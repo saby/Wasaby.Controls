@@ -557,5 +557,144 @@ define([
             done();
          }, 100)
       });
+
+      describe('EditInPlace', function() {
+         it('editItem', function(done) {
+            var opt = {
+               test: 'test'
+            };
+            var cfg = {
+               viewName : 'Controls/List/SimpleList/ListView',
+               source: source,
+               listViewModel: listViewModel
+            };
+            var ctrl = new SourceControl(cfg);
+            ctrl._children = {
+               editInPlace: {
+                  editItem: function(options) {
+                     assert.equal(options, opt);
+                     done();
+                  }
+               }
+            };
+            ctrl.editItem(opt);
+         });
+
+         it('addItem', function(done) {
+            var opt = {
+               test: 'test'
+            };
+            var cfg = {
+               viewName : 'Controls/List/SimpleList/ListView',
+               source: source,
+               listViewModel: listViewModel
+            };
+            var ctrl = new SourceControl(cfg);
+            ctrl._children = {
+               editInPlace: {
+                  addItem: function(options) {
+                     assert.equal(options, opt);
+                     done();
+                  }
+               }
+            };
+            ctrl.addItem(opt);
+         });
+
+         it('_onBeforeItemAdd', function() {
+            var opt = {
+               test: 'test'
+            };
+            var newOpt = {
+               test2: 'test'
+            };
+            var cfg = {
+               viewName : 'Controls/List/SimpleList/ListView',
+               source: source,
+               listViewModel: listViewModel
+            };
+            var ctrl = new SourceControl(cfg);
+            ctrl._notify = function(e, options) {
+               assert.equal(options[0], opt);
+               return newOpt;
+            };
+            var result = ctrl._onBeforeItemAdd({}, opt);
+            assert.equal(result, newOpt);
+         });
+
+         it('_onBeforeItemEdit', function() {
+            var opt = {
+               test: 'test'
+            };
+            var newOpt = {
+               test2: 'test'
+            };
+            var cfg = {
+               viewName : 'Controls/List/SimpleList/ListView',
+               source: source,
+               listViewModel: listViewModel
+            };
+            var ctrl = new SourceControl(cfg);
+            ctrl._notify = function(e, options) {
+               assert.equal(options[0], opt);
+               return newOpt;
+            };
+            var result = ctrl._onBeforeItemEdit({}, opt);
+            assert.equal(result, newOpt);
+         });
+
+         it('_onAfterItemEdit', function() {
+            var opt = {
+               test: 'test'
+            };
+            var cfg = {
+               viewName : 'Controls/List/SimpleList/ListView',
+               source: source,
+               listViewModel: listViewModel
+            };
+            var ctrl = new SourceControl(cfg);
+            ctrl._notify = function(e, options) {
+               assert.equal(options[0], opt);
+            };
+            ctrl._onAfterItemEdit({}, opt);
+         });
+
+         it('_onBeforeItemEndEdit', function() {
+            var opt = {
+               test: 'test'
+            };
+            var newOpt = {
+               test2: 'test'
+            };
+            var cfg = {
+               viewName : 'Controls/List/SimpleList/ListView',
+               source: source,
+               listViewModel: listViewModel
+            };
+            var ctrl = new SourceControl(cfg);
+            ctrl._notify = function(e, options) {
+               assert.equal(options[0], opt);
+               return newOpt;
+            };
+            var result = ctrl._onBeforeItemEndEdit({}, opt);
+            assert.equal(result, newOpt);
+         });
+
+         it('_onAfterItemEndEdit', function() {
+            var opt = {
+               test: 'test'
+            };
+            var cfg = {
+               viewName : 'Controls/List/SimpleList/ListView',
+               source: source,
+               listViewModel: listViewModel
+            };
+            var ctrl = new SourceControl(cfg);
+            ctrl._notify = function(e, options) {
+               assert.equal(options[0], opt);
+            };
+            ctrl._onAfterItemEndEdit({}, opt);
+         });
+      });
    })
 });

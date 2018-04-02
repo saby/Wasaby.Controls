@@ -8,45 +8,36 @@ define('Controls/List/EditInPlace', [
    var _private = {
       editItem: function(self, options, isAdd) {
          var result = self._notify(isAdd ? 'beforeItemAdd' : 'beforeItemEdit', [options]);
-         if (!isAdd) {
-            self._oldItem = options.item;
+         if (isAdd) {
+            self._isAdd = true;
+         } else {
+            self._originalItem = options.item;
          }
          return _private.processBeforeItemEditResult(self, options, result, isAdd);
       },
 
       afterItemEdit: function(self, options, isAdd) {
-         if (isAdd) {
-            self._isAdd = true;
-         }
          self._editingItem = options.item.clone();
          self._notify('afterItemEdit', [options.item, isAdd]);
          self._options.listModel.setEditingItem(self._editingItem);
 
-         return self._editingItem;
+         return options;
       },
 
-      processBeforeItemEditResult: function(self, originalResult, result, isAdd) {
-         if (result) {
-            if (result === ItemEditResult.CANCEL) {
-               return Deferred.fail(originalResult);
-            }
+      processBeforeItemEditResult: function(self, options, eventResult, isAdd) {
+         var result;
 
-            if (result instanceof Deferred) {
-               return result.addCallback(function(newOptions) {
-                  return newOptions;
-               });
-            }
-
-            if (result.item instanceof Record) {
-               return Deferred.success(result);
-            }
-
-            if (isAdd) {
-               return _private.createModel(self, result);
-            }
+         if (eventResult === ItemEditResult.CANCEL) {
+            result = Deferred.fail(options);
+         } else if (eventResult instanceof Deferred) {
+            result = eventResult;
+         } else if ((eventResult && eventResult.item instanceof Record) || (options && options.item instanceof Record)) {
+            result = Deferred.success(eventResult || options);
+         } else if (isAdd) {
+            result = _private.createModel(self, eventResult || options);
          }
 
-         return Deferred.success(originalResult);
+         return result;
       },
 
       endItemEdit: function(self, commit) {
@@ -75,14 +66,14 @@ define('Controls/List/EditInPlace', [
 
       afterItemEndEdit: function(self) {
          //Это событие всплывает, т.к. прикладники после завершения сохранения могут захотеть показать кнопку "+Запись" (по стандарту при старте добавления она скрывается)
-         self._notify('afterItemEndEdit', [self._oldItem, self._isAdd]);
+         self._notify('afterItemEndEdit', [self._originalItem, self._isAdd]);
          _private.resetVariables(self);
          self._options.listModel.setEditingItem(null);
       },
 
       createModel: function(self, options) {
-         return self._options.source.create().addCallback(function(newRecord) {
-            options.item = newRecord;
+         return self._options.source.create().addCallback(function(item) {
+            options.item = item;
             return options;
          });
       },
@@ -105,12 +96,12 @@ define('Controls/List/EditInPlace', [
          if (self._isAdd) {
             self._options.listModel.getItems().add(self._editingItem);
          } else {
-            self._oldItem.merge(self._editingItem);
+            self._originalItem.merge(self._editingItem);
          }
       },
 
       resetVariables: function(self) {
-         self._oldItem = null;
+         self._originalItem = null;
          self._editingItem = null;
          self._isAdd = null;
       },
@@ -234,7 +225,7 @@ define('Controls/List/EditInPlace', [
                if (newOptions.listModel._itemsModel._isAdd) {
                   this._isAdd = true;
                } else {
-                  this._oldItem = newOptions.listModel.getItemById(this._editingItem.get(newOptions.listModel._options.idProperty)).getContents();
+                  this._originalItem = newOptions.listModel.getItemById(this._editingItem.get(newOptions.listModel._options.idProperty)).getContents();
                }
             }
          }
@@ -328,21 +319,20 @@ define('Controls/List/EditInPlace', [
          }
       },
 
-      _onRowDeactivated: function(e, isTabPressed) {
+      // _onRowDeactivated: function(e, isTabPressed) {
          //TODO: по табу стреляет несколько раз на одной и той же строке, надо Шипину показать
          //TODO: про таб знаем, а про шифт нет, нужно доработать немножко
-         if (isTabPressed) {
+         // if (isTabPressed) {
             // _private.editNextRow(this, true);
             // console.log('ушёл фокус со строки по табу');
-         }
-         e.stopPropagation();
-      },
+         // }
+         // e.stopPropagation();
+      // },
 
       _beforeUnmount: function() {
          _private.resetVariables(this);
       }
    });
 
-   EditInPlace._private = _private;
    return EditInPlace;
 });
