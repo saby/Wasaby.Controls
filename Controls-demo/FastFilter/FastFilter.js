@@ -73,7 +73,7 @@ define('Controls-demo/FastFilter/FastFilter',
                      module: 'WS.Data/Source/Memory',
                      options: {
                         data: [
-                           {id: 0, lastName: '0', title: 'aaaa'},
+                           {id: 0, lastName: '0', title: '0'},
                            {id: 1, lastName: '1', title: '333'},
                            {id: 2, lastName: '2', title: 'iwfyls'},
                            {id: 3, lastName: '3', title: 'reset to me'},

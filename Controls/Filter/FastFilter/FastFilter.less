@@ -3,20 +3,19 @@
 }
 
 .controls-FastFilter__iconReset {
-   font-size: @icon-size_FastFilter;
+   .icon-size(@icon-size_FastFilter);
    color: @color_FastFilter-iconReset;
-   font-family: 'cbuc-icons';
 }
 
 .controls-FastFilter__iconArrow {
    fill: @color_FastFilter-iconArrow;
    height: @height_FastFilter-iconArrow;
    width: @width_FastFilter-iconArrow;
-   padding: @padding_FastFilter-iconArrow;
+   margin: @spacing_FastFilter-between-icon-text;
 }
 
 .controls-FastFilter__wrapper {
-   margin: @spacing_FastFilter;
+   margin: @spacing_FastFilter-between-lists;
    display: flex;
    align-items: center;
    cursor: pointer;
