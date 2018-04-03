@@ -8,8 +8,8 @@ define('Controls/List/EditInPlace', [
 ], function(Control, template, Deferred, Record, CollectionItem, ItemsUtil) {
 
    var
-      ItemEditResult = { // Возможные результаты события "ItemEditResult"
-         CANCEL: 'Cancel'
+      ItemEditResult = { // Возможные результаты события "onItemEdit"
+         CANCEL: 'Cancel' // Отменить начало редактирования/добавления
       },
       ItemEndEditResult = { // Возможные результаты события "onItemEndEdit"
          CANCEL: 'Cancel' // Отменить завершение редактирования/добавления
