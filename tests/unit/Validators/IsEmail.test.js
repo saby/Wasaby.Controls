@@ -17,6 +17,7 @@ define(
             '_______@example.com',
             'email@example.name',
             'email@example.museum',
+            'email@example.svnsmbl',
             'email@example.co.jp',
             'firstname-lastname@example.com',
             'тест@тест.рф',
@@ -41,7 +42,8 @@ define(
             'email@example..com',
             'Abc..123@example.com',
             'тест@example.com',
-            'example@тест.com'
+            'example@тест.com',
+            'email@example.toomanysymbols'
          ];
 
       describe('Controls.Validators', function () {
