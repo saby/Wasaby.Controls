@@ -29,8 +29,7 @@ define('SBIS3.CONTROLS/Mixins/ViewSourceMixin', [
        * @param {String} historyId Уникальный id по которому хранится история фильтров, необязательный параметр.
        */
       setViewDataSource: function(source, browserName, filter, offset, limit, sorting, historyId) {
-         var queryArgs = [],
-             historyFilter = {},
+         var historyFilter = {},
              applyFilterOnLoad = true,
              queryDef, historyController, history, serializedHistory, queryFilter;
 
