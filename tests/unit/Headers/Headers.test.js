@@ -73,5 +73,27 @@ define(['Controls/Header'], function (Header) {
          header.countClickHandler(event);
          assert(successCountClick);
       });
+
+      it('update icon', function () {
+         var opt = {
+            openIcon: "open",
+            closeIcon: "close",
+            isIconOpen: false
+         };
+         header.saveOptions(opt);
+         header._beforeUpdate();
+         assert(header._icon === "open");
+      });
+
+      it('update style', function () {
+         var opt = {
+            type: "type",
+            style: "style",
+            size: "size"
+         };
+         header.saveOptions(opt);
+         header._beforeUpdate();
+         assert(header._size === "controls-Header__caption_type-type_size-size" && header._style === "controls-Header__caption_type-type_style-style");
+      });
    });
 });
