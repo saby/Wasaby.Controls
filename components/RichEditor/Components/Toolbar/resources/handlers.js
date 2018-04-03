@@ -23,7 +23,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/handlers',
          strikethrough: onButtonClick,
          blockquote: onButtonClick,
          customBlockquote: function(event, key) {
-            this.getParent()._setCustomBlockquote(key);
+            this.getParent()._setCustomBlockquote();
          },
          align: function (event, key) {
             this.getParent()._setTextAlign(key);

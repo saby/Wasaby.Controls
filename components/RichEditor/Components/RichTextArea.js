@@ -76,7 +76,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                title: {inline: 'span', classes: 'titleText'},
                subTitle: {inline: 'span', classes: 'subTitleText'},
                additionalText: {inline: 'span', classes: 'additionalText'},
-               customBlockquote: {block: 'p', classes: 'customBlockquote'}
+               customBlockquote: {block: 'blockquote', classes: 'customBlockquote'}
             },
             colorsMap: {
                'rgb(0, 0, 0)': 'black',
@@ -1243,9 +1243,19 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
          // Добавление и удаление кастомизируемой цитаты
          setCustomBlockquote: function() {
-            var
-               $selectionContent = $(this._tinyEditor.selection.getNode());
-            this._tinyEditor.formatter.toggle('customBlockquote', $selectionContent);
+            if ($(this._tinyEditor.selection.getNode())[0].offsetParent.localName != "blockquote") {
+               this._tinyEditor.execCommand('mceblockquote');
+               if (this._getToolbar().getItemInstance('customBlockquote').isChecked()) {
+                  var
+                     $selectionContent = $(this._tinyEditor.selection.getNode());
+                  this._tinyEditor.formatter.toggle('customBlockquote', $selectionContent);
+               }
+            }
+            else {
+               var
+                  $selectionContent = $(this._tinyEditor.selection.getNode());
+               this._tinyEditor.formatter.toggle('customBlockquote', $selectionContent);
+            }
          },
 
          /**
