@@ -12,6 +12,7 @@
               <ws:partial
                       on:click="_onItemClick(_listModel.getEditingItemProjection())"
                       template="{{_itemTemplate}}"
+                      multiSelectTpl="{{_options.multiSelectTpl}}"
                       itemData="{{_listModel.getEditingItemData()}}"/>
           </ws:if>
       </div>

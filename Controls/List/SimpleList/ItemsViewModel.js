@@ -139,7 +139,8 @@ define('Controls/List/SimpleList/ItemsViewModel',
                   index: this._isAdd ? this.getItems().getCount() : index,
                   item: this._editingItem,
                   dispItem: this._editingItemProjection,
-                  isEditing: true
+                  isEditing: true,
+                  key: ItemsUtil.getPropertyValue(this._editingItemProjection, this._options.idProperty)
                };
             } else {
                this._editingItem = null;
