@@ -369,7 +369,7 @@ define([
                listModel: listModel
             });
             eip._editingItem = listModel.getItems().at(0);
-            eip._options.listModel.setEditingItem(listModel.getItems().at(0));
+            eip._setEditingItem(listModel.getItems().at(0), eip._options.listModel);
             eip._onKeyDown({
                nativeEvent: {
                   keyCode: 13
@@ -385,7 +385,7 @@ define([
                listModel: listModel
             });
             eip._editingItem = listModel.getItems().at(2);
-            eip._options.listModel.setEditingItem(listModel.getItems().at(2));
+            eip._setEditingItem(listModel.getItems().at(2), eip._options.listModel);
             eip._onKeyDown({
                nativeEvent: {
                   keyCode: 13
@@ -405,7 +405,7 @@ define([
                }
             });
             eip._editingItem = listModel.getItems().at(2);
-            eip._options.listModel.setEditingItem(listModel.getItems().at(2));
+            eip._setEditingItem(listModel.getItems().at(2), eip._options.listModel);
             eip._onKeyDown({
                nativeEvent: {
                   keyCode: 13
@@ -424,7 +424,7 @@ define([
                }
             });
             eip._editingItem = listModel.getItems().at(0);
-            eip._options.listModel.setEditingItem(listModel.getItems().at(0));
+            eip._setEditingItem(listModel.getItems().at(0), eip._options.listModel);
             eip._onKeyDown({
                nativeEvent: {
                   keyCode: 13
@@ -443,7 +443,7 @@ define([
                }
             });
             eip._editingItem = listModel.getItems().at(0);
-            eip._options.listModel.setEditingItem(listModel.getItems().at(0));
+            eip._setEditingItem(listModel.getItems().at(0), eip._options.listModel);
             eip._onKeyDown({
                nativeEvent: {
                   keyCode: 27
@@ -460,7 +460,7 @@ define([
                listModel: listModel
             });
             eip._editingItem = listModel.getItems().at(0);
-            eip._options.listModel.setEditingItem(listModel.getItems().at(0));
+            eip._setEditingItem(listModel.getItems().at(0), eip._options.listModel);
             eip._onKeyDown({
                nativeEvent: {
                   keyCode: 9
@@ -476,7 +476,7 @@ define([
                listModel: listModel
             });
             eip._editingItem = listModel.getItems().at(2);
-            eip._options.listModel.setEditingItem(listModel.getItems().at(2));
+            eip._setEditingItem(listModel.getItems().at(2), eip._options.listModel);
             eip._onKeyDown({
                nativeEvent: {
                   keyCode: 9
@@ -495,7 +495,7 @@ define([
                }
             });
             eip._editingItem = listModel.getItems().at(2);
-            eip._options.listModel.setEditingItem(listModel.getItems().at(2));
+            eip._setEditingItem(listModel.getItems().at(2), eip._options.listModel);
             eip._onKeyDown({
                nativeEvent: {
                   keyCode: 9
@@ -505,14 +505,14 @@ define([
 
          it('Shift+Tab', function(done) {
             eip.editItem = function(options) {
-               assert.equal(options.item, listModel.getItems().at(0));
+               assert.equal(options.item, listModel.getItems().at(0)), eip._options.listModel;
                done();
             };
             eip.saveOptions({
                listModel: listModel
             });
             eip._editingItem = listModel.getItems().at(1);
-            eip._options.listModel.setEditingItem(listModel.getItems().at(1));
+            eip._setEditingItem(listModel.getItems().at(1), eip._options.listModel);
             eip._onKeyDown({
                nativeEvent: {
                   keyCode: 9,
@@ -529,7 +529,7 @@ define([
                listModel: listModel
             });
             eip._editingItem = listModel.getItems().at(0);
-            eip._options.listModel.setEditingItem(listModel.getItems().at(0));
+            eip._setEditingItem(listModel.getItems().at(0), eip._options.listModel);
             eip._onKeyDown({
                nativeEvent: {
                   keyCode: 9,

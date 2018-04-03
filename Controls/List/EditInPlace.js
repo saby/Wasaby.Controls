@@ -2,8 +2,10 @@ define('Controls/List/EditInPlace', [
    'Core/Control',
    'tmpl!Controls/List/EditInPlace/EditInPlace',
    'Core/Deferred',
-   'WS.Data/Entity/Record'
-], function (Control, template, Deferred, Record) {
+   'WS.Data/Entity/Record',
+   'WS.Data/Display/CollectionItem',
+   'Controls/List/resources/utils/ItemsUtil'
+], function(Control, template, Deferred, Record, CollectionItem, ItemsUtil) {
 
    var _private = {
       editItem: function(self, options, isAdd) {
@@ -19,7 +21,7 @@ define('Controls/List/EditInPlace', [
       afterItemEdit: function(self, options, isAdd) {
          self._editingItem = options.item.clone();
          self._notify('afterItemEdit', [options.item, isAdd]);
-         self._options.listModel.setEditingItem(self._editingItem);
+         self._setEditingItem(self._editingItem, self._options.listModel);
 
          return options;
       },
@@ -68,7 +70,7 @@ define('Controls/List/EditInPlace', [
          //Это событие всплывает, т.к. прикладники после завершения сохранения могут захотеть показать кнопку "+Запись" (по стандарту при старте добавления она скрывается)
          self._notify('afterItemEndEdit', [self._originalItem, self._isAdd]);
          _private.resetVariables(self);
-         self._options.listModel.setEditingItem(null);
+         self._setEditingItem(null, self._options.listModel);
       },
 
       createModel: function(self, options) {
@@ -113,10 +115,10 @@ define('Controls/List/EditInPlace', [
       editNextRow: function(self, editNextRow) {
          var
             items = self._options.listModel.getItems(),
-            index = self._options.listModel.getEditingItemIndex();
+            index = _private.getEditingItemIndex(self, self._editingItem, self._options.listModel);
 
          if (editNextRow) {
-            if (index < items.getCount() - 1) {
+            if (index < items.getCount() - 1 && ~index) {
                self.editItem({
                   item: items.at(index + 1)
                });
@@ -134,6 +136,18 @@ define('Controls/List/EditInPlace', [
                self.commitEdit();
             }
          }
+      },
+
+      getEditingItemIndex: function(self, editingItem, listModel) {
+         var
+            index = -1,
+            originalItem = listModel.getItemById(ItemsUtil.getPropertyValue(editingItem, listModel._options.idProperty), listModel._options.idProperty);
+
+         if (originalItem) {
+            index = listModel.getItems().getIndex(originalItem.getContents());
+         }
+
+         return index;
       }
    },
    ItemEditResult = { // Возможные результаты события "ItemEditResult"
@@ -221,11 +235,9 @@ define('Controls/List/EditInPlace', [
          if (newOptions.editingConfig) {
             if (newOptions.editingConfig.item) {
                this._editingItem = newOptions.editingConfig.item;
-               newOptions.listModel.setEditingItem(this._editingItem);
-               if (newOptions.listModel._itemsModel._isAdd) {
-                  this._isAdd = true;
-               } else {
-                  this._originalItem = newOptions.listModel.getItemById(this._editingItem.get(newOptions.listModel._options.idProperty)).getContents();
+               this._setEditingItem(this._editingItem, newOptions.listModel);
+               if (!this._isAdd) {
+                  this._originalItem = newOptions.listModel.getItemById(this._editingItem.get(newOptions.listModel._options.idProperty), newOptions.listModel._options.idProperty).getContents();
                }
             }
          }
@@ -239,7 +251,7 @@ define('Controls/List/EditInPlace', [
       //TODO: управлять индикатором загрузки
       editItem: function(options) {
          var self = this,
-            editingItemIndex = this._options.listModel.getEditingItemIndex(),
+            editingItemIndex = _private.getEditingItemIndex(this, this._editingItem, this._options.listModel),
             currentItemIndex = this._options.listModel.getItems().getIndex(options.item);
          //Если currentItemIndex = -1, то происходит добавление
          if (editingItemIndex !== currentItemIndex && ~currentItemIndex) {
@@ -317,6 +329,33 @@ define('Controls/List/EditInPlace', [
                item: record
             });
          }
+      },
+
+      _setEditingItem: function(item, listModel) {
+         if (!item) {
+            listModel._setEditingItemData(null);
+            this._editingItemData = null;
+            this._isAdd = false;
+            return;
+         }
+         var
+            index = _private.getEditingItemIndex(this, item, listModel);
+         this._isAdd = index === -1;
+         this._editingItemProjection = this._isAdd ?
+            new CollectionItem({ contents: this._editingItem }) :
+            listModel.getItemById(ItemsUtil.getPropertyValue(this._editingItem, listModel._options.idProperty), listModel._options.idProperty);
+         this._editingItemData = {
+            getPropValue: ItemsUtil.getPropertyValue,
+            idProperty: listModel._options.idProperty,
+            displayProperty: listModel._options.displayProperty,
+            index: this._isAdd ? listModel.getItems().getCount() : index,
+            item: this._editingItem,
+            dispItem: this._editingItemProjection,
+            isEditing: true,
+            isSelected: !listModel._markedItem,
+            key: ItemsUtil.getPropertyValue(this._editingItemProjection.getContents(), listModel._options.idProperty)
+         };
+         listModel._setEditingItemData(this._editingItemData);
       },
 
       // _onRowDeactivated: function(e, isTabPressed) {

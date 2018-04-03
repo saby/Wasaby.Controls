@@ -201,47 +201,6 @@ define([
 
       });
 
-      describe('setEditingItem', function() {
-         it('existing item', function() {
-            var rs = new RecordSet({
-               rawData: data,
-               idProperty : 'id'
-            });
-            var iv = new ItemsViewModel({
-               items: rs,
-               idProperty: 'id',
-               displayProperty: 'title'
-            });
-            iv.setEditingItem(rs.at(1));
-            assert.isFalse(iv._isAdd, 'isAdd should be false if editing record exists');
-            assert.equal(rs.at(1), iv._editingItem, 'Editing item should be equal to original item');
-            iv._curIndex = 1;
-            assert.isTrue(iv.getCurrent().isEditing, 'isEditing should be true on editingItem');
-         });
-
-         it('new item', function() {
-            var
-               rs = new RecordSet({
-                  rawData: data,
-                  idProperty : 'id'
-               }),
-               item = new Record({
-                  id: 4,
-                  title: 'Четвёртый'
-               }),
-               iv = new ItemsViewModel({
-               items: rs,
-               idProperty: 'id',
-               displayProperty: 'title'
-            });
-            iv.setEditingItem(item);
-            assert.isTrue(iv._isAdd, 'isAdd should be true if editing record doesn\'t exist');
-            assert.equal(item, iv._editingItem, 'Editing item should be equal to original item');
-            assert.equal(item, iv._editingItemProjection.getContents(), 'Content of projection item should be equal to original item');
-            assert.isTrue(iv._editingItemData.isEditing, 'isEditing should be true on editingItem');
-         });
-      });
-
       it('itemsReadyCallback', function () {
          var rs1 = new RecordSet({
             rawData: data,
