@@ -110,9 +110,9 @@ define('Controls/Input/Suggest',
             _private.initSuggestController(this, this._options);
          },
 
-         _beforeUpdate: function() {
+         _beforeUpdate: function(newOptions) {
             this._simpleViewModel.updateOptions({
-               value: this._options.value
+               value: newOptions.value
             });
          },
          
