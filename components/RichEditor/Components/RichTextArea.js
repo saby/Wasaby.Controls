@@ -25,6 +25,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
    'SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptionsPanel/ImageOptionsPanel',
    'SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/CodeSampleDialog/CodeSampleDialog',
    'Core/EventBus',
+   'SBIS3.CONTROLS/WaitIndicator',
 
    'tmpl!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/RichTextAreaInner',
    "css!SBIS3.CORE.RichContentStyles",
@@ -52,7 +53,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
       LinkWrap,
       ImageOptionsPanel,
       CodeSampleDialog,
-      EventBus
+      EventBus,
+      WaitIndicator
    ) {
       'use strict';
 
@@ -454,6 +456,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             if (typeof html === 'string' && this._tinyEditor) {
                this._performByReady(function() {
                   html = this._prepareContent(html);
+                  // Если по любым причинам редактор пуст абсолютно - восстановить минимальный контент
+                  // 1175088566 https://online.sbis.ru/opendoc.html?guid=5f7765c4-55e5-4e73-b7bd-3cd05c61d4e2
+                  this._ensureHasMinContent();
                   var editor = this._tinyEditor;
                   var lastRng = this._tinyLastRng;
                   if (lastRng) {
@@ -484,6 +489,19 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      this._notifyMobileInputFocus();
                   }
                }.bind(this));
+            }
+         },
+
+         /**
+          * Убедиться в том, что в редакторе наличествует хотя бы минимальный контент, если нет - восстановить минимальный контент
+          * (Не все функции вставки и команд tiny работают нормально с абсолютно пустым редактором)
+          */
+         _ensureHasMinContent: function () {
+            var editor = this._tinyEditor;
+            var editorBody = editor.getBody();
+            if (!editorBody.innerHTML) {
+               editorBody.innerHTML = '<p></p>';
+               this._selectNewRng(editorBody.firstChild, 0);
             }
          },
 
@@ -1045,6 +1063,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             if (isBlockquote) {
                execCmd = 'mceBlockQuote';
             }
+            // Если по любым причинам редактор пуст абсолютно - восстановить минимальный контент
+            // 1175088566 https://online.sbis.ru/opendoc.html?guid=5f7765c4-55e5-4e73-b7bd-3cd05c61d4e2
+            this._ensureHasMinContent();
             var isAlreadyApplied = editor.formatter.match(command);
             var rng = selection.getRng();
             var isBlockquoteOfList;
@@ -1549,7 +1570,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             var prevSrc = $img.attr('src');
             var promise = this._makeImgPreviewerUrl($img, 0 < width ? width : null, 0 < height ? height : null, isPixels);
             return promise.addCallback(function (urls) {
-               var url = urls.preview;
+               var url = urls.preview || urls.original;
                if (prevSrc !== url) {
                   $img.attr('src', url);
                   $img.attr('data-mce-src', url);
@@ -2235,7 +2256,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   var width = $img[0].style.width || ($img.width() + 'px');
                   var isPixels = width.charAt(width.length - 1) !== '%';
                   self._makeImgPreviewerUrl(fileobj, +width.substring(0, width.length - (isPixels ? 2 : 1)), null, isPixels).addCallback(function (urls) {
-                     var url = urls.preview;
+                     var url = urls.preview || urls.original;
                      $img.attr('src', url);
                      $img.attr('data-mce-src', url);
                      var uuid = fileobj.id;
@@ -2344,7 +2365,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                url = (imgInfo.filePath || imgInfo.url);
             }
             promise = promise.addCallback(function (size) {
-               return {preview:'/previewer' + (size ?  '/r/' + size + '/' + size : '') + url, original:url};
+               return {preview:size ? '/previewer' + '/r/' + size + '/' + size + url : null, original:url};
             });
             if (0 < width) {
                var w = isPixels ? width : width*constants.baseAreaWidth/100;//this.getContainer().width()
@@ -2661,11 +2682,21 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          },
 
          _insertImg: function (urls, width, height, className, alt, before, after, uuid) {
+            var src = urls.preview ;
+            if (!src) {
+               return this._showImgError();
+            }
+            var stopper = new Deferred();
+            WaitIndicator.make({
+               overlay: 'dark',
+               delay: 1000,
+               target: this,
+               message: rk('Загрузка изображения...')
+            }, stopper);
             var promise = new Deferred();
-            var hasBoth = urls && typeof urls === 'object';
-            var src = hasBoth ? urls.preview : urls;
             var img = new Image();
             img.onload = function () {
+               stopper.callback();
                // TODO: 20170913 Здесь в атрибуты, сохранность которых не гарантируется ввиду свободного редактирования пользователями, помещается значение uuid - Для обратной совместимости
                // После задач https://online.sbis.ru/opendoc.html?guid=6bb150eb-4973-4770-b7da-865789355916 и https://online.sbis.ru/opendoc.html?guid=a56c487d-6e1d-47bc-bdf6-06a0cd7aa57a
                // Убрать по мере переделки стороннего кода, используещего эти атрибуты.
@@ -2682,26 +2713,29 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                promise.callback();
             }.bind(this);
             img.onerror = function () {
-               if (hasBoth && urls.original !== urls.preview) {
-                  promise.dependOn(this._insertImg(urls.original, width, height, className, alt, before, after, uuid));
-               }
-               else {
-                  require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function (InformationPopupManager) {
-                     InformationPopupManager.showMessageDialog({
-                           status: 'error',
-                           className: 'controls-RichEditor__insertImg-alert',
-                           message: rk('Ошибка'),
-                           details: rk('Невозможно открыть изображение'),
-                           isModal: true,
-                           closeByExternalClick: true,
-                           opener: this
-                        },
-                        promise.errback.bind(promise)
-                     );
-                  });
-               }
+               stopper.callback();
+               this._showImgError()
+                  .addCallback(promise.errback.bind(promise));
             }.bind(this);
             img.src = src;
+            return promise;
+         },
+
+         _showImgError: function (promise) {
+            var promise = new Deferred();
+            require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function (InformationPopupManager) {
+               InformationPopupManager.showMessageDialog({
+                     status: 'error',
+                     className: 'controls-RichEditor__insertImg-alert',
+                     message: rk('Ошибка'),
+                     details: rk('Невозможно открыть изображение'),
+                     isModal: true,
+                     closeByExternalClick: true,
+                     opener: this
+                  },
+                  promise.callback.bind(promise)
+               );
+            });
             return promise;
          },
 
