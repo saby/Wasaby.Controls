@@ -23,6 +23,7 @@
                 itemActionsType="outside"
                 itemActions="{{_itemActions}}"
                 itemActionVisibilityCallback="{{_showAction}}"
+                on:beforeItemsRemove="_beforeItemsRemove()"
                 idProperty="id">
             <ws:editingConfig>
                 <ws:Object editOnClick="{{true}}"/>
@@ -38,5 +39,6 @@
             </ws:itemTemplate>
         </Controls:List>
         <Controls:List:AddButton caption="Добавить запись" on:click="list.addItem()"/>
+        <Controls.Popup.Opener.Confirmation name="popupOpener"/>
     </div>
 </div>

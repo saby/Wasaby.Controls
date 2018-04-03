@@ -131,7 +131,7 @@ define('Controls-demo/List/EditAndRemoveOperations', [
                title: 'delete',
                main: true,
                handler: function(item){
-                  this._children.list.remove([item.get('id')]);
+                  this._children.list.removeItems([item.get('id')]);
                }.bind(this)
             },
             {
@@ -167,7 +167,12 @@ define('Controls-demo/List/EditAndRemoveOperations', [
             data: srcData5
          });
       },
-
+      _beforeItemsRemove: function(event, items) {
+         return this._children.popupOpener.open({
+            message: 'Remove items?',
+            type: 'yesno'
+         });
+      },
       _onBeginEdit: function(e, itemObj) {
          var item = itemObj.item;
          this.__editingItem = item;
