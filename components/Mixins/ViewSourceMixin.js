@@ -31,7 +31,6 @@ define('SBIS3.CONTROLS/Mixins/ViewSourceMixin', [
       setViewDataSource: function(source, browserName, filter, offset, limit, sorting, historyId) {
          var queryArgs = [],
              historyFilter = {},
-             resultDef = new Deferred(),
              applyFilterOnLoad = true,
              queryDef, historyController, history, serializedHistory, queryFilter;
 
@@ -71,7 +70,7 @@ define('SBIS3.CONTROLS/Mixins/ViewSourceMixin', [
                if(historyFilter.hasOwnProperty(key)) {
                   delete historyFilter[key];
                }
-            })
+            });
          }
 
          /* Подготавливаем фильтр */
@@ -83,7 +82,15 @@ define('SBIS3.CONTROLS/Mixins/ViewSourceMixin', [
             offset !== undefined ? offset : 0,
             limit !== undefined ? limit : 25
          ]).addErrback(function(e) {
-            return e
+            return e;
+         });
+   
+         var resultDef = new Deferred({
+            cancelCallback: function() {
+               if (!queryDef.isReady()) {
+                  queryDef.cancel();
+               }
+            }
          });
 
          /* По готовности компонента установим данные */
