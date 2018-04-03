@@ -22,6 +22,26 @@ define(
                assert.equal(result, '_top_bottom');
             });
          });
+         describe('getSizes', function() {
+            var container = {
+               scrollHeight: 200,
+               offsetHeight: 100,
+               scrollTop: 0
+            };
+
+            it('getScrollHeight', function() {
+               result = Scroll._private.getScrollHeight(container);
+               assert.equal(result, 200);
+            });
+            it('getContainerHeight', function() {
+               result = Scroll._private.getContainerHeight(container);
+               assert.equal(result, 100);
+            });
+            it('getScrollTop', function() {
+               result = Scroll._private.getScrollTop(container);
+               assert.equal(result, 0);
+            });
+         });
       });
    }
 );

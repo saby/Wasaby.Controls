@@ -7,7 +7,7 @@ define(
 
       'use strict';
 
-      describe('Controls.Container.Scroll.Controllers', function() {
+      describe('Controls.Container.Scroll.Utils', function() {
          var
             constWidthScrollbar = 20,
             detection, result;
@@ -36,7 +36,7 @@ define(
                   }
                ]
             };
-            result = ScrollOverflowUtil._private.calcChildHeight(container);
+            result = ScrollOverflowUtil._private.calcChildrenHeight(container);
             assert.equal(result, 150);
          });
          describe('calcOverflow', function() {
@@ -140,6 +140,9 @@ define(
          });
 
          describe('calcStyleHideScrollbar', function() {
+            result = ScrollWidthUtil._private.calcStyleHideScrollbar(0, {}, {});
+            assert.equal(result, '');
+
             result = ScrollWidthUtil._private.calcStyleHideScrollbar(17, {}, {});
             assert.equal(result, 'margin-right: -17px;');
 

@@ -45,6 +45,17 @@ define(
             result = Scrollbar._private.calcWheelDelta(true, 80);
             assert.equal(result, 100);
          });
+         it('calcScrollbarDelta', function() {
+            result = Scrollbar._private.calcScrollbarDelta(0, 100, 50);
+            assert.equal(result, 75);
+         });
+         it('getDefaultOptions', function() {
+            result = Scrollbar.getDefaultOptions();
+            assert.deepEqual(result, {
+               position: 0,
+               style: 'normal'
+            });
+         });
       });
    }
 );
