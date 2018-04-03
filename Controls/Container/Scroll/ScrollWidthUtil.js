@@ -42,7 +42,7 @@ define('Controls/Container/Scroll/ScrollWidthUtil',
                scrollbarWidth = 16;
             } else if (detection.isIE10 || detection.isIE11) {
                scrollbarWidth = 17;
-            } else {
+            } else if (window) {
                scrollbarWidth = _private.calcScrollbarWidthByMeasuredBlock();
             }
 
@@ -78,18 +78,24 @@ define('Controls/Container/Scroll/ScrollWidthUtil',
 
             if (detection.firefox) {
                styleHideScrollbarFn = function() {
-                  var scrollbarWidth = _private.calcScrollbarWidthByMeasuredBlock();
+                  var scrollbarWidth;
 
-                  return _private.calcStyleHideScrollbar(scrollbarWidth, detection, compatibility);
+                  if (window) {
+                     scrollbarWidth = _private.calcScrollbarWidthByMeasuredBlock();
+
+                     return _private.calcStyleHideScrollbar(scrollbarWidth, detection, compatibility);
+                  }
                };
             } else {
                styleHideScrollbarFn = function() {
                   var scrollbarWidth;
 
-                  if (!_private.styleHideScrollbar) {
+                  if (typeof _private.styleHideScrollbar === 'undefined') {
                      scrollbarWidth = _private.calcScrollbarWidth(navigator.userAgent, detection);
 
-                     _private.styleHideScrollbar = _private.calcStyleHideScrollbar(scrollbarWidth, detection, compatibility);
+                     if (typeof scrollbarWidth === 'number') {
+                        _private.styleHideScrollbar = _private.calcStyleHideScrollbar(scrollbarWidth, detection, compatibility);
+                     }
                   }
 
                   return _private.styleHideScrollbar;

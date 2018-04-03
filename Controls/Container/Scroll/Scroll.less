@@ -1,6 +1,7 @@
 .controls-Scroll {
-   overflow: hidden;
    position: relative;
+   // Таким образом мы скрываем нативный скролл.
+   overflow: hidden;
 }
 
 .controls-Scroll__scrollbar {
@@ -10,46 +11,41 @@
    bottom: 0;
 }
 
-.controls-Scroll__content_nativeScrollbar {
+.controls-Scroll__content {
    -webkit-overflow-scrolling: touch;
 }
 
+/**
+ * Данный модификатор предназначен для ускорения работы во время прокрутки.
+ * Вешать его следует только на контейнер, который по нашему предположению должен скролиться.
+ * В противном случае это вызовет тормоза вместо оптимизации.
+ * Подробнее https://developer.mozilla.org/ru/docs/Web/CSS/will-change.
+ */
 .controls-Scroll__content_possibleScroll {
    will-change: scroll-position;
 }
 
 .controls-Scroll__shadow {
-   position: absolute;
-   top: 0;
    left: 0;
    right: 0;
-   bottom: 0;
+   position: absolute;
    pointer-events: none;
+   height: @height-gradient_Scroll-shadow;
 }
 
 .controls-Scroll__shadow_top {
+   top: 0;
    background: linear-gradient(
            to bottom,
-           @color-shadow_Scroll_1, @color-shadow_Scroll_2 @height-gradient_Scroll-shadow,
-           transparent @height-gradient_Scroll-shadow
+           @start-color-gradient_Scroll-shadow, @end-color-gradient_Scroll-shadow
    );
 }
 
 .controls-Scroll__shadow_bottom {
+   bottom: 0;
    background: linear-gradient(
            to top,
-           @color-shadow_Scroll_1, @color-shadow_Scroll_2 @height-gradient_Scroll-shadow,
-           transparent @height-gradient_Scroll-shadow
-   );
-}
-
-.controls-Scroll__shadow_top_bottom {
-   background: linear-gradient(
-           to bottom,
-           @color-shadow_Scroll_1, @color-shadow_Scroll_2 @height-gradient_Scroll-shadow,
-           transparent @height-gradient_Scroll-shadow,
-           transparent calc(~"100% - @{height-gradient_Scroll-shadow}"),
-           @color-shadow_Scroll_2 calc(~"100% - @{height-gradient_Scroll-shadow}"), @color-shadow_Scroll_1
+           @start-color-gradient_Scroll-shadow, @end-color-gradient_Scroll-shadow
    );
 }
 

@@ -31,7 +31,7 @@ define('Controls/Container/Scroll/Scrollbar',
        * @name Controls/Container/resources/Scrollbar#style
        * @cfg {String} Цветовая схема контейнера. Влияет на цвет тени и полоски скролла. Используется для того чтобы контейнер корректно отображался как на светлом так и на темном фоне.
        * @variant normal стандартная схема
-       * @variant opposite противоположная схема
+       * @variant inverted противоположная схема
        *
        * @public
        * @control
@@ -215,7 +215,7 @@ define('Controls/Container/Scroll/Scrollbar',
                }
 
                this._dragging = true;
-               this._notify('scrollbarBeginDrag');
+               this._notify('draggingChanged', [this._dragging]);
             },
 
             /**
@@ -229,8 +229,6 @@ define('Controls/Container/Scroll/Scrollbar',
 
                if (this._setPosition(this._position + delta / this._scrollRatio, true)) {
                   _private.currentPageY = pageY;
-
-                  this._forceUpdate();
                }
             },
 
@@ -239,9 +237,7 @@ define('Controls/Container/Scroll/Scrollbar',
              */
             _scrollbarEndDragHandler: function() {
                this._dragging = false;
-               this._notify('scrollbarEndDrag');
-
-               this._forceUpdate();
+               this._notify('draggingChanged', [this._dragging]);
             },
 
             /**
