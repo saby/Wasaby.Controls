@@ -110,7 +110,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                if (!this._isIntroduced) {
                   this._introduce();
                }
-            }.bind(this), 1200);
+            }.bind(this), 2000);
          },
 
          _bindEvents: function () {
