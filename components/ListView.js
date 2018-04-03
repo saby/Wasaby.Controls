@@ -2836,7 +2836,7 @@ define('SBIS3.CONTROLS/ListView',
 
          _swipeHandler: function(e){
             var target = this._findItemByElement($(e.target)),
-                switchedToTouch = this._options.itemsActionsInItemContainer && this._itemsToolbar.isVisible() && !this._itemsToolbar.getTouchMode();
+                switchedToTouch = this._options.itemsActionsInItemContainer && this._itemsToolbar && this._itemsToolbar.isVisible() && !this._itemsToolbar.getTouchMode();
 
             if(!target.length) {
                return;

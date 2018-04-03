@@ -25,7 +25,11 @@
                                    on:afterItemEndEdit="_onAfterItemEndEdit()"
                                    listModel="{{_listViewModel}}"
                                    source="{{_options.source}}" />
-        <Controls.List.Remove ws:content="listView" name="removeControl"/>
+        <Controls.List.Remove ws:content="listView"
+                              name="removeControl"
+                              on:beforeItemsRemove="_beforeItemsRemove()"
+                              on:afterItemsRemove="_afterItemsRemove()"
+        />
         <Controls.List.ItemActions.ItemActionsControl
                 ws:content="listView"
                 listModel="{{_listViewModel}}"

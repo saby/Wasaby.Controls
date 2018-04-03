@@ -7,59 +7,57 @@ define([
          result,
          items = [1, 2, 3];
 
-      it('beginRemove return Deferred', function () {
+      it('beforeItemsRemove return Deferred', function () {
          var remove = new Remove();
-         result = remove.beginRemove(items);
+         result = remove.beforeItemsRemove(items);
 
          assert.isTrue(result instanceof Deferred);
       });
 
-      it('beginRemove notify event with params', function (done) {
+      it('beforeItemsRemove notify event with params', function (done) {
          var remove = new Remove();
-         remove._notify = function(event, args, opts) {
-            assert.equal(event, 'beginRemove');
+         remove._notify = function(event, args) {
+            assert.equal(event, 'beforeItemsRemove');
             assert.equal(args[0], items);
-            assert.equal(opts.bubbling, true);
             done();
          };
-         remove.beginRemove(items);
+         remove.beforeItemsRemove(items);
       });
 
-      it('beginRemove return notify result', function (done) {
+      it('beforeItemsRemove return notify result', function (done) {
          var remove = new Remove();
          remove._notify = function() {
             return false;
          };
 
-         remove.beginRemove(items).addCallback(function(beginRemoveResult) {
-            assert.equal(beginRemoveResult, false);
+         remove.beforeItemsRemove(items).addCallback(function(itemsRemoveResult) {
+            assert.equal(itemsRemoveResult, false);
             done();
          });
       });
 
-      it('beginRemove return notify deferred result', function (done) {
+      it('beforeItemsRemove return notify deferred result', function (done) {
          var remove = new Remove();
          remove._notify = function() {
             return Deferred.success(false);
          };
 
-         remove.beginRemove(items).addCallback(function(beginRemoveResult) {
-            assert.equal(beginRemoveResult, false);
+         remove.beforeItemsRemove(items).addCallback(function(itemsRemoveResult) {
+            assert.equal(itemsRemoveResult, false);
             done();
          });
       });
 
-      it('endRemove notify event with params', function (done) {
+      it('afterItemsRemove notify event with params', function (done) {
          var remove = new Remove();
-         remove._notify = function(event, args, opts) {
-            assert.equal(event, 'endRemove');
-            assert.equal(opts.bubbling, true);
+         remove._notify = function(event, args) {
+            assert.equal(event, 'afterItemsRemove');
             assert.equal(args[0], items);
             assert.equal(args[1], false);
             done();
          };
 
-         remove.endRemove(items, false);
+         remove.afterItemsRemove(items, false);
       });
    });
 });
