@@ -23,7 +23,7 @@ define('Controls/Filter/Button/_FilterCompatible',
       var _private = {
          
          notifyOnFilterChange: function(self, filter) {
-            self._filterButton._notify('filterChanged', [filter], {bubbling: true});
+            self._filterButton._notify('filterChanged', [filter]);
          },
          
          oldPanelChangeHandler: function(self) {

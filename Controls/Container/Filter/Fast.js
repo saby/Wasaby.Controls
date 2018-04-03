@@ -1,10 +1,10 @@
 /**
  * Created by am.gerasimov on 22.03.2018.
  */
-define('Controls/Container/FastFilter',
+define('Controls/Container/Filter/Fast',
    [
       'Core/Control',
-      'tmpl!Controls/Container/FastFilter/FastFilter',
+      'tmpl!Controls/Container/Filter/Fast/Fast',
       'Controls/Container/Filter/FilterContextField',
       'Core/helpers/Object/isEqual'
    ],
@@ -15,7 +15,7 @@ define('Controls/Container/FastFilter',
        * Container component for FastFilter
        * Receives props from context and pass to FastFilter.
        * Should be located inside Controls/Container/Filter.
-       * @class Controls/Container/FastFilter
+       * @class Controls/Container/Filter/Fast
        * @extends Controls/Control
        * @author Герасимов Александр
        * @control
@@ -40,6 +40,10 @@ define('Controls/Container/FastFilter',
             if (context.filterLayoutField.fastFilterItems) {
                this._items = context.filterLayoutField.fastFilterItems;
             }
+         },
+   
+         _filterChanged: function(event, filter) {
+            this._notify('filterChanged', [filter], {bubbling: true});
          }
       });
       
