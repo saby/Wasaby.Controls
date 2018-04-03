@@ -81,13 +81,11 @@ define('Controls/Container/Scroll/Scrollbar',
              * @return {number} высота ползунка.
              */
             calcThumbHeight: function(thumb, scrollbarAvailableHeight, viewportRatio) {
-               thumb.style.height = scrollbarAvailableHeight * viewportRatio + 'px';
+               var
+                  thumbHeight = scrollbarAvailableHeight * viewportRatio,
+                  minHeight = parseFloat(getComputedStyle(thumb)['min-height']);
 
-               /**
-                * У ползунка может быть минимальная высота установленная через css свойства, для каждой темы своя, поэтому
-                * возвращаем высоту ползунка вычисленную браузером после установленной нами высоты.
-                */
-               return thumb.offsetHeight;
+               return Math.max(minHeight, thumbHeight);
             },
             calcWheelDelta: function(firefox, delta) {
                /**
