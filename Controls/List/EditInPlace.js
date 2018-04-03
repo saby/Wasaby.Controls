@@ -17,9 +17,7 @@ define('Controls/List/EditInPlace', [
       _private = {
          editItem: function(self, options, isAdd) {
             var result = self._notify(isAdd ? 'beforeItemAdd' : 'beforeItemEdit', [options]);
-            if (isAdd) {
-               self._isAdd = true;
-            } else {
+            if (!isAdd) {
                self._originalItem = options.item;
             }
             return _private.processBeforeItemEditResult(self, options, result, isAdd);
@@ -340,7 +338,8 @@ define('Controls/List/EditInPlace', [
             return;
          }
          var index = _private.getEditingItemIndex(this, item, listModel);
-         this._editingItemProjection = index === -1
+         this._isAdd = index === -1;
+         this._editingItemProjection = this._isAdd
             ? new CollectionItem({ contents: this._editingItem })
             : listModel.getItemById(ItemsUtil.getPropertyValue(this._editingItem, listModel._options.idProperty), listModel._options.idProperty);
          this._editingItemData = {
