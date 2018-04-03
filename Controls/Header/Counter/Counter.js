@@ -29,18 +29,23 @@ define('Controls/Header/Counter/Counter', [
     */
 
    /**
-    * @name Controls/Header#separatorIconStyle
+    * @name Controls/Header#style
     * @cfg {String} Icon display style. In the online theme has only one display style.
     * @variant primary Counter will be accented.
     * @variant default Counter will be default.
     * @variant disabled Counter will be disabled.
     */
 
+   /**
+    * @name Controls/Header#singleClick
+    * @cfg {Boolean} The ability to send a single event when icon was clicked. Event name is countClick.
+    */
+
    var Counter = Control.extend({
       _template: template,
 
       countClickHandler: function (e) {
-         if(this._options.countClickable && this._options.clickable){
+         if(this._options.singleClick){
             e.stopPropagation();
             this._notify('countClick');
          }
@@ -59,8 +64,17 @@ define('Controls/Header/Counter/Counter', [
             'm',
             's',
             'l'
-         ])
+         ]),
+         singleClick: types(Boolean)
       }
+   };
+
+   Counter.getDefaultOptions = function() {
+      return {
+         style: 'default',
+         size: 'm',
+         singleClick: false
+      };
    };
 
    return Counter;

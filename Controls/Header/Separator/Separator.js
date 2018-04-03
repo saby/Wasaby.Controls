@@ -16,17 +16,17 @@ define('Controls/Header/Separator/Separator', [
     */
 
    /**
-    * @name Controls/Header#separatorIconStyle
+    * @name Controls/Header#style
     * @cfg {String} Icon display style. In the online theme has only one display style.
     * @variant primary Icon-separator will be accented.
     * @variant default Icon-separator will be default.
     */
 
-   var Header = Control.extend({
+   var Separator = Control.extend({
       _template: template
    });
 
-   Header.getOptionTypes =  function getOptionTypes() {
+   Separator.getOptionTypes =  function getOptionTypes() {
       return {
          style: types(String).oneOf([
             'default',
@@ -35,11 +35,11 @@ define('Controls/Header/Separator/Separator', [
       }
    };
 
-   Header.getDefaultOptions = function() {
+   Separator.getDefaultOptions = function() {
       return {
          style: 'default'
       };
    };
 
-   return Header;
+   return Separator;
 });

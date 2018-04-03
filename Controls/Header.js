@@ -36,11 +36,6 @@ define('Controls/Header', [
     * @variant primary Caption will be accented.
     */
 
-   /**
-    * @name Controls/Header#clickable
-    * @cfg {Boolean} Whether caption and counter can be clicked.
-    */
-
    var Header = Control.extend({
       _template: template
    });

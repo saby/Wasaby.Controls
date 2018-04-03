@@ -20,7 +20,7 @@ define('Controls-demo/Headers/demoHeader', [
             console.log('clickCount');
          },
 
-         iconCount: function (e) {
+         clickIcon: function (e) {
             console.log('iconCount');
             this._iconValue = !this._iconValue;
          }
