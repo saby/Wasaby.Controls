@@ -44,6 +44,13 @@ define(
             assert.isTrue(Suggest._private.needCloseOnFocusOut(suggest));
          });
    
+         it('_beforeUpdate', function() {
+            var suggest = new Suggest();
+      
+            suggest._beforeUpdate({value: '123'});
+            assert.equal(suggest._simpleViewModel.getValue(), '123');
+         });
+   
          it('selectHandler', function() {
             //тестирует фокусы, проверяем только на клиенте
             if (typeof document === 'undefined') {
