@@ -22,13 +22,24 @@
     <div class="testBlock">
         <div class="exampleBlock">
             <h2>Заголовок</h2>
-            <Controls.Button.ButtonSeparator on:iconClick="clickIcon()" singleClick="{{_iconSingleClick}}" style="{{_iconStyle}}" value="{{_iconValue}}"/>
-            <Controls.Header caption="{{_caption}}" style="{{_captionStyle}}" size="{{_captionSize}}"/>
-            <Controls.Header.Counter.Counter on:countClick="clickCount()" value="{{_counterValue}}" style="{{_counterStyle}}" size="{{_counterSize}}" singleClick="{{_counterSingleClick}}"/>
-            <Controls.Header.Separator.Separator style="{{_separatorIconStyle}}"/>
+            <div class="wrapper">
+                <ws:if data="{{_showButtonSeparator}}">
+                    <Controls.Button.ButtonSeparator on:iconClick="clickIcon()" singleClick="{{_iconSingleClick}}" style="{{_iconStyle}}" value="{{_iconValue}}"/>
+                </ws:if>
+                <ws:if data="{{_showCaption}}">
+                    <Controls.Header caption="{{_caption}}" style="{{_captionStyle}}" size="{{_captionSize}}"/>
+                </ws:if>
+                <ws:if data="{{_showCounter}}">
+                    <Controls.Header.Counter attr:class="counter" on:countClick="clickCount()" value="{{_counterValue}}" style="{{_counterStyle}}" size="{{_counterSize}}" singleClick="{{_counterSingleClick}}"/>
+                </ws:if>
+                <ws:if data="{{_showSeparator}}">
+                    <Controls.Header.Separator style="{{_separatorIconStyle}}"/>
+                </ws:if>
+            </div>
         </div>
         <div class="optionsBlock">
             <h3>Опции заголовка</h3>
+            <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_showCaption" caption="Показывать заголовок"/>
             <Controls:Label name="myLabel1" caption="size(s, m, l)"/>
             <Controls:Input:Text bind:value="_captionSize"/>
             <Controls:Label name="myLabel1" caption="caption"/>
@@ -36,6 +47,7 @@
             <Controls:Label name="myLabel1" caption="style(default, primary)"/>
             <Controls:Input:Text bind:value="_captionStyle"/>
             <h3>Опции счетчика</h3>
+            <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_showCounter" caption="Показывать счетчик"/>
             <Controls:Label name="myLabel1" caption="value"/>
             <Controls:Input:Number bind:value="_counterValue"/>
             <Controls:Label name="myLabel1" caption="style(disabled, default, primary)"/>
@@ -45,11 +57,13 @@
             <br/>
             <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_counterSingleClick" caption="singleClick"/>
             <h3>Опции кнопки-разделителя</h3>
+            <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_showButtonSeparator" caption="Показывать кнопку-разделитель"/>
             <Controls:Label name="myLabel1" caption="style(Accent, Additional, Main)"/>
             <Controls:Input:Text bind:value="_iconStyle"/>
             <br/>
             <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_iconSingleClick" caption="singleClick"/>
             <h3>Опции иконки</h3>
+            <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_showSeparator" caption="Показывать иконку у заголовка"/>
             <Controls:Label name="myLabel1" caption="style(primary, default)"/>
             <Controls:Input:Text bind:value="_separatorIconStyle"/>
         </div>

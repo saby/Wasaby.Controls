@@ -1,4 +1,4 @@
-define('Controls/Header/Counter/Counter', [
+define('Controls/Header/Counter', [
    'Core/Control',
    'Core/IoC',
    'tmpl!Controls/Header/Counter/Counter',

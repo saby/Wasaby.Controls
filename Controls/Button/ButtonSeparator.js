@@ -46,8 +46,7 @@ define('Controls/Button/ButtonSeparator', [
    var ButtonSeparator = Control.extend({
       _template: template,
 
-      constructor: function (options) {
-         ButtonSeparator.superclass.constructor.apply(this, arguments);
+      _beforeMount: function (options) {
          _private.iconChangedValue(this, options);
       },
 

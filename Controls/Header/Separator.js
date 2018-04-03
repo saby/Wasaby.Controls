@@ -1,4 +1,4 @@
-define('Controls/Header/Separator/Separator', [
+define('Controls/Header/Separator', [
    'Core/Control',
    'Core/IoC',
    'tmpl!Controls/Header/Separator/Separator',

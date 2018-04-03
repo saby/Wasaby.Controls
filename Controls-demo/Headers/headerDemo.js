@@ -15,7 +15,7 @@ define('Controls-demo/Headers/headerDemo', [
          _caption: 'test',
          _style: 'primary',
          _type: 'commonHeader',
-         _counterValue: undefined,
+         _counterValue: 12,
          _counterLocation: undefined,
          _counterStyle: undefined,
          _counterSize: undefined,
@@ -36,6 +36,11 @@ define('Controls-demo/Headers/headerDemo', [
          _counterIconClick: 0,
          _counterCountClick: 0,
          _iconSize: undefined,
+         _showCaption: true,
+         _showCounter: true,
+         _showButtonSeparator: true,
+         _showSeparator: true,
+
 
          clickHandler: function (e) {
             console.log('Click');

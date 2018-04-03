@@ -10,15 +10,19 @@
    color: @color-Header__icon_style-Additional;
 }
 
-.controls-Header__icon {
+.controls-Header__wrapper {
    padding: @spacing-Header-between-icon-text;
    cursor: pointer;
    display: inline-flex;
    align-items: center;
 }
 
-.controls-Header__icon:before {
+.controls-Header__wrapper:before {
    content: '\200b';
+}
+
+.controls-Header__icon {
+   display: inline-block;
 }
 
 .controls-Separator__icon_style-Accent:active {
