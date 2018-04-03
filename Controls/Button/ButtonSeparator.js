@@ -33,12 +33,17 @@ define('Controls/Button/ButtonSeparator', [
     * @cfg {Boolean} If value is true, that opening icon will be displaying, else closing icon will be displaying.
     */
 
+   /**
+    * @name Controls/Button/ButtonSeparator#bold
+    * @cfg {Boolean} If value is true, that icon is bold, else icon isn't bold.
+    */
+
    var _private = {
       iconChangedValue: function (self, options) {
          if (options.value) {
-            self._icon = 'icon-CollapseLight icon-16';
+            self._icon = 'icon-' + (options.bold ? 'MarkCollapseBold ':'CollapseLight ') + 'icon-16';
          }else {
-            self._icon = 'icon-ExpandLight icon-16';
+            self._icon = 'icon-' + (options.bold ? 'MarkExpandBold ':'ExpandLight ') + 'icon-16';
          }
       }
    };
@@ -65,6 +70,7 @@ define('Controls/Button/ButtonSeparator', [
    ButtonSeparator.getOptionTypes =  function getOptionTypes() {
       return {
          singleClick: types(Boolean),
+         bold: types(Boolean),
          style: types(String).oneOf([
             'Accent',
             'Additional',
@@ -78,7 +84,8 @@ define('Controls/Button/ButtonSeparator', [
       return {
          style: 'Accent',
          value: false,
-         singleClick: false
+         singleClick: false,
+         bold: false
       };
    };
 

@@ -40,6 +40,7 @@ define('Controls-demo/Headers/headerDemo', [
          _showCounter: true,
          _showButtonSeparator: true,
          _showSeparator: true,
+         _bold: true,
 
 
          clickHandler: function (e) {

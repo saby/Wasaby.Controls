@@ -24,7 +24,7 @@
             <h2>Заголовок</h2>
             <div class="wrapper">
                 <ws:if data="{{_showButtonSeparator}}">
-                    <Controls.Button.ButtonSeparator on:iconClick="clickIcon()" singleClick="{{_iconSingleClick}}" style="{{_iconStyle}}" value="{{_iconValue}}"/>
+                    <Controls.Button.ButtonSeparator on:iconClick="clickIcon()" singleClick="{{_iconSingleClick}}" style="{{_iconStyle}}" bold="{{_bold}}" value="{{_iconValue}}"/>
                 </ws:if>
                 <ws:if data="{{_showCaption}}">
                     <Controls.Header caption="{{_caption}}" style="{{_captionStyle}}" size="{{_captionSize}}"/>
@@ -62,6 +62,8 @@
             <Controls:Input:Text bind:value="_iconStyle"/>
             <br/>
             <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_iconSingleClick" caption="singleClick"/>
+            <br/>
+            <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_bold" caption="bold"/>
             <h3>Опции иконки</h3>
             <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_showSeparator" caption="Показывать иконку у заголовка"/>
             <Controls:Label name="myLabel1" caption="style(primary, default)"/>
