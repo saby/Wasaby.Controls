@@ -1,5 +1,6 @@
 define('SBIS3.CONTROLS/StylesPanelNew', [
    'Core/CommandDispatcher',
+   'Core/core-merge',
    'Lib/Control/CompoundControl/CompoundControl',
    'SBIS3.CONTROLS/Mixins/PopupMixin',
    'SBIS3.CONTROLS/History/HistoryController',
@@ -16,7 +17,7 @@ define('SBIS3.CONTROLS/StylesPanelNew', [
    'SBIS3.CONTROLS/CheckBox',
    'css!SBIS3.CONTROLS/StylesPanelNew/StylesPanelNew',
    'css!SBIS3.CONTROLS/Menu/MenuItem/MenuItem'
-], function(CommandDispatcher, CompoundControl, PopupMixin, HistoryController, objectFind, randHelpers, dotTplFn, EventBus) {
+], function(CommandDispatcher, cMerge, CompoundControl, PopupMixin, HistoryController, objectFind, randHelpers, dotTplFn, EventBus) {
 
 
    'use strict';
@@ -320,7 +321,9 @@ define('SBIS3.CONTROLS/StylesPanelNew', [
             if (presets.hasOwnProperty(style)) {
                preparedItem = {
                   id: randHelpers.randomId(),
-                  json: presets[style]
+                  // Обязательно скопировать, иначе при удалении preparedItem.json.name ниже будет изменена и опция presets
+                  // 1175097680 https://online.sbis.ru/opendoc.html?guid=3c38343d-1dc4-4bfb-b7c8-593606a6b846
+                  json: cMerge({}, presets[style])
                };
                if (presets[style].name) {
                   preparedItem.name = presets[style].name;
