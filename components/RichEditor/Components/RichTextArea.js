@@ -2651,30 +2651,47 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             return this.getName().replace('/', '#') + 'ИсторияИзменений';
          },
 
-         _insertImg: function (urls, width, height, className, alt, before, after, uuid) {
+         _insertImg: function (urls, width, height, className, alt, before, after, uuid, placeholder) {
             var promise = new Deferred();
             var hasBoth = urls && typeof urls === 'object';
             var src = hasBoth ? urls.preview : urls;
+            var editor = this._tinyEditor;
+            var undoManager = editor.undoManager;
+            if (!placeholder) {
+               // Сначала создаём замещающий элемент (с крутящейся ромашкой загрузки), так как изображения встречаются очень большие, которые могут грузиться достаточно долго
+               // 1174989279 https://online.sbis.ru/opendoc.html?guid=134784d6-4b1c-40ea-9df3-03f0a406d7ac
+               var placeholderId = 'image-placeholder-' + (new Date()).getTime();
+               undoManager.ignore(function () {
+                  this.insertHtml(
+                     (before || '') +
+                     '<span class="image-placeholder ' + (className || '') + '" id="' + placeholderId + '" style="' + (width ? 'width:' + width + ';' : '') + (height ? 'height:' + height + ';' : '') + '" contenteditable="false">&#65279;</span>' +
+                     (after || '')
+                  );
+               }.bind(this));
+               placeholder = editor.getBody().querySelector('#' + placeholderId);
+            }
             var img = new Image();
             img.onload = function () {
+               // И по мере загрузки заменяем замещающий элемент на реальное изображение
                // TODO: 20170913 Здесь в атрибуты, сохранность которых не гарантируется ввиду свободного редактирования пользователями, помещается значение uuid - Для обратной совместимости
                // После задач https://online.sbis.ru/opendoc.html?guid=6bb150eb-4973-4770-b7da-865789355916 и https://online.sbis.ru/opendoc.html?guid=a56c487d-6e1d-47bc-bdf6-06a0cd7aa57a
                // Убрать по мере переделки стороннего кода, используещего эти атрибуты.
                // Для пролучения uuid правильно использовать метод getImageUuid
-               this.insertHtml(
-                  (before || '') + '<img' +
+               $(placeholder).replaceWith(
+                  '<img' +
                   (className ? ' class="' + className + '"' : '') +
                   ' src="' + src + '"' +
                   (width || height ? ' style="' + (width ? 'width:' + width + ';' : '') + (height ? 'height:' + height + ';' : '') + '"' : '') +
                   /*(alt ? ' alt="' + alt.replace('"', '&quot;') + '"' : '') +*/
                   ' data-img-uuid="' + uuid + '" alt="' + uuid + '"' +
-                  '></img>' + (after || '')
+                  '></img>'
                );
+               undoManager.add();
                promise.callback();
             }.bind(this);
             img.onerror = function () {
                if (hasBoth && urls.original !== urls.preview) {
-                  promise.dependOn(this._insertImg(urls.original, width, height, className, alt, before, after, uuid));
+                  promise.dependOn(this._insertImg(urls.original, width, height, className, alt, before, after, uuid, placeholder));
                }
                else {
                   require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function (InformationPopupManager) {
@@ -2687,7 +2704,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                            closeByExternalClick: true,
                            opener: this
                         },
-                        promise.errback.bind(promise)
+                        function () {
+                           placeholder.remove();
+                           undoManager.add();
+                           promise.errback();
+                        }
                      );
                   });
                }
