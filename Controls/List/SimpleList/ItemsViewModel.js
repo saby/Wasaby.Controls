@@ -52,18 +52,15 @@ define('Controls/List/SimpleList/ItemsViewModel',
          },
 
          getCurrent: function() {
-            var
-               dispItem = this._display.at(this._curIndex),
-               isEditingItem = this._editingItemData && this._curIndex === this._editingItemData.index;
+            var dispItem = this._display.at(this._curIndex);
 
             return {
                getPropValue: ItemsUtil.getPropertyValue,
                idProperty: this._options.idProperty,
                displayProperty: this._options.displayProperty,
                index : this._curIndex,
-               item: isEditingItem ? this._editingItemData.item : dispItem.getContents(),
+               item: dispItem.getContents(),
                dispItem: dispItem,
-               isEditing: isEditingItem,
                key: ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.idProperty)
             }
          },
@@ -110,9 +107,6 @@ define('Controls/List/SimpleList/ItemsViewModel',
          },
          getItems: function() {
             return this._display ? this._display.getCollection() : undefined;
-         },
-         _setEditingItemData: function(itemData) {
-            this._editingItemData = itemData;
          },
 
          removeItems: function(items) {
