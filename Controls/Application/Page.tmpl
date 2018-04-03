@@ -5,13 +5,8 @@
       window.wsConfig = {
          wsRoot: '{{wsRoot}}',
          resourceRoot: '{{resourceRoot}}',
-         compatible: {
-      {
-         compat
-      }
-      }
-      }
-      ;
+         compatible: {{compat}}
+      };
    </script>
    <ws:if data="{{ _options.head }}">
       <ws:for data="i in _options.head">
