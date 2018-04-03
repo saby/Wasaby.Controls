@@ -8,11 +8,12 @@ define('Controls/Filter/FastFilter',
       'Core/core-instance',
       'Core/ParallelDeferred',
       'Core/Deferred',
+      'WS.Data/Utils',
       'css!Controls/Filter/FastFilter/FastFilter',
       'css!Controls/Input/Dropdown/Dropdown'
 
    ],
-   function (Control, template, SourceController, Chain, RecordSet, cInstance, pDeferred, Deferred) {
+   function (Control, template, SourceController, Chain, RecordSet, cInstance, pDeferred, Deferred, Utils) {
 
       'use strict';
 
@@ -39,10 +40,13 @@ define('Controls/Filter/FastFilter',
        * @cfg {WS.Data/Collection/IList} Sets a set of initial data, on which to build the mapping
        */
 
+      var getPropValue = Utils.getItemPropertyValue.bind(Utils);
+      var setPropValue = Utils.setItemPropertyValue.bind(Utils);
+
       var _private = {
 
          prepareItems: function (self, items, idProperty) {
-            if (!cInstance.instanceOfModule(items, 'WS.Data/Collection/RecordSet')) {
+            if (!cInstance.instanceOfMixin(items, 'WS.Data/Collection/IList')) {
                self._items = new RecordSet({
                   rawData: items,
                   idProperty: idProperty
@@ -63,11 +67,11 @@ define('Controls/Filter/FastFilter',
          },
 
          loadItems: function (self, item, index) {
-            var properties = item.get('properties');
+            var properties = getPropValue(item, 'properties');
 
             self._configs[index] = {};
             self._configs[index].keyProperty = properties.keyProperty;
-            self._configs[index].displayProperty = properties.displayProperty || 'title';
+            self._configs[index].displayProperty = properties.displayProperty;
 
             if (properties.items) {
                _private.prepareItems(self._configs[index], properties.items, properties.keyProperty);
@@ -92,8 +96,8 @@ define('Controls/Filter/FastFilter',
          getFilter: function (items) {
             var filter = {};
             Chain(items).each(function (item) {
-               if (item.get('value') !== item.get('resetValue')) {
-                  filter[item.get('id')] = item.get('value');
+               if (getPropValue(item, 'value') !== getPropValue(item, 'resetValue')) {
+                  filter[getPropValue(item, 'id')] = getPropValue(item, 'value');
                }
             });
             return filter;
@@ -101,19 +105,16 @@ define('Controls/Filter/FastFilter',
 
          selectItem: function (item) {
             //Получаем ключ выбранного элемента
-            var key = item.get(this._configs[this.lastOpenIndex].keyProperty);
-            this._items.at(this.lastOpenIndex).set({value: key});
+            var key = getPropValue(item, this._configs[this.lastOpenIndex].keyProperty);
+            setPropValue(this._items.at(this.lastOpenIndex), 'value', key);
             this._notify('selectedKeysChanged', [key]);
          },
 
          onResult: function (args) {
-            var actionName = args[0];
             var data = args[2];
-            if (actionName === 'itemClick') {
-               _private.selectItem.apply(this, data);
-               this._notify('filterChanged', [_private.getFilter(this._items)]);
-               this._children.DropdownOpener.close();
-            }
+            _private.selectItem.apply(this, data);
+            this._notify('filterChanged', [_private.getFilter(this._items)]);
+            this._children.DropdownOpener.close();
          }
       };
 
@@ -167,14 +168,14 @@ define('Controls/Filter/FastFilter',
 
          _getText: function (item, index) {
             if (this._configs[index]._items) {
-               var sKey = this._items.at(index).get('value');
-               return this._configs[index]._items.getRecordById(sKey).get(this._configs[index].displayProperty);
+               var sKey = getPropValue(this._items.at(index), 'value');
+               return getPropValue(this._configs[index]._items.getRecordById(sKey), this._configs[index].displayProperty);
             }
          },
 
          _reset: function (event, item, index) {
-            var newValue = this._items.at(index).get('resetValue');
-            this._items.at(index).set({value: newValue});
+            var newValue = getPropValue(this._items.at(index), 'resetValue');
+            setPropValue(this._items.at(index), 'value', newValue);
             this._notify('selectedKeysChanged', [newValue]);
             this._notify('filterChanged', [_private.getFilter(this._items)]);
          }
