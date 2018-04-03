@@ -7,12 +7,12 @@ define(['Controls/Input/resources/SuggestPopupController', 'Core/core-instance',
          
          it('.getSearchController', function() {
             var self = {
-               _dataSource: new Memory()
+               _source: new Memory()
             };
             
             var searchController = SuggestPopupController._private.getSearchController(self);
             assert.isTrue(cInstance.instanceOfModule(searchController, 'Controls/List/resources/utils/Search'));
-            assert.isTrue(cInstance.instanceOfModule(searchController._dataSource, 'WS.Data/Source/Memory'));
+            assert.isTrue(cInstance.instanceOfModule(searchController._source, 'WS.Data/Source/Memory'));
          });
    
          it('.prepareSuggestFilter', function() {

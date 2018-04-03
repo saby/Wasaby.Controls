@@ -45,12 +45,24 @@ define(
                      compOptions.footerTemplate === 'footerTemplate');
                }
             };
-            opener.open({componentOptions: {}});
+            opener.open({
+               componentOptions: {
+                  items: {
+                     getIdProperty: () => {},
+                     each: () => {}
+                  }
+               }
+            });
          });
 
          it('check templates config', () => {
             let cfg = {
-               componentOptions: {}
+               componentOptions: {
+                  items: {
+                      getIdProperty: () => {},
+                      each: () => {}
+                  }
+               }
             };
             opener._setPopupOptions(cfg);
             assert.isTrue(cfg.className === config.className);

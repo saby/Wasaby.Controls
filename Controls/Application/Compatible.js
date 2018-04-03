@@ -17,11 +17,20 @@ define('Controls/Application/Compatible', [
       _template: template,
       _wasPatched: false,
       _beforeMount: function(){
+         var rightsInitialized = new Deferred();
          this._forceUpdate = function(){
             return;
          }
          if(typeof window !== 'undefined') {
-            window.rights = rights;
+            Constants.rights = true;
+            var rights = RightsManager.getRights();
+            if (rights instanceof Deferred) {
+               rights.addCallback(function(rights) {
+                  window.rights = rights;
+                  rightsInitialized.callback();
+               });
+               return rightsInitialized;
+            }
          }
       },
       _afterMount: function(){

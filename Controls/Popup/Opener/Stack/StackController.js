@@ -10,7 +10,6 @@ define('Controls/Popup/Opener/Stack/StackController',
    function (BaseController, StackStrategy, List, TargetCoords, cDeferred, cConstants) {
       'use strict';
 
-      var POPUP_CLASS = 'ws-Container__stack-panel';
       var MINIMAL_PANEL_WIDTH = 50; // минимальная ширина стековой панели, todo уйдет в css после доработки по заданию размеров для панели
       var MINIMAL_PANEL_DISTANCE = 50; // минимальный отступ стековой панели от правого края
 
@@ -73,13 +72,15 @@ define('Controls/Popup/Opener/Stack/StackController',
             this._stack = new List();
          },
 
-         elementCreated: function (element) {
-            if (!element.popupOptions) {
-               element.popupOptions = {};
+         elementCreated: function (item, container) {
+            var templateStyle = getComputedStyle(container.children[0]);
+            if (!item.popupOptions.minWidth) {
+               item.popupOptions.minWidth = parseInt(templateStyle.minWidth, 10);
             }
-            //Добавляем стандартный класс
-            element.popupOptions.className += ' ' + POPUP_CLASS;
-            this._stack.add(element, 0);
+            if (!item.popupOptions.maxWidth) {
+               item.popupOptions.maxWidth = parseInt(templateStyle.maxWidth, 10);
+            }
+            this._stack.add(item, 0);
             this._update();
          },
 
@@ -107,25 +108,30 @@ define('Controls/Popup/Opener/Stack/StackController',
             return def;
          },
 
+         getDefaultPosition: function () {
+            var position = this._getItemPosition(this._stack.getCount());
+            return {
+               right: position.right,
+               top: position.top,
+               width: 0
+            }
+         },
+
          _update: function () {
-            var tCoords = _private.getStackParentCoords(),
-                previous;
+            var self = this;
             this._stack.each(function (item, index) {
-               var
-                  prevWidth = previous ? previous.width : null,
-                  prevRight = previous ? previous.right : null,
-                  width = _private.getPanelWidth(item.popupOptions.minWidth, item.popupOptions.maxWidth, window.innerWidth),
-                  maxPanelWidth = _private.getMaxPanelWidth(window.innerWidth);
-               item.position = StackStrategy.getPosition(index, tCoords, width, maxPanelWidth, prevWidth, prevRight);
-               previous = item.position;
-               if (!previous) {
-                  item.position = {
-                     top: -10000,
-                     left: -10000,
-                     width: 0
-                  };
-               }
+               item.position = self._getItemPosition(index);
             });
+         },
+
+         _getItemPosition: function(index) {
+            var tCoords = _private.getStackParentCoords();
+            var item = this._stack.at(index);
+            var previous = this._stack.at(index - 1);
+            var prevData = previous ? previous.position : {};
+            var width = item ? _private.getPanelWidth(item.popupOptions.minWidth, item.popupOptions.maxWidth, window.innerWidth) : 0;
+            var maxPanelWidth = _private.getMaxPanelWidth(window.innerWidth);
+            return StackStrategy.getPosition(index, tCoords, width, maxPanelWidth, prevData.width, prevData.right);
          }
       });
 

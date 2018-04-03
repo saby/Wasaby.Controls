@@ -1,7 +1,7 @@
 /**
  * Created by kraynovdo on 09.01.2018.
  */
-define('js!Controls/Input/interface/ILookup', [
+define('Controls/Input/interface/ILookup', [
 ], function() {
 
    /**

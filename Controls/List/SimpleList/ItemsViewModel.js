@@ -59,7 +59,8 @@ define('Controls/List/SimpleList/ItemsViewModel',
                displayProperty: this._options.displayProperty,
                index : this._curIndex,
                item: dispItem.getContents(),
-               dispItem: dispItem
+               dispItem: dispItem,
+               key: ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.idProperty)
             }
          },
 
@@ -102,6 +103,16 @@ define('Controls/List/SimpleList/ItemsViewModel',
 
          prependItems: function(items) {
             this._items.prepend(items);
+         },
+
+         removeItems: function(items) {
+            var item;
+            this._items.setEventRaising(false, true);
+            for (var i = 0; i < items.length; i++) {
+               item = this._items.getRecordById(items[i]);
+               item && this._items.remove(item);
+            }
+            this._items.setEventRaising(true, true);
          }
       });
 

@@ -4,9 +4,10 @@ define('Controls/Input/Dropdown',
       'tmpl!Controls/Input/Dropdown/Dropdown',
       'tmpl!Controls/Input/Dropdown/resources/defaultContentTemplate',
       'Controls/Controllers/SourceController',
+      'Controls/Input/Dropdown/Util',
       'css!Controls/Input/Dropdown/Dropdown'
    ],
-   function (Control, template, defaultContentTemplate, SourceController) {
+   function (Control, template, defaultContentTemplate, SourceController, dropdownUtil) {
 
       /**
        * Поле выбора из значения списка.
@@ -75,13 +76,7 @@ define('Controls/Input/Dropdown',
             return _private.getText([item], displayProperty); //По стандарту если есть иконка - текст не отображается
          },
          _open: function () {
-            var config = {
-               componentOptions: {
-                  items: this._items
-               },
-               target: this._children.popupTarget
-            };
-            this._children.DropdownOpener.open(config, this);
+             dropdownUtil.open(this, this._children.popupTarget);
          },
          _onResult: function (args) {
             var actionName = args[0];

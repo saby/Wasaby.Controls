@@ -1,14 +1,15 @@
-define('Controls/Layout/Search',
+define('Controls/Container/Search',
    [
       'Core/Control',
-      'tmpl!Controls/Layout/Search/Search',
-      'Controls/Layout/Search/SearchContextField'
+      'tmpl!Controls/Container/Search/Search',
+      'Controls/Container/Search/SearchContextField'
    ],
    
    function(Control, template, SearchContextField) {
       
       /**
-       * @class Controls/Layout/Search
+       * Container component for content that can be filtered by Controls/Input/Search.
+       * @class Controls/Container/Search
        * @extends Controls/Control
        * @author Герасимов Александр
        * @control

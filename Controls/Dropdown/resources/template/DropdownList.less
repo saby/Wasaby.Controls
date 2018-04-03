@@ -8,6 +8,7 @@
 }
 .controls-DropdownList__scroll {
    max-height: 100%;
+   padding: @padding_DropdownList-content;
 }
 
 .controls-DropdownList__row {
@@ -17,14 +18,23 @@
    min-height: @height_DropdownList-item;
    .flexbox();
    .align-items(center);
-   padding: @padding_DropdownList-item;
+   padding-left: @padding_DropdownList-default;
    font-size: @large-text-size;
    box-sizing: border-box;
    &:hover {
       background: @background_DropdownList-item_hover;
    }
 }
+.controls-DropdownList__item-left_default-padding {
+   padding-right: @padding_DropdownList-default;
+}
+.controls-DropdownList__item-right_default-padding {
+  padding-right: @padding_DropdownList-default;
+}
 
+.controls-DropdownList__item-right_hierarchy-padding {
+  padding-right: 28px;
+}
 .controls-DropdownList__content {
    font-size: @large-text-size;
 }
@@ -49,9 +59,10 @@
    background: @background_DropdownList-header;
    color: @color_DropdownList-header;
    height: @height_DropdownList-item;
+   padding: 0 @padding_DropdownList-head;
+   cursor: pointer;
    .flexbox();
    .align-items(center);
-   .justify-content(center);
    .flex-shrink(0);
 }
 
@@ -61,5 +72,68 @@
 }
 
 .controls-DropdownList__subMenu_margin {
-   margin-top: -@border-size_DropdownList;
+   margin-top: @offset_DropdownList-submenu;
+}
+
+.controls-DropdownList__arrow {
+   position: absolute;
+   right: @right_DropdownList-icon;
+   font-family: @default-icon-small-font !important;
+   font-size: @menu-expand-icon-font-size;
+   width: @menu-expand-width;
+   height: @menu-expand-height;
+   color: @color_primary;
+   .box-sizing(border-box);
+}
+
+.controls-MenuButton-cross {
+   position: absolute;
+   .inline-flexbox();
+   .justify-content(center);
+   .align-items(center);
+   color: #CCCCCC;
+   width: 16px;
+   height: 16px;
+   right: 6px;
+   top: 12px;
+   z-index: 1;
+}
+
+.controls-MenuButton-header {
+   .flexbox();
+   .align-items(center);
+}
+
+.controls-MenuButton-duplicate-header {
+   position: absolute;
+   .box-sizing(border-box);
+   .flexbox();
+   .justify-content(center);
+   .align-items(center);
+   z-index: 1;
+}
+
+.control-MenuButton-duplicate-head_medium {
+   top: @margin-top_MenuButton_link_duplicate_head_medium;
+   left: @margin-left_MenuButton_link_duplicate_head_medium;
+}
+
+.control-MenuButton-duplicate-head_small {
+   top: @margin-top_MenuButton_link_duplicate_head_small;
+   left: @margin-left_MenuButton_link_duplicate_head_small;
+}
+
+// чтобы убрать каскады нужно научить попап переворачиваться и сигналить об этом
+.controls-MenuButton.controls-Popup-align-horizontal-left .controls-DropdownList__head{
+   .flex-direction(row-reverse);
+}
+
+.controls-MenuButton.controls-Popup-corner-vertical-bottom .controls-DropdownList__popup {
+   .flex-direction(column-reverse);
+}
+
+.ws-is-no-touch {
+   .controls-MenuButton-cross:hover {
+      color: #313E78;
+   }
 }

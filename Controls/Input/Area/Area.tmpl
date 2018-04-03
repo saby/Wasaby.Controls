@@ -11,7 +11,7 @@
    <div attr:tabindex="-1">{{ value }}</div>
 </ws:template>
 
-<Controls:Input:resources:InputRender:InputRender
+<Controls.Input.resources.InputRender.InputRender
            size="{{ _options.size }}"
            sidePadding="Left"
            multiline="{{ _multiline }}"
@@ -30,10 +30,8 @@
       <ws:content>
             <!--TODO контейнер убрать https://online.sbis.ru/opendoc.html?guid=25000158-64ff-4db9-9605-a986cbc37b0f-->
             <div class="controls-InputRender__wrapper">
-               <!--TODO нужно использовать тернарный оператор внутри template у partial, жду правки https://online.sbis.ru/opendoc.html?guid=5f420fae-2ae0-48e1-b1f3-0145ad70a1f1-->
-               <ws:if data="{{ isEnabled() }}">
-                  <ws:partial
-                     template="enabledArea"
+               <ws:partial
+                     template="{{ isEnabled() ? 'enabledArea' : 'disabledArea' }}"
                      attr:class="controls-InputArea__field
                        controls-InputArea__realField
                        controls-InputRender__field
@@ -42,22 +40,9 @@
                        controls-InputArea__field_size_{{_options.size || 'default'}}"
                      value="{{ _options.value }}"
                      on:keydown="_keyDownHandler()"
-                     on:focus="_focusHandler()"
                      on:scroll="_scrollHandler()"
                   />
-               </ws:if>
-               <ws:else>
-                  <ws:partial
-                     template="disabledArea"
-                     attr:class="controls-InputArea__field
-                        controls-InputArea__realField
-                        controls-InputRender__field
-                        controls-InputArea__fieldPadding
-                        {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}
-                        controls-InputArea__field_size_{{_options.size || 'default'}}"
-                     value="{{ _options.value }}"
-                  />
-               </ws:else>
+
 
                <div class="controls-fakeTextArea__firstWrapper controls-InputArea__fieldPadding">
                   <div class="controls-fakeTextArea__secondWrapper controls-fakeTextArea__secondWrapper_size_{{_options.size || 'default'}}" name="fakeAreaWrapper">
@@ -72,4 +57,4 @@
                </div>
             </div>
       </ws:content>
-   </Controls:Input:resources:InputRender:InputRender>
+   </Controls.Input.resources.InputRender.InputRender>

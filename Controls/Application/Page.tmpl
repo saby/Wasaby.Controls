@@ -27,8 +27,8 @@
    <title key="title">{{ title }}</title>
    <meta name="viewport" content="width=device-width, initial-scale=1"/>
 </head>
-<Controls:Event:Listener name="scrollDetect" register="scroll" attr:fixCompatible="1">
-   <Controls:Event:Listener name="resizeDetect" register="resize" attr:fixCompatible="1">
+<Controls.Event.Listener name="scrollDetect" register="scroll" attr:fixCompatible="1">
+   <Controls.Event.Listener name="resizeDetect" register="resize" attr:fixCompatible="1">
       <Controls:Event:Listener name="mousemoveDetect" register="mousemove" attr:fixCompatible="1">
          <Controls:Event:Listener name="mouseupDetect" register="mouseup" attr:fixCompatible="1">
             <body
@@ -46,7 +46,7 @@
             <ws:if data="{{ content.content }}">
                <ws:partial template="{{ content.content }}" scope="{{ templateConfig }}"/>
             </ws:if>
-            <Controls:Popup:Manager:Container attr:id="popup"/>
+            <Controls.Popup.Manager.Container attr:id="popup"/>
             <script key="config" type="text/javascript" src="{{wsRoot}}ext/requirejs/bundles.js"></script>
             <script key="require" type="text/javascript" src="/cdn/requirejs/2.3.5-p3/require-min.js"></script>
             <script key="contents" type="text/javascript" src="{{resourceRoot}}/contents.js"></script>
@@ -77,6 +77,6 @@
             </body>
          </Controls:Event:Listener>
       </Controls:Event:Listener>
-   </Controls:Event:Listener>
-</Controls:Event:Listener>
+   </Controls.Event.Listener>
+</Controls.Event.Listener>
 </html>

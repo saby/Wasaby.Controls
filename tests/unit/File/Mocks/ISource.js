@@ -1,11 +1,15 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 function definition(Deferred) {
 // IResourceSourceBase mock object construnctor
-    var SourceMock = function (type) {
+    var SourceMock = function (type, isBroken) {
        this.type = type;
+       this.isBroken = Boolean(isBroken);
     };
 
     SourceMock.prototype.create = function (params, file) {
+       if (this.isBroken) {
+          return Deferred.fail('Ошибка загрузки файла');
+       }
        /**
         * Экземпляр SourceMock при загрузке на него файла возвращает объект со следующими свойствами:
         * @param suitable {Boolean} true, если загруженный файл является экземпляром IFileDataContructor, с которым инициализировался экземпляр SourceMock

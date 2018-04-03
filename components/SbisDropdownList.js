@@ -5,14 +5,14 @@ define('SBIS3.CONTROLS/SbisDropdownList',
    [
     'SBIS3.CONTROLS/DropdownList',
     'WS.Data/Entity/Model',
-    'Core/core-clone',
     'SBIS3.CONTROLS/Utils/DropdownUtil',
     'tmpl!SBIS3.CONTROLS/SbisDropdownList/SbisDropdownListItem',
     'tmpl!SBIS3.CONTROLS/DropdownList/DropdownListItem',
-    'css!SBIS3.CONTROLS/SbisDropdownList/SbisDropdownList'
+    'css!SBIS3.CONTROLS/SbisDropdownList/SbisDropdownList',
+    'Core/core-clone'
 ],
 
-   function (DropdownList, Model, coreClone, DropdownUtil, SbisDropdownListItem) {
+   function (DropdownList, Model, DropdownUtil, SbisDropdownListItem) {
 
       'use strict';
       /**

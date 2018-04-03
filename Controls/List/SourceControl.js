@@ -6,6 +6,7 @@ define('Controls/List/SourceControl', [
    'Controls/List/Controllers/VirtualScroll',
    'Controls/Controllers/SourceController',
    'Core/Deferred',
+   'tmpl!Controls/List/SourceControl/multiSelect',
    'css!Controls/List/SourceControl/SourceControl',
    'Controls/List/ItemActions/ItemActionsControl'
 ], function (Control,
@@ -14,7 +15,8 @@ define('Controls/List/SourceControl', [
              require,
              VirtualScroll,
              SourceController,
-             Deferred
+             Deferred,
+             multiSelectTpl
 ) {
    'use strict';
 
@@ -245,11 +247,15 @@ define('Controls/List/SourceControl', [
       getItemsCount: function(self) {
          return self._listViewModel ? self._listViewModel.getCount() : 0;
       },
-      
+
       initListViewModelHandler: function(self, model) {
          model.subscribe('onListChange', function () {
             self._forceUpdate();
          });
+      },
+
+      removeFromSource: function(self, items) {
+         return self._sourceController.remove(items);
       }
    };
 
@@ -276,7 +282,6 @@ define('Controls/List/SourceControl', [
 
       _listViewModel: null,
 
-      _dataSource: null,
       _loader: null,
       _loadingState: null,
       _loadingIndicatorState: null,
@@ -286,6 +291,7 @@ define('Controls/List/SourceControl', [
       _sorting: undefined,
 
       _itemTemplate: null,
+      _multiSelectTpl: multiSelectTpl,
 
       _loadOffset: 100,
       _topPlaceholderHeight: 0,
@@ -369,7 +375,7 @@ define('Controls/List/SourceControl', [
                navigation: newOptions.navigation
             });
          }
-         
+
          if (filterChanged || sourceChanged) {
             _private.reload(this);
          }
@@ -417,6 +423,41 @@ define('Controls/List/SourceControl', [
             case 'cantScroll': _private.onScrollHide(self); break;
          }
 
+      },
+
+      _onCheckBoxClick: function(e, key, status) {
+         if (status === 1) {
+            this._listViewModel.unselect([key])
+         }
+         else {
+            this._listViewModel.select([key])
+         }
+      },
+
+      removeItems: function(items) {
+         var
+            self = this,
+            removeControl = this._children.removeControl;
+         removeControl.beforeItemsRemove(items).addCallback(function(result) {
+            if (result !== false) {
+               _private.showIndicator(self);
+               _private.removeFromSource(self, items).addCallback(function(result) {
+                  self._listViewModel.removeItems(items);
+                  return result;
+               }).addBoth(function(result) {
+                  _private.hideIndicator(self);
+                  removeControl.afterItemsRemove(items, result);
+               });
+            }
+         });
+      },
+
+      _beforeItemsRemove: function(event, items) {
+         return this._notify('beforeItemsRemove', [items]);
+      },
+
+      _afterItemsRemove: function (event, items, result) {
+         this._notify('afterItemsRemove', [items, result]);
       },
 
       reload: function() {
