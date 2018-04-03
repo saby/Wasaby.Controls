@@ -25,7 +25,7 @@
    </div>
    <SBIS3.CONTROLS:ScrollContainer class="controls-ImportCustomizer-Area__body controls-ScrollContainer__flex">
       <ws:content>
-         <ws:if data="{{dataType === 'excel' && sheets && sheets.length}}">
+         <ws:if data="{{_isNeeds.sheet && sheets && sheets.length}}">
             <SBIS3.CONTROLS:ImportCustomizer:Sheet:View
                class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-sheet"
                name="controls-ImportCustomizer-Area__sheet"
@@ -34,14 +34,16 @@
                sheetIndex="{{sheetIndex}}"
             />
          </ws:if>
-         <ws:partial
-            template="{{baseParamsComponent}}"
-            scope="{{baseParams}}"
-            fields="{{fields}}"
-            class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-baseParams"
-            name="controls-ImportCustomizer-Area__baseParams"
-         />
-         <ws:if data="{{dataType === 'excel' || dataType === 'dbf'}}">
+         <ws:if data="{{_isNeeds.baseParams}}">
+            <ws:partial
+               template="{{baseParamsComponent}}"
+               scope="{{baseParams}}"
+               fields="{{fields}}"
+               class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-baseParams"
+               name="controls-ImportCustomizer-Area__baseParams"
+            />
+         </ws:if>
+         <ws:if data="{{_isNeeds.provider}}">
             <SBIS3.CONTROLS:ImportCustomizer:Provider:View
                class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-provider"
                name="controls-ImportCustomizer-Area__provider"
@@ -50,6 +52,8 @@
                skippedRows="{{_skippedRows}}"
                separator="{{_parserSeparator}}"
             />
+         </ws:if>
+         <ws:if data="{{_isNeeds.providerArgs}}">
             <Lib:Control:TemplatedArea:TemplatedArea
                template="{{_providerArgsComponent}}"
                class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-not-pad controls-ImportCustomizer-Area__body__box-providerArgs"
@@ -57,6 +61,8 @@
                visible="{{!!_providerArgsComponent}}"
                componentOptions="{{_providerArgsOptions}}"
             />
+         </ws:if>
+         <ws:if data="{{_isNeeds.columnBinding}}">
             <SBIS3.CONTROLS:ImportCustomizer:ColumnBinding:View
                class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-not-pad controls-ImportCustomizer-Area__body__box-columnBinding"
                name="controls-ImportCustomizer-Area__columnBinding"

@@ -144,11 +144,11 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             },
             // Ссылки на вложенные компоненты
             _views: {
-               sheet: null,
-               baseParams: null,
-               provider: null,
-               providerArgs: null,
-               columnBinding: null
+               //sheet: null,
+               //baseParams: null,
+               //provider: null,
+               //providerArgs: null,
+               //columnBinding: null
             },
             // Обещание, разрешаемое полным набором полей (если в опциях они не заданы явно)
             _fieldsPromise: null,
@@ -158,6 +158,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
 
          _modifyOptions: function () {
             var options = Area.superclass._modifyOptions.apply(this, arguments);
+            options._isNeeds = this._getChildCompmonentsNeediness(options);
             var sheets = options.sheets;
             var hasSheets = sheets && sheets.length;
             options._sheetsTitles = hasSheets ? sheets.map(function (v) {return v.name; }) : [];
@@ -201,12 +202,14 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
 
          init: function () {
             Area.superclass.init.apply(this, arguments);
+            var options = this._options;
             // Получить ссылки на имеющиеся подкомпоненты
             for (var name in this._childViewNames) {
-               this._views[name] = _getChildComponent(this, this._childViewNames[name]);
+               if (options._isNeeds[name]) {
+                  this._views[name] = _getChildComponent(this, this._childViewNames[name]);
+               }
             }
             // Инициализировать результирующие данные
-            var options = this._options;
             var sheets = options.sheets;
             if (sheets && sheets.length) {
                var results = {};
@@ -322,6 +325,27 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             // Изменились параметры провайдера парсинга
             var sheetIndex = this._options.sheetIndex;
             this._results[0 <= sheetIndex ? sheetIndex + 1 : ''].providerArgs = cMerge({}, values);
+         },
+
+         /*
+          * Получить список необходимости дочерних компонентов
+          *
+          * @protected
+          * @param {object} options Опции компонента
+          * @return {object}
+          */
+         _getChildCompmonentsNeediness: function (options) {
+            var dataType = options.dataType;
+            var isExcel = dataType === Area.DATA_TYPE_EXCEL;
+            var isDBF = dataType === Area.DATA_TYPE_DBF;
+            var isCML = dataType === Area.DATA_TYPE_CML;
+            return {
+                sheet: isExcel,
+                baseParams: true,
+                provider: isExcel || isCML,
+                providerArgs: isExcel || isCML,
+                columnBinding: isExcel || isCML
+            };
          },
 
          /*
