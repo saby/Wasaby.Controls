@@ -7,158 +7,159 @@ define('Controls/List/EditInPlace', [
    'Controls/List/resources/utils/ItemsUtil'
 ], function(Control, template, Deferred, Record, CollectionItem, ItemsUtil) {
 
-   var _private = {
-      editItem: function(self, options, isAdd) {
-         var result = self._notify(isAdd ? 'beforeItemAdd' : 'beforeItemEdit', [options]);
-         if (isAdd) {
-            self._isAdd = true;
-         } else {
-            self._originalItem = options.item;
-         }
-         return _private.processBeforeItemEditResult(self, options, result, isAdd);
+   var
+      ItemEditResult = { // Возможные результаты события "ItemEditResult"
+         CANCEL: 'Cancel'
       },
-
-      afterItemEdit: function(self, options, isAdd) {
-         self._editingItem = options.item.clone();
-         self._notify('afterItemEdit', [options.item, isAdd]);
-         self._setEditingItemData(self._editingItem, self._options.listModel);
-
-         return options;
+      ItemEndEditResult = { // Возможные результаты события "onItemEndEdit"
+         CANCEL: 'Cancel' // Отменить завершение редактирования/добавления
       },
+      _private = {
+         editItem: function(self, options, isAdd) {
+            var result = self._notify(isAdd ? 'beforeItemAdd' : 'beforeItemEdit', [options]);
+            if (isAdd) {
+               self._isAdd = true;
+            } else {
+               self._originalItem = options.item;
+            }
+            return _private.processBeforeItemEditResult(self, options, result, isAdd);
+         },
 
-      processBeforeItemEditResult: function(self, options, eventResult, isAdd) {
-         var result;
+         afterItemEdit: function(self, options, isAdd) {
+            self._editingItem = options.item.clone();
+            self._notify('afterItemEdit', [options.item, isAdd]);
+            self._setEditingItemData(self._editingItem, self._options.listModel);
 
-         if (eventResult === ItemEditResult.CANCEL) {
-            result = Deferred.fail(options);
-         } else if (eventResult instanceof Deferred) {
-            result = eventResult;
-         } else if ((eventResult && eventResult.item instanceof Record) || (options && options.item instanceof Record)) {
-            result = Deferred.success(eventResult || options);
-         } else if (isAdd) {
-            result = _private.createModel(self, eventResult || options);
-         }
+            return options;
+         },
 
-         return result;
-      },
+         processBeforeItemEditResult: function(self, options, eventResult, isAdd) {
+            var result;
 
-      endItemEdit: function(self, commit) {
+            if (eventResult === ItemEditResult.CANCEL) {
+               result = Deferred.fail(options);
+            } else if (eventResult instanceof Deferred) {
+               result = eventResult;
+            } else if ((eventResult && eventResult.item instanceof Record) || (options && options.item instanceof Record)) {
+               result = Deferred.success(eventResult || options);
+            } else if (isAdd) {
+               result = _private.createModel(self, eventResult || options);
+            }
+
+            return result;
+         },
+
+         endItemEdit: function(self, commit) {
          //Чтобы при первом старте редактирования не летели лишние события
-         if (!self._editingItem) {
-            return Deferred.success();
-         }
+            if (!self._editingItem) {
+               return Deferred.success();
+            }
 
-         var result = self._notify('beforeItemEndEdit', [self._editingItem, commit, self._isAdd]);
+            var result = self._notify('beforeItemEndEdit', [self._editingItem, commit, self._isAdd]);
 
-         if (result === ItemEndEditResult.CANCEL) {
-            return Deferred.fail();
-         }
-
-         if (result instanceof Deferred) {
+            if (result === ItemEndEditResult.CANCEL) {
+               return Deferred.fail();
+            }
+            if (result instanceof Deferred) {
             //Если мы попали сюда, то прикладники сами сохраняют запись
-            return result.addCallback(function() {
+               return result.addCallback(function() {
+                  _private.afterItemEndEdit(self);
+               });
+            }
+
+            return _private.updateModel(self, commit).addCallback(function() {
                _private.afterItemEndEdit(self);
             });
-         }
+         },
 
-         return _private.updateModel(self, commit).addCallback(function() {
-            _private.afterItemEndEdit(self);
-         });
-      },
-
-      afterItemEndEdit: function(self) {
+         afterItemEndEdit: function(self) {
          //Это событие всплывает, т.к. прикладники после завершения сохранения могут захотеть показать кнопку "+Запись" (по стандарту при старте добавления она скрывается)
-         self._notify('afterItemEndEdit', [self._originalItem, self._isAdd]);
-         _private.resetVariables(self);
-         self._setEditingItemData(null, self._options.listModel);
-      },
+            self._notify('afterItemEndEdit', [self._originalItem, self._isAdd]);
+            _private.resetVariables(self);
+            self._setEditingItemData(null, self._options.listModel);
+         },
 
-      createModel: function(self, options) {
-         return self._options.source.create().addCallback(function(item) {
-            options.item = item;
-            return options;
-         });
-      },
+         createModel: function(self, options) {
+            return self._options.source.create().addCallback(function(item) {
+               options.item = item;
+               return options;
+            });
+         },
 
-      updateModel: function(self, commit) {
-         if (commit) {
-            if (self._options.source) {
-               return self._options.source.update(self._editingItem).addCallback(function() {
+         updateModel: function(self, commit) {
+            if (commit) {
+               if (self._options.source) {
+                  return self._options.source.update(self._editingItem).addCallback(function() {
+                     _private.acceptChanges(self);
+                  });
+               } else {
                   _private.acceptChanges(self);
-               });
-            } else {
-               _private.acceptChanges(self);
+               }
             }
-         }
 
-         return Deferred.success();
-      },
+            return Deferred.success();
+         },
 
-      acceptChanges: function(self) {
-         if (self._isAdd) {
-            self._options.listModel.getItems().add(self._editingItem);
-         } else {
-            self._originalItem.merge(self._editingItem);
-         }
-      },
-
-      resetVariables: function(self) {
-         self._originalItem = null;
-         self._editingItem = null;
-         self._isAdd = null;
-      },
-
-      validate: function(self) {
-         return self._children.formController.submit();
-      },
-
-      editNextRow: function(self, editNextRow) {
-         var
-            items = self._options.listModel.getItems(),
-            index = _private.getEditingItemIndex(self, self._editingItem, self._options.listModel);
-
-         if (editNextRow) {
-            if (index < items.getCount() - 1 && ~index) {
-               self.editItem({
-                  item: items.at(index + 1)
-               });
-            } else if (self._options.editingConfig && self._options.editingConfig.autoAdd) {
-               self.addItem();
+         acceptChanges: function(self) {
+            if (self._isAdd) {
+               self._options.listModel.getItems().add(self._editingItem);
             } else {
-               self.commitEdit();
+               self._originalItem.merge(self._editingItem);
             }
-         } else {
-            if (index > 0) {
-               self.editItem({
-                  item: items.at(index - 1)
-               });
+         },
+
+         resetVariables: function(self) {
+            self._originalItem = null;
+            self._editingItem = null;
+            self._isAdd = null;
+         },
+
+         validate: function(self) {
+            return self._children.formController.submit();
+         },
+
+         editNextRow: function(self, editNextRow) {
+            var
+               items = self._options.listModel.getItems(),
+               index = _private.getEditingItemIndex(self, self._editingItem, self._options.listModel);
+
+            if (editNextRow) {
+               if (index < items.getCount() - 1 && ~index) {
+                  self.editItem({
+                     item: items.at(index + 1)
+                  });
+               } else if (self._options.editingConfig && self._options.editingConfig.autoAdd) {
+                  self.addItem();
+               } else {
+                  self.commitEdit();
+               }
             } else {
-               self.commitEdit();
+               if (index > 0) {
+                  self.editItem({
+                     item: items.at(index - 1)
+                  });
+               } else {
+                  self.commitEdit();
+               }
             }
+         },
+
+         getEditingItemIndex: function(self, editingItem, listModel) {
+            var
+               index = -1,
+               originalItem = listModel.getItemById(ItemsUtil.getPropertyValue(editingItem, listModel._options.idProperty), listModel._options.idProperty);
+
+            if (originalItem) {
+               index = listModel.getItems().getIndex(originalItem.getContents());
+            }
+
+            return index;
          }
-      },
-
-      getEditingItemIndex: function(self, editingItem, listModel) {
-         var
-            index = -1,
-            originalItem = listModel.getItemById(ItemsUtil.getPropertyValue(editingItem, listModel._options.idProperty), listModel._options.idProperty);
-
-         if (originalItem) {
-            index = listModel.getItems().getIndex(originalItem.getContents());
-         }
-
-         return index;
-      }
-   },
-   ItemEditResult = { // Возможные результаты события "ItemEditResult"
-      CANCEL: 'Cancel'
-   },
-   ItemEndEditResult = { // Возможные результаты события "onItemEndEdit"
-      CANCEL: 'Cancel' // Отменить завершение редактирования/добавления
-   };
+      };
 
    var EditInPlace = Control.extend({
       _template: template,
+
       /**
        * @class Controls/List/EditInPlace
        * @author Зайцев А.С.
@@ -253,6 +254,7 @@ define('Controls/List/EditInPlace', [
          var self = this,
             editingItemIndex = _private.getEditingItemIndex(this, this._editingItem, this._options.listModel),
             currentItemIndex = this._options.listModel.getItems().getIndex(options.item);
+
          //Если currentItemIndex = -1, то происходит добавление
          if (editingItemIndex !== currentItemIndex && ~currentItemIndex) {
             return this.commitEdit().addCallback(function() {
@@ -286,7 +288,7 @@ define('Controls/List/EditInPlace', [
          var self = this;
 
          return _private.validate(this).addCallback(function(result) {
-            for(var key in result) {
+            for (var key in result) {
                if (result.hasOwnProperty(key) && result[key]) {
                   return Deferred.fail();
                }
@@ -305,7 +307,7 @@ define('Controls/List/EditInPlace', [
 
       _onKeyDown: function(e) {
          if (this._editingItem) {
-            switch(e.nativeEvent.keyCode) {
+            switch (e.nativeEvent.keyCode) {
                case 13: //Enter
                   if (this._options.editingConfig && this._options.editingConfig.singleEdit) {
                      this.commitEdit();
@@ -338,9 +340,9 @@ define('Controls/List/EditInPlace', [
             return;
          }
          var index = _private.getEditingItemIndex(this, item, listModel);
-         this._editingItemProjection = index === -1 ?
-            new CollectionItem({ contents: this._editingItem }) :
-            listModel.getItemById(ItemsUtil.getPropertyValue(this._editingItem, listModel._options.idProperty), listModel._options.idProperty);
+         this._editingItemProjection = index === -1
+            ? new CollectionItem({ contents: this._editingItem })
+            : listModel.getItemById(ItemsUtil.getPropertyValue(this._editingItem, listModel._options.idProperty), listModel._options.idProperty);
          this._editingItemData = {
             getPropValue: ItemsUtil.getPropertyValue,
             idProperty: listModel._options.idProperty,
@@ -356,13 +358,13 @@ define('Controls/List/EditInPlace', [
       },
 
       // _onRowDeactivated: function(e, isTabPressed) {
-         //TODO: по табу стреляет несколько раз на одной и той же строке, надо Шипину показать
-         //TODO: про таб знаем, а про шифт нет, нужно доработать немножко
-         // if (isTabPressed) {
-            // _private.editNextRow(this, true);
-            // console.log('ушёл фокус со строки по табу');
-         // }
-         // e.stopPropagation();
+      //TODO: по табу стреляет несколько раз на одной и той же строке, надо Шипину показать
+      //TODO: про таб знаем, а про шифт нет, нужно доработать немножко
+      // if (isTabPressed) {
+      // _private.editNextRow(this, true);
+      // console.log('ушёл фокус со строки по табу');
+      // }
+      // e.stopPropagation();
       // },
 
       _beforeUnmount: function() {
