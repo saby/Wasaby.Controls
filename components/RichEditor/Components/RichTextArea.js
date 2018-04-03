@@ -168,6 +168,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                editorConfig: {
                   className: null,
                   plugins: 'media,paste,lists,noneditable,codesample',
+                  codesample_content_css: false,
                   inline: true,
                   relative_urls: false,
                   convert_urls: false,
@@ -217,6 +218,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                validateClass: undefined
             },
             _richTextAreaContainer: undefined,
+            _richTextAreaScrollContainer: undefined,
             _scrollContainer: undefined,
             _dataReview: undefined,
             _inputControl: undefined,
@@ -275,6 +277,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             this._dChildReady.push(this._readyControlDeffered);
             this._tinyReady = new Deferred();
             this._richTextAreaContainer = this._container.find('.controls-RichEditor__richTextArea');
+            this._richTextAreaScrollContainer = this._container.find('.controls-RichEditor__scrollContainer');
             this._scrollContainer = this._container.find('.controls-RichEditor__scrollContainer');
             this._dataReview = this._container.find('.controls-RichEditor__dataReview');
             this._inputControl = this._container.find('.controls-RichEditor__editorFrame');
@@ -430,6 +433,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   var isInline = options.editorConfig.inline;
                   var iFrame = isInline ? null : $(this._tinyEditor.iframeElement);
                   (isInline ? this._richTextAreaContainer : iFrame).css('max-height', options.maximalHeight || '');
+                  (isInline ? this._richTextAreaScrollContainer : iFrame).css('max-height', options.maximalHeight || '');
                   (isInline ? this._inputControl : iFrame).css('min-height', options.minimalHeight || '');
                }
             }
@@ -449,6 +453,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             if (typeof html === 'string' && this._tinyEditor) {
                this._performByReady(function() {
                   html = this._prepareContent(html);
+                  // Если по любым причинам редактор пуст абсолютно - восстановить минимальный контент
+                  // 1175088566 https://online.sbis.ru/opendoc.html?guid=5f7765c4-55e5-4e73-b7bd-3cd05c61d4e2
+                  this._ensureHasMinContent();
                   var editor = this._tinyEditor;
                   var lastRng = this._tinyLastRng;
                   if (lastRng) {
@@ -479,6 +486,19 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      this._notifyMobileInputFocus();
                   }
                }.bind(this));
+            }
+         },
+
+         /**
+          * Убедиться в том, что в редакторе наличествует хотя бы минимальный контент, если нет - восстановить минимальный контент
+          * (Не все функции вставки и команд tiny работают нормально с абсолютно пустым редактором)
+          */
+         _ensureHasMinContent: function () {
+            var editor = this._tinyEditor;
+            var editorBody = editor.getBody();
+            if (!editorBody.innerHTML) {
+               editorBody.innerHTML = '<p></p>';
+               this._selectNewRng(editorBody.firstChild, 0);
             }
          },
 
@@ -1040,6 +1060,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             if (isBlockquote) {
                execCmd = 'mceBlockQuote';
             }
+            // Если по любым причинам редактор пуст абсолютно - восстановить минимальный контент
+            // 1175088566 https://online.sbis.ru/opendoc.html?guid=5f7765c4-55e5-4e73-b7bd-3cd05c61d4e2
+            this._ensureHasMinContent();
             var isAlreadyApplied = editor.formatter.match(command);
             var rng = selection.getRng();
             var isBlockquoteOfList;
@@ -2424,6 +2447,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             var options = this._options;
             if (options.autoHeight) {
                this._richTextAreaContainer.css('max-height', this._cleanHeight(options.maximalHeight) || '');
+               this._richTextAreaScrollContainer.css('max-height', this._cleanHeight(options.maximalHeight) || '');
                // Минимальную высоту области просмотра нужно фиксировать только в отсутствии опции previewAutoHeight
                // 1175020199 https://online.sbis.ru/opendoc.html?guid=ff26541b-4dce-4df3-8b04-1764ee9b1e7a
                // 1175043073 https://online.sbis.ru/opendoc.html?guid=69a945c9-b517-4056-855a-6dec71d81823
@@ -2853,6 +2877,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          _initMainHeight: function () {
             if (!this._options.autoHeight) {
                this._richTextAreaContainer.css('height', this._container.height());
+               this._richTextAreaScrollContainer.css('height', this._container.height());
             }
          },
 
