@@ -147,6 +147,7 @@ define('Controls/Header', [
 
       captionStyleGeneration: function (self, options) {
          self._style = 'controls-Header__caption_type-' + options.type + '_style-' + options.style;
+         self._size = 'controls-Header__caption_type-' + options.type + '_size-' + options.size;
          if(options.type === 'commonHeader') {
             self._style += (options.clickable ? '_hovered' : '');
          }
