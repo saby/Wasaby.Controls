@@ -5,11 +5,15 @@ define('Controls/Application/Compatible', [
    'Core/Control',
    'Core/EventBus',
    'Core/RightsManager',
+   'Core/Deferred',
+   'Core/constants',
    'tmpl!Controls/Application/Compatible',
    'tmpl!Controls/Application/CompatibleScripts'
 ], function(Base,
             EventBus,
-            rights,
+            RightsManager,
+            Deferred,
+            Constants,
             template) {
    'use strict';
 
