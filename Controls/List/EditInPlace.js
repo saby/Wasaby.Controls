@@ -21,7 +21,7 @@ define('Controls/List/EditInPlace', [
       afterItemEdit: function(self, options, isAdd) {
          self._editingItem = options.item.clone();
          self._notify('afterItemEdit', [options.item, isAdd]);
-         self._setEditingItem(self._editingItem, self._options.listModel);
+         self._setEditingItemData(self._editingItem, self._options.listModel);
 
          return options;
       },
@@ -70,7 +70,7 @@ define('Controls/List/EditInPlace', [
          //Это событие всплывает, т.к. прикладники после завершения сохранения могут захотеть показать кнопку "+Запись" (по стандарту при старте добавления она скрывается)
          self._notify('afterItemEndEdit', [self._originalItem, self._isAdd]);
          _private.resetVariables(self);
-         self._setEditingItem(null, self._options.listModel);
+         self._setEditingItemData(null, self._options.listModel);
       },
 
       createModel: function(self, options) {
@@ -235,7 +235,7 @@ define('Controls/List/EditInPlace', [
          if (newOptions.editingConfig) {
             if (newOptions.editingConfig.item) {
                this._editingItem = newOptions.editingConfig.item;
-               this._setEditingItem(this._editingItem, newOptions.listModel);
+               this._setEditingItemData(this._editingItem, newOptions.listModel);
                if (!this._isAdd) {
                   this._originalItem = newOptions.listModel.getItemById(this._editingItem.get(newOptions.listModel._options.idProperty), newOptions.listModel._options.idProperty).getContents();
                }
@@ -331,17 +331,14 @@ define('Controls/List/EditInPlace', [
          }
       },
 
-      _setEditingItem: function(item, listModel) {
+      _setEditingItemData: function(item, listModel) {
          if (!item) {
             listModel._setEditingItemData(null);
             this._editingItemData = null;
-            this._isAdd = false;
             return;
          }
-         var
-            index = _private.getEditingItemIndex(this, item, listModel);
-         this._isAdd = index === -1;
-         this._editingItemProjection = this._isAdd ?
+         var index = _private.getEditingItemIndex(this, item, listModel);
+         this._editingItemProjection = index === -1 ?
             new CollectionItem({ contents: this._editingItem }) :
             listModel.getItemById(ItemsUtil.getPropertyValue(this._editingItem, listModel._options.idProperty), listModel._options.idProperty);
          this._editingItemData = {
