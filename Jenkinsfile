@@ -437,7 +437,7 @@ node('controls') {
                 HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/
                 SERVER = test-autotest-db1:5434
                 BASE_VERSION = css_${NODE_NAME}${ver}1
-				BRANCH=True
+                BRANCH=True
                 [regression]
                 IMAGE_DIR = capture_${params.theme}
                 RUN_REGRESSION=True"""
@@ -458,7 +458,7 @@ node('controls') {
                 HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/
                 SERVER = test-autotest-db1:5434
                 BASE_VERSION = css_${NODE_NAME}${ver}1
-				BRANCH=True
+                BRANCH=True
                 [regression]
                 IMAGE_DIR = capture
                 RUN_REGRESSION=True"""
