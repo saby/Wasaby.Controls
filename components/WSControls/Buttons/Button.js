@@ -21,7 +21,7 @@ define('js!WSControls/Buttons/Button', [
     * </ol>
     * @class WSControls/Buttons/Button
     * @extends WSControls/Buttons/ButtonBase
-	* @demo SBIS3.CONTROLS.Demo.MyButton
+	* @demo Examples/Button/MyButton/MyButton
     *
     * @author Крайнов Д.О.
     *

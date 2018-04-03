@@ -200,7 +200,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
       tplOptions.displayProperty = cfg.displayProperty;
       tplOptions.templateBinding = cfg.templateBinding;
       tplOptions.getPropertyValue = cfg._propertyValueGetter;
-      
+
       /* Для логирования */
       if(typeof window === 'undefined') {
          logger = IoC.resolve('ILogger');
@@ -753,6 +753,10 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
              */
             itemsSortMethod: null,
             itemsFilterMethod: undefined,
+            /**
+             * @cfg {boolean} Устанавливает быструю отрисовку списков с группировкой.
+             * Подробнее см. в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/fast-drawing/#_3">разделе</a>.
+             */
             easyGroup: false,
             task1173770359: false
          },
@@ -1183,7 +1187,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
       },
 
       _redrawHierarchyPathItem: function(item) {},
-      
+
       //TODO надо избавиться от этого метода
       //если в списке есть группировка, при переносе в папку записи, следующей за ней
       //не происходит события move, а только меняется запись
@@ -1658,6 +1662,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
          }
       },
       /**
+       * @name SBIS3.CONTROLS/Mixins/ItemsControlMixin#reload
        * Перезагружает набор записей компонента с последующим обновлением отображения.
        * @remark
        * При вызове метода происходят события {@link onBeforeDataLoad} &#8594; {@link onDataLoad} &#8594; {@link onItemsReady}, а в случае ошибки &#8594; {@link onDataLoadError}
@@ -2727,7 +2732,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
             }
          }
       },
-      
+
       _afterCollectionChange: function() {}
    };
 

@@ -27,13 +27,13 @@ define('Controls/Toggle/Switch', [
             if (value) {
                return 'controls-Switch__marker_enabled_checked';
             } else {
-               return 'controls-Switch__marker_enabled_unchecked'
+               return 'controls-Switch__marker_enabled_unchecked';
             }
          } else {
             if (value) {
                return 'controls-Switch__marker_disabled_checked';
             } else {
-               return 'controls-Switch__marker_disabled_unchecked'
+               return 'controls-Switch__marker_disabled_unchecked';
             }
          }
       }

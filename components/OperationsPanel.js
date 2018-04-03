@@ -65,7 +65,7 @@ define('SBIS3.CONTROLS/OperationsPanel', [
     *
     * @mixes SBIS3.CONTROLS/Mixins/ItemsControlMixin
     *
-    * @demo SBIS3.CONTROLS.Demo.MyOperationsPanel Пример 1. Типовые массовые операции над записями.
+    * @demo Examples/OperationsPanel/MyOperationsPanel/MyOperationsPanel Пример 1. Типовые массовые операции над записями.
     *
     * @author Сухоручкин А.С.
     * @ignoreOptions contextRestriction independentContext

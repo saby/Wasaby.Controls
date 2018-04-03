@@ -52,8 +52,8 @@ define('SBIS3.CONTROLS/ComboBox', [
     *
     * @author Красильников А.С.
     *
-    * @demo SBIS3.CONTROLS.Demo.MyComboBox Пример 1. Выпадающий список, для которого установлен набора данных в опции items.
-    * @demo SBIS3.CONTROLS.Demo.MyComboBoxDS Пример 2. Выпадающий список, для которого установлен источник данных в опции dataSource.
+    * @demo Examples/ComboBox/MyComboBox/MyComboBox Пример 1. Выпадающий список, для которого установлен набора данных в опции items.
+    * @demo Examples/ComboBox/MyComboBoxDS/MyComboBoxDS Пример 2. Выпадающий список, для которого установлен источник данных в опции dataSource.
     *
     * @mixes SBIS3.CONTROLS/Mixins/PickerMixin
     * @mixes SBIS3.CONTROLS/Mixins/ItemsControlMixin

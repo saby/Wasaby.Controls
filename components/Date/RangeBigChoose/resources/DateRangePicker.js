@@ -70,7 +70,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
       },
       _isAnimationProcessing: false,
       _scrollToElement: null,
-      _isDisplayedRangeChanged: true,
+      _isDisplayedRangeChangedEventActive: true,
 
       $constructor: function () {
          this._publish('onMonthActivated');
@@ -302,9 +302,9 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          // по ховеру, а ховер срабатывает сразу после прорутки. Получается что если мы вводим
          // во второе поле воле воода дату и этот ввод приводит к прокручиванию списка месяцев,
          // срабатывает onDayMouseEnter и фокус переходит в первое поле.
-         this._isDisplayedRangeChanged = false;
+         this._isDisplayedRangeChangedEventActive = false;
          setTimeout(function () {
-            this._isDisplayedRangeChanged = true;
+            this._isDisplayedRangeChangedEventActive = true;
          }.bind(this), 200);
 
          var oldMonth = this._options.month,
@@ -452,10 +452,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
       },
 
       _onMonthViewDisplayedRangeChanged: function (e, start, end) {
-         if (this._isDisplayedRangeChanged) {
+         if (this._isDisplayedRangeChangedEventActive) {
             this._notify('onDisplayedRangeChanged', start, end);
          }
-         this._isDisplayedRangeChanged = true;
+         this._isDisplayedRangeChangedEventActive = true;
       },
 
       _onMonthViewSelectingRangeEndDateChange: function (e, date, _date) {
@@ -526,6 +526,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
 
       cancelSelection: function () {
          this._selectionRangeEndItem = null;
+         this._isDisplayedRangeChangedEventActive = false;
          // this._selectionType = null;
          this.forEachMonthView(function (control) {
             control.cancelSelection();

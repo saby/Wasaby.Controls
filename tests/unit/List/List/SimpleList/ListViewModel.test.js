@@ -190,5 +190,83 @@ define([
          assert.equal(1, iv._itemsModel._items.at(3).get('id'), 'Incorrect items after prependItems');
 
       });
-   })
+
+      it('Remove', function () {
+         var iv = new ListViewModel({
+            items: new RecordSet({
+               rawData: data,
+               idProperty : 'id'
+            }),
+            idProperty: 'id',
+            displayProperty: 'title'
+         });
+
+         iv.removeItems([1]);
+         assert.equal(2, iv._itemsModel.getCount(), 'Incorrect items count after removeItems');
+         iv.removeItems([2, 3]);
+         assert.equal(0, iv._itemsModel.getCount(), 'Incorrect items count after remove all items');
+
+      });
+
+      it('itemsReadyCallback', function () {
+         var rs1 = new RecordSet({
+            rawData: data,
+            idProperty : 'id'
+         });
+         var rs2 = new RecordSet({
+            rawData: data2,
+            idProperty : 'id'
+         });
+
+         var result, callback, cfg;
+
+         callback = function() {
+            result = 1;
+         };
+
+         cfg = {
+            items: data,
+            idProperty: 'id',
+            displayProperty: 'title',
+            itemsReadyCallback: callback
+         };
+
+         result = 0;
+         var iv = new ListViewModel(cfg);
+         assert.equal(1, result, 'itemsReadycallback wasn\'t call');
+
+         result = 0;
+         iv.setItems(rs2);
+         assert.equal(1, result, 'itemsReadycallback wasn\'t call');
+      });
+
+      it('multiSelection', function () {
+         var rs1 = new RecordSet({
+            rawData: data,
+            idProperty : 'id'
+         });
+
+
+         var cfg;
+
+
+         cfg = {
+            items: data,
+            idProperty: 'id',
+            displayProperty: 'title',
+            selectedKeys: [1, 3]
+         };
+
+         var iv = new ListViewModel(cfg);
+         assert.isTrue(!!iv._multiselection, 'ListViewModel: MultiSelection instance wasn\'t create');
+         assert.deepEqual([1, 3], iv._multiselection._selectedKeys, 'ListViewModel: MultiSelection has wrong selected keys');
+
+         iv.select([2]);
+         assert.deepEqual([1, 3, 2], iv._multiselection._selectedKeys, 'ListViewModel: MultiSelection has wrong selected keys');
+
+         iv.unselect([1]);
+         assert.deepEqual([3, 2], iv._multiselection._selectedKeys, 'ListViewModel: MultiSelection has wrong selected keys');
+      });
+   });
+
 });

@@ -66,7 +66,22 @@ define('Controls/List/interface/IListControl', [
 
    /**
     * @name Controls/List/interface/IListControl#itemActions
-    * @cfg {Array} Операции над записью
+    * @cfg {Array} item operations
+    */
+
+    /**
+    * @name Controls/List/interface/IListControl#itemActionsType
+    * @cfg {String} item operations display type
+    * @variant inline
+    * @variant underline
+    */
+
+   /**
+    * @name Controls/List/interface/IListControl#itemActionVisibilityCallback
+    * @cfg {function} item operation visibility filter function
+    * @param {Object} action
+    * @param {Record} item
+    * @return {Boolean} action visibility
     */
 
    /**
@@ -79,6 +94,11 @@ define('Controls/List/interface/IListControl', [
     * @cfg {String} Стратегия действий с подгружаемыми в список записями
     * @variant true Мержить, при этом записи с одинаковыми id схлопнутся в одну
     * @variant false Добавлять, при этом записи с одинаковыми id будут выводиться в списке
+    */
+
+   /**
+    * @name Controls/List/interface/IListControl#itemsReadyCallback
+    * @cfg {Function} Коллбэк функция вызывающаяся в момент готовности инстанса списочных данных
     */
 
    /**

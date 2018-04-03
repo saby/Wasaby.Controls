@@ -1,11 +1,10 @@
 define('Controls/Dropdown/Opener',
    [
-      'Core/Control',
-      'tmpl!Controls/Dropdown/resources/Opener',
-      'WS.Data/Type/descriptor',
-      'Core/Deferred'
+      'Controls/Popup/Opener/Sticky',
+      'WS.Data/Relation/Hierarchy',
+      'WS.Data/Type/descriptor'
    ],
-   function (Control, Template, types, Deferred) {
+   function (Sticky, Hierarchy, types) {
       /**
        * Действие открытия прилипающего окна
        * @class Controls/Dropdown/Opener
@@ -13,46 +12,103 @@ define('Controls/Dropdown/Opener',
        * @public
        * @category Popup
        */
-      var Menu = Control.extend([], {
-         _template: Template,
+      var _private = {
+          /**
+           * Возвращает размер иконки
+           * @param icon
+           * @returns {*}
+           */
+          getIconSize: function(icon) {
+              var iconSizes = ['icon-small', 'icon-medium', 'icon-large', 'icon-size'],
+                  iconSize;
+
+              iconSizes.forEach(function(size) {
+                  if (icon.indexOf(size) !== -1) {
+                      iconSize = size;
+                  }
+              });
+              return iconSize;
+          },
+          /**
+           * Обходим все дерево для пунктов и проверяем наличие иконки у хотя бы одного в каждом меню
+           * При наличии таковой делаем всем пунктам в этом меню фэйковую иконку для их сдвига.
+           * @param self
+           * @param config
+           */
+          checkIcons: function(self, config) {
+              var parentProperty = config.componentOptions.parentProperty || self._options.popupOptions.componentOptions.parentProperty,
+                  nodeProperty = config.componentOptions.nodeProperty || self._options.popupOptions.componentOptions.nodeProperty,
+                  items = config.componentOptions.items,
+                  hierarchy = new Hierarchy({
+                      idProperty: items.getIdProperty(),
+                      parentProperty: parentProperty,
+                      nodeProperty: nodeProperty
+                  }),
+                  headerIcon = self._options.popupOptions.componentOptions &&
+                               self._options.popupOptions.componentOptions.headConfig &&
+                               self._options.popupOptions.componentOptions.headConfig.icon,
+                  menuStyle = self._options.popupOptions.componentOptions &&
+                              self._options.popupOptions.componentOptions.headConfig &&
+                              self._options.popupOptions.componentOptions.headConfig.menuStyle,
+                  parents = {},
+                  iconSize, children, child, pid, i, icon;
+
+              // необходимо учесть иконку в шапке
+              if (headerIcon && menuStyle !== 'cross') {
+                  parents['null'] = [null, this.getIconSize(headerIcon)];
+              }
+
+              items.each(function(item) {
+                  icon = item.get('icon');
+                  if (icon) {
+                      pid = item.get(parentProperty);
+                      if (!parents.hasOwnProperty(pid)) {
+                          iconSize = _private.getIconSize(icon);
+                          parents[pid] = [pid, iconSize];
+                      }
+                  }
+              });
+
+              for (var key in parents) {
+                  if (parents.hasOwnProperty(key)) {
+                      children = hierarchy.getChildren(parents[key][0], items);
+                      for (i = 0; i < children.length; i++) {
+                          child = children[i];
+                          if (!child.get('icon')) {
+                              child.set('icon', parents[key][1]);
+                          }
+                      }
+                  }
+              }
+          },
+
+          setComponentOptions: function(self, config) {
+              var cOptions = config.componentOptions;
+              var pOptions = self._options.popupOptions;
+              cOptions.depth = cOptions.depth || self._options.depth;
+              if(pOptions.componentOptions && pOptions.componentOptions.headConfig) {
+                  pOptions.componentOptions.headConfig.menuStyle = pOptions.componentOptions.headConfig.menuStyle || 'defaultHead';
+              }
+              this.checkIcons(self, config);
+          },
+          setPopupOptions: function(self, config) {
+              config.className = self._options.className || 'controls-DropdownList__margin';
+              config.template = 'Controls/Dropdown/resources/template/DropdownList';
+          }
+      };
+
+       var DropdownOpener = Sticky.extend({
          _controlName: 'Controls/Dropdown/Opener',
          _itemTemplateDeferred: undefined,
-         _beforeMount: function (newOptions) {
-            this._className = newOptions.className || 'controls-DropdownList__margin';
-         },
 
-         open: function (config, opener) {
-            var self = this;
-            return this._getOpenerList().addCallback(function() {
-               self._prepareConfig(config);
-               self._children.StickyOpener.open(config, opener);
-            });
-         },
-         _prepareConfig: function(config) {
-            config.componentOptions.itemTemplate = this._options.itemTemplate;
-            config.componentOptions.headTemplate = this._options.headTemplate;
-            config.componentOptions.footerTemplate = this._options.footerTemplate;
-         },
-         //Ленивая загрузка шаблона
-         _getOpenerList: function () {
-            var openerListName = 'Controls/Dropdown/resources/template/DropdownList';
-            if (requirejs.defined(openerListName)) {
-               return (new Deferred()).callback(requirejs(openerListName));
-            }
-            else if (!this._openerListDeferred) {
-               this._openerListDeferred = new Deferred();
-               requirejs([openerListName], function (itemTemplate) {
-                  this._openerListDeferred.callback(itemTemplate);
-               }.bind(this));
-            }
-            return this._openerListDeferred;
-         },
-         close: function() {
-            this._children.StickyOpener.close.apply(this._children.StickyOpener, arguments);
+         open: function (config, opener) {            
+            _private.setComponentOptions(this, config);
+            _private.setPopupOptions(this, config);
+            DropdownOpener.superclass.open.apply(this, arguments);
          }
       });
 
-      Menu.getOptionTypes = function getOptionTypes() {
+      DropdownOpener.getOptionTypes = function getOptionTypes() {
          return {
             keyProperty: types(String),
             parentProperty: types(String),
@@ -63,7 +119,7 @@ define('Controls/Dropdown/Opener',
          }
       };
 
-      Menu.getDefaultOptions = function getDefaultOptions() {
+      DropdownOpener.getDefaultOptions = function getDefaultOptions() {
          return {
             keyProperty: undefined,
             parentProperty: undefined,
@@ -75,6 +131,7 @@ define('Controls/Dropdown/Opener',
          };
       };
 
-      return Menu;
+      DropdownOpener._private = _private;
+      return DropdownOpener;
    }
 );

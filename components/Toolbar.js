@@ -172,7 +172,7 @@ define('SBIS3.CONTROLS/Toolbar', [
     * Контрол, отображающий панель с иконками.
     * @class SBIS3.CONTROLS/Toolbar
     * @extends SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBase
-    * @demo SBIS3.CONTROLS.Demo.MyToolbar
+    * @demo Examples/Toolbar/MyToolbar/MyToolbar
     * @author Сухоручкин А.С.
     *
     * @control

@@ -18,7 +18,7 @@ define('SBIS3.CONTROLS/Button/StateButton', [
     *
     * @category Button
     *
-    * @demo SBIS3.CONTROLS.Demo.MyButton
+    * @demo Examples/Button/MyButton/MyButton
     *
     * @initial
     * <component data-component='SBIS3.CONTROLS/Button/StateButton'>

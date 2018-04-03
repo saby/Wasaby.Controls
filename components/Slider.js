@@ -39,7 +39,7 @@ define('SBIS3.CONTROLS/Slider',
           *
           * @css controls-Slider__withBorder Устанавливает отображение границы вокруг слайдера.
           *
-          * @demo SBIS3.CONTROLS.Demo.SliderDemo
+          * @demo Examples/Slider/SliderDemo/SliderDemo
           */
          Slider = CompoundControl.extend([DragNDropMixinNew, RangeMixin],/** @lends SBIS3.CONTROLS/Slider.prototype */{
              /**

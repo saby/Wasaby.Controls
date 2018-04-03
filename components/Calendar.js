@@ -24,7 +24,7 @@ define(
        * @class SBIS3.CONTROLS/Calendar
        * @extends Lib/Control/CompoundControl/CompoundControl
        * @author Крайнов Д.О.
-       * @demo SBIS3.CONTROLS.Demo.MyCalendar
+       * @demo Examples/Calendar/MyCalendar/MyCalendar
        *
        * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol className
        * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment

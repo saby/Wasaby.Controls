@@ -573,11 +573,11 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
              */
             expanderDisplayMode: 'always',
             /**
-             * @cfg {String, Number} Устанавливает идентификатор узла, относительно которого отображаются данные в текущий момент
+             * @cfg {String|Number} Устанавливает идентификатор узла, относительно которого отображаются данные в текущий момент
              */
             currentRoot: null,
             /**
-             * @cfg {String, Number} Устанавливает идентификатор узла, относительно которого нужно отображать данные. Такой узел будет считаться вершиной иерархии.
+             * @cfg {String|Number} Устанавливает идентификатор узла, относительно которого нужно отображать данные. Такой узел будет считаться вершиной иерархии.
              * @example
              * <pre>
              *    <option name="root">12688410,ПапкаДокументов</option>
@@ -586,7 +586,6 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
              * @see getCurrentRoot
              */
             root: undefined,
-
             /**
              * @cfg {String} Устанавливает поле иерархии, по которому будут установлены иерархические связи записей списка.
              * @remark
@@ -1667,7 +1666,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
        * Устанавливает режим отображения содержимого записей типа "Узел" (папка) при первой загрузке контрола.
        * @remark
        * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
-       * @param {Boolena} expand true - содержимое узлов раскрыто, false - содержимое узлов скрыто.
+       * @param {Boolean} expand true - содержимое узлов раскрыто, false - содержимое узлов скрыто.
        * @see expand
        * @see getExpand
        */

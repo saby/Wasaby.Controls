@@ -32,7 +32,7 @@ define(
        * @author Крайнов Д.О.
        *
        * @public
-       * @demo SBIS3.CONTROLS.Demo.MyTabButtons
+       * @demo Examples/TabButtons/MyTabButtons/MyTabButtons
        *
        * @cssModifier controls-TabButtons__simple-view Модификатор для вкладок второго уровня
        * @cssModifier controls-TabButtons__simple-view-select Устанавливает для вкладок второго уровня выделение рыжим цветом. Использовать совместно с модификатором "controls-TabButtons__simple-view".

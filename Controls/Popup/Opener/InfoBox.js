@@ -3,8 +3,8 @@ define('Controls/Popup/Opener/InfoBox',
       'Core/core-merge',
       'Core/core-clone',
       'tmpl!Controls/Popup/Opener/InfoBox/resources/template',
-      'Controls/Popup/Opener/Base',
-      'Controls/Popup/Opener/InfoBox/Strategy',
+      'Controls/Popup/Opener/BaseOpener',
+      'Controls/Popup/Opener/InfoBox/InfoBoxController',
       'css!Controls/Popup/Opener/InfoBox/InfoBox'
    ],
    function (cMerge, cClone, template, Base, Strategy) {
@@ -69,15 +69,9 @@ define('Controls/Popup/Opener/InfoBox',
           * @param {InfoBoxCfg} cfg Объект с настройками инфобокса
           */
          open: function(cfg){
-
-            // Если есть открытый инфобокс, закрываем
-            if (this.isOpened()) {
-               this.close();
-            }
-
             cfg = cMerge(cClone(DEFAULT_CONFIG), cfg);
 
-            return Base.prototype.open.call(this, {
+            Base.prototype.open.call(this, {
                target: cfg.target,
                position: cfg.position,
                componentOptions: {

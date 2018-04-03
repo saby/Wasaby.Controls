@@ -24,7 +24,7 @@ define('js!WSControls/Containers/MasterDetail',
        *
        * @class WSControls/Containers/MasterDetail
        * @extends Core/Control
-       * @demo WSDemo/MasterDetail/MasterDetailDemo
+       * @demo Examples/MasterDetail/MasterDetailDemo
        * @author Uvarov Ivan (is.uvarov)
        *
        * @css controls-MasterDetail__masterContainer Class for changing master column styles.

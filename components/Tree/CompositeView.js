@@ -32,7 +32,7 @@ define('SBIS3.CONTROLS/Tree/CompositeView', [
     *
     * @cssModifier controls-TreeView__emptyIconInEmptyNode Изменяет отображение для всех записей с типом "Узел": если нет вложенных записей, треугольник по умолчанию скрыт и отображается только по ховеру. Демо-пример можно найти <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/list-hierarchy/triangle/#_3">здесь</a>.
     *
-    * @demo SBIS3.DOCS.TreeCompositeView
+    * @demo Examples/TreeCompositeView/TreeCompositeView/TreeCompositeView
     *
     * @public
     * @control
