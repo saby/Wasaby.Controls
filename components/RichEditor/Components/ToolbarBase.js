@@ -335,7 +335,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
                   element: $('<div></div>'),
                   fontSizes: fontSizes || constants.FONT_SIZES.slice(),
                   colors: constants.COLORS,
-                  presets:constants.STYLE_PRESETS,
+                  presets:cMerge({}, constants.STYLE_PRESETS),
                   activableByClick: false
                });
 
