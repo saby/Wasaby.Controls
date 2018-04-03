@@ -1,62 +1,29 @@
-.controls-Header {
-   display: inline-block;
-}
-
 .controls-Header__caption {
    font-weight: bold;
 }
 
-.controls-Header__wrapperCounterCaption {
-   display: flex;
-   align-items: baseline;
-}
-
-.controls-Header__icon_size-m {
-   .icon(@size-Header__icon_size-default, cbuc-icons);
-   padding: @spacing-Header-between-icon-text;
-}
-
-.controls-Header__icon_size-l {
-   .icon(@size-Header__icon_size-big, cbuc-icons);
-}
-
-.controls-Header__caption_type-commonHeader_size-s {
+.controls-Header__caption_size-s {
    font-size: @font-size_Header__caption_size-s;
 }
 
-.controls-Header__caption_type-commonHeader_size-m {
+.controls-Header__caption_size-m {
    font-size: @font-size_Header__caption_size-default;
 }
 
-.controls-Header__caption_type-commonHeader_size-l {
+.controls-Header__caption_size-l {
    font-size: @font-size_Header__caption_size-l;
 }
 
-.controls-Header__caption_type-simpleHeader_style-default {
-   color: @color_Header__caption_style-default_big;
+.controls-Header__caption_size-xl {
    font-size: @font-size_Header__caption_size-xl;
 }
 
-.controls-Header__caption_type-simpleHeader_style-primary {
-   color: @color_Header__caption_style-primary_big;
-   font-size: @font-size_Header__caption_size-xl;
-}
-
-.controls-Header__caption_type-commonHeader_style-primary, .controls-Header__caption_type-commonHeader_style-primary_hovered {
+.controls-Header__caption_style-primary, .controls-Header__caption_style-primary_hovered {
    color: @color_Header__caption_style-primary;
 }
 
-.controls-Header__caption_type-commonHeader_style-default, .controls-Header__caption_type-commonHeader_style-default_hovered {
+.controls-Header__caption_style-default, .controls-Header__caption_style-default_hovered {
    color: @color_Header__caption_style-deafult;
-}
-
-.controls-HeaderCount_location-left {
-   padding-right: @padding_HeaderCounter-between-counter-caption;
-}
-
-.controls-HeaderCount_location-right {
-   padding-left: @padding_HeaderCounter-between-counter-caption;
-   order: 1;
 }
 
 .controls-Header__wrapper {
@@ -64,184 +31,24 @@
    align-items: center;
 }
 
-.controls-Separator__icon_style-Accent {
-   color: @color-Header__icon_style-Accent;
-}
-
-.controls-Separator__icon_style-Main {
-   color: @color-Header__icon_style-Main;
-}
-
-.controls-Separator__icon_style-Additional {
-   color: @color-Header__icon_style-Additional;
-}
-
-.controls-Header__icon_location-left{
-   padding-right: @padding_Header-between-counter-icon;
-}
-
-
-.controls-Header__icon_location-right{
-   padding-left: @padding_Header-between-counter-icon;
-   order: 2;
-}
-.controls-Header__icon {
-   cursor: pointer;
-}
-
-.controls-Header__wrapper:before {
-   content: '\200b';
-}
-
-.controls-Separator__icon_style-Accent:active {
-   color: @color-Header__icon_style-Accent_hovered;
-}
-
-.controls-Separator__icon_style-Main:active {
-   color: @color-Header__icon_style-Main_hovered;
-}
-
-.controls-Separator__icon_style-Additional:active {
-   color: @color-Header__icon_style-Additional_hovered;
-}
-
-.controls-Header__caption_type-commonHeader_style-default_hovered:active {
+.controls-Header__caption_style-default_hovered:active {
    color: @color_Header__caption_style-deafult_hovered;
    cursor: pointer;
 }
 
-.controls-Header__caption_type-commonHeader_style-primary_hovered:active {
+.controls-Header__caption_style-primary_hovered:active {
    color: @color_Header__caption_style-primary_hovered;
    cursor: pointer;
 }
 
-.controls-HeaderSeparator__icon_style-primary, .controls-HeaderSeparator__icon_style-default {
-   padding-left: 10px;
-   order: 3;
-   cursor: pointer;
-}
-
-.controls-HeaderSeparator_size {
-   width: @width-HeaderSeparator;
-   height: @height-HeaderSeparator;
-}
-
-.controls-HeaderSeparator__icon_style-default {
-   content: @content_forwardArrowDefault;
-}
-
-.controls-HeaderSeparator__icon_style-primary{
-   content: @content_forwardArrowPrimary;
-}
-
-.controls-HeaderSeparator__icon_style-default:active {
-   content: @content_forwardArrowDefaultHovered;
-}
-
-.controls-HeaderSeparator__icon_style-primary:active {
-   content: @content_forwardArrowPrimaryHovered;
-}
-
-.controls-Header_content_hovered:active {
-   .controls-HeaderCounter_style-default_hovered {
-      color: @color_HeaderCounter_style-deafult_hovered;
-   }
-
-   .controls-HeaderCounter_style-primary_hovered {
-      color: @color_HeaderCounter_style-primary_hovered;
-   }
-
-   .controls-Header__caption_type-commonHeader_style-default_hovered {
-      color: @color_Header__caption_style-deafult_hovered;
-      cursor: pointer;
-   }
-
-   .controls-Header__caption_type-commonHeader_style-primary_hovered {
-      color: @color_Header__caption_style-primary_hovered;
-      cursor: pointer;
-   }
-
-   .controls-HeaderCounter_style-default {
-      color: @color_HeaderCounter_style-deafult_hovered;
-   }
-
-   .controls-HeaderCounter_style-primary {
-      color: @color_HeaderCounter_style-primary_hovered;
-   }
-
-   .controls-Separator__icon_style-Accent {
-      color: @color-Header__icon_style-Accent_hovered;
-   }
-
-   .controls-Separator__icon_style-Main {
-      color: @color-Header__icon_style-Main_hovered;
-   }
-
-   .controls-Separator__icon_style-Additional {
-      color: @color-Header__icon_style-Additional_hovered;
-   }
-}
-
 .ws-is-no-touch {
-   .controls-Header_content_hovered:hover {
-      .controls-HeaderCounter_style-default_hovered {
-         color: @color_HeaderCounter_style-deafult_hovered;
-      }
-
-      .controls-HeaderCounter_style-primary_hovered {
-         color: @color_HeaderCounter_style-primary_hovered;
-      }
-
-      .controls-Header__caption_type-commonHeader_style-default_hovered {
-         color: @color_Header__caption_style-deafult_hovered;
-         cursor: pointer;
-      }
-
-      .controls-Header__caption_type-commonHeader_style-primary_hovered {
-         color: @color_Header__caption_style-primary_hovered;
-         cursor: pointer;
-      }
-
-      .controls-HeaderCounter_style-default {
-         color: @color_HeaderCounter_style-deafult_hovered;
-      }
-
-      .controls-HeaderCounter_style-primary {
-         color: @color_HeaderCounter_style-primary_hovered;
-      }
-
-      .controls-Separator__icon_style-Accent {
-         color: @color-Header__icon_style-Accent_hovered;
-      }
-
-      .controls-Separator__icon_style-Main {
-         color: @color-Header__icon_style-Main_hovered;
-      }
-
-      .controls-Separator__icon_style-Additional {
-         color: @color-Header__icon_style-Additional_hovered;
-      }
-   }
-
-   .controls-Header__caption_type-commonHeader_style-default_hovered:hover {
+   .controls-Header__caption_style-default_hovered:hover {
       color: @color_Header__caption_style-deafult_hovered;
       cursor: pointer;
    }
 
-   .controls-Header__caption_type-commonHeader_style-primary_hovered:hover {
+   .controls-Header__caption_style-primary_hovered:hover {
       color: @color_Header__caption_style-primary_hovered;
       cursor: pointer;
-   }
-
-   .controls-Separator__icon_style-Accent:hover {
-      color: @color-Header__icon_style-Accent_hovered;
-   }
-
-   .controls-Separator__icon_style-Main:hover {
-      color: @color-Header__icon_style-Main_hovered;
-   }
-
-   .controls-Separator__icon_style-Additional:hover {
-      color: @color-Header__icon_style-Additional_hovered;
    }
 }

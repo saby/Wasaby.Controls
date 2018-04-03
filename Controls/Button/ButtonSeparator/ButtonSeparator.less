@@ -1,0 +1,50 @@
+.controls-Separator__icon_style-Accent {
+   color: @color-Header__icon_style-Accent;
+}
+
+.controls-Separator__icon_style-Main {
+   color: @color-Header__icon_style-Main;
+}
+
+.controls-Separator__icon_style-Additional {
+   color: @color-Header__icon_style-Additional;
+}
+
+.controls-Header__icon {
+   padding: @spacing-Header-between-icon-text;
+   cursor: pointer;
+   display: inline-flex;
+   align-items: center;
+}
+
+.controls-Header__icon:before {
+   content: '\200b';
+}
+
+.controls-Separator__icon_style-Accent:active {
+   color: @color-Header__icon_style-Accent_hovered;
+}
+
+.controls-Separator__icon_style-Main:active {
+   color: @color-Header__icon_style-Main_hovered;
+}
+
+.controls-Separator__icon_style-Additional:active{
+   color: @color-Header__icon_style-Additional_hovered;
+}
+
+.ws-is-no-touch {
+   .controls-Separator__icon_style-Accent:hover {
+      color: @color-Header__icon_style-Accent_hovered;
+   }
+
+   .controls-Separator__icon_style-Main:hover {
+      color: @color-Header__icon_style-Main_hovered;
+   }
+
+   .controls-Separator__icon_style-Additional:hover {
+      color: @color-Header__icon_style-Additional_hovered;
+   }
+}
+
+
