@@ -326,7 +326,7 @@ node('controls') {
             echo "Запускаем разворот стенда и подготавливаем окружение для тестов"
             // Создаем sbis-rpc-service.ini
             def host_db = "test-autotest-db1"
-            def port_db = "5432"
+            def port_db = "5434"
             def name_db = "css_${env.NODE_NAME}${ver}1"
             def user_db = "postgres"
             def password_db = "postgres"
@@ -391,7 +391,7 @@ node('controls') {
             [general]
             browser = ${params.browser_type}
             SITE = http://${NODE_NAME}:30001
-            SERVER = test-autotest-db1
+            SERVER = test-autotest-db1:5434
             BASE_VERSION = css_${NODE_NAME}${ver}1
             DO_NOT_RESTART = True
             SOFT_RESTART = True
@@ -416,7 +416,7 @@ node('controls') {
                 ELEMENT_OUTPUT_LOG = locator
                 WAIT_ELEMENT_LOAD = 20
                 HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/
-                SERVER = test-autotest-db1
+                SERVER = test-autotest-db1:5434
                 BASE_VERSION = css_${NODE_NAME}${ver}1
                 [regression]
                 IMAGE_DIR = capture_${params.theme}
@@ -436,7 +436,7 @@ node('controls') {
                 ELEMENT_OUTPUT_LOG = locator
                 WAIT_ELEMENT_LOAD = 20
                 HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/
-                SERVER = test-autotest-db1
+                SERVER = test-autotest-db1:5434
                 BASE_VERSION = css_${NODE_NAME}${ver}1
                 [regression]
                 IMAGE_DIR = capture
