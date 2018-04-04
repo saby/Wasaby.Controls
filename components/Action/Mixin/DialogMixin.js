@@ -318,8 +318,13 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
 
       },
 
-      _isNeedToRedrawDialog: function(){
-         return this._dialog && !this._dialog.isDestroyed();
+      _isNeedToRedrawDialog: function() {
+         //Нужно перерисовать панель если она есть, не задестроена и не находится в процессе открытия/закрытия
+         return this._dialog && !this._dialog.isDestroyed() && !this._isDialogClosing();
+      },
+
+      _isDialogClosing: function() {
+         return this._dialog && this._dialog._state === 'hide';
       },
 
       /**

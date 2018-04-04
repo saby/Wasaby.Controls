@@ -252,7 +252,8 @@ define('js!WSControls/Buttons/MenuButton', [
             closeByExternalClick: true,
             closeOnTargetMove: true,
             targetPart: true,
-            footerTpl: this._options.footerTpl
+            footerTpl: this._options.footerTpl,
+            _canScroll: true
          };
          if(this._options.historyId){
              menuconfig['historyId'] = this._options.historyId;
