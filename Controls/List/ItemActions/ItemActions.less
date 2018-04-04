@@ -2,7 +2,11 @@
   display: none;
   position:absolute;
 }
-
+.controls-itemActionsV__wrapper {
+  .inline-flexbox();
+  .align-items(center);
+  height: 100%;
+}
 .controls-itemActionsV_inline {
   right: @right_itemActions_inside;
   bottom: @bottom_itemActions_inside;
@@ -11,10 +15,12 @@
 }
 
 .controls-itemActionsV_outside {
+  box-sizing: border-box;
   right: 0;
   bottom: -@height_itemAction_outside;
   height: @height_itemAction_outside;
   background-color: @default-bg-color-hovered-item;
+  padding: 0 @right_itemActions_inside @bottom_itemActions_inside 0;
   z-index: 1;
   &:before {
     content:'';
@@ -26,18 +32,41 @@
     left: -@width_itemActions_outside_after;
   }
 }
-
+.controls-itemActionsV_editing {
+  background-color: @controls-editInPlace-editing-item-bg;
+  &:before {
+    border-top-color: @controls-editInPlace-editing-item-bg;
+  }
+}
 .controls-itemActionsV__action, .controls-itemActionsV__menuOpen {
   .inline-flexbox();
   .align-items(center);
   height: 100%;
   margin: @spacing_itemActions_action;
 }
-
+.controls-itemActionsV_editing__action {
+  .closeButton();
+  .inline-flexbox();
+  .align-items(center);
+  .justify-content(center);
+  //todo: cascade
+  .controls-itemActionsV__action_icon {
+    .icon-size-without-important(@default-icon-size);
+  }
+}
+.controls-itemActionsV_editing__action_done {
+  &:hover {
+    border-color: @success-color;
+  }
+}
+.controls-itemActionsV_editing__action_error {
+  &:hover {
+    border-color: @error-color;
+  }
+}
 .controls-itemActionsV__action_icon, .controls-itemActionsV__menuOpen_icon {
   .icon-size-without-important(@default-icon-size-medium, @default-icon-medium-font);
 }
-
 .controls-itemActionsV__action_title {
   color: @color_Link-text;
 }

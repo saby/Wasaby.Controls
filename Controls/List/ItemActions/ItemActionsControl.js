@@ -22,6 +22,12 @@ define('Controls/List/ItemActions/ItemActionsControl', [
             if (!itemActionVisibilityCallback || itemActionVisibilityCallback(action, item)) {
                if (action.icon && !~action.icon.indexOf('controls-itemActionsV__action_icon')) {
                   action.icon += ' controls-itemActionsV__action_icon icon-size';
+                  if (~action.icon.indexOf('icon-done')) {
+                     action.iconDone = true;
+                  }
+                  if (~action.icon.indexOf('icon-error')) {
+                     action.iconError = true;
+                  }
                }
                actions.push(action);
             }
@@ -55,7 +61,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
                itemData.itemActions && itemData.itemActions.filter(function(action){
                   return !action.additional;
                });
-         if (showActions) {
+         if (showActions && !itemData.isEditing) {
             var
                rs = new RecordSet({rawData: showActions}),
                realEvent =  childEvent ? childEvent: event;

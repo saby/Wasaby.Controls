@@ -28,7 +28,7 @@ define('Controls-demo/List/EditAndRemoveOperations', [
       },
       {
          id: 3,
-         title: 'Возвращается Deferred и через 3 секунды открывается другая запись',
+         title: 'Обычная запись 0',
          description: 'Хватит страдать'
       },
       {
@@ -102,7 +102,7 @@ define('Controls-demo/List/EditAndRemoveOperations', [
          if (item.get('id') === 1 && action.id === 0) { //первую запись всё равно нельзя редактировать
             return false;
          }
-         if (this.__editingItem) {
+         if (this.__editingItem === item) {
             if (action.id === 3) {
                return true;
             }
@@ -129,6 +129,7 @@ define('Controls-demo/List/EditAndRemoveOperations', [
                id: 1,
                icon: 'icon-Erase icon-error',
                title: 'delete',
+               style: 'border',
                main: true,
                handler: function(item){
                   this._children.list.removeItems([item.get('id')]);
@@ -136,6 +137,7 @@ define('Controls-demo/List/EditAndRemoveOperations', [
             },
             {
                id: 3,
+               icon: 'icon-ArrowDown icon-error',
                title: 'я прикладная операция и появляюсь только если запись редактируется',
                main: true,
                handler: function(item){
@@ -187,21 +189,21 @@ define('Controls-demo/List/EditAndRemoveOperations', [
                      description: 'Описание вот такое'
                   })
                } ;
-            case 3:
-               var def = new Deferred();
-               def.addCallback(function(){
-                  return {
-                     item:Record.fromObject({
-                        id: 3,
-                        title: 'Запись из Deferred',
-                        description: 'Хватит страдать'
-                     })
-                  }
-               });
-               setTimeout(function() {
-                  def.callback();
-               }, 3000);
-               return def;
+            // case 3:
+            //    var def = new Deferred();
+            //    def.addCallback(function(){
+            //       return {
+            //          item:Record.fromObject({
+            //             id: 3,
+            //             title: 'Запись из Deferred',
+            //             description: 'Хватит страдать'
+            //          })
+            //       }
+            //    });
+            //    setTimeout(function() {
+            //       def.callback();
+            //    }, 3000);
+            //    return def;
          }
       },
 
