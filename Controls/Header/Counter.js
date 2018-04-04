@@ -36,20 +36,8 @@ define('Controls/Header/Counter', [
     * @variant disabled Counter will be disabled.
     */
 
-   /**
-    * @name Controls/Header/Counter#singleClick
-    * @cfg {Boolean} The ability to send a single event when icon was clicked. Event name is countClick.
-    */
-
    var Counter = Control.extend({
-      _template: template,
-
-      countClickHandler: function (e) {
-         if(this._options.singleClick){
-            e.stopPropagation();
-            this._notify('countClick');
-         }
-      }
+      _template: template
    });
 
    Counter.getOptionTypes =  function getOptionTypes() {
@@ -64,16 +52,14 @@ define('Controls/Header/Counter', [
             'm',
             's',
             'l'
-         ]),
-         singleClick: types(Boolean)
+         ])
       }
    };
 
    Counter.getDefaultOptions = function() {
       return {
          style: 'default',
-         size: 'm',
-         singleClick: false
+         size: 'm'
       };
    };
 

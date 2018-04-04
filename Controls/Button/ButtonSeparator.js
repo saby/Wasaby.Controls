@@ -16,11 +16,6 @@ define('Controls/Button/ButtonSeparator', [
     */
 
    /**
-    * @name Controls/Button/ButtonSeparator#singleClick
-    * @cfg {Boolean} The ability to send a single event when icon was clicked. Event name is iconClick.
-    */
-
-   /**
     * @name Controls/Button/ButtonSeparator#style
     * @cfg {String} Icon display style.
     * @variant Accent Icon will be default.
@@ -57,19 +52,11 @@ define('Controls/Button/ButtonSeparator', [
 
       _beforeUpdate: function (newOptions) {
          _private.iconChangedValue(this, newOptions);
-      },
-
-      iconClickHandler: function (e) {
-         if(this._options.singleClick){
-            e.stopPropagation();
-            this._notify('iconClick');
-         }
       }
    });
 
    ButtonSeparator.getOptionTypes =  function getOptionTypes() {
       return {
-         singleClick: types(Boolean),
          bold: types(Boolean),
          style: types(String).oneOf([
             'Accent',
@@ -84,7 +71,6 @@ define('Controls/Button/ButtonSeparator', [
       return {
          style: 'Accent',
          value: false,
-         singleClick: false,
          bold: false
       };
    };

@@ -19,14 +19,14 @@
             <h2>Заголовок</h2>
             <div class="wrapper">
                 <ws:if data="{{_showButtonSeparator}}">
-                    <Controls.Button.ButtonSeparator on:iconClick="clickIcon()" singleClick="{{_iconSingleClick}}" style="{{_iconStyle}}" bold="{{_bold}}" value="{{_iconValue}}"/>
+                    <Controls.Button.ButtonSeparator on:iconClick="clickIcon()" style="{{_iconStyle}}" bold="{{_bold}}" value="{{_iconValue}}"/>
                 </ws:if>
                 <div class="wrapperCounterCaption">
                     <ws:if data="{{_showCaption}}">
                         <Controls.Header caption="{{_caption}}" style="{{_captionStyle}}" size="{{_captionSize}}"/>
                     </ws:if>
                     <ws:if data="{{_showCounter}}">
-                        <Controls.Header.Counter attr:class="counter" on:countClick="clickCount()" value="{{_counterValue}}" style="{{_counterStyle}}" size="{{_counterSize}}" singleClick="{{_counterSingleClick}}"/>
+                        <Controls.Header.Counter attr:class="counter" on:countClick="clickCount()" value="{{_counterValue}}" style="{{_counterStyle}}" size="{{_counterSize}}"/>
                     </ws:if>
                 </div>
                 <ws:if data="{{_showSeparator}}">
@@ -51,14 +51,10 @@
             <Controls:Input:Text bind:value="_counterStyle"/>
             <Controls:Label name="myLabel1" caption="size(s, m, l)"/>
             <Controls:Input:Text bind:value="_counterSize"/>
-            <br/>
-            <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_counterSingleClick" caption="singleClick"/>
             <h3>Опции кнопки-разделителя</h3>
             <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_showButtonSeparator" caption="Показывать кнопку-разделитель"/>
             <Controls:Label name="myLabel1" caption="style(Accent, Additional, Main)"/>
             <Controls:Input:Text bind:value="_iconStyle"/>
-            <br/>
-            <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_iconSingleClick" caption="singleClick"/>
             <br/>
             <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_bold" caption="bold"/>
             <h3>Опции иконки</h3>
