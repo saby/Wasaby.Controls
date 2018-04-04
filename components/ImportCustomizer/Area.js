@@ -440,6 +440,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             }
             else {
                sheets = [this._combineResultSheet(results[''])];
+               sheets[0].columnsCount = options.sheets[0].sampleRows[0].length;;
             }
             var data = {
                dataType: options.dataType,
@@ -490,6 +491,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             }
             if (sheet) {
                item.name = sheet.name;
+               item.columnsCount = sheet.sampleRows[0].length;
                item.sampleRows = sheet.sampleRows;
 
             }
