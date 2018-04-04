@@ -36,9 +36,9 @@ define('Controls/Button/ButtonSeparator', [
    var _private = {
       iconChangedValue: function (self, options) {
          if (options.value) {
-            self._icon = 'icon-' + (options.bold ? 'MarkCollapseBold ':'CollapseLight ') + 'icon-16';
+            self._icon = 'icon-' + (options.bold ? 'MarkCollapseBold ':'CollapseLight ');
          }else {
-            self._icon = 'icon-' + (options.bold ? 'MarkExpandBold ':'ExpandLight ') + 'icon-16';
+            self._icon = 'icon-' + (options.bold ? 'MarkExpandBold ':'ExpandLight ');
          }
       }
    };

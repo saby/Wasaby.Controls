@@ -1,3 +1,7 @@
+.controls-Separator__icon_size {
+   .icon-size-without-important(@size-Separator__icon);
+}
+
 .controls-Separator__icon_style-Accent {
    color: @color-Header__icon_style-Accent;
 }
@@ -10,18 +14,18 @@
    color: @color-Header__icon_style-Additional;
 }
 
-.controls-Header__wrapper {
+.controls-Separator__wrapper {
    padding: @spacing-Header-between-icon-text;
    cursor: pointer;
    display: inline-flex;
    align-items: center;
 }
 
-.controls-Header__wrapper:before {
+.controls-Separator__wrapper:before {
    content: '\200b';
 }
 
-.controls-Header__icon {
+.controls-Separator__icon {
    display: inline-block;
 }
 
