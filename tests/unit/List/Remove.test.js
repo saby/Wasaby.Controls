@@ -1,63 +1,104 @@
 define([
    'Controls/List/Remove',
-   'Core/Deferred'
-], function(Remove, Deferred){
+   'WS.Data/Source/Memory',
+   'WS.Data/Collection/RecordSet',
+   'Controls/Controllers/SourceController',
+   'Controls/List/SimpleList/ListViewModel',
+   'Core/Deferred',
+   'Core/core-clone'
+], function(Remove, MemorySource, RecordSet, SourceController, ListViewModel, Deferred, cClone){
    describe('Controls.List.Remove', function () {
-      var
-         result,
-         items = [1, 2, 3];
+      var remove;
 
-      it('beforeItemsRemove return Deferred', function () {
-         var remove = new Remove();
-         result = remove.beforeItemsRemove(items);
+      beforeEach(function() {
+         var
+            data = [{
+               id : 1,
+               title : 'Первый'
+            }, {
+               id : 2,
+               title : 'Второй'
+            }, {
+               id : 3,
+               title : 'Третий'
+            }],
+            rs = new RecordSet({
+               idProperty: 'id',
+               rawData: cClone(data)
+            }),
+            cfg = {
+               listModel: new ListViewModel({
+                  idProperty: 'id'
+               }),
+               sourceController: new SourceController({
+                  source : new MemorySource({
+                     idProperty: 'id',
+                     data: cClone(data)
+                  })
+               })
+            };
 
-         assert.isTrue(result instanceof Deferred);
+         cfg.listModel.setItems(rs);
+         remove = new Remove(cfg);
+         remove.saveOptions(cfg);
+
+      });
+
+      afterEach(function() {
+         remove.destroy();
       });
 
       it('beforeItemsRemove notify event with params', function (done) {
-         var remove = new Remove();
+         var items = [1];
          remove._notify = function(event, args) {
-            assert.equal(event, 'beforeItemsRemove');
-            assert.equal(args[0], items);
-            done();
+            if (event === 'beforeItemsRemove') {
+               assert.equal(args[0], items);
+               done();
+            }
          };
-         remove.beforeItemsRemove(items);
-      });
-
-      it('beforeItemsRemove return notify result', function (done) {
-         var remove = new Remove();
-         remove._notify = function() {
-            return false;
-         };
-
-         remove.beforeItemsRemove(items).addCallback(function(itemsRemoveResult) {
-            assert.equal(itemsRemoveResult, false);
-            done();
-         });
-      });
-
-      it('beforeItemsRemove return notify deferred result', function (done) {
-         var remove = new Remove();
-         remove._notify = function() {
-            return Deferred.success(false);
-         };
-
-         remove.beforeItemsRemove(items).addCallback(function(itemsRemoveResult) {
-            assert.equal(itemsRemoveResult, false);
-            done();
-         });
+         remove.removeItems(items);
       });
 
       it('afterItemsRemove notify event with params', function (done) {
-         var remove = new Remove();
+         var
+            items = [2, 3],
+            result = 'custom_result';
+         remove._options.sourceController.remove = function() {
+            return Deferred.success(result);
+         };
          remove._notify = function(event, args) {
-            assert.equal(event, 'afterItemsRemove');
-            assert.equal(args[0], items);
-            assert.equal(args[1], false);
-            done();
+            if (event === 'afterItemsRemove') {
+               assert.equal(args[0], items);
+               assert.equal(args[1], result);
+               done();
+            }
          };
 
-         remove.afterItemsRemove(items, false);
+         remove.removeItems(items);
+      });
+
+      it('beforeItemsRemove return false', function () {
+         remove._notify = function(event) {
+            if (event === 'beforeItemsRemove') {
+               return false;
+            }
+         };
+
+         remove.removeItems([2, 3]);
+         assert.equal(remove._options.listModel.getCount(), 3);
+      });
+
+      it('removeItems from source', function (done) {
+         remove.removeItems([1, 2]);
+         remove._options.sourceController.load({}).addCallback(function(recordSet) {
+            assert.equal(recordSet.getCount(), 1);
+            done();
+         });
+      });
+
+      it('removeItems from model', function () {
+         remove.removeItems([1, 2]);
+         assert.equal(remove._options.listModel.getCount(), 1);
       });
    });
 });

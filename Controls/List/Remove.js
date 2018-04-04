@@ -5,11 +5,11 @@ define('Controls/List/Remove', [
 ], function (Control, template, Deferred) {
    var _private = {
       removeFromSource: function(self, items) {
-         return self._sourceController.remove(items);
+         return self._options.sourceController.remove(items);
       },
 
       removeFromModel: function(self, items) {
-         self._listModel.removeItems(items);
+         self._options.listModel.removeItems(items);
       },
 
       beforeItemsRemove: function(self, items) {
@@ -22,25 +22,8 @@ define('Controls/List/Remove', [
       }
    };
 
-   var Remove = Control.extend( {
+   return Control.extend( {
       _template: template,
-
-      _beforeMount: function(newOptions){
-         this._updateOptions(newOptions);
-      },
-
-      _beforeUpdate: function(newOptions){
-         this._updateOptions(newOptions);
-      },
-
-      _updateOptions: function(newOptions) {
-         if (newOptions.listModel && (this._listModel !== newOptions.listModel)) {
-            this._listModel = newOptions.listModel;
-         }
-         if (newOptions.sourceController && (this._sourceController !== newOptions.sourceController)) {
-            this._sourceController = newOptions.sourceController;
-         }
-      },
 
       removeItems: function(items) {
          var self = this;
@@ -58,6 +41,4 @@ define('Controls/List/Remove', [
          });
       }
    });
-
-   return Remove;
 });
