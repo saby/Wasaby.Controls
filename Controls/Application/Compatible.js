@@ -5,11 +5,15 @@ define('Controls/Application/Compatible', [
    'Core/Control',
    'Core/EventBus',
    'Core/RightsManager',
+   'Core/Deferred',
+   'Core/constants',
    'tmpl!Controls/Application/Compatible',
    'tmpl!Controls/Application/CompatibleScripts'
 ], function(Base,
             EventBus,
-            rights,
+            RightsManager,
+            Deferred,
+            Constants,
             template) {
    'use strict';
 
@@ -17,11 +21,20 @@ define('Controls/Application/Compatible', [
       _template: template,
       _wasPatched: false,
       _beforeMount: function(){
+         var rightsInitialized = new Deferred();
          this._forceUpdate = function(){
             return;
          }
          if(typeof window !== 'undefined') {
-            window.rights = rights;
+            Constants.rights = true;
+            var rights = RightsManager.getRights();
+            if (rights instanceof Deferred) {
+               rights.addCallback(function(rights) {
+                  window.rights = rights;
+                  rightsInitialized.callback();
+               });
+               return rightsInitialized;
+            }
          }
       },
       _afterMount: function(){
