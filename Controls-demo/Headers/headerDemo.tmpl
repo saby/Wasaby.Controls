@@ -21,12 +21,14 @@
                 <ws:if data="{{_showButtonSeparator}}">
                     <Controls.Button.ButtonSeparator on:iconClick="clickIcon()" singleClick="{{_iconSingleClick}}" style="{{_iconStyle}}" bold="{{_bold}}" value="{{_iconValue}}"/>
                 </ws:if>
-                <ws:if data="{{_showCaption}}">
-                    <Controls.Header caption="{{_caption}}" style="{{_captionStyle}}" size="{{_captionSize}}"/>
-                </ws:if>
-                <ws:if data="{{_showCounter}}">
-                    <Controls.Header.Counter attr:class="counter" on:countClick="clickCount()" value="{{_counterValue}}" style="{{_counterStyle}}" size="{{_counterSize}}" singleClick="{{_counterSingleClick}}"/>
-                </ws:if>
+                <div class="wrapperCounterCaption">
+                    <ws:if data="{{_showCaption}}">
+                        <Controls.Header caption="{{_caption}}" style="{{_captionStyle}}" size="{{_captionSize}}"/>
+                    </ws:if>
+                    <ws:if data="{{_showCounter}}">
+                        <Controls.Header.Counter attr:class="counter" on:countClick="clickCount()" value="{{_counterValue}}" style="{{_counterStyle}}" size="{{_counterSize}}" singleClick="{{_counterSingleClick}}"/>
+                    </ws:if>
+                </div>
                 <ws:if data="{{_showSeparator}}">
                     <Controls.Header.Separator style="{{_separatorIconStyle}}"/>
                 </ws:if>
