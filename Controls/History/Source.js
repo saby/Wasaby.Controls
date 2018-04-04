@@ -232,7 +232,7 @@ define('Controls/History/Source', [
         },
 
         create: function (meta) {
-            return _private.getSourceByMeta(meta).create(meta);
+            return _private.getSourceByMeta(this, meta).create(meta);
         },
 
         read: function (key, meta) {
@@ -250,7 +250,7 @@ define('Controls/History/Source', [
         },
 
         destroy: function (keys, meta) {
-            return _private.getSourceByMeta(meta).destroy(keys, meta);
+            return _private.getSourceByMeta(this, meta).destroy(keys, meta);
         },
 
         query: function (query) {
@@ -282,6 +282,8 @@ define('Controls/History/Source', [
             return _private.getItemsWithHistory(this, this._history, this._oldItems);
         }
     });
+
+    Source._private = _private;
 
     return Source;
 });
