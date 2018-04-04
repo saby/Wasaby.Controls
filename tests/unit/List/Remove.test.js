@@ -88,6 +88,17 @@ define([
          assert.equal(remove._options.listModel.getCount(), 3);
       });
 
+      it('beforeItemsRemove return Deferred', function () {
+         remove._notify = function(event) {
+            if (event === 'beforeItemsRemove') {
+               return Deferred.success();
+            }
+         };
+
+         remove.removeItems([1, 2, 3]);
+         assert.equal(remove._options.listModel.getCount(), 0);
+      });
+
       it('removeItems from source', function (done) {
          remove.removeItems([1, 2]);
          remove._options.sourceController.load({}).addCallback(function(recordSet) {
