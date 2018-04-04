@@ -3,6 +3,7 @@ define('Controls/Container/Scroll',
       'Core/Control',
       'Core/Deferred',
       'Core/detection',
+      'Core/helpers/Object/isEqual',
       'Controls/Container/Scroll/ScrollWidthUtil',
       'Controls/Container/Scroll/ScrollHeightFixUtil',
       'tmpl!Controls/Container/Scroll/Scroll',
@@ -12,7 +13,7 @@ define('Controls/Container/Scroll',
       'Controls/Container/Scroll/Scrollbar',
       'css!Controls/Container/Scroll/Scroll'
    ],
-   function(Control, Deferred, detection, ScrollWidthUtil, ScrollHeightFixUtil, template) {
+   function(Control, Deferred, detection, isEqual, ScrollWidthUtil, ScrollHeightFixUtil, template) {
 
       'use strict';
 
@@ -69,7 +70,7 @@ define('Controls/Container/Scroll',
                return container.scrollTop;
             },
 
-            getHasScroll: function(self) {
+            calcHasScroll: function(self) {
                var
                   scrollHeight = _private.getScrollHeight(self._children.content),
                   containerHeight = _private.getContainerHeight(self._children.content);
@@ -90,8 +91,24 @@ define('Controls/Container/Scroll',
                return _private.calcShadowPosition(scrollTop, containerHeight, scrollHeight);
             },
 
-            getOverflow: function(self) {
+            calcHeightFix: function(self) {
                return ScrollHeightFixUtil.calcHeightFix(self._children.content);
+            },
+
+            calcDisplayState: function(self) {
+               return {
+                  heightFix: _private.calcHeightFix(self),
+                  hasScroll: _private.calcHasScroll(self),
+                  contentHeight: _private.getContentHeight(self),
+                  shadowPosition: _private.getShadowPosition(self)
+               }
+            },
+
+            updateDisplayState: function(self, displayState) {
+               self._displayState.hasScroll = displayState.hasScroll;
+               self._displayState.heightFix = displayState.haheightFixsScroll;
+               self._displayState.contentHeight = displayState.contentHeight;
+               self._displayState.shadowPosition = displayState.shadowPosition;
             }
          },
          Scroll = Control.extend({
@@ -101,21 +118,6 @@ define('Controls/Container/Scroll',
              * @type {number}
              */
             _scrollTop: 0,
-            /**
-             * Расположение тени внутри контейнера.
-             * @type {string}
-             */
-            _shadowPosition: '',
-            /**
-             * Высота контента.
-             * @type {number}
-             */
-            _contentHeight: 1,
-            /**
-             * Возможна ли прокрутка контента.
-             * @type {boolean}
-             */
-            _hasScroll: null,
             /**
              * Нужно ли показывать скролл при наведении.
              * @type {boolean}
@@ -132,13 +134,17 @@ define('Controls/Container/Scroll',
              */
             _useNativeScrollbar: null,
 
+            _displayState: null,
+
             _beforeMount: function(options, context, receivedState) {
                var
                   self = this,
                   def;
 
+               this._displayState = {};
+
                if (receivedState) {
-                  this._heightFix = receivedState.heightFix;
+                  _private.updateDisplayState(this, receivedState.displayState);
                   this._styleHideScrollbar = receivedState.styleHideScrollbar;
                   this._useNativeScrollbar = receivedState.useNativeScrollbar;
                } else {
@@ -146,17 +152,19 @@ define('Controls/Container/Scroll',
 
                   def.addCallback(function() {
                      var
-                        heightFix = ScrollHeightFixUtil.calcHeightFix(),
+                        displayState = {
+                           heightFix: ScrollHeightFixUtil.calcHeightFix()
+                        },
                         styleHideScrollbar = ScrollWidthUtil.calcStyleHideScrollbar(),
                         // На мобильных устройствах используется нативный скролл, на других платформенный.
                         useNativeScrollbar = detection.isMobileIOS || detection.isMobileAndroid || detection.isMac;
 
-                     self._heightFix = heightFix;
+                     _private.updateDisplayState(self, displayState);
                      self._styleHideScrollbar = styleHideScrollbar;
                      self._useNativeScrollbar = useNativeScrollbar;
 
                      return {
-                        heightFix: heightFix,
+                        displayState: displayState,
                         styleHideScrollbar: styleHideScrollbar,
                         useNativeScrollbar: useNativeScrollbar
                      }
@@ -173,44 +181,31 @@ define('Controls/Container/Scroll',
                 * Для определения heightFix и styleHideScrollbar может требоваться DOM, поэтому проверим
                 * смогли ли мы в beforeMount их определить.
                 */
-               this._heightFix = this._heightFix || ScrollHeightFixUtil.calcHeightFix(this._children.content);
-               this._styleHideScrollbar = this._styleHideScrollbar || ScrollWidthUtil.calcStyleHideScrollbar();
+               if (typeof this._displayState.heightFix === 'undefined') {
+                  this._displayState.heightFix = ScrollHeightFixUtil.calcHeightFix(this._children.content);
 
-               this._forceUpdate();
+                  this._forceUpdate();
+               }
+               if (typeof this._styleHideScrollbar === 'undefined') {
+                  this._styleHideScrollbar = ScrollWidthUtil.calcStyleHideScrollbar();
+
+                  this._forceUpdate();
+               }
             },
 
             _afterUpdate: function() {
-               var
-                  heightFix = _private.getOverflow(this),
-                  hasScroll = _private.getHasScroll(this),
-                  contentHeight = _private.getContentHeight(this),
-                  shadowPosition = _private.getShadowPosition(this);
+               var displayState = _private.calcDisplayState(this);
 
                this._children.content.scrollTop = this._scrollTop;
 
-               if (this._heightFix !== heightFix) {
-                  this._heightFix = heightFix;
-                  this._forceUpdate();
-               }
-               if (this._hasScroll !== hasScroll) {
-                  this._hasScroll = hasScroll;
-                  this._forceUpdate();
-               }
-               if (this._contentHeight !== contentHeight) {
-                  this._contentHeight = contentHeight;
-                  this._forceUpdate();
-               }
-               if (this._shadowPosition !== shadowPosition) {
-                  this._shadowPosition = shadowPosition;
+               if (isEqual(this._displayState, displayState)) {
+                  this._displayState = displayState;
                   this._forceUpdate();
                }
             },
 
             _resizeHandler: function() {
-               this._heightFix = _private.getOverflow(this);
-               this._hasScroll = _private.getHasScroll(this);
-               this._contentHeight = _private.getContentHeight(this);
-               this._shadowPosition = _private.getShadowPosition(this);
+               this._displayState = _private.calcDisplayState(this);
             },
 
             _scrollHandler: function() {
@@ -220,7 +215,7 @@ define('Controls/Container/Scroll',
             },
 
             _scrollbarTaken: function(notify) {
-               if (this._showScrollbarOnHover && this._hasScroll) {
+               if (this._showScrollbarOnHover && this._displayState.hasScroll) {
                   this._hasHover = true;
 
                   if (notify) {

@@ -3,10 +3,10 @@
    border-style: solid;
    display: inline-block;
    border-color: transparent;
-   padding: 0 @spacing_Scrollbar;
-   border-width: @spacing_Scrollbar 0;
+   padding: 0 @margin_Scrollbar;
+   border-width: @margin_Scrollbar 0;
    transition: width @animation-duration_Scrollbar ease-in-out;
-   width: @width_Scrollbar + 2 * @spacing_Scrollbar;
+   width: @width_Scrollbar + 2 * @margin_Scrollbar;
    .box-sizing();
 }
 
@@ -25,7 +25,7 @@
 
 .controls-VScrollbar:hover,
 .controls-VScrollbar_dragging {
-   width: @width_Scrollbar_animation + 2 * @spacing_Scrollbar;
+   width: @width_Scrollbar_animation + 2 * @margin_Scrollbar;
 }
 
 .controls-VScrollbar:hover .controls-VScrollbar__thumb,

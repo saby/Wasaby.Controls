@@ -2,10 +2,10 @@
    <div class="controls-Scroll ws-flexbox ws-flex-column">
       <Controls.Layout.Scroll>
          <div name="content"
-              style="{{hasScroll ? styleHideScrollbar}}"
+              style="{{displayState.hasScroll ? styleHideScrollbar}}"
               class="ws-flex-grow-1 controls-Scroll__content
                   {{hasHover ? 'controls-Scroll__content_possibleScroll'}}
-                  {{heightFix ? 'controls-Scroll__content_hidden' : 'controls-Scroll__content_scroll'}}"
+                  {{displayState.heightFix ? 'controls-Scroll__content_hidden' : 'controls-Scroll__content_scroll'}}"
               on:resize="_resizeHandler()"
               on:scroll="_scrollHandler()">
             <ws:partial template="{{optContent}}"/>
@@ -16,16 +16,16 @@
          <Controls.Container.Scroll.Scrollbar
             position="{{scrollTop}}"
             style="{{style}}"
-            contentHeight="{{contentHeight}}"
+            contentHeight="{{displayState.contentHeight}}"
             attr:class="controls-Scroll__scrollbar"
             on:positionChanged="_positionChangedHandler()"
             on:draggingChanged="_draggingChangedHandler()"/>
       </ws:if>
-      <ws:if data="{{shadowVisible && hasScroll}}">
-         <ws:if data="{{shadowPosition.indexOf('top') > -1}}">
+      <ws:if data="{{shadowVisible && displayState.hasScroll}}">
+         <ws:if data="{{displayState.shadowPosition.indexOf('top') > -1}}">
             <div class="controls-Scroll__shadow controls-Scroll__shadow_top"></div>
          </ws:if>
-         <ws:if data="{{shadowPosition.indexOf('bottom') > -1}}">
+         <ws:if data="{{displayState.shadowPosition.indexOf('bottom') > -1}}">
             <div class="controls-Scroll__shadow controls-Scroll__shadow_bottom"></div>
          </ws:if>
       </ws:if>
@@ -39,16 +39,13 @@
                scrollbarVisible="{{_options.scrollbarVisible}}"
                useNativeScrollbar="{{_useNativeScrollbar}}"
                hasHover="{{_hasHover}}"
-               hasScroll="{{_hasScroll}}"
-               shadowPosition="{{_shadowPosition}}"
                dragging="{{_dragging}}"
                style="{{_options.style}}"
                scrollTop="{{_scrollTop}}"
-               heightFix="{{_heightFix}}"
+               displayState="{{_displayState}}"
                shadowVisible="{{_options.shadowVisible}}"
                styleHideScrollbar="{{_styleHideScrollbar}}"
                optContent="{{_options.content}}"
-               contentHeight="{{_contentHeight}}"
                on:mouseenter="_mouseenterHandler()"
                on:mouseleave="_mouseleaveHandler()"
                on:scrollbarTaken="_scrollbarTakenHandler()"
@@ -59,14 +56,11 @@
                scrollbarVisible="{{_options.scrollbarVisible}}"
                useNativeScrollbar="{{_useNativeScrollbar}}"
                hasHover="{{_hasHover}}"
-               hasScroll="{{_hasScroll}}"
-               shadowPosition="{{_shadowPosition}}"
+               displayState="{{_displayState}}"
                dragging="{{_dragging}}"
                style="{{_options.style}}"
                scrollTop="{{_scrollTop}}"
-               heightFix="{{_heightFix}}"
                shadowVisible="{{_options.shadowVisible}}"
                styleHideScrollbar="{{_styleHideScrollbar}}"
-               optContent="{{_options.content}}"
-               contentHeight="{{_contentHeight}}"/>
+               optContent="{{_options.content}}"/>
 </ws:else>
