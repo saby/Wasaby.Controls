@@ -31,7 +31,6 @@ define('Controls-demo/Headers/headerDemo', [
          _bold: true,
 
          clickIcon: function (e) {
-            console.log('iconCount');
             this._iconValue = !this._iconValue;
          }
       });
