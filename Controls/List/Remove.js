@@ -24,8 +24,6 @@ define('Controls/List/Remove', [
 
    var Remove = Control.extend( {
       _template: template,
-      _listModel: undefined,
-      _sourceController: undefined,
 
       _beforeMount: function(newOptions){
          this._updateOptions(newOptions);
