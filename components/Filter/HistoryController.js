@@ -266,7 +266,6 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
              if(activeFilter) {
                 activeFilter.isActiveFilter = false;
              }
-             this._setFiltersToHash(filterObject);
              /* Не сохраняем в историю, если:
                 1) Ещё не сохранился предыдущий фильтр,
                 2) Такой фильтр уже есть в истории

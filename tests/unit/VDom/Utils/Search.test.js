@@ -38,7 +38,7 @@ define(
                var search = new Search(
                   {
                      searchParam: 'name',
-                     dataSource: source,
+                     source: source,
                      searchDelay: 50
                   }
                );
@@ -59,7 +59,7 @@ define(
                var search  = new Search(
                   {
                      searchParam: 'name',
-                     dataSource: source,
+                     source: source,
                      searchDelay: 50
                   }
                );
@@ -83,7 +83,7 @@ define(
                var search = new Search(
                   {
                      searchParam: 'name',
-                     dataSource: source,
+                     source: source,
                      searchDelay: 50
                   }
                ),
@@ -116,7 +116,7 @@ define(
                var search  = new Search(
                   {
                      searchParam: 'name',
-                     dataSource: source,
+                     source: source,
                      navigation: {
                         source: 'page',
                         sourceConfig: {
@@ -152,7 +152,7 @@ define(
                var search  = new Search(
                   {
                      searchParam: 'name',
-                     dataSource: source,
+                     source: source,
                      navigation: {
                         source: 'page',
                         sourceConfig: {

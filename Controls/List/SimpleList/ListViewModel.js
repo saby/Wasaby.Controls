@@ -140,8 +140,12 @@ define('Controls/List/SimpleList/ListViewModel',
             return this._itemsModel.getCount();
          },
 
-         getItems: function() {
-            return this._itemsModel.getItems();
+         at: function(index) {
+            return this._itemsModel.at(index);
+         },
+
+         getIndexBySourceItem: function(item) {
+            return this._itemsModel.getIndexBySourceItem(item);
          },
 
          _setEditingItemData: function(itemData) {

@@ -66,11 +66,11 @@ define([
             eip._beforeMount({
                listModel: listModel,
                editingConfig: {
-                  item: listModel.getItems().at(0)
+                  item: listModel.at(0).getContents()
                }
             });
-            assert.equal(listModel.getItems().at(0), eip._editingItem);
-            assert.equal(listModel.getItems().at(0), eip._originalItem);
+            assert.equal(listModel.at(0).getContents(), eip._editingItem);
+            assert.equal(listModel.at(0).getContents(), eip._originalItem);
          });
 
          it('Add', function() {
@@ -98,7 +98,7 @@ define([
             });
 
             var result = eip.editItem({
-               item: listModel.getItems().at(0)
+               item: listModel.at(0).getContents()
             });
             assert.isFalse(result.isSuccessful());
          });
@@ -109,17 +109,17 @@ define([
             });
 
             eip.editItem({
-               item: listModel.getItems().at(0)
+               item: listModel.at(0).getContents()
             });
-            assert.isTrue(listModel.getItems().at(0).isEqual(eip._editingItem));
-            assert.equal(listModel.getItems().at(0), eip._originalItem);
+            assert.isTrue(listModel.at(0).getContents().isEqual(eip._editingItem));
+            assert.equal(listModel.at(0).getContents(), eip._originalItem);
          });
 
          it('Deferred', function() {
             eip._notify = function(e) {
                if (e === 'beforeItemEdit') {
                   return Deferred.success({
-                     item: listModel.getItems().at(1)
+                     item: listModel.at(1).getContents()
                   });
                }
             };
@@ -129,17 +129,17 @@ define([
             });
 
             eip.editItem({
-               item: listModel.getItems().at(0)
+               item: listModel.at(0).getContents()
             });
-            assert.isTrue(listModel.getItems().at(1).isEqual(eip._editingItem));
-            assert.equal(listModel.getItems().at(0), eip._originalItem);
+            assert.isTrue(listModel.at(1).getContents().isEqual(eip._editingItem));
+            assert.equal(listModel.at(0).getContents(), eip._originalItem);
          });
 
          it('Record', function() {
             eip._notify = function(e) {
                if (e === 'beforeItemEdit') {
                   return {
-                     item: listModel.getItems().at(1)
+                     item: listModel.at(1).getContents()
                   };
                }
             };
@@ -149,10 +149,10 @@ define([
             });
 
             eip.editItem({
-               item: listModel.getItems().at(0)
+               item: listModel.at(0).getContents()
             });
-            assert.isTrue(listModel.getItems().at(1).isEqual(eip._editingItem));
-            assert.equal(listModel.getItems().at(0), eip._originalItem);
+            assert.isTrue(listModel.at(1).getContents().isEqual(eip._editingItem));
+            assert.equal(listModel.at(0).getContents(), eip._originalItem);
          });
       });
 
@@ -217,12 +217,12 @@ define([
             });
 
             eip.editItem({
-               item: listModel.getItems().at(0)
+               item: listModel.at(0).getContents()
             });
             eip._editingItem.set('title', '1234');
             var result = eip.commitEdit();
             assert.isTrue(result.isSuccessful());
-            assert.equal(listModel.getItems().at(0).get('title'), '1234');
+            assert.equal(listModel.at(0).getContents().get('title'), '1234');
          });
 
          it('Cancel', function() {
@@ -237,7 +237,7 @@ define([
             });
 
             eip.editItem({
-               item: listModel.getItems().at(0)
+               item: listModel.at(0).getContents()
             });
             var result = eip.commitEdit();
 
@@ -255,7 +255,7 @@ define([
             });
 
             eip.editItem({
-               item: listModel.getItems().at(0)
+               item: listModel.at(0).getContents()
             });
             var result = eip.commitEdit();
             assert.isTrue(result.isSuccessful());
@@ -272,11 +272,11 @@ define([
             });
 
             eip.editItem({
-               item: listModel.getItems().at(0)
+               item: listModel.at(0).getContents()
             });
             eip._editingItem.set('title', '1234');
             eip.commitEdit().addCallback(function() {
-               assert.equal(listModel.getItems().at(0).get('title'), '1234');
+               assert.equal(listModel.at(0).getContents().get('title'), '1234');
                source.read(1).addCallback(function(result) {
                   assert.equal(result.get('title'), '1234');
                   done();
@@ -300,7 +300,7 @@ define([
 
             eip._editingItem.set('title', '1234');
             eip.commitEdit().addCallback(function() {
-               assert.equal(listModel.getItems().at(3).get('title'), '1234');
+               assert.equal(listModel.at(3).getContents().get('title'), '1234');
                assert.equal(listModel.getCount(), 4);
                source.read(4).addCallback(function(result) {
                   assert.equal(result.get('title'), '1234');
@@ -351,25 +351,25 @@ define([
             });
 
             eip.editItem({
-               item: listModel.getItems().at(0)
+               item: listModel.at(0).getContents()
             });
             eip._editingItem.set('title', '1234');
             var result = eip.cancelEdit();
             assert.isTrue(result.isSuccessful());
-            assert.equal(listModel.getItems().at(0).get('title'), 'Первый');
+            assert.equal(listModel.at(0).getContents().get('title'), 'Первый');
          });
       });
 
       describe('_onKeyDown', function() {
          it('Enter', function() {
             eip.editItem = function(options) {
-               assert.equal(options.item, listModel.getItems().at(1))
+               assert.equal(options.item, listModel.at(1).getContents());
             };
             eip.saveOptions({
                listModel: listModel
             });
-            eip._editingItem = listModel.getItems().at(0);
-            eip._setEditingItemData(listModel.getItems().at(0), eip._options.listModel);
+            eip._editingItem = listModel.at(0).getContents();
+            eip._setEditingItemData(listModel.at(0).getContents(), eip._options.listModel);
             eip._onKeyDown({
                nativeEvent: {
                   keyCode: 13
@@ -384,8 +384,8 @@ define([
             eip.saveOptions({
                listModel: listModel
             });
-            eip._editingItem = listModel.getItems().at(2);
-            eip._setEditingItemData(listModel.getItems().at(2), eip._options.listModel);
+            eip._editingItem = listModel.at(2).getContents();
+            eip._setEditingItemData(listModel.at(2).getContents(), eip._options.listModel);
             eip._onKeyDown({
                nativeEvent: {
                   keyCode: 13
@@ -404,8 +404,8 @@ define([
                   autoAdd: true
                }
             });
-            eip._editingItem = listModel.getItems().at(2);
-            eip._setEditingItemData(listModel.getItems().at(2), eip._options.listModel);
+            eip._editingItem = listModel.at(2).getContents();
+            eip._setEditingItemData(listModel.at(2).getContents(), eip._options.listModel);
             eip._onKeyDown({
                nativeEvent: {
                   keyCode: 13
@@ -423,8 +423,8 @@ define([
                   singleEdit: true
                }
             });
-            eip._editingItem = listModel.getItems().at(0);
-            eip._setEditingItemData(listModel.getItems().at(0), eip._options.listModel);
+            eip._editingItem = listModel.at(0).getContents();
+            eip._setEditingItemData(listModel.at(0).getContents(), eip._options.listModel);
             eip._onKeyDown({
                nativeEvent: {
                   keyCode: 13
@@ -442,8 +442,8 @@ define([
                   singleEdit: true
                }
             });
-            eip._editingItem = listModel.getItems().at(0);
-            eip._setEditingItemData(listModel.getItems().at(0), eip._options.listModel);
+            eip._editingItem = listModel.at(0).getContents();
+            eip._setEditingItemData(listModel.at(0).getContents(), eip._options.listModel);
             eip._onKeyDown({
                nativeEvent: {
                   keyCode: 27
@@ -453,14 +453,14 @@ define([
 
          it('Tab', function(done) {
             eip.editItem = function(options) {
-               assert.equal(options.item, listModel.getItems().at(1));
+               assert.equal(options.item, listModel.at(1).getContents());
                done();
             };
             eip.saveOptions({
                listModel: listModel
             });
-            eip._editingItem = listModel.getItems().at(0);
-            eip._setEditingItemData(listModel.getItems().at(0), eip._options.listModel);
+            eip._editingItem = listModel.at(0).getContents();
+            eip._setEditingItemData(listModel.at(0).getContents(), eip._options.listModel);
             eip._onKeyDown({
                nativeEvent: {
                   keyCode: 9
@@ -475,8 +475,8 @@ define([
             eip.saveOptions({
                listModel: listModel
             });
-            eip._editingItem = listModel.getItems().at(2);
-            eip._setEditingItemData(listModel.getItems().at(2), eip._options.listModel);
+            eip._editingItem = listModel.at(2).getContents();
+            eip._setEditingItemData(listModel.at(2).getContents(), eip._options.listModel);
             eip._onKeyDown({
                nativeEvent: {
                   keyCode: 9
@@ -494,8 +494,8 @@ define([
                   autoAdd: true
                }
             });
-            eip._editingItem = listModel.getItems().at(2);
-            eip._setEditingItemData(listModel.getItems().at(2), eip._options.listModel);
+            eip._editingItem = listModel.at(2).getContents();
+            eip._setEditingItemData(listModel.at(2).getContents(), eip._options.listModel);
             eip._onKeyDown({
                nativeEvent: {
                   keyCode: 9
@@ -505,14 +505,14 @@ define([
 
          it('Shift+Tab', function(done) {
             eip.editItem = function(options) {
-               assert.equal(options.item, listModel.getItems().at(0)), eip._options.listModel;
+               assert.equal(options.item, eip._options.listModel.at(0).getContents());
                done();
             };
             eip.saveOptions({
                listModel: listModel
             });
-            eip._editingItem = listModel.getItems().at(1);
-            eip._setEditingItemData(listModel.getItems().at(1), eip._options.listModel);
+            eip._editingItem = listModel.at(1).getContents();
+            eip._setEditingItemData(listModel.at(1).getContents(), eip._options.listModel);
             eip._onKeyDown({
                nativeEvent: {
                   keyCode: 9,
@@ -528,8 +528,8 @@ define([
             eip.saveOptions({
                listModel: listModel
             });
-            eip._editingItem = listModel.getItems().at(0);
-            eip._setEditingItemData(listModel.getItems().at(0), eip._options.listModel);
+            eip._editingItem = listModel.at(0).getContents();
+            eip._setEditingItemData(listModel.at(0).getContents(), eip._options.listModel);
             eip._onKeyDown({
                nativeEvent: {
                   keyCode: 9,

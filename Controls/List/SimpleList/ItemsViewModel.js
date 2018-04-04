@@ -105,8 +105,13 @@ define('Controls/List/SimpleList/ItemsViewModel',
          prependItems: function(items) {
             this._items.prepend(items);
          },
-         getItems: function() {
-            return this._display ? this._display.getCollection() : undefined;
+
+         getIndexBySourceItem: function(item) {
+            return this._display ? this._display.getIndexBySourceItem(item) : undefined;
+         },
+
+         at: function(index) {
+            return this._display ? this._display.at(index) : undefined;
          },
 
          removeItems: function(items) {
