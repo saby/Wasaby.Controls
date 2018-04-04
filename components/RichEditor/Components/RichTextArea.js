@@ -79,7 +79,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          EDITOR_MODULES = [
             'css!' + TINYMCE_URL_BASE + '/skins/lightgray/skin.min.css',
             'css!' + TINYMCE_URL_BASE + '/skins/lightgray/content.inline.min.css',
-            TINYMCE_URL_BASE + '/tinymce'
+            //Экстренное решение что бы уменшить трафик. В 3.18.200 надо исправить сия безобразие
+            TINYMCE_URL_BASE + '/tinymce.min'
          ],
          constants = {
             baseAreaWidth: 768,//726
