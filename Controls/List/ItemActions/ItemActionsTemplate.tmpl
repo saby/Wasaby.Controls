@@ -2,7 +2,7 @@
     <div class="controls-itemActionsV__wrapper">
         <ws:for data="action in itemData.itemActions">
             <ws:if data="{{!!action.main ||!!action.additional || itemActionsType === 'outside'}}">
-                <div  class="controls-itemActionsV__action {{!!action.icon && itemData.isEditing ? 'controls-itemActionsV_editing__action'}}{{!!action.iconDone ? ' controls-itemActionsV_editing__action_done'}}{{!!action.iconError ? ' controls-itemActionsV_editing__action_error'}}"
+                <div  class="controls-itemActionsV__action {{!!action.style ? 'controls-itemActionsV__action_' + action.style}}{{!!action.iconDone ? ' controls-itemActionsV__action_done'}}{{!!action.iconError ? ' controls-itemActionsV__action_error'}}"
                       title="{{!!action.title ? action.title}}"
                       on:click="_onActionClick(action, itemData.item)">
                     <ws:if data="{{!!action.icon}}">
@@ -15,12 +15,12 @@
             </ws:if>
         </ws:for>
         <ws:if data ="{{itemData.isEditing}}">
-            <div  class="controls-itemActionsV__action controls-itemActionsV_editing__action controls-itemActionsV_editing__action_done"
+            <div  class="controls-itemActionsV__action controls-itemActionsV__action_bordered controls-itemActionsV__action_done"
                   title="Сохранить"
                   on:click="_applyEdit(itemData.item)">
                 <i class="icon-Yes icon-done controls-itemActionsV__action_icon icon-size"/>
             </div>
-            <div  class="controls-itemActionsV__action controls-itemActionsV_editing__action"  title="Отмена" on:click="_cancelEdit(itemData.item)">
+            <div  class="controls-itemActionsV__action controls-itemActionsV__action_bordered"  title="Отмена" on:click="_cancelEdit(itemData.item)">
                 <i class="icon-Close icon-primary controls-itemActionsV__action_icon icon-size"/>
             </div>
         </ws:if>

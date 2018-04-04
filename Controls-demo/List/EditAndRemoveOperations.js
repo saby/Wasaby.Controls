@@ -121,6 +121,7 @@ define('Controls-demo/List/EditAndRemoveOperations', [
                icon: 'icon-Edit icon-primary',
                title: 'edit',
                main: true,
+               style: 'bordered',
                handler: function(item){
                  this._children.list.editItem({item: item});
                }.bind(this)
@@ -129,7 +130,7 @@ define('Controls-demo/List/EditAndRemoveOperations', [
                id: 1,
                icon: 'icon-Erase icon-error',
                title: 'delete',
-               style: 'border',
+               style: 'bordered',
                main: true,
                handler: function(item){
                   this._children.list.removeItems([item.get('id')]);
@@ -140,6 +141,7 @@ define('Controls-demo/List/EditAndRemoveOperations', [
                icon: 'icon-ArrowDown icon-error',
                title: 'я прикладная операция и появляюсь только если запись редактируется',
                main: true,
+               style: 'bordered',
                handler: function(item){
                   if (confirm('Обязательно нажимать было?')) {
                      alert('У меня для вас плохие новости')
