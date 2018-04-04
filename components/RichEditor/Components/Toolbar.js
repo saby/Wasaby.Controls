@@ -165,9 +165,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
                case 'italic':
                case 'underline':
                case 'strikethrough':
-               case 'blockquote':
                   this._toggleState(state, obj);
-               break;
+                  break;
+               case 'blockquote': {
+                  if (!obj.node.className) {
+                     this._toggleState(state, obj);
+                  }
+                  break;
+               }
                case 'alignleft':
                case 'aligncenter':
                case 'alignright':
@@ -179,9 +184,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
                case 'additionalText':
                   this._updateTextFormat(state, obj);
                   break;
-               case 'customBlockquote':
-                  this._toggleState(state,obj);
-                  break;
+               default: {
+                  this._toggleState(state, obj);
+               }
             }
          },
 
@@ -189,14 +194,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
             var
                result = RichEditorToolbar.superclass._toggleState.apply(this, arguments);
             if (this.getItems().getRecordById(result.name) && this.getItemInstance(result.name)) {
-                if((this.getItemInstance('blockquote').isChecked()) && (result.name === 'customBlockquote')) {
-                   this.getItemInstance('blockquote').setChecked(false);
-                }
-                if((this.getItemInstance('customBlockquote').isChecked()) && (result.name === 'blockquote') && (this.getItemInstance('blockquote').isChecked())) {
-                   this.getItemInstance('customBlockquote').setChecked(false);
-                   this.getLinkedEditor().execCommand('mceblockquote');
-                   result.state = true;
-                }
                 this.getItemInstance(result.name).setChecked(result.state);
             }
          },
@@ -352,12 +349,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
             if (this._options.linkedEditor) {
                this._options.linkedEditor.setFontColor(color);
             }
-         },
-
-         _setCustomBlockquote: function(){
-           if (this._options.linkedEditor) {
-              this._options.linkedEditor.setCustomBlockquote();
-           }
          },
 
          _insertLink: function(onAfterCloseHandler, target) {

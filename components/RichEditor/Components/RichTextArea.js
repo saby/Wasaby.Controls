@@ -75,8 +75,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             styles: {
                title: {inline: 'span', classes: 'titleText'},
                subTitle: {inline: 'span', classes: 'subTitleText'},
-               additionalText: {inline: 'span', classes: 'additionalText'},
-               customBlockquote: {block: 'blockquote', classes: 'customBlockquote'}
+               additionalText: {inline: 'span', classes: 'additionalText'}
             },
             colorsMap: {
                'rgb(0, 0, 0)': 'black',
@@ -250,7 +249,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          },
 
          $constructor: function() {
-            var self = this;
+            var self = this,
+            // Настраиваемые форматы для блоков
+            customStyles = {
+               customStyle: {
+                  block: 'blockquote',
+                  classes: 'customStyle',
+                  wrapper: 1,
+                  remove: 'all'}
+            }
             this._publish('onInitEditor', 'onUndoRedoChange','onNodeChange', 'onFormatChange', 'onToggleContentSource');
             this._sourceContainer = this._container.find('.controls-RichEditor__sourceContainer');
             this._sourceArea = this._sourceContainer.find('.controls-RichEditor__sourceArea').bind('input', this._onChangeAreaValue.bind(this));
@@ -266,6 +273,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             this._inputControl = this._container.find('.controls-RichEditor__editorFrame');
             this._fakeArea = this._container.find('.controls-RichEditor__fakeArea');
             this._initMainHeight();
+            for(var key in customStyles) {
+               this._options.editorConfig.formats[key] = customStyles[key];
+            }
             this._options.editorConfig.selector = '#' + this.getId() + ' .controls-RichEditor__editorFrame';
             this._options.editorConfig.fixed_toolbar_container = '#' + this.getId() + ' > .controls-RichEditor__fakeArea';
             this._options.editorConfig.setup = function(editor) {
@@ -1242,20 +1252,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
 
          // Добавление и удаление кастомизируемой цитаты
-         setCustomBlockquote: function() {
-            if ($(this._tinyEditor.selection.getNode())[0].offsetParent.localName != "blockquote") {
-               this._tinyEditor.execCommand('mceblockquote');
-               if (this._getToolbar().getItemInstance('customBlockquote').isChecked()) {
-                  var
-                     $selectionContent = $(this._tinyEditor.selection.getNode());
-                  this._tinyEditor.formatter.toggle('customBlockquote', $selectionContent);
-               }
-            }
-            else {
-               var
-                  $selectionContent = $(this._tinyEditor.selection.getNode());
-               this._tinyEditor.formatter.toggle('customBlockquote', $selectionContent);
-            }
+         toggleStyle: function(style) {
+            this._tinyEditor.formatter.toggle(style);
          },
 
          /**
@@ -1625,7 +1623,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                self._tinyReady.callback();
                /*НОТИФИКАЦИЯ О ТОМ ЧТО В РЕДАКТОРЕ ПОМЕНЯЛСЯ ФОРМАТ ПОД КУРСОРОМ*/
                //formatter есть только после инита поэтому подписка осуществляется здесь
-               editor.formatter.formatChanged('bold,italic,underline,strikethrough,alignleft,aligncenter,alignright,alignjustify,title,subTitle,additionalText,blockquote,customBlockquote', function(state, obj) {
+               editor.formatter.formatChanged('bold,italic,underline,strikethrough,alignleft,aligncenter,alignright,alignjustify,title,subTitle,additionalText,blockquote,customStyle', function(state, obj) {
                   self._notify('onFormatChange', obj, state)
                });
                self._notify('onInitEditor');
