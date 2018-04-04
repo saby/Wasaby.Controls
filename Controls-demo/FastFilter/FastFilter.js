@@ -88,7 +88,7 @@ define('Controls-demo/FastFilter/FastFilter',
 
          dataSourceDemoItems: [
             {
-               id: 'filter1',
+               id: 'filter21',
                resetValue: 'все страны',
                value: 'Франция',
                properties: {
@@ -109,7 +109,7 @@ define('Controls-demo/FastFilter/FastFilter',
             },
             {
 
-               id: 'filter2',
+               id: 'filter22',
                resetValue: 0,
                value: 2,
                properties: {
@@ -129,7 +129,7 @@ define('Controls-demo/FastFilter/FastFilter',
                }
             },
             {
-               id: 'fafaf',
+               id: 'fafaf2',
                resetValue: '3',
                value: '0',
                properties: {

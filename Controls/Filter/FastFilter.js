@@ -45,11 +45,10 @@ define('Controls/Filter/FastFilter',
 
       var _private = {
 
-         prepareItems: function (self, items, idProperty) {
+         prepareItems: function (self, items) {
             if (!cInstance.instanceOfMixin(items, 'WS.Data/Collection/IList')) {
                self._items = new List({
-                  rawData: items,
-                  idProperty: idProperty
+                  items: items
                });
             } else {
                self._items = items;
@@ -151,13 +150,13 @@ define('Controls/Filter/FastFilter',
                componentOptions: {
                   items: this._configs[index]._items,
                   keyProperty: this._configs[index].keyProperty,
-                  parentProperty: item.get('parentProperty'),
-                  nodeProperty: item.get('nodeProperty'),
-                  itemTemplateProperty: item.get('itemTemplateProperty'),
-                  itemTemplate: item.get('itemTemplate'),
-                  headTemplate: item.get('headTemplate'),
-                  footerTemplate: item.get('footerTemplate'),
-                  selectedKeys: this._items.at(index).get('value')
+                  parentProperty: getPropValue(item, 'parentProperty'),
+                  nodeProperty: getPropValue(item, 'nodeProperty'),
+                  itemTemplateProperty: getPropValue(item, 'itemTemplateProperty'),
+                  itemTemplate: getPropValue(item, 'itemTemplate'),
+                  headTemplate: getPropValue(item, 'headTemplate'),
+                  footerTemplate: getPropValue(item, 'footerTemplate'),
+                  selectedKeys: getPropValue(this._items.at(index), 'value')
                },
                target: event.target.parentElement
             };
