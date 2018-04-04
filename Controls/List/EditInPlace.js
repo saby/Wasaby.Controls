@@ -100,7 +100,7 @@ define('Controls/List/EditInPlace', [
 
          acceptChanges: function(self) {
             if (self._isAdd) {
-               self._options.listModel.getItems().add(self._editingItem);
+               self._options.listModel.appendItems([self._editingItem]);
             } else {
                self._originalItem.merge(self._editingItem);
             }
@@ -117,14 +117,12 @@ define('Controls/List/EditInPlace', [
          },
 
          editNextRow: function(self, editNextRow) {
-            var
-               items = self._options.listModel.getItems(),
-               index = _private.getEditingItemIndex(self, self._editingItem, self._options.listModel);
+            var index = _private.getEditingItemIndex(self, self._editingItem, self._options.listModel);
 
             if (editNextRow) {
-               if (index < items.getCount() - 1 && ~index) {
+               if (index < self._options.listModel.getCount() - 1) {
                   self.editItem({
-                     item: items.at(index + 1)
+                     item: self._options.listModel.at(index + 1).getContents()
                   });
                } else if (self._options.editingConfig && self._options.editingConfig.autoAdd) {
                   self.addItem();
@@ -134,7 +132,7 @@ define('Controls/List/EditInPlace', [
             } else {
                if (index > 0) {
                   self.editItem({
-                     item: items.at(index - 1)
+                     item: self._options.listModel.at(index - 1).getContents()
                   });
                } else {
                   self.commitEdit();
@@ -144,11 +142,11 @@ define('Controls/List/EditInPlace', [
 
          getEditingItemIndex: function(self, editingItem, listModel) {
             var
-               index = -1,
+               index = listModel.getCount(),
                originalItem = listModel.getItemById(ItemsUtil.getPropertyValue(editingItem, listModel._options.idProperty), listModel._options.idProperty);
 
             if (originalItem) {
-               index = listModel.getItems().getIndex(originalItem.getContents());
+               index = listModel.getIndexBySourceItem(originalItem.getContents());
             }
 
             return index;
@@ -251,10 +249,9 @@ define('Controls/List/EditInPlace', [
       editItem: function(options) {
          var self = this,
             editingItemIndex = _private.getEditingItemIndex(this, this._editingItem, this._options.listModel),
-            currentItemIndex = this._options.listModel.getItems().getIndex(options.item);
+            currentItemIndex = this._options.listModel.getIndexBySourceItem(options.item);
 
-         //Если currentItemIndex = -1, то происходит добавление
-         if (editingItemIndex !== currentItemIndex && ~currentItemIndex) {
+         if (editingItemIndex !== currentItemIndex) {
             return this.commitEdit().addCallback(function() {
                return _private.editItem(self, options).addCallback(function(newOptions) {
                   return _private.afterItemEdit(self, newOptions);
@@ -338,7 +335,7 @@ define('Controls/List/EditInPlace', [
             return;
          }
          var index = _private.getEditingItemIndex(this, item, listModel);
-         this._isAdd = index === -1;
+         this._isAdd = index === listModel.getCount();
          this._editingItemProjection = this._isAdd
             ? new CollectionItem({ contents: this._editingItem })
             : listModel.getItemById(ItemsUtil.getPropertyValue(this._editingItem, listModel._options.idProperty), listModel._options.idProperty);
@@ -346,7 +343,7 @@ define('Controls/List/EditInPlace', [
             getPropValue: ItemsUtil.getPropertyValue,
             idProperty: listModel._options.idProperty,
             displayProperty: listModel._options.displayProperty,
-            index: this._isAdd ? listModel.getItems().getCount() : index,
+            index: this._isAdd ? listModel.getCount() : index,
             item: this._editingItem,
             dispItem: this._editingItemProjection,
             isEditing: true,
