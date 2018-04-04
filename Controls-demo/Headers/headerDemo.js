@@ -20,13 +20,9 @@ define('Controls-demo/Headers/headerDemo', [
          _iconStyle: undefined,
          _separatorIconStyle: undefined,
          _separatorIcon: false,
-         _iconClickable: false,
-         _countClickable: false,
          _backSize: undefined,
          _backCaption: 'Back',
          _backStyle: undefined,
-         _counterIconClick: 0,
-         _counterCountClick: 0,
          _iconSize: undefined,
          _showCaption: true,
          _showCounter: true,
@@ -34,18 +30,7 @@ define('Controls-demo/Headers/headerDemo', [
          _showSeparator: true,
          _bold: true,
 
-
-         clickHandler: function (e) {
-            console.log('Click');
-         },
-
-         clickCount: function (e) {
-            this._counterCountClick++;
-            console.log('clickCount');
-         },
-
          clickIcon: function (e) {
-            this._counterIconClick++;
             console.log('iconCount');
             this._iconValue = !this._iconValue;
          }

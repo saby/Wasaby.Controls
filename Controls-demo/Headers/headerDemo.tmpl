@@ -19,14 +19,14 @@
             <h2>Заголовок</h2>
             <div class="wrapper">
                 <ws:if data="{{_showButtonSeparator}}">
-                    <Controls.Button.ButtonSeparator on:iconClick="clickIcon()" style="{{_iconStyle}}" bold="{{_bold}}" value="{{_iconValue}}"/>
+                    <Controls.Button.ButtonSeparator on:click="clickIcon()" style="{{_iconStyle}}" bold="{{_bold}}" value="{{_iconValue}}"/>
                 </ws:if>
                 <div class="wrapperCounterCaption">
                     <ws:if data="{{_showCaption}}">
                         <Controls.Header caption="{{_caption}}" style="{{_captionStyle}}" size="{{_captionSize}}"/>
                     </ws:if>
                     <ws:if data="{{_showCounter}}">
-                        <Controls.Header.Counter attr:class="counter" on:countClick="clickCount()" value="{{_counterValue}}" style="{{_counterStyle}}" size="{{_counterSize}}"/>
+                        <Controls.Header.Counter attr:class="counter" value="{{_counterValue}}" style="{{_counterStyle}}" size="{{_counterSize}}"/>
                     </ws:if>
                 </div>
                 <ws:if data="{{_showSeparator}}">

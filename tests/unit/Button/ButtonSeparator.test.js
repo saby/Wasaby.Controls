@@ -1,6 +1,6 @@
 define(['Controls/Button/ButtonSeparator'], function (Separator) {
    'use strict';
-   var separator, successIconClick;
+   var separator;
    describe('Controls/Button/ButtonSeparator', function () {
       beforeEach(function(){
          separator = new Separator();
