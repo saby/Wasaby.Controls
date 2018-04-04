@@ -4,9 +4,8 @@
 define([
    'Controls/List/SimpleList/ItemsViewModel',
    'Controls/List/resources/utils/ItemsUtil',
-   'WS.Data/Collection/RecordSet',
-   'WS.Data/Entity/Record'
-], function(ItemsViewModel, ItemsUtil, RecordSet, Record){
+   'WS.Data/Collection/RecordSet'
+], function(ItemsViewModel, ItemsUtil, RecordSet){
    describe('Controls.List.ListControl.ItemsViewModel', function () {
       var data, data2, display;
       beforeEach(function() {
