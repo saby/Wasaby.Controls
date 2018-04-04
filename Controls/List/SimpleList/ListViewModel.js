@@ -82,6 +82,10 @@ define('Controls/List/SimpleList/ListViewModel',
             itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
             itemsModelCurrent.showActions = !this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive);
             itemsModelCurrent.multiSelectStatus = this._multiselection.getSelectionStatus(itemsModelCurrent.key);
+            if (this._editingItemData && itemsModelCurrent.index === this._editingItemData.index) {
+               itemsModelCurrent.isEditing = true;
+               itemsModelCurrent.item = this._editingItemData.item;
+            }
             return itemsModelCurrent;
          },
 
@@ -141,14 +145,12 @@ define('Controls/List/SimpleList/ListViewModel',
          },
 
          _setEditingItemData: function(itemData) {
-            this._itemsModel._setEditingItemData(itemData);
-            //todo: как получить дополнительные операции при добавлении записи
-            //itemData.itemActions =  this._actions[this.getCurrentIndex()];
+            this._editingItemData = itemData;
             if (itemData && itemData.item) {
                this.setMarkedKey(itemData.item.get(this._options.idProperty));
             }
          },
-         setItemActions: function(itemData, actions){
+         setItemActions: function(itemData, actions) {
             this._actions[itemData.index] = actions;
          },
 
