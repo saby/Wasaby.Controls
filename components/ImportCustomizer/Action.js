@@ -33,7 +33,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           * @typedef {object} ImportRemoteCall Тип, содержащий информацию для вызова удалённого сервиса для получения данных ввода или отправки данных вывода. Соответствует вспомогательному классу {@link SBIS3.CONTROLS/ImportCustomizer/RemoteCall}
           * @property {string} endpoint Сервис, метод которого будет вызван
           * @property {string} method Имя вызываемого метода
-          * @property {object} args Аргументы вызываемого метода (опционально)
+          * @property {string} [idProperty] Имя свойства, в котором находится идентификатор (опционально, если вызову это не потребуется)
+          * @property {object} [args] Аргументы вызываемого метода (опционально)
           * @property {function(object):object} [argsFilter] Фильтр аргументов (опционально)
           * @property {function(object):object} [resultFilter] Фильтр результатов (опционально)
           */
