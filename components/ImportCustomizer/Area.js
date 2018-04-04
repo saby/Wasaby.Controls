@@ -71,8 +71,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
 
          /**
           * @typedef {object} ImportValidator Тип, описывающий валидаторы результаттов редактирования
-          * @property {function} validator Функция проверки. Должна возвратить либо логическое значение, показывающее пройдена ли проверка, либо строку с сообщением об ошибке
-          * @property {Array<*>} [params] Дополнительные аргументы функции проверки (опционально)
+          * @property {function(object, function):(boolean|string)} validator Функция проверки. Принимает два аргумента. Первый - объект с проверяемыми данными. Второй - геттер опции по её имени. Геттер позволяет получить доступ к опциям, которые есть в настройщике импорта в момент валидации, но на момент задания валидатора ещё не были доступны (например, получены через обещание или через {@link ImportRemoteCall}). Должна возвратить либо логическое значение, показывающее пройдена ли проверка, либо строку с сообщением об ошибке
+          * @property {Array<*>} [params] Дополнительные аргументы функции проверки, будут добавлены после основных (опционально)
           * @property {string} [errorMessage] Сообщение об ошибке по умолчанию (опционально)
           * @property {boolean} [noFailOnError] Указывает на то, что если проверка не пройдена, это не является фатальным. В таком случае пользователю будет показан диалог с просьбой о подтверждении (опционально)
           */
@@ -403,7 +403,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                   var check = validators[i];
                   var args = check.params;
                   args = args && args.length ? args.slice() : [];
-                  args.push(data, optionGetter);
+                  args.unshift(data, optionGetter);
                   var result = check.validator.apply(null, args);
                   if (result !== true) {
                      (check.noFailOnError ? warnings : errors).push(
