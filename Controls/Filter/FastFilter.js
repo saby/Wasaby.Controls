@@ -55,7 +55,7 @@ define('Controls/Filter/FastFilter',
             }
          },
 
-         loadSource: function (instance, source, idProperty) {
+         loadItemsFromSource: function (instance, source, idProperty) {
             var sourceController = new SourceController({
                source: source,
                idProperty: idProperty
@@ -76,7 +76,7 @@ define('Controls/Filter/FastFilter',
                _private.prepareItems(self._configs[index], properties.items, properties.keyProperty);
                return Deferred.success(self._configs[index]._items);
             } else if (properties.source) {
-               return _private.loadSource(self._configs[index], properties.source, properties.keyProperty);
+               return _private.loadItemsFromSource(self._configs[index], properties.source, properties.keyProperty);
             }
          },
 
@@ -138,7 +138,7 @@ define('Controls/Filter/FastFilter',
                _private.prepareItems(this, options.items);
                resultDef = _private.reload(this);
             } else if (options.source) {
-               resultDef = _private.loadSource(self, options.source).addCallback(function () {
+               resultDef = _private.loadItemsFromSource(self, options.source).addCallback(function () {
                   return _private.reload(self);
                });
             }

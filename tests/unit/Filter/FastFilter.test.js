@@ -26,6 +26,7 @@ define(
                resetValue: 'все страны',
                properties: {
                   keyProperty: 'title',
+                  displayProperty: 'title',
                   source: {
                      module: 'WS.Data/Source/Memory',
                      options: {
