@@ -180,12 +180,13 @@ define('SBIS3.CONTROLS/Tree/CompositeView', [
             _getRecordsForRedraw: getRecordsForRedraw,
             /**
              * @cfg {String} Устанавливает шаблон, который используется для отрисовки папки в режимах "Список" и "Плитка"
+             * @deprecated Используйте {@link SBIS3.CONTROLS/Tree/CompositeView#folderTpl}.
              * @remark
              * Когда опция не задана, используется стандартный шаблон. Для его работы требуется установить опцию {@link SBIS3.CONTROLS/Mixins/DSMixin#displayProperty}.
              * Для режима отображения "Список" можно переопределить шаблон папки с помощью опции {@link listFolderTemplate}.
              * Кроме шаблона папки, можно установить шаблон отображения элементов коллекции с помощью опций {@link SBIS3.CONTROLS/Columns.typedef cellTemplate}, {@link SBIS3.CONTROLS/ListView#itemTemplate}, {@link SBIS3.CONTROLS/Mixins/CompositeViewMixin#listTemplate} и {@link SBIS3.CONTROLS/Mixins/CompositeViewMixin#tileTemplate}.
              * @see listFolderTemplate
-             * SBIS3.CONTROLS/Mixins/DSMixin#displayProperty
+             * @see SBIS3.CONTROLS/Mixins/DSMixin#displayProperty
              * @see SBIS3.CONTROLS/Columns.typedef
              * @see SBIS3.CONTROLS/ListView#itemTemplate
              * @see SBIS3.CONTROLS/Mixins/CompositeViewMixin#listTemplate
@@ -193,21 +194,45 @@ define('SBIS3.CONTROLS/Tree/CompositeView', [
              * @example
              * <pre>
              *    <div class="controls-ListView__demo-folder">\
-             *       {{=it.item.get("title")}}\
+             *       {{item['title']}}\
              *    </div>
              * </pre>
              */
             folderTemplate: undefined,
+            /**
+             * @cfg {String} Устанавливает шаблон, который используется для отрисовки папки в режимах "Список" и "Плитка"
+             * @remark
+             * Режим отображения определяется опцией {@link SBIS3.CONTROLS/Mixins/CompositeViewMixin#viewMode},
+             * Когда опция не задана, используется стандартный шаблон. Для его работы требуется установить опцию {@link SBIS3.CONTROLS/Mixins/DSMixin#displayProperty}.
+             * Для режима отображения "Список" можно переопределить шаблон папки с помощью опции {@link listFolderTpl}.
+             * Кроме шаблона папки, можно установить шаблон отображения элементов коллекции с помощью опций {@link SBIS3.CONTROLS/Columns.typedef cellTemplate}, {@link SBIS3.CONTROLS/ListView#itemTemplate}, {@link SBIS3.CONTROLS/Mixins/CompositeViewMixin#listTemplate} и {@link SBIS3.CONTROLS/Mixins/CompositeViewMixin#tileTemplate}.
+             * @see listFolderTpl
+             * @see SBIS3.CONTROLS/Mixins/DSMixin#displayProperty
+             * @see SBIS3.CONTROLS/Columns.typedef
+             * @see SBIS3.CONTROLS/ListView#itemTemplate
+             * @see SBIS3.CONTROLS/Mixins/CompositeViewMixin#listTemplate
+             * @see SBIS3.CONTROLS/Mixins/CompositeViewMixin#tileTemplate
+             */
             folderTpl: null,
+            /**
+             * @cfg {String} Задаёт шаблон отображения содержимого каждого элемента коллекции для отрисовки папки в режимах "Список" и "Плитка"
+             * @remark
+             * Режим отображения определяется опцией {@link SBIS3.CONTROLS/Mixins/CompositeViewMixin#viewMode},
+             * Подробнее про режимы отображения можно прочитать {@link /doc/platform/developmentapl/interface-development/components/list/list-settings/list-types/#compositeview здесь}.
+             * @see folderTpl
+             * @see listFolderTpl
+             * @see setListFolderTpl
+             */
             folderContentTpl: null,
             /**
-             * @cfg {String} Устанавливает шаблон, который используется для отрисовки папки в режимах "Список"
+             * @cfg {String} Устанавливает шаблон для отрисовки папки в режиме "Список"
+             * @deprecated Используйте {@link SBIS3.CONTROLS/Tree/CompositeView#listFolderTpl}.
              * @remark
              * Когда опция не задана, используется стандартный шаблон. Для его работы требуется установить опцию {@link SBIS3.CONTROLS/Mixins/DSMixin#displayProperty}.
              * Для режима отображения "Плитка" можно переопределить шаблон папки с помощью опции {@link folderTemplate}.
              * Кроме шаблона папки, можно установить шаблон отображения элементов коллекции с помощью опций {@link SBIS3.CONTROLS/Columns.typedef cellTemplate}, {@link SBIS3.CONTROLS/ListView#itemTemplate}, {@link SBIS3.CONTROLS/Mixins/CompositeViewMixin#listTemplate} и {@link SBIS3.CONTROLS/Mixins/CompositeViewMixin#tileTemplate}.
              * @see folderTemplate
-             * SBIS3.CONTROLS/Mixins/DSMixin#displayProperty
+             * @see SBIS3.CONTROLS/Mixins/DSMixin#displayProperty
              * @see SBIS3.CONTROLS/Columns.typedef
              * @see SBIS3.CONTROLS/ListView#itemTemplate
              * @see SBIS3.CONTROLS/Mixins/CompositeViewMixin#listTemplate
@@ -219,7 +244,27 @@ define('SBIS3.CONTROLS/Tree/CompositeView', [
              * </pre>
              */
             listFolderTemplate: undefined,
+            /**
+             * @cfg {String} Устанавливает шаблон для отрисовки папки в режиме "Список"
+             * @remark
+             * Режим отображения определяется опцией {@link SBIS3.CONTROLS/Mixins/CompositeViewMixin#viewMode},
+             * Опция работает для viewMode = list
+             * Подробнее про режимы отображения можно прочитать {@link /doc/platform/developmentapl/interface-development/components/list/list-settings/list-types/#compositeview здесь}.
+             * @see setListFolderTpl
+             * @see listFolderContentTpl
+             * @see setListFolderContentTpl
+             */
             listFolderTpl: null,
+            /**
+             * @cfg {String} Задаёт шаблон отображения содержимого каждого элемента коллекции для отрисовки папки в режиме "Список"
+             * @remark
+             * Режим отображения определяется опцией {@link SBIS3.CONTROLS/Mixins/CompositeViewMixin#viewMode},
+             * Опция работает для viewMode = list
+             * Подробнее про режимы отображения можно прочитать {@link /doc/platform/developmentapl/interface-development/components/list/list-settings/list-types/#compositeview здесь}.
+             * @see setListFolderContentTpl
+             * @see listFolderTpl
+             * @see setListFolderTpl
+             */
             listFolderContentTpl: null,
             _defaultFolderTemplate: FolderTemplate,
             _defaultFolderContentTemplate: FolderContentTemplate,
