@@ -2,8 +2,8 @@
  * Created by kraynovdo on 16.11.2017.
  */
 define('Controls/List/SimpleList/ListViewModel',
-   ['Core/Abstract', 'Controls/List/SimpleList/ItemsViewModel'],
-   function(Abstract, ItemsViewModel) {
+   ['Core/Abstract', 'Controls/List/SimpleList/ItemsViewModel', 'Controls/Controllers/Multiselect/Selection'],
+   function(Abstract, ItemsViewModel, MultiSelection) {
       /**
        *
        * @author Крайнов Дмитрий
@@ -42,6 +42,11 @@ define('Controls/List/SimpleList/ListViewModel',
             if (cfg.markedKey !== undefined) {
                this._markedItem = this.getItemById(cfg.markedKey, cfg.idProperty);
             }
+
+            this._multiselection = new MultiSelection({
+               selectedKeys : cfg.selectedKeys,
+               excludedKeys : cfg.excludedKeys
+            });
    
             _private.updateIndexes(self);
          },
@@ -72,8 +77,10 @@ define('Controls/List/SimpleList/ListViewModel',
          getCurrent: function() {
             var itemsModelCurrent = this._itemsModel.getCurrent();
             itemsModelCurrent.isSelected = itemsModelCurrent.dispItem === this._markedItem;
-            itemsModelCurrent.isActionHoverItem = itemsModelCurrent.dispItem.getContents() === this._actionHoverItem;
             itemsModelCurrent.itemActions =  this._actions[this.getCurrentIndex()];
+            itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
+            itemsModelCurrent.showActions = !this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive);
+            itemsModelCurrent.multiSelectStatus = this._multiselection.getSelectionStatus(itemsModelCurrent.key);
             return itemsModelCurrent;
          },
 
@@ -88,6 +95,15 @@ define('Controls/List/SimpleList/ListViewModel',
          setMarkedKey: function(key) {
             this._markedItem = this.getItemById(key, this._options.idProperty);
             this._notify('onListChange');
+         },
+
+
+         select: function(keys) {
+            this._multiselection.select(keys);
+         },
+
+         unselect: function(keys) {
+            this._multiselection.unselect(keys);
          },
 
          updateIndexes: function(startIndex, stopIndex) {

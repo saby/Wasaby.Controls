@@ -1,5 +1,6 @@
 <div class="ws-Popup">
     <ws:partial
+            attr:class="controls-Popup__template"
             template="{{_options.template}}"
             scope="{{_options.componentOptions}}"
             on:sendResult="_sendResult()"
@@ -9,6 +10,6 @@
             on:focusIn="_focusIn()"
             on:focusOut="_focusOut()">
     </ws:partial>
-    <Controls:Event:Emitter event="resize" on:resize="_update()"/>
-    <Controls:Event:Emitter event="scroll" on:scroll="_update()"/>
+    <Controls.Event.Emitter event="resize" on:resize="_update()"/>
+    <Controls.Event.Emitter event="scroll" on:scroll="_update()"/>
 </div>

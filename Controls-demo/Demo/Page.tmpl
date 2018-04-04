@@ -1,6 +1,13 @@
-<ws:partial template="Controls/Application" scope="{{_options}}">
+<ws:partial template="Controls/Application" scope="{{_options}}" bodyClass="controls-default-bg">
    <div>
-      <script if={{_themeSwitcher}} id="themeSwitcher" src="../pages/presto/themeSwitcher.js" type="text/javascript" on:load="loadThemeSwitcher()"></script>
+      <div class="themeSwitcher">
+         <div class="theme_button" on:click="changeTheme('online')">online</div>
+         <div class="theme_button" on:click="changeTheme('carry_m')">carry_m</div>
+         <div class="theme_button theme_dark" on:click="changeTheme('presto_m')">presto_m</div>
+         <div class="theme_button" on:click="changeTheme('carry')">carry</div>
+         <div class="theme_button theme_dark" on:click="changeTheme('presto')">presto</div>
+      </div>
+      <link rel="stylesheet" type="text/css" id="controlsThemeStyle" href="{{_theme}}.css"/>
       <Controls.Button if="{{componentName !== 'Controls-demo/Index'}}" attr:id="Back" caption="Назад" style="linkMain" icon="icon-16 icon-DayBackward icon-primary" on:click="backClickHdl()" />
       <ws:partial attr:id="newListView" template="{{componentName}}" />
    </div>

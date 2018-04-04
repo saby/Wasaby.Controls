@@ -19,6 +19,8 @@ define('Controls/List', [
             idProperty: cfg.idProperty,
             displayProperty: cfg.displayProperty,
             markedKey: cfg.markedKey,
+            selectedKeys: cfg.selectedKeys,
+            excludedKeys: cfg.excludedKeys,
             itemsReadyCallback: cfg.itemsReadyCallback
          });
       }
@@ -77,8 +79,16 @@ define('Controls/List', [
          }
       },
 
-      remove: function(items) {
-         this._children.sourceControl.remove(items);
+      _beforeItemsRemove: function(event, items) {
+         return this._notify('beforeItemsRemove', [items]);
+      },
+
+      _afterItemsRemove: function (event, items, result) {
+         this._notify('afterItemsRemove', [items, result]);
+      },
+
+      removeItems: function(items) {
+         this._children.sourceControl.removeItems(items);
       }
    });
 

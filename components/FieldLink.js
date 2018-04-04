@@ -1205,7 +1205,11 @@ define('SBIS3.CONTROLS/FieldLink',
                     list = this.getList(),
                     newIndex;
                 
-                pickerContainer[0].scrollTop = pickerContainer[0].scrollHeight;
+                if (cInstance.instanceOfMixin(list, 'SBIS3.CONTROLS/Interfaces/IItemsControl')) {
+                   list.getActiveView()._getScrollWatcher().scrollTo('bottom');
+                } else {
+                   pickerContainer[0].scrollTop = pickerContainer[0].scrollHeight;
+                }
                 
                 /* При подскроле вниз всегда устанавливаем маркер на последнюю запись */
                 if(cInstance.instanceOfMixin(list, 'SBIS3.CONTROLS/Mixins/Selectable')) {

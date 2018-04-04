@@ -33,7 +33,7 @@
       &.controls-ListView__dataLoaded {
          .controls-DataGridView__tr {
             .controls-DataGridView__td {
-               border-bottom-color: @data-grid-cell-separator-color;
+               border-top-color: @data-grid-cell-separator-color;
             }
          }
          /* Т.к. редактирование по месту может в DOM'e занимать первые две строки,
@@ -52,13 +52,15 @@
             }
          }
          .controls-DataGridView__tr:nth-last-child(1){
+            .box-shadow(@data-grid-edge-cell-separator-shadow);
             .controls-DataGridView__td {
-               border-bottom-color: @data-grid-edge-cell-separator-color;
+               border-bottom-color: transparent;
             }
          }
          &.controls-DataGridView__resultsBottom {
             .controls-DataGridView__table {
                .controls-DataGridView__tr:nth-last-child(1){
+                  box-shadow: none;
                   .controls-DataGridView__td {
                      border-bottom-color: transparent;
                   }

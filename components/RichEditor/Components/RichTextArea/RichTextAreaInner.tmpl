@@ -2,6 +2,7 @@
    <div class="controls-RichEditor__placeholder" >{{ placeholder }}</div>
    <SBIS3.CONTROLS:ScrollContainer
       class="controls-ScrollContainer_flex controls-RichEditor__scrollContainer"
+      style="{{autoHeight && maximalHeight && maximalHeight != 0 ? 'max-height:' + maximalHeight + 'px;' }}"
       takeScrollbarHidden="{{!(autoHeight && maximalHeight == 0)}}"
       >
       <div

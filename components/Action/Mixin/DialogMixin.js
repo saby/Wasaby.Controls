@@ -62,7 +62,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             /**
              * @cfg {Object} Объект с конфигурацией контрола, на основе которого создаётся диалог (см. {@link mode}). В числе опций также передают и {@link Lib/Control/Control#linkedContext}.
              */
-            dialogOptions: null,
+            dialogOptions: null
          },
          _dialog: undefined,
           _openedPanelConfig: {},
@@ -318,8 +318,13 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
 
       },
 
-      _isNeedToRedrawDialog: function(){
-         return this._dialog && !this._dialog.isDestroyed();
+      _isNeedToRedrawDialog: function() {
+         //Нужно перерисовать панель если она есть, не задестроена и не находится в процессе открытия/закрытия
+         return this._dialog && !this._dialog.isDestroyed() && !this._isDialogClosing();
+      },
+
+      _isDialogClosing: function() {
+         return this._dialog && this._dialog._state === 'hide';
       },
 
       /**

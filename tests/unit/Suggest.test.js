@@ -44,6 +44,13 @@ define(
             assert.isTrue(Suggest._private.needCloseOnFocusOut(suggest));
          });
    
+         it('_beforeUpdate', function() {
+            var suggest = new Suggest();
+      
+            suggest._beforeUpdate({value: '123'});
+            assert.equal(suggest._simpleViewModel.getValue(), '123');
+         });
+   
          it('selectHandler', function() {
             //тестирует фокусы, проверяем только на клиенте
             if (typeof document === 'undefined') {
@@ -59,9 +66,12 @@ define(
             
             /* Т.к. реально проверить, есть ли фокус в саггесте мы не можем (нет DOM элемента),
                просто проверим вызов focus() */
-            suggest.focus = function() {
-               focused = true;
-            };
+            /* Защита от изменения API, чтобы если api изменят, тест упал */
+            if (suggest.activate) {
+               suggest.activate = function () {
+                  focused = true;
+               };
+            }
             suggest._notify = function(eventName, value) {
                if (eventName === 'valueChanged') {
                   selectedValue = value;
@@ -90,9 +100,12 @@ define(
                 focused = false,
                 suggestValue;
    
-            suggest.focus = function() {
-               focused = true;
-            };
+            /* Защита от изменения API, чтобы если api изменят, тест упал */
+            if (suggest.activate) {
+               suggest.activate = function () {
+                  focused = true;
+               };
+            }
    
             suggest._notify = function(eventName, value) {
                if (eventName === 'valueChanged') {

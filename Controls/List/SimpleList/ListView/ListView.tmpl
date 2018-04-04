@@ -1,10 +1,11 @@
 <div class="ws-ListView">
    <ws:if data="{{_listModel}}">
-      <div class="ws-ListView__items {{_listModel._actionHoverItem ? 'ws-ListView__items__hasActionHoverItem' }}">
+      <div class="ws-ListView__items">
          <ws:partial
                  template="tmpl!Controls/List/resources/For"
                  listModel="{{_listModel}}"
                  itemActionsTemplate="{{_options.itemActionsTemplate}}"
+                 multiSelectTpl="{{_options.multiSelectTpl}}"
                  itemTemplate="{{_itemTemplate}}">
          </ws:partial>
       </div>

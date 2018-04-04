@@ -38,6 +38,15 @@
    }
 }
 
+.ws-is-firefox {
+   .controls-Spoiler__title-caption-blur {
+      // firefox не переносит элемент, спозиционированный через float: right, если он нулевой ширины
+      // задать адекватную ширину нельзя, т.к. она начинает влиять на отступ до крестика в панели фильтров
+      // https://online.sbis.ru/opendoc.html?guid=68e72402-ad66-49d5-a453-7b7f0944afb5
+      width: 0.01px;
+   }
+}
+
 .controls-Spoiler__toggle-item { //left
    padding: 7px 4px 0 4px;
 }

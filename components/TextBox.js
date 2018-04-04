@@ -11,6 +11,7 @@ define('SBIS3.CONTROLS/TextBox', [
    'Core/helpers/Function/forAliveOnly',
    'Core/i18n',
    'SBIS3.CONTROLS/ControlHierarchyManager',
+   "Core/Sanitize",
    'SBIS3.CONTROLS/Button/IconButton',
    'css!Controls/Input/resources/InputRender/InputRender',
    'css!SBIS3.CONTROLS/TextBox/TextBox'
@@ -27,7 +28,8 @@ define('SBIS3.CONTROLS/TextBox', [
     getTextWidth,
     forAliveOnly,
     i18n,
-    ControlHierarchyManager) {
+    ControlHierarchyManager,
+    Sanitize) {
 
    'use strict';
 
@@ -203,21 +205,7 @@ define('SBIS3.CONTROLS/TextBox', [
              * @see setInformationIconColor
              * @see informationIconColor
              */
-            informationIconColor: '',
-             /**
-              * @cfg {String} Устанавливает размер поля ввода.
-              * @remark
-              * По умолчанию значение опции "default" и зависит от темы.
-              * Значение "m" установит средний размер поля ввода.
-              * Значение "l" устaновит большой размер поля ввода.
-              * @example
-              * Пример 1. Большое поле ввода:
-              * фрагмент верстки:
-              * <pre class="brush:xml">
-              *     <option name="size">l</option>
-              * </pre>
-              */
-            size: 'default'
+            informationIconColor: ''
          }
       },
 
@@ -279,6 +267,9 @@ define('SBIS3.CONTROLS/TextBox', [
          cfg.afterFieldWrapper = TemplateUtil.prepareTemplate(cfg.afterFieldWrapper);
          if (cfg.placeholder) {
             cfg._isSimplePlaceholder = cfg.placeholder instanceof i18n._rkString || (typeof cfg.placeholder === 'string' && cfg.placeholder.indexOf('data-component') === -1);
+            if (cfg._isSimplePlaceholder) {
+               cfg.placeholder = Sanitize(cfg.placeholder);
+            }
          }
          return cfg;
       },
@@ -652,6 +643,9 @@ define('SBIS3.CONTROLS/TextBox', [
       _createCompatiblePlaceholder: function() {
          if (!this._compatPlaceholder) {
             this._options._isSimplePlaceholder = typeof this._options.placeholder === 'string' && this._options.placeholder.indexOf('data-component') === -1;
+            if (this._options._isSimplePlaceholder) {
+               this._options.placeholder = Sanitize(this._options.placeholder);
+            }
             this._compatPlaceholder = $(this._options.compatiblePlaceholderTemplate(this._options));
             this._inputField.after(this._compatPlaceholder);
             this.reviveComponents();

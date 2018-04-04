@@ -105,7 +105,7 @@ define('Controls/Container/Scroll',
           * Осуществить скролл к низу области
           */
          scrollToBottom: function() {
-            var containerHeight = this._getContainerHeight();
+            var containerHeight = this._getScrollHeight();
             this.scrollTo(containerHeight);
          }
 

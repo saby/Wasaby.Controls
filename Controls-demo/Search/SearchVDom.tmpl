@@ -1,14 +1,14 @@
 <div on:search="_changeValueSearchHandler()">
    <div class="controls-VDomSearch__row" >
-      <Controls:Input:Search bind:value="_value"
+      <Controls.Input.Search bind:value="_value"
                      on:valueChanged="_changeValuesHandler()"/>
    </div>
    <div class="controls-VDomSearch__row">
-      <Controls:Input:Search bind:value="_value2" style="header"
+      <Controls.Input.Search bind:value="_value2" style="header"
                      on:valueChanged="_changeValuesHandler()"/>
    </div>
    <div class="controls-VDomSearch__row">
-      <Controls:Input:Search enabled="{{false}}"/>
+      <Controls.Input.Search enabled="{{false}}"/>
    </div>
 <div>Стреляет valueChanged:
    <Controls.Input.Area value="{{textValue}}"></Controls.Input.Area>
