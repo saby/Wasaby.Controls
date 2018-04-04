@@ -4,7 +4,7 @@ define('Controls/Filter/FastFilter',
       'tmpl!Controls/Filter/FastFilter/FastFilter',
       'Controls/Controllers/SourceController',
       'WS.Data/Chain',
-      'WS.Data/Collection/RecordSet',
+      'WS.Data/Collection/List',
       'Core/core-instance',
       'Core/ParallelDeferred',
       'Core/Deferred',
@@ -13,7 +13,7 @@ define('Controls/Filter/FastFilter',
       'css!Controls/Input/Dropdown/Dropdown'
 
    ],
-   function (Control, template, SourceController, Chain, RecordSet, cInstance, pDeferred, Deferred, Utils) {
+   function (Control, template, SourceController, Chain, List, cInstance, pDeferred, Deferred, Utils) {
 
       'use strict';
 
@@ -47,7 +47,7 @@ define('Controls/Filter/FastFilter',
 
          prepareItems: function (self, items, idProperty) {
             if (!cInstance.instanceOfMixin(items, 'WS.Data/Collection/IList')) {
-               self._items = new RecordSet({
+               self._items = new List({
                   rawData: items,
                   idProperty: idProperty
                });
