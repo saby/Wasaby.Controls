@@ -47,7 +47,6 @@ define('Controls/Header', [
             'default',
             'primary'
          ]),
-         clickable: types(Boolean),
          size: types(String).oneOf([
             'xl',
             'l',

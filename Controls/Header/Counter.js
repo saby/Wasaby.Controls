@@ -9,35 +9,35 @@ define('Controls/Header/Counter', [
 
    /**
     * Control showing the counter.
-    * @class Controls/Header
+    * @class Controls/Header/Counter
     * @extends Controls/Control
     * @control
     * @public
     */
 
    /**
-    * @name Controls/Header#value
+    * @name Controls/Header/Counter#value
     * @cfg {String} Value of Counter.
     */
 
    /**
-    * @name Controls/Header#size
-    * @cfg {String} Icon display style. In the online theme has only one display style.
+    * @name Controls/Header/Counter#size
+    * @cfg {String} Size of Counter.
     * @variant l Counter has large size.
     * @variant m Counter has middle size.
     * @variant s Counter has small size.
     */
 
    /**
-    * @name Controls/Header#style
-    * @cfg {String} Icon display style. In the online theme has only one display style.
+    * @name Controls/Header/Counter#style
+    * @cfg {String} Counter displaying style.
     * @variant primary Counter will be accented.
     * @variant default Counter will be default.
     * @variant disabled Counter will be disabled.
     */
 
    /**
-    * @name Controls/Header#singleClick
+    * @name Controls/Header/Counter#singleClick
     * @cfg {Boolean} The ability to send a single event when icon was clicked. Event name is countClick.
     */
 

@@ -27,7 +27,7 @@ define('Controls/Button/Back', [
 
    /**
     * @name Controls/Button#size
-    * @cfg {String} button size
+    * @cfg {String} Button size
     * @variant s Button has small size.
     * @variant m Button has middle size.
     * @variant l Button has large size.
@@ -53,8 +53,7 @@ define('Controls/Button/Back', [
             's',
             'm',
             'l'
-         ]),
-         inHeader: types(Boolean)
+         ])
       }
    };
 
