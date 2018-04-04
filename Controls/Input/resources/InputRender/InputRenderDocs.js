@@ -12,6 +12,7 @@ define('Controls/Input/resources/InputRender/InputRenderDocs',
        * @css @font-size_InputRender_l Размер шрифта поля ввода при указанном размере "l".
        * @css @font-size_InputRender_default Размер шрифта поля ввода при размере "по умолчанию". Значение "по умолчанию", в зависимости от темы, указывает на один из доступных размеров (например, "m" или "l").
        * @css @font-size_InputRender_style_header Размер шрифта поля ввода при опции style в значении "header".
+       * @css @font-size_InputRender_style_accentHeader Размер шрифта поля ввода при опции style в значении "accentHeader".
        * @css @padding_InputRender Отступы в поле ввода.
        * @css @border-width_InputRender Ширина границы поля ввода.
        * @css @width_InputRender-tagStyle Ширина информационной иконки.
@@ -30,6 +31,7 @@ define('Controls/Input/resources/InputRender/InputRenderDocs',
        * @css @color_InputRender-placeholder Цвет подсказки в поле ввода.
        * @css @color_InputRender Цвет текста в поле ввода.
        * @css @color_InputRender_style_header Цвет текста в поле ввода при опции style в значении "header".
+       * @css @color_InputRender_style_accentHeader Цвет текста в поле ввода при опции style в значении "accentHeader".
        * @css @color_InputRender-tagStyle_attention Цвет информационной иконки.
        * @css @border-right-color_InputRender-tagStyle_done Цвет информационной иконки.
        * @css @border-right-color_InputRender-tagStyle_error Цвет информационной иконки.
