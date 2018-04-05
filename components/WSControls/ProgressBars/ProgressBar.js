@@ -4,7 +4,7 @@
 define('SBIS3.CONTROLS/WSControls/ProgressBars/ProgressBar',
    [
       'Core/Control',
-      'tmpl!WSControls/ProgressBars/ProgressBar',
+      'tmpl!SBIS3.CONTROLS/WSControls/ProgressBars/ProgressBar',
       'WS.Data/Type/descriptor',
       'css!SBIS3.CONTROLS/ProgressBar/ProgressBar'
    ],

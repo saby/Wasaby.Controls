@@ -1,8 +1,8 @@
 define('SBIS3.CONTROLS/WSControls/InputTag/InputTag',
    [
       'Core/Control',
-      'tmpl!WSControls/InputTag/InputTag',
-      'css!WSControls/InputTag/InputTag'
+      'tmpl!SBIS3.CONTROLS/WSControls/InputTag/InputTag',
+      'css!SBIS3.CONTROLS/WSControls/InputTag/InputTag'
    ],
    function(Control, template) {
 

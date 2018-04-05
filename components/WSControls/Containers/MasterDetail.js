@@ -6,8 +6,8 @@
 define('SBIS3.CONTROLS/WSControls/Containers/MasterDetail',
    [
       'Core/Control',
-      'tmpl!WSControls/Containers/MasterDetail',
-      'css!WSControls/Containers/MasterDetail'
+      'tmpl!SBIS3.CONTROLS/WSControls/Containers/MasterDetail',
+      'css!SBIS3.CONTROLS/WSControls/Containers/MasterDetail'
    ],
 
    function (Base, template) {

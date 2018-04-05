@@ -1,7 +1,7 @@
 define('SBIS3.CONTROLS/WSControls/Containers/Browser',
 [
    'Core/Control',
-   'tmpl!WSControls/Containers/Browser',
+   'tmpl!SBIS3.CONTROLS/WSControls/Containers/Browser',
    //TODO: удалить
    'WS.Data/Source/Memory'
 ], function(Control, template, StaticSource) {

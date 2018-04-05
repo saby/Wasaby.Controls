@@ -1,7 +1,7 @@
 define('SBIS3.CONTROLS/WSControls/Tooltips/Tooltip',
    [
       'Core/Control',
-      'tmpl!WSControls/Tooltips/Tooltip',
+      'tmpl!SBIS3.CONTROLS/WSControls/Tooltips/Tooltip',
       'Core/detection',
       'SBIS3.CONTROLS/Utils/GetTextWidth'
    ],

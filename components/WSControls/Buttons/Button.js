@@ -2,8 +2,8 @@
 define('SBIS3.CONTROLS/WSControls/Buttons/Button', [
    'Core/constants',
    'SBIS3.CONTROLS/WSControls/Buttons/ButtonBase',
-   'tmpl!WSControls/Buttons/Button',
-   'tmpl!WSControls/Buttons/resources/contentTemplate'
+   'tmpl!SBIS3.CONTROLS/WSControls/Buttons/Button',
+   'tmpl!SBIS3.CONTROLS/WSControls/Buttons/resources/contentTemplate'
 ], function(constants, ButtonBase, dotTplFn, contentTemplate) {
 
    'use strict';
