@@ -59,12 +59,28 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
       'use strict';
 
       //TODO: ПЕРЕПИСАТЬ НА НОРМАЛЬНЫЙ КОД РАБОТУ С ИЗОБРАЖЕНИЯМИ
+
+      var _getTrueIEVersion = function () {
+         var version = cConstants.browser.IEVersion;
+         // В cConstants.browser.IEVersion неправильно определяется MSIE 11
+         if (version < 11) {
+            var ms = navigator.userAgent.match(/Trident\/([0-9]+)\.[0-9]+/);
+            if (ms) {
+               version = +ms[1] + 4
+            }
+         }
+         return version;
+      };
+
       var
-         TINYMCE_URL_BASE = 'SBIS3.CONTROLS/RichEditor/third-party/tinymce',
+         // TinyMCE 4.7 и выше не поддерживает MSIE 10? поэтому отдельно для него старый TinyMCE
+         // 1175061954 https://online.sbis.ru/opendoc.html?guid=296b17cf-d7e9-4ff3-b4d9-e192627b41a1
+         TINYMCE_URL_BASE = cConstants.browser.isIE && _getTrueIEVersion() < 11 ? 'SBIS3.CONTROLS/RichEditor/third-party/tinymce46-ie10' : 'SBIS3.CONTROLS/RichEditor/third-party/tinymce',
          EDITOR_MODULES = [
             'css!' + TINYMCE_URL_BASE + '/skins/lightgray/skin.min.css',
             'css!' + TINYMCE_URL_BASE + '/skins/lightgray/content.inline.min.css',
-            TINYMCE_URL_BASE + '/tinymce'
+            //Экстренное решение что бы уменшить трафик. В 3.18.200 надо исправить сия безобразие
+            TINYMCE_URL_BASE + '/tinymce.min'
          ],
          constants = {
             baseAreaWidth: 768,//726

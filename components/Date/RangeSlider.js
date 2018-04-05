@@ -225,7 +225,8 @@ define('SBIS3.CONTROLS/Date/RangeSlider',[
                side: 'top'
             },
             closeByExternalClick: true,
-            className: 'controls-DateRangeSlider__picker-shadow ' +  pickerCss
+            className: 'controls-DateRangeSlider__picker-shadow ' +  pickerCss,
+            _canScroll: true
          };
       },
 
