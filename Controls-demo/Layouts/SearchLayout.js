@@ -53,6 +53,7 @@ define('Controls-demo/Layouts/SearchLayout', [
       {
          id: 'firstName',
          resetValue: 'По имени',
+         value: 'Petr',
          properties: {
             keyProperty: 'title',
             displayProperty: 'title',
@@ -73,6 +74,7 @@ define('Controls-demo/Layouts/SearchLayout', [
       {
          id: 'id',
          resetValue: '0',
+         value: '0',
          properties: {
             keyProperty: 'id',
             displayProperty: 'title',
@@ -115,7 +117,7 @@ define('Controls-demo/Layouts/SearchLayout', [
 
 
    var filterSourceData = [
-      {id: 'title', resetValue: '', value: '', textValue: ''},
+      {id: 'firstName', resetValue: '', value: '', textValue: ''},
       {id: 'id', resetValue: null, value: null, textValue: ''}
    ];
 
