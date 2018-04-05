@@ -214,7 +214,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                 *    </options>
                 * </pre>
                 */
-               custom_formats: {}
+               customFormats: {}
             },
             _scrollContainer: undefined,
             _dataReview: undefined,
@@ -258,9 +258,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                options.minimalHeight = this._cleanHeight(options.minimalHeight);
                options.maximalHeight = this._cleanHeight(options.maximalHeight);
             }
-            for(var key in options.custom_formats) {
-               if ({}.hasOwnProperty.call(options.custom_formats, key)) {
-                  options.editorConfig.formats[key] = options.custom_formats[key];
+            for(var key in options.customFormats) {
+               if ({}.hasOwnProperty.call(options.customFormats, key)) {
+                  options.editorConfig.formats[key] = options.customFormats[key];
                }
             }
             return options;
@@ -1631,8 +1631,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                /*НОТИФИКАЦИЯ О ТОМ ЧТО В РЕДАКТОРЕ ПОМЕНЯЛСЯ ФОРМАТ ПОД КУРСОРОМ*/
                //formatter есть только после инита поэтому подписка осуществляется здесь
                var formats = 'bold,italic,underline,strikethrough,alignleft,aligncenter,alignright,alignjustify,title,subTitle,additionalText,blockquote';
-               for(var key in this._options.custom_formats){
-                  if ({}.hasOwnProperty.call(this._options.custom_formats, key)) {
+               for(var key in this._options.customFormats){
+                  if ({}.hasOwnProperty.call(this._options.customFormats, key)) {
                      formats += ',' + key;
                   }
                }
