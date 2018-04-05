@@ -1,23 +1,24 @@
 .controls-itemActionsV {
+  .align-items(center);
   display: none;
   position:absolute;
-  .align-items(center);
 }
 .controls-itemActionsV_inline {
-  right: @right_itemActions_inside;
-  bottom: @bottom_itemActions_inside;
+  right: 0;
+  bottom: 0;
+  padding: @padding_itemActions_inside;
   height: @height_itemActions_inside;
   background-color: @default-bg-color-hovered-item;
 }
 
 .controls-itemActionsV_outside {
-  box-sizing: border-box;
   right: 0;
   bottom: -@height_itemAction_outside;
   height: @height_itemAction_outside;
   background-color: @default-bg-color-hovered-item;
-  padding: 0 @right_itemActions_inside @bottom_itemActions_inside 0;
+  padding: @padding_itemActions_outside;
   z-index: 1;
+  box-sizing: border-box;
   &:before {
     content:'';
     position: absolute;
