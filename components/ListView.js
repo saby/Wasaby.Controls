@@ -224,7 +224,7 @@ define('SBIS3.CONTROLS/ListView',
           * Событие срабатывает при подгрузке по скроллу, при подгрузке в ветку дерева.
           * Т.е. при любой вспомогательной загрузке данных.
           * @param {Core/EventObject} eventObject Дескриптор события.
-          * @param {Object} dataSet - dataSet с загруженными данными
+          * @param {Object} RecordSet - {@link /doc/platform/developmentapl/interface-development/working-with-data/icollection/#wsdatacollectionrecordset RecordSet} с загруженными данными
           * @example
           * <pre>
           *     DataGridView.subscribe('onDataMerge', function(event, dataSet) {
@@ -2836,7 +2836,7 @@ define('SBIS3.CONTROLS/ListView',
 
          _swipeHandler: function(e){
             var target = this._findItemByElement($(e.target)),
-                switchedToTouch = this._options.itemsActionsInItemContainer && this._itemsToolbar.isVisible() && !this._itemsToolbar.getTouchMode();
+                switchedToTouch = this._options.itemsActionsInItemContainer && this._itemsToolbar && this._itemsToolbar.isVisible() && !this._itemsToolbar.getTouchMode();
 
             if(!target.length) {
                return;

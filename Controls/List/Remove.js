@@ -3,21 +3,42 @@ define('Controls/List/Remove', [
    'tmpl!Controls/List/Remove/Remove',
    'Core/Deferred'
 ], function (Control, template, Deferred) {
-
-   var Remove = Control.extend( {
-      _template: template,
-
-      beginRemove: function(items) {
-         var beginRemoveResult;
-
-         beginRemoveResult = this._notify('beginRemove', [items], { bubbling: true });
-         return beginRemoveResult instanceof Deferred ? beginRemoveResult : Deferred.success(beginRemoveResult);
+   var _private = {
+      removeFromSource: function(self, items) {
+         return self._options.sourceController.remove(items);
       },
 
-      endRemove: function(items, result) {
-         this._notify('endRemove', [items, result], { bubbling: true });
+      removeFromModel: function(self, items) {
+         self._options.listModel.removeItems(items);
+      },
+
+      beforeItemsRemove: function(self, items) {
+         var beforeItemsRemoveResult = self._notify('beforeItemsRemove', [items]);
+         return beforeItemsRemoveResult instanceof Deferred ? beforeItemsRemoveResult : Deferred.success(beforeItemsRemoveResult);
+      },
+
+      afterItemsRemove: function(self, items, result) {
+         self._notify('afterItemsRemove', [items, result]);
+      }
+   };
+
+   return Control.extend( {
+      _template: template,
+
+      removeItems: function(items) {
+         var self = this;
+         _private.beforeItemsRemove(this, items).addCallback(function(result) {
+            if (result !== false) {
+               self._notify('showIndicator', [], { bubbling: true });
+               _private.removeFromSource(self, items).addCallback(function(result) {
+                  _private.removeFromModel(self, items);
+                  return result;
+               }).addBoth(function(result) {
+                  self._notify('hideIndicator', [], { bubbling: true });
+                  _private.afterItemsRemove(self, items, result);
+               });
+            }
+         });
       }
    });
-
-   return Remove;
 });

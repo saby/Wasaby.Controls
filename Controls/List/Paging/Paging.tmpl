@@ -7,11 +7,11 @@
          <i class="icon-Back2 ws-Paging__icon"></i>
       </span>
       <ws:if data="{{_options.showDigits}}">
-         <Controls.List.Paging:DigitButtons
+         <Controls.List.Paging.DigitButtons
                className="ws-Paging__digitButons"
                on:onDigitClick="__digitClick()"
                selectedKey="{{_options.selectedKey}}"
-               count="{{_options.pagesCount}}"></Controls.List.Paging:DigitButtons>
+               count="{{_options.pagesCount}}"></Controls.List.Paging.DigitButtons>
       </ws:if>
       <span class="ws-Paging__btn ws-Paging__arrow ws-Paging__arrow__state-{{_stateNext}}" on:click="__arrowClick('Next')">
          <i class="icon-Forward ws-Paging__icon"></i>

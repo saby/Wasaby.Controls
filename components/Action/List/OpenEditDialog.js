@@ -168,7 +168,14 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
             }.bind(this));
          }
          else {
-            OpenEditDialog.superclass._openComponent.call(this, meta, mode);
+            if (this._isDialogClosing()) {
+               this._dialog.once('onAfterClose', function() {
+                  OpenEditDialog.superclass._openComponent.call(this, meta, mode);
+               }.bind(this));
+            }
+            else {
+               OpenEditDialog.superclass._openComponent.call(this, meta, mode);
+            }
          }
       },
 

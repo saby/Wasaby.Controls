@@ -5,9 +5,31 @@
             markedKey="{{1}}"
             itemActions="{{_itemActions}}"
             source = "{{_viewSource}}"
-            on:beginremove="_onBeginRemove()"
-            on:endremove="_onEndRemove()"
+            on:beforeItemsRemove="_beforeItemsRemove()"
+            on:afterItemsRemove="_afterItemsRemove()"
             idProperty="id">
+    </Controls.List>
+    <Controls.List
+            class="removeDemo__list"
+            on:beforeItemsRemove="_secondListRemoveHandler()"
+            on:afterItemsRemove="_secondListRemoveHandler()"
+            source = "{{_viewSourceSecond}}"
+            idProperty="id">
+        <ws:itemTemplate>
+            <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate">
+                <ws:contentTemplate>
+                    <div>
+                        <span>List in list</span>
+                        <Controls.List
+                                name="listSecond"
+                                itemActions="{{_itemActionsSecond}}"
+                                source = "{{_viewSourceClone}}"
+                                idProperty="id">
+                        </Controls.List>
+                    </div>
+                </ws:contentTemplate>
+            </ws:partial>
+        </ws:itemTemplate>
     </Controls.List>
     <Controls.Popup.Opener.Confirmation name="popupOpener"/>
 </div>
