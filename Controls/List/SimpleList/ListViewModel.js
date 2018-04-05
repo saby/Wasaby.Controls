@@ -81,6 +81,10 @@ define('Controls/List/SimpleList/ListViewModel',
             itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
             itemsModelCurrent.showActions = !this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive);
             itemsModelCurrent.multiSelectStatus = this._multiselection.getSelectionStatus(itemsModelCurrent.key);
+            if (this._editingItemData && itemsModelCurrent.index === this._editingItemData.index) {
+               itemsModelCurrent.isEditing = true;
+               itemsModelCurrent.item = this._editingItemData.item;
+            }
             return itemsModelCurrent;
          },
 
@@ -134,6 +138,25 @@ define('Controls/List/SimpleList/ListViewModel',
          getCount: function() {
             return this._itemsModel.getCount();
          },
+
+         at: function(index) {
+            return this._itemsModel.at(index);
+         },
+
+         getIndexBySourceItem: function(item) {
+            return this._itemsModel.getIndexBySourceItem(item);
+         },
+
+         _setEditingItemData: function(itemData) {
+            this._editingItemData = itemData;
+            if (itemData && itemData.item) {
+               this.setMarkedKey(itemData.item.get(this._options.idProperty));
+            }
+         },
+         setItemActions: function(itemData, actions) {
+            this._actions[itemData.index] = actions;
+         },
+
          __calcSelectedItem: function(display, selKey, idProperty) {
 
             //TODO надо вычислить индекс
@@ -146,11 +169,7 @@ define('Controls/List/SimpleList/ListViewModel',
              }
              this._markedItem = this._display.at(this._selectedIndex);
              }*/
-         },
-         setItemActions: function(itemData, actions){
-            this._actions[itemData.index] = actions;
          }
-
       });
 
       return ListViewModel;

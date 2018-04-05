@@ -15,6 +15,16 @@
                 <ws:partial template ="{{_multiSelectTpl}}"/>
             </ws:multiSelectTpl>
         </ws:partial>
+        <Controls.List.EditInPlace ws:content="listView"
+                                   name="editInPlace"
+                                   editingConfig="{{_options.editingConfig}}"
+                                   on:beforeItemAdd="_onBeforeItemAdd()"
+                                   on:beforeItemEdit="_onBeforeItemEdit()"
+                                   on:afterItemEdit="_onAfterItemEdit()"
+                                   on:beforeItemEndEdit="_onBeforeItemEndEdit()"
+                                   on:afterItemEndEdit="_onAfterItemEndEdit()"
+                                   listModel="{{_listViewModel}}"
+                                   source="{{_sourceController}}" />
         <Controls.List.Remove ws:content="listView"
                 name="removeControl"
                 sourceController="{{_sourceController}}"

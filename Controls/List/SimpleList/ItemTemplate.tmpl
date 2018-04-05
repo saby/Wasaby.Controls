@@ -4,7 +4,18 @@
     <ws:partial template="{{multiSelectTpl}}" multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}"/>
 
     <ws:if data="{{contentTemplate}}">
-        <ws:partial template="{{contentTemplate}}" itemData="{{itemData}}"/>
+        <ws:if data="{{itemData.isEditing}}">
+            <Controls.List.EditInPlace.EditingRow>
+                <ws:partial
+                        template="{{contentTemplate}}"
+                        itemData="{{itemData}}"/>
+            </Controls.List.EditInPlace.EditingRow>
+        </ws:if>
+        <ws:else>
+            <ws:partial
+                    template="{{contentTemplate}}"
+                    itemData="{{itemData}}"/>
+        </ws:else>
     </ws:if>
     <ws:else>
         <div>{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>

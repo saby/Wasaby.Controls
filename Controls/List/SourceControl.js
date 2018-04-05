@@ -7,8 +7,9 @@ define('Controls/List/SourceControl', [
    'Controls/Controllers/SourceController',
    'Core/Deferred',
    'tmpl!Controls/List/SourceControl/multiSelect',
-   'css!Controls/List/SourceControl/SourceControl',
-   'Controls/List/ItemActions/ItemActionsControl'
+   'Controls/List/EditInPlace',
+   'Controls/List/ItemActions/ItemActionsControl',
+   'css!Controls/List/SourceControl/SourceControl'
 ], function (Control,
              IoC,
              SourceControlTpl,
@@ -454,9 +455,46 @@ define('Controls/List/SourceControl', [
 
       reload: function() {
          return _private.reload(this);
+      },
+
+     /**
+      * Starts editing in place.
+      * @param {ItemEditOptions} options Options of editing.
+      * @returns {Core/Deferred}
+      */
+     editItem: function(options) {
+         this._children.editInPlace.editItem(options);
+      },
+
+     /**
+      * Starts adding.
+      * @param {AddItemOptions} options Options of adding.
+      * @returns {Core/Deferred}
+      */
+      addItem: function(options) {
+        this._children.editInPlace.addItem(options);
+      },
+
+      _onBeforeItemAdd: function(e, options) {
+         return this._notify('beforeItemAdd', [options]);
+      },
+
+      _onBeforeItemEdit: function(e, options) {
+         return this._notify('beforeItemEdit', [options]);
+      },
+
+      _onAfterItemEdit: function(e, options) {
+         this._notify('afterItemEdit', [options]);
+      },
+
+      _onBeforeItemEndEdit: function(e, options) {
+         return this._notify('beforeItemEndEdit', [options]);
+      },
+
+      _onAfterItemEndEdit: function(e, options) {
+         this._notify('beforeItemEndEdit', [options]);
       }
    });
-
 
    //TODO https://online.sbis.ru/opendoc.html?guid=17a240d1-b527-4bc1-b577-cf9edf3f6757
    /*ListView.getOptionTypes = function getOptionTypes(){

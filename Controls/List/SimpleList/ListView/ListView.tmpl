@@ -8,6 +8,13 @@
                  multiSelectTpl="{{_options.multiSelectTpl}}"
                  itemTemplate="{{_itemTemplate}}">
          </ws:partial>
+          <ws:if data="{{_options.editingItemData && _options.isAdd}}">
+              <ws:partial
+                      on:click="_onItemClick(_options.editingItemProjection)"
+                      template="{{_itemTemplate}}"
+                      multiSelectTpl="{{_options.multiSelectTpl}}"
+                      itemData="{{_options.editingItemData}}"/>
+          </ws:if>
       </div>
    </ws:if>
 </div>
