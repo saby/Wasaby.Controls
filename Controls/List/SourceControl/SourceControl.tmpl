@@ -15,8 +15,6 @@
                 <ws:partial template ="{{_multiSelectTpl}}"/>
             </ws:multiSelectTpl>
         </ws:partial>
-        <!--Через каждый HoC нужно обязательно прокидывать scope="{{_options}}", иначе опции будут долетать только из последнего HoC'а.
-        Будет исправлено по этой ошибке: https://online.sbis.ru/opendoc.html?guid=85d636e8-2e00-4096-bf31-5f0dce3b1616-->
         <Controls.List.EditInPlace ws:content="listView"
                                    name="editInPlace"
                                    editingConfig="{{_options.editingConfig}}"
@@ -26,14 +24,14 @@
                                    on:beforeItemEndEdit="_onBeforeItemEndEdit()"
                                    on:afterItemEndEdit="_onAfterItemEndEdit()"
                                    listModel="{{_listViewModel}}"
-                                   source="{{_options.source}}" />
+                                   source="{{_sourceController}}" />
         <Controls.List.Remove ws:content="listView"
-                              name="removeControl"
-                              sourceController="{{_sourceController}}"
-                              listModel="{{_listViewModel}}"
-                              on:beforeItemsRemove="_beforeItemsRemove()"
-                              on:afterItemsRemove="_afterItemsRemove()"
-        />
+                name="removeControl"
+                sourceController="{{_sourceController}}"
+                listModel="{{_listViewModel}}"
+                on:beforeItemsRemove="_beforeItemsRemove()"
+                on:afterItemsRemove="_afterItemsRemove()"
+                />
         <Controls.List.ItemActions.ItemActionsControl
                 ws:content="listView"
                 on:commitActionClick="_commitEditActionHandler()"
