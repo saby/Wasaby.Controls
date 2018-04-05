@@ -33,7 +33,7 @@
 }
 
 .controls-DropdownList__item-right_hierarchy-padding {
-  padding-right: 28px;
+  padding-right: @padding_DropdownList-hierarchy;
 }
 .controls-DropdownList__content {
    font-size: @large-text-size;
@@ -91,12 +91,14 @@
    .inline-flexbox();
    .justify-content(center);
    .align-items(center);
-   color: #CCCCCC;
-   width: 16px;
-   height: 16px;
-   right: 6px;
-   top: 12px;
+   color: @color-Dropdown-cross;
+   width: @width-Dropdown-cross;
+   height: @height-Dropdown-cross;
+   font-size: @font-size-Dropdown-cross;
+   right: 0;
+   top: 0;
    z-index: 1;
+   font-family: @icon-font;
 }
 
 .controls-MenuButton-header {
@@ -134,6 +136,6 @@
 
 .ws-is-no-touch {
    .controls-MenuButton-cross:hover {
-      color: #313E78;
+      color: @color-Dropdown-cross_hovered;
    }
 }

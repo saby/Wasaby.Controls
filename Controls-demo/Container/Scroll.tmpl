@@ -1,0 +1,28 @@
+<div class="ws-flexbox" style="height: 100%">
+   <Controls.Container.Scroll attr:style="height: 50%; width: 50%; margin: auto;">
+      <!--<div>
+         <Controls.Container.Scroll attr:style="height: 300px;">
+            <Controls:List
+               source="{{_viewSource}}"
+               idProperty="id">
+               <ws:itemTemplate>
+                  <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate"
+                              itemData="{{itemTemplate.itemData}}"
+                              displayProperty="title"
+                  ></ws:partial>
+               </ws:itemTemplate>
+            </Controls:List>
+         </Controls.Container.Scroll>-->
+         <Controls:List
+            source="{{_viewSource}}"
+            idProperty="id">
+            <ws:itemTemplate>
+               <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate"
+                           itemData="{{itemTemplate.itemData}}"
+                           displayProperty="title"
+               ></ws:partial>
+            </ws:itemTemplate>
+         </Controls:List>
+      <!--</div>-->
+   </Controls.Container.Scroll>
+</div>
