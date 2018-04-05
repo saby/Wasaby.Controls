@@ -141,10 +141,6 @@ define('SBIS3.CONTROLS/ListView',
        * @public
        * @category Lists
        *
-       * @initial
-       * <component data-component='SBIS3.CONTROLS/ListView'>
-       * </component>
-       *
        *
        */
 
@@ -245,7 +241,7 @@ define('SBIS3.CONTROLS/ListView',
           */
          /**
           * @typedef {String} BeginEditResult
-          * @variant Cancel Отменить завершение редактирования.
+          * @variant Cancel Отменить завершение редактирования. Чтобы отменить запуск редактирования, нужно вернуть константу BeginEditResult.CANCEL из модуля {@link https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceBaseController/ EditInPlaceBaseController}.
           * @variant PendingAll В результате редактирования ожидается вся запись, как есть (с текущим набором полей).
           * @variant PendingModifiedOnly В результате редактирования ожидаются только измененные поля. Это поведение используется по умолчанию.
           */
