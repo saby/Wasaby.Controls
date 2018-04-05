@@ -297,23 +297,6 @@ define('SBIS3.CONTROLS/Tree/CompositeView', [
             return TreeCompositeView.superclass._getEditArrowMarker.apply(this, arguments);
          }
       },
-
-      _getInsertMarkupConfig: function() {
-         var result;
-         if (this._options.viewMode === 'table') {
-            result = TreeCompositeView.superclass._getInsertMarkupConfig.apply(this, arguments);
-         } else {
-            result = this._getInsertMarkupConfigICM.apply(this, arguments);
-            //При добавлении элементов в начало списка, они добавляются перед FoldersContainer, а должны добавлять после него.
-            //В таком случае явно укажем после какого блока вставить элементы.
-            if (result.inside && result.prepend) {
-               result.inside = false;
-               result.prepend = false;
-               result.container = this._getFoldersContainer()
-            }
-         }
-         return result;
-      },
       
       _modifyOptions: function() {
          var options = TreeCompositeView.superclass._modifyOptions.apply(this, arguments);
