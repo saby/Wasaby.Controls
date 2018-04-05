@@ -13,8 +13,8 @@ define('SBIS3.CONTROLS/Interfaces/IItemsControl', [], function() {
        * @example
        * <pre>
        *     Menu.subscribe('onDrawItems', function(){
-        *        if (Menu.getItemsInstance(2).getCaption() == 'Входящие'){
-        *           Menu.getItemsInstance(2).destroy();
+        *        if (Menu.getItemInstance(2).getCaption() == 'Входящие'){
+        *           Menu.getItemInstance(2).destroy();
         *        }
         *     });
        * </pre>

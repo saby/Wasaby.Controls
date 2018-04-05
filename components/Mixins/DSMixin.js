@@ -34,8 +34,8 @@ define('SBIS3.CONTROLS/Mixins/DSMixin', [
         * @example
         * <pre>
         *     Menu.subscribe('onDrawItems', function(){
-        *        if (Menu.getItemsInstance(2).getCaption() == 'Входящие'){
-        *           Menu.getItemsInstance(2).destroy();
+        *        if (Menu.getItemInstance(2).getCaption() == 'Входящие'){
+        *           Menu.getItemInstance(2).destroy();
         *        }
         *     });
         * </pre>
@@ -1430,7 +1430,7 @@ define('SBIS3.CONTROLS/Mixins/DSMixin', [
         * </ul>
         * @example
         * <pre>
-        *     Menu.getItemsInstance(3).setCaption('SomeNewCaption');
+        *     Menu.getItemInstance(3).setCaption('SomeNewCaption');
         * </pre>
         * @see getItems
         * @see setItems
