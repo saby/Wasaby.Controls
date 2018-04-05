@@ -42,6 +42,10 @@ define('Controls/Dropdown/resources/template/DropdownList',
             var sizes = ['small', 'medium', 'large'];
             var iconSize;
 
+            if(config.defaultItemTemplate){
+               this._defaultItemTemplate = config.defaultItemTemplate;
+            }
+
             if (config.showHeader) {
                this._headConfig = config.headConfig || {};
                this._headConfig.caption = this._headConfig.caption || config.caption;
@@ -97,7 +101,8 @@ define('Controls/Dropdown/resources/template/DropdownList',
                      selectedKeys: this._options.selectedKeys,
                      rootKey: item.get(this._options.keyProperty),
                      depth: this._options.depth + 1, //TODO когда будут готовы opener'ы, нужно проверять куда ушел фокус по ним. Сейчас связи OpenerTemplate->OpenerTemplate нет
-                     showHeader: false
+                     showHeader: false,
+                     defaultItemTemplate: this._options.defaultItemTemplate
                   },
                   corner: {
                      horizontal: 'right'
@@ -138,8 +143,8 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   this._notify('close');
             }
          },
-         _itemClickHandler: function (event, item) {
-            this._notify('sendResult', [['itemClick', event, [item]]]); //TODO Баг/Фича с передачей аргументов в попап.
+         _itemClickHandler: function (event, item, flag) {
+            this._notify('sendResult', [['itemClick', event, [item, flag]]]); //TODO Баг/Фича с передачей аргументов в попап.
          },
          _footerClick: function (event) {
             this._notify('sendResult', [['footerClick', event]]);

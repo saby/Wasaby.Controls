@@ -58,6 +58,7 @@ define('Controls/Dropdown/resources/MenuViewModel',
          getCurrent: function () {
             var itemsModelCurrent = this._itemsModel.getCurrent();
             itemsModelCurrent.hasChildren = this._hasChildren(itemsModelCurrent.item);
+            itemsModelCurrent.hasParent = this._hasParent(itemsModelCurrent.item);
             itemsModelCurrent.isSelected = this._isItemSelected(itemsModelCurrent.item);
             itemsModelCurrent.icon = itemsModelCurrent.item.get('icon');
             itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
@@ -73,6 +74,9 @@ define('Controls/Dropdown/resources/MenuViewModel',
          },
          _hasChildren: function (item) {
             return this._hierarchy.isNode(item) && !!this._hierarchy.getChildren(item, this._options.items).length;
+         },
+         _hasParent: function (item) {
+             return this._hierarchy.hasParent(item, this._options.items);
          },
          getCount: function () {
             return this._itemsModel.getCount();
