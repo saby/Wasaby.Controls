@@ -133,7 +133,7 @@ define('Controls-demo/Layouts/SearchLayout', [
             idProperty: 'id',
             data: filterData
          }),
-         _filterData: filterData
+         _fastFilterData: filterData
       });
    return ModuleClass;
 });
