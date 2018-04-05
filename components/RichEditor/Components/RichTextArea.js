@@ -201,7 +201,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                 /**
                  * @cfg {function} функция проверки валидности класса
                  */
-               validateClass: undefined
+               validateClass: undefined,
+               /**
+                * Пользовательские форматы для редактора
+                */
+               custom_formats: {
+                  customStyle: {
+                     block: 'blockquote',
+                     classes: 'customStyle',
+                     wrapper: 1,
+                     remove: 'all'}
+               }
             },
             _scrollContainer: undefined,
             _dataReview: undefined,
@@ -245,19 +255,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                options.minimalHeight = this._cleanHeight(options.minimalHeight);
                options.maximalHeight = this._cleanHeight(options.maximalHeight);
             }
+            for(var key in options.custom_formats) {
+               options.editorConfig.formats[key] = options.custom_formats[key];
+            }
             return options;
          },
 
          $constructor: function() {
-            var self = this,
+            var self = this;
             // Настраиваемые форматы для блоков
-            customStyles = {
-               customStyle: {
-                  block: 'blockquote',
-                  classes: 'customStyle',
-                  wrapper: 1,
-                  remove: 'all'}
-            }
             this._publish('onInitEditor', 'onUndoRedoChange','onNodeChange', 'onFormatChange', 'onToggleContentSource');
             this._sourceContainer = this._container.find('.controls-RichEditor__sourceContainer');
             this._sourceArea = this._sourceContainer.find('.controls-RichEditor__sourceArea').bind('input', this._onChangeAreaValue.bind(this));
@@ -273,9 +279,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             this._inputControl = this._container.find('.controls-RichEditor__editorFrame');
             this._fakeArea = this._container.find('.controls-RichEditor__fakeArea');
             this._initMainHeight();
-            for(var key in customStyles) {
-               this._options.editorConfig.formats[key] = customStyles[key];
-            }
             this._options.editorConfig.selector = '#' + this.getId() + ' .controls-RichEditor__editorFrame';
             this._options.editorConfig.fixed_toolbar_container = '#' + this.getId() + ' > .controls-RichEditor__fakeArea';
             this._options.editorConfig.setup = function(editor) {
