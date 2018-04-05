@@ -2409,23 +2409,41 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             if (typeof text !== 'string') {
                return text;
             }
-            return text
-               // Сначала заменяем все вхождения сущности &nbsp; на эквивалентный символ
-               .replace(/&nbsp;/g, String.fromCharCode(160))
-               // Затем регуляризуем все пробельные цепочки
-               .replace(/[\x20\xA0]+/g, function ($0/*, index, source*/) {
-                  if ($0.length === 1) {
-                     return $0.charCodeAt(0) === 32 ? $0 : '&nbsp;';
+            var out = '';
+            for (var a = 0, b = -1, opening = true, notEnd = true ; notEnd; opening = !opening) {
+               b = text.indexOf(opening ? '<' : '>', a);
+               notEnd = b !== -1;
+               if (opening) {
+                  if (a !== notEnd ? b : text.length) {
+                     // Это фрагмент между тегами
+                     out += text.substring(a, notEnd ? b : text.length)
+                        // Сначала заменяем все вхождения сущности &nbsp; на эквивалентный символ
+                        .replace(/&nbsp;/g, String.fromCharCode(160))
+                        // Затем регуляризуем все пробельные цепочки
+                        .replace(/[\x20\xA0]+/g, function ($0/*, index, source*/) {
+                           if ($0.length === 1) {
+                              return $0.charCodeAt(0) === 32 ? $0 : '&nbsp;';
+                           }
+                           else {
+                              // Получена цепочка пробельных символов - заменяем чередованием. Первым в цепочке всегда берём &nbsp;
+                              var spaces = '';
+                              for (var i = 0; i < $0.length; i++) {
+                                 spaces += i%2 === 1 ? ' ' : '&nbsp;';
+                              }
+                              return spaces;
+                           }
+                        });
+                     ;
                   }
-                  else {
-                     // Получена цепочка пробельных символов - заменяем чередованием. Первым в цепочке всегда берём &nbsp;
-                     var spaces = '';
-                     for (var i = 0; i < $0.length; i++) {
-                        spaces += i%2 === 1 ? ' ' : '&nbsp;';
-                     }
-                     return spaces;
-                  }
-            });
+                  a = b;
+               }
+               else {
+                  // Это фрагмент внутри тега
+                  out += text.substring(a, notEnd ? b + 1 : text.length);
+                  a = b + 1;
+               }
+            }
+            return out;
          },
 
          _performByReady: function(callback) {
