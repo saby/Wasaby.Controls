@@ -167,12 +167,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
                case 'strikethrough':
                   this._toggleState(state, obj);
                   break;
-               case 'blockquote': {
-                  if (!obj.node.className) {
+               case 'blockquote':
+                  if(!obj.node.className) {
                      this._toggleState(state, obj);
                   }
                   break;
-               }
                case 'alignleft':
                case 'aligncenter':
                case 'alignright':
@@ -185,7 +184,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
                   this._updateTextFormat(state, obj);
                   break;
                default: {
-                  this._toggleState(state, obj);
+                  if(obj.node.className) {
+                     this._toggleState(state, obj);
+                     this._toggleState(false, {node: obj.node.offsetParent, format:obj.node.localName});
+                  }
+                  else {
+                     this._toggleState(false, obj);
+                     this._toggleState(true, {node: obj.node.offsetParent, format:obj.node.offsetParent.localName});
+                  }
+                  break;
                }
             }
          },
