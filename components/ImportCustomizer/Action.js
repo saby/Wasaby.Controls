@@ -329,6 +329,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                baseParams: baseParamsOptions,
                parsers: parsers || defaults.parsers,
                fields: fields,
+               priceCorrespondence: options.priceCorrespondence,//^^^
+               priceTypes: options.priceTypes,//^^^
                validators: validators || defaults.validators,
                handlers: {
                   onComplete: this._onAreaComplete.bind(this),

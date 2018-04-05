@@ -140,7 +140,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                baseParams: 'controls-ImportCustomizer-Area__baseParams',
                provider: 'controls-ImportCustomizer-Area__provider',
                providerArgs: 'controls-ImportCustomizer-Area__providerArgs',
-               columnBinding: 'controls-ImportCustomizer-Area__columnBinding'
+               columnBinding: 'controls-ImportCustomizer-Area__columnBinding',
+               mapper: 'controls-ImportCustomizer-Area__mapper'
             },
             // Ссылки на вложенные компоненты
             _views: {
@@ -148,7 +149,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                //baseParams: null,
                //provider: null,
                //providerArgs: null,
-               //columnBinding: null
+               //columnBinding: null,
+               //mapper: null
             },
             // Обещание, разрешаемое полным набором полей (если в опциях они не заданы явно)
             _fieldsPromise: null,
@@ -186,6 +188,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             options._providerArgsComponent = parsers[parserName].component || undefined;
             options._providerArgsOptions = this._getProviderArgsOptions(options, parserName, true);
             options._columnsBindingRows = hasSheets ? sheet.sampleRows : [];
+            options._mapperItems = options.priceCorrespondence;//^^^
+            options._mapperVariants = options.priceTypes;//^^^
             var fields = options.fields;
             if (fields instanceof Deferred) {
                this._fieldsPromise = fields;
@@ -342,9 +346,10 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             return {
                 sheet: isExcel,
                 baseParams: true,
-                provider: isExcel || isCML,
-                providerArgs: isExcel || isCML,
-                columnBinding: isExcel || isCML
+                provider: isExcel,
+                providerArgs: isExcel,
+                columnBinding: isExcel || isDBF,
+                mapper: isCML
             };
          },
 

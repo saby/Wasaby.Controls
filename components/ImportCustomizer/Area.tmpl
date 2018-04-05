@@ -30,6 +30,7 @@
                class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-sheet"
                name="controls-ImportCustomizer-Area__sheet"
                allSheetsTitle="{{allSheetsTitle}}"
+               dataType="{{dataType}}"
                sheetTitles="{{_sheetsTitles}}"
                sheetIndex="{{sheetIndex}}"
             />
@@ -38,6 +39,7 @@
             <ws:partial
                template="{{baseParamsComponent}}"
                scope="{{baseParams}}"
+               dataType="{{dataType}}"
                fields="{{fields}}"
                class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-baseParams"
                name="controls-ImportCustomizer-Area__baseParams"
@@ -47,6 +49,7 @@
             <SBIS3.CONTROLS:ImportCustomizer:Provider:View
                class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-provider"
                name="controls-ImportCustomizer-Area__provider"
+               dataType="{{dataType}}"
                parsers="{{_parserItems}}"
                parser="{{_parserName}}"
                skippedRows="{{_skippedRows}}"
@@ -59,6 +62,7 @@
                class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-not-pad controls-ImportCustomizer-Area__body__box-providerArgs"
                name="controls-ImportCustomizer-Area__providerArgs"
                visible="{{!!_providerArgsComponent}}"
+               dataType="{{dataType}}"
                componentOptions="{{_providerArgsOptions}}"
             />
          </ws:if>
@@ -66,11 +70,21 @@
             <SBIS3.CONTROLS:ImportCustomizer:ColumnBinding:View
                class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-not-pad controls-ImportCustomizer-Area__body__box-columnBinding"
                name="controls-ImportCustomizer-Area__columnBinding"
+               dataType="{{dataType}}"
                columnCaption="{{bindingColumnCaption}}"
                columnTitle="{{bindingColumnTitle}}"
                rows="{{_columnsBindingRows}}"
                fields="{{fields}}"
                skippedRows="{{_skippedRows}}"
+            />
+         </ws:if>
+         <ws:if data="{{_isNeeds.mapper}}">
+            <SBIS3.CONTROLS:ImportCustomizer:Mapper:View
+               class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-not-pad controls-ImportCustomizer-Area__body__box-mapper"
+               name="controls-ImportCustomizer-Area__mapper"
+               dataType="{{dataType}}"
+               items="{{_mapperItems}}"
+               variants="{{_mapperVariants}}"
             />
          </ws:if>
       </ws:content>

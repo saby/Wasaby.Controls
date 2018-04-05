@@ -1,0 +1,21 @@
+<span class="controls-ImportCustomizer-Mapper-View__grid__item__cell {{item.className}}">
+   <ws:if data="{{column.field !== 'variant'}}">
+      {{decorators.applyOnly(getCellValue(getColumnVal(item, field), column.field, item, ladder, ladderColumns), {'highlight': column.highlight}) |orEmpty|sanitize}}
+   </ws:if>
+   <ws:else>
+      <ws:if data="{{false && column.menuConf && column.menuItems}}">
+         <ws:WSControls.Buttons.MenuButton
+            class="controls-ImportCustomizer-Mapper-View__grid__item__menu"
+            name="{{column.menuConf.namePrefix + column.field}}"
+            caption="{{column.menuCaption}}"
+            pickerClassName="controls-ImportCustomizer-Mapper-View__grid__item__menu__picker"
+            items="{{column.menuItems}}"
+            idProperty="{{column.menuConf.idProperty}}"
+            displayProperty="{{column.menuConf.displayProperty}}"
+            parentProperty="{{column.menuConf.parentProperty}}"
+            handlers="{{column.menuConf.handlers}}"
+         />
+      </ws:if>
+      1111
+   </ws:else>
+</span>
