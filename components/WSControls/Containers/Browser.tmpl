@@ -2,7 +2,7 @@
     <div class="controls-Browser__table {{ fastDataFilterConfig && _filterButtonConfig ?
 	'controls-Browser__table-fullFilterBlock'}} {{ stickyHeader ? 'ws-sticky-header__block' }}">
         <ws:if data="{{ _options.searchConfig }}">
-            <SBIS3.CONTROLS:WSControls.TextBoxes.SearchTextBox
+            <SBIS3.CONTROLS.WSControls.TextBoxes.SearchTextBox
                     className="controls-Browser__tableCell-search"
                     placeholder="Найти..."
                     on:onChangeText="_onSearch()"
@@ -11,12 +11,12 @@
     </div>
     <div class="controls-Browser__view">
         <!--<ws:partial template="{{ _options.contentTpl }}" scope="{{...}}" filter="{{ _filter }}" dataSource="{{ _dataSource }}"/>-->
-        <SBIS3.CONTROLS:WSControls.Lists.ListView2
+        <SBIS3.CONTROLS.WSControls.Lists.ListView2
                 name="PageDemoListView"
                 displayProperty="title"
                 dataSource="{{ _dataSource }}"
                 filter="{{ _filter }}"
                 idProperty="id">
-        </SBIS3.CONTROLS:WSControls.Lists.ListView2>
+        </SBIS3.CONTROLS.WSControls.Lists.ListView2>
     </div>
 </div>
