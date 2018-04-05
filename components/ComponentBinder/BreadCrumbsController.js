@@ -114,6 +114,9 @@ define('SBIS3.CONTROLS/ComponentBinder/BreadCrumbsController', ["Core/constants"
                if (!backButton.isDestroyed()) {
                   if (self._options.backButtonTemplate && self._currentRoot) {
                      caption = self._options.backButtonTemplate(self._currentRoot.data);
+                     if (backButton.getEscapeCaptionHtml()) {
+                         backButton.setEscapeCaptionHtml(false);
+                     }
                   } else {
                      caption = self._currentRoot ? self._currentRoot.title : '';
                   }

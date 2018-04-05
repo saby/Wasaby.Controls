@@ -25,7 +25,7 @@ define(
        * Чтобы скрыть одну вкладку, используйте следующий код:
        * <pre>
        *     // myId - идентификатор влкадки
-       *     this.getChildControlByName('TabButtons').getItemsInstances()[myId].hide()
+       *     this.getChildControlByName('TabButtons').getItemInstance(myId).hide()
        * </pre>
        * @class SBIS3.CONTROLS/Tab/Buttons
        * @extends SBIS3.CONTROLS/Radio/Group/RadioGroupBase

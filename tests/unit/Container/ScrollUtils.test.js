@@ -1,9 +1,9 @@
 define(
    [
       'Controls/Container/Scroll/ScrollWidthUtil',
-      'Controls/Container/Scroll/ScrollOverflowUtil'
+      'Controls/Container/Scroll/ScrollHeightFixUtil'
    ],
-   function(ScrollWidthUtil, ScrollOverflowUtil) {
+   function(ScrollWidthUtil, ScrollHeightFixUtil) {
 
       'use strict';
 
@@ -36,7 +36,7 @@ define(
                   }
                ]
             };
-            result = ScrollOverflowUtil._private.calcChildrenHeight(container);
+            result = ScrollHeightFixUtil._private.calcChildrenHeight(container);
             assert.equal(result, 150);
          });
          describe('calcOverflow', function() {
@@ -45,36 +45,36 @@ define(
                detection = {
                   chrome: true
                };
-               calcOverflow = ScrollOverflowUtil._private.calcOverflowFn(detection);
+               calcOverflow = ScrollHeightFixUtil._private.calcHeightFixFn(detection);
 
                result = calcOverflow();
-               assert.equal(result, 'scroll');
+               assert.equal(result, false);
             });
             it('ie', function() {
                detection = {
                   isIE: true
                };
-               calcOverflow = ScrollOverflowUtil._private.calcOverflowFn(detection);
+               calcOverflow = ScrollHeightFixUtil._private.calcHeightFixFn(detection);
 
                container = {
                   scrollHeight: 101,
                   offsetHeight: 100
                };
                result = calcOverflow(container);
-               assert.equal(result, 'hidden');
+               assert.equal(result, true);
 
                container = {
                   scrollHeight: 200,
                   offsetHeight: 100
                };
                result = calcOverflow(container);
-               assert.equal(result, 'scroll');
+               assert.equal(result, false);
             });
             it('firefox', function() {
                detection = {
                   firefox: true
                };
-               calcOverflow = ScrollOverflowUtil._private.calcOverflowFn(detection);
+               calcOverflow = ScrollHeightFixUtil._private.calcHeightFixFn(detection);
 
                container = {
                   children: [
@@ -84,7 +84,7 @@ define(
                   ]
                };
                result = calcOverflow(container);
-               assert.equal(result, 'hidden');
+               assert.equal(result, true);
 
                container = {
                   children: [
@@ -94,7 +94,7 @@ define(
                   ]
                };
                result = calcOverflow(container);
-               assert.equal(result, 'scroll');
+               assert.equal(result, false);
             });
          });
 
