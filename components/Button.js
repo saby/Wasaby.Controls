@@ -1,6 +1,6 @@
 define('SBIS3.CONTROLS/Button',
    [
-      'js!WSControls/Buttons/Button',
+      'SBIS3.CONTROLS/WSControls/Buttons/Button',
       'SBIS3.CONTROLS/Utils/ButtonUtil',
       'css!SBIS3.CONTROLS/Button/Button'
          ],
