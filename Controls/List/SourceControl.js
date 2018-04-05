@@ -253,10 +253,6 @@ define('Controls/List/SourceControl', [
          model.subscribe('onListChange', function () {
             self._forceUpdate();
          });
-      },
-
-      removeFromSource: function(self, items) {
-         return self._sourceController.remove(items);
       }
    };
 
@@ -436,21 +432,7 @@ define('Controls/List/SourceControl', [
       },
 
       removeItems: function(items) {
-         var
-            self = this,
-            removeControl = this._children.removeControl;
-         removeControl.beforeItemsRemove(items).addCallback(function(result) {
-            if (result !== false) {
-               _private.showIndicator(self);
-               _private.removeFromSource(self, items).addCallback(function(result) {
-                  self._listViewModel.removeItems(items);
-                  return result;
-               }).addBoth(function(result) {
-                  _private.hideIndicator(self);
-                  removeControl.afterItemsRemove(items, result);
-               });
-            }
-         });
+         this._children.removeControl.removeItems(items);
       },
 
       _beforeItemsRemove: function(event, items) {
@@ -459,6 +441,16 @@ define('Controls/List/SourceControl', [
 
       _afterItemsRemove: function (event, items, result) {
          this._notify('afterItemsRemove', [items, result]);
+      },
+
+      _showIndicator: function(event, direction) {
+         _private.showIndicator(this, direction);
+         event.stopPropagation();
+      },
+
+      _hideIndicator: function(event) {
+         _private.hideIndicator(this);
+         event.stopPropagation();
       },
 
       reload: function() {

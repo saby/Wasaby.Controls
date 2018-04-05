@@ -18,7 +18,7 @@ define('Controls/Controllers/PrimaryAction',
 
          keyPressHandler: function(e) {
             if(!(e.nativeEvent.altKey || e.nativeEvent.shiftKey) && (e.nativeEvent.ctrlKey || e.nativeEvent.metaKey)) { // Ctrl+Enter, Cmd+Enter, Win+Enter
-               this._notify('activated');
+               this._notify('triggered');
             }
          }
       });

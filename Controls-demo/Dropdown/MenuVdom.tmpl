@@ -114,15 +114,6 @@
                    nodeProperty="@parent"
                    class="menu-horizontal-revert"
                    source="{{_getHierarchyMenuItems()}}"/>
-   <Controls.Button.MenuButton name="myMenuButton7"
-                   keyProperty="id"
-                   style="buttonDefault"
-                   icon="icon-24 icon-Author icon-primary"
-                   caption="123"
-                   parentProperty="parent"
-                   nodeProperty="@parent"
-                   class="menu-vertical-revert"
-                   source="{{_getHierarchyMenuItems()}}"/>
    хе
    <Controls.Button.MenuButton name="myMenuButton8"
                    keyProperty="id"
@@ -130,12 +121,8 @@
                    icon="icon-small icon-Author icon-primary"
                    parentProperty="parent"
                    nodeProperty="@parent"
-                   menuStyle="duplicateHead"
                    source="{{_getHierarchyItems()}}">
-      <ws:headConfig
-              menuStyle="duplicateHead"
-              blabla="123"
-      />
+      <ws:headConfig menuStyle="duplicateHead" blabla="123"/>
    </Controls.Button.MenuButton>
    ехе
    <Controls.Button.MenuButton name="myMenuButton9"
@@ -144,11 +131,8 @@
                    icon="icon-medium icon-Author icon-primary"
                    parentProperty="parent"
                    nodeProperty="@parent"
-                   menuStyle="duplicateHead"
                    source="{{_getHierarchyItems()}}">
-      <ws:headConfig
-              menuStyle="duplicateHead"
-      />
+      <ws:headConfig menuStyle="duplicateHead" />
    </Controls.Button.MenuButton>
    ааа
    <Controls.Button.MenuButton name="myMenuButton9"
@@ -157,9 +141,6 @@
                    icon="icon-medium icon-Author icon-primary"
                    menuStyle="cross"
                    source="{{_getDefaultMemory()}}">
-      <ws:headConfig
-              menuStyle="cross"
-              blabla="123"
-         />
+      <ws:headConfig menuStyle="cross"/>
    </Controls.Button.MenuButton>
 </div>
