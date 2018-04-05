@@ -19,20 +19,20 @@
 @spacing_Grid-header-row: 8px;
 @color_Grid-header: #8991A9;
 
-@gap_Grid-left_default: 12px;
-@gap_Grid-left_XS: 0px;
-@gap_Grid-left_S: 8px;
-@gap_Grid-left_M: 12px;
-@gap_Grid-left_L: 16px;
-@gap_Grid-left_XL: 20px;
-@gap_Grid-left_XXL: 24px;
-@gap_Grid-right_default: 12px;
-@gap_Grid-right_XS: 0px;
-@gap_Grid-right_S: 8px;
-@gap_Grid-right_M: 12px;
-@gap_Grid-right_L: 16px;
-@gap_Grid-right_XL: 20px;
-@gap_Grid-right_XXL: 24px;
+@padding_Grid-left_default: 12px;
+@padding_Grid-left_XS: 0px;
+@padding_Grid-left_S: 8px;
+@padding_Grid-left_M: 12px;
+@padding_Grid-left_L: 16px;
+@padding_Grid-left_XL: 20px;
+@padding_Grid-left_XXL: 24px;
+@padding_Grid-right_default: 12px;
+@padding_Grid-right_XS: 0px;
+@padding_Grid-right_S: 8px;
+@padding_Grid-right_M: 12px;
+@padding_Grid-right_L: 16px;
+@padding_Grid-right_XL: 20px;
+@padding_Grid-right_XXL: 24px;
 
 @width_Grid-selection-marker: 3px;
 @color_Grid-selection-marker: #FF7033;
@@ -40,14 +40,14 @@
 @width_Grid-cell-checkbox: 24px;
 @height_Grid-checkboxArea: 32px;
 @width_Grid-checkboxArea: 24px;
-@gap_Grid-checkbox-left: 6px;
-@gap_Grid-checkbox-top: 10px;
+@padding_Grid-checkbox-left: 6px;
+@padding_Grid-checkbox-top: 10px;
 @height_Grid-checkbox: 12px;
 @width_Grid-checkbox: 12px;
 @width_Grid-checkbox-border: 1px;
 @color_Grid-checkbox-border: #999999;
-@gap_Grid-checkbox-icon-top: 4px;
-@gap_Grid-checkbox-icon-left: 6px;
+@padding_Grid-checkbox-icon-top: 4px;
+@padding_Grid-checkbox-icon-left: 6px;
 @font-size_Grid-checkbox-icon: 18px;
 @color_Grid-checkbox-icon: #ff7033;
 //--------------- styles ---------------
@@ -175,46 +175,46 @@
    font-size: @font-size_Grid-cell_XL;
 }
 .controls-Grid__cell_spacingFirstCol_default {
-   padding-left: @gap_Grid-left_default;
+   padding-left: @padding_Grid-left_default;
 }
 .controls-Grid__cell_spacingFirstCol_XS {
-   padding-left: @gap_Grid-left_XS;
+   padding-left: @padding_Grid-left_XS;
 }
 .controls-Grid__cell_spacingFirstCol_S {
-   padding-left: @gap_Grid-left_S;
+   padding-left: @padding_Grid-left_S;
 }
 .controls-Grid__cell_spacingFirstCol_M {
-   padding-left: @gap_Grid-left_M;
+   padding-left: @padding_Grid-left_M;
 }
 .controls-Grid__cell_spacingFirstCol_L {
-   padding-left: @gap_Grid-left_L;
+   padding-left: @padding_Grid-left_L;
 }
 .controls-Grid__cell_spacingFirstCol_XL {
-   padding-left: @gap_Grid-left_XL;
+   padding-left: @padding_Grid-left_XL;
 }
 .controls-Grid__cell_spacingFirstCol_XXL {
-   padding-left: @gap_Grid-left_XXL;
+   padding-left: @padding_Grid-left_XXL;
 }
 .controls-Grid__cell_spacingLastCol_default {
-   padding-right: @gap_Grid-right_default;
+   padding-right: @padding_Grid-right_default;
 }
 .controls-Grid__cell_spacingLastCol_XS {
-   padding-right: @gap_Grid-left_XS;
+   padding-right: @padding_Grid-left_XS;
 }
 .controls-Grid__cell_spacingLastCol_S {
-   padding-right: @gap_Grid-left_S;
+   padding-right: @padding_Grid-left_S;
 }
 .controls-Grid__cell_spacingLastCol_M {
-   padding-right: @gap_Grid-left_M;
+   padding-right: @padding_Grid-left_M;
 }
 .controls-Grid__cell_spacingLastCol_L {
-   padding-right: @gap_Grid-left_L;
+   padding-right: @padding_Grid-left_L;
 }
 .controls-Grid__cell_spacingLastCol_XL {
-   padding-right: @gap_Grid-left_XL;
+   padding-right: @padding_Grid-left_XL;
 }
 .controls-Grid__cell_spacingLastCol_XXL {
-   padding-right: @gap_Grid-left_XXL;
+   padding-right: @padding_Grid-left_XXL;
 }
 
 .controls-Grid__row-cell_withSelectionMarker {
@@ -237,8 +237,8 @@
 .controls-Grid__row:hover .controls-Grid__checkbox_unchecked:before {
    content: '\200b';
    position: absolute;
-   top: @gap_Grid-checkbox-top;
-   left: @gap_Grid-checkbox-left;
+   top: @padding_Grid-checkbox-top;
+   left: @padding_Grid-checkbox-left;
    width: @width_Grid-checkbox;
    height: @height_Grid-checkbox;
    border: @width_Grid-checkbox-border solid @color_Grid-checkbox-border;
@@ -249,8 +249,8 @@
    content: '\e616';
    font-family: cbuc-icons;
    position: absolute;
-   top: @gap_Grid-checkbox-icon-top;
-   left: @gap_Grid-checkbox-icon-left;
+   top: @padding_Grid-checkbox-icon-top;
+   left: @padding_Grid-checkbox-icon-left;
    font-size: @font-size_Grid-checkbox-icon;
    color: @color_Grid-checkbox-icon;
 }

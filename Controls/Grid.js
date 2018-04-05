@@ -41,8 +41,8 @@ define('Controls/Grid', [
                markedKey: cfg.markedKey,
                multiselect: cfg.multiselect,
                rowSpacing: cfg.rowSpacing,
-               leftGap: cfg.leftGap,
-               rightGap: cfg.rightGap,
+               leftPadding: cfg.leftPadding,
+               rightPadding: cfg.rightPadding,
                stickyFields: cfg.stickyFields
             });
          },
@@ -58,8 +58,8 @@ define('Controls/Grid', [
                markedKey: cfg.markedKey,
                multiselect: cfg.multiselect,
                rowSpacing: cfg.rowSpacing,
-               leftGap: cfg.leftGap,
-               rightGap: cfg.rightGap,
+               leftPadding: cfg.leftPadding,
+               rightPadding: cfg.rightPadding,
                stickyFields: cfg.stickyFields,
                itemTemplate: cfg.itemTemplate,
                displayProperty: cfg.displayProperty

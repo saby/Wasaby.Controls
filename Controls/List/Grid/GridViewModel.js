@@ -7,7 +7,7 @@ define('Controls/List/Grid/GridViewModel', [
 
    var
       _private = {
-         getGapCellClasses: function(params) {
+         getPaddingCellClasses: function(params) {
             var
                preparedClasses = '';
             // Колонки
@@ -19,11 +19,11 @@ define('Controls/List/Grid/GridViewModel', [
             }
             // Отступ для первой колонки. Если режим мультиселект, то отступ обеспечивается чекбоксом.
             if (params.columnIndex === 0 && !params.multiselect) {
-               preparedClasses += ' controls-Grid__cell_spacingFirstCol_' + (params.leftGap || 'default');
+               preparedClasses += ' controls-Grid__cell_spacingFirstCol_' + (params.leftPadding || 'default');
             }
             // Отступ для последней колонки
             if (params.columnIndex === params.columns.length - 1) {
-               preparedClasses += ' controls-Grid__cell_spacingLastCol_' + (params.rightGap || 'default');
+               preparedClasses += ' controls-Grid__cell_spacingLastCol_' + (params.rightPadding || 'default');
             }
             // Межстрочный интервал
             preparedClasses += ' controls-Grid__row-cell_rowSpacing_' + (params.rowSpacing || 'default');
@@ -61,12 +61,12 @@ define('Controls/List/Grid/GridViewModel', [
             if (current.multiselect && current.columnIndex === 0) {
                cellClasses += ' controls-Grid__row-cell-checkbox';
             } else {
-               cellClasses += _private.getGapCellClasses({
+               cellClasses += _private.getPaddingCellClasses({
                   columns: current.columns,
                   columnIndex: current.columnIndex,
                   multiselect: current.multiselect,
-                  leftGap: current.leftGap,
-                  rightGap: current.rightGap,
+                  leftPadding: current.leftPadding,
+                  rightPadding: current.rightPadding,
                   rowSpacing: current.rowSpacing
                });
             }
@@ -170,12 +170,12 @@ define('Controls/List/Grid/GridViewModel', [
             if (this.getMultiselect() && columnIndex === 0) {
                cellClasses += ' controls-Grid__header-cell-checkbox';
             } else {
-               cellClasses += _private.getGapCellClasses({
+               cellClasses += _private.getPaddingCellClasses({
                   columns: this._headerColumns,
                   columnIndex: columnIndex,
                   multiselect: this._options.multiselect,
-                  leftGap: this._options.leftGap,
-                  rightGap: this._options.rightGap,
+                  leftPadding: this._options.leftPadding,
+                  rightPadding: this._options.rightPadding,
                   rowSpacing: this._options.rowSpacing
                });
             }
@@ -225,12 +225,12 @@ define('Controls/List/Grid/GridViewModel', [
             if (this.getMultiselect() && columnIndex === 0) {
                cellClasses += ' controls-Grid__results-cell-checkbox';
             } else {
-               cellClasses += _private.getGapCellClasses({
+               cellClasses += _private.getPaddingCellClasses({
                   columns: this._resultsColumns,
                   columnIndex: columnIndex,
                   multiselect: this._options.multiselect,
-                  leftGap: this._options.leftGap,
-                  rightGap: this._options.rightGap,
+                  leftPadding: this._options.leftPadding,
+                  rightPadding: this._options.rightPadding,
                   rowSpacing: this._options.rowSpacing
                });
             }
@@ -327,8 +327,8 @@ define('Controls/List/Grid/GridViewModel', [
             var
                self = this,
                current = this._model.getCurrent();
-            current.leftGap = this._options.leftGap;
-            current.rightGap = this._options.rightGap;
+            current.leftPadding = this._options.leftPadding;
+            current.rightPadding = this._options.rightPadding;
             current.rowSpacing = this._options.rowSpacing;
             current.multiselect = this._options.multiselect;
             current.showRowSeparator = this._options.showRowSeparator;
