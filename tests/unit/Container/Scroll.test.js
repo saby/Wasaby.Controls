@@ -11,15 +11,15 @@ define(
          describe('calcShadowPosition', function() {
             it('Тень сверху', function() {
                result = Scroll._private.calcShadowPosition(100, 100, 200);
-               assert.equal(result, '_top');
+               assert.equal(result, 'top');
             });
             it('Тень снизу', function() {
                result = Scroll._private.calcShadowPosition(0, 100, 200);
-               assert.equal(result, '_bottom');
+               assert.equal(result, 'bottom');
             });
             it('Тень сверху и снизу', function() {
                result = Scroll._private.calcShadowPosition(50, 100, 200);
-               assert.equal(result, '_top_bottom');
+               assert.equal(result, 'topbottom');
             });
          });
          describe('getSizes', function() {

@@ -198,7 +198,7 @@ define('Controls/Container/Scroll',
 
                this._children.content.scrollTop = this._scrollTop;
 
-               if (isEqual(this._displayState, displayState)) {
+               if (!isEqual(this._displayState, displayState)) {
                   this._displayState = displayState;
                   this._forceUpdate();
                }

@@ -484,6 +484,11 @@ define('Controls/List/SourceControl', [
       },
 
       _onAfterItemEdit: function(e, options) {
+         this._listViewModel._activeItem = {
+            item: options.item,
+            contextEvent: false
+         };
+         this._children.itemActions.updateActions();
          this._notify('afterItemEdit', [options]);
       },
 
@@ -493,6 +498,16 @@ define('Controls/List/SourceControl', [
 
       _onAfterItemEndEdit: function(e, options) {
          this._notify('beforeItemEndEdit', [options]);
+         this._listViewModel._activeItem = false;
+         this._children.itemActions.updateActions();
+      },
+
+      _commitEditActionHandler: function() {
+         this._children.editInPlace.commitEdit();
+      },
+
+      _cancelEditActionHandler: function() {
+         this._children.editInPlace.cancelEdit();
       }
    });
 
