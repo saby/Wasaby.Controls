@@ -54,7 +54,7 @@ define('SBIS3.CONTROLS/WSControls/Buttons/MenuButton', [
     * @public
     * @category Button
     * @initial
-    * <component data-component='WSControls/Buttons/MenuButton'>
+    * <component data-component='SBIS3.CONTROLS/WSControls/Buttons/MenuButton'>
     *    <option name='caption' value='Кнопка с меню'></option>
     *    <options name="items" type="array">
     *        <options>
@@ -409,7 +409,7 @@ define('SBIS3.CONTROLS/WSControls/Buttons/MenuButton', [
       //Прокидываем вызов метода в меню
       getItemsInstances: function() {
          if (!this._picker) {
-            throw new Error('WSControls/Buttons/MenuButton::getItemsInstances  Попытка получения инстансов элементов меню до инициализации пикера.')
+            throw new Error('SBIS3.CONTROLS/WSControls/Buttons/MenuButton::getItemsInstances  Попытка получения инстансов элементов меню до инициализации пикера.')
          }
          return this._picker.getItemsInstances.apply(this._picker, arguments);
       },

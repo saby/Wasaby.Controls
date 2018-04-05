@@ -35,7 +35,7 @@ define('SBIS3.CONTROLS/WSControls/Containers/MasterDetail',
        */
 
       return Base.extend({
-         _controlName: 'WSControls/Containers/MasterDetail',
+         _controlName: 'SBIS3.CONTROLS/WSControls/Containers/MasterDetail',
          _template: template,
          _selected: null
       });

@@ -9,7 +9,7 @@ define('SBIS3.CONTROLS/WSControls/InputTag/InputTag',
       'use strict';
 
       var InputTag = Control.extend({
-         _controlName: 'WSControls/InputTag/InputTag',
+         _controlName: 'SBIS3.CONTROLS/WSControls/InputTag/InputTag',
 
          _template: template,
 

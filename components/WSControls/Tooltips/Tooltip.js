@@ -10,7 +10,7 @@ define('SBIS3.CONTROLS/WSControls/Tooltips/Tooltip',
       'use strict';
 
       var Tooltip = Control.extend({
-         _controlName: 'WSControls/Tooltips/Tooltip',
+         _controlName: 'SBIS3.CONTROLS/WSControls/Tooltips/Tooltip',
 
          _template: template,
 

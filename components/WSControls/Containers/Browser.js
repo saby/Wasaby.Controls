@@ -6,7 +6,7 @@ define('SBIS3.CONTROLS/WSControls/Containers/Browser',
    'WS.Data/Source/Memory'
 ], function(Control, template, StaticSource) {
    var Browser = Control.extend({
-      _controlName: 'WSControls/Containers/Browser',
+      _controlName: 'SBIS3.CONTROLS/WSControls/Containers/Browser',
       _template: template,
       iWantVDOM: true,
       operationsPanelConfig: [],

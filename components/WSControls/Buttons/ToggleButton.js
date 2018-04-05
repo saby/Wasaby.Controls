@@ -39,7 +39,7 @@ define('SBIS3.CONTROLS/WSControls/Buttons/ToggleButton', ['SBIS3.CONTROLS/WSCont
     * @control
     * @category Button
     * @initial
-    * <component data-component='WSControls/Buttons/ToggleButton'>
+    * <component data-component='SBIS3.CONTROLS/WSControls/Buttons/ToggleButton'>
     *    <option name='caption' value='Кнопка с залипанием'></option>
     * </component>
     */

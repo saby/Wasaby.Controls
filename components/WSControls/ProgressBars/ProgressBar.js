@@ -40,7 +40,7 @@ define('SBIS3.CONTROLS/WSControls/ProgressBars/ProgressBar',
       var ProgressBar = Control.extend({
          _template: template,
 
-         _controlName: 'WSControls/ProgressBars/ProgressBar',
+         _controlName: 'SBIS3.CONTROLS/WSControls/ProgressBars/ProgressBar',
 
          _getProgressPercent: function(minimum, maximum, progress, step) {
             var
