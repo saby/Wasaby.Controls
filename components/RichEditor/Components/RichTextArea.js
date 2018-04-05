@@ -263,7 +263,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
          $constructor: function() {
             var self = this;
-            // Настраиваемые форматы для блоков
             this._publish('onInitEditor', 'onUndoRedoChange','onNodeChange', 'onFormatChange', 'onToggleContentSource');
             this._sourceContainer = this._container.find('.controls-RichEditor__sourceContainer');
             this._sourceArea = this._sourceContainer.find('.controls-RichEditor__sourceArea').bind('input', this._onChangeAreaValue.bind(this));
@@ -1254,7 +1253,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          },
 
 
-         // Добавление и удаление кастомизируемой цитаты
+         // Переключение пользовательского формата у блока
          toggleStyle: function(style) {
             this._tinyEditor.formatter.toggle(style);
          },
