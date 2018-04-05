@@ -38,6 +38,7 @@ define('Controls/Button/MenuButton',
          },
          cssStyleGeneration: function(self, options) {
             var sizes = ['small', 'medium', 'large'],
+               menuStyle = options.headConfig && options.headConfig.menuStyle,
                currentButtonClass, iconSize;
 
             currentButtonClass = Classes.getCurrentButtonClass(options.style);
@@ -55,7 +56,7 @@ define('Controls/Button/MenuButton',
                // поэтому необходимо это учесть при сдвиге
                self._offsetClassName += '_' + iconSize;
             }
-            self._offsetClassName += (options.menuStyle === 'duplicateHead' ? '_duplicate' : '');
+            self._offsetClassName += (menuStyle === 'duplicateHead' ? '_duplicate' : '');
          }
       };
 

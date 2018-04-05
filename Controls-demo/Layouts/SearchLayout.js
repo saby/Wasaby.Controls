@@ -8,7 +8,7 @@ define('Controls-demo/Layouts/SearchLayout', [
    'Core/Control',
    'tmpl!Controls-demo/Layouts/SearchLayout/SearchLayout',
    'WS.Data/Source/Memory',
-   'Controls/Container/FilterButton',
+   'Controls/Container/Filter/Button',
    'Controls/List',
    'css!Controls-demo/Layouts/SearchLayout/SearchLayout',
    'Controls/Input/Text',
@@ -16,7 +16,8 @@ define('Controls-demo/Layouts/SearchLayout', [
    'Controls/Container/Filter',
    'Controls/Container/Search',
    'Controls/Filter/Button',
-   'Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/FilterButtonTemplate'
+   'Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/FilterButtonTemplate',
+   'Controls/Container/Input/Search'
 ], function (BaseControl,
              template,
              MemorySource

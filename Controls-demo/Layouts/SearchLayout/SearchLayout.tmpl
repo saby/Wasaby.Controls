@@ -8,14 +8,18 @@
                     <div class="controls-demo__SearchLayout_content">
                         <div class="controls-demo__Layouts_content">
                             <div class="controls-demo__Layouts_filterComponents">
-                                <Controls.Input.Search bind:value="_searchValue"/>
-                                <Controls.Filter.FastFilter bind:value="_value" source="{{_filterSource}}"/>
-                                <Controls.Container.FilterButton>
+                                <Controls.Container.Input.Search>
+                                    <ws:content>
+                                        <Controls.Input.Search bind:value="_searchValue"/>
+                                    </ws:content>
+                                </Controls.Container.Input.Search>
+                               <Controls.Filter.FastFilter bind:value="_value" source="{{_filterSource}}"/>
+                                <Controls.Container.Filter.Button>
                                     <ws:content>
                                         <Controls.Filter.Button filterTemplate="Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/FilterButtonTemplate">
                                         </Controls.Filter.Button>
                                     </ws:content>
-                                </Controls.Container.FilterButton>
+                                </Controls.Container.Filter.Button>
                             </div>
                             <div class="controls-demo__LayoutInner">
                                 <Controls.Container.List source="{{_dataSource}}" searchParam="title">

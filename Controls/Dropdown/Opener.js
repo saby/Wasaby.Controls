@@ -36,22 +36,18 @@ define('Controls/Dropdown/Opener',
            * @param config
            */
           checkIcons: function(self, config) {
-              var options = config.componentOptions || self._options.popupOptions.componentOptions;
-              var parentProperty = options.parentProperty,
-                  nodeProperty = options.nodeProperty,
-                  items = config.componentOptions.items,
+              var compOptions = self._options.popupOptions && self._options.popupOptions.componentOptions,
+                  configOptions = config.componentOptions,
+                  parentProperty = (configOptions && configOptions.parentProperty) || compOptions && compOptions.parentProperty,
+                  nodeProperty = (configOptions && configOptions.nodeProperty) || compOptions && compOptions.nodeProperty,
+                  items = configOptions && configOptions.items,
                   hierarchy = new Hierarchy({
                       idProperty: items.getIdProperty(),
                       parentProperty: parentProperty,
                       nodeProperty: nodeProperty
                   }),
-
-                  headerIcon = self._options.popupOptions.componentOptions &&
-                               self._options.popupOptions.componentOptions.headConfig &&
-                               self._options.popupOptions.componentOptions.headConfig.icon,
-                  menuStyle = self._options.popupOptions.componentOptions &&
-                              self._options.popupOptions.componentOptions.headConfig &&
-                              self._options.popupOptions.componentOptions.headConfig.menuStyle,
+                  headerIcon = compOptions && (compOptions.headConfig && compOptions.headConfig.icon || compOptions.icon),
+                  menuStyle = compOptions && compOptions.headConfig && compOptions.headConfig.menuStyle,
                   parents = {},
                   iconSize, children, child, pid, i, icon;
 
@@ -91,9 +87,7 @@ define('Controls/Dropdown/Opener',
               if(pOptions.componentOptions && pOptions.componentOptions.headConfig) {
                   pOptions.componentOptions.headConfig.menuStyle = pOptions.componentOptions.headConfig.menuStyle || 'defaultHead';
               }
-
-                 this.checkIcons(self, config);
-
+              this.checkIcons(self, config);
           },
           setPopupOptions: function(self, config) {
               config.className = self._options.className || 'controls-DropdownList__margin';

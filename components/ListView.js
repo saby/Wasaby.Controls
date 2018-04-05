@@ -224,7 +224,7 @@ define('SBIS3.CONTROLS/ListView',
           * Событие срабатывает при подгрузке по скроллу, при подгрузке в ветку дерева.
           * Т.е. при любой вспомогательной загрузке данных.
           * @param {Core/EventObject} eventObject Дескриптор события.
-          * @param {Object} dataSet - dataSet с загруженными данными
+          * @param {Object} RecordSet - {@link /doc/platform/developmentapl/interface-development/working-with-data/icollection/#wsdatacollectionrecordset RecordSet} с загруженными данными
           * @example
           * <pre>
           *     DataGridView.subscribe('onDataMerge', function(event, dataSet) {
