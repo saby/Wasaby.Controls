@@ -1630,7 +1630,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                self._tinyReady.callback();
                /*НОТИФИКАЦИЯ О ТОМ ЧТО В РЕДАКТОРЕ ПОМЕНЯЛСЯ ФОРМАТ ПОД КУРСОРОМ*/
                //formatter есть только после инита поэтому подписка осуществляется здесь
-               editor.formatter.formatChanged('bold,italic,underline,strikethrough,alignleft,aligncenter,alignright,alignjustify,title,subTitle,additionalText,blockquote,customStyle', function(state, obj) {
+               var formats = 'bold,italic,underline,strikethrough,alignleft,aligncenter,alignright,alignjustify,title,subTitle,additionalText,blockquote';
+               for(var key in this._options.custom_formats){
+                  if ({}.hasOwnProperty.call(this._options.custom_formats, key)) {
+                     formats += ',' + key;
+                  }
+               }
+               editor.formatter.formatChanged(formats, function(state, obj) {
                   self._notify('onFormatChange', obj, state)
                });
                self._notify('onInitEditor');
