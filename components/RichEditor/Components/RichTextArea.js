@@ -2400,40 +2400,27 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             return promise;
          },
 
-         _replaceWhitespaces: function(text) {
-            var
-               out = '',
-               lastIdx = null,
-               nbsp = false;
+         /**
+          * Заменить все вхождения пробелов и сущностей &nbsp; регуляризованными чередующимися цепочками
+          * @param {string} text Исходный текст
+          * @return {string}
+          */
+         _replaceWhitespaces: function (text) {
             if (typeof text !== 'string') {
                return text;
             }
-            for (var i = 0; i < text.length; i++) {
-               if (text[i] !== ' ') {
-                  out += text[i];
-               } else {
-                  if (text.substr(i - 6, 6) === '&nbsp;') {
-                     nbsp = false;
-                  } else {
-                     if (i === 0 || text[i - 1] === '\n' || text[i - 1] === '>') {
-                        nbsp = true;
-                     } else {
-                        if (lastIdx !== i - 1) {
-                           nbsp = text[i + 1] === ' ';
-                        } else {
-                           nbsp = !nbsp;
-                        }
-                     }
-                  }
-                  if (nbsp) {
-                     out += '&nbsp;';
-                  } else {
-                     out += ' ';
-                  }
-                  lastIdx = i;
+            return text
+               // Сначала заменяем все вхождения сущности &nbsp; на эквивалентный символ
+               .replace(/&nbsp;/g, String.fromCharCode(160))
+               // Затем регуляризуем все пробельные цепочки. Первым в цепочке всегда берём исходный символ
+               .replace(/[\x20\xA0]+/g, function ($0/*, index, source*/) {
+               // Получена цепочка пробельных символов - заменяем чередованием начиная с исходного символа
+               var spaces = '';
+               for (var i = 0, zeroOne = $0.charCodeAt(0) === 32 ? 0 : 1; i < $0.length; i++) {
+                  spaces += i%2 === zeroOne ? ' ' : '&nbsp;';
                }
-            }
-            return out;
+               return spaces;
+            });
          },
 
          _performByReady: function(callback) {
