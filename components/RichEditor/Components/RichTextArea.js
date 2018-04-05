@@ -203,9 +203,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                  */
                validateClass: undefined,
                /**
-                * Пользовательские форматы для редактора
-                */
-               /**
                 * @cfg {Object} Пользовательский формат для блоков
                 * @example
                 * <pre>
