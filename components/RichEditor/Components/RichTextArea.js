@@ -2412,14 +2412,19 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             return text
                // Сначала заменяем все вхождения сущности &nbsp; на эквивалентный символ
                .replace(/&nbsp;/g, String.fromCharCode(160))
-               // Затем регуляризуем все пробельные цепочки. Первым в цепочке всегда берём исходный символ
+               // Затем регуляризуем все пробельные цепочки
                .replace(/[\x20\xA0]+/g, function ($0/*, index, source*/) {
-               // Получена цепочка пробельных символов - заменяем чередованием начиная с исходного символа
-               var spaces = '';
-               for (var i = 0, zeroOne = $0.charCodeAt(0) === 32 ? 0 : 1; i < $0.length; i++) {
-                  spaces += i%2 === zeroOne ? ' ' : '&nbsp;';
-               }
-               return spaces;
+                  if ($0.length === 1) {
+                     return $0.charCodeAt(0) === 32 ? $0 : '&nbsp;';
+                  }
+                  else {
+                     // Получена цепочка пробельных символов - заменяем чередованием. Первым в цепочке всегда берём &nbsp;
+                     var spaces = '';
+                     for (var i = 0; i < $0.length; i++) {
+                        spaces += i%2 === 1 ? ' ' : '&nbsp;';
+                     }
+                     return spaces;
+                  }
             });
          },
 
