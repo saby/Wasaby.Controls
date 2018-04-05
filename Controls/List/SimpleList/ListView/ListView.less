@@ -15,11 +15,21 @@
   background-color: @default-bg-color-hovered-item;
 }
 
+.ws-ListView__item_editing {
+  background-color: @controls-editInPlace-editing-item-bg;
+  &:hover {
+    background-color: @controls-editInPlace-editing-item-bg;
+  }
+  .controls-itemActionsV {
+    .inline-flexbox();
+  }
+}
+
 .ws-is-no-touch {
   .ws-ListView__item_showActions {
     &:hover {
       .controls-itemActionsV {
-        display: inline-block;
+        .inline-flexbox();
       }
     }
   }

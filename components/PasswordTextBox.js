@@ -6,7 +6,7 @@ define('SBIS3.CONTROLS/PasswordTextBox', [
    'SBIS3.CONTROLS/TextBox',
    'tmpl!SBIS3.CONTROLS/PasswordTextBox/resources/showPasswordTemplate',
    'Core/CommandDispatcher',
-   'js!WSControls/Buttons/Button',
+   'SBIS3.CONTROLS/WSControls/Buttons/Button',
     'css!Controls/Input/Password/Password'
 ], function (TextBox, showPasswordTemplate, CommandDispatcher) {
 

@@ -1,5 +1,5 @@
 define('SBIS3.CONTROLS/Spoiler', [
-   'js!WSControls/Buttons/ButtonBase',
+   'SBIS3.CONTROLS/WSControls/Buttons/ButtonBase',
    'SBIS3.CONTROLS/Mixins/Expandable',
    'SBIS3.CONTROLS/Utils/TemplateUtil',
    'tmpl!SBIS3.CONTROLS/Spoiler/Spoiler',

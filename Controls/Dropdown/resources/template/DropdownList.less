@@ -33,7 +33,7 @@
 }
 
 .controls-DropdownList__item-right_hierarchy-padding {
-  padding-right: 28px;
+  padding-right: @padding_DropdownList-hierarchy;
 }
 .controls-DropdownList__content {
    font-size: @large-text-size;
@@ -91,12 +91,14 @@
    .inline-flexbox();
    .justify-content(center);
    .align-items(center);
-   color: #CCCCCC;
-   width: 16px;
-   height: 16px;
-   right: 6px;
-   top: 12px;
+   color: @color-Dropdown-cross;
+   width: @width-Dropdown-cross;
+   height: @height-Dropdown-cross;
+   font-size: @font-size-Dropdown-cross;
+   right: 0;
+   top: 0;
    z-index: 1;
+   font-family: @icon-font;
 }
 
 .controls-MenuButton-header {
@@ -134,6 +136,32 @@
 
 .ws-is-no-touch {
    .controls-MenuButton-cross:hover {
-      color: #313E78;
+      color: @color-Dropdown-cross_hovered;
+   }
+}
+
+.controls-DropdownList__item-pinned {
+   font-weight: bold;
+}
+
+.controls-DropdownList__row-pin {
+  position: absolute;
+  .inline-flexbox();
+  .align-items(center);
+  right: 0;
+  width:  @width-Dropdown-pin;
+  height: @height_DropdownList-item;
+  font-size: @icon-small-size;
+  font-family: @icon-font;
+  color: @color-Dropdown-pin;
+}
+
+.controls-DropdownList__unpin {
+   font-weight: normal;
+}
+
+.ws-is-no-touch {
+   .controls-DropdownList__row-pin:hover {
+      color: @color-Dropdown-pin_hovered;
    }
 }

@@ -1,7 +1,7 @@
-define('js!WSControls/Containers/TabButtons', [
+define('SBIS3.CONTROLS/WSControls/Containers/TabButtons', [
    'Core/Control',
-   'tmpl!WSControls/Containers/TabButtons',
-   'css!WSControls/Containers/TabButtons'
+   'tmpl!SBIS3.CONTROLS/WSControls/Containers/TabButtons',
+   'css!SBIS3.CONTROLS/WSControls/Containers/TabButtons'
 ], function (Base, template) {
    'use strict';
 

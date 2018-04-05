@@ -1,0 +1,39 @@
+.controls-HeaderSeparator__icon_style-primary, .controls-HeaderSeparator__icon_style-default {
+   padding-left: 10px;
+   cursor: pointer;
+}
+
+.controls-HeaderSeparator__icon_style-default {
+   content: @content_forwardArrowDefault;
+}
+
+.controls-HeaderSeparator__icon_style-primary{
+   content: @content_forwardArrowPrimary;
+}
+
+.ws-is-no-touch {
+   .controls-HeaderSeparator__icon_style-default:hover {
+      content: @content_forwardArrowDefaultHovered;
+   }
+
+   .controls-HeaderSeparator__icon_style-primary:hover {
+      content: @content_forwardArrowPrimaryHovered;
+   }
+}
+
+.controls-HeaderSeparator__icon_style-default:active {
+   content: @content_forwardArrowDefaultHovered;
+}
+
+.controls-HeaderSeparator__icon_style-primary:active {
+   content: @content_forwardArrowPrimaryHovered;
+}
+
+.controls-HeaderSeparator_size {
+   width: @width-HeaderSeparator;
+   height: @height-HeaderSeparator;
+}
+
+.controls-HeaderSeparator {
+   display: inline-block;
+}

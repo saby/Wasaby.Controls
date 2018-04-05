@@ -136,8 +136,10 @@ define('Controls-demo/InfoBox/InfoBox',
          items: [{
             text: 'CUSTOM',
             cfg: {
-               message: message,
-               template: contentTpl
+               template: contentTpl,
+               templateOptions: {
+                  message: message
+               }
             }
          }]
       }];

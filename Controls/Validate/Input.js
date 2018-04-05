@@ -9,26 +9,11 @@ define('Controls/Validate/Input',
    ){
       'use strict';
 
-      var
-         Validate,
-         _private;
-
-      _private = {
-         focusOut: function(self) {
-            self._shouldValidate = true;
-            self._forceUpdate();
-         }
-      };
-
-      Validate = Controller.extend({
+      return Controller.extend({
          _template: template,
          _focusOutHandler: function () {
-            if (!this._options.hasComponentFocusOut) {
-               _private.focusOut(this);
-            }
-         },
-         _componentFocusOutHandler: function () {
-            _private.focusOut(this);
+            this._shouldValidate = true;
+            this._forceUpdate();
          },
          _cleanValid: function () {
             this.setValidationResult(null);
@@ -40,6 +25,5 @@ define('Controls/Validate/Input',
             }
          }
       });
-      return Validate;
    }
 );

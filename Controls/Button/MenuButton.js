@@ -12,7 +12,7 @@ define('Controls/Button/MenuButton',
    function(Control, template, RecordSet, SourceController, dropdownUtil, Classes, menuHeadTemplate) {
 
        /**
-        * Кнопка
+        * MenuButton
         * @class Controls/Button
         * @extends Controls/Control
         * @mixes Controls/Button/interface/ICaption
@@ -27,17 +27,26 @@ define('Controls/Button/MenuButton',
 
       'use strict';
 
+       /**
+        * @name Controls/MenuButton#headConfig
+        * @cfg {Object} Menu style menuStyle
+        * @variant defaultHead The head with icon and caption
+        * @variant duplicateHead The icon set under first item
+        * @variant cross Menu have cross in left top corner
+        */
+
       var _private = {
-         loadItems: function(instance, source) {
+         loadItems: function(instance, source, filter) {
             instance._sourceController = new SourceController({
                source: source
             });
-            return instance._sourceController.load().addCallback(function(items){
+            return instance._sourceController.load(filter || {}).addCallback(function(items){
                instance._items = items;
             });
          },
          cssStyleGeneration: function(self, options) {
             var sizes = ['small', 'medium', 'large'],
+               menuStyle = options.headConfig && options.headConfig.menuStyle,
                currentButtonClass, iconSize;
 
             currentButtonClass = Classes.getCurrentButtonClass(options.style);
@@ -55,7 +64,7 @@ define('Controls/Button/MenuButton',
                // поэтому необходимо это учесть при сдвиге
                self._offsetClassName += '_' + iconSize;
             }
-            self._offsetClassName += (options.menuStyle === 'duplicateHead' ? '_duplicate' : '');
+            self._offsetClassName += (menuStyle === 'duplicateHead' ? '_duplicate' : '');
          }
       };
 
@@ -73,13 +82,13 @@ define('Controls/Button/MenuButton',
                this._items = receivedState;
             } else {
                if (options.source) {
-                  return _private.loadItems(this, options.source, options.selectedKeys);
+                  return _private.loadItems(this, options.source, options.filter);
                }
             }
          },
          _beforeUpdate: function(newOptions) {
             if (newOptions.source && newOptions.source !== this._options.source) {
-                return _private.loadItems(this, newOptions.source, newOptions.selectedKeys);
+                return _private.loadItems(this, newOptions.source);
             }
          },
          _open: function() {
