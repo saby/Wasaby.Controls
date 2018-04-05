@@ -1,4 +1,4 @@
-define('js!WSControls/Containers/Browser',
+define('SBIS3.CONTROLS/WSControls/Containers/Browser',
 [
    'Core/Control',
    'tmpl!WSControls/Containers/Browser',

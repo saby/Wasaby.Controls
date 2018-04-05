@@ -1,4 +1,4 @@
-define('js!WSControls/Buttons/ButtonBase', [
+define('SBIS3.CONTROLS/WSControls/Buttons/ButtonBase', [
    'Lib/Control/CompoundControl/CompoundControl',
    'SBIS3.CONTROLS/Mixins/Clickable',
    'SBIS3.CONTROLS/Mixins/FormWidgetMixin',

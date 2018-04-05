@@ -1,4 +1,4 @@
-define('js!WSControls/InputTag/InputTag',
+define('SBIS3.CONTROLS/WSControls/InputTag/InputTag',
    [
       'Core/Control',
       'tmpl!WSControls/InputTag/InputTag',

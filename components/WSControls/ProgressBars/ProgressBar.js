@@ -1,7 +1,7 @@
 /**
  * Модуль 'Индикатор процесса'.
  */
-define('js!WSControls/ProgressBars/ProgressBar',
+define('SBIS3.CONTROLS/WSControls/ProgressBars/ProgressBar',
    [
       'Core/Control',
       'tmpl!WSControls/ProgressBars/ProgressBar',

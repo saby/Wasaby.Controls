@@ -4,7 +4,7 @@
  * @description
  */
 define('SBIS3.CONTROLS/Button/ToggleButton', [
-   'js!WSControls/Buttons/ToggleButton',
+   'SBIS3.CONTROLS/WSControls/Buttons/ToggleButton',
    'SBIS3.CONTROLS/Utils/ButtonUtil',
    'css!SBIS3.CONTROLS/Button/Button',
    'css!SBIS3.CONTROLS/Button/ToggleButton/ToggleButton'

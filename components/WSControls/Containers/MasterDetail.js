@@ -3,7 +3,7 @@
  *
  * Author: Ivan Uvarov (is.uvarov@tensor.ru)
  */
-define('js!WSControls/Containers/MasterDetail',
+define('SBIS3.CONTROLS/WSControls/Containers/MasterDetail',
    [
       'Core/Control',
       'tmpl!WSControls/Containers/MasterDetail',

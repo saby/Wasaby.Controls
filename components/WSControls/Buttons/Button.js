@@ -1,7 +1,7 @@
 
-define('js!WSControls/Buttons/Button', [
+define('SBIS3.CONTROLS/WSControls/Buttons/Button', [
    'Core/constants',
-   'js!WSControls/Buttons/ButtonBase',
+   'SBIS3.CONTROLS/WSControls/Buttons/ButtonBase',
    'tmpl!WSControls/Buttons/Button',
    'tmpl!WSControls/Buttons/resources/contentTemplate'
 ], function(constants, ButtonBase, dotTplFn, contentTemplate) {

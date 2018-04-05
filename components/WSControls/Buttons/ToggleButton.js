@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!WSControls/Buttons/ToggleButton', ['js!WSControls/Buttons/Button', 'SBIS3.CONTROLS/Mixins/Checkable'], function(WSButton, Checkable) {
+define('SBIS3.CONTROLS/WSControls/Buttons/ToggleButton', ['SBIS3.CONTROLS/WSControls/Buttons/Button', 'SBIS3.CONTROLS/Mixins/Checkable'], function(WSButton, Checkable) {
 
    'use strict';
 

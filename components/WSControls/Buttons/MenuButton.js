@@ -1,5 +1,5 @@
-define('js!WSControls/Buttons/MenuButton', [
-   'js!WSControls/Buttons/Button',
+define('SBIS3.CONTROLS/WSControls/Buttons/MenuButton', [
+   'SBIS3.CONTROLS/WSControls/Buttons/Button',
    'SBIS3.CONTROLS/Mixins/PickerMixin',
    'SBIS3.CONTROLS/Mixins/DSMixin',
    'Core/IoC',

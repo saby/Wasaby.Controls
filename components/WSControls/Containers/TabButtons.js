@@ -1,4 +1,4 @@
-define('js!WSControls/Containers/TabButtons', [
+define('SBIS3.CONTROLS/WSControls/Containers/TabButtons', [
    'Core/Control',
    'tmpl!WSControls/Containers/TabButtons',
    'css!WSControls/Containers/TabButtons'

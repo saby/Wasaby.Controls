@@ -1,4 +1,4 @@
-define('js!WSControls/Tooltips/Tooltip',
+define('SBIS3.CONTROLS/WSControls/Tooltips/Tooltip',
    [
       'Core/Control',
       'tmpl!WSControls/Tooltips/Tooltip',
