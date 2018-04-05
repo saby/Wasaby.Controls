@@ -1,7 +1,6 @@
-//TODO переименовать папку после отказа от старых демок https://online.sbis.ru/opendoc.html?guid=a78c50e0-eca2-4ef0-ae2d-3905a7a2159c
-define('Controls-demo/Input/NumberNew/Number', [
+define('Controls-demo/Input/Number/Number', [
    'Core/Control',
-   'tmpl!Controls-demo/Input/NumberNew/Number',
+   'tmpl!Controls-demo/Input/Number/Number',
    'WS.Data/Source/Memory'
 ], function(Control, template) {
 

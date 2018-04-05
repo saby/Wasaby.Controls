@@ -1,7 +1,6 @@
-//TODO переименовать папку после отказа от старых демок https://online.sbis.ru/opendoc.html?guid=a78c50e0-eca2-4ef0-ae2d-3905a7a2159c
-define('Controls-demo/Input/AreaNew/Area', [
+define('Controls-demo/Input/Area/Area', [
    'Core/Control',
-   'tmpl!Controls-demo/Input/AreaNew/Area',
+   'tmpl!Controls-demo/Input/Area/Area',
    'WS.Data/Source/Memory'
 ], function(Control, template) {
 

@@ -27,7 +27,7 @@ define('Controls/Input/Text', [
        * @public
        * @category Input
        * @author Журавлев Максим Сергеевич
-       * @demo Controls-demo/Input/TextNew/Text
+       * @demo Controls-demo/Input/Text/Text
        */
 
 
