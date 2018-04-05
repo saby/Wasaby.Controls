@@ -204,7 +204,7 @@ define('SBIS3.CONTROLS/Tree/CompositeView', [
              * @remark
              * Режим отображения определяется опцией {@link SBIS3.CONTROLS/Mixins/CompositeViewMixin#viewMode},
              * Когда опция не задана, используется стандартный шаблон. Для его работы требуется установить опцию {@link SBIS3.CONTROLS/Mixins/DSMixin#displayProperty}.
-             * Для режима отображения "Список" можно переопределить шаблон папки с помощью опции {@link listFolderTemplate}.
+             * Для режима отображения "Список" можно переопределить шаблон папки с помощью опции {@link listFolderTpl}.
              * Кроме шаблона папки, можно установить шаблон отображения элементов коллекции с помощью опций {@link SBIS3.CONTROLS/Columns.typedef cellTemplate}, {@link SBIS3.CONTROLS/ListView#itemTemplate}, {@link SBIS3.CONTROLS/Mixins/CompositeViewMixin#listTemplate} и {@link SBIS3.CONTROLS/Mixins/CompositeViewMixin#tileTemplate}.
              * @see listFolderTpl
              * @see SBIS3.CONTROLS/Mixins/DSMixin#displayProperty
