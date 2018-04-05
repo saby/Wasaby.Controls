@@ -120,7 +120,13 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlace/EditInPlace',
                 // проверка цикла нажатия на клавишу.
                 // т.к. keyDown можно произойти по отличному от EIP элементу, а keyUp уже отработать по EIP
                 // при этому по факту на EIP никто не нажимал
-                this._keyDownFiredOnEditor = true;
+               //Проверка на системные клавиши, т.к. при нажатии сочетания клавиш ctrl + enter, и отпускании сначала ctrl затем enter,
+               //получится что при отпускании ctrl мы скинем значение переменной _keyDownFiredOnEditor в false.
+               //Для таких сценариев, когда нажимаются сочетания клавишь, не будем учитывать системные клавиши.
+               //В рамках VDOM такой проблемы не будет, т.к. обработка нажатия клавишь будет по keydown, а не по keyup.
+               if (e.which !== constants.key.ctrl) {
+                  this._keyDownFiredOnEditor = true;
+               }
                // ESC обрабатываем именно на keydown, т.к. все ws-панели и окна работают по keydown.
                // Иначе после нажатия ESC на FloatArea событие keyUp доплывет до редактирования по месту и оно тоже закроется.
                // https://online.sbis.ru/opendoc.html?guid=9558878b-0207-4355-bf9b-2615a9abd58a
@@ -136,7 +142,9 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlace/EditInPlace',
                if (e.which !== constants.key.esc && this._keyDownFiredOnEditor === true) {
                   this._notify('onKeyPress', e);
                }
-               this._keyDownFiredOnEditor = false;
+               if (e.which !== constants.key.ctrl) {
+                  this._keyDownFiredOnEditor = false;
+               }
             },
             /**
              * Заполняем значениями отображаемую editInPlace область
