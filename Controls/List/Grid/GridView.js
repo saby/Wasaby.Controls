@@ -81,12 +81,12 @@ define('Controls/List/Grid/GridView', [
                      resultsGap = '';
                   if (results.position === 'top') {
                      if (header) {
-                        resultsGap = $(this._container).find('.controls-Grid__header-cell:first').outerHeight() + 'px';
+                        resultsGap = this._container.getElementsByClassName('controls-Grid__header-cell')[0].getBoundingClientRect().height + 'px';
                      } else {
                         resultsGap = '0';
                      }
                   } else {
-                     resultsGap = 'calc(100% - ' + $(this._container).find('.controls-Grid__results-cell:first').outerHeight() + 'px)';
+                     resultsGap = 'calc(100% - ' + this._container.getElementsByClassName('controls-Grid__results-cell')[0].getBoundingClientRect().height + 'px)';
                   }
                   $(this._container).find('.controls-Grid__results-cell').css('top', resultsGap);
                }
