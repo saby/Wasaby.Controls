@@ -37,7 +37,7 @@ define('Controls/Button/ButtonSeparator', [
       iconChangedValue: function (self, options) {
          if (options.value) {
             self._icon = 'icon-' + (options.bold ? 'MarkCollapseBold ':'CollapseLight ');
-         }else {
+         } else {
             self._icon = 'icon-' + (options.bold ? 'MarkExpandBold ':'ExpandLight ');
          }
       }
