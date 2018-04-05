@@ -37,6 +37,11 @@ define('Controls/List/EditInPlace', [
             if (eventResult === ItemEditResult.CANCEL) {
                result = Deferred.fail(options);
             } else if (eventResult instanceof Deferred) {
+               self._notify('showIndicator', [], { bubbling: true });
+               eventResult.addBoth(function(result) {
+                  self._notify('hideIndicator', [], { bubbling: true });
+                  return result;
+               });
                result = eventResult;
             } else if ((eventResult && eventResult.item instanceof Record) || (options && options.item instanceof Record)) {
                result = Deferred.success(eventResult || options);
