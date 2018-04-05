@@ -42,7 +42,7 @@ define('SBIS3.CONTROLS/Radio/Button',
         * @param captionTxt Текст подписи у кнопки.
         * @example
         * <pre>
-        *     MyRadioGroup.getItemsInstance(2).setCaption('SomeNewCaption');
+        *     MyRadioGroup.getItemInstance(2).setCaption('SomeNewCaption');
         * </pre>
         * @see items
         */
