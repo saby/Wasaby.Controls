@@ -127,14 +127,14 @@ define('Controls-demo/Layouts/SearchLayout', [
             idProperty: 'id',
             data: sourceData
          }),
-         _filterSourceData: filterSourceData,
+         _filterSource: filterSourceData,
          _switchValue: false,
 
-         _filterSource: new MemorySource({
+         _fastFilterSource: new MemorySource({
             idProperty: 'id',
             data: filterData
          }),
-         _filterData: filterData
+         _fastFilterData: filterData
       });
    return ModuleClass;
 });
