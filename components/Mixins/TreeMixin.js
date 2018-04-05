@@ -650,7 +650,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
              * @cfg {Boolean} Раскрыть содержимое папок (запись с типом "Узел") при первой загрузке контрола.
              * @remark
              * Когда опция expand установлена в значение true, опцию {@link partialyReload} необходимо установить в значение false, чтобы обеспечить корректную работу контрола.
-             * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
+             * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
              * @see setExpand
              * @see getExpand
              */
