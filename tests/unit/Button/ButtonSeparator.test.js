@@ -17,7 +17,7 @@ define(['Controls/Button/ButtonSeparator'], function (Separator) {
          };
          separator.saveOptions(opt);
          separator._beforeMount(opt);
-         assert.isTrue(separator._icon === 'icon-CollapseLight', 'icon style generate incorrect');
+         assert.isTrue(separator._icon === 'icon-CollapseLight ', 'icon style generate incorrect');
       });
 
       it('counter close state', function () {
@@ -26,7 +26,7 @@ define(['Controls/Button/ButtonSeparator'], function (Separator) {
          };
          separator.saveOptions(opt);
          separator._beforeMount(opt);
-         assert.isTrue(separator._icon === 'icon-ExpandLight', 'icon style generate incorrect');
+         assert.isTrue(separator._icon === 'icon-ExpandLight ', 'icon style generate incorrect');
       });
 
       it('update counter open state to close state', function () {
@@ -38,7 +38,7 @@ define(['Controls/Button/ButtonSeparator'], function (Separator) {
          };
          separator.saveOptions(opt);
          separator._beforeUpdate(newOpt);
-         assert.isTrue(separator._icon === 'icon-ExpandLight', 'icon style generate incorrect');
+         assert.isTrue(separator._icon === 'icon-ExpandLight ', 'icon style generate incorrect');
       });
 
       it('update counter close state to open state', function () {
@@ -50,7 +50,7 @@ define(['Controls/Button/ButtonSeparator'], function (Separator) {
          };
          separator.saveOptions(opt);
          separator._beforeUpdate(newOpt);
-         assert.isTrue(separator._icon === 'icon-CollapseLight', 'icon style generate incorrect');
+         assert.isTrue(separator._icon === 'icon-CollapseLight ', 'icon style generate incorrect');
       });
    });
 });
