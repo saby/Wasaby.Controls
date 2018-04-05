@@ -1,0 +1,12 @@
+<div class="ControlsDemo-Scroll__user ws-flexbox ws-align-items-center">
+   <div class="ControlsDemo-Scroll__avatar icon-{{user.get('avatar')}}"></div>
+   <div class="ControlsDemo-Scroll__description ws-flexbox ws-flex-column">
+      <div class="ControlsDemo-Scroll__name ws-header_size_h3 ws-header_color_accent1 ws-header_size_weight">
+         {{user.get('name')}}
+      </div>
+      <div if="{{showStatus}}"
+           class="ControlsDemo-Scroll__status ws-header_size_h6 ws-header_color_accent2 ws-header_size_weight">
+         {{user.get('status')}}
+      </div>
+   </div>
+</div>
