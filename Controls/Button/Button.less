@@ -3,20 +3,70 @@
   box-sizing: border-box;
   .user-select();
 }
-
-.controls-Button__type-inBorder {
+//------------------------------------------------------------------------------------
+.controls-Button__type-IconButton, .controls-Button__type-IconButton_disabled {
   border-radius: 1px;
   border-style: solid;
   border-width: 1px;
+  box-shadow: @box-shadow-IconButton;
 }
 
-.controls-Button__type-inBorder_disabled {
-  border-radius: 1px;
-  border-style: solid;
-  border-width: 1px;
+.controls-Button__icon-IconButton-done {
+  color: @color-IconButton_style-done;
+}
+
+.controls-Button__icon-IconButton-error {
+  color: @color-IconButton_style-error;
+}
+
+.controls-Button__icon-IconButton-default {
+  color: @color-IconButton__icon_style-default;
+}
+
+.controls-Button__type-IconButton_size-s {
+  height: @height-IconButton_size-s;
+  width: @width-IconButton_size-s;
+}
+
+.controls-Button__type-IconButton_size-default {
+  height: @height-IconButton_size-m;
+  width: @width-IconButton_size-m;
+}
+
+.controls-Button__type-IconButton_disabled {
   color: @disabled-color;
 }
 
+.controls-Button__style-IconButton-done {
+  border-color: @border-color-IconButton
+}
+
+.controls-Button__style-IconButton-default {
+  border-color: @border-color-IconButton;
+}
+
+.controls-Button__style-IconButton-error {
+  border-color: @border-color-IconButton
+}
+
+.ws-is-no-touch {
+  .controls-Button__style-IconButton-default:hover {
+    border-color: @color-IconButton_style-default_hovered;
+  }
+
+  .controls-Button__style-IconButton-done {
+    border-color: @color-IconButton_style-done;
+  }
+
+  .controls-Button__style-IconButton-error {
+    border-color: @color-IconButton_style-error;
+  }
+}
+
+.controls-Button__style-IconButton-default:active {
+  color: @color-IconButton_style-default_hovered;
+}
+//------------------------------------------------------------------------------------
 .controls-Button__type-link {
   cursor: pointer;
 }

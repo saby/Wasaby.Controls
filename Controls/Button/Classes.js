@@ -2,6 +2,21 @@ define('Controls/Button/Classes', ['Core/IoC'], function(IoC) {
 
    'use strict';
    var classesOfButton = {
+      errorIconButton:{
+         style: 'IconButton-error',
+         type: 'IconButton'
+      },
+
+      doneIconButton:{
+         style: 'IconButton-done',
+         type: 'IconButton'
+      },
+
+      defaultIconButton:{
+         style: 'IconButton-default',
+         type: 'IconButton'
+      },
+
       linkMain: {
          style: 'link-main',
          type: 'link'
