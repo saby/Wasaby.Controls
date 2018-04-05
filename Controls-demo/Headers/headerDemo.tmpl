@@ -1,0 +1,66 @@
+<div class="demoWrapper">
+    <div class="testBlock">
+        <div class="exampleBlock">
+            <h2>Кнопка назад</h2>
+            <Controls:Button:Back style="{{_backStyle}}" size="{{_backSize}}" caption="{{_backCaption}}" inHeader="{{_inHeader}}"/>
+        </div>
+        <div class="optionsBlock">
+            <h3>Опции</h3>
+            <Controls:Label name="myLabel1" caption="style(primary, default)"/>
+            <Controls:Input:Text bind:value="_backStyle"/>
+            <Controls:Label name="myLabel1" caption="size(s, m, l)"/>
+            <Controls:Input:Text bind:value="_backSize"/>
+            <Controls:Label name="myLabel1" caption="caption"/>
+            <Controls:Input:Text bind:value="_backCaption"/>
+        </div>
+    </div>
+    <div class="testBlock">
+        <div class="exampleBlock">
+            <h2>Заголовок</h2>
+            <div class="wrapper">
+                <ws:if data="{{_showButtonSeparator}}">
+                    <Controls.Button.ButtonSeparator on:click="clickIcon()" style="{{_iconStyle}}" bold="{{_bold}}" value="{{_iconValue}}"/>
+                </ws:if>
+                <div class="wrapperCounterCaption">
+                    <ws:if data="{{_showCaption}}">
+                        <Controls.Header caption="{{_caption}}" style="{{_captionStyle}}" size="{{_captionSize}}"/>
+                    </ws:if>
+                    <ws:if data="{{_showCounter}}">
+                        <Controls.Header.Counter attr:class="counter" value="{{_counterValue}}" style="{{_counterStyle}}" size="{{_counterSize}}"/>
+                    </ws:if>
+                </div>
+                <ws:if data="{{_showSeparator}}">
+                    <Controls.Header.Separator style="{{_separatorIconStyle}}"/>
+                </ws:if>
+            </div>
+        </div>
+        <div class="optionsBlock">
+            <h3>Опции заголовка</h3>
+            <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_showCaption" caption="Показывать заголовок"/>
+            <Controls:Label name="myLabel1" caption="size(s, m, l, xl)"/>
+            <Controls:Input:Text bind:value="_captionSize"/>
+            <Controls:Label name="myLabel1" caption="caption"/>
+            <Controls:Input:Text bind:value="_caption"/>
+            <Controls:Label name="myLabel1" caption="style(default, primary)"/>
+            <Controls:Input:Text bind:value="_captionStyle"/>
+            <h3>Опции счетчика</h3>
+            <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_showCounter" caption="Показывать счетчик"/>
+            <Controls:Label name="myLabel1" caption="value"/>
+            <Controls:Input:Number bind:value="_counterValue"/>
+            <Controls:Label name="myLabel1" caption="style(disabled, default, primary)"/>
+            <Controls:Input:Text bind:value="_counterStyle"/>
+            <Controls:Label name="myLabel1" caption="size(s, m, l)"/>
+            <Controls:Input:Text bind:value="_counterSize"/>
+            <h3>Опции кнопки-разделителя</h3>
+            <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_showButtonSeparator" caption="Показывать кнопку-разделитель"/>
+            <Controls:Label name="myLabel1" caption="style(Accent, Additional, Main)"/>
+            <Controls:Input:Text bind:value="_iconStyle"/>
+            <br/>
+            <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_bold" caption="bold"/>
+            <h3>Опции иконки</h3>
+            <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_showSeparator" caption="Показывать иконку у заголовка"/>
+            <Controls:Label name="myLabel1" caption="style(primary, default)"/>
+            <Controls:Input:Text bind:value="_separatorIconStyle"/>
+        </div>
+    </div>
+</div>

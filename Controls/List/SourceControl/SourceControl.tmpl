@@ -1,4 +1,4 @@
-<div class="controls-SourceControl">
+<div class="controls-SourceControl" on:showIndicator="_showIndicator()" on:hideIndicator="_hideIndicator()">
     <div class="controls-SourceControl__trigger controls-SourceControl__topListTrigger" name="topListTrigger"></div>
     <div class="controls-SourceControl__topPlaceholder" style="height: {{_topPlaceholderHeight}}px;"></div>
     <div class="controls-SourceControl__trigger controls-SourceControl__topLoadTrigger" name="topLoadTrigger" style="bottom: -{{_loadOffset}}px;"></div>
@@ -28,9 +28,12 @@
                                    listModel="{{_listViewModel}}"
                                    source="{{_sourceController}}" />
         <Controls.List.Remove ws:content="listView"
-                              name="removeControl"
-                              on:beforeItemsRemove="_beforeItemsRemove()"
-                              on:afterItemsRemove="_afterItemsRemove()"/>
+                name="removeControl"
+                sourceController="{{_sourceController}}"
+                listModel="{{_listViewModel}}"
+                on:beforeItemsRemove="_beforeItemsRemove()"
+                on:afterItemsRemove="_afterItemsRemove()"
+                />
         <Controls.List.ItemActions.ItemActionsControl
                 ws:content="listView"
                 listModel="{{_listViewModel}}"

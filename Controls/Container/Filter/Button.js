@@ -1,22 +1,21 @@
 /**
  * Created by am.gerasimov on 22.03.2018.
  */
-define('Controls/Container/FilterButton',
+define('Controls/Container/Filter/Button',
    [
       'Core/Control',
-      'tmpl!Controls/Container/FilterButton/FilterButton',
+      'tmpl!Controls/Container/Filter/Button/Button',
       'Controls/Container/Filter/FilterContextField',
-      'Core/helpers/Object/isEqual',
-      'WS.Data/Type/descriptor'
+      'Core/helpers/Object/isEqual'
    ],
    
-   function(Control, template, FilterContextField, isEqual, descriptor) {
+   function(Control, template, FilterContextField, isEqual) {
       
       /**
        * Container component for FilterButton
        * Receives props from context and pass to FilterButton.
        * Should be located inside Controls/Container/Filter.
-       * @class Controls/Container/FilterButton
+       * @class Controls/Container/Filter/Button
        * @extends Controls/Control
        * @author Герасимов Александр
        * @control
@@ -41,6 +40,10 @@ define('Controls/Container/FilterButton',
             if (context.filterLayoutField.filterButtonItems) {
                this._items = context.filterLayoutField.filterButtonItems;
             }
+         },
+   
+         _filterChanged: function(event, filter) {
+            this._notify('filterChanged', [filter], {bubbling: true});
          }
       });
    
