@@ -205,13 +205,19 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                /**
                 * Пользовательские форматы для редактора
                 */
-               custom_formats: {
-                  customStyle: {
-                     block: 'blockquote',
-                     classes: 'customStyle',
-                     wrapper: 1,
-                     remove: 'all'}
-               }
+               /**
+                * @cfg {Object} Пользовательский формат для блоков
+                * @example
+                * <pre>
+                *    <options name="customStyle">
+                *       <option name="block">blockquote</option>
+                *       <option name="wrapper">1</option>
+                *       <option name="remove">all</option>
+                *       <option name="classes">customStyle</option>
+                *    </options>
+                * </pre>
+                */
+               custom_formats: {}
             },
             _scrollContainer: undefined,
             _dataReview: undefined,
@@ -256,7 +262,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                options.maximalHeight = this._cleanHeight(options.maximalHeight);
             }
             for(var key in options.custom_formats) {
-               options.editorConfig.formats[key] = options.custom_formats[key];
+               if ({}.hasOwnProperty.call(options.custom_formats, key)) {
+                  options.editorConfig.formats[key] = options.custom_formats[key];
+               }
             }
             return options;
          },
