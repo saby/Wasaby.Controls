@@ -61,14 +61,22 @@ define(
                   offsetHeight: 100
                };
                result = calcOverflow(container);
-               assert.equal(result, true);
+               if (window) {
+                  assert.equal(result, true);
+               } else {
+                  assert.equal(result, undefined);
+               }
 
                container = {
                   scrollHeight: 200,
                   offsetHeight: 100
                };
                result = calcOverflow(container);
-               assert.equal(result, false);
+               if (window) {
+                  assert.equal(result, false);
+               } else {
+                  assert.equal(result, undefined);
+               }
             });
             it('firefox', function() {
                detection = {
@@ -84,7 +92,11 @@ define(
                   ]
                };
                result = calcOverflow(container);
-               assert.equal(result, true);
+               if (window) {
+                  assert.equal(result, true);
+               } else {
+                  assert.equal(result, undefined);
+               }
 
                container = {
                   children: [
@@ -94,7 +106,11 @@ define(
                   ]
                };
                result = calcOverflow(container);
-               assert.equal(result, false);
+               if (window) {
+                  assert.equal(result, false);
+               } else {
+                  assert.equal(result, undefined);
+               }
             });
          });
 
@@ -135,7 +151,11 @@ define(
                };
 
                result = ScrollWidthUtil._private.calcScrollbarWidth('', detection);
-               assert.equal(result, 20);
+               if (window) {
+                  assert.equal(result, 20);
+               } else {
+                  assert.equal(result, undefined);
+               }
             });
          });
 
