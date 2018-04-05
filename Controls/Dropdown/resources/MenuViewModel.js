@@ -70,7 +70,7 @@ define('Controls/Dropdown/resources/MenuViewModel',
             // if (keys instanceof Array) {
             //    return keys.indexOf(item.get(this._options.keyProperty)) > -1;
             // }
-            return keys == item.get(this._options.keyProperty);
+            return keys && keys === item.get(this._options.keyProperty);
          },
          _hasChildren: function (item) {
             return this._hierarchy.isNode(item) && !!this._hierarchy.getChildren(item, this._options.items).length;
