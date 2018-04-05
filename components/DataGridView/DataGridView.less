@@ -52,9 +52,8 @@
             }
          }
          .controls-DataGridView__tr:nth-last-child(1){
-            .box-shadow(@data-grid-edge-cell-separator-shadow);
             .controls-DataGridView__td {
-               border-bottom-color: transparent;
+               border-bottom-color: @data-grid-edge-cell-separator-color;
             }
          }
          &.controls-DataGridView__resultsBottom {
@@ -355,6 +354,7 @@
   &:hover, &.controls-DataGridView__PartScroll__thumb-clicked {
     height: @data-grid-partScroll-thumb-height-hover;
     top: @data-grid-partScroll-thumb-clicked-top-shift;
+     border-radius:@data-grid-partScroll-thumb-border-radius-hover;
   }
 }
 
