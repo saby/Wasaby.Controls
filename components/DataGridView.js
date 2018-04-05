@@ -1186,8 +1186,8 @@ define('SBIS3.CONTROLS/DataGridView',
       _getEditInPlaceConfig: function() {
          var
             self = this,
-            columns = this._options.enabled ? this._options.columns : [];
-         if (!this._options.enabled) {
+            columns = this.isEnabled() ? this._options.columns : [];
+         if (!this.isEnabled()) {
             this._options.columns.forEach(function(item) {
                columns.push(item.allowChangeEnable === false ? item : {});
             });
