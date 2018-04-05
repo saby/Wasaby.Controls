@@ -1,12 +1,13 @@
-define('Controls-demo/Input/Text', [
+//TODO переименовать папку после отказа от старых демок https://online.sbis.ru/opendoc.html?guid=a78c50e0-eca2-4ef0-ae2d-3905a7a2159c
+define('Controls-demo/Input/AreaNew/Area', [
    'Core/Control',
-   'tmpl!Controls-demo/Input/Text',
+   'tmpl!Controls-demo/Input/AreaNew/Area',
    'WS.Data/Source/Memory'
 ], function(Control, template) {
 
    'use strict';
 
-   var VdomDemoText = Control.extend({
+   var VdomDemoArea = Control.extend({
       _template: template,
       _text1: '',
       _placeholder: '',
@@ -15,7 +16,9 @@ define('Controls-demo/Input/Text', [
       _validationErrorsValue: false,
       _trim: false,
       _maxLength: '',
-      _selectOnClick: false,
+      _minLines: '',
+      _maxLines: '',
+      _enabled: true,
 
       valueChangedHandler: function () {
          if (this._validationErrorsValue){
@@ -26,5 +29,5 @@ define('Controls-demo/Input/Text', [
       }
    });
 
-   return VdomDemoText;
+   return VdomDemoArea;
 });
