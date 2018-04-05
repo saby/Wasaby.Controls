@@ -66,9 +66,12 @@ define(
             
             /* Т.к. реально проверить, есть ли фокус в саггесте мы не можем (нет DOM элемента),
                просто проверим вызов focus() */
-            suggest.focus = function() {
-               focused = true;
-            };
+            /* Защита от изменения API, чтобы если api изменят, тест упал */
+            if (suggest.activate) {
+               suggest.activate = function () {
+                  focused = true;
+               };
+            }
             suggest._notify = function(eventName, value) {
                if (eventName === 'valueChanged') {
                   selectedValue = value;

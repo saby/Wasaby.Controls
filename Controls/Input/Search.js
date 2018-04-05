@@ -58,7 +58,7 @@ define('Controls/Input/Search',
 
          //Собственно поиск
          _applySearch: function (value) {
-            this._notify('search', [value], {bubbling: true});
+            this._notify('search', [value]);
          },
 
          _onResetClick: function () {

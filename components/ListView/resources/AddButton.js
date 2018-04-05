@@ -1,6 +1,6 @@
 
 define('SBIS3.CONTROLS/ListView/resources/AddButton', [
-   'js!WSControls/Buttons/Button',
+   'SBIS3.CONTROLS/WSControls/Buttons/Button',
    'css!Controls/List/AddButton/AddButton',
    'css!SBIS3.CONTROLS/ListView/resources/AddButton/AddButton'
 ], function(WSButton) {

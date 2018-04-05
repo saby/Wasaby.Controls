@@ -101,6 +101,14 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
                       this._onApplyFilterHandler();//сохранаяем в пользовательскую историю что бы фильтр применился при обновлении страницы
                    }.bind(this));
                 }
+                var hashFilters = this._getFiltersFormHash();
+                this._options.view.setFilter(cMerge(this._options.view.getFilter(), hashFilters), false);
+                if (
+                   cInstance.instanceOfMixin(this._options.view, 'SBIS3.CONTROLS/Mixins/TreeMixin') &&
+                   hashFilters[this._options.view.getParentProperty()]
+                ) {
+                   this._options.view.setCurrentRoot(hashFilters[this._options.view.getParentProperty()]);
+                }
              }
           },
 
@@ -373,7 +381,7 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
                    saveFilters = JSON.stringify(saveFilters);
                 }
                 if (saveFilters) {
-                   HashManager.set(this._options.historyId, JSON.stringify(saveFilters));
+                   HashManager.set(this._options.historyId, saveFilters);
                 } else {
                    HashManager.remove(this._options.historyId);
                 }

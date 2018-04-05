@@ -352,7 +352,7 @@ define('SBIS3.CONTROLS/DataGridView',
                column.resultTemplateData = {
                   result: value,
                   item: resultsRecord,
-                  column: column,
+                  column: coreClone(column),
                   index: i,
                   resultsText: cfg.resultsText
                };

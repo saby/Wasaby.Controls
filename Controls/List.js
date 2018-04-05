@@ -5,7 +5,8 @@ define('Controls/List', [
    'Core/Control',
    'tmpl!Controls/List/SimpleList',
    'Controls/List/SimpleList/ListViewModel',
-   'Controls/List/SimpleList/ListView'
+   'Controls/List/SimpleList/ListView',
+   'Controls/List/EditInPlace'
 ], function (Control,
              ListControlTpl,
              ListViewModel
@@ -77,6 +78,45 @@ define('Controls/List', [
          } else if (newOptions.markedKey !== this._options.markedKey) {
             this._viewModel.setMarkedKey(newOptions.markedKey);
          }
+      },
+
+
+      /**
+       * Starts editing in place.
+       * @param {ItemEditOptions} options Options of editing.
+       * @returns {Core/Deferred}
+       */
+      editItem: function(options) {
+         this._children.sourceControl.editItem(options);
+      },
+
+      /**
+       * Starts adding.
+       * @param {AddItemOptions} options Options of adding.
+       * @returns {Core/Deferred}
+       */
+      addItem: function(options) {
+         this._children.sourceControl.addItem(options);
+      },
+
+      _onBeforeItemAdd: function(e, options) {
+         return this._notify('beforeItemAdd', [options]);
+      },
+
+      _onBeforeItemEdit: function(e, options) {
+         return this._notify('beforeItemEdit', [options]);
+      },
+
+      _onAfterItemEdit: function(e, options) {
+         this._notify('afterItemEdit', [options]);
+      },
+
+      _onBeforeItemEndEdit: function(e, options) {
+         return this._notify('beforeItemEndEdit', [options]);
+      },
+
+      _onAfterItemEndEdit: function(e, options) {
+         this._notify('beforeItemEndEdit', [options]);
       },
 
       _beforeItemsRemove: function(event, items) {
