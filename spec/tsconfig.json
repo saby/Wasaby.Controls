@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "module": "amd",
+    "moduleResolution": "classic",
+    "target": "es5",
+    "lib": ["DOM", "ES5", "es2015"],
+    "declaration": false,
+    "noImplicitAny": false,
+    "stripInternal": true,
+    "sourceMap": false,
+    "alwaysStrict": true,
+    "traceResolution": true,
+    "baseUrl": "./",
+    "diagnostics": true,
+    "locale": "ru",
+    "importHelpers": true
+  },
+  "include": [
+    "../File",
+    "core.d.ts",
+    "tslib.js"
+  ],
+  "exclude": [
+    "node_modules",
+    "../SBIS3.CONTROLS"
+  ]
+}

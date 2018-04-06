@@ -24,13 +24,13 @@ define([
    describe('SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil', function () {
       it('unDecorateLinks empty block', function () {
          var
-            question = '<div class="LinkDecorator__wrap"><div>',
+            question = '<div class="LinkDecorator__wrap"></div>',
             answer ='';
          assert.strictEqual(RichTextAreaUtil.unDecorateLinks(question), answer);
       });
       it('unDecorateLinks block with image', function () {
          var
-            question = '<div class="LinkDecorator__wrap"><a class="LinkDecorator__linkWrap" target="_blank" href="href1"><img class="LinkDecorator__image" alt="href2" src="src1"></a></div>',
+            question = '<div class="LinkDecorator__wrap"><a class="LinkDecorator__linkWrap" target="_blank" href="href1"><img class="LinkDecorator__image" alt="href2" src="src1"/></a></div>',
             answer ='href2';
          assert.strictEqual(RichTextAreaUtil.unDecorateLinks(question), answer);
       });

@@ -32,7 +32,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Sheet/View',
                 */
                allSheetsTitle: rk('Все листы настраиваются одинаково', 'НастройщикИмпорта'),
                /**
-                * @cfg {string[]} Список областей данных для импортирования
+                * @cfg {Array<string>} Список областей данных для импортирования
                 */
                sheetTitles: [],
                /**
@@ -41,7 +41,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Sheet/View',
                sheetIndex: -1
             },
             // Контрол выбора области данных для импортирования
-            _view: null,
+            _view: null
          },
 
          _modifyOptions: function () {

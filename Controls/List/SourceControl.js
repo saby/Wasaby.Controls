@@ -6,6 +6,9 @@ define('Controls/List/SourceControl', [
    'Controls/List/Controllers/VirtualScroll',
    'Controls/Controllers/SourceController',
    'Core/Deferred',
+   'tmpl!Controls/List/SourceControl/multiSelect',
+   'Controls/List/EditInPlace',
+   'Controls/List/ItemActions/ItemActionsControl',
    'css!Controls/List/SourceControl/SourceControl'
 ], function (Control,
              IoC,
@@ -13,18 +16,20 @@ define('Controls/List/SourceControl', [
              require,
              VirtualScroll,
              SourceController,
-             Deferred
+             Deferred,
+             multiSelectTpl
 ) {
    'use strict';
 
    var _private = {
-
       reload: function(self) {
          if (self._sourceController) {
             _private.showIndicator(self);
             return self._sourceController.load(self._filter, self._sorting).addCallback(function (list) {
 
-               self._notify('onDataLoad', list);
+               //todo события не работают до маунта в дом, решить что с этим делать
+               //https://online.sbis.ru/opendoc.html?guid=1e98cfd2-f855-448e-adff-43ab8339e961
+               //self._notify('onDataLoad', [list]);
 
                _private.hideIndicator(self);
 
@@ -35,8 +40,8 @@ define('Controls/List/SourceControl', [
                //self._virtualScroll.setItemsCount(self._listViewModel.getCount());
                _private.handleListScroll(self, 0);
             }).addErrback(function(error){
-               _private.processLoadError(self, error)
-            })
+               _private.processLoadError(self, error);
+            });
          }
          else {
             IoC.resolve('ILogger').error('SourceControl', 'Source option is undefined. Can\'t load data');
@@ -48,7 +53,7 @@ define('Controls/List/SourceControl', [
          if (self._sourceController) {
             return self._sourceController.load(self._filter, self._sorting, direction).addCallback(function(addedItems){
 
-               self._notify('onDataLoad', addedItems);
+               self._notify('onDataLoad', [addedItems]);
 
                _private.hideIndicator(self);
 
@@ -75,7 +80,7 @@ define('Controls/List/SourceControl', [
       processLoadError: function(self, error) {
          if (!error.canceled) {
             _private.hideIndicator(self);
-            if (self._notify('onDataLoadError', error) !== true && !error._isOfflineMode) {//Не показываем ошибку, если было прервано соединение с интернетом
+            if (self._notify('onDataLoadError', [error]) !== true && !error._isOfflineMode) {//Не показываем ошибку, если было прервано соединение с интернетом
                //TODO новые попапы
                /*InformationPopupManager.showMessageDialog(
 
@@ -242,6 +247,12 @@ define('Controls/List/SourceControl', [
 
       getItemsCount: function(self) {
          return self._listViewModel ? self._listViewModel.getCount() : 0;
+      },
+
+      initListViewModelHandler: function(self, model) {
+         model.subscribe('onListChange', function () {
+            self._forceUpdate();
+         });
       }
    };
 
@@ -268,7 +279,6 @@ define('Controls/List/SourceControl', [
 
       _listViewModel: null,
 
-      _dataSource: null,
       _loader: null,
       _loadingState: null,
       _loadingIndicatorState: null,
@@ -278,6 +288,7 @@ define('Controls/List/SourceControl', [
       _sorting: undefined,
 
       _itemTemplate: null,
+      _multiSelectTpl: multiSelectTpl,
 
       _loadOffset: 100,
       _topPlaceholderHeight: 0,
@@ -288,7 +299,7 @@ define('Controls/List/SourceControl', [
          this._publish('onDataLoad');
       },
 
-      _beforeMount: function(newOptions) {
+      _beforeMount: function(newOptions, context, receivedState) {
          var self = this;
          this._virtualScroll = new VirtualScroll({
             maxVisibleItems: newOptions.virtualScrollConfig && newOptions.virtualScrollConfig.maxVisibleItems,
@@ -303,6 +314,7 @@ define('Controls/List/SourceControl', [
          if (newOptions.listViewModel) {
             this._listViewModel = newOptions.listViewModel;
             this._virtualScroll.setItemsCount(this._listViewModel.getCount());
+            _private.initListViewModelHandler(this, this._listViewModel);
          }
 
          if (newOptions.source) {
@@ -311,10 +323,11 @@ define('Controls/List/SourceControl', [
                navigation : newOptions.navigation  //TODO возможно не всю навигацию надо передавать а только то, что касается source
             });
 
-
-
-            if (!this._items) {
-               _private.reload(this);
+            if (receivedState) {
+               this._listViewModel.setItems(receivedState);
+            }
+            else {
+               return _private.reload(this);
             }
          }
       },
@@ -340,6 +353,7 @@ define('Controls/List/SourceControl', [
 
          if (newOptions.listViewModel && (newOptions.listViewModel !== this._options.listViewModel)) {
             this._listViewModel = newOptions.listViewModel;
+            _private.initListViewModelHandler(this, this._listViewModel);
             //this._virtualScroll.setItemsCount(this._listViewModel.getCount());
          } else
             if (newOptions.selectedKey !== this._options.selectedKey) {
@@ -358,7 +372,7 @@ define('Controls/List/SourceControl', [
                navigation: newOptions.navigation
             });
          }
-         
+
          if (filterChanged || sourceChanged) {
             _private.reload(this);
          }
@@ -408,10 +422,93 @@ define('Controls/List/SourceControl', [
 
       },
 
-      reload: function() {
-         _private.reload(this);
-      }
+      _onCheckBoxClick: function(e, key, status) {
+         if (status === 1) {
+            this._listViewModel.unselect([key])
+         }
+         else {
+            this._listViewModel.select([key])
+         }
+      },
 
+      removeItems: function(items) {
+         this._children.removeControl.removeItems(items);
+      },
+
+      _beforeItemsRemove: function(event, items) {
+         return this._notify('beforeItemsRemove', [items]);
+      },
+
+      _afterItemsRemove: function (event, items, result) {
+         this._notify('afterItemsRemove', [items, result]);
+      },
+
+      _showIndicator: function(event, direction) {
+         _private.showIndicator(this, direction);
+         event.stopPropagation();
+      },
+
+      _hideIndicator: function(event) {
+         _private.hideIndicator(this);
+         event.stopPropagation();
+      },
+
+      reload: function() {
+         return _private.reload(this);
+      },
+
+     /**
+      * Starts editing in place.
+      * @param {ItemEditOptions} options Options of editing.
+      * @returns {Core/Deferred}
+      */
+     editItem: function(options) {
+         this._children.editInPlace.editItem(options);
+      },
+
+     /**
+      * Starts adding.
+      * @param {AddItemOptions} options Options of adding.
+      * @returns {Core/Deferred}
+      */
+      addItem: function(options) {
+        this._children.editInPlace.addItem(options);
+      },
+
+      _onBeforeItemAdd: function(e, options) {
+         return this._notify('beforeItemAdd', [options]);
+      },
+
+      _onBeforeItemEdit: function(e, options) {
+         return this._notify('beforeItemEdit', [options]);
+      },
+
+      _onAfterItemEdit: function(e, options) {
+         this._listViewModel._activeItem = {
+            item: options.item,
+            contextEvent: false
+         };
+         this._children.itemActions.updateActions();
+         this._notify('afterItemEdit', [options]);
+      },
+
+      _onBeforeItemEndEdit: function(e, options) {
+         return this._notify('beforeItemEndEdit', [options]);
+      },
+
+      _onAfterItemEndEdit: function(e, options) {
+         this._notify('beforeItemEndEdit', [options]);
+         this._listViewModel._activeItem = false;
+         this._children.itemActions.updateActions();
+      },
+
+      _commitEditActionHandler: function() {
+         this._children.editInPlace.commitEdit();
+      },
+
+      _cancelEditActionHandler: function() {
+         this._children.editInPlace.cancelEdit();
+      }
    });
 
    //TODO https://online.sbis.ru/opendoc.html?guid=17a240d1-b527-4bc1-b577-cf9edf3f6757

@@ -1,5 +1,5 @@
 define('SBIS3.CONTROLS/Menu/MenuIcon', [
-   'js!WSControls/Buttons/MenuButton',
+   'SBIS3.CONTROLS/WSControls/Buttons/MenuButton',
    'SBIS3.CONTROLS/Utils/IconButtonUtil',
    'css!SBIS3.CONTROLS/Button/IconButton/IconButton',
    'css!SBIS3.CONTROLS/Menu/MenuIcon/MenuIcon'
@@ -16,7 +16,7 @@ define('SBIS3.CONTROLS/Menu/MenuIcon', [
     * @class SBIS3.CONTROLS/Menu/MenuIcon
     * @extends WSControls/Buttons/MenuButton
     *
-    * @demo SBIS3.CONTROLS.Demo.MyMenuIcon
+    * @demo Examples/MenuButton/MyMenuIcon/MyMenuIcon
     *
     * @author Романов В.С.
     *

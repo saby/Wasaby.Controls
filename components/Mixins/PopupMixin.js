@@ -7,7 +7,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
    "Core/EventBus",
    "Core/Deferred",
    "SBIS3.CONTROLS/ControlHierarchyManager",
-   "Deprecated/Controls/ModalOverlay/ModalOverlay",
+   "Lib/Control/ModalOverlay/ModalOverlay",
    "SBIS3.CONTROLS/Utils/TouchKeyboardHelper",
    'Core/core-instance',
    'Core/helpers/Hcontrol/doAutofocus',
@@ -120,6 +120,8 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
              */
             /**
              * @cfg {VerticalAlign} Устанавливает вертикальное выравнивание всплывающего окна относительно точки его построения.
+             * @default {}
+             * @remark опция обязательна для конфигурации
              */
             verticalAlign: {},
             /**
@@ -134,6 +136,8 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
              */
             /**
              * @cfg {HorizontalAlign} Устанавливает горизонтальное выравнивание всплывающего окна относительно точки его построения.
+             * @default {}
+             * @remark опция обязательна для конфигурации
              */
             horizontalAlign: {},
             /**

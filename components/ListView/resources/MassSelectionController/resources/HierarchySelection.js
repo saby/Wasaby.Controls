@@ -6,7 +6,7 @@ define('SBIS3.CONTROLS/ListView/resources/MassSelectionController/resources/Hier
    'WS.Data/Collection/RecordSet',
    'Core/core-clone',
    'Core/IoC',
-   'SBIS3.CONTROLS/Utils/ArraySimpleValuesUtil'
+   'Controls/Utils/ArraySimpleValuesUtil'
 ], function (Selection, Record, HierarchyRelation, RecordSet, cClone, IoC, ArraySimpleValuesUtil) {
    'use strict';
 
@@ -175,7 +175,10 @@ define('SBIS3.CONTROLS/ListView/resources/MassSelectionController/resources/Hier
             itemFromSelection = this._markedTree.getRecordById(id),
             selectionStatus = itemFromSelection ? itemFromSelection.get(STATUS_FILED) : STATUS.NOT_SELECTED;
          if (status === true) {
-            if (selectionStatus !== STATUS.SELECTED) {
+            if (selectionStatus === STATUS.PARTIALLY_FULL) {
+               result.push(id);
+               addStatus = STATUS.SELECTED;
+            } else if (selectionStatus !== STATUS.SELECTED) {
                addStatus = STATUS.PARTIALLY;
             }
          } else if (status === false) {

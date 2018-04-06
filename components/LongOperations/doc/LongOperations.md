@@ -16,7 +16,7 @@
 <br/>
 Для сбора информации о длительных операциях и выполнения действий с ними менеджер использует продюсеры длительных операций. Продюсер длительных
 операций - объект, реализующий интерфейс SBIS3.CONTROLS/LongOperations/IProducer. Каждый продюсер обычно отвечает за работу с длительными операциями
-в какой-либо одной узкой предметной области. Например продюсер SBIS3.Engine.LongOperations.LRSProducer предоставляет доступ к длительным
+в какой-либо одной узкой предметной области. Например продюсер SBIS3.ENGINE/Controls/LongOperation/LRSProducer предоставляет доступ к длительным
 операциям, с которыми работает сервис LRS (/long-requests/service/). Продюсер SBIS3.EDO.CD.UploadLongOperationsProducer предоставляет доступ к
 информации о загрузке файлов менеджером загрузок. Другие продюсеры работают с длительными операциями иного характрера.
 <br/>
@@ -76,5 +76,5 @@ subscribe(event, listener) и unsubscribe(event, listener) для того, чт
 //destroy
 
 
-@demo SBIS3.CONTROLS.Demo.MyLongOperations
-@demo SBIS3.CONTROLS.Demo.MyLongOperationsSvc
+@demo Examples/LongOperations/MyLongOperations/MyLongOperations
+@demo Examples/LongOperations/MyLongOperationsSvc/MyLongOperationsSvc

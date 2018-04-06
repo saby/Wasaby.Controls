@@ -23,7 +23,7 @@ define('SBIS3.CONTROLS/Tab/Control', [
     * @control
     * @author Красильников А.С.
     * @public
-    * @demo SBIS3.CONTROLS.Demo.MyTabControl
+    * @demo Examples/TabControl/MyTabControl/MyTabControl
     */
 
    var TabControl = CompoundControl.extend([HasItemsMixin], /** @lends SBIS3.CONTROLS/Tab/Control.prototype */ {
@@ -133,7 +133,7 @@ define('SBIS3.CONTROLS/Tab/Control', [
             observeVisibleProperty: false, //опция tabButtons
             /**
              * Опция SwitchableArea - устанавливает произвольный шаблон переключаемой области
-             * Если не задана, используется стандартный Deprecated/Controls/SwitchableArea/SwitchableArea_area
+             * Если не задана, используется стандартный Lib/Control/SwitchableArea/SwitchableArea_area
              */
             switchableAreaTemplate: undefined
          }

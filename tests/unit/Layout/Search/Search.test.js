@@ -1,6 +1,6 @@
-define(['Controls/Layout/Search'], function(Search){
+define(['Controls/Container/Search'], function(Search){
    
-   describe('Controls.Layout.Search', function () {
+   describe('Controls.Container.Search', function () {
       
       it('check searchValue', function () {
          var filterLayout = new Search();

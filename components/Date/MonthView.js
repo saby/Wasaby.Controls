@@ -33,7 +33,7 @@ define(
        * @control
        * @public
        * @author Миронов А.Ю.
-       * @demo SBIS3.CONTROLS.Demo.MyMonthView
+       * @demo Examples/MonthView/MyMonthView/MyMonthView
        *
        * @mixes SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin
        * @mixes SBIS3.CONTROLS/Mixins/RangeMixin
@@ -737,9 +737,17 @@ define(
          },
 
          _updateDisplayedValues: function() {
+            var range,
+               changed = (this._displayedStartValue !== this.getStartValue() ||
+               this._displayedEndValue !== this.getEndValue()) ||
+               this._displayedRangeSelectionEnd !== this._rangeSelectionEnd;
             this._displayedStartValue = this.getStartValue();
             this._displayedEndValue = this.getEndValue();
             this._displayedRangeSelectionEnd = this._rangeSelectionEnd;
+            if (changed) {
+               range = this._getUpdatedRange(this._displayedStartValue, this._displayedEndValue, this._displayedRangeSelectionEnd)
+               this._notify('onDisplayedRangeChanged', range[0], range[1]);
+            }
          },
 
          _drawCurrentRangeSelection: function () {

@@ -8,30 +8,6 @@ define('Controls/Popup/Manager/Popup',
    function (Control, template, CoreConstants) {
       'use strict';
 
-      var CONTENT_SELECTOR = '.ws-Container__popup-scrolling-content';
-
-      var _private = {
-         /*
-         * Вернуть размеры контента
-         * */
-         getContentSizes: function(self){
-            var content = self._container.querySelector(CONTENT_SELECTOR) || self._container.firstChild;
-
-            return {
-               width: content.scrollWidth,
-               height: content.scrollHeight
-            }
-         },
-
-         /*
-         * Сохранить размеры, которые требуются чтобы отобразить контент полностью
-         * */
-         setNeededSizes: function(self, sizes){
-            self._neededHeight = sizes.height;
-            self._neededWidth = sizes.width;
-         }
-      };
-
       var Popup = Control.extend({
          /**
           * Компонент "Всплывающее окно"
@@ -56,18 +32,7 @@ define('Controls/Popup/Manager/Popup',
          _template: template,
 
          _afterMount: function () {
-            var contentSizes = _private.getContentSizes(this);
-            _private.setNeededSizes(this, contentSizes);
-            this._notify('popupCreated', [this._options.id, this._getPopupSizes()]);
-         },
-
-         _afterUpdate: function () {
-            var contentSizes = _private.getContentSizes(this);
-            //Если размеры контента изменились, пересчитаем размеры окна
-            if (contentSizes.width !== this._neededWidth || contentSizes.height !== this._neededHeight) {
-               _private.setNeededSizes(this, contentSizes);
-               this._notify('popupUpdated', [this._options.id, this._getPopupSizes()]);
-            }
+            this._notify('popupCreated', [this._options.id]);
          },
 
          /**
@@ -75,7 +40,7 @@ define('Controls/Popup/Manager/Popup',
           * @function Controls/Popup/Manager/Popup#_close
           */
          _close: function () {
-            this._notify('closePopup', [this._options.id, this._container]);
+            this._notify('closePopup', [this._options.id]);
          },
 
          /**
@@ -117,34 +82,9 @@ define('Controls/Popup/Manager/Popup',
             this._notify('result', [this._options.id, result]);
          },
 
-         _onResize: function(){
-            this._notify('popupUpdated', [this._options.id, this._getPopupSizes()]);
-         },
-
-         _onScroll: function(){
-            this._notify('popupUpdated', [this._options.id, this._getPopupSizes()]);
-         },
-         _getPopupSizes: function() {
-            return {
-               width: this._neededWidth,
-               height: this._neededHeight,
-               margins: this._getMargins()
-            }
-         },
-
-         _getMargins: function() {
-            if (this._margins) {
-               return this._margins;
-            }
-            var style = this._container.currentStyle || window.getComputedStyle(this._container);
-            this._margins = {
-               top: parseInt(style.marginTop, 10),
-               left: parseInt(style.marginLeft, 10)
-            };
-            this._resetMargin = true; //todo пока не работает мерж конфига attr: на дефолтный
-            this._container.style.margin = 0;
-            return this._margins;
-         },
+         _update: function() {
+            this._notify('popupUpdated', [this._options.id]);
+         }
       });
 
       return Popup;

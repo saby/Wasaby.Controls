@@ -8,8 +8,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
    "tmpl!SBIS3.CONTROLS/RichEditor/Components/Toolbar/RichEditorToolbar",
    "SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/config",
    'SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/ImagePanel/ImagePanel',
-   "js!WSControls/Buttons/Button",
-   "js!WSControls/Buttons/ToggleButton",
+   "SBIS3.CONTROLS/WSControls/Buttons/Button",
+   "SBIS3.CONTROLS/WSControls/Buttons/ToggleButton",
    'SBIS3.CONTROLS/Menu/MenuButton',
    'SBIS3.CONTROLS/ComboBox',
    'css!SBIS3.CONTROLS/RichEditor/Components/Toolbar/RichEditorToolbar',
@@ -75,7 +75,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
                 *          <option name="componentType">SBIS3.CONTROLS/Button</option>
                 *          <option name="icon" >sprite:icon-16 icon-Add icon-primary</option>
                 *          <options name="handlers">
-                *             <option name="onActivated" type="function">js!MyComponentName:prototype.myButtonClick</option>
+                *             <option name="onActivated" type="function">MyComponentName:prototype.myButtonClick</option>
                 *          </options>
                 *       </options>
                 *    </options>

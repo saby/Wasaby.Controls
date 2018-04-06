@@ -1,4 +1,20 @@
 @themeName: 'online';
+
+.addButtonMixin(@svgIcon, @size: 12px) {
+   .inline-flexbox();
+   .justify-content(center);
+   .align-items(center);
+
+   &:before {
+      content: '';
+      display: inline-block;
+      width: @size;
+      height: @size;
+      background-image: @svgIcon;
+      background-size: contain;
+   }
+}
+
 .body {
   font-family: @default-font-name;
   font-size: @default-text-size;
@@ -37,6 +53,15 @@
          }
       }
    }
+   &.controls-ListView__withoutMarker {
+      &:not(.controls-DataGridView__markerRight) {
+         .controls-ListView__item__selected:hover {
+            .controls-DataGridView__td:first-child {
+               background-image: none;
+            }
+         }
+      }
+   }
 }
 
 .controls-Popup-border {
@@ -52,4 +77,35 @@
 
 .controls-DataGridView__td .controls-TreeView__searchBreadCrumbs {
    top: -1px;
+}
+
+// замена иконок через svg для выравнивания
+.controls-Button .icon-AddButtonNew.normaltext-color{
+   .addButtonMixin(@content_addButton_black);
+}
+.controls-Button, .controls-IconButton {
+   .icon-AddButtonNew.icon-primary {
+      &.icon-24, &.icon-medium {
+         .addButtonMixin(@content_addButton_blue);
+      }
+      &.icon-16, &.icon-small {
+         .addButtonMixin(@content_addButton_blue, 10px);
+      }
+   }
+}
+.controls-Menu__Popup:not(.controls-MenuPicker__resetIconColor) .controls-Menu__header-icon.icon-AddButtonNew{
+   &.icon-24, &.icon-medium {
+      .addButtonMixin(@content_addButton_blueDark);
+   }
+   &.icon-16, &.icon-small {
+      .addButtonMixin(@content_addButton_blueDark, 10px);
+   }
+}
+
+.ws-is-desktop-platform {
+   .controls-IconButton__standardBorder:hover .controls-Button__icon.icon-AddButtonNew.icon-primary {
+      &.icon-16, &.icon-small {
+         .addButtonMixin(@content_addButton_blueDark, 10px);
+      }
+   }
 }

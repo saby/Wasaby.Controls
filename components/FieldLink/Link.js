@@ -1,5 +1,5 @@
 define('SBIS3.CONTROLS/FieldLink/Link', [
-      'js!WSControls/Buttons/ButtonBase',
+      'SBIS3.CONTROLS/WSControls/Buttons/ButtonBase',
       'tmpl!SBIS3.CONTROLS/FieldLink/Link/FieldLink_Link',
       'css!SBIS3.CONTROLS/FieldLink/Link/FieldLink_Link'
    ],
@@ -35,8 +35,8 @@ define('SBIS3.CONTROLS/FieldLink/Link', [
             FieldLink_Link.superclass.setCaption.apply(this, arguments);
             this.getContainer().html(this._options.caption);
          },
-         setEnabled: function(enabled) {
-            FieldLink_Link.superclass.setEnabled.apply(this, arguments);
+         _setEnabled: function(enabled) {
+            FieldLink_Link.superclass._setEnabled.apply(this, arguments);
             this.getContainer()
                .toggleClass('controls-FieldLink__Link_enabled', enabled)
                .toggleClass('controls-FieldLink__Link_disabled', !enabled);

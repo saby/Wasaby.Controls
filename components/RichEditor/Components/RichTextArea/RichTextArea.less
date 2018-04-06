@@ -11,20 +11,25 @@
       overflow: visible;
    }
 
-   .controls-RichEditor__scrollContainer {
+   .controls-RichEditor__richTextArea {
+      .flexbox();
       box-sizing: border-box;
    }
 
-   &.ws-enabled .controls-RichEditor__scrollContainer {
+   &.ws-enabled .controls-RichEditor__richTextArea {
       border: 1px solid #EAEAEA;
    }
 
-   &.ws-disabled .controls-RichEditor__scrollContainer {
+   &.ws-disabled .controls-RichEditor__richTextArea {
       border: 1px solid transparent;
    }
 
-   &.controls-RichEditor_toolbarExpanded .controls-RichEditor__scrollContainer {
+   &.ws-enabled.controls-RichEditor_toolbarExpanded .controls-RichEditor__richTextArea {
       border-top: 0 none;
+   }
+
+   .controls-RichEditor__scrollContainer {
+      width: 100%;
    }
 
    .controls-RichEditor__editorFrame {
@@ -95,7 +100,7 @@
       padding: 0;
       display:none;
    }
-   &.ws-enabled.ws-validation-error .controls-RichEditor__scrollContainer {
+   &.ws-enabled.ws-validation-error .controls-RichEditor__richTextArea {
       border-color: #FF302B;
    }
 
@@ -199,23 +204,24 @@
       z-index: 0;
       .user-select();
    }
-   &.controls-RichEditor__empty .controls-RichEditor__placeholder{
+   &.controls-RichEditor__empty.ws-enabled .controls-RichEditor__placeholder {
       display: block;
       cursor: text;
    }
-}
-//Стили для окна добавления/редактирования ссылки
-.controls-RichEditor__InsertLink__label,
-.controls-RichEditor__InsertLink__input.ws-field-string,
-.controls-RichEditor__InsertLink__okButton.controls-Button {
-   font-weight: normal;
-   position: absolute;
 }
 
 // При выделении может появится элемент с классом "mce-offscreen-selection", отступ же нужно сбрасывать именно у последнего параграфа
 // https://online.sbis.ru/opendoc.html?guid=0f043ceb-354f-4c38-9cf6-8bc6cdbfb402
 .controls-RichEditor .controls-RichEditor__editorFrame.ws-basic-style > p:last-of-type {
    margin-bottom: 0;
+}
+
+//Стили для окна добавления/редактирования ссылки
+.controls-RichEditor__InsertLink__label,
+.controls-RichEditor__InsertLink__input.ws-field-string,
+.controls-RichEditor__InsertLink__okButton.controls-Button {
+   font-weight: normal;
+   position: absolute;
 }
 
 .controls-RichEditor__InsertLink__label {
@@ -237,12 +243,12 @@
 
 .controls-RichEditor__InsertLink__hrefLabel,
 .controls-RichEditor__InsertLink__hrefInput {
-   top: 0;
+   top: 8px;
 }
 
 .controls-RichEditor__InsertLink__captionLabel,
 .controls-RichEditor__InsertLink__captionInput {
-   top: 32px;
+   top: 40px;
 }
 
 .controls-RichEditor__InsertLink__okButton {

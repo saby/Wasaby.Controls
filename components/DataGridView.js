@@ -179,13 +179,13 @@ define('SBIS3.CONTROLS/DataGridView',
                 * пока что это единственный способ ее идентифицировать
                 */
                curColSplitTitle = (curCol.title || '');
-               if (curColSplitTitle.saveProtoM) {
+               if (curColSplitTitle instanceof String) {
                   curColSplitTitle = '' + curColSplitTitle;
                }
                curColSplitTitle = curColSplitTitle.split('.');
 
                nextColSplitTitle = ((nextCol && nextCol.title) || '');
-               if (nextColSplitTitle.saveProtoM) {
+               if (nextColSplitTitle instanceof String) {
                   nextColSplitTitle = '' + nextColSplitTitle;
                }
                nextColSplitTitle = nextColSplitTitle.split('.');
@@ -352,7 +352,7 @@ define('SBIS3.CONTROLS/DataGridView',
                column.resultTemplateData = {
                   result: value,
                   item: resultsRecord,
-                  column: column,
+                  column: coreClone(column),
                   index: i,
                   resultsText: cfg.resultsText
                };
@@ -492,13 +492,15 @@ define('SBIS3.CONTROLS/DataGridView',
              * </ol>
              * Следует указать настройки декораторов разметки, если требуется. Используем декоратор подсветки текста:
              * <pre>
-             *    {{=it.decorators.applyOnly(it.value, {
-             *       highlight: it.highlight
-             *    })}}
+             *    {{ someText|highlight: someString, cssClass }}
              * </pre>
              * Также можно использовать лесенку:
              * <pre>
-             *    {{=it.ladder.get(it.item, it.field)}}
+             *    <ws:if data="{{ ladder.isPrimary(item, 'responsibleId') }}">
+             *     <div class='edo-Browser-Responsible__photo'>
+             *      <ws:partial template="tmpl!SBIS3.Person.PersonsCollage" scope="{{ item.responsible.collageData }}"/>
+             *      </div>
+             *     </ws:if>
              * </pre>
              * @remark
              * Если в настройке колонки имя поля соответствует шаблону ['Name1.Name2'], то при подготовке полей для рендеринга строки считаем, что в .get('Name1') находится рекорд, и значение получаем уже у этого рекорда через .get('Name2')
@@ -531,10 +533,10 @@ define('SBIS3.CONTROLS/DataGridView',
              * @example
              * 1. Подключаем шаблон в массив зависимостей:
              * <pre>
-             *     define('js!SBIS3.Demo.nDataGridView',
+             *     define('Examples/MyArea/nDataGridView',
              *        [
              *           ...,
-             *           'html!SBIS3.Demo.nDataGridView/resources/headTpl'
+             *           'tmpl!Examples/MyArea/nDataGridView/resources/headTpl'
              *        ],
              *        ...
              *     );
@@ -593,10 +595,10 @@ define('SBIS3.CONTROLS/DataGridView',
              * @example
              * 1. Подключаем шаблон в массив зависимостей:
              * <pre>
-             *     define('js!SBIS3.Demo.nDataGridView',
+             *     define('SBIS3/Demo/nDataGridView',
              *        [
              *           ...,
-             *           'html!SBIS3.Demo.nDataGridView/resources/resultTemplate'
+             *           'html!SBIS3/Demo/nDataGridView/resources/resultTemplate'
              *        ],
              *        ...
              *     );
@@ -1083,6 +1085,11 @@ define('SBIS3.CONTROLS/DataGridView',
             $('<div></div>').appendTo(this._getTableContainer()).remove();
          }
       },
+   
+      _drawItemsCallbackSync: function() {
+         this._updateHoveredColumnCells();
+         DataGridView.superclass._drawItemsCallbackSync.call(this);
+      },
 
       _editFieldFocusHandler: function(focusedCtrl) {
          if(this._itemsToolbar) {
@@ -1094,11 +1101,14 @@ define('SBIS3.CONTROLS/DataGridView',
          }
       },
       _onResizeHandler: function() {
-         DataGridView.superclass._onResizeHandler.apply(this, arguments);
+         /* Выполняем до родительского resize, иначе фиксированная шапка будет считать ширину колонок
+            до установки ширины частичным скролом, и может случиться рассинхрон ширин в шапке и таблице */
          this._containerOffsetWidth = this.getContainer().outerWidth();
          if(this.hasPartScroll()) {
+            this._setColumnWidthForPartScroll();
             this._updatePartScroll();
          }
+         DataGridView.superclass._onResizeHandler.apply(this, arguments);
       },
       //********************************//
       //   БЛОК РЕДАКТИРОВАНИЯ ПО МЕСТУ //
@@ -1176,8 +1186,8 @@ define('SBIS3.CONTROLS/DataGridView',
       _getEditInPlaceConfig: function() {
          var
             self = this,
-            columns = this._options.enabled ? this._options.columns : [];
-         if (!this._options.enabled) {
+            columns = this.isEnabled() ? this._options.columns : [];
+         if (!this.isEnabled()) {
             this._options.columns.forEach(function(item) {
                columns.push(item.allowChangeEnable === false ? item : {});
             });
@@ -1301,7 +1311,9 @@ define('SBIS3.CONTROLS/DataGridView',
             for (var j = 0; j < columns.length; j++) {
                colIndex = this._options.multiselect ? j + 1 : j;
                minWidth = columns[j].minWidth && parseInt(columns[j].minWidth, 10);
-               if (minWidth) {
+               /* col в colgroup может не быть, если поменяли колонки (setColumns),
+                  но список ещё не перерисовался. Перерасчёт ширин может быть вызван любым resize'ом. */
+               if (minWidth && cols[colIndex]) {
                   cols[colIndex].width = minWidth + 'px';
                }
             }
@@ -1439,7 +1451,9 @@ define('SBIS3.CONTROLS/DataGridView',
          this._currentScrollPosition = typeof position === 'object' ? this._checkThumbPosition(position) : this._checkThumbPosition({left: position});
          /* Записываем в опцию, чтобы была возможность использовать в шаблоне */
          this._options._columnsShift = -this._currentScrollPosition*(this._partScrollRatio || 0);
-         this._thumb[0].style.left = this._currentScrollPosition + 'px';
+         if (this._isPartScrollVisible) {
+            this._thumb[0].style.left = this._currentScrollPosition + 'px';
+         }
       },
 
       _getColumnsScrollPosition: function() {

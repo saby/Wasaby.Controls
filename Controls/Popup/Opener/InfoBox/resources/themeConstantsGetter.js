@@ -19,7 +19,8 @@ define('Controls/Popup/Opener/InfoBox/resources/themeConstantsGetter', [],
             obj[key] = parseInt(computedStyles[hashMap[key]]);
          }
 
-         div.remove();
+         //Почему не просто div.remove() ? IE 11 Support
+         div.parentNode.removeChild(div);
          return obj;
       }
    }

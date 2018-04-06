@@ -5,7 +5,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/BaseList', [
    'tmpl!SBIS3.CONTROLS/Filter/Panel/components/Chooser/BaseList/resources/ItemTpl',
    'tmpl!SBIS3.CONTROLS/Filter/Panel/components/Chooser/BaseList/resources/FilterPanelChooserBaseList',
    'SBIS3.CONTROLS/ListView',
-   'css!SBIS3.CONTROLS/Filter/Panel/components/Chooser/BaseList/FilterPanelChooser.BaseList'
+   'css!SBIS3.CONTROLS/Filter/Panel/components/Chooser/BaseList/FilterPanelChooser-BaseList'
 ], function(FilterPanelChooserBase, coreClone, coreMerge, itemTpl, chooserTpl) {
    'use strict';
    /**
@@ -19,7 +19,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/BaseList', [
     * @author Сухоручкин А.С.
     * @public
     *
-    * @demo SBIS3.Demo.FilterPanel.FilterPanelSimple
+    * @demo Examples/FilterPanel/FilterPanelSimple/FilterPanelSimple
     */
 
    var FilterPanelChooserBaseList = FilterPanelChooserBase.extend( /** @lends SBIS3.CONTROLS/Filter/Panel/components/Chooser/BaseList.prototype */ {

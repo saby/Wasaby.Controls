@@ -6,7 +6,7 @@ define('SBIS3.CONTROLS/PasswordTextBox', [
    'SBIS3.CONTROLS/TextBox',
    'tmpl!SBIS3.CONTROLS/PasswordTextBox/resources/showPasswordTemplate',
    'Core/CommandDispatcher',
-   'js!WSControls/Buttons/Button',
+   'SBIS3.CONTROLS/WSControls/Buttons/Button',
     'css!Controls/Input/Password/Password'
 ], function (TextBox, showPasswordTemplate, CommandDispatcher) {
 
@@ -17,7 +17,7 @@ define('SBIS3.CONTROLS/PasswordTextBox', [
     * @extends SBIS3.CONTROLS/TextBox
     * @mixes Controls/Input/PasswordDocs
     * @author Крайнов Д.О.
-    * @demo SBIS3.CONTROLS.Demo.MyPasswordTextBox
+    * @demo Examples/PasswordTextBox/MyPasswordTextBox/MyPasswordTextBox
     *
     * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol textTransform
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment

@@ -172,7 +172,7 @@ define('SBIS3.CONTROLS/Toolbar', [
     * Контрол, отображающий панель с иконками.
     * @class SBIS3.CONTROLS/Toolbar
     * @extends SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBase
-    * @demo SBIS3.CONTROLS.Demo.MyToolbar
+    * @demo Examples/Toolbar/MyToolbar/MyToolbar
     * @author Сухоручкин А.С.
     *
     * @control
@@ -258,7 +258,7 @@ define('SBIS3.CONTROLS/Toolbar', [
          for (var i in itemsInstances) {
             if (itemsInstances.hasOwnProperty(i)) {
                var item = itemsInstances[i];
-               if (cInstance.instanceOfModule(item, 'WSControls/Buttons/MenuButton')) {
+               if (cInstance.instanceOfModule(item, 'SBIS3.CONTROLS/WSControls/Buttons/MenuButton')) {
                   item.subscribe('onMenuItemActivate', this._onMenuItemActivate.bind(this));
                }
             }

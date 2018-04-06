@@ -1,16 +1,25 @@
 #!groovy
 echo "Задаем параметры сборки"
 def version = "3.18.200"
-if ( "${env.BUILD_NUMBER}" != "1" && !params.run_reg && !params.run_int && !params.run_unit) {
-        currentBuild.result = 'ABORTED'
-        error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
+
+def gitlabStatusUpdate() {
+    if ( currentBuild.currentResult == "ABORTED" ) {
+        updateGitlabCommitStatus state: 'canceled'
+    } else if ( currentBuild.currentResult in ["UNSTABLE", "FAILURE"] ) {
+        updateGitlabCommitStatus state: 'failed'
+    } else if ( currentBuild.currentResult == "SUCCESS" ) {
+        updateGitlabCommitStatus state: 'success'
     }
+}    
+
+
 node('controls') {
     echo "Читаем settings_${version}.props"
     def props = readProperties file: "/home/jenkins/shared_autotest87/settings_${version}.props"
     echo "Генерируем параметры"
     properties([
     disableConcurrentBuilds(),
+    gitLabConnection('git'),
     buildDiscarder(
         logRotator(
             artifactDaysToKeepStr: '3',
@@ -46,6 +55,15 @@ node('controls') {
             ]),
         pipelineTriggers([])
     ])
+
+
+    if ( "${env.BUILD_NUMBER}" != "1" && !params.run_reg && !params.run_int && !params.run_unit) {
+            currentBuild.result = 'ABORTED'
+            gitlabStatusUpdate()
+            error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
+        }
+
+
     echo "Определяем рабочую директорию"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
@@ -110,6 +128,7 @@ node('controls') {
                         git merge origin/rc-${version}
                         """
                     }
+                    updateGitlabCommitStatus state: 'running'
                     parallel (
                         checkout_atf:{
                             echo " Выкачиваем atf"
@@ -326,7 +345,7 @@ node('controls') {
             echo "Запускаем разворот стенда и подготавливаем окружение для тестов"
             // Создаем sbis-rpc-service.ini
             def host_db = "test-autotest-db1"
-            def port_db = "5432"
+            def port_db = "5434"
             def name_db = "css_${env.NODE_NAME}${ver}1"
             def user_db = "postgres"
             def password_db = "postgres"
@@ -354,7 +373,7 @@ node('controls') {
                 Адрес=http://${env.NODE_NAME}:10001"""
             // Копируем шаблоны
             sh """cp -f ./controls/tests/stand/intest/pageTemplates/branch/* ./controls/tests/stand/intest/pageTemplates"""
-            sh """cp -fr ./controls/demo/ ./controls/tests/stand/intest/demo/"""
+            sh """cp -fr ./controls/Examples/ ./controls/tests/stand/intest/Examples/"""
             sh """
                 cd "${workspace}/controls/tests/stand/intest/"
                 sudo python3 "change_theme.py" ${params.theme}
@@ -391,7 +410,7 @@ node('controls') {
             [general]
             browser = ${params.browser_type}
             SITE = http://${NODE_NAME}:30001
-            SERVER = test-autotest-db1
+            SERVER = test-autotest-db1:5434
             BASE_VERSION = css_${NODE_NAME}${ver}1
             DO_NOT_RESTART = True
             SOFT_RESTART = True
@@ -416,8 +435,9 @@ node('controls') {
                 ELEMENT_OUTPUT_LOG = locator
                 WAIT_ELEMENT_LOAD = 20
                 HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/
-                SERVER = test-autotest-db1
+                SERVER = test-autotest-db1:5434
                 BASE_VERSION = css_${NODE_NAME}${ver}1
+                BRANCH=True
                 [regression]
                 IMAGE_DIR = capture_${params.theme}
                 RUN_REGRESSION=True"""
@@ -436,8 +456,9 @@ node('controls') {
                 ELEMENT_OUTPUT_LOG = locator
                 WAIT_ELEMENT_LOAD = 20
                 HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/
-                SERVER = test-autotest-db1
+                SERVER = test-autotest-db1:5434
                 BASE_VERSION = css_${NODE_NAME}${ver}1
+                BRANCH=True
                 [regression]
                 IMAGE_DIR = capture
                 RUN_REGRESSION=True"""
@@ -459,6 +480,7 @@ node('controls') {
 					"""
 					if ( "${tmp_smoke}" != "0" ) {
 						currentBuild.result = 'ABORTED'
+                        gitlabStatusUpdate()
 						error('Стенд неработоспособен (не прошел smoke test).')
 					}
 				}
@@ -515,5 +537,6 @@ node('controls') {
                 junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
             }
         }
+        gitlabStatusUpdate()
     }
 }

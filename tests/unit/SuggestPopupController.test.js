@@ -7,12 +7,12 @@ define(['Controls/Input/resources/SuggestPopupController', 'Core/core-instance',
          
          it('.getSearchController', function() {
             var self = {
-               _dataSource: new Memory()
+               _source: new Memory()
             };
             
             var searchController = SuggestPopupController._private.getSearchController(self);
             assert.isTrue(cInstance.instanceOfModule(searchController, 'Controls/List/resources/utils/Search'));
-            assert.isTrue(cInstance.instanceOfModule(searchController._dataSource, 'WS.Data/Source/Memory'));
+            assert.isTrue(cInstance.instanceOfModule(searchController._source, 'WS.Data/Source/Memory'));
          });
    
          it('.prepareSuggestFilter', function() {
@@ -65,6 +65,19 @@ define(['Controls/Input/resources/SuggestPopupController', 'Core/core-instance',
             SuggestPopupController._private.setSuggestSelectedIndex(selfTest, 2);
             assert.equal(selfTest._selectedIndex, 2);
             assert.equal(selfTest._popupOptions.componentOptions.selectedIndex, 2);
+         });
+   
+         it('._private.needShowPopup', function() {
+            var list = new List({items: [1, 2]}),
+                emptyList = new List(),
+                self = {};
+   
+            assert.isTrue(!!SuggestPopupController._private.needShowPopup(self, {result: list}));
+            assert.isFalse(!!SuggestPopupController._private.needShowPopup(self, {result: emptyList}));
+   
+            self._emptyTemplate = {};
+            assert.isTrue(!!SuggestPopupController._private.needShowPopup(self, {result: list}));
+            assert.isTrue(!!SuggestPopupController._private.needShowPopup(self, {result: emptyList}));
          });
          
       });

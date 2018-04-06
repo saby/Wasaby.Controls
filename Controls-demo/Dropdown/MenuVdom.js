@@ -9,6 +9,7 @@ define('Controls-demo/Dropdown/MenuVdom', [
    'tmpl!Controls-demo/Dropdown/resources/ItemsTemplateContent2',
    'tmpl!Controls-demo/Dropdown/resources/headerTemplate',
    'tmpl!Controls-demo/Dropdown/resources/footerTemplate',
+   'tmpl!Controls-demo/Dropdown/resources/contentTemplate',
    'css!Controls-demo/Dropdown/MenuVdom'
 ], function (Control, template, cClone, Memory) {
    'use strict';
@@ -80,7 +81,7 @@ define('Controls-demo/Dropdown/MenuVdom', [
             var icons = ['AddButton', '1c', 'Admin', 'Admin2', 'Album', 'Alert', 'Archive', 'Home'];
             var items = cClone(this._defaultItems);
             for (var i = 0; i < icons.length; i++) {
-               items[i].icon = 'icon-16 icon-' + icons[i] + ' icon-primary';
+               items[i].icon = 'icon-small icon-' + icons[i] + ' icon-primary';
             }
             return this._createMemory(items);
          },
@@ -99,6 +100,25 @@ define('Controls-demo/Dropdown/MenuVdom', [
             for (var i = 0; i < items.length; i++) {
                items[i].parent = hierConfig[i].parent;
                items[i]['@parent'] = hierConfig[i]['@parent'];
+            }
+            return this._createMemory(items);
+         },
+         _getHierarchyMenuItems: function() {
+            var items = cClone(this._defaultItems);
+            var hierConfig = [
+               {parent: null, '@parent': true, icon: 'icon-medium icon-Author icon-primary'},
+               {parent: null, '@parent': false},
+               {parent: null, '@parent': true},
+               {parent: '1', '@parent': true},
+               {parent: '4', '@parent': false},
+               {parent: '4', '@parent': false, icon: 'icon-medium icon-Author icon-primary'},
+               {parent: '3', '@parent': true},
+               {parent: '7', '@parent': false}
+            ];
+            for (var i = 0; i < items.length; i++) {
+               items[i].parent = hierConfig[i].parent;
+               items[i]['@parent'] = hierConfig[i]['@parent'];
+               items[i].icon = hierConfig[i].icon;
             }
             return this._createMemory(items);
          },

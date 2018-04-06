@@ -1,5 +1,5 @@
 <ws:if data="{{!!icon}}">
-   <i class="controls-Button__icon js-controls-Button__icon {{_iconClass}}{{enabled ? _iconState : (' ' + _iconDisabledClass)}} "></i>
+   <i class="controls-Button__icon js-controls-Button__icon {{_iconClass}}{{enabled ? (' ' + _iconState) : (' ' + _iconDisabledClass)}} "></i>
 </ws:if>
 <ws:if data="{{!!caption}}">
    <span class="controls-Button__text js-controls-Button__text{{!!withoutCaption ? ' ws-hidden'}}{{!!icon ? ' spacing-between-icon-text '}}{{_textClass}} ">{{caption|sanitize}}</span>

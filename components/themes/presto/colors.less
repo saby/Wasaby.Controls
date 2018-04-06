@@ -51,7 +51,7 @@
 //DropDownList
 @DropdownList-picker-head-color:         #FFFFFF;
 @DropdownList-picker-bg:                 #405A77;
-@DropdownList-picker-menu-item-hover:    rgba(92,122,163,.2);
+@DropdownList-picker-menu-item-hover:    rgb(69, 96, 128);
 @DropdownList-picker-menu-item-color:    #405A77;
 @DropdownList-picker-menu-item-base-color:#FFFFFF;
 @DropdownList-picker-title-type-header-bg:  rgba(96, 128, 164, 1);
@@ -117,6 +117,7 @@
 //DataGridView
 @color_DataGridView-sorting:                         #8991A9;
 @color_DataGridView-sorting_hovered:                 @color_DataGridView-sorting;
+@color_DataGridView-sortingIcon:                     @color_DataGridView-sorting;
 @background-color_DataGridView-notScrolledCell:      #1D2834;
 @background-color_DataGridView-item_multiselected:   #1D2834;
 @background-color_DataGridView-item_selected:        #1D2834;
@@ -148,6 +149,18 @@
 @background_Button_default_active:        #516B8C;
 @background_Button_disabled:              #567395;
 //Switcher
+@border-color_Switcher:                   @default-border-color;
+@color_Switcher-line_enabled:             #839EBC;
+@color_Switcher-line_disabled:            @default-disabled-color;
+@border-color_Switcher-btn_enabled:       #839EBC;
+@border-color_Switcher-btn_enabled_hover: #FF7033;
+@border-color_Switcher-btn_disabled:      @default-disabled-color;
+@bg_Switcher-btn_enabled:                 #FF7033;
+@bg_Switcher-btn_disabled:                #B9E9FF;
+@color_Switcher-text:                     #8991A9;
+@color_Switcher-text_disabled:            @default-disabled-color;
+
+//Switcher VDOM.
 @color_switcher_line:                     #839EBC;
 @switcher-disabled-color:                 #4B688B;
 @switcher-disabled-color_checked:         #FF7033;
@@ -160,8 +173,9 @@
 @border-color_Switch:                                   rgba(109,141,176, .4);
 @background-color_Switch-line_enabled:                  #839EBC;
 @background-color_Switch-line_disabled:                 #4B688B;
-@border-color_Switch-marker_unchecked_enabled:          #839EBC;
-@border-color_Switch-marker_unchecked_disabled:         #4B688B;
+@border-color_Switch-marker_enabled:                    #839EBC;
+@border-color_Switch-marker_disabled:                   #4B688B;
+@background_Switch-dot_disabled:                        #B9E9FF;
 @color_Switch-text_enabled_unselected:                  #8991A9;
 @color_Switch-text_disabled_unselected:                 #4B688B;
 
@@ -180,6 +194,9 @@
 @shadow_Menu:                             0 0 25px 1px rgba(0, 0, 0, 0.45);
 @border-color_Menu:                       transparent;
 @background-color-Menu-separator-line:    #476485;
+//MenuButton
+@color-Dropdown-cross:                                #8991A9;
+@color-Dropdown-cross_hovered:                        #B9E9FF;
 //menuItem
 @color_MenuItem:                          @white-color;
 @color_MenuItem_hovered:                  @color_MenuItem;
@@ -191,6 +208,8 @@
 @commands-button-close-hover-color:       #B9E9FF;
 //EditActions
 @background-color_IconButton_bordered:             rgba(64, 90, 119, 0.3);
+@box-shadow_IconButton:                   @box-shadow_Button;
+@box-shadow_Button_bordered_active:               none;
 @background-color_IconButton_bordered_standard_hovered:     rgba(58, 81, 107, 0.35);
 @border-color_IconButton_bordered_standard_hovered:     transparent;
 @border-color_IconButton_bordered_done_hovered:         transparent;
@@ -199,6 +218,7 @@
 @controls-editInPlace-editor-bg:          #2D3F54;
 @list-view-items-toolbar-bg:              @list-view-items-toolbar-locked-bg;
 @icon-button-round-icon-color-hover:      @color_primary;
+@box-shadow_Button_bordered_hovered:      @box-shadow_IconButton;
 //checkbox
 @check-box-icon-box-color:                rgba(109,141,176, .6);
 @color_checkBox-iconBox:                rgba(109,141,176, .6);
@@ -226,6 +246,7 @@
 @background-color_DateRangeBigChoose-range-selected-inner:            rgba(92, 122, 163, .2);
 @background-color_DateRangeBigChoose-dates-months-period-hover:       #39506A;
 @background-color_DateRangeBigChoose_quartersPanel:                   #273749;
+@color_DateRangeBigChoose_halfyearsAndQuartersPanel:                  #839EBC;
 @color_MonthView-item:                                                #fff;
 @color_DateRangeBigChoose-DateRangePickerItem-months-button:          #839EBC;
 @background-color_DateRangeBigChoose-DateRangePickerItem-months-button:#273749;
@@ -289,7 +310,7 @@
 @background-color_CloseButton:           #405A77;
 @border-color_CloseButton:               transparent;
 @box-shadow_CloseButton:                 0 1px 4px rgba(0, 0, 0, .5);
-@box-shadow_CloseButton_active:          none;
+@box-shadow_CloseButton_active:          @box-shadow_CloseButton;
 @background-color_CloseButton_hover:     #3D5571;
 
 @color_CloseButton-icon:                 #8991A9;
@@ -322,6 +343,12 @@
 @text-color_Tabs-item_selected_additional:   @text-color_Tabs-item_selected_default;
 @border-color_Tabs-item_selected_additional: @border-color_Tabs-item_selected_default;
 
+//Scrollbar
+@bg_Scrollbar-thumb_normal:                  rgba(131, 158, 188, 0.2);
+@bg_Scrollbar-thumb_active_normal:           rgba(131, 158, 188, 0.25);
+@bg_Scrollbar-thumb_inverted:                @bg_Scrollbar-thumb_normal;
+@bg_Scrollbar-thumb_active_inverted:         @bg_Scrollbar-thumb_active_normal;
+
 //FilterButton
 @color_FilterButton-icon:                #FFFFFF;
 @color_FilterButton-icon_hover:          #FFFFFF;
@@ -330,3 +357,8 @@
 @color_FilterButton-icon-arrow_hover:    #B9E9FF;
 @color_FilterButton-text:                #26B8FF;
 @color_FilterButton-text_hover:          #B9E9FF;
+
+//FastFilter
+@color_FastFilter-iconArrow:                    #26B8FF;
+@color_FastFilter-iconArrow_hover:         #B9E9FF;
+@color_FastFilter-iconReset:               #CCCCCC;

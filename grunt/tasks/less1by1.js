@@ -7,7 +7,7 @@ const helpers = require('./helpers'),
     less = require('less'),
     getModuleNameRegExp = new RegExp('\/resources\/([^/]+)'),
     DEFAULT_THEME = 'online',
-    themes = ['online', 'carrynew', 'prestonew'];
+    themes = ['online'];
     let errors = [];
 
 /**
@@ -98,7 +98,7 @@ module.exports = function less1by1Task(grunt) {
             complete: '♥',
             incomplete: '_',
             width: 30,
-            total: 153
+            total: 156
         });
         helpers.recurse(rootPath, function(filepath, cb) {
           let relpath = path.relative(rootPath, filepath);

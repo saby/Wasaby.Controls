@@ -65,9 +65,9 @@
 @closeButtonWidth:                        35px;
 @closeButtonHeight:                       26px;
 
-@background_EditActions-closeButton:        @closeButtonImage;
-@background_EditActions-closeButton_active: @closeButtonImageHover;
-@background_EditActions-closeButton_hovered:@closeButtonImageHover;
+@background_EditActions-closeButton:        transparent;
+@background_EditActions-closeButton_active: transparent;
+@background_EditActions-closeButton_hovered:transparent;
 
 @default-itemHover-color:                 #F0F5FB;//Переменную нужно удалить, она дублирует @default-bg-color-hovered-item
 @default-itemSelected-color:              #F3F3F3;
@@ -290,7 +290,7 @@
 @border-color_IconButton_bordered_error_hovered: #EF463A;
 @icon-button-round-border-position:     absolute;
 @icon-button-round-icon-color-hover:    @default-color;
-@border-radius:                         14px;
+@border-radius:                         2px;
 @border-width_IconButton_bordered:              1px;
 @list-view-items-toolbar-icon-button-border-width:      @border-width_IconButton_bordered;
 @list-view-items-toolbar-icon-button-border-radius:     @border-radius;
@@ -298,7 +298,7 @@
 
 @icon-button-edit-round-border-line-height:        @icon-medium-size - 2 * @default-border-width;
 @list-view-items-toolbar-animate-duration:         0.35s;
-@border-color_IconButton_bordered:                  @gray-ccc-color;
+@border-color_IconButton_bordered:                  rgba(0, 0, 0, 0.12);
 
 @height_IconButton_bordered_size-s:                 @icon-medium-size;
 @width_IconButton_bordered_size-s:                  @icon-medium-size;
@@ -306,7 +306,7 @@
 
 @height_IconButton_bordered_size-m:                 28px;
 @width_IconButton_bordered_size-m:                  28px;
-@border-radius_IconButton_bordered_size-m:          @border-radius;
+@border-radius_IconButton_bordered_size-m:          2px;
 @line-height_IconButton_bordered_size-m:            26px;
 
 @height_IconButton_bordered_size-default:           @height_IconButton_bordered_size-m;
@@ -318,7 +318,7 @@
 @border-radius_IconButton_bordered_size-l:          20px;
 @line-height_IconButton_bordered_size-l:            @height_IconButton_bordered_size-l;
 
-@border-color_IconButton_bordered_standard_hovered:      @default-color;
+@border-color_IconButton_bordered_standard_hovered:      rgba(0, 0, 0, 0.20);
 // Normal default button
 @button-checked-border-width:             2px;
 @button-checked-border:                   @button-checked-border-width solid @default-color;
@@ -337,16 +337,15 @@
 // ---------- //
 @tab-buttons-height:                            31px;
 @tab-buttons-border-bottom-height:              1px;
-@tab-buttons-border-bottom:                     @tab-buttons-border-bottom-height solid #E4E4E4;
-@tab-button-border-color:                       #E4E4E4;
-@tab-button-checked-border-color:               #CCCCCC;
+@tab-buttons-border-bottom:                     @tab-buttons-border-bottom-height solid #EAEAEA;
+@tab-button-border-color:                       #EAEAEA;
 @tab-button-height:                             28px;
 @tab-button-color:                              @blue-dark-color;
 @tab-button-font-size:                          14px;
 @tab-button-font:                               'TensorFont', sans-serif;
 @tab-button-main-text-line-height:              27px;
 @tab-button-simple-checked-bottomline-color:    #0055BB;
-@tab-button-simple-hover-bottomline-color:      #E4E4E4;
+@tab-button-simple-hover-bottomline-color:      #EAEAEA;
 @tab-control-smple-bottomline-height:           3px;
 @tab-button-simple-inner-color:                 #313E78;
 @tab-button-simple-inner-padding:               0 8px 0 8px;
@@ -412,7 +411,7 @@
 @radio-button-icon-bg:                          @white-color;
 @radio-button-icon-checked-bg:                  @radio-button-icon-bg;
 @radio-button-icon-checked-hover-bg:            @radio-button-icon-bg;
-@radio-button-icon-margin:                      7px 6px 0 6px;
+@radio-button-icon-margin:                      5px 6px 0 6px;
 @radio-button-icon-border-color:                @gray-color;
 @radio-button-icon-border-color-checked:        @radio-button-hover-text-color;
 @radio-button-hover-icon-border-color:          @radio-button-icon-border-color;
@@ -443,10 +442,12 @@
 @check-box-caption-padding:                     3px 0;
 @check-box-icon-box-size:                       12px;
 @check-box-icon-box-color:                      @innacent-color2;
-@check-box-disabled-color:                      @disabled-color;
+@check-box-disabled-color:                      @gray-light-color;
+@check-box-checked-disabled-color:              @blue-dark-color;
 @check-box-icon-successful-top-ie:              0;
 @check-box-caption-line-height:                 18px;
 @spacing_CheckBox-between-icon-caption:         3px 0;
+@margin-left-CheckBox__icon_size:               @width_CheckBox;
 @font-size__checkBox:                           @default-text-size;
 @color_checkBox-iconBox:                        @innacent-color2;
 @color_checkBox_disabled:                       @disabled-color;
@@ -578,6 +579,7 @@
 @margin_MenuIcon-hideHeader-round24_text: 6px 0 6px 28px;
 @margin_MenuIcon-hideHeader-icon24_text:  6px 0 6px 28px;
 @margin_MenuIcon-hideHeader-icon16_text:  6px 0 6px 22px;
+@margin_MenuIcon-hideHeader-round24-border_text: 6px 0 6px 28px;
 @menu-icon-big-menu-margin:               -5px 0 0 -13px;
 @menu-icon-menu-large-margin:             -5px 0 0 -13px;
 @margin_MenuIcon_size-l:                  -10px 0 0 7px;
@@ -838,7 +840,7 @@
 @list-view-items-toolbar-right-tile:                 8px;
 @list-view-items-toolbar-bottom-tile:                2px;
 @list-view-items-toolbar-icon-size:                  24px;
-@margin-right_ListView-itemsToolbar-closeButton:     0;
+@margin-right_ListView-itemsToolbar-closeButton:     6px;
 @list-view-items-toolbar-menu-icon-size:             @list-view-items-toolbar-icon-size;
 @list-view-items-toolbar-font-family:                @default-icon-medium-font;
 @font-family_closeButton-icon:                       @list-view-items-toolbar-font-family;
@@ -875,18 +877,21 @@
 @listView-loadmorebutton-font-size:             @font-size_Link;
 @scrollPaging-padding:                          32px;
 //EditActions
-@border-radius_EditButton:                      @border-radius;
+@border-radius_EditButton:                      2px;
 @border-width_EditButton:                       @border-width_IconButton_bordered;
 @width_EditButton:                              @width_IconButton_bordered_size-s;
 @height_EditButton:                             @height_IconButton_bordered_size-s;
 @line-height_EditButton:                        @line-height_IconButton_bordered_size-m;
 @background-color_IconButton_bordered:                   transparent;
+@box-shadow_IconButton:                         0 1px 2px rgba(0,0,0, .1);
 @background-color_IconButton_bordered_standard_hovered:           transparent;
 @border-color_IconButton_bordered_done_hovered:               @color_IconButton-icon_done;
-@text-shadow_IconButton_bordered:                        transparent;
+@text-shadow_IconButton_bordered:               none;
+@box-shadow_Button_bordered_active:            @box-shadow_Button;
+@box-shadow_Button_bordered_hovered:            0 1px 2px rgba(0,0,0, .15);
 //ItemsToolbar
-@width_EditActions-cancelButton:        36px;
-@height_EditActions-cancelButton:       24px;
+@width_EditActions-cancelButton:        @width_EditButton;
+@height_EditActions-cancelButton:       @height_EditButton;
 // ItemsToolbar small
 @list-view-small-items-toolbar-line-height:         16px;
 @list-view-small-actions-item-height:               16px;
@@ -1003,6 +1008,7 @@
 @data-grid-partScroll-thumb-width:              96px;
 @data-grid-partScroll-thumb-color:              @blue-dark-color;
 @data-grid-partScroll-thumb-border-radius:      3px 3px;
+@data-grid-partScroll-thumb-border-radius-hover:@data-grid-partScroll-thumb-border-radius;
 @data-grid-partScroll-thumb-margin:             24px;
 @data-grid-partScroll-thumb-top-shift:          -1px;
 @data-grid-partScroll-thumb-clicked-top-shift:  -2px;
@@ -1132,7 +1138,6 @@
 @DropdownList-footer-buttonsBlock-height:             24px;
 @DropdownList-footer-multisel-buttonsBlock-h:         32px;
 @DropdownList-checkbox-bottom:                        1px;
-@DropdownList-before-caption-wrapper-top:             2px;
 @DropdownList-after-caption-wrapper-top:              2px;
 @DropdownList-footer-hasMore-left:                    12px;
 @DropdownList-footer-hasMore-left-multiselect:        24px;
@@ -1148,6 +1153,9 @@
 @border-width_DropDownList_picker:                    0;
 @border-color_DropDownList_picker:                    #CCC;
 @size_DropDownList_filter_cross:                      @icon-size_default;
+@height_DropDownList_arrow-icon:                      9px;
+@width_DropDownList_arrow-icon:                       5px;
+@padding_DropDownList_arrow-icon:                     0 5px 0 6px;
 @size_DropDownList_arrow:                             19px;
 @color-DropDownList_arrowIcon:                        @color_primary;
 //ProgressBar
@@ -1498,6 +1506,7 @@
 @wait-indicator-small-size: 16px;
 @wait-indicator-gap: 8px;
 @wait-indicator-small-gap: 2px;
+@wait-indicator-min-text-width: 88px;
 @wait-indicator-labeled-width: 214px;
 @wait-indicator-small-margin: 6px;
 @wait-indicator-font-size: 14px;
@@ -1525,7 +1534,7 @@
 @long-operations-popup-collapsed-max-width: 400px;
 @long-operations-popup-exp-width: 400px;
 @long-operations-popup-exp-max-width: 500px;
-@long-operations-popup-header-height: auto;
+@long-operations-popup-header-height: 40px;
 @long-operations-popup-header-line-height: normal;
 @long-operations-popup-header-pad-rt: 41px;
 @long-operations-popup-header-icon-size: 24px;
@@ -1742,3 +1751,20 @@
 @infobox-max-width:                  300px;
 @infobox-float-element-size:         18px;
 @infobox-distance-to-target:         14px;
+
+//headers
+@font-size_Header__caption_size-xl:   20px;
+@font-size_Header__caption_size-l:    18px;
+@font-size_Header__caption_size-default: 15px;
+@font-size_Header__caption_size-s:    14px;
+@padding_HeaderCounter-between-counter-caption: 4px;
+@font-size_HeaderCounter_size-h3:     18px;
+@font-size_HeaderCounter_size-h7:     14px;
+@font-size_HeaderCounter_size-h6:     15px;
+@padding_Header-between-counter-caption: 4px;
+@size-Header__icon_size-default:      16px;
+@width-Header__icon_size-default:     24px;
+@height-Header__icon_size-default:    24px;
+@size-Header__icon_size-big:          26px;
+@width-Header__icon_size-big:         26px;
+@height-Header__icon_size-big:        26px;

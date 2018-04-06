@@ -2,7 +2,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/FieldLink', [
     'SBIS3.CONTROLS/Filter/Panel/components/Chooser/Base',
     'tmpl!SBIS3.CONTROLS/Filter/Panel/components/Chooser/FieldLink/resources/FilterPanelChooserFieldLinkTpl',
    'SBIS3.CONTROLS/FieldLink',
-   'css!SBIS3.CONTROLS/Filter/Panel/components/Chooser/FieldLink/FilterPanelChooser.FieldLink'
+   'css!SBIS3.CONTROLS/Filter/Panel/components/Chooser/FieldLink/FilterPanelChooser-FieldLink'
 ], function(FilterPanelChooserBase, FieldLinkChooserTemplate) {
 
     'use strict';
@@ -25,7 +25,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/FieldLink', [
      * @author Авраменко А.С.
      * @public
      *
-     * @demo SBIS3.Demo.FilterPanel.FilterPanelSimple
+     * @demo Examples/FilterPanel/FilterPanelSimple/FilterPanelSimple
      */
 
     var FilterPanelChooserFieldLink = FilterPanelChooserBase.extend(/** @lends SBIS3.CONTROLS/Filter/Panel/components/Chooser/FieldLink.prototype */ {

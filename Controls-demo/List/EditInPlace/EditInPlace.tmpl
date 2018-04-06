@@ -1,0 +1,135 @@
+<div class="editInPlaceDemo">
+    <style>
+        .ws-ListView__item {
+            height: 30px;
+            box-sizing: border-box;
+            padding: 3px 4px;
+            display: flex;
+            align-items: center;
+        }
+        .editInPlaceDemo {
+            padding-top: 30px;
+        }
+    </style>
+    <div>
+        <h3>Simple list</h3>
+        <Controls:List
+                name="list"
+                source="{{_viewSource}}"
+                on:beforeItemEdit="_onItemEdit()"
+                on:beforeItemAdd="_onItemAdd()"
+                allowEmptySelection="{{false}}"
+                idProperty="id">
+            <ws:editingConfig>
+                <ws:Object editOnClick="{{_editOnClick}}"
+                           singleEdit="{{_singleEdit}}"
+                           autoAdd="{{_autoAdd}}"/>
+            </ws:editingConfig>
+            <ws:itemTemplate>
+                <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate"
+                            itemData="{{itemTemplate.itemData}}">
+                    <ws:contentTemplate>
+                        <ws:partial template="tmpl!Controls-demo/List/EditInPlace/editingTemplate"
+                                    itemData="{{itemTemplate.itemData}}"/>
+                    </ws:contentTemplate>
+                </ws:partial>
+            </ws:itemTemplate>
+        </Controls:List>
+        <Controls:List:AddButton caption="Add record" on:click="addItem()"/>
+        <div attr:style="padding: 15px; background-color: rgba(81,81,81,0.11); width: 150px;">
+            <h3>Select options:</h3>
+            <div>
+                <ws:Controls.Toggle.Checkbox bind:value="_editOnClick" caption="editOnClick"/>
+                <ws:Controls.Toggle.Checkbox bind:value="_singleEdit" caption="singleEdit"/>
+                <ws:Controls.Toggle.Checkbox bind:value="_autoAdd" caption="autoAdd"/>
+            </div>
+        </div>
+    </div>
+    <div>
+        <h3>Adding doesn't work in this list</h3>
+        <Controls:List
+                name="list2"
+                source="{{_viewSource2}}"
+                on:beforeItemAdd="_cancelItemAdd()"
+                allowEmptySelection="{{false}}"
+                idProperty="id">
+            <ws:editingConfig>
+                <ws:Object editOnClick="{{true}}"/>
+            </ws:editingConfig>
+            <ws:itemTemplate>
+                <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate"
+                            itemData="{{itemTemplate.itemData}}">
+                    <ws:contentTemplate>
+                        <ws:partial template="tmpl!Controls-demo/List/EditInPlace/editingTemplate"
+                                    itemData="{{itemTemplate.itemData}}"/>
+                    </ws:contentTemplate>
+                </ws:partial>
+            </ws:itemTemplate>
+        </Controls:List>
+        <Controls:List:AddButton caption="Add record" on:click="list2.addItem()"/>
+    </div>
+    <div>
+        <h3>onBeforeItemAdd handler returns Deferred</h3>
+        <Controls:List
+                name="list3"
+                source="{{_viewSource3}}"
+                on:beforeItemAdd="_deferredItemAdd()"
+                allowEmptySelection="{{false}}"
+                idProperty="id">
+            <ws:editingConfig>
+                <ws:Object editOnClick="{{true}}"/>
+            </ws:editingConfig>
+            <ws:itemTemplate>
+                <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate"
+                            itemData="{{itemTemplate.itemData}}">
+                    <ws:contentTemplate>
+                        <ws:partial template="tmpl!Controls-demo/List/EditInPlace/editingTemplate"
+                                    itemData="{{itemTemplate.itemData}}"/>
+                    </ws:contentTemplate>
+                </ws:partial>
+            </ws:itemTemplate>
+        </Controls:List>
+    </div>
+    <div>
+        <h3>Editing starts before mounting to DOM</h3>
+        <Controls:List
+                name="list4"
+                source="{{_viewSource4}}"
+                allowEmptySelection="{{false}}"
+                idProperty="id">
+            <ws:editingConfig>
+                <ws:Object editOnClick="{{true}}" item="{{_editingItem}}"/>
+            </ws:editingConfig>
+            <ws:itemTemplate>
+                <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate"
+                            itemData="{{itemTemplate.itemData}}">
+                    <ws:contentTemplate>
+                        <ws:partial template="tmpl!Controls-demo/List/EditInPlace/editingTemplate"
+                                    itemData="{{itemTemplate.itemData}}"/>
+                    </ws:contentTemplate>
+                </ws:partial>
+            </ws:itemTemplate>
+        </Controls:List>
+    </div>
+    <div>
+        <h3>Adding starts before mounting to DOM</h3>
+        <Controls:List
+                name="list5"
+                source="{{_viewSource5}}"
+                allowEmptySelection="{{false}}"
+                idProperty="id">
+            <ws:editingConfig>
+                <ws:Object editOnClick="{{true}}" item="{{_addItem}}"/>
+            </ws:editingConfig>
+            <ws:itemTemplate>
+                <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate"
+                            itemData="{{itemTemplate.itemData}}">
+                    <ws:contentTemplate>
+                        <ws:partial template="tmpl!Controls-demo/List/EditInPlace/editingTemplate"
+                                    itemData="{{itemTemplate.itemData}}"/>
+                    </ws:contentTemplate>
+                </ws:partial>
+            </ws:itemTemplate>
+        </Controls:List>
+    </div>
+</div>

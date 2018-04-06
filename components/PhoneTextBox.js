@@ -12,7 +12,7 @@ define('SBIS3.CONTROLS/PhoneTextBox', [
     * <a href='http://axure.tensor.ru/standarts/v7/%D0%BF%D0%BE%D0%BB%D0%B5_%D0%B2%D0%B2%D0%BE%D0%B4%D0%B0__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_03_.html'>Спецификация</a>.
     * Пример:
     * <pre>
-    *    <ws:SBIS3.CONTROLS/PhoneTextBox enabled="{{false}}" srcText="88005553535" mask="ddd-(ddd)-dd-dd"/>
+    *    <SBIS3.CONTROLS.PhoneTextBox enabled="{{false}}" srcText="88005553535" mask="ddd-(ddd)-dd-dd"/>
     * </pre>
     * В примере использованы опции:
     * enabled - задает отображение PhoneTextBox в виде ссылки, по умолчанию PhoneTextBox отображается как поле ввода,
@@ -21,7 +21,7 @@ define('SBIS3.CONTROLS/PhoneTextBox', [
     *
     * @class SBIS3.CONTROLS/PhoneTextBox
     * @extends SBIS3.CONTROLS/FormattedTextBox
-    * @demo SBIS3.CONTROLS.Demo.PagePhoneTextBox
+    * @demo Examples/PhoneTextBox/PagePhoneTextBox/PagePhoneTextBox
     *
     * @author Крайнов Д.О.
     *
@@ -102,7 +102,7 @@ define('SBIS3.CONTROLS/PhoneTextBox', [
              * Номер будет отображен в соответствии с установленной {@link mask маской}
              * @example
              * <pre>
-             *     <ws:SBIS3.CONTROLS/PhoneTextBox srcText="88001002424" />
+             *     <SBIS3.CONTROLS.PhoneTextBox srcText="88001002424" />
              * </pre>
              * @see mask
              * @see getSrcText

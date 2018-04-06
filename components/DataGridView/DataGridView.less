@@ -33,7 +33,7 @@
       &.controls-ListView__dataLoaded {
          .controls-DataGridView__tr {
             .controls-DataGridView__td {
-               border-bottom-color: @data-grid-cell-separator-color;
+               border-top-color: @data-grid-cell-separator-color;
             }
          }
          /* Т.к. редактирование по месту может в DOM'e занимать первые две строки,
@@ -59,6 +59,7 @@
          &.controls-DataGridView__resultsBottom {
             .controls-DataGridView__table {
                .controls-DataGridView__tr:nth-last-child(1){
+                  box-shadow: none;
                   .controls-DataGridView__td {
                      border-bottom-color: transparent;
                   }
@@ -143,8 +144,12 @@
 }
 
 .controls-DataGridView__td, .controls-DataGridView__thead .controls-DataGridView__th {
-   &.controls-DataGridView__th__topRow{
+   &.controls-DataGridView__th__topRow {
       text-align: center;
+      padding: @data-grid-header-cell-padding;
+      &.controls-DataGridView__lastContentCell {
+         padding-right: @controls-view-padding-DEFAULT;
+      }
       &.controls-DataGridView__th__topRow-has_text{
          border-bottom: 1px solid transparent;
          padding-bottom: 3px;
@@ -285,6 +290,9 @@
       .controls-ListView__serviceFooter {
          padding: 0 ~"@{controls-view-padding-@{val}}";
       }
+      &.controls-ListView__multiselect.controls-ListView__hideCheckBoxes {
+         .check-box-width(~"@{controls-view-padding-@{val}}");
+      }
    }
    .generate-padding-class-DGV(@i + 1);
 }
@@ -346,6 +354,7 @@
   &:hover, &.controls-DataGridView__PartScroll__thumb-clicked {
     height: @data-grid-partScroll-thumb-height-hover;
     top: @data-grid-partScroll-thumb-clicked-top-shift;
+     border-radius:@data-grid-partScroll-thumb-border-radius-hover;
   }
 }
 
@@ -400,12 +409,17 @@
    font-size: @data-grid-header-cell-font-size;
    //выписал еще поручение https://online.sbis.ru/opendoc.html?guid=2a2781e5-bc7b-464f-b183-32317e0b85cc
    line-height: @data-grid-header-cell-sorting-icon-size;
+   width: 100%;
    .controls-Button__icon {
+      color: @color_DataGridView-sortingIcon;
       .icon-size(@font-size_DataGridView-headerIcon);
    }
 
    color: @color_DataGridView-sorting;
    cursor: pointer;
+   .controls-ButtonBase__content {
+      .justify-content(flex-end);
+   }
 
    &:hover {
       color: @color_DataGridView-sorting_hovered;
@@ -438,16 +452,7 @@
 }
 
 .controls-ListView__hideCheckBoxes.controls-ListView__multiselect {
-   .controls-DataGridView__colgroup {
-      col:first-child {
-         width: @data-grid-td-hidden-checkbox-width;
-         min-width: @data-grid-td-hidden-checkbox-width;
-      }
-   }
-   .controls-DataGridView__td__checkBox {
-      width: @data-grid-td-hidden-checkbox-width;
-      min-width: @data-grid-td-hidden-checkbox-width;
-   }
+   .check-box-width(@data-grid-td-hidden-checkbox-width);
 }
 
 .controls-ListView__multiselect {
@@ -458,16 +463,19 @@
    }
    
    &:not(.controls-ListView__hideCheckBoxes) > .controls-DataGridView__table {
-      > .controls-DataGridView__colgroup {
-         col:first-child {
-            width: @data-grid-td-visible-checkbox-width;
-            min-width: @data-grid-td-visible-checkbox-width;
-         }
+      .check-box-width(@data-grid-td-visible-checkbox-width);
+   }
+}
+.check-box-width(@width) {
+   .controls-DataGridView__colgroup {
+      col:first-child {
+         width: @width;
+         min-width: @width;
       }
-      .controls-DataGridView__td__checkBox {
-         width: @data-grid-td-visible-checkbox-width;
-         min-width: @data-grid-td-visible-checkbox-width;
-      }
+   }
+   .controls-DataGridView__td__checkBox {
+      width: @width;
+      min-width: @width;
    }
 }
 // Контейнер на который программно устанавливается минимальная высота. Используем пустой контейнер который не влияет

@@ -7,7 +7,7 @@
    .controls-RadioButton__caption {
       display: inline-block;
       margin: @radio-button-text-margin;
-      color: @radio-button-text-color;
+      color: @color_Switcher-text;
       & when not (@radio-button-text-font-size = 0) {
          font-size: @radio-button-text-font-size;
       }
@@ -17,42 +17,42 @@
       display: inline-block;
       float: left;
       line-height: @radio-button-icon-line-height;
-      width: @radio-button-icon-width;
-      height: @radio-button-icon-height;
+      width: @size_Switcher-btn;
+      height: @size_Switcher-btn;
       background: @radio-button-icon-bg;
       margin: @radio-button-icon-margin;
       box-sizing: border-box;
       border-style: solid;
-      border-color: @radio-button-icon-border-color;
-      border-width: @radio-button-icon-border-width;
-      border-radius: @radio-button-icon-border-radius;
+      border-color: @border-color_Switcher-btn_enabled;
+      border-width: @border-width_Switcher-btn;
+      border-radius: @size_Switcher-btn / 2;
       &:before {
-         width: @radio-button-dot-size;
-         height: @radio-button-dot-size;
-         background: @radio-button-dot-color;
-         margin: @radio-button-dot-margin;
-         border-radius: @radio-button-dot-radius;
+         width: @size_Switcher-btn-before;
+         height: @size_Switcher-btn-before;
+         background: @bg_Switcher-btn_enabled;
+         margin: (@size_Switcher-btn - @size_Switcher-btn-before) / 2 - @border-width_Switcher-btn;
+         border-radius: @size_Switcher-btn-before / 2;
       }
    }
 
    &:hover {
       &:not(.controls-Checked__checked) .controls-RadioButton__caption {
-         color: @radio-button-hover-text-color;
+         color: @color_Switcher-text;
          text-decoration: @radio-button-hover-text-decoration;
       }
       .controls-RadioButton__icon {
-         border-color: @radio-button-hover-icon-border-color;
+         border-color: @border-color_Switcher-btn_enabled_hover;
       }
    }
 
    &.controls-Checked__checked {
       .controls-RadioButton__caption {
-         color: @radio-button-checked-text-color;
+         color: @color_Switcher-text_checked;
          text-decoration: none;
       }
 
       .controls-RadioButton__icon {
-         border-color: @radio-button-icon-border-color-checked;
+         border-color: @border-color_Switcher-btn_enabled;
          &:before {
             content: '';
             display: block;
@@ -61,11 +61,11 @@
 
       &:hover:not(.controls-Checked__checked) {
          .controls-RadioButton__caption {
-            color: @radio-button-checked-hover-text-color;
+            color: @color_Switcher-text;
          }
 
          .controls-RadioButton__icon {
-            border-color: @radio-button-icon-border-color-checked;
+            border-color: @border-color_Switcher-btn_enabled_hover;
          }
       }
    }
@@ -73,39 +73,39 @@
    &.ws-disabled {
       cursor: text;
       .controls-RadioButton__caption {
-         color: @radio-button-disabled-text-color;
+         color: @color_Switcher-text_disabled;
          text-decoration: none;
       }
 
       .controls-RadioButton__icon {
-         border-color: @radio-button-icon-border-color-disabled;
+         border-color: @border-color_Switcher-btn_disabled;
 
       }
       &.controls-Checked__checked {
          .controls-RadioButton__icon {
-            border-color: @radio-button-icon-border-color-disabled_checked;
+            border-color: @border-color_Switcher-btn_disabled;
             &:before {
-               background: @radio-button-icon-border-color-disabled_checked;
+               background: @bg_Switcher-btn_disabled;
             }
          }
          &:hover {
             .controls-RadioButton__caption {
-               color: @radio-button-disabled-hover-text-color;
+               color: @color_Switcher-text_checked;
             }
          }
          .controls-RadioButton__caption {
-            color: @radio-button-disabled-text-color_checked;
+            color: @color_Switcher-text_checked;
          }
       }
 
       &:hover {
          &:not(.controls-Checked__checked)  .controls-RadioButton__caption {
-            color: @radio-button-disabled-hover-text-color;
+            color: @color_Switcher-text_disabled;
             text-decoration: none;
          }
 
          .controls-RadioButton__icon {
-            border-color: @radio-button-icon-border-color-disabled;
+            border-color: @border-color_Switcher-btn_disabled;
          }
       }
    }

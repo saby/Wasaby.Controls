@@ -1,163 +1,71 @@
-.controls-ScrollContainer {
-  overflow: hidden;
-  // Если включена фиксация заголовков внутри скролируемой области, то иногда стили на ws-sticky-header__wrapper
-  // переопределяют overflow
-  &.ws-sticky-header__wrapper {
-    overflow: hidden;
-  }
-  position: relative;
-  outline: none;
-  z-index: 0;
-
-  &:before, &:after {
-    content: '';
-    position: absolute;
-    display: block;
-    z-index: 1;
-    height: @controls-ScrollContainer-top-gradient-height;
-    left: 0;
-    width: 100%;
-    pointer-events: none; // чтобы можно было кликнуть сквозь тень
-  }
-  &:before {
-    top: 0;
-  }
-  &:after {
-    bottom: 0;
-  }
-  &.controls-ScrollContainer__top-gradient:before {
-    background: linear-gradient(to bottom, @controls-ScrollContainer-gradient-background);
-  }
-  &.controls-ScrollContainer__bottom-gradient:after {
-    background: linear-gradient(to top, @controls-ScrollContainer-gradient-background);
-  }
+.controls-Scroll {
+   position: relative;
+   // Таким образом мы скрываем нативный скролл.
+   overflow: hidden;
 }
 
-.controls-ScrollContainer__scrollbar{
-  position: absolute;
-  right: 0;
-  top: 0;
-  display: none;
-  height: 100%;
-  contain: strict;
+.controls-Scroll__scrollbar {
+   position: absolute;
+   top: 0;
+   right: 0;
+   bottom: 0;
 }
 
-.controls-ScrollContainer:not(.controls-ScrollContainer__hiddenScrollbar) {
-  .controls-Scrollbar.controls-Scrollbar__dragging {
-    display: block;
-  }
-}
-
-.controls-ScrollContainer__content {
-  overflow-y: scroll;
-  overflow-x: hidden;
-  height: 100%;
-  max-height: inherit;
-  min-width: inherit;
-  /*https://inside.tensor.ru/opendoc.html?guid=3d32d044-8a60-432d-9cd8-db555ad0786d&des=
-  R! Убрать с новых контролов класс ws-area с height:100%, чтобы работало по человечески.*/
-  &> .controls-ListView {
-    height: auto;
-  }
-  -webkit-overflow-scrolling: touch;
-  // isolation создает изолированный контект отображения и iframe в полноэкранном режиме отображается неправильно
-  // (элементы с isolation: isolate отображаются поверх него, т.к. у них собственный контекст рендера).
-  // Если будут проблемы, то можно попробовать следующее решение:
-  // .controls-ScrollContainer__content {
-  //    transform: scale(1);
-  // }
-  z-index: 0;
-
-  &.ws-sticky-header__scrollable-container {
-    width: auto;
-  }
-}
-
-// Для IE нужно оставить хак:
-// https://online.sbis.ru/opendoc.html?guid=bd8fad86-cab3-42e8-8914-d2309e35a865&des=
-// Ошибка в разработку 08.06.2017 Перенос: в ИЕ лишний вертикальный скролл в окне с периодами Как повторить: отчетность - в правом в…
-body.ws-is-ie .controls-ScrollContainer__content {
-  // Хак. IE не поддерживает isolation: isolate;
-  transform: scale(1);
-}
-
-.controls-ScrollContainer-overflow-scrolling-auto .controls-ScrollContainer__content {
-  -webkit-overflow-scrolling: auto!important;
-}
-
-.controls-ScrollContainer__content.controls-ScrollContainer__content-overflowHidden {
-  overflow: hidden;
-}
-
-.ws-is-mobile-android {
-  .controls-ScrollContainer__content {
-    overflow-y: auto;
-  }
-}
-
-// показываем нативный скролл только на android и ios
-.ws-is-mobile-safari, .ws-is-mobile-chrome-ios {
-  .controls-ScrollContainer {
-    overflow: auto;
-  }
-  .controls-ScrollContainer__content {
-    &::-webkit-scrollbar {
-      width: auto!important;
-    }
-  }
-}
-/*TODO временный фикс для выпуска*/
-.controls-ScrollContainer{
-  &.controls-ScrollContainer__withHead {
-    .controls-ScrollContainer__scrollbar {
-      top: 24px;
-      height: calc(~"100% - 32px");
-    }
-  }
-}
-
-.controls-ScrollContainer.ws-sticky-header__scrollable-container {
-  width: auto;
-}
-// Заголовки должны быть выше тени. Если этот z-index вызовет проблемы, то надо будет сделать, что бы при фиксации
-// заголовков на враппер фиксированных заголовков накидывался соответсвующий класс и при его наличии тень в скрол
-// контейнере вообще не отображалась.
-.controls-ScrollContainer > .ws-sticky-header__header-container {
-  z-index: 1;
-}
-
-.controls-ScrollContainer__hiddenScrollbar > .controls-Scrollbar {
-  display: none;
-}
-
-.controls-ScrollContainer__scrollbar_show:not(.controls-ScrollContainer__hiddenScrollbar) > .controls-Scrollbar {
-  display: block;
-}
-
-.controls-ScrollContainer.controls-ScrollContainer__flex {
-  .flexbox();
-  .flex-grow(1);
-  .flex-direction(column);
-  .align-content(stretch);
-}
-
-.controls-ScrollContainer.controls-ScrollContainer__flex > .controls-ScrollContainer__content {
-  height:100%;
-  .flex-grow(1);
+.controls-Scroll__content {
+   -webkit-overflow-scrolling: touch;
 }
 
 /**
- * Скрытие нативного скролла, для замены на платформенный.
- * Платформенный используется только на desktop платформах.
+ * Данный модификатор предназначен для ускорения работы во время прокрутки.
+ * Вешать его следует только на контейнер, который по нашему предположению должен скролиться.
+ * В противном случае это вызовет тормоза вместо оптимизации.
+ * Подробнее https://developer.mozilla.org/ru/docs/Web/CSS/will-change.
  */
-.controls-ScrollContainer__content::-webkit-scrollbar {
-  width: 0px;
+.controls-Scroll__content_possibleScroll {
+   will-change: scroll-position;
 }
 
-.forScrollBarMeasurement {
-  position: absolute;
-  width: 100px;
-  height: 100px;
-  overflow: scroll;
-  top: -9999px;
+.controls-Scroll__shadow {
+   left: 0;
+   right: 0;
+   position: absolute;
+   pointer-events: none;
+   height: @height-gradient_Scroll-shadow;
+}
+
+.controls-Scroll__shadow_top {
+   top: 0;
+   background: linear-gradient(
+           to bottom,
+           @start-color-gradient_Scroll-shadow, @end-color-gradient_Scroll-shadow
+   );
+}
+
+.controls-Scroll__shadow_bottom {
+   bottom: 0;
+   background: linear-gradient(
+           to top,
+           @start-color-gradient_Scroll-shadow, @end-color-gradient_Scroll-shadow
+   );
+}
+
+.controls-Scroll__content::-webkit-scrollbar {
+   width: 0px;
+}
+
+.controls-Scroll__content_scroll {
+   overflow-y: scroll;
+   overflow-x: hidden;
+}
+
+.controls-Scroll__content_hidden {
+   overflow: hidden;
+}
+
+.controls-Scroll__measuredBlock {
+   position: absolute;
+   width: 100px;
+   height: 100px;
+   overflow: scroll;
+   top: -9999px;
 }

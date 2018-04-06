@@ -1,10 +1,11 @@
 <div style="margin: 32px; display: flex; flex-direction: column; width: 18em;">
    <div style="padding: 3em; background-color: rgba(38,59,74,0.22)">
       <h2>Phone</h2>
-      <Controls:Label name="myLabel1" caption="Пример"/>
-      <ws:Controls.Input.Phone
+      <Controls.Label name="myLabel1" caption="Пример"/>
+      <Controls.Input.Phone
          name="phone"
          bind:value="phoneValue"
+         attr:test_name="Phone_1"
       />
    </div>
 </div>

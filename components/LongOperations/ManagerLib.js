@@ -7,6 +7,7 @@
  */
 define('SBIS3.CONTROLS/LongOperations/ManagerLib',
    [
+      'Core/Deferred',
       'WS.Data/Chain',
       'WS.Data/Collection/RecordSet',
       'WS.Data/Source/DataSet',
@@ -19,7 +20,7 @@ define('SBIS3.CONTROLS/LongOperations/ManagerLib',
       'SBIS3.CONTROLS/LongOperations/List/resources/model'
    ],
 
-   function (Chain, RecordSet, DataSet, LongOperationsConst, LongOperationEntry, LongOperationHistoryItem, LongOperationsBunch, LongOperationsCallsPool, LongOperationsTabCalls, Model) {
+   function (Deferred, Chain, RecordSet, DataSet, LongOperationsConst, LongOperationEntry, LongOperationHistoryItem, LongOperationsBunch, LongOperationsCallsPool, LongOperationsTabCalls, Model) {
       'use strict';
 
       /**

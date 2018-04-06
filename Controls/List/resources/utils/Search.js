@@ -14,8 +14,8 @@ define('Controls/List/resources/utils/Search',
           * Checks required parameters
           */
          checkRequiredParams: function(params) {
-            if (!params.dataSource) {
-               throw new Error('dataSource is required for search');
+            if (!params.source) {
+               throw new Error('source is required for search');
             }
          },
       
@@ -37,7 +37,7 @@ define('Controls/List/resources/utils/Search',
             }
             
             return [
-               self._dataSource,
+               self._source,
                null, //idProperty, using default
                queryParams.filter,
                queryParams.sorting,
@@ -84,11 +84,11 @@ define('Controls/List/resources/utils/Search',
             cfg = cfg || {};
             _private.checkRequiredParams(cfg);
             this._searchDelay = cfg.hasOwnProperty('searchDelay') ? cfg.searchDelay : 500;
-            this._dataSource = DataSourceUtil.prepareSource(cfg.dataSource);
+            this._source = DataSourceUtil.prepareSource(cfg.source);
             if (cfg.navigation && cfg.navigation.source === 'page') {
                //TODO переписать, как список переведут на актуальное апи навигации
                this._navigation = new PageNavigation(cfg.navigation.sourceConfig);
-               this._navigation.prepareSource(this._dataSource);
+               this._navigation.prepareSource(this._source);
                
             }
             Search.superclass.constructor.apply(this, arguments);

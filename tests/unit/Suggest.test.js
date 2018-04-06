@@ -44,6 +44,13 @@ define(
             assert.isTrue(Suggest._private.needCloseOnFocusOut(suggest));
          });
    
+         it('_beforeUpdate', function() {
+            var suggest = new Suggest();
+      
+            suggest._beforeUpdate({value: '123'});
+            assert.equal(suggest._simpleViewModel.getValue(), '123');
+         });
+   
          it('selectHandler', function() {
             //тестирует фокусы, проверяем только на клиенте
             if (typeof document === 'undefined') {
@@ -59,9 +66,12 @@ define(
             
             /* Т.к. реально проверить, есть ли фокус в саггесте мы не можем (нет DOM элемента),
                просто проверим вызов focus() */
-            suggest.focus = function() {
-               focused = true;
-            };
+            /* Защита от изменения API, чтобы если api изменят, тест упал */
+            if (suggest.activate) {
+               suggest.activate = function () {
+                  focused = true;
+               };
+            }
             suggest._notify = function(eventName, value) {
                if (eventName === 'valueChanged') {
                   selectedValue = value;
@@ -90,9 +100,12 @@ define(
                 focused = false,
                 suggestValue;
    
-            suggest.focus = function() {
-               focused = true;
-            };
+            /* Защита от изменения API, чтобы если api изменят, тест упал */
+            if (suggest.activate) {
+               suggest.activate = function () {
+                  focused = true;
+               };
+            }
    
             suggest._notify = function(eventName, value) {
                if (eventName === 'valueChanged') {
@@ -107,6 +120,37 @@ define(
             assert.equal(suggest._suggestController._value, '', 'Wrong value after clear');
             assert.equal(suggestValue, '', 'Wrong value after clear');
             assert.isTrue(focused, 'Suggest is not focused after clear');
+         });
+   
+         it('_focusOut', function(done) {
+            //тестирует фокус, проверяем только на клиенте
+            if (typeof document === 'undefined') {
+               this.skip();
+            }
+            var suggestDomNode = document.createElement('div');
+            var focusOutHandlerCalled = false;
+            
+            document.body.append(suggestDomNode);
+            
+            var suggest = new Suggest();
+            suggest.mountToDom(suggestDomNode, {});
+            suggest._focusOut = function() {
+               focusOutHandlerCalled = true;
+            };
+   
+            /* Таймаут для синхронизации VDOM'a */
+            setTimeout(function() {
+               /* Устанавливаем фокус в саггест */
+               var eventFocus = new Event('focus');
+               eventFocus.relatedTarget = document.body;
+               $('.controls-InputRender')[0].dispatchEvent(eventFocus);
+               /* Уводим фокус с саггеста */
+               var eventBlur = new Event('blur');
+               eventBlur.relatedTarget =  $('<div/>')[0];
+               $('.controls-InputRender')[0].dispatchEvent(eventBlur);
+               assert.isTrue(focusOutHandlerCalled, 'Event handler on focusOut is not called');
+               done();
+            }, 50);
          });
          
       });

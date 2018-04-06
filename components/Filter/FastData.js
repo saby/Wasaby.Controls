@@ -29,7 +29,7 @@ define('SBIS3.CONTROLS/Filter/FastData',
        * @mixes SBIS3.CONTROLS/Mixins/ItemsControlMixin
        * @mixes SBIS3.CONTROLS/Mixins/FilterMixin
        *
-       * @demo SBIS3.Demo.Filter.FastDataFilterMultiselect
+       * @demo Examples/Filter/FastDataFilterMultiselect/FastDataFilterMultiselect
        *
        * @cssModifier controls-FastDataFilter__resize Позволяет управлять шириной выпадающих списков, вписывая их по размеру в контейнер.
        *
@@ -227,18 +227,23 @@ define('SBIS3.CONTROLS/Filter/FastData',
             var instances = this.getItemsInstances();
             for (var i in instances) {
                if (instances.hasOwnProperty(i)) {
-                  var fsObject = this._filterStructure[this._getFilterSctructureItemIndex(instances[i].getContainer().attr('data-id'))],
-                     value = (fsObject.hasOwnProperty('value') && fsObject.value !== undefined) ? instances[i]._options.multiselect ? fsObject.value : [fsObject.value] : [instances[i].getDefaultId()];
+                  var value = this._getValueFromStructure(instances[i]);
                   if (instances[i].getItems()) {
                      this._setSelectedKeyByFilterStructure(instances[i], value);
                   }
                   else {
-                     instances[i].once('onItemsReady', function (instance, val) {
-                        this._setSelectedKeyByFilterStructure(instance, val);
-                     }.bind(this, instances[i], value));
+                     instances[i].once('onItemsReady', function (instance) {
+                        this._setSelectedKeyByFilterStructure(instance, this._getValueFromStructure(instance));
+                     }.bind(this, instances[i]));
                   }
                }
             }
+         },
+
+         _getValueFromStructure: function (instance) {
+            var fsObject = this._filterStructure[this._getFilterSctructureItemIndex(instance.getContainer().attr('data-id'))],
+               hasValue = fsObject.hasOwnProperty('value') && fsObject.value !== undefined;
+            return hasValue ? (instance._options.multiselect ? fsObject.value : [fsObject.value]) : [instance.getDefaultId()]
          },
 
          _setSelectedKeyByFilterStructure: function (instance, value) {

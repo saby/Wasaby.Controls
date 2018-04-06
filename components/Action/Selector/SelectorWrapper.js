@@ -16,8 +16,8 @@ define('SBIS3.CONTROLS/Action/Selector/SelectorWrapper', [
     * @public
     * @control
     *
-    * @demo SBIS3.CONTROLS.Demo.SelectorActionButton Пример 1. Окно выбора из справочника с использованием кнопок Button и Link.
-    * @demo SBIS3.CONTROLS.Demo.SelectorFieldLink Пример 2. Окно выбора из справочника с использованием поля связи.
+    * @demo Examples/SelectorWrapper/SelectorActionButton/SelectorActionButton Пример 1. Окно выбора из справочника с использованием кнопок Button и Link.
+    * @demo Examples/SelectorAction/SelectorFieldLink/SelectorFieldLink Пример 2. Окно выбора из справочника с использованием поля связи.
     */
 
    var SELECTION_TYPE_CLASSES = {
@@ -307,14 +307,19 @@ define('SBIS3.CONTROLS/Action/Selector/SelectorWrapper', [
       },
 
       setSelectedItems: function(items) {
-         var self = this,
-             keys = [],
-             linkedObject = this._getLinkedObject(),
+         var
+            id,
+            self = this,
+            keys = [],
+            linkedObject = this._getLinkedObject(),
             idProperty = linkedObject.getProperty('idProperty');
 
          items.each(function(rec) {
             if((self._options.selectedFilter || DEFAULT_SELECTED_FILTER)(rec)) {
-               keys.push(rec.get(idProperty));
+               id = rec.get(idProperty);
+               if (id !== undefined) {
+                  keys.push(id);
+               }
             }
          });
 

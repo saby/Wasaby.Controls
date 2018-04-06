@@ -21,7 +21,7 @@ define('SBIS3.CONTROLS/RichEditor',
        * @public
        * @control
        *
-       * @demo SBIS3.CONTROLS.Demo.RichEditorDemo В следующем примере первый контрол - SBIS3.CONTROLS.RichEditor.
+       * @demo Examples/RichEditor/RichEditorDemo/RichEditorDemo В следующем примере первый контрол - SBIS3.CONTROLS.RichEditor.
        * Ниже добавлен контрол SBIS3.CONTROLS/RichEditor/Components/Toolbar, который связан с контролом SBIS3.CONTROLS/RichEditor/Components/RichTextArea с помощью метода {@link SBIS3.CONTROLS/RichEditor/Components/ToolbarBase#setLinkedEditor}.
        *
        * @category Input
@@ -77,7 +77,7 @@ define('SBIS3.CONTROLS/RichEditor',
             this._toolbar.setLinkedEditor(this);
             this._toolbar.subscribe('onExpandedChange', function (evtName, expanded) {
                if (!this._options.autoHeight) {
-                  var container = this._scrollContainer;
+                  var container = this._scrollContainer.parent();
                   container.animate(
                      {height: container.outerHeight() + (expanded ? -constants.toolbarHeight : constants.toolbarHeight)},
                      'fast'
@@ -98,7 +98,9 @@ define('SBIS3.CONTROLS/RichEditor',
          _setEnabled: function(enabled){
             if (this._options.toolbar && (this._hasToolbar() || enabled)) {
                this._performByReady(function () {
-                  this._getToolbar().setEnabled(enabled);
+                  if (enabled === this.isEnabled()) {
+                     this._getToolbar().setEnabled(enabled);
+                  }
                }.bind(this));
             }
             RichEditor.superclass._setEnabled.apply(this, arguments);
@@ -126,7 +128,7 @@ define('SBIS3.CONTROLS/RichEditor',
             var options = this._options;
             if (!options.autoHeight) {
                var toolbarHeight = options.toolbar && options.toolbarVisible ? constants.toolbarHeight : 0;
-               this._scrollContainer.css('height',  this._container.height() - toolbarHeight);
+               this._scrollContainer.parent().css('height',  this._container.height() - toolbarHeight);
             }
          }
       });
