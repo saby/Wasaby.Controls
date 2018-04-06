@@ -36,12 +36,16 @@ define('SBIS3.CONTROLS/ComponentBinder/BreadCrumbsController', ["Core/constants"
          function setPreviousRoot() {
             var previousRoot = self._path[self._path.length - 1];
 
-            view.setCurrentRoot(previousRoot ? previousRoot[breadCrumbs._options.idProperty] : null);
-            view.reload().addCallback(function(){
-               if (self._currentRoot !== null) {
-                  self._currentRoot = previousRoot;
-                  if (self._path.length) self._path.splice(self._path.length - 1);
-               }
+            var cachedCurrentRoot = self._currentRoot;
+
+            if(self._currentRoot !== null) {
+               self._currentRoot = previousRoot;
+               if (self._path.length) self._path.splice(self._path.length - 1);
+               view.setCurrentRoot(previousRoot ? previousRoot[breadCrumbs._options.idProperty] : null);
+            }
+            view.reload().addErrback(function(err){
+               self._currentRoot = cachedCurrentRoot;
+               return err;
             });
          }
 
