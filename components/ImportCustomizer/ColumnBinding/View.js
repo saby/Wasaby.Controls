@@ -114,7 +114,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
             var options = View.superclass._modifyOptions.apply(this, arguments);
             var inf = this._makeUpdateInfo(options);
             options._columns = inf.columns;
-            options._items = inf.items;
+            options._rows = inf.rows;
             return options;
          },
 
@@ -197,7 +197,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
             if (has.rows || has.fields) {
                var inf = this._makeUpdateInfo(options);
                grid.setColumns(inf.columns);
-               grid.setItems(inf.items);
+               grid.setItems(inf.rows);
             }
             else {
                if (has.skippedRows) {
@@ -332,7 +332,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                   rowItems.push(rows[j].reduce(function (r, v, i) { r[_PREFIX_COLUMN_FIELD + (i + 1)] = v; return r; }, {id:j + 1, className:j < skippedRows ? _CLASS_LIGHT_ROW : undefined}));
                }
             }
-            return {columns:columns, items:rowItems};// TODO: Хочется переименовать items: в rows:
+            return {columns:columns, rows:rowItems};
          },
 
          /**
