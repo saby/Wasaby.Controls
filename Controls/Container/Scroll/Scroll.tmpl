@@ -3,7 +3,7 @@
       <Controls.Layout.Scroll>
          <div name="content"
               style="{{displayState.hasScroll ? styleHideScrollbar}}"
-              class="ws-flex-grow-1 controls-Scroll__content
+              class="ws-flex-grow-1 controls-Scroll__content controls-Scroll__content_paging
                   {{hasHover ? 'controls-Scroll__content_possibleScroll'}}
                   {{displayState.heightFix ? 'controls-Scroll__content_hidden' : 'controls-Scroll__content_scroll'}}"
               on:resize="_resizeHandler()"
@@ -30,6 +30,12 @@
          </ws:if>
       </ws:if>
 
+      <ws:if data="{{pagingState.visible}}">
+         <ws:Controls.List.Paging class="controls-Scroll__paging" pagesCount="{{pagingState.pagesCount}}"
+                                  selectedPage="{{pagingState.selectedPage}}"
+                                  showDigits="{{true}}" on:onChangeSelectedPage="_changeSelectedPageHandler()"/>
+      </ws:if>
+
       <Controls.Event.Emitter event="resize" on:resize="_resizeHandler()"/>
    </div>
 </ws:template>
@@ -46,6 +52,7 @@
                shadowVisible="{{_options.shadowVisible}}"
                styleHideScrollbar="{{_styleHideScrollbar}}"
                optContent="{{_options.content}}"
+               pagingState="{{_pagingState}}"
                on:mouseenter="_mouseenterHandler()"
                on:mouseleave="_mouseleaveHandler()"
                on:scrollbarTaken="_scrollbarTakenHandler()"
@@ -62,5 +69,6 @@
                scrollTop="{{_scrollTop}}"
                shadowVisible="{{_options.shadowVisible}}"
                styleHideScrollbar="{{_styleHideScrollbar}}"
-               optContent="{{_options.content}}"/>
+               optContent="{{_options.content}}"
+               pagingState="{{_pagingState}}"/>
 </ws:else>
