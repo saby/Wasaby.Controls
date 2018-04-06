@@ -6,7 +6,7 @@
     {{ topGradient ? ' controls-ScrollContainer__top-gradient' }}
     {{ bottomGradient ? ' controls-ScrollContainer__bottom-gradient' }}
     {{ showScrollbar ? ' controls-ScrollContainer__scrollbar_show' }}">
-    <Controls:Layout:Scroll>
+    <Controls:Layout:Scroll scope="{{_options}}">
         <ws:content>
             <div
                 name="content"
