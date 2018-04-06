@@ -1,0 +1,6 @@
+<div attr:class="controls-BreadCrumbsV">
+    <div attr:class="controls-BreadCrumbsV__home icon-size icon-Home3 icon-primary"
+         on:click="_onHomeClick()"></div>
+    <ws:partial template="{{_itemsTemplate}}" itemsViewModel="{{_itemsViewModel}}" itemTemplate="{{_itemTemplate}}" />
+    <Controls.Event.Emitter event="resize" on:resize="_onResize()"/>
+</div>

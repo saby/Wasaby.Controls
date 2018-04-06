@@ -1,0 +1,79 @@
+.controls-BreadCrumbsV__items {
+   //TODO: миксины
+   display: inline-flex;
+   align-items: center;
+   height: 24px;
+   max-width: calc(100% ~'-' @bread-crumb-home-font-size);
+}
+
+.controls-BreadCrumbsV__crumb {
+   display: inline-flex;
+   align-items: center;
+   flex-shrink: 0;
+   min-width: 0;
+}
+
+.controls-BreadCrumbsV__title {
+   flex-shrink: 0;
+   color: #0055BB;
+   cursor: pointer;
+   position: relative;
+   overflow: hidden;
+   min-width: 0;
+}
+
+//TODO: придумать какое-нибудь более адекватное название
+.controls-BreadCrumbsV__flexChild {
+   overflow: hidden;
+   text-overflow: clip;
+   white-space: nowrap;
+}
+
+.controls-BreadCrumbsV__crumb_blurred,
+.controls-BreadCrumbsV__title_blurred {
+   //TODO: завязываюсь на порядок
+   flex-shrink: 1;
+}
+
+.controls-BreadCrumbsV__title_blurred:after {
+   content: '';
+   display: inline-block;
+   position: absolute;
+   right: 0;
+   top: 0;
+   width: 24px;
+   height: 100%;
+   background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+}
+
+.controls-BreadCrumbsV__title:hover {
+   color: #313E78;
+   text-decoration: underline;
+}
+
+.controls-BreadCrumbsV__arrow {
+   //TODO:
+   .icon-size-without-important(@bread-crumb-home-font-size);
+   cursor: pointer;
+}
+
+.controls-BreadCrumbsV__measurer {
+   display: inline-flex;
+   top: 0;
+   left: -9999px;
+   position: absolute;
+   white-space: nowrap;
+}
+
+.controls-BreadCrumbsV__home {
+   .icon-size-without-important(@bread-crumb-home-font-size);
+   cursor: pointer;
+}
+
+.controls-BreadCrumbsV__home:hover {
+   color: @bread-crumb-title-hover-color;
+}
+
+.controls-BreadCrumbsV__title_min {
+   min-width: 36px;
+}
