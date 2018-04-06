@@ -1,0 +1,10 @@
+<div class="controls-ToolbarV_item controls-ToolbarV_item__styled"
+     title="{{item.title}}"
+     on:click="_onItemClick(item)">
+    <ws:if data="{{!!item.icon}}">
+        <i class="controls-ToolbarV__item_icon {{item.icon}}"/>
+    </ws:if>
+    <ws:else data="{{!!item.title}}">
+        <span class="controls-ToolbarV__item_title">{{item.title}}</span>
+    </ws:else>
+</div>
