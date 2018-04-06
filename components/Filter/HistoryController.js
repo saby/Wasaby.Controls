@@ -101,6 +101,14 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
                       this._onApplyFilterHandler();//сохранаяем в пользовательскую историю что бы фильтр применился при обновлении страницы
                    }.bind(this));
                 }
+                var hashFilters = this._getFiltersFormHash();
+                this._options.view.setFilter(cMerge(this._options.view.getFilter(), hashFilters), false);
+                if (
+                   cInstance.instanceOfMixin(this._options.view, 'SBIS3.CONTROLS/Mixins/TreeMixin') &&
+                   hashFilters[this._options.view.getParentProperty()]
+                ) {
+                   this._options.view.setCurrentRoot(hashFilters[this._options.view.getParentProperty()]);
+                }
              }
           },
 
@@ -266,7 +274,6 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
              if(activeFilter) {
                 activeFilter.isActiveFilter = false;
              }
-             this._setFiltersToHash(filterObject);
              /* Не сохраняем в историю, если:
                 1) Ещё не сохранился предыдущий фильтр,
                 2) Такой фильтр уже есть в истории
@@ -374,7 +381,7 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
                    saveFilters = JSON.stringify(saveFilters);
                 }
                 if (saveFilters) {
-                   HashManager.set(this._options.historyId, JSON.stringify(saveFilters));
+                   HashManager.set(this._options.historyId, saveFilters);
                 } else {
                    HashManager.remove(this._options.historyId);
                 }
@@ -449,27 +456,39 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
              )
           },
 
-          _hashChangeHandler: function () {
-             var view = this._options.view,
-               viewFilters = view.getFilter(),
-               hashFilters = this._getFiltersFormHash();
-             if (
-                cInstance.instanceOfMixin(this._options.view, 'SBIS3.CONTROLS/Mixins/TreeMixin') &&
-                this._options.filtersForHistory.indexOf(view.getParentProperty()) > -1
-             ) {//если меняется раздел то надо сменить корень у дерева иначе записи не будут отображаться
-                view.setCurrentRoot(hashFilters[view.getParentProperty()]||null);
-             }
-             cMerge(viewFilters, hashFilters);
-             view.setFilter(viewFilters);
-          },
+           _hashChangeHandler: function () {
+              var view = this._options.view,
+                 viewFilters = view.getFilter(),
+                 hashFilters = this._getFiltersFormHash(),
+                 isNeedUpdateFilter = false;
 
-          destroy: function() {
+              for (var name in hashFilters) {
+                 if (hashFilters.hasOwnProperty(name) && viewFilters[name] != hashFilters[name]) {
+                    viewFilters[name] = hashFilters[name];
+                    isNeedUpdateFilter = true;
+                 }
+              }
+
+              if (isNeedUpdateFilter) {
+                 if (
+                    cInstance.instanceOfMixin(this._options.view, 'SBIS3.CONTROLS/Mixins/TreeMixin') &&
+                    this._options.filtersForHistory.indexOf(view.getParentProperty()) > -1
+                 ) {//если меняется раздел то надо сменить корень у дерева иначе записи не будут отображаться
+                    view.setCurrentRoot(hashFilters[view.getParentProperty()]||null);
+                 }
+                 view.setFilter(viewFilters)
+              }
+
+           },
+
+
+           destroy: function() {
              HISTORY_CHANNEL.unsubscribe('onChangeHistory', this._changeHistoryFnc);
              HashManager.unsubscribe('onChange', this._hashChangeHandlerFnc);
              this._changeHistoryFnc = undefined;
              this._applyHandlerDebounced = undefined;
              FilterHistoryController.superclass.destroy.apply(this, arguments);
-          }
+           }
        });
 
        return FilterHistoryController;

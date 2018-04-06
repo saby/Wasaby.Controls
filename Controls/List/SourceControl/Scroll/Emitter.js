@@ -4,10 +4,9 @@
 define('Controls/List/SourceControl/Scroll/Emitter',
    [
       'Core/Control',
-      'tmpl!Controls/List/SourceControl/Scroll/Emitter/Emitter',
-      'WS.Data/Type/descriptor'
+      'tmpl!Controls/List/SourceControl/Scroll/Emitter/Emitter'
    ],
-   function(Control, template, types) {
+   function(Control, template) {
 
       'use strict';
 

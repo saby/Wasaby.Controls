@@ -1,6 +1,6 @@
-<div class="ws-Suggest" on:focusOut="_focusOut()">
+<div class="ws-Suggest">
 
-    <Controls:Input:resources:InputRender:InputRender
+    <Controls.Input.resources.InputRender.InputRender
         name="suggestText"
         size="{{ _options.size }}"
         viewModel="{{_simpleViewModel}}"
@@ -14,6 +14,7 @@
         validationErrors="{{_options.validationErrors}}"
         on:valueChanged="_changeValueHandler()"
         on:keydown="_keyDownHandler()"
+        on:blur="_focusOut()"
         attr:class="ws-Suggest__inputRender">
 
         <ws:content>
@@ -27,24 +28,24 @@
             </div>
         </ws:afterFieldWrapper>
 
-    </Controls:Input:resources:InputRender:InputRender>
+    </Controls.Input.resources.InputRender.InputRender>
 
-    <Controls:Popup:Opener:Sticky name="suggestPopupOpener">
+    <Controls.Popup.Opener.Sticky name="suggestPopupOpener">
         <ws:popupOptions vAlingTopClass="ws-Suggest__popup-vAlignTop" vAlingBottomClass="ws-Suggest__popup-vAlignBottom" autoHide="{{true}}" template="Controls/Input/resources/SuggestView/SuggestView">
             <ws:corner vertical="bottom"/>
             <ws:verticalAlign side="bottom"/>
             <ws:componentOptions idProperty="{{_options.idProperty}}"/>
             <ws:eventHandlers onFocusIn="{{_popupFocusIn}}" onFocusOut="{{_popupFocusOut}}" onResult="{{_selectHandler}}" onClose="{{_popupClose}}"/>
         </ws:popupOptions>
-    </Controls:Popup:Opener:Sticky>
+    </Controls.Popup.Opener.Sticky>
 
-    <Controls:Popup:Opener:Stack name="showAllOpener">
+    <Controls.Popup.Opener.Stack name="showAllOpener">
         <ws:popupOptions template="Controls/Input/resources/SuggestShowAll/SuggestShowAll" className="ws-Suggest__showAllPopup">
-            <ws:componentOptions dataSource="{{_options.dataSource}}" template="{{_options.suggestTemplate}}" navigation="{{_options.navigation}}"></ws:componentOptions>
+            <ws:componentOptions source="{{_options.source}}" template="{{_options.suggestTemplate}}" navigation="{{_options.navigation}}"></ws:componentOptions>
             <ws:eventHandlers onResult="{{_selectHandler}}"/>
         </ws:popupOptions>
-    </Controls:Popup:Opener:Stack>
+    </Controls.Popup.Opener.Stack>
 
-    <Controls:Event:Emitter event="resize" on:resize="_resize()" attr:tabindex="{{-1}}"/>
+    <Controls.Event.Emitter event="resize" on:resize="_resize()" attr:tabindex="{{-1}}"/>
 
 </div>

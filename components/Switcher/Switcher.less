@@ -1,72 +1,72 @@
-@crossing-line-btn: @switcherline-width - @switcher-btn-size;
+@crossing-line-btn: @width_Switcher-line - @size_Switcher-btn;
 .get-size(@prop, @var1, @var2, @border) {
-   @{prop}: calc(~"(@{var1} + @{var2}) / 2 - @{border}");
+      @{prop}: calc(~"(@{var1} + @{var2}) / 2 - @{border}");
 }
 
 .switcherBorder(@border) {
    &.controls-Checked__checked .controls-Switcher__btn {
-      .get-size(right, @switcher-width, -@switcherline-width, @border);
+      .get-size(right, @switcher-width, -@width_Switcher-line, @border);
    }
    &:not(.controls-Checked__checked) .controls-Switcher__btn {
-      .get-size(left, @switcher-width, -@switcherline-width, @border);
+      .get-size(left, @switcher-width, -@width_Switcher-line, @border);
    }
    & .controls-Switcher__line {
       .get-size(top, @switcher-height, -@switcherline-height, @border);
-      .get-size(left, @switcher-width, -@switcherline-width, @border);
+      .get-size(left, @switcher-width, -@width_Switcher-line, @border);
    }
    & .controls-Switcher__btn {
-      .get-size(top, @switcher-height, -@switcher-btn-size, @border);
+      .get-size(top, @switcher-height, -@size_Switcher-btn, @border);
    }
 }
 
 .controls-Switcher {
    position: relative;
    display: inline-block;
-   width: @switcher-width;
-   height: @switcher-height;
-   border-color: @switcher-border-color;
+   width: @width_Switcher;
+   height: @height_Switcher;
+   border-color: @border-color_Switcher;
    border-style: solid;
-   border-radius: @switcher-border-radius;
+   border-radius: @border-radius_Switcher;
    .box-sizing();
    &.controls-Checked__checked .controls-Switcher__btn:before {
       content: '';
       position: absolute;
-      width: @switcher-dot-size;
-      height: @switcher-dot-size;
-      margin: (@switcher-btn-size - @switcher-dot-size) / 2 - @switcher-btn-border-width;
+      width: @size_Switcher-btn-before;
+      height: @size_Switcher-btn-before;
+      margin: (@size_Switcher-btn - @size_Switcher-btn-before) / 2 - @border-width_Switcher-btn;
       .border-radius(100%);
    }
 }
 
 .controls-Switcher__line {
    position: absolute;
-   height: @switcherline-height;
-   width: @switcherline-width;
+   width: @width_Switcher-line;
+   height: @height_Switcher-line;
 }
 
 .controls-Switcher__line_disabled-checked() {
-   .horizontal-gradient(@switcher-disabled-color @crossing-line-btn, transparent @crossing-line-btn);
+   .horizontal-gradient(@color_Switcher-line_disabled @crossing-line-btn, transparent @crossing-line-btn);
 }
 
 .controls-Switcher__line_disabled-unchecked() {
-   .horizontal-gradient(transparent @switcher-btn-size, @switcher-disabled-color @switcher-btn-size);
+   .horizontal-gradient(transparent @size_Switcher-btn, @color_Switcher-line_disabled @size_Switcher-btn);
 }
 
 .controls-Switcher__line_enabled-checked() {
-   .horizontal-gradient(@color_switcher_line @crossing-line-btn, transparent @crossing-line-btn);
+   .horizontal-gradient(@color_Switcher-line_enabled @crossing-line-btn, transparent @crossing-line-btn);
 }
 
 .controls-Switcher__line_enabled-unchecked() {
-   .horizontal-gradient(transparent @switcher-btn-size, @color_switcher_line @switcher-btn-size);
+   .horizontal-gradient(transparent @size_Switcher-btn, @color_Switcher-line_enabled @size_Switcher-btn);
 }
 
 .controls-Switcher__btn {
    display: block;
    position: absolute;
-   width: @switcher-btn-size;
-   height: @switcher-btn-size;
+   width: @size_Switcher-btn;
+   height: @size_Switcher-btn;
    border-style: solid;
-   border-width: @switcher-btn-border-width;
+   border-width: @border-width_Switcher-btn;
    .border-radius(100%);
    .box-sizing();
 }
@@ -74,21 +74,21 @@
 body:not(.ws-is-mobile-platform) .ws-enabled.controls-Switcher:hover {
    cursor: pointer;
    .controls-Switcher__btn {
-      border-color: @primary-color;
-      border-width: @switcher-btn-hover-border-width;
+      border-color: @border-color_Switcher-btn_enabled_hover;
+      border-width: @border-width_Switcher-btn_hover;
    }
-   &.controls-Checked__checked .controls-Switcher__btn:before when not (@switcher-btn-border-width = @switcher-btn-hover-border-width) {
-      @dot-offset: @switcher-btn-border-width - @switcher-btn-hover-border-width;
+   &.controls-Checked__checked .controls-Switcher__btn:before when not (@border-width_Switcher-btn = @border-width_Switcher-btn_hover) {
+      @dot-offset: @border-width_Switcher-btn - @border-width_Switcher-btn_hover;
       top: @dot-offset;
       left: @dot-offset;
    }
 }
 
 .ws-enabled.controls-Switcher {
-   &.controls-Checked__checked .controls-Switcher__btn {
-      border-color: @primary-color;
+   .controls-Switcher__btn {
+      border-color: @border-color_Switcher-btn_enabled;
       &:before {
-         background: @primary-color;
+         background: @bg_Switcher-btn_enabled;
       }
    }
    &.controls-Checked__checked .controls-Switcher__line {
@@ -97,18 +97,9 @@ body:not(.ws-is-mobile-platform) .ws-enabled.controls-Switcher:hover {
    &:not(.controls-Checked__checked) .controls-Switcher__line {
       .controls-Switcher__line_enabled-unchecked();
    }
-   &:not(.controls-Checked__checked) .controls-Switcher__btn {
-      border-color: @color_switcher_line;
-   }
 }
 
 .ws-disabled.controls-Switcher {
-   &:hover {
-      cursor: pointer; //??
-   }
-   &.controls-Checked__checked .controls-Switcher__btn:before {
-      background: @switcher-disabled-color_checked;
-   }
    &.controls-Checked__checked .controls-Switcher__line {
       .controls-Switcher__line_disabled-checked();
    }
@@ -116,34 +107,32 @@ body:not(.ws-is-mobile-platform) .ws-enabled.controls-Switcher:hover {
       .controls-Switcher__line_disabled-unchecked();
    }
    .controls-Switcher__btn {
-      border-color: @switcher-disabled-color;
-   }
-   &.controls-Checked__checked {
-      .controls-Switcher__btn {
-         border-color: @switcher-disabled-color_checked;
+      border-color: @border-color_Switcher-btn_disabled;
+      &:before {
+         background: @bg_Switcher-btn_disabled;
       }
    }
 }
 
-& when (@switcher-hover-border-width = @default-border-width) {
+& when (@border-width_Switcher_hover = @border-width_Switcher) {
    .controls-Switcher {
-      border-width: @default-border-width;
-      line-height: calc(~"@{switcher-height} - 2 * @{default-border-width}");
-      .switcherBorder(@default-border-width);
+      border-width: @border-width_Switcher;
+      line-height: calc(~"@{height_Switcher} - 2 * @{border-width_Switcher}");
+      .switcherBorder(@border-width_Switcher);
    }
 }
 
-& when not (@switcher-hover-border-width = @default-border-width) {
+& when not (@border-width_Switcher_hover = @border-width_Switcher) {
    .controls-Switcher {
       &:not(:hover), .ws-disabled&:hover {
-         border-width: @default-border-width;
-         line-height: calc(~"@{switcher-height} - 2 * @{default-border-width}");
-         .switcherBorder(@default-border-width);
+         border-width: @border-width_Switcher;
+         line-height: calc(~"@{height_Switcher} - 2 * @{border-width_Switcher}");
+         .switcherBorder(@border-width_Switcher);
       }
       .ws-enabled&:hover {
-         border-width: @switcher-hover-border-width;
-         line-height: calc(~"@{switcher-height} - 2 * @{switcher-hover-border-width}");
-         .switcherBorder(@switcher-hover-border-width);
+         border-width: @border-width_Switcher_hover;
+         line-height: calc(~"@{height_Switcher} - 2 * @{switcher-hover-border-width}");
+         .switcherBorder(@border-width_Switcher_hover);
       }
    }
 }

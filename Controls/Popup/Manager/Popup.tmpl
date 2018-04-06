@@ -1,13 +1,15 @@
-<div class="ws-Popup" attr:style="{{_resetMargin ? 'margin: 0'}}">
+<div class="ws-Popup">
     <ws:partial
+            attr:class="controls-Popup__template"
             template="{{_options.template}}"
             scope="{{_options.componentOptions}}"
             on:sendResult="_sendResult()"
             on:close="_close()"
             on:keyup="_keyUp()"
+            on:resize="_onResize()"
             on:focusIn="_focusIn()"
             on:focusOut="_focusOut()">
     </ws:partial>
-    <Controls:Event:Emitter event="resize" on:resize="_onResize()"/>
-    <Controls:Event:Emitter event="scroll" on:scroll="_onScroll()"/>
+    <Controls.Event.Emitter event="resize" on:resize="_update()"/>
+    <Controls.Event.Emitter event="scroll" on:scroll="_update()"/>
 </div>

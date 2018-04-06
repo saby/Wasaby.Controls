@@ -15,7 +15,7 @@ define('SBIS3.CONTROLS/Date/RangeBig', [
     * @control
     * @public
     *
-    * @demo SBIS3.CONTROLS.Demo.MyDateRangeBig
+    * @demo Examples/DateRangeBig/MyDateRangeBig/MyDateRangeBig
     */
    var DateRangeBig = DateRange.extend( /** @lends SBIS3.CONTROLS/Date/RangeBig.prototype */{
       $protected: {

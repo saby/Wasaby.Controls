@@ -27,7 +27,7 @@ define('SBIS3.CONTROLS/Switcher/Double',
     * @mixes SBIS3.CONTROLS/Mixins/Clickable
     * @mixes SBIS3.CONTROLS/Mixins/Checkable
     *
-    * @demo SBIS3.Demo.MySwitcherDouble
+    * @demo Examples/SwitcherDouble/MySwitcherDouble/MySwitcherDouble
     *
     * @author Журавлев М.С.
     *

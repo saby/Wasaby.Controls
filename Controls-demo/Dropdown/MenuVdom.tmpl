@@ -1,9 +1,9 @@
 <div class="controls-VDomMenu" style="padding: 50px;">
-   <Controls:Input:Text name='fakeText' bind:value="_stateText"/>
+   <Controls.Input.Text name='fakeText' bind:value="_stateText"/>
    <br />
 
    Простой
-   <Controls:Input:Dropdown on:selectedKeysChanged="_selectedItemsChangedHandler(0)"
+   <Controls.Input.Dropdown on:selectedKeysChanged="_selectedItemsChangedHandler(0)"
                           bind:selectedKeys="_selectedKeys0"
                           name="myDropdownList0"
                           keyProperty="id"
@@ -11,7 +11,7 @@
    <br />
 
    С кастомными шаблонами записи
-   <Controls:Input:Dropdown name="myDropdownList1"
+   <Controls.Input.Dropdown name="myDropdownList1"
                           bind:selectedKeys="_selectedKeys1"
                           keyProperty="id"
                           itemTemplateProperty="myTemplate"
@@ -19,7 +19,7 @@
    <br />
 
    С кастомными шаблонами
-   <Controls:Input:Dropdown name="myDropdownList2"
+   <Controls.Input.Dropdown name="myDropdownList2"
                           bind:selectedKeys="_selectedKeys2"
                           keyProperty="id"
                           itemTemplate="tmpl!Controls-demo/Dropdown/resources/ItemsTemplate2"
@@ -27,14 +27,14 @@
    <br />
 
    С иконками
-   <Controls:Input:Dropdown name="myDropdownList3"
+   <Controls.Input.Dropdown name="myDropdownList3"
                           bind:selectedKeys="_selectedKeys3"
                           keyProperty="id"
                           source="{{_getIconItems()}}"/>
    <br />
 
     С иерархией
-   <Controls:Input:Dropdown name="myDropdownList4"
+   <Controls.Input.Dropdown name="myDropdownList4"
                           bind:selectedKeys="_selectedKeys4"
                           keyProperty="id"
                           parentProperty="parent"
@@ -43,11 +43,104 @@
    <br />
 
    Со скроллом, шапкой и футером
-   <Controls:Input:Dropdown name="myDropdownList5"
+   <Controls.Input.Dropdown name="myDropdownList5"
                           on:footerClick="footerClickHandler()"
                           bind:selectedKeys="_selectedKeys5"
                           keyProperty="id"
+                          showHeader="{{true}}"
                           headTemplate="tmpl!Controls-demo/Dropdown/resources/headerTemplate"
                           footerTemplate="tmpl!Controls-demo/Dropdown/resources/footerTemplate"
                           source="{{_getMultiData()}}"/>
+   <br />
+   И немножко меню
+   <Controls.Button.MenuButton name="myMenuButton1"
+                  keyProperty="id"
+                  style="buttonDefault"
+                  icon="icon-24 icon-Author"
+                  caption="123"
+                  parentProperty="parent"
+                  nodeProperty="@parent"
+                  source="{{_getHierarchyMenuItems()}}"/>
+   <Controls.Button.MenuButton name="myMenuButton12"
+                   keyProperty="id"
+                   style="buttonDefault"
+                   icon="icon-24 icon-Author"
+                   caption="контент"
+                   contentTemplate="tmpl!Controls-demo/Dropdown/resources/contentTemplate"
+                   parentProperty="parent"
+                   nodeProperty="@parent"
+                   source="{{_getHierarchyMenuItems()}}"/>
+   ехе
+   <Controls.Button.MenuButton name="myMenuButton2"
+                   keyProperty="id"
+                   style="linkMain"
+                   icon="icon-medium icon-Author"
+                   caption="menuLink"
+                   parentProperty="parent"
+                   nodeProperty="@parent"
+                   source="{{_getHierarchyMenuItems()}}"/>
+   хе
+   <Controls.Button.MenuButton name="myMenuButton3"
+                   keyProperty="id"
+                   style="linkMain"
+                   icon="icon-small icon-Author"
+                   caption="menuLink"
+                   parentProperty="parent"
+                   nodeProperty="@parent"
+                   source="{{_getHierarchyItems()}}"/>
+   ехе
+   <Controls.Button.MenuButton name="myMenuButton4"
+                   keyProperty="id"
+                   style="linkMain"
+                   icon="icon-small icon-Author"
+                   parentProperty="parent"
+                   nodeProperty="@parent"
+                   headCaption="wow so much vdom"
+                   source="{{_getHierarchyItems()}}"/>
+   хе
+   <Controls.Button.MenuButton name="myMenuButton5"
+                   keyProperty="id"
+                   style="linkMain"
+                   icon="icon-medium icon-Author"
+                   parentProperty="parent"
+                   nodeProperty="@parent"
+                   source="{{_getHierarchyItems()}}"/>
+   <Controls.Button.MenuButton name="myMenuButton6"
+                   keyProperty="id"
+                   style="buttonDefault"
+                   icon="icon-24 icon-Author"
+                   caption="123"
+                   parentProperty="parent"
+                   nodeProperty="@parent"
+                   class="menu-horizontal-revert"
+                   source="{{_getHierarchyMenuItems()}}"/>
+   хе
+   <Controls.Button.MenuButton name="myMenuButton8"
+                   keyProperty="id"
+                   style="linkMain"
+                   icon="icon-small icon-Author"
+                   parentProperty="parent"
+                   nodeProperty="@parent"
+                   source="{{_getHierarchyItems()}}">
+      <ws:headConfig menuStyle="duplicateHead" blabla="123"/>
+   </Controls.Button.MenuButton>
+   ехе
+   <Controls.Button.MenuButton name="myMenuButton9"
+                   keyProperty="id"
+                   style="linkMain"
+                   icon="icon-medium icon-Author"
+                   parentProperty="parent"
+                   nodeProperty="@parent"
+                   source="{{_getHierarchyItems()}}">
+      <ws:headConfig menuStyle="duplicateHead" />
+   </Controls.Button.MenuButton>
+   ааа
+   <Controls.Button.MenuButton name="myMenuButton9"
+                   keyProperty="id"
+                   style="linkMain"
+                   icon="icon-medium icon-Author"
+                   menuStyle="cross"
+                   source="{{_getDefaultMemory()}}">
+      <ws:headConfig menuStyle="cross"/>
+   </Controls.Button.MenuButton>
 </div>

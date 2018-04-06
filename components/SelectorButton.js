@@ -7,7 +7,7 @@ define('SBIS3.CONTROLS/SelectorButton',
    "tmpl!SBIS3.CONTROLS/SelectorButton/resources/contentTemplate",
    "tmpl!SBIS3.CONTROLS/SelectorButton/resources/defaultItemContentTemplate",
    "tmpl!SBIS3.CONTROLS/SelectorButton/resources/defaultItemTemplate",
-   "js!WSControls/Buttons/Button",
+   "SBIS3.CONTROLS/WSControls/Buttons/Button",
    "SBIS3.CONTROLS/Mixins/ItemsControlMixin",
    "SBIS3.CONTROLS/Mixins/MultiSelectable",
    "SBIS3.CONTROLS/Mixins/ActiveMultiSelectable",
@@ -74,9 +74,9 @@ define('SBIS3.CONTROLS/SelectorButton',
     * @cssModifier controls-SelectorButton__asLink Отображает текст как ссылку.
     * @cssModifier controls-SelectorButton__withoutCross Скрывает крестик справа от текста.
     *
-    * @demo SBIS3.DOCS.SelectorButtonLink Пример 1. Кнопка выбора в виде иконки, поле ввода отсутствует. Вызов справочника производится кликом по кнопке с иконкой. Все выбранные значения будут отображаться справа от кнопки.
+    * @demo Examples/SelectorButton/SelectorButtonLink/SelectorButtonLink Пример 1. Кнопка выбора в виде иконки, поле ввода отсутствует. Вызов справочника производится кликом по кнопке с иконкой. Все выбранные значения будут отображаться справа от кнопки.
     * В режиме множественного выбора сброс выбранных значений производится массово кликом по серому крестику.
-    * @demo SBIS3.DOCS.SelectorButtonSingle Пример 2. Кнопка выбора в виде кнопки-ссылки, поле ввода отсутствует. Вызов справочника производится кликом по ссылке. Все выбранные значения будут отображаться в качестве текста кнопки.
+    * @demo Examples/SelectorButton/SelectorButtonSingle/SelectorButtonSingle Пример 2. Кнопка выбора в виде кнопки-ссылки, поле ввода отсутствует. Вызов справочника производится кликом по ссылке. Все выбранные значения будут отображаться в качестве текста кнопки.
     * В режиме множественного выбора удаление выбранных значений производится массово кликом по серому крестику. Для корректного отображения кнопки-ссылки используется CSS-модификатор "controls-SelectorButton__asLink".
     *
     * @category Button
@@ -119,7 +119,7 @@ define('SBIS3.CONTROLS/SelectorButton',
              *    <options name="dictionaries" type="array">
              *       <options>
              *          <option name="caption">Сотрудники</option>
-             *          <option name="template">js!SBIS3.MyArea.DictEmployees</option>
+             *          <option name="template">Examples/MyArea/DictEmployees</option>
              *       </options>
              *    <options>
              * </pre>

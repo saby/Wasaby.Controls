@@ -3,6 +3,7 @@
    min-height: @DropdownList-height;
    box-sizing: border-box;
    position: relative;
+   line-height: normal;
    .controls-DropdownList__selectedItem {
       .flexbox();
       width: 100%;
@@ -27,7 +28,7 @@
 
       &:hover {
         .controls-DropdownList__arrowIcon {
-          color: @DropdownList-linkStyleHoverColor!important;
+          fill: @DropdownList-linkStyleHoverColor!important;
         }
       }
       * {
@@ -37,8 +38,7 @@
    .controls-DropdownList__beforeCaptionWrapper {
       display: none;
       position: relative;
-      top: @DropdownList-before-caption-wrapper-top;
-      line-height: @size_DropDownList_arrow!important;
+      height: @size_DropDownList_arrow!important;
       .flex-shrink(0);
    }
    .controls-DropdownList__afterCaptionWrapper {
@@ -79,7 +79,10 @@
    .controls-DropdownList__arrowIcon {
       font-size: @size_DropDownList_filter_cross !important;
       font-family: 'cbuc-icons' !important;
-      color: @color-DropDownList_arrowIcon;
+      fill: @color-DropDownList_arrowIcon;
+      height: @height_DropDownList_arrow-icon;
+      width: @width_DropDownList_arrow-icon;
+      margin: @padding_DropDownList_arrow-icon; //в оффлайн престе padding на svg не работает, работает margin
    }
    &.controls-DropdownList__type-filter {
       .controls-DropdownList__afterCaptionWrapper {
@@ -102,7 +105,7 @@
      .controls-DropdownList__selectedItem {
         .controls-DropdownList__beforeCaptionWrapper {
            .controls-DropdownList__arrowIcon {
-              color: @DropdownList-disabled-text !important;
+              fill: @DropdownList-disabled-text !important;
            }
         }
         .controls-DropdownList__textWrapper {
@@ -274,6 +277,9 @@
          width: 100%;
          min-height: @DropdownList-picker-head-height;
          line-height: @DropdownList-picker-head-height;
+         .controls-DropdownList__selectedItem {
+            height: auto;
+         }
       }
       .controls-DropdownList__arrowIcon:before {
          content: "\e673";
@@ -525,6 +531,9 @@
    .controls-DropdownList__value {
       display: inline-block;
       -ms-flex-negative: 1;
+   }
+   .controls-DropdownList__picker .controls-DropdownList__multiselect .controls-DropdownList__itemCheckBox {
+      bottom: 0;
    }
 }
 

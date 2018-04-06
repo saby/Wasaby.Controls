@@ -3,11 +3,11 @@
  *
  * Author: Ivan Uvarov (is.uvarov@tensor.ru)
  */
-define('js!WSControls/Containers/MasterDetail',
+define('SBIS3.CONTROLS/WSControls/Containers/MasterDetail',
    [
       'Core/Control',
-      'tmpl!WSControls/Containers/MasterDetail',
-      'css!WSControls/Containers/MasterDetail'
+      'tmpl!SBIS3.CONTROLS/WSControls/Containers/MasterDetail',
+      'css!SBIS3.CONTROLS/WSControls/Containers/MasterDetail'
    ],
 
    function (Base, template) {
@@ -24,7 +24,7 @@ define('js!WSControls/Containers/MasterDetail',
        *
        * @class WSControls/Containers/MasterDetail
        * @extends Core/Control
-       * @demo WSDemo/MasterDetail/MasterDetailDemo
+       * @demo Examples/MasterDetail/MasterDetailDemo
        * @author Uvarov Ivan (is.uvarov)
        *
        * @css controls-MasterDetail__masterContainer Class for changing master column styles.
@@ -35,7 +35,7 @@ define('js!WSControls/Containers/MasterDetail',
        */
 
       return Base.extend({
-         _controlName: 'WSControls/Containers/MasterDetail',
+         _controlName: 'SBIS3.CONTROLS/WSControls/Containers/MasterDetail',
          _template: template,
          _selected: null
       });

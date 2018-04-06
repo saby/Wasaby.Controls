@@ -25,7 +25,7 @@
 @font-size_InputRender_l:             @huge-text-size;
 @font-size_InputRender_default:       @font-size_InputRender_l;
 @padding_InputRender:                 0 round(15px * @multiplier);
-@padding_InputRender_left:            0 0 0 round(15px * @multiplier);
+@horizontal-padding_InputRender:      round(15px * @multiplier);
 @border-width_InputRender:            @default-border-width;
 @width_InputRender-tagStyle:          round(20px * @multiplier);
 @height_InputRender-tagStyle:         @width_InputRender-tagStyle;
@@ -42,6 +42,9 @@
 @margin-top_DropdownList:       round(-2px * @multiplier);
 @margin-left_DropdownList:      round(-17px * @multiplier);
 @right_DropdownList-icon:       round(16px * @multiplier);
+
+@padding_DropdownList-default:  round(16px * @multiplier);
+@padding_DropdownList-hierarchy:round(66px * @multiplier);
 //MoneyTextBox
 @font-size_MoneyTextBox-decimals: @small-text-size;
 //NumberTextBox
@@ -78,7 +81,7 @@
 @suggest-picker-standard-width:        round(700px * @multiplier);
 //itemsToolbar
 @list-view-actions-menu-margin:             round(-9px * @multiplier) 0 0 round(16px * @multiplier);
-@list-view-items-toolbar-icon-size:         round(42px * @multiplier);
+@list-view-items-toolbar-icon-size:         ceil(42px * @multiplier);
 @list-view-items-toolbar-menu-icon-size:    @icon-size_default_medium;
 @list-view-actions-menu-text-margin:        @margin_MenuItem-icon_medium;
 @list-view-actions-icon-top:                round(19px * @multiplier);
@@ -210,8 +213,10 @@
 @DropdownList-picker-fastdatafilter-offset:           0 0 0 round(25px * @multiplier);
 @DropdownList-picker-fdf-left:                        round(-17px * @multiplier);
 @size_DropDownList_filter_cross:                      round(42px * @multiplier);
+@height_DropDownList_arrow-icon:                      round(24px * @multiplier);
+@width_DropDownList_arrow-icon:                       round(14px * @multiplier);
+@padding_DropDownList_arrow-icon:                     0 round(13px * @multiplier) 0 round(15px * @multiplier);
 @size_DropDownList_arrow:                             round(42px * @multiplier);
-@DropdownList-before-caption-wrapper-top:             round(1px * @multiplier);
 @DropdownList-footer-hasMore-top-multiselect:         round(13px * @multiplier); //(78-52)/2
 //Marker
 @background-size_Marker:                              round(6px * @multiplier);
@@ -280,7 +285,7 @@
 @switcherline-height:                                 round(4px * @multiplier);
 @switcherline-width:                                  round(76px * @multiplier);
 @font-size_Switcher_text:                             @large-text-size;
-@text-decoration_switcher_text_unselected_hover:      none;
+@text-decoration_switcher_text_unselected_hover:      underline;
 
 //VDOM Switcher
 @width_Switch:                                      round(100px * @multiplier);
@@ -288,7 +293,6 @@
 @border-radius_Switch:                              round(28px * @multiplier);
 @size_Switch-marker:                                round(26px * @multiplier);
 @border-width_Switch-marker:                        round(3px * @multiplier);
-@border-width_Switch-marker_hover:                  round(3px * @multiplier);
 @size_Switch-dot:                                   ceil(14px * @multiplier);
 @margin_Switch-text:                                round(16px * @multiplier);
 @height_Switch-line:                                round(4px * @multiplier);
@@ -349,6 +353,7 @@
 @left_MenuIcon-hideHeader-round24_icon:               round(4px * @multiplier);
 @line-height_MenuIcon-hideHeader-round24_icon:        @icon-size_default_medium;
 @margin_MenuIcon-hideHeader-round24_text:             round(6px * @multiplier) 0 round(6px * @multiplier) round(60px * @multiplier);
+@margin_MenuIcon-hideHeader-round24-border_text:      0 0 0 round(70px * @multiplier);
 @margin_MenuIcon_size-l:                              round(-1px * @multiplier) 0 0 round(-4px * @multiplier);
 @top_MenuIcon_bordered_offset_s:                      round(16px * @multiplier);
 @left_MenuIcon_bordered_offset_m:                     round(12px * @multiplier);
@@ -356,6 +361,17 @@
 //MenuButton
 @menu-button-menu-margin:                             round(-1px * @multiplier) 0 0 round(0 * @multiplier);
 @menu-button-header-font-size:                        @font-size_Button_default;
+
+@margin-top_MenuButton_button:                        round(-11px * @multiplier);
+@margin-top_MenuButton_link_small:                    round(-24px * @multiplier);
+@margin-left_MenuButton_link_small:                   round(-17px * @multiplier);
+@margin-top_MenuButton_link_medium:                   round(-19px * @multiplier);
+@margin-left_MenuButton_link_medium:                  round(-17px * @multiplier);
+
+
+@width-Dropdown-cross:                                round(42px * @multiplier);
+@height-Dropdown-cross:                               round(42px * @multiplier);
+@font-size-Dropdown-cross:                            round(42px * @multiplier);
 //CommandsButton
 @menu-item-expand-padding-right:                      round(66px * @multiplier)!important;
 @commands-button-close-button-size:                   round(42px * @multiplier);
@@ -385,7 +401,7 @@
 @date-range-choose-year-margin-bottom:                0;
 //ItemsToolbar
 @list-view-items-toolbar-right:                        0;
-@list-view-items-toolbar-padding:                      round(4px * @multiplier) round(16px * @multiplier) round(4px * @multiplier) round(16px * @multiplier);
+@list-view-items-toolbar-padding:                      round(3px * @multiplier) round(16px * @multiplier) round(3px * @multiplier) round(16px * @multiplier);
 @height_IconButton_bordered_size-s:                         round(58px * @multiplier);
 @width_IconButton_bordered_size-s:                          round(58px * @multiplier);
 @height_IconButton_bordered_size-l:                    round(78px * @multiplier);
@@ -397,9 +413,9 @@
 @icon-button-edit-round-border-line-height:            round(58px * @multiplier);
 @list-view-items-toolbar-line-height:                  round(52px * @multiplier);
 @list-view-items-toolbar-icon-button-border-font-size: round(42px * @multiplier);
-@list-view-items-toolbar-bottom:                       0;
-@list-view-items-toolbar-vertical-line-height:         round(42px * @multiplier);
-@list-view-actions-item-height:                        round(42px * @multiplier);
+@list-view-items-toolbar-bottom:                       1px;
+@list-view-items-toolbar-vertical-line-height:         ceil(42px * @multiplier);
+@list-view-actions-item-height:                        ceil(42px * @multiplier);
 @list-view-actions-margin:                             0 round(8px * @multiplier);
 @list-view-items-toolbar-locked-right:                 0;
 @bottomStyle-items-toolbar-itemsContainer-margin-left: 0;
@@ -457,6 +473,7 @@
 @font-size_DateRangeBigChoose-MonthRangePickerItem-month-title:          round(24px * @multiplier);
 @font-size_DateRangeBigChoose-MonthRangePickerItem-month-date:           round(12px * @multiplier);
 @height_DateRangeBigChoose-MonthRangePickerItem-month-date:              round(16px * @multiplier);
+@font-size_DateRangeBigChoose_halfYearsPanel:                            @large-text-size;
 @font-size_DateRangeBigChoose_quartersPanel:                             @large-text-size;
 @width_MontView:                                                         round(558px * @multiplier);
 @height_DateRangeBigChoose-dates-months-button:                          round(45px * @multiplier);
@@ -533,6 +550,15 @@
 @font-size_listAddButton:                       @small-text-size;
 //ReportBrowser
 @height_ReportBrowser-top-content:              @default-height-big;
+//Switcher
+@width_Switcher:                                round(100px * @multiplier);
+@height_Switcher:                               round(50px * @multiplier);
+@border-radius_Switcher:                        round(24px * @multiplier);
+@width_Switcher-line:                           round(76px * @multiplier);
+@height_Switcher-line:                          round(4px * @multiplier);
+@border-width_Switcher-btn:                     round(3px * @multiplier);
+@size_Switcher-btn:                             round(26px * @multiplier);
+@size_Switcher-btn-before:                      ceil(14px * @multiplier);
 //Label
 @height_Label:                                  round(46px * @multiplier);
 //Tabs/Buttons
@@ -544,6 +570,37 @@
 @font-size_Tabs-item_selected:           @huge-text-size;
 @max-width_Tabs_item:                    round(1500px * @multiplier);
 @border-width_Tabs-item_hover_selected:  round(8px * @multiplier);
+//Scrollbar
+@width_Scrollbar:                        round(10px * @multiplier);
+@margin_Scrollbar:                       round(8px * @multiplier);
+@width_Scrollbar_animation:              round(16px * @multiplier);
+
+@min-height_Scrollbar-thumb:             round(100px * @multiplier);
+@border-radius_Scrollbar-thumb:          round(5px * @multiplier);
+@border-radius_Scrollbar-thumb_animation:round(10px * @multiplier);
+//Scroll
+@height-gradient_Scroll-shadow:          round(32px * @multiplier);
 //FilterButton
 @font-size_FilterButton-icon:            round(38px * @multiplier);
 @font-size_FilterButton-text:            @large-text-size;
+//partScroll
+@data-grid-partScroll-thumb-border-radius:      round(5px * @multiplier);
+@data-grid-partScroll-thumb-border-radius-hover:round(8px * @multiplier);
+@data-grid-partScroll-thumb-width:              round(160px * @multiplier);
+@data-grid-partScroll-thumb-height-hover:       round(16px * @multiplier);
+@data-grid-partScroll-thumb-height:             round(10px * @multiplier);
+@data-grid-partScroll-thumb-top-shift:          round(-6px * @multiplier);
+@data-grid-partScroll-thumb-clicked-top-shift:  round(-9px * @multiplier);
+//itemActions
+@height_itemActions_inside:                     round(42px * @multiplier);
+@height_itemAction_outside:                     round(75px * @multiplier);
+@margin_itemActions_action:                     0 round(8px * @multiplier);
+@padding_itemActions_outside:                   round(8px * @multiplier) 0;
+@padding_itemActions_inside:                    round(3px * @multiplier) round(16px * @multiplier);
+
+//FastFilter
+@icon-size_FastFilter:                      round(42px * @multiplier);
+@spacing_FastFilter-item:                   0 round(8px * @multiplier) 0 0;
+@height_FastFilter-iconArrow:               round(24px * @multiplier);
+@width_FastFilter-iconArrow:                round(24px * @multiplier);
+@spacing_FastFilter-between-icon-text:      0 round(4px *@multiplier) 0 round(4px *@multiplier);

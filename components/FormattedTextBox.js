@@ -16,7 +16,7 @@ define('SBIS3.CONTROLS/FormattedTextBox',
     * и останется ввести только недостающие символы.
     * @class SBIS3.CONTROLS/FormattedTextBox
     * @extends SBIS3.CONTROLS/FormattedTextBox/FormattedTextBoxBase
-    * @demo SBIS3.CONTROLS.Demo.MyFormattedTextBox
+    * @demo Examples/FormattedTextBox/MyFormattedTextBox/MyFormattedTextBox
     * @author Зайцев А.С.
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip

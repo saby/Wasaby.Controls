@@ -23,7 +23,7 @@ define('SBIS3.CONTROLS/Date/RangeSlider',[
     * @mixes SBIS3.CONTROLS/Mixins/DateRangeChoosePickerMixin
     *
     * @author Миронов А.Ю.
-    * @demo SBIS3.CONTROLS.Demo.MyDateRangeSlider
+    * @demo Examples/DateRangeSlider/MyDateRangeSlider/MyDateRangeSlider
     *
     * @control
     * @public
@@ -225,7 +225,8 @@ define('SBIS3.CONTROLS/Date/RangeSlider',[
                side: 'top'
             },
             closeByExternalClick: true,
-            className: 'controls-DateRangeSlider__picker-shadow ' +  pickerCss
+            className: 'controls-DateRangeSlider__picker-shadow ' +  pickerCss,
+            _canScroll: true
          };
       },
 

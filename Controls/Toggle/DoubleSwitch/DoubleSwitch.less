@@ -8,6 +8,9 @@
    border-radius: @border-radius_Switch;
    border-style: solid;
    box-sizing: border-box;
+}
+
+.controls-DoubleSwitch__toggle_enabled {
    cursor: pointer;
 }
 
@@ -68,8 +71,15 @@
    border-width: @border-width_Switch-marker;
    border-radius: 100%;
    box-sizing: border-box;
-   border-color: @border-color_Switch-marker_checked;
    position: relative;
+}
+
+.controls-DoubleSwitch__marker_enabled {
+   border-color: @border-color_Switch-marker_enabled;
+}
+
+.controls-DoubleSwitch__marker_disabled {
+   border-color: @border-color_Switch-marker_disabled;
 }
 
 .controls-DoubleSwitch__marker:before {
@@ -77,11 +87,18 @@
    width: @size_Switch-dot;
    height: @size_Switch-dot;
    border-radius: 100%;
-   background: @background_Switch-dot;
    display: inline-block; //Для псевдоэлементов в IE нужно высталять хоть какой-нибудь display, иначе они не отображаются
    //Не получится выровнять с помощью флексов, т.к. IE ставит не по центру, а вообще случайным образом: https://jsfiddle.net/n1gyq4to/
    position: absolute;
    margin: (@size_Switch-marker - @size_Switch-dot) / 2 - @border-width_Switch-marker;
+}
+
+.controls-DoubleSwitch__marker_enabled:before {
+   background: @background_Switch-dot_enabled;
+}
+
+.controls-DoubleSwitch__marker_disabled:before {
+   background: @background_Switch-dot_disabled;
 }
 
 .controls-DoubleSwitch__text_vertical {
@@ -100,14 +117,8 @@
 }
 
 .ws-is-desktop-platform {
-   .controls-DoubleSwitch_enabled:hover {
-      .controls-DoubleSwitch__marker { //Здесь вложенность не избежать, т.к. по ховеру на контейнере должен меняться размер кнопки
-         border-width: @border-width_Switch-marker_hover;
-         &:before {
-            top: @border-width_Switch-marker - @border-width_Switch-marker_hover;
-            left: @border-width_Switch-marker - @border-width_Switch-marker_hover;
-         }
-      }
+   .controls-DoubleSwitch__marker_enabled:hover {
+      border-color: @border-color_Switch_marker_enabled_hover;
    }
 
    .controls-DoubleSwitch__text_enabled_unselected:hover {

@@ -5,7 +5,7 @@ define('SBIS3.CONTROLS/Mixins/MultiSelectable', [
    "Core/moduleStubs",
    "Core/IoC",
    "WS.Data/Collection/List",
-   "SBIS3.CONTROLS/Utils/ArraySimpleValuesUtil",
+   "Controls/Utils/ArraySimpleValuesUtil",
    "Core/helpers/Object/isEqual",
    "Core/core-instance",
    "Core/helpers/Function/forAliveOnly",
@@ -760,16 +760,18 @@ define('SBIS3.CONTROLS/Mixins/MultiSelectable', [
                             /* Проверка на случай отмены загрузки, т.к. parallelDeferred не отменяет зависимые дефереды */
                             if(!dMultiResult.getResult().isReady()) {
                                self._options.selectedItems.add(record);
+                               self._selectedItemLoadCallback(record);
                             }
                             return record;
                          },
-                         function(key) {
+                         function(key, error) {
                             IoC.resolve('ILogger').info('MultiSelectable', 'У контрола ' + self.getName() + ' не удалось вычитать запись по ключу ' + key);
                             /* Если запись не удалось вычитать по ключу -> записи с таким ключем нет в источнике,
                                удаляем такой ключ из набора выбранных.
                                Делаем пока только для источников которые работают по RPC,
                                чтобы не ломать людям текущее поведение, если они работют с Memory источником. */
                             if (cInstance.instanceOfModule(self._dataSource, 'WS.Data/Source/Rpc')) {
+                               self._notify('onDataLoadError', error);
                                self._removeItemsSelection([key]);
                             }
                          }.bind(this, loadKeysArr[j])
@@ -789,6 +791,10 @@ define('SBIS3.CONTROLS/Mixins/MultiSelectable', [
             self._loadItemsDeferred.callback(this._options.selectedItems);
          }
          return this._loadItemsDeferred;
+      },
+
+      _selectedItemLoadCallback: function() {
+
       },
 
       /**

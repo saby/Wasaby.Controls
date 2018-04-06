@@ -114,6 +114,7 @@ define('SBIS3.CONTROLS/EditAtPlace',
                 * Если указано, текст будет переноситься, убираясь в ширину контейнера.
                 */
                multiline: false,
+               inputType: 'Text',
 
                dateDecoratorMask: 'DD.MM.YY',
 

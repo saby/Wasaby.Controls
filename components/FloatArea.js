@@ -12,7 +12,26 @@ define('SBIS3.CONTROLS/FloatArea', [
 ], function(CompoundControl, PopupMixin, LikeWindowMixin, dotTpl, TemplateUtil) {
 
    'use strict';
-    
+
+
+/**
+ * Всплывающая панель
+ * Панель, которая либо выезжает с левого края, либо появляется с правого края с fadeIn
+ * При открытии панели происходит поиск контрола, для которого установлен CSS-класс ws-autofocus.
+ * <ol>
+ * <li>Если подходящий контрол найден, на него устанавливается фокус методом {@link setActive}. В случае, если класс установлен на панель, фокус устанавливается на дочерний компонент панели согласно установленным tabindex. В случае, если класс установлен на компонент внутри панели, то поиск будет происходить внутри нее;</li>
+ *    <li>Если такой контрол не найден:
+ *       <ul><li>В случае загрузки страницы активируется первый попавшийся компонент.</li></ul>
+ *       <ul><li>В случае загрузки панели происходит поиск согласно установленным tabindex. Если таких компонентов несколько, фокус устанавливается на первый найденный. Если ничего активировать не удается, фокус устанавливается на саму панель.</li></ul>
+ *    </li>
+ * </ol>
+ * @author Крайнов Д.О.
+ * @class Lib/Control/FloatArea/FloatArea
+ * @cssModifier ws-float-area-header-background Класс, задающий цвет пользовательской шапки.
+ * @extends Lib/Control/TemplatedArea/TemplatedArea
+ * @control
+ * @public
+ */
 
    var FloatArea = CompoundControl.extend([PopupMixin, LikeWindowMixin], /** @lends SBIS3.CONTROLS/FloatArea.prototype*/ {
       _dotTplFn : dotTpl,
@@ -27,7 +46,7 @@ define('SBIS3.CONTROLS/FloatArea', [
              /**
               * @cfg {String} Устанавливает имя компонента, который будет открыт на всплывающей панели, или вёрстку всего шаблона.
               * @remark
-              * Имя компонента устанавливают в формате "js!SBIS3.MyArea.MyComponent".
+              * Имя компонента устанавливают в формате "SBIS3/MyArea/MyComponent".
               */
             template: null,
             /** @cfg {Object} Опции для компонента, отображаемого внутри {@link template}

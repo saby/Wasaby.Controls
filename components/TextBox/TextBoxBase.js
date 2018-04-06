@@ -193,7 +193,21 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
             focusOnActivatedOnMobiles: false,
             textAlign: 'left',
             style: 'default',
-            inputType: 'Text'
+            inputType: 'Text',
+             /**
+              * @cfg {String} Устанавливает размер поля ввода.
+              * @remark
+              * По умолчанию значение опции "default" и зависит от темы.
+              * Значение "m" установит средний размер поля ввода.
+              * Значение "l" устaновит большой размер поля ввода.
+              * @example
+              * Пример 1. Большое поле ввода:
+              * фрагмент верстки:
+              * <pre class="brush:xml">
+              *     <option name="size">l</option>
+              * </pre>
+              */
+            size: 'default'
          }
       },
 

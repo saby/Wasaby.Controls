@@ -39,7 +39,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Provider/View',
          $protected: {
             _options: {
                /**
-                * @cfg {object[]} Список всех доступных провайдеров парсинга импортируемых данных
+                * @cfg {Array<object>} Список всех доступных провайдеров парсинга импортируемых данных
                 */
                parsers: [],
                /**
@@ -53,7 +53,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Provider/View',
                /**
                 * @cfg {string} Символы-разделители
                 */
-               separator: '',
+               separator: ''
             },
             // Компонент выбора провайдера парсинга импортируемых данных
             _parserView: null

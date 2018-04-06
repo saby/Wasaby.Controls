@@ -52,7 +52,10 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
        * @event onUpdateModel Происходит при сохранении записи в источнике данных диалога.
        * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
-       * @param {String} key Первичный ключ сохраняемой записи.
+       * @param {Object} additionalData Метаданные. Служебная информация, необходимая для синхронизации Действия.
+       * @param {String} additionalData.key Идентификатор сохранённой записи.
+       * @param {String} additionalData.idProperty Имя поля записи, в котором хранится первичный ключ. Значение параметра извлекается из опции {@link idProperty}.
+       * @param {Boolean} additionalData.isNewRecord Признак "Новая запись", который означает, что запись инициализирована в источнике данных, но не сохранена.
        */
       /**
        * @event onDestroyModel Происходит при удалении записи из источника данных диалога.
@@ -165,7 +168,14 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
             }.bind(this));
          }
          else {
-            OpenEditDialog.superclass._openComponent.call(this, meta, mode);
+            if (this._isDialogClosing()) {
+               this._dialog.once('onAfterClose', function() {
+                  OpenEditDialog.superclass._openComponent.call(this, meta, mode);
+               }.bind(this));
+            }
+            else {
+               OpenEditDialog.superclass._openComponent.call(this, meta, mode);
+            }
          }
       },
 

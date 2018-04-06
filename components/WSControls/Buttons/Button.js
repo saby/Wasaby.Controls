@@ -1,9 +1,9 @@
 
-define('js!WSControls/Buttons/Button', [
+define('SBIS3.CONTROLS/WSControls/Buttons/Button', [
    'Core/constants',
-   'js!WSControls/Buttons/ButtonBase',
-   'tmpl!WSControls/Buttons/Button',
-   'tmpl!WSControls/Buttons/resources/contentTemplate'
+   'SBIS3.CONTROLS/WSControls/Buttons/ButtonBase',
+   'tmpl!SBIS3.CONTROLS/WSControls/Buttons/Button',
+   'tmpl!SBIS3.CONTROLS/WSControls/Buttons/resources/contentTemplate'
 ], function(constants, ButtonBase, dotTplFn, contentTemplate) {
 
    'use strict';
@@ -21,7 +21,7 @@ define('js!WSControls/Buttons/Button', [
     * </ol>
     * @class WSControls/Buttons/Button
     * @extends WSControls/Buttons/ButtonBase
-	* @demo SBIS3.CONTROLS.Demo.MyButton
+	* @demo Examples/Button/MyButton/MyButton
     *
     * @author Крайнов Д.О.
     *
@@ -58,7 +58,7 @@ define('js!WSControls/Buttons/Button', [
     * @category Button
     * @public
     * @initial
-    * <component data-component='WSControls/Buttons/Button'>
+    * <component data-component='SBIS3.CONTROLS/WSControls/Buttons/Button'>
     *    <option name='caption' value='Кнопка'></option>
     * </component>
     */
@@ -93,19 +93,21 @@ define('js!WSControls/Buttons/Button', [
             primary: false,
             _iconDisabledClass: 'icon-disabled',
             style: null,
-            _type: ''
+            _type: '',
+            _iconState: null
          },
          _contentContainer: null,
          _iconClass: null,
-         _iconState: null
+
       },
 
 
-      _parseIconClass: function(icon) {
+      _parseIconClass: function(opts) {
           var iconStates = ['icon-primary', 'icon-hover', 'icon-error', 'icon-done', 'icon-disabled', 'icon-attention'],
               state = '',
               i = -1,
-              statePos = -1;
+              statePos = -1,
+              icon = opts.icon;
 
           if (icon) {
               this._iconClass = icon.indexOf('sprite:') === 0 ? icon.substr(7) : icon;
@@ -115,19 +117,18 @@ define('js!WSControls/Buttons/Button', [
                   state = iconStates[i];
                   statePos = this._iconClass.indexOf(state);
               }
-              this._iconState = statePos !== -1 ? state : null;
+              opts._iconState = statePos !== -1 ? state : null;
 
               if(statePos !== -1){
-                  this._iconClass = this._iconClass.substring(0, statePos) + this._iconClass.substring(statePos + state.length);
+                  opts._iconClass = this._iconClass.substring(0, statePos) + this._iconClass.substring(statePos + state.length);
               }
           }
       },
 
       _modifyOptions: function() {
-          var opts = Button.superclass._modifyOptions.apply(this, arguments),
-              icon = opts.icon || opts._iconClass;
+          var opts = Button.superclass._modifyOptions.apply(this, arguments);
 
-          this._parseIconClass(icon);
+          this._parseIconClass(opts);
           opts.cssClassName += (' controls-ButtonBase_state-' + (opts.enabled ? 'enabled' : 'disabled'));
           return opts;
       },
@@ -193,7 +194,7 @@ define('js!WSControls/Buttons/Button', [
         * </pre>
         */
       _drawIcon: function() {
-          this._parseIconClass(this._options.icon);
+          this._parseIconClass(this._options);
           this._redrawButton();
       },
 
@@ -235,7 +236,7 @@ define('js!WSControls/Buttons/Button', [
 
           if(iconContainer.length) {
               iconContainer[0].className = iconContainer[0].className.replace(/(^|\s)icon-\S+/g, '');
-              iconContainer.addClass(this._iconClass + (this.isEnabled() ? (' ' + this._iconState || '') : (' ' + this._options._iconDisabledClass)));
+              iconContainer.addClass(this._options._iconClass + (this.isEnabled() ? (' ' + this._options._iconState || '') : (' ' + this._options._iconDisabledClass)));
           }
       },
 

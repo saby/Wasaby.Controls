@@ -8,12 +8,68 @@ define('SBIS3.CONTROLS/Mixins/SearchMixin',
        'SBIS3.CONTROLS/Mixins/SearchMixin/SearchMixinUtil'
     ], function(forAliveOnly, CommandDispatcher, SearchMixinUtil) {
 
-   /**
-    * Миксин, добавляющий иконку
-    * @mixin SBIS3.CONTROLS/Mixins/SearchMixin
-    * @public
-    * @author Крайнов Д.О.
-    */
+        /**
+         * Миксин, задающий любому полю ввода работу с поиском.
+         *
+         * <h3>Обязательные опции для работы с поиском</h3>
+         *
+         * Чтобы работал поиска данных, вам нужно задать контролу следующие настройки:
+         *
+         * 1. Источник данных в опции {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#dataSource dataSource};
+         *     * <a href="/doc/platform/developmentapl/service-development/service-contract/objects/blmethods/bllist/">списочный метод</a> в подопции {@link WS.Data/Source/SbisService#binding.query binding.query} источника данных;
+         * 2. Имя поискового параметра в опции {@link SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin#searchParam searchParam}.
+         *
+         * <h3>Как контрол обрабатывает поисковый запрос?</h3>
+         *
+         * Поиск данных происходит по следующему алгоритму:
+         *
+         * 1. Пользователь вводит поисковую фразу в поле ввода. Например, "Ярославль".
+         * 2. Если длина фразы превышает значение {@link SBIS3.CONTROLS/Mixins/SearchMixin#startCharacter startCharacter}, спустя интервал {@link SBIS3.CONTROLS/Mixins/SearchMixin#searchDelay searchDelay} вызывается списочный метод из источника данных. Например, "Регионы.СписокГородов".
+         * 3. Метод вызывается с аргументом <a href="/doc/platform/developmentapl/service-development/service-contract/objects/blmethods/bllist/declr/#parameters">Фильтр</a>, в составе которого передаётся параметр с именем {@link SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin#searchParam} и поисковой фразой в качестве значения.
+         * <pre>
+         * // В следующем примере показано, как мог быть вызван списочный метод из исходного JS-кода.
+         * requirejs(['WS.Data/Source/SbisService'], function(SbisService) {
+         *
+         *     // Аргумент "Фильтр".
+         *    var filters = {
+         *       // Здесь 'Поиск' - это имя поискового параметра, установленное в опции searchParam.
+         *       'Поиск': 'Ярославль'
+         *
+         *       // Или через получение значения из поля ввода.
+         *       // self - указатель на this родительского компонента.
+         *       'Поиск': self.getValueFromSearchSring();
+         *    },
+         *
+         *    // Объект БЛ, в котором определён списочный метод.
+         *    bl = new SbisService({endpoint: 'Регионы'});
+         *
+         *    // Вызов списочного метода.
+         *    bl.call('СписокГородов', filters, null, null).addCallbacks(...);
+         * });
+         * </pre>
+         * 4. Списочный метод обрабатывает поисковую фразу. Обработка происходит только при дополнительной настройке метода, о чём подробнее написано в следующем заголовке.
+         * 5. Формируется и отправляется на выполнение поисковый запрос к БД.
+         * 6. В ответе на запрос возвращается список записей для построения результатов поиска или автодополнения.
+         *
+         * <h3>Как списочный метод обрабатывает поисковую фразу?</h3>
+         *
+         * Чтобы настроить обработку поисковой фразы, вам нужно в [Genie](https://genie.sbis.ru) изменить <a href="/doc/platform/developmentapl/service-development/service-contract/objects/blmethods/bllist/declr/#parameters">параметры</a> вызываемого списочного метода.
+         *
+         * Например, выполните настройку:
+         *
+         * 1. В параметре **Filter parameters** создайте новый текстовый параметр с именем "Поиск".
+         *     * <u>Важно</u>: имя должно совпадать со значением, установленным в опции {@link SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin#searchParam searchParam}.
+         * 2. В параметре **Filter condition** создайте "SQL expression" со значением:
+         * <pre class="brush: sql">
+         *     lower(Поле:Наименование) LIKE ('%' || lower(Фильтр:Поиск) || '%')
+         * </pre>
+         * Этим выражением мы задали поиск любых совпадений поисковой фразы со значениями из полей "Наименование".
+         *
+         *
+         * @mixin SBIS3.CONTROLS/Mixins/SearchMixin
+         * @public
+         * @author Герасимов А.М.
+         */
 
    var SearchMixin = /**@lends SBIS3.CONTROLS/Mixins/SearchMixin.prototype  */{
       /**
@@ -33,31 +89,32 @@ define('SBIS3.CONTROLS/Mixins/SearchMixin',
          _searchText: '',
          _searchDelay: null,
          _options: {
-            /**
-             * @cfg {Number|null} Минимальное количество символов, с ввода которых отображается автодополнение.
-             * @remark
-             * Когда пользователь вводит необходимое количество символов, формируется запрос к бизнес-логике приложения для выборки релевантных записей и последующее построение результатов поиска в виде списка автодополнения.
-             * Точность поиска определяется настройками <a href="/doc/platform/developmentapl/service-development/service-contract/objects/blmethods/bllist/">списочного метода</a>, который установлен в настройках источника данных контрола.
-             *
-             * Каждый последующий ввод или удаление символа интерпретируется как формирование новой поисковой фразы и, как следствие, создание запроса к бизнес-логике приложения.
-             * В целях оптимизации, по умолчанию между запросами установлена задержка в 500 мс, чтобы создавать запрос не на каждый ввод символа, а на законченную поисковую фразу.
-             * Время задержки можно изменить в опции {@link searchDelay}.
-             *
-             * Установите в опции startCharacter значение null, чтобы автодополнение отображалось только при нажатии клавиши Enter или кнопки "Лупа", расположенной рядом с полем ввода.
-             * @see searchDelay
-             */
+             /**
+              * @cfg {Number|null} Минимальное количество символов, после ввода которых контрол выполняет поиск данных.
+              * @remark
+              * Опция startCharacter определяет лишь условие, при котором контрол создаёт запрос к источнику данных.
+              *
+              * Ознакомьтесь с описанием к {@link SBIS3.CONTROLS/Mixins/SearchMixin миксину}, чтобы понять алгоритм вызова списочного метода.
+              *
+              * <h4>Автодополнение</h4>
+              * Приведённая далее информация актуальна только для контролов, расширенных миксином {@link SBIS3.CONTROLS/Mixins/SuggestMixin} или {@link SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin}.
+              *
+              * Чтобы автодополнение отображалось только при нажатии клавиши Enter или кнопки "Лупа" (находится рядом с полем ввода), установите в опции startCharacter значение null.
+              *
+              * @see searchDelay
+              */
             startCharacter : 3,
-            /**
-             * @cfg {Number} Временная задержка между запросами к бизнес-логике. Используется функционалом автодополнения.
-             * @remark
-             * Значение устанавливается в миллисекундах.
-             *
-             * Временная задержка необходима для того, чтобы уменьшить частоту запросов автодополнения к бизнес-логике приложения.
-             *
-             * Отсутствие задержки может создавать повышенную нагрузку на сервер. Это происходит, когда автодополнение вызывается после каждого ввода или удаления символа, с учетом ограничения {@link startCharacter}.
-             *
-             * @see startCharacter
-             */
+             /**
+              * @cfg {Number} Задержка между запросами к источнику данных.
+              * @remark
+              * Значение устанавливается в миллисекундах.
+              *
+              * Чтобы на каждый ввод символа не отправлять запрос к источнику данных, для контрола по умолчанию задана временная задержка в 500 мс между такими запросами.
+              * Во-первых, любой ввод символа интерпретируется как формирование поисковой фразы, которая пользователем может расцениваться как незаконченная. Лучше дождаться окончания пользовательского ввода, чтобы отдавать релевантные результаты поиска.
+              * Во-вторых, с точки зрения оптимизации приложения лучше создать один запрос к источнику вместо множества, что позволит снизить нагрузку на сервер.
+              *
+              * @see startCharacter
+              */
             searchDelay : 500
          }
       },
@@ -72,6 +129,10 @@ define('SBIS3.CONTROLS/Mixins/SearchMixin',
             if(text !== this._searchText) {
                this._startSearch(text);
             }
+         },
+         
+         setText: function(text) {
+            SearchMixinUtil.textChangedHandler(this, text);
          }
       },
 
@@ -89,11 +150,7 @@ define('SBIS3.CONTROLS/Mixins/SearchMixin',
          },
          init: function () {
             /* Чтобы была возможность сбросить поиск, если контрол создаётся с уже проставленной опцией text */
-            var text = this.getText();
-            if(text && text.length >= this._options.startCharacter) {
-               this._onResetIsFired = false;
-               this._searchText = text;
-            }
+            SearchMixinUtil.textChangedHandler(this, this.getText());
          }
       },
 

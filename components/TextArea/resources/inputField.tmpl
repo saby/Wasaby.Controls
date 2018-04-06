@@ -18,4 +18,6 @@
 <div class="controls-TextArea__view__size__{{!! size ? size : 'm'}}
             {{ heightclassName ? heightclassName }}
             {{ !text ? 'controls-TextArea__view_empty'}}
-            controls-TextArea__view">{{ text ? wrapUrls(text) : placeholder && enabled ? placeholder }}</div>
+            controls-TextArea__view">
+    <ws:partial template="{{text ? wrapUrls(text) : placeholder && enabled ? placeholder}}" />
+</div>

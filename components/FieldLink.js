@@ -114,6 +114,13 @@ define('SBIS3.CONTROLS/FieldLink',
           },
           selectedMultipleItems: function(cfg) {
              return cfg.multiselect && cfg.selectedKeys.length > 1;
+          },
+          itemSelectHandler: function(self) {
+             if(self.getText() && !self._options.alwaysShowTextBox) {
+                /* Т.к. текст сбрасывается програмно, а searchMixin реагирует лишь на ввод текста с клавиатуры,
+                 то надо позвать метод searchMixin'a, который сбросит текст и поднимет событие */
+                self.resetSearch();
+             }
           }
        };
 
@@ -197,14 +204,14 @@ define('SBIS3.CONTROLS/FieldLink',
                  * @property {Object} dialogOptions Опции для диалога.
                  * Передаются при включенной опции <a href="/docs/js/SBIS3/CONTROLS/SelectorButton/options/useSelectorAction/">useSelectorAction</a>.
                  * <pre class="brush: xml">
-                 *     <option name="template">js!SBIS3.MyArea.MyDatGridView</option>
+                 *     <option name="template">Examples/MyArea/MyDatGridView</option>
                  *     <options name="dialogOptions">
                  *        <option name="minWidth">500px</option>
                  *     </options>
                  * </pre>
                  * или
                  * <pre class="brush: xml">
-                 *     <ws:Object template="js!SBIS3.MyArea.MyDatGridView">
+                 *     <ws:Object template="Examples/MyArea/MyDatGridView">
                  *        <ws:dialogOptions minWidth = "500px" />
                  *     </ws:Object>
                  * </pre>
@@ -228,7 +235,7 @@ define('SBIS3.CONTROLS/FieldLink',
                  * Значения переданных опций можно использовать в дочерних компонентах справочника через инструкции шаблонизатора.
                  * Например, передаём опции для построения справочника:
                  * <pre class="brush: xml">
-                 *     <option name="template">js!SBIS3.MyArea.MyDatGridView</option>
+                 *     <option name="template">Examples/MyArea/MyDatGridView</option>
                  *     <options name="componentOptions">
                  *        <option name="myShowHeadConfig" type="boolean">true</option>
                  *        <option name="myPageSizeConfig" type="number">5</option>
@@ -257,11 +264,11 @@ define('SBIS3.CONTROLS/FieldLink',
                  *     <options name="dictionaries" type="array">
                  *        <options>
                  *           <option name="caption">Сотрудники</option>
-                 *           <option name="template">js!SBIS3.MyArea.DictEmployees</option>
+                 *           <option name="template">Examples/MyArea/DictEmployees</option>
                  *        </options>
                  *        <options>
                  *           <option name="caption">Партнеры</option>
-                 *           <option name="template">js!SBIS3.MyArea.DictPartners</option>
+                 *           <option name="template">Examples/MyArea/DictPartners</option>
                  *        </options>
                  *     </options>
                  * </pre>
@@ -353,6 +360,7 @@ define('SBIS3.CONTROLS/FieldLink',
                    запись передаётся по ссылке и любые действия с ней будут отображаться и в списке.
                    Особенно актуально это когда зибниден selectedItem в добавлении по месту. */
                 this.addSelectedItems([item.clone()]);
+                _private.itemSelectHandler(this);
                 this.setText('');
              });
 
@@ -362,11 +370,7 @@ define('SBIS3.CONTROLS/FieldLink',
                Это всё актуально для поля связи без включенной опции alwaysShowTextBox,
                если она включена, то логика стирания текста обрабатывается по-другому. */
             this.subscribe('onSelectedItemsChange', function(event, result, changed) {
-               if(self.getText() && !self._options.alwaysShowTextBox) {
-                  /* Т.к. текст сбрасывается програмно, а searchMixin реагирует лишь на ввод текста с клавиатуры,
-                   то надо позвать метод searchMixin'a, который сбросит текст и поднимет событие */
-                  self.resetSearch();
-               }
+               _private.itemSelectHandler(self);
 
                /* При добавлении элементов надо запустить валидацию,
                   если же элементы были удалены,
@@ -383,8 +387,8 @@ define('SBIS3.CONTROLS/FieldLink',
                      или же по значениям в контексте */
                   self.getSelectedItems(true).addCallback(function(list) {
                      self.validate();
-                     return list
-                  })
+                     return list;
+                  });
                }
             });
 
@@ -520,7 +524,7 @@ define('SBIS3.CONTROLS/FieldLink',
            *        [
            *           {
            *              caption: 'Сотрудники',
-           *              template: 'js!SBIS3.MyArea.DictEmployees' // Компонент, на основе которого будет построен справочник поля связи
+           *              template: 'Examples/MyArea/DictEmployees' // Компонент, на основе которого будет построен справочник поля связи
            *              componentOptions: {
            *                 myShowHeadConfig: true,
            *                 myPageSizeConfig: 5
@@ -528,7 +532,7 @@ define('SBIS3.CONTROLS/FieldLink',
            *           },
            *           {
            *              caption: 'Сотрудники',
-           *              template: 'js!SBIS3.MyArea.DictEmployees' // Компонент, на основе которого будет построен справочник поля связи
+           *              template: 'Examples/MyArea/DictEmployees' // Компонент, на основе которого будет построен справочник поля связи
            *           }
            *        ]
            *     );
@@ -564,11 +568,11 @@ define('SBIS3.CONTROLS/FieldLink',
            * @example
            * @param {String|Object.<String, *>} template Компонент или конфигурация (объект) компонета, который будет использован для построения справочника.
            * @param {Object} componentOptions Опции, которые будут использованы в компоненте при построении справочника.
-           * Подробное описание можно прочесть {@link SBIS3.CONTROLS/dictionaries.typedef здесь}.
+           * Подробное описание можно прочесть {@link SBIS3.CONTROLS/FieldLink/dictionaries.typedef здесь}.
            * @example
            * <pre>
            *     this.showSelector(
-           *        'js!SBIS3.MyArea.MyDictionary',
+           *        'Examples/MyArea/MyDictionary',
            *        {
            *           title: 'Сотрудники предприятия'
            *        }
@@ -580,6 +584,7 @@ define('SBIS3.CONTROLS/FieldLink',
           showSelector: function(template, componentOptions, selectionType) {
              var actionCfg = {
                    selectionType: selectionType,
+                   selectedItems: this.getSelectedItems(),
                    multiselect: this.getMultiselect(),
                    opener: this
                 },
@@ -1200,7 +1205,11 @@ define('SBIS3.CONTROLS/FieldLink',
                     list = this.getList(),
                     newIndex;
                 
-                pickerContainer[0].scrollTop = pickerContainer[0].scrollHeight;
+                if (cInstance.instanceOfMixin(list, 'SBIS3.CONTROLS/Interfaces/IItemsControl')) {
+                   list.getActiveView()._getScrollWatcher().scrollTo('bottom');
+                } else {
+                   pickerContainer[0].scrollTop = pickerContainer[0].scrollHeight;
+                }
                 
                 /* При подскроле вниз всегда устанавливаем маркер на последнюю запись */
                 if(cInstance.instanceOfMixin(list, 'SBIS3.CONTROLS/Mixins/Selectable')) {

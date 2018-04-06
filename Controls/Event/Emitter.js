@@ -5,7 +5,7 @@
  * Created by dv.zuev on 17.01.2018.
  *
  * Вставляем в tmpl:
- * <Controls:Event:Emitter event="scroll" callback="myScrollCallback()" />
+ * <Controls.Event.Emitter event="scroll" callback="myScrollCallback()" />
  */
 define('Controls/Event/Emitter',
    [

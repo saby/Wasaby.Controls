@@ -77,7 +77,8 @@ define('Controls/Input/Suggest',
                textComponent:       self._children.suggestText,
                
                suggestTemplate:     options.suggestTemplate,
-               dataSource:          options.dataSource,
+               emptyTemplate:       options.emptyTemplate,
+               source:              options.source,
                filter:              options.filter,
                minSearchLength:     options.minSearchLength,
                searchDelay:         options.searchDelay,
@@ -109,9 +110,9 @@ define('Controls/Input/Suggest',
             _private.initSuggestController(this, this._options);
          },
 
-         _beforeUpdate: function() {
+         _beforeUpdate: function(newOptions) {
             this._simpleViewModel.updateOptions({
-               value: this._options.value
+               value: newOptions.value
             });
          },
          
@@ -135,14 +136,14 @@ define('Controls/Input/Suggest',
          
          _selectHandler: function(item) {
             /* move focus to input after select, because focus will be lost after closing popup  */
-            this.focus();
-            this._notify('select', [item]);
+            this.activate();
+            this._notify('choose', [item]);
             this._notify('valueChanged', [item.get(this._options.displayProperty)]);
          },
          
          _clearClick: function() {
             /* move focus to input after clear text, because focus will be lost after hiding cross  */
-            this.focus();
+            this.activate();
             this._suggestController.search('');
             this._notify('valueChanged', ['']);
          },
@@ -186,8 +187,12 @@ define('Controls/Input/Suggest',
             поэтому при ресайзе тоже закрываем.
             + у опенера сейчас отсутствует возможность обновить popup,
             кроме как вызвать его показ ещё раз */
-         _resize: function() {
-            _private.closePopup(this);
+         _resize: function(syntheticEvent, event) {
+            /* событие resize могут вызывать компоненты при изменении своего размера,
+               но нам интересен только resize у window, поэтому проверяем */
+            if (event.target === window) {
+               _private.closePopup(this);
+            }
          }
          
          // </editor-fold>

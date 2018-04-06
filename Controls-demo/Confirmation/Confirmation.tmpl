@@ -17,10 +17,12 @@
       <div class="controls-ConfirmationDemo__caption">{{block.caption}}</div>
       <div style="display: flex;">
          <ws:for data="item in block.items">
-            <div on:click="_open(item.cfg)" class="controls-ConfirmationDemo__button" style="background: {{item.background}}">{{item.caption}}</div>
+            <div on:click="_open(item.cfg)" class="controls-ConfirmationDemo__button" test_name="{{item.test_name}}" style="background: {{item.background}}">{{item.caption}}</div>
          </ws:for>
       </div>
    </ws:for>
 
-   <Controls:Popup:Opener:Confirmation name="popupOpener"/>
+   <div class="controls-ConfirmationDemo__caption" test_name="result">Result: {{_result}}</div>
+
+   <Controls.Popup.Opener.Confirmation name="popupOpener"/>
 </div>

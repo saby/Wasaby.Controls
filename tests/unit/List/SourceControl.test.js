@@ -68,7 +68,16 @@ define([
          };
          var ctrl = new SourceControl(cfg);
          ctrl.saveOptions(cfg);
-         ctrl._beforeMount(cfg);
+         var mountResult = ctrl._beforeMount(cfg);
+         assert.isTrue(!!mountResult.addCallback, '_beforeMount doesn\'t return deferred');
+
+         assert.isTrue(!!ctrl._sourceController, '_dataSourceController wasn\'t created before mounting');
+         assert.deepEqual(filter, ctrl._filter, 'incorrect filter before mounting');
+
+         //received state 3'rd argument
+         mountResult = ctrl._beforeMount(cfg, {}, rs);
+         assert.isFalse(!!(mountResult && mountResult.addCallback), '_beforeMount return deferred with received state');
+
          assert.isTrue(!!ctrl._sourceController, '_dataSourceController wasn\'t created before mounting');
          assert.deepEqual(filter, ctrl._filter, 'incorrect filter before mounting');
 
@@ -128,7 +137,17 @@ define([
                }
             }
          };
+         var dataLoadFired = false;
          var ctrl = new SourceControl(cfg);
+         
+         var originNotify = ctrl._notify;
+         ctrl._notify = function(event) {
+            if (event === 'onDataLoad') {
+               dataLoadFired = true;
+            }
+            originNotify.apply(ctrl, arguments);
+         };
+         
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
@@ -136,6 +155,7 @@ define([
             SourceControl._private.loadToDirection(ctrl, 'down');
             setTimeout(function(){
                assert.equal(6, SourceControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
+               assert.isTrue(dataLoadFired, 'onDataLoad event is not fired');
                done();
             }, 100)
          },100);
@@ -234,7 +254,7 @@ define([
 
          result = false;
          ctrl._notify = function(eventName, error) {
-            result = error
+            result = error[0];
          };
          SourceControl._private.processLoadError(ctrl, error);
 
@@ -536,6 +556,197 @@ define([
 
             done();
          }, 100)
+      });
+
+      it('_onCheckBoxClick', function () {
+         var rs = new RecordSet({
+            idProperty: 'id',
+            rawData: data
+         });
+
+         var listViewModel = new ListViewModel ({
+            items : rs,
+            idProperty: 'id',
+            selectedKeys : [1, 3]
+         });
+
+         var source = new MemorySource({
+            idProperty: 'id',
+            data: data
+         });
+
+         var cfg = {
+            selectedKeys : [1, 3],
+            viewName : 'Controls/List/SimpleList/ListView',
+            source: source,
+            listViewModel: listViewModel,
+            navigation: {
+               source: 'page',
+               sourceConfig: {
+                  pageSize: 6,
+                  page: 0,
+                  mode: 'totalCount'
+               },
+               view : 'infinity',
+               viewConfig: {
+                  pagingMode: 'direct'
+               }
+            }
+         };
+         var ctrl = new SourceControl(cfg);
+         ctrl.saveOptions(cfg);
+         ctrl._beforeMount(cfg);
+
+         ctrl._onCheckBoxClick({}, 2, 0);
+         assert.deepEqual([1, 3, 2], ctrl._listViewModel._multiselection._selectedKeys, 'SourceControl: MultiSelection has wrong selected keys');
+
+         ctrl._onCheckBoxClick({}, 1, 1);
+         assert.deepEqual([3, 2], ctrl._listViewModel._multiselection._selectedKeys, 'SourceControl: MultiSelection has wrong selected keys');
+      });
+
+      describe('EditInPlace', function() {
+         it('editItem', function(done) {
+            var opt = {
+               test: 'test'
+            };
+            var cfg = {
+               viewName : 'Controls/List/SimpleList/ListView',
+               source: source,
+               listViewModel: listViewModel
+            };
+            var ctrl = new SourceControl(cfg);
+            ctrl._children = {
+               editInPlace: {
+                  editItem: function(options) {
+                     assert.equal(options, opt);
+                     done();
+                  }
+               }
+            };
+            ctrl.editItem(opt);
+         });
+
+         it('addItem', function(done) {
+            var opt = {
+               test: 'test'
+            };
+            var cfg = {
+               viewName : 'Controls/List/SimpleList/ListView',
+               source: source,
+               listViewModel: listViewModel
+            };
+            var ctrl = new SourceControl(cfg);
+            ctrl._children = {
+               editInPlace: {
+                  addItem: function(options) {
+                     assert.equal(options, opt);
+                     done();
+                  }
+               }
+            };
+            ctrl.addItem(opt);
+         });
+
+         it('_onBeforeItemAdd', function() {
+            var opt = {
+               test: 'test'
+            };
+            var newOpt = {
+               test2: 'test'
+            };
+            var cfg = {
+               viewName : 'Controls/List/SimpleList/ListView',
+               source: source,
+               listViewModel: listViewModel
+            };
+            var ctrl = new SourceControl(cfg);
+            ctrl._notify = function(e, options) {
+               assert.equal(options[0], opt);
+               return newOpt;
+            };
+            var result = ctrl._onBeforeItemAdd({}, opt);
+            assert.equal(result, newOpt);
+         });
+
+         it('_onBeforeItemEdit', function() {
+            var opt = {
+               test: 'test'
+            };
+            var newOpt = {
+               test2: 'test'
+            };
+            var cfg = {
+               viewName : 'Controls/List/SimpleList/ListView',
+               source: source,
+               listViewModel: listViewModel
+            };
+            var ctrl = new SourceControl(cfg);
+            ctrl._notify = function(e, options) {
+               assert.equal(options[0], opt);
+               return newOpt;
+            };
+            var result = ctrl._onBeforeItemEdit({}, opt);
+            assert.equal(result, newOpt);
+         });
+
+         it('_onAfterItemEdit', function() {
+            var opt = {
+               test: 'test'
+            };
+            var cfg = {
+               viewName : 'Controls/List/SimpleList/ListView',
+               source: source,
+               listViewModel: listViewModel
+            };
+            var ctrl = new SourceControl(cfg);
+            ctrl._listViewModel = listViewModel; //аналог beforemount
+            ctrl._children = {itemActions: {updateActions: function() {}}};
+            ctrl._notify = function(e, options) {
+               assert.equal(options[0], opt);
+            };
+            ctrl._onAfterItemEdit({}, opt);
+         });
+
+         it('_onBeforeItemEndEdit', function() {
+            var opt = {
+               test: 'test'
+            };
+            var newOpt = {
+               test2: 'test'
+            };
+            var cfg = {
+               viewName : 'Controls/List/SimpleList/ListView',
+               source: source,
+               listViewModel: listViewModel
+            };
+            var ctrl = new SourceControl(cfg);
+            ctrl._listViewModel = listViewModel; //аналог beforemount
+            ctrl._children = {itemActions: {updateActions: function() {}}};
+            ctrl._notify = function(e, options) {
+               assert.equal(options[0], opt);
+               return newOpt;
+            };
+            var result = ctrl._onBeforeItemEndEdit({}, opt);
+            assert.equal(result, newOpt);
+         });
+
+         it('_onAfterItemEndEdit', function() {
+            var opt = {
+               test: 'test'
+            };
+            var cfg = {
+               viewName : 'Controls/List/SimpleList/ListView',
+               source: source,
+               listViewModel: listViewModel
+            };
+            var ctrl = new SourceControl(cfg);
+            ctrl._listViewModel = listViewModel; //аналог beforemount
+            ctrl._children = {itemActions: {updateActions: function() {}}};
+            ctrl._notify = function(e, options) {
+               assert.equal(options[0], opt);
+            };
+            ctrl._onAfterItemEndEdit({}, opt);
+         });
       });
    })
 });

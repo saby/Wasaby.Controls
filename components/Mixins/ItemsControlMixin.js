@@ -11,6 +11,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
    "WS.Data/Collection/IBind",
    "SBIS3.CONTROLS/Utils/TemplateUtil",
    "tmpl!SBIS3.CONTROLS/Mixins/ItemsControlMixin/resources/ItemsTemplate",
+   "tmpl!SBIS3.CONTROLS/Mixins/ItemsControlMixin/resources/defaultItemTemplate",
    "WS.Data/Utils",
    'Core/markup/ParserUtilities',
    "Core/Sanitize",
@@ -39,6 +40,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
    IBindCollection,
    TemplateUtil,
    ItemsTemplate,
+   defaultItemTemplate,
    Utils,
    ParserUtilities,
    Sanitize,
@@ -200,7 +202,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
       tplOptions.displayProperty = cfg.displayProperty;
       tplOptions.templateBinding = cfg.templateBinding;
       tplOptions.getPropertyValue = cfg._propertyValueGetter;
-      
+
       /* Для логирования */
       if(typeof window === 'undefined') {
          logger = IoC.resolve('ILogger');
@@ -279,8 +281,8 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
         * @example
         * <pre>
         *     Menu.subscribe('onDrawItems', function() {
-        *        if (Menu.getItemsInstance(2).getCaption() == 'Входящие') {
-        *           Menu.getItemsInstance(2).destroy();
+        *        if (Menu.getItemInstance(2).getCaption() == 'Входящие') {
+        *           Menu.getItemInstance(2).destroy();
         *        }
         *     });
         * </pre>
@@ -381,8 +383,8 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
             _canServerRender: false,
             _canServerRenderOther : canServerRenderOther,
             _serverRender: false,
-            _defaultItemTemplate: '',
-            _defaultItemContentTemplate: '',
+            _defaultItemTemplate: defaultItemTemplate,
+            _defaultItemContentTemplate: defaultItemTemplate,
             _prepareGroupId: prepareGroupId,
             _getGroupId: getGroupId,
             _createDefaultProjection : createDefaultProjection,
@@ -515,7 +517,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
              * <b>Пример 3.</b> Конфигурация источника данных через вёрстку компонента.
              * Второй способ основан на использовании функции, которая возвращает экземпляр класса источника.
              * <pre>
-             *    <option name="dataSource" type="function">js!SBIS3.MyArea.MyComponent:prototype.getMyDataSource</option>
+             *    <option name="dataSource" type="function">Examples/MyArea/MyComponent:prototype.getMyDataSource</option>
              * </pre>
              * Функция должна возвращать объект с конфигурацией источника данных.
              * <pre>
@@ -610,7 +612,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
              * @example
              * 1. Подключение шаблона группировки:
              * <pre>
-             *    define('js!SBIS3.MyArea.MyComponent', [ ..., "html!MyArea.MyComponent/resources/myTpl"], ...);
+             *    define('Examples/MyArea/MyComponent', [ ..., "tmpl!Examples/MyArea/MyComponent/resources/myTpl"], ...);
              * </pre>
              * 2. Настройка группировки:
              * <pre>
@@ -753,6 +755,10 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
              */
             itemsSortMethod: null,
             itemsFilterMethod: undefined,
+            /**
+             * @cfg {boolean} Устанавливает быструю отрисовку списков с группировкой.
+             * Подробнее см. в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/fast-drawing/#_3">разделе</a>.
+             */
             easyGroup: false,
             task1173770359: false
          },
@@ -1183,7 +1189,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
       },
 
       _redrawHierarchyPathItem: function(item) {},
-      
+
       //TODO надо избавиться от этого метода
       //если в списке есть группировка, при переносе в папку записи, следующей за ней
       //не происходит события move, а только меняется запись
@@ -1658,6 +1664,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
          }
       },
       /**
+       * @name SBIS3.CONTROLS/Mixins/ItemsControlMixin#reload
        * Перезагружает набор записей компонента с последующим обновлением отображения.
        * @remark
        * При вызове метода происходят события {@link onBeforeDataLoad} &#8594; {@link onDataLoad} &#8594; {@link onItemsReady}, а в случае ошибки &#8594; {@link onDataLoadError}
@@ -2251,12 +2258,12 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
         * </ul>
         * @example
         * <pre>
-        *     Menu.getItemsInstance(3).setCaption('SomeNewCaption');
+        *     Menu.getItemInstance(3).setCaption('SomeNewCaption');
         * </pre>
         * @see getItems
         * @see setItems
         * @see items
-        * @see getItemInstances
+        * @see getItemsInstances
         */
       getItemInstance: function (id) {
          var projItem = this._getItemProjectionByItemId(id);
@@ -2727,7 +2734,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
             }
          }
       },
-      
+
       _afterCollectionChange: function() {}
    };
 

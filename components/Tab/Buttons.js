@@ -25,14 +25,14 @@ define(
        * Чтобы скрыть одну вкладку, используйте следующий код:
        * <pre>
        *     // myId - идентификатор влкадки
-       *     this.getChildControlByName('TabButtons').getItemsInstances()[myId].hide()
+       *     this.getChildControlByName('TabButtons').getItemInstance(myId).hide()
        * </pre>
        * @class SBIS3.CONTROLS/Tab/Buttons
        * @extends SBIS3.CONTROLS/Radio/Group/RadioGroupBase
        * @author Крайнов Д.О.
        *
        * @public
-       * @demo SBIS3.CONTROLS.Demo.MyTabButtons
+       * @demo Examples/TabButtons/MyTabButtons/MyTabButtons
        *
        * @cssModifier controls-TabButtons__simple-view Модификатор для вкладок второго уровня
        * @cssModifier controls-TabButtons__simple-view-select Устанавливает для вкладок второго уровня выделение рыжим цветом. Использовать совместно с модификатором "controls-TabButtons__simple-view".

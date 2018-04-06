@@ -1,14 +1,26 @@
 <div class="controls-DropdownList__popup" depth="{{_options.depth}}">
-   <div if={{_options.headTemplate}} class="controls-DropdownList__header">
-      <ws:partial template="{{_options.headTemplate}}" />
-   </div>
-   <Controls:Container:Scroll attr:class="controls-ScrollContainer__flex controls-DropdownList__scroll">
+   <ws:if data="{{_options.showHeader}}">
+      <ws:partial template="{{_options.headTemplate ? _options.headTemplate : _defaultHeadTemplate}}"
+                  defaultContentHeadTemplate="{{_defaultContentHeadTemplate}}"
+                  duplicateHeadClassName="{{_duplicateHeadClassName}}"
+                  on:click="_headerClick()"
+                  scope="{{_headConfig}}"/>
+   </ws:if>
+   <Controls.Container.Scroll attr:class="controls-ScrollContainer__flex controls-DropdownList__scroll">
       <ws:content>
-         <ws:partial template="tmpl!Controls/Dropdown/resources/template/For" listModel="{{_listModel}}"
-                     itemTemplate="{{_options.itemTemplate}}" defaultItemTemplate="{{_defaultItemTemplate}}" resultHandler="{{resultHandler}}"></ws:partial>
+         <ws:if data="{{_options.contentTemplate}}">
+            <ws:partial template="{{_options.contentTemplate}}" scope="{{...}}"/>
+         </ws:if>
+         <ws:else>
+            <ws:partial template="tmpl!Controls/Dropdown/resources/template/For" listModel="{{_listModel}}"
+                        itemTemplate="{{_options.itemTemplate}}"
+                        defaultItemTemplate="{{_defaultItemTemplate}}"
+                        hierarchyPadding="{{(_options.headConfig.menuStyle === 'cross') || true ? true : false}}"
+                        resultHandler="{{resultHandler}}"></ws:partial>
+         </ws:else>
       </ws:content>
-   </Controls:Container:Scroll>
-   <div if={{_options.footerTemplate}} class="controls-DropdownList__footer" on:click="_footerClick()">
+   </Controls.Container.Scroll>
+   <div if="{{_options.footerTemplate}}" class="controls-DropdownList__footer" on:click="_footerClick()">
       <ws:partial template="{{_options.footerTemplate}}" />
    </div>
 </div>

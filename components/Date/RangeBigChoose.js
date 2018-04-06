@@ -14,7 +14,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
    'Core/helpers/Object/isEmpty',
    'SBIS3.CONTROLS/Date/RangeBigChoose/resources/Utils',
    "SBIS3.CONTROLS/Button",
-   'js!WSControls/Buttons/Button',
+   'SBIS3.CONTROLS/WSControls/Buttons/Button',
    "SBIS3.CONTROLS/Button/IconButton",
    'SBIS3.CONTROLS/Button/StateButton',
    "SBIS3.CONTROLS/Link",
@@ -22,7 +22,6 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
    'SBIS3.CONTROLS/Date/RangeSliderBase',
    "SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker",
    "SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker",
-   "Deprecated/Controls/CloseButton/CloseButton",
    "SBIS3.CONTROLS/Date/RangeBigChoose/resources/Validators",
    "browser!SBIS3.CONTROLS/ListView/resources/SwipeHandlers",
    'i18n!SBIS3.CONTROLS/Date/RangeBigChoose',
@@ -253,7 +252,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          this._dateRangePicker.subscribe('onMonthChanged', this._onDateRangePickerYearChanged.bind(this));
          this._dateRangePicker.subscribe('onMonthTitleMouseEnter', this._onDateRangePickerMonthTitleMouseEnter.bind(this));
          this._dateRangePicker.subscribe('onMonthTitleMouseLeave', this._datePickersResetActive.bind(this));
-         this._dateRangePicker.subscribe('onDayMouseEnter', this._dateOnDayMouseEnter.bind(this));
+         this._dateRangePicker.subscribe('onDisplayedRangeChanged', this._dateOnDisplayedRangeChanged.bind(this));
          this._dateRangePicker.subscribe('onPeriodMouseLeave', this._datePickersResetActive.bind(this));
 
          this.subscribe('onSelectionEnded', this._onSelectionEnded.bind(this));
@@ -378,15 +377,16 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          }
       },
 
-      _dateOnDayMouseEnter: function (event, date) {
+      _dateOnDisplayedRangeChanged: function (event, start, end) {
          if (this._dateRangePicker.isSelectionProcessing()) {
-            if (this.getStartValue() > date) {
+            if (this.getStartValue() > start) {
                this._endDatePickerResetActive();
-               this._datePickerSetActive(this._startDatePicker, date);
+               this._datePickerSetActive(this._startDatePicker, start);
             } else {
                this._startDatePickerResetActive();
-               this._datePickerSetActive(this._endDatePicker, date);
+               this._datePickerSetActive(this._endDatePicker, end);
             }
+            this.getChildControlByName('DateRangeHeader').setRange(start, end);
          } else {
             this._datePickerSetActive(this._startDatePicker);
          }

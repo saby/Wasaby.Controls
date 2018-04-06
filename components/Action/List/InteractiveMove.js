@@ -15,15 +15,10 @@ define('SBIS3.CONTROLS/Action/List/InteractiveMove',[
       'use strict';
       /**
        * Класс, описывающий действие перемещения записей по иерархии с возможностью выбора позиции перемещения через диалог. По умолчанию переносит выделенные записи.
-       * @class SBIS3.CONTROLS/Action/List/InteractiveMove
-       * @public
-       * @extends SBIS3.CONTROLS/Action/List/Move
-       * @mixes SBIS3.CONTROLS/Action/Mixin/DialogMixinл
-       * @author Ганшин Я.О.
-       * @example
+       * <br/>
        * Пример использования InteractiveMove:
        * <pre>
-       *    define('js!SBIS3.Demo.InteractiveMove', ['Lib/Control/CompoundControl/CompoundControl', 'SBIS3.CONTROLS/Action/List/InteractiveMove'],
+       *    define('Examples/MyArea/InteractiveMove', ['Lib/Control/CompoundControl/CompoundControl', 'SBIS3.CONTROLS/Action/List/InteractiveMove'],
        *    function(CompoundControl, InteractiveMove){
        *       var move;
        *       return CompoundControl.extend({
@@ -48,29 +43,41 @@ define('SBIS3.CONTROLS/Action/List/InteractiveMove',[
        * <pre>
        *     move.execute({movedItems: movedItems, componentOptions: {filter: {demo:'only'}}});
        * </pre>
-       * В xhtml навесим обработчик:
+       * В tmpl навесим обработчик:
        * <pre>
        *    <div class="MyListView">
-       *    <component data-component="SBIS3.CONTROLS/Button" name="ButtonHierMove" class="Button">
-       *       <option name="caption">Переместить</option>
-       *       <options name="handlers">
-       *          <option name="onActivated" type="function">js!SBIS3.Demo.InteractiveMove:prototype.buttonInteractiveMove
-       *       </option>
-       *       </options>
-       *    </component>
-       *    <component data-component="SBIS3.CONTROLS/ListView" name="MyListView">
-       *       <options name="itemsActions" type="Array">
-       *          <options>
-       *             <option name="name" value="moveUp"></option>
-       *             <option name="icon" value="sprite:icon-16 icon-folder icon-primary"></option>
-       *             <option name="title" value="Interactive move"></option>
-       *             <option name="isMainAction" value="true" type="boolean"></option>
-       *             <option name="onActivated" type="function">js!SBIS3.Demo.InteractiveMove:prototype.interactiveMove</option>
-       *          </options>
-       *       </options>
-       *    </component>
+       *    <SBIS3.CONTROLS.Button
+       *       name="ButtonHierMove"
+       *       class="Button"
+       *       caption="Переместить">
+       *       <ws:handlers>
+       *          <ws:Object>
+       *             <ws:onActivated>
+       *                <ws:Function>Examples/MyArea/InteractiveMove:prototype.buttonInteractiveMove</ws:Function>
+       *             </ws:onActivated>
+       *          </ws:Object>
+       *       </ws:handlers>
+       *    </SBIS3.CONTROLS.Button>
+       *    <SBIS3.CONTROLS.ListView
+       *       name="MyListView">
+       *       <ws:itemsActions>
+       *          <ws:Array>
+       *             <ws:Object name="moveUp" title="Interactive move" isMainAction="{{true}}" icon="sprite:icon-16 icon-folder icon-primary">
+       *                <ws:onActivated>
+       *                   <ws:Function>Examples/MyArea/InteractiveMove:prototype.interactiveMove</ws:Function>
+       *                </ws:onActivated>
+       *             </ws:Object>
+       *          </ws:Array>
+       *       </ws:itemsActions>
+       *    </SBIS3.CONTROLS.ListView>
        *    </div>
        * </pre>
+       *
+       * @class SBIS3.CONTROLS/Action/List/InteractiveMove
+       * @public
+       * @extends SBIS3.CONTROLS/Action/List/Move
+       * @mixes SBIS3.CONTROLS/Action/Mixin/DialogMixinл
+       * @author Ганшин Я.О.
        * @see WS.Data/MoveStrategy/Base
        * @ignoreOptions validators independentContext contextRestriction extendedTooltip
        *

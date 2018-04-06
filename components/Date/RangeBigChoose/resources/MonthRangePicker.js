@@ -154,12 +154,11 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
          if (this._options.quarterSelectionEnabled || this._options.halfyearSelectionEnabled) {
             container.on('click.monthRangePicker', '.controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button',
                this._onHalfyearQuarterClick.bind(this));
-            if (!detection.isMobileIOS) {
-               container.on('mouseenter.monthRangePicker', '.controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button',
-                  this._onHalfyearQuarterMouseEnter.bind(this));
-               container.on('mouseleave.monthRangePicker', '.controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button',
-                  this._onHalfyearQuarterMouseLeave.bind(this));
-            }
+
+            container.on(detection.isMobileIOS ? 'touchstart.monthRangePicker' : 'mouseenter.monthRangePicker', '.controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button',
+               this._onHalfyearQuarterMouseEnter.bind(this));
+            container.on(detection.isMobileIOS ? 'touchend.monthRangePicker' : 'mouseleave.monthRangePicker', '.controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button',
+               this._onHalfyearQuarterMouseLeave.bind(this));
          }
 
          // TODO: сделать что бы компонет наследовался от compoundControl и содержал внутри ScrollContainer,

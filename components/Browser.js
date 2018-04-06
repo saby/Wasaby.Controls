@@ -17,7 +17,7 @@ define('SBIS3.CONTROLS/Browser', [
     * @class SBIS3.CONTROLS/Browser
     * @extends Lib/Control/CompoundControl/CompoundControl
     * @author Крайнов Д.О.
-    * @demo SBIS3.CONTROLS.Demo.MyBrowser
+    * @demo Examples/Browser/MyBrowser/MyBrowser
     *
     * @ignoreEvents onAfterLoad onChange onStateChange
     * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
@@ -201,9 +201,9 @@ define('SBIS3.CONTROLS/Browser', [
              * Вызов панели производят кликом по иконке с шестерёнкой, которая расположена справа от строки поиска.
              * Иконка отображается, когда в опции установлено значение.
              * @example
-             * 1. В файле MyColumnsConfig.module.js описан RecordSet для конфигурации Панели редактирования колонок:
+             * 1. В файле MyColumnsConfig.js описан RecordSet для конфигурации Панели редактирования колонок:
              * <pre>
-             * define('js!SBIS3.MyArea.MyColumnsConfig', ['WS.Data/Collection/RecordSet'], function(RecordSet) {
+             * define('Examples/MyArea/MyColumnsConfig', ['WS.Data/Collection/RecordSet'], function(RecordSet) {
              *    var data = [
              *        {
              *           id: 1,
@@ -244,7 +244,7 @@ define('SBIS3.CONTROLS/Browser', [
              * </pre>
              * 2. Для JS-модуль реестра импортирован RecordSet:
              * <pre>
-             * define('js!SBIS3.MyArea.MyReportBrowser',[ ... , 'js!SBIS3.MyArea.MyColumnsConfig'], function(... , MyColumnsConfig) {
+             * define('Examples/MyArea/MyReportBrowser',[ ... , 'Examples/MyArea/MyColumnsConfig'], function(... , MyColumnsConfig) {
              *    ...
              *    $protected: {
              *       _options : {
@@ -262,9 +262,9 @@ define('SBIS3.CONTROLS/Browser', [
              * </pre>
              * 3. В разметке реестра передана конфигурация в опцию columnsConfig:
              * <pre>
-             *     <ws:SBIS3.Engine.ReportBrowser columnsConfig="{{ columnsConfig }}">
+             *     <SBIS3.ENGINE:Controls:Browser:Report columnsConfig="{{ columnsConfig }}">
              *         ...
-             *     </ws:SBIS3.Engine.ReportBrowser>
+             *     </SBIS3.ENGINE:Controls:Browser:Report>
              * </pre>
              * Для редактирования набора колонок (в том числе отличных от набора колонок данного браузера) используется команда showColumnsEditor (из любых подкомпонентов браузера)
              * <pre>
@@ -428,10 +428,10 @@ define('SBIS3.CONTROLS/Browser', [
           * @see ColumnsConfigObject
           * @see SBIS3.CONTROLS/Browser/ColumnsEditor/Editor#open
           *
-          * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButton Пример браузера с кнопкой редактора колонок
-          * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButtonWithPresets Пример браузера с кнопкой редактора колонок, с пресетами и группами колонок
-          * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndCustomButton Пример браузера с собственной кнопкой, открывающией редактор колонок
-          * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.AllCustom Пример с одиночной кнопкой, открывающией редактор колонок (без браузера)
+          * @demo Examples/ColumnsEditor/BrowserAndEditorButton/BrowserAndEditorButton Пример браузера с кнопкой редактора колонок
+          * @demo Examples/ColumnsEditor/BrowserAndEditorButtonWithPresets/BrowserAndEditorButtonWithPresets Пример браузера с кнопкой редактора колонок, с пресетами и группами колонок
+          * @demo Examples/ColumnsEditor/BrowserAndCustomButton/BrowserAndCustomButton Пример браузера с собственной кнопкой, открывающией редактор колонок
+          * @demo Examples/ColumnsEditor/AllCustom/AllCustom Пример с одиночной кнопкой, открывающией редактор колонок (без браузера)
           */
          CommandDispatcher.declareCommand(this, 'showColumnsEditor', this._showColumnsEditor);
       },
@@ -549,10 +549,10 @@ define('SBIS3.CONTROLS/Browser', [
        * @see ColumnsConfigObject
        * @see SBIS3.CONTROLS/Browser/ColumnsEditor/Editor#open
        *
-       * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButton Пример браузера с кнопкой редактора колонок
-       * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButtonWithPresets Пример браузера с кнопкой редактора колонок, с пресетами и группами колонок
-       * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndCustomButton Пример браузера с собственной кнопкой, открывающией редактор колонок
-       * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.AllCustom Пример с одиночной кнопкой, открывающией редактор колонок (без браузера)
+       * @demo Examples/ColumnsEditor/BrowserAndEditorButton/BrowserAndEditorButton Пример браузера с кнопкой редактора колонок
+       * @demo Examples/ColumnsEditor/BrowserAndEditorButtonWithPresets/BrowserAndEditorButtonWithPresets Пример браузера с кнопкой редактора колонок, с пресетами и группами колонок
+       * @demo Examples/ColumnsEditor/BrowserAndCustomButton/BrowserAndCustomButton Пример браузера с собственной кнопкой, открывающией редактор колонок
+       * @demo Examples/ColumnsEditor/AllCustom/AllCustom Пример с одиночной кнопкой, открывающией редактор колонок (без браузера)
        */
       _showColumnsEditor: function (options) {
          var hasArgs = options && typeof options === 'object';

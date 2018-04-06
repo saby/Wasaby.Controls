@@ -269,6 +269,9 @@
       &.controls-Checked__checked {
          .controls-TabButton__inner {
             color: @tab-button-simple-inner-checked-color;
+            .controls-TabButton__wrapper {
+               margin-bottom: 0;
+            }
          }
          &:after {
             background: @tab-button-simple-checked-bottomline-color;
@@ -295,10 +298,6 @@
    //Для главной вкладки, внутри которой 1 текстбокс c font-size: 18px. ошибка из-за overflow:hidden на редактировании
    .controls-EditAtPlace {
       &.controls-InputRender_size_l {
-         .controls-EditAtPlace__fieldWrapper {
-            position: relative;
-            top: -1px;
-         }
          .controls-InputRender_size_l.controls-InputRender {
             .flexbox();
          }
@@ -356,6 +355,12 @@
       }
    }
 }
+.ws-is-mobile-safari {
+   //решение только для ipad
+   .controls-TabButton.controls-Checked__checked .controls-TabButton__inner .controls-TabButton__wrapper {
+      margin-bottom: 0;
+   }
+}
 
 //модификатор, который возвращает дефолтные паддинги в редактирование по месту. Нужно пересмотреть стандарт на компонент.
 .controls-TabButton.controls-TabButton__main-item .controls-TabButton__fixEditAtPlace-padding.controls-EditAtPlace .controls-EditAtPlace__fieldWrapper {
@@ -364,13 +369,8 @@
 
 .ws-is-firefox {
    .controls-TabButton {
-      &:not(.controls-Checked__checked) .controls-TabButton__flex > .controls-TabButton__mainText {
-         position: relative;
-         top: 1px;
-      }
-      .controls-TabButton__flex .controls-TabButton__additionalText2 .controls-TextBox__field {
-         position: relative;
-         top: -1px;
+      .controls-TabButton__inner .controls-TabButton__wrapper {
+         margin-bottom: 0;
       }
    }
 }

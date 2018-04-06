@@ -70,7 +70,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
        * @cssModifier controls-ScrollContainer__hiddenScrollbar Скрывает отображение ползунка.
        * @cssModifier controls-ScrollContainer__flex Модификатор применяется в тех случаях, когда контрол встроен внутрь flex-контейнера.
        *
-       * @demo SBIS3.CONTROLS.Demo.MyScrollContainer Использование SBIS3.CONTROLS/ScrollContainer с автоподгрузкой вниз и с вложенным в него списком, который создан на основе класса {@link SBIS3.CONTROLS/ListView}.
+       * @demo Examples/ScrollContainer/MyScrollContainer/MyScrollContainer Использование SBIS3.CONTROLS/ScrollContainer с автоподгрузкой вниз и с вложенным в него списком, который создан на основе класса {@link SBIS3.CONTROLS/ListView}.
        *
        * @control
        * @public
@@ -257,7 +257,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                FloatAreaManager._scrollableContainers[this.getId()] = this.getContainer().find('.controls-ScrollContainer__content');
 
                this._initPaging();
-
+               this._resizeInner();
          },
 
          _hideBrowserScrollbar: function(){
@@ -310,12 +310,12 @@ define('SBIS3.CONTROLS/ScrollContainer', [
 
          // Показать скролл
          _showScrollbar: function() {
-            this._container.toggleClass('controls-ScrollContainer__scrollbar_show', true);
+            this._scrollbar._container.toggleClass('controls-ScrollContainer__scrollbar_show', true);
          },
 
          //Скрыть скролл
          _hideScrollbar: function() {
-            this._container.toggleClass('controls-ScrollContainer__scrollbar_show', false);
+            this._scrollbar._container.toggleClass('controls-ScrollContainer__scrollbar_show', false);
          },
 
          _subscribeOnScroll: function(){

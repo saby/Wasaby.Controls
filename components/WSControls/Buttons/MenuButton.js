@@ -1,5 +1,5 @@
-define('js!WSControls/Buttons/MenuButton', [
-   'js!WSControls/Buttons/Button',
+define('SBIS3.CONTROLS/WSControls/Buttons/MenuButton', [
+   'SBIS3.CONTROLS/WSControls/Buttons/Button',
    'SBIS3.CONTROLS/Mixins/PickerMixin',
    'SBIS3.CONTROLS/Mixins/DSMixin',
    'Core/IoC',
@@ -28,7 +28,7 @@ define('js!WSControls/Buttons/MenuButton', [
     * @remark
     * !Важно: Если в меню задан только один пункт, то меню НЕ будет показано, а при нажатии на кнопку будет выполнено действие, соответствующее этому пункту.
     * Кнопка с меню - это кнопка с выбором варината действия, и если возможно только одно действие, то оно и будет выполнено по нажатию.
-    * @demo SBIS3.CONTROLS.Demo.MyMenuButton Пример кнопки с выпадающим меню
+    * @demo Examples/MenuButton/MyMenuButton/MyMenuButton Пример кнопки с выпадающим меню
     *
     * @mixes SBIS3.CONTROLS/Mixins/PickerMixin
     * @mixes SBIS3.CONTROLS/Mixins/DSMixin
@@ -54,7 +54,7 @@ define('js!WSControls/Buttons/MenuButton', [
     * @public
     * @category Button
     * @initial
-    * <component data-component='WSControls/Buttons/MenuButton'>
+    * <component data-component='SBIS3.CONTROLS/WSControls/Buttons/MenuButton'>
     *    <option name='caption' value='Кнопка с меню'></option>
     *    <options name="items" type="array">
     *        <options>
@@ -252,7 +252,8 @@ define('js!WSControls/Buttons/MenuButton', [
             closeByExternalClick: true,
             closeOnTargetMove: true,
             targetPart: true,
-            footerTpl: this._options.footerTpl
+            footerTpl: this._options.footerTpl,
+            _canScroll: true
          };
          if(this._options.historyId){
              menuconfig['historyId'] = this._options.historyId;
@@ -408,7 +409,7 @@ define('js!WSControls/Buttons/MenuButton', [
       //Прокидываем вызов метода в меню
       getItemsInstances: function() {
          if (!this._picker) {
-            throw new Error('WSControls/Buttons/MenuButton::getItemsInstances  Попытка получения инстансов элементов меню до инициализации пикера.')
+            throw new Error('SBIS3.CONTROLS/WSControls/Buttons/MenuButton::getItemsInstances  Попытка получения инстансов элементов меню до инициализации пикера.')
          }
          return this._picker.getItemsInstances.apply(this._picker, arguments);
       },

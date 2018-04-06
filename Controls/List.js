@@ -5,7 +5,8 @@ define('Controls/List', [
    'Core/Control',
    'tmpl!Controls/List/SimpleList',
    'Controls/List/SimpleList/ListViewModel',
-   'Controls/List/SimpleList/ListView'
+   'Controls/List/SimpleList/ListView',
+   'Controls/List/EditInPlace'
 ], function (Control,
              ListControlTpl,
              ListViewModel
@@ -18,7 +19,10 @@ define('Controls/List', [
             items : cfg.items,
             idProperty: cfg.idProperty,
             displayProperty: cfg.displayProperty,
-            markedKey: cfg.markedKey
+            markedKey: cfg.markedKey,
+            selectedKeys: cfg.selectedKeys,
+            excludedKeys: cfg.excludedKeys,
+            itemsReadyCallback: cfg.itemsReadyCallback
          });
       }
    };
@@ -69,11 +73,62 @@ define('Controls/List', [
 
 
       _beforeUpdate: function(newOptions) {
-         if (newOptions.items && (newOptions.items != this._options.items)) {
+         if (newOptions.items && (newOptions.items !== this._options.items)) {
             this._viewModel.setItems(newOptions.items);
-         } else if (newOptions.selectedKey !== this._options.selectedKey) {
-            this._viewModel.setSelectedKey(newOptions.selectedKey);
+         } else if (newOptions.markedKey !== this._options.markedKey) {
+            this._viewModel.setMarkedKey(newOptions.markedKey);
          }
+      },
+
+
+      /**
+       * Starts editing in place.
+       * @param {ItemEditOptions} options Options of editing.
+       * @returns {Core/Deferred}
+       */
+      editItem: function(options) {
+         this._children.sourceControl.editItem(options);
+      },
+
+      /**
+       * Starts adding.
+       * @param {AddItemOptions} options Options of adding.
+       * @returns {Core/Deferred}
+       */
+      addItem: function(options) {
+         this._children.sourceControl.addItem(options);
+      },
+
+      _onBeforeItemAdd: function(e, options) {
+         return this._notify('beforeItemAdd', [options]);
+      },
+
+      _onBeforeItemEdit: function(e, options) {
+         return this._notify('beforeItemEdit', [options]);
+      },
+
+      _onAfterItemEdit: function(e, options) {
+         this._notify('afterItemEdit', [options]);
+      },
+
+      _onBeforeItemEndEdit: function(e, options) {
+         return this._notify('beforeItemEndEdit', [options]);
+      },
+
+      _onAfterItemEndEdit: function(e, options) {
+         this._notify('beforeItemEndEdit', [options]);
+      },
+
+      _beforeItemsRemove: function(event, items) {
+         return this._notify('beforeItemsRemove', [items]);
+      },
+
+      _afterItemsRemove: function (event, items, result) {
+         this._notify('afterItemsRemove', [items, result]);
+      },
+
+      removeItems: function(items) {
+         this._children.sourceControl.removeItems(items);
       }
    });
 

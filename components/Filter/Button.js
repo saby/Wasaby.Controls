@@ -44,7 +44,7 @@ define('SBIS3.CONTROLS/Filter/Button',
         * @mixes SBIS3.CONTROLS/Mixins/FilterMixin
         * @mixes SBIS3.CONTROLS/Mixins/PickerMixin
         *
-        * @demo SBIS3.DOCS.FilterButton
+        * @demo Examples/FilterButton/FilterButton/FilterButton
         *
         * @control
         * @public
@@ -153,12 +153,12 @@ define('SBIS3.CONTROLS/Filter/Button',
                  * Пример:
                  * <pre>
                  *    ...
-                 *    template: 'js!SBIS3.User.Info'
+                 *    template: 'Examples/MyArea/Info'
                  *    componentOptions: {
-             *       firstName: 'John',
-             *       secondName: 'Snow',
-             *       nationality: 'Westerosi'
-             *    }
+                 *       firstName: 'John',
+                 *       secondName: 'Snow',
+                 *       nationality: 'Westerosi'
+                 *    }
                  *    ...
                  * </pre>
                  */

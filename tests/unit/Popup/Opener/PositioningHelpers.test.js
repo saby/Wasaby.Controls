@@ -1,9 +1,9 @@
 define(
    [
-      'Controls/Popup/Opener/Stack/Strategy',
-      'Controls/Popup/Opener/Sticky/Strategy',
-      'Controls/Popup/Opener/Notification/Strategy',
-      'Controls/Popup/Opener/Dialog/Strategy'
+      'Controls/Popup/Opener/Stack/StackStrategy',
+      'Controls/Popup/Opener/Sticky/StickyStrategy',
+      'Controls/Popup/Opener/Notification/NotificationStrategy',
+      'Controls/Popup/Opener/Dialog/DialogStrategy'
    ],
 
    function (Stack, Sticky, Notification, Dialog) {
@@ -21,7 +21,7 @@ define(
                topScroll: 0
             };
 
-            Sticky.constructor._private.getWindowSizes = function(){
+            Sticky._private.getWindowSizes = function(){
               return {
                  width: 1920,
                  height: 1040
@@ -165,12 +165,12 @@ define(
                      height: 200,
                      margins: {
                         top: 0,
-                        left: 0
+                        left: 10
                      }
                   }
                }, targetCoords);
                assert.isTrue(position.top === 400);
-               assert.isTrue(position.left === 400);
+               assert.isTrue(position.left === 390);
             });
 
          });

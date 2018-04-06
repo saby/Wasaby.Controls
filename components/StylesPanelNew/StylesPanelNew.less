@@ -90,10 +90,12 @@
     border-radius: 3px;
     background: #fff;
     text-align: center;
-    line-height: 30px;
+    line-height: normal;
     padding: 0!important;
-    vertical-align: middle;
-    display: inline-block!important;
+    .inline-flexbox();
+    .align-items(center);
+    .justify-content(center);
+
     &.controls-Checked__checked{
       background: #F3F3F3;
     }
@@ -105,7 +107,6 @@
       height: 16px;
       display: inline-block;
       border-radius: 2px;
-      vertical-align: middle;
       .box-shadow(@styles-panel-color-shadow);
     }
   }

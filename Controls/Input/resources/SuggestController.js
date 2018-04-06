@@ -76,7 +76,7 @@ define('Controls/Input/resources/SuggestController',
             componentOptions: {
                width: container.offsetWidth,
                template: self._options.suggestTemplate,
-               dataSource: self._options.dataSource,
+               source: self._options.source,
                showAllOpener: self._options.showAllOpener,
                filter: _private.getSearchFilter(self, self._value)
             }
@@ -88,12 +88,13 @@ define('Controls/Input/resources/SuggestController',
          return moduleStubs.require(['Controls/Input/resources/SuggestPopupController', self._options.suggestTemplate]).addCallback(function(result) {
             if (!self._suggestPopupController) {
                self._suggestPopupController = new result[0]({
-                  dataSource: self._options.dataSource,
+                  source: self._options.source,
                   searchDelay: self._options.searchDelay,
                   popupOpener: self._options.suggestOpener,
                   navigation: self._options.navigation,
                   selectCallback: self._options.selectCallback,
-                  searchParam: self._options.searchParam
+                  searchParam: self._options.searchParam,
+                  emptyTemplate: self._options.emptyTemplate
                });
             }
             return self._suggestPopupController;

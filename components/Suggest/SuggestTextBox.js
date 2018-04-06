@@ -32,7 +32,7 @@ define('SBIS3.CONTROLS/Suggest/SuggestTextBox', [
     * @mixes SBIS3.CONTROLS/Mixins/SearchMixin
     * @mixes SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin
     *
-    * @demo SBIS3.CONTROLS.Demo.MySuggestTextBox Поле ввода с автодополнением
+    * @demo Examples/SuggestTextBox/MySuggestTextBox/MySuggestTextBox Поле ввода с автодополнением
     *
     * @author Герасимов А.М.
     *

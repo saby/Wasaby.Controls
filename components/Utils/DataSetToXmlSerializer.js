@@ -270,7 +270,9 @@ define('SBIS3.CONTROLS/Utils/DataSetToXmlSerializer', [
                elem.appendChild(document.createTextNode(removeInvalidXMLChars(fieldValue[i] + '')));
             }
          } else if (typeName == 'recordset' || typeName == 'record') {
-            this._serializeObject(fieldValue, fieldElement, document, this._getColumns(fieldValue));
+            if (fieldValue) {
+               this._serializeObject(fieldValue, fieldElement, document, this._getColumns(fieldValue));
+            }
          }
       },
       _getColumns: function(object) {

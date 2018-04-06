@@ -21,12 +21,13 @@
 }
 
 .controls-CheckBox__caption {
-  word-wrap: break-word;
-  padding: @spacing_CheckBox-between-icon-caption;
+   margin-left: @margin-left-CheckBox__icon_size;
+   word-wrap: break-word;
+   padding: @spacing_CheckBox-between-icon-caption;
 }
 
 .controls-CheckBox__icon {
-  position: relative;
+  position: absolute;
   .checkbox-border-size();
   .checkbox();
 }

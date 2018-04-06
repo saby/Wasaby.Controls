@@ -27,6 +27,7 @@ define('Controls/Input/Text', [
        * @public
        * @category Input
        * @author Журавлев Максим Сергеевич
+       * @demo Controls-demo/Input/Text
        */
 
 
@@ -81,11 +82,11 @@ define('Controls/Input/Text', [
             });
          },
 
-         _beforeUpdate: function() {
+         _beforeUpdate: function(newOptions) {
             this._textViewModel.updateOptions({
-               constraint: this._options.constraint,
-               maxLength: this._options.maxLength,
-               value: this._options.value
+               constraint: newOptions.constraint,
+               maxLength: newOptions.maxLength,
+               value: newOptions.value
             });
          },
 

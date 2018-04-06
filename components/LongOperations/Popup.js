@@ -74,6 +74,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
             _tabChannel: null,
 
             _loadingIndicator: null,
+            _isIntroduced: null,
             _isInStartAnimation: null
          },
 
@@ -104,6 +105,12 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
 
             this._bindEvents();
             this._longOpList.reload();
+
+            setTimeout(function () {
+               if (!this._isIntroduced) {
+                  this._introduce();
+               }
+            }.bind(this), 2000);
          },
 
          _bindEvents: function () {
@@ -129,6 +136,8 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
 
             var view = this._longOpList.getView();//this._longOpList.getChildControlByName('operationListDataGrid')
 
+            var container = this.getContainer();
+            var actionsContainer = container.find('.controls-LongOperationsPopup__footer__actionsContainer');
             this.subscribeTo(view, 'onDrawItems'/*'onItemsReady'*/, function () {
                var items = self._longOpList.getItems();
                var count = items ? items.getCount() : 0;
@@ -150,14 +159,11 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                         self._activeOperation = items.getRecordById(items.at(0).getId());
                      }
                   }
+                  actionsContainer.removeClass('ws-hidden');
                   self._updateState();
 
-                  var cls = 'controls-LongOperationsPopup__hidden';
-                  var $ctr = self.getContainer();
-                  if ($ctr.hasClass(cls)) {
-                     $ctr.css('opacity', 0);
-                     $ctr.removeClass(cls);
-                     $ctr.animate({opacity:1}, 800);//1500
+                  if (!self._isIntroduced) {
+                     self._introduce();
                   }
 
                   //При перерисовке размеры могут меняться
@@ -185,7 +191,6 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                self._showRegistry();
             });
 
-            var container = this.getContainer();
             container.find('.controls-LongOperationsPopup__hideContentIcon').on('click', function () {
                //Показать / Скрыть контент
                self._toggleContent();
@@ -228,6 +233,17 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                   self._longOpList.reload();
                }
             });
+         },
+
+         _introduce: function () {
+            var cssClass = 'controls-LongOperationsPopup__hidden';
+            var container = this.getContainer();
+            if (container.hasClass(cssClass)) {
+               container.css('opacity', 0);
+               container.removeClass(cssClass);
+               container.animate({opacity:1}, 800);
+               this._isIntroduced = true;
+            }
          },
 
          /**
@@ -541,7 +557,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
             var text = waitIndicatorText || this._options.waitIndicatorText || DEFAULT_WAITINDICATOR_TEXT;
             var promise = new Deferred();
             if (!this._loadingIndicator) {
-               require(['Deprecated/Controls/LoadingIndicator/LoadingIndicator'], function (LoadingIndicator) {
+               require(['Lib/Control/LoadingIndicator/LoadingIndicator'], function (LoadingIndicator) {
                   self._loadingIndicator = new LoadingIndicator({message:text});
                   self._loadingIndicator.show();
                   promise.callback();

@@ -34,8 +34,8 @@ define('SBIS3.CONTROLS/Mixins/DSMixin', [
         * @example
         * <pre>
         *     Menu.subscribe('onDrawItems', function(){
-        *        if (Menu.getItemsInstance(2).getCaption() == 'Входящие'){
-        *           Menu.getItemsInstance(2).destroy();
+        *        if (Menu.getItemInstance(2).getCaption() == 'Входящие'){
+        *           Menu.getItemInstance(2).destroy();
         *        }
         *     });
         * </pre>
@@ -255,7 +255,7 @@ define('SBIS3.CONTROLS/Mixins/DSMixin', [
              * <b>Пример 3.</b> Конфигурация источника данных через вёрстку компонента.
              * Второй способ основан на использовании функции, которая возвращает конфигурацию источника.
              * <pre>
-             *    <option name="dataSource" type="function">js!SBIS3.MyArea.MyComponent:prototype.getMyDataSource</option>
+             *    <option name="dataSource" type="function">Examples/MyArea/MyComponent:prototype.getMyDataSource</option>
              * </pre>
              * Функция должна возвращать объект с конфигурацией источника данных.
              * <pre>
@@ -392,7 +392,7 @@ define('SBIS3.CONTROLS/Mixins/DSMixin', [
              * @example
              * Устанавливаем функцию из вёрстки компонента:
              * <pre class="brush:xml">
-             *    <option name="userItemAttributes" type="function">js!SBIS3.Contacts.MessageViewBP:prototype.myUserItemAttributes</option>
+             *    <option name="userItemAttributes" type="function">Examples/MyArea/MessageViewBP:prototype.myUserItemAttributes</option>
              * </pre>
              * Создаём функцию в JS-коде компоненнта:
              * <pre>
@@ -1430,7 +1430,7 @@ define('SBIS3.CONTROLS/Mixins/DSMixin', [
         * </ul>
         * @example
         * <pre>
-        *     Menu.getItemsInstance(3).setCaption('SomeNewCaption');
+        *     Menu.getItemInstance(3).setCaption('SomeNewCaption');
         * </pre>
         * @see getItems
         * @see setItems

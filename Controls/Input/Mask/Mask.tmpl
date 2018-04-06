@@ -1,13 +1,15 @@
-<ws:Controls.Input.resources.InputRender.InputRender
+<Controls.Input.resources.InputRender.InputRender
    value="{{_options.value}}"
    viewModel="{{_viewModel}}"
    tagStyle="{{_options.tagStyle}}"
    placeholder="{{_options.placeholder}}"
+   on:focusin="_focusinHandler()"
 >
    <ws:content>
       <ws:partial
+         name="input"
          template="tmpl!Controls/Input/resources/input"
          enabled="{{isEnabled()}}"
       />
    </ws:content>
-</ws:Controls.Input.resources.InputRender.InputRender>
+</Controls.Input.resources.InputRender.InputRender>

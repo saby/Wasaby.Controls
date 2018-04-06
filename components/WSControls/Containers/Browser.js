@@ -1,12 +1,12 @@
-define('js!WSControls/Containers/Browser',
+define('SBIS3.CONTROLS/WSControls/Containers/Browser',
 [
    'Core/Control',
-   'tmpl!WSControls/Containers/Browser',
+   'tmpl!SBIS3.CONTROLS/WSControls/Containers/Browser',
    //TODO: удалить
    'WS.Data/Source/Memory'
 ], function(Control, template, StaticSource) {
    var Browser = Control.extend({
-      _controlName: 'WSControls/Containers/Browser',
+      _controlName: 'SBIS3.CONTROLS/WSControls/Containers/Browser',
       _template: template,
       iWantVDOM: true,
       operationsPanelConfig: [],

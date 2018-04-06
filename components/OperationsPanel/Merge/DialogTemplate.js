@@ -8,6 +8,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Merge/DialogTemplate', [
    "WS.Data/Source/SbisService",
    "WS.Data/Query/Query",
    "WS.Data/Collection/RecordSet",
+   "SBIS3.CONTROLS/WaitIndicator",
    "Core/helpers/Hcontrol/openErrorsReportDialog",
    "tmpl!SBIS3.CONTROLS/OperationsPanel/Merge/resources/cellRadioButtonTpl",
    "tmpl!SBIS3.CONTROLS/OperationsPanel/Merge/resources/cellCommentTpl",
@@ -20,7 +21,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Merge/DialogTemplate', [
    "i18n!!SBIS3.CONTROLS/OperationsPanel/Merge/DialogTemplate",
    'css!SBIS3.CONTROLS/OperationsPanel/Merge/DialogTemplate',
    'css!SBIS3.CONTROLS/Radio/Button/RadioButton'
-], function( CommandDispatcher, Control, dotTplFn, SbisServiceSource, Query, RecordSet, openErrorsReportDialog, cellRadioButtonTpl, cellCommentTpl, cellTitleTpl, rowTpl) {
+], function( CommandDispatcher, Control, dotTplFn, SbisServiceSource, Query, RecordSet, WaitIndicator, openErrorsReportDialog, cellRadioButtonTpl, cellCommentTpl, cellTitleTpl, rowTpl) {
 
 
     var COMMENT_FIELD_NAME = 'Comment',
@@ -124,15 +125,17 @@ define('SBIS3.CONTROLS/OperationsPanel/Merge/DialogTemplate', [
             });
         },
         onMergeButtonActivated: function() {
-            var self = this,
+            var
+                deferred,
+                self = this,
                 mergeTo = this._treeView.getSelectedKey(),
                 mergeKeys = this._getMergedKeys(mergeTo, true);
-            this._treeView._toggleIndicator(true);
-            this._options.dataSource.merge(mergeTo, mergeKeys).addErrback(function(errors) {
+            deferred = this._options.dataSource.merge(mergeTo, mergeKeys).addErrback(function(errors) {
                 self._showErrorDialog(mergeKeys, errors);
             }).addBoth(function(result) {
                 self.sendCommand('close', { mergeTo: mergeTo, mergeKeys: mergeKeys, mergeResult: result });
             });
+           this._showIndicator(deferred);
         },
         _showErrorDialog: function(mergeKeys, error) {
             var
@@ -167,18 +170,26 @@ define('SBIS3.CONTROLS/OperationsPanel/Merge/DialogTemplate', [
             }
             return keys;
         },
+
+        _showIndicator: function(deferred) {
+           WaitIndicator.make({
+              delay: 750,
+              target: this._container
+           }, deferred);
+        },
+
         onSelectedItemChange: function(event, mergeTo) {
             var
                 id,
                 record,
+                deferred,
                 self = this,
                 isAvailable,
                 showMergeButton,
                 idProperty = this._options.idProperty,
                 items = this._treeView.getItems();
            if (!this._silent) {
-              this._treeView._toggleIndicator(true);
-              this._options.dataSource.call(this._options.testMergeMethodName, {
+              deferred = this._options.dataSource.call(this._options.testMergeMethodName, {
                  'target': mergeTo,
                  'merged': this._getMergedKeys(mergeTo)
               }).addCallback(function (data) {
@@ -201,9 +212,8 @@ define('SBIS3.CONTROLS/OperationsPanel/Merge/DialogTemplate', [
                  items.setEventRaising(true, true);
                  self._silent = false;
                  self._applyContainer.toggleClass('ws-hidden', !showMergeButton);
-              }).addBoth(function () {
-                 self._treeView._toggleIndicator(false);
               });
+              this._showIndicator(deferred);
            }
         }
     });
