@@ -44,7 +44,7 @@ define('Controls/Popup/Opener/BaseOpener',
 
          //Ленивая загрузка шаблона
          _getTemplate: function (config) {
-            if (requirejs.defined(config.template)) {
+            if (typeof config.template === 'function' || requirejs.defined(config.template)) {
                return (new Deferred()).callback(requirejs(config.template));
             }
             else if (!this._openerListDeferred) {
