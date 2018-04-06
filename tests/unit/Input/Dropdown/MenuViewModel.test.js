@@ -56,7 +56,7 @@ define(
             keyProperty: 'id',
             parentProperty: 'parent',
             nodeProperty: '@parent',
-            selectedKeys: 3,
+            selectedKeys: '3',
             rootKey: null
          };
 
