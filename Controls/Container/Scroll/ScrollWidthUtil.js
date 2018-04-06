@@ -26,17 +26,16 @@ define('Controls/Container/Scroll/ScrollWidthUtil',
 
          /**
           * Расчет ширины нативного скролла.
-          * @param userAgent
           * @param detection
           * @return {number}
           */
-         calcScrollbarWidth: function(userAgent, detection) {
+         calcScrollbarWidth: function(detection) {
             var scrollbarWidth;
             /**
              * В браузерах с поддержкой ::-webkit-scrollbar установлена ширина 0.
              * Определяем не с помощью Core/detection, потому что в нем считается, что chrome не на WebKit.
              */
-            if (userAgent.indexOf('AppleWebKit') > -1) {
+            if (detection.userAgent.indexOf('AppleWebKit') > -1) {
                scrollbarWidth = 0;
             } else if (detection.isIE12) {
                scrollbarWidth = 16;
@@ -91,7 +90,7 @@ define('Controls/Container/Scroll/ScrollWidthUtil',
                   var scrollbarWidth;
 
                   if (typeof _private.styleHideScrollbar === 'undefined') {
-                     scrollbarWidth = _private.calcScrollbarWidth(navigator.userAgent, detection);
+                     scrollbarWidth = _private.calcScrollbarWidth(detection);
 
                      if (typeof scrollbarWidth === 'number') {
                         _private.styleHideScrollbar = _private.calcStyleHideScrollbar(scrollbarWidth, detection, compatibility);
