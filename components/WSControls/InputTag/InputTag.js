@@ -1,15 +1,15 @@
-define('js!WSControls/InputTag/InputTag',
+define('SBIS3.CONTROLS/WSControls/InputTag/InputTag',
    [
       'Core/Control',
-      'tmpl!WSControls/InputTag/InputTag',
-      'css!WSControls/InputTag/InputTag'
+      'tmpl!SBIS3.CONTROLS/WSControls/InputTag/InputTag',
+      'css!SBIS3.CONTROLS/WSControls/InputTag/InputTag'
    ],
    function(Control, template) {
 
       'use strict';
 
       var InputTag = Control.extend({
-         _controlName: 'WSControls/InputTag/InputTag',
+         _controlName: 'SBIS3.CONTROLS/WSControls/InputTag/InputTag',
 
          _template: template,
 

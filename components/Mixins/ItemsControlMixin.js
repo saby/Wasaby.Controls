@@ -11,6 +11,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
    "WS.Data/Collection/IBind",
    "SBIS3.CONTROLS/Utils/TemplateUtil",
    "tmpl!SBIS3.CONTROLS/Mixins/ItemsControlMixin/resources/ItemsTemplate",
+   "tmpl!SBIS3.CONTROLS/Mixins/ItemsControlMixin/resources/defaultItemTemplate",
    "WS.Data/Utils",
    'Core/markup/ParserUtilities',
    "Core/Sanitize",
@@ -39,6 +40,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
    IBindCollection,
    TemplateUtil,
    ItemsTemplate,
+   defaultItemTemplate,
    Utils,
    ParserUtilities,
    Sanitize,
@@ -279,8 +281,8 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
         * @example
         * <pre>
         *     Menu.subscribe('onDrawItems', function() {
-        *        if (Menu.getItemsInstance(2).getCaption() == 'Входящие') {
-        *           Menu.getItemsInstance(2).destroy();
+        *        if (Menu.getItemInstance(2).getCaption() == 'Входящие') {
+        *           Menu.getItemInstance(2).destroy();
         *        }
         *     });
         * </pre>
@@ -381,8 +383,8 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
             _canServerRender: false,
             _canServerRenderOther : canServerRenderOther,
             _serverRender: false,
-            _defaultItemTemplate: '',
-            _defaultItemContentTemplate: '',
+            _defaultItemTemplate: defaultItemTemplate,
+            _defaultItemContentTemplate: defaultItemTemplate,
             _prepareGroupId: prepareGroupId,
             _getGroupId: getGroupId,
             _createDefaultProjection : createDefaultProjection,
@@ -2256,12 +2258,12 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
         * </ul>
         * @example
         * <pre>
-        *     Menu.getItemsInstance(3).setCaption('SomeNewCaption');
+        *     Menu.getItemInstance(3).setCaption('SomeNewCaption');
         * </pre>
         * @see getItems
         * @see setItems
         * @see items
-        * @see getItemInstances
+        * @see getItemsInstances
         */
       getItemInstance: function (id) {
          var projItem = this._getItemProjectionByItemId(id);

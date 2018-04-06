@@ -15,12 +15,12 @@ define('Controls/Application',
     * Компонент приложение. не делает НИЧЕГО. На вход принимает конфиг - на выходе шаблон.
     * Никакой логики внутри нет.
     */
-   function (Base,
-             template,
-             Deferred,
-             BodyClasses,
-             TouchDetector,
-             AppData) {
+   function(Base,
+            template,
+            Deferred,
+            BodyClasses,
+            TouchDetector,
+            AppData) {
       'use strict';
 
       var _private,
@@ -42,23 +42,28 @@ define('Controls/Application',
       var Page = Base.extend({
          _template: template,
 
-         getDataId: function(){
+         getDataId: function() {
             return 'cfg-pagedata';
          },
 
-         _scrollPage: function(ev){
+         _scrollPage: function(ev) {
             this._children.scrollDetect.start(ev);
          },
 
-         _resizePage: function(ev){
+         _resizePage: function(ev) {
             this._children.resizeDetect.start(ev);
          },
 
          _touchstartPage: function() {
-             TouchDetector.touchHandler()
+            TouchDetector.touchHandler()
          },
-         _mousemovePage: function(){
-             TouchDetector.moveHandler();
+         _mousemovePage: function(ev) {
+            TouchDetector.moveHandler();
+
+            this._children.mousemoveDetect.start(ev);
+         },
+         _mouseupPage: function(ev) {
+            this._children.mouseupDetect.start(ev);
          },
          _touchclass: function() {
             return TouchDetector.getClass();
@@ -68,7 +73,7 @@ define('Controls/Application',
             var self = this,
                def = new Deferred();
 
-            _private.initState(self, receivedState||cfg);
+            _private.initState(self, receivedState || cfg);
             self.content = cfg.content;
             self.needArea = cfg.compat || self.compat;
             if (!receivedState) {
@@ -97,7 +102,7 @@ define('Controls/Application',
          }
       });
 
-      Page.contextTypes =  function contextTypes() {
+      Page.contextTypes = function contextTypes() {
          return {
             AppData: AppData
          };

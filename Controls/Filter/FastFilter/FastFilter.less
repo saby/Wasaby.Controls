@@ -1,0 +1,31 @@
+.controls-FastFilter {
+   display: flex;
+}
+
+.controls-FastFilter__iconReset {
+   .icon-size(@icon-size_FastFilter);
+   color: @color_FastFilter-iconReset;
+}
+
+.controls-FastFilter__iconArrow {
+   fill: @color_FastFilter-iconArrow;
+   height: @height_FastFilter-iconArrow;
+   width: @width_FastFilter-iconArrow;
+   margin: @spacing_FastFilter-between-icon-text;
+}
+
+.controls-FastFilter__wrapper {
+   margin: @spacing_FastFilter-item;
+   display: flex;
+   align-items: center;
+   cursor: pointer;
+}
+
+.controls-FastFilter__block {
+   display: flex;
+   align-items: baseline;
+}
+
+.controls-FastFilter__block:hover .controls-FastFilter__iconArrow {
+   fill: @color_FastFilter-iconArrow_hover;
+}

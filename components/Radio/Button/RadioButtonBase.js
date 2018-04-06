@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('SBIS3.CONTROLS/Radio/Button/RadioButtonBase', ['js!WSControls/Buttons/ButtonBase', 'SBIS3.CONTROLS/Mixins/Checkable'], function(WSButtonBase, Checkable) {
+define('SBIS3.CONTROLS/Radio/Button/RadioButtonBase', ['SBIS3.CONTROLS/WSControls/Buttons/ButtonBase', 'SBIS3.CONTROLS/Mixins/Checkable'], function(WSButtonBase, Checkable) {
 
    'use strict';
 

@@ -142,6 +142,14 @@ define('SBIS3.CONTROLS/Button/BackButton',
          return this._options.href;
       },
 
+      setEscapeCaptionHtml: function (escapeHtml) {
+         this._link.setProperty('escapeCaptionHtml', escapeHtml);
+      },
+
+      getEscapeCaptionHtml: function () {
+         return this._link.getProperty('escapeCaptionHtml');
+      },
+
       /**
        * Устанавливает текст кнопки
        * @param caption Текси

@@ -1,4 +1,4 @@
-<Controls.Container.Filter attr:class="controls-demo__FilterLayout" filterButtonSource="{{_filterSource}}" historyId="123">
+<Controls.Container.Filter attr:class="controls-demo__FilterLayout" filterButtonSource="{{_filterSource}}" historyId="123" fastFilterSource="{{_fastFilterData}}">
     <ws:content>
         <div>
             <Controls.Container.Search
@@ -8,22 +8,44 @@
                     <div class="controls-demo__SearchLayout_content">
                         <div class="controls-demo__Layouts_content">
                             <div class="controls-demo__Layouts_filterComponents">
-                                <Controls.Input.Search bind:value="_searchValue"/>
-                                <Controls.Container.FilterButton>
+                                <Controls.Container.Input.Search>
+                                    <ws:content>
+                                        <Controls.Input.Search bind:value="_searchValue"/>
+                                    </ws:content>
+                                </Controls.Container.Input.Search>
+                                <Controls.Container.Filter.Fast>
+                                    <ws:content>
+                                        <Controls.Filter.FastFilter bind:value="_value"/>
+                                    </ws:content>
+                                </Controls.Container.Filter.Fast>
+                                <Controls.Container.Filter.Button>
                                     <ws:content>
                                         <Controls.Filter.Button filterTemplate="Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/FilterButtonTemplate">
                                         </Controls.Filter.Button>
                                     </ws:content>
-                                </Controls.Container.FilterButton>
+                                </Controls.Container.Filter.Button>
                             </div>
                             <div class="controls-demo__LayoutInner">
                                 <Controls.Container.List source="{{_dataSource}}" searchParam="title">
                                     <ws:content>
                                         <div>
                                             <Controls.List idProperty="id" name="list">
-                                                <ws:emptyTemplate>
-                                                    Не найдено
-                                                </ws:emptyTemplate>
+                                                <ws:itemTemplate>
+                                                    <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate"
+                                                                itemData="{{itemTemplate.itemData}}"
+                                                    >
+                                                        <ws:contentTemplate>
+                                                            <div style="padding: 4px; display: flex; justify-content: space-between">
+                                                                <div style="width: 200px">{{itemTemplate.itemData.item.get('firstName')}}</div>
+                                                                <div style="font-size: 13px; color: darkblue">{{itemTemplate.itemData.item.get('lastName')}}</div>
+                                                                <div style="font-size: 13px; color: limegreen">{{itemTemplate.itemData.item.get('id')}}</div>
+                                                            </div>
+                                                        </ws:contentTemplate>
+                                                    </ws:partial>
+                                                    <ws:emptyTemplate>
+                                                        Не найдено
+                                                    </ws:emptyTemplate>
+                                                </ws:itemTemplate>
                                             </Controls.List>
                                         </div>
                                     </ws:content>
