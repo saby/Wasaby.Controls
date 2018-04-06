@@ -145,7 +145,7 @@ define(
                eventFocus.relatedTarget = document.body;
                $('.controls-InputRender')[0].dispatchEvent(eventFocus);
                /* Уводим фокус с саггеста */
-               var eventBlur = new Event('blur');
+               var eventBlur = new Event('focusout');
                eventBlur.relatedTarget =  $('<div/>')[0];
                $('.controls-InputRender')[0].dispatchEvent(eventBlur);
                assert.isTrue(focusOutHandlerCalled, 'Event handler on focusOut is not called');
