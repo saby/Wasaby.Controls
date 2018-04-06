@@ -7,6 +7,7 @@
  */
 define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
    [
+      'Core/helpers/Object/isEqual',
       'SBIS3.CONTROLS/CompoundControl',
       'tmpl!SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
       'tmpl!SBIS3.CONTROLS/ImportCustomizer/Mapper/tmpl/head',
@@ -14,7 +15,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
       'css!SBIS3.CONTROLS/ImportCustomizer/Mapper/View'
    ],
 
-   function (CompoundControl, dotTplFn) {
+   function (cObjectIsEqual, CompoundControl, dotTplFn) {
       'use strict';
 
       var View = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ImportCustomizer/Mapper/View.prototype*/ {
@@ -38,13 +39,21 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
                 */
                variantColumnTitle: rk('Вид цены в файле', 'НастройщикИмпорта'),
                /**
-                * @cfg {Array<object>} Список значений для установления соответствия (мэпинга)
+                * @cfg {object} Набор значений для установления соответствия (мэпинга)
                 */
-               items: [],
+               items: {},
                /**
-                * @cfg {Array<object>} Список вариантов сопоставления
+                * @cfg {object} Набор вариантов сопоставления
                 */
-               variants: []
+               variants: {},
+               /**
+                * @cfg {ImportTargetFields} ^^^
+                */
+               fields: null,
+               /**
+                * @cfg {string} ^^^
+                */
+               fieldProperty: null
             },
             _grid: null
          },
@@ -53,7 +62,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
             var options = View.superclass._modifyOptions.apply(this, arguments);
             var inf = this._makeUpdateInfo(options);
             options._columns = inf.columns;
-            options._items = inf.items;
+            options._rows = inf.rows;
             return options;
          },
 
@@ -76,28 +85,86 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
          },
 
          /**
-          * Подготовить данные в таблице компонента
+          * Подготовить данные ^^^
           *
           * @protected
           * @param {object} options Опции
+          * @return {object}
           */
          _makeUpdateInfo: function (options) {
-            //////////////////////////////////////////////////
-            console.log('DBG: IC_Map._makeUpdateInfo: options.items=', options.items, '; options.variants=', options.variants, ';');
-            //////////////////////////////////////////////////
             var headTmpl = 'tmpl!SBIS3.CONTROLS/ImportCustomizer/Mapper/tmpl/head';
             var cellTmpl = 'tmpl!SBIS3.CONTROLS/ImportCustomizer/Mapper/tmpl/cell';
+            var menuConf;
+            var variants = options.variants;
+            if (variants) {
+               var variantIds = Object.keys(variants);
+               if (variantIds.length) {
+                  var menuItems = variantIds.map(function (v) { return {id:v, title:variants[v] || rk('(Без названия)', 'НастройщикИмпорта')}; });
+                  menuItems.unshift();
+                  menuConf = {
+                     namePrefix: 'controls-ImportCustomizer-Mapper-View__grid__item__menu__',
+                     items: menuItems
+                  };
+               }
+            }
             var columns = [
                {field:'num', title:''},
-               {field:'item', title:options.itemColumnTitle, headTemplate:headTmpl, cellTemplate:cellTmpl},
-               {field:'variant', title:options.variantColumnTitle, headTemplate:headTmpl, cellTemplate:cellTmpl}
+               {field:'title', title:options.itemColumnTitle, headTemplate:headTmpl},
+               {field:'variant', title:options.variantColumnTitle, headTemplate:headTmpl, cellTemplate:cellTmpl, menuConf:menuConf}
             ];
-            var items = [
-               {num:1, item:'1', variant:'1'},
-               {num:2, item:'2', variant:'2'},
-               {num:3, item:'3', variant:'3'}
-            ];
-            return {columns:columns, items:items};
+            var rows = [];
+            var fields = options.fields;
+            if (fields) {
+               var accordances = options.items;
+               var hasAccordances = accordances && Object.keys(accordances).length;
+               // TODO: fields.items Может быть рекордсетом
+               var displayProperty = fields.displayProperty;
+               // TODO: options.fieldProperty Может не быть
+               var fieldProperty = options.fieldProperty;
+               var counter = 0;
+               rows = fields.items.reduce(function (r, v) { var id = v[fieldProperty]; if (id) { r.push({num:++counter, id:id, title:v[displayProperty], variant:hasAccordances ? (accordances[id] || null) : null}); }; return r; }, []);
+            }
+            return {columns:columns, rows:rows};
+         },
+
+         /**
+          * Установить указанные настраиваемые значения компонента
+          *
+          * @public
+          * @param {object} values Набор из нескольких значений, которые необходимо изменить
+          * @param {object} [values.items] ^^^ (опционально)
+          * @param {object} [values.variants] ^^^ (опционально)
+          * @param {ImportTargetFields} [values.fields] ^^^ (опционально)
+          * @param {string} [values.fieldProperty] ^^^ (опционально)
+          */
+         setValues: function (values) {
+            if (!values || typeof values !== 'object') {
+               throw new Error('Object required');
+            }
+            var options = this._options;
+            var has = {};
+            for (var name in values) {
+               switch (name) {
+                  case 'items':
+                  case 'variants':
+                  case 'fields':
+                  case 'fieldProperty':
+                     break;
+                  default:
+                     continue;
+               }
+               var value = values[name];
+               if (name === 'fieldProperty' ? value !== options[name] : !cObjectIsEqual(value, options[name])) {
+                  has[name] = true;
+                  options[name] = value;
+               }
+            }
+            if (has.items || has.variants || has.fields) {
+               var inf = this._makeUpdateInfo(options);
+               var grid = this._grid;
+               grid.setColumns(inf.columns);
+               grid.setItems(inf.rows);
+            }
          },
 
          /**
@@ -107,8 +174,12 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
           * @return {object}
           */
          getValues: function () {
+            var options = this._options;
             return {
-               /*^^^@@@: this._options.@@@*/
+               items: options.items/*^^^,
+               variants: options.variants,
+               fields: options.fields,
+               fieldProperty: options.fieldProperty*/
             };
          }
       });

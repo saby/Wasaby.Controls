@@ -331,6 +331,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                fields: fields,
                priceCorrespondence: options.priceCorrespondence,//^^^
                priceTypes: options.priceTypes,//^^^
+               priceFieldProperty: options.priceFieldProperty,//^^^
                validators: validators || defaults.validators,
                handlers: {
                   onComplete: this._onAreaComplete.bind(this),

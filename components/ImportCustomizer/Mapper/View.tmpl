@@ -3,9 +3,10 @@
    <div class="controls-ImportCustomizer-Mapper-View__title">{[НастройщикИмпорта@@Настройка соответствия значений]}</div>
    <SBIS3.CONTROLS:DataGridView
       name="controls-ImportCustomizer-Mapper-View__grid"
-      class="controls-DataGridView__hasSeparator controls-ListView__disableHover controls-ListView__withoutMarker controls-ImportCustomizer-Mapper-View__grid"
-      items="{{_items}}"
+      class="controls-DataGridView__hasSeparator controls-ListView__withoutMarker controls-DataGridView__overflow-ellipsis controls-ImportCustomizer-Mapper-View__grid"
+      items="{{_rows}}"
       idProperty="id"
+      displayProperty="title"
       columns="{{_columns}}"
       itemsActions="{{[]}}"
    />

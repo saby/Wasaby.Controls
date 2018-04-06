@@ -190,6 +190,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             options._columnsBindingRows = hasSheets ? sheet.sampleRows : [];
             options._mapperItems = options.priceCorrespondence;//^^^
             options._mapperVariants = options.priceTypes;//^^^
+            options._mapperFieldProperty = options.priceFieldProperty;//^^^
             var fields = options.fields;
             if (fields instanceof Deferred) {
                this._fieldsPromise = fields;
@@ -275,10 +276,10 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                   sheetIndex = values.sheetIndex;
                   options.sheetIndex = sheetIndex;
                   var nextResult = results[0 <= sheetIndex ? sheetIndex + 1 : ''];
-                  views.provider.setValues(nextResult.provider);
+                  this._setChildComponentValues('provider', nextResult.provider);
                   this._updateProviderArgsView(nextResult.provider.parser);
                   var sheets = options.sheets;
-                  views.columnBinding.setValues(cMerge({rows:sheets[0 < sheetIndex ? sheetIndex : 0].sampleRows}, nextResult.columnBinding));
+                  this._setChildComponentValues('columnBinding', cMerge({rows:sheets[0 < sheetIndex ? sheetIndex : 0].sampleRows}, nextResult.columnBinding));
                }.bind(this));
             }
             if (views.baseParams) {
@@ -287,7 +288,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                   var fields = values.fields;
                   if (fields) {
                      this._options.fields = fields;
-                     this._views.columnBinding.setValues({fields:fields});
+                     this._setChildComponentValues('columnBinding', {fields:fields});
                   }
                }.bind(this));
             }
@@ -303,7 +304,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                   }
                   result.provider = cMerge({}, values);
                   result.columnBinding.skippedRows = skippedRows;
-                  this._views.columnBinding.setValues({skippedRows:skippedRows});
+                  this._setChildComponentValues('columnBinding', {skippedRows:skippedRows});
                }.bind(this));
             }
             // Для компонента this._views.providerArgs подисываеися отдельно через обработчик в опциях
@@ -315,7 +316,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                   var skippedRows = values.skippedRows;
                   result.provider.skippedRows = skippedRows;
                   result.columnBinding = cMerge({}, values);
-                  this._views.provider.setValues({skippedRows:skippedRows});
+                  this._setChildComponentValues('provider', {skippedRows:skippedRows});
                }.bind(this));
             }
          },
@@ -384,9 +385,22 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             }
             this._options.fields = fields;
             var views = this._views;
-            //views.baseParams.setValues({fields:fields});
-            if (views.columnBinding) {
-               views.columnBinding.setValues({fields:fields});
+            //this._setChildComponentValues('baseParams', {fields:fields});
+            this._setChildComponentValues('columnBinding', {fields:fields});
+            this._setChildComponentValues('mapper', {fields:fields});
+         },
+
+         /*
+          * Установить указанные настраиваемые значения у дочернего компонента, если он есть
+          *
+          * @protected
+          * @param {string} name Мнемоническое имя компонента (в наборе _views)
+          * @param {object} values Набор из нескольких значений, которые необходимо изменить
+          */
+         _setChildComponentValues: function (name, values) {
+            var view = this._views[name];
+            if (view) {
+               view.setValues(values);
             }
          },
 
