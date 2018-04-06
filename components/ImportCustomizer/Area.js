@@ -188,9 +188,10 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             options._providerArgsComponent = parsers[parserName].component || undefined;
             options._providerArgsOptions = this._getProviderArgsOptions(options, parserName, true);
             options._columnsBindingRows = hasSheets ? sheet.sampleRows : [];
-            options._mapperItems = options.priceCorrespondence;//^^^
-            options._mapperVariants = options.priceTypes;//^^^
+            options._mapperFieldFilter = options.priceFieldFilter;//^^^
             options._mapperFieldProperty = options.priceFieldProperty;//^^^
+            options._mapperVariants = options.priceTypes;//^^^
+            options._mapperAccordances = options.priceCorrespondence;//^^^
             var fields = options.fields;
             if (fields instanceof Deferred) {
                this._fieldsPromise = fields;
