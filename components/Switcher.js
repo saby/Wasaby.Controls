@@ -17,7 +17,7 @@ define('SBIS3.CONTROLS/Switcher',
     * @mixes SBIS3.CONTROLS/Mixins/Checkable
     * @mixes SBIS3.CONTROLS/Mixins/Clickable
     * @author Журавлев М.С.
-    * @demo SBIS3.CONTROLS.Demo.MySwitcher
+    * @demo Examples/Switcher/MySwitcher/MySwitcher
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers
     * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner stateKey

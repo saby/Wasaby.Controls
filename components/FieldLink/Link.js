@@ -1,5 +1,5 @@
 define('SBIS3.CONTROLS/FieldLink/Link', [
-      'js!WSControls/Buttons/ButtonBase',
+      'SBIS3.CONTROLS/WSControls/Buttons/ButtonBase',
       'tmpl!SBIS3.CONTROLS/FieldLink/Link/FieldLink_Link',
       'css!SBIS3.CONTROLS/FieldLink/Link/FieldLink_Link'
    ],

@@ -33,6 +33,8 @@ define('Controls/Input/Number', [
        * @control
        * @public
        * @category Input
+       * @author Баранов М.А.
+       * @demo Controls-demo/Input/Number
        */
 
       /**

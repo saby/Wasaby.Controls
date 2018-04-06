@@ -4,7 +4,7 @@
  * @description
  */
 define('SBIS3.CONTROLS/Button/IconButton', [
-    'js!WSControls/Buttons/Button',
+    'SBIS3.CONTROLS/WSControls/Buttons/Button',
     'SBIS3.CONTROLS/Utils/IconButtonUtil',
     'css!SBIS3.CONTROLS/Button/IconButton/IconButton'
 ],
@@ -21,7 +21,7 @@ function(WSButton, IconButtonUtil) {
     * @class SBIS3.CONTROLS/Button/IconButton
     * @extends WSControls/Buttons/Button
     * @mixes SBIS3.CONTROLS/Button/IconButton/IconButtonDocs
-    * @demo SBIS3.CONTROLS.Demo.MyIconButton
+    * @demo Examples/IconButton/MyIconButton/MyIconButton
     * @author Борисов П.С.
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators

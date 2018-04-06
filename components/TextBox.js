@@ -54,7 +54,7 @@ define('SBIS3.CONTROLS/TextBox', [
     * @class SBIS3.CONTROLS/TextBox
     * @extends SBIS3.CONTROLS/TextBox/TextBoxBase
     * @author Зайцев А.С.
-    * @demo SBIS3.CONTROLS.Demo.MyTextBox
+    * @demo Examples/TextBox/MyTextBox/MyTextBox
     *
     * @ignoreOptions independentContext contextRestriction className horizontalAlignment
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth
@@ -205,21 +205,7 @@ define('SBIS3.CONTROLS/TextBox', [
              * @see setInformationIconColor
              * @see informationIconColor
              */
-            informationIconColor: '',
-             /**
-              * @cfg {String} Устанавливает размер поля ввода.
-              * @remark
-              * По умолчанию значение опции "default" и зависит от темы.
-              * Значение "m" установит средний размер поля ввода.
-              * Значение "l" устaновит большой размер поля ввода.
-              * @example
-              * Пример 1. Большое поле ввода:
-              * фрагмент верстки:
-              * <pre class="brush:xml">
-              *     <option name="size">l</option>
-              * </pre>
-              */
-            size: 'default'
+            informationIconColor: ''
          }
       },
 

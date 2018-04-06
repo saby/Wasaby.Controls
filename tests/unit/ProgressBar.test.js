@@ -1,7 +1,7 @@
 define(
    [
       'Core/Control',
-      'js!WSControls/ProgressBars/ProgressBar'
+      'SBIS3.CONTROLS/WSControls/ProgressBars/ProgressBar'
    ],
    (Control, ProgressBar) => {
 

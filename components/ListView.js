@@ -42,7 +42,7 @@ define('SBIS3.CONTROLS/ListView',
    'SBIS3.CONTROLS/Paging',
    'SBIS3.CONTROLS/ComponentBinder',
    'WS.Data/Di',
-   'SBIS3.CONTROLS/Utils/ArraySimpleValuesUtil',
+   'Controls/Utils/ArraySimpleValuesUtil',
    'Core/core-instance',
    'Core/LocalStorageNative',
    'Core/helpers/Function/forAliveDeferred',
@@ -115,6 +115,7 @@ define('SBIS3.CONTROLS/ListView',
        * @mixes SBIS3.CONTROLS/Mixins/DragNDropMixin
        * @mixes SBIS3.CONTROLS/ListView/resources/CommonHandlers
        *
+       * @cssModifier controls-ListView__withoutMarker Скрывает отображение маркера активной строки. Подробнее о маркере вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/marker/">этом разделе</a>.
        * @cssModifier controls-ListView__orangeMarker Устанавливает отображение маркера активной строки у элементов списка. Модификатор актуален только для класса SBIS3.CONTROLS.ListView.
        * @cssModifier controls-ListView__showCheckBoxes Устанавливает постоянное отображение чекбоксов для записей списка. Модификатор применяется для режима множественного выбора записей (см. {@link multiselect}).
        * @cssModifier controls-ListView__hideCheckBoxes Скрывает отображение чекбоксов для записей списка, для которого установлен режим множественного выбора записей (см. {@link multiselect}).
@@ -139,10 +140,6 @@ define('SBIS3.CONTROLS/ListView',
        * @control
        * @public
        * @category Lists
-       *
-       * @initial
-       * <component data-component='SBIS3.CONTROLS/ListView'>
-       * </component>
        *
        *
        */
@@ -223,7 +220,7 @@ define('SBIS3.CONTROLS/ListView',
           * Событие срабатывает при подгрузке по скроллу, при подгрузке в ветку дерева.
           * Т.е. при любой вспомогательной загрузке данных.
           * @param {Core/EventObject} eventObject Дескриптор события.
-          * @param {Object} dataSet - dataSet с загруженными данными
+          * @param {Object} RecordSet - {@link /doc/platform/developmentapl/interface-development/working-with-data/icollection/#wsdatacollectionrecordset RecordSet} с загруженными данными
           * @example
           * <pre>
           *     DataGridView.subscribe('onDataMerge', function(event, dataSet) {
@@ -244,7 +241,7 @@ define('SBIS3.CONTROLS/ListView',
           */
          /**
           * @typedef {String} BeginEditResult
-          * @variant Cancel Отменить завершение редактирования.
+          * @variant Cancel Отменить завершение редактирования. Чтобы отменить запуск редактирования, нужно вернуть константу BeginEditResult.CANCEL из модуля {@link https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceBaseController/ EditInPlaceBaseController}.
           * @variant PendingAll В результате редактирования ожидается вся запись, как есть (с текущим набором полей).
           * @variant PendingModifiedOnly В результате редактирования ожидаются только измененные поля. Это поведение используется по умолчанию.
           */
@@ -660,7 +657,7 @@ define('SBIS3.CONTROLS/ListView',
                 * // Модификация опций компонента, нужна для передачи обработчиков
                 * _modifyOptions: function() {
                 *    var options = moduleClass.superclass._modifyOptions.apply(this, arguments);
-                *    Serializer.setToJsonForFunction(this._deleteRecord, 'js!SBIS3.Site.MainTable', 'prototype._deleteRecord');
+                *    Serializer.setToJsonForFunction(this._deleteRecord, 'SBIS3/Site/MainTable', 'prototype._deleteRecord');
                 *    options.deleteRecord = this._deleteRecord;
                 *    return options;
                 * }
@@ -719,6 +716,8 @@ define('SBIS3.CONTROLS/ListView',
                 * @variant down Подгружать данные при достижении дна контейнера (подгрузка "вниз").
                 * @variant up Подгружать данные при достижении верха контейнера (подгрузка "вверх").
                 * @variant demand Подгружать данные при нажатии на кнопку "Еще...".
+                * Если метод возвращает n:true/false, то кнопка будет рисовать просто "Еще...".
+                * Если метод возвращает n: число записей - будет выводить число (например, "Еще 30").
                 * @variant null Не загружать данные по скроллу.
                 *
                 * @example
@@ -2140,24 +2139,7 @@ define('SBIS3.CONTROLS/ListView',
          },
 
          /**
-          * Перезагружает набор записей представления данных с последующим обновлением отображения.
-          * @remark
-          * Производится запрос на выборку записей из источника данных по установленным параметрам:
-          * <ol>
-          *    <li>Параметры фильтрации, которые устанавливают с помощью опции {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#filter}.</li>
-          *    <li>Параметры сортировки, которые устанавливают с помощью опции {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#sorting}.</li>
-          *    <li>Порядковый номер записи в источнике, с которого будет производиться отбор записей для выборки. Устанавливают с помощью метода {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#setOffset}.</li>
-          *    <li>Масимальное число записей, которые будут присутствовать в выборке. Устанавливают с помощью метода {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#pageSize}.</li>
-          * </ol>
-          * Вызов метода инициирует событие {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#onBeforeDataLoad}. В случае успешной перезагрузки набора записей происходит событие {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#onDataLoad}, а в случае ошибки - {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#onDataLoadError}.
-          * Если источник данных не установлен, производит перерисовку установленного набора данных.
-          * @return {Deferred}
-          * @example
-          * <pre>
-          *    btn.subscribe('onActivated', function() {
-          *       DataGridViewBL.reload();
-          *    });
-          * </pre>
+          *
           */
          reload: function (filter, sorting, offset, limit, deepReload, resetPosition) {
             if (this._scrollBinder && this._options.saveReloadPosition){

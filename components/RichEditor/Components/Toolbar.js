@@ -8,8 +8,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
    "tmpl!SBIS3.CONTROLS/RichEditor/Components/Toolbar/RichEditorToolbar",
    "SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/config",
    'SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/ImagePanel/ImagePanel',
-   "js!WSControls/Buttons/Button",
-   "js!WSControls/Buttons/ToggleButton",
+   "SBIS3.CONTROLS/WSControls/Buttons/Button",
+   "SBIS3.CONTROLS/WSControls/Buttons/ToggleButton",
    'SBIS3.CONTROLS/Menu/MenuButton',
    'SBIS3.CONTROLS/ComboBox',
    'css!SBIS3.CONTROLS/RichEditor/Components/Toolbar/RichEditorToolbar',
@@ -165,9 +165,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
                case 'italic':
                case 'underline':
                case 'strikethrough':
-               case 'blockquote':
                   this._toggleState(state, obj);
-               break;
+                  break;
+               case 'blockquote': {
+                  if (!obj.node.className) {
+                     this._toggleState(state, obj);
+                  }
+                  break;
+               }
                case 'alignleft':
                case 'aligncenter':
                case 'alignright':
@@ -179,6 +184,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
                case 'additionalText':
                   this._updateTextFormat(state, obj);
                   break;
+               default: {
+                  this._toggleState(state, obj);
+               }
             }
          },
 

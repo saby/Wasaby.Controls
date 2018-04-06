@@ -318,3 +318,22 @@
       }
    }
 }
+// Стили для кастомизируемой цитаты
+// Сам блок с цитатой
+.customBlockquote {
+   border-left: 1px #587AB0 solid;
+   padding-left: 8px;
+   padding-right: 0;
+   margin: 0 16px 0 40px !important;
+   clear: both;
+   position: relative;
+   font-size: 24px;
+   line-height: normal;
+}
+// Блок под картинку слева от цитаты
+.customBlockquote::before {
+   position: absolute;
+   margin-left: -32px;
+   height: 16px;
+   width: 24px;
+}

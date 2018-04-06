@@ -1,7 +1,7 @@
-define('js!WSControls/Tooltips/Tooltip',
+define('SBIS3.CONTROLS/WSControls/Tooltips/Tooltip',
    [
       'Core/Control',
-      'tmpl!WSControls/Tooltips/Tooltip',
+      'tmpl!SBIS3.CONTROLS/WSControls/Tooltips/Tooltip',
       'Core/detection',
       'SBIS3.CONTROLS/Utils/GetTextWidth'
    ],
@@ -10,7 +10,7 @@ define('js!WSControls/Tooltips/Tooltip',
       'use strict';
 
       var Tooltip = Control.extend({
-         _controlName: 'WSControls/Tooltips/Tooltip',
+         _controlName: 'SBIS3.CONTROLS/WSControls/Tooltips/Tooltip',
 
          _template: template,
 

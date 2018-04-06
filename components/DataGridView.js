@@ -352,7 +352,7 @@ define('SBIS3.CONTROLS/DataGridView',
                column.resultTemplateData = {
                   result: value,
                   item: resultsRecord,
-                  column: column,
+                  column: coreClone(column),
                   index: i,
                   resultsText: cfg.resultsText
                };
@@ -492,13 +492,15 @@ define('SBIS3.CONTROLS/DataGridView',
              * </ol>
              * Следует указать настройки декораторов разметки, если требуется. Используем декоратор подсветки текста:
              * <pre>
-             *    {{=it.decorators.applyOnly(it.value, {
-             *       highlight: it.highlight
-             *    })}}
+             *    {{ someText|highlight: someString, cssClass }}
              * </pre>
              * Также можно использовать лесенку:
              * <pre>
-             *    {{=it.ladder.get(it.item, it.field)}}
+             *    <ws:if data="{{ ladder.isPrimary(item, 'responsibleId') }}">
+             *     <div class='edo-Browser-Responsible__photo'>
+             *      <ws:partial template="tmpl!SBIS3.Person.PersonsCollage" scope="{{ item.responsible.collageData }}"/>
+             *      </div>
+             *     </ws:if>
              * </pre>
              * @remark
              * Если в настройке колонки имя поля соответствует шаблону ['Name1.Name2'], то при подготовке полей для рендеринга строки считаем, что в .get('Name1') находится рекорд, и значение получаем уже у этого рекорда через .get('Name2')
@@ -593,10 +595,10 @@ define('SBIS3.CONTROLS/DataGridView',
              * @example
              * 1. Подключаем шаблон в массив зависимостей:
              * <pre>
-             *     define('js!SBIS3.Demo.nDataGridView',
+             *     define('SBIS3/Demo/nDataGridView',
              *        [
              *           ...,
-             *           'html!SBIS3.Demo.nDataGridView/resources/resultTemplate'
+             *           'html!SBIS3/Demo/nDataGridView/resources/resultTemplate'
              *        ],
              *        ...
              *     );

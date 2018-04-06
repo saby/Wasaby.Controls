@@ -14,7 +14,7 @@ define('SBIS3.CONTROLS/Button/BackButton',
     * @class SBIS3.CONTROLS/Button/BackButton
     * @extends Lib/Control/CompoundControl/CompoundControl
     * @author Герасимов А.М.
-    * @demo SBIS3.CONTROLS.Demo.MyBackButton
+    * @demo Examples/BackButton/MyBackButton/MyBackButton
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers parent
     * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner record stateKey
@@ -140,6 +140,14 @@ define('SBIS3.CONTROLS/Button/BackButton',
 
       getHref: function(){
          return this._options.href;
+      },
+
+      setEscapeCaptionHtml: function (escapeHtml) {
+         this._link.setProperty('escapeCaptionHtml', escapeHtml);
+      },
+
+      getEscapeCaptionHtml: function () {
+         return this._link.getProperty('escapeCaptionHtml');
       },
 
       /**

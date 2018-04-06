@@ -1,7 +1,8 @@
-<Controls:List:SourceControl
+<Controls.List.SourceControl
               listViewModel="{{_viewModel}}"
               source="{{_options.source}}"
               filter="{{_options.filter}}"
+              name="sourceControl"
               navigation="{{_options.navigation}}"
               viewName="Controls/List/SimpleList/ListView"
               itemTemplate="{{_options.itemTemplate}}"
@@ -9,6 +10,18 @@
               idProperty="{{_options.idProperty}}"
               displayProperty="{{_options.displayProperty}}"
               markedKey="{{_options.markedKey}}"
-              filter="{{_options.filter}}"
-            >
-</Controls:List:SourceControl>
+              selectedKeys="{{_options.selectedKeys}}"
+              excludedKeys="{{_options.excludedKeys}}"
+              itemsReadyCallback="{{_options.itemsReadyCallback}}"
+              on:beforeItemsRemove="_beforeItemsRemove()"
+              on:afterItemsRemove="_afterItemsRemove()"
+              itemActionsType="{{_options.itemActionsType}}"
+              itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
+              itemActions="{{_options.itemActions}}"
+              editingConfig="{{_options.editingConfig}}"
+              on:beforeItemAdd="_onBeforeItemAdd()"
+              on:beforeItemEdit="_onBeforeItemEdit()"
+              on:afterItemEdit="_onAfterItemEdit()"
+              on:beforeItemEndEdit="_onBeforeItemEndEdit()"
+              on:afterItemEndEdit="_onAfterItemEndEdit()">
+</Controls.List.SourceControl>

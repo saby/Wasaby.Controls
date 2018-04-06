@@ -233,7 +233,20 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                 /**
                  * @cfg {function} функция проверки валидности класса
                  */
-               validateClass: undefined
+               validateClass: undefined,
+               /**
+                * @cfg {Object} Пользовательский формат для блоков
+                * @example
+                * <pre>
+                *    <options name="customStyle">
+                *       <option name="block">blockquote</option>
+                *       <option name="wrapper">1</option>
+                *       <option name="remove">all</option>
+                *       <option name="classes">customStyle</option>
+                *    </options>
+                * </pre>
+                */
+               customFormats: {}
             },
             _richTextAreaContainer: undefined,
             _richTextAreaScrollContainer: undefined,
@@ -278,6 +291,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             if (options.autoHeight) {
                options.minimalHeight = this._cleanHeight(options.minimalHeight);
                options.maximalHeight = this._cleanHeight(options.maximalHeight);
+            }
+            for(var key in options.customFormats) {
+               if ({}.hasOwnProperty.call(options.customFormats, key)) {
+                  options.editorConfig.formats[key] = options.customFormats[key];
+               }
             }
             return options;
          },
@@ -1348,6 +1366,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             return this._inputControl;
          },
 
+
+         // Переключение пользовательского формата у блока
+         toggleStyle: function(style) {
+            this._tinyEditor.formatter.toggle(style);
+         },
+
          /**
           * Установить выравнивание текста для активной строки
           * @param {String} align Устанавливаемое выравнивание
@@ -1724,7 +1748,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                self._tinyReady.callback();
                /*НОТИФИКАЦИЯ О ТОМ ЧТО В РЕДАКТОРЕ ПОМЕНЯЛСЯ ФОРМАТ ПОД КУРСОРОМ*/
                //formatter есть только после инита поэтому подписка осуществляется здесь
-               editor.formatter.formatChanged('bold,italic,underline,strikethrough,alignleft,aligncenter,alignright,alignjustify,title,subTitle,additionalText,blockquote', function(state, obj) {
+               var formats = 'bold,italic,underline,strikethrough,alignleft,aligncenter,alignright,alignjustify,title,subTitle,additionalText,blockquote';
+               for(var key in this._options.customFormats){
+                  if ({}.hasOwnProperty.call(this._options.customFormats, key)) {
+                     formats += ',' + key;
+                  }
+               }
+               editor.formatter.formatChanged(formats, function(state, obj) {
                   self._notify('onFormatChange', obj, state)
                });
                self._notify('onInitEditor');

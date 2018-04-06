@@ -42,6 +42,9 @@
 @margin-top_DropdownList:       round(-2px * @multiplier);
 @margin-left_DropdownList:      round(-17px * @multiplier);
 @right_DropdownList-icon:       round(16px * @multiplier);
+
+@padding_DropdownList-default:  round(16px * @multiplier);
+@padding_DropdownList-hierarchy:round(66px * @multiplier);
 //MoneyTextBox
 @font-size_MoneyTextBox-decimals: @small-text-size;
 //NumberTextBox
@@ -290,7 +293,6 @@
 @border-radius_Switch:                              round(28px * @multiplier);
 @size_Switch-marker:                                round(26px * @multiplier);
 @border-width_Switch-marker:                        round(3px * @multiplier);
-@border-width_Switch-marker_hover:                  round(3px * @multiplier);
 @size_Switch-dot:                                   ceil(14px * @multiplier);
 @margin_Switch-text:                                round(16px * @multiplier);
 @height_Switch-line:                                round(4px * @multiplier);
@@ -359,6 +361,17 @@
 //MenuButton
 @menu-button-menu-margin:                             round(-1px * @multiplier) 0 0 round(0 * @multiplier);
 @menu-button-header-font-size:                        @font-size_Button_default;
+
+@margin-top_MenuButton_button:                        round(-11px * @multiplier);
+@margin-top_MenuButton_link_small:                    round(-24px * @multiplier);
+@margin-left_MenuButton_link_small:                   round(-17px * @multiplier);
+@margin-top_MenuButton_link_medium:                   round(-19px * @multiplier);
+@margin-left_MenuButton_link_medium:                  round(-17px * @multiplier);
+
+
+@width-Dropdown-cross:                                round(42px * @multiplier);
+@height-Dropdown-cross:                               round(42px * @multiplier);
+@font-size-Dropdown-cross:                            round(42px * @multiplier);
 //CommandsButton
 @menu-item-expand-padding-right:                      round(66px * @multiplier)!important;
 @commands-button-close-button-size:                   round(42px * @multiplier);
@@ -557,6 +570,16 @@
 @font-size_Tabs-item_selected:           @huge-text-size;
 @max-width_Tabs_item:                    round(1500px * @multiplier);
 @border-width_Tabs-item_hover_selected:  round(8px * @multiplier);
+//Scrollbar
+@width_Scrollbar:                        round(10px * @multiplier);
+@margin_Scrollbar:                       round(8px * @multiplier);
+@width_Scrollbar_animation:              round(16px * @multiplier);
+
+@min-height_Scrollbar-thumb:             round(100px * @multiplier);
+@border-radius_Scrollbar-thumb:          round(5px * @multiplier);
+@border-radius_Scrollbar-thumb_animation:round(10px * @multiplier);
+//Scroll
+@height-gradient_Scroll-shadow:          round(32px * @multiplier);
 //FilterButton
 @font-size_FilterButton-icon:            round(38px * @multiplier);
 @font-size_FilterButton-text:            @large-text-size;
@@ -568,3 +591,16 @@
 @data-grid-partScroll-thumb-height:             round(10px * @multiplier);
 @data-grid-partScroll-thumb-top-shift:          round(-6px * @multiplier);
 @data-grid-partScroll-thumb-clicked-top-shift:  round(-9px * @multiplier);
+//itemActions
+@height_itemActions_inside:                     round(42px * @multiplier);
+@height_itemAction_outside:                     round(75px * @multiplier);
+@margin_itemActions_action:                     0 round(8px * @multiplier);
+@padding_itemActions_outside:                   round(8px * @multiplier) 0;
+@padding_itemActions_inside:                    round(3px * @multiplier) round(16px * @multiplier);
+
+//FastFilter
+@icon-size_FastFilter:                      round(42px * @multiplier);
+@spacing_FastFilter-item:                   0 round(8px * @multiplier) 0 0;
+@height_FastFilter-iconArrow:               round(24px * @multiplier);
+@width_FastFilter-iconArrow:                round(24px * @multiplier);
+@spacing_FastFilter-between-icon-text:      0 round(4px *@multiplier) 0 round(4px *@multiplier);

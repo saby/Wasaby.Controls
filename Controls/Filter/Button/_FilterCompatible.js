@@ -5,13 +5,14 @@ define('Controls/Filter/Button/_FilterCompatible',
    [
       'Core/core-extend',
       'SBIS3.CONTROLS/Filter/Button/Utils/FilterToStringUtil',
-      'Controls/Filter/Button/OldPanelOpener'
+      'Controls/Filter/Button/OldPanelOpener',
+      'Controls/Filter/Button/converterFilterStructure'
    ],
    
-   function(extend, stringTransformer, OldPanelOpener) {
+   function(extend, stringTransformer, OldPanelOpener, converterFilterStructure) {
       
       /**
-       * @class Controls/Layout/Search
+       * @class Controls/Container/Search
        * @extends Controls/Control
        * @control
        * @public
@@ -22,11 +23,13 @@ define('Controls/Filter/Button/_FilterCompatible',
       var _private = {
          
          notifyOnFilterChange: function(self, filter) {
-            self._filterButton._notify('filterChanged', filter, {bubbling: true});
+            self._filterButton._notify('filterChanged', [filter]);
          },
          
          oldPanelChangeHandler: function(self) {
-            self._filterButton._text = stringTransformer.string(self._oldPanelOpener.getFilterStructure(), 'itemTemplate');
+            var filterStructure = self._oldPanelOpener.getFilterStructure();
+            self._filterButton._text = stringTransformer.string(filterStructure, 'itemTemplate');
+            self._filterButton._items = converterFilterStructure.convertToSourceData(filterStructure);
             _private.notifyOnFilterChange(self, self._oldPanelOpener.getFilter());
             self._filterButton._forceUpdate();
          },

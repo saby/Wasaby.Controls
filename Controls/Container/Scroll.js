@@ -1,145 +1,303 @@
 define('Controls/Container/Scroll',
    [
       'Core/Control',
-      'tmpl!Controls/Container/Scroll/Scroll',
+      'Core/Deferred',
       'Core/detection',
-      'Controls/Container/Scrollbar/Scrollbar',
+      'Core/helpers/Object/isEqual',
+      'Controls/Container/Scroll/ScrollWidthUtil',
+      'Controls/Container/Scroll/ScrollHeightFixUtil',
+      'tmpl!Controls/Container/Scroll/Scroll',
+
+      'Controls/Layout/Scroll',
+      'Controls/Event/Emitter',
+      'Controls/Container/Scroll/Scrollbar',
       'css!Controls/Container/Scroll/Scroll'
    ],
-   function(Control, template, detection) {
+   function(Control, Deferred, detection, isEqual, ScrollWidthUtil, ScrollHeightFixUtil, template) {
 
       'use strict';
-
-      var _private = {
-         doInitScrollbar: function(self){
-            self.showScrollbar = !(detection.isMobileIOS || detection.isMobileAndroid) && (self._getContainerHeight() !== self._getScrollHeight());
-            self.contentHeight = self._getScrollHeight();
-            self.scrollBarPosition = self._getScrollTop();
-         }
-      };
 
       /**
        * Компонент - контейнер с узкой стилизованной полосой скролла.
        * @class Controls/Container/Scroll
-       * @extends Controls/Control
+       * @extends Core/Control
        * @control
        * @public
        * @category Container
-       */
-
-      /**
+       *
        * @name Controls/Container/Scroll#content
        * @cfg {Content} Содержимое контейнера
-       */
-      /**
-       * @name Controls/Container/Scroll#shadowVisibility
+       *
+       * @name Controls/Container/Scroll#shadowVisible
        * @cfg {Boolean} Наличие тени при прокрутке контента
-       */
-      /**
-       * @name Controls/Container/Scroll#scrollbarVisibility
+       *
+       * @name Controls/Container/Scroll#scrollbarVisible
        * @cfg {Boolean} Наличие полосы прокрутки
-       */
-      /**
+       *
        * @name Controls/Container/Scroll#style
        * @cfg {String} Цветовая схема контейнера. Влияет на цвет тени и полоски скролла. Используется для того чтобы контейнер корректно отображался как на светлом так и на темном фоне.
        * @variant normal стандартная схема
-       * @variant opposite противоположная схема
+       * @variant inverted противоположная схема
        */
+      var
+         _private = {
+            /**
+             * Получить расположение тени внутри контейнера в зависимости от прокрутки контента.
+             * @return {String}
+             */
+            calcShadowPosition: function(scrollTop, containerHeight, scrollHeight) {
+               var shadowPosition = '';
 
-      var ScrollContainer = Control.extend({
-         _template: template,
-         contentHeight: 1,
-         scrollBarPosition: 0,
-         showScrollbar: false,
-         goodIntervalForSilentSizeChanged: null,
-         _getScrollHeight: function(){
-            return this._children.content.scrollHeight;
-         },
-         _getContainerHeight: function() {
-            return this._children.content.offsetHeight;
-         },
-         _toggleGradient: function() {
-            // maxScrollTop > 1 - погрешность округления на различных браузерах.
-            var maxScrollTop = this._getScrollHeight() - this._getContainerHeight();
-            this.topGradient = this._getScrollTop() > 0;
-            this.bottomGradient = maxScrollTop > 1 && this._getScrollTop() < maxScrollTop;
-         },
-         _getScrollTop: function(){
-            return this._children.content.scrollTop;
-         },
-         _initScrollbar: function initScrollbar() {
-            _private.doInitScrollbar(this);
-         },
-         _hideScrollbar: function hideScrollbar() {
-            this.showScrollbar = false;
-         },
-         _onScroll: function onScroll() {
-            var scrollTop = this._getScrollTop();
-            if (this.showScrollbar) {
-               this.scrollBarPosition = scrollTop;
+               if (scrollTop) {
+                  shadowPosition += 'top';
+               }
+               if (scrollHeight - containerHeight - scrollTop) {
+                  shadowPosition += 'bottom';
+               }
+
+               return shadowPosition;
+            },
+
+            getScrollHeight: function(container) {
+               return container.scrollHeight;
+            },
+
+            getContainerHeight: function(container) {
+               return container.offsetHeight;
+            },
+
+            getScrollTop: function(container) {
+               return container.scrollTop;
+            },
+
+            calcHasScroll: function(self) {
+               var
+                  scrollHeight = _private.getScrollHeight(self._children.content),
+                  containerHeight = _private.getContainerHeight(self._children.content);
+
+               return scrollHeight > containerHeight;
+            },
+
+            getContentHeight: function(self) {
+               return _private.getScrollHeight(self._children.content);
+            },
+
+            getShadowPosition: function(self) {
+               var
+                  scrollTop = _private.getScrollTop(self._children.content),
+                  scrollHeight = _private.getScrollHeight(self._children.content),
+                  containerHeight = _private.getContainerHeight(self._children.content);
+
+               return _private.calcShadowPosition(scrollTop, containerHeight, scrollHeight);
+            },
+
+            calcHeightFix: function(self) {
+               return ScrollHeightFixUtil.calcHeightFix(self._children.content);
+            },
+
+            calcDisplayState: function(self) {
+               return {
+                  heightFix: _private.calcHeightFix(self),
+                  hasScroll: _private.calcHasScroll(self),
+                  contentHeight: _private.getContentHeight(self),
+                  shadowPosition: _private.getShadowPosition(self)
+               }
+            },
+
+            updateDisplayState: function(self, displayState) {
+               self._displayState.hasScroll = displayState.hasScroll;
+               self._displayState.heightFix = displayState.haheightFixsScroll;
+               self._displayState.contentHeight = displayState.contentHeight;
+               self._displayState.shadowPosition = displayState.shadowPosition;
             }
-            this._toggleGradient();
          },
-         _afterMount: function afterMountScrollContainer() {
-            if (this.showScrollbar) {
-               this._toggleGradient();
+         Scroll = Control.extend({
+            _template: template,
+            /**
+             * Смещение контента сверху относительно контейнера.
+             * @type {number}
+             */
+            _scrollTop: 0,
+            /**
+             * Нужно ли показывать скролл при наведении.
+             * @type {boolean}
+             */
+            _showScrollbarOnHover: true,
+            /**
+             * Наведен ли курсор на контейнер.
+             * @type {boolean}
+             */
+            _hasHover: false,
+            /**
+             * Используется ли нативный скролл.
+             * @type {boolean}
+             */
+            _useNativeScrollbar: null,
+
+            _displayState: null,
+
+            _beforeMount: function(options, context, receivedState) {
+               var
+                  self = this,
+                  def;
+
+               this._displayState = {};
+
+               if (receivedState) {
+                  _private.updateDisplayState(this, receivedState.displayState);
+                  this._styleHideScrollbar = receivedState.styleHideScrollbar;
+                  this._useNativeScrollbar = receivedState.useNativeScrollbar;
+               } else {
+                  def = new Deferred();
+
+                  def.addCallback(function() {
+                     var
+                        displayState = {
+                           heightFix: ScrollHeightFixUtil.calcHeightFix()
+                        },
+                        styleHideScrollbar = ScrollWidthUtil.calcStyleHideScrollbar(),
+                        // На мобильных устройствах используется нативный скролл, на других платформенный.
+                        useNativeScrollbar = detection.isMobileIOS || detection.isMobileAndroid || detection.isMac;
+
+                     _private.updateDisplayState(self, displayState);
+                     self._styleHideScrollbar = styleHideScrollbar;
+                     self._useNativeScrollbar = useNativeScrollbar;
+
+                     return {
+                        displayState: displayState,
+                        styleHideScrollbar: styleHideScrollbar,
+                        useNativeScrollbar: useNativeScrollbar
+                     }
+                  });
+
+                  def.callback();
+
+                  return def;
+               }
+            },
+
+            _afterMount: function() {
+               /**
+                * Для определения heightFix и styleHideScrollbar может требоваться DOM, поэтому проверим
+                * смогли ли мы в beforeMount их определить.
+                */
+               if (typeof this._displayState.heightFix === 'undefined') {
+                  this._displayState.heightFix = ScrollHeightFixUtil.calcHeightFix(this._children.content);
+
+                  this._forceUpdate();
+               }
+               if (typeof this._styleHideScrollbar === 'undefined') {
+                  this._styleHideScrollbar = ScrollWidthUtil.calcStyleHideScrollbar();
+
+                  this._forceUpdate();
+               }
+            },
+
+            _afterUpdate: function() {
+               var displayState = _private.calcDisplayState(this);
+
+               this._children.content.scrollTop = this._scrollTop;
+
+               if (!isEqual(this._displayState, displayState)) {
+                  this._displayState = displayState;
+                  this._forceUpdate();
+               }
+            },
+
+            _resizeHandler: function() {
+               this._displayState = _private.calcDisplayState(this);
+            },
+
+            _scrollHandler: function() {
+               if (!this._dragging) {
+                  this._scrollTop = _private.getScrollTop(this._children.content);
+               }
+            },
+
+            _scrollbarTaken: function(notify) {
+               if (this._showScrollbarOnHover && this._displayState.hasScroll) {
+                  this._hasHover = true;
+
+                  if (notify) {
+                     this._notify('scrollbarTaken', [], {bubbling: true});
+                  }
+               }
+            },
+
+            _mouseenterHandler: function() {
+               this._scrollbarTaken(true);
+            },
+
+            _mouseleaveHandler: function() {
+               if (this._hasHover) {
+                  this._hasHover = false;
+                  this._notify('scrollbarReleased', [], {bubbling: true});
+               }
+            },
+
+            _scrollbarTakenHandler: function() {
+               this._hasHover = false;
+               this._showScrollbarOnHover = false;
+            },
+
+            _scrollbarReleasedHandler: function(event) {
+               if (!this._showScrollbarOnHover) {
+                  this._showScrollbarOnHover = true;
+                  event.preventDefault();
+
+                  this._scrollbarTaken(false)
+               }
+            },
+
+            /**
+             * TODO: убрать после выполнения https://online.sbis.ru/opendoc.html?guid=93779c1a-8d18-42fe-8dc8-1bab779d0943.
+             * Переделать на bind в шаблоне и избавится от прокидывания опций.
+             */
+            _positionChangedHandler: function(event, position) {
+               this._scrollTop = position;
+            },
+
+            _draggingChangedHandler: function(event, dragging) {
+               this._dragging = dragging;
+            },
+
+            getDataId: function() {
+               return 'Controls.Container.Scroll';
+            },
+
+            /**
+             * Осуществить скролл на заданную величину в пикселях
+             * @param {Number} offset
+             */
+            scrollTo: function(offset) {
+               this._scrollTop = offset;
+            },
+
+            /**
+             * Осуществить скролл к верху области
+             */
+            scrollToTop: function() {
+               this._scrollTop = 0;
+            },
+
+            /**
+             * Осуществить скролл к низу области
+             */
+            scrollToBottom: function() {
+               this._scrollTop = _private.getScrollHeight(this._children.content);
             }
-         },
+         });
 
-         /**
-          * Осуществить скролл на заданную величину в пикселях
-          * @param {Number} offset
-          */
-         scrollTo: function(offset) {
-            return this._children.content.scrollTop = offset;
-         },
-
-         /**
-          * Осуществить скролл к верху области
-          */
-         scrollToTop: function() {
-            this.scrollTo(0);
-         },
-
-         /**
-          * Осуществить скролл к низу области
-          */
-         scrollToBottom: function() {
-            var containerHeight = this._getScrollHeight();
-            this.scrollTo(containerHeight);
+      Scroll.getDefaultOptions = function() {
+         return {
+            style: 'normal',
+            shadowVisible: true,
+            scrollbarVisible: true
          }
+      };
 
-      });
+      Scroll._private = _private;
 
-      ScrollContainer.prototype.browserScrollSize = (function() {
-         if(typeof window === 'undefined') {
-            return;
-         }
-         var scrollbarWidth = null,
-            outer;
-         /**
-          * В браузерах с поддержкой ::-webkit-scrollbar установлена ширина 0.
-          * Определяем не с помощью Core/detection, потому что в нем считается, что chrome не на WebKit.
-          */
-         if (/AppleWebKit/.test(navigator.userAgent)) {
-            scrollbarWidth = 0;
-         } else if (detection.isMac) {
-            scrollbarWidth = 15;
-         } else if (detection.isIE12) {
-            scrollbarWidth = 16;
-         } else if (detection.isIE10 || detection.isIE11) {
-            scrollbarWidth = 17;
-         } else {
-            outer = document.createElement('div');
-            outer.className = 'forScrollBarMeasurement';
-            document.body.appendChild(outer);
-            scrollbarWidth = outer.offsetWidth - outer.clientWidth;
-            document.body.removeChild(outer);
-         }
-
-         return scrollbarWidth;
-      })();
-
-      return ScrollContainer;
+      return Scroll;
    }
 );

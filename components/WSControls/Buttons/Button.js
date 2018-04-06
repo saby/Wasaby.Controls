@@ -1,9 +1,9 @@
 
-define('js!WSControls/Buttons/Button', [
+define('SBIS3.CONTROLS/WSControls/Buttons/Button', [
    'Core/constants',
-   'js!WSControls/Buttons/ButtonBase',
-   'tmpl!WSControls/Buttons/Button',
-   'tmpl!WSControls/Buttons/resources/contentTemplate'
+   'SBIS3.CONTROLS/WSControls/Buttons/ButtonBase',
+   'tmpl!SBIS3.CONTROLS/WSControls/Buttons/Button',
+   'tmpl!SBIS3.CONTROLS/WSControls/Buttons/resources/contentTemplate'
 ], function(constants, ButtonBase, dotTplFn, contentTemplate) {
 
    'use strict';
@@ -21,7 +21,7 @@ define('js!WSControls/Buttons/Button', [
     * </ol>
     * @class WSControls/Buttons/Button
     * @extends WSControls/Buttons/ButtonBase
-	* @demo SBIS3.CONTROLS.Demo.MyButton
+	* @demo Examples/Button/MyButton/MyButton
     *
     * @author Крайнов Д.О.
     *
@@ -58,7 +58,7 @@ define('js!WSControls/Buttons/Button', [
     * @category Button
     * @public
     * @initial
-    * <component data-component='WSControls/Buttons/Button'>
+    * <component data-component='SBIS3.CONTROLS/WSControls/Buttons/Button'>
     *    <option name='caption' value='Кнопка'></option>
     * </component>
     */

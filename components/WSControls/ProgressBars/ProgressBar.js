@@ -1,10 +1,10 @@
 /**
  * Модуль 'Индикатор процесса'.
  */
-define('js!WSControls/ProgressBars/ProgressBar',
+define('SBIS3.CONTROLS/WSControls/ProgressBars/ProgressBar',
    [
       'Core/Control',
-      'tmpl!WSControls/ProgressBars/ProgressBar',
+      'tmpl!SBIS3.CONTROLS/WSControls/ProgressBars/ProgressBar',
       'WS.Data/Type/descriptor',
       'css!SBIS3.CONTROLS/ProgressBar/ProgressBar'
    ],
@@ -13,7 +13,7 @@ define('js!WSControls/ProgressBars/ProgressBar',
        * Класс контрола "Индикатор прохождения процесса".
        * @class SBIS3.CONTROLS/ProgressBar
        * @extends Core/Control
-       * @demo SBIS3.CONTROLS.Demo.MyProgressBar
+       * @demo Examples/ProgressBar/MyProgressBar/MyProgressBar
        *
        * @control
        * @author Журавлев М.С.
@@ -40,7 +40,7 @@ define('js!WSControls/ProgressBars/ProgressBar',
       var ProgressBar = Control.extend({
          _template: template,
 
-         _controlName: 'WSControls/ProgressBars/ProgressBar',
+         _controlName: 'SBIS3.CONTROLS/WSControls/ProgressBars/ProgressBar',
 
          _getProgressPercent: function(minimum, maximum, progress, step) {
             var

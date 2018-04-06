@@ -160,6 +160,18 @@ define('Controls/Controllers/SourceController',
             this._queryParamsController.setEdgeState(direction)
          },
 
+         create: function(meta) {
+            return this._source.create(meta);
+         },
+
+         update: function(item) {
+            return this._source.update(item);
+         },
+
+         remove: function(items) {
+            return this._source.destroy(items);
+         },
+
          destroy: function() {
             if (this._queryParamsController) {
                this._queryParamsController.destroy();

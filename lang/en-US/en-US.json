@@ -16,7 +16,6 @@
    "Все": "All",
    "Все записи": "All records",
    "Всего": "Total",
-   "Вставка": "Paste",
    "Вставить картинку": "Insert image",
    "Вставить с учётом стилей": "Insert considering styles",
    "Вставить/Удалить список": "Insert / Remove list",
@@ -215,7 +214,6 @@
    "тупица": "dump",
    "улыбка": "smile",
    "умник": "nerd",
-   "Цитата": "Quote",
    "шокирован": "shocked",
    "Показать": "Show",
    "Показать все": "Show all",
@@ -252,5 +250,10 @@
    "РедакторКолонок@@Выберите шаблон": "Select template",
    "РедакторКолонок@@Показать колонку": "Show column",
    "РедакторКолонок@@Скрыть колонку": "Hide column",
-   "РедакторКолонок@@Название шаблона не может быть пустым и должно отличаться от названий других шаблонов": "Template name cannot be empty and must be different from the names of the other templates"
+   "РедакторКолонок@@Название шаблона не может быть пустым и должно отличаться от названий других шаблонов": "Template name cannot be empty and must be different from the names of the other templates",
+   "Загрузить": "Upload",
+   "Переместите файлы сюда": "Drag files here",
+   "Отпустите файлы": "Drag files",
+   "Нет выбранных ресурсов для загрузки": "No selected resources to upload",
+   "Инициализация камеры": "Initialize the camera"
 }

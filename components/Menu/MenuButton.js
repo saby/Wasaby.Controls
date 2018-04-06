@@ -1,5 +1,5 @@
 define('SBIS3.CONTROLS/Menu/MenuButton', [
-   'js!WSControls/Buttons/MenuButton',
+   'SBIS3.CONTROLS/WSControls/Buttons/MenuButton',
    'SBIS3.CONTROLS/Utils/ButtonUtil',
    'css!SBIS3.CONTROLS/Button/Button',
    'css!SBIS3.CONTROLS/Menu/MenuButton/MenuButton'

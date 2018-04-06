@@ -12,7 +12,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/config',
       return [
       {
          name: 'undo',
-         componentType: 'WSControls/Buttons/Button',
+         componentType: 'SBIS3.CONTROLS/WSControls/Buttons/Button',
          tooltip: rk('Шаг назад'),
           className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          icon: 'sprite:icon-24 icon-Undo2 icon-primary',
@@ -26,7 +26,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/config',
 
       {
          name: 'redo',
-         componentType: 'WSControls/Buttons/Button',
+         componentType: 'SBIS3.CONTROLS/WSControls/Buttons/Button',
          tooltip: rk('Шаг вперед'),
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          icon: 'sprite:icon-24 icon-Redo2 icon-primary',
@@ -39,7 +39,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/config',
       },
       {
          name: 'styles',
-         componentType: 'WSControls/Buttons/Button',
+         componentType: 'SBIS3.CONTROLS/WSControls/Buttons/Button',
          tooltip: rk('Стили'),
          icon: 'sprite:icon-24 icon-TFCurtailRTE2 icon-primary',
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
@@ -72,7 +72,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/config',
 
       {
          name: 'bold',
-         componentType: 'WSControls/Buttons/ToggleButton',
+         componentType: 'SBIS3.CONTROLS/WSControls/Buttons/ToggleButton',
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          tooltip: rk('Полужирный'),
          icon: 'sprite:icon-24 icon-Bold icon-primary',
@@ -85,7 +85,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/config',
 
       {
          name: 'italic',
-         componentType: 'WSControls/Buttons/ToggleButton',
+         componentType: 'SBIS3.CONTROLS/WSControls/Buttons/ToggleButton',
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          tooltip: rk('Курсив'),
          icon: 'sprite:icon-24 icon-Italic icon-primary',
@@ -98,7 +98,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/config',
 
       {
          name: 'underline',
-         componentType: 'WSControls/Buttons/ToggleButton',
+         componentType: 'SBIS3.CONTROLS/WSControls/Buttons/ToggleButton',
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          tooltip: rk('Подчеркнутый'),
          icon: 'sprite:icon-24 icon-Underline icon-primary',
@@ -111,7 +111,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/config',
 
       {
          name: 'strikethrough',
-         componentType: 'WSControls/Buttons/ToggleButton',
+         componentType: 'SBIS3.CONTROLS/WSControls/Buttons/ToggleButton',
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          tooltip: rk('Зачеркнутый'),
          icon: 'sprite:icon-24 icon-Stroked icon-primary',
@@ -124,7 +124,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/config',
 
       {
          name: 'blockquote',
-         componentType: 'WSControls/Buttons/ToggleButton',
+         componentType: 'SBIS3.CONTROLS/WSControls/Buttons/ToggleButton',
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          tooltip: rk('Цитата'),
          icon: 'sprite:icon-24 icon-Quote icon-primary',
@@ -137,7 +137,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/config',
 
       {
          name: 'align',
-         componentType: 'WSControls/Buttons/MenuButton',
+         componentType: 'SBIS3.CONTROLS/WSControls/Buttons/MenuButton',
          tooltip: rk('Выравнивание текста'),
          items: [
             { key: 'alignleft',title: ' ', tooltip: rk('По левому краю'), icon: 'icon-24 icon-AlignmentLeft icon-primary'},
@@ -170,7 +170,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/config',
 
       {
          name: 'color',
-         componentType: 'WSControls/Buttons/MenuButton',
+         componentType: 'SBIS3.CONTROLS/WSControls/Buttons/MenuButton',
          tooltip: rk('Цвет текста'),
          icon: 'sprite:icon-24 icon-LetterA icon-primary',
          className: 'fre-color controls-ToggleButton__square controls-ToggleButton-square__medium',
@@ -202,7 +202,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/config',
 
       {
          name: 'list',
-         componentType: 'WSControls/Buttons/MenuButton',
+         componentType: 'SBIS3.CONTROLS/WSControls/Buttons/MenuButton',
          tooltip: rk('Вставить/Удалить список'),
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          pickerClassName: 'fre-list controls-RichEditorToolbarMenu controls-MenuIcon__Menu controls-Menu__hide-menu-header',
@@ -231,7 +231,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/config',
 
       {
          name: 'link',
-         componentType: 'WSControls/Buttons/ToggleButton',
+         componentType: 'SBIS3.CONTROLS/WSControls/Buttons/ToggleButton',
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          tooltip: rk('Вставить/редактировать ссылку'),
          icon: 'sprite:icon-24 icon-Link icon-primary',
@@ -245,7 +245,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/config',
 
       {
          name: 'unlink',
-         componentType: 'WSControls/Buttons/Button',
+         componentType: 'SBIS3.CONTROLS/WSControls/Buttons/Button',
          tooltip: rk('Убрать ссылку'),
          icon: 'sprite:icon-24 icon-Unlink icon-primary',
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
@@ -260,7 +260,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/config',
 
       {
          name: 'image',
-         componentType: 'WSControls/Buttons/Button',
+         componentType: 'SBIS3.CONTROLS/WSControls/Buttons/Button',
          icon: 'sprite:icon-24 icon-PicBtr icon-primary',
          tooltip: rk('Вставить изображение'),
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
@@ -274,7 +274,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/config',
       {
          name: 'smile',
          tooltip: rk('Вставить смайлик'),
-         componentType: 'WSControls/Buttons/MenuButton',
+         componentType: 'SBIS3.CONTROLS/WSControls/Buttons/MenuButton',
          icon: 'sprite:icon-24 icon-SmileBtr icon-primary',
          pickerClassName: 'controls-RichEditorToolbar__smilesPicker controls-Menu__hide-menu-header controls-MenuButton__Menu',
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
@@ -290,7 +290,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/config',
 
       {
          name: 'paste',
-         componentType: 'WSControls/Buttons/MenuButton',
+         componentType: 'SBIS3.CONTROLS/WSControls/Buttons/MenuButton',
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          pickerClassName: 'controls-MenuButton__Menu',
          caption: rk('Вставка'),
@@ -321,7 +321,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/config',
 
       {
          name: 'source',
-         componentType: 'WSControls/Buttons/ToggleButton',
+         componentType: 'SBIS3.CONTROLS/WSControls/Buttons/ToggleButton',
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          tooltip: rk('html-разметка'),
          icon: 'sprite:icon-24 icon-Html icon-primary',
@@ -334,7 +334,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/config',
       {
          name: 'history',
          caption: rk('История ввода'),
-         componentType: 'WSControls/Buttons/MenuButton',
+         componentType: 'SBIS3.CONTROLS/WSControls/Buttons/MenuButton',
          pickerClassName: 'controls-MenuIcon__Menu',
          icon: 'sprite:icon-24 icon-InputHistory icon-primary',
          multiselect: false,
@@ -360,7 +360,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/config',
       {
          name: 'codesample',
          tooltip: rk('Вставка кода'),
-         componentType: 'WSControls/Buttons/Button',
+         componentType: 'SBIS3.CONTROLS/WSControls/Buttons/Button',
          icon: 'sprite:icon-24 icon-PasteCodeBtr icon-primary',
          multiselect: false,
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',

@@ -1,7 +1,7 @@
 
 define('SBIS3.CONTROLS/CheckBox', [
    "Core/constants",
-   "js!WSControls/Buttons/ButtonBase",
+   "SBIS3.CONTROLS/WSControls/Buttons/ButtonBase",
    "SBIS3.CONTROLS/Mixins/Checkable",
    "tmpl!SBIS3.CONTROLS/CheckBox/CheckBox",
    "tmpl!SBIS3.CONTROLS/CheckBox/resources/ContentTemplate",
@@ -30,7 +30,7 @@ define('SBIS3.CONTROLS/CheckBox', [
     * @mixes SBIS3.CONTROLS/Mixins/ITextValue
     *
     *
-    * @demo SBIS3.CONTROLS.Demo.MyCheckbox
+    * @demo Examples/CheckBox/MyCheckBox/MyCheckBox
     * @author Журавлев М.С.
     *
     * @ignoreOptions icon extendedTooltip independentContext contextRestriction isContainerInsideParent stateKey subcontrol

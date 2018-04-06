@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!WSControls/Buttons/ToggleButton', ['js!WSControls/Buttons/Button', 'SBIS3.CONTROLS/Mixins/Checkable'], function(WSButton, Checkable) {
+define('SBIS3.CONTROLS/WSControls/Buttons/ToggleButton', ['SBIS3.CONTROLS/WSControls/Buttons/Button', 'SBIS3.CONTROLS/Mixins/Checkable'], function(WSButton, Checkable) {
 
    'use strict';
 
@@ -12,7 +12,7 @@ define('js!WSControls/Buttons/ToggleButton', ['js!WSControls/Buttons/Button', 'S
     *
     * @class WSControls/Buttons/ToggleButton
     * @extends WSControls/Buttons/Button
-    * @demo SBIS3.CONTROLS.Demo.MyToggleButton
+    * @demo Examples/ToggleButton/MyToggleButton/MyToggleButton
     *
     * @author Крайнов Д.О.
     *
@@ -39,7 +39,7 @@ define('js!WSControls/Buttons/ToggleButton', ['js!WSControls/Buttons/Button', 'S
     * @control
     * @category Button
     * @initial
-    * <component data-component='WSControls/Buttons/ToggleButton'>
+    * <component data-component='SBIS3.CONTROLS/WSControls/Buttons/ToggleButton'>
     *    <option name='caption' value='Кнопка с залипанием'></option>
     * </component>
     */
