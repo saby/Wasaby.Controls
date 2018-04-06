@@ -168,12 +168,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
                   this._toggleState(state, obj);
                   break;
                case 'blockquote':
-                  if(!obj.node.className) {
-                     this._toggleState(state, obj);
-                  }
-                  else {
-                     this._toggleState(false, obj);
-                  }
+                  this._toggleState(state, obj);
                   break;
                case 'alignleft':
                case 'aligncenter':
@@ -187,7 +182,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
                   this._updateTextFormat(state, obj);
                   break;
                default: {
-                     this._toggleState(state, obj);
+                  this._toggleState(state, obj);
                }
             }
          },
