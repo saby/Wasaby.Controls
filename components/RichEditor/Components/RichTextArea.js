@@ -2430,7 +2430,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         cfg.formats[key] = self._options.customFormats[key];
                      }
                   }
-                  tinyMCE.baseURL = 'SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/tinymce';
+                  tinyMCE.baseURL = '/resources/' + TINYMCE_URL_BASE;
                   tinyMCE.init(cfg);
                });
             }
