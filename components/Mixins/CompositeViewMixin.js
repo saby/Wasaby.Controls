@@ -444,7 +444,28 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
          this._options.tileTemplate = tpl;
       },
 
+      _hasInvisibleItems: function() {
+         return this._options.viewMode === 'tile' && this._options.tileMode === TILE_MODE.STATIC;
+      },
+
       around : {
+         _getInsertMarkupConfig: function(parentFn, newItemsIndex, newItems, prevDomNode) {
+            var result;
+            if (this._options.viewMode === 'table') {
+               result = parentFn.call(this, newItemsIndex, newItems, prevDomNode);
+            } else {
+               result = this._getInsertMarkupConfigICM.call(this, newItemsIndex, newItems, prevDomNode);
+               //При добавлении элементов в конец списка, если там присутствуют пустышки для плитки, то элементы надо встаить
+               //до этих пустышек, иначе образуется пустое пространство.
+               if (this._hasInvisibleItems() && result.inside && !result.prepend) {
+                  result.inside = false;
+                  result.prepend = true;
+                  result.container = result.container.find('.controls-CompositeView__tileItem-invisible').first();
+               }
+            }
+            return result;
+         },
+
          _getItemTemplate: function(parentFnc, itemProj) {
             var resultTpl, dotTpl, item = itemProj.getContents();
             switch (this._options.viewMode) {
