@@ -13,7 +13,10 @@
          </ws:if>
          <ws:else>
             <ws:partial template="tmpl!Controls/Dropdown/resources/template/For" listModel="{{_listModel}}"
-                        itemTemplate="{{_options.itemTemplate}}" defaultItemTemplate="{{_defaultItemTemplate}}" hierarchyPadding="{{_options.headConfig.menuStyle === 'cross' ? true : false}}" resultHandler="{{resultHandler}}"></ws:partial>
+                        itemTemplate="{{_options.itemTemplate}}"
+                        defaultItemTemplate="{{_defaultItemTemplate}}"
+                        hierarchyPadding="{{(_options.headConfig.menuStyle === 'cross') || true ? true : false}}"
+                        resultHandler="{{resultHandler}}"></ws:partial>
          </ws:else>
       </ws:content>
    </Controls.Container.Scroll>

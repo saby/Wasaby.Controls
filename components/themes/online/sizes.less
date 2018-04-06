@@ -236,6 +236,7 @@
 @height_DropdownList-item:      32px;
 @border-size_DropdownList:      1px;
 @padding_DropdownList-default:  12px;
+@padding_DropdownList-hierarchy:28px;
 @padding_DropdownList-item:     5px;
 @width_DropdownList-marker:     6px;
 @height_DropdownList-marker:    8px;
@@ -260,6 +261,11 @@
 @margin-left_MenuButton_link_duplicate_small:  -12px;
 @margin-top_MenuButton_link_duplicate_head_small:   10px;
 @margin-left_MenuButton_link_duplicate_head_small:  12px;
+
+@width-Dropdown-cross: 32px;
+@height-Dropdown-cross: 30px;
+@font-size-Dropdown-cross: 16px;
+
    //header
 @header-h2-text-size:             20px;
 @header-h3-text-size:             18px;
@@ -279,6 +285,7 @@
 @padding-left_forwardArrow:       10px;
 //MenuButton
 @menu-button-header-font-size:    @font-size_Popup;
+@width-Dropdown-pin:              20px;
 
 @bread-crumb-home-font-size:      @icon-size_default;
 
@@ -368,13 +375,48 @@
 @font-size_Tabs-item_selected:           15px;
 @max-width_Tabs_item:                    630px;
 @border-width_Tabs-item_hover_selected:  3px;
+//Scrollbar
+@width_Scrollbar:                        4px;
+//Отступ сверху/снизу и от правого края в скролируемой области.
+@margin_Scrollbar:                       2px;
+@width_Scrollbar_animation:              12px;
+@animation-duration_Scrollbar:           0.3s;
+
+@border-radius_Scrollbar-thumb:          2px;
+@border-radius_Scrollbar-thumb_animation:5px;
+@min-height_Scrollbar-thumb:             46px;
+//Scroll
+@height-gradient_Scroll-shadow:          8px;
 //FilterButton
 @font-size_FilterButton-icon:            @icon-size_default_medium;
 @font-size_FilterButton-text:            @default-text-size;
 //itemActions
-@height_itemActions_inline:              24px;
-@height_itemAction_underline:            29px;
-@width_itemActions_underine_after:       24px;
-@bottom_itemActions_inline:              3px;
-@right_itemActions_inline:               6px;
+@height_itemActions_inside:              24px;
+@height_itemAction_outside:              29px;
+@width_itemActions_outside_after:        24px;
+@right_itemActions_inside:               6px;
+@padding_itemActions_inside:             0 6px 3px 6px;
+@padding_itemActions_outside:            0 6px 3px 0;
 @margin_itemActions_action:              0 6px;
+//headers
+@width-HeaderSeparator:                6px;
+@height-HeaderSeparator:               10px;
+@size-Separator__icon:                 16px;
+//backButton
+@width-BackButton_size-l:              10px;
+@height-BackButton_size-l:             14px;
+@width-BackButton_size-default:        9px;
+@height-BackButton_size-default:       12px;
+@width-BackButton_size-s:              9px;
+@height-BackButton_size-s:             11px;
+@spacing-BackButton-between-icon-text: 3px;
+@spacing-BackButton-between-icon-text_big: 2px;
+@spacing-Separator-between-icon-text:     4px;
+
+
+//FastFilter
+@icon-size_FastFilter:                      @icon-size_default;
+@spacing_FastFilter-item:                   0;
+@height_FastFilter-iconArrow:               9px;
+@width_FastFilter-iconArrow:                16px;
+@spacing_FastFilter-between-icon-text:      0 2px 0 2px;

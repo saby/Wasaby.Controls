@@ -59,12 +59,28 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
       'use strict';
 
       //TODO: ПЕРЕПИСАТЬ НА НОРМАЛЬНЫЙ КОД РАБОТУ С ИЗОБРАЖЕНИЯМИ
+
+      var _getTrueIEVersion = function () {
+         var version = cConstants.browser.IEVersion;
+         // В cConstants.browser.IEVersion неправильно определяется MSIE 11
+         if (version < 11) {
+            var ms = navigator.userAgent.match(/Trident\/([0-9]+)\.[0-9]+/);
+            if (ms) {
+               version = +ms[1] + 4
+            }
+         }
+         return version;
+      };
+
       var
-         TINYMCE_URL_BASE = 'SBIS3.CONTROLS/RichEditor/third-party/tinymce',
+         // TinyMCE 4.7 и выше не поддерживает MSIE 10? поэтому отдельно для него старый TinyMCE
+         // 1175061954 https://online.sbis.ru/opendoc.html?guid=296b17cf-d7e9-4ff3-b4d9-e192627b41a1
+         TINYMCE_URL_BASE = cConstants.browser.isIE && _getTrueIEVersion() < 11 ? 'SBIS3.CONTROLS/RichEditor/third-party/tinymce46-ie10' : 'SBIS3.CONTROLS/RichEditor/third-party/tinymce',
          EDITOR_MODULES = [
             'css!' + TINYMCE_URL_BASE + '/skins/lightgray/skin.min.css',
             'css!' + TINYMCE_URL_BASE + '/skins/lightgray/content.inline.min.css',
-            TINYMCE_URL_BASE + '/tinymce'
+            //Экстренное решение что бы уменшить трафик. В 3.18.200 надо исправить сия безобразие
+            TINYMCE_URL_BASE + '/tinymce.min'
          ],
          constants = {
             baseAreaWidth: 768,//726
@@ -80,8 +96,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             styles: {
                title: {inline: 'span', classes: 'titleText'},
                subTitle: {inline: 'span', classes: 'subTitleText'},
-               additionalText: {inline: 'span', classes: 'additionalText'},
-               customBlockquote: {block: 'p', classes: 'customBlockquote'}
+               additionalText: {inline: 'span', classes: 'additionalText'}
             },
             colorsMap: {
                'rgb(0, 0, 0)': 'black',
@@ -218,7 +233,20 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                 /**
                  * @cfg {function} функция проверки валидности класса
                  */
-               validateClass: undefined
+               validateClass: undefined,
+               /**
+                * @cfg {Object} Пользовательский формат для блоков
+                * @example
+                * <pre>
+                *    <options name="customStyle">
+                *       <option name="block">blockquote</option>
+                *       <option name="wrapper">1</option>
+                *       <option name="remove">all</option>
+                *       <option name="classes">customStyle</option>
+                *    </options>
+                * </pre>
+                */
+               customFormats: {}
             },
             _richTextAreaContainer: undefined,
             _richTextAreaScrollContainer: undefined,
@@ -263,6 +291,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             if (options.autoHeight) {
                options.minimalHeight = this._cleanHeight(options.minimalHeight);
                options.maximalHeight = this._cleanHeight(options.maximalHeight);
+            }
+            for(var key in options.customFormats) {
+               if ({}.hasOwnProperty.call(options.customFormats, key)) {
+                  options.editorConfig.formats[key] = options.customFormats[key];
+               }
             }
             return options;
          },
@@ -1334,11 +1367,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          },
 
 
-         // Добавление и удаление кастомизируемой цитаты
-         setCustomBlockquote: function() {
-            var
-               $selectionContent = $(this._tinyEditor.selection.getNode());
-            this._tinyEditor.formatter.toggle('customBlockquote', $selectionContent);
+         // Переключение пользовательского формата у блока
+         toggleStyle: function(style) {
+            this._tinyEditor.formatter.toggle(style);
          },
 
          /**
@@ -1717,7 +1748,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                self._tinyReady.callback();
                /*НОТИФИКАЦИЯ О ТОМ ЧТО В РЕДАКТОРЕ ПОМЕНЯЛСЯ ФОРМАТ ПОД КУРСОРОМ*/
                //formatter есть только после инита поэтому подписка осуществляется здесь
-               editor.formatter.formatChanged('bold,italic,underline,strikethrough,alignleft,aligncenter,alignright,alignjustify,title,subTitle,additionalText,blockquote,customBlockquote', function(state, obj) {
+               var formats = 'bold,italic,underline,strikethrough,alignleft,aligncenter,alignright,alignjustify,title,subTitle,additionalText,blockquote';
+               for(var key in this._options.customFormats){
+                  if ({}.hasOwnProperty.call(this._options.customFormats, key)) {
+                     formats += ',' + key;
+                  }
+               }
+               editor.formatter.formatChanged(formats, function(state, obj) {
                   self._notify('onFormatChange', obj, state)
                });
                self._notify('onInitEditor');
@@ -2393,37 +2430,47 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             return promise;
          },
 
-         _replaceWhitespaces: function(text) {
-            var
-               out = '',
-               lastIdx = null,
-               nbsp = false;
+         /**
+          * Заменить все вхождения пробелов и сущностей &nbsp; регуляризованными чередующимися цепочками
+          * @param {string} text Исходный текст
+          * @return {string}
+          */
+         _replaceWhitespaces: function (text) {
             if (typeof text !== 'string') {
                return text;
             }
-            for (var i = 0; i < text.length; i++) {
-               if (text[i] !== ' ') {
-                  out += text[i];
-               } else {
-                  if (text.substr(i - 6, 6) === '&nbsp;') {
-                     nbsp = false;
-                  } else {
-                     if (i === 0 || text[i - 1] === '\n' || text[i - 1] === '>') {
-                        nbsp = true;
-                     } else {
-                        if (lastIdx !== i - 1) {
-                           nbsp = text[i + 1] === ' ';
-                        } else {
-                           nbsp = !nbsp;
-                        }
-                     }
+            var out = '';
+            for (var a = 0, b = -1, opening = true, notEnd = true ; notEnd; opening = !opening) {
+               b = text.indexOf(opening ? '<' : '>', a);
+               notEnd = b !== -1;
+               if (opening) {
+                  if (a !== notEnd ? b : text.length) {
+                     // Это фрагмент между тегами
+                     out += text.substring(a, notEnd ? b : text.length)
+                        // Сначала заменяем все вхождения сущности &nbsp; на эквивалентный символ
+                        .replace(/&nbsp;/g, String.fromCharCode(160))
+                        // Затем регуляризуем все пробельные цепочки
+                        .replace(/[\x20\xA0]+/g, function ($0/*, index, source*/) {
+                           if ($0.length === 1) {
+                              return $0.charCodeAt(0) === 32 ? $0 : '&nbsp;';
+                           }
+                           else {
+                              // Получена цепочка пробельных символов - заменяем чередованием. Первым в цепочке всегда берём &nbsp;
+                              var spaces = '';
+                              for (var i = 0; i < $0.length; i++) {
+                                 spaces += i%2 === 1 ? ' ' : '&nbsp;';
+                              }
+                              return spaces;
+                           }
+                        });
+                     ;
                   }
-                  if (nbsp) {
-                     out += '&nbsp;';
-                  } else {
-                     out += ' ';
-                  }
-                  lastIdx = i;
+                  a = b;
+               }
+               else {
+                  // Это фрагмент внутри тега
+                  out += text.substring(a, notEnd ? b + 1 : text.length);
+                  a = b + 1;
                }
             }
             return out;

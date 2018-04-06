@@ -22,12 +22,12 @@
         </ws:itemTemplate>
     </Controls.List>
     <div on:click="changeSource()"> Сменить источник для первого списка</div>
-    <h2>itemActionsType="underline"</h2>
+    <h2>itemActionsType="outside"</h2>
     <Controls.List
             source = "{{_viewSource2}}"
             markedKey="{{2}}"
             allowEmptySelection="{{false}}"
-            itemActionsType="underline"
+            itemActionsType="outside"
             idProperty="id"
             itemActions="{{_itemActions}}"
             itemActionVisibilityCallback="{{_showAction}}"

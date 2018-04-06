@@ -1,6 +1,6 @@
 
 define('SBIS3.CONTROLS/Menu/MenuItem', [
-   'js!WSControls/Buttons/ButtonBase',
+   'SBIS3.CONTROLS/WSControls/Buttons/ButtonBase',
    'tmpl!SBIS3.CONTROLS/Menu/MenuItem/MenuItem',
    'Core/EventBus',
    'Core/Sanitize',

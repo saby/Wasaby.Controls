@@ -36,20 +36,18 @@ define('Controls/Dropdown/Opener',
            * @param config
            */
           checkIcons: function(self, config) {
-              var parentProperty = config.componentOptions.parentProperty || self._options.popupOptions.componentOptions.parentProperty,
-                  nodeProperty = config.componentOptions.nodeProperty || self._options.popupOptions.componentOptions.nodeProperty,
-                  items = config.componentOptions.items,
+              var compOptions = self._options.popupOptions && self._options.popupOptions.componentOptions,
+                  configOptions = config.componentOptions,
+                  parentProperty = (configOptions && configOptions.parentProperty) || compOptions && compOptions.parentProperty,
+                  nodeProperty = (configOptions && configOptions.nodeProperty) || compOptions && compOptions.nodeProperty,
+                  items = configOptions && configOptions.items,
                   hierarchy = new Hierarchy({
                       idProperty: items.getIdProperty(),
                       parentProperty: parentProperty,
                       nodeProperty: nodeProperty
                   }),
-                  headerIcon = self._options.popupOptions.componentOptions &&
-                               self._options.popupOptions.componentOptions.headConfig &&
-                               self._options.popupOptions.componentOptions.headConfig.icon,
-                  menuStyle = self._options.popupOptions.componentOptions &&
-                              self._options.popupOptions.componentOptions.headConfig &&
-                              self._options.popupOptions.componentOptions.headConfig.menuStyle,
+                  headerIcon = compOptions && (compOptions.headConfig && compOptions.headConfig.icon || compOptions.icon),
+                  menuStyle = compOptions && compOptions.headConfig && compOptions.headConfig.menuStyle,
                   parents = {},
                   iconSize, children, child, pid, i, icon;
 
@@ -101,7 +99,7 @@ define('Controls/Dropdown/Opener',
          _controlName: 'Controls/Dropdown/Opener',
          _itemTemplateDeferred: undefined,
 
-         open: function (config, opener) {            
+         open: function (config, opener) {
             _private.setComponentOptions(this, config);
             _private.setPopupOptions(this, config);
             DropdownOpener.superclass.open.apply(this, arguments);

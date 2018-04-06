@@ -7,8 +7,9 @@ define('Controls/List/SourceControl', [
    'Controls/Controllers/SourceController',
    'Core/Deferred',
    'tmpl!Controls/List/SourceControl/multiSelect',
-   'css!Controls/List/SourceControl/SourceControl',
-   'Controls/List/ItemActions/ItemActionsControl'
+   'Controls/List/EditInPlace',
+   'Controls/List/ItemActions/ItemActionsControl',
+   'css!Controls/List/SourceControl/SourceControl'
 ], function (Control,
              IoC,
              SourceControlTpl,
@@ -252,10 +253,6 @@ define('Controls/List/SourceControl', [
          model.subscribe('onListChange', function () {
             self._forceUpdate();
          });
-      },
-
-      removeFromSource: function(self, items) {
-         return self._sourceController.remove(items);
       }
    };
 
@@ -435,21 +432,7 @@ define('Controls/List/SourceControl', [
       },
 
       removeItems: function(items) {
-         var
-            self = this,
-            removeControl = this._children.removeControl;
-         removeControl.beforeItemsRemove(items).addCallback(function(result) {
-            if (result !== false) {
-               _private.showIndicator(self);
-               _private.removeFromSource(self, items).addCallback(function(result) {
-                  self._listViewModel.removeItems(items);
-                  return result;
-               }).addBoth(function(result) {
-                  _private.hideIndicator(self);
-                  removeControl.afterItemsRemove(items, result);
-               });
-            }
-         });
+         this._children.removeControl.removeItems(items);
       },
 
       _beforeItemsRemove: function(event, items) {
@@ -460,11 +443,73 @@ define('Controls/List/SourceControl', [
          this._notify('afterItemsRemove', [items, result]);
       },
 
+      _showIndicator: function(event, direction) {
+         _private.showIndicator(this, direction);
+         event.stopPropagation();
+      },
+
+      _hideIndicator: function(event) {
+         _private.hideIndicator(this);
+         event.stopPropagation();
+      },
+
       reload: function() {
          return _private.reload(this);
+      },
+
+     /**
+      * Starts editing in place.
+      * @param {ItemEditOptions} options Options of editing.
+      * @returns {Core/Deferred}
+      */
+     editItem: function(options) {
+         this._children.editInPlace.editItem(options);
+      },
+
+     /**
+      * Starts adding.
+      * @param {AddItemOptions} options Options of adding.
+      * @returns {Core/Deferred}
+      */
+      addItem: function(options) {
+        this._children.editInPlace.addItem(options);
+      },
+
+      _onBeforeItemAdd: function(e, options) {
+         return this._notify('beforeItemAdd', [options]);
+      },
+
+      _onBeforeItemEdit: function(e, options) {
+         return this._notify('beforeItemEdit', [options]);
+      },
+
+      _onAfterItemEdit: function(e, options) {
+         this._listViewModel._activeItem = {
+            item: options.item,
+            contextEvent: false
+         };
+         this._children.itemActions.updateActions();
+         this._notify('afterItemEdit', [options]);
+      },
+
+      _onBeforeItemEndEdit: function(e, options) {
+         return this._notify('beforeItemEndEdit', [options]);
+      },
+
+      _onAfterItemEndEdit: function(e, options) {
+         this._notify('beforeItemEndEdit', [options]);
+         this._listViewModel._activeItem = false;
+         this._children.itemActions.updateActions();
+      },
+
+      _commitEditActionHandler: function() {
+         this._children.editInPlace.commitEdit();
+      },
+
+      _cancelEditActionHandler: function() {
+         this._children.editInPlace.cancelEdit();
       }
    });
-
 
    //TODO https://online.sbis.ru/opendoc.html?guid=17a240d1-b527-4bc1-b577-cf9edf3f6757
    /*ListView.getOptionTypes = function getOptionTypes(){

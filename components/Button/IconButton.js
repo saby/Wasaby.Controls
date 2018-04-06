@@ -4,7 +4,7 @@
  * @description
  */
 define('SBIS3.CONTROLS/Button/IconButton', [
-    'js!WSControls/Buttons/Button',
+    'SBIS3.CONTROLS/WSControls/Buttons/Button',
     'SBIS3.CONTROLS/Utils/IconButtonUtil',
     'css!SBIS3.CONTROLS/Button/IconButton/IconButton'
 ],
