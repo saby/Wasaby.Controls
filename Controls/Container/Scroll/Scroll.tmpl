@@ -1,6 +1,6 @@
 <ws:template name="scrollTpl">
    <div class="controls-Scroll ws-flexbox ws-flex-column">
-      <Controls.Layout.Scroll>
+      <Controls.Layout.Scroll scope="{{_options}}">
          <div name="content"
               style="{{displayState.hasScroll ? styleHideScrollbar}}"
               class="ws-flex-grow-1 controls-Scroll__content
