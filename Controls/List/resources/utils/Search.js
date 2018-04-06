@@ -135,8 +135,9 @@ define('Controls/List/resources/utils/Search',
                      self._searchDeferred.errback(err);
                      return err;
                   })
-                  .addBoth(function() {
+                  .addBoth(function(res) {
                      self._searchDeferred = null;
+                     return res;
                   });
             }, this._searchDelay);
             
