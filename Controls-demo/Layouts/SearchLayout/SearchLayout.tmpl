@@ -3,7 +3,7 @@
         <div>
             <Controls.Container.Search
                     attr:class="controls-demo__SearchLayout"
-                    searchParam="title">
+                    searchParam="firstName">
                 <ws:content>
                     <div class="controls-demo__SearchLayout_content">
                         <div class="controls-demo__Layouts_content">
@@ -15,7 +15,7 @@
                                 </Controls.Container.Input.Search>
                                 <Controls.Container.Filter.Fast>
                                     <ws:content>
-                                        <Controls.Filter.FastFilter bind:value="_value"/>
+                                        <Controls.Filter.FastFilter bind:selectedKeys="_value"/>
                                     </ws:content>
                                 </Controls.Container.Filter.Fast>
                                 <Controls.Container.Filter.Button>
@@ -26,10 +26,10 @@
                                 </Controls.Container.Filter.Button>
                             </div>
                             <div class="controls-demo__LayoutInner">
-                                <Controls.Container.List source="{{_dataSource}}" searchParam="title">
+                                <Controls.Container.List searchParam="firstName" source="{{_dataSource}}">
                                     <ws:content>
                                         <div>
-                                            <Controls.List idProperty="id" name="list">
+                                            <Controls.List idProperty="id" name="list" >
                                                 <ws:itemTemplate>
                                                     <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate"
                                                                 itemData="{{itemTemplate.itemData}}"
