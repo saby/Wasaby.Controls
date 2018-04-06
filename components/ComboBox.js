@@ -841,6 +841,7 @@ define('SBIS3.CONTROLS/ComboBox', [
             }
          }
 
+         this._revertArrow(true);
          $('.controls-ComboBox__item', this._picker.getContainer()).bind('mouseenter', function itemMouseEnter(event) {
             //не устанавливаем title на мобильных устройствах:
             //во-первых не нужно, во-вторых на ios из-за установки аттрибута не работает клик
@@ -856,10 +857,16 @@ define('SBIS3.CONTROLS/ComboBox', [
          this._scrollToItem(hash);
       },
 
+      _revertArrow: function(isPickerShow) {
+         var arrow = $('.js-controls-ComboBox__arrowDown', this.getContainer());
+         arrow.toggleClass('icon-ExpandLight', !isPickerShow).toggleClass('icon-CollapseLight', isPickerShow);
+      },
+
       hidePicker: function() {
          if (this._picker) {
             $('.controls-ComboBox__item', this._picker.getContainer()).unbind();
          }
+         this._revertArrow(false);
          ComboBox.superclass.hidePicker.apply(this, arguments);
       },
 
