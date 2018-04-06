@@ -161,7 +161,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
                   var item = fieldFilter(value);
                   if (item) {
                      item.num = ++counter;
-                     item.variant = hasAccordances ? (accordances[id] || null) : null;
+                     item.variant = hasAccordances ? (accordances[item.id] || null) : null;
                      rows.push(item);
                   };
                });
