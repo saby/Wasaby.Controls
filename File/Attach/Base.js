@@ -13,7 +13,7 @@ define("File/Attach/Base", ["require", "exports", "Core/Abstract", "Core/core-si
      *   });
      *
      *   var scanner = new ScannerGetter();
-     *   var fs = new FS();
+     *   var fs = new FileSystem();
      *   attach.registerGetter(scanner);
      *   attach.registerGetter(fs);
      *
@@ -75,7 +75,7 @@ define("File/Attach/Base", ["require", "exports", "Core/Abstract", "Core/core-si
             this._getterContainer = new GetterContainer();
             this._sourceContainer = new SourceContainer();
             this._uploadHandlers = {};
-            this._publish('onProgress', 'onWarning', 'onLoadedFolder', 'onChoose', 'onChooseError', 'onLoaded', 'onLoadError', 'onLoadResourceError', 'onLoadedResource');
+            this._publish('onProgress', 'onWarning', 'onLoadedFolder', 'onChosen', 'onChooseError', 'onLoaded', 'onLoadError', 'onLoadResourceError', 'onLoadedResource');
         },
         /// region IAttacher
         /**
@@ -142,7 +142,7 @@ define("File/Attach/Base", ["require", "exports", "Core/Abstract", "Core/core-si
         /// region IDirectInsertFile
         /**
          * Устанавливает ресурсы в список выбранных
-         * @param {Array<File/IFileData> | File/IFileData} files файл или набор устанавливаемых файлов
+         * @param {Array<File/IResource> | File/IResource} files файл или набор устанавливаемых файлов
          * @example
          * Привязка файлов, полученных путём Drag&Drop к Attach для последующей загрузки
          * <pre>
@@ -172,7 +172,7 @@ define("File/Attach/Base", ["require", "exports", "Core/Abstract", "Core/core-si
         },
         /**
          * Возвращает набор выбраных ресурсов
-         * @return {Array<File/IFileData>}
+         * @return {Array<File/IResource>}
          * @method
          * @name File/Attach/Base#getSelectedResource
          * @see File/LocalFile
@@ -184,7 +184,7 @@ define("File/Attach/Base", ["require", "exports", "Core/Abstract", "Core/core-si
         },
         /**
          * Добавляет ресурсы к списку выбранных
-         * @return {Array<File/IFileData>}
+         * @return {Array<File/IResource>}
          * @method
          * @name File/Attach/Base#addSelectedResource
          * @see File/LocalFile
@@ -281,14 +281,14 @@ define("File/Attach/Base", ["require", "exports", "Core/Abstract", "Core/core-si
         /**
          * Метод вызова выбора ресурсов
          * @param {String} getterName Имя модуля {@link File/IResourceGetter}
-         * @return {Core/Deferred<Array<File/IFileData | Error>>}
+         * @return {Core/Deferred<Array<File/IResource | Error>>}
          * @example
          * Выбор и загрузка ресурсов:
          * <pre>
          *   var attach = new Base();
          *
          *   var scanner = new ScannerGetter();
-         *   var fs = new FS();
+         *   var fs = new FileSystem();
          *   attach.registerGetter(scanner);
          *   attach.registerGetter(fs);
          *
@@ -340,8 +340,8 @@ define("File/Attach/Base", ["require", "exports", "Core/Abstract", "Core/core-si
         },
         /**
          * Стреляет событием выбора ресурса и обрабатывает результат от обработчикво
-         * @param {Core/Deferred<Array<File/IFileData | Error>>} chooseDef
-         * @return {Core/Deferred<Array<File/IFileData | Error>>}
+         * @param {Core/Deferred<Array<File/IResource | Error>>} chooseDef
+         * @return {Core/Deferred<Array<File/IResource | Error>>}
          * @private
          */
         _chooseNotify: function (chooseDef) {
@@ -350,7 +350,7 @@ define("File/Attach/Base", ["require", "exports", "Core/Abstract", "Core/core-si
             return chooseDef.addCallbacks(function (files) {
                 length = files.length;
                 var eventResults = files.map(function (file) {
-                    var event = file instanceof Error ? 'onChooseError' : "onChoose";
+                    var event = file instanceof Error ? 'onChooseError' : "onChosen";
                     return Deferred.callbackWrapper(_this._notify(event, file), function (result) { return Deferred.success(typeof result !== 'undefined' ? result : file); });
                 });
                 return new ParallelDeferred({
@@ -369,7 +369,7 @@ define("File/Attach/Base", ["require", "exports", "Core/Abstract", "Core/core-si
         },
         /**
          * Возвращает список конструкторов над ресурсами, для которыйх зарегестрирован ISource
-         * @return {Array<File/IFileDataConstructor>}
+         * @return {Array<File/IResourceConstructor>}
          * @see File/LocalFile
          * @see File/LocalFileLink
          * @see File/HttpFileLink
@@ -393,21 +393,21 @@ define("File/Attach/Base", ["require", "exports", "Core/Abstract", "Core/core-si
  * @name File/Attach/Base#onProgress
  * @param {Core/EventObject} eventObject Дескриптор события.
  * @param {Object} data
- * @param {File/IFileData} file
+ * @param {File/IResource} file
  */
 /**
  * @event onWarning
  * @name File/Attach/Base#onWarning
  * @param {Core/EventObject} eventObject Дескриптор события.
  * @param {Object} data
- * @param {File/IFileData} file
+ * @param {File/IResource} file
  */
 /**
  * @event onLoadedFolder
  * @name File/Attach/Base#onLoadedFolder
  * @param {Core/EventObject} eventObject Дескриптор события.
  * @param {Object} data
- * @param {File/IFileData} file
+ * @param {File/IResource} file
  */
 /**
  * @event onLoaded
@@ -434,7 +434,7 @@ define("File/Attach/Base", ["require", "exports", "Core/Abstract", "Core/core-si
  *
  * @name File/Attach/Base#onLoadResourceError
  * @param {Core/EventObject} eventObject Дескриптор события.
- * @param {File/IFileData} resource загружаемый ресурс
+ * @param {File/IResource} resource загружаемый ресурс
  * @param {Error} error
  *
  * @see File/LocalFile
@@ -447,7 +447,7 @@ define("File/Attach/Base", ["require", "exports", "Core/Abstract", "Core/core-si
  *
  * @name File/Attach/Base#onLoadedResource
  * @param {Core/EventObject} eventObject Дескриптор события.
- * @param {File/IFileData} resource загружаемый ресурс
+ * @param {File/IResource} resource загружаемый ресурс
  * @param {Model} model Результат загрузки
  *
  * @see File/LocalFile
@@ -456,20 +456,20 @@ define("File/Attach/Base", ["require", "exports", "Core/Abstract", "Core/core-si
  * @see WS.Data/Entity/Model
  */
 /**
- * @event onChoose
+ * @event onChosen
  * Событые выбора ресурса
  * <wiTag group="Управление">
  * Обработка результата:
  * При передаче в результат события заначений, приводимых к логическому false, указанный ресурс не попадёт
  * в результат Deferred'a метода choose. При передаче любого другого значения текщуий ресурс будет заменён им
  *
- * @name File/Attach/Base#onChoose
+ * @name File/Attach/Base#onChosen
  * @param {Core/EventObject} eventObject Дескриптор события.
- * @param {File/IFileData} resource загружаемый ресурс
+ * @param {File/IResource} resource загружаемый ресурс
  * @example
  * Фильтрация файлов по размеру
  * <pre>
- *    attach.subscribe('onChoose', function(event, fileData) {
+ *    attach.subscribe('onChosen', function(event, fileData) {
  *       if (getSize(fileData) > 100 * MB) {
  *          event.setResult(new Error(rk('Превышен допустимый размер загружаемого файла')))
  *       }
@@ -477,7 +477,7 @@ define("File/Attach/Base", ["require", "exports", "Core/Abstract", "Core/core-si
  * </pre>
  * Предобработка перед загрузкой
  * <pre>
- *    attach.subscribe('onChoose', function(event, fileData) {
+ *    attach.subscribe('onChosen', function(event, fileData) {
  *       var blurImage = addFilter(fileData, "blur", 0.5);
  *       event.setResult(blurImage);
  *    });
