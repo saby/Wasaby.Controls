@@ -1,0 +1,44 @@
+<div class="demo-Grid">
+   <div class="demo-Grid__container">
+      <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+         <ws:content>
+            <Controls.Grid
+                          attr:class="demo-Grid__control"
+                          idProperty="id"
+                          displayProperty="title"
+                          markedKey="{{448390}}"
+                          multiselect="{{true}}"
+                          header="{{gridHeader}}"
+                          itemTemplate="tmpl!Controls-demo/List/Grid/DemoItem"
+                          source = "{{_viewSource}}"
+                          columns="{{gridColumns}}">
+            </Controls.Grid>
+         </ws:content>
+      </Controls.Container.Scroll>
+      <!--<Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+         <ws:content>
+            <Controls.Grid
+                          attr:class="demo-Grid__control"
+                          idProperty="id"
+                          displayProperty="title"
+                          markedKey="{{448390}}"
+                          items="{{gridData.catalog}}"
+                          header="{{gridHeader}}"
+                          showRowSeparator="{{true}}"
+                          columns="{{gridColumns}}">
+            </Controls.Grid>
+         </ws:content>
+      </Controls.Container.Scroll>-->
+      <!--<Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+         <ws:content>
+            <Controls.Grid
+                          attr:class="demo-Grid__control"
+                          idProperty="id"
+                          items="{{gridData.tasks}}"
+                          stickyFields="{{['photo']}}"
+                          columns="{{tasksColumns}}">
+            </Controls.Grid>
+         </ws:content>
+      </Controls.Container.Scroll>-->
+   </div>
+</div>
