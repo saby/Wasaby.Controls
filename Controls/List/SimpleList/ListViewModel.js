@@ -48,7 +48,7 @@ define('Controls/List/SimpleList/ListViewModel',
                selectedKeys : cfg.selectedKeys,
                excludedKeys : cfg.excludedKeys
             });
-   
+
             _private.updateIndexes(self);
          },
 
@@ -69,6 +69,10 @@ define('Controls/List/SimpleList/ListViewModel',
             return this._itemsModel.isEnd();
          },
 
+         isLast: function() {
+            return this._itemsModel.isLast();
+         },
+
          goToNext: function() {
             //TODO убрать this._itemsModel._curIndex ?
             //this._itemsModel._curIndex++;
@@ -87,6 +91,10 @@ define('Controls/List/SimpleList/ListViewModel',
                itemsModelCurrent.item = this._editingItemData.item;
             }
             return itemsModelCurrent;
+         },
+
+         getNext: function() {
+            return this._itemsModel.getNext();
          },
 
          getCurrentIndex: function() {

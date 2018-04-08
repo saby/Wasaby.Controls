@@ -47,6 +47,10 @@ define('Controls/List/SimpleList/ItemsViewModel',
             return this._curIndex < (this._display ? this._display.getCount() : 0);
          },
 
+         isLast: function() {
+            return this._curIndex === (this._display ? this._display.getCount() - 1 : 0);
+         },
+
          goToNext: function() {
             this._curIndex++;
          },
@@ -62,6 +66,20 @@ define('Controls/List/SimpleList/ItemsViewModel',
                item: dispItem.getContents(),
                dispItem: dispItem,
                key: ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.idProperty)
+            }
+         },
+
+         getNext: function() {
+            var
+               itemIndex = this._curIndex + 1,
+               dispItem = this._display.at(itemIndex);
+            return {
+               getPropValue: ItemsUtil.getPropertyValue,
+               idProperty: this._options.idProperty,
+               displayProperty: this._options.displayProperty,
+               index : itemIndex,
+               item: dispItem.getContents(),
+               dispItem: dispItem
             }
          },
 
