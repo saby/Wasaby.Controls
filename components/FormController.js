@@ -283,7 +283,8 @@ define('SBIS3.CONTROLS/FormController', [
 
       _onBeforeUnload: function(e) {
          //Если рекорд был изменен и пытаются уйти со страницы - задаем вопрос, чтобы пользователь мог сохранить отредактированные данные.
-         if (this.getRecord().isChanged()) {
+         //рекорда может и не быть, это штатная ситуация
+         if (this.getRecord() && this.getRecord().isChanged()) {
             //Почти во всех браузер была убрана возможность настраивать кастомный текст для диалогового окна https://www.chromestatus.com/feature/5349061406228480
             //Для того чтобы показать вопрос - из события нужно вернуть строку. Содержание строки будет проигнорировано https://developer.mozilla.org/en-US/docs/Web/Events/beforeunload
             var message = "Редактируемая запись была изменена";
