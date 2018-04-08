@@ -22,6 +22,7 @@ define('Controls/List', [
             markedKey: cfg.markedKey,
             selectedKeys: cfg.selectedKeys,
             excludedKeys: cfg.excludedKeys,
+            multiSelectVisibility: cfg.multiSelectVisibility,
             itemsReadyCallback: cfg.itemsReadyCallback
          });
       }

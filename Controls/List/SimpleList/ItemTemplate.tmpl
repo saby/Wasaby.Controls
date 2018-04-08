@@ -1,7 +1,9 @@
 <div attr:class="ws-ListView__item{{marker != false && itemData.isSelected ? ' ws-ListView__item__selected'}}{{!!itemData.showActions ? ' ws-ListView__item_showActions'}}{{!!itemData.isActive ? ' ws-ListView__item_active'}}{{!!itemData.isEditing? ' ws-ListView__item_editing'}}"
      attr:key="{{itemData.dispItem.getHash()}}">
 
-    <ws:partial template="{{multiSelectTpl}}" multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}"/>
+    <ws:if data="{{itemData.multiSelectVisibility}}">
+        <ws:partial template="{{multiSelectTpl}}" multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}"/>
+    </ws:if>
 
     <ws:if data="{{contentTemplate}}">
         <ws:if data="{{itemData.isEditing}}">
