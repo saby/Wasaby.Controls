@@ -34,7 +34,7 @@ define('Controls/Toggle/Checkbox', [
    var _private ={
       notifyChangeValue: function (self, value) {
          self._notify('valueChanged', [value]);
-      }   
+      }
    };
 
    var mapTriState = {false: true, true: null, null: false};
