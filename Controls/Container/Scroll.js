@@ -262,7 +262,7 @@ define('Controls/Container/Scroll',
             },
 
             getDataId: function() {
-               return 'Controls.Container.Scroll';
+               return 'ControlsContainerScroll';
             },
 
             /**
