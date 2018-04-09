@@ -4,12 +4,12 @@ import Model = require('WS.Data/Entity/Model');
 import ISource = require("WS.Data/Source/ISource");
 import SourceContainer = require("File/Attach/Container/Source");
 import EventObject = require("Core/EventObject");
-import {IFileData} from "File/IFileData";
+import IResource = require("File/IResource");
 // real dependency
 import Deferred = require("Core/Deferred");
 import ParallelDeferred = require("Core/ParallelDeferred");
 
-type CreateHandler = (data: any, file: IFileData) => void;
+type CreateHandler = (data: any, file: IResource) => void;
 type EventNames = "onLoaded" | "onProgress" | "onWarning" | "onLoadedFolder"
     | "onLoadResourceError" | "onLoadResource" | "onLoaded" | "onLoadError";
 type CreateHandlers = {
@@ -58,17 +58,17 @@ class Uploader {
 
     /**
      *
-     * @param {Array<File/IFileData>} files Загружаемые файлы
+     * @param {Array<File/IResource>} files Загружаемые файлы
      * @param {Object} [meta] Дополнительные мета-данные для отправки
      * @param {Object<Function>} [handlers]
      * @return {Core/Deferred<Array<WS.Data/Entity/Model | Error>>}
      * @name File/Attach/Uploader#upload
      * @method
      */
-    upload(files: Array<IFileData>, meta?: {}, handlers?: CreateHandlers): Deferred<Array<Model | Error>> {
+    upload(files: Array<IResource>, meta?: {}, handlers?: CreateHandlers): Deferred<Array<Model | Error>> {
         let uploadDefArray: Array<Deferred<Model | Error>>;
 
-        uploadDefArray = files.map((file: IFileData) => {
+        uploadDefArray = files.map((file: IResource) => {
             return this._uploadFile(file, meta);
         });
         let len = uploadDefArray.length;
@@ -91,14 +91,14 @@ class Uploader {
 
     /**
      * загрузка одного файла через ISource полученный из SourceContainer
-     * @param {File/IFileData} file Загружаемый файл
+     * @param {File/IResource} file Загружаемый файл
      * @param {Object} [meta] Дополнительные мета-данные для отправки
      * @return {Core/Deferred<WS.Data/Entity/Model | Error>}
      * @private
      * @name File/Attach/Uploader#_uploadFile
      * @method
      */
-    private _uploadFile(file: IFileData, meta?: {}): Deferred<Model | Error> {
+    private _uploadFile(file: IResource, meta?: {}): Deferred<Model | Error> {
         return this._container.get(file).addCallback((source: ISource) => {
             this._subscribeToSource(source);
             return source.create(meta || {}, file);

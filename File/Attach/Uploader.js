@@ -32,7 +32,7 @@ define("File/Attach/Uploader", ["require", "exports", "File/Attach/Container/Sou
         }
         /**
          *
-         * @param {Array<File/IFileData>} files Загружаемые файлы
+         * @param {Array<File/IResource>} files Загружаемые файлы
          * @param {Object} [meta] Дополнительные мета-данные для отправки
          * @param {Object<Function>} [handlers]
          * @return {Core/Deferred<Array<WS.Data/Entity/Model | Error>>}
@@ -64,7 +64,7 @@ define("File/Attach/Uploader", ["require", "exports", "File/Attach/Container/Sou
         };
         /**
          * загрузка одного файла через ISource полученный из SourceContainer
-         * @param {File/IFileData} file Загружаемый файл
+         * @param {File/IResource} file Загружаемый файл
          * @param {Object} [meta] Дополнительные мета-данные для отправки
          * @return {Core/Deferred<WS.Data/Entity/Model | Error>}
          * @private

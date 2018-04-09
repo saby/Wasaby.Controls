@@ -1,7 +1,7 @@
 /// <amd-module name="File/ResourceGetter/Base" />
 import Deferred = require("Core/Deferred");
-import {IResourceGetter} from "File/IResourceGetter";
-import {IFileData} from "File/IFileData";
+import IResourceGetter = require("File/IResourceGetter");
+import IResource = require("File/IResource");
 
 /**
  * Абстрактный класс, реализующий интерфейс получения файлов IResourceGetter
@@ -30,7 +30,7 @@ import {IFileData} from "File/IFileData";
  * @method
  * @name File/ResourceGetter/Base#getFiles
  * @abstract
- * @return {Core/Deferred<Array<File/IFileData | Error>>}
+ * @return {Core/Deferred<Array<File/IResource | Error>>}
  * @example
  * Получение скана:
  * <pre>
@@ -47,8 +47,8 @@ import {IFileData} from "File/IFileData";
  * </pre>
  * Выбор из файловой системы:
  * <pre>
- *    require(['File/ResourceGetter/FS'], function (FSGetter) {
- *       var getter = new FSGetter({
+ *    require(['File/ResourceGetter/FileSystem'], function (FileSystem) {
+ *       var getter = new FileSystem({
  *          extensions: ["png", "jpg"]
  *       });
  *       getter.getFiles().addCallbacks(function(files){ // files: Array<File/LocalFile | Error>
@@ -92,12 +92,12 @@ import {IFileData} from "File/IFileData";
 abstract class IResourceGetterBase implements IResourceGetter /** @lends File/ResourceGetter/Base.prototype*/{
     protected name: string;
     private _isDestroyed: boolean = false;
-    abstract getFiles(): Deferred<Array<IFileData | Error>>;
+    abstract getFiles(): Deferred<Array<IResource | Error>>;
     abstract canExec(): Deferred<boolean>;
     destroy(): void {
         this._isDestroyed = true;
     }
-    isDestroy(): boolean {
+    isDestroyed(): boolean {
         return this._isDestroyed;
     }
     /**

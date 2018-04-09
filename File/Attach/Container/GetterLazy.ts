@@ -1,6 +1,7 @@
 /// <amd-module name="File/Attach/Container/GetterLazy" />
 // dependency for types
-import {IResourceGetter, IResourceGetterConstructor} from "File/IResourceGetter";
+import IResourceGetter = require("File/IResourceGetter");
+import IResourceGetterConstructor = require("File/IResourceGetterConstructor");
 // real dependency
 import Deferred = require("Core/Deferred");
 import moduleStubs = require("Core/moduleStubs");
