@@ -10,7 +10,7 @@ def gitlabStatusUpdate() {
     } else if ( currentBuild.currentResult == "SUCCESS" ) {
         updateGitlabCommitStatus state: 'success'
     }
-}    
+}
 
 
 node('controls') {
@@ -170,7 +170,7 @@ node('controls') {
                     echo " Выкачиваем сборочные скрипты"
                     dir(workspace) {
                         checkout([$class: 'GitSCM',
-                        branches: [[name: "rc-${version}"]],
+                        branches: [[name: "3.18.200/feature/migrate-ps"]],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [[
                             $class: 'RelativeTargetDirectory',
@@ -349,8 +349,24 @@ node('controls') {
             def name_db = "css_${env.NODE_NAME}${ver}1"
             def user_db = "postgres"
             def password_db = "postgres"
+            writeFile file: "./controls/tests/stand/conf/sbis-rpc-service_ps.ini", text: """[Базовая конфигурация]
+                [Ядро.Http]
+                Порт=10020
+
+                [Ядро.Сервер приложений]
+                ЧислоРабочихПроцессов=3
+                ЧислоСлужебныхРабочихПроцессов=0
+                ЧислоДополнительныхПроцессов=0
+                ЧислоПотоковВРабочихПроцессах=10
+
+                [Presentation Service]
+                WarmUpEnabled=No
+                ExtractLicense=Нет
+                ExtractRights=Нет
+                ExtractSystemExtensions=Нет
+                ExtractUserInfo=Нет"""
             writeFile file: "./controls/tests/stand/conf/sbis-rpc-service.ini", text: """[Базовая конфигурация]
-                АдресСервиса=${env.NODE_NAME}:10001
+                АдресСервиса=${env.NODE_NAME}:10010
                 ПаузаПередЗагрузкойМодулей=0
                 ХранилищеСессий=host=\'dev-sbis3-autotest\' port=\'6380\' dbindex=\'2\'
                 БазаДанных=postgresql: host=\'${host_db}\' port=\'${port_db}\' dbname=\'${name_db}\' user=\'${user_db}\' password=\'${password_db}\'
@@ -370,7 +386,7 @@ node('controls') {
                 ОграничениеДляИсходящегоВызова=1024
                 ОтправлятьНаСервисЛогов=Нет
                 [Тест]
-                Адрес=http://${env.NODE_NAME}:10001"""
+                Адрес=http://${env.NODE_NAME}:10010"""
             // Копируем шаблоны
             sh """cp -f ./controls/tests/stand/intest/pageTemplates/branch/* ./controls/tests/stand/intest/pageTemplates"""
             sh """cp -fr ./controls/Examples/ ./controls/tests/stand/intest/Examples/"""
@@ -381,12 +397,12 @@ node('controls') {
             """
             sh """
                 sudo chmod -R 0777 ${workspace}
-                ${python_ver} "./constructor/updater.py" "${version}" "/home/sbis/Controls1" "css_${env.NODE_NAME}${ver}1" "./controls/tests/stand/conf/sbis-rpc-service.ini" "./controls/tests/stand/distrib_branch_new" --sdk_path "${SDK}" --items "${items}" --host test-autotest-db1 --stand nginx_branch --daemon_name Controls1
+                ${python_ver} "./constructor/updater.py" "${version}" "/home/sbis/Controls" "css_${env.NODE_NAME}${ver}1" "./controls/tests/stand/conf/sbis-rpc-service.ini" "./controls/tests/stand/distrib_branch_ps" --sdk_path "${SDK}" --items "${items}" --host test-autotest-db1 --stand nginx_branch --daemon_name Controls --use_ps --conf x86_64
                 sudo chmod -R 0777 ${workspace}
-                sudo chmod -R 0777 /home/sbis/Controls1
+                sudo chmod -R 0777 /home/sbis/Controls
             """
             //Пакуем данные
-            writeFile file: "/home/sbis/Controls1/Core.package.json", text: """
+            writeFile file: "/home/sbis/Controls/Core.package.json", text: """
                 {
                 "includeCore":true,
                 "include":[
@@ -401,8 +417,8 @@ node('controls') {
                 }"""
             sh """
                 cd ./jinnee/distrib/builder
-                node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/sbis/Controls1 --application=/
-                node ./node_modules/grunt-cli/bin/grunt less1by1 --root=/home/sbis/Controls1/ --aplication=/ > /dev/null
+                node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/sbis/Controls --application=/
+                #node ./node_modules/grunt-cli/bin/grunt less1by1 --root=/home/sbis/Controls/ --aplication=/ > /dev/null
             """
         }
         writeFile file: "./controls/tests/int/config.ini", text:
@@ -519,7 +535,7 @@ node('controls') {
         }
         sh """
             sudo chmod -R 0777 ${workspace}
-            sudo chmod -R 0777 /home/sbis/Controls1
+            sudo chmod -R 0777 /home/sbis/Controls
         """
         stage("Результаты"){
             echo "выкладываем результаты в зависимости от включенных тестов 'all only_reg only_int only_unit'"
