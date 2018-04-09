@@ -7,13 +7,14 @@
 define('SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase', [
    "Core/Deferred",
    'Core/deprecated',
+   "Core/core-instance",
    "SBIS3.CONTROLS/Menu/MenuLink",
    "Lib/Control/Dialog/Dialog",
    "WS.Data/Chain",
    "WS.Data/Collection/Factory/RecordSet",
    "WS.Data/Collection/RecordSet",
    "Core/Indicator"
-], function(Deferred, Deprecated, MenuLink, Dialog, Chain, RecordSetFactory, RecordSet, Indicator) {
+], function(Deferred, Deprecated, cInstance, MenuLink, Dialog, Chain, RecordSetFactory, RecordSet, Indicator) {
    //TODO: ограничение на максимальное количество записей, получаемое на клиент для печати/выгрузки.
    //Необходимо т.к. на сервере сейчас невозможно произвести xsl преобразование. Выписана задача:
    //(https://inside.tensor.ru/opendoc.html?guid=f852d5cc-b75e-4957-9635-3401e1832e80&description=)
@@ -356,7 +357,9 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase', [
             items = view.getItems(),
             proj = view._getItemsProjection();
 
-         return Chain(proj).map(function(item) {
+         return Chain(proj).filter(function (item) {
+            return !cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem');
+         }).map(function(item) {
             return item.getContents();
          }).first(count).value(RecordSetFactory, {
             adapter: items.getAdapter(),
