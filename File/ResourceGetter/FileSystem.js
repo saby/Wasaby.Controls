@@ -1,5 +1,5 @@
-/// <amd-module name="File/ResourceGetter/FS" />
-define("File/ResourceGetter/FS", ["require", "exports", "tslib", "File/ResourceGetter/Base", "Core/Deferred", "File/utils/ExtensionsHelper"], function (require, exports, tslib_1, IResourceGetterBase, Deferred, ExtensionsHelper) {
+/// <amd-module name="File/ResourceGetter/FileSystem" />
+define("File/ResourceGetter/FileSystem", ["require", "exports", "tslib", "File/ResourceGetter/Base", "Core/Deferred", "File/utils/ExtensionsHelper"], function (require, exports, tslib_1, IResourceGetterBase, Deferred, ExtensionsHelper) {
     "use strict";
     var SEC = 1000;
     var MIN = 60 * SEC;
@@ -38,7 +38,7 @@ define("File/ResourceGetter/FS", ["require", "exports", "tslib", "File/ResourceG
          * @cfg {Boolean} Выбрать несколько файлов
          * <wiTag group="Управление">
          * Позволяет выбрать несколько файлов
-         * @name File/ResourceGetter/FS#multiSelect
+         * @name File/ResourceGetter/FileSystem#multiSelect
          */
         multiSelect: false,
         /**
@@ -55,7 +55,7 @@ define("File/ResourceGetter/FS", ["require", "exports", "tslib", "File/ResourceG
          *    extensions: ["image"]
          *    // extensions: ["jpe","jpg","jpeg","gif","png","bmp","ico","svg","svgz","tif","tiff","pct","psd"]
          * </pre>
-         * @name File/ResourceGetter/FS#extensions
+         * @name File/ResourceGetter/FileSystem#extensions
          */
         extensions: null,
         /**
@@ -63,7 +63,7 @@ define("File/ResourceGetter/FS", ["require", "exports", "tslib", "File/ResourceG
          * посредством которого открывается окошко выбора файлов
          * <wiTag group="Управление">
          * По умолчанию: document.body
-         * @name File/ResourceGetter/FS#element
+         * @name File/ResourceGetter/FileSystem#element
          */
         element: null
     };
@@ -98,16 +98,16 @@ define("File/ResourceGetter/FS", ["require", "exports", "tslib", "File/ResourceG
      * </ul>
      *
      * @class
-     * @name File/ResourceGetter/FS
+     * @name File/ResourceGetter/FileSystem
      * @extends File/ResourceGetter/Base
      * @public
      * @author Заляев А.В.
      */
-    var FS = /** @class */ (function (_super) {
-        tslib_1.__extends(FS, _super);
-        function FS(cfg) {
+    var FileSystem = /** @class */ (function (_super) {
+        tslib_1.__extends(FileSystem, _super);
+        function FileSystem(cfg) {
             var _this = _super.call(this) || this;
-            _this.name = "FS";
+            _this.name = "FileSystem";
             _this._options = Object.assign({}, OPTION, cfg);
             _this._extensions = new ExtensionsHelper(_this._options.extensions);
             _this._mime = _this._extensions.getMimeString();
@@ -120,12 +120,12 @@ define("File/ResourceGetter/FS", ["require", "exports", "tslib", "File/ResourceG
          * Необходимо это учитывать при обработке errback у результата метода
          * @return {Core/Deferred<Array<File/LocalFile | Error>>}
          * @method
-         * @name File/ResourceGetter/FS#getFiles
+         * @name File/ResourceGetter/FileSystem#getFiles
          * @see File/LocalFile
          */
-        FS.prototype.getFiles = function () {
+        FileSystem.prototype.getFiles = function () {
             var _this = this;
-            if (this.isDestroy()) {
+            if (this.isDestroyed()) {
                 return Deferred.fail("Resource getter is destroyed");
             }
             /**
@@ -175,12 +175,12 @@ define("File/ResourceGetter/FS", ["require", "exports", "tslib", "File/ResourceG
          * Возможен ли выбор файлов
          * @return {Core/Deferred<Boolean>}
          * @method
-         * @name File/ResourceGetter/FS#canExec
+         * @name File/ResourceGetter/FileSystem#canExec
          */
-        FS.prototype.canExec = function () {
-            return Deferred.success(!this.isDestroy());
+        FileSystem.prototype.canExec = function () {
+            return Deferred.success(!this.isDestroyed());
         };
-        return FS;
+        return FileSystem;
     }(IResourceGetterBase));
-    return FS;
+    return FileSystem;
 });

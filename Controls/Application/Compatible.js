@@ -10,22 +10,22 @@ define('Controls/Application/Compatible', [
    'tmpl!Controls/Application/Compatible',
    'tmpl!Controls/Application/CompatibleScripts'
 ], function(Base,
-            EventBus,
-            RightsManager,
-            Deferred,
-            Constants,
-            template) {
+   EventBus,
+   RightsManager,
+   Deferred,
+   Constants,
+   template) {
    'use strict';
 
    var ViewTemplate = Base.extend({
       _template: template,
       _wasPatched: false,
-      _beforeMount: function(){
+      _beforeMount: function() {
          var rightsInitialized = new Deferred();
-         this._forceUpdate = function(){
+         this._forceUpdate = function() {
             return;
-         }
-         if(typeof window !== 'undefined') {
+         };
+         if (typeof window !== 'undefined') {
             Constants.rights = true;
             var rights = RightsManager.getRights();
             if (rights instanceof Deferred) {
@@ -37,20 +37,20 @@ define('Controls/Application/Compatible', [
             }
          }
       },
-      _afterMount: function(){
-         for (var i in this._children){
-            this._children[i]._forceUpdate = function(){
+      _afterMount: function() {
+         for (var i in this._children) {
+            this._children[i]._forceUpdate = function() {
                return;
             };
-            this._children[i]._shouldUpdate = function(){
+            this._children[i]._shouldUpdate = function() {
                return false;
-            }
+            };
          }
          require(['Lib/StickyHeader/StickyHeaderMediator/StickyHeaderMediator'], function() {
-            EventBus.globalChannel().notify('bootupReady', {error:''});
-         })
+            EventBus.globalChannel().notify('bootupReady', {error: ''});
+         });
       },
-      _shouldUpdate: function(){
+      _shouldUpdate: function() {
          return false;
       }
    });

@@ -18,15 +18,16 @@ define('Controls/Layout/Scroll',
       'use strict';
 
       var SCROLL_LOAD_OFFSET = 100;
-      var global = (function() { return this || (0,eval)('this') })();
+      var global = (function() {
+         return this || (0, eval)('this'); 
+      })();
 
       var _private = {
 
          sendCanScroll: function(self, clientHeight, scrollHeight) {
             if (clientHeight < scrollHeight) {
                _private.start(self, 'canScroll');
-            }
-            else {
+            } else {
                _private.start(self, 'cantScroll');
             }
          },
@@ -102,18 +103,15 @@ define('Controls/Layout/Scroll',
          doScroll: function(self, scrollParam, container) {
             if (scrollParam === 'top') {
                self._container.scrollTop = 0;
-            }
-            else {
+            } else {
                var clientHeight = container.clientHeight, scrollHeight;
                if (scrollParam === 'bottom') {
                   scrollHeight = container.scrollHeight;
                   self._container.scrollTop = scrollHeight - clientHeight;
-               }
-               else {
+               } else {
                   if (scrollParam === 'pageUp') {
                      self._container.scrollTop -= clientHeight;
-                  }
-                  else {
+                  } else {
                      self._container.scrollTop += clientHeight;
                   }
                }
@@ -130,16 +128,17 @@ define('Controls/Layout/Scroll',
          _observer: null,
 
 
-         _beforeMount: function(){
+         _beforeMount: function() {
             this._registrar = new Registrar({register: 'listScroll'});
          },
 
 
          _scrollHandler: function(e) {
             var self = this;
+
             // подписка на скролл через throttle. Нужно подобрать оптимальное значение,
             // как часто кидать внутреннее событие скролла. На простом списке - раз в 100мс достаточно.
-            throttle(function(){
+            throttle(function() {
                _private.start(self, 'scrollMove', {scrollTop: e.target.scrollTop});
                if (!self._observer) {
                   _private.onChangeScroll(self, e.target);
@@ -151,7 +150,7 @@ define('Controls/Layout/Scroll',
             _private.onChangeScroll(this, this._container);
          },
 
-         _registerIt: function(event, registerType, component, callback, triggers){
+         _registerIt: function(event, registerType, component, callback, triggers) {
             if (registerType === 'listScroll') {
                this._registrar.register(event, component, callback);
 
@@ -159,8 +158,7 @@ define('Controls/Layout/Scroll',
 
                if (global && global.IntersectionObserver && triggers) {
                   _private.initIntersectionObserver(this, triggers);
-               }
-               else {
+               } else {
                   _private.onChangeScroll(this, this._container);
                }
             }
@@ -173,7 +171,7 @@ define('Controls/Layout/Scroll',
 
 
 
-         _unRegisterIt: function(event, registerType, component){
+         _unRegisterIt: function(event, registerType, component) {
             if (registerType === 'listScroll') {
                this._registrar.unregister(event, component, callback);
             }

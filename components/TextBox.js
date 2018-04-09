@@ -294,10 +294,8 @@ define('SBIS3.CONTROLS/TextBox', [
             this._informationIcon = $('.controls-TextBox__informationIcon', this.getContainer());
          }
 
-         this._container.on('mouseenter', function(e) {
-            if ($(e.target).hasClass('controls-TextBox__informationIcon')) {
-               self._notify('onInformationIconMouseEnter');
-            }
+         this._container.on('mouseenter', '.controls-TextBox__informationIcon', function(e) {
+            self._notify('onInformationIconMouseEnter');
          });
          this._container.on('click', function(e) {
             if ($(e.target).hasClass('controls-TextBox__informationIcon')) {

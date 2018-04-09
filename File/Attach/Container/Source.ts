@@ -2,15 +2,15 @@
 import IContainer = require("File/Attach/Container/IContainer");
 import ISource = require("WS.Data/Source/ISource");
 import Deferred = require("Core/Deferred");
-import {IFileDataConstructor} from "File/IFileDataConstructor";
-import {IFileData} from "File/IFileData";
+import IResourceConstructor = require("File/IResourceConstructor");
+import IResource = require("File/IResource");
 
 type SourceWrapper = {
-    fileType: IFileDataConstructor;
+    fileType: IResourceConstructor;
     source: ISource;
 }
 
-let filterForType = (wrappers: Array<SourceWrapper>, fileData: IFileDataConstructor) => {
+let filterForType = (wrappers: Array<SourceWrapper>, fileData: IResourceConstructor) => {
     return wrappers.filter((sourceObj) => {
         return fileData == sourceObj.fileType;
     });
@@ -31,12 +31,12 @@ class SourceContainer implements IContainer<ISource> {
     /**
      * Регистрация источников данных для загрузки определённого типа ресурса
      * @param {Core/Deferred<ISource>} source источник данных
-     * @param {File/IFileDataConstructor} FileData конструктор обёртки над ресурсом
+     * @param {File/IResourceConstructor} FileData конструктор обёртки над ресурсом
      * @see File/LocalFile
      * @see File/LocalFileLink
      * @see File/HttpFileLink
      */
-    push(source: ISource, FileData: IFileDataConstructor) {
+    push(source: ISource, FileData: IResourceConstructor) {
         if (!(FileData instanceof Function)) {
             throw new Error("Invalid type of the first argument, expected constructor");
         }
@@ -53,24 +53,24 @@ class SourceContainer implements IContainer<ISource> {
     }
     /**
      * Зарегестрирован ли для текущего ресурса источник данных
-     * @param {IFileData} file
+     * @param {IResource} file
      * @return {boolean}
      * @see File/LocalFile
      * @see File/LocalFileLink
      * @see File/HttpFileLink
      */
-    has(file: IFileData): boolean {
+    has(file: IResource): boolean {
         return !!this._get(file);
     }
     /**
      * Возвращает источник данных для ресурса
-     * @param {IFileData} file
+     * @param {IResource} file
      * @return {Core/Deferred<ISource>}
      * @see File/LocalFile
      * @see File/LocalFileLink
      * @see File/HttpFileLink
      */
-    get(file: IFileData): Deferred<ISource> {
+    get(file: IResource): Deferred<ISource> {
         let source = this._get(file);
         return Deferred.success(
             source ||
@@ -79,17 +79,17 @@ class SourceContainer implements IContainer<ISource> {
     }
     /**
      * Возвращает список зарегестрированый обёрток
-     * @return {Array<IFileDataConstructor>}
+     * @return {Array<IResourceConstructor>}
      * @see File/LocalFile
      * @see File/LocalFileLink
      * @see File/HttpFileLink
      */
-    getRegisteredResource(): Array<IFileDataConstructor> {
+    getRegisteredResource(): Array<IResourceConstructor> {
         return this._sourceWrappers.map((wrapper) => {
             return wrapper.fileType;
         })
     }
-    private _get(file: IFileData): ISource {
+    private _get(file: IResource): ISource {
         let wrapper = this._sourceWrappers.filter((wrapper) => {
             return file instanceof wrapper.fileType;
         })[0];

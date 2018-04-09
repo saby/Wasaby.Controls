@@ -7,7 +7,7 @@ define('Controls/Popup/Opener/InfoBox',
       'Controls/Popup/Opener/InfoBox/InfoBoxController',
       'css!Controls/Popup/Opener/InfoBox/InfoBox'
    ],
-   function (cMerge, cClone, template, Base, Strategy) {
+   function(cMerge, cClone, template, Base, Strategy) {
       'use strict';
 
       /**
@@ -69,9 +69,14 @@ define('Controls/Popup/Opener/InfoBox',
           * @function Controls/Popup/Opener/InfoBox#open
           * @param {InfoBoxCfg} cfg Объект с настройками инфобокса
           */
-         open: function(cfg){
-            cfg = cMerge(cClone(DEFAULT_CONFIG), cfg);
+         open: function(cfg) {
+            //todo Есть проблема с обновлением в инфобоксе. В update прилетает новый конфиг, но в dom находится
+            //еще старая версия подсказки => нельзя получить актуальные размеры, чтобы правильно спозиционироваться.
+            if (this.isOpened()) { // Инфобокс всегда один
+               this.close();
+            }
 
+            cfg = cMerge(cClone(DEFAULT_CONFIG), cfg);
             Base.prototype.open.call(this, {
                target: cfg.target,
                position: cfg.position,

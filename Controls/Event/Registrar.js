@@ -10,27 +10,28 @@ define('Controls/Event/Registrar',
 
          _registry: null,
 
-         constructor: function (cfg) {
+         constructor: function(cfg) {
             Registrar.superclass.constructor.apply(this, arguments);
             this._registry = {};
             this._options = cfg;
          },
 
-         register: function(event, component, callback){
+         register: function(event, component, callback) {
             this._registry[component.getInstanceId()] = {
                component: component,
                callback: callback
             };
             event.stopPropagation();
          },
-         unregister: function(event, component){
+         unregister: function(event, component) {
             delete this._registry[component.getInstanceId()];
             event.stopPropagation();
          },
-         start: function(){
-            if (!this._registry)
+         start: function() {
+            if (!this._registry) {
                return;
-            for(var i in this._registry){
+            }
+            for (var i in this._registry) {
                if (this._registry.hasOwnProperty(i)) {
                   var obj = this._registry[i];
                   obj && obj.callback.apply(obj.component, arguments);

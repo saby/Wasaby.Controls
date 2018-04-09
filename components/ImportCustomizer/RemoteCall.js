@@ -7,11 +7,10 @@
 define('SBIS3.CONTROLS/ImportCustomizer/RemoteCall',
    [
       'Core/core-merge',
-      'Core/Deferred',
       'WS.Data/Source/SbisService'
    ],
 
-   function (cMerge, Deferred, SbisService) {
+   function (cMerge, SbisService) {
       'use strict';
 
       /**
@@ -23,6 +22,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/RemoteCall',
        * @param {object} options Входные аргументы:
        * @param {string} options.endpoint Сервис, метод которого будет вызван
        * @param {string} options.method Имя вызываемого метода
+       * @param {string} [options.idProperty] Имя свойства, в котором находится идентификатор (опционально, если вызову это не потребуется)
        * @param {object} [options.args] Аргументы вызываемого метода (опционально)
        * @param {function(object):object} [options.argsFilter] Фильтр аргументов (опционально)
        * @param {function(object):object} [options.resultFilter] Фильтр результатов (опционально)
@@ -37,6 +37,9 @@ define('SBIS3.CONTROLS/ImportCustomizer/RemoteCall',
          if (!options.method || typeof options.method !== 'string') {
             throw new Error('Wrong method');
          }
+         if (options.idProperty && typeof options.idProperty !== 'string') {
+            throw new Error('Wrong idProperty');
+         }
          if (options.args && typeof options.args !== 'object') {
             throw new Error('Wrong args');
          }
@@ -48,6 +51,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/RemoteCall',
          }
          this._endpoint = options.endpoint;
          this._method = options.method;
+         this._idProperty = options.idProperty;
          this._args = options.args;
          this._argsFilter = options.argsFilter;
          this._resultFilter = options.resultFilter;
@@ -72,7 +76,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/RemoteCall',
             if (this._args) {
                args = args ? cMerge(cMerge({}, this._args), args) : this._args;
             }
-            var promise = (new SbisService({endpoint:this._endpoint})).call(this._method, args);
+            var promise = (new SbisService({endpoint:this._endpoint, idProperty:this._idProperty || undefined})).call(this._method, args);
             if (this._resultFilter) {
                promise.addCallback(this._resultFilter);
             }

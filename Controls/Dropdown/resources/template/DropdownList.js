@@ -8,7 +8,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
       'tmpl!Controls/Dropdown/resources/template/defaultContentHeadTemplate',
       'css!Controls/Dropdown/resources/template/DropdownList'
    ],
-   function (Control, MenuItemsTpl, MenuViewModel, itemTemplate, defaultHeadTemplate, defaultContentHeadTemplate) {
+   function(Control, MenuItemsTpl, MenuViewModel, itemTemplate, defaultHeadTemplate, defaultContentHeadTemplate) {
 
       /**
        * Действие открытия прилипающего окна
@@ -18,14 +18,14 @@ define('Controls/Dropdown/resources/template/DropdownList',
        * @category Popup
        */
 
-       /**
+      /**
         * @name Controls/Menu#menuStyle
         * @cfg {String} Отображения меню
         * @variant defaultHead Стандартный заголовок
         * @variant duplicateHead Иконка вызывающего элемента дублрируется в первый пункт. Заголовка с фоном нет.
         * @variant cross Добавляется крест закрытия. Заголовка с фоном нет.
         */
-       /**
+      /**
         * @name Controls/Menu#showHeader
         * @cfg {Boolean} Показывать ли заголовок в меню.
         * @variant true Заголовок есть
@@ -37,12 +37,12 @@ define('Controls/Dropdown/resources/template/DropdownList',
          _defaultHeadTemplate: defaultHeadTemplate,
          _defaultContentHeadTemplate: defaultContentHeadTemplate,
          _controlName: 'Controls/Dropdown/resources/template/DropdownList',
-         constructor: function (config) {
+         constructor: function(config) {
             var self = this;
             var sizes = ['small', 'medium', 'large'];
             var iconSize;
 
-            if(config.defaultItemTemplate){
+            if (config.defaultItemTemplate) {
                this._defaultItemTemplate = config.defaultItemTemplate;
             }
 
@@ -53,7 +53,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
                this._headConfig.menuStyle =  this._headConfig.menuStyle || 'defaultHead';
 
                if (this._headConfig.icon) {
-                  sizes.forEach(function (size) {
+                  sizes.forEach(function(size) {
                      if (self._headConfig.icon.indexOf('icon-' + size) !== -1) {
                         iconSize = size;
                      }
@@ -63,7 +63,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   this._duplicateHeadClassName = 'control-MenuButton-duplicate-head_' + iconSize;
                }
                if (this._headConfig.menuStyle === 'cross') {
-                   this._headConfig.icon = null;
+                  this._headConfig.icon = null;
                }
             }
             Menu.superclass.constructor.apply(this, arguments);
@@ -74,7 +74,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
             document.addEventListener('mousedown', this._documentClickHandler);
             document.addEventListener('touchstart', this._documentClickHandler);
          },
-         _beforeMount: function (newOptions) {
+         _beforeMount: function(newOptions) {
             if (newOptions.items) {
                this._listModel = new MenuViewModel({
                   items: newOptions.items,
@@ -89,7 +89,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
          },
 
          //TODO Логика открытия подменю переедет в попап
-         _itemMouseEnter: function (event, item, hasChildren) {
+         _itemMouseEnter: function(event, item, hasChildren) {
             if (hasChildren) {
                var config = {
                   componentOptions: {
@@ -112,8 +112,9 @@ define('Controls/Dropdown/resources/template/DropdownList',
                this._children['MenuOpener' + item.get(this._options.keyProperty)].open(config, this);
             }
          },
+
          //TODO Логика закрытия подменю переедет в попап
-         _itemMouseOut: function (event, item) {
+         _itemMouseOut: function(event, item) {
             var targetMenu = event.nativeEvent.relatedTarget && event.nativeEvent.relatedTarget.closest('.controls-DropdownList__popup'),
                targetDepth = targetMenu && parseInt(targetMenu.getAttribute('depth'), 10),
                childSubMenu = this._children['MenuOpener' + item.get(this._options.keyProperty)];
@@ -124,13 +125,13 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   this._notify('sendResult', [['itemMouseOut', event]]);
                   this._notify('close');
                }
-            }
-            else if (this._options.depth >= targetDepth) { //Если увели на родителя или на другую запись в текущем меню - скрываем подменю
+            } else if (this._options.depth >= targetDepth) { //Если увели на родителя или на другую запись в текущем меню - скрываем подменю
                childSubMenu && childSubMenu.close(); //Скрываем открытое подменю
             }
          },
-         resultHandler: function (args) {
+         resultHandler: function(args) {
             switch (args[0]) {
+
                //Увели мышь мимо всех меню => сообщаем родительскому подменю что надо закрыться и закрываемся сами
                case 'itemMouseOut':
                   if (this._options.depth > 1) {
@@ -143,22 +144,22 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   this._notify('close');
             }
          },
-         _itemClickHandler: function (event, item, flag) {
+         _itemClickHandler: function(event, item, flag) {
             this._notify('sendResult', [['itemClick', event, [item, flag]]]); //TODO Баг/Фича с передачей аргументов в попап.
          },
-         _footerClick: function (event) {
+         _footerClick: function(event) {
             this._notify('sendResult', [['footerClick', event]]);
          },
-         _headerClick: function () {
+         _headerClick: function() {
             this._notify('close');
          },
-         _documentClickHandler: function (event) {
+         _documentClickHandler: function(event) {
             //Если кликнули мимо меню - закрываемся
             if (!event.target.closest('.controls-DropdownList__popup')) {
                this._notify('close');
             }
          },
-         destroy: function () {
+         destroy: function() {
             document.removeEventListener('mousedown', this._documentClickHandler);
             document.removeEventListener('touchstart', this._documentClickHandler);
             Menu.superclass.destroy.apply(this, arguments);
@@ -166,9 +167,9 @@ define('Controls/Dropdown/resources/template/DropdownList',
       });
 
       Menu.getDefaultOptions = function() {
-          return {
-              menuStyle: 'defaultHead'
-          };
+         return {
+            menuStyle: 'defaultHead'
+         };
       };
 
       return Menu;
