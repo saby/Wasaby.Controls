@@ -67,10 +67,9 @@ define('Controls/Dropdown/resources/MenuViewModel',
          },
          _isItemSelected: function(item) {
             var keys = this._options.selectedKeys;
-
-            // if (keys instanceof Array) {
-            //    return keys.indexOf(item.get(this._options.keyProperty)) > -1;
-            // }
+            if (keys instanceof Array) {
+               return keys.indexOf(item.get(this._options.keyProperty)) > -1;
+            }
             return keys && keys === item.get(this._options.keyProperty);
          },
          _hasChildren: function(item) {
