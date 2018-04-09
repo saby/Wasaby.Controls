@@ -105,6 +105,14 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
 
             this._bindEvents();
             this._longOpList.reload();
+
+            // Убираю таймаут, т.к. из-за асинхронных "гонок" иногда стало отображаться пустое окно
+            // https://online.sbis.ru/opendoc.html?guid=23ff686f-a6ea-4976-9bd9-21d59c6d38e4
+            // setTimeout(function () {
+            if (!this._isIntroduced) {
+               this._introduce();
+            }
+            // }.bind(this), 2000);
          },
 
          _bindEvents: function () {
