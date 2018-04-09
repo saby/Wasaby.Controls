@@ -105,26 +105,22 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
 
             this._bindEvents();
             this._longOpList.reload();
-
-            // Убираю таймаут, т.к. из-за асинхронных "гонок" иногда стало отображаться пустое окно
-            // https://online.sbis.ru/opendoc.html?guid=23ff686f-a6ea-4976-9bd9-21d59c6d38e4
-            // setTimeout(function () {
-            if (!this._isIntroduced) {
-               this._introduce();
-            }
-            // }.bind(this), 2000);
          },
 
          _bindEvents: function () {
             var self = this;
 
+            this.subscribeTo(this, 'onShow', function () {
+               self._tabChannel.notify('LongOperations:Popup:onOpen', self.getId());
+            });
+
             /*Если пользователь закроет в одной вкладке, закрываем на всех вкладках*/
             this.subscribeTo(this, 'onClose', function () {
                if (self.isVisible()) {
-                  self._tabChannel.notify('LongOperations:Popup:onClosed');
+                  self._tabChannel.notify('LongOperations:Popup:onClose', self.getId());
                }
             });
-            this.subscribeTo(this._tabChannel, 'LongOperations:Popup:onClosed', function () {
+            this.subscribeTo(this._tabChannel, 'LongOperations:Popup:onClose', function () {
                if (!self._isDestroyed) {
                   self.close();
                }
