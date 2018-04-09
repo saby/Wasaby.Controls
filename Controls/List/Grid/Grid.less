@@ -1,0 +1,255 @@
+//--------------- constants ---------------
+@font-size_Grid-cell_XL: 17px;
+@font-size_Grid-row-cell: 14px;
+@font-size_Grid-header-cell: 12px;
+
+@height-Grid-row-separator: 1px;
+@color-Grid-row-separator: #EAEAEA;
+
+@min-height_Grid-row: 24px;
+@background-color_Grid-row_hover: #F0F5FB;
+
+@background-color_Grid-sticky-row: #ffffff;
+
+@spacing_Grid-row_default: 6px;
+@spacing_Grid-row_M: 6px;
+@spacing_Grid-row_L: 12px;
+@spacing_Grid-column: 12px;
+
+@spacing_Grid-header-row: 8px;
+@color_Grid-header: #8991A9;
+
+@padding_Grid-left_default: 12px;
+@padding_Grid-left_XS: 0px;
+@padding_Grid-left_S: 8px;
+@padding_Grid-left_M: 12px;
+@padding_Grid-left_L: 16px;
+@padding_Grid-left_XL: 20px;
+@padding_Grid-left_XXL: 24px;
+@padding_Grid-right_default: 12px;
+@padding_Grid-right_XS: 0px;
+@padding_Grid-right_S: 8px;
+@padding_Grid-right_M: 12px;
+@padding_Grid-right_L: 16px;
+@padding_Grid-right_XL: 20px;
+@padding_Grid-right_XXL: 24px;
+
+@width_Grid-selection-marker: 3px;
+@color_Grid-selection-marker: #FF7033;
+
+@width_Grid-cell-checkbox: 24px;
+@height_Grid-checkboxArea: 32px;
+@width_Grid-checkboxArea: 24px;
+@padding_Grid-checkbox-left: 6px;
+@padding_Grid-checkbox-top: 10px;
+@height_Grid-checkbox: 12px;
+@width_Grid-checkbox: 12px;
+@width_Grid-checkbox-border: 1px;
+@color_Grid-checkbox-border: #999999;
+@padding_Grid-checkbox-icon-top: 4px;
+@padding_Grid-checkbox-icon-left: 6px;
+@font-size_Grid-checkbox-icon: 18px;
+@color_Grid-checkbox-icon: #ff7033;
+//--------------- styles ---------------
+.controls-Grid__wrapper {
+   display: grid;
+   width: 100%;
+}
+.controls-Grid__header {
+   display: contents;
+   color: @color_Grid-header;
+}
+.controls-Grid__header-cell {
+   height: 100%;
+   box-sizing: border-box;
+   min-width: 0;
+   font-size: @font-size_Grid-header-cell;
+   .position-sticky();
+   z-index: 1;
+   top: 0;
+   background-color: @background-color_Grid-sticky-row;
+   padding-top: @spacing_Grid-header-row / 2;
+   padding-bottom: @spacing_Grid-header-row / 2;
+}
+.controls-Grid__header-cell_spacing_money:after {
+   content: ".99";
+   visibility: hidden;
+   display: inline-block;
+}
+.controls-Grid__header-cell__content{
+   display: inline-block;
+}
+.controls-Grid__header-cell_valign_bottom {
+   align-self: end;
+}
+.controls-Grid__header-cell_valign_top {
+   align-self: start;
+}
+.controls-Grid__header-cell_valign_middle {
+   align-self: center;
+}
+.controls-Grid__results {
+   display: contents;
+}
+.controls-Grid__results-cell {
+   .position-sticky();
+   background-color: @background-color_Grid-sticky-row;
+   z-index: 1;
+   min-width: 0;
+}
+.controls-Grid__row {
+   display: contents;
+}
+.controls-Grid__row-cell {
+   min-height: @min-height_Grid-row;
+   position: relative;
+   // Default "min-width" value "auto" and width limited not working. Fix this bug by reset "min-width" value to "0".
+   // http://css-live.ru/articles/chto-mozhet-polomat-maket-na-gridax-css-grid-layout.html
+   min-width: 0;
+   font-size: @font-size_Grid-row-cell;
+   overflow: hidden;
+}
+.controls-Grid__row-cell_halign_left {
+   text-align: left;
+}
+.controls-Grid__row-cell_halign_right {
+   text-align: right;
+}
+.controls-Grid__row-cell_halign_center {
+   text-align: center;
+}
+.controls-Grid__row:hover .controls-Grid__row-cell {
+   background-color: @background-color_Grid-row_hover;
+}
+.controls-Grid__row-cell_rowSpacing_default {
+   padding-top: (@spacing_Grid-row_default / 2) + @height-Grid-row-separator;
+   padding-bottom: @spacing_Grid-row_default / 2;
+}
+.controls-Grid__row-cell_rowSpacing_M {
+   padding-top: (@spacing_Grid-row_M / 2) + @height-Grid-row-separator;
+   padding-bottom: @spacing_Grid-row_M / 2;
+}
+.controls-Grid__row-cell_rowSpacing_L {
+   padding-top: (@spacing_Grid-row_L / 2) + @height-Grid-row-separator;
+   padding-bottom: @spacing_Grid-row_L / 2;
+}
+.controls-Grid__cell_spacingLeft {
+   padding-left: @spacing_Grid-column / 2;
+}
+.controls-Grid__cell_spacingRight {
+   padding-right: @spacing_Grid-column / 2;
+}
+.controls-Grid__row-cell {
+   border-top: @height-Grid-row-separator solid;
+}
+.controls-Grid__row-cell__content_withLadder {
+   visibility: hidden;
+}
+.controls-Grid__row-ladder-cell {
+   pointer-events: none;
+   position: relative;
+}
+.controls-Grid__row-ladder-cell__content {
+   .position-sticky();
+   top: 0;
+}
+.controls-Grid__row-cell_withoutRowSeparator {
+   border-top-color: transparent;
+   border-bottom-color: transparent;
+}
+.controls-Grid__row-cell_lastRow {
+   border-bottom: @height-Grid-row-separator solid;
+}
+.controls-Grid__row-cell_withRowSeparator_firstRow {
+   border-top-color: @color-Grid-row-separator;
+}
+.controls-Grid__row-cell_withRowSeparator_lastRow {
+   border-bottom-color: @color-Grid-row-separator;
+}
+.controls-Grid__row-cell_withRowSeparator {
+   border-top-color: @color-Grid-row-separator;
+}
+.controls-Grid__row-cell__content_baseline_XL:before {
+   // Для выравнивания текста внутри ячейки по базовой линии, создаваемой самым большим шрифтом
+   content: '\200b';
+   font-size: @font-size_Grid-cell_XL;
+}
+.controls-Grid__cell_spacingFirstCol_default {
+   padding-left: @padding_Grid-left_default;
+}
+.controls-Grid__cell_spacingFirstCol_XS {
+   padding-left: @padding_Grid-left_XS;
+}
+.controls-Grid__cell_spacingFirstCol_S {
+   padding-left: @padding_Grid-left_S;
+}
+.controls-Grid__cell_spacingFirstCol_M {
+   padding-left: @padding_Grid-left_M;
+}
+.controls-Grid__cell_spacingFirstCol_L {
+   padding-left: @padding_Grid-left_L;
+}
+.controls-Grid__cell_spacingFirstCol_XL {
+   padding-left: @padding_Grid-left_XL;
+}
+.controls-Grid__cell_spacingFirstCol_XXL {
+   padding-left: @padding_Grid-left_XXL;
+}
+.controls-Grid__cell_spacingLastCol_default {
+   padding-right: @padding_Grid-right_default;
+}
+.controls-Grid__cell_spacingLastCol_XS {
+   padding-right: @padding_Grid-left_XS;
+}
+.controls-Grid__cell_spacingLastCol_S {
+   padding-right: @padding_Grid-left_S;
+}
+.controls-Grid__cell_spacingLastCol_M {
+   padding-right: @padding_Grid-left_M;
+}
+.controls-Grid__cell_spacingLastCol_L {
+   padding-right: @padding_Grid-left_L;
+}
+.controls-Grid__cell_spacingLastCol_XL {
+   padding-right: @padding_Grid-left_XL;
+}
+.controls-Grid__cell_spacingLastCol_XXL {
+   padding-right: @padding_Grid-left_XXL;
+}
+
+.controls-Grid__row-cell_withSelectionMarker {
+   box-shadow: inset @width_Grid-selection-marker 0 0 @color_Grid-selection-marker;
+}
+// Checkbox styles
+.controls-Grid__row-cell-checkbox {
+   min-width: @width_Grid-cell-checkbox;
+   max-width: @width_Grid-cell-checkbox;
+}
+.controls-Grid__checkboxArea {
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: @width_Grid-checkboxArea;
+   height: @height_Grid-checkboxArea;
+   cursor: pointer;
+}
+.controls-Grid__checkbox_checked:before,
+.controls-Grid__row:hover .controls-Grid__checkbox_unchecked:before {
+   content: '\200b';
+   position: absolute;
+   top: @padding_Grid-checkbox-top;
+   left: @padding_Grid-checkbox-left;
+   width: @width_Grid-checkbox;
+   height: @height_Grid-checkbox;
+   border: @width_Grid-checkbox-border solid @color_Grid-checkbox-border;
+   box-sizing: border-box;
+}
+
+.controls-Grid__checkbox_checked:after {
+   .draw-checkbox();
+   position: absolute;
+   top: @padding_Grid-checkbox-icon-top;
+   left: @padding_Grid-checkbox-icon-left;
+   font-size: @font-size_Grid-checkbox-icon;
+   color: @color_Grid-checkbox-icon;
+}

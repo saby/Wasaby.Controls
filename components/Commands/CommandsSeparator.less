@@ -56,3 +56,13 @@
 		}
 	}
 }
+.controls-popup-revert-vertical {
+	.controls-CommandsSeparator-icon:before {
+		content: @controls-commandsSeparator-icon-up;
+	}
+	.controls-CommandsSeparator.controls-Checked__checked {
+		.controls-CommandsSeparator-icon:before {
+			content: @controls-commandsSeparator-icon-down;
+		}
+	}
+}

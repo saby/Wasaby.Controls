@@ -274,6 +274,20 @@ define('SBIS3.CONTROLS/Tree/CompositeView', [
          }
       },
 
+      _getInsertMarkupConfig: function() {
+         var result = TreeCompositeView.superclass._getInsertMarkupConfig.apply(this, arguments);
+         if (this._options.viewMode !== 'table') {
+            //При добавлении элементов в начало списка, они добавляются перед FoldersContainer, а должны добавлять после него.
+            //В таком случае явно укажем после какого блока вставить элементы.
+            if (result.inside && result.prepend) {
+               result.inside = false;
+               result.prepend = false;
+               result.container = this._getFoldersContainer();
+            }
+         }
+         return result;
+      },
+
       _getChildrenDOMItems: function() {
          var
             folders = this._getFoldersContainer().children('.js-controls-ListView__item'),

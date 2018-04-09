@@ -1,4 +1,4 @@
-<div attr:class="controls-DropdownList__row {{itemData.isSelected ? 'controls-DropdownList__selected'}} controls-DropdownList__item-{{itemData.getPropValue(itemData.item, 'pinned') === true && !itemData.hasParent ? 'pinned'}} controls-DropdownList__item-right_{{itemData.hasChildren || hierarchyPadding ? 'hierarchy-padding': 'default-padding'}}"
+<div attr:class="controls-DropdownList__row {{itemData.isSelected ? 'controls-DropdownList__selected'}} controls-DropdownList__item-{{itemData.getPropValue(itemData.item, 'pinned') === true && !itemData.hasParent ? 'pinned'}} controls-DropdownList__item-right_{{itemData.hasChildren || hierarchyPadding || itemData.getPropValue(itemData.item, 'pinned') === true || !itemData.hasParent ? 'hierarchy-padding': 'default-padding'}}"
      on:click="_itemClickHandler(itemData.item)" on:mouseenter="_itemMouseEnter(itemData.item, itemData.hasChildren)"
      on:mouseleave="_itemMouseOut(itemData.item)">
    <div if="{{itemData.icon}}" class="controls-DropdownList__icon {{itemData.icon}}"></div>

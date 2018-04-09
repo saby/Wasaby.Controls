@@ -235,24 +235,26 @@ define(
             assert.equal(result, '123 456.78');
          });
 
-         it('getValue: only integers', function () {
-            var
-               numberViewModel = new NumberViewModel({
-                  value: 123456
-               }),
-               result = numberViewModel.getValue();
+         describe('getValue', function() {
+            var getValueTests = [
+               ['123456', 123456],
+               ['-123456', -123456],
+               ['123.456', 123.456],
+               ['0', 0],
+               ['-', undefined],
+               [undefined, undefined]
+            ];
 
-            assert.equal(result, '123456');
-         });
+            getValueTests.forEach(function(test, i) {
+               it('Test ' + i, function () {
+                  var numberViewModel = new NumberViewModel({
+                     value: test[0]
+                  });
+                  var result = numberViewModel.getValue();
 
-         it('getValue: integers and decimals', function () {
-            var
-               numberViewModel = new NumberViewModel({
-                  value: 123456.78
-               }),
-               result = numberViewModel.getValue();
-
-            assert.equal(result, '123456.78');
+                  assert.isTrue(result === test[1]);
+               });
+            });
          });
 
          it('\'0.\' wouldn\'t update if value is 0', function () {

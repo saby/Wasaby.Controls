@@ -81,8 +81,8 @@ define('Controls/Dropdown/Opener',
           },
 
           setComponentOptions: function(self, config) {
-              var cOptions = config.componentOptions;
-              var pOptions = self._options.popupOptions;
+              var cOptions = config.componentOptions || {};
+              var pOptions = self._options.popupOptions || {};
               cOptions.depth = cOptions.depth || self._options.depth;
               if(pOptions.componentOptions && pOptions.componentOptions.headConfig) {
                   pOptions.componentOptions.headConfig.menuStyle = pOptions.componentOptions.headConfig.menuStyle || 'defaultHead';

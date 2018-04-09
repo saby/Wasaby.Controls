@@ -169,7 +169,10 @@ define('Controls/Input/Number/ViewModel',
             },
 
             getValue: function () {
-               return parseFloat(this._options.value) || undefined;
+               var numValue = parseFloat(this._options.value);
+
+               // Can be NaN if value is '-' or 'undefined'
+               return isNaN(numValue) ? undefined : numValue;
             },
 
             updateOptions: function(options) {
