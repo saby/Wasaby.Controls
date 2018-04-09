@@ -11,7 +11,7 @@ define('Controls/Button/MenuButton',
    ],
    function(Control, template, RecordSet, SourceController, dropdownUtil, Classes, menuHeadTemplate) {
 
-       /**
+      /**
         * MenuButton
         * @class Controls/Button
         * @extends Controls/Control
@@ -27,7 +27,7 @@ define('Controls/Button/MenuButton',
 
       'use strict';
 
-       /**
+      /**
         * @name Controls/MenuButton#headConfig
         * @cfg {Object} Menu style menuStyle
         * @variant defaultHead The head with icon and caption
@@ -40,7 +40,7 @@ define('Controls/Button/MenuButton',
             instance._sourceController = new SourceController({
                source: source
             });
-            return instance._sourceController.load(filter || {}).addCallback(function(items){
+            return instance._sourceController.load(filter || {}).addCallback(function(items) {
                instance._items = items;
             });
          },
@@ -60,6 +60,7 @@ define('Controls/Button/MenuButton',
                      iconSize = size;
                   }
                });
+
                // у кнопки типа 'Ссылка' высота вызывающего элемента зависит от размера иконки,
                // поэтому необходимо это учесть при сдвиге
                self._offsetClassName += '_' + iconSize;
@@ -71,7 +72,7 @@ define('Controls/Button/MenuButton',
       var MenuButton = Control.extend({
          _template: template,
          _menuHeadTemplate: menuHeadTemplate,
-         constructor: function (config) {
+         constructor: function(config) {
             _private.cssStyleGeneration(this, config);
             config.headCaption = config.headCaption || config.caption;
             MenuButton.superclass.constructor.apply(this, arguments);
@@ -88,7 +89,7 @@ define('Controls/Button/MenuButton',
          },
          _beforeUpdate: function(newOptions) {
             if (newOptions.source && newOptions.source !== this._options.source) {
-                return _private.loadItems(this, newOptions.source);
+               return _private.loadItems(this, newOptions.source);
             }
          },
          _open: function() {
@@ -98,7 +99,7 @@ define('Controls/Button/MenuButton',
             var actionName = args[0];
             var data = args[2];
 
-            if(actionName === 'itemClick') {
+            if (actionName === 'itemClick') {
                this._notify('onMenuItemActivate', data);
                this._children.DropdownOpener.close();
             }

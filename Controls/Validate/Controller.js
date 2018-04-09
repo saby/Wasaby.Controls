@@ -12,16 +12,16 @@ define('Controls/Validate/Controller',
       IoC,
       ParallelDeferred,
       Deferred
-   ){
+   ) {
       'use strict';
 
       var Validate = Base.extend({
          _template: template,
-         _afterMount: function () {
-            this._notify('validateCreated', [this], {bubbling:true});
+         _afterMount: function() {
+            this._notify('validateCreated', [this], {bubbling: true});
          },
-         _beforeUnmount: function () {
-            this._notify('validateDestroyed', [this], {bubbling:true});
+         _beforeUnmount: function() {
+            this._notify('validateDestroyed', [this], {bubbling: true});
          },
 
          _validationResult: undefined,
@@ -95,12 +95,13 @@ define('Controls/Validate/Controller',
 
                this.setValidationResult(validationResult);
                resultDeferred.callback(validationResult);
-            }.bind(this)).addErrback(function (e) {
+            }.bind(this)).addErrback(function(e) {
                IoC.resolve('ILogger').error('Validate', 'Validation error', e);
             });
 
             return resultDeferred;
          },
+
          /**
           * Запустить валидацию
           * @returns {*}
@@ -121,6 +122,7 @@ define('Controls/Validate/Controller',
                this._forceUpdate();
             }
          },
+
          /**
           * Получить результат валидации
           * @returns {undefined|*}

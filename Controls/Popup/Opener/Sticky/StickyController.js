@@ -6,7 +6,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
       'Core/core-clone',
       'Controls/Popup/TargetCoords'
    ],
-   function (BaseController, StickyStrategy, cMerge, cClone, TargetCoords) {
+   function(BaseController, StickyStrategy, cMerge, cClone, TargetCoords) {
       var DEFAULT_OPTIONS = {
          horizontalAlign: {
             side: 'right',
@@ -23,7 +23,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
       };
 
       var _private = {
-         prepareConfig: function (cfg, sizes) {
+         prepareConfig: function(cfg, sizes) {
             var popupCfg = {
                corner: cMerge(cClone(DEFAULT_OPTIONS['corner']), cfg.popupOptions.corner || {}),
                align: {
@@ -39,13 +39,12 @@ define('Controls/Popup/Opener/Sticky/StickyController',
             if (cfg.popupOptions.className) {
                cfg.popupOptions.className = cfg.popupOptions.className.replace(/controls-Popup-corner\S*|controls-Popup-align\S*/g, '').trim();
                cfg.popupOptions.className += ' ' + _private.getOrientationClasses(popupCfg);
-            }
-            else {
+            } else {
                cfg.popupOptions.className = _private.getOrientationClasses(popupCfg);
             }
          },
 
-         getOrientationClasses: function (cfg) {
+         getOrientationClasses: function(cfg) {
             var className = 'controls-Popup-corner-vertical-' + cfg.corner.vertical;
             className += ' controls-Popup-corner-horizontal-' + cfg.corner.horizontal;
             className += ' controls-Popup-align-horizontal-' + cfg.align.horizontal.side;
@@ -62,14 +61,14 @@ define('Controls/Popup/Opener/Sticky/StickyController',
        * @category Popup
        */
       var StickyController = BaseController.extend({
-         elementCreated: function (cfg, container) {
+         elementCreated: function(cfg, container) {
             this.prepareConfig(cfg, container);
          },
 
-         elementUpdated: function (cfg, container) {
+         elementUpdated: function(cfg, container) {
             this.prepareConfig(cfg, container);
          },
-         prepareConfig: function (cfg, container) {
+         prepareConfig: function(cfg, container) {
             var sizes = this._getPopupSizes(cfg, container);
             _private.prepareConfig(cfg, sizes);
          }

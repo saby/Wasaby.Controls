@@ -71,6 +71,7 @@ define('Controls/Input/Mask',
                   return value.length;
                }
             },
+
             /**
              * If there's no symbol at selected position,
              * set caret to the position following the last user-entered character.
@@ -144,7 +145,7 @@ define('Controls/Input/Mask',
                'd': '[0-9]',
                'x': '[А-ЯA-Zа-яa-z0-9ёЁ]'
             }
-         }
+         };
       };
 
       Mask._private = _private;

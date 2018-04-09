@@ -28,7 +28,7 @@ define('Controls/List/SimpleList/ListViewModel',
             this._actions = [];
             ListViewModel.superclass.constructor.apply(this, arguments);
             this._itemsModel = new ItemsViewModel({
-               items : cfg.items,
+               items: cfg.items,
                idProperty: cfg.idProperty,
                displayProperty: cfg.displayProperty,
                itemsReadyCallback: cfg.itemsReadyCallback
@@ -45,8 +45,8 @@ define('Controls/List/SimpleList/ListViewModel',
             }
 
             this._multiselection = new MultiSelection({
-               selectedKeys : cfg.selectedKeys,
-               excludedKeys : cfg.excludedKeys
+               selectedKeys: cfg.selectedKeys,
+               excludedKeys: cfg.excludedKeys
             });
 
             _private.updateIndexes(self);
@@ -121,7 +121,7 @@ define('Controls/List/SimpleList/ListViewModel',
          },
 
          updateIndexes: function(startIndex, stopIndex) {
-            if ((this._startIndex !== startIndex) || (this._stopIndex !== stopIndex)){
+            if ((this._startIndex !== startIndex) || (this._stopIndex !== stopIndex)) {
                this._startIndex = startIndex;
                this._stopIndex = stopIndex;
                this._notify('onListChange');

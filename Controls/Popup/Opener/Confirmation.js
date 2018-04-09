@@ -6,7 +6,7 @@ define('Controls/Popup/Opener/Confirmation',
       'css!Controls/Popup/Opener/Confirmation/Confirmation',
       'Controls/Popup/Opener/Confirmation/Dialog'
    ],
-   function (Control, Deferred, template) {
+   function(Control, Deferred, template) {
       'use strict';
 
       /**
@@ -30,19 +30,19 @@ define('Controls/Popup/Opener/Confirmation',
          _resultDef: null,
          _openerResultHandler: null,
 
-         constructor: function (options) {
+         constructor: function(options) {
             Confirmation.superclass.constructor.apply(this, options);
             this._openerResultHandler = this._resultHandler.bind(this);
          },
 
-         _resultHandler: function(res){
-            if(this._resultDef){
+         _resultHandler: function(res) {
+            if (this._resultDef) {
                this._resultDef.callback(res);
                this._resultDef = null;
             }
          },
 
-         open: function(cfg){
+         open: function(cfg) {
             this._resultDef = new Deferred();
             this._children.opener.open({
                componentOptions: cfg

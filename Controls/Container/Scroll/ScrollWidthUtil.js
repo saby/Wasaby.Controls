@@ -8,6 +8,7 @@ define('Controls/Container/Scroll/ScrollWidthUtil',
       'use strict';
 
       var _private = {
+
          /**
           * Расчет ширины нативного скролла с помощью вспомогательного контейнера.
           * @return {number}
@@ -31,6 +32,7 @@ define('Controls/Container/Scroll/ScrollWidthUtil',
           */
          calcScrollbarWidth: function(detection) {
             var scrollbarWidth;
+
             /**
              * В браузерах с поддержкой ::-webkit-scrollbar установлена ширина 0.
              * Определяем не с помощью Core/detection, потому что в нем считается, что chrome не на WebKit.
@@ -109,6 +111,6 @@ define('Controls/Container/Scroll/ScrollWidthUtil',
          _private: _private,
 
          calcStyleHideScrollbar: _private.calcStyleHideScrollbarFn(detection, compatibility)
-      }
+      };
    }
 );

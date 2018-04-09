@@ -26,13 +26,13 @@ define('Controls/Input/resources/RenderHelper',
                   insert: '',
                   delete: '',
                   after: newValue.substring(caretPosition)
-               }
+               };
             }
 
             afterInsertValue = newValue.substring(caretPosition);
-            beforeInsertValue = inputType === 'insert' ?
-               oldValue.substring(0, oldValue.length - afterInsertValue.length - selectionLength) :
-               newValue.substring(0, caretPosition);
+            beforeInsertValue = inputType === 'insert'
+               ? oldValue.substring(0, oldValue.length - afterInsertValue.length - selectionLength)
+               : newValue.substring(0, caretPosition);
             insertValue = newValue.substring(beforeInsertValue.length, newValue.length - afterInsertValue.length);
             deleteValue = oldValue.substring(beforeInsertValue.length, oldValue.length - afterInsertValue.length);
 

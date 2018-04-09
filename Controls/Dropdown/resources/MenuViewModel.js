@@ -8,11 +8,11 @@ define('Controls/Dropdown/resources/MenuViewModel',
       'Controls/List/SimpleList/ItemsViewModel',
       'WS.Data/Relation/Hierarchy'
    ],
-   function (Abstract, Chain, ItemsViewModel, Hierarchy) {
+   function(Abstract, Chain, ItemsViewModel, Hierarchy) {
       var MenuViewModel = Abstract.extend({
          _itemsModel: null,
 
-         constructor: function (cfg) {
+         constructor: function(cfg) {
             this._options = cfg;
             MenuViewModel.superclass.constructor.apply(this, arguments);
 
@@ -28,7 +28,7 @@ define('Controls/Dropdown/resources/MenuViewModel',
             });
          },
 
-         _getCurrentRootItems: function (cfg) {
+         _getCurrentRootItems: function(cfg) {
             if (!cfg.parentProperty || !cfg.nodeProperty) {
                return cfg.items;
             }
@@ -37,25 +37,25 @@ define('Controls/Dropdown/resources/MenuViewModel',
             }).value();
          },
 
-         destroy: function () {
+         destroy: function() {
             this._itemsModel.destroy();
             this._hierarchy.destroy();
             MenuViewModel.superclass.destroy.apply(this, arguments);
          },
 
-         reset: function () {
+         reset: function() {
             return this._itemsModel.reset();
          },
 
-         isEnd: function () {
+         isEnd: function() {
             return this._itemsModel.isEnd();
          },
 
-         goToNext: function () {
+         goToNext: function() {
             return this._itemsModel.goToNext();
          },
 
-         getCurrent: function () {
+         getCurrent: function() {
             var itemsModelCurrent = this._itemsModel.getCurrent();
             itemsModelCurrent.hasChildren = this._hasChildren(itemsModelCurrent.item);
             itemsModelCurrent.hasParent = this._hasParent(itemsModelCurrent.item);
@@ -67,18 +67,19 @@ define('Controls/Dropdown/resources/MenuViewModel',
          },
          _isItemSelected: function(item) {
             var keys = this._options.selectedKeys;
+
             // if (keys instanceof Array) {
             //    return keys.indexOf(item.get(this._options.keyProperty)) > -1;
             // }
             return keys && keys === item.get(this._options.keyProperty);
          },
-         _hasChildren: function (item) {
+         _hasChildren: function(item) {
             return this._hierarchy.isNode(item) && !!this._hierarchy.getChildren(item, this._options.items).length;
          },
-         _hasParent: function (item) {
-             return this._hierarchy.hasParent(item, this._options.items);
+         _hasParent: function(item) {
+            return this._hierarchy.hasParent(item, this._options.items);
          },
-         getCount: function () {
+         getCount: function() {
             return this._itemsModel.getCount();
          }
       });

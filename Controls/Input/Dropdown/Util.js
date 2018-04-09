@@ -2,6 +2,7 @@ define('Controls/Input/Dropdown/Util', ['Controls/Controllers/SourceController']
 
    'use strict';
    var DropdownUtil = {
+
    /**
      * Открывает всплывашку
      * @param {Object} self

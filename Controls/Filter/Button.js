@@ -87,7 +87,7 @@ define('Controls/Filter/Button',
             if (this.isEnabled()) {
                /* if template - show old component */
                if (this._options.filterTemplate) {
-                  _private.getFilterButtonCompatible(this).addCallback(function (panelOpener) {
+                  _private.getFilterButtonCompatible(this).addCallback(function(panelOpener) {
                      panelOpener.showFilterPanel();
                   });
                } else {
