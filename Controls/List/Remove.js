@@ -22,16 +22,16 @@ define('Controls/List/Remove', [
       }
    };
 
-    /**
-     * Компонент плоского списка, с произвольным шаблоном отображения каждого элемента. Обладает возможностью загрузки/подгрузки данных из источника.
-     * @class Controls/Remove
-     * @extends Controls/Control
-     * @mixes Controls/interface/IRemovable
-     * @control
-     * @author Крайнов Д.О.
-     * @public
-     * @category List
-     */
+   /**
+   * Компонент плоского списка, с произвольным шаблоном отображения каждого элемента. Обладает возможностью загрузки/подгрузки данных из источника.
+   * @class Controls/Remove
+   * @extends Controls/Control
+   * @mixes Controls/interface/IRemovable
+   * @control
+   * @author Крайнов Д.О.
+   * @public
+   * @category List
+   */
     
    return Control.extend({
       _template: template,
