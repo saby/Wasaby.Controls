@@ -702,7 +702,7 @@ define([
             };
             var ctrl = new SourceControl(cfg);
             ctrl._listViewModel = listViewModel; //аналог beforemount
-            ctrl._children = {itemActions: {updateActions: function() {}}};
+            ctrl._children = {itemActions: {updateItemActions : function() {}}};
             ctrl._notify = function(e, options) {
                assert.equal(options[0], opt);
             };
@@ -723,7 +723,7 @@ define([
             };
             var ctrl = new SourceControl(cfg);
             ctrl._listViewModel = listViewModel; //аналог beforemount
-            ctrl._children = {itemActions: {updateActions: function() {}}};
+            ctrl._children = {itemActions: {updateItemActions : function() {}}};
             ctrl._notify = function(e, options) {
                assert.equal(options[0], opt);
                return newOpt;
@@ -743,7 +743,7 @@ define([
             };
             var ctrl = new SourceControl(cfg);
             ctrl._listViewModel = listViewModel; //аналог beforemount
-            ctrl._children = {itemActions: {updateActions: function() {}}};
+            ctrl._children = {itemActions: {updateItemActions : function() {}}};
             ctrl._notify = function(e, options) {
                assert.equal(options[0], opt);
             };

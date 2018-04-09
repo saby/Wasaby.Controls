@@ -2,9 +2,6 @@
    border-left: 3px solid transparent;
    cursor: pointer;
    position: relative;
-   &:hover {
-     background-color: @default-bg-color-hovered-item;
-   }
 }
 
 .controls-ListView__item__marked {
@@ -27,11 +24,8 @@
 
 .controls-ListView__item_editing {
   background-color: @controls-editInPlace-editing-item-bg;
-  &:hover {
-    background-color: @controls-editInPlace-editing-item-bg;
-  }
   >.controls-itemActionsV {
-    .inline-flexbox();
+    display: inline-flex;
   }
 }
 
@@ -39,8 +33,18 @@
   .controls-ListView__item_showActions {
     &:hover {
       >.controls-itemActionsV {
-        .inline-flexbox();
+        display: inline-flex;
       }
+    }
+  }
+  .controls-ListView__itemV {
+    &:hover {
+      background-color: @default-bg-color-hovered-item;
+    }
+  }
+  .controls-ListView__item_editing {
+    &:hover {
+      background-color: @controls-editInPlace-editing-item-bg;
     }
   }
 }

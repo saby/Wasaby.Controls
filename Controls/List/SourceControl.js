@@ -7,6 +7,9 @@ define('Controls/List/SourceControl', [
    'Controls/Controllers/SourceController',
    'Core/Deferred',
    'tmpl!Controls/List/SourceControl/multiSelect',
+   'WS.Data/Collection/RecordSet',
+   'Controls/Utils/Toolbar',
+   'Controls/List/ItemActions/Utils/Actions',
    'Controls/List/EditInPlace',
    'Controls/List/ItemActions/ItemActionsControl',
    'css!Controls/List/SourceControl/SourceControl'
@@ -17,7 +20,10 @@ define('Controls/List/SourceControl', [
    VirtualScroll,
    SourceController,
    Deferred,
-   multiSelectTpl
+   multiSelectTpl,
+   RecordSet,
+   tUtil,
+   aUtil
 ) {
    'use strict';
 
@@ -253,6 +259,51 @@ define('Controls/List/SourceControl', [
          model.subscribe('onListChange', function() {
             self._forceUpdate();
          });
+      },
+
+      showActionsMenu: function(self, event, itemData, childEvent, showAll) {
+         var
+            context = event.type === 'itemcontextmenu',
+            showActions = (context || showAll) && itemData.itemActions.all
+               ? itemData.itemActions.all
+               : itemData.itemActions && itemData.itemActions.all.filter(function(action) {
+                  return action.showType !== tUtil.showType.TOOLBAR;
+               });
+         if (context && self._isTouch) {
+            return false;
+         }
+         if (showActions) {
+            var
+               rs = new RecordSet({rawData: showActions});
+            childEvent.nativeEvent.preventDefault();
+            childEvent.stopImmediatePropagation();
+            itemData.contextEvent = context;
+            self._listViewModel.setActiveItem(itemData);
+            self._children.itemActionsOpener.open({
+               opener: self._children.listView,
+               target: !context ? childEvent.target : false,
+               templateOptions: {items: rs}
+            });
+            self._menuIsShown = true;
+         }
+      },
+
+      closeActionsMenu: function(self, args) {
+         var
+            actionName = args && args.action,
+            event = args && args.event;
+
+         if (actionName === 'itemClick') {
+            var action = args.data && args.data[0] && args.data[0].getRawData();
+            aUtil.actionClick(self, event, action, self._listViewModel._activeItem);
+            self._children.itemActionsOpener.close();
+         }
+         self._listViewModel.setActiveItem(null);
+         self._menuIsShown = false;
+      },
+
+      bindHandlers: function(self) {
+         self._closeActionsMenu = self._closeActionsMenu.bind(self);
       }
    };
 
@@ -295,6 +346,7 @@ define('Controls/List/SourceControl', [
       _loadOffset: 100,
       _topPlaceholderHeight: 0,
       _bottomPlaceholderHeight: 0,
+      _menuIsShown: null,
 
       constructor: function(cfg) {
          SourceControl.superclass.constructor.apply(this, arguments);
@@ -302,7 +354,8 @@ define('Controls/List/SourceControl', [
       },
 
       _beforeMount: function(newOptions, context, receivedState) {
-         var self = this;
+         _private.bindHandlers(this);
+
          this._virtualScroll = new VirtualScroll({
             maxVisibleItems: newOptions.virtualScrollConfig && newOptions.virtualScrollConfig.maxVisibleItems,
             itemsCount: 0
@@ -433,6 +486,19 @@ define('Controls/List/SourceControl', [
          }
       },
 
+      _listSwipe: function(event, itemData, childEvent) {
+         this._children.itemActionsOpener.close();
+         if (childEvent.nativeEvent.direction === 'right' && itemData.multiSelectVisibility) {
+            var status = itemData.multiSelectStatus;
+            if (status === 1) {
+               this._listViewModel.unselect([itemData.key]);
+            } else {
+               this._listViewModel.select([itemData.key]);
+            }
+         }
+
+      },
+
       removeItems: function(items) {
          this._children.removeControl.removeItems(items);
       },
@@ -505,23 +571,22 @@ define('Controls/List/SourceControl', [
          return this._notify('beforeItemEdit', [options]);
       },
 
-      _onAfterItemEdit: function(e, options) {
-         this._listViewModel._activeItem = {
-            item: options.item,
-            contextEvent: false
-         };
-         this._children.itemActions.updateActions();
-         this._notify('afterItemEdit', [options]);
+      _onAfterItemEdit: function(e, item) {
+         this._notify('afterItemEdit', [item]);
+         this._children.itemActions.updateItemActions(item, true);
       },
 
       _onBeforeItemEndEdit: function(e, options) {
          return this._notify('beforeItemEndEdit', [options]);
       },
 
-      _onAfterItemEndEdit: function(e, options) {
-         this._notify('beforeItemEndEdit', [options]);
-         this._listViewModel._activeItem = false;
-         this._children.itemActions.updateActions();
+      _onAfterItemEndEdit: function(e, item) {
+         this._notify('beforeItemEndEdit', [item]);
+         this._children.itemActions.updateItemActions(item);
+      },
+
+      _closeSwipe: function(event, item) {
+         this._children.itemActions.updateItemActions(item);
       },
 
       _commitEditActionHandler: function() {
@@ -530,15 +595,17 @@ define('Controls/List/SourceControl', [
 
       _cancelEditActionHandler: function() {
          this._children.editInPlace.cancelEdit();
+      },
+
+      _showActionsMenu: function(event, itemData, childEvent, showAll) {
+         _private.showActionsMenu(this, event, itemData, childEvent, showAll);
+      },
+
+      _closeActionsMenu: function(args) {
+         _private.closeActionsMenu(this, args);
       }
    });
 
-   //TODO https://online.sbis.ru/opendoc.html?guid=17a240d1-b527-4bc1-b577-cf9edf3f6757
-   /*ListView.getOptionTypes = function getOptionTypes(){
-    return {
-    dataSource: Types(ISource)
-    }
-    };*/
    SourceControl._private = _private;
    return SourceControl;
 });
