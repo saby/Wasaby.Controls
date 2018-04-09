@@ -1184,8 +1184,8 @@ define('SBIS3.CONTROLS/DataGridView',
       _getEditInPlaceConfig: function() {
          var
             self = this,
-            columns = this._options.enabled ? this._options.columns : [];
-         if (!this._options.enabled) {
+            columns = this.isEnabled() ? this._options.columns : [];
+         if (!this.isEnabled()) {
             this._options.columns.forEach(function(item) {
                columns.push(item.allowChangeEnable === false ? item : {});
             });
@@ -1449,7 +1449,9 @@ define('SBIS3.CONTROLS/DataGridView',
          this._currentScrollPosition = typeof position === 'object' ? this._checkThumbPosition(position) : this._checkThumbPosition({left: position});
          /* Записываем в опцию, чтобы была возможность использовать в шаблоне */
          this._options._columnsShift = -this._currentScrollPosition*(this._partScrollRatio || 0);
-         this._thumb[0].style.left = this._currentScrollPosition + 'px';
+         if (this._isPartScrollVisible) {
+            this._thumb[0].style.left = this._currentScrollPosition + 'px';
+         }
       },
 
       _getColumnsScrollPosition: function() {

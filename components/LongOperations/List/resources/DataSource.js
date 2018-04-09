@@ -49,8 +49,7 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
             _options: {
                customConditions: [],
                navigationType: 'Page'
-            },
-            _retryCounter: 0
+            }
          },
 
          $constructor: function $LongOperationsListDataSource () {
@@ -141,16 +140,15 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
             }
             this._notify('onBeforeProviderCall');
             var promise = new Deferred();
-            this._queryCall(promise, options, hasCustomConditions, limit);
+            this._queryCall(promise, options, hasCustomConditions ? customConditions : null, limit, 0);
             return promise;
          },
 
-         _queryCall: function (promise, options, hasCustomConditions, origLimit) {
+         _queryCall: function (promise, options, customConditions, origLimit, retryCounter) {
             longOperationsManager.fetch(Object.keys(options).length ? options : null).addCallbacks(function (recordSet) {
-               this._retryCounter = 0;
                var meta = recordSet.getMetaData();
                var items = recordSet.getRawData();
-               if (hasCustomConditions && items.length) {
+               if (customConditions && items.length) {
                   items = items.filter(function (operation) {
                      var custom = operation.custom;
                      return !custom || !customConditions.some(function (cond) { return Object.keys(cond).every(function (name) { return cond[name] === custom[name]; }); });
@@ -171,14 +169,15 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
                }));
             }.bind(this),
             function (err) {
-               if (this._retryCounter < _RETRY_DELAYS.length) {
-                  setTimeout(this._queryCall.bind(this, promise, options, hasCustomConditions, origLimit), _RETRY_DELAYS[this._retryCounter]);
-                  this._retryCounter++;
-               }
-               else {
-                  this._retryCounter = 0;
-                  //Не нужно пропускать ошибку в ListView - вылетет алерт, не нужно посылать пустой результат - закроется попап
-                  //promise.errback(err);
+               if (!promise.isReady()) {
+                  // Только если обещание ещё не разрешено. Обещание может быть разрешено снаружи отказом ожидать дальше
+                  if (retryCounter < _RETRY_DELAYS.length) {
+                     setTimeout(this._queryCall.bind(this, promise, options, customConditions, origLimit), _RETRY_DELAYS[retryCounter], retryCounter + 1);
+                  }
+                  else {
+                     //Не нужно пропускать ошибку в ListView - вылетет алерт, не нужно посылать пустой результат - закроется попап
+                     //promise.errback(err);
+                  }
                }
             }.bind(this));
          }
