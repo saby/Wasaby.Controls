@@ -21,43 +21,43 @@ define('SBIS3.CONTROLS/VdomPhoneTextBox',
          _template: template,
 
          _beforeMount: function(options) {
-            this._srcText = options.srcText;
+            this._value = options.value;
          },
 
-         _textChangeHandler: function() {
-            this._notify('textChange', [this._srcText]);
+         _valueChangedHandler: function() {
+            this._notify('valueChanged', [this._value]);
          },
 
          /**
           * Получает текстовое значение поля ввода телефонного номера без разделителей.
-          * @returns {*|srcText|string}
+          * @returns {*|value|string}
           * @example
           * <pre>
           *     myComponent.subscribe('onTextChange', function(){
-       *        myPhone.getSrcText();
+       *        myPhone.getValue();
        *     });
           * </pre>
-          * @see srcText
-          * @see setSrcText
+          * @see value
+          * @see setValue
           */
-         getSrcText: function() {
-            return this._srcText;
+         getValue: function() {
+            return this._value;
          },
 
          /**
           * Устанавливает текстовое значение поля ввода телефонного номера без разделителей.
-          * @param srcText
+          * @param value
           * @example
           * <pre>
           *     myComponent.subscribe('onClick', function(){
-       *        myPhone.setSrcText("88001002424");
+       *        myPhone.setValue("88001002424");
        *     });
           * </pre>
-          * @see srcText
-          * @see getSrcText
+          * @see value
+          * @see getValue
           */
-         setSrcText: function(srcText) {
-            this._srcText = srcText;
+         setValue: function(value) {
+            this._value = value;
             this._forceUpdate();
          }
       });
