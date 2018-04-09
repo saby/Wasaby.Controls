@@ -31,7 +31,7 @@ define('Controls/Header/Separator', [
             'default',
             'primary'
          ])
-      }
+      };
    };
 
    Separator.getDefaultOptions = function() {

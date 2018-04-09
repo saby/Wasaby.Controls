@@ -1,7 +1,7 @@
 /**
  * Created by as.krasilnikov on 21.03.2018.
  */
-define('Controls/Popup/Opener/Sticky/StickyStrategy', [], function () {
+define('Controls/Popup/Opener/Sticky/StickyStrategy', [], function() {
 
    var INVERTING_CONST = {
       top: 'bottom',
@@ -20,10 +20,11 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', [], function () {
    };
 
    var _private = {
+
       /*
        * Возвращает точку таргета, относительно которой нужно спозиционироваться окну
        * */
-      getTargetPoint: function (popupCfg, targetInfo) {
+      getTargetPoint: function(popupCfg, targetInfo) {
          var offsetMultipliers = {
             top: 0,
             left: 0,
@@ -35,14 +36,14 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', [], function () {
          return {
             top: targetInfo.top + targetInfo.height * offsetMultipliers[popupCfg.corner.vertical],
             left: targetInfo.left + targetInfo.width * offsetMultipliers[popupCfg.corner.horizontal]
-         }
+         };
       },
 
       /*
        * Инвертировать положение окна
        * В случае если окно не влезает в доступную область, может потребоваться его инвертировать
        * */
-      invert: function (cfg, direction) {
+      invert: function(cfg, direction) {
          cfg.corner[direction] = INVERTING_CONST[cfg.corner[direction]];
          cfg.align[direction].side = INVERTING_CONST[cfg.align[direction].side];
          cfg.align[direction].offset *= -1;
@@ -52,7 +53,7 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', [], function () {
       /*
        * Получить горизонтальную или вертикальную координату позиционирования окна
        * */
-      getCoordinate: function (targetPoint, cfg, direction) {
+      getCoordinate: function(targetPoint, cfg, direction) {
          var isHorizontalDirection = direction === 'horizontal';
          return targetPoint[isHorizontalDirection ? 'left' : 'top'] + cfg.align[direction].offset +
             cfg.sizes[isHorizontalDirection ? 'width' : 'height'] * COORDINATE_MULTIPLIERS[cfg.align[direction].side] +
@@ -62,15 +63,15 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', [], function () {
       /*
        * Проверить насколько не влезает окно с обеих сторон относительно переданной координаты и вернуть максимальное значение
        * */
-      getMaxOverflowValue: function (coordinate, popupCfg, direction, targetCoords) {
+      getMaxOverflowValue: function(coordinate, popupCfg, direction, targetCoords) {
          return Math.max(
-            popupCfg.sizes[direction === 'horizontal' ? 'width' : 'height']
-            - (this.getWindowSizes()[direction === 'horizontal' ? 'width' : 'height']
-            - (coordinate - targetCoords[direction === 'horizontal' ? 'leftScroll' : 'topScroll'])),
+            popupCfg.sizes[direction === 'horizontal' ? 'width' : 'height'] -
+            (this.getWindowSizes()[direction === 'horizontal' ? 'width' : 'height'] -
+            (coordinate - targetCoords[direction === 'horizontal' ? 'leftScroll' : 'topScroll'])),
             targetCoords[direction === 'horizontal' ? 'leftScroll' : 'topScroll'] - coordinate);
       },
 
-      getPositionCoordinates: function (popupCfg, targetCoords, targetPoint, direction) {
+      getPositionCoordinates: function(popupCfg, targetCoords, targetPoint, direction) {
          var self = this,
             coordinate,
             maxOverflowValue,
@@ -78,9 +79,10 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', [], function () {
             scroll,
             size;
 
-         var checkOverflow = function (callback) {
+         var checkOverflow = function(callback) {
             coordinate = self.getCoordinate(targetPoint, popupCfg, direction);
             maxOverflowValue = self.getMaxOverflowValue(coordinate, popupCfg, direction, targetCoords);
+
             //Если окно не влезает, то передаем управление дальше
             if (maxOverflowValue > 0) {
                callback(maxOverflowValue);
@@ -88,12 +90,12 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', [], function () {
          };
 
          //Проверим, возможно окну достаточно места
-         checkOverflow(function (firstOverflowValue) {
+         checkOverflow(function(firstOverflowValue) {
             //Попробуем инвертировать окно и проверим снова
             self.invert(popupCfg, direction);
             targetPoint = self.getTargetPoint(popupCfg, targetCoords);
 
-            checkOverflow(function (secondOverflowValue) {
+            checkOverflow(function(secondOverflowValue) {
                //Если и на этот раз окно не поместилось, отобразим окно в ту сторону, где места было больше
                if (firstOverflowValue < secondOverflowValue) {
                   self.invert(popupCfg, direction);
@@ -115,19 +117,19 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', [], function () {
          return {
             coordinate: coordinate,
             size: size
-         }
+         };
       },
 
-      getWindowSizes: function () {
+      getWindowSizes: function() {
          return {
             width: window.innerWidth,
             height: window.innerHeight
-         }
+         };
       }
    };
 
    return {
-      getPosition: function (popupCfg, targetCoords) {
+      getPosition: function(popupCfg, targetCoords) {
          var targetPoint = _private.getTargetPoint(popupCfg, targetCoords);
          var horizontalPosition = _private.getPositionCoordinates(popupCfg, targetCoords, targetPoint, 'horizontal');
          var verticalPosition = _private.getPositionCoordinates(popupCfg, targetCoords, targetPoint, 'vertical');
@@ -140,5 +142,5 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', [], function () {
          };
       },
       _private: _private //для тестов
-   }
+   };
 });

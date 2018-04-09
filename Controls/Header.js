@@ -52,7 +52,7 @@ define('Controls/Header', [
             'm',
             's'
          ])
-      }
+      };
    };
 
    Header.getDefaultOptions = function() {

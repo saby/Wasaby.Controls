@@ -53,7 +53,7 @@ define('Controls/Button/Back', [
             'm',
             'l'
          ])
-      }
+      };
    };
 
    BackButton.getDefaultOptions = function() {

@@ -5,10 +5,11 @@ define('Controls/Popup/Manager/Popup',
       'Core/constants',
       'css!Controls/Popup/Manager/Popup'
    ],
-   function (Control, template, CoreConstants) {
+   function(Control, template, CoreConstants) {
       'use strict';
 
       var Popup = Control.extend({
+
          /**
           * Компонент "Всплывающее окно"
           * @class Controls/Popup/Manager/Popup
@@ -31,7 +32,7 @@ define('Controls/Popup/Manager/Popup',
 
          _template: template,
 
-         _afterMount: function () {
+         _afterMount: function() {
             this._notify('popupCreated', [this._options.id]);
          },
 
@@ -39,7 +40,7 @@ define('Controls/Popup/Manager/Popup',
           * Закрыть popup
           * @function Controls/Popup/Manager/Popup#_close
           */
-         _close: function () {
+         _close: function() {
             this._notify('closePopup', [this._options.id]);
          },
 
@@ -49,7 +50,7 @@ define('Controls/Popup/Manager/Popup',
           * @param event
           * @param focusedControl
           */
-         _focusIn: function (event, focusedControl) {
+         _focusIn: function(event, focusedControl) {
             this._notify('popupFocusIn', [this._options.id, focusedControl]);
          },
 
@@ -59,7 +60,7 @@ define('Controls/Popup/Manager/Popup',
           * @param event
           * @param focusedControl
           */
-         _focusOut: function (event, focusedControl) {
+         _focusOut: function(event, focusedControl) {
             this._notify('popupFocusOut', [this._options.id, focusedControl]);
          },
 
@@ -68,7 +69,7 @@ define('Controls/Popup/Manager/Popup',
           * @function Controls/Popup/Manager/Popup#_keyUp
           * @param event
           */
-         _keyUp: function (event) {
+         _keyUp: function(event) {
             if (event.nativeEvent.keyCode === CoreConstants.key.esc) {
                this._close();
             }
@@ -78,7 +79,7 @@ define('Controls/Popup/Manager/Popup',
           * Отправить результат
           * @function Controls/Popup/Manager/Popup#_sendResult
           */
-         _sendResult: function (event, result) {
+         _sendResult: function(event, result) {
             this._notify('result', [this._options.id, result]);
          },
 

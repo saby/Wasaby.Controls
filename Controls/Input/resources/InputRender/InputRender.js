@@ -1,6 +1,7 @@
 define('Controls/Input/resources/InputRender/InputRender',
    [
       'Core/Control',
+
       /*'WS.Data/Type/descriptor',*/
       'tmpl!Controls/Input/resources/InputRender/InputRender',
       'Controls/Input/resources/RenderHelper',
@@ -23,7 +24,7 @@ define('Controls/Input/resources/InputRender/InputRender',
 
       var _private = {
 
-         getSelection: function(self){
+         getSelection: function(self) {
             var
                result = self._selection;
 
@@ -38,17 +39,17 @@ define('Controls/Input/resources/InputRender/InputRender',
             return result;
          },
 
-         getTargetPosition: function(target){
+         getTargetPosition: function(target) {
             return target.selectionEnd;
          },
 
-         saveSelection: function(self, target){
+         saveSelection: function(self, target) {
             self._selection = _private.getSelection(self);
             self._selection.selectionStart = target.selectionStart;
             self._selection.selectionEnd = target.selectionEnd;
          },
 
-         setTargetData: function(target, data){
+         setTargetData: function(target, data) {
             target.value = data.value;
             target.setSelectionRange(data.position, data.position);
          }
@@ -59,7 +60,7 @@ define('Controls/Input/resources/InputRender/InputRender',
          
          _template: template,
 
-         constructor: function (options) {
+         constructor: function(options) {
             InputRender.superclass.constructor.apply(this, arguments);
 
          },
@@ -77,9 +78,10 @@ define('Controls/Input/resources/InputRender/InputRender',
              * inputType == 'insertCompositionText', вместо 'deleteContentBackward'.
              * Соответственно доверять ему мы не можем и нужно вызвать метод RenderHelper.getInputType
              */
-            inputType = e.nativeEvent.inputType && e.nativeEvent.inputType !== 'insertCompositionText' ?
-                  RenderHelper.getAdaptiveInputType(e.nativeEvent.inputType, selection) :
-                  RenderHelper.getInputType(value, newValue, position, selection);
+            inputType = e.nativeEvent.inputType && e.nativeEvent.inputType !== 'insertCompositionText'
+               ? RenderHelper.getAdaptiveInputType(e.nativeEvent.inputType, selection)
+               : RenderHelper.getInputType(value, newValue, position, selection);
+
             //Подготавливаем объект с разобранным значением
             splitValue = RenderHelper.getSplitInputValue(value, newValue, position, selection, inputType);
 
@@ -105,7 +107,7 @@ define('Controls/Input/resources/InputRender/InputRender',
             _private.saveSelection(this, e.target);
          },
 
-         _selectionHandler: function(e){
+         _selectionHandler: function(e) {
             _private.saveSelection(this, e.target);
          },
 

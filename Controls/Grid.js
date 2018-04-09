@@ -4,7 +4,7 @@ define('Controls/Grid', [
    'tmpl!Controls/List/Grid/Grid',
    'Controls/List/Grid/GridView',
    'Controls/List/SourceControl'
-], function (Control, GridViewModel, GridTpl) {
+], function(Control, GridViewModel, GridTpl) {
 
    'use strict';
 
@@ -31,7 +31,7 @@ define('Controls/Grid', [
       _private = {
          createViewModel: function(cfg) {
             return new GridViewModel({
-               items : cfg.items,
+               items: cfg.items,
                columns: cfg.columns,
                header: cfg.header,
                results: cfg.results,
@@ -63,7 +63,7 @@ define('Controls/Grid', [
                stickyFields: cfg.stickyFields,
                itemTemplate: cfg.itemTemplate,
                displayProperty: cfg.displayProperty
-            }
+            };
          }
       },
       Grid = Control.extend({

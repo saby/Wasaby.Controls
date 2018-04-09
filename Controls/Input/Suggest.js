@@ -52,6 +52,7 @@ define('Controls/Input/Suggest',
          
          onFocusOutHandler: function(self) {
             self._suggestController.abort();
+
             //FIXME Для правильной работы валидации. костыль. сейчас событие focusOut стреляет, когда фокус уходит на саггест,
             //из-за этого некорректно запускается валидация.
             self._notify('componentFocusOut');
@@ -72,22 +73,22 @@ define('Controls/Input/Suggest',
          
          initSuggestController: function(self, options) {
             self._suggestController = new SuggestController({
-               suggestOpener:       self._children.suggestPopupOpener,
-               showAllOpener:       self._children.showAllOpener,
-               textComponent:       self._children.suggestText,
+               suggestOpener: self._children.suggestPopupOpener,
+               showAllOpener: self._children.showAllOpener,
+               textComponent: self._children.suggestText,
                
-               suggestTemplate:     options.suggestTemplate,
-               emptyTemplate:       options.emptyTemplate,
-               source:              options.source,
-               filter:              options.filter,
-               minSearchLength:     options.minSearchLength,
-               searchDelay:         options.searchDelay,
-               searchParam:         options.searchParam,
-               navigation:          options.navigation,
+               suggestTemplate: options.suggestTemplate,
+               emptyTemplate: options.emptyTemplate,
+               source: options.source,
+               filter: options.filter,
+               minSearchLength: options.minSearchLength,
+               searchDelay: options.searchDelay,
+               searchParam: options.searchParam,
+               navigation: options.navigation,
                
-               selectCallback:      self._selectHandler,
+               selectCallback: self._selectHandler,
                searchStartCallback: _private.onSearchStart.bind(self, self),
-               searchEndCallback:   _private.onSearchEnd.bind(self, self)
+               searchEndCallback: _private.onSearchEnd.bind(self, self)
             });
          }
       };
@@ -106,7 +107,7 @@ define('Controls/Input/Suggest',
             _private.initViewModel(this, options || {});
          },
    
-         _afterMount: function () {
+         _afterMount: function() {
             _private.initSuggestController(this, this._options);
          },
 
@@ -217,6 +218,7 @@ define('Controls/Input/Suggest',
             minSearchLength: 3
          };
       };
+
       // </editor-fold>
    
       Suggest._private = _private;

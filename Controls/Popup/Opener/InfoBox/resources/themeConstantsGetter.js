@@ -1,9 +1,9 @@
 define('Controls/Popup/Opener/InfoBox/resources/themeConstantsGetter', [],
-   function () {
-      return function(className, hashMap){
+   function() {
+      return function(className, hashMap) {
 
          //Для тестов
-         if(typeof window === 'undefined') {
+         if (typeof window === 'undefined') {
             return {};
          }
 
@@ -15,13 +15,13 @@ define('Controls/Popup/Opener/InfoBox/resources/themeConstantsGetter', [],
          document.body.appendChild(div);
 
          var computedStyles = getComputedStyle(div);
-         for(var key in hashMap){
+         for (var key in hashMap) {
             obj[key] = parseInt(computedStyles[hashMap[key]]);
          }
 
          //Почему не просто div.remove() ? IE 11 Support
          div.parentNode.removeChild(div);
          return obj;
-      }
+      };
    }
 );
