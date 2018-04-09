@@ -1,16 +1,25 @@
 #!groovy
 echo "Задаем параметры сборки"
 def version = "3.18.200"
-if ( "${env.BUILD_NUMBER}" != "1" && !params.run_reg && !params.run_int && !params.run_unit) {
-        currentBuild.result = 'ABORTED'
-        error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
+
+def gitlabStatusUpdate() {
+    if ( currentBuild.currentResult == "ABORTED" ) {
+        updateGitlabCommitStatus state: 'canceled'
+    } else if ( currentBuild.currentResult in ["UNSTABLE", "FAILURE"] ) {
+        updateGitlabCommitStatus state: 'failed'
+    } else if ( currentBuild.currentResult == "SUCCESS" ) {
+        updateGitlabCommitStatus state: 'success'
     }
+}
+
+
 node('controls') {
     echo "Читаем settings_${version}.props"
     def props = readProperties file: "/home/jenkins/shared_autotest87/settings_${version}.props"
     echo "Генерируем параметры"
     properties([
     disableConcurrentBuilds(),
+    gitLabConnection('git'),
     buildDiscarder(
         logRotator(
             artifactDaysToKeepStr: '3',
@@ -46,6 +55,15 @@ node('controls') {
             ]),
         pipelineTriggers([])
     ])
+
+
+    if ( "${env.BUILD_NUMBER}" != "1" && !params.run_reg && !params.run_int && !params.run_unit) {
+            currentBuild.result = 'ABORTED'
+            gitlabStatusUpdate()
+            error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
+        }
+
+
     echo "Определяем рабочую директорию"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
@@ -110,6 +128,7 @@ node('controls') {
                         git merge origin/rc-${version}
                         """
                     }
+                    updateGitlabCommitStatus state: 'running'
                     parallel (
                         checkout_atf:{
                             echo " Выкачиваем atf"
@@ -370,7 +389,7 @@ node('controls') {
                 Адрес=http://${env.NODE_NAME}:10010"""
             // Копируем шаблоны
             sh """cp -f ./controls/tests/stand/intest/pageTemplates/branch/* ./controls/tests/stand/intest/pageTemplates"""
-            sh """cp -fr ./controls/demo/ ./controls/tests/stand/intest/demo/"""
+            sh """cp -fr ./controls/Examples/ ./controls/tests/stand/intest/Examples/"""
             sh """
                 cd "${workspace}/controls/tests/stand/intest/"
                 sudo python3 "change_theme.py" ${params.theme}
@@ -413,7 +432,7 @@ node('controls') {
             SOFT_RESTART = True
             NO_RESOURCES = True
             DELAY_RUN_TESTS = 2
-			TAGS_NOT_TO_START = iOSOnly, todomvc, tabmessage
+            TAGS_NOT_TO_START = iOSOnly, todomvc, tabmessage
             ELEMENT_OUTPUT_LOG = locator
             WAIT_ELEMENT_LOAD = 20
             HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/"""
@@ -475,6 +494,7 @@ node('controls') {
 					"""
 					if ( "${tmp_smoke}" != "0" ) {
 						currentBuild.result = 'ABORTED'
+                        gitlabStatusUpdate()
 						error('Стенд неработоспособен (не прошел smoke test).')
 					}
 				}
@@ -531,5 +551,6 @@ node('controls') {
                 junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
             }
         }
+        gitlabStatusUpdate()
     }
 }
