@@ -10,14 +10,14 @@ define('Controls/List/SourceControl', [
    'Controls/List/EditInPlace',
    'Controls/List/ItemActions/ItemActionsControl',
    'css!Controls/List/SourceControl/SourceControl'
-], function (Control,
-             IoC,
-             SourceControlTpl,
-             require,
-             VirtualScroll,
-             SourceController,
-             Deferred,
-             multiSelectTpl
+], function(Control,
+   IoC,
+   SourceControlTpl,
+   require,
+   VirtualScroll,
+   SourceController,
+   Deferred,
+   multiSelectTpl
 ) {
    'use strict';
 
@@ -25,7 +25,7 @@ define('Controls/List/SourceControl', [
       reload: function(self) {
          if (self._sourceController) {
             _private.showIndicator(self);
-            return self._sourceController.load(self._filter, self._sorting).addCallback(function (list) {
+            return self._sourceController.load(self._filter, self._sorting).addCallback(function(list) {
 
                //todo события не работают до маунта в дом, решить что с этим делать
                //https://online.sbis.ru/opendoc.html?guid=1e98cfd2-f855-448e-adff-43ab8339e961
@@ -39,11 +39,10 @@ define('Controls/List/SourceControl', [
 
                //self._virtualScroll.setItemsCount(self._listViewModel.getCount());
                _private.handleListScroll(self, 0);
-            }).addErrback(function(error){
+            }).addErrback(function(error) {
                _private.processLoadError(self, error);
             });
-         }
-         else {
+         } else {
             IoC.resolve('ILogger').error('SourceControl', 'Source option is undefined. Can\'t load data');
          }
       },
@@ -51,7 +50,7 @@ define('Controls/List/SourceControl', [
       loadToDirection: function(self, direction) {
          _private.showIndicator(self, direction);
          if (self._sourceController) {
-            return self._sourceController.load(self._filter, self._sorting, direction).addCallback(function(addedItems){
+            return self._sourceController.load(self._filter, self._sorting, direction).addCallback(function(addedItems) {
 
                self._notify('onDataLoad', [addedItems]);
 
@@ -67,11 +66,10 @@ define('Controls/List/SourceControl', [
 
                //обновить начало/конец видимого диапазона записей и высоты распорок
                //_private.applyVirtualWindow(self, self._virtualScroll.getVirtualWindow());
-            }).addErrback(function(error){
-               _private.processLoadError(self, error)
-            })
-         }
-         else {
+            }).addErrback(function(error) {
+               _private.processLoadError(self, error);
+            });
+         } else {
             IoC.resolve('ILogger').error('SourceControl', 'Source option is undefined. Can\'t load data');
          }
       },
@@ -98,7 +96,7 @@ define('Controls/List/SourceControl', [
       onScrollLoadEdge: function(self, direction) {
          if (self._options.navigation && self._options.navigation.view === 'infinity') {
             if (self._sourceController.hasMoreData(direction) && !self._sourceController.isLoading()) {
-               _private.loadToDirection(self, direction)
+               _private.loadToDirection(self, direction);
             }
          }
       },
@@ -112,20 +110,17 @@ define('Controls/List/SourceControl', [
       scrollToEdge: function(self, direction) {
          if (self._sourceController && self._sourceController.hasMoreData(direction)) {
             self._sourceController.setEdgeState(direction);
-            _private.reload(self).addCallback(function(){
+            _private.reload(self).addCallback(function() {
                if (direction === 'up') {
                   self._notify('doScroll', ['top'], {bubbling: true});
-               }
-               else {
+               } else {
                   self._notify('doScroll', ['bottom'], {bubbling: true});
                }
             });
-         }
-         else {
+         } else {
             if (direction === 'up') {
                self._notify('doScroll', ['top'], {bubbling: true});
-            }
-            else {
+            } else {
                self._notify('doScroll', ['bottom'], {bubbling: true});
             }
          }
@@ -147,17 +142,16 @@ define('Controls/List/SourceControl', [
 
       onScrollShow: function(self) {
          if (!self._scrollPagingCtr) {
-            if (self._options.navigation
-               && self._options.navigation.view === 'infinity'
-               && self._options.navigation.viewConfig
-               && self._options.navigation.viewConfig.pagingMode
+            if (self._options.navigation &&
+               self._options.navigation.view === 'infinity' &&
+               self._options.navigation.viewConfig &&
+               self._options.navigation.viewConfig.pagingMode
             ) {
-               _private.createScrollPagingController(self).addCallback(function(scrollPagingCtr){
+               _private.createScrollPagingController(self).addCallback(function(scrollPagingCtr) {
                   self._scrollPagingCtr = scrollPagingCtr;
-               })
+               });
             }
-         }
-         else {
+         } else {
 
          }
       },
@@ -169,7 +163,7 @@ define('Controls/List/SourceControl', [
 
       createScrollPagingController: function(self) {
          var def = new Deferred();
-         require(['Controls/List/Controllers/ScrollPaging'], function (ScrollPagingController) {
+         require(['Controls/List/Controllers/ScrollPaging'], function(ScrollPagingController) {
             var scrollPagingCtr;
             scrollPagingCtr = new ScrollPagingController({
                mode: self._options.navigation.viewConfig.pagingMode,
@@ -182,7 +176,7 @@ define('Controls/List/SourceControl', [
             def.callback(scrollPagingCtr);
 
 
-         }, function(error){
+         }, function(error) {
             def.errback(error);
          });
 
@@ -196,7 +190,7 @@ define('Controls/List/SourceControl', [
                self._loadingIndicatorState = self._loadingState;
                self._forceUpdate();
             }
-         }, 2000)
+         }, 2000);
       },
 
       hideIndicator: function(self) {
@@ -227,7 +221,7 @@ define('Controls/List/SourceControl', [
             //_private.applyVirtualWindow(self, self._virtualScroll.getVirtualWindow());
          }
          if (self._scrollPagingCtr) {
-            self._scrollPagingCtr.handleScroll(scrollTop)
+            self._scrollPagingCtr.handleScroll(scrollTop);
          }
       },
 
@@ -250,7 +244,7 @@ define('Controls/List/SourceControl', [
       },
 
       initListViewModelHandler: function(self, model) {
-         model.subscribe('onListChange', function () {
+         model.subscribe('onListChange', function() {
             self._forceUpdate();
          });
       }
@@ -294,7 +288,7 @@ define('Controls/List/SourceControl', [
       _topPlaceholderHeight: 0,
       _bottomPlaceholderHeight: 0,
 
-      constructor: function (cfg) {
+      constructor: function(cfg) {
          SourceControl.superclass.constructor.apply(this, arguments);
          this._publish('onDataLoad');
       },
@@ -319,14 +313,13 @@ define('Controls/List/SourceControl', [
 
          if (newOptions.source) {
             this._sourceController = new SourceController({
-               source : newOptions.source,
-               navigation : newOptions.navigation  //TODO возможно не всю навигацию надо передавать а только то, что касается source
+               source: newOptions.source,
+               navigation: newOptions.navigation  //TODO возможно не всю навигацию надо передавать а только то, что касается source
             });
 
             if (receivedState) {
                this._listViewModel.setItems(receivedState);
-            }
-            else {
+            } else {
                return _private.reload(this);
             }
          }
@@ -354,21 +347,23 @@ define('Controls/List/SourceControl', [
          if (newOptions.listViewModel && (newOptions.listViewModel !== this._options.listViewModel)) {
             this._listViewModel = newOptions.listViewModel;
             _private.initListViewModelHandler(this, this._listViewModel);
+
             //this._virtualScroll.setItemsCount(this._listViewModel.getCount());
          } else
-            if (newOptions.selectedKey !== this._options.selectedKey) {
-               this._listViewModel.setMarkedKey(newOptions.selectedKey);
-            }
+         if (newOptions.selectedKey !== this._options.selectedKey) {
+            this._listViewModel.setMarkedKey(newOptions.selectedKey);
+         }
 
 
          if (sourceChanged) {
             if (this._sourceController) {
                this._sourceController.destroy();
             }
+
             //TODO обработать смену фильтров и т.д. позвать релоад если надо
 
             this._sourceController = new SourceController({
-               source : newOptions.source,
+               source: newOptions.source,
                navigation: newOptions.navigation
             });
          }
@@ -424,10 +419,9 @@ define('Controls/List/SourceControl', [
 
       _onCheckBoxClick: function(e, key, status) {
          if (status === 1) {
-            this._listViewModel.unselect([key])
-         }
-         else {
-            this._listViewModel.select([key])
+            this._listViewModel.unselect([key]);
+         } else {
+            this._listViewModel.select([key]);
          }
       },
 
@@ -439,7 +433,7 @@ define('Controls/List/SourceControl', [
          return this._notify('beforeItemsRemove', [items]);
       },
 
-      _afterItemsRemove: function (event, items, result) {
+      _afterItemsRemove: function(event, items, result) {
          this._notify('afterItemsRemove', [items, result]);
       },
 
@@ -457,22 +451,22 @@ define('Controls/List/SourceControl', [
          return _private.reload(this);
       },
 
-     /**
+      /**
       * Starts editing in place.
       * @param {ItemEditOptions} options Options of editing.
       * @returns {Core/Deferred}
       */
-     editItem: function(options) {
+      editItem: function(options) {
          this._children.editInPlace.editItem(options);
       },
 
-     /**
+      /**
       * Starts adding.
       * @param {AddItemOptions} options Options of adding.
       * @returns {Core/Deferred}
       */
       addItem: function(options) {
-        this._children.editInPlace.addItem(options);
+         this._children.editInPlace.addItem(options);
       },
 
       _onBeforeItemAdd: function(e, options) {

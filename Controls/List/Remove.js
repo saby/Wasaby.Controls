@@ -2,7 +2,7 @@ define('Controls/List/Remove', [
    'Core/Control',
    'tmpl!Controls/List/Remove/Remove',
    'Core/Deferred'
-], function (Control, template, Deferred) {
+], function(Control, template, Deferred) {
    var _private = {
       removeFromSource: function(self, items) {
          return self._options.sourceController.remove(items);
@@ -22,7 +22,7 @@ define('Controls/List/Remove', [
       }
    };
 
-   return Control.extend( {
+   return Control.extend({
       _template: template,
 
       removeItems: function(items) {

@@ -2,10 +2,11 @@ define('Controls/Input/Number/ViewModel',
    [
       'Controls/Input/resources/InputRender/BaseViewModel'
    ],
-   function (
+   function(
       BaseViewModel
    ) {
       'use strict';
+
       /**
        * @class Controls/Input/Number/ViewModel
        * @private
@@ -17,12 +18,13 @@ define('Controls/Input/Number/ViewModel',
          NumberViewModel;
 
       _private = {
+
          /**
           * Возвращает готовую строку с разделителями
           * @param splitValue
           * @returns {String}
           */
-         getValueWithDelimiters: function (splitValue) {
+         getValueWithDelimiters: function(splitValue) {
             var
                clearValSplited = this.getClearValue(splitValue).split('.');
 
@@ -37,7 +39,7 @@ define('Controls/Input/Number/ViewModel',
           * @param splitValue
           * @returns {String}
           */
-         getClearValue: function (splitValue) {
+         getClearValue: function(splitValue) {
             return this.concatSplitValue(splitValue).replace(/ /g, '');
          },
 
@@ -46,7 +48,7 @@ define('Controls/Input/Number/ViewModel',
           * @param splitValue
           * @returns {String}
           */
-         concatSplitValue: function (splitValue) {
+         concatSplitValue: function(splitValue) {
             return splitValue.before + splitValue.insert + splitValue.after;
          },
 
@@ -56,7 +58,7 @@ define('Controls/Input/Number/ViewModel',
           * @param shift {Integer} дополнительный сдвиг курсора, на случай если он должен стоять не сразу после введённого значения
           * @returns {Integer}
           */
-         getCursorPosition: function (splitValue, shift) {
+         getCursorPosition: function(splitValue, shift) {
             var
                beforeNewDelimetersSpacesCnt = _private.concatSplitValue(splitValue).trim().split(' ').length - 1,
                afterNewDelimetersSpacesCnt = _private.getValueWithDelimiters(splitValue).split(' ').length - 1,
@@ -73,7 +75,7 @@ define('Controls/Input/Number/ViewModel',
           * @param precision
           * @returns {boolean}
           */
-         validate: function (clearValue, onlyPositive, integersLength, precision) {
+         validate: function(clearValue, onlyPositive, integersLength, precision) {
             if (
                !_private.validators.isNumber(clearValue) ||
                onlyPositive && !_private.validators.onlyPositive(clearValue) ||
@@ -88,22 +90,26 @@ define('Controls/Input/Number/ViewModel',
 
          //Набор валидаторов для числа
          validators: {
+
             //Проверяет что строка является числом и не содержит недопустимых символов
-            isNumber: function (valueToValidate) {
+            isNumber: function(valueToValidate) {
                return valueToValidate.match(/^\-?\d*(\.\d*)?$/);
             },
+
             //Только положительные значения
-            onlyPositive: function (valueToValidate) {
+            onlyPositive: function(valueToValidate) {
                return valueToValidate[0] !== '-';
             },
+
             //Ограничение максимальной длины целой части
-            maxIntegersLength: function (valueToValidate, maxLength) {
+            maxIntegersLength: function(valueToValidate, maxLength) {
                var
                   integers = valueToValidate.split('.')[0].replace('-', '');
                return !maxLength || integers.length <= maxLength;
             },
+
             //Ограничение максимальной длины дробной части
-            maxDecimalsLength: function (valueToValidate, maxLength) {
+            maxDecimalsLength: function(valueToValidate, maxLength) {
                var
                   decimals = valueToValidate.split('.')[1] || '';
 
@@ -118,72 +124,73 @@ define('Controls/Input/Number/ViewModel',
       };
 
       NumberViewModel = BaseViewModel.extend({
-            /**
+
+         /**
              * Валидирует и подготавливает новое значение по splitValue
              * @param splitValue
              * @param inputType
              * @returns {{value: (*|String), position: (*|Integer)}}
              */
-            handleInput: function (splitValue, inputType) {
-               var
-                  shift = 0;
+         handleInput: function(splitValue, inputType) {
+            var
+               shift = 0;
 
                //Если был удалён пробел, то нужно удалить цифру слева от него и сдвинуть курсор на единицу влево
-               if (splitValue.delete === ' ') {
-                  if (inputType === 'deleteForward') {
-                     splitValue.after = splitValue.after.substr(1, splitValue.after.length);
-                  } else if (inputType === 'deleteBackward') {
-                     splitValue.before = splitValue.before.substr(0, splitValue.before.length - 1);
-                     shift = -1;
-                  }
-               }
-
-               //Если по ошибке вместо точки ввели запятую или "б"  или "ю", то выполним замену
-               splitValue.insert = splitValue.insert.toLowerCase().replace(/,|б|ю/, '.');
-
-               //Если в начале строки ввода точка, а до неё ничего нет, то предполагаем что хотят видеть '0.'
-               if (splitValue.insert[0] === '.' && !splitValue.before) {
-                  splitValue.before = '0';
-               }
-
-               //Если валидация не прошла, то не даем ничего ввести
-               if (!_private.validate(_private.getClearValue(splitValue), this._options.onlyPositive, this._options.integersLength, this._options.precision)) {
-                  splitValue.insert = '';
-               }
-
-               this._options.value = _private.getClearValue(splitValue);
-
-               //Запишет значение в input и поставит курсор в указанное место
-               return {
-                  value: _private.getValueWithDelimiters(splitValue),
-                  position: _private.getCursorPosition(splitValue, shift)
-               };
-            },
-
-            getDisplayValue: function () {
-               return _private.getValueWithDelimiters({
-                  before: '',
-                  insert: this._options.value,
-                  after: ''
-               });
-            },
-
-            getValue: function () {
-               var numValue = parseFloat(this._options.value);
-
-               // Can be NaN if value is '-' or 'undefined'
-               return isNaN(numValue) ? undefined : numValue;
-            },
-
-            updateOptions: function(options) {
-               this._options.onlyPositive = options.onlyPositive;
-               this._options.integersLength = options.integersLength;
-               this._options.precision = options.precision;
-               if (!isNaN(parseFloat(this._options.value)) && parseFloat(this._options.value) !== options.value) {
-                  this._options.value = options.value !== undefined ? String(options.value) : '';
+            if (splitValue.delete === ' ') {
+               if (inputType === 'deleteForward') {
+                  splitValue.after = splitValue.after.substr(1, splitValue.after.length);
+               } else if (inputType === 'deleteBackward') {
+                  splitValue.before = splitValue.before.substr(0, splitValue.before.length - 1);
+                  shift = -1;
                }
             }
-         });
+
+            //Если по ошибке вместо точки ввели запятую или "б"  или "ю", то выполним замену
+            splitValue.insert = splitValue.insert.toLowerCase().replace(/,|б|ю/, '.');
+
+            //Если в начале строки ввода точка, а до неё ничего нет, то предполагаем что хотят видеть '0.'
+            if (splitValue.insert[0] === '.' && !splitValue.before) {
+               splitValue.before = '0';
+            }
+
+            //Если валидация не прошла, то не даем ничего ввести
+            if (!_private.validate(_private.getClearValue(splitValue), this._options.onlyPositive, this._options.integersLength, this._options.precision)) {
+               splitValue.insert = '';
+            }
+
+            this._options.value = _private.getClearValue(splitValue);
+
+            //Запишет значение в input и поставит курсор в указанное место
+            return {
+               value: _private.getValueWithDelimiters(splitValue),
+               position: _private.getCursorPosition(splitValue, shift)
+            };
+         },
+
+         getDisplayValue: function() {
+            return _private.getValueWithDelimiters({
+               before: '',
+               insert: this._options.value,
+               after: ''
+            });
+         },
+
+         getValue: function() {
+            var numValue = parseFloat(this._options.value);
+
+            // Can be NaN if value is '-' or 'undefined'
+            return isNaN(numValue) ? undefined : numValue;
+         },
+
+         updateOptions: function(options) {
+            this._options.onlyPositive = options.onlyPositive;
+            this._options.integersLength = options.integersLength;
+            this._options.precision = options.precision;
+            if (!isNaN(parseFloat(this._options.value)) && parseFloat(this._options.value) !== options.value) {
+               this._options.value = options.value !== undefined ? String(options.value) : '';
+            }
+         }
+      });
 
       return NumberViewModel;
    }

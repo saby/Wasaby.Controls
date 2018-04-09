@@ -12,7 +12,7 @@ define('Controls/Controllers/QueryParamsController/Position',
             PositionNavigation.superclass.constructor.apply(this, arguments);
 
             if (!this._options.pageSize) {
-               throw new Error ('Option pageSize is undefined in PositionNavigation')
+               throw new Error('Option pageSize is undefined in PositionNavigation');
             }
          },
 

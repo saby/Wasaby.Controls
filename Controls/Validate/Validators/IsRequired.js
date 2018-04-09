@@ -19,11 +19,11 @@ define('Controls/Validate/Validators/IsRequired', ['Core/core-instance'], functi
          case 'object':
             if (cInstance.instanceOfModule(args.value, 'WS.Data/Collection/List')) {
                isEmpty = !Boolean(args.value.getCount());
-            } else if(args.value instanceof Array) {
+            } else if (args.value instanceof Array) {
                isEmpty = !Boolean(args.value.length);
-            } else if(args.value instanceof Object) {
-               isEmpty = Object.isEmpty(args.value)
-            } else if(args.value === null) {
+            } else if (args.value instanceof Object) {
+               isEmpty = Object.isEmpty(args.value);
+            } else if (args.value === null) {
                isEmpty = true;
             }
             break;
@@ -32,8 +32,8 @@ define('Controls/Validate/Validators/IsRequired', ['Core/core-instance'], functi
             break;
       }
 
-      return isEmpty ?
-         rk('Поле обязательно для заполнения') :
-         true;
+      return isEmpty
+         ? rk('Поле обязательно для заполнения')
+         : true;
    };
 });

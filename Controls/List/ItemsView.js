@@ -5,15 +5,15 @@ define('Controls/List/ItemsView', [
    'Core/Control',
    'tmpl!Controls/List/ItemsView',
    'Controls/List/SimpleList/ItemsViewModel'
-], function (BaseControl,
-             ItemsRenderTpl,
-             ItemsViewModel
-   ) {
+], function(BaseControl,
+   ItemsRenderTpl,
+   ItemsViewModel
+) {
    'use strict';
    var _private = {
       createListModel: function(cfg) {
-         return new ItemsViewModel ({
-            items : cfg.items,
+         return new ItemsViewModel({
+            items: cfg.items,
             idProperty: cfg.idProperty,
             displayProperty: cfg.displayProperty
          });
@@ -29,7 +29,7 @@ define('Controls/List/ItemsView', [
       {
          _template: ItemsRenderTpl,
 
-         constructor: function (cfg) {
+         constructor: function(cfg) {
             ItemsRender.superclass.constructor.apply(this, arguments);
             this._onListChangeFnc = _private.onListChange.bind(this);
          },
@@ -57,7 +57,7 @@ define('Controls/List/ItemsView', [
          },
 
          // Пустой обработчик, т.к. переиспользуется шаблон из ListControl
-         _onItemClick: function () {}
+         _onItemClick: function() {}
 
       });
 

@@ -6,16 +6,16 @@ define('Controls/Validate/Input',
    function(
       Controller,
       template
-   ){
+   ) {
       'use strict';
 
       return Controller.extend({
          _template: template,
-         _focusOutHandler: function () {
+         _focusOutHandler: function() {
             this._shouldValidate = true;
             this._forceUpdate();
          },
-         _cleanValid: function () {
+         _cleanValid: function() {
             this.setValidationResult(null);
          },
          _afterUpdate: function() {
