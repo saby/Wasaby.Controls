@@ -968,7 +968,8 @@ define('SBIS3.CONTROLS/FormController', [
       };
 
       FormController.prototype.getComponentOptions = function(mergeOptions) {
-         return OpenDialogUtil.getOptionsFromProto(this, mergeOptions)
+         var options = OpenDialogUtil.getOptionsFromProto(this, mergeOptions);
+         return this._modifyOptions(options);
       };
    return FormController;
 
