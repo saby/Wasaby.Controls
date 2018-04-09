@@ -1541,7 +1541,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   parent: self,
                   componentOptions: {
                      selectedImage: $image,
-                     editorWidth: self._inputControl.width(),
+                     editorWidth: self._inputControl.width()
                   },
                   handlers: {
                      onBeforeShow: function () {
