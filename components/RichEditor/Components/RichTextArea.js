@@ -63,7 +63,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
       var _getTrueIEVersion = function () {
          var version = cConstants.browser.IEVersion;
          // В cConstants.browser.IEVersion неправильно определяется MSIE 11
-         if (version < 11) {
+         if (version < 11 && typeof window !== 'undefined') {
             var ms = navigator.userAgent.match(/Trident\/([0-9]+)\.[0-9]+/);
             if (ms) {
                version = +ms[1] + 4
