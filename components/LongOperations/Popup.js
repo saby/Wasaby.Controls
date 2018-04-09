@@ -118,13 +118,17 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
          _bindEvents: function () {
             var self = this;
 
+            this.subscribeTo(this, 'onShow', function () {
+               self._tabChannel.notify('LongOperations:Popup:onOpen', self.getId());
+            });
+
             /*Если пользователь закроет в одной вкладке, закрываем на всех вкладках*/
             this.subscribeTo(this, 'onClose', function () {
                if (self.isVisible()) {
-                  self._tabChannel.notify('LongOperations:Popup:onClosed');
+                  self._tabChannel.notify('LongOperations:Popup:onClose', self.getId());
                }
             });
-            this.subscribeTo(this._tabChannel, 'LongOperations:Popup:onClosed', function () {
+            this.subscribeTo(this._tabChannel, 'LongOperations:Popup:onClose', function () {
                if (!self._isDestroyed) {
                   self.close();
                }
