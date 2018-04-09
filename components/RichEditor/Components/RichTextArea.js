@@ -2731,11 +2731,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   // После задач https://online.sbis.ru/opendoc.html?guid=6bb150eb-4973-4770-b7da-865789355916 и https://online.sbis.ru/opendoc.html?guid=a56c487d-6e1d-47bc-bdf6-06a0cd7aa57a
                   // Убрать по мере переделки стороннего кода, используещего эти атрибуты.
                   // Для пролучения uuid правильно использовать метод getImageUuid
+                  var style = (width ? 'width:' + width + ';' : '') + (height ? 'height:' + height + ';' : '');
                   $(placeholder).replaceWith(
                      '<img' +
                      (className ? ' class="' + className + '"' : '') +
                      ' src="' + src + '"' +
-                     (width || height ? ' style="' + (width ? 'width:' + width + ';' : '') + (height ? 'height:' + height + ';' : '') + '"' : '') +
+                     (style ? ' style="' + style + '" data-mce-style="' + style + '"' : '') +
                      /*(alt ? ' alt="' + alt.replace('"', '&quot;') + '"' : '') +*/
                      ' data-img-uuid="' + uuid + '" alt="' + uuid + '"' +
                      '></img>'
