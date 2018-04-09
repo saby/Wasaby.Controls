@@ -173,6 +173,10 @@ define('Controls/Controllers/SourceController',
             return this._source.destroy(items);
          },
 
+         move: function(items, target, meta) {
+            return this._source.move(items, target, meta);
+         },
+
          destroy: function() {
             if (this._queryParamsController) {
                this._queryParamsController.destroy();

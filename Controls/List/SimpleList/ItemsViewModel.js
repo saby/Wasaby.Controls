@@ -2,8 +2,8 @@
  * Created by kraynovdo on 16.11.2017.
  */
 define('Controls/List/SimpleList/ItemsViewModel',
-   ['Core/Abstract', 'Controls/List/resources/utils/ItemsUtil', 'Core/core-instance', 'WS.Data/Entity/VersionableMixin'],
-   function(Abstract, ItemsUtil, cInstance, VersionableMixin) {
+   ['Core/Abstract', 'Controls/List/resources/utils/ItemsUtil', 'Core/core-instance', 'WS.Data/Entity/VersionableMixin', 'WS.Data/Source/ISource'],
+   function(Abstract, ItemsUtil, cInstance, VersionableMixin, ISource) {
 
       /**
        *
@@ -90,6 +90,28 @@ define('Controls/List/SimpleList/ItemsViewModel',
 
          getItemById: function(id, idProperty) {
             return this._display ? ItemsUtil.getDisplayItemById(this._display, id, idProperty) : undefined;
+         },
+
+         moveItems: function(movedItems, target, position) {
+            var
+               itemIndex,
+               targetIndex,
+               items = this._items;
+            movedItems.forEach(function(movedItem) {
+               itemIndex = items.getIndex(movedItem);
+               if (itemIndex === -1) {
+                  items.add(movedItem);
+                  itemIndex = items.getCount() - 1;
+               }
+
+               targetIndex = items.getIndex(target);
+               if (position === ISource.MOVE_POSITION.after && targetIndex < itemIndex) {
+                  targetIndex = (targetIndex + 1) < items.getCount() ? targetIndex + 1 : items.getCount();
+               } else if (position === ISource.MOVE_POSITION.before && targetIndex > itemIndex) {
+                  targetIndex = targetIndex !== 0  ? targetIndex - 1 : 0;
+               }
+               items.move(itemIndex, targetIndex);
+            });
          },
 
          getCount: function() {
