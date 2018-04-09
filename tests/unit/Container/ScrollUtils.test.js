@@ -118,39 +118,45 @@ define(
             it('webKit', function() {
                var userAgent = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36';
 
-               result = ScrollWidthUtil._private.calcScrollbarWidth(userAgent);
+               result = ScrollWidthUtil._private.calcScrollbarWidth({
+                  userAgent: userAgent
+               });
                assert.equal(result, 0);
             });
             it('ie12', function() {
                detection = {
-                  isIE12: true
+                  isIE12: true,
+                  userAgent: ''
                };
 
-               result = ScrollWidthUtil._private.calcScrollbarWidth('', detection);
+               result = ScrollWidthUtil._private.calcScrollbarWidth(detection);
                assert.equal(result, 16);
             });
             it('ie11', function() {
                detection = {
-                  isIE11: true
+                  isIE11: true,
+                  userAgent: ''
                };
 
-               result = ScrollWidthUtil._private.calcScrollbarWidth('', detection);
+               result = ScrollWidthUtil._private.calcScrollbarWidth(detection);
                assert.equal(result, 17);
             });
             it('ie10', function() {
                detection = {
-                  isIE10: true
+                  isIE10: true,
+                  userAgent: ''
                };
 
-               result = ScrollWidthUtil._private.calcScrollbarWidth('', detection);
+               result = ScrollWidthUtil._private.calcScrollbarWidth(detection);
                assert.equal(result, 17);
             });
             it('firefox', function() {
                detection = {
-                  firefox: true
+                  firefox: true,
+                  userAgent: ''
                };
 
-               result = ScrollWidthUtil._private.calcScrollbarWidth('', detection);
+               result = ScrollWidthUtil._private.calcScrollbarWidth(detection);
                if (window) {
                   assert.equal(result, 20);
                } else {

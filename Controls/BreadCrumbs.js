@@ -1,7 +1,7 @@
 define('Controls/BreadCrumbs', [
    'Core/Control'
 
-], function (Control
+], function(Control
 ) {
    'use strict';
 

@@ -1,7 +1,6 @@
 define('SBIS3.CONTROLS/Mixins/PickerMixin', [
-   "Core/constants",
    "SBIS3.CONTROLS/FloatArea"
-], function( constants,FloatArea) {
+], function(FloatArea) {
    /**
     * Миксин, умеющий отображать выдающий вниз блок.
     * Задаётся контент и методы, позволяющие открывать, закрывать блок.

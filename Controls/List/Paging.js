@@ -5,9 +5,9 @@ define('Controls/List/Paging', [
    'Core/Control',
    'tmpl!Controls/List/Paging/Paging',
    'css!Controls/List/Paging/Paging'
-], function (BaseControl,
-             template
-   ) {
+], function(BaseControl,
+   template
+) {
    'use strict';
    var _private, ModuleClass;
 
@@ -23,8 +23,7 @@ define('Controls/List/Paging', [
          if (page <= 1) {
             self._stateBegin = 'disabled';
             self._statePrev = 'disabled';
-         }
-         else {
+         } else {
             self._stateBegin = 'normal';
             self._statePrev = 'normal';
          }
@@ -32,8 +31,7 @@ define('Controls/List/Paging', [
          if (page >= config.pagesCount) {
             self._stateEnd = 'disabled';
             self._stateNext = 'disabled';
-         }
-         else {
+         } else {
             self._stateEnd = 'normal';
             self._stateNext = 'normal';
          }
@@ -55,8 +53,7 @@ define('Controls/List/Paging', [
       _beforeMount: function(newOptions) {
          if (newOptions.showDigits) {
             _private.initArrowStateBySelectedPage(this, newOptions.selectedPage, newOptions);
-         }
-         else {
+         } else {
             _private.initArrowDefaultStates(this, newOptions);
          }
       },
@@ -64,8 +61,7 @@ define('Controls/List/Paging', [
       _beforeUpdate: function(newOptions) {
          if (newOptions.showDigits) {
             _private.initArrowStateBySelectedPage(this, newOptions.selectedPage, newOptions);
-         }
-         else {
+         } else {
             _private.initArrowDefaultStates(this, newOptions);
          }
       },

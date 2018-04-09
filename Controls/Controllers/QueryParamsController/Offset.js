@@ -12,7 +12,7 @@ define('Controls/Controllers/QueryParamsController/Offset',
             OffsetNavigation.superclass.constructor.apply(this, arguments);
 
             if (!this._options.pageSize) {
-               throw new Error ('Option pageSize is undefined in OffsetNavigation')
+               throw new Error('Option pageSize is undefined in OffsetNavigation');
             }
          },
 

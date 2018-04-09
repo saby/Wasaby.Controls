@@ -239,7 +239,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                 * @example
                 * <pre>
                 *    <options name="customStyle">
-                *       <option name="block">blockquote</option>
+                *       <option name="block">div</option>
                 *       <option name="wrapper">1</option>
                 *       <option name="remove">all</option>
                 *       <option name="classes">customStyle</option>
@@ -291,11 +291,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             if (options.autoHeight) {
                options.minimalHeight = this._cleanHeight(options.minimalHeight);
                options.maximalHeight = this._cleanHeight(options.maximalHeight);
-            }
-            for(var key in options.customFormats) {
-               if ({}.hasOwnProperty.call(options.customFormats, key)) {
-                  options.editorConfig.formats[key] = options.customFormats[key];
-               }
             }
             return options;
          },
@@ -1546,7 +1541,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   parent: self,
                   componentOptions: {
                      selectedImage: $image,
-                     editorWidth: self._inputControl.width(),
+                     editorWidth: self._inputControl.width()
                   },
                   handlers: {
                      onBeforeShow: function () {
@@ -2565,6 +2560,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this._requireTinyMCE().addCallback(function() {
                   var cfg = cClone(self._options.editorConfig);
                   cfg.paste_as_text = false;
+
+                  for(var key in self._options.customFormats) {
+                     if ({}.hasOwnProperty.call(self._options.customFormats, key)) {
+                        cfg.formats[key] = self._options.customFormats[key];
+                     }
+                  }
                   tinyMCE.baseURL = '/resources/' + TINYMCE_URL_BASE;
                   tinyMCE.init(cfg);
                });

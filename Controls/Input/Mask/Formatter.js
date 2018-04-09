@@ -6,6 +6,7 @@ define('Controls/Input/Mask/Formatter',
       'use strict';
 
       var _private = {
+
          /**
           * Получить разбиение исходного значения, на группы.
           * Разбиение будет найденно, только в том случае, если значение полностью подходит маске.
@@ -25,6 +26,7 @@ define('Controls/Input/Mask/Formatter',
       };
 
       var Formatter = {
+
          /**
           * Получить чистые данные.
           * Чистыми данными будем называть: значение без разделителей(чистое) и массив для сопоставления
@@ -100,7 +102,7 @@ define('Controls/Input/Mask/Formatter',
                   // Группа разделителей.
                   group = format.delimiterGroups[groupIndex].value;
 
-                  switch(format.delimiterGroups[groupIndex].type) {
+                  switch (format.delimiterGroups[groupIndex].type) {
                      case 'single':
                         // Первая группа одиночных разделителей в маске должна быть добавлена к данным.
                         if (groupIndex === 0) {
@@ -118,9 +120,11 @@ define('Controls/Input/Mask/Formatter',
                            pairs[format.delimiterGroups[groupIndex].pair].push(value.length + delimiters.length);
                         } else {
                            pairPosition = pairs[group].pop();
+
                            // Добавляем открывающий разделитель.
                            value = value.substring(0, pairPosition) + format.delimiterGroups[groupIndex].pair + value.substring(pairPosition);
                            position += pairPosition <= position;
+
                            // Добавляем закрывающий разделитель.
                            value += group;
                            position += value.length - position === 1;

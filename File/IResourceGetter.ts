@@ -1,5 +1,6 @@
 import Deferred = require("Core/Deferred")
-import {IFileData} from "File/IFileData";
+import IResource = require("File/IResource");
+
 /**
  * Интерфейс сущности получения ресурсов
  * @author Заляев А.В.
@@ -8,7 +9,7 @@ import {IFileData} from "File/IFileData";
  * @see File/HttpFileLink
  * @name File/IResourceGetter
  */
-declare type IResourceGetter = {
+type IResourceGetter = {
     /**
      * Возможен ли выбор ресурса
      * @return {Core/Deferred<Boolean>}
@@ -18,14 +19,14 @@ declare type IResourceGetter = {
     canExec(): Deferred<boolean>;
     /**
      * Осуществляет выбор ресурсов
-     * @return {Core/Deferred<Array<File/IFileData>>}
+     * @return {Core/Deferred<Array<File/IResource>>}
      * @see File/LocalFile
      * @see File/LocalFileLink
      * @see File/HttpFileLink
      * @method
      * @name File/IResourceGetter#getFiles
      */
-    getFiles(): Deferred<Array<IFileData>>;
+    getFiles(): Deferred<Array<IResource>>;
     /**
      * Возвращает строку - тип ресурса
      * @return {String}
@@ -34,17 +35,8 @@ declare type IResourceGetter = {
      */
     getType(): string;
     destroy(): void;
-    isDestroy(): boolean;
+    isDestroyed(): boolean;
 }
-/**
- * Конструктор сущности получения ресурсов
- * @author Заляев А.В.
- * @see File/LocalFile
- * @see File/LocalFileLink
- * @see File/HttpFileLink
- * @see File/IResourceGetter
- * @name File/IResourceGetterConstructor
- */
-declare type IResourceGetterConstructor = {
-    new (...args): IResourceGetter;
-}
+
+export = IResourceGetter;
+

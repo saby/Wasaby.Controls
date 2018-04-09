@@ -1,6 +1,7 @@
 define('Controls/Input/Area', [
    'Controls/Input/Text',
    'Core/constants',
+
    /*'WS.Data/Type/descriptor',*/
    'Core/detection',
    'tmpl!Controls/Input/Area/Area',
@@ -8,11 +9,12 @@ define('Controls/Input/Area', [
 
    'css!Controls/Input/Area/Area'
 ], function(Text,
-            constants,
-            /*types,*/
-            detection,
-            template,
-            inputHelper) {
+   constants,
+
+   /*types,*/
+   detection,
+   template,
+   inputHelper) {
 
    'use strict';
 
@@ -49,23 +51,23 @@ define('Controls/Input/Area', [
 
    var _private = {
 
-      setFakeAreaValue: function(self, value){
+      setFakeAreaValue: function(self, value) {
          self._children.fakeAreaValue.innerHTML = value;
       },
 
       /*
       * Обновляет наличие скролла, в зависимости от того, есть ли скролл на фейковой текст арии
       */
-      updateHasScroll: function(self){
+      updateHasScroll: function(self) {
          var fakeArea = self._children.fakeArea;
          var needScroll = fakeArea.scrollHeight - fakeArea.clientHeight > 1;
 
          //Для IE, текст мы показываем из fakeArea, поэтому сдвинем скролл.
-         if(needScroll && detection.isIE){
+         if (needScroll && detection.isIE) {
             fakeArea.scrollTop = self._children.realArea.scrollTop;
          }
 
-         if(needScroll !== self._hasScroll){
+         if (needScroll !== self._hasScroll) {
             self._hasScroll = needScroll;
          }
       },
@@ -73,9 +75,10 @@ define('Controls/Input/Area', [
       /*
        * Updates area multiline
        */
-      updateMultiline: function(self){
+      updateMultiline: function(self) {
          var fakeArea = self._children.fakeArea;
          var fakeAreaWrapper = self._children.fakeAreaWrapper;
+
          //Will define the number of rows in Area by comparing fakeArea and her wrap heights
          self._multiline = fakeArea.clientHeight > fakeAreaWrapper.clientHeight;
       }
@@ -93,12 +96,13 @@ define('Controls/Input/Area', [
 
       constructor: function(options) {
          Area.superclass.constructor.call(this, options);
+
          //'_multiline' is responsible for adding multi-line field classes to InputRender
          //Should be set before the component is mounted into DOM to avoid content jumps
          this._multiline = options.minLines > 1;
       },
 
-      _afterMount: function(){
+      _afterMount: function() {
          Area.superclass._afterMount.apply(this, arguments);
 
          //Should calculate area height after mount
@@ -121,25 +125,25 @@ define('Controls/Input/Area', [
          }
       },
 
-      _valueChangedHandler: function(e, value){
+      _valueChangedHandler: function(e, value) {
          _private.setFakeAreaValue(this, value);
          _private.updateHasScroll(this);
          _private.updateMultiline(this);
          this._notify('valueChanged', [value]);
       },
 
-      _keyDownHandler: function(e){
+      _keyDownHandler: function(e) {
 
          //В режиме newLineKey === 'ctrlEnter' будем эмулировать переход на новую строку в ручную
-         if(e.nativeEvent.keyCode === constants.key.enter && this._options.newLineKey === 'ctrlEnter'){
+         if (e.nativeEvent.keyCode === constants.key.enter && this._options.newLineKey === 'ctrlEnter') {
 
             //Обычный enter прерываем
-            if(!e.nativeEvent.shiftKey && !e.nativeEvent.ctrlKey){
+            if (!e.nativeEvent.shiftKey && !e.nativeEvent.ctrlKey) {
                e.preventDefault();
             }
 
             //Вроде не очень хорошо. Но если хотим перенести на новую строку сами, придется вмешиваться.
-            if(e.nativeEvent.ctrlKey){
+            if (e.nativeEvent.ctrlKey) {
                e.target.value += '\n';
                this._children.inputRender._inputHandler(e);
             }
@@ -147,7 +151,7 @@ define('Controls/Input/Area', [
 
       },
 
-      _scrollHandler: function(){
+      _scrollHandler: function() {
          _private.updateHasScroll(this);
       },
 

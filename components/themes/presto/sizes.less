@@ -33,6 +33,7 @@
 @line-height_InputRender_l:           round(52px * @multiplier);
 @line-height_InputRender_default:     @line-height_InputRender_l;
 @font-size_InputRender_style_header:  round(40px * @multiplier);
+@font-size_InputRender_style_accentHeader:  round(40px * @multiplier);
 //DropdownList
 @height_DropdownList-item:      round(77px * @multiplier);
 @max-height_DropdownList:       100%;
@@ -211,6 +212,7 @@
 @DropdownList-picker-menu-item-height:                round(52px * @multiplier);
 @dropdown-list-item-padding:                          round(12px * @multiplier) round(78px * @multiplier)  round(13px * @multiplier) round(16px * @multiplier);
 @DropdownList-picker-fastdatafilter-offset:           0 0 0 round(25px * @multiplier);
+@DropdownList-picker-fastdatafilter-multi-offset:     @DropdownList-picker-fastdatafilter-offset;
 @DropdownList-picker-fdf-left:                        round(-17px * @multiplier);
 @size_DropDownList_filter_cross:                      round(42px * @multiplier);
 @height_DropDownList_arrow-icon:                      round(24px * @multiplier);
@@ -413,7 +415,7 @@
 @icon-button-edit-round-border-line-height:            round(58px * @multiplier);
 @list-view-items-toolbar-line-height:                  round(52px * @multiplier);
 @list-view-items-toolbar-icon-button-border-font-size: round(42px * @multiplier);
-@list-view-items-toolbar-bottom:                       1px;
+@list-view-items-toolbar-bottom:                       floor(1px * @multiplier);
 @list-view-items-toolbar-vertical-line-height:         ceil(42px * @multiplier);
 @list-view-actions-item-height:                        ceil(42px * @multiplier);
 @list-view-actions-margin:                             0 round(8px * @multiplier);

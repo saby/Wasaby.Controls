@@ -1,6 +1,5 @@
 /// <amd-module name="File/Attach/Option/Source" />
-import {IFileDataConstructor} from "File/IFileDataConstructor";
-import {IFileData} from "File/IFileData";
+import IResourceConstructor = require("File/IResourceConstructor");
 /**
  * Класс конфигурации ISource, передаваемый в Attach
  * @class
@@ -26,7 +25,7 @@ class SourceOption {
      */
     constructor(
         protected source: string,
-        protected resourceType: IFileDataConstructor,
+        protected resourceType: IResourceConstructor,
         protected options: any
     ){}
     /**
@@ -47,10 +46,10 @@ class SourceOption {
     }
     /**
      * Возвращает конструктор ресурса, для которого будет зарегестрирован источник
-     * @return {File/IFileDataConstructor}
+     * @return {File/IResourceConstructor}
      * @name File/Attach/Option/Source#getResourceType
      */
-    getResourceType(): IFileDataConstructor {
+    getResourceType(): IResourceConstructor {
         return this.resourceType;
     }
 }

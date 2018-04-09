@@ -41,6 +41,7 @@ define('Controls/Container/Scroll',
        */
       var
          _private = {
+
             /**
              * Получить расположение тени внутри контейнера в зависимости от прокрутки контента.
              * @return {String}
@@ -101,7 +102,7 @@ define('Controls/Container/Scroll',
                   hasScroll: _private.calcHasScroll(self),
                   contentHeight: _private.getContentHeight(self),
                   shadowPosition: _private.getShadowPosition(self)
-               }
+               };
             },
 
             calcPagingPagesCount: function(heightOnePage, heightAllPages) {
@@ -154,21 +155,25 @@ define('Controls/Container/Scroll',
          },
          Scroll = Control.extend({
             _template: template,
+
             /**
              * Смещение контента сверху относительно контейнера.
              * @type {number}
              */
             _scrollTop: 0,
+
             /**
              * Нужно ли показывать скролл при наведении.
              * @type {boolean}
              */
             _showScrollbarOnHover: true,
+
             /**
              * Наведен ли курсор на контейнер.
              * @type {boolean}
              */
             _hasHover: false,
+
             /**
              * Используется ли нативный скролл.
              * @type {boolean}
@@ -200,6 +205,7 @@ define('Controls/Container/Scroll',
                            heightFix: ScrollHeightFixUtil.calcHeightFix()
                         },
                         styleHideScrollbar = ScrollWidthUtil.calcStyleHideScrollbar(),
+
                         // На мобильных устройствах используется нативный скролл, на других платформенный.
                         useNativeScrollbar = detection.isMobileIOS || detection.isMobileAndroid || detection.isMac;
 
@@ -211,7 +217,7 @@ define('Controls/Container/Scroll',
                         displayState: displayState,
                         styleHideScrollbar: styleHideScrollbar,
                         useNativeScrollbar: useNativeScrollbar
-                     }
+                     };
                   });
 
                   def.callback();
@@ -297,7 +303,7 @@ define('Controls/Container/Scroll',
                   this._showScrollbarOnHover = true;
                   event.preventDefault();
 
-                  this._scrollbarTaken(false)
+                  this._scrollbarTaken(false);
                }
             },
 
@@ -314,7 +320,7 @@ define('Controls/Container/Scroll',
             },
 
             getDataId: function() {
-               return 'Controls.Container.Scroll';
+               return 'ControlsContainerScroll';
             },
 
             /**
@@ -345,7 +351,7 @@ define('Controls/Container/Scroll',
             style: 'normal',
             shadowVisible: true,
             scrollbarVisible: true
-         }
+         };
       };
 
       Scroll.contextTypes = function() {

@@ -14,7 +14,7 @@ define('Controls/Input/Phone/MaskBuilder',
                      plus = false;
                      return '+';
                   } else {
-                     return ''
+                     return '';
                   }
                });
 
@@ -24,7 +24,7 @@ define('Controls/Input/Phone/MaskBuilder',
                   digitValue = digitValue.slice(0, -1);
                }
                if (digitValue.length < 12) {
-                  mask += 'd (ddd) ddd-dd-dd'
+                  mask += 'd (ddd) ddd-dd-dd';
                } else if (digitValue.length === 12) {
                   mask += 'd ddddddddddd';
                } else {
@@ -46,6 +46,6 @@ define('Controls/Input/Phone/MaskBuilder',
 
             return mask || '+d\\*';
          }
-      }
+      };
    }
 );

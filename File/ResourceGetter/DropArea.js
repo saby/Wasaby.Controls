@@ -215,7 +215,7 @@ define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/Res
          * @see File/LocalFile
          */
         DropArea.prototype.getFiles = function () {
-            if (this.isDestroy()) {
+            if (this.isDestroyed()) {
                 return Deferred.fail("Resource getter is destroyed");
             }
             if (this._selectDef) {
@@ -230,7 +230,7 @@ define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/Res
          * @name File/ResourceGetter/DropArea#canExec
          */
         DropArea.prototype.canExec = function () {
-            return Deferred.success(IS_SUPPORT && !this.isDestroy());
+            return Deferred.success(IS_SUPPORT && !this.isDestroyed());
         };
         DropArea.prototype.destroy = function () {
             if (this._selectDef) {
