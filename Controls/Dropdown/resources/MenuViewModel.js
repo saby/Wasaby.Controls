@@ -5,7 +5,7 @@ define('Controls/Dropdown/resources/MenuViewModel',
    [
       'Core/Abstract',
       'WS.Data/Chain',
-      'Controls/List/SimpleList/ItemsViewModel',
+      'Controls/List/ItemsViewModel',
       'WS.Data/Relation/Hierarchy'
    ],
    function(Abstract, Chain, ItemsViewModel, Hierarchy) {

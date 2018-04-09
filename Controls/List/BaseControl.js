@@ -1,18 +1,20 @@
-define('Controls/List/SourceControl', [
+define('Controls/List/BaseControl', [
    'Core/Control',
    'Core/IoC',
-   'tmpl!Controls/List/SourceControl/SourceControl',
+   'tmpl!Controls/List/BaseControl/BaseControl',
+   'Controls/List/resources/utils/ItemsUtil',
    'require',
    'Controls/List/Controllers/VirtualScroll',
    'Controls/Controllers/SourceController',
    'Core/Deferred',
-   'tmpl!Controls/List/SourceControl/multiSelect',
+   'tmpl!Controls/List/BaseControl/multiSelect',
    'Controls/List/EditInPlace',
    'Controls/List/ItemActions/ItemActionsControl',
-   'css!Controls/List/SourceControl/SourceControl'
+   'css!Controls/List/BaseControl/BaseControl'
 ], function(Control,
    IoC,
-   SourceControlTpl,
+   BaseControlTpl,
+   ItemsUtil,
    require,
    VirtualScroll,
    SourceController,
@@ -46,7 +48,7 @@ define('Controls/List/SourceControl', [
                return _private.processLoadError(self, error);
             });
          } else {
-            IoC.resolve('ILogger').error('SourceControl', 'Source option is undefined. Can\'t load data');
+            IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
          }
       },
 
@@ -74,7 +76,7 @@ define('Controls/List/SourceControl', [
                return _private.processLoadError(self, error);
             });
          } else {
-            IoC.resolve('ILogger').error('SourceControl', 'Source option is undefined. Can\'t load data');
+            IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
          }
       },
 
@@ -266,16 +268,15 @@ define('Controls/List/SourceControl', [
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
-    * @mixes Controls/interface/IReorderMovable
-    * @mixes Controls/List/interface/IListControl
+    * @mixes Controls/List/interface/IBaseControl
     * @mixes Controls/interface/IRemovable
     * @control
     * @public
     * @category List
     */
 
-   var SourceControl = Control.extend({
-      _template: SourceControlTpl,
+   var BaseControl = Control.extend({
+      _template: BaseControlTpl,
       iWantVDOM: true,
       _isActiveByClick: false,
 
@@ -297,12 +298,11 @@ define('Controls/List/SourceControl', [
       _bottomPlaceholderHeight: 0,
 
       constructor: function(cfg) {
-         SourceControl.superclass.constructor.apply(this, arguments);
+         BaseControl.superclass.constructor.apply(this, arguments);
          this._publish('onDataLoad');
       },
 
       _beforeMount: function(newOptions, context, receivedState) {
-         var self = this;
          this._virtualScroll = new VirtualScroll({
             maxVisibleItems: newOptions.virtualScrollConfig && newOptions.virtualScrollConfig.maxVisibleItems,
             itemsCount: 0
@@ -313,8 +313,8 @@ define('Controls/List/SourceControl', [
           */
          this._filter = newOptions.filter;
 
-         if (newOptions.listViewModel) {
-            this._listViewModel = newOptions.listViewModel;
+         if (newOptions.viewModelConfig && newOptions.viewModelConstructor) {
+            this._listViewModel = new newOptions.viewModelConstructor(newOptions.viewModelConfig);
             this._virtualScroll.setItemsCount(this._listViewModel.getCount());
             _private.initListViewModelHandler(this, this._listViewModel);
          }
@@ -331,6 +331,14 @@ define('Controls/List/SourceControl', [
                return _private.reload(this);
             }
          }
+      },
+
+      getViewModel: function() {
+         return this._listViewModel;
+      },
+
+      getSourceController: function() {
+         return this._sourceController;
       },
 
       _afterMount: function() {
@@ -352,8 +360,8 @@ define('Controls/List/SourceControl', [
             this._filter = newOptions.filter;
          }
 
-         if (newOptions.listViewModel && (newOptions.listViewModel !== this._options.listViewModel)) {
-            this._listViewModel = newOptions.listViewModel;
+         if (newOptions.viewModelConfig && (newOptions.viewModelConfig !== this._options.viewModelConfig)) {
+            this._listViewModel = new newOptions.viewModelConstructor(newOptions.viewModelConfig);
             _private.initListViewModelHandler(this, this._listViewModel);
 
             //this._virtualScroll.setItemsCount(this._listViewModel.getCount());
@@ -392,7 +400,7 @@ define('Controls/List/SourceControl', [
             this._scrollPagingCtr.destroy();
          }
 
-         SourceControl.superclass._beforeUnmount.apply(this, arguments);
+         BaseControl.superclass._beforeUnmount.apply(this, arguments);
       },
 
 
@@ -445,26 +453,6 @@ define('Controls/List/SourceControl', [
          this._notify('afterItemsRemove', [items, result]);
       },
 
-      moveItemUp: function(item) {
-         this._children.moveControl.moveItemUp(item);
-      },
-
-      moveItemDown: function(item) {
-         this._children.moveControl.moveItemDown(item);
-      },
-
-      moveItems: function(items, target, position) {
-         this._children.moveControl.moveItems(items, target, position);
-      },
-
-      _beforeItemsMove: function(event, items, target, position) {
-         return this._notify('beforeItemsMove', [items, target, position]);
-      },
-
-      _afterItemsMove: function(event, items, target, position, result) {
-         this._notify('afterItemsMove', [items, target, position, result]);
-      },
-
       _showIndicator: function(event, direction) {
          _private.showIndicator(this, direction);
          event.stopPropagation();
@@ -477,6 +465,11 @@ define('Controls/List/SourceControl', [
 
       reload: function() {
          return _private.reload(this);
+      },
+
+      _onItemClick: function(e, item) {
+         var newKey = ItemsUtil.getPropertyValue(item, this._options.viewConfig.idProperty);
+         this._listViewModel.setMarkedKey(newKey);
       },
 
       /**
@@ -539,6 +532,6 @@ define('Controls/List/SourceControl', [
     dataSource: Types(ISource)
     }
     };*/
-   SourceControl._private = _private;
-   return SourceControl;
+   BaseControl._private = _private;
+   return BaseControl;
 });

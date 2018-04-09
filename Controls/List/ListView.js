@@ -1,15 +1,13 @@
 /**
  * Created by kraynovdo on 22.09.2017.
  */
-define('Controls/List/SimpleList/ListView', [
+define('Controls/List/ListView', [
    'Core/Control',
-   'tmpl!Controls/List/SimpleList/ListView/ListView',
-   'Controls/List/resources/utils/ItemsUtil',
-   'tmpl!Controls/List/SimpleList/ItemTemplate',
-   'css!Controls/List/SimpleList/ListView/ListView'
+   'tmpl!Controls/List/ListView/ListView',
+   'tmpl!Controls/List/ItemTemplate',
+   'css!Controls/List/ListView/ListView'
 ], function(BaseControl,
    ListViewTpl,
-   ItemsUtil,
    defaultItemTemplate
 ) {
    'use strict';
@@ -68,10 +66,8 @@ define('Controls/List/SimpleList/ListView', [
          },
 
          _onItemClick: function(e, dispItem) {
-            var item, newKey;
+            var item;
             item = dispItem.getContents();
-            newKey = ItemsUtil.getPropertyValue(item, this._options.idProperty);
-            this._listModel.setMarkedKey(newKey);
             this._notify('itemClick', [item], {bubbling: true});
          },
          _onItemContextMenu: function(event, itemData) {
