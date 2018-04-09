@@ -291,16 +291,10 @@ define('SBIS3.CONTROLS/ComponentBinder',
                когда мы не можем сделать соответствие фильтров по биндингам и нам нужен фильтр списка,
                но применять надо не все фильтры */
          var noSaveFilters = ['Разворот', 'ВидДерева'],
-            /* Т.к. параметры вычитываются один раз на сессию, то они могут "протухнуть" в случае,
-               если страница строится на сервере открыта на разных вкладках / тачках,
-               поэтому историю надо всегда актуализировать. */
-             dReady = loadHistory && historyId ? UserConfig.getParam(historyId) : Deferred.success(),
              self = this,
              byFilterButtonConfig = browser && browser._hasOption('filterButtonConfig') && find(browser._getOptions().bindings, function(elem) { return elem.propName && (elem.propName.indexOf("filterButtonConfig") !== -1); }),
              view, filter, preparedStructure;
             
-         this._dFiltersReady = dReady;
-
          if(browser) {
             view = browser.getView();
          }
@@ -317,19 +311,22 @@ define('SBIS3.CONTROLS/ComponentBinder',
             this._filterHistoryController.destroy();
          }
    
-         dReady.addCallback(function(res) {
-            var filtersForHistory = [];
-            if (saveRootInHistory && view) {
-               filtersForHistory.push(view.getParentProperty());
-            }
-            self._filterHistoryController = new FilterHistoryController({
-               historyId: historyId,
-               filterButton: filterButton,
-               fastDataFilter: fastDataFilter,
-               view: view,
-               noSaveFilters: noSaveFilters,
-               filtersForHistory: filtersForHistory
-            });
+         var filtersForHistory = [];
+         if (saveRootInHistory && view) {
+            filtersForHistory.push(view.getParentProperty());
+         }
+         self._filterHistoryController = new FilterHistoryController({
+            historyId: historyId,
+            filterButton: filterButton,
+            fastDataFilter: fastDataFilter,
+            view: view,
+            noSaveFilters: noSaveFilters,
+            filtersForHistory: filtersForHistory
+         });
+   
+         this._dFiltersReady = historyId ? self._filterHistoryController.getHistory(true) : Deferred.success();
+   
+         this._dFiltersReady.addCallback(function(res) {
    
             filterButton.setHistoryController(self._filterHistoryController);
             if(applyOnLoad) {
@@ -378,11 +375,12 @@ define('SBIS3.CONTROLS/ComponentBinder',
 
       bindPagingHistory: function(view, id) {
          this._pagingHistoryController = new HistoryController({historyId: id});
-         var historyLimit = this._pagingHistoryController.getHistory();
-
-         if(historyLimit) {
-            view.setPageSize(historyLimit, true);
-         }
+         
+         this._pagingHistoryController.getHistory(true).addCallback(function(limit) {
+            if (limit) {
+               view.setPageSize(limit, true);
+            }
+         });
 
          var self = this;
          view.subscribe('onPageSizeChange', function(event, pageSize) {

@@ -8,6 +8,7 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
    'SBIS3.CONTROLS/History/HistoryListUtils',
    'Core/CommandDispatcher',
    'Core/helpers/collection-helpers',
+   'Core/ParallelDeferred',
    'SBIS3.CONTROLS/History/HistoryList',
    'SBIS3.CONTROLS/Utils/InformationPopupManager',
    'SBIS3.CONTROLS/Filter/HistoryView'
@@ -17,7 +18,8 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
    CompoundControl,
    HistoryListUtils,
    CommandDispatcher,
-   colHelpers
+   colHelpers,
+   ParallelDeferred
 ) {
 
       'use strict';
@@ -71,11 +73,27 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
          },
 
          $constructor: function() {
-            var self = this,
-               favoriteList = this._getHistoryList(true),
-               favoriteAllList = this._getHistoryList(true, true),
-               historyList = this._getHistoryList();
-
+            var self = this;
+            var listsDef = new ParallelDeferred();
+            var favoriteList;
+            var favoriteAllList;
+            var historyList;
+   
+            listsDef.push(this._getHistoryList(true).addCallback(function(res) {
+               favoriteList = res;
+               return res;
+            }));
+            listsDef.push(this._getHistoryList(true, true).addCallback(function(res) {
+               favoriteAllList = res;
+               return res;
+            }));
+            listsDef.push(this._getHistoryList().addCallback(function(res) {
+               historyList = res;
+               return res;
+            }));
+   
+            listsDef.done();
+            
             this._publish('onItemActivate');
 
             function deleteReportHistory(id, isFavorite, isGlobal) {
@@ -214,31 +232,33 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
                   checkItems(self._favoriteView);
                });
 
-               this.subscribeTo(self._favoriteView, 'onItemsReady', function() {
-                  self._favoriteView.getItems().prepend(favoriteAllList.getHistory().clone());
-                  checkItems(self._favoriteView);
-               });
-
-               self._favoriteView.getItems().prepend(favoriteAllList.getHistory().clone());
-
                function checkItems(view) {
                   var viewBlock = view.getContainer().parent();
                   viewBlock.toggleClass('ws-hidden', !view.getItems().getCount());
                }
-
-               this.processViews(function(view) {
-                  self.subscribeTo(view, 'onItemActivate', function(event, itemObj) {
-                     self._notify('onItemActivate', itemObj, this === self._favoriteView, itemObj.item.get('data').get('globalParams'));
+   
+               listsDef.getResult().addCallback(function() {
+                  self.subscribeTo(self._favoriteView, 'onItemsReady', function() {
+                     self._favoriteView.getItems().prepend(favoriteAllList.getHistory().clone());
+                     checkItems(self._favoriteView);
                   });
-               });
-
-               this.processViews(function(view) {
-                  self.subscribeTo(view, 'onItemsReady', function() {
-                     checkItems(view);
+   
+                  self._favoriteView.getItems().prepend(favoriteAllList.getHistory().clone());
+   
+                  self.processViews(function(view) {
+                     self.subscribeTo(view, 'onItemActivate', function(event, itemObj) {
+                        self._notify('onItemActivate', itemObj, self === self._favoriteView, itemObj.item.get('data').get('globalParams'));
+                     });
                   });
+   
+                  self.processViews(function(view) {
+                     self.subscribeTo(view, 'onItemsReady', function() {
+                        checkItems(view);
+                     });
+                  });
+   
+                  self.processViews(checkItems);
                });
-
-               this.processViews(checkItems);
             });
 
             this.once('onDestroy', function() {

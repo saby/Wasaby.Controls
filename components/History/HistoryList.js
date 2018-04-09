@@ -90,6 +90,12 @@ define('SBIS3.CONTROLS/History/HistoryList',
 
          return isEqual;
       }
+      
+      function checkHistory(history) {
+         if (!history) {
+            throw new Error('SBIS3.CONTROLS/History/HistoryList: need load history (HistoryList::getHistory) before use.');
+         }
+      }
 
       /**
       * Список - коллекция истории c доступом по индексу. Данные хронятся в определённом формате, всего два поля
@@ -153,12 +159,14 @@ define('SBIS3.CONTROLS/History/HistoryList',
          },
 
          append: function(item) {
+            checkHistory(this._history);
             if(this._addItemWithMethod('append', item)) {
                this.saveHistory();
             }
          },
 
          assign: function(items) {
+            checkHistory(this._history);
             this.clear();
 
             for(var i = 0, len = items.length; i < len; i++) {
@@ -169,14 +177,16 @@ define('SBIS3.CONTROLS/History/HistoryList',
          },
 
          clear: function() {
+            checkHistory(this._history);
             if(this.getCount()) {
-               this.getHistory().clear();
+               this._history.clear();
                this.saveHistory();
             }
          },
 
          remove: function(item) {
-            var result = this.getHistory().removeAt(this._getIndex(item));
+            checkHistory(this._history);
+            var result = this._history.removeAt(this._getIndex(item));
 
             if(result) {
                this.saveHistory();
@@ -185,26 +195,30 @@ define('SBIS3.CONTROLS/History/HistoryList',
          },
 
          removeAt: function(index) {
-            var history = this.getHistory(),
+            checkHistory(this._history);
+            var history = this._history,
                 result;
 
             if(index < history.getCount()) {
-               this.getHistory().removeAt(index);
+               history.removeAt(index);
                this.saveHistory();
             }
             return result;
          },
 
          at: function(index) {
-            return this.getHistory().at(index);
+            checkHistory(this._history);
+            return this._history.at(index);
          },
 
          getIndex: function(item) {
+            checkHistory(this._history);
             return this._getIndex(item);
          },
 
          getCount : function() {
-            return this.getHistory().getCount();
+            checkHistory(this._history);
+            return this._history.getCount();
          },
 
          //endregion WS.Data/Collection/IList
@@ -212,11 +226,13 @@ define('SBIS3.CONTROLS/History/HistoryList',
          //region WS.Data/Collection/IEnumerable
 
          each: function(callback, context) {
-            this.getHistory().each(callback, context);
+            checkHistory(this._history);
+            this._history.each(callback, context);
          },
 
          getEnumerator: function() {
-            return this.getHistory().getEnumerator();
+            checkHistory(this._history);
+            return this._history.getEnumerator();
          },
 
          //endregion WS.Data/Collection/IEnumerable
@@ -224,11 +240,13 @@ define('SBIS3.CONTROLS/History/HistoryList',
          //region WS.Data/Collection/IIndexedCollection
 
          getIndexByValue: function(property, value) {
-            return this.getHistory().getIndexByValue(property, value);
+            checkHistory(this._history);
+            return this._history.getIndexByValue(property, value);
          },
 
          getIndicesByValue: function(property, value) {
-            return this.getHistory().getIndicesByValue(property, value);
+            checkHistory(this._history);
+            return this._history.getIndicesByValue(property, value);
          },
 
          //endregion WS.Data/Collection/IIndexedCollection
@@ -264,7 +282,7 @@ define('SBIS3.CONTROLS/History/HistoryList',
           * @private
           */
          _addItemWithMethod: function(method, item) {
-            var historyList = this.getHistory(),
+            var historyList = this._history,
                 index = this._getIndex(item),
                 changed = false;
 

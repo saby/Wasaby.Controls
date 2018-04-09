@@ -124,30 +124,46 @@ define('SBIS3.CONTROLS/Storages/SBIS/SBISHistoryStorage', [
          }
       },
 
-      _getStorageValue: function() {
+      _getStorageValue: function(async) {
          var key = this._options.historyId,
-            value, serializedValue;
-
-         try {
-            value = constants.userConfigSupport ? cSessionStorage.getItem(key) :  this._getLocalStorage().getItem(key);
-            /* В хранилище уже может лежать сериализованое значение, а не строка */
-            serializedValue = (!value || typeof value === "string") ? this._options.serialize(false, value) : value;
-         } catch (e) {
-            IoC.resolve('ILogger').error('HistoryController', e.message, e);
-            serializedValue = null;
+             self = this,
+             value;
+   
+         var valueDeferred;
+         if (constants.userConfigSupport)  {
+            if (async) {
+               valueDeferred = this._SBISStorage.getItem(key);
+            } else {
+               valueDeferred = Deferred.success(cSessionStorage.getItem(key));
+            }
+         } else {
+            valueDeferred = Deferred.success(this._getLocalStorage().getItem(key));
          }
+   
+         valueDeferred.addCallback(function(rawData) {
+            try {
+               /* В хранилище уже может лежать сериализованое значение, а не строка */
+               value = (!rawData || typeof rawData === "string") ? self._options.serialize(false, rawData) : rawData;
+            } catch (e) {
+               IoC.resolve('ILogger').error('HistoryController', e.message, e);
+               value = null;
+            }
+            return value;
+         });
 
-         return serializedValue;
+         return valueDeferred;
       },
 
       _getLocalStorage: function() {
+         var self = this;
+         
          if(!this._localStorage) {
             this._localStorage = new LocalStorage(this._options.historyId);
             this._localStorage.subscribe('onChange', function(event, key) {
                /* Пока нет нормального механизма хранения данных (хранилища),
                 в планах на январь фервраль. Пока просто подписываюсь на изменения LocalStorage. */
-               if(key === this._options.historyId) {
-                  cSessionStorage.setItem(this._options.historyId, this._localStorage.getItem(key));
+               if(key === self._options.historyId) {
+                  STORAGES[self._options.historyId] = this._localStorage.getItem(key);
                }
             }.bind(this));
          }
@@ -161,14 +177,28 @@ define('SBIS3.CONTROLS/Storages/SBIS/SBISHistoryStorage', [
        * @see saveHistory
        * @see clearHistory
        */
-      getHistory: function() {
+      //async - временный флаг, чтобы можно было без ошибок перевести прикладные модули
+      getHistory: function(async) {
+         var getValueDef = new Deferred();
+         var self = this;
+         
          if(!this._history) {
             if(!STORAGES[this._options.historyId]) {
-               STORAGES[this._options.historyId] = this._getStorageValue();
+               this._getStorageValue(async).addCallback(function(value) {
+                  /* Кэшируем данные, чтобы не делать в следующий рас запрос */
+                  STORAGES[self._options.historyId] = value;
+                  self._history = value;
+                  getValueDef.callback(self._history);
+               });
+            } else {
+               self._history = STORAGES[this._options.historyId];
+               getValueDef.callback(self._history);
             }
-            this._history = STORAGES[this._options.historyId];
+         } else {
+            getValueDef.callback(self._history);
          }
-         return this._history;
+         
+         return async ? getValueDef : self._history;
       },
 
       /**
@@ -242,7 +272,7 @@ define('SBIS3.CONTROLS/Storages/SBIS/SBISHistoryStorage', [
        * @returns {Deferred|*|boolean}
        */
       getSaveDeferred: function() {
-         return this._saveParamsDeferred
+         return this._saveParamsDeferred;
       },
 
 

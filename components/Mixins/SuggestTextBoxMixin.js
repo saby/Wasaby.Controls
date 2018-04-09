@@ -162,9 +162,6 @@ define('SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin', [
             if (rs.getCount()) {
                this.getList().setItems(rs);
                this.showPicker();
-            } else if (this._options.useUserConfigHistory && this._historyController.getCount()) { // Для поддержки совместимости
-               this.getList().setItems(this._getHistoryRecordSetSync()); //В рамках совместимости оставляю старое поведение
-               this.showPicker();
             }
          }.bind(this)).addErrback(function (err) {
             //Если запрос был прерван нами, то ничего не делаем
@@ -172,10 +169,6 @@ define('SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin', [
                //В рамках совместимости оставляю старое поведение
                if (!err.processed) {
                   IoC.resolve('ILogger').log(this._moduleName, 'Списочный метод не смог вычитать записи по массиву идентификаторов');
-               }
-               if (this._historyController.getCount()) {
-                  this.getList().setItems(this._getHistoryRecordSetSync());
-                  this.showPicker();
                }
             }
          }.bind(this));
@@ -246,15 +239,16 @@ define('SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin', [
                   return self._makeQueryFilterForHistory(recordsId);
              });
          }else {
-             for (var i = 0, l = this._historyController.getCount(); i < l; i++) {
-                 recordsId.push(this._getHistoryRecordId(this._historyController.at(i).get('data')));
-             }
-
              this._inputHistoryDeferred = new Deferred();
-             this._inputHistoryDeferred.addCallback(function(data) {
-                 return self._makeQueryFilterForHistory(data);
+             this._historyController.getHistory(true).addCallback(function() {
+                for (var i = 0, l = self._historyController.getCount(); i < l; i++) {
+                   recordsId.push(this._getHistoryRecordId(self._historyController.at(i).get('data')));
+                }
+                self._inputHistoryDeferred.addCallback(function(data) {
+                   return self._makeQueryFilterForHistory(data);
+                });
+                self._inputHistoryDeferred.callback(recordsId);
              });
-             this._inputHistoryDeferred.callback(recordsId);
          }
          return this._inputHistoryDeferred;
       },
@@ -291,28 +285,6 @@ define('SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin', [
          var listItems = this._getListItems();
          return this._historyController && !this.getText().length && this._options.startChar && //Если startChar = 0, историю показывать не нужно
                (!listItems || !listItems.getCount() || !this.isPickerVisible()); // Показываем историю, если записей нет или пикер скрыт
-      },
-
-      //TODO Выпилить _getHistoryRecordSetSync и _prepareHistoryData после выполнения задачи, когда будет поддержан списочный метод
-      //https://online.sbis.ru/opendoc.html?guid=501e09cc-5d9f-4cc4-841f-1723aa8d8d40&des=
-      _getHistoryRecordSetSync: function(){
-         var listSource = this.getList().getDataSource(),
-            historyRecordSet = new RecordSet({
-               adapter: listSource.getAdapter(),
-               rawData: [],
-               idProperty: this._list.getProperty('idProperty'),
-               model: listSource.getModel()
-            });
-         historyRecordSet.assign(this._prepareHistoryData());
-         return historyRecordSet;
-      },
-      _prepareHistoryData: function(){
-         var history = this._historyController,
-            rawData = [];
-         for (var i = 0, l = history.getCount(); i < l; i++){
-            rawData.push(this._getHistoryRecord(history.at(i).get('data')));
-         }
-         return rawData;
       },
 
       /**
