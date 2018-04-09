@@ -1103,7 +1103,7 @@ define('SBIS3.CONTROLS/ListView',
 
                // Оживляем компоненты после отрисовки виртуальным скролом
                if (this._revivePackageParams.revive !== false) {
-                  this._reviveItems(this._revivePackageParams.light);
+                  this._reviveItems(this._revivePackageParams.light, true);
                }
                this._revivePackageParams.processed = true;
 
