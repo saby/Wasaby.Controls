@@ -1,4 +1,4 @@
-define('Controls/List/resources/utils/CSSGridLayoutUtils', [], function () {
+define('Controls/List/resources/utils/CSSGridLayoutUtils', [], function() {
 
    /**
     * Вспомогательные функции для работы с моделью CSS Grid Layout
@@ -20,13 +20,15 @@ define('Controls/List/resources/utils/CSSGridLayoutUtils', [], function () {
        * @param {Array.<String|Number>} columns Массив с указанием ширины колонок (pixels/percent/auto).
        * @returns {Array.<String>} Итоговой массив с указанием ширины колонок.
        */
-      calcGridTemplateColumns: function (columns) {
+      calcGridTemplateColumns: function(columns) {
          var resultColumns = [],
             staticColumns = [],
             autoColumnsLength = 0,
+
             // Шаблон шарины для авто-колонок:
             // 100% минус ширина колонок с указанным размерам, деленное на кол-во авто-колонок
             autoColumnsWidthTmpl = 'calc( ( 100% - {{staticColumns}} ) / {{autoColumnsLength}} )',
+
             // Шаблон для авто-колонок, если все колонки указаны с авто-шириной
             onlyAutoColumnsWidthTmpl = 'calc( 100% / {{autoColumnsLength}} )',
             autoColumnsWidth,

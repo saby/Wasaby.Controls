@@ -14,7 +14,7 @@ define('Controls/Controllers/SourceController',
       var _private = {
          prepareSource: function(sourceOpt) {
             var result = sourceOpt;
-            if (typeof result ==='object' && 'module' in sourceOpt) {
+            if (typeof result === 'object' && 'module' in sourceOpt) {
                var sourceConstructor = requirejs(sourceOpt.module);
                result = new sourceConstructor(sourceOpt.options || {});
             }
@@ -25,7 +25,7 @@ define('Controls/Controllers/SourceController',
 
          },
 
-         getQueryInstance: function (filter, sorting, offset, limit) {
+         getQueryInstance: function(filter, sorting, offset, limit) {
             var query = new Query();
             query.where(filter)
                .offset(offset)
@@ -34,7 +34,7 @@ define('Controls/Controllers/SourceController',
             return query;
          },
 
-         callQuery: function (dataSource, idProperty, filter, sorting, offset, limit) {
+         callQuery: function(dataSource, idProperty, filter, sorting, offset, limit) {
             var queryDef, queryIns;
 
             queryIns = _private.getQueryInstance(filter, sorting, offset, limit);
@@ -51,12 +51,11 @@ define('Controls/Controllers/SourceController',
                /*Проблема в том что деферред с синхронным кодом статического источника выполняется сихронно.
                 в итоге в коолбэк релоада мы приходим в тот момент, когда еще не отработал _beforeMount и заполнение опций, и не можем обратиться к this._options*/
                var queryDefAsync = cDeferred.fromTimer(0);
-               queryDefAsync.addCallback(function(){
+               queryDefAsync.addCallback(function() {
                   return queryDef;
                });
                return queryDefAsync;
-            }
-            else {
+            } else {
                return queryDef;
             }
          },
@@ -87,7 +86,7 @@ define('Controls/Controllers/SourceController',
          _source: null,
          _queryParamsController: null,
          _loader: null,
-         constructor: function (cfg) {
+         constructor: function(cfg) {
             this._options = cfg;
             SourceController.superclass.constructor.apply(this, arguments);
             this._source = _private.prepareSource(this._options.source);
@@ -108,11 +107,13 @@ define('Controls/Controllers/SourceController',
                offset: undefined
             };
             this.cancelLoading();
+
             //модифицируем параметры через навигацию
             if (this._queryParamsController) {
                var navigParams = this._queryParamsController.prepareQueryParams(direction);
                queryParams.limit = navigParams.limit;
                queryParams.offset = navigParams.offset;
+
                //TODO фильтр и сортировка не забыть приделать
             }
 
@@ -125,18 +126,18 @@ define('Controls/Controllers/SourceController',
             */
             self = this;
             def = _private.callQuery(this._source, this._options.idProperty,
-                                    queryParams.filter,
-                                    queryParams.sorting,
-                                    queryParams.offset,
-                                    queryParams.limit)
-            .addCallback(function(list){
-               if (self._queryParamsController) {
-                  self._queryParamsController.calculateState(list, direction);
-               }
-               return list;
-            }).addErrback(function(error){
-               return error;
-            });
+               queryParams.filter,
+               queryParams.sorting,
+               queryParams.offset,
+               queryParams.limit)
+               .addCallback(function(list) {
+                  if (self._queryParamsController) {
+                     self._queryParamsController.calculateState(list, direction);
+                  }
+                  return list;
+               }).addErrback(function(error) {
+                  return error;
+               });
             this._loader = def;
             return def;
          },
@@ -157,7 +158,7 @@ define('Controls/Controllers/SourceController',
          },
 
          setEdgeState: function(direction) {
-            this._queryParamsController.setEdgeState(direction)
+            this._queryParamsController.setEdgeState(direction);
          },
 
          create: function(meta) {

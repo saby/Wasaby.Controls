@@ -6,8 +6,10 @@ define('Controls/Input/Mask/FormatBuilder',
 
       var
          _private = {
+
             // Парные разделители открывающего типа. Порядок должен совпадать с порядком в closeDelimiters.
             openDelimiters: '({[⟨<\'"«„‘”',
+
             // Парные разделители закрывающего типа. Порядок должен совпадать с порядком в openDelimiters.
             closeDelimiters: ')}]⟩>\'"»“’”',
 
@@ -19,6 +21,7 @@ define('Controls/Input/Mask/FormatBuilder',
                6: 'close',
                7: 'singlingDelimiter'
             },
+
             /**
              * Экранирование специальных символов регулярного выражения.
              * @param {String} value экранируемое значение.
@@ -27,6 +30,7 @@ define('Controls/Input/Mask/FormatBuilder',
             escapeRegSpecialChars: function(value) {
                return value.replace(/[\(\)\{\}\[\]\?\+\*\.]/g, '\\$&');
             },
+
             /**
              * Получить ключи маски в виде строки.
              * @param {Object} formatMaskChars ключи и значения маски {@link Controls/Input/Mask#formatMaskChars}.
@@ -41,6 +45,7 @@ define('Controls/Input/Mask/FormatBuilder',
 
                return _private.escapeRegSpecialChars(maskKeys);
             },
+
             /**
              * Получить замену для ключа, как его значение.
              * @param {Object} formatMaskChars ключи и значения маски {@link Controls/Input/Mask#formatMaskChars}.
@@ -51,6 +56,7 @@ define('Controls/Input/Mask/FormatBuilder',
             getReplacingKeyAsValue: function(formatMaskChars, key, quantifier) {
                return (quantifier ? '(?:' + formatMaskChars[key] + quantifier + ')' : formatMaskChars[key]) + '?';
             },
+
             /**
              * Получить замену для ключа, как его значение или заменитель.
              * @param {Object} formatMaskChars ключи и значения маски {@link Controls/Input/Mask#formatMaskChars}.
@@ -62,6 +68,7 @@ define('Controls/Input/Mask/FormatBuilder',
             getReplacingKeyAsValueAndReplacer: function(formatMaskChars, replacer, key, quantifier) {
                return '(?:' + formatMaskChars[key] + '|' + replacer + ')' + quantifier;
             },
+
             /**
              * Получить функция замены ключа.
              * @param {String} replacer заменитель.
@@ -70,6 +77,7 @@ define('Controls/Input/Mask/FormatBuilder',
             getReplacingKeyFn: function(formatMaskChars, replacer) {
                return replacer ? _private.getReplacingKeyAsValueAndReplacer.bind(this, formatMaskChars, replacer) : _private.getReplacingKeyAsValue.bind(this, formatMaskChars);
             },
+
             /**
              * Получить регулярное выражение для поиска кванторов, специальных конструкций, ключей, парных разделителей,
              * одиночных разделителей и конца маски(;).
@@ -83,17 +91,22 @@ define('Controls/Input/Mask/FormatBuilder',
 
                // Конец маски
                expression += '(;$)';
+
                // Ключи
                expression += '|([' + maskKeys + '])';
+
                // Кванторы +, *, ?, {n[, m]}
                expression += '(?:\\\\({.*?}|.))?';
+
                // Парные разделители
                expression += '|(([' + _private.escapeRegSpecialChars(openDelimiters) + '])|([' + _private.escapeRegSpecialChars(closeDelimiters) + ']))';
+
                // Одиночные разделители
                expression += '|(.)';
 
                return new RegExp(expression, 'g');
             },
+
             /**
              * Получить данные символа маски.
              * @param execSearchingGroupChar результат exec.
@@ -125,6 +138,7 @@ define('Controls/Input/Mask/FormatBuilder',
                   }
                }
             },
+
             /**
              * Получить данные о маске.
              * @param mask
@@ -212,11 +226,12 @@ define('Controls/Input/Mask/FormatBuilder',
                return {
                   searchingGroups: searchingGroups,
                   delimiterGroups: delimiterGroups
-               }
+               };
             }
          },
          FormatBuilder = {
             pairingDelimiters: '(){}[]⟨⟩<>\'\'""«»„“‘’””',
+
             /**
              * Получить данные о маске.
              * @param {String} mask маска {@link Controls/Input/Mask#mask}.

@@ -5,10 +5,11 @@ define('Controls/Popup/DialogTemplate',
       'css!Controls/Popup/DialogTemplate',
       'css!SBIS3.CONTROLS/Mixins/PopupMixin/PopupMixin'
    ],
-   function (Control, template) {
+   function(Control, template) {
       'use strict';
 
       var DialogTemplate = Control.extend({
+
          /**
           * Базовый шаблон диалога
           * @class Controls/Popup/DialogTemplate
@@ -40,7 +41,7 @@ define('Controls/Popup/DialogTemplate',
           * Закрыть всплывающее окно
           * @function Controls/Popup/DialogTemplate#close
           */
-         close: function () {
+         close: function() {
             this._notify('close', [], {bubbling: true});
          }
       });

@@ -20,13 +20,12 @@ define('Controls/List/resources/utils/ItemsUtil', [
             if (!cfg.groupBy.method) {
                var field = cfg.groupBy.field;
 
-               method = function (item, index, dispItem) {
+               method = function(item, index, dispItem) {
                   //делаем id группы строкой всегда, чтоб потом при обращении к id из верстки не ошибаться
                   return ItemsUtil.getPropertyValue(item, field) + '';
-               }
-            }
-            else {
-               method = cfg.groupBy.method
+               };
+            } else {
+               method = cfg.groupBy.method;
             }
             projCfg.group = method;
          }
@@ -36,11 +35,10 @@ define('Controls/List/resources/utils/ItemsUtil', [
          return Display.getDefaultDisplay(items, projCfg);
       },
 
-      getPropertyValue: function (itemContents, field) {
+      getPropertyValue: function(itemContents, field) {
          if (!(itemContents instanceof Object)) {
             return itemContents;
-         }
-         else {
+         } else {
             return DataUtils.getItemPropertyValue(itemContents, field);
          }
       },
@@ -50,10 +48,9 @@ define('Controls/List/resources/utils/ItemsUtil', [
          var list = display.getCollection();
          if (cInstance.instanceOfModule(list, 'WS.Data/Collection/RecordSet')) {
             return display.getItemBySourceItem(list.getRecordById(id));
-         }
-         else {
+         } else {
             var resItem;
-            display.each(function(item, i){
+            display.each(function(item, i) {
                if (ItemsUtil.getPropertyValue(item.getContents(), idProperty) == id) {
                   resItem = item;
                }

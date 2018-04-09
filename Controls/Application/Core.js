@@ -14,11 +14,11 @@ define('Controls/Application/Core',
       var AppCore = Control.extend({
          _template: template,
          ctxData: null,
-         constructor: function(cfg){
+         constructor: function(cfg) {
             AppCore.superclass.constructor.apply(this, arguments);
             this.ctxData = new AppData(cfg);
          },
-         _getChildContext: function () {
+         _getChildContext: function() {
             return {
                AppData: this.ctxData
             };

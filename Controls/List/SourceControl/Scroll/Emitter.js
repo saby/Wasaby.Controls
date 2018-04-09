@@ -16,13 +16,13 @@ define('Controls/List/SourceControl/Scroll/Emitter',
 
 
          startRegister: function(triggers) {
-            this._notify("register", ['listScroll', this, this.handleScroll, triggers], {bubbling:true});
+            this._notify('register', ['listScroll', this, this.handleScroll, triggers], {bubbling: true});
          },
 
-         _beforeUnmount: function(){
-            this._notify("unregister", [this._options.event, this], {bubbling:true});
+         _beforeUnmount: function() {
+            this._notify('unregister', [this._options.event, this], {bubbling: true});
          },
-         handleScroll: function(){
+         handleScroll: function() {
             this._notify('emitListScroll', Array.prototype.slice.call(arguments));
          }
       });
