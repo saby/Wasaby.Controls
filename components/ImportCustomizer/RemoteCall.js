@@ -7,11 +7,10 @@
 define('SBIS3.CONTROLS/ImportCustomizer/RemoteCall',
    [
       'Core/core-merge',
-      'Core/Deferred',
       'WS.Data/Source/SbisService'
    ],
 
-   function (cMerge, Deferred, SbisService) {
+   function (cMerge, SbisService) {
       'use strict';
 
       /**
