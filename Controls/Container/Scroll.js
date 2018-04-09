@@ -133,10 +133,10 @@ define('Controls/Container/Scroll',
                var pagesCount = _private.getPagingPagesCount(self);
 
                return {
-                  pagesCount:pagesCount,
+                  pagesCount: pagesCount,
                   selectedPage: _private.getPagingSelectedPage(self),
                   visible: self._contextObj.ScrollData.pagingVisible && pagesCount
-               }
+               };
             },
 
             updateDisplayState: function(self, displayState) {
