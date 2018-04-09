@@ -588,7 +588,9 @@ define('SBIS3.CONTROLS/LongOperations/Manager',
                throw new Error('Unknown event');
             }
             var eventType = typeof evtName === 'object' ? evtName.name : evtName;
-            if (inner._fetchCalls) {
+            // Временное отключение из-за длинных ответов LRS
+            // 1175105439 https://online.sbis.ru/opendoc.html?guid=23ff686f-a6ea-4976-9bd9-21d59c6d38e4
+            /*if (inner._fetchCalls) {
                var isFullDataEvent = eventType === 'onlongoperationchanged' && data.changed === 'progress';
                if (!isFullDataEvent) {
                   // Если произошло событие в продюсере, которое не несёт полной информации о состоянии операции, и есть выполняющиеся fetch запросы -
@@ -596,13 +598,13 @@ define('SBIS3.CONTROLS/LongOperations/Manager',
                   // "на подходе" со старыми данными)
                   // TODO: ### Для уменьшения количества запросов можно попробовать рассмотреть компромисный вариант - переспрашивать только если уже прошло достаточно много времени
                   var member = {tab:inner._tabKey, producer:data.producer};
-                  var queries = inner._fetchCalls.listPools(member/*, true*/);
+                  var queries = inner._fetchCalls.listPools(member/*, true* /);
                   for (var i = 0; i < queries.length; i++) {
                      var query = queries[i];
                      inner._fetchCalls.replace(query, member, producer.fetch(query));
                   }
                }
-            }
+            }*/
          }
          _channel.notifyWithTarget(eventType, manager, !dontCrossTab ? (data ? ObjectAssign({tabKey:inner._tabKey}, data) : {tabKey:inner._tabKey}) : data);
          if (!dontCrossTab && !producer.hasCrossTabEvents()) {
