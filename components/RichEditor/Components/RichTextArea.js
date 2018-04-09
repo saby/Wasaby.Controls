@@ -1429,12 +1429,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   return;
             }
             var size = constants.defaultImagePercentSize;
+            // Сначала создаём замещающий элемент (с крутящейся ромашкой загрузки), так как изображения встречаются очень большие, которые могут грузиться достаточно долго
+            // 1174989279 https://online.sbis.ru/opendoc.html?guid=134784d6-4b1c-40ea-9df3-03f0a406d7ac
+            var imgPlaceholder = this._insertImgPlaceholder(size + '%', null, className, before, after);
             this._makeImgPreviewerUrl(fileobj, size, null, false).addCallback(function (urls) {
                var uuid = fileobj.id;
                if (uuid) {
                   this._images[uuid] = false;
                }
-               this._insertImg(urls, size + '%', null, className, null, before, after, uuid);
+               this._insertImg(urls, size + '%', null, className, null, before, after, uuid, imgPlaceholder);
             }.bind(this));
          },
          codeSample: function(text, language) {
@@ -1575,7 +1578,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             $img.css(size);
             $img.attr('data-mce-style', css.join('; '));
             var prevSrc = $img.attr('src');
-            var promise = this._makeImgPreviewerUrl($img, 0 < width ? width : null, 0 < height ? height : null, isPixels);
+            var promise = this._makeImgPreviewerUrl({url:$img.attr('src')}, 0 < width ? width : null, 0 < height ? height : null, isPixels);
             return promise.addCallback(function (urls) {
                var url = urls.preview || urls.original;
                if (prevSrc !== url) {
@@ -2256,6 +2259,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                });
                this._imageOptionsPanel.subscribe('onImageChange', function(event, fileobj){
+                  var stopper = new Deferred();
+                  WaitIndicator.make({
+                     overlay: 'dark',
+                     delay: 1000,
+                     target: self,
+                     message: rk('Загрузка изображения...')
+                  }, stopper);
                   var $img = this.getTarget();
                   //Сбросим ширину и высоту, т.к. они могут остаться от предыдущей картинки
                   $img[0].style.width = '';
@@ -2270,6 +2280,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      // TODO: 20170913 Также убрать атрибуты с uuid, как и в методе _insertImg
                      $img.attr('data-img-uuid', uuid);
                      $img.attr('alt', uuid);
+                     $img[0].onload = $img[0].onerror = stopper.callback.bind(stopper);
                      self._tinyEditor.undoManager.add();
                      self._updateTextByTiny();
                      if (uuid) {
@@ -2345,7 +2356,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          /**
           * Создать урл изображения через previewer-сервис с необходимым масштабированием
           * @protected
-          * @param {jQuery|object} imgInfo Источник информации об изображении
+          * @param {object} imgInfo Информация об изображении (url, width, height, id?, filePath?)
           * @param {number} width Визуальная ширина изображения
           * @param {number} height Визуальная высота изображения
           * @param {boolean} isPixels Размеры указаны в пикселах (иначе в процентах)
@@ -2356,21 +2367,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                throw new Error('Size is not specified');
             }
             var promise = new Deferred();
-            var url;
-            // Либо это jQuery-оболочка над IMG
-            if (imgInfo.jquery) {
-               url = imgInfo.attr('src');
-               if (!/\/disk\/api\/v[0-9\.]+\//i.test(url)) {
-                  // Это не файл, хранящийся на СбисДиск, вернуть как есть
-                  promise.callback({preview:url, original:url});
-                  return promise;
-               }
-               url = url.replace(/^\/previewer(?:\/r\/[0-9]+\/[0-9]+)?/i, '');
+            var url = imgInfo.filePath || imgInfo.url;
+            if (!/\/disk\/api\/v[0-9\.]+\//i.test(url)) {
+               // Это не файл, хранящийся на СбисДиск, вернуть как есть
+               promise.callback({preview:url, original:url});
+               return promise;
             }
-            // Либо это fileobj из события загрузки файла
-            else {
-               url = (imgInfo.filePath || imgInfo.url);
-            }
+            url = url.replace(/^\/previewer(?:\/r\/[0-9]+\/[0-9]+)?/i, '');
             promise = promise.addCallback(function (size) {
                return {preview:size ? '/previewer' + '/r/' + size + '/' + size + url : null, original:url};
             });
@@ -2380,7 +2383,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   promise.callback(Math.round(width < height ? w*height/width : w));
                }
                else
-               if (!imgInfo.jquery && 0 < imgInfo.width && 0 < imgInfo.height) {
+               if (0 < imgInfo.width && 0 < imgInfo.height) {
                   promise.callback(Math.round(imgInfo.width < imgInfo.height ? w*imgInfo.height/imgInfo.width : w));
                }
                else {
@@ -2698,46 +2701,36 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             return this.getName().replace('/', '#') + 'ИсторияИзменений';
          },
 
+         _insertImgPlaceholder: function (width, height, className, before, after) {
+            var placeholderId = 'image-placeholder-' + (new Date()).getTime();
+            var editor = this._tinyEditor;
+            editor.undoManager.ignore(function () {
+               this.insertHtml(
+                  (before || '') +
+                  '<span class="image-placeholder ' + (className || '') + '" id="' + placeholderId + '" style="' + (width ? 'width:' + width + ';' : '') + (height ? 'height:' + height + ';' : '') + '" contenteditable="false">&#65279;</span>' +
+                  (after || '')
+               );
+            }.bind(this));
+            return editor.getBody().querySelector('#' + placeholderId);
+         },
+
          _insertImg: function (urls, width, height, className, alt, before, after, uuid, placeholder) {
-            //////////////////////////////////////////////////
-            console.log('DBG: RTE._insertImg: urls=', urls, ';');
-            //////////////////////////////////////////////////
-            var hasBoth = urls && typeof urls === 'object';
-            var src = hasBoth ? urls.preview : urls;
+            var src = urls.preview || urls.original;
             if (!src) {
                return this._showImgError();
             }
-               /*^^^var stopper = new Deferred();
-                WaitIndicator.make({
-                overlay: 'dark',
-                delay: 1000,
-                target: this,
-                message: rk('Загрузка изображения...')
-                }, stopper);*/
             var promise = new Deferred();
             var editor = this._tinyEditor;
             var undoManager = editor.undoManager;
-            if (!placeholder) {
-               // Сначала создаём замещающий элемент (с крутящейся ромашкой загрузки), так как изображения встречаются очень большие, которые могут грузиться достаточно долго
-               // 1174989279 https://online.sbis.ru/opendoc.html?guid=134784d6-4b1c-40ea-9df3-03f0a406d7ac
-               var placeholderId = 'image-placeholder-' + (new Date()).getTime();
-               undoManager.ignore(function () {
-                  this.insertHtml(
-                     (before || '') +
-                     '<span class="image-placeholder ' + (className || '') + '" id="' + placeholderId + '" style="' + (width ? 'width:' + width + ';' : '') + (height ? 'height:' + height + ';' : '') + '" contenteditable="false">&#65279;</span>' +
-                     (after || '')
-                  );
-               }.bind(this));
-               placeholder = editor.getBody().querySelector('#' + placeholderId);
-            }
             var img = new Image();
             img.onload = function () {
-                  // И по мере загрузки заменяем замещающий элемент на реальное изображение
-               // TODO: 20170913 Здесь в атрибуты, сохранность которых не гарантируется ввиду свободного редактирования пользователями, помещается значение uuid - Для обратной совместимости
-               // После задач https://online.sbis.ru/opendoc.html?guid=6bb150eb-4973-4770-b7da-865789355916 и https://online.sbis.ru/opendoc.html?guid=a56c487d-6e1d-47bc-bdf6-06a0cd7aa57a
-               // Убрать по мере переделки стороннего кода, используещего эти атрибуты.
-               // Для пролучения uuid правильно использовать метод getImageUuid
+               // По мере загрузки заменяем замещающий элемент на реальное изображение
+               // 1174989279 https://online.sbis.ru/opendoc.html?guid=134784d6-4b1c-40ea-9df3-03f0a406d7ac
                if (placeholder.parentNode) {
+                  // TODO: 20170913 Здесь в атрибуты, сохранность которых не гарантируется ввиду свободного редактирования пользователями, помещается значение uuid - Для обратной совместимости
+                  // После задач https://online.sbis.ru/opendoc.html?guid=6bb150eb-4973-4770-b7da-865789355916 и https://online.sbis.ru/opendoc.html?guid=a56c487d-6e1d-47bc-bdf6-06a0cd7aa57a
+                  // Убрать по мере переделки стороннего кода, используещего эти атрибуты.
+                  // Для пролучения uuid правильно использовать метод getImageUuid
                   $(placeholder).replaceWith(
                      '<img' +
                      (className ? ' class="' + className + '"' : '') +
@@ -2752,18 +2745,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                promise.callback();
             }.bind(this);
             img.onerror = function () {
-               if (hasBoth && urls.original !== urls.preview) {
-                  promise.dependOn(this._insertImg(urls.original, width, height, className, alt, before, after, uuid, placeholder));
-               }
-               else {
-                  this._showImgError().addCallback(function () {
-                     if (placeholder.parentNode) {
-                        placeholder.remove();
-                        undoManager.add();
-                     }
-                     promise.errback();
-                  });
-               }
+               this._showImgError().addCallback(function () {
+                  if (placeholder.parentNode) {
+                     placeholder.remove();
+                     undoManager.add();
+                  }
+                  promise.errback();
+               });
             }.bind(this);
             img.src = src;
             return promise;
