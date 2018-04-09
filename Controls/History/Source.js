@@ -13,8 +13,7 @@ define('Controls/History/Source', [
    'Controls/History/Constants',
    'WS.Data/Entity/Model',
    'WS.Data/Source/DataSet'
-], function(
-   Abstract,
+], function(Abstract,
    OptionsMixin,
    ISource,
    SbisService,
@@ -24,19 +23,18 @@ define('Controls/History/Source', [
    recordSetFactory,
    Constants,
    Model,
-   DataSet
-) {
+   DataSet) {
    /**
-     * Source
-     * @class Controls/History/Source
-     * @extends WS.Data/Entity/Abstract
-     * @mixes WS.Data/Entity/OptionsMixin
-     * @control
-     * @public
-     * @category Menu
-     @example
-     *  <pre>
-     *    var solarSystem = new historySource({
+    * Source
+    * @class Controls/History/Source
+    * @extends WS.Data/Entity/Abstract
+    * @mixes WS.Data/Entity/OptionsMixin
+    * @control
+    * @public
+    * @category Menu
+    @example
+    *  <pre>
+    *    var solarSystem = new historySource({
      *           originSource: new Memory({
      *               idProperty: 'id',
      *               data: items
@@ -46,8 +44,8 @@ define('Controls/History/Source', [
      *           }),
      *           parentProperty: 'parent'
      *       });
-     * </pre>
-     */
+    * </pre>
+    */
 
    'use strict';
 
@@ -141,7 +139,7 @@ define('Controls/History/Source', [
          this.addProperty(this, items, 'pinned', 'boolean', false);
 
          this.fillItems(self, filteredHistory, 'pinned', oldItems, items);
-         this.fillItems(self, filteredHistory, 'frequent', oldItems, items);
+         this.fillFrequentItems(self, filteredHistory, 'frequent', oldItems, items);
          this.fillItems(self, filteredHistory, 'recent', oldItems, items);
 
          oldItems.forEach(function(item) {
@@ -185,6 +183,29 @@ define('Controls/History/Source', [
          });
       },
 
+      fillFrequentItems: function(self, history, oldItems, items) {
+         var config = {
+            adapter: items.getAdapter(),
+            idProperty: items.getIdProperty(),
+            format: items.getFormat()
+         };
+         var frequentItems = new RecordSet(config);
+         var displayProperty = self._displayProperty || 'title';
+         var firstName, secondName;
+
+         this.fillItems(self, history, 'frequent', oldItems, frequentItems);
+
+         // alphabet sorting
+         frequentItems = Chain(frequentItems).sort(function(first, second) {
+            firstName = first.get(displayProperty);
+            secondName = second.get(displayProperty);
+
+            return (firstName < secondName) ? -1 : (firstName > secondName) ? 1 : 0;
+         }).value(recordSetFactory, config);
+
+         items.append(frequentItems);
+      },
+
       addProperty: function(self, record, name, type, defaultValue) {
          if (record.getFormat().getFieldIndex(name) === -1) {
             record.addField({
@@ -223,6 +244,7 @@ define('Controls/History/Source', [
       _oldItems: null,
       _parentProperty: null,
       _nodeProperty: null,
+      _displayProperty: null,
       _parents: null,
 
       constructor: function Memory(cfg) {
@@ -230,6 +252,7 @@ define('Controls/History/Source', [
          this.historySource = cfg.historySource;
          this._parentProperty = cfg.parentProperty;
          this._nodeProperty = cfg.nodeProperty;
+         this._displayProperty = cfg.displayProperty;
       },
 
       create: function(meta) {
