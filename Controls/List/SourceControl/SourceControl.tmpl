@@ -41,6 +41,9 @@
                              on:afterItemsRemove="_afterItemsRemove()"/>
        <Controls.List.ItemActions.ItemActionsControl
                ws:content="listView"
+               on:commitActionClick="_commitEditActionHandler()"
+               on:cancelActionClick="_cancelEditActionHandler()"
+               name="itemActions"
                listModel="{{_listViewModel}}"
                itemActions="{{_options.itemActions}}"
                itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
