@@ -7,9 +7,7 @@ define('Controls/History/Source', [
     'WS.Data/Source/ISource',
     'WS.Data/Source/SbisService',
     'Core/ParallelDeferred',
-    'WS.Data/Chain',
     'WS.Data/Collection/RecordSet',
-    'WS.Data/Collection/Factory/RecordSet',
     'Controls/History/Constants',
     'WS.Data/Entity/Model',
     'WS.Data/Source/DataSet'
@@ -19,9 +17,7 @@ define('Controls/History/Source', [
     ISource,
     SbisService,
     ParallelDeferred,
-    Chain,
     RecordSet,
-    recordSetFactory,
     Constants,
     Model,
     DataSet

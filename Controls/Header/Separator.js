@@ -1,10 +1,9 @@
 define('Controls/Header/Separator', [
    'Core/Control',
-   'Core/IoC',
    'tmpl!Controls/Header/Separator/Separator',
    'WS.Data/Type/descriptor',
    'css!Controls/Header/Separator/Separator'
-], function(Control, IoC, template, types) {
+], function(Control, template, types) {
    'use strict';
 
    /**

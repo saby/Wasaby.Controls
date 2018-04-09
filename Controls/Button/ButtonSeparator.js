@@ -1,10 +1,9 @@
 define('Controls/Button/ButtonSeparator', [
    'Core/Control',
-   'Core/IoC',
    'tmpl!Controls/Button/ButtonSeparator/ButtonSeparator',
    'WS.Data/Type/descriptor',
    'css!Controls/Button/ButtonSeparator/ButtonSeparator'
-], function(Control, IoC, template, types) {
+], function(Control, template, types) {
    'use strict';
 
    /**
