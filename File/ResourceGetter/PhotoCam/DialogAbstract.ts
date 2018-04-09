@@ -9,7 +9,7 @@ import LocalFile = require("File/LocalFile");
 import LocalFileLink = require("File/LocalFileLink");
 import tmpl = require("tmpl!File/ResourceGetter/PhotoCam/Dialog");
 import WaitIndicator = require("SBIS3.CONTROLS/WaitIndicator");
-import {IFileData} from "File/IFileData";
+import IResource = require("File/IResource");
 
 const BEFORE_SHOW_DELAY = 300;
 
@@ -106,12 +106,12 @@ let DialogAbstract = CompoundControl.extend({
         });
     },
     /**
-     * Возвращает {@link File/IFileData} по переданному параметру
+     * Возвращает {@link File/IResource} по переданному параметру
      * @param {File | Blob | string} image
      * @return {File/LocalFile | File/LocalFileLink}
      * @private
      */
-    _prepareFile(image: File | Blob | string): IFileData {
+    _prepareFile(image: File | Blob | string): IResource {
         if (image instanceof Blob) {
             let name = "imageFromCamera.png";
 

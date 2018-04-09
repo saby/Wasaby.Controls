@@ -1,7 +1,7 @@
 /// <amd-module name="File/Attach/Container/Getter" />
 // dependency for types
 import IContainer = require("File/Attach/Container/IContainer");
-import {IResourceGetter} from "File/IResourceGetter";
+import IResourceGetter = require("File/IResourceGetter");
 // real dependency
 import Deferred = require("Core/Deferred");
 

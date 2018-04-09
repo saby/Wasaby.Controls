@@ -96,7 +96,7 @@ define("File/ResourceGetter/PhotoCam/DialogAbstract", ["require", "exports", "SB
             });
         },
         /**
-         * Возвращает {@link File/IFileData} по переданному параметру
+         * Возвращает {@link File/IResource} по переданному параметру
          * @param {File | Blob | string} image
          * @return {File/LocalFile | File/LocalFileLink}
          * @private
