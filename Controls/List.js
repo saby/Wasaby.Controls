@@ -39,6 +39,7 @@ define('Controls/List', [
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/List/interface/IListControl
+    * @mixes Controls/interface/IRemovable
     * @control
     * @author Крайнов Д.О.
     * @public
