@@ -402,7 +402,6 @@ node('controls') {
             sh """
                 cd ./jinnee/distrib/builder
                 node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/sbis/Controls1 --application=/
-                node ./node_modules/grunt-cli/bin/grunt less1by1 --root=/home/sbis/Controls1/ --aplication=/ > /dev/null
             """
         }
         writeFile file: "./controls/tests/int/config.ini", text:
