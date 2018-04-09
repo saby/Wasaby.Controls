@@ -135,7 +135,7 @@ define('Controls/Container/Scroll',
                return {
                   pagesCount: pagesCount,
                   selectedPage: _private.getPagingSelectedPage(self),
-                  visible: self._contextObj.ScrollData.pagingVisible && pagesCount
+                  visible: self._contextObj.ScrollData.pagingVisible && pagesCount > 1
                };
             },
 

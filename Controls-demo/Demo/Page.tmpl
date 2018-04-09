@@ -1,4 +1,4 @@
-<ws:partial template="Controls/Application" scope="{{_options}}" bodyClass="controls-default-bg" cssLinks="{{[_theme + '.css']}}">
+<ws:partial template="Controls/Application" scope="{{_options}}" bodyClass="controls-default-bg">
    <div class="ControlsDemo-Page ws-flexbox ws-flex-column">
       <div class="themeSwitcher">
          <div class="theme_button" on:click="changeTheme('online')">online</div>
@@ -7,6 +7,7 @@
          <div class="theme_button" on:click="changeTheme('carry')">carry</div>
          <div class="theme_button theme_dark" on:click="changeTheme('presto')">presto</div>
       </div>
+      <link rel="stylesheet" type="text/css" id="controlsThemeStyle" href="{{_theme}}.css"/>
       <Controls.Button if="{{componentName !== 'Controls-demo/Index'}}" attr:id="Back" caption="Назад" style="linkMain" icon="icon-16 icon-DayBackward icon-primary" on:click="backClickHdl()" />
       <ws:partial attr:id="newListView" template="{{componentName}}" />
    </div>
