@@ -5,7 +5,7 @@
       on:click="_clickHandler()">
     <span attr:class="controls-BaseButton__content controls-Button__wrapper_type-{{_typeWithSize}}">
         <ws:if data="{{!!_options.icon}}">
-            <i attr:class="controls-Button__icon {{_options.icon}} controls-Button__icon-{{_style}}{{isEnabled() ? '':'_disabled'}}"></i>
+            <i attr:class="controls-Button__icon {{_options.icon}} controls-Button__icon-{{isEnabled() ? _options.iconStyle : 'disabled'}}"></i>
         </ws:if>
         <ws:if data="{{!!_options.caption}}">
            <span attr:class="controls-BaseButton__text controls-Button__text_style-{{_style}} {{_options.icon ? ' controls-Button__text_gap'}}">{{_options.caption}}</span>

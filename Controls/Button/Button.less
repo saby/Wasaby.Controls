@@ -144,8 +144,12 @@
 
 .ws-is-no-touch {
   .controls-Button_style-link-main:hover {
-    .controls-Button__icon-link-main {
+    /*.controls-Button__icon-link-main {
       color: @color_Link-main-text_hovered;
+    }*/
+
+    .controls-Button__icon-primary {
+      color: @color-Icon_style_primary_hovered;
     }
     color: @color_Link-main-text_hovered;
   }
@@ -228,33 +232,59 @@
   .border-radius(@border-radius_Button_l);
 }
 
-.controls-Button__icon-primary-add{
+/*.controls-Button__icon-primary-add{
    color: @color_Button-style-addButton-icon;
+}*/
+
+//Icon
+.controls-Button__icon-hover {
+  color: @color-Icon_style_hover;
 }
 
-.controls-Button__icon-default, .controls-Button__icon-default-big {
-  color: @color_Button-icon;
+.controls-Button__icon-attention {
+  color: @color-Icon_style_attention;
 }
+
+.controls-Button__icon-primary {
+  color: @color-Icon_style_primary;
+}
+
+.controls-Button__icon-done {
+  color: @color-Icon_style_done;
+}
+
+.controls-Button__icon-error {
+  color: @color-Icon_style_error;
+}
+
+.controls-Button__icon-disabled {
+  color: @color-Icon_style_disabled;
+}
+
+/*.controls-Button__icon-default, .controls-Button__icon-default-big {
+  color: @color_Button-icon;
+}*/
+
 .controls-Button__text_style-default {
   .text-overflow();
 }
 
-.controls-Button__icon-primary, .controls-Button__icon-primary-big {
+/*.controls-Button__icon-primary, .controls-Button__icon-primary-big {
   color: @color_Button-icon_primary;
-}
+}*/
 
-.controls-Button__icon-link-main {
+/*.controls-Button__icon-link-main {
   color: @color_Link-main-icon;
-}
+}*/
 
 .controls-Button__text_style-primary {
   .text-overflow();
 }
 
-.controls-Button__icon-primary_disabled, .controls-Button__icon-default_disabled, .controls-Button__icon-primary-add_disabled,
+/*.controls-Button__icon-primary_disabled, .controls-Button__icon-default_disabled, .controls-Button__icon-primary-add_disabled,
 .controls-Button__icon-primary-big_disabled, .controls-Button__icon-default-big_disabled {
   color: @color_Button-Vdom-icon_disabled;
-}
+}*/
 
 .controls-Button__wrapper_type-button_size-default {
   padding: @padding_Button-wrapper_default;
@@ -278,16 +308,16 @@
   }
 }
 
-.ws-is-no-touch {
-   .controls-Button_style-primary-add:active{
-      .controls-Button__icon-primary-add {
-         color: @color_Button-style-addButton-icon_hovered;
-      }
-   }
+.controls-Button_style-primary-add:active {
+  .controls-Button__icon-primary {
+    color: @color-Icon_style_primary_hovered;
+  }
+}
 
-   .controls-Button_style-primary-add:hover{
-      .controls-Button__icon-primary-add {
-         color: @color_Button-style-addButton-icon_hovered;
+.ws-is-no-touch {
+   .controls-Button_style-primary-add:hover {
+      .controls-Button__icon-primary {
+         color: @color-Icon_style_primary_hovered;
       }
    }
   .controls-Button_style-primary:hover, .controls-Button_style-primary-add:hover {
