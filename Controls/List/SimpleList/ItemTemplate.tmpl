@@ -1,4 +1,4 @@
-<div attr:class="controls-ListView__item{{marker != false && itemData.isSelected ? ' controls-ListView__item__selected'}}{{!!itemData.showActions ? ' controls-ListView__item_showActions'}}{{!!itemData.isActive ? ' controls-ListView__item_active'}}{{!!itemData.isEditing? ' controls-ListView__item_editing'}}"
+<div attr:class="controls-ListView__itemV{{marker != false && itemData.isSelected ? ' controls-ListView__item__marked'}}{{!!itemData.showActions ? ' controls-ListView__item_showActions'}}{{!!itemData.isActive ? ' controls-ListView__item_active'}}{{!!itemData.isEditing? ' controls-ListView__item_editing'}}"
      attr:key="{{itemData.dispItem.getHash()}}">
 
     <ws:if data="{{itemData.multiSelectVisibility}}">
