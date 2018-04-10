@@ -7,6 +7,7 @@ define('Controls/Container/Scroll/ScrollHeightFixUtil',
       'use strict';
 
       var _private = {
+
          /**
           * Расчитать сумму высот дочерних нод.
           * @param container
@@ -63,6 +64,6 @@ define('Controls/Container/Scroll/ScrollHeightFixUtil',
          _private: _private,
 
          calcHeightFix: _private.calcHeightFixFn(detection)
-      }
+      };
    }
 );

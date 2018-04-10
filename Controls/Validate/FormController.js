@@ -10,7 +10,7 @@ define('Controls/Validate/FormController',
       template,
       IoC,
       ParallelDeferred
-   ){
+   ) {
       'use strict';
 
       var Form = Base.extend({
@@ -25,29 +25,30 @@ define('Controls/Validate/FormController',
             e.stopPropagation();
          },
          onValidateDestroyed: function(e, control) {
-            this._validates = this._validates.filter(function (validate) {
+            this._validates = this._validates.filter(function(validate) {
                return validate !== control;
             });
             e.stopPropagation();
          },
          submit: function() {
             var parallelDeferred = new ParallelDeferred();
-            this._validates.forEach(function (validate) {
+            this._validates.forEach(function(validate) {
                var def = validate.validate();
                parallelDeferred.push(def);
             });
             return parallelDeferred.done().getResult().addCallback(function(results) {
                var
                   key;
+
                //Проходимся по объекту с ошибками и ставим фокус в первое невалидное поле
-               for(key in results) {
+               for (key in results) {
                   if (results[key]) {
                      this._validates[key].activate();
                      break;
                   }
                }
                return results;
-            }.bind(this)).addErrback(function (e) {
+            }.bind(this)).addErrback(function(e) {
                IoC.resolve('ILogger').error('Form', 'Submit error', e);
             });
          }

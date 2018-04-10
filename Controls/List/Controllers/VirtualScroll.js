@@ -1,7 +1,7 @@
 define('Controls/List/Controllers/VirtualScroll', [
    'Core/core-simpleExtend'
 ], function(simpleExtend
-   ) {
+) {
    'use strict';
 
    // Количество записей на 1 видимой странице (для изменения индексов нужно проскроллить на это число).
@@ -10,6 +10,7 @@ define('Controls/List/Controllers/VirtualScroll', [
    var virtualPageSize = 5;
 
    var _private = {
+
       /**
        * рассчитать начало/конец видимой области и высоты распорок
        * @param topIndex - первый отображаемый индекс
@@ -31,6 +32,7 @@ define('Controls/List/Controllers/VirtualScroll', [
             bottomPlaceholderHeight: wrapperHeight.bottom
          };
       },
+
       /**
        * Получить индексы текущей видимой страницы и первой видимой записи
        * @param scrollTop
@@ -137,6 +139,7 @@ define('Controls/List/Controllers/VirtualScroll', [
          var result = {
             changed: false
          };
+
          //Если средняя высота уже проинициализирована или еще ничего не отрисовали - просто выходим
          if (this._isInitializedHeights) {
             return result;

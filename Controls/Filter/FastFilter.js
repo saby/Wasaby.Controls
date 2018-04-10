@@ -13,7 +13,7 @@ define('Controls/Filter/FastFilter',
       'css!Controls/Input/Dropdown/Dropdown'
 
    ],
-   function (Control, template, SourceController, Chain, List, cInstance, pDeferred, Deferred, Utils) {
+   function(Control, template, SourceController, Chain, List, cInstance, pDeferred, Deferred, Utils) {
 
       'use strict';
 
@@ -45,7 +45,7 @@ define('Controls/Filter/FastFilter',
 
       var _private = {
 
-         prepareItems: function (self, items) {
+         prepareItems: function(self, items) {
             if (!cInstance.instanceOfMixin(items, 'WS.Data/Collection/IList')) {
                self._items = new List({
                   items: items
@@ -55,17 +55,17 @@ define('Controls/Filter/FastFilter',
             }
          },
 
-         loadItemsFromSource: function (instance, source, idProperty) {
+         loadItemsFromSource: function(instance, source, idProperty) {
             var sourceController = new SourceController({
                source: source,
                idProperty: idProperty
             });
-            return sourceController.load().addCallback(function (items) {
+            return sourceController.load().addCallback(function(items) {
                instance._items = items;
             });
          },
 
-         loadItems: function (self, item, index) {
+         loadItems: function(self, item, index) {
             var properties = getPropValue(item, 'properties');
 
             self._configs[index] = {};
@@ -80,21 +80,22 @@ define('Controls/Filter/FastFilter',
             }
          },
 
-         reload: function (self) {
+         reload: function(self) {
             var pDef = new pDeferred();
-            Chain(self._items).each(function (item, index) {
+            Chain(self._items).each(function(item, index) {
                var result = _private.loadItems(self, item, index);
                pDef.push(result);
             });
+
             //Сначала загрузим все списки, чтобы не вызывать морганий интерфейса и множества перерисовок
-            return pDef.done().getResult().addCallback(function () {
+            return pDef.done().getResult().addCallback(function() {
                self._forceUpdate();
             });
          },
 
-         getFilter: function (items) {
+         getFilter: function(items) {
             var filter = {};
-            Chain(items).each(function (item) {
+            Chain(items).each(function(item) {
                if (getPropValue(item, 'value') !== getPropValue(item, 'resetValue')) {
                   filter[getPropValue(item, 'id')] = getPropValue(item, 'value');
                }
@@ -102,14 +103,14 @@ define('Controls/Filter/FastFilter',
             return filter;
          },
 
-         selectItem: function (item) {
+         selectItem: function(item) {
             //Получаем ключ выбранного элемента
             var key = getPropValue(item, this._configs[this.lastOpenIndex].keyProperty);
             setPropValue(this._items.at(this.lastOpenIndex), 'value', key);
             this._notify('selectedKeysChanged', [key]);
          },
 
-         onResult: function (args) {
+         onResult: function(args) {
             var data = args[2];
             _private.selectItem.apply(this, data);
             this._notify('filterChanged', [_private.getFilter(this._items)]);
@@ -122,7 +123,7 @@ define('Controls/Filter/FastFilter',
          _configs: null,
          _items: null,
 
-         constructor: function () {
+         constructor: function() {
             FastData.superclass.constructor.apply(this, arguments);
 
             this._configs = {};
@@ -131,21 +132,21 @@ define('Controls/Filter/FastFilter',
             this._onResult = _private.onResult.bind(this);
          },
 
-         _beforeMount: function (options) {
+         _beforeMount: function(options) {
             var self = this,
                resultDef;
             if (options.items) {
                _private.prepareItems(this, options.items);
                resultDef = _private.reload(this);
             } else if (options.source) {
-               resultDef = _private.loadItemsFromSource(self, options.source).addCallback(function () {
+               resultDef = _private.loadItemsFromSource(self, options.source).addCallback(function() {
                   return _private.reload(self);
                });
             }
             return resultDef;
          },
 
-         _open: function (event, item, index) {
+         _open: function(event, item, index) {
             var config = {
                componentOptions: {
                   items: this._configs[index]._items,
@@ -160,19 +161,20 @@ define('Controls/Filter/FastFilter',
                },
                target: event.target.parentElement
             };
+
             //Сохраняем индекс последнего открытого списка. Чтобы получить список в selectItem
             this.lastOpenIndex = index;
             this._children.DropdownOpener.open(config, this);
          },
 
-         _getText: function (item, index) {
+         _getText: function(item, index) {
             if (this._configs[index]._items) {
                var sKey = getPropValue(this._items.at(index), 'value');
                return getPropValue(this._configs[index]._items.getRecordById(sKey), this._configs[index].displayProperty);
             }
          },
 
-         _reset: function (event, item, index) {
+         _reset: function(event, item, index) {
             var newValue = getPropValue(this._items.at(index), 'resetValue');
             setPropValue(this._items.at(index), 'value', newValue);
             this._notify('selectedKeysChanged', [newValue]);

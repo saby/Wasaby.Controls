@@ -1,4 +1,4 @@
-define('Controls/Toggle/interface/ICheckable', [], function () {
+define('Controls/Toggle/interface/ICheckable', [], function() {
 
    /**
     * Интерфейс работы двухпозиционного переключетеля

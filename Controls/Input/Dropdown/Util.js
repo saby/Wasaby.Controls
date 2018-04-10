@@ -1,7 +1,8 @@
-define('Controls/Input/Dropdown/Util', ['Controls/Controllers/SourceController'], function(SourceController) {
+define('Controls/Input/Dropdown/Util', [], function() {
 
    'use strict';
    var DropdownUtil = {
+
    /**
      * Открывает всплывашку
      * @param {Object} self

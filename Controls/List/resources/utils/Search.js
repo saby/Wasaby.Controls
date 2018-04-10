@@ -5,11 +5,12 @@ define('Controls/List/resources/utils/Search',
       'Controls/List/resources/utils/DataSourceUtil',
       'Controls/Controllers/QueryParamsController/Page'
    ],
-   function (extend, Deferred, DataSourceUtil, PageNavigation) {
+   function(extend, Deferred, DataSourceUtil, PageNavigation) {
       
       'use strict';
    
       var _private = {
+
          /**
           * Checks required parameters
           */
@@ -106,13 +107,13 @@ define('Controls/List/resources/utils/Search',
           * @cfg {searchConfig} Search configuration
           * @returns {Core/Deferred}
           */
-         search: function (searchConfig) {
+         search: function(searchConfig) {
             if (!searchConfig.filter) {
-               throw new Error('filter is required for search ')
+               throw new Error('filter is required for search ');
             }
             
             var self = this,
-                hasMore;
+               hasMore;
             
             //aborting current search
             this.abort();
@@ -149,7 +150,7 @@ define('Controls/List/resources/utils/Search',
           * Aborting search
           * @public
           */
-         abort: function () {
+         abort: function() {
             if (this._searchDelayTimer) {
                clearTimeout(this._searchDelayTimer);
                this._searchDelayTimer = null;
