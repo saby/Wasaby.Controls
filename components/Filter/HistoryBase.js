@@ -75,22 +75,13 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
          $constructor: function() {
             var self = this;
             var listsDef = new ParallelDeferred();
-            var favoriteList;
-            var favoriteAllList;
-            var historyList;
+            var favoriteList = this._getHistoryList(true);
+            var favoriteAllList = this._getHistoryList(true, true);
+            var historyList = this._getHistoryList();
    
-            listsDef.push(this._getHistoryList(true).addCallback(function(res) {
-               favoriteList = res;
-               return res;
-            }));
-            listsDef.push(this._getHistoryList(true, true).addCallback(function(res) {
-               favoriteAllList = res;
-               return res;
-            }));
-            listsDef.push(this._getHistoryList().addCallback(function(res) {
-               historyList = res;
-               return res;
-            }));
+            listsDef.push(favoriteList.getHistory(true));
+            listsDef.push(favoriteAllList.getHistory(true));
+            listsDef.push(historyList.getHistory(true));
    
             listsDef.done();
             
