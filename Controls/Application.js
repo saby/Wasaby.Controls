@@ -54,13 +54,15 @@ define('Controls/Application',
          _resizePage: function(ev) {
             this._children.resizeDetect.start(ev);
          },
+         _mousedownPage: function(ev) {
+            this._children.mousedownDetect.start(ev);
+         },
 
          _touchstartPage: function() {
             TouchDetector.touchHandler();
          },
          _mousemovePage: function(ev) {
             TouchDetector.moveHandler();
-
             this._children.mousemoveDetect.start(ev);
          },
          _mouseupPage: function(ev) {

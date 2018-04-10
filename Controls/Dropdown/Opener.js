@@ -83,9 +83,7 @@ define('Controls/Dropdown/Opener',
          },
 
          setComponentOptions: function(self, config) {
-            var cOptions = config.componentOptions || {};
             var pOptions = self._options.popupOptions || {};
-            cOptions.depth = cOptions.depth || self._options.depth;
             if (pOptions.componentOptions && pOptions.componentOptions.headConfig) {
                pOptions.componentOptions.headConfig.menuStyle = pOptions.componentOptions.headConfig.menuStyle || 'defaultHead';
             }
@@ -114,8 +112,7 @@ define('Controls/Dropdown/Opener',
             parentProperty: types(String),
             nodeProperty: types(String),
             hasSelectedMarker: types(Boolean),
-            multiselectable: types(Boolean),
-            depth: types(Number)
+            multiselectable: types(Boolean)
          };
       };
 
@@ -126,8 +123,7 @@ define('Controls/Dropdown/Opener',
             nodeProperty: undefined,
             itemTemplate: undefined,
             hasSelectedMarker: false,
-            multiselectable: false,
-            depth: 1
+            multiselectable: false
          };
       };
 

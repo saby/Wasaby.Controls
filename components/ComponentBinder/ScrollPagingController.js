@@ -48,6 +48,12 @@ define('SBIS3.CONTROLS/ComponentBinder/ScrollPagingController',
          else {
             pagingVisibility= false;
          }
+
+         /*Новое требование, если страниц всего две (посчитали две и ЕстьЕще false) то пэйджинг не показываем*/
+         if (pagingVisibility && pagesCount <= 2 && !(view._hasNextPage(view.getItems().getMetaData().more, view._scrollOffset.bottom, 'after'))) {
+            pagingVisibility = false;
+         }
+
          /* Для пэйджинга считаем, что кол-во страниц это:
           текущее кол-во загруженных страниц + 1, если в метаинформации рекордсета есть данные о том, что на бл есть ещё записи.
           Необходимо для того, чтобы в пэйджинге не моргала кнопка перехода к следующей странице, пока грузятся данные. */

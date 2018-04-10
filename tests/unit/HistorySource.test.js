@@ -67,8 +67,8 @@ define(
          let data = new DataSet({
              rawData: {
                  frequent: [
-                     "4",
-                     "6"
+                     "6",
+                     "4"
                  ],
                  pinned: [
                      "5"
@@ -175,6 +175,11 @@ define(
                assert.equal(historyItems.at(0).get('title') , 'Запись 5');
                assert.equal(historyItems.at(1).get('title') , 'Запись 4');
                assert.equal(historyItems.at(3).get('title') , 'Запись 8');
+           });
+           it('check alphabet', function () {
+               historyItems = hSource.getItems();
+               assert.equal(historyItems.at(1).get('title') , 'Запись 4');
+               assert.equal(historyItems.at(2).get('title') , 'Запись 6');
            });
            it('updatePinned', function () {
                let meta = {
