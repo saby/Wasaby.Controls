@@ -105,52 +105,11 @@ define('Controls/Container/Scroll',
                };
             },
 
-            calcPagingPagesCount: function(heightOnePage, heightAllPages) {
-               return Math.ceil(heightAllPages / heightOnePage);
-            },
-
-            getPagingPagesCount: function(self) {
-               var
-                  heightOnePage = _private.getContainerHeight(self._children.content),
-                  heightAllPages = _private.getContentHeight(self);
-
-               return _private.calcPagingPagesCount(heightOnePage, heightAllPages);
-            },
-
-            calcPagingSelectedPage: function(heightOnePage, scrollTop) {
-               return Math.ceil(scrollTop / heightOnePage) + 1;
-            },
-
-            getPagingSelectedPage: function(self) {
-               var
-                  heightOnePage = _private.getContainerHeight(self._children.content),
-                  scrollTop = _private.getScrollTop(self._children.content);
-
-               return _private.calcPagingSelectedPage(heightOnePage, scrollTop);
-            },
-
-            calcPagingState: function(self) {
-               var pagesCount = _private.getPagingPagesCount(self);
-
-               return {
-                  pagesCount: pagesCount,
-                  selectedPage: _private.getPagingSelectedPage(self),
-                  visible: self._contextObj.ScrollData.pagingVisible && pagesCount > 1
-               };
-            },
-
             updateDisplayState: function(self, displayState) {
                self._displayState.hasScroll = displayState.hasScroll;
                self._displayState.heightFix = displayState.heightFix;
                self._displayState.contentHeight = displayState.contentHeight;
                self._displayState.shadowPosition = displayState.shadowPosition;
-            },
-
-            updatePagingSelectedPage: function(self, selectedPage) {
-               var heightOnePage = _private.getContainerHeight(self._children.content);
-
-               self._pagingState.selectedPage = selectedPage;
-               self._scrollTop = heightOnePage * (selectedPage - 1);
             }
          },
          Scroll = Control.extend({
@@ -190,7 +149,15 @@ define('Controls/Container/Scroll',
                   def;
 
                this._displayState = {};
-               this._pagingState = {};
+               if (context.ScrollData && context.ScrollData.pagingVisible) {
+                  this._pagingState = {
+                     visible: true,
+                     stateUp: 'disabled',
+                     stateDown: 'normal'
+                  };
+               } else {
+                  this._pagingState = {};
+               }
 
                if (receivedState) {
                   _private.updateDisplayState(this, receivedState.displayState);
@@ -243,16 +210,17 @@ define('Controls/Container/Scroll',
                }
             },
 
+            _beforeUpdate: function(options, context) {
+               this._pagingState.visible = context.ScrollData && context.ScrollData.pagingVisible;
+            },
+
             _afterUpdate: function() {
-               var
-                  displayState = _private.calcDisplayState(this),
-                  pagingState = _private.calcPagingState(this);
+               var displayState = _private.calcDisplayState(this);
 
                this._children.content.scrollTop = this._scrollTop;
 
-               if (!(isEqual(this._displayState, displayState) && isEqual(this._pagingState, pagingState))) {
+               if (!isEqual(this._displayState, displayState)) {
                   this._displayState = displayState;
-                  this._pagingState = pagingState;
 
                   this._forceUpdate();
                }
@@ -268,10 +236,6 @@ define('Controls/Container/Scroll',
                }
             },
 
-            _changeSelectedPageHandler: function(event, selectedPage) {
-               _private.updatePagingSelectedPage(this, selectedPage);
-            },
-
             _scrollbarTaken: function(notify) {
                if (this._showScrollbarOnHover && this._displayState.hasScroll) {
                   this._hasHover = true;
@@ -280,6 +244,40 @@ define('Controls/Container/Scroll',
                      this._notify('scrollbarTaken', [], {bubbling: true});
                   }
                }
+            },
+
+            _arrowClickHandler: function(event, btnName) {
+               var scrollParam;
+
+               switch(btnName) {
+                  case 'Begin':
+                     scrollParam = 'top';
+                     break;
+                  case 'End':
+                     scrollParam = 'bottom';
+                     break;
+                  case 'Prev':
+                     scrollParam = 'pageUp';
+                     break;
+                  case 'Next':
+                     scrollParam = 'pageDown';
+                     break;
+               }
+
+               this._children.scrollLayout.doScroll(scrollParam);
+            },
+
+            _listTopHandler: function() {
+               this._pagingState.stateUp = 'disabled';
+            },
+
+            _listBottomHandler: function() {
+               this._pagingState.stateDown = 'disabled';
+            },
+
+            _scrollMoveHandler: function() {
+               this._pagingState.stateUp = 'normal';
+               this._pagingState.stateDown = 'normal';
             },
 
             _mouseenterHandler: function() {

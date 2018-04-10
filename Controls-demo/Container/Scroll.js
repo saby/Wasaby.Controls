@@ -9,6 +9,8 @@ define('Controls-demo/Container/Scroll',
       return Control.extend({
          _template: template,
 
+         _pagingVisible: true,
+
          _beforeMount: function() {
             var srcData = [];
 
@@ -22,6 +24,8 @@ define('Controls-demo/Container/Scroll',
                idProperty: 'id',
                data: srcData
             });
+
+            this._items = srcData;
          },
 
          _getChildContext: function() {

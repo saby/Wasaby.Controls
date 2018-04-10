@@ -120,6 +120,7 @@ define('Controls/Layout/Scroll',
 
          start: function(self, eventType, scrollTop) {
             self._registrar.start(eventType, scrollTop);
+            self._notify(eventType, [scrollTop]);
          }
       };
 
@@ -168,8 +169,9 @@ define('Controls/Layout/Scroll',
             _private.doScroll(this, scrollParam, this._container);
          },
 
-
-
+         doScroll: function(scrollParam) {
+            _private.doScroll(this, scrollParam, this._container);
+         },
 
          _unRegisterIt: function(event, registerType, component) {
             if (registerType === 'listScroll') {
