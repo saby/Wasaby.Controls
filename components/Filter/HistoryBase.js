@@ -156,8 +156,10 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
 
                                     if(reportItem) {
                                        reportItem.value = reportItem.resetValue;
-                                       textValue = textValue.replace(new RegExp(',\s?|\s?' + reportItem[self._options._filterItemTextProperty] + ',?\s?'), '');
-                                       textValue = textValue.replace(/ {1,}/g, ' ');
+                                       // Если отменили сохранение фильтра, то из сформированной по фильтрам строки, надо вырезать подстроку,
+                                       // которая отвечала за отображение этого фильтра
+                                       textValue = textValue.replace(new RegExp(',?\\s?' + reportItem[self._options._filterItemTextProperty]), '');
+                                       textValue = textValue.replace(/\\s{1,}/g, ' ');
                                        reportItem[self._options._filterItemTextProperty] = '';
                                        delete filter[key];
                                     }
