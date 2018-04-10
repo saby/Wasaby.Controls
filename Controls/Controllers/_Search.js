@@ -4,7 +4,7 @@ define('Controls/Controllers/_Search',
       'Core/Deferred',
       'Controls/Controllers/SourceController'
    ],
-   function (extend, Deferred, SourceController) {
+   function(extend, Deferred, SourceController) {
       
       'use strict';
    
@@ -82,7 +82,7 @@ define('Controls/Controllers/_Search',
           * @cfg {Object} filter
           * @returns {Core/Deferred}
           */
-         search: function (filter) {
+         search: function(filter) {
             var self = this;
             
             //aborting current query
@@ -113,7 +113,7 @@ define('Controls/Controllers/_Search',
           * Aborting search
           * @public
           */
-         abort: function () {
+         abort: function() {
             if (this._searchDelayTimer) {
                clearTimeout(this._searchDelayTimer);
                this._searchDelayTimer = null;

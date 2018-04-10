@@ -7,11 +7,11 @@ define('Controls/Input/Number', [
 
    'Controls/Input/resources/InputRender/InputRender',
    'tmpl!Controls/Input/resources/input'
-], function (Control,
-             template,
-             types,
-             NumberViewModel,
-             inputHelper) {
+], function(Control,
+   template,
+   types,
+   NumberViewModel,
+   inputHelper) {
 
    'use strict';
    var
@@ -22,6 +22,7 @@ define('Controls/Input/Number', [
    };
 
    NumberInput = Control.extend({
+
       /**
        * Поле ввода числа.
        * @class Controls/Input/Number
@@ -61,7 +62,7 @@ define('Controls/Input/Number', [
 
       _caretPosition: null,
 
-      constructor: function (options) {
+      constructor: function(options) {
          NumberInput.superclass.constructor.apply(this, arguments);
 
          this._numberViewModel = new NumberViewModel({
@@ -88,11 +89,11 @@ define('Controls/Input/Number', [
          }
       },
 
-      _inputCompletedHandler: function (event, value) {
+      _inputCompletedHandler: function(event, value) {
          this._notify('inputCompleted', [value]);
       },
 
-      _notifyHandler: function (event, value) {
+      _notifyHandler: function(event, value) {
          this._notify(value);
       },
 
@@ -107,7 +108,7 @@ define('Controls/Input/Number', [
       }
    });
 
-   NumberInput.getOptionTypes = function () {
+   NumberInput.getOptionTypes = function() {
       return {
          precision: types(Number), //Точность (кол-во знаков после запятой)
          integersLength: types(Number), //Длина целой части

@@ -1,9 +1,9 @@
-<Controls.Container.Filter attr:class="controls-demo__FilterLayout" filterButtonSource="{{_filterSource}}" historyId="123">
+<Controls.Container.Filter attr:class="controls-demo__FilterLayout" filterButtonSource="{{_filterSource}}" historyId="123" fastFilterSource="{{_fastFilterData}}">
     <ws:content>
         <div>
             <Controls.Container.Search
                     attr:class="controls-demo__SearchLayout"
-                    searchParam="title">
+                    searchParam="firstName">
                 <ws:content>
                     <div class="controls-demo__SearchLayout_content">
                         <div class="controls-demo__Layouts_content">
@@ -13,6 +13,11 @@
                                         <Controls.Input.Search bind:value="_searchValue"/>
                                     </ws:content>
                                 </Controls.Container.Input.Search>
+                                <Controls.Container.Filter.Fast>
+                                    <ws:content>
+                                        <Controls.Filter.FastFilter bind:selectedKeys="_value"/>
+                                    </ws:content>
+                                </Controls.Container.Filter.Fast>
                                 <Controls.Container.Filter.Button>
                                     <ws:content>
                                         <Controls.Filter.Button filterTemplate="Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/FilterButtonTemplate">
@@ -21,10 +26,23 @@
                                 </Controls.Container.Filter.Button>
                             </div>
                             <div class="controls-demo__LayoutInner">
-                                <Controls.Container.List source="{{_dataSource}}" searchParam="title">
+                                <Controls.Container.List searchParam="firstName" source="{{_dataSource}}">
                                     <ws:content>
                                         <div>
-                                            <Controls.List idProperty="id" name="list">
+                                            <Controls.List idProperty="id" name="list" >
+                                                <ws:itemTemplate>
+                                                    <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate"
+                                                                itemData="{{itemTemplate.itemData}}"
+                                                    >
+                                                        <ws:contentTemplate>
+                                                            <div style="padding: 4px; display: flex; justify-content: space-between">
+                                                                <div style="width: 200px">{{itemTemplate.itemData.item.get('firstName')}}</div>
+                                                                <div style="font-size: 13px; color: darkblue">{{itemTemplate.itemData.item.get('lastName')}}</div>
+                                                                <div style="font-size: 13px; color: limegreen">{{itemTemplate.itemData.item.get('id')}}</div>
+                                                            </div>
+                                                        </ws:contentTemplate>
+                                                    </ws:partial>
+                                                </ws:itemTemplate>
                                                 <ws:emptyTemplate>
                                                     Не найдено
                                                 </ws:emptyTemplate>

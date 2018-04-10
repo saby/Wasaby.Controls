@@ -1,5 +1,5 @@
 define('SBIS3.CONTROLS/Button/ButtonGroup/ButtonBase', [
-    'js!WSControls/Buttons/ButtonBase',
+    'SBIS3.CONTROLS/WSControls/Buttons/ButtonBase',
     'Core/IoC'
 ], function(ButtonBase, IoC) {
 

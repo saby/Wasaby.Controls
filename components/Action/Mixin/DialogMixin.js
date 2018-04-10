@@ -324,7 +324,8 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
       },
 
       _isDialogClosing: function() {
-         return this._dialog && this._dialog._state === 'hide';
+         //Панель либо закрывается, либо дожидается, пока закроются дочерние панели, чтобы закрыться самой
+         return this._dialog && (this._dialog._state === 'hide' || this._dialog._deferClose === true);
       },
 
       /**

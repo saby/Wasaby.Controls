@@ -258,7 +258,7 @@ define('SBIS3.CONTROLS/Toolbar', [
          for (var i in itemsInstances) {
             if (itemsInstances.hasOwnProperty(i)) {
                var item = itemsInstances[i];
-               if (cInstance.instanceOfModule(item, 'WSControls/Buttons/MenuButton')) {
+               if (cInstance.instanceOfModule(item, 'SBIS3.CONTROLS/WSControls/Buttons/MenuButton')) {
                   item.subscribe('onMenuItemActivate', this._onMenuItemActivate.bind(this));
                }
             }

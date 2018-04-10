@@ -34,11 +34,11 @@ define('Controls/Button/ButtonSeparator', [
     */
 
    var _private = {
-      iconChangedValue: function (self, options) {
+      iconChangedValue: function(self, options) {
          if (options.value) {
-            self._icon = 'icon-' + (options.bold ? 'MarkCollapseBold ':'CollapseLight ');
-         }else {
-            self._icon = 'icon-' + (options.bold ? 'MarkExpandBold ':'ExpandLight ');
+            self._icon = 'icon-' + (options.bold ? 'MarkCollapseBold ' : 'CollapseLight ');
+         } else {
+            self._icon = 'icon-' + (options.bold ? 'MarkExpandBold ' : 'ExpandLight ');
          }
       }
    };
@@ -46,11 +46,11 @@ define('Controls/Button/ButtonSeparator', [
    var ButtonSeparator = Control.extend({
       _template: template,
 
-      _beforeMount: function (options) {
+      _beforeMount: function(options) {
          _private.iconChangedValue(this, options);
       },
 
-      _beforeUpdate: function (newOptions) {
+      _beforeUpdate: function(newOptions) {
          _private.iconChangedValue(this, newOptions);
       }
    });
@@ -64,7 +64,7 @@ define('Controls/Button/ButtonSeparator', [
             'Main'
          ]),
          value: types(Boolean)
-      }
+      };
    };
 
    ButtonSeparator.getDefaultOptions = function() {

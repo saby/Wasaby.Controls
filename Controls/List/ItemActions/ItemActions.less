@@ -1,43 +1,69 @@
 .controls-itemActionsV {
+  .align-items(center);
   display: none;
   position:absolute;
 }
-
 .controls-itemActionsV_inline {
-  right: @right_itemActions_inline;
-  bottom: @bottom_itemActions_inline;
-  height: @height_itemActions_inline;
+  right: 0;
+  bottom: 0;
+  padding: @padding_itemActions_inside;
+  height: @height_itemActions_inside;
   background-color: @default-bg-color-hovered-item;
 }
 
-.controls-itemActionsV_underline {
+.controls-itemActionsV_outside {
   right: 0;
-  bottom: -@height_itemAction_underline;
-  height: @height_itemAction_underline;
+  bottom: -@height_itemAction_outside;
+  height: @height_itemAction_outside;
   background-color: @default-bg-color-hovered-item;
+  padding: @padding_itemActions_outside;
   z-index: 1;
+  box-sizing: border-box;
   &:before {
     content:'';
     position: absolute;
     width: 0;
     height: 0;
-    border-top: @height_itemAction_underline solid @default-bg-color-hovered-item;
-    border-left: @width_itemActions_underine_after solid transparent;
-    left: -@width_itemActions_underine_after;
+    border-top: @height_itemAction_outside solid @default-bg-color-hovered-item;
+    border-left: @width_itemActions_outside_after solid transparent;
+    left: -@width_itemActions_outside_after;
   }
 }
-
+.controls-itemActionsV_editing {
+  background-color: @controls-editInPlace-editing-item-bg;
+  &:before {
+    border-top-color: @controls-editInPlace-editing-item-bg;
+  }
+}
 .controls-itemActionsV__action, .controls-itemActionsV__menuOpen {
   .inline-flexbox();
   .align-items(center);
   height: 100%;
   margin: @margin_itemActions_action;
 }
-
+.controls-itemActionsV__action_bordered {
+  .closeButton();
+  .inline-flexbox();
+  .align-items(center);
+  .justify-content(center);
+  //todo: cascade
+  .controls-itemActionsV__action_icon {
+    .icon-size-without-important(@default-icon-size);
+  }
+}
+.controls-itemActionsV__action_done {
+  &:hover {
+    border-color: @success-color;
+  }
+}
+.controls-itemActionsV__action_error {
+  &:hover {
+    border-color: @error-color;
+  }
+}
 .controls-itemActionsV__action_icon, .controls-itemActionsV__menuOpen_icon {
   .icon-size-without-important(@default-icon-size-medium, @default-icon-medium-font);
 }
-
 .controls-itemActionsV__action_title {
   color: @color_Link-text;
 }

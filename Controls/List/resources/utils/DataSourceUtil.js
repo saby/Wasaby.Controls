@@ -4,7 +4,7 @@ define('Controls/List/resources/utils/DataSourceUtil', [
    'Core/Deferred'
 ], function(Query, cInstance, cDeferred) {
    
-   function getQueryForCall (filter, sorting, offset, limit) {
+   function getQueryForCall(filter, sorting, offset, limit) {
       var query = new Query();
       query.where(filter)
          .offset(offset)
@@ -34,7 +34,7 @@ define('Controls/List/resources/utils/DataSourceUtil', [
          return result;
       },
 
-      callQuery: function (dataSource, idProperty, filter, sorting, offset, limit) {
+      callQuery: function(dataSource, idProperty, filter, sorting, offset, limit) {
          var queryDef, query = getQueryForCall(filter, sorting, offset, limit);
 
 
@@ -50,12 +50,11 @@ define('Controls/List/resources/utils/DataSourceUtil', [
             /*TODO временное решение. Проблема в том что деферред с синхронным кодом статического источника выполняется сихронно.
             в итоге в коолбэк релоада мы приходим в тот момент, когда еще не отработал _beforeMount и заполнение опций, и не можем обратиться к this._options*/
             var queryDefAsync = cDeferred.fromTimer(0);
-            queryDefAsync.addCallback(function(){
+            queryDefAsync.addCallback(function() {
                return queryDef;
             });
             return queryDefAsync;
-         }
-         else {
+         } else {
             return queryDef;
          }
       }

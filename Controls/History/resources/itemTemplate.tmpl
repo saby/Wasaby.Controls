@@ -1,0 +1,30 @@
+<div attr:class="controls-DropdownList__row {{itemData.isSelected ? 'controls-DropdownList__selected'}} controls-DropdownList__item-{{itemData.getPropValue(itemData.item, 'pinned') === true && !itemData.hasParent ? 'pinned'}} controls-DropdownList__item-right_{{itemData.hasChildren || hierarchyPadding || itemData.getPropValue(itemData.item, 'pinned') === true || !itemData.hasParent ? 'hierarchy-padding': 'default-padding'}}"
+     on:click="_itemClickHandler(itemData.item)" on:mouseenter="_itemMouseEnter(itemData.item, itemData.hasChildren)"
+     on:mouseleave="_itemMouseOut(itemData.item)">
+   <div if="{{itemData.icon}}" class="controls-DropdownList__icon {{itemData.icon}}"></div>
+   <div class="controls-DropdownList__content">
+      <ws:if data="{{contentTemplate}}">
+         <ws:partial
+            template="{{contentTemplate}}"
+            itemData="{{itemData}}" />
+      </ws:if>
+      <ws:else>
+         <div>{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>
+      </ws:else>
+   </div>
+    <ws:if data="{{!itemData.hasChildren && !(itemData.getPropValue(itemData.item, 'pinned') === true && itemData.hasParent)}}">
+        <div    on:click="_itemClickHandler(itemData.item, true)"
+                class="controls-DropdownList__row-pin {{itemData.getPropValue(itemData.item, 'pinned') === true ? 'controls-DropdownList__unpin icon-PinOff' : 'icon-PinNull'}}"></div>
+    </ws:if>
+   <div if="{{itemData.hasChildren}}" class="controls-DropdownList__arrow icon-MarkCRightLight"></div>
+
+   <Controls.Dropdown.Opener if="{{itemData.hasChildren}}"
+                                  name="MenuOpener{{itemData.getPropValue(itemData.item, itemData.idProperty)}}"
+                                  on:onSelectedItemChange="resultHandler()"
+                                  className="controls-DropdownList__subMenu_margin">
+      <ws:popupOptions>
+         <ws:corner horizontal="right"/>
+         <ws:eventHandlers onResult="{{resultHandler}}"/>
+      </ws:popupOptions>
+   </Controls.Dropdown.Opener>
+</div>

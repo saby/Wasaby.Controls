@@ -47,7 +47,7 @@ define('Controls/Container/Filter',
          getFilterByItems: function(filterButtonItems, fastFilterItems) {
             var filter = {};
             
-            function processItems (items) {
+            function processItems(items) {
                Chain(items).each(function(elem) {
                   var value = getPropValue(elem, 'value');
       
@@ -131,7 +131,7 @@ define('Controls/Container/Filter',
          
          _beforeMount: function(options) {
             var itemsDef = _private.resolveItems(this, options.historyId, options.filterButtonSource, options.fastFilterSource),
-                self = this;
+               self = this;
             
             itemsDef.addCallback(function() {
                self._filter = _private.getFilterByItems(self._filterButtonItems, self._fastFilterItems);

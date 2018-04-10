@@ -2,6 +2,7 @@ define('Controls/Input/Dropdown/Util', ['Controls/Controllers/SourceController']
 
    'use strict';
    var DropdownUtil = {
+
    /**
      * Открывает всплывашку
      * @param {Object} self
@@ -10,7 +11,8 @@ define('Controls/Input/Dropdown/Util', ['Controls/Controllers/SourceController']
       open: function(self, target) {
          var config = {
             componentOptions: {
-               items: self._items
+               items: self._items,
+               defaultItemTemplate: self._defaultItemTemplate
             },
             target: target
          };

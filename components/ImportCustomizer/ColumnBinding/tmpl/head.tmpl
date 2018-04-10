@@ -1,6 +1,6 @@
 <div class="controls-ImportCustomizer-ColumnBinding-View__grid__column">
    <ws:if data="{{column.menuConf && column.menuItems}}">
-      <ws:WSControls.Buttons.MenuButton
+      <SBIS3.CONTROLS.WSControls.Buttons.MenuButton
          class="controls-ImportCustomizer-ColumnBinding-View__grid__column__menu"
          name="{{column.menuConf.namePrefix + column.field}}"
          caption="{{column.menuCaption}}"
@@ -13,6 +13,6 @@
       />
    </ws:if>
    <ws:else>
-      {{column.title}}
+      <div class="controls-ImportCustomizer-ColumnBinding-View__grid__column__simple">{{column.title}}</div>
    </ws:else>
 </div>

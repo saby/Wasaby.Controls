@@ -13,28 +13,7 @@ define('SBIS3.CONTROLS/ComponentBinder/BreadCrumbsController', ["Core/constants"
          _path: []
       },
 
-      _createBreadCrumb: function(data) {
-         var point = {},
-            breadCrumbs = this._options.breadCrumbs;
-         point[breadCrumbs._options.displayProperty] = data.title;
-         point[breadCrumbs._options.idProperty] = data.id;
-         point[breadCrumbs._options.colorField] = data.color;
-         point.data = data.data;
-         return point;
-      },
 
-      _setPreviousRoot: function() {
-         var previousRoot = this._path[this._path.length - 1],
-            view = this._options.view,
-            idProperty = this._options.breadCrumbs.getItems().getIdProperty();
-
-         if (this._currentRoot !== null) {
-            this._currentRoot = previousRoot;
-            if (this._path.length) this._path.splice(this._path.length - 1);
-            view.setCurrentRoot(previousRoot ? previousRoot[idProperty] : null);
-         }
-         view.reload();
-      },
 
       bindBreadCrumbs: function(breadCrumbs, backButton){
          var self = this,
@@ -57,12 +36,17 @@ define('SBIS3.CONTROLS/ComponentBinder/BreadCrumbsController', ["Core/constants"
          function setPreviousRoot() {
             var previousRoot = self._path[self._path.length - 1];
 
+            var cachedCurrentRoot = self._currentRoot;
+
             if(self._currentRoot !== null) {
                self._currentRoot = previousRoot;
                if (self._path.length) self._path.splice(self._path.length - 1);
                view.setCurrentRoot(previousRoot ? previousRoot[breadCrumbs._options.idProperty] : null);
             }
-            view.reload();
+            view.reload().addErrback(function(err){
+               self._currentRoot = cachedCurrentRoot;
+               return err;
+            });
          }
 
          function applyRoot(id, hier) {
@@ -114,6 +98,9 @@ define('SBIS3.CONTROLS/ComponentBinder/BreadCrumbsController', ["Core/constants"
                if (!backButton.isDestroyed()) {
                   if (self._options.backButtonTemplate && self._currentRoot) {
                      caption = self._options.backButtonTemplate(self._currentRoot.data);
+                     if (backButton.getEscapeCaptionHtml()) {
+                         backButton.setEscapeCaptionHtml(false);
+                     }
                   } else {
                      caption = self._currentRoot ? self._currentRoot.title : '';
                   }

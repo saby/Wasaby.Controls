@@ -7,7 +7,7 @@ define('Controls/Input/Search',
       'css!Controls/Input/Search/Search'
    ],
 
-   function (Control, types, template, BaseViewModel) {
+   function(Control, types, template, BaseViewModel) {
       'use strict';
 
       /**
@@ -36,7 +36,7 @@ define('Controls/Input/Search',
          _template: template,
          _isFocused: false,
 
-         constructor: function (options) {
+         constructor: function(options) {
             Search.superclass.constructor.apply(this, arguments);
             this._baseViewModel = new BaseViewModel();
          },
@@ -52,24 +52,24 @@ define('Controls/Input/Search',
             this._applySearch(value);
          },
 
-         _valueChangedHandler: function (event, value) {
+         _valueChangedHandler: function(event, value) {
             this._notifyOnValueChanged(value);
          },
 
          //Собственно поиск
-         _applySearch: function (value) {
+         _applySearch: function(value) {
             this._notify('search', [value]);
          },
 
-         _onResetClick: function () {
+         _onResetClick: function() {
             this._notifyOnValueChanged('');
          },
 
-         _onSearchClick: function () {
+         _onSearchClick: function() {
             this._applySearch(this._options.value);
          },
 
-         _keyDownHandler: function (event) {
+         _keyDownHandler: function(event) {
             if (event.nativeEvent.keyCode == 13) {
                this._applySearch(this._options.value);
             }
@@ -84,7 +84,7 @@ define('Controls/Input/Search',
 
       Search.getDefaultOptions = function getDefaultOptions() {
          return {
-            placeholder: rk('Найти')+'...',
+            placeholder: rk('Найти') + '...',
             style: 'default'
          };
       };

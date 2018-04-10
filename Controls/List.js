@@ -7,21 +7,22 @@ define('Controls/List', [
    'Controls/List/SimpleList/ListViewModel',
    'Controls/List/SimpleList/ListView',
    'Controls/List/EditInPlace'
-], function (Control,
-             ListControlTpl,
-             ListViewModel
+], function(Control,
+   ListControlTpl,
+   ListViewModel
 ) {
    'use strict';
 
    var _private = {
       createListModel: function(cfg) {
-         return new ListViewModel ({
-            items : cfg.items,
+         return new ListViewModel({
+            items: cfg.items,
             idProperty: cfg.idProperty,
             displayProperty: cfg.displayProperty,
             markedKey: cfg.markedKey,
             selectedKeys: cfg.selectedKeys,
             excludedKeys: cfg.excludedKeys,
+            multiSelectVisibility: cfg.multiSelectVisibility,
             itemsReadyCallback: cfg.itemsReadyCallback
          });
       }
@@ -123,7 +124,7 @@ define('Controls/List', [
          return this._notify('beforeItemsRemove', [items]);
       },
 
-      _afterItemsRemove: function (event, items, result) {
+      _afterItemsRemove: function(event, items, result) {
          this._notify('afterItemsRemove', [items, result]);
       },
 

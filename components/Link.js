@@ -1,5 +1,5 @@
 define('SBIS3.CONTROLS/Link', [
-   'js!WSControls/Buttons/Button',
+   'SBIS3.CONTROLS/WSControls/Buttons/Button',
    'SBIS3.CONTROLS/Utils/LinkUtil',
    'tmpl!SBIS3.CONTROLS/Link/resources/hrefTemplate',
    'css!SBIS3.CONTROLS/Link/Link'

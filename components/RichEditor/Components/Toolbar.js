@@ -8,8 +8,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
    "tmpl!SBIS3.CONTROLS/RichEditor/Components/Toolbar/RichEditorToolbar",
    "SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/config",
    'SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/ImagePanel/ImagePanel',
-   "js!WSControls/Buttons/Button",
-   "js!WSControls/Buttons/ToggleButton",
+   "SBIS3.CONTROLS/WSControls/Buttons/Button",
+   "SBIS3.CONTROLS/WSControls/Buttons/ToggleButton",
    'SBIS3.CONTROLS/Menu/MenuButton',
    'SBIS3.CONTROLS/ComboBox',
    'css!SBIS3.CONTROLS/RichEditor/Components/Toolbar/RichEditorToolbar',
@@ -165,9 +165,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
                case 'italic':
                case 'underline':
                case 'strikethrough':
+                  this._toggleState(state, obj);
+                  break;
                case 'blockquote':
                   this._toggleState(state, obj);
-               break;
+                  break;
                case 'alignleft':
                case 'aligncenter':
                case 'alignright':
@@ -179,9 +181,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
                case 'additionalText':
                   this._updateTextFormat(state, obj);
                   break;
-               case 'customBlockquote':
-                  this._toggleState(state,obj);
-                  break;
+               default: {
+                  this._toggleState(state, obj);
+               }
             }
          },
 
@@ -344,12 +346,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
             if (this._options.linkedEditor) {
                this._options.linkedEditor.setFontColor(color);
             }
-         },
-
-         _setCustomBlockquote: function(){
-           if (this._options.linkedEditor) {
-              this._options.linkedEditor.setCustomBlockquote();
-           }
          },
 
          _insertLink: function(onAfterCloseHandler, target) {

@@ -33,7 +33,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           * @typedef {object} ImportRemoteCall Тип, содержащий информацию для вызова удалённого сервиса для получения данных ввода или отправки данных вывода. Соответствует вспомогательному классу {@link SBIS3.CONTROLS/ImportCustomizer/RemoteCall}
           * @property {string} endpoint Сервис, метод которого будет вызван
           * @property {string} method Имя вызываемого метода
-          * @property {object} args Аргументы вызываемого метода (опционально)
+          * @property {string} [idProperty] Имя свойства, в котором находится идентификатор (опционально, если вызову это не потребуется)
+          * @property {object} [args] Аргументы вызываемого метода (опционально)
           * @property {function(object):object} [argsFilter] Фильтр аргументов (опционально)
           * @property {function(object):object} [resultFilter] Фильтр результатов (опционально)
           */
@@ -83,8 +84,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
 
          /**
           * @typedef {object} ImportValidator Тип, описывающий валидаторы результаттов редактирования
-          * @property {function} validator Функция проверки. Должна возвратить либо логическое значение, показывающее пройдена ли проверка, либо строку с сообщением об ошибке
-          * @property {Array<*>} [params] Дополнительные аргументы функции проверки (опционально)
+          * @property {function(object, function):(boolean|string)} validator Функция проверки. Принимает два аргумента. Первый - объект с проверяемыми данными. Второй - геттер опции по её имени. Геттер позволяет получить доступ к опциям, которые есть в настройщике импорта в момент валидации, но на момент задания валидатора ещё не были доступны (например, получены через обещание или через {@link ImportRemoteCall}). Должна возвратить либо логическое значение, показывающее пройдена ли проверка, либо строку с сообщением об ошибке
+          * @property {Array<*>} [params] Дополнительные аргументы функции проверки, будут добавлены после основных (опционально)
           * @property {string} [errorMessage] Сообщение об ошибке по умолчанию (опционально)
           * @property {boolean} [noFailOnError] Указывает на то, что если проверка не пройдена, это не является фатальным. В таком случае пользователю будет показан диалог с просьбой о подтверждении (опционально)
           */
@@ -96,6 +97,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                 * @cfg {object<ImportParser>} Список доступных провайдеров парсинга импортируемых данных
                 */
                parsers: {
+                  // TODO: Обдумать добавление поля applicable:Array<string> для указания типов данных
                   'InColumsHierarchyParser': {title:rk('в отдельной колонке', 'НастройщикИмпорта'), component:'SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View', order:10},
                   'InLineGroupsHierarchyParser': {title:rk('в группировке строк', 'НастройщикИмпорта'), order:20},
                   'InSeparateLineHierarchyParser': {title:rk('в отдельной строке', 'НастройщикИмпорта'), order:30}
@@ -234,26 +236,35 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                throw new Error('Wrong fields');
             }
             // TODO: Обдумать возможность выделения из fields массива hierarchy (с флагом joinHierarchy и последующим слиянием для нужного парсера)
+            var isExcel = dataType === Area.DATA_TYPE_EXCEL;
+            var isDBF = dataType === Area.DATA_TYPE_DBF;
+            var isCML = dataType === Area.DATA_TYPE_CML;
+            var needSheets = isExcel || isDBF;
             var sheets = options.sheets;
-            // Должно быть свойство "sheets" и быть не пустым массивом
-            if (!sheets || !Array.isArray(sheets) || !sheets.length) {
-               throw new Error('Sheets required');
-            }
-            // И каждый элемент массива должен быть {@link ImportSheet}
-            if (!sheets.every(function (v) { return (
-                  typeof v === 'object' &&
-                  (v.name && typeof v.name === 'string') &&
-                  (v.sampleRows && Array.isArray(v.sampleRows) && v.sampleRows.length && v.sampleRows.every(function (v2) { return v2 && Array.isArray(v2) && v2.length && v2.length === v.sampleRows[0].length; }))
+            if (needSheets) {
+               // Для типа данных EXCEL должно быть свойство "sheets" и быть не пустым массивом
+               if (!sheets || !Array.isArray(sheets) || !sheets.length) {
+                  throw new Error('Sheets required');
+               }
+               // И каждый элемент массива должен быть {@link ImportSheet}
+               if (!sheets.every(function (v) { return (
+                     typeof v === 'object' &&
+                     (v.name && typeof v.name === 'string') &&
+                     (v.sampleRows && Array.isArray(v.sampleRows) && v.sampleRows.length && v.sampleRows.every(function (v2) { return v2 && Array.isArray(v2) && v2.length && v2.length === v.sampleRows[0].length; }))
                   ); })) {
-               throw new Error('Wrong sheets');
+                  throw new Error('Wrong sheets');
+               }
             }
             var sheetIndex = options.sheetIndex;
-            // Если есть свойство "sheetIndex", то оно должно быть числом
-            if (sheetIndex !=/*Не !==*/ null && typeof sheetIndex !== 'number') {
-               throw new Error('Wrong sheetIndex');
-            }
-            if (options.sameSheetConfigs) {
-               sheetIndex = -1;
+            var sameSheetConfigs = options.sameSheetConfigs;
+            if (needSheets) {
+               // Если есть свойство "sheetIndex", то оно должно быть числом
+               if (sheetIndex !=/*Не !==*/ null && typeof sheetIndex !== 'number') {
+                  throw new Error('Wrong sheetIndex');
+               }
+               if (sameSheetConfigs) {
+                  sheetIndex = -1;
+               }
             }
             var validators = options.validators;
             // Если есть свойство "validators", то оно должно быть массивом
@@ -318,9 +329,10 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                baseParams: baseParamsOptions,
                parsers: parsers || defaults.parsers,
                fields: fields,
+               priceCorrespondence: options.priceCorrespondence,//^^^
+               priceTypes: options.priceTypes,//^^^
+               priceFieldProperty: options.priceFieldProperty,//^^^
                validators: validators || defaults.validators,
-               sheets: sheets,
-               sheetIndex: sheetIndex,
                handlers: {
                   onComplete: this._onAreaComplete.bind(this),
                   onFatalError: this._onAreaError.bind(this)
@@ -328,6 +340,12 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
             };
             if (baseParamsComponent) {
                componentOptions.baseParamsComponent = baseParamsComponent;
+            }
+            if (needSheets) {
+               componentOptions.sheets = sheets;
+               componentOptions.sheetIndex = sheetIndex;
+               componentOptions.sameSheetConfigs = sameSheetConfigs;
+
             }
             this._areaContainer = new FloatArea({
                opener: this,
