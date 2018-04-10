@@ -2,10 +2,9 @@ define('Controls/Popup/Manager/Container',
    [
       'Core/Control',
       'tmpl!Controls/Popup/Manager/Container',
-      'WS.Data/Collection/List',
       'css!Controls/Popup/Manager/Container'
    ],
-   function(Control, template, List) {
+   function(Control, template) {
       'use strict';
 
       var Container = Control.extend({
