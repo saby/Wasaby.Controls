@@ -21,15 +21,6 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
       var ImportCustomizerAction = Action.extend([], /**@lends SBIS3.CONTROLS/ImportCustomizer/Action.prototype*/ {
 
          /**
-          * @typedef {object} ImportResults Тип, содержащий информацию о результате редактирования
-          * @property {string} dataType Тип импортируемых данных (excel и т.д.)
-          * @property {ImportFile} file Информация о файле с импортируемыми данными
-          * @property {Array<ImportSheet>} sheets Список объектов, представляющих имеющиеся области данных
-          * @property {boolean} [sameSheetConfigs] Обрабатываются ли все области данных одинаково (опционально)
-          * @property {*} [*] Базовые параметры импортирования (опционально)
-          */
-
-         /**
           * @typedef {object} ImportRemoteCall Тип, содержащий информацию для вызова удалённого сервиса для получения данных ввода или отправки данных вывода. Соответствует вспомогательному классу {@link SBIS3.CONTROLS/ImportCustomizer/RemoteCall}
           * @property {string} endpoint Сервис, метод которого будет вызван
           * @property {string} method Имя вызываемого метода
@@ -104,6 +95,16 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           * @property {boolean} [noFailOnError] Указывает на то, что если проверка не пройдена, это не является фатальным. В таком случае пользователю будет показан диалог с просьбой о подтверждении (опционально)
           */
 
+         /**
+          * @typedef {object} ImportResults Тип, содержащий информацию о результате редактирования
+          * @property {string} dataType Тип импортируемых данных (excel и т.д.)
+          * @property {ImportFile} file Информация о файле с импортируемыми данными
+          * @property {Array<ImportSheet>} sheets Список объектов, представляющих имеющиеся области данных
+          * @property {boolean} [sameSheetConfigs] Обрабатываются ли все области данных одинаково (опционально)
+          * @property {object} [mappingAccordances] Перечень соответствий специальный ключ поля - идентификатор варианта (опционально, когда применимо)
+          * @property {*} [*] Базовые параметры импортирования (опционально)
+          */
+
          //_dotTplFn: null,
          $protected: {
             _options: {
@@ -121,7 +122,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                 */
                validators: [
                   {
-                     validator: function (data, optionGetter) { return data.sheets.every(function (sheet) { return !!sheet.columns.length; }); },
+                     validator: function (data, optionGetter) { return data.dataType === 'cml' || data.sheets.every(function (sheet) { return !!sheet.columns.length; }); },
                      errorMessage: rk('Не установлено соответсвие между колонками и полями', 'НастройщикИмпорта')
                   }
                ]
