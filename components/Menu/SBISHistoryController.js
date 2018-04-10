@@ -224,6 +224,13 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
                 needToDrawSeparate = false,
                 itemCount = 0,
                 indexLastHistoryItem = null,
+                displayProperty = self._options.displayProperty,
+                config = {
+                    adapter: new SbisAdapter(),
+                    idProperty: self._options.oldItems.getIdProperty(),
+                    format: self._options.oldItems.getFormat().clone()
+                },
+                firstName, secondName,
                 isHistoryFull, recentItems, countOfVisible, isInternalItem;
 
             self._count = 0;
@@ -237,6 +244,14 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
             }
 
             self._filteredFrequent = _private.getFrequent(self);
+            // сортируем по алфавиту популярные записи
+            self._filteredFrequent = Chain(self._filteredFrequent).sort(function (first, second) {
+                firstName = first.get(displayProperty);
+                secondName = second.get(displayProperty);
+
+                return (firstName < secondName) ? -1 : (firstName > secondName) ? 1 : 0;
+            }).value(recordSetFactory, config);
+
             recentItems = _private.getRecent(self);
 
             processedItems.append(self._filteredFrequent);
@@ -559,14 +574,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
          * @param {dataSet} data
          */
         parseHistoryData: function(data){
-            var rows = data && data.getRow(),
-                displayProperty = this._options.displayProperty,
-                config = {
-                    adapter: new SbisAdapter(),
-                    idProperty: this._options.oldItems.getIdProperty(),
-                    format: this._options.oldItems.getFormat().clone()
-                },
-                firstName, secondName;
+            var rows = data && data.getRow();
 
             if(this._options.pinned instanceof Array){
                 _private.fillHistoryRecord(this, this._options.pinned, this._pinned);
@@ -583,13 +591,6 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
             }else if (this._options.frequent && rows && rows.get('frequent')) {
                 _private.fillHistoryRecord(this, rows.get('frequent'), this._frequent);
             }
-            // сортируем по алфавиту популярные записи
-            this._frequent = Chain(this._frequent).sort(function (first, second) {
-                firstName = first.get(displayProperty);
-                secondName = second.get(displayProperty);
-
-                return (firstName < secondName) ? -1 : (firstName > secondName) ? 1 : 0;
-            }).value(recordSetFactory, config);
         },
 
         /**
