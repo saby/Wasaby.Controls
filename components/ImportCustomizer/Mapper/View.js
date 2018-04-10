@@ -19,6 +19,13 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
    function (cObjectIsEqual, CompoundControl, RecordSet, dotTplFn) {
       'use strict';
 
+      /**
+       * Константа (как бы) префикс имён дропдаунов для выбора вариантов
+       * @type {string}
+       * @private
+       */
+      var _PREFIX_VARIANT_NAME = 'controls-ImportCustomizer-Mapper-View__grid__item__menu__';
+
       var View = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ImportCustomizer/Mapper/View.prototype*/ {
 
          /**
@@ -96,11 +103,12 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
          },
 
          _bindEvents: function () {
-            /*^^^this.subscribeTo(this._view, 'onSelectedItemsChange', function (evtName, selecteds, changes) {
-               var id = selecteds[0];
-               this._options.sheetIndex = id ? id - 1 : -1;
-               this._notify('change', this.getValues());
-            }.bind(this));*/
+            for (var i = 0, list = this.getChildControls(), handler; i < list.length; i++) {
+               var cmp = list[i];
+               if (cmp.getName().substring(0, _PREFIX_VARIANT_NAME.length) === _PREFIX_VARIANT_NAME) {
+                  this.subscribeTo(cmp, 'onSelectedItemsChange', handler = handler || this._onChangeVariant.bind(this));
+               }
+            }
          },
 
          /**
@@ -120,9 +128,13 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
                if (variantIds.length) {
                   var menuItems = variantIds.map(function (v) { return {id:v, title:variants[v] || rk('(Без названия)', 'НастройщикИмпорта')}; });
                   menuItems.unshift();
+                  var self = this;
                   menuConf = {
-                     namePrefix: 'controls-ImportCustomizer-Mapper-View__grid__item__menu__',
-                     items: menuItems
+                     namePrefix: _PREFIX_VARIANT_NAME,
+                     items: menuItems,
+                     handlers: this._options ? {
+                        onSelectedItemsChange: this._onChangeVariant.bind(this)
+                     } : null
                   };
                }
             }
@@ -170,6 +182,28 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
          },
 
          /**
+          * Константа (как бы) префикс имён дропдаунов для выбора вариантов
+          *
+          * @protected
+          * @param {Core/EventObject} evtName Дескриптор события
+          * @param {Array<string|number>} selectedIds Список выбранных идентификаторов
+          * @param {object} changes Дескриптор Подробные данные об изменениях
+          */
+         _onChangeVariant: function (evtName, selectedIds, changes) {
+            var variantId = selectedIds[0];
+            var fieldId = evtName.getTarget().getName().substring(_PREFIX_VARIANT_NAME.length);
+            var options = this._options;
+            var accordances = options.accordances;
+            if (variantId) {
+               accordances[fieldId] = variantId;
+            }
+            else {
+               delete accordances[fieldId];
+            }
+            this._notify('change', this.getValues());
+         },
+
+         /**
           * Установить указанные настраиваемые значения компонента
           *
           * @public
@@ -191,6 +225,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
                throw new Error('Object required');
             }
             var options = this._options;
+            var fieldsBefore = !!options.fields;
             var has = {};
             for (var name in values) {
                switch (name) {
@@ -211,7 +246,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
             }
             if (has.fields || has.fieldFilter || has.fieldProperty || has.variants || has.accordances) {
                var grid = this._grid;
-               if (has.variants) {
+               if (has.variants || !fieldsBefore) {
                   grid.setColumns(this._makeColumnsInfo(options));
                }
                grid.setItems(this._makeRowsInfo(options));

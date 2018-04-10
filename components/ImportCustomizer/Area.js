@@ -320,6 +320,12 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                   this._setChildComponentValues('provider', {skippedRows:skippedRows});
                }.bind(this));
             }
+            if (views.mapper) {
+               this.subscribeTo(views.mapper, 'change', function (evtName, values) {
+                  // Изменилась ^^^
+                  //^^^
+               }.bind(this));
+            }
          },
 
          /*
