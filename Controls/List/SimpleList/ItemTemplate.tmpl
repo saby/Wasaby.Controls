@@ -1,8 +1,8 @@
-<div attr:class="ws-ListView__item{{marker != false && itemData.isSelected ? ' ws-ListView__item__selected'}}{{!!itemData.showActions ? ' ws-ListView__item_showActions'}}{{!!itemData.isActive ? ' ws-ListView__item_active'}}{{!!itemData.isEditing? ' ws-ListView__item_editing'}}"
+<div attr:class="controls-ListView__itemV{{marker != false && itemData.isSelected ? ' controls-ListView__item__marked'}}{{!!itemData.showActions ? ' controls-ListView__item_showActions'}}{{!!itemData.isActive ? ' controls-ListView__item_active'}}{{!!itemData.isEditing? ' controls-ListView__item_editing'}}"
      attr:key="{{itemData.dispItem.getHash()}}">
 
     <ws:if data="{{itemData.multiSelectVisibility}}">
-        <ws:partial template="{{multiSelectTpl}}" multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}"/>
+        <ws:partial template="{{multiSelectTpl}}" multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" attr:class="controls-ListView__checkbox"/>
     </ws:if>
 
     <ws:if data="{{contentTemplate}}">
@@ -15,12 +15,13 @@
         </ws:if>
         <ws:else>
             <ws:partial
+                    attr:class="controls-ListView__itemContent"
                     template="{{contentTemplate}}"
                     itemData="{{itemData}}"/>
         </ws:else>
     </ws:if>
     <ws:else>
-        <div>{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>
+        <div attr:class="controls-ListView__itemContent">{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>
     </ws:else>
     <ws:if data="{{ (itemData.itemActions && itemData.itemActions.length) || itemData.isEditing }}">
         <ws:partial template="{{itemActionsTemplate}}"  itemData="{{itemData}}"/>
