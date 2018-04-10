@@ -80,7 +80,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             //'css!' + TINYMCE_URL_BASE + '/skins/lightgray/skin.min.css',
             //'css!' + TINYMCE_URL_BASE + '/skins/lightgray/content.inline.min.css',
             //Экстренное решение что бы уменшить трафик. В 3.18.200 надо исправить сия безобразие
-            TINYMCE_URL_BASE + '/tinymce.min'
+            TINYMCE_URL_BASE + '/tinymce'
          ],
          constants = {
             baseAreaWidth: 768,//726
