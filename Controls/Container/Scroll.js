@@ -249,7 +249,7 @@ define('Controls/Container/Scroll',
             _arrowClickHandler: function(event, btnName) {
                var scrollParam;
 
-               switch(btnName) {
+               switch (btnName) {
                   case 'Begin':
                      scrollParam = 'top';
                      break;
