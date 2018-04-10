@@ -91,6 +91,16 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
           * @property {boolean} [noFailOnError] Указывает на то, что если проверка не пройдена, это не является фатальным. В таком случае пользователю будет показан диалог с просьбой о подтверждении (опционально)
           */
 
+         /**
+          * @typedef {object} ImportResults Тип, содержащий информацию о результате редактирования
+          * @property {string} dataType Тип импортируемых данных (excel и т.д.)
+          * @property {ImportFile} file Информация о файле с импортируемыми данными
+          * @property {Array<ImportSheet>} sheets Список объектов, представляющих имеющиеся области данных
+          * @property {boolean} [sameSheetConfigs] Обрабатываются ли все области данных одинаково (опционально)
+          * @property {object} [mappingAccordances] Перечень соответствий специальный ключ поля - идентификатор варианта (опционально, когда применимо)
+          * @property {*} [*] Базовые параметры импортирования (опционально)
+          */
+
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
@@ -153,7 +163,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                validators: null
             },
             // Список имён вложенных компонентов
-            _childViewNames: {
+            _subviewNames: {
                sheet: 'controls-ImportCustomizer-Area__sheet',
                baseParams: 'controls-ImportCustomizer-Area__baseParams',
                provider: 'controls-ImportCustomizer-Area__provider',
@@ -178,7 +188,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
 
          _modifyOptions: function () {
             var options = Area.superclass._modifyOptions.apply(this, arguments);
-            options._isNeeds = this._getChildCompmonentsNeediness(options);
+            options._isNeeds = this._getSubviewUsings(options);
             var sheets = options.sheets;
             var hasSheets = sheets && sheets.length;
             options._sheetsTitles = hasSheets ? sheets.map(function (v) {return v.name; }) : [];
@@ -231,9 +241,9 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             Area.superclass.init.apply(this, arguments);
             var options = this._options;
             // Получить ссылки на имеющиеся подкомпоненты
-            for (var name in this._childViewNames) {
+            for (var name in this._subviewNames) {
                if (options._isNeeds[name]) {
-                  this._views[name] = _getChildComponent(this, this._childViewNames[name]);
+                  this._views[name] = _getChildComponent(this, this._subviewNames[name]);
                }
             }
             // Инициализировать результирующие данные
@@ -298,10 +308,10 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                   sheetIndex = values.sheetIndex;
                   options.sheetIndex = sheetIndex;
                   var nextResult = results[0 <= sheetIndex ? sheetIndex + 1 : ''];
-                  this._setChildComponentValues('provider', nextResult.provider);
+                  this._setSubviewValues('provider', nextResult.provider);
                   this._updateProviderArgsView(nextResult.provider.parser);
                   var sheets = options.sheets;
-                  this._setChildComponentValues('columnBinding', cMerge({rows:sheets[0 < sheetIndex ? sheetIndex : 0].sampleRows}, nextResult.columnBinding));
+                  this._setSubviewValues('columnBinding', cMerge({rows:sheets[0 < sheetIndex ? sheetIndex : 0].sampleRows}, nextResult.columnBinding));
                }.bind(this));
             }
             if (views.baseParams) {
@@ -310,7 +320,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                   var fields = values.fields;
                   if (fields) {
                      this._options.fields = fields;
-                     this._setChildComponentValues('columnBinding', {fields:fields});
+                     this._setSubviewValues('columnBinding', {fields:fields});
                   }
                }.bind(this));
             }
@@ -326,7 +336,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                   }
                   result.provider = cMerge({}, values);
                   result.columnBinding.skippedRows = skippedRows;
-                  this._setChildComponentValues('columnBinding', {skippedRows:skippedRows});
+                  this._setSubviewValues('columnBinding', {skippedRows:skippedRows});
                }.bind(this));
             }
             // Для компонента this._views.providerArgs подисываеися отдельно через обработчик в опциях
@@ -338,12 +348,16 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                   var skippedRows = values.skippedRows;
                   result.provider.skippedRows = skippedRows;
                   result.columnBinding = cMerge({}, values);
-                  this._setChildComponentValues('provider', {skippedRows:skippedRows});
+                  this._setSubviewValues('provider', {skippedRows:skippedRows});
                }.bind(this));
             }
             if (views.mapper) {
                this.subscribeTo(views.mapper, 'change', function (evtName, values) {
                   // Изменился перечень соответсвий
+                  var accordances = values.accordances;
+                  if (accordances) {
+                     this._options.mapping.accordances = accordances;
+                  }
                }.bind(this));
             }
          },
@@ -366,18 +380,16 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
           * @param {object} options Опции компонента
           * @return {object}
           */
-         _getChildCompmonentsNeediness: function (options) {
+         _getSubviewUsings: function (options) {
             var dataType = options.dataType;
             var isExcel = dataType === Area.DATA_TYPE_EXCEL;
-            var isDBF = dataType === Area.DATA_TYPE_DBF;
-            var isCML = dataType === Area.DATA_TYPE_CML;
             return {
                 sheet: isExcel,
                 baseParams: true,
                 provider: isExcel,
                 providerArgs: isExcel,
-                columnBinding: isExcel || isDBF,
-                mapper: isCML
+                columnBinding: isExcel || dataType === Area.DATA_TYPE_DBF,
+                mapper: dataType === Area.DATA_TYPE_CML
             };
          },
 
@@ -412,9 +424,9 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             }
             this._options.fields = fields;
             var views = this._views;
-            //this._setChildComponentValues('baseParams', {fields:fields});
-            this._setChildComponentValues('columnBinding', {fields:fields});
-            this._setChildComponentValues('mapper', {fields:fields});
+            //this._setSubviewValues('baseParams', {fields:fields});
+            this._setSubviewValues('columnBinding', {fields:fields});
+            this._setSubviewValues('mapper', {fields:fields});
          },
 
          /*
@@ -424,7 +436,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
           * @param {string} name Мнемоническое имя компонента (в наборе _views)
           * @param {object} values Набор из нескольких значений, которые необходимо изменить
           */
-         _setChildComponentValues: function (name, values) {
+         _setSubviewValues: function (name, values) {
             var view = this._views[name];
             if (view) {
                view.setValues(values);
@@ -476,25 +488,32 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          _cmdComplete: function () {
             // Сформировать результирующие данные из всего имеющегося
             var options = this._options;
-            var views = this._views;
-            var results = this._results;
-            var sheetIndex = options.sheetIndex;
-            var useAllSheets = 0 <= sheetIndex;
-            var sheets;
-            if (useAllSheets) {
-               sheets = options.sheets.reduce(function (r, v, i) { r.push(this._combineResultSheet(results[i + 1], v, i)); return r; }.bind(this), []);
-            }
-            else {
-               sheets = [this._combineResultSheet(results[''])];
-               sheets[0].columnsCount = options.sheets[0].sampleRows[0].length;;
-            }
+            var dataType = options.dataType;
+            var useSheets = dataType === Area.DATA_TYPE_EXCEL || dataType === Area.DATA_TYPE_DBF;
+            var useMapping = dataType === Area.DATA_TYPE_CML;
             var data = {
-               dataType: options.dataType,
-               file: options.file,
-               //sheetIndex: sheetIndex,
-               sameSheetConfigs: !useAllSheets,
-               sheets: sheets
+               dataType: dataType,
+               file: options.file
             };
+            if (useSheets) {
+               var results = this._results;
+               var sheetIndex = options.sheetIndex;
+               var useAllSheets = 0 <= sheetIndex;
+               var sheets;
+               if (useAllSheets) {
+                  sheets = options.sheets.reduce(function (r, v, i) { r.push(this._combineResultSheet(results[i + 1], v, i)); return r; }.bind(this), []);
+               }
+               else {
+                  sheets = [this._combineResultSheet(results[''])];
+                  sheets[0].columnsCount = options.sheets[0].sampleRows[0].length;;
+               }
+               //data.sheetIndex = sheetIndex;
+               data.sameSheetConfigs = !useAllSheets;
+               data.sheets = sheets;
+            }
+            if (useMapping) {
+               data.mappingAccordances = options.mapping.accordances;
+            }
             var baseParams = this._views.baseParams.getValues();
             for (var name in baseParams) {
                data[name] = baseParams[name];
@@ -503,7 +522,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             this._checkResults(data).addCallback(function (isSuccess) {
                // И если всё нормально - завершить диалог
                if (isSuccess) {
-                  this._notify('onComplete', data);
+                  this._notify('onComplete', /*ImportResults*/ data);
                }
                /*else {
                   // Иначе пользователь продолжает редактирование
