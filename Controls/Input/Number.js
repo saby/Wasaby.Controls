@@ -103,6 +103,38 @@ define('Controls/Input/Number', [
          }
       },
 
+      _focusoutHandler: function() {
+         if (!this._options.showEmptyDecimals) {
+            var
+               i,
+               emptyCount = 0,
+               value = this._numberViewModel.getDisplayValue(),
+               processedValue;
+
+            if (value.indexOf('.') !== -1) {
+               for (i = value.length - 1; i >= 0; i--) {
+                  if (value[i] !== '0' || value[i] === '.') {
+                     break;
+                  }
+
+                  if (value[i] === '0') {
+                     emptyCount++;
+                  }
+               }
+
+               if (emptyCount !== 0) {
+                  processedValue = value.slice(0, -emptyCount);
+
+                  if (processedValue[processedValue.length - 1] === '.') {
+                     processedValue = processedValue.slice(0, -1);
+                  }
+
+                  this._notify('valueChanged', [processedValue]);
+               }
+            }
+         }
+      },
+
       paste: function(text) {
          this._caretPosition = inputHelper.pasteHelper(this._children['inputRender'], this._children['realArea'], text);
       }
