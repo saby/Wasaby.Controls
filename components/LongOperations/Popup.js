@@ -74,6 +74,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
             _tabChannel: null,
 
             _loadingIndicator: null,
+            _isIntroduced: null,
             _isInStartAnimation: null
          },
 
@@ -105,24 +106,24 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
             this._bindEvents();
             this._longOpList.reload();
 
-            var cls = 'controls-LongOperationsPopup__hidden';
-            if (container.hasClass(cls)) {
-               container.css('opacity', 0);
-               container.removeClass(cls);
-               container.animate({opacity:1}, 800);
-            }
+            // Здесь закоментировать - если открывать сразу, или даже с задержкой в 2 сек, то при длинном ответе LRS будет показано белое пустое окошко информера
+            //this._introduce();
          },
 
          _bindEvents: function () {
             var self = this;
 
+            this.subscribeTo(this, 'onShow', function () {
+               self._tabChannel.notify('LongOperations:Popup:onOpen', self.getId());
+            });
+
             /*Если пользователь закроет в одной вкладке, закрываем на всех вкладках*/
             this.subscribeTo(this, 'onClose', function () {
                if (self.isVisible()) {
-                  self._tabChannel.notify('LongOperations:Popup:onClosed');
+                  self._tabChannel.notify('LongOperations:Popup:onClose', self.getId());
                }
             });
-            this.subscribeTo(this._tabChannel, 'LongOperations:Popup:onClosed', function () {
+            this.subscribeTo(this._tabChannel, 'LongOperations:Popup:onClose', function () {
                if (!self._isDestroyed) {
                   self.close();
                }
@@ -161,6 +162,11 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                   }
                   actionsContainer.removeClass('ws-hidden');
                   self._updateState();
+
+                  // Данные получены - пора показать окно, если оно не было показано ранее
+                  if (!self._isIntroduced) {
+                     self._introduce();
+                  }
 
                   //При перерисовке размеры могут меняться
                   self._notify('onSizeChange');
@@ -229,6 +235,17 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                   self._longOpList.reload();
                }
             });
+         },
+
+         _introduce: function () {
+            var cssClass = 'controls-LongOperationsPopup__hidden';
+            var container = this.getContainer();
+            if (container.hasClass(cssClass)) {
+               container.css('opacity', 0);
+               container.removeClass(cssClass);
+               container.animate({opacity:1}, 800);
+               this._isIntroduced = true;
+            }
          },
 
          /**
