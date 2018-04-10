@@ -35,7 +35,7 @@ define('Controls/Button', [
     * @variant flat Кнопка без контура
     */
    var _private = {
-      cssStyleGeneration: function (self, options) {
+      cssStyleGeneration: function(self, options) {
          var currentButtonClass = Classes.getCurrentButtonClass(options.style);
 
          self._style = currentButtonClass.style;
