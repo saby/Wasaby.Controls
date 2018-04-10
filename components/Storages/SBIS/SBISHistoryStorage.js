@@ -20,6 +20,18 @@ define('SBIS3.CONTROLS/Storages/SBIS/SBISHistoryStorage', [
    var serializeFnc = function(serialize, value) {
       return value ? strHelpersMin[serialize ? 'serializeURLData' : 'deserializeURLData'](value) : null;
    };
+   
+   var historyLoadCallback = function(rawData) {
+      var value;
+      try {
+         /* В хранилище уже может лежать сериализованое значение, а не строка */
+         value = (!rawData || typeof rawData === "string") ? self._options.serialize(false, rawData) : rawData;
+      } catch (e) {
+         IoC.resolve('ILogger').error('HistoryController', e.message, e);
+         value = null;
+      }
+      return value;
+   };
 
    /* Постфикс для хранения данных в глобальных параметрах клиента */
    var GLOBAL_POSTFIX = '-global';
@@ -28,6 +40,8 @@ define('SBIS3.CONTROLS/Storages/SBIS/SBISHistoryStorage', [
       В случае разрушение всех экземпляров, которые ссылаются на один id,
       история из объекта удаляется */
    var STORAGES = {};
+   
+   var HISTORY_DEFERREDS = {};
 
    /**
     * Контроллер, который предоставляет базовые механизмы работы с историей.
@@ -125,11 +139,13 @@ define('SBIS3.CONTROLS/Storages/SBIS/SBISHistoryStorage', [
       },
 
       _getStorageValue: function(async) {
-         var key = this._options.historyId,
-             self = this,
-             value;
-   
+         var key = this._options.historyId;
          var valueDeferred;
+   
+         if (HISTORY_DEFERREDS[key]) {
+            return HISTORY_DEFERREDS[key];
+         }
+         
          if (constants.userConfigSupport)  {
             if (async) {
                valueDeferred = this._SBISStorage.getItem(key);
@@ -139,18 +155,13 @@ define('SBIS3.CONTROLS/Storages/SBIS/SBISHistoryStorage', [
          } else {
             valueDeferred = Deferred.success(this._getLocalStorage().getItem(key));
          }
-   
+         
+         HISTORY_DEFERREDS[key] = valueDeferred;
          valueDeferred.addCallback(function(rawData) {
-            try {
-               /* В хранилище уже может лежать сериализованое значение, а не строка */
-               value = (!rawData || typeof rawData === "string") ? self._options.serialize(false, rawData) : rawData;
-            } catch (e) {
-               IoC.resolve('ILogger').error('HistoryController', e.message, e);
-               value = null;
-            }
-            return value;
+            delete HISTORY_DEFERREDS[key];
+            return historyLoadCallback(rawData);
          });
-
+         
          return valueDeferred;
       },
 
