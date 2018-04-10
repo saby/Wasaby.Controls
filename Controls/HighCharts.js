@@ -10,6 +10,14 @@ define('Controls/HighCharts',
    function(Control, template, constants) {
       'use strict';
 
+      /**
+       * Диаграмма HighCharts
+       * @class Controls/HighCharts
+       * @extends Core/Control
+       * @control
+       * @authors Волоцкой В.Д., Сухоручкин А.С.
+       */
+
       var HighChart = Control.extend({
          _template: template,
 
