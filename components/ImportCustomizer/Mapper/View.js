@@ -1,5 +1,5 @@
 /**
- * Контрол "Настройка соответствия соответствия/мэпинга значений настройщика импорта"
+ * Контрол "Настройка соответствия/мэпинга значений настройщика импорта"
  *
  * @public
  * @class SBIS3.CONTROLS/ImportCustomizer/Mapper/View
@@ -19,10 +19,17 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
    function (cObjectIsEqual, CompoundControl, RecordSet, dotTplFn) {
       'use strict';
 
+      /**
+       * Константа (как бы) префикс имён дропдаунов для выбора вариантов
+       * @type {string}
+       * @private
+       */
+      var _PREFIX_VARIANT_NAME = 'controls-ImportCustomizer-Mapper-View__grid__item__menu__';
+
       var View = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ImportCustomizer/Mapper/View.prototype*/ {
 
          /**
-          * @typedef {object} ImportMapperItem Тип, содержащий информацию об элементе сопоставления
+          * @typedef {object} ImportSimpleItem Тип, содержащий информацию об элементе сопоставления
           * @property {string|number} id Идентификатор элемента
           * @property {string} title Название элемента
           */
@@ -32,7 +39,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
           * @param {Core/EventObject} evtName Дескриптор события
           * @param {object} values Настраиваемые значения компонента:
           * @param {ImportTargetFields} [values.fields]  Полный список полей (опционально)
-          * @param {function(object|WS.Data/Entity/Record):ImportMapperItem} [values.fieldFilter] Фильтр полей (опционально)
+          * @param {function(object|WS.Data/Entity/Record):ImportSimpleItem} [values.fieldFilter] Фильтр полей (опционально)
           * @param {string} [values.fieldProperty] Имя специального ключевого свойства (опционально)
           * @param {object} [values.variants] Набор вариантов сопоставления (опционально)
           * @param {object} [values.accordances] Перечень соответствий специальный ключ поля - идентификатор варианта (опционально)
@@ -59,7 +66,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
                 */
                fields: null,
                /**
-                * @cfg {function(object|WS.Data/Entity/Record):ImportMapperItem} Фильтр полей, с помощью которого из общего списка полей {@link fields} отбираются нужные. Фильтр принимает объект поля и, если оно нужное, возвращает объект вида {@link ImportMapperItem}. Упрощённый способ отбора предоставляется опцией {@link fieldProperty}
+                * @cfg {function(object|WS.Data/Entity/Record):ImportSimpleItem} Фильтр полей, с помощью которого из общего списка полей {@link fields} отбираются нужные. Фильтр принимает объект поля и, если оно нужное, возвращает объект вида {@link ImportSimpleItem}. Упрощённый способ отбора предоставляется опцией {@link fieldProperty}
                 */
                fieldFilter: null,
                /**
@@ -96,11 +103,12 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
          },
 
          _bindEvents: function () {
-            /*^^^this.subscribeTo(this._view, 'onSelectedItemsChange', function (evtName, selecteds, changes) {
-               var id = selecteds[0];
-               this._options.sheetIndex = id ? id - 1 : -1;
-               this._notify('change', this.getValues());
-            }.bind(this));*/
+            for (var i = 0, list = this.getChildControls(), handler; i < list.length; i++) {
+               var cmp = list[i];
+               if (cmp.getName().substring(0, _PREFIX_VARIANT_NAME.length) === _PREFIX_VARIANT_NAME) {
+                  this.subscribeTo(cmp, 'onSelectedItemsChange', handler = handler || this._onChangeVariant.bind(this));
+               }
+            }
          },
 
          /**
@@ -120,9 +128,13 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
                if (variantIds.length) {
                   var menuItems = variantIds.map(function (v) { return {id:v, title:variants[v] || rk('(Без названия)', 'НастройщикИмпорта')}; });
                   menuItems.unshift();
+                  var self = this;
                   menuConf = {
-                     namePrefix: 'controls-ImportCustomizer-Mapper-View__grid__item__menu__',
-                     items: menuItems
+                     namePrefix: _PREFIX_VARIANT_NAME,
+                     items: menuItems,
+                     handlers: this._options ? {
+                        onSelectedItemsChange: this._onChangeVariant.bind(this)
+                     } : null
                   };
                }
             }
@@ -170,12 +182,34 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
          },
 
          /**
+          * Константа (как бы) префикс имён дропдаунов для выбора вариантов
+          *
+          * @protected
+          * @param {Core/EventObject} evtName Дескриптор события
+          * @param {Array<string|number>} selectedIds Список выбранных идентификаторов
+          * @param {object} changes Дескриптор Подробные данные об изменениях
+          */
+         _onChangeVariant: function (evtName, selectedIds, changes) {
+            var variantId = selectedIds[0];
+            var fieldId = evtName.getTarget().getName().substring(_PREFIX_VARIANT_NAME.length);
+            var options = this._options;
+            var accordances = options.accordances;
+            if (variantId) {
+               accordances[fieldId] = variantId;
+            }
+            else {
+               delete accordances[fieldId];
+            }
+            this._notify('change', this.getValues());
+         },
+
+         /**
           * Установить указанные настраиваемые значения компонента
           *
           * @public
           * @param {object} values Набор из нескольких значений, которые необходимо изменить
           * @param {ImportTargetFields} [values.fields]  Полный список полей (опционально)
-          * @param {function(object|WS.Data/Entity/Record):ImportMapperItem} [values.fieldFilter] Фильтр полей (опционально)
+          * @param {function(object|WS.Data/Entity/Record):ImportSimpleItem} [values.fieldFilter] Фильтр полей (опционально)
           * @param {string} [values.fieldProperty] Имя специального ключевого свойства (опционально)
           * @param {object} [values.variants] Набор вариантов сопоставления (опционально)
           * @param {object} [values.accordances] Перечень соответствий специальный ключ поля - идентификатор варианта (опционально)
@@ -191,6 +225,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
                throw new Error('Object required');
             }
             var options = this._options;
+            var fieldsBefore = !!options.fields;
             var has = {};
             for (var name in values) {
                switch (name) {
@@ -211,7 +246,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
             }
             if (has.fields || has.fieldFilter || has.fieldProperty || has.variants || has.accordances) {
                var grid = this._grid;
-               if (has.variants) {
+               if (has.variants || !fieldsBefore) {
                   grid.setColumns(this._makeColumnsInfo(options));
                }
                grid.setItems(this._makeRowsInfo(options));
@@ -248,7 +283,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
        * @param {string} displayProperty Имя свойства поля для отображения
        * @param {boolean} isRecord Значение value является рекордсетом
        * @param {object|WS.Data/Entity/Record} value Поле для фильтрации
-       * @return {ImportMapperItem}
+       * @return {ImportSimpleItem}
        */
       var _defaultFieldFilter = function (fieldProperty, displayProperty, isRecord, value) {
          var id = isRecord ? value.get(fieldProperty) : value[fieldProperty];
