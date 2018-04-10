@@ -42,20 +42,6 @@ define(
                assert.equal(result, 0);
             });
          });
-         it('calcPagingPagesCount', function() {
-            result = Scroll._private.calcPagingPagesCount(200, 200);
-            assert.equal(result, 1);
-
-            result = Scroll._private.calcPagingPagesCount(200, 201);
-            assert.equal(result, 2);
-         });
-         it('calcPagingSelectedPage', function() {
-            result = Scroll._private.calcPagingSelectedPage(200, 200);
-            assert.equal(result, 2);
-
-            result = Scroll._private.calcPagingSelectedPage(200, 201);
-            assert.equal(result, 3);
-         });
       });
    }
 );
