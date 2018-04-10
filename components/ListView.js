@@ -577,22 +577,20 @@ define('SBIS3.CONTROLS/ListView',
                 * @example
                 * <b>Пример 1.</b> Конфигурация операций через вёрстку компонента.
                 * <pre>
-                *     <options name="itemsActions" type="array">
-                *        <options>
-                *           <option name="name">btn1</option>
-                *           <option name="icon">sprite:icon-16 icon-Delete icon-primary</option>
-                *           <option name="isMainAction">false</option>
-                *           <option name="tooltip">Удалить</option>
-                *           <option name="onActivated" type="function">Examples/MyArea/MyComponent:prototype.myOnActivatedHandler</option>
-                *        </options>
-                *        <options>
-                *            <option name="name">btn2</option>
-                *            <option name="icon">sprite:icon-16 icon-Trade icon-primary</option>
-                *            <option name="tooltip">Изменить</option>
-                *            <option name="isMainAction">true</option>
-                *            <option name="onActivated" type="function">Examples/MyArea/MyComponent:prototype.myOnActivatedHandler</option>
-                *         </options>
-                *     </options>
+                *     <ws:itemsActions>
+                *        <ws:Array>
+                *           <ws:Object name="btn1" caption="Удалить" tooltip="Удалить" icon="sprite:icon-16 icon-Delete icon-primary" isMainAction="{{false}}">
+                *              <ws:onActivated>
+                *                 <ws:Function>Examples/MyArea/MyComponent:prototype.myOnActivatedHandler</ws:Function>
+                *              </ws:onActivated>
+                *           </ws:Object>
+                *           <ws:Object name="btn2" caption="Изменить" tooltip="Изменить" icon="sprite:icon-16 icon-Trade icon-primary" isMainAction="{{true}}">
+                *              <ws:onActivated>
+                *                 <ws:Function>Examples/MyArea/MyComponent:prototype.myOnActivatedHandler</ws:Function>
+                *              </ws:onActivated>
+                *           </ws:Object>
+                *         </ws:Array>
+                *     </ws:itemsActions>>
                 * </pre>
                 * <b>Пример 2.</b> Конфигурация операций через JS-код компонента.
                 * <pre>
@@ -686,16 +684,13 @@ define('SBIS3.CONTROLS/ListView',
                 * Подробнее о способах передачи значения в опцию вы можете прочитать в разделе <a href="/doc/platform/developmentapl/interface-development/core/component/xhtml/">Вёрстка компонента</a>.
                 * <b>Пример 1.</b> Ограничим возможность перемещения записей с помощью курсора мыши.
                 * <pre>
-                *     <option name="itemsDragNDrop" value=""></option>      <!-- Передаём пустую строку в атрибуте value. Иным способом пустая строка не распознаётся -->
-                *     <option name="itemsDragNDrop" value="false"></option> <!-- Первый способ передачи false -->
-                *     <option name="itemsDragNDrop">false</option>          <!-- Второй способ передачи false -->
+                *     itemsDragNDrop=""          <!-- Передаём пустую строку в атрибуте value. Иным способом пустая строка не распознаётся -->
+                *     itemsDragNDrop="{{false}}" <!-- Передаем false -->
                 * </pre>
                 * <b>Пример 2.</b> Разрешим перемещение записей с помощью курсора мыши.
                 * <pre>
-                *     <option name="itemsDragNDrop" type="string" value="allow"></option> <!-- Первый способ передачи allow -->
-                *     <option name="itemsDragNDrop" type="string">allow</option>          <!-- Второй способ передачи allow -->
-                *     <option name="itemsDragNDrop" value="true"></option> <!-- Первый способ передачи true -->
-                *     <option name="itemsDragNDrop">true</option>          <!-- Второй способ передачи true -->
+                *     itemsDragNDrop="allow"    <!-- Передаем allow -->
+                *     itemsDragNDrop="{{true}}" <!-- Передаем true -->
                 * </pre>
                 */
                itemsDragNDrop: 'allow',
@@ -722,7 +717,7 @@ define('SBIS3.CONTROLS/ListView',
                 *
                 * @example
                 * <pre>
-                *    <option name="infiniteScroll">down</option>
+                *    infiniteScroll="down"
                 * </pre>
                 * @see isInfiniteScroll
                 * @see setInfiniteScroll
@@ -760,7 +755,7 @@ define('SBIS3.CONTROLS/ListView',
                 * </ol>
                 * @example
                 * <pre>
-                *     <option name="showPaging">true</option>
+                *     showPaging="{{true}}"
                 * </pre>
                 * @see setPage
                 * @see getPage
@@ -787,13 +782,13 @@ define('SBIS3.CONTROLS/ListView',
                 * Режимы редактирования можно группировать и получать совмещенное поведение.
                 * Например, задать редактирование по клику и отобразить панель инструментов при входе в режим редактирования записи можно такой конфигурацией:
                 * <pre>
-                *    <option name="editMode">click|toolbar</option>
+                *    editMode="click|toolbar"
                 * </pre>
                 * Подробное описание каждого режима редактирования и их демонстрационные примеры вы можете найти в разделе документации {@link /doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/edit-in-place/ Редактирование по месту}.
                 * @example
                 * Установлен режим редактирования по клику на элемент коллекции.
                 * <pre>
-                *     <option name="editMode">click</option>
+                *    editMode="click"
                 * </pre>
                 * @see getEditMode
                 * @see setEditMode
@@ -828,7 +823,7 @@ define('SBIS3.CONTROLS/ListView',
                 * С подробным описанием можно ознакомиться в статье {@link /doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/results/ Строка итогов}.
                 * @example
                 * <pre class="brush: xml">
-                *     <option name="resultsPosition">bottom</option> <!-- Строка итогов будет отображена под всеми элементами коллекции -->
+                *     resultsPosition="bottom" <!-- Строка итогов будет отображена под всеми элементами коллекции -->
                 * </pre>
                 * @see resultsText
                 * @see resultsTpl
@@ -842,7 +837,7 @@ define('SBIS3.CONTROLS/ListView',
                 * С подробным описанием можно ознакомиться в статье {@link /doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/results/ Строка итогов}.
                 * @example
                 * <pre class="brush: xml">
-                *    <option name="resultsText">Перечислено за квартал: </option>
+                *    resultsText="Перечислено за квартал: "
                 * </pre>
                 * @see resultsPosition
                 * @see resultsTpl
@@ -870,7 +865,7 @@ define('SBIS3.CONTROLS/ListView',
                 * </pre>
                 * 2. Передаем шаблон в опцию:
                 * <pre class="brush: xml">
-                *     <option name="resultsTpl" value="html!SBIS3.Demo.nDataGridView/resources/resultTemplate"></option>
+                *     resultsTpl="tmpl!SBIS3.Demo.nDataGridView/resources/resultTemplate"
                 * </pre>
                 * @editor CloudFileChooser
                 * @editorConfig extFilter xhtml
