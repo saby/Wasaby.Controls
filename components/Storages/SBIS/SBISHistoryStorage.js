@@ -21,11 +21,11 @@ define('SBIS3.CONTROLS/Storages/SBIS/SBISHistoryStorage', [
       return value ? strHelpersMin[serialize ? 'serializeURLData' : 'deserializeURLData'](value) : null;
    };
    
-   var historyLoadCallback = function(rawData) {
+   var historyLoadCallback = function(rawData, serializer) {
       var value;
       try {
          /* В хранилище уже может лежать сериализованое значение, а не строка */
-         value = (!rawData || typeof rawData === "string") ? self._options.serialize(false, rawData) : rawData;
+         value = (!rawData || typeof rawData === "string") ? serializer(false, rawData) : rawData;
       } catch (e) {
          IoC.resolve('ILogger').error('HistoryController', e.message, e);
          value = null;
@@ -141,6 +141,7 @@ define('SBIS3.CONTROLS/Storages/SBIS/SBISHistoryStorage', [
       _getStorageValue: function(async) {
          var key = this._options.historyId;
          var valueDeferred;
+         var self = this;
    
          if (HISTORY_DEFERREDS[key]) {
             return HISTORY_DEFERREDS[key];
@@ -159,7 +160,7 @@ define('SBIS3.CONTROLS/Storages/SBIS/SBISHistoryStorage', [
          HISTORY_DEFERREDS[key] = valueDeferred;
          valueDeferred.addCallback(function(rawData) {
             delete HISTORY_DEFERREDS[key];
-            return historyLoadCallback(rawData);
+            return historyLoadCallback(rawData, self._options.serialize);
          });
          
          return valueDeferred;
