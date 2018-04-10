@@ -1,22 +1,22 @@
-/// <amd-module name="File/Attach/Option/Getters/FS" />
+/// <amd-module name="File/Attach/Option/Getters/FileSystem" />
 
 import ResourceGetter = require("File/Attach/Option/ResourceGetter");
-import Getter = require("File/ResourceGetter/FS");
+import Getter = require("File/ResourceGetter/FileSystem");
 
 /**
  * Класс конфигурации IResourceGetter для выбора из файловой системы, передаваемый в Attach
  * @class
- * @name File/Attach/Option/Getters/FS
+ * @name File/Attach/Option/Getters/FileSystem
  * @extends File/Attach/Option/ResourceGetter
  * @public
  * @author Заляев А.В.
  */
-class FS extends ResourceGetter {
+class FileSystem extends ResourceGetter {
     /**
      * @cfg {Boolean} Выбрать несколько файлов
      * <wiTag group="Управление">
      * Позволяет выбрать несколько файлов
-     * @name File/Attach/Option/Getters/FS#multiSelect
+     * @name File/Attach/Option/Getters/FileSystem#multiSelect
      */
     /**
      * @cfg {Array<String>} Список расширений выбираемых файлов
@@ -32,14 +32,14 @@ class FS extends ResourceGetter {
      *    extensions: ["image"]
      *    // extensions: ["jpe","jpg","jpeg","gif","png","bmp","ico","svg","svgz","tif","tiff","pct","psd"]
      * </pre>
-     * @name File/Attach/Option/Getters/FS#extensions
+     * @name File/Attach/Option/Getters/FileSystem#extensions
      */
     /**
      * @cfg {HTMLElement} DOM элемент - контейнер, в котором будет построен невидивый input[type=file]
      * посредством которого открывается окошко выбора файлов
      * <wiTag group="Управление">
      * По умолчанию: document.body
-     * @name File/Attach/Option/Getters/FS#element
+     * @name File/Attach/Option/Getters/FileSystem#element
      */
     /**
      * @param {Object} [options] Параметры вызова конструктора
@@ -50,4 +50,4 @@ class FS extends ResourceGetter {
         super (new Getter(options || {}));
     }
 }
-export = FS;
+export = FileSystem;

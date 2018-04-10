@@ -355,9 +355,9 @@ define('SBIS3.CONTROLS/ComboBox', [
             selectedItem = $('.controls-ComboBox__item_selected', this._picker.getContainer());
             //навигация по стрелкам
             if (e.which === constants.key.up) {
-               newSelectedItem = selectedKey || this._options.emptyValue ? selectedItem.prev('.controls-ListView__item') : items.eq(0);
+               newSelectedItem = selectedItem.length ? selectedItem.prev('.controls-ListView__item') : items.eq(0);
             } else if (e.which === constants.key.down) {
-               newSelectedItem = selectedKey || this._options.emptyValue ? selectedItem.next('.controls-ListView__item') : items.eq(0);
+               newSelectedItem = selectedItem.length ? selectedItem.next('.controls-ListView__item') : items.eq(0);
             }
             if (newSelectedItem && newSelectedItem.length) {
                //Устанавливаем новую запись. через проекцию, т.к. может быть enum
@@ -472,7 +472,7 @@ define('SBIS3.CONTROLS/ComboBox', [
                   }
                }
             }
-            def.addCallback(this._drawSelectedItemText.bind(this, cKey));
+            def.addCallback(this._drawSelectedItemText.bind(this, cKey, index));
          }
          if (this._isClearing) {
             this._clearSelection();
@@ -480,7 +480,7 @@ define('SBIS3.CONTROLS/ComboBox', [
          }
       },
 
-      _drawSelectedItemText: function(key, item){
+      _drawSelectedItemText: function(key, index, item){
          if (item) {
             var newText = this._getPropertyValue(item, this._options.displayProperty);
             if (newText != this._options.text) {
@@ -495,7 +495,13 @@ define('SBIS3.CONTROLS/ComboBox', [
          }
          if (this._picker) {
             $('.controls-ComboBox__item_selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__item_selected');
-            $('.controls-ComboBox__item[data-id=\'' + key + '\']', this._picker.getContainer().get(0)).addClass('controls-ComboBox__item_selected');
+            if (this._options.emptyValue && key === null) {
+               $('.controls-ComboBox__item:first', this._picker.getContainer()).addClass('controls-ComboBox__item_selected');
+            } else {
+               var projItem = this._getItemsProjection().at(index);
+               var hash = projItem && projItem.getHash();
+               $('.controls-ComboBox__item[data-hash=\'' + hash + '\']', this._picker.getContainer()).addClass('controls-ComboBox__item_selected');
+            }
          }
       },
 
@@ -519,7 +525,7 @@ define('SBIS3.CONTROLS/ComboBox', [
             ComboBox.superclass.setText.call(this, '');
          }
          else {
-            this._drawSelectedItemText(null, this._options._emptyRecordProjection.getContents());
+            this._drawSelectedItemText(null, 0, this._options._emptyRecordProjection.getContents());
          }
 
          this._options.selectedKey = null;
@@ -841,6 +847,7 @@ define('SBIS3.CONTROLS/ComboBox', [
             }
          }
 
+         this._revertArrow(true);
          $('.controls-ComboBox__item', this._picker.getContainer()).bind('mouseenter', function itemMouseEnter(event) {
             //не устанавливаем title на мобильных устройствах:
             //во-первых не нужно, во-вторых на ios из-за установки аттрибута не работает клик
@@ -856,10 +863,16 @@ define('SBIS3.CONTROLS/ComboBox', [
          this._scrollToItem(hash);
       },
 
+      _revertArrow: function(isPickerShow) {
+         var arrow = $('.js-controls-ComboBox__arrowDown', this.getContainer());
+         arrow.toggleClass('icon-ExpandLight', !isPickerShow).toggleClass('icon-CollapseLight', isPickerShow);
+      },
+
       hidePicker: function() {
          if (this._picker) {
             $('.controls-ComboBox__item', this._picker.getContainer()).unbind();
          }
+         this._revertArrow(false);
          ComboBox.superclass.hidePicker.apply(this, arguments);
       },
 

@@ -1,10 +1,10 @@
 define('Controls/Button', [
-    'Core/Control',
-    'Controls/Button/Classes',
-    'tmpl!Controls/Button/Button',
-    'css!Controls/Button/Button'
+   'Core/Control',
+   'Controls/Button/Classes',
+   'tmpl!Controls/Button/Button',
+   'css!Controls/Button/Button'
 ], function(Control, Classes, template) {
-    'use strict';
+   'use strict';
 
    /**
 	* Набор базовых компонентов VDOM.
@@ -35,33 +35,33 @@ define('Controls/Button', [
     * @variant flat Кнопка без контура
     */
    var _private = {
-     cssStyleGeneration: function (self, options) {
-        var currentButtonClass = Classes.getCurrentButtonClass(options.style);
+      cssStyleGeneration: function (self, options) {
+         var currentButtonClass = Classes.getCurrentButtonClass(options.style);
 
-        self._style = currentButtonClass.style;
-        self._type = currentButtonClass.type;
-        self._typeWithSize = currentButtonClass.type + '_size-' + options.size;
-        self._typeWithIconStyle = currentButtonClass.type + '_iconStyle-' + options.iconStyle;
-     }
+         self._style = currentButtonClass.style;
+         self._type = currentButtonClass.type;
+         self._typeWithSize = currentButtonClass.type + '_size-' + options.size;
+         self._typeWithIconStyle = currentButtonClass.type + '_iconStyle-' + options.iconStyle;
+      }
    };
 
    var Button = Control.extend({
-       _template: template,
+      _template: template,
 
-       constructor: function (options) {
-          Button.superclass.constructor.apply(this, arguments);
-          _private.cssStyleGeneration(this, options);
-       },
+      constructor: function(options) {
+         Button.superclass.constructor.apply(this, arguments);
+         _private.cssStyleGeneration(this, options);
+      },
 
-       _beforeUpdate: function (newOptions) {
-          _private.cssStyleGeneration(this, newOptions);
-       },
+      _beforeUpdate: function(newOptions) {
+         _private.cssStyleGeneration(this, newOptions);
+      },
 
-       _clickHandler: function (e) {
-           if(!this.isEnabled()) {
-               e.stopPropagation();
-           }
-       }
+      _clickHandler: function(e) {
+         if (!this.isEnabled()) {
+            e.stopPropagation();
+         }
+      }
    });
 
    Button.getDefaultOptions = function() {
@@ -73,5 +73,5 @@ define('Controls/Button', [
 
    Button._private = _private;
 
-    return Button;
+   return Button;
 });

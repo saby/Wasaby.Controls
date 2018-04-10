@@ -34,13 +34,13 @@ define('SBIS3.CONTROLS/Mixins/ChooserMixin', [
 
    var ChooserMixin = /**@lends SBIS3.CONTROLS/Mixins/ChooserMixin.prototype  */{
           /**
-           * @event onChooserClick Происходит при клике на кнопку открытия диалога выбора.
+           * @event onChooserClick Происходит при клике на кнопку открытия диалога выбора. Подробнее о создании диалога выбора можно посмотреть {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/selector-action/selector-dialog/ здесь}.
            * @param {Core/EventObject} eventObject Дескриптор события.
-           * @param {String|Object} Строка или объект
-           * Для {@link /docs/js/SBIS3/CONTROLS/FieldLink/ поля связи} значение второго параметра зависит от значения опции {@link /docs/js/SBIS3/CONTROLS/FieldLink/options/useSelectorAction/ useSelectorAction}:
+           * @param {String|Object} Строка или объект - конфигурация справочника диалога выбора.
+           * Для {@link SBIS3.CONTROLS/FieldLink поля связи} значение второго параметра зависит от значения опции {@link SBIS3.CONTROLS/FieldLink#useSelectorAction useSelectorAction}:
            * <ol>
-           *    <li> useSelectorAction = true - в параметр прийдет объект</li>
-           *    <li> useSelectorAction = false - в параметр прийдет строка</li>
+           *    <li> useSelectorAction = true - в параметр придёт объект</li>
+           *    <li> useSelectorAction = false - в параметр придёт строка</li>
            * </ol>
            * @return {Deferred|Boolean|*} Возможные значения:
            * <ol>

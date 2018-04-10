@@ -16,17 +16,18 @@ define('Controls/Application',
     * Никакой логики внутри нет.
     */
    function(Base,
-            template,
-            Deferred,
-            BodyClasses,
-            TouchDetector,
-            AppData) {
+      template,
+      Deferred,
+      BodyClasses,
+      TouchDetector,
+      AppData) {
       'use strict';
 
       var _private,
          DEFAULT_DEBUG_CATALOG = 'debug/';
 
       _private = {
+
          /**
           * Перекладываем опции или recivedState на инстанс
           * @param self
@@ -55,7 +56,7 @@ define('Controls/Application',
          },
 
          _touchstartPage: function() {
-            TouchDetector.touchHandler()
+            TouchDetector.touchHandler();
          },
          _mousemovePage: function(ev) {
             TouchDetector.moveHandler();

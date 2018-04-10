@@ -28,7 +28,7 @@ define('Controls/List/SimpleList/ListViewModel',
             this._actions = [];
             ListViewModel.superclass.constructor.apply(this, arguments);
             this._itemsModel = new ItemsViewModel({
-               items : cfg.items,
+               items: cfg.items,
                idProperty: cfg.idProperty,
                displayProperty: cfg.displayProperty,
                itemsReadyCallback: cfg.itemsReadyCallback
@@ -45,10 +45,10 @@ define('Controls/List/SimpleList/ListViewModel',
             }
 
             this._multiselection = new MultiSelection({
-               selectedKeys : cfg.selectedKeys,
-               excludedKeys : cfg.excludedKeys
+               selectedKeys: cfg.selectedKeys,
+               excludedKeys: cfg.excludedKeys
             });
-   
+
             _private.updateIndexes(self);
          },
 
@@ -69,6 +69,10 @@ define('Controls/List/SimpleList/ListViewModel',
             return this._itemsModel.isEnd();
          },
 
+         isLast: function() {
+            return this._itemsModel.isLast();
+         },
+
          goToNext: function() {
             //TODO убрать this._itemsModel._curIndex ?
             //this._itemsModel._curIndex++;
@@ -82,11 +86,16 @@ define('Controls/List/SimpleList/ListViewModel',
             itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
             itemsModelCurrent.showActions = !this._editingItemData && !this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive);
             itemsModelCurrent.multiSelectStatus = this._multiselection.getSelectionStatus(itemsModelCurrent.key);
+            itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility === 'visible';
             if (this._editingItemData && itemsModelCurrent.index === this._editingItemData.index) {
                itemsModelCurrent.isEditing = true;
                itemsModelCurrent.item = this._editingItemData.item;
             }
             return itemsModelCurrent;
+         },
+
+         getNext: function() {
+            return this._itemsModel.getNext();
          },
 
          getCurrentIndex: function() {
@@ -112,7 +121,7 @@ define('Controls/List/SimpleList/ListViewModel',
          },
 
          updateIndexes: function(startIndex, stopIndex) {
-            if ((this._startIndex !== startIndex) || (this._stopIndex !== stopIndex)){
+            if ((this._startIndex !== startIndex) || (this._stopIndex !== stopIndex)) {
                this._startIndex = startIndex;
                this._stopIndex = stopIndex;
                this._notify('onListChange');

@@ -1,0 +1,14 @@
+<div class="controls-Grid__header">
+   <ws:for data="listModel.resetHeaderColumns(); listModel.isEndHeaderColumn(); listModel.goToNextHeaderColumn();">
+      <div class="{{listModel.getCurrentHeaderColumn().cellClasses}}">
+         <ws:if data="{{!listModel.getMultiselect() || listModel.getCurrentHeaderColumn().index !== 0}}">
+            <ws:if data="{{!!listModel.getCurrentHeaderColumn().column.template}}">
+               <ws:partial template="{{listModel.getCurrentHeaderColumn().column.template}}" colData="{{listModel.getCurrentHeaderColumn()}}"/>
+            </ws:if>
+            <ws:else>
+               <ws:partial template="{{defaultHeaderContent}}" colData="{{listModel.getCurrentHeaderColumn()}}"/>
+            </ws:else>
+         </ws:if>
+      </div>
+   </ws:for>
+</div>

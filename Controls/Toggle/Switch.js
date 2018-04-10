@@ -3,7 +3,7 @@ define('Controls/Toggle/Switch', [
    'tmpl!Controls/Toggle/Switch/Switch',
    'WS.Data/Type/descriptor',
    'css!Controls/Toggle/Switch/Switch'
-], function (Control, template, types) {
+], function(Control, template, types) {
 
    /**
     * Контрол, отображающий переключатель
@@ -54,7 +54,7 @@ define('Controls/Toggle/Switch', [
          this._markerState = _private._getMarkerState(enabled, options.value);
       },
 
-      _clickHandler: function (e) {
+      _clickHandler: function(e) {
          if (this.isEnabled()) {
             this._notify('valueChanged', [!this._options.value]);
          }

@@ -40,7 +40,7 @@ define('Controls/Controllers/_SearchController',
             });
          },
          
-         abort: function (self) {
+         abort: function(self) {
             _private.getSearch(self).addCallback(function(search) {
                var filter = self._options.filter;
                
@@ -83,7 +83,7 @@ define('Controls/Controllers/_SearchController',
             }
          },
          
-         abort: function () {
+         abort: function() {
             _private.abort(this);
          }
          

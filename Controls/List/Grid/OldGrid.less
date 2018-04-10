@@ -1,0 +1,50 @@
+//--------------- constants ---------------
+@width_Grid-cell-checkbox: 24px;
+//--------------- styles ---------------
+.ws-is-not-full-grid-support {
+  .controls-Grid__wrapper {
+    display: table;
+    width: 100%;
+  }
+  .controls-Grid__header {
+    display: table-header-group;
+  }
+  .controls-Grid__header-cell {
+    position: static;
+    top: 0;
+    display: table-cell;
+  }
+  .controls-Grid__header-cell_valign_top {
+    vertical-align: top;
+  }
+  .controls-Grid__header-cell_valign_middle {
+    vertical-align: middle;
+  }
+  .controls-Grid__header-cell_valign_bottom {
+    vertical-align: bottom;
+  }
+  .controls-Grid__results {
+    display: table-row-group;
+  }
+  .controls-Grid__results-cell {
+    display: table-cell;
+    position: static;
+  }
+  .controls-Grid__row {
+    display: table-row;
+  }
+  .controls-Grid__row-cell {
+    display: table-cell;
+    white-space: nowrap;
+  }
+  .controls-Grid__row-cell-checkbox {
+    width: @width_Grid-cell-checkbox;
+  }
+
+  .controls-Grid__colgroup {
+    display: table-column-group;
+  }
+  .controls-Grid__colgroup-column {
+    display: table-column;
+  }
+}

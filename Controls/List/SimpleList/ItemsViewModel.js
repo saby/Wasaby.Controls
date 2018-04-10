@@ -11,12 +11,13 @@ define('Controls/List/SimpleList/ItemsViewModel',
        * @public
        */
       var _private = {
+
          //проверка на то, нужно ли создавать новый инстанс рекордсета или же можно положить данные в старый
-         isEqualItems: function (oldList, newList) {
-            return oldList && cInstance.instanceOfModule(oldList, 'WS.Data/Collection/RecordSet')
-               && (newList.getModel() === oldList.getModel())
-               && (Object.getPrototypeOf(newList).constructor == Object.getPrototypeOf(newList).constructor)
-               && (Object.getPrototypeOf(newList.getAdapter()).constructor == Object.getPrototypeOf(oldList.getAdapter()).constructor)
+         isEqualItems: function(oldList, newList) {
+            return oldList && cInstance.instanceOfModule(oldList, 'WS.Data/Collection/RecordSet') &&
+               (newList.getModel() === oldList.getModel()) &&
+               (Object.getPrototypeOf(newList).constructor == Object.getPrototypeOf(newList).constructor) &&
+               (Object.getPrototypeOf(newList.getAdapter()).constructor == Object.getPrototypeOf(oldList.getAdapter()).constructor);
          }
       };
       var ItemsViewModel = Abstract.extend({
@@ -47,6 +48,10 @@ define('Controls/List/SimpleList/ItemsViewModel',
             return this._curIndex < (this._display ? this._display.getCount() : 0);
          },
 
+         isLast: function() {
+            return this._curIndex === (this._display ? this._display.getCount() - 1 : 0);
+         },
+
          goToNext: function() {
             this._curIndex++;
          },
@@ -58,11 +63,25 @@ define('Controls/List/SimpleList/ItemsViewModel',
                getPropValue: ItemsUtil.getPropertyValue,
                idProperty: this._options.idProperty,
                displayProperty: this._options.displayProperty,
-               index : this._curIndex,
+               index: this._curIndex,
                item: dispItem.getContents(),
                dispItem: dispItem,
                key: ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.idProperty)
-            }
+            };
+         },
+
+         getNext: function() {
+            var
+               itemIndex = this._curIndex + 1,
+               dispItem = this._display.at(itemIndex);
+            return {
+               getPropValue: ItemsUtil.getPropertyValue,
+               idProperty: this._options.idProperty,
+               displayProperty: this._options.displayProperty,
+               index: itemIndex,
+               item: dispItem.getContents(),
+               dispItem: dispItem
+            };
          },
 
          getCurrentIndex: function() {

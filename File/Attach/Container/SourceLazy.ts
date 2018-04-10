@@ -3,11 +3,11 @@ import SourceContainer = require("File/Attach/Container/Source");
 import ISource = require("WS.Data/Source/ISource");
 import Deferred = require("Core/Deferred");
 import moduleStubs = require("Core/moduleStubs");
-import {IFileDataConstructor} from "File/IFileDataConstructor";
-import {IFileData} from "File/IFileData";
+import IResourceConstructor = require("File/IResourceConstructor");
+import IResource = require("File/IResource");
 
 type Wrapper = {
-    fileType: IFileDataConstructor;
+    fileType: IResourceConstructor;
 }
 type CreateWrappers = Wrapper & {
     source: Deferred<ISource>;
@@ -20,7 +20,7 @@ type LazyWrapper = Wrapper & {
 /**
  * Фильтрует массив обёрток над ISource по типу файла
  * @param {Array<Wrapper>} array
- * @param {File/IFileData} file
+ * @param {File/IResource} file
  * @return {Wrapper}
  * @private
  * @author Заляев А.В.
@@ -50,14 +50,14 @@ class SourceContainerLazy extends SourceContainer {
 
     /**
      * Ленивая егистрация источников данных для загрузки определённого типа ресурса
-     * @param {File/IFileDataConstructor} fileType конструктор обёртки над ресурсом
+     * @param {File/IResourceConstructor} fileType конструктор обёртки над ресурсом
      * @param {String} link Ссылка на источник данных
      * @param {*} options Параметры вызова конструктора обёртки
      * @see File/LocalFile
      * @see File/LocalFileLink
      * @see File/HttpFileLink
      */
-    register(fileType: IFileDataConstructor, link: string, options: any): void {
+    register(fileType: IResourceConstructor, link: string, options: any): void {
         this._lazyWrappers.push({
             fileType,
             link,
@@ -66,24 +66,24 @@ class SourceContainerLazy extends SourceContainer {
     }
     /**
      * Зарегестрирован ли для текущего ресурса источник данных
-     * @param {File/IFileData} file
+     * @param {File/IResource} file
      * @return {boolean}
      * @see File/LocalFile
      * @see File/LocalFileLink
      * @see File/HttpFileLink
      */
-    has(file: IFileData): boolean {
+    has(file: IResource): boolean {
         return super.has(file) || !!this._getLazyWrapper(file);
     }
     /**
      * Возвращает источник данных для ресурса
-     * @param {File/IFileData} file
+     * @param {File/IResource} file
      * @return {Core/Deferred<ISource>}
      * @see File/LocalFile
      * @see File/LocalFileLink
      * @see File/HttpFileLink
      */
-    get(file: IFileData): Deferred<ISource> {
+    get(file: IResource): Deferred<ISource> {
         return super.get(file).addErrback((error) => {
             let lazyWrapper = this._getLazyWrapper(file);
             if (!lazyWrapper) {
@@ -94,17 +94,17 @@ class SourceContainerLazy extends SourceContainer {
     }
     /**
      * Возвращает список зарегестрированый обёрток
-     * @return {Array<File/IFileDataConstructor>}
+     * @return {Array<File/IResourceConstructor>}
      * @see File/LocalFile
      * @see File/LocalFileLink
      * @see File/HttpFileLink
      */
-    getRegisteredResource(): Array<IFileDataConstructor> {
+    getRegisteredResource(): Array<IResourceConstructor> {
         return super.getRegisteredResource().concat(this._lazyWrappers.map((wrapper) => {
             return wrapper.fileType;
         }));
     }
-    private _getLazyWrapper(file: IFileData): LazyWrapper {
+    private _getLazyWrapper(file: IResource): LazyWrapper {
         return <LazyWrapper>instanceFilter(this._lazyWrappers, file);
     }
     private _createSource(wrapper: LazyWrapper): Deferred<ISource> {

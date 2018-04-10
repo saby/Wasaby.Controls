@@ -4,22 +4,22 @@ define('Controls/Popup/Manager',
       'WS.Data/Collection/List'
    ],
 
-   function (Random, List) {
+   function(Random, List) {
       'use strict';
 
       var _popupContainer;
 
       var _private = {
-         addElement: function (element) {
+         addElement: function(element) {
             this._popupItems.add(element);
             if (element.isModal) {
                _private.getPopupContainer().setOverlay(this._popupItems.getCount() - 1);
             }
          },
 
-         removeElement: function (element, container, id) {
+         removeElement: function(element, container, id) {
             var self = this;
-            return element.strategy.elementDestroyed(element, container, id).addCallback( function(){
+            return element.strategy.elementDestroyed(element, container, id).addCallback(function() {
                self._popupItems.remove(element);
                if (element.isModal) {
                   var indices = self._popupItems.getIndicesByValue('isModal', true);
@@ -33,28 +33,28 @@ define('Controls/Popup/Manager',
           * Получить Popup/Container
           * TODO временное решение, пока непонятно, как Manager должен узнать о контейнере
           */
-         getPopupContainer: function () {
+         getPopupContainer: function() {
             if (document && !_popupContainer) {
                var element = document.getElementById('popup');
                if (element && element.controlNodes && element.controlNodes.length) {
                   _popupContainer = element.controlNodes[0].control;
                   _popupContainer.eventHandlers = {
-                     onClosePopup: function (event, id, container) {
+                     onClosePopup: function(event, id, container) {
                         _private.popupClose(id, container);
                      },
-                     onPopupCreated: function (event, id) {
+                     onPopupCreated: function(event, id) {
                         _private.popupCreated(id);
                      },
-                     onPopupUpdated: function (event, id) {
+                     onPopupUpdated: function(event, id) {
                         _private.popupUpdated(id);
                      },
-                     onPopupFocusIn: function (event, id, focusedControl) {
+                     onPopupFocusIn: function(event, id, focusedControl) {
                         _private.popupFocusIn(id, focusedControl);
                      },
-                     onPopupFocusOut: function (event, id, focusedControl) {
+                     onPopupFocusOut: function(event, id, focusedControl) {
                         _private.popupFocusOut(id, focusedControl);
                      },
-                     onResult: function (event, id, result) {
+                     onResult: function(event, id, result) {
                         _private.sendResult(id, result);
                      }
                   };
@@ -63,7 +63,7 @@ define('Controls/Popup/Manager',
             return _popupContainer;
          },
 
-         popupCreated: function (id) {
+         popupCreated: function(id) {
             var element = Manager.find(id);
             if (element) {
                var strategy = element.strategy;
@@ -75,7 +75,7 @@ define('Controls/Popup/Manager',
             }
          },
 
-         popupUpdated: function (id) {
+         popupUpdated: function(id) {
             var element = Manager.find(id);
             if (element) {
                var strategy = element.strategy;
@@ -93,15 +93,15 @@ define('Controls/Popup/Manager',
             }
          },
          
-         popupFocusIn: function(id, focusedControl){
+         popupFocusIn: function(id, focusedControl) {
             _private.fireEventHandler(id, 'onFocusIn', focusedControl);
          },
 
-         popupFocusOut: function (id, focusedControl) {
+         popupFocusOut: function(id, focusedControl) {
             _private.fireEventHandler(id, 'onFocusOut', focusedControl);
          },
 
-         sendResult: function (id, result) {
+         sendResult: function(id, result) {
             _private.fireEventHandler(id, 'onResult', result);
          },
          
@@ -109,7 +109,7 @@ define('Controls/Popup/Manager',
             _private.fireEventHandler(id, 'onClose');
             Manager.remove(id, this.getItemContainer(id));
          },
-         getItemContainer: function (id) {
+         getItemContainer: function(id) {
             var popupContainer = this.getPopupContainer();
             var item = popupContainer && popupContainer._children[id];
             return item && item._container;
@@ -117,6 +117,7 @@ define('Controls/Popup/Manager',
       };
 
       var Manager = {
+
          /**
           * Менеджер окон
           * @class Controls/Popup/Manager
@@ -132,7 +133,7 @@ define('Controls/Popup/Manager',
           * @param options конфигурация попапа
           * @param strategy стратегия позиционирования попапа
           */
-         show: function (options, strategy) {
+         show: function(options, strategy) {
             var element = {
                id: Random.randomId('popup-'),
                isModal: options.isModal,
@@ -151,7 +152,7 @@ define('Controls/Popup/Manager',
           * @param id идентификатор попапа, для которого нужно обновить опции
           * @param options новые опции
           */
-         update: function (id, options) {
+         update: function(id, options) {
             var element = this.find(id);
             if (element) {
                element.popupOptions = options;
@@ -168,11 +169,11 @@ define('Controls/Popup/Manager',
           * @param id идентификатор попапа
           * @param container контейнер
           */
-         remove: function (id) {
+         remove: function(id) {
             var
                element = this.find(id);
             if (element) {
-               _private.removeElement.call(this, element, _private.getItemContainer(id), id).addCallback( function(){
+               _private.removeElement.call(this, element, _private.getItemContainer(id), id).addCallback(function() {
                   Manager._redrawItems();
                   return element;
                });
@@ -184,7 +185,7 @@ define('Controls/Popup/Manager',
           * @function Controls/Popup/Manager#find
           * @param id идентификатор попапа
           */
-         find: function (id) {
+         find: function(id) {
             var
                element,
                index = this._popupItems.getIndexByValue('id', id);
@@ -198,7 +199,7 @@ define('Controls/Popup/Manager',
           * Установить набор попапов
           * @function Controls/Popup/Manager#_redrawItems
           */
-         _redrawItems: function () {
+         _redrawItems: function() {
             var container = _private.getPopupContainer();
             if (container) {
                container.setPopupItems(this._popupItems);

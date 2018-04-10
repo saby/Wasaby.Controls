@@ -2,13 +2,13 @@ define('Controls/Popup/Manager/Container',
    [
       'Core/Control',
       'tmpl!Controls/Popup/Manager/Container',
-      'WS.Data/Collection/List',
       'css!Controls/Popup/Manager/Container'
    ],
-   function (Control, template, List) {
+   function(Control, template) {
       'use strict';
 
       var Container = Control.extend({
+
          /**
           * Контейнер для отображения окон
           * @class Controls/Popup/Manager/Container
@@ -27,7 +27,7 @@ define('Controls/Popup/Manager/Container',
           * @function Controls/Popup/Manager/Container#setPopupItems
           * @param {Integer} index индекс попапа
           */
-         setOverlay: function(index){
+         setOverlay: function(index) {
             this._overlayId = index;
          },
 
@@ -36,7 +36,7 @@ define('Controls/Popup/Manager/Container',
           * @function Controls/Popup/Manager/Container#setPopupItems
           * @param {List} popupItems новый набор окон
           */
-         setPopupItems: function (popupItems) {
+         setPopupItems: function(popupItems) {
             this._popupItems = popupItems;
             this._forceUpdate();
          },
@@ -48,7 +48,7 @@ define('Controls/Popup/Manager/Container',
           * @param id идентификатор попапа.
           * @param container контейнер
           */
-         _closePopup: function (event, id, container) {
+         _closePopup: function(event, id, container) {
             if (this.eventHandlers && this.eventHandlers.onClosePopup) {
                this.eventHandlers.onClosePopup(event, id, container);
             }
@@ -61,7 +61,7 @@ define('Controls/Popup/Manager/Container',
           * @param id идентификатор попапа.
           * @param container
           */
-         _popupCreated: function(event, id, container){
+         _popupCreated: function(event, id, container) {
             if (this.eventHandlers && this.eventHandlers.onPopupCreated) {
                this.eventHandlers.onPopupCreated(event, id, container);
             }
@@ -74,7 +74,7 @@ define('Controls/Popup/Manager/Container',
           * @param id идентификатор попапа.
           * @param container
           */
-         _popupUpdated: function(event, id, container){
+         _popupUpdated: function(event, id, container) {
             if (this.eventHandlers && this.eventHandlers.onPopupUpdated) {
                this.eventHandlers.onPopupUpdated(event, id, container);
             }
@@ -87,7 +87,7 @@ define('Controls/Popup/Manager/Container',
           * @param id идентификатор попапа.
           * @param focusedControl
           */
-         _popupFocusIn: function(event, id, focusedControl){
+         _popupFocusIn: function(event, id, focusedControl) {
             if (this.eventHandlers && this.eventHandlers.onPopupFocusIn) {
                this.eventHandlers.onPopupFocusIn(event, id, focusedControl);
             }
@@ -100,7 +100,7 @@ define('Controls/Popup/Manager/Container',
           * @param id идентификатор попапа.
           * @param focusedControl
           */
-         _popupFocusOut: function(event, id, focusedControl){
+         _popupFocusOut: function(event, id, focusedControl) {
             if (this.eventHandlers && this.eventHandlers.onPopupFocusOut) {
                this.eventHandlers.onPopupFocusOut(event, id, focusedControl);
             }
@@ -113,7 +113,7 @@ define('Controls/Popup/Manager/Container',
           * @param id идентификатор попапа.
           * @param result
           */
-         _result: function(event, id, result){
+         _result: function(event, id, result) {
             if (this.eventHandlers && this.eventHandlers.onResult) {
                this.eventHandlers.onResult(event, id, result);
             }

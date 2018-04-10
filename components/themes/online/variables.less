@@ -594,7 +594,8 @@
 // ----------- //
 // InputRender //
 // ----------- //
-@font-weight_InputRender_style_header:     bold;
+@font-weight_InputRender_style_header:           bold;
+@font-weight_InputRender_style_accentHeader:     bold;
 //todo
 @text-box-focus-bg:                       @background-color_InputRender;
 // --------- //
@@ -837,7 +838,7 @@
 @list-view-items-toolbar-right-tile:                 8px;
 @list-view-items-toolbar-bottom-tile:                2px;
 @list-view-items-toolbar-icon-size:                  24px;
-@margin-right_ListView-itemsToolbar-closeButton:     6px;
+@margin-right_ListView-itemsToolbar-closeButton:     12px;
 @list-view-items-toolbar-menu-icon-size:             @list-view-items-toolbar-icon-size;
 @list-view-items-toolbar-font-family:                @default-icon-medium-font;
 @font-family_closeButton-icon:                       @list-view-items-toolbar-font-family;
@@ -868,7 +869,7 @@
 @list-view-loading-indicator-gradient-bg-up:    @list-view-scroll-spritesheet no-repeat center, linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.69) 51%, rgba(255, 255, 255, 0) 100%);
 @listView-empty-data-color:                     #999999;
 @listView-empty-data-font-size:                 15px;
-@listView-empty-data-padding-top:               46px;
+@listView-empty-data-padding-top:               16px;
 @listView-servicefooter-height:                 32px;
 @listView-servicefooter-fontsize:               12px;
 @listView-loadmorebutton-font-size:             @font-size_Link;
@@ -889,6 +890,7 @@
 //ItemsToolbar
 @width_EditActions-cancelButton:        @width_EditButton;
 @height_EditActions-cancelButton:       @height_EditButton;
+@font-size_EditActions-cancelButton:    22px;
 // ItemsToolbar small
 @list-view-small-items-toolbar-line-height:         16px;
 @list-view-small-actions-item-height:               16px;
@@ -1093,6 +1095,7 @@
 @DropdownList-header-bg:                              @DropdownList-picker-bg;
 @DropdownList-picker-offset:                          -8px 0 0 -13px;
 @DropdownList-picker-fastdatafilter-offset:           -7px 0 0 3px;
+@DropdownList-picker-fastdatafilter-multi-offset:     -7px 0 0 -9px;
 @DropdownList-picker-fdf-left:                        -13px;
 @DropdownList-picker-margin-top:                      -1px;
 @DropdownList-picker-close-btn-top:                   4px;
@@ -1188,9 +1191,9 @@
 @controls-filterButton-button-margin-right-align: 8px 0 8px @controls-filterButton-button-verSide-margin;
 @controls-filterButton-line-margin-right-align:   8px 0 8px 8px;
 @controls-filterButton-height:                    40px;
-@controls-filterButton-header-vertical-spacing:   10px;
+@controls-filterButton-header-vertical-spacing:   0;
 @controls-filterButton-area-header-padding:       @controls-filterButton-header-vertical-spacing 48px @controls-filterButton-header-vertical-spacing 12px;
-@controls-filterButton-area-header-height:        24px;
+@controls-filterButton-area-header-height:        44px;
 @controls-filterButton-area-header-width:         310px;
 @controls-filterButton-area-text-size:            18px;
 @controls-filterButton-area-text-weight:          bold;
@@ -1277,6 +1280,7 @@
 @bread-crumbs-menu-max-width:                      800px;
 @bread-crumb-crumb-margin-left:                    0;
 @bread-crumb-crumb-home-top:                       0;
+@color_BreadCrumb-arrow_hovered:                   #587ab0;
 // EditDialog
 @editdialog-applybutton-width:                     auto;
 @editdialog-applybutton-right:                     48px; //ширина кнопки закрытия окна 36px + 12px на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)*/
@@ -1578,7 +1582,7 @@
 @padding-ColumnsEditor-Editing-Area-head: 8px 0 2px 12px;
 @padding-ColumnsEditor-Editing-Area-head-2: 8px 0 7px 12px;
 @spacing-ColumnsEditor-Editing-Area-head: 18px;
-@background-color-ColumnsEditor-Editing-Area-head: #f7f4f0;
+@background-color-ColumnsEditor-Editing-Area-head: #F2F2F2;
 @color-ColumnsEditor-Editing-Area__head-title-left: #313E78;
 @font-size-ColumnsEditor-Editing-Area__head-title-left: 18px;
 @font-weight-ColumnsEditor-Editing-Area__head-title-left: bold;

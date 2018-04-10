@@ -1,61 +1,52 @@
-.controls-CheckBox {
-  cursor:pointer;
-  display: inline-flex;
-  font-size: @font-size__checkBox;
+.controls-Checkbox {
+   display: inline-block;
 }
-
-.controls-CheckBox__icon-border-color__enabled {
-  color: @color_checkBox-iconBox;
+.controls-Checkbox__wrapper {
+   cursor:pointer;
+   display: inline-flex;
+   font-size: @font-size__checkBox;
+   align-items: center;
 }
-
-.controls-CheckBox__icon-border-color__disabled {
-  color: @color_checkBox_disabled;
+.controls-Checkbox__icon-border-color__enabled {
+   color: @color_CheckBox__iconBox;
 }
-
-.controls-CheckBox__caption-color__enabled{
-  color: @color_checkBox-caption_enabled;
+.controls-Checkbox__icon-border-color__disabled {
+   color: @color_CheckBox__iconBox_disabled;
 }
-
-.controls-CheckBox__caption-color__disabled{
-  color: @color_checkBox_disabled;
+.controls-Checkbox__caption-color__enabled{
+   color: @color_CheckBox-caption_enabled;
 }
-
-.controls-CheckBox__caption {
+.controls-Checkbox__caption-color__disabled{
+   color: @color_CheckBox___caption_disabled;
+}
+.controls-Checkbox__caption {
    margin-left: @margin-left-CheckBox__icon_size;
    word-wrap: break-word;
    padding: @spacing_CheckBox-between-icon-caption;
 }
-
-.controls-CheckBox__icon {
-  position: absolute;
-  .checkbox-border-size();
-  .checkbox();
+.controls-Checkbox__icon {
+   position: absolute;
+   .checkbox-border-size();
+   .checkbox();
 }
-
-.controls-CheckBox__icon:before {
-  content: '';
+.controls-Checkbox__icon:before {
+   content: '';
 }
-
-.controls-CheckBox__icon-checked {
-  .checkbox-checked-size();
+.controls-Checkbox__icon-checked {
+   .checkbox-checked-size();
 }
-
-.controls-CheckBox__icon-tristate {
-  .checkbox-null-size();
+.controls-Checkbox__icon-tristate {
+   .checkbox-null-size();
 }
-
-.controls-CheckBox__icon-tristate-color__disabled:after{
-    background-color: @color_checkBox_disabled;
+.controls-Checkbox__icon-tristate-color__disabled:after{
+   background-color: @color_CheckBox_disabled;
 }
-
-.controls-CheckBox__icon-tristate-color__enabled:after{
-    background-color: @color_checkBox-icon_enabled;
+.controls-Checkbox__icon-tristate-color__enabled:after{
+   background-color: @color_CheckBox-icon_enabled;
 }
-
-.controls-CheckBox__icon-checked-color__enabled:after{
-    color: @color_checkBox-icon_enabled;
+.controls-Checkbox__icon-checked-color__enabled:after{
+   color: @color_CheckBox-icon_enabled;
 }
-
-.controls-CheckBox__icon-checked-color__disabled:after{
-    color: @color_checkBox_disabled;
+.controls-Checkbox__icon-checked-color__disabled:after{
+   color: @color_CheckBox_disabled;
 }
