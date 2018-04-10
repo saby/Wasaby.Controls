@@ -1,6 +1,7 @@
 <span attr:class="controls-BaseButton controls-Button_style-{{_style}}{{isEnabled() ? '':'_disabled'}}
                  controls-Button_type-{{_type}}{{isEnabled() ? '':'_disabled'}}
-                 controls-Button_type-{{_typeWithSize}}"
+                 controls-Button_type-{{_typeWithSize}}
+                 controls-Button_type-{{isEnabled() ? _typeWithIconStyle}}"
       attr:title="{{_options.tooltip}}"
       on:click="_clickHandler()">
     <span attr:class="controls-BaseButton__content controls-Button__wrapper_type-{{_typeWithSize}}">

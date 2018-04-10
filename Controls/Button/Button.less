@@ -18,6 +18,7 @@
 
 .controls-Button_type-IconButton {
   cursor: pointer;
+  border-color: @border-color-IconButton;
 }
 
 .controls-Button_type-IconButton_size-s {
@@ -35,6 +36,7 @@
   border-color: @border-color-IconButton_disabled;
 }
 
+/*
 .controls-Button_style-IconButton-done {
   border-color: @border-color-IconButton;
   color: @color-IconButton_style-done;
@@ -48,13 +50,40 @@
 .controls-Button_style-IconButton-error {
   border-color: @border-color-IconButton;
   color: @color-IconButton_style-error;
-}
+}*/
 
 .ws-is-no-touch {
   .controls-Button_type-IconButton:hover {
     background-color: @background-color-IconButton_hovered;
   }
 
+  .controls-Button_type-IconButton_iconStyle-done:hover {
+    border-color: @color-Icon_style_done;
+  }
+
+  .controls-Button_type-IconButton_iconStyle-error:hover {
+    border-color: @color-Icon_style_error;
+  }
+
+  .controls-Button_type-IconButton_iconStyle-attention:hover {
+    border-color: @color-Icon_style_attention;
+  }
+
+  .controls-Button_type-IconButton_iconStyle-disabled:hover {
+    border-color: @color-Icon_style_disabled;
+  }
+
+  .controls-Button_type-IconButton_iconStyle-hover:hover {
+    border-color: @color-Icon_style_hover;
+  }
+
+  .controls-Button_type-IconButton_iconStyle-primary:hover {
+    border-color: @color-IconButton__border_iconStyle-primary_hovered;
+    .controls-Button__icon-primary {
+      color: @color-Icon_style_primary_hovered;
+    }
+  }
+/*
   .controls-Button_style-IconButton-default:hover {
     border-color: @color-IconButton_style-default_hovered;
     color: @color-IconButton__icon_style-default_hovered;
@@ -66,7 +95,7 @@
 
   .controls-Button_style-IconButton-error:hover {
     border-color: @color-IconButton_style-error;
-  }
+  }*/
 }
 
 .controls-Button_type-IconButton:active {
@@ -74,17 +103,31 @@
   box-shadow: @box-shadow-IconButton_activated;
 }
 
-.controls-Button_style-IconButton-default:active {
-  border-color: @color-IconButton_style-default_hovered;
-  color: @color-IconButton__icon_style-default_hovered;
+.controls-Button_type-IconButton_iconStyle-done:active {
+  border-color: @color-Icon_style_done;
 }
 
-.controls-Button_style-IconButton-done:active {
-  border-color: @color-IconButton_style-done;
+.controls-Button_type-IconButton_iconStyle-error:active {
+  border-color: @color-Icon_style_error;
 }
 
-.controls-Button_style-IconButton-error:active {
-  border-color: @color-IconButton_style-error;
+.controls-Button_type-IconButton_iconStyle-attention:active {
+  border-color: @color-Icon_style_attention;
+}
+
+.controls-Button_type-IconButton_iconStyle-disabled:active {
+  border-color: @color-Icon_style_disabled;
+}
+
+.controls-Button_type-IconButton_iconStyle-hover:active {
+  border-color: @color-Icon_style_hover;
+}
+
+.controls-Button_type-IconButton_iconStyle-primary:active {
+  border-color: @color-IconButton__border_iconStyle-primary_hovered;
+  .controls-Button__icon-primary {
+    color: @color-Icon_style_primary_hovered;
+  }
 }
 
 .controls-Button_type-link {
@@ -144,10 +187,6 @@
 
 .ws-is-no-touch {
   .controls-Button_style-link-main:hover {
-    /*.controls-Button__icon-link-main {
-      color: @color_Link-main-text_hovered;
-    }*/
-
     .controls-Button__icon-primary {
       color: @color-Icon_style_primary_hovered;
     }
@@ -232,10 +271,6 @@
   .border-radius(@border-radius_Button_l);
 }
 
-/*.controls-Button__icon-primary-add{
-   color: @color_Button-style-addButton-icon;
-}*/
-
 //Icon
 .controls-Button__icon-hover {
   color: @color-Icon_style_hover;
@@ -261,30 +296,13 @@
   color: @color-Icon_style_disabled;
 }
 
-/*.controls-Button__icon-default, .controls-Button__icon-default-big {
-  color: @color_Button-icon;
-}*/
-
 .controls-Button__text_style-default {
   .text-overflow();
 }
 
-/*.controls-Button__icon-primary, .controls-Button__icon-primary-big {
-  color: @color_Button-icon_primary;
-}*/
-
-/*.controls-Button__icon-link-main {
-  color: @color_Link-main-icon;
-}*/
-
 .controls-Button__text_style-primary {
   .text-overflow();
 }
-
-/*.controls-Button__icon-primary_disabled, .controls-Button__icon-default_disabled, .controls-Button__icon-primary-add_disabled,
-.controls-Button__icon-primary-big_disabled, .controls-Button__icon-default-big_disabled {
-  color: @color_Button-Vdom-icon_disabled;
-}*/
 
 .controls-Button__wrapper_type-button_size-default {
   padding: @padding_Button-wrapper_default;

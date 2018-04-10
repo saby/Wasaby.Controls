@@ -41,6 +41,7 @@ define('Controls/Button', [
         self._style = currentButtonClass.style;
         self._type = currentButtonClass.type;
         self._typeWithSize = currentButtonClass.type + '_size-' + options.size;
+        self._typeWithIconStyle = currentButtonClass.type + '_iconStyle-' + options.iconStyle;
      }
    };
 
