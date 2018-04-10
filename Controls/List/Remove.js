@@ -23,12 +23,12 @@ define('Controls/List/Remove', [
    };
 
    /**
-   * Компонент плоского списка, с произвольным шаблоном отображения каждого элемента. Обладает возможностью загрузки/подгрузки данных из источника.
+   * Control for deleting instances from collection of list
    * @class Controls/Remove
    * @extends Controls/Control
    * @mixes Controls/interface/IRemovable
    * @control
-   * @author Крайнов Д.О.
+   * @author Sukhoruchkin A.S.
    * @public
    * @category List
    */
