@@ -89,7 +89,7 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
                containerClasses.push('controls-TextBox_size_' + (cfg.size ? cfg.size : 'default') + (cfg._isMultiline ? '_multiLine' : '_singleLine'));
                containerClasses.push('controls-TextBox_text-align_' + cfg.textAlign);
                containerClasses.push(cfg._paddingClass);
-               cfg.style && containerClasses.push('controls-InputRender_style_' + cfg.style);
+               cfg.style && containerClasses.push('controls-' + cfg.inputType + '-InputRender_style_' + cfg.style);
                if (cfg.textTransform) {
                   fieldClasses.push('controls-TextBox__field-' + cfg.textTransform);
                }
