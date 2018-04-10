@@ -4,7 +4,6 @@ define('Controls/HighCharts',
       'tmpl!Controls/HighCharts/HighCharts',
       'Core/constants',
       'Core/Date',
-      'css!Controls/HighCharts/HighCharts',
       'browser!/cdn/highcharts/4.2.7/highcharts-more.js'
    ],
    function(Control, template, constants) {

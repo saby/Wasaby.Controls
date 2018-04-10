@@ -24,17 +24,8 @@ define('Controls-demo/HighCharts/HighCharts',
                data: [10, 20]
             }]
          },
-         highChartOptions3: {
-            chart: {
-               type: 'line'
-            },
-            series: [{
-               name: 'USD to EUR',
-               data: [10, 20]
-            }]
-         },
          changeHighChartOptions: function () {
-            this.highChartOptions1 = this.highChartOptions3;
+            this.highChartOptions1 = this.highChartOptions2;
          }
       });
    });
