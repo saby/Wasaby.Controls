@@ -486,7 +486,28 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
           * @protected
           */
          _cmdComplete: function () {
+            // TODO: хорошо бы вынести эту команду в родителя
             // Сформировать результирующие данные из всего имеющегося
+            // И сразу прроверить их
+            this.getValues(true).addCallback(function (data) {
+               // И если всё нормально - завершить диалог
+               if (data) {
+                  this._notify('onComplete', /*ImportResults*/ data);
+               }
+               /*else {
+                  // Иначе пользователь продолжает редактирование
+               }*/
+            }.bind(this));
+         },
+
+         /*
+          * Получить все результирующие данные
+          *
+          * @public
+          * #param {boolean} withValidation Провести проверку данных перез возвратом
+          * @return {Core/Deferred<ImportResults>}
+          */
+         getValues: function (withValidation) {
             var options = this._options;
             var dataType = options.dataType;
             var useSheets = dataType === Area.DATA_TYPE_EXCEL || dataType === Area.DATA_TYPE_DBF;
@@ -518,16 +539,15 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             for (var name in baseParams) {
                data[name] = baseParams[name];
             }
-            // Прроверить их
-            this._checkResults(data).addCallback(function (isSuccess) {
-               // И если всё нормально - завершить диалог
-               if (isSuccess) {
-                  this._notify('onComplete', /*ImportResults*/ data);
-               }
-               /*else {
-                  // Иначе пользователь продолжает редактирование
-               }*/
-            }.bind(this));
+            return withValidation
+               ?
+                  // Прроверить собранные данные
+                  this._checkResults(data).addCallback(function (isSuccess) {
+                     return isSuccess ? data : null;
+                  })
+               :
+                  // Вернуть сразу
+                  Deferred.success(data);
          },
 
          /*
