@@ -64,10 +64,10 @@ define(
                   }
                }
             };
-            opener._setPopupOptions(cfg);
+            Opener._private.setPopupOptions(opener, cfg);
             assert.isTrue(cfg.className === config.className);
 
-            opener._setComponentOptions(cfg);
+            Opener._private.setComponentOptions(opener, cfg);
             let isEqual = true;
             for (let key of Object.keys(config)) {
                if (config[key] !== cfg.componentOptions[key] && cfg.componentOptions[key] !== undefined) {

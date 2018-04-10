@@ -46,7 +46,7 @@ define("File/Attach/Option/Source", ["require", "exports"], function (require, e
         };
         /**
          * Возвращает конструктор ресурса, для которого будет зарегестрирован источник
-         * @return {File/IFileDataConstructor}
+         * @return {File/IResourceConstructor}
          * @name File/Attach/Option/Source#getResourceType
          */
         SourceOption.prototype.getResourceType = function () {

@@ -42,34 +42,6 @@ define('SBIS3.CONTROLS/CompositeView', [
       _onChangeHoveredItem: function(hoveredItem) {
          this._setHoveredStyles(hoveredItem.container);
          CompositeView.superclass._onChangeHoveredItem.apply(this, arguments);
-      },
-
-      _getInsertMarkupConfig: function() {
-         var result;
-         if (this._options.viewMode === 'table') {
-            result = CompositeView.superclass._getInsertMarkupConfig.apply(this, arguments);
-         } else {
-            result = this._getInsertMarkupConfigICM.apply(this, arguments);
-            //При добавлении элементов в начало списка, они добавляются перед FoldersContainer, а должны добавлять после него.
-            //В таком случае явно укажем после какого блока вставить элементы.
-            if (result.inside && result.prepend) {
-               result.inside = false;
-               result.prepend = false;
-               result.container = this._getFoldersContainer();
-            }
-            //При добавлении элементов в конец списка, если там присутствуют пустышки для плитки, то элементы надо встаить
-            //до этих пустышек, иначе образуется пустое пространство.
-            if (this._hasInvisibleItems() && result.inside && !result.prepend) {
-               result.inside = false;
-               result.prepend = true;
-               result.container = result.container.find('.controls-CompositeView__tileItem-invisible').first();
-            }
-         }
-         return result;
-      },
-
-      _hasInvisibleItems: function() {
-         return this._options.viewMode === 'tile' && this._options.tileMode === CompositeViewMixin.TILE_MODE.STATIC;
       }
 
    });

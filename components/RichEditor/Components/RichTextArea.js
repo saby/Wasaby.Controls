@@ -63,7 +63,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
       var _getTrueIEVersion = function () {
          var version = cConstants.browser.IEVersion;
          // В cConstants.browser.IEVersion неправильно определяется MSIE 11
-         if (version < 11) {
+         if (version < 11 && typeof window !== 'undefined') {
             var ms = navigator.userAgent.match(/Trident\/([0-9]+)\.[0-9]+/);
             if (ms) {
                version = +ms[1] + 4
@@ -77,8 +77,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          // 1175061954 https://online.sbis.ru/opendoc.html?guid=296b17cf-d7e9-4ff3-b4d9-e192627b41a1
          TINYMCE_URL_BASE = cConstants.browser.isIE && _getTrueIEVersion() < 11 ? 'SBIS3.CONTROLS/RichEditor/third-party/tinymce46-ie10' : 'SBIS3.CONTROLS/RichEditor/third-party/tinymce',
          EDITOR_MODULES = [
-            'css!' + TINYMCE_URL_BASE + '/skins/lightgray/skin.min.css',
-            'css!' + TINYMCE_URL_BASE + '/skins/lightgray/content.inline.min.css',
+            //'css!' + TINYMCE_URL_BASE + '/skins/lightgray/skin.min.css',
+            //'css!' + TINYMCE_URL_BASE + '/skins/lightgray/content.inline.min.css',
             //Экстренное решение что бы уменшить трафик. В 3.18.200 надо исправить сия безобразие
             TINYMCE_URL_BASE + '/tinymce.min'
          ],
@@ -239,7 +239,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                 * @example
                 * <pre>
                 *    <options name="customStyle">
-                *       <option name="block">blockquote</option>
+                *       <option name="block">div</option>
                 *       <option name="wrapper">1</option>
                 *       <option name="remove">all</option>
                 *       <option name="classes">customStyle</option>
@@ -291,11 +291,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             if (options.autoHeight) {
                options.minimalHeight = this._cleanHeight(options.minimalHeight);
                options.maximalHeight = this._cleanHeight(options.maximalHeight);
-            }
-            for(var key in options.customFormats) {
-               if ({}.hasOwnProperty.call(options.customFormats, key)) {
-                  options.editorConfig.formats[key] = options.customFormats[key];
-               }
             }
             return options;
          },
@@ -1546,7 +1541,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   parent: self,
                   componentOptions: {
                      selectedImage: $image,
-                     editorWidth: self._inputControl.width(),
+                     editorWidth: self._inputControl.width()
                   },
                   handlers: {
                      onBeforeShow: function () {
@@ -2565,6 +2560,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this._requireTinyMCE().addCallback(function() {
                   var cfg = cClone(self._options.editorConfig);
                   cfg.paste_as_text = false;
+
+                  for(var key in self._options.customFormats) {
+                     if ({}.hasOwnProperty.call(self._options.customFormats, key)) {
+                        cfg.formats[key] = self._options.customFormats[key];
+                     }
+                  }
                   tinyMCE.baseURL = '/resources/' + TINYMCE_URL_BASE;
                   tinyMCE.init(cfg);
                });

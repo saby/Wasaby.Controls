@@ -1,8 +1,9 @@
 /**
  * Created by as.krasilnikov on 21.03.2018.
  */
-define('Controls/Popup/Opener/Stack/StackStrategy', [], function () {
+define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
    return {
+
       /**
        * Возвращает позицию стек-панели
        * @function Controls/Popup/Opener/Stack/StackController#stack
@@ -13,21 +14,20 @@ define('Controls/Popup/Opener/Stack/StackStrategy', [], function () {
        * @param prevWidth ширина предыдущей панели
        * @param prevRight отступ справа предыдущей панели
        */
-      getPosition: function (index, tCoords, width, maxWidth, prevWidth, prevRight) {
+      getPosition: function(index, tCoords, width, maxWidth, prevWidth, prevRight) {
          var
             top = tCoords.top,
             right = tCoords.right;
          if (index !== 0) {
             if (prevWidth) {
-               var rightCalc = 100 - ( width - prevWidth - prevRight );
+               var rightCalc = 100 - (width - prevWidth - prevRight);
                if (rightCalc > 0) {
                   right = Math.max(100, rightCalc);
-                  if (( width + right ) > maxWidth) {
+                  if ((width + right) > maxWidth) {
                      return null;
                   }
                }
-            }
-            else {
+            } else {
                return null;
             }
          }
@@ -38,5 +38,5 @@ define('Controls/Popup/Opener/Stack/StackStrategy', [], function () {
             bottom: 0
          };
       }
-   }
+   };
 });

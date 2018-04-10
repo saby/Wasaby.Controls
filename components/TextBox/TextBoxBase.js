@@ -192,6 +192,12 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
              */
             focusOnActivatedOnMobiles: false,
             textAlign: 'left',
+             /**
+              * @cfg {String} Устанавливает стилевое оформление поля ввода.
+              * @variant default по умолчанию
+              * @variant header заголовок
+              * @variant accentHeader акцентный заголовок
+              */
             style: 'default',
             inputType: 'Text',
              /**

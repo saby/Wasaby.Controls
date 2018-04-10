@@ -1,8 +1,8 @@
 <ws:template name="scrollTpl">
    <div class="controls-Scroll ws-flexbox ws-flex-column">
-      <Controls.Layout.Scroll>
+      <Controls.Layout.Scroll scope="{{_options}}">
          <div name="content"
-              style="{{displayState.hasScroll ? styleHideScrollbar}}"
+              style="{{displayState.heightFix ? '' : styleHideScrollbar}}"
               class="ws-flex-grow-1 controls-Scroll__content
                   {{hasHover ? 'controls-Scroll__content_possibleScroll'}}
                   {{displayState.heightFix ? 'controls-Scroll__content_hidden' : 'controls-Scroll__content_scroll'}}"
