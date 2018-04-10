@@ -402,23 +402,23 @@ node('controls') {
                 sudo chmod -R 0777 /home/sbis/Controls
             """
             //Пакуем данные
-            writeFile file: "/home/sbis/Controls/Core.package.json", text: """
-                {
-                "includeCore":true,
-                "include":[
-                "Core/*",
-                "SBIS3.CONTROLS.ItemsControlMixin"
-                ],
-                "modules" : [
-                "Core/core",
-                "SBIS3.CONTROLS.ItemsControlMixin"
-                ],
-                    "output" : "/resources/Core.module.js"
-                }"""
-            sh """
-                cd ./jinnee/distrib/builder
-                node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/sbis/Controls1 --application=/
-            """
+            // writeFile file: "/home/sbis/Controls/Core.package.json", text: """
+            //     {
+            //     "includeCore":true,
+            //     "include":[
+            //     "Core/*",
+            //     "SBIS3.CONTROLS.ItemsControlMixin"
+            //     ],
+            //     "modules" : [
+            //     "Core/core",
+            //     "SBIS3.CONTROLS.ItemsControlMixin"
+            //     ],
+            //         "output" : "/resources/Core.module.js"
+            //     }"""
+            //sh """
+            //     cd ./jinnee/distrib/builder
+            //     node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/sbis/Controls1 --application=/
+            // """
         }
         writeFile file: "./controls/tests/int/config.ini", text:
             """# UTF-8
