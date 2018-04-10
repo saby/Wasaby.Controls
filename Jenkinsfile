@@ -405,6 +405,7 @@ node('controls') {
             writeFile file: "/home/sbis/Controls/Core.package.json", text: """
                 {
                 "includeCore":true,
+                "platformPackage": true,
                 "include":[
                 "Core/*",
                 "SBIS3.CONTROLS.ItemsControlMixin"
