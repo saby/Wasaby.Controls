@@ -1,5 +1,5 @@
 /**
- * Контрол "Настройка соответствия соответствия/мэпинга значений настройщика импорта"
+ * Контрол "Настройка соответствия/мэпинга значений настройщика импорта"
  *
  * @public
  * @class SBIS3.CONTROLS/ImportCustomizer/Mapper/View
@@ -29,7 +29,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
       var View = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ImportCustomizer/Mapper/View.prototype*/ {
 
          /**
-          * @typedef {object} ImportMapperItem Тип, содержащий информацию об элементе сопоставления
+          * @typedef {object} ImportSimpleItem Тип, содержащий информацию об элементе сопоставления
           * @property {string|number} id Идентификатор элемента
           * @property {string} title Название элемента
           */
@@ -39,7 +39,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
           * @param {Core/EventObject} evtName Дескриптор события
           * @param {object} values Настраиваемые значения компонента:
           * @param {ImportTargetFields} [values.fields]  Полный список полей (опционально)
-          * @param {function(object|WS.Data/Entity/Record):ImportMapperItem} [values.fieldFilter] Фильтр полей (опционально)
+          * @param {function(object|WS.Data/Entity/Record):ImportSimpleItem} [values.fieldFilter] Фильтр полей (опционально)
           * @param {string} [values.fieldProperty] Имя специального ключевого свойства (опционально)
           * @param {object} [values.variants] Набор вариантов сопоставления (опционально)
           * @param {object} [values.accordances] Перечень соответствий специальный ключ поля - идентификатор варианта (опционально)
@@ -66,7 +66,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
                 */
                fields: null,
                /**
-                * @cfg {function(object|WS.Data/Entity/Record):ImportMapperItem} Фильтр полей, с помощью которого из общего списка полей {@link fields} отбираются нужные. Фильтр принимает объект поля и, если оно нужное, возвращает объект вида {@link ImportMapperItem}. Упрощённый способ отбора предоставляется опцией {@link fieldProperty}
+                * @cfg {function(object|WS.Data/Entity/Record):ImportSimpleItem} Фильтр полей, с помощью которого из общего списка полей {@link fields} отбираются нужные. Фильтр принимает объект поля и, если оно нужное, возвращает объект вида {@link ImportSimpleItem}. Упрощённый способ отбора предоставляется опцией {@link fieldProperty}
                 */
                fieldFilter: null,
                /**
@@ -209,7 +209,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
           * @public
           * @param {object} values Набор из нескольких значений, которые необходимо изменить
           * @param {ImportTargetFields} [values.fields]  Полный список полей (опционально)
-          * @param {function(object|WS.Data/Entity/Record):ImportMapperItem} [values.fieldFilter] Фильтр полей (опционально)
+          * @param {function(object|WS.Data/Entity/Record):ImportSimpleItem} [values.fieldFilter] Фильтр полей (опционально)
           * @param {string} [values.fieldProperty] Имя специального ключевого свойства (опционально)
           * @param {object} [values.variants] Набор вариантов сопоставления (опционально)
           * @param {object} [values.accordances] Перечень соответствий специальный ключ поля - идентификатор варианта (опционально)
@@ -283,7 +283,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
        * @param {string} displayProperty Имя свойства поля для отображения
        * @param {boolean} isRecord Значение value является рекордсетом
        * @param {object|WS.Data/Entity/Record} value Поле для фильтрации
-       * @return {ImportMapperItem}
+       * @return {ImportSimpleItem}
        */
       var _defaultFieldFilter = function (fieldProperty, displayProperty, isRecord, value) {
          var id = isRecord ? value.get(fieldProperty) : value[fieldProperty];

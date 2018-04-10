@@ -70,6 +70,20 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
           */
 
          /**
+          * @typedef {object} ImportMapping Тип, содержащий информацию о настройке соответствий значений
+          * @property {function(object|WS.Data/Entity/Record):ImportMapperItem} fieldFilter Фильтр полей, с помощью которого из общего списка полей {@link fields} отбираются нужные. Фильтр принимает объект поля и, если оно нужное, возвращает объект вида {@link ImportSimpleItem}. Упрощённый способ отбора предоставляется опцией {@link fieldProperty}
+          * @property {string} fieldProperty Имя специального ключевого свойства, с помощью которого из общего списка полей {@link fields} отбираются нужные. Каждое нужное поле должно иметь свойство с таким именем. Более комплексный способ отбора предоставляется опцией {@link fieldFilter}
+          * @property {object} variants Набор вариантов сопоставления
+          * @property {object} accordances Перечень соответствий специальный ключ поля - идентификатор варианта
+          */
+
+         /**
+          * @typedef {object} ImportSimpleItem Тип, содержащий информацию об элементе сопоставления
+          * @property {string|number} id Идентификатор элемента
+          * @property {string} title Название элемента
+          */
+
+         /**
           * @typedef {object} ImportValidator Тип, описывающий валидаторы результаттов редактирования
           * @property {function(object, function):(boolean|string)} validator Функция проверки. Принимает два аргумента. Первый - объект с проверяемыми данными. Второй - геттер опции по её имени. Геттер позволяет получить доступ к опциям, которые есть в настройщике импорта в момент валидации, но на момент задания валидатора ещё не были доступны (например, получены через обещание или через {@link ImportRemoteCall}). Должна возвратить либо логическое значение, показывающее пройдена ли проверка, либо строку с сообщением об ошибке
           * @property {Array<*>} [params] Дополнительные аргументы функции проверки, будут добавлены после основных (опционально)
@@ -130,6 +144,10 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                 */
                sameSheetConfigs: null,
                /**
+                * @cfg {ImportMapping} Информацию о настройке соответствий значений
+                */
+               mapping: null,
+               /**
                 * @cfg {Array<ImportValidator>} Список валидаторов результатов редактирования
                 */
                validators: null
@@ -188,10 +206,13 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             options._providerArgsComponent = parsers[parserName].component || undefined;
             options._providerArgsOptions = this._getProviderArgsOptions(options, parserName, true);
             options._columnsBindingRows = hasSheets ? sheet.sampleRows : [];
-            options._mapperFieldFilter = options.priceFieldFilter;//^^^
-            options._mapperFieldProperty = options.priceFieldProperty;//^^^
-            options._mapperVariants = options.priceTypes;//^^^
-            options._mapperAccordances = options.priceCorrespondence;//^^^
+            var mapping = options.mapping;
+            if (mapping) {
+               options._mapperFieldFilter = mapping.fieldFilter;
+               options._mapperFieldProperty = mapping.fieldProperty;
+               options._mapperVariants = mapping.variants;
+               options._mapperAccordances = mapping.accordances;
+            }
             var fields = options.fields;
             if (fields instanceof Deferred) {
                this._fieldsPromise = fields;
@@ -322,8 +343,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             }
             if (views.mapper) {
                this.subscribeTo(views.mapper, 'change', function (evtName, values) {
-                  // Изменилась ^^^
-                  //^^^
+                  // Изменился перечень соответсвий
                }.bind(this));
             }
          },
