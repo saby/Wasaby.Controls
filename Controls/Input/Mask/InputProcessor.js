@@ -8,6 +8,7 @@ define('Controls/Input/Mask/InputProcessor',
 
       var
          _private = {
+
             /**
              * Получить данные путем приведения исходного значения в виде разбиения к маске.
              * @param format данные о маске.
@@ -27,6 +28,7 @@ define('Controls/Input/Mask/InputProcessor',
             }
          },
          InputProcessor = {
+
             /**
              * Получить разбиение чистого значения.
              * @param splitValue разбиение исходного значения.
@@ -52,6 +54,7 @@ define('Controls/Input/Mask/InputProcessor',
 
                return clearSplitValue;
             },
+
             /**
              * Вставка.
              * @param format данные маски.
@@ -66,6 +69,7 @@ define('Controls/Input/Mask/InputProcessor',
                   before: clearSplitValue.before,
                   after: clearSplitValue.delete.replace(/./g, replacer) + clearSplitValue.after
                };
+
                // Будем добавлять по 1 символу, потому что вставка должна работать так же как и ввод по 1 символу.
                for (var i = 0; i < clearSplitValue.insert.length; i++) {
                   char = clearSplitValue.insert[i];
@@ -88,6 +92,7 @@ define('Controls/Input/Mask/InputProcessor',
                      };
 
                      data = _private.getDataBySplitValue(format, newClearSplitValue);
+
                      // Если не получилось, то поробуем заменить.
                      if (!data) {
                         newClearSplitValue = {
@@ -108,6 +113,7 @@ define('Controls/Input/Mask/InputProcessor',
 
                return result;
             },
+
             /**
              * Удаление.
              * @param format данные маски.
@@ -136,12 +142,12 @@ define('Controls/Input/Mask/InputProcessor',
                   newClearSplitValue = {
                      before: clearSplitValue.before + replacer,
                      after: clearSplitValue.after
-                  }
+                  };
                } else {
                   newClearSplitValue = {
                      before: clearSplitValue.before + replacer,
                      after: clearSplitValue.after.substring(1)
-                  }
+                  };
                }
 
                return _private.getDataBySplitValue(format, newClearSplitValue);
@@ -161,16 +167,17 @@ define('Controls/Input/Mask/InputProcessor',
                   newClearSplitValue = {
                      before: clearSplitValue.before,
                      after: replacer + clearSplitValue.after
-                  }
+                  };
                } else {
                   newClearSplitValue = {
                      before: clearSplitValue.before.slice(0, -1),
                      after: replacer + clearSplitValue.after
-                  }
+                  };
                }
 
                return _private.getDataBySplitValue(format, newClearSplitValue);
             },
+
             /**
              * Ввод.
              * @param splitValue значение разбитое на части before, insert, after, delete.
@@ -186,7 +193,7 @@ define('Controls/Input/Mask/InputProcessor',
                   clearData = Formatter.getClearData(oldFormat, value),
                   clearSplitValue = InputProcessor.getClearSplitValue(splitValue, clearData), result;
 
-               switch(inputType) {
+               switch (inputType) {
                   case 'insert':
                      result = InputProcessor.insert(newFormat, clearSplitValue, replacer);
                      break;
@@ -203,9 +210,9 @@ define('Controls/Input/Mask/InputProcessor',
 
                // Берем старое значение, если не смогли получить результат.
                return result || {
-                     value: value,
-                     position: splitValue.before.length + splitValue.delete.length
-                  };
+                  value: value,
+                  position: splitValue.before.length + splitValue.delete.length
+               };
             }
          };
 

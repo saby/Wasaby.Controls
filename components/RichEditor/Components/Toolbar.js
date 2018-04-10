@@ -167,12 +167,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
                case 'strikethrough':
                   this._toggleState(state, obj);
                   break;
-               case 'blockquote': {
-                  if (!obj.node.className) {
-                     this._toggleState(state, obj);
-                  }
+               case 'blockquote':
+                  this._toggleState(state, obj);
                   break;
-               }
                case 'alignleft':
                case 'aligncenter':
                case 'alignright':

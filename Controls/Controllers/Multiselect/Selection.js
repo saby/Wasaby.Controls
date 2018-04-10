@@ -3,7 +3,7 @@ define('Controls/Controllers/Multiselect/Selection', [
    'Core/core-simpleExtend',
    'Core/core-clone',
    'Controls/Utils/ArraySimpleValuesUtil'
-], function (
+], function(
    cExtend,
    cClone,
    ArraySimpleValuesUtil
@@ -11,10 +11,10 @@ define('Controls/Controllers/Multiselect/Selection', [
    'use strict';
 
    var ALLSELECTION_VALUE = [null],
-   SELECTION_STATUS = {
-      NOT_SELECTED: 0,
-      SELECTED: 1
-   };
+      SELECTION_STATUS = {
+         NOT_SELECTED: 0,
+         SELECTED: 1
+      };
 
    var _private = {
       isAllSelection: function(selectedKeys) {
@@ -34,8 +34,7 @@ define('Controls/Controllers/Multiselect/Selection', [
          //excluded keys имеют смысл только когда выделено все, поэтому ситуацию, когда переданы оба массива считаем ошибочной //TODO возможно надо кинуть здесь исключение
          if (_private.isAllSelection(this._selectedKeys)) {
             this._excludedKeys = options.excludedKeys || [];
-         }
-         else {
+         } else {
             this._excludedKeys = [];
          }
 
@@ -45,8 +44,7 @@ define('Controls/Controllers/Multiselect/Selection', [
       select: function(keys) {
          if (_private.isAllSelection(this._selectedKeys)) {
             ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, keys);
-         }
-         else {
+         } else {
             ArraySimpleValuesUtil.addSubArray(this._selectedKeys, keys);
          }
       },
@@ -54,8 +52,7 @@ define('Controls/Controllers/Multiselect/Selection', [
       unselect: function(keys) {
          if (_private.isAllSelection(this._selectedKeys)) {
             ArraySimpleValuesUtil.addSubArray(this._excludedKeys, keys);
-         }
-         else {
+         } else {
             ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, keys);
          }
       },
@@ -87,19 +84,18 @@ define('Controls/Controllers/Multiselect/Selection', [
          return {
             selected: this._selectedKeys,
             excluded: this._excludedKeys
-         }
+         };
       },
 
       getSelectionStatus: function(id) {
          var status = SELECTION_STATUS.NOT_SELECTED;
          if (_private.isAllSelection(this._selectedKeys)) {
             if (ArraySimpleValuesUtil.invertTypeIndexOf(this._excludedKeys, id) === -1) {
-               status = SELECTION_STATUS.SELECTED
+               status = SELECTION_STATUS.SELECTED;
             }
-         }
-         else {
+         } else {
             if (ArraySimpleValuesUtil.invertTypeIndexOf(this._selectedKeys, id) > -1) {
-               status = SELECTION_STATUS.SELECTED
+               status = SELECTION_STATUS.SELECTED;
             }
          }
          return status;

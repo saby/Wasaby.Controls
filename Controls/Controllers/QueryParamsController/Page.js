@@ -20,7 +20,7 @@ define('Controls/Controllers/QueryParamsController/Page',
                this._nextPage = this._page + 1;
             }
             if (!this._options.pageSize) {
-               throw new Error ('Option pageSize is undefined in PageNavigation')
+               throw new Error('Option pageSize is undefined in PageNavigation');
             }
          },
 
@@ -44,23 +44,20 @@ define('Controls/Controllers/QueryParamsController/Page',
             var meta = list.getMetaData();
             if (this._options.mode == 'totalCount') {
                if (typeof meta.more != 'number') {
-                  throw new Error('"more" Parameter has incorrect type. Must be numeric')
+                  throw new Error('"more" Parameter has incorrect type. Must be numeric');
                }
-            }
-            else {
+            } else {
                if (typeof meta.more != 'boolean') {
-                  throw new Error('"more" Parameter has incorrect type. Must be boolean')
+                  throw new Error('"more" Parameter has incorrect type. Must be boolean');
                }
             }
             this._more = meta.more;
 
             if (direction == 'down') {
                this._nextPage++;
-            }
-            else if (direction == 'up') {
+            } else if (direction == 'up') {
                this._prevPage--;
-            }
-            else {
+            } else {
                //Если направление не указано, значит это расчет параметров после начальной загрузки списка или после перезагрузки
                this._nextPage = this._page + 1;
                this._prevPage = this._page - 1;
@@ -73,16 +70,13 @@ define('Controls/Controllers/QueryParamsController/Page',
                   //в таком случае в more приходит общее число записей в списке
                   //значит умножим номер след. страницы на число записей на одной странице и сравним с общим
                   return this._nextPage * this._options.pageSize < this._more;
-               }
-               else {
+               } else {
                   return this._more;
                }
-            }
-            else if (direction == 'up'){
+            } else if (direction == 'up') {
                return this._prevPage >= 0;
-            }
-            else {
-               throw new Error('Parameter direction is not defined in hasMoreData call')
+            } else {
+               throw new Error('Parameter direction is not defined in hasMoreData call');
             }
          },
 
@@ -95,17 +89,14 @@ define('Controls/Controllers/QueryParamsController/Page',
          setEdgeState: function(direction) {
             if (direction == 'up') {
                this._page = 0;
-            }
-            else if (direction == 'down') {
+            } else if (direction == 'down') {
                if (typeof this._more == 'number') {
                   this._page = this._more / this._options.pageSize - 1;
-               }
-               else {
+               } else {
                   this._page = -1;
                }
-            }
-            else {
-               throw new Error ('Wrong argument Direction in NavigationController::setEdgeState');
+            } else {
+               throw new Error('Wrong argument Direction in NavigationController::setEdgeState');
             }
          }
       });

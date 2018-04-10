@@ -1,4 +1,4 @@
-<div class="controls-DropdownList__popup" depth="{{_options.depth}}">
+<div class="controls-DropdownList__popup">
    <ws:if data="{{_options.showHeader}}">
       <ws:partial template="{{_options.headTemplate ? _options.headTemplate : _defaultHeadTemplate}}"
                   defaultContentHeadTemplate="{{_defaultContentHeadTemplate}}"
@@ -15,7 +15,7 @@
             <ws:partial template="tmpl!Controls/Dropdown/resources/template/For" listModel="{{_listModel}}"
                         itemTemplate="{{_options.itemTemplate}}"
                         defaultItemTemplate="{{_defaultItemTemplate}}"
-                        hierarchyPadding="{{(_options.headConfig.menuStyle === 'cross') || true ? true : false}}"
+                        hierarchyPadding="{{(_options.headConfig.menuStyle === 'cross') ? true : false}}"
                         resultHandler="{{resultHandler}}"></ws:partial>
          </ws:else>
       </ws:content>
@@ -23,5 +23,16 @@
    <div if="{{_options.footerTemplate}}" class="controls-DropdownList__footer" on:click="_footerClick()">
       <ws:partial template="{{_options.footerTemplate}}" />
    </div>
+   <!--todo Emitter должен переехать в попап, когда будем делать попапы, показывающиеся при наведении мыши-->
+   <Controls:Event:Emitter if="{{_hasHierarchy}}" event="mousemove" on:mousemove="_mousemoveHandler()"/>
+   <Controls:Dropdown:Opener if="{{_hasHierarchy}}"
+                             name="subDropdownOpener"
+                             on:onSelectedItemChange="resultHandler()"
+                             className="controls-DropdownList__subMenu controls-DropdownList__subMenu_margin">
+      <ws:popupOptions>
+         <ws:corner horizontal="right"/>
+         <ws:eventHandlers onResult="{{resultHandler}}"/>
+      </ws:popupOptions>
+   </Controls:Dropdown:Opener>
 </div>
 

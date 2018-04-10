@@ -156,7 +156,7 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
 
                                     if(reportItem) {
                                        reportItem.value = reportItem.resetValue;
-                                       textValue = textValue.replace(new RegExp('\s?' + reportItem[self._options._filterItemTextProperty] + ',?\s?'), '');
+                                       textValue = textValue.replace(new RegExp(',\s?|\s?' + reportItem[self._options._filterItemTextProperty] + ',?\s?'), '');
                                        textValue = textValue.replace(/ {1,}/g, ' ');
                                        reportItem[self._options._filterItemTextProperty] = '';
                                        delete filter[key];

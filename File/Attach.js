@@ -15,7 +15,7 @@ define("File/Attach", ["require", "exports", "File/Attach/Lazy", "Core/core-simp
      *       // Возможные способы загрузки
      *       sourceOptions: [ // загрузка на бизнеслогику
      *          // для загрузки через ajax
-     *          new BLXHR(sourceOptions), // модуль опций: SBIS3.File/Attach/Option/Sources/BLXHR
+     *          new BL(sourceOptions), // модуль опций: SBIS3.File/Attach/Option/Sources/BL
      *          // для загрузки через СБИС Плагин
      *          new BLPlugin(sourceOptions) // модуль опций: SBIS3.File/Attach/Option/Sources/BLPlugin
      *       ],
@@ -25,10 +25,10 @@ define("File/Attach", ["require", "exports", "File/Attach/Lazy", "Core/core-simp
      *       // Возможные способы получения ресурсов
      *       getterOptions: [
      *          // Для нативного окна выбора файлов
-     *          new FS({
+     *          new FileSystem({
      *              multiSelect: true,
      *              extensions: ["image"]
-     *           }), // модуль опций: File/Attach/Option/Getters/FS
+     *           }), // модуль опций: File/Attach/Option/Getters/FileSystem
      *          // Для выбора чрезе FileLoader/Chooser
      *          new FileChooser({
      *              multiSelect: true,
@@ -59,7 +59,7 @@ define("File/Attach", ["require", "exports", "File/Attach/Lazy", "Core/core-simp
      *   });
      *
      *   self.getChildControlByName("fsBtn").subscribe("onActivated", function(){
-     *      attach.choose("FS");
+     *      attach.choose("FileSystem");
      *   });
      *   self.getChildControlByName("clipboardBtn").subscribe("onActivated", function(){
      *      attach.choose("ClipboardGetter");
@@ -137,10 +137,10 @@ define("File/Attach", ["require", "exports", "File/Attach/Lazy", "Core/core-simp
              *   var attach = new Attach({
              *       getterOptions: [
              *          // Для нативного окна выбора файлов
-             *          new FS({
+             *          new FileSystem({
              *              multiSelect: true,
              *              extensions: ["image"]
-             *           }), // модуль опций: File/Attach/Option/Getters/FS
+             *           }), // модуль опций: File/Attach/Option/Getters/FileSystem
              *          // Для выбора чрезе FileLoader/Chooser
              *          new FileChooser({
              *              multiSelect: true,
@@ -177,7 +177,7 @@ define("File/Attach", ["require", "exports", "File/Attach/Lazy", "Core/core-simp
             this._$options = Object.assign({}, this._$options, opt);
             this._attacher = new Lazy(this._$options.attachOptions);
             var events = [
-                "onProgress", "onWarning", "onLoadedFolder", "onLoaded", "onChooseError", "onChoose",
+                "onProgress", "onWarning", "onLoadedFolder", "onLoaded", "onChooseError", "onChosen",
                 "onLoadError", "onLoadResourceError", "onLoadedResource"
             ];
             this._publish.apply(this, events);
@@ -206,7 +206,7 @@ define("File/Attach", ["require", "exports", "File/Attach/Lazy", "Core/core-simp
         /// region IDirectInsertFile
         /**
          * Устанавливает ресурсы в список выбранных
-         * @param {Array<File/IFileData> | File/IFileData} files файл или набор устанавливаемых файлов
+         * @param {Array<File/IResource> | File/IResource} files файл или набор устанавливаемых файлов
          * @example
          * Привязка файлов, полученных путём Drag&Drop к Attach для последующей загрузки
          * <pre>
@@ -236,7 +236,7 @@ define("File/Attach", ["require", "exports", "File/Attach/Lazy", "Core/core-simp
         },
         /**
          * Возвращает набор выбраных ресурсов
-         * @return {Array<File/IFileData>}
+         * @return {Array<File/IResource>}
          * @method
          * @name File/Attach#getSelectedResource
          * @see File/LocalFile
@@ -260,7 +260,7 @@ define("File/Attach", ["require", "exports", "File/Attach/Lazy", "Core/core-simp
          *   var attach = new Attach({...});
          *
          *   self.getChildControlByName("fsBtn").subscribe("onActivated", function(){});
-         *      attach.choose("FS").addCallback(function(files) {
+         *      attach.choose("FileSystem").addCallback(function(files) {
          *          attach.upload({
          *              // Дополнительные мета-данные для отправки
          *              // Сигнатура зависит от конечного сервиса загрузки
@@ -291,14 +291,14 @@ define("File/Attach", ["require", "exports", "File/Attach/Lazy", "Core/core-simp
         /**
          * Метод вызова выбора ресурсов
          * @param {String} getterName Имя модуля {@link File/IResourceGetter}
-         * @return {Core/Deferred<Array<File/IFileData>>}
+         * @return {Core/Deferred<Array<File/IResource>>}
          * @example
          * Выбор и загрузка файла:
          * <pre>
          *   var attach = new Attach({...});
          *
          *   self.getChildControlByName("fsBtn").subscribe("onActivated", function(){});
-         *      attach.choose("FS").addCallback(function(files) {
+         *      attach.choose("FileSystem").addCallback(function(files) {
          *          attach.upload({
          *              // Дополнительные мета-данные для отправки
          *          }).addCallback(function(results){
@@ -340,21 +340,21 @@ define("File/Attach", ["require", "exports", "File/Attach/Lazy", "Core/core-simp
  * @name File/Attach#onProgress
  * @param {Core/EventObject} eventObject Дескриптор события.
  * @param {Object} data
- * @param {File/IFileData} file
+ * @param {File/IResource} file
  */
 /**
  * @event onWarning
  * @name File/Attach#onWarning
  * @param {Core/EventObject} eventObject Дескриптор события.
  * @param {Object} data
- * @param {File/IFileData} file
+ * @param {File/IResource} file
  */
 /**
  * @event onLoadedFolder
  * @name File/Attach#onLoadedFolder
  * @param {Core/EventObject} eventObject Дескриптор события.
  * @param {Object} data
- * @param {File/IFileData} file
+ * @param {File/IResource} file
  */
 /**
  * @event onLoaded
@@ -381,7 +381,7 @@ define("File/Attach", ["require", "exports", "File/Attach/Lazy", "Core/core-simp
  *
  * @name File/Attach#onLoadResourceError
  * @param {Core/EventObject} eventObject Дескриптор события.
- * @param {File/IFileData} resource загружаемый ресурс
+ * @param {File/IResource} resource загружаемый ресурс
  * @param {Error} error
  *
  * @see File/LocalFile
@@ -394,7 +394,7 @@ define("File/Attach", ["require", "exports", "File/Attach/Lazy", "Core/core-simp
  *
  * @name File/Attach#onLoadedResource
  * @param {Core/EventObject} eventObject Дескриптор события.
- * @param {File/IFileData} resource загружаемый ресурс
+ * @param {File/IResource} resource загружаемый ресурс
  * @param {Model} model Результат загрузки
  *
  * @see File/LocalFile
@@ -403,20 +403,20 @@ define("File/Attach", ["require", "exports", "File/Attach/Lazy", "Core/core-simp
  * @see WS.Data/Entity/Model
  */
 /**
- * @event onChoose
+ * @event onChosen
  * Событые выбора ресурса
  * <wiTag group="Управление">
  * Обработка результата:
  * При передаче в результат события заначений, приводимых к логическому false, указанный ресурс не попадёт
  * в результат Deferred'a метода choose. При передаче любого другого значения текщуий ресурс будет заменён им
  *
- * @name File/Attach#onChoose
+ * @name File/Attach#onChosen
  * @param {Core/EventObject} eventObject Дескриптор события.
- * @param {File/IFileData} resource загружаемый ресурс
+ * @param {File/IResource} resource загружаемый ресурс
  * @example
  * Фильтрация файлов по размеру
  * <pre>
- *    attach.subscribe('onChoose', function(event, fileData) {
+ *    attach.subscribe('onChosen', function(event, fileData) {
  *       if (getSize(fileData) > 100 * MB) {
  *          event.setResult(new Error(rk('Превышен допустимый размер загружаемого файла')))
  *       }
@@ -424,7 +424,7 @@ define("File/Attach", ["require", "exports", "File/Attach/Lazy", "Core/core-simp
  * </pre>
  * Предобработка перед загрузкой
  * <pre>
- *    attach.subscribe('onChoose', function(event, fileData) {
+ *    attach.subscribe('onChosen', function(event, fileData) {
  *       var blurImage = addFilter(fileData, "blur", 0.5);
  *       event.setResult(blurImage);
  *    });

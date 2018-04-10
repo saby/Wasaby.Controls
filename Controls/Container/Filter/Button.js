@@ -28,7 +28,7 @@ define('Controls/Container/Filter/Button',
          
          _template: template,
    
-         _beforeUpdate: function (options, context) {
+         _beforeUpdate: function(options, context) {
             //context from Filter layout
             var filterItems = context.filterLayoutField.filterButtonItems;
             if (!isEqual(this.context.get('filterLayoutField').filterButtonItems, filterItems)) {
@@ -36,7 +36,7 @@ define('Controls/Container/Filter/Button',
             }
          },
    
-         _beforeMount: function (options, context) {
+         _beforeMount: function(options, context) {
             if (context.filterLayoutField.filterButtonItems) {
                this._items = context.filterLayoutField.filterButtonItems;
             }

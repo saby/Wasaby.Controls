@@ -13,4 +13,4 @@ define('Controls/Application/AppData', [
          this.resourceRoot = cfg.resourceRoot;
       }
    });
-})
+});

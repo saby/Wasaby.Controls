@@ -390,6 +390,9 @@ define('SBIS3.CONTROLS/DropdownList',
                cfg.parentProperty = cfg.hierField;
             }
             cfg.pickerClassName += ' controls-DropdownList__picker';
+            if (cfg.multiselect) {
+               cfg.pickerClassName += ' controls-DropdownList__picker-multiselect';
+            }
             cfg.headTemplate = TemplateUtil.prepareTemplate(cfg.headTemplate);
 
             if (!cfg.selectedItems) {

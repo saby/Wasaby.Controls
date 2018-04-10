@@ -5,7 +5,7 @@ define('Controls/Toggle/DoubleSwitch', [
    'tmpl!Controls/Toggle/DoubleSwitch/resources/DoubleSwitchText',
    'WS.Data/Type/descriptor',
    'css!Controls/Toggle/DoubleSwitch/DoubleSwitch'
-], function (Control, template, toggleTemplate, textTemplate, types) {
+], function(Control, template, toggleTemplate, textTemplate, types) {
 
    /**
     * Контрол, отображающий переключатель
@@ -30,13 +30,13 @@ define('Controls/Toggle/DoubleSwitch', [
     * @variant vertical Вертикальная ориентация
     */
    var _private = {
-      checkCaptions: function(captions){
+      checkCaptions: function(captions) {
          if (captions.length !== 2) {
-            throw new Error ('You must set 2 captions.')
+            throw new Error('You must set 2 captions.');
          }
       },
 
-      notifyChanged: function(self){
+      notifyChanged: function(self) {
          self._notify('valueChanged', [!self._options.value]);
       }
    };
@@ -47,24 +47,24 @@ define('Controls/Toggle/DoubleSwitch', [
       _toggleTemplate: toggleTemplate,
       _textTemplate: textTemplate,
 
-      constructor: function (options) {
+      constructor: function(options) {
          Switch.superclass.constructor.apply(this, arguments);
          _private.checkCaptions(options.captions);
       },
 
-      _clickTextHandler: function (e, _nextValue) {
+      _clickTextHandler: function(e, _nextValue) {
          if (this._options.value !== _nextValue && this.isEnabled()) {
             _private.notifyChanged(this);
          }
       },
 
-      _clickToggleHandler: function (e) {
+      _clickToggleHandler: function(e) {
          if (this.isEnabled()) {
             _private.notifyChanged(this);
          }
       },
 
-      _beforeUpdate: function (newOptions) {
+      _beforeUpdate: function(newOptions) {
          _private.checkCaptions(newOptions.captions);
       }
    });
@@ -82,6 +82,7 @@ define('Controls/Toggle/DoubleSwitch', [
             'vertical',
             'horizontal'
          ]),
+
          //TODO: сделать проверку на массив когда будет сделана задача https://online.sbis.ru/opendoc.html?guid=2016ea16-ed0d-4413-82e5-47c3aeaeac59
          captions: types(Object)
       };

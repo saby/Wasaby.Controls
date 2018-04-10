@@ -61,7 +61,7 @@ define('Controls/List/Controllers/ScrollPaging',
          },
 
          handleScrollEdge: function(direction) {
-            switch(direction) {
+            switch (direction) {
                case 'up': this.handleScrollTop(); break;
                case 'down': this.handleScrollBottom(); break;
             }

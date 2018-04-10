@@ -7,11 +7,11 @@ define('Controls/List/SimpleList/ListView', [
    'Controls/List/resources/utils/ItemsUtil',
    'tmpl!Controls/List/SimpleList/ItemTemplate',
    'css!Controls/List/SimpleList/ListView/ListView'
-], function (BaseControl,
-             ListViewTpl,
-             ItemsUtil,
-             defaultItemTemplate
-   ) {
+], function(BaseControl,
+   ListViewTpl,
+   ItemsUtil,
+   defaultItemTemplate
+) {
    'use strict';
 
    var _private = {
@@ -20,7 +20,7 @@ define('Controls/List/SimpleList/ListView', [
          self._forceUpdate();
       },
 
-      resizeNotifyOnListChanged: function (self) {
+      resizeNotifyOnListChanged: function(self) {
          if (self._listChanged) {
             self._listChanged = false;
             self._notify('resize', [], {bubbling: true});
@@ -35,7 +35,7 @@ define('Controls/List/SimpleList/ListView', [
          _defaultItemTemplate: defaultItemTemplate,
          _listChanged: false,
 
-         constructor: function (cfg) {
+         constructor: function(cfg) {
             ListView.superclass.constructor.apply(this, arguments);
             var self = this;
             this._onListChangeFnc = function() {

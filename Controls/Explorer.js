@@ -1,7 +1,7 @@
 define('Controls/Explorer', [
    'Core/Control'
 
-], function (Control
+], function(Control
 ) {
    'use strict';
 

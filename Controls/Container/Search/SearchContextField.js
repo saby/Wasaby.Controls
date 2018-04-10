@@ -4,14 +4,14 @@
  * @class Controls/Container/Search/SearchContextField
  */
 define('Controls/Container/Search/SearchContextField', ['Core/DataContext'], function(DataContext) {
-      'use strict';
+   'use strict';
       
-      return DataContext.extend({
-         searchValue: '',
+   return DataContext.extend({
+      searchValue: '',
          
-         constructor: function(searchValue) {
-            this.searchValue = searchValue;
-         }
-      });
-   }
+      constructor: function(searchValue) {
+         this.searchValue = searchValue;
+      }
+   });
+}
 );

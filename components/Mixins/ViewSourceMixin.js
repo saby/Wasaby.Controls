@@ -84,11 +84,11 @@ define('SBIS3.CONTROLS/Mixins/ViewSourceMixin', [
             return e;
          });
    
-         var resultDef = new Deferred({
-            cancelCallback: function() {
-               if (!queryDef.isReady()) {
-                  queryDef.cancel();
-               }
+         var resultDef = new Deferred();
+   
+         this.once('onDestroy', function() {
+            if (!queryDef.isReady()) {
+               queryDef.cancel();
             }
          });
 

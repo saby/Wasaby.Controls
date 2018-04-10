@@ -1,10 +1,9 @@
 define('Controls/Header', [
    'Core/Control',
-   'Core/IoC',
    'tmpl!Controls/Header/Header',
    'WS.Data/Type/descriptor',
    'css!Controls/Header/Header'
-], function(Control, IoC, template, types) {
+], function(Control, template, types) {
    'use strict';
 
    /**
@@ -53,7 +52,7 @@ define('Controls/Header', [
             'm',
             's'
          ])
-      }
+      };
    };
 
    Header.getDefaultOptions = function() {

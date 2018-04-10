@@ -1,12 +1,12 @@
 define('Controls/Popup/TargetCoords',
    [],
 
-   function () {
+   function() {
 
       return {
-         get: function (target) {
+         get: function(target) {
 
-            if(!target){
+            if (!target) {
                throw new Error('Target parameter is required');
             }
 
