@@ -378,7 +378,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
           * Выделеить указанный пункт меню, снять выделение с предыдущего (если указан)
           *
           * @protected
-          * @param {WSControls/Buttons/MenuButton} menu Компонент меню
+          * @param {SBIS3.CONTROLS/WSControls/Buttons/MenuButton} menu Компонент меню
           * @param {string|number} selectedField Идентификатор выбранного пункта
           * @param {string|number} prevSelectedField Идентификатор предыдущего выбранного пункта
           */
@@ -395,7 +395,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
           * Выделеить пункт меню (маркировать выделенный пункт классом, установить заголовок меню)
           *
           * @protected
-          * @param {WSControls/Buttons/MenuButton} menu Компонент меню
+          * @param {SBIS3.CONTROLS/WSControls/Buttons/MenuButton} menu Компонент меню
           * @param {string|number} itemId Идентификатор пункта меню
           * @param {boolean} isSeelcted Становится ли пункт выделенным
           * @param {boolean} updateCaption Обновить также заголовок меню
