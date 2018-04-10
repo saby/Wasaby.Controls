@@ -176,19 +176,14 @@ define('Controls/Input/Number/ViewModel',
          },
 
          getValue: function() {
-            var numValue = parseFloat(this._options.value);
-
-            // Can be NaN if value is '-' or 'undefined'
-            return isNaN(numValue) ? undefined : numValue;
+            return this._options.value;
          },
 
          updateOptions: function(options) {
             this._options.onlyPositive = options.onlyPositive;
             this._options.integersLength = options.integersLength;
             this._options.precision = options.precision;
-            if (!isNaN(parseFloat(this._options.value)) && parseFloat(this._options.value) !== options.value) {
-               this._options.value = options.value !== undefined ? String(options.value) : '';
-            }
+            this._options.value = options.value;
          }
       });
 
