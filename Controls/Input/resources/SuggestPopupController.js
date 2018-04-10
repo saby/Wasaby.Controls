@@ -10,13 +10,14 @@ define('Controls/Input/resources/SuggestPopupController',
       'use strict';
       
       var _private = {
+
          /**
           * Контроллер для запроса за данными
           */
          getSearchController: function(self) {
             if (!self._search) {
                self._search = new Search({
-                  source:  self._source,
+                  source: self._source,
                   searchDelay: self._searchDelay,
                   navigation: self._navigation
                });

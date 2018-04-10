@@ -2,10 +2,11 @@ define('Controls/Input/resources/InputRender/BaseViewModel',
    [
       'Core/core-simpleExtend'
    ],
-   function (
+   function(
       simpleExtend
    ) {
       'use strict';
+
       /**
        * Базовый класс ViewModel для InputRender
        * @class Controls/Input/resources/InputRender/BaseViewModel
@@ -14,7 +15,7 @@ define('Controls/Input/resources/InputRender/BaseViewModel',
        */
 
       return simpleExtend.extend({
-         constructor: function (options) {
+         constructor: function(options) {
             this._options = options || {};
          },
 
@@ -22,7 +23,7 @@ define('Controls/Input/resources/InputRender/BaseViewModel',
           * @param splitValue
           * @returns {{value: (*|String), position: (*|Integer)}}
           */
-         handleInput: function (splitValue) {
+         handleInput: function(splitValue) {
             var
                value = splitValue.before + splitValue.insert + splitValue.after;
 
@@ -31,14 +32,14 @@ define('Controls/Input/resources/InputRender/BaseViewModel',
             return {
                value: value,
                position: splitValue.before.length + splitValue.insert.length
-            }
+            };
          },
 
-         getDisplayValue: function () {
+         getDisplayValue: function() {
             return this.getValue();
          },
 
-         getValue: function () {
+         getValue: function() {
             return this._options.value || '';
          },
 

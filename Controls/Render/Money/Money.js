@@ -3,7 +3,7 @@ define('Controls/Render/Money/Money', [
    'tmpl!Controls/Render/Money/Money',
    'css!Controls/Render/Money/Money'
 
-], function (Control, Template) {
+], function(Control, Template) {
 
    'use strict';
 
@@ -20,7 +20,7 @@ define('Controls/Render/Money/Money', [
                integer = '0';
             }
             regResult = text.replace(numReg, '$2');
-            integer = integer === '0' ? integer: (text.substr(0, 1) === '-' ? '-' : '') + (regResult.replace(/(?=(\d{3})+$)/g, ' ').trim());
+            integer = integer === '0' ? integer : (text.substr(0, 1) === '-' ? '-' : '') + (regResult.replace(/(?=(\d{3})+$)/g, ' ').trim());
             if (fraction.length == 1 && alwaysFraction) {
                fraction = fraction + '0';
             }
@@ -39,20 +39,20 @@ define('Controls/Render/Money/Money', [
             Money.superclass.constructor.apply(this, arguments);
          },
 
-         getModel: function(){
+         getModel: function() {
             var
                type = 'default',
-               text= this._options.text - 0,
+               text = this._options.text - 0,
                numberObj = _private.getPartsOfNumber(text.toFixed(2), true);
-               if(this._options.type){
-                  type = this._options.type;
-               }
+            if (this._options.type) {
+               type = this._options.type;
+            }
             return {
                integer: numberObj.integer,
                fraction: numberObj.fraction,
                title: numberObj.integer + '.' + numberObj.fraction,
                type: type
-            }
+            };
          }
       });
 

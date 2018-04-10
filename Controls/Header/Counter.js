@@ -53,7 +53,7 @@ define('Controls/Header/Counter', [
             's',
             'l'
          ])
-      }
+      };
    };
 
    Counter.getDefaultOptions = function() {

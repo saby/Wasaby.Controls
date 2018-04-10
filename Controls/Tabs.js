@@ -1,7 +1,7 @@
 define('Controls/Tabs', [
    'Core/Control'
 
-], function (Control
+], function(Control
 ) {
    'use strict';
 

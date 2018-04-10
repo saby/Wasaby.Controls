@@ -31,8 +31,8 @@ define('Controls/Toggle/Checkbox', [
     * @param {Boolean|null} value Новое состояние
     */
 
-   var _private ={
-      notifyChangeValue: function (self, value) {
+   var _private = {
+      notifyChangeValue: function(self, value) {
          self._notify('valueChanged', [value]);
       }
    };
@@ -43,7 +43,7 @@ define('Controls/Toggle/Checkbox', [
    var Checkbox = Control.extend({
       _template: template,
 
-      _clickHandler: function () {
+      _clickHandler: function() {
          var map = this._options.triState ? mapTriState : mapBoolState;
          _private.notifyChangeValue(this, map[this._options.value + '']);
       }
@@ -57,11 +57,11 @@ define('Controls/Toggle/Checkbox', [
       };
    };
 
-   Checkbox.getDefaultOptions = function getDefaultOptions (){
-     return{
-        value:false,
-        triState: false
-     };
+   Checkbox.getDefaultOptions = function getDefaultOptions() {
+      return {
+         value: false,
+         triState: false
+      };
    };
 
    Checkbox._ptivate = _private;

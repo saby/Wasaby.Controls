@@ -1,14 +1,14 @@
 define('Controls/Input/Password',
-    [
-        'Core/Control',
-        'tmpl!Controls/Input/Password/Password',
-        'WS.Data/Type/descriptor',
-       'Controls/Input/resources/InputRender/BaseViewModel',
+   [
+      'Core/Control',
+      'tmpl!Controls/Input/Password/Password',
+      'WS.Data/Type/descriptor',
+      'Controls/Input/resources/InputRender/BaseViewModel',
 
-        'css!Controls/Input/Password/Password'
-    ],
+      'css!Controls/Input/Password/Password'
+   ],
 
-function(Control, template, types, BaseViewModel) {
+   function(Control, template, types, BaseViewModel) {
 
    /**
     * Поле ввода пароля.
@@ -25,46 +25,46 @@ function(Control, template, types, BaseViewModel) {
     * @author Золотова Э.Е.
     */
 
-    'use strict';
+      'use strict';
 
-    var PasswordInput = Control.extend({
-        _template: template,
-        _passwordVisible: false,
+      var PasswordInput = Control.extend({
+         _template: template,
+         _passwordVisible: false,
 
-        constructor: function (options) {
-           PasswordInput.superclass.constructor.apply(this, arguments);
-           this._simpleViewModel = new BaseViewModel({
-              value: options.value
-           });
-        },
+         constructor: function(options) {
+            PasswordInput.superclass.constructor.apply(this, arguments);
+            this._simpleViewModel = new BaseViewModel({
+               value: options.value
+            });
+         },
 
-        _beforeUpdate: function() {
-           this._simpleViewModel.updateOptions({
-              value: this._options.value
-           });
-        },
+         _beforeUpdate: function() {
+            this._simpleViewModel.updateOptions({
+               value: this._options.value
+            });
+         },
 
-        _toggleVisibilityHandler: function() {
+         _toggleVisibilityHandler: function() {
             this._passwordVisible = !this._passwordVisible;
-        },
+         },
 
-       _valueChangedHandler: function(e, value) {
-          this._notify('valueChanged', [value]);
-       }
+         _valueChangedHandler: function(e, value) {
+            this._notify('valueChanged', [value]);
+         }
 
-    });
+      });
 
-    PasswordInput.getOptionTypes = function getOptionsTypes() {
-        return {
+      PasswordInput.getOptionTypes = function getOptionsTypes() {
+         return {
             placeholder: types(String)
-        };
-    };
+         };
+      };
 
-    PasswordInput.getDefaultOptions = function getDefaultOptions() {
-        return {
+      PasswordInput.getDefaultOptions = function getDefaultOptions() {
+         return {
             placeholder: rk('Пароль')
-        };
-    };
+         };
+      };
 
-    return PasswordInput;
-});
+      return PasswordInput;
+   });

@@ -25,7 +25,7 @@ define('SBIS3.CONTROLS/SearchForm', [
     * @mixes SBIS3.CONTROLS/Mixins/ChooserMixin
     * @mixes SBIS3.CONTROLS/Mixins/PickerMixin
     *
-    * @demo Examples/SeacrhForm/MySearchForm/MySearchForm
+    * @demo Examples/SearchForm/MySearchForm/MySearchForm
     * @author Крайнов Д.О.
     *
     * @public

@@ -7,7 +7,7 @@ define('Controls/Input/Dropdown',
       'Controls/Input/Dropdown/Util',
       'css!Controls/Input/Dropdown/Dropdown'
    ],
-   function (Control, template, defaultContentTemplate, SourceController, dropdownUtil) {
+   function(Control, template, defaultContentTemplate, SourceController, dropdownUtil) {
 
       /**
        * Поле выбора из значения списка.
@@ -25,8 +25,9 @@ define('Controls/Input/Dropdown',
       'use strict';
 
       var _private = {
-         getText: function (selectedItems) {
+         getText: function(selectedItems) {
             var text = selectedItems[0].get('title');
+
             // if (selectedItems.length > 1) {
             //    text += ' и еще' + (selectedItems.length - 1)
             // }
@@ -36,12 +37,12 @@ define('Controls/Input/Dropdown',
             instance._sourceController = new SourceController({
                source: source
             });
-            return instance._sourceController.load().addCallback(function(items){
+            return instance._sourceController.load().addCallback(function(items) {
                instance._items = items;
                _private.updateSelectedItem(instance, selectedKeys);
             });
          },
-         updateSelectedItem: function (instance, selectedKeys) {
+         updateSelectedItem: function(instance, selectedKeys) {
             instance._selectedItem = instance._items.getRecordById(selectedKeys);
             instance._icon = instance._selectedItem.get('icon');
          }
@@ -50,21 +51,20 @@ define('Controls/Input/Dropdown',
       var DropdownList = Control.extend({
          _template: template,
          _defaultContentTemplate: defaultContentTemplate,
-         constructor: function (config) {
+         constructor: function(config) {
             DropdownList.superclass.constructor.apply(this, arguments);
             this._onResult = this._onResult.bind(this);
          },
-         _beforeMount: function (options, context, receivedState) {
+         _beforeMount: function(options, context, receivedState) {
             if (receivedState) {
                this._items = receivedState;
-            }
-            else {
+            } else {
                if (options.source) {
                   return _private.loadItems(this, options.source, options.selectedKeys);
                }
             }
          },
-         _beforeUpdate: function (newOptions) {
+         _beforeUpdate: function(newOptions) {
             if (newOptions.selectedKeys && newOptions.selectedKeys !== this._options.selectedKeys) {
                _private.updateSelectedItem(this, newOptions.selectedKeys);
             }
@@ -72,13 +72,13 @@ define('Controls/Input/Dropdown',
                return _private.loadItems(this, newOptions.source, newOptions.selectedKeys);
             }
          },
-         _updateText: function (item, displayProperty) {
+         _updateText: function(item, displayProperty) {
             return _private.getText([item], displayProperty); //По стандарту если есть иконка - текст не отображается
          },
-         _open: function () {
-             dropdownUtil.open(this, this._children.popupTarget);
+         _open: function() {
+            dropdownUtil.open(this, this._children.popupTarget);
          },
-         _onResult: function (args) {
+         _onResult: function(args) {
             var actionName = args[0];
             var event = args[1];
             var data = args[2];
@@ -91,7 +91,7 @@ define('Controls/Input/Dropdown',
                   this._notify('footerClick', [event]);
             }
          },
-         _selectItem: function (item) {
+         _selectItem: function(item) {
             var key = item.get(this._options.keyProperty);
             this._notify('selectedKeysChanged', [key]);
          }

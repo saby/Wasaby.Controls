@@ -6,7 +6,7 @@ define('Controls/Popup/Opener/BaseOpener',
       'Core/core-merge',
       'Core/Deferred'
    ],
-   function (Control, Manager, CoreClone, CoreMerge, Deferred) {
+   function(Control, Manager, CoreClone, CoreMerge, Deferred) {
       /**
        * Базовый опенер
        * @category Popup
@@ -15,7 +15,7 @@ define('Controls/Popup/Opener/BaseOpener',
        * @author Лощинин Дмитрий
        */
       var Base = Control.extend({
-         _beforeUnmount: function () {
+         _beforeUnmount: function() {
             this.close();
          },
 
@@ -25,14 +25,13 @@ define('Controls/Popup/Opener/BaseOpener',
           * @param config конфигурация попапа
           * @param strategy стратегия позиционирования попапа
           */
-         open: function (config, strategy) {
+         open: function(config, strategy) {
             var cfg = this._options.popupOptions ? CoreClone(this._options.popupOptions) : {};
             var self = this;
             CoreMerge(cfg, config || {});
             if (this.isOpened()) {
                this._popupId = Manager.update(this._popupId, cfg);
-            }
-            else {
+            } else {
                if (!cfg.opener) {
                   cfg.opener = this;
                }
@@ -43,13 +42,12 @@ define('Controls/Popup/Opener/BaseOpener',
          },
 
          //Ленивая загрузка шаблона
-         _getTemplate: function (config) {
+         _getTemplate: function(config) {
             if (typeof config.template === 'function' || requirejs.defined(config.template)) {
                return (new Deferred()).callback(requirejs(config.template));
-            }
-            else if (!this._openerListDeferred) {
+            } else if (!this._openerListDeferred) {
                this._openerListDeferred = new Deferred();
-               requirejs([config.template], function (template) {
+               requirejs([config.template], function(template) {
                   this._openerListDeferred.callback(template);
                }.bind(this));
             }
@@ -60,7 +58,7 @@ define('Controls/Popup/Opener/BaseOpener',
           * Закрыть всплывающую панель
           * @function Controls/Popup/Opener/Base#show
           */
-         close: function () {
+         close: function() {
             if (this._popupId) {
                Manager.remove(this._popupId);
             }
@@ -71,7 +69,7 @@ define('Controls/Popup/Opener/BaseOpener',
           * @function Controls/Popup/Opener/Base#isOpened
           * @returns {Boolean} Признак открыта ли связанная всплывающая панель
           */
-         isOpened: function () {
+         isOpened: function() {
             return !!Manager.find(this._popupId);
          }
       });

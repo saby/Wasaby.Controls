@@ -5,6 +5,7 @@ define('Controls/Input/resources/InputHelper',
       'use strict';
 
       return {
+
          /**
           * Хелпер для вставки текста в поле ввода. В нём происходит вставка и выставляется позиция каретки dom-элемета
           * @param inputRender экземпляр контрола InputRender
