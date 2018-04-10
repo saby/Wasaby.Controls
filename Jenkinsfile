@@ -424,7 +424,7 @@ node('controls') {
             """# UTF-8
             [general]
             browser = ${params.browser_type}
-            SITE = http://${NODE_NAME}:30001
+            SITE = http://${NODE_NAME}:30010
             SERVER = test-autotest-db1:5434
             BASE_VERSION = css_${NODE_NAME}${ver}1
             DO_NOT_RESTART = True
@@ -441,7 +441,7 @@ node('controls') {
                 """# UTF-8
                 [general]
                 browser = ${params.browser_type}
-                SITE = http://${NODE_NAME}:30001
+                SITE = http://${NODE_NAME}:30010
                 DO_NOT_RESTART = True
                 SOFT_RESTART = False
                 NO_RESOURCES = True
@@ -462,7 +462,7 @@ node('controls') {
                 """# UTF-8
                 [general]
                 browser = ${params.browser_type}
-                SITE = http://${NODE_NAME}:30001
+                SITE = http://${NODE_NAME}:30010
                 DO_NOT_RESTART = True
                 SOFT_RESTART = False
                 NO_RESOURCES = True
@@ -484,7 +484,7 @@ node('controls') {
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
         }
         stage("Запуск тестов интеграционных и верстки"){
-            def site = "http://${NODE_NAME}:30001"
+            def site = "http://${NODE_NAME}:30010"
             site.trim()
 			if ("${params.browser_type}" != "ff"){
 				dir("./controls/tests/int"){
