@@ -1,3 +1,11 @@
-<Controls.HighCharts>
-
-</Controls.HighCharts>
+<div>
+    <Controls.HighCharts
+            highChartContainer="highChartLine"
+            highChartOptions="{{highChartOptions1}}"
+    />
+    <Controls.HighCharts
+            highChartContainer="highChartPie"
+            highChartOptions="{{highChartOptions2}}"
+    />
+    <div on:click="changeHighChartOptions()">Кликни</div>
+</div>
