@@ -7,24 +7,24 @@ define('Controls/HighCharts',
       'css!Controls/HighCharts/HighCharts',
       'browser!/cdn/highcharts/4.2.7/highcharts-more.js'
    ],
-   function (Control, template, constants) {
+   function(Control, template, constants) {
       'use strict';
 
       var HighChart = Control.extend({
          _template: template,
 
-         _shouldUpdate: function () {
+         _shouldUpdate: function() {
             return false;
          },
 
-         _beforeMount: function () {
+         _beforeMount: function() {
             Highcharts.setOptions({
                lang: {
                   numericSymbols: ['', '', '', '', '', ''],
-                  months : constants.Date.longMonths,
-                  shortMonths : constants.Date.months,
+                  months: constants.Date.longMonths,
+                  shortMonths: constants.Date.months,
                   weekdays: constants.Date.longDays,
-                  thousandsSep : ' '
+                  thousandsSep: ' '
                },
                plotOptions: {
                   series: {
@@ -38,13 +38,13 @@ define('Controls/HighCharts',
             this._drawChart(config);
          },
 
-         _beforeUpdate: function (config) {
+         _beforeUpdate: function(config) {
             if (this._options.highChartOptions !== config.highChartOptions) {
                this._drawChart(config);
             }
          },
 
-         _drawChart: function (config) {
+         _drawChart: function(config) {
             config.highChartOptions.chart.renderTo = this._children[this._options.highChartContainer];
             new Highcharts.Chart(config.highChartOptions);
          }
