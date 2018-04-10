@@ -3,9 +3,9 @@ define('Controls/Popup/Opener/InfoBox/InfoBoxController',
       'Controls/Popup/Opener/Sticky/StickyController',
       'Controls/Popup/Opener/InfoBox/resources/themeConstantsGetter',
       'Core/core-merge',
-      'Controls/Popup/Manager'
+      'Controls/Popup/Manager/ManagerController'
    ],
-   function(StickyController, themeConstantsGetter, cMerge, Manager) {
+   function(StickyController, themeConstantsGetter, cMerge, ManagerController) {
       var constants = themeConstantsGetter('controls-InfoBox__themeConstants', {
          ARROW_WIDTH: 'marginLeft',
          ARROW_H_OFFSET: 'marginRight',
@@ -95,7 +95,7 @@ define('Controls/Popup/Opener/InfoBox/InfoBoxController',
          elementCreated: function(cfg, container, id) {
             // Открыто может быть только одно окно
             if (this._openedPopupId) {
-               Manager.remove(this._openedPopupId);
+               ManagerController.remove(this._openedPopupId);
             }
             this._openedPopupId = id;
 
