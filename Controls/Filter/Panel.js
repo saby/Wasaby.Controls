@@ -14,26 +14,26 @@ define('Controls/Filter/Panel', [
    var FilterPanel = Control.extend({
       _template: template,
 
-      _beforeMount: function (options) {
+      _beforeMount: function(options) {
          this._items = clone([options.items])[0];
          this._additionalItems = clone([options.items])[0];
       },
 
-      applyFilter: function () {
+      applyFilter: function() {
          this._notify('filterChanged', [this.getFilter()]);
          return this._items;
       },
 
-      getFilter: function () {
+      getFilter: function() {
          var filter = {};
-         Chain(this._items).each(function (item) {
+         Chain(this._items).each(function(item) {
             filter[item.id] = item.value;
          });
          return filter;
       },
-      
-      resetFilter: function () {
-         Chain(this._items).each(function (item) {
+
+      resetFilter: function() {
+         Chain(this._items).each(function(item) {
             item.value = item.resetValue;
          });
          this._children.PropertyGrid._forceUpdate();

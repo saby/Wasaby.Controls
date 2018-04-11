@@ -18,7 +18,7 @@ define('Controls-demo/Layouts/SearchLayout', [
    'Controls/Filter/Button',
    'Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/FilterButtonTemplate',
    'Controls/Container/Input/Search'
-], function (BaseControl,
+], function(BaseControl,
              template,
              MemorySource
 ) {
