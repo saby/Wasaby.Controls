@@ -1532,7 +1532,7 @@ define('SBIS3.CONTROLS/DataGridView',
 
       _toggleActiveArrow: function(arrow, enable) {
          arrow.toggleClass('icon-disabled', !enable)
-              .toggleClass('icon-primary action-hover', enable);
+              .toggleClass('icon-primary controls-DataGridView__PartScroll__arrowRight_hover', enable);
       },
 
       _isTableWide: function() {

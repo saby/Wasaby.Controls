@@ -94,12 +94,9 @@ define('Controls/Button/MenuButton',
          _open: function() {
             dropdownUtil.open(this, this._children.popupTarget._container);
          },
-         _onResult: function(args) {
-            var actionName = args[0];
-            var data = args[2];
-
-            if (actionName === 'itemClick') {
-               this._notify('onMenuItemActivate', data);
+         _onResult: function(result) {
+            if (result.action === 'itemClick') {
+               this._notify('onMenuItemActivate', result.data);
                this._children.DropdownOpener.close();
             }
          }
