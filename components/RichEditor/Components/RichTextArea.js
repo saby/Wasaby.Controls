@@ -28,7 +28,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
    'SBIS3.CONTROLS/WaitIndicator',
 
    'tmpl!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/RichTextAreaInner',
-   "css!SBIS3.CORE.RichContentStyles",
+   "css!WS/css/styles/RichContentStyles",
    "i18n!SBIS3.CONTROLS/RichEditor",
    'css!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/RichTextArea'
 ], function (
