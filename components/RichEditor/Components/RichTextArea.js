@@ -1257,7 +1257,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                     linkAttrs.href = href;
                                     selection.setRng(range);
                                     var content = selection.getContent();
-                                    if (content === '' || ((content.indexOf('<') === -1 || (content.indexOf('href=') !== -1 && /^<a [^>]+>[^<]+<\/a>$/.test(content))) && BROWSER.firefox)) {
+                                    if (content === '' || (BROWSER.firefox && (content.indexOf('<') === -1 || (content.indexOf('href=') !== -1 && /^<a [^>]+>[^<]+<\/a>$/.test(content))))) {
                                        var linkHtml = dom.createHTML('a', linkAttrs, dom.encode(caption));
                                        // Для MSIE и FF принудительно смещаем курсор ввода после вставленной ссылки
                                        // 1174853380 https://online.sbis.ru/opendoc.html?guid=77405679-2b2b-42d3-8bc0-d2eee745ea23
