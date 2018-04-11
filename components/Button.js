@@ -2,17 +2,18 @@ define('SBIS3.CONTROLS/Button',
    [
       'js!WSControls/Buttons/Button',
       'SBIS3.CONTROLS/Utils/ButtonUtil',
+      'tmpl!WSControls/Buttons/resources/AddIcon',
       'css!SBIS3.CONTROLS/Button/Button'
-         ],
+   ],
 
-   function (Base, ButtonUtil) {
+   function(Base, ButtonUtil, svgIconTpl) {
 
-   'use strict';
+      'use strict';
 
-   // почему нельзя сделать единый шаблон на <button - не работает клик по ссылке в ФФ
-   // почему нельзя сделать единый шаблона на <a - нельзя положить <a внутрь <a, в верстке получится два рядом лежащих тега <a
+      // почему нельзя сделать единый шаблон на <button - не работает клик по ссылке в ФФ
+      // почему нельзя сделать единый шаблона на <a - нельзя положить <a внутрь <a, в верстке получится два рядом лежащих тега <a
 
-   /**
+      /**
     * Класс контрола "Обычная кнопка".
     *
     * <a href='/doc/platform/developmentapl/interface-development/components/textbox/buttons/button-line/#button'>Демонстрационные примеры</a>.
@@ -55,9 +56,10 @@ define('SBIS3.CONTROLS/Button',
     * @initial
     * <SBIS3.CONTROLS.Button caption="Кнопка" />
     */
-   var Button = Base.extend( [], /** @lends SBIS3.CONTROLS/Button.prototype */ {
-       $protected: {
-           _options: {
+      var Button = Base.extend([], /** @lends SBIS3.CONTROLS/Button.prototype */ {
+         $protected: {
+            _options: {
+
                /**
                 * @cfg {String} Устанавливает размер кнопки.
                 * @remark
@@ -71,6 +73,7 @@ define('SBIS3.CONTROLS/Button',
                 * </pre>
                 */
                size: 'default',
+
                /**
                 * @cfg {String} Устанавливает стилевое оформление кнопки.
                 * @remark
@@ -84,36 +87,39 @@ define('SBIS3.CONTROLS/Button',
                 *     <option name="style">primary</option>
                 * </pre>
                 */
-               style: 'standard'
-           }
-       },
-      _modifyOptions : function(options, parsedOptions, attrToMerge) {
-         var opts = Button.superclass._modifyOptions.apply(this, arguments);
-         opts._type = 'Button';
-         opts.cssClassName += ' controls-Button';
-         opts._iconDisabledClass = 'icon-button-disabled';
-         ButtonUtil.getStyleByConfig(opts, attrToMerge);
-         ButtonUtil.preparedClassFromOptions(opts);
-         return opts;
-      },
-      show: function(){
+               style: 'standard',
+               _svgIcon: null,
+               _svgIconTpl: svgIconTpl
+            }
+         },
+         _modifyOptions: function(options, parsedOptions, attrToMerge) {
+            var opts = Button.superclass._modifyOptions.apply(this, arguments);
+            opts._type = 'Button';
+            opts.cssClassName += ' controls-Button';
+            opts._iconDisabledClass = 'icon-button-disabled';
+
+            ButtonUtil.getStyleByConfig(opts, attrToMerge);
+            ButtonUtil.preparedClassFromOptions(opts);
+            return opts;
+         },
+         show: function() {
          // если кнопка скрыта при построение, то она не зарегистрируется дефолтной,
          // поэтому при показе такой кнопки регистрируем её как дефолтную
-         var oldVisible = this.isVisible();
+            var oldVisible = this.isVisible();
 
-         Button.superclass.show.call(this);
-         if (!oldVisible && this.isPrimary()) {
-            this.setDefaultButton(true);
+            Button.superclass.show.call(this);
+            if (!oldVisible && this.isPrimary()) {
+               this.setDefaultButton(true);
+            }
+         },
+         _toggleState: function() {
+            var  container = this._container;
+
+            container[0].className = container[0].className.replace(/(^|\s)controls-Button_size-\S+/g, '').replace(/(^|\s)controls-Button_state-\S+/g, '');
+            container.addClass(ButtonUtil.getClassState(this._options));
+            Button.superclass._toggleState.apply(this, arguments);
          }
-      },
-      _toggleState: function() {
-        var  container = this._container;
-
-        container[0].className = container[0].className.replace(/(^|\s)controls-Button_size-\S+/g, '').replace(/(^|\s)controls-Button_state-\S+/g, '');
-        container.addClass(ButtonUtil.getClassState(this._options));
-        Button.superclass._toggleState.apply(this, arguments);
-      }
-   });
+      });
 
       return Button;
 

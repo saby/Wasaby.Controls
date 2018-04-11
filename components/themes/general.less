@@ -63,12 +63,14 @@ input::-webkit-contacts-auto-fill-button {
 .icon-primary
 {
   color: @color_primary;
+  fill: @color_primary;
 }
 
 /* DISABLED styles */
 .icon-disabled
 {
   color: @icon-color-disabled;
+  fill: @icon-color-disabled;
 }
 
 /* Для тех, кто поддерживает... */
@@ -79,6 +81,7 @@ input::-webkit-contacts-auto-fill-button {
 /* Цвет основного текста */
 .normaltext-color {
   color: @black-color;
+  fill: @black-color;
 }
 
 //HOVER styles
@@ -123,6 +126,20 @@ input::-webkit-contacts-auto-fill-button {
 }
 .icon-large, .icon-32 {// icon-32 coprolite
    .icon-size(@default-icon-size-large, @default-icon-large-font);
+}
+
+.svg-icon-size-small, .svg-icon-size-16 {
+  width: @default-svg-icon-size-small;
+  height: @default-svg-icon-size-small;
+}
+
+.svg-icon-size-medium, .svg-icon-size-24 {
+  width: @default-svg-icon-size-medium;
+  height: @default-svg-icon-size-medium;
+}
+.svg-icon-size-large, .svg-icon-size-32 {
+  width: @default-svg-icon-size-large;
+  height: @default-svg-icon-size-large;
 }
 
 .ws-unSelectable {
