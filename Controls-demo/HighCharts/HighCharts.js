@@ -10,6 +10,9 @@ define('Controls-demo/HighCharts/HighCharts',
          need: true,
          toggleCaption: 'Убрать диаграмму',
          highChartOptions1: {
+            credits: {
+               enabled: false
+            },
             chart: {
                type: 'line'
             },

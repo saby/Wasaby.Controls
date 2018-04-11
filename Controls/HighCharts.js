@@ -54,6 +54,9 @@ define('Controls/HighCharts',
 
          _drawChart: function(config) {
             config.highChartOptions.chart.renderTo = this._children[this._options.highChartContainer];
+            if (this.highChartObj) {
+               this.highChartObj.destroy();
+            }
             this.highChartObj = new Highcharts.Chart(config.highChartOptions);
          },
 
