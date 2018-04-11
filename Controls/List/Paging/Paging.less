@@ -1,14 +1,14 @@
 //TODO темы синхронизируем с Лехой, когда он будет делать ListView, обобщим стили
 .ws-Paging__wrapper {
    display: flex;
-   background-color: @default-bg-color;
 }
 .ws-Paging__btn {
-   height: 32px;
+   height: @height_Paging-button;
    display: inline-flex;
    align-items: center;
    justify-content: center;
    user-select: none;
+   background-color: @background-color_Paging-button;
 }
 .ws-Paging__digitButons {
    display: inline-flex;
@@ -19,10 +19,12 @@
 .ws-Paging__arrow__state-normal {
    color: @color_primary;
    cursor: pointer;
-   &:hover {
-      background-color: #F0F5FB;
-   }
 }
+
+.ws-is-no-touch .ws-Paging__arrow__state-normal:hover {
+   background-color: @background-color_Paging-button_hover;
+}
+
 .ws-Paging__arrow__state-disabled {
    color: @icon-color-disabled
 }

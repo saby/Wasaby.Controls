@@ -2,10 +2,17 @@
    width: 24px;
 }
 .ws-DigitButtons__digit {
-   border-bottom: 3px solid transparent;
-   min-width: 28px;
+   border: solid transparent;
+   border-width: @border-width_Paging-digit;
+   min-width: @width_Paging-digit;
+   background-color: @background-color_Paging-button;
    cursor: pointer;
+   box-sizing: border-box;
+   color: @color-text_Paging-digit;
+}
+.ws-is-no-touch .ws-DigitButtons__digit:hover {
+   background-color: @background-color_Paging-button_hover;
 }
 .ws-DigitButtons__digit__selected {
-   border-bottom: 3px solid #FF7033;
+   border-color: @border-color_Paging-digit_active;
 }
