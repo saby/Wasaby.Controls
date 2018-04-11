@@ -158,10 +158,10 @@
 
 .ws-is-no-touch {
   .controls-Button_style-link-main:hover {
-    .controls-Button__icon-primary {
-      color: @color-Icon_style_primary_hovered;
-    }
-    color: @color_Link-main-text_hovered;
+     .controls-Button__icon-link-main {
+        color: @color_Link-main-text_hovered;
+     }
+     color: @color_Link-main-text_hovered;
   }
 
   .controls-Button_style-link-main3:hover {
@@ -242,6 +242,25 @@
   .border-radius(@border-radius_Button_l);
 }
 
+.controls-Button__icon-primary-add{
+   color: @color_Button-style-addButton-icon;
+}
+
+.controls-Button__icon-default, .controls-Button__icon-default-big {
+   color: @color_Button-icon;
+}
+.controls-Button__text_style-default {
+   .text-overflow();
+}
+
+.controls-Button__icon-primary, .controls-Button__icon-primary-big {
+   color: @color_Button-icon_primary;
+}
+
+.controls-Button__icon-link-main {
+   color: @color_Link-main-icon;
+}
+
 //Icon
 .controls-Button__icon-hover {
   color: @color-Icon_style_hover;
@@ -298,15 +317,15 @@
 }
 
 .controls-Button_style-primary-add:active {
-  .controls-Button__icon-primary {
-    color: @color-Icon_style_primary_hovered;
-  }
+   .controls-Button__icon-primary-add {
+      color: @color_Button-style-addButton-icon_hovered;
+   }
 }
 
 .ws-is-no-touch {
    .controls-Button_style-primary-add:hover {
-      .controls-Button__icon-primary {
-         color: @color-Icon_style_primary_hovered;
+      .controls-Button__icon-primary-add {
+         color: @color_Button-style-addButton-icon_hovered;
       }
    }
   .controls-Button_style-primary:hover, .controls-Button_style-primary-add:hover {
