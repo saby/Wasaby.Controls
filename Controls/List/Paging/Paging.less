@@ -1,6 +1,6 @@
-//TODO темы синхронизируем с Лехой, когда он будет делать ListView, обобщим стили
 .ws-Paging__wrapper {
    display: flex;
+   padding: @padding_Paging;
 }
 .ws-Paging__btn {
    height: @height_Paging-button;
@@ -8,16 +8,17 @@
    align-items: center;
    justify-content: center;
    user-select: none;
-   background-color: @background-color_Paging-button;
+   margin: 0 @spacing-Paging_button/2;
 }
 .ws-Paging__digitButons {
    display: inline-flex;
 }
 .ws-Paging__arrow {
-   width: 32px;
+   width: @width_Paging-arrow;
+   background-color: @background-color_Paging-button;
 }
 .ws-Paging__arrow__state-normal {
-   color: @color_primary;
+   color: @color-icon_Paging_arrow;
    cursor: pointer;
 }
 
@@ -26,10 +27,10 @@
 }
 
 .ws-Paging__arrow__state-disabled {
-   color: @icon-color-disabled
+   color: @color-icon_Paging_arrow_disabled;
 }
 .ws-Paging__icon {
    font-family: @default-icon-font;
-   font-size: 18px;
+   font-size: @font-size_Paging_arrow;
    font-style: normal;
 }
