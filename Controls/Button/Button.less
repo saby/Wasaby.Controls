@@ -41,30 +41,22 @@
     background-color: @background-color-IconButton_hovered;
   }
 
-  .controls-Button_type-iconButtonBordered_iconStyle-done:hover {
+  .controls-Button_style-iconButtonBordered_iconStyle-done:hover {
     border-color: @color-Icon_style_done;
   }
 
-  .controls-Button_type-iconButtonBordered_iconStyle-error:hover {
+  .controls-Button_style-iconButtonBordered_iconStyle-error:hover {
     border-color: @color-Icon_style_error;
   }
 
-  .controls-Button_type-iconButtonBordered_iconStyle-attention:hover {
+  .controls-Button_style-iconButtonBordered_iconStyle-attention:hover {
     border-color: @color-Icon_style_attention;
   }
 
-  .controls-Button_type-iconButtonBordered_iconStyle-disabled:hover {
-    border-color: @color-Icon_style_disabled;
-  }
-
-  .controls-Button_type-iconButtonBordered_iconStyle-hover:hover {
-    border-color: @color-Icon_style_hover;
-  }
-
-  .controls-Button_type-iconButtonBordered_iconStyle-primary:hover {
+  .controls-Button_style-iconButtonBordered_iconStyle-default:hover {
     border-color: @color-IconButton__border_iconStyle-primary_hovered;
-    .controls-Button__icon-primary {
-      color: @color-Icon_style_primary_hovered;
+    .controls-Button__icon-iconButtonBordered_iconStyle-default {
+      color: @color-IconButtonBordered_default_hovered;
     }
   }
 }
@@ -74,30 +66,22 @@
   box-shadow: @box-shadow-IconButton_activated;
 }
 
-.controls-Button_type-iconButtonBordered_iconStyle-done:active {
+.controls-Button_style-iconButtonBordered_iconStyle-done:active {
   border-color: @color-Icon_style_done;
 }
 
-.controls-Button_type-iconButtonBordered_iconStyle-error:active {
+.controls-Button_style-iconButtonBordered_iconStyle-error:active {
   border-color: @color-Icon_style_error;
 }
 
-.controls-Button_type-iconButtonBordered_iconStyle-attention:active {
+.controls-Button_style-iconButtonBordered_iconStyle-attention:active {
   border-color: @color-Icon_style_attention;
 }
 
-.controls-Button_type-iconButtonBordered_iconStyle-disabled:active {
-  border-color: @color-Icon_style_disabled;
-}
-
-.controls-Button_type-iconButtonBordered_iconStyle-hover:active {
-  border-color: @color-Icon_style_hover;
-}
-
-.controls-Button_type-iconButtonBordered_iconStyle-primary:active {
+.controls-Button_style-iconButtonBordered_iconStyle-default:active {
   border-color: @color-IconButton__border_iconStyle-primary_hovered;
-  .controls-Button__icon-primary {
-    color: @color-Icon_style_primary_hovered;
+  .controls-Button__icon-iconButtonBordered_iconStyle-default {
+    color: @color-IconButtonBordered_default_hovered;
   }
 }
 
@@ -158,7 +142,7 @@
 
 .ws-is-no-touch {
   .controls-Button_style-link-main:hover {
-     .controls-Button__icon-link-main {
+     .controls-Button__icon-link-main_iconStyle-default {
         color: @color_Link-main-text_hovered;
      }
      color: @color_Link-main-text_hovered;
@@ -242,48 +226,40 @@
   .border-radius(@border-radius_Button_l);
 }
 
-.controls-Button__icon-primary-add{
+.controls-Button__icon-primary-add_iconStyle-default {
    color: @color_Button-style-addButton-icon;
 }
 
-.controls-Button__icon-default, .controls-Button__icon-default-big {
+.controls-Button__icon-default_iconStyle-default, .controls-Button__icon-default-big_iconStyle-default {
    color: @color_Button-icon;
 }
 .controls-Button__text_style-default {
    .text-overflow();
 }
 
-.controls-Button__icon-primary, .controls-Button__icon-primary-big {
+.controls-Button__icon-primary_iconStyle-default, .controls-Button__icon-primary-big_iconStyle-default {
    color: @color_Button-icon_primary;
 }
 
-.controls-Button__icon-link-main {
+.controls-Button__icon-link-main_iconStyle-default {
    color: @color_Link-main-icon;
 }
 
-//Icon
-.controls-Button__icon-hover {
-  color: @color-Icon_style_hover;
+.controls-Button__icon-iconButtonBordered_iconStyle-default {
+   color: @color-IconButtonBordered_default;
 }
 
-.controls-Button__icon-attention {
+//Icon
+.controls-Button__icon-iconButtonBordered_iconStyle-attention {
   color: @color-Icon_style_attention;
 }
 
-.controls-Button__icon-primary {
-  color: @color-Icon_style_primary;
-}
-
-.controls-Button__icon-done {
+.controls-Button__icon-iconButtonBordered_iconStyle-done {
   color: @color-Icon_style_done;
 }
 
-.controls-Button__icon-error {
+.controls-Button__icon-iconButtonBordered_iconStyle-error {
   color: @color-Icon_style_error;
-}
-
-.controls-Button__icon-disabled {
-  color: @color-Icon_style_disabled;
 }
 
 .controls-Button__text_style-default {
@@ -317,14 +293,14 @@
 }
 
 .controls-Button_style-primary-add:active {
-   .controls-Button__icon-primary-add {
+   .controls-Button__icon-primary-add_iconStyle-default {
       color: @color_Button-style-addButton-icon_hovered;
    }
 }
 
 .ws-is-no-touch {
    .controls-Button_style-primary-add:hover {
-      .controls-Button__icon-primary-add {
+      .controls-Button__icon-primary-add_iconStyle-default {
          color: @color_Button-style-addButton-icon_hovered;
       }
    }

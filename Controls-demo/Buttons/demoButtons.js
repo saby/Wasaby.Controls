@@ -15,14 +15,6 @@ define('Controls-demo/Buttons/demoButtons', [
          _addButtonIcon: '',
          clickHandler: function (e) {
             this.count++;
-         },
-
-         mouseoverAddButtonHandler: function (e) {
-            this._addButtonIcon = "primary";
-         },
-
-         mouseoutAddButtonHandler: function (e) {
-            this._addButtonIcon = "";
          }
       });
    return ModuleClass;
