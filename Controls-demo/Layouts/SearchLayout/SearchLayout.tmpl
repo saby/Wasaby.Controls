@@ -20,7 +20,41 @@
                                 </Controls.Container.Filter.Fast>
                                 <Controls.Container.Filter.Button>
                                     <ws:content>
-                                        <Controls.Filter.Button filterTemplate="Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/FilterButtonTemplate">
+                                        <Controls.Filter.Button>
+                                           <ws:items>
+                                              <ws:Array>
+                                                 <ws:Object id="firstName" value="123" resetValue="">
+                                                    <ws:editor>
+                                                       <Controls.Filter.Panel.Editor.Text>
+                                                          <ws:content>
+                                                             <Controls.Input.Text></Controls.Input.Text>
+                                                          </ws:content>
+                                                       </Controls.Filter.Panel.Editor.Text>
+                                                    </ws:editor>
+                                                 </ws:Object>
+                                                 <ws:Object id="1" value="123" resetValue="{{true}}">
+                                                    <ws:editor>
+                                                       <Controls.Filter.Panel.Editor.Boolean>
+                                                          <ws:content>
+                                                             <Controls.Button caption="click me"
+                                                                              style="linkMain"></Controls.Button>
+                                                          </ws:content>
+                                                       </Controls.Filter.Panel.Editor.Boolean>
+                                                    </ws:editor>
+                                                 </ws:Object>
+                                                 <ws:Object id="2" value="{{_value}}" resetValue="{{1}}">
+                                                    <ws:editor>
+                                                       <Controls.Filter.Panel.Editor.Keys>
+                                                          <ws:content>
+                                                             <Controls.Input.Dropdown source="{{sourceDropdown}}"
+                                                                                      bind:selectedKeys="_value"
+                                                                                      keyProperty="key"></Controls.Input.Dropdown>
+                                                          </ws:content>
+                                                       </Controls.Filter.Panel.Editor.Keys>
+                                                    </ws:editor>
+                                                 </ws:Object>
+                                              </ws:Array>
+                                           </ws:items>
                                         </Controls.Filter.Button>
                                     </ws:content>
                                 </Controls.Container.Filter.Button>
