@@ -28,7 +28,7 @@ define('Controls/Input/resources/SuggestPopupController',
          
          prepareSuggestFilter: function(self, searchResult) {
             if (!searchResult.hasMore) {
-               delete self._popupOptions.componentOptions.filter[self._searchParam];
+               delete self._popupOptions.templateOptions.filter[self._searchParam];
             }
          },
    
@@ -51,13 +51,13 @@ define('Controls/Input/resources/SuggestPopupController',
          },
          
          setSuggestSearchResult: function(self, searchResult) {
-            self._popupOptions.componentOptions.items = searchResult.result;
-            self._popupOptions.componentOptions.hasMore = searchResult.hasMore || !searchResult.result.getCount();
+            self._popupOptions.templateOptions.items = searchResult.result;
+            self._popupOptions.templateOptions.hasMore = searchResult.hasMore || !searchResult.result.getCount();
          },
          
          setSuggestSelectedIndex: function(self, selectedIndex) {
             self._selectedIndex = selectedIndex;
-            self._popupOptions.componentOptions.selectedIndex = selectedIndex;
+            self._popupOptions.templateOptions.selectedIndex = selectedIndex;
          },
    
          decreaseSelectedIndex: function(self) {
@@ -68,7 +68,7 @@ define('Controls/Input/resources/SuggestPopupController',
          },
          
          increaseSelectedIndex: function(self) {
-            if (self._selectedIndex < self._popupOptions.componentOptions.items.getCount() - 1) {
+            if (self._selectedIndex < self._popupOptions.templateOptions.items.getCount() - 1) {
                self._selectedIndex++;
             }
             _private.setSuggestSelectedIndex(self, self._selectedIndex);
@@ -132,7 +132,7 @@ define('Controls/Input/resources/SuggestPopupController',
                      break;
    
                   case constants.key.enter:
-                     this._selectCallback(this._popupOptions.componentOptions.items.at(this._selectedIndex));
+                     this._selectCallback(this._popupOptions.templateOptions.items.at(this._selectedIndex));
                      this._popupOpener.close();
                      break;
                }

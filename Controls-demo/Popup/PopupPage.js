@@ -29,7 +29,7 @@ define('Controls-demo/Popup/PopupPage',
             this._children.sticky.open({
                target: this._children.stickyButton._container,
                opener: this._children.stickyButton,
-               componentOptions: {
+               templateOptions: {
                   type: this._firstClick ? 'sticky' : 'dialog'
                }
             });

@@ -148,7 +148,7 @@ define('Controls/Filter/FastFilter',
 
          _open: function(event, item, index) {
             var config = {
-               componentOptions: {
+               templateOptions: {
                   items: this._configs[index]._items,
                   keyProperty: this._configs[index].keyProperty,
                   parentProperty: getPropValue(item, 'parentProperty'),
