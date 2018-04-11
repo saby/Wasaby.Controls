@@ -57,7 +57,7 @@ define('Controls/HighCharts',
             this.highChartObj = new Highcharts.Chart(config.highChartOptions);
          },
 
-         _beforeUnmount: function () {
+         _beforeUnmount: function() {
             this.highChartObj.destroy();
             this.highChartObj = undefined;
          }
