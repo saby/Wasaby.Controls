@@ -15,8 +15,7 @@ define('Controls/Filter/Panel', [
       _template: template,
 
       _beforeMount: function(options) {
-         this._items = clone([options.items])[0];
-         this._additionalItems = clone([options.items])[0];
+         this._items = clone(options.items);
       },
 
       applyFilter: function() {
