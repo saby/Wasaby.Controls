@@ -1429,15 +1429,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   return;
             }
             var size = constants.defaultImagePercentSize;
-            // Сначала создаём замещающий элемент (с крутящейся ромашкой загрузки), так как изображения встречаются очень большие, которые могут грузиться достаточно долго
-            // 1174989279 https://online.sbis.ru/opendoc.html?guid=134784d6-4b1c-40ea-9df3-03f0a406d7ac
-            var imgPlaceholder = this._insertImgPlaceholder(size + '%', null, className, before, after);
+            this._startWaitIndicator(rk('Загрузка изображения...'), 1000);
             this._makeImgPreviewerUrl(fileobj, size, null, false).addCallback(function (urls) {
                var uuid = fileobj.id;
                if (uuid) {
                   this._images[uuid] = false;
                }
-               this._insertImg(urls, size + '%', null, className, null, before, after, uuid, imgPlaceholder);
+               this._insertImg(urls, size + '%', null, className, null, before, after, uuid)
+                  .addBoth(this._stopWaitIndicator.bind(this));
             }.bind(this));
          },
          codeSample: function(text, language) {
@@ -2259,13 +2258,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                });
                this._imageOptionsPanel.subscribe('onImageChange', function(event, fileobj){
-                  var stopper = new Deferred();
-                  WaitIndicator.make({
-                     overlay: 'dark',
-                     delay: 1000,
-                     target: self,
-                     message: rk('Загрузка изображения...')
-                  }, stopper);
+                  self._startWaitIndicator(rk('Загрузка изображения...'), 1000);
                   var $img = this.getTarget();
                   //Сбросим ширину и высоту, т.к. они могут остаться от предыдущей картинки
                   $img[0].style.width = '';
@@ -2280,7 +2273,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      // TODO: 20170913 Также убрать атрибуты с uuid, как и в методе _insertImg
                      $img.attr('data-img-uuid', uuid);
                      $img.attr('alt', uuid);
-                     $img[0].onload = $img[0].onerror = stopper.callback.bind(stopper);
+                     $img[0].onload = $img[0].onerror = self._stopWaitIndicator.bind(self);
                      self._tinyEditor.undoManager.add();
                      self._updateTextByTiny();
                      if (uuid) {
@@ -2701,58 +2694,65 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             return this.getName().replace('/', '#') + 'ИсторияИзменений';
          },
 
-         _insertImgPlaceholder: function (width, height, className, before, after) {
-            var placeholderId = 'image-placeholder-' + (new Date()).getTime();
-            var editor = this._tinyEditor;
-            editor.undoManager.ignore(function () {
-               this.insertHtml(
-                  (before || '') +
-                  '<span class="image-placeholder ' + (className || '') + '" id="' + placeholderId + '" style="' + (width ? 'width:' + width + ';' : '') + (height ? 'height:' + height + ';' : '') + '" contenteditable="false">&#65279;</span>' +
-                  (after || '')
-               );
-            }.bind(this));
-            return editor.getBody().querySelector('#' + placeholderId);
+         /**
+          * Показать индикатор ожидания
+          * @protected
+          * @param {string} message Текст сообщения
+          * @param {string} [delay] Задержка перед началом показа индикатора (опционально)
+          */
+         _startWaitIndicator: function (message, delay) {
+            this._stopWaitIndicator();
+            this._waitIndicatorStopper = new Deferred();
+            WaitIndicator.make({
+               overlay: 'dark',
+               delay: 0 < delay ? delay : 0,
+               target: this,
+               message: message
+            }, this._waitIndicatorStopper);
          },
 
-         _insertImg: function (urls, width, height, className, alt, before, after, uuid, placeholder) {
+         /**
+          * Прекратить показ индикатор ожидания
+          * @protected
+          */
+         _stopWaitIndicator: function () {
+            var stopper = this._waitIndicatorStopper;
+            if (stopper && !stopper.isReady()) {
+               stopper.callback();
+            }
+            this._waitIndicatorStopper = null;
+         },
+
+         _insertImg: function (urls, width, height, className, alt, before, after, uuid) {
             var src = urls.preview || urls.original;
             if (!src) {
                return this._showImgError();
             }
             var promise = new Deferred();
             var editor = this._tinyEditor;
-            var undoManager = editor.undoManager;
             var img = new Image();
             img.onload = function () {
-               // По мере загрузки заменяем замещающий элемент на реальное изображение
-               // 1174989279 https://online.sbis.ru/opendoc.html?guid=134784d6-4b1c-40ea-9df3-03f0a406d7ac
-               if (placeholder.parentNode) {
-                  // TODO: 20170913 Здесь в атрибуты, сохранность которых не гарантируется ввиду свободного редактирования пользователями, помещается значение uuid - Для обратной совместимости
-                  // После задач https://online.sbis.ru/opendoc.html?guid=6bb150eb-4973-4770-b7da-865789355916 и https://online.sbis.ru/opendoc.html?guid=a56c487d-6e1d-47bc-bdf6-06a0cd7aa57a
-                  // Убрать по мере переделки стороннего кода, используещего эти атрибуты.
-                  // Для пролучения uuid правильно использовать метод getImageUuid
-                  var style = (width ? 'width:' + width + ';' : '') + (height ? 'height:' + height + ';' : '');
-                  $(placeholder).replaceWith(
-                     '<img' +
-                     (className ? ' class="' + className + '"' : '') +
-                     ' src="' + src + '"' +
-                     (style ? ' style="' + style + '" data-mce-style="' + style + '"' : '') +
-                     /*(alt ? ' alt="' + alt.replace('"', '&quot;') + '"' : '') +*/
-                     ' data-img-uuid="' + uuid + '" alt="' + uuid + '"' +
-                     '></img>'
-                  );
-                  undoManager.add();
-               }
+               // TODO: 20170913 Здесь в атрибуты, сохранность которых не гарантируется ввиду свободного редактирования пользователями, помещается значение uuid - Для обратной совместимости
+               // После задач https://online.sbis.ru/opendoc.html?guid=6bb150eb-4973-4770-b7da-865789355916 и https://online.sbis.ru/opendoc.html?guid=a56c487d-6e1d-47bc-bdf6-06a0cd7aa57a
+               // Убрать по мере переделки стороннего кода, используещего эти атрибуты.
+               // Для пролучения uuid правильно использовать метод getImageUuid
+               var style = (width ? 'width:' + width + ';' : '') + (height ? 'height:' + height + ';' : '');
+               this.insertHtml(
+                  (before || '') +
+                  '<img' +
+                  (className ? ' class="' + className + '"' : '') +
+                  ' src="' + src + '"' +
+                  (style ? ' style="' + style + '" data-mce-style="' + style + '"' : '') +
+                  /*(alt ? ' alt="' + alt.replace('"', '&quot;') + '"' : '') +*/
+                  ' data-img-uuid="' + uuid + '" alt="' + uuid + '"' +
+                  '></img>' +
+                  (after || '')
+               );
                promise.callback();
             }.bind(this);
             img.onerror = function () {
-               this._showImgError().addCallback(function () {
-                  if (placeholder.parentNode) {
-                     placeholder.remove();
-                     undoManager.add();
-                  }
-                  promise.errback();
-               });
+               this._showImgError();//.addCallback(promise.errback.bind(promise))
+               promise.errback();
             }.bind(this);
             img.src = src;
             return promise;
