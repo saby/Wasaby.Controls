@@ -1,12 +1,14 @@
-.controls-SourceControl__scrollPaging {
+.controls-SourceControl__pagingContainer {
+   pointer-events: none;
    position: absolute;
    position: -webkit-sticky;
    position: sticky;
-   /*position sticky container has 100% width*/
-   float: right;
    bottom: 0;
    right: 0;
    top: auto;
+}
+.controls-SourceControl__scrollPaging {
+   pointer-events: auto;
    border-top: 1px solid @color_primary;
 }
 .controls-SourceControl__loadingIndicator {
