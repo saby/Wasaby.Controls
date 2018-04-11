@@ -9,6 +9,7 @@ define('Controls/Filter/Panel/Editor/Text', [
 
    var TextEditor = Control.extend({
       _template: template,
+      value: '123',
 
       constructor: function(cfg) {
          TextEditor.superclass.constructor.apply(this, arguments);

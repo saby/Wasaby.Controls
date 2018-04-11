@@ -15,8 +15,11 @@ define('Controls/Filter/Panel/Editor/Boolean', [
       },
 
       _clickHandler: function() {
-         this._options.item.value = !this._options.item.value;
+         this._item.value = !this._options.item.value;
+      },
 
+      _beforeMount: function(options) {
+         this._item = options.item;
       }
 
    });
