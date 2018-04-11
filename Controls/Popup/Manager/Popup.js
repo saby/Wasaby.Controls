@@ -61,26 +61,6 @@ define('Controls/Popup/Manager/Popup',
          },
 
          /**
-          * Обработчик установки фокуса.
-          * @function Controls/Popup/Manager/Popup#_focusIn
-          * @param event
-          * @param focusedControl
-          */
-         _focusIn: function(event, focusedControl) {
-            this._notify('popupFocusIn', [this._options.id, focusedControl], {bubbling: true});
-         },
-
-         /**
-          * Обработчик потери фокуса.
-          * @function Controls/Popup/Manager/Popup#_focusOut
-          * @param event
-          * @param focusedControl
-          */
-         _focusOut: function(event, focusedControl) {
-            this._notify('popupFocusOut', [this._options.id, focusedControl], {bubbling: true});
-         },
-
-         /**
           * Обработчик нажатия на клавиши.
           * @function Controls/Popup/Manager/Popup#_keyUp
           * @param event
