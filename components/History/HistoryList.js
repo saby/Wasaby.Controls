@@ -10,10 +10,11 @@ define('SBIS3.CONTROLS/History/HistoryList',
       'WS.Data/Entity/Record',
       'Core/Serializer',
       'Core/helpers/random-helpers',
-      'Core/helpers/Object/isEqual'
+      'Core/helpers/Object/isEqual',
+      'Core/IoC'
    ],
 
-   function(HistoryController, IList, IEnumerable, RecordSet, Record, Serializer, randHelpers, isEqualObject) {
+   function(HistoryController, IList, IEnumerable, RecordSet, Record, Serializer, randHelpers, isEqualObject, IoC) {
 
       'use strict';
 
@@ -91,9 +92,10 @@ define('SBIS3.CONTROLS/History/HistoryList',
          return isEqual;
       }
       
-      function checkHistory(history) {
+      function checkHistory(self, history) {
          if (!history) {
-            throw new Error('SBIS3.CONTROLS/History/HistoryList: need load history (HistoryList::getHistory) before use.');
+            self.getHistory();
+            IoC.resolve('ILogger').log('SBIS3.CONTROLS/History/HistoryList', 'Need load history (HistoryList::getHistory) before use.');
          }
       }
 
@@ -159,14 +161,14 @@ define('SBIS3.CONTROLS/History/HistoryList',
          },
 
          append: function(item) {
-            checkHistory(this._history);
+            checkHistory(this, this._history);
             if(this._addItemWithMethod('append', item)) {
                this.saveHistory();
             }
          },
 
          assign: function(items) {
-            checkHistory(this._history);
+            checkHistory(this, this._history);
             this.clear();
 
             for(var i = 0, len = items.length; i < len; i++) {
@@ -177,7 +179,7 @@ define('SBIS3.CONTROLS/History/HistoryList',
          },
 
          clear: function() {
-            checkHistory(this._history);
+            checkHistory(this, this._history);
             if(this.getCount()) {
                this._history.clear();
                this.saveHistory();
@@ -185,7 +187,7 @@ define('SBIS3.CONTROLS/History/HistoryList',
          },
 
          remove: function(item) {
-            checkHistory(this._history);
+            checkHistory(this, this._history);
             var result = this._history.removeAt(this._getIndex(item));
 
             if(result) {
@@ -195,7 +197,7 @@ define('SBIS3.CONTROLS/History/HistoryList',
          },
 
          removeAt: function(index) {
-            checkHistory(this._history);
+            checkHistory(this, this._history);
             var history = this._history,
                 result;
 
@@ -207,17 +209,17 @@ define('SBIS3.CONTROLS/History/HistoryList',
          },
 
          at: function(index) {
-            checkHistory(this._history);
+            checkHistory(this, this._history);
             return this._history.at(index);
          },
 
          getIndex: function(item) {
-            checkHistory(this._history);
+            checkHistory(this, this._history);
             return this._getIndex(item);
          },
 
          getCount : function() {
-            checkHistory(this._history);
+            checkHistory(this, this._history);
             return this._history.getCount();
          },
 
@@ -226,12 +228,12 @@ define('SBIS3.CONTROLS/History/HistoryList',
          //region WS.Data/Collection/IEnumerable
 
          each: function(callback, context) {
-            checkHistory(this._history);
+            checkHistory(this, this._history);
             this._history.each(callback, context);
          },
 
          getEnumerator: function() {
-            checkHistory(this._history);
+            checkHistory(this, this._history);
             return this._history.getEnumerator();
          },
 
@@ -240,12 +242,12 @@ define('SBIS3.CONTROLS/History/HistoryList',
          //region WS.Data/Collection/IIndexedCollection
 
          getIndexByValue: function(property, value) {
-            checkHistory(this._history);
+            checkHistory(this, this._history);
             return this._history.getIndexByValue(property, value);
          },
 
          getIndicesByValue: function(property, value) {
-            checkHistory(this._history);
+            checkHistory(this, this._history);
             return this._history.getIndicesByValue(property, value);
          },
 
