@@ -242,7 +242,7 @@ define('SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin', [
              this._inputHistoryDeferred = new Deferred();
              this._historyController.getHistory(true).addCallback(function() {
                 for (var i = 0, l = self._historyController.getCount(); i < l; i++) {
-                   recordsId.push(this._getHistoryRecordId(self._historyController.at(i).get('data')));
+                   recordsId.push(self._getHistoryRecordId(self._historyController.at(i).get('data')));
                 }
                 self._inputHistoryDeferred.addCallback(function(data) {
                    return self._makeQueryFilterForHistory(data);
