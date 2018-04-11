@@ -9,7 +9,9 @@ define('Controls/History/Source', [
    'WS.Data/Collection/RecordSet',
    'Controls/History/Constants',
    'WS.Data/Entity/Model',
-   'WS.Data/Source/DataSet'
+   'WS.Data/Source/DataSet',
+   'WS.Data/Chain',
+   'WS.Data/Collection/Factory/RecordSet'
 ], function(Abstract,
    OptionsMixin,
    ISource,
@@ -17,7 +19,9 @@ define('Controls/History/Source', [
    RecordSet,
    Constants,
    Model,
-   DataSet) {
+   DataSet,
+   Chain,
+   recordSetFactory) {
    /**
     * Source
     * @class Controls/History/Source
@@ -133,7 +137,7 @@ define('Controls/History/Source', [
          this.addProperty(this, items, 'pinned', 'boolean', false);
 
          this.fillItems(self, filteredHistory, 'pinned', oldItems, items);
-         this.fillFrequentItems(self, filteredHistory, 'frequent', oldItems, items);
+         this.fillFrequentItems(self, filteredHistory, oldItems, items);
          this.fillItems(self, filteredHistory, 'recent', oldItems, items);
 
          oldItems.forEach(function(item) {
