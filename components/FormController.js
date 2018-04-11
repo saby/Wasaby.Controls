@@ -640,7 +640,7 @@ function(cContext, coreClone, cMerge, CommandDispatcher, EventBus, Deferred, IoC
             destroyConfig = {
                hideIndicator: config.hideIndicator !== undefined ? config.hideIndicator : true,
                eventName: 'onDestroyModel',
-               hideErrorDialog: true
+               hideErrorDialog: config.hideErrorDialog !== undefined ? config.hideErrorDialog : true
             },
             def = this._dataSource.destroy(this._getRecordId());
 
