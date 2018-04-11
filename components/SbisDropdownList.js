@@ -95,7 +95,7 @@ define('SBIS3.CONTROLS/SbisDropdownList',
          setSelectedKeys: function(idArray) {
             var id = idArray && idArray[0];
 
-            if(!this._options.multiselect && id){
+            if(this._historyController && !this._options.multiselect && id){
                 this._historyController.addToHistory(id);
             }
             SbisDropdownList.superclass.setSelectedKeys.apply(this, arguments);

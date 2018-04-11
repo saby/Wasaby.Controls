@@ -1,7 +1,7 @@
 define('Controls/Container', [
    'Core/Control'
 
-], function (Control
+], function(Control
 ) {
    'use strict';
 

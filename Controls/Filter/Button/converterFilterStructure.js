@@ -4,7 +4,7 @@ define('Controls/Filter/Button/converterFilterStructure',
       'WS.Data/Collection/RecordSet',
       'WS.Data/Utils'
    ],
-   function (Chain, RecordSet, Util) {
+   function(Chain, RecordSet, Util) {
       
       'use strict';
       
@@ -25,8 +25,8 @@ define('Controls/Filter/Button/converterFilterStructure',
          }
       }
       
-      function convertToFilterStructure (items) {
-         return Chain(items).map(function (item) {
+      function convertToFilterStructure(items) {
+         return Chain(items).map(function(item) {
             var itemStructureItem = {};
             for (var i in structureMap) {
                if (Util.getItemPropertyValue(item, structureMap[i]) && structureMap.hasOwnProperty(i)) {
@@ -37,11 +37,11 @@ define('Controls/Filter/Button/converterFilterStructure',
          }).value();
       }
       
-      function convertToSourceData (filterStructure) {
+      function convertToSourceData(filterStructure) {
          var dataArray = [];
 
          Chain(filterStructure)
-            .each(function (item) {
+            .each(function(item) {
                var rsItem = {};
                for (var i in recordToSructureElemMap) {
                   if (Util.getItemPropertyValue(item, recordToSructureElemMap[i]) && recordToSructureElemMap.hasOwnProperty(i)) {

@@ -19,7 +19,7 @@ define('Controls/Container/List',
          getSearchController: function(self) {
             var options = self._options;
    
-            if(!self._searchController) {
+            if (!self._searchController) {
                self._searchController = new SearchController({
                   filter: merge({}, options.filter),
                   searchParam: options.searchParam,
@@ -66,11 +66,11 @@ define('Controls/Container/List',
             self._forceUpdate();
          },
    
-         searchValueChanged: function (self, value) {
+         searchValueChanged: function(self, value) {
             _private.getSearchController(self).search(value);
          },
    
-         filterChanged: function (self, filter) {
+         filterChanged: function(self, filter) {
             _private.updateFilter(self, filter);
             self._forceUpdate();
          }
@@ -106,7 +106,7 @@ define('Controls/Container/List',
             }
          },
          
-         _beforeUpdate: function (options, context) {
+         _beforeUpdate: function(options, context) {
             var searchContextValue = context.searchLayoutField.searchValue;
             var filterContextValue = context.filterLayoutField.filter;
             
@@ -119,7 +119,7 @@ define('Controls/Container/List',
             }
          },
          
-         _beforeUnmount: function () {
+         _beforeUnmount: function() {
             _private.getSearchController(this).abort();
          }
          

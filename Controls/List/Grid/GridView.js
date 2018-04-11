@@ -12,7 +12,7 @@ define('Controls/List/Grid/GridView', [
    'css!Controls/List/Grid/Grid',
    'css!Controls/List/Grid/OldGrid',
    'Controls/List/SourceControl/Scroll/Emitter'
-], function (Control, GridViewModel, GridTpl, ItemTpl, ColumnTpl, HeaderContentTpl, cDetection) {
+], function(Control, GridViewModel, GridTpl, ItemTpl, ColumnTpl, HeaderContentTpl, cDetection) {
 
    'use strict';
 
@@ -49,23 +49,22 @@ define('Controls/List/Grid/GridView', [
             this._gridViewModel = cfg.listModel;
             this._gridViewModel.setColumnTemplate(ColumnTpl);
 
-            if(cDetection.isNotFullGridSupport || cDetection.isIE) {
+            if (cDetection.isNotFullGridSupport || cDetection.isIE) {
                var tmp = cfg.columns,
-                  temp = function (tmp) {
+                  temp = function(tmp) {
                      var tmps = tmp;
                      var i;
                      for (i = 0; i < tmps.length; i++) {
-                        if (tmps[i].width == "1fr") {
-                           tmps[i].width = "auto";
-                        }
-                        else {
-                           if (tmps[i].width == "auto") {
-                              tmps[i].width = "1px";
+                        if (tmps[i].width == '1fr') {
+                           tmps[i].width = 'auto';
+                        } else {
+                           if (tmps[i].width == 'auto') {
+                              tmps[i].width = '1px';
                            }
                         }
-                  }
-                  return tmps;
-               };
+                     }
+                     return tmps;
+                  };
                temp(tmp);
             }
          },

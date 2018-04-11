@@ -39,10 +39,12 @@ define('Controls/Container/Scroll/Scrollbar',
        */
       var
          _private = {
+
             /**
              * Позиция курсора относительно страницы, в начале перемещения.
              */
             currentPageY: null,
+
             /**
              * Посчитать позицию ползунка учитывая граници за которые он не может выйти.
              * @param {number} position позиция ползунка.
@@ -53,6 +55,7 @@ define('Controls/Container/Scroll/Scrollbar',
             calcPosition: function(position, bottom, top) {
                return Math.min(Math.max(bottom, position), top);
             },
+
             /**
              * Посчитать отношение высот контейнера ползунка к контенту.
              * @param {number} scrollbarHeight высота контейнера ползунка.
@@ -62,6 +65,7 @@ define('Controls/Container/Scroll/Scrollbar',
             calcViewportRatio: function(scrollbarHeight, contentHeight) {
                return scrollbarHeight / contentHeight;
             },
+
             /**
              * Получить отношение высот отображения скрытого контента и самого скрытого контента.
              * @param {number} scrollbarHeight высота контейнера ползунка.
@@ -73,6 +77,7 @@ define('Controls/Container/Scroll/Scrollbar',
             calcScrollRatio: function(scrollbarHeight, scrollbarAvailableHeight, thumbHeight, contentHeight) {
                return (scrollbarAvailableHeight - thumbHeight) / (contentHeight - scrollbarHeight);
             },
+
             /**
              * Посчитать высоту ползунка.
              * @param thumb ползунок.
@@ -97,7 +102,7 @@ define('Controls/Container/Scroll/Scrollbar',
                 * https://online.sbis.ru/opendoc.html?guid=3e532f22-65a9-421b-ab0c-001e69d382c8
                 */
                if (firefox) {
-                  return 100;
+                  return Math.sign(delta) * 100;
                }
 
                return delta;
@@ -263,7 +268,7 @@ define('Controls/Container/Scroll/Scrollbar',
          return {
             position: 0,
             style: 'normal'
-         }
+         };
       };
 
       Scrollbar._private = _private;

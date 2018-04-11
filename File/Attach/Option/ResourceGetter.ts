@@ -1,6 +1,6 @@
 /// <amd-module name="File/Attach/Option/ResourceGetter" />
 
-import {IResourceGetter} from "File/IResourceGetter";
+import IResourceGetter = require("File/IResourceGetter");
 /**
  * Класс конфигурации {@link File/IResourceGetter}, передаваемый в {@link File/Attach}
  * @class File/Attach/Option/ResourceGetter

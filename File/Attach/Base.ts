@@ -3,9 +3,9 @@
 import Uploader = require("File/Attach/Uploader");
 import Model = require("WS.Data/Entity/Model");
 import ISource = require("WS.Data/Source/ISource");
-import {IResourceGetter} from "File/IResourceGetter";
-import {IFileDataConstructor} from "File/IFileDataConstructor";
-import {IFileData} from "File/IFileData";
+import IResourceGetter = require("File/IResourceGetter");
+import IResourceConstructor = require("File/IResourceConstructor");
+import IResource = require("File/IResource");
 // real dependency
 import Abstract = require("Core/Abstract");
 import CoreExtend = require('Core/core-simpleExtend');
@@ -28,7 +28,7 @@ const EMPTY_SELECTED_ERROR = rk("Нет выбранных ресурсов дл
  *   });
  *
  *   var scanner = new ScannerGetter();
- *   var fs = new FS();
+ *   var fs = new FileSystem();
  *   attach.registerGetter(scanner);
  *   attach.registerGetter(fs);
  *
@@ -90,7 +90,7 @@ let Base = CoreExtend.extend(Abstract,{
         this._getterContainer = new GetterContainer();
         this._sourceContainer = new SourceContainer();
         this._uploadHandlers = {};
-        this._publish('onProgress', 'onWarning', 'onLoadedFolder', 'onChoose', 'onChooseError',
+        this._publish('onProgress', 'onWarning', 'onLoadedFolder', 'onChosen', 'onChooseError',
             'onLoaded', 'onLoadError', 'onLoadResourceError', 'onLoadedResource'
         );
     },
@@ -153,7 +153,7 @@ let Base = CoreExtend.extend(Abstract,{
      * @see File/HttpFileLink
      * @see WS.Data/Source/ISource
      */
-    registerSource(type: IFileDataConstructor, source: ISource): void {
+    registerSource(type: IResourceConstructor, source: ISource): void {
         return this._sourceContainer.push(source, type);
     },
     /// endregion
@@ -161,7 +161,7 @@ let Base = CoreExtend.extend(Abstract,{
     /// region IDirectInsertFile
     /**
      * Устанавливает ресурсы в список выбранных
-     * @param {Array<File/IFileData> | File/IFileData} files файл или набор устанавливаемых файлов
+     * @param {Array<File/IResource> | File/IResource} files файл или набор устанавливаемых файлов
      * @example
      * Привязка файлов, полученных путём Drag&Drop к Attach для последующей загрузки
      * <pre>
@@ -177,7 +177,7 @@ let Base = CoreExtend.extend(Abstract,{
      * @see File/LocalFileLink
      * @see File/HttpFileLink
      */
-    setSelectedResource(files: IFileData | Array<IFileData>): void {
+    setSelectedResource(files: IResource | Array<IResource>): void {
         this._selectedResources = Array.isArray(files) ? files : [files];
     },
     /**
@@ -191,26 +191,26 @@ let Base = CoreExtend.extend(Abstract,{
     },
     /**
      * Возвращает набор выбраных ресурсов
-     * @return {Array<File/IFileData>}
+     * @return {Array<File/IResource>}
      * @method
      * @name File/Attach/Base#getSelectedResource
      * @see File/LocalFile
      * @see File/LocalFileLink
      * @see File/HttpFileLink
      */
-    getSelectedResource(): Array<IFileData> {
+    getSelectedResource(): Array<IResource> {
         return this._selectedResources || [];
     },
     /**
      * Добавляет ресурсы к списку выбранных
-     * @return {Array<File/IFileData>}
+     * @return {Array<File/IResource>}
      * @method
      * @name File/Attach/Base#addSelectedResource
      * @see File/LocalFile
      * @see File/LocalFileLink
      * @see File/HttpFileLink
      */
-    addSelectedResource(files: IFileData | Array<IFileData>): void {
+    addSelectedResource(files: IResource | Array<IResource>): void {
         let fileArray = [];
         if (this._$options.multiSelect) {
             fileArray = this.getSelectedResource();
@@ -297,14 +297,14 @@ let Base = CoreExtend.extend(Abstract,{
     /**
      * Метод вызова выбора ресурсов
      * @param {String} getterName Имя модуля {@link File/IResourceGetter}
-     * @return {Core/Deferred<Array<File/IFileData | Error>>}
+     * @return {Core/Deferred<Array<File/IResource | Error>>}
      * @example
      * Выбор и загрузка ресурсов:
      * <pre>
      *   var attach = new Base();
      *
      *   var scanner = new ScannerGetter();
-     *   var fs = new FS();
+     *   var fs = new FileSystem();
      *   attach.registerGetter(scanner);
      *   attach.registerGetter(fs);
      *
@@ -341,10 +341,10 @@ let Base = CoreExtend.extend(Abstract,{
      * @see File/LocalFileLink
      * @see File/HttpFileLink
      */
-    choose(getterName: string): Deferred<Array<IFileData | Error>> {
+    choose(getterName: string): Deferred<Array<IResource | Error>> {
         return this._getterContainer.get(getterName).addCallback((getter: IResourceGetter) => {
             return this._chooseNotify(getter.getFiles());
-        }).addCallback((files: Array<IFileData>) => {
+        }).addCallback((files: Array<IResource>) => {
             /* добавляем к ранее сохранёным ресурсам отфильтрованные от ошибок при выборе
              * они не нужны нам во внутренем состоянии, а пользователь о них будет уведомлен,
              * т.к. возвращаем что было выбрано в текущей операции
@@ -355,16 +355,16 @@ let Base = CoreExtend.extend(Abstract,{
     },
     /**
      * Стреляет событием выбора ресурса и обрабатывает результат от обработчикво
-     * @param {Core/Deferred<Array<File/IFileData | Error>>} chooseDef
-     * @return {Core/Deferred<Array<File/IFileData | Error>>}
+     * @param {Core/Deferred<Array<File/IResource | Error>>} chooseDef
+     * @return {Core/Deferred<Array<File/IResource | Error>>}
      * @private
      */
-    _chooseNotify(chooseDef: Deferred<Array<IFileData | Error>>): Deferred<Array<IFileData | Error>> {
+    _chooseNotify(chooseDef: Deferred<Array<IResource | Error>>): Deferred<Array<IResource | Error>> {
         let length;
-        return chooseDef.addCallbacks((files: Array<IFileData | Error>) => {
+        return chooseDef.addCallbacks((files: Array<IResource | Error>) => {
             length = files.length;
-            let eventResults = files.map((file: IFileData | Error) => {
-                let event = file instanceof Error? 'onChooseError': "onChoose";
+            let eventResults = files.map((file: IResource | Error) => {
+                let event = file instanceof Error? 'onChooseError': "onChosen";
                 return Deferred.callbackWrapper(this._notify(event, file),
                     (result) => Deferred.success(typeof result !== 'undefined'? result : file)
                 )
@@ -385,12 +385,12 @@ let Base = CoreExtend.extend(Abstract,{
     },
     /**
      * Возвращает список конструкторов над ресурсами, для которыйх зарегестрирован ISource
-     * @return {Array<File/IFileDataConstructor>}
+     * @return {Array<File/IResourceConstructor>}
      * @see File/LocalFile
      * @see File/LocalFileLink
      * @see File/HttpFileLink
      */
-    getRegisteredResource(): Array<IFileDataConstructor> {
+    getRegisteredResource(): Array<IResourceConstructor> {
         return this._sourceContainer.getRegisteredResource();
     },
     destroy() {
@@ -409,21 +409,21 @@ export = Base;
  * @name File/Attach/Base#onProgress
  * @param {Core/EventObject} eventObject Дескриптор события.
  * @param {Object} data
- * @param {File/IFileData} file
+ * @param {File/IResource} file
  */
 /**
  * @event onWarning
  * @name File/Attach/Base#onWarning
  * @param {Core/EventObject} eventObject Дескриптор события.
  * @param {Object} data
- * @param {File/IFileData} file
+ * @param {File/IResource} file
  */
 /**
  * @event onLoadedFolder
  * @name File/Attach/Base#onLoadedFolder
  * @param {Core/EventObject} eventObject Дескриптор события.
  * @param {Object} data
- * @param {File/IFileData} file
+ * @param {File/IResource} file
  */
 /**
  * @event onLoaded
@@ -450,7 +450,7 @@ export = Base;
  *
  * @name File/Attach/Base#onLoadResourceError
  * @param {Core/EventObject} eventObject Дескриптор события.
- * @param {File/IFileData} resource загружаемый ресурс
+ * @param {File/IResource} resource загружаемый ресурс
  * @param {Error} error
  *
  * @see File/LocalFile
@@ -463,7 +463,7 @@ export = Base;
  *
  * @name File/Attach/Base#onLoadedResource
  * @param {Core/EventObject} eventObject Дескриптор события.
- * @param {File/IFileData} resource загружаемый ресурс
+ * @param {File/IResource} resource загружаемый ресурс
  * @param {Model} model Результат загрузки
  *
  * @see File/LocalFile
@@ -472,20 +472,20 @@ export = Base;
  * @see WS.Data/Entity/Model
  */
 /**
- * @event onChoose
+ * @event onChosen
  * Событые выбора ресурса
  * <wiTag group="Управление">
  * Обработка результата:
  * При передаче в результат события заначений, приводимых к логическому false, указанный ресурс не попадёт
  * в результат Deferred'a метода choose. При передаче любого другого значения текщуий ресурс будет заменён им
  *
- * @name File/Attach/Base#onChoose
+ * @name File/Attach/Base#onChosen
  * @param {Core/EventObject} eventObject Дескриптор события.
- * @param {File/IFileData} resource загружаемый ресурс
+ * @param {File/IResource} resource загружаемый ресурс
  * @example
  * Фильтрация файлов по размеру
  * <pre>
- *    attach.subscribe('onChoose', function(event, fileData) {
+ *    attach.subscribe('onChosen', function(event, fileData) {
  *       if (getSize(fileData) > 100 * MB) {
  *          event.setResult(new Error(rk('Превышен допустимый размер загружаемого файла')))
  *       }
@@ -493,7 +493,7 @@ export = Base;
  * </pre>
  * Предобработка перед загрузкой
  * <pre>
- *    attach.subscribe('onChoose', function(event, fileData) {
+ *    attach.subscribe('onChosen', function(event, fileData) {
  *       var blurImage = addFilter(fileData, "blur", 0.5);
  *       event.setResult(blurImage);
  *    });

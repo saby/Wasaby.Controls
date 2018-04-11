@@ -16,17 +16,18 @@ define('Controls/Application',
     * Никакой логики внутри нет.
     */
    function(Base,
-            template,
-            Deferred,
-            BodyClasses,
-            TouchDetector,
-            AppData) {
+      template,
+      Deferred,
+      BodyClasses,
+      TouchDetector,
+      AppData) {
       'use strict';
 
       var _private,
          DEFAULT_DEBUG_CATALOG = 'debug/';
 
       _private = {
+
          /**
           * Перекладываем опции или recivedState на инстанс
           * @param self
@@ -53,13 +54,15 @@ define('Controls/Application',
          _resizePage: function(ev) {
             this._children.resizeDetect.start(ev);
          },
+         _mousedownPage: function(ev) {
+            this._children.mousedownDetect.start(ev);
+         },
 
          _touchstartPage: function() {
-            TouchDetector.touchHandler()
+            TouchDetector.touchHandler();
          },
          _mousemovePage: function(ev) {
             TouchDetector.moveHandler();
-
             this._children.mousemoveDetect.start(ev);
          },
          _mouseupPage: function(ev) {

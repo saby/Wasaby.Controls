@@ -27,7 +27,7 @@ define("File/ResourceGetter/Base", ["require", "exports"], function (require, ex
      * @method
      * @name File/ResourceGetter/Base#getFiles
      * @abstract
-     * @return {Core/Deferred<Array<File/IFileData | Error>>}
+     * @return {Core/Deferred<Array<File/IResource | Error>>}
      * @example
      * Получение скана:
      * <pre>
@@ -44,8 +44,8 @@ define("File/ResourceGetter/Base", ["require", "exports"], function (require, ex
      * </pre>
      * Выбор из файловой системы:
      * <pre>
-     *    require(['File/ResourceGetter/FS'], function (FSGetter) {
-     *       var getter = new FSGetter({
+     *    require(['File/ResourceGetter/FileSystem'], function (FileSystemGetter) {
+     *       var getter = new FileSystemGetter({
      *          extensions: ["png", "jpg"]
      *       });
      *       getter.getFiles().addCallbacks(function(files){ // files: Array<File/LocalFile | Error>
@@ -92,7 +92,7 @@ define("File/ResourceGetter/Base", ["require", "exports"], function (require, ex
         IResourceGetterBase.prototype.destroy = function () {
             this._isDestroyed = true;
         };
-        IResourceGetterBase.prototype.isDestroy = function () {
+        IResourceGetterBase.prototype.isDestroyed = function () {
             return this._isDestroyed;
         };
         /**

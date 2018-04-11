@@ -41,6 +41,7 @@ define('Controls/Container/Scroll',
        */
       var
          _private = {
+
             /**
              * Получить расположение тени внутри контейнера в зависимости от прокрутки контента.
              * @return {String}
@@ -68,6 +69,11 @@ define('Controls/Container/Scroll',
 
             getScrollTop: function(container) {
                return container.scrollTop;
+            },
+
+            setScrollTop: function(self, scrollTop) {
+               self._children.content.scrollTop = scrollTop;
+               self._scrollTop = scrollTop;
             },
 
             calcHasScroll: function(self) {
@@ -101,7 +107,7 @@ define('Controls/Container/Scroll',
                   hasScroll: _private.calcHasScroll(self),
                   contentHeight: _private.getContentHeight(self),
                   shadowPosition: _private.getShadowPosition(self)
-               }
+               };
             },
 
             updateDisplayState: function(self, displayState) {
@@ -113,21 +119,25 @@ define('Controls/Container/Scroll',
          },
          Scroll = Control.extend({
             _template: template,
+
             /**
              * Смещение контента сверху относительно контейнера.
              * @type {number}
              */
             _scrollTop: 0,
+
             /**
              * Нужно ли показывать скролл при наведении.
              * @type {boolean}
              */
             _showScrollbarOnHover: true,
+
             /**
              * Наведен ли курсор на контейнер.
              * @type {boolean}
              */
             _hasHover: false,
+
             /**
              * Используется ли нативный скролл.
              * @type {boolean}
@@ -156,6 +166,7 @@ define('Controls/Container/Scroll',
                            heightFix: ScrollHeightFixUtil.calcHeightFix()
                         },
                         styleHideScrollbar = ScrollWidthUtil.calcStyleHideScrollbar(),
+
                         // На мобильных устройствах используется нативный скролл, на других платформенный.
                         useNativeScrollbar = detection.isMobileIOS || detection.isMobileAndroid || detection.isMac;
 
@@ -167,7 +178,7 @@ define('Controls/Container/Scroll',
                         displayState: displayState,
                         styleHideScrollbar: styleHideScrollbar,
                         useNativeScrollbar: useNativeScrollbar
-                     }
+                     };
                   });
 
                   def.callback();
@@ -195,8 +206,6 @@ define('Controls/Container/Scroll',
 
             _afterUpdate: function() {
                var displayState = _private.calcDisplayState(this);
-
-               this._children.content.scrollTop = this._scrollTop;
 
                if (!isEqual(this._displayState, displayState)) {
                   this._displayState = displayState;
@@ -245,7 +254,7 @@ define('Controls/Container/Scroll',
                   this._showScrollbarOnHover = true;
                   event.preventDefault();
 
-                  this._scrollbarTaken(false)
+                  this._scrollbarTaken(false);
                }
             },
 
@@ -254,7 +263,7 @@ define('Controls/Container/Scroll',
              * Переделать на bind в шаблоне и избавится от прокидывания опций.
              */
             _positionChangedHandler: function(event, position) {
-               this._scrollTop = position;
+               _private.setScrollTop(this, position);
             },
 
             _draggingChangedHandler: function(event, dragging) {
@@ -270,21 +279,21 @@ define('Controls/Container/Scroll',
              * @param {Number} offset
              */
             scrollTo: function(offset) {
-               this._scrollTop = offset;
+               _private.setScrollTop(this, offset);
             },
 
             /**
              * Осуществить скролл к верху области
              */
             scrollToTop: function() {
-               this._scrollTop = 0;
+               _private.setScrollTop(this, 0);
             },
 
             /**
              * Осуществить скролл к низу области
              */
             scrollToBottom: function() {
-               this._scrollTop = _private.getScrollHeight(this._children.content);
+               _private.setScrollTop(this, _private.getScrollHeight(this._children.content));
             }
          });
 
@@ -293,7 +302,7 @@ define('Controls/Container/Scroll',
             style: 'normal',
             shadowVisible: true,
             scrollbarVisible: true
-         }
+         };
       };
 
       Scroll._private = _private;

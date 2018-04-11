@@ -1,7 +1,7 @@
 define('Controls/Tree', [
    'Core/Control'
 
-], function (Control
+], function(Control
 ) {
    'use strict';
 
