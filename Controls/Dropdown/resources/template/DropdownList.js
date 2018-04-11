@@ -37,6 +37,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
          _defaultHeadTemplate: defaultHeadTemplate,
          _defaultContentHeadTemplate: defaultContentHeadTemplate,
          _controlName: 'Controls/Dropdown/resources/template/DropdownList',
+         _hasHierarchy: false,
          constructor: function(config) {
             var self = this;
             var sizes = ['small', 'medium', 'large'];
@@ -68,11 +69,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
             }
             Menu.superclass.constructor.apply(this, arguments);
             this.resultHandler = this.resultHandler.bind(this);
-            this._documentClickHandler = this._documentClickHandler.bind(this);
-
-            //TODO Подписка на события вместе с логикой закрытия подменю переедет в попап
-            document.addEventListener('mousedown', this._documentClickHandler);
-            document.addEventListener('touchstart', this._documentClickHandler);
+            this._mousemoveHandler = this._mousemoveHandler.bind(this);
          },
          _beforeMount: function(newOptions) {
             if (newOptions.items) {
@@ -85,10 +82,10 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   nodeProperty: newOptions.nodeProperty,
                   parentProperty: newOptions.parentProperty
                });
+               this._hasHierarchy = this._listModel.hasHierarchy();
             }
          },
 
-         //TODO Логика открытия подменю переедет в попап
          _itemMouseEnter: function(event, item, hasChildren) {
             if (hasChildren) {
                var config = {
@@ -100,7 +97,6 @@ define('Controls/Dropdown/resources/template/DropdownList',
                      nodeProperty: this._options.nodeProperty,
                      selectedKeys: this._options.selectedKeys,
                      rootKey: item.get(this._options.keyProperty),
-                     depth: this._options.depth + 1, //TODO когда будут готовы opener'ы, нужно проверять куда ушел фокус по ним. Сейчас связи OpenerTemplate->OpenerTemplate нет
                      showHeader: false,
                      defaultItemTemplate: this._options.defaultItemTemplate
                   },
@@ -109,60 +105,39 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   },
                   target: event.target
                };
-               this._children['MenuOpener' + item.get(this._options.keyProperty)].open(config, this);
+               this._children.subDropdownOpener.open(config, this);
+            } else if (this._hasHierarchy) {
+               this._children.subDropdownOpener.close();
             }
          },
-
-         //TODO Логика закрытия подменю переедет в попап
-         _itemMouseOut: function(event, item) {
-            var targetMenu = event.nativeEvent.relatedTarget && event.nativeEvent.relatedTarget.closest('.controls-DropdownList__popup'),
-               targetDepth = targetMenu && parseInt(targetMenu.getAttribute('depth'), 10),
-               childSubMenu = this._children['MenuOpener' + item.get(this._options.keyProperty)];
-
-            if (!targetDepth) { //Увели мимо меню
-               childSubMenu && childSubMenu.close(); //Скрываем открытое подменю
-               if (this._options.depth !== 1) { //не с основного меню - закрываем открытых детей и текущее подменю
-                  this._notify('sendResult', [['itemMouseOut', event]]);
-                  this._notify('close');
-               }
-            } else if (this._options.depth >= targetDepth) { //Если увели на родителя или на другую запись в текущем меню - скрываем подменю
-               childSubMenu && childSubMenu.close(); //Скрываем открытое подменю
-            }
-         },
-         resultHandler: function(args) {
-            switch (args[0]) {
-
-               //Увели мышь мимо всех меню => сообщаем родительскому подменю что надо закрыться и закрываемся сами
-               case 'itemMouseOut':
-                  if (this._options.depth > 1) {
-                     this._notify('sendResult', [['itemMouseOut', args[1]]]);
-                     this._notify('close');
-                  }
-                  break;
+         resultHandler: function(result) {
+            switch (result.action) {
                case 'itemClick':
-                  this._notify('sendResult', [['itemClick', args[1], args[2]]]);
-                  this._notify('close');
+                  this._notify('sendResult', [result]);
             }
          },
-         _itemClickHandler: function(event, item, flag) {
-            this._notify('sendResult', [['itemClick', event, [item, flag]]]); //TODO Баг/Фича с передачей аргументов в попап.
+         _itemClickHandler: function(event, item, flag) { //todo нужно обсудить
+            var result = {
+               action: 'itemClick',
+               event: event,
+               data: [item, flag]
+            };
+            this._notify('sendResult', [result]);
          },
          _footerClick: function(event) {
-            this._notify('sendResult', [['footerClick', event]]);
+            var result = {
+               action: 'footerClick',
+               event: event
+            };
+            this._notify('sendResult', [result]);
          },
          _headerClick: function() {
             this._notify('close');
          },
-         _documentClickHandler: function(event) {
-            //Если кликнули мимо меню - закрываемся
-            if (!event.target.closest('.controls-DropdownList__popup')) {
+         _mousemoveHandler: function(emitterEvent, event) {
+            if (!event.target.closest('.controls-DropdownList__popup') && this._container.closest('.controls-DropdownList__subMenu')) { //Если увели курсор мимо - закрываемся
                this._notify('close');
             }
-         },
-         destroy: function() {
-            document.removeEventListener('mousedown', this._documentClickHandler);
-            document.removeEventListener('touchstart', this._documentClickHandler);
-            Menu.superclass.destroy.apply(this, arguments);
          }
       });
 

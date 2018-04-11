@@ -2,14 +2,13 @@ define('Controls/Button/MenuButton',
    [
       'Core/Control',
       'tmpl!Controls/Button/Menu/MenuButton',
-      'WS.Data/Collection/RecordSet',
       'Controls/Controllers/SourceController',
       'Controls/Input/Dropdown/Util',
       'Controls/Button/Classes',
       'css!Controls/Button/Menu/MenuButton',
       'Controls/Button'
    ],
-   function(Control, template, RecordSet, SourceController, dropdownUtil, Classes, menuHeadTemplate) {
+   function(Control, template, SourceController, dropdownUtil, Classes, menuHeadTemplate) {
 
       /**
         * MenuButton
@@ -95,12 +94,9 @@ define('Controls/Button/MenuButton',
          _open: function() {
             dropdownUtil.open(this, this._children.popupTarget._container);
          },
-         _onResult: function(args) {
-            var actionName = args[0];
-            var data = args[2];
-
-            if (actionName === 'itemClick') {
-               this._notify('onMenuItemActivate', data);
+         _onResult: function(result) {
+            if (result.action === 'itemClick') {
+               this._notify('onMenuItemActivate', result.data);
                this._children.DropdownOpener.close();
             }
          }

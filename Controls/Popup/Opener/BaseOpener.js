@@ -1,12 +1,12 @@
 define('Controls/Popup/Opener/BaseOpener',
    [
       'Core/Control',
-      'Controls/Popup/Manager',
+      'Controls/Popup/Manager/ManagerController',
       'Core/core-clone',
       'Core/core-merge',
       'Core/Deferred'
    ],
-   function(Control, Manager, CoreClone, CoreMerge, Deferred) {
+   function(Control, ManagerController, CoreClone, CoreMerge, Deferred) {
       /**
        * Базовый опенер
        * @category Popup
@@ -30,13 +30,13 @@ define('Controls/Popup/Opener/BaseOpener',
             var self = this;
             CoreMerge(cfg, config || {});
             if (this.isOpened()) {
-               this._popupId = Manager.update(this._popupId, cfg);
+               this._popupId = ManagerController.update(this._popupId, cfg);
             } else {
                if (!cfg.opener) {
                   cfg.opener = this;
                }
                this._getTemplate(cfg).addCallback(function() {
-                  self._popupId = Manager.show(cfg, strategy);
+                  self._popupId = ManagerController.show(cfg, strategy);
                });
             }
          },
@@ -60,7 +60,7 @@ define('Controls/Popup/Opener/BaseOpener',
           */
          close: function() {
             if (this._popupId) {
-               Manager.remove(this._popupId);
+               ManagerController.remove(this._popupId);
             }
          },
 
@@ -70,7 +70,7 @@ define('Controls/Popup/Opener/BaseOpener',
           * @returns {Boolean} Признак открыта ли связанная всплывающая панель
           */
          isOpened: function() {
-            return !!Manager.find(this._popupId);
+            return !!ManagerController.find(this._popupId);
          }
       });
       return Base;

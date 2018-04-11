@@ -33,7 +33,7 @@ define('Controls/Popup/Manager/Popup',
          _template: template,
 
          _afterMount: function() {
-            this._notify('popupCreated', [this._options.id]);
+            this._notify('popupCreated', [this._options.id], {bubbling: true});
          },
 
          /**
@@ -41,7 +41,23 @@ define('Controls/Popup/Manager/Popup',
           * @function Controls/Popup/Manager/Popup#_close
           */
          _close: function() {
-            this._notify('closePopup', [this._options.id]);
+            this._notify('popupClose', [this._options.id], {bubbling: true});
+         },
+
+         /**
+          * Обновить popup
+          * @function Controls/Popup/Manager/Popup#_close
+          */
+         _update: function() {
+            this._notify('popupUpdated', [this._options.id], {bubbling: true});
+         },
+
+         /**
+          * Отправить результат
+          * @function Controls/Popup/Manager/Popup#_sendResult
+          */
+         _sendResult: function(event, result) {
+            this._notify('popupResult', [this._options.id, result], {bubbling: true});
          },
 
          /**
@@ -51,7 +67,7 @@ define('Controls/Popup/Manager/Popup',
           * @param focusedControl
           */
          _focusIn: function(event, focusedControl) {
-            this._notify('popupFocusIn', [this._options.id, focusedControl]);
+            this._notify('popupFocusIn', [this._options.id, focusedControl], {bubbling: true});
          },
 
          /**
@@ -61,7 +77,7 @@ define('Controls/Popup/Manager/Popup',
           * @param focusedControl
           */
          _focusOut: function(event, focusedControl) {
-            this._notify('popupFocusOut', [this._options.id, focusedControl]);
+            this._notify('popupFocusOut', [this._options.id, focusedControl], {bubbling: true});
          },
 
          /**
@@ -74,17 +90,10 @@ define('Controls/Popup/Manager/Popup',
                this._close();
             }
          },
-
-         /**
-          * Отправить результат
-          * @function Controls/Popup/Manager/Popup#_sendResult
-          */
-         _sendResult: function(event, result) {
-            this._notify('result', [this._options.id, result]);
-         },
-
-         _update: function() {
-            this._notify('popupUpdated', [this._options.id]);
+         _documentClickHandler: function(emitterEvent, event) {
+            if (this._options.closeByExternalClick && !event.target.closest('.controls-DropdownList__popup')) { //Если кликнули мимо меню - закрываемся
+               this._close();
+            }
          }
       });
 
