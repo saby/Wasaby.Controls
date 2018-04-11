@@ -501,6 +501,9 @@ define('SBIS3.CONTROLS/TextBox', [
          var newText = this._getInputValue(),
             textsEmpty = this._isEmptyValue(this._options.text) && this._isEmptyValue(newText);
          if (this._options.text !== newText && !textsEmpty){
+            if (this._options.inputRegExp){
+               newText = this._checkRegExp(newText, this._options.inputRegExp);
+            }
             this._setTextByKeyboard(newText);
          }
          var key = event.which || event.keyCode;
