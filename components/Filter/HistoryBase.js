@@ -238,7 +238,7 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
    
                   self.processViews(function(view) {
                      self.subscribeTo(view, 'onItemActivate', function(event, itemObj) {
-                        self._notify('onItemActivate', itemObj, self === self._favoriteView, itemObj.item.get('data').get('globalParams'));
+                        self._notify('onItemActivate', itemObj, this === self._favoriteView, itemObj.item.get('data').get('globalParams'));
                      });
                   });
    
