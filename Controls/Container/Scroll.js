@@ -71,6 +71,11 @@ define('Controls/Container/Scroll',
                return container.scrollTop;
             },
 
+            setScrollTop: function(self, scrollTop) {
+               self._children.content.scrollTop = scrollTop;
+               self._scrollTop = scrollTop;
+            },
+
             calcHasScroll: function(self) {
                var
                   scrollHeight = _private.getScrollHeight(self._children.content),
@@ -202,8 +207,6 @@ define('Controls/Container/Scroll',
             _afterUpdate: function() {
                var displayState = _private.calcDisplayState(this);
 
-               this._children.content.scrollTop = this._scrollTop;
-
                if (!isEqual(this._displayState, displayState)) {
                   this._displayState = displayState;
                   this._forceUpdate();
@@ -260,7 +263,7 @@ define('Controls/Container/Scroll',
              * Переделать на bind в шаблоне и избавится от прокидывания опций.
              */
             _positionChangedHandler: function(event, position) {
-               this._scrollTop = position;
+               _private.setScrollTop(this, position);
             },
 
             _draggingChangedHandler: function(event, dragging) {
@@ -276,21 +279,21 @@ define('Controls/Container/Scroll',
              * @param {Number} offset
              */
             scrollTo: function(offset) {
-               this._scrollTop = offset;
+               _private.setScrollTop(this, offset);
             },
 
             /**
              * Осуществить скролл к верху области
              */
             scrollToTop: function() {
-               this._scrollTop = 0;
+               _private.setScrollTop(this, 0);
             },
 
             /**
              * Осуществить скролл к низу области
              */
             scrollToBottom: function() {
-               this._scrollTop = _private.getScrollHeight(this._children.content);
+               _private.setScrollTop(this, _private.getScrollHeight(this._children.content));
             }
          });
 
