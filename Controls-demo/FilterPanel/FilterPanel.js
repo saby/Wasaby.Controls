@@ -10,7 +10,7 @@ define('Controls-demo/FilterPanel/FilterPanel',
       'Controls/Filter/Panel'
    ],
 
-   function (Control, Memory, template) {
+   function(Control, Memory, template) {
       'use strict';
 
       var FilterPanel = Control.extend({
@@ -67,7 +67,7 @@ define('Controls-demo/FilterPanel/FilterPanel',
                template: 'Controls/Input/Dropdown'
             }],
 
-         changeHandler:function (event, value) {
+         changeHandler: function(event, value) {
             this.areaText = value['0'];
             this.areaText += '\n' + value['1'] + '\n' + value['2'];
          }

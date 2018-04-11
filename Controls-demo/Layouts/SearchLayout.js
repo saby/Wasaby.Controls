@@ -17,12 +17,11 @@ define('Controls-demo/Layouts/SearchLayout', [
    'Controls/Container/Search',
    'Controls/Filter/Button',
    'Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/FilterButtonTemplate',
-   'Controls/Container/Input/Search',
-   'Controls/Button',
-   'Controls/Input/Dropdown'
+   'Controls/Container/Input/Search'
 ], function(BaseControl,
-   template,
-   MemorySource) {
+             template,
+             MemorySource
+) {
    'use strict';
    
    var sourceData = [
