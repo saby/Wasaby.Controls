@@ -134,7 +134,16 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
                               globalParams = record.get('globalParams'),
                               editedTextValue = record.get('editedTextValue'),//Текст, который хочет сохранить пользователь
                               textValue = record.get(self._options.displayProperty),//Оригинальный текст
+                              editableFieldsCount = record.get(self._options._structureProperty).reduce(function(result, elem) {
+                                 return isEqualObject(elem.value, elem.resetValue) ? result : ++result;
+                              }, 0),
                               reportItem, filterItems;
+   
+                           /* Не сохраняем запись, если нет параметров для сохранения */
+                           if(editableFieldsCount <= Object.keys(toSaveFields).length) {
+                              record.acceptChanges(); // Чтобы formController не запустил обновление записи
+                              return;
+                           }
 
                            /* Сбрасываем поля, которые не надо сохранять после редактирования */
                            if(!Object.isEmpty(toSaveFields)) {
