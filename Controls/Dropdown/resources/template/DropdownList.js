@@ -89,7 +89,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
          _itemMouseEnter: function(event, item, hasChildren) {
             if (hasChildren) {
                var config = {
-                  componentOptions: {
+                  templateOptions: {
                      items: this._options.items,
                      itemTemplate: this._options.itemTemplate,
                      keyProperty: this._options.keyProperty,

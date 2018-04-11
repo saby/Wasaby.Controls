@@ -26,7 +26,7 @@ define('Controls/Popup/Manager/Popup',
           */
 
          /**
-          * @name Controls/Popup/Manager/Popup#componentOptions
+          * @name Controls/Popup/Manager/Popup#templateOptions
           * @cfg {Object} Опции компонента
           */
 
@@ -96,6 +96,12 @@ define('Controls/Popup/Manager/Popup',
             }
          }
       });
+
+      Popup.getDefaultOptions = function() {
+         return {
+            closeByExternalClick: true
+         };
+      };
 
       return Popup;
    }
