@@ -2,7 +2,7 @@ define('Controls-demo/Container/Scroll',
    [
       'Core/Control',
       'WS.Data/Source/Memory',
-      'Controls/Container/Scroll/ScrollData',
+      'Controls/Container/Scroll/Context',
       'tmpl!Controls-demo/Container/Scroll'
    ],
    function(Control, MemorySource, ScrollData, template) {

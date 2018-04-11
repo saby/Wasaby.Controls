@@ -1,4 +1,4 @@
-define('Controls/Container/Scroll/ScrollData',
+define('Controls/Container/Scroll/Context',
    [
       'Core/DataContext'
    ],
