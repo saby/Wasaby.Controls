@@ -1,15 +1,15 @@
 define('Controls/Filter/Button/OldPanelOpener',
    [
-      "Core/CommandDispatcher",
-      "Lib/Control/CompoundControl/CompoundControl",
-      "tmpl!SBIS3.CONTROLS/Filter/Button/FilterComponentTemplate",
-      "SBIS3.CONTROLS/Mixins/FilterMixin",
-      "SBIS3.CONTROLS/Mixins/PickerMixin",
+      'Core/CommandDispatcher',
+      'Lib/Control/CompoundControl/CompoundControl',
+      'tmpl!SBIS3.CONTROLS/Filter/Button/FilterComponentTemplate',
+      'SBIS3.CONTROLS/Mixins/FilterMixin',
+      'SBIS3.CONTROLS/Mixins/PickerMixin',
       'SBIS3.CONTROLS/Utils/TemplateUtil',
-      "SBIS3.CONTROLS/Utils/FilterPanelUtils",
-      "Controls/Filter/Button/converterFilterStructure",
-      "SBIS3.CONTROLS/Button/IconButton",
-      "i18n!SBIS3.CONTROLS/Filter/Button",
+      'SBIS3.CONTROLS/Utils/FilterPanelUtils',
+      'Controls/Filter/Button/converterFilterStructure',
+      'SBIS3.CONTROLS/Button/IconButton',
+      'i18n!SBIS3.CONTROLS/Filter/Button',
       'css!SBIS3.CONTROLS/Filter/Button/FilterButton'
    ],
    function(
@@ -24,6 +24,7 @@ define('Controls/Filter/Button/OldPanelOpener',
    ) {
       
       'use strict';
+
       /**
        * Класс контрола "Кнопка фильтров".
        *
@@ -49,16 +50,18 @@ define('Controls/Filter/Button/OldPanelOpener',
          additional: 'additionalFilterParamsTemplate'
       };
       
-      var OldPanelOpener = CompoundControl.extend([FilterMixin, PickerMixin],/** @lends SBIS3.CONTROLS/Filter/Button.prototype */{
+      var OldPanelOpener = CompoundControl.extend([FilterMixin, PickerMixin], /** @lends SBIS3.CONTROLS/Filter/Button.prototype */{
          $protected: {
             _options: {
                _areaTemplate: 'SBIS3.CONTROLS/Filter/Button/Area',
+
                /**
                 * @cfg {String} Устанавливает направление, в котором будет открываться всплывающая панель кнопки фильтров.
                 * @variant left Панель открывается влево.
                 * @variant right Панель открывается вправо.
                 */
                filterAlign: 'left',
+
                /**
                 * @сfg {String} Устанавливает шаблон всплывающей панели кнопки фильтров.
                 * @remark
@@ -72,6 +75,7 @@ define('Controls/Filter/Button/OldPanelOpener',
                 * @see additionalFilterParamsTemplate
                 */
                template: '',
+
                /**
                 * @сfg {String} Устанавливает шаблон заголовка всплывающей панели кнопки фильтров.
                 * @remark
@@ -82,6 +86,7 @@ define('Controls/Filter/Button/OldPanelOpener',
                 * </pre>
                 */
                topTemplate: '',
+
                /**
                 * @сfg {String} Устанавливает шаблон для блока "Можно отобрать" на всплывающей панели.
                 * @remark
@@ -94,16 +99,19 @@ define('Controls/Filter/Button/OldPanelOpener',
                 * @see filterAlign
                 */
                additionalFilterParamsTemplate: null,
+
                /**
                 * @cfg {String} Устанавливает отображение кнопки фильтров.
                 * @variant oneColumn Панель строится в одну колонку.
                 * @variant twoColumns Панель строится в две колонки.
                 */
                viewMode: 'oneColumn',
+
                /**
                 * @cfg {String} Заголовок панели фильтров.
                 */
                areaCaption: '',
+
                /** @cfg {Object.<String, Boolean|Number|String|Function>} Опции для компонента, отображаемом внутри области
                 * <wiTag group="Управление">
                 * Передаем опции для комопнента, которой будем отображать внутри области.
@@ -122,10 +130,11 @@ define('Controls/Filter/Button/OldPanelOpener',
                 * </pre>
                 */
                componentOptions: {},
+
                /**
                 * @cfg {String}
                 */
-               internalContextFilterName : 'sbis3-controls-filter-button'
+               internalContextFilterName: 'sbis3-controls-filter-button'
             },
             
             _pickerContext: null,        /* Контекст пикера */
@@ -136,8 +145,8 @@ define('Controls/Filter/Button/OldPanelOpener',
          
          $constructor: function() {
             var dispatcher = CommandDispatcher,
-                declareCmd = dispatcher.declareCommand.bind(dispatcher, this),
-                showPicker = this.showPicker.bind(this);
+               declareCmd = dispatcher.declareCommand.bind(dispatcher, this),
+               showPicker = this.showPicker.bind(this);
             
             declareCmd('apply-filter', this.applyFilter.bind(this));
             declareCmd('reset-filter-internal', this._resetFilter.bind(this, true));
@@ -156,7 +165,9 @@ define('Controls/Filter/Button/OldPanelOpener',
             var self = this;
             
             /* Не показываем кнопку фильтров, если она выключена */
-            if(!this.isEnabled()) return;
+            if (!this.isEnabled()) {
+               return;
+            }
             
             if (!this._dTemplatesReady) {
                this._dTemplatesReady = FilterPanelUtils.initTemplates(self, TEMPLATES, function(name) {
@@ -170,7 +181,7 @@ define('Controls/Filter/Button/OldPanelOpener',
          },
          
          applyFilter: function() {
-            if(this._picker && !this._picker.validate()) {
+            if (this._picker && !this._picker.validate()) {
                return false;
             }
             OldPanelOpener.superclass.applyFilter.call(this);
@@ -180,7 +191,7 @@ define('Controls/Filter/Button/OldPanelOpener',
          _changeFieldInternal: function(field, val) {
             var pickerContext = this._getCurrentContext();
             
-            if(pickerContext) {
+            if (pickerContext) {
                pickerContext.setValueSelf(field, val);
             }
          },
@@ -218,7 +229,7 @@ define('Controls/Filter/Button/OldPanelOpener',
             return config;
          },
          
-         _setPickerConfig: function () {
+         _setPickerConfig: function() {
             var isRightAlign = this._options.filterAlign === 'right',
                self = this;
             
@@ -251,7 +262,7 @@ define('Controls/Filter/Button/OldPanelOpener',
             });
          },
          
-         _getCurrentContext : function(){
+         _getCurrentContext: function() {
             return this._pickerContext;
          },
          
@@ -263,7 +274,7 @@ define('Controls/Filter/Button/OldPanelOpener',
                descriptionPath = internalName + '/visibility',
                toSet;
             
-            if(!this._picker){
+            if (!this._picker) {
                return false;
             }
             
@@ -287,7 +298,7 @@ define('Controls/Filter/Button/OldPanelOpener',
          getResetLinkText: function() {},
          
          destroy: function() {
-            if(this._dTemplatesReady) {
+            if (this._dTemplatesReady) {
                this._dTemplatesReady.getResult().cancel();
                this._dTemplatesReady = null;
             }

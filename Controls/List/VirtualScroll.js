@@ -2,7 +2,7 @@ define('Controls/List/VirtualScroll',
    [
       'Core/Abstract'
    ],
-   function (Abstract) {
+   function(Abstract) {
 
       var VirtualScroll = Abstract.extend({
          $protected: {
@@ -28,8 +28,7 @@ define('Controls/List/VirtualScroll',
 
             if (this._options.maxItems < this._projectionLength) {
                this._virtualWindow.end = this._options.maxItems;
-            }
-            else {
+            } else {
                this._virtualWindow.end = this._projectionLength;
             }
          },

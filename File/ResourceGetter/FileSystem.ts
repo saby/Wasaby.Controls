@@ -1,4 +1,4 @@
-/// <amd-module name="File/ResourceGetter/FS" />
+/// <amd-module name="File/ResourceGetter/FileSystem" />
 
 import IResourceGetterBase = require("File/ResourceGetter/Base");
 import Deferred = require("Core/Deferred");
@@ -48,7 +48,7 @@ const OPTION: Options = {
      * @cfg {Boolean} Выбрать несколько файлов
      * <wiTag group="Управление">
      * Позволяет выбрать несколько файлов
-     * @name File/ResourceGetter/FS#multiSelect
+     * @name File/ResourceGetter/FileSystem#multiSelect
      */
     multiSelect: false,
     /**
@@ -65,7 +65,7 @@ const OPTION: Options = {
      *    extensions: ["image"]
      *    // extensions: ["jpe","jpg","jpeg","gif","png","bmp","ico","svg","svgz","tif","tiff","pct","psd"]
      * </pre>
-     * @name File/ResourceGetter/FS#extensions
+     * @name File/ResourceGetter/FileSystem#extensions
      */
     extensions: null,
     /**
@@ -73,7 +73,7 @@ const OPTION: Options = {
      * посредством которого открывается окошко выбора файлов
      * <wiTag group="Управление">
      * По умолчанию: document.body
-     * @name File/ResourceGetter/FS#element
+     * @name File/ResourceGetter/FileSystem#element
      */
     element: null
 };
@@ -116,13 +116,13 @@ let createInput = ({parent, mime, multiSelect}: CreateConfig) => {
  * </ul>
  *
  * @class
- * @name File/ResourceGetter/FS
+ * @name File/ResourceGetter/FileSystem
  * @extends File/ResourceGetter/Base
  * @public
  * @author Заляев А.В.
  */
-class FS extends IResourceGetterBase {
-    protected name = "FS";
+class FileSystem extends IResourceGetterBase {
+    protected name = "FileSystem";
     private _extensions: ExtensionsHelper;
     private _mime: string;
     private _options: Options;
@@ -141,11 +141,11 @@ class FS extends IResourceGetterBase {
      * Необходимо это учитывать при обработке errback у результата метода
      * @return {Core/Deferred<Array<File/LocalFile | Error>>}
      * @method
-     * @name File/ResourceGetter/FS#getFiles
+     * @name File/ResourceGetter/FileSystem#getFiles
      * @see File/LocalFile
      */
     getFiles(): Deferred<Array<LocalFile | Error>> {
-        if (this.isDestroy()) {
+        if (this.isDestroyed()) {
             return Deferred.fail("Resource getter is destroyed");
         }
         /**
@@ -197,11 +197,11 @@ class FS extends IResourceGetterBase {
      * Возможен ли выбор файлов
      * @return {Core/Deferred<Boolean>}
      * @method
-     * @name File/ResourceGetter/FS#canExec
+     * @name File/ResourceGetter/FileSystem#canExec
      */
     canExec(): Deferred<boolean> {
-        return Deferred.success(!this.isDestroy());
+        return Deferred.success(!this.isDestroyed());
     }
 }
 
-export = FS;
+export = FileSystem;

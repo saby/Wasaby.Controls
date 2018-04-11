@@ -1,5 +1,3 @@
-// js Файл только чтобы подцепилось автодокой
-
 /**
  * Интерфейс сущности получения ресурсов
  * @author Заляев А.В.
@@ -17,7 +15,7 @@
  */
 /**
  * Осуществляет выбор ресурсов
- * @return {Core/Deferred<Array<IFileData>>}
+ * @return {Core/Deferred<Array<File/IResource>>}
  * @see File/LocalFile
  * @see File/LocalFileLink
  * @see File/HttpFileLink
@@ -29,15 +27,4 @@
  * @return {String}
  * @method
  * @name File/IResourceGetter#getType
- */
-
-/**
- * Конструктор сущности получения ресурсов
- * @author Заляев А.В.
- * @see File/LocalFile
- * @see File/LocalFileLink
- * @see File/HttpFileLink
- * @see File/IResourceGetter
- * @constructor
- * @name IResourceGetterConstructor
  */

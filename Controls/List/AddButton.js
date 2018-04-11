@@ -3,13 +3,13 @@ define('Controls/List/AddButton', [
    'tmpl!Controls/List/AddButton/AddButton',
    'WS.Data/Type/descriptor',
    'css!Controls/List/AddButton/AddButton'
-], function (Control, template, types) {
+], function(Control, template, types) {
 
    var AddButton = Control.extend({
       _template: template,
 
-      clickHandler: function (e) {
-         if(!this.isEnabled()){
+      clickHandler: function(e) {
+         if (!this.isEnabled()) {
             e.stopPropagation();
          }
       }

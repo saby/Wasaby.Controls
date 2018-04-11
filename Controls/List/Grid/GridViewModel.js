@@ -1,7 +1,7 @@
 define('Controls/List/Grid/GridViewModel', [
    'Core/Abstract',
    'Controls/List/SimpleList/ListViewModel'
-], function (Abstract, ListViewModel) {
+], function(Abstract, ListViewModel) {
 
    'use strict';
 
@@ -10,6 +10,7 @@ define('Controls/List/Grid/GridViewModel', [
          getPaddingCellClasses: function(params) {
             var
                preparedClasses = '';
+
             // Колонки
             if (params.multiselect ? params.columnIndex > 1 :  params.columnIndex > 0) {
                preparedClasses += ' controls-Grid__cell_spacingLeft';
@@ -17,22 +18,27 @@ define('Controls/List/Grid/GridViewModel', [
             if (params.columnIndex < params.columns.length - 1) {
                preparedClasses += ' controls-Grid__cell_spacingRight';
             }
+
             // Отступ для первой колонки. Если режим мультиселект, то отступ обеспечивается чекбоксом.
             if (params.columnIndex === 0 && !params.multiselect) {
                preparedClasses += ' controls-Grid__cell_spacingFirstCol_' + (params.leftPadding || 'default');
             }
+
             // Отступ для последней колонки
             if (params.columnIndex === params.columns.length - 1) {
                preparedClasses += ' controls-Grid__cell_spacingLastCol_' + (params.rightPadding || 'default');
             }
+
             // Межстрочный интервал
             preparedClasses += ' controls-Grid__row-cell_rowSpacing_' + (params.rowSpacing || 'default');
+
             // Горизонтальное выравнивание колонок
-            if(params.columns[params.columnIndex].align) {
+            if (params.columns[params.columnIndex].align) {
                preparedClasses += ' controls-Grid__row-cell_halign_' + params.columns[params.columnIndex].align;
             }
+
             // Вертикальное выравнивание хедера
-            if(params.columns[params.columnIndex].valign) {
+            if (params.columns[params.columnIndex].valign) {
                preparedClasses += ' controls-Grid__header-cell_valign_' + params.columns[params.columnIndex].valign;
             }
             return preparedClasses;
@@ -200,7 +206,7 @@ define('Controls/List/Grid/GridViewModel', [
          // -----------------------------------------------------------
 
          getResults: function() {
-            return this._options.results
+            return this._options.results;
          },
 
          _prepareResultsColumns: function(columns, multiselect) {
@@ -302,8 +308,8 @@ define('Controls/List/Grid/GridViewModel', [
             this._prepareResultsColumns(this._options.columns, this._options.multiselect);
          },
 
-        getItemById: function(id, idProperty) {
-            return this._model.getItemById(id, idProperty)
+         getItemById: function(id, idProperty) {
+            return this._model.getItemById(id, idProperty);
          },
 
          setMarkedKey: function(key) {
@@ -361,8 +367,8 @@ define('Controls/List/Grid/GridViewModel', [
                      currentColumn.withLadder = true;
                   }
                   currentColumn.cellStyleForLadder = 'grid-area: ' +
-                     + (current.index + 1) + ' / '
-                     + (currentColumn.columnIndex + 1) + ' / ' +
+                     +(current.index + 1) + ' / ' +
+                     (currentColumn.columnIndex + 1) + ' / ' +
                      'span 1 / ' +
                      'span 1;';
                }
@@ -373,9 +379,9 @@ define('Controls/List/Grid/GridViewModel', [
                this._processLadder(current);
                if (this._drawLadder) {
                   current.ladder = this._ladder;
-                  current.ladder.style = 'grid-area: '
-                     + (current.ladder.rowIndex + 1) + ' / '
-                     + (current.ladder.columnIndex + 1) + ' / ' +
+                  current.ladder.style = 'grid-area: ' +
+                     (current.ladder.rowIndex + 1) + ' / ' +
+                     (current.ladder.columnIndex + 1) + ' / ' +
                      'span ' + current.ladder.ladderLength + ' / ' +
                      'span 1;';
                }
@@ -388,6 +394,7 @@ define('Controls/List/Grid/GridViewModel', [
                ladderField = this._options.stickyFields[0],
                nextItem,
                nextLadderValue;
+
             // если рисуем первый элемент
             if (current.index === 0) {
                this._ladder.ladderValue = current.getPropValue(current.item, ladderField);
@@ -409,11 +416,14 @@ define('Controls/List/Grid/GridViewModel', [
                return;
             }
             nextItem = this.getNext();
+
             // смотрим на следующий item
             nextLadderValue = nextItem.getPropValue(nextItem.item, ladderField);
+
             // если лесенка у следующего item такая же, то увеличиваем длинну лесенки, запоминаем current и rowIndex
             if (this._ladder.ladderValue === nextLadderValue) {
                this._withLadder = true;
+
                // запоминаем только если ранее не запоминали
                if (!this._ladder.currentColumn) {
                   this._ladder.currentColumn = current.getCurrentColumn();
@@ -444,7 +454,7 @@ define('Controls/List/Grid/GridViewModel', [
          },
 
          setItems: function(items) {
-            this._model.setItems(items)
+            this._model.setItems(items);
          },
 
          appendItems: function(items) {

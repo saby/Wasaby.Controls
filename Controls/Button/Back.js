@@ -1,10 +1,9 @@
 define('Controls/Button/Back', [
    'Core/Control',
-   'Core/IoC',
    'tmpl!Controls/Button/BackButton/Back',
    'WS.Data/Type/descriptor',
    'css!Controls/Button/BackButton/Back'
-], function(Control, IoC, template, types) {
+], function(Control, template, types) {
 
    /**
     * Button "Back".
@@ -54,7 +53,7 @@ define('Controls/Button/Back', [
             'm',
             'l'
          ])
-      }
+      };
    };
 
    BackButton.getDefaultOptions = function() {

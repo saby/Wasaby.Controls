@@ -21,15 +21,6 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
       var ImportCustomizerAction = Action.extend([], /**@lends SBIS3.CONTROLS/ImportCustomizer/Action.prototype*/ {
 
          /**
-          * @typedef {object} ImportResults Тип, содержащий информацию о результате редактирования
-          * @property {string} dataType Тип импортируемых данных (excel и т.д.)
-          * @property {ImportFile} file Информация о файле с импортируемыми данными
-          * @property {Array<ImportSheet>} sheets Список объектов, представляющих имеющиеся области данных
-          * @property {boolean} [sameSheetConfigs] Обрабатываются ли все области данных одинаково (опционально)
-          * @property {*} [*] Базовые параметры импортирования (опционально)
-          */
-
-         /**
           * @typedef {object} ImportRemoteCall Тип, содержащий информацию для вызова удалённого сервиса для получения данных ввода или отправки данных вывода. Соответствует вспомогательному классу {@link SBIS3.CONTROLS/ImportCustomizer/RemoteCall}
           * @property {string} endpoint Сервис, метод которого будет вызван
           * @property {string} method Имя вызываемого метода
@@ -83,11 +74,35 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           */
 
          /**
+          * @typedef {object} ImportMapping Тип, содержащий информацию о настройке соответствий значений
+          * @property {function(object|WS.Data/Entity/Record):ImportMapperItem} fieldFilter Фильтр полей, с помощью которого из общего списка полей {@link fields} отбираются нужные. Фильтр принимает объект поля и, если оно нужное, возвращает объект вида {@link ImportSimpleItem}. Упрощённый способ отбора предоставляется опцией {@link fieldProperty}
+          * @property {string} fieldProperty Имя специального ключевого свойства, с помощью которого из общего списка полей {@link fields} отбираются нужные. Каждое нужное поле должно иметь свойство с таким именем. Более комплексный способ отбора предоставляется опцией {@link fieldFilter}
+          * @property {object} variants Набор вариантов сопоставления
+          * @property {object} accordances Перечень соответствий специальный ключ поля - идентификатор варианта
+          */
+
+         /**
+          * @typedef {object} ImportSimpleItem Тип, содержащий информацию об элементе сопоставления
+          * @property {string|number} id Идентификатор элемента
+          * @property {string} title Название элемента
+          */
+
+         /**
           * @typedef {object} ImportValidator Тип, описывающий валидаторы результаттов редактирования
           * @property {function(object, function):(boolean|string)} validator Функция проверки. Принимает два аргумента. Первый - объект с проверяемыми данными. Второй - геттер опции по её имени. Геттер позволяет получить доступ к опциям, которые есть в настройщике импорта в момент валидации, но на момент задания валидатора ещё не были доступны (например, получены через обещание или через {@link ImportRemoteCall}). Должна возвратить либо логическое значение, показывающее пройдена ли проверка, либо строку с сообщением об ошибке
           * @property {Array<*>} [params] Дополнительные аргументы функции проверки, будут добавлены после основных (опционально)
           * @property {string} [errorMessage] Сообщение об ошибке по умолчанию (опционально)
           * @property {boolean} [noFailOnError] Указывает на то, что если проверка не пройдена, это не является фатальным. В таком случае пользователю будет показан диалог с просьбой о подтверждении (опционально)
+          */
+
+         /**
+          * @typedef {object} ImportResults Тип, содержащий информацию о результате редактирования
+          * @property {string} dataType Тип импортируемых данных (excel и т.д.)
+          * @property {ImportFile} file Информация о файле с импортируемыми данными
+          * @property {Array<ImportSheet>} sheets Список объектов, представляющих имеющиеся области данных
+          * @property {boolean} [sameSheetConfigs] Обрабатываются ли все области данных одинаково (опционально)
+          * @property {object} [mappingAccordances] Перечень соответствий специальный ключ поля - идентификатор варианта (опционально, когда применимо)
+          * @property {*} [*] Базовые параметры импортирования (опционально)
           */
 
          //_dotTplFn: null,
@@ -107,7 +122,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                 */
                validators: [
                   {
-                     validator: function (data, optionGetter) { return data.sheets.every(function (sheet) { return !!sheet.columns.length; }); },
+                     validator: function (data, optionGetter) { return data.dataType === 'cml' || data.sheets.every(function (sheet) { return !!sheet.columns.length; }); },
                      errorMessage: rk('Не установлено соответсвие между колонками и полями', 'НастройщикИмпорта')
                   }
                ]
@@ -266,6 +281,17 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                   sheetIndex = -1;
                }
             }
+            var mapping = options.mapping;
+            // Если есть свойство "mapping", то оно должно быть {link ImportMapping}
+            if (mapping && (typeof mapping !== 'object' ||
+                  !(!mapping.fieldFilter || typeof mapping.fieldFilter === 'function') ||
+                  !(!mapping.fieldProperty || typeof mapping.fieldProperty === 'string') ||
+                  !(mapping.fieldFilter || mapping.fieldProperty) ||
+                  !(!mapping.variants || typeof mapping.variants === 'object') ||
+                  !(!mapping.accordances || typeof mapping.accordances === 'object')
+               )) {
+               throw new Error('Wrong mapping');
+            }
             var validators = options.validators;
             // Если есть свойство "validators", то оно должно быть массивом
             if (validators && !Array.isArray(validators)) {
@@ -329,9 +355,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                baseParams: baseParamsOptions,
                parsers: parsers || defaults.parsers,
                fields: fields,
-               priceCorrespondence: options.priceCorrespondence,//^^^
-               priceTypes: options.priceTypes,//^^^
-               priceFieldProperty: options.priceFieldProperty,//^^^
+               mapping: mapping,
                validators: validators || defaults.validators,
                handlers: {
                   onComplete: this._onAreaComplete.bind(this),

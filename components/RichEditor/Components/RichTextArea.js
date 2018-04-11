@@ -63,7 +63,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
       var _getTrueIEVersion = function () {
          var version = cConstants.browser.IEVersion;
          // В cConstants.browser.IEVersion неправильно определяется MSIE 11
-         if (version < 11) {
+         if (version < 11 && typeof window !== 'undefined') {
             var ms = navigator.userAgent.match(/Trident\/([0-9]+)\.[0-9]+/);
             if (ms) {
                version = +ms[1] + 4
@@ -77,8 +77,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          // 1175061954 https://online.sbis.ru/opendoc.html?guid=296b17cf-d7e9-4ff3-b4d9-e192627b41a1
          TINYMCE_URL_BASE = cConstants.browser.isIE && _getTrueIEVersion() < 11 ? 'SBIS3.CONTROLS/RichEditor/third-party/tinymce46-ie10' : 'SBIS3.CONTROLS/RichEditor/third-party/tinymce',
          EDITOR_MODULES = [
-            'css!' + TINYMCE_URL_BASE + '/skins/lightgray/skin.min.css',
-            'css!' + TINYMCE_URL_BASE + '/skins/lightgray/content.inline.min.css',
+            //'css!' + TINYMCE_URL_BASE + '/skins/lightgray/skin.min.css',
+            //'css!' + TINYMCE_URL_BASE + '/skins/lightgray/content.inline.min.css',
             //Экстренное решение что бы уменшить трафик. В 3.18.200 надо исправить сия безобразие
             TINYMCE_URL_BASE + '/tinymce.min'
          ],
@@ -1541,7 +1541,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   parent: self,
                   componentOptions: {
                      selectedImage: $image,
-                     editorWidth: self._inputControl.width(),
+                     editorWidth: self._inputControl.width()
                   },
                   handlers: {
                      onBeforeShow: function () {

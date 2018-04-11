@@ -3,7 +3,7 @@ define("File/Attach/Container/SourceLazy", ["require", "exports", "tslib", "File
     /**
      * Фильтрует массив обёрток над ISource по типу файла
      * @param {Array<Wrapper>} array
-     * @param {File/IFileData} file
+     * @param {File/IResource} file
      * @return {Wrapper}
      * @private
      * @author Заляев А.В.
@@ -30,7 +30,7 @@ define("File/Attach/Container/SourceLazy", ["require", "exports", "tslib", "File
         }
         /**
          * Ленивая егистрация источников данных для загрузки определённого типа ресурса
-         * @param {File/IFileDataConstructor} fileType конструктор обёртки над ресурсом
+         * @param {File/IResourceConstructor} fileType конструктор обёртки над ресурсом
          * @param {String} link Ссылка на источник данных
          * @param {*} options Параметры вызова конструктора обёртки
          * @see File/LocalFile
@@ -46,7 +46,7 @@ define("File/Attach/Container/SourceLazy", ["require", "exports", "tslib", "File
         };
         /**
          * Зарегестрирован ли для текущего ресурса источник данных
-         * @param {File/IFileData} file
+         * @param {File/IResource} file
          * @return {boolean}
          * @see File/LocalFile
          * @see File/LocalFileLink
@@ -57,7 +57,7 @@ define("File/Attach/Container/SourceLazy", ["require", "exports", "tslib", "File
         };
         /**
          * Возвращает источник данных для ресурса
-         * @param {File/IFileData} file
+         * @param {File/IResource} file
          * @return {Core/Deferred<ISource>}
          * @see File/LocalFile
          * @see File/LocalFileLink
@@ -75,7 +75,7 @@ define("File/Attach/Container/SourceLazy", ["require", "exports", "tslib", "File
         };
         /**
          * Возвращает список зарегестрированый обёрток
-         * @return {Array<File/IFileDataConstructor>}
+         * @return {Array<File/IResourceConstructor>}
          * @see File/LocalFile
          * @see File/LocalFileLink
          * @see File/HttpFileLink

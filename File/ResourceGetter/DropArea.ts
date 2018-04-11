@@ -269,7 +269,7 @@ class DropArea extends IResourceGetterBase {
      * @see File/LocalFile
      */
     getFiles(): Deferred<Array<LocalFile | Error>> {
-        if (this.isDestroy()) {
+        if (this.isDestroyed()) {
             return Deferred.fail("Resource getter is destroyed");
         }
         if (this._selectDef) {
@@ -284,7 +284,7 @@ class DropArea extends IResourceGetterBase {
      * @name File/ResourceGetter/DropArea#canExec
      */
     canExec(): Deferred<boolean> {
-        return Deferred.success(IS_SUPPORT && !this.isDestroy());
+        return Deferred.success(IS_SUPPORT && !this.isDestroyed());
     }
     destroy() {
         if (this._selectDef) {

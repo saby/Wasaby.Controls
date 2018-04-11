@@ -16,7 +16,7 @@ define('SBIS3.CONTROLS/Menu/MenuIcon', [
     * @class SBIS3.CONTROLS/Menu/MenuIcon
     * @extends WSControls/Buttons/MenuButton
     *
-    * @demo Examples/MenuButton/MyMenuIcon/MyMenuIcon
+    * @demo Examples/MenuIcon/MyMenuIcon/MyMenuIcon
     *
     * @author Романов В.С.
     *

@@ -69,7 +69,7 @@ define('Controls/List/interface/IListControl', [
     * @cfg {Array} item operations
     */
 
-    /**
+   /**
     * @name Controls/List/interface/IListControl#itemActionsType
     * @cfg {String} item operations display type
     * @variant inline
