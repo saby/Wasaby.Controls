@@ -19,6 +19,7 @@ define('Controls/HighCharts',
 
       var HighChart = Control.extend({
          _template: template,
+         highChartObj: null,
 
          _shouldUpdate: function() {
             return false;
@@ -53,7 +54,12 @@ define('Controls/HighCharts',
 
          _drawChart: function(config) {
             config.highChartOptions.chart.renderTo = this._children[this._options.highChartContainer];
-            new Highcharts.Chart(config.highChartOptions);
+            this.highChartObj = new Highcharts.Chart(config.highChartOptions);
+         },
+
+         _beforeUnmount: function () {
+            this.highChartObj.destroy();
+            this.highChartObj = undefined;
          }
       });
 

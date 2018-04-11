@@ -1,12 +1,16 @@
 <div>
-    <Controls.HighCharts
-            highChartContainer="highChartLine"
-            highChartOptions="{{highChartOptions1}}"
-    />
+    <Controls.Button name="button1" caption="Кликни меня"
+                     on:click="changeHighChartOptions()" />
+    <Controls.Button class="test-demo-button" name="toggleButton" caption="{{toggleCaption}}"
+                     on:click="toggleChart()" />
+    <ws:if data="{{need}}">
+        <Controls.HighCharts
+                highChartContainer="highChartLine"
+                highChartOptions="{{highChartOptions1}}"
+        />
+    </ws:if>
     <Controls.HighCharts
             highChartContainer="highChartPie"
             highChartOptions="{{highChartOptions2}}"
     />
-    <Controls.Button name="button1" caption="Кликни меня"
-                     on:click="changeHighChartOptions()" />
 </div>
