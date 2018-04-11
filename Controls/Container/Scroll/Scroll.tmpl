@@ -19,9 +19,9 @@
                      hasHover="{{hasHover}}"
                      optContent="{{optContent}}"
                      styleHideScrollbar="{{styleHideScrollbar}}"
-                     on:listTop="_listTopHandler()"
+                     on:listTop="_scrollReachTopHandler()"
                      on:scrollMove="_scrollMoveHandler()"
-                     on:listBottom="_listBottomHandler()"/>
+                     on:listBottom="_scrollReachBottomHandler()"/>
       </ws:if>
       <ws:else>
          <ws:partial template="content"

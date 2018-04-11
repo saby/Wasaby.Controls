@@ -267,11 +267,11 @@ define('Controls/Container/Scroll',
                this._children.scrollLayout.doScroll(scrollParam);
             },
 
-            _listTopHandler: function() {
+            _scrollReachTopHandler: function() {
                this._pagingState.stateUp = 'disabled';
             },
 
-            _listBottomHandler: function() {
+            _scrollReachBottomHandler: function() {
                this._pagingState.stateDown = 'disabled';
             },
 
