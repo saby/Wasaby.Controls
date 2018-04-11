@@ -3,11 +3,11 @@ define([
    'Controls/Input/resources/SuggestView/SuggestView',
    'WS.Data/Collection/List',
    'WS.Data/Entity/Model'
-], function (SuggestView, List, Model) {
+], function(SuggestView, List, Model) {
    
    'use strict';
    
-   describe('Controls/Input/resources/SuggestView/SuggestView', function () {
+   describe('Controls/Input/resources/SuggestView/SuggestView', function() {
       
       it('_private.getMarkedKey', function() {
          var items = new List({
@@ -44,7 +44,7 @@ define([
          assert.deepEqual(
             SuggestView._private.getOptionsForShowAll(self),
             {
-               componentOptions: {
+               templateOptions: {
                   filter: {
                      myField: 'myValue'
                   }
