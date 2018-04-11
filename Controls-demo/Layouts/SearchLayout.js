@@ -19,8 +19,8 @@ define('Controls-demo/Layouts/SearchLayout', [
    'Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/FilterButtonTemplate',
    'Controls/Container/Input/Search'
 ], function(BaseControl,
-             template,
-             MemorySource
+   template,
+   MemorySource
 ) {
    'use strict';
    
