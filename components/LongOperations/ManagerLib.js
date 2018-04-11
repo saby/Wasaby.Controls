@@ -409,6 +409,7 @@ define('SBIS3.CONTROLS/LongOperations/ManagerLib',
             var inner = protectedOf(this);
             if (0 < query.offset) {
                var promises = [];
+               var offsetIds = useBunch ? inner._offsetBunch.searchIds({where:query.where, orderBy:query.orderBy, limit:query.limit}) : null;
                for (var tabKey in targets) {
                   for (var list = targets[tabKey], i = 0; i < list.length; i++) {
                      var n = list[i];

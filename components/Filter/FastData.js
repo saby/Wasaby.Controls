@@ -111,6 +111,9 @@ define('SBIS3.CONTROLS/Filter/FastData',
                items: []
             }
          },
+         $constructor: function() {
+            this._publish('onClickMore');
+         },
          _drawItemsCallbackSync: function(){
             this._setSelectionToItemsInstances();
          },

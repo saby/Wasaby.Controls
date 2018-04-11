@@ -18,11 +18,11 @@ define('Controls/Dropdown/resources/MenuViewModel',
 
             this._itemsModel = new ItemsViewModel({
                items: this._getCurrentRootItems(cfg),
-               idProperty: cfg.keyProperty, //TODO поменять на keyProperty, как зальют правки
+               idProperty: cfg.keyProperty,
                displayProperty: 'title'
             });
             this._hierarchy = new Hierarchy({
-               idProperty: cfg.keyProperty, //TODO поменять на keyProperty, как зальют правки
+               idProperty: cfg.keyProperty,
                parentProperty: cfg.parentProperty,
                nodeProperty: cfg.nodeProperty
             });
@@ -57,7 +57,7 @@ define('Controls/Dropdown/resources/MenuViewModel',
 
          getCurrent: function() {
             var itemsModelCurrent = this._itemsModel.getCurrent();
-            itemsModelCurrent.hasChildren = this._hasChildren(itemsModelCurrent.item);
+            itemsModelCurrent.hasChildren = this._hasItemChildren(itemsModelCurrent.item);
             itemsModelCurrent.hasParent = this._hasParent(itemsModelCurrent.item);
             itemsModelCurrent.isSelected = this._isItemSelected(itemsModelCurrent.item);
             itemsModelCurrent.icon = itemsModelCurrent.item.get('icon');
@@ -67,14 +67,26 @@ define('Controls/Dropdown/resources/MenuViewModel',
          },
          _isItemSelected: function(item) {
             var keys = this._options.selectedKeys;
-
-            // if (keys instanceof Array) {
-            //    return keys.indexOf(item.get(this._options.keyProperty)) > -1;
-            // }
+            if (keys instanceof Array) {
+               return keys.indexOf(item.get(this._options.keyProperty)) > -1;
+            }
             return keys && keys === item.get(this._options.keyProperty);
          },
-         _hasChildren: function(item) {
+         _hasItemChildren: function(item) {
             return this._hierarchy.isNode(item) && !!this._hierarchy.getChildren(item, this._options.items).length;
+         },
+         hasHierarchy: function() {
+            if (!this._options.parentProperty || !this._options.nodeProperty) {
+               return false;
+            }
+            var display = this._itemsModel._display;
+            for (var i = 0; i < display.getCount(); i++) {
+               var item = display.at(i).getContents();
+               if (item.get(this._options.nodeProperty)) {
+                  return true;
+               }
+            }
+            return false;
          },
          _hasParent: function(item) {
             return this._hierarchy.hasParent(item, this._options.items);

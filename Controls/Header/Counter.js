@@ -1,10 +1,9 @@
 define('Controls/Header/Counter', [
    'Core/Control',
-   'Core/IoC',
    'tmpl!Controls/Header/Counter/Counter',
    'WS.Data/Type/descriptor',
    'css!Controls/Header/Counter/Counter'
-], function(Control, IoC, template, types) {
+], function(Control, template, types) {
    'use strict';
 
    /**
