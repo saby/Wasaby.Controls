@@ -233,6 +233,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
 
          $constructor: function () {
             CommandDispatcher.declareCommand(this, 'complete', this._cmdComplete);
+            CommandDispatcher.declareCommand(this, 'subview-changed', this._cmdSubviewChanged);
             //CommandDispatcher.declareCommand(this, 'showMessage', Area.showMessage);
             this._publish('onComplete', 'onFatalError');
          },
@@ -292,13 +293,17 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             this._bindEvents();
          },
 
+         _cmdSubviewChanged: function () {
+         },
+
          _bindEvents: function () {
             var views = this._views;
+            var handlers = {};
             if (views.sheet) {
-               this.subscribeTo(this._views.sheet, 'change', function (evtName, values) {
+               handlers.sheet = function () {
                   // Изменилась область данных для импортирования
+                  var values = this._getSubviewValues('sheet');
                   var options = this._options;
-                  var views = this._views;
                   var results = this._results;
                   var sheetIndex = options.sheetIndex;
                   var prevResult = results[0 <= sheetIndex ? sheetIndex + 1 : ''];
@@ -312,21 +317,23 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                   this._updateProviderArgsView(nextResult.provider.parser);
                   var sheets = options.sheets;
                   this._setSubviewValues('columnBinding', cMerge({rows:sheets[0 < sheetIndex ? sheetIndex : 0].sampleRows}, nextResult.columnBinding));
-               }.bind(this));
+               }.bind(this);
             }
             if (views.baseParams) {
-               this.subscribeTo(views.baseParams, 'change', function (evtName, values) {
+               handlers.baseParams = function () {
                   // Изменились основные параметры импортирования
+                  var values = this._getSubviewValues('baseParams');
                   var fields = values.fields;
                   if (fields) {
                      this._options.fields = fields;
                      this._setSubviewValues('columnBinding', {fields:fields});
                   }
-               }.bind(this));
+               }.bind(this);
             }
             if (views.provider) {
-               this.subscribeTo(views.provider, 'change', function (evtName, values) {
+               handlers.provider = function () {
                   // Изменился выбор провайдера парсинга
+                  var values = this._getSubviewValues('provider');
                   var sheetIndex = this._options.sheetIndex;
                   var result = this._results[0 <= sheetIndex ? sheetIndex + 1 : ''];
                   var parserName = values.parser;
@@ -337,38 +344,49 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                   result.provider = cMerge({}, values);
                   result.columnBinding.skippedRows = skippedRows;
                   this._setSubviewValues('columnBinding', {skippedRows:skippedRows});
-               }.bind(this));
+               }.bind(this);
             }
             // Для компонента this._views.providerArgs подисываеися отдельно через обработчик в опциях
             if (views.columnBinding) {
-               this.subscribeTo(views.columnBinding, 'change', function (evtName, values) {
+               handlers.columnBinding = function () {
                   // Изменилась привязка данных к полям базы
+                  var values = this._getSubviewValues('columnBinding');
                   var sheetIndex = this._options.sheetIndex;
                   var result = this._results[0 <= sheetIndex ? sheetIndex + 1 : ''];
                   var skippedRows = values.skippedRows;
                   result.provider.skippedRows = skippedRows;
                   result.columnBinding = cMerge({}, values);
                   this._setSubviewValues('provider', {skippedRows:skippedRows});
-               }.bind(this));
+               }.bind(this);
             }
             if (views.mapper) {
-               this.subscribeTo(views.mapper, 'change', function (evtName, values) {
+               handlers.mapper = function () {
                   // Изменился перечень соответсвий
+                  var values = this._getSubviewValues('mapper');
                   var accordances = values.accordances;
                   if (accordances) {
                      this._options.mapping.accordances = accordances;
                   }
-               }.bind(this));
+               }.bind(this);
+            }
+            for (var name in views) {
+               this.subscribeTo(views[name], 'onCommandCatch', function (subview, evtName, command/*, args*/) {
+                  if (command === 'subview-changed') {
+                     handlers[subview].apply(this, Array.prototype.slice.call(arguments, 2));
+                     evtName.setResult(true);
+                  }
+               }.bind(this, name));
             }
          },
 
          /*
-          * Обработчик события "change" для компонента this._views.providerArgs
+          * Обработчик "subview-changed" для под-компонента providerArgs
           *
           * @protected
           */
-         _onChangeProviderArgs: function (evtName, values) {
+         _onChangeProviderArgs: function () {
             // Изменились параметры провайдера парсинга
+            var values = this._getSubviewValues('providerArgs');
             var sheetIndex = this._options.sheetIndex;
             this._results[0 <= sheetIndex ? sheetIndex + 1 : ''].providerArgs = cMerge({}, values);
          },
@@ -444,6 +462,20 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          },
 
          /*
+          * Получить настраиваемые значения дочернего компонента, если он есть
+          *
+          * @protected
+          * @param {string} name Мнемоническое имя компонента (в наборе _views)
+          * @return {object}
+          */
+         _getSubviewValues: function (name) {
+            var view = this._views[name];
+            if (view) {
+               return view.getValues();
+            }
+         },
+
+         /*
           * Проверить результаты
           *
           * @protected
@@ -498,6 +530,18 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                   // Иначе пользователь продолжает редактирование
                }*/
             }.bind(this));
+         },
+
+         /**
+          * Установить указанные настраиваемые значения компонента
+          *
+          * @public
+          * @param {object} values Набор из нескольких значений, которые необходимо изменить
+          */
+         setValues: function (values) {
+            if (!values || typeof values !== 'object') {
+               throw new Error('Object required');
+            }
          },
 
          /*

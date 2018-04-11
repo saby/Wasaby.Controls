@@ -67,8 +67,20 @@ define('SBIS3.CONTROLS/ImportCustomizer/Sheet/View',
             this.subscribeTo(this._view, 'onSelectedItemsChange', function (evtName, selecteds, changes) {
                var id = selecteds[0];
                this._options.sheetIndex = id ? id - 1 : -1;
-               this._notify('change', this.getValues());
+               this.sendCommand('subview-changed');
             }.bind(this));
+         },
+
+         /**
+          * Установить указанные настраиваемые значения компонента
+          *
+          * @public
+          * @param {object} values Набор из нескольких значений, которые необходимо изменить
+          */
+         setValues: function (values) {
+            if (!values || typeof values !== 'object') {
+               throw new Error('Object required');
+            }
          },
 
          /**

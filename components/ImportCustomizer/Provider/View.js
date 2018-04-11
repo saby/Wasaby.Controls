@@ -85,7 +85,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Provider/View',
          _bindEvents: function () {
             this.subscribeTo(this._parserView, 'onSelectedItemsChange', function (evtName, selecteds, changes) {
                this._options.parser = selecteds[0];
-               this._notify('change', this.getValues());
+               this.sendCommand('subview-changed');
             }.bind(this));
             this.subscribeTo(this.getLinkedContext(), 'onFieldChange', function (evtName, name, value) {
                var isFirstLine = name === 'firstLine';
@@ -94,7 +94,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Provider/View',
                var options = this._options;
                if (options[key] !== val) {
                   options[key] = val;
-                  this._notify('change', this.getValues());
+                  this.sendCommand('subview-changed');
                }
             }.bind(this));
          },

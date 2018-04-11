@@ -53,8 +53,20 @@ define('SBIS3.CONTROLS/ImportCustomizer/BaseParams/View',
          _bindEvents: function () {
             this.subscribeTo(this._replaceAllDataView, 'onCheckedChange', function (evtName, isChecked) {
                this._options.replaceAllData = isChecked;
-               this._notify('change', this.getValues());
+               this.sendCommand('subview-changed');
             }.bind(this));
+         },
+
+         /**
+          * Установить указанные настраиваемые значения компонента
+          *
+          * @public
+          * @param {object} values Набор из нескольких значений, которые необходимо изменить
+          */
+         setValues: function (values) {
+            if (!values || typeof values !== 'object') {
+               throw new Error('Object required');
+            }
          },
 
          /**

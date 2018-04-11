@@ -141,7 +141,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View',
                   }
                }
             }
-            this._notify('change', this.getValues());
+            this.sendCommand('subview-changed');
          },
 
          /**

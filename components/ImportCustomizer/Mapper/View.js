@@ -200,7 +200,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
             else {
                delete accordances[fieldId];
             }
-            this._notify('change', this.getValues());
+            this.sendCommand('subview-changed');
          },
 
          /**
