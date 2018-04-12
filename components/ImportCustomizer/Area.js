@@ -118,9 +118,9 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          $protected: {
             _options: {
                /**
-                * @cfg {boolean} Отображать как диалог (опционально)
+                * @cfg {string} Режим отображения. Возможные значения задаются публичными константами MODE_DIALOG, MODE_WAITING, MODES (опционально)
                 */
-               dialogMode: null,
+               mode: null,
                /**
                 * @cfg {string} Заголовок диалога настройщика импорта (опционально)
                 */
@@ -214,6 +214,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             var options = Area.superclass._modifyOptions.apply(this, arguments);
             this._resolveOptions(options);
             this._validateOptions(options);
+            options._isDialogMode = options.mode === Area.MODE_DIALOG;
+            options._isWaitingMode = options.mode === Area.MODE_WAITING;
             options._isNeeds = this._getSubviewUsings(options);
             var sheets = options.sheets;
             var hasSheets = sheets && sheets.length;
@@ -281,7 +283,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             var typeValidators = Area.getOptionTypes();
             if (typeValidators) {
                var skip = [];
-               if (!options.dialogMode) {
+               if (!options.mode !== Area.MODE_DIALOG) {
                   skip.push('dialogTitle', 'dialogButtonTitle');
                }
                var dataType = options.dataType;
@@ -314,7 +316,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
              * @public
              */
             CommandDispatcher.declareCommand(this, 'subviewChanged', this._cmdSubviewChanged);
-            if (this._options.dialogMode) {
+            if (this._options.mode === Area.MODE_DIALOG) {
                CommandDispatcher.declareCommand(this, 'complete', this._cmdComplete);
             }
             //CommandDispatcher.declareCommand(this, 'showMessage', Area.showMessage);
@@ -793,12 +795,40 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
        * @public
        * @static
        * @constant
-       * @type {Array<string>}
+       * @type {string}
        */
       Object.defineProperty(Area, 'DATA_TYPE_EXCEL', {value:'excel', enumerable:true});
       Object.defineProperty(Area, 'DATA_TYPE_DBF', {value:'dbf', enumerable:true});
       Object.defineProperty(Area, 'DATA_TYPE_CML', {value:'cml', enumerable:true});
+      /**
+       * Константы - Список всех поддерживаемых типов данных
+       *
+       * @public
+       * @static
+       * @constant
+       * @type {Array<string>}
+       */
       Object.defineProperty(Area, 'DATA_TYPES', {value:[Area.DATA_TYPE_EXCEL, Area.DATA_TYPE_DBF, Area.DATA_TYPE_CML], enumerable:true});
+
+      /**
+       * Константы - Поддерживаемые режимы отображения
+       *
+       * @public
+       * @static
+       * @constant
+       * @type {string}
+       */
+      Object.defineProperty(Area, 'MODE_DIALOG', {value:'dialog', enumerable:true});
+      Object.defineProperty(Area, 'MODE_WAITING', {value:'waiting', enumerable:true});
+      /**
+       * Константы - Список всех режимов отображения
+       *
+       * @public
+       * @static
+       * @constant
+       * @type {Array<string>}
+       */
+      Object.defineProperty(Area, 'MODES', {value:[Area.MODE_DIALOG, Area.MODE_WAITING], enumerable:true});
 
 
       // Public static methods:
@@ -871,17 +901,26 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
        * @return {object}
        */
       Area.getOptionTypes = function () {
-         var typeIfDefined = function (type, name, value) {
+         var typeIfDefined = function (type, value) {
             // Если значение есть - оно должно иметь указанный тип
-            return value !=/*Не !==*/ null && typeof value !== type ? new Error('Option "' + name + '" must be a ' + type) : value;
+            return value !=/*Не !==*/ null && typeof value !== type ? new Error('Value must be a ' + type) : value;
          };
          return {
-            dialogMode: typeIfDefined.bind(null, 'boolean', 'dialogMode'),
-            dialogTitle: typeIfDefined.bind(null, 'string', 'dialogTitle'),
-            dialogButtonTitle: typeIfDefined.bind(null, 'string', 'dialogButtonTitle'),
-            allSheetsTitle: typeIfDefined.bind(null, 'string', 'allSheetsTitle'),
-            bindingColumnCaption: typeIfDefined.bind(null, 'string', 'bindingColumnCaption'),
-            bindingColumnTitle: typeIfDefined.bind(null, 'string', 'bindingColumnTitle'),
+            mode: function (mode) {
+               var err = typeIfDefined('string', mode);
+               if (err instanceof Error) {
+                  return err;
+               }
+               if (mode && Area.MODES.indexOf(mode) === -1) {
+                  return new Error('Value must be one of: ' + Area.MODES.join(', '));
+               }
+               return mode;
+            },
+            dialogTitle: typeIfDefined.bind(null, 'string'),
+            dialogButtonTitle: typeIfDefined.bind(null, 'string'),
+            allSheetsTitle: typeIfDefined.bind(null, 'string'),
+            bindingColumnCaption: typeIfDefined.bind(null, 'string'),
+            bindingColumnTitle: typeIfDefined.bind(null, 'string'),
             dataType: DataType(String).required().oneOf(Area.DATA_TYPES),
             file: function (file) {
                // Должна быть опция "file"
@@ -898,10 +937,10 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                return file;
             },
             baseParamsComponent: DataType(String).required(),
-            baseParams: typeIfDefined.bind(null, 'object', 'baseParams'),
+            baseParams: typeIfDefined.bind(null, 'object'),
             parsers: function (parsers) {
                // Должна быть опция "parsers" и она должна быть объектом
-               if (!parsers || typeof parsers !== 'object') {
+               if (!parsers || typeof parsers !== 'object') {//^^^
                   throw new Error('Option "parsers" must be an object');
                }
                for (var name in parsers) {
@@ -920,7 +959,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             },
             fields: function (fields) {
                // Должна быть опция "fields" и являться либо экземпляром Deferred, либо иметь тип ImportTargetFields, либо иметь тип ImportRemoteCall
-               if (!fields || typeof fields !== 'object') {
+               if (!fields || typeof fields !== 'object') {//^^^
                   return new Error('Option "fields" must be an object');
                }
                if (fields instanceof Deferred) {
@@ -935,7 +974,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             },
             sheets: function (sheets) {
                // Для типа данных EXCEL или DBF должна быть опция "sheets" и быть не пустым массивом
-               if (!sheets || !Array.isArray(sheets) || !sheets.length) {
+               if (!sheets || !Array.isArray(sheets) || !sheets.length) {//^^^
                   return new Error('Option "sheets" required');
                }
                // И каждый элемент массива должен быть {@link ImportSheet}
@@ -948,11 +987,11 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                }
                return sheets
             },
-            sheetIndex: typeIfDefined.bind(null, 'number', 'sheetIndex'),
-            sameSheetConfigs: typeIfDefined.bind(null, 'boolean', 'sameSheetConfigs'),
+            sheetIndex: typeIfDefined.bind(null, 'number'),
+            sameSheetConfigs: typeIfDefined.bind(null, 'boolean'),
             mapping: function (mapping) {
                // Для типа данных CML(CommerceML) должна быть опция "mapping", то она должна быть {link ImportMapping}
-               if (!mapping || (typeof mapping !== 'object' ||
+               if (!mapping || (typeof mapping !== 'object' ||//^^^
                      !(!mapping.fieldFilter || typeof mapping.fieldFilter === 'function') ||
                      !(!mapping.fieldProperty || typeof mapping.fieldProperty === 'string') ||
                      !(mapping.fieldFilter || mapping.fieldProperty) ||
