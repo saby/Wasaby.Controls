@@ -110,8 +110,8 @@ define('Controls/Filter/FastFilter',
             this._notify('selectedKeysChanged', [key]);
          },
 
-         onResult: function(args) {
-            var data = args[2];
+         onResult: function(result) {
+            var data = result.data;
             _private.selectItem.apply(this, data);
             this._notify('filterChanged', [_private.getFilter(this._items)]);
             this._children.DropdownOpener.close();
