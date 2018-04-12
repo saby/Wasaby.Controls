@@ -1,9 +1,10 @@
 define('SBIS3.CONTROLS/Menu/MenuButton', [
    'SBIS3.CONTROLS/WSControls/Buttons/MenuButton',
    'SBIS3.CONTROLS/Utils/ButtonUtil',
+   'tmpl!WSControls/Buttons/resources/AddIcon',
    'css!SBIS3.CONTROLS/Button/Button',
    'css!SBIS3.CONTROLS/Menu/MenuButton/MenuButton'
-], function(WSMenuButton, ButtonUtil) {
+], function(WSMenuButton, ButtonUtil, svgIconTpl) {
 
    'use strict';
 
@@ -55,13 +56,15 @@ define('SBIS3.CONTROLS/Menu/MenuButton', [
     * </component>
     */
 
-   var MenuButton = WSMenuButton.extend( [], /** @lends SBIS3.CONTROLS/Menu/MenuButton.prototype */ {
-       $protected: {
-           _options: {
-               style: 'standard'
-           }
-       },
-      _modifyOptions : function(options, parsedOptions, attrToMerge) {
+   var MenuButton = WSMenuButton.extend([], /** @lends SBIS3.CONTROLS/Menu/MenuButton.prototype */ {
+      $protected: {
+         _options: {
+            style: 'standard',
+            _svgIcon: null,
+            _svgIconTpl: svgIconTpl
+         }
+      },
+      _modifyOptions: function(options, parsedOptions, attrToMerge) {
          var opts = MenuButton.superclass._modifyOptions.apply(this, arguments);
          opts.cssClassName += ' controls-Button';
          opts._type = 'Button';
@@ -72,13 +75,13 @@ define('SBIS3.CONTROLS/Menu/MenuButton', [
          return opts;
       },
 
-      _toggleState: function () {
-          var container = this._container;
+      _toggleState: function() {
+         var container = this._container;
 
-          container[0].className = container[0].className.replace(/(^|\s)controls-Button_size-\S+/g, '').replace(/(^|\s)controls-Button_state-\S+/g, '');
-          container.addClass(ButtonUtil.getClassState(this._options));
-          MenuButton.superclass._toggleState.apply(this, arguments);
-       }
+         container[0].className = container[0].className.replace(/(^|\s)controls-Button_size-\S+/g, '').replace(/(^|\s)controls-Button_state-\S+/g, '');
+         container.addClass(ButtonUtil.getClassState(this._options));
+         MenuButton.superclass._toggleState.apply(this, arguments);
+      }
    });
 
    return MenuButton;
