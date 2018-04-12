@@ -33,6 +33,12 @@ define('SBIS3.CONTROLS/Filter/FavoriteEditDialog',
          });
          return items;
       };
+      
+      var hasFieldsToSave = function(self, record) {
+         var toSaveFields = record.get('toSaveFields');
+         /* Не даём сохранить запись, если нет параметров для сохранения */
+         return self._options._items.length > Object.keys(toSaveFields).length;
+      };
 
       var FavoriteEditDialog = FormController.extend({
          _dotTplFn: template,
@@ -45,6 +51,16 @@ define('SBIS3.CONTROLS/Filter/FavoriteEditDialog',
          $constructor: function() {
             var window = this.getParent();
             window._options.resizable = false;
+         },
+         
+         init: function() {
+            FavoriteEditDialog.superclass.init.call(this);
+            
+            var self = this;
+            var record = this.getRecord();
+            this.subscribeTo(record, 'onPropertyChange', function() {
+               self.getChildControlByName('saveButton').setEnabled(hasFieldsToSave(self, record));
+            });
          },
          
          _modifyOptions: function() {
