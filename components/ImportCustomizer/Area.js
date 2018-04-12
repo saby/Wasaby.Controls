@@ -10,6 +10,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
       'Core/CommandDispatcher',
       'Core/core-merge',
       'Core/Deferred',
+      //'Core/IoC',
       'SBIS3.CONTROLS/CompoundControl',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
       'WS.Data/Collection/RecordSet',
@@ -22,7 +23,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
       'SBIS3.CONTROLS/ScrollContainer'
    ],
 
-   function (CommandDispatcher, cMerge, Deferred, CompoundControl, InformationPopupManager, RecordSet, DataType, dotTplFn) {
+   function (CommandDispatcher, cMerge, Deferred, /*IoC,*/ CompoundControl, InformationPopupManager, RecordSet, DataType, dotTplFn) {
       'use strict';
 
       var Area = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ImportCustomizer/Area.prototype*/ {
@@ -140,16 +141,11 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                /**
                 * @cfg {string} Класс компонента настройки параметоров импортирования (Опционально, если не указан - используется {@link SBIS3.CONTROLS/ImportCustomizer/BaseParams/View комполнент по умолчанию})
                 */
-               baseParamsComponent: 'SBIS3.CONTROLS/ImportCustomizer/BaseParams/View',
+               baseParamsComponent: null,
                /**
                 * @cfg {object} Опции компонента настройки параметоров импортирования. Состав опций определяется {@link baseParamsComponent используемым компонентом} (опционально)
                 */
-               baseParams: {
-                  //Заменять ли импортируемыми данными предыдущее содержимое базы данных полностью или нет (только обновлять и добавлять)
-                  replaceAllData: false,
-                  //Место назначения для импортирования (таблица в базе данных и т.п.)
-                  destination: null
-               },
+               baseParams: null,
                /**
                 * @cfg {object<ImportParser>} Список всех доступных провайдеров парсинга импортируемых данных
                 */
@@ -280,7 +276,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                      if (validator) {
                         var err = validator(options[name]);
                         if (err instanceof Error) {
-                           throw err;
+                           //IoC.resolve('ILogger').error('ImportCustomizer', err.message);
+                           throw new Error('Wrong option "' + name + '": ' + err.message);
                         }
                      }
                   }
@@ -508,6 +505,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
           * @param {ImportTargetFields} fields Полный набор полей
           */
          _setFields: function (fields) {
+            // TODO: Обдумать возможность выделения из fields массива hierarchy (с флагом joinHierarchy и последующим слиянием для нужного парсера)
             var err = _validateImportTargetFields(fields);
             if (err instanceof Error) {
                throw err;
@@ -792,6 +790,13 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
        */
       Area.getDefaultOptions = function () {
          return {
+            baseParamsComponent: 'SBIS3.CONTROLS/ImportCustomizer/BaseParams/View',
+            baseParams: {
+               //Заменять ли импортируемыми данными предыдущее содержимое базы данных полностью или нет (только обновлять и добавлять)
+               replaceAllData: false,
+               //Место назначения для импортирования (таблица в базе данных и т.п.)
+               destination: null
+            },
             parsers: {
                // TODO: Обдумать добавление поля applicable:Array<string> для указания типов данных (Excel или DBF)
                // TODO: Обдумать удаление поля order
@@ -818,7 +823,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
       Area.getOptionTypes = function () {
          var typeIfDefined = function (type, name, value) {
             // Если значение есть - оно должно иметь указанный тип
-            return value !=/*Не !==*/ null && typeof value !== type ? new Error('Wrong option "' + name + '"') : value;
+            return value !=/*Не !==*/ null && typeof value !== type ? new Error('Option "' + name + '" must be a ' + type) : value;
          };
          return {
             dialogMode: typeIfDefined.bind(null, 'boolean', 'dialogMode'),
@@ -838,16 +843,16 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                   !(file.name && typeof file.name === 'string') ||
                   !(file.url && typeof file.url === 'string') ||
                   !(file.uuid && typeof file.uuid === 'string')) {
-                  return new Error('Wrong option "file"');
+                  return new Error('Option "file" must be an ImportFile');
                }
                return file;
             },
-            baseParamsComponent: typeIfDefined.bind(null, 'string', 'baseParamsComponent'),
+            baseParamsComponent: DataType(String).required(),
             baseParams: typeIfDefined.bind(null, 'object', 'baseParams'),
             parsers: function (parsers) {
                // Должна быть опция "parsers" и она должна быть объектом
                if (!parsers || typeof parsers !== 'object') {
-                  throw new Error('Wrong option "parsers"');
+                  throw new Error('Option "parsers" must be an object');
                }
                for (var name in parsers) {
                   // Каждый элемент набора parsers должно быть {@link ImportParser}
@@ -858,7 +863,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                         (!v.component || typeof v.component === 'string') &&
                         (!v.args || typeof v.args === 'object')
                      )) {
-                     return new Error('Wrong parsers items');
+                     return new Error('Parsers items must be an ImportParser');
                   }
                }
                return parsers;
@@ -878,7 +883,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                      (v.name && typeof v.name === 'string') &&
                      (v.sampleRows && Array.isArray(v.sampleRows) && v.sampleRows.length && v.sampleRows.every(function (v2) { return v2 && Array.isArray(v2) && v2.length && v2.length === v.sampleRows[0].length; }))
                   ); })) {
-                  return new Error('Wrong option "sheets"');
+                  return new Error('Option "sheets" items must be an ImportSheet');
                }
                return sheets
             },
@@ -893,14 +898,14 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                      !(!mapping.variants || typeof mapping.variants === 'object') ||
                      !(!mapping.accordances || typeof mapping.accordances === 'object')
                   )) {
-                  return new Error('Wrong option "mapping"');
+                  return new Error('Option "mapping" must be an ImportMapping');
                }
                return mapping;
             },
             validators: function (validators) {
                // Если есть опция "validators", то она должна быть массивом
                if (validators && !Array.isArray(validators)) {
-                  return new Error('Wrong validators');
+                  return new Error('Option "validators" must be an Array');
                }
                if (validators) {
                   // И каждый элемент массива должен быть {@link ImportValidator}
@@ -911,7 +916,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                         (!v.errorMessage || typeof v.errorMessage === 'string') &&
                         (!v.noFailOnError || typeof v.noFailOnError === 'boolean')
                      ); })) {
-                     return new Error('Wrong validators items');
+                     return new Error('Option "validators" items must be an ImportValidator');
                   }
                }
                return validators;

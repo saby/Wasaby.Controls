@@ -184,175 +184,54 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           * @param {object} options Входные аргументы("мета-данные") настройщика импорта (согласно описанию в методе {@link execute})
           */
          _open: function (options) {
-            // TODO: Учесть возможность задания части аргумента options декларативно через this._options
-            var dataType = options.dataType;
-            // Если есть свойство "dataType"
-            if (dataType) {
-               // оно должно быть строкой
-               if (typeof dataType !== 'string') {
-                  throw new Error('Wrong dataType');
-               }
-               // и входить в число поддерживаемых
-               if (Area.DATA_TYPES.indexOf(dataType) === -1) {
-                  var err = new Error(rk('Тип данных в этом файле не поддерживается', 'НастройщикИмпорта'));
-                  err.name = 'NotSupportedDataType';
-                  this._completeWithError(true, err);
-                  return;
-               }
-            }
-            var file = options.file;
-            // Должно быть свойство "file"
-            if (!file) {
-               throw new Error('File required');
-            }
-            // И свойство "file" должно быть {@link ImportFile}
-            if (typeof file !== 'object' ||
-               !(file.name && typeof file.name === 'string') ||
-               !(file.url && typeof file.url === 'string') ||
-               !(file.uuid && typeof file.uuid === 'string')) {
-               throw new Error('Wrong file');
-            }
-            var baseParamsComponent = options.baseParamsComponent;
-            // Если есть свойство "baseParamsComponent" - оно должно быть строкой
-            if (baseParamsComponent && typeof baseParamsComponent !== 'string') {
-               throw new Error('Wrong baseParamsComponent');
-            }
-            var baseParamsOptions = options.baseParams;
-            // Если есть свойство "baseParams" - оно должно быть объектом
-            if (baseParamsOptions && typeof baseParamsOptions !== 'object') {
-               throw new Error('Wrong baseParams');
-            }
-            var parsers = options.parsers;
-            // Если есть свойство "parsers" - то оно должно быть объектом
-            if (parsers && typeof parsers !== 'object') {
-               throw new Error('Wrong parsers');
-            }
-            var fields = options.fields;
-            // Должно быть свойство "fields" и быть объектом
-            if (!fields || typeof fields !== 'object') {
-               throw new Error('Wrong fields');
-            }
-            // TODO: Обдумать возможность выделения из fields массива hierarchy (с флагом joinHierarchy и последующим слиянием для нужного парсера)
-            var isExcel = dataType === Area.DATA_TYPE_EXCEL;
-            var isDBF = dataType === Area.DATA_TYPE_DBF;
-            var isCML = dataType === Area.DATA_TYPE_CML;
-            var needSheets = isExcel || isDBF;
-            var sheets = options.sheets;
-            if (needSheets) {
-               // Для типа данных EXCEL должно быть свойство "sheets" и быть не пустым массивом
-               if (!sheets || !Array.isArray(sheets) || !sheets.length) {
-                  throw new Error('Sheets required');
-               }
-               // И каждый элемент массива должен быть {@link ImportSheet}
-               if (!sheets.every(function (v) { return (
-                     typeof v === 'object' &&
-                     (v.name && typeof v.name === 'string') &&
-                     (v.sampleRows && Array.isArray(v.sampleRows) && v.sampleRows.length && v.sampleRows.every(function (v2) { return v2 && Array.isArray(v2) && v2.length && v2.length === v.sampleRows[0].length; }))
-                  ); })) {
-                  throw new Error('Wrong sheets');
-               }
-            }
-            var sheetIndex = options.sheetIndex;
-            var sameSheetConfigs = options.sameSheetConfigs;
-            if (needSheets) {
-               // Если есть свойство "sheetIndex", то оно должно быть числом
-               if (sheetIndex !=/*Не !==*/ null && typeof sheetIndex !== 'number') {
-                  throw new Error('Wrong sheetIndex');
-               }
-               if (sameSheetConfigs) {
-                  sheetIndex = -1;
-               }
-            }
-            var mapping = options.mapping;
-            // Если есть свойство "mapping", то оно должно быть {link ImportMapping}
-            if (mapping && (typeof mapping !== 'object' ||
-                  !(!mapping.fieldFilter || typeof mapping.fieldFilter === 'function') ||
-                  !(!mapping.fieldProperty || typeof mapping.fieldProperty === 'string') ||
-                  !(mapping.fieldFilter || mapping.fieldProperty) ||
-                  !(!mapping.variants || typeof mapping.variants === 'object') ||
-                  !(!mapping.accordances || typeof mapping.accordances === 'object')
-               )) {
-               throw new Error('Wrong mapping');
-            }
-            var validators = options.validators;
-            // Если есть свойство "validators", то оно должно быть массивом
-            if (validators && !Array.isArray(validators)) {
-               throw new Error('Wrong validators');
-            }
-            var defaults = this._options;
-            if (parsers) {
-               // Поскольку уже есть набор парсеров по умолчанию, то в объекте parsers могут содержаться только поправки, значит нужно слить их,
-               // прежде чем проверять
-               parsers = cMerge(cMerge({}, defaults.parsers), parsers);
-               for (var name in parsers) {
-                  // Каждый элемент набора parsers должно быть {@link ImportParser}
-                  var v = parsers[name];
-                  if (!(name &&
-                        (typeof v === 'object') &&
-                        (v.title && typeof v.title === 'string') &&
-                        (!v.component || typeof v.component === 'string') &&
-                        (!v.args || typeof v.args === 'object')
-                     )) {
-                     throw new Error('Wrong parsers items');
-                  }
-               }
-            }
-            if (validators) {
-               // Поскольку уже есть набор валидаторов по умолчанию, то нужно слить их, прежде чем проверять
-               validators = defaults.validators.concat(validators);
-               // И каждый элемент массива должен быть {@link ImportValidator}
-               if (!validators.every(function (v) { return (
-                     typeof v === 'object' &&
-                     (v.validator && typeof v.validator === 'function') &&
-                     (!v.params || Array.isArray(params)) &&
-                     (!v.errorMessage || typeof v.errorMessage === 'string') &&
-                     (!v.noFailOnError || typeof v.noFailOnError === 'boolean')
-                  ); })) {
-                  throw new Error('Wrong validators items');
-               }
-            }
-            if (!(fields instanceof Deferred)) {
-               // Проверим, имеет ли fields тип ImportRemoteCall
-               var fieldsCall;
-               try {
-                  fieldsCall = new RemoteCall(fields);
-               }
-               catch (ex) {}
-               if (fieldsCall) {
-                  // Если да, то вызвать метод удалённого сервиса для получения списка полей
-                  fields = fieldsCall.call(options);
-               }
-               /*else {
-                  // иначе это должен быть тип ImportTargetFields, он будет проверен позже, в Area
-               }*/
-            }
+            var optionNames = [
+               'dialogTitle',
+               'dialogButtonTitle',
+               'allSheetsTitle',
+               'bindingColumnCaption',
+               'bindingColumnTitle',
+               'dataType',
+               'file',
+               'baseParamsComponent',
+               'baseParams',
+               'parsers',
+               'fields',
+               'sheets',
+               'sheetIndex',
+               'sameSheetConfigs',
+               'mapping',
+               'validators'
+            ];
             var componentOptions = {
                dialogMode: true,
-               dialogTitle: options.dialogTitle,
-               dialogButtonTitle: options.dialogButtonTitle,
-               allSheetsTitle: options.allSheetsTitle,
-               bindingColumnCaption: options.bindingColumnCaption,
-               bindingColumnTitle: options.bindingColumnTitle,
-               dataType: dataType,
-               file: file,
-               baseParams: baseParamsOptions,
-               parsers: parsers || defaults.parsers,
-               fields: fields,
-               mapping: mapping,
-               validators: validators || defaults.validators,
                handlers: {
                   onComplete: this._onAreaComplete.bind(this),
                   onFatalError: this._onAreaError.bind(this)
                }
             };
-            if (baseParamsComponent) {
-               componentOptions.baseParamsComponent = baseParamsComponent;
+            var defaults = this._options;
+            optionNames.forEach(function (name) {
+               var value = options[name];
+               componentOptions[name] = value !=/*Не !==*/ null ? value : defaults[name];
+            });
+            // Если указан не поддерживаемый тип данных - завершить с ошибкой
+            if (Area.DATA_TYPES.indexOf(componentOptions.dataType) === -1) {
+               var err = new Error(rk('Тип данных в этом файле не поддерживается', 'НастройщикИмпорта'));
+               err.name = 'NotSupportedDataType';
+               this._completeWithError(true, err);
+               return;
             }
-            if (needSheets) {
-               componentOptions.sheets = sheets;
-               componentOptions.sheetIndex = sheetIndex;
-               componentOptions.sameSheetConfigs = sameSheetConfigs;
-
+            // В поле "fields" может быть указан вызов удалённого метода {@link ImportRemoteCall}
+            // Прочие проверки будут произведены в Area
+            var fields = componentOptions.fields;
+            if (fields && typeof fields === 'object' && !(fields instanceof Deferred)) {
+               var fieldsCall;
+               try { fieldsCall = new RemoteCall(fields); } catch (ex) {}
+               if (fieldsCall) {
+                  // Если это действительно {@link ImportRemoteCall}, то вызвать метод удалённого сервиса для получения списка полей
+                  componentOptions.fields = fieldsCall.call(componentOptions);
+                  // TODO: Рассмотреть перенос в Area тоже (так как опции ещё не проверены)
+               }
             }
             this._areaContainer = new FloatArea({
                opener: this,
