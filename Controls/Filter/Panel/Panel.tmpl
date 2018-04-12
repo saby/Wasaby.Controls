@@ -1,24 +1,45 @@
 <div class="controls-PanelFilter">
-   <div class="controls-FilterPanel__header">
-      <span class="controls-FilterPanel__header-title">{[Отбираются]}</span>
-      <ws:if data="{{topTemplate}}">
-         <ws:partial template="{{topTemplate}}"/>
-      </ws:if>
-      <Controls.Button style="linkMain" caption="{[По умолчанию]}" on:click="resetFilter()"></Controls.Button>
+   <div class="controls-FilterPanel__wrapper">
+      <div class="controls-FilterPanel__header">
+         <span class="controls-FilterPanel__header-title controls-FilterPanel__header-title_{{_options.styleHeader}}">{{_options.title}}</span>
+         <ws:if data="{{topTemplate}}">
+            <div class="controls-FilterPanel__header-topTemplate">
+               <ws:partial template="{{topTemplate}}"/>
+            </div>
+         </ws:if>
+         <Controls.Button style="linkMain" caption="{[По умолчанию]}" on:click="resetFilter()"
+                          attr:class="controls-FilterPanel__resetButton"></Controls.Button>
 
-      <Controls.Button style="buttonPrimary" caption="{[Отобрать]}" on:click="applyFilter()"></Controls.Button>
-      <div class="controls-FilterPanel__closeButton"></div>
-   </div>
-   <div class="controls-FilterPanel_content">
-
-      <Controls.Filter.Panel.PropertyGrid name="PropertyGrid" bind:items="_items"/>
-   </div>
-   <div class="controls-FilterPanel__footer">
-      <ws:if data="{{_additionalItems}}">
-
-      </ws:if>
-      <div class="controls-FilterPanel__history">
-
+         <Controls.Button style="buttonPrimary" caption="{[Отобрать]}" on:click="applyFilter()"
+                          attr:class="controls-FilterPanel__filterButton"></Controls.Button>
+         <div class="controls-DialogTemplate__close_button controls-DialogTemplate__close_button_standart"
+              on:click="close()"></div>
       </div>
+      <div class="controls-FilterPanel__content">
+
+         <Controls.Filter.Panel.PropertyGrid name="PropertyGrid" bind:items="_items"/>
+      </div>
+      <div class="controls-FilterPanel__footer">
+         <ws:if data="{{_additionalItems}}">
+            <div class="controls-FilterPanel__additionalParams">
+
+            </div>
+         </ws:if>
+         <ws:if data="{{_options.viewMode === 'oneColumn'}}">
+            <div class="controls-FilterPanel__history controls-FilterPanel__history-oneColumn">
+               <p>Исторические данные 1</p>
+               <p>Исторические данные 4</p>
+               <p>Исторические данные 3</p>
+               <p>Исторические данные 2</p>
+            </div>
+         </ws:if>
+      </div>
+   </div>
+   <div if="{{ _options.viewMode === 'twoColumn' }}"
+        class="controls-FilterPanel__history controls-filterPanel__history-twoColumn">
+      <p>Исторические данные 1</p>
+      <p>Исторические данные 4</p>
+      <p>Исторические данные 3</p>
+      <p>Исторические данные 2</p>
    </div>
 </div>
