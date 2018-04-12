@@ -4,8 +4,9 @@ define('Controls/Filter/Panel', [
    'WS.Data/Utils',
    'Core/helpers/Array/clone',
    'tmpl!Controls/Filter/Panel/Panel',
-
+   'css!Controls/Popup/DialogTemplate',
    'css!Controls/Filter/Panel/Panel'
+
 ], function(Control, Chain, Utils, clone, template) {
 
    'use strict';
@@ -36,8 +37,21 @@ define('Controls/Filter/Panel', [
             item.value = item.resetValue;
          });
          this._children.PropertyGrid._forceUpdate();
+      },
+
+      close: function() {
+         this.resetFilter();
+         this._notify('close', [], {bubbling: true});
       }
    });
+
+   FilterPanel.getDefaultOptions = function getDefaultOptions() {
+      return {
+         title: rk('Отбираются'),
+         styleHeader: 'default',
+         viewMode: 'oneColumn'
+      };
+   };
 
    return FilterPanel;
 
