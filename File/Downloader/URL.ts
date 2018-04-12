@@ -27,7 +27,7 @@ class DownloaderURL {
          this.downloadForMobile(url);
          return;
       }
-      if (detection.firefox || detection.safari) {
+      if (detection.safari) {
          this.downloadByIframe(url);
          return;
       }

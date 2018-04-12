@@ -25,7 +25,7 @@ define("File/Downloader/URL", ["require", "exports", "Core/detection"], function
                 this.downloadForMobile(url);
                 return;
             }
-            if (detection.firefox || detection.safari) {
+            if (detection.safari) {
                 this.downloadByIframe(url);
                 return;
             }
