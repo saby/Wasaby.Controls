@@ -285,7 +285,8 @@ define('SBIS3.CONTROLS/Filter/Button',
                     hasHistory: this._hasHistory(),
                     historyId: this._options.historyId,
                     internalContextFilterName: this._options.internalContextFilterName,
-                    componentOptions: this._options.componentOptions
+                    componentOptions: this._options.componentOptions,
+                    filterStructure: this.getFilterStructure()
                  },
                  self = this,
                  templateProperty;
