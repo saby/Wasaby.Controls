@@ -1094,6 +1094,13 @@ define('SBIS3.CONTROLS/ListView',
                   prevDomNode = editingTr;
                }
                this._addItems(itemsToAdd, addPosition, prevDomNode);
+
+               // Оживляем компоненты после отрисовки виртуальным скролом
+               if (this._revivePackageParams.revive !== false) {
+                  this._reviveItems(this._revivePackageParams.light, true);
+               }
+               this._revivePackageParams.processed = true;
+
                if(this._options.itemsActionsInItemContainer && itemsToRemove.length && this._itemsToolbar && this._itemsToolbar.isVisible()){
                   this._itemsToolbar.hide();
                }

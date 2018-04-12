@@ -24,14 +24,14 @@ define(
          return testAbstract;
       }
       
-      describe('Controls.Input.SuggestController', function () {
+      describe('Controls.Input.SuggestController', function() {
    
          it('.destroy', function() {
             var selfTest = getTestAbstract(),
-                isAborted = false;
+               isAborted = false;
             
             selfTest._suggestPopupController = {
-               hidePopup: function(){
+               hidePopup: function() {
                   isAborted = true;
                }
             };
@@ -44,7 +44,7 @@ define(
          
          it('.showPopup', function(done) {
             var selfTest = getTestAbstract(),
-                result = false;
+               result = false;
    
             //Заглушка для тестирования
             selfTest._options.textComponent = {
@@ -52,7 +52,9 @@ define(
             };
             
             SuggestController._private.getSuggestPopupController(selfTest).addCallback(function(controller) {
-               controller.showPopup = function() {result = true};
+               controller.showPopup = function() {
+                  result = true;
+               };
                SuggestController._private.showPopup(selfTest);
    
                SuggestController._private.getSuggestPopupController(selfTest).addCallback(function() {
@@ -73,10 +75,12 @@ define(
          
          it('.hidePopup', function(done) {
             var selfTest = getTestAbstract(),
-                result = false;
+               result = false;
             
             SuggestController._private.getSuggestPopupController(selfTest).addCallback(function(controller) {
-               controller.hidePopup = function() {result = true};
+               controller.hidePopup = function() {
+                  result = true;
+               };
                SuggestController._private.hidePopup(selfTest);
                
                SuggestController._private.getSuggestPopupController(selfTest).addCallback(function() {
@@ -98,7 +102,7 @@ define(
             selfTest._options.textComponent = {
                _container: {offsetWidth: 0}
             };
-            assert.equal(SuggestController._private.getPopupOptions(selfTest).componentOptions.width, 0);
+            assert.equal(SuggestController._private.getPopupOptions(selfTest).templateOptions.width, 0);
          });
    
          it('.needShowPopup', function() {
@@ -120,14 +124,19 @@ define(
    
             selfTest._options = {};
             selfTest._options.minSearchLength = 3;
+
             //Заглушка для тестирования
             selfTest._options.textComponent = {
                _container: {offsetWidth: 0}
             };
    
             SuggestController._private.getSuggestPopupController(selfTest).addCallback(function(controller) {
-               controller.hidePopup = function() {abortResult = true};
-               controller.showPopup = function() {searchResult = true;};
+               controller.hidePopup = function() {
+                  abortResult = true;
+               };
+               controller.showPopup = function() {
+                  searchResult = true;
+               };
    
                selfTest._value = '';
                SuggestController._private.onChangeValueHandler(selfTest);
@@ -155,14 +164,16 @@ define(
    
          it('.searchStart', function() {
             var selfTest = getTestAbstract(),
-                searching = false;
+               searching = false;
       
             selfTest._options = {};
    
             SuggestController._private.searchStart(selfTest);
             assert.isFalse(searching);
             
-            selfTest._options.searchStartCallback = function(){searching = true};
+            selfTest._options.searchStartCallback = function() {
+               searching = true;
+            };
             SuggestController._private.searchStart(selfTest);
             assert.isTrue(searching);
          });
@@ -176,7 +187,9 @@ define(
             SuggestController._private.searchEnd(selfTest);
             assert.isTrue(searching);
    
-            selfTest._options.searchEndCallback = function(){searching = false};
+            selfTest._options.searchEndCallback = function() {
+               searching = false;
+            };
             SuggestController._private.searchEnd(selfTest);
             assert.isFalse(searching);
          });

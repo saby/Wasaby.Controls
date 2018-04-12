@@ -261,6 +261,7 @@ define('Controls/List/SourceControl', [
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/List/interface/IListControl
+    * @mixes Controls/interface/IRemovable
     * @control
     * @public
     * @category List

@@ -110,8 +110,8 @@ define('Controls/Filter/FastFilter',
             this._notify('selectedKeysChanged', [key]);
          },
 
-         onResult: function(args) {
-            var data = args[2];
+         onResult: function(result) {
+            var data = result.data;
             _private.selectItem.apply(this, data);
             this._notify('filterChanged', [_private.getFilter(this._items)]);
             this._children.DropdownOpener.close();
@@ -148,7 +148,7 @@ define('Controls/Filter/FastFilter',
 
          _open: function(event, item, index) {
             var config = {
-               componentOptions: {
+               templateOptions: {
                   items: this._configs[index]._items,
                   keyProperty: this._configs[index].keyProperty,
                   parentProperty: getPropValue(item, 'parentProperty'),

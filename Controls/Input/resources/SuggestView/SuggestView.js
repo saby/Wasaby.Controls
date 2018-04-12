@@ -16,7 +16,7 @@ define('Controls/Input/resources/SuggestView/SuggestView',
          
          getOptionsForShowAll: function(self) {
             return {
-               componentOptions: {
+               templateOptions: {
                   filter: self._options.filter
                }
             };

@@ -38,8 +38,8 @@ define('Controls/Dropdown/Opener',
            * @param config
            */
          checkIcons: function(self, config) {
-            var compOptions = self._options.popupOptions && self._options.popupOptions.componentOptions,
-               configOptions = config.componentOptions,
+            var compOptions = self._options.popupOptions && self._options.popupOptions.templateOptions,
+               configOptions = config.templateOptions,
                parentProperty = (configOptions && configOptions.parentProperty) || compOptions && compOptions.parentProperty,
                nodeProperty = (configOptions && configOptions.nodeProperty) || compOptions && compOptions.nodeProperty,
                items = configOptions && configOptions.items,
@@ -82,10 +82,10 @@ define('Controls/Dropdown/Opener',
             }
          },
 
-         setComponentOptions: function(self, config) {
+         setTemplateOptions: function(self, config) {
             var pOptions = self._options.popupOptions || {};
-            if (pOptions.componentOptions && pOptions.componentOptions.headConfig) {
-               pOptions.componentOptions.headConfig.menuStyle = pOptions.componentOptions.headConfig.menuStyle || 'defaultHead';
+            if (pOptions.templateOptions && pOptions.templateOptions.headConfig) {
+               pOptions.templateOptions.headConfig.menuStyle = pOptions.templateOptions.headConfig.menuStyle || 'defaultHead';
             }
             this.checkIcons(self, config);
          },
@@ -100,7 +100,7 @@ define('Controls/Dropdown/Opener',
          _itemTemplateDeferred: undefined,
 
          open: function(config, opener) {
-            _private.setComponentOptions(this, config);
+            _private.setTemplateOptions(this, config);
             _private.setPopupOptions(this, config);
             DropdownOpener.superclass.open.apply(this, arguments);
          }

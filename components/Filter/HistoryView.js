@@ -52,13 +52,16 @@ define('SBIS3.CONTROLS/Filter/HistoryView',
              FilterHistoryView.superclass.init.apply(this, arguments);
 
              if(this._options.historyId) {
-                var historyController = new HistoryList({historyId: this.getProperty('historyId')});
-
-                this.subscribeTo(historyController, 'onHistoryUpdate', function(event, history) {
-                   this.setItems(history.clone());
-                }.bind(this));
-
-                this.setItems(historyController.getHistory().clone());
+                var historyController = new HistoryList({historyId: this.getProperty('historyId')}),
+                    self = this;
+   
+                self.subscribeTo(historyController, 'onHistoryUpdate', function(event, history) {
+                   self.setItems(history.clone());
+                });
+   
+                historyController.getHistory(true).addCallback(function(history) {
+                   self.setItems(history.clone());
+                });
              }
           }
        });
