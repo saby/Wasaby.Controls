@@ -232,8 +232,15 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          },
 
          $constructor: function () {
-            CommandDispatcher.declareCommand(this, 'complete', this._cmdComplete);
+            /**
+             * Уведомление об изменении данных под-компонента
+             * @command subview-changed
+             * @public
+             */
             CommandDispatcher.declareCommand(this, 'subview-changed', this._cmdSubviewChanged);
+            if (this._options.dialogMode) {
+               CommandDispatcher.declareCommand(this, 'complete', this._cmdComplete);
+            }
             //CommandDispatcher.declareCommand(this, 'showMessage', Area.showMessage);
             this._publish('onComplete', 'onFatalError');
          },

@@ -345,6 +345,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                }*/
             }
             var componentOptions = {
+               dialogMode: true,
                title: options.title,
                applyButtonTitle: options.applyButtonTitle,
                allSheetsTitle: options.allSheetsTitle,
