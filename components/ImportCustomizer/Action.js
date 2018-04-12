@@ -184,24 +184,6 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           * @param {object} options Входные аргументы("мета-данные") настройщика импорта (согласно описанию в методе {@link execute})
           */
          _open: function (options) {
-            var optionNames = [
-               'dialogTitle',
-               'dialogButtonTitle',
-               'allSheetsTitle',
-               'bindingColumnCaption',
-               'bindingColumnTitle',
-               'dataType',
-               'file',
-               'baseParamsComponent',
-               'baseParams',
-               'parsers',
-               'fields',
-               'sheets',
-               'sheetIndex',
-               'sameSheetConfigs',
-               'mapping',
-               'validators'
-            ];
             var componentOptions = {
                dialogMode: true,
                handlers: {
@@ -210,7 +192,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                }
             };
             var defaults = this._options;
-            optionNames.forEach(function (name) {
+            Area.getOwnOptionNames().forEach(function (name) {
                var value = options[name];
                componentOptions[name] = value !=/*Не !==*/ null ? value : defaults[name];
             });
@@ -220,18 +202,6 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                err.name = 'NotSupportedDataType';
                this._completeWithError(true, err);
                return;
-            }
-            // В поле "fields" может быть указан вызов удалённого метода {@link ImportRemoteCall}
-            // Прочие проверки будут произведены в Area
-            var fields = componentOptions.fields;
-            if (fields && typeof fields === 'object' && !(fields instanceof Deferred)) {
-               var fieldsCall;
-               try { fieldsCall = new RemoteCall(fields); } catch (ex) {}
-               if (fieldsCall) {
-                  // Если это действительно {@link ImportRemoteCall}, то вызвать метод удалённого сервиса для получения списка полей
-                  componentOptions.fields = fieldsCall.call(componentOptions);
-                  // TODO: Рассмотреть перенос в Area тоже (так как опции ещё не проверены)
-               }
             }
             this._areaContainer = new FloatArea({
                opener: this,

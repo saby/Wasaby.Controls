@@ -12,6 +12,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
       'Core/Deferred',
       //'Core/IoC',
       'SBIS3.CONTROLS/CompoundControl',
+      'SBIS3.CONTROLS/ImportCustomizer/RemoteCall',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
       'WS.Data/Collection/RecordSet',
       'WS.Data/Type/descriptor',
@@ -23,10 +24,20 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
       'SBIS3.CONTROLS/ScrollContainer'
    ],
 
-   function (CommandDispatcher, cMerge, Deferred, /*IoC,*/ CompoundControl, InformationPopupManager, RecordSet, DataType, dotTplFn) {
+   function (CommandDispatcher, cMerge, Deferred, /*IoC,*/ CompoundControl, RemoteCall, InformationPopupManager, RecordSet, DataType, dotTplFn) {
       'use strict';
 
       var Area = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ImportCustomizer/Area.prototype*/ {
+
+         /**
+          * @typedef {object} ImportRemoteCall Тип, содержащий информацию для вызова удалённого сервиса для получения данных ввода или отправки данных вывода. Соответствует вспомогательному классу {@link SBIS3.CONTROLS/ImportCustomizer/RemoteCall}
+          * @property {string} endpoint Сервис, метод которого будет вызван
+          * @property {string} method Имя вызываемого метода
+          * @property {string} [idProperty] Имя свойства, в котором находится идентификатор (опционально, если вызову это не потребуется)
+          * @property {object} [args] Аргументы вызываемого метода (опционально)
+          * @property {function(object):object} [argsFilter] Фильтр аргументов (опционально)
+          * @property {function(object):object} [resultFilter] Фильтр результатов (опционально)
+          */
 
          /**
           * @typedef {object} ImportFile Тип, содержащий информацию об импортируемом файле
@@ -151,7 +162,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                 */
                parsers: null,
                /**
-                * @cfg {ImportTargetFields|Core/Deferred<ImportTargetFields>} Полный набор полей, к которым должны быть привязаны импортируемые данные
+                * @cfg {ImportTargetFields|Core/Deferred<ImportTargetFields>|ImportRemoteCall} Полный набор полей, к которым должны быть привязаны импортируемые данные
                 */
                fields: null,
                /**
@@ -238,9 +249,20 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                options._mapperVariants = mapping.variants;
                options._mapperAccordances = mapping.accordances;
             }
+            // Если в опции "fields" нет явных данных типа {@link ImportTargetFields}, то выявить обещание this._fieldsPromise, а опцию сбросить
             var fields = options.fields;
+            var promise;
             if (fields instanceof Deferred) {
-               this._fieldsPromise = fields;
+               promise = fields;
+            }
+            else {
+               var call = _validateImportRemoteCall(fields, true);
+               if (call instanceof RemoteCall) {
+                  promise = call.call(Area.getOwnOptionNames().reduce(function (r, v) { r[v] = options[v]; return r; }, {}));
+               }
+            }
+            if (promise) {
+               this._fieldsPromise = promise;
                options.fields = null;
             }
             return options;
@@ -814,6 +836,34 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
       };
 
       /**
+       * Получить список имён всех собственных опций компонента
+       *
+       * @public
+       * @static
+       * @return {Array<string>}
+       */
+      Area.getOwnOptionNames = function () {
+         return [
+            'dialogTitle',
+            'dialogButtonTitle',
+            'allSheetsTitle',
+            'bindingColumnCaption',
+            'bindingColumnTitle',
+            'dataType',
+            'file',
+            'baseParamsComponent',
+            'baseParams',
+            'parsers',
+            'fields',
+            'sheets',
+            'sheetIndex',
+            'sameSheetConfigs',
+            'mapping',
+            'validators'
+         ];
+      };
+
+      /**
        * Получить проверочную информацию о типах данных опций
        *
        * @public
@@ -869,8 +919,19 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                return parsers;
             },
             fields: function (fields) {
-               // Должна быть опция "fields" и являтся либо экземпляром Deferred, либо иметь тип ImportTargetFields
-               return fields instanceof Deferred ? fields : _validateImportTargetFields(fields);
+               // Должна быть опция "fields" и являться либо экземпляром Deferred, либо иметь тип ImportTargetFields, либо иметь тип ImportRemoteCall
+               if (!fields || typeof fields !== 'object') {
+                  return new Error('Option "fields" must be an object');
+               }
+               if (fields instanceof Deferred) {
+                  return fields;
+               }
+               var err1 = _validateImportTargetFields(fields);
+               if (!(err1 instanceof Error)) {
+                  return fields;
+               }
+               var err2 = _validateImportRemoteCall(fields);
+               return err2 instanceof Error ? new Error('Option "fields" must be an ImportTargetFields or ImportRemoteCall or Core/Deferred') : fields;
             },
             sheets: function (sheets) {
                // Для типа данных EXCEL или DBF должна быть опция "sheets" и быть не пустым массивом
@@ -971,6 +1032,25 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
       };
 
       /**
+       * Проверить, соответствует ли аргумент определению типа {@link ImportRemoteCall}
+       *
+       * @private
+       * @param {*} fields Аргумент
+       * @param {boolean} normalize В случае успеха возвращать экземпляр SBIS3.CONTROLS/ImportCustomizer/RemoteCall
+       * @return {Error|*}
+       */
+      var _validateImportRemoteCall = function (call, normalize) {
+         // Значение должно быть объектом
+         if (!call || typeof call !== 'object') {
+            return new Error('Object required');
+         }
+         // Если получится создать экземпляр RemoteCall - значит это {@link ImportRemoteCall}
+         var instance, err;
+         try { instance = new RemoteCall(call); } catch (ex) { err = ex; }
+         return err || (normalize ? instance : call);
+      };
+
+      /**
        * Проверить, соответствует ли аргумент определению типа {@link ImportTargetFields}
        *
        * @private
@@ -980,7 +1060,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
       var _validateImportTargetFields = function (fields) {
          // Значение должно быть объектом
          if (!fields || typeof fields !== 'object') {
-            return new Error('Wrong fields');
+            return new Error('Object required');
          }
          var items = fields.items;
          // Должно иметь свойство "items", являющееся рекордсетом или массивом объектов
