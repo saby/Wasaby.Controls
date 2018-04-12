@@ -1376,7 +1376,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
          // Переключение пользовательского формата у блока
          toggleStyle: function(style) {
-            this.setActive(true);
+            if (!this.isActive()) {
+               this.setActive(true);
+            }
             this._tinyEditor.formatter.toggle(style);
          },
 
