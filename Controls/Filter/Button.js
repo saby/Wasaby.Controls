@@ -105,7 +105,7 @@ define('Controls/Filter/Button',
             }
          },
 
-         _notifyFilter: function (event, filter) {
+         _notifyFilter: function(event, filter) {
             this._notify('filterChanged', [filter]);
             this._children.filterStickyOpener.close();
          }
