@@ -6,8 +6,8 @@ define('SBIS3.CONTROLS/Filter/Button/LinkSelector',
       'Lib/Control/CompoundControl/CompoundControl',
       'tmpl!SBIS3.CONTROLS/Filter/Button/LinkSelector/LinkSelector',
       'WS.Data/Chain',
-      "SBIS3.CONTROLS/Link",
-      "SBIS3.CONTROLS/Action/SelectorAction"
+      'SBIS3.CONTROLS/Link',
+      'SBIS3.CONTROLS/Action/SelectorAction'
    ], function(CompoundControl, template, Chain) {
       'use strict';
       
@@ -25,6 +25,7 @@ define('SBIS3.CONTROLS/Filter/Button/LinkSelector',
          _dotTplFn: template,
          $protected: {
             _options: {
+
                /**
                 * @cfg {boolean} Инвертированное значение опции visible.
                 * Если значение false - компонент отображается, если значение true - компонент скрыт.
@@ -32,6 +33,7 @@ define('SBIS3.CONTROLS/Filter/Button/LinkSelector',
                 * @see getInvertedVisible
                 */
                invertedVisible: false,
+
                /**
                 * @cfg {String} Устанавливает надпись на кнопке.
                 * @example
@@ -43,6 +45,7 @@ define('SBIS3.CONTROLS/Filter/Button/LinkSelector',
                 * @see getCaption
                 */
                caption: '',
+
                /**
                 * @typedef {Array} dictionaries
                 * @property {String} template Шаблон справочника. В качестве значения передают имя компонента.
@@ -62,6 +65,7 @@ define('SBIS3.CONTROLS/Filter/Button/LinkSelector',
                 * </pre>
                 */
                dictionaries: [],
+
                /**
                 * @cfg {String[]} Устанавливает массив идентификаторов, по которым будет установлен набор выбранных элементов коллекции.
                 * @remark
@@ -81,6 +85,14 @@ define('SBIS3.CONTROLS/Filter/Button/LinkSelector',
                 * @see getSelectedKeys
                 */
                selectedKeys: [],
+
+               /**
+                * @cfg {Object} Устанавливает рекордсет, по которому будет установлен набор выбранных элементов коллекции.
+                * @see setSelectedItems
+                * @see getSelectedItems
+                */
+               selectedItems: [],
+
                /**
                 * @cfg {String} Устанавливает поле элемента коллекции, которое является идентификатором записи.
                 * @remark
@@ -91,12 +103,14 @@ define('SBIS3.CONTROLS/Filter/Button/LinkSelector',
                 * </pre>
                 */
                idProperty: '',
+
                /**
                 * @cfg {String} Устанавливает режим открытия компонента выбора.
                 * @variant dialog Открытие производится в новом диалоговом окне.
                 * @variant floatArea Открытие производится на всплывающей панели.
                 */
                selectMode: 'floatArea',
+
                /**
                 * @cfg {Boolean} Устанавливает режим множественного выбора элементов коллекции.
                 * * true Режим множественного выбора элементов коллекции установлен.
@@ -113,8 +127,9 @@ define('SBIS3.CONTROLS/Filter/Button/LinkSelector',
          },
          _modifyOptions: function() {
             var opts = LinkSelector.superclass._modifyOptions.apply(this, arguments);
+
             /* Если invertedVisible выставлена, то компонент должен быть скрыт */
-            if(opts.invertedVisible) {
+            if (opts.invertedVisible) {
                opts.visible = false;
             }
             return opts;
@@ -124,7 +139,7 @@ define('SBIS3.CONTROLS/Filter/Button/LinkSelector',
             LinkSelector.superclass.init.call(this);
             
             var self = this,
-                selectorAction = self.getChildControlByName('linkSelector.selectorAction');
+               selectorAction = self.getChildControlByName('linkSelector.selectorAction');
             
             self.subscribeTo(this.getChildControlByName('linkSelector.link'), 'onActivated', function() {
                var selectorActionConfig = self._options.dictionaries[0];
@@ -140,6 +155,7 @@ define('SBIS3.CONTROLS/Filter/Button/LinkSelector',
                   }, []);
                   
                   self.setSelectedKeys(keys);
+                  self.setSelectedItems(result);
                   if (keys.length && !!self._options.command) {
                      var args = [self._options.command].concat(self._options.commandArgs);
                      self.sendCommand.apply(self, args);
@@ -157,6 +173,15 @@ define('SBIS3.CONTROLS/Filter/Button/LinkSelector',
          setSelectedKeys: function(keys) {
             this._options.selectedKeys = keys;
             this._notifyOnPropertyChanged('selectedKeys');
+         },
+
+         getSelectedItems: function() {
+            return this._options.selectedItems;
+         },
+
+         setSelectedItems: function(items) {
+            this._options.selectedItems = items;
+            this._notifyOnPropertyChanged('selectedItems');
          },
    
          //endregion multiSelectable
