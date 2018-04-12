@@ -19,11 +19,15 @@ define('SBIS3.CONTROLS/StylesPanelNew', [
    var StylesPanel = StylesPalette.extend([PopupMixin], /** @lends SBIS3.CONTROLS/StylesPanelNew.prototype */ {
       $protected: {
          _options: {
-            addingClass: 'controls-StylesPanelNew',
             closeButton: true,
             closeByExternalClick: true
          },
          _pickerOpenHandler: undefined
+      },
+      _modifyOptions : function() {
+         var opts = StylesPanel.superclass._modifyOptions.apply(this, arguments);
+         opts.cssClassName += ' controls-StylesPanelNew';
+         return opts;
       },
       $constructor: function () {
          if (this._options.paletteRenderStyle) {
