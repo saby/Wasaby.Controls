@@ -40,9 +40,9 @@ define('Controls/Button', [
    /**
     * @name Controls/Button#size
     * @cfg {String} Size of Button.
-    * @variant s Button has s size. Not supported by these button styles: buttonPrimary, buttonDefault, buttonAdd.
+    * @variant s Button has s size. Not supported by these button styles: buttonPrimary, buttonDefault, buttonAdd, iconButtonBordered.
     * @variant m Button has m size.
-    * @variant l Button has l size. Not supported by these button styles: iconButtonBordered.
+    * @variant l Button has l size.
     * @variant xl Button has xl size. Not supported by these button styles: buttonPrimary, buttonDefault, buttonAdd, iconButtonBordered.
     */
 
