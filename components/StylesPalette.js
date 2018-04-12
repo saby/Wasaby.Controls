@@ -420,17 +420,22 @@ define('SBIS3.CONTROLS/StylesPalette', [
       },
 
       _historyInit: function() {
+         var self = this;
+
          this._historyController = new HistoryController({
             historyId: this._options.historyId
          });
-         this._history = this._historyController.getHistory();
 
-         if (this._history) {
-            this._presetView.setItems(this._prepareItems(this._history));
-         } else {
-            this._history = [];
-            this._presetView.toggle();
-         }
+         this._historyController.getHistory(true).addCallback(function(history) {
+            self._history = history;
+
+            if (self._history) {
+               self._presetView.setItems(self._prepareItems(self._history));
+            } else {
+               self._history = [];
+               self._presetView.toggle();
+            }
+         });
       },
 
       /* собирает строку css стилей из текущего  */
