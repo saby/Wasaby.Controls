@@ -135,27 +135,58 @@ define('Controls/Input/Number/ViewModel',
             var
                shift = 0;
 
-               //Если был удалён пробел, то нужно удалить цифру слева от него и сдвинуть курсор на единицу влево
-            if (splitValue.delete === ' ') {
-               if (inputType === 'deleteForward') {
-                  splitValue.after = splitValue.after.substr(1, splitValue.after.length);
-               } else if (inputType === 'deleteBackward') {
-                  splitValue.before = splitValue.before.substr(0, splitValue.before.length - 1);
-                  shift = -1;
-               }
-            }
-
             //Если по ошибке вместо точки ввели запятую или "б"  или "ю", то выполним замену
             splitValue.insert = splitValue.insert.toLowerCase().replace(/,|б|ю/, '.');
 
-            //Если в начале строки ввода точка, а до неё ничего нет, то предполагаем что хотят видеть '0.'
-            if (splitValue.insert[0] === '.' && !splitValue.before) {
-               splitValue.before = '0';
-            }
-
-            //Если валидация не прошла, то не даем ничего ввести
-            if (!_private.validate(_private.getClearValue(splitValue), this._options.onlyPositive, this._options.integersLength, this._options.precision)) {
+            if (splitValue.insert === '.' && splitValue.before.indexOf('.') === -1 && splitValue.after.indexOf('.') !== -1) {
                splitValue.insert = '';
+               shift += splitValue.after.indexOf('.') + 1;
+            } else {
+               //Если ввели минус, а перед ним строка '0', то нужно переместить его в начало
+               if (splitValue.insert === '-' && splitValue.before === '0') {
+                  if (!this._options.onlyPositive) {
+                     splitValue.before = '-0';
+                  }
+               } else if (splitValue.before === '0') {
+                  //Если в before лежит строка '0', то её нужно удалить
+                  splitValue.before = '';
+               } else if (splitValue.before === '-0') {
+                  //Если в before лежит строка '-0', то нужно оставить только '-'
+                  splitValue.before = '-';
+               }
+
+               //Если удаляем последний символ слева, то нужно установить туда '0'
+               if (splitValue.delete !== '' && (splitValue.before === '' || splitValue.before === '-')) {
+                  splitValue.before = '0';
+               }
+
+               //Если был удалён пробел, то нужно удалить цифру слева от него и сдвинуть курсор на единицу влево
+               if (splitValue.delete === ' ') {
+                  if (inputType === 'deleteForward') {
+                     splitValue.after = splitValue.after.substr(1, splitValue.after.length);
+                  } else if (inputType === 'deleteBackward') {
+                     splitValue.before = splitValue.before.substr(0, splitValue.before.length - 1);
+                     shift = -1;
+                  }
+               }
+
+               //Если в начале строки ввода точка, а до неё ничего нет, то предполагаем что хотят видеть '0.'
+               if (splitValue.insert[0] === '.' && !splitValue.before) {
+                  splitValue.before = '0';
+               }
+
+               //Если валидация не прошла, то не даем ничего ввести
+               if (!_private.validate(_private.getClearValue(splitValue), this._options.onlyPositive, this._options.integersLength, this._options.precision)) {
+                  //Если превысили максимальное количество в целой части, то перепрыгнем через точку и начнём ввод дробной
+                  if (!_private.validators.maxIntegersLength(_private.getClearValue(splitValue), this._options.integersLength)) {
+                     if (splitValue.after[0] === '.') {
+                        shift += 2;
+                        splitValue.after = splitValue.after.substring(0, 1) + splitValue.insert + splitValue.after.substring(2, splitValue.after.length);
+                     }
+                  }
+
+                  splitValue.insert = '';
+               }
             }
 
             this._options.value = _private.getClearValue(splitValue);
@@ -176,19 +207,20 @@ define('Controls/Input/Number/ViewModel',
          },
 
          getValue: function() {
-            var numValue = parseFloat(this._options.value);
-
-            // Can be NaN if value is '-' or 'undefined'
-            return isNaN(numValue) ? undefined : numValue;
+            return this._options.value;
          },
 
          updateOptions: function(options) {
             this._options.onlyPositive = options.onlyPositive;
             this._options.integersLength = options.integersLength;
             this._options.precision = options.precision;
-            if (!isNaN(parseFloat(this._options.value)) && parseFloat(this._options.value) !== options.value) {
-               this._options.value = options.value !== undefined ? String(options.value) : '';
+            if (String(parseFloat(this._options.value)) !== options.value) {
+               this._options.value = options.value;
             }
+         },
+
+         updateValue: function(value) {
+            this._options.value = value;
          }
       });
 
