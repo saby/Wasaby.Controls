@@ -10,9 +10,9 @@ define('Controls/Filter/Button',
       'WS.Data/Utils',
       'css!Controls/Filter/Button/Button'
    ],
-   
+
    function(Control, template, moduleStubs, Chain, Utils) {
-      
+
       /**
        * @class Controls/Filter/Button
        * @extends Controls/Control
@@ -82,7 +82,7 @@ define('Controls/Filter/Button',
                panelOpener.clearFilter();
             });
          },
-   
+
          _openFilterPanel: function() {
             if (!this._options.readOnly) {
                /* if template - show old component */

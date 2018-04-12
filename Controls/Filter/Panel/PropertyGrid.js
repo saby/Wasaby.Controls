@@ -5,9 +5,8 @@ define('Controls/Filter/Panel/PropertyGrid', [
    'tmpl!Controls/Filter/Panel/PropertyGrid/PropertyGrid',
    'Controls/Filter/Panel/Editor/Boolean',
    'Controls/Filter/Panel/Editor/Text',
-   'Controls/Filter/Panel/Editor/Keys'
-
-   // 'css!Controls/Filter/Panel/Panel'
+   'Controls/Filter/Panel/Editor/Keys',
+   'css!Controls/Filter/Panel/PropertyGrid/PropertyGrid'
 ], function(Control, Chain, isEqual, template) {
 
    'use strict';
@@ -17,13 +16,6 @@ define('Controls/Filter/Panel/PropertyGrid', [
 
       _beforeMount: function(opts) {
          this.items = opts.items;
-      },
-
-      _beforeUpdate: function(newOptions) {
-         if (!isEqual(this.items, newOptions.items)) {
-            this.items = newOptions.items;
-            this._forceUpdate();
-         }
       }
 
    });
