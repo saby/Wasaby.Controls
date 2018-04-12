@@ -55,6 +55,15 @@ define('Controls/Button', [
     * @name Controls/Button#icon
     * @cfg {String} Icon of Button.
     */
+
+   /**
+    * @name Controls/Button#iconStyle
+    * @cfg {String} Displaying icon style.
+    * @variant default Icon has default display style in this type of button.
+    * @variant attention Icon has attention display style.
+    * @variant error Icon has error display style.
+    * @variant done Icon has done icon style.
+    */
    var _private = {
       cssStyleGeneration: function(self, options) {
          var currentButtonClass = Classes.getCurrentButtonClass(options.style);
