@@ -13,7 +13,8 @@ define('Controls-demo/Input/Number', [
       _tagStyle: '',
       _integersLength: 5,
       _precision: 2,
-      _onlyPositive: true,
+      _onlyPositive: false,
+      _showEmptyDecimals: false,
       _enabled: true
    });
 
