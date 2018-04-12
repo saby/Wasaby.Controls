@@ -81,7 +81,7 @@ define('SBIS3.CONTROLS/Mixins/hierarchyMixin', [
              *    <li>all - будут отображаться узлы (папки) и их содержимое - элементы коллекции, сгруппированные по этим узлам.</li>
              * </ul>
              *
-             * Подробное описание иерархической структуры приведено в документе {@link /doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy Типы отношений в таблицах БД}.
+             * Подробное описание иерархической структуры приведено в документе {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy Типы отношений в таблицах БД}.
              * @example
              * Устанавливаем режим полного отображения данных: будут отображены элементы коллекции и папки, по которым сгруппированы эти элементы.
              * <pre class="brush:xml">
