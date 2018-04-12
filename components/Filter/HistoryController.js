@@ -72,8 +72,11 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
           $constructor: function() {
              /* Делаем клон, т.к. сериализация производится один раз, и создаётся лишь один экземпляр объекта,
                 и его портить нельзя */
-             this._listHistory = new List({items: coreClone(this.getHistory()) || []});
-             this._prepareListHistory();
+             var self = this;
+             self.getHistory(true).addCallback(function(history) {
+                self._listHistory = new List({items: coreClone(history) || []});
+                self._prepareListHistory();
+             });
              this._changeHistoryFnc = this._changeHistoryHandler.bind(this);
              this._applyHandlerDebounced = debounce.call(forAliveOnly(this._onApplyFilterHandler, this)).bind(this);
 
