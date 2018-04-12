@@ -7,14 +7,7 @@ define('Controls/Button', [
    'use strict';
 
    /**
-	* Набор базовых компонентов VDOM.
-	* @namespace Controls
-	* @public
-	* @author Крайнов Д.
-	*/
-
-   /**
-    * Кнопка
+    * Button
     * @class Controls/Button
     * @extends Controls/Control
     * @mixes Controls/Button/interface/IHref
@@ -28,11 +21,39 @@ define('Controls/Button', [
     */
 
    /**
-    * @name Controls/Button#type
-    * @cfg {String} Внешний вид кнопки
-    * @variant standard Стандартная кнопка
-    * @variant link Кнопка ссылка
-    * @variant flat Кнопка без контура
+    * @name Controls/Button#style
+    * @cfg {String} Display style of button.
+    * @variant iconButtonBordered Button display as icon with border.
+    * @variant linkMain Button display as main link style.
+    * @variant linkMain2 Button display as first nonaccent link style.
+    * @variant linkMain3 Button display as second nonaccent link style.
+    * @variant linkAdditional Button display as third nonaccent link style.
+    * @variant linkAdditional2 Button display as first accent link style.
+    * @variant linkAdditional3 Button display as second accent link style.
+    * @variant linkAdditional4 Button display as third accent link style.
+    * @variant linkAdditional5 Button display as fourth accent link style.
+    * @variant buttonPrimary Button display as primary contour button style.
+    * @variant buttonDefault Button display as default contour button style.
+    * @variant buttonAdd Button display as button with icon add style.
+    */
+
+   /**
+    * @name Controls/Button#size
+    * @cfg {String} Size of Button.
+    * @variant s Button has s size.
+    * @variant m Button has m size.
+    * @variant l Button has l size.
+    * @variant xl Button has xl size.
+    */
+
+   /**
+    * @name Controls/Button#caption
+    * @cfg {String} Caption of Button.
+    */
+
+   /**
+    * @name Controls/Button#icon
+    * @cfg {String} Icon of Button. 
     */
    var _private = {
       cssStyleGeneration: function(self, options) {
@@ -67,7 +88,7 @@ define('Controls/Button', [
    Button.getDefaultOptions = function() {
       return {
          style: 'buttonDefault',
-         size: 'default',
+         size: 'm',
          iconStyle: 'default'
       };
    };
