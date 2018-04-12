@@ -108,24 +108,6 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
          //_dotTplFn: null,
          $protected: {
             _options: {
-               /**
-                * @cfg {object<ImportParser>} Список доступных провайдеров парсинга импортируемых данных
-                */
-               parsers: {
-                  // TODO: Обдумать добавление поля applicable:Array<string> для указания типов данных
-                  'InColumsHierarchyParser': {title:rk('в отдельной колонке', 'НастройщикИмпорта'), component:'SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View', order:10},
-                  'InLineGroupsHierarchyParser': {title:rk('в группировке строк', 'НастройщикИмпорта'), order:20},
-                  'InSeparateLineHierarchyParser': {title:rk('в отдельной строке', 'НастройщикИмпорта'), order:30}
-               },
-               /**
-                * @cfg {Array<ImportValidator>} Список валидаторов результатов редактирования
-                */
-               validators: [
-                  {
-                     validator: function (data, optionGetter) { return data.dataType === 'cml' || data.sheets.every(function (sheet) { return !!sheet.columns.length; }); },
-                     errorMessage: rk('Не установлено соответсвие между колонками и полями', 'НастройщикИмпорта')
-                  }
-               ]
             },
             _result: null,
             _resultHandler: null
@@ -299,7 +281,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
             }
             var defaults = this._options;
             if (parsers) {
-               // Поскольку уже есть набор парсеров по-умолчанию, то в объекте parsers могут содержаться только поправки, значит нужно слить их,
+               // Поскольку уже есть набор парсеров по умолчанию, то в объекте parsers могут содержаться только поправки, значит нужно слить их,
                // прежде чем проверять
                parsers = cMerge(cMerge({}, defaults.parsers), parsers);
                for (var name in parsers) {
@@ -316,7 +298,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                }
             }
             if (validators) {
-               // Поскольку уже есть набор валидаторов по-умолчанию, то нужно слить их, прежде чем проверять
+               // Поскольку уже есть набор валидаторов по умолчанию, то нужно слить их, прежде чем проверять
                validators = defaults.validators.concat(validators);
                // И каждый элемент массива должен быть {@link ImportValidator}
                if (!validators.every(function (v) { return (

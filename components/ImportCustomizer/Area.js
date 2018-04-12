@@ -153,7 +153,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                /**
                 * @cfg {object<ImportParser>} Список всех доступных провайдеров парсинга импортируемых данных
                 */
-               parsers: {},
+               parsers: null,
                /**
                 * @cfg {ImportTargetFields|Core/Deferred<ImportTargetFields>} Полный набор полей, к которым должны быть привязаны импортируемые данные
                 */
@@ -205,6 +205,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
 
          _modifyOptions: function () {
             var options = Area.superclass._modifyOptions.apply(this, arguments);
+            this._resolveOptions(options);
             this._validateOptions(options);
             options._isNeeds = this._getSubviewUsings(options);
             var sheets = options.sheets;
@@ -249,6 +250,15 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             return options;
          },
 
+         _resolveOptions: function (options) {
+            var defaultOptions = Area.getDefaultOptions();
+            for (var name in defaultOptions) {
+               if (options[name] ==/*Не ===*/ null) {
+                  options[name] = defaultOptions[name];
+               }
+            }
+         },
+
          _validateOptions: function (options) {
             var typeValidators = Area.getOptionTypes();
             if (typeValidators) {
@@ -262,7 +272,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                }
                else
                if (dataType === Area.DATA_TYPE_CML) {
-                  skip.push('allSheetsTitle', 'bindingColumnCaption', 'bindingColumnTitle', 'sheets', 'sheetIndex', 'sameSheetConfigs');
+                  skip.push('allSheetsTitle', 'bindingColumnCaption', 'bindingColumnTitle', 'parsers', 'sheets', 'sheetIndex', 'sameSheetConfigs');
                }
                for (name in typeValidators) {
                   if (!skip.length || skip.indexOf(name) === -1) {
@@ -774,6 +784,30 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
       // Public static methods:
 
       /**
+       * Получить опции по умолчанию
+       *
+       * @public
+       * @static
+       * @return {object}
+       */
+      Area.getDefaultOptions = function () {
+         return {
+            parsers: {
+               // TODO: Обдумать добавление поля applicable:Array<string> для указания типов данных (Excel или DBF)
+               'InColumsHierarchyParser': {title:rk('в отдельной колонке', 'НастройщикИмпорта'), component:'SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View', order:10},
+               'InLineGroupsHierarchyParser': {title:rk('в группировке строк', 'НастройщикИмпорта'), order:20},
+               'InSeparateLineHierarchyParser': {title:rk('в отдельной строке', 'НастройщикИмпорта'), order:30}
+            },
+            validators: [
+               {
+                  validator: function (data, optionGetter) { return data.dataType === 'cml' || data.sheets.every(function (sheet) { return !!sheet.columns.length; }); },
+                  errorMessage: rk('Не установлено соответсвие между колонками и полями', 'НастройщикИмпорта')
+               }
+            ]
+         };
+      };
+
+      /**
        * Получить проверочную информацию о типах данных опций
        *
        * @public
@@ -810,8 +844,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             baseParamsComponent: typeIfDefined.bind(null, 'string', 'baseParamsComponent'),
             baseParams: typeIfDefined.bind(null, 'object', 'baseParams'),
             parsers: function (parsers) {
-               // Если есть опция "parsers" - то она должно быть объектом
-               if (parsers && typeof parsers !== 'object') {
+               // Должна быть опция "parsers" и она должна быть объектом
+               if (!parsers || typeof parsers !== 'object') {
                   throw new Error('Wrong option "parsers"');
                }
                for (var name in parsers) {
@@ -867,15 +901,17 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                if (validators && !Array.isArray(validators)) {
                   return new Error('Wrong validators');
                }
-               // И каждый элемент массива должен быть {@link ImportValidator}
-               if (!validators.every(function (v) { return (
-                     typeof v === 'object' &&
-                     (v.validator && typeof v.validator === 'function') &&
-                     (!v.params || Array.isArray(params)) &&
-                     (!v.errorMessage || typeof v.errorMessage === 'string') &&
-                     (!v.noFailOnError || typeof v.noFailOnError === 'boolean')
-                  ); })) {
-                  return new Error('Wrong validators items');
+               if (validators) {
+                  // И каждый элемент массива должен быть {@link ImportValidator}
+                  if (!validators.every(function (v) { return (
+                        typeof v === 'object' &&
+                        (v.validator && typeof v.validator === 'function') &&
+                        (!v.params || Array.isArray(params)) &&
+                        (!v.errorMessage || typeof v.errorMessage === 'string') &&
+                        (!v.noFailOnError || typeof v.noFailOnError === 'boolean')
+                     ); })) {
+                     return new Error('Wrong validators items');
+                  }
                }
                return validators;
             }
