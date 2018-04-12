@@ -5,7 +5,7 @@ import detection = require('Core/detection');
  * @class File/BlobDownloader
  * @public
  * @author Ибрагимов А.А
- * @description Компонент для инициализации загрузки Blob'a
+ * @description Компонент для загрузки Blob'a
  * @example
  * <pre>
  *    require(['File/BlobDownloader'], function(BlobDownloader) {

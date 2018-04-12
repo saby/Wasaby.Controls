@@ -1,16 +1,15 @@
 define("File/BlobDownloader", ["require", "exports", "Core/detection"], function (require, exports, detection) {
     "use strict";
     /**
-     * @class File/Downloader/Blob
+     * @class File/BlobDownloader
      * @public
      * @author Ибрагимов А.А
-     * @description Компонент для инициализации загрузки файла
-     * @remark Класс-обертка над {@link File/Downloader/URL}
+     * @description Компонент для загрузки Blob'a
      * @example
      * <pre>
-     *    require(['File/Downloader/Blob'], function(DownloaderFile) {
-     *       var file = new Blob(['<a id="a"><b id="b">hey!</b></a>'], {type : 'text/html'});
-     *       new DownloaderFile(file);
+     *    require(['File/BlobDownloader'], function(BlobDownloader) {
+     *       var blob = new Blob(['<a id="a"><b id="b">hey!</b></a>'], {type : 'text/html'});
+     *       new BlobDownloader(blob, 'index.html');
      *    });
      * </pre>
      */

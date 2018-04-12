@@ -10,7 +10,7 @@ define("File/Base64Blob", ["require", "exports", "File/BlobDownloader"], functio
      */
     var Base64File /** @lends Lib/File/Base64File.prototype*/ = /** @class */ (function () {
         /**
-         * @name File/Base64File
+         * @name File/Base64Blob
          * @constructor
          * @param {String} data Base64-строка
          * @param {String} [contentType='application/zip'] Тип файла
@@ -28,22 +28,16 @@ define("File/Base64Blob", ["require", "exports", "File/BlobDownloader"], functio
                 this.base64Data = data.substring(data.indexOf(',') + 1);
                 this.contentType = data.substring(data.indexOf(':') + 1, data.indexOf(';'));
             }
-            this.blob = this.getBlob();
+            this.blob = this.createBlob();
         }
         /**
-         * Конвертирует base64 строку в {@linkhttps://developer.mozilla.org/ru/docs/Web/API/Blob Blob} и возвращает его
+         * Возвращает {@link https://developer.mozilla.org/ru/docs/Web/API/Blob Blob}, созданный из base64-строки
          * @public
+         * @method
          * @returns {Blob} Объект Blob
          */
         Base64File.prototype.getBlob = function () {
-            var decodedChars = atob(this.base64Data);
-            var charCodes = new Array(decodedChars.length);
-            var bytesArray = [];
-            for (var i = 0; i < decodedChars.length; i++) {
-                charCodes[i] = decodedChars.charCodeAt(i);
-            }
-            bytesArray.push(new Uint8Array(charCodes));
-            return new Blob(bytesArray, { type: this.contentType });
+            return this.blob;
         };
         /**
          * @public
@@ -52,9 +46,9 @@ define("File/Base64Blob", ["require", "exports", "File/BlobDownloader"], functio
          * @description Начинает загрузку Blob'a
          * @example
          * <pre>
-         *    require(['File/Base64Blob'], function(Base64File) {
-         *       var data = "UGFjaWZpYyBSaW0=";
-         *       var blob = new Base64Blob(data);
+         *    require(['File/Base64Blob'], function(Base64Blob) {
+         *        var base64_data = "UGFjaWZpYyBSaW0=";
+         *        var blob = new Base64Blob(base64_data);
          *       blob.saveAs('secret.txt');
          *     });
          * </pre>
@@ -62,6 +56,21 @@ define("File/Base64Blob", ["require", "exports", "File/BlobDownloader"], functio
         Base64File.prototype.saveAs = function (name) {
             if (name === void 0) { name = 'unnamed.zip'; }
             new BlobDownloader(this.blob, name);
+        };
+        /**
+         * Конвертирует base64 строку в Blob и возвращает его
+         * @private
+         * @returns {Blob} Объект Blob
+         */
+        Base64File.prototype.createBlob = function () {
+            var decodedChars = atob(this.base64Data);
+            var charCodes = new Array(decodedChars.length);
+            var bytesArray = [];
+            for (var i = 0; i < decodedChars.length; i++) {
+                charCodes[i] = decodedChars.charCodeAt(i);
+            }
+            bytesArray.push(new Uint8Array(charCodes));
+            return new Blob(bytesArray, { type: this.contentType });
         };
         return Base64File;
     }());
