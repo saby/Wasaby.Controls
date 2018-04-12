@@ -64,7 +64,7 @@ define(
          fastDataItems._beforeMount(configWithItems);
 
          fastData._notify = (e, args) => {
-            if (e == 'selectedKeysChanged') {
+            if(e == 'selectedKeysChanged') {
                isSelected = true;
                selectedKey = args[0];
             } else {

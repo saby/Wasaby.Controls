@@ -28,7 +28,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
    'SBIS3.CONTROLS/WaitIndicator',
 
    'tmpl!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/RichTextAreaInner',
-   "css!SBIS3.CORE.RichContentStyles",
+   "css!WS/css/styles/RichContentStyles",
    "i18n!SBIS3.CONTROLS/RichEditor",
    'css!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/RichTextArea'
 ], function (
@@ -1460,12 +1460,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   return;
             }
             var size = constants.defaultImagePercentSize;
+            this._startWaitIndicator(rk('Загрузка изображения...'), 1000);
             this._makeImgPreviewerUrl(fileobj, size, null, false).addCallback(function (urls) {
                var uuid = fileobj.id;
                if (uuid) {
                   this._images[uuid] = false;
                }
-               this._insertImg(urls, size + '%', null, className, null, before, after, uuid);
+               this._insertImg(urls, size + '%', null, className, null, before, after, uuid)
+                  .addBoth(this._stopWaitIndicator.bind(this));
             }.bind(this));
          },
          codeSample: function(text, language) {
@@ -1606,7 +1608,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             $img.css(size);
             $img.attr('data-mce-style', css.join('; '));
             var prevSrc = $img.attr('src');
-            var promise = this._makeImgPreviewerUrl($img, 0 < width ? width : null, 0 < height ? height : null, isPixels);
+            var promise = this._makeImgPreviewerUrl({url:$img.attr('src')}, 0 < width ? width : null, 0 < height ? height : null, isPixels);
             return promise.addCallback(function (urls) {
                var url = urls.preview || urls.original;
                if (prevSrc !== url) {
@@ -2293,6 +2295,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                });
                this._imageOptionsPanel.subscribe('onImageChange', function(event, fileobj){
+                  self._startWaitIndicator(rk('Загрузка изображения...'), 1000);
                   var $img = this.getTarget();
                   //Сбросим ширину и высоту, т.к. они могут остаться от предыдущей картинки
                   $img[0].style.width = '';
@@ -2307,6 +2310,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      // TODO: 20170913 Также убрать атрибуты с uuid, как и в методе _insertImg
                      $img.attr('data-img-uuid', uuid);
                      $img.attr('alt', uuid);
+                     $img[0].onload = $img[0].onerror = self._stopWaitIndicator.bind(self);
                      self._tinyEditor.undoManager.add();
                      self._updateTextByTiny();
                      if (uuid) {
@@ -2382,7 +2386,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          /**
           * Создать урл изображения через previewer-сервис с необходимым масштабированием
           * @protected
-          * @param {jQuery|object} imgInfo Источник информации об изображении
+          * @param {object} imgInfo Информация об изображении (url, width, height, id?, filePath?)
           * @param {number} width Визуальная ширина изображения
           * @param {number} height Визуальная высота изображения
           * @param {boolean} isPixels Размеры указаны в пикселах (иначе в процентах)
@@ -2393,21 +2397,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                throw new Error('Size is not specified');
             }
             var promise = new Deferred();
-            var url;
-            // Либо это jQuery-оболочка над IMG
-            if (imgInfo.jquery) {
-               url = imgInfo.attr('src');
-               if (!/\/disk\/api\/v[0-9\.]+\//i.test(url)) {
-                  // Это не файл, хранящийся на СбисДиск, вернуть как есть
-                  promise.callback({preview:url, original:url});
-                  return promise;
-               }
-               url = url.replace(/^\/previewer(?:\/r\/[0-9]+\/[0-9]+)?/i, '');
+            var url = imgInfo.filePath || imgInfo.url;
+            if (!/\/disk\/api\/v[0-9\.]+\//i.test(url)) {
+               // Это не файл, хранящийся на СбисДиск, вернуть как есть
+               promise.callback({preview:url, original:url});
+               return promise;
             }
-            // Либо это fileobj из события загрузки файла
-            else {
-               url = (imgInfo.filePath || imgInfo.url);
-            }
+            url = url.replace(/^\/previewer(?:\/r\/[0-9]+\/[0-9]+)?/i, '');
             promise = promise.addCallback(function (size) {
                return {preview:size ? '/previewer' + '/r/' + size + '/' + size + url : null, original:url};
             });
@@ -2417,7 +2413,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   promise.callback(Math.round(width < height ? w*height/width : w));
                }
                else
-               if (!imgInfo.jquery && 0 < imgInfo.width && 0 < imgInfo.height) {
+               if (0 < imgInfo.width && 0 < imgInfo.height) {
                   promise.callback(Math.round(imgInfo.width < imgInfo.height ? w*imgInfo.height/imgInfo.width : w));
                }
                else {
@@ -2741,47 +2737,71 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             return this.getName().replace('/', '#') + 'ИсторияИзменений';
          },
 
+         /**
+          * Показать индикатор ожидания
+          * @protected
+          * @param {string} message Текст сообщения
+          * @param {string} [delay] Задержка перед началом показа индикатора (опционально)
+          */
+         _startWaitIndicator: function (message, delay) {
+            this._stopWaitIndicator();
+            this._waitIndicatorStopper = new Deferred();
+            WaitIndicator.make({
+               overlay: 'dark',
+               delay: 0 < delay ? delay : 0,
+               target: this,
+               message: message
+            }, this._waitIndicatorStopper);
+         },
+
+         /**
+          * Прекратить показ индикатор ожидания
+          * @protected
+          */
+         _stopWaitIndicator: function () {
+            var stopper = this._waitIndicatorStopper;
+            if (stopper && !stopper.isReady()) {
+               stopper.callback();
+            }
+            this._waitIndicatorStopper = null;
+         },
+
          _insertImg: function (urls, width, height, className, alt, before, after, uuid) {
-            var src = urls.preview ;
+            var src = urls.preview || urls.original;
             if (!src) {
                return this._showImgError();
             }
-            var stopper = new Deferred();
-            WaitIndicator.make({
-               overlay: 'dark',
-               delay: 1000,
-               target: this,
-               message: rk('Загрузка изображения...')
-            }, stopper);
             var promise = new Deferred();
+            var editor = this._tinyEditor;
             var img = new Image();
             img.onload = function () {
-               stopper.callback();
                // TODO: 20170913 Здесь в атрибуты, сохранность которых не гарантируется ввиду свободного редактирования пользователями, помещается значение uuid - Для обратной совместимости
                // После задач https://online.sbis.ru/opendoc.html?guid=6bb150eb-4973-4770-b7da-865789355916 и https://online.sbis.ru/opendoc.html?guid=a56c487d-6e1d-47bc-bdf6-06a0cd7aa57a
                // Убрать по мере переделки стороннего кода, используещего эти атрибуты.
                // Для пролучения uuid правильно использовать метод getImageUuid
+               var style = (width ? 'width:' + width + ';' : '') + (height ? 'height:' + height + ';' : '');
                this.insertHtml(
-                  (before || '') + '<img' +
+                  (before || '') +
+                  '<img' +
                   (className ? ' class="' + className + '"' : '') +
                   ' src="' + src + '"' +
-                  (width || height ? ' style="' + (width ? 'width:' + width + ';' : '') + (height ? 'height:' + height + ';' : '') + '"' : '') +
+                  (style ? ' style="' + style + '" data-mce-style="' + style + '"' : '') +
                   /*(alt ? ' alt="' + alt.replace('"', '&quot;') + '"' : '') +*/
                   ' data-img-uuid="' + uuid + '" alt="' + uuid + '"' +
-                  '></img>' + (after || '')
+                  '></img>' +
+                  (after || '')
                );
                promise.callback();
             }.bind(this);
             img.onerror = function () {
-               stopper.callback();
-               this._showImgError()
-                  .addCallback(promise.errback.bind(promise));
+               this._showImgError();//.addCallback(promise.errback.bind(promise))
+               promise.errback();
             }.bind(this);
             img.src = src;
             return promise;
          },
 
-         _showImgError: function (promise) {
+         _showImgError: function () {
             var promise = new Deferred();
             require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function (InformationPopupManager) {
                InformationPopupManager.showMessageDialog({

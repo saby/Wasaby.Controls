@@ -100,14 +100,3 @@
    .align-items(baseline);
    box-sizing: border-box;
 }
-
-//В IE будем показывать текст из fakeArea, так как иначе при быстром вводе textArea не успевает обновлять размеры и дергается
-// Демка: https://jsfiddle.net/85y2oj2s/1/
-.ws-is-ie {
-   .controls-InputArea__realField {
-      color: rgba(0, 0, 0, 0);
-   }
-   .controls-InputArea__fakeField {
-      visibility: visible;
-   }
-}

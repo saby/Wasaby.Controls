@@ -70,19 +70,18 @@ define('Controls/Popup/Manager/Popup',
                this._close();
             }
          },
-         _documentClickHandler: function(emitterEvent, event) {
-            if (this._options.closeByExternalClick && !event.target.closest('.controls-DropdownList__popup')) { //Если кликнули мимо меню - закрываемся
+         _popupClickHandler: function(event) {
+            //Не даем клику всплыть выше попапа. В этому случае событие не долетит до лисенера,
+            //который слушает клик по документу. В этом случае, если лисенер отловил событие, значит
+            //клик был сделан вне попапа.
+            event.stopPropagation();
+         },
+         _documentClickHandler: function() {
+            if (this._options.closeByExternalClick) {
                this._close();
             }
          }
       });
-
-      Popup.getDefaultOptions = function() {
-         return {
-            closeByExternalClick: true
-         };
-      };
-
       return Popup;
    }
 );
