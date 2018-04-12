@@ -37,7 +37,7 @@
                     </div>
                 </div>
                 <div if="{{ viewMode === 'twoColumns' && _hasHistory }}" class="controls__filterButton__area-secondColumn">
-                    <SBIS3.CONTROLS:Filter:History name="filterHistory" tabindex="0" historyId="{{ historyId }}"/>
+                    <SBIS3.CONTROLS:Filter:History name="filterHistory" tabindex="0" historyId="{{ historyId }}" filterStructure="{{ filterStructure }}"/>
                 </div>
             </div>
         </ws:content>
