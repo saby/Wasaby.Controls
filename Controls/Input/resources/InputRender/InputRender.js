@@ -60,14 +60,11 @@ define('Controls/Input/resources/InputRender/InputRender',
          
          _template: template,
 
-         constructor: function(options) {
-            InputRender.superclass.constructor.apply(this, arguments);
-
-         },
+         _oldValue: undefined,
 
          _inputHandler: function(e) {
             var
-               value = this._options.viewModel.getDisplayValue(),
+               value = this._oldValue || this._options.value,
                newValue = e.target.value,
                selection = _private.getSelection(this),
                position = _private.getTargetPosition(e.target),
@@ -91,7 +88,9 @@ define('Controls/Input/resources/InputRender/InputRender',
             _private.setTargetData(e.target, processedData);
             _private.saveSelection(this, e.target);
 
-            this._notify('valueChanged', [this._options.viewModel.getValue()]);
+            this._oldValue = processedData.value;
+
+            this._notify('valueChanged', [processedData.value]);
          },
 
          _keyUpHandler: function(e) {

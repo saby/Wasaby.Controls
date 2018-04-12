@@ -4,6 +4,7 @@ define('Controls/Input/Number', [
    'WS.Data/Type/descriptor',
    'Controls/Input/Number/ViewModel',
    'Controls/Input/resources/InputHelper',
+   'Core/helpers/Function/runDelayed',
 
    'Controls/Input/resources/InputRender/InputRender',
    'tmpl!Controls/Input/resources/input'
@@ -11,7 +12,8 @@ define('Controls/Input/Number', [
    template,
    types,
    NumberViewModel,
-   inputHelper) {
+   inputHelper,
+   runDelayed) {
 
    'use strict';
    var
@@ -69,6 +71,9 @@ define('Controls/Input/Number', [
 
       _caretPosition: null,
 
+      //Флаг того, что мы обновили значение вручную и в _beforeUpdate этого делать не нужно
+      _valueUpdated: false,
+
       constructor: function(options) {
          NumberInput.superclass.constructor.apply(this, arguments);
 
@@ -76,7 +81,7 @@ define('Controls/Input/Number', [
             onlyPositive: options.onlyPositive,
             integersLength: options.integersLength,
             precision: options.precision,
-            value: options.value
+            value: String(options.value)
          });
       },
 
@@ -85,19 +90,20 @@ define('Controls/Input/Number', [
             onlyPositive: newOptions.onlyPositive,
             integersLength: newOptions.integersLength,
             precision: newOptions.precision,
-            value: newOptions.value
+            value: this._valueUpdated ? this._numberViewModel.getValue() : String(newOptions.value)
          });
+         this._valueUpdated = false;
       },
 
       _afterUpdate: function(oldOptions) {
-         if ((oldOptions.value !== this._options.value) && this._caretPosition) {
+         if ((oldOptions.value !== this._numberViewModel.getValue()) && this._caretPosition) {
             this._children['input'].setSelectionRange(this._caretPosition, this._caretPosition);
             this._caretPosition = null;
          }
       },
 
       _inputCompletedHandler: function(event, value) {
-         this._notify('inputCompleted', [value]);
+         this._notify('inputCompleted', [this._getNumericValue(value)]);
       },
 
       _notifyHandler: function(event, value) {
@@ -105,17 +111,56 @@ define('Controls/Input/Number', [
       },
 
       _valueChangedHandler: function(e, value) {
-         if (this._options.value !== value) {
-            this._notify('valueChanged', [value]);
+         this._notify('valueChanged', [this._getNumericValue(value)]);
+      },
+
+      /**
+       * Transforms value with delimiters into number
+       * @param value
+       * @return {*}
+       * @private
+       */
+      _getNumericValue: function(value) {
+         var
+            val = parseFloat(value.replace(/ /g, ''));
+         return isNaN(val) ? undefined : val;
+      },
+
+      _focusinHandler: function() {
+         var
+            self = this;
+
+         //Если при фокусе поле пустое, то нужно вставить в него заглушку
+         if (this._numberViewModel.getValue() === '') {
+            if (this._options.showEmptyDecimals && this._options.precision) {
+               this._numberViewModel.updateValue('0.' + '0'.repeat(this._options.precision));
+            } else if (this._options.precision) {
+               this._numberViewModel.updateValue('0.0');
+            } else {
+               this._numberViewModel.updateValue('0');
+            }
+            this._valueUpdated = true;
+            runDelayed(function() {
+               self._children.input.setSelectionRange(1, 1);
+            });
+         } else if (this._numberViewModel.getValue().indexOf('.') === -1) {
+            this._numberViewModel.updateValue(this._numberViewModel.getValue() + '.0');
+            this._valueUpdated = true;
+            runDelayed(function() {
+               self._children.input.setSelectionRange(self._numberViewModel.getValue().length - 2, self._numberViewModel.getValue().length - 2);
+            });
          }
       },
 
       _focusoutHandler: function() {
-         if (!this._options.showEmptyDecimals) {
+         if (this._numberViewModel.getValue() === '0.0') {
+            this._numberViewModel.updateValue('');
+            this._valueUpdated = true;
+         } else if (!this._options.showEmptyDecimals) {
             var
                i,
                emptyCount = 0,
-               value = this._numberViewModel.getDisplayValue(),
+               value = this._numberViewModel.getValue(),
                processedValue;
 
             if (value.indexOf('.') !== -1) {
@@ -136,7 +181,8 @@ define('Controls/Input/Number', [
                      processedValue = processedValue.slice(0, -1);
                   }
 
-                  this._notify('valueChanged', [processedValue]);
+                  this._numberViewModel.updateValue(processedValue);
+                  this._valueUpdated = true;
                }
             }
          }
