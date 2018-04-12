@@ -147,7 +147,7 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
                                  return isEqualObject(elem.value, elem.resetValue) ? result : ++result;
                               }, 0),
                               reportItem, filterItems;
-
+   
                            /* Не сохраняем запись, если нет параметров для сохранения */
                            if(editableFieldsCount <= Object.keys(toSaveFields).length) {
                               record.acceptChanges(); // Чтобы formController не запустил обновление записи
