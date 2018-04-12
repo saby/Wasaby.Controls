@@ -40,7 +40,7 @@ define('Controls/Input/resources/SuggestView/SuggestView',
             var self = this;
             
             //loading showAll templates
-            moduleStubs.require(['Controls/Input/resources/SuggestShowAll/SuggestShowAll', 'Controls/Popup/DialogTemplate']).addCallback(function(res) {
+            moduleStubs.require(['Controls/Input/resources/SuggestShowAll/SuggestShowAll', 'Controls/Popup/Templates/Dialog/DialogTemplate']).addCallback(function(res) {
                self._options.showAllOpener.open(_private.getOptionsForShowAll(self));
                return res;
             });
