@@ -794,9 +794,10 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          return {
             parsers: {
                // TODO: Обдумать добавление поля applicable:Array<string> для указания типов данных (Excel или DBF)
-               'InColumsHierarchyParser': {title:rk('в отдельной колонке', 'НастройщикИмпорта'), component:'SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View', order:10},
-               'InLineGroupsHierarchyParser': {title:rk('в группировке строк', 'НастройщикИмпорта'), order:20},
-               'InSeparateLineHierarchyParser': {title:rk('в отдельной строке', 'НастройщикИмпорта'), order:30}
+               // TODO: Обдумать удаление поля order
+               'InColumsHierarchyParser': {title:rk('в отдельной колонке', 'НастройщикИмпорта'), order:10},
+               'InSeparateLineHierarchyParser': {title:rk('в отдельной строке', 'НастройщикИмпорта'), component:'SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View', order:20},
+               'InLineGroupsHierarchyParser': {title:rk('в группировке строк', 'НастройщикИмпорта'), order:30}
             },
             validators: [
                {
