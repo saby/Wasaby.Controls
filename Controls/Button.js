@@ -40,10 +40,10 @@ define('Controls/Button', [
    /**
     * @name Controls/Button#size
     * @cfg {String} Size of Button.
-    * @variant s Button has s size.
+    * @variant s Button has s size. Not supported by these button styles: buttonPrimary, buttonDefault, buttonAdd.
     * @variant m Button has m size.
-    * @variant l Button has l size.
-    * @variant xl Button has xl size.
+    * @variant l Button has l size. Not supported by these button styles: iconButtonBordered.
+    * @variant xl Button has xl size. Not supported by these button styles: buttonPrimary, buttonDefault, buttonAdd, iconButtonBordered.
     */
 
    /**
@@ -53,7 +53,7 @@ define('Controls/Button', [
 
    /**
     * @name Controls/Button#icon
-    * @cfg {String} Icon of Button. 
+    * @cfg {String} Icon of Button.
     */
    var _private = {
       cssStyleGeneration: function(self, options) {
