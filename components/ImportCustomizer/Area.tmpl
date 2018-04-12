@@ -3,7 +3,7 @@
       <div class="controls-ImportCustomizer-Area__head">
          <div class="controls-ImportCustomizer-Area__head-title">
             <div class="controls-ImportCustomizer-Area__head-title-left">
-               <ws:if data="{{title}}">{{title}}</ws:if><ws:else>{[НастройщикИмпорта@@Настройка импорта]}</ws:else>:
+               <ws:if data="{{dialogTitle}}">{{dialogTitle}}</ws:if><ws:else>{[НастройщикИмпорта@@Настройка импорта]}</ws:else>:
                <SBIS3.CONTROLS:Link
                        class="controls-ImportCustomizer-Area__head-title-link"
                        href="{{file.url}}"
@@ -17,7 +17,7 @@
                        command="complete" primary="true"
                >
                   <ws:caption>
-                     <ws:if data="{{applyButtonTitle}}">{{applyButtonTitle}}</ws:if>
+                     <ws:if data="{{dialogButtonTitle}}">{{dialogButtonTitle}}</ws:if>
                      <ws:else>{[НастройщикИмпорта@@Импортировать]}</ws:else>
                   </ws:caption>
                </SBIS3.CONTROLS:Button>

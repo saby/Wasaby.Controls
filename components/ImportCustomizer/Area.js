@@ -13,6 +13,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
       'SBIS3.CONTROLS/CompoundControl',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
       'WS.Data/Collection/RecordSet',
+      'WS.Data/Type/descriptor',
       'tmpl!SBIS3.CONTROLS/ImportCustomizer/Area',
       'css!SBIS3.CONTROLS/ImportCustomizer/Area',
       'SBIS3.CONTROLS/Button',
@@ -21,7 +22,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
       'SBIS3.CONTROLS/ScrollContainer'
    ],
 
-   function (CommandDispatcher, cMerge, Deferred, CompoundControl, InformationPopupManager, RecordSet, dotTplFn) {
+   function (CommandDispatcher, cMerge, Deferred, CompoundControl, InformationPopupManager, RecordSet, DataType, dotTplFn) {
       'use strict';
 
       var Area = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ImportCustomizer/Area.prototype*/ {
@@ -105,13 +106,29 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          $protected: {
             _options: {
                /**
-                * @cfg {string} Заголовок настройщика импорта (опционально)
+                * @cfg {boolean} Отображать как диалог (опционально)
                 */
-               title: null,//Определено в шаблоне
+               dialogMode: null,
                /**
-                * @cfg {string} Название кнопки применения результата редактирования (опционально)
+                * @cfg {string} Заголовок диалога настройщика импорта (опционально)
                 */
-               applyButtonTitle: null,//Определено в шаблоне
+               dialogTitle: null,//Определено в шаблоне
+               /**
+                * @cfg {string} Подпись кнопки диалога применения результата редактирования (опционально)
+                */
+               dialogButtonTitle: null,//Определено в шаблоне
+               /**
+                * @cfg {string} Название опции для выбора одинаковых настроек для всех листов файла в под-компоненте выбора области данных (опционально)
+                */
+               allSheetsTitle: null,//Определено в шаблоне
+               /**
+                * @cfg {string} Заголовок для меню выбора соответсвия в колонках в под-компоненте привязки колонок (опционально)
+                */
+               bindingColumnCaption: null,//Определено в шаблоне
+               /**
+                * @cfg {string} Всплывающая подсказака в заголовке колонки в под-компоненте привязки колонок (опционально)
+                */
+               bindingColumnTitle: null,//Определено в шаблоне
                /**
                 * @cfg {string} Тип импортируемых данных (excel и т.д.)
                 */
@@ -188,6 +205,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
 
          _modifyOptions: function () {
             var options = Area.superclass._modifyOptions.apply(this, arguments);
+            this._validateOptions(options);
             options._isNeeds = this._getSubviewUsings(options);
             var sheets = options.sheets;
             var hasSheets = sheets && sheets.length;
@@ -229,6 +247,35 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                options.fields = null;
             }
             return options;
+         },
+
+         _validateOptions: function (options) {
+            var typeValidators = Area.getOptionTypes();
+            if (typeValidators) {
+               var skip = [];
+               if (!options.dialogMode) {
+                  skip.push('dialogTitle', 'dialogButtonTitle');
+               }
+               var dataType = options.dataType;
+               if (dataType === Area.DATA_TYPE_EXCEL || dataType === Area.DATA_TYPE_DBF) {
+                  skip.push('mapping');
+               }
+               else
+               if (dataType === Area.DATA_TYPE_CML) {
+                  skip.push('allSheetsTitle', 'bindingColumnCaption', 'bindingColumnTitle', 'sheets', 'sheetIndex', 'sameSheetConfigs');
+               }
+               for (name in typeValidators) {
+                  if (!skip.length || skip.indexOf(name) === -1) {
+                     var validator = typeValidators[name];
+                     if (validator) {
+                        var err = validator(options[name]);
+                        if (err instanceof Error) {
+                           throw err;
+                        }
+                     }
+                  }
+               }
+            }
          },
 
          $constructor: function () {
@@ -451,27 +498,9 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
           * @param {ImportTargetFields} fields Полный набор полей
           */
          _setFields: function (fields) {
-            if (!fields || typeof fields !== 'object') {
-               throw new Error('Wrong fields');
-            }
-            var items = fields.items;
-            if (!items || !(
-                  (Array.isArray(items) && items.every(function (v) { return typeof v === 'object'; })) ||
-                  (items instanceof RecordSet)
-               )) {
-               throw new Error('Wrong fields items');
-            }
-            var idProperty = fields.idProperty;
-            if (Array.isArray(items) ? (!idProperty || typeof idProperty !== 'string') : (idProperty && typeof idProperty !== 'string')) {
-               throw new Error('Wrong fields idProperty');
-            }
-            var displayProperty = fields.displayProperty;
-            if (!displayProperty || typeof displayProperty !== 'string') {
-               throw new Error('Wrong fields displayProperty');
-            }
-            var parentProperty = fields.parentProperty;
-            if (parentProperty && typeof parentProperty !== 'string') {
-               throw new Error('Wrong fields parentProperty');
+            var err = _validateImportTargetFields(fields);
+            if (err instanceof Error) {
+               throw err;
             }
             this._options.fields = fields;
             var views = this._views;
@@ -745,6 +774,115 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
       // Public static methods:
 
       /**
+       * Получить проверочную информацию о типах данных опций
+       *
+       * @public
+       * @static
+       * @return {object}
+       */
+      Area.getOptionTypes = function () {
+         var typeIfDefined = function (type, name, value) {
+            // Если значение есть - оно должно иметь указанный тип
+            return value !=/*Не !==*/ null && typeof value !== type ? new Error('Wrong option "' + name + '"') : value;
+         };
+         return {
+            dialogMode: typeIfDefined.bind(null, 'boolean', 'dialogMode'),
+            dialogTitle: typeIfDefined.bind(null, 'string', 'dialogTitle'),
+            dialogButtonTitle: typeIfDefined.bind(null, 'string', 'dialogButtonTitle'),
+            allSheetsTitle: typeIfDefined.bind(null, 'string', 'allSheetsTitle'),
+            bindingColumnCaption: typeIfDefined.bind(null, 'string', 'bindingColumnCaption'),
+            bindingColumnTitle: typeIfDefined.bind(null, 'string', 'bindingColumnTitle'),
+            dataType: DataType(String).required().oneOf(Area.DATA_TYPES),
+            file: function (file) {
+               // Должна быть опция "file"
+               if (!file) {
+                  return new Error('Option "file" required');
+               }
+               // И опция "file" должна быть {@link ImportFile}
+               if (typeof file !== 'object' ||
+                  !(file.name && typeof file.name === 'string') ||
+                  !(file.url && typeof file.url === 'string') ||
+                  !(file.uuid && typeof file.uuid === 'string')) {
+                  return new Error('Wrong option "file"');
+               }
+               return file;
+            },
+            baseParamsComponent: typeIfDefined.bind(null, 'string', 'baseParamsComponent'),
+            baseParams: typeIfDefined.bind(null, 'object', 'baseParams'),
+            parsers: function (parsers) {
+               // Если есть опция "parsers" - то она должно быть объектом
+               if (parsers && typeof parsers !== 'object') {
+                  throw new Error('Wrong option "parsers"');
+               }
+               for (var name in parsers) {
+                  // Каждый элемент набора parsers должно быть {@link ImportParser}
+                  var v = parsers[name];
+                  if (!(name &&
+                        (typeof v === 'object') &&
+                        (v.title && typeof v.title === 'string') &&
+                        (!v.component || typeof v.component === 'string') &&
+                        (!v.args || typeof v.args === 'object')
+                     )) {
+                     return new Error('Wrong parsers items');
+                  }
+               }
+               return parsers;
+            },
+            fields: function (fields) {
+               // Должна быть опция "fields" и являтся либо экземпляром Deferred, либо иметь тип ImportTargetFields
+               return fields instanceof Deferred ? fields : _validateImportTargetFields(fields);
+            },
+            sheets: function (sheets) {
+               // Для типа данных EXCEL или DBF должна быть опция "sheets" и быть не пустым массивом
+               if (!sheets || !Array.isArray(sheets) || !sheets.length) {
+                  return new Error('Option "sheets" required');
+               }
+               // И каждый элемент массива должен быть {@link ImportSheet}
+               if (!sheets.every(function (v) { return (
+                     typeof v === 'object' &&
+                     (v.name && typeof v.name === 'string') &&
+                     (v.sampleRows && Array.isArray(v.sampleRows) && v.sampleRows.length && v.sampleRows.every(function (v2) { return v2 && Array.isArray(v2) && v2.length && v2.length === v.sampleRows[0].length; }))
+                  ); })) {
+                  return new Error('Wrong option "sheets"');
+               }
+               return sheets
+            },
+            sheetIndex: typeIfDefined.bind(null, 'number', 'sheetIndex'),
+            sameSheetConfigs: typeIfDefined.bind(null, 'boolean', 'sameSheetConfigs'),
+            mapping: function (mapping) {
+               // Для типа данных CML(CommerceML) должна быть опция "mapping", то она должна быть {link ImportMapping}
+               if (!mapping || (typeof mapping !== 'object' ||
+                     !(!mapping.fieldFilter || typeof mapping.fieldFilter === 'function') ||
+                     !(!mapping.fieldProperty || typeof mapping.fieldProperty === 'string') ||
+                     !(mapping.fieldFilter || mapping.fieldProperty) ||
+                     !(!mapping.variants || typeof mapping.variants === 'object') ||
+                     !(!mapping.accordances || typeof mapping.accordances === 'object')
+                  )) {
+                  return new Error('Wrong option "mapping"');
+               }
+               return mapping;
+            },
+            validators: function (validators) {
+               // Если есть опция "validators", то она должна быть массивом
+               if (validators && !Array.isArray(validators)) {
+                  return new Error('Wrong validators');
+               }
+               // И каждый элемент массива должен быть {@link ImportValidator}
+               if (!validators.every(function (v) { return (
+                     typeof v === 'object' &&
+                     (v.validator && typeof v.validator === 'function') &&
+                     (!v.params || Array.isArray(params)) &&
+                     (!v.errorMessage || typeof v.errorMessage === 'string') &&
+                     (!v.noFailOnError || typeof v.noFailOnError === 'boolean')
+                  ); })) {
+                  return new Error('Wrong validators items');
+               }
+               return validators;
+            }
+         };
+      };
+
+      /**
        * Показать сообщение пользователю
        *
        * @public
@@ -776,10 +914,56 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
 
       // Private methods:
 
+      /**
+       * Получить дочерний компонент, если он есть
+       *
+       * @private
+       * @param {SBIS3.CONTROLS/ImportCustomizer/Area} self Этот объект
+       * @param {string} name Имя дочернего компонента
+       * @return {object}
+       */
       var _getChildComponent = function (self, name) {
          if (self.hasChildControlByName(name)) {
             return self.getChildControlByName(name);
          }
+      };
+
+      /**
+       * Проверить, соответствует ли аргумент определению типа {@link ImportTargetFields}
+       *
+       * @private
+       * @param {*} fields Аргумент
+       * @return {Error|*}
+       */
+      var _validateImportTargetFields = function (fields) {
+         // Значение должно быть объектом
+         if (!fields || typeof fields !== 'object') {
+            return new Error('Wrong fields');
+         }
+         var items = fields.items;
+         // Должно иметь свойство "items", являющееся рекордсетом или массивом объектов
+         if (!items || !(
+               (Array.isArray(items) && items.every(function (v) { return typeof v === 'object'; })) ||
+               (items instanceof RecordSet)
+            )) {
+            return new Error('Wrong fields items');
+         }
+         // Если items не является рекордсетом, то должно иметь свойство "idProperty", являющееся не пустой строкой
+         var idProperty = fields.idProperty;
+         if (Array.isArray(items) ? (!idProperty || typeof idProperty !== 'string') : (idProperty && typeof idProperty !== 'string')) {
+            return new Error('Wrong fields idProperty');
+         }
+         // Должно иметь свойство "displayProperty", являющееся не пустой строкой
+         var displayProperty = fields.displayProperty;
+         if (!displayProperty || typeof displayProperty !== 'string') {
+            return new Error('Wrong fields displayProperty');
+         }
+         // Если есть свойство "parentProperty" - оно должно быть не пустой строкой
+         var parentProperty = fields.parentProperty;
+         if (parentProperty && typeof parentProperty !== 'string') {
+            return new Error('Wrong fields parentProperty');
+         }
+         return fields;
       };
 
 
