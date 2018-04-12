@@ -67,7 +67,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Sheet/View',
             this.subscribeTo(this._view, 'onSelectedItemsChange', function (evtName, selecteds, changes) {
                var id = selecteds[0];
                this._options.sheetIndex = id ? id - 1 : -1;
-               this.sendCommand('subview-changed');
+               this.sendCommand('subviewChanged');
             }.bind(this));
          },
 

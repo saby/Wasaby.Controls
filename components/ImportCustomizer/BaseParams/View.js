@@ -53,7 +53,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/BaseParams/View',
          _bindEvents: function () {
             this.subscribeTo(this._replaceAllDataView, 'onCheckedChange', function (evtName, isChecked) {
                this._options.replaceAllData = isChecked;
-               this.sendCommand('subview-changed');
+               this.sendCommand('subviewChanged');
             }.bind(this));
          },
 

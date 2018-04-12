@@ -132,7 +132,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
             this.subscribeTo(this._grid, 'onItemClick'/*onItemActivate*/, function (evtName, id, model) {
                this._options.skippedRows = this._grid.getItems().getIndex(model);
                this._updateSkippedRows();
-               this.sendCommand('subview-changed');
+               this.sendCommand('subviewChanged');
             }.bind(this));
 
             for (var i = 0, list = this._grid.getChildControls(), prefix = _PREFIX_COLUMN_NAME + _PREFIX_COLUMN_FIELD; i < list.length; i++) {
@@ -370,7 +370,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                if (notEmpty) {
                   accordances[selectedField] = columnIndex;
                }
-               this.sendCommand('subview-changed');
+               this.sendCommand('subviewChanged');
             }
          },
 

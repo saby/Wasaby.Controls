@@ -234,10 +234,10 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          $constructor: function () {
             /**
              * Уведомление об изменении данных под-компонента
-             * @command subview-changed
+             * @command subviewChanged
              * @public
              */
-            CommandDispatcher.declareCommand(this, 'subview-changed', this._cmdSubviewChanged);
+            CommandDispatcher.declareCommand(this, 'subviewChanged', this._cmdSubviewChanged);
             if (this._options.dialogMode) {
                CommandDispatcher.declareCommand(this, 'complete', this._cmdComplete);
             }
@@ -315,7 +315,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             var views = this._views;
             for (var name in views) {
                this.subscribeTo(views[name], 'onCommandCatch', function (handler, evtName, command/*, args*/) {
-                  if (command === 'subview-changed') {
+                  if (command === 'subviewChanged') {
                      handler.apply(this, Array.prototype.slice.call(arguments, 3));
                      evtName.setResult(true);
                   }
@@ -324,7 +324,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          },
 
          /*
-          * Обработчик "subview-changed" для под-компонента sheet
+          * Обработчик "subviewChanged" для под-компонента sheet
           *
           * @protected
           */
@@ -348,7 +348,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          },
 
          /*
-          * Обработчик "subview-changed" для под-компонента baseParams
+          * Обработчик "subviewChanged" для под-компонента baseParams
           *
           * @protected
           */
@@ -363,7 +363,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          },
 
          /*
-          * Обработчик "subview-changed" для под-компонента provider
+          * Обработчик "subviewChanged" для под-компонента provider
           *
           * @protected
           */
@@ -383,7 +383,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          },
 
          /*
-          * Обработчик "subview-changed" для под-компонента columnBinding
+          * Обработчик "subviewChanged" для под-компонента columnBinding
           *
           * @protected
           */
@@ -399,7 +399,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          },
 
          /*
-          * Обработчик "subview-changed" для под-компонента mapper
+          * Обработчик "subviewChanged" для под-компонента mapper
           *
           * @protected
           */
@@ -413,7 +413,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          },
 
          /*
-          * Обработчик "subview-changed" для под-компонента providerArgs
+          * Обработчик "subviewChanged" для под-компонента providerArgs
           *
           * @protected
           */
