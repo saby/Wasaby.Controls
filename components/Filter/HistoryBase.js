@@ -9,6 +9,7 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
    'Core/CommandDispatcher',
    'Core/helpers/collection-helpers',
    'Core/ParallelDeferred',
+   'SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil',
    'SBIS3.CONTROLS/History/HistoryList',
    'SBIS3.CONTROLS/Utils/InformationPopupManager',
    'SBIS3.CONTROLS/Filter/HistoryView'
@@ -19,7 +20,8 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
    HistoryListUtils,
    CommandDispatcher,
    colHelpers,
-   ParallelDeferred
+   ParallelDeferred,
+   FilterHistoryControllerUntil
 ) {
 
       'use strict';
@@ -115,7 +117,8 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
                var action = this.getChildControlByName('editFavorite'),
                   self = this,
                   toEditItem = item.get('data').clone(),
-                  isGlobal = !!toEditItem.get('globalParams');
+                  isGlobal = !!toEditItem.get('globalParams'),
+                  filterStructure = self._options.filterStructure;
 
                //В старом формате в параметре globalParams хранился Boolean, в новом формате хранится значение 1 или 0.
                //Для обратной совместимости, перегоняем значения из старого формата в новыый.
@@ -126,6 +129,10 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
                /* Подготавливаем запись к редктированию */
                toEditItem.set('toSaveFields', {});
                toEditItem.set('editedTextValue', '');
+               
+               if (filterStructure) {
+                  toEditItem.set('filter', FilterHistoryControllerUntil.prepareStructureToApply(toEditItem.get('filter'), filterStructure));
+               }
 
                action.execute({
                   item: toEditItem,
@@ -186,6 +193,9 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
                            record.set(self._options.displayProperty, editedTextValue ? editedTextValue : textValue);
                            if(editedTextValue && editedTextValue !== textValue) {
                               record.set('fullTextValue', textValue);
+                           }
+                           if (filterStructure) {
+                              record.set('filter', FilterHistoryControllerUntil.minimizeStructureToSave(record.get('filter')));
                            }
                            record.acceptChanges();
                            deleteReportHistory(item.get('id'), isFavorite, isGlobal);
