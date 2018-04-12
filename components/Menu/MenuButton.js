@@ -1,7 +1,7 @@
 define('SBIS3.CONTROLS/Menu/MenuButton', [
    'SBIS3.CONTROLS/WSControls/Buttons/MenuButton',
    'SBIS3.CONTROLS/Utils/ButtonUtil',
-   'tmpl!WSControls/Buttons/resources/AddIcon',
+   'tmpl!SBIS3.CONTROLS/WSControls/Buttons/resources/AddIcon',
    'css!SBIS3.CONTROLS/Button/Button',
    'css!SBIS3.CONTROLS/Menu/MenuButton/MenuButton'
 ], function(WSMenuButton, ButtonUtil, svgIconTpl) {
