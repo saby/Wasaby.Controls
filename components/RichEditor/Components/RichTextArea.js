@@ -60,6 +60,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
       //TODO: ПЕРЕПИСАТЬ НА НОРМАЛЬНЫЙ КОД РАБОТУ С ИЗОБРАЖЕНИЯМИ
 
+      /**
+       * Константа - информация о текущем браузере
+       * @private
+       * @type {object}
+       */
+      var BROWSER = cConstants.browser;
+      // TODO: Избавиться везде ниже от выражения cConstants.browser
+
       var _getTrueIEVersion = function () {
          var version = cConstants.browser.IEVersion;
          // В cConstants.browser.IEVersion неправильно определяется MSIE 11
@@ -1248,13 +1256,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                  if (href) {
                                     linkAttrs.href = href;
                                     selection.setRng(range);
-                                    if (selection.getContent() === '' || (fre._isOnlyTextSelected() && cConstants.browser.firefox)) {
-                                       var linkText = caption;
-                                       var linkHtml = dom.createHTML('a', linkAttrs, dom.encode(linkText));
-                                       // Для MSIE принудительно смещаем курсор ввода после вставленной ссылки
+                                    var content = selection.getContent();
+                                    if (content === '' || (BROWSER.firefox && (content.indexOf('<') === -1 || (content.indexOf('href=') !== -1 && /^<a [^>]+>[^<]+<\/a>$/.test(content))))) {
+                                       var linkHtml = dom.createHTML('a', linkAttrs, dom.encode(caption));
+                                       // Для MSIE и FF принудительно смещаем курсор ввода после вставленной ссылки
                                        // 1174853380 https://online.sbis.ru/opendoc.html?guid=77405679-2b2b-42d3-8bc0-d2eee745ea23
-                                       editor.insertContent(cConstants.browser.isIE ? linkHtml + '&#65279;&#8203;' : linkHtml);
-                                       selection.select(selection.getNode().querySelector('a'), true);
+                                       // 1175114814 https://online.sbis.ru/opendoc.html?guid=4cef3009-ccbc-4751-b755-dea3d69b82f1
+                                       var appendix = BROWSER.isIE ? '&#65279;&#8203;' : (BROWSER.firefox ? '&#65279;' : '');
+                                       editor.insertContent(linkHtml + appendix);
+                                       if (!appendix) {
+                                          selection.select(selection.getNode().querySelector('a'), true);
+                                       }
                                        selection.collapse(false);
                                     }
                                     else {
