@@ -13,7 +13,7 @@
             </div>
         </ws:if>
     </ws:for>
-    <ws:if data ="{{itemData.isEditing}}">
+    <ws:if data ="{{itemData.isEditing && showToolbar}}">
         <div  class="controls-itemActionsV__action controls-itemActionsV__action_bordered controls-itemActionsV__action_done"
               title="Сохранить"
               on:click="_applyEdit(itemData.item)">

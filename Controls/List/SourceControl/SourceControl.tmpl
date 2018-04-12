@@ -45,6 +45,7 @@
                ws:content="listView"
                on:commitActionClick="_commitEditActionHandler()"
                on:cancelActionClick="_cancelEditActionHandler()"
+               showToolbar="{{_options.editingConfig.showToolbar}}"
                name="itemActions"
                listModel="{{_listViewModel}}"
                itemActions="{{_options.itemActions}}"
