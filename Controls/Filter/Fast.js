@@ -1,7 +1,7 @@
-define('Controls/Filter/FastFilter',
+define('Controls/Filter/Fast',
    [
       'Core/Control',
-      'tmpl!Controls/Filter/FastFilter/FastFilter',
+      'tmpl!Controls/Filter/Fast/Fast',
       'Controls/Controllers/SourceController',
       'WS.Data/Chain',
       'WS.Data/Collection/List',
@@ -9,7 +9,7 @@ define('Controls/Filter/FastFilter',
       'Core/ParallelDeferred',
       'Core/Deferred',
       'WS.Data/Utils',
-      'css!Controls/Filter/FastFilter/FastFilter',
+      'css!Controls/Filter/Fast/Fast',
       'css!Controls/Input/Dropdown/Dropdown'
 
    ],
@@ -111,8 +111,7 @@ define('Controls/Filter/FastFilter',
          },
 
          onResult: function(result) {
-            var data = result.data;
-            _private.selectItem.apply(this, data);
+            _private.selectItem.apply(this, result.data);
             this._notify('filterChanged', [_private.getFilter(this._items)]);
             this._children.DropdownOpener.close();
          }

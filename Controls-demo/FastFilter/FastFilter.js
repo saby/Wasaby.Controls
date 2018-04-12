@@ -3,7 +3,7 @@ define('Controls-demo/FastFilter/FastFilter',
       'Core/Control',
       'tmpl!Controls-demo/FastFilter/FastFilter',
       'WS.Data/Source/Memory',
-      'Controls/Filter/FastFilter',
+      'Controls/Filter/Fast',
       'css!Controls-demo/FastFilter/FastFilter'
    ],
 
