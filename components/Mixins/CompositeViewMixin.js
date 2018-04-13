@@ -139,7 +139,7 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
             /**
              * @cfg {String} Устанавливает отображение плитки по ховеру
              * @remark
-             * Использование опции актуально для режима отображения {@link /doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/tiles/ "Плитка"}.
+             * Использование опции актуально для режима отображения {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/tiles/ "Плитка"}.
              * В зависимости от значения опции ширина плитки может меняться или оставаться неизменной при наведении на нее курсора.
              * @variant static ширина плитки остается неизменной.
              * @variant dynamic ширина плитки меняется.
