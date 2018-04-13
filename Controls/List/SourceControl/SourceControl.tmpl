@@ -70,7 +70,9 @@
     </ws:if>
     <ws:if data="{{_loadingIndicatorState}}">
         <div class="controls-SourceControl__loadingIndicator controls-SourceControl__loadingIndicator__state-{{_loadingIndicatorState}}">
-            <div class="controls-SourceControl__loadingIndicatorImg"></div>
+            <ws:if data="{{_showLoadingIndicatorImage}}">
+                <div class="controls-SourceControl__loadingIndicatorImg"></div>
+            </ws:if>
         </div>
     </ws:if>
 </div>
