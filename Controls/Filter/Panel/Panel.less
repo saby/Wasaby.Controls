@@ -1,4 +1,5 @@
 .controls-PanelFilter {
+   min-width: @min-width_FilterPanel;
    width: auto;
    box-shadow: @box-shadow_FilterPanel;
    border: @border-size_FilterPanel solid @border-color_FilterPanel;
@@ -13,10 +14,25 @@
    min-width: @min-width_FilterPanel;
    height: @height_FilterPanel-header;
    display: flex;
-   align-items: center;
    justify-content: space-between;
+   align-items: center;
    background-color: @background-color_FilterPanel-header;
-   padding: @padding_FilterPanel-header;
+}
+
+.controls-FilterPanel__content {
+   padding: @padding_FilterPanel__content;
+}
+
+.controls-FilterPanel__history {
+   padding: @spacing_FilterPanel-footer;
+}
+
+.controls-FilterPanel__history-block {
+   margin: @spacing_FilterPanel-history-block;
+}
+
+.controls-FilterPanel__history-oneColumn {
+   background-color: @background-color_FilterPanel-footer;
 }
 
 .controls-FilterPanel__header-topTemplate {
@@ -45,6 +61,41 @@
    margin: @spacing_FilterPanel-filterButton;
 }
 
-.controls-FilterPanel__content {
-padding: @padding_FilterPanel__content;
+.controls-FilterPanel__caption {
+   font-size: @font-size_FilterPanel-caption;
+   color: @color_FilterPanel-caption;
+   margin-bottom: @spacing_FilterPanel-caption;
+}
+
+.controls-FilterPanel__closeButton {
+   position: relative;
+   cursor: pointer;
+   z-index: 1;
+   .flexbox();
+   .align-items(center);
+   .justify-content(center);
+   &:before {
+      content: @content_CloseButton_icon;
+   }
+}
+
+.controls-FilterPanel__close_button_standart {
+   border-style: solid;
+   width: @width_CloseButton - extract(@border-width_CloseButton, 2) - extract(@border-width_CloseButton, 4);
+   height: @height_CloseButton - extract(@border-width_CloseButton, 1) - extract(@border-width_CloseButton, 3);
+   font-family: @default-icon-font;
+   line-height: @height_CloseButton;
+   font-size: @font-size_CloseButton;
+   box-shadow: @box-shadow_CloseButton;
+   border-width: @border-width_CloseButton;
+   border-color: @border-color_CloseButton;
+   border-radius: @border-radius_CloseButton;
+   background-color: @background-color_CloseButton;
+   &:before {
+      color: @color_CloseButton-icon;
+      text-shadow: @text-shadow_Button;
+   }
+   &:active {
+      box-shadow: none;
+   }
 }
