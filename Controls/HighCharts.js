@@ -19,13 +19,13 @@ define('Controls/HighCharts',
 
       var HighChart = Control.extend({
          _template: template,
-         highChartObj: null,
+         _highChartInstance: null,
 
          _shouldUpdate: function() {
             return false;
          },
 
-         _beforeMount: function() {
+         _afterMount: function(config) {
             Highcharts.setOptions({
                lang: {
                   numericSymbols: ['', '', '', '', '', ''],
@@ -40,9 +40,6 @@ define('Controls/HighCharts',
                   }
                }
             });
-         },
-
-         _afterMount: function(config) {
             this._drawChart(config);
          },
 
@@ -53,18 +50,22 @@ define('Controls/HighCharts',
          },
 
          _drawChart: function(config) {
-            config.highChartOptions.chart.renderTo = this._children.highChartContainer;
+            config.highChartOptions.chart.renderTo = this._container;
+            /**
+             * Как добавят возможность использовать контейнер как _children поменять на
+             * config.highChartOptions.chart.renderTo = this._children.highChartContainer;
+             */
             config.highChartOptions.credits = config.highChartOptions.credits || {};
             config.highChartOptions.credits.enabled = false;
-            if (this.highChartObj) {
-               this.highChartObj.destroy();
+            if (this._highChartInstance) {
+               this._highChartInstance.destroy();
             }
-            this.highChartObj = new Highcharts.Chart(config.highChartOptions);
+            this._highChartInstance = new Highcharts.Chart(config.highChartOptions);
          },
 
          _beforeUnmount: function() {
-            this.highChartObj.destroy();
-            this.highChartObj = undefined;
+            this._highChartInstance.destroy();
+            this._highChartInstance = undefined;
          }
       });
 
