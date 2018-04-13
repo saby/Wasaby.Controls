@@ -1,6 +1,6 @@
-define('Controls-demo/Input/VDomInputs', [
+define('Controls-demo/Input/VDomInputs/VDomInputs', [
    'Core/Control',
-   'tmpl!Controls-demo/Input/VDomInputs',
+   'tmpl!Controls-demo/Input/VDomInputs/VDomInputs',
    'WS.Data/Source/Memory'
 ], function(Control, template) {
 
