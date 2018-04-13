@@ -13,7 +13,7 @@ import DropAreaGetter = require("File/ResourceGetter/DropArea");
  */
 class DropArea extends ResourceGetter {
     /**
-     * @cfg {Array<String>} Список расширений выбираемых файлов
+     * @cfg {Array.<String>} Список расширений выбираемых файлов
      * <wiTag group="Управление">
      * Помимо перечисления массива конкретных расширений файлов, можно также передать в массив значения:
      * <ul>

@@ -19,7 +19,7 @@ define("File/Attach/Container/GetterLazy", ["require", "exports", "tslib", "Core
         /**
          * Метод асинхронного получения экземпляра IResourceGetter
          * @param {String} name Имя модуля
-         * @return {Core/Deferred<File/IResourceGetter>}
+         * @return {Core/Deferred.<File/IResourceGetter>}
          * @see File/IResourceGetter#getType
          */
         GetterContainerLazy.prototype.get = function (name) {
