@@ -177,7 +177,7 @@ define('SBIS3.CONTROLS/Mixins/FormWidgetMixin', [
        * <br/>
        * Если для контрола ограничено взаимодействие через опцию {@link Lib/Control/Control#enabled}, то для него валидация не производится.
        * <br/>
-       * Подробнее о валидации вы можете прочитать в {@link /doc/platform/developmentapl/interface-development/forms-and-validation/validation/ руководстве разработчика}.
+       * Подробнее о валидации вы можете прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/validation/ руководстве разработчика}.
        * @returns {Boolean} Признак: валидация пройдена успешно (true) или с ошибками (false).
        * @see validators
        * @see getValidators

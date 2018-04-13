@@ -11,7 +11,7 @@ define('Controls-demo/Dropdown/MenuVdom', [
    'tmpl!Controls-demo/Dropdown/resources/footerTemplate',
    'tmpl!Controls-demo/Dropdown/resources/contentTemplate',
    'css!Controls-demo/Dropdown/MenuVdom'
-], function (Control, template, cClone, Memory) {
+], function(Control, template, cClone, Memory) {
    'use strict';
 
 
@@ -25,8 +25,11 @@ define('Controls-demo/Dropdown/MenuVdom', [
          _selectedKeys3: '4',
          _selectedKeys4: '5',
          _selectedKeys5: '6',
-         _selectedItemsChangedHandler: function (event, dropdownIndex, selectedKeys) {
+         _selectedItemsChangedHandler: function(event, dropdownIndex, selectedKeys) {
             this._stateText = 'Выбранный ключ: ' + selectedKeys;
+         },
+         _clickItemsChangedHandler: function(event, data) {
+            this._stateText = data.get('title');
          },
          _defaultItems: [
             {
@@ -62,22 +65,22 @@ define('Controls-demo/Dropdown/MenuVdom', [
                title: 'Запись 8'
             }
          ],
-         _createMemory: function (items) {
+         _createMemory: function(items) {
             return new Memory({
                idProperty: 'id',
                data: items
-            })
+            });
          },
-         _getDefaultMemory: function () {
+         _getDefaultMemory: function() {
             return this._createMemory(this._defaultItems);
          },
-         _getItemTemplateData: function () {
+         _getItemTemplateData: function() {
             var items = cClone(this._defaultItems);
             items[0].myTemplate = 'tmpl!Controls-demo/Dropdown/resources/itemTemplate1';
             items[4].myTemplate = 'tmpl!Controls-demo/Dropdown/resources/itemTemplate1';
             return this._createMemory(items);
          },
-         _getIconItems: function () {
+         _getIconItems: function() {
             var icons = ['AddButton', '1c', 'Admin', 'Admin2', 'Album', 'Alert', 'Archive', 'Home'];
             var items = cClone(this._defaultItems);
             for (var i = 0; i < icons.length; i++) {
@@ -85,7 +88,7 @@ define('Controls-demo/Dropdown/MenuVdom', [
             }
             return this._createMemory(items);
          },
-         _getHierarchyItems: function () {
+         _getHierarchyItems: function() {
             var items = cClone(this._defaultItems);
             var hierConfig = [
                {parent: null, '@parent': true},
@@ -122,7 +125,7 @@ define('Controls-demo/Dropdown/MenuVdom', [
             }
             return this._createMemory(items);
          },
-         _getMultiData: function () {
+         _getMultiData: function() {
             var items = cClone(this._defaultItems);
             for (var i = 9; i < 101; i++) {
                items.push({
@@ -132,7 +135,7 @@ define('Controls-demo/Dropdown/MenuVdom', [
             }
             return this._createMemory(items);
          },
-         footerClickHandler: function () {
+         footerClickHandler: function() {
             alert('Обработка клика по футеру');
          }
       });
