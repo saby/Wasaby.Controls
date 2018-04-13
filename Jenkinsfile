@@ -170,7 +170,7 @@ node('controls') {
                     echo " Выкачиваем сборочные скрипты"
                     dir(workspace) {
                         checkout([$class: 'GitSCM',
-                        branches: [[name: "3.18.200/feature/migrate-ps"]],
+                        branches: [[name: "rc-${version}"]],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [[
                             $class: 'RelativeTargetDirectory',
@@ -394,6 +394,7 @@ node('controls') {
                 cd "${workspace}/controls/tests/stand/intest/"
                 sudo python3 "change_theme.py" ${params.theme}
                 cd "${workspace}"
+
             """
             sh """
                 sudo chmod -R 0777 ${workspace}
