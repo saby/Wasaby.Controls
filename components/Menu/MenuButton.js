@@ -1,10 +1,9 @@
 define('SBIS3.CONTROLS/Menu/MenuButton', [
    'js!WSControls/Buttons/MenuButton',
    'SBIS3.CONTROLS/Utils/ButtonUtil',
-   'tmpl!WSControls/Buttons/resources/AddIcon',
    'css!SBIS3.CONTROLS/Button/Button',
    'css!SBIS3.CONTROLS/Menu/MenuButton/MenuButton'
-], function(WSMenuButton, ButtonUtil, svgIconTpl) {
+], function(WSMenuButton, ButtonUtil) {
 
    'use strict';
 
@@ -59,9 +58,7 @@ define('SBIS3.CONTROLS/Menu/MenuButton', [
    var MenuButton = WSMenuButton.extend([], /** @lends SBIS3.CONTROLS/Menu/MenuButton.prototype */ {
       $protected: {
          _options: {
-            style: 'standard',
-            _svgIcon: null,
-            _svgIconTpl: svgIconTpl
+            style: 'standard'
          }
       },
       _modifyOptions: function(options, parsedOptions, attrToMerge) {
