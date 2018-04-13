@@ -460,7 +460,9 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
                if (this._hasInvisibleItems() && result.inside && !result.prepend) {
                   result.inside = false;
                   result.prepend = true;
-                  result.container = result.container.find('.controls-CompositeView__tileItem-invisible').first();
+                  //Искать первую пустышку надо непосредственно внутри переданного container. Иначе при добавлении
+                  //листов, можем найти пустышку в контейнере для папок.
+                  result.container = result.container.find('>.controls-CompositeView__tileItem-invisible').first();
                }
             }
             return result;
