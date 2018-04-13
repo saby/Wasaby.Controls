@@ -3,8 +3,9 @@ define('js!WSControls/Buttons/Button', [
    'Core/constants',
    'js!WSControls/Buttons/ButtonBase',
    'tmpl!WSControls/Buttons/Button',
-   'tmpl!WSControls/Buttons/resources/contentTemplate'
-], function(constants, ButtonBase, dotTplFn, contentTemplate) {
+   'tmpl!WSControls/Buttons/resources/contentTemplate',
+   'tmpl!WSControls/Buttons/resources/AddIcon'
+], function(constants, ButtonBase, dotTplFn, contentTemplate, svgIconTpl) {
 
    'use strict';
 
@@ -97,7 +98,9 @@ define('js!WSControls/Buttons/Button', [
             style: null,
             _type: '',
             _iconState: null,
-            _iconSize: null
+            _iconSize: null,
+            _svgIconTpl: svgIconTpl,
+            _fix1175160840: false
          },
          _contentContainer: null,
          _iconClass: null
