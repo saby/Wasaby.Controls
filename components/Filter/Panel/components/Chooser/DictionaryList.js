@@ -111,6 +111,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList', [
         _showDictionary: function(meta) {
             meta = coreMerge(coreClone(this._options.dictionaryOptions), meta || {});
             meta.multiselect = true;
+            meta.selectedItems = this._getListView().getSelectedItems();
             this._getSelectorAction().execute(meta);
         },
 
@@ -202,18 +203,12 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList', [
         _onExecutedHandler: function(event, meta, result) {
             var
                 listView = this._getListView(),
-                items = listView.getItems(),
-                idProperty = listView._options.idProperty;
+                items = listView.getItems();
             if (cInstance.instanceOfModule(result, 'WS.Data/Collection/List')) {
                 items.setEventRaising(false, true);
-                //Удалим из набора все элементы из набора дефолтных элементов
-                this._removeItemsFromDefault();
+                items.clear();
                 if (result.getCount()) {
-                    result.forEach(function(item) {
-                        if (!items.getRecordById(item.get(idProperty))) {
-                            items.add(this._createRecordWithAdapter(item, items.getAdapter()));
-                        }
-                    }, this);
+                    items.assign(result);
                 }
                 items.setEventRaising(true, true);
                 listView.setSelectedItemsAll();

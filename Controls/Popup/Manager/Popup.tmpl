@@ -1,10 +1,11 @@
-<div class="ws-Popup">
+<div class="controls-Popup">
     <ws:partial
             attr:class="controls-Popup__template"
             template="{{_options.template}}"
             scope="{{_options.templateOptions}}"
             on:sendResult="_sendResult()"
             on:close="_close()"
+            on:mousedown="_popupClickHandler()"
             on:keyup="_keyUp()"
             on:resize="_onResize()">
     </ws:partial>
