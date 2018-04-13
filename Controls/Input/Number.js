@@ -35,7 +35,7 @@ define('Controls/Input/Number', [
        * @public
        * @category Input
        * @author Баранов М.А.
-       * @demo Controls-demo/Input/Number
+       * @demo Controls-demo/Input/Number/Number
        */
 
       /**

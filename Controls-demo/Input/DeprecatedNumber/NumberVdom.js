@@ -1,8 +1,8 @@
-define('Controls-demo/Input/Number/NumberVdom', [
+define('Controls-demo/Input/DeprecatedNumber/NumberVdom', [
 	'Core/Control',
-	'tmpl!Controls-demo/Input/Number/NumberVdom',
+	'tmpl!Controls-demo/Input/DeprecatedNumber/NumberVdom',
 	'Controls/Input/Number',
-	'css!Controls-demo/Input/Number/NumberVdom'
+	'css!Controls-demo/Input/DeprecatedNumber/NumberVdom'
 ], function ( Control, dotTplFn) {
 	'use strict';
 	var moduleClass = Control.extend({
