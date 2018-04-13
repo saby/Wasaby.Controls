@@ -38,7 +38,7 @@ define('Controls/List/Paging', [
       },
       changePage: function(self, page) {
          if (self._options.selectedPage !== page) {
-            self._notify('onChangeSelectedPage', page);
+            self._notify('selectedPageChanged', [page]);
          }
       }
    };
