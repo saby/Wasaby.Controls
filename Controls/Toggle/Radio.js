@@ -7,7 +7,7 @@ define('Controls/Toggle/Radio', [
 ], function(Control, SourceController, template, types) {
 
    var _private = {
-      initItems: function (source, self) {
+      initItems: function(source, self) {
          self._sourceController = new SourceController({
             source: source
          });
@@ -20,17 +20,31 @@ define('Controls/Toggle/Radio', [
    var Radio = Control.extend({
       _template: template,
 
-      _beforeMount: function(options, context, receivedState) {
+      _beforeMount: function(options) {
          if (options.source) {
             return _private.initItems(options.source, this).addCallback(function(items) {
                this._items = items;
-               items.each(function(item) {
-                  console.log(item.get("title"))
-               });
             }.bind(this));
          }
+      },
+
+      ItemClass: function(item, items) {
+         if (item === items.at(items.getCount()-1)){
+            if (item  === items.at(0)){
+               return "controls-RadioGroup_first-and-last";
+            } else {
+               return "controls-RadioGroup_last";
+            }
+         }
+         if (item  === items.at(0)){
+            return "controls-RadioGroup_first";
+         }
+         return "controls-RadioGroup_default";
       }
+
    });
+
+   Radio._private= _private;
 
    return Radio;
 });

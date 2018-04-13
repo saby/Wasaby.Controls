@@ -14,35 +14,35 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
          data: [
             {
                id: "1",
-               title: 'Done'
+               caption: 'radio1'
             },
             {
                id: "2",
-               title: 'From Me'
+               caption: 'radio2'
             },
             {
                id: "3",
-               title: 'Controlled'
+               caption: 'radio3'
             },
             {
                id: "4",
-               title: 'very'
+               caption: 'radio4'
             },
             {
                id: "5",
-               title: 'hard'
+               caption: 'radio5'
             },
             {
                id: "6",
-               title: 'invent'
+               caption: 'radio6'
             },
             {
                id: "7",
-               title: 'tabs'
+               caption: 'radio7'
             },
             {
                id: "8",
-               title: 'titles'
+               caption: 'radio8'
             }
          ]
       });

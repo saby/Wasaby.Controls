@@ -1,5 +1,8 @@
 <div class="controls-RadioGroup">
     <ws:for data="item in _items">
-        <ws:partial template="tmpl!Controls/Toggle/Radio/resources/ItemTemplate"/>
+        <ws:partial template="tmpl!Controls/Toggle/Radio/resources/ItemTemplate"
+                    attr:class="{{ItemClass(item, _items)}}"
+                    item="{{item}}"
+                    selected="{{item[_options.keyProperty] === _options.selectedKey ? true : false}}"/>
     </ws:for>
 </div>
