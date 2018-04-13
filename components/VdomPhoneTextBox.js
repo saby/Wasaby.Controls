@@ -47,9 +47,9 @@ define('SBIS3.CONTROLS/VdomPhoneTextBox',
           * @returns {*|value|string}
           * @example
           * <pre>
-          *     myComponent.subscribe('onTextChange', function(){
-       *        myPhone.getValue();
-       *     });
+          * myComponent.subscribe('onTextChange', function(){
+          *    myPhone.getValue();
+          * });
           * </pre>
           * @see value
           * @see setValue
@@ -63,9 +63,9 @@ define('SBIS3.CONTROLS/VdomPhoneTextBox',
           * @param value
           * @example
           * <pre>
-          *     myComponent.subscribe('onClick', function(){
-       *        myPhone.setValue("88001002424");
-       *     });
+          * myComponent.subscribe('onClick', function(){
+          *    myPhone.setValue("88001002424");
+          * });
           * </pre>
           * @see value
           * @see getValue
@@ -74,6 +74,10 @@ define('SBIS3.CONTROLS/VdomPhoneTextBox',
             this._wrapper.setValue(value);
          },
 
+         /**
+          * Получает текстовое значение поля ввода телефонного номера c разделителями.
+          * @return {String}
+          */
          getDisplayValue: function() {
             return this._wrapper.getDisplayValue();
          }
