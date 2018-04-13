@@ -4,9 +4,9 @@
  * @description
  */
 define('SBIS3.CONTROLS/Button/IconButton', [
-    'SBIS3.CONTROLS/WSControls/Buttons/Button',
-    'SBIS3.CONTROLS/Utils/IconButtonUtil',
-    'css!SBIS3.CONTROLS/Button/IconButton/IconButton'
+   'SBIS3.CONTROLS/WSControls/Buttons/Button',
+   'SBIS3.CONTROLS/Utils/IconButtonUtil',
+   'css!SBIS3.CONTROLS/Button/IconButton/IconButton'
 ],
 function(WSButton, IconButtonUtil) {
 
@@ -54,9 +54,10 @@ function(WSButton, IconButtonUtil) {
     */
 
    var IconButton = WSButton.extend([], /** @lends SBIS3.CONTROLS/Button/IconButton.prototype */ {
-        $protected: {
-           _options: {
-               /**
+      $protected: {
+         _options: {
+
+            /**
                 * @cfg {String} Устанавливает размер кнопки.
                 * @remark
                 * Сейчас опция size будет работать только в сочетании style в значении 'bordered'
@@ -70,8 +71,9 @@ function(WSButton, IconButtonUtil) {
                 *     <option name="size">l</option>
                 * </pre>
                 */
-               size: 'default',
-               /**
+            size: 'default',
+
+            /**
                 * @cfg {String} Устанавливает стилевое оформление кнопки.
                 * @remark
                 * По умолчанию значение опции "standard".
@@ -84,13 +86,13 @@ function(WSButton, IconButtonUtil) {
                 *     <option name="style">bordered</option>
                 * </pre>
                 */
-               style: ''
-           }
-        },
+            style: ''
+         }
+      },
 
-      _modifyOptions: function (opts, parsedOptions, attrToMerge) {
+      _modifyOptions: function(opts, parsedOptions, attrToMerge) {
          var
-             options = IconButton.superclass._modifyOptions.apply(this, arguments);
+            options = IconButton.superclass._modifyOptions.apply(this, arguments);
 
          options._type = 'IconButton';
          options.className += ' controls-IconButton';
@@ -103,7 +105,7 @@ function(WSButton, IconButtonUtil) {
          return options;
       },
 
-      $constructor: function () {
+      $constructor: function() {
          /*TODO оставляем добавку класса через jquery
           * чтобы избавиться - надо убрать зависимость от icons.css
           * в котором прописаны поведение и цвета для иконок по ховеру*/
@@ -114,30 +116,30 @@ function(WSButton, IconButtonUtil) {
       },
 
       setIcon: function(icon) {
-          if (icon) {
-              if (((icon.indexOf('icon-error') >= 0) || (icon.indexOf('icon-done') >= 0))){
-                  if (icon.indexOf('icon-error') >= 0) {
-                      this.getContainer().removeClass('controls-IconButton__doneBorder').addClass('controls-IconButton__errorBorder');
-                  }
-                  else {
-                      this.getContainer().addClass('controls-IconButton__doneBorder').removeClass('controls-IconButton__errorBorder');
-                  }
-              } else {
-                  this.getContainer().removeClass('controls-IconButton__doneBorder').removeClass('controls-IconButton__errorBorder');
-              }
-          } else {
-              this.getContainer().removeClass('controls-IconButton__doneBorder').removeClass('controls-IconButton__errorBorder');
-          }
-          IconButton.superclass.setIcon.call(this, icon);
+         if (icon) {
+            if (((icon.indexOf('icon-error') >= 0) || (icon.indexOf('icon-done') >= 0))) {
+               if (icon.indexOf('icon-error') >= 0) {
+                  this.getContainer().removeClass('controls-IconButton__doneBorder').addClass('controls-IconButton__errorBorder');
+               } else {
+                  this.getContainer().addClass('controls-IconButton__doneBorder').removeClass('controls-IconButton__errorBorder');
+               }
+            } else {
+               this.getContainer().removeClass('controls-IconButton__doneBorder').removeClass('controls-IconButton__errorBorder');
+            }
+         } else {
+            this.getContainer().removeClass('controls-IconButton__doneBorder').removeClass('controls-IconButton__errorBorder');
+         }
+         IconButton.superclass.setIcon.call(this, icon);
       },
       _toggleState: function() {
-          var  container = this._container;
-          // селекторы с filter стирать не надо т.к. есть FilterPanel которая использует точно такие же селекторы controls-IconButton__filter
-          // на них завязаны прикладники поэтому просто поменять имя селектора не получится
-          container[0].className = container[0].className.replace(/(^|\s)controls-IconButton_(?!(_filter))\S+/g, '').replace(/(^|\s)controls-IconButton__(?!(filter))\S+/g, '');
-          container.addClass(IconButtonUtil.getClassState(this._options));
-          IconButton.superclass._toggleState.apply(this, arguments);
-       }
+         var  container = this._container;
+
+         // селекторы с filter стирать не надо т.к. есть FilterPanel которая использует точно такие же селекторы controls-IconButton__filter
+         // на них завязаны прикладники поэтому просто поменять имя селектора не получится
+         container[0].className = container[0].className.replace(/(^|\s)controls-IconButton_(?!(_filter))\S+/g, '').replace(/(^|\s)controls-IconButton__(?!(filter))\S+/g, '');
+         container.addClass(IconButtonUtil.getClassState(this._options));
+         IconButton.superclass._toggleState.apply(this, arguments);
+      }
    });
 
    return IconButton;

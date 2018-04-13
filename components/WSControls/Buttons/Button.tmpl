@@ -1,5 +1,10 @@
 <span class="controls-ButtonBase {{!visible ? ' ws-hidden'}}" title="{{tooltip}}" disabled="{{!enabled ? 'disabled'}}" type="button">
     <span class="controls-ButtonBase__content controls-{{_type}}__content">
-        <ws:partial template="{{contentTemplate}}" scope="{{...}}"></ws:partial>
+        <ws:if data="{{_svgIcon}}">
+            <ws:partial template="{{_svgIconTpl}}" scope="{{...}}"></ws:partial>
+        </ws:if>
+        <ws:else>
+            <ws:partial template="{{contentTemplate}}" scope="{{...}}"></ws:partial>
+        </ws:else>
     </span>
 </span>

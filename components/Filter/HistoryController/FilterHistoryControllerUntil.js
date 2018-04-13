@@ -7,8 +7,9 @@ define('SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil',
        'Core/helpers/Object/isEqual',
        'Core/helpers/Object/find',
        'Core/helpers/String/ucFirst',
+       'WS.Data/Chain',
        'Core/Date'
-    ], function(coreClone, isEqualObject, objectFind, ucFirst) {
+    ], function(coreClone, isEqualObject, objectFind, ucFirst, Chain, Date) {
 
    'use strict';
 
@@ -222,6 +223,30 @@ define('SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil',
                }
             }
          }
+      },
+   
+      minimizeStructureToSave: function(structure) {
+         structure = this.prepareStructureToSave(structure);
+         return Chain(structure).reduce(function(result, item) {
+            var structureElem = {};
+         
+            structureElem.internalValueField = item.internalValueField;
+         
+            if (item.hasOwnProperty('value')) {
+               structureElem.value = item.value;
+            }
+         
+            if (item.hasOwnProperty('caption')) {
+               structureElem.caption = item.caption;
+            }
+         
+            if (item.hasOwnProperty('visibilityValue')) {
+               structureElem.visibilityValue = item.visibilityValue;
+            }
+         
+            result.push(structureElem);
+            return result;
+         }, []);
       }
    };
 });

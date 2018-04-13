@@ -11,9 +11,10 @@ define('Controls/Layout/Scroll',
       'Core/Control',
       'tmpl!Controls/Layout/Scroll/Scroll',
       'Controls/Event/Registrar',
-      'Core/helpers/Function/throttle'
+      'Core/helpers/Function/throttle',
+      'Core/detection'
    ],
-   function(Control, template, Registrar, throttle) {
+   function(Control, template, Registrar, throttle, detection) {
 
       'use strict';
 
@@ -156,7 +157,9 @@ define('Controls/Layout/Scroll',
 
                _private.onInitScroll(this, this._container);
 
-               if (global && global.IntersectionObserver && triggers) {
+               //IntersectionObserver doesn't work correctly in Edge
+               //https://online.sbis.ru/opendoc.html?guid=aa514bbc-c5ac-40f7-81d4-50ba55f8e29d
+               if (global && global.IntersectionObserver && triggers && !detection.isIE12) {
                   _private.initIntersectionObserver(this, triggers);
                } else {
                   _private.onChangeScroll(this, this._container);
