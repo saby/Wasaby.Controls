@@ -1,11 +1,11 @@
 define('SBIS3.CONTROLS/VdomPhoneTextBox',
    [
-      'Core/Control',
+      'SBIS3.CONTROLS/CompoundControl',
       'tmpl!SBIS3.CONTROLS/VdomPhoneTextBox/VdomPhoneTextBox',
 
-      'Controls/Input/Phone'
+      'SBIS3.CONTROLS/VdomPhoneTextBox/PhoneTextBoxWrapper'
    ],
-   function(Control, template) {
+   function(CompoundControl, dotTplFn) {
 
       'use strict';
 
@@ -17,15 +17,29 @@ define('SBIS3.CONTROLS/VdomPhoneTextBox',
        * @extends Core/Control
        * @author Журавлев М. С.
        */
-      var VdomPhoneTextBox = Control.extend(/** @lends SBIS3.CONTROLS/VdomPhoneTextBox.prototype*/{
-         _template: template,
+      var VdomPhoneTextBox = CompoundControl.extend(/** @lends SBIS3.CONTROLS/VdomPhoneTextBox.prototype*/{
+         _dotTplFn: dotTplFn,
 
-         _beforeMount: function(options) {
-            this._value = options.value;
+         $protected: {
+            _options: {
+               value: ''
+            }
          },
 
-         _valueChangedHandler: function() {
-            this._notify('valueChanged', [this._value]);
+         init: function() {
+            var wrapper;
+
+            VdomPhoneTextBox.superclass.init.apply(this, arguments);
+
+            wrapper = this.getChildControlByName('wrapper');
+
+            wrapper.subscribe('onValueChange', this._valueChangedHandler.bind(this));
+
+            this._wrapper = wrapper;
+         },
+
+         _valueChangedHandler: function(event, value) {
+            this._notify('onValueChange', value);
          },
 
          /**
@@ -33,15 +47,15 @@ define('SBIS3.CONTROLS/VdomPhoneTextBox',
           * @returns {*|value|string}
           * @example
           * <pre>
-          *     myComponent.subscribe('onTextChange', function(){
-       *        myPhone.getValue();
-       *     });
+          * myComponent.subscribe('onTextChange', function(){
+          *    myPhone.getValue();
+          * });
           * </pre>
           * @see value
           * @see setValue
           */
          getValue: function() {
-            return this._value;
+            return this._wrapper.getValue();
          },
 
          /**
@@ -49,16 +63,23 @@ define('SBIS3.CONTROLS/VdomPhoneTextBox',
           * @param value
           * @example
           * <pre>
-          *     myComponent.subscribe('onClick', function(){
-       *        myPhone.setValue("88001002424");
-       *     });
+          * myComponent.subscribe('onClick', function(){
+          *    myPhone.setValue("88001002424");
+          * });
           * </pre>
           * @see value
           * @see getValue
           */
          setValue: function(value) {
-            this._value = value;
-            this._forceUpdate();
+            this._wrapper.setValue(value);
+         },
+
+         /**
+          * Получает текстовое значение поля ввода телефонного номера c разделителями.
+          * @return {String}
+          */
+         getDisplayValue: function() {
+            return this._wrapper.getDisplayValue();
          }
       });
 
