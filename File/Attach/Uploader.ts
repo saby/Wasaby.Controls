@@ -36,7 +36,7 @@ class Uploader {
     private _notify: (eventName: string, ...args) => void;
     /**
      * Список событий, необходимых к пробрасыванию от ISource
-     * @type {Array<String>}
+     * @type {Array.<String>}
      * @private
      */
     private _events: Array<string> = ["onProgress", "onWarning", "onLoadedFolder"];
@@ -58,10 +58,10 @@ class Uploader {
 
     /**
      *
-     * @param {Array<File/IResource>} files Загружаемые файлы
+     * @param {Array.<File/IResource>} files Загружаемые файлы
      * @param {Object} [meta] Дополнительные мета-данные для отправки
-     * @param {Object<Function>} [handlers]
-     * @return {Core/Deferred<Array<WS.Data/Entity/Model | Error>>}
+     * @param {Object.<Function>} [handlers]
+     * @return {Core/Deferred.<Array.<WS.Data/Entity/Model | Error>>}
      * @name File/Attach/Uploader#upload
      * @method
      */
@@ -93,7 +93,7 @@ class Uploader {
      * загрузка одного файла через ISource полученный из SourceContainer
      * @param {File/IResource} file Загружаемый файл
      * @param {Object} [meta] Дополнительные мета-данные для отправки
-     * @return {Core/Deferred<WS.Data/Entity/Model | Error>}
+     * @return {Core/Deferred.<WS.Data/Entity/Model | Error>}
      * @private
      * @name File/Attach/Uploader#_uploadFile
      * @method

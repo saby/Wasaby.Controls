@@ -30,7 +30,7 @@ class SourceContainer implements IContainer<ISource> {
 
     /**
      * Регистрация источников данных для загрузки определённого типа ресурса
-     * @param {Core/Deferred<ISource>} source источник данных
+     * @param {Core/Deferred.<ISource>} source источник данных
      * @param {File/IResourceConstructor} FileData конструктор обёртки над ресурсом
      * @see File/LocalFile
      * @see File/LocalFileLink
@@ -65,12 +65,12 @@ class SourceContainer implements IContainer<ISource> {
     /**
      * Возвращает источник данных для ресурса
      * @param {IResource} file
-     * @return {Core/Deferred<ISource>}
+     * @return {Core/Deferred.<ISource>}
      * @see File/LocalFile
      * @see File/LocalFileLink
      * @see File/HttpFileLink
      */
-    get(file: IResource): Deferred<ISource> {
+    get(file: IResource): Deferred.<ISource> {
         let source = this._get(file);
         return Deferred.success(
             source ||
@@ -79,7 +79,7 @@ class SourceContainer implements IContainer<ISource> {
     }
     /**
      * Возвращает список зарегестрированый обёрток
-     * @return {Array<IResourceConstructor>}
+     * @return {Array.<IResourceConstructor>}
      * @see File/LocalFile
      * @see File/LocalFileLink
      * @see File/HttpFileLink

@@ -17,7 +17,7 @@ define("File/Attach/Container/Source", ["require", "exports", "Core/Deferred"], 
         }
         /**
          * Регистрация источников данных для загрузки определённого типа ресурса
-         * @param {Core/Deferred<ISource>} source источник данных
+         * @param {Core/Deferred.<ISource>} source источник данных
          * @param {File/IResourceConstructor} FileData конструктор обёртки над ресурсом
          * @see File/LocalFile
          * @see File/LocalFileLink
@@ -52,7 +52,7 @@ define("File/Attach/Container/Source", ["require", "exports", "Core/Deferred"], 
         /**
          * Возвращает источник данных для ресурса
          * @param {IResource} file
-         * @return {Core/Deferred<ISource>}
+         * @return {Core/Deferred.<ISource>}
          * @see File/LocalFile
          * @see File/LocalFileLink
          * @see File/HttpFileLink
@@ -64,7 +64,7 @@ define("File/Attach/Container/Source", ["require", "exports", "Core/Deferred"], 
         };
         /**
          * Возвращает список зарегестрированый обёрток
-         * @return {Array<IResourceConstructor>}
+         * @return {Array.<IResourceConstructor>}
          * @see File/LocalFile
          * @see File/LocalFileLink
          * @see File/HttpFileLink

@@ -30,7 +30,7 @@ import IResource = require("File/IResource");
  * @method
  * @name File/ResourceGetter/Base#getFiles
  * @abstract
- * @return {Core/Deferred<Array<File/IResource | Error>>}
+ * @return {Core/Deferred.<Array.<File/IResource | Error>>}
  * @example
  * Получение скана:
  * <pre>
@@ -74,7 +74,7 @@ import IResource = require("File/IResource");
  * @abstract
  * @method
  * @name File/ResourceGetter/Base#canExec
- * @return {Core/Deferred<boolean>}
+ * @return {Core/Deferred.<boolean>}
  * @example
  * Доступны ли сканеры:
  * <pre>

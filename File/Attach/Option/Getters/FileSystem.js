@@ -18,7 +18,7 @@ define("File/Attach/Option/Getters/FileSystem", ["require", "exports", "tslib", 
          * @name File/Attach/Option/Getters/FileSystem#multiSelect
          */
         /**
-         * @cfg {Array<String>} Список расширений выбираемых файлов
+         * @cfg {Array.<String>} Список расширений выбираемых файлов
          * <wiTag group="Управление">
          * Помимо перечисления массива конкретных расширений файлов, можно также передать в массив значения:
          * <ul>

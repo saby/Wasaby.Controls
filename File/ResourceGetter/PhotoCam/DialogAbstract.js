@@ -83,7 +83,7 @@ define("File/ResourceGetter/PhotoCam/DialogAbstract", ["require", "exports", "SB
         },
         /**
          *
-         * @return {Core/Deferred<Array<Blob>>}
+         * @return {Core/Deferred.<Array.<Blob>>}
          * @private
          */
         _getFiles: function () {
@@ -129,7 +129,7 @@ define("File/ResourceGetter/PhotoCam/DialogAbstract", ["require", "exports", "SB
         },
         /**
          * Получение текущего изображения из медиа контента
-         * @return {Core/Deferred<Blob | File | String>}
+         * @return {Core/Deferred.<Blob | File | String>}
          * @protected
          * @abstract
          */
