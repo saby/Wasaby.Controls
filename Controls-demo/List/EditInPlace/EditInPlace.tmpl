@@ -1,16 +1,4 @@
 <div class="editInPlaceDemo">
-    <style>
-        .ws-ListView__item {
-            height: 30px;
-            box-sizing: border-box;
-            padding: 3px 4px;
-            display: flex;
-            align-items: center;
-        }
-        .editInPlaceDemo {
-            padding-top: 30px;
-        }
-    </style>
     <div>
         <h3>Simple list</h3>
         <Controls:List
@@ -23,6 +11,7 @@
             <ws:editingConfig>
                 <ws:Object editOnClick="{{_editOnClick}}"
                            singleEdit="{{_singleEdit}}"
+                           showToolbar="{{_showToolbar}}"
                            autoAdd="{{_autoAdd}}"/>
             </ws:editingConfig>
             <ws:itemTemplate>
@@ -42,6 +31,7 @@
                 <ws:Controls.Toggle.Checkbox bind:value="_editOnClick" caption="editOnClick"/>
                 <ws:Controls.Toggle.Checkbox bind:value="_singleEdit" caption="singleEdit"/>
                 <ws:Controls.Toggle.Checkbox bind:value="_autoAdd" caption="autoAdd"/>
+                <ws:Controls.Toggle.Checkbox bind:value="_showToolbar" caption="showToolbar"/>
             </div>
         </div>
     </div>

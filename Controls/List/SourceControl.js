@@ -185,9 +185,10 @@ define('Controls/List/SourceControl', [
 
       showIndicator: function(self, direction) {
          self._loadingState = direction ? direction : 'all';
+         self._loadingIndicatorState = self._loadingState;
          setTimeout(function() {
-            if (self._loadingIndicatorState !== self._loadingState) {
-               self._loadingIndicatorState = self._loadingState;
+            if (self._loadingState) {
+               self._showLoadingIndicatorImage = true;
                self._forceUpdate();
             }
          }, 2000);
@@ -195,6 +196,7 @@ define('Controls/List/SourceControl', [
 
       hideIndicator: function(self) {
          self._loadingState = null;
+         self._showLoadingIndicatorImage = false;
          if (self._loadingIndicatorState !== null) {
             self._loadingIndicatorState = self._loadingState;
             self._forceUpdate();

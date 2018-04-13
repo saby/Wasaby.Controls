@@ -267,16 +267,18 @@ define([
 
          SourceControl._private.showIndicator(ctrl);
          assert.equal(ctrl._loadingState, 'all', 'Wrong loading state');
+         assert.equal(ctrl._loadingIndicatorState, 'all', 'Wrong loading state');
 
-         //индикатор должен появляться через 2000 мс, проверим, что его нет сразу
-         assert.equal(ctrl._loadingIndicatorState, null, 'Wrong loading indicator state');
+         //картинка должен появляться через 2000 мс, проверим, что её нет сразу
+         assert.isFalse(ctrl._showLoadingIndicatorImage, 'Wrong loading indicator image state');
 
-         //искуственно покажем индикатор
-         ctrl._loadingIndicatorState = 'all';
+         //искуственно покажем картинку
+         ctrl._showLoadingIndicatorImage = true;
          //и вызовем скрытие
          SourceControl._private.hideIndicator(ctrl);
          assert.equal(ctrl._loadingState, null, 'Wrong loading state');
          assert.equal(ctrl._loadingIndicatorState, null, 'Wrong loading indicator state');
+         assert.isFalse(ctrl._showLoadingIndicatorImage, 'Wrong loading indicator image state');
       });
 
       it('scrollToEdge_load', function (done) {
