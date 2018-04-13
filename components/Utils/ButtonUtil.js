@@ -23,8 +23,6 @@ define('SBIS3.CONTROLS/Utils/ButtonUtil', [],
          preparedClassFromOptions: function(opts) {
             opts.cssClassName += ' controls-Button';
             opts.cssClassName += this.getClassState(opts);
-
-            this.checkSVG(opts);
          },
 
          getClassState: function(opts) {
@@ -38,13 +36,7 @@ define('SBIS3.CONTROLS/Utils/ButtonUtil', [],
                state = (!!opts.primary ? 'primary' : opts.style);
             }
             classes += ' controls-Button_state-' + state;
-
-            this.checkSVG(opts);
             return classes;
-         },
-         // TODO откатить все правки по svg, когда Андрей Голубев будет грузить статику первее БЛ-запросов
-         checkSVG: function(opts) {
-            opts._svgIcon = opts.icon && opts.icon.indexOf('icon-AddButtonNew') !== -1 ? true : false;
          }
       };
    });
