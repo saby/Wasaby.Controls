@@ -31,17 +31,17 @@
     </Controls.Input.resources.InputRender.InputRender>
 
     <Controls.Popup.Opener.Sticky name="suggestPopupOpener">
-        <ws:popupOptions vAlingTopClass="ws-Suggest__popup-vAlignTop" vAlingBottomClass="ws-Suggest__popup-vAlignBottom" autoHide="{{true}}" template="Controls/Input/resources/SuggestView/SuggestView">
+        <ws:popupOptions vAlingTopClass="ws-Suggest__popup-vAlignTop" vAlingBottomClass="ws-Suggest__popup-vAlignBottom" template="Controls/Input/resources/SuggestView/SuggestView">
             <ws:corner vertical="bottom"/>
             <ws:verticalAlign side="bottom"/>
-            <ws:componentOptions idProperty="{{_options.idProperty}}"/>
+            <ws:templateOptions idProperty="{{_options.idProperty}}"/>
             <ws:eventHandlers onFocusIn="{{_popupFocusIn}}" onFocusOut="{{_popupFocusOut}}" onResult="{{_selectHandler}}" onClose="{{_popupClose}}"/>
         </ws:popupOptions>
     </Controls.Popup.Opener.Sticky>
 
     <Controls.Popup.Opener.Stack name="showAllOpener">
         <ws:popupOptions template="Controls/Input/resources/SuggestShowAll/SuggestShowAll" className="ws-Suggest__showAllPopup">
-            <ws:componentOptions source="{{_options.source}}" template="{{_options.suggestTemplate}}" navigation="{{_options.navigation}}"></ws:componentOptions>
+            <ws:templateOptions source="{{_options.source}}" template="{{_options.suggestTemplate}}" navigation="{{_options.navigation}}"></ws:templateOptions>
             <ws:eventHandlers onResult="{{_selectHandler}}"/>
         </ws:popupOptions>
     </Controls.Popup.Opener.Stack>
