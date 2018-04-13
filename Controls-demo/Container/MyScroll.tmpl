@@ -52,7 +52,7 @@
       </Controls.Container.Scroll>
       <Controls.Popup.Opener.Dialog name="usersDialog">
          <ws:popupOptions>
-            <ws:componentOptions usersSource="{{_usersSource}}"/>
+            <ws:templateOptions usersSource="{{_usersSource}}"/>
             <ws:template>
                <ws:partial template="tmpl!Controls-demo/Container/resources/UsersList" on:itemClick="_selectUser()"
                            attr:class="ControlsDemo-Scroll__usersList" showShadow="{{_showShadow}}"

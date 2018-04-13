@@ -10,7 +10,7 @@ define('Controls/Input/Dropdown/Util', [], function() {
      */
       open: function(self, target) {
          var config = {
-            componentOptions: {
+            templateOptions: {
                items: self._items,
                defaultItemTemplate: self._defaultItemTemplate
             },

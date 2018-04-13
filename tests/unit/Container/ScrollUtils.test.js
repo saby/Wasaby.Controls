@@ -116,11 +116,11 @@ define(
 
          describe('calcScrollbarWidth', function() {
             it('webKit', function() {
-               var userAgent = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36';
+               detection = {
+                  webkit: true
+               };
 
-               result = ScrollWidthUtil._private.calcScrollbarWidth({
-                  userAgent: userAgent
-               });
+               result = ScrollWidthUtil._private.calcScrollbarWidth(detection);
                assert.equal(result, 0);
             });
             it('ie12', function() {
