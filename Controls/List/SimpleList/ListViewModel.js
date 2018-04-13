@@ -84,7 +84,7 @@ define('Controls/List/SimpleList/ListViewModel',
             itemsModelCurrent.isSelected = itemsModelCurrent.dispItem === this._markedItem;
             itemsModelCurrent.itemActions =  this._actions[this.getCurrentIndex()];
             itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
-            itemsModelCurrent.showActions = !this._editingItemData && (!this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive))
+            itemsModelCurrent.showActions = !this._editingItemData && (!this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive));
             itemsModelCurrent.multiSelectStatus = this._multiselection.getSelectionStatus(itemsModelCurrent.key);
             itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility === 'visible';
             if (this._editingItemData && itemsModelCurrent.index === this._editingItemData.index) {
