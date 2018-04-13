@@ -377,7 +377,7 @@ function(cContext, coreClone, cMerge, CommandDispatcher, EventBus, Deferred, IoC
       },
 
       _isConfirmDialogShowed: function() {
-         return this._confirmDialog && this._confirmDialog.isVisible();
+         return !!this._confirmDialog;
       },
 
       _isRecordSaving: function() {
@@ -813,6 +813,7 @@ function(cContext, coreClone, cMerge, CommandDispatcher, EventBus, Deferred, IoC
       },
 
       _confirmDialogHandler: function(result) {
+         this._confirmDialog = undefined;
          if (result) {
             this._prepareUpdatingRecord({
                closePanelAfterSubmit: true
