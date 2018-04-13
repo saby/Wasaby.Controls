@@ -589,7 +589,7 @@ define('SBIS3.CONTROLS/DataGridView',
             /**
              * @cfg {String} Устанавливает шаблон отображения строки итогов.
              * @remark
-             * Подробнее о правилах построения шаблона вы можете прочитать в статье {@link /doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/results/ Строка итогов}.
+             * Подробнее о правилах построения шаблона вы можете прочитать в статье {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/results/ Строка итогов}.
              * <br/>
              * Чтобы шаблон можно было передать в опцию компонента, его нужно предварительно подключить в массив зависимостей.
              * @example
@@ -1532,7 +1532,7 @@ define('SBIS3.CONTROLS/DataGridView',
 
       _toggleActiveArrow: function(arrow, enable) {
          arrow.toggleClass('icon-disabled', !enable)
-              .toggleClass('icon-primary action-hover', enable);
+              .toggleClass('icon-primary controls-DataGridView__PartScroll__arrowRight_hover', enable);
       },
 
       _isTableWide: function() {

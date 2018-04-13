@@ -218,7 +218,7 @@ define('SBIS3.CONTROLS/Tree/CompositeView', [
              * @cfg {String} Задаёт шаблон отображения содержимого каждого элемента коллекции для отрисовки папки в режимах "Список" и "Плитка"
              * @remark
              * Режим отображения определяется опцией {@link SBIS3.CONTROLS/Mixins/CompositeViewMixin#viewMode},
-             * Подробнее про режимы отображения можно прочитать {@link /doc/platform/developmentapl/interface-development/components/list/list-settings/list-types/#compositeview здесь}.
+             * Подробнее про режимы отображения можно прочитать {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-types/#compositeview здесь}.
              * @see folderTpl
              * @see listFolderTpl
              * @see setListFolderTpl
@@ -249,7 +249,7 @@ define('SBIS3.CONTROLS/Tree/CompositeView', [
              * @remark
              * Режим отображения определяется опцией {@link SBIS3.CONTROLS/Mixins/CompositeViewMixin#viewMode},
              * Опция работает для viewMode = list
-             * Подробнее про режимы отображения можно прочитать {@link /doc/platform/developmentapl/interface-development/components/list/list-settings/list-types/#compositeview здесь}.
+             * Подробнее про режимы отображения можно прочитать {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-types/#compositeview здесь}.
              * @see setListFolderTpl
              * @see listFolderContentTpl
              * @see setListFolderContentTpl
@@ -260,7 +260,7 @@ define('SBIS3.CONTROLS/Tree/CompositeView', [
              * @remark
              * Режим отображения определяется опцией {@link SBIS3.CONTROLS/Mixins/CompositeViewMixin#viewMode},
              * Опция работает для viewMode = list
-             * Подробнее про режимы отображения можно прочитать {@link /doc/platform/developmentapl/interface-development/components/list/list-settings/list-types/#compositeview здесь}.
+             * Подробнее про режимы отображения можно прочитать {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-types/#compositeview здесь}.
              * @see setListFolderContentTpl
              * @see listFolderTpl
              * @see setListFolderTpl

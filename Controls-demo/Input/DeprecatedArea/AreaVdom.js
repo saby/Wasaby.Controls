@@ -1,8 +1,8 @@
-define('Controls-demo/Input/Area/AreaVdom', [
+define('Controls-demo/Input/DeprecatedArea/AreaVdom', [
 	'Core/Control',
-	'tmpl!Controls-demo/Input/Area/AreaVdom',
+	'tmpl!Controls-demo/Input/DeprecatedArea/AreaVdom',
 	'Controls/Input/Area',
-	'css!Controls-demo/Input/Area/AreaVdom'
+	'css!Controls-demo/Input/DeprecatedArea/AreaVdom'
 ], function ( Control, dotTplFn) {
 	'use strict';
 	var moduleClass = Control.extend({
