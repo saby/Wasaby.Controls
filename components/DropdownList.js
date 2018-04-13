@@ -122,6 +122,7 @@ define('SBIS3.CONTROLS/DropdownList',
              textArray = [];
          if (cfg.emptyValue && keys && keys[0] === null) {
             cfg.text = getEmptyText(cfg);
+            cfg.className += ' controls-DropdownList__defaultItem';
          } else if (items && keys && keys.length > 0) {
             list = new List();
             if (items.at(0) && items.at(0).get(cfg.idProperty) === keys[0]) {
