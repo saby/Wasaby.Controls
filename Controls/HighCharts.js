@@ -51,10 +51,8 @@ define('Controls/HighCharts',
 
          _drawChart: function(config) {
             config.highChartOptions.chart.renderTo = this._container;
-            /**
-             * Как добавят возможность использовать контейнер как _children поменять на
-             * config.highChartOptions.chart.renderTo = this._children.highChartContainer;
-             */
+            //Как добавят возможность использовать контейнер как _children поменять на
+            //config.highChartOptions.chart.renderTo = this._children.highChartContainer
             config.highChartOptions.credits = config.highChartOptions.credits || {};
             config.highChartOptions.credits.enabled = false;
             if (this._highChartInstance) {
