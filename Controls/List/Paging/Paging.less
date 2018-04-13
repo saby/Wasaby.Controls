@@ -1,6 +1,5 @@
 .controls-Paging__wrapper {
    display: flex;
-   padding: @padding_Paging;
 }
 .controls-Paging__btn {
    height: @height_Paging-button;
@@ -8,13 +7,13 @@
    align-items: center;
    justify-content: center;
    user-select: none;
-   margin: 0 @spacing_Paging_button/2;
+   margin: @padding_Paging-button;
 }
 .controls-Paging__digitButons {
    display: inline-flex;
 }
 .controls-Paging__arrow {
-   width: @width_Paging-arrow;
+   width: @width_Paging-arrow-button;
    background-color: @background-color_Paging-button;
 }
 .controls-Paging__arrow__state-normal {
@@ -31,6 +30,6 @@
 }
 .controls-Paging__icon {
    font-family: @default-icon-font;
-   font-size: @font-size_Paging_arrow;
+   font-size: @font-size_Paging-arrow-button;
    font-style: normal;
 }
