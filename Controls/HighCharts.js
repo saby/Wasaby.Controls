@@ -53,7 +53,9 @@ define('Controls/HighCharts',
          },
 
          _drawChart: function(config) {
-            config.highChartOptions.chart.renderTo = this._children[this._options.highChartContainer];
+            config.highChartOptions.chart.renderTo = this._children.highChartContainer;
+            config.highChartOptions.credits = config.highChartOptions.credits || {};
+            config.highChartOptions.credits.enabled = false;
             if (this.highChartObj) {
                this.highChartObj.destroy();
             }

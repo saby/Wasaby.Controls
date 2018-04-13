@@ -5,12 +5,10 @@
                      on:click="toggleChart()" />
     <ws:if data="{{need}}">
         <Controls.HighCharts
-                highChartContainer="highChartLine"
                 highChartOptions="{{highChartOptions1}}"
         />
     </ws:if>
     <Controls.HighCharts
-            highChartContainer="highChartPie"
             highChartOptions="{{highChartOptions2}}"
     />
 </div>
