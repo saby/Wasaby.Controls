@@ -3,15 +3,17 @@ define('SBIS3.CONTROLS/PrintDialogTemplate',
       'Lib/Control/CompoundControl/CompoundControl',
       'tmpl!SBIS3.CONTROLS/PrintDialogTemplate/PrintDialogTemplate',
       'Core/SessionStorage',
-      'Core/constants',
+      'Core/detection',
       'Core/helpers/fast-control-helpers',
       'Core/CommandDispatcher',
       'css!SBIS3.CONTROLS/PrintDialogTemplate/PrintDialogTemplate'
-   ], function(CompoundControl, template, SessionStorage, constants, fcHelpers, CommandDispatcher) {
+   ], function(CompoundControl, template, SessionStorage, detection, fcHelpers, CommandDispatcher) {
       "use strict";
 
       var autoTestsConfig = SessionStorage.get('autoTestConfig');
-      var needShowReportDialog = !constants.browser.chrome || autoTestsConfig && autoTestsConfig.showPrintReportForTests;
+
+      //retailOffline неожиданно превратился в chrome, в котором нет нативного диалога предпросмотра. Будем показывать свой.
+      var needShowReportDialog = !detection.chrome || detection.retailOffline || autoTestsConfig && autoTestsConfig.showPrintReportForTests;
 
       var PrintDialogTemplate = CompoundControl.extend({
          _dotTplFn: template,

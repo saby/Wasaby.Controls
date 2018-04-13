@@ -77,7 +77,7 @@ define('SBIS3.CONTROLS/RichEditor',
             this._toolbar.setLinkedEditor(this);
             this._toolbar.subscribe('onExpandedChange', function (evtName, expanded) {
                if (!this._options.autoHeight) {
-                  var container = this._scrollContainer.parent();
+                  var container = this._richTextAreaContainer;
                   container.animate(
                      {height: container.outerHeight() + (expanded ? -constants.toolbarHeight : constants.toolbarHeight)},
                      'fast'
@@ -128,7 +128,7 @@ define('SBIS3.CONTROLS/RichEditor',
             var options = this._options;
             if (!options.autoHeight) {
                var toolbarHeight = options.toolbar && options.toolbarVisible ? constants.toolbarHeight : 0;
-               this._scrollContainer.parent().css('height',  this._container.height() - toolbarHeight);
+               this._richTextAreaContainer.css('height',  this._container.height() - toolbarHeight);
             }
          }
       });

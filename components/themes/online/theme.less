@@ -51,17 +51,19 @@
          .controls-DataGridView__td:first-child {
             .marker();
          }
-      }
-   }
-   &.controls-ListView__withoutMarker {
-      &:not(.controls-DataGridView__markerRight) {
-         .controls-ListView__item__selected:hover {
+         .controls-ListView__withoutMarker {
             .controls-DataGridView__td:first-child {
                background-image: none;
             }
          }
       }
    }
+    //todo
+    &.controls-ListView__withoutMarker,.controls-ListView__withoutMarker {
+       .controls-DataGridView__td:first-child {
+          background-image: none !important;
+       }
+    }
 }
 
 .controls-Popup-border {

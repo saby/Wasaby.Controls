@@ -151,8 +151,14 @@ define('SBIS3.CONTROLS/Filter/Button/History',
        * Обновляет список истории
        */
       updateHistoryViewItems: function() {
+         var self = this;
+         
          if(this._historyController) {
-            this._historyView.setItems(this._historyController.getHistory() || []);
+            this._historyController.getHistory(true).addCallback(function(history) {
+               if (!self._historyView.isDestroyed()) {
+                  self._historyView.setItems(history || []);
+               }
+            });
          }
       },
 

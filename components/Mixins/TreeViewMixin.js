@@ -89,7 +89,7 @@ define('SBIS3.CONTROLS/Mixins/TreeViewMixin', [
              * @example
              * В частном случае шаблон футера узла иерархии используют для размещения кнопок создания нового листа или папки.
              * ![](/folderFooterTpl.png)
-             * Подробный пример использования футера для решения этой прикладной задачи вы можете найти в разделе {@link /doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/ Добавление по месту в иерархическом списке}.
+             * Подробный пример использования футера для решения этой прикладной задачи вы можете найти в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/ Добавление по месту в иерархическом списке}.
              * @see SBIS3.CONTROLS.List#footerTpl
              */
             folderFooterTpl: undefined,
@@ -114,7 +114,7 @@ define('SBIS3.CONTROLS/Mixins/TreeViewMixin', [
        * - Если активен элемент (лист), внутри открытой папки (узла/скрытого узла) - id этой папки
        * - В остальных случаях вернет id текущей папки (узла/скрытого узла)
        *
-       * Подробнее о типах данных иерархического списка можно прочитать в разделе {@link /doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/ Иерархия}.
+       * Подробнее о типах данных иерархического списка можно прочитать в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/ Иерархия}.
        */
       getActiveNodeKey: function() {
          var

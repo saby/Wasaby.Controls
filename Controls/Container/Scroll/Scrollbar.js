@@ -102,7 +102,7 @@ define('Controls/Container/Scroll/Scrollbar',
                 * https://online.sbis.ru/opendoc.html?guid=3e532f22-65a9-421b-ab0c-001e69d382c8
                 */
                if (firefox) {
-                  return 100;
+                  return Math.sign(delta) * 100;
                }
 
                return delta;
