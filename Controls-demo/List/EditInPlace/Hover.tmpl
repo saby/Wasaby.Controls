@@ -1,0 +1,30 @@
+<div class="editInPlaceDemo">
+    <div>
+        <h3>Text</h3>
+        <Controls:List
+                name="list"
+                source="{{_viewSource}}"
+                allowEmptySelection="{{false}}"
+                idProperty="id">
+            <ws:editingConfig>
+                <ws:Object editOnClick="{{true}}"/>
+            </ws:editingConfig>
+            <ws:itemTemplate>
+                <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate"
+                            itemData="{{itemTemplate.itemData}}">
+                    <ws:contentTemplate>
+                        <ws:partial template="tmpl!Controls-demo/List/EditInPlace/textEditor"
+                                    enabled="{{_enabled}}"
+                                    itemData="{{itemTemplate.itemData}}"/>
+                    </ws:contentTemplate>
+                </ws:partial>
+            </ws:itemTemplate>
+        </Controls:List>
+        <div attr:style="padding: 15px; background-color: rgba(81,81,81,0.11); width: 150px;">
+            <h3>Select options:</h3>
+            <div>
+                <ws:Controls.Toggle.Checkbox bind:value="_enabled" caption="enabled"/>
+            </div>
+        </div>
+    </div>
+</div>

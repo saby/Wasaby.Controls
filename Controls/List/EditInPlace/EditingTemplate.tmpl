@@ -1,0 +1,13 @@
+<ws:if data="{{isEditing}}">
+    <ws:Controls.Validate.Input validators="{{validators}}">
+        <ws:partial template="{{editorTemplate}}" />
+    </ws:Controls.Validate.Input>
+</ws:if>
+<ws:else>
+    <div class="controls-EditingTemplateText
+                {{enabled ? 'controls-EditingTemplateText_enabled'}}
+                controls-EditingTemplateText_size_{{size ? size : 'default'}}
+                controls-EditingTemplateText_style_{{style ? style : 'default'}}">
+        <div class="controls-EditingTemplateText__inner">{{value}}</div>
+    </div>
+</ws:else>

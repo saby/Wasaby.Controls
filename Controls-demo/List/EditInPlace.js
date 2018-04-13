@@ -4,7 +4,8 @@ define('Controls-demo/List/EditInPlace', [
    'WS.Data/Source/Memory',
    'WS.Data/Entity/Model',
    'Core/Deferred',
-   'Controls/Validate/Validators/IsRequired'
+   'Controls/Validate/Validators/IsRequired',
+   'css!Controls-demo/List/EditInPlace/EditInPlace'
 ], function (Control,
              template,
              MemorySource,
