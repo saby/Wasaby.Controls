@@ -2,7 +2,7 @@ define("File/Attach/Container/SourceLazy", ["require", "exports", "tslib", "File
     "use strict";
     /**
      * Фильтрует массив обёрток над ISource по типу файла
-     * @param {Array<Wrapper>} array
+     * @param {Array.<Wrapper>} array
      * @param {File/IResource} file
      * @return {Wrapper}
      * @private
@@ -58,7 +58,7 @@ define("File/Attach/Container/SourceLazy", ["require", "exports", "tslib", "File
         /**
          * Возвращает источник данных для ресурса
          * @param {File/IResource} file
-         * @return {Core/Deferred<ISource>}
+         * @return {Core/Deferred.<ISource>}
          * @see File/LocalFile
          * @see File/LocalFileLink
          * @see File/HttpFileLink
@@ -75,7 +75,7 @@ define("File/Attach/Container/SourceLazy", ["require", "exports", "tslib", "File
         };
         /**
          * Возвращает список зарегестрированый обёрток
-         * @return {Array<File/IResourceConstructor>}
+         * @return {Array.<File/IResourceConstructor>}
          * @see File/LocalFile
          * @see File/LocalFileLink
          * @see File/HttpFileLink

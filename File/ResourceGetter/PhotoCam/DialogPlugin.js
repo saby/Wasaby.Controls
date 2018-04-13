@@ -27,7 +27,7 @@ define("File/ResourceGetter/PhotoCam/DialogPlugin", ["require", "exports", "Core
      *
      * @param {HTMLObjectElement} connection
      * @param {HTMLObjectElement} localVideoElement
-     * @return {Core/Deferred<MediaStream>}
+     * @return {Core/Deferred.<MediaStream>}
      */
     var getMedia = function (connection, localVideoElement) {
         var def = new Deferred();
