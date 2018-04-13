@@ -1,14 +1,16 @@
 .controls-PanelFilter {
-   min-width: @min-width_FilterPanel;
    width: auto;
    box-shadow: @box-shadow_FilterPanel;
    border: @border-size_FilterPanel solid @border-color_FilterPanel;
    background-color: @background-color_FilterPanel;
+}
+
+.controls-FilterPanel__wrapper {
    display: flex;
-   flex-wrap: wrap;
 }
 
 .controls-FilterPanel__header {
+   min-width: @min-width_FilterPanel;
    height: @height_FilterPanel-header;
    display: flex;
    align-items: center;

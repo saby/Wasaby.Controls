@@ -96,7 +96,8 @@ define('Controls/Filter/Button',
                } else {
                   this._children.filterStickyOpener.open({
                      componentOptions: {
-                        items: clone(this._options.items)
+                        items: clone(this._options.items),
+                        viewMode: this._options.viewMode
                      },
                      template: 'Controls/Filter/Panel',
                      target: event.target
