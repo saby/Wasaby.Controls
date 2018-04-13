@@ -131,7 +131,7 @@ define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/Res
     }
     var OPTION = {
         /**
-         * @cfg {Array<String>} Список расширений выбираемых файлов
+         * @cfg {Array.<String>} Список расширений выбираемых файлов
          * <wiTag group="Управление">
          * Помимо перечисления массива конкретных расширений файлов, можно также передать в массив значения:
          * <ul>
@@ -209,7 +209,7 @@ define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/Res
         }
         /**
          * Возвращает Deferred, который стрельнёт, когда на указанный элемент будут перемещены файлы
-         * @return {Core/Deferred<Array<File/LocalFile | Error>>}
+         * @return {Core/Deferred.<Array.<File/LocalFile | Error>>}
          * @method
          * @name File/ResourceGetter/DropArea#getFiles
          * @see File/LocalFile
@@ -225,7 +225,7 @@ define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/Res
         };
         /**
          * Возможен ли выбор файлов
-         * @return {Core/Deferred<Boolean>}
+         * @return {Core/Deferred.<Boolean>}
          * @method
          * @name File/ResourceGetter/DropArea#canExec
          */
