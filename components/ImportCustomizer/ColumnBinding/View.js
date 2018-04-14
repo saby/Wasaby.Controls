@@ -85,11 +85,11 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                /**
                 * @cfg {string} Заголовок для меню выбора соответсвия в колонках
                 */
-               columnCaption: rk('Не используется', 'НастройщикИмпорта'),
+               menuTitle: rk('Не используется', 'НастройщикИмпорта'),
                /**
                 * @cfg {string} Всплывающая подсказака в заголовке колонки
                 */
-               columnTitle: rk('Колонка', 'НастройщикИмпорта'),
+               headTitle: rk('Колонка', 'НастройщикИмпорта'),
                /**
                 * @cfg {Array<Array<string>>} Данные таблицы, массив массивов равной длины (по количеству колонок)
                 */
@@ -118,9 +118,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
             return options;
          },
 
-         $constructor: function () {
-            this._publish('change');
-         },
+         /*$constructor: function () {
+         },*/
 
          init: function () {
             View.superclass.init.apply(this, arguments);
@@ -288,7 +287,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                   }
                   var firstItem = {className:_CLASS_MENU_EMPTY};
                   firstItem[idProperty] = _ID_MENU_EMPTY;
-                  firstItem[displayProperty] = options.columnCaption;
+                  firstItem[displayProperty] = options.menuTitle;
                   firstItem[parentProperty] = null;
                   commonMenuItems.unshift(firstItem);
                   // Размножим commonMenuItems для каждого меню отдельно (чтобы можно было задачть индивидуальные свойства)
@@ -316,7 +315,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                      }
                   }
                }
-               var title = options.columnTitle;
+               var title = options.headTitle;
                var skippedRows = 0 < options.skippedRows ? options.skippedRows : 0;
                var columns = rows[0].map(function (v, i) { return {
                   field: _PREFIX_COLUMN_FIELD + (i + 1),
@@ -410,7 +409,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                item.setProperty('className', isSeelcted ? _CLASS_MENU_SELECTED : undefined);
             }
             if (updateCaption) {
-               menu.setCaption(isSeelcted ? item.getCaption() : this._options.columnCaption);
+               menu.setCaption(isSeelcted ? item.getCaption() : this._options.menuTitle);
             }
          },
 

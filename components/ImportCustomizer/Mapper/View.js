@@ -92,9 +92,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
             return options;
          },
 
-         $constructor: function () {
-            this._publish('change');
-         },
+         /*$constructor: function () {
+         },*/
 
          init: function () {
             View.superclass.init.apply(this, arguments);

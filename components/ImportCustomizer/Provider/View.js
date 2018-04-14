@@ -73,7 +73,6 @@ define('SBIS3.CONTROLS/ImportCustomizer/Provider/View',
                firstLine: 0 < options.skippedRows ? options.skippedRows + 1 : 1,
                separator: options.separator
             });
-            this._publish('change');
          },
 
          init: function () {

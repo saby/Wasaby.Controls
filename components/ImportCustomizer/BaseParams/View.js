@@ -40,9 +40,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/BaseParams/View',
             _replaceAllDataView: null
          },
 
-         $constructor: function () {
-            this._publish('change');
-         },
+         /*$constructor: function () {
+         },*/
 
          init: function () {
             View.superclass.init.apply(this, arguments);
