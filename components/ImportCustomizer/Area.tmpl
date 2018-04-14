@@ -1,5 +1,5 @@
 <div class="controls-ImportCustomizer-Area">
-   <ws:if data="{{_isDialogMode}}">
+   <ws:if data="{{dialogMode}}">
       <div class="controls-ImportCustomizer-Area__head">
          <div class="controls-ImportCustomizer-Area__head-title">
             <div class="controls-ImportCustomizer-Area__head-title-left">
@@ -27,28 +27,30 @@
    </ws:if>
    <SBIS3.CONTROLS:ScrollContainer class="controls-ImportCustomizer-Area__body controls-ScrollContainer__flex">
       <ws:content>
-         <ws:if data="{{_isNeeds.sheet && sheets && sheets.length}}">
-            <SBIS3.CONTROLS:ImportCustomizer:Sheet:View
+         <ws:if data="{{_isUsedSubview.sheet}}">
+            <!--^^^<SBIS3.CONTROLS:ImportCustomizer:Sheet:View
                class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-sheet"
                name="controls-ImportCustomizer-Area__sheet"
                allSheetsTitle="{{allSheetsTitle}}"
                dataType="{{dataType}}"
-               sheetTitles="{{_sheetsTitles}}"
+               sheetTitles="{{_sheetTitles}}"
                sheetIndex="{{sheetIndex}}"
-            />
+            />-->
+            <ws:partial template="tmpl!SBIS3.CONTROLS/ImportCustomizer/Area_sheet" scope="{{...}}" />
          </ws:if>
-         <ws:if data="{{_isNeeds.baseParams}}">
-            <ws:partial
+         <ws:if data="{{_isUsedSubview.baseParams}}">
+            <!--^^^<ws:partial
                template="{{baseParamsComponent}}"
                scope="{{baseParams}}"
                dataType="{{dataType}}"
                fields="{{fields}}"
                class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-baseParams"
                name="controls-ImportCustomizer-Area__baseParams"
-            />
+            />-->
+            <ws:partial template="tmpl!SBIS3.CONTROLS/ImportCustomizer/Area_baseParams" scope="{{...}}" />
          </ws:if>
-         <ws:if data="{{_isNeeds.provider}}">
-            <SBIS3.CONTROLS:ImportCustomizer:Provider:View
+         <ws:if data="{{_isUsedSubview.provider}}">
+            <!--^^^<SBIS3.CONTROLS:ImportCustomizer:Provider:View
                class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-provider"
                name="controls-ImportCustomizer-Area__provider"
                dataType="{{dataType}}"
@@ -56,32 +58,35 @@
                parser="{{_parserName}}"
                skippedRows="{{_skippedRows}}"
                separator="{{_parserSeparator}}"
-            />
+            />-->
+            <ws:partial template="tmpl!SBIS3.CONTROLS/ImportCustomizer/Area_provider" scope="{{...}}" />
          </ws:if>
-         <ws:if data="{{_isNeeds.providerArgs}}">
-            <Lib:Control:TemplatedArea:TemplatedArea
+         <ws:if data="{{_isUsedSubview.providerArgs}}">
+            <!--^^^<Lib:Control:TemplatedArea:TemplatedArea
                template="{{_providerArgsComponent}}"
                class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-not-pad controls-ImportCustomizer-Area__body__box-providerArgs"
                name="controls-ImportCustomizer-Area__providerArgs"
                visible="{{!!_providerArgsComponent}}"
                dataType="{{dataType}}"
                componentOptions="{{_providerArgsOptions}}"
-            />
+            />-->
+            <ws:partial template="tmpl!SBIS3.CONTROLS/ImportCustomizer/Area_providerArgs" scope="{{...}}" />
          </ws:if>
-         <ws:if data="{{_isNeeds.columnBinding}}">
-            <SBIS3.CONTROLS:ImportCustomizer:ColumnBinding:View
+         <ws:if data="{{_isUsedSubview.columnBinding}}">
+            <!--^^^<SBIS3.CONTROLS:ImportCustomizer:ColumnBinding:View
                class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-not-pad controls-ImportCustomizer-Area__body__box-columnBinding"
                name="controls-ImportCustomizer-Area__columnBinding"
                dataType="{{dataType}}"
-               columnCaption="{{bindingColumnCaption}}"
-               columnTitle="{{bindingColumnTitle}}"
-               rows="{{_columnsBindingRows}}"
+               menuTitle="{{columnBindingMenuTitle}}"
+               headTitle="{{columnBindingHeadTitle}}"
+               rows="{{_columnBindingRows}}"
                fields="{{fields}}"
                skippedRows="{{_skippedRows}}"
-            />
+            />-->
+            <ws:partial template="tmpl!SBIS3.CONTROLS/ImportCustomizer/Area_columnBinding" scope="{{...}}" />
          </ws:if>
-         <ws:if data="{{_isNeeds.mapper}}">
-            <SBIS3.CONTROLS:ImportCustomizer:Mapper:View
+         <ws:if data="{{_isUsedSubview.mapper}}">
+            <!--^^^<SBIS3.CONTROLS:ImportCustomizer:Mapper:View
                class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-not-pad controls-ImportCustomizer-Area__body__box-mapper"
                name="controls-ImportCustomizer-Area__mapper"
                dataType="{{dataType}}"
@@ -90,7 +95,8 @@
                fieldProperty="{{_mapperFieldProperty}}"
                variants="{{_mapperVariants}}"
                accordances="{{_mapperAccordances}}"
-            />
+            />-->
+            <ws:partial template="tmpl!SBIS3.CONTROLS/ImportCustomizer/Area_mapper" scope="{{...}}" />
          </ws:if>
       </ws:content>
    </SBIS3.CONTROLS:ScrollContainer>

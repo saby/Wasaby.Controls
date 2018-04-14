@@ -185,7 +185,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           */
          _open: function (options) {
             var componentOptions = {
-               mode: Area.MODE_DIALOG,
+               dialogMode: true,
                handlers: {
                   onComplete: this._onAreaComplete.bind(this),
                   onFatalError: this._onAreaError.bind(this)
