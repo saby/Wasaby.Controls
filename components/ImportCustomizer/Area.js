@@ -11,44 +11,26 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
       'Core/core-merge',
       'Core/Deferred',
       //'Core/IoC',
-      'Core/markup/ParserUtilities',
+      'Lib/Control/TemplatedArea/TemplatedArea',
       'SBIS3.CONTROLS/CompoundControl',
+      'SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
+      'SBIS3.CONTROLS/ImportCustomizer/BaseParams/View',
+      'SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
+      'SBIS3.CONTROLS/ImportCustomizer/Provider/View',
+      'SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View',
       'SBIS3.CONTROLS/ImportCustomizer/RemoteCall',
+      'SBIS3.CONTROLS/ImportCustomizer/Sheet/View',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
       'WS.Data/Collection/RecordSet',
       'WS.Data/Type/descriptor',
       'tmpl!SBIS3.CONTROLS/ImportCustomizer/Area',
-      'tmpl!SBIS3.CONTROLS/ImportCustomizer/Area_sheet',
-      'tmpl!SBIS3.CONTROLS/ImportCustomizer/Area_baseParams',
-      'tmpl!SBIS3.CONTROLS/ImportCustomizer/Area_provider',
-      'tmpl!SBIS3.CONTROLS/ImportCustomizer/Area_providerArgs',
-      'tmpl!SBIS3.CONTROLS/ImportCustomizer/Area_columnBinding',
-      'tmpl!SBIS3.CONTROLS/ImportCustomizer/Area_mapper',
       'css!SBIS3.CONTROLS/ImportCustomizer/Area',
       'SBIS3.CONTROLS/Button',
-      'SBIS3.CONTROLS/ImportCustomizer/BaseParams/View',
-      'SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View',
       'SBIS3.CONTROLS/ScrollContainer'
    ],
 
-   function (CommandDispatcher, cMerge, Deferred, /*IoC,*/ ParserUtilities, CompoundControl, RemoteCall, InformationPopupManager, RecordSet, DataType, tmpl, sheetTmpl, baseParamsTmpl, providerTmpl, providerArgsTmpl, columnBindingTmpl, mapperTmpl) {
+   function (CommandDispatcher, cMerge, Deferred, /*IoC,*/ TemplatedArea, CompoundControl, ColumnBindingView, BaseParamsView, MapperView, ProviderView, ProviderArgsView, RemoteCall, SheetView, InformationPopupManager, RecordSet, DataType, tmpl) {
       'use strict';
-
-      /**
-       * Константа (как бы) - Список шаблонов вложенных под-компонентов
-       * @private
-       * @type {object}
-       */
-      var SUBVIEW_TMPLS = {
-         sheet: sheetTmpl,
-         baseParams: baseParamsTmpl,
-         provider: providerTmpl,
-         providerArgs: providerArgsTmpl,
-         columnBinding: columnBindingTmpl,
-         mapper: mapperTmpl
-      };
-
-
 
       var Area = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ImportCustomizer/Area.prototype*/ {
 
@@ -221,6 +203,15 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                 */
                validators: null
             },
+            // Список модулей вложенных под-компонентов
+            _SUBVIEW_MODS: {
+               sheet: SheetView,
+               baseParams: null,// Используется компонент, указанный в опции baseParamsComponent
+               provider: ProviderView,
+               providerArgs: null,// Используется TemplatedArea, содержащая компонент, указанный в опции _scope._providerArgs.component
+               columnBinding: ColumnBindingView,
+               mapper: MapperView
+            },
             // Список имён вложенных под-компонентов
             _SUBVIEW_NAMES: {
                sheet: 'controls-ImportCustomizer-Area__sheet',
@@ -248,6 +239,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                //columnBinding: null,
                //mapper: null
             },
+            // Непосредственный контейнер, содержащий под-компоненты
+            _subviewContainer: null,
             // Обещание, разрешаемое полным набором полей (если в опциях они не заданы явно)
             _fieldsPromise: null,
             // Набор результирующих значений (по обастям данных)
@@ -309,7 +302,6 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             options._skippedRows = hasSheets && 0 < sheet.skippedRows ? sheet.skippedRows : 0;
             options._parserSeparator = hasSheets && sheet.separator ? sheet.separator : '';
             options._providerArgsComponent = parsers[parserName].component || undefined;
-            options._providerArgsHas = !!options._providerArgsComponent;
             options._providerArgsOptions = this._getProviderArgsOptions(options, parserName, true);
             options._columnBindingRows = hasSheets ? sheet.sampleRows : [];
             options._columnBindingAccordances = null;//^^^
@@ -321,11 +313,36 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                options._mapperAccordances = mapping.accordances;
             }
             // Сформировать области видимости для под-компонентов
+
+            /*var scopeProfiles = {
+               sheet: ['dataType', 'allSheetsTitle', {sheetTitles:'_sheetTitles'}, 'sheetIndex'],
+               //baseParams: null,
+               provider: ['dataType', {parsers:'_parserItems', parser:'_parserName', skippedRows:'_skippedRows', separator:'_parserSeparator'}],
+               //providerArgs: null,
+               columnBinding: ['dataType', 'fields', {menuTitle:'columnBindingMenuTitle', headTitle:'columnBindingHeadTitle', rows:'_columnBindingRows', skippedRows:'_skippedRows', accordances:'_columnBindingAccordances'}],
+               mapper: ['dataType', 'fields', {fieldColumnTitle:'mapperFieldColumnTitle', variantColumnTitle:'mapperVariantColumnTitle', fieldFilter:'_mapperfieldFilter', fieldProperty:'_mapperFieldProperty', variants:'_mapperVariants', accordances:'_mapperAccordances'}]
+            };
+            var scopes = {};
+            for (var name in scopeProfiles) {
+               if (isUsedSubview[name] && (name !== 'baseParams' && name !== 'providerArgs')) {
+                  var data = _lodashPick(options, scopeProfiles[name]);
+                  data.className = this._SUBVIEW_CSS_CLASSES[name];
+                  data.name = this._SUBVIEW_NAMES[name];
+                  scopes[name] = data;
+               }
+            }
+            if (isUsedSubview.baseParams) {
+               scopes.baseParams = cMerge(options.baseParams ? cMerge({}, options.baseParams) : {}, _lodashPick(options, ['dataType', 'fields']));
+            }
+            if (isUsedSubview.providerArgs) {
+               scopes.providerArgs = {component:options._providerArgsComponent, options:options._providerArgsOptions};
+            }*/
+
             options._scopes = {
                sheet: isUsedSubview.sheet ? _lodashPick(options, ['dataType', 'allSheetsTitle', {sheetTitles:'_sheetTitles'}, 'sheetIndex']) : null,
                baseParams: isUsedSubview.baseParams ? cMerge(options.baseParams ? cMerge({}, options.baseParams) : {}, _lodashPick(options, ['dataType', 'fields'])) : null,
                provider: isUsedSubview.provider ? _lodashPick(options, ['dataType', {parsers:'_parserItems', parser:'_parserName', skippedRows:'_skippedRows', separator:'_parserSeparator'}]) : null,
-               providerArgs: isUsedSubview.providerArgs ? _lodashPick(options, [{/*^^^template:'_providerArgsComponent',*/ visible:'_providerArgsHas', componentOptions:'_providerArgsOptions'}]) : null,
+               providerArgs: isUsedSubview.providerArgs ? {component:options._providerArgsComponent, options:options._providerArgsOptions} : null,
                columnBinding: isUsedSubview.columnBinding ? _lodashPick(options, ['dataType', 'fields', {menuTitle:'columnBindingMenuTitle', headTitle:'columnBindingHeadTitle', rows:'_columnBindingRows', skippedRows:'_skippedRows', accordances:'_columnBindingAccordances'}]) : null,
                mapper: isUsedSubview.mapper ? _lodashPick(options, ['dataType', 'fields', {fieldColumnTitle:'mapperFieldColumnTitle', variantColumnTitle:'mapperVariantColumnTitle', fieldFilter:'_mapperfieldFilter', fieldProperty:'_mapperFieldProperty', variants:'_mapperVariants', accordances:'_mapperAccordances'}]) : null
             };
@@ -618,15 +635,52 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
           * @param {string} after Имя предыдущего под-компонента, после которого нужно разместить новый
           */
          _createSubview: function (name, after) {
-            this._subviewContainer = this.getContainer().find('.controls-ScrollContainer__content');
-            var builded = SUBVIEW_TMPLS[name].call(null, this._options);
-            var html = ParserUtilities.buildInnerComponents(builded, this._options);
+            var element = $('<div></div>');
+            if (!this._subviewContainer) {
+               this._subviewContainer = this.getContainer().find('.controls-ScrollContainer__content');
+            }
             if (after) {
-               this._views[after].getContainer().after(html);
+               this._views[after].getContainer().after(element);
             }
             else {
-               this._subviewContainer.append(html);
+               this._subviewContainer.append(element);
             }
+            var Ctor;
+            var args = {
+               className: this._SUBVIEW_CSS_CLASSES[name],
+               name: this._SUBVIEW_NAMES[name],
+               element: element,
+               parent: this//^^^.getChildControlByName('controls-ImportCustomizer-Area__scrollContainer')
+            };
+            var options = this._options;
+            var scope = options._scopes[name];
+            if (name === 'baseParams') {
+               // Используется компонент, указанный в опции baseParamsComponent
+               var baseParamsComponent = options.baseParamsComponent;
+               if (!requirejs.defined(baseParamsComponent)) {
+                  throw new Error('Component ' + baseParamsComponent + ' must be loaded');
+               }
+               Ctor = require(baseParamsComponent);
+               args = cMerge(args, scope);
+            }
+            else
+            if (name === 'providerArgs') {
+               // Используется TemplatedArea, содержащая компонент, указанный в опции _scope._providerArgs.component
+               Ctor = TemplatedArea;
+               args = cMerge(args, {
+                  template: scope.component || '',
+                  visible: !!scope.component,
+                  componentOptions: scope.options || {}
+
+               });
+            }
+            else {
+               Ctor = this._SUBVIEW_MODS[name];
+               args = cMerge(args, scope);
+            }
+            var view = new Ctor(args);
+            this._views[name] = view;
+            this._bindSubviewEvents(name);
          },
 
          /*
@@ -1016,6 +1070,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             'allSheetsTitle',
             'columnBindingMenuTitle',
             'columnBindingHeadTitle',
+            'mapperFieldColumnTitle',
+            'mapperVariantColumnTitle',
             'dataType',
             'file',
             'baseParamsComponent',
@@ -1050,6 +1106,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             allSheetsTitle: typeIfDefined.bind(null, 'string'),
             columnBindingMenuTitle: typeIfDefined.bind(null, 'string'),
             columnBindingHeadTitle: typeIfDefined.bind(null, 'string'),
+            mapperFieldColumnTitle: typeIfDefined.bind(null, 'string'),
+            mapperVariantColumnTitle: typeIfDefined.bind(null, 'string'),
             dataType: DataType(String).required().oneOf(Area.DATA_TYPES),
             file: function (file) {
                // Должна быть опция "file"
