@@ -245,7 +245,7 @@ define('Controls/List/SourceControl', [
 
       initListViewModelHandler: function(self, model) {
          var version = 0;
-         model.getVersion = function(){
+         model.getVersion = function updateVersion() {
             return version;
          };
          model.subscribe('onListChange', function() {
