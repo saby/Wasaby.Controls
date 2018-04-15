@@ -13,23 +13,19 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
       //'Core/IoC',
       'Lib/Control/TemplatedArea/TemplatedArea',
       'SBIS3.CONTROLS/CompoundControl',
-      'SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
-      'SBIS3.CONTROLS/ImportCustomizer/BaseParams/View',
-      'SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
-      'SBIS3.CONTROLS/ImportCustomizer/Provider/View',
-      'SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View',
       'SBIS3.CONTROLS/ImportCustomizer/RemoteCall',
-      'SBIS3.CONTROLS/ImportCustomizer/Sheet/View',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
       'WS.Data/Collection/RecordSet',
       'WS.Data/Type/descriptor',
       'tmpl!SBIS3.CONTROLS/ImportCustomizer/Area',
       'css!SBIS3.CONTROLS/ImportCustomizer/Area',
       'SBIS3.CONTROLS/Button',
-      'SBIS3.CONTROLS/ScrollContainer'
+      'SBIS3.CONTROLS/ScrollContainer',
+      'SBIS3.CONTROLS/ImportCustomizer/BaseParams/View',
+      'SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View'
    ],
 
-   function (CommandDispatcher, cMerge, Deferred, /*IoC,*/ TemplatedArea, CompoundControl, ColumnBindingView, BaseParamsView, MapperView, ProviderView, ProviderArgsView, RemoteCall, SheetView, InformationPopupManager, RecordSet, DataType, tmpl) {
+   function (CommandDispatcher, cMerge, Deferred, /*IoC,*/ TemplatedArea, CompoundControl, RemoteCall, InformationPopupManager, RecordSet, DataType, tmpl) {
       'use strict';
 
       var Area = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ImportCustomizer/Area.prototype*/ {
@@ -203,15 +199,6 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                 */
                validators: null
             },
-            // Список модулей вложенных под-компонентов
-            _SUBVIEW_MODS: {
-               sheet: SheetView,
-               baseParams: null,// Используется компонент, указанный в опции baseParamsComponent
-               provider: ProviderView,
-               providerArgs: null,// Используется TemplatedArea, содержащая компонент, указанный в опции _scope._providerArgs.component
-               columnBinding: ColumnBindingView,
-               mapper: MapperView
-            },
             // Список имён вложенных под-компонентов
             _SUBVIEW_NAMES: {
                sheet: 'controls-ImportCustomizer-Area__sheet',
@@ -220,15 +207,6 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                providerArgs: 'controls-ImportCustomizer-Area__providerArgs',
                columnBinding: 'controls-ImportCustomizer-Area__columnBinding',
                mapper: 'controls-ImportCustomizer-Area__mapper'
-            },
-            // Список css-классов вложенных под-компонентов
-            _SUBVIEW_CSS_CLASSES: {
-               sheet: 'controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-sheet',
-               baseParams: 'controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-baseParams',
-               provider: 'controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-provider',
-               providerArgs: 'controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-not-pad controls-ImportCustomizer-Area__body__box-providerArgs',
-               columnBinding: 'controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-not-pad controls-ImportCustomizer-Area__body__box-columnBinding',
-               mapper: 'controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-not-pad controls-ImportCustomizer-Area__body__box-mapper'
             },
             // Ссылки на вложенные под-компоненты
             _views: {
@@ -239,8 +217,6 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                //columnBinding: null,
                //mapper: null
             },
-            // Непосредственный контейнер, содержащий под-компоненты
-            _subviewContainer: null,
             // Обещание, разрешаемое полным набором полей (если в опциях они не заданы явно)
             _fieldsPromise: null,
             // Набор результирующих значений (по обастям данных)
@@ -249,13 +225,17 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
 
          _modifyOptions: function () {
             var options = Area.superclass._modifyOptions.apply(this, arguments);
+            this._processOptions(options);
+            return options;
+         },
+
+         _processOptions: function (options) {
             options._isUsedSubview = this._getSubviewUsings(options);
             if (!options.waitingMode) {
                this._resolveOptions(options);
                this._validateOptions(options);
                this._reshapeOptions(options);
             }
-            return options;
          },
 
          _reshapeOptions: function (options) {
@@ -277,6 +257,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                options.fields = null;
             }
             // Сформировать дополнительные свойства
+            // TODO: Причесать здесь немного
             var sheets = options.sheets;
             var hasSheets = sheets && sheets.length;
             options._sheetTitles = hasSheets ? sheets.map(function (v) {return v.name; }) : [];
@@ -304,7 +285,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             options._providerArgsComponent = parsers[parserName].component || undefined;
             options._providerArgsOptions = this._getProviderArgsOptions(options, parserName, true);
             options._columnBindingRows = hasSheets ? sheet.sampleRows : [];
-            options._columnBindingAccordances = null;//^^^
+            options._columnBindingAccordances = undefined;//^^^
             var mapping = options.mapping;
             if (mapping) {
                options._mapperFieldFilter = mapping.fieldFilter;
@@ -325,10 +306,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             var scopes = {};
             for (var name in scopeProfiles) {
                if (isUsedSubview[name] && (name !== 'baseParams' && name !== 'providerArgs')) {
-                  var data = _lodashPick(options, scopeProfiles[name]);
-                  data.className = this._SUBVIEW_CSS_CLASSES[name];
-                  data.name = this._SUBVIEW_NAMES[name];
-                  scopes[name] = data;
+                  scopes[name] = _lodashPick(options, scopeProfiles[name]);
                }
             }
             if (isUsedSubview.baseParams) {
@@ -407,11 +385,22 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
 
          init: function () {
             Area.superclass.init.apply(this, arguments);
-            var options = this._options;
+            this._init();
+         },
+
+         _init: function () {
             // Получить ссылки на имеющиеся под-компоненты
             this._collectViews();
             // Инициализировать результирующие данные
-            if (!options.waitingMode) {
+            this._initResults();
+            // Подписаться на необходимые события
+            this._bindEvents();
+         },
+
+         _initResults: function () {
+            var options = this._options;
+            var notWaiting = !options.waitingMode;
+            if (notWaiting) {
                if (options.dataType === Area.DATA_TYPE_EXCEL || options.dataType === Area.DATA_TYPE_DBF) {
                   var sheets = options.sheets;
                   if (sheets && sheets.length) {
@@ -433,9 +422,14 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                      this._results = results;
                   }
                }
-               // Если поля представлены обещанием
-               var fields = this._fieldsPromise;
-               if (fields) {
+            }
+            else {
+               this._results = null;
+            }
+            // Если поля представлены обещанием
+            var fields = this._fieldsPromise;
+            if (fields) {
+               if (notWaiting) {
                   // Получить из этого обещания актуальные значения полей по мере разрешения обещания
                   var success = function (data) {
                      this._fieldsPromise = null;
@@ -455,9 +449,10 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                      (fields.isSuccessful() ? success : fail)(value);
                   }
                }
+               else {
+                  this._fieldsPromise = null;
+               }
             }
-            // Подписаться на необходимые события
-            this._bindEvents();
          },
 
          _cmdSubviewChanged: function () {
@@ -628,80 +623,6 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          },
 
          /*
-          * ^^^
-          *
-          * @protected
-          * @param {string} name Мнемоническое имя под-компонента (в наборе _views)
-          * @param {string} after Имя предыдущего под-компонента, после которого нужно разместить новый
-          */
-         _createSubview: function (name, after) {
-            var element = $('<div></div>');
-            if (!this._subviewContainer) {
-               this._subviewContainer = this.getContainer().find('.controls-ScrollContainer__content');
-            }
-            if (after) {
-               this._views[after].getContainer().after(element);
-            }
-            else {
-               this._subviewContainer.append(element);
-            }
-            var Ctor;
-            var args = {
-               className: this._SUBVIEW_CSS_CLASSES[name],
-               name: this._SUBVIEW_NAMES[name],
-               element: element,
-               parent: this//^^^.getChildControlByName('controls-ImportCustomizer-Area__scrollContainer')
-            };
-            var options = this._options;
-            var scope = options._scopes[name];
-            if (name === 'baseParams') {
-               // Используется компонент, указанный в опции baseParamsComponent
-               var baseParamsComponent = options.baseParamsComponent;
-               if (!requirejs.defined(baseParamsComponent)) {
-                  throw new Error('Component ' + baseParamsComponent + ' must be loaded');
-               }
-               Ctor = require(baseParamsComponent);
-               args = cMerge(args, scope);
-            }
-            else
-            if (name === 'providerArgs') {
-               // Используется TemplatedArea, содержащая компонент, указанный в опции _scope._providerArgs.component
-               Ctor = TemplatedArea;
-               args = cMerge(args, {
-                  template: scope.component || '',
-                  visible: !!scope.component,
-                  componentOptions: scope.options || {}
-
-               });
-            }
-            else {
-               Ctor = this._SUBVIEW_MODS[name];
-               args = cMerge(args, scope);
-            }
-            var view = new Ctor(args);
-            this._views[name] = view;
-            this._bindSubviewEvents(name);
-         },
-
-         /*
-          * ^^^
-          *
-          * @protected
-          * @param {string} name Мнемоническое имя под-компонента (в наборе _views)
-          */
-         _updateSubview: function (name) {
-         },
-
-         /*
-          * ^^^
-          *
-          * @protected
-          * @param {string} name Мнемоническое имя под-компонента (в наборе _views)
-          */
-         _removeSubview: function (name) {
-         },
-
-         /*
           * Установить полный набор полей, к которым должны быть привязаны импортируемые данные
           *
           * @protected
@@ -826,34 +747,39 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             if (!values || typeof values !== 'object') {
                throw new Error('Object required');
             }
+            if (!Object.keys(values).length) {
+               return;
+            }
             // Если при установке значений надились в режиме ожидания - сбросить его
             var options = this._options;
             if (options.waitingMode) {
                options.waitingMode = null;
             }
             this._setOptions(values);
-            var isUsedSubview = options._isUsedSubview = this._getSubviewUsings(options);
-            if (!options.waitingMode) {
-               this._resolveOptions(options);
-               this._validateOptions(options);
-               this._reshapeOptions(options);
-            }
+            this._processOptions(options);
+            var isUsedSubview = options._isUsedSubview
             var views = this._views;
-            var last;
+            var needRebuild;
             for (var name in views) {
-               var view = views[name];
-               if (isUsedSubview[name]) {
-                  if (view) {
-                     this._updateSubview(name);
-                  }
-                  else {
-                     this._createSubview(name/*^^^, last*/);
-                  }
-                  last = name;
+               if (isUsedSubview[name] !== !!views[name]) {
+                  needRebuild = true;
+                  break;
                }
-               else {
-                  if (view) {
-                     this._removeSubview(name);
+            }
+            if (needRebuild) {
+               this.rebuildMarkup();
+               this._init();
+            }
+            else {
+               var scopes = options._scopes;
+               for (var name in views) {
+                  if (isUsedSubview[name]) {
+                     if (name !== 'providerArgs') {
+                        views[name].setValues(scopes[name]);
+                     }
+                     else {
+                        this._updateProviderArgsView(scopes.provider.parser);
+                     }
                   }
                }
             }
