@@ -71,9 +71,6 @@ define('Controls/Input/Number', [
 
       _caretPosition: null,
 
-      //Флаг того, что мы обновили значение вручную и в _beforeUpdate этого делать не нужно
-      _valueUpdated: false,
-
       constructor: function(options) {
          NumberInput.superclass.constructor.apply(this, arguments);
 
@@ -81,6 +78,7 @@ define('Controls/Input/Number', [
             onlyPositive: options.onlyPositive,
             integersLength: options.integersLength,
             precision: options.precision,
+            showEmptyDecimals: options.showEmptyDecimals,
             value: String(options.value)
          });
       },
@@ -90,9 +88,9 @@ define('Controls/Input/Number', [
             onlyPositive: newOptions.onlyPositive,
             integersLength: newOptions.integersLength,
             precision: newOptions.precision,
-            value: this._valueUpdated ? this._numberViewModel.getValue() : String(newOptions.value)
+            showEmptyDecimals: newOptions.showEmptyDecimals,
+            value: this._options.value === newOptions.value ? this._numberViewModel.getValue() : String(newOptions.value)
          });
-         this._valueUpdated = false;
       },
 
       _afterUpdate: function(oldOptions) {
@@ -139,23 +137,27 @@ define('Controls/Input/Number', [
             } else {
                this._numberViewModel.updateValue('0');
             }
-            this._valueUpdated = true;
             runDelayed(function() {
                self._children.input.setSelectionRange(1, 1);
             });
          } else if (this._numberViewModel.getValue().indexOf('.') === -1) {
-            this._numberViewModel.updateValue(this._numberViewModel.getValue() + '.0');
-            this._valueUpdated = true;
-            runDelayed(function() {
-               self._children.input.setSelectionRange(self._numberViewModel.getValue().length - 2, self._numberViewModel.getValue().length - 2);
-            });
+            if (this._options.showEmptyDecimals && this._options.precision) {
+               this._numberViewModel.updateValue(this._numberViewModel.getValue() + '.' + '0'.repeat(this._options.precision));
+               runDelayed(function() {
+                  self._children.input.setSelectionRange(self._numberViewModel.getValue().length - self._options.precision - 1, self._numberViewModel.getValue().length - self._options.precision - 1);
+               });
+            } else if (this._options.precision) {
+               this._numberViewModel.updateValue(this._numberViewModel.getValue() + '.0');
+               runDelayed(function() {
+                  self._children.input.setSelectionRange(self._numberViewModel.getValue().length - 2, self._numberViewModel.getValue().length - 2);
+               });
+            }
          }
       },
 
       _focusoutHandler: function() {
          if (this._numberViewModel.getValue() === '0.0') {
             this._numberViewModel.updateValue('');
-            this._valueUpdated = true;
          } else if (!this._options.showEmptyDecimals) {
             var
                i,
@@ -182,7 +184,6 @@ define('Controls/Input/Number', [
                   }
 
                   this._numberViewModel.updateValue(processedValue);
-                  this._valueUpdated = true;
                }
             }
          }
