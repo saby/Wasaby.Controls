@@ -120,6 +120,133 @@ define('Controls/Input/Number/ViewModel',
 
                return !maxLength || decimals.length <= maxLength;
             }
+         },
+
+         processInsert: function(splitValue, options) {
+            var
+               shift = 0;
+
+            //Inserting dot in integers part moves cursor to decimals part
+            if (splitValue.insert === '.' && splitValue.before.indexOf('.') === -1 && splitValue.after.indexOf('.') !== -1) {
+               splitValue.insert = '';
+               shift += splitValue.after.indexOf('.') + 1;
+            }
+
+            //Inserting '-' after '0' should result in '-0'
+            if (splitValue.insert === '-' && splitValue.before === '0') {
+               if (!options.onlyPositive) {
+                  splitValue.before = '-0';
+               }
+            } else if (splitValue.before === '0' && _private.validate(_private.getClearValue(splitValue), options.onlyPositive, options.integersLength, options.precision)) {
+               //If before value is '0' and input is valid, then we should delete before value
+               splitValue.before = '';
+            } else if (splitValue.before === '-0' && splitValue.insert !== '-') {
+               //if before value is '-0', then we should delete '0'
+               splitValue.before = '-';
+            }
+
+            //If first symbol in insert is '.' and no before value, then it should be '0.'
+            if (splitValue.insert[0] === '.' && !splitValue.before) {
+               splitValue.before = '0';
+            }
+
+            //If input is invalid, then we should clear it
+            if (!_private.validate(_private.getClearValue(splitValue), options.onlyPositive, options.integersLength, options.precision)) {
+               //If we have exceeded the maximum number in integers part, then we should move cursor after dot
+               if (!_private.validators.maxIntegersLength(_private.getClearValue(splitValue), options.integersLength)) {
+                  if (splitValue.after[0] === '.') {
+                     shift += 2;
+                     splitValue.after = splitValue.after.substring(0, 1) + splitValue.insert + splitValue.after.substring(2, splitValue.after.length);
+                  }
+               }
+
+               //If we have exceeded the maximum number in decimals part, then we will replace the symbol on the right
+               if (!_private.validators.maxDecimalsLength(_private.getClearValue(splitValue), options.precision)) {
+                  if (splitValue.after !== '') {
+                     splitValue.before += splitValue.insert;
+                     splitValue.after = splitValue.after.slice(splitValue.insert.length);
+                  }
+               }
+
+               splitValue.insert = '';
+            }
+
+            return {
+               value: _private.getValueWithDelimiters(splitValue),
+               position: _private.getCursorPosition(splitValue, shift)
+            };
+         },
+
+         processDelete: function(splitValue) {
+            var
+               shift = 0;
+
+            return {
+               value: _private.getValueWithDelimiters(splitValue),
+               position: _private.getCursorPosition(splitValue, shift)
+            };
+         },
+
+         processDeleteForward: function(splitValue) {
+            var
+               shift = 0;
+
+            //If a space was removed, then we need to delete the number to the right of it
+            if (splitValue.delete === ' ') {
+               splitValue.after = splitValue.after.substr(1, splitValue.after.length);
+            }
+
+            //If deleting a dot then we should move cursor right and delete fires symbol in decimal part
+            if (splitValue.delete === '.') {
+               if (splitValue.after === '0') {
+                  splitValue.after = '.' + splitValue.after;
+               } else {
+                  splitValue.before += '.';
+                  splitValue.after = splitValue.after.slice(1);
+               }
+            }
+
+            return {
+               value: _private.getValueWithDelimiters(splitValue),
+               position: _private.getCursorPosition(splitValue, shift)
+            };
+         },
+
+         processDeleteBackward: function(splitValue, options) {
+            var
+               shift = 0;
+
+            //If whole decimal part was deleted then we should place '.0'
+            if (splitValue.before[splitValue.before.length - 1] === '.' && splitValue.after === '') {
+               splitValue.after = '0';
+               shift -= 1;
+            }
+
+            //If you erase a point, you need to undo this and move the cursor to the left
+            if (splitValue.delete === '.') {
+               splitValue.after = '.' + splitValue.after;
+            }
+
+            //If we delete the last character on the left, then we need to set it to '0'
+            if (splitValue.before === '' || splitValue.before === '-') {
+               splitValue.before = '0';
+            }
+
+            //If a space was removed, we should delete the number to the left of it and move the cursor one unit to the left
+            if (splitValue.delete === ' ') {
+               splitValue.before = splitValue.before.substr(0, splitValue.before.length - 1);
+               shift = -1;
+            }
+
+            //iIf we delete symbol in decimal part and showEmptyDecimals is true? then we should replace this symbol by '0'
+            if (splitValue.before.indexOf('.') !== -1 && options.showEmptyDecimals) {
+               splitValue.after = splitValue.after + '0'.repeat(splitValue.delete.length);
+            }
+
+            return {
+               value: _private.getValueWithDelimiters(splitValue),
+               position: _private.getCursorPosition(splitValue, shift)
+            };
          }
       };
 
@@ -133,69 +260,30 @@ define('Controls/Input/Number/ViewModel',
              */
          handleInput: function(splitValue, inputType) {
             var
-               shift = 0;
+               result;
 
             //Если по ошибке вместо точки ввели запятую или "б"  или "ю", то выполним замену
             splitValue.insert = splitValue.insert.toLowerCase().replace(/,|б|ю/, '.');
 
-            if (splitValue.insert === '.' && splitValue.before.indexOf('.') === -1 && splitValue.after.indexOf('.') !== -1) {
-               splitValue.insert = '';
-               shift += splitValue.after.indexOf('.') + 1;
-            } else {
-               //Если ввели минус, а перед ним строка '0', то нужно переместить его в начало
-               if (splitValue.insert === '-' && splitValue.before === '0') {
-                  if (!this._options.onlyPositive) {
-                     splitValue.before = '-0';
-                  }
-               } else if (splitValue.before === '0') {
-                  //Если в before лежит строка '0', то её нужно удалить
-                  splitValue.before = '';
-               } else if (splitValue.before === '-0') {
-                  //Если в before лежит строка '-0', то нужно оставить только '-'
-                  splitValue.before = '-';
-               }
-
-               //Если удаляем последний символ слева, то нужно установить туда '0'
-               if (splitValue.delete !== '' && (splitValue.before === '' || splitValue.before === '-')) {
-                  splitValue.before = '0';
-               }
-
-               //Если был удалён пробел, то нужно удалить цифру слева от него и сдвинуть курсор на единицу влево
-               if (splitValue.delete === ' ') {
-                  if (inputType === 'deleteForward') {
-                     splitValue.after = splitValue.after.substr(1, splitValue.after.length);
-                  } else if (inputType === 'deleteBackward') {
-                     splitValue.before = splitValue.before.substr(0, splitValue.before.length - 1);
-                     shift = -1;
-                  }
-               }
-
-               //Если в начале строки ввода точка, а до неё ничего нет, то предполагаем что хотят видеть '0.'
-               if (splitValue.insert[0] === '.' && !splitValue.before) {
-                  splitValue.before = '0';
-               }
-
-               //Если валидация не прошла, то не даем ничего ввести
-               if (!_private.validate(_private.getClearValue(splitValue), this._options.onlyPositive, this._options.integersLength, this._options.precision)) {
-                  //Если превысили максимальное количество в целой части, то перепрыгнем через точку и начнём ввод дробной
-                  if (!_private.validators.maxIntegersLength(_private.getClearValue(splitValue), this._options.integersLength)) {
-                     if (splitValue.after[0] === '.') {
-                        shift += 2;
-                        splitValue.after = splitValue.after.substring(0, 1) + splitValue.insert + splitValue.after.substring(2, splitValue.after.length);
-                     }
-                  }
-
-                  splitValue.insert = '';
-               }
+            switch (inputType) {
+               case 'insert':
+                  result = _private.processInsert(splitValue, this._options);
+                  break;
+               case 'delete':
+                  result = _private.processDelete(splitValue);
+                  break;
+               case 'deleteForward':
+                  result = _private.processDeleteForward(splitValue);
+                  break;
+               case 'deleteBackward':
+                  result = _private.processDeleteBackward(splitValue, this._options);
+                  break;
             }
 
             this._options.value = _private.getClearValue(splitValue);
 
             //Запишет значение в input и поставит курсор в указанное место
-            return {
-               value: _private.getValueWithDelimiters(splitValue),
-               position: _private.getCursorPosition(splitValue, shift)
-            };
+            return result;
          },
 
          getDisplayValue: function() {
@@ -214,6 +302,7 @@ define('Controls/Input/Number/ViewModel',
             this._options.onlyPositive = options.onlyPositive;
             this._options.integersLength = options.integersLength;
             this._options.precision = options.precision;
+            this._options.showEmptyDecimals = options.showEmptyDecimals;
             if (String(parseFloat(this._options.value)) !== options.value) {
                this._options.value = options.value;
             }
