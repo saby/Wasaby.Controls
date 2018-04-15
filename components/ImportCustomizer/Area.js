@@ -256,16 +256,14 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                this._fieldsPromise = promise;
                options.fields = null;
             }
-            // Сформировать дополнительные свойства
-            // TODO: Причесать здесь немного
+            // Сформировать дополнительные свойства и области видимости для под-компонентов
+            var scopes = {};
             var sheets = options.sheets;
             var hasSheets = sheets && sheets.length;
-            options._sheetTitles = hasSheets ? sheets.map(function (v) {return v.name; }) : [];
             var parsers = options.parsers;
             var parserNames = Object.keys(parsers);
             var parserItems = parserNames.map(function (v) { var o = parsers[v]; return {id:v, title:o.title, order:o.order}; });
             parserItems.sort(function (v1, v2) { return v1.order - v2.order; });
-            options._parserItems = parserItems;
             options._defaultParserName = parserItems[0].id;
             var sheetIndex = options.sheetIndex;
             if (hasSheets && (options.sameSheetConfigs || sheetIndex ==/*Не ===*/ null)) {
@@ -279,51 +277,35 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                   sheet.parser = parserName;
                }
             }
-            options._parserName = parserName;
-            options._skippedRows = hasSheets && 0 < sheet.skippedRows ? sheet.skippedRows : 0;
-            options._parserSeparator = hasSheets && sheet.separator ? sheet.separator : '';
-            options._providerArgsComponent = parsers[parserName].component || undefined;
-            options._providerArgsOptions = this._getProviderArgsOptions(options, parserName, true);
-            options._columnBindingRows = hasSheets ? sheet.sampleRows : [];
-            options._columnBindingAccordances = undefined;//^^^
-            var mapping = options.mapping;
-            if (mapping) {
-               options._mapperFieldFilter = mapping.fieldFilter;
-               options._mapperFieldProperty = mapping.fieldProperty;
-               options._mapperVariants = mapping.variants;
-               options._mapperAccordances = mapping.accordances;
+            var skippedRows = hasSheets && 0 < sheet.skippedRows ? sheet.skippedRows : 0;
+            // Опции под-компонента "sheet"
+            if (isUsedSubview.sheet) {
+               var sheetTitles = hasSheets ? sheets.map(function (v) {return v.name; }) : [];
+               scopes.sheet = cMerge({sheetTitles:sheetTitles}, _lodashPick(options, ['dataType', 'allSheetsTitle', 'sheetIndex']));
             }
-            // Сформировать области видимости для под-компонентов
-
-            /*var scopeProfiles = {
-               sheet: ['dataType', 'allSheetsTitle', {sheetTitles:'_sheetTitles'}, 'sheetIndex'],
-               //baseParams: null,
-               provider: ['dataType', {parsers:'_parserItems', parser:'_parserName', skippedRows:'_skippedRows', separator:'_parserSeparator'}],
-               //providerArgs: null,
-               columnBinding: ['dataType', 'fields', {menuTitle:'columnBindingMenuTitle', headTitle:'columnBindingHeadTitle', rows:'_columnBindingRows', skippedRows:'_skippedRows', accordances:'_columnBindingAccordances'}],
-               mapper: ['dataType', 'fields', {fieldColumnTitle:'mapperFieldColumnTitle', variantColumnTitle:'mapperVariantColumnTitle', fieldFilter:'_mapperfieldFilter', fieldProperty:'_mapperFieldProperty', variants:'_mapperVariants', accordances:'_mapperAccordances'}]
-            };
-            var scopes = {};
-            for (var name in scopeProfiles) {
-               if (isUsedSubview[name] && (name !== 'baseParams' && name !== 'providerArgs')) {
-                  scopes[name] = _lodashPick(options, scopeProfiles[name]);
-               }
-            }
+            // Опции под-компонента "baseParams"
             if (isUsedSubview.baseParams) {
                scopes.baseParams = cMerge(options.baseParams ? cMerge({}, options.baseParams) : {}, _lodashPick(options, ['dataType', 'fields']));
             }
+            // Опции под-компонента "provider"
+            if (isUsedSubview.provider) {
+               var separator = hasSheets && sheet.separator ? sheet.separator : '';
+               scopes.provider = {dataType:options.dataType, parsers:parserItems, parser:parserName, skippedRows:skippedRows, separator:separator};
+            }
+            // Опции под-компонента "providerArgs"
             if (isUsedSubview.providerArgs) {
-               scopes.providerArgs = {component:options._providerArgsComponent, options:options._providerArgsOptions};
-            }*/
-
-            options._scopes = {
-               sheet: isUsedSubview.sheet ? _lodashPick(options, ['dataType', 'allSheetsTitle', {sheetTitles:'_sheetTitles'}, 'sheetIndex']) : null,
-               baseParams: isUsedSubview.baseParams ? cMerge(options.baseParams ? cMerge({}, options.baseParams) : {}, _lodashPick(options, ['dataType', 'fields'])) : null,
-               provider: isUsedSubview.provider ? _lodashPick(options, ['dataType', {parsers:'_parserItems', parser:'_parserName', skippedRows:'_skippedRows', separator:'_parserSeparator'}]) : null,
-               providerArgs: isUsedSubview.providerArgs ? {component:options._providerArgsComponent, options:options._providerArgsOptions} : null,
-               columnBinding: isUsedSubview.columnBinding ? _lodashPick(options, ['dataType', 'fields', {menuTitle:'columnBindingMenuTitle', headTitle:'columnBindingHeadTitle', rows:'_columnBindingRows', skippedRows:'_skippedRows', accordances:'_columnBindingAccordances'}]) : null,
-               mapper: isUsedSubview.mapper ? _lodashPick(options, ['dataType', 'fields', {fieldColumnTitle:'mapperFieldColumnTitle', variantColumnTitle:'mapperVariantColumnTitle', fieldFilter:'_mapperfieldFilter', fieldProperty:'_mapperFieldProperty', variants:'_mapperVariants', accordances:'_mapperAccordances'}]) : null
-            };
+               scopes.providerArgs = {component:parsers[parserName].component || undefined, options:this._getProviderArgsOptions(options, parserName, true)};
+            }
+            // Опции под-компонента "columnBinding"
+            if (isUsedSubview.columnBinding) {
+               var sampleRows = hasSheets ? sheet.sampleRows : [];
+               scopes.columnBinding = cMerge({rows:sampleRows, skippedRows:skippedRows, accordances:undefined}, _lodashPick(options, ['dataType', 'fields', {menuTitle:'columnBindingMenuTitle', headTitle:'columnBindingHeadTitle'}]));
+            }
+            // Опции под-компонента "mapping"
+            if (isUsedSubview.mapper) {
+               scopes.mapper = cMerge(options.mapping || {}, _lodashPick(options, ['dataType', 'fields', {fieldColumnTitle:'mapperFieldColumnTitle', variantColumnTitle:'mapperVariantColumnTitle'}]));
+            }
+            options._scopes = scopes;
          },
 
          _resolveOptions: function (options) {
