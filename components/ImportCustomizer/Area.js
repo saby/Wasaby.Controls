@@ -11,7 +11,6 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
       'Core/core-merge',
       'Core/Deferred',
       //'Core/IoC',
-      'Lib/Control/TemplatedArea/TemplatedArea',
       'SBIS3.CONTROLS/CompoundControl',
       'SBIS3.CONTROLS/ImportCustomizer/RemoteCall',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
@@ -20,12 +19,12 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
       'tmpl!SBIS3.CONTROLS/ImportCustomizer/Area',
       'css!SBIS3.CONTROLS/ImportCustomizer/Area',
       'SBIS3.CONTROLS/Button',
-      'SBIS3.CONTROLS/ScrollContainer',
       'SBIS3.CONTROLS/ImportCustomizer/BaseParams/View',
-      'SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View'
+      'SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View',
+      'SBIS3.CONTROLS/ScrollContainer'
    ],
 
-   function (CommandDispatcher, cMerge, Deferred, /*IoC,*/ TemplatedArea, CompoundControl, RemoteCall, InformationPopupManager, RecordSet, DataType, tmpl) {
+   function (CommandDispatcher, cMerge, Deferred, /*IoC,*/ CompoundControl, RemoteCall, InformationPopupManager, RecordSet, DataType, tmpl) {
       'use strict';
 
       var Area = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ImportCustomizer/Area.prototype*/ {
