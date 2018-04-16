@@ -1038,8 +1038,12 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             baseParamsComponent: DataType(String).required(),
             baseParams: typeIfDefined.bind(null, 'object'),
             parsers: function (parsers) {
-               // Должна быть опция "parsers" и она должна быть объектом
-               if (!parsers || typeof parsers !== 'object') {//^^^
+               // Должна быть опция "parsers"
+               if (!parsers) {
+                  throw new Error('Option "parsers" required');
+               }
+               // и она должна быть объектом
+               if (typeof parsers !== 'object') {
                   throw new Error('Option "parsers" must be an object');
                }
                for (var name in parsers) {
@@ -1057,8 +1061,12 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                return parsers;
             },
             fields: function (fields) {
-               // Должна быть опция "fields" и являться либо экземпляром Deferred, либо иметь тип ImportTargetFields, либо иметь тип ImportRemoteCall
-               if (!fields || typeof fields !== 'object') {//^^^
+               // Должна быть опция "fields"
+               if (!fields) {
+                  return new Error('Option "fields" required');
+               }
+               // и являться либо экземпляром Deferred, либо иметь тип ImportTargetFields, либо иметь тип ImportRemoteCall
+               if (typeof fields !== 'object') {
                   return new Error('Option "fields" must be an object');
                }
                if (fields instanceof Deferred) {
@@ -1072,9 +1080,13 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                return err2 instanceof Error ? new Error('Option "fields" must be an ImportTargetFields or ImportRemoteCall or Core/Deferred') : fields;
             },
             sheets: function (sheets) {
-               // Для типа данных EXCEL или DBF должна быть опция "sheets" и быть не пустым массивом
-               if (!sheets || !Array.isArray(sheets) || !sheets.length) {//^^^
+               // Для типа данных EXCEL или DBF должна быть опция "sheets"
+               if (!sheets) {
                   return new Error('Option "sheets" required');
+               }
+               // и быть не пустым массивом
+               if (!Array.isArray(sheets) || !sheets.length) {
+                  return new Error('Option "sheets" must be none empty array');
                }
                // И каждый элемент массива должен быть {@link ImportSheet}
                if (!sheets.every(function (v) { return (
@@ -1090,14 +1102,20 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             sameSheetConfigs: typeIfDefined.bind(null, 'boolean'),
             columnBindingAccordances: typeIfDefined.bind(null, 'object'),
             mapping: function (mapping) {
-               // Для типа данных CML(CommerceML) должна быть опция "mapping", то она должна быть {link ImportMapping}
-               if (!mapping || (typeof mapping !== 'object' ||//^^^
-                     !(!mapping.fieldFilter || typeof mapping.fieldFilter === 'function') ||
+               // Для типа данных CML(CommerceML) должна быть опция "mapping"
+               if (!mapping) {
+                  return new Error('Option "mapping" required');
+               }
+               if (typeof mapping !== 'object') {
+                  return new Error('Option "mapping" must be an object');
+               }
+               // и она должна быть {link ImportMapping}
+               if (!(!mapping.fieldFilter || typeof mapping.fieldFilter === 'function') ||
                      !(!mapping.fieldProperty || typeof mapping.fieldProperty === 'string') ||
                      !(mapping.fieldFilter || mapping.fieldProperty) ||
                      !(!mapping.variants || typeof mapping.variants === 'object') ||
                      !(!mapping.accordances || typeof mapping.accordances === 'object')
-                  )) {
+                  ) {
                   return new Error('Option "mapping" must be an ImportMapping');
                }
                return mapping;
