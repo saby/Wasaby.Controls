@@ -37,7 +37,7 @@ define('Controls/List/SimpleList/ListViewModel',
             this._itemsModel.subscribe('onListChange', function() {
                //т.к. при действиях с рекордсетом рекорд может потерять владельца, надо обновить ссылку на актуальный рекорд из текущего набора
                self._markedItem = self.getItemById(self._options.markedKey, self._options.idProperty);
-               this._nextVersion();
+               self._nextVersion();
                self._notify('onListChange');
             });
 
@@ -116,10 +116,14 @@ define('Controls/List/SimpleList/ListViewModel',
 
          select: function(keys) {
             this._multiselection.select(keys);
+            this._nextVersion();
+            this._notify('onListChange');
          },
 
          unselect: function(keys) {
             this._multiselection.unselect(keys);
+            this._nextVersion();
+            this._notify('onListChange');
          },
 
          updateIndexes: function(startIndex, stopIndex) {
