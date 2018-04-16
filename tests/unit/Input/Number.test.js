@@ -212,6 +212,196 @@ define(
                      position: 4
                   },
                   inputType: 'deleteForward'
+               },
+
+               {
+                  testName: 'Insert minus after zero',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '0',
+                     insert: '-',
+                     after: '',
+                     delete: ''
+                  },
+                  result: {
+                     value: '-0.0',
+                     position: 2
+                  },
+                  inputType: 'insert'
+               },
+
+               {
+                  testName: 'Insert number after first "0" in line',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '0',
+                     insert: '1',
+                     after: '',
+                     delete: ''
+                  },
+                  result: {
+                     value: '1.0',
+                     position: 1
+                  },
+                  inputType: 'insert'
+               },
+
+               {
+                  testName: 'Insert number after first "-0" in line',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '-0',
+                     insert: '1',
+                     after: '',
+                     delete: ''
+                  },
+                  result: {
+                     value: '-1.0',
+                     position: 2
+                  },
+                  inputType: 'insert'
+               },
+
+               {
+                  testName: 'Insert number in field with maxed integers (first in line)',
+                  controlConfig: {
+                     integersLength: 5
+                  },
+                  splitValue: {
+                     before: '',
+                     insert: '6',
+                     after: '12 345.0',
+                     delete: ''
+                  },
+                  result: {
+                     value: '62 345.0',
+                     position: 1
+                  },
+                  inputType: 'insert'
+               },
+
+               {
+                  testName: 'Insert number in field with maxed integers (before space)',
+                  controlConfig: {
+                     integersLength: 4
+                  },
+                  splitValue: {
+                     before: '',
+                     insert: '5',
+                     after: '1 234.0',
+                     delete: ''
+                  },
+                  result: {
+                     value: '5 234.0',
+                     position: 1
+                  },
+                  inputType: 'insert'
+               },
+
+               {
+                  testName: 'Delete dot forward followed by single zero',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '123',
+                     insert: '',
+                     after: '0',
+                     delete: '.'
+                  },
+                  result: {
+                     value: '123.0',
+                     position: 4
+                  },
+                  inputType: 'deleteForward'
+               },
+
+               {
+                  testName: 'Delete dot forward followed by some number',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '123',
+                     insert: '',
+                     after: '456',
+                     delete: '.'
+                  },
+                  result: {
+                     value: '123.56',
+                     position: 4
+                  },
+                  inputType: 'deleteForward'
+               },
+
+               {
+                  testName: 'Delete whole decimal part',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '123',
+                     insert: '',
+                     after: '4',
+                     delete: '.'
+                  },
+                  result: {
+                     value: '123.4',
+                     position: 3
+                  },
+                  inputType: 'deleteBackward'
+               },
+
+               {
+                  testName: 'Delete last symbol',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '',
+                     insert: '',
+                     after: '',
+                     delete: '1'
+                  },
+                  result: {
+                     value: '0',
+                     position: 1
+                  },
+                  inputType: 'deleteBackward'
+               },
+
+               {
+                  testName: 'Delete last symbol (negative number)',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '-',
+                     insert: '',
+                     after: '',
+                     delete: '1'
+                  },
+                  result: {
+                     value: '0',
+                     position: 1
+                  },
+                  inputType: 'deleteBackward'
+               },
+
+               {
+                  testName: 'Delete decimal when showEmptyDecimals is enabled',
+                  controlConfig: {
+                     showEmptyDecimals: true
+                  },
+                  splitValue: {
+                     before: '123.45',
+                     insert: '',
+                     after: '',
+                     delete: '6'
+                  },
+                  result: {
+                     value: '123.450',
+                     position: 6
+                  },
+                  inputType: 'deleteBackward'
                }
             ];
 
