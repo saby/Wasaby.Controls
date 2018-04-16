@@ -4,17 +4,19 @@ define('Controls/HighCharts',
       'tmpl!Controls/HighCharts/HighCharts',
       'Core/constants',
       'Core/Date',
+      'css!Controls/HighCharts/HighCharts',
       'browser!/cdn/highcharts/4.2.7/highcharts-more.js'
    ],
    function(Control, template, constants) {
       'use strict';
 
       /**
-       * Диаграмма HighCharts
+       * Component HighCharts
        * @class Controls/HighCharts
        * @extends Core/Control
+       * @mixes Controls/interface/IHighCharts
        * @control
-       * @authors Волоцкой В.Д., Сухоручкин А.С.
+       * @authors Volotskoy V.D., Sukhoruchkin A.S.
        */
 
       var HighChart = Control.extend({
