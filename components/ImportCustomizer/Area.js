@@ -87,7 +87,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
           * @property {function(object|WS.Data/Entity/Record):ImportMapperItem} fieldFilter Фильтр полей, с помощью которого из общего списка полей {@link fields} отбираются нужные. Фильтр принимает объект поля и, если оно нужное, возвращает объект вида {@link ImportSimpleItem}. Упрощённый способ отбора предоставляется опцией {@link fieldProperty}
           * @property {string} fieldProperty Имя специального ключевого свойства, с помощью которого из общего списка полей {@link fields} отбираются нужные. Каждое нужное поле должно иметь свойство с таким именем. Более комплексный способ отбора предоставляется опцией {@link fieldFilter}
           * @property {object} variants Набор вариантов сопоставления
-          * @property {object} accordances Перечень соответствий специальный ключ поля - идентификатор варианта
+          * @property {object} mapping Перечень соответствий специальный ключ поля - идентификатор варианта
           */
 
          /**
@@ -110,7 +110,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
           * @property {ImportFile} file Информация о файле с импортируемыми данными
           * @property {Array<ImportSheet>} sheets Список объектов, представляющих имеющиеся области данных
           * @property {boolean} [sameSheetConfigs] Обрабатываются ли все области данных одинаково (опционально)
-          * @property {object} [mappingAccordances] Перечень соответствий специальный ключ поля - идентификатор варианта (опционально, когда применимо)
+          * @property {object} [mapping] Перечень соответствий специальный ключ поля - идентификатор варианта (опционально, когда применимо)
           * @property {*} [*] Базовые параметры импортирования (опционально)
           */
 
@@ -555,9 +555,9 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          _onChangeMapper: function () {
             // Изменился перечень соответсвий
             var values = this._getSubviewValues('mapper');
-            var accordances = values.accordances;
-            if (accordances) {
-               this._options.mapping.accordances = accordances;
+            var mapping = values.mapping;
+            if (mapping) {
+               this._options.mapping.mapping = mapping;
             }
          },
 
@@ -803,7 +803,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                data.sheets = sheets;
             }
             if (useMapping) {
-               data.mappingAccordances = options.mapping.accordances;
+               data.mapping = options.mapping.mapping;
             }
             var baseParams = this._getSubviewValues('baseParams');
             for (var name in baseParams) {
@@ -1114,7 +1114,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                      !(!mapping.fieldProperty || typeof mapping.fieldProperty === 'string') ||
                      !(mapping.fieldFilter || mapping.fieldProperty) ||
                      !(!mapping.variants || typeof mapping.variants === 'object') ||
-                     !(!mapping.accordances || typeof mapping.accordances === 'object')
+                     !(!mapping.mapping || typeof mapping.mapping === 'object')
                   ) {
                   return new Error('Option "mapping" must be an ImportMapping');
                }
