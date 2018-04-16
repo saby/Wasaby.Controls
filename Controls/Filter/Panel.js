@@ -9,38 +9,79 @@ define('Controls/Filter/Panel', [
 
 ], function(Control, Chain, Utils, isEqual, clone, template) {
 
+   /**
+    * Control "Filter panel"
+    * @class Controls/Filter/Panel
+    * @extends Controls/Control
+    * @control
+    * @public
+    */
+
+   /**
+    * @event Controls/Filter/Panel#filterChanged Happens when clicking on the button "Select"
+    */
+
+   /**
+    * @name Controls/Filter/Panel#styleHeader
+    * @cfg {String} Color of title in header
+    * @variant default Blue color
+    * @variant custom Orange color
+    */
+
+   /**
+    * @name Controls/Filter/Panel#viewMode
+    * @cfg {String} Sets the display of the filter button
+    * @variant oneColumn The panel is built in one column
+    * @variant twoColumn The panel is built in two columns
+    */
+   
+   /**
+    * @name Controls/Filter/Panel#title
+    * @cfg {String} Caption
+    */
+
    'use strict';
 
+   var getPropValue = Utils.getItemPropertyValue.bind(Utils);
 
-   var FilterPanel = Control.extend({
-      _template: template,
-      _isEnabled: true,
-
-      _beforeMount: function(options) {
-         this._items = clone(options.items);
-      },
-
-      //?
-      _beforeUpdate: function() {
-         if (isEqual(this._items, this._options.items)) {
-            this._isEnabled = true;
-         }
-      },
-
-      applyFilter: function() {
-         this._notify('filterChanged', [this.getFilter()]);
-         this._notify('close', [], {bubbling: true});
-      },
-
-      getFilter: function() {
+   var _private = {
+      getFilter: function(self) {
          var filter = {};
-         Chain(this._items).each(function(item) {
+         Chain(self._items).each(function(item) {
             filter[item.id] = item.value;
          });
          return filter;
       },
 
-      resetFilter: function() {
+      isChangedValue: function(items1, items2) {
+         for (var i in items1) {
+            if (getPropValue(items1[i], 'value') !== getPropValue(items2[i], 'resetValue')) {
+               return true;
+            }
+         }
+         return false;
+      }
+   };
+
+   var FilterPanel = Control.extend({
+      _template: template,
+      _isEnabled: false,
+
+      _beforeMount: function(options) {
+         this._items = clone(options.items);
+         this._isEnabled = _private.isChangedValue(this._items, options.items);
+      },
+
+      _beforeUpdate: function() {
+         this._isEnabled = _private.isChangedValue(this._items, this._options.items);
+      },
+
+      _applyFilter: function() {
+         this._notify('filterChanged', [_private.getFilter(this)]);
+         this._notify('close');
+      },
+
+      _resetFilter: function() {
          Chain(this._items).each(function(item) {
             item.value = item.resetValue;
          });
@@ -49,8 +90,7 @@ define('Controls/Filter/Panel', [
       },
 
       _close: function() {
-         this.resetFilter();
-         this._notify('close', [], {bubbling: true});
+         this._notify('close');
       }
    });
 
@@ -62,6 +102,7 @@ define('Controls/Filter/Panel', [
       };
    };
 
+   FilterPanel._private = _private;
    return FilterPanel;
 
 });
