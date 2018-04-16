@@ -1,4 +1,4 @@
-define('Controls/interface/IHighCharts', [], function () {
+define('Controls/interface/IHighCharts', [], function() {
 
    /**
     * Interface for HighCharts
