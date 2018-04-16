@@ -1,0 +1,64 @@
+.controls-RadioItem_selected {
+   content: @content-RadioGroup_selected;
+}
+
+.controls-RadioItem_unselected {
+   content: @content-RadioGroup_unselected;
+}
+
+.controls-RadioItem_wrapper {
+   height: 24px;
+   .inline-flexbox();
+   .align-items(center);
+}
+
+.controls-RadioItem_wrapper:before {
+   content: '\200b';
+}
+
+.controls-RadioItem_caption {
+   font-size: 14px;
+}
+
+.controls-RadioGroup__wrapper_horizontal {
+   .flexbox();
+   .flex-direction(row);
+}
+
+.controls-RadioGroup__wrapper_vertical {
+   .flexbox();
+   .flex-direction(column);
+}
+
+.controls-RadioGroup__innerCircle_selected_enabled {
+   fill: #FF7033;
+}
+
+.controls-RadioGroup__innerCircle_selected_disabled {
+   fill: #313E78;
+}
+
+.controls-RadioGroup__innerCircle_unselected {
+   fill: none;
+}
+
+.controls-RadioGroup__borderCircle {
+   stroke-width: 2px;
+   fill: none;
+}
+
+.controls-RadioGroup__borderCircle_enabled {
+   stroke: #CCCCCC;
+}
+
+.controls-RadioGroup__borderCircle_disabled {
+   stroke: #e4e4e4;
+}
+
+.ws-is-no-touch {
+   .controls-RadioItem_wrapper:hover {
+      .controls-RadioGroup__borderCircle_enabled {
+         stroke: #FF7033;
+      }
+   }
+}

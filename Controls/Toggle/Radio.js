@@ -41,7 +41,6 @@ define('Controls/Toggle/Radio', [
          }
          return "controls-RadioGroup_default";
       }
-
    });
 
    Radio._private= _private;

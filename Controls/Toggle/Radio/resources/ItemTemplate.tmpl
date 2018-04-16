@@ -1,4 +1,7 @@
-<span class="wrapper">
-    <i class="controls-RadioItem_{{selected ? 'selected' : 'unselected'}}"/>
-    <span class="controls-RadioItem_caption">{{item["caption"]}}</span>
+<span attr:class="controls-RadioItem_wrapper">
+    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" stroke="null">
+        <circle attr:xmlns="http://www.w3.org/2000/svg" attr:cx="6" attr:cy="6" attr:r="4" attr:class="controls-RadioGroup__borderCircle controls-RadioGroup__borderCircle_{{readOnly ? 'enabled' : 'disabled'}}"/>
+        <circle attr:xmlns="http://www.w3.org/2000/svg" attr:cx="6" attr:cy="6" attr:r="2" attr:class="controls-RadioGroup__innerCircle controls-RadioGroup__innerCircle_{{selected ? (readOnly ? 'selected_enabled' : 'selected_disabled') : 'unselected'}}"/>
+    </svg>
+    <span attr:class="controls-RadioItem_caption">{{item["caption"]}}</span>
 </span>
