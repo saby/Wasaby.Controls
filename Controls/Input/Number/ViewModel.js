@@ -126,6 +126,11 @@ define('Controls/Input/Number/ViewModel',
             var
                shift = 0;
 
+            //if number doesn't contain '.', then we should add '.0' at the end
+            if (splitValue.before.indexOf('.') === -1 && splitValue.after.indexOf('.') === -1) {
+               splitValue.after += '.0';
+            }
+
             //Inserting dot in integers part moves cursor to decimals part
             if (splitValue.insert === '.' && splitValue.before.indexOf('.') === -1 && splitValue.after.indexOf('.') !== -1) {
                splitValue.insert = '';
@@ -157,6 +162,13 @@ define('Controls/Input/Number/ViewModel',
                   if (splitValue.after[0] === '.') {
                      shift += 2;
                      splitValue.after = splitValue.after.substring(0, 1) + splitValue.insert + splitValue.after.substring(2, splitValue.after.length);
+                  } else {
+                     if (splitValue.after[1] === ' ') {
+                        shift += 2;
+                     } else {
+                        shift += 1;
+                     }
+                     splitValue.after = splitValue.insert + splitValue.after.slice(1);
                   }
                }
 
