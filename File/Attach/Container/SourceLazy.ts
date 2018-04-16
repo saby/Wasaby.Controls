@@ -19,7 +19,7 @@ type LazyWrapper = Wrapper & {
 
 /**
  * Фильтрует массив обёрток над ISource по типу файла
- * @param {Array<Wrapper>} array
+ * @param {Array.<Wrapper>} array
  * @param {File/IResource} file
  * @return {Wrapper}
  * @private
@@ -78,7 +78,7 @@ class SourceContainerLazy extends SourceContainer {
     /**
      * Возвращает источник данных для ресурса
      * @param {File/IResource} file
-     * @return {Core/Deferred<ISource>}
+     * @return {Core/Deferred.<ISource>}
      * @see File/LocalFile
      * @see File/LocalFileLink
      * @see File/HttpFileLink
@@ -94,7 +94,7 @@ class SourceContainerLazy extends SourceContainer {
     }
     /**
      * Возвращает список зарегестрированый обёрток
-     * @return {Array<File/IResourceConstructor>}
+     * @return {Array.<File/IResourceConstructor>}
      * @see File/LocalFile
      * @see File/LocalFileLink
      * @see File/HttpFileLink

@@ -46,7 +46,7 @@ define("File/utils/ExtensionsHelper", ["require", "exports", "json!File/utils/Mi
         /**
          * Проверяет валидность файлов переданного FileList и заменяет их на {@link File/LocalFile} либо на объект ошибки
          * @param {FileList} fileList
-         * @return {Array<LocalFile | Error>} Массив обёрток над локальными файлами или ошибок
+         * @return {Array.<LocalFile | Error>} Массив обёрток над локальными файлами или ошибок
          */
         ExtensionsHelper.prototype.verifyAndReplace = function (fileList) {
             var files = [];

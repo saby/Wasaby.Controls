@@ -2,11 +2,10 @@ define('SBIS3.CONTROLS/Button',
    [
       'SBIS3.CONTROLS/WSControls/Buttons/Button',
       'SBIS3.CONTROLS/Utils/ButtonUtil',
-      'tmpl!SBIS3.CONTROLS/WSControls/Buttons/resources/AddIcon',
       'css!SBIS3.CONTROLS/Button/Button'
    ],
 
-   function(Base, ButtonUtil, svgIconTpl) {
+   function(Base, ButtonUtil) {
 
       'use strict';
 
@@ -88,8 +87,7 @@ define('SBIS3.CONTROLS/Button',
                 * </pre>
                 */
                style: 'standard',
-               _svgIcon: null,
-               _svgIconTpl: svgIconTpl
+               _svgIcon: null
             }
          },
          _modifyOptions: function(options, parsedOptions, attrToMerge) {
