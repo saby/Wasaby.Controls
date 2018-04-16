@@ -92,12 +92,12 @@ define('Controls/Filter/Button',
                   });
                } else {
                   this._children.filterStickyOpener.open({
-                     componentOptions: {
+                     templateOptions: {
                         items: this._options.items,
                         viewMode: this._options.viewMode
                      },
                      template: 'Controls/Filter/Panel',
-                     target: event.target
+                     target: this._children.panelTarget
                   });
                }
             }

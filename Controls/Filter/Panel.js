@@ -3,7 +3,7 @@ define('Controls/Filter/Panel', [
    'WS.Data/Chain',
    'WS.Data/Utils',
    'Core/helpers/Object/isEqual',
-   'Core/helpers/Array/clone',
+   'Core/core-clone',
    'tmpl!Controls/Filter/Panel/Panel',
    'css!Controls/Filter/Panel/Panel'
 
@@ -43,19 +43,22 @@ define('Controls/Filter/Panel', [
    'use strict';
 
    var getPropValue = Utils.getItemPropertyValue.bind(Utils);
+   var setPropValue = Utils.setItemPropertyValue.bind(Utils);
 
    var _private = {
       getFilter: function(self) {
          var filter = {};
          Chain(self._items).each(function(item) {
-            filter[item.id] = item.value;
+            if (getPropValue(item, 'value') !== getPropValue(item, 'resetValue')) {
+               filter[item.id] = getPropValue(item, 'value');
+            }
          });
          return filter;
       },
 
-      isChangedValue: function(items1, items2) {
-         for (var i in items1) {
-            if (getPropValue(items1[i], 'value') !== getPropValue(items2[i], 'resetValue')) {
+      isChangedValue: function(items) {
+         for (var i in items) {
+            if (getPropValue(items[i], 'value') !== getPropValue(items[i], 'resetValue')) {
                return true;
             }
          }
@@ -65,15 +68,15 @@ define('Controls/Filter/Panel', [
 
    var FilterPanel = Control.extend({
       _template: template,
-      _isEnabled: false,
+      _isChanged: false,
 
       _beforeMount: function(options) {
          this._items = clone(options.items);
-         this._isEnabled = _private.isChangedValue(this._items, options.items);
+         this._isChanged = _private.isChangedValue(this._items);
       },
 
       _beforeUpdate: function() {
-         this._isEnabled = _private.isChangedValue(this._items, this._options.items);
+         this._isChanged = _private.isChangedValue(this._items);
       },
 
       _applyFilter: function() {
@@ -83,10 +86,9 @@ define('Controls/Filter/Panel', [
 
       _resetFilter: function() {
          Chain(this._items).each(function(item) {
-            item.value = item.resetValue;
+            setPropValue(item, 'value', item.resetValue);
          });
-         this._isEnabled = false;
-         this._children.PropertyGrid._forceUpdate();
+         this._isChanged = false;
       },
 
       _close: function() {
