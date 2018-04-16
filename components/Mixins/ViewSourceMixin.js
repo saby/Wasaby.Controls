@@ -42,10 +42,8 @@ define('SBIS3.CONTROLS/Mixins/ViewSourceMixin', [
                   }
                }
                historyDef.callback(filter || {});
-            });
-   
-            self.once('onDestroy', function() {
                historyController.destroy();
+               return history;
             });
          } else {
             historyDef.callback({});
@@ -56,7 +54,9 @@ define('SBIS3.CONTROLS/Mixins/ViewSourceMixin', [
       }
    };
    var ViewSourceMixin = /**@lends SBIS3.CONTROLS/Mixins/ViewSourceMixin.prototype  */{
-
+      $consturctor: function() {
+         this.__cancelQueryDef = this.__cancelQueryDef.bind(this);
+      },
       /**
        * Устанавливает dataSource для представления данных.
        * Для этого делается запрос на БЛ, можно вызывать в конструкторе.
@@ -99,11 +99,9 @@ define('SBIS3.CONTROLS/Mixins/ViewSourceMixin', [
                return e;
             });
    
-            self.once('onDestroy', function() {
-               if (!queryDef.isReady()) {
-                  queryDef.cancel();
-               }
-            });
+            self._queryDef = queryDef;
+            
+            self.once('onDestroy', self.__cancelQueryDef);
             
             return queryFilter;
          });
@@ -151,11 +149,22 @@ define('SBIS3.CONTROLS/Mixins/ViewSourceMixin', [
                      resultDef.callback(recordSet);
          
                      return recordSet;
+                  })
+                  .addBoth(function(res) {
+                     self.unsubscribe('onDestroy', self.__cancelQueryDef);
+                     return res;
                   });
                return filter;
             });
          });
          return resultDef;
+      },
+      
+      __cancelQueryDef: function() {
+         if (!this._queryDef.isReady()) {
+            this._queryDef.cancel();
+         }
+         this._queryDef = null;
       }
    };
 
