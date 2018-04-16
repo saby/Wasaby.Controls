@@ -1,0 +1,17 @@
+.ws-is-ie .controls-HighCharts,
+.ws-is-mobile-safari .controls-HighCharts,
+.ws-is-mobile-chrome-ios .controls-HighCharts {
+   -webkit-transform: none !important;
+}
+
+.controls-HighCharts {
+   height: 400px;
+}
+
+/* В хроме на некоторых видеокартах(как минимум на GT1060) svg некорректно рендерится
+ * https://bugs.chromium.org/p/chromium/issues/detail?id=819211
+ * https://github.com/highcharts/highcharts/issues/7662
+ */
+.controls-HighCharts .highcharts-series path {
+   stroke-linecap: initial;
+}
