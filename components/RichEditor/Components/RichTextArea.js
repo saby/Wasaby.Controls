@@ -1376,6 +1376,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
          // Переключение пользовательского формата у блока
          toggleStyle: function(style) {
+            //Проверяем наличие фокуса на редакторе и если его там нет, то ставим его на него
+            //https://online.sbis.ru/opendoc.html?guid=80c4825a-91f6-4d7d-b377-2b788df94439
             if (!this.isActive()) {
                this.setActive(true);
             }
