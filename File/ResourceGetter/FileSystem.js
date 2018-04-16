@@ -42,7 +42,7 @@ define("File/ResourceGetter/FileSystem", ["require", "exports", "tslib", "File/R
          */
         multiSelect: false,
         /**
-         * @cfg {Array<String>} Список расширений выбираемых файлов
+         * @cfg {Array.<String>} Список расширений выбираемых файлов
          * <wiTag group="Управление">
          * Помимо перечисления массива конкретных расширений файлов, можно также передать в массив значения:
          * <ul>
@@ -118,7 +118,7 @@ define("File/ResourceGetter/FileSystem", ["require", "exports", "tslib", "File/R
          * @description Deferred.cancel стреляет с задержкой после закрытия окна выбора.
          * Это связано необходимым временем между получением фокуса и отработкой onChange у input-элемента на маломощных эвм
          * Необходимо это учитывать при обработке errback у результата метода
-         * @return {Core/Deferred<Array<File/LocalFile | Error>>}
+         * @return {Core/Deferred.<Array.<File/LocalFile | Error>>}
          * @method
          * @name File/ResourceGetter/FileSystem#getFiles
          * @see File/LocalFile
@@ -173,7 +173,7 @@ define("File/ResourceGetter/FileSystem", ["require", "exports", "tslib", "File/R
         };
         /**
          * Возможен ли выбор файлов
-         * @return {Core/Deferred<Boolean>}
+         * @return {Core/Deferred.<Boolean>}
          * @method
          * @name File/ResourceGetter/FileSystem#canExec
          */

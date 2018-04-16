@@ -139,7 +139,7 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
             /**
              * @cfg {String} Устанавливает отображение плитки по ховеру
              * @remark
-             * Использование опции актуально для режима отображения {@link /doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/tiles/ "Плитка"}.
+             * Использование опции актуально для режима отображения {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/tiles/ "Плитка"}.
              * В зависимости от значения опции ширина плитки может меняться или оставаться неизменной при наведении на нее курсора.
              * @variant static ширина плитки остается неизменной.
              * @variant dynamic ширина плитки меняется.
@@ -460,7 +460,9 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
                if (this._hasInvisibleItems() && result.inside && !result.prepend) {
                   result.inside = false;
                   result.prepend = true;
-                  result.container = result.container.find('.controls-CompositeView__tileItem-invisible').first();
+                  //Искать первую пустышку надо непосредственно внутри переданного container. Иначе при добавлении
+                  //листов, можем найти пустышку в контейнере для папок.
+                  result.container = result.container.find('>.controls-CompositeView__tileItem-invisible').first();
                }
             }
             return result;

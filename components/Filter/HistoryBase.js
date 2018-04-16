@@ -8,6 +8,8 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
    'SBIS3.CONTROLS/History/HistoryListUtils',
    'Core/CommandDispatcher',
    'Core/helpers/collection-helpers',
+   'Core/ParallelDeferred',
+   'SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil',
    'SBIS3.CONTROLS/History/HistoryList',
    'SBIS3.CONTROLS/Utils/InformationPopupManager',
    'SBIS3.CONTROLS/Filter/HistoryView'
@@ -17,7 +19,9 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
    CompoundControl,
    HistoryListUtils,
    CommandDispatcher,
-   colHelpers
+   colHelpers,
+   ParallelDeferred,
+   FilterHistoryControllerUntil
 ) {
 
       'use strict';
@@ -71,11 +75,18 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
          },
 
          $constructor: function() {
-            var self = this,
-               favoriteList = this._getHistoryList(true),
-               favoriteAllList = this._getHistoryList(true, true),
-               historyList = this._getHistoryList();
-
+            var self = this;
+            var listsDef = new ParallelDeferred();
+            var favoriteList = this._getHistoryList(true);
+            var favoriteAllList = this._getHistoryList(true, true);
+            var historyList = this._getHistoryList();
+   
+            listsDef.push(favoriteList.getHistory(true));
+            listsDef.push(favoriteAllList.getHistory(true));
+            listsDef.push(historyList.getHistory(true));
+   
+            listsDef.done();
+            
             this._publish('onItemActivate');
 
             function deleteReportHistory(id, isFavorite, isGlobal) {
@@ -106,7 +117,8 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
                var action = this.getChildControlByName('editFavorite'),
                   self = this,
                   toEditItem = item.get('data').clone(),
-                  isGlobal = !!toEditItem.get('globalParams');
+                  isGlobal = !!toEditItem.get('globalParams'),
+                  filterStructure = self._options.filterStructure;
 
                //В старом формате в параметре globalParams хранился Boolean, в новом формате хранится значение 1 или 0.
                //Для обратной совместимости, перегоняем значения из старого формата в новыый.
@@ -117,6 +129,10 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
                /* Подготавливаем запись к редктированию */
                toEditItem.set('toSaveFields', {});
                toEditItem.set('editedTextValue', '');
+               
+               if (filterStructure) {
+                  toEditItem.set('filter', FilterHistoryControllerUntil.prepareStructureToApply(toEditItem.get('filter'), filterStructure));
+               }
 
                action.execute({
                   item: toEditItem,
@@ -138,7 +154,7 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
                                  return isEqualObject(elem.value, elem.resetValue) ? result : ++result;
                               }, 0),
                               reportItem, filterItems;
-
+   
                            /* Не сохраняем запись, если нет параметров для сохранения */
                            if(editableFieldsCount <= Object.keys(toSaveFields).length) {
                               record.acceptChanges(); // Чтобы formController не запустил обновление записи
@@ -178,6 +194,9 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
                            if(editedTextValue && editedTextValue !== textValue) {
                               record.set('fullTextValue', textValue);
                            }
+                           if (filterStructure) {
+                              record.set('filter', FilterHistoryControllerUntil.minimizeStructureToSave(record.get('filter')));
+                           }
                            record.acceptChanges();
                            deleteReportHistory(item.get('id'), isFavorite, isGlobal);
                            (globalParams ? favoriteAllList : favoriteList).prepend(record);
@@ -216,31 +235,33 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
                   checkItems(self._favoriteView);
                });
 
-               this.subscribeTo(self._favoriteView, 'onItemsReady', function() {
-                  self._favoriteView.getItems().prepend(favoriteAllList.getHistory().clone());
-                  checkItems(self._favoriteView);
-               });
-
-               self._favoriteView.getItems().prepend(favoriteAllList.getHistory().clone());
-
                function checkItems(view) {
                   var viewBlock = view.getContainer().parent();
                   viewBlock.toggleClass('ws-hidden', !view.getItems().getCount());
                }
-
-               this.processViews(function(view) {
-                  self.subscribeTo(view, 'onItemActivate', function(event, itemObj) {
-                     self._notify('onItemActivate', itemObj, this === self._favoriteView, itemObj.item.get('data').get('globalParams'));
+   
+               listsDef.getResult().addCallback(function() {
+                  self.subscribeTo(self._favoriteView, 'onItemsReady', function() {
+                     self._favoriteView.getItems().prepend(favoriteAllList.getHistory().clone());
+                     checkItems(self._favoriteView);
                   });
-               });
-
-               this.processViews(function(view) {
-                  self.subscribeTo(view, 'onItemsReady', function() {
-                     checkItems(view);
+   
+                  self._favoriteView.getItems().prepend(favoriteAllList.getHistory().clone());
+   
+                  self.processViews(function(view) {
+                     self.subscribeTo(view, 'onItemActivate', function(event, itemObj) {
+                        self._notify('onItemActivate', itemObj, this === self._favoriteView, itemObj.item.get('data').get('globalParams'));
+                     });
                   });
+   
+                  self.processViews(function(view) {
+                     self.subscribeTo(view, 'onItemsReady', function() {
+                        checkItems(view);
+                     });
+                  });
+   
+                  self.processViews(checkItems);
                });
-
-               this.processViews(checkItems);
             });
 
             this.once('onDestroy', function() {

@@ -77,17 +77,16 @@ define('Controls/Popup/Opener/InfoBox',
             }
 
             cfg = cMerge(cClone(DEFAULT_CONFIG), cfg);
-            Base.prototype.open.call(this, {
+            InfoBox.superclass.open.call(this, {
                target: cfg.target,
                position: cfg.position,
-               componentOptions: {
+               templateOptions: { // Опции, которые будут переданы в наш шаблон Opener/InfoBox/resources/template
                   template: cfg.template,
-                  templateOptions: cfg.templateOptions,
+                  templateOptions: cfg.templateOptions, // Опции, которые будут переданы в прикладной cfg.template (выполняется построение внутри нашего шаблона)
                   message: cfg.message,
                   float: cfg.float
                },
                className: 'controls-InfoBox__popup controls-InfoBox-style-' + cfg.style,
-               autoHide: true,
                template: template
             }, Strategy);
          }

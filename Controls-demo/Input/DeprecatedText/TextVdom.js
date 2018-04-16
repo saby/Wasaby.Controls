@@ -1,8 +1,8 @@
-define('Controls-demo/Input/Text/TextVdom', [
+define('Controls-demo/Input/DeprecatedText/TextVdom', [
 	'Core/Control',
-	'tmpl!Controls-demo/Input/Text/TextVdom',
+	'tmpl!Controls-demo/Input/DeprecatedText/TextVdom',
 	'Controls/Input/Text',
-	'css!Controls-demo/Input/Text/TextVdom'
+	'css!Controls-demo/Input/DeprecatedText/TextVdom'
 ], function ( Control, dotTplFn) {
 	'use strict';
 	var moduleClass = Control.extend({

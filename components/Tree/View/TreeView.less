@@ -76,6 +76,23 @@
    }
 }
 
+.ws-is-mobile-safari, .ws-is-mobile-chrome-ios{
+   .controls-TreeView__expand {
+      &:active {
+         border-width: @tree-view-expand-hover-border-width;
+         border-style: @tree-view-expand-hover-border-style;
+         border-color: @tree-view-expand-hover-border-color;
+         color: @color_TreeDataGridView-expand_hovered;
+      }
+      &.controls-TreeView__expand__open:active {
+         border-width: @tree-view-expand-open-hover-border-width;
+         border-style: @tree-view-expand-open-hover-border-style;
+         border-color: @tree-view-expand-open-hover-border-color;
+         color: @color_TreeDataGridView-expand_hovered;
+      }
+   }
+}
+
 .ws-is-desktop-platform {
    .controls-TreeView__expand {
       &:hover {

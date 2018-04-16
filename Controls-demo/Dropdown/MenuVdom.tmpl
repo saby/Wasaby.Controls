@@ -52,12 +52,13 @@
                           footerTemplate="tmpl!Controls-demo/Dropdown/resources/footerTemplate"
                           source="{{_getMultiData()}}"/>
    <br />
-   И немножко меню
-   <Controls.Button.MenuButton name="myMenuButton1"
+
+   <Controls.Button.MenuButton on:onMenuItemActivate="_clickItemsChangedHandler()"
+                  name="myMenuButton1"
                   keyProperty="id"
                   style="buttonDefault"
                   icon="icon-24 icon-Author"
-                  caption="123"
+                  caption="обычное меню"
                   parentProperty="parent"
                   nodeProperty="@parent"
                   source="{{_getHierarchyMenuItems()}}"/>
@@ -65,30 +66,28 @@
                    keyProperty="id"
                    style="buttonDefault"
                    icon="icon-24 icon-Author"
-                   caption="контент"
+                   caption="кастомный контент"
                    contentTemplate="tmpl!Controls-demo/Dropdown/resources/contentTemplate"
                    parentProperty="parent"
                    nodeProperty="@parent"
                    source="{{_getHierarchyMenuItems()}}"/>
-   ехе
    <Controls.Button.MenuButton name="myMenuButton2"
                    keyProperty="id"
                    style="linkMain"
                    icon="icon-medium icon-Author"
-                   caption="menuLink"
+                   caption="кнопка-ссылка с меню"
                    parentProperty="parent"
                    nodeProperty="@parent"
                    source="{{_getHierarchyMenuItems()}}"/>
-   хе
    <Controls.Button.MenuButton name="myMenuButton3"
                    keyProperty="id"
                    style="linkMain"
                    icon="icon-small icon-Author"
-                   caption="menuLink"
+                   caption="меню с малой иконкой"
                    parentProperty="parent"
                    nodeProperty="@parent"
                    source="{{_getHierarchyItems()}}"/>
-   ехе
+   кнопка иконка small
    <Controls.Button.MenuButton name="myMenuButton4"
                    keyProperty="id"
                    style="linkMain"
@@ -97,7 +96,7 @@
                    nodeProperty="@parent"
                    headCaption="wow so much vdom"
                    source="{{_getHierarchyItems()}}"/>
-   хе
+   кнопка иконка medium
    <Controls.Button.MenuButton name="myMenuButton5"
                    keyProperty="id"
                    style="linkMain"
@@ -108,13 +107,13 @@
    <Controls.Button.MenuButton name="myMenuButton6"
                    keyProperty="id"
                    style="buttonDefault"
-                   icon="icon-24 icon-Author"
-                   caption="123"
+                   icon="icon-medium icon-Author"
+                   caption="с переворотом"
                    parentProperty="parent"
                    nodeProperty="@parent"
                    class="menu-horizontal-revert"
                    source="{{_getHierarchyMenuItems()}}"/>
-   хе
+   дублирование малой иконки
    <Controls.Button.MenuButton name="myMenuButton8"
                    keyProperty="id"
                    style="linkMain"
@@ -124,7 +123,7 @@
                    source="{{_getHierarchyItems()}}">
       <ws:headConfig menuStyle="duplicateHead" blabla="123"/>
    </Controls.Button.MenuButton>
-   ехе
+   дублирование большой иконки
    <Controls.Button.MenuButton name="myMenuButton9"
                    keyProperty="id"
                    style="linkMain"
@@ -134,8 +133,8 @@
                    source="{{_getHierarchyItems()}}">
       <ws:headConfig menuStyle="duplicateHead" />
    </Controls.Button.MenuButton>
-   ааа
-   <Controls.Button.MenuButton name="myMenuButton9"
+   меню с крестом
+   <Controls.Button.MenuButton name="myMenuButton10"
                    keyProperty="id"
                    style="linkMain"
                    icon="icon-medium icon-Author"

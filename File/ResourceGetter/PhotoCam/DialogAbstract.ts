@@ -94,7 +94,7 @@ let DialogAbstract = CompoundControl.extend({
     },
     /**
      *
-     * @return {Core/Deferred<Array<Blob>>}
+     * @return {Core/Deferred.<Array.<Blob>>}
      * @private
      */
     _getFiles(): Deferred<Array<Blob>> {
@@ -142,7 +142,7 @@ let DialogAbstract = CompoundControl.extend({
     },
     /**
      * Получение текущего изображения из медиа контента
-     * @return {Core/Deferred<Blob | File | String>}
+     * @return {Core/Deferred.<Blob | File | String>}
      * @protected
      * @abstract
      */

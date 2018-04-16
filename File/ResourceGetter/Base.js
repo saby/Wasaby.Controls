@@ -27,7 +27,7 @@ define("File/ResourceGetter/Base", ["require", "exports"], function (require, ex
      * @method
      * @name File/ResourceGetter/Base#getFiles
      * @abstract
-     * @return {Core/Deferred<Array<File/IResource | Error>>}
+     * @return {Core/Deferred.<Array.<File/IResource | Error>>}
      * @example
      * Получение скана:
      * <pre>
@@ -71,7 +71,7 @@ define("File/ResourceGetter/Base", ["require", "exports"], function (require, ex
      * @abstract
      * @method
      * @name File/ResourceGetter/Base#canExec
-     * @return {Core/Deferred<boolean>}
+     * @return {Core/Deferred.<boolean>}
      * @example
      * Доступны ли сканеры:
      * <pre>
