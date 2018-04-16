@@ -17,7 +17,7 @@
             keyProperty="id"
             menuStyle="cross"
             className="controls-itemActionsV__menu">
-        <ws:popupOptions>
+        <ws:popupOptions closeByExternalClick="{{true}}">
             <ws:corner vertical="top" horizontal="right"/>
             <ws:horizontalAlign side="left"/>
             <ws:eventHandlers onResult="{{_closeActionsMenu}}" onClose="{{_closeActionsMenu}}"/>
