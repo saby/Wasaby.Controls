@@ -1,18 +1,13 @@
 define('Controls/Filter/Panel/Editor/Keys', [
    'Core/Control',
-   'tmpl!Controls/Filter/Panel/Editor/Keys/KeysEditor'
-
-   // 'css!Controls/Filter/Panel/Panel'
+   'tmpl!Controls/Filter/Panel/Editor/Keys/KeysEditor',
+   'css!Controls/Filter/Panel/PropertyGrid/PropertyGrid'
 ], function(Control, template) {
 
    'use strict';
 
    var KeysEditor = Control.extend({
       _template: template,
-
-      constructor: function(cfg) {
-         KeysEditor.superclass.constructor.apply(this, arguments);
-      },
 
       _beforeMount: function(options) {
          this._item = options.item;
