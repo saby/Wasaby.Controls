@@ -192,7 +192,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                /**
                 * @cfg {object} Перечень соответствий идентификатор поля - индекс колонки в под-компоненте привязки колонок
                 */
-               columnBindingAccordances: null,
+               columnBindingMapping: null,
                /**
                 * @cfg {ImportMapping} Информацию о настройке соответствий значений
                 */
@@ -302,7 +302,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             // Опции под-компонента "columnBinding"
             if (isUsedSubview.columnBinding) {
                var sampleRows = hasSheets ? sheet.sampleRows : [];
-               scopes.columnBinding = cMerge({rows:sampleRows, skippedRows:skippedRows}, _lodashPick(options, ['dataType', 'fields', {menuTitle:'columnBindingMenuTitle', headTitle:'columnBindingHeadTitle', accordances:'columnBindingAccordances'}]));
+               scopes.columnBinding = cMerge({rows:sampleRows, skippedRows:skippedRows}, _lodashPick(options, ['dataType', 'fields', {menuTitle:'columnBindingMenuTitle', headTitle:'columnBindingHeadTitle', mapping:'columnBindingMapping'}]));
             }
             // Опции под-компонента "mapping"
             if (isUsedSubview.mapper) {
@@ -400,7 +400,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                         results[i + 1] = {
                            provider: {parser:parserName, skippedRows:skippedRows, separator:sheet.separator || ''},
                            providerArgs: this._getProviderArgsOptions(options, parserName, false),
-                           columnBinding: {accordances:{}, skippedRows:skippedRows}
+                           columnBinding: {mapping:{}, skippedRows:skippedRows}
                         };
                      }
                      results[''] = cMerge({}, results[1]);
@@ -832,11 +832,11 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          _combineResultSheet: function (result, sheet, index) {
             var provider = result.provider;
             var providerArgs = result.providerArgs;
-            var columnBindingAccordances = result.columnBinding.accordances;
+            var columnBindingMapping = result.columnBinding.mapping;
             var item = {
                parser: provider.parser,
                skippedRows: provider.skippedRows,
-               columns: Object.keys(columnBindingAccordances).map(function (v) { return {index:columnBindingAccordances[v], field:v}; })
+               columns: Object.keys(columnBindingMapping).map(function (v) { return {index:columnBindingMapping[v], field:v}; })
             };
             if (provider.separator) {
                item.separator = provider.separator;
@@ -992,7 +992,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             'sheets',
             'sheetIndex',
             'sameSheetConfigs',
-            'columnBindingAccordances',
+            'columnBindingMapping',
             'mapping',
             'validators'
          ];
@@ -1100,7 +1100,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             },
             sheetIndex: typeIfDefined.bind(null, 'number'),
             sameSheetConfigs: typeIfDefined.bind(null, 'boolean'),
-            columnBindingAccordances: typeIfDefined.bind(null, 'object'),
+            columnBindingMapping: typeIfDefined.bind(null, 'object'),
             mapping: function (mapping) {
                // Для типа данных CML(CommerceML) должна быть опция "mapping"
                if (!mapping) {
