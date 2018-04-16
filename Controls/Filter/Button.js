@@ -8,13 +8,12 @@ define('Controls/Filter/Button',
       'Core/moduleStubs',
       'WS.Data/Chain',
       'WS.Data/Utils',
-      'Core/helpers/Array/clone',
       'css!Controls/Filter/Button/Button',
       'Controls/Input/Text',
       'Controls/Filter/Panel'
    ],
 
-   function(Control, template, moduleStubs, Chain, Utils, clone) {
+   function(Control, template, moduleStubs, Chain, Utils) {
 
       /**
        * @class Controls/Container/Search
@@ -96,7 +95,7 @@ define('Controls/Filter/Button',
                } else {
                   this._children.filterStickyOpener.open({
                      componentOptions: {
-                        items: clone(this._options.items),
+                        items: this._options.items,
                         viewMode: this._options.viewMode
                      },
                      template: 'Controls/Filter/Panel',
