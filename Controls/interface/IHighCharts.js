@@ -17,7 +17,7 @@ define('Controls/interface/IHighCharts', [], function() {
     */
 
    /**
-    * typedef {Object} HighChartOptions
+    * @typedef {Object} HighChartOptions
     * @property {Chart} chart ChartOptions
     * @property {String[]} colors Array of using colors
     * @property {Credits} credits Option for HighCharts credits
@@ -31,7 +31,7 @@ define('Controls/interface/IHighCharts', [], function() {
     */
 
    /**
-    * typedef {Object} Chart
+    * @typedef {Object} Chart
     * @property {chartType} type Type of chart
     * @property {Number} marginTop Top inner indent
     * @property {Number} marginRight Right inner indent
@@ -44,12 +44,12 @@ define('Controls/interface/IHighCharts', [], function() {
     */
 
    /**
-    * typedef {Object} Credits
+    * @typedef {Object} Credits
     * @property {Boolean} enabled Turn off/on credits of Highcharts.com
     */
 
    /**
-    * typedef {Object} Legend
+    * @typedef {Object} Legend
     * @property {Boolean} enabled Turn off/on the legend
     * @property {Number} width Width of the legend
     * @property {Number} height Height of the legend
@@ -67,7 +67,7 @@ define('Controls/interface/IHighCharts', [], function() {
     */
 
    /**
-    * typedef {Object} plotOptions
+    * @typedef {Object} plotOptions
     * @property {Column} column Configuration for columns
     * @property {Line} line Configuration for line
     * @property {Pie} pie Configuration for pie
@@ -75,7 +75,7 @@ define('Controls/interface/IHighCharts', [], function() {
     */
 
    /**
-    * typedef {Object} Title
+    * @typedef {Object} Title
     * @property {Align} align Align title horizontally
     * @property {Boolean} floating Position title over the chart
     * @property {Number} margin Indents from title
@@ -84,14 +84,14 @@ define('Controls/interface/IHighCharts', [], function() {
     */
 
    /**
-    * typedef {Object} Tooltip
+    * @typedef {Object} Tooltip
     * @property {Boolean} enabled Turn off/on tooltips
     * @property {Boolean} shared General tooltip (all points with same X value highlights together)
     * @property {Function} formatter Rendering function for tooltips
     */
 
    /**
-    * typedef {Object} xAxis
+    * @typedef {Object} xAxis
     * @property {Boolean} allowDecimals Turn off/on decimal values
     * @property {Number} gridLineWidth Width of grid lines
     * @property {Labels} labels Configuration for labels of marks on axis X
@@ -101,7 +101,7 @@ define('Controls/interface/IHighCharts', [], function() {
     */
 
    /**
-    * typedef {Object} yAxis
+    * @typedef {Object} yAxis
     * @property {Boolean} allowDecimals Turn off/on decimal values
     * @property {Number} gridLineWidth Width of grid lines
     * @property {Labels} labels Configuration for labels of marks on axis X
@@ -112,7 +112,7 @@ define('Controls/interface/IHighCharts', [], function() {
     */
 
    /**
-    * typedef {Object} chartType
+    * @typedef {Object} chartType
     * @variant line Linear chart
     * @variant spline Linear smoothed chart
     * @variant pie Pie chart
@@ -125,14 +125,14 @@ define('Controls/interface/IHighCharts', [], function() {
     */
 
    /**
-    * typedef {Object} Align
+    * @typedef {Object} Align
     * @variant center Align the legend to center
     * @variant left Align the legend to left
     * @variant right Align the legend to right
     */
 
    /**
-    * typedef{Object} vAlign
+    * @typedef{Object} vAlign
     * @variant bottom Align the legend to bottom
     * @variant middle Align the legend to middle
     * @variant top Align the legend to top
@@ -145,7 +145,7 @@ define('Controls/interface/IHighCharts', [], function() {
     */
 
    /**
-    * typedef {Object} column
+    * @typedef {Object} column
     * @property {dataLabels} dataLabels Configuration for captions
     * @property {Point} point Configuration for points
     * @property {typeStacking} stacking Configuration for stacking
@@ -153,7 +153,7 @@ define('Controls/interface/IHighCharts', [], function() {
     */
 
    /**
-    * typedef {Object} dataLabels
+    * @typedef {Object} dataLabels
     * @property {Number} distance Distance from chart to caption (for pie charts)
     * @property {Boolean} enabled Turn off/on captions of values
     * @property {String} color Color of captions
@@ -162,12 +162,12 @@ define('Controls/interface/IHighCharts', [], function() {
     */
 
    /**
-    * typedef {Object} Point
+    * @typedef {Object} Point
     * @property {Events} events Event handlers
     */
 
    /**
-    * typedef {Object} Events
+    * @typedef {Object} Events
     * @property {Function} click Click on column event handler
     */
 
@@ -178,7 +178,7 @@ define('Controls/interface/IHighCharts', [], function() {
     */
 
    /**
-    * typedef {Object} Line
+    * @typedef {Object} Line
     * @property {dataLables} dataLabels Configuration for captions
     * @property {Marker} marker Configuration for accentuate points
     * @property {Number} pointInterval Interval X of values (only if x is not defined)
@@ -187,21 +187,21 @@ define('Controls/interface/IHighCharts', [], function() {
     */
 
    /**
-    * typedef {Object} Pie
+    * @typedef {Object} Pie
     * @property {Boolean} Turn off/on accentuation sector by click
     * @property {dataLabels} dataLabels Configuration for captions
     * @property {Boolean} showInLegend Show series in legend
     */
 
    /**
-    * typedef {Object} Marker
+    * @typedef {Object} Marker
     * @property {Boolean} enabled Turn off/on accentuation of points
     * @property {Number} radius Radius of points
     * @property {Point} point Configuration for points
     */
 
    /**
-    * typedef {Object} Series
+    * @typedef {Object} Series
     * @property {Boolean} animation Turn off/on animation of chart
     * @property {String} cursor Type of cursor
     * @property {dataLabels} dataLabels Configuration for captions
@@ -209,7 +209,7 @@ define('Controls/interface/IHighCharts', [], function() {
     */
 
    /**
-    * typedef {Object} Labels
+    * @typedef {Object} Labels
     * @property {Function} formatter Rendering functions for marks on axis X
     * @property {Number} staggerLines Quantity of lines for show off marks on axis X
     * @property {Number} step Step of caption for marks on axis X
