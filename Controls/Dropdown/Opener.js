@@ -1,13 +1,13 @@
 define('Controls/Dropdown/Opener',
    [
       'Controls/Popup/Opener/Sticky',
-      'WS.Data/Relation/Hierarchy',
-      'WS.Data/Type/descriptor'
+      'WS.Data/Relation/Hierarchy'
    ],
-   function(Sticky, Hierarchy, types) {
+   function(Sticky, Hierarchy) {
       /**
        * Действие открытия прилипающего окна
        * @class Controls/Dropdown/Opener
+       * @mixes Controls/interface/IDropdown
        * @control
        * @public
        * @category Popup
@@ -106,27 +106,6 @@ define('Controls/Dropdown/Opener',
             DropdownOpener.superclass.open.apply(this, arguments);
          }
       });
-
-      DropdownOpener.getOptionTypes = function getOptionTypes() {
-         return {
-            keyProperty: types(String),
-            parentProperty: types(String),
-            nodeProperty: types(String),
-            hasSelectedMarker: types(Boolean),
-            multiselectable: types(Boolean)
-         };
-      };
-
-      DropdownOpener.getDefaultOptions = function getDefaultOptions() {
-         return {
-            keyProperty: undefined,
-            parentProperty: undefined,
-            nodeProperty: undefined,
-            itemTemplate: undefined,
-            hasSelectedMarker: false,
-            multiselectable: false
-         };
-      };
 
       DropdownOpener._private = _private;
       return DropdownOpener;
