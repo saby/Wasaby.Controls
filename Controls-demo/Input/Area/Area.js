@@ -25,6 +25,10 @@ define('Controls-demo/Input/Area/Area', [
          } else{
             this._validationErrors = null;
          }
+      },
+
+      _eventHandler: function(e, value) {
+         this._eventResult = e.type + ': ' + value;
       }
    });
 
