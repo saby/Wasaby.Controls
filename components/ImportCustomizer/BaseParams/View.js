@@ -7,12 +7,13 @@
  */
 define('SBIS3.CONTROLS/ImportCustomizer/BaseParams/View',
    [
+      'Core/helpers/Object/isEqual',
       'SBIS3.CONTROLS/CompoundControl',
       'tmpl!SBIS3.CONTROLS/ImportCustomizer/BaseParams/View'/*,
       'css!SBIS3.CONTROLS/ImportCustomizer/BaseParams/View'*/
    ],
 
-   function (CompoundControl, dotTplFn) {
+   function (cObjectIsEqual, CompoundControl, dotTplFn) {
       'use strict';
 
       var View = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ImportCustomizer/BaseParams/View.prototype*/ {
@@ -65,6 +66,21 @@ define('SBIS3.CONTROLS/ImportCustomizer/BaseParams/View',
          setValues: function (values) {
             if (!values || typeof values !== 'object') {
                throw new Error('Object required');
+            }
+            var names = ['replaceAllData', 'destination'];
+            var has = {};
+            var options = this._options;
+            for (var name in values) {
+               if (names.indexOf(name) !== -1) {
+                  var value = values[name];
+                  if (name !== '' ? value !== options[name] : !cObjectIsEqual(value, options[name])) {
+                     has[name] = true;
+                     options[name] = value;
+                  }
+               }
+            }
+            if (has.replaceAllData) {
+               this._replaceAllDataView.setChecked(options.replaceAllData);
             }
          },
 

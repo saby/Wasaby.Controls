@@ -80,6 +80,11 @@ define('SBIS3.CONTROLS/ImportCustomizer/Sheet/View',
             if (!values || typeof values !== 'object') {
                throw new Error('Object required');
             }
+            var options = this._options;
+            if ('sheetIndex' in values && values.sheetIndex !== options.sheetIndex) {
+               options.sheetIndex = values.sheetIndex;
+               this._view.setSelectedKeys(values.sheetIndex && values.sheetIndex !== -1 ? [values.sheetIndex] : []);
+            }
          },
 
          /**
