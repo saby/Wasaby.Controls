@@ -94,6 +94,9 @@ define('SBIS3.CONTROLS/OperationsPanel/Print', [
       applyOperation: function(cfg){
          var p;
          cfg.minWidth = this._options.minPrintWindowWidth;
+         //Устанавливам кнопку как родителя в принтер, т.к. принтер показывает диалог
+         //предпросмотра и для диалога нужно будет задать правильный opener.
+         cfg.parent = this;
          if (this._options.xsl) {
             cfg.xsl = this._options.xsl;
             cfg.report = true;

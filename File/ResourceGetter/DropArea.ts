@@ -10,7 +10,7 @@ import ExtensionsHelper = require("File/utils/ExtensionsHelper");
 type Handler = (files: FileList) => void;
 /**
  * @typedef {Function} Handler
- * @param {Array<File>} files
+ * @param {Array.<File>} files
  * @void
  */
 
@@ -182,7 +182,7 @@ if (IS_SUPPORT) {
 
 const OPTION = {
     /**
-     * @cfg {Array<String>} Список расширений выбираемых файлов
+     * @cfg {Array.<String>} Список расширений выбираемых файлов
      * <wiTag group="Управление">
      * Помимо перечисления массива конкретных расширений файлов, можно также передать в массив значения:
      * <ul>
@@ -263,7 +263,7 @@ class DropArea extends IResourceGetterBase {
     }
     /**
      * Возвращает Deferred, который стрельнёт, когда на указанный элемент будут перемещены файлы
-     * @return {Core/Deferred<Array<File/LocalFile | Error>>}
+     * @return {Core/Deferred.<Array.<File/LocalFile | Error>>}
      * @method
      * @name File/ResourceGetter/DropArea#getFiles
      * @see File/LocalFile
@@ -279,7 +279,7 @@ class DropArea extends IResourceGetterBase {
     }
     /**
      * Возможен ли выбор файлов
-     * @return {Core/Deferred<Boolean>}
+     * @return {Core/Deferred.<Boolean>}
      * @method
      * @name File/ResourceGetter/DropArea#canExec
      */

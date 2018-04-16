@@ -3,8 +3,9 @@ define('SBIS3.CONTROLS/WSControls/Buttons/Button', [
    'Core/constants',
    'SBIS3.CONTROLS/WSControls/Buttons/ButtonBase',
    'tmpl!SBIS3.CONTROLS/WSControls/Buttons/Button',
-   'tmpl!SBIS3.CONTROLS/WSControls/Buttons/resources/contentTemplate'
-], function(constants, ButtonBase, dotTplFn, contentTemplate) {
+   'tmpl!SBIS3.CONTROLS/WSControls/Buttons/resources/contentTemplate',
+   'tmpl!SBIS3.CONTROLS/WSControls/Buttons/resources/AddIcon'
+], function(constants, ButtonBase, dotTplFn, contentTemplate, svgIconTpl) {
 
    'use strict';
 
@@ -97,7 +98,9 @@ define('SBIS3.CONTROLS/WSControls/Buttons/Button', [
             style: null,
             _type: '',
             _iconState: null,
-            _iconSize: null
+            _iconSize: null,
+            _svgIconTpl: svgIconTpl,
+            _fix1175160840: false
          },
          _contentContainer: null,
          _iconClass: null

@@ -197,7 +197,7 @@
          }
 
          &.controls-ListView__hoveredItem, &.controls-ItemActions__activeItem {
-            z-index: 1;
+            z-index: 2;
             box-shadow: 0 0 5px #587AB0;
          }
 
@@ -224,6 +224,11 @@
          }
       }
    }
+
+   .controls-CompositeView__tileTitle-text {
+      overflow: hidden;
+   }
+
    .controls-ItemsToolbar {
       &.controls-ListView__ItemsToolbar-container {
          bottom: 2px;
@@ -300,7 +305,9 @@
                text-align: center;
                line-height: 40px;
                font-size: 15px;
-               .align-self(stretch);
+               .flexbox();
+               .align-items(center);
+               .justify-content(center);
 
                .controls-CompositeView__tileTitle-text {
                   line-height: 20px;
@@ -379,7 +386,6 @@
 
                .controls-CompositeView__tileTitle-text {
                   max-height: 36px;
-                  overflow-y: hidden;
                }
             }
          }

@@ -12,7 +12,7 @@ define("File/Attach/Option/Getters/DropArea", ["require", "exports", "tslib", "F
     var DropArea = /** @class */ (function (_super) {
         tslib_1.__extends(DropArea, _super);
         /**
-         * @cfg {Array<String>} Список расширений выбираемых файлов
+         * @cfg {Array.<String>} Список расширений выбираемых файлов
          * <wiTag group="Управление">
          * Помимо перечисления массива конкретных расширений файлов, можно также передать в массив значения:
          * <ul>

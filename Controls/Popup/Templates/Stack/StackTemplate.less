@@ -1,4 +1,4 @@
-.controls-DialogTemplate {
+.controls-StackTemplate {
    .flexbox();
    .flex-direction(column);
    .flex-grow(1);
@@ -9,7 +9,7 @@
    overflow: hidden;
 }
 
-.controls-DialogTemplate__top-area {
+.controls-StackTemplate__top-area {
    .flexbox();
    .flex-shrink(0);
    height: 38px;
@@ -17,7 +17,7 @@
    border-bottom: 1px solid #EAEAEA;
 }
 
-.controls-DialogTemplate__content-area {
+.controls-StackTemplate__content-area {
    .flexbox();
    .flex-direction(column);
    .flex-grow(1);
@@ -25,7 +25,7 @@
    min-height: 1px;
 }
 
-.controls-DialogTemplate__top-area-content {
+.controls-StackTemplate__top-area-content {
    width: 100%;
    flex-shrink: 1;
    display: flex;
@@ -33,7 +33,7 @@
    margin: 0 12px;
 }
 
-.controls-DialogTemplate__close_button {
+.controls-StackTemplate__close_button {
    position: relative;
    top: 5px;
    cursor: pointer;
@@ -46,7 +46,7 @@
    }
 }
 
-.controls-DialogTemplate__close_button_standart {
+.controls-StackTemplate__close_button_standart {
    border-style: solid;
    width: @width_CloseButton - extract(@border-width_CloseButton, 2) - extract(@border-width_CloseButton, 4);
    height: @height_CloseButton - extract(@border-width_CloseButton, 1) - extract(@border-width_CloseButton, 3);
@@ -67,7 +67,7 @@
    }
 }
 
-.controls-DialogTemplate__caption {
+.controls-StackTemplate__caption {
    font-family: TensorFont, sans-serif !important;
    font-size: 18px !important;
    font-weight: 700 !important;

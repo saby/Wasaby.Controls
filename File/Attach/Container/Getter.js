@@ -22,7 +22,7 @@ define("File/Attach/Container/Getter", ["require", "exports", "Core/Deferred"], 
         /**
          * Метод асинхронного получения экземпляра {@link File/IResourceGetter}
          * @param {String} name Имя модуля
-         * @return {Core/Deferred<File/IResourceGetter>}
+         * @return {Core/Deferred.<File/IResourceGetter>}
          * @see File/IResourceGetter#getType
          */
         GetterContainer.prototype.get = function (name) {

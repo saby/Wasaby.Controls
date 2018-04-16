@@ -80,12 +80,12 @@ define('Controls/List/ItemActions/ItemActionsControl', [
       },
       closeActionsMenu: function(self, args) {
          var
-            actionName = args && args[0],
-            event = args && args[1];
+            actionName = args && args.action,
+            event = args && args.event;
 
          //todo: Особая логика событий попапа, исправить как будут нормально приходить аргументы
          if (actionName === 'itemClick') {
-            var action = args[2][0].getRawData();
+            var action = args.data && args.data[0] && args.data[0].getRawData();
             self._onActionClick(event, action, self._options.listModel._activeItem.item);
          }
          self._children['itemActionsOpener'].close();

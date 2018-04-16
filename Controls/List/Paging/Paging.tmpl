@@ -1,23 +1,23 @@
-<div class="ws-Paging">
-   <div class="ws-Paging__wrapper">
-      <span class="ws-Paging__btn ws-Paging__arrow ws-Paging__arrow__state-{{_stateBegin}}" on:click="__arrowClick('Begin')">
-         <i class="icon-First ws-Paging__icon"></i>
+<div class="controls-Paging">
+   <div class="controls-Paging__wrapper">
+      <span class="controls-Paging__btn controls-Paging__arrow controls-Paging__arrow__state-{{_stateBegin}}" on:click="__arrowClick('Begin')">
+         <i class="icon-First controls-Paging__icon"></i>
       </span>
-      <span class="ws-Paging__btn ws-Paging__arrow ws-Paging__arrow__state-{{_statePrev}}" on:click="__arrowClick('Prev')">
-         <i class="icon-Back2 ws-Paging__icon"></i>
+      <span class="controls-Paging__btn controls-Paging__arrow controls-Paging__arrow__state-{{_statePrev}}" on:click="__arrowClick('Prev')">
+         <i class="icon-Back2 controls-Paging__icon"></i>
       </span>
       <ws:if data="{{_options.showDigits}}">
          <Controls.List.Paging.DigitButtons
-               className="ws-Paging__digitButons"
+               className="controls-Paging__digitButons"
                on:onDigitClick="__digitClick()"
-               selectedKey="{{_options.selectedKey}}"
+               selectedKey="{{_options.selectedPage}}"
                count="{{_options.pagesCount}}"></Controls.List.Paging.DigitButtons>
       </ws:if>
-      <span class="ws-Paging__btn ws-Paging__arrow ws-Paging__arrow__state-{{_stateNext}}" on:click="__arrowClick('Next')">
-         <i class="icon-Forward ws-Paging__icon"></i>
+      <span class="controls-Paging__btn controls-Paging__arrow controls-Paging__arrow__state-{{_stateNext}}" on:click="__arrowClick('Next')">
+         <i class="icon-Forward controls-Paging__icon"></i>
       </span>
-      <span attr:style="display:none" class="ws-Paging__btn ws-Paging__arrow ws-Paging__arrow__state-{{_stateEnd}}" on:click="__arrowClick('End')">
-         <i class="icon-Last ws-Paging__icon"></i>
+      <span attr:style="display:none" class="controls-Paging__btn controls-Paging__arrow controls-Paging__arrow__state-{{_stateEnd}}" on:click="__arrowClick('End')">
+         <i class="icon-Last controls-Paging__icon"></i>
       </span>
    </div>
 </div>
