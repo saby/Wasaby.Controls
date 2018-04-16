@@ -151,7 +151,7 @@ define('SBIS3.CONTROLS/Mixins/ViewSourceMixin', [
                      return recordSet;
                   })
                   .addBoth(function(res) {
-                     self.unsubscribe('onDestroy', this.__cancelQueryDef);
+                     self.unsubscribe('onDestroy', self.__cancelQueryDef);
                      return res;
                   });
                return filter;
