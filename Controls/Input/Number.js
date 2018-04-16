@@ -124,40 +124,10 @@ define('Controls/Input/Number', [
          return isNaN(val) ? undefined : val;
       },
 
-      _focusinHandler: function() {
-         var
-            self = this;
-
-         //Если при фокусе поле пустое, то нужно вставить в него заглушку
-         if (this._numberViewModel.getValue() === '') {
-            if (this._options.showEmptyDecimals && this._options.precision) {
-               this._numberViewModel.updateValue('0.' + '0'.repeat(this._options.precision));
-            } else if (this._options.precision) {
-               this._numberViewModel.updateValue('0.0');
-            } else {
-               this._numberViewModel.updateValue('0');
-            }
-            runDelayed(function() {
-               self._children.input.setSelectionRange(1, 1);
-            });
-         } else if (this._numberViewModel.getValue().indexOf('.') === -1) {
-            if (this._options.showEmptyDecimals && this._options.precision) {
-               this._numberViewModel.updateValue(this._numberViewModel.getValue() + '.' + '0'.repeat(this._options.precision));
-               runDelayed(function() {
-                  self._children.input.setSelectionRange(self._numberViewModel.getValue().length - self._options.precision - 1, self._numberViewModel.getValue().length - self._options.precision - 1);
-               });
-            } else if (this._options.precision) {
-               this._numberViewModel.updateValue(this._numberViewModel.getValue() + '.0');
-               runDelayed(function() {
-                  self._children.input.setSelectionRange(self._numberViewModel.getValue().length - 2, self._numberViewModel.getValue().length - 2);
-               });
-            }
-         }
-      },
-
       _focusoutHandler: function() {
          if (this._numberViewModel.getValue() === '0.0') {
-            this._numberViewModel.updateValue('');
+            this._numberViewModel.updateValue('0');
+            this._children['inputRender']._oldValue = '0';
          } else if (!this._options.showEmptyDecimals) {
             var
                i,
