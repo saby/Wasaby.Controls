@@ -85,7 +85,7 @@ define('Controls/Filter/Button',
             });
          },
 
-         _openFilterPanel: function(event) {
+         _openFilterPanel: function() {
             if (this.isEnabled()) {
                /* if template - show old component */
                if (this._options.filterTemplate) {
@@ -94,20 +94,15 @@ define('Controls/Filter/Button',
                   });
                } else {
                   this._children.filterStickyOpener.open({
-                     componentOptions: {
+                     templateOptions: {
                         items: this._options.items,
                         viewMode: this._options.viewMode
                      },
                      template: 'Controls/Filter/Panel',
-                     target: event.target
+                     target: this._children.panelTarget
                   });
                }
             }
-         },
-
-         _notifyFilter: function(event, filter) {
-            this._notify('filterChanged', [filter]);
-            this._children.filterStickyOpener.close();
          }
       });
 
