@@ -128,12 +128,15 @@ define([
          var iv = new ItemsViewModel(cfg1);
          iv.setItems(rs2);
          assert.equal(rs2, iv._items, 'Incorrect items after setItems');
+         assert.equal(1, iv.getVersion(), 'Incorrect version setItems');
+
 
          //второй кейс - были items - рекордсет, и ставим рекордсет. Должен остаться инстанс старого, но данные новые
          iv = new ItemsViewModel(cfg2);
          iv.setItems(rs2);
          assert.equal(rs1, iv._items, 'Incorrect items after setItems');
          assert.equal(4, iv._items.at(0).get('id'), 'Incorrect items after setItems');
+         assert.equal(1, iv.getVersion(), 'Incorrect version setItems');
 
       });
 
@@ -157,6 +160,7 @@ define([
 
          assert.equal(6, iv._items.getCount(), 'Incorrect items count after appendItems');
          assert.equal(4, iv._items.at(3).get('id'), 'Incorrect items after appendItems');
+         assert.equal(1, iv.getVersion(), 'Incorrect version appendItems');
 
       });
 
@@ -180,6 +184,7 @@ define([
 
          assert.equal(6, iv._items.getCount(), 'Incorrect items count after prependItems');
          assert.equal(1, iv._items.at(3).get('id'), 'Incorrect items after prependItems');
+         assert.equal(1, iv.getVersion(), 'Incorrect version prependItems');
 
       });
 
