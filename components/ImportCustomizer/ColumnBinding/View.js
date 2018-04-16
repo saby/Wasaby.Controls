@@ -112,6 +112,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
 
          _modifyOptions: function () {
             var options = View.superclass._modifyOptions.apply(this, arguments);
+            options.accordances = options.accordances || {};
             var inf = this._makeUpdateInfo(options);
             options._columns = inf.columns;
             options._rows = inf.rows;

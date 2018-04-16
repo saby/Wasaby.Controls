@@ -190,6 +190,10 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                 */
                sameSheetConfigs: null,
                /**
+                * @cfg {object} Перечень соответствий идентификатор поля - индекс колонки в под-компоненте привязки колонок
+                */
+               columnBindingAccordances: null,
+               /**
                 * @cfg {ImportMapping} Информацию о настройке соответствий значений
                 */
                mapping: null,
@@ -298,7 +302,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             // Опции под-компонента "columnBinding"
             if (isUsedSubview.columnBinding) {
                var sampleRows = hasSheets ? sheet.sampleRows : [];
-               scopes.columnBinding = cMerge({rows:sampleRows, skippedRows:skippedRows, accordances:undefined}, _lodashPick(options, ['dataType', 'fields', {menuTitle:'columnBindingMenuTitle', headTitle:'columnBindingHeadTitle'}]));
+               scopes.columnBinding = cMerge({rows:sampleRows, skippedRows:skippedRows}, _lodashPick(options, ['dataType', 'fields', {menuTitle:'columnBindingMenuTitle', headTitle:'columnBindingHeadTitle', accordances:'columnBindingAccordances'}]));
             }
             // Опции под-компонента "mapping"
             if (isUsedSubview.mapper) {
