@@ -33,7 +33,13 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
        */
       var _PREFIX_COLUMN_NAME = 'controls-ImportCustomizer-ColumnBinding-View__grid__column__menu__';
       /**
-       * Константа (как бы) имя css-класса для осветлённых (неимпортируемых) рядов данных
+       * Константа (как бы) имя css-класса для осветлённых (неимпортируемых) колонок данных (будет установлен непосредственно на td таблицы)
+       * @type {string}
+       * @private
+       */
+      var _CLASS_LIGHT_COLUMN = 'controls-ImportCustomizer-ColumnBinding-View__grid__column-light';
+      /**
+       * Константа (как бы) имя css-класса для осветлённых (неимпортируемых) рядов данных (будет установлен на элементе td > div > span в таблице)
        * @type {string}
        * @private
        */
@@ -113,6 +119,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
          _modifyOptions: function () {
             var options = View.superclass._modifyOptions.apply(this, arguments);
             options.accordances = options.accordances || {};
+            options.skippedRows = 0 < options.skippedRows ? options.skippedRows : 0;
             var inf = this._makeUpdateInfo(options);
             options._columns = inf.columns;
             options._rows = inf.rows;
@@ -175,16 +182,20 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
             var prevAccordances = options.accordances;
             var has = {};
             for (var name in values) {
+               var value = values[name];
                switch (name) {
                   case 'rows':
                   case 'fields':
+                     break;
                   case 'accordances':
+                     value = value || {};
+                     break;
                   case 'skippedRows':
+                     value = 0 < value ? value : 0;
                      break;
                   default:
                      continue;
                }
-               var value = values[name];
                if (name === 'skippedRows' ? value !== options[name] : !cObjectIsEqual(value, options[name])) {
                   has[name] = true;
                   options[name] = value;
@@ -244,6 +255,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                var cellTmpl = 'tmpl!SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/tmpl/cell';
                var menuConf;
                var menuCaptions;
+               var menuIds;
                var menuItems;
                var fields = options.fields;
                if (fields) {
@@ -252,7 +264,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                   var displayProperty = fields.displayProperty;
                   var parentProperty = fields.parentProperty;
                   var accordances = options.accordances;
-                  var menuIds = Object.keys(accordances).reduce(function (r, v) { r[accordances[v]] = v; return r; }, []);
+                  menuIds = Object.keys(accordances).reduce(function (r, v) { r[accordances[v]] = v; return r; }, []);
                   var commonMenuItems;
                   if (parentProperty) {
                      // Если поля организованы иерархически, то нужно создать новые данные для пунктов меню и пометить наличие подпунктов
@@ -325,8 +337,9 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                   cellTemplate: cellTmpl,
                   menuConf: menuConf,
                   menuItems: menuConf ? menuItems[i] : undefined,
-                  menuCaption: menuConf ? menuCaptions[i] : undefined};
-               });
+                  menuCaption: menuConf ? menuCaptions[i] : undefined,
+                  className: !(menuIds && i in menuIds) ? _CLASS_LIGHT_COLUMN : undefined
+               }; });
                columns.unshift({field:'id', title:''});
                for (var j = 0; j < rows.length; j++) {
                   rowItems.push(rows[j].reduce(function (r, v, i) { r[_PREFIX_COLUMN_FIELD + (i + 1)] = v; return r; }, {id:j + 1, className:j < skippedRows ? _CLASS_LIGHT_ROW : undefined}));
@@ -363,15 +376,29 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                if (prevField) {
                   // Сбросить предыдущее соответсвие поля колонке
                   delete accordances[prevField];
+                  this._changeColumnHighlighting(prevIndex, false);
                }
                // Изменить выделение в меню
                this._changeMenuSelection(menu, selectedField, prevField || _ID_MENU_EMPTY);
                // Зафиксировать новое соответсвие поля колонке
                if (notEmpty) {
                   accordances[selectedField] = columnIndex;
+                  this._changeColumnHighlighting(columnIndex, true);
                }
                this.sendCommand('subviewChanged');
             }
+         },
+
+         /**
+          * Изменить выделение колонки цветом
+          *
+          * @protected
+          * @param {number} columnIndex Индекс колонки
+          * @param {boolean} isSelected Выделить ли колонку
+          */
+         _changeColumnHighlighting: function (columnIndex, isSelected) {
+            var $cells = this._grid.getContainer().find('.controls-DataGridView__tr').find('.controls-DataGridView__td:eq(' + (columnIndex + 1) + ')');
+            $cells[isSelected ? 'removeClass' : 'addClass'](_CLASS_LIGHT_COLUMN);
          },
 
          /**
