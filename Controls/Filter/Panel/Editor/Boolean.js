@@ -10,10 +10,6 @@ define('Controls/Filter/Panel/Editor/Boolean', [
    var BooleanEditor = Control.extend({
       _template: template,
 
-      constructor: function(cfg) {
-         BooleanEditor.superclass.constructor.apply(this, arguments);
-      },
-
       _clickHandler: function() {
          this._item.value = !this._options.item.value;
       },

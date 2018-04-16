@@ -6,10 +6,11 @@
             <ws:partial template="{{topTemplate}}"/>
          </div>
       </ws:if>
-      <Controls.Button style="linkMain" enabled="{{_isEnabled}}" caption="{[По умолчанию]}" on:click="resetFilter()" name="resetButton"
+      <Controls.Button style="linkMain" enabled="{{_isEnabled}}" caption="{[По умолчанию]}" on:click="_resetFilter()"
+                       name="resetButton"
                        attr:class="controls-FilterPanel__resetButton"></Controls.Button>
 
-      <Controls.Button style="buttonPrimary" caption="{[Отобрать]}" on:click="applyFilter()"
+      <Controls.Button style="buttonPrimary" caption="{[Отобрать]}" on:click="_applyFilter()"
                        attr:class="controls-FilterPanel__filterButton"></Controls.Button>
 
       <div class="controls-FilterPanel__close_button_standart controls-FilterPanel__closeButton"
@@ -28,7 +29,7 @@
 
                </div>
             </ws:if>
-            <div ></div>
+            <div></div>
             <div if="{{_options.viewMode === 'oneColumn'}}" class=" controls-FilterPanel__history-oneColumn">
                <div class="controls-FilterPanel__history">
                   <span class="controls-FilterPanel__caption">{[Ранее отбирались]}</span>
@@ -43,8 +44,8 @@
          </div>
       </div>
       <div if="{{ _options.viewMode === 'twoColumn' }}" class="controls-FilterPanel__history">
-         <div class="controls-filterPanel__history-twoColumn">
-            <span class="controls-FilterPanel__caption">{[Ранее отбирались]}</span>
+         <span class="controls-FilterPanel__caption">{[Ранее отбирались]}</span>
+         <div class="controls-FilterPanel__history-block-{{_options.viewMode}}">
             <p>Исторические данные 1</p>
             <p>Исторические данные 4</p>
             <p>Исторические данные 3</p>
