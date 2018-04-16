@@ -992,6 +992,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             'sheets',
             'sheetIndex',
             'sameSheetConfigs',
+            'columnBindingAccordances',
             'mapping',
             'validators'
          ];
@@ -1087,6 +1088,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             },
             sheetIndex: typeIfDefined.bind(null, 'number'),
             sameSheetConfigs: typeIfDefined.bind(null, 'boolean'),
+            columnBindingAccordances: typeIfDefined.bind(null, 'object'),
             mapping: function (mapping) {
                // Для типа данных CML(CommerceML) должна быть опция "mapping", то она должна быть {link ImportMapping}
                if (!mapping || (typeof mapping !== 'object' ||//^^^
