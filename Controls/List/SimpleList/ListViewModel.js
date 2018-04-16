@@ -2,8 +2,8 @@
  * Created by kraynovdo on 16.11.2017.
  */
 define('Controls/List/SimpleList/ListViewModel',
-   ['Core/Abstract', 'Controls/List/SimpleList/ItemsViewModel', 'Controls/Controllers/Multiselect/Selection'],
-   function(Abstract, ItemsViewModel, MultiSelection) {
+   ['Core/Abstract', 'Controls/List/SimpleList/ItemsViewModel', 'Controls/Controllers/Multiselect/Selection', 'WS.Data/Entity/VersionableMixin'],
+   function(Abstract, ItemsViewModel, MultiSelection, VersionableMixin) {
       /**
        *
        * @author Крайнов Дмитрий
@@ -17,7 +17,7 @@ define('Controls/List/SimpleList/ListViewModel',
          }
       };
       
-      var ListViewModel = Abstract.extend({
+      var ListViewModel = Abstract.extend([VersionableMixin], {
 
          _itemsModel: null,
          _markedItem: null,
@@ -37,6 +37,7 @@ define('Controls/List/SimpleList/ListViewModel',
             this._itemsModel.subscribe('onListChange', function() {
                //т.к. при действиях с рекордсетом рекорд может потерять владельца, надо обновить ссылку на актуальный рекорд из текущего набора
                self._markedItem = self.getItemById(self._options.markedKey, self._options.idProperty);
+               this._nextVersion();
                self._notify('onListChange');
             });
 
@@ -108,6 +109,7 @@ define('Controls/List/SimpleList/ListViewModel',
 
          setMarkedKey: function(key) {
             this._markedItem = this.getItemById(key, this._options.idProperty);
+            this._nextVersion();
             this._notify('onListChange');
          },
 
@@ -124,6 +126,7 @@ define('Controls/List/SimpleList/ListViewModel',
             if ((this._startIndex !== startIndex) || (this._stopIndex !== stopIndex)) {
                this._startIndex = startIndex;
                this._stopIndex = stopIndex;
+               this._nextVersion();
                this._notify('onListChange');
             }
          },

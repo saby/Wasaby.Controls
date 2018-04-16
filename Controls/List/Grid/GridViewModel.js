@@ -1,7 +1,8 @@
 define('Controls/List/Grid/GridViewModel', [
    'Core/Abstract',
-   'Controls/List/SimpleList/ListViewModel'
-], function(Abstract, ListViewModel) {
+   'Controls/List/SimpleList/ListViewModel',
+   'WS.Data/Entity/VersionableMixin'
+], function(Abstract, ListViewModel, VersionableMixin) {
 
    'use strict';
 
@@ -89,7 +90,7 @@ define('Controls/List/Grid/GridViewModel', [
          }
       },
 
-      GridViewModel = Abstract.extend({
+      GridViewModel = Abstract.extend([VersionableMixin], {
 
          _model: null,
          _columnTemplate: null,
@@ -314,6 +315,7 @@ define('Controls/List/Grid/GridViewModel', [
 
          setMarkedKey: function(key) {
             this._model.setMarkedKey(key);
+            this._nextVersion();
             this._notify('onListChange');
          },
 
@@ -450,6 +452,7 @@ define('Controls/List/Grid/GridViewModel', [
 
          updateIndexes: function(startIndex, stopIndex) {
             this._model.updateIndexes(startIndex, stopIndex);
+            this._nextVersion();
             this._notify('onListChange');
          },
 
