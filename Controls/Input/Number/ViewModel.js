@@ -126,8 +126,11 @@ define('Controls/Input/Number/ViewModel',
             var
                shift = 0;
 
-            //if number doesn't contain '.', then we should add '.0' at the end
-            if (splitValue.before.indexOf('.') === -1 && splitValue.after.indexOf('.') === -1) {
+            if (splitValue.insert === '.' && splitValue.before === '' && splitValue.after === '') {
+               splitValue.after = '.0';
+               splitValue.insert = '0';
+            } else if (splitValue.before.indexOf('.') === -1 && splitValue.after.indexOf('.') === -1) {
+               //if number doesn't contain '.', then we should add '.0' at the end
                splitValue.after += '.0';
             }
 
