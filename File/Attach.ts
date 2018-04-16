@@ -120,7 +120,7 @@ let Attach  = CoreExtend.extend(Abstract,{
             fileProperty: "Файл"
         },
         /**
-         * @cfg {Array<File/Attach/Option/Source>} Набор параметров для регестрации ISource
+         * @cfg {Array.<File/Attach/Option/Source>} Набор параметров для регестрации ISource
          * @example
          * Загрузка на бизнеслогику
          * <pre>
@@ -151,7 +151,7 @@ let Attach  = CoreExtend.extend(Abstract,{
          */
         sourceOptions: [],
         /**
-         * @cfg {Array<File/Attach/Option/ResourceGetter>} Набор параметров для регестрации
+         * @cfg {Array.<File/Attach/Option/ResourceGetter>} Набор параметров для регестрации
          * {@link File/IResourceGetter}, указывающий доступные способы получения ресурслв
          * @example
          * <pre>
@@ -231,7 +231,7 @@ let Attach  = CoreExtend.extend(Abstract,{
     /// region IDirectInsertFile
     /**
      * Устанавливает ресурсы в список выбранных
-     * @param {Array<File/IResource> | File/IResource} files файл или набор устанавливаемых файлов
+     * @param {Array.<File/IResource> | File/IResource} files файл или набор устанавливаемых файлов
      * @example
      * Привязка файлов, полученных путём Drag&Drop к Attach для последующей загрузки
      * <pre>
@@ -261,7 +261,7 @@ let Attach  = CoreExtend.extend(Abstract,{
     },
     /**
      * Возвращает набор выбраных ресурсов
-     * @return {Array<File/IResource>}
+     * @return {Array.<File/IResource>}
      * @method
      * @name File/Attach#getSelectedResource
      * @see File/LocalFile
@@ -278,7 +278,7 @@ let Attach  = CoreExtend.extend(Abstract,{
      * Загрузка выбраных ресурсов.
      * При отсутствии ресурсов во внутреннем состоянии, возвращаеммый Deferred будет завершен ошибкой.
      * @param {*} [meta] Дополнительные мета-данные для отправки. Сигнатура зависит от конечного сервиса загрузки
-     * @return {Core/Deferred<Array<WS.Data/Entity/Model | Error>>} Набор, содержащий модели с результатами,
+     * @return {Core/Deferred.<Array.<WS.Data/Entity/Model | Error>>} Набор, содержащий модели с результатами,
      * либо ошибками загрузки
      * @example
      * Выбор и загрузка файла:
@@ -318,7 +318,7 @@ let Attach  = CoreExtend.extend(Abstract,{
     /**
      * Метод вызова выбора ресурсов
      * @param {String} getterName Имя модуля {@link File/IResourceGetter}
-     * @return {Core/Deferred<Array<File/IResource>>}
+     * @return {Core/Deferred.<Array.<File/IResource>>}
      * @example
      * Выбор и загрузка файла:
      * <pre>
@@ -346,7 +346,7 @@ let Attach  = CoreExtend.extend(Abstract,{
     },
     /**
      * Возвращает список конструкторов над ресурсами, для которыйх зарегестрирован ISource
-     * @return {Array<Function>}
+     * @return {Array.<Function>}
      * @see File/LocalFile
      * @see File/LocalFileLink
      * @see File/HttpFileLink
@@ -390,7 +390,7 @@ export = Attach;
  *
  * @name File/Attach#onLoaded
  * @param {Core/EventObject} eventObject Дескриптор события.
- * @param {Array<Error | WS.Data/Entity/Model>} results Массив, содержащий результаты загрузки выбранных ресурсов.
+ * @param {Array.<Error | WS.Data/Entity/Model>} results Массив, содержащий результаты загрузки выбранных ресурсов.
  * Эквивалентно рузультату Deferred'а .upload
  *
  * @see WS.Data/Entity/Model

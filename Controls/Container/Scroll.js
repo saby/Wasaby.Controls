@@ -4,16 +4,16 @@ define('Controls/Container/Scroll',
       'Core/Deferred',
       'Core/detection',
       'Core/helpers/Object/isEqual',
+      'Controls/Container/Scroll/Context',
       'Controls/Container/Scroll/ScrollWidthUtil',
       'Controls/Container/Scroll/ScrollHeightFixUtil',
       'tmpl!Controls/Container/Scroll/Scroll',
-
       'Controls/Layout/Scroll',
       'Controls/Event/Emitter',
       'Controls/Container/Scroll/Scrollbar',
       'css!Controls/Container/Scroll/Scroll'
    ],
-   function(Control, Deferred, detection, isEqual, ScrollWidthUtil, ScrollHeightFixUtil, template) {
+   function(Control, Deferred, detection, isEqual, ScrollData, ScrollWidthUtil, ScrollHeightFixUtil, template) {
 
       'use strict';
 
@@ -71,6 +71,11 @@ define('Controls/Container/Scroll',
                return container.scrollTop;
             },
 
+            setScrollTop: function(self, scrollTop) {
+               self._children.content.scrollTop = scrollTop;
+               self._scrollTop = scrollTop;
+            },
+
             calcHasScroll: function(self) {
                var
                   scrollHeight = _private.getScrollHeight(self._children.content),
@@ -107,7 +112,7 @@ define('Controls/Container/Scroll',
 
             updateDisplayState: function(self, displayState) {
                self._displayState.hasScroll = displayState.hasScroll;
-               self._displayState.heightFix = displayState.haheightFixsScroll;
+               self._displayState.heightFix = displayState.heightFix;
                self._displayState.contentHeight = displayState.contentHeight;
                self._displayState.shadowPosition = displayState.shadowPosition;
             }
@@ -141,12 +146,23 @@ define('Controls/Container/Scroll',
 
             _displayState: null,
 
+            _pagingState: null,
+
             _beforeMount: function(options, context, receivedState) {
                var
                   self = this,
                   def;
 
                this._displayState = {};
+               if (context.ScrollData && context.ScrollData.pagingVisible) {
+                  this._pagingState = {
+                     visible: true,
+                     stateUp: 'disabled',
+                     stateDown: 'normal'
+                  };
+               } else {
+                  this._pagingState = {};
+               }
 
                if (receivedState) {
                   _private.updateDisplayState(this, receivedState.displayState);
@@ -199,13 +215,16 @@ define('Controls/Container/Scroll',
                }
             },
 
+            _beforeUpdate: function(options, context) {
+               this._pagingState.visible = context.ScrollData && context.ScrollData.pagingVisible;
+            },
+
             _afterUpdate: function() {
                var displayState = _private.calcDisplayState(this);
 
-               this._children.content.scrollTop = this._scrollTop;
-
                if (!isEqual(this._displayState, displayState)) {
                   this._displayState = displayState;
+
                   this._forceUpdate();
                }
             },
@@ -228,6 +247,40 @@ define('Controls/Container/Scroll',
                      this._notify('scrollbarTaken', [], {bubbling: true});
                   }
                }
+            },
+
+            _arrowClickHandler: function(event, btnName) {
+               var scrollParam;
+
+               switch (btnName) {
+                  case 'Begin':
+                     scrollParam = 'top';
+                     break;
+                  case 'End':
+                     scrollParam = 'bottom';
+                     break;
+                  case 'Prev':
+                     scrollParam = 'pageUp';
+                     break;
+                  case 'Next':
+                     scrollParam = 'pageDown';
+                     break;
+               }
+
+               this._children.scrollLayout.doScroll(scrollParam);
+            },
+
+            _scrollReachTopHandler: function() {
+               this._pagingState.stateUp = 'disabled';
+            },
+
+            _scrollReachBottomHandler: function() {
+               this._pagingState.stateDown = 'disabled';
+            },
+
+            _scrollMoveHandler: function() {
+               this._pagingState.stateUp = 'normal';
+               this._pagingState.stateDown = 'normal';
             },
 
             _mouseenterHandler: function() {
@@ -260,7 +313,7 @@ define('Controls/Container/Scroll',
              * Переделать на bind в шаблоне и избавится от прокидывания опций.
              */
             _positionChangedHandler: function(event, position) {
-               this._scrollTop = position;
+               _private.setScrollTop(this, position);
             },
 
             _draggingChangedHandler: function(event, dragging) {
@@ -276,21 +329,21 @@ define('Controls/Container/Scroll',
              * @param {Number} offset
              */
             scrollTo: function(offset) {
-               this._scrollTop = offset;
+               _private.setScrollTop(this, offset);
             },
 
             /**
              * Осуществить скролл к верху области
              */
             scrollToTop: function() {
-               this._scrollTop = 0;
+               _private.setScrollTop(this, 0);
             },
 
             /**
              * Осуществить скролл к низу области
              */
             scrollToBottom: function() {
-               this._scrollTop = _private.getScrollHeight(this._children.content);
+               _private.setScrollTop(this, _private.getScrollHeight(this._children.content));
             }
          });
 
@@ -299,6 +352,12 @@ define('Controls/Container/Scroll',
             style: 'normal',
             shadowVisible: true,
             scrollbarVisible: true
+         };
+      };
+
+      Scroll.contextTypes = function() {
+         return {
+            ScrollData: ScrollData
          };
       };
 

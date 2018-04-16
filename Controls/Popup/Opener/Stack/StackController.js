@@ -48,7 +48,7 @@ define('Controls/Popup/Opener/Stack/StackController',
             return wWidth - MINIMAL_PANEL_DISTANCE;
          },
          getStackParentCoords: function() {
-            var elements = document.getElementsByClassName('ws-Popup__stack-target-container');
+            var elements = document.getElementsByClassName('controls-Popup__stack-target-container');
             var targetCoords = TargetCoords.get(elements && elements.length ? elements[0] : document.body);
 
             return {

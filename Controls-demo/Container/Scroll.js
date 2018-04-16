@@ -2,11 +2,14 @@ define('Controls-demo/Container/Scroll',
    [
       'Core/Control',
       'WS.Data/Source/Memory',
+      'Controls/Container/Scroll/Context',
       'tmpl!Controls-demo/Container/Scroll'
    ],
-   function(Control, MemorySource, template) {
+   function(Control, MemorySource, ScrollData, template) {
       return Control.extend({
          _template: template,
+
+         _pagingVisible: true,
 
          _beforeMount: function() {
             var srcData = [];
@@ -21,6 +24,16 @@ define('Controls-demo/Container/Scroll',
                idProperty: 'id',
                data: srcData
             });
+
+            this._items = srcData;
+         },
+
+         _getChildContext: function() {
+            return {
+               ScrollData: new ScrollData({
+                  pagingVisible: this._pagingVisible
+               })
+            };
          }
       });
    }

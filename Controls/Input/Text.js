@@ -29,7 +29,7 @@ define('Controls/Input/Text', [
        * @public
        * @category Input
        * @author Журавлев Максим Сергеевич
-       * @demo Controls-demo/Input/Text
+       * @demo Controls-demo/Input/Text/Text
        */
 
 

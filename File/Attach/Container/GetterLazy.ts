@@ -31,7 +31,7 @@ class GetterContainerLazy extends GetterContainer {
     /**
      * Метод асинхронного получения экземпляра IResourceGetter
      * @param {String} name Имя модуля
-     * @return {Core/Deferred<File/IResourceGetter>}
+     * @return {Core/Deferred.<File/IResourceGetter>}
      * @see File/IResourceGetter#getType
      */
     get(name: string): Deferred<IResourceGetter> {

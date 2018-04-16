@@ -2,8 +2,8 @@
  * Created by kraynovdo on 16.11.2017.
  */
 define('Controls/List/SimpleList/ItemsViewModel',
-   ['Core/Abstract', 'Controls/List/resources/utils/ItemsUtil', 'Core/core-instance'],
-   function(Abstract, ItemsUtil, cInstance) {
+   ['Core/Abstract', 'Controls/List/resources/utils/ItemsUtil', 'Core/core-instance', 'WS.Data/Entity/VersionableMixin'],
+   function(Abstract, ItemsUtil, cInstance, VersionableMixin) {
 
       /**
        *
@@ -20,7 +20,7 @@ define('Controls/List/SimpleList/ItemsViewModel',
                (Object.getPrototypeOf(newList.getAdapter()).constructor == Object.getPrototypeOf(oldList.getAdapter()).constructor);
          }
       };
-      var ItemsViewModel = Abstract.extend({
+      var ItemsViewModel = Abstract.extend([VersionableMixin], {
 
          _display: null,
          _items: null,
@@ -97,6 +97,7 @@ define('Controls/List/SimpleList/ItemsViewModel',
          },
 
          _onCollectionChange: function() {
+            this._nextVersion();
             this._notify('onListChange');
          },
 
@@ -113,6 +114,7 @@ define('Controls/List/SimpleList/ItemsViewModel',
                }
                this._display = ItemsUtil.getDefaultDisplayFlat(this._items, this._options);
                this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);
+               this._nextVersion();
                this._notify('onListChange');
             }
 

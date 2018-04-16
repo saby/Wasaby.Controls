@@ -120,7 +120,10 @@ define('SBIS3.CONTROLS/DropdownList',
              keys = cfg.selectedKeys,
              list,
              textArray = [];
-         if (items && keys && keys.length > 0){
+         if (cfg.emptyValue && keys && keys[0] === null) {
+            cfg.text = getEmptyText(cfg);
+            cfg.className += ' controls-DropdownList__defaultItem';
+         } else if (items && keys && keys.length > 0) {
             list = new List();
             if (items.at(0) && items.at(0).get(cfg.idProperty) === keys[0]) {
                //Если выбрано дефолтное значение - скрываем крест

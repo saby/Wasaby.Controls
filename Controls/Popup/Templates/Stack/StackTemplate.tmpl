@@ -1,0 +1,16 @@
+<div class="controls-StackTemplate">
+    <div class="controls-StackTemplate__top-area">
+        <div class="controls-StackTemplate__top-area-content">
+            <ws:if data="{{_options.caption}}">
+                <span class="controls-StackTemplate__caption" title="{{_options.caption}}">{{_options.caption}}</span>
+            </ws:if>
+            <ws:if data="{{_options.topArea}}">
+                <ws:partial template="{{_options.topArea}}"></ws:partial>
+            </ws:if>
+        </div>
+        <div class="controls-StackTemplate__close_button controls-StackTemplate__close_button_standart" on:click="close()"></div>
+    </div>
+    <div class="controls-StackTemplate__content-area">
+        <ws:partial template="{{_options.contentArea}}"></ws:partial>
+    </div>
+</div>

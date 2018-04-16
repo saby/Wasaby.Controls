@@ -2,6 +2,9 @@
 @icon-size_default:            round(32px * @multiplier);
 @icon-size_default_medium:     round(42px * @multiplier);
 @icon-size_default_large:      round(52px * @multiplier);
+@default-svg-icon-size-small:  round(20px * @multiplier);
+@default-svg-icon-size-medium: round(26px * @multiplier);
+@default-svg-icon-size-large:  round(32px * @multiplier);
 //старые default-sizes
 @default-height:               round(78px * @multiplier);
 @default-height-big:           round(78px * @multiplier);
@@ -282,12 +285,25 @@
 @top_window_button:                                   round(11px * @multiplier);
 @controls-Popup-closeButton-top:                      round(11px * @multiplier);
 @padding-right_floatArea-title:                       round(8px * @multiplier);
+//image
+@editdialog-applybutton-top:                          @top_window_button;
 //switcher
 @switcher-dot-size:                                   ceil(14px * @multiplier);
 @switcherline-height:                                 round(4px * @multiplier);
 @switcherline-width:                                  round(76px * @multiplier);
 @font-size_Switcher_text:                             @large-text-size;
 @text-decoration_switcher_text_unselected_hover:      underline;
+
+//VDOM Paging
+@height_Paging-button:                            round(86px * @multiplier);
+@width_Paging-digit-button:                              @height_Paging-button;
+@border-width_Paging-digit-button:                       2px;
+@width_Paging-ellipsis:                           @width_Paging-digit-button;
+@width_Paging-arrow-button:                              @width_Paging-digit-button;
+@font-size_Paging-arrow-button:                          round(52px * @multiplier);
+@font-size_Paging-button:                         round(40px * @multiplier);
+@padding_Paging-button:                           11px 4px;
+@border-width_ScrollPaging:                       0;
 
 //VDOM Switcher
 @width_Switch:                                      round(100px * @multiplier);
@@ -403,7 +419,7 @@
 @date-range-choose-year-margin-bottom:                0;
 //ItemsToolbar
 @list-view-items-toolbar-right:                        0;
-@list-view-items-toolbar-padding:                      round(3px * @multiplier) round(16px * @multiplier) round(3px * @multiplier) round(16px * @multiplier);
+@list-view-items-toolbar-padding:                      round(3px * @multiplier) round(16px * @multiplier) round(2px * @multiplier) round(16px * @multiplier);
 @height_IconButton_bordered_size-s:                         round(58px * @multiplier);
 @width_IconButton_bordered_size-s:                          round(58px * @multiplier);
 @height_IconButton_bordered_size-l:                    round(78px * @multiplier);
@@ -415,7 +431,7 @@
 @icon-button-edit-round-border-line-height:            round(58px * @multiplier);
 @list-view-items-toolbar-line-height:                  round(52px * @multiplier);
 @list-view-items-toolbar-icon-button-border-font-size: round(42px * @multiplier);
-@list-view-items-toolbar-bottom:                       floor(1px * @multiplier);
+@list-view-items-toolbar-bottom:                       1px;
 @list-view-items-toolbar-vertical-line-height:         ceil(42px * @multiplier);
 @list-view-actions-item-height:                        ceil(42px * @multiplier);
 @list-view-actions-margin:                             0 round(8px * @multiplier);

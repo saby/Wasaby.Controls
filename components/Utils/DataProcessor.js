@@ -93,7 +93,8 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
          this._prepareSerializer().addCallback(function(reportText){
             return PrintDialogHTMLView({
                htmlText: reportText,
-               minWidth: self._options.minWidth
+               minWidth: self._options.minWidth,
+               opener: self._options.parent
             });
          }).addBoth(function() {
             deferred.callback();

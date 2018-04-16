@@ -3,8 +3,9 @@ define('SBIS3.CONTROLS/WSControls/Buttons/Button', [
    'Core/constants',
    'SBIS3.CONTROLS/WSControls/Buttons/ButtonBase',
    'tmpl!SBIS3.CONTROLS/WSControls/Buttons/Button',
-   'tmpl!SBIS3.CONTROLS/WSControls/Buttons/resources/contentTemplate'
-], function(constants, ButtonBase, dotTplFn, contentTemplate) {
+   'tmpl!SBIS3.CONTROLS/WSControls/Buttons/resources/contentTemplate',
+   'tmpl!SBIS3.CONTROLS/WSControls/Buttons/resources/AddIcon'
+], function(constants, ButtonBase, dotTplFn, contentTemplate, svgIconTpl) {
 
    'use strict';
 
@@ -63,17 +64,19 @@ define('SBIS3.CONTROLS/WSControls/Buttons/Button', [
     * </component>
     */
 
-   var Button = ButtonBase.extend( /** @lends WSControls/Buttons/Button.prototype */ {
+   var Button = ButtonBase.extend(/** @lends WSControls/Buttons/Button.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
          _keysWeHandle: [
             constants.key.enter
          ],
          _options: {
+
             /**
              * @cfg {Boolean} Пользовательский шаблон внутреннего контента кнопки.
              */
             contentTemplate: contentTemplate,
+
             /**
              * @cfg {Boolean} Кнопка по умолчанию
              * Кнопка будет срабатывать при нажатии клавиши Enter, и будет визуально отличаться от других кнопок.
@@ -94,43 +97,52 @@ define('SBIS3.CONTROLS/WSControls/Buttons/Button', [
             _iconDisabledClass: 'icon-disabled',
             style: null,
             _type: '',
-            _iconState: null
+            _iconState: null,
+            _iconSize: null,
+            _svgIconTpl: svgIconTpl,
+            _fix1175160840: false
          },
          _contentContainer: null,
-         _iconClass: null,
-
+         _iconClass: null
       },
 
 
       _parseIconClass: function(opts) {
-          var iconStates = ['icon-primary', 'icon-hover', 'icon-error', 'icon-done', 'icon-disabled', 'icon-attention'],
-              state = '',
-              i = -1,
-              statePos = -1,
-              icon = opts.icon;
+         var iconStates = ['icon-primary', 'icon-hover', 'icon-error', 'icon-done', 'icon-disabled', 'icon-attention'],
+            state = '',
+            i = -1,
+            statePos = -1,
+            icon = opts.icon,
+            sizes = ['16', '24', '32', 'small', 'medium', 'large'];
 
-          if (icon) {
-              this._iconClass = icon.indexOf('sprite:') === 0 ? icon.substr(7) : icon;
+         if (icon) {
+            sizes.forEach(function(size) {
+               if (icon.indexOf('icon-' + size) !== -1) {
+                  opts._iconSize = size;
+               }
+            });
 
-              while(statePos === -1 && i < iconStates.length){
-                  i++;
-                  state = iconStates[i];
-                  statePos = this._iconClass.indexOf(state);
-              }
-              opts._iconState = statePos !== -1 ? state : null;
+            this._iconClass = icon.indexOf('sprite:') === 0 ? icon.substr(7) : icon;
 
-              if(statePos !== -1){
-                  opts._iconClass = this._iconClass.substring(0, statePos) + this._iconClass.substring(statePos + state.length);
-              }
-          }
+            while (statePos === -1 && i < iconStates.length) {
+               i++;
+               state = iconStates[i];
+               statePos = this._iconClass.indexOf(state);
+            }
+            opts._iconState = statePos !== -1 ? state : null;
+
+            if (statePos !== -1) {
+               opts._iconClass = this._iconClass.substring(0, statePos) + this._iconClass.substring(statePos + state.length);
+            }
+         }
       },
 
       _modifyOptions: function() {
-          var opts = Button.superclass._modifyOptions.apply(this, arguments);
+         var opts = Button.superclass._modifyOptions.apply(this, arguments);
 
-          this._parseIconClass(opts);
-          opts.cssClassName += (' controls-ButtonBase_state-' + (opts.enabled ? 'enabled' : 'disabled'));
-          return opts;
+         this._parseIconClass(opts);
+         opts.cssClassName += (' controls-ButtonBase_state-' + (opts.enabled ? 'enabled' : 'disabled'));
+         return opts;
       },
 
       $constructor: function() {
@@ -140,11 +152,12 @@ define('SBIS3.CONTROLS/WSControls/Buttons/Button', [
          this._contentContainer = this._container.find('.controls-ButtonBase__content');
       },
 
-      setCaption: function(caption){
+      setCaption: function(caption) {
          Button.superclass.setCaption.call(this, caption);
          this._redrawButton();
       },
-       /**
+
+      /**
         * Метод установки кнопки по умолчанию.
         * @param flag Признак является ли кнопкой по умолчанию.
         * Возможные значения:
@@ -160,10 +173,11 @@ define('SBIS3.CONTROLS/WSControls/Buttons/Button', [
         * @see isPrimary
         * @see primary
         */
-      setPrimary: function(flag){
+      setPrimary: function(flag) {
          this._options.primary = !!flag;
          this._toggleState();
       },
+
       /**
        * Является ли кнопкой по умолчанию.
        * @returns {Boolean} Возвращает признак является ли кнопкой по умолчанию.
@@ -181,10 +195,11 @@ define('SBIS3.CONTROLS/WSControls/Buttons/Button', [
        * @see primary
        * @see setPrimary
        */
-      isPrimary: function(){
+      isPrimary: function() {
          return this._options.primary;
       },
-       /**
+
+      /**
         * Метод установки/замены иконки на кнопке.
         * @param icon Иконка из набора <a href="/docs/js/icons/">общих иконок</a>. Задаётся через sprite.
         * @example
@@ -194,8 +209,8 @@ define('SBIS3.CONTROLS/WSControls/Buttons/Button', [
         * </pre>
         */
       _drawIcon: function() {
-          this._parseIconClass(this._options);
-          this._redrawButton();
+         this._parseIconClass(this._options);
+         this._redrawButton();
       },
 
       _redrawButton: function() {
@@ -205,55 +220,58 @@ define('SBIS3.CONTROLS/WSControls/Buttons/Button', [
             this._contentContainer[0].innerHTML = contentTemplate(this._options);
          }
       },
+
       /**
        * Установить стилевое оформление кнопки
        * @param style стилевое оформление.
        * @see style
        */
       setStyle: function(style) {
-          this._options.style = style;
-          this._toggleState();
+         this._options.style = style;
+         this._toggleState();
       },
 
-      setEnabled: function(enabled){
-          Button.superclass.setEnabled.call(this, enabled);
-          this._container.attr('disabled', !this.isEnabled());
+      setEnabled: function(enabled) {
+         Button.superclass.setEnabled.call(this, enabled);
+         this._container.attr('disabled', !this.isEnabled());
       },
 
       _setEnabled: function(enabled) {
-          Button.superclass._setEnabled.apply(this, arguments);
+         Button.superclass._setEnabled.apply(this, arguments);
          this._toggleState();
       },
 
       // метод который будет переключать состояния кнопки, пока не перейдем на vDom
       // https://online.sbis.ru/opendoc.html?guid=aa39901a-7aec-4ebe-ab51-a123c53eac92
       _toggleState: function() {
-          var  container = this._container,
-               iconContainer = container.find('.controls-Button__icon');
+         var  container = this._container,
+            iconContainer = container.find('.controls-Button__icon');
 
-          container[0].className = container[0].className.replace(/(^|\s)controls-ButtonBase_state-\S+/g, '');
-          container.addClass('controls-ButtonBase_state-' + (this.isEnabled() ? 'enabled' : 'disabled'));
+         container[0].className = container[0].className.replace(/(^|\s)controls-ButtonBase_state-\S+/g, '');
+         container.addClass('controls-ButtonBase_state-' + (this.isEnabled() ? 'enabled' : 'disabled'));
 
-          if(iconContainer.length) {
-              iconContainer[0].className = iconContainer[0].className.replace(/(^|\s)icon-\S+/g, '');
-              iconContainer.addClass(this._options._iconClass + (this.isEnabled() ? (' ' + this._options._iconState || '') : (' ' + this._options._iconDisabledClass)));
-          }
+         if (iconContainer.length) {
+            iconContainer[0].className = iconContainer[0].className.replace(/(^|\s)icon-\S+/g, '');
+            iconContainer.addClass(this._options._iconClass + (this.isEnabled() ? (' ' + this._options._iconState || '') : (' ' + this._options._iconDisabledClass)));
+         }
       },
 
-      _notifyOnActivated: function(originalEvent){
-          Button.superclass._notifyOnActivated.apply(this, arguments);
+      _notifyOnActivated: function(originalEvent) {
+         Button.superclass._notifyOnActivated.apply(this, arguments);
+
          //preventDefault тоже надо делать, поскольку иначе при нажатии enter на кнопки генерируется click, и onActivated стреляет два раза
          // похоже, что это нативное поведение html у кнопки виновато
-          if(originalEvent.which === constants.key.enter) {
-              originalEvent.preventDefault();
-          }
+         if (originalEvent.which === constants.key.enter) {
+            originalEvent.preventDefault();
+         }
       },
+
       /*TODO методы для поддержки defaultButton*/
-       /**
+      /**
         * @noShow
         * @returns {boolean}
         */
-      isDefaultButton: function(){
+      isDefaultButton: function() {
          return !!this._options.primary;
       },
       _unregisterDefaultButton: function() {
@@ -265,6 +283,7 @@ define('SBIS3.CONTROLS/WSControls/Buttons/Button', [
          if (this.isVisible()) {
             // сначала отменяем регистрацию текущего действия по умолчанию, а потом регистрируем новое действие
             this._unregisterDefaultButton();
+
             // action создаем только после отмены регистрации, иначе он зануляется
             this._defaultAction = function(e) {
                if (this && this.isEnabled()) {
@@ -279,37 +298,37 @@ define('SBIS3.CONTROLS/WSControls/Buttons/Button', [
          }
       },
 
-       /**
+      /**
         * Делает кнопку дефолтной или отменяет таковое состояние
         *
         * @noShow
         * @param {Boolean} [isDefault] Если не указан, считается true
         * @param {Boolean} [dontSendCommand] Не стрелять событием о регистрации/разрегистрации кнопки
         */
-      setDefaultButton: function(isDefault, dontSendCommand){
-          if (isDefault === undefined) {
-             isDefault = true;
-          }
+      setDefaultButton: function(isDefault, dontSendCommand) {
+         if (isDefault === undefined) {
+            isDefault = true;
+         }
 
-          if (!dontSendCommand) {
-             if (isDefault) {
-                this._registerDefaultButton();
-             }
-             else {
-                this._unregisterDefaultButton();
-             }
-          }
+         if (!dontSendCommand) {
+            if (isDefault) {
+               this._registerDefaultButton();
+            } else {
+               this._unregisterDefaultButton();
+            }
+         }
 
-          this.setPrimary(isDefault);
+         this.setPrimary(isDefault);
       },
 
-      destroy: function(){
+      destroy: function() {
          this._contentContainer = null;
-         if(this.isPrimary()) {
-             this._unregisterDefaultButton();
+         if (this.isPrimary()) {
+            this._unregisterDefaultButton();
          }
          Button.superclass.destroy.apply(this, arguments);
       }
+
       /*TODO конец*/
    });
 

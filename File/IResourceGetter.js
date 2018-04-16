@@ -9,13 +9,13 @@
  */
 /**
  * Возможен ли выбор ресурса
- * @return {Core/Deferred<Boolean>}
+ * @return {Core/Deferred.<Boolean>}
  * @method
  * @name File/IResourceGetter#canExec
  */
 /**
  * Осуществляет выбор ресурсов
- * @return {Core/Deferred<Array<File/IResource>>}
+ * @return {Core/Deferred.<Array.<File/IResource>>}
  * @see File/LocalFile
  * @see File/LocalFileLink
  * @see File/HttpFileLink

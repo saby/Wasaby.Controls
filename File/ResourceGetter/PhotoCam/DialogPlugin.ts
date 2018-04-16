@@ -36,7 +36,7 @@ function jsToSafeArray(array) {
  *
  * @param {HTMLObjectElement} connection
  * @param {HTMLObjectElement} localVideoElement
- * @return {Core/Deferred<MediaStream>}
+ * @return {Core/Deferred.<MediaStream>}
  */
 let getMedia = (connection, localVideoElement) => {
     let def = new Deferred();

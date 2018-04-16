@@ -1,7 +1,7 @@
-define('Controls/Filter/FastFilter',
+define('Controls/Filter/Fast',
    [
       'Core/Control',
-      'tmpl!Controls/Filter/FastFilter/FastFilter',
+      'tmpl!Controls/Filter/Fast/Fast',
       'Controls/Controllers/SourceController',
       'WS.Data/Chain',
       'WS.Data/Collection/List',
@@ -9,7 +9,7 @@ define('Controls/Filter/FastFilter',
       'Core/ParallelDeferred',
       'Core/Deferred',
       'WS.Data/Utils',
-      'css!Controls/Filter/FastFilter/FastFilter',
+      'css!Controls/Filter/Fast/Fast',
       'css!Controls/Input/Dropdown/Dropdown'
 
    ],
@@ -110,9 +110,8 @@ define('Controls/Filter/FastFilter',
             this._notify('selectedKeysChanged', [key]);
          },
 
-         onResult: function(args) {
-            var data = args[2];
-            _private.selectItem.apply(this, data);
+         onResult: function(result) {
+            _private.selectItem.apply(this, result.data);
             this._notify('filterChanged', [_private.getFilter(this._items)]);
             this._children.DropdownOpener.close();
          }
@@ -148,7 +147,7 @@ define('Controls/Filter/FastFilter',
 
          _open: function(event, item, index) {
             var config = {
-               componentOptions: {
+               templateOptions: {
                   items: this._configs[index]._items,
                   keyProperty: this._configs[index].keyProperty,
                   parentProperty: getPropValue(item, 'parentProperty'),
