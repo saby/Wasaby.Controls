@@ -87,7 +87,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
           * @property {function(object|WS.Data/Entity/Record):ImportMapperItem} fieldFilter Фильтр полей, с помощью которого из общего списка полей {@link fields} отбираются нужные. Фильтр принимает объект поля и, если оно нужное, возвращает объект вида {@link ImportSimpleItem}. Упрощённый способ отбора предоставляется опцией {@link fieldProperty}
           * @property {string} fieldProperty Имя специального ключевого свойства, с помощью которого из общего списка полей {@link fields} отбираются нужные. Каждое нужное поле должно иметь свойство с таким именем. Более комплексный способ отбора предоставляется опцией {@link fieldFilter}
           * @property {object} variants Набор вариантов сопоставления
-          * @property {object} accordances Перечень соответствий специальный ключ поля - идентификатор варианта
+          * @property {object} mapping Перечень соответствий специальный ключ поля - идентификатор варианта
           */
 
          /**
@@ -110,7 +110,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
           * @property {ImportFile} file Информация о файле с импортируемыми данными
           * @property {Array<ImportSheet>} sheets Список объектов, представляющих имеющиеся области данных
           * @property {boolean} [sameSheetConfigs] Обрабатываются ли все области данных одинаково (опционально)
-          * @property {object} [mappingAccordances] Перечень соответствий специальный ключ поля - идентификатор варианта (опционально, когда применимо)
+          * @property {object} [mapping] Перечень соответствий специальный ключ поля - идентификатор варианта (опционально, когда применимо)
           * @property {*} [*] Базовые параметры импортирования (опционально)
           */
 
@@ -192,7 +192,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                /**
                 * @cfg {object} Перечень соответствий идентификатор поля - индекс колонки в под-компоненте привязки колонок
                 */
-               columnBindingAccordances: null,
+               columnBindingMapping: null,
                /**
                 * @cfg {ImportMapping} Информацию о настройке соответствий значений
                 */
@@ -302,7 +302,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             // Опции под-компонента "columnBinding"
             if (isUsedSubview.columnBinding) {
                var sampleRows = hasSheets ? sheet.sampleRows : [];
-               scopes.columnBinding = cMerge({rows:sampleRows, skippedRows:skippedRows}, _lodashPick(options, ['dataType', 'fields', {menuTitle:'columnBindingMenuTitle', headTitle:'columnBindingHeadTitle', accordances:'columnBindingAccordances'}]));
+               scopes.columnBinding = cMerge({rows:sampleRows, skippedRows:skippedRows}, _lodashPick(options, ['dataType', 'fields', {menuTitle:'columnBindingMenuTitle', headTitle:'columnBindingHeadTitle', mapping:'columnBindingMapping'}]));
             }
             // Опции под-компонента "mapping"
             if (isUsedSubview.mapper) {
@@ -400,7 +400,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                         results[i + 1] = {
                            provider: {parser:parserName, skippedRows:skippedRows, separator:sheet.separator || ''},
                            providerArgs: this._getProviderArgsOptions(options, parserName, false),
-                           columnBinding: {accordances:{}, skippedRows:skippedRows}
+                           columnBinding: {mapping:{}, skippedRows:skippedRows}
                         };
                      }
                      results[''] = cMerge({}, results[1]);
@@ -555,9 +555,9 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          _onChangeMapper: function () {
             // Изменился перечень соответсвий
             var values = this._getSubviewValues('mapper');
-            var accordances = values.accordances;
-            if (accordances) {
-               this._options.mapping.accordances = accordances;
+            var mapping = values.mapping;
+            if (mapping) {
+               this._options.mapping.mapping = mapping;
             }
          },
 
@@ -803,7 +803,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                data.sheets = sheets;
             }
             if (useMapping) {
-               data.mappingAccordances = options.mapping.accordances;
+               data.mapping = options.mapping.mapping;
             }
             var baseParams = this._getSubviewValues('baseParams');
             for (var name in baseParams) {
@@ -832,11 +832,11 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          _combineResultSheet: function (result, sheet, index) {
             var provider = result.provider;
             var providerArgs = result.providerArgs;
-            var columnBindingAccordances = result.columnBinding.accordances;
+            var columnBindingMapping = result.columnBinding.mapping;
             var item = {
                parser: provider.parser,
                skippedRows: provider.skippedRows,
-               columns: Object.keys(columnBindingAccordances).map(function (v) { return {index:columnBindingAccordances[v], field:v}; })
+               columns: Object.keys(columnBindingMapping).map(function (v) { return {index:columnBindingMapping[v], field:v}; })
             };
             if (provider.separator) {
                item.separator = provider.separator;
@@ -992,7 +992,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             'sheets',
             'sheetIndex',
             'sameSheetConfigs',
-            'columnBindingAccordances',
+            'columnBindingMapping',
             'mapping',
             'validators'
          ];
@@ -1100,7 +1100,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             },
             sheetIndex: typeIfDefined.bind(null, 'number'),
             sameSheetConfigs: typeIfDefined.bind(null, 'boolean'),
-            columnBindingAccordances: typeIfDefined.bind(null, 'object'),
+            columnBindingMapping: typeIfDefined.bind(null, 'object'),
             mapping: function (mapping) {
                // Для типа данных CML(CommerceML) должна быть опция "mapping"
                if (!mapping) {
@@ -1114,7 +1114,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                      !(!mapping.fieldProperty || typeof mapping.fieldProperty === 'string') ||
                      !(mapping.fieldFilter || mapping.fieldProperty) ||
                      !(!mapping.variants || typeof mapping.variants === 'object') ||
-                     !(!mapping.accordances || typeof mapping.accordances === 'object')
+                     !(!mapping.mapping || typeof mapping.mapping === 'object')
                   ) {
                   return new Error('Option "mapping" must be an ImportMapping');
                }
