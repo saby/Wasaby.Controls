@@ -3,13 +3,14 @@ define(
       'Core/Control',
       'Controls/Input/Number/ViewModel'
    ],
-   function (Control, NumberViewModel) {
+   function(Control, NumberViewModel) {
 
       'use strict';
 
-      describe('Controls.Input.Number', function () {
+      describe('Controls.Input.Number', function() {
          var
             testCases = [
+
                //Проверим что нельзя вставить букву в целую часть
                {
                   testName: 'Only digits allowed in integer part',
@@ -22,9 +23,10 @@ define(
                      delete: ''
                   },
                   result: {
-                     value: '12',
+                     value: '12.0',
                      position: 2
-                  }
+                  },
+                  inputType: 'insert'
                },
 
                //Проверим что нельзя вставить букву в дробную часть
@@ -41,7 +43,8 @@ define(
                   result: {
                      value: '12.3',
                      position: 4
-                  }
+                  },
+                  inputType: 'insert'
                },
 
                //Проверим что в начало стоки нельзя вставить минус при onlyPositive: true
@@ -57,9 +60,10 @@ define(
                      delete: ''
                   },
                   result: {
-                     value: '123',
+                     value: '123.0',
                      position: 0
-                  }
+                  },
+                  inputType: 'insert'
                },
 
                //Проверим что нельзя ввести больше указанного числа символов целой части
@@ -75,9 +79,10 @@ define(
                      delete: ''
                   },
                   result: {
-                     value: '12 345',
+                     value: '12 345.6',
                      position: 7
-                  }
+                  },
+                  inputType: 'insert'
                },
 
                //Проверим что нельзя ввести больше указанного числа символов дробной части
@@ -95,7 +100,8 @@ define(
                   result: {
                      value: '0.12345',
                      position: 6
-                  }
+                  },
+                  inputType: 'insert'
                },
 
                //Проверим что нельзя ввести точку, если precision: 0
@@ -111,14 +117,15 @@ define(
                      delete: ''
                   },
                   result: {
-                     value: '12',
+                     value: '12.0',
                      position: 2
-                  }
+                  },
+                  inputType: 'insert'
                },
 
                //Проверим что при вводе точки в начало строки будет '0.'
                {
-                  testName: 'Inserting a dot at the beginning of a line results in \'0.\'',
+                  testName: 'Inserting a dot at the beginning of a line results in \'0.0\'',
                   controlConfig: {
                   },
                   splitValue: {
@@ -128,9 +135,10 @@ define(
                      delete: ''
                   },
                   result: {
-                     value: '0.',
+                     value: '0.0',
                      position: 2
-                  }
+                  },
+                  inputType: 'insert'
                },
 
                //При попытке удалить пробел происходит удаление символа левее него и сдвиг курсора влево
@@ -164,9 +172,10 @@ define(
                      delete: ''
                   },
                   result: {
-                     value: '123.',
+                     value: '123.0',
                      position: 4
-                  }
+                  },
+                  inputType: 'insert'
                },
 
                //Проверим что нельзя вставить вторую точку
@@ -183,7 +192,8 @@ define(
                   result: {
                      value: '123.456789',
                      position: 7
-                  }
+                  },
+                  inputType: 'insert'
                },
 
                //Проверка удаления пробела клавишей delete
@@ -235,14 +245,14 @@ define(
             assert.equal(result, '123 456.78');
          });
 
-         describe('getValue', function() {
+         describe('getDisplayValue', function() {
             var getValueTests = [
-               ['123456', 123456],
-               ['-123456', -123456],
-               ['123.456', 123.456],
-               ['0', 0],
-               ['-', undefined],
-               [undefined, undefined]
+               ['123456', '123 456'],
+               ['-123456', '-123 456'],
+               ['123.456', '123.456'],
+               ['0', '0'],
+               ['-', '-'],
+               ['', '']
             ];
 
             getValueTests.forEach(function(test, i) {
@@ -250,7 +260,7 @@ define(
                   var numberViewModel = new NumberViewModel({
                      value: test[0]
                   });
-                  var result = numberViewModel.getValue();
+                  var result = numberViewModel.getDisplayValue();
 
                   assert.isTrue(result === test[1]);
                });
