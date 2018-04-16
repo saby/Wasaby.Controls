@@ -120,7 +120,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           *
           * @public
           * @param {object} options Входные аргументы("мета-данные") настройщика импорта:
-          * @param {string} options.dataType Тип импортируемых данных (excel и т.д.)
+          * @param {string} options.dataType Тип импортируемых данных. Должен сооветствовать одной из констант: Area.DATA_TYPE_EXCEL, Area.DATA_TYPE_DBF, Area.DATA_TYPE_CML, Area.DATA_TYPES
           * @param {ImportFile} options.file Информация о файле с импортируемыми данными
           * @param {string} [options.baseParamsComponent] Класс компонента для настройки параметров импортирования (опционально)
           * @param {object} [options.baseParams] Опции компонента для настройки параметров импортирования (опционально)
@@ -129,9 +129,18 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           * @param {Array<ImportSheet>} options.sheets Список объектов, представляющих имеющиеся области данных
           * @param {number} [options.sheetIndex] Индекс выбранной области данных (опционально)
           * @param {boolean} [options.sameSheetConfigs] Обрабатываются ли все области данных одинаково (опционально)
+          * @param {object} options.columnBindingAccordances Перечень соответствий идентификатор поля - индекс колонки в под-компоненте привязки колонок (опционально)
+          * @param {ImportMapping} options.mapping Информацию о настройке соответствий значений
           * @param {Array<ImportValidator>} options.validators Список валидаторов результатов редактирования
           * @param {ImportRemoteCall} [options.inputCall] Информация для вызова метода удалённого сервиса для получения данных ввода (опционально)
           * @param {ImportRemoteCall} [options.outputCall] Информация для вызова метода удалённого сервиса для отправки данных вывода (опционально)
+          * @param {string} options.dialogTitle Заголовок диалога настройщика импорта (опционально)
+          * @param {string} options.dialogButtonTitle Подпись кнопки диалога применения результата редактирования (опционально)
+          * @param {string} options.allSheetsTitle Название опции для выбора одинаковых настроек для всех листов файла в под-компоненте выбора области данных (опционально)
+          * @param {string} options.columnBindingMenuTitle Заголовок для меню выбора соответсвия в колонках в под-компоненте привязки колонок (опционально)
+          * @param {string} options.columnBindingHeadTitle Всплывающая подсказака в заголовке колонки в под-компоненте привязки колонок (опционально)
+          * @param {string} options.mapperFieldColumnTitle Заголовок колонки целевых элементов сопоставления в под-компоненте настройки соответствия/мэпинга значений (опционально)
+          * @param {string} options.mapperVariantColumnTitle Заголовок колонки вариантов сопоставления в под-компоненте настройки соответствия/мэпинга значений (опционально)
           * @return {Deferred<ImportResults>}
           */
          execute: function (options) {

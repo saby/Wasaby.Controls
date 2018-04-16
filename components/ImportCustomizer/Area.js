@@ -154,7 +154,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                 */
                mapperVariantColumnTitle: null,
                /**
-                * @cfg {string} Тип импортируемых данных (excel и т.д.)
+                * @cfg {string} Тип импортируемых данных. Должен сооветствовать одной из констант: Area.DATA_TYPE_EXCEL, Area.DATA_TYPE_DBF, Area.DATA_TYPE_CML, Area.DATA_TYPES
                 */
                dataType: null,
                /**
