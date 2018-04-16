@@ -6,7 +6,7 @@
             <ws:partial template="{{topTemplate}}"/>
          </div>
       </ws:if>
-      <Controls.Button style="linkMain" enabled="{{_isEnabled}}" caption="{[По умолчанию]}" on:click="_resetFilter()"
+      <Controls.Button style="linkMain" enabled="{{_isChanged}}" caption="{[По умолчанию]}" on:click="_resetFilter()"
                        name="resetButton"
                        attr:class="controls-FilterPanel__resetButton"></Controls.Button>
 
@@ -17,40 +17,16 @@
            on:click="_close()"></div>
    </div>
 
-   <div class="controls-FilterPanel__wrapper">
-      <div class="controls-FilterPanel__firstColumn">
-         <div class="controls-FilterPanel__content">
-            <Controls.Filter.Panel.PropertyGrid name="PropertyGrid" bind:items="_items"/>
-         </div>
-         <div class="controls-FilterPanel__footer">
-            <ws:if data="{{_additionalItems}}">
-               <span class="controls-FilterPanel__caption">{[Еще можно отобрать]}</span>
-               <div class="controls-FilterPanel__additionalParams">
+   <div class="controls-FilterPanel__content">
+      <Controls.Filter.Panel.PropertyGrid name="PropertyGrid" bind:items="_items"/>
+   </div>
+   <div class="controls-FilterPanel__footer">
+      <ws:if data="{{_additionalItems}}">
+         <span class="controls-FilterPanel__caption">{[Еще можно отобрать]}</span>
+         <div class="controls-FilterPanel__additionalParams">
 
-               </div>
-            </ws:if>
-            <div></div>
-            <div if="{{_options.viewMode === 'oneColumn'}}" class=" controls-FilterPanel__history-oneColumn">
-               <div class="controls-FilterPanel__history">
-                  <span class="controls-FilterPanel__caption">{[Ранее отбирались]}</span>
-                  <div class="controls-FilterPanel__history-block">
-                     <p class="controls-FilterPanel__history-item">Исторические данные 1</p>
-                     <p class="controls-FilterPanel__history-item">Исторические данные 4</p>
-                     <p class="controls-FilterPanel__history-item">Исторические данные 3</p>
-                     <p class="controls-FilterPanel__history-item">Исторические данные 2</p>
-                  </div>
-               </div>
-            </div>
          </div>
-      </div>
-      <div if="{{ _options.viewMode === 'twoColumn' }}" class="controls-FilterPanel__history">
-         <span class="controls-FilterPanel__caption">{[Ранее отбирались]}</span>
-         <div class="controls-FilterPanel__history-block-{{_options.viewMode}}">
-            <p>Исторические данные 1</p>
-            <p>Исторические данные 4</p>
-            <p>Исторические данные 3</p>
-            <p>Длииииииииииииииииииинная Историческая запись 2</p>
-         </div>
-      </div>
+      </ws:if>
+      <div class="controls-FilterPanel__history"></div>
    </div>
 </div>
