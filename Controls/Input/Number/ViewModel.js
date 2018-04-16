@@ -153,11 +153,6 @@ define('Controls/Input/Number/ViewModel',
                splitValue.before = '-';
             }
 
-            //If first symbol in insert is '.' and no before value, then it should be '0.'
-            if (splitValue.insert[0] === '.' && !splitValue.before) {
-               splitValue.before = '0';
-            }
-
             //If input is invalid, then we should clear it
             if (!_private.validate(_private.getClearValue(splitValue), options.onlyPositive, options.integersLength, options.precision)) {
                //If we have exceeded the maximum number in integers part, then we should move cursor after dot
@@ -211,7 +206,7 @@ define('Controls/Input/Number/ViewModel',
                splitValue.after = splitValue.after.substr(1, splitValue.after.length);
             }
 
-            //If deleting a dot then we should move cursor right and delete fires symbol in decimal part
+            //If deleting a dot then we should move cursor right and delete first symbol in decimal part
             if (splitValue.delete === '.') {
                if (splitValue.after === '0') {
                   splitValue.after = '.' + splitValue.after;
