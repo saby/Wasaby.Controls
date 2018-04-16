@@ -10,9 +10,12 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
       'Core/CommandDispatcher',
       'Core/core-merge',
       'Core/Deferred',
+      //'Core/IoC',
       'SBIS3.CONTROLS/CompoundControl',
+      'SBIS3.CONTROLS/ImportCustomizer/RemoteCall',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
       'WS.Data/Collection/RecordSet',
+      'WS.Data/Type/descriptor',
       'tmpl!SBIS3.CONTROLS/ImportCustomizer/Area',
       'css!SBIS3.CONTROLS/ImportCustomizer/Area',
       'SBIS3.CONTROLS/Button',
@@ -21,10 +24,20 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
       'SBIS3.CONTROLS/ScrollContainer'
    ],
 
-   function (CommandDispatcher, cMerge, Deferred, CompoundControl, InformationPopupManager, RecordSet, dotTplFn) {
+   function (CommandDispatcher, cMerge, Deferred, /*IoC,*/ CompoundControl, RemoteCall, InformationPopupManager, RecordSet, DataType, tmpl) {
       'use strict';
 
       var Area = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ImportCustomizer/Area.prototype*/ {
+
+         /**
+          * @typedef {object} ImportRemoteCall Тип, содержащий информацию для вызова удалённого сервиса для получения данных ввода или отправки данных вывода. Соответствует вспомогательному классу {@link SBIS3.CONTROLS/ImportCustomizer/RemoteCall}
+          * @property {string} endpoint Сервис, метод которого будет вызван
+          * @property {string} method Имя вызываемого метода
+          * @property {string} [idProperty] Имя свойства, в котором находится идентификатор (опционально, если вызову это не потребуется)
+          * @property {object} [args] Аргументы вызываемого метода (опционально)
+          * @property {function(object):object} [argsFilter] Фильтр аргументов (опционально)
+          * @property {function(object):object} [resultFilter] Фильтр результатов (опционально)
+          */
 
          /**
           * @typedef {object} ImportFile Тип, содержащий информацию об импортируемом файле
@@ -74,7 +87,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
           * @property {function(object|WS.Data/Entity/Record):ImportMapperItem} fieldFilter Фильтр полей, с помощью которого из общего списка полей {@link fields} отбираются нужные. Фильтр принимает объект поля и, если оно нужное, возвращает объект вида {@link ImportSimpleItem}. Упрощённый способ отбора предоставляется опцией {@link fieldProperty}
           * @property {string} fieldProperty Имя специального ключевого свойства, с помощью которого из общего списка полей {@link fields} отбираются нужные. Каждое нужное поле должно иметь свойство с таким именем. Более комплексный способ отбора предоставляется опцией {@link fieldFilter}
           * @property {object} variants Набор вариантов сопоставления
-          * @property {object} accordances Перечень соответствий специальный ключ поля - идентификатор варианта
+          * @property {object} mapping Перечень соответствий специальный ключ поля - идентификатор варианта
           */
 
          /**
@@ -97,23 +110,51 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
           * @property {ImportFile} file Информация о файле с импортируемыми данными
           * @property {Array<ImportSheet>} sheets Список объектов, представляющих имеющиеся области данных
           * @property {boolean} [sameSheetConfigs] Обрабатываются ли все области данных одинаково (опционально)
-          * @property {object} [mappingAccordances] Перечень соответствий специальный ключ поля - идентификатор варианта (опционально, когда применимо)
+          * @property {object} [mapping] Перечень соответствий специальный ключ поля - идентификатор варианта (опционально, когда применимо)
           * @property {*} [*] Базовые параметры импортирования (опционально)
           */
 
-         _dotTplFn: dotTplFn,
+         _dotTplFn: tmpl,
          $protected: {
             _options: {
                /**
-                * @cfg {string} Заголовок настройщика импорта (опционально)
+                * @cfg {string} Отображать как часть диалога (опционально)
                 */
-               title: null,//Определено в шаблоне
+               dialogMode: null,
                /**
-                * @cfg {string} Название кнопки применения результата редактирования (опционально)
+                * @cfg {string} Отображать в режиме ожидания (опционально)
                 */
-               applyButtonTitle: null,//Определено в шаблоне
+               waitingMode: null,
                /**
-                * @cfg {string} Тип импортируемых данных (excel и т.д.)
+                * @cfg {string} Заголовок диалога настройщика импорта (опционально)
+                */
+               dialogTitle: null,//Определено в шаблоне
+               /**
+                * @cfg {string} Подпись кнопки диалога применения результата редактирования (опционально)
+                */
+               dialogButtonTitle: null,//Определено в шаблоне
+               /**
+                * @cfg {string} Название опции для выбора одинаковых настроек для всех листов файла в под-компоненте выбора области данных (опционально)
+                */
+               allSheetsTitle: null,
+               /**
+                * @cfg {string} Заголовок для меню выбора соответсвия в колонках в под-компоненте привязки колонок (опционально)
+                */
+               columnBindingMenuTitle: null,
+               /**
+                * @cfg {string} Всплывающая подсказака в заголовке колонки в под-компоненте привязки колонок (опционально)
+                */
+               columnBindingHeadTitle: null,
+               /**
+                * @cfg {string} Заголовок колонки целевых элементов сопоставления в под-компоненте настройки соответствия/мэпинга значений (опционально)
+                */
+               mapperFieldColumnTitle: null,
+               /**
+                * @cfg {string} Заголовок колонки вариантов сопоставления в под-компоненте настройки соответствия/мэпинга значений (опционально)
+                */
+               mapperVariantColumnTitle: null,
+               /**
+                * @cfg {string} Тип импортируемых данных. Должен сооветствовать одной из констант: Area.DATA_TYPE_EXCEL, Area.DATA_TYPE_DBF, Area.DATA_TYPE_CML, Area.DATA_TYPES
                 */
                dataType: null,
                /**
@@ -123,22 +164,17 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                /**
                 * @cfg {string} Класс компонента настройки параметоров импортирования (Опционально, если не указан - используется {@link SBIS3.CONTROLS/ImportCustomizer/BaseParams/View комполнент по умолчанию})
                 */
-               baseParamsComponent: 'SBIS3.CONTROLS/ImportCustomizer/BaseParams/View',
+               baseParamsComponent: null,
                /**
                 * @cfg {object} Опции компонента настройки параметоров импортирования. Состав опций определяется {@link baseParamsComponent используемым компонентом} (опционально)
                 */
-               baseParams: {
-                  //Заменять ли импортируемыми данными предыдущее содержимое базы данных полностью или нет (только обновлять и добавлять)
-                  replaceAllData: false,
-                  //Место назначения для импортирования (таблица в базе данных и т.п.)
-                  destination: null
-               },
+               baseParams: null,
                /**
                 * @cfg {object<ImportParser>} Список всех доступных провайдеров парсинга импортируемых данных
                 */
-               parsers: {},
+               parsers: null,
                /**
-                * @cfg {ImportTargetFields|Core/Deferred<ImportTargetFields>} Полный набор полей, к которым должны быть привязаны импортируемые данные
+                * @cfg {ImportTargetFields|Core/Deferred<ImportTargetFields>|ImportRemoteCall} Полный набор полей, к которым должны быть привязаны импортируемые данные
                 */
                fields: null,
                /**
@@ -154,6 +190,10 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                 */
                sameSheetConfigs: null,
                /**
+                * @cfg {object} Перечень соответствий идентификатор поля - индекс колонки в под-компоненте привязки колонок
+                */
+               columnBindingMapping: null,
+               /**
                 * @cfg {ImportMapping} Информацию о настройке соответствий значений
                 */
                mapping: null,
@@ -162,8 +202,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                 */
                validators: null
             },
-            // Список имён вложенных компонентов
-            _subviewNames: {
+            // Список имён вложенных под-компонентов
+            _SUBVIEW_NAMES: {
                sheet: 'controls-ImportCustomizer-Area__sheet',
                baseParams: 'controls-ImportCustomizer-Area__baseParams',
                provider: 'controls-ImportCustomizer-Area__provider',
@@ -171,7 +211,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                columnBinding: 'controls-ImportCustomizer-Area__columnBinding',
                mapper: 'controls-ImportCustomizer-Area__mapper'
             },
-            // Ссылки на вложенные компоненты
+            // Ссылки на вложенные под-компоненты
             _views: {
                //sheet: null,
                //baseParams: null,
@@ -188,15 +228,45 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
 
          _modifyOptions: function () {
             var options = Area.superclass._modifyOptions.apply(this, arguments);
-            options._isNeeds = this._getSubviewUsings(options);
+            this._processOptions(options);
+            return options;
+         },
+
+         _processOptions: function (options) {
+            options._isUsedSubview = this._getSubviewUsings(options);
+            if (!options.waitingMode) {
+               this._resolveOptions(options);
+               this._validateOptions(options);
+               this._reshapeOptions(options);
+            }
+         },
+
+         _reshapeOptions: function (options) {
+            var isUsedSubview = options._isUsedSubview;
+            // Если в опции "fields" нет явных данных типа {@link ImportTargetFields}, то выявить обещание this._fieldsPromise, а опцию сбросить
+            var fields = options.fields;
+            var promise;
+            if (fields instanceof Deferred) {
+               promise = fields;
+            }
+            else {
+               var call = _validateImportRemoteCall(fields, true);
+               if (call instanceof RemoteCall) {
+                  promise = call.call(Area.getOwnOptionNames().reduce(function (r, v) { r[v] = options[v]; return r; }, {}));
+               }
+            }
+            if (promise) {
+               this._fieldsPromise = promise;
+               options.fields = null;
+            }
+            // Сформировать дополнительные свойства и области видимости для под-компонентов
+            var scopes = {};
             var sheets = options.sheets;
             var hasSheets = sheets && sheets.length;
-            options._sheetsTitles = hasSheets ? sheets.map(function (v) {return v.name; }) : [];
             var parsers = options.parsers;
             var parserNames = Object.keys(parsers);
             var parserItems = parserNames.map(function (v) { var o = parsers[v]; return {id:v, title:o.title, order:o.order}; });
             parserItems.sort(function (v1, v2) { return v1.order - v2.order; });
-            options._parserItems = parserItems;
             options._defaultParserName = parserItems[0].id;
             var sheetIndex = options.sheetIndex;
             if (hasSheets && (options.sameSheetConfigs || sheetIndex ==/*Не ===*/ null)) {
@@ -210,186 +280,330 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                   sheet.parser = parserName;
                }
             }
-            options._parserName = parserName;
-            options._skippedRows = hasSheets && 0 < sheet.skippedRows ? sheet.skippedRows : 0;
-            options._parserSeparator = hasSheets && sheet.separator ? sheet.separator : '';
-            options._providerArgsComponent = parsers[parserName].component || undefined;
-            options._providerArgsOptions = this._getProviderArgsOptions(options, parserName, true);
-            options._columnsBindingRows = hasSheets ? sheet.sampleRows : [];
-            var mapping = options.mapping;
-            if (mapping) {
-               options._mapperFieldFilter = mapping.fieldFilter;
-               options._mapperFieldProperty = mapping.fieldProperty;
-               options._mapperVariants = mapping.variants;
-               options._mapperAccordances = mapping.accordances;
+            var skippedRows = hasSheets && 0 < sheet.skippedRows ? sheet.skippedRows : 0;
+            // Опции под-компонента "sheet"
+            if (isUsedSubview.sheet) {
+               var sheetTitles = hasSheets ? sheets.map(function (v) {return v.name; }) : [];
+               scopes.sheet = cMerge({sheetTitles:sheetTitles}, _lodashPick(options, ['dataType', 'allSheetsTitle', 'sheetIndex']));
             }
-            var fields = options.fields;
-            if (fields instanceof Deferred) {
-               this._fieldsPromise = fields;
-               options.fields = null;
+            // Опции под-компонента "baseParams"
+            if (isUsedSubview.baseParams) {
+               scopes.baseParams = cMerge(options.baseParams ? cMerge({}, options.baseParams) : {}, _lodashPick(options, ['dataType', 'fields']));
             }
-            return options;
+            // Опции под-компонента "provider"
+            if (isUsedSubview.provider) {
+               var separator = hasSheets && sheet.separator ? sheet.separator : '';
+               scopes.provider = {dataType:options.dataType, parsers:parserItems, parser:parserName, skippedRows:skippedRows, separator:separator};
+            }
+            // Опции под-компонента "providerArgs"
+            if (isUsedSubview.providerArgs) {
+               scopes.providerArgs = {component:parsers[parserName].component || undefined, options:this._getProviderArgsOptions(options, parserName, true)};
+            }
+            // Опции под-компонента "columnBinding"
+            if (isUsedSubview.columnBinding) {
+               var sampleRows = hasSheets ? sheet.sampleRows : [];
+               scopes.columnBinding = cMerge({rows:sampleRows, skippedRows:skippedRows}, _lodashPick(options, ['dataType', 'fields', {menuTitle:'columnBindingMenuTitle', headTitle:'columnBindingHeadTitle', mapping:'columnBindingMapping'}]));
+            }
+            // Опции под-компонента "mapping"
+            if (isUsedSubview.mapper) {
+               scopes.mapper = cMerge(options.mapping || {}, _lodashPick(options, ['dataType', 'fields', {fieldColumnTitle:'mapperFieldColumnTitle', variantColumnTitle:'mapperVariantColumnTitle'}]));
+            }
+            options._scopes = scopes;
+         },
+
+         _resolveOptions: function (options) {
+            var defaultOptions = Area.getDefaultOptions();
+            for (var name in defaultOptions) {
+               if (options[name] ==/*Не ===*/ null) {
+                  options[name] = defaultOptions[name];
+               }
+            }
+         },
+
+         _validateOptions: function (options) {
+            if (!options.waitingMode) {
+               var typeValidators = Area.getOptionTypes();
+               if (typeValidators) {
+                  var _remove = function (list) { Array.prototype.slice.call(arguments, 1).forEach(function (item) { var i = list.indexOf(item); if (i !== -1) { list.splice(i, 1); }; }); };
+                  var names = Object.keys(typeValidators);
+                  if (!options.dialogMode) {
+                     _remove(names, 'dialogTitle', 'dialogButtonTitle');
+                  }
+                  var dataType = options.dataType;
+                  if (dataType === Area.DATA_TYPE_EXCEL || dataType === Area.DATA_TYPE_DBF) {
+                     _remove(names, 'mapping');
+                  }
+                  else
+                  if (dataType === Area.DATA_TYPE_CML) {
+                     _remove(names, 'allSheetsTitle', 'columnBindingMenuTitle', 'columnBindingHeadTitle', 'parsers', 'sheets', 'sheetIndex', 'sameSheetConfigs');
+                  }
+                  if (names && names.length) {
+                     for (var i = 0; i < names.length; i++) {
+                        var name = names[i];
+                        var validator = typeValidators[name];
+                        if (validator) {
+                           var err = validator(options[name]);
+                           if (err instanceof Error) {
+                              //IoC.resolve('ILogger').error('ImportCustomizer', err.message);
+                              throw new Error('Wrong option "' + name + '": ' + err.message);
+                           }
+                        }
+                     }
+                  }
+               }
+            }
          },
 
          $constructor: function () {
-            CommandDispatcher.declareCommand(this, 'complete', this._cmdComplete);
+            /**
+             * Уведомление об изменении данных под-компонента
+             * @command subviewChanged
+             * @public
+             */
+            CommandDispatcher.declareCommand(this, 'subviewChanged', this._cmdSubviewChanged);
+            if (this._options.dialogMode) {
+               CommandDispatcher.declareCommand(this, 'complete', this._cmdComplete);
+            }
             //CommandDispatcher.declareCommand(this, 'showMessage', Area.showMessage);
             this._publish('onComplete', 'onFatalError');
          },
 
          init: function () {
             Area.superclass.init.apply(this, arguments);
-            var options = this._options;
-            // Получить ссылки на имеющиеся подкомпоненты
-            for (var name in this._subviewNames) {
-               if (options._isNeeds[name]) {
-                  this._views[name] = _getChildComponent(this, this._subviewNames[name]);
-               }
-            }
+            this._init();
+         },
+
+         _init: function () {
+            // Получить ссылки на имеющиеся под-компоненты
+            this._collectViews();
             // Инициализировать результирующие данные
-            var sheets = options.sheets;
-            if (sheets && sheets.length) {
-               var results = {};
-               for (var i = 0; i < sheets.length; i++) {
-                  var sheet = sheets[i];
-                  var parserName = sheet.parser;
-                  if (!parserName) {
-                     sheet.parser = parserName = options._defaultParserName;
-                  }
-                  var skippedRows = 0 < sheet.skippedRows ? sheet.skippedRows : 0;
-                  results[i + 1] = {
-                     provider: {parser:parserName, skippedRows:skippedRows, separator:sheet.separator || ''},
-                     providerArgs: this._getProviderArgsOptions(options, parserName, false),
-                     columnBinding: {accordances:{}, skippedRows:skippedRows}
-                  };
-               }
-               results[''] = cMerge({}, results[1]);
-               this._results = results;
-            }
-            // Если поля представлены обещанием
-            var fields = this._fieldsPromise;
-            if (fields) {
-               // Получить из этого обещания актуальные значения полей по мере разрешения обещания
-               var success = function (data) {
-                  this._fieldsPromise = null;
-                  this._setFields(data);
-                  return data;
-               }.bind(this);
-               var fail = function (err) {
-                  this._fieldsPromise = null;
-                  this._notify('onFatalError', true, /*err*/rk('При получении данных поизошла ошибка', 'НастройщикИмпорта'));
-                  return err;
-               }.bind(this);
-               if (!fields.isReady()) {
-                  fields.addCallbacks(success, fail);
-               }
-               else {
-                  var value = fields.getResult();
-                  (fields.isSuccessful() ? success : fail)(value);
-               }
-            }
+            this._initResults();
             // Подписаться на необходимые события
             this._bindEvents();
          },
 
-         _bindEvents: function () {
-            var views = this._views;
-            if (views.sheet) {
-               this.subscribeTo(this._views.sheet, 'change', function (evtName, values) {
-                  // Изменилась область данных для импортирования
-                  var options = this._options;
-                  var views = this._views;
-                  var results = this._results;
-                  var sheetIndex = options.sheetIndex;
-                  var prevResult = results[0 <= sheetIndex ? sheetIndex + 1 : ''];
-                  prevResult.provider =  cMerge({}, views.provider.getValues());
-                  prevResult.providerArgs = cMerge({}, this._getProviderArgsValues());
-                  prevResult.columnBinding = cMerge({}, views.columnBinding.getValues());
-                  sheetIndex = values.sheetIndex;
-                  options.sheetIndex = sheetIndex;
-                  var nextResult = results[0 <= sheetIndex ? sheetIndex + 1 : ''];
-                  this._setSubviewValues('provider', nextResult.provider);
-                  this._updateProviderArgsView(nextResult.provider.parser);
+         _initResults: function () {
+            var options = this._options;
+            var notWaiting = !options.waitingMode;
+            if (notWaiting) {
+               if (options.dataType === Area.DATA_TYPE_EXCEL || options.dataType === Area.DATA_TYPE_DBF) {
                   var sheets = options.sheets;
-                  this._setSubviewValues('columnBinding', cMerge({rows:sheets[0 < sheetIndex ? sheetIndex : 0].sampleRows}, nextResult.columnBinding));
-               }.bind(this));
-            }
-            if (views.baseParams) {
-               this.subscribeTo(views.baseParams, 'change', function (evtName, values) {
-                  // Изменились основные параметры импортирования
-                  var fields = values.fields;
-                  if (fields) {
-                     this._options.fields = fields;
-                     this._setSubviewValues('columnBinding', {fields:fields});
+                  if (sheets && sheets.length) {
+                     var results = {};
+                     for (var i = 0; i < sheets.length; i++) {
+                        var sheet = sheets[i];
+                        var parserName = sheet.parser;
+                        if (!parserName) {
+                           sheet.parser = parserName = options._defaultParserName;
+                        }
+                        var skippedRows = 0 < sheet.skippedRows ? sheet.skippedRows : 0;
+                        results[i + 1] = {
+                           provider: {parser:parserName, skippedRows:skippedRows, separator:sheet.separator || ''},
+                           providerArgs: this._getProviderArgsOptions(options, parserName, false),
+                           columnBinding: {mapping:{}, skippedRows:skippedRows}
+                        };
+                     }
+                     results[''] = cMerge({}, results[1]);
+                     this._results = results;
                   }
-               }.bind(this));
+               }
             }
-            if (views.provider) {
-               this.subscribeTo(views.provider, 'change', function (evtName, values) {
-                  // Изменился выбор провайдера парсинга
-                  var sheetIndex = this._options.sheetIndex;
-                  var result = this._results[0 <= sheetIndex ? sheetIndex + 1 : ''];
-                  var parserName = values.parser;
-                  var skippedRows = values.skippedRows;
-                  if (parserName !== result.provider.parser) {
-                     this._updateProviderArgsView(parserName);
+            else {
+               this._results = null;
+            }
+            // Если поля представлены обещанием
+            var fields = this._fieldsPromise;
+            if (fields) {
+               if (notWaiting) {
+                  // Получить из этого обещания актуальные значения полей по мере разрешения обещания
+                  var success = function (data) {
+                     this._fieldsPromise = null;
+                     this._setFields(data);
+                     return data;
+                  }.bind(this);
+                  var fail = function (err) {
+                     this._fieldsPromise = null;
+                     this._notify('onFatalError', true, /*err*/rk('При получении данных поизошла ошибка', 'НастройщикИмпорта'));
+                     return err;
+                  }.bind(this);
+                  if (!fields.isReady()) {
+                     fields.addCallbacks(success, fail);
                   }
-                  result.provider = cMerge({}, values);
-                  result.columnBinding.skippedRows = skippedRows;
-                  this._setSubviewValues('columnBinding', {skippedRows:skippedRows});
-               }.bind(this));
-            }
-            // Для компонента this._views.providerArgs подисываеися отдельно через обработчик в опциях
-            if (views.columnBinding) {
-               this.subscribeTo(views.columnBinding, 'change', function (evtName, values) {
-                  // Изменилась привязка данных к полям базы
-                  var sheetIndex = this._options.sheetIndex;
-                  var result = this._results[0 <= sheetIndex ? sheetIndex + 1 : ''];
-                  var skippedRows = values.skippedRows;
-                  result.provider.skippedRows = skippedRows;
-                  result.columnBinding = cMerge({}, values);
-                  this._setSubviewValues('provider', {skippedRows:skippedRows});
-               }.bind(this));
-            }
-            if (views.mapper) {
-               this.subscribeTo(views.mapper, 'change', function (evtName, values) {
-                  // Изменился перечень соответсвий
-                  var accordances = values.accordances;
-                  if (accordances) {
-                     this._options.mapping.accordances = accordances;
+                  else {
+                     var value = fields.getResult();
+                     (fields.isSuccessful() ? success : fail)(value);
                   }
-               }.bind(this));
+               }
+               else {
+                  this._fieldsPromise = null;
+               }
+            }
+         },
+
+         _cmdSubviewChanged: function () {
+         },
+
+         _bindEvents: function () {
+            var isUsedSubview = this._getSubviewUsings(this._options);
+            for (var name in this._views) {
+               if (isUsedSubview[name]) {
+                  this._bindSubviewEvents(name);
+               }
+            }
+         },
+
+         _bindSubviewEvents: function (name) {
+            var view = this._views[name];
+            if (view && !view.isDestroyed()) {
+               var handlers = {
+                  sheet: this._onChangeSheet,
+                  baseParams: this._onChangeBaseParams,
+                  provider: this._onChangeProvider,
+                  providerArgs: this._onChangeProviderArgs,
+                  columnBinding: this._onChangeColumnBinding,
+                  mapper: this._onChangeMapper
+               };
+               this.subscribeTo(view, 'onCommandCatch', function (handler, evtName, command/*, args*/) {
+                  if (command === 'subviewChanged') {
+                     handler.apply(this, Array.prototype.slice.call(arguments, 3));
+                     evtName.setResult(true);
+                  }
+               }.bind(this, handlers[name].bind(this)));
             }
          },
 
          /*
-          * Обработчик события "change" для компонента this._views.providerArgs
+          * Обработчик "subviewChanged" для под-компонента sheet
           *
           * @protected
           */
-         _onChangeProviderArgs: function (evtName, values) {
+         _onChangeSheet: function () {
+            // Изменилась область данных для импортирования
+            var values = this._getSubviewValues('sheet');
+            var options = this._options;
+            var results = this._results;
+            var sheetIndex = options.sheetIndex;
+            var prevResult = results[0 <= sheetIndex ? sheetIndex + 1 : ''];
+            prevResult.provider =  cMerge({}, this._getSubviewValues('provider'));
+            prevResult.providerArgs = cMerge({}, this._getSubviewValues('providerArgs'));
+            prevResult.columnBinding = cMerge({}, this._getSubviewValues('columnBinding'));
+            sheetIndex = values.sheetIndex;
+            options.sheetIndex = sheetIndex;
+            var nextResult = results[0 <= sheetIndex ? sheetIndex + 1 : ''];
+            this._setSubviewValues('provider', nextResult.provider);
+            this._updateProviderArgsView(nextResult.provider.parser);
+            var sheets = options.sheets;
+            this._setSubviewValues('columnBinding', cMerge({rows:sheets[0 < sheetIndex ? sheetIndex : 0].sampleRows}, nextResult.columnBinding));
+         },
+
+         /*
+          * Обработчик "subviewChanged" для под-компонента baseParams
+          *
+          * @protected
+          */
+         _onChangeBaseParams: function () {
+            // Изменились основные параметры импортирования
+            var values = this._getSubviewValues('baseParams');
+            var fields = values.fields;
+            if (fields) {
+               this._options.fields = fields;
+               this._setSubviewValues('columnBinding', {fields:fields});
+            }
+         },
+
+         /*
+          * Обработчик "subviewChanged" для под-компонента provider
+          *
+          * @protected
+          */
+         _onChangeProvider: function () {
+            // Изменился выбор провайдера парсинга
+            var values = this._getSubviewValues('provider');
+            var sheetIndex = this._options.sheetIndex;
+            var result = this._results[0 <= sheetIndex ? sheetIndex + 1 : ''];
+            var parserName = values.parser;
+            var skippedRows = values.skippedRows;
+            if (parserName !== result.provider.parser) {
+               this._updateProviderArgsView(parserName);
+            }
+            result.provider = cMerge({}, values);
+            result.columnBinding.skippedRows = skippedRows;
+            this._setSubviewValues('columnBinding', {skippedRows:skippedRows});
+         },
+
+         /*
+          * Обработчик "subviewChanged" для под-компонента columnBinding
+          *
+          * @protected
+          */
+         _onChangeColumnBinding: function () {
+            // Изменилась привязка данных к полям базы
+            var values = this._getSubviewValues('columnBinding');
+            var sheetIndex = this._options.sheetIndex;
+            var result = this._results[0 <= sheetIndex ? sheetIndex + 1 : ''];
+            var skippedRows = values.skippedRows;
+            result.provider.skippedRows = skippedRows;
+            result.columnBinding = cMerge({}, values);
+            this._setSubviewValues('provider', {skippedRows:skippedRows});
+         },
+
+         /*
+          * Обработчик "subviewChanged" для под-компонента mapper
+          *
+          * @protected
+          */
+         _onChangeMapper: function () {
+            // Изменился перечень соответсвий
+            var values = this._getSubviewValues('mapper');
+            var mapping = values.mapping;
+            if (mapping) {
+               this._options.mapping.mapping = mapping;
+            }
+         },
+
+         /*
+          * Обработчик "subviewChanged" для под-компонента providerArgs
+          *
+          * @protected
+          */
+         _onChangeProviderArgs: function () {
             // Изменились параметры провайдера парсинга
+            var values = this._getSubviewValues('providerArgs');
             var sheetIndex = this._options.sheetIndex;
             this._results[0 <= sheetIndex ? sheetIndex + 1 : ''].providerArgs = cMerge({}, values);
          },
 
+         /**
+          * Собрать ссылки на все реально имеющиеся под-компоненты
+          * @protected
+          */
+         _collectViews: function () {
+            var subviewNames = this._SUBVIEW_NAMES;
+            var views = {};
+            for (var name in subviewNames) {
+               views[name] = _getChildComponent(this, subviewNames[name]);
+            }
+            this._views = views;
+         },
+
          /*
-          * Получить список необходимости дочерних компонентов
+          * Получить список необходимости вложенных под-компонентов
           *
           * @protected
           * @param {object} options Опции компонента
           * @return {object}
           */
          _getSubviewUsings: function (options) {
+            var notWaiting = !options.waitingMode;
             var dataType = options.dataType;
             var isExcel = dataType === Area.DATA_TYPE_EXCEL;
             return {
-                sheet: isExcel,
-                baseParams: true,
-                provider: isExcel,
-                providerArgs: isExcel,
-                columnBinding: isExcel || dataType === Area.DATA_TYPE_DBF,
-                mapper: dataType === Area.DATA_TYPE_CML
+                sheet: notWaiting && isExcel,
+                baseParams: notWaiting,
+                provider: notWaiting && isExcel,
+                providerArgs: notWaiting && isExcel,
+                columnBinding: notWaiting && (isExcel || dataType === Area.DATA_TYPE_DBF),
+                mapper: notWaiting && dataType === Area.DATA_TYPE_CML
             };
          },
 
@@ -400,27 +614,10 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
           * @param {ImportTargetFields} fields Полный набор полей
           */
          _setFields: function (fields) {
-            if (!fields || typeof fields !== 'object') {
-               throw new Error('Wrong fields');
-            }
-            var items = fields.items;
-            if (!items || !(
-                  (Array.isArray(items) && items.every(function (v) { return typeof v === 'object'; })) ||
-                  (items instanceof RecordSet)
-               )) {
-               throw new Error('Wrong fields items');
-            }
-            var idProperty = fields.idProperty;
-            if (Array.isArray(items) ? (!idProperty || typeof idProperty !== 'string') : (idProperty && typeof idProperty !== 'string')) {
-               throw new Error('Wrong fields idProperty');
-            }
-            var displayProperty = fields.displayProperty;
-            if (!displayProperty || typeof displayProperty !== 'string') {
-               throw new Error('Wrong fields displayProperty');
-            }
-            var parentProperty = fields.parentProperty;
-            if (parentProperty && typeof parentProperty !== 'string') {
-               throw new Error('Wrong fields parentProperty');
+            // TODO: Обдумать возможность выделения из fields массива hierarchy (с флагом joinHierarchy и последующим слиянием для нужного парсера)
+            var err = _validateImportTargetFields(fields);
+            if (err instanceof Error) {
+               throw err;
             }
             this._options.fields = fields;
             var views = this._views;
@@ -430,16 +627,41 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          },
 
          /*
-          * Установить указанные настраиваемые значения у дочернего компонента, если он есть
+          * Установить указанные настраиваемые значения у вложенного под-компонента, если он есть
           *
           * @protected
-          * @param {string} name Мнемоническое имя компонента (в наборе _views)
+          * @param {string} name Мнемоническое имя под-компонента (в наборе _views)
           * @param {object} values Набор из нескольких значений, которые необходимо изменить
           */
          _setSubviewValues: function (name, values) {
             var view = this._views[name];
             if (view) {
                view.setValues(values);
+            }
+         },
+
+         /*
+          * Получить настраиваемые значения вложенного под-компонента, если он есть
+          *
+          * @protected
+          * @param {string} name Мнемоническое имя под-компонента (в наборе _views)
+          * @return {object}
+          */
+         _getSubviewValues: function (name) {
+            var view = this._views[name];
+            if (view) {
+               if (name === 'providerArgs') {
+                  // Получить значения из компонента настройки параметров провайдера парсинга
+                  var current = view.getCurrentTemplateName();
+                  if (current) {
+                     var values;
+                     view.getChildControls().some(function (v) { if (v._moduleName === current) { values = v.getValues(); return true; }; });
+                     return values;
+                  }
+               }
+               else {
+                  return view.getValues();
+               }
             }
          },
 
@@ -500,6 +722,54 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             }.bind(this));
          },
 
+         /**
+          * Установить указанные настраиваемые значения компонента
+          *
+          * @public
+          * @param {object} values Набор из нескольких значений, которые необходимо изменить
+          */
+         setValues: function (values) {
+            if (!values || typeof values !== 'object') {
+               throw new Error('Object required');
+            }
+            if (!Object.keys(values).length) {
+               return;
+            }
+            // Если при установке значений надились в режиме ожидания - сбросить его
+            var options = this._options;
+            if (options.waitingMode) {
+               options.waitingMode = null;
+            }
+            this._setOptions(values);
+            this._processOptions(options);
+            var isUsedSubview = options._isUsedSubview
+            var views = this._views;
+            var needRebuild;
+            for (var name in views) {
+               if (isUsedSubview[name] !== !!views[name]) {
+                  needRebuild = true;
+                  break;
+               }
+            }
+            if (needRebuild) {
+               this.rebuildMarkup();
+               this._init();
+            }
+            else {
+               var scopes = options._scopes;
+               for (var name in views) {
+                  if (isUsedSubview[name]) {
+                     if (name !== 'providerArgs') {
+                        views[name].setValues(scopes[name]);
+                     }
+                     else {
+                        this._updateProviderArgsView(scopes.provider.parser);
+                     }
+                  }
+               }
+            }
+         },
+
          /*
           * Получить все результирующие данные
           *
@@ -533,9 +803,9 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                data.sheets = sheets;
             }
             if (useMapping) {
-               data.mappingAccordances = options.mapping.accordances;
+               data.mapping = options.mapping.mapping;
             }
-            var baseParams = this._views.baseParams.getValues();
+            var baseParams = this._getSubviewValues('baseParams');
             for (var name in baseParams) {
                data[name] = baseParams[name];
             }
@@ -562,11 +832,11 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          _combineResultSheet: function (result, sheet, index) {
             var provider = result.provider;
             var providerArgs = result.providerArgs;
-            var columnBindingAccordances = result.columnBinding.accordances;
+            var columnBindingMapping = result.columnBinding.mapping;
             var item = {
                parser: provider.parser,
                skippedRows: provider.skippedRows,
-               columns: Object.keys(columnBindingAccordances).map(function (v) { return {index:columnBindingAccordances[v], field:v}; })
+               columns: Object.keys(columnBindingMapping).map(function (v) { return {index:columnBindingMapping[v], field:v}; })
             };
             if (provider.separator) {
                item.separator = provider.separator;
@@ -620,30 +890,12 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                var sheets = options.sheets;
                var sheetIndex = options.sheetIndex;
                var values = {
-                  columnCount:sheets && sheets.length ? sheets[0 < sheetIndex ? sheetIndex : 0].sampleRows[0].length : 0,
-                  handlers: {change:this._onChangeProviderArgs.bind(this)}
+                  dataType: options.dataType,
+                  columnCount:sheets && sheets.length ? sheets[0 < sheetIndex ? sheetIndex : 0].sampleRows[0].length : 0
                };
                var args = parser.args;
                return args ? cMerge(values, args) : values;
             }
-         },
-
-         /*
-          * Получить значения из компонента настройки параметров провайдера парсинга
-          *
-          * @protected
-          * @return {object}
-          */
-         _getProviderArgsValues: function () {
-            var values;
-            var view = this._views.providerArgs;
-            if (view) {
-               var current = view.getCurrentTemplateName();
-               if (current) {
-                  view.getChildControls().some(function (v) { if (v._moduleName === current) { values = v.getValues(); return true; }; });
-               }
-            }
-            return values;
          },
 
          destroy: function () {
@@ -665,15 +917,230 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
        * @public
        * @static
        * @constant
-       * @type {Array<string>}
+       * @type {string}
        */
       Object.defineProperty(Area, 'DATA_TYPE_EXCEL', {value:'excel', enumerable:true});
       Object.defineProperty(Area, 'DATA_TYPE_DBF', {value:'dbf', enumerable:true});
       Object.defineProperty(Area, 'DATA_TYPE_CML', {value:'cml', enumerable:true});
+      /**
+       * Константы - Список всех поддерживаемых типов данных
+       *
+       * @public
+       * @static
+       * @constant
+       * @type {Array<string>}
+       */
       Object.defineProperty(Area, 'DATA_TYPES', {value:[Area.DATA_TYPE_EXCEL, Area.DATA_TYPE_DBF, Area.DATA_TYPE_CML], enumerable:true});
 
 
       // Public static methods:
+
+      /**
+       * Получить опции по умолчанию
+       *
+       * @public
+       * @static
+       * @return {object}
+       */
+      Area.getDefaultOptions = function () {
+         return {
+            baseParamsComponent: 'SBIS3.CONTROLS/ImportCustomizer/BaseParams/View',
+            baseParams: {
+               //Заменять ли импортируемыми данными предыдущее содержимое базы данных полностью или нет (только обновлять и добавлять)
+               replaceAllData: false,
+               //Место назначения для импортирования (таблица в базе данных и т.п.)
+               destination: null
+            },
+            parsers: {
+               // TODO: Обдумать добавление поля applicable:Array<string> для указания типов данных (Excel или DBF)
+               // TODO: Обдумать удаление поля order
+               'InColumsHierarchyParser': {title:rk('в отдельной колонке', 'НастройщикИмпорта'), order:10},
+               'InSeparateLineHierarchyParser': {title:rk('в отдельной строке', 'НастройщикИмпорта'), component:'SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View', order:20},
+               'InLineGroupsHierarchyParser': {title:rk('в группировке строк', 'НастройщикИмпорта'), order:30}
+            },
+            validators: [
+               {
+                  validator: function (data, optionGetter) { return data.dataType === 'cml' || data.sheets.every(function (sheet) { return !!sheet.columns.length; }); },
+                  errorMessage: rk('Не установлено соответсвие между колонками и полями', 'НастройщикИмпорта')
+               }
+            ]
+         };
+      };
+
+      /**
+       * Получить список имён всех собственных опций компонента
+       *
+       * @public
+       * @static
+       * @return {Array<string>}
+       */
+      Area.getOwnOptionNames = function () {
+         return [
+            'dialogTitle',
+            'dialogButtonTitle',
+            'allSheetsTitle',
+            'columnBindingMenuTitle',
+            'columnBindingHeadTitle',
+            'mapperFieldColumnTitle',
+            'mapperVariantColumnTitle',
+            'dataType',
+            'file',
+            'baseParamsComponent',
+            'baseParams',
+            'parsers',
+            'fields',
+            'sheets',
+            'sheetIndex',
+            'sameSheetConfigs',
+            'columnBindingMapping',
+            'mapping',
+            'validators'
+         ];
+      };
+
+      /**
+       * Получить проверочную информацию о типах данных опций
+       *
+       * @public
+       * @static
+       * @return {object}
+       */
+      Area.getOptionTypes = function () {
+         var typeIfDefined = function (type, value) {
+            // Если значение есть - оно должно иметь указанный тип
+            return value !=/*Не !==*/ null && typeof value !== type ? new Error('Value must be a ' + type) : value;
+         };
+         return {
+            dialogMode: typeIfDefined.bind(null, 'boolean'),
+            waitingMode: typeIfDefined.bind(null, 'boolean'),
+            dialogTitle: typeIfDefined.bind(null, 'string'),
+            dialogButtonTitle: typeIfDefined.bind(null, 'string'),
+            allSheetsTitle: typeIfDefined.bind(null, 'string'),
+            columnBindingMenuTitle: typeIfDefined.bind(null, 'string'),
+            columnBindingHeadTitle: typeIfDefined.bind(null, 'string'),
+            mapperFieldColumnTitle: typeIfDefined.bind(null, 'string'),
+            mapperVariantColumnTitle: typeIfDefined.bind(null, 'string'),
+            dataType: DataType(String).required().oneOf(Area.DATA_TYPES),
+            file: function (file) {
+               // Должна быть опция "file"
+               if (!file) {
+                  return new Error('Option "file" required');
+               }
+               // И опция "file" должна быть {@link ImportFile}
+               if (typeof file !== 'object' ||
+                  !(file.name && typeof file.name === 'string') ||
+                  !(file.url && typeof file.url === 'string') ||
+                  !(file.uuid && typeof file.uuid === 'string')) {
+                  return new Error('Option "file" must be an ImportFile');
+               }
+               return file;
+            },
+            baseParamsComponent: DataType(String).required(),
+            baseParams: typeIfDefined.bind(null, 'object'),
+            parsers: function (parsers) {
+               // Должна быть опция "parsers"
+               if (!parsers) {
+                  throw new Error('Option "parsers" required');
+               }
+               // и она должна быть объектом
+               if (typeof parsers !== 'object') {
+                  throw new Error('Option "parsers" must be an object');
+               }
+               for (var name in parsers) {
+                  // Каждый элемент набора parsers должно быть {@link ImportParser}
+                  var v = parsers[name];
+                  if (!(name &&
+                        (typeof v === 'object') &&
+                        (v.title && typeof v.title === 'string') &&
+                        (!v.component || typeof v.component === 'string') &&
+                        (!v.args || typeof v.args === 'object')
+                     )) {
+                     return new Error('Parsers items must be an ImportParser');
+                  }
+               }
+               return parsers;
+            },
+            fields: function (fields) {
+               // Должна быть опция "fields"
+               if (!fields) {
+                  return new Error('Option "fields" required');
+               }
+               // и являться либо экземпляром Deferred, либо иметь тип ImportTargetFields, либо иметь тип ImportRemoteCall
+               if (typeof fields !== 'object') {
+                  return new Error('Option "fields" must be an object');
+               }
+               if (fields instanceof Deferred) {
+                  return fields;
+               }
+               var err1 = _validateImportTargetFields(fields);
+               if (!(err1 instanceof Error)) {
+                  return fields;
+               }
+               var err2 = _validateImportRemoteCall(fields);
+               return err2 instanceof Error ? new Error('Option "fields" must be an ImportTargetFields or ImportRemoteCall or Core/Deferred') : fields;
+            },
+            sheets: function (sheets) {
+               // Для типа данных EXCEL или DBF должна быть опция "sheets"
+               if (!sheets) {
+                  return new Error('Option "sheets" required');
+               }
+               // и быть не пустым массивом
+               if (!Array.isArray(sheets) || !sheets.length) {
+                  return new Error('Option "sheets" must be none empty array');
+               }
+               // И каждый элемент массива должен быть {@link ImportSheet}
+               if (!sheets.every(function (v) { return (
+                     typeof v === 'object' &&
+                     (v.name && typeof v.name === 'string') &&
+                     (v.sampleRows && Array.isArray(v.sampleRows) && v.sampleRows.length && v.sampleRows.every(function (v2) { return v2 && Array.isArray(v2) && v2.length && v2.length === v.sampleRows[0].length; }))
+                  ); })) {
+                  return new Error('Option "sheets" items must be an ImportSheet');
+               }
+               return sheets
+            },
+            sheetIndex: typeIfDefined.bind(null, 'number'),
+            sameSheetConfigs: typeIfDefined.bind(null, 'boolean'),
+            columnBindingMapping: typeIfDefined.bind(null, 'object'),
+            mapping: function (mapping) {
+               // Для типа данных CML(CommerceML) должна быть опция "mapping"
+               if (!mapping) {
+                  return new Error('Option "mapping" required');
+               }
+               if (typeof mapping !== 'object') {
+                  return new Error('Option "mapping" must be an object');
+               }
+               // и она должна быть {link ImportMapping}
+               if (!(!mapping.fieldFilter || typeof mapping.fieldFilter === 'function') ||
+                     !(!mapping.fieldProperty || typeof mapping.fieldProperty === 'string') ||
+                     !(mapping.fieldFilter || mapping.fieldProperty) ||
+                     !(!mapping.variants || typeof mapping.variants === 'object') ||
+                     !(!mapping.mapping || typeof mapping.mapping === 'object')
+                  ) {
+                  return new Error('Option "mapping" must be an ImportMapping');
+               }
+               return mapping;
+            },
+            validators: function (validators) {
+               // Если есть опция "validators", то она должна быть массивом
+               if (validators && !Array.isArray(validators)) {
+                  return new Error('Option "validators" must be an Array');
+               }
+               if (validators) {
+                  // И каждый элемент массива должен быть {@link ImportValidator}
+                  if (!validators.every(function (v) { return (
+                        typeof v === 'object' &&
+                        (v.validator && typeof v.validator === 'function') &&
+                        (!v.params || Array.isArray(params)) &&
+                        (!v.errorMessage || typeof v.errorMessage === 'string') &&
+                        (!v.noFailOnError || typeof v.noFailOnError === 'boolean')
+                     ); })) {
+                     return new Error('Option "validators" items must be an ImportValidator');
+                  }
+               }
+               return validators;
+            }
+         };
+      };
 
       /**
        * Показать сообщение пользователю
@@ -707,10 +1174,106 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
 
       // Private methods:
 
+      /**
+       * Получить вложенный под-компонент, если он есть
+       *
+       * @private
+       * @param {SBIS3.CONTROLS/ImportCustomizer/Area} self Этот объект
+       * @param {string} name Имя вложенного под-компонента
+       * @return {object}
+       */
       var _getChildComponent = function (self, name) {
          if (self.hasChildControlByName(name)) {
             return self.getChildControlByName(name);
          }
+      };
+
+      /**
+       * Выбрать из объекта только указанные в списке свойства. Является аналогом Lodash pick, но в отличие от него принимает в качестве элемтов массива properties не только строки, но также и объекты вида имя-значение, где имя будет использовано в качестве имени свойства в результате, а значение - в качестве имени свойства в исходном объекте-источнике
+       *
+       * @private
+       * @param {object} source Объект-источник
+       * @param {Array<string|object>} properties Список выбираемых свойства
+       * @return {object}
+       */
+      var _lodashPick = function (source, properties) {
+         if (source && typeof source === 'object' && Array.isArray(properties) && properties.length) {
+            return properties.reduce(function (result, what) {
+               if (what) {
+                  var type = typeof what;
+                  if (type === 'object') {
+                     for (var to in what) {
+                        var from = what[to];
+                        if (from && typeof from === 'string') {
+                           result[to] = source[from];
+                        }
+                     }
+                  }
+                  else
+                  if (type === 'string') {
+                     result[what] = source[what];
+                  }
+               }
+               return result;
+            }, {});
+         }
+      };
+
+      /**
+       * Проверить, соответствует ли аргумент определению типа {@link ImportRemoteCall}
+       *
+       * @private
+       * @param {*} fields Аргумент
+       * @param {boolean} normalize В случае успеха возвращать экземпляр SBIS3.CONTROLS/ImportCustomizer/RemoteCall
+       * @return {Error|*}
+       */
+      var _validateImportRemoteCall = function (call, normalize) {
+         // Значение должно быть объектом
+         if (!call || typeof call !== 'object') {
+            return new Error('Object required');
+         }
+         // Если получится создать экземпляр RemoteCall - значит это {@link ImportRemoteCall}
+         var instance, err;
+         try { instance = new RemoteCall(call); } catch (ex) { err = ex; }
+         return err || (normalize ? instance : call);
+      };
+
+      /**
+       * Проверить, соответствует ли аргумент определению типа {@link ImportTargetFields}
+       *
+       * @private
+       * @param {*} fields Аргумент
+       * @return {Error|*}
+       */
+      var _validateImportTargetFields = function (fields) {
+         // Значение должно быть объектом
+         if (!fields || typeof fields !== 'object') {
+            return new Error('Object required');
+         }
+         var items = fields.items;
+         // Должно иметь свойство "items", являющееся рекордсетом или массивом объектов
+         if (!items || !(
+               (Array.isArray(items) && items.every(function (v) { return typeof v === 'object'; })) ||
+               (items instanceof RecordSet)
+            )) {
+            return new Error('Wrong fields items');
+         }
+         // Если items не является рекордсетом, то должно иметь свойство "idProperty", являющееся не пустой строкой
+         var idProperty = fields.idProperty;
+         if (Array.isArray(items) ? (!idProperty || typeof idProperty !== 'string') : (idProperty && typeof idProperty !== 'string')) {
+            return new Error('Wrong fields idProperty');
+         }
+         // Должно иметь свойство "displayProperty", являющееся не пустой строкой
+         var displayProperty = fields.displayProperty;
+         if (!displayProperty || typeof displayProperty !== 'string') {
+            return new Error('Wrong fields displayProperty');
+         }
+         // Если есть свойство "parentProperty" - оно должно быть не пустой строкой
+         var parentProperty = fields.parentProperty;
+         if (parentProperty && typeof parentProperty !== 'string') {
+            return new Error('Wrong fields parentProperty');
+         }
+         return fields;
       };
 
 
