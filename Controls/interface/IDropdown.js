@@ -7,11 +7,6 @@ define('Controls/interface/IDropdown', [], function() {
     */
 
    /**
-    * @name Controls/interface/IDropdown#hasSelectedMarker
-    * @cfg {Boolean} Отмечать выбранную запись маркером
-    */
-
-   /**
     * @name Controls/interface/IDropdown#templateOptions.headerConfig
     * @cfg {Object} Конфигурация, по которой строится шаблон шапки
     */
