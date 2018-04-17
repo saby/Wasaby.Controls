@@ -31,7 +31,7 @@ define('SBIS3.CONTROLS/Mixins/ViewSourceMixin', [
                          ignoreFiltersList. Но опцию ignoreFiltersList могут менять динамически, поэтому перед запросом надо
                          удалить ключи из фильтра, которые указаны в ignoreFiltersList. */
                         if(self._options.ignoreFiltersList && self._options.ignoreFiltersList.length) {
-                           this._options.ignoreFiltersList.forEach(function(key) {
+                           self._options.ignoreFiltersList.forEach(function(key) {
                               if(filter.hasOwnProperty(key)) {
                                  delete filter[key];
                               }
@@ -84,7 +84,7 @@ define('SBIS3.CONTROLS/Mixins/ViewSourceMixin', [
          }
 
          /* Если есть historyId и разрешёно применение из истории, то попытаемся достать фильтр из истории */
-         historyDef = _private.getHistoryFilter.call(this, historyId, applyFilterOnLoad);
+         historyDef = _private.getHistoryFilter(this, historyId, applyFilterOnLoad);
    
          historyDef.addCallback(function(historyFilter) {
             /* Подготавливаем фильтр */
