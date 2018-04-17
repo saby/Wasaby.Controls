@@ -3,18 +3,19 @@
  */
 define('SBIS3.CONTROLS/SbisDropdownList',
    [
-    'SBIS3.CONTROLS/DropdownList',
-    'WS.Data/Entity/Model',
-    'SBIS3.CONTROLS/Utils/DropdownUtil',
-    'tmpl!SBIS3.CONTROLS/SbisDropdownList/SbisDropdownListItem',
-    'tmpl!SBIS3.CONTROLS/DropdownList/DropdownListItem',
-    'css!SBIS3.CONTROLS/SbisDropdownList/SbisDropdownList',
-    'Core/core-clone'
-],
+      'SBIS3.CONTROLS/DropdownList',
+      'WS.Data/Entity/Model',
+      'SBIS3.CONTROLS/Utils/DropdownUtil',
+      'tmpl!SBIS3.CONTROLS/SbisDropdownList/SbisDropdownListItem',
+      'tmpl!SBIS3.CONTROLS/DropdownList/DropdownListItem',
+      'css!SBIS3.CONTROLS/SbisDropdownList/SbisDropdownList',
+      'Core/core-clone'
+   ],
 
-   function (DropdownList, Model, DropdownUtil, SbisDropdownListItem) {
+   function(DropdownList, Model, DropdownUtil, SbisDropdownListItem) {
 
       'use strict';
+
       /**
        *
        * @class SBIS3.CONTROLS/SbisDropdownList
@@ -31,8 +32,9 @@ define('SBIS3.CONTROLS/SbisDropdownList',
       var SbisDropdownList = DropdownList.extend(/** @lends SBIS3.CONTROLS/SbisDropdownList.prototype */{
          $protected: {
             _options: {
-                itemTpl: SbisDropdownListItem,
-                /**
+               itemTpl: SbisDropdownListItem,
+
+               /**
                  * @cfg {String} Идентификатор истории ввода.
                  * @remark
                  * Используется <a href="/doc/platform/developmentapl/middleware/input-history-service/">Сервисом истории выбора</a> для сохранения данных о выборе пользователя.
@@ -40,8 +42,9 @@ define('SBIS3.CONTROLS/SbisDropdownList',
                  * Идентификатор должен быть уникальным в рамках всего приложения. Он должен описывать ту функциональную область, в которой применяется.
                  * Пример: ИсходящийПлатеж, КоррИсх, Веха, Смета, Проекта
                  */
-                historyId: null,
-                /**
+               historyId: null,
+
+               /**
                  * @cfg {Boolean} Отображать ли закреплённые пункты меню в блоке истории.
                  * @remark
                  * Для каждого пользователя отображается собственный набор закреплённых пунктов меню.
@@ -50,8 +53,9 @@ define('SBIS3.CONTROLS/SbisDropdownList',
                  * Пункты стилизованы в полужирном начертании.
                  * Количество таких пунктов не ограничено.
                  */
-                pinned: false,
-                /**
+               pinned: false,
+
+               /**
                  * @cfg {Boolean} Отображать ли популярные (часто выбираемые) пункты меню в блоке истории.
                  * @remark
                  * Для каждого пользователя отображается собственный набор популярных пунктов меню.
@@ -60,63 +64,63 @@ define('SBIS3.CONTROLS/SbisDropdownList',
                  * Популярные пункты меню сортируются в алфавитном порядке.
                  * Единовременно может быть отображено не более 7 пунктов меню.
                  */
-                frequent: false
+               frequent: false
             },
-             _historyDeferred: null,
-             _needToRedrawHistory: false,
-             _historyController: null
+            _historyDeferred: null,
+            _needToRedrawHistory: false,
+            _historyController: null
          },
 
-         showPicker: function () {
-             DropdownUtil.showPicker(this, SbisDropdownList);
+         showPicker: function() {
+            DropdownUtil.showPicker(this, SbisDropdownList);
          },
 
-         _clickItemHandler : function (e) {
-             var row = $(e.target).closest('.' + this._getItemClass()),
-                 itemId = this._getIdByRow(row),
-                 item = this.getItems().getRecordById(itemId),
-                 newItem;
+         _clickItemHandler: function(e) {
+            var row = $(e.target).closest('.' + this._getItemClass()),
+               itemId = this._getIdByRow(row),
+               item = this.getItems().getRecordById(itemId),
+               newItem;
 
-             if (row.length && (e.button === 0)) {
-                 if (this._historyController.getRecent()) {
-                     newItem = new Model({
-                         rawData: item.getRawData(),
-                         adapter: item.getAdapter()
-                     });
+            if (row.length && (e.button === 0)) {
+               if (this._historyController.getRecent()) {
+                  newItem = new Model({
+                     rawData: item.getRawData(),
+                     adapter: item.getAdapter()
+                  });
 
-                     this._historyController.addToRecent(itemId, newItem);
-                     this._needToRedrawHistory = true;
-                 }
-             }
+                  this._historyController.addToRecent(itemId, newItem);
+                  this._needToRedrawHistory = true;
+               }
+            }
 
-             SbisDropdownList.superclass._clickItemHandler.apply(this, arguments);
+            SbisDropdownList.superclass._clickItemHandler.apply(this, arguments);
          },
 
          setSelectedKeys: function(idArray) {
             var id = idArray && idArray[0];
 
-            if(this._historyController && !this._options.multiselect && id){
-                this._historyController.addToHistory(id);
+            if (this._historyController && !this._options.multiselect && id) {
+               this._historyController.addToHistory(id);
             }
             SbisDropdownList.superclass.setSelectedKeys.apply(this, arguments);
          },
 
          setPinned: function(items) {
-             if(!this._historyController) {
-                this._options.pinned = items;
-             }else {
-                this._historyController.setPinned(items);
-                this.setItems(this._historyController.prepareHistory());
-             }
+            if (!this._historyController) {
+               this._options.pinned = items;
+            } else {
+               this._historyController.setPinned(items);
+               this.setItems(this._historyController.prepareHistory());
+            }
          },
 
          getPinned: function() {
-             this._historyController.getPinned();
+            this._historyController.getPinned();
          },
 
          _getIdByRow: function() {
-           var id =  SbisDropdownList.superclass._getIdByRow.apply(this, arguments);
-           return this._historyController.getOriginId(id);
+            var id =  SbisDropdownList.superclass._getIdByRow.apply(this, arguments);
+            return this._historyController.getOriginId(id);
          },
 
          getDefaultId: function() {
@@ -124,9 +128,9 @@ define('SBIS3.CONTROLS/SbisDropdownList',
             return (this._historyController && this._historyController.getOriginId(id)) || id;
          },
 
-         destroy : function(){
-             SbisDropdownList.superclass.destroy.apply(this, arguments);
-             this._historyController && this._historyController.destroy();
+         destroy: function() {
+            SbisDropdownList.superclass.destroy.apply(this, arguments);
+            this._historyController && this._historyController.destroy();
          }
       });
 
