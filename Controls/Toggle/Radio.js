@@ -11,7 +11,7 @@ define('Controls/Toggle/Radio', [
          self._sourceController = new SourceController({
             source: source
          });
-         return self._sourceController.load().addCallback(function (items) {
+         return self._sourceController.load().addCallback(function(items) {
             return items;
          });
       }
@@ -29,34 +29,34 @@ define('Controls/Toggle/Radio', [
       },
 
       prepareItemClass: function(item, items, options) {
-         if (item  === items.at(0)){
-            return "controls-RadioGroup_first";
+         if (item  === items.at(0)) {
+            return 'controls-RadioGroup_first';
          }
-         return "controls-RadioGroup_default_" + (options.direction === "horizontal" ? "horizontal" : "vertical");
+         return 'controls-RadioGroup_default_' + (options.direction === 'horizontal' ? 'horizontal' : 'vertical');
       },
 
       prepareItemCaptionClass: function(options) {
-         var captionClass="controls-RadioItem__caption"+(options.size ==="l" ? '_size-l': '_size-m') + " controls-RadioItem__caption";
+         var captionClass = 'controls-RadioItem__caption' + (options.size === 'l' ? '_size-l': '_size-m') + ' controls-RadioItem__caption';
          if (options.selected) {
-            captionClass+= "_selected";
-            if (options.size === "m") {
-               captionClass+= "_size-m";
+            captionClass+= '_selected';
+            if (options.size === 'm') {
+               captionClass+= '_size-m';
             } else {
-               captionClass+= "_size-l";
+               captionClass+= '_size-l';
             }
          } else {
-            captionClass+= "_unselected";
+            captionClass+= '_unselected';
             if (options.readOnly) {
-               captionClass+= "_disabled";
+               captionClass+= '_disabled';
             } else {
-               captionClass+= "_enabled";
+               captionClass+= '_enabled';
             }
          }
          return captionClass;
       },
 
-      selectKeyChanged: function (e, item, keyProperty) {
-         this._notify("selectKeyChange", item.get(keyProperty));
+      selectKeyChanged: function(e, item, keyProperty) {
+         this._notify('selectKeyChange', item.get(keyProperty));
       }
    });
 
