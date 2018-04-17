@@ -1,28 +1,24 @@
-<div class="controls-ImportCustomizer-Area">
+<div class="controls-ImportCustomizer-Area{{dialogMode ? ' controls-ImportCustomizer-Area_dialog' : ''}}">
    <ws:if data="{{dialogMode}}">
-      <div class="controls-ImportCustomizer-Area__head">
+      <div class="controls-ImportCustomizer-Area__head  ws-window-titlebar">
          <div class="controls-ImportCustomizer-Area__head-title">
-            <div class="controls-ImportCustomizer-Area__head-title-left">
-               <ws:if data="{{dialogTitle}}">{{dialogTitle}}</ws:if><ws:else>{[НастройщикИмпорта@@Настройка импорта]}</ws:else>:
-               <SBIS3.CONTROLS:Link
-                  className="controls-ImportCustomizer-Area__head-title-link"
-                  href="{{file.url}}"
-                  caption="{{file.name}}"
-                  inNewTab="{{true}}"
-               />
-            </div>
-            <div class="controls-ImportCustomizer-Area__head-title-right">
-               <SBIS3.CONTROLS:Button
-                  className="controls-ImportCustomizer-Area__applyButton"
-                  command="complete" primary="true"
-                  >
-                  <ws:caption>
-                     <ws:if data="{{dialogButtonTitle}}">{{dialogButtonTitle}}</ws:if>
-                     <ws:else>{[НастройщикИмпорта@@Импортировать]}</ws:else>
-                  </ws:caption>
-               </SBIS3.CONTROLS:Button>
-            </div>
+            <ws:if data="{{dialogTitle}}">{{dialogTitle}}</ws:if><ws:else>{[НастройщикИмпорта@@Настройка импорта]}</ws:else>:
+            <SBIS3.CONTROLS:Link
+               className="controls-ImportCustomizer-Area__head-title-link"
+               href="{{file.url}}"
+               caption="{{file.name}}"
+               inNewTab="{{true}}"
+            />
          </div>
+         <SBIS3.CONTROLS:Button
+            className="controls-ImportCustomizer-Area__applyButton"
+            command="complete" primary="true"
+            >
+            <ws:caption>
+               <ws:if data="{{dialogButtonTitle}}">{{dialogButtonTitle}}</ws:if>
+               <ws:else>{[НастройщикИмпорта@@Импортировать]}</ws:else>
+            </ws:caption>
+         </SBIS3.CONTROLS:Button>
       </div>
    </ws:if>
    <SBIS3.CONTROLS:ScrollContainer name="controls-ImportCustomizer-Area__scrollContainer" class="controls-ImportCustomizer-Area__body controls-ScrollContainer__flex">

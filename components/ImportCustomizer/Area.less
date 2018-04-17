@@ -1,13 +1,10 @@
 
-@width_ImportCustomizer-Area: 900px;
-@border-bottom_ImportCustomizer-Area-head: 1px solid #CCCCCC;
-@padding_ImportCustomizer-Area-head: 8px 0 7px 12px;
-@background-color_ImportCustomizer-Area-head: #f7f4f0;
-@height_ImportCustomizer-Area-head-title: 24px;
+@width_ImportCustomizer-Area-dialog: 900px;
+@padding_ImportCustomizer-Area-dialog: 39px 0 0 0;
+@padding_ImportCustomizer-Area-head: 0 52px 0 12px;
 @color_ImportCustomizer-Area-head-title-left: #313E78;
 @font-size_ImportCustomizer-Area-head-title-left: 18px;
 @font-weight_ImportCustomizer-Area-head-title-left: bold;
-@margin-right_ImportCustomizer-Area-head-title-right: 52px;
 @padding_ImportCustomizer-Area-body: 10px 0;
 @margin_ImportCustomizer-Area-body-box: 0 0 10px 0;
 @border-bottom_ImportCustomizer-Area-body-box: 1px solid #f7f4f0;
@@ -15,34 +12,32 @@
 @padding_ImportCustomizer-Area-body-box-not-pad: 0 0 10px 0;
 
 .controls-ImportCustomizer-Area {
-   .flexbox();
-   .flex-direction(column);
-   width: @width_ImportCustomizer-Area;
-   height: 100%;
+   box-sizing: border-box;
+}
+
+.controls-ImportCustomizer-Area_dialog {
+    width: @width_ImportCustomizer-Area-dialog;
+    height: 100%;
+    padding: @padding_ImportCustomizer-Area-dialog;
 }
 
 .controls-ImportCustomizer-Area__head {
-   box-sizing: border-box;
-   .flex-shrink(0);
-   border-bottom: @border-bottom_ImportCustomizer-Area-head;
+   top: 0;
+   .flexbox();
+   .flex-direction(row);
+   .align-items(center);
    padding: @padding_ImportCustomizer-Area-head;
-   background-color: @background-color_ImportCustomizer-Area-head;
 }
 
 .controls-ImportCustomizer-Area__head-title {
-   height: @height_ImportCustomizer-Area-head-title;
-}
-
-.controls-ImportCustomizer-Area__head-title-left {
-   float: left;
+   .flex-grow(1);
    color: @color_ImportCustomizer-Area-head-title-left;
    font-size: @font-size_ImportCustomizer-Area-head-title-left;
    font-weight: @font-weight_ImportCustomizer-Area-head-title-left;
 }
 
-.controls-ImportCustomizer-Area__head-title-right {
-   float: right;
-   margin-right: @margin-right_ImportCustomizer-Area-head-title-right;
+.controls-ImportCustomizer-Area__applyButton {
+   .flex-shrink(0);
 }
 
 .controls-ImportCustomizer-Area__body {
