@@ -28,18 +28,22 @@ define('Controls/Toggle/Radio', [
          }
       },
 
-      ItemClass: function(item, items) {
-         if (item === items.at(items.getCount()-1)){
-            if (item  === items.at(0)){
-               return "controls-RadioGroup_first-and-last";
-            } else {
-               return "controls-RadioGroup_last";
-            }
-         }
+      prepareItemClass: function(item, items, options) {
          if (item  === items.at(0)){
             return "controls-RadioGroup_first";
          }
-         return "controls-RadioGroup_default";
+         return "controls-RadioGroup_default_" + (options.direction === "horizontal" ? "horizontal" : "vertical");
+      },
+
+      prepareItemCaptionClass: function(item, items, options) {
+         if (item  === items.at(0)){
+            return "controls-RadioGroup_first";
+         }
+         return "controls-RadioGroup_default_" + (options.direction === "horizontal" ? "horizontal" : "vertical");
+      },
+
+      selectKeyChanged: function (e, item, keyProperty) {
+         this._notify("selectKeyChange", item.get(keyProperty));
       }
    });
 

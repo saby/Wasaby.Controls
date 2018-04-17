@@ -49,7 +49,11 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
 
    var RadioGroupDemo = Control.extend({
       _template: template,
-      _source: source
+      _source: source,
+      _selectKey: null,
+      changeKey: function (e, key) {
+         this._selectKey=key;
+      }
    });
    return RadioGroupDemo;
 });

@@ -3,5 +3,5 @@
         <circle attr:xmlns="http://www.w3.org/2000/svg" attr:cx="6" attr:cy="6" attr:r="4" attr:class="controls-RadioGroup__borderCircle controls-RadioGroup__borderCircle_{{readOnly ? 'enabled' : 'disabled'}}"/>
         <circle attr:xmlns="http://www.w3.org/2000/svg" attr:cx="6" attr:cy="6" attr:r="2" attr:class="controls-RadioGroup__innerCircle controls-RadioGroup__innerCircle_{{selected ? (readOnly ? 'selected_enabled' : 'selected_disabled') : 'unselected'}}"/>
     </svg>
-    <span attr:class="controls-RadioItem_caption">{{item["caption"]}}</span>
+    <span attr:class="controls-RadioItem_caption_{{selected ? 'selected' : (readOnly ? 'unselected_enabled' : 'unselected_disabled')}} {{prepareItemCaptionClass(item, _options)}}">{{item["caption"]}}</span>
 </span>

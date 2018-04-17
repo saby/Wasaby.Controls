@@ -1,7 +1,8 @@
 <div class="wrapper">
     <Controls.Toggle.Radio
+            on:selectKeyChange="changeKey()"
             keyProperty="id"
-            selectedKey="2"
+            selectedKey="{{_selectKey}}"
             source="{{_source}}"
             direction="vertical"
             enabled="{{true}}"/>

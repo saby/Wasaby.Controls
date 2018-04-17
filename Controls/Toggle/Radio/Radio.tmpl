@@ -1,8 +1,9 @@
-<div class="controls-GroupRadio">
+<div class="controls-GroupRadio{{isEnabled() ? '_enabled'}}">
     <div class="controls-RadioGroup__wrapper_{{_options.direction}}">
         <ws:for data="item in _items">
             <ws:partial template="tmpl!Controls/Toggle/Radio/resources/ItemTemplate"
-                        attr:class="{{ItemClass(item, _items)}}"
+                        on:click="selectKeyChanged(item, _options.keyProperty)"
+                        attr:class="{{prepareItemClass(item, _items, _options)}}"
                         item="{{item}}"
                         readOnly="{{isEnabled()}}"
                         selected="{{item.get(_options.keyProperty) === _options.selectedKey}}"/>

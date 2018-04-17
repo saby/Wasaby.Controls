@@ -1,13 +1,17 @@
-.controls-RadioItem_selected {
-   content: @content-RadioGroup_selected;
+.controls-GroupRadio_enabled {
+   cursor: pointer;
 }
 
-.controls-RadioItem_unselected {
-   content: @content-RadioGroup_unselected;
+.controls-RadioGroup_default_horizontal {
+   padding-left: @spacing-between-radioItems_horizontal;
+}
+
+.controls-RadioGroup_default_vertical {
+   padding-left: @spacing-between-radioItems_vertical;
 }
 
 .controls-RadioItem_wrapper {
-   height: 24px;
+   height: @height_RadioItem;
    .inline-flexbox();
    .align-items(center);
 }
@@ -17,48 +21,64 @@
 }
 
 .controls-RadioItem_caption {
-   font-size: 14px;
+   font-size: @font-size_RadioItem;
+}
+
+.controls-RadioItem_caption_selected {
+   color: @color_RadioItem_caption_selected;
+}
+
+.controls-RadioItem_caption_unselected_disabled {
+   color: @color_RadioItem_caption_unselected_disabled;
+}
+
+.controls-RadioItem_caption_unselected_enabled {
+   color: @color_RadioItem_caption_unselected_enabled;
 }
 
 .controls-RadioGroup__wrapper_horizontal {
-   .flexbox();
+   .inline-flexbox();
    .flex-direction(row);
 }
 
 .controls-RadioGroup__wrapper_vertical {
-   .flexbox();
+   .inline-flexbox();
    .flex-direction(column);
 }
 
 .controls-RadioGroup__innerCircle_selected_enabled {
-   fill: #FF7033;
+   fill: @fill_RadioGroup_innerCircle_selected_enabled;
 }
 
 .controls-RadioGroup__innerCircle_selected_disabled {
-   fill: #313E78;
+   fill: @fill_RadioGroup_innerCircle_selected_disabled;
 }
 
 .controls-RadioGroup__innerCircle_unselected {
-   fill: none;
+   fill: @fill_RadioGroup_innerCircle_unselected;
 }
 
 .controls-RadioGroup__borderCircle {
-   stroke-width: 2px;
-   fill: none;
+   stroke-width: @stroke-width_RadioGroup_borderCircle;
+   fill: @fill_RadioGroup_borderCircle;
 }
 
 .controls-RadioGroup__borderCircle_enabled {
-   stroke: #CCCCCC;
+   stroke: @stroke_RadioGroup_borderCircle_enabled;
 }
 
 .controls-RadioGroup__borderCircle_disabled {
-   stroke: #e4e4e4;
+   stroke: @stroke_RadioGroup_borderCircle_disabled;
 }
 
 .ws-is-no-touch {
    .controls-RadioItem_wrapper:hover {
       .controls-RadioGroup__borderCircle_enabled {
-         stroke: #FF7033;
+         stroke: @stroke_RadioGroup_borderCircle_enabled_hovered;
+      }
+
+      .controls-RadioItem_caption_unselected_enabled {
+         text-decoration: underline;
       }
    }
 }
