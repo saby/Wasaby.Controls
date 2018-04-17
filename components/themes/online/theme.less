@@ -73,8 +73,10 @@
    border-color: @border-color_Menu;
 }
 
-.controls-Popup__touchScroll-fix .controls-ScrollContainer .controls-ScrollContainer__content, .controls-Menu__Popup {
-   -webkit-overflow-scrolling: touch!important;
+.controls-Popup__touchScroll-fix {
+   .controls-ScrollContainer .controls-ScrollContainer__content, &.controls-Menu__Popup, &.controls-DropdownList__picker {
+      -webkit-overflow-scrolling: touch!important;
+   }
 }
 
 .controls-DataGridView__td .controls-TreeView__searchBreadCrumbs {
