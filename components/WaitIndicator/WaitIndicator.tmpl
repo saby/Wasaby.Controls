@@ -6,7 +6,7 @@
         {{overlay ? 'ws-wait-indicator_overlay-' + overlay}}
         {{mods && mods.length ? 'ws-wait-indicator_mod-' + mods.join(' ws-wait-indicator_mod-') }}
         "
-        {{rect || z ? ' style="' + (rect ? 'left:' + rect.x + 'px; right:' + rect.y + 'px; width:' + rect.w + 'px; height:' + rect.h + 'px;' : '') + (z ? 'z-index:' + z : '') + '"'}}
-    >
+     style="{{ (rect ? 'left:' + rect.x + 'px; right:' + rect.y + 'px; width:' + rect.w + 'px; height:' + rect.h + 'px;' : '') + (z ? 'z-index:' + z : '')}}"
+>
     <div class="ws-wait-indicator-in">{{message}}</div>
 </div>

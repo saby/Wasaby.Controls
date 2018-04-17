@@ -1,93 +1,75 @@
 <div class="controls-ImportCustomizer-Area">
-   <div class="controls-ImportCustomizer-Area__head">
-      <div class="controls-ImportCustomizer-Area__head-title">
-         <div class="controls-ImportCustomizer-Area__head-title-left">
-            <ws:if data="{{title}}">{{title}}</ws:if><ws:else>{[НастройщикИмпорта@@Настройка импорта]}</ws:else>:
-            <SBIS3.CONTROLS:Link
-               class="controls-ImportCustomizer-Area__head-title-link"
-               href="{{file.url}}"
-               caption="{{file.name}}"
-               inNewTab="{{true}}"
-            />
-         </div>
-         <div class="controls-ImportCustomizer-Area__head-title-right">
-            <SBIS3.CONTROLS:Button
-               class="controls-ImportCustomizer-Area__applyButton"
-               command="complete" primary="true"
-               >
-               <ws:caption>
-                  <ws:if data="{{applyButtonTitle}}">{{applyButtonTitle}}</ws:if>
-                  <ws:else>{[НастройщикИмпорта@@Импортировать]}</ws:else>
-               </ws:caption>
-            </SBIS3.CONTROLS:Button>
+   <ws:if data="{{dialogMode}}">
+      <div class="controls-ImportCustomizer-Area__head">
+         <div class="controls-ImportCustomizer-Area__head-title">
+            <div class="controls-ImportCustomizer-Area__head-title-left">
+               <ws:if data="{{dialogTitle}}">{{dialogTitle}}</ws:if><ws:else>{[НастройщикИмпорта@@Настройка импорта]}</ws:else>:
+               <SBIS3.CONTROLS:Link
+                  className="controls-ImportCustomizer-Area__head-title-link"
+                  href="{{file.url}}"
+                  caption="{{file.name}}"
+                  inNewTab="{{true}}"
+               />
+            </div>
+            <div class="controls-ImportCustomizer-Area__head-title-right">
+               <SBIS3.CONTROLS:Button
+                  className="controls-ImportCustomizer-Area__applyButton"
+                  command="complete" primary="true"
+                  >
+                  <ws:caption>
+                     <ws:if data="{{dialogButtonTitle}}">{{dialogButtonTitle}}</ws:if>
+                     <ws:else>{[НастройщикИмпорта@@Импортировать]}</ws:else>
+                  </ws:caption>
+               </SBIS3.CONTROLS:Button>
+            </div>
          </div>
       </div>
-   </div>
-   <SBIS3.CONTROLS:ScrollContainer class="controls-ImportCustomizer-Area__body controls-ScrollContainer__flex">
+   </ws:if>
+   <SBIS3.CONTROLS:ScrollContainer name="controls-ImportCustomizer-Area__scrollContainer" class="controls-ImportCustomizer-Area__body controls-ScrollContainer__flex">
       <ws:content>
-         <ws:if data="{{_isNeeds.sheet && sheets && sheets.length}}">
+         <ws:if data="{{_isUsedSubview.sheet}}">
             <SBIS3.CONTROLS:ImportCustomizer:Sheet:View
-               class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-sheet"
+               className="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-sheet"
                name="controls-ImportCustomizer-Area__sheet"
-               allSheetsTitle="{{allSheetsTitle}}"
-               dataType="{{dataType}}"
-               sheetTitles="{{_sheetsTitles}}"
-               sheetIndex="{{sheetIndex}}"
+               scope="{{_scopes.sheet}}"
             />
          </ws:if>
-         <ws:if data="{{_isNeeds.baseParams}}">
+         <ws:if data="{{_isUsedSubview.baseParams}}">
             <ws:partial
                template="{{baseParamsComponent}}"
-               scope="{{baseParams}}"
-               dataType="{{dataType}}"
-               fields="{{fields}}"
-               class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-baseParams"
+               className="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-baseParams"
                name="controls-ImportCustomizer-Area__baseParams"
+               scope="{{_scopes.baseParams}}"
             />
          </ws:if>
-         <ws:if data="{{_isNeeds.provider}}">
+         <ws:if data="{{_isUsedSubview.provider}}">
             <SBIS3.CONTROLS:ImportCustomizer:Provider:View
-               class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-provider"
+               className="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-provider"
                name="controls-ImportCustomizer-Area__provider"
-               dataType="{{dataType}}"
-               parsers="{{_parserItems}}"
-               parser="{{_parserName}}"
-               skippedRows="{{_skippedRows}}"
-               separator="{{_parserSeparator}}"
+               scope="{{_scopes.provider}}"
             />
          </ws:if>
-         <ws:if data="{{_isNeeds.providerArgs}}">
+         <ws:if data="{{_isUsedSubview.providerArgs}}">
             <Lib:Control:TemplatedArea:TemplatedArea
-               template="{{_providerArgsComponent}}"
-               class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-not-pad controls-ImportCustomizer-Area__body__box-providerArgs"
+               className="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-not-pad controls-ImportCustomizer-Area__body__box-providerArgs"
                name="controls-ImportCustomizer-Area__providerArgs"
-               visible="{{!!_providerArgsComponent}}"
-               dataType="{{dataType}}"
-               componentOptions="{{_providerArgsOptions}}"
+               template="{{_scopes.providerArgs.component}}"
+               visible="{{!!_scopes.providerArgs.component}}"
+               componentOptions="{{_scopes.providerArgs.options}}"
             />
          </ws:if>
-         <ws:if data="{{_isNeeds.columnBinding}}">
+         <ws:if data="{{_isUsedSubview.columnBinding}}">
             <SBIS3.CONTROLS:ImportCustomizer:ColumnBinding:View
-               class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-not-pad controls-ImportCustomizer-Area__body__box-columnBinding"
+               className="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-not-pad controls-ImportCustomizer-Area__body__box-columnBinding"
                name="controls-ImportCustomizer-Area__columnBinding"
-               dataType="{{dataType}}"
-               columnCaption="{{bindingColumnCaption}}"
-               columnTitle="{{bindingColumnTitle}}"
-               rows="{{_columnsBindingRows}}"
-               fields="{{fields}}"
-               skippedRows="{{_skippedRows}}"
+               scope="{{_scopes.columnBinding}}"
             />
          </ws:if>
-         <ws:if data="{{_isNeeds.mapper}}">
+         <ws:if data="{{_isUsedSubview.mapper}}">
             <SBIS3.CONTROLS:ImportCustomizer:Mapper:View
-               class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-not-pad controls-ImportCustomizer-Area__body__box-mapper"
+               className="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-not-pad controls-ImportCustomizer-Area__body__box-mapper"
                name="controls-ImportCustomizer-Area__mapper"
-               dataType="{{dataType}}"
-               fields="{{fields}}"
-               fieldFilter="{{_mapperfieldFilter}}"
-               fieldProperty="{{_mapperFieldProperty}}"
-               variants="{{_mapperVariants}}"
-               accordances="{{_mapperAccordances}}"
+               scope="{{_scopes.mapper}}"
             />
          </ws:if>
       </ws:content>

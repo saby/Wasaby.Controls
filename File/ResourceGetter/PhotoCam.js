@@ -46,7 +46,7 @@ define("File/ResourceGetter/PhotoCam", ["require", "exports", "tslib", "File/Res
         }
         /**
          * Осуществляет получение изображения с веб-камеры устройства
-         * @return {Core/Deferred<Array<File/LocalFile | File/LocalFileLink>>}
+         * @return {Core/Deferred.<Array.<File/LocalFile | File/LocalFileLink>>}
          * @method
          * @name File/ResourceGetter/PhotoCam#getFiles
          * @see File/LocalFile
@@ -73,7 +73,7 @@ define("File/ResourceGetter/PhotoCam", ["require", "exports", "tslib", "File/Res
         ;
         /**
          * Возможен ли выбор файлов
-         * @return {Core/Deferred<Boolean>}
+         * @return {Core/Deferred.<Boolean>}
          * @method
          * @name File/ResourceGetter/PhotoCam#canExec
          */

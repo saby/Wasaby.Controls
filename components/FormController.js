@@ -20,7 +20,7 @@ define('SBIS3.CONTROLS/FormController', [
    'i18n!SBIS3.CONTROLS/FormController',
    'css!SBIS3.CONTROLS/FormController/FormController'
 ],
-   function( cContext, coreClone, cMerge, CommandDispatcher, EventBus, Deferred, IoC, cInstance, forAliveOnly, doAutofocus, isEmpty, CompoundControl, cIndicator, Record, SbisService, InformationPopupManager, OpenDialogUtil, TitleManager) {
+function(cContext, coreClone, cMerge, CommandDispatcher, EventBus, Deferred, IoC, cInstance, forAliveOnly, doAutofocus, isEmpty, CompoundControl, cIndicator, Record, SbisService, InformationPopupManager, OpenDialogUtil, TitleManager) {
    /**
     * Компонент, на основе которого создают диалог, данные которого инициализируются по записи.
     * В частном случае компонент применяется для создания <a href='/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/'>диалогов редактирования записи</a>.
@@ -123,20 +123,24 @@ define('SBIS3.CONTROLS/FormController', [
          _onRecordChangeHandler: undefined,
          _needUpdateAlways: false, //Сохранять запись всегда, даже когда не было изменений
          _options: {
+
             /**
              * @cfg {String} Устанавливает первичный ключ записи {@link record}.
              * @see record
              * @see dataSource
              */
             key: null,
+
             /**
              * @cfg {String} Поле записи, которое является идентификатором записи.
              */
             idProperty: undefined,
+
             /**
              * @cfg {String} Поле записи, в котором хранится ссылка на текущую страницу.
              */
             urlProperty: undefined,
+
             /**
              * @cfg {WS.Data/Entity/Model} Устанавливает запись, по которой произведена инициализация данных диалога.
              * @see setRecord
@@ -145,26 +149,31 @@ define('SBIS3.CONTROLS/FormController', [
              * @see key
              */
             record: null,
+
             /**
              * @cfg {Boolean} Устанавливает сохранение только изменённых полей.
              */
             diffOnly: false,
+
             /**
              * @cfg {Object} Устанавливает ассоциативный массив, который используют только при создании новой записи для инициализации её начальными значениями.
              */
             initValues: null,
+
             /**
              * @cfg {Object} Дополнительные мета-данные, которые будут переданы в метод прочитать
              */
             readMetaData: null,
-             /**
+
+            /**
              * @cfg {String} Устанавливает текст, отображаемый рядом с индикатором при сохранении записи командной {@link update}.
              * @translatable
              * @see update
              * @see submit
              * @see onUpdateModel
              */
-            indicatorSavingMessage:  rk('Подождите, идёт сохранение'),
+            indicatorSavingMessage: rk('Подождите, идёт сохранение'),
+
             /**
              * @cfg {dataSource} Конфигурация источника данных диалога.
              * @remark
@@ -192,11 +201,12 @@ define('SBIS3.CONTROLS/FormController', [
       $constructor: function() {
          this._publish('onFail', 'onReadModel', 'onBeforeUpdateModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel', 'onAfterFormLoad');
          this._declareCommands();
+
          // ищем панель как ближайший предок LikeWindowMixin, именно он является панелью, а не getTopParent.
          // у панели может быть задан parent и getTopParent вернет не то что надо
          this._panel = this.findParent(function(parent) {
-                 return cInstance.instanceOfMixin(parent, 'Lib/Mixins/LikeWindowMixin');
-             }) || this.getTopParent();
+            return cInstance.instanceOfMixin(parent, 'Lib/Mixins/LikeWindowMixin');
+         }) || this.getTopParent();
          this._initHandlers();
          this._subscribeToEvents();
 
@@ -209,8 +219,7 @@ define('SBIS3.CONTROLS/FormController', [
 
          if (this._getDelayedRemoteWayDeferred()) {
             this._processingRecordDeferred();
-         }
-         else {
+         } else {
             //Если не дожидаемся ответа от БЛ, то до показа панели покажем оверлей
             this._toggleOverlay(true);
          }
@@ -243,13 +252,13 @@ define('SBIS3.CONTROLS/FormController', [
 
       _subscribeToEvents: function() {
          this.subscribeTo(EventBus.channel('navigation'), 'onBeforeNavigate', this._onBeforeNavigateHandler);
-         window.addEventListener("beforeunload", this._onBeforeUnloadHandler);
+         window.addEventListener('beforeunload', this._onBeforeUnloadHandler);
          this._panel.subscribe('onBeforeClose', this._onBeforeCloseHandler);
          this._panel.subscribe('onAfterShow', this._onAfterShowHandler);
          this._subscribeToRecordChange();
       },
 
-      _declareCommands: function(){
+      _declareCommands: function() {
          CommandDispatcher.declareCommand(this, 'read', this._read);
          CommandDispatcher.declareCommand(this, 'update', this.update);
          CommandDispatcher.declareCommand(this, 'destroy', this._destroyModel);
@@ -260,15 +269,15 @@ define('SBIS3.CONTROLS/FormController', [
 
       _processingRecordDeferred: function() {
          var receiptRecordDeferred = this._getDelayedRemoteWayDeferred(),
-             needUpdateKey = !this._options.key,
-             eventName = needUpdateKey ? 'onCreateModel' : 'onReadModel',
-             config = {
+            needUpdateKey = !this._options.key,
+            eventName = needUpdateKey ? 'onCreateModel' : 'onReadModel',
+            config = {
                hideIndicator: true,
                eventName: eventName
-             },
-             self = this;
+            },
+            self = this;
          if (receiptRecordDeferred) {
-            receiptRecordDeferred.addCallback(function (record) {
+            receiptRecordDeferred.addCallback(function(record) {
                self.setRecord(record, needUpdateKey);
                return record;
             });
@@ -276,7 +285,7 @@ define('SBIS3.CONTROLS/FormController', [
          }
       },
 
-      _getDelayedRemoteWayDeferred: function(){
+      _getDelayedRemoteWayDeferred: function() {
          var receiptRecordDeferred = this._options._receiptRecordDeferred;
          return cInstance.instanceOfModule(receiptRecordDeferred, 'Core/Deferred') ? receiptRecordDeferred : null;
       },
@@ -287,10 +296,11 @@ define('SBIS3.CONTROLS/FormController', [
          if (this.getRecord() && this.getRecord().isChanged()) {
             //Почти во всех браузер была убрана возможность настраивать кастомный текст для диалогового окна https://www.chromestatus.com/feature/5349061406228480
             //Для того чтобы показать вопрос - из события нужно вернуть строку. Содержание строки будет проигнорировано https://developer.mozilla.org/en-US/docs/Web/Events/beforeunload
-            var message = "Редактируемая запись была изменена";
+            var message = 'Редактируемая запись была изменена';
             e.returnValue = message;
             return message;
          }
+
          //Нужно вернуть undefined, любой другой результат ie воспримет как текст для окна с вопросом
          return undefined;
       },
@@ -303,18 +313,17 @@ define('SBIS3.CONTROLS/FormController', [
          this._notifyOnAfterFormLoadEvent();
       },
 
-      _notifyOnAfterFormLoadEvent: function(){
+      _notifyOnAfterFormLoadEvent: function() {
          //Если у нас показалась панель и есть рекорд, то в этом случае верстка по установленной записи уже построена и мы просто кидаем событие
          //Если же записи нет, дожидаемся, когда получим ее с БЛ.
-         if (this.getRecord()){
+         if (this.getRecord()) {
             this._actionNotify('onAfterFormLoad');
-         }
-         else{
+         } else {
             this._panelReadyDeferred.callback();
          }
       },
 
-      _onBeforeClose: function(event, result){
+      _onBeforeClose: function(event, result) {
          //Обработчик _onBeforeClose универсален: при фактической операции закрытия панели мы можем попасть сюда несколько раз, т.к.
          //при определенных условиях прерываем логику закрытия панели и/или сами вызываем команду на закрытие.
          //Есть 2 типовых операции, когда мы попадаем сюда несколько раз, прежде чем закрыться:
@@ -325,27 +334,26 @@ define('SBIS3.CONTROLS/FormController', [
          //TODO: Сейчас нет механизма, позволяющего работать с панелью не через события и влиять на ее работу. хорошо бы такой иметь
 
          var self = this,
-             record = self.getRecord(),
-             closeAfterConfirmDialogHandler = self._isConfirmDialogShowed();
+            record = self.getRecord(),
+            closeAfterConfirmDialogHandler = self._isConfirmDialogShowed();
 
          if (!record || (record.getState() === Record.RecordState.DELETED)) {
             //Если нет записи или она была удалена, то закрываем панель
          }
+
          //Если запись еще сохраняется, то отменяем закрытие (защита от множественного вызова закрытия панели)
          else if (self._isRecordSaving()) {
             event.setResult(false);
-         }
-         else if (result !== undefined || !record.isChanged() && !self._panel.getChildPendingOperations().length) {
-            if (self._needDestroyModel(closeAfterConfirmDialogHandler, result)){
+         } else if (result !== undefined || !record.isChanged() && !self._panel.getChildPendingOperations().length) {
+            if (self._needDestroyModel(closeAfterConfirmDialogHandler, result)) {
                self._destroyModel({
                   closeResult: result
-               }).addBoth(function(){
+               }).addBoth(function() {
                   self._closePanel(result);
                });
                event.setResult(false);
             }
-         }
-         else {
+         } else {
             event.setResult(false);
             if (!closeAfterConfirmDialogHandler) {
                self._showConfirmDialog();
@@ -353,7 +361,7 @@ define('SBIS3.CONTROLS/FormController', [
          }
       },
 
-      _needDestroyModel: function (closeAfterConfirmDialogHandler, closeResult) {
+      _needDestroyModel: function(closeAfterConfirmDialogHandler, closeResult) {
          //Дестроим запись, когда выполнены три условия
          //1. если это было создание
          //2. если есть ключ (метод создать его вернул)
@@ -361,31 +369,31 @@ define('SBIS3.CONTROLS/FormController', [
          return this.isNewRecord() && this._getRecordId() && (!closeAfterConfirmDialogHandler && !this.getRecord().isChanged() || closeResult === false);
       },
 
-      _onBeforeNavigate: function(event, activeElement, isIconClick){
+      _onBeforeNavigate: function(event, activeElement, isIconClick) {
          //Если показан диалог о сохранении, то не даем перейти в другой раздел аккордеона, пока его не закроют
          if (!isIconClick) {
             event.setResult(!this._isConfirmDialogShowed());
          }
       },
 
-      _isConfirmDialogShowed: function(){
-         return this._confirmDialog && this._confirmDialog.isVisible();
+      _isConfirmDialogShowed: function() {
+         return !!this._confirmDialog;
       },
 
-      _isRecordSaving: function(){
+      _isRecordSaving: function() {
          return !!this._updateDeferred;
       },
 
-      _setDefaultContextRecord: function(){
+      _setDefaultContextRecord: function() {
          var ctx = cContext.createContext(this, {restriction: 'set'}, this.getLinkedContext());
          ctx.setValue('record', this._options.record || new Record());
          this._context = ctx;
       },
 
-      _updateDocumentData: function () {
+      _updateDocumentData: function() {
          var record = this._options.record,
-             newUrl = record && record.get(this._options.urlProperty),
-             newTitle = record && record.get('title');
+            newUrl = record && record.get(this._options.urlProperty),
+            newTitle = record && record.get('title');
          if (newTitle) {
             TitleManager.set(newTitle, this);
          }
@@ -395,14 +403,13 @@ define('SBIS3.CONTROLS/FormController', [
                   this._defaultUrl = window.location.pathname + window.location.search + window.location.hash;
                }
                history.pushState(null, null, newUrl);
-            }
-            catch(e) {
+            } catch (e) {
                this._defaultUrl = undefined;
             }
          }
       },
 
-      _resetUrl: function () {
+      _resetUrl: function() {
          if (this._defaultUrl) {
             history.pushState(null, null, this._defaultUrl);
          }
@@ -430,34 +437,36 @@ define('SBIS3.CONTROLS/FormController', [
          }
       },
 
-      _setContextRecord: function(record){
+      _setContextRecord: function(record) {
          this.getLinkedContext().setValue('record', record);
       },
+
       /**
        * Показывает индикатор загрузки
        */
-      _showLoadingIndicator: forAliveOnly(function(message){
+      _showLoadingIndicator: forAliveOnly(function(message) {
          cIndicator.setMessage(message || this._options.indicatorSavingMessage, true);
       }),
+
       /**
        * Скрывает индикатор загрузки
        */
-      _hideLoadingIndicator: function(){
+      _hideLoadingIndicator: function() {
          cIndicator.hide();
       },
       _processError: function(e, hideErrorDialog, eventName) {
          var eResult = this._notify('onFail', e, eventName),
-             eMessage = typeof eResult === 'string' ? eResult : e.message,
-             self = this;
-         if(!hideErrorDialog && eResult !== false) {
+            eMessage = typeof eResult === 'string' ? eResult : e.message,
+            self = this;
+         if (!hideErrorDialog && eResult !== false) {
             //Не показываем сообщение, если запрос был прерван
             //В новом ff при переходе по ссылке обрываются все активные xhr => показываются ненужные алерты о том, что запрос был прерван
-            if(eMessage && eMessage !== 'Cancel') {
+            if (eMessage && eMessage !== 'Cancel') {
                InformationPopupManager.showMessageDialog({
                   message: eMessage,
                   status: 'error'
-               }, function(){
-                  if (e.httpError === 403){
+               }, function() {
+                  if (e.httpError === 403) {
                      self._closePanel();
                   }
                });
@@ -472,12 +481,13 @@ define('SBIS3.CONTROLS/FormController', [
        * @param {*} result "Результат" закрытия панели - передаётся в соответствующее событие (onBeforeClose, onAfterClose).
        * @private
        */
-      _closePanel: function(result){
+      _closePanel: function(result) {
          //Если задача открыта в новом окне, то FormController лежит не во floatArea => нет панели, которую нужно закрывать
-         if (this._panel.close){
+         if (this._panel.close) {
             this._panel.close(result);
          }
       },
+
       /**
        * Возвращает источник данных диалога редактирования.
        * @return {Object} Объект с конфигурацией источника данных.
@@ -493,19 +503,21 @@ define('SBIS3.CONTROLS/FormController', [
        * </pre>
        * @see dataSource
        */
-      getDataSource: function(){
+      getDataSource: function() {
          return this._dataSource;
       },
+
       /**
        * Возвращает признак: новая запись или нет.
        * @returns {Boolean} true - запись создана, но не сохранена в источнике данных диалога.
        */
-      isNewRecord: function(){
+      isNewRecord: function() {
          return this._newRecord;
       },
-      setDataSource: function (source, config) {
+      setDataSource: function(source, config) {
          throw new Error('FormController: Задавать источник данных необходимо через опцию dataSource. Подробнее /doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/create/');
       },
+
       /**
        * Устанавливает запись, по данным которой производится инициализация данных диалога.
        * @remark
@@ -516,12 +528,12 @@ define('SBIS3.CONTROLS/FormController', [
        * @see key
        * @see getRecord
        */
-      setRecord: function(record, updateKey){
+      setRecord: function(record, updateKey) {
          var newKey;
          this._unsubscribeFromRecordChange(); // отписываемся от отслеживания изменений старой записи
          this._options.record = record;
          this._setPanelRecord(record);
-         if (updateKey){
+         if (updateKey) {
             newKey = this._getRecordId();
             this._options.key = newKey;
             this._newRecord = true;
@@ -530,16 +542,17 @@ define('SBIS3.CONTROLS/FormController', [
          this._updateDocumentData();
          this._setContextRecord(record);
          var self = this;
-         this._panelReadyDeferred.addCallback(function(){
+         this._panelReadyDeferred.addCallback(function() {
             self._actionNotify('onAfterFormLoad');
          });
       },
-      _setPanelRecord: function(record){
+      _setPanelRecord: function(record) {
          //Запоминаем запись на панели, т.к. при повторном вызове execute, когда уже есть открытая панель,
          //текущая панель закрывается и открывается новая. В dialogActionBase в подписке на onAfterClose ссылка на панель будет не актуальной,
          //т.к. ссылается на только что открытую панель. Поэтому берем редактируемую запись с самой панели.
          this._panel._record = record;
       },
+
       /**
        * Возвращает запись, по данным которой произведена инициализация данных диалога.
        * @reaturn {WS.Data/Entity/Model}
@@ -547,12 +560,12 @@ define('SBIS3.CONTROLS/FormController', [
        * @see key
        * @see setRecord
        */
-      getRecord: function(){
-        return this._options.record;
+      getRecord: function() {
+         return this._options.record;
       },
 
 
-      _getRecordId: function(){
+      _getRecordId: function() {
          if (this._options.idProperty) {
             return this.getRecord().get(this._options.idProperty);
          }
@@ -565,6 +578,7 @@ define('SBIS3.CONTROLS/FormController', [
          }
          return this._create(config);
       },
+
       /**
        * Создаёт новую запись в источнике данных диалога.
        * @param {Object} [config] Конфигурация команды.
@@ -585,7 +599,7 @@ define('SBIS3.CONTROLS/FormController', [
        * @see onCreateModel
        * @see dataSource
        */
-      _create: function(config){
+      _create: function(config) {
          var createConfig = {
                indicatorText: rk('Загрузка'),
                eventName: 'onCreateModel'
@@ -593,20 +607,23 @@ define('SBIS3.CONTROLS/FormController', [
             self = this,
             createDeferred = this._dataSource.create(this._options.initValues);
 
-         createDeferred.addCallback(function(record){
+         createDeferred.addCallback(function(record) {
             self.setRecord(record, true);
             return record;
-         }).addBoth(function(data){
+         }).addBoth(function(data) {
             self._activateChildControlAfterLoad();
             return data;
          });
          return this._prepareSyncOperation(createDeferred, config, createConfig);
       },
+
       /**
        * Удаляет запись из источника данных диалога.
        * @param {Object} [config] Конфигурация команды.
        * @param {Boolean} [config.hideIndicator=false] Не показывать индикатор.
        * @param {Boolean} [config.closePanelAfterSubmit=true] Закрывать диалог после выполнения команды.
+       * @param {Boolean} [config.hideErrorDialog=true] Не показывать сообещние при ошибке.
+       * @param {Object} [config.destroyMeta] Дополнительные мета данные, которые будут переданы при удалении модели из источника данных
        * @remark
        * При удалении происходит событие {@link onDestroyModel}.
        * Источник данных диалога устанавливают с помощью опции {@link dataSource}.
@@ -618,18 +635,18 @@ define('SBIS3.CONTROLS/FormController', [
        * @see onDestroyModel
        * @see dataSource
        */
-      _destroyModel: function(cfg){
+      _destroyModel: function(cfg) {
          var record = this._options.record,
             config = cfg || {},
             self = this,
             destroyConfig = {
                hideIndicator: config.hideIndicator !== undefined ? config.hideIndicator : true,
                eventName: 'onDestroyModel',
-               hideErrorDialog: true
+               hideErrorDialog: config.hideErrorDialog !== undefined ? config.hideErrorDialog : true
             },
-            def = this._dataSource.destroy(this._getRecordId());
+            def = this._dataSource.destroy(this._getRecordId(), config.destroyMeta);
 
-         return this._prepareSyncOperation(def, config, destroyConfig).addBoth(function(data){
+         return this._prepareSyncOperation(def, config, destroyConfig).addBoth(function(data) {
             self._newRecord = false;
             record.setState(Record.RecordState.DELETED);
             if (config.closePanelAfterSubmit) {
@@ -661,7 +678,7 @@ define('SBIS3.CONTROLS/FormController', [
        * @see onFail
        * @see dataSource
        */
-      _read: function (config) {
+      _read: function(config) {
          var readConfig = {
                indicatorText: rk('Загрузка'),
                eventName: 'onReadModel'
@@ -670,11 +687,11 @@ define('SBIS3.CONTROLS/FormController', [
             readDeferred;
          this._options.key = (config && config.key) || this._options.key;
 
-         readDeferred = this._dataSource.read(this._options.key, this._options.readMetaData).addCallback(function(record){
+         readDeferred = this._dataSource.read(this._options.key, this._options.readMetaData).addCallback(function(record) {
             self._newRecord = false;
             self.setRecord(record);
             return record;
-         }).addBoth(function(data){
+         }).addBoth(function(data) {
             self._activateChildControlAfterLoad();
             return data;
          });
@@ -714,26 +731,26 @@ define('SBIS3.CONTROLS/FormController', [
          return this._prepareUpdatingRecord(config || {});
       },
 
-      _showConfirmDialog: function(){
+      _showConfirmDialog: function() {
          this._confirmDialog = InformationPopupManager.showConfirmDialog({
-               message: rk('Сохранить изменения?'),
-               details: rk('Чтобы продолжить редактирование, нажмите "Отмена".'),
-               hasCancelButton: true,
-               opener: this
-            },
-            this._confirmDialogHandler.bind(this, true),
-            this._confirmDialogHandler.bind(this, false),
-            this._confirmDialogHandler.bind(this)
+            message: rk('Сохранить изменения?'),
+            details: rk('Чтобы продолжить редактирование, нажмите "Отмена".'),
+            hasCancelButton: true,
+            opener: this
+         },
+         this._confirmDialogHandler.bind(this, true),
+         this._confirmDialogHandler.bind(this, false),
+         this._confirmDialogHandler.bind(this)
          );
       },
 
-      _prepareUpdatingRecord: function(config){
+      _prepareUpdatingRecord: function(config) {
          var error = new Error(rk('Некорректно заполнены обязательные поля')),
-             self = this,
-             updateDeferred = new Deferred(),
-             onBeforeUpdateData;
+            self = this,
+            updateDeferred = new Deferred(),
+            onBeforeUpdateData;
 
-         updateDeferred.addErrback(function (e) {
+         updateDeferred.addErrback(function(e) {
             return e;
          });
 
@@ -743,19 +760,17 @@ define('SBIS3.CONTROLS/FormController', [
             //FormController не продолжает сохранение записи, если пользовательский результат будет равен false (либо Error)
             //В случае, если пользователь вернул Error, текст ошибки будет взят из error.message.
             onBeforeUpdateData = this._prepareOnBeforeUpdateResult(this._notify('onBeforeUpdateModel', this.getRecord()));
-            if (onBeforeUpdateData.result instanceof Deferred){
-               onBeforeUpdateData.result.addBoth(function(result){
+            if (onBeforeUpdateData.result instanceof Deferred) {
+               onBeforeUpdateData.result.addBoth(function(result) {
                   onBeforeUpdateData = self._prepareOnBeforeUpdateResult(result);
-                  if (onBeforeUpdateData.result !== false){
+                  if (onBeforeUpdateData.result !== false) {
                      updateDeferred.dependOn(self._updateRecord(config));
-                  }
-                  else{
+                  } else {
                      updateDeferred.errback(onBeforeUpdateData.errorMessage);
                   }
                });
                return updateDeferred;
-            }
-            else if (onBeforeUpdateData.result === false) {
+            } else if (onBeforeUpdateData.result === false) {
                return Deferred.fail(onBeforeUpdateData.errorMessage);
             }
             return this._updateRecord(config);
@@ -765,21 +780,21 @@ define('SBIS3.CONTROLS/FormController', [
          return Deferred.fail(error);
       },
 
-      _updateRecord: function(config){
+      _updateRecord: function(config) {
          var dResult = new Deferred(),
-             updateConfig = {
+            updateConfig = {
                indicatorText: this._options.indicatorSavingMessage,
                eventName: 'onUpdateModel',
                additionalData: {}
-             },
+            },
             self = this;
 
          if (this._options.record.isChanged() || self._newRecord || this._needUpdateAlways) {
-            this._updateDeferred = this._dataSource.update(this._options.record).addCallback(function (key) {
+            this._updateDeferred = this._dataSource.update(this._options.record).addCallback(function(key) {
                updateConfig.additionalData.key = key;
                self._newRecord = false;
                return key;
-            }).addErrback(function (error) {
+            }).addErrback(function(error) {
                self._updateDeferred = false;
                return error;
             });
@@ -787,7 +802,7 @@ define('SBIS3.CONTROLS/FormController', [
          } else {
             dResult.callback();
          }
-         dResult.addCallback(function (result) {
+         dResult.addCallback(function(result) {
             self._updateDeferred = false; //в 230+ версии можно перенести в колбэк самого _updateDeferred, когда выпилится опция source
             if (config.closePanelAfterSubmit) {
                self._closePanel(true);
@@ -797,20 +812,20 @@ define('SBIS3.CONTROLS/FormController', [
          return dResult;
       },
 
-      _confirmDialogHandler: function (result) {
+      _confirmDialogHandler: function(result) {
+         this._confirmDialog = undefined;
          if (result) {
             this._prepareUpdatingRecord({
                closePanelAfterSubmit: true
-            })
-         }
-         else if (result === false) {
+            });
+         } else if (result === false) {
             this._closePanel(false);
          } else {
             this._panel.onBringToFront();
          }
       },
 
-      _prepareOnBeforeUpdateResult: function(result){
+      _prepareOnBeforeUpdateResult: function(result) {
          var errorMessage = 'updateModel canceled from onBeforeUpdateModel event';
          if (result instanceof Error) {
             errorMessage = result.message;
@@ -822,15 +837,15 @@ define('SBIS3.CONTROLS/FormController', [
          };
       },
 
-      _prepareSyncOperation: function(operation, commonConfig, operationConfig){
+      _prepareSyncOperation: function(operation, commonConfig, operationConfig) {
          var self = this,
-             config = coreClone(commonConfig || {});
+            config = coreClone(commonConfig || {});
          config = cMerge(commonConfig, operationConfig);
 
-         if (!config.hideIndicator){
+         if (!config.hideIndicator) {
             this._showLoadingIndicator(config.indicatorText);
          }
-         if (!config.additionalData){
+         if (!config.additionalData) {
             config.additionalData = {};
          }
          config.additionalData.idProperty = this._options.idProperty;
@@ -839,41 +854,42 @@ define('SBIS3.CONTROLS/FormController', [
          this._toggleOverlay(true);
          this._addSyncOperationPending();
 
-         operation.addCallback(function(data){
+         operation.addCallback(function(data) {
             self._notify(config.eventName, self._options.record, config.additionalData);
             return data;
-         }).addErrback(function(err){
-               //Не показываем ошибку, если было прервано соединение с интернетом. просто скрываем индикатор и оверлей
-               if ((err instanceof Error) && !err._isOfflineMode){
-                  self._processError(err, config.hideErrorDialog, config.eventName);
-               }
-               return err;
-         }).addBoth(function(result){
-               self._removeSyncOperationPending();
-               self._hideLoadingIndicator();
-               self._toggleOverlay(false);
-               return result;
+         }).addErrback(function(err) {
+            //Не показываем ошибку, если было прервано соединение с интернетом. просто скрываем индикатор и оверлей
+            if ((err instanceof Error) && !err._isOfflineMode) {
+               self._processError(err, config.hideErrorDialog, config.eventName);
+            }
+            return err;
+         }).addBoth(function(result) {
+            self._removeSyncOperationPending();
+            self._hideLoadingIndicator();
+            self._toggleOverlay(false);
+            return result;
          });
          return operation;
       },
 
-      _toggleOverlay: function(show){
-         if (!this._overlay){
+      _toggleOverlay: function(show) {
+         if (!this._overlay) {
             this._overlay = $('<div class="controls-FormController-overlay ws-hidden"></div>').appendTo(this.getContainer());
          }
          this._overlay.toggleClass('ws-hidden', !show);
       },
 
-      _addSyncOperationPending: function(){
+      _addSyncOperationPending: function() {
          this._removeSyncOperationPending();
          this._syncOperationCallback = new Deferred();
          this._panel.addPendingOperation(this._syncOperationCallback);
       },
-      _removeSyncOperationPending: function(){
-         if (this._syncOperationCallback && !this._syncOperationCallback.isReady()){
+      _removeSyncOperationPending: function() {
+         if (this._syncOperationCallback && !this._syncOperationCallback.isReady()) {
             this._syncOperationCallback.callback();
          }
       },
+
       /**
        * Оповещает экземпляр класса действия (см. {@link SBIS3.CONTROLS/Action/List/OpenEditDialog}) о произошедшем событии.
        * @remark
@@ -892,9 +908,10 @@ define('SBIS3.CONTROLS/FormController', [
        * @see update
        * @see destroy
        */
-      _actionNotify: function(eventName, additionalData){
+      _actionNotify: function(eventName, additionalData) {
          this._notify(eventName, this._options.record, additionalData || {});
       },
+
       /**
        * Устанавливает фокус на дочерний контрол диалога при окончании чтения/создания записи в источнике данных диалога.
        * @returns {Deferred}
@@ -911,23 +928,22 @@ define('SBIS3.CONTROLS/FormController', [
        * @command activateChildControl
        * @see dataSource
        */
-      _createChildControlActivatedDeferred: function(){
-         this._activateChildControlDeferred = (new Deferred()).addCallback(function(){
+      _createChildControlActivatedDeferred: function() {
+         this._activateChildControlDeferred = (new Deferred()).addCallback(function() {
             doAutofocus(this._container);
          }.bind(this));
          return this._activateChildControlDeferred;
       },
-      _activateChildControlAfterLoad: function(){
-         if (this._activateChildControlDeferred instanceof Deferred){
+      _activateChildControlAfterLoad: function() {
+         if (this._activateChildControlDeferred instanceof Deferred) {
             this._activateChildControlDeferred.callback();
             this._activateChildControlDeferred = undefined;
-         }
-         else{
+         } else {
             doAutofocus(this._container);
          }
       },
 
-      destroy: function(){
+      destroy: function() {
          this._panel.unsubscribe('onAfterShow', this._onAfterShowHandler);
          this._panel.unsubscribe('onBeforeClose', this._onBeforeCloseHandler);
          this.unsubscribeFrom(EventBus.channel('navigation'), 'onBeforeNavigate', this._onBeforeNavigateHandler);
@@ -937,40 +953,39 @@ define('SBIS3.CONTROLS/FormController', [
          FormController.superclass.destroy.apply(this, arguments);
       }
    });
+
       //Функционал, позволяющий с прототипа компонента вычитать запись до инициализации компонента и прокинуть ее в опции. Сделано в рамках ускорения
-      FormController.prototype.getRecordFromSource = function (opt) {
-         var options = this.getComponentOptions(opt),
-             dataSource,
-             result;
+   FormController.prototype.getRecordFromSource = function(opt) {
+      var options = this.getComponentOptions(opt),
+         dataSource,
+         result;
 
          //TODO в рамках совместимости
-         if (isEmpty(options.dataSource) && !options.source){
-            IoC.resolve('ILogger').error('SBIS3.CONTROLS/FormController', 'Необходимо задать опцию dataSource');
-            return false;
-         }
+      if (isEmpty(options.dataSource) && !options.source) {
+         IoC.resolve('ILogger').error('SBIS3.CONTROLS/FormController', 'Необходимо задать опцию dataSource');
+         return false;
+      }
 
-         options.source = this.createDataSource(options);
+      options.source = this.createDataSource(options);
 
-         if (options.key){
-            result = options.source.read(options.key, options.readMetaData);
-         }
-         else{
-            result = options.source.create(options.initValues);
-         }
-         return result;
-      };
+      if (options.key) {
+         result = options.source.read(options.key, options.readMetaData);
+      } else {
+         result = options.source.create(options.initValues);
+      }
+      return result;
+   };
 
-      FormController.prototype.createDataSource = function(options){
-         if (!cInstance.instanceOfModule(options.source, 'WS.Data/Source/Base')) {
-            return new SbisService(options.dataSource);
-         }
-         return options.source;
-      };
+   FormController.prototype.createDataSource = function(options) {
+      if (!cInstance.instanceOfModule(options.source, 'WS.Data/Source/Base')) {
+         return new SbisService(options.dataSource);
+      }
+      return options.source;
+   };
 
-      FormController.prototype.getComponentOptions = function(mergeOptions) {
-         var options = OpenDialogUtil.getOptionsFromProto(this, mergeOptions);
-         return this._modifyOptions(options);
-      };
+   FormController.prototype.getComponentOptions = function(mergeOptions) {
+      return OpenDialogUtil.getOptionsFromProto(this, mergeOptions);
+   };
    return FormController;
 
 });

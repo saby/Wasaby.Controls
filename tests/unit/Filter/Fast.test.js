@@ -1,6 +1,6 @@
 define(
    [
-      'Controls/Filter/FastFilter',
+      'Controls/Filter/Fast',
       'WS.Data/Source/Memory',
       'Core/vdom/Synchronizer/resources/SyntheticEvent'
    ],
@@ -122,7 +122,7 @@ define(
                   isSelected = false;
                   isFilterChanged =false;
                   selectedKey = null;
-                  fastData._onResult(['itemClick', 'event', [fastData._configs[0]._items.at(2)]]);
+                  fastData._onResult({data: fastData._configs[0]._items.at(2)});
                   assert.isTrue(isSelected);
                   assert.isTrue(isFilterChanged);
                   assert.equal(items[0][2].title, selectedKey);

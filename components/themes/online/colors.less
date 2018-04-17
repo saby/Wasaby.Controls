@@ -27,7 +27,7 @@
 @color_primary:                          #587ab0;
 @icon-color-primary-hover:               #313E78;
 @color_hover:                            #ff7033;
-@icon-color-disabled:                    @disabled-color;
+@icon-color-disabled:                    @default-disabled-color;
 //InputRender
 @border-color_InputRender:                           @default-border-color @default-border-color @default-border-color-active @default-border-color;
 @border-color_InputRender_hover:                     @default-border-color-hover;
@@ -247,6 +247,17 @@
 @color_CloseButton-light-icon:        #CCC;
 @color_CloseButton-light-icon_hover:  #313E78;
 
+//VDOM Paging
+@border-color_Paging-digit_active:       @color_hover;
+@background-color_Paging-button:         @default-bg-color;
+@background-color_Paging-button_hover:   @default-bg-color-hovered-item;
+@color_Paging-digit-text:                @default-text-color;
+@color_Paging-ellipsis-text:             @default-text-color;
+@background-color_Paging-ellispis:       @default-bg-color;
+@color_Paging_arrow-icon:                @default-color;
+@color_Paging_arrow-icon_disabled:       @disabled-color;
+
+
 //VDOM Switcher
 @border-color_Switch:                              #E4E4E4;
 @background-color_Switch-line_enabled:             #CCC;
@@ -302,8 +313,13 @@
 @color_CheckBox___caption_disabled:             #CCCCCC;
 @color_CheckBox-caption_enabled:                @default-text-color;
 @color_CheckBox-icon_enabled:                   @primary-color;
-
-//link
+//Icon
+@color-IconButtonBordered_default:             #587AB0;
+@color-IconButtonBordered_default_hovered:     #313E78;
+@color-Icon_style_attention:                   #fec63f;
+@color-Icon_style_done:                        #72be44;
+@color-Icon_style_error:                       #ef463a;
+//Link
 @color_Link-main-text:                         #0055BB;
 @color_Link-main-text_hovered:                 #313E78;
 @color_Link-main2-text:                        #8991A9;
@@ -314,6 +330,7 @@
 @color_Link-additional3-text:                  #EF463A;
 @color_Link-additional4-text:                  #53A52C;
 @color_Link-additional5-text:                  #9122BF;
+//Button
 @box-shadow_Button_primary:                    none;
 @box-shadow_Button_primary_active:             none;
 @background_Button_primary_active:             #FDD2C0;
@@ -322,11 +339,19 @@
 @box-shadow_Button_active:                     none;
 @color_Button-Vdom-disabled:                   #CCCCCC;
 @border-color_Button-Vdom_disabled:            #CCCCCC;
-@color_Button-Vdom-icon_disabled:               #CCCCCC;
 @color_Button-Vdom-text_primary:                #000000;
 @color_Button-Vdom-text_default:                #000000;
-@color_Button-style-addButton-icon:            #000000;
 @color_Button-style-addButton-icon_hovered:    #313E78;
+@color-IconButton__border_iconStyle-primary_hovered:          #cccccc;
+@color-Button_type-IconButton_disabled:           #CCCCCC;
+@border-color-IconButton_disabled:                rgba(0, 0, 0, 0.05);
+@border-color-IconButton:                         rgba(0, 0, 0, 0.05);
+@color-IconButton__shadow:                        rgba(0, 0, 0, 0.15);
+@background-color-IconButton:                     none;
+@background-color-IconButton_hovered:             none;
+@color_Button-style-addButton-icon:            #000000;
+@color_Button-icon:                       @color_primary;
+@color_Button-icon_primary:               @color_hover;
 @color_Link-main-icon:                          #587AB0;
 
 //Label

@@ -1,6 +1,6 @@
 #!groovy
 echo "Задаем параметры сборки"
-def version = "3.18.200"
+def version = "3.18.300"
 
 def gitlabStatusUpdate() {
     if ( currentBuild.currentResult == "ABORTED" ) {
@@ -10,7 +10,7 @@ def gitlabStatusUpdate() {
     } else if ( currentBuild.currentResult == "SUCCESS" ) {
         updateGitlabCommitStatus state: 'success'
     }
-}    
+}
 
 
 node('controls') {
@@ -349,8 +349,24 @@ node('controls') {
             def name_db = "css_${env.NODE_NAME}${ver}1"
             def user_db = "postgres"
             def password_db = "postgres"
+            writeFile file: "./controls/tests/stand/conf/sbis-rpc-service_ps.ini", text: """[Базовая конфигурация]
+                [Ядро.Http]
+                Порт=10020
+
+                [Ядро.Сервер приложений]
+                ЧислоРабочихПроцессов=3
+                ЧислоСлужебныхРабочихПроцессов=0
+                ЧислоДополнительныхПроцессов=0
+                ЧислоПотоковВРабочихПроцессах=10
+
+                [Presentation Service]
+                WarmUpEnabled=No
+                ExtractLicense=Нет
+                ExtractRights=Нет
+                ExtractSystemExtensions=Нет
+                ExtractUserInfo=Нет"""
             writeFile file: "./controls/tests/stand/conf/sbis-rpc-service.ini", text: """[Базовая конфигурация]
-                АдресСервиса=${env.NODE_NAME}:10001
+                АдресСервиса=${env.NODE_NAME}:10010
                 ПаузаПередЗагрузкойМодулей=0
                 ХранилищеСессий=host=\'dev-sbis3-autotest\' port=\'6380\' dbindex=\'2\'
                 БазаДанных=postgresql: host=\'${host_db}\' port=\'${port_db}\' dbname=\'${name_db}\' user=\'${user_db}\' password=\'${password_db}\'
@@ -370,7 +386,7 @@ node('controls') {
                 ОграничениеДляИсходящегоВызова=1024
                 ОтправлятьНаСервисЛогов=Нет
                 [Тест]
-                Адрес=http://${env.NODE_NAME}:10001"""
+                Адрес=http://${env.NODE_NAME}:10010"""
             // Копируем шаблоны
             sh """cp -f ./controls/tests/stand/intest/pageTemplates/branch/* ./controls/tests/stand/intest/pageTemplates"""
             sh """cp -fr ./controls/Examples/ ./controls/tests/stand/intest/Examples/"""
@@ -378,17 +394,19 @@ node('controls') {
                 cd "${workspace}/controls/tests/stand/intest/"
                 sudo python3 "change_theme.py" ${params.theme}
                 cd "${workspace}"
+
             """
             sh """
                 sudo chmod -R 0777 ${workspace}
-                ${python_ver} "./constructor/updater.py" "${version}" "/home/sbis/Controls1" "css_${env.NODE_NAME}${ver}1" "./controls/tests/stand/conf/sbis-rpc-service.ini" "./controls/tests/stand/distrib_branch_new" --sdk_path "${SDK}" --items "${items}" --host test-autotest-db1 --stand nginx_branch --daemon_name Controls1
+                ${python_ver} "./constructor/updater.py" "${version}" "/home/sbis/Controls" "css_${env.NODE_NAME}${ver}1" "./controls/tests/stand/conf/sbis-rpc-service.ini" "./controls/tests/stand/distrib_branch_ps" --sdk_path "${SDK}" --items "${items}" --host test-autotest-db1 --stand nginx_branch --daemon_name Controls --use_ps --conf x86_64
                 sudo chmod -R 0777 ${workspace}
-                sudo chmod -R 0777 /home/sbis/Controls1
+                sudo chmod -R 0777 /home/sbis/Controls
             """
             //Пакуем данные
-            writeFile file: "/home/sbis/Controls1/Core.package.json", text: """
+            writeFile file: "/home/sbis/Controls/Core.package.json", text: """
                 {
                 "includeCore":true,
+                "platformPackage": true,
                 "include":[
                 "Core/*",
                 "SBIS3.CONTROLS.ItemsControlMixin"
@@ -401,21 +419,22 @@ node('controls') {
                 }"""
             sh """
                 cd ./jinnee/distrib/builder
-                node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/sbis/Controls1 --application=/
+                cp -rf /home/sbis/Controls/build-ui/ws /home/sbis/Controls/intest-ps/ui/
+                node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/sbis/Controls/intest-ps/ui --application=/
             """
         }
         writeFile file: "./controls/tests/int/config.ini", text:
             """# UTF-8
             [general]
             browser = ${params.browser_type}
-            SITE = http://${NODE_NAME}:30001
+            SITE = http://${NODE_NAME}:30010
             SERVER = test-autotest-db1:5434
             BASE_VERSION = css_${NODE_NAME}${ver}1
             DO_NOT_RESTART = True
             SOFT_RESTART = True
             NO_RESOURCES = True
             DELAY_RUN_TESTS = 2
-            TAGS_NOT_TO_START = iOSOnly, todomvc, tabmessage
+            TAGS_NOT_TO_START = iOSOnly, tabmessage
             ELEMENT_OUTPUT_LOG = locator
             WAIT_ELEMENT_LOAD = 20
             HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/"""
@@ -425,7 +444,7 @@ node('controls') {
                 """# UTF-8
                 [general]
                 browser = ${params.browser_type}
-                SITE = http://${NODE_NAME}:30001
+                SITE = http://${NODE_NAME}:30010
                 DO_NOT_RESTART = True
                 SOFT_RESTART = False
                 NO_RESOURCES = True
@@ -436,7 +455,7 @@ node('controls') {
                 HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/
                 SERVER = test-autotest-db1:5434
                 BASE_VERSION = css_${NODE_NAME}${ver}1
-                BRANCH=True
+                #BRANCH=True
                 [regression]
                 IMAGE_DIR = capture_${params.theme}
                 RUN_REGRESSION=True"""
@@ -446,7 +465,7 @@ node('controls') {
                 """# UTF-8
                 [general]
                 browser = ${params.browser_type}
-                SITE = http://${NODE_NAME}:30001
+                SITE = http://${NODE_NAME}:30010
                 DO_NOT_RESTART = True
                 SOFT_RESTART = False
                 NO_RESOURCES = True
@@ -457,7 +476,7 @@ node('controls') {
                 HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/
                 SERVER = test-autotest-db1:5434
                 BASE_VERSION = css_${NODE_NAME}${ver}1
-                BRANCH=True
+                #BRANCH=True
                 [regression]
                 IMAGE_DIR = capture
                 RUN_REGRESSION=True"""
@@ -468,7 +487,7 @@ node('controls') {
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
         }
         stage("Запуск тестов интеграционных и верстки"){
-            def site = "http://${NODE_NAME}:30001"
+            def site = "http://${NODE_NAME}:30010"
             site.trim()
 			if ("${params.browser_type}" != "ff"){
 				dir("./controls/tests/int"){
@@ -518,7 +537,7 @@ node('controls') {
         }
         sh """
             sudo chmod -R 0777 ${workspace}
-            sudo chmod -R 0777 /home/sbis/Controls1
+            sudo chmod -R 0777 /home/sbis/Controls
         """
         stage("Результаты"){
             echo "выкладываем результаты в зависимости от включенных тестов 'all only_reg only_int only_unit'"

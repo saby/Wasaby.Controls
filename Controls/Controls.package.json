@@ -1,0 +1,99 @@
+[{
+  "include": [
+    "Controls/Application/*",
+    "Controls/Application"
+  ],
+  "output": "controls-application.package.js"
+}, {
+  "include": [
+    "Controls/Button/*",
+    "Controls/Button"
+  ],
+  "output": "controls-button.package.js"
+}, {
+  "include": [
+    "Controls/Container/*",
+    "Controls/Layout/*"
+  ],
+  "output": "controls-container.package.js"
+}, {
+  "include": [
+    "Controls/Controllers/*"
+  ],
+  "output": "controls-controllers.package.js"
+}, {
+  "include": [
+    "Controls/Dropdown/*"
+  ],
+  "output": "controls-dropdown.package.js"
+}, {
+  "include": [
+    "Controls/Event/*"
+  ],
+  "output": "controls-event.package.js"
+}, {
+  "include": [
+    "Controls/Filter/*"
+  ],
+  "output": "controls-filter.package.js"
+}, {
+  "include": [
+    "Controls/Header/*",
+    "Controls/Header"
+  ],
+  "output": "controls-header.package.js"
+}, {
+  "include": [
+    "Controls/History/*"
+  ],
+  "output": "controls-history.package.js"
+}, {
+  "include": [
+    "Controls/Input/*"
+  ],
+  "output": "controls-input.package.js"
+}, {
+  "include": [
+    "Controls/Label/*",
+    "Controls/Label"
+  ],
+  "output": "controls-label.package.js"
+}, {
+  "include": [
+    "Controls/List/*",
+    "Controls/List",
+    "Controls/Grid"
+  ],
+  "output": "controls-list.package.js"
+}, {
+  "include": [
+    "Controls/Popup/*"
+  ],
+  "output": "controls-popup.package.js"
+}, {
+  "include": [
+    "Controls/Render/*"
+  ],
+  "output": "controls-render.package.js"
+}, {
+  "include": [
+    "Controls/Tabs/*",
+    "Controls/Tabs"
+  ],
+  "output": "controls-tabs.package.js"
+}, {
+  "include": [
+    "Controls/Toggle/*"
+  ],
+  "output": "controls-toggle.package.js"
+}, {
+  "include": [
+    "Controls/Utils/*"
+  ],
+  "output": "controls-utils.package.js"
+}, {
+  "include": [
+    "Controls/Validate/*"
+  ],
+  "output": "controls-validate.package.js"
+}]

@@ -2,8 +2,8 @@
  * Created by kraynovdo on 16.11.2017.
  */
 define('Controls/List/SimpleList/ListViewModel',
-   ['Core/Abstract', 'Controls/List/SimpleList/ItemsViewModel', 'Controls/Controllers/Multiselect/Selection'],
-   function(Abstract, ItemsViewModel, MultiSelection) {
+   ['Core/Abstract', 'Controls/List/SimpleList/ItemsViewModel', 'Controls/Controllers/Multiselect/Selection', 'WS.Data/Entity/VersionableMixin'],
+   function(Abstract, ItemsViewModel, MultiSelection, VersionableMixin) {
       /**
        *
        * @author Крайнов Дмитрий
@@ -17,7 +17,7 @@ define('Controls/List/SimpleList/ListViewModel',
          }
       };
       
-      var ListViewModel = Abstract.extend({
+      var ListViewModel = Abstract.extend([VersionableMixin], {
 
          _itemsModel: null,
          _markedItem: null,
@@ -37,6 +37,7 @@ define('Controls/List/SimpleList/ListViewModel',
             this._itemsModel.subscribe('onListChange', function() {
                //т.к. при действиях с рекордсетом рекорд может потерять владельца, надо обновить ссылку на актуальный рекорд из текущего набора
                self._markedItem = self.getItemById(self._options.markedKey, self._options.idProperty);
+               self._nextVersion();
                self._notify('onListChange');
             });
 
@@ -84,7 +85,7 @@ define('Controls/List/SimpleList/ListViewModel',
             itemsModelCurrent.isSelected = itemsModelCurrent.dispItem === this._markedItem;
             itemsModelCurrent.itemActions =  this._actions[this.getCurrentIndex()];
             itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
-            itemsModelCurrent.showActions = !this._editingItemData && !this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive);
+            itemsModelCurrent.showActions = !this._editingItemData && (!this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive));
             itemsModelCurrent.multiSelectStatus = this._multiselection.getSelectionStatus(itemsModelCurrent.key);
             itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility === 'visible';
             if (this._editingItemData && itemsModelCurrent.index === this._editingItemData.index) {
@@ -106,24 +107,34 @@ define('Controls/List/SimpleList/ListViewModel',
             return this._itemsModel.getItemById(id, idProperty);
          },
 
+         moveItems: function(items, target, position) {
+            this._itemsModel.moveItems(items, target, position);
+         },
+
          setMarkedKey: function(key) {
             this._markedItem = this.getItemById(key, this._options.idProperty);
+            this._nextVersion();
             this._notify('onListChange');
          },
 
 
          select: function(keys) {
             this._multiselection.select(keys);
+            this._nextVersion();
+            this._notify('onListChange');
          },
 
          unselect: function(keys) {
             this._multiselection.unselect(keys);
+            this._nextVersion();
+            this._notify('onListChange');
          },
 
          updateIndexes: function(startIndex, stopIndex) {
             if ((this._startIndex !== startIndex) || (this._stopIndex !== stopIndex)) {
                this._startIndex = startIndex;
                this._stopIndex = stopIndex;
+               this._nextVersion();
                this._notify('onListChange');
             }
          },

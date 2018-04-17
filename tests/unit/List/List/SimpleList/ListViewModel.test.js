@@ -108,6 +108,7 @@ define([
          iv.setMarkedKey(3);
          marItem = iv._markedItem;
          assert.equal(iv._itemsModel._display.at(2), marItem, 'Incorrect selectedItem');
+         assert.equal(1, iv.getVersion(), 'Incorrect version appendItems');
       });
 
       it('setItems', function () {
@@ -136,12 +137,14 @@ define([
          var iv = new ListViewModel(cfg1);
          iv.setItems(rs2);
          assert.equal(rs2, iv._itemsModel._items, 'Incorrect items after setItems');
+         assert.equal(1, iv.getVersion(), 'Incorrect version setItems');
 
          //второй кейс - были items - рекордсет, и ставим рекордсет. Должен остаться инстанс старого, но данные новые
          iv = new ListViewModel(cfg2);
          iv.setItems(rs2);
          assert.equal(rs1, iv._itemsModel._items, 'Incorrect items after setItems');
          assert.equal(4, iv._itemsModel._items.at(0).get('id'), 'Incorrect items after setItems');
+         assert.equal(1, iv.getVersion(), 'Incorrect version setItems');
 
       });
 
@@ -263,9 +266,11 @@ define([
 
          iv.select([2]);
          assert.deepEqual([1, 3, 2], iv._multiselection._selectedKeys, 'ListViewModel: MultiSelection has wrong selected keys');
+         assert.equal(1, iv.getVersion(), 'Incorrect version appendItems');
 
          iv.unselect([1]);
          assert.deepEqual([3, 2], iv._multiselection._selectedKeys, 'ListViewModel: MultiSelection has wrong selected keys');
+         assert.equal(2, iv.getVersion(), 'Incorrect version appendItems');
       });
    });
 

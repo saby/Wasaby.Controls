@@ -26,7 +26,7 @@ define('Controls/Popup/Manager/Popup',
           */
 
          /**
-          * @name Controls/Popup/Manager/Popup#componentOptions
+          * @name Controls/Popup/Manager/Popup#templateOptions
           * @cfg {Object} Опции компонента
           */
 
@@ -61,26 +61,6 @@ define('Controls/Popup/Manager/Popup',
          },
 
          /**
-          * Обработчик установки фокуса.
-          * @function Controls/Popup/Manager/Popup#_focusIn
-          * @param event
-          * @param focusedControl
-          */
-         _focusIn: function(event, focusedControl) {
-            this._notify('popupFocusIn', [this._options.id, focusedControl], {bubbling: true});
-         },
-
-         /**
-          * Обработчик потери фокуса.
-          * @function Controls/Popup/Manager/Popup#_focusOut
-          * @param event
-          * @param focusedControl
-          */
-         _focusOut: function(event, focusedControl) {
-            this._notify('popupFocusOut', [this._options.id, focusedControl], {bubbling: true});
-         },
-
-         /**
           * Обработчик нажатия на клавиши.
           * @function Controls/Popup/Manager/Popup#_keyUp
           * @param event
@@ -90,13 +70,18 @@ define('Controls/Popup/Manager/Popup',
                this._close();
             }
          },
-         _documentClickHandler: function(emitterEvent, event) {
-            if (this._options.closeByExternalClick && !event.target.closest('.controls-DropdownList__popup')) { //Если кликнули мимо меню - закрываемся
+         _popupClickHandler: function(event) {
+            //Не даем клику всплыть выше попапа. В этому случае событие не долетит до лисенера,
+            //который слушает клик по документу. В этом случае, если лисенер отловил событие, значит
+            //клик был сделан вне попапа.
+            event.stopPropagation();
+         },
+         _documentClickHandler: function() {
+            if (this._options.closeByExternalClick) {
                this._close();
             }
          }
       });
-
       return Popup;
    }
 );

@@ -220,7 +220,7 @@ define('SBIS3.CONTROLS/ListView',
           * Событие срабатывает при подгрузке по скроллу, при подгрузке в ветку дерева.
           * Т.е. при любой вспомогательной загрузке данных.
           * @param {Core/EventObject} eventObject Дескриптор события.
-          * @param {Object} RecordSet - {@link /doc/platform/developmentapl/interface-development/working-with-data/icollection/#wsdatacollectionrecordset RecordSet} с загруженными данными
+          * @param {Object} RecordSet - {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/working-with-data/icollection/#wsdatacollectionrecordset RecordSet} с загруженными данными
           * @example
           * <pre>
           *     DataGridView.subscribe('onDataMerge', function(event, dataSet) {
@@ -488,7 +488,7 @@ define('SBIS3.CONTROLS/ListView',
                 * Для доступа к полям элемента коллекции в шаблоне подразумевается использование конструкций шаблонизатора.
                 * <br/>
                 * Шаблон может быть создан в отдельном XHTML-файле, когда вёрстка большая или требуется использовать его в разных компонентах.
-                * Шаблон создают в директории компонента в подпапке resources согласно правилам, описанным в разделе {@link /doc/platform/developmentapl/interface-development/core/component/file-structure/ Файловая структура компонента}.
+                * Шаблон создают в директории компонента в подпапке resources согласно правилам, описанным в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/component/file-structure/ Файловая структура компонента}.
                 * <br/>
                 * Чтобы такой шаблон можно было использовать, нужно:
                 * 1. Подключить шаблон в массив зависимостей компонента и импортировать его в переменную:
@@ -784,7 +784,7 @@ define('SBIS3.CONTROLS/ListView',
                 * <pre>
                 *    editMode="click|toolbar"
                 * </pre>
-                * Подробное описание каждого режима редактирования и их демонстрационные примеры вы можете найти в разделе документации {@link /doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/edit-in-place/ Редактирование по месту}.
+                * Подробное описание каждого режима редактирования и их демонстрационные примеры вы можете найти в разделе документации {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/edit-in-place/ Редактирование по месту}.
                 * @example
                 * Установлен режим редактирования по клику на элемент коллекции.
                 * <pre>
@@ -820,7 +820,7 @@ define('SBIS3.CONTROLS/ListView',
                 * @remark
                 * Отображение строки итогов конфигурируется тремя опциями: resultsPosition, {@link resultsText} и {@link resultsTpl}.
                 * Данная опция определяет расположение строки итогов, а также предоставляет возможность отображения строки в случае отсутствия записей.
-                * С подробным описанием можно ознакомиться в статье {@link /doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/results/ Строка итогов}.
+                * С подробным описанием можно ознакомиться в статье {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/results/ Строка итогов}.
                 * @example
                 * <pre class="brush: xml">
                 *     resultsPosition="bottom" <!-- Строка итогов будет отображена под всеми элементами коллекции -->
@@ -834,7 +834,7 @@ define('SBIS3.CONTROLS/ListView',
                 * @remark
                 * Отображение строки итогов конфигурируется тремя опциями: resultsText, {@link resultsPosition} и {@link resultsTpl}.
                 * В данную опцию передается заголовок строки итогов.
-                * С подробным описанием можно ознакомиться в статье {@link /doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/results/ Строка итогов}.
+                * С подробным описанием можно ознакомиться в статье {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/results/ Строка итогов}.
                 * @example
                 * <pre class="brush: xml">
                 *    resultsText="Перечислено за квартал: "
@@ -851,7 +851,7 @@ define('SBIS3.CONTROLS/ListView',
                 * Чтобы шаблон можно было передать в опцию компонента, его нужно предварительно подключить в массив зависимостей.
                 * Опция позволяет пользователю выводить в строку требуемые данные и задать для нее определенное стилевое оформление.
                 * Подсчет каких-либо итоговых сумм в строке не предусмотрен. Все итоги рассчитываются на стороне источника данных.
-                * С подробным описанием можно ознакомиться в статье {@link /doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/results/ Строка итогов}.
+                * С подробным описанием можно ознакомиться в статье {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/results/ Строка итогов}.
                 * @example
                 * 1. Подключаем шаблон в массив зависимостей:
                 * <pre>
@@ -1094,6 +1094,13 @@ define('SBIS3.CONTROLS/ListView',
                   prevDomNode = editingTr;
                }
                this._addItems(itemsToAdd, addPosition, prevDomNode);
+
+               // Оживляем компоненты после отрисовки виртуальным скролом
+               if (this._revivePackageParams.revive !== false) {
+                  this._reviveItems(this._revivePackageParams.light, true);
+               }
+               this._revivePackageParams.processed = true;
+
                if(this._options.itemsActionsInItemContainer && itemsToRemove.length && this._itemsToolbar && this._itemsToolbar.isVisible()){
                   this._itemsToolbar.hide();
                }
@@ -2549,7 +2556,8 @@ define('SBIS3.CONTROLS/ListView',
          //ListView, валидация редактирования не вызывается. Сейчас есть сценарий, когда редактирование
          //располагается на карточке, и при попытке провалидировать карточку перед сохранением, результат
          //будет true, но редактирование может быть невалидно.
-         validate: function() {
+         //Для того, чтобы валидация для неизменной записи запускалась, необходимо использовать режим PendingAll.
+          validate: function() {
             var
                editingIsValid = true;
             if (this.isEdit()) {

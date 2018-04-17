@@ -74,7 +74,7 @@ define('Controls/Input/resources/SuggestController',
             var container = self._options.textComponent._container;
             return {
                target: container,
-               componentOptions: {
+               templateOptions: {
                   width: container.offsetWidth,
                   template: self._options.suggestTemplate,
                   source: self._options.source,

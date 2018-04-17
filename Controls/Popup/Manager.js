@@ -33,12 +33,9 @@ define('Controls/Popup/Manager',
          popupCreated: function(id) {
             var element = ManagerController.find(id);
             if (element) {
-               var strategy = element.strategy;
-               if (strategy) {
-                  // при создании попапа, зарегистрируем его
-                  strategy.elementCreated(element, this.getItemContainer(id), id);
-                  return true;
-               }
+               // при создании попапа, зарегистрируем его
+               element.strategy.elementCreated(element, this.getItemContainer(id), id);
+               return true;
             }
             return false;
          },
@@ -46,21 +43,10 @@ define('Controls/Popup/Manager',
          popupUpdated: function(id) {
             var element = ManagerController.find(id);
             if (element) {
-               var strategy = element.strategy;
-               if (strategy) {
-                  strategy.elementUpdated(element, this.getItemContainer(id)); // при создании попапа, зарегистрируем его
-                  return true;
-               }
+               element.strategy.elementUpdated(element, this.getItemContainer(id)); // при создании попапа, зарегистрируем его
+               return true;
             }
             return false;
-         },
-
-         popupFocusIn: function(id, focusedControl) {
-            return _private.fireEventHandler(id, 'onFocusIn', focusedControl);
-         },
-
-         popupFocusOut: function(id, focusedControl) {
-            return _private.fireEventHandler(id, 'onFocusOut', focusedControl);
          },
 
          popupResult: function(id, result) {
@@ -70,7 +56,7 @@ define('Controls/Popup/Manager',
          popupClose: function(id) {
             _private.fireEventHandler(id, 'onClose');
             ManagerController.remove(id, this.getItemContainer(id));
-            return true;
+            return false;
          },
 
          fireEventHandler: function(id, event, eventArg) {
@@ -179,10 +165,7 @@ define('Controls/Popup/Manager',
           * @function Controls/Popup/Manager#_redrawItems
           */
          _redrawItems: function() {
-            var container = ManagerController.getContainer();
-            if (container) {
-               container.setPopupItems(this._popupItems);
-            }
+            ManagerController.getContainer().setPopupItems(this._popupItems);
          },
          _eventHandler: function(event, actionName) {
             var args = Array.prototype.slice.call(arguments, 2);

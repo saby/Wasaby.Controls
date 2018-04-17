@@ -120,7 +120,10 @@ define('SBIS3.CONTROLS/DropdownList',
              keys = cfg.selectedKeys,
              list,
              textArray = [];
-         if (items && keys && keys.length > 0){
+         if (cfg.emptyValue && keys && keys[0] === null) {
+            cfg.text = getEmptyText(cfg);
+            cfg.className += ' controls-DropdownList__defaultItem';
+         } else if (items && keys && keys.length > 0) {
             list = new List();
             if (items.at(0) && items.at(0).get(cfg.idProperty) === keys[0]) {
                //Если выбрано дефолтное значение - скрываем крест
@@ -447,9 +450,10 @@ define('SBIS3.CONTROLS/DropdownList',
 
          _removeOldKeys: function(){
             if (this._loadItemsDeferred && !this._loadItemsDeferred.isReady()) {
-               this._loadItemsDeferred.addCallback(function() {
+               this._loadItemsDeferred.addCallback(function(list) {
                   var item = this._options.selectedItems.at(0);
-                  var text = item && item.get(this._options.displayProperty);
+                  var textValues = [];
+                  var self = this;
                   if (!item) {
                      this._setFirstItemAsSelected();
                      //Скрываю крестик сброса
@@ -457,8 +461,12 @@ define('SBIS3.CONTROLS/DropdownList',
                      this.getContainer().toggleClass('controls-DropdownList__hideCross', true);
                   } else {
                      this._removeOldKeysCallback();
-                     this._drawSelectedValue(this._options.selectedKeys[0], [text]);
+                     list.each(function(rec) {
+                        textValues.push(rec.get(self._options.displayProperty));
+                     });
+                     this._drawSelectedValue(this._options.selectedKeys[0], textValues);
                   }
+                  return list;
                }.bind(this));
             } else {
                this._removeOldKeysCallback();

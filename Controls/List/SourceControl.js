@@ -185,9 +185,10 @@ define('Controls/List/SourceControl', [
 
       showIndicator: function(self, direction) {
          self._loadingState = direction ? direction : 'all';
+         self._loadingIndicatorState = self._loadingState;
          setTimeout(function() {
-            if (self._loadingIndicatorState !== self._loadingState) {
-               self._loadingIndicatorState = self._loadingState;
+            if (self._loadingState) {
+               self._showLoadingIndicatorImage = true;
                self._forceUpdate();
             }
          }, 2000);
@@ -195,6 +196,7 @@ define('Controls/List/SourceControl', [
 
       hideIndicator: function(self) {
          self._loadingState = null;
+         self._showLoadingIndicatorImage = false;
          if (self._loadingIndicatorState !== null) {
             self._loadingIndicatorState = self._loadingState;
             self._forceUpdate();
@@ -260,7 +262,9 @@ define('Controls/List/SourceControl', [
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
+    * @mixes Controls/interface/IReorderMovable
     * @mixes Controls/List/interface/IListControl
+    * @mixes Controls/interface/IRemovable
     * @control
     * @public
     * @category List
@@ -435,6 +439,26 @@ define('Controls/List/SourceControl', [
 
       _afterItemsRemove: function(event, items, result) {
          this._notify('afterItemsRemove', [items, result]);
+      },
+
+      moveItemUp: function(item) {
+         this._children.moveControl.moveItemUp(item);
+      },
+
+      moveItemDown: function(item) {
+         this._children.moveControl.moveItemDown(item);
+      },
+
+      moveItems: function(items, target, position) {
+         this._children.moveControl.moveItems(items, target, position);
+      },
+
+      _beforeItemsMove: function(event, items, target, position) {
+         return this._notify('beforeItemsMove', [items, target, position]);
+      },
+
+      _afterItemsMove: function(event, items, target, position, result) {
+         this._notify('afterItemsMove', [items, target, position, result]);
       },
 
       _showIndicator: function(event, direction) {

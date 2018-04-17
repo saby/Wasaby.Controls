@@ -2,8 +2,8 @@
  * Created by kraynovdo on 16.11.2017.
  */
 define('Controls/List/SimpleList/ItemsViewModel',
-   ['Core/Abstract', 'Controls/List/resources/utils/ItemsUtil', 'Core/core-instance'],
-   function(Abstract, ItemsUtil, cInstance) {
+   ['Core/Abstract', 'Controls/List/resources/utils/ItemsUtil', 'Core/core-instance', 'WS.Data/Entity/VersionableMixin', 'WS.Data/Source/ISource'],
+   function(Abstract, ItemsUtil, cInstance, VersionableMixin, ISource) {
 
       /**
        *
@@ -20,7 +20,7 @@ define('Controls/List/SimpleList/ItemsViewModel',
                (Object.getPrototypeOf(newList.getAdapter()).constructor == Object.getPrototypeOf(oldList.getAdapter()).constructor);
          }
       };
-      var ItemsViewModel = Abstract.extend({
+      var ItemsViewModel = Abstract.extend([VersionableMixin], {
 
          _display: null,
          _items: null,
@@ -92,11 +92,34 @@ define('Controls/List/SimpleList/ItemsViewModel',
             return this._display ? ItemsUtil.getDisplayItemById(this._display, id, idProperty) : undefined;
          },
 
+         moveItems: function(movedItems, target, position) {
+            var
+               itemIndex,
+               targetIndex,
+               items = this._items;
+            movedItems.forEach(function(movedItem) {
+               itemIndex = items.getIndex(movedItem);
+               if (itemIndex === -1) {
+                  items.add(movedItem);
+                  itemIndex = items.getCount() - 1;
+               }
+
+               targetIndex = items.getIndex(target);
+               if (position === ISource.MOVE_POSITION.after && targetIndex < itemIndex) {
+                  targetIndex = (targetIndex + 1) < items.getCount() ? targetIndex + 1 : items.getCount();
+               } else if (position === ISource.MOVE_POSITION.before && targetIndex > itemIndex) {
+                  targetIndex = targetIndex !== 0  ? targetIndex - 1 : 0;
+               }
+               items.move(itemIndex, targetIndex);
+            });
+         },
+
          getCount: function() {
             return this._display ? this._display.getCount() : 0;
          },
 
          _onCollectionChange: function() {
+            this._nextVersion();
             this._notify('onListChange');
          },
 
@@ -113,6 +136,7 @@ define('Controls/List/SimpleList/ItemsViewModel',
                }
                this._display = ItemsUtil.getDefaultDisplayFlat(this._items, this._options);
                this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);
+               this._nextVersion();
                this._notify('onListChange');
             }
 

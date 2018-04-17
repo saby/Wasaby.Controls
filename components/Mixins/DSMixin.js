@@ -1391,7 +1391,9 @@ define('SBIS3.CONTROLS/Mixins/DSMixin', [
          this.addedOnlyExtraNew = true;
          var childControls = this.getChildControls();
          for (var i = 0; i < childControls.length; i++) {
-            if (childControls[i].getContainer().hasClass('controls-ListView__item')) {
+            if (childControls[i].getContainer().hasClass('controls-ListView__item')
+               // если в меню, был указан footerTpl, в котором может находиться RadioButtonBase, то их instance смешиваются
+               && !childControls[i].getContainer().parents('.controls-Menu__footer').length) {
                var id = childControls[i].getContainer().attr('data-id');
                this._itemsInstances[id] = childControls[i];
                if (!childControls[i]._template) {

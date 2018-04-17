@@ -37,9 +37,10 @@ define('SBIS3.CONTROLS/Mixins/SyncSelectionMixin', [
             }
 
             /* Если уже в конструкторе есть selectedKey, то синхронизируем с selectedKeys */
-            if (options.selectedKey) {
+            var hasSelectedKeys = options.selectedKeys && options.selectedKeys.length;
+            if (options.selectedKey && !hasSelectedKeys) {
                options.selectedKeys = [options.selectedKey];
-            } else if (options.selectedKeys && options.selectedKeys.length) {
+            } else if (hasSelectedKeys) {
                options.selectedKey = options.selectedKeys[0];
             }
          }

@@ -70,7 +70,7 @@ class PhotoCam extends IResourceGetterBase {
     }
     /**
      * Осуществляет получение изображения с веб-камеры устройства
-     * @return {Core/Deferred<Array<File/LocalFile | File/LocalFileLink>>}
+     * @return {Core/Deferred.<Array.<File/LocalFile | File/LocalFileLink>>}
      * @method
      * @name File/ResourceGetter/PhotoCam#getFiles
      * @see File/LocalFile
@@ -95,7 +95,7 @@ class PhotoCam extends IResourceGetterBase {
     };
     /**
      * Возможен ли выбор файлов
-     * @return {Core/Deferred<Boolean>}
+     * @return {Core/Deferred.<Boolean>}
      * @method
      * @name File/ResourceGetter/PhotoCam#canExec
      */

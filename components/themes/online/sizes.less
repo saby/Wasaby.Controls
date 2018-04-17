@@ -18,6 +18,9 @@
 @default-padding:              4px;
 @default-padding-small:        2px;
 @default-input-padding:        @default-padding;
+@default-svg-icon-size-small:  10px;
+@default-svg-icon-size-medium: 12px;
+@default-svg-icon-size-large:  17px;
 //InputRender
 @height_InputRender_m:                       24px;
 @height_InputRender_default:                 @height_InputRender_m;
@@ -196,7 +199,7 @@
 //engine-browser
 @browser-search-margin:           10px 0px 10px 12px;
 @margin-left_Browser_tableRow:    12px;
-@browser-top-template-padding:    10px 12px;
+@browser-top-template-padding:    10px 12px 10px 0;
 @padding-left_Browser-backButton: 0px;
 //DropDownList
 @padding_DropDownList_item_child:      3px 8px 2px 8px;
@@ -306,6 +309,17 @@
 
 
 //VDOM controls
+
+//VDOM Paging
+@height_Paging-button:             32px;
+@width_Paging-digit-button:               28px;
+@border-width_Paging-digit-button:        0 0 3px 0;
+@width_Paging-ellipsis:            24px;
+@width_Paging-arrow-button:               32px;
+@font-size_Paging-arrow-button:           18px;
+@font-size_Paging-button:          @default-text-size;
+@padding_Paging-button:            0;
+@border-width_ScrollPaging:        1px 0 0 0;
 
 //VDOM Switch
 @width_Switch:                     46px;
@@ -433,3 +447,13 @@
 @height_FastFilter-iconArrow:               9px;
 @width_FastFilter-iconArrow:                16px;
 @spacing_FastFilter-between-icon-text:      0 2px 0 2px;
+//icon-button
+@box-shadow-IconButton:                  0px 1px 2px @color-IconButton__shadow;
+@height-IconButton_size-m:               24px;
+@width-IconButton_size-m:                24px;
+@height-IconButton_size-l:               28px;
+@width-IconButton_size-l:                28px;
+@border-radius-IconButton:               1px;
+@border-width-IconButton:                1px;
+@border-style-IconButton:                solid;
+@box-shadow-IconButton_activated:        none;

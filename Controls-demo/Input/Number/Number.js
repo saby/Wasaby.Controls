@@ -1,6 +1,6 @@
-define('Controls-demo/Input/Number', [
+define('Controls-demo/Input/Number/Number', [
    'Core/Control',
-   'tmpl!Controls-demo/Input/Number',
+   'tmpl!Controls-demo/Input/Number/Number',
    'WS.Data/Source/Memory'
 ], function(Control, template) {
 

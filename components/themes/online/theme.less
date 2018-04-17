@@ -58,7 +58,12 @@
          }
       }
    }
-
+    //todo
+    &.controls-ListView__withoutMarker,.controls-ListView__withoutMarker {
+       .controls-DataGridView__td:first-child {
+          background-image: none !important;
+       }
+    }
 }
 
 .controls-Popup-border {
@@ -68,8 +73,10 @@
    border-color: @border-color_Menu;
 }
 
-.controls-Popup__touchScroll-fix .controls-ScrollContainer .controls-ScrollContainer__content, .controls-Menu__Popup {
-   -webkit-overflow-scrolling: touch!important;
+.controls-Popup__touchScroll-fix {
+   .controls-ScrollContainer .controls-ScrollContainer__content, &.controls-Menu__Popup, &.controls-DropdownList__picker {
+      -webkit-overflow-scrolling: touch!important;
+   }
 }
 
 .controls-DataGridView__td .controls-TreeView__searchBreadCrumbs {
