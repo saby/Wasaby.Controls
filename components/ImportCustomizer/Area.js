@@ -458,6 +458,11 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             return options;
          },
 
+         /**
+          * Провести обработку опций
+          * @protected
+          * @param {object} options Опции компонента
+          */
          _processOptions: function (options) {
             options._isUsedSubview = this._getSubviewUsings(options);
             if (!options.waitingMode) {
@@ -467,6 +472,11 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             }
          },
 
+         /**
+          * Создать все необходимые дополнительные опции компонента
+          * @protected
+          * @param {object} options Опции компонента
+          */
          _reshapeOptions: function (options) {
             var isUsedSubview = options._isUsedSubview;
             // Если в опции "fields" нет явных данных типа {@link ImportTargetFields}, то выявить обещание this._fieldsPromise, а опцию сбросить
@@ -537,6 +547,11 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             options._scopes = scopes;
          },
 
+         /**
+          * Разрешить неустановленные собственные опции компонента их значениями по умолчанию из статического метода getDefaultOptions
+          * @protected
+          * @param {object} options Опции компонента
+          */
          _resolveOptions: function (options) {
             var defaultOptions = Area.getDefaultOptions();
             for (var name in defaultOptions) {
@@ -546,6 +561,11 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             }
          },
 
+         /**
+          * Проверить собственные опции компонента на допустимость их значений, используя валидаторы из статического метода getOptionTypes
+          * @protected
+          * @param {object} options Опции компонента
+          */
          _validateOptions: function (options) {
             if (!options.waitingMode) {
                var typeValidators = Area.getOptionTypes();
