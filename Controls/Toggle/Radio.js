@@ -36,20 +36,20 @@ define('Controls/Toggle/Radio', [
       },
 
       prepareItemCaptionClass: function(options) {
-         var captionClass = 'controls-RadioItem__caption' + (options.size === 'l' ? '_size-l': '_size-m') + ' controls-RadioItem__caption';
+         var captionClass = 'controls-RadioItem__caption' + (options.size === 'l' ? '_size-l' : '_size-m') + ' controls-RadioItem__caption';
          if (options.selected) {
-            captionClass+= '_selected';
+            captionClass += '_selected';
             if (options.size === 'm') {
-               captionClass+= '_size-m';
+               captionClass += '_size-m';
             } else {
-               captionClass+= '_size-l';
+               captionClass += '_size-l';
             }
          } else {
             captionClass+= '_unselected';
             if (options.readOnly) {
-               captionClass+= '_disabled';
+               captionClass += '_disabled';
             } else {
-               captionClass+= '_enabled';
+               captionClass += '_enabled';
             }
          }
          return captionClass;
@@ -60,7 +60,7 @@ define('Controls/Toggle/Radio', [
       }
    });
 
-   Radio._private= _private;
+   Radio._private = _private;
 
    return Radio;
 });
