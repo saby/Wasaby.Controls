@@ -25,6 +25,13 @@
                </ws:multiSelectTpl>
             </ws:partial>
         </ws:else>
+        <Controls.List.Mover ws:content="listView"
+                             name="moveControl"
+                             idProperty="{{_options.idProperty}}"
+                             on:beforeItemsMove="_beforeItemsMove()"
+                             on:afterItemsMove="_afterItemsMove()"
+                             sourceController="{{_sourceController}}"
+                             listModel="{{_listViewModel}}"/>
        <Controls.List.EditInPlace ws:content="listView"
                                   name="editInPlace"
                                   editingConfig="{{_options.editingConfig}}"
