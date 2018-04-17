@@ -45,7 +45,7 @@ define('Controls/Toggle/Radio', [
                captionClass += '_size-l';
             }
          } else {
-            captionClass+= '_unselected';
+            captionClass += '_unselected';
             if (options.readOnly) {
                captionClass += '_disabled';
             } else {
