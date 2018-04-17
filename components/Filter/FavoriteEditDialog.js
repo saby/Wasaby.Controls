@@ -71,6 +71,7 @@ define('SBIS3.CONTROLS/Filter/FavoriteEditDialog',
                if (hasFieldsToSave(this, this.getRecord())) {
                   fcMethod.call(this, result);
                } else {
+                  this._confirmDialog = undefined;
                   InformationPopupManager.showMessageDialog({
                      message: 'Нельзя сохранить в историю запись без фильтров',
                      opener: this,

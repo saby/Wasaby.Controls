@@ -450,9 +450,10 @@ define('SBIS3.CONTROLS/DropdownList',
 
          _removeOldKeys: function(){
             if (this._loadItemsDeferred && !this._loadItemsDeferred.isReady()) {
-               this._loadItemsDeferred.addCallback(function() {
+               this._loadItemsDeferred.addCallback(function(list) {
                   var item = this._options.selectedItems.at(0);
-                  var text = item && item.get(this._options.displayProperty);
+                  var textValues = [];
+                  var self = this;
                   if (!item) {
                      this._setFirstItemAsSelected();
                      //Скрываю крестик сброса
@@ -460,8 +461,12 @@ define('SBIS3.CONTROLS/DropdownList',
                      this.getContainer().toggleClass('controls-DropdownList__hideCross', true);
                   } else {
                      this._removeOldKeysCallback();
-                     this._drawSelectedValue(this._options.selectedKeys[0], [text]);
+                     list.each(function(rec) {
+                        textValues.push(rec.get(self._options.displayProperty));
+                     });
+                     this._drawSelectedValue(this._options.selectedKeys[0], textValues);
                   }
+                  return list;
                }.bind(this));
             } else {
                this._removeOldKeysCallback();
