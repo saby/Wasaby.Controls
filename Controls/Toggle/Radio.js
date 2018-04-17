@@ -35,11 +35,24 @@ define('Controls/Toggle/Radio', [
          return "controls-RadioGroup_default_" + (options.direction === "horizontal" ? "horizontal" : "vertical");
       },
 
-      prepareItemCaptionClass: function(item, items, options) {
-         if (item  === items.at(0)){
-            return "controls-RadioGroup_first";
+      prepareItemCaptionClass: function(options) {
+         var captionClass="controls-RadioItem__caption"+(options.size ==="l" ? '_size-l': '_size-m') + " controls-RadioItem__caption";
+         if (options.selected) {
+            captionClass+= "_selected";
+            if (options.size === "m") {
+               captionClass+= "_size-m";
+            } else {
+               captionClass+= "_size-l";
+            }
+         } else {
+            captionClass+= "_unselected";
+            if (options.readOnly) {
+               captionClass+= "_disabled";
+            } else {
+               captionClass+= "_enabled";
+            }
          }
-         return "controls-RadioGroup_default_" + (options.direction === "horizontal" ? "horizontal" : "vertical");
+         return captionClass;
       },
 
       selectKeyChanged: function (e, item, keyProperty) {

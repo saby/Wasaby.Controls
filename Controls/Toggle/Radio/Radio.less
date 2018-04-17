@@ -7,7 +7,7 @@
 }
 
 .controls-RadioGroup_default_vertical {
-   padding-left: @spacing-between-radioItems_vertical;
+   padding-botton: @spacing-between-radioItems_vertical;
 }
 
 .controls-RadioItem_wrapper {
@@ -20,19 +20,28 @@
    content: '\200b';
 }
 
-.controls-RadioItem_caption {
-   font-size: @font-size_RadioItem;
+.controls-RadioItem__caption_size-m {
+   font-size: @font-size_RadioItem_size-m;
 }
 
-.controls-RadioItem_caption_selected {
-   color: @color_RadioItem_caption_selected;
+.controls-RadioItem__caption_size-l {
+   font-size: @font-size_RadioItem_size-l;
+   font-weight: bold;
 }
 
-.controls-RadioItem_caption_unselected_disabled {
+.controls-RadioItem__caption_selected_size-m {
+   color: @color_RadioItem_caption_selected_size-m;
+}
+
+.controls-RadioItem__caption_selected_size-l {
+   color: @color_RadioItem_caption_selected_size-l;
+}
+
+.controls-RadioItem__caption_unselected_disabled {
    color: @color_RadioItem_caption_unselected_disabled;
 }
 
-.controls-RadioItem_caption_unselected_enabled {
+.controls-RadioItem__caption_unselected_enabled {
    color: @color_RadioItem_caption_unselected_enabled;
 }
 
@@ -77,7 +86,7 @@
          stroke: @stroke_RadioGroup_borderCircle_enabled_hovered;
       }
 
-      .controls-RadioItem_caption_unselected_enabled {
+      .controls-RadioItem__caption_unselected_enabled {
          text-decoration: underline;
       }
    }
