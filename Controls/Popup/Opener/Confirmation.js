@@ -45,7 +45,7 @@ define('Controls/Popup/Opener/Confirmation',
          open: function(cfg) {
             this._resultDef = new Deferred();
             this._children.opener.open({
-               componentOptions: cfg
+               templateOptions: cfg
             });
             return this._resultDef;
          }

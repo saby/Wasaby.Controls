@@ -1,9 +1,9 @@
-define(['Controls/Input/resources/SuggestPopupController', 'Core/core-instance', 'WS.Data/Source/Memory','WS.Data/Collection/List'],
+define(['Controls/Input/resources/SuggestPopupController', 'Core/core-instance', 'WS.Data/Source/Memory', 'WS.Data/Collection/List'],
    function(SuggestPopupController, cInstance, Memory, List) {
    
-   'use strict';
+      'use strict';
       
-      describe('Controls.Input.SuggestPopupController', function () {
+      describe('Controls.Input.SuggestPopupController', function() {
          
          it('.getSearchController', function() {
             var self = {
@@ -17,11 +17,11 @@ define(['Controls/Input/resources/SuggestPopupController', 'Core/core-instance',
    
          it('.prepareSuggestFilter', function() {
             var selfTest = {
-                  _searchParam: 'test'
-               };
+               _searchParam: 'test'
+            };
    
             selfTest._popupOptions = {
-               componentOptions: {
+               templateOptions: {
                   filter: {
                      test: 123
                   }
@@ -29,23 +29,23 @@ define(['Controls/Input/resources/SuggestPopupController', 'Core/core-instance',
             };
    
             SuggestPopupController._private.prepareSuggestFilter(selfTest, {hasMore: true});
-            assert.equal(selfTest._popupOptions.componentOptions.filter.test, 123);
+            assert.equal(selfTest._popupOptions.templateOptions.filter.test, 123);
    
             SuggestPopupController._private.prepareSuggestFilter(selfTest, {hasMore: false});
-            assert.equal(selfTest._popupOptions.componentOptions.filter.test, undefined);
+            assert.equal(selfTest._popupOptions.templateOptions.filter.test, undefined);
             
          });
    
          it('.changeSelectedIndex', function() {
             var list = new List({items: [1, 2]}),
-                selfTest = {};
+               selfTest = {};
    
             selfTest._popupOpener = {
-               open: function(){}
+               open: function() {}
             };
             selfTest._selectedIndex = 0;
             selfTest._popupOptions = {
-               componentOptions: {
+               templateOptions: {
                   items: list
                }
             };
@@ -64,13 +64,13 @@ define(['Controls/Input/resources/SuggestPopupController', 'Core/core-instance',
    
             SuggestPopupController._private.setSuggestSelectedIndex(selfTest, 2);
             assert.equal(selfTest._selectedIndex, 2);
-            assert.equal(selfTest._popupOptions.componentOptions.selectedIndex, 2);
+            assert.equal(selfTest._popupOptions.templateOptions.selectedIndex, 2);
          });
    
          it('._private.needShowPopup', function() {
             var list = new List({items: [1, 2]}),
-                emptyList = new List(),
-                self = {};
+               emptyList = new List(),
+               self = {};
    
             assert.isTrue(!!SuggestPopupController._private.needShowPopup(self, {result: list}));
             assert.isFalse(!!SuggestPopupController._private.needShowPopup(self, {result: emptyList}));

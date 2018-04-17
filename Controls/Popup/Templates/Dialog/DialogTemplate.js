@@ -1,9 +1,8 @@
-define('Controls/Popup/DialogTemplate',
+define('Controls/Popup/Templates/Dialog/DialogTemplate',
    [
       'Core/Control',
-      'tmpl!Controls/Popup/DialogTemplate',
-      'css!Controls/Popup/DialogTemplate',
-      'css!SBIS3.CONTROLS/Mixins/PopupMixin/PopupMixin'
+      'tmpl!Controls/Popup/Templates/Dialog/DialogTemplate',
+      'css!Controls/Popup/Templates/Dialog/DialogTemplate'
    ],
    function(Control, template) {
       'use strict';
@@ -12,7 +11,7 @@ define('Controls/Popup/DialogTemplate',
 
          /**
           * Базовый шаблон диалога
-          * @class Controls/Popup/DialogTemplate
+          * @class Controls/Popup/Templates/Dialog/DialogTemplate
           * @extends Core/Control
           * @control
           * @public
@@ -21,17 +20,17 @@ define('Controls/Popup/DialogTemplate',
           */
 
          /**
-          * @name Controls/Popup/DialogTemplate#caption
+          * @name Controls/Popup/Templates/Dialog/DialogTemplate#caption
           * @cfg {String} Заголовок
           */
 
          /**
-          * @name Controls/Popup/DialogTemplate#topArea
+          * @name Controls/Popup/Templates/Dialog/DialogTemplate#topArea
           * @cfg {Content} Шаблон шапки диалога
           */
 
          /**
-          * @name Controls/Popup/DialogTemplate#contentArea
+          * @name Controls/Popup/Templates/Dialog/DialogTemplate#contentArea
           * @cfg {Content} Шаблон контента диалога
           */
 
@@ -39,7 +38,7 @@ define('Controls/Popup/DialogTemplate',
 
          /**
           * Закрыть всплывающее окно
-          * @function Controls/Popup/DialogTemplate#close
+          * @function Controls/Popup/Templates/Dialog/DialogTemplate#close
           */
          close: function() {
             this._notify('close', [], {bubbling: true});
