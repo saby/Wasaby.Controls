@@ -14,12 +14,12 @@ define('Controls/Container/List',
    function(Control, template, Memory, SearchController, merge, isEqual, SearchContextField, FilterContextField, Deferred) {
       
       'use strict';
-   
-   
+      
+      
       var _private = {
          getSearchController: function(self) {
             var options = self._options;
-   
+            
             if (!self._searchController) {
                self._searchController = new SearchController({
                   filter: merge({}, options.filter),
@@ -41,7 +41,7 @@ define('Controls/Container/List',
             self._source = options.source;
             self._filter = options.filter;
          },
-      
+         
          updateSource: function(self, data) {
             /* TODO will be a cached source */
             self._source = new Memory({
@@ -54,7 +54,7 @@ define('Controls/Container/List',
             var filterClone = merge({}, self._options.filter);
             self._filter = merge(filterClone, resultFilter);
          },
-      
+         
          abortCallback: function(self, filter) {
             _private.updateFilter(self, filter);
             
@@ -64,7 +64,7 @@ define('Controls/Container/List',
             
             self._forceUpdate();
          },
-      
+         
          searchCallback: function(self, result, filter) {
             _private.updateFilter(self, filter);
             _private.updateSource(self, result.data);
@@ -74,7 +74,7 @@ define('Controls/Container/List',
             
             self._forceUpdate();
          },
-   
+         
          searchValueChanged: function(self, value) {
             if (self._searchDeferred && self._searchDeferred.isReady()) {
                self._searchDeferred.cancel();
@@ -83,7 +83,7 @@ define('Controls/Container/List',
             _private.getSearchController(self).search(value);
             self._notify('searchStart', [], {bubbling: true});
          },
-   
+         
          filterChanged: function(self, filter) {
             _private.updateFilter(self, filter);
             self._forceUpdate();
@@ -91,23 +91,23 @@ define('Controls/Container/List',
          
          checkFilterValue: function(self, newContext, oldContext) {
             var newFilter = newContext.filterLayoutField && newContext.filterLayoutField.filter,
-                oldFilter = self._contextObj &&
-                            self._contextObj.hasOwnProperty('filterLayoutField') &&
-                            oldContext.get('filterLayoutField').filter;
-   
+               oldFilter = self._contextObj &&
+                  self._contextObj.hasOwnProperty('filterLayoutField') &&
+                  oldContext.get('filterLayoutField').filter;
+            
             return newFilter && !isEqual(newFilter, oldFilter) ? _private.filterChanged(self, newFilter) : false;
          },
          
          checkSearchValue: function(self, newContext, oldContext) {
             var newValue = newContext.searchLayoutField && newContext.searchLayoutField.searchValue,
-                oldValue = self._contextObj &&
-                           self._contextObj.hasOwnProperty('searchLayoutField') &&
-                           oldContext.get('searchLayoutField').searchValue;
-   
+               oldValue = self._contextObj &&
+                  self._contextObj.hasOwnProperty('searchLayoutField') &&
+                  oldContext.get('searchLayoutField').searchValue;
+            
             return newValue && !isEqual(newValue, oldValue) ? _private.searchValueChanged(self, newValue) : false;
          }
       };
-   
+      
       /**
        * Container for lists components.
        * Pass props (like filter, source, navigation) to list inside.
@@ -157,14 +157,14 @@ define('Controls/Container/List',
          }
          
       });
-   
+      
       List.contextTypes = function() {
          return {
             searchLayoutField: SearchContextField,
             filterLayoutField: FilterContextField
          };
       };
-   
+      
       List.getDefaultOptions = function() {
          return {
             searchDelay: 500,
@@ -172,7 +172,7 @@ define('Controls/Container/List',
             filter: {}
          };
       };
-   
+      
       /* For tests */
       List._private = _private;
       return List;
