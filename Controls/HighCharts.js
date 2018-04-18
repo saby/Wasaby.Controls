@@ -19,9 +19,24 @@ define('Controls/HighCharts',
        * @authors Volotskoy V.D., Sukhoruchkin A.S.
        */
 
-      var HighChart = Control.extend({
+      var _private = {
+            drawChart: function(self, config) {
+
+               //TODO Как добавят возможность использовать контейнер как _children поменять на config.highChartOptions.chart.renderTo = this._children.highChartContainer
+               //Ссылка на задачу: https://online.sbis.ru/opendoc.html?guid=e6e4454f-0f12-45e7-a390-86adfd5582a1
+
+               config.chartOptions.chart.renderTo = self._container;
+               config.chartOptions.credits = config.chartOptions.credits || {};
+               config.chartOptions.credits.enabled = false;
+               if (self._chartInstance) {
+                  self._chartInstance.destroy();
+               }
+               self._chartInstance = new Highcharts.Chart(config.chartOptions);
+            }
+         },
+         HighChart = Control.extend({
          _template: template,
-         _highChartInstance: null,
+         _chartInstance: null,
 
          _shouldUpdate: function() {
             return false;
@@ -42,32 +57,20 @@ define('Controls/HighCharts',
                   }
                }
             });
-            this._drawChart(config);
+            _private.drawChart(this, config);
          },
 
          _beforeUpdate: function(config) {
-            if (this._options.highChartOptions !== config.highChartOptions) {
-               this._drawChart(config);
+            if (this._options.chartOptions !== config.chartOptions) {
+               _private.drawChart(this, config);
             }
          },
 
-         _drawChart: function(config) {
-            config.highChartOptions.chart.renderTo = this._container;
 
-            //TODO Как добавят возможность использовать контейнер как _children поменять на config.highChartOptions.chart.renderTo = this._children.highChartContainer
-            //Ссылка на задачу: https://online.sbis.ru/opendoc.html?guid=e6e4454f-0f12-45e7-a390-86adfd5582a1
-
-            config.highChartOptions.credits = config.highChartOptions.credits || {};
-            config.highChartOptions.credits.enabled = false;
-            if (this._highChartInstance) {
-               this._highChartInstance.destroy();
-            }
-            this._highChartInstance = new Highcharts.Chart(config.highChartOptions);
-         },
 
          _beforeUnmount: function() {
-            this._highChartInstance.destroy();
-            this._highChartInstance = undefined;
+            this._chartInstance.destroy();
+            this._chartInstance = undefined;
          }
       });
 
