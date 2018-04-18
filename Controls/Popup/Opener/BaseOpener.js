@@ -35,15 +35,24 @@ define('Controls/Popup/Opener/BaseOpener',
                if (!cfg.opener) {
                   cfg.opener = this;
                }
-               this._getTemplate(cfg).addCallback(function() {
-                  self._popupId = ManagerController.show(cfg, strategy);
+               this._getTemplate(cfg).addCallback(function(tpl) {
+                  if (self._isVDOMTemplate(tpl)) {
+                     self._popupId = ManagerController.show(cfg, strategy);
+                  } else {
+                     requirejs(['Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea'], function() {
+                        self._prepareConfigForOldTemplate(cfg, tpl);
+                        self._popupId = ManagerController.show(cfg, strategy);
+                     });
+                  }
                });
             }
          },
 
          //Ленивая загрузка шаблона
          _getTemplate: function(config) {
-            if (typeof config.template === 'function' || requirejs.defined(config.template)) {
+            if (typeof config.template === 'function') {
+               return (new Deferred()).callback(config.template);
+            } else if (requirejs.defined(config.template)) {
                return (new Deferred()).callback(requirejs(config.template));
             } else if (!this._openerListDeferred) {
                this._openerListDeferred = new Deferred();
@@ -71,6 +80,24 @@ define('Controls/Popup/Opener/BaseOpener',
           */
          isOpened: function() {
             return !!ManagerController.find(this._popupId);
+         },
+
+
+         /* TODO COMPATIBLE */
+         _isVDOMTemplate: function(templateClass) {
+            //на VDOM классах есть св-во _template.
+            //Если его нет, но есть _stable, значит это функция от tmpl файла
+            return !!templateClass.prototype._template || !!templateClass.stable;
+         },
+         _prepareConfigForOldTemplate: function(cfg, templateClass) {
+            cfg.templateOptions.component = cfg.template;
+            cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
+            this._setDimensions(cfg, templateClass);
+         },
+         _setDimensions: function(cfg, templateClass) {
+            var dimensions = templateClass.dimensions;
+            cfg.minWidth = dimensions.minWidth ? parseInt(dimensions.minWidth, 10) : null;
+            cfg.maxWidth = dimensions.maxWidth ? parseInt(dimensions.maxWidth, 10) : null;
          }
       });
       return Base;
