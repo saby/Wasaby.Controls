@@ -22,7 +22,7 @@ define('SBIS3.CONTROLS/WSControls/Containers/MasterDetail',
        *    <li>detail - component for detail column.</li>
        * </ol>
        *
-       * @class WSControls/Containers/MasterDetail
+       * @class SBIS3.CONTROLS/WSControls/Containers/MasterDetail
        * @extends Core/Control
        * @demo Examples/MasterDetail/MasterDetailDemo
        * @author Uvarov Ivan (is.uvarov)
