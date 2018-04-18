@@ -1,0 +1,10 @@
+[{
+   "include": [
+      "SBIS3.CONTROLS/RichEditor/Components/RoundToolbar",
+      "SBIS3.CONTROLS/RichEditor/Components/RoundToolbar/resources/config",
+      "SBIS3.CONTROLS/RichEditor/Components/RoundToolbar/resources/handlers",
+      "tmpl!SBIS3.CONTROLS/RichEditor/Components/RoundToolbar/RichEditorRoundToolbar",
+      "css!SBIS3.CONTROLS/RichEditor/Components/RoundToolbar/RichEditorRoundToolbar"
+   ],
+   "output": "SBIS3.CONTROLS/RichEditor/Components/RoundToolbar"
+}]
