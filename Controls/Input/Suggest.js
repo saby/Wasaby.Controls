@@ -41,6 +41,7 @@ define('Controls/Input/Suggest',
       var Suggest = Control.extend({
          
          _template: template,
+         
          //context value
          _searchMode: false,
          _searchResult: null,
@@ -78,12 +79,13 @@ define('Controls/Input/Suggest',
             this._notify('valueChanged', [value]);
          },
          
-         _deactivated: function () {
+         _deactivated: function() {
             this._isOpen = false;
          },
          
          _select: function(event, item) {
             item = item || event;
+            
             /* move focus to input after select, because focus will be lost after closing popup  */
             this.activate();
             this._isOpen = false;

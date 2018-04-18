@@ -91,14 +91,18 @@ define('Controls/Container/List',
          
          checkFilterValue: function(self, newContext, oldContext) {
             var newFilter = newContext.filterLayoutField && newContext.filterLayoutField.filter,
-                oldFilter = self._contextObj && self._contextObj.hasOwnProperty('filterLayoutField') && oldContext.get('filterLayoutField').filter;
+                oldFilter = self._contextObj &&
+                            self._contextObj.hasOwnProperty('filterLayoutField') &&
+                            oldContext.get('filterLayoutField').filter;
    
             return newFilter && !isEqual(newFilter, oldFilter) ? _private.filterChanged(self, newFilter) : false;
          },
          
          checkSearchValue: function(self, newContext, oldContext) {
             var newValue = newContext.searchLayoutField && newContext.searchLayoutField.searchValue,
-                oldValue = self._contextObj && self._contextObj.hasOwnProperty('searchLayoutField') && oldContext.get('searchLayoutField').searchValue;
+                oldValue = self._contextObj &&
+                           self._contextObj.hasOwnProperty('searchLayoutField') &&
+                           oldContext.get('searchLayoutField').searchValue;
    
             return newValue && !isEqual(newValue, oldValue) ? _private.searchValueChanged(self, newValue) : false;
          }
