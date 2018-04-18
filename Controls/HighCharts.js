@@ -68,7 +68,7 @@ define('Controls/HighCharts',
                this._chartInstance.destroy();
                this._chartInstance = undefined;
             }
-      });
+         });
 
       return HighChart;
    });
