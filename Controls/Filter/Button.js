@@ -96,7 +96,7 @@ define('Controls/Filter/Button',
                         items: this._options.items,
                         viewMode: this._options.viewMode
                      },
-                     template: 'Controls/Filter/Panel',
+                     template: 'Controls/Filter/Button/Panel',
                      target: this._children.panelTarget
                   });
                }

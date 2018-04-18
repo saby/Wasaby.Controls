@@ -1,0 +1,7 @@
+<div class="controls-PropertyGrid">
+   <ws:for data="index, item in _options.items">
+      <div class="controls-PropertyGrid__item">
+         <ws:partial template="{{item.editor}}" item="{{item}}" on:valueChanged="_valueChangedHandler()"/>
+      </div>
+   </ws:for>
+</div>
