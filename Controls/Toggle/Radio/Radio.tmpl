@@ -3,7 +3,7 @@
         <ws:for data="item in _items">
             <ws:partial template="tmpl!Controls/Toggle/Radio/resources/ItemTemplate"
                         on:click="selectKeyChanged(item, _options.keyProperty)"
-                        attr:class="{{prepareItemClass(item, _items, _options)}}"
+                        attr:class="{{item  === _items.at(0) ? 'controls-RadioGroup_first_' : 'controls-RadioGroup_default_'}}{{_options.direction === 'horizontal' ? 'horizontal' : 'vertical'}}"
                         item="{{item}}"
                         readOnly="{{_options.readOnly}}"
                         selected="{{item.get(_options.keyProperty) === _options.selectedKey}}"
