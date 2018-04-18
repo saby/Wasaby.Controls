@@ -31,43 +31,43 @@ define('Controls/HighCharts',
             }
          },
          HighChart = Control.extend({
-         _template: template,
-         _chartInstance: null,
+            _template: template,
+            _chartInstance: null,
 
-         _shouldUpdate: function() {
-            return false;
-         },
+            _shouldUpdate: function() {
+               return false;
+            },
 
-         _afterMount: function(config) {
-            Highcharts.setOptions({
-               lang: {
-                  numericSymbols: ['', '', '', '', '', ''],
-                  months: constants.Date.longMonths,
-                  shortMonths: constants.Date.months,
-                  weekdays: constants.Date.longDays,
-                  thousandsSep: ' '
-               },
-               plotOptions: {
-                  series: {
-                     animation: !constants.browser.isIE10
+            _afterMount: function(config) {
+               Highcharts.setOptions({
+                  lang: {
+                     numericSymbols: ['', '', '', '', '', ''],
+                     months: constants.Date.longMonths,
+                     shortMonths: constants.Date.months,
+                     weekdays: constants.Date.longDays,
+                     thousandsSep: ' '
+                  },
+                  plotOptions: {
+                     series: {
+                        animation: !constants.browser.isIE10
+                     }
                   }
-               }
-            });
-            _private.drawChart(this, config);
-         },
-
-         _beforeUpdate: function(config) {
-            if (this._options.chartOptions !== config.chartOptions) {
+               });
                _private.drawChart(this, config);
+            },
+
+            _beforeUpdate: function(config) {
+               if (this._options.chartOptions !== config.chartOptions) {
+                  _private.drawChart(this, config);
+               }
+            },
+
+
+
+            _beforeUnmount: function() {
+               this._chartInstance.destroy();
+               this._chartInstance = undefined;
             }
-         },
-
-
-
-         _beforeUnmount: function() {
-            this._chartInstance.destroy();
-            this._chartInstance = undefined;
-         }
       });
 
       return HighChart;
