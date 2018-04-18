@@ -28,13 +28,6 @@ define('Controls/Toggle/Radio', [
          }
       },
 
-      prepareItemClass: function(item, items, options) {
-         if (item  === items.at(0)) {
-            return 'controls-RadioGroup_first';
-         }
-         return 'controls-RadioGroup_default_' + (options.direction === 'horizontal' ? 'horizontal' : 'vertical');
-      },
-
       selectKeyChanged: function(e, item, keyProperty) {
          this._notify('selectKeyChange', item.get(keyProperty));
       }
