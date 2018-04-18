@@ -1,4 +1,4 @@
-<span attr:class="controls-RadioItem_wrapper">
+<span attr:class="controls-RadioItem__wrapper">
     <svg attr:xmlns="http://www.w3.org/2000/svg" attr:id="Слой_1" attr:data-name="Слой 1" attr:class="controls-RadioItem__svg_size" attr:viewBox="0 0 12 12">
        <path attr:xmlns="http://www.w3.org/2000/svg"
              attr:class="controls-RadioGroup__borderCircle controls-RadioGroup__borderCircle_{{readOnly ? 'disabled' : 'enabled'}}"
@@ -7,5 +7,7 @@
              attr:class="controls-RadioGroup__innerCircle controls-RadioGroup__innerCircle_{{selected ? (readOnly ? 'selected_disabled' : 'selected_enabled') : 'unselected'}}"
              attr:x="3" attr:y="3" attr:width="6" attr:height="6" attr:rx="3" attr:ry="3"/>
     </svg>
-    <span attr:class="{{captionClass}}">{{item["caption"]}}</span>
+    <span attr:class="controls-RadioItem__caption_style_{{style}}_{{selected ? 'selected' : 'unselected'}}_{{readOnly ? 'disabled' : 'enabled'}}
+                      controls-RadioItem__caption_style_{{style}}">
+        {{item["caption"]}}</span>
 </span>

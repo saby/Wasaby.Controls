@@ -10,40 +10,53 @@
    padding-botton: @spacing-between-radioItems_vertical;
 }
 
-.controls-RadioItem_wrapper {
+.controls-RadioItem__wrapper {
    height: @height_RadioItem;
    .inline-flexbox();
    .align-items(center);
 }
 
-.controls-RadioItem_wrapper:before {
+.controls-RadioItem__wrapper:before {
    content: '\200b';
 }
 
-.controls-RadioItem__caption_size-m {
-   font-size: @font-size_RadioItem_size-m;
-   padding-left: @spacing-between-radioItem-icon-caption;
+.controls-RadioItem__caption_style_default {
+    font-size: @font-size_RadioItem_size-m;
+    padding-left: @spacing-between-radioItem-icon-caption;
+ }
+
+.controls-RadioItem__caption_style_default_selected_disabled,
+.controls-RadioItem__caption_style_default_selected_enabled {
+   color: @color_RadioItem_caption_selected_size-m;
 }
 
-.controls-RadioItem__caption_size-l {
+.controls-RadioItem__caption_style_default_unselected_disabled {
+   color: @color_RadioItem_caption_unselected_disabled;
+}
+
+.controls-RadioItem__caption_style_default_unselected_enabled {
+   color: @color_RadioItem_caption_unselected_enabled;
+}
+
+.controls-RadioItem__caption_style_additional {
    font-size: @font-size_RadioItem_size-l;
    font-weight: bold;
    padding-left: @spacing-between-radioItem-icon-caption;
 }
 
-.controls-RadioItem__caption_selected_size-m {
-   color: @color_RadioItem_caption_selected_size-m;
+.controls-RadioItem__caption_style_additional_selected_disabled {
+   color: @color_RadioItem_caption_selected_size-l_disabled;
 }
 
-.controls-RadioItem__caption_selected_size-l {
+.controls-RadioItem__caption_style_additional_selected_enabled {
    color: @color_RadioItem_caption_selected_size-l;
 }
 
-.controls-RadioItem__caption_unselected_disabled {
+.controls-RadioItem__caption_style_additional_unselected_disabled {
    color: @color_RadioItem_caption_unselected_disabled;
 }
 
-.controls-RadioItem__caption_unselected_enabled {
+.controls-RadioItem__caption_style_additional_unselected_enabled {
    color: @color_RadioItem_caption_unselected_enabled;
 }
 
