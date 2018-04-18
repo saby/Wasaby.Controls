@@ -1,0 +1,19 @@
+<div class="controls-RichEditor">
+    <Controls.Container.Scroll
+            class="controls-ScrollContainer_flex controls-RichEditor__scrollContainer"
+    >
+        <ws:content>
+            <ws:if data="{{_options.enabled}}">
+                <div class="controls-RichEditor__editorFrame"
+                     on:input="_textChanged()"
+                     name="mceEditor">
+                </div>
+            </ws:if>
+            <ws:else>
+                <div class="controls-RichEditor__previewContainer" name="textContainer">
+                </div>
+            </ws:else>
+        </ws:content>
+    </Controls.Container.Scroll>
+
+</div>
