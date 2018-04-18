@@ -524,9 +524,7 @@ define('SBIS3.CONTROLS/WaitIndicator',
          change: function (spinner, container, message, look) {
             var options = this._prepareOptions(container, message, look);
             var $prev = spinner ? $(spinner) : null;
-            if (container) {
-               options.z = spinner ? +$prev.css('z-index') : WindowManager.acquireZIndex(false, false, false);
-            }
+            options.z = spinner ? +$prev.css('z-index') : WindowManager.acquireZIndex(false, false, false);
             var $next = $(this._dotTplFn(options));
             if (spinner) {
                $prev.replaceWith($next);
@@ -574,9 +572,7 @@ define('SBIS3.CONTROLS/WaitIndicator',
          remove: function (spinner, isGlobal) {
             var p = spinner.parentNode;
             if (p) {
-               if (!isGlobal) {
-                  WindowManager.releaseZIndex(+$(spinner).css('z-index'));
-               }
+               WindowManager.releaseZIndex(+$(spinner).css('z-index'));//^^^
                this._unwatchResize(spinner);
                p.removeChild(spinner);
             }
