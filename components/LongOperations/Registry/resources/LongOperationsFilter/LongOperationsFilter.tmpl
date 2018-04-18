@@ -9,42 +9,20 @@
          parentProperty="parent"
          multiselect="{{false}}"
          text="{{'StateTitle'|mutable}}"
+         items="{{ [
+            {'key':null, 'title':rk('В любом состоянии')},
+            {'key':'running', 'title':rk('В процессе')},
+            {'key':'ended', 'title':rk('Завершенные')},
+            {'key':'success-ended', 'title':rk('Успешно'), 'parent':'ended'},
+            {'key':'error-ended', 'title':rk('С ошибками'), 'parent':'ended'},
+            {'key':'suspended', 'title':rk('Приостановленные')}
+         ] }}"
          >
          <ws:selectedKeys>
             <ws:Array>
                <ws:Object><ws:String>{{'StateKey'|mutable}}</ws:String></ws:Object>
             </ws:Array>
          </ws:selectedKeys>
-         <ws:items>
-            <ws:Array>
-               <ws:Object
-                  key="{{null}}"
-                  title="{[В любом состоянии]}"
-               />
-               <ws:Object
-                  key="running"
-                  title="{[В процессе]}"
-               />
-               <ws:Object
-                  key="ended"
-                  title="{[Завершенные]}"
-               />
-               <ws:Object
-                  key="success-ended"
-                  title="{[Успешно]}"
-                  parent="ended"
-               />
-               <ws:Object
-                  key="error-ended"
-                  title="{[С ошибками]}"
-                  parent="ended"
-               />
-               <ws:Object
-                  key="suspended"
-                  title="{[Приостановленные]}"
-               />
-            </ws:Array>
-         </ws:items>
       </SBIS3.CONTROLS:DropdownList>
       <SBIS3.CONTROLS:DropdownList
          name="PeriodFilter"
@@ -54,40 +32,19 @@
          displayProperty="title"
          multiselect="{{false}}"
          text="{{'PeriodTitle'|mutable}}"
+         items="{{ [
+            {'key':null, 'title':rk('За все время')},
+            {'key':'PT1H', 'title':rk('За час')},
+            {'key':'P1D', 'title':rk('За сегодня')},
+            {'key':'P7D', 'title':rk('За неделю')},
+            {'key':'P30D', 'title':rk('За месяц')}
+         ] }}"
          >
          <ws:selectedKeys>
             <ws:Array>
                <ws:Object><ws:String>{{'PeriodKey'|mutable}}</ws:String></ws:Object>
             </ws:Array>
          </ws:selectedKeys>
-         <ws:items>
-            <ws:Array>
-               <ws:Object
-                  key="{{null}}"
-                  title="{[За все время]}"
-               />
-               <ws:Object
-                  key="PT1H"
-                  title="{[За час]}"
-               />
-               <ws:Object
-                  key="P1D"
-                  title="{[За сегодня]}"
-               />
-               <ws:Object
-                  key="P7D"
-                  title="{[За неделю]}"
-               />
-               <ws:Object
-                  key="P30D"
-                  title="{[За месяц]}"
-               />
-               <ws:Object
-                  key="P180D"
-                  title="{[За полгода]}"
-               />
-            </ws:Array>
-         </ws:items>
       </SBIS3.CONTROLS:DropdownList>
    </div>
    <div class="controls-LongOperationsFilter__block">
@@ -100,36 +57,19 @@
          displayProperty="title"
          multiselect="{{false}}"
          text="{{'DurationTitle'|mutable}}"
+         items="{{ [
+            {'key':null, 'title':rk('Все')},
+            {'key':'PT5M', 'title':rk('Дольше 5 минут')},
+            {'key':'PT10M', 'title':rk('Дольше 10 минут')},
+            {'key':'PT30M', 'title':rk('Дольше 30 минут')},
+            {'key':'PT1H', 'title':rk('Дольше часа')}
+         ] }}"
          >
          <ws:selectedKeys>
             <ws:Array>
                <ws:Object><ws:String>{{'DurationKey'|mutable}}</ws:String></ws:Object>
             </ws:Array>
          </ws:selectedKeys>
-         <ws:items>
-            <ws:Array>
-               <ws:Object
-                  key="{{null}}"
-                  title="{[Все]}"
-               />
-               <ws:Object
-                  key="PT5M"
-                  title="{[Дольше 5 минут]}"
-               />
-               <ws:Object
-                  key="PT10M"
-                  title="{[Дольше 10 минут]}"
-               />
-               <ws:Object
-                  key="PT30M"
-                  title="{[Дольше 30 минут]}"
-               />
-               <ws:Object
-                  key="PT1H"
-                  title="{[Дольше часа]}"
-               />
-            </ws:Array>
-         </ws:items>
       </SBIS3.CONTROLS:DropdownList>
    </div>
    <div if="{{!hideStaffFilter}}" class="controls-LongOperationsFilter__block">
