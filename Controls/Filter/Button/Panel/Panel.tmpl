@@ -18,7 +18,7 @@
    </div>
 
    <div class="controls-FilterPanel__content">
-      <Controls.Filter.Panel.PropertyGrid name="PropertyGrid" bind:items="_items"/>
+      <Controls.Filter.Button.Panel.PropertyGrid bind:items="_items" on:valueChanged="_valueChangedHandler()"/>
    </div>
    <div class="controls-FilterPanel__footer">
       <ws:if data="{{_additionalItems}}">

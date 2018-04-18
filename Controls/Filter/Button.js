@@ -9,8 +9,7 @@ define('Controls/Filter/Button',
       'WS.Data/Chain',
       'WS.Data/Utils',
       'css!Controls/Filter/Button/Button',
-      'Controls/Input/Text',
-      'Controls/Filter/Panel'
+      'Controls/Input/Text'
    ],
 
    function(Control, template, moduleStubs, Chain, Utils) {
@@ -98,7 +97,7 @@ define('Controls/Filter/Button',
                         items: this._options.items,
                         viewMode: this._options.viewMode
                      },
-                     template: 'Controls/Filter/Panel',
+                     template: 'Controls/Filter/Button/Panel',
                      target: this._children.panelTarget
                   });
                }
