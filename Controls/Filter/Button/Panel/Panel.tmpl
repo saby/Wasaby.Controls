@@ -1,27 +1,32 @@
-<Controls.Popup.Templates.Dialog.DialogTemplate caption="{{_options.title}}">
-   <ws:topArea>
-      <div class="controls-FilterPanel__header">
+<div class="controls-PanelFilter">
+   <div class="controls-FilterPanel__header">
+      <span class="controls-FilterPanel__header-title controls-FilterPanel__header-title_{{_options.styleHeader}}">{{_options.title}}</span>
+      <ws:if data="{{topTemplate}}">
+         <div class="controls-FilterPanel__header-topTemplate">
+            <ws:partial template="{{topTemplate}}"/>
+         </div>
+      </ws:if>
+      <Controls.Button style="linkMain" enabled="{{_isChanged}}" caption="{[По умолчанию]}" on:click="_resetFilter()"
+                       name="resetButton"
+                       attr:class="controls-FilterPanel__resetButton"></Controls.Button>
 
-         <ws:if data="{{_options.topTemplate}}">
-            <div class="controls-FilterPanel__header-topTemplate">
-               <ws:partial template="{{_options.topTemplate}}"/>
-            </div>
-         </ws:if>
-         <Controls.Button style="linkMain" readOnly="{{!_isChanged}}" caption="{[По умолчанию]}"
-                          on:click="_resetFilter()"
-                          name="resetButton"
-                          attr:class="controls-FilterPanel__resetButton"></Controls.Button>
+      <Controls.Button style="buttonPrimary" caption="{[Отобрать]}" on:click="_applyFilter()"
+                       attr:class="controls-FilterPanel__filterButton"></Controls.Button>
 
-         <Controls.Button style="buttonPrimary" caption="{[Отобрать]}" on:click="_applyFilter()"
-                          attr:class="controls-FilterPanel__filterButton"></Controls.Button>
-      </div>
-   </ws:topArea>
-   <ws:contentArea>
-      <div>
-      <Controls.PropertyGrid items="{{_items}}" on:valueChanged="_valueChangedHandler()"
-                             class="controls-FilterPanel__PropertyGrid"/>
-      <Controls.Filter.Button.Panel.AdditionalParams if="{{_hasAdditionalParams}}" items="{{_items}}"
-                                                     on:valueChanged="_valueChangedHandler()"/>
+      <div class="controls-FilterPanel__close_button_standart controls-FilterPanel__closeButton"
+           on:click="_close()"></div>
    </div>
-   </ws:contentArea>
-</Controls.Popup.Templates.Dialog.DialogTemplate>
+
+   <div class="controls-FilterPanel__content">
+      <Controls.Filter.Button.Panel.PropertyGrid bind:items="_items" on:valueChanged="_valueChangedHandler()"/>
+   </div>
+   <div class="controls-FilterPanel__footer">
+      <ws:if data="{{_additionalItems}}">
+         <span class="controls-FilterPanel__caption">{[Еще можно отобрать]}</span>
+         <div class="controls-FilterPanel__additionalParams">
+
+         </div>
+      </ws:if>
+      <div class="controls-FilterPanel__history"></div>
+   </div>
+</div>

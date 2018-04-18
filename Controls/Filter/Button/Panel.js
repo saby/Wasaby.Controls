@@ -10,15 +10,33 @@ define('Controls/Filter/Button/Panel', [
 
    /**
     * Control "Filter panel"
-    * @class Controls/Filter/Button/Panel
+    * @class Controls/Filter/Panel
     * @extends Controls/Control
-    * @mixes Controls/Filter/Button/interface/IFilterPanel
     * @control
     * @public
     */
 
    /**
-    * @event Controls/Filter/Button/Panel#filterChanged Happens when clicking on the button "Select"
+    * @event Controls/Filter/Panel#filterChanged Happens when clicking on the button "Select"
+    */
+
+   /**
+    * @name Controls/Filter/Panel#styleHeader
+    * @cfg {String} Color of title in header
+    * @variant default Blue color
+    * @variant custom Orange color
+    */
+
+   /**
+    * @name Controls/Filter/Panel#viewMode
+    * @cfg {String} Sets the display of the filter button
+    * @variant oneColumn The panel is built in one column
+    * @variant twoColumn The panel is built in two columns
+    */
+   
+   /**
+    * @name Controls/Filter/Panel#title
+    * @cfg {String} Caption
     */
 
    'use strict';
@@ -30,7 +48,7 @@ define('Controls/Filter/Button/Panel', [
       getFilter: function(self) {
          var filter = {};
          Chain(self._items).each(function(item) {
-            if (getPropValue(item, 'value') !== getPropValue(item, 'resetValue') && getPropValue(item, 'visibility')) {
+            if (getPropValue(item, 'value') !== getPropValue(item, 'resetValue')) {
                filter[item.id] = getPropValue(item, 'value');
             }
          });
@@ -39,16 +57,7 @@ define('Controls/Filter/Button/Panel', [
 
       isChangedValue: function(items) {
          for (var i in items) {
-            if (getPropValue(items[i], 'value') !== getPropValue(items[i], 'resetValue') && getPropValue(items[i], 'visibility')) {
-               return true;
-            }
-         }
-         return false;
-      },
-
-      hasAdditionalParams: function(items) {
-         for (var i in items) {
-            if (!getPropValue(items[i], 'visibility')) {
+            if (getPropValue(items[i], 'value') !== getPropValue(items[i], 'resetValue')) {
                return true;
             }
          }
@@ -59,21 +68,18 @@ define('Controls/Filter/Button/Panel', [
    var FilterPanel = Control.extend({
       _template: template,
       _isChanged: false,
-      _hasAdditionalParams: false,
 
       _beforeMount: function(options) {
          this._items = clone(options.items);
-         this._hasAdditionalParams = _private.hasAdditionalParams(options.items);
          this._isChanged = _private.isChangedValue(this._items);
       },
 
       _beforeUpdate: function() {
          this._isChanged = _private.isChangedValue(this._items);
-         this._hasAdditionalParams = _private.hasAdditionalParams(this._items);
       },
 
       _valueChangedHandler: function() {
-         this._items = clone(this._items);
+         this._forceUpdate();
       },
 
       _applyFilter: function() {
@@ -82,11 +88,9 @@ define('Controls/Filter/Button/Panel', [
       },
 
       _resetFilter: function() {
-         var self = this;
          this._items = clone(this._items);
-         Chain(this._items).each(function(item, index) {
-            setPropValue(item, 'value', getPropValue(item, 'resetValue'));
-            setPropValue(item, 'visibility', getPropValue(self._options.items[index], 'visibility'));
+         Chain(this._items).each(function(item) {
+            setPropValue(item, 'value', item.resetValue);
          });
          this._isChanged = false;
       },
@@ -99,8 +103,8 @@ define('Controls/Filter/Button/Panel', [
    FilterPanel.getDefaultOptions = function getDefaultOptions() {
       return {
          title: rk('Отбираются'),
-         styleHeader: 'primary',
-         size: 'default'
+         styleHeader: 'default',
+         viewMode: 'oneColumn'
       };
    };
 
