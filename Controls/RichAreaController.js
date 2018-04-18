@@ -1,6 +1,6 @@
 define('Controls/RichAreaController', [
    'Core/constants'
-], function (cConstants) {
+], function(cConstants) {
    'use strict';
 
    return {
@@ -25,7 +25,7 @@ define('Controls/RichAreaController', [
          menubar: false,
          browser_spellcheck: true,
          smart_paste: true,
-         noneditable_noneditable_class: "controls-RichEditor__noneditable",
+         noneditable_noneditable_class: 'controls-RichEditor__noneditable',
          object_resizing: false,
          inline_boundaries: false
       },

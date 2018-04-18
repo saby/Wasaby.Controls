@@ -42,6 +42,12 @@ define('Controls/RichTextArea', [
          },
 
          _beforeUpdate: function(opts) {
+            var text = this._prepareReviewContent(opts.value);
+            if (this._children.mceEditor) {
+               this._children.mceEditor.innerHTML = text;
+            } else {
+               this._children.textContainer.innerHTML = text;
+            }
             if (this._options.enabled != opts.enabled) {
                this._toggleEditorEnabled(opts.enabled);
             }
@@ -50,7 +56,7 @@ define('Controls/RichTextArea', [
          _toggleEditorEnabled: function(newState) {
             var self = this;
             if (newState) {
-               return this.loadTinyMCE().addCallback(function () {
+               return this.loadTinyMCE().addCallback(function() {
                   self.tinyInit();
                });
             } else {
@@ -61,7 +67,7 @@ define('Controls/RichTextArea', [
          tinyInit: function() {
             var self = this;
             self._inputControl = self._children.mceEditor;
-            self.editorConfig.setup = function (editor) {
+            self.editorConfig.setup = function(editor) {
                self._tinyEditor = editor;
                editController._bindEvents(self);
             };
@@ -84,5 +90,4 @@ define('Controls/RichTextArea', [
 
 
    return RichEdtior;
-})
-;
+});
