@@ -8,8 +8,7 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
              MemorySource
 ) {
    'use strict';
-   var
-      source = new MemorySource({
+   var source = new MemorySource({
          idProperty: 'id',
          data: [
             {
