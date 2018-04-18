@@ -1,10 +1,19 @@
-.ws-Suggest__inputRender {
+.ws-Suggest__inputRender, .ws-Suggest__wrapper, .ws-Suggest__suggestionsContainer {
 	width: 100%;
+}
+
+.ws-Suggest__suggestionsContainer {
+	position: absolute;
+	border-width: 0 @default-border-width @default-border-width @default-border-width;
+	border-color: @suggest-picker-border-color;
+	border-style: solid;
+	box-sizing: border-box;
 }
 
 .ws-Suggest {
 	display: inline-block;
 	max-width: 100%;
+	position: relative;
 }
 
 .ws-Suggest__loader {
@@ -22,6 +31,25 @@
 	margin: auto;
 	color: @color_Suggest-clear;
 	cursor: pointer;
+}
+
+.ws-Suggest__footer {
+	.flexbox();
+}
+
+.ws-Suggest__showAllLink {
+	color: @color_Link-text;
+	text-decoration: @text-decoration_Link;
+	height: @height_Link;
+	line-height: @link-line-height;
+	cursor: @link-cursor;
+	padding: 0 8px;
+	margin-left: auto;
+}
+
+.ws-Suggest__showAllLink:hover {
+	color: @color_Link-text_hovered;
+	text-decoration: underline;
 }
 
 .ws-Suggest__afterFieldWrapper {

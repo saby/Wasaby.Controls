@@ -7,10 +7,11 @@ define('Controls/Container/List',
       'Core/core-merge',
       'Core/helpers/Object/isEqual',
       'Controls/Container/Search/SearchContextField',
-      'Controls/Container/Filter/FilterContextField'
+      'Controls/Container/Filter/FilterContextField',
+      'Core/Deferred'
    ],
    
-   function(Control, template, Memory, SearchController, merge, isEqual, SearchContextField, FilterContextField) {
+   function(Control, template, Memory, SearchController, merge, isEqual, SearchContextField, FilterContextField, Deferred) {
       
       'use strict';
    
@@ -56,23 +57,50 @@ define('Controls/Container/List',
       
          abortCallback: function(self, filter) {
             _private.updateFilter(self, filter);
+            
             self._source = self._options.source;
+            self._searchDeferred.errback();
+            self._notify('searchEnd', [null, filter], {bubbling: true});
+            
             self._forceUpdate();
          },
       
          searchCallback: function(self, result, filter) {
             _private.updateFilter(self, filter);
             _private.updateSource(self, result.data);
+            
+            self._searchDeferred.callback();
+            self._notify('searchEnd', [result, filter], {bubbling: true});
+            
             self._forceUpdate();
          },
    
          searchValueChanged: function(self, value) {
+            if (self._searchDeferred && self._searchDeferred.isReady()) {
+               self._searchDeferred.cancel();
+            }
+            self._searchDeferred = new Deferred();
             _private.getSearchController(self).search(value);
+            self._notify('searchStart', [], {bubbling: true});
          },
    
          filterChanged: function(self, filter) {
             _private.updateFilter(self, filter);
             self._forceUpdate();
+         },
+         
+         checkFilterValue: function(self, newContext, oldContext) {
+            var newFilter = newContext.filterLayoutField && newContext.filterLayoutField.filter,
+                oldFilter = self._contextObj && self._contextObj.hasOwnProperty('filterLayoutField') && oldContext.get('filterLayoutField').filter;
+   
+            return newFilter && !isEqual(newFilter, oldFilter) ? _private.filterChanged(self, newFilter) : false;
+         },
+         
+         checkSearchValue: function(self, newContext, oldContext) {
+            var newValue = newContext.searchLayoutField && newContext.searchLayoutField.searchValue,
+                oldValue = self._contextObj && self._contextObj.hasOwnProperty('searchLayoutField') && oldContext.get('searchLayoutField').searchValue;
+   
+            return newValue && !isEqual(newValue, oldValue) ? _private.searchValueChanged(self, newValue) : false;
          }
       };
    
@@ -95,6 +123,7 @@ define('Controls/Container/List',
       var List = Control.extend({
          
          _template: template,
+         _searchDeferred: null,
          
          constructor: function(options) {
             List.superclass.constructor.call(this, options);
@@ -102,22 +131,21 @@ define('Controls/Container/List',
          },
          
          _beforeMount: function(options, context) {
-            if (context.filterLayoutField.filter) {
-               _private.filterChanged(this, context.filterLayoutField.filter);
-            }
+            _private.checkFilterValue(this, context);
+            _private.checkSearchValue(this, context);
+            
+            return this._searchDeferred;
+         },
+         
+         _afterMount: function() {
+         
          },
          
          _beforeUpdate: function(options, context) {
-            var searchContextValue = context.searchLayoutField.searchValue;
-            var filterContextValue = context.filterLayoutField.filter;
+            _private.checkFilterValue(this, context, this.context);
+            _private.checkSearchValue(this, context, this.context);
             
-            if (!isEqual(this.context.get('searchLayoutField').searchValue, searchContextValue)) {
-               _private.searchValueChanged(this, searchContextValue);
-            }
-            
-            if (!isEqual(this.context.get('filterLayoutField').filter, filterContextValue)) {
-               _private.filterChanged(this, filterContextValue);
-            }
+            return this._searchDeferred;
          },
          
          _beforeUnmount: function() {
