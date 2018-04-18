@@ -1,13 +1,12 @@
-define('Controls/Filter/Panel', [
+define('Controls/Filter/Button/Panel', [
    'Core/Control',
    'WS.Data/Chain',
    'WS.Data/Utils',
-   'Core/helpers/Object/isEqual',
    'Core/core-clone',
-   'tmpl!Controls/Filter/Panel/Panel',
-   'css!Controls/Filter/Panel/Panel'
+   'tmpl!Controls/Filter/Button/Panel/Panel',
+   'css!Controls/Filter/Button/Panel/Panel'
 
-], function(Control, Chain, Utils, isEqual, clone, template) {
+], function(Control, Chain, Utils, clone, template) {
 
    /**
     * Control "Filter panel"
@@ -79,12 +78,17 @@ define('Controls/Filter/Panel', [
          this._isChanged = _private.isChangedValue(this._items);
       },
 
+      _valueChangedHandler: function() {
+         this._forceUpdate();
+      },
+
       _applyFilter: function() {
          this._notify('filterChanged', [_private.getFilter(this)]);
          this._notify('close');
       },
 
       _resetFilter: function() {
+         this._items = clone(this._items);
          Chain(this._items).each(function(item) {
             setPropValue(item, 'value', item.resetValue);
          });

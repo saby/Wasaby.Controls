@@ -25,41 +25,34 @@
                                               <ws:Array>
                                                  <ws:Object id="firstName" value="123" resetValue="">
                                                     <ws:editor>
-                                                       <Controls.Filter.Panel.Editor.Text>
-                                                          <ws:content>
-                                                             <Controls.Input.Text></Controls.Input.Text>
-                                                          </ws:content>
-                                                       </Controls.Filter.Panel.Editor.Text>
+                                                       <Controls.Filter.Button.Panel.Editor.Text>
+                                                          <Controls.Input.Text/>
+                                                       </Controls.Filter.Button.Panel.Editor.Text>
                                                     </ws:editor>
                                                  </ws:Object>
                                                  <ws:Object id="1" value="123" resetValue="{{true}}">
                                                     <ws:editor>
-                                                       <Controls.Filter.Panel.Editor.Boolean>
-                                                          <ws:content>
+                                                       <Controls.Filter.Button.Panel.Editor.Boolean>
                                                              <Controls.Toggle.Checkbox caption="click me"
                                                                               style="linkMain"></Controls.Toggle.Checkbox>
-                                                          </ws:content>
-                                                       </Controls.Filter.Panel.Editor.Boolean>
+                                                       </Controls.Filter.Button.Panel.Editor.Boolean>
                                                     </ws:editor>
                                                  </ws:Object>
-                                                 <ws:Object id="2" value="{{_value}}" resetValue="{{1}}">
+                                                 <ws:Object id="id" value="{{_value}}" resetValue="{{1}}">
                                                     <ws:editor>
-                                                       <Controls.Filter.Panel.Editor.Keys>
-                                                          <ws:content>
+                                                       <Controls.Filter.Button.Panel.Editor.Keys>
                                                              <Controls.Input.Dropdown source="{{sourceDropdown}}"
-                                                                                      bind:selectedKeys="_value"
                                                                                       keyProperty="key"></Controls.Input.Dropdown>
-                                                          </ws:content>
-                                                       </Controls.Filter.Panel.Editor.Keys>
+                                                       </Controls.Filter.Button.Panel.Editor.Keys>
                                                     </ws:editor>
                                                  </ws:Object>
                                                  <ws:Object id="3" value="{{_value}}" resetValue="{{1}}">
                                                     <ws:editor>
-                                                       <Controls.Filter.Panel.Editor.Text>
+                                                       <Controls.Filter.Button.Panel.Editor.Text>
                                                           <ws:content>
                                                              <div>"LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOONG"</div>
                                                           </ws:content>
-                                                       </Controls.Filter.Panel.Editor.Text>
+                                                       </Controls.Filter.Button.Panel.Editor.Text>
                                                     </ws:editor>
                                                  </ws:Object>
                                               </ws:Array>

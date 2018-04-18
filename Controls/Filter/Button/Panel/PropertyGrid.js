@@ -1,12 +1,9 @@
-define('Controls/Filter/Panel/PropertyGrid', [
+define('Controls/Filter/Button/Panel/PropertyGrid', [
    'Core/Control',
-   'WS.Data/Chain',
-   'tmpl!Controls/Filter/Panel/PropertyGrid/PropertyGrid',
-   'Controls/Filter/Panel/Editor/Boolean',
-   'Controls/Filter/Panel/Editor/Text',
-   'Controls/Filter/Panel/Editor/Keys',
-   'css!Controls/Filter/Panel/PropertyGrid/PropertyGrid'
-], function(Control, Chain, template) {
+   'tmpl!Controls/Filter/Button/Panel/PropertyGrid/PropertyGrid',
+   'css!Controls/Filter/Button/Panel/PropertyGrid/PropertyGrid'
+], function(Control, template) {
+
    /**
     * Control PropertyGrid
     * Provides a user interface for browsing and editing the properties of an object.
@@ -22,9 +19,8 @@ define('Controls/Filter/Panel/PropertyGrid', [
 
    var PropertyGrid = Control.extend({
       _template: template,
-
-      _beforeMount: function(options) {
-         this.items = options.items;
+      _valueChangedHandler: function(event, value) {
+         this._notify('valueChanged', [value]);
       }
    });
 
