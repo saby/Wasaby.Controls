@@ -23,6 +23,10 @@ define('Controls-demo/Input/Text/Text', [
          } else{
             this._validationErrors = null;
          }
+      },
+
+      _eventHandler: function(e, value) {
+         this._eventResult = e.type + ': ' + value;
       }
    });
 
