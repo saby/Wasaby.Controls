@@ -21,11 +21,7 @@ define('Controls/HighCharts',
 
       var _private = {
             drawChart: function(self, config) {
-
-               //TODO Как добавят возможность использовать контейнер как _children поменять на config.highChartOptions.chart.renderTo = this._children.highChartContainer
-               //Ссылка на задачу: https://online.sbis.ru/opendoc.html?guid=e6e4454f-0f12-45e7-a390-86adfd5582a1
-
-               config.chartOptions.chart.renderTo = self._container;
+               config.chartOptions.chart.renderTo = self._children.chartContainer;
                config.chartOptions.credits = config.chartOptions.credits || {};
                config.chartOptions.credits.enabled = false;
                if (self._chartInstance) {
