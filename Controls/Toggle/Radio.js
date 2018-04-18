@@ -6,6 +6,44 @@ define('Controls/Toggle/Radio', [
    'css!Controls/Toggle/Radio/Radio'
 ], function(Control, SourceController, template, types) {
 
+   /**
+    * Group of radioButton.
+    * @class Controls/Toggle/Radio
+    * @extends Controls/Control
+    * @control
+    * @public
+    * @category Toggle
+    */
+
+   /**
+    * @name Controls/Toggle/Radio#source
+    * @cfg {MemorySource} Data of radioButton.
+    */
+
+   /**
+    * @name Controls/Toggle/Radio#direction
+    * @cfg {string} Direction of RadioGroup.
+    * @variant horizontal RadioGroup is a row of RadioButton.
+    * @variant vertical RadioGroup is a column of RadioButton.
+    */
+
+   /**
+    * @name Controls/Toggle/Radio#selectedKey
+    * @cfg {String} Selected key. RadioButton with this key has selected state.
+   */
+
+   /**
+    * @name Controls/Toggle/Radio#keyProperty
+    * @cfg {String} Name of the field that will be the key.
+    */
+
+   /**
+    * @name Controls/Toggle/Radio#style
+    * @cfg {String} Display style of RadioGroup.
+    * @variant default RadioGroup has default display style.
+    * @variant additional RadioGroup has additional display style.
+    */
+
    var _private = {
       initItems: function(source, self) {
          self._sourceController = new SourceController({
@@ -24,6 +62,16 @@ define('Controls/Toggle/Radio', [
          if (options.source) {
             return _private.initItems(options.source, this).addCallback(function(items) {
                this._items = items;
+            }.bind(this));
+         }
+      },
+
+      _beforeUpdate: function(newOptions) {
+         var self = this;
+         if (newOptions.source && newOptions.source !== this._options.source) {
+            return _private.initItems(newOptions.source, this).addCallback(function(items) {
+               this._items = items;
+               self._forceUpdate();
             }.bind(this));
          }
       },

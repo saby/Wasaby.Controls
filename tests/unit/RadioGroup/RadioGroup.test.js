@@ -25,7 +25,7 @@ define(
             assert.isTrue(keyChanged, 'changed selected key is not success');
          });
 
-         it('source to recordSet', function(done) {
+         it('_beforeMount', function(done) {
             var radio = new RadioGroup();
             var source = new MemorySource({
                idProperty: 'id',
@@ -47,6 +47,51 @@ define(
             radio._beforeMount(options).addCallback(function () {
                assert.isTrue(radio._items.at(0).get("caption") === "test1", '_beforeMount work uncorrect');
                assert.isTrue(radio._items.at(1).get("caption") === "test2", '_beforeMount work uncorrect');
+               done();
+            });
+         });
+
+         it('_beforeUpdate', function(done) {
+            var radio = new RadioGroup();
+            var source = new MemorySource({
+               idProperty: 'id',
+               data: [
+                  {
+                     id: '1',
+                     caption: 'test1'
+                  },
+                  {
+                     id: '2',
+                     caption: 'test2'
+                  }
+               ]
+            });
+            var options = {
+               source: source
+            };
+
+            radio.saveOptions(options);
+
+            source = new MemorySource({
+               idProperty: 'id',
+               data: [
+                  {
+                     id: '1',
+                     caption: 'caption1'
+                  },
+                  {
+                     id: '2',
+                     caption: 'caption2'
+                  }
+               ]
+            });
+            options = {
+               source: source
+            };
+
+            radio._beforeUpdate(options).addCallback(function () {
+               assert.isTrue(radio._items.at(0).get("caption") === "caption1", '_beforeUpdate work uncorrect');
+               assert.isTrue(radio._items.at(1).get("caption") === "caption2", '_beforeUpdate work uncorrect');
                done();
             });
          });
