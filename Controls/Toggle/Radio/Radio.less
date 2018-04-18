@@ -69,23 +69,23 @@
    fill: @fill_RadioGroup_innerCircle_unselected;
 }
 
-.controls-RadioGroup__borderCircle {
-   stroke-width: @stroke-width_RadioGroup_borderCircle;
-   fill: @fill_RadioGroup_borderCircle;
-}
-
 .controls-RadioGroup__borderCircle_enabled {
-   stroke: @stroke_RadioGroup_borderCircle_enabled;
+   fill: @fill_RadioGroup_borderCircle_enabled;
 }
 
 .controls-RadioGroup__borderCircle_disabled {
-   stroke: @stroke_RadioGroup_borderCircle_disabled;
+   fill: @fill_RadioGroup_borderCircle_disabled;
+}
+
+.controls-RadioItem__svg_size {
+   width: @width_RadioItem_svg;
+   height: @height_RadioItem_svg;
 }
 
 .ws-is-no-touch {
    .controls-RadioItem_wrapper:hover {
       .controls-RadioGroup__borderCircle_enabled {
-         stroke: @stroke_RadioGroup_borderCircle_enabled_hovered;
+         fill: @fill_RadioGroup_borderCircle_enabled_hovered;
       }
 
       .controls-RadioItem__caption_unselected_enabled {
