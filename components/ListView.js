@@ -4574,6 +4574,13 @@ define('SBIS3.CONTROLS/ListView',
                this._mover.destroy();
             }
             this._toggleEventHandlers(this._container, false);
+
+            //если запущен показ индикатора (а он срабатывает по таймеру - надо его отменить)
+            if (this._loadingIndicatorTimer) {
+               clearTimeout(this._loadingIndicatorTimer);
+               this._loadingIndicatorTimer = undefined;
+            }
+
             ListView.superclass.destroy.call(this);
             if (this._hasDragMove()) {
                this._getDragMove().destroy();
