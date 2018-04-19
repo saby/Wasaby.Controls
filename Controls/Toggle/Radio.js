@@ -3,7 +3,8 @@ define('Controls/Toggle/Radio', [
    'Controls/Controllers/SourceController',
    'tmpl!Controls/Toggle/Radio/Radio',
    'tmpl!Controls/Toggle/Radio/resources/ItemTemplate',
-   'css!Controls/Toggle/Radio/Radio'
+   'css!Controls/Toggle/Radio/Radio',
+   'css!Controls/Toggle/resources/SwitchCircle/SwitchCircle'
 ], function(Control, SourceController, template, defaultItemTemplate) {
 
    /**
