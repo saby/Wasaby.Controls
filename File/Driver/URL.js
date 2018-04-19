@@ -1,9 +1,30 @@
 define("File/Driver/URL", ["require", "exports", "Core/detection"], function (require, exports, detection) {
     "use strict";
+    /**
+     * @public
+     * @class File/Driver/URL
+     * @author Ибрагимов А.А
+     * @description Файловый драйвер для скачивания файлов по URL
+     * <pre>
+     * require(['File/Driver/URL'], function(URLDriver) {
+     *    var url_document = "/file-transfer/file.pdf"
+     *    new URLDriver(url_document).download();
+     * });
+     * </pre>
+     */
     var URL = /** @class */ (function () {
+        /**
+         * @constructor
+         * @param {Strign} url URL файла
+         */
         function URL(url) {
             this.url = url;
         }
+        /**
+         * @public
+         * @method
+         * @description Начинает загрузку файла
+         */
         URL.prototype.download = function () {
             if (detection.isMobilePlatform) {
                 window.open(this.url, '_self');
