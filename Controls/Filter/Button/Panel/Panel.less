@@ -15,47 +15,45 @@
    height: @height_FilterPanel-header;
    display: flex;
    justify-content: space-between;
-   align-items: center;
+   align-items: baseline;
    background-color: @background-color_FilterPanel-header;
 }
 
-.controls-FilterPanel__content {
-   padding: @padding_FilterPanel__content;
+.controls-FilterPanel__header:before {
+   content: "\200b";
+   line-height: @controls-filterButton-area-header-height;
+   display: inline-block;
+   width: 0;
+   visibility: hidden;
 }
 
-.controls-FilterPanel__history {
-   padding: @spacing_FilterPanel-footer;
+.controls-FilterPanel__PropertyGrid {
+   margin: @spacing_FilterPanel__PropertyGrid;
 }
 
-.controls-FilterPanel__history-block {
-   padding: @spacing_FilterPanel-history-block;
-}
+//.controls-FilterPanel__history {
+//   padding: @spacing_FilterPanel-footer;
+//}
+//
+//.controls-FilterPanel__history-block {
+//   padding: @spacing_FilterPanel-history-block;
+//}
 
 //.controls-FilterPanel__history-block-twoColumn {
 //   padding: @spacing_FilterPanel-history-block;
 //   border-left: @border-size_FilterPanel-historyBlock solid @border-color_FilterPanel-historyBlock;
 //}
 
-.controls-FilterPanel__history-oneColumn {
-   background-color: @background-color_FilterPanel-footer;
-}
+//.controls-FilterPanel__history-oneColumn {
+//   background-color: @background-color_FilterPanel-footer;
+//}
 
 .controls-FilterPanel__header-topTemplate {
    margin: @spacing_FilterPanel-header-topTemplate;
 }
 
 .controls-FilterPanel__header-title {
-   font-size: @font-size_FilterPanel-header-title;
-   font-weight: bold;
    margin: @spacing_FilterPanel-header-title;
-}
-
-.controls-FilterPanel__header-title_default {
-   color: @color_FilterPanel-header-title_default;
-}
-
-.controls-FilterPanel__header-title_custom {
-   color: @color_FilterPanel-header-title_custom;
 }
 
 .controls-FilterPanel__resetButton {
@@ -69,12 +67,13 @@
 .controls-FilterPanel__caption {
    font-size: @font-size_FilterPanel-caption;
    color: @color_FilterPanel-caption;
-   margin-bottom: @spacing_FilterPanel-caption;
+   margin: @spacing_FilterPanel-caption;
 }
 
 .controls-FilterPanel__closeButton {
    position: relative;
    cursor: pointer;
+   top: 5px;
    z-index: 1;
    .flexbox();
    .align-items(center);

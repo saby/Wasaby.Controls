@@ -20,8 +20,7 @@ define('Controls/PropertyGrid', [
    var PropertyGrid = Control.extend({
       _template: template,
 
-      _valueChangedHandler: function(event, index, value) {
-         this._options.items[index].value = value;
+      _valueChangedHandler: function(event, value) {
          this._notify('valueChanged', [value]);
       }
    });
