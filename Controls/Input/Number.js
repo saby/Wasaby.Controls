@@ -21,6 +21,13 @@ define('Controls/Input/Number', [
       NumberInput;
 
    _private = {
+      trimEmptyDecimals: function(self) {
+         if (!self._options.showEmptyDecimals) {
+            var
+               processedVal = self._numberViewModel.getValue().replace(/\.?0+$/g, '');
+            self._numberViewModel.updateValue(processedVal);
+         }
+      }
    };
 
    NumberInput = Control.extend({
@@ -89,6 +96,8 @@ define('Controls/Input/Number', [
             integersLength: newOptions.integersLength,
             precision: newOptions.precision,
             showEmptyDecimals: newOptions.showEmptyDecimals,
+
+            //If the old and new values are the same, then the model is changed from outside, and we shouldn't update it's value
             value: this._options.value === newOptions.value ? this._numberViewModel.getValue() : String(newOptions.value)
          });
       },
@@ -125,38 +134,7 @@ define('Controls/Input/Number', [
       },
 
       _focusoutHandler: function() {
-         if (this._numberViewModel.getValue() === '0.0') {
-            this._numberViewModel.updateValue('0');
-            this._children['inputRender']._oldValue = '0';
-         } else if (!this._options.showEmptyDecimals) {
-            var
-               i,
-               emptyCount = 0,
-               value = this._numberViewModel.getValue(),
-               processedValue;
-
-            if (value.indexOf('.') !== -1) {
-               for (i = value.length - 1; i >= 0; i--) {
-                  if (value[i] !== '0' || value[i] === '.') {
-                     break;
-                  }
-
-                  if (value[i] === '0') {
-                     emptyCount++;
-                  }
-               }
-
-               if (emptyCount !== 0) {
-                  processedValue = value.slice(0, -emptyCount);
-
-                  if (processedValue[processedValue.length - 1] === '.') {
-                     processedValue = processedValue.slice(0, -1);
-                  }
-
-                  this._numberViewModel.updateValue(processedValue);
-               }
-            }
-         }
+         _private.trimEmptyDecimals(this);
       },
 
       paste: function(text) {
@@ -168,7 +146,8 @@ define('Controls/Input/Number', [
       return {
          precision: types(Number), //Точность (кол-во знаков после запятой)
          integersLength: types(Number), //Длина целой части
-         onlyPositive: types(Boolean) //Только положительные значения
+         onlyPositive: types(Boolean), //Только положительные значения
+         showEmptyDecimals: types(Boolean) //Показывать нули в конце дробной части
       };
    };
 
