@@ -72,6 +72,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
             realEvent.nativeEvent.preventDefault();
             itemData.contextEvent = context;
             self._options.listModel._activeItem = itemData;
+            self._options.listModel._nextVersion();
             self._children['itemActionsOpener'].open({
                target: !context ? event.target : false,
                componentOptions: {items: rs}
@@ -90,6 +91,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          }
          self._children['itemActionsOpener'].close();
          self._options.listModel._activeItem = false;
+         self._options.listModel._nextVersion();
          self._forceUpdate();
       },
       updateModel: function(options, newOptions) {
