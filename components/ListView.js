@@ -917,6 +917,13 @@ define('SBIS3.CONTROLS/ListView',
                 *
                 */
                navigation: null,
+               /**
+                * @cfg {Boolean} Устанавливает видимость кнопок управления скроллом
+                * @remark
+                * используется только вместе с включенным бесконечным скроллом
+                * @see infiniteScroll
+                * @see showPaging
+                */
                scrollPaging: true, //Paging для скролла. TODO: объеденить с обычным пэйджингом в 200
                /**
                 * @cfg {String|Function(DragEntityOptions):SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Entity} Конструктор перемещаемой сущности, должен вернуть элемент наследник класса {@link SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Row}
