@@ -71,11 +71,10 @@ define('Controls/List/ItemActions/ItemActionsControl', [
                realEvent =  childEvent ? childEvent : event;
             realEvent.nativeEvent.preventDefault();
             itemData.contextEvent = context;
-            self._options.listModel._activeItem = itemData;
-            self._options.listModel._nextVersion();
+            self._options.listModel.setActiveItem(itemData);
             self._children['itemActionsOpener'].open({
                target: !context ? event.target : false,
-               componentOptions: {items: rs}
+               templateOptions: {items: rs}
             });
          }
       },
@@ -90,8 +89,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
             self._onActionClick(event, action, self._options.listModel._activeItem.item);
          }
          self._children['itemActionsOpener'].close();
-         self._options.listModel._activeItem = false;
-         self._options.listModel._nextVersion();
+         self._options.listModel.setActiveItem(false);
          self._forceUpdate();
       },
       updateModel: function(options, newOptions) {
