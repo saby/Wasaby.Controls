@@ -30,6 +30,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          $protected: {
             _options: {
                /**
+                * @cfg {string} Заголовок компонента
+                */
+               title: null,//Определено в шаблоне
+               /**
+                * @cfg {string} Заголовок меню выбора способа форматирования
+                */
+               menuTitle: rk('Редактировать', 'НастройщикЭкспорта'),
+               /**
                 * @cfg {string} Урл файла с результатом форматирования
                 */
                fileUrl: null,
@@ -44,7 +52,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
 
          _modifyOptions: function () {
             var options = View.superclass._modifyOptions.apply(this, arguments);
-            options._items = [//^^^'Редактировать'
+            options._menuItems = [
                {id:'browser', title:'в браузере'},
                {id:'app', title:'в приложении'}
             ];
