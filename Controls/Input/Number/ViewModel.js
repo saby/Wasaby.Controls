@@ -1,9 +1,11 @@
 define('Controls/Input/Number/ViewModel',
    [
-      'Controls/Input/resources/InputRender/BaseViewModel'
+      'Controls/Input/resources/InputRender/BaseViewModel',
+      'Controls/Input/Number/SplitValueHelper'
    ],
    function(
-      BaseViewModel
+      BaseViewModel,
+      SplitValueHelper
    ) {
       'use strict';
 
@@ -122,20 +124,31 @@ define('Controls/Input/Number/ViewModel',
             }
          },
 
-         processInsert: function(splitValue, options) {
+         /**
+          * Insert value handler
+          * @param splitValue
+          * @param options
+          * @param splitValueHelper
+          * @return {{value: (*|String), position: (*|Integer)}}
+          */
+         processInsert: function(splitValue, options, splitValueHelper) {
             var
                shift = 0;
 
-            if (splitValue.insert === '.' && splitValue.before === '' && splitValue.after === '') {
+            if (splitValueHelper.isAtLineStart() && splitValue.insert === '0' && splitValue.after[0] !== '.') {
+               splitValue.insert = '';
+            }
+
+            if (splitValue.insert === '.' && splitValueHelper.isEmptyField()) {
                splitValue.after = '.0';
                splitValue.insert = '0';
-            } else if (splitValue.before.indexOf('.') === -1 && splitValue.after.indexOf('.') === -1) {
+            } else if (splitValueHelper.numberHasNoDot()) {
                //if number doesn't contain '.', then we should add '.0' at the end
                splitValue.after += '.0';
             }
 
             //Inserting dot in integers part moves cursor to decimals part
-            if (splitValue.insert === '.' && splitValue.before.indexOf('.') === -1 && splitValue.after.indexOf('.') !== -1) {
+            if (splitValue.insert === '.' && splitValueHelper.isInIntegersPart()) {
                splitValue.insert = '';
                shift += splitValue.after.indexOf('.') + 1;
             }
@@ -187,7 +200,12 @@ define('Controls/Input/Number/ViewModel',
             };
          },
 
-         processDelete: function(splitValue) {
+         /**
+          * Delete value handler (fires only when we delete selected range)
+          * @param splitValue
+          * @return {{value: (*|String), position: (*|Integer)}}
+          */
+         processDelete: function(splitValue/*, options, splitValueHelper*/) {
             var
                shift = 0;
 
@@ -197,7 +215,12 @@ define('Controls/Input/Number/ViewModel',
             };
          },
 
-         processDeleteForward: function(splitValue) {
+         /**
+          * Delete value forward handler ('delete' button)
+          * @param splitValue
+          * @return {{value: (*|String), position: (*|Integer)}}
+          */
+         processDeleteForward: function(splitValue/*, options, splitValueHelper*/) {
             var
                shift = 0;
 
@@ -222,12 +245,19 @@ define('Controls/Input/Number/ViewModel',
             };
          },
 
-         processDeleteBackward: function(splitValue, options) {
+         /**
+          * Delete value backward handler ('backspace' button)
+          * @param splitValue
+          * @param options
+          * @param splitValueHelper
+          * @return {{value: (*|String), position: (*|Integer)}}
+          */
+         processDeleteBackward: function(splitValue, options, splitValueHelper) {
             var
                shift = 0;
 
             //If whole decimal part was deleted then we should place '.0'
-            if (splitValue.before[splitValue.before.length - 1] === '.' && splitValue.after === '') {
+            if (splitValue.before[splitValue.before.length - 1] === '.' && splitValueHelper.isAtLineEnd()) {
                splitValue.after = '0';
                shift -= 1;
             }
@@ -237,8 +267,8 @@ define('Controls/Input/Number/ViewModel',
                splitValue.after = '.' + splitValue.after;
             }
 
-            //If we delete the last character on the left, then we need to set it to '0'
-            if (splitValue.before === '' || splitValue.before === '-') {
+            //If we delete the last character on the left and there is no integers after it, then we need to set it to '0'
+            if ((splitValue.before === '' || splitValue.before === '-') && (splitValue.after === '' || splitValue.after[0] === '.')) {
                splitValue.before = '0';
             }
 
@@ -248,8 +278,8 @@ define('Controls/Input/Number/ViewModel',
                shift = -1;
             }
 
-            //iIf we delete symbol in decimal part and showEmptyDecimals is true? then we should replace this symbol by '0'
-            if (splitValue.before.indexOf('.') !== -1 && options.showEmptyDecimals) {
+            //If we delete symbol in decimal part and showEmptyDecimals is true, then we should replace this symbol by '0'
+            if (splitValueHelper.isInDecimalsPart() && options.showEmptyDecimals) {
                splitValue.after = splitValue.after + '0'.repeat(splitValue.delete.length);
             }
 
@@ -270,23 +300,24 @@ define('Controls/Input/Number/ViewModel',
              */
          handleInput: function(splitValue, inputType) {
             var
-               result;
+               result,
+               splitValueHelper = new SplitValueHelper(splitValue);
 
             //Если по ошибке вместо точки ввели запятую или "б"  или "ю", то выполним замену
             splitValue.insert = splitValue.insert.toLowerCase().replace(/,|б|ю/, '.');
 
             switch (inputType) {
                case 'insert':
-                  result = _private.processInsert(splitValue, this._options);
+                  result = _private.processInsert(splitValue, this._options, splitValueHelper);
                   break;
                case 'delete':
-                  result = _private.processDelete(splitValue);
+                  result = _private.processDelete(splitValue, this._options, splitValueHelper);
                   break;
                case 'deleteForward':
-                  result = _private.processDeleteForward(splitValue);
+                  result = _private.processDeleteForward(splitValue, this._options, splitValueHelper);
                   break;
                case 'deleteBackward':
-                  result = _private.processDeleteBackward(splitValue, this._options);
+                  result = _private.processDeleteBackward(splitValue, this._options, splitValueHelper);
                   break;
             }
 

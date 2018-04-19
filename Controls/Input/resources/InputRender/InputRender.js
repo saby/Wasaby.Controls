@@ -60,11 +60,9 @@ define('Controls/Input/resources/InputRender/InputRender',
          
          _template: template,
 
-         _oldValue: undefined,
-
          _inputHandler: function(e) {
             var
-               value = this._oldValue || this._options.value,
+               value = this._options.viewModel.getDisplayValue(),
                newValue = e.target.value,
                selection = _private.getSelection(this),
                position = _private.getTargetPosition(e.target),
@@ -87,8 +85,6 @@ define('Controls/Input/resources/InputRender/InputRender',
 
             _private.setTargetData(e.target, processedData);
             _private.saveSelection(this, e.target);
-
-            this._oldValue = processedData.value;
 
             this._notify('valueChanged', [processedData.value]);
          },
