@@ -11,6 +11,7 @@ define('Controls/Toggle/Radio', [
     * Group of radioButton.
     * @class Controls/Toggle/Radio
     * @extends Controls/Control
+    * @mixes Controls/interface/ISource
     * @control
     * @public
     * @category Toggle
