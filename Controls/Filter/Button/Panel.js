@@ -79,7 +79,7 @@ define('Controls/Filter/Button/Panel', [
       },
 
       _valueChangedHandler: function() {
-         this._forceUpdate();
+         this._items = clone(this._items);
       },
 
       _applyFilter: function() {
@@ -89,8 +89,9 @@ define('Controls/Filter/Button/Panel', [
 
       _resetFilter: function() {
          this._items = clone(this._items);
-         Chain(this._items).each(function(item) {
-            setPropValue(item, 'value', item.resetValue);
+         Chain(this._items).each(function(item, index) {
+            setPropValue(item, 'value', getPropValue(item, 'resetValue'));
+
          });
          this._isChanged = false;
       },
@@ -103,7 +104,7 @@ define('Controls/Filter/Button/Panel', [
    FilterPanel.getDefaultOptions = function getDefaultOptions() {
       return {
          title: rk('Отбираются'),
-         styleHeader: 'default',
+         styleHeader: 'primary',
          viewMode: 'oneColumn'
       };
    };
