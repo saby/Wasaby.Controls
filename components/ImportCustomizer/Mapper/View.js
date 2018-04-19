@@ -35,14 +35,12 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
           */
 
          /**
-          * @event change Происходит при измении настраиваемые значения компонента
-          * @param {Core/EventObject} evtName Дескриптор события
-          * @param {object} values Настраиваемые значения компонента:
-          * @param {ImportTargetFields} [values.fields]  Полный список полей (опционально)
-          * @param {function(object|WS.Data/Entity/Record):ImportSimpleItem} [values.fieldFilter] Фильтр полей (опционально)
-          * @param {string} [values.fieldProperty] Имя специального ключевого свойства (опционально)
-          * @param {object} [values.variants] Набор вариантов сопоставления (опционально)
-          * @param {object} [values.mapping] Перечень соответствий специальный ключ поля - идентификатор варианта (опционально)
+          * @typedef {object} ExportMapperResult Тип, описывающий возвращаемые настраиваемые значения компонента
+          * @property {ImportTargetFields} [fields]  Полный список полей (опционально)
+          * @property {function(object|WS.Data/Entity/Record):ImportSimpleItem} [fieldFilter] Фильтр полей (опционально)
+          * @property {string} [fieldProperty] Имя специального ключевого свойства (опционально)
+          * @property {object} [variants] Набор вариантов сопоставления (опционально)
+          * @property {object} [mapping] Перечень соответствий специальный ключ поля - идентификатор варианта (опционально)
           *
           * @see fields
           * @see fieldFilter
@@ -256,7 +254,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
           * Получить все настраиваемые значения компонента
           *
           * @public
-          * @return {object}
+          * @return {ExportMapperResult}
           */
          getValues: function () {
             var options = this._options;

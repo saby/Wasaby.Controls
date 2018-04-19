@@ -19,9 +19,14 @@ define('SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View',
       var View = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View.prototype*/ {
 
          /**
-          * @event change Происходит при измении настраиваемые значения компонента
-          * @param {Core/EventObject} evtName Дескриптор события
-          * @param {object} values Настраиваемые значения компонента
+          * @typedef {object} ExportProviderArgsResult Тип, описывающий возвращаемые настраиваемые значения компонента
+          * @property {number} columnCount Количество имеющихся колонок
+          * @property {Array<number>} columns Список индексов колонок, задающих иерархию разделов импортируемых данных
+          * @property {string} hierarchyField Имя поля, хранящего иерархию
+          *
+          * @see columnCount
+          * @see columns
+          * @see hierarchyField
           */
 
          _dotTplFn: dotTplFn,
@@ -189,7 +194,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View',
           * Получить все настраиваемые значения компонента
           *
           * @public
-          * @return {object}
+          * @return {ExportProviderArgsResult}
           */
          getValues: function () {
             var options = this._options;
