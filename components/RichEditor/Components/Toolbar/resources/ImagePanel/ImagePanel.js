@@ -6,7 +6,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/ImagePanel/ImageP
       'WS.Data/Di',
       'tmpl!SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/ImagePanel/ImagePanel',
       "Core/EventBus",
-      'Lib/Control/FileStorageLoader/FileStorageLoader',
+      'SBIS3.CONTROLS/RichEditor/Components/_ImageUploader',
       'css!SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/ImagePanel/ImagePanel'
    ], function(CompoundControl, PopupMixin, LikeWindowMixin, Di, dotTplFn, EventBus) {
       'use strict';
