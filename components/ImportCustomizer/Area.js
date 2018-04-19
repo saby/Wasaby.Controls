@@ -27,92 +27,318 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
    function (CommandDispatcher, cMerge, Deferred, /*IoC,*/ CompoundControl, RemoteCall, InformationPopupManager, RecordSet, DataType, tmpl) {
       'use strict';
 
+      /**
+       * @typedef {object} ImportRemoteCall Тип, содержащий информацию для вызова удалённого сервиса для получения данных ввода или отправки данных вывода. Соответствует вспомогательному классу {@link SBIS3.CONTROLS/ImportCustomizer/RemoteCall}
+       * @property {string} endpoint Сервис, метод которого будет вызван
+       * @property {string} method Имя вызываемого метода
+       * @property {string} [idProperty] Имя свойства, в котором находится идентификатор (опционально, если вызову это не потребуется)
+       * @property {object} [args] Аргументы вызываемого метода (опционально)
+       * @property {function(object):object} [argsFilter] Фильтр аргументов (опционально)
+       * @property {function(object):object} [resultFilter] Фильтр результатов (опционально)
+       */
+
+      /**
+       * @typedef {object} ImportFile Тип, содержащий информацию об импортируемом файле
+       * @property {string} name Отображаемое имя файла
+       * @property {string} url Урл для скачивания файла
+       * @property {string} uuid Идентификатор файла в системе хранения
+       */
+
+      /**
+       * @typedef {object} ImportParser Тип, содержащий информацию о провайдере парсинга импортируемых данных
+       * @property {string} name Имя(идентификатор) парсера
+       * @property {string} title Отображаемое имя парсера
+       * @property {string} [component] Класс компонента для настройки парсера (опционально)
+       * @property {object} [args] Набор специфичных для данного парсера параметров (опционально)
+       */
+
+      /**
+       * @typedef {object} ImportSheet Тип, содержащий информацию об области импортируемых данных (например, лист excel)
+       * @property {string} name Отображаемое наименование области данных
+       * @property {Array<Array<string>>} sampleRows Образец данных в области, массив массивов равной длины
+       * @property {string} [parser] Провайдер парсинга импортируемых данных (опционально)
+       * @property {object} [parserConfig] Параметры провайдера парсинга импортируемых данных. Определяется видом парсера (опционально)
+       * @property {number} [skippedRows] Количество пропускаемых строк в начале (опционально)
+       * @property {string} [separator] Символы-разделители (опционально)
+       * @property {Array<ImportColumnBinding>} [columns] Список привязки колонок импортируемых данных к полям базы данных (опционально)
+       * @property {number} [index] Индекс в массиве (опционально)
+       */
+
+      /**
+       * @typedef {object} ImportColumnBinding Тип, содержащий информацию о привязке колонки импортируемых данных к полю базы данных
+       * @property {number} index Индекс колонки
+       * @property {string} field Имя поля
+       */
+
+      /**
+       * @typedef {object} ImportTargetFields Тип, описывающий целевые поля для привязки импортируемых данных
+       * @property {Array<object>|WS.Data/Collection/RecordSet} items Список объектов, представляющих данные об одном поле. Каждый из них должен
+       *                            содержать идентификатор поля, отображаемое наименование поля и идентификатор родителя, если необходимо. Имена
+       *                            свойств задаются явно в этом же определинии типе
+       * @property {string} [idProperty] Имя свойства, содержащего идентификатор (опционально, если items представлен рекордсетом)
+       * @property {string} displayProperty Имя свойства, содержащего отображаемое наименование
+       * @property {string} [parentProperty] Имя свойства, содержащего идентификатор родителя (опционально)
+       */
+
+      /**
+       * @typedef {object} ImportMapping Тип, содержащий информацию о настройке соответствий значений
+       * @property {function(object|WS.Data/Entity/Record):ImportMapperItem} fieldFilter Фильтр полей, с помощью которого из общего списка полей {@link fields} отбираются нужные. Фильтр принимает объект поля и, если оно нужное, возвращает объект вида {@link ImportSimpleItem}. Упрощённый способ отбора предоставляется опцией {@link fieldProperty}
+       * @property {string} fieldProperty Имя специального ключевого свойства, с помощью которого из общего списка полей {@link fields} отбираются нужные. Каждое нужное поле должно иметь свойство с таким именем. Более комплексный способ отбора предоставляется опцией {@link fieldFilter}
+       * @property {object} variants Набор вариантов сопоставления
+       * @property {object} mapping Перечень соответствий специальный ключ поля - идентификатор варианта
+       */
+
+      /**
+       * @typedef {object} ImportSimpleItem Тип, содержащий информацию об элементе сопоставления
+       * @property {string|number} id Идентификатор элемента
+       * @property {string} title Название элемента
+       */
+
+      /**
+       * @typedef {object} ImportValidator Тип, описывающий валидаторы результаттов редактирования
+       * @property {function(object, function):(boolean|string)} validator Функция проверки. Принимает два аргумента. Первый - объект с проверяемыми данными. Второй - геттер опции по её имени. Геттер позволяет получить доступ к опциям, которые есть в настройщике импорта в момент валидации, но на момент задания валидатора ещё не были доступны (например, получены через обещание или через {@link ImportRemoteCall}). Должна возвратить либо логическое значение, показывающее пройдена ли проверка, либо строку с сообщением об ошибке
+       * @property {Array<*>} [params] Дополнительные аргументы функции проверки, будут добавлены после основных (опционально)
+       * @property {string} [errorMessage] Сообщение об ошибке по умолчанию (опционально)
+       * @property {boolean} [noFailOnError] Указывает на то, что если проверка не пройдена, это не является фатальным. В таком случае пользователю будет показан диалог с просьбой о подтверждении (опционально)
+       */
+
+      /**
+       * @typedef {object} ImportResults Тип, содержащий информацию о результате редактирования
+       * @property {string} dataType Тип импортируемых данных (excel и т.д.)
+       * @property {ImportFile} file Информация о файле с импортируемыми данными
+       * @property {Array<ImportSheet>} sheets Список объектов, представляющих имеющиеся области данных
+       * @property {boolean} [sameSheetConfigs] Обрабатываются ли все области данных одинаково (опционально)
+       * @property {object} [mapping] Перечень соответствий специальный ключ поля - идентификатор варианта (опционально, когда применимо)
+       * @property {*} [*] Базовые параметры импортирования (опционально)
+       */
+
+      var _typeIfDefined = function (type, value) {
+         // Если значение есть - оно должно иметь указанный тип
+         return value !=/*Не !==*/ null && typeof value !== type ? new Error('Value must be a ' + type) : value;
+      };
+
+      /**
+       * Константа (как бы) - Тип данных Excel
+       * @private
+       * @type {string}
+       */
+      var _DATA_TYPE_EXCEL = 'excel';
+      /**
+       * Константа (как бы) - Тип данных DBF
+       * @private
+       * @type {string}
+       */
+      var _DATA_TYPE_DBF = 'dbf';
+      /**
+       * Константа (как бы) - Тип данных CommerceML
+       * @private
+       * @type {string}
+       */
+      var _DATA_TYPE_CML = 'cml';
+      /**
+       * Константа (как бы) - Список всех поддерживаемых типов данных
+       * @private
+       * @type {string}
+       */
+      var _DATA_TYPES = [_DATA_TYPE_EXCEL, _DATA_TYPE_DBF, _DATA_TYPE_CML];
+
+      /**
+       * Константа (как бы) - Проверочная информация о типах данных опций
+       *
+       * @private
+       * @type {object}
+       */
+      var _OPTION_TYPES = {
+         dialogMode: _typeIfDefined.bind(null, 'boolean'),
+         waitingMode: _typeIfDefined.bind(null, 'boolean'),
+         dialogTitle: _typeIfDefined.bind(null, 'string'),
+         dialogButtonTitle: _typeIfDefined.bind(null, 'string'),
+         allSheetsTitle: _typeIfDefined.bind(null, 'string'),
+         columnBindingMenuTitle: _typeIfDefined.bind(null, 'string'),
+         columnBindingHeadTitle: _typeIfDefined.bind(null, 'string'),
+         mapperFieldColumnTitle: _typeIfDefined.bind(null, 'string'),
+         mapperVariantColumnTitle: _typeIfDefined.bind(null, 'string'),
+         dataType: DataType(String).required().oneOf(_DATA_TYPES),
+         file: function (file) {
+            // Должна быть опция "file"
+            if (!file) {
+               return new Error('Option "file" required');
+            }
+            // И опция "file" должна быть {@link ImportFile}
+            if (typeof file !== 'object' ||
+               !(file.name && typeof file.name === 'string') ||
+               !(file.url && typeof file.url === 'string') ||
+               !(file.uuid && typeof file.uuid === 'string')) {
+               return new Error('Option "file" must be an ImportFile');
+            }
+            return file;
+         },
+         baseParamsComponent: DataType(String).required(),
+         baseParams: _typeIfDefined.bind(null, 'object'),
+         parsers: function (parsers) {
+            // Должна быть опция "parsers"
+            if (!parsers) {
+               throw new Error('Option "parsers" required');
+            }
+            // и она должна быть объектом
+            if (typeof parsers !== 'object') {
+               throw new Error('Option "parsers" must be an object');
+            }
+            for (var name in parsers) {
+               // Каждый элемент набора parsers должно быть {@link ImportParser}
+               var v = parsers[name];
+               if (!(name &&
+                     (typeof v === 'object') &&
+                     (v.title && typeof v.title === 'string') &&
+                     (!v.component || typeof v.component === 'string') &&
+                     (!v.args || typeof v.args === 'object')
+                  )) {
+                  return new Error('Parsers items must be an ImportParser');
+               }
+            }
+            return parsers;
+         },
+         fields: function (fields) {
+            // Должна быть опция "fields"
+            if (!fields) {
+               return new Error('Option "fields" required');
+            }
+            // и являться либо экземпляром Deferred, либо иметь тип ImportTargetFields, либо иметь тип ImportRemoteCall
+            if (typeof fields !== 'object') {
+               return new Error('Option "fields" must be an object');
+            }
+            if (fields instanceof Deferred) {
+               return fields;
+            }
+            var err1 = _validateImportTargetFields(fields);
+            if (!(err1 instanceof Error)) {
+               return fields;
+            }
+            var err2 = _validateImportRemoteCall(fields);
+            return err2 instanceof Error ? new Error('Option "fields" must be an ImportTargetFields or ImportRemoteCall or Core/Deferred') : fields;
+         },
+         sheets: function (sheets) {
+            // Для типа данных EXCEL или DBF должна быть опция "sheets"
+            if (!sheets) {
+               return new Error('Option "sheets" required');
+            }
+            // и быть не пустым массивом
+            if (!Array.isArray(sheets) || !sheets.length) {
+               return new Error('Option "sheets" must be none empty array');
+            }
+            // И каждый элемент массива должен быть {@link ImportSheet}
+            if (!sheets.every(function (v) { return (
+                  typeof v === 'object' &&
+                  (v.name && typeof v.name === 'string') &&
+                  (v.sampleRows && Array.isArray(v.sampleRows) && v.sampleRows.length && v.sampleRows.every(function (v2) { return v2 && Array.isArray(v2) && v2.length && v2.length === v.sampleRows[0].length; }))
+               ); })) {
+               return new Error('Option "sheets" items must be an ImportSheet');
+            }
+            return sheets
+         },
+         sheetIndex: _typeIfDefined.bind(null, 'number'),
+         sameSheetConfigs: _typeIfDefined.bind(null, 'boolean'),
+         columnBindingMapping: _typeIfDefined.bind(null, 'object'),
+         mapping: function (mapping) {
+            // Для типа данных CML(CommerceML) должна быть опция "mapping"
+            if (!mapping) {
+               return new Error('Option "mapping" required');
+            }
+            if (typeof mapping !== 'object') {
+               return new Error('Option "mapping" must be an object');
+            }
+            // и она должна быть {link ImportMapping}
+            if (!(!mapping.fieldFilter || typeof mapping.fieldFilter === 'function') ||
+               !(!mapping.fieldProperty || typeof mapping.fieldProperty === 'string') ||
+               !(mapping.fieldFilter || mapping.fieldProperty) ||
+               !(!mapping.variants || typeof mapping.variants === 'object') ||
+               !(!mapping.mapping || typeof mapping.mapping === 'object')
+            ) {
+               return new Error('Option "mapping" must be an ImportMapping');
+            }
+            return mapping;
+         },
+         validators: function (validators) {
+            // Если есть опция "validators", то она должна быть массивом
+            if (validators && !Array.isArray(validators)) {
+               return new Error('Option "validators" must be an Array');
+            }
+            if (validators) {
+               // И каждый элемент массива должен быть {@link ImportValidator}
+               if (!validators.every(function (v) { return (
+                     typeof v === 'object' &&
+                     (v.validator && typeof v.validator === 'function') &&
+                     (!v.params || Array.isArray(params)) &&
+                     (!v.errorMessage || typeof v.errorMessage === 'string') &&
+                     (!v.noFailOnError || typeof v.noFailOnError === 'boolean')
+                  ); })) {
+                  return new Error('Option "validators" items must be an ImportValidator');
+               }
+            }
+            return validators;
+         }
+      };
+
+      /**
+       * онстанта (как бы) - Значения опций по умолчанию
+       *
+       * @private
+       * @type {object}
+       */
+      var _DEFAULT_OPTIONS = {
+         baseParamsComponent: 'SBIS3.CONTROLS/ImportCustomizer/BaseParams/View',
+         baseParams: {
+            //Заменять ли импортируемыми данными предыдущее содержимое базы данных полностью или нет (только обновлять и добавлять)
+            replaceAllData: false,
+            //Место назначения для импортирования (таблица в базе данных и т.п.)
+            destination: null
+         },
+         parsers: {
+            // TODO: Обдумать добавление поля applicable:Array<string> для указания типов данных (Excel или DBF)
+            // TODO: Обдумать удаление поля order
+            'InColumsHierarchyParser': {title:rk('в отдельной колонке', 'НастройщикИмпорта'), order:10},
+            'InSeparateLineHierarchyParser': {title:rk('в отдельной строке', 'НастройщикИмпорта'), component:'SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View', order:20},
+            'InLineGroupsHierarchyParser': {title:rk('в группировке строк', 'НастройщикИмпорта'), order:30}
+         },
+         validators: [
+            {
+               validator: function (data, optionGetter) { return data.dataType === 'cml' || data.sheets.every(function (sheet) { return !!sheet.columns.length; }); },
+               errorMessage: rk('Не установлено соответсвие между колонками и полями', 'НастройщикИмпорта')
+            }
+         ]
+      };
+
+      /**
+       * Константа (как бы) - Список имён всех собственных опций компонента
+       *
+       * @private
+       * @type {Array<string>}
+       */
+      var _OWN_OPTIONS_NAMES = [
+         'dialogTitle',
+         'dialogButtonTitle',
+         'allSheetsTitle',
+         'columnBindingMenuTitle',
+         'columnBindingHeadTitle',
+         'mapperFieldColumnTitle',
+         'mapperVariantColumnTitle',
+         'dataType',
+         'file',
+         'baseParamsComponent',
+         'baseParams',
+         'parsers',
+         'fields',
+         'sheets',
+         'sheetIndex',
+         'sameSheetConfigs',
+         'columnBindingMapping',
+         'mapping',
+         'validators'
+      ];
+
+
+
       var Area = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ImportCustomizer/Area.prototype*/ {
-
-         /**
-          * @typedef {object} ImportRemoteCall Тип, содержащий информацию для вызова удалённого сервиса для получения данных ввода или отправки данных вывода. Соответствует вспомогательному классу {@link SBIS3.CONTROLS/ImportCustomizer/RemoteCall}
-          * @property {string} endpoint Сервис, метод которого будет вызван
-          * @property {string} method Имя вызываемого метода
-          * @property {string} [idProperty] Имя свойства, в котором находится идентификатор (опционально, если вызову это не потребуется)
-          * @property {object} [args] Аргументы вызываемого метода (опционально)
-          * @property {function(object):object} [argsFilter] Фильтр аргументов (опционально)
-          * @property {function(object):object} [resultFilter] Фильтр результатов (опционально)
-          */
-
-         /**
-          * @typedef {object} ImportFile Тип, содержащий информацию об импортируемом файле
-          * @property {string} name Отображаемое имя файла
-          * @property {string} url Урл для скачивания файла
-          * @property {string} uuid Идентификатор файла в системе хранения
-          */
-
-         /**
-          * @typedef {object} ImportParser Тип, содержащий информацию о провайдере парсинга импортируемых данных
-          * @property {string} name Имя(идентификатор) парсера
-          * @property {string} title Отображаемое имя парсера
-          * @property {string} [component] Класс компонента для настройки парсера (опционально)
-          * @property {object} [args] Набор специфичных для данного парсера параметров (опционально)
-          */
-
-         /**
-          * @typedef {object} ImportSheet Тип, содержащий информацию об области импортируемых данных (например, лист excel)
-          * @property {string} name Отображаемое наименование области данных
-          * @property {Array<Array<string>>} sampleRows Образец данных в области, массив массивов равной длины
-          * @property {string} [parser] Провайдер парсинга импортируемых данных (опционально)
-          * @property {object} [parserConfig] Параметры провайдера парсинга импортируемых данных. Определяется видом парсера (опционально)
-          * @property {number} [skippedRows] Количество пропускаемых строк в начале (опционально)
-          * @property {string} [separator] Символы-разделители (опционально)
-          * @property {Array<ImportColumnBinding>} [columns] Список привязки колонок импортируемых данных к полям базы данных (опционально)
-          * @property {number} [index] Индекс в массиве (опционально)
-          */
-
-         /**
-          * @typedef {object} ImportColumnBinding Тип, содержащий информацию о привязке колонки импортируемых данных к полю базы данных
-          * @property {number} index Индекс колонки
-          * @property {string} field Имя поля
-          */
-
-         /**
-          * @typedef {object} ImportTargetFields Тип, описывающий целевые поля для привязки импортируемых данных
-          * @property {Array<object>|WS.Data/Collection/RecordSet} items Список объектов, представляющих данные об одном поле. Каждый из них должен
-          *                            содержать идентификатор поля, отображаемое наименование поля и идентификатор родителя, если необходимо. Имена
-          *                            свойств задаются явно в этом же определинии типе
-          * @property {string} [idProperty] Имя свойства, содержащего идентификатор (опционально, если items представлен рекордсетом)
-          * @property {string} displayProperty Имя свойства, содержащего отображаемое наименование
-          * @property {string} [parentProperty] Имя свойства, содержащего идентификатор родителя (опционально)
-          */
-
-         /**
-          * @typedef {object} ImportMapping Тип, содержащий информацию о настройке соответствий значений
-          * @property {function(object|WS.Data/Entity/Record):ImportMapperItem} fieldFilter Фильтр полей, с помощью которого из общего списка полей {@link fields} отбираются нужные. Фильтр принимает объект поля и, если оно нужное, возвращает объект вида {@link ImportSimpleItem}. Упрощённый способ отбора предоставляется опцией {@link fieldProperty}
-          * @property {string} fieldProperty Имя специального ключевого свойства, с помощью которого из общего списка полей {@link fields} отбираются нужные. Каждое нужное поле должно иметь свойство с таким именем. Более комплексный способ отбора предоставляется опцией {@link fieldFilter}
-          * @property {object} variants Набор вариантов сопоставления
-          * @property {object} mapping Перечень соответствий специальный ключ поля - идентификатор варианта
-          */
-
-         /**
-          * @typedef {object} ImportSimpleItem Тип, содержащий информацию об элементе сопоставления
-          * @property {string|number} id Идентификатор элемента
-          * @property {string} title Название элемента
-          */
-
-         /**
-          * @typedef {object} ImportValidator Тип, описывающий валидаторы результаттов редактирования
-          * @property {function(object, function):(boolean|string)} validator Функция проверки. Принимает два аргумента. Первый - объект с проверяемыми данными. Второй - геттер опции по её имени. Геттер позволяет получить доступ к опциям, которые есть в настройщике импорта в момент валидации, но на момент задания валидатора ещё не были доступны (например, получены через обещание или через {@link ImportRemoteCall}). Должна возвратить либо логическое значение, показывающее пройдена ли проверка, либо строку с сообщением об ошибке
-          * @property {Array<*>} [params] Дополнительные аргументы функции проверки, будут добавлены после основных (опционально)
-          * @property {string} [errorMessage] Сообщение об ошибке по умолчанию (опционально)
-          * @property {boolean} [noFailOnError] Указывает на то, что если проверка не пройдена, это не является фатальным. В таком случае пользователю будет показан диалог с просьбой о подтверждении (опционально)
-          */
-
-         /**
-          * @typedef {object} ImportResults Тип, содержащий информацию о результате редактирования
-          * @property {string} dataType Тип импортируемых данных (excel и т.д.)
-          * @property {ImportFile} file Информация о файле с импортируемыми данными
-          * @property {Array<ImportSheet>} sheets Список объектов, представляющих имеющиеся области данных
-          * @property {boolean} [sameSheetConfigs] Обрабатываются ли все области данных одинаково (опционально)
-          * @property {object} [mapping] Перечень соответствий специальный ключ поля - идентификатор варианта (опционально, когда применимо)
-          * @property {*} [*] Базовые параметры импортирования (опционально)
-          */
 
          _dotTplFn: tmpl,
          $protected: {
@@ -919,9 +1145,9 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
        * @constant
        * @type {string}
        */
-      Object.defineProperty(Area, 'DATA_TYPE_EXCEL', {value:'excel', enumerable:true});
-      Object.defineProperty(Area, 'DATA_TYPE_DBF', {value:'dbf', enumerable:true});
-      Object.defineProperty(Area, 'DATA_TYPE_CML', {value:'cml', enumerable:true});
+      Object.defineProperty(Area, 'DATA_TYPE_EXCEL', {value:_DATA_TYPE_EXCEL, enumerable:true});
+      Object.defineProperty(Area, 'DATA_TYPE_DBF', {value:_DATA_TYPE_DBF, enumerable:true});
+      Object.defineProperty(Area, 'DATA_TYPE_CML', {value:_DATA_TYPE_CML, enumerable:true});
       /**
        * Константы - Список всех поддерживаемых типов данных
        *
@@ -930,7 +1156,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
        * @constant
        * @type {Array<string>}
        */
-      Object.defineProperty(Area, 'DATA_TYPES', {value:[Area.DATA_TYPE_EXCEL, Area.DATA_TYPE_DBF, Area.DATA_TYPE_CML], enumerable:true});
+      Object.defineProperty(Area, 'DATA_TYPES', {value:_DATA_TYPES, enumerable:true});
 
 
       // Public static methods:
@@ -943,28 +1169,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
        * @return {object}
        */
       Area.getDefaultOptions = function () {
-         return {
-            baseParamsComponent: 'SBIS3.CONTROLS/ImportCustomizer/BaseParams/View',
-            baseParams: {
-               //Заменять ли импортируемыми данными предыдущее содержимое базы данных полностью или нет (только обновлять и добавлять)
-               replaceAllData: false,
-               //Место назначения для импортирования (таблица в базе данных и т.п.)
-               destination: null
-            },
-            parsers: {
-               // TODO: Обдумать добавление поля applicable:Array<string> для указания типов данных (Excel или DBF)
-               // TODO: Обдумать удаление поля order
-               'InColumsHierarchyParser': {title:rk('в отдельной колонке', 'НастройщикИмпорта'), order:10},
-               'InSeparateLineHierarchyParser': {title:rk('в отдельной строке', 'НастройщикИмпорта'), component:'SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View', order:20},
-               'InLineGroupsHierarchyParser': {title:rk('в группировке строк', 'НастройщикИмпорта'), order:30}
-            },
-            validators: [
-               {
-                  validator: function (data, optionGetter) { return data.dataType === 'cml' || data.sheets.every(function (sheet) { return !!sheet.columns.length; }); },
-                  errorMessage: rk('Не установлено соответсвие между колонками и полями', 'НастройщикИмпорта')
-               }
-            ]
-         };
+         return _DEFAULT_OPTIONS;
       };
 
       /**
@@ -975,27 +1180,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
        * @return {Array<string>}
        */
       Area.getOwnOptionNames = function () {
-         return [
-            'dialogTitle',
-            'dialogButtonTitle',
-            'allSheetsTitle',
-            'columnBindingMenuTitle',
-            'columnBindingHeadTitle',
-            'mapperFieldColumnTitle',
-            'mapperVariantColumnTitle',
-            'dataType',
-            'file',
-            'baseParamsComponent',
-            'baseParams',
-            'parsers',
-            'fields',
-            'sheets',
-            'sheetIndex',
-            'sameSheetConfigs',
-            'columnBindingMapping',
-            'mapping',
-            'validators'
-         ];
+         return _OWN_OPTIONS_NAMES;
       };
 
       /**
@@ -1006,140 +1191,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
        * @return {object}
        */
       Area.getOptionTypes = function () {
-         var typeIfDefined = function (type, value) {
-            // Если значение есть - оно должно иметь указанный тип
-            return value !=/*Не !==*/ null && typeof value !== type ? new Error('Value must be a ' + type) : value;
-         };
-         return {
-            dialogMode: typeIfDefined.bind(null, 'boolean'),
-            waitingMode: typeIfDefined.bind(null, 'boolean'),
-            dialogTitle: typeIfDefined.bind(null, 'string'),
-            dialogButtonTitle: typeIfDefined.bind(null, 'string'),
-            allSheetsTitle: typeIfDefined.bind(null, 'string'),
-            columnBindingMenuTitle: typeIfDefined.bind(null, 'string'),
-            columnBindingHeadTitle: typeIfDefined.bind(null, 'string'),
-            mapperFieldColumnTitle: typeIfDefined.bind(null, 'string'),
-            mapperVariantColumnTitle: typeIfDefined.bind(null, 'string'),
-            dataType: DataType(String).required().oneOf(Area.DATA_TYPES),
-            file: function (file) {
-               // Должна быть опция "file"
-               if (!file) {
-                  return new Error('Option "file" required');
-               }
-               // И опция "file" должна быть {@link ImportFile}
-               if (typeof file !== 'object' ||
-                  !(file.name && typeof file.name === 'string') ||
-                  !(file.url && typeof file.url === 'string') ||
-                  !(file.uuid && typeof file.uuid === 'string')) {
-                  return new Error('Option "file" must be an ImportFile');
-               }
-               return file;
-            },
-            baseParamsComponent: DataType(String).required(),
-            baseParams: typeIfDefined.bind(null, 'object'),
-            parsers: function (parsers) {
-               // Должна быть опция "parsers"
-               if (!parsers) {
-                  throw new Error('Option "parsers" required');
-               }
-               // и она должна быть объектом
-               if (typeof parsers !== 'object') {
-                  throw new Error('Option "parsers" must be an object');
-               }
-               for (var name in parsers) {
-                  // Каждый элемент набора parsers должно быть {@link ImportParser}
-                  var v = parsers[name];
-                  if (!(name &&
-                        (typeof v === 'object') &&
-                        (v.title && typeof v.title === 'string') &&
-                        (!v.component || typeof v.component === 'string') &&
-                        (!v.args || typeof v.args === 'object')
-                     )) {
-                     return new Error('Parsers items must be an ImportParser');
-                  }
-               }
-               return parsers;
-            },
-            fields: function (fields) {
-               // Должна быть опция "fields"
-               if (!fields) {
-                  return new Error('Option "fields" required');
-               }
-               // и являться либо экземпляром Deferred, либо иметь тип ImportTargetFields, либо иметь тип ImportRemoteCall
-               if (typeof fields !== 'object') {
-                  return new Error('Option "fields" must be an object');
-               }
-               if (fields instanceof Deferred) {
-                  return fields;
-               }
-               var err1 = _validateImportTargetFields(fields);
-               if (!(err1 instanceof Error)) {
-                  return fields;
-               }
-               var err2 = _validateImportRemoteCall(fields);
-               return err2 instanceof Error ? new Error('Option "fields" must be an ImportTargetFields or ImportRemoteCall or Core/Deferred') : fields;
-            },
-            sheets: function (sheets) {
-               // Для типа данных EXCEL или DBF должна быть опция "sheets"
-               if (!sheets) {
-                  return new Error('Option "sheets" required');
-               }
-               // и быть не пустым массивом
-               if (!Array.isArray(sheets) || !sheets.length) {
-                  return new Error('Option "sheets" must be none empty array');
-               }
-               // И каждый элемент массива должен быть {@link ImportSheet}
-               if (!sheets.every(function (v) { return (
-                     typeof v === 'object' &&
-                     (v.name && typeof v.name === 'string') &&
-                     (v.sampleRows && Array.isArray(v.sampleRows) && v.sampleRows.length && v.sampleRows.every(function (v2) { return v2 && Array.isArray(v2) && v2.length && v2.length === v.sampleRows[0].length; }))
-                  ); })) {
-                  return new Error('Option "sheets" items must be an ImportSheet');
-               }
-               return sheets
-            },
-            sheetIndex: typeIfDefined.bind(null, 'number'),
-            sameSheetConfigs: typeIfDefined.bind(null, 'boolean'),
-            columnBindingMapping: typeIfDefined.bind(null, 'object'),
-            mapping: function (mapping) {
-               // Для типа данных CML(CommerceML) должна быть опция "mapping"
-               if (!mapping) {
-                  return new Error('Option "mapping" required');
-               }
-               if (typeof mapping !== 'object') {
-                  return new Error('Option "mapping" must be an object');
-               }
-               // и она должна быть {link ImportMapping}
-               if (!(!mapping.fieldFilter || typeof mapping.fieldFilter === 'function') ||
-                     !(!mapping.fieldProperty || typeof mapping.fieldProperty === 'string') ||
-                     !(mapping.fieldFilter || mapping.fieldProperty) ||
-                     !(!mapping.variants || typeof mapping.variants === 'object') ||
-                     !(!mapping.mapping || typeof mapping.mapping === 'object')
-                  ) {
-                  return new Error('Option "mapping" must be an ImportMapping');
-               }
-               return mapping;
-            },
-            validators: function (validators) {
-               // Если есть опция "validators", то она должна быть массивом
-               if (validators && !Array.isArray(validators)) {
-                  return new Error('Option "validators" must be an Array');
-               }
-               if (validators) {
-                  // И каждый элемент массива должен быть {@link ImportValidator}
-                  if (!validators.every(function (v) { return (
-                        typeof v === 'object' &&
-                        (v.validator && typeof v.validator === 'function') &&
-                        (!v.params || Array.isArray(params)) &&
-                        (!v.errorMessage || typeof v.errorMessage === 'string') &&
-                        (!v.noFailOnError || typeof v.noFailOnError === 'boolean')
-                     ); })) {
-                     return new Error('Option "validators" items must be an ImportValidator');
-                  }
-               }
-               return validators;
-            }
-         };
+         return _OPTION_TYPES;
       };
 
       /**

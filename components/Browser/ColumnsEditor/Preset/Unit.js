@@ -103,15 +103,12 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit',
       };
 
       var _setTitle = function (value) {
-         //В 150 переделать на instance of String, когда rk научится возрашать наслденика String.
-         if (value instanceof Object) {
-            value = value.valueOf();
-         }
-
-         if (!value || typeof value !== 'string') {
+         // Аргумент может быть как нативной строкой, так и наследником String
+         // 1174997532 https://online.sbis.ru/opendoc.html?guid=7ba8f75b-62d9-4f6f-bc0f-d7d7ffd21e3a
+         if (!value || !(typeof value === 'string' || value instanceof String)) {
             throw new Error('None empty string required');
          }
-         this._title = value;
+         this._title = value.toString();
       };
       var _getTitle = function () {
          return this._title;
