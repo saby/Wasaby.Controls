@@ -137,6 +137,19 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Dropdown',
          },
 
          /**
+          * Получить выбранный пресет редактора колонок
+          * @public
+          * @return {SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit}
+          */
+         getSelectedPreset: function () {
+            if (this._selectedPresetId) {
+               var presetId = this._selectedPresetId;
+               var preset; this.getPresets().some(function (v) { if (v.id === presetId) { preset = v; return true; } });
+               return preset;
+            }
+         },
+
+         /**
           * Получить список всех отображаемых пресетов редактора колонок
           * @public
           * @return {SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit[]}
@@ -152,7 +165,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Dropdown',
           */
          _setSelectedPresetId: function (selectedPresetId) {
             // Если указанный идентификатор пустой или есть в списке
-            if (!selectedPresetId || this.getPresets().map(function (v) { return v.id; }).indexOf(selectedPresetId) !== -1) {
+            if (!selectedPresetId || this.getPresets().some(function (v) { return v.id === selectedPresetId; })) {
                this._selectedPresetId = selectedPresetId;
                this._dropdown.setSelectedKeys(selectedPresetId ? [selectedPresetId] : []);
             }
@@ -170,7 +183,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Dropdown',
                // TODO: Нужна ли общая сортировка ? Если да, то как пользователь будет различить статические и пользовательские пресеты ?
             }
             var selectedId = this._selectedPresetId;
-            if (selectedId && (!presets.length || presets.map(function (v) { return v.id; }).indexOf(selectedId) === -1)) {
+            if (selectedId && (!presets.length || !presets.some(function (v) { return v.id === selectedId; }))) {
                selectedId = null;
             }
             if (!selectedId && presets.length) {
