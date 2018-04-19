@@ -3,48 +3,51 @@
  */
 define('SBIS3.CONTROLS/Image',
    [
-   'SBIS3.CONTROLS/Utils/ImageUtil',
-   'Core/helpers/vital/processImagePath',
-   "Core/Indicator",
-   "Core/core-merge",
-   "Core/CommandDispatcher",
-   "Core/Deferred",
-   "Lib/Control/CompoundControl/CompoundControl",
-   "WS.Data/Source/SbisService",
-   "tmpl!SBIS3.CONTROLS/Image/Image",
-   "Lib/Control/FileLoader/FileLoader",
-   "Core/helpers/Hcontrol/toggleLocalIndicator",
-   "Transport/prepareGetRPCInvocationURL",
-   "SBIS3.CONTROLS/Utils/SourceUtil",
-   'SBIS3.CONTROLS/ControlHierarchyManager',
-   'SBIS3.CONTROLS/Utils/InformationPopupManager',
-   'Core/helpers/Function/debounce',
-   "SBIS3.CONTROLS/Link",
-   'SBIS3.CONTROLS/Menu/MenuLink',
-   "i18n!SBIS3.CONTROLS/Image",
-   'css!SBIS3.CONTROLS/Image/Image'
-], function(
-   ImageUtil,
-   processImagePath,
-   cIndicator, cMerge,
-   CommandDispatcher,
-   Deferred,
-   CompoundControl,
-   SbisService,
-   dotTplFn,
-   FileLoader,
-   toggleLocalIndicator,
-   prepareGetRPCInvocationURL,
-   SourceUtil,
-   ControlHierarchyManager,
-   InformationPopupManager,
-   debounce
-) {
+      'SBIS3.CONTROLS/Utils/ImageUtil',
+      'Core/helpers/vital/processImagePath',
+      'Core/Indicator',
+      'Core/core-merge',
+      'Core/CommandDispatcher',
+      'Core/Deferred',
+      'Lib/Control/CompoundControl/CompoundControl',
+      'WS.Data/Source/SbisService',
+      'tmpl!SBIS3.CONTROLS/Image/Image',
+      'Lib/Control/FileLoader/FileLoader',
+      'Core/helpers/Hcontrol/toggleLocalIndicator',
+      'Transport/prepareGetRPCInvocationURL',
+      'SBIS3.CONTROLS/Utils/SourceUtil',
+      'SBIS3.CONTROLS/ControlHierarchyManager',
+      'SBIS3.CONTROLS/Utils/InformationPopupManager',
+      'Core/helpers/Function/debounce',
+      'SBIS3.CONTROLS/Link',
+      'SBIS3.CONTROLS/Menu/MenuLink',
+      'i18n!SBIS3.CONTROLS/Image',
+      'css!SBIS3.CONTROLS/Image/Image'
+   ], function(
+      ImageUtil,
+      processImagePath,
+      cIndicator, cMerge,
+      CommandDispatcher,
+      Deferred,
+      CompoundControl,
+      SbisService,
+      dotTplFn,
+      FileLoader,
+      toggleLocalIndicator,
+      prepareGetRPCInvocationURL,
+      SourceUtil,
+      ControlHierarchyManager,
+      InformationPopupManager,
+      debounce
+   ) {
       'use strict';
+
       //TODO: Избавится от дублирования
       var
+
          //Продолжительность анимации при отображения панели изображения
          ANIMATION_DURATION = 300,
+
          /**
           * Класс контрол "Изображение". Позволяет отображать и редактировать изображения, полученные из источника данных.
           * В качестве источника данных допускается использовать только {@link WS.Data/Source/SbisService}.
@@ -95,13 +98,13 @@ define('SBIS3.CONTROLS/Image',
              * @param {Core/EventObject} eventObject Дескриптор события.
              * @param {String} image Адрес изображения.
              */
-             /**
+            /**
              * @event onDataLoaded Происходит при загрузке изображения в компонент.
              * @param {Core/EventObject} eventObject Дескриптор события.
              * @param {String} imageUrl Адрес изображения.
              * @param {Boolean} firstload Первый ли раз прошла загрузка: false - первый, true- не первый.
              */
-             /**
+            /**
              * @event onResetImage Происходит при сбросе изображения.
              * @remark
              * Происходит при вызове команды {@link resetImage}.
@@ -137,9 +140,10 @@ define('SBIS3.CONTROLS/Image',
              * @param {Object} response Ответ бизнес-логики.
              * @see onBeginSave
              */
-            _dotTplFn : dotTplFn,
+            _dotTplFn: dotTplFn,
             $protected: {
                _options: {
+
                   /**
                    * @cfg {Boolean} Устанавливает использование панели для работы с изображением: кнопки загрузить, редактировать и удалить.
                    * @example
@@ -148,6 +152,7 @@ define('SBIS3.CONTROLS/Image',
                    * </pre>
                    */
                   imageBar: true,
+
                   /**
                    * @cfg {Boolean} Включает диалог редактирования изображения.
                    * @remark
@@ -160,6 +165,7 @@ define('SBIS3.CONTROLS/Image',
                    * @see cropAspectRatio
                    */
                   edit: false,
+
                   /**
                    * @cfg {Object} Устанавливает параметры диалога редактирования изображения.
                    * @example
@@ -177,6 +183,7 @@ define('SBIS3.CONTROLS/Image',
                   editConfig: {
                      title: rk('Редактирование изображения')
                   },
+
                   /**
                    * @cfg {Number} Устанавливает соотношение сторон в выделяемой области.
                    * @remark
@@ -191,6 +198,7 @@ define('SBIS3.CONTROLS/Image',
                    * @see cropSelection
                    */
                   cropAspectRatio: undefined,
+
                   /**
                    * @cfg {Boolean} Устанавливает режим автоматического маскимального расширения и центрирования области выделения.
                    * @remark
@@ -203,6 +211,7 @@ define('SBIS3.CONTROLS/Image',
                    * @see cropSelection
                    */
                   cropAutoSelectionMode: true,
+
                   /**
                    * @cfg {Array} Устанавливает координаты начального выделения при редактировании изображения.
                    * @example
@@ -218,6 +227,7 @@ define('SBIS3.CONTROLS/Image',
                    * @see cropAutoSelectionMode
                    */
                   cropSelection: undefined,
+
                   /**
                    * @cfg {String} Устанавливает способ отображения изображения в контейнере.
                    * @variant normal Изображение размещается в верхнем левом углу. Изображение располагается в центре, если размер контейнера больше, чем размер изображения.
@@ -230,6 +240,7 @@ define('SBIS3.CONTROLS/Image',
                    * @see getSizeMode
                    */
                   sizeMode: 'normal',
+
                   /**
                    * @cfg {String} Устанавливает изображение, используемое по умолчанию.
                    * @example
@@ -238,6 +249,7 @@ define('SBIS3.CONTROLS/Image',
                    * </pre>
                    */
                   defaultImage: processImagePath('SBIS3.CONTROLS/Image/resources/default-image.png'),
+
                   /**
                    * @cfg {Object} Устанавливает связанный источник данных - {@link WS.Data/Source/SbisService}.
                    * @remark
@@ -273,6 +285,7 @@ define('SBIS3.CONTROLS/Image',
                    * @see getDataSource
                    */
                   dataSource: undefined,
+
                   /**
                    * @cfg {Object} Устанавливает фильтр данных.
                    * @remark
@@ -292,12 +305,14 @@ define('SBIS3.CONTROLS/Image',
                    * @see getFilter
                    */
                   filter: {},
+
                   /**
                    * todo Удалить, временная опция для поддержки смены логотипа компании (используется в FileLoader)
                    * @deprecated
                    * @noshow
                    */
                   linkedObject: '',
+
                   /**
                    * @cfg {Boolean} Устанавливает использование web-камеры для загрузки изображения
                    * @example
@@ -306,6 +321,7 @@ define('SBIS3.CONTROLS/Image',
                    * </pre>
                    */
                   webCam: true,
+
                   /**
                    * @cfg {Boolean} Устанавливает способ установки src в тег img,
                    *    установка данной опции в false обеспечит более быструю смену изображения,
@@ -338,12 +354,14 @@ define('SBIS3.CONTROLS/Image',
                if (options.dataSource) {
                   options.dataSource = SourceUtil.prepareSource(options.dataSource);
                }
+
                //если источник данных задан из вёрстки, то необходимо построить теш Img с уже заданным src атрибутом
                options._templateImage = this._getSourceUrl(options);
                return options;
             },
             $constructor: function() {
                this._publish('onBeginLoad', 'onEndLoad', 'onErrorLoad', 'onChangeImage', 'onResetImage', 'onShowEdit', 'onBeginSave', 'onEndSave', 'onDataLoaded');
+
                //Debounce перебиваем в конструкторе, чтобы не было debounce на прототипе, тк если несколько инстансов сработает только для одного
                //Оборачиваем именно в debounce, т.к. могут последовательно задать filter, dataSource и тогда изображения загрузка произойдет дважды.
                //Опция avoidCache = false означает что если нет изщображения то setDS будет вызываться с reload = false следоватьельно debounce не нужен
@@ -363,6 +381,7 @@ define('SBIS3.CONTROLS/Image',
             },
             init: function() {
                Image.superclass.init.call(this);
+
                //Находим компоненты, необходимые для работы (если нужно)
                if (this._options.imageBar) {
                   var
@@ -372,24 +391,26 @@ define('SBIS3.CONTROLS/Image',
                   this._buttonReset = this.getChildControlByName('ButtonReset');
                   this._bindToolbarEvents();
                   if (this._options.webCam) {
-                     this._buttonUpload.once('onPickerOpen', function(){
+                     this._buttonUpload.once('onPickerOpen', function() {
                         pickerContainer = this._buttonUpload.getPicker().getContainer();
-                        pickerContainer.mouseenter(function(){
+                        pickerContainer.mouseenter(function() {
                            this._cursorInside = true;
                         }.bind(this));
-                        pickerContainer.mouseleave(function(){
+                        pickerContainer.mouseleave(function() {
                            this._cursorInside = false;
-                        }.bind(this))
-                     }.bind(this))
+                        }.bind(this));
+                     }.bind(this));
                   }
                }
+
                //Если задан источник данных и изображение не загрузилось то перезагружаем его.
                //Например у сотрудника не загружено фото, метод возвращает null.
                //Определяем битое изображение по https://stackoverflow.com/questions/92720/jquery-javascript-to-replace-broken-images
-               if (this.getDataSource() && (typeof this._image[0].naturalWidth === "undefined" || this._image[0].naturalWidth === 0 )) {
-                   this.reload();
+               if (this.getDataSource() && (typeof this._image[0].naturalWidth === 'undefined' || this._image[0].naturalWidth === 0)) {
+                  this.reload();
                }
             },
+
             /* ------------------------------------------------------------
                Блок публичных методов
                ------------------------------------------------------------ */
@@ -397,12 +418,13 @@ define('SBIS3.CONTROLS/Image',
              * Метод перезагрузки данных.
              */
             reload: function() {
-              var
-                 url = this._getSourceUrl();
+               var
+                  url = this._getSourceUrl();
                if (url !== '') {
                   this._loadImage(url);
                }
             },
+
             /**
              * Устанавливает способ отображения изображения в контейнере.
              * @param {String} sizeMode Способ отображения. Варианты значений:
@@ -421,6 +443,7 @@ define('SBIS3.CONTROLS/Image',
                }
                this._container.toggleClass('controls-image__normal', sizeMode == 'normal');
             },
+
             /**
              * Возвращает текущий способ отображения изображения в контейнере.
              * @returns {String} Варианты значений:
@@ -434,10 +457,11 @@ define('SBIS3.CONTROLS/Image',
             getSizeMode: function() {
                return this._options.sizeMode;
             },
+
             /* ------------------------------------------------------------
                Блок приватных методов
                ------------------------------------------------------------ */
-            _recalcUploadCaption: function(){
+            _recalcUploadCaption: function() {
                var
                   width = this._container.width(),
                   uploadWidth,
@@ -447,12 +471,12 @@ define('SBIS3.CONTROLS/Image',
                if (width !== 0) {
                   this._imageBar.show();//показываем, чтобы можно было вычислить размеры
                   this._buttonReset.toggle(true);//показываем, чтобы можно было вычислить размеры
-                  uploadWidth = this._buttonUpload._container[0].getBoundingClientRect().width,
+                  uploadWidth = this._buttonUpload._container[0].getBoundingClientRect().width +  this._buttonUpload._container[0].css('margin-left').replace('px', ''),
                   resetWidth = this._buttonReset._container[0].getBoundingClientRect().width,
                   minToolbar = uploadWidth + resetWidth + (this._options.edit ? resetWidth : 0) + 4;
                   this._imageBar.hide();//скрываем после вычисления размеров
                   this._buttonReset.toggle(resetVisible);//скрываем после вычисления размеров
-                  if ((width < minToolbar )) {
+                  if ((width < minToolbar)) {
                      this._buttonUpload.setCaption('');
                      this._buttonUpload.setTooltip(rk('Загрузить', 'Image'));
                   }
@@ -467,7 +491,7 @@ define('SBIS3.CONTROLS/Image',
                   return options.defaultImage;
                }
             },
-            _bindToolbarEvents: function(){
+            _bindToolbarEvents: function() {
                this._boundEvents = {
                   onImageMouseEnter: this._onImageMouseEnter.bind(this),
                   onImageMouseLeave: this._onImageMouseLeave.bind(this)
@@ -487,17 +511,18 @@ define('SBIS3.CONTROLS/Image',
             },
             _onEndLoad: function(event, response) {
                var imageInstance = this.getParent();
-               var error = response instanceof Error? response: response.error;
+               var error = response instanceof Error ? response : response.error;
                if (error) {
                   toggleLocalIndicator(imageInstance._container, false);
                   this._hideIndicator();
+
                   // игнорируем HTTPError офлайна, если они обработаны
-                  if (!(error._isOfflineMode && error.processed)){
+                  if (!(error._isOfflineMode && error.processed)) {
                      var
                         config = error._isOfflineMode ? {
-                           message: "Отсутствует соединение с интернет",
-                           details: "Подключите интернет и повторите попытку.",
-                           status: "error"
+                           message: 'Отсутствует соединение с интернет',
+                           details: 'Подключите интернет и повторите попытку.',
+                           status: 'error'
                         } : {
                            status: 'error',
                            details: error.message,
@@ -521,8 +546,8 @@ define('SBIS3.CONTROLS/Image',
                   image = this._image.get(0),
                   showButtons = this._imageUrl !== this._options.defaultImage;
                if (this._options.sizeMode === 'stretch') {
-                  this._image.css(image.naturalHeight > image.naturalWidth ? 'width': 'height', '');
-                  this._image.css(image.naturalHeight > image.naturalWidth ? 'height': 'width', '100%');
+                  this._image.css(image.naturalHeight > image.naturalWidth ? 'width' : 'height', '');
+                  this._image.css(image.naturalHeight > image.naturalWidth ? 'height' : 'width', '100%');
                }
                if (this._options.imageBar) {
                   this._buttonReset.toggle(showButtons);
@@ -572,26 +597,26 @@ define('SBIS3.CONTROLS/Image',
                if (this._options.avoidCache) {
                   //Из-за проблем, связанных с кэшированием - перезагружаем картинку специальным хелпером
                   ImageUtil.reloadImage(this._image, url)
-                     .addCallback(function(){
+                     .addCallback(function() {
                         self._image.hasClass('ws-hidden') && self._image.removeClass('ws-hidden');
                         self._onChangeImage();
                      })
-                     .addErrback(function(){
+                     .addErrback(function() {
                         self._onErrorLoad();
                      });
                } else {
                   var
                      img = this._image[0],
-                     onLoadHandler = function(){
+                     onLoadHandler = function() {
                         self._image.hasClass('ws-hidden') && self._image.removeClass('ws-hidden');
                         self._onChangeImage();
-                        img.removeEventListener('load',onLoadHandler);
-                        img.removeEventListener('error',onErrorHandler);
+                        img.removeEventListener('load', onLoadHandler);
+                        img.removeEventListener('error', onErrorHandler);
                      },
-                     onErrorHandler = function(){
+                     onErrorHandler = function() {
                         self._onErrorLoad();
-                        img.removeEventListener('error',onErrorHandler);
-                        img.removeEventListener('load',onLoadHandler);
+                        img.removeEventListener('error', onErrorHandler);
+                        img.removeEventListener('load', onLoadHandler);
                      };
                   img.addEventListener('load', onLoadHandler);
                   img.addEventListener('error', onErrorHandler);
@@ -604,12 +629,13 @@ define('SBIS3.CONTROLS/Image',
                   showCropResult = this._notify('onShowEdit', imageType),
                   dataSource = this.getDataSource(),
                   filter = this.getFilter();
+
                //todo Удалить, временная опция для поддержки смены логотипа компании
                if (showCropResult && showCropResult.dataSource instanceof SbisService) {
                   dataSource = showCropResult.dataSource;
                   filter = showCropResult.filter;
                } else if (showCropResult) {
-                   filter = showCropResult;
+                  filter = showCropResult;
                }
                require(['Lib/Control/Dialog/Dialog'], function(Dialog) {
                   new Dialog({
@@ -626,16 +652,16 @@ define('SBIS3.CONTROLS/Image',
                         cropAutoSelectionMode: self._options.cropAutoSelectionMode,
                         cropSelection: self._options.cropSelection,
                         handlers: {
-                           onBeginSave: function (event, sendObject) {
+                           onBeginSave: function(event, sendObject) {
                               event.setResult(self._notify('onBeginSave', sendObject));
                               self._toggleSaveIndicator(true);
                            },
-                           onEndSave: function (event, result) {
+                           onEndSave: function(event, result) {
                               event.setResult(self._notify('onEndSave', result));
                               self._toggleSaveIndicator(false);
                               self._setImage(self._getSourceUrl());
                            },
-                           onOpenError: function(event){
+                           onOpenError: function(event) {
                               toggleLocalIndicator(self._container, false);
                               cIndicator.hide();
                               InformationPopupManager.showMessageDialog({
@@ -660,6 +686,7 @@ define('SBIS3.CONTROLS/Image',
                   });
                });
             },
+
             /**
              * Показать/скрыть индикатор сохранения изображения
              */
@@ -673,9 +700,9 @@ define('SBIS3.CONTROLS/Image',
                            'name': 'ws-load-indicator'
                         });
                         if (!this._saveIndicatorState) {
-                            this._saveIndicator.hide();
+                           this._saveIndicator.hide();
                         }
-                     }.bind(this))
+                     }.bind(this));
                   } else {
                      this._saveIndicator.show();
                   }
@@ -683,10 +710,11 @@ define('SBIS3.CONTROLS/Image',
                   this._saveIndicator.hide();
                }
             },
+
             /* ------------------------------------------------------------
                Блок обработчиков команд
                ------------------------------------------------------------ */
-             /**
+            /**
               * Иниицирует вызов диалога для выбора загружаемого изображения.
               * @remark
               * Для контрола должен быть установлен {@link dataSource источник данных}.
@@ -696,13 +724,13 @@ define('SBIS3.CONTROLS/Image',
               * @see resetImage
               */
             _uploadImage: function(originalEvent) {
-                if (this._options.imageBar && this._canDisplayImageBar()) {
-                   this._imageBar.hide();
-                }
+               if (this._options.imageBar && this._canDisplayImageBar()) {
+                  this._imageBar.hide();
+               }
                if (!this.getDataSource()) {
                   return;
                }
-               this._getFileLoader().addCallback(function (loader){
+               this._getFileLoader().addCallback(function(loader) {
                   loader.selectFile(originalEvent, false);
                });
             },
@@ -714,11 +742,12 @@ define('SBIS3.CONTROLS/Image',
                if (!this.getDataSource()) {
                   return;
                }
-               this._getFileCamLoader().addCallback(function (loader){
+               this._getFileCamLoader().addCallback(function(loader) {
                   loader.getImage(originalEvent, false);
                });
             },
-             /**
+
+            /**
               * Инициирует вызов диалога редактирования изображения.
               * @remark
               * При открытии диалога происходит событие {@link onShowEdit}.
@@ -731,7 +760,8 @@ define('SBIS3.CONTROLS/Image',
                toggleLocalIndicator(this.getContainer(), true);
                this._showEditDialog('current');
             },
-             /**
+
+            /**
               * Инициирует сбор изображения.
               * @remark
               * При сбросе изображения происходит вызов метода удаления из опции destroy (см. {@link dataSource}), а в контрол будет установлено изображение по умолчанию {@link defaultImage}.
@@ -750,7 +780,7 @@ define('SBIS3.CONTROLS/Image',
                         dataSource = self.getDataSource(),
                         sendFilter = filter && Object.prototype.toString.call(filter) === '[object Object]' ? filter : self.getFilter();
                      new SbisService({
-                       endpoint: dataSource.getEndpoint().contract
+                        endpoint: dataSource.getEndpoint().contract
                      }).call(dataSource.getBinding().destroy, sendFilter)
                         .addBoth(function() {
                            self._setImage(self._options.defaultImage);
@@ -772,13 +802,14 @@ define('SBIS3.CONTROLS/Image',
                            if (result !== false) {
                               callDestroy(result);
                            }
-                        }.bind(this));
+                        });
                      } else {
                         callDestroy(imageResetResult);
                      }
                   }
                }
             },
+
             /* ------------------------------------------------------------
                Блок обработчиков кнопок imageBar
                ------------------------------------------------------------ */
@@ -827,13 +858,13 @@ define('SBIS3.CONTROLS/Image',
                   var self = this;
                   if (this._fileLoader) {
                      this._fileLoader.setMethod(
-                           (self._options.linkedObject || dataSource.getEndpoint().contract) +
+                        (self._options.linkedObject || dataSource.getEndpoint().contract) +
                            '.' + dataSource.getBinding().create
                      );
                   }
                   if (this._fileCamLoader) {
                      this._fileCamLoader.setMethod(
-                           (self._options.linkedObject || dataSource.getEndpoint().contract) +
+                        (self._options.linkedObject || dataSource.getEndpoint().contract) +
                            '.' + dataSource.getBinding().create
                      );
                   }
@@ -843,6 +874,7 @@ define('SBIS3.CONTROLS/Image',
                   }
                }
             },
+
             /**
              * Возвращает текущий источник данных.
              * @returns {WS.Data/Source/SbisService} Экземпляр класса с конфигурацией источника.
@@ -852,6 +884,7 @@ define('SBIS3.CONTROLS/Image',
             getDataSource: function() {
                return this._options.dataSource;
             },
+
             /**
              * Устанавливает фильтр.
              * @param {Object} filter Фильтр контрола.
@@ -865,6 +898,7 @@ define('SBIS3.CONTROLS/Image',
                   this._setImage(this._getSourceUrl());
                }
             },
+
             /**
              * Возвращает установленный фильтр.
              * @returns {Object} Фильтр контрола.
@@ -881,6 +915,7 @@ define('SBIS3.CONTROLS/Image',
             _getFileCamLoader: function() {
                return this._createFileCamLoader();
             },
+
             /**
              * Создание загрузчика файлов
              * @private
@@ -916,8 +951,9 @@ define('SBIS3.CONTROLS/Image',
                   );
                }
 
-               return Deferred.success(self._fileLoader)
+               return Deferred.success(self._fileLoader);
             },
+
             /**
              * Создание загрузчика файлов
              * @private
@@ -931,7 +967,7 @@ define('SBIS3.CONTROLS/Image',
                   def = new Deferred(),
                   cont = $('<div class="controls-image__file-cam-loader"></div>');
                self.getContainer().append(cont);
-               require(['Lib/Control/FileCamLoader/FileCamLoader'], function (FileCamLoader) {
+               require(['Lib/Control/FileCamLoader/FileCamLoader'], function(FileCamLoader) {
                   self._fileCamLoader = new FileCamLoader({
                      extensions: ['image'],
                      element: cont,
