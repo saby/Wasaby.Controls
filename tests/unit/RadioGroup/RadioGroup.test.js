@@ -15,7 +15,7 @@ define(
             item.set("2", "test");
 
             radio._notify = function (event, value) {
-               if (event === "selectKeyChange" && value === "test") {
+               if (event === "onSelectedItemChange" && value === "test") {
                   keyChanged = true;
                }
             };
