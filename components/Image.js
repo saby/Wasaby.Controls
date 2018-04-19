@@ -471,7 +471,7 @@ define('SBIS3.CONTROLS/Image',
                if (width !== 0) {
                   this._imageBar.show();//показываем, чтобы можно было вычислить размеры
                   this._buttonReset.toggle(true);//показываем, чтобы можно было вычислить размеры
-                  uploadWidth = this._buttonUpload._container[0].getBoundingClientRect().width +  this._buttonUpload._container[0].css('margin-left').replace('px', ''),
+                  uploadWidth = this._buttonUpload._container[0].getBoundingClientRect().width +  this._buttonUpload._container.css('margin-left').replace('px', ''),
                   resetWidth = this._buttonReset._container[0].getBoundingClientRect().width,
                   minToolbar = uploadWidth + resetWidth + (this._options.edit ? resetWidth : 0) + 4;
                   this._imageBar.hide();//скрываем после вычисления размеров
