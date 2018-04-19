@@ -2,7 +2,9 @@
    <div style="padding: 3em; background-color: rgba(38,59,74,0.22)">
       <h2>Area</h2>
       <Controls.Label name="myLabel1" caption="Пример"/>
-      <Controls.Input.Area bind:value="_text1"
+      <Controls.Input.Area
+                           attr:id="main_field"
+                           bind:value="_text1"
                            placeholder="{{_placeholder}}"
                            constraint="{{_constraint}}"
                            validationErrors="{{_validationErrors}}"
@@ -11,29 +13,33 @@
                            minLines="{{_minLines}}"
                            maxLines="{{_maxLines}}"
                            tagStyle="{{_tagStyle}}"
-                           enabled="{{_enabled}}"/>
+                           enabled="{{_enabled}}"
+                           on:valueChanged="_eventHandler()"
+                           on:inputCompleted="_eventHandler()"
+      />
    </div>
    <div style="padding: 3em; background-color: rgba(81,81,81,0.11) ">
       <h3>Задайте опции:</h3>
       <Controls.Label name="myLabel1" caption="placeholder"/>
-      <Controls.Input.Text bind:value="_placeholder"/>
+      <Controls.Input.Text attr:id="placeholder" bind:value="_placeholder"/>
       <Controls.Label name="myLabel1" caption="tagStyle(варианты: attention, done, error, primary, disabled)"
                       attr:style="height: auto;"/>
-      <Controls.Input.Text bind:value="_tagStyle"/>
+      <Controls.Input.Text attr:id="tagStyle" bind:value="_tagStyle"/>
       <Controls.Label name="myLabel1" caption="constraint"/>
-      <Controls.Input.Text bind:value="_constraint"/>
+      <Controls.Input.Text attr:id="constraint" bind:value="_constraint"/>
       <Controls.Label name="myLabel1" caption="maxLength"/>
-      <Controls.Input.Text bind:value="_maxLength"/>
+      <Controls.Input.Text attr:id="maxLength" bind:value="_maxLength"/>
       <Controls.Label name="myLabel1" caption="minLines"/>
-      <Controls.Input.Text bind:value="_minLines"/>
+      <Controls.Input.Text attr:id="minLines" bind:value="_minLines"/>
       <Controls.Label name="myLabel1" caption="maxLines"/>
-      <Controls.Input.Text bind:value="_maxLines"/>
+      <Controls.Input.Text attr:id="maxLines" bind:value="_maxLines"/>
       <div>
-         <Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_trim" caption="trim"/>
-         <Controls.Toggle.Checkbox on:valueChanged="valueChangedHandler()" enabled="{{true}}"
+         <Controls.Toggle.Checkbox attr:id="trim" enabled="{{true}}" bind:value="_trim" caption="trim"/>
+         <Controls.Toggle.Checkbox attr:id="validationErrors" on:valueChanged="valueChangedHandler()" enabled="{{true}}"
                                       bind:value="_validationErrorsValue" caption="validationErrors"/>
          <br/>
-         <Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_enabled" caption="enabled"/>
+         <Controls.Toggle.Checkbox attr:id="enabled" enabled="{{true}}" bind:value="_enabled" caption="enabled"/>
       </div>
    </div>
+   <div hidden="hidden" id="event_test">{{ _eventResult }}</div>
 </div>

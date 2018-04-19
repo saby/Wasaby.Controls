@@ -22,7 +22,7 @@ define('Controls/Controllers/Multiselect/Selection', [
       }
    };
 
-   var Selection = cExtend.extend(/** @lends SBIS3.CONTROLS/ListView/resources/MassSelectionController/resources/Selection */{
+   var Selection = cExtend.extend({
       _selectedKeys: null,
       _excludedKeys: null,
 
