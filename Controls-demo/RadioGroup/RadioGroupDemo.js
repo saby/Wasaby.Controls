@@ -2,10 +2,17 @@
 define('Controls-demo/RadioGroup/RadioGroupDemo', [
    'Core/Control',
    'tmpl!Controls-demo/RadioGroup/RadioGroupDemo',
-   'WS.Data/Source/Memory'
+   'WS.Data/Source/Memory',
+   'tmpl!Controls-demo/RadioGroup/resources/RadioItemTemplate',
+   'tmpl!Controls-demo/RadioGroup/resources/SingleItemTemplate',
+   'tmpl!Controls-demo/RadioGroup/resources/UnionItemTemplate',
+   'css!Controls-demo/RadioGroup/RadioGroupDemo'
 ], function (Control,
              template,
-             MemorySource
+             MemorySource,
+             CustomItemTemplate,
+             SingleItemTemplate,
+             UnionItemTemplate
 ) {
    'use strict';
    var source = new MemorySource({
@@ -29,7 +36,8 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
             },
             {
                id: "5",
-               caption: 'Значение5'
+               caption: 'Не такой как все',
+               template: 'tmpl!Controls-demo/RadioGroup/resources/SingleItemTemplate'
             },
             {
                id: "6",
@@ -48,6 +56,8 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
 
    var RadioGroupDemo = Control.extend({
       _template: template,
+      _customItemTemplate: CustomItemTemplate,
+      _unionItemTemplate: UnionItemTemplate,
       _source: source,
       _selectKey: null,
       changeKey: function (e, key) {

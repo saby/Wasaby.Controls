@@ -2,9 +2,9 @@ define('Controls/Toggle/Radio', [
    'Core/Control',
    'Controls/Controllers/SourceController',
    'tmpl!Controls/Toggle/Radio/Radio',
-   'WS.Data/Type/descriptor',
+   'tmpl!Controls/Toggle/Radio/resources/ItemTemplate',
    'css!Controls/Toggle/Radio/Radio'
-], function(Control, SourceController, template, types) {
+], function(Control, SourceController, template, defaultItemTemplate) {
 
    /**
     * Group of radioButton.
@@ -38,10 +38,13 @@ define('Controls/Toggle/Radio', [
     */
 
    /**
-    * @name Controls/Toggle/Radio#style
-    * @cfg {String} Display style of RadioGroup.
-    * @variant default RadioGroup has default display style.
-    * @variant additional RadioGroup has additional display style.
+    * @name Controls/Toggle/Radio#captionTemplate
+    * @cfg {Template} Template for caption.
+    */
+
+   /**
+    * @name Controls/Toggle/Radio#itemContent
+    * @cfg {Template} Template for item.
     */
 
    var _private = {
@@ -57,9 +60,12 @@ define('Controls/Toggle/Radio', [
 
    var Radio = Control.extend({
       _template: template,
+      _defaultItemTemplate:  defaultItemTemplate,
 
-      _beforeMount: function(options) {
-         if (options.source) {
+      _beforeMount: function(options, context, receivedState) {
+         if (receivedState) {
+            this._items = receivedState;
+         } else {
             return _private.initItems(options.source, this).addCallback(function(items) {
                this._items = items;
             }.bind(this));
@@ -77,7 +83,9 @@ define('Controls/Toggle/Radio', [
       },
 
       selectKeyChanged: function(e, item, keyProperty) {
-         this._notify('selectKeyChange', item.get(keyProperty));
+         if(!this._options.readOnly) {
+            this._notify('onSelectedItemChange', item.get(keyProperty));
+         }
       }
    });
 
