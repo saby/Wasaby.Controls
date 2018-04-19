@@ -9,7 +9,7 @@ define('Controls/Filter/Button/Panel/Editor/Keys', [
    var KeysEditor = Control.extend({
       _template: template,
 
-      _beforeUpdate: function() {
+      _keysChangedHandler: function() {
          this._notify('valueChanged', [this._options.item.value]);
       }
    });

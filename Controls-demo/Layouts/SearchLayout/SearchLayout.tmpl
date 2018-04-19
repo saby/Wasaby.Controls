@@ -14,51 +14,55 @@
                                     </ws:content>
                                 </Controls.Container.Input.Search>
                                 <Controls.Container.Filter.Fast>
-                                    <ws:content>
-                                        <Controls.Filter.Fast bind:selectedKeys="_value"/>
-                                    </ws:content>
+                                   <Controls.Filter.Fast bind:value="_value"/>
                                 </Controls.Container.Filter.Fast>
                                 <Controls.Container.Filter.Button>
-                                    <ws:content>
                                         <Controls.Filter.Button viewMode="twoColumn">
                                            <ws:items>
                                               <ws:Array>
-                                                 <ws:Object id="firstName" value="123" resetValue="">
+                                                 <ws:Object id="1" value="" resetValue="{{true}}" visibility="{{false}}">
+                                                 <ws:additionalTemplate>
+                                                    <Controls.Button style="linkMain" caption="CheckBox"/>
+                                                 </ws:additionalTemplate>
+                                                 <ws:editor>
+                                                    <Controls.Filter.Button.Panel.Editor.Boolean>
+                                                       <Controls.Toggle.Checkbox caption="click me"
+                                                                                 style="linkMain"/>
+                                                    </Controls.Filter.Button.Panel.Editor.Boolean>
+                                                 </ws:editor>
+                                              </ws:Object>
+                                                 <ws:Object id="firstName" value="123" resetValue="" visibility="{{false}}">
+                                                    <ws:additionalTemplate>
+                                                       <Controls.Button style="linkMain" caption="Text"/>
+                                                    </ws:additionalTemplate>
                                                     <ws:editor>
                                                        <Controls.Filter.Button.Panel.Editor.Text>
                                                           <Controls.Input.Text/>
                                                        </Controls.Filter.Button.Panel.Editor.Text>
                                                     </ws:editor>
                                                  </ws:Object>
-                                                 <ws:Object id="1" value="123" resetValue="{{true}}">
-                                                    <ws:editor>
-                                                       <Controls.Filter.Button.Panel.Editor.Boolean>
-                                                             <Controls.Toggle.Checkbox caption="click me"
-                                                                              style="linkMain"></Controls.Toggle.Checkbox>
-                                                       </Controls.Filter.Button.Panel.Editor.Boolean>
-                                                    </ws:editor>
-                                                 </ws:Object>
-                                                 <ws:Object id="id" value="{{_value}}" resetValue="{{1}}">
+
+                                                 <ws:Object id="id" value="{{_value}}" resetValue="{{1}}" visibility="{{false}}">
+                                                    <ws:additionalTemplate>
+                                                       <Controls.Button style="linkMain" caption="List"/>
+                                                    </ws:additionalTemplate>
                                                     <ws:editor>
                                                        <Controls.Filter.Button.Panel.Editor.Keys>
                                                              <Controls.Input.Dropdown source="{{sourceDropdown}}"
-                                                                                      keyProperty="key"></Controls.Input.Dropdown>
+                                                                                      keyProperty="key"/>
                                                        </Controls.Filter.Button.Panel.Editor.Keys>
                                                     </ws:editor>
                                                  </ws:Object>
-                                                 <ws:Object id="3" value="{{_value}}" resetValue="{{1}}">
+                                                 <ws:Object id="3" value="{{1}}" resetValue="{{1}}" visibility="{{true}}">
                                                     <ws:editor>
                                                        <Controls.Filter.Button.Panel.Editor.Text>
-                                                          <ws:content>
                                                              <div>"LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOONG"</div>
-                                                          </ws:content>
                                                        </Controls.Filter.Button.Panel.Editor.Text>
                                                     </ws:editor>
                                                  </ws:Object>
                                               </ws:Array>
                                            </ws:items>
                                         </Controls.Filter.Button>
-                                    </ws:content>
                                 </Controls.Container.Filter.Button>
                             </div>
                             <div class="controls-demo__LayoutInner">

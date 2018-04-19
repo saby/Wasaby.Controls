@@ -1,3 +1,3 @@
 <div class="controls-PropertyGrid_BooleanEditor">
-   <ws:partial template="{{_options.content}}" bind:value="_options.item.value"/>
+   <ws:partial template="{{_options.content}}" bind:value="_options.item.value" on:valueChanged="_valueChangedHandler()"/>
 </div>

@@ -9,7 +9,7 @@ define('Controls/Filter/Button/Panel/Editor/Boolean', [
    var BooleanEditor = Control.extend({
       _template: template,
 
-      _beforeUpdate: function() {
+      _valueChangedHandler: function() {
          this._notify('valueChanged', [this._options.item.value]);
       }
    });

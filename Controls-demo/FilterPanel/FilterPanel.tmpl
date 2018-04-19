@@ -1,73 +1,74 @@
 <div style="margin: 20px 20px;">
-   <Controls.Filter.Panel on:filterChanged="changeHandler()">
+   <Controls.Filter.Button.Panel on:filterChanged="changeHandler()">
       <ws:items>
          <ws:Array>
-            <ws:Object id="0" value="123" resetValue="">
+            <ws:Object id="0" value="123" resetValue="" visibility="{{true}}">
                <ws:editor>
-                  <Controls.Filter.Panel.Editor.Text>
-                     <ws:content>
-                        <Controls.Input.Text></Controls.Input.Text>
-                     </ws:content>
-                  </Controls.Filter.Panel.Editor.Text>
+                  <Controls.Filter.Button.Panel.Editor.Text>
+                     <Controls.Input.Text></Controls.Input.Text>
+                  </Controls.Filter.Button.Panel.Editor.Text>
                </ws:editor>
             </ws:Object>
-            <ws:Object id="1" value="123" resetValue="{{true}}">
+            <ws:Object id="1" value="123" resetValue="{{true}}" visibility="{{true}}">
                <ws:editor>
-                  <Controls.Filter.Panel.Editor.Boolean>
-                     <ws:content>
-                        <Controls.Button caption="click me" style="linkMain"></Controls.Button>
-                     </ws:content>
-                  </Controls.Filter.Panel.Editor.Boolean>
+                  <Controls.Filter.Button.Panel.Editor.Boolean>
+                     <Controls.Toggle.Checkbox caption="click me"/>
+                  </Controls.Filter.Button.Panel.Editor.Boolean>
                </ws:editor>
             </ws:Object>
-            <ws:Object id="2" value="{{3}}" resetValue="{{1}}">
+            <ws:Object id="2" value="{{3}}" resetValue="{{1}}" visibility="{{false}}">
+               <ws:additionalTemplate>
+                  <Controls.Button style="linkMain" caption="dropdown"/>
+               </ws:additionalTemplate>
                <ws:editor>
-                  <Controls.Filter.Panel.Editor.Keys>
-                     <ws:content>
-                        <Controls.Input.Dropdown source="{{dataSource}}" keyProperty="key"></Controls.Input.Dropdown>
-                     </ws:content>
-                  </Controls.Filter.Panel.Editor.Keys>
+                  <Controls.Filter.Button.Panel.Editor.Keys>
+                     <Controls.Input.Dropdown source="{{sourceDropdown}}" keyProperty="key"/>
+                  </Controls.Filter.Button.Panel.Editor.Keys>
                </ws:editor>
             </ws:Object>
          </ws:Array>
       </ws:items>
 
-   </Controls.Filter.Panel>
+   </Controls.Filter.Button.Panel>
 
    <Controls.Input.Area bind:value="areaText"></Controls.Input.Area>
 
-   <Controls.Filter.Panel on:filterChanged="changeHandler()" viewMode="twoColumn">
+   <Controls.Filter.Button.Panel on:filterChanged="changeHandler()" viewMode="twoColumn">
       <ws:items>
          <ws:Array>
-            <ws:Object id="0" value="123" resetValue="">
+            <ws:Object id="1" value="123" resetValue="{{true}}" visibility="{{true}}">
                <ws:editor>
-                  <Controls.Filter.Panel.Editor.Text>
-                     <ws:content>
-                        <Controls.Input.Text></Controls.Input.Text>
-                     </ws:content>
-                  </Controls.Filter.Panel.Editor.Text>
+                  <Controls.Filter.Button.Panel.Editor.Boolean>
+                     <Controls.Toggle.Checkbox caption="click me"/>
+                  </Controls.Filter.Button.Panel.Editor.Boolean>
                </ws:editor>
             </ws:Object>
-            <ws:Object id="1" value="123" resetValue="{{true}}">
+            <ws:Object id="firstName" value="123" resetValue="" visibility="{{true}}">
                <ws:editor>
-                  <Controls.Filter.Panel.Editor.Boolean>
-                     <ws:content>
-                        <Controls.Button caption="click me" style="linkMain"></Controls.Button>
-                     </ws:content>
-                  </Controls.Filter.Panel.Editor.Boolean>
+                  <Controls.Filter.Button.Panel.Editor.Text>
+                     <Controls.Input.Number/>
+                  </Controls.Filter.Button.Panel.Editor.Text>
                </ws:editor>
             </ws:Object>
-            <ws:Object id="2" value="{{3}}" resetValue="{{1}}">
+
+            <ws:Object id="id" value="{{3}}" resetValue="{{1}}" visibility="{{true}}">
                <ws:editor>
-                  <Controls.Filter.Panel.Editor.Keys>
-                     <ws:content>
-                        <Controls.Input.Dropdown source="{{dataSource}}" keyProperty="key"></Controls.Input.Dropdown>
-                     </ws:content>
-                  </Controls.Filter.Panel.Editor.Keys>
+                  <Controls.Filter.Button.Panel.Editor.Keys>
+                     <Controls.Input.Dropdown source="{{sourceDropdown}}"
+                                              keyProperty="key"/>
+                  </Controls.Filter.Button.Panel.Editor.Keys>
+               </ws:editor>
+            </ws:Object>
+            <ws:Object id="3" value="{{1}}" resetValue="{{1}}"
+                       visibility="{{true}}">
+               <ws:editor>
+                  <Controls.Filter.Button.Panel.Editor.Text>
+                     <Controls.Input.Text/>
+                  </Controls.Filter.Button.Panel.Editor.Text>
                </ws:editor>
             </ws:Object>
          </ws:Array>
       </ws:items>
 
-   </Controls.Filter.Panel>
+   </Controls.Filter.Button.Panel>
 </div>
