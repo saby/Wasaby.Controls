@@ -7,7 +7,7 @@ define('Controls-demo/FilterPanel/FilterPanel',
       'Controls/Input/Password',
       'Controls/Input/Area',
       'Controls/Input/Dropdown',
-      'Controls/Filter/Panel'
+      'Controls/Filter/Button/Panel'
    ],
 
    function(Control, Memory, template) {
@@ -19,7 +19,7 @@ define('Controls-demo/FilterPanel/FilterPanel',
          areaText: '',
          sKey: 1,
 
-         dataSource: {
+         sourceDropdown: {
             module: 'WS.Data/Source/Memory',
             options: {
                data: [
@@ -31,41 +31,6 @@ define('Controls-demo/FilterPanel/FilterPanel',
                idProperty: 'key'
             }
          },
-
-         itemsFilterPanel: [
-            {
-               id: 'number',
-               value: '',
-               editor: 'text',
-               template: 'Controls/Input/Number'
-            },
-            {
-               id: 'password',
-               value: '',
-               editor: 'text',
-               template: 'Controls/Input/Password'
-            },
-            {
-               id: 'area',
-               value: 'Long long',
-               editor: 'text',
-               template: 'Controls/Input/Area'
-            },
-            {
-               id: 'button',
-               style: 'linkMain',
-               caption: 'click me',
-               editor: 'boolean',
-               template: 'Controls/Button'
-            },
-            {
-               id: 'list',
-               value: 1,
-
-               keyProperty: 'key',
-               editor: 'keys',
-               template: 'Controls/Input/Dropdown'
-            }],
 
          changeHandler: function(event, value) {
             this.areaText = value['0'];
