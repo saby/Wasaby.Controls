@@ -321,7 +321,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
             }
             if (!stylesPanel) {
                var editor = this.getLinkedEditor();
-               this._stylesPanel = new StylesPanel({
+               var options = {
                   parent: editor, // при закрытии панели необходимо чтобы фокус оставался в редакторе
                   target: button.getContainer(),
                   corner: 'tl',
@@ -337,7 +337,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
                   colors: constants.COLORS,
                   presets:cMerge({}, constants.STYLE_PRESETS),
                   activableByClick: false
-               });
+               };
+               var componentOptions = button.getProperty('componentOptions');
+               this._stylesPanel = new StylesPanel(componentOptions && typeof componentOptions === 'object' ? cMerge(options, componentOptions) : options);
 
                this.subscribeTo(this._stylesPanel, 'changeFormat', function () {
                   this.getLinkedEditor().applyFormats(this._stylesPanel.getStylesObject());

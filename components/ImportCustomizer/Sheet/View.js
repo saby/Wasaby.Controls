@@ -53,9 +53,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/Sheet/View',
             return options;
          },
 
-         $constructor: function () {
-            this._publish('change');
-         },
+         /*$constructor: function () {
+         },*/
 
          init: function () {
             View.superclass.init.apply(this, arguments);
@@ -67,8 +66,25 @@ define('SBIS3.CONTROLS/ImportCustomizer/Sheet/View',
             this.subscribeTo(this._view, 'onSelectedItemsChange', function (evtName, selecteds, changes) {
                var id = selecteds[0];
                this._options.sheetIndex = id ? id - 1 : -1;
-               this._notify('change', this.getValues());
+               this.sendCommand('subviewChanged');
             }.bind(this));
+         },
+
+         /**
+          * Установить указанные настраиваемые значения компонента
+          *
+          * @public
+          * @param {object} values Набор из нескольких значений, которые необходимо изменить
+          */
+         setValues: function (values) {
+            if (!values || typeof values !== 'object') {
+               throw new Error('Object required');
+            }
+            var options = this._options;
+            if ('sheetIndex' in values && values.sheetIndex !== options.sheetIndex) {
+               options.sheetIndex = values.sheetIndex;
+               this._view.setSelectedKeys(values.sheetIndex && values.sheetIndex !== -1 ? [values.sheetIndex] : []);
+            }
          },
 
          /**

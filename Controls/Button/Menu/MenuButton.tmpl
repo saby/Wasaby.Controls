@@ -7,7 +7,7 @@
                     on:click="_open()"/>
 
    <Controls.Dropdown.Opener name="DropdownOpener" className="{{_offsetClassName}}">
-      <ws:popupOptions>
+      <ws:popupOptions closeByExternalClick="{{true}}">
          <ws:eventHandlers onResult="{{_onResult}}"/>
          <ws:componentOptions
                  keyProperty="{{_options.keyProperty}}"
