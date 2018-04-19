@@ -113,6 +113,10 @@ define('Controls/List/SimpleList/ListViewModel',
             this._notify('onListChange');
          },
 
+         setActiveItem: function(itemData) {
+            this._activeItem = itemData;
+            this._nextVersion();
+         },
 
          select: function(keys) {
             this._multiselection.select(keys);

@@ -7,12 +7,13 @@
  */
 define('SBIS3.CONTROLS/ImportCustomizer/BaseParams/View',
    [
+      'Core/helpers/Object/isEqual',
       'SBIS3.CONTROLS/CompoundControl',
       'tmpl!SBIS3.CONTROLS/ImportCustomizer/BaseParams/View'/*,
       'css!SBIS3.CONTROLS/ImportCustomizer/BaseParams/View'*/
    ],
 
-   function (CompoundControl, dotTplFn) {
+   function (cObjectIsEqual, CompoundControl, dotTplFn) {
       'use strict';
 
       var View = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ImportCustomizer/BaseParams/View.prototype*/ {
@@ -40,9 +41,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/BaseParams/View',
             _replaceAllDataView: null
          },
 
-         $constructor: function () {
-            this._publish('change');
-         },
+         /*$constructor: function () {
+         },*/
 
          init: function () {
             View.superclass.init.apply(this, arguments);
@@ -53,8 +53,35 @@ define('SBIS3.CONTROLS/ImportCustomizer/BaseParams/View',
          _bindEvents: function () {
             this.subscribeTo(this._replaceAllDataView, 'onCheckedChange', function (evtName, isChecked) {
                this._options.replaceAllData = isChecked;
-               this._notify('change', this.getValues());
+               this.sendCommand('subviewChanged');
             }.bind(this));
+         },
+
+         /**
+          * Установить указанные настраиваемые значения компонента
+          *
+          * @public
+          * @param {object} values Набор из нескольких значений, которые необходимо изменить
+          */
+         setValues: function (values) {
+            if (!values || typeof values !== 'object') {
+               throw new Error('Object required');
+            }
+            var names = ['replaceAllData', 'destination'];
+            var has = {};
+            var options = this._options;
+            for (var name in values) {
+               if (names.indexOf(name) !== -1) {
+                  var value = values[name];
+                  if (name !== '' ? value !== options[name] : !cObjectIsEqual(value, options[name])) {
+                     has[name] = true;
+                     options[name] = value;
+                  }
+               }
+            }
+            if (has.replaceAllData) {
+               this._replaceAllDataView.setChecked(options.replaceAllData);
+            }
          },
 
          /**

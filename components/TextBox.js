@@ -252,7 +252,18 @@ define('SBIS3.CONTROLS/TextBox', [
             })
             .on('focusin', this._inputFocusInHandler.bind(this))
             .on('click', this._inputClickHandler.bind(this));
-   
+         
+         /* На Ipad'e при вставке текста из т9/autocorrect'a стреляет только событие input.
+            Проверить, что это была вставка, можно по опции текст, т.к. в остальных случаях,
+            мы обновляем опцию, раньше наступления события input. */
+         if (constants.browser.isMobileSafari) {
+            this._inputField.on('input', function (event) {
+               if (self._getInputValue() !== self.getText()) {
+                  self._pasteHandler(event);
+               }
+            });
+         }
+         
          this._container
             .on('keypress keydown keyup', this._keyboardDispatcher.bind(this))
             .on('keyup mouseenter', function() { self._applyTooltip(); })
