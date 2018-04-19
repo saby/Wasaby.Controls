@@ -25,10 +25,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
           */
 
          /**
-          * @event change Происходит при измении настраиваемые значения компонента
-          * @param {Core/EventObject} evtName Дескриптор события
-          * @param {object} values Настраиваемые значения компонента:
-          * @param {Array<string>} values.fields Список привязки колонок файла к полям данных
+          * @typedef {object} ExportColumnBinderResult Тип, описывающий возвращаемые настраиваемые значения компонента
+          * @property {Array<string>} fields Список привязки колонок файла к полям данных
+          *
+          * @see fields
           */
 
          _dotTplFn: dotTplFn,
@@ -47,6 +47,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
                 */
                fieldsTitle: rk('Поле данных', 'НастройщикЭкспорта'),
                /**
+                * @cfg {string} Отображаемый текст при пустом списке соответствий
+                */
+               emptyTitle: rk('Не задано', 'НастройщикЭкспорта'),
+               /**
                 * @cfg {Array<ExportField>} Список соответствий колонок файла и полей данных
                 */
                filelds: []
@@ -58,11 +62,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
          _modifyOptions: function () {
             var options = View.superclass._modifyOptions.apply(this, arguments);
             var filelds = options.filelds;
-            options._rows = filelds.map(function (v, i) { return {id:v.field, column:_toLetter(i), field:v.title}; });
+            options._rows = (filelds && filelds.length ? filelds : [{field:'', title:emptyTitle}]).map(function (v, i) { return {id:v.field, column:_toLetter(i), field:v.title}; });
             options._columns = [
                {field:'column', title:options.columnsTitle, className:undefined},
                {field:'field', title:options.fieldsTitle, className:undefined}
             ];
+            options._rowActions = [];
             return options;
          },
 
@@ -71,8 +76,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
 
          init: function () {
             View.superclass.init.apply(this, arguments);
-            //^^^this._grid = this.getChildControlByName('controls-ExportCustomizer-ColumnBinder-View__grid');
-            this._bindEvents();
+            this._grid = this.getChildControlByName('controls-ExportCustomizer-ColumnBinder-View__grid');
          },
 
          _bindEvents: function () {
@@ -108,7 +112,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
           * Получить все настраиваемые значения компонента
           *
           * @public
-          * @return {object}
+          * @return {ExportColumnBinderResult}
           */
          getValues: function () {
             return {
@@ -129,7 +133,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
        * @return {string}
        */
       var _toLetter = function (index) {
-         return '' + (i + 1);//^^^
+         return '' + (index + 1);//^^^
       };
 
 

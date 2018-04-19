@@ -101,6 +101,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                 */
                columnBinderFieldsTitle: null,
                /**
+                * @cfg {string} Отображаемый текст при пустом списке соответствий в под-компоненте "columnBinder"
+                */
+               columnBinderEmptyTitle: null,
+               /**
                 * @cfg {Array<ExportField>} Список соответствий колонок файла и полей данных для под-компонента "columnBinder"
                 */
                columnBinderFilelds: []
