@@ -1,0 +1,19 @@
+<div class="controls-ExportCustomizer-ColumnBinder-View__head">
+   <div class="controls-ExportCustomizer-ColumnBinder-View__head__title">
+      <ws:if data="{{title}}">{{title}}</ws:if><ws:else>{[НастройщикЭкспорта@@Настройка колонок]}</ws:else>
+   </div>
+   <SBIS3.CONTROLS:Button
+      className="controls-ExportCustomizer-ColumnBinder-View__head__button"
+      command="addRows"
+      caption="+"
+   />
+</div>
+<SBIS3.CONTROLS:DataGridView
+   name="controls-ExportCustomizer-ColumnBinder-View__grid"
+   class="controls-DataGridView__hasSeparator controls-ExportCustomizer-ColumnBinder-View__grid"
+   items="{{_rows}}"
+   idProperty="id"
+   columns="{{_columns}}"
+   itemsActions="{{[]}}"
+   startScrollColumn="{{1}}"
+/>

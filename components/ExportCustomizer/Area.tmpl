@@ -5,7 +5,7 @@
             <ws:if data="{{dialogTitle}}">{{dialogTitle}}</ws:if><ws:else>{[НастройщикЭкспорта@@Настройка экспорта]}</ws:else>
          </div>
          <SBIS3.CONTROLS:Button
-            className="controls-ExportCustomizer-Area__applyButton"
+            className="controls-ExportCustomizer-Area__completeButton"
             command="complete" primary="true"
             >
             <ws:caption>
@@ -15,9 +15,18 @@
          </SBIS3.CONTROLS:Button>
       </div>
    </ws:if>
-   <SBIS3.CONTROLS:ScrollContainer name="controls-ExportCustomizer-Area__scrollContainer" class="controls-ExportCustomizer-Area__body controls-ScrollContainer__flex">
+   <SBIS3.CONTROLS:ScrollContainer name="controls-ExportCustomizer-Area__scrollContainer" class="controls-ExportCustomizer-Area__body">
       <ws:content>
-         Здесь контент
+         <SBIS3.CONTROLS:ExportCustomizer:_ColumnBinder:View
+            className="controls-ExportCustomizer-Area__body__columnBinder"
+            name="controls-ExportCustomizer-Area__body__columnBinder"
+            scope="{{_scopes.columnBinder}}"
+         />
+         <!--^^^<SBIS3.CONTROLS:ExportCustomizer:_Formatter:View
+            className="controls-ExportCustomizer-Area__body__formatter"
+            name="controls-ExportCustomizer-Area__body__formatter"
+            scope="{{_scopes.formatter}}"
+         />-->
       </ws:content>
    </SBIS3.CONTROLS:ScrollContainer>
 </div>

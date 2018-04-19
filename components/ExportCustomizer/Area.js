@@ -8,19 +8,19 @@
 define('SBIS3.CONTROLS/ExportCustomizer/Area',
    [
       'Core/CommandDispatcher',
-      'Core/core-merge',
+      /*^^^'Core/core-merge',*/
       'Core/Deferred',
       'SBIS3.CONTROLS/CompoundControl',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
-      'WS.Data/Collection/RecordSet',
-      'WS.Data/Type/descriptor',
+      /*^^^'WS.Data/Collection/RecordSet',*/
+      /*^^^'WS.Data/Type/descriptor',*/
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/Area',
       'css!SBIS3.CONTROLS/ExportCustomizer/Area',
       'SBIS3.CONTROLS/Button',
       'SBIS3.CONTROLS/ScrollContainer'
    ],
 
-   function (CommandDispatcher, cMerge, Deferred, CompoundControl, InformationPopupManager, RecordSet, DataType, tmpl) {
+   function (CommandDispatcher, /*^^^cMerge,*/ Deferred, CompoundControl, InformationPopupManager, /*^^^RecordSet,*/ /*^^^DataType,*/ tmpl) {
       'use strict';
 
       /**
@@ -86,10 +86,30 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                /**
                 * @cfg {string} Подпись кнопки диалога применения результата редактирования (опционально)
                 */
-               dialogButtonTitle: null//Определено в шаблоне
+               dialogButtonTitle: null,//Определено в шаблоне
+
+               /**
+                * @cfg {string} Заголовок под-компонента "columnBinder"
+                */
+               columnBinderTitle: null,
+               /**
+                * @cfg {string} Заголовок столбца колонок файла в таблице соответствия под-компонента "columnBinder"
+                */
+               columnBinderColumnsTitle: null,
+               /**
+                * @cfg {string} Заголовок столбца полей данных в таблице соответствия под-компонента "columnBinder"
+                */
+               columnBinderFieldsTitle: null,
+               /**
+                * @cfg {Array<ExportField>} Список соответствий колонок файла и полей данных для под-компонента "columnBinder"
+                */
+               columnBinderFilelds: []
+
             },
             // Список имён вложенных под-компонентов
             _SUBVIEW_NAMES: {
+               columnBinder: 'controls-ExportCustomizer-Area__body__columnBinder',
+               formatter: 'controls-ExportCustomizer-Area__body__formatter',
             },
             // Ссылки на вложенные под-компоненты
             _views: {
@@ -113,12 +133,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           */
          _processOptions: function (options) {
             this._resolveOptions(options);
-            this._validateOptions(options);
+            this._validateOptions(options, this._filterValidatedOptionNames.bind(this));
             this._reshapeOptions(options);
          },
 
          /**
-          * Разрешить неустановленные собственные опции компонента их значениями по умолчанию
+          * Разрешить неустановленные собственные опции компонента их значениями по умолчанию из статического метода getDefaultOptions
           * @protected
           * @param {object} options Опции компонента
           */
@@ -152,11 +172,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * Проверить собственные опции компонента на допустимость их значений, используя валидаторы из статического метода getOptionTypes
           * @protected
           * @param {object} options Опции компонента
+          * @param {function(Array<string>, object):Array<string>} [namesFilter] Фильт имён опций, которые подлежат проверке. Применяется при необходимости варьировать проверку в зависимости от значений других опций (опционально)
           */
-         _validateOptions: function (options) {
+         _validateOptions: function (options, namesFilter) {
             var typeValidators = Area.getOptionTypes();
             if (typeValidators) {
-               var names = this._filterValidatedOptionNames(Object.keys(typeValidators), options);
+               var names = Object.keys(typeValidators);
+               if (namesFilter) {
+                  names = namesFilter.call(null, names, options);
+               }
                if (names && names.length) {
                   for (var i = 0; i < names.length; i++) {
                      var name = names[i];
@@ -178,6 +202,17 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * @param {object} options Опции компонента
           */
          _reshapeOptions: function (options) {
+            options._scopes = {
+               columnBinder: {
+                  title: options.columnBinderTitle,
+                  columnsTitle: options.columnBinderColumnsTitle,
+                  fieldsTitle: options.columnBinderFieldsTitle,
+                  fields: options.columnBinderFields
+               },
+               formatter: {
+                  //^^^
+               }
+            };
          },
 
          $constructor: function () {
@@ -202,6 +237,19 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             this._bindEvents();
          },
 
+         /**
+          * Собрать ссылки на все реально имеющиеся под-компоненты
+          * @protected
+          */
+         _collectViews: function () {
+            var subviewNames = this._SUBVIEW_NAMES;
+            var views = {};
+            for (var name in subviewNames) {
+               views[name] = _getChildComponent(this, subviewNames[name]);
+            }
+            this._views = views;
+         },
+
          _initResults: function () {
             var options = this._options;
             var notWaiting = !options.waitingMode;
@@ -214,19 +262,63 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          },
 
          _bindEvents: function () {
+            for (var name in this._views) {
+               this._bindSubviewEvents(name);
+            }
          },
 
-         /**
-          * Собрать ссылки на все реально имеющиеся под-компоненты
+         _bindSubviewEvents: function (name) {
+            var view = this._views[name];
+            if (view && !view.isDestroyed()) {
+               var handlers = {
+                  columnBinder: this._onChangeColumnBinder,
+                  formatter: this._onChangeFormatter
+               };
+               this.subscribeTo(view, 'onCommandCatch', function (handler, evtName, command/*, args*/) {
+                  if (command === 'subviewChanged') {
+                     handler.apply(this, Array.prototype.slice.call(arguments, 3));
+                     evtName.setResult(true);
+                  }
+               }.bind(this, handlers[name].bind(this)));
+            }
+         },
+
+         /*
+          * Обработчик "subviewChanged" для под-компонента "columnBinder"
+          *
           * @protected
           */
-         _collectViews: function () {
-            var subviewNames = this._SUBVIEW_NAMES;
-            var views = {};
-            for (var name in subviewNames) {
-               views[name] = _getChildComponent(this, subviewNames[name]);
+         _onChangeColumnBinder: function () {
+            // Изменилась область данных для импортирования
+            var values = this._getSubviewValues('columnBinder');
+            var options = this._options;
+            var results = this._results;
+         },
+
+         /*
+          * Обработчик "subviewChanged" для под-компонента "formatter"
+          *
+          * @protected
+          */
+         _onChangeFormatter: function () {
+            // Изменилась область данных для импортирования
+            var values = this._getSubviewValues('formatter');
+            var options = this._options;
+            var results = this._results;
+         },
+
+         /*
+          * Получить настраиваемые значения вложенного под-компонента, если он есть
+          *
+          * @protected
+          * @param {string} name Мнемоническое имя под-компонента (в наборе _views)
+          * @return {object}
+          */
+         _getSubviewValues: function (name) {//^^^
+            var view = this._views[name];
+            if (view) {
+               return view.getValues();
             }
-            this._views = views;
          },
 
          /*
@@ -345,11 +437,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           */
          getValues: function (withValidation) {
             var options = this._options;
-            var dataType = options.dataType;
-            var useSheets = dataType === Area.DATA_TYPE_EXCEL || dataType === Area.DATA_TYPE_DBF;
-            var useMapping = dataType === Area.DATA_TYPE_CML;
+            var useSheets = true;
+            var useMapping = true;
             var data = {
-               dataType: dataType,
                file: options.file
             };
             if (useSheets) {
