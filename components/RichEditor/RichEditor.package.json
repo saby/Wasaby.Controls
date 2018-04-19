@@ -8,5 +8,5 @@
       "tmpl!SBIS3.CONTROLS/RichEditor/Components/Toolbar/RichEditorToolbar",
       "css!SBIS3.CONTROLS/RichEditor/Components/Toolbar/RichEditorToolbar"
    ],
-   "output": "SBIS3.CONTROLS/RichEditor/Components/RichEditor"
+   "output": "SBIS3.CONTROLS/RichEditor"
 }]

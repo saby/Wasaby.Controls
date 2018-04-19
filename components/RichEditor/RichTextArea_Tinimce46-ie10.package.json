@@ -1,8 +1,0 @@
-[{
-   "include": [
-      "SBIS3.CONTROLS/RichEditor/third-party/tinymce46-ie10/tinymce.min",
-      "css!SBIS3.CONTROLS/RichEditor/third-party/tinymce46-ie10/skins/lightgray/skin.min",
-      "css!SBIS3.CONTROLS/RichEditor/third-party/tinymce46-ie10/skins/lightgray/content.inline.min"
-   ],
-   "output": "SBIS3.CONTROLS/RichEditor/third-party/tinymce46-ie10/tinymce.min"
-}]
