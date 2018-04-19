@@ -338,7 +338,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
                   presets:cMerge({}, constants.STYLE_PRESETS),
                   activableByClick: false
                };
-               var componentOptions = button.getProperty('componentOptions');
+               var componentOptions; try { componentOptions = button.getProperty('componentOptions'); } catch (ex) {};
                this._stylesPanel = new StylesPanel(componentOptions && typeof componentOptions === 'object' ? cMerge(options, componentOptions) : options);
 
                this.subscribeTo(this._stylesPanel, 'changeFormat', function () {
