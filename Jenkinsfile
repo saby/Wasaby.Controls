@@ -403,7 +403,7 @@ node('controls') {
                 sudo chmod -R 0777 /home/sbis/Controls
             """
             //Пакуем данные
-            writeFile file: "/home/sbis/Controls/Core.package.json", text: """
+            writeFile file: "/home/sbis/Controls/intest-ps/ui/Core.package.json", text: """
                 {
                 "includeCore":true,
                 "platformPackage": true,
