@@ -60,7 +60,7 @@ define('Controls/Toggle/Radio', [
 
    var Radio = Control.extend({
       _template: template,
-      _defaultItemTemplate:  defaultItemTemplate,
+      _defaultItemTemplate: defaultItemTemplate,
 
       _beforeMount: function(options, context, receivedState) {
          if (receivedState) {
@@ -83,7 +83,7 @@ define('Controls/Toggle/Radio', [
       },
 
       selectKeyChanged: function(e, item, keyProperty) {
-         if(!this._options.readOnly) {
+         if (!this._options.readOnly) {
             this._notify('onSelectedItemChange', item.get(keyProperty));
          }
       }
