@@ -1,8 +1,9 @@
 /// <amd-module name='File/Driver/Base64' />
+import DriverInterface = require('File/Driver/Interface');
 import base64toblob = require('File/utils/b64toBlob');
 import BlobDriver = require('File/Driver/Blob');
 
-class Base64  /** @lends Lib/File/Base64.prototype*/ {
+class Base64 implements DriverInterface {
    private base64Data: string;
    private contentType: string;
 
@@ -15,10 +16,10 @@ class Base64  /** @lends Lib/File/Base64.prototype*/ {
       this.base64Data = data.substring(data.indexOf(',') + 1);
    }
 
-   public save(name: string, options?: object) {
+   public download(options?: Object) {
       let type = (options && options['contentType']) ? options['contentType'] : this.contentType;
       let blob: Blob = base64toblob(this.base64Data, type);
-      new BlobDriver(blob).save(name, type)
+      new BlobDriver(blob).download(options);
    }
 }
 export = Base64;

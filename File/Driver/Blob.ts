@@ -1,10 +1,14 @@
 /// <amd-module name='File/Driver/Blob' />
+import DriverInterface = require('File/Driver/Interface');
 import detection = require('Core/detection');
 
-class Blob {
+class Blob implements DriverInterface {
+   private name: string = 'noname';
+
    constructor(private blob: Blob) { }
 
-   public save(name: string) {
+   public download(options?: Object) {
+      let name = (options) ? options['name'] : this.name;
       if (detection.isIE) {
          window.navigator.msSaveOrOpenBlob(this.blob, name);
          return;

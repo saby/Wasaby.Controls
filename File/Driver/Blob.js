@@ -3,8 +3,10 @@ define("File/Driver/Blob", ["require", "exports", "Core/detection"], function (r
     var Blob = /** @class */ (function () {
         function Blob(blob) {
             this.blob = blob;
+            this.name = 'noname';
         }
-        Blob.prototype.save = function (name) {
+        Blob.prototype.download = function (options) {
+            var name = (options) ? options['name'] : this.name;
             if (detection.isIE) {
                 window.navigator.msSaveOrOpenBlob(this.blob, name);
                 return;
