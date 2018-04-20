@@ -498,7 +498,7 @@ define('SBIS3.CONTROLS/DataGridView',
              * <pre>
              *    <ws:if data="{{ ladder.isPrimary(item, 'responsibleId') }}">
              *     <div class='edo-Browser-Responsible__photo'>
-             *      <ws:partial template="tmpl!SBIS3.Person.PersonsCollage" scope="{{ item.responsible.collageData }}"/>
+             *      <ws:partial template="tmpl!Person/Collage/Collage" scope="{{ item.responsible.collageData }}"/>
              *      </div>
              *     </ws:if>
              * </pre>

@@ -1,11 +1,11 @@
 /**
  * Demo components.
  */
-define('js!WSTest', [], function () {
+define('WSTest/WSTest', [], function () {
    'use strict';
 
    return {
-      name: 'WSTest',
+      name: 'WSTest/WSTest',
       version: '3.17.10',
       description: 'Components for test'
    };
