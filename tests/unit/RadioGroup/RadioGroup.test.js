@@ -45,8 +45,8 @@ define(
             };
 
             radio._beforeMount(options).addCallback(function () {
-               assert.isTrue(radio._items.at(0).get("caption") === "test1", '_beforeMount work uncorrect');
-               assert.isTrue(radio._items.at(1).get("caption") === "test2", '_beforeMount work uncorrect');
+               assert.isTrue(radio._items.at(0).get("tittle") === "test1", '_beforeMount work uncorrect');
+               assert.isTrue(radio._items.at(1).get("tittle") === "test2", '_beforeMount work uncorrect');
                done();
             });
          });
@@ -90,8 +90,8 @@ define(
             };
 
             radio._beforeUpdate(options).addCallback(function () {
-               assert.isTrue(radio._items.at(0).get("caption") === "caption1", '_beforeUpdate work uncorrect');
-               assert.isTrue(radio._items.at(1).get("caption") === "caption2", '_beforeUpdate work uncorrect');
+               assert.isTrue(radio._items.at(0).get("tittle") === "caption1", '_beforeUpdate work uncorrect');
+               assert.isTrue(radio._items.at(1).get("tittle") === "caption2", '_beforeUpdate work uncorrect');
                done();
             });
          });

@@ -1,11 +1,12 @@
+
 <span attr:class="controls-RadioItem__wrapper">
     <ws:partial template="tmpl!Controls/Toggle/resources/SwitchCircle/SwitchCircle" item="{{item}}" readOnly="{{readOnly}}" selected="{{selected}}"/>
-    <ws:if data="{{itemContent}}">
-        <ws:partial template="{{captionTemplate}}" item="{{item}}" readOnly="{{readOnly}}" selected="{{selected}}"/>
+    <ws:if data="{{itemContentTpl}}">
+        <ws:partial template="{{itemContentTpl}}" displayProperty="{{displayProperty}}" item="{{item}}" readOnly="{{readOnly}}" selected="{{selected}}"/>
     </ws:if>
     <ws:else>
         <span attr:class="controls-RadioItem__caption_{{selected ? 'selected' : 'unselected'}}_{{readOnly ? 'disabled' : 'enabled'}}
                           controls-RadioItem__caption">
-            {{item["caption"]}}</span>
+            {{item[displayProperty]}}</span>
     </ws:else>
 </span>

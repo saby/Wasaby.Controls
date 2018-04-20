@@ -20,36 +20,38 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
          data: [
             {
                id: "1",
-               caption: 'Значение1'
+               tittle: 'Значение1'
             },
             {
                id: "2",
-               caption: 'Значение2'
+               tittle: 'Значение2'
             },
             {
                id: "3",
-               caption: 'Значение3'
+               tittle: 'Особенный',
+               templateTwo: 'tmpl!Controls-demo/RadioGroup/resources/SingleItemTemplate'
             },
             {
                id: "4",
-               caption: 'Значение4'
+               tittle: 'Значение4'
             },
             {
                id: "5",
-               caption: 'Не такой как все',
+               tittle: 'Не такой как все',
                template: 'tmpl!Controls-demo/RadioGroup/resources/SingleItemTemplate'
             },
             {
                id: "6",
-               caption: 'Значение6'
+               tittle: 'Значение6'
             },
             {
                id: "7",
-               caption: 'Значение7'
+               tittle: 'Супер Особенный',
+               templateTwo: 'tmpl!Controls-demo/RadioGroup/resources/SingleItemTemplate'
             },
             {
                id: "8",
-               caption: 'Значение8'
+               tittle: 'Значение8'
             }
          ]
       });

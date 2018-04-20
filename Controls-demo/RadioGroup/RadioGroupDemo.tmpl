@@ -7,7 +7,8 @@
                 selectedKey="{{_selectKey}}"
                 source="{{_source}}"
                 direction="vertical"
-                readOnly="{{true}}"/>
+                readOnly="{{true}}"
+                itemTemplateProperty="templateTwo"/>
     </div>
 
     <div class="demo-RadioGroup__TestBlock">
@@ -19,7 +20,8 @@
                 source="{{_source}}"
                 direction="horizontal"
                 readOnly="{{false}}"
-                captionTemplate="{{_customItemTemplate}}"/>
+                itemContentTpl="{{_customItemTemplate}}"
+                itemTemplateProperty="template"/>
     </div>
 
     <div class="demo-RadioGroup__TestBlock">
@@ -31,6 +33,6 @@
                 source="{{_source}}"
                 direction="vertical"
                 readOnly="{{false}}"
-                itemTemplate="{{_unionItemTemplate}}"/>
+                itemTpl="{{_unionItemTemplate}}"/>
     </div>
 </div>

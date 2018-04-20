@@ -1,13 +1,14 @@
 <div class="controls-GroupRadio{{_options.readOnly ? '_disabled': '_enabled'}}">
     <div class="controls-RadioGroup__wrapper_{{_options.direction}}">
         <ws:for data="index, item in _items">
-            <ws:partial template="{{item.get('template') || _options.itemTemplate || _defaultItemTemplate}}"
+            <ws:partial template="{{item.get(_options.itemTemplateProperty) || _options.itemTpl || _defaultItemTemplate}}"
                         on:click="selectKeyChanged(item, _options.keyProperty)"
-                        attr:class="{{index  === 0 ? 'controls-RadioGroup_first_' : 'controls-RadioGroup_default_'}}{{_options.direction === 'horizontal' ? 'horizontal' : 'vertical'}}"
+                        attr:class="controls-RadioGroup_default_{{_options.direction === 'horizontal' ? 'horizontal' : 'vertical'}}"
                         item="{{item}}"
                         readOnly="{{_options.readOnly}}"
                         selected="{{item.get(_options.keyProperty) === _options.selectedKey}}"
-                        captionTemplate="{{_options.captionTemplate}}"/>
+                        itemContentTpl="{{_options.itemContentTpl}}"
+                        displayProperty="{{_options.displayProperty || 'tittle'}}"/>
         </ws:for>
     </div>
 </div>
