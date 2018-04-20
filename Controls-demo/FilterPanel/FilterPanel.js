@@ -37,8 +37,6 @@ define('Controls-demo/FilterPanel/FilterPanel',
             this.areaText += '\n' + value['1'] + '\n' + value['2'];
          }
 
-
-
       });
 
       return FilterPanel;
