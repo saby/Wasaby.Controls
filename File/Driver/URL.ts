@@ -2,7 +2,6 @@
 import DriverInterface = require('File/Driver/Interface');
 import detection = require('Core/detection');
 
-
 /**
  * @public
  * @class File/Driver/URL
@@ -40,14 +39,14 @@ class URL implements DriverInterface {
       this.downloadByA(this.url);
    }
 
-   protected downloadByA(url: string) {
+   private downloadByA(url: string) {
       var link = document.createElement('a');
       link.href = url;
       link.download = url;
       document.body.appendChild(link).click();
    }
 
-   protected downloadByIframe(url: string) {
+   private downloadByIframe(url: string) {
       var iframe = document.createElement('iframe');
       iframe.src = url;
       iframe.setAttribute('style', 'width:0px; height:0px; display:none; border:0px;');

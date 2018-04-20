@@ -1,7 +1,12 @@
 /// <amd-module name='File/Downloader' />
 import DriverInterface = require('File/Driver/Interface');
-
-function Downloader(entity: string, options?: Object, driverName?: DriversNames) {
+/**
+ * Инициализирует загрузку файла
+ * @param {string} entity URL документа, либо Base64-строка
+ * @param {Object} [options] name - имя файла, contentType - тип файла
+ * @param {DRIVERS_NAMES} [driverName] Имя драйвера для работы с данным типом фалйла (см Downloader.DRIVERS_NAMES)
+ */
+function Downloader(entity: string, options?: Object, driverName?: DRIVERS_NAMES) {
    if (!entity) {
       throw new Error("Некорректный аргумент entity: " + typeof entity);
    }
@@ -11,19 +16,30 @@ function Downloader(entity: string, options?: Object, driverName?: DriversNames)
    });
 }
 
+/**
+ * Детектирует переданный аргумент и возвращает соответствующий для работы драйвер
+ * @param {string} entity  URL документа, либо Base64-строка
+ * @return {DRIVERS_NAMES} driverName Имя драйвера для работы с данным типом фалйла (см Downloader.DRIVERS_NAMES)
+ */
 function DetectDriverName(entity: string) {
    if (entity.indexOf('https://') !== -1 || entity.indexOf('?') !== -1 || entity.indexOf('&') !== -1) {
-      return DriversNames.URL;
+      return DRIVERS_NAMES.URL;
    }
-   return DriversNames.Base64;
+   return DRIVERS_NAMES.Base64;
 }
 
-enum DriversNames {
+/**
+   Имена драйверов для работы с файлами    
+   @name File/Downloader#DRIVERS_NAMES
+   @type {enum}
+   @readonly
+*/
+enum DRIVERS_NAMES {
    URL = 'File/Driver/URL',
    Base64 = 'File/Driver/Base64'
 }
 
-Downloader['DriversNames'] = DriversNames;
+Downloader['DRIVERS_NAMES'] = DRIVERS_NAMES;
 export = Downloader;
 
 /**
@@ -91,6 +107,7 @@ export = Downloader;
  * @typedef {String} FileDriver 
  * @variant 'File/Driver/Base64'
  * @variant 'File/Driver/URL'
+ * @description Имена модулей также храняться в Downloader.DRIVERS_NAMES
  * @remark
  * Downloader пытается сам определить тип загружаемого файла, однако желательно явно определить драйвер для работы со скачиваемым файлом.
  * @example

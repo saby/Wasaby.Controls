@@ -1,5 +1,11 @@
 define("File/Downloader", ["require", "exports"], function (require, exports) {
     "use strict";
+    /**
+     * Инициализирует загрузку файла
+     * @param {string} entity URL документа, либо Base64-строка
+     * @param {Object} [options] name - имя файла, contentType - тип файла
+     * @param {DRIVERS_NAMES} [driverName] Имя драйвера для работы с данным типом фалйла (см Downloader.DRIVERS_NAMES)
+     */
     function Downloader(entity, options, driverName) {
         if (!entity) {
             throw new Error("Некорректный аргумент entity: " + typeof entity);
@@ -8,18 +14,29 @@ define("File/Downloader", ["require", "exports"], function (require, exports) {
             new Driver(entity).download(options);
         });
     }
+    /**
+     * Детектирует переданный аргумент и возвращает соответствующий для работы драйвер
+     * @param {string} entity  URL документа, либо Base64-строка
+     * @return {DRIVERS_NAMES} driverName Имя драйвера для работы с данным типом фалйла (см Downloader.DRIVERS_NAMES)
+     */
     function DetectDriverName(entity) {
         if (entity.indexOf('https://') !== -1 || entity.indexOf('?') !== -1 || entity.indexOf('&') !== -1) {
-            return DriversNames.URL;
+            return DRIVERS_NAMES.URL;
         }
-        return DriversNames.Base64;
+        return DRIVERS_NAMES.Base64;
     }
-    var DriversNames;
-    (function (DriversNames) {
-        DriversNames["URL"] = "File/Driver/URL";
-        DriversNames["Base64"] = "File/Driver/Base64";
-    })(DriversNames || (DriversNames = {}));
-    Downloader['DriversNames'] = DriversNames;
+    /**
+       Имена драйверов для работы с файлами
+       @name File/Downloader#DRIVERS_NAMES
+       @type {enum}
+       @readonly
+    */
+    var DRIVERS_NAMES;
+    (function (DRIVERS_NAMES) {
+        DRIVERS_NAMES["URL"] = "File/Driver/URL";
+        DRIVERS_NAMES["Base64"] = "File/Driver/Base64";
+    })(DRIVERS_NAMES || (DRIVERS_NAMES = {}));
+    Downloader['DRIVERS_NAMES'] = DRIVERS_NAMES;
     return Downloader;
 });
 /**
@@ -84,6 +101,7 @@ define("File/Downloader", ["require", "exports"], function (require, exports) {
  * @typedef {String} FileDriver
  * @variant 'File/Driver/Base64'
  * @variant 'File/Driver/URL'
+ * @description Имена модулей также храняться в Downloader.DRIVERS_NAMES
  * @remark
  * Downloader пытается сам определить тип загружаемого файла, однако желательно явно определить драйвер для работы со скачиваемым файлом.
  * @example
