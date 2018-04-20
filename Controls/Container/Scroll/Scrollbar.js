@@ -135,7 +135,7 @@ define('Controls/Container/Scroll/Scrollbar',
             _afterUpdate: function(oldOptions) {
                var
                   shouldForceUpdate = false,
-                  shouldUpdatePosition = oldOptions.position !== this._options.position;
+                  shouldUpdatePosition = !this._dragging && oldOptions.position !== this._options.position;
 
                if (oldOptions.contentHeight !== this._options.contentHeight) {
                   shouldForceUpdate = shouldForceUpdate || this._setSizes(this._options.contentHeight);
