@@ -15,6 +15,7 @@ define('Controls/Input/Number/InputProcessor',
 
       var
          _private = {
+
             /**
              * Возвращает готовую строку с разделителями
              * @param splitValue
