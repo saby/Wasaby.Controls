@@ -64,6 +64,10 @@
    }
    .controls-ComboBox__fieldNotEditable {
       display: inline-block;
+      //Поле ввода нередактируемого комбобокса не должно реагировать на фокус
+      &:focus {
+         text-overflow: ellipsis;
+      }
    }
 }
 
