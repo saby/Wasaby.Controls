@@ -53,11 +53,6 @@ define('Controls/Input/Text', [
           */
 
    /**
-       * @name Controls/Input/Number#textAlign
-       * @cfg {Boolean} Выравнивание текста
-       */
-
-   /**
           * @name  Controls/Input/Text#constraint
           * @cfg {String} Устанавливает регулярное выражение, в соответствии с которым будет осуществляться валидация вводимых символов.
           * @remark
