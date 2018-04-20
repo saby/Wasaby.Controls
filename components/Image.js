@@ -12,7 +12,10 @@ define('SBIS3.CONTROLS/Image',
       'Lib/Control/CompoundControl/CompoundControl',
       'WS.Data/Source/SbisService',
       'tmpl!SBIS3.CONTROLS/Image/Image',
-      'Lib/Control/FileLoader/FileLoader',
+      'Lib/File/Attach/LazyAttach',
+      'Lib/File/ResourceGetter/FSGetter',
+      'Lib/File/LocalFile',
+      'Core/Indicator',
       'Core/helpers/Hcontrol/toggleLocalIndicator',
       'Transport/prepareGetRPCInvocationURL',
       'SBIS3.CONTROLS/Utils/SourceUtil',
@@ -32,7 +35,10 @@ define('SBIS3.CONTROLS/Image',
       CompoundControl,
       SbisService,
       dotTplFn,
-      FileLoader,
+      LazyAttach,
+      FSGetter,
+      LocalFile,
+      Indicator,
       toggleLocalIndicator,
       prepareGetRPCInvocationURL,
       SourceUtil,
@@ -307,7 +313,7 @@ define('SBIS3.CONTROLS/Image',
                   filter: {},
 
                   /**
-                   * todo Удалить, временная опция для поддержки смены логотипа компании (используется в FileLoader)
+                   * todo Удалить, временная опция для поддержки смены логотипа компании
                    * @deprecated
                    * @noshow
                    */
@@ -336,9 +342,8 @@ define('SBIS3.CONTROLS/Image',
                _imageBar: undefined,
                _imageUrl: '',
                _image: undefined,
-               _fileLoader: undefined,
-               _fileCamLoader: undefined,
                _buttonReset: undefined,
+               _attach: undefined,
                _buttonEdit: undefined,
                _buttonUpload: undefined,
                _boundEvents: undefined,
@@ -499,38 +504,20 @@ define('SBIS3.CONTROLS/Image',
                this._container.mouseenter(this._boundEvents.onImageMouseEnter);
                this._container.mouseleave(this._boundEvents.onImageMouseLeave);
             },
-            _onBeginLoad: function(event) {
+            _onBeginLoad: function() {
                var
-                  imageInstance = this.getParent(),
+                  imageInstance = this,
                   result = imageInstance._notify('onBeginLoad', this);
-               this._showIndicator();
-               event.setResult(result);
+               Indicator.setMessage(rk('Загрузка...'));
                if (result !== false) {
                   toggleLocalIndicator(imageInstance._container, true);
                }
+               return result;
             },
-            _onEndLoad: function(event, response) {
-               var imageInstance = this.getParent();
-               var error = response instanceof Error ? response : response.error;
-               if (error) {
-                  toggleLocalIndicator(imageInstance._container, false);
-                  this._hideIndicator();
-
-                  // игнорируем HTTPError офлайна, если они обработаны
-                  if (!(error._isOfflineMode && error.processed)) {
-                     var
-                        config = error._isOfflineMode ? {
-                           message: 'Отсутствует соединение с интернет',
-                           details: 'Подключите интернет и повторите попытку.',
-                           status: 'error'
-                        } : {
-                           status: 'error',
-                           details: error.message,
-                           message: 'При загрузке изображения возникла ошибка'
-                        };
-                     InformationPopupManager.showMessageDialog(config);
-                  }
-                  return imageInstance._onErrorLoad(error, true);
+            _onEndLoad: function(response) {
+               var imageInstance = this;
+               if (response instanceof Error) {
+                  return this._onLoadedError(response);
                }
                imageInstance._notify('onEndLoad', response);
                if (imageInstance._options.edit) {
@@ -538,8 +525,31 @@ define('SBIS3.CONTROLS/Image',
                } else {
                   imageInstance._setImage(imageInstance._getSourceUrl());
                   toggleLocalIndicator(imageInstance._container, false);
-                  this._hideIndicator();
+                  Indicator.hide();
                }
+            },
+            /**
+             * @param {Error} error
+             * @private
+             */
+            _onLoadedError: function(error) {
+               toggleLocalIndicator(this._container, false);
+               Indicator.hide();
+               // игнорируем HTTPError офлайна, если они обработаны
+               if (!(error._isOfflineMode && error.processed)){
+                  var
+                     config = error._isOfflineMode ? {
+                        message: 'Отсутствует соединение с интернет',
+                        details: 'Подключите интернет и повторите попытку.',
+                        status: 'error'
+                     } : {
+                        status: 'error',
+                        details: error.message,
+                        message: 'При загрузке изображения возникла ошибка'
+                     };
+                  InformationPopupManager.showMessageDialog(config);
+               }
+               return this._onErrorLoad(error, true);
             },
             _onChangeImage: function() {
                var
@@ -723,27 +733,19 @@ define('SBIS3.CONTROLS/Image',
               * @see editImage
               * @see resetImage
               */
-            _uploadImage: function(originalEvent) {
-               if (this._options.imageBar && this._canDisplayImageBar()) {
-                  this._imageBar.hide();
-               }
-               if (!this.getDataSource()) {
-                  return;
-               }
-               this._getFileLoader().addCallback(function(loader) {
-                  loader.selectFile(originalEvent, false);
+            _uploadImage: function() {
+               var self = this;
+               self._getAttach().choose("FSGetter").addCallback(function() {
+                  self._upload();
                });
             },
 
-            _uploadFileCam: function(originalEvent) {
-               if (this._options.imageBar && this._canDisplayImageBar()) {
-                  this._imageBar.hide();
-               }
-               if (!this.getDataSource()) {
-                  return;
-               }
-               this._getFileCamLoader().addCallback(function(loader) {
-                  loader.getImage(originalEvent, false);
+            _uploadFileCam: function() {
+               var self = this;
+               self._getAttach().choose("PhotoCam").addCallbacks(function() {
+                   self._upload();
+               }, function(error) {
+                   self._onEndLoad(error);
                });
             },
 
@@ -853,22 +855,6 @@ define('SBIS3.CONTROLS/Image',
             setDataSource: function(dataSource, noReload) {
                if (dataSource instanceof SbisService) {
                   this._options.dataSource = dataSource;
-
-                  //todo Удалить, временная опция для поддержки смены логотипа компании
-                  var self = this;
-                  if (this._fileLoader) {
-                     this._fileLoader.setMethod(
-                        (self._options.linkedObject || dataSource.getEndpoint().contract) +
-                           '.' + dataSource.getBinding().create
-                     );
-                  }
-                  if (this._fileCamLoader) {
-                     this._fileCamLoader.setMethod(
-                        (self._options.linkedObject || dataSource.getEndpoint().contract) +
-                           '.' + dataSource.getBinding().create
-                     );
-                  }
-
                   if (!noReload) {
                      this._setImage(this._getSourceUrl());
                   }
@@ -909,86 +895,69 @@ define('SBIS3.CONTROLS/Image',
                return this._options.filter;
             },
 
-            _getFileLoader: function() {
-               return this._createFileLoader();
-            },
-            _getFileCamLoader: function() {
-               return this._createFileCamLoader();
-            },
-
-            /**
-             * Создание загрузчика файлов
-             * @private
-             */
-            _createFileLoader: function() {
-               if (this._fileLoader) {
-                  return Deferred.success(this._fileLoader);
-               }
-
-               //NB! Вероятно хотим отредактировать.
-               // Webkit не хочет открывать отрабатывать клик, если элемент создан из не загруженного скрипта
+             /**
+              * Возвращает загрузчик
+              * @return {Lib/File/Attach/LazyAttach}
+              * @private
+              */
+            _getAttach: function() {
                var self = this;
-               var cont = $('<div class="controls-image__file-loader"></div>');
-               self.getContainer().append(cont);
-               self._fileLoader = new FileLoader({
-                  extensions: ['image'],
-                  element: cont,
-                  name: 'FileLoader',
-                  parent: self,
-                  showIndicator: false,
-                  handlers: {
-                     onLoadStarted: self._onBeginLoad,
-                     onLoaded: self._onEndLoad
-                  }
-               });
-
-               //todo Удалить, временная опция для поддержки смены логотипа компании
-               var dataSource = self.getDataSource();
-               if (dataSource) {
-                  self._fileLoader.setMethod((
-                     self._options.linkedObject || dataSource.getEndpoint().contract) +
-                     '.' + dataSource.getBinding().create
-                  );
-               }
-
-               return Deferred.success(self._fileLoader);
-            },
-
-            /**
-             * Создание загрузчика файлов
-             * @private
-             */
-            _createFileCamLoader: function() {
-               if (this._fileCamLoader) {
-                  return Deferred.success(this._fileCamLoader);
-               }
-               var
-                  self = this,
-                  def = new Deferred(),
-                  cont = $('<div class="controls-image__file-cam-loader"></div>');
-               self.getContainer().append(cont);
-               require(['Lib/Control/FileCamLoader/FileCamLoader'], function(FileCamLoader) {
-                  self._fileCamLoader = new FileCamLoader({
-                     extensions: ['image'],
-                     element: cont,
-                     name: 'FileLoader',
-                     parent: self,
-                     showIndicator: false,
-                     handlers: {
-                        onLoadStarted: self._onBeginLoad,
-                        onLoaded: self._onEndLoad
-                     }
+               var attach = self._attach;
+               if (!attach) {
+                  self._attach = attach = new LazyAttach({
+                      multiSelect: false
                   });
 
-                  //todo Удалить, временная опция для поддержки смены логотипа компании
-                  var dataSource = self.getDataSource();
-                  if (dataSource) {
-                     self._fileCamLoader.setMethod((
-                        self._options.linkedObject || dataSource.getEndpoint().contract) +
-                        '.' + dataSource.getBinding().create
-                     );
-                  }
-                  def.callback(self._fileCamLoader);
+                  var cont = document.createElement('div');
+                  self.getContainer().append(cont);
+                  var fsGetter = new FSGetter({
+                      multiSelect: false,
+                      element: cont,
+                      extensions: ['image']
+                  });
+                  attach.registerGetter(fsGetter);
+                  attach.registerLazyGetter('PhotoCam', 'Lib/File/ResourceGetter/PhotoCam', {
+                      openDialog: {
+                          dialogOptions: {
+                             opener: self
+                          }
+                      }
+                  });
+               }
+               var dataSource = self.getDataSource();
+               if (dataSource) {
+                  attach.registerLazySource(LocalFile, "WS.Data/Source/SbisFile", {
+                     endpoint: {
+                         //todo Удалить, временная опция для поддержки смены логотипа компании
+                        contract: self._options.linkedObject || dataSource.getEndpoint().contract
+                     },
+                     binding: dataSource.getBinding()
+                  });
+               }
+               return attach;
+            },
+            /**
+             * Загрузка выбранного изображения
+             * @private
+             */
+            _upload: function() {
+               var self = this;
+               if (this._options.imageBar && this._canDisplayImageBar()) {
+                  this._imageBar.hide();
+               }
+               if (!this.getDataSource()) {
+                  Indicator.hide();
+                  return;
+               }
+               var attach = self._getAttach();
+               if (this._onBeginLoad() === false) {
+                  Indicator.hide();
+                  return;
+               }
+               attach.upload().addCallback(function(results) {
+                  results.forEach(function(result) {
+                     self._onEndLoad(result)
+                  })
                });
                return def;
             }
