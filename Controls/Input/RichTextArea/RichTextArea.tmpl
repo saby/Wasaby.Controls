@@ -4,7 +4,7 @@
     >
         <ws:content>
             <ws:if data="{{isEnabled()}}">
-                <Controls.Container.TinyMCE value="{{value}}"
+                <Controls.Container.TinyMCE value="{{_options.value}}"
                         on:textChanged="setText()"
                         name="tinyMCE"
                 />
