@@ -3,11 +3,11 @@ define('Controls/Container/TinyMCE', [
    'Core/constants',
    'tmpl!Controls/Container/TinyMCE/TinyMCE',
    'Core/moduleStubs'
-], function (Control, cConstants, template, moduleStabs) {
+], function(Control, cConstants, template, moduleStabs) {
    'use strict';
 
    var _private = {
-         prepareReviewContent: function (text) {
+         prepareReviewContent: function(text) {
             if (text && text[0] !== '<') {
                text = '<p>' + text.replace(/\n/gi, '<br/>') + '</p>';
             }
@@ -42,23 +42,23 @@ define('Controls/Container/TinyMCE', [
             inline_boundaries: false
          },
 
-         _shouldUpate: function () {
+         _shouldUpate: function() {
             return false;
          },
 
-         _beforeMount: function () {
+         _beforeMount: function() {
             if (cConstants.isBrowserPlatform) {
                return moduleStabs.require([cConstants.browser.isIE10 ? 'SBIS3.CONTROLS/RichEditor/third-party/tinymce46-ie10' : 'SBIS3.CONTROLS/RichEditor/third-party/tinymce/tinymce.min']);
             }
          },
 
 
-         _afterMount: function (opts) {
+         _afterMount: function(opts) {
             this.tinyInit();
             this._children.mceContainer.innerHTML = _private.prepareReviewContent(opts.value);
          },
 
-         setCursorToTheEnd: function () {
+         setCursorToTheEnd: function() {
             var editor = this._tinyEditor;
             if (editor && this._active) {
                var nodeForSelect = editor.getBody();
@@ -67,26 +67,26 @@ define('Controls/Container/TinyMCE', [
             }
          },
 
-         _bindEvents: function () {
+         _bindEvents: function() {
             console.log('success');
          },
 
-         _beforeUpdate: function (opts) {
+         _beforeUpdate: function(opts) {
             this._children.mceContainer.innerHTML = _private.prepareReviewContent(opts.value);
          },
 
 
-         tinyInit: function () {
+         tinyInit: function() {
             var self = this;
             self.editorConfiguration.target = self._children.mceContainer;
-            self.editorConfiguration.setup = function (editor) {
+            self.editorConfiguration.setup = function(editor) {
                self._tinyEditor = editor;
                self._bindEvents();
             };
             tinyMCE.init(this.editorConfiguration);
          },
 
-         textChanged: function () {
+         textChanged: function() {
             this._notify('textChanged', [this._children.mceContainer.innerHTML]);
          }
       });
