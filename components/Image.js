@@ -733,14 +733,14 @@ define('SBIS3.CONTROLS/Image',
               */
             _uploadImage: function() {
                var self = this;
-               self.attach.choose("FSGetter").addCallback(function() {
+               self._getAttach().choose("FSGetter").addCallback(function() {
                   self._upload();
                });
             },
 
             _uploadFileCam: function() {
                var self = this;
-               self.attach.choose("PhotoCam").addCallback(function() {
+               self._getAttach().choose("PhotoCam").addCallback(function() {
                    self._upload();
                });
             },
