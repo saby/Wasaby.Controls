@@ -2,18 +2,23 @@ define('Controls/Container/TinyMCE', [
    'Core/Control',
    'Core/constants',
    'tmpl!Controls/Container/TinyMCE/TinyMCE',
-   'Core/moduleStubs'
-], function(Control, cConstants, template, moduleStabs) {
+   'Core/moduleStubs',
+   'Core/Sanitize'
+], function(Control, cConstants, template, moduleStabs, sanitize) {
    'use strict';
 
    var _private = {
+         active: false,
          tinyInit: function(self) {
             self.editorConfiguration.target = self._children.mceContainer;
             self.editorConfiguration.setup = function(editor) {
                self._tinyEditor = editor;
                _private.bindEvents(self);
             };
-            tinyMCE.init(this.editorConfiguration);
+            tinyMCE.init(self.editorConfiguration);
+         },
+         updateMceContainerText: function(self, text) {
+            self._children.mceContainer.innerHTML = _private.prepareReviewContent(text);
          },
          trimText: function(text) {
             if (!text) {
@@ -57,7 +62,7 @@ define('Controls/Container/TinyMCE', [
             if (text && text[0] !== '<') {
                text = '<p>' + text.replace(/\n/gi, '<br/>') + '</p>';
             }
-            return text;
+            return sanitize(text);
          },
          bindEvents: function(self) {
             var editor = self._tinyEditor;
@@ -110,17 +115,25 @@ define('Controls/Container/TinyMCE', [
 
          _afterMount: function(opts) {
             _private.tinyInit(this);
-            this._children.mceContainer.innerHTML = _private.prepareReviewContent(opts.value);
+            _private.updateMceContainerText(this, opts.value);
          },
 
          _beforeUpdate: function(opts) {
-            if (!this._active) {
-               this._children.mceContainer.innerHTML = opts.value;
+            if (!_private.active) {
+               _private.updateMceContainerText(this, opts.value);
             }
          },
 
+         _setActive: function() {
+            _private.active = true;
+         },
+
+         _setInActive: function() {
+            _private.active = false;
+         },
+
          textChanged: function() {
-            this._notify('textChanged', [_private.trimText(this._children.mceContainer.innerHTML)]);
+            this._notify('textChanged', [_private.trimText(this._tinyEditor.getContent())]);
          }
       });
 

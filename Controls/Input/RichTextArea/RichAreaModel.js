@@ -12,10 +12,6 @@ define('Controls/Input/RichTextArea/RichAreaModel',
             this._options = options || {};
          },
 
-         getDisplayValue: function() {
-            return this.getValue();
-         },
-
          getValue: function() {
             return this._options.value || '';
          },

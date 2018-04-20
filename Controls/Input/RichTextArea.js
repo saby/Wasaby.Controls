@@ -22,11 +22,11 @@ define('Controls/Input/RichTextArea', [
 
       _afterUpdate: function() {
          if (!this.isEnabled()) {
-            this._children.textContainer.innerHTML = this.value;
+            this._children.textContainer.innerHTML = this._simpleViewModel.getValue();
          }
       },
 
-      setText: function(e, value) {
+      _onTextChanged: function(e, value) {
          this._notify('valueChanged', [value]);
       }
    });

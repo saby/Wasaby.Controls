@@ -1,18 +1,20 @@
-<div class="controls-RichEditor">
-    <Controls.Container.Scroll
-            class="controls-ScrollContainer_flex controls-RichEditor__scrollContainer"
-    >
-        <ws:content>
-            <ws:if data="{{isEnabled()}}">
-                <Controls.Container.TinyMCE value="{{_options.value}}"
-                        on:textChanged="setText()"
-                        name="tinyMCE"
-                />
-            </ws:if>
-            <ws:else>
-                <div class="previewContainer" name="textContainer">
-                </div>
-            </ws:else>
-        </ws:content>
-    </Controls.Container.Scroll>
+<div class="controls-RichEditor {{isEnabled() ? 'ws-enabled' : 'ws-disabled'}}">
+    <div class="controls-RichEditor__richTextArea">
+        <Controls.Container.Scroll
+                class="controls-ScrollContainer_flex controls-RichEditor__scrollContainer"
+        >
+            <ws:content>
+                <ws:if data="{{isEnabled()}}">
+                    <Controls.Container.TinyMCE value="{{_options.value}}"
+                                                on:textChanged="_onTextChanged()"
+                                                name="tinyMCE"
+                    />
+                </ws:if>
+                <ws:else>
+                    <div class="controls-RichEditor__dataReview ws-basic-style" name="textContainer">
+                    </div>
+                </ws:else>
+            </ws:content>
+        </Controls.Container.Scroll>
+    </div>
 </div>

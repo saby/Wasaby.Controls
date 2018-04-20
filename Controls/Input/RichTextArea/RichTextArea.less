@@ -1,6 +1,343 @@
-.mce-content-container p {
-   -webkit-margin-before: 0em;
-   -webkit-margin-after: 0em;
-   -webkit-margin-start: 0px;
-   -webkit-margin-end: 0px
+.controls-RichEditor {
+   .mce-edit-focus {
+      outline: none;
+   }
+
+   background-color: #ffffff;
+   overflow: hidden;
+   position: relative;
+
+   &.controls-RichEditor__overflowVisible {
+      overflow: visible;
+   }
+
+   .controls-RichEditor__richTextArea {
+      .flexbox();
+      box-sizing: border-box;
+   }
+
+   &.ws-enabled .controls-RichEditor__richTextArea {
+      border: 1px solid #EAEAEA;
+   }
+
+   &.ws-disabled .controls-RichEditor__richTextArea {
+      border: 1px solid transparent;
+   }
+
+   &.ws-enabled.controls-RichEditor_toolbarExpanded .controls-RichEditor__richTextArea {
+      border-top: 0 none;
+   }
+
+   .controls-RichEditor__scrollContainer {
+      width: 100%;
+   }
+
+   .controls-RichEditor__editorFrame {
+      z-index: 1;
+      width: 100%;
+      position: relative;
+      /* Проблема:
+                  tinyMCE при клике на contenteditable="false" элемент внутри поля ввода
+                  создают копию всего контента(блок "mce-offscreen-selection") внутри поля ввода
+                  mce-offscreen-selection имеет  стили:
+                     position: absolute;
+                     left: -9999999999px;
+                     width: 100px;
+                     height: 100px;
+                  в Firefox данный блок приводит к появлению скрола у поля ввода
+         Решение:
+                  сделать  блок 0;0; overflow: hidden*/
+      .mce-offscreen-selection {
+         width: 0;
+         height: 0;
+         overflow: hidden;
+      }
+      &:empty{
+         padding-bottom: 6px;
+      }
+
+      &.ws-basic-style {
+         & > p, & > pre, & > div {
+            margin-top: 0;
+            margin-left: 0;
+            margin-right: 16px;
+         }
+         .mce-visual-caret {
+            margin: 0px;
+         }
+      }
+      li {
+         margin-bottom: 6px;
+      }
+      & > :last-child li:last-child {
+         margin-bottom: 0;
+      }
+   }
+   &.controls-RichEditor_fixedHeight .controls-RichEditor__editorFrame {
+      min-height: 100%;
+   }
+   .controls-RichEditor__sourceArea {
+      display: block;
+      height: 100%;
+      width:100%;
+      -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+      -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+      box-sizing: border-box;         /* Opera/IE 8+ */
+      border: 0 none;
+      resize: none;
+      line-height: 20px;
+      margin: 0;
+      padding: 6px 0 0 4px;
+      overflow-x: hidden;
+      overflow-y: auto;
+   }
+   .controls-RichEditor__fakeArea {
+      height: 0;
+      width: 0;
+      border: none;
+      position: absolute;
+      resize: none;
+      padding: 0;
+      display:none;
+   }
+   &.ws-enabled.ws-validation-error .controls-RichEditor__richTextArea {
+      border-color: #FF302B;
+   }
+
+   &.ws-disabled {
+      .controls-RichEditor__editorFrame {
+         display: none;
+      }
+      background-color: transparent;
+   }
+
+   .controls-RichEditor__dataReview {
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      padding: 2px 0 2px 4px; /* отступы у параграфов через padding родительского блока без first-child */
+      box-sizing: border-box;
+      word-wrap: break-word;
+      .engine-DecoratedLink {
+         display: block;
+      }
+      & > :last-child,
+      & > :last-child li:last-child {
+         margin-bottom: 0;
+      }
+   }
+   .controls-RichEditor__editorFrame.ws-basic-style {
+      padding: 2px 0 2px 4px;
+      box-sizing: border-box;
+      word-wrap: break-word;
+      table {
+         margin-bottom: 5px;
+      }
+      outline: none !important;
+      img{
+         &:hover {
+            .box-shadow(0px 0px 5px #587AB0);
+            .box-sizing(border-box);
+         }
+      }
+   }
+
+   img {
+      //TODO: увелисчить вес селектора
+      outline: none !important;
+      cursor: pointer;
+   }
+   .controls-RichEditor__editorFrame img {
+      .user-select();
+   }
+   .controls-RichEditor__noneditable {
+      //TODO: увелисчить вес селектора
+      outline: none !important;
+   }
+}
+
+.ws-is-mobile-safari {
+   .controls-RichEditor {
+      ::-webkit-scrollbar {
+         width: 3px;
+      }
+      ::-webkit-scrollbar-track {
+         -webkit-box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.5);
+      }
+      ::-webkit-scrollbar-thumb {
+         background-color: gray;
+         border-radius: 3px;
+      }
+   }
+}
+.controls-RichEditor {
+   &.request-result {
+      display: block;
+      overflow: hidden;
+      color: #72BE44;
+      width: 420px;
+      height: 20px;
+      &.ws-image-post-error {
+         color: #EF463A;
+      }
+   }
+
+   &.ws-upload-file-browse {
+      width: 20px;
+      visibility: hidden;
+   }
+
+   .controls-RichEditor__sourceContainer{
+      overflow: hidden;
+   }
+
+   img.ws-fre__smile {
+      outline: none;
+   }
+   .controls-RichEditor__placeholder {
+      color:  #ccc;
+      /* +1px к каждой стороне отступа тк у controls-RichEditor__editorFrame  есть border 1px*/
+      padding: 3px 17px 1px 5px;
+      background-color: transparent;
+      position: absolute;
+      display: none;
+      z-index: 0;
+      .user-select();
+   }
+   &.controls-RichEditor__empty.ws-enabled .controls-RichEditor__placeholder {
+      display: block;
+      cursor: text;
+   }
+}
+
+// При выделении может появится элемент с классом "mce-offscreen-selection", отступ же нужно сбрасывать именно у последнего параграфа
+// https://online.sbis.ru/opendoc.html?guid=0f043ceb-354f-4c38-9cf6-8bc6cdbfb402
+.controls-RichEditor .controls-RichEditor__editorFrame.ws-basic-style > p:last-of-type {
+   margin-bottom: 0;
+}
+
+//Стили для окна добавления/редактирования ссылки
+.controls-RichEditor__InsertLink__label,
+.controls-RichEditor__InsertLink__input.ws-field-string,
+.controls-RichEditor__InsertLink__okButton.controls-Button {
+   font-weight: normal;
+   position: absolute;
+}
+
+.controls-RichEditor__InsertLink__label {
+   width: 63px;
+   height: 24px;
+   padding: 2px 0;
+   left: 20px;
+   cursor: default;
+   text-align: right;
+   font-size: 15px;
+   color: #999999;
+}
+
+.controls-RichEditor__InsertLink__input {
+   width: 331px;
+   height: 24px;
+   right: 18px;
+}
+
+.controls-RichEditor__InsertLink__hrefLabel,
+.controls-RichEditor__InsertLink__hrefInput {
+   top: 8px;
+}
+
+.controls-RichEditor__InsertLink__captionLabel,
+.controls-RichEditor__InsertLink__captionInput {
+   top: 40px;
+}
+
+.controls-RichEditor__InsertLink__okButton {
+   right: 48px;
+   top: 8px;
+}
+
+/*вставка со стилями*/
+.controls-RichEditor__pasteWithStyles{
+   text-align: center;
+   .controls-RichEditor__pasteWithStylesLabel {
+      font-family:  'TensorFont', sans-serif;
+      color: #000000;
+      font-size: 15px;
+      margin: 20px;
+   }
+   .controls-RichEditor__pasteWithStylesButton{
+      margin-bottom: 20px;
+   }
+}
+
+.ws-is-ie {
+   .controls-RichEditor__empty {
+      .controls-RichEditor__editorFrame.ws-basic-style {
+         background-color:rgba(0, 0, 0, 0);
+      }
+   }
+
+   /* Кроме MSIE 12
+    * 1174787393 https://online.sbis.ru/opendoc.html?guid=37d3adf2-546a-4c4e-b5a4-010b237ddcb4
+   */
+   &:not(.ws-is-ie12) .controls-RichEditor br[data-mce-bogus] {
+      display: none;
+   }
+
+   .controls-RichEditor {
+      /* Без ненулевого пэддинга (и при жирном или курсивном шрифте) у последнего элемента неправильно считаются размеры,
+       * разсогласуется offsetHeight и scrollHeight, появляется мерцающая прокрутка в родительском элементе
+       */
+      .controls-RichEditor__editorFrame.ws-basic-style > p:last-child {
+         padding-bottom: 1px;
+      }
+   }
+}
+
+.ws-is-chrome {
+   .controls-RichEditor__editorFrame.ws-basic-style p:empty{
+      min-height: 18px;
+   }
+}
+.ws-is-mobile-android {
+   .controls-RichEditor__editorFrame {
+      -webkit-text-size-adjust: 100%;
+      -moz-text-size-adjust: none;
+      -ms-text-size-adjust: 100%;
+   }
+}
+.ws-is-desktop-platform {
+   .controls-RichEditor__sourceArea {
+      font-family: 'EmojiFont', 'TensorFont', sans-serif;
+   }
+}
+.ws-is-mobile-safari {
+   .controls-RichEditor {
+      .controls-RichEditor__placeholder {
+         padding-top: 2px;
+      }
+   }
+}
+// Стили для кастомизируемой цитаты
+// Сам блок с цитатой
+.customBlockquote {
+   border-left: 1px #587AB0 solid;
+   padding-left: 8px;
+   padding-right: 0;
+   margin: 0 16px 0 40px !important;
+   clear: both;
+   position: relative;
+   font-size: 24px;
+   line-height: normal;
+}
+// Блок под картинку слева от цитаты
+.customBlockquote::before {
+   position: absolute;
+   margin-left: -32px;
+   height: 16px;
+   width: 24px;
+}
+
+.mce-floatpanel {
+   display: none;
 }
