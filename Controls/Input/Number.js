@@ -91,14 +91,22 @@ define('Controls/Input/Number', [
       },
 
       _beforeUpdate: function(newOptions) {
+         var
+            value;
+
+         //If the old and new values are the same, then the model is changed from outside, and we shouldn't update it's value
+         if (this._options.value === newOptions.value) {
+            value = this._numberViewModel.getValue();
+         } else {
+            value = newOptions.value !== undefined ? String(newOptions.value) : '';
+         }
+
          this._numberViewModel.updateOptions({
             onlyPositive: newOptions.onlyPositive,
             integersLength: newOptions.integersLength,
             precision: newOptions.precision,
             showEmptyDecimals: newOptions.showEmptyDecimals,
-
-            //If the old and new values are the same, then the model is changed from outside, and we shouldn't update it's value
-            value: this._options.value === newOptions.value ? this._numberViewModel.getValue() : String(newOptions.value)
+            value: value
          });
       },
 

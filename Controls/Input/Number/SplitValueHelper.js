@@ -41,8 +41,8 @@ define('Controls/Input/Number/SplitValueHelper',
                return this.isAtLineStart() && this.isAtLineEnd();
             },
 
-            numberHasNoDot: function() {
-               return this._splitValue.before.indexOf('.') === -1 && this._splitValue.after.indexOf('.') === -1;
+            hasDot: function() {
+               return this._splitValue.before.indexOf('.') !== -1 || this._splitValue.after.indexOf('.') !== -1;
             }
 
 
