@@ -67,6 +67,7 @@ define('Controls/List/SourceControl', [
                   self._virtualScroll.prependItems(addedItems.getCount());
                }
                return addedItems;
+               
                //обновить начало/конец видимого диапазона записей и высоты распорок
                //_private.applyVirtualWindow(self, self._virtualScroll.getVirtualWindow());
             }).addErrback(function(error) {
