@@ -60,7 +60,9 @@ define('Controls/Input/Number', [
 
       /**
        * @name Controls/Input/Number#textAlign
-       * @cfg {Boolean} Выравнивание текста
+       * @cfg {String} Выравнивание текста.
+       * @variant 'left' default
+       * @variant 'right'
        */
 
       _template: template,
