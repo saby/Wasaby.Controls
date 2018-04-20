@@ -388,8 +388,8 @@ node('controls') {
                 [Тест]
                 Адрес=http://${env.NODE_NAME}:10010"""
             // Копируем шаблоны
-            sh """cp -f ./controls/tests/stand/intest/pageTemplates/branch/* ./controls/tests/stand/intest/pageTemplates"""
-            sh """cp -fr ./controls/Examples/ ./controls/tests/stand/intest/Examples/"""
+            sh """cp -f ./controls/tests/stand/Intest/pageTemplates/branch/* ./controls/tests/stand/Intest/pageTemplates"""
+            sh """cp -fr ./controls/Examples/ ./controls/tests/stand/Intest/Examples/"""
             sh """
                 cd "${workspace}/controls/tests/stand/intest/"
                 sudo python3 "change_theme.py" ${params.theme}
