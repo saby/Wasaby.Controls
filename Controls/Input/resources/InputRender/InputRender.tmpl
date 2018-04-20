@@ -21,6 +21,7 @@
                on:keyup="_keyUpHandler()"
                on:change="_inputCompletedHandler()"
                on:focusin="_focusinHandler()"
+               attr:style="{{ _options.alignRight ? 'text-align: right' }}"
                value="{{ _options.viewModel.getDisplayValue() }}"
          />
 

@@ -53,6 +53,11 @@ define('Controls/Input/Text', [
           */
 
    /**
+       * @name Controls/Input/Number#alignRight
+       * @cfg {Boolean} Выравнивание по правому краю
+       */
+
+   /**
           * @name  Controls/Input/Text#constraint
           * @cfg {String} Устанавливает регулярное выражение, в соответствии с которым будет осуществляться валидация вводимых символов.
           * @remark
