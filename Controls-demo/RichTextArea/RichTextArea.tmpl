@@ -3,12 +3,11 @@
             on:click="_updateState()"
             caption="{{buttonCaption}}"
     />
-    <Controls.RichTextArea
+    <Controls.Input.RichTextArea
             class="rich-text-editor-demo"
-            editorContainer="name123"
             enabled="{{need}}"
             value="{{value123}}"
-            on:textChanged="changeText()"
+            on:valueChanged="changeText()"
     />
     <Controls.Input.Area
             enabled="{{need}}"
