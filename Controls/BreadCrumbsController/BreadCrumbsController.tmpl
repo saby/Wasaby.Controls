@@ -1,0 +1,18 @@
+<div>
+    <Controls.BreadCrumbs items="{{_visibleItems}}"
+                          idProperty="{{_options.idProperty}}"
+                          displayProperty="{{_options.displayProperty}}"
+                          on:itemClick="_onItemClick()"/>
+
+    <Controls.Dropdown.Opener
+            name="menuOpener"
+            keyProperty="id"
+            className="controls-BreadCrumbsController__menu">
+        <ws:popupOptions closeByExternalClick="{{true}}">
+            <ws:corner vertical="top" horizontal="right"/>
+            <ws:horizontalAlign side="left"/>
+        </ws:popupOptions>
+    </Controls.Dropdown.Opener>
+
+    <Controls.Event.Emitter event="resize" on:resize="_onResize()"/>
+</div>
