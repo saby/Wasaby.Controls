@@ -94,8 +94,7 @@ define('Controls/Filter/Button',
                } else {
                   this._children.filterStickyOpener.open({
                      templateOptions: {
-                        items: this._options.items,
-                        viewMode: this._options.viewMode
+                        items: this._options.items
                      },
                      template: 'Controls/Filter/Button/Panel',
                      target: this._children.panelTarget
