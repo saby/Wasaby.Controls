@@ -74,7 +74,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
             self._options.listModel.setActiveItem(itemData);
             self._children['itemActionsOpener'].open({
                target: !context ? event.target : false,
-               templateOptions: {items: rs}
+               componentOptions: {items: rs}
             });
          }
       },
