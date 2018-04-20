@@ -84,6 +84,7 @@ define('Controls/Container/List',
        * @mixes Controls/Input/interface/ISearch
        * @mixes Controls/interface/INavigation
        * @mixes Controls/interface/IFilter
+       * @public
        */
       
       /**
