@@ -12,24 +12,13 @@ define('Controls/Filter/Button/Panel', [
     * Control "Filter panel"
     * @class Controls/Filter/Panel
     * @extends Controls/Control
+    * @mixes Controls/Filter/Button/interface/IFilterPanel
     * @control
     * @public
     */
 
    /**
     * @event Controls/Filter/Panel#filterChanged Happens when clicking on the button "Select"
-    */
-
-   /**
-    * @name Controls/Filter/Panel#styleHeader
-    * @cfg {String} Color of title in header
-    * @variant primary Blue color
-    * @variant default Orange color
-    */
-
-   /**
-    * @name Controls/Filter/Panel#title
-    * @cfg {String} Caption
     */
 
    'use strict';
@@ -97,7 +86,7 @@ define('Controls/Filter/Button/Panel', [
    FilterPanel.getDefaultOptions = function getDefaultOptions() {
       return {
          title: rk('Отбираются'),
-         styleHeader: 'primary'
+         styleHeader: 'default'
       };
    };
 
