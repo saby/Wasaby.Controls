@@ -23,17 +23,10 @@ define('Controls/Filter/Button/Panel', [
    /**
     * @name Controls/Filter/Panel#styleHeader
     * @cfg {String} Color of title in header
-    * @variant default Blue color
-    * @variant custom Orange color
+    * @variant primary Blue color
+    * @variant default Orange color
     */
 
-   /**
-    * @name Controls/Filter/Panel#viewMode
-    * @cfg {String} Sets the display of the filter button
-    * @variant oneColumn The panel is built in one column
-    * @variant twoColumn The panel is built in two columns
-    */
-   
    /**
     * @name Controls/Filter/Panel#title
     * @cfg {String} Caption
@@ -89,7 +82,7 @@ define('Controls/Filter/Button/Panel', [
 
       _resetFilter: function() {
          this._items = clone(this._items);
-         Chain(this._items).each(function(item, index) {
+         Chain(this._items).each(function(item) {
             setPropValue(item, 'value', getPropValue(item, 'resetValue'));
 
          });
@@ -104,8 +97,7 @@ define('Controls/Filter/Button/Panel', [
    FilterPanel.getDefaultOptions = function getDefaultOptions() {
       return {
          title: rk('Отбираются'),
-         styleHeader: 'primary',
-         viewMode: 'oneColumn'
+         styleHeader: 'primary'
       };
    };
 
