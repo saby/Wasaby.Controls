@@ -53,8 +53,8 @@ define('Controls/Input/Text', [
           */
 
    /**
-       * @name Controls/Input/Number#alignRight
-       * @cfg {Boolean} Выравнивание по правому краю
+       * @name Controls/Input/Number#textAlign
+       * @cfg {Boolean} Выравнивание текста
        */
 
    /**
