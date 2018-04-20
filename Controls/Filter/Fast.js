@@ -111,7 +111,8 @@ define('Controls/Filter/Fast',
          },
 
          onResult: function(result) {
-            _private.selectItem.apply(this, result.data);
+            var data = result.data;
+            _private.selectItem.apply(this, data);
             this._notify('filterChanged', [_private.getFilter(this._items)]);
             this._children.DropdownOpener.close();
          }

@@ -3,7 +3,7 @@ define('SBIS3.CONTROLS/LongOperations/Registry/resources/LongOperationsFilter', 
       'tmpl!SBIS3.CONTROLS/LongOperations/Registry/resources/LongOperationsFilter/LongOperationsFilter',
       'css!SBIS3.CONTROLS/LongOperations/Registry/resources/LongOperationsFilter/LongOperationsFilter',
       'SBIS3.CONTROLS/DropdownList',
-      'optional!js!SBIS3.Staff.Choice'
+      'optional!Staff/Choice'
    ],
    function(CompoundControl, ContentTpl) {
 

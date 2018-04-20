@@ -11,11 +11,11 @@
 }
 
 .controls-FavoriteEditDialog__titleButtons {
-    top: 8px;
     right: 52px;
     position: absolute;
     display: inline-block;
     font-weight: normal;
+    height: 100%;
 }
 
 .controls-FavoriteEditDialog__addButton, .controls-FavoriteEditDialog__deleteButton {
@@ -42,4 +42,12 @@
     color: #999;
     white-space: normal;
     line-height: 14px;
+}
+
+.controls-FavoriteEditDialog__titleButtons:before {
+    content: "\200b";
+    line-height: 42px;
+    display: inline-block;
+    width: 0;
+    visibility: hidden;
 }

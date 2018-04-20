@@ -241,7 +241,7 @@ define('SBIS3.CONTROLS/Utils/FilterPanelUtils',
             }
             /* Если шаблон указали как имя компонента (строки которые начинаются с js! или SBIS3.),
              то перед отображением панели фильтров сначала загрузим компонент. */
-            if (template && isStringTemplate && (jsModule || constants.modules.hasOwnProperty(template.split('/')[0]) || template.indexOf('js!') === 0)) {
+            if (template && isStringTemplate && (jsModule || constants.requirejsPaths.hasOwnProperty(template.split('/')[0]) || template.indexOf('js!') === 0)) {
 
                if (jsModule) {
                   template = 'js!' + template;

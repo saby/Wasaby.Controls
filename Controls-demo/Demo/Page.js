@@ -6,11 +6,12 @@ define('Controls-demo/Demo/Page',
       'Core/Control',
       'Core/Deferred',
       'tmpl!Controls-demo/Demo/Page',
+      'Controls/Application/AppData',
       'css',
       'css!Controls-demo/Demo/Page',
-      'Controls/Application'
+      'Controls/Application',
    ],
-   function (Control, Deferred, template, cssPlugin) {
+   function (Control, Deferred, template, AppData,  cssPlugin) {
       'use strict';
 
       var UrlParams = (function () {
@@ -101,6 +102,15 @@ define('Controls-demo/Demo/Page',
 
          backClickHdl: function () {
             window.location.href = window.location.origin + '/Controls-demo/demo.html'
+         },
+         constructor: function(cfg){
+            DemoPage.superclass.constructor.apply(this, arguments);
+            this.ctxData = new AppData(cfg);
+         },
+         _getChildContext: function () {
+            return {
+               AppData: this.ctxData
+            };
          }
       });
 

@@ -12,6 +12,8 @@
               markedKey="{{_options.markedKey}}"
               selectedKeys="{{_options.selectedKeys}}"
               excludedKeys="{{_options.excludedKeys}}"
+              on:beforeItemsMove="_beforeItemsMove()"
+              on:afterItemsMove="_afterItemsMove()"
               itemsReadyCallback="{{_options.itemsReadyCallback}}"
               on:beforeItemsRemove="_beforeItemsRemove()"
               on:afterItemsRemove="_afterItemsRemove()"

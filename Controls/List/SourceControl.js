@@ -262,6 +262,7 @@ define('Controls/List/SourceControl', [
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
+    * @mixes Controls/interface/IReorderMovable
     * @mixes Controls/List/interface/IListControl
     * @mixes Controls/interface/IRemovable
     * @control
@@ -438,6 +439,26 @@ define('Controls/List/SourceControl', [
 
       _afterItemsRemove: function(event, items, result) {
          this._notify('afterItemsRemove', [items, result]);
+      },
+
+      moveItemUp: function(item) {
+         this._children.moveControl.moveItemUp(item);
+      },
+
+      moveItemDown: function(item) {
+         this._children.moveControl.moveItemDown(item);
+      },
+
+      moveItems: function(items, target, position) {
+         this._children.moveControl.moveItems(items, target, position);
+      },
+
+      _beforeItemsMove: function(event, items, target, position) {
+         return this._notify('beforeItemsMove', [items, target, position]);
+      },
+
+      _afterItemsMove: function(event, items, target, position, result) {
+         this._notify('afterItemsMove', [items, target, position, result]);
       },
 
       _showIndicator: function(event, direction) {

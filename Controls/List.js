@@ -38,6 +38,7 @@ define('Controls/List', [
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
+    * @mixes Controls/interface/IReorderMovable
     * @mixes Controls/List/interface/IListControl
     * @mixes Controls/interface/IRemovable
     * @control
@@ -80,6 +81,10 @@ define('Controls/List', [
          } else if (newOptions.markedKey !== this._options.markedKey) {
             this._viewModel.setMarkedKey(newOptions.markedKey);
          }
+      },
+
+      reload: function() {
+         this._children.sourceControl.reload();
       },
 
 
@@ -131,6 +136,26 @@ define('Controls/List', [
 
       removeItems: function(items) {
          this._children.sourceControl.removeItems(items);
+      },
+
+      moveItemUp: function(item) {
+         this._children.sourceControl.moveItemUp(item);
+      },
+
+      moveItemDown: function(item) {
+         this._children.sourceControl.moveItemDown(item);
+      },
+
+      moveItems: function(items, target, position) {
+         this._children.sourceControl.moveItems(items, target, position);
+      },
+
+      _beforeItemsMove: function(event, items, target, position) {
+         return this._notify('beforeItemsMove', [items, target, position]);
+      },
+
+      _afterItemsMove: function(event, items, target, position, result) {
+         this._notify('afterItemsMove', [items, target, position, result]);
       }
    });
 

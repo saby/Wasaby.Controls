@@ -107,12 +107,20 @@ define('Controls/List/SimpleList/ListViewModel',
             return this._itemsModel.getItemById(id, idProperty);
          },
 
+         moveItems: function(items, target, position) {
+            this._itemsModel.moveItems(items, target, position);
+         },
+
          setMarkedKey: function(key) {
             this._markedItem = this.getItemById(key, this._options.idProperty);
             this._nextVersion();
             this._notify('onListChange');
          },
 
+         setActiveItem: function(itemData) {
+            this._activeItem = itemData;
+            this._nextVersion();
+         },
 
          select: function(keys) {
             this._multiselection.select(keys);

@@ -15,7 +15,12 @@ define('Controls-demo/Input/Number/Number', [
       _precision: 2,
       _onlyPositive: false,
       _showEmptyDecimals: false,
-      _enabled: true
+      _enabled: true,
+      _eventResult: '',
+
+      _eventHandler: function(e, value) {
+         this._eventResult = e.type + ': ' + value;
+      }
    });
 
    return VdomDemoNumber;

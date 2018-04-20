@@ -2,8 +2,9 @@
    <div style="padding: 3em; background-color: rgba(38,59,74,0.22)">
       <h2>Number</h2>
       <Controls.Label name="myLabel1" caption="Пример"/>
-      <Controls.Input.Number 
-         class="test_input"
+      <Controls.Input.Number
+         attr:id="main_field"
+         attr:class="test_input"
          bind:value="_text1"
          placeholder="{{_placeholder}}"
          integersLength="{{_integersLength}}"
@@ -12,24 +13,27 @@
          onlyPositive="{{_onlyPositive}}"
          showEmptyDecimals="{{_showEmptyDecimals}}"
          enabled="{{_enabled}}"
+         on:valueChanged="_eventHandler()"
+         on:inputCompleted="_eventHandler()"
       />
 
    </div>
    <div style="padding: 3em; background-color: rgba(81,81,81,0.08)">
       <h3>Задайте опции:</h3>
       <Controls.Label name="myLabel1" caption="placeholder"/>
-      <Controls.Input.Text bind:value="_placeholder" class="test_input"/>
+      <Controls.Input.Text attr:id="placeholder" bind:value="_placeholder" attr:class="test_input"/>
       <Controls.Label name="myLabel1" caption="tagStyle(варианты: attention, done, error, primary, disabled)"
                       attr:style="height: auto;"/>
-      <Controls.Input.Text bind:value="_tagStyle" class="test_tagStyle"/>
+      <Controls.Input.Text attr:id="tagStyle" bind:value="_tagStyle" attr:class="test_tagStyle"/>
       <Controls.Label name="myLabel1" caption="integersLength"/>
-      <Controls.Input.Number bind:value="_integersLength" class="test_integersLength"/>
+      <Controls.Input.Number attr:id="integersLength" bind:value="_integersLength" attr:class="test_integersLength"/>
       <Controls.Label name="myLabel1" caption="precision"/>
-      <Controls.Input.Number bind:value="_precision" class="test_precision"/>
+      <Controls.Input.Number attr:id="precision" bind:value="_precision" attr:class="test_precision"/>
       <div>
-         <Controls.Toggle.Checkbox bind:value="_enabled" caption="enabled"/>
-         <Controls.Toggle.Checkbox bind:value="_onlyPositive" caption="onlyPositive"/>
-         <Controls.Toggle.Checkbox bind:value="_showEmptyDecimals" caption="showEmptyDecimals"/>
+         <Controls.Toggle.Checkbox attr:id="enabled" enabled="{{true}}" bind:value="_enabled" caption="enabled"/>
+         <Controls.Toggle.Checkbox attr:id="onlyPositive" enabled="{{true}}" bind:value="_onlyPositive" caption="onlyPositive"/>
+         <Controls.Toggle.Checkbox attr:id="showEmptyDecimals" enabled="{{true}}" bind:value="_showEmptyDecimals" caption="showEmptyDecimals"/>
       </div>
    </div>
+   <div hidden="hidden" id="event_test">{{ _eventResult }}</div>
 </div>
