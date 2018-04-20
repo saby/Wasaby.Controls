@@ -44,7 +44,8 @@ define(
                   }, 'insert', replacer, format, format);
                   assert.deepEqual(result, {
                      value: '12. 3',
-                     position: 2
+                     position: 2,
+                     format: format
                   });
                });
                it('Test_02', function() {
@@ -56,7 +57,8 @@ define(
                   }, 'insert', replacer, format, format);
                   assert.deepEqual(result, {
                      value: '1 . 2',
-                     position: 5
+                     position: 5,
+                     format: format
                   });
                });
                it('Test_03', function() {
@@ -71,7 +73,47 @@ define(
                   }, 'insert', '', format, format);
                   assert.deepEqual(result, {
                      value: '12.3',
-                     position: 2
+                     position: 2,
+                     format: format
+                  });
+               });
+               it('Test_04', function() {
+                  var newFormat = FormatBuilder.getFormat('dd-dd', {
+                     d: '[0-9]'
+                  }, '');
+                  var oldFormat = FormatBuilder.getFormat('dd-dd-dd', {
+                     d: '[0-9]'
+                  }, '');
+                  result = InputProcessor.input({
+                     before: '',
+                     after: '',
+                     delete: '12-34-56',
+                     insert: '4'
+                  }, 'insert', '', oldFormat, newFormat);
+                  assert.deepEqual(result, {
+                     value: '4',
+                     position: 1,
+                     format: newFormat
+                  });
+               });
+               it('Test_05', function() {
+                  var newFormat = FormatBuilder.getFormat('dd-dd', {
+                     d: '[0-9]'
+                  }, '');
+                  var oldFormat = FormatBuilder.getFormat('dd-dd-dd', {
+                     d: '[0-9]'
+                  }, '');
+                  result = InputProcessor.input({
+                     before: '',
+                     after: '',
+                     delete: '12-34-56',
+                     insert: 'f'
+                  }, 'insert', '', oldFormat, newFormat);
+                  console.log(result);
+                  assert.deepEqual(result, {
+                     value: '12-34-56',
+                     position: 8,
+                     format: oldFormat
                   });
                });
             });
@@ -85,7 +127,8 @@ define(
                   }, 'delete', replacer, format, format);
                   assert.deepEqual(result, {
                      value: '  .  ',
-                     position: 0
+                     position: 0,
+                     format: format
                   });
                });
             });
@@ -99,7 +142,8 @@ define(
                   }, 'deleteForward', replacer, format, format);
                   assert.deepEqual(result, {
                      value: '1 . 4',
-                     position: 2
+                     position: 2,
+                     format: format
                   });
                });
                it('Test_02', function() {
@@ -111,7 +155,8 @@ define(
                   }, 'deleteForward', replacer, format, format);
                   assert.deepEqual(result, {
                      value: '12. 4',
-                     position: 4
+                     position: 4,
+                     format: format
                   });
                });
             });
@@ -125,7 +170,8 @@ define(
                   }, 'deleteBackward', replacer, format, format);
                   assert.deepEqual(result, {
                      value: '1 .34',
-                     position: 1
+                     position: 1,
+                     format: format
                   });
                });
                it('Test_02', function() {
@@ -137,7 +183,8 @@ define(
                   }, 'deleteBackward', replacer, format, format);
                   assert.deepEqual(result, {
                      value: '1 .34',
-                     position: 1
+                     position: 1,
+                     format: format
                   });
                });
             });
