@@ -10,16 +10,14 @@ define(
       describe('Controls.Input.Number', function() {
          var
             testCases = [
-
-               //Проверим что нельзя вставить букву в целую часть
                {
-                  testName: 'Only digits allowed in integer part',
+                  testName: 'Invalid 12.0 => 12a.0',
                   controlConfig: {
                   },
                   splitValue: {
                      before: '12',
                      insert: 'a',
-                     after: '',
+                     after: '.0',
                      delete: ''
                   },
                   result: {
@@ -28,10 +26,8 @@ define(
                   },
                   inputType: 'insert'
                },
-
-               //Проверим что нельзя вставить букву в дробную часть
                {
-                  testName: 'Only numbers allowed in decimal part',
+                  testName: 'Invalid 12.3 => 12.3a',
                   controlConfig: {
                   },
                   splitValue: {
@@ -46,10 +42,8 @@ define(
                   },
                   inputType: 'insert'
                },
-
-               //Проверим что в начало стоки нельзя вставить минус при onlyPositive: true
                {
-                  testName: 'onlyPositive doesn\'t allow entering negative numbers',
+                  testName: 'Invalid 123.0 => -123',
                   controlConfig: {
                      onlyPositive: true
                   },
