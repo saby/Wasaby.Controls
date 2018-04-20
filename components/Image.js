@@ -15,6 +15,7 @@ define('SBIS3.CONTROLS/Image',
       'Lib/File/Attach/LazyAttach',
       'Lib/File/ResourceGetter/FSGetter',
       'Lib/File/LocalFile',
+      'Core/Indicator',
       'Core/helpers/Hcontrol/toggleLocalIndicator',
       'Transport/prepareGetRPCInvocationURL',
       'SBIS3.CONTROLS/Utils/SourceUtil',
@@ -37,6 +38,7 @@ define('SBIS3.CONTROLS/Image',
       LazyAttach,
       FSGetter,
       LocalFile,
+      Indicator,
       toggleLocalIndicator,
       prepareGetRPCInvocationURL,
       SourceUtil,
@@ -504,9 +506,9 @@ define('SBIS3.CONTROLS/Image',
             },
             _onBeginLoad: function() {
                var
-                  imageInstance = this.getParent(),
+                  imageInstance = this,
                   result = imageInstance._notify('onBeginLoad', this);
-               this._showIndicator();
+               Indicator.setMessage(rk('Загрузка...'));
                if (result !== false) {
                   toggleLocalIndicator(imageInstance._container, true);
                }
@@ -523,7 +525,7 @@ define('SBIS3.CONTROLS/Image',
                } else {
                   imageInstance._setImage(imageInstance._getSourceUrl());
                   toggleLocalIndicator(imageInstance._container, false);
-                  this._hideIndicator();
+                  Indicator.hide();
                }
             },
             /**
@@ -531,23 +533,23 @@ define('SBIS3.CONTROLS/Image',
              * @private
              */
             _onLoadedError: function(error) {
-                toggleLocalIndicator(this._container, false);
-                this._hideIndicator();
-                // игнорируем HTTPError офлайна, если они обработаны
-                if (!(error._isOfflineMode && error.processed)){
-                    var
-                        config = error._isOfflineMode ? {
-                           message: 'Отсутствует соединение с интернет',
-                           details: 'Подключите интернет и повторите попытку.',
-                           status: 'error'
-                        } : {
-                           status: 'error',
-                           details: error.message,
-                           message: 'При загрузке изображения возникла ошибка'
-                        };
-                    InformationPopupManager.showMessageDialog(config);
-                }
-                return this._onErrorLoad(error, true);
+               toggleLocalIndicator(this._container, false);
+               Indicator.hide();
+               // игнорируем HTTPError офлайна, если они обработаны
+               if (!(error._isOfflineMode && error.processed)){
+                  var
+                     config = error._isOfflineMode ? {
+                        message: 'Отсутствует соединение с интернет',
+                        details: 'Подключите интернет и повторите попытку.',
+                        status: 'error'
+                     } : {
+                        status: 'error',
+                        details: error.message,
+                        message: 'При загрузке изображения возникла ошибка'
+                     };
+                  InformationPopupManager.showMessageDialog(config);
+               }
+               return this._onErrorLoad(error, true);
             },
             _onChangeImage: function() {
                var
@@ -740,8 +742,10 @@ define('SBIS3.CONTROLS/Image',
 
             _uploadFileCam: function() {
                var self = this;
-               self._getAttach().choose("PhotoCam").addCallback(function() {
+               self._getAttach().choose("PhotoCam").addCallbacks(function() {
                    self._upload();
+               }, function(error) {
+                   self._onEndLoad(error);
                });
             },
 
@@ -942,10 +946,12 @@ define('SBIS3.CONTROLS/Image',
                   this._imageBar.hide();
                }
                if (!this.getDataSource()) {
+                  Indicator.hide();
                   return;
                }
                var attach = self._getAttach();
-               if (!this._onBeginLoad()) {
+               if (this._onBeginLoad() === false) {
+                  Indicator.hide();
                   return;
                }
                attach.upload().addCallback(function(results) {
