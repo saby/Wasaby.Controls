@@ -32,11 +32,11 @@ define(
                data: [
                   {
                      id: '1',
-                     caption: 'test1'
+                     tittle: 'test1'
                   },
                   {
                      id: '2',
-                     caption: 'test2'
+                     tittle: 'test2'
                   }
                ]
             });
@@ -58,11 +58,11 @@ define(
                data: [
                   {
                      id: '1',
-                     caption: 'test1'
+                     tittle: 'test1'
                   },
                   {
                      id: '2',
-                     caption: 'test2'
+                     tittle: 'test2'
                   }
                ]
             });
@@ -77,11 +77,11 @@ define(
                data: [
                   {
                      id: '1',
-                     caption: 'caption1'
+                     tittle: 'caption1'
                   },
                   {
                      id: '2',
-                     caption: 'caption2'
+                     tittle: 'caption2'
                   }
                ]
             });

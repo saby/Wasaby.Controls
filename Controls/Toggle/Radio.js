@@ -23,6 +23,16 @@ define('Controls/Toggle/Radio', [
     */
 
    /**
+    * @name Controls/Toggle/Radio#displayProperty
+    * @cfg {MemorySource} Field name, that it is displaying.
+    */
+
+   /**
+    * @name Controls/Toggle/Radio#itemTemplateProperty
+    * @cfg {MemorySource} Path to item template, for exclusive template.
+    */
+
+   /**
     * @name Controls/Toggle/Radio#direction
     * @cfg {string} Direction of RadioGroup.
     * @variant horizontal RadioGroup is a row of RadioButton.
@@ -40,13 +50,13 @@ define('Controls/Toggle/Radio', [
     */
 
    /**
-    * @name Controls/Toggle/Radio#captionTemplate
-    * @cfg {Template} Template for caption.
+    * @name Controls/Toggle/Radio#itemContentTpl
+    * @cfg {Template} Template for each item.
     */
 
    /**
-    * @name Controls/Toggle/Radio#itemContent
-    * @cfg {Template} Template for item.
+    * @name Controls/Toggle/Radio#itemTpl
+    * @cfg {Template} Template for each field with name in option 'displayProperty'.
     */
 
    var _private = {

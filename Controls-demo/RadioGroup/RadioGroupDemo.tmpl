@@ -3,6 +3,7 @@
         <h2>Для каждого элемента используется верстка по умолчанию. Для 3 и 7 элементов (itemTemplateProperty === 'templateTwo') задана персональная верстка. В режиме чтения.</h2>
         <Controls.Toggle.Radio
                 on:onSelectedItemChange="changeKey()"
+                attr:class="demo-RadioGroup"
                 keyProperty="id"
                 selectedKey="{{_selectKey}}"
                 source="{{_source}}"
@@ -14,6 +15,7 @@
     <div class="demo-RadioGroup__TestBlock">
         <h2>Задан itemContentTpl. Для каждого заголовка используется верстка заданная в опциях. Для 5 элемента (itemTemplateProperty === 'template') задан персональная верстка.</h2>
         <Controls.Toggle.Radio
+                attr:class="demo-RadioGroup"
                 on:onSelectedItemChange="changeKey()"
                 keyProperty="id"
                 selectedKey="{{_selectKey}}"
@@ -25,9 +27,10 @@
     </div>
 
     <div class="demo-RadioGroup__TestBlock">
-        <h2>Задан itemTpl. Для каждого элемента используется верстка заданная в опциях. Для 5 элемента задан уникальный стиль.</h2>
+        <h2>Задан itemTpl. Для каждого элемента используется верстка заданная в опциях.</h2>
         <Controls.Toggle.Radio
                 on:onSelectedItemChange="changeKey()"
+                attr:class="demo-RadioGroup"
                 keyProperty="id"
                 selectedKey="{{_selectKey}}"
                 source="{{_source}}"
