@@ -2,7 +2,7 @@ define('Controls/Filter/Button/interface/IFilterPanel', [
 ], function() {
 
    /**
-    * Интерфейс работы панели фильтра
+    * Interface for filter panel
     *
     * @mixin Controls/Filter/Button/interface/IFilterPanel
     * @public
