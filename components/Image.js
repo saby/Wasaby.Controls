@@ -959,7 +959,6 @@ define('SBIS3.CONTROLS/Image',
                      self._onEndLoad(result)
                   })
                });
-               return def;
             }
          });
 
