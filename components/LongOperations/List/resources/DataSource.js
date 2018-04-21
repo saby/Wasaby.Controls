@@ -147,7 +147,7 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
          _queryCall: function (promise, options, customConditions, origLimit, retryCounter) {
             longOperationsManager.fetch(Object.keys(options).length ? options : null).addCallbacks(function (recordSet) {
                var meta = recordSet.getMetaData();
-               var items = recordSet.getRawData();
+               var items = recordSet.getRawData() || [];
                if (customConditions && items.length) {
                   items = items.filter(function (operation) {
                      var custom = operation.custom;

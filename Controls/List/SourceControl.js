@@ -38,9 +38,12 @@ define('Controls/List/SourceControl', [
                }
 
                //self._virtualScroll.setItemsCount(self._listViewModel.getCount());
+
+
                _private.handleListScroll(self, 0);
+               return list;
             }).addErrback(function(error) {
-               _private.processLoadError(self, error);
+               return _private.processLoadError(self, error);
             });
          } else {
             IoC.resolve('ILogger').error('SourceControl', 'Source option is undefined. Can\'t load data');
@@ -63,11 +66,12 @@ define('Controls/List/SourceControl', [
                   self._listViewModel.prependItems(addedItems);
                   self._virtualScroll.prependItems(addedItems.getCount());
                }
-
+               return addedItems;
+               
                //обновить начало/конец видимого диапазона записей и высоты распорок
                //_private.applyVirtualWindow(self, self._virtualScroll.getVirtualWindow());
             }).addErrback(function(error) {
-               _private.processLoadError(self, error);
+               return _private.processLoadError(self, error);
             });
          } else {
             IoC.resolve('ILogger').error('SourceControl', 'Source option is undefined. Can\'t load data');

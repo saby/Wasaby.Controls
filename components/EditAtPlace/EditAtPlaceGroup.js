@@ -88,10 +88,6 @@ define('SBIS3.CONTROLS/EditAtPlace/EditAtPlaceGroup',
 
          _setPickerContent: function () {
             var self = this;
-            this._picker._container.bind('keydown', function (e) {
-               self._keyPressHandler(e);
-            });
-
             this._iterateChildEditAtPlaces(function(child){
                child._setEditInGroup();
                child._setKeyPressHandler(self._keyPressHandler.bind(self));
