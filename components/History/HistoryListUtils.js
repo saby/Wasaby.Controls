@@ -33,7 +33,8 @@ define('SBIS3.CONTROLS/History/HistoryListUtils', [
 
          for (var listName in historyLists) {
             if (historyLists.hasOwnProperty(listName)) {
-               result |= historyLists[listName].getCount();
+               var historyList = historyLists[listName].getHistory();
+               result |= historyList.getCount();
             }
          }
 

@@ -35,7 +35,7 @@ class GetterContainer implements IContainer<IResourceGetter> {
     /**
      * Метод асинхронного получения экземпляра {@link File/IResourceGetter}
      * @param {String} name Имя модуля
-     * @return {Core/Deferred<File/IResourceGetter>}
+     * @return {Core/Deferred.<File/IResourceGetter>}
      * @see File/IResourceGetter#getType
      */
     get(name: string): Deferred<IResourceGetter> {

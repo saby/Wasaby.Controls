@@ -1,12 +1,12 @@
-define('Controls-demo/Input/Area', [
+define('Controls-demo/Input/Text/Text', [
    'Core/Control',
-   'tmpl!Controls-demo/Input/Area',
+   'tmpl!Controls-demo/Input/Text/Text',
    'WS.Data/Source/Memory'
 ], function(Control, template) {
 
    'use strict';
 
-   var VdomDemoArea = Control.extend({
+   var VdomDemoText = Control.extend({
       _template: template,
       _text1: '',
       _placeholder: '',
@@ -15,9 +15,7 @@ define('Controls-demo/Input/Area', [
       _validationErrorsValue: false,
       _trim: false,
       _maxLength: '',
-      _minLines: '',
-      _maxLines: '',
-      _enabled: true,
+      _selectOnClick: false,
 
       valueChangedHandler: function () {
          if (this._validationErrorsValue){
@@ -28,5 +26,5 @@ define('Controls-demo/Input/Area', [
       }
    });
 
-   return VdomDemoArea;
+   return VdomDemoText;
 });

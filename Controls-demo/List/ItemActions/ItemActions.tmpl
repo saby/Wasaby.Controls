@@ -29,6 +29,7 @@
             allowEmptySelection="{{false}}"
             itemActionsType="outside"
             idProperty="id"
+            on:actionClick="_onActionClick()"
             itemActions="{{_itemActions}}"
             itemActionVisibilityCallback="{{_showAction}}"
             class="itemActionsDemo__list">
@@ -44,5 +45,6 @@
             </ws:partial>
         </ws:itemTemplate>
     </Controls.List>
-
+    <div>последний нажатый экшн</div>
+    <div class="action__last_clicked">{{__lastClicked}}</div>
 </div>
