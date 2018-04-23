@@ -1,7 +1,7 @@
 <span attr:class="controls-BaseButton controls-Button_style-{{_style}}{{_options.readOnly ? '_disabled':''}}
-                 controls-Button_type-{{_type}}{{_options.readOnly() ? '_disabled':''}}
+                 controls-Button_type-{{_type}}{{_options.readOnly ? '_disabled':''}}
                  controls-Button_type-{{_typeWithSize}}
-                 {{_options.readOnly() ?  '':'controls-Button_style-' + _styleWithIconStyle}}"
+                 {{_options.readOnly ?  '':'controls-Button_style-' + _styleWithIconStyle}}"
       attr:title="{{_options.tooltip}}"
       on:click="_clickHandler()">
     <span attr:class="controls-BaseButton__content controls-Button__wrapper_type-{{_typeWithSize}}">
