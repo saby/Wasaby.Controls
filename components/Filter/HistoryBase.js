@@ -172,6 +172,7 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
 
                                     if(reportItem) {
                                        reportItem.value = reportItem.resetValue;
+                                       reportItem.caption = reportItem.hasOwnProperty('resetCaption') ? reportItem.resetCaption : '';
                                        // Если отменили сохранение фильтра, то из сформированной по фильтрам строки, надо вырезать подстроку,
                                        // которая отвечала за отображение этого фильтра
                                        textValue = textValue.replace(new RegExp(',?\\s?' + reportItem[self._options._filterItemTextProperty]), '');
