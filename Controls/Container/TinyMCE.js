@@ -7,6 +7,13 @@ define('Controls/Container/TinyMCE', [
 ], function(Control, cConstants, template, moduleStabs, sanitize) {
    'use strict';
 
+   /**
+    * Component TinyMCE
+    * @class Controls/Container/TinyMCE
+    * @extends Core/Control
+    * @control
+    * @authors Volotskoy V.D., Sukhoruchkin A.S., Avramenko A.S.
+    */
    var _private = {
          active: false,
          tinyInit: function(self) {
@@ -124,14 +131,17 @@ define('Controls/Container/TinyMCE', [
             }
          },
 
-         _setActive: function() {
+         _onFocusIn: function() {
             _private.active = true;
          },
 
-         _setInActive: function() {
+         _onFocusOut: function() {
             _private.active = false;
          },
 
+         /**
+          * Function strikes 'textChanged' to upper control with current editor value
+          */
          textChanged: function() {
             this._notify('textChanged', [_private.trimText(this._tinyEditor.getContent())]);
          }

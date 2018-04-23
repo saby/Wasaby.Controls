@@ -5,12 +5,12 @@
     />
     <Controls.Input.RichTextArea
             class="rich-text-editor-demo"
-            enabled="{{need}}"
+            readOnly="{{readOnly}}"
             value="{{value123}}"
             on:valueChanged="changeText()"
     />
     <Controls.Input.Area
-            enabled="{{need}}"
+            enabled="{{!readOnly}}"
             value="{{value123}}"
             on:input="_changeText()"
     />

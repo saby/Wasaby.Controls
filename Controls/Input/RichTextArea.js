@@ -1,9 +1,18 @@
 define('Controls/Input/RichTextArea', [
    'Core/Control',
    'tmpl!Controls/Input/RichTextArea/RichTextArea',
-   'Controls/Input/RichTextArea/RichAreaModel'
+   'Controls/Input/RichTextArea/RichAreaModel',
+   'css!Controls/Input/RichTextArea/RichTextArea'
 ], function(Control, template, RichModel) {
    'use strict';
+
+   /**
+    * Component RichTextArea
+    * @class Controls/Input/RichTextArea
+    * @extends Core/Control
+    * @control
+    * @authors Volotskoy V.D., Sukhoruchkin A.S., Avramenko A.S.
+    */
 
    var RichEdtior = Control.extend({
       _template: template,
@@ -20,8 +29,8 @@ define('Controls/Input/RichTextArea', [
          });
       },
 
-      _afterUpdate: function() {
-         if (!this.isEnabled()) {
+      _afterUpdate: function(opts) {
+         if (this._options.readOnly) {
             this._children.textContainer.innerHTML = this._simpleViewModel.getValue();
          }
       },

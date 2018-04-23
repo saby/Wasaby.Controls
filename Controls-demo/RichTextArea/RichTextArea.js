@@ -9,16 +9,16 @@ define('Controls-demo/RichTextArea/RichTextArea', [
          _template: template,
          value123: 'example123',
 
-         need: true,
+         readOnly: false,
 
          buttonCaption: 'Заблокировать',
          _updateState: function() {
-            if (this.need) {
+            if (this.readOnly) {
                this.buttonCaption = 'Разблокировать';
             } else {
                this.buttonCaption = 'Заблокировать';
             }
-            this.need = !this.need;
+            this.readOnly = !this.readOnly;
          },
          changeText: function(event, value) {
             this.value123 = value;
