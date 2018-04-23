@@ -1,9 +1,7 @@
 <div class="ws-Suggest">
     <Controls.Container.Search
             on:deactivated="_deactivated()"
-            on:itemClick="_select()"
-            on:searchStart="_searchStart()"
-            on:searchEnd="_searchEnd()">
+            on:itemClick="_select()">
         <div>
             <Controls.Container.Input.Search>
                 <Controls.Input.resources.InputRender.InputRender
@@ -34,7 +32,7 @@
 
             <ws:if data="{{_isOpen}}">
                 <div class="ws-Suggest__suggestionsContainer">
-                    <ws:partial template="{{_options.suggestTemplate}}"/>
+                    <ws:partial template="{{_options.suggestTemplate}}" searchEnd="{{_searchEnd}}" searchStart="{{_searchStart}}"/>
                     <ws:partial if="{{_options.emptyTemplate && !_searchResult.hasMore}}" template="{{_options.emptyTemplate}}"/>
                     <ws:partial if="{{_options.footerTemplate && _searchResult.hasMore}}" template="{{_options.footerTemplate}}" on:click="_showAllClick()"/>
                 </div>

@@ -56,22 +56,23 @@ define('Controls/Container/List',
          },
          
          abortCallback: function(self, filter) {
+            if (self._options.searchEnd) {
+               self._options.searchEnd(null, filter);
+            }
+   
             _private.updateFilter(self, filter);
-            
             self._source = self._options.source;
-            self._searchDeferred.errback();
-            self._notify('searchEnd', [null, filter], {bubbling: true});
-            
             self._forceUpdate();
          },
          
          searchCallback: function(self, result, filter) {
+            if (self._options.searchEnd) {
+               self._options.searchEnd(result, filter);
+            }
+   
             _private.updateFilter(self, filter);
             _private.updateSource(self, result.data);
-            
             self._searchDeferred.callback();
-            self._notify('searchEnd', [result, filter], {bubbling: true});
-            
             self._forceUpdate();
          },
          
@@ -79,9 +80,11 @@ define('Controls/Container/List',
             if (self._searchDeferred && self._searchDeferred.isReady()) {
                self._searchDeferred.cancel();
             }
+            if (self._options.searchStart) {
+               self._options.searchStart();
+            }
             self._searchDeferred = new Deferred();
             _private.getSearchController(self).search(value);
-            self._notify('searchStart', [], {bubbling: true});
          },
          
          filterChanged: function(self, filter) {
@@ -141,15 +144,9 @@ define('Controls/Container/List',
             return this._searchDeferred;
          },
          
-         _afterMount: function() {
-         
-         },
-         
          _beforeUpdate: function(options, context) {
             _private.checkFilterValue(this, context, this.context);
             _private.checkSearchValue(this, context, this.context);
-            
-            return this._searchDeferred;
          },
          
          _beforeUnmount: function() {

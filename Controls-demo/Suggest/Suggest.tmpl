@@ -23,21 +23,14 @@
         </Controls.Input.Suggest>
     </div>
     <div class="demo-SuggestWrapper">
-        <h3>Suggest</h3>
+        <h3>Suggest with Tabs</h3>
         <Controls.Input.Suggest
                 bind:value="_suggest2Value"
                 displayProperty="text">
             <ws:suggestTemplate>
                 <div>
-                    <Controls.Tabs.Buttons displayProperty="title" keyProperty="id">
-                        <ws:items>
-                            <ws:Array>
-                                <ws:Object title="Сотрудники" id="Сотрудники"/>
-                                <ws:Object title="Сотрудники" id="Сотрудники"/>
-                            </ws:Array>
-                        </ws:items>
-                    </Controls.Tabs.Buttons>
-                    <Controls.Container.List searchParam="title" source="{{_suggestSource}}">
+                    <Controls.Tabs.Buttons displayProperty="title" keyProperty="id" source="{{_tabSource}}"/>
+                    <Controls.Container.Suggest.List searchParam="title" source="{{_suggestSource}}">
                         <ws:navigation source="page" view="page">
                             <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
                         </ws:navigation>
@@ -45,12 +38,9 @@
                             <Controls:List
                                     displayProperty="title"
                                     idProperty="id">
-                                <ws:emptyTemplate>
-                                    Нет данных
-                                </ws:emptyTemplate>
                             </Controls:List>
                         </ws:content>
-                    </Controls.Container.List>
+                    </Controls.Container.Suggest.List>
                 </div>
             </ws:suggestTemplate>
             <ws:minSearchLength>

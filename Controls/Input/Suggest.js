@@ -50,7 +50,11 @@ define('Controls/Input/Suggest',
          
          constructor: function(options) {
             Suggest.superclass.constructor.call(this, options);
+            
             this._searchResult = {};
+            this._searchStart = this._searchStart.bind(this);
+            this._searchEnd = this._searchEnd.bind(this);
+            
             _private.initViewModel(this, options || {});
          },
          
@@ -101,11 +105,13 @@ define('Controls/Input/Suggest',
          },
    
          _searchStart: function() {
-            this._searching = true;
-            this._forceUpdate();
+            if (!this._searching) {
+               this._searching = true;
+               this._forceUpdate();
+            }
          },
    
-         _searchEnd: function(event, result) {
+         _searchEnd: function(result) {
             this._searching = false;
             this._searchResult = result || {};
             
