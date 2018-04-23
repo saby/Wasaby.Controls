@@ -2,8 +2,12 @@
     <Controls.Button
             name="button1"
             caption="Нажмите для подгрузки"
+            on:click="_updateState()"
     />
-    <Controls.HighChartDS
-            highChartContainer="name1"
+    <Controls.HighChartsDS
+            chartOptions="{{_chartConfig}}"
+            query="БизнесЛогика.Позвать"
+            instantUpdate="false"
+            filter="{{_filter}}"
     />
 </div>
