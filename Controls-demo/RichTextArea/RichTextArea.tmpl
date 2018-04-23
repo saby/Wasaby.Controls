@@ -1,0 +1,17 @@
+<div>
+    <Controls.Button
+            on:click="_updateState()"
+            caption="{{buttonCaption}}"
+    />
+    <Controls.Input.RichTextArea
+            class="rich-text-editor-demo"
+            enabled="{{need}}"
+            value="{{value123}}"
+            on:valueChanged="changeText()"
+    />
+    <Controls.Input.Area
+            enabled="{{need}}"
+            value="{{value123}}"
+            on:input="_changeText()"
+    />
+</div>
