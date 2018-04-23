@@ -13,7 +13,7 @@
                            minLines="{{_minLines}}"
                            maxLines="{{_maxLines}}"
                            tagStyle="{{_tagStyle}}"
-                           enabled="{{_enabled}}"
+                           readOnly="{{_readOnly}}"
                            on:valueChanged="_eventHandler()"
                            on:inputCompleted="_eventHandler()"
       />
@@ -34,11 +34,11 @@
       <Controls.Label name="myLabel1" caption="maxLines"/>
       <Controls.Input.Text attr:id="maxLines" bind:value="_maxLines"/>
       <div>
-         <Controls.Toggle.Checkbox attr:id="trim" enabled="{{true}}" bind:value="_trim" caption="trim"/>
-         <Controls.Toggle.Checkbox attr:id="validationErrors" on:valueChanged="valueChangedHandler()" enabled="{{true}}"
+         <Controls.Toggle.Checkbox attr:id="trim" readOnly="{{false}}" bind:value="_trim" caption="trim"/>
+         <Controls.Toggle.Checkbox attr:id="validationErrors" on:valueChanged="valueChangedHandler()" readOnly="{{false}}"
                                       bind:value="_validationErrorsValue" caption="validationErrors"/>
          <br/>
-         <Controls.Toggle.Checkbox attr:id="enabled" enabled="{{true}}" bind:value="_enabled" caption="enabled"/>
+         <Controls.Toggle.Checkbox attr:id="enabled" readOnly="{{false}}" bind:value="_readOnly" caption="readOnly"/>
       </div>
    </div>
    <div hidden="hidden" id="event_test">{{ _eventResult }}</div>
