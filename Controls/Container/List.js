@@ -56,8 +56,8 @@ define('Controls/Container/List',
          },
          
          abortCallback: function(self, filter) {
-            if (self._options.searchEnd) {
-               self._options.searchEnd(null, filter);
+            if (self._options.searchEndCallback) {
+               self._options.searchEndCallback(null, filter);
             }
    
             _private.updateFilter(self, filter);
@@ -66,8 +66,8 @@ define('Controls/Container/List',
          },
          
          searchCallback: function(self, result, filter) {
-            if (self._options.searchEnd) {
-               self._options.searchEnd(result, filter);
+            if (self._options.searchEndCallback) {
+               self._options.searchEndCallback(result, filter);
             }
    
             _private.updateFilter(self, filter);
@@ -80,8 +80,8 @@ define('Controls/Container/List',
             if (self._searchDeferred && self._searchDeferred.isReady()) {
                self._searchDeferred.cancel();
             }
-            if (self._options.searchStart) {
-               self._options.searchStart();
+            if (self._options.searchStartCallback) {
+               self._options.searchStartCallback();
             }
             self._searchDeferred = new Deferred();
             _private.getSearchController(self).search(value);
