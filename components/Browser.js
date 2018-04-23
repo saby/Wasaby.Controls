@@ -434,6 +434,17 @@ define('SBIS3.CONTROLS/Browser', [
           * @demo Examples/ColumnsEditor/AllCustom/AllCustom Пример с одиночной кнопкой, открывающией редактор колонок (без браузера)
           */
          CommandDispatcher.declareCommand(this, 'showColumnsEditor', this._showColumnsEditor);
+
+         /**
+          * Изменить набор отображаемых колонок
+          *
+          * @command changeColumns
+          * @public
+          * @param {Array<string|number>} columnIds Список идентификаторов выбранных колонок (обязательный)
+          *
+          * @see _changeColumns
+          */
+         CommandDispatcher.declareCommand(this, 'changeColumns', this._changeColumns);
       },
 
       /**
@@ -579,11 +590,20 @@ define('SBIS3.CONTROLS/Browser', [
          return promise;
       },
 
-      _changeColumns: function (columns) {
-         var result = this._notify('onColumnsChange', columns);
-         this._columnsController.setState(columns);
+      /**
+       * Изменить набор отображаемых колонок
+       *
+       * @protected
+       * @param {Array<string|number>} columnIds Список идентификаторов выбранных колонок (обязательный)
+       *
+       * @see changeColumns
+       */
+      _changeColumns: function (columnIds) {
+         columnIds = columnIds || [];
+         var result = this._notify('onColumnsChange', columnIds);
+         this._columnsController.setState(columnIds);
          var columnsConfig = this._options.columnsConfig;
-         columnsConfig.selectedColumns = columns;
+         columnsConfig.selectedColumns = columnIds;
          var view = this._getView();
          view.setColumns(this._columnsController.getColumns(columnsConfig.columns));
          if (result === ChangeColumnsResult.RELOAD) {

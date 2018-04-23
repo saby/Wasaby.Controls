@@ -69,11 +69,12 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/EditorButton',
 
          _onPresetDropdown: function (evtName) {
             var preset = this._presetDropdown.getSelectedPreset();
-            var args = {applyToSelf:true};
-            if (selectedPreset) {
-               (args.editorOptions = args.editorOptions || {}).selectedPreset = selectedPreset;
+            if (preset) {
+               var selectedColumnIds = preset.selectedColumns;
+               if (selectedColumnIds && selectedColumnIds.length) {
+                  this.sendCommand('changeColumns', selectedColumnIds);
+               }
             }
-            this.sendCommand('showColumnsEditor', args);
          },
 
          _onButton: function (evtName) {
