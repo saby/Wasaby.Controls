@@ -952,10 +952,12 @@ define('SBIS3.CONTROLS/DropdownList',
                 text = prepareText(textValue),
                 hash = this._getItemHash(id),
                 pickerContainer;
-            if (this._picker && !this._options.multiselect) {
-               pickerContainer = this._getPickerContainer();
-               pickerContainer.find('.controls-DropdownList__item__selected').removeClass('controls-DropdownList__item__selected');
-               pickerContainer.find('[data-hash="' + hash + '"]').addClass('controls-DropdownList__item__selected');
+            if (this._picker) {
+               if (!this._options.multiselect) {
+                  pickerContainer = this._getPickerContainer();
+                  pickerContainer.find('.controls-DropdownList__item__selected').removeClass('controls-DropdownList__item__selected');
+                  pickerContainer.find('[data-hash="' + hash + '"]').addClass('controls-DropdownList__item__selected');
+               }
                this._setHasMoreButtonVisibility();
             }
             this._setText(text);

@@ -6,71 +6,16 @@
       caption="{[Заменить]}"
       icon="sprite:icon-16 icon-PicBtr icon-primary"
    />
-   <SBIS3.CONTROLS:Commands:CommandsButton name="commandsButton" class="controls-ImageOptionsPanel__commandsButton" pickerClassName="controls-ImageOptionsPanel__commandsButton__picker">
-      <ws:items>
-         <ws:Array>
-            <ws:Object>
-               <ws:id>
-                  <ws:String>template</ws:String>
-               </ws:id>
-               <ws:icon>
-                  <ws:String>icon-16 icon-PicLeftT icon-primary</ws:String>
-               </ws:icon>
-               <ws:title>
-                  <ws:String>{[Сменить шаблон]}</ws:String>
-               </ws:title>
-               <ws:visible>
-                  <ws:Boolean>{{ templates }}</ws:Boolean>
-               </ws:visible>
-            </ws:Object>
-            <ws:Object>
-               <ws:id>
-                  <ws:String>size</ws:String>
-               </ws:id>
-               <ws:icon>
-                  <ws:String>sprite:icon-16 icon-FullScrin icon-primary</ws:String>
-               </ws:icon>
-               <ws:title>
-                  <ws:String>{[Изменить размер]}</ws:String>
-               </ws:title>
-            </ws:Object>
-            <ws:Object>
-               <ws:id>
-                  <ws:String>edit</ws:String>
-               </ws:id>
-               <ws:icon>
-                  <ws:String>sprite:icon-16 icon-Edit icon-primary</ws:String>
-               </ws:icon>
-               <ws:title>
-                  <ws:String>{[Редактировать]}</ws:String>
-               </ws:title>
-               <ws:visible>
-                  <ws:Boolean>{{imageUuid}}</ws:Boolean>
-               </ws:visible>
-            </ws:Object>
-            <ws:Object>
-               <ws:id>
-                  <ws:String>change</ws:String>
-               </ws:id>
-               <ws:icon>
-                  <ws:String>sprite:icon-16 icon-PicBtr icon-primary</ws:String>
-               </ws:icon>
-               <ws:title>
-                  <ws:String>{[Заменить]}</ws:String>
-               </ws:title>
-            </ws:Object>
-            <ws:Object>
-               <ws:id>
-                  <ws:String>delete</ws:String>
-               </ws:id>
-               <ws:icon>
-                  <ws:String>sprite:icon-16 icon-Erase icon-error</ws:String>
-               </ws:icon>
-               <ws:title>
-                  <ws:String>{[Удалить]}</ws:String>
-               </ws:title>
-            </ws:Object>
-         </ws:Array>
-      </ws:items>
-   </SBIS3.CONTROLS:Commands:CommandsButton>
+   <SBIS3.CONTROLS:Commands:CommandsButton
+      name="commandsButton"
+      class="controls-ImageOptionsPanel__commandsButton"
+      pickerClassName="controls-ImageOptionsPanel__commandsButton__picker"
+      items="{{ [
+         {'id':'template', 'title':rk('Сменить шаблон'), 'icon':'icon-16 icon-PicLeftT icon-primary', 'visible':!!templates},
+         {'id':'size', 'title':rk('Изменить размер'), 'icon':'sprite:icon-16 icon-FullScrin icon-primary'},
+         {'id':'edit', 'title':rk('Редактировать'), 'icon':'sprite:icon-16 icon-Edit icon-primary', 'visible':!!imageUuid},
+         {'id':'change', 'title':rk('Заменить'), 'icon':'sprite:icon-16 icon-PicBtr icon-primary'},
+         {'id':'delete', 'title':rk('Удалить'), 'icon':'sprite:icon-16 icon-Erase icon-error'}
+      ] }}"
+   />
 </div>

@@ -2,7 +2,7 @@
    <Controls.Layout.Scroll scope="{{_options}}" name="scrollLayout">
       <div name="content"
            style="{{displayState.heightFix ? '' : styleHideScrollbar}}"
-           class="ws-flex-grow-1 controls-Scroll__content controls-Scroll__content_paging
+           class="ws-flex-grow-1 controls-Scroll__content
                   {{hasHover ? 'controls-Scroll__content_possibleScroll'}}
                   {{displayState.heightFix ? 'controls-Scroll__content_hidden' : 'controls-Scroll__content_scroll'}}"
            on:resize="_resizeHandler()"
@@ -19,6 +19,7 @@
                      hasHover="{{hasHover}}"
                      optContent="{{optContent}}"
                      styleHideScrollbar="{{styleHideScrollbar}}"
+                     attr:class="controls-Scroll__content_paging"
                      on:listTop="_scrollReachTopHandler()"
                      on:scrollMove="_scrollMoveHandler()"
                      on:listBottom="_scrollReachBottomHandler()"/>
