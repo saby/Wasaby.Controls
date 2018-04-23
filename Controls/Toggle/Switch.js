@@ -44,13 +44,13 @@ define('Controls/Toggle/Switch', [
 
       _beforeMount: function(options) {
          //Мы ждем прокси опции от Димы Зуева, сейчас isEnabled() может работать неправильно
-         var enabled = !this._options.readOnly;
+         var enabled = !options.readOnly;
          this._markerState = _private._getMarkerState(enabled, options.value);
       },
 
       _beforeUpdate: function(options) {
          //Мы ждем прокси опции от Димы Зуева, сейчас isEnabled() может работать неправильно
-         var enabled = this._options.readOnly;
+         var enabled = !options.readOnly;
          this._markerState = _private._getMarkerState(enabled, options.value);
       },
 
