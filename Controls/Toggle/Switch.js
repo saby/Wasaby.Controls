@@ -44,18 +44,18 @@ define('Controls/Toggle/Switch', [
 
       _beforeMount: function(options) {
          //Мы ждем прокси опции от Димы Зуева, сейчас isEnabled() может работать неправильно
-         var enabled = options.enabled === undefined ? this.isEnabled() : options.enabled;
+         var enabled = !this._options.readOnly;
          this._markerState = _private._getMarkerState(enabled, options.value);
       },
 
       _beforeUpdate: function(options) {
          //Мы ждем прокси опции от Димы Зуева, сейчас isEnabled() может работать неправильно
-         var enabled = options.enabled === undefined ? this.isEnabled() : options.enabled;
+         var enabled = this._options.readOnly;
          this._markerState = _private._getMarkerState(enabled, options.value);
       },
 
       _clickHandler: function(e) {
-         if (this.isEnabled()) {
+         if (!this._options.readOnly) {
             this._notify('valueChanged', [!this._options.value]);
          }
       }
