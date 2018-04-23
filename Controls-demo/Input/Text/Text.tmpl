@@ -14,6 +14,7 @@
                            selectOnClick="{{_selectOnClick}}"
                            on:valueChanged="_eventHandler()"
                            on:inputCompleted="_eventHandler()"
+                           enabled="{{ _enabled }}"
       />
    </div>
    <div style="padding: 3em; background-color: rgba(81,81,81,0.11)">
@@ -33,6 +34,7 @@
                                       bind:value="_validationErrorsValue" caption="validationErrors"/>
          <br/>
          <Controls.Toggle.Checkbox attr:id="selectOnClick" enabled="{{true}}" bind:value="_selectOnClick" caption="selectOnClick"/>
+         <Controls.Toggle.Checkbox attr:id="enabled" enabled="{{true}}" bind:value="_enabled" caption="enabled"/>
       </div>
    </div>
    <div hidden="hidden" id="event_test">{{ _eventResult }}</div>
