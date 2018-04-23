@@ -9,7 +9,9 @@
             <i attr:class="controls-Button__icon {{_options.icon}} {{isEnabled() ? 'controls-Button__icon-' + _styleWithIconStyle}}"></i>
         </ws:if>
         <ws:if data="{{!!_options.caption}}">
-           <span attr:class="controls-BaseButton__text controls-Button__text_style-{{_style}} {{_options.icon ? ' controls-Button__text_gap'}}">{{_options.caption}}</span>
+           <span attr:class="controls-BaseButton__text controls-Button__text_style-{{_style}} {{_options.icon ? ' controls-Button__text_gap'}}">
+               <ws:partial template="{{_options.caption}}"/>
+           </span>
         </ws:if>
     </span>
 </span>
