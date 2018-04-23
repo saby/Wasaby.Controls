@@ -4,10 +4,7 @@
     >
         <ws:content>
             <ws:if data="{{!_options.readOnly}}">
-                <Controls.Container.TinyMCE value="{{_options.value}}"
-                                            on:textChanged="_onTextChanged()"
-                                            name="tinyMCE"
-                />
+                <Controls.Container.TinyMCE value="{{_options.value}}" on:textChanged="_onTextChanged()" name="tinyMCE"/>
             </ws:if>
             <ws:else>
                 <div class="controls-RichTextArea__dataReview ws-basic-style" name="textContainer">
