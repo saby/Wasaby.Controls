@@ -21,6 +21,7 @@
                on:keyup="_keyUpHandler()"
                on:change="_inputCompletedHandler()"
                on:focusin="_focusinHandler()"
+               attr:class="{{ _options.textAlign === 'right' ? 'controls-InputRender__field_textAlign_right' }}"
                value="{{ _options.viewModel.getDisplayValue() }}"
          />
 
