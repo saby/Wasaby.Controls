@@ -152,7 +152,8 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
                displayProperty: this._options.displayProperty,
                additionalProperty: this._options.additionalProperty,
                subContainers: this._subContainers,
-               parentProperty: this._options.parentProperty
+               parentProperty: this._options.parentProperty,
+               needHistoryId: true
             });
          }
 
