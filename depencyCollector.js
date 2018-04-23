@@ -43,10 +43,12 @@ var contents = {
 };
 contents["requirejsPaths"] = {
    "SBIS3.CONTROLS": "components",
-   "View": "sbis3-ws/View"
+   "View": "sbis3-ws/View",
+   "WSTest": "tests/WSTest"
 };
 fs.writeFileSync(path.join(__dirname, 'components/contents.json'), JSON.stringify(contents, null, 3));
 contents["modules"] = {
    "SBIS3.CONTROLS": "SBIS3.CONTROLS"
 };
+
 fs.writeFileSync(path.join(__dirname, 'components/contents.js'), 'contents = ' + JSON.stringify(contents, null, 3) + ';');

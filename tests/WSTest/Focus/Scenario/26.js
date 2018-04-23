@@ -1,10 +1,10 @@
 /**
  * Created by nv.belotelov on 14.07.2017.
  */
-define('js!WSTest/Focus/Scenario/26', [
+define('WSTest/Focus/Scenario/26', [
    'Core/constants',
-   'js!WSTest/Focus/TestFocusHelpers',
-   'js!WSTest/Focus/Case26'
+   'WSTest/Focus/TestFocusHelpers',
+   'WSTest/Focus/Case26'
 ], function (cConstants,
              fHelpers,
              caseControl) {

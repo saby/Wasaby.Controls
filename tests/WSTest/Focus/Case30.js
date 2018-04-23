@@ -1,4 +1,4 @@
-define('js!WSTest/Focus/Case30', [
+define('WSTest/Focus/Case30', [
    'tmpl!WSTest/Focus/Case30',
    'Lib/Control/CompoundControl/CompoundControl'
 ], function(dotTplFn, CompoundControl) {
