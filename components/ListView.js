@@ -903,6 +903,7 @@ define('SBIS3.CONTROLS/ListView',
                 * @cfg {ListViewNavigation} Устанавливает конфиг для контроллера навигации ListView
                 * @example
                 * Пример 1:
+                * <pre>
                 * navigation: {
                 *    type: 'cursor',
                 *    config: {
@@ -910,11 +911,13 @@ define('SBIS3.CONTROLS/ListView',
                 *       position: 150
                 *    }
                 * }
+                * </pre>
                 * Пример 2:
+                * <pre>
                 * <ws:navigation type="cursor">
                 *    <ws:config field="Курсор" direction="both" position="{{ null }}"/>
                 * </ws:navigation>
-                *
+                * </pre>
                 */
                navigation: null,
                /**
