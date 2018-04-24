@@ -67,6 +67,11 @@ define(['SBIS3.CONTROLS/Utils/NumberTextBoxUtil'], function (NumberTextBoxUtil) 
             assert.equal(newState.value, '62345678912345.0');
             assert.equal(newState.caretPosition, 1);
          });
+         it('12345678901234|.0 => 12345678901234.5|', function (){
+            newState = NumberTextBoxUtil.numberPress(14, 14, '12345678901234.0', false, 14, -1, 53, null); // press digit 5
+            assert.equal(newState.value, '12345678901234.5');
+            assert.equal(newState.caretPosition, 16);
+         });
       });
       describe('.deletPressed', function (){
          it('1|23.12 => 1|3.12', function (){
