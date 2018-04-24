@@ -94,8 +94,10 @@ define('SBIS3.CONTROLS/History/HistoryList',
       
       function checkHistory(self, history) {
          if (!history) {
+            if (!self.__isHistoryLoaded()) {
+               IoC.resolve('ILogger').log('SBIS3.CONTROLS/History/HistoryList', 'Need load history (HistoryList::getHistory) before use.');
+            }
             self.getHistory();
-            IoC.resolve('ILogger').log('SBIS3.CONTROLS/History/HistoryList', 'Need load history (HistoryList::getHistory) before use.');
          }
       }
 

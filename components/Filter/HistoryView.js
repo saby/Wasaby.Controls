@@ -61,6 +61,7 @@ define('SBIS3.CONTROLS/Filter/HistoryView',
    
                 historyController.getHistory(true).addCallback(function(history) {
                    self.setItems(history.clone());
+                   return history;
                 });
              }
           }
