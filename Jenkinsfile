@@ -489,7 +489,7 @@ node('controls') {
         stage("Запуск тестов интеграционных и верстки"){
             def site = "http://${NODE_NAME}:30010"
             site.trim()
-			if ("${params.browser_type}" == "chrome"){
+			if ("${params.browser_type}" != "ff"){
 				dir("./controls/tests/int"){
 					tmp_smoke = sh returnStatus:true, script: """
 						source /home/sbis/venv_for_test/bin/activate
