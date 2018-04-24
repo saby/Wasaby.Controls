@@ -1,7 +1,7 @@
 /**
  * Created by dv.zuev on 01.08.2017.
  */
-define('js!WSTest/Sync/Sync',
+define('WSTest/Sync/Sync',
    [
       'Core/Control',
       'tmpl!WSTest/Sync/Sync'
