@@ -15,9 +15,9 @@ define('Controls/HighChartsDS', [
          wsSeries: {},
          wsAxis: {},
          filter: {},
-         initDataSource: function() {
+         initDataSource: function(endpoint) {
             _private.dataSource = new SbisService({
-               endpoint: _private.endpoint
+               endpoint: endpoint
             });
          },
          getFilter: function() {
@@ -33,14 +33,28 @@ define('Controls/HighChartsDS', [
          _chartOptions: {},
 
          _beforeMount: function(opts) {
+            var tmpArr = opts.query.split('.');
+            _private.initDataSource(tmpArr[0]);
+            _private.query = tmpArr[1];
             this._chartOptions = opts.chartOptions;
          },
 
          _beforeUpdate: function(opts) {
             var self = this;
             if (opts.filter !== _private.getFilter()) {
-               _private.callQuery(opts.filter).addCallback(function () {
-                  debugger;
+               _private.callQuery(opts.filter).addErrback(function () {
+                  self._chartOptions = {
+                     credits: {
+                        enabled: false
+                     },
+                     chart: {
+                        type: 'line'
+                     },
+                     series: [{
+                        name: 'USD to EUR',
+                        data: [10, 20]
+                     }]
+                  };
                });
             }
          }
