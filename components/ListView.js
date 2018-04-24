@@ -901,20 +901,37 @@ define('SBIS3.CONTROLS/ListView',
                 */
                /**
                 * @cfg {ListViewNavigation} Устанавливает конфиг для контроллера навигации ListView
+                * Опция применяется для настройки навигации по курсору - https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/navigations/cursor/
                 * @example
-                * Пример 1:
-                * navigation: {
-                *    type: 'cursor',
-                *    config: {
-                *       field: 'timestamp',
-                *       position: 150
-                *    }
-                * }
-                * Пример 2:
-                * <ws:navigation type="cursor">
-                *    <ws:config field="Курсор" direction="both" position="{{ null }}"/>
-                * </ws:navigation>
+                * Пример:
                 *
+                * // Импортируем компонент прямо в исходном коде.
+                * require(['SBIS3.CONTROLS/ListView'], function(List) {
+                *
+                *    // Инициализируем компонент, передаём конфигурацию.
+                *    var list = new List({
+                *
+                *       // Настройка навигации по списку.
+                *       navigation: {
+                *
+                *          // Тип навигации - "курсор".
+                *          type: 'cursor',
+                *
+                *          // Конфигурация для типа навигации.
+                *          config: {
+                *
+                *             // В таблице БД индекс создан по полю 'timestamp'.
+                *             field: 'timestamp',
+                *
+                *             // Курсор устанавливается на записи со значением timestamp=40.
+                *             position: 40,
+                *
+                *             // Направление выборки - вверх.
+                *             direction: 'before'
+                *          }
+                *       }
+                *    });
+                * });
                 */
                navigation: null,
                /**
