@@ -1,8 +1,0 @@
-[{
-   "include": [
-      "SBIS3.CONTROLS/RichEditor/third-party/tinymce/tinymce.min",
-      "css!SBIS3.CONTROLS/RichEditor/third-party/tinymce/skins/lightgray/skin.min",
-      "css!SBIS3.CONTROLS/RichEditor/third-party/tinymce/skins/lightgray/content.inline.min"
-   ],
-   "output": "SBIS3.CONTROLS/RichEditor/third-party/tinymce/tinymce.min"
-}]
