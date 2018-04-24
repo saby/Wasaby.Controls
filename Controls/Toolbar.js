@@ -2,7 +2,7 @@ define('Controls/Toolbar', [
    'Core/Control',
    'Controls/Controllers/SourceController',
    'tmpl!Controls/Toolbar/Toolbar',
-   'tmpl!Controls/Toolbar/toolbarItemTemplate',
+   'tmpl!Controls/Toolbar/ToolbarItemTemplate',
    'WS.Data/Collection/RecordSet',
    'WS.Data/Collection/Factory/RecordSet',
    'Controls/Utils/Toolbar',
