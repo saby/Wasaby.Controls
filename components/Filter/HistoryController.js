@@ -76,6 +76,7 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
              self.getHistory(true).addCallback(function(history) {
                 self._listHistory = new List({items: coreClone(history) || []});
                 self._prepareListHistory();
+                return history;
              });
              this._changeHistoryFnc = this._changeHistoryHandler.bind(this);
              this._applyHandlerDebounced = debounce.call(forAliveOnly(this._onApplyFilterHandler, this)).bind(this);
