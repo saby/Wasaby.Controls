@@ -1,34 +1,21 @@
-.controls-PanelFilter {
-   min-width: @min-width_FilterPanel;
-   box-shadow: @box-shadow_FilterPanel;
-   border: @border-size_FilterPanel solid @border-color_FilterPanel;
-   background-color: @background-color_FilterPanel;
-}
-
-.controls-FilterPanel__wrapper {
-   display: flex;
-}
-
 .controls-FilterPanel__header {
    min-width: @min-width_FilterPanel;
    width: 100%;
-   height: @height_FilterPanel-header;
    display: flex;
    justify-content: space-between;
    align-items: baseline;
-   background-color: @background-color_FilterPanel-header;
 }
 
 .controls-FilterPanel__header:before {
    content: "\200b";
-   line-height: @controls-filterButton-area-header-height;
+   line-height: @height_FilterPanel-header;
    display: inline-block;
    width: 0;
    visibility: hidden;
 }
 
 .controls-FilterPanel__PropertyGrid {
-   margin: @spacing_FilterPanel__PropertyGrid;
+   margin: @margin_FilterPanel__PropertyGrid;
 }
 
 .controls-FilterPanel__header-topTemplate {
@@ -36,7 +23,7 @@
 }
 
 .controls-FilterPanel__resetButton {
-   margin: @spacing_FilterPanel-resetButton-title;
+   margin: @margin_FilterPanel-resetButton-title;
 }
 
 .controls-FilterPanel__filterButton {

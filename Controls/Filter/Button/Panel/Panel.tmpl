@@ -1,11 +1,10 @@
-<Controls.Popup.Templates.Dialog.DialogTemplate class="controls-PanelFilter">
+<Controls.Popup.Templates.Dialog.DialogTemplate caption="{{_options.title}}">
    <ws:topArea>
       <div class="controls-FilterPanel__header">
-         <Controls.Header caption="{{_options.title}}" style="{{_options.styleHeader}}" size="l" readOnly="{{true}}"
-                          class="controls-FilterPanel__header-title"/>
-         <ws:if data="{{topTemplate}}">
+
+         <ws:if data="{{_options.topTemplate}}">
             <div class="controls-FilterPanel__header-topTemplate">
-               <ws:partial template="{{topTemplate}}"/>
+               <ws:partial template="{{_options.topTemplate}}"/>
             </div>
          </ws:if>
          <Controls.Button style="linkMain" readOnly="{{!_isChanged}}" caption="{[По умолчанию]}"
