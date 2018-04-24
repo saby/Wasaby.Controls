@@ -271,6 +271,7 @@ define('Controls/List/SourceControl', [
     */
 
    var SourceControl = Control.extend({
+      
       //TODO временный state, не нужен после выполнения задачи https://online.sbis.ru/opendoc.html?guid=eddeb809-98cd-4708-a75c-a5de7b87b145
       _tempDataId: undefined,
       _template: SourceControlTpl,
