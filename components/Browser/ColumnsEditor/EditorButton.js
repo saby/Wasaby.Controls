@@ -61,28 +61,37 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/EditorButton',
             this._presetDropdown = this._options.usePresets ? this.getChildControlByName('controls-Browser-ColumnsEditor-EditorButton__presetDropdown') : null;
             this._button = this.getChildControlByName('controls-Browser-ColumnsEditor-EditorButton__button');
 
-            var handler = _handler.bind(null, this);
             if (this._presetDropdown) {
-               this.subscribeTo(this._presetDropdown, 'onChange', handler);
+               this.subscribeTo(this._presetDropdown, 'onChange', this._onPresetDropdown.bind(this));
             }
-            this.subscribeTo(this._button, 'onActivated', handler);
+            this.subscribeTo(this._button, 'onActivated', this._onButton.bind(this));
+         },
+
+         _onPresetDropdown: function (evtName) {
+            var preset = this._presetDropdown.getSelectedPreset();
+            if (preset) {
+               var selectedColumnIds = preset.selectedColumns;
+               if (selectedColumnIds && selectedColumnIds.length) {
+                  this.sendCommand('changeColumns', selectedColumnIds);
+               }
+            }
+         },
+
+         _onButton: function (evtName) {
+            var args = {applyToSelf:true};
+            var editorOptions = this._options.editorOptions;
+            if (editorOptions) {
+               args.editorOptions = coreMerge({}, editorOptions);
+            }
+            if (this._presetDropdown) {
+               var presetId = this._presetDropdown.getSelectedPresetId();
+               if (presetId) {
+                  (args.editorOptions = args.editorOptions || {}).selectedPresetId = presetId;
+               }
+            }
+            this.sendCommand('showColumnsEditor', args);
          }
       });
-
-      var _handler = function (self) {
-         var args = {applyToSelf:true};
-         var options = self._options.editorOptions;
-         if (options) {
-            args.editorOptions = coreMerge({}, options);
-         }
-         if (self._presetDropdown) {
-            var selected = self._presetDropdown.getSelectedPresetId();
-            if (selected) {
-               (args.editorOptions = args.editorOptions || {}).selectedPresetId = selected;
-            }
-         }
-         self.sendCommand('showColumnsEditor', args);
-      };
 
       return EditorButton;
    }
