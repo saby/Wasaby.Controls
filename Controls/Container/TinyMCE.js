@@ -3,7 +3,8 @@ define('Controls/Container/TinyMCE', [
    'Core/constants',
    'tmpl!Controls/Container/TinyMCE/TinyMCE',
    'Core/moduleStubs',
-   'Core/Sanitize'
+   'Core/Sanitize',
+   'css!Controls/Container/TinyMCE/TinyMCE'
 ], function(Control, cConstants, template, moduleStabs, sanitize) {
    'use strict';
 
@@ -58,7 +59,7 @@ define('Controls/Container/TinyMCE', [
          removeEmptyTags: function(text) {
             var temp = document.createElement('div');
             temp.innerHTML = text;
-            while (temp.querySelectorAll(':empty:not(img):not(iframe)') && temp.querySelectorAll(':empty:not(img):not(iframe)').length) {
+            while (temp.querySelectorAll(':empty:not(img):not(iframe)').length) {
                var item = temp.querySelector(':empty:not(img):not(iframe)'),
                   parent = item.parentNode;
                parent.removeChild(item);
