@@ -241,7 +241,7 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
                   viewBlock.toggleClass('ws-hidden', !view.getItems().getCount());
                }
    
-               listsDef.getResult().addCallback(function() {
+               listsDef.getResult().addCallback(function(res) {
                   self.subscribeTo(self._favoriteView, 'onItemsReady', function() {
                      self._favoriteView.getItems().prepend(favoriteAllList.getHistory().clone());
                      checkItems(self._favoriteView);
@@ -262,6 +262,7 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
                   });
    
                   self.processViews(checkItems);
+                  return res;
                });
             });
 

@@ -151,6 +151,7 @@ define('SBIS3.CONTROLS/Storages/SBIS/SBISHistoryStorage', [
             if (async) {
                valueDeferred = this._SBISStorage.getItem(key);
             } else {
+               IoC.resolve('ILogger').log('SBIS3.CONTROLS/Storages/SBIS/SBISHistoryStorage', 'Need load history (SBISHistoryStorage::getHistory) before use.');
                valueDeferred = Deferred.success(cSessionStorage.getItem(key));
             }
          } else {
@@ -201,6 +202,7 @@ define('SBIS3.CONTROLS/Storages/SBIS/SBISHistoryStorage', [
                   STORAGES[self._options.historyId] = value;
                   self._history = value;
                   getValueDef.callback(self._history);
+                  return value;
                });
             } else {
                self._history = STORAGES[this._options.historyId];
@@ -211,6 +213,10 @@ define('SBIS3.CONTROLS/Storages/SBIS/SBISHistoryStorage', [
          }
          
          return async ? getValueDef : self._history;
+      },
+      
+      __isHistoryLoaded: function () {
+         return this._history || STORAGES[this._options.historyId];
       },
 
       /**
