@@ -86,7 +86,7 @@ define('Controls/Filter/Button/Panel', [
    FilterPanel.getDefaultOptions = function getDefaultOptions() {
       return {
          title: rk('Отбираются'),
-         styleHeader: 'default'
+         styleHeader: 'primary'
       };
    };
 
