@@ -2095,6 +2095,20 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }.bind(this));
             }
 
+            // При посимвольном удалении текста на Ipad, полностью удалив текст, упираемся в невидимый символ. При этом
+            // у <br> в <p> отсутствует аттрибут data-mce-bogus="1". Добавим его вручную, тем самым установив курсор в
+            // должное положение
+            // https://online.sbis.ru/opendoc.html?guid=18888f87-e0b7-4295-903d-c7f8093c2701
+            if(cConstants.browser.isMobileSafari || (cConstants.browser.chrome && cConstants.browser.isMobileIOS)) {
+               editor.on('keyup', function(e) {
+                  var selection = this._tinyEditor.selection,
+                     node = selection.getNode().parentNode;
+                  if (node.innerHTML === "<p><br></p>") {
+                     node.innerHTML = '<p><br data-mce-bogus="1"></p>';
+                  }
+               }.bind(this));
+            }
+
             // Обработка изменения содержимого редактора.
             editor.on('keydown', function(e) {
                if (e.key && 1 < e.key.length) {
