@@ -56,7 +56,7 @@ define('Controls/Toolbar', [
    var Toolbar = Control.extend({
       showType: tUtil.showType,
       _template: template,
-      _itemTemplate: toolbarItemTemplate,
+      _defaultItemTemplate: toolbarItemTemplate,
       _needShowMenu: null,
       _menuItems: null,
       _parentProperty: null,

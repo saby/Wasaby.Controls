@@ -1,7 +1,10 @@
 define('Controls-demo/Toolbar/ToolbarVdom', [
    'Core/Control',
    'WS.Data/Source/Memory',
-   'tmpl!Controls-demo/Toolbar/ToolbarVdom'
+   'tmpl!Controls-demo/Toolbar/ToolbarVdom',
+   'css!Controls-demo/Toolbar/ToolbarVdom',
+   'tmpl!Controls-demo/Toolbar/resources/itemTemplate',
+   'tmpl!Controls-demo/Toolbar/resources/itemTemplateContent'
 ], function(Control, Memory, template) {
    'use strict';
 
@@ -82,7 +85,8 @@ define('Controls-demo/Toolbar/ToolbarVdom', [
                id: '2',
                showType: 2,
                icon: 'icon-medium icon-Linked',
-               title: 'Связанные документы'
+               title: 'Связанные документы',
+               myTemplate: 'tmpl!Controls-demo/Toolbar/resources/itemTemplate'
             },
             {
                id: '3',
