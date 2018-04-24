@@ -28,6 +28,13 @@ define('SBIS3.CONTROLS/LongOperations/AbstractProducer',
       var DEFAULT_FETCH_SORTING = {status:true, startedAt:false};
 
       /**
+       * "Константа" - максимальное количество сохраняемых операций
+       * @protected
+       * @type {number}
+       */
+      var MAX_OPERATIONS_COUNT = 5000;
+
+      /**
        * Сервис - источник данных о пользователях, когда это потребуется в методе fetch
        * @rpoteced
        * @type {WS.Data/Source/SbisService}
@@ -295,6 +302,14 @@ define('SBIS3.CONTROLS/LongOperations/AbstractProducer',
             if (!snapshots.length) {
                return snapshots;
             }
+            if (MAX_OPERATIONS_COUNT < snapshots.length) {
+               // Если в хранилеще содержится слишком мпого операций - самые старые из них отправить на удаление
+               var list = snapshots.map(function (v, i) { return {time:v.startedAt, i:i};});
+               list.sort(function (a, b) { return a.time - b.time; });
+               var garbageIds = list.slice(0, list.length - MAX_OPERATIONS_COUNT).map(function (v) { return snapshots[v.i].id; });
+               LOStorage.removeAll(this._getStorageNS(), garbageIds);
+               var snapshots = list.slice(list.length - MAX_OPERATIONS_COUNT).map(function (v) { return snapshots[v.i]; });
+            }
             var DEFAULTS = LongOperationEntry.DEFAULTS;
             var unpacker = this._getStorageUnpacker();
             if (unpacker) {
@@ -556,8 +571,8 @@ define('SBIS3.CONTROLS/LongOperations/AbstractProducer',
             for (var i = 0, len = localStorage.length; i < len; i++) {
                var name = localStorage.key(i);
                if (name.indexOf(prefix) === 0) {
-                  var id = parseInt(name.substring(prefix.length));
-                  if (0 < id) {
+                  var id = name.substring(prefix.length);
+                  if (id !== '(n)') {
                      var obj = this._jsonParse(localStorage.getItem(name));
                      if (obj) {
                         list.push(obj);
@@ -585,6 +600,18 @@ define('SBIS3.CONTROLS/LongOperations/AbstractProducer',
          },
 
          /**
+          * Удалить сохранённый объект
+          * @public
+          * @param {string} ns Пространство имён
+          * @param {Array<number>} ids Список идентификаторов сохранённых объектов
+          */
+         removeAll: function (ns, ids) {
+            for (var i = 0; i < ids.length; i++) {
+               localStorage.removeItem(ns + '-' + ids[i]);
+            }
+         },
+
+         /**
           * Удалить всю ранее сохранённую информацию. Возвращает идентификаторы удалённых объектов
           * @public
           * @param {string} ns Пространство имён
@@ -597,8 +624,8 @@ define('SBIS3.CONTROLS/LongOperations/AbstractProducer',
                var name = localStorage.key(i);
                if (name.indexOf(prefix) === 0) {
                   localStorage.removeItem(name);
-                  var id = parseInt(name.substring(prefix.length));
-                  if (!isNaN(id)) {
+                  var id = name.substring(prefix.length);
+                  if (id !== '(n)') {
                      ids.push(id);
                   }
                }

@@ -93,8 +93,9 @@ define('SBIS3.CONTROLS/LongOperations/ManagerLib',
             }
             if (!inner._fetchCalls.has(query)) {
                // Если нет уже выполняющегося запроса
+               var tabManagers = inner._tabManagers;
                var hasProducers = !!Object.keys(inner._producers).length;
-               var hasTabManagers = !!Object.keys(inner._tabManagers).length;
+               var hasTabManagers = !!Object.keys(tabManagers).length;
                if (hasProducers || hasTabManagers) {
                   var useOffsets = 0 < query.offset;
                   var offsetPattern = {where:query.where, orderBy:query.orderBy, limit:query.limit};
@@ -114,8 +115,11 @@ define('SBIS3.CONTROLS/LongOperations/ManagerLib',
                   }
                   if (hasTabManagers) {
                      var targets;
-                     for (var tabKey in inner._tabManagers) {
-                        targets = inner._tabTargets(targets, tabKey, inner._tabManagers[tabKey]);
+                     for (var tabKey in tabManagers) {
+                        var tabManager = tabManagers[tabKey];
+                        if (tabManager.isFulloperational) {
+                           targets = inner._tabTargets(targets, tabKey, tabManager.producers);
+                        }
                      }
                      if (targets) {
                         /*^^^var promises;
@@ -172,7 +176,8 @@ define('SBIS3.CONTROLS/LongOperations/ManagerLib',
                return producer.callAction(action, operationId);
             }
             else {
-               if (!(tabKey in inner._tabManagers && prodName in inner._tabManagers[tabKey])) {
+               var tabManagers = inner._tabManagers;
+               if (!(tabKey in tabManagers && prodName in tabManagers[tabKey].producers)) {
                   throw new Error('Producer not found');
                }
                if (!inner._tabCalls) {
@@ -213,13 +218,15 @@ define('SBIS3.CONTROLS/LongOperations/ManagerLib',
                }
                return producer.history(operationId, count, filter);
             }
-            else
-            if (tabKey in inner._tabManagers && prodName in inner._tabManagers[tabKey]) {
-               if (!inner._tabCalls) {
-                  _init(this);
+            else {
+               var tabManagers = inner._tabManagers;
+               if (tabKey in tabManagers && prodName in tabManagers[tabKey].producers) {
+                  if (!inner._tabCalls) {
+                     _init(this);
+                  }
+                  // Если вкладка не закрыта и продюсер не раз-регистрирован
+                  return inner._tabCalls.call(tabKey, prodName, 'history', filter ? [operationId, count, filter] : [operationId, count], LongOperationHistoryItem);
                }
-               // Если вкладка не закрыта и продюсер не раз-регистрирован
-               return inner._tabCalls.call(tabKey, prodName, 'history', filter ? [operationId, count, filter] : [operationId, count], LongOperationHistoryItem);
             }
             return Deferred.fail('Not available');
          }
@@ -267,8 +274,9 @@ define('SBIS3.CONTROLS/LongOperations/ManagerLib',
                   throw new Error('Unknown result type');
                }
                var inner = protectedOf(self);
+               var tabManagers = inner._tabManagers;
                // Проверить, что продюсер есть и не был раз-регистрирован за время ожидания
-               var prodName = (member.tab === inner._tabKey ? inner._producers[member.producer] : member.tab in inner._tabManagers && member.producer in inner._tabManagers[member.tab]) ? member.producer : null;
+               var prodName = (member.tab === inner._tabKey ? inner._producers[member.producer] : member.tab in tabManagers && member.producer in tabManagers[member.tab].producers) ? member.producer : null;
                // Если продюсер найден
                if (prodName) {
                   var values = result instanceof DataSet ? result.getAll() : result;
@@ -287,14 +295,14 @@ define('SBIS3.CONTROLS/LongOperations/ManagerLib',
                      throw new Error('Unknown result type');
                   }
                   if (len) {
-                     var useMemberTab = member.tab === inner._tabKey ? !inner._producers[member.producer].hasCrossTabData() : !inner._producers[member.producer] || !inner._tabManagers[member.tab][member.producer].hasCrossTabData();
+                     var useMemberTab = member.tab === inner._tabKey ? !inner._producers[member.producer].hasCrossTabData() : !inner._producers[member.producer] || !tabManagers[member.tab].producers[member.producer].hasCrossTabData();
                      values[iterate](function (v) {
                         // Значение должно быть экземпляром SBIS3.CONTROLS/LongOperations/Entry и иметь правилное имя продюсера
                         if (!(v instanceof LongOperationEntry && v.producer === prodName)) {
                            throw new Error('Invalid result');
                         }
                         if (v.tabKey) {
-                           if (v.tabKey !== inner._tabKey && !(inner._tabManagers[v.tabKey] && inner._tabManagers[v.tabKey][member.producer])) {
+                           if (v.tabKey !== inner._tabKey && !(tabManagers[v.tabKey] && tabManagers[v.tabKey].producers[member.producer])) {
                               v.tabKey = null;
                            }
                         }
@@ -423,6 +431,16 @@ define('SBIS3.CONTROLS/LongOperations/ManagerLib',
                return inner._tabCalls.callBatch(targets, 'fetch', [query], LongOperationEntry);
             }
          }.bind(self);
+
+         /**
+          * Указывает на то, что менеджер теперь полностью функционален
+          * @protected
+          * @type {boolean}
+          */
+         protectedOf(self)._isFulloperational = true;
+
+         // Уведомить подписчиков в других вкладках о том, что менеджер теперь полностью функционален
+         protectedOf(self)._tabChannel.notify('LongOperations:Manager:onActivity', {type:'fulloperational', tab:protectedOf(self)._tabKey});
       };
 
       var ObjectAssign = Object.assign || function(d){return [].slice.call(arguments,1).reduce(function(r,s){return Object.keys(s).reduce(function(o,n){o[n]=s[n];return o},r)},d)};
