@@ -9,7 +9,8 @@ define("File/Attach", ["require", "exports", "File/Attach/Lazy", "Core/core-simp
      *      },
      *      binding: {
      *          create: "ЗагрузитьВНикуда"
-     *      }
+     *      },
+     *      fileProperty: "Файл"
      *   }
      *   var attach = new Attach({
      *       // Возможные способы загрузки
@@ -51,11 +52,7 @@ define("File/Attach", ["require", "exports", "File/Attach/Lazy", "Core/core-simp
      *          // Для выбора файлов через окно СБИС Плагин'a
      *          new Dialogs() // модуль опций: SBIS3.File/Attach/Option/Getters/Dialogs
      *      ],
-     *      // Конфигурация {@link File/Attach/Base}
-     *      attachOptions: {
-     *          fileProperty: "Файл",
-     *          multiSelect: true
-     *      }
+     *      multiSelect: true
      *   });
      *
      *   self.getChildControlByName("fsBtn").subscribe("onActivated", function(){
@@ -83,23 +80,17 @@ define("File/Attach", ["require", "exports", "File/Attach/Lazy", "Core/core-simp
     var Attach = CoreExtend.extend(Abstract, {
         _$options: {
             /**
-             * @cfg {Object} Объект конфигурирования {@link File/Attach/Base}
-             * @example
-             * <pre>
-             *   var attach = new Attach({
-             *      attachOptions: {
-             *          multiSelect: true
-             *      }
-             *      ...
-             *   });
-             * </pre>
-             * @see File/Attach/Base
+             * @cfg {Boolean} Множественный выбор.
+             * <ul>
+             * <li> true - результат выбора ресурсов .choose попаддёт во внутренее состояние для загрузки вместе
+             * с результатом предыдущих выборок </li>
+             * <li> false - внутренее состояние для загрузки будет содержать только результат последней выборки </li>
+             * </ul>
+             * @name File/Attach#multiSelect
              */
-            attachOptions: {
-                fileProperty: "Файл"
-            },
+            multiSelect: true,
             /**
-             * @cfg {Array.<File/Attach/Option/Source>} Набор параметров для регестрации ISource
+             * @cfg {Array<File/Attach/Option/Source>} Набор параметров для регестрации ISource
              * @example
              * Загрузка на бизнеслогику
              * <pre>
@@ -112,6 +103,7 @@ define("File/Attach", ["require", "exports", "File/Attach/Lazy", "Core/core-simp
              *          binding: {
              *              create: "ЗагрузитьВНикуда"
              *          },
+             *          fileProperty: "File"
              *       }),
              *       ...
              *   });
@@ -175,10 +167,10 @@ define("File/Attach", ["require", "exports", "File/Attach/Lazy", "Core/core-simp
             var _this = this;
             Attach.superclass.constructor.apply(this, arguments);
             this._$options = Object.assign({}, this._$options, opt);
-            this._attacher = new Lazy(this._$options.attachOptions);
+            this._attacher = new Lazy({ multiSelect: this._$options.multiSelect });
             var events = [
                 "onProgress", "onWarning", "onLoadedFolder", "onLoaded", "onChooseError", "onChosen",
-                "onLoadError", "onLoadResourceError", "onLoadedResource"
+                "onLoadError", "onLoadResourceError", "onLoadedResource", 'onBeforeLoad'
             ];
             this._publish.apply(this, events);
             // пробрасываем события загрузки файлов
@@ -447,4 +439,32 @@ define("File/Attach", ["require", "exports", "File/Attach/Lazy", "Core/core-simp
  *        alert(error);
  *    });
  * </pre>
+ */
+/**
+ * @event onBeforeLoad
+ * Событые выбора ресурса
+ * <wiTag group="Управление">
+ * Обработка результата:
+ * <ul>
+ *     <li> false - отмена загрузки. При этом ресурсы, предназначенные для загрузки пропадут из внутреннего состояния
+ *     и не попадут в вледующую загрузку </li>
+ *     <li> object - объект дополнительных данных для запроса meta будет заменён на переданный результат </li>
+ * </ul>
+ *
+ * @name File/Attach#onBeforeLoad
+ * @param {Core/EventObject} eventObject Дескриптор события.
+ * @param {Array.<File/IResource>} resource загружаемый ресурс
+ * @param {Object} meta Дополнительные мета-данные для отправки.
+ * @example
+ * <pre>
+ *    attach.subscribe('onBeforeLoad', function(event, files, meta) {
+ *       if (isEmpty(meta)) {
+ *          event.setResult(self.getUploadParam())
+ *       }
+ *    });
+ * </pre>
+ *
+ * @see File/LocalFile
+ * @see File/LocalFileLink
+ * @see File/HttpFileLink
  */
