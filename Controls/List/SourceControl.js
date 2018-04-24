@@ -271,6 +271,8 @@ define('Controls/List/SourceControl', [
     */
 
    var SourceControl = Control.extend({
+      //TODO временный state, не нужен после выполнения задачи https://online.sbis.ru/opendoc.html?guid=eddeb809-98cd-4708-a75c-a5de7b87b145
+      _tempDataId: undefined,
       _template: SourceControlTpl,
       iWantVDOM: true,
       _isActiveByClick: false,
@@ -292,7 +294,14 @@ define('Controls/List/SourceControl', [
       _topPlaceholderHeight: 0,
       _bottomPlaceholderHeight: 0,
 
+      getDataId: function() {
+         return this._tempDataId;
+      },
+
       constructor: function(cfg) {
+         if (cfg._tempDataId) {
+            this._tempDataId = cfg._tempDataId;
+         }
          SourceControl.superclass.constructor.apply(this, arguments);
          this._publish('onDataLoad');
       },
