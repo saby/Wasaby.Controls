@@ -7,6 +7,8 @@
          class="controls-ExportCustomizer-Formatter-View__formatterMenu"
          name="controls-ExportCustomizer-Formatter-View__formatterMenu"
          caption="{{menuTitle}}"
+         tooltip="{[НастройщикЭкспорта@@Редактировать формат отображения]}"
+         icon="sprite:icon-16 icon-Edit icon-primary"
          pickerClassName=""
          items="{{_menuItems}}"
          idProperty="id"
@@ -14,10 +16,15 @@
          handlers="{{undefined}}"
       />
    </div>
-   <SBIS3.CONTROLS:Button
+   <img
+      class="controls-ExportCustomizer-Formatter-View__preview"
+      src="{{previewUrl || '/resources/SBIS3.CONTROLS/ExportCustomizer/_Formatter/img/formatter.png'}}"
+      title="{[НастройщикЭкспорта@@Редактировать формат отображения в браузере]}"
+   />
+   <!--^^^<SBIS3.CONTROLS:Button
       className="controls-ExportCustomizer-Formatter-View__preview"
       name="controls-ExportCustomizer-Formatter-View__preview"
       command="editInBrowser"
       caption=""
-   />
+   />-->
 </div>

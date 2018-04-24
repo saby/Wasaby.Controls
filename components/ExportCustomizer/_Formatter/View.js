@@ -67,7 +67,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          init: function () {
             View.superclass.init.apply(this, arguments);
             this._formatterMenu = this.getChildControlByName('controls-ExportCustomizer-Formatter-View__formatterMenu');
-            this._preview = this.getChildControlByName('controls-ExportCustomizer-Formatter-View__preview');
+            this._preview = this.getContainer().find('.controls-ExportCustomizer-Formatter-View__preview');
+            //^^^this._preview = this.getChildControlByName('controls-ExportCustomizer-Formatter-View__preview');
             this._bindEvents();
          },
 
