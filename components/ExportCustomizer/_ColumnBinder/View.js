@@ -9,8 +9,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
    [
       'Core/helpers/Object/isEqual',
       'SBIS3.CONTROLS/CompoundControl',
-      'tmpl!SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View'/*,
-      'css!SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View'*/
+      'tmpl!SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
+      'css!SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View'
    ],
 
    function (cObjectIsEqual, CompoundControl, dotTplFn) {
@@ -64,8 +64,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
             var filelds = options.filelds;
             options._rows = (filelds && filelds.length ? filelds : [{field:'', title:emptyTitle}]).map(function (v, i) { return {id:v.field, column:_toLetter(i), field:v.title}; });
             options._columns = [
-               {field:'column', title:options.columnsTitle, className:undefined},
-               {field:'field', title:options.fieldsTitle, className:undefined}
+               {field:'column', title:options.columnsTitle},
+               {field:'field', title:options.fieldsTitle}
             ];
             options._rowActions = [];
             return options;
@@ -80,6 +80,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
          },
 
          _bindEvents: function () {
+            //При клике по строке открыть редактор колонок
+            this.subscribeTo(this._grid, 'onItemActivate', function (evtName, meta) {
+               //^^^
+            });
+
             /*^^^this.subscribeTo(this._grid, 'on^^^', function (evtName) {
                var ^^^ = ^^^;
                this._options.^^^ = ^^^;

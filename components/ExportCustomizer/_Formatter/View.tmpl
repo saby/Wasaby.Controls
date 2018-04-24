@@ -1,11 +1,11 @@
 <div class="controls-ExportCustomizer-Formatter-View">
    <div class="controls-ExportCustomizer-Formatter-View__head">
-      <div class="controls-ExportCustomizer-Formatter-View__head__title">
+      <div class="controls-ExportCustomizer-Formatter-View__title">
          <ws:if data="{{title}}">{{title}}</ws:if><ws:else>{[НастройщикЭкспорта@@Формат отображения]}</ws:else>
       </div>
       <SBIS3.CONTROLS:WSControls:Buttons:MenuButton
-         class="controls-ExportCustomizer-Formatter-View__head__edit"
-         name="controls-ExportCustomizer-Formatter-View__head__edit"
+         class="controls-ExportCustomizer-Formatter-View__formatterMenu"
+         name="controls-ExportCustomizer-Formatter-View__formatterMenu"
          caption="{{menuTitle}}"
          pickerClassName=""
          items="{{_menuItems}}"
@@ -16,6 +16,7 @@
    </div>
    <SBIS3.CONTROLS:Button
       className="controls-ExportCustomizer-Formatter-View__preview"
+      name="controls-ExportCustomizer-Formatter-View__preview"
       command="editInBrowser"
       caption=""
    />

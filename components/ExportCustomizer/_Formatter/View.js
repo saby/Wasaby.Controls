@@ -8,8 +8,8 @@
 define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
    [
       'SBIS3.CONTROLS/CompoundControl',
-      'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Formatter/View'/*,
-      'css!SBIS3.CONTROLS/ExportCustomizer/_Formatter/View'*/
+      'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
+      'css!SBIS3.CONTROLS/ExportCustomizer/_Formatter/View'
    ],
 
    function (CompoundControl, dotTplFn) {
@@ -47,7 +47,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                previewUrl: null
             },
             // Контрол выбора способа форматирования
-            _menu: null
+            _formatterMenu: null,
+            // Контрол предпросмотра
+            _preview: null
          },
 
          _modifyOptions: function () {
@@ -64,7 +66,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
 
          init: function () {
             View.superclass.init.apply(this, arguments);
-            this._menu = this.getChildControlByName('controls-ExportCustomizer-Formatter-View__head__edit');
+            this._formatterMenu = this.getChildControlByName('controls-ExportCustomizer-Formatter-View__formatterMenu');
+            this._preview = this.getChildControlByName('controls-ExportCustomizer-Formatter-View__preview');
             this._bindEvents();
          },
 

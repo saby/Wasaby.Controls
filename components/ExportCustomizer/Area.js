@@ -208,9 +208,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          _reshapeOptions: function (options) {
             options._scopes = {
                columnBinder: {
-                  title: options.columnBinderTitle,
-                  columnsTitle: options.columnBinderColumnsTitle,
-                  fieldsTitle: options.columnBinderFieldsTitle,
+                  title: options.columnBinderTitle || undefined,
+                  columnsTitle: options.columnBinderColumnsTitle || undefined,
+                  fieldsTitle: options.columnBinderFieldsTitle || undefined,
                   fields: options.columnBinderFields
                },
                formatter: {
