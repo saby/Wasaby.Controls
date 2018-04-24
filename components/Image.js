@@ -344,6 +344,7 @@ define('SBIS3.CONTROLS/Image',
                _image: undefined,
                _buttonReset: undefined,
                _attach: undefined,
+               _uploadParams: undefined,
                _buttonEdit: undefined,
                _buttonUpload: undefined,
                _boundEvents: undefined,
@@ -505,12 +506,10 @@ define('SBIS3.CONTROLS/Image',
                this._container.mouseleave(this._boundEvents.onImageMouseLeave);
             },
             _onBeginLoad: function() {
-               var
-                  imageInstance = this,
-                  result = imageInstance._notify('onBeginLoad', this);
+               var result = this._notify('onBeginLoad', this);
                Indicator.setMessage(rk('Загрузка...'));
                if (result !== false) {
-                  toggleLocalIndicator(imageInstance._container, true);
+                  toggleLocalIndicator(this._container, true);
                }
                return result;
             },
@@ -954,11 +953,23 @@ define('SBIS3.CONTROLS/Image',
                   Indicator.hide();
                   return;
                }
-               attach.upload().addCallback(function(results) {
+               attach.upload(this._uploadParams || {}).addCallback(function(results) {
                   results.forEach(function(result) {
                      self._onEndLoad(result)
                   })
                });
+            },
+            /**
+             * Устанавливает параметры при загрузке файла
+             *
+             * Аналог метода из FileLoaderAbstract, который раньше прокидывался в onBeginLoad
+             * и там докидывались параметры загрузки
+             * Сейчас в событие не отправляем внутрености компонента, а шлём себя, и сами разруливаем параметризацию загрузки
+             *
+             * @param {Object} params Объект с параметрами
+             */
+            setUploadParams: function(params) {
+                this._uploadParams = params;
             }
          });
 
