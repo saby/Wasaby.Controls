@@ -125,17 +125,17 @@ define('Controls/Input/resources/InputRender/InputRender',
 
             if (this._options.validationErrors && this._options.validationErrors.length) {
                result = 'error';
-            } else if (this.isEnabled()) {
-               result = 'default';
-            } else {
+            } else if (this._options.readOnly) {
                result = 'disabled';
+            } else {
+               result = 'default';
             }
 
             return result;
          },
 
          _focusinHandler: function(e) {
-            if (this.isEnabled() && this._options.selectOnClick) {
+            if (!this._options.readOnly && this._options.selectOnClick) {
                e.target.select();
             }
          },
