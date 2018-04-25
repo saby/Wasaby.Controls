@@ -107,13 +107,14 @@ define('Controls-demo/Demo/Page',
          constructor: function(cfg){
             DemoPage.superclass.constructor.apply(this, arguments);
             this.ctxData = new AppData(cfg);
+            this.scrollData = new ScrollData({
+               pagingVisible: false
+            });
          },
          _getChildContext: function () {
             return {
                AppData: this.ctxData,
-               ScrollData: new ScrollData({
-                  pagingVisible: this._pagingVisible
-               })
+               ScrollData: this.scrollData
             };
          }
       });
