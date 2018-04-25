@@ -1,0 +1,187 @@
+.controls-MonthView {
+   text-align: center;
+   width: @width_MontView;
+   background: @background_MonthView;
+}
+
+.controls-MonthView__dayTable {
+   table-layout: fixed;
+   vertical-align: middle;
+   width: 100%;
+   border-spacing: @spacing_MonthView-item;
+}
+
+.controls-MonthView__tableHead {
+   font-size: @font-size_MontView-weekDayHeader;
+   text-align: center;
+}
+
+.controls-MonthView__tableElement {
+   position: relative;
+   // TODO: высота должна задаваться через высоту контрола, а ячейки должны растягиваться. Переделать с уходом от таблицы.
+   height: @height_MonthView-item;
+   font-size: @font-size_MonthView-item;
+}
+
+.controls-MonthView__weekDayHeader {
+   position: relative;
+   height: @height_MonthView-item;
+   color: @color_MonthView-weekDayHeader;
+}
+
+.ws-is-desktop-platform {
+   .controls-MonthView__hover-selectableItem {
+      &:hover {
+         background: @background_MonthView-item-hover;
+      }
+   }
+
+   .controls-MonthView__border-currentMonthDay-unselected {
+      &:hover {
+         outline: 1px solid @border-color__MonthView-item-hover;
+      }
+   }
+}
+
+.controls-MonthView__item-selectedStart,
+.controls-MonthView__item-selectedEnd,
+.controls-MonthView__item-selectedInner,
+.controls-MonthView__item-selectedStart-unfinished,
+.controls-MonthView__item-selectedEnd-unfinished {
+   outline: 1px solid @border-color__MonthView-item-selected;
+}
+
+.controls-MonthView__item-selectedStart,
+.controls-MonthView__item-selectedEnd {
+   font-weight: bold;
+}
+
+.controls-MonthView__item-selectedStart:before {
+   content: "";
+   position: absolute;
+   height: 100%;
+   width: @width__MonthView-item-selected-startEnd-hover;
+   background-color: @border-color__MonthView-item-selected-startEnd-hover;
+   top: 0;
+   left: -1px;
+   z-index: 1;
+}
+
+.controls-MonthView__item-selectedEnd:after {
+   content: "";
+   position: absolute;
+   height: 100%;
+   width:  @width__MonthView-item-selected-startEnd-hover;
+   background-color: @border-color__MonthView-item-selected-startEnd-hover;
+   top: 0;
+   right: -1px;
+}
+
+.controls-MonthView__backgroundColor-currentMonthDay-weekend-unselected-enabled,
+.controls-MonthView__backgroundColor-currentMonthDay-workday-unselected-enabled {
+   background: @background_MonthView-item;
+}
+.controls-MonthView__backgroundColor-currentMonthDay-weekend-selected-enabled,
+.controls-MonthView__backgroundColor-currentMonthDay-workday-selected-enabled {
+   background: @background_MonthView-item-selected;
+}
+
+.controls-MonthView__backgroundColor-currentMonthDay-weekend-selected-startend-unfinished-enabled,
+.controls-MonthView__backgroundColor-currentMonthDay-workday-selected-startend-unfinished-enabled {
+   background: @background_MonthView-item-hover;
+}
+
+.controls-MonthView__backgroundColor-currentMonthDay-weekend-unselected-disabled,
+.controls-MonthView__backgroundColor-currentMonthDay-workday-unselected-disabled {
+   background: greyscale(lighten(@background_MonthView-item, 3%));
+}
+.controls-MonthView__backgroundColor-currentMonthDay-weekend-selected-disabled,
+.controls-MonthView__backgroundColor-currentMonthDay-workday-selected-disabled {
+   background: greyscale(lighten(@background_MonthView-item-selected, 15%));
+}
+
+.controls-MonthView__textColor-currentMonthDay-workday-enabled {
+   color: @color_MonthView-item;
+   //&:hover {
+   //   color: @color_MonthView-item-hover;
+   //}
+}
+.controls-MonthView__textColor-currentMonthDay-weekend-enabled {
+   color: @color_MonthView-item-weekend;
+}
+.controls-MonthView__textColor-currentMonthDay-workday-disabled {
+   color:  greyscale(lighten(@color_MonthView-item, 30%));
+}
+.controls-MonthView__textColor-currentMonthDay-weekend-disabled {
+   color: greyscale(lighten(@color_MonthView-item-weekend, 20%));
+}
+
+.controls-MonthView__today {
+   color: @color_MonthView-item-today;
+}
+.controls-MonthView__item-today-background {
+   position: absolute;
+   //height: calc(100% - 2px);
+   //width: calc(100% - 2px);
+   top: @background-spacing_MonthView-item-today;
+   bottom: @background-spacing_MonthView-item-today;
+   left: @background-spacing_MonthView-item-today;
+   right: @background-spacing_MonthView-item-today;
+   border-radius: @border-radius_MonthView-item-today;
+   background-color: @background-color_MonthView-item-today;
+}
+
+.controls-MonthView__item-title {
+   position: relative;
+}
+// Переделать, не привязываться к фиксированной высоте ячеек
+.ws-is-webkit,
+.ws-is-mobile-chrome-ios,
+.ws-is-ie {
+   .controls-MonthView__item-title{
+      height: @height_MonthView-item;
+      line-height: @height_MonthView-item;
+      display: block;
+   }
+}
+
+.controls-MonthView__cursor-item {
+   cursor: pointer;
+}
+
+.controls-MonthView__prevMonth,
+.controls-MonthView__nextMonth {
+   color: @color_MonthView-item-prev-next-month;
+
+   &:hover {
+      color: @color_MonthView-item-prev-next-month-hover;
+   }
+}
+.ws-is-desktop-platform {
+   .controls-MonthView__prevMonth,
+   .controls-MonthView__nextMonth {
+      &:hover {
+         color: @color_MonthView-item-prev-next-month-hover;
+      }
+   }
+}
+
+.controls-MonthView__dayTitle {
+   display: block;
+   .box-sizing(border-box);
+   height: 100%;
+}
+
+// В хром на ipad установлен класс ws-is-old-webkit, но не установлен ws-is-webkit. В текущую версию фиксим по месту.
+.ws-is-old-webkit,
+.ws-is-webkit {
+   // в 3.17.150 вместе с упрощение селекторов сделать везде однотипно(через position: absolute),
+   // а исключение сделать для ie. Либо подумать как свертстать по дургому.
+   .controls-MonthView__dayTitle {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+   }
+}

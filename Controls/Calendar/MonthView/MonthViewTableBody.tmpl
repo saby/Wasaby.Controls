@@ -1,0 +1,19 @@
+<tbody class="controls-MonthView__tableBody">
+   <ws:for data="index, week in monthViewModel.getMonthArray()">
+      <tr class="controls-MonthView__tableRow">
+         <ws:for data="indexOfDay, value in week">
+            <ws:if data="{{value.isCurrentMonth}}">
+               <td on:click="_dayClickHandler(value.date)"
+                   on:mouseenter="_mouseEnterHandler(value.date)"
+                   attr:class="controls-MonthView__tableElement {{ monthViewModel._prepareClass({'value': value}) }}"
+               >
+                  <ws:partial template="{{_dayTmpl}}" value="{{value}}"/>
+               </td>
+            </ws:if>
+            <ws:else>
+               <td attr:class="controls-MonthView__tableElement {{monthViewModel._prepareClass({'value': value}) }}"></td>
+            </ws:else>
+         </ws:for>
+      </tr>
+   </ws:for>
+</tbody>

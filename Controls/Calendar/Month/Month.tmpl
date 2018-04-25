@@ -1,0 +1,24 @@
+<Controls.Calendar.Controllers.DateRangeSelectionController
+   name="selectionController"
+
+   view="{{_view}}"
+   viewOptions="{{ {
+      'month': _options.month,
+      'showCaption': _options.showCaption,
+      'showWeekdays': _options.showWeekdays,
+      'dayFormatter': _dayFormatter,
+      'monthViewModel': _monthViewModel
+   } }}"
+
+   selectionType="{{_options.selectionType}}"
+   quantum="{{_options.quantum}}"
+
+   startValue="{{_options.startValue}}"
+   endValue="{{_options.endValue}}"
+
+   selectionProcessing="{{_options.selectionProcessing}}"
+   selectionBaseValue="{{_options.selectionBaseValue}}"
+   selectionHoveredValue="{{_options.selectionHoveredValue}}"
+
+   on:rangeChanged="_onRangeChangedHandler()"
+/>

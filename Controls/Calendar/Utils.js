@@ -43,37 +43,32 @@ define('Controls/Calendar/Utils', [], function() {
       },
          
       /**
-          * Получить массив недель (строка) с массивом дней (ячейка) для MonthTableBody
-          * @param {Number} year
-          * @param {Number} month
-          * @returns {Array}
-          */
-      getWeeksArray: function(year, month) {
+       * Получить массив недель (строка) с массивом дней (ячейка) для MonthTableBody
+       * @param {Date} date месяц
+       * @returns {Array}
+       */
+      getWeeksArray: function(date) {
          var
             weeksArray = [],
-            daysInMonth = this.getDaysInMonth(year, month),
+            year = date.getFullYear(),
+            month = date.getMonth() + 1,
             weeksInMonth = this.getWeeksInMonth(year, month),
-            date = this.getFirstDayOffset(year, month) * -1 + 1;
-            
+            monthDate = this.getFirstDayOffset(year, month) * -1 + 1;
+
+
          for (var w = 0; w < weeksInMonth; w++) {
             var daysArray = [];
-               
+
             for (var d = 0; d < 7; d++) {
-               if (date > 0 && date <= daysInMonth) {
-                  daysArray.push(date);
-               } else {
-                  daysArray.push(0);
-               }
-               date++;
+               daysArray.push(new Date(year, month - 1, monthDate));
+               monthDate++;
             }
             weeksArray.push(daysArray);
          }
-            
+
          return weeksArray;
       }
-         
    };
-      
+
    return Utils;
-}
-);
+});
