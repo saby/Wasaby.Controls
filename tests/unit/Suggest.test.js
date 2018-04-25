@@ -133,7 +133,7 @@ define(
             document.body.append(suggestDomNode);
             
             var suggest = new Suggest();
-            suggest.mountToDom(suggestDomNode, {});
+            suggest.mountToDom(suggestDomNode, {}, suggest);
             suggest._focusOut = function() {
                focusOutHandlerCalled = true;
             };

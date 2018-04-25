@@ -1,6 +1,9 @@
 <html attr:lang="ru" attr:xml:lang="ru" attr:xmlns="http://www.w3.org/1999/xhtml" attr:key="1_" attr:id="root"
       attr:component="Controls/Application">
 <head key="1_1_">
+   <meta name="viewport" content="width=device-width, initial-scale=1"/>
+   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+   
    <script key="ws-config">
       window.wsConfig = {
          wsRoot: '{{wsRoot}}',
@@ -9,9 +12,7 @@
       };
    </script>
    <ws:if data="{{ _options.head }}">
-      <ws:for data="i in _options.head">
-         <ws:partial template="{{ i }}"/>
-      </ws:for>
+      <ws:partial template="{{ _options.head }}"/>
    </ws:if>
    <link rel="stylesheet" href="{{wsRoot}}css/core.css" type="text/css" key="core-css"/>
    <ws:if data="{{ cssLinks }}">
@@ -20,8 +21,6 @@
       </ws:for>
    </ws:if>
    <title key="title">{{ title }}</title>
-   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 </head>
 <Controls.Event.Listener name="scrollDetect" register="scroll" attr:fixCompatible="1">
    <Controls.Event.Listener name="resizeDetect" register="resize" attr:fixCompatible="1">

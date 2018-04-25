@@ -172,6 +172,7 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
 
                                     if(reportItem) {
                                        reportItem.value = reportItem.resetValue;
+                                       reportItem.caption = reportItem.hasOwnProperty('resetCaption') ? reportItem.resetCaption : '';
                                        // Если отменили сохранение фильтра, то из сформированной по фильтрам строки, надо вырезать подстроку,
                                        // которая отвечала за отображение этого фильтра
                                        textValue = textValue.replace(new RegExp(',?\\s?' + reportItem[self._options._filterItemTextProperty]), '');
@@ -240,7 +241,7 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
                   viewBlock.toggleClass('ws-hidden', !view.getItems().getCount());
                }
    
-               listsDef.getResult().addCallback(function() {
+               listsDef.getResult().addCallback(function(res) {
                   self.subscribeTo(self._favoriteView, 'onItemsReady', function() {
                      self._favoriteView.getItems().prepend(favoriteAllList.getHistory().clone());
                      checkItems(self._favoriteView);
@@ -261,6 +262,7 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
                   });
    
                   self.processViews(checkItems);
+                  return res;
                });
             });
 

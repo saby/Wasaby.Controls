@@ -165,7 +165,7 @@ define('Controls/Filter/Button/OldPanelOpener',
             var self = this;
             
             /* Не показываем кнопку фильтров, если она выключена */
-            if (!this.isEnabled()) {
+            if (this._options.readOnly) {
                return;
             }
             

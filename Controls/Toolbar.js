@@ -2,7 +2,7 @@ define('Controls/Toolbar', [
    'Core/Control',
    'Controls/Controllers/SourceController',
    'tmpl!Controls/Toolbar/Toolbar',
-   'tmpl!Controls/Toolbar/toolbarItemTemplate',
+   'tmpl!Controls/Toolbar/ToolbarItemTemplate',
    'WS.Data/Collection/RecordSet',
    'WS.Data/Collection/Factory/RecordSet',
    'Controls/Utils/Toolbar',
@@ -56,7 +56,7 @@ define('Controls/Toolbar', [
    var Toolbar = Control.extend({
       showType: tUtil.showType,
       _template: template,
-      _itemTemplate: toolbarItemTemplate,
+      _defaultItemTemplate: toolbarItemTemplate,
       _needShowMenu: null,
       _menuItems: null,
       _parentProperty: null,

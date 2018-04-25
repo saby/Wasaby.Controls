@@ -44,7 +44,7 @@ define(['Controls/Toggle/Switch'], function (Switch) {
          it('enabled checked', function() {
             var options = {
                value: true,
-               enabled: true
+               readOnly: false
             };
             SW._beforeMount(options);
             assert.equal('controls-Switch__marker_enabled_checked', SW._markerState);
@@ -52,7 +52,7 @@ define(['Controls/Toggle/Switch'], function (Switch) {
          it('disabled checked', function() {
             var options = {
                value: true,
-               enabled: false
+               readOnly: true
             };
             SW._beforeMount(options);
             assert.equal('controls-Switch__marker_disabled_checked', SW._markerState);
@@ -60,7 +60,7 @@ define(['Controls/Toggle/Switch'], function (Switch) {
          it('enabled unchecked', function() {
             var options = {
                value: false,
-               enabled: true
+               readonly: false
             };
             SW._beforeMount(options);
             assert.equal('controls-Switch__marker_enabled_unchecked', SW._markerState);
@@ -68,7 +68,7 @@ define(['Controls/Toggle/Switch'], function (Switch) {
          it('disabled unchecked', function() {
             var options = {
                value: false,
-               enabled: false
+               readOnly: true
             };
             SW._beforeMount(options);
             assert.equal('controls-Switch__marker_disabled_unchecked', SW._markerState);
@@ -79,7 +79,7 @@ define(['Controls/Toggle/Switch'], function (Switch) {
          it('enabled checked', function() {
             var options = {
                value: true,
-               enabled: true
+               readOnly: false
             };
             SW._beforeUpdate(options);
             assert.equal('controls-Switch__marker_enabled_checked', SW._markerState);
@@ -87,7 +87,7 @@ define(['Controls/Toggle/Switch'], function (Switch) {
          it('disabled checked', function() {
             var options = {
                value: true,
-               enabled: false
+               readOnly: true
             };
             SW._beforeUpdate(options);
             assert.equal('controls-Switch__marker_disabled_checked', SW._markerState);
@@ -95,7 +95,7 @@ define(['Controls/Toggle/Switch'], function (Switch) {
          it('enabled unchecked', function() {
             var options = {
                value: false,
-               enabled: true
+               readOnly: false
             };
             SW._beforeUpdate(options);
             assert.equal('controls-Switch__marker_enabled_unchecked', SW._markerState);
@@ -103,7 +103,7 @@ define(['Controls/Toggle/Switch'], function (Switch) {
          it('disabled unchecked', function() {
             var options = {
                value: false,
-               enabled: false
+               readOnly: true
             };
             SW._beforeUpdate(options);
             assert.equal('controls-Switch__marker_disabled_unchecked', SW._markerState);

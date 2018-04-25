@@ -5,7 +5,7 @@ define([
    'Controls/List/ItemActions/ItemActionsControl',
    'WS.Data/Source/Memory',
    'WS.Data/Collection/RecordSet',
-   'Controls/List/SimpleList/ListViewModel',
+   'Controls/List/ListViewModel',
    'Core/core-instance'
 ], function( ItemActionsControl, MemorySource, RecordSet, ListViewModel,cInstance ) {
 
@@ -193,7 +193,7 @@ define([
                itemActionsOpener: {
                   open: function(args) {
                      assert.isFalse(args.target);
-                     assert.isTrue( cInstance.instanceOfModule(args.templateOptions.items, 'WS.Data/Collection/RecordSet'));
+                     assert.isTrue( cInstance.instanceOfModule(args.componentOptions.items, 'WS.Data/Collection/RecordSet'));
                   }
                }
             };
@@ -230,7 +230,7 @@ define([
             itemActionsOpener: {
                open: function(args) {
                   assert.equal(target, args.target);
-                  assert.isTrue( cInstance.instanceOfModule(args.templateOptions.items, 'WS.Data/Collection/RecordSet'));
+                  assert.isTrue( cInstance.instanceOfModule(args.componentOptions.items, 'WS.Data/Collection/RecordSet'));
                }
             }
          };

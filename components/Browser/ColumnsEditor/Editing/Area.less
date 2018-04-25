@@ -59,7 +59,7 @@
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__head-preset-editor {
-   width: 100%;
+   max-width: @max-width-ColumnsEditor-Editing-Area__head-preset-editor;
    .flex-shrink(1);
    .controls-ItemsToolbar {
       top: 0;
@@ -74,8 +74,11 @@
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__Preset-item {
-   height: @height-ColumnsEditor-Editing-Area-head-preset;
-   padding-left: @padding-left-ColumnsEditor-Editing-Area__Preset-item;
+   height: @height-ColumnsEditor-Editing-Area__Preset-item;
+   padding: @padding-ColumnsEditor-Editing-Area__Preset-item;
+   .controls-Browser-ColumnsEditor-Preset-Dropdown__dropdown {
+      max-width: 100%;
+   }
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__Preset-input {
