@@ -1602,7 +1602,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             var size = {width:'', height:''};
             var css = [];
             if (0 < width) {
-               size.width = width + (isPixels ? 'px' : '%');
+               if (!isPixels && width > 100) {
+                  size.width = '100%';
+               } else {
+                  size.width = width + (isPixels ? 'px' : '%');
+               }
                css.push('width:' + size.width);
             }
             //не проставляем высоту если процентые размеры
@@ -2413,6 +2417,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                return {preview:size ? '/previewer' + '/r/' + size + '/' + size + url : null, original:url};
             });
             if (0 < width) {
+               if (!isPixels && width > 100) {
+                  width=100;
+                  height=100;
+               }
                var w = isPixels ? width : width*constants.baseAreaWidth/100;//this.getContainer().width()
                if (0 < height) {
                   promise.callback(Math.round(width < height ? w*height/width : w));
