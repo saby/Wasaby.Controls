@@ -704,12 +704,14 @@ define('SBIS3.CONTROLS/ListView',
                /**
                 * @cfg {String|null} Устанавливает режим подгрузки данных по скроллу.
                 * @remark
-                * По умолчанию, подгрузка осуществляется "вниз". Мы поскроллили и записи подгрузились вниз.
+                * По умолчанию подгрузка осуществляется "вниз". Мы поскроллили и записи подгрузились вниз.
                 * Но можно настроить скролл так, что записи будут загружаться по скроллу к верхней границе контейнера.
-                * Важно. Запросы к БЛ все так же будут уходить с увеличением номера страницы. V
+                * Важно! Запросы к БЛ все так же будут уходить с увеличением номера страницы.
                 * Может использоваться для загрузки истории сообщений, например.
-                * @variant down Подгружать данные при достижении дна контейнера (подгрузка "вниз").
-                * @variant up Подгружать данные при достижении верха контейнера (подгрузка "вверх").
+                * Подробное описание можно посмотреть в документах по настройке <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/navigations/infinite-scroll/">скроллинга</a> и <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/navigations/cursor/">курсора</a>.
+                * @variant down Подгружать данные при достижении нижней границы контейнера (подгрузка "вниз").
+                * @variant up Подгружать данные при достижении верхней границы контейнера (подгрузка "вверх").
+                * @variant both Подгружать данные в обе стороны ("вверх" и "вниз").
                 * @variant demand Подгружать данные при нажатии на кнопку "Еще...".
                 * Если метод возвращает n:true/false, то кнопка будет рисовать просто "Еще...".
                 * Если метод возвращает n: число записей - будет выводить число (например, "Еще 30").
@@ -901,10 +903,11 @@ define('SBIS3.CONTROLS/ListView',
                 */
                /**
                 * @cfg {ListViewNavigation} Устанавливает конфиг для контроллера навигации ListView
-                * Опция применяется для настройки навигации по курсору - https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/navigations/cursor/
+                * Опция применяется для настройки {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/navigations/cursor/ навигации по курсору}.
                 * @example
                 * Пример:
                 *
+                * <pre>
                 * // Импортируем компонент прямо в исходном коде.
                 * require(['SBIS3.CONTROLS/ListView'], function(List) {
                 *
@@ -932,6 +935,7 @@ define('SBIS3.CONTROLS/ListView',
                 *       }
                 *    });
                 * });
+                * </pre>
                 */
                navigation: null,
                /**
