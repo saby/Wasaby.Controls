@@ -3,16 +3,19 @@ define('Controls/BreadCrumbsController', [
    'tmpl!Controls/BreadCrumbsController/BreadCrumbsController',
    'tmpl!Controls/BreadCrumbs/resources/itemsTemplate',
    'tmpl!Controls/BreadCrumbs/resources/itemTemplate',
+   //TODO: сделать нормальный шаблон меню
+   'tmpl!Controls/BreadCrumbs/resources/menuItemTemplate',
    'WS.Data/Collection/RecordSet',
    'Core/helpers/Object/isEqual',
 
-   //TODO: только чтобы первый раз нормально посчитались размеры
+   //подключаю css-ку здесь чтобы первый раз нормально посчитались размеры
    'css!Controls/BreadCrumbs/BreadCrumbs'
 ], function(
    Control,
    template,
    itemsTemplate,
    itemTemplate,
+   menuItemTemplate,
    RecordSet,
    isEqual
 ) {
@@ -136,6 +139,36 @@ define('Controls/BreadCrumbsController', [
             width = measurer.clientWidth;
             document.body.removeChild(measurer);
             return width;
+         },
+
+         onCloseMenu: function(self, args) {
+            var
+               actionName = args && args.action,
+               event = args && args.event;
+
+            //todo: Особая логика событий попапа, исправить как будут нормально приходить аргументы
+            if (actionName === 'itemClick') {
+               var item = args.data && args.data[0] && args.data[0].getRawData();
+               self._onItemClick(event, {}, item);
+            }
+            self._children.menuOpener.close();
+         },
+
+         onItemClick: function(self, originalEvent, item, isDots) {
+            if (isDots) {
+               //оборачиваю айтемы в рекордсет чисто ради того, чтобы меню могло с ними работать
+               self._children.menuOpener.open({
+                  target: originalEvent.target,
+                  templateOptions: {
+                     items: new RecordSet({
+                        rawData: self._options.items
+                     }),
+                     itemTemplate: menuItemTemplate
+                  }
+               });
+            } else {
+               self._notify('itemClick', [item]);
+            }
          }
       },
 
@@ -157,6 +190,10 @@ define('Controls/BreadCrumbsController', [
       _visibleItems: [],
       _hasMenu: false,
 
+      _beforeMount: function() {
+         this._onCloseMenu = this._onCloseMenu.bind(this);
+      },
+
       _afterMount: function() {
          if (this._options.items && this._options.items.length > 0) {
             _private.calculateBreadCrumbsToDraw(this, _private.getItemsSizes(this), this._container.clientWidth - HOME_WIDTH);
@@ -170,23 +207,16 @@ define('Controls/BreadCrumbsController', [
          }, 0) + HOME_WIDTH;
       },
 
+      _onCloseMenu: function(args) {
+         _private.onCloseMenu(this, args);
+      },
+
       _onItemClick: function(e, originalEvent, item, isDots) {
-         if (isDots) {
-            //TODO: сейчас бы оборачивать айтемы в рекордсет чисто ради того, чтобы меню могло с ними работать
-            this._children.menuOpener.open({
-               target: originalEvent.target,
-               templateOptions: {
-                  items: new RecordSet({
-                     rawData: this._options.items
-                  })
-               }
-            });
-         } else {
-            this._notify('itemClick', [item]);
-         }
+         _private.onItemClick(this, originalEvent, item, isDots);
       },
 
       _onResize: function() {
+         this._children.menuOpener.close();
          //TODO: добавить shouldRedraw
          _private.calculateBreadCrumbsToDraw(this, _private.getItemsSizes(this), this._container.clientWidth - HOME_WIDTH);
       }

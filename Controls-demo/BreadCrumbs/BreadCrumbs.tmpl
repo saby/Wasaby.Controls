@@ -4,5 +4,6 @@
             display: none !important;
         }
     </style>
-    <Controls.BreadCrumbsController items="{{items}}" />
+    <Controls.BreadCrumbsController items="{{items}}"
+                                    on:itemClick="_onItemClick()" />
 </div>

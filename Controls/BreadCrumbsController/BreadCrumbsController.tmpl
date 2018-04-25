@@ -8,11 +8,14 @@
             name="menuOpener"
             keyProperty="id"
             className="controls-BreadCrumbsController__menu">
-        <ws:popupOptions closeByExternalClick="{{true}}">
-            <ws:corner vertical="top" horizontal="right"/>
+        <ws:popupOptions>
+            <ws:corner vertical="top"
+                       horizontal="right"/>
             <ws:horizontalAlign side="left"/>
+            <ws:eventHandlers onResult="{{_onCloseMenu}}"/>
         </ws:popupOptions>
     </Controls.Dropdown.Opener>
 
-    <Controls.Event.Emitter event="resize" on:resize="_onResize()"/>
+    <Controls.Event.Emitter event="resize"
+                            on:resize="_onResize()"/>
 </div>

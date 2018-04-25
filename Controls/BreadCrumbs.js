@@ -3,6 +3,7 @@ define('Controls/BreadCrumbs', [
    'tmpl!Controls/BreadCrumbs/BreadCrumbs',
    'tmpl!Controls/BreadCrumbs/resources/itemTemplate',
    'tmpl!Controls/BreadCrumbs/resources/itemsTemplate',
+   'tmpl!Controls/BreadCrumbs/resources/menuContentTemplate',
    'css!Controls/BreadCrumbs/BreadCrumbs'
 ], function(
    Control,

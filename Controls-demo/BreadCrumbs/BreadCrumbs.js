@@ -33,7 +33,11 @@ define('Controls-demo/BreadCrumbs/BreadCrumbs', [
 
    var BreadCrumbs = Control.extend({
       _template: template,
-      items: data
+      items: data,
+
+      _onItemClick: function(e, item) {
+         console.log(item);
+      }
    });
 
    return BreadCrumbs;
