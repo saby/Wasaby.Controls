@@ -117,9 +117,9 @@ define([
          var pg = new Paging(cfg1);
          pg.saveOptions(cfg1);
          //определяем нотифай, чтоб понять произошел ли он
-         pg._notify = function(eName, num) {
-            if (eName === 'onChangeSelectedPage') {
-               result = num;
+         pg._notify = function(eName, args) {
+            if (eName === 'selectedPageChanged') {
+               result = args[0];
             }
          };
 

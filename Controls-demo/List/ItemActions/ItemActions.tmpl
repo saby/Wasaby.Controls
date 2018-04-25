@@ -11,7 +11,7 @@
             class="test_list_1 itemActionsDemo__list itemActionsDemo__marginleft10">
 
         <ws:itemTemplate>
-            <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate">
+            <ws:partial template="tmpl!Controls/List/ItemTemplate">
                 <ws:contentTemplate>
                     <div style="padding: 3px;" on:click="_contentClick( itemTemplate.itemData)">
                         <div>{{itemTemplate.itemData.item.get('title')}}</div>
@@ -35,7 +35,7 @@
             class="test_list_2 itemActionsDemo__list itemActionsDemo__marginleft10">
 
         <ws:itemTemplate>
-            <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate">
+            <ws:partial template="tmpl!Controls/List/ItemTemplate">
                 <ws:contentTemplate>
                     <div style="padding: 4px;">
                         <div>{{itemTemplate.itemData.item.get('title')}}</div>

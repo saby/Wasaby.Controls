@@ -2,7 +2,7 @@
  * Created by kraynovdo on 17.11.2017.
  */
 define([
-   'Controls/List/SimpleList/ItemsViewModel',
+   'Controls/List/ItemsViewModel',
    'Controls/List/resources/utils/ItemsUtil',
    'WS.Data/Collection/RecordSet'
 ], function(ItemsViewModel, ItemsUtil, RecordSet){

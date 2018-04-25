@@ -2,15 +2,15 @@
  * Created by kraynovdo on 23.10.2017.
  */
 define([
-   'Controls/List/SourceControl',
+   'Controls/List/BaseControl',
    'Controls/List/resources/utils/ItemsUtil',
    'WS.Data/Source/Memory',
    'WS.Data/Collection/RecordSet',
-   'Controls/List/SimpleList/ListViewModel',
-   'Controls/List/SimpleList/ListView'
-], function(SourceControl, ItemsUtil, MemorySource, RecordSet, ListViewModel){
-   describe('Controls.List.SourceControl', function () {
-      var data, display, result, source, listViewModel, rs;
+   'Controls/List/ListViewModel',
+   'Controls/List/ListView'
+], function(BaseControl, ItemsUtil, MemorySource, RecordSet, ListViewModel){
+   describe('Controls.List.BaseControl', function () {
+      var data, display, result, source, rs;
       beforeEach(function() {
          data = [
             {
@@ -48,10 +48,6 @@ define([
             idProperty: 'id',
             data: data
          });
-         listViewModel = new ListViewModel ({
-            items : [],
-            idProperty: 'id'
-         });
          rs = new RecordSet({
             idProperty: 'id',
             rawData: data
@@ -61,12 +57,19 @@ define([
 
          var filter = {1: 1, 2: 2};
          var cfg = {
-            viewName : 'Controls/List/SimpleList/ListView',
+            viewName : 'Controls/List/ListView',
+            viewConfig: {
+               idProperty: 'id'
+            },
+            viewModelConfig: {
+               items : [],
+               idProperty: 'id'
+            },
+            viewModelConstructor: ListViewModel,
             source: source,
-            listViewModel: listViewModel,
             filter: filter
          };
-         var ctrl = new SourceControl(cfg);
+         var ctrl = new BaseControl(cfg);
          ctrl.saveOptions(cfg);
          var mountResult = ctrl._beforeMount(cfg);
          assert.isTrue(!!mountResult.addCallback, '_beforeMount doesn\'t return deferred');
@@ -91,9 +94,13 @@ define([
 
          var filter2 = {3: 3};
          cfg = {
-            viewName : 'Controls/List/SimpleList/ListView',
+            viewName : 'Controls/List/ListView',
             source: source,
-            listViewModel: listViewModel,
+            viewModelConstructor: ListViewModel,
+            viewModelConfig: {
+               items : [],
+               idProperty: 'id'
+            },
             filter : filter2
          };
 
@@ -114,20 +121,22 @@ define([
 
       it('loadToDirection down', function (done) {
 
-         var listViewModel = new ListViewModel ({
-            items : rs,
-            idProperty: 'id'
-         });
-
          var source = new MemorySource({
             idProperty: 'id',
             data: data
          });
 
          var cfg = {
-            viewName : 'Controls/List/SimpleList/ListView',
+            viewName : 'Controls/List/ListView',
             source: source,
-            listViewModel: listViewModel,
+            viewConfig: {
+               idProperty: 'id'
+            },
+            viewModelConfig: {
+               items : [],
+               idProperty: 'id'
+            },
+            viewModelConstructor: ListViewModel,
             navigation: {
                source: 'page',
                sourceConfig: {
@@ -138,7 +147,7 @@ define([
             }
          };
          var dataLoadFired = false;
-         var ctrl = new SourceControl(cfg);
+         var ctrl = new BaseControl(cfg);
          
          var originNotify = ctrl._notify;
          ctrl._notify = function(event) {
@@ -152,9 +161,9 @@ define([
          ctrl._beforeMount(cfg);
 
          setTimeout(function(){
-            SourceControl._private.loadToDirection(ctrl, 'down');
+            BaseControl._private.loadToDirection(ctrl, 'down');
             setTimeout(function(){
-               assert.equal(6, SourceControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
+               assert.equal(6, BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
                assert.isTrue(dataLoadFired, 'onDataLoad event is not fired');
                done();
             }, 100)
@@ -163,21 +172,22 @@ define([
       });
 
       it('loadToDirection down', function (done) {
-
-         var listViewModel = new ListViewModel ({
-            items : rs,
-            idProperty: 'id'
-         });
-
          var source = new MemorySource({
             idProperty: 'id',
             data: data
          });
 
          var cfg = {
-            viewName : 'Controls/List/SimpleList/ListView',
+            viewName : 'Controls/List/ListView',
             source: source,
-            listViewModel: listViewModel,
+            viewConfig: {
+               idProperty: 'id'
+            },
+            viewModelConfig: {
+               items : rs,
+               idProperty: 'id'
+            },
+            viewModelConstructor: ListViewModel,
             navigation: {
                source: 'page',
                sourceConfig: {
@@ -187,14 +197,14 @@ define([
                }
             }
          };
-         var ctrl = new SourceControl(cfg);
+         var ctrl = new BaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
          setTimeout(function(){
-            SourceControl._private.loadToDirection(ctrl, 'up');
+            BaseControl._private.loadToDirection(ctrl, 'up');
             setTimeout(function(){
-               assert.equal(6, SourceControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
+               assert.equal(6, BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
                done();
             }, 100)
          },100);
@@ -207,20 +217,22 @@ define([
             rawData: data
          });
 
-         var listViewModel = new ListViewModel ({
-            items : rs,
-            idProperty: 'id'
-         });
-
          var source = new MemorySource({
             idProperty: 'id',
             data: data
          });
 
          var cfg = {
-            viewName : 'Controls/List/SimpleList/ListView',
+            viewName : 'Controls/List/ListView',
             source: source,
-            listViewModel: listViewModel,
+            viewConfig: {
+               idProperty: 'id'
+            },
+            viewModelConfig: {
+               items : rs,
+               idProperty: 'id'
+            },
+            viewModelConstructor: ListViewModel,
             navigation: {
                view : 'infinity',
                source: 'page',
@@ -231,13 +243,13 @@ define([
                }
             }
          };
-         var ctrl = new SourceControl(cfg);
+         var ctrl = new BaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
          //два таймаута, первый - загрузка начального рекордсета, второй - на последюущий запрос
          setTimeout(function(){
-            SourceControl._private.onScrollLoadEdge(ctrl, 'down');
+            BaseControl._private.onScrollLoadEdge(ctrl, 'down');
             setTimeout(function() {
                assert.equal(6, ctrl._listViewModel.getCount(), 'Items wasn\'t load');
                done();
@@ -249,36 +261,35 @@ define([
 
       it('processLoadError', function () {
          var cfg = {};
-         var ctrl = new SourceControl(cfg);
+         var ctrl = new BaseControl(cfg);
          var error = {message: 'error'};
 
          result = false;
          ctrl._notify = function(eventName, error) {
             result = error[0];
          };
-         SourceControl._private.processLoadError(ctrl, error);
+         BaseControl._private.processLoadError(ctrl, error);
 
          assert.equal(error, result, 'Event doesn\'t return instance of Error');
       });
 
       it('indicator', function () {
          var cfg = {};
-         var ctrl = new SourceControl(cfg);
+         var ctrl = new BaseControl(cfg);
 
-         SourceControl._private.showIndicator(ctrl);
+         BaseControl._private.showIndicator(ctrl);
          assert.equal(ctrl._loadingState, 'all', 'Wrong loading state');
          assert.equal(ctrl._loadingIndicatorState, 'all', 'Wrong loading state');
-
          //картинка должен появляться через 2000 мс, проверим, что её нет сразу
-         assert.isFalse(ctrl._showLoadingIndicatorImage, 'Wrong loading indicator image state');
+         assert.isFalse(!!ctrl._showLoadingIndicatorImage, 'Wrong loading indicator image state');
 
          //искуственно покажем картинку
          ctrl._showLoadingIndicatorImage = true;
          //и вызовем скрытие
-         SourceControl._private.hideIndicator(ctrl);
+         BaseControl._private.hideIndicator(ctrl);
          assert.equal(ctrl._loadingState, null, 'Wrong loading state');
          assert.equal(ctrl._loadingIndicatorState, null, 'Wrong loading indicator state');
-         assert.isFalse(ctrl._showLoadingIndicatorImage, 'Wrong loading indicator image state');
+         assert.isFalse(!!ctrl._showLoadingIndicatorImage, 'Wrong loading indicator image state');
       });
 
       it('scrollToEdge_load', function (done) {
@@ -287,20 +298,22 @@ define([
             rawData: data
          });
 
-         var listViewModel = new ListViewModel ({
-            items : rs,
-            idProperty: 'id'
-         });
-
          var source = new MemorySource({
             idProperty: 'id',
             data: data
          });
 
          var cfg = {
-            viewName : 'Controls/List/SimpleList/ListView',
+            viewName : 'Controls/List/ListView',
             source: source,
-            listViewModel: listViewModel,
+            viewConfig: {
+               idProperty: 'id'
+            },
+            viewModelConfig: {
+               items : rs,
+               idProperty: 'id'
+            },
+            viewModelConstructor: ListViewModel,
             navigation: {
                source: 'page',
                sourceConfig: {
@@ -310,14 +323,14 @@ define([
                }
             }
          };
-         var ctrl = new SourceControl(cfg);
+         var ctrl = new BaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
 
          //два таймаута, первый - загрузка начального рекордсета, второй - на последюущий запрос
          setTimeout(function(){
-            SourceControl._private.scrollToEdge(ctrl, 'down');
+            BaseControl._private.scrollToEdge(ctrl, 'down');
             setTimeout(function() {
                assert.equal(3, ctrl._listViewModel.getCount(), 'Items wasn\'t load');
                done();
@@ -332,20 +345,22 @@ define([
             rawData: data
          });
 
-         var listViewModel = new ListViewModel ({
-            items : rs,
-            idProperty: 'id'
-         });
-
          var source = new MemorySource({
             idProperty: 'id',
             data: data
          });
 
          var cfg = {
-            viewName : 'Controls/List/SimpleList/ListView',
+            viewName : 'Controls/List/ListView',
             source: source,
-            listViewModel: listViewModel,
+            viewConfig: {
+               idProperty: 'id'
+            },
+            viewModelConfig: {
+               items : rs,
+               idProperty: 'id'
+            },
+            viewModelConstructor: ListViewModel,
             navigation: {
                view : 'infinity',
                viewConfig: {
@@ -353,12 +368,12 @@ define([
                }
             }
          };
-         var ctrl = new SourceControl(cfg);
+         var ctrl = new BaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
          //эмулируем появление скролла
-         SourceControl._private.onScrollShow(ctrl);
+         BaseControl._private.onScrollShow(ctrl);
 
          //скроллпэйджиг контроллер создается асинхронном
          setTimeout(function(){
@@ -366,13 +381,13 @@ define([
 
 
             //прокручиваем к низу, проверяем состояние пэйджинга
-            SourceControl._private.onScrollListEdge(ctrl, 'down');
+            BaseControl._private.onScrollListEdge(ctrl, 'down');
             assert.deepEqual({stateBegin: "normal", statePrev: "normal", stateNext: "disabled", stateEnd: "disabled"}, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll to bottom');
 
-            SourceControl._private.handleListScroll(ctrl, '200');
+            BaseControl._private.handleListScroll(ctrl, '200');
             assert.deepEqual({stateBegin: "normal", statePrev: "normal", stateNext: "normal", stateEnd: "normal"}, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
 
-            SourceControl._private.onScrollHide(ctrl);
+            BaseControl._private.onScrollHide(ctrl);
             assert.deepEqual(null, ctrl._pagingCfg, 'Wrong state of paging');
 
             done();
@@ -385,20 +400,22 @@ define([
             rawData: data
          });
 
-         var listViewModel = new ListViewModel ({
-            items : rs,
-            idProperty: 'id'
-         });
-
          var source = new MemorySource({
             idProperty: 'id',
             data: data
          });
 
          var cfg = {
-            viewName : 'Controls/List/SimpleList/ListView',
+            viewName : 'Controls/List/ListView',
             source: source,
-            listViewModel: listViewModel,
+            viewConfig: {
+               idProperty: 'id'
+            },
+            viewModelConfig: {
+               items : rs,
+               idProperty: 'id'
+            },
+            viewModelConstructor: ListViewModel,
             navigation: {
                source: 'page',
                sourceConfig: {
@@ -412,7 +429,7 @@ define([
                }
             }
          };
-         var ctrl = new SourceControl(cfg);
+         var ctrl = new BaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
@@ -423,10 +440,10 @@ define([
                result = dir;
             };
             //прокручиваем к низу, проверяем состояние пэйджинга
-            SourceControl._private.scrollToEdge(ctrl, 'down');
+            BaseControl._private.scrollToEdge(ctrl, 'down');
             assert.equal(result, 'bottom', 'List wasn\'t scrolled to bottom');
 
-            SourceControl._private.scrollToEdge(ctrl, 'up');
+            BaseControl._private.scrollToEdge(ctrl, 'up');
             assert.equal(result, 'top', 'List wasn\'t scrolled to top');
 
             done();
@@ -439,20 +456,22 @@ define([
             rawData: data
          });
 
-         var listViewModel = new ListViewModel ({
-            items : rs,
-            idProperty: 'id'
-         });
-
          var source = new MemorySource({
             idProperty: 'id',
             data: data
          });
 
          var cfg = {
-            viewName : 'Controls/List/SimpleList/ListView',
+            viewName : 'Controls/List/ListView',
             source: source,
-            listViewModel: listViewModel,
+            viewConfig: {
+               idProperty: 'id'
+            },
+            viewModelConfig: {
+               items : rs,
+               idProperty: 'id'
+            },
+            viewModelConstructor: ListViewModel,
             navigation: {
                source: 'page',
                sourceConfig: {
@@ -466,12 +485,12 @@ define([
                }
             }
          };
-         var ctrl = new SourceControl(cfg);
+         var ctrl = new BaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
          //эмулируем появление скролла
-         SourceControl._private.onScrollShow(ctrl);
+         BaseControl._private.onScrollShow(ctrl);
 
          //скроллпэйджиг контроллер создается асинхронном
          setTimeout(function(){
@@ -505,20 +524,22 @@ define([
             rawData: data
          });
 
-         var listViewModel = new ListViewModel ({
-            items : rs,
-            idProperty: 'id'
-         });
-
          var source = new MemorySource({
             idProperty: 'id',
             data: data
          });
 
          var cfg = {
-            viewName : 'Controls/List/SimpleList/ListView',
+            viewName : 'Controls/List/ListView',
             source: source,
-            listViewModel: listViewModel,
+            viewConfig: {
+               idProperty: 'id'
+            },
+            viewModelConfig: {
+               items : rs,
+               idProperty: 'id'
+            },
+            viewModelConstructor: ListViewModel,
             navigation: {
                source: 'page',
                sourceConfig: {
@@ -532,12 +553,12 @@ define([
                }
             }
          };
-         var ctrl = new SourceControl(cfg);
+         var ctrl = new BaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
          //эмулируем появление скролла
-         SourceControl._private.onScrollShow(ctrl);
+         BaseControl._private.onScrollShow(ctrl);
 
          //скроллпэйджиг контроллер создается асинхронном
          setTimeout(function(){
@@ -566,12 +587,6 @@ define([
             rawData: data
          });
 
-         var listViewModel = new ListViewModel ({
-            items : rs,
-            idProperty: 'id',
-            selectedKeys : [1, 3]
-         });
-
          var source = new MemorySource({
             idProperty: 'id',
             data: data
@@ -579,9 +594,17 @@ define([
 
          var cfg = {
             selectedKeys : [1, 3],
-            viewName : 'Controls/List/SimpleList/ListView',
+            viewName : 'Controls/List/ListView',
             source: source,
-            listViewModel: listViewModel,
+            viewConfig: {
+               idProperty: 'id'
+            },
+            viewModelConfig: {
+               items : rs,
+               idProperty: 'id',
+               selectedKeys : [1, 3]
+            },
+            viewModelConstructor: ListViewModel,
             navigation: {
                source: 'page',
                sourceConfig: {
@@ -595,15 +618,15 @@ define([
                }
             }
          };
-         var ctrl = new SourceControl(cfg);
+         var ctrl = new BaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
          ctrl._onCheckBoxClick({}, 2, 0);
-         assert.deepEqual([1, 3, 2], ctrl._listViewModel._multiselection._selectedKeys, 'SourceControl: MultiSelection has wrong selected keys');
+         assert.deepEqual([1, 3, 2], ctrl._listViewModel._multiselection._selectedKeys, 'BaseControl: MultiSelection has wrong selected keys');
 
          ctrl._onCheckBoxClick({}, 1, 1);
-         assert.deepEqual([3, 2], ctrl._listViewModel._multiselection._selectedKeys, 'SourceControl: MultiSelection has wrong selected keys');
+         assert.deepEqual([3, 2], ctrl._listViewModel._multiselection._selectedKeys, 'BaseControl: MultiSelection has wrong selected keys');
       });
 
       describe('EditInPlace', function() {
@@ -612,11 +635,31 @@ define([
                test: 'test'
             };
             var cfg = {
-               viewName : 'Controls/List/SimpleList/ListView',
+               viewName : 'Controls/List/ListView',
                source: source,
-               listViewModel: listViewModel
+               viewConfig: {
+                  idProperty: 'id'
+               },
+               viewModelConfig: {
+                  items : rs,
+                  idProperty: 'id',
+                  selectedKeys : [1, 3]
+               },
+               viewModelConstructor: ListViewModel,
+               navigation: {
+                  source: 'page',
+                  sourceConfig: {
+                     pageSize: 6,
+                     page: 0,
+                     mode: 'totalCount'
+                  },
+                  view : 'infinity',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  }
+               }
             };
-            var ctrl = new SourceControl(cfg);
+            var ctrl = new BaseControl(cfg);
             ctrl._children = {
                editInPlace: {
                   editItem: function(options) {
@@ -633,11 +676,31 @@ define([
                test: 'test'
             };
             var cfg = {
-               viewName : 'Controls/List/SimpleList/ListView',
+               viewName : 'Controls/List/ListView',
                source: source,
-               listViewModel: listViewModel
+               viewConfig: {
+                  idProperty: 'id'
+               },
+               viewModelConfig: {
+                  items : rs,
+                  idProperty: 'id',
+                  selectedKeys : [1, 3]
+               },
+               viewModelConstructor: ListViewModel,
+               navigation: {
+                  source: 'page',
+                  sourceConfig: {
+                     pageSize: 6,
+                     page: 0,
+                     mode: 'totalCount'
+                  },
+                  view : 'infinity',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  }
+               }
             };
-            var ctrl = new SourceControl(cfg);
+            var ctrl = new BaseControl(cfg);
             ctrl._children = {
                editInPlace: {
                   addItem: function(options) {
@@ -657,11 +720,31 @@ define([
                test2: 'test'
             };
             var cfg = {
-               viewName : 'Controls/List/SimpleList/ListView',
+               viewName : 'Controls/List/ListView',
                source: source,
-               listViewModel: listViewModel
+               viewConfig: {
+                  idProperty: 'id'
+               },
+               viewModelConfig: {
+                  items : rs,
+                  idProperty: 'id',
+                  selectedKeys : [1, 3]
+               },
+               viewModelConstructor: ListViewModel,
+               navigation: {
+                  source: 'page',
+                  sourceConfig: {
+                     pageSize: 6,
+                     page: 0,
+                     mode: 'totalCount'
+                  },
+                  view : 'infinity',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  }
+               }
             };
-            var ctrl = new SourceControl(cfg);
+            var ctrl = new BaseControl(cfg);
             ctrl._notify = function(e, options) {
                assert.equal(options[0], opt);
                return newOpt;
@@ -678,11 +761,31 @@ define([
                test2: 'test'
             };
             var cfg = {
-               viewName : 'Controls/List/SimpleList/ListView',
+               viewName : 'Controls/List/ListView',
                source: source,
-               listViewModel: listViewModel
+               viewConfig: {
+                  idProperty: 'id'
+               },
+               viewModelConfig: {
+                  items : rs,
+                  idProperty: 'id',
+                  selectedKeys : [1, 3]
+               },
+               viewModelConstructor: ListViewModel,
+               navigation: {
+                  source: 'page',
+                  sourceConfig: {
+                     pageSize: 6,
+                     page: 0,
+                     mode: 'totalCount'
+                  },
+                  view : 'infinity',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  }
+               }
             };
-            var ctrl = new SourceControl(cfg);
+            var ctrl = new BaseControl(cfg);
             ctrl._notify = function(e, options) {
                assert.equal(options[0], opt);
                return newOpt;
@@ -696,12 +799,36 @@ define([
                test: 'test'
             };
             var cfg = {
-               viewName : 'Controls/List/SimpleList/ListView',
+               viewName : 'Controls/List/ListView',
                source: source,
-               listViewModel: listViewModel
+               viewConfig: {
+                  idProperty: 'id'
+               },
+               viewModelConfig: {
+                  items : rs,
+                  idProperty: 'id',
+                  selectedKeys : [1, 3]
+               },
+               viewModelConstructor: ListViewModel,
+               navigation: {
+                  source: 'page',
+                  sourceConfig: {
+                     pageSize: 6,
+                     page: 0,
+                     mode: 'totalCount'
+                  },
+                  view : 'infinity',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  }
+               }
             };
-            var ctrl = new SourceControl(cfg);
-            ctrl._listViewModel = listViewModel; //аналог beforemount
+            var ctrl = new BaseControl(cfg);
+            ctrl._listViewModel = new ListViewModel({ //аналог beforemount
+               items : rs,
+               idProperty: 'id',
+               selectedKeys : [1, 3]
+            });
             ctrl._children = {itemActions: {updateItemActions : function() {}}};
             ctrl._notify = function(e, options) {
                assert.equal(options[0], opt);
@@ -717,12 +844,36 @@ define([
                test2: 'test'
             };
             var cfg = {
-               viewName : 'Controls/List/SimpleList/ListView',
+               viewName : 'Controls/List/ListView',
                source: source,
-               listViewModel: listViewModel
+               viewConfig: {
+                  idProperty: 'id'
+               },
+               viewModelConfig: {
+                  items : rs,
+                  idProperty: 'id',
+                  selectedKeys : [1, 3]
+               },
+               viewModelConstructor: ListViewModel,
+               navigation: {
+                  source: 'page',
+                  sourceConfig: {
+                     pageSize: 6,
+                     page: 0,
+                     mode: 'totalCount'
+                  },
+                  view : 'infinity',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  }
+               }
             };
-            var ctrl = new SourceControl(cfg);
-            ctrl._listViewModel = listViewModel; //аналог beforemount
+            var ctrl = new BaseControl(cfg);
+            ctrl._listViewModel = new ListViewModel({ //аналог beforemount
+               items : rs,
+               idProperty: 'id',
+               selectedKeys : [1, 3]
+            });
             ctrl._children = {itemActions: {updateItemActions : function() {}}};
             ctrl._notify = function(e, options) {
                assert.equal(options[0], opt);
@@ -737,12 +888,36 @@ define([
                test: 'test'
             };
             var cfg = {
-               viewName : 'Controls/List/SimpleList/ListView',
+               viewName : 'Controls/List/ListView',
                source: source,
-               listViewModel: listViewModel
+               viewConfig: {
+                  idProperty: 'id'
+               },
+               viewModelConfig: {
+                  items : rs,
+                  idProperty: 'id',
+                  selectedKeys : [1, 3]
+               },
+               viewModelConstructor: ListViewModel,
+               navigation: {
+                  source: 'page',
+                  sourceConfig: {
+                     pageSize: 6,
+                     page: 0,
+                     mode: 'totalCount'
+                  },
+                  view : 'infinity',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  }
+               }
             };
-            var ctrl = new SourceControl(cfg);
-            ctrl._listViewModel = listViewModel; //аналог beforemount
+            var ctrl = new BaseControl(cfg);
+            ctrl._listViewModel = new ListViewModel({ //аналог beforemount
+               items : rs,
+               idProperty: 'id',
+               selectedKeys : [1, 3]
+            });
             ctrl._children = {itemActions: {updateItemActions : function() {}}};
             ctrl._notify = function(e, options) {
                assert.equal(options[0], opt);

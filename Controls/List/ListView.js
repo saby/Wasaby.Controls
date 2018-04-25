@@ -1,15 +1,13 @@
 /**
  * Created by kraynovdo on 22.09.2017.
  */
-define('Controls/List/SimpleList/ListView', [
+define('Controls/List/ListView', [
    'Core/Control',
-   'tmpl!Controls/List/SimpleList/ListView/ListView',
-   'Controls/List/resources/utils/ItemsUtil',
-   'tmpl!Controls/List/SimpleList/ItemTemplate',
-   'css!Controls/List/SimpleList/ListView/ListView'
+   'tmpl!Controls/List/ListView/ListView',
+   'tmpl!Controls/List/ItemTemplate',
+   'css!Controls/List/ListView/ListView'
 ], function(BaseControl,
    ListViewTpl,
-   ItemsUtil,
    defaultItemTemplate
 ) {
    'use strict';
