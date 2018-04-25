@@ -13,7 +13,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/FieldLink', [
      * Реализует выборку идентификаторов из поля связи - {@link SBIS3.CONTROLS/FieldLink}.
      *
      * <h2>Конфигурация редактора</h2>
-     * Чтобы изменить конфигурацию редактора, используют подопцию *properties.properties* (см. {@link SBIS3.CONTROLS/Filter/FilterPanelItem.typedef}) в {@link SBIS3.CONTROLS/Filter/FilterPanel#items}.
+     * Чтобы изменить конфигурацию редактора, используют подопцию *properties.properties* (см. {@link https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/Filter/FilterPanel/typedefs/FilterPanelItem/}) в {@link SBIS3.CONTROLS/Filter/FilterPanel#items}.
      * По умолчанию опции для контрола редактора {@link SBIS3.CONTROLS/FieldLink} не установлены. Полный список опций и примеры конфигурации поля связи вы можете найти в описании его класса.
      *
      * <h2>Создание пользовательского редактора</h2>

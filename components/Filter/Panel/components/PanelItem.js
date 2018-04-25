@@ -27,7 +27,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/PanelItem', [
             /**
              * @cfg {WS.Data/Entity/Record} Запись, описывающая конфигурацию фильтр.
              * @remark
-             * Пример полей для записи, которая определяется миксином, описан в {@link SBIS3.CONTROLS/Filter/FilterPanelItem.typedef}.
+             * Пример полей для записи, которая определяется миксином, описан в {@link SBIS3/CONTROLS/Filter/FilterPanel/typedefs/FilterPanelItem/}.
              */
             item: null
          }
