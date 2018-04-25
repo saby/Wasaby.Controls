@@ -12,7 +12,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
       'Core/Deferred',
       'SBIS3.CONTROLS/CompoundControl',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
-      /*^^^'WS.Data/Collection/RecordSet',*/
+      'WS.Data/Collection/RecordSet',
       /*^^^'WS.Data/Type/descriptor',*/
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/Area',
       'css!SBIS3.CONTROLS/ExportCustomizer/Area',
@@ -20,12 +20,27 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
       'SBIS3.CONTROLS/ScrollContainer'
    ],
 
-   function (CommandDispatcher, /*^^^cMerge,*/ Deferred, CompoundControl, InformationPopupManager, /*^^^RecordSet,*/ /*^^^DataType,*/ tmpl) {
+   function (CommandDispatcher, /*^^^cMerge,*/ Deferred, CompoundControl, InformationPopupManager, RecordSet, /*^^^DataType,*/ tmpl) {
       'use strict';
 
       /**
+       * @typedef {object} BrowserColumnInfo Тип, содержащий информацию о колонке браузера
+       * @property {string} id Идентификатор колонки (как правило, имя поля в базе данных или БЛ)
+       * @property {string} title Отображаемое название колонки
+       * @property {string} [group] Идентификатор или название группы, к которой относится колонка (опционально)
+       * @property {boolean} [fixed] Обязательная колонка (опционально)
+       * @property {object} columnConfig Конфигурация колонки в формате, используемом компонентом SBIS3.CONTROLS:DataGridView
+       */
+
+      /**
+       * @typedef {object} ExportField ^^^ Тип, описывающий целевое поле при привязке колонок файла к полям данных
+       * @property {string} filed Идентификатор поля
+       * @property {string} title Отображаемое наименование поля
+       */
+
+      /**
        * @typedef {object} ExportResults Тип, содержащий информацию о результате редактирования
-       * @property {*} [*] Базовые параметры экспортирования (опционально)
+       * @property {*} [*] ^^^ Базовые параметры экспортирования (опционально)
        */
 
       var _typeIfDefined = function (type, value) {
@@ -43,7 +58,64 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          dialogMode: _typeIfDefined.bind(null, 'boolean'),
          waitingMode: _typeIfDefined.bind(null, 'boolean'),
          dialogTitle: _typeIfDefined.bind(null, 'string'),
-         dialogButtonTitle: _typeIfDefined.bind(null, 'string')
+         dialogButtonTitle: _typeIfDefined.bind(null, 'string'),
+         columnBinderTitle: _typeIfDefined.bind(null, 'string'),
+         columnBinderColumnsTitle: _typeIfDefined.bind(null, 'string'),
+         columnBinderFieldsTitle: _typeIfDefined.bind(null, 'string'),
+         columnBinderEmptyTitle: _typeIfDefined.bind(null, 'string'),
+         columns: function (value) {
+            // Должно быть значение
+            if (!value) {
+               return new Error('Value required');
+            }
+            // и быть не пустым массивом или рекодсетом
+            if (!(Array.isArray(value) && value.length) && !(value instanceof RecordSet && value.getCount())) {
+               return new Error('Value must be none empty array or recordset');
+            }
+            var isRecordSet = value instanceof RecordSet;
+            var list = isRecordSet ? value.getRawData() : value;
+            // И каждый элемент массива (или рекодсета) должен быть {@link BrowserColumnInfo}. Но проверить достаточно только на актуальные здесь свойства
+            if (!list.every(function (v) { return (
+                  typeof v === 'object' &&
+                  (v.id && typeof v.id === 'string') &&
+                  (v.title && typeof v.title === 'string')
+               ); })) {
+               return new Error((isRecordSet ? 'RecordSet' : 'Array') + ' items must be an BrowserColumnInfo');
+            }
+            return value;
+         },
+         selectedColumnIds: function (value) {
+            // Если значение есть
+            if (value) {
+               // оно должно быть массивом
+               if (!Array.isArray(value)) {
+                  return new Error('Value must be array');
+               }
+               // И каждый элемент массива должен быть не пустой строкой
+               if (!value.every(function (v) { return !!v && typeof v === 'string'; })) {
+                  return new Error('Array items must be none empty strings');
+               }
+               return value;
+            }
+         },
+         columnBinderFields: /*^^^*/function (value) {
+            // Если значение есть
+            if (value) {
+               // оно должно быть массивом
+               if (!Array.isArray(value)) {
+                  return new Error('Value must be array');
+               }
+               // И каждый элемент массива должен быть {@link ExportField}
+               if (!sheets.every(function (v) { return (
+                     typeof v === 'object' &&
+                     (v.field && typeof v.field === 'string') &&
+                     (v.title && typeof v.title === 'string')
+                  ); })) {
+                  return new Error('Option "sheets" items must be an ImportSheet');
+               }
+               return value;
+            }
+         }
       };
 
       /**
@@ -63,7 +135,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
        */
       var _OWN_OPTIONS_NAMES = [
          'dialogTitle',
-         'dialogButtonTitle'
+         'dialogButtonTitle',
+         'columnBinderTitle',
+         'columnBinderColumnsTitle',
+         'columnBinderFieldsTitle',
+         'columnBinderEmptyTitle',
+         'columns',
+         'selectedColumnIds',
+         'columnBinderFields'//^^^
       ];
 
       var Area = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ExportCustomizer/Area.prototype*/ {
@@ -87,7 +166,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                 * @cfg {string} Подпись кнопки диалога применения результата редактирования (опционально)
                 */
                dialogButtonTitle: null,//Определено в шаблоне
-
                /**
                 * @cfg {string} Заголовок под-компонента "columnBinder"
                 */
@@ -105,10 +183,17 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                 */
                columnBinderEmptyTitle: null,
                /**
-                * @cfg {Array<ExportField>} Список соответствий колонок файла и полей данных для под-компонента "columnBinder"
+                * @cfg {Array<BrowserColumnInfo>|WS.Data/Collection/RecordSet<BrowserColumnInfo>} Список объектов с информацией о колонках браузера
                 */
-               columnBinderFilelds: []
-
+               columns: null,
+               /**
+                * @cfg {Array<string>} Список идентификаторов выбранных колонок
+                */
+               selectedColumnIds: null,
+               /**
+                * @cfg {Array<ExportField>} ^^^Список соответствий колонок файла и полей данных для под-компонента "columnBinder"
+                */
+               columnBinderFields: []//^^^
             },
             // Список имён вложенных под-компонентов
             _SUBVIEW_NAMES: {
@@ -206,12 +291,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * @param {object} options Опции компонента
           */
          _reshapeOptions: function (options) {
+            var columns = options.columns;
             options._scopes = {
                columnBinder: {
                   title: options.columnBinderTitle || undefined,
                   columnsTitle: options.columnBinderColumnsTitle || undefined,
                   fieldsTitle: options.columnBinderFieldsTitle || undefined,
-                  fields: options.columnBinderFields
+                  columns: columns && columns instanceof RecordSet ? columns.getRawData() : columns,
+                  selectedColumnIds: options.selectedColumnIds,
+                  fields: options.columnBinderFields//^^^
                },
                formatter: {
                   //^^^
