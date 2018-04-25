@@ -10,9 +10,10 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlace/EditInPlace',
    "Core/constants",
    "SBIS3.CONTROLS/Mixins/CompoundFocusMixin",
    "Core/Indicator",
+   'Core/CommandDispatcher',
    'css!SBIS3.CONTROLS/ListView/resources/EditInPlace/EditInPlace'
 ],
-   function(Deferred, Control, dotTplFn, constants, CompoundFocusMixin, Indicator) {
+   function(Deferred, Control, dotTplFn, constants, CompoundFocusMixin, Indicator, CommandDispatcher) {
       'use strict';
 
       /**
@@ -56,6 +57,14 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlace/EditInPlace',
                               .bind('mousedown', this._onMouseDown.bind(this));
                this.subscribe('onChildControlFocusOut', this._onChildControlFocusOut);
                this._editors = this.getContainer().find('.controls-editInPlace__editor');
+
+               //если внутри есть ListView или его наследники, то при помощи такой команды они сообщают об изменении своих размеров.
+               //надо пересчитать размер плашки редактирования в таком случае
+               CommandDispatcher.declareCommand(this, 'resizeYourself', function() {
+                  if (this.isEdit()) {
+                     this._targetTracking(this.getTarget().prop('tagName') !== 'TR');
+                  }
+               }.bind(this));
             },
 
             _onMouseDown: function(event) {
