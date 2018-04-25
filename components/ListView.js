@@ -907,6 +907,7 @@ define('SBIS3.CONTROLS/ListView',
                 * @example
                 * Пример:
                 *
+                * <pre>
                 * // Импортируем компонент прямо в исходном коде.
                 * require(['SBIS3.CONTROLS/ListView'], function(List) {
                 *
@@ -934,6 +935,7 @@ define('SBIS3.CONTROLS/ListView',
                 *       }
                 *    });
                 * });
+                * </pre>
                 */
                navigation: null,
                /**
