@@ -1,8 +1,16 @@
 .controls-PropertyGrid__item {
    margin: @spacing_PropertyGrid-item;
-   height: auto;
+   height: @height_FilterPanel-item;
 }
 
 .controls-PropertyGrid_KeysEditor {
    margin-left: @spacing_PropertyGrid-dropdownList;
+   display: flex;
+}
+
+.controls-FilterPanel__iconClose {
+   .flexbox();
+   .align-self(center);
+   .icon-size(@default-icon-size);
+   cursor: pointer;
 }

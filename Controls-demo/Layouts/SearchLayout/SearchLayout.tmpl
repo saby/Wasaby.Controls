@@ -20,17 +20,118 @@
                                         <Controls.Filter.Button>
                                            <ws:items>
                                               <ws:Array>
+                                                 <ws:Object id="1" value="" resetValue="{{true}}"
+                                                            visibility="{{false}}">
+                                                    <ws:additionalTemplate>
+                                                       <Controls.Button style="linkMain" caption="CheckBox"/>
+                                                    </ws:additionalTemplate>
+                                                    <ws:editor>
+                                                       <Controls.Filter.Button.Panel.Editor.Boolean>
+                                                          <Controls.Toggle.Checkbox caption="click me"
+                                                                                    style="linkMain"/>
+                                                       </Controls.Filter.Button.Panel.Editor.Boolean>
+                                                    </ws:editor>
+                                                 </ws:Object>
+
+                                                 <ws:Object id="1" value="{{true}}" resetValue="{{false}}"
+                                                            visibility="{{false}}">
+                                                    <ws:additionalTemplate>
+                                                       <Controls.Button style="linkMain" caption="FilterText"/>
+                                                    </ws:additionalTemplate>
+                                                    <ws:editor>
+                                                       <Controls.Filter.Button.Panel.Editor.Boolean>
+                                                          <Controls.Filter.Button.Panel.FilterText caption="Прочитанные"/>
+                                                       </Controls.Filter.Button.Panel.Editor.Boolean>
+                                                    </ws:editor>
+                                                 </ws:Object>
+                                                 <ws:Object id="1" value="2" resetValue="1" visibility="{{false}}">
+                                                    <ws:additionalTemplate>
+                                                       <Controls.Filter.Button.Panel.FilterSelect
+                                                               keyProperty="key">
+                                                          <ws:items>
+                                                             <ws:Array>
+                                                                <ws:Object key="{{2}}" value="Россия"/>
+                                                                <ws:Object key="{{3}}" value="США"/>
+                                                                <ws:Object key="{{4}}" value="UK"/>
+                                                             </ws:Array>
+                                                          </ws:items>
+                                                       </Controls.Filter.Button.Panel.FilterSelect>
+                                                    </ws:additionalTemplate>
+                                                    <ws:editor>
+                                                       <Controls.Filter.Button.Panel.Editor.Keys>
+                                                          <Controls.Input.Dropdown source="{{sourceDropdown}}"
+                                                                                   keyProperty="key"/>
+                                                       </Controls.Filter.Button.Panel.Editor.Keys>
+                                                    </ws:editor>
+                                                 </ws:Object>
+                                                 <ws:Object id="inPlace" value="1" resetValue="2" visibility="{{false}}" onPlace="{{true}}">
+                                                    <ws:additionalTemplate>
+                                                       <Controls.Input.Dropdown source="{{sourceDropdown}}"
+                                                                                keyProperty="key"
+                                                       selectedKeys="{{_value}}"/>
+                                                    </ws:additionalTemplate>
+                                                    <ws:editor>
+                                                       <Controls.Filter.Button.Panel.Editor.Keys>
+                                                          <Controls.Input.Dropdown source="{{sourceDropdown}}"
+                                                                                   keyProperty="key"/>
+                                                       </Controls.Filter.Button.Panel.Editor.Keys>
+                                                    </ws:editor>
+                                                 </ws:Object>
                                                  <ws:Object id="1" value="" resetValue="{{true}}" visibility="{{false}}">
-                                                 <ws:additionalTemplate>
-                                                    <Controls.Button style="linkMain" caption="CheckBox"/>
-                                                 </ws:additionalTemplate>
-                                                 <ws:editor>
-                                                    <Controls.Filter.Button.Panel.Editor.Boolean>
-                                                       <Controls.Toggle.Checkbox caption="click me"
-                                                                                 style="linkMain"/>
-                                                    </Controls.Filter.Button.Panel.Editor.Boolean>
-                                                 </ws:editor>
-                                              </ws:Object>
+                                                    <ws:additionalTemplate>
+                                                       <Controls.Button style="linkMain" caption="CheckBox"/>
+                                                    </ws:additionalTemplate>
+                                                    <ws:editor>
+                                                       <Controls.Filter.Button.Panel.Editor.Boolean>
+                                                          <Controls.Toggle.Checkbox caption="click me"
+                                                                                    style="linkMain"/>
+                                                       </Controls.Filter.Button.Panel.Editor.Boolean>
+                                                    </ws:editor>
+                                                 </ws:Object>
+                                                 <ws:Object id="1" value="" resetValue="{{true}}" visibility="{{false}}">
+                                                    <ws:additionalTemplate>
+                                                       <Controls.Button style="linkMain" caption="CheckBox"/>
+                                                    </ws:additionalTemplate>
+                                                    <ws:editor>
+                                                       <Controls.Filter.Button.Panel.Editor.Boolean>
+                                                          <Controls.Toggle.Checkbox caption="click me"
+                                                                                    style="linkMain"/>
+                                                       </Controls.Filter.Button.Panel.Editor.Boolean>
+                                                    </ws:editor>
+                                                 </ws:Object>
+                                                 <ws:Object id="1" value="" resetValue="{{true}}" visibility="{{false}}">
+                                                    <ws:additionalTemplate>
+                                                       <Controls.Button style="linkMain" caption="CheckBox"/>
+                                                    </ws:additionalTemplate>
+                                                    <ws:editor>
+                                                       <Controls.Filter.Button.Panel.Editor.Boolean>
+                                                          <Controls.Toggle.Checkbox caption="click me"
+                                                                                    style="linkMain"/>
+                                                       </Controls.Filter.Button.Panel.Editor.Boolean>
+                                                    </ws:editor>
+                                                 </ws:Object>
+                                                 <ws:Object id="1" value="" resetValue="{{true}}" visibility="{{false}}">
+                                                    <ws:additionalTemplate>
+                                                       <Controls.Button style="linkMain" caption="CheckBox"/>
+                                                    </ws:additionalTemplate>
+                                                    <ws:editor>
+                                                       <Controls.Filter.Button.Panel.Editor.Boolean>
+                                                          <Controls.Toggle.Checkbox caption="click me"
+                                                                                    style="linkMain"/>
+                                                       </Controls.Filter.Button.Panel.Editor.Boolean>
+                                                    </ws:editor>
+                                                 </ws:Object>
+                                                 <ws:Object id="1" value="" resetValue="{{true}}" visibility="{{false}}">
+                                                    <ws:additionalTemplate>
+                                                       <Controls.Button style="linkMain" caption="CheckBox"/>
+                                                    </ws:additionalTemplate>
+                                                    <ws:editor>
+                                                       <Controls.Filter.Button.Panel.Editor.Boolean>
+                                                          <Controls.Toggle.Checkbox caption="click me"
+                                                                                    style="linkMain"/>
+                                                       </Controls.Filter.Button.Panel.Editor.Boolean>
+                                                    </ws:editor>
+                                                 </ws:Object>
                                                  <ws:Object id="firstName" value="123" resetValue="" visibility="{{false}}">
                                                     <ws:additionalTemplate>
                                                        <Controls.Button style="linkMain" caption="Text"/>
@@ -56,7 +157,7 @@
                                                  <ws:Object id="3" value="{{1}}" resetValue="{{1}}" visibility="{{true}}">
                                                     <ws:editor>
                                                        <Controls.Filter.Button.Panel.Editor.Text>
-                                                             <div>"LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOONG"</div>
+                                                             <div>"LOOOOOOOOOOOOOOOOOOOOOONG"</div>
                                                        </Controls.Filter.Button.Panel.Editor.Text>
                                                     </ws:editor>
                                                  </ws:Object>
