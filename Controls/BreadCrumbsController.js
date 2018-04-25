@@ -61,13 +61,10 @@ define('Controls/BreadCrumbsController', [
          },
 
          canBlur: function(itemWidth, currentWidth, availableWidth) {
-            //TODO: неправильно работает, я сейчас учитываю ширину стрелки, а нужно смотреть только на title
             return itemWidth > BREAD_CRUMB_MIN_WIDTH && currentWidth - itemWidth + BREAD_CRUMB_MIN_WIDTH < availableWidth;
          },
 
          calculateBreadCrumbsToDraw: function(self, itemsSizes, availableWidth) {
-            //TODO: последняя крошка не обрезается никогда
-            //TODO: если крошка одна, то сейчас она не обрезается
             var
                length = itemsSizes.length,
                i = length - 2,
@@ -80,46 +77,56 @@ define('Controls/BreadCrumbsController', [
                return acc + width;
             }, 0) + HOME_WIDTH;
 
-            if (length > 2 && currentWidth > availableWidth) {
-               //Сначала пробуем замылить предпоследний элемент
-               if (_private.canBlur(itemsSizes[length - 2], currentWidth, availableWidth)) {
-                  blurredItemIndex = length - 2;
-               } else {
-
-                  //Если замылить не получилось, то добавляем точки
-                  self._hasMenu = true;
-                  currentWidth += DOTS_WIDTH;
-
-                  for (i; i > 0; i--) {
-                     if (currentWidth < availableWidth) {
-                        break;
-                     } else if (_private.canBlur(itemsSizes[i], currentWidth, availableWidth)) {
-                        blurredItemIndex = i;
-                        break;
-                     } else {
-                        currentWidth -= itemsSizes[i];
+            if (currentWidth > availableWidth) {
+               if (length > 2) {
+                  //Сначала пробуем замылить предпоследний элемент
+                  if (_private.canBlur(itemsSizes[length - 2], currentWidth, availableWidth)) {
+                     for (var j = 0; j < length; j++) {
+                        self._visibleItems.push(_private.getItemData(j, self._options.items, j === length - 2));
                      }
+                  } else {
+                     //Если замылить не получилось, то добавляем точки
+                     self._hasMenu = true;
+                     currentWidth += DOTS_WIDTH;
+
+                     for (i; i > 0; i--) {
+                        if (currentWidth < availableWidth) {
+                           break;
+                        } else if (_private.canBlur(itemsSizes[i], currentWidth, availableWidth)) {
+                           blurredItemIndex = i;
+                           currentWidth -= itemsSizes[i] - BREAD_CRUMB_MIN_WIDTH;
+                           break;
+                        } else {
+                           currentWidth -= itemsSizes[i];
+                        }
+                     }
+
+                     //TODO: вообще может быть ситуация, когда замыливаться будет только одна крошка, потому что вторую некуда сжимать, нужно подумать как с этим жить
+                     //Если осталось всего 2 крошки, но места все равно не хватает, то замыливаем первый и последний элементы одновременно
+                     if (i === 0 && currentWidth > availableWidth) {
+                        blurredItemIndex = 0;
+                     }
+
+                     for (var j = 0; j <= i; j++) {
+                        self._visibleItems.push(_private.getItemData(j, self._options.items, j === blurredItemIndex));
+                     }
+
+                     self._visibleItems.push({
+                        item: {
+                           title: '...'
+                        },
+                        isDots: true,
+                        hasArrow: true
+                     });
+
+                     self._visibleItems.push(_private.getItemData(length - 1, self._options.items, blurredItemIndex === 0));
                   }
-
-                  //Если осталось всего 2 крошки, но места все равно не хватает, то замыливаем первый элемент
-                  if (i === 0 && currentWidth > availableWidth) {
-                     blurredItemIndex = 0;
-                  }
+               } else {
+                  //TODO: вообще может быть ситуация, когда замыливаться будет только одна крошка, потому что вторую некуда сжимать, нужно подумать как с этим жить
+                  self._visibleItems = self._options.items.map(function(item, index, items) {
+                     return _private.getItemData(index, items, true);
+                  });
                }
-
-               for (var j = 0; j <= i; j++) {
-                  self._visibleItems.push(_private.getItemData(j, self._options.items, j === blurredItemIndex));
-               }
-
-               self._visibleItems.push({
-                  item: {
-                     title: '...'
-                  },
-                  isDots: true,
-                  hasArrow: true
-               });
-
-               self._visibleItems.push(_private.getItemData(length - 1, self._options.items));
             } else {
                self._visibleItems = self._options.items.map(function(item, index, items) {
                   return _private.getItemData(index, items);

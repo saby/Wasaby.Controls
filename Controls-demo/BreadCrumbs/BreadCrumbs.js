@@ -27,13 +27,15 @@ define('Controls-demo/BreadCrumbs/BreadCrumbs', [
       },
       {
          id: 6,
-         title: 'Record3'
+         title: 'Record3eqweqweqeqweqweedsadeqweqewqeqweqweqw'
       }
    ];
 
    var BreadCrumbs = Control.extend({
       _template: template,
       items: data,
+      items1: [data[0]],
+      items2: [data[0], data[5]],
 
       _onItemClick: function(e, item) {
          console.log(item);
