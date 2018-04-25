@@ -107,17 +107,30 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
           * @return {Array<object>}
           */
          _makeRows: function (options) {
-            var allFields = options.allFields;
-            if (allFields instanceof RecordSet) {
-               allFields = allFields.getRawData();//^^^
-            }
             var fieldIds = options.fieldIds;
-            return fieldIds && fieldIds.length
-               ? fieldIds.map(function (id, i) {
-                  var field; allFields.some(function (v) { if (v.id === id) { field = v; return true; } });
-                  return {id:id, column:_toLetter(i), field:field.title};
-               })
-               : [{id:'', column:'A', field:emptyTitle}];
+            if (fieldIds && fieldIds.length) {
+               var allFields = options.allFields;
+               var isRecordSet = allFields instanceof RecordSet;
+               return fieldIds.map(function (id, i) {
+                     var field;
+                     if (!isRecordSet) {
+                        allFields.some(function (v) { if (v.id === id) { field = v; return true; } });
+                     }
+                     else {
+                        var model = allFields.getRecordById(id);
+                        if (model) {
+                           field = model.getRawData();
+                        }
+                     }
+                     if (!field) {
+                        throw new Error('Unknown field: ' + id);
+                     }
+                     return {id:id, column:_toLetter(i), field:field.title};
+                  });
+            }
+            else {
+               return [{id:'', column:'A', field:emptyTitle}];
+            }
          },
 
          /**
@@ -148,6 +161,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
                this._columnsEditor = new ColumnsEditor();
             }
             var options = this._options;
+            //////////////////////////////////////////////////
+            // Это временная затычка до тех пор, пока не реализована опция ignoreFixed в редакторе колонок
+            // TODO: Убрать это
+            options.allFields = new RecordSet({
+               rawData: options.allFields.getRawData().map(function (v) { return {id:v.id, title:v.title, group:v.group, columnConfig:v.columnConfig}; }),
+               idProperty: options.allFields.getIdProperty()
+            });
+            //////////////////////////////////////////////////
             return this._columnsEditor.open(
                {
                   columns: options.allFields,
@@ -157,7 +178,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
                   title: fieldId ? rk('Выберите поле данных', 'НастройщикЭкспорта') : rk('Выбор полей данных', 'НастройщикЭкспорта'),
                   applyButtonTitle: rk('Выбрать', 'НастройщикЭкспорта'),
                   groupTitles: options.fieldGroupTitles,
-                  preserveOrder: true
+                  preserveOrder: true,
+                  ignoreFixed: true// TODO: Добавить в редактор колонок опцию ignoreFixed
                }
             ).addCallback(function (resultColumnsConfig) {
                return resultColumnsConfig ? resultColumnsConfig.selectedColumns : null;
