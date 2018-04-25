@@ -35,16 +35,26 @@
                              listModel="{{_listViewModel}}"
                              on:beforeItemsRemove="_beforeItemsRemove()"
                              on:afterItemsRemove="_afterItemsRemove()"/>
-       <Controls.List.ItemActions.ItemActionsControl
-               ws:content="listView"
-               on:commitActionClick="_commitEditActionHandler()"
-               on:cancelActionClick="_cancelEditActionHandler()"
-               showToolbar="{{_options.editingConfig.showToolbar}}"
-               name="itemActions"
-               listModel="{{_listViewModel}}"
-               itemActions="{{_options.itemActions}}"
-               itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
-               itemActionsType="{{_options.itemActionsType}}"/>
+        <Controls.List.ItemActions.ItemActionsControl
+                ws:content="listView"
+                on:commitActionClick="_commitEditActionHandler()"
+                on:cancelActionClick="_cancelEditActionHandler()"
+                on:menuActionsClick="_showActionsMenu()"
+                showToolbar="{{_options.editingConfig.showToolbar}}"
+                name="itemActions"
+                listModel="{{_listViewModel}}"
+                menuIsShown="{{_menuIsShown}}"
+                itemActions="{{_options.itemActions}}"
+                itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
+                itemActionsType="{{_options.itemActionsType}}"/>
+        <Controls.List.Swipe.SwipeControl
+                ws:content="listView"
+                on:menuActionsClick="_showActionsMenu()"
+                on:closeSwipe="_closeSwipe()"
+                menuIsShown="{{_menuIsShown}}"
+                listModel="{{_listViewModel}}"
+                itemActions="{{_options.itemActions}}"
+                name="swipeControl"/>
     </ws:if>
 
     <ws:if data="{{_options.emptyTemplate && _listViewModel && !_listViewModel.getCount()}}">
