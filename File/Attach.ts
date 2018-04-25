@@ -34,11 +34,11 @@ type Options = {
  *       // Возможные способы загрузки
  *       sourceOptions: [ // загрузка на бизнеслогику
  *          // для загрузки через ajax
- *          new BL(sourceOptions), // модуль опций: SBIS3.File/Attach/Option/Sources/BL
+ *          new BL(sourceOptions), // модуль опций: SbisFile/Attach/Option/Sources/BL
  *          // для загрузки через СБИС Плагин
- *          new BLPlugin(sourceOptions) // модуль опций: SBIS3.File/Attach/Option/Sources/BLPlugin
+ *          new BLPlugin(sourceOptions) // модуль опций: SbisFile/Attach/Option/Sources/BLPlugin
  *       ],
- *       //  Или фабрика опций для ISource: SBIS3.File/Attach/Option/Sources/Fabric
+ *       //  Или фабрика опций для ISource: SbisFile/Attach/Option/Sources/Fabric
  *       // sourceOptions: Fabric.getBLSourceOptions(sourceOptions),
  *
  *       // Возможные способы получения ресурсов
@@ -52,7 +52,7 @@ type Options = {
  *          new FileChooser({
  *              multiSelect: true,
  *              extensions: ["image"]
- *          }), // модуль опций: SBIS3.File/Attach/Option/Getters/FileChooser
+ *          }), // модуль опций: SbisFile/Attach/Option/Getters/FileChooser
  *          // Для получения файлов, путём Drag&drop
  *          new DropArea({
  *              extensions: ["image"],
@@ -62,13 +62,13 @@ type Options = {
  *              element: document.querySelector('#toDrop')
  *          }), // модуль опций: File/Attach/Option/Getters/DropArea
  *          // Для работы со сканерами
- *          new Scanner(), // модуль опций: SBIS3.File/Attach/Option/Getters/Scanner
+ *          new Scanner(), // модуль опций: SbisFile/Attach/Option/Getters/Scanner
  *          // Для получения фото с веб-камеры
  *          new PhotoCam(), // модуль опций: File/Attach/Option/Getters/PhotoCam
  *          // Для получения ресурсов из буфера обмена
- *          new Clipboard(), // модуль опций: SBIS3.File/Attach/Option/Getters/Clipboard
+ *          new Clipboard(), // модуль опций: SbisFile/Attach/Option/Getters/Clipboard
  *          // Для выбора файлов через окно СБИС Плагин'a
- *          new Dialogs() // модуль опций: SBIS3.File/Attach/Option/Getters/Dialogs
+ *          new Dialogs() // модуль опций: SbisFile/Attach/Option/Getters/Dialogs
  *      ],
  *      multiSelect: true
  *   });
@@ -113,7 +113,7 @@ let Attach  = CoreExtend.extend(Abstract,{
          * Загрузка на бизнеслогику
          * <pre>
          *   var attach = new Attach({
-         *       // фабрика опций для ISource: {@link SBIS3.File/Attach/Option/Sources/Fabric}
+         *       // фабрика опций для ISource: {@link SbisFile/Attach/Option/Sources/Fabric}
          *       sourceOptions: Fabric.getBLSourceOptions({
          *          endpoint: {
          *              contract: "simple"
@@ -129,7 +129,7 @@ let Attach  = CoreExtend.extend(Abstract,{
          * Загрузка в СБИС Диск
          * <pre>
          *   var attach = new Attach({
-         *       // фабрика опций для ISource: {@link SBIS3.File/Attach/Option/Sources/Fabric}
+         *       // фабрика опций для ISource: {@link SbisFile/Attach/Option/Sources/Fabric}
          *       sourceOptions: Fabric.getSbisDiskSourceOptions({
          *          catalog: 'mydocs'
          *       }),
@@ -155,7 +155,7 @@ let Attach  = CoreExtend.extend(Abstract,{
          *          new FileChooser({
          *              multiSelect: true,
          *              extensions: ["image"]
-         *          }), // модуль опций: SBIS3.File/Attach/Option/Getters/FileChooser
+         *          }), // модуль опций: SbisFile/Attach/Option/Getters/FileChooser
          *          // Для получения файлов, путём Drag&drop
          *          new DropArea({
          *              extensions: ["image"],
@@ -165,13 +165,13 @@ let Attach  = CoreExtend.extend(Abstract,{
          *              element: document.querySelector('#toDrop')
          *          }), // модуль опций: File/Attach/Option/Getters/DropArea
          *          // Для работы со сканерами
-         *          new Scanner(), // модуль опций: SBIS3.File/Attach/Option/Getters/Scanner
+         *          new Scanner(), // модуль опций: SbisFile/Attach/Option/Getters/Scanner
          *          // Для получения фото с веб-камеры
          *          new PhotoCam(), // модуль опций: File/Attach/Option/Getters/PhotoCam
          *          // Для получения ресурсов из буфера обмена
-         *          new Clipboard(), // модуль опций: SBIS3.File/Attach/Option/Getters/Clipboard
+         *          new Clipboard(), // модуль опций: SbisFile/Attach/Option/Getters/Clipboard
          *          // Для выбора файлов через окно СБИС Плагин'a
-         *          new Dialogs() // модуль опций: SBIS3.File/Attach/Option/Getters/Dialogs
+         *          new Dialogs() // модуль опций: SbisFile/Attach/Option/Getters/Dialogs
          *      ],
          *      ...
          *   });
