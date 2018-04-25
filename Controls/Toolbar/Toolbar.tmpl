@@ -1,9 +1,8 @@
 <div class="controls-ToolBarV">
     <div class="controls-ToolBarV_content {{!_needShowMenu ? 'controls-ToolBarV_content__resetMargin'}}">
         <ws:for data="item in _items">
-
             <ws:partial if="{{item.showType !== showType.MENU && !item[_parentProperty] && item[_parentProperty] !== 0}}"
-                        template="{{_itemTemplate}}"
+                        template="{{item[_options.itemTemplateProperty] || itemTemplate || _defaultItemTemplate}}"
                         item="{{item}}"/>
         </ws:for>
     <div if="{{_needShowMenu}}" class="controls-ToolBarV__menuOpen controls-ToolbarV_item__styled"  name="popupTarget" on:click="_showMenu()">
