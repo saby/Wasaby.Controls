@@ -259,7 +259,9 @@ define('SBIS3.CONTROLS/TextBox', [
          if (constants.browser.isMobileSafari) {
             this._inputField.on('input', function (event) {
                if (self._getInputValue() !== self.getText()) {
-                  self._pasteHandler(event);
+                  /* У текста при вставке нельзя обрезать пробелы, иначе слово вставленное из autocorrecta,
+                     вставится без пробела */
+                  self._pasteHandler(event, true);
                }
             });
          }
@@ -576,13 +578,13 @@ define('SBIS3.CONTROLS/TextBox', [
          return true;
       },
 
-       _pasteHandler: function(event) {
+       _pasteHandler: function(event, noTrimText) {
            var text = this._getInputValue(),
                inputRegExp = this._options.inputRegExp;
            if (inputRegExp){
                text = this._checkRegExp(text, inputRegExp);
            }
-           if (this._options.trim) {
+           if (this._options.trim && noTrimText !== true) {
                text = text.trim();
            }
            text = this._formatText(text);
