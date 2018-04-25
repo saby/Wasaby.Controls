@@ -17,7 +17,11 @@
       </div>
    </ws:topArea>
    <ws:contentArea>
+      <div>
       <Controls.PropertyGrid items="{{_items}}" on:valueChanged="_valueChangedHandler()"
                              class="controls-FilterPanel__PropertyGrid"/>
+      <Controls.Filter.Button.Panel.AdditionalParams if="{{_hasAdditionalParams}}" items="{{_items}}"
+                                                     on:valueChanged="_valueChangedHandler()"/>
+   </div>
    </ws:contentArea>
 </Controls.Popup.Templates.Dialog.DialogTemplate>
