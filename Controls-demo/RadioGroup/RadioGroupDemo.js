@@ -38,7 +38,6 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
             {
                id: "4",
                title: 'Значение4',
-               displayProperty: 'caption',
                caption: 'caption4'
             },
             {
