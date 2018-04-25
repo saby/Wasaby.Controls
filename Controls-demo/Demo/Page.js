@@ -7,11 +7,12 @@ define('Controls-demo/Demo/Page',
       'Core/Deferred',
       'tmpl!Controls-demo/Demo/Page',
       'Controls/Application/AppData',
+      'Controls/Container/Scroll/Context',
       'css',
       'css!Controls-demo/Demo/Page',
       'Controls/Application',
    ],
-   function (Control, Deferred, template, AppData,  cssPlugin) {
+   function (Control, Deferred, template, AppData, ScrollData, cssPlugin) {
       'use strict';
 
       var UrlParams = (function () {
@@ -106,10 +107,14 @@ define('Controls-demo/Demo/Page',
          constructor: function(cfg){
             DemoPage.superclass.constructor.apply(this, arguments);
             this.ctxData = new AppData(cfg);
+            this.scrollData = new ScrollData({
+               pagingVisible: false
+            });
          },
          _getChildContext: function () {
             return {
-               AppData: this.ctxData
+               AppData: this.ctxData,
+               ScrollData: this.scrollData
             };
          }
       });
