@@ -25,8 +25,60 @@ define('Controls/Container/TinyMCE', [
             };
             tinyMCE.init(self.editorConfiguration);
          },
-         updateMceContainerText: function(self, text) {
-            self._children.mceContainer.innerHTML = _private.prepareReviewContent(text);
+         drawText: function(self, text) {
+            var autoFormat = true;
+            if (!self._typeInProcess && text != _private.getTinyEditorValue(self)) {
+               text = '<p>' + text.replace(/\n/gi, '<br/>') + '</p>';
+               autoFormat = false;
+            }
+            text = _private.replaceWhitespaces(text);
+            self._tinyEditor.setContent(_private.prepareReviewContent(_private.trimText(text)), autoFormat ? undefined : {format: 'raw'});
+            self._tinyEditor.undoManager.add();
+         },
+         getTinyEditorValue: function(self) {
+            var
+               content = self._tinyEditor.getContent({no_events: true}),
+               args = self._tinyEditor.fire('PostProcess', {content: content});
+            return args.content;
+         },
+         replaceWhitespaces: function(text) {
+            if (typeof text !== 'string') {
+               return text;
+            }
+            var out = '';
+            for (var a = 0, b = -1, opening = true, notEnd = true; notEnd; opening = !opening) {
+               b = text.indexOf(opening ? '<' : '>', a);
+               notEnd = b !== -1;
+               if (opening) {
+                  if (a !== notEnd ? b : text.length) {
+                     // Это фрагмент между тегами
+                     out += text.substring(a, notEnd ? b : text.length)
+
+                     // Сначала заменяем все вхождения сущности &nbsp; на эквивалентный символ
+                        .replace(/&nbsp;/g, String.fromCharCode(160))
+
+                        // Затем регуляризуем все пробельные цепочки
+                        .replace(/[\x20\xA0]+/g, function($0/*, index, source*/) {
+                           if ($0.length === 1) {
+                              return $0.charCodeAt(0) === 32 ? $0 : '&nbsp;';
+                           } else {
+                              // Получена цепочка пробельных символов - заменяем чередованием. Первым в цепочке всегда берём &nbsp;
+                              var spaces = '';
+                              for (var i = 0; i < $0.length; i++) {
+                                 spaces += i % 2 === 1 ? ' ' : '&nbsp;';
+                              }
+                              return spaces;
+                           }
+                        });
+                  }
+                  a = b;
+               } else {
+                  // Это фрагмент внутри тега
+                  out += text.substring(a, notEnd ? b + 1 : text.length);
+                  a = b + 1;
+               }
+            }
+            return out;
          },
          trimText: function(text) {
             if (!text) {
@@ -88,7 +140,7 @@ define('Controls/Container/TinyMCE', [
       },
       tinyMCEController = Control.extend({
          _template: template,
-         _typeInProcces: false,
+         _typeInProcess: false,
          editorConfiguration: {
             className: null,
             plugins: 'media,paste,lists,noneditable,codesample',
@@ -123,21 +175,13 @@ define('Controls/Container/TinyMCE', [
 
          _afterMount: function(opts) {
             _private.tinyInit(this);
-            _private.updateMceContainerText(this, opts.value);
+            _private.drawText(this, opts.value);
          },
 
          _beforeUpdate: function(opts) {
-            if (!_private.active) {
-               _private.updateMceContainerText(this, opts.value);
+            if (!this._typeInProcess && _private.getTinyEditorValue(this) !== opts.value) {
+               _private.drawText(this, opts.value);
             }
-         },
-
-         _onFocusIn: function() {
-            _private.active = true;
-         },
-
-         _onFocusOut: function() {
-            _private.active = false;
          },
 
          /**
