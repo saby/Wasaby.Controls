@@ -126,7 +126,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
                      if (!field) {
                         throw new Error('Unknown field: ' + id);
                      }
-                     return {id:id, column:_toLetter(i), field:field.title};
+                     return {id:id, column:_toLetters(i), field:field.title};
                   });
             }
             else {
@@ -216,7 +216,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
           * @param {object} model Модель пункта списка колонок
           * @param {string} action Название действия
           */
-         _onDelete: function (evtName, id, model/*, action*/) {
+         _onDelete: function (evtName, id/*, model, action*/) {
             var fieldIds = this._options.fieldIds;
             var index = fieldIds.indexOf(id);
             if (index !== -1) {
@@ -237,6 +237,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
                var fieldIds = this._options.fieldIds;
                _arrayInsert(fieldIds, removedId ? fieldIds.indexOf(removedId) : null, insertedIds);
                this._redraw();
+               this._grid.setSelectedKey(insertedIds[0]);
                this.sendCommand('subviewChanged');
             }
          },
@@ -318,11 +319,17 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
        * Создать буквенное обозначение для числа
        *
        * @private
-       * @param {number} index Неотрицательное число
+       * @param {number} value Неотрицательное число
        * @return {string}
        */
-      var _toLetter = function (index) {
-         return '' + (index + 1);// TODO: Реализовать эксель-нумерацию
+      var _toLetters = function (value) {
+         if (typeof value === 'number' && 0 <= value) {
+            var result = '';
+            for ( ; 0 <= value; value = Math.floor(value/26) - 1) {
+               result = String.fromCharCode(65 + value%26) + result;
+            }
+            return result;
+         }
       };
 
 
