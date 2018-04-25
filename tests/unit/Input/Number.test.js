@@ -27,6 +27,22 @@ define(
                   inputType: 'insert'
                },
                {
+                  testName: 'Invalid 12 => 12a',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '12',
+                     insert: 'a',
+                     after: '',
+                     delete: ''
+                  },
+                  result: {
+                     value: '12',
+                     position: 2
+                  },
+                  inputType: 'insert'
+               },
+               {
                   testName: 'Invalid 12.3 => 12.3a',
                   controlConfig: {
                   },
@@ -43,7 +59,24 @@ define(
                   inputType: 'insert'
                },
                {
-                  testName: 'Invalid 123.0 => -123',
+                  testName: 'Invalid 123.0 => -123.0',
+                  controlConfig: {
+                     onlyPositive: true
+                  },
+                  splitValue: {
+                     before: '',
+                     insert: '-',
+                     after: '123.0',
+                     delete: ''
+                  },
+                  result: {
+                     value: '123.0',
+                     position: 0
+                  },
+                  inputType: 'insert'
+               },
+               {
+                  testName: 'Invalid 123 => -123',
                   controlConfig: {
                      onlyPositive: true
                   },
@@ -54,15 +87,30 @@ define(
                      delete: ''
                   },
                   result: {
-                     value: '123.0',
+                     value: '123',
                      position: 0
                   },
                   inputType: 'insert'
                },
-
-               //Проверим что нельзя ввести больше указанного числа символов целой части
                {
-                  testName: 'Max length integer part',
+                  testName: 'Max length integers part 12 345.0 => 12 345.6',
+                  controlConfig: {
+                     integersLength: 5
+                  },
+                  splitValue: {
+                     before: '12 345',
+                     insert: '6',
+                     after: '.0',
+                     delete: ''
+                  },
+                  result: {
+                     value: '12 345.6',
+                     position: 7
+                  },
+                  inputType: 'insert'
+               },
+               {
+                  testName: 'Max length integers part 12 345 => 12 345.6',
                   controlConfig: {
                      integersLength: 5
                   },
@@ -78,10 +126,8 @@ define(
                   },
                   inputType: 'insert'
                },
-
-               //Проверим что нельзя ввести больше указанного числа символов дробной части
                {
-                  testName: 'Max length decimal part',
+                  testName: 'Max length decimal part 0.12345 => 0.12345',
                   controlConfig: {
                      precision: 5
                   },
@@ -97,10 +143,8 @@ define(
                   },
                   inputType: 'insert'
                },
-
-               //Проверим что нельзя ввести точку, если precision: 0
                {
-                  testName: 'No decimal part if precision is 0',
+                  testName: 'Forbid inserting dot if precision is 0',
                   controlConfig: {
                      precision: 0
                   },
@@ -111,13 +155,45 @@ define(
                      delete: ''
                   },
                   result: {
-                     value: '12.0',
+                     value: '12',
                      position: 2
                   },
                   inputType: 'insert'
                },
-
-               //Проверим что при вводе точки в начало строки будет '0.'
+               {
+                  testName: 'No dot when input starts if precision is 0 (empty field)',
+                  controlConfig: {
+                     precision: 0
+                  },
+                  splitValue: {
+                     before: '',
+                     insert: '1',
+                     after: '',
+                     delete: ''
+                  },
+                  result: {
+                     value: '1',
+                     position: 1
+                  },
+                  inputType: 'insert'
+               },
+               {
+                  testName: 'No dot when input starts if precision is 0 (field with value)',
+                  controlConfig: {
+                     precision: 0
+                  },
+                  splitValue: {
+                     before: '12',
+                     insert: '3',
+                     after: '',
+                     delete: ''
+                  },
+                  result: {
+                     value: '123',
+                     position: 3
+                  },
+                  inputType: 'insert'
+               },
                {
                   testName: 'Inserting a dot at the beginning of a line results in \'0.0\'',
                   controlConfig: {
@@ -134,8 +210,22 @@ define(
                   },
                   inputType: 'insert'
                },
-
-               //При попытке удалить пробел происходит удаление символа левее него и сдвиг курсора влево
+               {
+                  testName: 'Inserting 5 at the beginning of a line results in \'5.0\'',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '',
+                     insert: '5',
+                     after: '',
+                     delete: ''
+                  },
+                  result: {
+                     value: '5.0',
+                     position: 1
+                  },
+                  inputType: 'insert'
+               },
                {
                   testName: 'Delete space operation removes symbol before space and moves cursor left',
                   controlConfig: {
@@ -152,9 +242,6 @@ define(
                   },
                   inputType: 'deleteBackward'
                },
-
-               //Проверим что при вводе вместо точки запятой или буквы "б" или буквы "ю" - они будут заменены
-               //Достаточно проверить что один символ из набора заменяется на точку. Проверка остальных символов будет излишней
                {
                   testName: 'Symbols ",", "б", "ю", "Б", "Ю" are replaced by dot',
                   controlConfig: {
@@ -171,8 +258,6 @@ define(
                   },
                   inputType: 'insert'
                },
-
-               //Проверим что нельзя вставить вторую точку
                {
                   testName: 'Second dot is not allowed',
                   controlConfig: {
@@ -189,8 +274,6 @@ define(
                   },
                   inputType: 'insert'
                },
-
-               //Проверка удаления пробела клавишей delete
                {
                   testName: 'Remove space using \'delete\' button',
                   controlConfig: {
@@ -207,9 +290,8 @@ define(
                   },
                   inputType: 'deleteForward'
                },
-
                {
-                  testName: 'Insert minus after zero',
+                  testName: 'Insert minus after 0',
                   controlConfig: {
                   },
                   splitValue: {
@@ -224,7 +306,22 @@ define(
                   },
                   inputType: 'insert'
                },
-
+               {
+                  testName: 'Insert minus after first zero in 0.0',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '0',
+                     insert: '-',
+                     after: '.0',
+                     delete: ''
+                  },
+                  result: {
+                     value: '-0.0',
+                     position: 2
+                  },
+                  inputType: 'insert'
+               },
                {
                   testName: 'Insert number after first "0" in line',
                   controlConfig: {
@@ -233,6 +330,22 @@ define(
                      before: '0',
                      insert: '1',
                      after: '',
+                     delete: ''
+                  },
+                  result: {
+                     value: '1.0',
+                     position: 1
+                  },
+                  inputType: 'insert'
+               },
+               {
+                  testName: 'Insert number after first "0" in line (with .0)',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '0',
+                     insert: '1',
+                     after: '.0',
                      delete: ''
                   },
                   result: {
@@ -260,7 +373,60 @@ define(
                },
 
                {
+                  testName: 'Insert number after first "-0" in line (with .0)',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '-0',
+                     insert: '1',
+                     after: '.0',
+                     delete: ''
+                  },
+                  result: {
+                     value: '-1.0',
+                     position: 2
+                  },
+                  inputType: 'insert'
+               },
+
+               {
                   testName: 'Insert number in field with maxed integers (first in line)',
+                  controlConfig: {
+                     integersLength: 5
+                  },
+                  splitValue: {
+                     before: '',
+                     insert: '6',
+                     after: '12 345',
+                     delete: ''
+                  },
+                  result: {
+                     value: '62 345.0',
+                     position: 1
+                  },
+                  inputType: 'insert'
+               },
+
+               {
+                  testName: 'Insert number in field with maxed integers (before space)',
+                  controlConfig: {
+                     integersLength: 4
+                  },
+                  splitValue: {
+                     before: '',
+                     insert: '5',
+                     after: '1 234',
+                     delete: ''
+                  },
+                  result: {
+                     value: '5 234.0',
+                     position: 1
+                  },
+                  inputType: 'insert'
+               },
+
+               {
+                  testName: 'Insert number in field with maxed integers (first in line, with .0)',
                   controlConfig: {
                      integersLength: 5
                   },
@@ -278,7 +444,7 @@ define(
                },
 
                {
-                  testName: 'Insert number in field with maxed integers (before space)',
+                  testName: 'Insert number in field with maxed integers (before space, with .0)',
                   controlConfig: {
                      integersLength: 4
                   },
@@ -357,7 +523,24 @@ define(
                      delete: '1'
                   },
                   result: {
-                     value: '0',
+                     value: '',
+                     position: 0
+                  },
+                  inputType: 'deleteBackward'
+               },
+
+               {
+                  testName: 'Delete last symbol (with .0)',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '',
+                     insert: '',
+                     after: '.0',
+                     delete: '1'
+                  },
+                  result: {
+                     value: '0.0',
                      position: 1
                   },
                   inputType: 'deleteBackward'
@@ -374,7 +557,24 @@ define(
                      delete: '1'
                   },
                   result: {
-                     value: '0',
+                     value: '',
+                     position: 0
+                  },
+                  inputType: 'deleteBackward'
+               },
+
+               {
+                  testName: 'Delete last symbol (negative number, with .0)',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '-',
+                     insert: '',
+                     after: '.0',
+                     delete: '1'
+                  },
+                  result: {
+                     value: '0.0',
                      position: 1
                   },
                   inputType: 'deleteBackward'
@@ -396,11 +596,96 @@ define(
                      position: 6
                   },
                   inputType: 'deleteBackward'
+               },
+
+               {
+                  testName: '123.0 delete 0',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '123.',
+                     insert: '',
+                     after: '',
+                     delete: '0'
+                  },
+                  result: {
+                     value: '123.',
+                     position: 3
+                  },
+                  inputType: 'deleteBackward'
+               },
+
+               {
+                  testName: '1.0 delete 1',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '',
+                     insert: '',
+                     after: '.0',
+                     delete: '1'
+                  },
+                  result: {
+                     value: '0.0',
+                     position: 1
+                  },
+                  inputType: 'deleteBackward'
+               },
+
+               {
+                  testName: '0.0 delete firts 0',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '',
+                     insert: '',
+                     after: '.0',
+                     delete: '0'
+                  },
+                  result: {
+                     value: '0.0',
+                     position: 1
+                  },
+                  inputType: 'deleteBackward'
+               },
+
+               {
+                  testName: '0. delete 0',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '',
+                     insert: '',
+                     after: '.',
+                     delete: '0'
+                  },
+                  result: {
+                     value: '',
+                     position: 0
+                  },
+                  inputType: 'deleteBackward'
+               },
+
+               {
+                  testName: '1. delete 1',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '',
+                     insert: '',
+                     after: '.',
+                     delete: '1'
+                  },
+                  result: {
+                     value: '',
+                     position: 0
+                  },
+                  inputType: 'deleteBackward'
                }
             ];
 
          testCases.forEach(function(item) {
-            it(item.testName, function () {
+            it(item.testName, function() {
                var
                   numberViewModel = new NumberViewModel(item.controlConfig),
                   result = numberViewModel.handleInput(item.splitValue, item.inputType);
@@ -409,7 +694,7 @@ define(
             });
          });
 
-         it('getDisplayValue: only integers', function () {
+         it('getDisplayValue: only integers', function() {
             var
                numberViewModel = new NumberViewModel({
                   value: 123456
@@ -419,7 +704,7 @@ define(
             assert.equal(result, '123 456');
          });
 
-         it('getDisplayValue: integers and decimals', function () {
+         it('getDisplayValue: integers and decimals', function() {
             var
                numberViewModel = new NumberViewModel({
                   value: 123456.78
@@ -440,7 +725,7 @@ define(
             ];
 
             getValueTests.forEach(function(test, i) {
-               it('Test ' + i, function () {
+               it('Test ' + i, function() {
                   var numberViewModel = new NumberViewModel({
                      value: test[0]
                   });
@@ -451,7 +736,7 @@ define(
             });
          });
 
-         it('\'0.\' wouldn\'t update if value is 0', function () {
+         it('\'0.\' wouldn\'t update if value is 0', function() {
             var
                numberViewModel = new NumberViewModel({}),
                result;
@@ -461,7 +746,7 @@ define(
                insert: '.',
                after: '',
                delete: ' '
-            });
+            }, 'insert');
 
             numberViewModel.updateOptions({
                value: 0

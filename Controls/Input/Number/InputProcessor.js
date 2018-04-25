@@ -88,6 +88,11 @@ define('Controls/Input/Number/InputProcessor',
             //Набор валидаторов для числа
             validators: {
 
+               //Checks if insert is valid (number, dot or minus)
+               isValidInsert: function(insertValue) {
+                  return insertValue.match(/[\d.-]/);
+               },
+
                //Проверяет что строка является числом и не содержит недопустимых символов
                isNumber: function(valueToValidate) {
                   return valueToValidate.match(/^\-?\d*(\.\d*)?$/);
@@ -132,82 +137,83 @@ define('Controls/Input/Number/InputProcessor',
                var
                   shift = 0;
 
-               //Forbid inserting multiple zeroes at line start
-               if (!splitValueHelper.isEmptyField() && splitValueHelper.isAtLineStart() && splitValue.insert === '0' && splitValue.after[0] !== '.') {
+               if (
+                  !_private.validators.isValidInsert(splitValue.insert) ||
+                  (options.onlyPositive && splitValue.insert === '-') ||
+                  (options.precision === 0 && splitValue.insert === '.')
+               ) {
                   splitValue.insert = '';
-               }
-
-               if (splitValue.insert === '.') {
-                  //Inserting dot in emty field results in '0.0'
-                  if (splitValueHelper.isEmptyField()) {
-                     splitValue.after = '.0';
-                     splitValue.insert = '0';
-                  }
-
-                  //Inserting dot in integers part moves cursor to decimals part
-                  if (splitValueHelper.isInIntegersPart()) {
+               } else {
+                  //Forbid inserting multiple zeroes at line start
+                  if (!splitValueHelper.isEmptyField() && splitValueHelper.isAtLineStart() && splitValue.insert === '0' && splitValue.after[0] !== '.') {
                      splitValue.insert = '';
-                     shift += splitValue.after.indexOf('.') + 1;
                   }
-               }
 
-               //If field is empty or number doesn't contain dot, then we should add '.0' at the end
-               if (splitValueHelper.isEmptyField() || !splitValueHelper.hasDot()) {
-                  splitValue.after += '.0';
-               }
-
-               if (splitValueHelper.isEmptyField()) {
-                  splitValue.after += '.0';
-               }
-
-               if (splitValue.insert === '-') {
-                  if (!options.onlyPositive) {
-                     //Inserting '-' after '0' should result in '-0'
-                     if (splitValue.before === '0' || splitValue.before === '') {
-                        splitValue.before = '-0';
+                  if (splitValue.insert === '.') {
+                     //Inserting dot in emty field results in '0.0'
+                     if (splitValueHelper.isEmptyField()) {
+                        splitValue.after = '.0';
+                        splitValue.insert = '0';
+                     } else if (splitValueHelper.isInIntegersPart()) {
+                        //Inserting dot in integers part moves cursor to decimals part
+                        splitValue.insert = '';
+                        shift += splitValue.after.indexOf('.') + 1;
                      }
-                  } else {
-                     splitValue.insert = '';
-                     return;
                   }
-               }
 
-               //If before value is '0' and input is valid, then we should delete before value
-               if (splitValue.before === '0' && _private.validate(_private.getClearValue(splitValue), options.onlyPositive, options.integersLength, options.precision)) {
-                  splitValue.before = '';
-               }
+                  //If field is empty or number doesn't contain dot, then we should add '.0' at the end
+                  if ((splitValueHelper.isEmptyField() || !splitValueHelper.hasDot()) && options.precision !== 0) {
+                     splitValue.after += '.0';
+                  }
 
-               //if before value is '-0', then we should delete '0'
-               if (splitValue.before === '-0' && _private.validate(_private.getClearValue(splitValue), options.onlyPositive, options.integersLength, options.precision)) {
-                  splitValue.before = '-';
-               }
-
-               //If we have exceeded the maximum number in integers part, then we should move cursor after dot
-               if (!_private.validators.maxIntegersLength(_private.getClearValue(splitValue), options.integersLength)) {
-                  if (splitValue.after[0] === '.') {
-                     shift += 2;
-                     splitValue.after = splitValue.after.substring(0, 1) + splitValue.insert + splitValue.after.substring(2, splitValue.after.length);
-                  } else {
-                     if (splitValue.after[1] === ' ') {
-                        shift += 2;
+                  if (splitValue.insert === '-') {
+                     if (!options.onlyPositive) {
+                        //Inserting '-' after '0' should result in '-0'
+                        if (splitValue.before === '0' || splitValue.before === '') {
+                           splitValue.before = '-0';
+                        }
                      } else {
-                        shift += 1;
+                        splitValue.insert = '';
                      }
-                     splitValue.after = splitValue.insert + splitValue.after.slice(1);
                   }
-               }
 
-               //If we have exceeded the maximum number in decimals part, then we will replace the symbol on the right
-               if (!_private.validators.maxDecimalsLength(_private.getClearValue(splitValue), options.precision)) {
-                  if (splitValue.after !== '') {
-                     splitValue.before += splitValue.insert;
-                     splitValue.after = splitValue.after.slice(splitValue.insert.length);
+                  //If before value is '0' and input is valid, then we should delete before value
+                  if (splitValue.before === '0' && _private.validate(_private.getClearValue(splitValue), options.onlyPositive, options.integersLength, options.precision)) {
+                     splitValue.before = '';
                   }
-               }
 
-               //If input value will become invalid, then we should clear insert
-               if (!_private.validate(_private.getClearValue(splitValue), options.onlyPositive, options.integersLength, options.precision)) {
-                  splitValue.insert = '';
+                  //if before value is '-0', then we should delete '0'
+                  if (splitValue.before === '-0' && _private.validate(_private.getClearValue(splitValue), options.onlyPositive, options.integersLength, options.precision)) {
+                     splitValue.before = '-';
+                  }
+
+                  //If we have exceeded the maximum number in integers part, then we should move cursor after dot
+                  if (!_private.validators.maxIntegersLength(_private.getClearValue(splitValue), options.integersLength)) {
+                     if (splitValue.after[0] === '.') {
+                        shift += 2;
+                        splitValue.after = splitValue.after.substring(0, 1) + splitValue.insert + splitValue.after.substring(2, splitValue.after.length);
+                     } else {
+                        if (splitValue.after[1] === ' ') {
+                           shift += 2;
+                        } else {
+                           shift += 1;
+                        }
+                        splitValue.after = splitValue.insert + splitValue.after.slice(1);
+                     }
+                  }
+
+                  //If we have exceeded the maximum number in decimals part, then we will replace the symbol on the right
+                  if (!_private.validators.maxDecimalsLength(_private.getClearValue(splitValue), options.precision)) {
+                     if (splitValue.after !== '') {
+                        splitValue.before += splitValue.insert;
+                        splitValue.after = splitValue.after.slice(splitValue.insert.length);
+                     }
+                  }
+
+                  //If input value will become invalid, then we should clear insert
+                  if (!_private.validate(_private.getClearValue(splitValue), options.onlyPositive, options.integersLength, options.precision)) {
+                     splitValue.insert = '';
+                  }
                }
 
                return {
@@ -274,7 +280,6 @@ define('Controls/Input/Number/InputProcessor',
 
                //If whole decimal part was deleted then we should place '.0'
                if (splitValue.before[splitValue.before.length - 1] === '.' && splitValueHelper.isAtLineEnd()) {
-                  splitValue.after = '0';
                   shift -= 1;
                }
 
@@ -284,8 +289,17 @@ define('Controls/Input/Number/InputProcessor',
                }
 
                //If we delete the last character on the left and there is no integers after it, then we need to set it to '0'
-               if ((splitValue.before === '' || splitValue.before === '-') && (splitValue.after === '' || splitValue.after[0] === '.')) {
-                  splitValue.before = '0';
+               if (splitValue.before === '' || splitValue.before === '-') {
+                  if (splitValue.after === '') {
+                     splitValue.before = '';
+                  }
+                  if (splitValue.after[0] === '.') {
+                     if (splitValue.after[1]) {
+                        splitValue.before = '0';
+                     } else {
+                        splitValue.after = '';
+                     }
+                  }
                }
 
                //If a space was removed, we should delete the number to the left of it and move the cursor one unit to the left
