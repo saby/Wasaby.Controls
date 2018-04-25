@@ -29,7 +29,12 @@ define('Controls/List/Swipe/SwipeControl', [
       COLUMN_SECOND_TYPE_THRESHOLD = 32,
       COLUMN_THIRD_TYPE_THRESHOLD = 40,
       COLUMN_FOURTH_TYPE_THRESHOLD = 48,
-      SEPARATOR_WIDTH = 1;
+      SEPARATOR_WIDTH = 1,
+      TWO_COLUMN_MENU_TYPE = 13,
+      ROW_TYPE_THRESHOLD = 4,
+      ONE_COLUMN_TYPE_THRESHOLD = 8,
+      SUBTYPE_COUNT = 4,
+      TYPES_WITH_TITLE = [3, 4, 7, 8, 11, 12];
    var _private = {
       
       getNumberInterval: function(number,  limits) {
@@ -46,15 +51,15 @@ define('Controls/List/Swipe/SwipeControl', [
 
          //inline
          type  = _private.getNumberInterval(size, [ROW_FIRST_TYPE_THRESHOLD, ROW_SECOND_TYPE_THRESHOLD, ROW_THIRD_TYPE_THRESHOLD, ROW_FOURTH_TYPE_THRESHOLD]);
-         if (type < 4) {
-            return type + 1;
+         if (type < ROW_TYPE_THRESHOLD) {
+            return type + 1; //index start from 0
          }
 
          //1 column
          x1 = (size  - VERTICAL_MARGIN - (VERTICAL_MARGIN + SEPARATOR_WIDTH) * (count - 1)) / count;
          type = _private.getNumberInterval(x1, [COLUMN_FIRST_TYPE_THRESHOLD, COLUMN_SECOND_TYPE_THRESHOLD, COLUMN_THIRD_TYPE_THRESHOLD, COLUMN_FOURTH_TYPE_THRESHOLD]);
          if (type) {
-            return type + 4;
+            return type + ROW_TYPE_THRESHOLD;
          }
 
          //2column
@@ -62,14 +67,14 @@ define('Controls/List/Swipe/SwipeControl', [
          x2 = (2 * size  - (VERTICAL_MARGIN * 2) - (VERTICAL_MARGIN + SEPARATOR_WIDTH) * (evenNumber - 2)) / evenNumber;
          type = _private.getNumberInterval(x2,  [COLUMN_FIRST_TYPE_THRESHOLD, COLUMN_SECOND_TYPE_THRESHOLD, COLUMN_THIRD_TYPE_THRESHOLD, COLUMN_FOURTH_TYPE_THRESHOLD]);
          if (type) {
-            return type + 8;
+            return type + ONE_COLUMN_TYPE_THRESHOLD;
          }
-         return 13;
+         return TWO_COLUMN_MENU_TYPE;
 
       },
 
       initSwipeDirection: function(type) {
-         if (type < 5) {
+         if (type <= ROW_TYPE_THRESHOLD) {
             return 'row';
          } else {
             return 'column';
@@ -77,7 +82,7 @@ define('Controls/List/Swipe/SwipeControl', [
       },
 
       swipeIsFull: function(type) {
-         return (type > 4 && type < 9) || type  === 13;
+         return (type > ROW_TYPE_THRESHOLD && type <= ONE_COLUMN_TYPE_THRESHOLD) || type  === TWO_COLUMN_MENU_TYPE;
       },
 
       getActionDefaultHeight: function(type) {
@@ -87,7 +92,7 @@ define('Controls/List/Swipe/SwipeControl', [
             3: SMALL_ICON_SIZE + TITLE_HEIGHT + VERTICAL_MARGIN,
             0: BIG_ICON_SIZE + TITLE_HEIGHT + VERTICAL_MARGIN
          };
-         return heights[type % 4];//каждые 4 типа высота сбрасывается до 1
+         return heights[type % SUBTYPE_COUNT];//каждые SUBTYPE_COUNT типа высота сбрасывается до 1
       },
 
       closeSwipe: function(self) {
@@ -110,7 +115,7 @@ define('Controls/List/Swipe/SwipeControl', [
             self._swipeConfig.isFull = _private.swipeIsFull(self._swipeConfig.type);
             self._swipeConfig.separatorType = _private.initSeparatorType(self._swipeConfig.direction);
             self._swipeConfig.swipeIconSize = _private.initSwipeIconSize(self._swipeConfig.type);
-            self._swipeConfig.bigTitle = self._swipeConfig.type === 13;
+            self._swipeConfig.bigTitle = self._swipeConfig.type === TWO_COLUMN_MENU_TYPE;
             _private.initItemsForSwipe(self, itemData, actionsHeight);
          }
       },
@@ -134,11 +139,11 @@ define('Controls/List/Swipe/SwipeControl', [
 
          }
 
-         if (self._swipeConfig.type > 4 && self._swipeConfig.type < 9) {
+         if (self._swipeConfig.type > ROW_TYPE_THRESHOLD && self._swipeConfig.type <= ONE_COLUMN_TYPE_THRESHOLD) {
             _private.initOneColumsItems(self, itemData);
          }
 
-         if (self._swipeConfig.type > 8) {
+         if (self._swipeConfig.type > ONE_COLUMN_TYPE_THRESHOLD) {
             _private.initTwoColumsItems(self, itemData,  actionsHeight);
          }
       },
@@ -172,7 +177,7 @@ define('Controls/List/Swipe/SwipeControl', [
             sum += SEPARATOR_WIDTH; //separator width
          }
 
-         if (self._swipeConfig.type === 13) {
+         if (self._swipeConfig.type === TWO_COLUMN_MENU_TYPE) {
             self._visibleItemsCount =  oneColumnCount * 2;
 
             for (i = 0; i <  self._visibleItemsCount; i++) {
@@ -217,9 +222,8 @@ define('Controls/List/Swipe/SwipeControl', [
 
       needShowTitle: function(action, type) {
          var
-            tempAction = action ? action : {title: true, icon: true}, //menu emulateAction
-            needTitleTypes = [3, 4, 7, 8, 11, 12]; //данные типы должны быть с подсказкой
-         return tempAction.title && (!tempAction.icon || ~needTitleTypes.indexOf(type));
+            tempAction = action ? action : {title: true, icon: true}; //menu emulateAction
+         return tempAction.title && (!tempAction.icon || ~TYPES_WITH_TITLE.indexOf(type));
       },
 
       needShowSeparator: function(self, action, itemData, type) {
@@ -228,7 +232,7 @@ define('Controls/List/Swipe/SwipeControl', [
          if (!type || actionIndex === self._visibleItemsCount) {
             return false;
          }
-         if (type > 8) {
+         if (type > ONE_COLUMN_TYPE_THRESHOLD) {
             //две колонки
             //если с меню то не показываем у меню и у средней
             //без меню не показываем у средней
@@ -287,7 +291,7 @@ define('Controls/List/Swipe/SwipeControl', [
       },
 
       _onActionClick: function(event, action, itemData) {
-         aUtil.actionClick(this, event, action, itemData, this._swipeConfig.type > 4);
+         aUtil.actionClick(this, event, action, itemData, this._swipeConfig.type > ROW_TYPE_THRESHOLD);
       }
 
    });
