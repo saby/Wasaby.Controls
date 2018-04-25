@@ -2,7 +2,7 @@
     <div class="controls-RadioGroup__wrapper_{{_options.direction}}">
         <ws:for data="index, item in _items">
             <ws:partial template="{{item[_options.itemTemplateProperty] || _options.itemTemplate || _defaultItemTemplate}}"
-                        on:click="selectKeyChanged(item, _options.keyProperty)"
+                        on:click="_selectKeyChanged(item, _options.keyProperty)"
                         attr:class="controls-RadioGroup_defaultItem_{{_options.direction === 'horizontal' ? 'horizontal' : 'vertical'}}"
                         item="{{item}}"
                         readOnly="{{_options.readOnly}}"
