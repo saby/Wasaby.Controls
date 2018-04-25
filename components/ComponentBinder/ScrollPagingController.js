@@ -39,8 +39,7 @@ define('SBIS3.CONTROLS/ComponentBinder/ScrollPagingController',
              Сейчас пэйджинг заточен на загрузку вниз. Код необходимо переписать. */
             pagingVisibility = pagesCount > 1 && infiniteScroll !== 'up' && infiniteScroll !== 'both';
       
-            /* Если пэйджинг скрыт - паддинг не нужен */
-            view.getContainer().toggleClass('controls-ScrollPaging__pagesPadding', pagingVisibility);
+
             if (this._options.paging.getSelectedKey() > pagesCount) {
                this._options.paging.setSelectedKey(pagesCount);
             }
@@ -49,10 +48,6 @@ define('SBIS3.CONTROLS/ComponentBinder/ScrollPagingController',
             pagingVisibility= false;
          }
 
-         /*Новое требование, если страниц всего две (посчитали две и ЕстьЕще false) то пэйджинг не показываем*/
-         if (pagingVisibility && pagesCount <= 2 && !(view._hasNextPage(view.getItems().getMetaData().more, view._scrollOffset.bottom, 'after'))) {
-            pagingVisibility = false;
-         }
 
          /* Для пэйджинга считаем, что кол-во страниц это:
           текущее кол-во загруженных страниц + 1, если в метаинформации рекордсета есть данные о том, что на бл есть ещё записи.
@@ -65,6 +60,13 @@ define('SBIS3.CONTROLS/ComponentBinder/ScrollPagingController',
          }
    
          //Если есть страницы - покажем paging
+         /*Новое требование, если страниц всего две (посчитали две и ЕстьЕще false) то пэйджинг не показываем*/
+         if (pagingVisibility && pagesCount <= 2 && !(view._hasNextPage(view.getItems().getMetaData().more, view._scrollOffset.bottom, 'after'))) {
+            pagingVisibility = false;
+         }
+
+         /* Если пэйджинг скрыт - паддинг не нужен */
+         view.getContainer().toggleClass('controls-ScrollPaging__pagesPadding', pagingVisibility);
          this._options.paging.setVisible(pagingVisibility && !this._options.hiddenPager);
       }
    };
