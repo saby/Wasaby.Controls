@@ -24,7 +24,8 @@ define([
                   element: container
                });
             
-            assert.equal(bc.getContainer().find('.controls-BreadCrumbs__itemsContainer .controls-BreadCrumbs__crumb').attr('title'), '"""');
+            assert.equal(bc.getContainer().find('.controls-BreadCrumbs__itemsContainer .controls-BreadCrumbs__crumb').attr('title'), '&quot;&quot;&quot;');
+            assert.equal(bc.getContainer().find('.controls-BreadCrumbs__itemsContainer .controls-BreadCrumbs__crumb').attr('data-id'), '&quot;');
             bc.destroy();
          });
       });
