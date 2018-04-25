@@ -9,12 +9,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
    [
       'Core/CommandDispatcher',
       'Core/helpers/Object/isEqual',
+      'SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
       'SBIS3.CONTROLS/CompoundControl',
+      'WS.Data/Collection/RecordSet',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
       'css!SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View'
    ],
 
-   function (CommandDispatcher, cObjectIsEqual, CompoundControl, dotTplFn) {
+   function (CommandDispatcher, cObjectIsEqual, ColumnsEditor, CompoundControl, RecordSet, dotTplFn) {
       'use strict';
 
       var View = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View.prototype*/ {
@@ -53,16 +55,22 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
                 */
                emptyTitle: rk('Не задано', 'НастройщикЭкспорта'),
                /**
-                * @cfg {Array<BrowserColumnInfo>} Список объектов с информацией о всех колонках в формате, используемом в браузере
+                * @cfg {Array<BrowserColumnInfo>|WS.Data/Collection/RecordSet<BrowserColumnInfo>} Список объектов с информацией о всех колонках в формате, используемом в браузере
                 */
                allFields: null,
                /**
                 * @cfg {Array<string>} Список привязки колонок в экспортируемом файле к полям данных
                 */
-               fieldIds: null
+               fieldIds: null,
+               /**
+                * @cfg {object} Список отображаемых названий групп полей (если используются идентификаторы групп)
+                */
+               fieldGroupTitles: null
             },
             // Контрол списка соответствий колонок файла и полей данных
-            _grid: null
+            _grid: null,
+            // Редактор колонок
+            _columnsEditor: null
          },
 
          _modifyOptions: function () {
@@ -100,6 +108,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
           */
          _makeRows: function (options) {
             var allFields = options.allFields;
+            if (allFields instanceof RecordSet) {
+               allFields = allFields.getRawData();//^^^
+            }
             var fieldIds = options.fieldIds;
             return fieldIds && fieldIds.length
                ? fieldIds.map(function (id, i) {
@@ -127,25 +138,58 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
          },
 
          /**
+          * Открыть редактор колонок
+          * @protected
+          * @param {string} fieldId Идентификатор текущего поля
+          * @return {Core/Deferred<Array<string>>}
+          */
+         _openColumnsEditor: function (fieldId) {
+            if (!this._columnsEditor) {
+               this._columnsEditor = new ColumnsEditor();
+            }
+            var options = this._options;
+            return this._columnsEditor.open(
+               {
+                  columns: options.allFields,
+                  selectedColumns: fieldId ? [fieldId] : []
+               },
+               {
+                  title: fieldId ? rk('Выберите поле данных', 'НастройщикЭкспорта') : rk('Выбор полей данных', 'НастройщикЭкспорта'),
+                  applyButtonTitle: rk('Выбрать', 'НастройщикЭкспорта'),
+                  groupTitles: options.fieldGroupTitles,
+                  preserveOrder: true
+               }
+            ).addCallback(function (resultColumnsConfig) {
+               return resultColumnsConfig ? resultColumnsConfig.selectedColumns : null;
+            });
+         },
+
+         /**
           * Обработчик команды при клике по кнопке добавления колонок
           * @protected
           */
          _onAdd: function () {
             // Открыть редактор колонок
-            //^^^this._options.^^^ = ^^^;
-            //^^^this.sendCommand('subviewChanged');
+            this._openColumnsEditor().addCallback(function (fieldIds) {
+               // И затем ...
+               //^^^this._options.^^^ = ^^^;
+               //^^^this.sendCommand('subviewChanged');
+            });
          },
 
          /**
           * Обработчик события при клике по строке списка колонок
           * @protected
           * @param {Core/EventObject} evtName Дескриптор события
-          * @param {object} meta ^^^
+          * @param {object} data Информация о редактируемой строке (id, item)
           */
-         _onEdit: function (evtName, meta) {
+         _onEdit: function (evtName, data) {
             // Открыть редактор колонок
-            //^^^this._options.^^^ = ^^^;
-            //^^^this.sendCommand('subviewChanged');
+            this._openColumnsEditor(data.id).addCallback(function (fieldIds) {
+               // И затем ...
+               //^^^this._options.^^^ = ^^^;
+               //^^^this.sendCommand('subviewChanged');
+            });
          },
 
          /**

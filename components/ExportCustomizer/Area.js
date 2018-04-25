@@ -91,7 +91,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                }
                return value;
             }
-         }
+         },
+         fieldGroupTitles: _typeIfDefined.bind(null, 'object')
       };
 
       /**
@@ -117,7 +118,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          'columnBinderFieldsTitle',
          'columnBinderEmptyTitle',
          'allFields',
-         'fieldIds'
+         'fieldIds',
+         'fieldGroupTitles'
       ];
 
       var Area = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ExportCustomizer/Area.prototype*/ {
@@ -164,7 +166,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                /**
                 * @cfg {Array<string>} Список привязки колонок в экспортируемом файле к полям данных
                 */
-               fieldIds: null
+               fieldIds: null,
+               /**
+                * @cfg {object} Список отображаемых названий групп полей (если используются идентификаторы групп)
+                */
+               fieldGroupTitles: null
             },
             // Список имён вложенных под-компонентов
             _SUBVIEW_NAMES: {
@@ -262,13 +268,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * @param {object} options Опции компонента
           */
          _reshapeOptions: function (options) {
-            var allFields = options.allFields;
             options._scopes = {
                columnBinder: {
                   title: options.columnBinderTitle || undefined,
                   columnsTitle: options.columnBinderColumnsTitle || undefined,
                   fieldsTitle: options.columnBinderFieldsTitle || undefined,
-                  allFields: allFields && allFields instanceof RecordSet ? allFields.getRawData() : allFields,
+                  allFields: options.allFields,
                   fieldIds: options.fieldIds
                },
                formatter: {
