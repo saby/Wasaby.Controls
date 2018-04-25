@@ -4,7 +4,6 @@ define('Controls/Input/Number', [
    'WS.Data/Type/descriptor',
    'Controls/Input/Number/ViewModel',
    'Controls/Input/resources/InputHelper',
-   'Core/helpers/Function/runDelayed',
 
    'Controls/Input/resources/InputRender/InputRender',
    'tmpl!Controls/Input/resources/input'
@@ -12,8 +11,7 @@ define('Controls/Input/Number', [
    template,
    types,
    NumberViewModel,
-   inputHelper,
-   runDelayed) {
+   inputHelper) {
 
    'use strict';
    var
@@ -158,6 +156,8 @@ define('Controls/Input/Number', [
          showEmptyDecimals: types(Boolean) //Показывать нули в конце дробной части
       };
    };
+
+   NumberInput._private = _private;
 
    return NumberInput;
 });
