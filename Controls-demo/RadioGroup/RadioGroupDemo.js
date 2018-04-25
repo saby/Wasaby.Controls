@@ -17,43 +17,50 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
    'use strict';
    var source = new MemorySource({
          idProperty: 'id',
+         displayProperty: 'caption',
          data: [
             {
                id: "1",
-               title: 'Значение1'
+               title: 'Значение1',
+               caption: 'caption1'
             },
             {
                id: "2",
-               title: 'Значение2'
+               title: 'Значение2',
+               caption: 'caption2'
             },
             {
                id: "3",
                title: 'Особенный',
-               templateTwo: 'tmpl!Controls-demo/RadioGroup/resources/SingleItemTemplate'
+               templateTwo: 'tmpl!Controls-demo/RadioGroup/resources/SingleItemTemplate',
+               caption: 'caption3'
             },
             {
                id: "4",
                title: 'Значение4',
                displayProperty: 'caption',
-               caption: 'Другое значение'
+               caption: 'caption4'
             },
             {
                id: "5",
                title: 'Не такой как все',
-               template: 'tmpl!Controls-demo/RadioGroup/resources/SingleItemTemplate'
+               caption: 'caption5'
             },
             {
                id: "6",
-               title: 'Значение6'
+               title: 'Значение6',
+               caption: 'caption6'
             },
             {
                id: "7",
                title: 'Супер Особенный',
-               templateTwo: 'tmpl!Controls-demo/RadioGroup/resources/SingleItemTemplate'
+               templateTwo: 'tmpl!Controls-demo/RadioGroup/resources/SingleItemTemplate',
+               caption: 'caption7'
             },
             {
                id: "8",
-               title: 'Значение8'
+               title: 'Значение8',
+               caption: 'caption8'
             }
          ]
       });

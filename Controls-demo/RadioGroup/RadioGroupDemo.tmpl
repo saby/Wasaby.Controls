@@ -13,7 +13,7 @@
     </div>
 
     <div class="demo-RadioGroup__TestBlock">
-        <h2>Задан itemContentTpl. Для каждого заголовка используется верстка заданная в опциях. Для 5 элемента (itemTemplateProperty === 'template') задан персональная верстка.</h2>
+        <h2>Задан ws:contentTemplate. Для каждого заголовка используется верстка заданная в опциях.</h2>
         <Controls.Toggle.Radio
                 attr:class="demo-RadioGroup"
                 on:onSelectedItemChange="changeKey()"
@@ -21,13 +21,44 @@
                 selectedKey="{{_selectKey}}"
                 source="{{_source}}"
                 direction="horizontal"
-                readOnly="{{false}}"
-                itemContentTpl="{{_customItemTemplate}}"
-                itemTemplateProperty="template"/>
+                readOnly="{{false}}">
+            <ws:itemTemplate>
+                <ws:partial template='tmpl!Controls/Toggle/Radio/resources/ItemTemplate'
+                            item="{{item}}"
+                >
+                    <ws:contentTemplate>
+                        <div style="padding: 4px;">
+                            <div style="font-size: 11px; color: grey">{{itemTemplate.item.get('title')}}</div>
+                        </div>
+                    </ws:contentTemplate>
+                </ws:partial>
+            </ws:itemTemplate>
+        </Controls.Toggle.Radio>
     </div>
 
     <div class="demo-RadioGroup__TestBlock">
-        <h2>Задан itemTpl. Для каждого элемента используется верстка заданная в опциях.</h2>
+        <h2>Задан displayProperty.</h2>
+        <Controls.Toggle.Radio
+                attr:class="demo-RadioGroup"
+                on:onSelectedItemChange="changeKey()"
+                keyProperty="id"
+                selectedKey="{{_selectKey}}"
+                source="{{_source}}"
+                direction="horizontal"
+                readOnly="{{false}}">
+            <ws:itemTemplate>
+                <ws:partial template='tmpl!Controls/Toggle/Radio/resources/ItemTemplate'
+                            item="{{item}}"
+                            readOnly="{{readOnly}}"
+                            selected="{{selected}}"
+                            displayProperty="caption"
+                />
+            </ws:itemTemplate>
+        </Controls.Toggle.Radio>
+    </div>
+
+    <div class="demo-RadioGroup__TestBlock">
+        <h2>Задан itemTemplate. Для каждого элемента используется верстка заданная в опциях.</h2>
         <Controls.Toggle.Radio
                 on:onSelectedItemChange="changeKey()"
                 attr:class="demo-RadioGroup"
@@ -36,6 +67,6 @@
                 source="{{_source}}"
                 direction="vertical"
                 readOnly="{{false}}"
-                itemTpl="{{_unionItemTemplate}}"/>
+                itemTemplate="{{_unionItemTemplate}}"/>
     </div>
 </div>
