@@ -24,18 +24,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
       'use strict';
 
       /**
-       * @typedef {object} BrowserColumnInfo Тип, содержащий информацию о колонке браузера
+       * @typedef {object} BrowserColumnInfo Тип, содержащий информацию о колонке браузера (SBIS3.CONTROLS/Browser и его наследники)
        * @property {string} id Идентификатор колонки (как правило, имя поля в базе данных или БЛ)
        * @property {string} title Отображаемое название колонки
        * @property {string} [group] Идентификатор или название группы, к которой относится колонка (опционально)
        * @property {boolean} [fixed] Обязательная колонка (опционально)
-       * @property {object} columnConfig Конфигурация колонки в формате, используемом компонентом SBIS3.CONTROLS:DataGridView
-       */
-
-      /**
-       * @typedef {object} ExportField ^^^ Тип, описывающий целевое поле при привязке колонок файла к полям данных
-       * @property {string} filed Идентификатор поля
-       * @property {string} title Отображаемое наименование поля
+       * @property {object} columnConfig Конфигурация колонки в формате, используемом компонентом SBIS3.CONTROLS/DataGridView
        */
 
       /**
@@ -63,7 +57,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          columnBinderColumnsTitle: _typeIfDefined.bind(null, 'string'),
          columnBinderFieldsTitle: _typeIfDefined.bind(null, 'string'),
          columnBinderEmptyTitle: _typeIfDefined.bind(null, 'string'),
-         columns: function (value) {
+         allFields: function (value) {
             // Должно быть значение
             if (!value) {
                return new Error('Value required');
@@ -84,7 +78,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             }
             return value;
          },
-         selectedColumnIds: function (value) {
+         fieldIds: function (value) {
             // Если значение есть
             if (value) {
                // оно должно быть массивом
@@ -94,24 +88,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                // И каждый элемент массива должен быть не пустой строкой
                if (!value.every(function (v) { return !!v && typeof v === 'string'; })) {
                   return new Error('Array items must be none empty strings');
-               }
-               return value;
-            }
-         },
-         columnBinderFields: /*^^^*/function (value) {
-            // Если значение есть
-            if (value) {
-               // оно должно быть массивом
-               if (!Array.isArray(value)) {
-                  return new Error('Value must be array');
-               }
-               // И каждый элемент массива должен быть {@link ExportField}
-               if (!sheets.every(function (v) { return (
-                     typeof v === 'object' &&
-                     (v.field && typeof v.field === 'string') &&
-                     (v.title && typeof v.title === 'string')
-                  ); })) {
-                  return new Error('Option "sheets" items must be an ImportSheet');
                }
                return value;
             }
@@ -140,9 +116,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          'columnBinderColumnsTitle',
          'columnBinderFieldsTitle',
          'columnBinderEmptyTitle',
-         'columns',
-         'selectedColumnIds',
-         'columnBinderFields'//^^^
+         'allFields',
+         'fieldIds'
       ];
 
       var Area = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ExportCustomizer/Area.prototype*/ {
@@ -183,22 +158,18 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                 */
                columnBinderEmptyTitle: null,
                /**
-                * @cfg {Array<BrowserColumnInfo>|WS.Data/Collection/RecordSet<BrowserColumnInfo>} Список объектов с информацией о колонках браузера
+                * @cfg {Array<BrowserColumnInfo>|WS.Data/Collection/RecordSet<BrowserColumnInfo>} Список объектов с информацией о всех колонках в формате, используемом в браузере
                 */
-               columns: null,
+               allFields: null,
                /**
-                * @cfg {Array<string>} Список идентификаторов выбранных колонок
+                * @cfg {Array<string>} Список привязки колонок в экспортируемом файле к полям данных
                 */
-               selectedColumnIds: null,
-               /**
-                * @cfg {Array<ExportField>} ^^^Список соответствий колонок файла и полей данных для под-компонента "columnBinder"
-                */
-               columnBinderFields: []//^^^
+               fieldIds: null
             },
             // Список имён вложенных под-компонентов
             _SUBVIEW_NAMES: {
                columnBinder: 'controls-ExportCustomizer-Area__body__columnBinder',
-               formatter: 'controls-ExportCustomizer-Area__body__formatter',
+               formatter: 'controls-ExportCustomizer-Area__body__formatter'
             },
             // Ссылки на вложенные под-компоненты
             _views: {
@@ -291,15 +262,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * @param {object} options Опции компонента
           */
          _reshapeOptions: function (options) {
-            var columns = options.columns;
+            var allFields = options.allFields;
             options._scopes = {
                columnBinder: {
                   title: options.columnBinderTitle || undefined,
                   columnsTitle: options.columnBinderColumnsTitle || undefined,
                   fieldsTitle: options.columnBinderFieldsTitle || undefined,
-                  columns: columns && columns instanceof RecordSet ? columns.getRawData() : columns,
-                  selectedColumnIds: options.selectedColumnIds,
-                  fields: options.columnBinderFields//^^^
+                  allFields: allFields && allFields instanceof RecordSet ? allFields.getRawData() : allFields,
+                  fieldIds: options.fieldIds
                },
                formatter: {
                   //^^^
@@ -570,10 +540,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
 
          destroy: function () {
             Area.superclass.destroy.apply(this, arguments);
-            var fieldsPromise = this._fieldsPromise;
+            /*^^^var fieldsPromise = this._fieldsPromise;
             if (fieldsPromise && !fieldsPromise.isReady()) {
                fieldsPromise.cancel();
-            }
+            }*/
          }
       });
 

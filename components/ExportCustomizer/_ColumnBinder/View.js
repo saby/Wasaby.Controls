@@ -20,16 +20,17 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
       var View = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View.prototype*/ {
 
          /**
-          * @typedef {object} ExportField Тип, описывающий целевое поле при привязке колонок файла к полям данных
-          * @property {string} filed Идентификатор поля
-          * @property {string} title Отображаемое наименование поля
+          * @typedef {object} BrowserColumnInfo Тип, содержащий информацию о колонке браузера
+          * @property {string} id Идентификатор колонки (как правило, имя поля в базе данных или БЛ)
+          * @property {string} title Отображаемое название колонки
+          * @property {string} [group] Идентификатор или название группы, к которой относится колонка (опционально)
+          * @property {boolean} [fixed] Обязательная колонка (опционально)
+          * @property {object} columnConfig Конфигурация колонки в формате, используемом компонентом SBIS3.CONTROLS:DataGridView
           */
 
          /**
           * @typedef {object} ExportColumnBinderResult Тип, описывающий возвращаемые настраиваемые значения компонента
-          * @property {Array<string>} fields Список привязки колонок файла к полям данных
-          *
-          * @see fields
+          * @property {Array<string>} fieldIds Список привязки колонок в экспортируемом файле к полям данных
           */
 
          _dotTplFn: dotTplFn,
@@ -52,9 +53,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
                 */
                emptyTitle: rk('Не задано', 'НастройщикЭкспорта'),
                /**
-                * @cfg {Array<ExportField>} Список соответствий колонок файла и полей данных
+                * @cfg {Array<BrowserColumnInfo>} Список объектов с информацией о всех колонках в формате, используемом в браузере
                 */
-               filelds: []
+               allFields: null,
+               /**
+                * @cfg {Array<string>} Список привязки колонок в экспортируемом файле к полям данных
+                */
+               fieldIds: null
             },
             // Контрол списка соответствий колонок файла и полей данных
             _grid: null
@@ -62,12 +67,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
 
          _modifyOptions: function () {
             var options = View.superclass._modifyOptions.apply(this, arguments);
-            var filelds = options.filelds;
-            options._rows = (filelds && filelds.length ? filelds : [{field:'', title:emptyTitle}]).map(function (v, i) { return {id:v.field, column:_toLetter(i), field:v.title}; });
             options._columns = [
                {field:'column', title:options.columnsTitle},
                {field:'field', title:options.fieldsTitle}
             ];
+            options._rows = this._makeRows(options);
             options._rowActions = this._makeRowActions();
             return options;
          },
@@ -86,6 +90,23 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
          _bindEvents: function () {
             //При клике по строке списка колонок
             this.subscribeTo(this._grid, 'onItemActivate', this._onEdit.bind(this));
+         },
+
+         /**
+          * Приготовить строки списка колонок
+          * @protected
+          * @param {object} options Опции компонента
+          * @return {Array<object>}
+          */
+         _makeRows: function (options) {
+            var allFields = options.allFields;
+            var fieldIds = options.fieldIds;
+            return fieldIds && fieldIds.length
+               ? fieldIds.map(function (id, i) {
+                  var field; allFields.some(function (v) { if (v.id === id) { field = v; return true; } });
+                  return {id:id, column:_toLetter(i), field:field.title};
+               })
+               : [{id:'', column:'A', field:emptyTitle}];
          },
 
          /**
@@ -151,12 +172,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
                throw new Error('Object required');
             }
             var options = this._options;
-            if ('fields' in values) {
-               var fields = values.fields;
-               var has = fields && fields.length ? !cObjectIsEqual(fields, options.fields) : !!(options.fields && options.fields.length);
+            if ('fieldIds' in values) {
+               var fieldIds = values.fieldIds;
+               var has = fieldIds && fieldIds.length ? !cObjectIsEqual(fieldIds, options.fieldIds) : !!(options.fieldIds && options.fieldIds.length);
                if (has) {
-                  options.fields = fields || [];
-                  this._grid.setItems(this._getRows());
+                  options.fieldIds = fieldIds || [];
+                  this._grid.setItems(this._makeRows(options));
                }
             }
          },
@@ -169,7 +190,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
           */
          getValues: function () {
             return {
-               fields: this._options.fields
+               fieldIds: this._options.fieldIds
             };
          }
       });
