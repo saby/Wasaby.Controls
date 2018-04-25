@@ -218,7 +218,7 @@ define('SBIS3.CONTROLS/NumberTextBox', [
          // временное решения в версию для скролла в поле ввода,
          // сейчас браузерный скролл ломает preventDefalt - его нельзя удалить т.к. мы обрабатываем все нажатия и иначе цифры будут дублироваться
          this._inputField.on('keyup click focus', function(event) {
-            var off = this.selectionStart,
+            var off = self._getCaretPosition()[0],
                containerWidth, cursorOffset, scrollLeft;
 
             self._inputMirror.text(self._getInputValue().substring(0, off).replace(/\s/g, "\u00a0"));

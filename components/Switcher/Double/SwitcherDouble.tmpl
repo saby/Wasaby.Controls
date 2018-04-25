@@ -13,21 +13,29 @@
    <ws:if data="{{disposition === 'vertical'}}">
       <ws:partial template="toggle" scope="{{...}}"/>
       <span class="controls-SwitcherDouble__textBlock">
-         <span class="js-controls-SwitcherDouble__textOn controls-SwitcherDouble__text controls-SwitcherDouble__textOn{{checked ? '' : ' controls-SwitcherDouble__unselected'}}">
-            <ws:partial template="{{stateOn}}"/>
-         </span>
-         <span class="js-controls-SwitcherDouble__textOff controls-SwitcherDouble__text controls-SwitcherDouble__textOff{{checked ? ' controls-SwitcherDouble__unselected' : ''}}">
-            <ws:partial template="{{stateOff}}"/>
-         </span>
+         <ws:if data="{{stateOn}}">
+            <span class="js-controls-SwitcherDouble__textOn controls-SwitcherDouble__text controls-SwitcherDouble__textOn{{checked ? '' : ' controls-SwitcherDouble__unselected'}}">
+               <ws:partial template="{{stateOn}}"/>
+            </span>
+         </ws:if>
+         <ws:if data="{{stateOff}}">
+            <span class="js-controls-SwitcherDouble__textOff controls-SwitcherDouble__text controls-SwitcherDouble__textOff{{checked ? ' controls-SwitcherDouble__unselected' : ''}}">
+               <ws:partial template="{{stateOff}}"/>
+            </span>
+         </ws:if>
       </span>
    </ws:if>
    <ws:else>
-      <span class="js-controls-SwitcherDouble__textOff controls-SwitcherDouble__text controls-SwitcherDouble__textOff{{checked ? ' controls-SwitcherDouble__unselected' : ''}}">
-         <ws:partial template="{{stateOff}}"/>
-      </span>
+      <ws:if data="{{stateOff}}">
+         <span class="js-controls-SwitcherDouble__textOff controls-SwitcherDouble__text controls-SwitcherDouble__textOff{{checked ? ' controls-SwitcherDouble__unselected' : ''}}">
+            <ws:partial template="{{stateOff}}"/>
+         </span>
+      </ws:if>
       <ws:partial template="toggle" scope="{{...}}"/>
-      <span class="js-controls-SwitcherDouble__textOn controls-SwitcherDouble__text controls-SwitcherDouble__textOn{{checked ? '' : ' controls-SwitcherDouble__unselected'}}">
-         <ws:partial template="{{stateOn}}"/>
-      </span>
+      <ws:if data="{{stateOn}}">
+         <span class="js-controls-SwitcherDouble__textOn controls-SwitcherDouble__text controls-SwitcherDouble__textOn{{checked ? '' : ' controls-SwitcherDouble__unselected'}}">
+            <ws:partial template="{{stateOn}}"/>
+         </span>
+      </ws:if>
    </ws:else>
 </span>

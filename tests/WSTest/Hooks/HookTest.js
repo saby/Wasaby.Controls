@@ -1,7 +1,7 @@
 /**
  * Child control for Two Way Bind demo.
  */
-define('js!WSTest/Hooks/HookTest',
+define('WSTest/Hooks/HookTest',
    [
       'SBIS3.CONTROLS/Button',
       'tmpl!WSTest/Hooks/HookTest'

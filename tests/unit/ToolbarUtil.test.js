@@ -10,11 +10,13 @@ define(
          let defaultItems = [
             {
                id: '1',
-               title: 'Запись 1'
+               title: 'Запись 1',
+               showType: 1
             },
             {
                id: '2',
-               title: 'Запись 2'
+               title: 'Запись 2',
+               showType: 1
             },
             {
                id: '3',

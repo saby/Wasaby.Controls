@@ -188,10 +188,10 @@ define('Controls/Input/Mask/InputProcessor',
              * @return {{value: (String) новая строка, position: (Integer) позиция курсора}}
              */
             input: function(splitValue, inputType, replacer, oldFormat, newFormat) {
-               var
-                  value = splitValue.before + splitValue.delete + splitValue.after,
-                  clearData = Formatter.getClearData(oldFormat, value),
-                  clearSplitValue = InputProcessor.getClearSplitValue(splitValue, clearData), result;
+               var value = splitValue.before + splitValue.delete + splitValue.after;
+               var clearData = Formatter.getClearData(oldFormat, value);
+               var clearSplitValue = InputProcessor.getClearSplitValue(splitValue, clearData);
+               var result;
 
                switch (inputType) {
                   case 'insert':
@@ -208,11 +208,19 @@ define('Controls/Input/Mask/InputProcessor',
                      break;
                }
 
-               // Берем старое значение, если не смогли получить результат.
-               return result || {
-                  value: value,
-                  position: splitValue.before.length + splitValue.delete.length
-               };
+               // Result is undefined when input was invalid
+               if (result) {
+                  result.format = newFormat;
+               } else {
+                  // Return old value
+                  result = {
+                     value: value,
+                     position: splitValue.before.length + splitValue.delete.length,
+                     format: oldFormat
+                  };
+               }
+
+               return result;
             }
          };
 

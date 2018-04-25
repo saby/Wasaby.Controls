@@ -124,11 +124,6 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
          MoneyTextBox.superclass._setEnabled.apply(this, arguments);
       },
 
-       _createMirrorInput: function () {
-       },
-       _initMirrorInput: function () {
-       },
-
       _blurHandler: function() {
          MoneyTextBox.superclass._blurHandler.apply(this, arguments);
          // имитация стандартного поведения поля ввода

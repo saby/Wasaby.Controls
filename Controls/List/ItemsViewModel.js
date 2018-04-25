@@ -1,7 +1,7 @@
 /**
  * Created by kraynovdo on 16.11.2017.
  */
-define('Controls/List/SimpleList/ItemsViewModel',
+define('Controls/List/ItemsViewModel',
    ['Core/Abstract', 'Controls/List/resources/utils/ItemsUtil', 'Core/core-instance', 'WS.Data/Entity/VersionableMixin', 'WS.Data/Source/ISource'],
    function(Abstract, ItemsUtil, cInstance, VersionableMixin, ISource) {
 
@@ -35,8 +35,16 @@ define('Controls/List/SimpleList/ItemsViewModel',
                   cfg.itemsReadyCallback(cfg.items);
                }
                this._items = cfg.items;
-               this._display = ItemsUtil.getDefaultDisplayFlat(cfg.items, cfg);
+               this._display = this._prepareDisplay(cfg.items, cfg);
                this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);
+            }
+         },
+
+         _prepareDisplay: function(items, cfg) {
+            if (cfg.display) {
+               return cfg.display;
+            } else {
+               return ItemsUtil.getDefaultDisplayFlat(items, cfg);
             }
          },
 
@@ -134,7 +142,7 @@ define('Controls/List/SimpleList/ItemsViewModel',
                if (this._display) {
                   this._display.destroy();
                }
-               this._display = ItemsUtil.getDefaultDisplayFlat(this._items, this._options);
+               this._display = this._prepareDisplay(this._items, this._options);
                this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);
                this._nextVersion();
                this._notify('onListChange');

@@ -1,15 +1,13 @@
-<Controls.List.SourceControl
-              listViewModel="{{_viewModel}}"
+<Controls.List.ListControl
+              viewModelConfig="{{_viewModelConfig}}"
+              viewModelConstructor="{{_viewModelConstructor}}"
+              viewConfig="{{_viewConfig}}"
               source="{{_options.source}}"
               filter="{{_options.filter}}"
-              name="sourceControl"
+              name="listControl"
               navigation="{{_options.navigation}}"
-              viewName="Controls/List/SimpleList/ListView"
-              itemTemplate="{{_options.itemTemplate}}"
+              viewName="Controls/List/ListView"
               emptyTemplate="{{_options.emptyTemplate}}"
-              idProperty="{{_options.idProperty}}"
-              displayProperty="{{_options.displayProperty}}"
-              markedKey="{{_options.markedKey}}"
               selectedKeys="{{_options.selectedKeys}}"
               excludedKeys="{{_options.excludedKeys}}"
               on:beforeItemsMove="_beforeItemsMove()"
@@ -26,4 +24,4 @@
               on:afterItemEdit="_onAfterItemEdit()"
               on:beforeItemEndEdit="_onBeforeItemEndEdit()"
               on:afterItemEndEdit="_onAfterItemEndEdit()">
-</Controls.List.SourceControl>
+</Controls.List.ListControl>

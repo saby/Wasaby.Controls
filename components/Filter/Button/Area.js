@@ -26,20 +26,18 @@ define('SBIS3.CONTROLS/Filter/Button/Area',
       
       var FilterButtonArea = CompoundControl.extend([], /** @lends SBIS3.CONTROLS/Filter/Button/Area.prototype */ {
          _dotTplFn: dotTplFn,
-
-         _modifyOptions: function() {
-            var opts = FilterButtonArea.superclass._modifyOptions.apply(this, arguments);
-            if (opts.historyId && opts.viewMode === 'twoColumns') {
-               opts._hasHistory = HistoryListUtils.hasHistory(opts.historyId);
-            }
-
-            return opts;
-         },
-
+         
          init: function() {
             FilterButtonArea.superclass.init.apply(this, arguments);
-            if (this._options.historyId && this._options.viewMode === 'twoColumns' && this._options._hasHistory) {
-               this.subscribeTo(this.getChildControlByName('filterHistory'), 'onItemActivate', this._applyFromHistory.bind(this));
+            if (this._options.historyId && this._options.viewMode === 'twoColumns') {
+               var self = this;
+               HistoryListUtils.loadHistoryLists(self, self._options.historyId).addCallback(function(res) {
+                  if(HistoryListUtils.hasHistory(self._options.historyId)) {
+                     self.getContainer().find('.controls__filterButton__area-secondColumn').removeClass('ws-hidden');
+                     self.subscribeTo(self.getChildControlByName('filterHistory'), 'onItemActivate', self._applyFromHistory.bind(self));
+                  }
+                  return res;
+               });
             }
          },
 

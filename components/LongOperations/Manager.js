@@ -271,10 +271,12 @@ define('SBIS3.CONTROLS/LongOperations/Manager',
                   }
                   return inner._canHasHistory(producer);
                }
-               else
-               if (tabKey in inner._tabManagers && prodName in inner._tabManagers[tabKey]) {
-                  // Если вкладка не закрыта и продюсер не раз-регистрирован
-                  return inner._tabManagers[tabKey][prodName].canHasHistory;
+               else {
+                  var tabManager = inner._tabManagers[tabKey];
+                  if (tabManager && prodName in tabManager.producers) {
+                     // Если вкладка не закрыта и продюсер не раз-регистрирован
+                     return tabManager.producers[prodName].canHasHistory;
+                  }
                }
                return false;
             }
@@ -539,7 +541,7 @@ define('SBIS3.CONTROLS/LongOperations/Manager',
          for (var prodName in prodInfo) {
             // Если продюсер во вкладке имеет не cross-tab данные - использовать его
             // или имеет cross-tab данные, но не зарегистрирован в текущей вкладке
-            if (!inner._tabManagers[tabKey][prodName].hasCrossTabData || !inner._producers[prodName]) {
+            if (!inner._tabManagers[tabKey].producers[prodName].hasCrossTabData || !inner._producers[prodName]) {
                if (!targets) {
                   targets = {};
                }
@@ -627,18 +629,18 @@ define('SBIS3.CONTROLS/LongOperations/Manager',
          switch (type) {
             case 'born':
                var inner = protectedOf(manager);
-               inner._tabManagers[tab] = {};
+               inner._tabManagers[tab] = {producers:{}, isFulloperational:false};
                var prodData = {};
                for (var n in inner._producers) {
                   prodData[n] = {isCrossTab:inner._producers[n].hasCrossTabData(), hasHistory:inner._canHasHistory(inner._producers[n])};
                }
-               inner._tabChannel.notify('LongOperations:Manager:onActivity', {type:'handshake', tab:inner._tabKey, producers:prodData});
+               inner._tabChannel.notify('LongOperations:Manager:onActivity', {type:'handshake', tab:inner._tabKey, producers:prodData, isFulloperational:inner._isFulloperational});
                break;
             case 'handshake':
                if (!(evt.producers && typeof evt.producers === 'object')) {
                   throw new Error('Unknown event');
                }
-               _regTabProducer(tab, evt.producers);
+               _regTabProducer(tab, evt.producers, evt.isFulloperational);
                break;
             case 'die':
                _unregTabProducer(tab);
@@ -648,13 +650,21 @@ define('SBIS3.CONTROLS/LongOperations/Manager',
                if (!(evt.producer && typeof evt.producer === 'string' && 'isCrossTab' in evt && typeof evt.isCrossTab === 'boolean' && 'hasHistory' in evt && typeof evt.hasHistory === 'boolean')) {
                   throw new Error('Unknown event');
                }
-               _regTabProducer(tab, evt.producer, evt.isCrossTab, evt.hasHistory);
+               var prodInfo = {}; prodInfo[evt.producer] = {isCrossTab:evt.isCrossTab, hasHistory:evt.hasHistory};
+               _regTabProducer(tab, prodInfo, false);
                break;
             case 'unregister':
                if (!(evt.producer && typeof evt.producer === 'string')) {
                   throw new Error('Unknown event');
                }
                _unregTabProducer(tab, evt.producer);
+               break;
+
+            case 'fulloperational':
+               var inner = protectedOf(manager);
+               inner._tabManagers[tab].isFulloperational = true;
+               // И уведомить своих подписчиков
+               _channel.notifyWithTarget('fulloperational', manager);
                break;
 
             case 'onlongoperationstarted':
@@ -665,7 +675,8 @@ define('SBIS3.CONTROLS/LongOperations/Manager',
                if (!(data && typeof data === 'object' && data.producer && typeof data.producer === 'string' && 'isCrossTab' in evt && typeof evt.isCrossTab === 'boolean' && 'hasHistory' in evt && typeof evt.hasHistory === 'boolean')) {
                   throw new Error('Unknown event');
                }
-               _regTabProducer(tab, data.producer, evt.isCrossTab, evt.hasHistory);
+               var prodInfo = {}; prodInfo[data.producer] = {isCrossTab:evt.isCrossTab, hasHistory:evt.hasHistory};
+               _regTabProducer(tab, prodInfo, true);
                _eventListener(type, ObjectAssign({tabKey:tab}, data), true);
                break;
          }
@@ -675,32 +686,29 @@ define('SBIS3.CONTROLS/LongOperations/Manager',
        * Зарегистрировать продюсер(ы) из другой вкладки (если он ещё не зарегистрирован)
        * @protected
        * @param {string} tabKey Ключ вкладки
-       * @param {string|object} prodInfo Имя продюсера или объект, содержащий данные по нескольким продюсерам
-       * @param {boolean} isCrossTab Имеет ли продюсер cross-tab данные
-       * @param {boolean} hasHistory Может ли продюсер иметь историю
+       * @param {object} prodInfo Объект, содержащий данные по нескольким продюсерам
+       * @param {boolean} isFulloperational Менеджер в другой вкладке полностью функционален
        */
-      var _regTabProducer = function (tabKey, prodInfo, isCrossTab, hasHistory) {
+      var _regTabProducer = function (tabKey, prodInfo, isFulloperational) {
          var inner = protectedOf(manager);
-         if (!(tabKey in inner._tabManagers)) {
-            inner._tabManagers[tabKey] = {};
+         var tabManagers = inner._tabManagers;
+         if (!(tabKey in tabManagers)) {
+            tabManagers[tabKey] = {producers:{}, isFulloperational:isFulloperational};
          }
-         var tabProds = inner._tabManagers[tabKey];
+         var tabManager = tabManagers[tabKey];
+         var tabProducers = tabManager.producers;
          var newProds;
-         if (typeof prodInfo == 'object' && Object.keys(prodInfo).length) {
+         if (Object.keys(prodInfo).length) {
             newProds = {};
             for (var n in prodInfo) {
-               if (!(n in tabProds)) {
+               if (!(n in tabProducers)) {
                   var inf = prodInfo[n];
-                  tabProds[n] = newProds[n] = {hasCrossTabData:inf.isCrossTab, canHasHistory:inf.hasHistory};
+                  tabProducers[n] = newProds[n] = {hasCrossTabData:inf.isCrossTab, canHasHistory:inf.hasHistory};
                }
             }
          }
-         else
-         if (!(prodInfo in tabProds)) {
-            newProds = {};
-            tabProds[prodInfo] = newProds[prodInfo] = {hasCrossTabData:isCrossTab, canHasHistory:hasHistory};
-         }
-         if (newProds) {
+         // Если есть новые продюсерв и если менеджер в другой вкладке полностью функционален
+         if (newProds && tabManager.isFulloperational) {
             // Если есть уже выполняющиеся запросы данных - присоединиться к ним
             if (inner._fetchCalls) {
                var queries = inner._fetchCalls.listPools();
@@ -739,16 +747,17 @@ define('SBIS3.CONTROLS/LongOperations/Manager',
        */
       var _unregTabProducer = function (tabKey, prodName) {
          var inner = protectedOf(manager);
-         if (tabKey in inner._tabManagers) {
+         var tabManagers = inner._tabManagers;
+         if (tabKey in tabManagers) {
             // Если есть выполняющийся запрос данных - отсоединиться от него
             if (inner._fetchCalls) {
                inner._fetchCalls.remove(null, prodName ? {tab:tabKey, producer:prodName} : {tab:tabKey});
             }
             if (prodName) {
-               delete inner._tabManagers[tabKey][prodName];
+               delete tabManagers[tabKey].producers[prodName];
             }
             else {
-               delete inner._tabManagers[tabKey];
+               delete tabManagers[tabKey];
             }
             // Почистить _offsetBunch
             if (inner._offsetBunch) {
