@@ -39,6 +39,11 @@ define('Controls-demo/BreadCrumbs/BreadCrumbs', [
 
       _onItemClick: function(e, item) {
          console.log(item);
+         this.items = this.items.slice(0, item.id);
+      },
+
+      _resetCrumbs: function() {
+         this.items = data;
       }
    });
 
