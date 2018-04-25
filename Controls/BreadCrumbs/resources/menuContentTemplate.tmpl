@@ -1,1 +1,8 @@
-<div>{{itemData.getPropValue(itemData.item, 'title')}}</div>
+<div class="controls-BreadCrumbsV__menuItem">
+    <ws:if data="{{itemData.item.wrapperCount}}">
+        <ws:for data="i in itemData.item.wrapperCount">
+            <div class="controls-BreadCrumbsV__hierWrapper"></div>
+        </ws:for>
+    </ws:if>
+    <span class="controls-BreadCrumbsV__menuTitle">{{itemData.getPropValue(itemData.item, 'title')}}</span>
+</div>

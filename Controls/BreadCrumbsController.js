@@ -3,7 +3,6 @@ define('Controls/BreadCrumbsController', [
    'tmpl!Controls/BreadCrumbsController/BreadCrumbsController',
    'tmpl!Controls/BreadCrumbs/resources/itemsTemplate',
    'tmpl!Controls/BreadCrumbs/resources/itemTemplate',
-   //TODO: сделать нормальный шаблон меню
    'tmpl!Controls/BreadCrumbs/resources/menuItemTemplate',
    'WS.Data/Collection/RecordSet',
    'Core/helpers/Object/isEqual',
@@ -163,13 +162,20 @@ define('Controls/BreadCrumbsController', [
 
          onItemClick: function(self, originalEvent, item, isDots) {
             if (isDots) {
+
                //оборачиваю айтемы в рекордсет чисто ради того, чтобы меню могло с ними работать
+               var
+                  rs = new RecordSet({
+                     rawData: self._options.items
+                  }),
+                  wrapperCount = 0;
+               rs.each(function(item) {
+                  item.set('wrapperCount', wrapperCount++);
+               });
                self._children.menuOpener.open({
                   target: originalEvent.target,
                   templateOptions: {
-                     items: new RecordSet({
-                        rawData: self._options.items
-                     }),
+                     items: rs,
                      itemTemplate: menuItemTemplate
                   }
                });
@@ -202,6 +208,7 @@ define('Controls/BreadCrumbsController', [
       },
 
       _afterMount: function() {
+         //TODO: нужно приделать костыли для браузеров без прелоад (т.е. всех, кроме хрома, сафари и оперы)
          if (this._options.items && this._options.items.length > 0) {
             _private.calculateBreadCrumbsToDraw(this, _private.getItemsSizes(this), this._container.clientWidth - HOME_WIDTH);
             this._forceUpdate();

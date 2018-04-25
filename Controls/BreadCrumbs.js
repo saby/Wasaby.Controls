@@ -34,7 +34,7 @@ define('Controls/BreadCrumbs', [
       },
 
       _onHomeClick: function() {
-         this._notify('itemClick', [this._options.items[0].item]);
+         this._notify('itemClick', [{}, this._options.items[0].item]);
       }
    });
    return BreadCrumbs;

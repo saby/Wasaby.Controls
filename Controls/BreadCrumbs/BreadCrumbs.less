@@ -82,3 +82,26 @@
 .controls-BreadCrumbsV__title_min {
    min-width: 36px;
 }
+
+.controls-BreadCrumbsV__menuItem {
+   display: inline-flex;
+}
+
+.controls-BreadCrumbsV__menuTitle {
+   .text-overflow();
+   flex-shrink: 1;
+   display: inline-block;
+   width: 100%;
+}
+
+.controls-BreadCrumbsV__hierWrapper{
+   display: inline-flex;
+   flex-shrink: 0;
+   height: 13px;
+   width: 14px;
+   &:last-of-type{
+      background: @bread-crumbs-hier-wrapper-bg no-repeat;
+      position: relative;
+      top: -4px;
+   }
+}
