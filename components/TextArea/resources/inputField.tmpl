@@ -9,7 +9,7 @@
    title="{{tooltip ? tooltip : ' '}}"
    required="true"
    placeholder="{{' '}}"
->{{ text }}</textarea>
+>{{ text|sanitize }}</textarea>
 <!-- В Safari и на iOS если во flex-контейнере лежит пустая textarea или input, то базовая линия высчитывается неправильно,
 но если задать пробел в качестве плейсхолдера, то она встаёт на место https://jsfiddle.net/5mk21u7L/-->
 <ws:if data="{{ enabled && placeholder }}">
@@ -19,5 +19,5 @@
             {{ heightclassName ? heightclassName }}
             {{ !text ? 'controls-TextArea__view_empty'}}
             controls-TextArea__view">
-    <ws:partial template="{{text ? wrapUrls(text) : placeholder && enabled ? placeholder}}" />
+{{ (text ? wrapUrls(text) : placeholder && enabled ? placeholder)|sanitize }}
 </div>
