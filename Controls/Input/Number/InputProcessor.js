@@ -64,27 +64,6 @@ define('Controls/Input/Number/InputProcessor',
                return this.concatSplitValue(splitValue).replace(/ /g, '');
             },
 
-            /**
-             * Валидирует значение splitValue
-             * @param clearValue
-             * @param onlyPositive
-             * @param integersLength
-             * @param precision
-             * @returns {boolean}
-             */
-            validate: function(clearValue, onlyPositive, integersLength, precision) {
-               if (
-                  !_private.validators.isNumber(clearValue) ||
-                  onlyPositive && !_private.validators.onlyPositive(clearValue) ||
-                  typeof integersLength !== 'undefined' && !_private.validators.maxIntegersLength(clearValue, integersLength) ||
-                  typeof precision !== 'undefined' && !_private.validators.maxDecimalsLength(clearValue, precision)
-               ) {
-                  return false;
-               }
-
-               return true;
-            },
-
             //Набор валидаторов для числа
             validators: {
 
@@ -96,11 +75,6 @@ define('Controls/Input/Number/InputProcessor',
                //Проверяет что строка является числом и не содержит недопустимых символов
                isNumber: function(valueToValidate) {
                   return valueToValidate.match(/^\-?\d*(\.\d*)?$/);
-               },
-
-               //Только положительные значения
-               onlyPositive: function(valueToValidate) {
-                  return valueToValidate[0] !== '-';
                },
 
                //Ограничение максимальной длины целой части
@@ -167,24 +141,21 @@ define('Controls/Input/Number/InputProcessor',
                   }
 
                   if (splitValue.insert === '-') {
-                     if (!options.onlyPositive) {
-                        //Inserting '-' after '0' should result in '-0'
-                        if (splitValue.before === '0' || splitValue.before === '') {
-                           splitValue.before = '-0';
-                        }
-                     } else {
+                     //Inserting '-' after '0' should result in '-0'
+                     if (splitValue.before === '0' || splitValue.before === '') {
+                        splitValue.before = '-0';
                         splitValue.insert = '';
                      }
-                  }
+                  } else {
+                     //If before value is '0' and input is valid, then we should delete before value
+                     if (splitValue.before === '0' && _private.validators.isValidInsert(_private.getClearValue(splitValue))) {
+                        splitValue.before = '';
+                     }
 
-                  //If before value is '0' and input is valid, then we should delete before value
-                  if (splitValue.before === '0' && _private.validate(_private.getClearValue(splitValue), options.onlyPositive, options.integersLength, options.precision)) {
-                     splitValue.before = '';
-                  }
-
-                  //if before value is '-0', then we should delete '0'
-                  if (splitValue.before === '-0' && _private.validate(_private.getClearValue(splitValue), options.onlyPositive, options.integersLength, options.precision)) {
-                     splitValue.before = '-';
+                     //if before value is '-0', then we should delete '0'
+                     if (splitValue.before === '-0' && _private.validators.isValidInsert(_private.getClearValue(splitValue))) {
+                        splitValue.before = '-';
+                     }
                   }
 
                   //If we have exceeded the maximum number in integers part, then we should move cursor after dot
@@ -192,6 +163,7 @@ define('Controls/Input/Number/InputProcessor',
                      if (splitValue.after[0] === '.') {
                         shift += 2;
                         splitValue.after = splitValue.after.substring(0, 1) + splitValue.insert + splitValue.after.substring(2, splitValue.after.length);
+                        splitValue.insert = '';
                      } else {
                         if (splitValue.after[1] === ' ') {
                            shift += 2;
@@ -199,6 +171,7 @@ define('Controls/Input/Number/InputProcessor',
                            shift += 1;
                         }
                         splitValue.after = splitValue.insert + splitValue.after.slice(1);
+                        splitValue.insert = '';
                      }
                   }
 
@@ -208,10 +181,10 @@ define('Controls/Input/Number/InputProcessor',
                         splitValue.before += splitValue.insert;
                         splitValue.after = splitValue.after.slice(splitValue.insert.length);
                      }
+                     splitValue.insert = '';
                   }
 
-                  //If input value will become invalid, then we should clear insert
-                  if (!_private.validate(_private.getClearValue(splitValue), options.onlyPositive, options.integersLength, options.precision)) {
+                  if (!_private.validators.isNumber(_private.getClearValue(splitValue))) {
                      splitValue.insert = '';
                   }
                }
