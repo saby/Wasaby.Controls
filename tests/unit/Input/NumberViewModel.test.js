@@ -732,6 +732,23 @@ define(
                      position: 0
                   },
                   inputType: 'insert'
+               },
+
+               {
+                  testName: 'Inserting minus in empty field',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '',
+                     insert: '-',
+                     after: '',
+                     delete: ''
+                  },
+                  result: {
+                     value: '-0.0',
+                     position: 2
+                  },
+                  inputType: 'insert'
                }
             ];
 
@@ -789,8 +806,7 @@ define(
 
          it('\'0.\' wouldn\'t update if value is 0', function() {
             var
-               numberViewModel = new NumberViewModel({}),
-               result;
+               numberViewModel = new NumberViewModel({});
 
             numberViewModel.handleInput({
                before: '',
@@ -804,6 +820,22 @@ define(
             });
 
             assert.equal(numberViewModel._options.value, '0.');
+         });
+
+         it('getValue', function() {
+            var
+               numberViewModel = new NumberViewModel({value: '123'});
+
+            assert.equal(numberViewModel.getValue(), '123');
+         });
+
+         it('updateValue', function() {
+            var
+               numberViewModel = new NumberViewModel({value: '123'});
+
+            numberViewModel.updateValue('456');
+
+            assert.equal(numberViewModel.getValue(), '456');
          });
       });
    }
