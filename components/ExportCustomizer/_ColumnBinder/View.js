@@ -75,12 +75,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
 
          _modifyOptions: function () {
             var options = View.superclass._modifyOptions.apply(this, arguments);
+            options.fieldIds = options.fieldIds || [];
             options._columns = [
                {field:'column', title:options.columnsTitle},
                {field:'field', title:options.fieldsTitle}
             ];
             options._rows = this._makeRows(options);
-            options._rowActions = this._makeRowActions();
             return options;
          },
 
@@ -92,6 +92,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
             CommandDispatcher.declareCommand(this, 'addRows', this._onAdd.bind(this));
             View.superclass.init.apply(this, arguments);
             this._grid = this.getChildControlByName('controls-ExportCustomizer-ColumnBinder-View__grid');
+            this._grid.setItemsActions(this._makeRowActions());
             this._bindEvents();
          },
 
@@ -182,7 +183,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
                   ignoreFixed: true// TODO: Добавить в редактор колонок опцию ignoreFixed
                }
             ).addCallback(function (resultColumnsConfig) {
-               return resultColumnsConfig ? resultColumnsConfig.selectedColumns : null;
+               if (resultColumnsConfig) {
+                  return resultColumnsConfig.selectedColumns;
+               }
             });
          },
 
@@ -191,12 +194,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
           * @protected
           */
          _onAdd: function () {
-            // Открыть редактор колонок
-            this._openColumnsEditor().addCallback(function (fieldIds) {
-               // И затем ...
-               //^^^this._options.^^^ = ^^^;
-               //^^^this.sendCommand('subviewChanged');
-            });
+            this._openColumnsEditor().addCallback(this._replaceField.bind(this, null));
          },
 
          /**
@@ -206,12 +204,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
           * @param {object} data Информация о редактируемой строке (id, item)
           */
          _onEdit: function (evtName, data) {
-            // Открыть редактор колонок
-            this._openColumnsEditor(data.id).addCallback(function (fieldIds) {
-               // И затем ...
-               //^^^this._options.^^^ = ^^^;
-               //^^^this.sendCommand('subviewChanged');
-            });
+            var fieldId = data.id;
+            this._openColumnsEditor(fieldId).addCallback(this._replaceField.bind(this, fieldId));
          },
 
          /**
@@ -223,8 +217,37 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
           * @param {string} action Название действия
           */
          _onDelete: function (evtName, id, model/*, action*/) {
-            //^^^this._options.^^^ = ^^^;
-            //^^^this.sendCommand('subviewChanged');
+            var fieldIds = this._options.fieldIds;
+            var index = fieldIds.indexOf(id);
+            if (index !== -1) {
+               fieldIds.splice(index, 1);
+            }
+            this._redraw();
+            this.sendCommand('subviewChanged');
+         },
+
+         /**
+          * Заместить в списке полей удаляемое поле на новые поля. Если удаляемого поля нет, то новые поля будут добавлены в конец. Если нет новых полей - ничего не произойдёт
+          * @protected
+          * @param {string} removedId Идентификатор удаляемого поля
+          * @param {Array<string>} insertedIds список идентификаторов новых полей
+          */
+         _replaceField: function (removedId, insertedIds) {
+            if (insertedIds && insertedIds.length) {
+               var fieldIds = this._options.fieldIds;
+               _arrayInsert(fieldIds, removedId ? fieldIds.indexOf(removedId) : null, insertedIds);
+               this._redraw();
+               this.sendCommand('subviewChanged');
+            }
+         },
+
+         /**
+          * Перероисовать список полей
+          *
+          * @protected
+          */
+         _redraw: function () {
+            this._grid.setItems(this._makeRows(this._options));
          },
 
          /**
@@ -243,7 +266,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
                var has = fieldIds && fieldIds.length ? !cObjectIsEqual(fieldIds, options.fieldIds) : !!(options.fieldIds && options.fieldIds.length);
                if (has) {
                   options.fieldIds = fieldIds || [];
-                  this._grid.setItems(this._makeRows(options));
+                  this._redraw();
                }
             }
          },
@@ -266,6 +289,32 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
       // Private methods:
 
       /**
+       * Вставить в массив новые элементы в указанную позицию, при этом предыдущие вхождения этих элементов будут удалены
+       *
+       * @private
+       * @param {Array<*>} list Исходный массив
+       * @param {number} index Позиция для вставки
+       * @param {Array<*>} items Новые элементы для вставки
+       */
+      var _arrayInsert = function (list, index, items) {
+         if (items && items.length) {
+            var hasIndex = typeof index === 'number' && 0 <= index;
+            for (var i = 0; i < items.length; i++) {
+               var j = list.indexOf(items[i]);
+               if (j !== -1) {
+                  list.splice(j, 1);
+                  if (hasIndex && j < index) {
+                     index--;
+                  }
+               }
+            }
+            var args = [hasIndex ? index : list.length, 0];
+            args.push.apply(args, items);
+            list.splice.apply(list, args);
+         }
+      };
+
+      /**
        * Создать буквенное обозначение для числа
        *
        * @private
@@ -273,7 +322,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
        * @return {string}
        */
       var _toLetter = function (index) {
-         return '' + (index + 1);//^^^
+         return '' + (index + 1);// TODO: Реализовать эксель-нумерацию
       };
 
 
