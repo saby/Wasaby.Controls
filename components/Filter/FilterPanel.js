@@ -106,22 +106,22 @@ define('SBIS3.CONTROLS/Filter/FilterPanel', [
             collapsedClassName: 'controls-FilterPanel_collapsed',
             /**
              * @typedef {Object} FilterPanelItem
-             * @property {String|Number} id Идентификатор редактора. Является полем фильтрации, в которое будут записаны выбранные значения редактора (см. *value* и *resetValue*).
-             * @property {String} caption Заголовок редактора.
-             * @property {Boolean} expanded Признак, что редактор раскрыт. Когда *expanded=true*, то при открытии Панели фильтров редактор будет раскрытым.
-             * @property {Array|Boolean|*} value Выбранное значение редактора, которое будет записано в поле фильтрации (см. *id*).
+             * @property {String|Number} id Идентификатор редактора. Является полем фильтрации, в которое будут записаны выбранные значения редактора (см. *value* и *resetValue*). Опция обязательна для конфигурации.
+             * @property {String} caption Заголовок редактора. Опция обязательна для конфигурации.
+             * @property {Boolean} expanded Признак, что редактор раскрыт. Когда *expanded=true*, то при открытии Панели фильтров редактор будет раскрытым. Опция обязательна для конфигурации.
+             * @property {Array|Boolean|*} value Выбранное значение редактора, которое будет записано в поле фильтрации (см. *id*). Опция обязательна для конфигурации.
              * Используйте опцию, чтобы предустановить выбранные значения редактора при открытии панели фильтрации.
-             * @property {*} resetValue Значение редактора, которое будет установлено при сбросе фильтра.
-             * @property {String} textValue Текстовое значение, используемое для отображения в строке выбранных фильтров, когда для редактора используются значения из *resetValue* и *value* (предустановленное).
-             * @property {String} template Шаблон редактора.
+             * @property {*} resetValue Значение редактора, которое будет установлено при сбросе фильтра. Опция обязательна для конфигурации.
+             * @property {String} textValue Текстовое значение, используемое для отображения в строке выбранных фильтров, когда для редактора используются значения из *resetValue* и *value* (предустановленное). Опция обязательна для конфигурации.
+             * @property {String} template Шаблон редактора. Опция обязательна для конфигурации.
              * Возможные значения:
              * <ol>
              *    <li><b>tmpl!SBIS3.CONTROLS/Filter/Panel/resources/TemplateChooser</b><br/>Шаблон, реализующий выборку идентификаторов. Подробнее о редакторе вы можете прочитать {@link SBIS3.CONTROLS/Filter/Panel/components/Chooser/Base}.</li>
              *    <li><b>tmpl!SBIS3.CONTROLS/Filter/Panel/resources/TemplateDataRange</b><br/>Шаблон, реализующий выборку из числового диапазона. Подробнее о редакторе вы можете прочитать {@link SBIS3.CONTROLS/Filter/Panel/components/DataRange}.</li>
              *    <li><b>SBIS3.CONTROLS/Filter/Panel/components/Boolean</b> - обыкновенный чекбокс {@link SBIS3.CONTROLS/Filter/Panel/components/Boolean}. Данный редактор поля фильтрации отображается без спойлера (см. {@link SBIS3.CONTROLS/Spoiler}), в связи с чем рекомендуется размещать его в конце списка доступных фильтров.</li>
              * </ol>
-             * @property {Object} properties Опции, передаваемые в конфигурацию редактора.
-             * @property {String} properties.editor Тип редактора. Применяется при использовании шаблона редактора "tmpl!SBIS3.CONTROLS/Filter/Panel/resources/TemplateChooser". Когда опция не установлена, используется класс редактора "Список" (значение list).
+             * @property {Object} properties Опции, передаваемые в конфигурацию редактора. Опция обязательна для конфигурации.
+             * @property {String} properties.editor Тип редактора. Применяется при использовании шаблона редактора "tmpl!SBIS3.CONTROLS/Filter/Panel/resources/TemplateChooser". Когда опция не установлена, используется класс редактора "Список" (значение list). Опция обязательна для конфигурации.
              * Возможные значения:
              * <ul>
              *     <li>list - использовать редактор {@link SBIS3.CONTROLS/Filter/Panel/components/Chooser/List}.</li>
@@ -131,9 +131,9 @@ define('SBIS3.CONTROLS/Filter/FilterPanel', [
              *     <li>fieldLink - использовать редактор {@link SBIS3.CONTROLS/Filter/Panel/components/Chooser/FieldLink}.</li>
              *     <li>details - использовать редактор {@link SBIS3.CONTROLS/Filter/Panel/components/Chooser/DetailsList}.</li>
              * </ul>
-             * @property {Object} properties.properties Объект, в который передают опции для конфигурации контрола {@link SBIS3.CONTROLS/FieldLink}, на основе которого создан редактор {@link SBIS3.CONTROLS/Filter/Panel/components/Chooser/FieldLink}.
+             * @property {Object} properties.properties Объект, в который передают опции для конфигурации контрола {@link SBIS3.CONTROLS/FieldLink}, на основе которого создан редактор {@link SBIS3.CONTROLS/Filter/Panel/components/Chooser/FieldLink}. Опция обязательна для конфигурации.
              * Описание контрола и список его опций вы можете найти <a href='/docs/js/SBIS3/CONTROLS/FieldLink/'>здесь</a> и <a href='/doc/platform/developmentapl/interface-development/components/textbox/field-link/selector-action/'>здесь</a>.
-             * @property {Object} properties.items Набор данных, по которому будет построен список значений. Актуально для редакторов типа "SBIS3.CONTROLS.FilterPanelChooser.*".
+             * @property {Object} properties.items Набор данных, по которому будет построен список значений. Актуально для редакторов типа "SBIS3.CONTROLS.FilterPanelChooser.*". Опция обязательна для конфигурации.
              */
             /**
              * @cfg {WS.Data/Collection/RecordSet|Array.<FilterPanelItem>} Устанавливает конфигурацию редакторов и структуру полей фильтра.
