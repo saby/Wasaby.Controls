@@ -1,10 +1,10 @@
 /**
  * Created by kraynovdo on 15.02.2018.
  */
-define('Controls/List/SourceControl/Scroll/Emitter',
+define('Controls/List/BaseControl/Scroll/Emitter',
    [
       'Core/Control',
-      'tmpl!Controls/List/SourceControl/Scroll/Emitter/Emitter'
+      'tmpl!Controls/List/BaseControl/Scroll/Emitter/Emitter'
    ],
    function(Control, template) {
 

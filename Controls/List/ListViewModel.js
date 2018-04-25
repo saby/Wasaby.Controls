@@ -1,8 +1,8 @@
 /**
  * Created by kraynovdo on 16.11.2017.
  */
-define('Controls/List/SimpleList/ListViewModel',
-   ['Core/Abstract', 'Controls/List/SimpleList/ItemsViewModel', 'Controls/Controllers/Multiselect/Selection', 'WS.Data/Entity/VersionableMixin'],
+define('Controls/List/ListViewModel',
+   ['Core/Abstract', 'Controls/List/ItemsViewModel', 'Controls/Controllers/Multiselect/Selection', 'WS.Data/Entity/VersionableMixin'],
    function(Abstract, ItemsViewModel, MultiSelection, VersionableMixin) {
       /**
        *
@@ -13,33 +13,18 @@ define('Controls/List/SimpleList/ListViewModel',
       var _private = {
          updateIndexes: function(self) {
             self._startIndex = 0;
-            self._stopIndex = self._itemsModel.getCount();
+            self._stopIndex = self.getCount();
          }
       };
       
-      var ListViewModel = Abstract.extend([VersionableMixin], {
-
-         _itemsModel: null,
+      var ListViewModel = ItemsViewModel.extend([VersionableMixin], {
          _markedItem: null,
          _actions: null,
 
          constructor: function(cfg) {
-            this._options = cfg;
+            var self = this;
             this._actions = [];
             ListViewModel.superclass.constructor.apply(this, arguments);
-            this._itemsModel = new ItemsViewModel({
-               items: cfg.items,
-               idProperty: cfg.idProperty,
-               displayProperty: cfg.displayProperty,
-               itemsReadyCallback: cfg.itemsReadyCallback
-            });
-            var self = this;
-            this._itemsModel.subscribe('onListChange', function() {
-               //т.к. при действиях с рекордсетом рекорд может потерять владельца, надо обновить ссылку на актуальный рекорд из текущего набора
-               self._markedItem = self.getItemById(self._options.markedKey, self._options.idProperty);
-               self._nextVersion();
-               self._notify('onListChange');
-            });
 
             if (cfg.markedKey !== undefined) {
                this._markedItem = this.getItemById(cfg.markedKey, cfg.idProperty);
@@ -50,38 +35,12 @@ define('Controls/List/SimpleList/ListViewModel',
                excludedKeys: cfg.excludedKeys
             });
 
+            //TODO надо ли?
             _private.updateIndexes(self);
          },
 
-         destroy: function() {
-            this._itemsModel.destroy();
-            ListViewModel.superclass.destroy.apply(this, arguments);
-         },
-
-         reset: function() {
-            //TODO убрать this._itemsModel._curIndex ?
-            //this._itemsModel._curIndex = this._startIndex;
-            return this._itemsModel.reset();
-         },
-
-         isEnd: function() {
-            //TODO убрать this._itemsModel._curIndex ?
-            //return this._itemsModel._curIndex < this._stopIndex;
-            return this._itemsModel.isEnd();
-         },
-
-         isLast: function() {
-            return this._itemsModel.isLast();
-         },
-
-         goToNext: function() {
-            //TODO убрать this._itemsModel._curIndex ?
-            //this._itemsModel._curIndex++;
-            return this._itemsModel.goToNext();
-         },
-
          getCurrent: function() {
-            var itemsModelCurrent = this._itemsModel.getCurrent();
+            var itemsModelCurrent = ListViewModel.superclass.getCurrent.apply(this, arguments);
             itemsModelCurrent.isSelected = itemsModelCurrent.dispItem === this._markedItem;
             itemsModelCurrent.itemActions =  this._actions[this.getCurrentIndex()];
             itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
@@ -93,22 +52,6 @@ define('Controls/List/SimpleList/ListViewModel',
                itemsModelCurrent.item = this._editingItemData.item;
             }
             return itemsModelCurrent;
-         },
-
-         getNext: function() {
-            return this._itemsModel.getNext();
-         },
-
-         getCurrentIndex: function() {
-            return this._itemsModel.getCurrentIndex();
-         },
-
-         getItemById: function(id, idProperty) {
-            return this._itemsModel.getItemById(id, idProperty);
-         },
-
-         moveItems: function(items, target, position) {
-            this._itemsModel.moveItems(items, target, position);
          },
 
          setMarkedKey: function(key) {
@@ -144,32 +87,8 @@ define('Controls/List/SimpleList/ListViewModel',
          },
 
          setItems: function(items) {
-            this._itemsModel.setItems(items);
+            ListViewModel.superclass.setItems.apply(this, arguments);
             _private.updateIndexes(this);
-         },
-
-         appendItems: function(items) {
-            this._itemsModel.appendItems(items);
-         },
-
-         prependItems: function(items) {
-            this._itemsModel.prependItems(items);
-         },
-
-         removeItems: function(items) {
-            this._itemsModel.removeItems(items);
-         },
-
-         getCount: function() {
-            return this._itemsModel.getCount();
-         },
-
-         at: function(index) {
-            return this._itemsModel.at(index);
-         },
-
-         getIndexBySourceItem: function(item) {
-            return this._itemsModel.getIndexBySourceItem(item);
          },
 
          _setEditingItemData: function(itemData) {
