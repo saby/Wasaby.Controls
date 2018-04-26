@@ -7,15 +7,17 @@
  */
 define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
    [
+      'Core/Deferred',
       'Core/helpers/Object/isEqual',
       'SBIS3.CONTROLS/CompoundControl',
+      'SBIS3.CONTROLS/WaitIndicator',
       'WS.Data/Collection/RecordSet',
       'WS.Data/Di',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
       'css!SBIS3.CONTROLS/ExportCustomizer/_Formatter/View'
    ],
 
-   function (cObjectIsEqual, CompoundControl, RecordSet, Di, dotTplFn) {
+   function (Deferred, cObjectIsEqual, CompoundControl, WaitIndicator, RecordSet, Di, dotTplFn) {
       'use strict';
 
       /**
@@ -203,7 +205,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           */
          _updatePreview: function () {
             var url = this._exportFormatter.getPreviewUrl(this._options.fileUuid);
-            this._preview[0].src = url;
+            var img = this._preview[0];
+            var stopper = new Deferred();
+            WaitIndicator.make({target:img.parentNode, delay:1000}, stopper);
+            img.onload = img.onerror = stopper.callback.bind(stopper);
+            img.src = url;
          },
 
          /**
