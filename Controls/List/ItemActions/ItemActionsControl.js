@@ -41,7 +41,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          return actions;
       },
 
-      updateItemActions: function(item, options, isEditingItem) {
+      updateItemActions: function(item, options, isEditingItem, self) {
          var
             all = _private.fillItemAllActions(item, options.itemActions, options.itemActionVisibilityCallback),
 
@@ -58,14 +58,14 @@ define('Controls/List/ItemActions/ItemActionsControl', [
                iconDone: true,
                handler: function(item) {
                   this._applyEdit(item);
-               }.bind(this)
+               }.bind(self)
             });
             showed.push({
                icon: 'icon-Close icon-primary ' + ACTION_ICON_CLASS,
                style: 'bordered',
                handler: function(item) {
                   this._cancelEdit(item);
-               }.bind(this)
+               }.bind(self)
             });
          }
 
@@ -114,11 +114,6 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          });
 
          return actions && (additional + main !==  actions.length) && itemActionsType !== 'outside';
-      },
-
-      bindHandlers: function(self) {
-         self._applyEdit = self._applyEdit.bind(self);
-         self._cancelEdit = self._cancelEdit.bind(self);
       }
    };
 
@@ -127,7 +122,6 @@ define('Controls/List/ItemActions/ItemActionsControl', [
       _template: template,
 
       _beforeMount: function(newOptions) {
-         _private.bindHandlers(this);
          if (newOptions.listModel) {
             _private.updateModel(this._options, newOptions);
          }
@@ -156,7 +150,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
       },
 
       updateItemActions: function(item, isEditingItem) {
-         _private.updateItemActions(item, this._options, isEditingItem);
+         _private.updateItemActions(item, this._options, isEditingItem, this);
       }
    });
 

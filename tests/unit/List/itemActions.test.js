@@ -6,8 +6,10 @@ define([
    'WS.Data/Source/Memory',
    'WS.Data/Collection/RecordSet',
    'Controls/List/ListViewModel',
+   'Controls/List/ItemActions/Utils/Actions',
+   'Controls/Utils/Toolbar',
    'Core/core-instance'
-], function(ItemActionsControl, MemorySource, RecordSet, ListViewModel, cInstance) {
+], function(ItemActionsControl, MemorySource, RecordSet, ListViewModel, aUtil, tUtil, cInstance) {
 
    describe('Controls.List.ItemActions', function() {
       var data, source, listViewModel, rs, actions, cfg;
@@ -59,9 +61,9 @@ define([
 
          actions = [
             {
-               id: 5,
+               id: 0,
                title: 'прочитано',
-               additional: true,
+               showType: tUtil.showType.TOOLBAR,
                handler: function() {
                   console.log('action read Click');
                }
@@ -70,6 +72,7 @@ define([
                id: 1,
                icon: 'icon-primary icon-PhoneNull',
                title: 'phone',
+               showType: tUtil.showType.MENU,
                handler: function(item) {
                   console.log('action phone Click ', item);
                }
@@ -78,6 +81,7 @@ define([
                id: 2,
                icon: 'icon-primary icon-EmptyMessage',
                title: 'message',
+               showType: tUtil.showType.MENU,
                handler: function() {
                   alert('Message Click');
                }
@@ -86,7 +90,7 @@ define([
                id: 3,
                icon: 'icon-primary icon-Profile',
                title: 'profile',
-               main: true,
+               showType: tUtil.showType.MENU_TOOLBAR,
                handler: function() {
                   console.log('action profile Click');
                }
@@ -95,7 +99,16 @@ define([
                id: 4,
                icon: 'icon-Erase icon-error',
                title: 'delete pls',
-               additional: true,
+               showType: tUtil.showType.TOOLBAR,
+               handler: function() {
+                  console.log('action delete Click');
+               }
+            },
+            {
+               id: 5,
+               icon: 'icon-done icon-Admin',
+               title: 'delete pls',
+               showType: tUtil.showType.TOOLBAR,
                handler: function() {
                   console.log('action delete Click');
                }
@@ -114,6 +127,36 @@ define([
          assert.equal(listViewModel._actions.length, data.length);//число соответствий равно числу айтемов
          listViewModel._notify('onListChange');
          assert.equal(listViewModel._actions.length, data.length);//число соответствий равно числу айтемов
+         assert.equal(listViewModel._actions[0].all.length, actions.length);
+         assert.equal(listViewModel._actions[0].showed.length, 4 + 1); // 3-showType.TOOLBAR 1-showType.MENU_TOOLBAR 1 -само menu
+      });
+
+      it('updateItemActions editingItem showToolbar', function() {
+         var callBackCount = 0;
+         var cfg = {
+            listModel: listViewModel,
+            itemActions: actions,
+            showToolbar: true,
+            itemActionsType: 'outside'
+         };
+         var ctrl = new ItemActionsControl(cfg);
+         ctrl._beforeMount(cfg);
+         ctrl.saveOptions(cfg);
+
+         ctrl._notify = function(eventName) {
+            if (eventName === 'commitActionClick' || eventName === 'cancelActionClick') {
+               callBackCount++;
+            }
+         };
+
+         listViewModel.reset();
+         ctrl.updateItemActions(listViewModel.getCurrent().item, true);
+         assert.equal(listViewModel._actions[0].showed.length, actions.length + 2); // 2 - edititplace
+
+         assert.equal(callBackCount, 0);
+         listViewModel._actions[0].showed[actions.length].handler(); //applyEdit
+         listViewModel._actions[0].showed[actions.length + 1].handler();//cancelEdit
+         assert.equal(callBackCount, 2);
       });
 
       it('itemActionVisibilityCallback', function() {
@@ -132,176 +175,61 @@ define([
          assert.equal(listViewModel._actions[1].all.length, actions.length - 2);// для item`a  с id = 2 фильтруется два экшена
       });
 
-      //todo: private
-      /*it('_needActionsMenu', function() {
-         var instance = new ItemActionsControl();
-         var mainActions = [
-            {
-               main: true
-            },
-            {
-               main: true
-            }
-         ];
-         var additionalActions = [
-            {
-               additional: true
-            },
-            {
-               additional: true
-            }
-         ];
-         assert.equal(instance._private.needActionsMenu(actions), true);
-         assert.equal(instance._private._needActionsMenu([]), false);
-         assert.equal(instance._private._needActionsMenu(mainActions), false);
-         assert.equal(instance._private._needActionsMenu(additionalActions), false);
-
-      });*/
       it('_onActionClick', function() {
+         var callBackCount = 0;
          var instance = new ItemActionsControl();
          var action = {
             handler: function(item) {
+               callBackCount++;
                assert.isTrue(item);
             }
          };
          instance._notify = function(eventName, args) {
+            callBackCount++;
             assert.isTrue(args[1]);
             assert.equal(args[0], action);
          };
          instance._onActionClick({stopPropagation: function() {}}, action, {item: true});
-
+         assert.equal(callBackCount, 2);
       });
 
-      /* it('showActionsMenu context', function() {
-         var
-            cfg = {
-               listModel: listViewModel,
-               itemActions: actions
-            },
-            instance = new ItemActionsControl(cfg),
-            fakeEvent = {
-               type: 'itemcontextmenu',
-               nativeEvent: {
-                  preventDefault: function() {
-                     assert.isTrue(true); //make preventDefault
-                  }
-               },
-               stopImmediatePropagation: function(){
-                  assert.isTrue(true); //make stopImmediatePropagation
-               }
-            },
-            itemData = {
-               itemActions: {all: actions}
-            };
-         instance._children = {
-            itemActionsOpener: {
-               open: function(args) {
-                  assert.isFalse(args.target);
-                  assert.isTrue(cInstance.instanceOfModule(args.componentOptions.items, 'WS.Data/Collection/RecordSet'));
-               }
-            }
-         };
-
-         instance.saveOptions(cfg);
-         instance._beforeMount(cfg);
-         instance._showActionsMenu(fakeEvent, itemData);
-         assert.equal(itemData, listViewModel._activeItem);
-         assert.isTrue(itemData.contextEvent);
-
-      });*/
-
-      /* it('showActionsMenu no context', function() {
-         var
-            cfg = {
-               listModel: listViewModel,
-               itemActions: actions
-            },
-            target = 123,
-            instance = new ItemActionsControl(cfg),
-            fakeEvent = {
-               target: target,
-               type: 'click',
-               nativeEvent: {
-                  preventDefault: function() {
-                     assert.isTrue(true); //make preventDefault
-                  }
-               },
-               stopImmediatePropagation: function(){
-                  assert.isTrue(true); //make stopImmediatePropagation
-               }
-            },
-            itemData = {
-               itemActions:  {all:actions}
-            };
-         instance._children = {
-            itemActionsOpener: {
-               open: function(args) {
-                  assert.equal(target, args.target);
-                  assert.isTrue(cInstance.instanceOfModule(args.componentOptions.items, 'WS.Data/Collection/RecordSet'));
-               }
-            }
-         };
-
-         instance.saveOptions(cfg);
-         instance._beforeMount(cfg);
-         instance._showActionsMenu(fakeEvent, itemData);
-         assert.equal(itemData, listViewModel._activeItem);
-         assert.isFalse(itemData.contextEvent);
-
+      it('getDefaultOptions ', function() {
+         var defOpts = ItemActionsControl.getDefaultOptions();
+         assert.equal(defOpts.itemActionsType, 'inside');
+         assert.isTrue(defOpts.itemActionVisibilityCallback());
       });
-*/
-      /*  it('closeActionsMenu', function() {
+
+   });
+
+   describe('Controls.List.Utils.Actions', function() {
+
+      it('actionClick menu', function() {
          var
-            cfg = {
-               listModel: listViewModel,
-               itemActions: actions
-            },
-            target = 123,
-            instance = new ItemActionsControl(cfg),
+            callBackCount = 0,
             fakeEvent = {
-               target: target,
-               type: 'click',
                stopPropagation: function() {
-                  assert.isTrue(true); //make stopPropagation
-               },
-               nativeEvent: {
-                  preventDefault: function() {
-                     assert.isTrue(true); //make preventDefault
-                  }
-               },
-               stopImmediatePropagation: function(){
-                  assert.isTrue(true); //make stopImmediatePropagation
+                  callBackCount++;
                }
             },
+            action = {
+               isMenu: true
+            },
             itemData = {
-               itemActions: actions
-            };
-         instance._children = {
-            itemActionsOpener: {
-               close: function() {
-                  assert.isTrue(true); //make preventDefault
+               item: 'test'
+            },
+            instance = {
+               _notify: function(eventName, args) {
+                  callBackCount++;
+                  assert.equal(args[0], itemData);
+                  assert.equal(args[1], fakeEvent);
+                  assert.equal(args[2], false);
+                  assert.equal(eventName, 'menuActionsClick');
                }
-            }
-         };
-         listViewModel._activeItem = {
-            item: true
-         };
+            };
+         aUtil.actionClick(instance, fakeEvent, action, itemData, false);
+         assert.equal(callBackCount, 2);
+      });
 
-         instance.saveOptions(cfg);
-         instance._beforeMount(cfg);
-         instance._closeActionsMenu(['itemClick', fakeEvent, [{
-            getRawData: function() {
-               assert.isTrue(true); //make getRawData
-               return {
-                  handler: function() {
-                     assert.isTrue(true); //make action handler;
-                  }
-               };
-            }
-         }]]);
-         assert.isFalse(listViewModel._activeItem);
-
-      });*/
 
    });
 });
