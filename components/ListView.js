@@ -704,12 +704,14 @@ define('SBIS3.CONTROLS/ListView',
                /**
                 * @cfg {String|null} Устанавливает режим подгрузки данных по скроллу.
                 * @remark
-                * По умолчанию, подгрузка осуществляется "вниз". Мы поскроллили и записи подгрузились вниз.
+                * По умолчанию подгрузка осуществляется "вниз". Мы поскроллили и записи подгрузились вниз.
                 * Но можно настроить скролл так, что записи будут загружаться по скроллу к верхней границе контейнера.
-                * Важно. Запросы к БЛ все так же будут уходить с увеличением номера страницы. V
+                * Важно! Запросы к БЛ все так же будут уходить с увеличением номера страницы.
                 * Может использоваться для загрузки истории сообщений, например.
-                * @variant down Подгружать данные при достижении дна контейнера (подгрузка "вниз").
-                * @variant up Подгружать данные при достижении верха контейнера (подгрузка "вверх").
+                * Подробное описание можно посмотреть в документах по настройке <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/navigations/infinite-scroll/">скроллинга</a> и <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/navigations/cursor/">курсора</a>.
+                * @variant down Подгружать данные при достижении нижней границы контейнера (подгрузка "вниз").
+                * @variant up Подгружать данные при достижении верхней границы контейнера (подгрузка "вверх").
+                * @variant both Подгружать данные в обе стороны ("вверх" и "вниз").
                 * @variant demand Подгружать данные при нажатии на кнопку "Еще...".
                 * Если метод возвращает n:true/false, то кнопка будет рисовать просто "Еще...".
                 * Если метод возвращает n: число записей - будет выводить число (например, "Еще 30").
@@ -901,20 +903,39 @@ define('SBIS3.CONTROLS/ListView',
                 */
                /**
                 * @cfg {ListViewNavigation} Устанавливает конфиг для контроллера навигации ListView
+                * Опция применяется для настройки {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/navigations/cursor/ навигации по курсору}.
                 * @example
-                * Пример 1:
-                * navigation: {
-                *    type: 'cursor',
-                *    config: {
-                *       field: 'timestamp',
-                *       position: 150
-                *    }
-                * }
-                * Пример 2:
-                * <ws:navigation type="cursor">
-                *    <ws:config field="Курсор" direction="both" position="{{ null }}"/>
-                * </ws:navigation>
+                * Пример:
                 *
+                * <pre>
+                * // Импортируем компонент прямо в исходном коде.
+                * require(['SBIS3.CONTROLS/ListView'], function(List) {
+                *
+                *    // Инициализируем компонент, передаём конфигурацию.
+                *    var list = new List({
+                *
+                *       // Настройка навигации по списку.
+                *       navigation: {
+                *
+                *          // Тип навигации - "курсор".
+                *          type: 'cursor',
+                *
+                *          // Конфигурация для типа навигации.
+                *          config: {
+                *
+                *             // В таблице БД индекс создан по полю 'timestamp'.
+                *             field: 'timestamp',
+                *
+                *             // Курсор устанавливается на записи со значением timestamp=40.
+                *             position: 40,
+                *
+                *             // Направление выборки - вверх.
+                *             direction: 'before'
+                *          }
+                *       }
+                *    });
+                * });
+                * </pre>
                 */
                navigation: null,
                /**
@@ -3688,7 +3709,7 @@ define('SBIS3.CONTROLS/ListView',
 
          _getNextOffset: function(){
             if (this._infiniteScrollState.mode == 'down' || this._infiniteScrollState.mode == 'demand'){
-               if (this._getSourceNavigationType == 'Offset') {
+               if (this._getSourceNavigationType() == 'Offset') {
                   return Math.min(this._scrollOffset.bottom + this._limit, this._getRootCount());
                } else {
                   return this._scrollOffset.bottom + this._limit;

@@ -1,6 +1,8 @@
 define('SBIS3.CONTROLS/History/HistoryListUtils', [
-   'SBIS3.CONTROLS/History/HistoryList'
-], function(HistoryList) {
+   'SBIS3.CONTROLS/History/HistoryList',
+   'Core/ParallelDeferred',
+   'Core/Deferred'
+], function(HistoryList, ParallelDeferred, Deferred) {
 
    return {
       getHistoryList: function(historyId, isFavorite, isGlobal) {
@@ -33,12 +35,31 @@ define('SBIS3.CONTROLS/History/HistoryListUtils', [
 
          for (var listName in historyLists) {
             if (historyLists.hasOwnProperty(listName)) {
-               var historyList = historyLists[listName].getHistory();
-               result |= historyList.getCount();
+               result |= historyLists[listName].getCount();
             }
          }
 
          return result;
+      },
+   
+      loadHistoryLists: function(self, historyId) {
+         var loadDef = new ParallelDeferred();
+         var lists = this.getHistoryLists(historyId);
+   
+         if (!self._historyLists) {
+            for (var list in lists) {
+               if (lists.hasOwnProperty(list)) {
+                  loadDef.push(lists[list].getHistory(true));
+               }
+            }
+            
+            return loadDef.done().getResult().addCallback(function () {
+               self._historyLists = lists;
+               return lists;
+            });
+         } else {
+            return Deferred.success(self._historyLists);
+         }
       }
    };
 });

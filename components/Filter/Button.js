@@ -203,10 +203,14 @@ define('SBIS3.CONTROLS/Filter/Button',
                 this._dTemplatesReady = FilterPanelUtils.initTemplates(self, TEMPLATES, function(name) {
                    self._filterTemplates[name] = true;
                 });
+                if (this._historyController) {
+                   this._dTemplatesReady.push(this._historyController.getHistory(true));
+                }
              }
 
-             this._dTemplatesReady.done().getResult().addCallback(function() {
+             this._dTemplatesReady.done().getResult().addCallback(function(res) {
                 FilterButton.superclass.showPicker.call(self);
+                return res;
              });
           },
           

@@ -25,6 +25,14 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
          return self._adapterf || new SbisAdapter();
       },
 
+      getConfig: function(self) {
+         return {
+            adapter: this.getAdapter(self),
+            idProperty: this.getHistoryId(self),
+            format: self._options.oldItems.getFormat().clone()
+         };
+      },
+
       getHistoryDataSource: function(self) {
          if (!self._historyDataSource) {
             self._historyDataSource = new SbisService({
@@ -65,12 +73,8 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
             // из популярных убираем запиненые
          return Chain(self._frequent).filter(function(item) {
             id = myself.getOriginId(item.getId());
-            return !self._pinned.getRecordById('pinned-' + id);
-         }).value(recordSetFactory, {
-            adapter: this.getAdapter(self),
-            idProperty: 'historyId',
-            format: self._options.oldItems.getFormat().clone()
-         });
+            return !self._pinned.getRecordById(self._options.needHistoryId ? ('pinned-' + id) : id);
+         }).value(recordSetFactory, this.getConfig(self));
       },
 
       filterRecent: function(self) {
@@ -80,12 +84,9 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
          // убираем из последних выбранных запиненые и популярные пункты
          return Chain(self._recent).filter(function(item) {
             id = myself.getOriginId(item.getId());
-            return !(self._pinned.getRecordById('pinned-' + id) || self._filteredFrequent.getRecordById('frequent-' + id));
-         }).value(recordSetFactory, {
-            adapter: this.getAdapter(self),
-            idProperty: 'historyId',
-            format: self._options.oldItems.getFormat().clone()
-         });
+            return !(self._pinned.getRecordById(self._options.needHistoryId ? ('pinned-' + id) : id) ||
+                     self._filteredFrequent.getRecordById(self._options.needHistoryId ? ('frequent-' + id) : id));
+         }).value(recordSetFactory, this.getConfig(self));
       },
 
       fillPinned: function(self, historyItems) {
@@ -115,11 +116,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
 
       fillRecent: function(self, filteredRecent) {
          var myself = this,
-            items = new RecordSet({
-               adapter: this.getAdapter(self),
-               idProperty: 'historyId',
-               format: self._options.oldItems.getFormat().clone()
-            }),
+            items = new RecordSet(this.getConfig(self)),
             i = 0,
             id, oldElement, item, newItem;
 
@@ -157,11 +154,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
             countRecent = self._recent.getCount(),
             maxLength = 10 - self._pinned.getCount() - (countRecent > 3 ? 3 : countRecent),
             i = 0,
-            items = new RecordSet({
-               adapter: this.getAdapter(self),
-               idProperty: 'historyId',
-               format: self._options.oldItems.getFormat().clone()
-            }),
+            items = new RecordSet(this.getConfig(self)),
             id, oldElement, item, newItem;
 
          while (self._count < 10 && i < filteredFrequent.getCount() && i < 7 && i < maxLength) {
@@ -192,11 +185,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
       },
 
       getFrequent: function(self) {
-         var frequentItems = new RecordSet({
-               adapter: this.getAdapter(self),
-               idProperty: 'historyId',
-               format: self._options.oldItems.getFormat().clone()
-            }),
+         var frequentItems = new RecordSet(this.getConfig(self)),
             items = [];
 
          items = _private.filterFrequent(self);
@@ -207,11 +196,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
       },
 
       getRecent: function(self) {
-         var recentItems = new RecordSet({
-               adapter: this.getAdapter(self),
-               idProperty: 'historyId',
-               format: self._options.oldItems.getFormat().clone()
-            }),
+         var recentItems = new RecordSet(this.getConfig(self)),
             items = [];
 
          items = _private.filterRecent(self);
@@ -224,7 +209,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
       processHistory: function(self) {
          var processedItems = new RecordSet({
                adapter: this.getAdapter(self),
-               idProperty: 'historyId',
+               idProperty: this.getHistoryId(self),
                model: self._options.oldItems.getModel(),
                metaData: self._options.oldItems.getMetaData && self._options.oldItems.getMetaData()
             }),
@@ -232,11 +217,6 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
             itemCount = 0,
             indexLastHistoryItem = null,
             displayProperty = self._options.displayProperty,
-            config = {
-               adapter: new SbisAdapter(),
-               idProperty: self._options.oldItems.getIdProperty(),
-               format: self._options.oldItems.getFormat().clone()
-            },
             firstName, secondName, isHistoryFull, recentItems, countOfVisible, isInternalItem;
 
          self._count = 0;
@@ -257,7 +237,9 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
             secondName = second.get(displayProperty);
 
             return (firstName < secondName) ? -1 : (firstName > secondName) ? 1 : 0;
-         }).value(recordSetFactory, config); recentItems = _private.getRecent(self);
+         }).value(recordSetFactory, this.getConfig(self));
+
+         recentItems = _private.getRecent(self);
 
          processedItems.append(self._filteredFrequent);
          processedItems.append(recentItems);
@@ -357,7 +339,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
                newItem.set('groupSeparator', false);
                newItem.set(self._options.additionalProperty, false);
                self._pinned.add(newItem);
-               self._pinned.setIdProperty('historyId');
+               self._pinned.setIdProperty(this.getHistoryId(self));
                pinItem.set('visible', false);
                pinned = true;
             } else {
@@ -370,11 +352,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
             // получаем старый id и восстанавливаем видимость пункта меню
             self._pinned = Chain(self._pinned).filter(function(element) {
                return myself.getOriginId(element.getId()) !== origId;
-            }).value(recordSetFactory, {
-               adapter: this.getAdapter(self),
-               idProperty: 'historyId',
-               format: self._options.oldItems.getFormat().clone()
-            });
+            }).value(recordSetFactory, this.getConfig(self));
 
             oldItem = self._options.oldItems.getRecordById(origId);
             oldItem.set('visible', true);
@@ -393,6 +371,10 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
                recent: self._recent
             }
          });
+      },
+
+      getHistoryId: function(self) {
+         return self._options.needHistoryId ? 'historyId' : self._options.oldItems.getIdProperty();
       }
    };
 
@@ -590,7 +572,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
             item.set('historyId', idPrefix + item.getId());
          });
 
-         record.setIdProperty('historyId');
+         record.setIdProperty(_private.getHistoryId(this));
       },
 
       /**
@@ -724,7 +706,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
             return self.getOriginId(element.getId()) !== origId;
          }).value(recordSetFactory, {
             adapter: _private.getAdapter(self),
-            idProperty: 'historyId',
+            idProperty: _private.getHistoryId(this),
             format: this._options.oldItems.getFormat().clone()
          });
 
@@ -736,7 +718,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
          }
          newItem.set('pinned', false);
          newItem.set('groupSeparator', false);
-         newItem.set('historyId', 'recent-' + origId);
+         newItem.set(_private.getHistoryId(this), self._options.needHistoryId ? ('recent-' + origId) : origId);
          if (this._options.additionalProperty) {
             newItem.set(this._options.additionalProperty, false);
          }
@@ -746,7 +728,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
          });
          records.add(newItem);
          this._recent.prepend(records);
-         this._pinned.setIdProperty('historyId');
+         this._pinned.setIdProperty(_private.getHistoryId(this));
       },
 
       getIndexesList: function(self, data) {

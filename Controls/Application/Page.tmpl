@@ -12,9 +12,7 @@
       };
    </script>
    <ws:if data="{{ _options.head }}">
-      <ws:for data="i in _options.head">
-         <ws:partial template="{{ i }}"/>
-      </ws:for>
+      <ws:partial template="{{ _options.head }}"/>
    </ws:if>
    <link rel="stylesheet" href="{{wsRoot}}css/core.css" type="text/css" key="core-css"/>
    <ws:if data="{{ cssLinks }}">

@@ -36,7 +36,7 @@
         </div>
         <div class="optionsBlock">
             <h3>Опции заголовка</h3>
-            <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_showCaption" caption="Показывать заголовок"/>
+            <ws:Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_showCaption" caption="Показывать заголовок"/>
             <Controls:Label name="myLabel1" caption="size(s, m, l, xl)"/>
             <Controls:Input:Text bind:value="_captionSize"/>
             <Controls:Label name="myLabel1" caption="caption"/>
@@ -44,7 +44,7 @@
             <Controls:Label name="myLabel1" caption="style(default, primary)"/>
             <Controls:Input:Text bind:value="_captionStyle"/>
             <h3>Опции счетчика</h3>
-            <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_showCounter" caption="Показывать счетчик"/>
+            <ws:Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_showCounter" caption="Показывать счетчик"/>
             <Controls:Label name="myLabel1" caption="value"/>
             <Controls:Input:Number bind:value="_counterValue"/>
             <Controls:Label name="myLabel1" caption="style(disabled, default, primary)"/>
@@ -52,13 +52,13 @@
             <Controls:Label name="myLabel1" caption="size(s, m, l)"/>
             <Controls:Input:Text bind:value="_counterSize"/>
             <h3>Опции кнопки-разделителя</h3>
-            <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_showButtonSeparator" caption="Показывать кнопку-разделитель"/>
+            <ws:Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_showButtonSeparator" caption="Показывать кнопку-разделитель"/>
             <Controls:Label name="myLabel1" caption="style(Accent, Additional, Main)"/>
             <Controls:Input:Text bind:value="_iconStyle"/>
             <br/>
-            <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_bold" caption="bold"/>
+            <ws:Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_bold" caption="bold"/>
             <h3>Опции иконки</h3>
-            <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_showSeparator" caption="Показывать иконку у заголовка"/>
+            <ws:Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_showSeparator" caption="Показывать иконку у заголовка"/>
             <Controls:Label name="myLabel1" caption="style(primary, default)"/>
             <Controls:Input:Text bind:value="_separatorIconStyle"/>
         </div>

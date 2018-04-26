@@ -117,7 +117,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
             var self = this;
             var STATUSES = LongOperationEntry.STATUSES;
 
-            ['onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted', 'onproducerregistered', 'onproducerunregistered'].forEach(function (evtType) {
+            ['onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted', 'onproducerregistered', 'onproducerunregistered', 'fulloperational'].forEach(function (evtType) {
                self.subscribeTo(longOperationsManager, evtType, function (evtName, evt) {
                   var custom = evt ? evt.custom : null;
                   if (custom) {

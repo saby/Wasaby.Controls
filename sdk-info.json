@@ -2,6 +2,7 @@
     "ui-modules":
     [
          "SBIS3.CONTROLS",
-		 "Controls"
+		 "Controls",
+         "File"
     ]
 }

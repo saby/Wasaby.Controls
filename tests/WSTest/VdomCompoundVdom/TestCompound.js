@@ -1,4 +1,4 @@
-define('js!WSTest/VdomCompoundVdom/TestCompound', [
+define('WSTest/VdomCompoundVdom/TestCompound', [
    'tmpl!WSTest/VdomCompoundVdom/TestCompound',
    'Lib/Control/CompoundControl/CompoundControl'
 ], function(dotTplFn, CompoundControl) {

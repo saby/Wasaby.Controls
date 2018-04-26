@@ -106,7 +106,7 @@ define('SBIS3.CONTROLS/Mixins/hierarchyMixin', [
       },
       /**
        * Устанавливает поле иерархии.
-       * @param {String }hierField Название поля иерархии.
+       * @param {String} hierField Название поля иерархии.
        * @see hierField
        * @see getHierField
        */
@@ -126,7 +126,7 @@ define('SBIS3.CONTROLS/Mixins/hierarchyMixin', [
       },
       /**
        * Устанавливает поле иерархии.
-       * @param {String }pp Название поля иерархии.
+       * @param {String} pp Название поля иерархии.
        * @see parentProperty
        * @see getParentProperty
        */
@@ -246,7 +246,7 @@ define('SBIS3.CONTROLS/Mixins/hierarchyMixin', [
          return record.get(this._options.parentProperty);
       },
       /**
-       * Установить корень выборки.
+       * Устанавливает узел, относительно которого будет производиться выборка данных.
        * @param {String|Number} root Идентификатор корня
        */
       setRoot: function(root){

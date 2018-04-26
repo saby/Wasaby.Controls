@@ -29,11 +29,11 @@
       <Controls.Label name="myLabel1" caption="maxLength"/>
       <Controls.Input.Text attr:id="maxLength" bind:value="_maxLength"/>
       <div>
-         <Controls.Toggle.Checkbox attr:id="trim" enabled="{{true}}" bind:value="_trim" caption="trim"/>
-         <Controls.Toggle.Checkbox attr:id="validationErrors" on:valueChanged="valueChangedHandler()" enabled="{{true}}"
+         <Controls.Toggle.Checkbox attr:id="trim" readOnly="{{false}}" bind:value="_trim" caption="trim"/>
+         <Controls.Toggle.Checkbox attr:id="validationErrors" on:valueChanged="valueChangedHandler()" readonly="{{false}}"
                                       bind:value="_validationErrorsValue" caption="validationErrors"/>
          <br/>
-         <Controls.Toggle.Checkbox attr:id="selectOnClick" enabled="{{true}}" bind:value="_selectOnClick" caption="selectOnClick"/>
+         <Controls.Toggle.Checkbox attr:id="selectOnClick" readOnly="{{false}}" bind:value="_selectOnClick" caption="selectOnClick"/>
          <Controls.Toggle.Checkbox attr:id="enabled" enabled="{{true}}" bind:value="_enabled" caption="enabled"/>
       </div>
    </div>
