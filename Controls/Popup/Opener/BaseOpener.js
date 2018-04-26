@@ -39,8 +39,8 @@ define('Controls/Popup/Opener/BaseOpener',
                   if (self._isVDOMTemplate(tpl)) {
                      self._popupId = ManagerController.show(cfg, strategy);
                   } else {
-                     requirejs(['Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea'], function() {
-                        self._prepareConfigForOldTemplate(cfg, tpl);
+                     requirejs(['Controls/Popup/Compatible/BaseOpener'], function(CompatibleOpener) {
+                        CompatibleOpener._prepareConfigForOldTemplate(cfg, tpl);
                         self._popupId = ManagerController.show(cfg, strategy);
                      });
                   }
@@ -82,22 +82,10 @@ define('Controls/Popup/Opener/BaseOpener',
             return !!ManagerController.find(this._popupId);
          },
 
-
-         /* TODO COMPATIBLE */
          _isVDOMTemplate: function(templateClass) {
             //на VDOM классах есть св-во _template.
             //Если его нет, но есть _stable, значит это функция от tmpl файла
             return !!templateClass.prototype._template || !!templateClass.stable;
-         },
-         _prepareConfigForOldTemplate: function(cfg, templateClass) {
-            cfg.templateOptions.component = cfg.template;
-            cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
-            this._setDimensions(cfg, templateClass);
-         },
-         _setDimensions: function(cfg, templateClass) {
-            var dimensions = templateClass.dimensions;
-            cfg.minWidth = dimensions.minWidth ? parseInt(dimensions.minWidth, 10) : null;
-            cfg.maxWidth = dimensions.maxWidth ? parseInt(dimensions.maxWidth, 10) : null;
          }
       });
       return Base;
