@@ -79,4 +79,18 @@
             </ws:if>
         </div>
     </ws:if>
+    <Controls.Dropdown.Opener
+            name="itemActionsOpener"
+            keyProperty="id"
+            menuStyle="cross"
+            className="controls-itemActionsV__menu">
+        <ws:popupOptions closeByExternalClick="{{true}}">
+            <ws:corner vertical="top" horizontal="right"/>
+            <ws:horizontalAlign side="left"/>
+            <ws:eventHandlers onResult="{{_closeActionsMenu}}" onClose="{{_closeActionsMenu}}"/>
+            <ws:templateOptions showHeader="{{true}}">
+                <ws:headConfig menuStyle="cross" />
+            </ws:templateOptions>
+        </ws:popupOptions>
+    </Controls.Dropdown.Opener>
 </div>
