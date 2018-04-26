@@ -52,7 +52,7 @@ define('Controls/Calendar/Controllers/RangeSelectionController', [
 
       notifyAllDataChanged: function(self) {
          self._notify('selectionChanged');
-         self._notify('rangeChanged');
+         self._notify('rangeChanged', [self._startValue, self._endValue]);
          self._notify('selectionProcessingChanged', [self._selectionProcessing]);
          self._notify('selectionBaseValueChanged', [self._selectionBaseValue]);
          self._notify('selectionHoveredValueChanged', [self._selectionHoveredValue]);
@@ -93,7 +93,14 @@ define('Controls/Calendar/Controllers/RangeSelectionController', [
    };
 
    /**
-    * Контроллер реализующий выделение элементов от одного до другого.
+    * Контроллер реализующий выделение элементов от одного до другого. В качестве айтемов могут использоваться любые
+    * значения поддерживающие операйии < и >, например числа.
+    *
+    * Компонент которым управляет контроллер должен поддерживать опции startValue и endValue. Это значнеия элементов
+    * от которого и до которого в данный момент выделен диапазон. Так же компонент должен поддерживать события
+    * itemClick и itemMouseEnter. Эти события должны передавать в качестве параметра значения элементов с которыми
+    * в данный момент происходит взаимодействие.
+    *
     * @class Controls/Calendar/Controllers/RangeSelectionController
     * @extends Core/Abstract
     * @mixes Controls/Calendar/interface/IRangeSelectable
@@ -241,7 +248,7 @@ define('Controls/Calendar/Controllers/RangeSelectionController', [
          this._endValue = this._displayedEndValue = range[1];
          this._notify('selectionEnded');
          this._notify('selectionChanged');
-         this._notify('rangeChanged');
+         this._notify('rangeChanged', [this._startValue, this._endValue]);
       },
 
       /**
@@ -288,16 +295,10 @@ define('Controls/Calendar/Controllers/RangeSelectionController', [
       return coreMerge({
 
          /**
-          * @name Controls/Calendar/Controllers/RangeSelectionController#view
+          * @name Controls/Calendar/Controllers/RangeSelectionController#content
           * @cfg {String} представление которым управлят контроллер
           */
-         view: undefined,
-
-         /**
-          * @name Controls/Calendar/Controllers/RangeSelectionController#viewOptions
-          * @cfg {*} опции которые передаются в представление
-          */
-         viewOptions: undefined,
+         content: undefined,
       }, IRangeSelectable.getDefaultOptions());
    };
 

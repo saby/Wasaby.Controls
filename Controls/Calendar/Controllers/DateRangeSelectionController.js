@@ -23,6 +23,12 @@ define('Controls/Calendar/Controllers/DateRangeSelectionController', [
    /**
     * Контроллер реализующий выделение элементов от одного до другого. В качестве элементов используются даты.
     * Поддерживает выделение квантами кратными дням, неделям, месяцам.
+    *
+    * Компонент которым управляет контроллер должен поддерживать опции startValue и endValue. Это значнеия элементов
+    * от которого и до которого в данный момент выделен диапазон. Так же компонент должен поддерживать события
+    * itemClick и itemMouseEnter. Эти события должны передавать в качестве параметра значения элементов с которыми
+    * в данный момент происходит взаимодействие.
+    *
     * @class Controls/Calendar/Controllers/DateRangeSelectionController
     * @extends Controls/Calendar/Controllers/RangeSelectionController
     * @author Миронов А.Ю.

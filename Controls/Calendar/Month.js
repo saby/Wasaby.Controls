@@ -39,7 +39,6 @@ define('Controls/Calendar/Month', [
 
    var Component = BaseControl.extend({
       _template: monthTmpl,
-      _view: null,
       _monthViewModel: MonthViewModel,
 
       // constructor: function() {
@@ -47,44 +46,13 @@ define('Controls/Calendar/Month', [
       //    Component.superclass.constructor.apply(this, arguments);
       // },
 
-      _beforeMount: function(options) {
-         this._view = options.view || 'Controls/Calendar/MonthView';
-
-         // this._rangeSelectionController = new DaysRangeSelectionController(options);
-         // this.subscribeTo(this._rangeSelectionController, 'rangeChanged', this._onModelRangeChangeHandler.bind(this));
-         // this.subscribeTo(this._rangeSelectionController, 'selectionChanged', this._validateWeeksArray.bind(this));
-
-         // this._updateView(options);
-         // this._weeksArray = this._getDaysArray();
-      },
-
-      // _dayFormatter: function(date) {
-      //    var obj = {},
-      //       sController = this._children.selectionController,
-      //       startDate = sController.getDisplayedStartValue(),
-      //       endDate = sController.getDisplayedEndValue();
-      //
-      //    obj.selectionProcessing = sController.isSelectionProcessing();
-      //
-      //    obj.selected = (startDate && endDate && date >= startDate && date <= endDate) ||
-      //       (startDate && DateUtil.isDatesEqual(date, startDate) && !endDate) ||
-      //       (!startDate && endDate && DateUtil.isDatesEqual(date, endDate));
-      //
-      //    obj.selectedStart = DateUtil.isDatesEqual(date, startDate || endDate);
-      //    obj.selectedEnd = DateUtil.isDatesEqual(date, endDate);
-      //
-      //    obj.selectedInner = (date && startDate && endDate && date.getTime() > startDate.getTime() && date.getTime() < endDate.getTime());
-      //
-      //    if (this.dayFormatter) {
-      //       coreMerge(obj, this.dayFormatter(date) || {});
-      //    }
-      //
-      //    return obj;
+      // _beforeMount: function(options) {
+      //    this._view = options.view || 'Controls/Calendar/MonthView';
       // },
 
-      _onRangeChangedHandler: function() {
-         this._notify('startValueChanged', [this._children.selectionController.getStartValue()]);
-         this._notify('endValueChanged', [this._children.selectionController.getEndValue()]);
+      _onRangeChangedHandler: function(event, startValue, endValue) {
+         this._notify('startValueChanged', [startValue]);
+         this._notify('endValueChanged', [endValue]);
       }
 
       // _startValueChangedHandler: function(event, value) {
