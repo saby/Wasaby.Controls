@@ -20,6 +20,7 @@ define('Controls/BreadCrumbsController', [
    'use strict';
 
    var
+      ARROW_WIDTH,
       HOME_WIDTH,
       BREAD_CRUMB_MIN_WIDTH,
       DOTS_WIDTH,
@@ -99,9 +100,8 @@ define('Controls/BreadCrumbsController', [
                         }
                      }
 
-                     //TODO: вообще может быть ситуация, когда замыливаться будет только одна крошка, потому что вторую некуда сжимать, нужно подумать как с этим жить
-                     //Если осталось всего 2 крошки, но места все равно не хватает, то замыливаем первый и последний элементы одновременно
-                     if (i === 0 && currentWidth > availableWidth) {
+                     //Если осталось всего 2 крошки, но места все равно не хватает, то пытаемся обрезать первый элемент.
+                     if (i === 0 && currentWidth > availableWidth && itemsSizes[0] - ARROW_WIDTH > BREAD_CRUMB_MIN_WIDTH) {
                         shrinkedItemIndex = 0;
                      }
 
@@ -118,12 +118,14 @@ define('Controls/BreadCrumbsController', [
                         hasArrow: true
                      });
 
-                     self._visibleItems.push(_private.getItemData(length - 1, items, shrinkedItemIndex === 0));
+                     self._visibleItems.push(_private.getItemData(length - 1, items, i === 0 && currentWidth > availableWidth && itemsSizes[length - 1] - ARROW_WIDTH > BREAD_CRUMB_MIN_WIDTH));
                   }
                } else {
-                  //TODO: вообще может быть ситуация, когда замыливаться будет только одна крошка, потому что вторую некуда сжимать, нужно подумать как с этим жить
                   self._visibleItems = items.map(function(item, index, items) {
-                     return _private.getItemData(index, items, true);
+                     var
+                        hasArrow = index !== 1,
+                        withOverflow = itemsSizes[index] - (hasArrow ? ARROW_WIDTH : 0) > BREAD_CRUMB_MIN_WIDTH;
+                     return _private.getItemData(index, items, withOverflow);
                   });
                }
             } else {
@@ -182,6 +184,7 @@ define('Controls/BreadCrumbsController', [
             }
          },
          calculateConstants: function() {
+            ARROW_WIDTH = _private.getWidth('<span class="controls-BreadCrumbsV__arrow icon-size icon-DayForward icon-primary action-hover"></span>');
             HOME_WIDTH = _private.getWidth('<div class="controls-BreadCrumbsV__home icon-size icon-Home3 icon-primary"></div>');
             BREAD_CRUMB_MIN_WIDTH = _private.getWidth('<div class="controls-BreadCrumbsV__title_min"></div>');
             DOTS_WIDTH = _private.getWidth(itemTemplate({
