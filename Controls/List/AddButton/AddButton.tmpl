@@ -1,5 +1,5 @@
 <span class="controls-AddButton" on:click="clickHandler()">
-   <span attr:class="controls-AddButton_state-{{!!isEnabled() ? 'enable': 'disable'}} controls-AddButton-wrapper">
+   <span attr:class="controls-AddButton_state-{{_options.readOnly ? 'disable': 'enable'}} controls-AddButton-wrapper">
       <i attr:class="controls-AddButton__icon icon-Add"></i>
       <span attr:class="controls-AddButtonText">{{_options.caption}}</span>
    </span>
