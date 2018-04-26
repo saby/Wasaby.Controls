@@ -7,8 +7,9 @@ define([
    'WS.Data/Collection/RecordSet',
    'Controls/List/ListViewModel',
    'Controls/List/ItemActions/Utils/Actions',
-   'Controls/Utils/Toolbar'
-], function(ItemActionsControl, MemorySource, RecordSet, ListViewModel, aUtil, tUtil) {
+   'Controls/Utils/Toolbar',
+   'Controls/List/Swipe/SwipeControl'
+], function(ItemActionsControl, MemorySource, RecordSet, ListViewModel, aUtil, tUtil, SwipeControl) {
 
    describe('Controls.List.ItemActions', function() {
       var data, source, listViewModel, rs, actions, cfg;
@@ -198,6 +199,225 @@ define([
          assert.isTrue(defOpts.itemActionVisibilityCallback());
       });
 
+      describe('Controls.List.Swipe.SwipeControl', function() {
+         it('_listSwipe right', function() {
+            var
+               instance = new SwipeControl(),
+               childEvent = {
+                  nativeEvent: {
+                     direction: 'right'
+                  }
+               };
+
+            instance._listSwipe({}, {}, childEvent);
+         });
+         it('_listSwipe 37', function() {
+            var cfg = {
+                  listModel: listViewModel,
+                  itemActions: actions
+               },
+               instance = new SwipeControl(cfg),
+               childEvent = {
+                  nativeEvent: {
+                     direction: 'left'
+                  },
+                  currentTarget: {
+                     clientHeight: 37
+                  }
+               },
+               itemData =  {
+                  itemActions: {all: actions},
+                  item: true
+               };
+            instance._beforeMount(cfg, {isTouch: {isTouch: true}});
+            instance.saveOptions(cfg);
+            instance._listSwipe({}, itemData, childEvent);
+            assert.equal(instance._swipeConfig.type, 1);
+            assert.equal(instance._swipeConfig.direction, 'row');
+            assert.equal(instance._swipeConfig.isFull, false);
+            assert.equal(instance._swipeConfig.separatorType, 'vertical');
+            assert.equal(instance._swipeConfig.bigTitle, false);
+            instance._beforeUpdate({itemActions: []}, {isTouch: {isTouch: false}});
+         });
+
+         it('_listSwipe 73', function() {
+            var cfg = {
+                  listModel: listViewModel,
+                  itemActions: actions
+               },
+               instance = new SwipeControl(cfg),
+               childEvent = {
+                  nativeEvent: {
+                     direction: 'left'
+                  },
+                  currentTarget: {
+                     clientHeight: 73
+                  }
+               },
+               itemData =  {
+                  itemActions: {all: actions},
+                  item: true
+               };
+            instance._beforeMount(cfg, {isTouch: {isTouch: true}});
+            instance.saveOptions(cfg);
+            instance._listSwipe({}, itemData, childEvent);
+            assert.equal(instance._swipeConfig.type, 13);
+            assert.equal(instance._swipeConfig.direction, 'column');
+            assert.equal(instance._swipeConfig.isFull, true);
+            assert.equal(instance._swipeConfig.separatorType, 'horizontal');
+            assert.equal(instance._swipeConfig.bigTitle, true);
+         });
+
+         it('_listSwipe 110', function() {
+            var cfg = {
+                  listModel: listViewModel,
+                  itemActions: actions
+               },
+               instance = new SwipeControl(cfg),
+               childEvent = {
+                  nativeEvent: {
+                     direction: 'left'
+                  },
+                  currentTarget: {
+                     clientHeight: 110
+                  }
+               },
+               itemData =  {
+                  itemActions: {all: actions},
+                  item: true
+               };
+            instance._beforeMount(cfg, {isTouch: {isTouch: true}});
+            instance.saveOptions(cfg);
+            instance._listSwipe({}, itemData, childEvent);
+            assert.equal(instance._swipeConfig.type, 9);
+            assert.equal(instance._swipeConfig.direction, 'column');
+            assert.equal(instance._swipeConfig.isFull, false);
+            assert.equal(instance._swipeConfig.separatorType, 'horizontal');
+            assert.equal(instance._swipeConfig.bigTitle, false);
+         });
+         it('_listSwipe 184', function() {
+            var cfg = {
+                  listModel: listViewModel,
+                  itemActions: actions
+               },
+               instance = new SwipeControl(cfg),
+               childEvent = {
+                  nativeEvent: {
+                     direction: 'left'
+                  },
+                  currentTarget: {
+                     clientHeight: 250
+                  }
+               },
+               itemData =  {
+                  itemActions: {all: actions},
+                  item: true
+               };
+            instance._beforeMount(cfg, {isTouch: {isTouch: true}});
+            instance.saveOptions(cfg);
+            instance._listSwipe({}, itemData, childEvent);
+            assert.equal(instance._swipeConfig.type, 5);
+            assert.equal(instance._swipeConfig.direction, 'column');
+            assert.equal(instance._swipeConfig.isFull, true);
+            assert.equal(instance._swipeConfig.separatorType, 'horizontal');
+            assert.equal(instance._swipeConfig.bigTitle, false);
+         });
+         it('_private initSwipeType', function() {
+            assert.equal(SwipeControl._private.initSwipeType(37, 5), 1);
+            assert.equal(SwipeControl._private.initSwipeType(44, 5), 2);
+            assert.equal(SwipeControl._private.initSwipeType(52, 5), 3);
+            assert.equal(SwipeControl._private.initSwipeType(55, 5), 4);
+            assert.equal(SwipeControl._private.initSwipeType(72, 5), 4);
+            assert.equal(SwipeControl._private.initSwipeType(73, 5), 13);
+            assert.equal(SwipeControl._private.initSwipeType(109, 5), 13);
+            assert.equal(SwipeControl._private.initSwipeType(110, 5), 9);
+            assert.equal(SwipeControl._private.initSwipeType(133, 5), 9);
+            assert.equal(SwipeControl._private.initSwipeType(134, 5), 10);
+            assert.equal(SwipeControl._private.initSwipeType(157, 5), 10);
+            assert.equal(SwipeControl._private.initSwipeType(158, 5), 11);
+            assert.equal(SwipeControl._private.initSwipeType(181, 5), 11);
+            assert.equal(SwipeControl._private.initSwipeType(182, 5), 12);
+            assert.equal(SwipeControl._private.initSwipeType(183, 5), 12);
+            assert.equal(SwipeControl._private.initSwipeType(184, 5), 5);
+            assert.equal(SwipeControl._private.initSwipeType(223, 5), 5);
+            assert.equal(SwipeControl._private.initSwipeType(224, 5), 6);
+            assert.equal(SwipeControl._private.initSwipeType(263, 5), 6);
+            assert.equal(SwipeControl._private.initSwipeType(264, 5), 7);
+            assert.equal(SwipeControl._private.initSwipeType(303, 5), 7);
+            assert.equal(SwipeControl._private.initSwipeType(304, 5), 8);
+            assert.equal(SwipeControl._private.initSwipeType(604, 5), 8);
+         });
+         it('_private getNumberInterval', function() {
+            assert.equal(SwipeControl._private.getNumberInterval(1, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 12, 13, 15, 16]), 1);
+            assert.equal(SwipeControl._private.getNumberInterval(10, [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 12, 13, 15, 16]), 9);
+         });
+         it('_private initSwipeDirection', function() {
+            assert.equal(SwipeControl._private.initSwipeDirection(3), 'row');
+            assert.equal(SwipeControl._private.initSwipeDirection(4), 'row');
+            assert.equal(SwipeControl._private.initSwipeDirection(10), 'column');
+            assert.equal(SwipeControl._private.initSwipeDirection(7), 'column');
+         });
+         it('_private swipeIsFull', function() {
+            assert.equal(SwipeControl._private.swipeIsFull(7), true);
+            assert.equal(SwipeControl._private.swipeIsFull(13), true);
+            assert.equal(SwipeControl._private.swipeIsFull(8), true);
+            assert.equal(SwipeControl._private.swipeIsFull(5), true);
+            assert.equal(SwipeControl._private.swipeIsFull(3), false);
+            assert.equal(SwipeControl._private.swipeIsFull(1), false);
+            assert.equal(SwipeControl._private.swipeIsFull(9), false);
+            assert.equal(SwipeControl._private.swipeIsFull(11), false);
+         });
+         it('_private getActionDefaultHeight', function() {
+            assert.equal(SwipeControl._private.getActionDefaultHeight(1), 36);
+            assert.equal(SwipeControl._private.getActionDefaultHeight(2), 44);
+            assert.equal(SwipeControl._private.getActionDefaultHeight(3), 52);
+            assert.equal(SwipeControl._private.getActionDefaultHeight(4), 60);
+         });
+         it('_private initSeparatorType', function() {
+            assert.equal(SwipeControl._private.initSeparatorType('row'), 'vertical');
+            assert.equal(SwipeControl._private.initSeparatorType('abrakadabra'), 'horizontal');
+         });
+         it('_private needShowTitle', function() {
+            assert.equal(SwipeControl._private.needShowTitle(false, 3), true);
+            assert.equal(SwipeControl._private.needShowTitle(false, 4), true);
+            assert.equal(SwipeControl._private.needShowTitle(false, 7), true);
+            assert.equal(SwipeControl._private.needShowTitle(false, 8), true);
+            assert.equal(SwipeControl._private.needShowTitle(false, 11), true);
+            assert.equal(SwipeControl._private.needShowTitle(false, 12), true);
+            assert.equal(SwipeControl._private.needShowTitle({title: true}, 5), true);
+            assert.equal(SwipeControl._private.needShowTitle({title: true, icon: true}, 9), false);
+            assert.equal(SwipeControl._private.needShowTitle({title: true, icon: true}, 10), false);
+         });
+
+         it('_private needShowSeparator', function() {
+            var
+               itemData = {
+                  itemActions: {
+                     all: [1, 2, 3, 4, 5, 6, 7, 8]
+                  }
+               };
+            assert.equal(SwipeControl._private.needShowSeparator({_visibleItemsCount: 2}, 1, itemData, 1), true);
+            assert.equal(SwipeControl._private.needShowSeparator({}, 0, itemData, false), false);
+            assert.equal(SwipeControl._private.needShowSeparator({_visibleItemsCount: 2}, 2, itemData, 1), false);
+            assert.equal(SwipeControl._private.needShowSeparator({_visibleItemsCount: 4}, 2, itemData, 9), false);
+            assert.equal(SwipeControl._private.needShowSeparator({_visibleItemsCount: 4}, {isMenu: true}, itemData, 9), false);
+            assert.equal(SwipeControl._private.needShowSeparator({_visibleItemsCount: 4}, {isMenu: true}, itemData, 6), false);
+            assert.equal(SwipeControl._private.needShowSeparator({_visibleItemsCount: 4}, 3, itemData, 9), true);
+         });
+
+         it('_listDeactivated _listClick', function() {
+            SwipeControl.contextTypes();
+            var cfg = {
+                  listModel: listViewModel,
+                  itemActions: actions
+               },
+               instance = new SwipeControl(cfg);
+            instance._beforeMount(cfg, {isTouch: {isTouch: true}});
+            instance.saveOptions(cfg);
+            instance._listDeactivated();
+            instance._listClick();
+         });
+      });
    });
 
    describe('Controls.List.Utils.Actions', function() {

@@ -223,7 +223,7 @@ define('Controls/List/Swipe/SwipeControl', [
       needShowTitle: function(action, type) {
          var
             tempAction = action ? action : {title: true, icon: true}; //menu emulateAction
-         return tempAction.title && (!tempAction.icon || ~TYPES_WITH_TITLE.indexOf(type));
+         return tempAction.title && (!tempAction.icon || !!~TYPES_WITH_TITLE.indexOf(type));
       },
 
       needShowSeparator: function(self, action, itemData, type) {
@@ -302,5 +302,9 @@ define('Controls/List/Swipe/SwipeControl', [
          isTouch: TouchContextField
       };
    };
+
+   //tests
+   SwipeControl._private = _private;
+
    return SwipeControl;
 });
