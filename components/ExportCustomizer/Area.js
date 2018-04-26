@@ -200,10 +200,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                formatter: 'controls-ExportCustomizer-Area__body__formatter'
             },
             // Ссылки на вложенные под-компоненты
-            _views: {
-            },
-            // Набор результирующих значений (по обастям данных)
-            _results: null
+            _views: {}
          },
 
          _modifyOptions: function () {
@@ -296,13 +293,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   columnsTitle: options.columnBinderColumnsTitle || undefined,
                   fieldsTitle: options.columnBinderFieldsTitle || undefined,
                   allFields: options.allFields,
-                  fieldIds: options.fieldIds
+                  fieldIds: options.fieldIds ? options.fieldIds.slice() : null
                },
                formatter: {
                   title: options.formatterTitle,
                   menuTitle: options.formatterMenuTitle,
                   allFields: options.allFields,
-                  fieldIds: options.fieldIds,
+                  fieldIds: options.fieldIds ? options.fieldIds.slice() : null,
                   fileUuid: options.fileUuid
                }
             };
@@ -324,8 +321,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          _init: function () {
             // Получить ссылки на имеющиеся под-компоненты
             this._collectViews();
-            // Инициализировать результирующие данные
-            this._initResults();
             // Подписаться на необходимые события
             this._bindEvents();
          },
@@ -341,17 +336,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                views[name] = _getChildComponent(this, subviewNames[name]);
             }
             this._views = views;
-         },
-
-         _initResults: function () {
-            var options = this._options;
-            var notWaiting = !options.waitingMode;
-            if (notWaiting) {
-               this._results = null;
-            }
-            else {
-               this._results = null;
-            }
          },
 
          _bindEvents: function () {
@@ -383,9 +367,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           */
          _onChangeColumnBinder: function () {
             // Изменилась область данных для импортирования
-            var values = this._getSubviewValues('columnBinder');
-            var options = this._options;
-            var results = this._results;
+            var views = this._views;
+            var values = views.columnBinder.getValues();
+            var fieldIds = values.fieldIds;
+            if (fieldIds) {
+               this._options.fieldIds = fieldIds.slice();
+               views.formatter.setValues({fieldIds:fieldIds.slice()});
+            }
          },
 
          /*
@@ -395,9 +383,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           */
          _onChangeFormatter: function () {
             // Изменилась область данных для импортирования
-            var values = this._getSubviewValues('formatter');
-            var options = this._options;
-            var results = this._results;
+            var values = this._views.formatter.getValues();
+            var fileUuid = values.fileUuid;
+            if (fileUuid) {
+               this._options.fileUuid = fileUuid;
+            }
          },
 
          /*
