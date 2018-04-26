@@ -1,14 +1,16 @@
 define('Controls/BreadCrumbsController', [
    'Core/Control',
+   'Controls/List/resources/utils/ItemsUtil',
    'WS.Data/Collection/RecordSet',
    'tmpl!Controls/BreadCrumbsController/BreadCrumbsController',
    'tmpl!Controls/BreadCrumbs/resources/itemsTemplate',
    'tmpl!Controls/BreadCrumbs/resources/itemTemplate',
    'tmpl!Controls/BreadCrumbsController/resources/menuItemTemplate',
    'tmpl!Controls/BreadCrumbsController/resources/menuContentTemplate',
-   'Controls/BreadCrumbs'
+   'Controls/BreadCrumbs' //Подгружаю здесь крошки, чтобы на момент высчитывания стилей css-ка точно была подгружена
 ], function(
    Control,
+   ItemsUtil,
    RecordSet,
    template,
    itemsTemplate,
@@ -27,6 +29,7 @@ define('Controls/BreadCrumbsController', [
                currentItem = items[index],
                count = items.length;
             return {
+               getPropValue: ItemsUtil.getPropertyValue,
                item: currentItem,
                hasArrow: count > 1 && index !== count - 1,
                isBlurred: isBlurred
@@ -34,7 +37,6 @@ define('Controls/BreadCrumbsController', [
          },
 
          getItemsSizes: function(self, items) {
-            //TODO: по сути копипаста, но так быстрее, чем мерять все айтемы по отдельности
             var
                measurer = document.createElement('div'),
                itemsSizes = [];
@@ -108,6 +110,7 @@ define('Controls/BreadCrumbsController', [
                      }
 
                      self._visibleItems.push({
+                        getPropValue: ItemsUtil.getPropertyValue,
                         item: {
                            title: '...'
                         },
@@ -159,14 +162,13 @@ define('Controls/BreadCrumbsController', [
          onItemClick: function(self, originalEvent, item, isDots) {
             if (isDots) {
 
-               //оборачиваю айтемы в рекордсет чисто ради того, чтобы меню могло с ними работать
-               var
-                  rs = new RecordSet({
+               //Оборачиваю айтемы в рекордсет чисто ради того, чтобы меню могло с ними работать
+               //Нельзя сделать source, т.к. с ним оно не умеет работать
+               var rs = new RecordSet({
                      rawData: self._options.items
-                  }),
-                  indentation = 0;
-               rs.each(function(item) {
-                  item.set('indentation', indentation++);
+                  });
+               rs.each(function(item, index) {
+                  item.set('indentation', index);
                });
                self._children.menuOpener.open({
                   target: originalEvent.target,
@@ -184,6 +186,7 @@ define('Controls/BreadCrumbsController', [
             BREAD_CRUMB_MIN_WIDTH = _private.getWidth('<div class="controls-BreadCrumbsV__title_min"></div>');
             DOTS_WIDTH = _private.getWidth(itemTemplate({
                itemData: {
+                  getPropValue: ItemsUtil.getPropertyValue,
                   item: {
                      title: '...'
                   },
@@ -207,7 +210,7 @@ define('Controls/BreadCrumbsController', [
       _afterMount: function() {
          _private.calculateConstants();
 
-         //TODO: нужно приделать костыли для браузеров без прелоад (т.е. всех, кроме хрома, сафари и оперы)
+         //TODO: нужно приделать костыли для браузеров без preload
          if (this._options.items && this._options.items.length > 0) {
             this._oldWidth = this._container.clientWidth - HOME_WIDTH;
             _private.calculateBreadCrumbsToDraw(this,  this._options.items, _private.getItemsSizes(this, this._options.items), this._oldWidth);

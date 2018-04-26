@@ -1,10 +1,12 @@
 define('Controls/Path', [
    'Core/Control',
+   'Controls/List/resources/utils/ItemsUtil',
    'tmpl!Controls/Path/Path',
    'tmpl!Controls/Button/BackButton/Back',
    'css!Controls/Path/Path'
 ], function(
    Control,
+   ItemsUtil,
    template,
    backButtonTemplate
 ) {
@@ -48,14 +50,13 @@ define('Controls/Path', [
       
       calculateItems: function(self, items) {
          var backButtonWidth;
-         
-         //TODO: вместо title доставать через idProperty
-         self._backButtonCaption = items[0].title;
+
+         self._backButtonCaption = ItemsUtil.getPropertyValue(items[0], self._options.displayProperty || 'title');
          if (items.length > 1) {
             self._breadCrumbsItems = items.slice(1);
             backButtonWidth = _private.getWidth(backButtonTemplate({
                _options: {
-                  caption: items[0].title,
+                  caption: self._backButtonCaption,
                   style: 'default',
                   size: 'm'
                }
