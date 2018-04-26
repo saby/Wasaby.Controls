@@ -8,7 +8,7 @@
 define('SBIS3.CONTROLS/ExportCustomizer/Area',
    [
       'Core/CommandDispatcher',
-      /*^^^'Core/core-merge',*/
+      'Core/core-merge',
       'Core/Deferred',
       'SBIS3.CONTROLS/CompoundControl',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
@@ -20,7 +20,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
       'SBIS3.CONTROLS/ScrollContainer'
    ],
 
-   function (CommandDispatcher, /*^^^cMerge,*/ Deferred, CompoundControl, InformationPopupManager, RecordSet, /*^^^DataType,*/ tmpl) {
+   function (CommandDispatcher, cMerge, Deferred, CompoundControl, InformationPopupManager, RecordSet, /*^^^DataType,*/ tmpl) {
       'use strict';
 
       /**
@@ -43,7 +43,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
 
       /**
        * @typedef {object} ExportResults Тип, содержащий информацию о результате редактирования
-       * @property {*} [*] ^^^ Базовые параметры экспортирования (опционально)
+       * @property {string} MethodName Имя списочного метода, результат раболты которого будет сохранён в эксель-файл
+       * @property {WS.Data/Entity/Record} [Filter] Параметры фильтрации для списочного метода (опционально)
+       * @property {WS.Data/Entity/Record} [Pagination] Навигация для списочного метода (опционально)
+       * @property {string} [HierarchyField] Название поля иерархии (опционально)
+       * @property {string} FileName Название результирующего эксель-файла
+       * @property {Array<string>} Fields Список полей для колонок в экспортируемом файле
+       * @property {Array<string>} Titles Список отображаемых названий колонок в экспортируемом файле
+       * @property {string} TemplateId Uuid шаблона форматирования эксель-файла
        */
 
       var _typeIfDefined = function (type, value) {
@@ -220,6 +227,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                 * @cfg {string} Uuid шаблона форматирования эксель-файла
                 */
                fileUuid: null
+               // TODO: добавить валидаторы
             },
             // Список имён вложенных под-компонентов
             _SUBVIEW_NAMES: {
@@ -419,20 +427,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          },
 
          /*
-          * Получить настраиваемые значения вложенного под-компонента, если он есть
-          *
-          * @protected
-          * @param {string} name Мнемоническое имя под-компонента (в наборе _views)
-          * @return {object}
-          */
-         _getSubviewValues: function (name) {//^^^
-            var view = this._views[name];
-            if (view) {
-               return view.getValues();
-            }
-         },
-
-         /*
           * Проверить результаты
           *
           * @protected
@@ -481,7 +475,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             this.getValues(true).addCallback(function (data) {
                // И если всё нормально - завершить диалог
                if (data) {
-                  this._notify('onComplete', /*ExportResults*/ data);
+                  this._notify('onComplete', /*ExportResults:*/data);
                }
                /*else {
                   // Иначе пользователь продолжает редактирование
@@ -511,15 +505,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             if (!options.waitingMode) {
                this._processOptions(options);
             }
-            var isUsedSubview = !options.waitingMode ? options._isUsedSubview : {};
             var views = this._views;
-            var needRebuild;
-            for (var name in views) {
-               if (isUsedSubview[name] !== !!views[name]) {
-                  needRebuild = true;
-                  break;
-               }
-            }
+            var needRebuild = !options.waitingMode ? !views.columnBinder || !views.formatter : !!views.columnBinder || !!views.formatter;
             if (needRebuild) {
                this.rebuildMarkup();
                this._init();
@@ -527,14 +514,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             else {
                var scopes = options._scopes;
                for (var name in views) {
-                  if (isUsedSubview[name]) {
-                     if (name !== 'providerArgs') {
-                        views[name].setValues(scopes[name]);
-                     }
-                     else {
-                        this._updateProviderArgsView(scopes.provider.parser);
-                     }
-                  }
+                  views[name].setValues(scopes[name]);
                }
             }
          },
@@ -548,34 +528,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           */
          getValues: function (withValidation) {
             var options = this._options;
-            var useSheets = true;
-            var useMapping = true;
-            var data = {
-               file: options.file
-            };
-            if (useSheets) {
-               var results = this._results;
-               var sheetIndex = options.sheetIndex;
-               var useAllSheets = 0 <= sheetIndex;
-               var sheets;
-               if (useAllSheets) {
-                  sheets = options.sheets.reduce(function (r, v, i) { r.push(this._combineResultSheet(results[i + 1], v, i)); return r; }.bind(this), []);
-               }
-               else {
-                  sheets = [this._combineResultSheet(results[''])];
-                  sheets[0].columnsCount = options.sheets[0].sampleRows[0].length;;
-               }
-               //data.sheetIndex = sheetIndex;
-               data.sameSheetConfigs = !useAllSheets;
-               data.sheets = sheets;
-            }
-            if (useMapping) {
-               data.mapping = options.mapping.mapping;
-            }
-            var baseParams = this._getSubviewValues('baseParams');
-            for (var name in baseParams) {
-               data[name] = baseParams[name];
-            }
+            var data = cMerge({}, options.serviceParams);
+            data.Fields = options.fieldIds;
+            data.Titles = this._selectFields(options.allFields, options.fieldIds, function (v) { return v.title; });
+            data.TemplateId = options.fileUuid;
             return withValidation
                ?
                   // Прроверить собранные данные
@@ -587,13 +543,40 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   Deferred.success(data);
          },
 
-         destroy: function () {
+         /**
+          * Выбрать из списка всех колонок только объекты согласно указанным идентификаторам. Если указана функция-преобразователь, то преобразовать с её помощью каждый полученный элемент списка
+          *
+          * @protected
+          * @param {Array<BrowserColumnInfo>|WS.Data/Collection/RecordSet<BrowserColumnInfo>} allFields Список объектов с информацией о всех колонках в формате, используемом в браузере
+          * @param {Array<string>} fieldIds Список привязки колонок в экспортируемом файле к полям данных
+          * @param {function} [mapper] Функция-преобразователь отобранных объектов (опционально)
+          * @return {Array<*>}
+          */
+         _selectFields: function (allFields, fieldIds, mapper) {
+            if (allFields && fieldIds && fieldIds.length) {
+               var isRecordSet = allFields instanceof RecordSet;
+               if (isRecordSet ? allFields.getCount() : allFields.length) {
+                  var needMap = typeof mapper === 'function';
+                  return fieldIds.map(function (id, i) {
+                     var field;
+                     if (!isRecordSet) {
+                        allFields.some(function (v) { if (v.id === id) { field = v; return true; } });
+                     }
+                     else {
+                        var model = allFields.getRecordById(id);
+                        if (model) {
+                           field = model.getRawData();
+                        }
+                     }
+                     return field && needMap ? mapper(field) : field;
+                  });
+               }
+            }
+         }//,
+
+         /*destroy: function () {
             Area.superclass.destroy.apply(this, arguments);
-            /*^^^var fieldsPromise = this._fieldsPromise;
-            if (fieldsPromise && !fieldsPromise.isReady()) {
-               fieldsPromise.cancel();
-            }*/
-         }
+         }*/
       });
 
 

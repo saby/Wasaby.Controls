@@ -150,6 +150,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             }
             if (method === 'create' || useBoth) {
                var fieldIds = options.fieldIds;
+               // TODO: Как быть, если массив полей пуст, а файл уже есть? вызывать с пустым массивом или удалять файл?
                args.push(fieldIds || [], this._selectFields(options.allFields, fieldIds, function (v) { return v.title; }) || [], options.serviceParams);
             }
             var formatter = this._exportFormatter;
