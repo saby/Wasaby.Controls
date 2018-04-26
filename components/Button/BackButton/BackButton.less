@@ -11,6 +11,13 @@
    max-width: calc(~"100% - @{back-arrow-width} - @{back-button-arrow-padding-right}");
 }
 
+.ws-is-ie10, .ws-is-ie11 {
+   .controls-BackButton .controls-BackButton__caption_size_h2 {
+      position: relative;
+      top: -1px;
+   }
+}
+
 .controls-BackButton {
    cursor: pointer;
    white-space: nowrap;
