@@ -8,7 +8,8 @@ define('Controls/Filter/Button',
       'Core/moduleStubs',
       'WS.Data/Chain',
       'WS.Data/Utils',
-      'css!Controls/Filter/Button/Button'
+      'css!Controls/Filter/Button/Button',
+      'Controls/Input/Text'
    ],
 
    function(Control, template, moduleStubs, Chain, Utils) {
