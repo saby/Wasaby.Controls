@@ -4,7 +4,13 @@
     <div class="controls-BaseControl__trigger controls-BaseControl__topLoadTrigger" name="topLoadTrigger" style="bottom: -{{_loadOffset}}px;"></div>
 
     <ws:if data="{{_listViewModel}}">
-        <ws:partial template="{{ _options.content }}" name="listView" scope="{{_options.viewConfig}}" listModel="{{_listViewModel}}" on:itemClick="_onItemClick()">
+        <ws:partial
+                template="{{ _options.content }}"
+                name="listView"
+                scope="{{_options.viewConfig}}"
+                listModel="{{_listViewModel}}"
+                on:itemClick="_onItemClick()"
+                on:itemSwipe="_listSwipe()">
            <ws:viewTemplate>
               <ws:partial template="{{_options.viewName}}"/>
            </ws:viewTemplate>

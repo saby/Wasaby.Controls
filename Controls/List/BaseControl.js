@@ -496,8 +496,9 @@ define('Controls/List/BaseControl', [
       },
 
       _listSwipe: function(event, itemData, childEvent) {
+         var direction = childEvent.nativeEvent.direction;
          this._children.itemActionsOpener.close();
-         if (childEvent.nativeEvent.direction === 'right' && itemData.multiSelectVisibility) {
+         if (direction === 'right' && itemData.multiSelectVisibility) {
             var status = itemData.multiSelectStatus;
             if (status === 1) {
                this._listViewModel.unselect([itemData.key]);
@@ -505,7 +506,10 @@ define('Controls/List/BaseControl', [
                this._listViewModel.select([itemData.key]);
             }
          }
-
+         if (direction === 'right' || direction === 'left') {
+            var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.viewConfig.idProperty);
+            this._listViewModel.setMarkedKey(newKey);
+         }
       },
 
       removeItems: function(items) {
