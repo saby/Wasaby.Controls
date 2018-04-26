@@ -24,7 +24,7 @@ define('Controls/BreadCrumbsController', [
       BREAD_CRUMB_MIN_WIDTH,
       DOTS_WIDTH,
       _private = {
-         getItemData: function(index, items, isBlurred) {
+         getItemData: function(index, items, withOverflow) {
             var
                currentItem = items[index],
                count = items.length;
@@ -32,7 +32,7 @@ define('Controls/BreadCrumbsController', [
                getPropValue: ItemsUtil.getPropertyValue,
                item: currentItem,
                hasArrow: count > 1 && index !== count - 1,
-               isBlurred: isBlurred
+               withOverflow: withOverflow
             };
          },
 
@@ -61,7 +61,7 @@ define('Controls/BreadCrumbsController', [
             return currentItems !== newItems || oldWidth !== availableWidth;
          },
 
-         canBlur: function(itemWidth, currentWidth, availableWidth) {
+         canShrink: function(itemWidth, currentWidth, availableWidth) {
             return itemWidth > BREAD_CRUMB_MIN_WIDTH && currentWidth - itemWidth + BREAD_CRUMB_MIN_WIDTH < availableWidth;
          },
 
@@ -69,7 +69,7 @@ define('Controls/BreadCrumbsController', [
             var
                length = itemsSizes.length,
                currentWidth,
-               blurredItemIndex;
+               shrinkedItemIndex;
             self._visibleItems = [];
 
             currentWidth = itemsSizes.reduce(function(acc, width) {
@@ -79,7 +79,7 @@ define('Controls/BreadCrumbsController', [
             if (currentWidth > availableWidth) {
                if (length > 2) {
                   //Сначала пробуем замылить предпоследний элемент
-                  if (_private.canBlur(itemsSizes[length - 2], currentWidth, availableWidth)) {
+                  if (_private.canShrink(itemsSizes[length - 2], currentWidth, availableWidth)) {
                      for (var j = 0; j < length; j++) {
                         self._visibleItems.push(_private.getItemData(j, items, j === length - 2));
                      }
@@ -90,8 +90,8 @@ define('Controls/BreadCrumbsController', [
                      for (var i = length - 2; i > 0; i--) {
                         if (currentWidth <= availableWidth) {
                            break;
-                        } else if (_private.canBlur(itemsSizes[i], currentWidth, availableWidth)) {
-                           blurredItemIndex = i;
+                        } else if (_private.canShrink(itemsSizes[i], currentWidth, availableWidth)) {
+                           shrinkedItemIndex = i;
                            currentWidth -= itemsSizes[i] - BREAD_CRUMB_MIN_WIDTH;
                            break;
                         } else {
@@ -102,11 +102,11 @@ define('Controls/BreadCrumbsController', [
                      //TODO: вообще может быть ситуация, когда замыливаться будет только одна крошка, потому что вторую некуда сжимать, нужно подумать как с этим жить
                      //Если осталось всего 2 крошки, но места все равно не хватает, то замыливаем первый и последний элементы одновременно
                      if (i === 0 && currentWidth > availableWidth) {
-                        blurredItemIndex = 0;
+                        shrinkedItemIndex = 0;
                      }
 
                      for (var j = 0; j <= i; j++) {
-                        self._visibleItems.push(_private.getItemData(j, items, j === blurredItemIndex));
+                        self._visibleItems.push(_private.getItemData(j, items, j === shrinkedItemIndex));
                      }
 
                      self._visibleItems.push({
@@ -118,7 +118,7 @@ define('Controls/BreadCrumbsController', [
                         hasArrow: true
                      });
 
-                     self._visibleItems.push(_private.getItemData(length - 1, items, blurredItemIndex === 0));
+                     self._visibleItems.push(_private.getItemData(length - 1, items, shrinkedItemIndex === 0));
                   }
                } else {
                   //TODO: вообще может быть ситуация, когда замыливаться будет только одна крошка, потому что вторую некуда сжимать, нужно подумать как с этим жить

@@ -15,7 +15,12 @@
 .controls-Path__backButton_short {
    flex-shrink: 1;
    min-width: 48px; //TODO: 36px минимальная ширина текста + 12px ширина иконки
-   overflow: hidden;
+}
+
+.controls-Path__backButton_half,
+.controls-Path__backButton_short {
+   //TODO: сейчас кнопка назад не умеет обрезаться вообще
+   .text-overflow();
 }
 
 .controls-Path__backButton_half,
@@ -23,16 +28,4 @@
    width: 50%;
    flex-shrink: 1;
    overflow: hidden;
-}
-
-.controls-Path__backButton_half:after,
-.controls-Path__backButton_short:after {
-   content: '';
-   display: inline-block;
-   position: absolute;
-   right: 0;
-   top: 0;
-   width: 24px;
-   height: 100%;
-   background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
 }
