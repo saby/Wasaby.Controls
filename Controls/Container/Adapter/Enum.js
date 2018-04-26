@@ -13,7 +13,9 @@ define('Controls/Container/Adapter/Enum',
          getArrayFromEnum: function(enumInstance) {
             var arr = [];
             enumInstance.each(function(item) {
-               arr.push({'title' : item});
+               arr.push({
+                  title: item
+               });
             });
             return arr;
          },
