@@ -2,7 +2,8 @@ define('Controls/Toggle/Switch', [
    'Core/Control',
    'tmpl!Controls/Toggle/Switch/Switch',
    'WS.Data/Type/descriptor',
-   'css!Controls/Toggle/Switch/Switch'
+   'css!Controls/Toggle/Switch/Switch',
+   'css!Controls/Toggle/resources/SwitchCircle/SwitchCircle'
 ], function(Control, template, types) {
 
    /**
@@ -43,13 +44,11 @@ define('Controls/Toggle/Switch', [
       _template: template,
 
       _beforeMount: function(options) {
-         //Мы ждем прокси опции от Димы Зуева, сейчас isEnabled() может работать неправильно
          var enabled = !options.readOnly;
          this._markerState = _private._getMarkerState(enabled, options.value);
       },
 
       _beforeUpdate: function(options) {
-         //Мы ждем прокси опции от Димы Зуева, сейчас isEnabled() может работать неправильно
          var enabled = !options.readOnly;
          this._markerState = _private._getMarkerState(enabled, options.value);
       },
