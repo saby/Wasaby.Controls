@@ -108,7 +108,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          _bindEvents: function () {
             this.subscribeTo(this._formatterMenu, 'onMenuItemActivate', function (evtName, selectedId) {
                this._startFormatEditing(selectedId === 'app');
-            }.bind(this))
+            }.bind(this));
+            this._preview.on('click', this._startFormatEditing.bind(this, false));
          },
 
          /**
