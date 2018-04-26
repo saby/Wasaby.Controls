@@ -13,14 +13,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
       'SBIS3.CONTROLS/CompoundControl',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
       'WS.Data/Collection/RecordSet',
-      /*^^^'WS.Data/Type/descriptor',*/
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/Area',
       'css!SBIS3.CONTROLS/ExportCustomizer/Area',
       'SBIS3.CONTROLS/Button',
       'SBIS3.CONTROLS/ScrollContainer'
    ],
 
-   function (CommandDispatcher, cMerge, Deferred, CompoundControl, InformationPopupManager, RecordSet, /*^^^DataType,*/ tmpl) {
+   function (CommandDispatcher, cMerge, Deferred, CompoundControl, InformationPopupManager, RecordSet, tmpl) {
       'use strict';
 
       /**
@@ -184,27 +183,27 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                 */
                dialogButtonTitle: null,//Определено в шаблоне
                /**
-                * @cfg {string} Заголовок под-компонента "columnBinder"
+                * @cfg {string} Заголовок под-компонента "columnBinder" (опционально)
                 */
                columnBinderTitle: null,
                /**
-                * @cfg {string} Заголовок столбца колонок файла в таблице соответствия под-компонента "columnBinder"
+                * @cfg {string} Заголовок столбца колонок файла в таблице соответствия под-компонента "columnBinder" (опционально)
                 */
                columnBinderColumnsTitle: null,
                /**
-                * @cfg {string} Заголовок столбца полей данных в таблице соответствия под-компонента "columnBinder"
+                * @cfg {string} Заголовок столбца полей данных в таблице соответствия под-компонента "columnBinder" (опционально)
                 */
                columnBinderFieldsTitle: null,
                /**
-                * @cfg {string} Отображаемый текст при пустом списке соответствий в под-компоненте "columnBinder"
+                * @cfg {string} Отображаемый текст при пустом списке соответствий в под-компоненте "columnBinder" (опционально)
                 */
                columnBinderEmptyTitle: null,
                /**
-                * @cfg {string} Заголовок под-компонента "formatter"
+                * @cfg {string} Заголовок под-компонента "formatter" (опционально)
                 */
                formatterTitle: null,
                /**
-                * @cfg {string} Заголовок меню выбора способа форматирования в под-компоненте "formatter"
+                * @cfg {string} Заголовок меню выбора способа форматирования в под-компоненте "formatter" (опционально)
                 */
                formatterMenuTitle: null,
                /**

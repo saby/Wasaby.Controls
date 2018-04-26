@@ -17,6 +17,36 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
    function (cMerge, Deferred, FloatArea, Action, Area) {
       'use strict';
 
+      /**
+       * @typedef {object} BrowserColumnInfo Тип, содержащий информацию о колонке браузера (SBIS3.CONTROLS/Browser и его наследники)
+       * @property {string} id Идентификатор колонки (как правило, имя поля в базе данных или БЛ)
+       * @property {string} title Отображаемое название колонки
+       * @property {string} [group] Идентификатор или название группы, к которой относится колонка (опционально)
+       * @property {boolean} [fixed] Обязательная колонка (опционально)
+       * @property {object} columnConfig Конфигурация колонки в формате, используемом компонентом SBIS3.CONTROLS/DataGridView
+       */
+
+      /**
+       * @typedef {object} ExportServiceParams Тип, содержащий информацию о прочих параметрах, необходимых для работы БЛ
+       * @property {string} MethodName Имя списочного метода, результат раболты которого будет сохранён в эксель-файл
+       * @property {WS.Data/Entity/Record} [Filter] Параметры фильтрации для списочного метода (опционально)
+       * @property {WS.Data/Entity/Record} [Pagination] Навигация для списочного метода (опционально)
+       * @property {string} [HierarchyField] Название поля иерархии (опционально)
+       * @property {string} FileName Название результирующего эксель-файла
+       */
+
+      /**
+       * @typedef {object} ExportResults Тип, содержащий информацию о результате редактирования
+       * @property {string} MethodName Имя списочного метода, результат раболты которого будет сохранён в эксель-файл
+       * @property {WS.Data/Entity/Record} [Filter] Параметры фильтрации для списочного метода (опционально)
+       * @property {WS.Data/Entity/Record} [Pagination] Навигация для списочного метода (опционально)
+       * @property {string} [HierarchyField] Название поля иерархии (опционально)
+       * @property {string} FileName Название результирующего эксель-файла
+       * @property {Array<string>} Fields Список полей для колонок в экспортируемом файле
+       * @property {Array<string>} Titles Список отображаемых названий колонок в экспортируемом файле
+       * @property {string} TemplateId Uuid шаблона форматирования эксель-файла
+       */
+
       var ExportCustomizerAction = Action.extend([], /**@lends SBIS3.CONTROLS/ExportCustomizer/Action.prototype*/ {
 
          /**
@@ -42,7 +72,19 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           *
           * @public
           * @param {object} options Входные аргументы("мета-данные") настройщика экспорта:
-          * @param {*} [options.*] ^^^ (опционально)
+          * @param {string} [options.dialogTitle] Заголовок диалога настройщика экспорта (опционально)
+          * @param {string} [options.dialogButtonTitle] Подпись кнопки диалога применения результата редактирования (опционально)
+          * @param {string} [options.columnBinderTitle] Заголовок под-компонента "columnBinder" (опционально)
+          * @param {string} [options.columnBinderColumnsTitle] Заголовок столбца колонок файла в таблице соответствия под-компонента "columnBinder" (опционально)
+          * @param {string} [options.columnBinderFieldsTitle] Заголовок столбца полей данных в таблице соответствия под-компонента "columnBinder" (опционально)
+          * @param {string} [options.columnBinderEmptyTitle] Отображаемый текст при пустом списке соответствий в под-компоненте "columnBinder" (опционально)
+          * @param {string} [options.formatterTitle] Заголовок под-компонента "formatter" (опционально)
+          * @param {string} [options.formatterMenuTitle] Заголовок меню выбора способа форматирования в под-компоненте "formatter" (опционально)
+          * @param {ExportServiceParams} options.serviceParams Прочие параметры, необходимых для работы БЛ
+          * @param {Array<BrowserColumnInfo>|WS.Data/Collection/RecordSet<BrowserColumnInfo>} options.allFields Список объектов с информацией о всех колонках в формате, используемом в браузере
+          * @param {Array<string>} options.fieldIds Список привязки колонок в экспортируемом файле к полям данных
+          * @param {object} options.fieldGroupTitles Список отображаемых названий групп полей (если используются идентификаторы групп)
+          * @param {string} options.fileUuid Uuid шаблона форматирования эксель-файла
           * @return {Deferred<ExportResults>}
           */
          execute: function (options) {
