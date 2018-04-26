@@ -15,12 +15,12 @@ define(
             item.set("2", "test");
 
             radio._notify = function (event, value) {
-               if (event === "onSelectedItemChange" && value === "test") {
+               if (event === "selectedKeyChanged" && value === "test") {
                   keyChanged = true;
                }
             };
 
-            radio.selectKeyChanged("event", item, "2");
+            radio._selectKeyChanged("event", item, "2");
 
             assert.isTrue(keyChanged, 'changed selected key is not success');
          });
