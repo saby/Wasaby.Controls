@@ -223,22 +223,15 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
             }
             var options = this._options;
             var fieldsBefore = !!options.fields;
+            var waited = {fields:true, fieldFilter:false, fieldProperty:false, variants:true, mapping:true};
             var has = {};
             for (var name in values) {
-               switch (name) {
-                  case 'fields':
-                  case 'fieldFilter':
-                  case 'fieldProperty':
-                  case 'variants':
-                  case 'mapping':
-                     break;
-                  default:
-                     continue;
-               }
-               var value = values[name];
-               if (name === 'fieldFilter' || name === 'fieldProperty' ? value !== options[name] : !cObjectIsEqual(value, options[name])) {
-                  has[name] = true;
-                  options[name] = value;
+               if (name in waited) {
+                  var value = values[name];
+                  if (waited[name] ? !cObjectIsEqual(value, options[name]) : value !== options[name]) {
+                     has[name] = true;
+                     options[name] = value;
+                  }
                }
             }
             if (has.fields || has.fieldFilter || has.fieldProperty || has.variants || has.mapping) {

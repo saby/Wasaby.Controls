@@ -161,21 +161,16 @@ define('SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View',
             if (!values || typeof values !== 'object') {
                throw new Error('Object required');
             }
-            var has = {};
             var options = this._options;
+            var waited = {columnCount:false, columns:true, hierarchyField:false};
+            var has = {};
             for (var name in values) {
-               switch (name) {
-                  case 'columnCount':
-                  case 'columns':
-                  case 'hierarchyField':
-                     break;
-                  default:
-                     continue;
-               }
-               var value = values[name];
-               if (name !== 'columns' ? value !== options[name] : !cObjectIsEqual(value, options[name])) {
-                  has[name] = true;
-                  options[name] = value;
+               if (name in waited) {
+                  var value = values[name];
+                  if (waited[name] ? !cObjectIsEqual(value, options[name]) : value !== options[name]) {
+                     has[name] = true;
+                     options[name] = value;
+                  }
                }
             }
             if (has.columnCount) {

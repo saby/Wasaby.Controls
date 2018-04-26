@@ -112,13 +112,13 @@ define('SBIS3.CONTROLS/ImportCustomizer/Provider/View',
             if (!values || typeof values !== 'object') {
                throw new Error('Object required');
             }
-            var names = ['parser', 'skippedRows', 'separator'];
-            var has = {};
             var options = this._options;
+            var waited = {parser:false, skippedRows:false, separator:false};
+            var has = {};
             for (var name in values) {
-               if (names.indexOf(name) !== -1) {
+               if (name in waited) {
                   var value = values[name];
-                  if (options[name] !== value) {
+                  if (waited[name] ? !cObjectIsEqual(value, options[name]) : value !== options[name]) {
                      has[name] = true;
                      options[name] = value;
                   }

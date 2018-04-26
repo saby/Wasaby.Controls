@@ -68,13 +68,13 @@ define('SBIS3.CONTROLS/ImportCustomizer/BaseParams/View',
             if (!values || typeof values !== 'object') {
                throw new Error('Object required');
             }
-            var names = ['replaceAllData', 'destination'];
-            var has = {};
             var options = this._options;
+            var waited = {replaceAllData:false, destination:true};
+            var has = {};
             for (var name in values) {
-               if (names.indexOf(name) !== -1) {
+               if (name in waited) {
                   var value = values[name];
-                  if (name !== '' ? value !== options[name] : !cObjectIsEqual(value, options[name])) {
+                  if (waited[name] ? !cObjectIsEqual(value, options[name]) : value !== options[name]) {
                      has[name] = true;
                      options[name] = value;
                   }
