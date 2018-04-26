@@ -96,7 +96,7 @@ define('Controls/Path', [
          var backButtonWidth;
          backButtonWidth = _private.getWidth(backButtonTemplate({
             _options: {
-               caption: this._options.items[0].title,
+               caption: ItemsUtil.getPropertyValue(this._options.items[0], this._options.displayProperty || 'title'),
                style: 'default',
                size: 'm'
             }
