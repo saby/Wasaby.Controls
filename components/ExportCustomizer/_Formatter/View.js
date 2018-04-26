@@ -7,24 +7,31 @@
  */
 define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
    [
+      'Core/helpers/Object/isEqual',
       'SBIS3.CONTROLS/CompoundControl',
+      'WS.Data/Di',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
       'css!SBIS3.CONTROLS/ExportCustomizer/_Formatter/View'
    ],
 
-   function (CompoundControl, dotTplFn) {
+   function (cObjectIsEqual, CompoundControl, Di, dotTplFn) {
       'use strict';
 
-      var View = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ExportCustomizer/_Formatter/View.prototype*/ {
+      /**
+       * @typedef {object} ExportFormatterResult Тип, описывающий возвращаемые настраиваемые значения компонента
+       * @property {string} fileUuid Uuid шаблона форматирования эксель-файла
+       *
+       * @see fileUuid
+       */
 
-         /**
-          * @typedef {object} ExportFormatterResult Тип, описывающий возвращаемые настраиваемые значения компонента
-          * @property {string} fileUrl Урл файла с результатом форматирования
-          * @property {string} previewUrl Урл для предпросмотра результата форматирования
-          *
-          * @see fileUrl
-          * @see previewUrl
-          */
+      /**
+       * Имя регистрации объекта, предоставляющего методы форматирования шаблона эксель-файла, в инжекторе зависимостей
+       * @private
+       * @type {string}
+       */
+      var ExportFormatterName = 'ExportFormatter.Excel';
+
+      var View = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ExportCustomizer/_Formatter/View.prototype*/ {
 
          _dotTplFn: dotTplFn,
          $protected: {
@@ -38,14 +45,16 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                 */
                menuTitle: rk('Редактировать', 'НастройщикЭкспорта'),
                /**
-                * @cfg {string} Урл файла с результатом форматирования
+                * @cfg {Array<string>} Список привязки колонок в экспортируемом файле к полям данных
                 */
-               fileUrl: null,
+               fieldIds: null,
                /**
-                * @cfg {string} Урл для предпросмотра результата форматирования
+                * @cfg {string} Uuid шаблона форматирования эксель-файла
                 */
-               previewUrl: null
+               fileUuid: null
             },
+            // Объект, предоставляющий методы форматирования шаблона эксель-файла
+            _exportFormatter: null,
             // Контрол выбора способа форматирования
             _formatterMenu: null,
             // Контрол предпросмотра
@@ -66,10 +75,16 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
 
          init: function () {
             View.superclass.init.apply(this, arguments);
-            this._formatterMenu = this.getChildControlByName('controls-ExportCustomizer-Formatter-View__formatterMenu');
-            this._preview = this.getContainer().find('.controls-ExportCustomizer-Formatter-View__preview');
-            //^^^this._preview = this.getChildControlByName('controls-ExportCustomizer-Formatter-View__preview');
-            this._bindEvents();
+            this._exportFormatter = Di.isRegistered(ExportFormatterName) ? Di.resolve(ExportFormatterName) : null;
+            if (this._exportFormatter) {
+               this._formatterMenu = this.getChildControlByName('controls-ExportCustomizer-Formatter-View__formatterMenu');
+               this._preview = this.getContainer().find('.controls-ExportCustomizer-Formatter-View__preview img');
+               this._bindEvents();
+            }
+            else {
+               this.setEnabled(false);
+               this.setVisible(false);
+            }
          },
 
          _bindEvents: function () {
@@ -91,7 +106,29 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                throw new Error('Object required');
             }
             var options = this._options;
-            //^^^
+            var waited = {fieldIds:true, fileUuid:false};
+            var has = {};
+            for (var name in values) {
+               if (name in waited) {
+                  var value = values[name];
+                  if (waited[name] ? !cObjectIsEqual(value, options[name]) : value !== options[name]) {
+                     has[name] = true;
+                     options[name] = value;
+                  }
+               }
+            }
+            if (has.fieldIds) {
+               if (has.fileUuid) {
+                  //^^^
+               }
+               else {
+                  //^^^
+               }
+            }
+            else
+            if (has.fileUuid) {
+               //^^^
+            }
          },
 
          /**
@@ -103,8 +140,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          getValues: function () {
             var options = this._options;
             return {
-               fileUrl: options.fileUrl,
-               previewUrl: options.previewUrl
+               fileUuid: options.fileUuid
             };
          }
       });

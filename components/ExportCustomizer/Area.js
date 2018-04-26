@@ -57,6 +57,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          columnBinderColumnsTitle: _typeIfDefined.bind(null, 'string'),
          columnBinderFieldsTitle: _typeIfDefined.bind(null, 'string'),
          columnBinderEmptyTitle: _typeIfDefined.bind(null, 'string'),
+         formatterTitle: _typeIfDefined.bind(null, 'string'),
+         formatterMenuTitle: _typeIfDefined.bind(null, 'string'),
          allFields: function (value) {
             // Должно быть значение
             if (!value) {
@@ -92,7 +94,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                return value;
             }
          },
-         fieldGroupTitles: _typeIfDefined.bind(null, 'object')
+         fieldGroupTitles: _typeIfDefined.bind(null, 'object'),
+         fileUuid: _typeIfDefined.bind(null, 'string')
       };
 
       /**
@@ -117,9 +120,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          'columnBinderColumnsTitle',
          'columnBinderFieldsTitle',
          'columnBinderEmptyTitle',
+         'formatterTitle',
+         'formatterMenuTitle',
          'allFields',
          'fieldIds',
-         'fieldGroupTitles'
+         'fieldGroupTitles',
+         'fileUuid'
       ];
 
       var Area = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ExportCustomizer/Area.prototype*/ {
@@ -160,6 +166,18 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                 */
                columnBinderEmptyTitle: null,
                /**
+                * @cfg {string} Заголовок под-компонента "formatter"
+                */
+               formatterTitle: null,
+               /**
+                * @cfg {string} Заголовок меню выбора способа форматирования в под-компоненте "formatter"
+                */
+               formatterMenuTitle: null,
+               /**
+                * @cfg {Array<string>} Список привязки колонок в экспортируемом файле к полям данных
+                */
+               fieldIds: null,
+               /**
                 * @cfg {Array<BrowserColumnInfo>|WS.Data/Collection/RecordSet<BrowserColumnInfo>} Список объектов с информацией о всех колонках в формате, используемом в браузере
                 */
                allFields: null,
@@ -170,7 +188,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                /**
                 * @cfg {object} Список отображаемых названий групп полей (если используются идентификаторы групп)
                 */
-               fieldGroupTitles: null
+               fieldGroupTitles: null,
+               /**
+                * @cfg {string} Uuid шаблона форматирования эксель-файла
+                */
+               fileUuid: null
             },
             // Список имён вложенных под-компонентов
             _SUBVIEW_NAMES: {
@@ -277,7 +299,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   fieldIds: options.fieldIds
                },
                formatter: {
-                  //^^^
+                  title: options.formatterTitle,
+                  menuTitle: options.formatterMenuTitle,
+                  fieldIds: options.fieldIds,
+                  fileUuid: options.fileUuid
                }
             };
          },
