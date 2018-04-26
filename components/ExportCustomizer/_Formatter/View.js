@@ -21,17 +21,19 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
       'use strict';
 
       /**
+       * @typedef {object} ExportServiceParams Тип, содержащий информацию о прочих параметрах, необходимых для работы БЛ
+       * @property {string} MethodName Имя списочного метода, результат раболты которого будет сохранён в эксель-файл
+       * @property {WS.Data/Entity/Record} [Filter] Параметры фильтрации для списочного метода (опционально)
+       * @property {WS.Data/Entity/Record} [Pagination] Навигация для списочного метода (опционально)
+       * @property {string} [HierarchyField] Название поля иерархии (опционально)
+       * @property {string} FileName Название результирующего эксель-файла
+       */
+
+      /**
        * @typedef {object} ExportFormatterResult Тип, описывающий возвращаемые настраиваемые значения компонента
        * @property {string} fileUuid Uuid шаблона форматирования эксель-файла
        *
        * @see fileUuid
-       */
-
-      /**
-       * @typedef {object} ExportFormatterColumnInfo Тип, содержащий информацию об одной колонке экспортируемого файла
-       * @property {string} id Идентификатор колонки (как правило, имя поля в базе данных или БЛ)
-       * @property {string} title Отображаемое имя колонки
-       * @property {*} * Другие свойства
        */
 
       /**
@@ -55,6 +57,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                 * @cfg {string} Заголовок меню выбора способа форматирования
                 */
                menuTitle: rk('Редактировать', 'НастройщикЭкспорта'),
+               /**
+                * @cfg {ExportServiceParams} Прочие параметры, необходимых для работы БЛ
+                */
+               serviceParams: null,
                /**
                 * @cfg {Array<BrowserColumnInfo>|WS.Data/Collection/RecordSet<BrowserColumnInfo>} Список объектов с информацией о всех колонках в формате, используемом в браузере
                 */
@@ -143,7 +149,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                args.push(options.fileUuid);
             }
             if (method === 'create' || useBoth) {
-               args.push(this._makeFormatterColumns());
+               var fieldIds = options.fieldIds;
+               args.push(fieldIds || [], this._selectFields(options.allFields, fieldIds, function (v) { return v.title; }) || [], options.serviceParams);
             }
             var formatter = this._exportFormatter;
             return formatter[method].apply(formatter, args).addErrback(function (err) {
@@ -153,33 +160,33 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          },
 
          /**
-          * Подготовить список колонок для форматера
+          * Выбрать из списка всех колонок только объекты согласно указанным идентификаторам. Если указана функция-преобразователь, то преобразовать с её помощью каждый полученный элемент списка
           *
           * @protected
-          * @return {Array<ExportFormatterColumnInfo>}
+          * @param {Array<BrowserColumnInfo>|WS.Data/Collection/RecordSet<BrowserColumnInfo>} allFields Список объектов с информацией о всех колонках в формате, используемом в браузере
+          * @param {Array<string>} fieldIds Список привязки колонок в экспортируемом файле к полям данных
+          * @param {function} [mapper] Функция-преобразователь отобранных объектов (опционально)
+          * @return {Array<*>}
           */
-         _makeFormatterColumns: function () {
-            var options = this._options;
-            var fieldIds = options.fieldIds;
-            if (fieldIds && fieldIds.length) {
-               var allFields = options.allFields;
+         _selectFields: function (allFields, fieldIds, mapper) {
+            if (allFields && fieldIds && fieldIds.length) {
                var isRecordSet = allFields instanceof RecordSet;
-               return fieldIds.map(function (id, i) {
-                  var field;
-                  if (!isRecordSet) {
-                     allFields.some(function (v) { if (v.id === id) { field = v; return true; } });
-                  }
-                  else {
-                     var model = allFields.getRecordById(id);
-                     if (model) {
-                        field = model.getRawData();
+               if (isRecordSet ? allFields.getCount() : allFields.length) {
+                  var needMap = typeof mapper === 'function';
+                  return fieldIds.map(function (id, i) {
+                     var field;
+                     if (!isRecordSet) {
+                        allFields.some(function (v) { if (v.id === id) { field = v; return true; } });
                      }
-                  }
-                  if (!field) {
-                     throw new Error('Unknown field: ' + id);
-                  }
-                  return {id:id, title:field.title};
-               });
+                     else {
+                        var model = allFields.getRecordById(id);
+                        if (model) {
+                           field = model.getRawData();
+                        }
+                     }
+                     return field && needMap ? mapper(field) : field;
+                  });
+               }
             }
          },
 

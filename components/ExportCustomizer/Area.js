@@ -33,6 +33,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
        */
 
       /**
+       * @typedef {object} ExportServiceParams Тип, содержащий информацию о прочих параметрах, необходимых для работы БЛ
+       * @property {string} MethodName Имя списочного метода, результат раболты которого будет сохранён в эксель-файл
+       * @property {WS.Data/Entity/Record} [Filter] Параметры фильтрации для списочного метода (опционально)
+       * @property {WS.Data/Entity/Record} [Pagination] Навигация для списочного метода (опционально)
+       * @property {string} [HierarchyField] Название поля иерархии (опционально)
+       * @property {string} FileName Название результирующего эксель-файла
+       */
+
+      /**
        * @typedef {object} ExportResults Тип, содержащий информацию о результате редактирования
        * @property {*} [*] ^^^ Базовые параметры экспортирования (опционально)
        */
@@ -59,6 +68,23 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          columnBinderEmptyTitle: _typeIfDefined.bind(null, 'string'),
          formatterTitle: _typeIfDefined.bind(null, 'string'),
          formatterMenuTitle: _typeIfDefined.bind(null, 'string'),
+         serviceParams: function (value) {
+            // Должно быть значение
+            if (!value) {
+               return new Error('Value required');
+            }
+            // и должна быть {@link ExportServiceParams}
+            if (typeof value !== 'object' ||
+               !(value.MethodName && typeof value.MethodName === 'string') ||
+               !(value.Filter ==/*Не ===*/ null || typeof value.Filter === 'object') ||
+               !(value.Pagination ==/*Не ===*/ null || typeof value.Pagination === 'object') ||
+               !(value.HierarchyField ==/*Не ===*/ null || typeof value.HierarchyField === 'string') ||
+               !(value.FileName && typeof value.FileName === 'string')
+            ) {
+               return new Error('Value must be an ExportServiceParams');
+            }
+            return value;
+         },
          allFields: function (value) {
             // Должно быть значение
             if (!value) {
@@ -122,6 +148,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          'columnBinderEmptyTitle',
          'formatterTitle',
          'formatterMenuTitle',
+         'serviceParams',
          'allFields',
          'fieldIds',
          'fieldGroupTitles',
@@ -174,9 +201,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                 */
                formatterMenuTitle: null,
                /**
-                * @cfg {Array<string>} Список привязки колонок в экспортируемом файле к полям данных
+                * @cfg {ExportServiceParams} Прочие параметры, необходимых для работы БЛ
                 */
-               fieldIds: null,
+               serviceParams: null,
                /**
                 * @cfg {Array<BrowserColumnInfo>|WS.Data/Collection/RecordSet<BrowserColumnInfo>} Список объектов с информацией о всех колонках в формате, используемом в браузере
                 */
@@ -300,7 +327,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   menuTitle: options.formatterMenuTitle,
                   allFields: options.allFields,
                   fieldIds: options.fieldIds ? options.fieldIds.slice() : null,
-                  fileUuid: options.fileUuid
+                  fileUuid: options.fileUuid,
+                  serviceParams: options.serviceParams
                }
             };
          },
