@@ -1,26 +1,26 @@
 define('Controls/BreadCrumbsController', [
    'Core/Control',
+   'WS.Data/Collection/RecordSet',
    'tmpl!Controls/BreadCrumbsController/BreadCrumbsController',
    'tmpl!Controls/BreadCrumbs/resources/itemsTemplate',
    'tmpl!Controls/BreadCrumbs/resources/itemTemplate',
-   'tmpl!Controls/BreadCrumbs/resources/menuItemTemplate',
-   'WS.Data/Collection/RecordSet',
-   'Core/helpers/Object/isEqual',
-
-   //TODO: если сss-ка BreadCrumbs не подгружена, то все расчеты будут заведомо неправильными
-   'css!Controls/BreadCrumbs/BreadCrumbs'
+   'tmpl!Controls/BreadCrumbsController/resources/menuItemTemplate',
+   'tmpl!Controls/BreadCrumbsController/resources/menuContentTemplate',
+   'Controls/BreadCrumbs'
 ], function(
    Control,
+   RecordSet,
    template,
    itemsTemplate,
    itemTemplate,
-   menuItemTemplate,
-   RecordSet,
-   isEqual
+   menuItemTemplate
 ) {
    'use strict';
 
    var
+      HOME_WIDTH,
+      BREAD_CRUMB_MIN_WIDTH,
+      DOTS_WIDTH,
       _private = {
          getItemData: function(index, items, isBlurred) {
             var
@@ -56,7 +56,7 @@ define('Controls/BreadCrumbsController', [
          },
 
          shouldRedraw: function(currentItems, newItems, oldWidth, availableWidth) {
-            return  !isEqual(currentItems, newItems) || oldWidth !== availableWidth;
+            return currentItems !== newItems || oldWidth !== availableWidth;
          },
 
          canBlur: function(itemWidth, currentWidth, availableWidth) {
@@ -66,11 +66,9 @@ define('Controls/BreadCrumbsController', [
          calculateBreadCrumbsToDraw: function(self, items, itemsSizes, availableWidth) {
             var
                length = itemsSizes.length,
-               i = length - 2,
                currentWidth,
                blurredItemIndex;
             self._visibleItems = [];
-            self._hasMenu = false;
 
             currentWidth = itemsSizes.reduce(function(acc, width) {
                return acc + width;
@@ -85,11 +83,10 @@ define('Controls/BreadCrumbsController', [
                      }
                   } else {
                      //Если замылить не получилось, то добавляем точки
-                     self._hasMenu = true;
                      currentWidth += DOTS_WIDTH;
 
-                     for (i; i > 0; i--) {
-                        if (currentWidth < availableWidth) {
+                     for (var i = length - 2; i > 0; i--) {
+                        if (currentWidth <= availableWidth) {
                            break;
                         } else if (_private.canBlur(itemsSizes[i], currentWidth, availableWidth)) {
                            blurredItemIndex = i;
@@ -146,7 +143,7 @@ define('Controls/BreadCrumbsController', [
             return width;
          },
 
-         onCloseMenu: function(self, args) {
+         onResult: function(self, args) {
             var
                actionName = args && args.action,
                event = args && args.event;
@@ -167,9 +164,9 @@ define('Controls/BreadCrumbsController', [
                   rs = new RecordSet({
                      rawData: self._options.items
                   }),
-                  wrapperCount = 0;
+                  indentation = 0;
                rs.each(function(item) {
-                  item.set('wrapperCount', wrapperCount++);
+                  item.set('indentation', indentation++);
                });
                self._children.menuOpener.open({
                   target: originalEvent.target,
@@ -181,31 +178,35 @@ define('Controls/BreadCrumbsController', [
             } else {
                self._notify('itemClick', [item]);
             }
+         },
+         calculateConstants: function() {
+            HOME_WIDTH = _private.getWidth('<div class="controls-BreadCrumbsV__home icon-size icon-Home3 icon-primary"></div>');
+            BREAD_CRUMB_MIN_WIDTH = _private.getWidth('<div class="controls-BreadCrumbsV__title_min"></div>');
+            DOTS_WIDTH = _private.getWidth(itemTemplate({
+               itemData: {
+                  item: {
+                     title: '...'
+                  },
+                  isDots: true,
+                  hasArrow: true
+               }
+            }));
          }
-      },
-      HOME_WIDTH = _private.getWidth('<div class="controls-BreadCrumbsV__home icon-size icon-Home3 icon-primary"></div>'),
-      BREAD_CRUMB_MIN_WIDTH = _private.getWidth('<div class="controls-BreadCrumbsV__title_min"></div>'),
-      DOTS_WIDTH = _private.getWidth(itemTemplate({
-         itemData: {
-            item: {
-               title: '...'
-            },
-            isDots: true,
-            hasArrow: true
-         }
-      }));
+      };
 
    var BreadCrumbsController = Control.extend({
       _template: template,
       _visibleItems: [],
-      _hasMenu: false,
       _oldWidth: 0,
 
       _beforeMount: function() {
-         this._onCloseMenu = this._onCloseMenu.bind(this);
+         //Эта функция передаётся по ссылке в Opener, так что нужно биндить this, чтобы не потерять его
+         this._onResult = this._onResult.bind(this);
       },
 
       _afterMount: function() {
+         _private.calculateConstants();
+
          //TODO: нужно приделать костыли для браузеров без прелоад (т.е. всех, кроме хрома, сафари и оперы)
          if (this._options.items && this._options.items.length > 0) {
             this._oldWidth = this._container.clientWidth - HOME_WIDTH;
@@ -227,8 +228,8 @@ define('Controls/BreadCrumbsController', [
          }, 0) + HOME_WIDTH;
       },
 
-      _onCloseMenu: function(args) {
-         _private.onCloseMenu(this, args);
+      _onResult: function(args) {
+         _private.onResult(this, args);
       },
 
       _onItemClick: function(e, originalEvent, item, isDots) {

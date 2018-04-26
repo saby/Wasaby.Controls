@@ -2,13 +2,11 @@ define('Controls/Path', [
    'Core/Control',
    'tmpl!Controls/Path/Path',
    'tmpl!Controls/Button/BackButton/Back',
-   'Core/helpers/Object/isEqual',
    'css!Controls/Path/Path'
 ], function(
    Control,
    template,
-   backButtonTemplate,
-   isEqual
+   backButtonTemplate
 ) {
    'use strict';
 
@@ -29,7 +27,7 @@ define('Controls/Path', [
 
       shouldRedraw: function(currentItems, newItems, oldWidth, availableWidth) {
          //TODO: копипаста из BreadCrumbsController
-         return  !isEqual(currentItems, newItems) || oldWidth !== availableWidth;
+         return currentItems !== newItems || oldWidth !== availableWidth;
       },
 
       calculateClasses: function(self, maxCrumbsWidth, backButtonWidth, availableWidth) {
@@ -84,7 +82,7 @@ define('Controls/Path', [
       },
 
       _beforeUpdate: function(newOptions) {
-         if (!isEqual(this._options.items, newOptions.items)) {
+         if (this._options.items !== newOptions.items) {
             _private.calculateItems(this, newOptions.items);
          }
       },
