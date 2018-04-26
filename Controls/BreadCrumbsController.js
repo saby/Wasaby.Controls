@@ -165,8 +165,8 @@ define('Controls/BreadCrumbsController', [
                //Оборачиваю айтемы в рекордсет чисто ради того, чтобы меню могло с ними работать
                //Нельзя сделать source, т.к. с ним оно не умеет работать
                var rs = new RecordSet({
-                     rawData: self._options.items
-                  });
+                  rawData: self._options.items
+               });
                rs.each(function(item, index) {
                   item.set('indentation', index);
                });
