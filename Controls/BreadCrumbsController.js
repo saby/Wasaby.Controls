@@ -139,7 +139,6 @@ define('Controls/BreadCrumbsController', [
                width;
             measurer.classList.add('controls-BreadCrumbsV__measurer');
 
-            //TODO: нужно эскейпить, наверное
             measurer.innerHTML = element;
             document.body.appendChild(measurer);
             width = measurer.clientWidth;
@@ -222,8 +221,8 @@ define('Controls/BreadCrumbsController', [
          }
       },
 
-      getMaxCrumbsWidth: function() {
-         return _private.getItemsSizes(this, this._options.items).reduce(function(acc, width) {
+      getMaxCrumbsWidth: function(items) {
+         return _private.getItemsSizes(this, items).reduce(function(acc, width) {
             return acc + width;
          }, 0) + HOME_WIDTH;
       },

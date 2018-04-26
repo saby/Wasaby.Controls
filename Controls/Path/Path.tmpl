@@ -1,0 +1,12 @@
+<div class="controls-Path">
+    <Controls.Button.Back attr:class="controls-Path__backButton {{_backButtonClass}}"
+                          name="backButton"
+                          caption="{{_backButtonCaption}}" />
+    <Controls.BreadCrumbsController attr:class="controls-Path__breadCrumbs {{_breadCrumbsClass}}"
+                                    name="breadCrumbs"
+                                    items="{{_breadCrumbsItems}}"
+                                    on:itemClick="_onItemClick()" />
+
+    <Controls.Event.Emitter event="resize"
+                            on:resize="_onResize()"/>
+</div>

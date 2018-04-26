@@ -7,9 +7,12 @@
     <h2>Много крошек</h2>
     <Controls.BreadCrumbsController items="{{items}}"
                                     on:itemClick="_onItemClick()" />
+    <h2>Одна крошка</h2>
+    <Controls.BreadCrumbsController items="{{items1}}" />
+    <h2>Две крошки</h2>
+    <Controls.BreadCrumbsController items="{{items2}}" />
+    <h2>Path</h2>
+    <Controls.Path items="{{items}}"
+                   on:itemClick="_onItemClick()" />
     <div class="asLink" on:click="_resetCrumbs()">Сбросить крошки</div>
-    <!--<h2>Одна крошка</h2>-->
-    <!--<Controls.BreadCrumbsController items="{{items1}}" />-->
-    <!--<h2>Две крошки</h2>-->
-    <!--<Controls.BreadCrumbsController items="{{items2}}" />-->
 </div>
