@@ -1,10 +1,10 @@
 define('SBIS3.CONTROLS/Mixins/EditAtPlaceMixin',
    [
-   "Core/Deferred",
-   "SBIS3.CONTROLS/Button/IconButton",
-   "Lib/Control/ModalOverlay/ModalOverlay",
-   "Lib/Control/Dialog/Dialog"
-], function(Deferred, IconButton, ModalOverlay) {
+      'Core/Deferred',
+      'SBIS3.CONTROLS/Button/IconButton',
+      'Lib/Control/ModalOverlay/ModalOverlay',
+      'Lib/Control/Dialog/Dialog'
+   ], function(Deferred, IconButton, ModalOverlay) {
       /**
        * @mixin SBIS3.CONTROLS/Mixins/EditAtPlaceMixin
        * @public
@@ -17,15 +17,18 @@ define('SBIS3.CONTROLS/Mixins/EditAtPlaceMixin',
             _inEditMode: null,
             _cntrlPanel: null,
             _options: {
+
                /**
                 * @cfg {Boolean} отображать как редактор
                 * @see setInPlaceEditMode
                 */
                displayAsEditor: false,
+
                /**
                 * @cfg {Boolean} редактировать во всплывающей панели или в собственном контейнере
                 */
                editInPopup: false,
+
                /**
                 * @cfg {Boolean} отображать кнопки отмены и применения редактирования или нет
                 */
@@ -36,7 +39,7 @@ define('SBIS3.CONTROLS/Mixins/EditAtPlaceMixin',
          $constructor: function() {
          },
 
-         _applyEdit: function () {
+         _applyEdit: function() {
             if (this.validate(undefined, undefined, true)) {
                var values = {};
                this._inEditMode = false;
@@ -52,41 +55,43 @@ define('SBIS3.CONTROLS/Mixins/EditAtPlaceMixin',
             }
          },
 
-          //Метод необходим, так как при завершении редактирования(esc или enter), дочерние контролы скрываются, при этом
-          //нативный фокус уходит на body и в событие focusout у контрола приходит event.relatedTarget = null, из-за этого
-          //контрол не понимает куда уходит фокус и не может сделать setActive(false), т.к. при деактивации нужно обязательно
-          //указывать контрол на который ушёл фокус. У некоторых контролов(например DatePicker) есть логика на уход фокуса
-          //и эта логика не выполняется. Поэтому мы сами позовём setActive(false) у активного дочернего контрола.
+         //Метод необходим, так как при завершении редактирования(esc или enter), дочерние контролы скрываются, при этом
+         //нативный фокус уходит на body и в событие focusout у контрола приходит event.relatedTarget = null, из-за этого
+         //контрол не понимает куда уходит фокус и не может сделать setActive(false), т.к. при деактивации нужно обязательно
+         //указывать контрол на который ушёл фокус. У некоторых контролов(например DatePicker) есть логика на уход фокуса
+         //и эта логика не выполняется. Поэтому мы сами позовём setActive(false) у активного дочернего контрола.
          _deactivateActiveChildControl: function() {
             var activeControl = this.getActiveChildControl();
+
             //метод getActiveControl определен у compoundControl, поэтому у контролов унаследованных от Control его нет
             while (activeControl && activeControl.getActiveChildControl && activeControl.getActiveChildControl()) {
                activeControl = activeControl.getActiveChildControl();
             }
             activeControl && activeControl.setActive(false);
          },
+
          /**
           * Открывает диалог подтверждения при отмене радактирования.
           * @returns {Deferred} deferred на закрытие модального диалога подтверждения.
           * @private
           */
-         _openConfirmDialog: function () {
+         _openConfirmDialog: function() {
             var
                self = this,
                deferred = new Deferred();
 
-            require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function(InformationPopupManager){
+            require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function(InformationPopupManager) {
                InformationPopupManager.showConfirmDialog({
                   message: rk('Сохранить изменения?'),
                   details: rk('Чтобы продолжить редактирование, нажмите "Отмена".'),
                   hasCancelButton: true,
                   parent: self._options.editInPopup ? self._picker : self,
                   opener: self._options.editInPopup ? self._picker : self
-               }, function(){
+               }, function() {
                   deferred.callback('yesButton');
-               }, function(){
+               }, function() {
                   deferred.callback('noButton');
-               }, function(){
+               }, function() {
                   deferred.callback('cancelButton');
                });
             });
@@ -94,28 +99,28 @@ define('SBIS3.CONTROLS/Mixins/EditAtPlaceMixin',
             return deferred;
          },
 
-         _keyPressHandler: function (e) {
-            switch (e.which) {
-               case 13: {
-                  this._applyEdit();
+         _keyPressHandler: function(e) {
+            if (!this._picker || this._picker.isVisible()) {
+               switch (e.which) {
+                  case 13:
+                     this._applyEdit();
+                     break;
+                  case 27:
+                     this._cancelEdit();
+                     break;
+                  default:
+                     break;
                }
-                  break;
-               case 27: {
-                  this._cancelEdit();
-               }
-                  break;
-               default:
-                  break;
             }
          },
 
          after: {
-            _initializePicker: function(){
+            _initializePicker: function() {
                var self = this;
                this.subscribeTo(ModalOverlay, 'onClick', function(event) {
                   if (this.isVisible() && this._picker._zIndex - ModalOverlay.getZIndex() === 1) {
                      if (self._requireDialog) {
-                        self._openConfirmDialog().addCallback(function (result) {
+                        self._openConfirmDialog().addCallback(function(result) {
                            switch (result) {
                               case 'yesButton':
                                  self._applyEdit();
@@ -129,18 +134,18 @@ define('SBIS3.CONTROLS/Mixins/EditAtPlaceMixin',
                   }
                }.bind(this));
 
-               this._picker.subscribe('onClose', function(event){
+               this._picker.subscribe('onClose', function(event) {
                   event.setResult(!self._requireDialog);
-               })
+               });
             },
 
-            showPicker: function(){
+            showPicker: function() {
                this._requireDialog = false;
             }
          },
 
          instead: {
-            _setPickerConfig: function () {
+            _setPickerConfig: function() {
                return {
                   corner: 'tl',
                   className: 'controls-EditAtPlaceGroup__editorOverlay',
@@ -158,7 +163,7 @@ define('SBIS3.CONTROLS/Mixins/EditAtPlaceMixin',
          },
 
          // Добавляем кнопки
-         _addControlPanel: function (container) {
+         _addControlPanel: function(container) {
             if (this._options.enableControlPanel) {
                var self = this,
                   $ok = $('<span class="controls-EditAtPlace__okButton"></span>'),
@@ -175,16 +180,16 @@ define('SBIS3.CONTROLS/Mixins/EditAtPlaceMixin',
                   icon: 'sprite:icon-16 icon-Yes icon-done action-hover'
                });
                container.append(this._cntrlPanel);
-               this._okButton.subscribe('onActivated', function () {
+               this._okButton.subscribe('onActivated', function() {
                   self._applyEdit();
                });
-               $cancelCross.bind('mousedown', function () {
+               $cancelCross.bind('mousedown', function() {
                   self._cancelEdit();
                });
             }
          },
 
-         _removeControlPanel: function(){
+         _removeControlPanel: function() {
             if (this._options.enableControlPanel) {
                this._cntrlPanel.remove();
             }

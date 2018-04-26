@@ -36,13 +36,12 @@ define('Controls/Input/Phone/ViewModel',
          },
 
          handleInput: function(splitValue, inputType) {
-            var
-               newMask = MaskBuilder.getMask(splitValue.before + splitValue.insert + splitValue.after),
-               newFormat = FormatBuilder.getFormat(newMask, formatMaskChars, replacer),
-               result = InputProcessor.input(splitValue, inputType, replacer, this._format, newFormat);
+            var newMask = MaskBuilder.getMask(splitValue.before + splitValue.insert + splitValue.after);
+            var newFormat = FormatBuilder.getFormat(newMask, formatMaskChars, replacer);
+            var result = InputProcessor.input(splitValue, inputType, replacer, this._format, newFormat);
 
-            this._options.value = Formatter.getClearData(newFormat, result.value).value;
-            this._format = newFormat;
+            this._options.value = Formatter.getClearData(result.format, result.value).value;
+            this._format = result.format;
 
             return result;
          },

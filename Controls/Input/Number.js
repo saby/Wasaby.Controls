@@ -58,6 +58,13 @@ define('Controls/Input/Number', [
        * @cfg {Boolean} Показывать нулевую дробную часть
        */
 
+      /**
+       * @name Controls/Input/Number#textAlign
+       * @cfg {String} Выравнивание текста.
+       * @variant 'left' default
+       * @variant 'right'
+       */
+
       _template: template,
 
       _caretPosition: null,

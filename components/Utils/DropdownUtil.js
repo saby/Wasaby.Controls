@@ -9,8 +9,9 @@ define('SBIS3.CONTROLS/Utils/DropdownUtil', [
       showPicker: function(self, prototype) {
          var myself = this;
 
-         if (!self._historyDeferred || !historyUtil.isEqualHistory(self._options.historyId, this._getHistoryController().getHistoryDataSet())) {
+         if (!self._historyDeferred || !historyUtil.isEqualHistory(self._options.historyId, this._getHistoryController(self).getHistoryDataSet())) {
             this._getHistoryController(self).initRecordSet();
+
             // нужна вычитка данных с БЛ по id позвать списочный метод с нужным фильтром
             self._historyDeferred = this._getHistoryController(self).getUnionIndexesList(self).addCallback(function(data) {
                if (self.getDataSource()) {
@@ -18,7 +19,7 @@ define('SBIS3.CONTROLS/Utils/DropdownUtil', [
                } else {
                   myself._getHistoryController(self).parseHistoryData(data);
                   myself.callShow(self, prototype);
-                  historyUtil.setHistory(self._options.historyId, self._getHistoryController().getHistoryDataSet());
+                  historyUtil.setHistory(self._options.historyId, self._getHistoryController(self).getHistoryDataSet());
                }
             }).addErrback(function() {
                myself._getHistoryController(self).parseHistoryData();
@@ -46,16 +47,16 @@ define('SBIS3.CONTROLS/Utils/DropdownUtil', [
             query = this._makeQueryFilterForHistory(self, indexesList);
 
             // подгрузят данные метод БЛ опции и в utils ещё необходимо проставить через item
-            self.getDataSource().query(query).addCallback(function (result) {
+            self.getDataSource().query(query).addCallback(function(result) {
                // заполняем по пунктам, учесть индексы из опций
                myself._getHistoryController(self).setHistoryDataFromRecord(result.getAll(), data);
                myself.callShow(self, prototype);
-               historyUtil.setHistory(self._options.historyId, self._getHistoryController().getHistoryDataSet());
+               historyUtil.setHistory(self._options.historyId, self._getHistoryController(self).getHistoryDataSet());
             });
          } else {
             myself._getHistoryController(self).setHistoryDataFromRecord(null, data);
             myself.callShow(self, prototype);
-            historyUtil.setHistory(self._options.historyId, self._getHistoryController().getHistoryDataSet());
+            historyUtil.setHistory(self._options.historyId, this._getHistoryController(self).getHistoryDataSet());
          }
       },
 

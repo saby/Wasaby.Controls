@@ -88,7 +88,7 @@ define('Controls/Button', [
       },
 
       _clickHandler: function(e) {
-         if (!this.isEnabled()) {
+         if (this._options.readOnly) {
             e.stopPropagation();
          }
       }

@@ -1,4 +1,4 @@
-define('js!WSTest/VdomCompoundVdom/VdomCompoundVdom', [
+define('WSTest/VdomCompoundVdom/VdomCompoundVdom', [
    'tmpl!WSTest/VdomCompoundVdom/VdomCompoundVdom',
    'Core/Control',
 ], function(tmpl, Control) {

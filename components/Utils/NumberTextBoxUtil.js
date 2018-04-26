@@ -7,7 +7,12 @@ define('SBIS3.CONTROLS/Utils/NumberTextBoxUtil', [],
      * @public
      */
     function () /** @lends SBIS3.CONTROLS/Utils/NumberTextBoxUtil.prototype */{
-        return {
+       //В связи с проблемой с функцией toFixed(), integers было ограничено до 14
+       //111111111111111.12.toFixed(2) === "111111111111111.13"
+       //11111111111111.12.toFixed(2) === "11111111111111.12"
+       var MAX_INTEGER_COUNT = 14;
+
+       return {
             /**
              *
              * @param value
@@ -16,7 +21,7 @@ define('SBIS3.CONTROLS/Utils/NumberTextBoxUtil', [],
              */
             checkMaxLength: function (value, maxLength) {
                 var length = this._getValueLength(value);
-                return !(maxLength && length > maxLength) && (this._getIntegersCount(value || '') < 16);
+                return !(maxLength && length > maxLength) && (this._getIntegersCount(value || '') <= MAX_INTEGER_COUNT);
             },
             /**
              *
@@ -37,10 +42,7 @@ define('SBIS3.CONTROLS/Utils/NumberTextBoxUtil', [],
                     integerCount =  this._getIntegersCount(currentVal),
                     checkMaxLengthResult = this.checkMaxLength(currentVal, maxLength),
                     newCaretPosition = b,
-                    //В связи с проблемой с функцией toFixed(), integers было ограничено до 14
-                    //111111111111111.12.toFixed(2) === "111111111111111.13"
-                    //11111111111111.12.toFixed(2) === "11111111111111.12"
-                    isFull = this._getValueLength(currentVal) === parseInt(maxLength, 10) || integerCount === integers || integerCount === 14,
+                    isFull = this._getValueLength(currentVal) === parseInt(maxLength, 10) || integerCount === integers || integerCount === MAX_INTEGER_COUNT,
                     replaceFirstZero = false;
 
                 if (((currentVal[0] == 0 && b == 1) || (currentVal[0] == '-' && currentVal[1] == 0 && b == 2)) && b == e ){ // заменяем первый ноль если курсор после него
@@ -64,7 +66,12 @@ define('SBIS3.CONTROLS/Utils/NumberTextBoxUtil', [],
                                 e+=1;
                                 newCaretPosition++;
                             }
-                            currentVal = currentVal.substr(0, replaceFirstZero ? (this._isNumberPositive(currentVal) ? 0 : 1) : b) + symbol + currentVal.substr(isFull ? e + 1 : e);
+                            if (isFull && currentVal[e] === '.') { //Введено максимальное количество знаков в целой части, и курсор стоит перед точкой
+                               currentVal = currentVal.substr(0, replaceFirstZero ? (this._isNumberPositive(currentVal) ? 0 : 1) : b + 1) + symbol + currentVal.substr(e + 2);
+                               newCaretPosition++;
+                            } else {
+                               currentVal = currentVal.substr(0, replaceFirstZero ? (this._isNumberPositive(currentVal) ? 0 : 1) : b) + symbol + currentVal.substr(isFull ? e + 1 : e);
+                            }
                         }
                     } else {
                         currentVal = currentVal.substr(0, b) + symbol + currentVal.substr(e);

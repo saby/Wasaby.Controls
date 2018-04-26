@@ -5,7 +5,7 @@ define([
    
    'Core/constants',
    'Lib/Control/CompoundControl/CompoundControl',
-   'js!WSTest/Focus/TestFocusHelpers',
+   'WSTest/Focus/TestFocusHelpers',
    'css!WSTest/Focus/FocusTests'
 ], function (cConstants,
              focusTestControl,
@@ -38,7 +38,7 @@ define([
       for (var i = 1; i < 34; i++) {
          (function (i) {
             it('Case' + (i), function (done) {
-               require(['tmpl!WSTest/Focus/Case' + i, 'js!WSTest/Focus/Scenario/' + i], function (caseTmpl, func) {
+               require(['tmpl!WSTest/Focus/Case' + i, 'WSTest/Focus/Scenario/' + i], function (caseTmpl, func) {
                   if (!~skipComponent.indexOf(i)) {
                      var comp = focusTestControl.extend({
                         _dotTplFn: caseTmpl

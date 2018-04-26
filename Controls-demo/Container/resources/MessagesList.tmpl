@@ -2,7 +2,7 @@
    <Controls.List source="{{messagesSource}}" idProperty="id" name="{{nameList}}">
       <ws:itemTemplate>
          <ws:partial itemData="{{itemTemplate.itemData}}"
-                     template="tmpl!Controls/List/SimpleList/ItemTemplate">
+                     template="tmpl!Controls/List/ItemTemplate">
             <ws:contentTemplate>
                <div>
                   <ws:partial user="{{users.getRecordById(itemTemplate.itemData.item.get('user'))}}"

@@ -11,7 +11,7 @@ define('Controls-demo/HighCharts/HighCharts',
          toggleCaption: 'Убрать диаграмму',
          highChartOptions1: {
             credits: {
-               enabled: false
+               readOnly: true
             },
             chart: {
                type: 'line'

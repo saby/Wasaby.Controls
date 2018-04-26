@@ -10,7 +10,7 @@
                     {{_text}}
                 </div>
             </div>
-            <ws:if data="{{isEnabled()}}">
+            <ws:if data="{{!_options.readOnly}}">
                 <div class="controls-FilterButton__clear icon-Close" on:click="_clearClick()"></div>
             </ws:if>
         </ws:if>

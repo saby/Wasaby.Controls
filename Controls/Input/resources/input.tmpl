@@ -1,10 +1,9 @@
-<ws:if data="{{ enabled }}">
+<ws:if data="{{!readOnly}}">
    <input
       name="input"
       type="{{ type }}"
       value="{{value}}"
       class="controls-InputRender__field"
-      readonly="{{enabled ? '' : 'readonly'}}"
       autocomplete="off"
    />
 </ws:if>

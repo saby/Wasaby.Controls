@@ -91,7 +91,7 @@ define('SBIS3.CONTROLS/Browser', [
        * @property {Array.<String|Number>} selectedColumns Список идентификаторов колонок, которые будут отмечены на панели редактирования колонок. Параметр актуален для элементов с опцией *fixed=false*.
        * @property {object} [groupTitles] Ассоциированый массив имён групп по их идентификаторам (используется редактором колонок) (опционально)
        * @property {boolean} [usePresets] Разрешает использовать пресеты (используется редактором колонок) (опционально)
-       * @property {SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit[]} [staticPresets] Список объектов статически задаваемых пресетов (используется редактором колонок) (опционально)
+       * @property {Array<SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit>} [staticPresets] Список объектов статически задаваемых пресетов (используется редактором колонок) (опционально)
        * @property {string} [presetNamespace] Пространство имён для сохранения пользовательских пресетов (используется редактором колонок) (опционально)
        * @property {string|number} [selectedPresetId] Идентификатор первоначально выбранного пресета в дропдауне (используется редактором колонок) (опционально)
        * @property {string} [newPresetTitle] Начальное название нового пользовательского пресета (используется редактором колонок) (опционально)
@@ -413,7 +413,7 @@ define('SBIS3.CONTROLS/Browser', [
           * @param {object} [options.editorOptions.groupTitles] Ассоциированый массив имён групп по их идентификаторам (опционально)
           * @param {boolean} [options.editorOptions.usePresets] Разрешает использовать пресеты (опционально)
           * @param {string} [options.editorOptions.presetsTitle] Заголовок дропдауна пресетов (опционально)
-          * @param {SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit[]} [options.editorOptions.staticPresets] Список объектов статически задаваемых пресетов (опционально)
+          * @param {Array<SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit>} [options.editorOptions.staticPresets] Список объектов статически задаваемых пресетов (опционально)
           * @param {string} [options.editorOptions.presetNamespace] Пространство имён для сохранения пользовательских пресетов (опционально)
           * @param {string|number} [options.editorOptions.selectedPresetId] Идентификатор первоначально выбранного пресета в дропдауне (опционально)
           * @param {string} [options.editorOptions.newPresetTitle] Начальное название нового пользовательского пресета (опционально)
@@ -434,6 +434,17 @@ define('SBIS3.CONTROLS/Browser', [
           * @demo Examples/ColumnsEditor/AllCustom/AllCustom Пример с одиночной кнопкой, открывающией редактор колонок (без браузера)
           */
          CommandDispatcher.declareCommand(this, 'showColumnsEditor', this._showColumnsEditor);
+
+         /**
+          * Изменить набор отображаемых колонок
+          *
+          * @command changeColumns
+          * @public
+          * @param {Array<string|number>} columnIds Список идентификаторов выбранных колонок (обязательный)
+          *
+          * @see _changeColumns
+          */
+         CommandDispatcher.declareCommand(this, 'changeColumns', this._changeColumns);
       },
 
       /**
@@ -441,11 +452,11 @@ define('SBIS3.CONTROLS/Browser', [
        * @public
        * @param {object} config Параметры конфигурации колонок
        * @param {WS.Data/Collection/RecordSet} config.columns Набор колонок (обязательный)
-       * @param {(string|number)[]} config.selectedColumns Список идентификаторов выбранных колонок (обязательный)
+       * @param {Array<string|number>} config.selectedColumns Список идентификаторов выбранных колонок (обязательный)
        * @param {object} [config.groupTitles] Ассоциированый массив имён групп по их идентификаторам (опционально)
        * @param {boolean} [config.usePresets] Разрешает использовать пресеты (опционально)
        * @param {string} [config.presetsTitle] Заголовок дропдауна пресетов (опционально)
-       * @param {SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit[]} [config.staticPresets] Список объектов статически задаваемых пресетов (опционально)
+       * @param {Array<SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit>} [config.staticPresets] Список объектов статически задаваемых пресетов (опционально)
        * @param {string} [config.presetNamespace] Пространство имён для сохранения пользовательских пресетов (опционально)
        * @param {string|number} [config.selectedPresetId] Идентификатор первоначально выбранного пресета в дропдауне (опционально)
        * @param {string} [config.newPresetTitle] Начальное название нового пользовательского пресета (опционально)
@@ -534,7 +545,7 @@ define('SBIS3.CONTROLS/Browser', [
        * @param {object} [options.editorOptions.groupTitles] Ассоциированый массив имён групп по их идентификаторам (опционально)
        * @param {boolean} [options.editorOptions.usePresets] Разрешает использовать пресеты (опционально)
        * @param {string} [options.editorOptions.presetsTitle] Заголовок дропдауна пресетов (опционально)
-       * @param {SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit[]} [options.editorOptions.staticPresets] Список объектов статически задаваемых пресетов (опционально)
+       * @param {Array<SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit>} [options.editorOptions.staticPresets] Список объектов статически задаваемых пресетов (опционально)
        * @param {string} [options.editorOptions.presetNamespace] Пространство имён для сохранения пользовательских пресетов (опционально)
        * @param {string|number} [options.editorOptions.selectedPresetId] Идентификатор первоначально выбранного пресета в дропдауне (опционально)
        * @param {string} [options.editorOptions.newPresetTitle] Начальное название нового пользовательского пресета (опционально)
@@ -579,11 +590,20 @@ define('SBIS3.CONTROLS/Browser', [
          return promise;
       },
 
-      _changeColumns: function (columns) {
-         var result = this._notify('onColumnsChange', columns);
-         this._columnsController.setState(columns);
+      /**
+       * Изменить набор отображаемых колонок
+       *
+       * @protected
+       * @param {Array<string|number>} columnIds Список идентификаторов выбранных колонок (обязательный)
+       *
+       * @see changeColumns
+       */
+      _changeColumns: function (columnIds) {
+         columnIds = columnIds || [];
+         var result = this._notify('onColumnsChange', columnIds);
+         this._columnsController.setState(columnIds);
          var columnsConfig = this._options.columnsConfig;
-         columnsConfig.selectedColumns = columns;
+         columnsConfig.selectedColumns = columnIds;
          var view = this._getView();
          view.setColumns(this._columnsController.getColumns(columnsConfig.columns));
          if (result === ChangeColumnsResult.RELOAD) {
