@@ -42,7 +42,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
 
 
       var View = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ExportCustomizer/_Formatter/View.prototype*/ {
-
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
@@ -89,11 +88,16 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
 
          init: function () {
             View.superclass.init.apply(this, arguments);
-            this._exportFormatter = Di.isRegistered(ExportFormatterName) ? Di.resolve(ExportFormatterName) : null;
-            if (this._exportFormatter) {
+            if (Di.isRegistered(ExportFormatterName)) {
+               this._exportFormatter = Di.resolve(ExportFormatterName);
                this._formatterMenu = this.getChildControlByName('controls-ExportCustomizer-Formatter-View__formatterMenu');
                this._preview = this.getContainer().find('.controls-ExportCustomizer-Formatter-View__preview img');
                this._bindEvents();
+               var options = this._options;
+               var fieldIds = options.fieldIds;
+               if (fieldIds && fieldIds.length && !options.fileUuid) {
+                  this._callFormatterMethod('create').addCallback(this._onFormatter.bind(this));
+               }
             }
             else {
                this.setEnabled(false);
@@ -117,20 +121,32 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             var options = this._options;
             var fieldIds = options.fieldIds;
             if (fieldIds && fieldIds.length) {
-               this._exportFormatter[useApp ? 'openApp' : 'open'](options.fileUuid || null, this._makeFormatterColumns()).addCallbacks(
-                  function (fileUuid) {
-                     if (!options.fileUuid) {
-                        options.fileUuid = fileUuid;
-                        this.sendCommand('subviewChanged');
-                     }
-                     this._updatePreview();
-                  }.bind(this),
-                  function (err) {
-                     //^^^
-                     return err;
-                  }.bind(this)
-               );
+               this._callFormatterMethod(useApp ? 'openApp' : 'open').addCallback(this._onFormatter.bind(this));
             }
+         },
+
+         /**
+          * Вызвать метод форматера
+          *
+          * @protected
+          * @param {object} values Набор из нескольких значений, которые необходимо изменить
+          * return {Core/Deferred}
+          */
+         _callFormatterMethod: function (method) {
+            var args = [];
+            var options = this._options;
+            var useBoth = method === 'update' || method === 'open' || method === 'openApp';
+            if (method === 'delete' || useBoth) {
+               args.push(options.fileUuid);
+            }
+            if (method === 'create' || useBoth) {
+               args.push(this._makeFormatterColumns());
+            }
+            var formatter = this._exportFormatter;
+            return formatter[method].apply(formatter, args).addErrback(function (err) {
+               //^^^
+               return err;
+            });
          },
 
          /**
@@ -162,6 +178,21 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                   return {id:id, title:field.title};
                });
             }
+         },
+
+         /**
+          * Обработчик обратного вызова после выполнения методов форматера
+          *
+          * @protected
+          * @param {string} fileUuid Uuid шаблона форматирования эксель-файла
+          */
+         _onFormatter: function (fileUuid) {
+            var options = this._options;
+            if (fileUuid && !options.fileUuid) {
+               options.fileUuid = fileUuid;
+               this.sendCommand('subviewChanged');
+            }
+            this._updatePreview();
          },
 
          /**
@@ -197,16 +228,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                }
             }
             if (has.fieldIds) {
-               if (has.fileUuid) {
-                  //^^^
-               }
-               else {
-                  //^^^
-               }
+               this._callFormatterMethod(options.fileUuid ? 'update' : 'create').addCallback(this._onFormatter.bind(this));
             }
             else
             if (has.fileUuid) {
-               //^^^
+               this._callFormatterMethod('update').addCallback(this._onFormatter.bind(this));
             }
          },
 
