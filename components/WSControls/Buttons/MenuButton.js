@@ -12,12 +12,12 @@ define('SBIS3.CONTROLS/WSControls/Buttons/MenuButton', [
    
    function _getContextMenu(callback, history) {
       var ctxMenu = history ? 'SBIS3.CONTROLS/Menu/SbisMenu' : 'SBIS3.CONTROLS/Menu/ContextMenu';
-      if(requirejs.defined(ctxMenu)) {
+      if (requirejs.defined(ctxMenu)) {
          return callback(requirejs(ctxMenu));
       } else {
          requirejs([ctxMenu], function(menu) {
             return callback(menu);
-         })
+         });
       }
    }
 
@@ -69,7 +69,7 @@ define('SBIS3.CONTROLS/WSControls/Buttons/MenuButton', [
     * </component>
     */
 
-   var MenuButton = Button.extend( [PickerMixin, DSMixin], /** @lends WSControls/Buttons/MenuButton.prototype */ {
+   var MenuButton = Button.extend([PickerMixin, DSMixin], /** @lends WSControls/Buttons/MenuButton.prototype */ {
       /**
        * @event onMenuItemActivate Происходит при клике по пункту меню.
        * @param {Core/EventObject} eventObject Дескриптор события.
@@ -78,6 +78,7 @@ define('SBIS3.CONTROLS/WSControls/Buttons/MenuButton', [
        */
       $protected: {
          _options: {
+
             /**
              * @cfg {String} Устанавливает поле иерархии, по которому будут установлены иерархические связи записей списка.
              * @remark
@@ -89,6 +90,7 @@ define('SBIS3.CONTROLS/WSControls/Buttons/MenuButton', [
              * </pre>
              */
             parentProperty: null,
+
             /**
              * @cfg {String} Устанавливает поле в котором хранится признак типа записи в иерархии
              * @remark
@@ -100,6 +102,7 @@ define('SBIS3.CONTROLS/WSControls/Buttons/MenuButton', [
              * </pre>
              */
             nodeProperty: null,
+
             /**
              * @cfg {String} Устанавливает заголовок меню, если не задан, то будет отображаться опция caption
              * @example
@@ -109,23 +112,31 @@ define('SBIS3.CONTROLS/WSControls/Buttons/MenuButton', [
              * @see setMenuCaption
              * @see getMenuCaption
              */
-             menuCaption: '',
-             /**
+            menuCaption: '',
+
+            /**
               * @cfg {String} Идентификатор истории ввода
               */
-             historyId: null,
-             /**
+            historyId: null,
+
+            /**
               * @cfg {Boolean} Показывать ли припиненные
               */
-             pinned: false,
-             /**
+            pinned: false,
+
+            /**
               * @cfg {Boolean} Показывать ли наиболее частые
               */
-             frequent: false
+            frequent: false,
+
+            /**
+             * @cfg {Boolean} Экранирует текст в пунктах меню, если опция не задана на элементе
+             */
+            escapeHtmlItems: false
          }
       },
 
-      _modifyOptions : function(cfg) {
+      _modifyOptions: function(cfg) {
          if (cfg.hierField) {
             IoC.resolve('ILogger').log('MenuButton', 'Опция hierField является устаревшей, используйте parentProperty');
             cfg.parentProperty = cfg.hierField;
@@ -142,27 +153,27 @@ define('SBIS3.CONTROLS/WSControls/Buttons/MenuButton', [
          return opts;
       },
 
-      $constructor: function () {
+      $constructor: function() {
          this._publish('onMenuItemActivate');
-         if (this._container.hasClass('controls-Menu__hide-menu-header')){
+         if (this._container.hasClass('controls-Menu__hide-menu-header')) {
             this._options.pickerClassName += ' controls-Menu__hide-menu-header';
          }
       },
 
       //TODO: Постараться придумать что то получше
       // Вешаем на пункты меню отступы слева в соответствии с иконкой у самой кнопки
-      _checkItemsIcons: function(items){
+      _checkItemsIcons: function(items) {
          var self = this,
-             padding = 'controls-MenuItem__',
-             sizes = ['16' , '24', '32', 'small', 'medium', 'large'];
-         if (this._options.icon && items && !this._container.hasClass('controls-Menu__hide-menu-header')){
-            sizes.forEach(function(size){
-                if(self._options.icon.indexOf('icon-' + size) !== -1){
-                    padding += 'padding-' + size;
-                }
+            padding = 'controls-MenuItem__',
+            sizes = ['16', '24', '32', 'small', 'medium', 'large'];
+         if (this._options.icon && items && !this._container.hasClass('controls-Menu__hide-menu-header')) {
+            sizes.forEach(function(size) {
+               if (self._options.icon.indexOf('icon-' + size) !== -1) {
+                  padding += 'padding-' + size;
+               }
             });
          }
-         $('> .controls-MenuItem', this._picker.getContainer().find('.controls-Menu__itemsContainer')).each(function(){
+         $('> .controls-MenuItem', this._picker.getContainer().find('.controls-Menu__itemsContainer')).each(function() {
             var $this = $(this);
             if (!$this.find('.controls-MenuItem__icon').length) {
                $this.addClass(padding);
@@ -170,26 +181,26 @@ define('SBIS3.CONTROLS/WSControls/Buttons/MenuButton', [
          });
       },
 
-      init: function(){
+      init: function() {
          this._container.addClass('controls-MenuButton');
-         if(this._container.hasClass('controls-Button__big')){
+         if (this._container.hasClass('controls-Button__big')) {
             this._options.pickerClassName += ' controls-Menu__big';
          }
          this.reload();
          MenuButton.superclass.init.call(this);
       },
 
-      _clickHandler: function (event) {
-         if (this._items){
+      _clickHandler: function(event) {
+         if (this._items) {
             if (this._items.getCount() > 1) {
                this.togglePicker();
             } else {
                if (this._items.getCount() == 1) {
                   var id = this._items.at(0).getId(),
-                      command = this._items.at(0).get('command'),
-                      commandArgs, args;
+                     command = this._items.at(0).get('command'),
+                     commandArgs, args;
 
-                  if(command){
+                  if (command) {
                      commandArgs = this._items.at(0).get('commandArgs');
                      args = [command].concat(commandArgs ? commandArgs : []);
                      this.sendCommand.apply(this, args);
@@ -200,6 +211,7 @@ define('SBIS3.CONTROLS/WSControls/Buttons/MenuButton', [
             }
          }
       },
+
       /**
        * Показывает меню у кнопки
        */
@@ -207,33 +219,34 @@ define('SBIS3.CONTROLS/WSControls/Buttons/MenuButton', [
          var self = this;
          _getContextMenu(function() {
             MenuButton.superclass.showPicker.call(self);
-            self._picker.subscribe("ondrawitems", function(){
-                self._checkItemsIcons(self._picker.getItems());
+            self._picker.subscribe('ondrawitems', function() {
+               self._checkItemsIcons(self._picker.getItems());
             });
          }, self._options.historyId);
 
       },
 
-      getPicker: function () {
-        if(!requirejs.defined('SBIS3.CONTROLS/Menu/ContextMenu')) {
+      getPicker: function() {
+         if (!requirejs.defined('SBIS3.CONTROLS/Menu/ContextMenu')) {
             IoC.resolve('ILogger').log('MenuButton', 'ContextMenu не загружено');
-           return;
-        }
-        return MenuButton.superclass.getPicker.call(this);
+            return;
+         }
+         return MenuButton.superclass.getPicker.call(this);
       },
 
-      _createPicker: function(targetElement){
+      _createPicker: function(targetElement) {
          var menuconfig = {
             parent: this.getParent(),
             opener: this,
             groupBy: this._options.groupBy,
             context: this.getParent() ? this.getParent().getLinkedContext() : {},
             element: targetElement,
-            target : this.getContainer(),
+            target: this.getContainer(),
             className: this._options.pickerClassName,
+
             //items могли задать через опцию или через setItems
             items: this._options.items  ||  this._items,
-            corner : 'tl',
+            corner: 'tl',
             filter: this._options.filter,
             enabled: this.isEnabled(),
             parentProperty: this._options.parentProperty,
@@ -241,6 +254,7 @@ define('SBIS3.CONTROLS/WSControls/Buttons/MenuButton', [
             idProperty: this._options.idProperty,
             additionalProperty: this._options.additionalProperty,
             allowChangeEnable: this._options.allowChangeEnable,
+            escapeHtmlItems: this._options.escapeHtmlItems,
             //title задано для совместимости со старыми контролами, когда люди не указывали displayField
             displayProperty: this._options.displayProperty || 'title',
             verticalAlign: {
@@ -255,16 +269,16 @@ define('SBIS3.CONTROLS/WSControls/Buttons/MenuButton', [
             footerTpl: this._options.footerTpl,
             _canScroll: true
          };
-         if(this._options.historyId){
-             menuconfig['historyId'] = this._options.historyId;
-             menuconfig['pinned'] = this._options.pinned;
-             menuconfig['frequent'] = this._options.frequent;
-             menuconfig['recent'] = this._options.recent;
+         if (this._options.historyId) {
+            menuconfig['historyId'] = this._options.historyId;
+            menuconfig['pinned'] = this._options.pinned;
+            menuconfig['frequent'] = this._options.frequent;
+            menuconfig['recent'] = this._options.recent;
 
          }
-         if (this._options.pickerConfig){
+         if (this._options.pickerConfig) {
             for (var key in this._options.pickerConfig) {
-               if(this._options.pickerConfig.hasOwnProperty(key)) {
+               if (this._options.pickerConfig.hasOwnProperty(key)) {
                   menuconfig[key] = this._options.pickerConfig[key];
                }
             }
@@ -273,8 +287,9 @@ define('SBIS3.CONTROLS/WSControls/Buttons/MenuButton', [
          if (this._dataSource) {
             menuconfig.dataSource = this._dataSource;
          }
+
          //_getContextMenu отработает синхронно, т.к. в _createPicker попадаем когда menu уже загружено
-         return _getContextMenu(function (menu) {
+         return _getContextMenu(function(menu) {
             return new menu(menuconfig);
          }, this._options.historyId);
       },
@@ -283,16 +298,16 @@ define('SBIS3.CONTROLS/WSControls/Buttons/MenuButton', [
          return opts;
       },
 
-      _setWidth: function(){
+      _setWidth: function() {
          //Установить ширину меню
       },
 
-      _initializePicker: function(){
+      _initializePicker: function() {
          MenuButton.superclass._initializePicker.call(this);
          var self = this;
          this._picker._oppositeCorners.tl.horizontal.top = 'tr';
          this._picker._oppositeCorners.tr.horizontal.top = 'tl';
-         this._picker.subscribe('onDrawItems', function(){
+         this._picker.subscribe('onDrawItems', function() {
             self._picker.recalcPosition(true);
          });
 
@@ -313,8 +328,7 @@ define('SBIS3.CONTROLS/WSControls/Buttons/MenuButton', [
                if (header.length) {
                   if (isVerticalRevert) {
                      picker.getContainer().append(header);
-                  }
-                  else {
+                  } else {
                      picker.getContainer().prepend(header);
                   }
                }
@@ -323,61 +337,61 @@ define('SBIS3.CONTROLS/WSControls/Buttons/MenuButton', [
          }
       },
 
-      setEnabled: function (enabled) {
+      setEnabled: function(enabled) {
          MenuButton.superclass.setEnabled.apply(this, arguments);
          if (this._picker) {
             this._picker.setEnabled(enabled);
          }
       },
 
-      setAllowChangeEnable: function (allowChangeEnable) {
+      setAllowChangeEnable: function(allowChangeEnable) {
          MenuButton.superclass.setAllowChangeEnable.apply(this, arguments);
          if (this._picker) {
             this._picker.setAllowChangeEnable(allowChangeEnable);
          }
       },
 
-      _setPickerContent: function(){
+      _setPickerContent: function() {
          var self = this,
-             header = this._getHeader();
-         header.bind('click', function(){
+            header = this._getHeader();
+         header.bind('click', function() {
             self._onHeaderClick();
          });
          this._picker.getItems() && this._checkItemsIcons(this._picker.getItems());
          this._picker.getContainer().prepend(header);
       },
 
-      setCaption: function(caption){
+      setCaption: function(caption) {
          MenuButton.superclass.setCaption.apply(this, arguments);
          !this._options.menuCaption && this._drawMenuCaption(caption);
       },
 
-       setMenuCaption: function (menuCaption) {
-           this._options.menuCaption = menuCaption || '';
-           this._drawMenuCaption(menuCaption);
-       },
+      setMenuCaption: function(menuCaption) {
+         this._options.menuCaption = menuCaption || '';
+         this._drawMenuCaption(menuCaption);
+      },
 
-       _drawMenuCaption: function(menuCaption) {
-           if (this._picker && menuCaption){
-              if(this._options.escapeCaptionHtml){
-                  menuCaption = escapeHtml(menuCaption);
-              }
-              menuCaption = Sanitize(menuCaption, {validNodes: {component: true}});
-              $('.controls-Menu__header-caption', this._picker._container).html(menuCaption);
-           }
-       },
+      _drawMenuCaption: function(menuCaption) {
+         if (this._picker && menuCaption) {
+            if (this._options.escapeCaptionHtml) {
+               menuCaption = escapeHtml(menuCaption);
+            }
+            menuCaption = Sanitize(menuCaption, {validNodes: {component: true}});
+            $('.controls-Menu__header-caption', this._picker._container).html(menuCaption);
+         }
+      },
 
-       getMenuCaption: function () {
-           return this._options.menuCaption;
-       },
+      getMenuCaption: function() {
+         return this._options.menuCaption;
+      },
 
-      _drawIcon: function(icon){
+      _drawIcon: function(icon) {
          MenuButton.superclass._drawIcon.apply(this, arguments);
-         if (this._picker){
+         if (this._picker) {
             var $icon = $('.controls-Menu__header-icon', this._picker.getContainer()),
-                newclass = 'controls-Menu__header-icon ' + this._options._iconClass;
+               newclass = 'controls-Menu__header-icon ' + this._options._iconClass;
             if (icon) {
-               if ($icon.length){
+               if ($icon.length) {
                   $icon.get(0).className = newclass;
                } else {
                   var $caption = $('.controls-Menu__header-caption', this._picker.getContainer().get(0));
@@ -390,9 +404,9 @@ define('SBIS3.CONTROLS/WSControls/Buttons/MenuButton', [
          }
       },
 
-      _getHeader: function(){
+      _getHeader: function() {
          var header = $('<div class="controls-Menu__header">'),
-             headerWrapper = $('<div class="controls-Menu-headWrapper">');
+            headerWrapper = $('<div class="controls-Menu-headWrapper">');
 
          if (this._options.icon) {
             headerWrapper.append('<i class="controls-Menu__header-icon ' + this._iconTemplate(this._options) + '"></i>');
@@ -402,68 +416,69 @@ define('SBIS3.CONTROLS/WSControls/Buttons/MenuButton', [
          return header;
       },
 
-      _onHeaderClick: function(){
+      _onHeaderClick: function() {
          this.togglePicker();
       },
 
       //Прокидываем вызов метода в меню
       getItemsInstances: function() {
          if (!this._picker) {
-            throw new Error('SBIS3.CONTROLS/WSControls/Buttons/MenuButton::getItemsInstances  Попытка получения инстансов элементов меню до инициализации пикера.')
+            throw new Error('SBIS3.CONTROLS/WSControls/Buttons/MenuButton::getItemsInstances  Попытка получения инстансов элементов меню до инициализации пикера.');
          }
          return this._picker.getItemsInstances.apply(this._picker, arguments);
       },
 
-      _redraw  : function() {
+      _redraw: function() {
          if (this._picker) {
             this._picker.destroy();
             this._initializePicker();
          }
       },
 
-       _dataLoadedCallback : function() {
+      _dataLoadedCallback: function() {
          var items = this.getItems();
 
-         if (this._picker){
+         if (this._picker) {
             this.hidePicker();
             this._picker.setItems(items);
          }
+
          // если в меню один пункт, то состояние доступности кнопки определяется по этому пункту
-         if(items.getCount() === 1 && items.at(0).has('enabled')){
+         if (items.getCount() === 1 && items.at(0).has('enabled')) {
             this.setEnabled(items.at(0).get('enabled'));
          }
-       },
+      },
 
       /*TODO блок сеттеров для временного решения проблем с названиями опций полей. Избавиться с переходм на интерфейсы вместо миксинов*/
-       setKeyField: function(prop) {
-           IoC.resolve('ILogger').log('MenuButton', 'Метод setKeyField устарел, используйте setIdProperty');
-           this.setIdProperty(prop);
-       },
+      setKeyField: function(prop) {
+         IoC.resolve('ILogger').log('MenuButton', 'Метод setKeyField устарел, используйте setIdProperty');
+         this.setIdProperty(prop);
+      },
 
-       setIdProperty: function(prop) {
-           this._options.idProperty = prop;
-       },
+      setIdProperty: function(prop) {
+         this._options.idProperty = prop;
+      },
 
-       setDisplayField: function(prop) {
-           IoC.resolve('ILogger').log('MenuButton', 'Метод setDisplayField устарел, используйте setDisplayProperty');
-           this.setDisplayProperty(prop);
-       },
+      setDisplayField: function(prop) {
+         IoC.resolve('ILogger').log('MenuButton', 'Метод setDisplayField устарел, используйте setDisplayProperty');
+         this.setDisplayProperty(prop);
+      },
 
-       setDisplayProperty: function(prop) {
-           this._options.displayProperty = prop;
-       },
+      setDisplayProperty: function(prop) {
+         this._options.displayProperty = prop;
+      },
 
-       setHierField: function(prop) {
-           IoC.resolve('ILogger').log('MenuButton', 'Метод setHierField устарел, используйте setParentProperty/setNodeProperty');
-           this.setParentProperty(prop);
-       },
+      setHierField: function(prop) {
+         IoC.resolve('ILogger').log('MenuButton', 'Метод setHierField устарел, используйте setParentProperty/setNodeProperty');
+         this.setParentProperty(prop);
+      },
 
-       setParentProperty: function(prop) {
-           this._options.parentProperty = prop;
-       },
-       setNodeProperty: function(prop) {
-           this._options.nodeProperty = prop;
-       }
+      setParentProperty: function(prop) {
+         this._options.parentProperty = prop;
+      },
+      setNodeProperty: function(prop) {
+         this._options.nodeProperty = prop;
+      }
    });
 
    return MenuButton;
