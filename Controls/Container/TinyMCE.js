@@ -16,7 +16,6 @@ define('Controls/Container/TinyMCE', [
     * @authors Volotskoy V.D., Sukhoruchkin A.S., Avramenko A.S.
     */
    var _private = {
-         active: false,
          tinyInit: function(self) {
             self.editorConfiguration.target = self._children.mceContainer;
             self.editorConfiguration.setup = function(editor) {

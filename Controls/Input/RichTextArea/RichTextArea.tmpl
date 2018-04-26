@@ -1,10 +1,10 @@
-<div class="controls-RichTextArea {{_options.readOnly ? 'controls-RichTextArea__readOnly' : 'controls-RichTextArea__notReadOnly'}}">
+<div class="controls-RichTextArea {{_options.readOnly ? 'controls-RichTextArea__readOnly' : 'controls-RichTextArea__editable'}}">
     <Controls.Container.Scroll
             class="controls-RichTextArea__scrollContainer"
     >
         <ws:content>
             <ws:if data="{{_options.readOnly}}">
-                <div class="controls-RichTextArea__dataReview ws-basic-style" name="textContainer">
+                <div class="controls-RichTextArea__dataReview ws-basic-style" name="previewContainer">
                 </div>
             </ws:if>
             <ws:else>

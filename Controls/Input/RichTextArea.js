@@ -14,7 +14,7 @@ define('Controls/Input/RichTextArea', [
     * @authors Volotskoy V.D., Sukhoruchkin A.S., Avramenko A.S.
     */
 
-   var RichEdtior = Control.extend({
+   var RichTextArea = Control.extend({
       _template: template,
 
       _beforeMount: function(opts) {
@@ -31,7 +31,7 @@ define('Controls/Input/RichTextArea', [
 
       _afterUpdate: function(opts) {
          if (this._options.readOnly) {
-            this._children.textContainer.innerHTML = this._simpleViewModel.getValue();
+            this._children.reviewContainer.innerHTML = this._simpleViewModel.getValue();
          }
       },
 
@@ -39,5 +39,5 @@ define('Controls/Input/RichTextArea', [
          this._notify('valueChanged', [value]);
       }
    });
-   return RichEdtior;
+   return RichTextArea;
 });
