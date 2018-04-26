@@ -7,9 +7,8 @@ define([
    'WS.Data/Collection/RecordSet',
    'Controls/List/ListViewModel',
    'Controls/List/ItemActions/Utils/Actions',
-   'Controls/Utils/Toolbar',
-   'Core/core-instance'
-], function(ItemActionsControl, MemorySource, RecordSet, ListViewModel, aUtil, tUtil, cInstance) {
+   'Controls/Utils/Toolbar'
+], function(ItemActionsControl, MemorySource, RecordSet, ListViewModel, aUtil, tUtil) {
 
    describe('Controls.List.ItemActions', function() {
       var data, source, listViewModel, rs, actions, cfg;
