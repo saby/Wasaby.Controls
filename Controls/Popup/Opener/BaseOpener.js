@@ -82,6 +82,7 @@ define('Controls/Popup/Opener/BaseOpener',
             return !!ManagerController.find(this._popupId);
          },
 
+         //TODO Compatible
          _isVDOMTemplate: function(templateClass) {
             //на VDOM классах есть св-во _template.
             //Если его нет, но есть _stable, значит это функция от tmpl файла
