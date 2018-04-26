@@ -213,7 +213,7 @@ define('Controls/BreadCrumbsController', [
       _afterMount: function() {
          _private.calculateConstants();
 
-         //TODO: нужно приделать костыли для браузеров без preload
+         //TODO: нужно приделать костыли для браузеров без preload, но сейчас это сделать не получится, т.к. демки в IE не взлетают
          if (this._options.items && this._options.items.length > 0) {
             this._oldWidth = this._container.clientWidth - HOME_WIDTH;
             _private.calculateBreadCrumbsToDraw(this,  this._options.items, _private.getItemsSizes(this, this._options.items), this._oldWidth);
