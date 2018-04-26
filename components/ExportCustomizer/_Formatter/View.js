@@ -9,12 +9,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
    [
       'Core/helpers/Object/isEqual',
       'SBIS3.CONTROLS/CompoundControl',
+      'WS.Data/Collection/RecordSet',
       'WS.Data/Di',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
       'css!SBIS3.CONTROLS/ExportCustomizer/_Formatter/View'
    ],
 
-   function (cObjectIsEqual, CompoundControl, Di, dotTplFn) {
+   function (cObjectIsEqual, CompoundControl, RecordSet, Di, dotTplFn) {
       'use strict';
 
       /**
@@ -25,11 +26,20 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
        */
 
       /**
+       * @typedef {object} ExportFormatterColumnInfo Тип, содержащий информацию об одной колонке экспортируемого файла
+       * @property {string} id Идентификатор колонки (как правило, имя поля в базе данных или БЛ)
+       * @property {string} title Отображаемое имя колонки
+       * @property {*} * Другие свойства
+       */
+
+      /**
        * Имя регистрации объекта, предоставляющего методы форматирования шаблона эксель-файла, в инжекторе зависимостей
        * @private
        * @type {string}
        */
       var ExportFormatterName = 'ExportFormatter.Excel';
+
+
 
       var View = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ExportCustomizer/_Formatter/View.prototype*/ {
 
@@ -44,6 +54,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                 * @cfg {string} Заголовок меню выбора способа форматирования
                 */
                menuTitle: rk('Редактировать', 'НастройщикЭкспорта'),
+               /**
+                * @cfg {Array<BrowserColumnInfo>|WS.Data/Collection/RecordSet<BrowserColumnInfo>} Список объектов с информацией о всех колонках в формате, используемом в браузере
+                */
+               allFields: null,
                /**
                 * @cfg {Array<string>} Список привязки колонок в экспортируемом файле к полям данных
                 */
@@ -88,11 +102,76 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          },
 
          _bindEvents: function () {
-            /*^^^this.subscribeTo(this._grid, 'on^^^', function (evtName) {
-             var ^^^ = ^^^;
-             this._options.^^^ = ^^^;
-             this.sendCommand('subviewChanged');
-             }.bind(this));*/
+            this.subscribeTo(this._formatterMenu, 'onMenuItemActivate', function (evtName, selectedId) {
+               this._startFormatEditing(selectedId === 'app');
+            }.bind(this))
+         },
+
+         /**
+          * Открыть для редактирования пользователем (в браузере или в отдельном приложении) шаблон форматирования эксель-файла
+          *
+          * @protected
+          * @param {boolean} useApp Открыть в отдельном приложении
+          */
+         _startFormatEditing: function (useApp) {
+            var options = this._options;
+            var fieldIds = options.fieldIds;
+            if (fieldIds && fieldIds.length) {
+               this._exportFormatter[useApp ? 'openApp' : 'open'](options.fileUuid || null, this._makeFormatterColumns()).addCallbacks(
+                  function (fileUuid) {
+                     if (!options.fileUuid) {
+                        options.fileUuid = fileUuid;
+                        this.sendCommand('subviewChanged');
+                     }
+                     this._updatePreview();
+                  }.bind(this),
+                  function (err) {
+                     //^^^
+                     return err;
+                  }.bind(this)
+               );
+            }
+         },
+
+         /**
+          * Подготовить список колонок для форматера
+          *
+          * @protected
+          * @return {Array<ExportFormatterColumnInfo>}
+          */
+         _makeFormatterColumns: function () {
+            var options = this._options;
+            var fieldIds = options.fieldIds;
+            if (fieldIds && fieldIds.length) {
+               var allFields = options.allFields;
+               var isRecordSet = allFields instanceof RecordSet;
+               return fieldIds.map(function (id, i) {
+                  var field;
+                  if (!isRecordSet) {
+                     allFields.some(function (v) { if (v.id === id) { field = v; return true; } });
+                  }
+                  else {
+                     var model = allFields.getRecordById(id);
+                     if (model) {
+                        field = model.getRawData();
+                     }
+                  }
+                  if (!field) {
+                     throw new Error('Unknown field: ' + id);
+                  }
+                  return {id:id, title:field.title};
+               });
+            }
+         },
+
+         /**
+          * Обновить изображение предпросмотра
+          *
+          * @protected
+          */
+         _updatePreview: function () {
+            var url = this._exportFormatter.getPreviewUrl(this._options.fileUuid);
+            this._preview[0].src = url;
          },
 
          /**

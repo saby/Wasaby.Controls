@@ -301,6 +301,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                formatter: {
                   title: options.formatterTitle,
                   menuTitle: options.formatterMenuTitle,
+                  allFields: options.allFields,
                   fieldIds: options.fieldIds,
                   fileUuid: options.fileUuid
                }
