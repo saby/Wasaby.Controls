@@ -1011,12 +1011,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this.setFontStyle(formats.id);
             }
             else {
-               var previous = this.getCurrentFormats();
                var formatter = editor.formatter;
                for (var i = 0, names = ['title', 'subTitle', 'additionalText', 'forecolor']; i < names.length; i++) {
                   formatter.remove(names[i], {value: undefined}, null, true);
                }
-               var sameFont = formats.fontsize && formats.fontsize === previous.fontsize;
+               var sameFont = formats.fontsize && formats.fontsize === this.getCurrentFormats(['fontsize']).fontsize;
                //необходимо сначала ставить размер шрифта, тк это сбивает каретку
                if (!sameFont) {
                   this._setFontSize(formats.fontsize);
@@ -1024,14 +1023,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                var hasOther;
                for (var i = 0, names = ['bold', 'italic', 'underline', 'strikethrough']; i < names.length; i++) {
                   var name = names[i];
-                  if (name in formats && formats[name] !== previous[name]) {
+                  if (name in formats) {
                      if (formats[name] !== formatter.match(name)) {
                         editor.execCommand(name);
                      }
                      hasOther = formats[name] || hasOther;
                   }
                }
-               if (formats.color && formats.color !== previous.color) {
+               if (formats.color) {
                   var currentColor = this.getCurrentFormats(['color']).color;
                   if (formats.color !== currentColor) {
                      formatter.apply('forecolor', {value: formats.color});
