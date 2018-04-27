@@ -39,8 +39,8 @@ define('Controls/List/resources/utils/DataSourceUtil', [
 
 
          queryDef = dataSource.query(query).addCallback((function(dataSet) {
-            if (keyProperty && keyProperty !== dataSet.getIdProperty()) {
-               dataSet.setIdProperty(keyProperty);
+            if (keyProperty && keyProperty !== dataSet.keyProperty) {
+               dataSet.keyProperty = keyProperty;
             }
             return dataSet.getAll();
          }));

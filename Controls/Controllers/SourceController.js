@@ -40,8 +40,8 @@ define('Controls/Controllers/SourceController',
             queryIns = _private.getQueryInstance(filter, sorting, offset, limit);
 
             queryDef = dataSource.query(queryIns).addCallback((function(dataSet) {
-               if (keyProperty && keyProperty !== dataSet.getIdProperty()) {
-                  dataSet.setIdProperty(keyProperty);
+               if (keyProperty && keyProperty !== dataSet.keyProperty) {
+                  dataSet.keyProperty = keyProperty;
                }
                return dataSet.getAll();
             }));

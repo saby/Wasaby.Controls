@@ -30,7 +30,7 @@ define('Controls/List/resources/utils/TreeItemsUtil', [
             rootAsNode = isPlainObject(root);
             if (rootAsNode) {
                root = Model.fromObject(root, 'adapter.sbis');
-               root.setIdProperty(cfg.keyProperty);
+               root.keyProperty = cfg.keyProperty;
             }
             displayProperties.root = root;
 

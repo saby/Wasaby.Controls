@@ -73,7 +73,7 @@ define(['Controls/List/resources/utils/DataSourceUtil', 'Controls/List/resources
                });
 
                assert.isTrue(cInstance.instanceOfModule(resSource, 'WS.Data/Source/Memory'), 'prepareSource doesn\'t returns datasource by config');
-               assert.equal('id', resSource.getIdProperty(), 'prepareSource doesn\'t returns datasource by config');
+               assert.equal('id', resSource.keyProperty, 'prepareSource doesn\'t returns datasource by config');
 
             });
 
