@@ -2254,6 +2254,42 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             EventBus.globalChannel().notify('MobileInputFocus');
          },
 
+         /**
+          * Проверить, допускает ли загрузчик изображений множественную загрузку
+          * @public
+          * @return {boolean}
+          */
+         canUploadMultiSelect: function () {
+            if (Di.isRegistered('ImageUploader')) {
+               return Di.resolve('ImageUploader').canMultiSelect;
+            }
+         },
+
+         /**
+          * Выбрать и загрузить (на сервер) изображение(я)
+          * @public
+          * @param {object} target Инициирующий элемент
+          * @param {string} [imageFolder] Папка для изображений (опционально)
+          * @param {boolean} [canMultiSelect] Можно ли выбрать и загрузить несколько изображений
+          * @return {Core/Deferred}
+          */
+         selectAndUploadImage: function (target, imageFolder, canMultiSelect) {
+            var imageUploader = this._imageUploader;
+            if (!imageUploader) {
+               if (Di.isRegistered('ImageUploader')) {
+                  this._imageUploader = imageUploader = Di.resolve('ImageUploader').getFileLoader();
+               }
+               else {
+                  return Deferred.fail('No image uplader');
+               }
+            }
+            return imageUploader.startFileLoad(target, canMultiSelect !== undefined ? canMultiSelect : this.canUploadMultiSelect(), imageFolder || this._options.imageFolder)
+               .addErrback(function (err) {
+                  this._showImgError();
+                  return err;
+               }.bind(this));
+         },
+
          _showImageOptionsPanel: function(target) {
             this._getImageOptionsPanel(target).show();
          },
