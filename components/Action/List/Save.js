@@ -9,8 +9,8 @@ define('SBIS3.CONTROLS/Action/List/Save', [
     'WS.Data/Collection/RecordSet',
     'Lib/Control/Dialog/Dialog',
     'WS.Data/Query/Query',
-    'WS.Data/Entity/Record'
-], function (Save, ListMixin, Indicator, Deferred, cMerge, cInstance, coreClone, RecordSet, Dialog, Query, Record) {
+    'SBIS3.CONTROLS/Utils/SelectionUtil'
+], function (Save, ListMixin, Indicator, Deferred, cMerge, cInstance, coreClone, RecordSet, Dialog, Query, SelectionUtil) {
     var MAX_RECORDS_COUNT = 20000;
 
     /**
@@ -116,7 +116,7 @@ define('SBIS3.CONTROLS/Action/List/Save', [
 
         _getDataFromSelection: function(meta, selection) {
            var query = this._createQuery({
-                 selection: Record.fromObject(selection, meta.dataSource.getAdapter()),
+                 selection: SelectionUtil.selectionToRecord(selection, meta.dataSource.getAdapter()),
                  columns: this._formatColumnsForFilter(meta.columns)
               });
            return this._getDataFromQuery(meta.dataSource, query, meta.serverSideExport);
