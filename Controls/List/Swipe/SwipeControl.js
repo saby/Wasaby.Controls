@@ -135,8 +135,7 @@ define('Controls/List/Swipe/SwipeControl', [
          self._visibleItemsCount = allActions.length;
 
          for (var i = self._visibleItemsCount - 1; i >= 0; i--) {
-            allActions[i].height = 'auto';
-
+            allActions[i].height = _private.getActionDefaultHeight(self._swipeConfig.type) + 'px';
          }
 
          if (self._swipeConfig.type > ROW_TYPE_THRESHOLD && self._swipeConfig.type <= ONE_COLUMN_TYPE_THRESHOLD) {
