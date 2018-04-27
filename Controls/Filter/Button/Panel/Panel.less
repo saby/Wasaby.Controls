@@ -15,24 +15,22 @@
 }
 
 .controls-FilterPanel__header {
-   min-width: @min-width_FilterPanel;
-   height: @height_FilterPanel-header;
+   flex-grow: 1;
    display: flex;
-   justify-content: space-between;
+   justify-content: flex-end;
    align-items: baseline;
-   background-color: @background-color_FilterPanel-header;
 }
 
 .controls-FilterPanel__header:before {
    content: "\200b";
-   line-height: @controls-filterButton-area-header-height;
+   line-height: @height_FilterPanel-header;
    display: inline-block;
    width: 0;
    visibility: hidden;
 }
 
 .controls-FilterPanel__PropertyGrid {
-   margin: @spacing_FilterPanel__PropertyGrid;
+   margin: @margin_FilterPanel__PropertyGrid;
 }
 
 //.controls-FilterPanel__history {
@@ -56,54 +54,11 @@
    margin: @spacing_FilterPanel-header-topTemplate;
 }
 
-.controls-FilterPanel__header-title {
-   margin: @spacing_FilterPanel-header-title;
-}
-
 .controls-FilterPanel__resetButton {
-   margin-left: @spacing_FilterPanel-resetButton-title;
+   margin: @margin_FilterPanel-resetButton-title;
 }
 
 .controls-FilterPanel__filterButton {
-   margin: @spacing_FilterPanel-filterButton;
+   margin-right: @spacing_FilterPanel-between-filterButton-closeButton;
 }
 
-.controls-FilterPanel__caption {
-   font-size: @font-size_FilterPanel-caption;
-   color: @color_FilterPanel-caption;
-   margin: @spacing_FilterPanel-caption;
-}
-
-.controls-FilterPanel__closeButton {
-   position: relative;
-   cursor: pointer;
-   top: 5px;
-   z-index: 1;
-   .flexbox();
-   .align-items(center);
-   .justify-content(center);
-   &:before {
-      content: @content_CloseButton_icon;
-   }
-}
-
-.controls-FilterPanel__close_button_standart {
-   border-style: solid;
-   width: @width_CloseButton - extract(@border-width_CloseButton, 2) - extract(@border-width_CloseButton, 4);
-   height: @height_CloseButton - extract(@border-width_CloseButton, 1) - extract(@border-width_CloseButton, 3);
-   font-family: @default-icon-font;
-   line-height: @height_CloseButton;
-   font-size: @font-size_CloseButton;
-   box-shadow: @box-shadow_CloseButton;
-   border-width: @border-width_CloseButton;
-   border-color: @border-color_CloseButton;
-   border-radius: @border-radius_CloseButton;
-   background-color: @background-color_CloseButton;
-   &:before {
-      color: @color_CloseButton-icon;
-      text-shadow: @text-shadow_Button;
-   }
-   &:active {
-      box-shadow: none;
-   }
-}
