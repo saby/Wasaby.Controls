@@ -843,7 +843,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          /**
           * Установить стиль для выделенного текста
           * @param {Object} style Объект, содержащий устанавливаемый стиль текста
-          * @private
+          * @public
           */
          setFontStyle: function(style) {
             if (cConstants.browser.firefox) {
@@ -869,7 +869,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          /**
           * Установить цвет для выделенного текста
           * @param {Object} color Объект, содержащий устанавливаемый цвет текста
-          * @private
+          * @public
           */
          setFontColor: function(color) {
             this._applyFormat('forecolor', color);
@@ -877,12 +877,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             //при установке стиля(через форматтер) не стреляет change
             this._updateTextByTiny();
          },
+
          /**
           * Установить размер для выделенного текста
-          * @param {Object} size Объект, содержащий устанавливаемый размер текста
-          * @private
+          * @param {number} size Устанавливаемый размер текста
+          * @public
           */
-         setFontSize: function(size) {
+         setFontSize: function (size) {
+            // TODO: Использоватиь здесь _setFontSize
             //необходимо удалять текущий формат(размер шрифта) чтобы правльно создавались span
             this._removeFormat('fontsize');
             if (size) {
@@ -894,18 +896,31 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          },
 
          /**
-          * Получить свойства форматирования текущего выделения
-          * @return {object}
+          * Установить размер для выделенного текста
+          * @param {Object} size Устанавливаемый размер текста
+          * @protected
           */
-         getCurrentFormats: function () {
+         _setFontSize: function (size) {
+            // Это "чистая" реализация, здесь не должно быть НИКАКИХ дополнительных манипуляций с рэнжем, фокусом, фиксацией значения компоненты и так далее!
             var editor = this._tinyEditor;
             if (editor) {
-               var rng = editor.selection.getRng();
-               var selNode = rng.startContainer;
-               if (selNode.nodeType === 3) {
-                  selNode = selNode.parentNode;
+               //необходимо удалять текущий формат(размер шрифта) чтобы правльно создавались span
+               editor.formatter.remove('fontsize', {value: undefined}, null, true);
+               if (size) {
+                  editor.execCommand('FontSize', false,  size + 'px');
                }
-               return this._getNodeFormats(selNode);
+            }
+         },
+
+         /**
+          * Получить свойства форматирования текущего выделения
+          * @param {Array<string>} [properties] Список имён запрашиваемых свойств форматирования. Если не указан, буду возвращены все свойства (опционально)
+          * @return {object}
+          */
+         getCurrentFormats: function (properties) {
+            var node = this._getCurrentFormatNode();
+            if (node) {
+               return this._getNodeFormats(node, properties);
             }
          },
 
@@ -918,6 +933,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this._defaultFormats = this._getNodeFormats(this._inputControl, ['fontsize', 'color']);
             }
             return this._defaultFormats;
+         },
+
+         _getCurrentFormatNode: function () {
+            var editor = this._tinyEditor;
+            if (editor) {
+               var rng = editor.selection.getRng();
+               var node = rng.startContainer;
+               return node.nodeType === 3 ? node.parentNode : node;
+            }
          },
 
          _getNodeFormats: function (node, properties) {
@@ -964,13 +988,16 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
          /**
           * Применить свойства форматирования к текущему выделению
+          * @public
           * @param {object} formats Свойства форматирования
           */
          applyFormats: function (formats) {
             // Отбросить все свойства форматирования, тождественные форматированию по-умолчанию
-            var rng = this._tinyEditor.selection.getRng();
-            var node = rng.startContainer;
-            var defaults = this._getNodeFormats((node.nodeType === 3 ? node.parentNode : node).parentNode, ['fontsize', 'color']);
+            var editor = this._tinyEditor;
+            if (!editor) {
+               return;
+            }
+            var defaults = this._getNodeFormats(this._getCurrentFormatNode().parentNode, ['fontsize', 'color']);
             for (var prop in defaults) {
                if (prop in formats && formats[prop] ==/* Не "==="! */ defaults[prop]) {
                   delete formats[prop];
@@ -984,34 +1011,41 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this.setFontStyle(formats.id);
             }
             else {
-               for (var i = 0, names = ['title', 'subTitle', 'additionalText', 'forecolor']; i < names.length; i++) {
-                  this._removeFormat(names[i]);
-               }
                var previous = this.getCurrentFormats();
+               var formatter = editor.formatter;
+               for (var i = 0, names = ['title', 'subTitle', 'additionalText', 'forecolor']; i < names.length; i++) {
+                  formatter.remove(names[i], {value: undefined}, null, true);
+               }
                var sameFont = formats.fontsize && formats.fontsize === previous.fontsize;
                //необходимо сначала ставить размер шрифта, тк это сбивает каретку
                if (!sameFont) {
-                  this.setFontSize(formats.fontsize);
+                  this._setFontSize(formats.fontsize);
                }
                var hasOther;
                for (var i = 0, names = ['bold', 'italic', 'underline', 'strikethrough']; i < names.length; i++) {
                   var name = names[i];
                   if (name in formats && formats[name] !== previous[name]) {
-                     this.execCommand(name);
+                     if (formats[name] !== formatter.match(name)) {
+                        editor.execCommand(name);
+                     }
                      hasOther = formats[name] || hasOther;
                   }
                }
                if (formats.color && formats.color !== previous.color) {
-                  this.setFontColor(formats.color);
-                  hasOther = true;
+                  var currentColor = this.getCurrentFormats(['color']).color;
+                  if (formats.color !== currentColor) {
+                     formatter.apply('forecolor', {value: formats.color});
+                     hasOther = true;
+                  }
                }
                if (sameFont && !hasOther) {
                   // Если указан тот же размер шрифта (и это не размер по умолчанию), и нет других изменений - нужно чтобы были правильно
                   // созданы окружающие span-ы (например https://online.sbis.ru/opendoc.html?guid=5f4b9308-ec3e-49b7-934c-d64deaf556dc)
                   // в настоящий момент работает и без этого кода, но если не будет работать, но нужно использовать modify, т.к. expand помечен deprecated.
                   //this._tinyEditor.selection.getSel().modify();//.getRng().expand()
-                  this.setFontSize(formats.fontsize);
+                  this._setFontSize(formats.fontsize);
                }
+               this._updateTextByTiny();
             }
          },
 
