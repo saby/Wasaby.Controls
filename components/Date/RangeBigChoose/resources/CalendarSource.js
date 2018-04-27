@@ -19,6 +19,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/CalendarSource', [
          _dataSetTotalProperty: 'total'
       },
 
+      _callCount: 0,
+
       query: function (query) {
          var
             offset = query.getOffset(),
@@ -26,9 +28,9 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/CalendarSource', [
 
             executor = (function() {
                var adapter = this.getAdapter().forTable(),
-                  now = (new Date()).getFullYear(),
                   items = [],
-                  months;
+                  months,
+                  def;
 
                for (var i = 0; i < limit; i++) {
                   months = [];
@@ -68,7 +70,25 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/CalendarSource', [
                   {items: adapter.getData(), total: {before: true, after: true}}
                );
 
-               return items;
+               // Хак. Датасорс в данном месте синхронный. Листвью грузит первую порцию данных и отрисовывает ее.
+               // Браузер стреляет событием скрола до того как перерисовал контент(Paint).
+               // Листвью грузит вторую порцию(страница сверху). Отрисовывает ее.
+               // В итоге браузер делает Paint после того как загрузилась и отрисовалась вторая страница..
+               // Делаем первые 2 вызова сорса асинхронными, что бы браузер перерисовал контенет сразу же после отрисовки
+               // персвой страницы. Это уменьшает время появления списков месяцев в 2 раза.
+               // В VDOM этой проблемы не будет. Там как минимум раскладка месяцев отрисовывается в несколько раз быстрее.
+               if (this._callCount >= 2) {
+                  return items;
+               } else {
+                  this._callCount += 1;
+                  def = new Deferred();
+                  setTimeout(function() {
+                     def.callback(items);
+                  }, 0);
+                  return def;
+               }
+
+
             }).bind(this);
 
          if (this._loadAdditionalDependencies) {
