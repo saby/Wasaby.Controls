@@ -6,7 +6,8 @@ define('SBIS3.CONTROLS/Spoiler', [
    'tmpl!SBIS3.CONTROLS/Spoiler/resources/LeftPartTitleTemplate',
    'tmpl!SBIS3.CONTROLS/Spoiler/resources/MiddlePartTitleTemplate',
    'SBIS3.CONTROLS/Utils/Contains',
-   'css!SBIS3.CONTROLS/Spoiler/Spoiler'
+   'css!SBIS3.CONTROLS/Spoiler/Spoiler',
+   'i18n!SBIS3.CONTROLS/Spoiler'
 ], function(WSButtonBase, Expandable, TemplateUtil, dotTplFn, LeftPartTitleTemplate, MiddlePartTitleTemplate, contains) {
 
    'use strict';
