@@ -301,8 +301,10 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
 
       _calculateHoveredStyles: function(item) {
          if (this._options.tileMode === TILE_MODE.DYNAMIC) {
+            this._resetHoveredStyles(item);
             this._setDynamicHoveredStyles(item);
          } else if (this._options.tileMode === TILE_MODE.STATIC && !this._container.hasClass('controls-CompositeView-tile__static-smallImage')) {
+            this._resetHoveredStyles(item);
             this._setStaticHoveredStyles(item);
          }
       },
@@ -324,6 +326,11 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
          margin = (item.outerHeight(true) - item.outerHeight()) / 2;
          item.css('padding-bottom', offset).css('margin-bottom', -(offset - margin));
          $('.controls-CompositeView__tileContainer', item).css('margin-bottom', offset);
+      },
+
+      _resetHoveredStyles: function(item) {
+         //Сбрасываем установленные ранее стили для ховера, т.к. элемент мог измениться и перерисоваться.
+         item.css('padding', '').css('margin', '');
       },
 
       _updateHeadAfterInit: function() {

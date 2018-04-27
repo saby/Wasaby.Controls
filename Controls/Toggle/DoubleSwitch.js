@@ -59,7 +59,7 @@ define('Controls/Toggle/DoubleSwitch', [
       },
 
       _clickToggleHandler: function(e) {
-         if (this._options.readOnly) {
+         if (!this._options.readOnly) {
             _private.notifyChanged(this);
          }
       },

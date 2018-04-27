@@ -30,7 +30,28 @@ define('Controls/List/ListControl', [
     */
 
    var ListControl = Control.extend({
-      _template: ListControlTpl
+      _template: ListControlTpl,
+      removeItems: function(items) {
+         this._children.baseControl.removeItems(items);
+      },
+      moveItemUp: function(item) {
+         this._children.baseControl.moveItemUp(item);
+      },
+      moveItemDown: function(item) {
+         this._children.baseControl.moveItemDown(item);
+      },
+      moveItems: function(items, target, position) {
+         this._children.baseControl.moveItems(items, target, position);
+      },
+      reload: function() {
+         this._children.baseControl.reload();
+      },
+      editItem: function(options) {
+         this._children.baseControl.editItem(options);
+      },
+      addItem: function(options) {
+         this._children.baseControl.addItem(options);
+      }
    });
 
    return ListControl;

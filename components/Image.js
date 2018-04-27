@@ -477,8 +477,8 @@ define('SBIS3.CONTROLS/Image',
                if (width !== 0) {
                   this._imageBar.show();//показываем, чтобы можно было вычислить размеры
                   this._buttonReset.toggle(true);//показываем, чтобы можно было вычислить размеры
-                  uploadWidth = this._buttonUpload._container[0].getBoundingClientRect().width +  this._buttonUpload._container.css('margin-left').replace('px', ''),
-                  resetWidth = this._buttonReset._container[0].getBoundingClientRect().width,
+                  uploadWidth = this._buttonUpload._container[0].clientWidth + (+this._buttonUpload._container.css('margin-left').replace('px', '')),
+                  resetWidth = this._buttonReset._container[0].clientWidth,
                   minToolbar = uploadWidth + resetWidth + (this._options.edit ? resetWidth : 0) + 4;
                   this._imageBar.hide();//скрываем после вычисления размеров
                   this._buttonReset.toggle(resetVisible);//скрываем после вычисления размеров
@@ -518,7 +518,7 @@ define('SBIS3.CONTROLS/Image',
                if (response instanceof Error) {
                   return this._onLoadedError(response);
                }
-               imageInstance._notify('onEndLoad', response);
+               imageInstance._notify('onEndLoad', {result: response.getRawData()});
                if (imageInstance._options.edit) {
                   imageInstance._showEditDialog('new');
                } else {
@@ -527,6 +527,7 @@ define('SBIS3.CONTROLS/Image',
                   Indicator.hide();
                }
             },
+
             /**
              * @param {Error} error
              * @private
@@ -534,8 +535,9 @@ define('SBIS3.CONTROLS/Image',
             _onLoadedError: function(error) {
                toggleLocalIndicator(this._container, false);
                Indicator.hide();
+
                // игнорируем HTTPError офлайна, если они обработаны
-               if (!(error._isOfflineMode && error.processed)){
+               if (!(error._isOfflineMode && error.processed)) {
                   var
                      config = error._isOfflineMode ? {
                         message: 'Отсутствует соединение с интернет',
@@ -734,17 +736,17 @@ define('SBIS3.CONTROLS/Image',
               */
             _uploadImage: function() {
                var self = this;
-               self._getAttach().choose("FSGetter").addCallback(function() {
+               self._getAttach().choose('FSGetter').addCallback(function() {
                   self._upload();
                });
             },
 
             _uploadFileCam: function() {
                var self = this;
-               self._getAttach().choose("PhotoCam").addCallbacks(function() {
-                   self._upload();
+               self._getAttach().choose('PhotoCam').addCallbacks(function() {
+                  self._upload();
                }, function(error) {
-                   self._onEndLoad(error);
+                  self._onEndLoad(error);
                });
             },
 
@@ -894,7 +896,7 @@ define('SBIS3.CONTROLS/Image',
                return this._options.filter;
             },
 
-             /**
+            /**
               * Возвращает загрузчик
               * @return {Lib/File/Attach/LazyAttach}
               * @private
@@ -904,30 +906,31 @@ define('SBIS3.CONTROLS/Image',
                var attach = self._attach;
                if (!attach) {
                   self._attach = attach = new LazyAttach({
-                      multiSelect: false
+                     multiSelect: false
                   });
 
                   var cont = document.createElement('div');
                   self.getContainer().append(cont);
                   var fsGetter = new FSGetter({
-                      multiSelect: false,
-                      element: cont,
-                      extensions: ['image']
+                     multiSelect: false,
+                     element: cont,
+                     extensions: ['image']
                   });
                   attach.registerGetter(fsGetter);
                   attach.registerLazyGetter('PhotoCam', 'Lib/File/ResourceGetter/PhotoCam', {
-                      openDialog: {
-                          dialogOptions: {
-                             opener: self
-                          }
-                      }
+                     openDialog: {
+                        dialogOptions: {
+                           opener: self
+                        }
+                     }
                   });
                }
                var dataSource = self.getDataSource();
                if (dataSource) {
-                  attach.registerLazySource(LocalFile, "WS.Data/Source/SbisFile", {
+                  attach.registerLazySource(LocalFile, 'WS.Data/Source/SbisFile', {
                      endpoint: {
-                         //todo Удалить, временная опция для поддержки смены логотипа компании
+
+                        //todo Удалить, временная опция для поддержки смены логотипа компании
                         contract: self._options.linkedObject || dataSource.getEndpoint().contract
                      },
                      binding: dataSource.getBinding()
@@ -935,6 +938,7 @@ define('SBIS3.CONTROLS/Image',
                }
                return attach;
             },
+
             /**
              * Загрузка выбранного изображения
              * @private
@@ -955,10 +959,11 @@ define('SBIS3.CONTROLS/Image',
                }
                attach.upload(this._uploadParams || {}).addCallback(function(results) {
                   results.forEach(function(result) {
-                     self._onEndLoad(result)
-                  })
+                     self._onEndLoad(result);
+                  });
                });
             },
+
             /**
              * Устанавливает параметры при загрузке файла
              *
@@ -969,7 +974,7 @@ define('SBIS3.CONTROLS/Image',
              * @param {Object} params Объект с параметрами
              */
             setUploadParams: function(params) {
-                this._uploadParams = params;
+               this._uploadParams = params;
             }
          });
 

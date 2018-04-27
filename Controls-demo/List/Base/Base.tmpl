@@ -1,59 +1,51 @@
-<div class="123">
-    <h2>Default</h2>
-    <Controls.List
-			attr:test_name="default"
-            source = "{{_viewSource}}"
-            markedKey="{{2}}"
-            allowEmptySelection="{{false}}"
-            idProperty="id">
-    </Controls.List>
+<div class="demo-BaseList">
+   <h2>Отображение списка по умолчанию</h2>
+   <Controls:List
+      source = "{{_viewSource}}"
+      markedKey="{{2}}"
+      idProperty="id">
+      <ws:itemTemplate>
+         <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate"
+                     itemData="{{itemTemplate.itemData}}" />
+      </ws:itemTemplate>
+   </Controls:List><br/><br/>
 
-    <h2>Display property</h2>
-    <Controls.List
-            source = "{{_viewSource}}"
-            markedKey="{{2}}"
-            allowEmptySelection="{{false}}"
-            idProperty="id">
-        <ws:itemTemplate>
-            <ws:partial template="tmpl!Controls/List/ItemTemplate"
-                        itemData="{{itemTemplate.itemData}}"
-                        displayProperty="description"
-            ></ws:partial>
-        </ws:itemTemplate>
-    </Controls.List>
+   <h2>Конфигурирование базового шаблона</h2><br/>
+   <h4>меняем поле отображения и убираем маркер строки</h4>
+   <Controls:List
+      source = "{{_viewSource}}"
+      multiSelectVisibility="visible"
+      idProperty="id">
+      <ws:selectedKeys>
+         <ws:Array>
+            <ws:Number>2</ws:Number>
+            <ws:Number>4</ws:Number>
+         </ws:Array>
+      </ws:selectedKeys>
+      <ws:itemTemplate>
+         <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate"
+                     itemData="{{itemTemplate.itemData}}"
+                     displayProperty="description"
+                     marker="{{false}}">
+         </ws:partial>
+      </ws:itemTemplate>
+   </Controls:List><br/>
 
-    <h2>Without marker</h2>
-    <Controls.List
-            source = "{{_viewSource}}"
-            markedKey="{{2}}"
-            allowEmptySelection="{{false}}"
-            idProperty="id">
-        <ws:itemTemplate>
-            <ws:partial template="tmpl!Controls/List/ItemTemplate"
-                        itemData="{{itemTemplate.itemData}}"
-                        marker="{{false}}"
-            ></ws:partial>
-        </ws:itemTemplate>
-    </Controls.List>
-
-    <h2>Custom render</h2>
-    <Controls.List
-			attr:test_name="custom"
-            source = "{{_viewSource}}"
-            markedKey="{{2}}"
-            allowEmptySelection="{{false}}"
-            idProperty="id">
-        <ws:itemTemplate>
-            <ws:partial template="tmpl!Controls/List/ItemTemplate"
-                        itemData="{{itemTemplate.itemData}}"
-            >
-                <ws:contentTemplate>
-                    <div style="padding: 4px;">
-                        <div>{{itemTemplate.itemData.item.get('title')}}</div>
-                        <div style="font-size: 11px; color: grey">{{itemTemplate.itemData.item.get('description')}}</div>
-                    </div>
-                </ws:contentTemplate>
-            </ws:partial>
-        </ws:itemTemplate>
-    </Controls.List>
+   <h4>задаем собственный шаблон отображения контента</h4>
+   <Controls:List
+      source = "{{_viewSource}}"
+      markedKey="{{2}}"
+      idProperty="id">
+      <ws:itemTemplate>
+         <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate"
+                     itemData="{{itemTemplate.itemData}}">
+            <ws:contentTemplate>
+               <div class="demo-BaseList__item">
+                  <div>{{itemTemplate.itemData.item.get('id')}}.&nbsp; {{itemTemplate.itemData.item.get('author')}}&nbsp;&nbsp;&nbsp;"{{itemTemplate.itemData.item.get('title')}}"</div>
+                  <div class="demo-BaseList__description">{{itemTemplate.itemData.item.get('description')}}</div>
+               </div>
+            </ws:contentTemplate>
+         </ws:partial>
+      </ws:itemTemplate>
+   </Controls:List>
 </div>

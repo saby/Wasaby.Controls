@@ -158,8 +158,6 @@ define(
                throw new Error('MonthView. Неверный формат даты');
             }
 
-            this._drawMonthTable();
-
             this._updateDisplayedValues();
             this._attachEvents();
          },

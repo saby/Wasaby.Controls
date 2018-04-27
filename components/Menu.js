@@ -3,7 +3,7 @@
  */
 
 define('SBIS3.CONTROLS/Menu', [
-   "Core/CommandDispatcher",
+   'Core/CommandDispatcher',
    'SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBaseDS',
    'tmpl!SBIS3.CONTROLS/Menu/Menu',
    'SBIS3.CONTROLS/Mixins/hierarchyMixin',
@@ -51,8 +51,9 @@ define('SBIS3.CONTROLS/Menu', [
        *     });
        * </pre>
        */
-      _dotTplFn : dot,
-       /**
+      _dotTplFn: dot,
+
+      /**
         * @typedef {Object} ItemsMenu
         * @description Каждый элемент строится на основе класса {@link SBIS3.CONTROLS/Menu/MenuItem}, в описании к которому приведён полный список опций для конфигурации каждого пункта меню.
         * @property {String} id Идентификатор.
@@ -64,7 +65,7 @@ define('SBIS3.CONTROLS/Menu', [
         * @editor icon ImageEditor
         * @translatable title
         */
-       /**
+      /**
         * @cfg {ItemsMenu[]} Устанавливает конфигурацию пунктов меню.
         * @name SBIS3.CONTROLS/Menu#items
         * @description Каждый пункт меню строится на основе класса {@link SBIS3.CONTROLS/Menu/MenuItem}.
@@ -94,35 +95,43 @@ define('SBIS3.CONTROLS/Menu', [
         */
 
       $protected: {
-         _subContainers : {},
-         _subMenus : {},
+         _subContainers: {},
+         _subMenus: {},
          _toggleAdditionalButton: null,
          _needShowToggleButton: false,
          _options: {
+
             /**
              * @cfg {Number} Задержка перед открытием
              * @noShow
              */
             showDelay: null,
+
             /**
              * @cfg {Number} Задержка перед закрытием
              * @noShow
              */
             hideDelay: null,
+
             /**
              * @cfg {String} Поле отображается как название
              * @noShow
              */
-            displayProperty : 'title',
+            displayProperty: 'title',
             expand: true,
+
             /**
              * @cfg {String} Поле исходя из которого скрываются дополнительные элементы меню
              */
-            additionalProperty: null
+            additionalProperty: null,
+            /**
+             * @cfg {Boolean} Экранирует текст в пунктах меню, если опция не задана на элементе
+             */
+            escapeHtmlItems: false
          }
       },
 
-      _modifyOptions: function (cfg) {
+      _modifyOptions: function(cfg) {
          if (cfg.hierField) {
             IoC.resolve('ILogger').log('Menu', 'Опция hierField является устаревшей, используйте parentProperty');
             cfg.parentProperty = cfg.hierField;
@@ -139,6 +148,7 @@ define('SBIS3.CONTROLS/Menu', [
       },
       init: function() {
          Menu.superclass.init.apply(this, arguments);
+
          // Предотвращаем всплытие focus и mousedown с контейнера меню, т.к. это приводит к потере фокуса
          this._container.on('mousedown focus', this._blockFocusEvents);
       },
@@ -154,13 +164,13 @@ define('SBIS3.CONTROLS/Menu', [
       },
       _getItemTemplate: function(item) {
          var
-             caption = Sanitize(item.get(this._options.displayProperty), {validNodes: {component: true}}),
-             options = this._getItemConfig({}, item);
+            caption = Sanitize(item.get(this._options.displayProperty), {validNodes: {component: true}}),
+            options = this._getItemConfig({}, item);
 
-         if (item.get('escapeCaptionHtml')){
+         if (item.has('escapeCaptionHtml') ? item.get('escapeCaptionHtml') : this._options.escapeHtmlItems) {
             caption = escapeHtml(caption);
          }
-         if(this._options.additionalProperty && item.get(this._options.additionalProperty)){
+         if (this._options.additionalProperty && item.get(this._options.additionalProperty)) {
             options.className = (options.className ? options.className : '') + ' controls-MenuItem-additional';
             this._needShowToggleButton = true;
          }
@@ -169,25 +179,25 @@ define('SBIS3.CONTROLS/Menu', [
              '</component>';
       },
 
-      _getItemConfig: function (cfg, item) {
+      _getItemConfig: function(cfg, item) {
          var isEnabled = item.get('enabled'),
-             visible = item.get('visible'),
-             options = {
-             className: item.get('className'),
-             activableByClick: false,
-             command: item.get('command'),
-             commandArgs: item.get('commandArgs'),
-             enabled: isEnabled === undefined ? true : isEnabled,
-             visible: visible === undefined ? true : visible,
-             icon: item.get('icon'),
-             tooltip: item.get('tooltip'),
-             allowChangeEnable: item.get('allowChangeEnable') !== undefined ? item.get('allowChangeEnable') : this._options.allowChangeEnable
-         };
+            visible = item.get('visible'),
+            options = {
+               className: item.get('className'),
+               activableByClick: false,
+               command: item.get('command'),
+               commandArgs: item.get('commandArgs'),
+               enabled: isEnabled === undefined ? true : isEnabled,
+               visible: visible === undefined ? true : visible,
+               icon: item.get('icon'),
+               tooltip: item.get('tooltip'),
+               allowChangeEnable: item.get('allowChangeEnable') !== undefined ? item.get('allowChangeEnable') : this._options.allowChangeEnable
+            };
 
          return cMerge(cfg || {}, options);
       },
 
-      _itemActivatedHandler : function(id, event){
+      _itemActivatedHandler: function(id, event) {
          var menuItem = this.getItemInstance(id);
          if (!(menuItem.getContainer().hasClass('controls-Menu__hasChild'))) {
             for (var j in this._subMenus) {
@@ -199,16 +209,14 @@ define('SBIS3.CONTROLS/Menu', [
          this._notify('onMenuItemActivate', id, event);
       },
 
-      _getTargetContainer : function(item) {
+      _getTargetContainer: function(item) {
          if (!this._options.parentProperty) {
             return this._getItemsContainer();
-         }
-         else {
+         } else {
             var parId = item.get(this._options.parentProperty);
             if (parId === null || parId === undefined) {
                return this._getItemsContainer();
-            }
-            else {
+            } else {
                if (!this._subContainers[parId]) {
                   this._subContainers[parId] = $('<div class="controls-Menu__submenu" data-parId="' + parId + '"></div>').hide();
                   this._subContainers[parId].parentCtrl = this;
@@ -220,17 +228,18 @@ define('SBIS3.CONTROLS/Menu', [
          }
       },
 
-      _getItemsContainer: function () {
+      _getItemsContainer: function() {
          return $('.controls-Menu__itemsContainer', this._container);
       },
    
-      _drawItems : function() {
+      _drawItems: function() {
          this.destroySubObjects();
          this._checkIcons();
          this._needShowToggleButton = false;
          Menu.superclass._drawItems.apply(this, arguments);
          this._checkAdditionalItems();
       },
+
       //TODO: Придрот для выпуска 3.7.3
       //Обходим все дерево для пунктов и проверяем наличие иконки у хотя бы одного в каждом меню
       //При наличии таковой делаем всем пунктам в этом меню фэйковую иконку для их сдвига.
@@ -258,9 +267,9 @@ define('SBIS3.CONTROLS/Menu', [
             if (icon) {
                pid = item.get(parentProperty);
                if (!parents.hasOwnProperty(pid)) {
-                  iconSizes.forEach(function(size){
-                     if(icon.indexOf(size) !== -1){
-                         iconSize = size;
+                  iconSizes.forEach(function(size) {
+                     if (icon.indexOf(size) !== -1) {
+                        iconSize = size;
                      }
                   });
                   parents[pid] = [pid, iconSize];
@@ -282,14 +291,14 @@ define('SBIS3.CONTROLS/Menu', [
          }
       },
 
-      _checkAdditionalItems: function () {
-          if(this._options.additionalProperty){
-              this._toggleAdditionalButton = this.getChildControlByName('toggleAdditionalItems');
-              this._toggleAdditionalButton[this._needShowToggleButton ? 'show' : 'hide']();
-          }
+      _checkAdditionalItems: function() {
+         if (this._options.additionalProperty) {
+            this._toggleAdditionalButton = this.getChildControlByName('toggleAdditionalItems');
+            this._toggleAdditionalButton[this._needShowToggleButton ? 'show' : 'hide']();
+         }
       },
 
-      _drawItemsCallback : function() {
+      _drawItemsCallback: function() {
          var
             menuItems = this.getItemsInstances(),
             self = this;
@@ -309,7 +318,7 @@ define('SBIS3.CONTROLS/Menu', [
 
          for (i in instances) {
             if (instances.hasOwnProperty(i)) {
-               instances[i].getContainer().hover(function(e){
+               instances[i].getContainer().hover(function(e) {
                   var
                      isFirstLevel = false,
                      id = $(this).attr('data-id'),
@@ -321,8 +330,7 @@ define('SBIS3.CONTROLS/Menu', [
                   }
                   if (parId) {
                      parent = self._subMenus[parId];
-                  }
-                  else {
+                  } else {
                      parent = self;
                      isFirstLevel = true;
                   }
@@ -332,6 +340,7 @@ define('SBIS3.CONTROLS/Menu', [
                   if (self._subContainers[id]) {
                      if (!self._subMenus[id]) {
                         self._subMenus[id] = self._createSubMenu(this, parent, isFirstLevel, item);
+
                         // Предотвращаем всплытие focus и mousedown с контейнера меню, т.к. это приводит к потере фокуса
                         self._subMenus[id]._container.on('mousedown focus', self._blockFocusEvents);
                         self._subContainers[id].show();
@@ -340,14 +349,14 @@ define('SBIS3.CONTROLS/Menu', [
                      mySubmenu = self._subMenus[id];
                      mySubmenu.show();
                   }
-               })
+               });
             }
          }
          Menu.superclass._drawItemsCallback.apply(this, arguments);
       },
-      _createSubMenu : function(target, parent, isFirstLevel, item) {
+      _createSubMenu: function(target, parent, isFirstLevel, item) {
          var config = this._getSubMenuConfig(isFirstLevel, item),
-             subMenu;
+            subMenu;
 
          target = $(target);
          config.element = $('<div class="controls-Menu__SubMenuPopup ' + this.getClassName() + '"></div>');
@@ -361,33 +370,33 @@ define('SBIS3.CONTROLS/Menu', [
          return subMenu;
       },
 
-      _getSubMenuConfig : function(isFirstLevel, item) {
+      _getSubMenuConfig: function(isFirstLevel, item) {
          var config =  {
-            corner : 'tr',
-            verticalAlign : {
-               side : 'top'
+            corner: 'tr',
+            verticalAlign: {
+               side: 'top'
             },
-            horizontalAlign : {  
-               side : 'left'
+            horizontalAlign: {  
+               side: 'left'
             },
             allowOverlapTarget: true,
             handlers: {
-               'onShow': function(){
+               'onShow': function() {
                   this._notify('onNodeExpand', this._options.item.getId());
                },
-               'onClose': function(){
+               'onClose': function() {
                   this._notify('onNodeCollapse', this._options.item.getId());
                }
             },
             closeByExternalOver: true,
-            targetPart : true,
+            targetPart: true,
             item: item
          };
          config = this._onMenuConfig(config, isFirstLevel, item);
          return config;
       },
 
-      _onMenuConfig : function(config, isFirstLevel, item) {
+      _onMenuConfig: function(config, isFirstLevel, item) {
          var direction;
          if (isFirstLevel) {
             direction = 'down';
@@ -421,17 +430,17 @@ define('SBIS3.CONTROLS/Menu', [
          которым требуется расчитывать ширину, поэтому запускаем расчёты только для дочерних */
       _setVisibility: function(show) {
          Menu.superclass._setVisibility.apply(this, arguments);
-         if(show) {
+         if (show) {
             this._resizeChilds();
          }
       },
 
-      destroy : function(){
+      destroy: function() {
          Menu.superclass.destroy.call(this);
          this.destroySubObjects();
       },
 
-      destroySubObjects : function() {
+      destroySubObjects: function() {
          this._subMenus = {};
          this._subContainers = {};
          for (var j in this._subMenus) {

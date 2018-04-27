@@ -1,7 +1,7 @@
 @import (reference) "../../themes/header";
 
 .max-width_BackButton_caption(@back-arrow-width, @back-button-arrow-padding-right) {
-   .ws-is-mobile-safari &, .ws-is-desktop-safari &, .ws-is-mobile-chrome-ios & {
+   .ws-is-mobile-safari &, .ws-is-desktop-safari &, .ws-is-mobile-chrome-ios &, .ws-is-webkit & {
       /**
        * 1px прибавляем для компенсирования погрешности расчетов calc.
        * В safari значение calc(...) округляется в меньшую сторону, из-за чего всегда происходит обрезание текста.
@@ -9,6 +9,13 @@
       max-width: calc(~"100% - @{back-arrow-width} - @{back-button-arrow-padding-right} + 1px");
    }
    max-width: calc(~"100% - @{back-arrow-width} - @{back-button-arrow-padding-right}");
+}
+
+.ws-is-ie10, .ws-is-ie11 {
+   .controls-BackButton .controls-BackButton__caption_size_h2 {
+      position: relative;
+      top: -1px;
+   }
 }
 
 .controls-BackButton {
