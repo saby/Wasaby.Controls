@@ -1,11 +1,13 @@
 define('Controls/Path', [
    'Core/Control',
+   'Controls/Utils/BreadCrumbsUtil',
    'Controls/List/resources/utils/ItemsUtil',
    'tmpl!Controls/Path/Path',
    'tmpl!Controls/Button/BackButton/Back',
    'css!Controls/Path/Path'
 ], function(
    Control,
+   BreadCrumbsUtil,
    ItemsUtil,
    template,
    backButtonTemplate
@@ -13,25 +15,6 @@ define('Controls/Path', [
    'use strict';
 
    var _private = {
-      getWidth: function(element) {
-         //TODO: копипаста из BreadCrumbsController
-         var
-            measurer = document.createElement('div'),
-            width;
-         measurer.classList.add('controls-BreadCrumbsV__measurer');
-         
-         measurer.innerHTML = element;
-         document.body.appendChild(measurer);
-         width = measurer.clientWidth;
-         document.body.removeChild(measurer);
-         return width;
-      },
-
-      shouldRedraw: function(currentItems, newItems, oldWidth, availableWidth) {
-         //TODO: копипаста из BreadCrumbsController
-         return currentItems !== newItems || oldWidth !== availableWidth;
-      },
-
       calculateClasses: function(self, maxCrumbsWidth, backButtonWidth, availableWidth) {
          if (maxCrumbsWidth < availableWidth / 2 && backButtonWidth < availableWidth / 2) {
             self._backButtonClass = '';
@@ -49,19 +32,27 @@ define('Controls/Path', [
       },
       
       calculateItems: function(self, items) {
-         var backButtonWidth;
+         var
+            backButtonWidth,
+            availableWidth,
+            breadCrumbsItems;
 
          self._backButtonCaption = ItemsUtil.getPropertyValue(items[0], self._options.displayProperty || 'title');
          if (items.length > 1) {
-            self._breadCrumbsItems = items.slice(1);
-            backButtonWidth = _private.getWidth(backButtonTemplate({
+            breadCrumbsItems = items.slice(1);
+            backButtonWidth = BreadCrumbsUtil.getWidth(backButtonTemplate({
                _options: {
                   caption: self._backButtonCaption,
                   style: 'default',
                   size: 'm'
                }
             }));
-            _private.calculateClasses(self, self._children.breadCrumbs.getMaxCrumbsWidth(self._breadCrumbsItems), backButtonWidth, self._container.clientWidth);
+            _private.calculateClasses(self, BreadCrumbsUtil.getMaxCrumbsWidth(breadCrumbsItems), backButtonWidth, self._container.clientWidth);
+
+            availableWidth = self._breadCrumbsClass === 'controls-Path__breadCrumbs_half' ? self._container.clientWidth / 2 : self._container.clientWidth;
+            BreadCrumbsUtil.calculateBreadCrumbsToDraw(self,  breadCrumbsItems, BreadCrumbsUtil.getItemsSizes(breadCrumbsItems), availableWidth);
+         } else {
+            self._visibleItems = [];
          }
       }
    };
@@ -69,12 +60,19 @@ define('Controls/Path', [
    var Path = Control.extend({
       _template: template,
       _backButtonCaption: '',
-      _breadCrumbsItems: [],
+      _visibleItems: [],
       _backButtonClass: '',
       _breadCrumbsClass: '',
       _oldWidth: 0,
 
+      _beforeMount: function() {
+         //Эта функция передаётся по ссылке в Opener, так что нужно биндить this, чтобы не потерять его
+         this._onResult = this._onResult.bind(this);
+      },
+
       _afterMount: function() {
+         BreadCrumbsUtil.calculateConstants();
+
          this._oldWidth = this._container.clientWidth;
          if (this._options.items && this._options.items.length > 0) {
             _private.calculateItems(this, this._options.items);
@@ -83,26 +81,26 @@ define('Controls/Path', [
       },
 
       _beforeUpdate: function(newOptions) {
-         if (this._options.items !== newOptions.items) {
+         if (BreadCrumbsUtil.shouldRedraw(this._options.items, newOptions.items, this._oldWidth, this._container.clientWidth - BreadCrumbsUtil.HOME_WIDTH)) {
+            this._oldWidth = this._container.clientWidth;
             _private.calculateItems(this, newOptions.items);
          }
       },
 
-      _onItemClick: function(e, item) {
-         this._notify('itemClick', [item]);
+      _onResult: function(args) {
+         BreadCrumbsUtil.onResult(this, args);
+      },
+
+      _onItemClick: function(e, originalEvent, item, isDots) {
+         BreadCrumbsUtil.onItemClick(this, originalEvent, item, isDots);
+      },
+
+      _onBackButtonClick: function() {
+         BreadCrumbsUtil.onItemClick(this, {}, this._options.items[0]);
       },
 
       _onResize: function() {
-         var backButtonWidth;
-         backButtonWidth = _private.getWidth(backButtonTemplate({
-            _options: {
-               caption: ItemsUtil.getPropertyValue(this._options.items[0], this._options.displayProperty || 'title'),
-               style: 'default',
-               size: 'm'
-            }
-         }));
-         _private.calculateClasses(this, this._children.breadCrumbs.getMaxCrumbsWidth(this._breadCrumbsItems), backButtonWidth, this._container.clientWidth);
-         this._oldWidth = this._container.clientWidth;
+         this._children.menuOpener.close();
       }
    });
    return Path;

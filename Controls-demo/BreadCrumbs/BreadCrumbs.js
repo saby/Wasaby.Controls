@@ -41,7 +41,7 @@ define('Controls-demo/BreadCrumbs/BreadCrumbs', [
       items: data,
       items1: [data[0]],
       items2: [data[0], data[5]],
-      items3: [{id: 5, title: 'Recer'}, data[5]],
+      items3: [{id: 5, title: 'Recor'}, data[5]],
 
       _onItemClick: function(e, item) {
          console.log(item);

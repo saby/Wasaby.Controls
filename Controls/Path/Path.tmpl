@@ -1,11 +1,24 @@
 <div class="controls-Path">
-    <Controls.Button.Back attr:class="controls-Path__backButton {{_backButtonClass}}"
-                          name="backButton"
-                          caption="{{_backButtonCaption}}" />
-    <Controls.BreadCrumbsController attr:class="controls-Path__breadCrumbs {{_breadCrumbsClass}}"
-                                    name="breadCrumbs"
-                                    items="{{_breadCrumbsItems}}"
-                                    on:itemClick="_onItemClick()" />
+    <ws:if data="{{_options.items}}">
+        <Controls.Button.Back attr:class="controls-Path__backButton {{_backButtonClass}}"
+                              caption="{{_backButtonCaption}}"
+                              on:click="_onBackButtonClick()"/>
+        <Controls.BreadCrumbs attr:class="controls-Path__breadCrumbs {{_breadCrumbsClass}}"
+                              items="{{_visibleItems}}"
+                              on:itemClick="_onItemClick()" />
+    </ws:if>
+
+    <Controls.Dropdown.Opener
+            name="menuOpener"
+            keyProperty="id"
+            className="controls-BreadCrumbsController__menu">
+        <ws:popupOptions>
+            <ws:corner vertical="top"
+                       horizontal="right"/>
+            <ws:horizontalAlign side="left"/>
+            <ws:eventHandlers onResult="{{_onResult}}"/>
+        </ws:popupOptions>
+    </Controls.Dropdown.Opener>
 
     <Controls.Event.Emitter event="resize"
                             on:resize="_onResize()"/>
