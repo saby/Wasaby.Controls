@@ -749,6 +749,23 @@ define(
                      position: 2
                   },
                   inputType: 'insert'
+               },
+
+               {
+                  testName: 'Insert first symbol in decimal part: 123.0 => 123.4',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '123.',
+                     insert: '4',
+                     after: '0',
+                     delete: ''
+                  },
+                  result: {
+                     value: '123.4',
+                     position: 5
+                  },
+                  inputType: 'insert'
                }
             ];
 

@@ -158,6 +158,11 @@ define('Controls/Input/Number/InputProcessor',
                      }
                   }
 
+                  //If we insert first symbol in decimal part when it already contains '0', then we should erase '0'
+                  if (splitValue.after === '0' && splitValue.before[splitValue.before.length - 1] === '.') {
+                     splitValue.after = '';
+                  }
+
                   //If we have exceeded the maximum number in integers part, then we should move cursor after dot
                   if (!_private.validators.maxIntegersLength(_private.getClearValue(splitValue), options.integersLength)) {
                      if (splitValue.after[0] === '.') {
