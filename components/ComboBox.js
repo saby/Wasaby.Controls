@@ -593,7 +593,12 @@ define('SBIS3.CONTROLS/ComboBox', [
             targetPart: true,
             activableByClick: false,
             closeOnTargetMove: true,
-            template : this._dotTplFnPicker
+            template : this._dotTplFnPicker,
+            handlers: {
+               onClose: function() {
+                  this._revertArrow(false);
+               }.bind(this)
+            }
          };
       },
 
@@ -869,7 +874,6 @@ define('SBIS3.CONTROLS/ComboBox', [
          if (this._picker) {
             $('.controls-ComboBox__item', this._picker.getContainer()).unbind();
          }
-         this._revertArrow(false);
          ComboBox.superclass.hidePicker.apply(this, arguments);
       },
 
