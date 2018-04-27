@@ -50,7 +50,7 @@ define('Controls/Path', [
             _private.calculateClasses(self, BreadCrumbsUtil.getMaxCrumbsWidth(breadCrumbsItems), backButtonWidth, self._container.clientWidth);
 
             availableWidth = self._breadCrumbsClass === 'controls-Path__breadCrumbs_half' ? self._container.clientWidth / 2 : self._container.clientWidth;
-            BreadCrumbsUtil.calculateBreadCrumbsToDraw(self,  breadCrumbsItems, BreadCrumbsUtil.getItemsSizes(breadCrumbsItems), availableWidth);
+            BreadCrumbsUtil.calculateBreadCrumbsToDraw(self,  breadCrumbsItems, availableWidth);
          } else {
             self._visibleItems = [];
          }
@@ -71,8 +71,6 @@ define('Controls/Path', [
       },
 
       _afterMount: function() {
-         BreadCrumbsUtil.calculateConstants();
-
          this._oldWidth = this._container.clientWidth;
          if (this._options.items && this._options.items.length > 0) {
             _private.calculateItems(this, this._options.items);
@@ -81,7 +79,7 @@ define('Controls/Path', [
       },
 
       _beforeUpdate: function(newOptions) {
-         if (BreadCrumbsUtil.shouldRedraw(this._options.items, newOptions.items, this._oldWidth, this._container.clientWidth - BreadCrumbsUtil.HOME_WIDTH)) {
+         if (BreadCrumbsUtil.shouldRedraw(this._options.items, newOptions.items, this._oldWidth, this._container.clientWidth)) {
             this._oldWidth = this._container.clientWidth;
             _private.calculateItems(this, newOptions.items);
          }
@@ -96,7 +94,7 @@ define('Controls/Path', [
       },
 
       _onBackButtonClick: function() {
-         BreadCrumbsUtil.onItemClick(this, {}, this._options.items[0]);
+         this._notify('itemClick', [this._options.items[0]]);
       },
 
       _onResize: function() {

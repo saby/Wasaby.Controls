@@ -22,20 +22,18 @@ define('Controls/BreadCrumbsController', [
       },
 
       _afterMount: function() {
-         BreadCrumbsUtil.calculateConstants();
-
          //TODO: нужно приделать костыли для браузеров без preload, но сейчас это сделать не получится, т.к. демки в IE не взлетают
          if (this._options.items && this._options.items.length > 0) {
-            this._oldWidth = this._container.clientWidth - BreadCrumbsUtil.HOME_WIDTH;
-            BreadCrumbsUtil.calculateBreadCrumbsToDraw(this,  this._options.items, BreadCrumbsUtil.getItemsSizes(this._options.items), this._oldWidth);
+            this._oldWidth = this._container.clientWidth;
+            BreadCrumbsUtil.calculateBreadCrumbsToDraw(this,  this._options.items, this._oldWidth);
             this._forceUpdate();
          }
       },
 
       _beforeUpdate: function(newOptions) {
-         if (BreadCrumbsUtil.shouldRedraw(this._options.items, newOptions.items, this._oldWidth, this._container.clientWidth - BreadCrumbsUtil.HOME_WIDTH)) {
-            this._oldWidth = this._container.clientWidth - BreadCrumbsUtil.HOME_WIDTH;
-            BreadCrumbsUtil.calculateBreadCrumbsToDraw(this,  newOptions.items, BreadCrumbsUtil.getItemsSizes(newOptions.items), this._container.clientWidth - BreadCrumbsUtil.HOME_WIDTH);
+         if (BreadCrumbsUtil.shouldRedraw(this._options.items, newOptions.items, this._oldWidth, this._container.clientWidth)) {
+            this._oldWidth = this._container.clientWidth;
+            BreadCrumbsUtil.calculateBreadCrumbsToDraw(this,  newOptions.items, this._container.clientWidth);
          }
       },
 
@@ -48,7 +46,6 @@ define('Controls/BreadCrumbsController', [
       },
 
       _onResize: function() {
-         //Здесь только скрываю меню, т.к. перерасчет крошек запустится в beforeUpdate
          this._children.menuOpener.close();
       }
    });

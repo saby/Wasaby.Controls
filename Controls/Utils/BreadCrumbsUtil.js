@@ -14,12 +14,7 @@ define('Controls/Utils/BreadCrumbsUtil', [
 ) {
    'use strict';
 
-   return {
-      ARROW_WIDTH: 0,
-      HOME_WIDTH: 0,
-      BREAD_CRUMB_MIN_WIDTH: 0,
-      DOTS_WIDTH: 0,
-
+   var _private = {
       getItemData: function(index, items, withOverflow) {
          var
             currentItem = items[index],
@@ -40,8 +35,8 @@ define('Controls/Utils/BreadCrumbsUtil', [
          measurer.innerHTML = itemsTemplate({
             itemTemplate: itemTemplate,
             items: items.map(function(item, index) {
-               return this.getItemData(index, items);
-            }.bind(this))
+               return _private.getItemData(index, items);
+            })
          });
          measurer.classList.add('controls-BreadCrumbsV__measurer');
          document.body.appendChild(measurer);
@@ -67,37 +62,60 @@ define('Controls/Utils/BreadCrumbsUtil', [
       },
 
       canShrink: function(itemWidth, currentWidth, availableWidth) {
-         return itemWidth > this.BREAD_CRUMB_MIN_WIDTH && currentWidth - itemWidth + this.BREAD_CRUMB_MIN_WIDTH < availableWidth;
+         return itemWidth > BREAD_CRUMB_MIN_WIDTH && currentWidth - itemWidth + BREAD_CRUMB_MIN_WIDTH < availableWidth;
+      }
+   };
+
+   var
+      ARROW_WIDTH = window && _private.getWidth('<span class="controls-BreadCrumbsV__arrow icon-size icon-DayForward icon-primary action-hover"></span>'),
+      HOME_WIDTH = window && _private.getWidth('<div class="controls-BreadCrumbsV__home icon-size icon-Home3 icon-primary"></div>'),
+      BREAD_CRUMB_MIN_WIDTH = window && _private.getWidth('<div class="controls-BreadCrumbsV__title_min"></div>'),
+      DOTS_WIDTH = window && _private.getWidth(itemTemplate({
+         itemData: {
+            getPropValue: ItemsUtil.getPropertyValue,
+            item: {
+               title: '...'
+            },
+            isDots: true,
+            hasArrow: true
+         }
+      }));
+
+   return {
+      getWidth: function(element) {
+         return _private.getWidth(element);
       },
 
-      calculateBreadCrumbsToDraw: function(self, items, itemsSizes, availableWidth) {
+      calculateBreadCrumbsToDraw: function(self, items, availableWidth) {
          var
+            itemsSizes = _private.getItemsSizes(items),
             length = itemsSizes.length,
             currentWidth,
             shrinkedItemIndex;
          self._visibleItems = [];
+         availableWidth -= HOME_WIDTH;
 
          currentWidth = itemsSizes.reduce(function(acc, width) {
             return acc + width;
-         }, 0) + this.HOME_WIDTH;
+         }, 0) + HOME_WIDTH;
 
          if (currentWidth > availableWidth) {
             if (length > 2) {
                //Сначала пробуем замылить предпоследний элемент
-               if (this.canShrink(itemsSizes[length - 2], currentWidth, availableWidth)) {
+               if (_private.canShrink(itemsSizes[length - 2], currentWidth, availableWidth)) {
                   for (var j = 0; j < length; j++) {
-                     self._visibleItems.push(this.getItemData(j, items, j === length - 2));
+                     self._visibleItems.push(_private.getItemData(j, items, j === length - 2));
                   }
                } else {
                   //Если замылить не получилось, то добавляем точки
-                  currentWidth += this.DOTS_WIDTH;
+                  currentWidth += DOTS_WIDTH;
 
                   for (var i = length - 2; i > 0; i--) {
                      if (currentWidth <= availableWidth) {
                         break;
-                     } else if (this.canShrink(itemsSizes[i], currentWidth, availableWidth)) {
+                     } else if (_private.canShrink(itemsSizes[i], currentWidth, availableWidth)) {
                         shrinkedItemIndex = i;
-                        currentWidth -= itemsSizes[i] - this.BREAD_CRUMB_MIN_WIDTH;
+                        currentWidth -= itemsSizes[i] - BREAD_CRUMB_MIN_WIDTH;
                         break;
                      } else {
                         currentWidth -= itemsSizes[i];
@@ -105,12 +123,12 @@ define('Controls/Utils/BreadCrumbsUtil', [
                   }
 
                   //Если осталось всего 2 крошки, но места все равно не хватает, то пытаемся обрезать первый элемент.
-                  if (i === 0 && currentWidth > availableWidth && itemsSizes[0] - this.ARROW_WIDTH > this.BREAD_CRUMB_MIN_WIDTH) {
+                  if (i === 0 && currentWidth > availableWidth && itemsSizes[0] - ARROW_WIDTH > BREAD_CRUMB_MIN_WIDTH) {
                      shrinkedItemIndex = 0;
                   }
 
                   for (var j = 0; j <= i; j++) {
-                     self._visibleItems.push(this.getItemData(j, items, j === shrinkedItemIndex));
+                     self._visibleItems.push(_private.getItemData(j, items, j === shrinkedItemIndex));
                   }
 
                   self._visibleItems.push({
@@ -122,43 +140,27 @@ define('Controls/Utils/BreadCrumbsUtil', [
                      hasArrow: true
                   });
 
-                  self._visibleItems.push(this.getItemData(length - 1, items, i === 0 && currentWidth > availableWidth && itemsSizes[length - 1] - this.ARROW_WIDTH > this.BREAD_CRUMB_MIN_WIDTH));
+                  self._visibleItems.push(_private.getItemData(length - 1, items, i === 0 && currentWidth > availableWidth && itemsSizes[length - 1] - ARROW_WIDTH > BREAD_CRUMB_MIN_WIDTH));
                }
             } else {
                self._visibleItems = items.map(function(item, index, items) {
                   var
                      hasArrow = index !== 1,
-                     withOverflow = itemsSizes[index] - (hasArrow ? this.ARROW_WIDTH : 0) > this.BREAD_CRUMB_MIN_WIDTH;
-                  return this.getItemData(index, items, withOverflow);
-               }.bind(this));
+                     withOverflow = itemsSizes[index] - (hasArrow ? ARROW_WIDTH : 0) > BREAD_CRUMB_MIN_WIDTH;
+                  return _private.getItemData(index, items, withOverflow);
+               });
             }
          } else {
             self._visibleItems = items.map(function(item, index, items) {
-               return this.getItemData(index, items);
-            }.bind(this));
+               return _private.getItemData(index, items);
+            });
          }
       },
 
-      calculateConstants: function() {
-         this.ARROW_WIDTH = this.getWidth('<span class="controls-BreadCrumbsV__arrow icon-size icon-DayForward icon-primary action-hover"></span>');
-         this.HOME_WIDTH = this.getWidth('<div class="controls-BreadCrumbsV__home icon-size icon-Home3 icon-primary"></div>');
-         this.BREAD_CRUMB_MIN_WIDTH = this.getWidth('<div class="controls-BreadCrumbsV__title_min"></div>');
-         this.DOTS_WIDTH = this.getWidth(itemTemplate({
-            itemData: {
-               getPropValue: ItemsUtil.getPropertyValue,
-               item: {
-                  title: '...'
-               },
-               isDots: true,
-               hasArrow: true
-            }
-         }));
-      },
-
       getMaxCrumbsWidth: function(items) {
-         return this.getItemsSizes(items, itemsTemplate, itemTemplate).reduce(function(acc, width) {
+         return _private.getItemsSizes(items, itemsTemplate, itemTemplate).reduce(function(acc, width) {
             return acc + width;
-         }, 0) + this.HOME_WIDTH;
+         }, 0) + HOME_WIDTH;
       },
 
       shouldRedraw: function(currentItems, newItems, oldWidth, availableWidth) {
@@ -194,6 +196,7 @@ define('Controls/Utils/BreadCrumbsUtil', [
             event = args && args.event;
 
          //todo: Особая логика событий попапа, исправить как будут нормально приходить аргументы
+         //https://online.sbis.ru/opendoc.html?guid=0ca4b2db-b359-4e7b-aac6-97e061b953bf
          if (actionName === 'itemClick') {
             var item = args.data && args.data[0] && args.data[0].getRawData();
             self._onItemClick(event, {}, item);
