@@ -92,6 +92,7 @@ define('Controls/Dropdown/Opener',
          setPopupOptions: function(self, config) {
             config.className = self._options.className || 'controls-DropdownList__margin';
             config.template = 'Controls/Dropdown/resources/template/DropdownList';
+            config.closeByExternalClick = true;
          }
       };
 
