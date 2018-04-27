@@ -24,7 +24,7 @@ define('SBIS3.CONTROLS/Filter/FavoriteEditDialog',
       var normalizeItems = function(filterItems, idField, captionField, textValueField) {
          var items = [];
          filterItems.forEach(function (item) {
-            if (!isEqual(item.value, item.resetValue) && item[textValueField] && item.editable !== false) {
+            if (item.hasOwnProperty('value') && !isEqual(item.value, item.resetValue) && item[textValueField] && item.editable !== false) {
                items.push({
                   id: item[idField],
                   checkBoxCaption: item[captionField],

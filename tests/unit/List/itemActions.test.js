@@ -197,7 +197,7 @@ define([
             itemActionsOpener: {
                open: function(args) {
                   assert.isFalse(args.target);
-                  assert.isTrue(cInstance.instanceOfModule(args.componentOptions.items, 'WS.Data/Collection/RecordSet'));
+                  assert.isTrue(cInstance.instanceOfModule(args.templateOptions.items, 'WS.Data/Collection/RecordSet'));
                }
             }
          };
@@ -237,7 +237,7 @@ define([
             itemActionsOpener: {
                open: function(args) {
                   assert.equal(target, args.target);
-                  assert.isTrue(cInstance.instanceOfModule(args.componentOptions.items, 'WS.Data/Collection/RecordSet'));
+                  assert.isTrue(cInstance.instanceOfModule(args.templateOptions.items, 'WS.Data/Collection/RecordSet'));
                }
             }
          };

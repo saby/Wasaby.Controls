@@ -1,10 +1,10 @@
 define(
    [
-      'Controls/Dropdown/resources/MenuViewModel',
+      'Controls/Dropdown/resources/DropdownViewModel',
       'WS.Data/Collection/RecordSet'
    ],
-   (MenuViewModel, RecordSet) => {
-      describe('MenuViewModel', () => {
+   (DropdownViewModel, RecordSet) => {
+      describe('DropdownViewModel', () => {
          let rs = new RecordSet({
             idProperty: 'id',
             rawData: [
@@ -60,8 +60,8 @@ define(
             rootKey: null
          };
 
-         let viewModel = new MenuViewModel(config);
-         let viewModel2 = new MenuViewModel(config);
+         let viewModel = new DropdownViewModel(config);
+         let viewModel2 = new DropdownViewModel(config);
 
          it('check hier items collection', () => {
             assert.equal(viewModel._itemsModel._options.items.length, 3);

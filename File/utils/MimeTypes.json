@@ -58,7 +58,7 @@
    "pdf": "application/pdf",
    "xhtml": "application/xhtml+xml",
 
-   "zip": "application/x-zip-compressed",
+   "zip": "application/x-zip-compressed, application/zip",
    "rar": "application/x-rar-compressed",
    "cmd": "application/cmd",
    "bat": "application/x-msdos-program",
