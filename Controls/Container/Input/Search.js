@@ -11,7 +11,7 @@ define('Controls/Container/Input/Search',
        * Notify bubbling event "search".
        * Should be located inside Controls/Container/Search.
        * @class Controls/Container/Input/Search
-       * @extends Controls/Control
+       * @extends Core/Control
        * @author Герасимов Александр
        * @control
        * @public

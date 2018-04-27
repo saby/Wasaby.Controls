@@ -67,7 +67,7 @@ define('Controls/Tabs/Buttons', [
    /**
      * Компонент - корешки закладок
      * @class Controls/Tabs/Buttons
-     * @extends Controls/Control
+     * @extends Core/Control
      * @mixes Controls/interface/ISource
      * @mixes Controls/interface/ISingleSelectable
      * @control
