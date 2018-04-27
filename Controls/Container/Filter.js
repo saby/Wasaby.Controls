@@ -6,10 +6,15 @@ define('Controls/Container/Filter',
       'Core/Deferred',
       'WS.Data/Chain',
       'WS.Data/Utils',
-      'Core/helpers/Object/isEqual'
+      'Core/helpers/Object/isEqual',
+      'Controls/History/FilterSource',
+      'Controls/History/Service',
+      'WS.Data/Source/Memory',
+      'Controls/Controllers/SourceController',
+      'Core/helpers/Object/isEmpty'
    ],
    
-   function(Control, template, FilterContextField, Deferred, Chain, Utils, isEqual) {
+   function(Control, template, FilterContextField, Deferred, Chain, Utils, isEqual, HistorySource, HistoryService, Memory, SourceController, isEmptyObject) {
       
       'use strict';
       
@@ -33,15 +38,44 @@ define('Controls/Container/Filter',
             
             return result;
          },
+
+         getHistorySource: function(self, hId) {
+            if (!self._historySource) {
+               self._historySource = new HistorySource({
+                  originSource: new Memory({
+                     idProperty: 'id',
+                     data: []
+                  }),
+                  historySource: new HistoryService({
+                     historyId: hId,
+                     pinned: true,
+                     dataLoaded: true
+                  })
+               });
+            }
+            return self._historySource;
+         },
          
          getHistoryItems: function(self, id) {
-            //TODO сделать, как будет готов сервис истории
-            var items;
-            
-            if (id) {
-               items = [];
+            if (!id) {
+               return Deferred.success([]);
             }
-            return Deferred.success(items);
+            var that = this;
+            var recent, lastFilter;
+
+            if (!self._sourceController) {
+               self._sourceController = new SourceController({
+                  source: this.getHistorySource(self, id)
+               });
+            }
+
+            return self._sourceController.load({$_history: true}).addCallback(function() {
+               recent = that.getHistorySource(self, id).getRecent();
+               if (recent.getCount()) {
+                  lastFilter = recent.at(0);
+                  return that.getHistorySource(self, id).getDataObject(lastFilter.get('ObjectData'));
+               }
+            });
          },
    
          getFilterByItems: function(filterButtonItems, fastFilterItems) {
@@ -82,12 +116,12 @@ define('Controls/Container/Filter',
                   if (getPropValue(item, 'id') === getPropValue(historyItem, 'id')) {
                      var value = getPropValue(historyItem, 'value');
                      var textValue = getPropValue(historyItem, 'textValue');
-                     
-                     if (value !== undefined) {
+
+                     if (value !== undefined && value !== getPropValue(historyItem, 'resetValue')) {
                         setPropValue(item, 'value', value);
                      }
-                     
-                     if (textValue !== undefined) {
+
+                     if (textValue !== undefined && item.hasOwnProperty('textValue')) {
                         setPropValue(item, 'textValue', textValue);
                      }
                   }
@@ -140,8 +174,18 @@ define('Controls/Container/Filter',
             
             return itemsDef;
          },
-         
-         _changeFilterHandler: function(event, filter) {
+
+         _itemsChanged: function(event, items) {
+            var filter = _private.getFilterByItems(items);
+            var meta;
+
+            if (this._options.historyId) {
+               meta = {
+                  '$_addFromData': true
+               };
+               _private.getHistorySource(this).update(isEmptyObject(filter) ? filter : items, meta);
+            }
+            _private.resolveItems(this, this._options.historyId, this._options.filterButtonSource, this._options.fastFilterSource);
             this._filter = filter;
          },
    
@@ -150,7 +194,8 @@ define('Controls/Container/Filter',
                filterLayoutField: new FilterContextField({
                   filter: this._filter,
                   filterButtonItems: this._filterButtonItems,
-                  fastFilterItems: this._fastFilterItems
+                  fastFilterItems: this._fastFilterItems,
+                  historyId: this._options.historyId
                })
             };
          }

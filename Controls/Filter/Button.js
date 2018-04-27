@@ -8,10 +8,11 @@ define('Controls/Filter/Button',
       'Core/moduleStubs',
       'WS.Data/Chain',
       'WS.Data/Utils',
+      'Controls/Container/Filter/FilterContextField',
       'css!Controls/Filter/Button/Button'
    ],
 
-   function(Control, template, moduleStubs, Chain, Utils) {
+   function(Control, template, moduleStubs, Chain, Utils, FilterContextField) {
 
       /**
        * @class Controls/Filter/Button
@@ -61,21 +62,28 @@ define('Controls/Filter/Button',
          _template: template,
          _oldPanelOpener: null,
          _text: '',
+         _historyId: null,
 
          constructor: function(config) {
             FilterButton.superclass.constructor.apply(this, arguments);
             this._onFilterChanged = this._onFilterChanged.bind(this);
          },
 
-         _beforeUpdate: function(options) {
+         _beforeUpdate: function(options, context) {
             if (this._options.items !== options.items) {
                _private.resolveItems(this, options.items);
             }
+            if (this._historyId !== context.filterLayoutField.historyId) {
+               this._historyId = context.filterLayoutField.historyId;
+            }
          },
 
-         _beforeMount: function(options) {
+         _beforeMount: function(options, context) {
             if (options.items) {
                _private.resolveItems(this, options.items);
+            }
+            if (context.filterLayoutField.historyId) {
+               this._historyId = context.filterLayoutField.historyId;
             }
          },
 
@@ -100,7 +108,8 @@ define('Controls/Filter/Button',
                   this._children.filterStickyOpener.open({
                      templateOptions: {
                         items: this._options.items,
-                        itemTemplate: this._options.itemTemplate
+                        itemTemplate: this._options.itemTemplate,
+                        historyId: this._historyId
                      },
                      template: 'Controls/Filter/Button/Panel',
                      target: this._children.panelTarget
@@ -109,10 +118,17 @@ define('Controls/Filter/Button',
             }
          },
 
-         _onFilterChanged: function(filter) {
-            this._notify('filterChanged', [filter]);
+         _onFilterChanged: function(data) {
+            this._notify('filterChanged', [data.filter]);
+            this._notify('itemsChanged', [data.items]);
          }
       });
+
+      FilterButton.contextTypes = function() {
+         return {
+            filterLayoutField: FilterContextField
+         };
+      };
 
       FilterButton.getDefaultOptions = function() {
          return {

@@ -41,9 +41,10 @@ define('Controls/Container/Filter/Button',
                this._items = context.filterLayoutField.filterButtonItems;
             }
          },
-   
-         _filterChanged: function(event, filter) {
-            this._notify('filterChanged', [filter], {bubbling: true});
+
+         _itemsChanged: function(event, items) {
+            this._items = items;
+            this._notify('itemsChanged', [items], {bubbling: true});
          }
       });
    

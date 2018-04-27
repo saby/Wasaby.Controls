@@ -27,9 +27,9 @@ define('Controls/Filter/Button/Panel', [
    var setPropValue = Utils.setItemPropertyValue.bind(Utils);
 
    var _private = {
-      getFilter: function(self) {
+      getFilter: function(self, items) {
          var filter = {};
-         Chain(self._items).each(function(item) {
+         Chain(items || self._items).each(function(item) {
             if (getPropValue(item, 'value') !== getPropValue(item, 'resetValue')) {
                filter[item.id] = getPropValue(item, 'value');
             }
@@ -64,8 +64,17 @@ define('Controls/Filter/Button/Panel', [
          this._items = clone(this._items);
       },
 
-      _applyFilter: function() {
-         this._notify('sendResult', [_private.getFilter(this)]);
+      _applyHistoryFilter: function(event, items) {
+         var filter = _private.getFilter(this, items);
+         filter['$_history' ] = true;
+         this._applyFilter(event, items);
+      },
+
+      _applyFilter: function(event, items) {
+         this._notify('sendResult', [{
+            filter: _private.getFilter(this),
+            items: items || this._items
+         }]);
          this._notify('close');
       },
 
@@ -73,7 +82,6 @@ define('Controls/Filter/Button/Panel', [
          this._items = clone(this._items);
          Chain(this._items).each(function(item) {
             setPropValue(item, 'value', getPropValue(item, 'resetValue'));
-
          });
          this._isChanged = false;
       },
