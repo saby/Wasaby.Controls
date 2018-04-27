@@ -43,12 +43,12 @@ define([
             module: 'WS.Data/Source/Memory',
             options: {
                data: data,
-               keyProperty: 'id'
+               idProperty: 'id'
             }
          });
 
          assert.isTrue(cInstance.instanceOfModule(resSource, 'WS.Data/Source/Memory'), 'prepareSource doesn\'t returns datasource by config');
-         assert.equal('id', resSource.keyProperty, 'prepareSource doesn\'t returns datasource by config');
+         assert.equal('id', resSource.getIdProperty(), 'prepareSource doesn\'t returns datasource by config');
       });
 
       it('load', function (done) {
