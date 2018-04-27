@@ -308,10 +308,6 @@ define('Controls/List/EditInPlace', [
          if (this._editingItem) {
             switch (e.nativeEvent.keyCode) {
                case 13: //Enter
-                  //По нажатию Enter редактирование не должно завершаться, иначе нельзя будет переносить строки в TextArea
-                  if (!e.nativeEvent.ctrlKey) {
-                     return;
-                  }
                   if (this._options.editingConfig && this._options.editingConfig.singleEdit) {
                      this.commitEdit();
                   } else {
