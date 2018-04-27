@@ -18,7 +18,7 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/
             { id: 5, title: 'Sasha' }];
          listSource = new Memory({
             data: listSourceData,
-            idProperty: 'id'
+            keyProperty: 'id'
          });
          listSearchParam = 'title';
          listOptions = {

@@ -23,16 +23,16 @@ define([
                title : 'Третий'
             }],
             rs = new RecordSet({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: cClone(data)
             }),
             cfg = {
                listModel: new ListViewModel({
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                sourceController: new SourceController({
                   source : new MemorySource({
-                     idProperty: 'id',
+                     keyProperty: 'id',
                      data: cClone(data)
                   })
                })

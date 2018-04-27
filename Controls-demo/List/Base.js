@@ -55,7 +55,7 @@ define('Controls-demo/List/Base', [
          constructor: function() {
             ModuleClass.superclass.constructor.apply(this, arguments);
             this._viewSource = new MemorySource({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: myData
             })
          }

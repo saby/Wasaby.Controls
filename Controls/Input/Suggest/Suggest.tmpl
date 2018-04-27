@@ -34,7 +34,7 @@
         <ws:popupOptions vAlingTopClass="ws-Suggest__popup-vAlignTop" vAlingBottomClass="ws-Suggest__popup-vAlignBottom" template="Controls/Input/resources/SuggestView/SuggestView">
             <ws:corner vertical="bottom"/>
             <ws:verticalAlign side="bottom"/>
-            <ws:templateOptions idProperty="{{_options.idProperty}}"/>
+            <ws:templateOptions keyProperty="{{_options.keyProperty}}"/>
             <ws:eventHandlers onFocusIn="{{_popupFocusIn}}" onFocusOut="{{_popupFocusOut}}" onResult="{{_selectHandler}}" onClose="{{_popupClose}}"/>
         </ws:popupOptions>
     </Controls.Popup.Opener.Sticky>

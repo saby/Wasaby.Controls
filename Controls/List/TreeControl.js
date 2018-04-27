@@ -12,7 +12,7 @@ define('Controls/List/TreeControl', [
          var
             filter = cClone(self._filter || {}),
             listViewModel = self._children.baseControl.getViewModel(),
-            nodeKey = ItemsUtil.getPropertyValue(dispItem.getContents(), self._options.viewConfig.idProperty);
+            nodeKey = ItemsUtil.getPropertyValue(dispItem.getContents(), self._options.viewConfig.keyProperty);
          if (!self._loadedNodes[nodeKey]) {
             filter[self._options.viewConfig.parentProperty] = nodeKey;
             self._children.baseControl.getSourceController().load(filter, self._sorting).addCallback(function(list) {

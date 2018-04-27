@@ -39,7 +39,7 @@ define('Controls/List/resources/utils/Search',
             
             return [
                self._source,
-               null, //idProperty, using default
+               null, //keyProperty, using default
                queryParams.filter,
                queryParams.sorting,
                queryParams.offset,

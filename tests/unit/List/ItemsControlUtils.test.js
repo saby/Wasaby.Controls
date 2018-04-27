@@ -54,7 +54,7 @@ define(['Controls/List/resources/utils/DataSourceUtil', 'Controls/List/resources
             beforeEach(function() {
                dataSource = new MemorySource({
                   data: data,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                });
             });
 
@@ -68,7 +68,7 @@ define(['Controls/List/resources/utils/DataSourceUtil', 'Controls/List/resources
                   module: 'WS.Data/Source/Memory',
                   options: {
                      data: data,
-                     idProperty: 'id'
+                     keyProperty: 'id'
                   }
                });
 
@@ -98,7 +98,7 @@ define(['Controls/List/resources/utils/DataSourceUtil', 'Controls/List/resources
             it('Flat display Recordset', function () {
                var rs = new RecordSet({
                   rawData: data,
-                  idProperty : 'id'
+                  keyProperty : 'id'
                });
                proj = ItemsUtil.getDefaultDisplayFlat(rs, cfg1);
                assert.equal(proj.getSort()[0], sortFnc, 'ItemsSortMethod doesn\'t transfer to display');
@@ -112,7 +112,7 @@ define(['Controls/List/resources/utils/DataSourceUtil', 'Controls/List/resources
             it('getPropertyValue', function () {
                var rs = new RecordSet({
                   rawData: data,
-                  idProperty : 'id'
+                  keyProperty : 'id'
                });
 
                var value = ItemsUtil.getPropertyValue(rs.at(0), 'title');
@@ -128,7 +128,7 @@ define(['Controls/List/resources/utils/DataSourceUtil', 'Controls/List/resources
             it('getDisplayItemById', function () {
                var rs = new RecordSet({
                   rawData: data,
-                  idProperty : 'id'
+                     keyProperty : 'id'
                }),
                myEnum = new Enum({
                   dictionary: ['Первый', 'Второй', 'Третий']

@@ -468,7 +468,7 @@ define('Controls/List/BaseControl', [
       },
 
       _onItemClick: function(e, item) {
-         var newKey = ItemsUtil.getPropertyValue(item, this._options.viewConfig.idProperty);
+         var newKey = ItemsUtil.getPropertyValue(item, this._options.viewConfig.keyProperty);
          this._listViewModel.setMarkedKey(newKey);
       },
 

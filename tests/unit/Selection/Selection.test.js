@@ -10,13 +10,13 @@ define(
 
       var data = new RecordSet({
          rawData: [{id: 1}, {id: 2}, {id: 3}, {id: 4}, {id: 5}, {id: 6}, {id: 7}, {id: 8}, {id: 9}],
-         idProperty: 'id'
+         keyProperty: 'id'
       });
 
       var selection = new Selection({});
 
       selection.setProjection(Projection.getDefaultDisplay(data, {
-         idProperty: 'id'
+         keyProperty: 'id'
       }));
 
       describe('SBIS3.CONTROLS/ListView/resources/MassSelectionController/resources/Selection', function () {

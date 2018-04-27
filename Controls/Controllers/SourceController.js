@@ -34,14 +34,14 @@ define('Controls/Controllers/SourceController',
             return query;
          },
 
-         callQuery: function(dataSource, idProperty, filter, sorting, offset, limit) {
+         callQuery: function(dataSource, keyProperty, filter, sorting, offset, limit) {
             var queryDef, queryIns;
 
             queryIns = _private.getQueryInstance(filter, sorting, offset, limit);
 
             queryDef = dataSource.query(queryIns).addCallback((function(dataSet) {
-               if (idProperty && idProperty !== dataSet.getIdProperty()) {
-                  dataSet.setIdProperty(idProperty);
+               if (keyProperty && keyProperty !== dataSet.getIdProperty()) {
+                  dataSet.setIdProperty(keyProperty);
                }
                return dataSet.getAll();
             }));
@@ -125,7 +125,7 @@ define('Controls/Controllers/SourceController',
             }
             */
             self = this;
-            def = _private.callQuery(this._source, this._options.idProperty,
+            def = _private.callQuery(this._source, this._options.keyProperty,
                queryParams.filter,
                queryParams.sorting,
                queryParams.offset,

@@ -45,11 +45,11 @@ define([
             }
          ];
          source = new MemorySource({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: data
          });
          rs = new RecordSet({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: data
          })
       });
@@ -59,11 +59,11 @@ define([
          var cfg = {
             viewName : 'Controls/List/ListView',
             viewConfig: {
-               idProperty: 'id'
+               keyProperty: 'id'
             },
             viewModelConfig: {
                items : [],
-               idProperty: 'id'
+               keyProperty: 'id'
             },
             viewModelConstructor: ListViewModel,
             source: source,
@@ -88,7 +88,7 @@ define([
          var oldSourceCtrl = ctrl._sourceController;
 
          source = new MemorySource({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: data
          });
 
@@ -99,7 +99,7 @@ define([
             viewModelConstructor: ListViewModel,
             viewModelConfig: {
                items : [],
-               idProperty: 'id'
+               keyProperty: 'id'
             },
             filter : filter2
          };
@@ -122,7 +122,7 @@ define([
       it('loadToDirection down', function (done) {
 
          var source = new MemorySource({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: data
          });
 
@@ -130,11 +130,11 @@ define([
             viewName : 'Controls/List/ListView',
             source: source,
             viewConfig: {
-               idProperty: 'id'
+               keyProperty: 'id'
             },
             viewModelConfig: {
                items : [],
-               idProperty: 'id'
+               keyProperty: 'id'
             },
             viewModelConstructor: ListViewModel,
             navigation: {
@@ -173,7 +173,7 @@ define([
 
       it('loadToDirection down', function (done) {
          var source = new MemorySource({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: data
          });
 
@@ -181,11 +181,11 @@ define([
             viewName : 'Controls/List/ListView',
             source: source,
             viewConfig: {
-               idProperty: 'id'
+               keyProperty: 'id'
             },
             viewModelConfig: {
                items : rs,
-               idProperty: 'id'
+               keyProperty: 'id'
             },
             viewModelConstructor: ListViewModel,
             navigation: {
@@ -213,12 +213,12 @@ define([
 
       it('onScrollLoadEdge', function (done) {
          var rs = new RecordSet({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: data
          });
 
          var source = new MemorySource({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: data
          });
 
@@ -226,11 +226,11 @@ define([
             viewName : 'Controls/List/ListView',
             source: source,
             viewConfig: {
-               idProperty: 'id'
+               keyProperty: 'id'
             },
             viewModelConfig: {
                items : rs,
-               idProperty: 'id'
+               keyProperty: 'id'
             },
             viewModelConstructor: ListViewModel,
             navigation: {
@@ -294,12 +294,12 @@ define([
 
       it('scrollToEdge_load', function (done) {
          var rs = new RecordSet({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: data
          });
 
          var source = new MemorySource({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: data
          });
 
@@ -307,11 +307,11 @@ define([
             viewName : 'Controls/List/ListView',
             source: source,
             viewConfig: {
-               idProperty: 'id'
+               keyProperty: 'id'
             },
             viewModelConfig: {
                items : rs,
-               idProperty: 'id'
+               keyProperty: 'id'
             },
             viewModelConstructor: ListViewModel,
             navigation: {
@@ -341,12 +341,12 @@ define([
 
       it('ScrollPagingController', function (done) {
          var rs = new RecordSet({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: data
          });
 
          var source = new MemorySource({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: data
          });
 
@@ -354,11 +354,11 @@ define([
             viewName : 'Controls/List/ListView',
             source: source,
             viewConfig: {
-               idProperty: 'id'
+               keyProperty: 'id'
             },
             viewModelConfig: {
                items : rs,
-               idProperty: 'id'
+               keyProperty: 'id'
             },
             viewModelConstructor: ListViewModel,
             navigation: {
@@ -396,12 +396,12 @@ define([
 
       it('scrollToEdge without load', function (done) {
          var rs = new RecordSet({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: data
          });
 
          var source = new MemorySource({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: data
          });
 
@@ -409,11 +409,11 @@ define([
             viewName : 'Controls/List/ListView',
             source: source,
             viewConfig: {
-               idProperty: 'id'
+               keyProperty: 'id'
             },
             viewModelConfig: {
                items : rs,
-               idProperty: 'id'
+               keyProperty: 'id'
             },
             viewModelConstructor: ListViewModel,
             navigation: {
@@ -452,12 +452,12 @@ define([
 
       it('__onPagingArrowClick', function (done) {
          var rs = new RecordSet({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: data
          });
 
          var source = new MemorySource({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: data
          });
 
@@ -465,11 +465,11 @@ define([
             viewName : 'Controls/List/ListView',
             source: source,
             viewConfig: {
-               idProperty: 'id'
+               keyProperty: 'id'
             },
             viewModelConfig: {
                items : rs,
-               idProperty: 'id'
+               keyProperty: 'id'
             },
             viewModelConstructor: ListViewModel,
             navigation: {
@@ -520,12 +520,12 @@ define([
 
       it('__onEmitScroll', function (done) {
          var rs = new RecordSet({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: data
          });
 
          var source = new MemorySource({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: data
          });
 
@@ -533,11 +533,11 @@ define([
             viewName : 'Controls/List/ListView',
             source: source,
             viewConfig: {
-               idProperty: 'id'
+               keyProperty: 'id'
             },
             viewModelConfig: {
                items : rs,
-               idProperty: 'id'
+               keyProperty: 'id'
             },
             viewModelConstructor: ListViewModel,
             navigation: {
@@ -583,12 +583,12 @@ define([
 
       it('_onCheckBoxClick', function () {
          var rs = new RecordSet({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: data
          });
 
          var source = new MemorySource({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: data
          });
 
@@ -597,11 +597,11 @@ define([
             viewName : 'Controls/List/ListView',
             source: source,
             viewConfig: {
-               idProperty: 'id'
+               keyProperty: 'id'
             },
             viewModelConfig: {
                items : rs,
-               idProperty: 'id',
+               keyProperty: 'id',
                selectedKeys : [1, 3]
             },
             viewModelConstructor: ListViewModel,
@@ -638,11 +638,11 @@ define([
                viewName : 'Controls/List/ListView',
                source: source,
                viewConfig: {
-                  idProperty: 'id'
+                  keyProperty: 'id'
                },
                viewModelConfig: {
                   items : rs,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   selectedKeys : [1, 3]
                },
                viewModelConstructor: ListViewModel,
@@ -679,11 +679,11 @@ define([
                viewName : 'Controls/List/ListView',
                source: source,
                viewConfig: {
-                  idProperty: 'id'
+                  keyProperty: 'id'
                },
                viewModelConfig: {
                   items : rs,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   selectedKeys : [1, 3]
                },
                viewModelConstructor: ListViewModel,
@@ -723,11 +723,11 @@ define([
                viewName : 'Controls/List/ListView',
                source: source,
                viewConfig: {
-                  idProperty: 'id'
+                  keyProperty: 'id'
                },
                viewModelConfig: {
                   items : rs,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   selectedKeys : [1, 3]
                },
                viewModelConstructor: ListViewModel,
@@ -764,11 +764,11 @@ define([
                viewName : 'Controls/List/ListView',
                source: source,
                viewConfig: {
-                  idProperty: 'id'
+                  keyProperty: 'id'
                },
                viewModelConfig: {
                   items : rs,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   selectedKeys : [1, 3]
                },
                viewModelConstructor: ListViewModel,
@@ -802,11 +802,11 @@ define([
                viewName : 'Controls/List/ListView',
                source: source,
                viewConfig: {
-                  idProperty: 'id'
+                  keyProperty: 'id'
                },
                viewModelConfig: {
                   items : rs,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   selectedKeys : [1, 3]
                },
                viewModelConstructor: ListViewModel,
@@ -826,7 +826,7 @@ define([
             var ctrl = new BaseControl(cfg);
             ctrl._listViewModel = new ListViewModel({ //аналог beforemount
                items : rs,
-               idProperty: 'id',
+               keyProperty: 'id',
                selectedKeys : [1, 3]
             });
             ctrl._children = {itemActions: {updateActions: function() {}}};
@@ -847,11 +847,11 @@ define([
                viewName : 'Controls/List/ListView',
                source: source,
                viewConfig: {
-                  idProperty: 'id'
+                  keyProperty: 'id'
                },
                viewModelConfig: {
                   items : rs,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   selectedKeys : [1, 3]
                },
                viewModelConstructor: ListViewModel,
@@ -871,7 +871,7 @@ define([
             var ctrl = new BaseControl(cfg);
             ctrl._listViewModel = new ListViewModel({ //аналог beforemount
                items : rs,
-               idProperty: 'id',
+               keyProperty: 'id',
                selectedKeys : [1, 3]
             });
             ctrl._children = {itemActions: {updateActions: function() {}}};
@@ -891,11 +891,11 @@ define([
                viewName : 'Controls/List/ListView',
                source: source,
                viewConfig: {
-                  idProperty: 'id'
+                  keyProperty: 'id'
                },
                viewModelConfig: {
                   items : rs,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   selectedKeys : [1, 3]
                },
                viewModelConstructor: ListViewModel,
@@ -915,7 +915,7 @@ define([
             var ctrl = new BaseControl(cfg);
             ctrl._listViewModel = new ListViewModel({ //аналог beforemount
                items : rs,
-               idProperty: 'id',
+               keyProperty: 'id',
                selectedKeys : [1, 3]
             });
             ctrl._children = {itemActions: {updateActions: function() {}}};

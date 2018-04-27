@@ -3,7 +3,7 @@
    <Controls:List
       source = "{{_viewSource}}"
       markedKey="{{2}}"
-      idProperty="id">
+      keyProperty="id">
       <ws:itemTemplate>
          <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate"
                      itemData="{{itemTemplate.itemData}}" />
@@ -15,7 +15,7 @@
    <Controls:List
       source = "{{_viewSource}}"
       multiSelectVisibility="visible"
-      idProperty="id">
+      keyProperty="id">
       <ws:selectedKeys>
          <ws:Array>
             <ws:Number>2</ws:Number>
@@ -35,7 +35,7 @@
    <Controls:List
       source = "{{_viewSource}}"
       markedKey="{{2}}"
-      idProperty="id">
+      keyProperty="id">
       <ws:itemTemplate>
          <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate"
                      itemData="{{itemTemplate.itemData}}">

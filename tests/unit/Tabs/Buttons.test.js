@@ -77,7 +77,7 @@ define([
                 ],
                 source = new MemorySource({
                     data: data,
-                    idProperty: 'id'
+                   keyProperty: 'id'
                 });
 
             TabsButtons._private.initItems(source, tabInstance).addCallback(function(items) {

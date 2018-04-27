@@ -16,7 +16,7 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
 ) {
    'use strict';
    var source = new MemorySource({
-         idProperty: 'id',
+      keyProperty: 'id',
          displayProperty: 'caption',
          data: [
             {

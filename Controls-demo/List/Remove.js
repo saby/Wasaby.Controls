@@ -35,7 +35,7 @@ define('Controls-demo/List/Remove', [
 
       _createSource: function(items) {
          return new DemoSource({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: cClone(items)
          });
       },

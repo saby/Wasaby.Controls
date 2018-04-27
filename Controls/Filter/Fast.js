@@ -55,10 +55,10 @@ define('Controls/Filter/Fast',
             }
          },
 
-         loadItemsFromSource: function(instance, source, idProperty) {
+         loadItemsFromSource: function(instance, source, keyProperty) {
             var sourceController = new SourceController({
                source: source,
-               idProperty: idProperty
+               keyProperty: keyProperty
             });
             return sourceController.load().addCallback(function(items) {
                instance._items = items;

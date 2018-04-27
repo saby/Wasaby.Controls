@@ -28,7 +28,7 @@ define([
          ];
          source = new MemorySource({
             data: data,
-            idProperty: 'id'
+            keyProperty: 'id'
          });
 
       });
@@ -43,7 +43,7 @@ define([
             module: 'WS.Data/Source/Memory',
             options: {
                data: data,
-               idProperty: 'id'
+               keyProperty: 'id'
             }
          });
 

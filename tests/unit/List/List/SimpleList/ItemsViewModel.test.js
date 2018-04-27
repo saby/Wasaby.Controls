@@ -48,7 +48,7 @@ define([
       it('Display', function () {
          var cfg = {
             items: data,
-            idProperty: 'id'
+            keyProperty: 'id'
          };
          var iv = new ItemsViewModel(cfg);
 
@@ -60,7 +60,7 @@ define([
       it('Enumeration', function () {
          var cfg = {
             items: data,
-            idProperty: 'id'
+            keyProperty: 'id'
          };
 
          var iv = new ItemsViewModel(cfg);
@@ -87,14 +87,14 @@ define([
       it('Other', function () {
          var cfg = {
             items: data,
-            idProperty: 'id',
+            keyProperty: 'id',
             displayProperty: 'title'
          };
 
          var iv = new ItemsViewModel(cfg);
 
          var cur = iv.getCurrent();
-         assert.equal('id', cur.idProperty, 'Incorrect field set on getCurrent()');
+         assert.equal('id', cur.keyProperty, 'Incorrect field set on getCurrent()');
          assert.equal('title', cur.displayProperty, 'Incorrect field set on getCurrent()');
          assert.equal(0, cur.index, 'Incorrect field set on getCurrent()');
          assert.deepEqual(data[0], cur.item, 'Incorrect field set on getCurrent()');
@@ -105,22 +105,22 @@ define([
       it('setItems', function () {
          var rs1 = new RecordSet({
             rawData: data,
-            idProperty : 'id'
+            keyProperty : 'id'
          });
          var rs2 = new RecordSet({
             rawData: data2,
-            idProperty : 'id'
+            keyProperty : 'id'
          });
 
          var cfg1 = {
             items: data,
-            idProperty: 'id',
+            keyProperty: 'id',
             displayProperty: 'title'
          };
 
          var cfg2 = {
             items: rs1,
-            idProperty: 'id',
+            keyProperty: 'id',
             displayProperty: 'title'
          };
 
@@ -143,15 +143,15 @@ define([
       it('Append', function () {
          var rs1 = new RecordSet({
             rawData: data,
-            idProperty : 'id'
+            keyProperty : 'id'
          });
          var rs2 = new RecordSet({
             rawData: data2,
-            idProperty : 'id'
+            keyProperty : 'id'
          });
          var cfg1 = {
             items: rs1,
-            idProperty: 'id',
+            keyProperty: 'id',
             displayProperty: 'title'
          };
 
@@ -167,15 +167,15 @@ define([
       it('Prepend', function () {
          var rs1 = new RecordSet({
             rawData: data,
-            idProperty : 'id'
+            keyProperty : 'id'
          });
          var rs2 = new RecordSet({
             rawData: data2,
-            idProperty : 'id'
+            keyProperty : 'id'
          });
          var cfg1 = {
             items: rs1,
-            idProperty: 'id',
+            keyProperty: 'id',
             displayProperty: 'title'
          };
 
@@ -192,9 +192,9 @@ define([
          var iv = new ItemsViewModel({
             items: new RecordSet({
                rawData: data,
-               idProperty : 'id'
+               keyProperty : 'id'
             }),
-            idProperty: 'id',
+            keyProperty: 'id',
             displayProperty: 'title'
          });
 
@@ -208,11 +208,11 @@ define([
       it('itemsReadyCallback', function () {
          var rs1 = new RecordSet({
             rawData: data,
-            idProperty : 'id'
+            keyProperty : 'id'
          });
          var rs2 = new RecordSet({
             rawData: data2,
-            idProperty : 'id'
+            keyProperty : 'id'
          });
 
 
@@ -226,7 +226,7 @@ define([
 
          cfg = {
             items: data,
-            idProperty: 'id',
+            keyProperty: 'id',
             displayProperty: 'title',
             itemsReadyCallback: callback
          };

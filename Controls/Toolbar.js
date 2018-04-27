@@ -48,7 +48,7 @@ define('Controls/Toolbar', [
       getMenuItems: function(items) {
          return tUtil.getMenuItems(items).value(recordSetFactory, {
             adapter: items.getAdapter(),
-            idProperty: items.getIdProperty()
+            keyProperty: items.getIdProperty()
          });
       }
    };

@@ -19,7 +19,7 @@ define(
             { id: 2,    'title': '2',            'parent@': null, parent: null },
             { id: 3,    'title': '3',            'parent@': null, parent: null }
          ],
-         idProperty: 'id'
+         keyProperty: 'id'
       });
 
       var selection = new Selection({
@@ -28,7 +28,7 @@ define(
 
       selection.setProjection(new Projection({
          collection: data,
-         idProperty: 'id',
+         keyProperty: 'id',
          parentProperty: 'parent',
          nodeProperty: 'parent@',
          root: null,

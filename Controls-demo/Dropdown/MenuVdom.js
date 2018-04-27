@@ -67,7 +67,7 @@ define('Controls-demo/Dropdown/MenuVdom', [
          ],
          _createMemory: function(items) {
             return new Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: items
             });
          },

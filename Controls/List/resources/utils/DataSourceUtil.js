@@ -34,13 +34,13 @@ define('Controls/List/resources/utils/DataSourceUtil', [
          return result;
       },
 
-      callQuery: function(dataSource, idProperty, filter, sorting, offset, limit) {
+      callQuery: function(dataSource, keyProperty, filter, sorting, offset, limit) {
          var queryDef, query = getQueryForCall(filter, sorting, offset, limit);
 
 
          queryDef = dataSource.query(query).addCallback((function(dataSet) {
-            if (idProperty && idProperty !== dataSet.getIdProperty()) {
-               dataSet.setIdProperty(idProperty);
+            if (keyProperty && keyProperty !== dataSet.getIdProperty()) {
+               dataSet.setIdProperty(keyProperty);
             }
             return dataSet.getAll();
          }));

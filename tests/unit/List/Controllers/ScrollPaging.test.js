@@ -31,7 +31,7 @@ define([
          ];
          source = new MemorySource({
             data: data,
-            idProperty: 'id'
+            keyProperty: 'id'
          });
 
       });

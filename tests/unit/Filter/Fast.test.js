@@ -49,7 +49,7 @@ define(
 
          var config = {};
          config.source = new Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: source
          });
 

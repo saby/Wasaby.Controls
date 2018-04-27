@@ -28,7 +28,7 @@ define(
          it('_beforeMount', function(done) {
             var radio = new RadioGroup();
             var source = new MemorySource({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [
                   {
                      id: '1',
@@ -54,7 +54,7 @@ define(
          it('_beforeUpdate', function(done) {
             var radio = new RadioGroup();
             var source = new MemorySource({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [
                   {
                      id: '1',
@@ -73,7 +73,7 @@ define(
             radio.saveOptions(options);
 
             source = new MemorySource({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [
                   {
                      id: '1',
