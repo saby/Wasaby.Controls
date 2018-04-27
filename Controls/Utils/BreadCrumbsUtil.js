@@ -172,6 +172,7 @@ define('Controls/Utils/BreadCrumbsUtil', [
 
             //Оборачиваю айтемы в рекордсет чисто ради того, чтобы меню могло с ними работать
             //Нельзя сделать source, т.к. с ним оно не умеет работать
+            //По этой задаче научится: https://online.sbis.ru/opendoc.html?guid=c46567a3-77ab-46b1-a8d2-aa29e0cdf9d0
             var rs = new RecordSet({
                rawData: self._options.items
             });
