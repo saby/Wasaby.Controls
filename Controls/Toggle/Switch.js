@@ -22,36 +22,8 @@ define('Controls/Toggle/Switch', [
     * @cfg {String} Заголовок
     */
 
-   var _private = {
-      _getMarkerState: function(enabled, value) {
-         if (enabled) {
-            if (value) {
-               return 'controls-Switch__marker_enabled_checked';
-            } else {
-               return 'controls-Switch__marker_enabled_unchecked';
-            }
-         } else {
-            if (value) {
-               return 'controls-Switch__marker_disabled_checked';
-            } else {
-               return 'controls-Switch__marker_disabled_unchecked';
-            }
-         }
-      }
-   };
-
    var Switch = Control.extend({
       _template: template,
-
-      _beforeMount: function(options) {
-         var enabled = !options.readOnly;
-         this._markerState = _private._getMarkerState(enabled, options.value);
-      },
-
-      _beforeUpdate: function(options) {
-         var enabled = !options.readOnly;
-         this._markerState = _private._getMarkerState(enabled, options.value);
-      },
 
       _clickHandler: function(e) {
          if (!this._options.readOnly) {
