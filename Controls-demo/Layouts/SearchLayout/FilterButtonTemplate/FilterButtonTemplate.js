@@ -2,10 +2,10 @@
  * Created by am.gerasimov on 28.03.2018.
  */
 define('Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/FilterButtonTemplate', [
-   'SBIS3.CONTROLS/CompoundControl',
+   'Lib/Control/CompoundControl/CompoundControl',
    'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/FilterButtonTemplate'
 
-], function (CompoundControl, template) {
+], function(CompoundControl, template) {
    'use strict';
    
    var ModuleClass = CompoundControl.extend(

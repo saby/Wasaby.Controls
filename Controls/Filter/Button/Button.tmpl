@@ -1,4 +1,4 @@
-<div class="controls-FilterButton">
+<div class="controls-FilterButton" name="panelTarget">
     <div class="controls-FilterButton__wrapper">
         <ws:if data="{{_text}}">
             <div class="controls-FilterButton__text-wrapper controls-FilterButton__text-wrapper_state_{{_getFilterState()}}"
@@ -24,4 +24,8 @@
     <ws:if data="{{_options.filterTemplate}}">
         <div class="controls-FilterButton__oldTemplate controls-FilterButton__oldTemplate_{{_options.filterAlign}}"></div>
     </ws:if>
+
+   <Controls.Popup.Opener.Sticky name="filterStickyOpener">
+      <ws:popupOptions  closeByExternalClick="{{true}}" />
+   </Controls.Popup.Opener.Sticky>
 </div>
