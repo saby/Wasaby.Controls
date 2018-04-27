@@ -22,7 +22,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
                displayProperty: 'title'
             });
             this._hierarchy = new Hierarchy({
-               keyProperty: cfg.keyProperty,
+               idProperty: cfg.keyProperty,
                parentProperty: cfg.parentProperty,
                nodeProperty: cfg.nodeProperty
             });
