@@ -18,32 +18,20 @@
                                 </Controls.Container.Filter.Fast>
                                 <Controls.Container.Filter.Button>
                                         <Controls.Filter.Button>
+                                           <ws:itemsTemplate>
+                                              <ws:partial
+                                                      template="tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate"/>
+                                           </ws:itemsTemplate>
                                            <ws:items>
                                               <ws:Array>
                                                  <ws:Object id="FIO" value="Name" resetValue="">
-                                                    <ws:editor>
-                                                       <ws:partial
-                                                               template="tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate"/>
-                                                    </ws:editor>
                                                  </ws:Object>
                                                  <ws:Object id="firstName" value="123" resetValue="">
-                                                    <ws:editor>
-                                                       <ws:partial
-                                                               template="tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate"/>
-                                                    </ws:editor>
                                                  </ws:Object>
                                                  <ws:Object id="keys" value="{{3}}" resetValue="{{4}}"
                                                             source="{{sourceDropdown}}">
-                                                    <ws:editor>
-                                                       <ws:partial
-                                                               template="tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate"/>
-                                                    </ws:editor>
                                                  </ws:Object>
                                                  <ws:Object id="checked" value="{{true}}" resetValue="{{false}}">
-                                                    <ws:editor>
-                                                       <ws:partial
-                                                               template="tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate"/>
-                                                    </ws:editor>
                                                  </ws:Object>
                                                  <ws:Object id="3" value="{{_value}}" resetValue="{{1}}">
                                                     <ws:editor>
