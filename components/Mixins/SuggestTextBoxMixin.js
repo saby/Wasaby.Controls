@@ -284,7 +284,7 @@ define('SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin', [
       },
       _needShowHistory: function(){
          var listItems = this._getListItems();
-         return this._historyController && !this.getText().length && this._options.startChar && //Если startChar = 0, историю показывать не нужно
+         return this._historyController && !this.getText() && this._options.startChar && //Если startChar = 0, историю показывать не нужно
                (!listItems || !listItems.getCount() || !this.isPickerVisible()); // Показываем историю, если записей нет или пикер скрыт
       },
 
