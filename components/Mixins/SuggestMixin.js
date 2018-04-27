@@ -16,7 +16,7 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
    var DEFAULT_LIST_CONFIG = {
       allowEmptySelection: false,
       itemsDragNDrop: false,
-      emptyHTML: 'Не найдено',
+      emptyHTML: rk('Не найдено'),
       scrollPaging: false,
       element: function() { return this._getListContainer(); },
       filter: function() { return this.getProperty('listFilter'); },
