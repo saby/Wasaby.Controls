@@ -523,6 +523,26 @@ define('Controls/List/BaseControl', [
 
       _cancelEditActionHandler: function() {
          this._children.editInPlace.cancelEdit();
+      },
+
+      moveItemUp: function(item) {
+         this._children.moveControl.moveItemUp(item);
+      },
+
+      moveItemDown: function(item) {
+         this._children.moveControl.moveItemDown(item);
+      },
+
+      moveItems: function(items, target, position) {
+         this._children.moveControl.moveItems(items, target, position);
+      },
+
+      _beforeItemsMove: function(event, items, target, position) {
+         return this._notify('beforeItemsMove', [items, target, position]);
+      },
+
+      _afterItemsMove: function(event, items, target, position, result) {
+         this._notify('afterItemsMove', [items, target, position, result]);
       }
    });
 
