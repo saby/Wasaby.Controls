@@ -126,7 +126,7 @@ define('Controls/List/Swipe/SwipeControl', [
 
       initSwipeIconSize: function(type) {
          //нечетные типы должны быть с большими иконками
-         return 'controls-itemActionsV__action_icon_' + (type % 2  ? 'default' : 'big');
+         return 'controls-itemActionsV__action_icon_' + (type % 2  ? 'small' : 'big');
       },
 
       initItemsForSwipe: function(self, itemData, actionsHeight) {
@@ -197,7 +197,7 @@ define('Controls/List/Swipe/SwipeControl', [
          } else {
             var
                height = Math.floor((actionsHeight - (oneColumnCount - 1)) / oneColumnCount),
-               firstColumnCount = oneColumnCount % 2
+               firstColumnCount = oneColumnCount % 2 &&  oneColumnCount !== allActions.length / 2
                   ? oneColumnCount - 1
                   : oneColumnCount > allActions.length / 2 //ситуация когда 3 операции и в ервый столбец влезает две
                      ? allActions.length - oneColumnCount
