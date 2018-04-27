@@ -1574,7 +1574,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                     node = node.parentNode;
                                  }
                                  var next = node.nextSibling;
-                                 self._selectNewRng(next, next && next.nodeType === 3 && next.nodeValue.length && next.nodeValue.charCodeAt(0) === 65279 ? 1 : 0);
+                                 if (next) {
+                                    self._selectNewRng(next, next.nodeType === 3 && next.nodeValue.length && next.nodeValue.charCodeAt(0) === 65279 ? 1 : 0);
+                                 }
+                                 else {
+                                    self._selectAfterNode(node);
+                                 }
                                  if (scrollTop) {
                                     $scrollParent.scrollTop(scrollTop);
                                  }
@@ -1642,6 +1647,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             if (!hasEndNode && !hasEndOffset) {
                selection.collapse(false);
             }
+         },
+
+         _selectAfterNode: function (node) {
+            var selection = this._tinyEditor.selection;
+            selection.select(node, true);
+            selection.collapse(false);
          },
 
          _cleanHeight: function (value) {
