@@ -45,7 +45,7 @@ define(
             selectedKeys: '2',
             keyProperty: 'id',
             source: new Memory({
-               keyProperty: 'id',
+               idProperty: 'id',
                data: items
             })
          };
@@ -100,7 +100,7 @@ define(
                   selectedKeys: '2',
                   keyProperty: 'id',
                   source: new Memory({
-                     keyProperty: 'id',
+                     idProperty: 'id',
                      data: items
                   })
                }).addCallback(() => {

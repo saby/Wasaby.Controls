@@ -89,7 +89,7 @@ define([
       it('multiSelection', function () {
          var rs1 = new RecordSet({
             rawData: data,
-            keyProperty : 'id'
+            idProperty : 'id'
          });
 
 

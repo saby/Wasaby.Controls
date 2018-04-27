@@ -23,7 +23,7 @@ define([
                title : 'Третий'
             }],
             rs = new RecordSet({
-               keyProperty: 'id',
+               idProperty: 'id',
                rawData: cClone(data)
             }),
             cfg = {
@@ -32,7 +32,7 @@ define([
                }),
                sourceController: new SourceController({
                   source : new MemorySource({
-                     keyProperty: 'id',
+                     idProperty: 'id',
                      data: cClone(data)
                   })
                })

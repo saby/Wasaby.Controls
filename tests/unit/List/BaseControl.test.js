@@ -45,11 +45,11 @@ define([
             }
          ];
          source = new MemorySource({
-            keyProperty: 'id',
+            idProperty: 'id',
             data: data
          });
          rs = new RecordSet({
-            keyProperty: 'id',
+            idProperty: 'id',
             rawData: data
          })
       });
@@ -88,7 +88,7 @@ define([
          var oldSourceCtrl = ctrl._sourceController;
 
          source = new MemorySource({
-            keyProperty: 'id',
+            idProperty: 'id',
             data: data
          });
 
@@ -122,7 +122,7 @@ define([
       it('loadToDirection down', function (done) {
 
          var source = new MemorySource({
-            keyProperty: 'id',
+            idProperty: 'id',
             data: data
          });
 
@@ -173,7 +173,7 @@ define([
 
       it('loadToDirection down', function (done) {
          var source = new MemorySource({
-            keyProperty: 'id',
+            idProperty: 'id',
             data: data
          });
 
@@ -213,12 +213,12 @@ define([
 
       it('onScrollLoadEdge', function (done) {
          var rs = new RecordSet({
-            keyProperty: 'id',
+            idProperty: 'id',
             rawData: data
          });
 
          var source = new MemorySource({
-            keyProperty: 'id',
+            idProperty: 'id',
             data: data
          });
 
@@ -294,12 +294,12 @@ define([
 
       it('scrollToEdge_load', function (done) {
          var rs = new RecordSet({
-            keyProperty: 'id',
+            idProperty: 'id',
             rawData: data
          });
 
          var source = new MemorySource({
-            keyProperty: 'id',
+            idProperty: 'id',
             data: data
          });
 
@@ -341,12 +341,12 @@ define([
 
       it('ScrollPagingController', function (done) {
          var rs = new RecordSet({
-            keyProperty: 'id',
+            idProperty: 'id',
             rawData: data
          });
 
          var source = new MemorySource({
-            keyProperty: 'id',
+            idProperty: 'id',
             data: data
          });
 
@@ -396,12 +396,12 @@ define([
 
       it('scrollToEdge without load', function (done) {
          var rs = new RecordSet({
-            keyProperty: 'id',
+            idProperty: 'id',
             rawData: data
          });
 
          var source = new MemorySource({
-            keyProperty: 'id',
+            idProperty: 'id',
             data: data
          });
 
@@ -452,12 +452,12 @@ define([
 
       it('__onPagingArrowClick', function (done) {
          var rs = new RecordSet({
-            keyProperty: 'id',
+            idProperty: 'id',
             rawData: data
          });
 
          var source = new MemorySource({
-            keyProperty: 'id',
+            idProperty: 'id',
             data: data
          });
 
@@ -520,12 +520,12 @@ define([
 
       it('__onEmitScroll', function (done) {
          var rs = new RecordSet({
-            keyProperty: 'id',
+            idProperty: 'id',
             rawData: data
          });
 
          var source = new MemorySource({
-            keyProperty: 'id',
+            idProperty: 'id',
             data: data
          });
 
@@ -583,12 +583,12 @@ define([
 
       it('_onCheckBoxClick', function () {
          var rs = new RecordSet({
-            keyProperty: 'id',
+            idProperty: 'id',
             rawData: data
          });
 
          var source = new MemorySource({
-            keyProperty: 'id',
+            idProperty: 'id',
             data: data
          });
 

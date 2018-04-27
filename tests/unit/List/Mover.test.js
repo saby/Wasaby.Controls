@@ -31,14 +31,14 @@ define([
                }),
                sourceController: new SourceController({
                   source: new MemorySource({
-                     keyProperty: 'id',
+                     idProperty: 'id',
                      data: cClone(data)
                   })
                })
             };
 
          items = new RecordSet({
-            keyProperty: 'id',
+            idProperty: 'id',
             rawData: cClone(data)
          });
 

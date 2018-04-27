@@ -34,7 +34,7 @@ define(
             ];
             dataRs = new RecordSet({
                rawData: data,
-               keyProperty : 'id'
+               idProperty : 'id'
             });
 
             dataRsDown = new RecordSet({

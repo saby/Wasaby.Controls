@@ -28,14 +28,14 @@ define([
          ];
          items = new RecordSet({
             rawData: data,
-            keyProperty: 'id'
+            idProperty: 'id'
          });
          newItem = new Model({
             rawData: {
                id: 4,
                title: 'Четвёртый'
             },
-            keyProperty: 'id'
+            idProperty: 'id'
          });
          listModel = new ListViewModel({
             items: items,
@@ -159,7 +159,7 @@ define([
       describe('addItem', function() {
          it('Without handler', function(done) {
             var source = new Memory({
-               keyProperty: 'id',
+               idProperty: 'id',
                data: items
             });
 
@@ -177,7 +177,7 @@ define([
 
          it('Object without item', function(done) {
             var source = new Memory({
-               keyProperty: 'id',
+               idProperty: 'id',
                data: items
             });
             eip._notify = function(e) {
@@ -263,7 +263,7 @@ define([
 
          it('With source', function(done) {
             var source = new Memory({
-               keyProperty: 'id',
+               idProperty: 'id',
                data: data
             });
             eip.saveOptions({
@@ -286,7 +286,7 @@ define([
 
          it('Add item', function(done) {
             var source = new Memory({
-               keyProperty: 'id',
+               idProperty: 'id',
                data: data
             });
             eip.saveOptions({

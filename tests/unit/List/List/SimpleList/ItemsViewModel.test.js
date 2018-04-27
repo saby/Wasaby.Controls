@@ -105,11 +105,11 @@ define([
       it('setItems', function () {
          var rs1 = new RecordSet({
             rawData: data,
-            keyProperty : 'id'
+            idProperty : 'id'
          });
          var rs2 = new RecordSet({
             rawData: data2,
-            keyProperty : 'id'
+            idProperty : 'id'
          });
 
          var cfg1 = {
@@ -143,11 +143,11 @@ define([
       it('Append', function () {
          var rs1 = new RecordSet({
             rawData: data,
-            keyProperty : 'id'
+            idProperty : 'id'
          });
          var rs2 = new RecordSet({
             rawData: data2,
-            keyProperty : 'id'
+            idProperty : 'id'
          });
          var cfg1 = {
             items: rs1,
@@ -167,11 +167,11 @@ define([
       it('Prepend', function () {
          var rs1 = new RecordSet({
             rawData: data,
-            keyProperty : 'id'
+            idProperty : 'id'
          });
          var rs2 = new RecordSet({
             rawData: data2,
-            keyProperty : 'id'
+            idProperty : 'id'
          });
          var cfg1 = {
             items: rs1,
@@ -192,7 +192,7 @@ define([
          var iv = new ItemsViewModel({
             items: new RecordSet({
                rawData: data,
-               keyProperty : 'id'
+               idProperty : 'id'
             }),
             keyProperty: 'id',
             displayProperty: 'title'

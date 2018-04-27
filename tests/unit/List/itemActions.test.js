@@ -45,11 +45,11 @@ define([
             }
          ];
          source = new MemorySource({
-            keyProperty: 'id',
+            idProperty: 'id',
             data: data
          });
          rs = new RecordSet({
-            keyProperty: 'id',
+            idProperty: 'id',
             rawData: data
          });
          listViewModel = new ListViewModel ({

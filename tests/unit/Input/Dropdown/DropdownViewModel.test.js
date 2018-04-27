@@ -6,7 +6,7 @@ define(
    (DropdownViewModel, RecordSet) => {
       describe('DropdownViewModel', () => {
          let rs = new RecordSet({
-            keyProperty: 'id',
+            idProperty: 'id',
             rawData: [
                {
                   id: '1',
