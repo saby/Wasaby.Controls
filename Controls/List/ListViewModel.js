@@ -94,6 +94,10 @@ define('Controls/List/ListViewModel',
 
          setItems: function(items) {
             ListViewModel.superclass.setItems.apply(this, arguments);
+            if (this._options.markedKey !== undefined) {
+               this._markedItem = this.getItemById(this._options.markedKey, this._options.idProperty);
+            }
+            this._nextVersion();
             _private.updateIndexes(this);
          },
 

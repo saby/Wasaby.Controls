@@ -1602,7 +1602,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             var size = {width:'', height:''};
             var css = [];
             if (0 < width) {
-               size.width = width + (isPixels ? 'px' : '%');
+               if (!isPixels && width > 100) {
+                  size.width = '100%';
+               } else {
+                  size.width = width + (isPixels ? 'px' : '%');
+               }
                css.push('width:' + size.width);
             }
             //не проставляем высоту если процентые размеры
@@ -2095,6 +2099,20 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }.bind(this));
             }
 
+            // При посимвольном удалении текста на Ipad, полностью удалив текст, упираемся в невидимый символ. При этом
+            // у <br> в <p> отсутствует аттрибут data-mce-bogus="1". Добавим его вручную, тем самым установив курсор в
+            // должное положение
+            // https://online.sbis.ru/opendoc.html?guid=18888f87-e0b7-4295-903d-c7f8093c2701
+            if(cConstants.browser.isMobileSafari || (cConstants.browser.chrome && cConstants.browser.isMobileIOS)) {
+               editor.on('keyup', function(e) {
+                  var selection = this._tinyEditor.selection,
+                     node = selection.getNode().parentNode;
+                  if (node.innerHTML === "<p><br></p>") {
+                     node.innerHTML = '<p><br data-mce-bogus="1"></p>';
+                  }
+               }.bind(this));
+            }
+
             // Обработка изменения содержимого редактора.
             editor.on('keydown', function(e) {
                if (e.key && 1 < e.key.length) {
@@ -2413,6 +2431,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                return {preview:size ? '/previewer' + '/r/' + size + '/' + size + url : null, original:url};
             });
             if (0 < width) {
+               if (!isPixels && width > 100) {
+                  width=100;
+                  height=100;
+               }
                var w = isPixels ? width : width*constants.baseAreaWidth/100;//this.getContainer().width()
                if (0 < height) {
                   promise.callback(Math.round(width < height ? w*height/width : w));

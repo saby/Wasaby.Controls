@@ -9,7 +9,8 @@ define('Controls/Application',
       'Core/BodyClasses',
       'Core/compatibility',
       'Controls/Application/TouchDetector',
-      'Controls/Application/AppData'
+      'Controls/Application/AppData',
+      'Core/ConsoleLogger'
    ],
 
    /**

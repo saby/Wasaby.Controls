@@ -122,7 +122,7 @@ define(
                   isSelected = false;
                   isFilterChanged =false;
                   selectedKey = null;
-                  fastData._onResult({data: fastData._configs[0]._items.at(2)});
+                  fastData._onResult({data: [fastData._configs[0]._items.at(2)]});
                   assert.isTrue(isSelected);
                   assert.isTrue(isFilterChanged);
                   assert.equal(items[0][2].title, selectedKey);

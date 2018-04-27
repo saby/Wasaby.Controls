@@ -1,7 +1,7 @@
 /**
  * Created by as.krasilnikov on 26.12.2017.
  */
-define('Controls/Dropdown/resources/MenuViewModel',
+define('Controls/Dropdown/resources/DropdownViewModel',
    [
       'Core/Abstract',
       'WS.Data/Chain',
@@ -9,12 +9,12 @@ define('Controls/Dropdown/resources/MenuViewModel',
       'WS.Data/Relation/Hierarchy'
    ],
    function(Abstract, Chain, ItemsViewModel, Hierarchy) {
-      var MenuViewModel = Abstract.extend({
+      var DropdownViewModel = Abstract.extend({
          _itemsModel: null,
 
          constructor: function(cfg) {
             this._options = cfg;
-            MenuViewModel.superclass.constructor.apply(this, arguments);
+            DropdownViewModel.superclass.constructor.apply(this, arguments);
 
             this._itemsModel = new ItemsViewModel({
                items: this._getCurrentRootItems(cfg),
@@ -40,7 +40,7 @@ define('Controls/Dropdown/resources/MenuViewModel',
          destroy: function() {
             this._itemsModel.destroy();
             this._hierarchy.destroy();
-            MenuViewModel.superclass.destroy.apply(this, arguments);
+            DropdownViewModel.superclass.destroy.apply(this, arguments);
          },
 
          reset: function() {
@@ -96,5 +96,5 @@ define('Controls/Dropdown/resources/MenuViewModel',
          }
       });
 
-      return MenuViewModel;
+      return DropdownViewModel;
    });
