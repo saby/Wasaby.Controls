@@ -4,7 +4,7 @@
 <ws:if data="{{item.id === 'firstName'}}">
    <Controls.Input.Text bind:value="item.value"/>
 </ws:if>
-<ws:if data="{{item.id === 'keys'}}">
+<ws:if data="{{item.id === 'id'}}">
    <Controls.Input.Dropdown bind:selectedKeys="item.value"
                          keyProperty="key"
                          source="{{item.source}}"/>

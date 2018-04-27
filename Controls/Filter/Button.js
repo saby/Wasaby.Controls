@@ -62,6 +62,11 @@ define('Controls/Filter/Button',
          _oldPanelOpener: null,
          _text: '',
 
+         constructor: function(config) {
+            FilterButton.superclass.constructor.apply(this, arguments);
+            this._onFilterChanged = this._onFilterChanged.bind(this);
+         },
+
          _beforeUpdate: function(options) {
             if (this._options.items !== options.items) {
                _private.resolveItems(this, options.items);
@@ -102,6 +107,10 @@ define('Controls/Filter/Button',
                   });
                }
             }
+         },
+
+         _onFilterChanged: function(filter) {
+            this._notify('filterChanged', [filter]);
          }
       });
 
