@@ -32,6 +32,11 @@
                     itemTemplateProperty="{{_options.additionalTemplateProperty}}"
                     on:valueChanged="_valueChangedHandler()"/>
          </ws:if>
+         <ws:if data="{{_options.historyId}}">
+            <Controls.Filter.Button.History.List
+                    historyId="{{_options.historyId}}"
+                    on:applyHistoryFilter="_applyHistoryFilter()"/>
+         </ws:if>
       </div>
    </ws:contentArea>
 </Controls.Popup.Templates.Dialog.DialogTemplate>
