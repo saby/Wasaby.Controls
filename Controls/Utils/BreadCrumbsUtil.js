@@ -1,16 +1,11 @@
 define('Controls/Utils/BreadCrumbsUtil', [
    'Controls/List/resources/utils/ItemsUtil',
-   'WS.Data/Collection/RecordSet',
    'tmpl!Controls/BreadCrumbs/resources/itemsTemplate',
-   'tmpl!Controls/BreadCrumbs/resources/itemTemplate',
-   'tmpl!Controls/BreadCrumbsController/resources/menuItemTemplate',
-   'tmpl!Controls/BreadCrumbsController/resources/menuContentTemplate'
+   'tmpl!Controls/BreadCrumbs/resources/itemTemplate'
 ], function(
    ItemsUtil,
-   RecordSet,
    itemsTemplate,
-   itemTemplate,
-   menuItemTemplate
+   itemTemplate
 ) {
    'use strict';
 
@@ -165,44 +160,6 @@ define('Controls/Utils/BreadCrumbsUtil', [
 
       shouldRedraw: function(currentItems, newItems, oldWidth, availableWidth) {
          return currentItems !== newItems || oldWidth !== availableWidth;
-      },
-
-      onItemClick: function(self, originalEvent, item, isDots) {
-         if (isDots) {
-
-            //Оборачиваю айтемы в рекордсет чисто ради того, чтобы меню могло с ними работать
-            //Нельзя сделать source, т.к. с ним оно не умеет работать
-            //По этой задаче научится: https://online.sbis.ru/opendoc.html?guid=c46567a3-77ab-46b1-a8d2-aa29e0cdf9d0
-            var rs = new RecordSet({
-               rawData: self._options.items
-            });
-            rs.each(function(item, index) {
-               item.set('indentation', index);
-            });
-            self._children.menuOpener.open({
-               target: originalEvent.target,
-               templateOptions: {
-                  items: rs,
-                  itemTemplate: menuItemTemplate
-               }
-            });
-         } else {
-            self._notify('itemClick', [item]);
-         }
-      },
-
-      onResult: function(self, args) {
-         var
-            actionName = args && args.action,
-            event = args && args.event;
-
-         //todo: Особая логика событий попапа, исправить как будут нормально приходить аргументы
-         //https://online.sbis.ru/opendoc.html?guid=0ca4b2db-b359-4e7b-aac6-97e061b953bf
-         if (actionName === 'itemClick') {
-            var item = args.data && args.data[0] && args.data[0].getRawData();
-            self._onItemClick(event, {}, item);
-         }
-         self._children.menuOpener.close();
       }
    };
 });

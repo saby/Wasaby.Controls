@@ -16,11 +16,6 @@ define('Controls/BreadCrumbsController', [
       _visibleItems: [],
       _oldWidth: 0,
 
-      _beforeMount: function() {
-         //Эта функция передаётся по ссылке в Opener, так что нужно биндить this, чтобы не потерять его
-         this._onResult = this._onResult.bind(this);
-      },
-
       _afterMount: function() {
          //TODO: нужно приделать костыли для браузеров без preload, но сейчас это сделать не получится, т.к. демки в IE не взлетают
          if (this._options.items && this._options.items.length > 0) {
@@ -37,16 +32,12 @@ define('Controls/BreadCrumbsController', [
          }
       },
 
-      _onResult: function(args) {
-         BreadCrumbsUtil.onResult(this, args);
-      },
-
-      _onItemClick: function(e, originalEvent, item, isDots) {
-         BreadCrumbsUtil.onItemClick(this, originalEvent, item, isDots);
+      _onItemClick: function(e, item) {
+         this._notify('itemClick', [item]);
       },
 
       _onResize: function() {
-         this._children.menuOpener.close();
+         //Пустой обработчик чисто ради того, чтобы при ресайзе запускалась перерисовка
       }
    });
 

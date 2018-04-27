@@ -34,12 +34,11 @@ define('Controls/Path', [
       calculateItems: function(self, items) {
          var
             backButtonWidth,
-            availableWidth,
-            breadCrumbsItems;
+            availableWidth;
 
          self._backButtonCaption = ItemsUtil.getPropertyValue(items[0], self._options.displayProperty || 'title');
          if (items.length > 1) {
-            breadCrumbsItems = items.slice(1);
+            self._breadCrumbsItems = items.slice(1);
             backButtonWidth = BreadCrumbsUtil.getWidth(backButtonTemplate({
                _options: {
                   caption: self._backButtonCaption,
@@ -47,12 +46,13 @@ define('Controls/Path', [
                   size: 'm'
                }
             }));
-            _private.calculateClasses(self, BreadCrumbsUtil.getMaxCrumbsWidth(breadCrumbsItems), backButtonWidth, self._container.clientWidth);
+            _private.calculateClasses(self, BreadCrumbsUtil.getMaxCrumbsWidth(self._breadCrumbsItems), backButtonWidth, self._container.clientWidth);
 
             availableWidth = self._breadCrumbsClass === 'controls-Path__breadCrumbs_half' ? self._container.clientWidth / 2 : self._container.clientWidth;
-            BreadCrumbsUtil.calculateBreadCrumbsToDraw(self,  breadCrumbsItems, availableWidth);
+            BreadCrumbsUtil.calculateBreadCrumbsToDraw(self,  self._breadCrumbsItems, availableWidth);
          } else {
             self._visibleItems = [];
+            self._breadCrumbsItems = [];
          }
       }
    };
@@ -61,14 +61,10 @@ define('Controls/Path', [
       _template: template,
       _backButtonCaption: '',
       _visibleItems: [],
+      _breadCrumbsItems: [],
       _backButtonClass: '',
       _breadCrumbsClass: '',
       _oldWidth: 0,
-
-      _beforeMount: function() {
-         //Эта функция передаётся по ссылке в Opener, так что нужно биндить this, чтобы не потерять его
-         this._onResult = this._onResult.bind(this);
-      },
 
       _afterMount: function() {
          this._oldWidth = this._container.clientWidth;
@@ -85,12 +81,8 @@ define('Controls/Path', [
          }
       },
 
-      _onResult: function(args) {
-         BreadCrumbsUtil.onResult(this, args);
-      },
-
-      _onItemClick: function(e, originalEvent, item, isDots) {
-         BreadCrumbsUtil.onItemClick(this, originalEvent, item, isDots);
+      _onItemClick: function(e, item) {
+         this._notify('itemClick', [item]);
       },
 
       _onBackButtonClick: function() {
@@ -98,7 +90,7 @@ define('Controls/Path', [
       },
 
       _onResize: function() {
-         this._children.menuOpener.close();
+         //Пустой обработчик чисто ради того, чтобы при ресайзе запускалась перерисовка
       }
    });
    return Path;

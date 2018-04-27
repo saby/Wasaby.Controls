@@ -1,20 +1,9 @@
 <div>
-    <Controls.BreadCrumbs items="{{_visibleItems}}"
+    <Controls.BreadCrumbs items="{{_options.items}}"
+                          visibleItems="{{_visibleItems}}"
                           idProperty="{{_options.idProperty}}"
                           displayProperty="{{_options.displayProperty}}"
                           on:itemClick="_onItemClick()"/>
-
-    <Controls.Dropdown.Opener
-            name="menuOpener"
-            keyProperty="id"
-            className="controls-BreadCrumbsController__menu">
-        <ws:popupOptions>
-            <ws:corner vertical="top"
-                       horizontal="right"/>
-            <ws:horizontalAlign side="left"/>
-            <ws:eventHandlers onResult="{{_onResult}}"/>
-        </ws:popupOptions>
-    </Controls.Dropdown.Opener>
 
     <Controls.Event.Emitter event="resize"
                             on:resize="_onResize()"/>
