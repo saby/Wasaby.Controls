@@ -4,7 +4,6 @@ define('Controls/Toggle/Button', [
    /**
     * Кнопка, которая может находиться в одном из двух состояний.
     * @class Controls/Toggle/Button
-    * @extends Controls/Control
     * @mixes Controls/Toggle/interface/ICheckable
     * @mixes Controls/interface/ITooltip
     * @control

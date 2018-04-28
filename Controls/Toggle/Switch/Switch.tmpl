@@ -3,7 +3,7 @@
                {{!_options.readOnly ? 'controls-Switch_enabled'}}
                {{_options.value ? ' controls-Switch_checked'}}"
          title="{{tooltip}}">
-      <span class="controls-Switch__marker {{_markerState}}"></span>
+      <ws:partial template="tmpl!Controls/Toggle/resources/SwitchCircle/SwitchCircle" readOnly="{{_options.readOnly}}" selected="{{_options.value ? true : false}}"/>
       <span class="controls-Switch__line{{_options.readOnly ? ' controls-Switch__line_disabled' : ' controls-Switch__line_enabled'}}"></span>
    </span>
    <span class="controls-Switch__text{{!_options.value ? _options.readOnly ? ' controls-Switch__text_disabled_unselected' : ' controls-Switch__text_enabled_unselected'}}" >{{_options.caption}}</span>

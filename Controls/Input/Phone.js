@@ -11,7 +11,7 @@ define('Controls/Input/Phone',
       /**
        * Поле ввода телефонного номера.
        * @class Controls/Input/Phone
-       * @extends Controls/Control
+       * @extends Core/Control
        * @mixes Controls/Input/interface/IInputText
        * @mixes Controls/Input/interface/IValidation
        * @mixes Controls/Input/interface/IInputTag

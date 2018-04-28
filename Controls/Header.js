@@ -9,7 +9,7 @@ define('Controls/Header', [
    /**
     * Control showing the headers.
     * @class Controls/Header
-    * @extends Controls/Control
+    * @extends Core/Control
     * @control
     * @public
     */

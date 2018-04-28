@@ -20,7 +20,7 @@ define('Controls/BreadCrumbs', [
    /**
     * Компонент - хлебные крошки
     * @class Controls/BreadCrumbs
-    * @extends Controls/Control
+    * @extends Core/Control
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IHighlighter
     * @control

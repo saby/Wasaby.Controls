@@ -5,88 +5,100 @@ define('Controls-demo/List/EditAndRemoveOperations', [
    'WS.Data/Entity/Record',
    'Core/Deferred',
    'Controls/Validate/Validators/IsRequired'
-], function (Control,
-             template,
-             MemorySource,
-             Record,
-             Deferred
+], function(Control,
+   template,
+   MemorySource,
+   Record,
+   Deferred
 ) {
    'use strict';
+
+   var showType = {
+
+      //show only in Menu
+      MENU: 0,
+
+      //show in Menu and Toolbar
+      MENU_TOOLBAR: 1,
+
+      //show only in Toolbar
+      TOOLBAR: 2
+   };
 
    var counter = 10;
 
    var srcData = [
-      {
-         id: 1,
-         title: 'Не открывается на редактирование',
-         description: 'Другое название 1'
-      },
-      {
-         id: 2,
-         title: 'Открывается другая запись',
-         description: 'Описание вот такое'
-      },
-      {
-         id: 3,
-         title: 'Обычная запись 0',
-         description: 'Хватит страдать'
-      },
-      {
-         id: 4,
-         title: 'Обычная запись1',
-         description: 'йцукен'
-      },
-      {
-         id: 5,
-         title: 'Обычная запись2',
-         description: 'йцукен'
-      },
-      {
-         id: 6,
-         title: 'Обычная запись3',
-         description: 'йцукен'
-      }
-   ],
-   srcData2 = [
-      {
-         id: 1,
-         title: 'Notebook ASUS X550LC-XO228H 6'
-      },
-      {
-         id: 2,
-         title: 'Notebook Lenovo IdeaPad G5030 (80G0001FRK) 7'
-      }
-   ],
-   srcData3 = [
-      {
-         id: 1,
-         title: 'Notebook Lenovo G505 59426068 8'
-      },
-      {
-         id: 2,
-         title: 'Lenovo 9'
-      }
-   ],
-   srcData4 = [
-      {
-         id: 1,
-         title: 'Notebook Lenovo G505 59426068 14'
-      },
-      {
-         id: 2,
-         title: 'редактирование стартует по опции'
-      }
-   ],
-   srcData5 = [
-      {
-         id: 1,
-         title: 'Notebook ASUS X550LC-XO228H 16'
-      },
-      {
-         id: 2,
-         title: 'Notebook Lenovo IdeaPad G5030 (80G0001FRK) 17'
-      }
-   ];
+         {
+            id: 1,
+            title: 'Не открывается на редактирование',
+            description: 'Другое название 1'
+         },
+         {
+            id: 2,
+            title: 'Открывается другая запись',
+            description: 'Описание вот такое'
+         },
+         {
+            id: 3,
+            title: 'Обычная запись 0',
+            description: 'Хватит страдать'
+         },
+         {
+            id: 4,
+            title: 'Обычная запись1',
+            description: 'йцукен'
+         },
+         {
+            id: 5,
+            title: 'Обычная запись2',
+            description: 'йцукен'
+         },
+         {
+            id: 6,
+            title: 'Обычная запись3',
+            description: 'йцукен'
+         }
+      ],
+      srcData2 = [
+         {
+            id: 1,
+            title: 'Notebook ASUS X550LC-XO228H 6'
+         },
+         {
+            id: 2,
+            title: 'Notebook Lenovo IdeaPad G5030 (80G0001FRK) 7'
+         }
+      ],
+      srcData3 = [
+         {
+            id: 1,
+            title: 'Notebook Lenovo G505 59426068 8'
+         },
+         {
+            id: 2,
+            title: 'Lenovo 9'
+         }
+      ],
+      srcData4 = [
+         {
+            id: 1,
+            title: 'Notebook Lenovo G505 59426068 14'
+         },
+         {
+            id: 2,
+            title: 'редактирование стартует по опции'
+         }
+      ],
+      srcData5 = [
+         {
+            id: 1,
+            title: 'Notebook ASUS X550LC-XO228H 16'
+         },
+         {
+            id: 2,
+            title: 'Notebook Lenovo IdeaPad G5030 (80G0001FRK) 17'
+         }
+      ];
 
 
    var EditInPlace = Control.extend({
@@ -120,10 +132,10 @@ define('Controls-demo/List/EditAndRemoveOperations', [
                id: 0,
                icon: 'icon-Edit icon-primary',
                title: 'edit',
-               main: true,
+               showType: showType.MENU_TOOLBAR,
                style: 'bordered',
-               handler: function(item){
-                 this._children.list.editItem({item: item});
+               handler: function(item) {
+                  this._children.list.editItem({item: item});
                }.bind(this)
             },
             {
@@ -131,8 +143,8 @@ define('Controls-demo/List/EditAndRemoveOperations', [
                icon: 'icon-Erase icon-error',
                title: 'delete',
                style: 'bordered',
-               main: true,
-               handler: function(item){
+               showType: showType.MENU_TOOLBAR,
+               handler: function(item) {
                   this._children.list.removeItems([item.get('id')]);
                }.bind(this)
             },
@@ -140,13 +152,13 @@ define('Controls-demo/List/EditAndRemoveOperations', [
                id: 3,
                icon: 'icon-ArrowDown icon-error',
                title: 'я прикладная операция и появляюсь только если запись редактируется',
-               main: true,
+               showType: showType.MENU_TOOLBAR,
                style: 'bordered',
-               handler: function(item){
+               handler: function(item) {
                   if (confirm('Обязательно нажимать было?')) {
-                     alert('У меня для вас плохие новости')
+                     alert('У меня для вас плохие новости');
                   }
-               }.bind(this)
+               }
             }
          ];
 
@@ -185,12 +197,13 @@ define('Controls-demo/List/EditAndRemoveOperations', [
                return 'Cancel';
             case 2:
                return {
-                  item:Record.fromObject({
+                  item: Record.fromObject({
                      id: 2,
                      title: 'Другая запись',
                      description: 'Описание вот такое'
                   })
-               } ;
+               };
+
             // case 3:
             //    var def = new Deferred();
             //    def.addCallback(function(){
@@ -215,13 +228,13 @@ define('Controls-demo/List/EditAndRemoveOperations', [
 
       _onBeginAdd: function(e, item) {
          return {
-               item: Record.fromObject({
-                  id: counter++,
-                  title: '',
-                  description: 'описание',
-                  extraField: 'поле, которого нет у остальных itemов'
-               })
-            };
+            item: Record.fromObject({
+               id: counter++,
+               title: '',
+               description: 'описание',
+               extraField: 'поле, которого нет у остальных itemов'
+            })
+         };
       },
 
       _cancelBeginAdd: function() {
