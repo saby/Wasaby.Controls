@@ -4,7 +4,13 @@
     <div class="controls-BaseControl__trigger controls-BaseControl__topLoadTrigger" name="topLoadTrigger" style="bottom: -{{_loadOffset}}px;"></div>
 
     <ws:if data="{{_listViewModel}}">
-        <ws:partial template="{{ _options.content }}" name="listView" scope="{{_options.viewConfig}}" listModel="{{_listViewModel}}" on:itemClick="_onItemClick()">
+        <ws:partial
+                template="{{ _options.content }}"
+                name="listView"
+                scope="{{_options.viewConfig}}"
+                listModel="{{_listViewModel}}"
+                on:itemClick="_onItemClick()"
+                on:itemSwipe="_listSwipe()">
            <ws:viewTemplate>
               <ws:partial template="{{_options.viewName}}"/>
            </ws:viewTemplate>
@@ -35,16 +41,26 @@
                              listModel="{{_listViewModel}}"
                              on:beforeItemsRemove="_beforeItemsRemove()"
                              on:afterItemsRemove="_afterItemsRemove()"/>
-       <Controls.List.ItemActions.ItemActionsControl
-               ws:content="listView"
-               on:commitActionClick="_commitEditActionHandler()"
-               on:cancelActionClick="_cancelEditActionHandler()"
-               showToolbar="{{_options.editingConfig.showToolbar}}"
-               name="itemActions"
-               listModel="{{_listViewModel}}"
-               itemActions="{{_options.itemActions}}"
-               itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
-               itemActionsType="{{_options.itemActionsType}}"/>
+        <Controls.List.ItemActions.ItemActionsControl
+                ws:content="listView"
+                on:commitActionClick="_commitEditActionHandler()"
+                on:cancelActionClick="_cancelEditActionHandler()"
+                on:menuActionsClick="_showActionsMenu()"
+                showToolbar="{{_options.editingConfig.showToolbar}}"
+                name="itemActions"
+                listModel="{{_listViewModel}}"
+                menuIsShown="{{_menuIsShown}}"
+                itemActions="{{_options.itemActions}}"
+                itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
+                itemActionsType="{{_options.itemActionsType}}"/>
+        <Controls.List.Swipe.SwipeControl
+                ws:content="listView"
+                on:menuActionsClick="_showActionsMenu()"
+                on:closeSwipe="_closeSwipe()"
+                menuIsShown="{{_menuIsShown}}"
+                listModel="{{_listViewModel}}"
+                itemActions="{{_options.itemActions}}"
+                name="swipeControl"/>
     </ws:if>
 
     <ws:if data="{{_options.emptyTemplate && _listViewModel && !_listViewModel.getCount()}}">
@@ -69,4 +85,18 @@
             </ws:if>
         </div>
     </ws:if>
+    <Controls.Dropdown.Opener
+            name="itemActionsOpener"
+            keyProperty="id"
+            menuStyle="cross"
+            className="controls-itemActionsV__menu">
+        <ws:popupOptions closeByExternalClick="{{true}}">
+            <ws:corner vertical="top" horizontal="right"/>
+            <ws:horizontalAlign side="left"/>
+            <ws:eventHandlers onResult="{{_closeActionsMenu}}" onClose="{{_closeActionsMenu}}"/>
+            <ws:templateOptions showHeader="{{true}}">
+                <ws:headConfig menuStyle="cross" />
+            </ws:templateOptions>
+        </ws:popupOptions>
+    </Controls.Dropdown.Opener>
 </div>

@@ -8,6 +8,9 @@ define('Controls/List/BaseControl', [
    'Controls/Controllers/SourceController',
    'Core/Deferred',
    'tmpl!Controls/List/BaseControl/multiSelect',
+   'WS.Data/Collection/RecordSet',
+   'Controls/Utils/Toolbar',
+   'Controls/List/ItemActions/Utils/Actions',
    'Controls/List/EditInPlace',
    'Controls/List/ItemActions/ItemActionsControl',
    'css!Controls/List/BaseControl/BaseControl'
@@ -19,7 +22,10 @@ define('Controls/List/BaseControl', [
    VirtualScroll,
    SourceController,
    Deferred,
-   multiSelectTpl
+   multiSelectTpl,
+   RecordSet,
+   tUtil,
+   aUtil
 ) {
    'use strict';
 
@@ -255,6 +261,51 @@ define('Controls/List/BaseControl', [
          model.subscribe('onListChange', function() {
             self._forceUpdate();
          });
+      },
+
+      showActionsMenu: function(self, event, itemData, childEvent, showAll) {
+         var
+            context = event.type === 'itemcontextmenu',
+            showActions = (context || showAll) && itemData.itemActions.all
+               ? itemData.itemActions.all
+               : itemData.itemActions && itemData.itemActions.all.filter(function(action) {
+                  return action.showType !== tUtil.showType.TOOLBAR;
+               });
+         if (context && self._isTouch) {
+            return false;
+         }
+         if (showActions) {
+            var
+               rs = new RecordSet({rawData: showActions});
+            childEvent.nativeEvent.preventDefault();
+            childEvent.stopImmediatePropagation();
+            itemData.contextEvent = context;
+            self._listViewModel.setActiveItem(itemData);
+            self._children.itemActionsOpener.open({
+               opener: self._children.listView,
+               target: !context ? childEvent.target : false,
+               templateOptions: {items: rs}
+            });
+            self._menuIsShown = true;
+         }
+      },
+
+      closeActionsMenu: function(self, args) {
+         var
+            actionName = args && args.action,
+            event = args && args.event;
+
+         if (actionName === 'itemClick') {
+            var action = args.data && args.data[0] && args.data[0].getRawData();
+            aUtil.actionClick(self, event, action, self._listViewModel._activeItem);
+            self._children.itemActionsOpener.close();
+         }
+         self._listViewModel.setActiveItem(null);
+         self._menuIsShown = false;
+      },
+
+      bindHandlers: function(self) {
+         self._closeActionsMenu = self._closeActionsMenu.bind(self);
       }
    };
 
@@ -296,6 +347,7 @@ define('Controls/List/BaseControl', [
       _loadOffset: 100,
       _topPlaceholderHeight: 0,
       _bottomPlaceholderHeight: 0,
+      _menuIsShown: null,
 
       constructor: function(cfg) {
          BaseControl.superclass.constructor.apply(this, arguments);
@@ -303,6 +355,8 @@ define('Controls/List/BaseControl', [
       },
 
       _beforeMount: function(newOptions, context, receivedState) {
+         _private.bindHandlers(this);
+
          this._virtualScroll = new VirtualScroll({
             maxVisibleItems: newOptions.virtualScrollConfig && newOptions.virtualScrollConfig.maxVisibleItems,
             itemsCount: 0
@@ -441,6 +495,23 @@ define('Controls/List/BaseControl', [
          }
       },
 
+      _listSwipe: function(event, itemData, childEvent) {
+         var direction = childEvent.nativeEvent.direction;
+         this._children.itemActionsOpener.close();
+         if (direction === 'right' && itemData.multiSelectVisibility) {
+            var status = itemData.multiSelectStatus;
+            if (status === 1) {
+               this._listViewModel.unselect([itemData.key]);
+            } else {
+               this._listViewModel.select([itemData.key]);
+            }
+         }
+         if (direction === 'right' || direction === 'left') {
+            var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.viewConfig.idProperty);
+            this._listViewModel.setMarkedKey(newKey);
+         }
+      },
+
       removeItems: function(items) {
          this._children.removeControl.removeItems(items);
       },
@@ -498,23 +569,22 @@ define('Controls/List/BaseControl', [
          return this._notify('beforeItemEdit', [options]);
       },
 
-      _onAfterItemEdit: function(e, options) {
-         this._listViewModel._activeItem = {
-            item: options.item,
-            contextEvent: false
-         };
-         this._children.itemActions.updateActions();
-         this._notify('afterItemEdit', [options]);
+      _onAfterItemEdit: function(e, item) {
+         this._notify('afterItemEdit', [item]);
+         this._children.itemActions.updateItemActions(item, true);
       },
 
       _onBeforeItemEndEdit: function(e, options) {
          return this._notify('beforeItemEndEdit', [options]);
       },
 
-      _onAfterItemEndEdit: function(e, options) {
-         this._notify('beforeItemEndEdit', [options]);
-         this._listViewModel._activeItem = false;
-         this._children.itemActions.updateActions();
+      _onAfterItemEndEdit: function(e, item) {
+         this._notify('beforeItemEndEdit', [item]);
+         this._children.itemActions.updateItemActions(item);
+      },
+
+      _closeSwipe: function(event, item) {
+         this._children.itemActions.updateItemActions(item);
       },
 
       _commitEditActionHandler: function() {
@@ -523,6 +593,14 @@ define('Controls/List/BaseControl', [
 
       _cancelEditActionHandler: function() {
          this._children.editInPlace.cancelEdit();
+      },
+
+      _showActionsMenu: function(event, itemData, childEvent, showAll) {
+         _private.showActionsMenu(this, event, itemData, childEvent, showAll);
+      },
+
+      _closeActionsMenu: function(args) {
+         _private.closeActionsMenu(this, args);
       },
 
       moveItemUp: function(item) {
