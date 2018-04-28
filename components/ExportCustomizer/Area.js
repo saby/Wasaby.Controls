@@ -468,7 +468,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * @protected
           */
          _cmdComplete: function () {
-            // TODO: хорошо бы вынести эту команду в родителя
             // Сформировать результирующие данные из всего имеющегося
             // И сразу прроверить их
             this.getValues(true).addCallback(function (data) {
