@@ -10,7 +10,7 @@ define('Controls/Toggle/DoubleSwitch', [
    /**
     * Контрол, отображающий переключатель
     * @class Controls/Toggle/DoubleSwitch
-    * @extends Controls/Control
+    * @extends Core/Control
     * @mixes Controls/Toggle/interface/ICheckable
     * @mixes Controls/interface/ITooltip
     * @control

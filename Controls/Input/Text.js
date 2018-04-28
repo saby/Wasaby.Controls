@@ -20,7 +20,7 @@ define('Controls/Input/Text', [
    /**
        * Однострочное текстовое поле ввода.
        * @class Controls/Input/Text
-       * @extends Controls/Control
+       * @extends Core/Control
        * @mixes Controls/Input/interface/IInputText
        * @mixes Controls/Input/interface/IInputPlaceholder
        * @mixes Controls/Input/interface/IValidation

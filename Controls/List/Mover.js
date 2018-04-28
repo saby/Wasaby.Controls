@@ -58,7 +58,7 @@ define('Controls/List/Mover', [
    /**
     * A class that describes the action of moving list items up/down.
     * @class Controls/List/Mover
-    * @extends Controls/Control
+    * @extends Core/Control
     * @mixes Controls/interface/IReorderMovable
     * @control
     * @author Крайнов Д.О.

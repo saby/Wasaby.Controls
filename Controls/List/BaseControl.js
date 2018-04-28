@@ -260,8 +260,8 @@ define('Controls/List/BaseControl', [
 
    /**
     * Компонент плоского списка, с произвольным шаблоном отображения каждого элемента. Обладает возможностью загрузки/подгрузки данных из источника.
-    * @class Controls/List
-    * @extends Controls/Control
+    * @class Controls/List/BaseControl
+    * @extends Core/Control
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IGroupedView

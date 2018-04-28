@@ -8,7 +8,7 @@ define('Controls/Toggle/Switch', [
    /**
     * Контрол, отображающий переключатель
     * @class Controls/Toggle/Switch
-    * @extends Controls/Control
+    * @extends Core/Control
     * @mixes Controls/Toggle/interface/ICheckable
     * @mixes Controls/interface/ITooltip
     * @control
