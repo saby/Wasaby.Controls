@@ -26,6 +26,13 @@ define('Controls/Container/Adapter/Enum',
                data: data,
                idProperty: 'title'
             });
+         },
+
+         enumSubscribe: function(self, enumInstance) {
+            enumInstance.subscribe('onChange', function(e, index, value) {
+               self._selectedKey = value;
+               self._forceUpdate();
+            });
          }
 
       };
@@ -53,13 +60,16 @@ define('Controls/Container/Adapter/Enum',
          _beforeMount: function(newOptions) {
             if (newOptions.enum) {
                this._enum = newOptions.enum;
+               _private.enumSubscribe(this, this._enum);
                this._source = _private.getSourceFromEnum(newOptions.enum);
                this._selectedKey = newOptions.enum.getAsValue();
             }
          },
 
          _beforeUpdate: function(newOptions) {
-            if ((newOptions.enum) || (newOptions.enum !== this._enum)) {
+            if ((newOptions.enum) && (newOptions.enum !== this._enum)) {
+               this._enum = newOptions.enum;
+               _private.enumSubscribe(this, this._enum);
                this._source = _private.getSourceFromEnum(newOptions.enum);
                this._selectedKey = newOptions.enum.getAsValue();
             }
@@ -72,6 +82,10 @@ define('Controls/Container/Adapter/Enum',
          }
 
       });
+
+      /*For tests*/
+
+      SearchContainer._private = _private;
 
       return SearchContainer;
    });

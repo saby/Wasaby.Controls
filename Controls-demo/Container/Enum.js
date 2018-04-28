@@ -20,8 +20,11 @@ define('Controls-demo/Container/Enum',
             EnumCont.superclass.constructor.apply(this, arguments);
             this._enumInst = new Enum({
                dictionary: ['Первый', 'Второй', 'Третий'],
-               index: 0
+               index: 1
             });
+         },
+         _changeIndex: function() {
+            this._enumInst.set(2);
          }
 
       });
