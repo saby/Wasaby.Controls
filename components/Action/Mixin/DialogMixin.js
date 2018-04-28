@@ -125,6 +125,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
 
       _createComponent: function(config, meta) {
          var componentName = (meta.mode == 'floatArea') ? 'Lib/Control/FloatArea/FloatArea' : 'Lib/Control/Dialog/Dialog',
+             self = this,
              resetWidth;
          
          if (this._isNeedToRedrawDialog()){
@@ -138,7 +139,14 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             this._isExecuting = true;
             requirejs([componentName], function(Component) {
                try {
-                  this._dialog = new Component(config);
+                  if (this._isNewEnvironment()) {
+                     //TODO тут кучу проверок в зависимости от конфига разные контроллеры грузить и конфиги между старыми и новыми синхронизировать
+                     requirejs(['Controls/Popup/Manager/ManagerController', 'Controls/Popup/Opener/Sticky/StickyController'], function(ManagerController, StickyStrategy) {
+                        ManagerController.show(self._getVDOMConfig(config), StickyStrategy);
+                     });
+                  } else {
+                     this._dialog = new Component(config);
+                  }
                }
                catch (error) {
                   this._finishExecuteDeferred(error);
@@ -147,6 +155,26 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
 
          }
       },
+
+
+      //TODO start compatible block for VDOM
+      _isNewEnvironment: function () {
+         return !!document.getElementsByTagName('html')[0].controlNodes;
+      },
+
+      _getVDOMConfig: function(cfg) {
+         var templateOptions = cfg.componentOptions;
+         // templateOptions.component = "Controls-demo/Popup/Env/template/oldTemplate";
+         return {
+            maxWidth: 900,
+            minWidth: 800,
+            opener: cfg.opener,
+            template: cfg.template,
+            templateOptions: templateOptions,
+         };
+      },
+      //TODO end compatible block for VDOM
+      
       _documentClickHandler: function (event) {
          //Клик по связному списку приводит к перерисовке записи в панели, а не открытию новой при autoHide = true
          if (this._dialog && this._openedPanelConfig.mode === 'floatArea' && this._dialog.isVisible() && this._openedPanelConfig.autoHide) {

@@ -1,0 +1,529 @@
+.close-button-mixin(@important: ~'', @width: @width_CloseButton, @height: @height_CloseButton, @icon: "\e66c") {
+  .inline-flexbox();
+  .align-items(center);
+  .justify-content(center);
+  color: #8991A9 @important;
+  font-size: round(56px * @multiplier) @important;
+  line-height: round(56px * @multiplier) @important;
+  font-family: 'cbuc-icons' @important;
+  width: @width @important;
+  height: @height @important;
+  background-color: #405A77 @important;
+  background-image: none @important;
+  box-shadow: @box-shadow_Button !important;
+  .border-radius(@border-radius_Button_default);
+
+  &:before {
+    content: @icon @important;
+    text-shadow: @text-shadow_Button @important;
+  }
+
+  &:hover {
+    background: none @important;
+    background-color: #3D5571 @important;
+  }
+  &:active {
+    background: none @important;
+    box-shadow: none !important;
+    background-color: #3D5571 @important;
+  }
+}
+
+html {
+  color: #e4e4e4;
+}
+body {
+   font-size: round(28px * @multiplier) !important;
+}
+body {
+    //Todo: сделать @accent-color - #FFCC99  https://online.sbis.ru/opendoc.html?guid=47bdafa8-88ab-4cb2-9383-89ffd7c9dcdd
+    //сейчас пока сделаем так, чтобы не разломать версию 3.7.5.150
+    .controls-accent-text {
+    	color: #FFCC99 !important;
+    }
+
+  .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
+    width: round(84px * @multiplier) !important;
+    height: round(84px * @multiplier) !important;
+  }
+
+  .engine-Browser__path {
+    max-height: round(56px * @multiplier);
+    height: auto !important;
+  }
+   .engine-BrowserTabs__header {
+      height: round(100px * @multiplier);
+   }
+
+  /*.controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableRow .controls-MonthView__tableElement {
+    font-size: round(32px * @multiplier);
+  }*/
+
+  .controls-DateRangeBigChoose__dates-dates-top-gradient, .controls-DateRangeBigChoose__dates-dates-bottom-gradient {
+    display: none;
+  }
+
+  .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__header-rangeDash {
+     border-color: rgba(96, 170, 221, 0.15);
+     border-width: @default-border-width;
+  }
+
+    .controls-Button .controls-Button__icon.icon-32 {
+      top: 20%
+    }
+      .controls-Button .controls-Button__icon.icon-large {
+      top: 50%
+    }
+   /*.controls-DateRangeBigChoose {
+      // в онлайне в большом выборе периода иконки разного размера, а тут одинаковые 3rem
+      .icon-16, .icon-24, .icon-small{
+         font-size: round(84px * @multiplier) !important;
+         line-height: round(84px * @multiplier) !important;
+         width: round(84px * @multiplier);
+         height: round(84px * @multiplier);
+      }
+   }*/
+}
+
+// SBIS3.CORE.CloseButton используется в DateRangeSlider. Удалить после того как выпилим SBIS3.CORE.CloseButton
+/*.controls-DateRangeBigChoose .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled.ws-button-classic {
+   width: round(84px * @multiplier) !important;
+   height: round(84px * @multiplier) !important;
+   // Перед тем как править стили для кнопки закрытия прочитай комментарий по .ws-float-close.sbisname-window-title-close
+}*/
+
+//Удалить, как будет темизация для engine.
+.controls-Browser {
+   .controls-Browser__tableCell-search {
+      .controls-Browser__selectAllCheckBox {
+         .align-self(center);
+      }
+   }
+   .controls-Browser__table {
+      .controls-Browser__tableCell-filterButton {
+         .controls__filterButton {
+         /*   margin-top: 10px;*/
+           margin: 0px;
+         }
+      }
+   }
+  .controls-Browser__filterButton .controls__filterButton__filterLine-text {
+     height: auto;
+  }
+}
+
+.engine-browserTabs__operationsPanelButton.icon-MarkExpandBold:before {
+   margin-top: 0;
+}
+
+.controls-ComboBox__picker {
+  .controls-Scrollbar {
+     &.controls-Scrollbar__dragging {
+        .controls-Scrollbar__thumb {
+           background-color: rgba(0,0,0,.15);
+        }
+     }
+     .controls-Scrollbar__thumb {
+        background-color: rgba(0,0,0,.1);
+        &:hover {
+           background-color: rgba(0,0,0,.15);
+        }
+     }
+  }
+}
+
+.controls-Button__closeButton {
+   display: inline-block;
+   width: @closeButtonWidth;
+   height: @closeButtonHeight;
+   background: @closeBigButtonImage;
+   &:hover {
+     background: @closeBigButtonImageHover;
+   }
+   &:active {
+     background: @closeBigButtonImageHover;
+   }
+}
+.controls-Button {
+  white-space: normal; //??
+   padding-bottom: 0; // FF only ???
+}
+
+body {
+   .ws-sticky-header__block.ws-sticky-header__fixed,
+   .ws-sticky-header__table-header-copy {
+      // В престо в паре мест используется нестандартные цвета фона, чуть темнее или чуть светлее.
+      // В этих местах прикладники должны сами устанавливать цвет фона у зафиксированных заголовков.
+      // В большинстве реестров используется #2C3E50 - @basic-block-bg-color
+      background-color: @basic-block-bg-color;
+   }
+   // На андроиде между контейнерами на масштабе отличном от 100% всегда есть какая то щель
+   // через которую видно скролируемое содержимое. Стилизация фикса этого бага.
+   // TODO: выпилить после того как перейдем на position: sticky
+   &.ws-is-mobile-android {
+      .ws-sticky-header__block.ws-sticky-header__fixed,
+      .ws-sticky-header__table-header-copy {
+         &:before {
+            background-color: @basic-block-bg-color;
+         }
+      }
+   }
+   .ws-sticky-header__gradient {
+      height: round(24px * @multiplier);
+      box-shadow: none;
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
+   }
+}
+
+.controls-listView td {
+  font-size: round(28px * @multiplier);
+}
+
+.controls-Button.controls-Button--prestogray {
+    color: #2C3E50;
+  background: #e4e4e4;
+}
+
+.controls-Suggest__picker {
+  .controls-ListView__hoveredItem {
+    background-color:  @suggest-list-hover-color !important;
+    .controls-DataGridView__td {
+      background-color:  @suggest-list-hover-color !important;
+    }
+  }
+}
+
+.controls-ComboBox__picker {
+   &.controls-popup-revert-vertical{
+      border-bottom: none;
+   }
+}
+
+.controls-ListView__item__selected {
+   .controls-DataGridView__td:first-child {
+      .marker()
+   }
+}
+
+/*body {
+   .controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableRow .controls-MonthView__tableElement {
+    font-size: round(32px * @multiplier);
+  }
+}*/
+
+.controls-DateRangeBigChoose__dates-dates-top-gradient, .controls-DateRangeBigChoose__dates-dates-bottom-gradient {
+  display: none;
+}
+
+/*.controls-DateRangeBigChoose .controls-DateRangeBigChoose__header {
+    height: round(84px * @multiplier);
+}*/
+
+//todo: отказаться от данного сомнительного решения
+.controls-FormattedTextBox .controls-InputRender__wrapper .controls-InputRender__field .controls-FormattedTextBox__field-symbol {
+    line-height: round(56px * @multiplier);
+}
+.controls-Link__text {
+  vertical-align: baseline;
+}
+.controls-DropdownList__picker .controls-DropdownList__multiselect.controls-DropdownList__item * {
+    font-size: round(32px * @multiplier);
+}
+.icon-large {
+  vertical-align: middle !important;
+}
+.controls-ToolBar__menuIcon {
+   .icon-24 {
+      font-size: @icon-large-size !important;
+      line-height: @icon-large-size !important;
+      width: @icon-large-size !important;
+      height: @icon-large-size !important;
+      vertical-align: middle !important;
+   }
+}
+
+.controls-Browser {
+   .controls-Browser__topTemplate {
+      height: auto;
+   }
+}
+
+body .ws-window.ws-LoadingIndicator__window {
+   border-radius: 16px;
+   border-color: transparent;
+
+   .ws-win-loadingIndicator {
+      background-color: transparent;
+   }
+}
+
+.ws-LoadingIndicator__window, .ws-loading {
+   img, .ws-loadingimg > div:before{
+      width: round(77px * @multiplier);
+      height: round(77px * @multiplier);
+   }
+
+   img {
+      display: none;
+   }
+
+   .ws-loadingimg {
+      left: round(12px * @multiplier);
+      top: round(11px * @multiplier);
+      div:before {
+         content: '';
+         background-size: contain;
+         display: inline-block;
+         background-image: url('img/ajax-loader-indicator-big.gif');
+      }
+   }
+   .ws-LoadingIndicator__message__progress-no {
+      margin-left: round(77px * @multiplier);
+   }
+   .ws-LoadingIndicator__loadingContainer {
+      padding: round(32px * @multiplier);
+   }
+}
+// В теме онлайна фон у кнопки при наведении по умолчанию совпадает с цветом кнопок в панели выбора периода,
+// а тут не совпадает. Когда будем переделывать компонент под новую спецификацию, избавится от кнопок в пользу div.
+.ws-is-desktop-platform .controls-Button:not(.ws-disabled):not(.controls-Click__active).controls-Button__default {
+   &.controls-DateRangeBigChoose__months-quarter-btn,
+   &.controls-DateRangeBigChoose__months-halfyear-btn {
+      &:hover {
+         background-color: transparent;
+      }
+   }
+}
+
+.controls-DateRangeBigChoose__months-quarter-btn.controls-Button.controls-Button-color__default,
+.controls-DateRangeBigChoose__months-halfyear-btn.controls-Button.controls-Button-color__default,
+.controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__yearsRange span.controls-Button {
+  color: @default-text-color;
+}
+
+.controls-FormattedTextBox .controls-InputRender__wrapper {
+  text-align: center;
+}
+
+//todo: удалить это нафиг сделать нормально и не лениться
+.controls-image {
+   .controls-image__image-bar{
+      .justify-content(space-around);
+     .controls-image__button-upload {
+       margin-right: 0;
+     }
+      .icon-16{
+         font-size: @default-icon-size-large !important;
+         height: @default-icon-size-large !important;
+         width: @default-icon-size-large !important;
+         line-height: @default-icon-size-large !important;
+      }
+   }
+}
+
+
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__left,
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__right {
+   .icon-24 {
+       font-size: round(42px * @multiplier) !important;
+       height: round(84px * @multiplier) !important;
+       width: round(84px * @multiplier) !important;
+       line-height: round(84px * @multiplier) !important;
+   }
+}
+.controls-DateRangeBigChoose__years-toggleChooseYearBtn, .controls-DateRangeBigChoose__years-currentYearBtn {
+   height: round(84px * @multiplier) !important;
+}
+
+body .controls-DateRangeBigChoose__header .controls-DateBox {
+    border-width: @default-border-width;
+    border-radius: 0;
+}
+
+body .controls-DateRangeBigChoose__dates-month-btn {
+   // Будет выпелено с переходом на новый стандарт. Там выравнивание одинаковое.
+   padding-left: 0;
+   text-align: center;
+   .controls-Button__text {
+      width: 100%;
+   }
+}
+body .controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-MonthView__caption-text {
+   margin-left: round(126px * @multiplier);
+}
+
+body {
+   // В формулах в темах надо сделать что бы можно было задать нижний отступ отличный от верхнего
+   .controls-DateRangeBigChoose__months-quarterRange-btn-wrapper3 {
+       height: round(165px * @multiplier);
+   }
+   .controls-DateRangeBigChoose__months-halfyearRange-btn-wrapper1 {
+       height: round(308px * @multiplier);
+   }
+}
+
+.controls-DateRangeBigChoose__noBorder {
+  border: none !important;
+}
+
+/*body .controls-DateRangeBigChoose__years-yearsRange-btn:hover {
+  color: #fff;
+}*/
+
+.controls-ToolBar .controls-ToolBar__menuIcon {
+    vertical-align: baseline;
+}
+
+.controls-MergeDialogTemplate .controls-TreeDataGridView__levelPadding {
+   display: none;
+}
+
+// В темах престо и розницы все сверстано на внутренних скролируемых контенерах.
+// Делаем что бы флоат арии всегда были с 100% высотой и не надо устанавливать ws-float-area__block-layout.
+// Выпилить когда уйдем от ws-float-area__block-layout в онлайне.
+.ws-float-area-stack-cut-wrapper {
+   .ws-float-area {
+      display: block !important;
+   }
+   .ws-float-area-stack-panel-shadow {
+      display: block !important;
+   }
+
+   .ws-float-area-stack-scroll-wrapper-touch {
+     -webkit-overflow-scrolling: auto!important;
+   }
+}
+// Предыдущие стили отключает скролы на плавающих панелях. А значит и хак с тем что эти скролы могут отвалится на ipad
+// не нужен. ЧТо бы ничего не прыгало отключаем этот хак.
+// Выпилить когда уйдем от ws-float-area__block-layout в онлайне.
+body {
+   &.ws-is-mobile-safari, &.ws-is-mobile-chrome-ios {
+      .ws-float-area-no-height-calc .ws-float-area-stack-panel-overflow {
+         height: 100%;
+      }
+   }
+}
+
+body {
+  .ws-errorsReportDialog {
+    min-width: round(840px * @multiplier)m;
+
+    .ws-field-string {
+      font-size: round(28px * @multiplier);
+      height: round(42px * @multiplier);
+      color: @default-text-color;
+    }
+
+    .ws-field-button {
+      height: round(42px * @multiplier);
+      padding-right: round(14px * @multiplier);
+    }
+
+    .ws-errorsReportDialog-caption {
+      text-align: left;
+      width: round(168x * @multiplier);
+      color: @default-text-color;
+    }
+
+    .ws-errorsReportDialog-errors {
+      .ws-errorsReportDialog-caption, .ws-field-string, .ws-errorsReportDialog-errorsDescription {
+        color: @error-color;
+      }
+    }
+  }
+  //todo: временное решение на неопределенный срок
+  //Проблема: css контролов не из CONTROLS (например ENGINE) нельзя включить в presto.css
+  //Поэтому данные котнролы подключают свои css сами, но в теме Online`а
+  //Необходимо: возобновить работы по отказу от _control-list.less (Кудрявцев И.)
+  //Возникающие проблемы: переключение темы (как переключать отдельные файлы контролов)
+  //Возможные решения:
+  //                  Доработать механизм переключения тем в престе(Гатауллина Г.)
+  //                  Доработать роутинг в пересте и перезагружать страницу
+  .controls-Browser__search {
+    width: round(600px * @multiplier);
+  }
+  .controls-Browser__search-small .controls-Browser__search {
+    width: round(350px * @multiplier);
+  }
+}
+.controls-Browser {
+  .controls-Browser__search {
+    margin: @top_window_button 0 @top_window_button round(8px * @multiplier);
+  }
+}
+//ОКНА И ЭРИИ ИЗ WS`А
+//!IMPORTANT лучше чем увеличение веса селектора через BODY тк возможно собирать тему под селектором
+.ws-window-titlebar-action.close {
+  .close-button-mixin(~'!important');
+}
+
+.ws-window-title {
+  font-size: round(40px * @multiplier) !important;
+  height: round(100px * @multiplier) !important;
+  max-height: round(100px * @multiplier) !important;
+  line-height: round(100px * @multiplier) !important;
+  font-weight: normal !important;
+  margin: 0 round(92px * @multiplier) 0 round(24px * @multiplier) !important;
+}
+.ws-float-area-nostack-panel-shadow-standart {
+  border: 1px solid #2e404f !important;
+  background: #2e404f !important;
+}
+.ws-float-area-stack-panel-shadow {
+  border-left: @default-border-width solid #00a2ef !important;
+  border-color: #00a4f0 !important;
+  border-width: 0 0 0 @default-border-width !important;
+  border-style: solid!important;
+  -webkit-box-shadow: -8px 0 12px -4px rgba(0,0,0,0.2) !important;
+  -moz-box-shadow: -8px 0 12px -4px rgba(0,0,0,0.2) !important;
+  box-shadow: -8px 0 12px -4px rgba(0,0,0,0.2) !important;
+  background: #273749 !important;
+}
+.ws-float-area-title-generated {
+  margin-right: round(84px * @multiplier) !important;
+  line-height: round(100px * @multiplier) !important;
+}
+
+.ws-float-area .ws-window-titlebar.ws-window-titlebar-custom {
+  height: round(100px * @multiplier )!important;
+  .ws-float-area-title {
+    line-height: round(100px * @multiplier) !important;
+  }
+}
+.ws-window {
+  background-color: @basic-block-bg-color !important;
+  border-style: solid !important;
+  border-color: transparent !important;
+  border-width: @default-border-width !important;
+}
+
+.ws-float-area-nostack-panel-overflow .ws-float-close.sbisname-window-title-close, .ws-float-close.sbisname-window-title-close {
+  top: @top_window_button !important;
+}
+
+.ws-float-close.sbisname-window-title-close,
+body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
+  .close-button-mixin();
+}
+.ws-float-area-stack-scroll-wrapper .ws-float-area-stack-panel-shadow {
+  border-left-color: @default-border-color-second;
+  border-left-width: round(3px * @multiplier);
+}
+//!IMPORTANT лучше чем увеличение веса селектора через BODY тк возможно собирать тему под селектором
+.ws-float-close, .ws-window-titlebar-action {
+  top: @top_window_button !important;
+}
+//ОКНА И ЭРИИ ИЗ WS`А
+
+.controls-MergeDialogTemplate__cellRadioButton.controls-RadioButton .controls-RadioButton__icon {
+  margin: round(1px * @multiplier) round(16px * @multiplier) round(0px * @multiplier) round(8px * @multiplier)
+}
+//делаю только для тем, ибо опасно
+.ws-is-ie, .ws-is-firefox {
+  .controls-DropdownList .controls-DropdownList__selectedItem {
+    display: inline-flex !important;
+    display: -ms-flexbox !important;
+    display: -ms-inline-flexbox !important;
+    display: -webkit-inline-flex !important;
+  }
+}

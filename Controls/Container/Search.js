@@ -10,7 +10,7 @@ define('Controls/Container/Search',
       /**
        * Container component for content that can be filtered by Controls/Input/Search.
        * @class Controls/Container/Search
-       * @extends Controls/Control
+       * @extends Core/Control
        * @author Герасимов Александр
        * @control
        * @public

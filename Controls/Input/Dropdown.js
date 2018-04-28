@@ -12,7 +12,7 @@ define('Controls/Input/Dropdown',
       /**
        * Поле выбора из значения списка.
        * @class Controls/Input/Dropdown
-       * @extends Controls/Control
+       * @extends Core/Control
        * @mixes Controls/interface/ISource
        * @mixes Controls/Input/interface/IValidation
        * @mixes Controls/interface/ISingleSelectable

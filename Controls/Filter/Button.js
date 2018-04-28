@@ -8,15 +8,14 @@ define('Controls/Filter/Button',
       'Core/moduleStubs',
       'WS.Data/Chain',
       'WS.Data/Utils',
-      'css!Controls/Filter/Button/Button',
-      'Controls/Input/Text'
+      'css!Controls/Filter/Button/Button'
    ],
-
+   
    function(Control, template, moduleStubs, Chain, Utils) {
-
+      
       /**
        * @class Controls/Filter/Button
-       * @extends Controls/Control
+       * @extends Core/Control
        * @mixin Controls/Filter/Button/interface/IFilterPanel
        * @control
        * @public
