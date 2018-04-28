@@ -67,6 +67,12 @@ define('Controls/Toggle/Radio', [
       }
    });
 
+   Switch.getDefaultOptions = function getDefaultOptions() {
+      return {
+         direction: 'vertical'
+      };
+   };
+
    Radio._private = _private;
 
    return Radio;
