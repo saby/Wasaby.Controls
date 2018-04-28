@@ -13,7 +13,7 @@ define('Controls/Input/Password',
    /**
     * Поле ввода пароля.
     * @class Controls/Input/Password
-    * @extends Controls/Control
+    * @extends Core/Control
     * @mixes Controls/Input/interface/IInputText
     * @mixes Controls/Input/interface/IInputPlaceholder
     * @mixes Controls/Input/interface/IValidation

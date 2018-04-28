@@ -5,7 +5,6 @@ define('Controls/Input/TimeInterval', [
     * Контрол предназначен для ввода информации о количестве времени с точностью от дня до минуты.
     * Можно вводить только значения особого формата даты ISO_8601 с точностью от дней до минут.
     * @class Controls/Input/TimeInterval
-    * @extends Controls/Control
     * @mixes Controls/Input/interface/IInputText
     * @mixes Controls/Input/interface/IValidation
     * @mixes Controls/Input/interface/IInputTag

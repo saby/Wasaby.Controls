@@ -311,8 +311,8 @@ define('Controls/List/BaseControl', [
 
    /**
     * Компонент плоского списка, с произвольным шаблоном отображения каждого элемента. Обладает возможностью загрузки/подгрузки данных из источника.
-    * @class Controls/List
-    * @extends Controls/Control
+    * @class Controls/List/BaseControl
+    * @extends Core/Control
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IGroupedView
@@ -601,6 +601,26 @@ define('Controls/List/BaseControl', [
 
       _closeActionsMenu: function(args) {
          _private.closeActionsMenu(this, args);
+      },
+
+      moveItemUp: function(item) {
+         this._children.moveControl.moveItemUp(item);
+      },
+
+      moveItemDown: function(item) {
+         this._children.moveControl.moveItemDown(item);
+      },
+
+      moveItems: function(items, target, position) {
+         this._children.moveControl.moveItems(items, target, position);
+      },
+
+      _beforeItemsMove: function(event, items, target, position) {
+         return this._notify('beforeItemsMove', [items, target, position]);
+      },
+
+      _afterItemsMove: function(event, items, target, position, result) {
+         this._notify('afterItemsMove', [items, target, position, result]);
       }
    });
 

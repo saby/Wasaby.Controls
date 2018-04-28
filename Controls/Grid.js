@@ -13,7 +13,7 @@ define('Controls/Grid', [
     * Компонент плоского списка, отображаемого в виде таблицы. Обладает возможностью загрузки/подгрузки данных из источника.
     *
     * @class Controls/Grid
-    * @extends Controls/Control
+    * @extends Controls/List
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/ISingleSelectable
     * @mixes Controls/interface/IPromisedSelectable
