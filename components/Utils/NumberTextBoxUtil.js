@@ -7,10 +7,9 @@ define('SBIS3.CONTROLS/Utils/NumberTextBoxUtil', [],
      * @public
      */
     function () /** @lends SBIS3.CONTROLS/Utils/NumberTextBoxUtil.prototype */{
-       //В связи с проблемой с функцией toFixed(), integers было ограничено до 14
-       //111111111111111.12.toFixed(2) === "111111111111111.13"
-       //11111111111111.12.toFixed(2) === "11111111111111.12"
-       var MAX_INTEGER_COUNT = 14;
+       var
+          MAX_NUMBER_OF_DIGITS = 16,
+          MAX_SAFE_INTEGER = 9007199254740991;
 
        return {
             /**
@@ -21,7 +20,7 @@ define('SBIS3.CONTROLS/Utils/NumberTextBoxUtil', [],
              */
             checkMaxLength: function (value, maxLength) {
                 var length = this._getValueLength(value);
-                return !(maxLength && length > maxLength) && (this._getIntegersCount(value || '') <= MAX_INTEGER_COUNT);
+                return !(maxLength && length > maxLength) && length <= MAX_NUMBER_OF_DIGITS && parseFloat(value) <= MAX_SAFE_INTEGER;
             },
             /**
              *
@@ -42,7 +41,7 @@ define('SBIS3.CONTROLS/Utils/NumberTextBoxUtil', [],
                     integerCount =  this._getIntegersCount(currentVal),
                     checkMaxLengthResult = this.checkMaxLength(currentVal, maxLength),
                     newCaretPosition = b,
-                    isFull = this._getValueLength(currentVal) === parseInt(maxLength, 10) || integerCount === integers || integerCount === MAX_INTEGER_COUNT,
+                    isFull = this._getValueLength(currentVal) === parseInt(maxLength, 10) || integerCount === integers || integerCount === MAX_NUMBER_OF_DIGITS,
                     replaceFirstZero = false;
 
                 if (((currentVal[0] == 0 && b == 1) || (currentVal[0] == '-' && currentVal[1] == 0 && b == 2)) && b == e ){ // заменяем первый ноль если курсор после него
