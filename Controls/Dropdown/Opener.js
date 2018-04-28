@@ -62,7 +62,7 @@ define('Controls/Dropdown/Opener',
                icon = item.get('icon');
                if (icon) {
                   pid = item.get(parentProperty);
-                  if (!parents.hasOwnProperty(pid)) {
+                  if (!parents.hasOwnProperty(pid) && pid) {
                      iconSize = _private.getIconSize(icon);
                      parents[pid] = [pid, iconSize];
                   }

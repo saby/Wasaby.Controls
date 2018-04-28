@@ -8,7 +8,7 @@ define('Controls/Toggle/Checkbox', [
    /**
     * Контрол, отображающий стандартный флажок
     * @class Controls/Toggle/Checkbox
-    * @extends Controls/Control
+    * @extends Core/Control
     * @mixes Controls/Button/interface/ICaption
     * @mixes Controls/interface/ITooltip
     * @control

@@ -26,7 +26,7 @@ define('Controls/Input/Number', [
       /**
        * Поле ввода числа.
        * @class Controls/Input/Number
-       * @extends Controls/Control
+       * @extends Core/Control
        * @mixes Controls/Input/interface/IInputNumber
        * @mixes Controls/Input/interface/IInputPlaceholder
        * @mixes Controls/Input/interface/IValidation

@@ -15,7 +15,7 @@ define('Controls/Filter/Button',
       
       /**
        * @class Controls/Filter/Button
-       * @extends Controls/Control
+       * @extends Core/Control
        * @control
        * @public
        */

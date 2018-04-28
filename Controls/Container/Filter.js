@@ -99,7 +99,7 @@ define('Controls/Container/Filter',
       /**
        * Container component for content that can be filtered by Controls/Filter/Button or Controls/Filter/FastFilter.
        * @class Controls/Container/Filter
-       * @extends Controls/Control
+       * @extends Core/Control
        * @control
        * @public
        */
