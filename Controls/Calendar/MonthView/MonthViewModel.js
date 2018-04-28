@@ -102,11 +102,10 @@ define('Controls/Calendar/MonthView/MonthViewModel', [
       },
 
       _prepareClass: function(scope) {
-         // TODO: Попробовать переверстать на flex.
          scope = scope.value;
 
-         var textColorClass = 'controls-MonthView__textColor',
-            backgroundColorClass = 'controls-MonthView__backgroundColor',
+         var textColorClass = 'controls-MonthViewVDOM__textColor',
+            backgroundColorClass = 'controls-MonthViewVDOM__backgroundColor',
             css = [];
 
          if (scope.isCurrentMonth) {
@@ -151,57 +150,48 @@ define('Controls/Calendar/MonthView/MonthViewModel', [
          if (scope.isCurrentMonth) {
             // if (scope.selectionEnabled) {
             if (scope.enabled) {
-               css.push('controls-MonthView__cursor-item');
+               css.push('controls-MonthViewVDOM__cursor-item');
                if (!scope.selected) {
-                  css.push('controls-MonthView__border-currentMonthDay-unselected');
+                  css.push('controls-MonthViewVDOM__border-currentMonthDay-unselected');
                }
             }
-            css.push('controls-RangeSelectable__item', 'controls-MonthView__selectableItem');
+            css.push('controls-MonthViewVDOM__selectableItem');
             if (scope.enabled && scope.selectionEnabled) {
-               css.push('controls-MonthView__hover-selectableItem');
+               css.push('controls-MonthViewVDOM__hover-selectableItem');
             }
             if (scope.selected) {
-               css.push('controls-MonthView__item-selected');
+               css.push('controls-MonthViewVDOM__item-selected');
             }
 
             if (scope.selectedUnfinishedStart) {
-               css.push('controls-MonthView__item-selectedStart-unfinished');
+               css.push('controls-MonthViewVDOM__item-selectedStart-unfinished');
             }
             if (scope.selectedUnfinishedEnd) {
-               css.push('controls-MonthView__item-selectedEnd-unfinished');
+               css.push('controls-MonthViewVDOM__item-selectedEnd-unfinished');
             }
             if (scope.selected && scope.selectedStart && !scope.selectedUnfinishedStart) {
-               css.push('controls-MonthView__item-selectedStart');
+               css.push('controls-MonthViewVDOM__item-selectedStart');
             }
             if (scope.selected && scope.selectedEnd && (!scope.selectionProcessing || (scope.selectedEnd !== scope.selectedStart && !scope.selectedUnfinishedEnd))) {
-               css.push('controls-MonthView__item-selectedEnd');
+               css.push('controls-MonthViewVDOM__item-selectedEnd');
             }
             if (scope.selectedInner) {
-               css.push('controls-MonthView__item-selectedInner');
+               css.push('controls-MonthViewVDOM__item-selectedInner');
             }
 
             // }
 
             if (scope.today) {
-               css.push('controls-MonthView__today');
+               css.push('controls-MonthViewVDOM__today');
             }
-            css.push('controls-MonthView__dayNumber' + scope.day);
          }
 
-         css.push(scope.isCalendar ? 'controls-MonthView__currentMonthDay' : 'controls-MonthView__' + scope.month);
+         css.push(scope.isCalendar ? 'controls-MonthViewVDOM__currentMonthDay' : 'controls-MonthViewVDOM__' + scope.month);
 
          if (scope.weekend) {
-            css.push('controls-MonthView__weekend');
+            css.push('controls-MonthViewVDOM__weekend');
          } else {
-            css.push('controls-MonthView__workday');
-         }
-
-         if (scope.firstDayOfMonth) {
-            css.push('controls-MonthView__firstDayOfMonth');
-         }
-
-         if (scope.lastDayOfMonth) {
-            css.push('controls-MonthView__lastDayOfMonth');
+            css.push('controls-MonthViewVDOM__workday');
          }
 
          return css.join(' ');

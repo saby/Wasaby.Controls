@@ -24,7 +24,8 @@ define('Controls/Calendar/Month', [
 
    /**
     * Календарь отображающий 1 месяц.
-    * Предназначен для задания даты или диапазона дат в рамках одного месяца путём выбора.
+    * Предназначен для задания даты или диапазона дат в рамках одного месяца путём выбора периода с помощью мыши.
+    * 
     * @class Controls/Calendar/Month
     * @extends Core/Control
     * @mixes Controls/Calendar/interface/IMonth

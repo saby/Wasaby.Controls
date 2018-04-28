@@ -2,13 +2,11 @@
 define('Controls/Calendar/Month/Model', [
    'Core/core-merge',
    'Controls/Calendar/MonthView/MonthViewModel',
-   'SBIS3.CONTROLS/Utils/DateUtil',
-   'Controls/Calendar/Utils'
+   'SBIS3.CONTROLS/Utils/DateUtil'
 ], function(
    coreMerge,
    MonthViewModel,
-   DateUtil,
-   calendarUtils
+   DateUtil
 ) {
    'use strict';
 

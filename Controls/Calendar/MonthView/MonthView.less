@@ -1,62 +1,77 @@
-.controls-MonthView {
+.controls-MonthViewVDOM {
+   display: flex;
+   flex-direction: column;
    text-align: center;
    width: @width_MontView;
    background: @background_MonthView;
 }
 
-.controls-MonthView__dayTable {
-   table-layout: fixed;
-   vertical-align: middle;
+.controls-MonthViewVDOM__table {
+   flex-shrink: 1;
+   flex-grow: 1;
+   display: flex;
+   flex-direction: column;
+   align-items: stretch;
    width: 100%;
-   border-spacing: @spacing_MonthView-item;
 }
 
-.controls-MonthView__tableHead {
+.controls-MonthViewVDOM__tableRow {
+   flex-grow: 1;
+   flex-shrink: 1;
+   flex-basis: @height_MonthView-item;
+   display: flex;
+   margin-right: 1px;
+   color: @color_MonthView-weekDayHeader;
+}
+
+.controls-MonthViewVDOM__tableHead {
    font-size: @font-size_MontView-weekDayHeader;
    text-align: center;
 }
 
-.controls-MonthView__tableElement {
+.controls-MonthViewVDOM__item {
    position: relative;
-   // TODO: высота должна задаваться через высоту контрола, а ячейки должны растягиваться. Переделать с уходом от таблицы.
-   height: @height_MonthView-item;
    font-size: @font-size_MonthView-item;
+
+   flex-grow: 1;
+   flex-shrink: 1;
+   flex-basis: 0;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   margin-top: 1px;
+   margin-left: 1px;
+   box-sizing: content-box;
 }
 
-.controls-MonthView__weekDayHeader {
-   position: relative;
-   height: @height_MonthView-item;
-   color: @color_MonthView-weekDayHeader;
-}
-
-.ws-is-desktop-platform {
-   .controls-MonthView__hover-selectableItem {
+.ws-is-no-touch {
+   .controls-MonthViewVDOM__hover-selectableItem {
       &:hover {
          background: @background_MonthView-item-hover;
       }
    }
 
-   .controls-MonthView__border-currentMonthDay-unselected {
+   .controls-MonthViewVDOM__border-currentMonthDay-unselected {
       &:hover {
          outline: 1px solid @border-color__MonthView-item-hover;
       }
    }
 }
 
-.controls-MonthView__item-selectedStart,
-.controls-MonthView__item-selectedEnd,
-.controls-MonthView__item-selectedInner,
-.controls-MonthView__item-selectedStart-unfinished,
-.controls-MonthView__item-selectedEnd-unfinished {
+.controls-MonthViewVDOM__item-selectedStart,
+.controls-MonthViewVDOM__item-selectedEnd,
+.controls-MonthViewVDOM__item-selectedInner,
+.controls-MonthViewVDOM__item-selectedStart-unfinished,
+.controls-MonthViewVDOM__item-selectedEnd-unfinished {
    outline: 1px solid @border-color__MonthView-item-selected;
 }
 
-.controls-MonthView__item-selectedStart,
-.controls-MonthView__item-selectedEnd {
+.controls-MonthViewVDOM__item-selectedStart,
+.controls-MonthViewVDOM__item-selectedEnd {
    font-weight: bold;
 }
 
-.controls-MonthView__item-selectedStart:before {
+.controls-MonthViewVDOM__item-selectedStart:before {
    content: "";
    position: absolute;
    height: 100%;
@@ -67,7 +82,7 @@
    z-index: 1;
 }
 
-.controls-MonthView__item-selectedEnd:after {
+.controls-MonthViewVDOM__item-selectedEnd:after {
    content: "";
    position: absolute;
    height: 100%;
@@ -77,49 +92,49 @@
    right: -1px;
 }
 
-.controls-MonthView__backgroundColor-currentMonthDay-weekend-unselected-enabled,
-.controls-MonthView__backgroundColor-currentMonthDay-workday-unselected-enabled {
+.controls-MonthViewVDOM__backgroundColor-currentMonthDay-weekend-unselected-enabled,
+.controls-MonthViewVDOM__backgroundColor-currentMonthDay-workday-unselected-enabled {
    background: @background_MonthView-item;
 }
-.controls-MonthView__backgroundColor-currentMonthDay-weekend-selected-enabled,
-.controls-MonthView__backgroundColor-currentMonthDay-workday-selected-enabled {
+.controls-MonthViewVDOM__backgroundColor-currentMonthDay-weekend-selected-enabled,
+.controls-MonthViewVDOM__backgroundColor-currentMonthDay-workday-selected-enabled {
    background: @background_MonthView-item-selected;
 }
 
-.controls-MonthView__backgroundColor-currentMonthDay-weekend-selected-startend-unfinished-enabled,
-.controls-MonthView__backgroundColor-currentMonthDay-workday-selected-startend-unfinished-enabled {
+.controls-MonthViewVDOM__backgroundColor-currentMonthDay-weekend-selected-startend-unfinished-enabled,
+.controls-MonthViewVDOM__backgroundColor-currentMonthDay-workday-selected-startend-unfinished-enabled {
    background: @background_MonthView-item-hover;
 }
 
-.controls-MonthView__backgroundColor-currentMonthDay-weekend-unselected-disabled,
-.controls-MonthView__backgroundColor-currentMonthDay-workday-unselected-disabled {
+.controls-MonthViewVDOM__backgroundColor-currentMonthDay-weekend-unselected-disabled,
+.controls-MonthViewVDOM__backgroundColor-currentMonthDay-workday-unselected-disabled {
    background: greyscale(lighten(@background_MonthView-item, 3%));
 }
-.controls-MonthView__backgroundColor-currentMonthDay-weekend-selected-disabled,
-.controls-MonthView__backgroundColor-currentMonthDay-workday-selected-disabled {
+.controls-MonthViewVDOM__backgroundColor-currentMonthDay-weekend-selected-disabled,
+.controls-MonthViewVDOM__backgroundColor-currentMonthDay-workday-selected-disabled {
    background: greyscale(lighten(@background_MonthView-item-selected, 15%));
 }
 
-.controls-MonthView__textColor-currentMonthDay-workday-enabled {
+.controls-MonthViewVDOM__textColor-currentMonthDay-workday-enabled {
    color: @color_MonthView-item;
    //&:hover {
    //   color: @color_MonthView-item-hover;
    //}
 }
-.controls-MonthView__textColor-currentMonthDay-weekend-enabled {
+.controls-MonthViewVDOM__textColor-currentMonthDay-weekend-enabled {
    color: @color_MonthView-item-weekend;
 }
-.controls-MonthView__textColor-currentMonthDay-workday-disabled {
+.controls-MonthViewVDOM__textColor-currentMonthDay-workday-disabled {
    color:  greyscale(lighten(@color_MonthView-item, 30%));
 }
-.controls-MonthView__textColor-currentMonthDay-weekend-disabled {
+.controls-MonthViewVDOM__textColor-currentMonthDay-weekend-disabled {
    color: greyscale(lighten(@color_MonthView-item-weekend, 20%));
 }
 
-.controls-MonthView__today {
+.controls-MonthViewVDOM__today {
    color: @color_MonthView-item-today;
 }
-.controls-MonthView__item-today-background {
+.controls-MonthViewVDOM__item-today-background {
    position: absolute;
    //height: calc(100% - 2px);
    //width: calc(100% - 2px);
@@ -131,57 +146,24 @@
    background-color: @background-color_MonthView-item-today;
 }
 
-.controls-MonthView__item-title {
+.controls-MonthViewVDOM__item-title {
    position: relative;
 }
-// Переделать, не привязываться к фиксированной высоте ячеек
-.ws-is-webkit,
-.ws-is-mobile-chrome-ios,
-.ws-is-ie {
-   .controls-MonthView__item-title{
-      height: @height_MonthView-item;
-      line-height: @height_MonthView-item;
-      display: block;
-   }
-}
 
-.controls-MonthView__cursor-item {
+.controls-MonthViewVDOM__cursor-item {
    cursor: pointer;
 }
 
-.controls-MonthView__prevMonth,
-.controls-MonthView__nextMonth {
+.controls-MonthViewVDOM__prevMonth,
+.controls-MonthViewVDOM__nextMonth {
    color: @color_MonthView-item-prev-next-month;
-
-   &:hover {
-      color: @color_MonthView-item-prev-next-month-hover;
-   }
 }
-.ws-is-desktop-platform {
-   .controls-MonthView__prevMonth,
-   .controls-MonthView__nextMonth {
+
+.ws-is-no-touch {
+   .controls-MonthViewVDOM__prevMonth,
+   .controls-MonthViewVDOM__nextMonth {
       &:hover {
          color: @color_MonthView-item-prev-next-month-hover;
       }
-   }
-}
-
-.controls-MonthView__dayTitle {
-   display: block;
-   .box-sizing(border-box);
-   height: 100%;
-}
-
-// В хром на ipad установлен класс ws-is-old-webkit, но не установлен ws-is-webkit. В текущую версию фиксим по месту.
-.ws-is-old-webkit,
-.ws-is-webkit {
-   // в 3.17.150 вместе с упрощение селекторов сделать везде однотипно(через position: absolute),
-   // а исключение сделать для ie. Либо подумать как свертстать по дургому.
-   .controls-MonthView__dayTitle {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
    }
 }
