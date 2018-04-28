@@ -108,7 +108,7 @@ define('Controls/Tabs/Buttons', [
          }
       },
       _onItemClick: function(event, key) {
-         this._notify('selectedKeyChanged', key);
+         this._notify('selectedKeyChanged', [key]);
       },
       _prepareItemClass: function(item) {
          return _private.prepareItemClass(item, this._options, this._lastRightOrder);
