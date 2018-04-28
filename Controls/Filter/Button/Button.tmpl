@@ -26,6 +26,8 @@
     </ws:if>
 
    <Controls.Popup.Opener.Sticky name="filterStickyOpener">
-      <ws:popupOptions  closeByExternalClick="{{true}}" />
+       <ws:popupOptions  closeByExternalClick="{{true}}">
+           <ws:eventHandlers onResult="{{_onFilterChanged}}"/>
+       </ws:popupOptions>
    </Controls.Popup.Opener.Sticky>
 </div>

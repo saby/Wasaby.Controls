@@ -77,7 +77,7 @@ define('Controls/Filter/Button/Panel', [
       },
 
       _applyFilter: function() {
-         this._notify('filterChanged', [_private.getFilter(this)]);
+         this._notify('sendResult', [_private.getFilter(this)]);
          this._notify('close');
       },
 
