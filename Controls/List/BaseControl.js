@@ -621,6 +621,10 @@ define('Controls/List/BaseControl', [
 
       _afterItemsMove: function(event, items, target, position, result) {
          this._notify('afterItemsMove', [items, target, position, result]);
+      },
+
+      _onActionClick: function(e, action, item) {
+         this._notify('actionClick', [action, item]);
       }
    });
 
