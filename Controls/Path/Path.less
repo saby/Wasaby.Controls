@@ -7,6 +7,7 @@
 .controls-Path__backButton {
    white-space: nowrap;
    position: relative;
+   padding: 0 @spacing_Path-backButton;
 }
 
 .controls-Path__breadCrumbs {
@@ -16,13 +17,8 @@
 
 .controls-Path__backButton_short {
    flex-shrink: 1;
-   min-width: 48px; //TODO: 36px минимальная ширина текста + 12px ширина иконки
-}
-
-.controls-Path__backButton_half,
-.controls-Path__backButton_short {
-   //TODO: нужно переписывать кнопку назад, сейчас она не умеет обрезаться многоточием
-   .text-overflow();
+   min-width: @min-width_BreadCrumbs-text + @width-BackButton_size-default + @spacing-BackButton-between-icon-text;
+   overflow: hidden;
 }
 
 .controls-Path__backButton_half,
