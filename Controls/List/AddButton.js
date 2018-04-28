@@ -9,7 +9,7 @@ define('Controls/List/AddButton', [
       _template: template,
 
       clickHandler: function(e) {
-         if (!this.isEnabled()) {
+         if (this._options.readOnly) {
             e.stopPropagation();
          }
       }

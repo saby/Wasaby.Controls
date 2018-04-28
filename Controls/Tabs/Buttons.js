@@ -67,7 +67,7 @@ define('Controls/Tabs/Buttons', [
    /**
      * Компонент - корешки закладок
      * @class Controls/Tabs/Buttons
-     * @extends Controls/Control
+     * @extends Core/Control
      * @mixes Controls/interface/ISource
      * @mixes Controls/interface/ISingleSelectable
      * @control
@@ -108,7 +108,7 @@ define('Controls/Tabs/Buttons', [
          }
       },
       _onItemClick: function(event, key) {
-         this._notify('selectedKeyChanged', key);
+         this._notify('selectedKeyChanged', [key]);
       },
       _prepareItemClass: function(item) {
          return _private.prepareItemClass(item, this._options, this._lastRightOrder);

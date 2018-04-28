@@ -2,7 +2,7 @@
    controls-{{ _options.inputType }}-InputRender
    controls-{{ _options.inputType }}-InputRender_style_{{ _options.style }}
    controls-{{ _options.inputType }}-InputRender_state_{{ _getInputState() }}
-   {{ !isEnabled() ? 'controls-' + _options.inputType + '-InputRender_state_disabled_' + (_options.multiline ? 'multiLine' : 'singleLine') }}
+   {{ _options.readOnly ? 'controls-' + _options.inputType + '-InputRender_state_disabled_' + (_options.multiline ? 'multiLine' : 'singleLine') }}
    controls-InputRender_size_{{ (_options.size ? _options.size : 'default') + (_options.multiline ? '_multiLine' : '_singleLine') }}
    controls-{{ _options.inputType }}-InputRender_padding{{ _options.sidePadding ? _options.sidePadding : 'Both' }}"
      title="{{tooltip}}">
@@ -25,7 +25,7 @@
                value="{{ _options.viewModel.getDisplayValue() }}"
          />
 
-         <ws:if data="{{ !_options.viewModel.getDisplayValue() && isEnabled()}}">
+         <ws:if data="{{ !_options.viewModel.getDisplayValue() && !_options.readOnly}}">
             <ws:partial
                attr:class="{{ _options.multiline ? 'controls-InputArea__placeholder_multiline' }}"
                template="tmpl!Controls/Input/resources/CustomPlaceholder"

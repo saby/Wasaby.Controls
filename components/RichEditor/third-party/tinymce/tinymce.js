@@ -22803,7 +22803,7 @@
     ], [
       editor,
       evt.shiftKey
-    ]).getOr(newLineAction.none());
+    ]).getOr(newLineAction.block());
   };
   var $_8auq9m6ujedwgi7q = { getAction: getAction$1 };
 

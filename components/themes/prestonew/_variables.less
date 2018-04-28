@@ -1,0 +1,66 @@
+@import "../online/_variables";
+@import "_defaults";
+@import "_colors";
+@import "_sizes";
+// Default vars
+@closeBigButtonImage:                     url('img/areaBigCloseButton.png') 0 0;
+@closeBigButtonImageHover:                url('img/areaBigCloseButton.png') 0 round(-84px * @multiplier);
+//Icon Button
+@color_Button:                            @white-color;
+@text-shadow_Button:                      0px 1px 0px rgba(0, 0, 0, 0.35);
+@box-shadow_Button:                       0px 1px 4px rgba(0, 0, 0, 0.5);
+// Normal default button
+@button-border:                           @border-width_Button solid @default-border-color-second;
+// Normal primary button
+@button-primary-border:                   @default-border-width solid @border-color_Button_primary;
+@button-primary-active-border:            @default-border-width solid #d94700;
+// Normal disabled button
+@border_Button_disabled:                  @border-width_Button solid @background_Button;
+@button-checked-border:                   @border-width_Button solid @button-checked-border-color;
+// Normal primary button
+@button-primary-checked-border:           @button-primary-active-border;
+@switcher-border:                         @default-border-width solid #2C4458;
+//Month picker
+@month-picker-arrow-spritesheet:          '';
+@month-picker-wrapper-border:             0.0357 solid @gray-color;
+@date-range-dash-border-top:              @default-border-width solid @date-range-dash-color;
+@date-range-choose-border-hover:          solid @default-border-color-second;
+
+@font-family_closeButton-icon:             'cbuc-icons';
+@list-view-scroll-spritesheet-big:         url('img/ajax-loader-indicator-big.gif');
+@list-view-scroll-spritesheet:             url('img/ajax-loader-indicator.gif');
+@list-view-scroll-bg:                      @list-view-scroll-spritesheet-big no-repeat center;
+//InformationPopup
+@controls-InformationPopup-border-width:                 1px;
+@controls-InformationPopup-closeButton-font-family:      @icon-font;
+//ProgressBar
+@ProgressBar-height:                      round(37px * @multiplier);
+@ProgressBar-width:                       round(400px * @multiplier);
+@ProgressBar-first-color:                 #26B8FF;
+@ProgressBar-last-color:                  @ProgressBar-first-color;
+@ProgressBar-border-color:                rgba(102, 170, 221, .15);
+@ProgressBar-background-color:            #354B62;
+@ProgressBar-border-radius:               0;
+@ProgressBar-value-color:                 @default-text-color;
+@ProgressBar-value-padding:               0 round(6px * @multiplier);
+@ProgressBar-value-font-size:             round(28px * @multiplier);
+@DropdownList-picker-menu-height-ff:      round(84px * @multiplier); //Решаю конфликт в 155, за не тот файл для этого кода извени
+@DropdownList-picker-menu-selected-marker-width: round(11px * @multiplier);
+@DropdownList-picker-menu-selected-marker-height: round(16px * @multiplier);
+@DropdownList-picker-menu-selected-marker-bg: #FF7033;
+@top_DropdownList_picker_marker:          round(42px * @multiplier);
+//TabButton
+@tab-buttons-border-bottom:               1px solid #293543;
+//sundry
+@list-view-loading-indicator-gradient-bg: @list-view-scroll-spritesheet-big no-repeat center;
+@list-view-loading-indicator-gradient-bg-up: @list-view-scroll-spritesheet-big no-repeat center;
+@controls-NotificationPopup-header-padding-with-close-button: @controls-NotificationPopup-header-padding round(58px * @multiplier) @controls-NotificationPopup-header-padding 8px;
+//-----------------//
+//  StickyHeader  //
+//----------------//
+@sticky-header-partScroll-padding:        round(12px * @multiplier);
+//waitIndicator
+@background_url_WaitIndicator:            @list-view-scroll-spritesheet-big;
+@background_url_WaitIndicator_small:      @list-view-scroll-spritesheet;
+//EditInPlace
+@controls-editInPlace-editing-item-bg:    @controls-editInPlace-editor-bg;

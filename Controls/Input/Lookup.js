@@ -4,7 +4,6 @@ define('Controls/Input/Lookup', [
    /**
     * Поле выбора из справочника с единичным выбором.
     * @class Controls/Input/Lookup
-    * @extends Controls/Control
     * @mixes Controls/Input/interface/ISearch
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IFilter

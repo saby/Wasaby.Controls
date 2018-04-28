@@ -1,16 +1,36 @@
-<ws:template name="scrollTpl">
-   <div class="controls-Scroll">
-      <Controls.Layout.Scroll scope="{{_options}}">
-         <div name="content"
-              style="{{displayState.heightFix ? '' : styleHideScrollbar}}"
-              class="controls-Scroll__content
+<ws:template name="content">
+   <Controls.Layout.Scroll scope="{{_options}}" name="scrollLayout">
+      <div name="content"
+           style="{{displayState.heightFix ? '' : styleHideScrollbar}}"
+           class="ws-flex-grow-1 controls-Scroll__content
                   {{hasHover ? 'controls-Scroll__content_possibleScroll'}}
                   {{displayState.heightFix ? 'controls-Scroll__content_hidden' : 'controls-Scroll__content_scroll'}}"
-              on:resize="_resizeHandler()"
-              on:scroll="_scrollHandler()">
-            <ws:partial template="{{optContent}}"/>
-         </div>
-      </Controls.Layout.Scroll>
+           on:resize="_resizeHandler()"
+           on:scroll="_scrollHandler()">
+         <ws:partial template="{{optContent}}"/>
+      </div>
+   </Controls.Layout.Scroll>
+</ws:template>
+<ws:template name="scrollTpl">
+   <div class="controls-Scroll ws-flexbox ws-flex-column">
+      <ws:if data="{{pagingState.visible}}">
+         <ws:partial template="content"
+                     displayState="{{displayState}}"
+                     hasHover="{{hasHover}}"
+                     optContent="{{optContent}}"
+                     styleHideScrollbar="{{styleHideScrollbar}}"
+                     attr:class="controls-Scroll__content_paging"
+                     on:listTop="_scrollReachTopHandler()"
+                     on:scrollMove="_scrollMoveHandler()"
+                     on:listBottom="_scrollReachBottomHandler()"/>
+      </ws:if>
+      <ws:else>
+         <ws:partial template="content"
+                     displayState="{{displayState}}"
+                     hasHover="{{hasHover}}"
+                     optContent="{{optContent}}"
+                     styleHideScrollbar="{{styleHideScrollbar}}"/>
+      </ws:else>
 
       <ws:if data="{{!useNativeScrollbar && scrollbarVisible && (hasHover || dragging)}}">
          <Controls.Container.Scroll.Scrollbar
@@ -30,10 +50,20 @@
          </ws:if>
       </ws:if>
 
+      <ws:if data="{{pagingState.visible}}">
+         <ws:Controls.List.Paging class="controls-Scroll__paging"
+                                  stateBegin="{{pagingState.stateUp}}"
+                                  statePrev="{{pagingState.stateUp}}"
+                                  stateEnd="{{pagingState.stateDown}}"
+                                  stateNext="{{pagingState.stateDown}}"
+                                  on:onArrowClick="_arrowClickHandler()"/>
+      </ws:if>
+
       <Controls.Event.Emitter event="resize" on:resize="_resizeHandler()"/>
    </div>
 </ws:template>
 
+<!--TODO:избавиться от прокидывания опций в шаблоне когда будет сделано https://online.sbis.ru/opendoc.html?guid=93779c1a-8d18-42fe-8dc8-1bab779d0943-->
 <ws:if data="{{!_useNativeScrollbar}}">
    <ws:partial template="scrollTpl"
                scrollbarVisible="{{_options.scrollbarVisible}}"
@@ -46,6 +76,7 @@
                shadowVisible="{{_options.shadowVisible}}"
                styleHideScrollbar="{{_styleHideScrollbar}}"
                optContent="{{_options.content}}"
+               pagingState="{{_pagingState}}"
                on:mouseenter="_mouseenterHandler()"
                on:mouseleave="_mouseleaveHandler()"
                on:scrollbarTaken="_scrollbarTakenHandler()"
@@ -62,5 +93,6 @@
                scrollTop="{{_scrollTop}}"
                shadowVisible="{{_options.shadowVisible}}"
                styleHideScrollbar="{{_styleHideScrollbar}}"
-               optContent="{{_options.content}}"/>
+               optContent="{{_options.content}}"
+               pagingState="{{_pagingState}}"/>
 </ws:else>

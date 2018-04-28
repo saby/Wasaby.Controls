@@ -1,13 +1,22 @@
-.ws-Suggest__inputRender {
+.controls-SuggestV__inputRender, .controls-SuggestV__wrapper, .controls-SuggestV__suggestionsContainer {
 	width: 100%;
 }
 
-.ws-Suggest {
-	display: inline-block;
-	max-width: 100%;
+.controls-SuggestV__suggestionsContainer {
+	position: absolute;
+	border-width: 0 @default-border-width @default-border-width @default-border-width;
+	border-color: @suggest-picker-border-color;
+	border-style: solid;
+	box-sizing: border-box;
 }
 
-.ws-Suggest__loader {
+.controls-SuggestV {
+	display: inline-block;
+	max-width: 100%;
+	position: relative;
+}
+
+.controls-SuggestV__loader {
 	.flex-shrink(0);
 	background: @background_Suggest-loader;
 	background-size: contain;
@@ -17,19 +26,38 @@
 	margin-right: @spacing_Suggest-loader;
 }
 
-.ws-Suggest__clear {
+.controls-SuggestV__clear {
 	.icon-size-without-important();
 	margin: auto;
 	color: @color_Suggest-clear;
 	cursor: pointer;
 }
 
-.ws-Suggest__afterFieldWrapper {
+.controls-SuggestV__footer {
+	.flexbox();
+}
+
+.controls-SuggestV__showAllLink {
+	color: @color_Link-text;
+	text-decoration: @text-decoration_Link;
+	height: @height_Link;
+	line-height: @link-line-height;
+	cursor: @link-cursor;
+	padding: 0 8px;
+	margin-left: auto;
+}
+
+.controls-SuggestV__showAllLink:hover {
+	color: @color_Link-text_hovered;
+	text-decoration: underline;
+}
+
+.controls-SuggestV__afterFieldWrapper {
 	.inline-flexbox();
 }
 
 //TODO Пока зададим ширину для новой стековой панели явно. Нужно для Матильды. https://online.sbis.ru/opendoc.html?guid=23717d3b-cb27-4a7e-a7ae-b4d06eb6aa25
-.ws-Suggest__showAllPopup {
+.controls-SuggestV__showAllPopup {
 	max-width: 700px;
 	width: calc(~"100% - 64px");
 }

@@ -10,14 +10,11 @@ define("File/Attach/Uploader", ["require", "exports", "File/Attach/Container/Sou
         /**
          *
          * @param {File/Attach/Container/Source} container
-         * @param {String} fileProperty
          * @param {Function} notify
          * @constructor
          * @name File/Attach/Uploader
          */
-        function Uploader(container, fileProperty, notify) {
-            if (fileProperty === void 0) { fileProperty = "File"; }
-            this.fileProperty = fileProperty;
+        function Uploader(container, notify) {
             /**
              * Список событий, необходимых к пробрасыванию от ISource
              * @type {Array.<String>}

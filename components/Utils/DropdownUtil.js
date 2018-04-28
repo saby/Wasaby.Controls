@@ -51,7 +51,7 @@ define('SBIS3.CONTROLS/Utils/DropdownUtil', [
                // заполняем по пунктам, учесть индексы из опций
                myself._getHistoryController(self).setHistoryDataFromRecord(result.getAll(), data);
                myself.callShow(self, prototype);
-               historyUtil.setHistory(self._options.historyId, self._getHistoryController(self).getHistoryDataSet());
+               historyUtil.setHistory(self._options.historyId, myself._getHistoryController(self).getHistoryDataSet());
             });
          } else {
             myself._getHistoryController(self).setHistoryDataFromRecord(null, data);

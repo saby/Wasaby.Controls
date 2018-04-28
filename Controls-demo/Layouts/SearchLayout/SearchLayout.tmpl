@@ -15,7 +15,7 @@
                                 </Controls.Container.Input.Search>
                                 <Controls.Container.Filter.Fast>
                                     <ws:content>
-                                        <Controls.Filter.FastFilter bind:selectedKeys="_value"/>
+                                        <Controls.Filter.Fast bind:selectedKeys="_value"/>
                                     </ws:content>
                                 </Controls.Container.Filter.Fast>
                                 <Controls.Container.Filter.Button>
@@ -31,7 +31,7 @@
                                         <div>
                                             <Controls.List idProperty="id" name="list" >
                                                 <ws:itemTemplate>
-                                                    <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate"
+                                                    <ws:partial template="tmpl!Controls/List/ItemTemplate"
                                                                 itemData="{{itemTemplate.itemData}}"
                                                     >
                                                         <ws:contentTemplate>

@@ -1,6 +1,6 @@
 #!groovy
 echo "Задаем параметры сборки"
-def version = "3.18.200"
+def version = "3.18.300"
 
 def gitlabStatusUpdate() {
     if ( currentBuild.currentResult == "ABORTED" ) {
@@ -218,7 +218,7 @@ node('controls') {
                     echo "Выкачиваем demo_stand"
                     dir(workspace) {
                         checkout([$class: 'GitSCM',
-                        branches: [[name: 'master']],
+                        branches: [[name: "rc-${version}"]],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [[
                             $class: 'RelativeTargetDirectory',
@@ -388,10 +388,10 @@ node('controls') {
                 [Тест]
                 Адрес=http://${env.NODE_NAME}:10010"""
             // Копируем шаблоны
-            sh """cp -f ./controls/tests/stand/intest/pageTemplates/branch/* ./controls/tests/stand/intest/pageTemplates"""
-            sh """cp -fr ./controls/Examples/ ./controls/tests/stand/intest/Examples/"""
+            sh """cp -f ./controls/tests/stand/Intest/pageTemplates/branch/* ./controls/tests/stand/Intest/pageTemplates"""
+            sh """cp -fr ./controls/Examples/ ./controls/tests/stand/Intest/Examples/"""
             sh """
-                cd "${workspace}/controls/tests/stand/intest/"
+                cd "${workspace}/controls/tests/stand/Intest/"
                 sudo python3 "change_theme.py" ${params.theme}
                 cd "${workspace}"
 
@@ -421,6 +421,7 @@ node('controls') {
                 cd ./jinnee/distrib/builder
                 cp -rf /home/sbis/Controls/build-ui/ws /home/sbis/Controls/intest-ps/ui/
                 node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/sbis/Controls/intest-ps/ui --application=/
+                sudo systemctl restart Controls_ps
             """
         }
         writeFile file: "./controls/tests/int/config.ini", text:
@@ -434,7 +435,7 @@ node('controls') {
             SOFT_RESTART = True
             NO_RESOURCES = True
             DELAY_RUN_TESTS = 2
-            TAGS_NOT_TO_START = iOSOnly, tabmessage
+            TAGS_NOT_TO_START = iOSOnly
             ELEMENT_OUTPUT_LOG = locator
             WAIT_ELEMENT_LOAD = 20
             HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/"""

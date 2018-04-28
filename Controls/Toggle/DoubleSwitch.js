@@ -10,7 +10,7 @@ define('Controls/Toggle/DoubleSwitch', [
    /**
     * Контрол, отображающий переключатель
     * @class Controls/Toggle/DoubleSwitch
-    * @extends Controls/Control
+    * @extends Core/Control
     * @mixes Controls/Toggle/interface/ICheckable
     * @mixes Controls/interface/ITooltip
     * @control
@@ -53,13 +53,13 @@ define('Controls/Toggle/DoubleSwitch', [
       },
 
       _clickTextHandler: function(e, _nextValue) {
-         if (this._options.value !== _nextValue && this.isEnabled()) {
+         if (this._options.value !== _nextValue && !this._options.readOnly) {
             _private.notifyChanged(this);
          }
       },
 
       _clickToggleHandler: function(e) {
-         if (this.isEnabled()) {
+         if (!this._options.readOnly) {
             _private.notifyChanged(this);
          }
       },

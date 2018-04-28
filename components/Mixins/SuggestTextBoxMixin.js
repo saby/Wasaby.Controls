@@ -240,14 +240,15 @@ define('SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin', [
              });
          }else {
              this._inputHistoryDeferred = new Deferred();
-             this._historyController.getHistory(true).addCallback(function() {
+             this._inputHistoryDeferred.addCallback(function(data) {
+                return self._makeQueryFilterForHistory(data);
+             });
+             this._historyController.getHistory(true).addCallback(function(history) {
                 for (var i = 0, l = self._historyController.getCount(); i < l; i++) {
                    recordsId.push(self._getHistoryRecordId(self._historyController.at(i).get('data')));
                 }
-                self._inputHistoryDeferred.addCallback(function(data) {
-                   return self._makeQueryFilterForHistory(data);
-                });
                 self._inputHistoryDeferred.callback(recordsId);
+                return history;
              });
          }
          return this._inputHistoryDeferred;
@@ -283,7 +284,7 @@ define('SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin', [
       },
       _needShowHistory: function(){
          var listItems = this._getListItems();
-         return this._historyController && !this.getText().length && this._options.startChar && //Если startChar = 0, историю показывать не нужно
+         return this._historyController && !this.getText() && this._options.startChar && //Если startChar = 0, историю показывать не нужно
                (!listItems || !listItems.getCount() || !this.isPickerVisible()); // Показываем историю, если записей нет или пикер скрыт
       },
 

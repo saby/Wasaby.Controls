@@ -15,7 +15,7 @@ define('Controls/Filter/Button',
       
       /**
        * @class Controls/Filter/Button
-       * @extends Controls/Control
+       * @extends Core/Control
        * @control
        * @public
        */
@@ -74,7 +74,7 @@ define('Controls/Filter/Button',
          },
          
          _getFilterState: function() {
-            return this.isEnabled() ? 'default' : 'disabled';
+            return this._options.readOnly ? 'disabled' : 'default';
          },
    
          _clearClick: function() {
@@ -84,7 +84,7 @@ define('Controls/Filter/Button',
          },
    
          _openFilterPanel: function() {
-            if (this.isEnabled()) {
+            if (!this._options.readOnly) {
                /* if template - show old component */
                if (this._options.filterTemplate) {
                   _private.getFilterButtonCompatible(this).addCallback(function(panelOpener) {

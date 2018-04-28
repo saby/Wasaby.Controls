@@ -8,12 +8,12 @@
             itemActions="{{_itemActions}}"
             on:actionClick="_onActionClick()"
             itemActionVisibilityCallback="{{_showAction}}"
-            class="itemActionsDemo__list">
+            class="test_list_1 itemActionsDemo__list itemActionsDemo__marginleft10">
 
         <ws:itemTemplate>
-            <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate">
+            <ws:partial template="tmpl!Controls/List/ItemTemplate">
                 <ws:contentTemplate>
-                    <div style="padding: 4px;" on:click="_contentClick( itemTemplate.itemData)">
+                    <div style="padding: 3px;" on:click="_contentClick( itemTemplate.itemData)">
                         <div>{{itemTemplate.itemData.item.get('title')}}</div>
                         <div style="font-size: 11px; color: grey">{{itemTemplate.itemData.item.get('description')}}</div>
                     </div>
@@ -21,7 +21,7 @@
             </ws:partial>
         </ws:itemTemplate>
     </Controls.List>
-    <div on:click="changeSource()"> Сменить источник для первого списка</div>
+    <div on:click="changeSource()" style="margin:10px"> Сменить источник для первого списка</div>
     <h2>itemActionsType="outside"</h2>
     <Controls.List
             source = "{{_viewSource2}}"
@@ -32,10 +32,10 @@
             on:actionClick="_onActionClick()"
             itemActions="{{_itemActions}}"
             itemActionVisibilityCallback="{{_showAction}}"
-            class="itemActionsDemo__list">
+            class="test_list_2 itemActionsDemo__list itemActionsDemo__marginleft10">
 
         <ws:itemTemplate>
-            <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate">
+            <ws:partial template="tmpl!Controls/List/ItemTemplate">
                 <ws:contentTemplate>
                     <div style="padding: 4px;">
                         <div>{{itemTemplate.itemData.item.get('title')}}</div>
@@ -45,6 +45,6 @@
             </ws:partial>
         </ws:itemTemplate>
     </Controls.List>
-    <div>последний нажатый экшн</div>
-    <div class="action__last_clicked">{{__lastClicked}}</div>
+    <div class="itemActionsDemo__marginleft10">последний нажатый экшн</div>
+    <div class="action__last_clicked itemActionsDemo__marginleft10">{{__lastClicked}}</div>
 </div>

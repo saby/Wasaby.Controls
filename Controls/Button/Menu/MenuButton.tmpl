@@ -7,9 +7,9 @@
                     on:click="_open()"/>
 
    <Controls.Dropdown.Opener name="DropdownOpener" className="{{_offsetClassName}}">
-      <ws:popupOptions closeByExternalClick="{{true}}">
+      <ws:popupOptions>
          <ws:eventHandlers onResult="{{_onResult}}"/>
-         <ws:componentOptions
+         <ws:templateOptions
                  keyProperty="{{_options.keyProperty}}"
                  parentProperty="{{_options.parentProperty}}"
                  nodeProperty="{{_options.nodeProperty}}"
@@ -26,7 +26,7 @@
                       caption="{{_options.headConfig.caption || _options.caption}}"
                       menuStyle="{{_options.headConfig.menuStyle}}"
                       icon="{{_options.headConfig.icon || _options.icon}}"/>-->
-         </ws:componentOptions>
+         </ws:templateOptions>
       </ws:popupOptions>
    </Controls.Dropdown.Opener>
 </div>

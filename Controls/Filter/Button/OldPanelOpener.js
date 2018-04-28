@@ -121,7 +121,7 @@ define('Controls/Filter/Button/OldPanelOpener',
                 * <pre>
                 *    ...
                 *    template: 'js!SBIS3.User.Info'
-                *    componentOptions: {
+                *    templateOptions: {
              *       firstName: 'John',
              *       secondName: 'Snow',
              *       nationality: 'Westerosi'
@@ -129,7 +129,7 @@ define('Controls/Filter/Button/OldPanelOpener',
                 *    ...
                 * </pre>
                 */
-               componentOptions: {},
+               templateOptions: {},
 
                /**
                 * @cfg {String}
@@ -165,7 +165,7 @@ define('Controls/Filter/Button/OldPanelOpener',
             var self = this;
             
             /* Не показываем кнопку фильтров, если она выключена */
-            if (!this.isEnabled()) {
+            if (this._options.readOnly) {
                return;
             }
             
@@ -204,14 +204,14 @@ define('Controls/Filter/Button/OldPanelOpener',
                   viewMode: this._options.viewMode,
                   areaCaption: this._options.areaCaption,
                   internalContextFilterName: this._options.internalContextFilterName,
-                  componentOptions: this._options.componentOptions
+                  templateOptions: this._options.templateOptions
                },
                self = this,
                templateProperty;
             
             /* Если шаблон указали как имя компонента (SBIS3.* || js!SBIS3.*) */
             function getCompTpl(tpl) {
-               return prepTpl(dotTplForComp({component: (requirejs.defined(tpl) ? tpl : 'js!' + tpl), componentOptions: self.getProperty('componentOptions')}));
+               return prepTpl(dotTplForComp({component: (requirejs.defined(tpl) ? tpl : 'js!' + tpl), templateOptions: self.getProperty('templateOptions')}));
             }
             
             /* Если в качестве шаблона передали вёрстку */
@@ -247,7 +247,7 @@ define('Controls/Filter/Button/OldPanelOpener',
                },
                context: this._pickerContext,
                template: 'SBIS3.CONTROLS/Filter/Button/Area',
-               componentOptions: this._getAreaOptions(),
+               templateOptions: this._getAreaOptions(),
                handlers: {
                   onClose: function() {
                      /* Разрушаем панель при закрытии,

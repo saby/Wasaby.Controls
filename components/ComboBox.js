@@ -196,12 +196,9 @@ define('SBIS3.CONTROLS/ComboBox', [
              * Благодаря данной опции контрол можно перевести в такой режим работы, при котором в выпадающем списке будет присутствовать пункт "Не выбрано".
              * ![](/empty-value-1.png)
              * При выборе этого пункта сбрасывается ранее установленное значение. Также говорят, что устанавливается пустое значение.
-             * Выбор пункта аналогичен выполнению следующего кода:
-             * <pre>
-             * // myComboBox - экземпляр класса SBIS3.CONTROLS/ComboBox
-             * myComboBox.setSelectedKey(null);
-             * </pre>
+             * Опцию корректно использовать только с {@link allowEmptySelection} = "{{true}}".
              * Чтобы установить текст, отображаемый в поле ввода после выбора пустого значения, определите значение в опции {@link placeholder}.
+             * @see allowEmptySelection
              */
             emptyValue: false,
             /**
@@ -596,7 +593,12 @@ define('SBIS3.CONTROLS/ComboBox', [
             targetPart: true,
             activableByClick: false,
             closeOnTargetMove: true,
-            template : this._dotTplFnPicker
+            template : this._dotTplFnPicker,
+            handlers: {
+               onClose: function() {
+                  this._revertArrow(false);
+               }.bind(this)
+            }
          };
       },
 
@@ -872,7 +874,6 @@ define('SBIS3.CONTROLS/ComboBox', [
          if (this._picker) {
             $('.controls-ComboBox__item', this._picker.getContainer()).unbind();
          }
-         this._revertArrow(false);
          ComboBox.superclass.hidePicker.apply(this, arguments);
       },
 

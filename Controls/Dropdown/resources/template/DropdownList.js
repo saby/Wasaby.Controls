@@ -2,13 +2,13 @@ define('Controls/Dropdown/resources/template/DropdownList',
    [
       'Core/Control',
       'tmpl!Controls/Dropdown/resources/template/DropdownList',
-      'Controls/Dropdown/resources/MenuViewModel',
+      'Controls/Dropdown/resources/DropdownViewModel',
       'tmpl!Controls/Dropdown/resources/template/itemTemplate',
       'tmpl!Controls/Dropdown/resources/template/defaultHeadTemplate',
       'tmpl!Controls/Dropdown/resources/template/defaultContentHeadTemplate',
       'css!Controls/Dropdown/resources/template/DropdownList'
    ],
-   function(Control, MenuItemsTpl, MenuViewModel, itemTemplate, defaultHeadTemplate, defaultContentHeadTemplate) {
+   function(Control, MenuItemsTpl, DropdownViewModel, itemTemplate, defaultHeadTemplate, defaultContentHeadTemplate) {
 
       /**
        * Действие открытия прилипающего окна
@@ -73,7 +73,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
          },
          _beforeMount: function(newOptions) {
             if (newOptions.items) {
-               this._listModel = new MenuViewModel({
+               this._listModel = new DropdownViewModel({
                   items: newOptions.items,
                   rootKey: newOptions.rootKey || null,
                   selectedKeys: newOptions.selectedKeys,
@@ -89,7 +89,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
          _itemMouseEnter: function(event, item, hasChildren) {
             if (hasChildren) {
                var config = {
-                  componentOptions: {
+                  templateOptions: {
                      items: this._options.items,
                      itemTemplate: this._options.itemTemplate,
                      keyProperty: this._options.keyProperty,
