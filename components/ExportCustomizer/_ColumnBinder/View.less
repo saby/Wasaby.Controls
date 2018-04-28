@@ -1,0 +1,73 @@
+
+@margin_ExportCustomizer-ColumnBinder-View-head: 0 0 15px 0;
+@padding_ExportCustomizer-ColumnBinder-View-title: 0 12px;
+@font-size_ExportCustomizer-ColumnBinder-View-title: 15px;
+@color_ExportCustomizer-ColumnBinder-View-title: #313E78;
+@min-width_ExportCustomizer-ColumnBinder-View-addRows: 24px;
+@height_ExportCustomizer-ColumnBinder-View-addRows: 24px;
+@border_ExportCustomizer-ColumnBinder-View-addRows: 1px solid #F3F3F3;
+@border-radius_ExportCustomizer-ColumnBinder-View-addRows: 2px;
+@font-size_ExportCustomizer-ColumnBinder-View-addRows: 22px;
+@color_ExportCustomizer-ColumnBinder-View-addRows: #587AB0;
+@width_ExportCustomizer-ColumnBinder-View-grid-topFirstCell: 52px;
+@padding_ExportCustomizer-ColumnBinder-View-grid-topFirstCell: 3px 6px;
+@border-bottom_ExportCustomizer-ColumnBinder-View-grid-firstCell: 1px solid #F5F5F5;
+@padding_ExportCustomizer-ColumnBinder-View-grid-firstCell: 4px 12px;
+@background-color_ExportCustomizer-ColumnBinder-View-grid-firstCell: #E5ECF5;
+@color_ExportCustomizer-ColumnBinder-View-grid-lastCell: #0055BB;
+
+.controls-ExportCustomizer-ColumnBinder-View__head {
+   .flexbox();
+   .flex-direction(row);
+   .align-items(center);
+   margin: @margin_ExportCustomizer-ColumnBinder-View-head;
+}
+
+.controls-ExportCustomizer-ColumnBinder-View__title {
+   display: inline-block;
+   padding: @padding_ExportCustomizer-ColumnBinder-View-title;
+   font-size: @font-size_ExportCustomizer-ColumnBinder-View-title;
+   font-weight: bold;
+   color: @color_ExportCustomizer-ColumnBinder-View-title;
+}
+
+.controls-ExportCustomizer-ColumnBinder-View__addRows {
+   min-width: @min-width_ExportCustomizer-ColumnBinder-View-addRows;
+   height: @height_ExportCustomizer-ColumnBinder-View-addRows;
+   border: @border_ExportCustomizer-ColumnBinder-View-addRows;
+   border-radius: @border-radius_ExportCustomizer-ColumnBinder-View-addRows;
+   padding: 0;
+   font-size: @font-size_ExportCustomizer-ColumnBinder-View-addRows;
+   font-family: 'cbuc-icons';
+   font-weight: bold;
+   color: @color_ExportCustomizer-ColumnBinder-View-addRows;
+}
+
+.controls-ExportCustomizer-ColumnBinder-View__addRows:hover {
+   color: @color_ExportCustomizer-ColumnBinder-View-title;
+}
+
+.controls-ExportCustomizer-ColumnBinder-View__grid .controls-DataGridView__thead .controls-DataGridView__firstContentCell {
+   width: @width_ExportCustomizer-ColumnBinder-View-grid-topFirstCell;
+   padding: @padding_ExportCustomizer-ColumnBinder-View-grid-topFirstCell;
+   text-align: center;
+}
+
+.controls-ExportCustomizer-ColumnBinder-View__grid .controls-DataGridView__tr .controls-DataGridView__firstContentCell {
+   border-bottom: @border-bottom_ExportCustomizer-ColumnBinder-View-grid-firstCell !important;
+   padding: @padding_ExportCustomizer-ColumnBinder-View-grid-firstCell;
+   background-color: @background-color_ExportCustomizer-ColumnBinder-View-grid-firstCell;
+   text-align: center;
+}
+
+.controls-ExportCustomizer-ColumnBinder-View__grid .controls-DataGridView__tr.controls-ListView__hoveredItem .controls-DataGridView__firstContentCell {
+   background-color: @background-color_ExportCustomizer-ColumnBinder-View-grid-firstCell !important;
+}
+
+.controls-ExportCustomizer-ColumnBinder-View__grid .controls-DataGridView__tr .controls-DataGridView__lastContentCell {
+   color: @color_ExportCustomizer-ColumnBinder-View-grid-lastCell;
+}
+
+.controls-ExportCustomizer-ColumnBinder-View__grid .controls-DataGridView__tr .controls-DataGridView__lastContentCell .controls-DataGridView__columnValue:hover {
+   text-decoration: underline;
+}
