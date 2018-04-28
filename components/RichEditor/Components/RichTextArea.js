@@ -68,6 +68,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
       var BROWSER = cConstants.browser;
       // TODO: Избавиться везде ниже от выражения cConstants.browser
 
+      /**
+       * Константа - имя регистрации загрузчика изображений в инжекторе зависимостей
+       * @private
+       * @type {string}
+       */
+      var DI_IMAGE_UPLOADER = 'ImageUploader';
+
       var _getTrueIEVersion = function () {
          var version = cConstants.browser.IEVersion;
          // В cConstants.browser.IEVersion неправильно определяется MSIE 11
@@ -2260,8 +2267,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           * @return {boolean}
           */
          canUploadMultiSelect: function () {
-            if (Di.isRegistered('ImageUploader')) {
-               return Di.resolve('ImageUploader').canMultiSelect;
+            if (Di.isRegistered(DI_IMAGE_UPLOADER)) {
+               return Di.resolve(DI_IMAGE_UPLOADER).canMultiSelect;
             }
          },
 
@@ -2276,8 +2283,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          selectAndUploadImage: function (target, imageFolder, canMultiSelect) {
             var imageUploader = this._imageUploader;
             if (!imageUploader) {
-               if (Di.isRegistered('ImageUploader')) {
-                  this._imageUploader = imageUploader = Di.resolve('ImageUploader').getFileLoader();
+               if (Di.isRegistered(DI_IMAGE_UPLOADER)) {
+                  this._imageUploader = imageUploader = Di.resolve(DI_IMAGE_UPLOADER).getFileLoader();
                }
                else {
                   return Deferred.fail('No image uplader');
