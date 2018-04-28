@@ -20,7 +20,7 @@ define('SBIS3.CONTROLS/Utils/NumberTextBoxUtil', [],
              */
             checkMaxLength: function (value, maxLength) {
                 var length = this._getValueLength(value);
-                return !(maxLength && length > maxLength) && length <= MAX_NUMBER_OF_DIGITS && parseFloat(value) <= MAX_SAFE_INTEGER;
+                return !(maxLength && length > maxLength) && length <= MAX_NUMBER_OF_DIGITS && (isNaN(parseFloat(value)) || parseFloat(value) <= MAX_SAFE_INTEGER);
             },
             /**
              *
