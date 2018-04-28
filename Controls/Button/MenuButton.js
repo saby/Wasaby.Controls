@@ -97,7 +97,9 @@ define('Controls/Button/MenuButton',
          _onResult: function(result) {
             if (result.action === 'itemClick') {
                this._notify('onMenuItemActivate', result.data);
-               this._children.DropdownOpener.close();
+               if (!result.data[0].get('@parent')) {
+                  this._children.DropdownOpener.close();
+               }
             }
          }
       });
