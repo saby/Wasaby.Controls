@@ -256,7 +256,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                customFormats: {}
             },
             _richTextAreaContainer: undefined,
-            _richTextAreaScrollContainer: undefined,
             _scrollContainer: undefined,
             _dataReview: undefined,
             _inputControl: undefined,
@@ -315,7 +314,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             this._dChildReady.push(this._readyControlDeffered);
             this._tinyReady = new Deferred();
             this._richTextAreaContainer = this._container.find('.controls-RichEditor__richTextArea');
-            this._richTextAreaScrollContainer = this._container.find('.controls-RichEditor__scrollContainer');
             this._scrollContainer = this._container.find('.controls-RichEditor__scrollContainer');
             this._dataReview = this._container.find('.controls-RichEditor__dataReview');
             this._inputControl = this._container.find('.controls-RichEditor__editorFrame');
@@ -471,7 +469,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   var isInline = options.editorConfig.inline;
                   var iFrame = isInline ? null : $(this._tinyEditor.iframeElement);
                   (isInline ? this._richTextAreaContainer : iFrame).css('max-height', options.maximalHeight || '');
-                  (isInline ? this._richTextAreaScrollContainer : iFrame).css('max-height', options.maximalHeight || '');
+                  (isInline ? this._scrollContainer : iFrame).css('max-height', options.maximalHeight || '');
                   (isInline ? this._inputControl : iFrame).css('min-height', options.minimalHeight || '');
                }
             }
@@ -2533,8 +2531,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             var container = this._tinyEditor && this._tinyEditor.getContainer() ? $(this._tinyEditor.getContainer()) : this._inputControl;
             var options = this._options;
             if (options.autoHeight) {
-               this._richTextAreaContainer.css('max-height', this._cleanHeight(options.maximalHeight) || '');
-               this._richTextAreaScrollContainer.css('max-height', this._cleanHeight(options.maximalHeight) || '');
+               var minHeight = this._cleanHeight(options.maximalHeight) || '';
+               this._richTextAreaContainer.css('max-height', minHeight);
+               this._scrollContainer.css('max-height', minHeight);
                // Минимальную высоту области просмотра нужно фиксировать только в отсутствии опции previewAutoHeight
                // 1175020199 https://online.sbis.ru/opendoc.html?guid=ff26541b-4dce-4df3-8b04-1764ee9b1e7a
                // 1175043073 https://online.sbis.ru/opendoc.html?guid=69a945c9-b517-4056-855a-6dec71d81823
@@ -2870,7 +2869,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                else {
                   content = this._tinyEditor.iframeElement;
                }
-               if (cConstants.browser.isIE) {
+               if (BROWSER.isIE) {
                   $content = $content || $(content);
                   $content.css('height', '');
                }
@@ -2879,11 +2878,20 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                // При вводе (при переводе на вторую строку) скрол-контейнер немного прокручивается внутри родительского контейнера - вернуть его на место
                // 1175034880 https://online.sbis.ru/opendoc.html?guid=ea5afa7c-f81d-4e53-9709-e10e3acc51e9
                this._scrollContainer[0].scrollTop = 0;
-               if (cConstants.browser.isIE) {
-                  // В MSIE при добавлении новой строки clientHeight и scrollHeight начинают расходиться - нужно их уравнять
-                  // 1175015989 https://online.sbis.ru/opendoc.html?guid=d013f54f-683c-465c-b437-6adc64dc294a
-                  var diff = contentHeight - content.clientHeight;
-                  $content.css('height', 0 < diff ? content.offsetHeight + diff : content.offsetHeight);
+               if (BROWSER.isIE) {
+                  if (contentHeight <= 36) {
+                     // В MSIE нативная прокрутка имеет неубиваемую высоту, поэтому для маленькой высоты скрвть еёе совсем
+                     // 1175088729 https://online.sbis.ru/opendoc.html?guid=733e34fd-e101-4cb9-b99b-afa6674c559d
+                     this._scrollContainer.addClass('controls-ScrollContainer__hiddenScrollbar');
+                     $content.css('height', this._scrollContainer.height());
+                  }
+                  else {
+                     this._scrollContainer.removeClass('controls-ScrollContainer__hiddenScrollbar');
+                     // В MSIE при добавлении новой строки clientHeight и scrollHeight начинают расходиться - нужно их уравнять
+                     // 1175015989 https://online.sbis.ru/opendoc.html?guid=d013f54f-683c-465c-b437-6adc64dc294a
+                     var diff = contentHeight - content.clientHeight;
+                     $content.css('height', 0 < diff ? content.offsetHeight + diff : content.offsetHeight);
+                  }
                   if (isChanged) {
                      var parent = content.parentNode;
                      if (parent.clientHeight < contentHeight) {
@@ -3006,8 +3014,16 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           */
          _initMainHeight: function () {
             if (!this._options.autoHeight) {
-               this._richTextAreaContainer.css('height', this._container.height());
-               this._richTextAreaScrollContainer.css('height', this._container.height());
+               var height = this._container.height();
+               var richTextAreaContainer = this._richTextAreaContainer;
+               var scrollContainer = this._scrollContainer;
+               richTextAreaContainer.css('height', height);
+               scrollContainer.css('height', richTextAreaContainer.height());
+               if (BROWSER.isIE && height < 36) {
+                  // В MSIE нативная прокрутка имеет неубиваемую высоту, поэтому для маленькой высоты скрвть еёе совсем
+                  // 1175088729 https://online.sbis.ru/opendoc.html?guid=733e34fd-e101-4cb9-b99b-afa6674c559d
+                  scrollContainer.addClass('controls-ScrollContainer__hiddenScrollbar');
+               }
             }
          },
 
