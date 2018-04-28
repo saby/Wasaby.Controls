@@ -107,7 +107,7 @@ define('Controls/Container/List',
                   self._contextObj.hasOwnProperty('searchLayoutField') &&
                   oldContext.get('searchLayoutField').searchValue;
             
-            return newValue && !isEqual(newValue, oldValue) ? _private.searchValueChanged(self, newValue) : false;
+            return !isEqual(newValue, oldValue) ? _private.searchValueChanged(self, newValue) : false;
          }
       };
       
