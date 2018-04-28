@@ -69,15 +69,4 @@
                 readOnly="{{false}}"
                 itemTemplate="{{_unionItemTemplate}}"/>
     </div>
-
-    <div class="demo-RadioGroup__TestBlock">
-        <h2>Задан itemTemplate. Для каждого элемента используется верстка заданная в опциях.</h2>
-        <Controls.Toggle.Radio
-                on:selectedKeyChanged="changeKey()"
-                attr:class="demo-RadioGroup"
-                keyProperty="id"
-                selectedKey="{{_selectKey}}"
-                source="{{_source}}"
-                itemTemplate="{{_unionItemTemplate}}"/>
-    </div>
 </div>
