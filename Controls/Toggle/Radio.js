@@ -10,7 +10,7 @@ define('Controls/Toggle/Radio', [
    /**
     * Group of radioButton.
     * @class Controls/Toggle/Radio
-    * @extends Controls/Control
+    * @extends Core/Control
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/ISingleSelectable
     * @control
@@ -66,6 +66,12 @@ define('Controls/Toggle/Radio', [
          }
       }
    });
+
+   Radio.getDefaultOptions = function getDefaultOptions() {
+      return {
+         direction: 'vertical'
+      };
+   };
 
    Radio._private = _private;
 

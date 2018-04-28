@@ -4,7 +4,6 @@ define('Controls/Input/Money', [
    /**
     * Поле ввода денежных единиц.
     * @class Controls/Input/Money
-    * @extends Controls/Control
     * @mixes Controls/Input/interface/IInputText
     * @mixes Controls/Input/interface/IValidation
     * @mixes Controls/Input/interface/IInputTag

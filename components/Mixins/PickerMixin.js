@@ -121,6 +121,7 @@ define('SBIS3.CONTROLS/Mixins/PickerMixin', [
          pickerConfig.context = pickerConfig.context || (parent && parent.getLinkedContext());
          pickerConfig.target = pickerConfig.target || this._container;
          pickerConfig.element = pickerContainer;
+         pickerConfig.visible = true;
          return new FloatArea(pickerConfig);
       },
 

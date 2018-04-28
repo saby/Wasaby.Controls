@@ -518,7 +518,7 @@ define('SBIS3.CONTROLS/Image',
                if (response instanceof Error) {
                   return this._onLoadedError(response);
                }
-               imageInstance._notify('onEndLoad', response);
+               imageInstance._notify('onEndLoad', {result: response.getRawData()});
                if (imageInstance._options.edit) {
                   imageInstance._showEditDialog('new');
                } else {

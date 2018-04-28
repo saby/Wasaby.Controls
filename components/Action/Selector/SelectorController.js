@@ -7,13 +7,13 @@ define('SBIS3.CONTROLS/Action/Selector/SelectorController', [
    "WS.Data/Di",
    "Core/core-instance",
    'Core/core-clone',
-   "WS.Data/Entity/Record",
+   "SBIS3.CONTROLS/Utils/SelectionUtil",
    "SBIS3.CONTROLS/Utils/QueryUtil",
    "SBIS3.CONTROLS/Action/Utils/OpenDialogUtil",
    "WS.Data/Collection/List",
    "SBIS3.CONTROLS/Action/Selector/SelectorWrapper"
 ],
-    function (CommandDispatcher, CompoundControl, Di, cInstance, coreClone, Record, Query, OpenDialogUtil, List) {
+    function (CommandDispatcher, CompoundControl, Di, cInstance, coreClone, SelectionUtil, Query, OpenDialogUtil, List) {
 
        'use strict';
 
@@ -220,7 +220,7 @@ define('SBIS3.CONTROLS/Action/Selector/SelectorController', [
                 selection = cInstance.instanceOfModule(item, 'WS.Data/Entity/Model') ? {
                    marked: [item.get(this._linkedObject.getProperty('idProperty'))], excluded: []
                 } : this._linkedObject.getSelection();
-                filter['selection'] = Record.fromObject(selection, dataSource.getAdapter());
+                filter['selection'] = SelectionUtil.selectionToRecord(selection, dataSource.getAdapter());
                 Query(dataSource, [filter]).addCallback(function(recordSet) {
                    list = new List();
                    list.assign(recordSet.getAll());

@@ -9,7 +9,7 @@ define('Controls/Button', [
    /**
     * Button
     * @class Controls/Button
-    * @extends Controls/Control
+    * @extends Core/Control
     * @mixes Controls/Button/interface/IHref
     * @mixes Controls/Button/interface/ICaption
     * @mixes Controls/Button/interface/IClick

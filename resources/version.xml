@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<version>
+
+  <version_core>
+    <version_number>3.18.14eww693415</version_number>
+    <build_number>84</build_number>
+    <build_date>28.03.2018</build_date>
+    <build_time>12:34:55</build_time>
+  </version_core>
+
+  <version_number>3.18.121.a</version_number>
+
+  <build_number>81</build_number>
+
+  <build_date>30.03.2018</build_date>
+
+  <build_time>21:50:49</build_time>
+
+</version>

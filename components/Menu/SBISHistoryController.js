@@ -307,7 +307,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
 
          sourceItems = sourceItems || self._options.oldItems;
          items.forEach(function(id) {
-            oldItem = sourceItems.getRecordById(id);
+            oldItem = sourceItems.getRecordById(id) || self._options.oldItems.getRecordById(id);
             if (oldItem) {
                newItem = new Model({
                   rawData: oldItem.getRawData(),
