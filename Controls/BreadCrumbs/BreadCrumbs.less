@@ -19,7 +19,6 @@
 
 .controls-BreadCrumbsV__titleWrapper {
    flex-shrink: 0;
-   color: #0055BB;
    cursor: pointer;
    position: relative;
    overflow: hidden;
@@ -28,6 +27,7 @@
 
 .controls-BreadCrumbsV__title {
    .text-overflow();
+   color: @color_BreadCrumbs-title;
 }
 
 .controls-BreadCrumbsV__crumb_withOverflow {
@@ -41,7 +41,7 @@
 }
 
 .controls-BreadCrumbsV__title:hover {
-   color: #313E78;
+   color: @color_BreadCrumbs-title_hovered;
    text-decoration: underline;
 }
 
@@ -79,6 +79,11 @@
 
 .controls-BreadCrumbsV__menuItem {
    display: inline-flex;
+   align-items: center;
+   //TODO: нужна новая svg-шка для тем (эта слишком жирная)
+   //TODO: размеры через background-size
+   //TODO: высота в темах не совпадает с высотой item'ов
+   height: @height_BreadCrumbs-items - 2px; //TODO: хз откуда эти 2 пикселя берутся
 }
 
 .controls-BreadCrumbsV__menuTitle {
@@ -91,11 +96,10 @@
 .controls-BreadCrumbsV__indentation {
    display: inline-flex;
    flex-shrink: 0;
-   height: 13px;
-   width: 14px;
+   height: @height_BreadCrumbs-corner;
+   width: @width_BreadCrumbs-corner;
    &:last-of-type {
-      background: @bread-crumbs-hier-wrapper-bg no-repeat;
-      position: relative;
-      top: -4px;
+      background: @background_BreadCrumbs-corner no-repeat;
+      align-self: flex-start;
    }
 }

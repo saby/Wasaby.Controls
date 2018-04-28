@@ -1,0 +1,11 @@
+<svg id="Слой_1" data-name="Слой 1" xmlns="http://www.w3.org/2000/svg" width="7" height="11" viewBox="0 0 7 11">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #8991a9;
+      }
+    </style>
+  </defs>
+  <title>путь</title>
+  <polygon class="cls-1" points="1 10 1 0 0 0 0 11 7 11 7 10 1 10"/>
+</svg>
