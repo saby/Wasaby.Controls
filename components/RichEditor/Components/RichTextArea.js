@@ -2287,7 +2287,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   this._imageUploader = imageUploader = Di.resolve(DI_IMAGE_UPLOADER).getFileLoader();
                }
                else {
-                  return Deferred.fail('No image uplader');
+                  return Deferred.fail('No image uploader');
                }
             }
             return imageUploader.startFileLoad(target, canMultiSelect !== undefined ? canMultiSelect : this.canUploadMultiSelect(), imageFolder || this._options.imageFolder)
