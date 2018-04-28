@@ -252,6 +252,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
           * Метод показывает floatArea.
           */
          _showRegistry: function () {
+            this._onFloatAreaClose_b = this._onFloatAreaClose_b || this._onFloatAreaClose.bind(this)
             this._floatArea = new FloatArea({
                title: rk('Все операции'),
                template: 'SBIS3.CONTROLS/LongOperations/Registry',
@@ -268,13 +269,12 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                autoCloseOnHide: true,
                maxWidth: 1000
             });
+            this._floatArea.once('onAfterClose', this._onFloatAreaClose_b);
 
             //Скрываем нашу панель, во время работы с floatArea, она не нужна
             this.setVisible(false);
 
             this._notify('onSizeChange');
-
-            this._floatArea.once('onAfterClose', this._onFloatAreaClose_b = this._onFloatAreaClose_b || this._onFloatAreaClose.bind(this));
          },
 
          _onFloatAreaClose: function () {
