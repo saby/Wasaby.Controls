@@ -37,7 +37,10 @@ define('Controls/Input/resources/InputRender/InputRender',
                };
             }
 
-            return result;
+            return {
+               selectionStart: undefined,
+               selectionEnd: undefined
+            };
          },
 
          getTargetPosition: function(target) {
