@@ -25,7 +25,7 @@ define('Controls/List/Remove', [
    /**
    * Control for deleting instances from collection of list
    * @class Controls/Remove
-   * @extends Controls/Control
+   * @extends Core/Control
    * @mixes Controls/interface/IRemovable
    * @control
    * @author Sukhoruchkin A.S.

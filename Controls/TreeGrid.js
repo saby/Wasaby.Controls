@@ -26,7 +26,7 @@ define('Controls/TreeGrid', [
    /**
     * Компонент иерархического списка, отображаемого в виде дерева, с произвольным шаблоном отображения каждого элемента. Обладает возможностью загрузки/подгрузки данных из источника.
     * @class Controls/Tree
-    * @extends Controls/Control
+    * @extends Controls/Grid
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/ISingleSelectable
     * @mixes Controls/interface/IPromisedSelectable

@@ -829,7 +829,7 @@ define([
                keyProperty: 'id',
                selectedKeys : [1, 3]
             });
-            ctrl._children = {itemActions: {updateActions: function() {}}};
+            ctrl._children = {itemActions: {updateItemActions : function() {}}};
             ctrl._notify = function(e, options) {
                assert.equal(options[0], opt);
             };
@@ -874,7 +874,7 @@ define([
                keyProperty: 'id',
                selectedKeys : [1, 3]
             });
-            ctrl._children = {itemActions: {updateActions: function() {}}};
+            ctrl._children = {itemActions: {updateItemActions : function() {}}};
             ctrl._notify = function(e, options) {
                assert.equal(options[0], opt);
                return newOpt;
@@ -918,7 +918,7 @@ define([
                keyProperty: 'id',
                selectedKeys : [1, 3]
             });
-            ctrl._children = {itemActions: {updateActions: function() {}}};
+            ctrl._children = {itemActions: {updateItemActions : function() {}}};
             ctrl._notify = function(e, options) {
                assert.equal(options[0], opt);
             };

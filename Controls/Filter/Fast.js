@@ -20,7 +20,7 @@ define('Controls/Filter/Fast',
       /**
        * Control "Fast Filter"
        * @class Controls/Filter/FastFilter
-       * @extends Controls/Control
+       * @extends Core/Control
        * @control
        * @public
        * @author Золотова Э.Е.

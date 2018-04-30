@@ -10,7 +10,7 @@ define('Controls/Explorer', [
    /**
     * Компонент иерархического списка, с возможностью распахивания, а так же проваливания в узлы. Обладает возможностью загрузки/подгрузки данных из источника.
     * @class Controls/Explorer
-    * @extends Controls/Control
+    * @extends Core/Control
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IGroupedView

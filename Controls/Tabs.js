@@ -10,7 +10,7 @@ define('Controls/Tabs', [
    /**
     * Временная заглушка, чтоб заработал раздел Tabs
     * @class Controls/Tabs
-    * @extends Controls/Control
+    * @extends Core/Control
     * @control
     * @public
     * @category List

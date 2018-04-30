@@ -20,7 +20,7 @@ define('Controls/Toolbar', [
    /**
     * Toolbar
     * @class Controls/Toolbar
-    * @extends Controls/Control
+    * @extends Core/Control
     * @mixes Controls/Button/interface/ICaption
     * @mixes Controls/Button/interface/IClick
     * @mixes Controls/Button/interface/IIcon

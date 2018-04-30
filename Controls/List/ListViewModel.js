@@ -45,6 +45,7 @@ define('Controls/List/ListViewModel',
             itemsModelCurrent.itemActions =  this._actions[this.getCurrentIndex()];
             itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
             itemsModelCurrent.showActions = !this._editingItemData && (!this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive));
+            itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem.item;
             itemsModelCurrent.multiSelectStatus = this._multiselection.getSelectionStatus(itemsModelCurrent.key);
             itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility === 'visible';
             if (this._editingItemData && itemsModelCurrent.index === this._editingItemData.index) {
@@ -62,6 +63,11 @@ define('Controls/List/ListViewModel',
 
          setActiveItem: function(itemData) {
             this._activeItem = itemData;
+            this._nextVersion();
+         },
+
+         setSwipeItem: function(itemData) {
+            this._swipeItem = itemData;
             this._nextVersion();
          },
 
@@ -101,8 +107,8 @@ define('Controls/List/ListViewModel',
                this.setMarkedKey(itemData.item.get(this._options.keyProperty));
             }
          },
-         setItemActions: function(itemData, actions) {
-            this._actions[itemData.index] = actions;
+         setItemActions: function(item, actions) {
+            this._actions[this.getIndexBySourceItem(item)] = actions;
          },
 
          __calcSelectedItem: function(display, selKey, keyProperty) {
