@@ -108,8 +108,8 @@ define('Controls/Input/Number', [
          });
       },
 
-      _afterUpdate: function(oldOptions) {
-         if ((oldOptions.value !== this._numberViewModel.getValue()) && this._caretPosition) {
+      _afterUpdate: function() {
+         if (this._caretPosition) {
             this._children['input'].setSelectionRange(this._caretPosition, this._caretPosition);
             this._caretPosition = null;
          }
