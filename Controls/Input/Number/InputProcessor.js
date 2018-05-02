@@ -165,19 +165,20 @@ define('Controls/Input/Number/InputProcessor',
 
                   //If we have exceeded the maximum number in integers part, then we should move cursor after dot
                   if (!_private.validators.maxIntegersLength(_private.getClearValue(splitValue), options.integersLength)) {
-                     if (splitValue.after[0] === '.') {
-                        shift += 2;
-                        splitValue.after = splitValue.after.substring(0, 1) + splitValue.insert + splitValue.after.substring(2, splitValue.after.length);
-                        splitValue.insert = '';
-                     } else {
-                        if (splitValue.after[1] === ' ') {
+                     if (options.precision !== 0) {
+                        if (splitValue.after[0] === '.') {
                            shift += 2;
+                           splitValue.after = splitValue.after.substring(0, 1) + splitValue.insert + splitValue.after.substring(2, splitValue.after.length);
                         } else {
-                           shift += 1;
+                           if (splitValue.after[1] === ' ') {
+                              shift += 2;
+                           } else {
+                              shift += 1;
+                           }
+                           splitValue.after = splitValue.insert + splitValue.after.slice(1);
                         }
-                        splitValue.after = splitValue.insert + splitValue.after.slice(1);
-                        splitValue.insert = '';
                      }
+                     splitValue.insert = '';
                   }
 
                   //If we have exceeded the maximum number in decimals part, then we will replace the symbol on the right
