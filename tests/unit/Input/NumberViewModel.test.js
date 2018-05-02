@@ -766,6 +766,25 @@ define(
                      position: 5
                   },
                   inputType: 'insert'
+               },
+
+               {
+                  testName: 'Max integers length while precision = 0',
+                  controlConfig: {
+                     integersLength: 5,
+                     precision: 0
+                  },
+                  splitValue: {
+                     before: '12 345',
+                     insert: '6',
+                     after: '',
+                     delete: ''
+                  },
+                  result: {
+                     value: '12 345',
+                     position: 6
+                  },
+                  inputType: 'insert'
                }
             ];
 
