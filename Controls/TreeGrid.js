@@ -24,7 +24,8 @@ define('Controls/TreeGrid', [
    };
 
    /**
-    * Компонент иерархического списка, отображаемого в виде дерева, с произвольным шаблоном отображения каждого элемента. Обладает возможностью загрузки/подгрузки данных из источника.
+    * Hierarchical list with custom item template. Can load data from data source.
+    *
     * @class Controls/Tree
     * @extends Controls/Grid
     * @mixes Controls/interface/ISource

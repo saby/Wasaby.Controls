@@ -5,7 +5,8 @@ define('Controls/Dropdown/Opener',
    ],
    function(Sticky, Hierarchy) {
       /**
-       * Действие открытия прилипающего окна
+       * Opener for dropdown menu.
+       *
        * @class Controls/Dropdown/Opener
        * @mixes Controls/interface/IDropdown
        * @control
@@ -97,7 +98,6 @@ define('Controls/Dropdown/Opener',
       };
 
       var DropdownOpener = Sticky.extend({
-         _controlName: 'Controls/Dropdown/Opener',
          _itemTemplateDeferred: undefined,
 
          open: function(config, opener) {

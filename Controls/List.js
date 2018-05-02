@@ -37,7 +37,8 @@ define('Controls/List', [
    };
 
    /**
-    * Компонент плоского списка, с произвольным шаблоном отображения каждого элемента. Обладает возможностью загрузки/подгрузки данных из источника.
+    * Plain list with custom item template. Can load data from data source.
+    *
     * @class Controls/List
     * @extends Core/Control
     * @mixes Controls/interface/ISource

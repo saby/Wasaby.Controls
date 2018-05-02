@@ -27,17 +27,17 @@ define('Controls/Filter/Fast',
        */
 
       /**
-       * @event Controls/Filter/FastFilter#filterChanged Happen when the filter changes
+       * @event Controls/Filter/FastFilter#filterChanged Occurs when the filter changes.
        */
 
       /**
        * @name Controls/Filter/FastFilter#source
-       * @cfg {WS.Data/Source/ISource} Sets the source of data set, on which to build the mapping. If 'items' are specified, 'source' will be ignored
+       * @cfg {WS.Data/Source/ISource} Sets the source of data set to use in the mapping. If 'items' is specified, 'source' will be ignored.
        */
 
       /**
        * @name Controls/Filter/FastFilter#items
-       * @cfg {WS.Data/Collection/IList} Sets a set of initial data, on which to build the mapping
+       * @cfg {WS.Data/Collection/IList} Sets a set of initial data to build the mapping.
        */
 
       var getPropValue = Utils.getItemPropertyValue.bind(Utils);
