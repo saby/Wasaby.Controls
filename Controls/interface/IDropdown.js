@@ -1,64 +1,65 @@
 define('Controls/interface/IDropdown', [], function() {
 
    /**
-    * Интерфейс работы выпадающих списков.
+    * Interface for dropdown lists.
+    *
     * @mixin Controls/interface/IDropdown
     * @public
     */
 
    /**
     * @name Controls/interface/IDropdown#templateOptions.headerConfig
-    * @cfg {Object} Конфигурация, по которой строится шаблон шапки
+    * @cfg {Object} Configuration for folder render.
     */
 
    /**
     * @name Controls/interface/IDropdown#templateOptions.keyProperty
-    * @cfg {String} Имя свойства элемента, которое является идентификатором записи.
+    * @cfg {String} Name of the item property that uniquely identifies collection item.
     */
 
    /**
     * @name Controls/interface/IDropdown#templateOptions.parentProperty
-    * @cfg {String} Имя поля в объекте из набора items, которое используется для создания отношения иерархии.
+    * @cfg {String} Name of the field that contains item's parent identifier.
     */
 
    /**
     * @name Controls/interface/IDropdown#templateOptions.nodeProperty
-    * @cfg {String} Имя свойства элемента, в котором содержится информация о типе элемента (лист/узел/скрытый узел)
+    * @cfg {String} Name of the item property that identifies item type (list, node, hidden node).
     */
 
    /**
     * @name Controls/interface/IDropdown#templateOptions.itemTemplateProperty
-    * @cfg {String} Имя свойства элемента, в котором содержится шаблон отображения этого элемента. При отсутствии шаблона в поле используется шаблон из опции itemTemplate
+    * @cfg {String} Name of the item property that contains template for item render. If not set, itemTemplate is used instead.
     */
 
    /**
     * @name Controls/interface/IDropdown#templateOptions.itemTemplate
-    * @cfg {Function} Шаблон для отображения элемента коллекции.
+    * @cfg {Function} Template for item render.
     */
 
    /**
     * @name Controls/interface/IDropdown#templateOptions.headTemplate
-    * @cfg {Function} Шаблон для отображения шапки.
+    * @cfg {Function} Template for folder render.
     */
 
    /**
     * @name Controls/interface/IDropdown#templateOptions.contentTemplate
-    * @cfg {Function} Шаблон для отображения содержимого элемента коллекции.
+    * @cfg {Function} Template for item's contents render.
     */
 
    /**
     * @name Controls/interface/IDropdown#templateOptions.footerTemplate
-    * @cfg {Function} Шаблон для отображения подвала.
+    * @cfg {Function} Footer template.
     */
 
    /**
     * @name Controls/interface/IDropdown#templateOptions.showHeader
-    * @cfg {Boolean} Отображать шапку
+    * @cfg {Boolean} Indicates whether folders should be displayed.
     */
 
    /**
     * @name Controls/interface/IDropdown#templateOptions.selectedKeys
-    * @cfg {String|Array} Выбранные ключи
+    * @cfg {String|Array} Selected items' keys.
     */
 
 });
