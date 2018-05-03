@@ -1131,20 +1131,46 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          execCommand: function (command) {
             var editor = this._tinyEditor;
             var selection = editor.selection;
-            var isBlockquote = command === 'blockquote';
-            var isListNode = !isBlockquote && (command === 'InsertOrderedList' || command === 'InsertUnorderedList');
-            var afterProcess;
-            var execCmd;
-            if (isBlockquote) {
-               execCmd = 'mceBlockQuote';
+            var formatter = editor.formatter;
+            var isA = {};
+            var editorCmd;
+            switch (command) {
+               case 'blockquote':
+                  isA.blockquote = true;
+                  editorCmd = 'mceBlockQuote';
+                  break;
+               case 'InsertOrderedList':
+               case 'InsertUnorderedList':
+                  isA.list = true;
+                  break;
+               case 'alignleft':
+               case 'aligncenter':
+               case 'alignright':
+               case 'alignjustify':
+                  isA.align = true;
+                  editorCmd = {
+                     'alignleft': 'JustifyNone',
+                     'aligncenter': 'JustifyCenter',
+                     'alignright': 'JustifyRight',
+                     'alignjustify': 'JustifyFull'
+                  }[command];
+                  break;
             }
             // Если по любым причинам редактор пуст абсолютно - восстановить минимальный контент
             // 1175088566 https://online.sbis.ru/opendoc.html?guid=5f7765c4-55e5-4e73-b7bd-3cd05c61d4e2
             this._ensureHasMinContent();
-            var isAlreadyApplied = editor.formatter.match(command);
-            var rng = selection.getRng();
+            var rng;
+            var isAlreadyApplied;
+            var afterProcess;
+            if (isA.blockquote || isA.list) {
+               rng = selection.getRng();
+               isAlreadyApplied = formatter.match(command);
+               if (isA.list && !isAlreadyApplied) {
+                  isAlreadyApplied = !!editor.dom.getParent(rng.commonAncestorContainer, 'ol,ul');
+               }
+            }
             var isBlockquoteOfList;
-            if (isBlockquote) {
+            if (isA.blockquote) {
                // При обёртывании списков в блок цитат каждый элемент списка оборачивается отдельно. Во избежание этого сделать список временно нередактируемым
                // 1174914305 https://online.sbis.ru/opendoc.html?guid=305e5cb1-8b37-49ea-917d-403f746d1dfe
                var listNode = rng.commonAncestorContainer;
@@ -1161,7 +1187,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   };
                }
             }
-            if ((isListNode || (isBlockquote && !isBlockquoteOfList)) && !isAlreadyApplied) {
+            if ((isA.list || (isA.blockquote && !isBlockquoteOfList)) && !isAlreadyApplied) {
                var node = rng.startContainer;
                if (rng.endContainer === node) {
                   if (node.nodeType === 3 && node.previousSibling && node.previousSibling.nodeType === 1) {
@@ -1182,7 +1208,53 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                }
             }
-            editor.execCommand(execCmd || command);
+            if (isA.list) {
+               if (!isAlreadyApplied) {
+                  if (['aligncenter', 'alignright'].some(function (v) { return formatter.match(v); })) {
+                     afterProcess = function () {
+                        var list = editor.dom.getParent(selection.getRng().commonAncestorContainer, 'ol,ul');
+                        $(list).css('list-style-position', 'inside');
+                        this._updateTextByTiny();
+                     }.bind(this);
+                  }
+               }
+               else {
+                  var align; ['aligncenter', 'alignright', 'alignjustify'].some(function (v) { if (formatter.match(v)) { align = v; return true; }; });
+                  if (align) {
+                     afterProcess = function () {
+                        var isCollapsed = selection.isCollapsed();
+                        formatter.apply(align);
+                        if (isCollapsed) {
+                           selection.collapse(false);
+                        }
+                        this._updateTextByTiny();
+                     }.bind(this);
+                  }
+               }
+            }
+            if (isA.align) {
+               // выбираем ноду из выделения
+               var $node = $(selection.getNode());
+               // ищем в ней списки
+               var selector = 'ol,ul';
+               var $list = $node.find();
+               if (!$list.length) {
+                  // если списков не нашлось внутри, может есть список выше
+                  $list = $node.closest(selector);
+               }
+               if ($list.length) {
+                  // для того чтобы список выравнивался вместе с маркерами нужно проставлять ему
+                  // свойство list-style-position: inline, и, также, убирать его при возврате назад,
+                  // так как это влечет к дополнительным отступам
+                  $list.css('list-style-position', command === 'aligncenter' || command === 'alignright' ? 'inside' : '');
+               }
+               if (selection.isCollapsed()) {
+                  afterProcess = function () {
+                     selection.collapse(false);
+                  };
+               }
+            }
+            editor.execCommand(editorCmd || command);
             if (afterProcess) {
                afterProcess();
             }
@@ -1427,29 +1499,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          /**
           * Установить выравнивание текста для активной строки
           * @param {String} align Устанавливаемое выравнивание
-          * @private
+          * @public
           */
-         setTextAlign: function(align) {
-            //TODO: перейти на  this.execCommand('JustifyRight'), http://archive.tinymce.com/wiki.php/Tutorials:Command_identifiers
-            var
-            // выбираем ноду из выделения
-               $selectionContent = $(this._tinyEditor.selection.getNode()),
-            // ищем в ней списки
-               $list = $selectionContent.find('ol,ul');
-            if (!$list.length) {
-               // если списков не нашлось внутри, может нода и есть сам список
-               $list = $selectionContent.closest('ol,ul');
-            }
-            if ($list.length) {
-               // для того чтобы список выравнивался вместе с маркерами нужно проставлять ему
-               // свойство list-style-position: inline, и, также, убирать его при возврате назад,
-               // так как это влечет к дополнительным отступам
-               $list.css('list-style-position', align === 'alignjustify' || align === 'alignleft' ? '' : 'inside');
-            }
-            this._tinyEditor.formatter.apply(align, true);
-            //если смена стиля будет сразу после setValue то контент не установится,
-            //так как через форматттер не стреляет change
-            this._updateTextByTiny();
+         setTextAlign: function (align) {
+            this.execCommand({'left':'alignleft', 'center':'aligncenter', 'right':'alignright', 'justify':'alignjustify'}[align] || align);
          },
 
          toggleContentSource: function(visible) {
