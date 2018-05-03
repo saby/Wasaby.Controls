@@ -74,17 +74,34 @@ define('SBIS3.CONTROLS/ListView/resources/VirtualScrollController', ['Core/Abstr
             this._onVirtualPageChange(0);
          },
 
-         _scrollHandler: function (e, scrollTop) {
+         /**
+          * Updates virtual page (adds and removes list items)
+          * based on the current scroll position.
+          *
+          * @private
+          */
+         _processScroll: function() {
+            var scrollTop = this._options.viewport.scrollTop(),
+               page = this._getPage(scrollTop);
+            if (this._currentVirtualPage != page) {
+               this._currentVirtualPage = page;
+               this._onVirtualPageChange(page);
+            }
+         },
+
+         _scrollHandler: function (e, scrollTop, scrollbarDragging) {
             if (!this._scrollHandlerDisabled) {
                clearTimeout(this._scrollTimeout);
-               this._scrollTimeout = setTimeout(function () {
-                  var scrollTop = this._options.viewport.scrollTop(),
-                     page = this._getPage(scrollTop);
-                  if (this._currentVirtualPage != page) {
-                     this._currentVirtualPage = page;
-                     this._onVirtualPageChange(page);
-                  }
-               }.bind(this), 25);
+               // Update virtual page with timeout when using scrollbar. This way, it
+               // doesn't lag and scrolls smoothly, but content updates with a small delay.
+               if (scrollbarDragging) {
+                  this._scrollTimeout = setTimeout(this._processScroll.bind(this), 25);
+               } else {
+                  // When scrolling with mouse wheel, update pages immediately, so user
+                  // doesn't see white pages.
+                  this._processScroll();
+               }
+
             }
          },
 

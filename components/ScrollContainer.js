@@ -156,7 +156,12 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                },
                takeScrollbarHidden: true
             },
-            _content: null
+            _content: null,
+
+            /**
+             * Indicates that user drags the scrollbar at the moment.
+             */
+            _scrollbarDragging: false
          },
 
          $constructor: function() {
@@ -303,9 +308,28 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                });
 
                this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
+               this.subscribeTo(this._scrollbar, 'onScrollbarStartDrag', this._setScrollbarDragging.bind(this, true));
+               this.subscribeTo(this._scrollbar, 'onScrollbarEndDrag', this._setScrollbarDragging.bind(this, false));
                this._resizeInner();
             }
             this._toggleGradient();
+         },
+
+         /**
+          * Updates scrollbarDragging flag. Indicates that user drags the scrollbar at the moment.
+          *
+          * @param dragging
+          * @private
+          */
+         _setScrollbarDragging: function (dragging) {
+            this._scrollbarDragging = dragging;
+         },
+
+         /**
+          * Return true if the user is dragging the scrollbar.
+          */
+         isScrollbarDragging: function () {
+            return this._scrollbarDragging;
          },
 
          // Показать скролл
