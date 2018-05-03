@@ -1496,6 +1496,25 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             this._updateTextByTiny();
          },
 
+         // Проверка вложенности цитаты в блок с пользовательски форматом и наоборот. Если один из них вложен другой,
+         // то отменяем тот, что находится снаружи Здесь obj.parent[2] существует только при вложенности одного блока в
+         // другой, и это либо блок с пользовательским форматом в который вложена цитата, либо цитата в которую вложен
+         // блок с пользовательским форматом
+         checkParentForCustomStyle: function(obj) {
+            switch(obj.format) {
+               case 'blockquote':
+                  if (obj.parents[2]) {
+                     this.toggleStyle(obj.parents[2].className);
+                  }
+                  break;
+               default:
+                  if (obj.parents[2]) {
+                     this.execCommand(obj.parents[2].localName);
+                  }
+                  break;
+            }
+         },
+
          /**
           * Установить выравнивание текста для активной строки
           * @param {String} align Устанавливаемое выравнивание
