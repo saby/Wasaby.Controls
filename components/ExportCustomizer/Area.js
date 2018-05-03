@@ -14,7 +14,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
       'WS.Data/Collection/RecordSet',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/Area',
-      'tmpl!SBIS3.CONTROLS/ExportCustomizer/tmpl/presetsFooter',
       'css!SBIS3.CONTROLS/ExportCustomizer/Area',
       'SBIS3.CONTROLS/Button',
       'SBIS3.CONTROLS/ScrollContainer'
@@ -231,6 +230,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             },
             // Список имён вложенных под-компонентов
             _SUBVIEW_NAMES: {
+               preset: 'controls-ExportCustomizer-Area__preset',
                columnBinder: 'controls-ExportCustomizer-Area__body__columnBinder',
                formatter: 'controls-ExportCustomizer-Area__body__formatter'
             },
@@ -323,7 +323,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           */
          _reshapeOptions: function (options) {
             options._scopes = {
-               presets: {
+               preset: {
                },
                columnBinder: {
                   title: options.columnBinderTitle || undefined,
@@ -386,6 +386,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             var view = this._views[name];
             if (view && !view.isDestroyed()) {
                var handlers = {
+                  preset: this._onChangePreset,
                   columnBinder: this._onChangeColumnBinder,
                   formatter: this._onChangeFormatter
                };
@@ -396,6 +397,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   }
                }.bind(this, handlers[name].bind(this)));
             }
+         },
+
+         /*
+          * Обработчик "subviewChanged" для под-компонента "preset"
+          *
+          * @protected
+          */
+         _onChangePreset: function () {
          },
 
          /*
