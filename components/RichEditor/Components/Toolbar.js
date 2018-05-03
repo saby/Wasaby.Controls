@@ -307,6 +307,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
             //todo: https://online.sbis.ru/opendoc.html?guid=2842f4a3-d4b7-4454-a034-4051337f0e25&des=
             //кдалить проверку на destroyed после выполнения задачи
             if (!this._imagePanel || this._imagePanel.isDestroyed()) {
+               var editor = this.getLinkedEditor();
                this._imagePanel = new ImagePanel({
                   parent: button,
                   target: button.getContainer(),
@@ -318,7 +319,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
                     side: 'right'
                   },
                   element: $('<div></div>'),
-                  imageFolder: self.getLinkedEditor()._options.imageFolder
+                  linkedEditor: editor,
+                  imageFolder: editor._options.imageFolder
                });
                this._imagePanel.subscribe('onImageChange', function(event, key, fileobj){
                   self._insertImageTemplate(key, fileobj);
