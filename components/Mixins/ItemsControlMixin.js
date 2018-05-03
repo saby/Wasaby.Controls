@@ -1351,6 +1351,9 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
              prepend = false,
              container = this._getItemsContainer(),
              projection = this._getItemsProjection(),
+             // При некоторых последовательностях изменений проекции индекс, определенный для вставки может стать устаревшим.
+             // Пересчитываем этот индекс: https://online.sbis.ru/opendoc.html?guid=fa48e9e0-e9ab-40fc-ae41-58e13f652b3a
+             newItemsIndex = projection.getIndex(newItems[0]),
              prevItem = projection.at(newItemsIndex - 1),
              lastItemsIndex = projection.getCount() - newItems.length;
 
