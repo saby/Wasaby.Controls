@@ -1414,6 +1414,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this.setActive(true);
             }
             this._tinyEditor.formatter.toggle(style);
+            this._updateTextByTiny();
          },
 
          /**
