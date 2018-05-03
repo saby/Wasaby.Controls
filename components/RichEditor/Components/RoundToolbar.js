@@ -130,16 +130,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RoundToolbar', [
                this._options.linkedEditor._getFileLoader().selectFile(originalEvent);
             }
          },
-         getFileLoader: function() {
-            return Di.resolve('ImageUploader').getFileLoader();
-         },
+
          _startFileLoad: function(target) {
-            var
-               self = this;
-            if (self._options.linkedEditor) {
-               this.getFileLoader().startFileLoad(target, false, 'images').addCallback(function (fileobj) {
-                  self._options.linkedEditor.insertImageTemplate(constants.INLINE_TEMPLATE, fileobj);
-               }.bind(this))
+            var editor = this._options.linkedEditor;
+            if (editor) {
+               editor.selectAndUploadImage(target, 'images', false).addCallback(editor.insertImageTemplate.bind(editor, constants.INLINE_TEMPLATE));
             }
          },
          _insertSmile: function(smile) {

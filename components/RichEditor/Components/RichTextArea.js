@@ -68,6 +68,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
       var BROWSER = cConstants.browser;
       // TODO: Избавиться везде ниже от выражения cConstants.browser
 
+      /**
+       * Константа - имя регистрации загрузчика изображений в инжекторе зависимостей
+       * @private
+       * @type {string}
+       */
+      var DI_IMAGE_UPLOADER = 'ImageUploader';
+
       var _getTrueIEVersion = function () {
          var version = cConstants.browser.IEVersion;
          // В cConstants.browser.IEVersion неправильно определяется MSIE 11
@@ -2297,6 +2304,42 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
          _notifyMobileInputFocus: function () {
             EventBus.globalChannel().notify('MobileInputFocus');
+         },
+
+         /**
+          * Проверить, допускает ли загрузчик изображений множественную загрузку
+          * @public
+          * @return {boolean}
+          */
+         canUploadMultiSelect: function () {
+            if (Di.isRegistered(DI_IMAGE_UPLOADER)) {
+               return Di.resolve(DI_IMAGE_UPLOADER).canMultiSelect;
+            }
+         },
+
+         /**
+          * Выбрать и загрузить (на сервер) изображение(я)
+          * @public
+          * @param {object} target Инициирующий элемент
+          * @param {string} [imageFolder] Папка для изображений (опционально)
+          * @param {boolean} [canMultiSelect] Можно ли выбрать и загрузить несколько изображений
+          * @return {Core/Deferred}
+          */
+         selectAndUploadImage: function (target, imageFolder, canMultiSelect) {
+            var imageUploader = this._imageUploader;
+            if (!imageUploader) {
+               if (Di.isRegistered(DI_IMAGE_UPLOADER)) {
+                  this._imageUploader = imageUploader = Di.resolve(DI_IMAGE_UPLOADER).getFileLoader();
+               }
+               else {
+                  return Deferred.fail('No image uploader');
+               }
+            }
+            return imageUploader.startFileLoad(target, canMultiSelect !== undefined ? canMultiSelect : this.canUploadMultiSelect(), imageFolder || this._options.imageFolder)
+               .addErrback(function (err) {
+                  this._showImgError();
+                  return err;
+               }.bind(this));
          },
 
          _showImageOptionsPanel: function(target) {
