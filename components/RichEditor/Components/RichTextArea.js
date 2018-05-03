@@ -190,6 +190,16 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                 * <wiTag group="Управление">
                 *
                 */
+               /**
+                * @cfg {boolean} Использовать однострочный режим работы редактора. В этом режиме блокируется перевод строки и нен используется scroll-контейнер
+                * <wiTag group="Управление">
+                * Использовать однострочный режим работы редактора
+                * @example
+                * <pre>
+                *     <option name="singleLine">true</option>
+                * </pre>
+                */
+               singleLine: false,
                editorConfig: {
                   className: null,
                   plugins: 'media,paste,lists,noneditable,codesample',
