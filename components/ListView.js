@@ -3167,10 +3167,10 @@ define('SBIS3.CONTROLS/ListView',
             if (this._scrollBinder) {
                // Resets paging if called after reload()
                this._scrollBinder._updateScrollPages(!this._options.virtualScrolling || this._resetPaging);
-               this._resetPaging = false;
             } else if (this._options.infiniteScroll == 'down' && this._options.scrollPaging){
                this._createScrollPager();
             }
+            this._resetPaging = false;
 
             // отправляем команду о перерисовке парентов, и только их. Предполагается, что изменение items
             // у ListView может повлиять только на некоторых парентов
