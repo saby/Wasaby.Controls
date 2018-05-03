@@ -2,9 +2,6 @@
 @width_ExportCustomizer-Area-dialog: 450px;
 @padding_ExportCustomizer-Area-dialog: 39px 0 0 0;
 @padding_ExportCustomizer-Area-head: 0 52px 0 12px;
-@color_ExportCustomizer-Area-head-title-left: #313E78;
-@font-size_ExportCustomizer-Area-head-title-left: 18px;
-@font-weight_ExportCustomizer-Area-head-title-left: bold;
 @padding_ExportCustomizer-Area-body: 10px 0;
 @margin_ExportCustomizer-Area-body-box: 0 0 10px 0;
 @border-bottom_ExportCustomizer-Area-body-box: 1px solid #f7f4f0;
@@ -27,18 +24,33 @@
    .flexbox();
    .flex-direction(row);
    .align-items(center);
+   .justify-content(space-between);
    padding: @padding_ExportCustomizer-Area-head;
 }
 
-.controls-ExportCustomizer-Area__head-title {
-   .flex-grow(1);
-   color: @color_ExportCustomizer-Area-head-title-left;
-   font-size: @font-size_ExportCustomizer-Area-head-title-left;
-   font-weight: @font-weight_ExportCustomizer-Area-head-title-left;
+.controls-ExportCustomizer-Area__presetButton {
+   .controls-Button__text {
+      color: #8991A9;
+   }
+
+   .controls-Button__text:hover {
+      text-decoration: underline;
+   }
 }
 
-.controls-ExportCustomizer-Area__completeButton {
-   .flex-shrink(0);
+.controls-ExportCustomizer-Area__presets {
+   min-width: 286px;
+   margin: 3px 0 3px 0;
+
+   .controls-ListView__item {
+      border-bottom: 1px solid transparent;
+      padding: 7px 0 7px 12px;
+      cursor: pointer;
+   }
+}
+
+.controls-ExportCustomizer-Area__presets__add {
+   margin: 4px 12px 4px 12px;
 }
 
 .controls-ExportCustomizer-Area__body {

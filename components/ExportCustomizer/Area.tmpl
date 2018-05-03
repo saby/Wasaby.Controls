@@ -1,9 +1,38 @@
 <div class="controls-ExportCustomizer-Area{{dialogMode ? ' controls-ExportCustomizer-Area_dialog' : ''}}">
    <ws:if data="{{dialogMode}}">
       <div class="controls-ExportCustomizer-Area__head ws-window-titlebar">
-         <div class="controls-ExportCustomizer-Area__head-title">
-            <ws:if data="{{dialogTitle}}">{{dialogTitle}}</ws:if><ws:else>{[НастройщикЭкспорта@@Настройка экспорта]}</ws:else>
-         </div>
+         <SBIS3.CONTROLS:SelectorButton
+            className="controls-ExportCustomizer-Area__presetButton"
+            name="controls-ExportCustomizer-Area__presetButton"
+            withoutCross="{{true}}"
+            idProperty="id"
+            displayProperty="title"
+            dictionaries="{{ [{
+               'template': 'SBIS3.CONTROLS/ListView',
+               'dialogOptions': {
+                  'className': 'controls-ExportCustomizer-Area__presetPicker',
+                  'border': false,
+                  'direction': 'bottom',
+                  'isStack': false,
+                  'offset': {'x':0, 'y':0}
+               },
+               'componentOptions': {
+                  'className': 'controls-ExportCustomizer-Area__presets',
+                  'items': _scopes.presets.items,
+                  'idProperty': 'id',
+                  'displayProperty': 'title',
+                  'itemsActionsInItemContainer': true,
+                  'footerTpl': 'tmpl!SBIS3.CONTROLS/ExportCustomizer/tmpl/presetsFooter'
+               }
+            }] }}"
+            >
+            <ws:defaultCaption>
+               <ws:if data="{{dialogTitle}}">{{dialogTitle}}</ws:if><ws:else>{[НастройщикЭкспорта@@Настройка экспорта]}</ws:else>
+            </ws:defaultCaption>
+            <ws:tooltip>
+               <ws:if data="{{presetsTooltip}}">{{presetsTooltip}}</ws:if><ws:else>{[НастройщикЭкспорта@@Выбрать другой шаблон]}</ws:else>
+            </ws:tooltip>
+         </SBIS3.CONTROLS:SelectorButton>
          <SBIS3.CONTROLS:Button
             className="controls-ExportCustomizer-Area__completeButton"
             command="complete" primary="true"
