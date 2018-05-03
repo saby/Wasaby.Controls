@@ -2879,19 +2879,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                // 1175034880 https://online.sbis.ru/opendoc.html?guid=ea5afa7c-f81d-4e53-9709-e10e3acc51e9
                this._scrollContainer[0].scrollTop = 0;
                if (BROWSER.isIE) {
-                  if (contentHeight <= 36) {
-                     // В MSIE нативная прокрутка имеет неубиваемую высоту, поэтому для маленькой высоты скрвть еёе совсем
-                     // 1175088729 https://online.sbis.ru/opendoc.html?guid=733e34fd-e101-4cb9-b99b-afa6674c559d
-                     this._scrollContainer.addClass('controls-ScrollContainer__hiddenScrollbar');
-                     $content.css('height', this._scrollContainer.height());
-                  }
-                  else {
-                     this._scrollContainer.removeClass('controls-ScrollContainer__hiddenScrollbar');
-                     // В MSIE при добавлении новой строки clientHeight и scrollHeight начинают расходиться - нужно их уравнять
-                     // 1175015989 https://online.sbis.ru/opendoc.html?guid=d013f54f-683c-465c-b437-6adc64dc294a
-                     var diff = contentHeight - content.clientHeight;
-                     $content.css('height', 0 < diff ? content.offsetHeight + diff : content.offsetHeight);
-                  }
+                  // В MSIE при добавлении новой строки clientHeight и scrollHeight начинают расходиться - нужно их уравнять
+                  // 1175015989 https://online.sbis.ru/opendoc.html?guid=d013f54f-683c-465c-b437-6adc64dc294a
+                  var diff = contentHeight - content.clientHeight;
+                  $content.css('height', 0 < diff ? content.offsetHeight + diff : content.offsetHeight);
                   if (isChanged) {
                      var parent = content.parentNode;
                      if (parent.clientHeight < contentHeight) {
@@ -3014,16 +3005,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           */
          _initMainHeight: function () {
             if (!this._options.autoHeight) {
-               var height = this._container.height();
                var richTextAreaContainer = this._richTextAreaContainer;
-               var scrollContainer = this._scrollContainer;
-               richTextAreaContainer.css('height', height);
-               scrollContainer.css('height', richTextAreaContainer.height());
-               if (BROWSER.isIE && height < 36) {
-                  // В MSIE нативная прокрутка имеет неубиваемую высоту, поэтому для маленькой высоты скрвть еёе совсем
-                  // 1175088729 https://online.sbis.ru/opendoc.html?guid=733e34fd-e101-4cb9-b99b-afa6674c559d
-                  scrollContainer.addClass('controls-ScrollContainer__hiddenScrollbar');
-               }
+               richTextAreaContainer.css('height', this._container.height());
+               this._scrollContainer.css('height', richTextAreaContainer.height());
             }
          },
 
