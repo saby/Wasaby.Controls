@@ -209,6 +209,10 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
                            if (filterStructure) {
                               record.set('filter', FilterHistoryControllerUntil.minimizeStructureToSave(record.get('filter')));
                            }
+
+                           var recordRawData = record.getRawData();
+                           self.sendCommand('historySave', recordRawData);
+                           record.setRawData(recordRawData);
                            record.acceptChanges();
                            deleteReportHistory(item.get('id'), isFavorite, isGlobal);
                            (globalParams ? favoriteAllList : favoriteList).prepend(record);

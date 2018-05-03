@@ -150,7 +150,15 @@ define('Controls/Controllers/SourceController',
          },
 
          hasMoreData: function(direction) {
-            return this._queryParamsController.hasMoreData(direction);
+            if (this._queryParamsController) {
+               return this._queryParamsController.hasMoreData(direction);
+            }
+         },
+
+         calculateState: function(list) {
+            if (this._queryParamsController) {
+               this._queryParamsController.calculateState(list);
+            }
          },
 
          isLoading: function() {
@@ -158,7 +166,9 @@ define('Controls/Controllers/SourceController',
          },
 
          setEdgeState: function(direction) {
-            this._queryParamsController.setEdgeState(direction);
+            if (this._queryParamsController) {
+               this._queryParamsController.setEdgeState(direction);
+            }
          },
 
          create: function(meta) {

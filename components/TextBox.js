@@ -421,7 +421,7 @@ define('SBIS3.CONTROLS/TextBox', [
             // для случая, когда текст не умещается в поле ввода по ширине, показываем всплывающую подсказку с полным текстом
             if (scrollWidth > field[0].clientWidth) {
                this._container.attr('title', this._options.text);
-               field.attr('title', this._options.text);
+               field.attr('title', this._options.text === '' ? constants.browser.isIE || constants.browser.retailOffline ? '' : ' ' : this._options.text);
             }
             else if (this._options.tooltip) {
                this.setTooltip(this._options.tooltip);
