@@ -47,3 +47,13 @@
 .ws-window-overlay {
   background-color: rgba(0,0,0,.5);
 }
+
+/* Т.к. стилизация строки поиска в шапке панели сейчас сделана на прикладной стороне,
+   а доступа к панели автодополнения у них нет, то делаю вот так.
+   на vdom контролах у нас из коробки можно будет стилизовать компонент для шапки панели. */
+.ws-window-titlebar-custom,
+.ws-window-titlebar {
+  .controls-searchForm__suggest-shown {
+    background-color: #39506a !important;
+  }
+}
