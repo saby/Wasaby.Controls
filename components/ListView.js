@@ -2160,6 +2160,11 @@ define('SBIS3.CONTROLS/ListView',
                   this.setInfiniteScroll('both', true);
                }
             }
+            
+            if (offset === 0 && this._options.infiniteScroll === 'down') {
+               this._lastPageLoaded = false;
+               this._setInfiniteScrollState('down');
+            }
 
             // Reset virtual scrolling if it's enabled
             if (this._options.virtualScrolling && this._virtualScrollController) {
@@ -2176,7 +2181,7 @@ define('SBIS3.CONTROLS/ListView',
                this._bottomWrapper.height(0);
             }
 
-            this._reloadInfiniteScrollParams();
+            this._reloadInfiniteScrollParams(offset);
             this._previousGroupBy = undefined;
             // При перезагрузке нужно также почистить hoveredItem, иначе следующее отображение тулбара будет для элемента, которого уже нет (ведь именно из-за этого ниже скрывается тулбар).
             this._clearHoveredItem();
