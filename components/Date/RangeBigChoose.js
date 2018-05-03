@@ -306,7 +306,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          options.displayedYear = options.startValue ? options.startValue.getFullYear() : (new Date()).getFullYear();
          // options.displayedPeriod = options.startValue ? options.startValue : DateUtil.normalizeMonth(new Date());
          options.yearPanelLastYear = options.displayedYear;
-         options.yearPanelData = this._getYearsRangeItems(options.displayedYear, options, true);
+         options.yearPanelData = this._getYearsRangeItems(options.displayedYear + 1, options, true);
          options.weekdaysCaptions = DateControlsUtil.getWeekdaysCaptions();
          // options._state = options.selectionType === RangeSelectableViewMixin.selectionTypes.range ? states.year: states.month;
          if (isEmpty(options.quantum) && options.selectionType === RangeSelectableViewMixin.selectionTypes.single) {
