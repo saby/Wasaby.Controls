@@ -10,6 +10,27 @@
    padding: 0 @spacing_Path-backButton;
 }
 
+.controls-Path__backButton__wrapper {
+   position: relative;
+   display: inline-flex;
+   align-items: baseline;
+}
+
+.controls-Path__backButtonArrow {
+   .icon-size-without-important(@font-size_BreadCrumbs-backButtonArrow);
+   position: absolute;
+   align-self: center;
+   background-color: @background-color_Path-backButtonArrow;
+   right: -@spacing_Path-backButton;
+   &:hover {
+      color: @color_Path-backButtonArrow;
+   }
+}
+
+.controls-Path__backButtonArrow_overflow {
+   right: 0;
+}
+
 .controls-Path__breadCrumbs {
    flex-grow: 1;
    overflow: hidden;
