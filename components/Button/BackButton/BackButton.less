@@ -1,7 +1,7 @@
 @import (reference) "../../themes/header";
 
 .max-width_BackButton_caption(@back-arrow-width, @back-button-arrow-padding-right) {
-   .ws-is-mobile-safari &, .ws-is-desktop-safari &, .ws-is-mobile-chrome-ios & {
+   .ws-is-mobile-safari &, .ws-is-desktop-safari &, .ws-is-mobile-chrome-ios &, .ws-is-webkit & {
       /**
        * 1px прибавляем для компенсирования погрешности расчетов calc.
        * В safari значение calc(...) округляется в меньшую сторону, из-за чего всегда происходит обрезание текста.
