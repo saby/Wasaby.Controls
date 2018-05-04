@@ -24,7 +24,7 @@ define('Controls-demo/Tabs/Buttons', [
     'use strict';
     var
         source1 = new MemorySource({
-           keyProperty: 'id',
+           idProperty: 'id',
             data: [
                 {
                     id: "1",
@@ -64,7 +64,7 @@ define('Controls-demo/Tabs/Buttons', [
             ]
         }),
         source2 = new MemorySource({
-           keyProperty: 'id',
+           idProperty: 'id',
             data: [
                 {
                     id: "1",
@@ -95,7 +95,7 @@ define('Controls-demo/Tabs/Buttons', [
             ]
         }),
         source3 = new MemorySource({
-           keyProperty: 'id',
+           idProperty: 'id',
             data: [
                 {
                     id: "1",
@@ -125,7 +125,7 @@ define('Controls-demo/Tabs/Buttons', [
             ]
         }),
         source4 = new MemorySource({
-           keyProperty: 'id',
+           idProperty: 'id',
             data: [
                 {
                     id: "1",
@@ -143,7 +143,7 @@ define('Controls-demo/Tabs/Buttons', [
             ]
         }),
         source5 = new MemorySource({
-           keyProperty: 'id',
+           idProperty: 'id',
             data: [
                 {
                     id: "1",
@@ -158,7 +158,7 @@ define('Controls-demo/Tabs/Buttons', [
             ]
         }),
         source6 = new MemorySource({
-           keyProperty: 'id',
+           idProperty: 'id',
             data: [
                 {
                     id: "1",
@@ -176,7 +176,7 @@ define('Controls-demo/Tabs/Buttons', [
             ]
         }),
         newSource6 =  new MemorySource({
-           keyProperty: 'id',
+           idProperty: 'id',
             data:  [
                 {
                     id: "1",
@@ -193,7 +193,7 @@ define('Controls-demo/Tabs/Buttons', [
             ]
         }),
         source7 = new MemorySource({
-           keyProperty: 'id',
+           idProperty: 'id',
             data: [
                 {
                     id: "1",

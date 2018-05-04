@@ -98,14 +98,14 @@ define('Controls-demo/Toolbar/ToolbarVdom', [
 
          _getDefaultMemory: function() {
             return new Memory({
-               keyProperty: 'id',
+               idProperty: 'id',
                data: this._defaultItems
             });
          },
 
          _getMemorySource: function(items) {
             return new Memory({
-               keyProperty: 'id',
+               idProperty: 'id',
                data: items
             });
          },

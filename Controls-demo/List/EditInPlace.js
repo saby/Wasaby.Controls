@@ -105,23 +105,23 @@ define('Controls-demo/List/EditInPlace', [
 
       _beforeMount: function() {
          this._viewSource = new MemorySource({
-            keyProperty: 'id',
+            idProperty: 'id',
             data: srcData
          });
          this._viewSource2 = new MemorySource({
-            keyProperty: 'id',
+            idProperty: 'id',
             data: srcData2
          });
          this._viewSource3 = new MemorySource({
-            keyProperty: 'id',
+            idProperty: 'id',
             data: srcData3
          });
          this._viewSource4 = new MemorySource({
-            keyProperty: 'id',
+            idProperty: 'id',
             data: srcData4
          });
          this._viewSource5 = new MemorySource({
-            keyProperty: 'id',
+            idProperty: 'id',
             data: srcData5
          });
       },

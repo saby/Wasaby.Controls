@@ -15,7 +15,7 @@ define('Controls-demo/List/Tree/Tree', [
          _template: template,
 
          _viewSource: new MemorySource({
-            keyProperty: 'id',
+            idProperty: 'id',
             data: GridData.catalog
          }),
 
