@@ -457,7 +457,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
       },
 
       _toggleHeaderInputsVisibility: function (isInputVisible) {
-         if (isEmpty(this._options.quantum) || ('days' in this._options.quantum && Object.keys(this._options.quantum).length === 1)) {
+         if ((isEmpty(this._options.quantum) ||
+               ('days' in this._options.quantum && Object.keys(this._options.quantum).length === 1)) &&
+               this._options.minQuantum === 'day'
+            ) {
             this.getChildControlByName('DateRangeHeader').toggle(!isInputVisible);
             this.getContainer().find('.controls-DateRangeBigChoose__header-period-input').toggleClass('ws-hidden', !isInputVisible);
          } else {
