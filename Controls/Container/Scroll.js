@@ -82,6 +82,14 @@ define('Controls/Container/Scroll',
                   scrollHeight = _private.getScrollHeight(self._children.content),
                   containerHeight = _private.getContainerHeight(self._children.content);
 
+               /**
+                * In IE, if the content has a rational height, the height is rounded to the smaller side,
+                * and the scrollable height to the larger side. Reduce the scrollable height to the real.
+                */
+               if (detection.isIE) {
+                  scrollHeight--;
+               }
+
                return scrollHeight > containerHeight;
             },
 
