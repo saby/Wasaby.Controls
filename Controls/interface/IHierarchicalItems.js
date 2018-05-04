@@ -2,18 +2,19 @@ define('Controls/interface/IHierarchicalItems', [
 ], function() {
 
    /**
-    * Интерфейс для работы иерархических списков.
+    * Interface for hierarchical list.
+    *
     * @mixin Controls/interface/IHierarchicalItems
     * @public
     */
 
    /**
     * @name Controls/interface/IHierarchicalItems#parentProperty
-    * @cfg {String} Имя поля в объекте из набора items, которое используется для создания отношения иерархии.
+    * @cfg {String} Name of the field that contains item's parent identifier.
     */
    /**
     * @name Controls/interface/IHierarchicalItems#hasChildrenProperty
-    * @cfg {String} Имя поля в объекте из набора items, которое используется для создания определения наличия детей.
+    * @cfg {String} Name of the field that indicates whether items has children.
     */
 
 });
