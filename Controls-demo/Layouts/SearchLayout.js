@@ -17,11 +17,12 @@ define('Controls-demo/Layouts/SearchLayout', [
    'Controls/Container/Search',
    'Controls/Filter/Button',
    'Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/FilterButtonTemplate',
-   'Controls/Container/Input/Search'
-], function (BaseControl,
-             template,
-             MemorySource
-) {
+   'Controls/Container/Input/Search',
+   'Controls/Button',
+   'Controls/Input/Dropdown'
+], function(BaseControl,
+   template,
+   MemorySource) {
    'use strict';
    
    var sourceData = [
@@ -115,6 +116,18 @@ define('Controls-demo/Layouts/SearchLayout', [
       }
    ];
 
+   var sourceDropdown = {
+      module: 'WS.Data/Source/Memory',
+      options: {
+         data: [
+            {key: 1, title: 'все страны'},
+            {key: 2, title: 'Россия'},
+            {key: 3, title: 'США'},
+            {key: 4, title: 'Великобритания'}
+         ],
+         idProperty: 'key'
+      }
+   };
 
    var filterSourceData = [
       {id: 'firstName', resetValue: '', value: '', textValue: ''},
@@ -135,7 +148,9 @@ define('Controls-demo/Layouts/SearchLayout', [
             keyProperty: 'id',
             data: filterData
          }),
-         _fastFilterData: filterData
+         _fastFilterData: filterData,
+         sourceDropdown: sourceDropdown,
+         _value: 3
       });
    return ModuleClass;
 });
