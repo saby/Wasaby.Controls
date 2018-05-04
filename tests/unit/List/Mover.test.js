@@ -25,9 +25,9 @@ define([
                title: 'Третий'
             }],
             cfg = {
-               idProperty: 'id',
+               keyProperty: 'id',
                listModel: new ListViewModel({
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                sourceController: new SourceController({
                   source: new MemorySource({

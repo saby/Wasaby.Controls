@@ -7,7 +7,8 @@ define('Controls/Toggle/Switch', [
 ], function(Control, template, types) {
 
    /**
-    * Контрол, отображающий переключатель
+    * Switch control.
+    *
     * @class Controls/Toggle/Switch
     * @extends Core/Control
     * @mixes Controls/Toggle/interface/ICheckable
@@ -19,7 +20,7 @@ define('Controls/Toggle/Switch', [
 
    /**
     * @name Controls/Toggle/Switch#caption
-    * @cfg {String} Заголовок
+    * @cfg {String} Title.
     */
 
    var Switch = Control.extend({

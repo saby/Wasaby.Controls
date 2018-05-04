@@ -19,6 +19,13 @@ define('Controls/Input/Number', [
       NumberInput;
 
    _private = {
+      trimEmptyDecimals: function(self) {
+         if (!self._options.showEmptyDecimals) {
+            var
+               processedVal = self._numberViewModel.getValue().replace(/\.?0+$/g, '');
+            self._numberViewModel.updateValue(processedVal);
+         }
+      }
    };
 
    NumberInput = Control.extend({
@@ -76,28 +83,40 @@ define('Controls/Input/Number', [
             onlyPositive: options.onlyPositive,
             integersLength: options.integersLength,
             precision: options.precision,
-            value: options.value
+            showEmptyDecimals: options.showEmptyDecimals,
+            value: String(options.value)
          });
       },
 
       _beforeUpdate: function(newOptions) {
+         var
+            value;
+
+         //If the old and new values are the same, then the model is changed from outside, and we shouldn't update it's value
+         if (this._options.value === newOptions.value) {
+            value = this._numberViewModel.getValue();
+         } else {
+            value = newOptions.value !== undefined ? String(newOptions.value) : '';
+         }
+
          this._numberViewModel.updateOptions({
             onlyPositive: newOptions.onlyPositive,
             integersLength: newOptions.integersLength,
             precision: newOptions.precision,
-            value: newOptions.value
+            showEmptyDecimals: newOptions.showEmptyDecimals,
+            value: value
          });
       },
 
-      _afterUpdate: function(oldOptions) {
-         if ((oldOptions.value !== this._options.value) && this._caretPosition) {
+      _afterUpdate: function() {
+         if (this._caretPosition) {
             this._children['input'].setSelectionRange(this._caretPosition, this._caretPosition);
             this._caretPosition = null;
          }
       },
 
       _inputCompletedHandler: function(event, value) {
-         this._notify('inputCompleted', [value]);
+         this._notify('inputCompleted', [this._getNumericValue(value)]);
       },
 
       _notifyHandler: function(event, value) {
@@ -105,9 +124,23 @@ define('Controls/Input/Number', [
       },
 
       _valueChangedHandler: function(e, value) {
-         if (this._options.value !== value) {
-            this._notify('valueChanged', [value]);
-         }
+         this._notify('valueChanged', [this._getNumericValue(value)]);
+      },
+
+      /**
+       * Transforms value with delimiters into number
+       * @param value
+       * @return {*}
+       * @private
+       */
+      _getNumericValue: function(value) {
+         var
+            val = parseFloat(value.replace(/ /g, ''));
+         return isNaN(val) ? undefined : val;
+      },
+
+      _focusoutHandler: function() {
+         _private.trimEmptyDecimals(this);
       },
 
       paste: function(text) {
@@ -119,9 +152,12 @@ define('Controls/Input/Number', [
       return {
          precision: types(Number), //Точность (кол-во знаков после запятой)
          integersLength: types(Number), //Длина целой части
-         onlyPositive: types(Boolean) //Только положительные значения
+         onlyPositive: types(Boolean), //Только положительные значения
+         showEmptyDecimals: types(Boolean) //Показывать нули в конце дробной части
       };
    };
+
+   NumberInput._private = _private;
 
    return NumberInput;
 });

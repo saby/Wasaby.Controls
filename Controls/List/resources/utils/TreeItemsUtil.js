@@ -12,7 +12,7 @@ define('Controls/List/resources/utils/TreeItemsUtil', [
             var
                displayProperties = {
                   collection: items,
-                  idProperty: cfg.idProperty,
+                  keyProperty: cfg.keyProperty,
                   parentProperty: cfg.parentProperty,
                   nodeProperty: cfg.nodeProperty,
                   loadedProperty: '!' + cfg.parentProperty + '$',
@@ -30,7 +30,7 @@ define('Controls/List/resources/utils/TreeItemsUtil', [
             rootAsNode = isPlainObject(root);
             if (rootAsNode) {
                root = Model.fromObject(root, 'adapter.sbis');
-               root.setIdProperty(cfg.idProperty);
+               root.keyProperty = cfg.keyProperty;
             }
             displayProperties.root = root;
 

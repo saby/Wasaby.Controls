@@ -7,7 +7,8 @@ define('Controls/Button', [
    'use strict';
 
    /**
-    * Button
+    * Basic button.
+    *
     * @class Controls/Button
     * @extends Core/Control
     * @mixes Controls/Button/interface/IHref
@@ -39,7 +40,7 @@ define('Controls/Button', [
 
    /**
     * @name Controls/Button#size
-    * @cfg {String} Size of Button.
+    * @cfg {String} Size of the button.
     * @variant s Button has s size. Not supported by these button styles: buttonPrimary, buttonDefault, buttonAdd, iconButtonBordered.
     * @variant m Button has m size.
     * @variant l Button has l size.
@@ -48,12 +49,12 @@ define('Controls/Button', [
 
    /**
     * @name Controls/Button#caption
-    * @cfg {String} Caption of Button.
+    * @cfg {String} Button text.
     */
 
    /**
     * @name Controls/Button#icon
-    * @cfg {String} Icon of Button.
+    * @cfg {String} Button icon.
     */
 
    /**
