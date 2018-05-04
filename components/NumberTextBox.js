@@ -205,7 +205,10 @@ define('SBIS3.CONTROLS/NumberTextBox', [
          this._inputField.on('input', function() {
             //При вставке спец. символов не стреляет никаких событий, кроме input. Так что буду тут дёргать setText,
             //чтобы отфильтровать лишнее
-            self._setText(this.value);
+            if (!self._pasteProcessing) {
+               self._setText(this.value);
+               self._setCaretPosition(self._caretPosition[0] + 1, self._caretPosition[1] + 1);
+            }
          });
          this._initMirrorInput();
       },
