@@ -20,7 +20,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          compatible: null,
          fixBaseCompatible: true,
          _templateComponent: undefined,
-         _beforeMount: function(cfg) {
+         _beforeMount: function() {
             this._commandHandler = this._commandHandler.bind(this);
          },
 
@@ -36,11 +36,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             } else {
                this.componentOptions = {};
             }
-            moduleStubs.require([/*'cdn!jquery/3.3.1/jquery-min.js',*/ 'Core/constants']).addCallback(function(result) {
+            moduleStubs.require(['cdn!jquery/3.3.1/jquery-min.js', 'Core/constants']).addCallback(function(result) {
                if (window && window.$) {
-                  result[0].$win = $(window);
-                  result[0].$doc = $(document);
-                  result[0].$body = $('body');
+                  result[1].$win = $(window);
+                  result[1].$doc = $(document);
+                  result[1].$body = $('body');
                }
                moduleStubs.require(
                   [
@@ -48,30 +48,15 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                      'Lib/Control/Control.compatible',
                      'Lib/Control/AreaAbstract/AreaAbstract.compatible',
                      'Lib/Control/BaseCompatible/BaseCompatible',
-                     'Core/vdom/Synchronizer/resources/DirtyCheckingCompatible'
+                     'Core/vdom/Synchronizer/resources/DirtyCheckingCompatible',
+                     'View/Runner/Text/markupGeneratorCompatible'
                   ]).addCallback(function(result) {
+                  var
+                     elem = $(self._children.compoundBlock);
 
-                  var ignore = ['_forceUpdate', '_getMarkup', '_notify'];
+                  self.componentOptions.element = elem;
 
-                  for (var i in result[1]) {
-                     if (ignore.indexOf(i) == -1) {
-                        self[i] = result[1][i];
-                     }
-                  }
-                  for (var i in result[2]) {
-                     if (ignore.indexOf(i) == -1) {
-                        self[i] = result[2][i];
-                     }
-                  }
-                  for (var i in result[3]) {
-                     if (ignore.indexOf(i) == -1) {
-                        self[i] = result[3][i];
-                     }
-                  }
-
-                  self.VDOMReady = true;
-                  self.deprecatedContr(self._options);
-                  self.reviveSuperOldControls();
+                  self._compoundControl = new (result[0])(self.componentOptions);
 
                   self._subscribeToCommand();
                });
@@ -97,9 +82,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          },
          _subscribeToCommand: function() {
-            this._templateComponent = this.getChildControls(undefined, false)[0];
-            this._templateComponent.subscribe('onCommandCatch', this._commandHandler);
-
+            this._compoundControl.subscribe('onCommandCatch', this._commandHandler);
          },
          _commandHandler: function(event, commandName) {
             switch (commandName) {
