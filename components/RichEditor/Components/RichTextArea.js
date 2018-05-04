@@ -1684,6 +1684,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          _showImagePropertiesDialog: function(target) {
             var
                $image = $(target),
+               image = $image[0],
                editor = this._tinyEditor,
                $scrollParent = this._inputControl.parent(),
                scrollTop = $scrollParent.scrollTop(),
@@ -1694,7 +1695,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   template: 'SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog',
                   parent: self,
                   componentOptions: {
-                     selectedImage: $image,
+                     naturalSize: {width:image.naturalWidth, height:image.naturalHeight},
+                     pixelSize: {width:image.width, height:image.height},
+                     cssSize: {width:image.style.width || image.width + 'px' || '', height:image.style.height || image.height + 'px' || ''},
                      editorWidth: self._inputControl.width()
                   },
                   handlers: {
