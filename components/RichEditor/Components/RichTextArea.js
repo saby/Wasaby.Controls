@@ -2251,6 +2251,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                               node.nodeValue = 1 < text.length ? text.substring(0, index - 1) + text.substring(index) : '';
                               this._selectNewRng(node, index - 1);
                            }
+                           else
+                           if (text.length === 2 && text.charCodeAt(0) === 65279/*&#xFEFF;*/) {
+                              // Или если после удаления последнего символа останется только символ &#xFEFF; , - то подготовить к удалению весь узел, если он не текстовый
+                              for ( ; !node.previousSibling && !node.nextSibling; node = node.parentNode) {}
+                              if (node.nodeType === 1) {
+                                 selection.select(node);
+                              }
+                           }
                         }
                      }
                   }
