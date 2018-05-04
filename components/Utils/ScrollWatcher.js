@@ -130,6 +130,18 @@ define('SBIS3.CONTROLS/Utils/ScrollWatcher', [
       },
 
       /**
+       * Return control instance of the corresponding scroll container.
+       */
+      getScrollContainerControl: function () {
+         var scrollContainerControl;
+         try {
+            scrollContainerControl = this.getScrollContainer()[0].parentElement.wsControl;
+         } catch(e) {}
+
+         return scrollContainerControl;
+      },
+
+      /**
        * Находится ли скролл внизу
        * @param  {Boolean} noOffset Учитывать опцию totalScrollOffset или только реальное положение скролла
        * @return {Boolean} Находится ли скролл внизу
