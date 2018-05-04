@@ -52,14 +52,14 @@ define('Controls-demo/List/Mover', [
          return [{
             id: 0,
             icon: 'icon-ArrowUp icon-primary',
-            main: true,
+            showType: 2,
             handler: function(item) {
                self._children[listName].moveItemUp(item);
             }
          },{
             id: 1,
             icon: 'icon-ArrowDown icon-primary',
-            main: true,
+            showType: 2,
             handler: function(item) {
                self._children[listName].moveItemDown(item);
             }
