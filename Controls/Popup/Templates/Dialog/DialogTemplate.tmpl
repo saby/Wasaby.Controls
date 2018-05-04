@@ -5,12 +5,12 @@
                 <span class="controls-DialogTemplate__caption" title="{{_options.caption}}">{{_options.caption}}</span>
             </ws:if>
             <ws:if data="{{_options.topArea}}">
-                <ws:partial template="{{_options.topArea}}"></ws:partial>
+                <ws:partial template="{{_options.topArea}}" scope="{{_options.topAreaOptions}}"></ws:partial>
             </ws:if>
         </div>
         <div class="controls-DialogTemplate__close_button controls-DialogTemplate__close_button_standart" on:click="close()"></div>
     </div>
     <div class="controls-DialogTemplate__content-area">
-        <ws:partial template="{{_options.contentArea}}"></ws:partial>
+        <ws:partial template="{{_options.contentArea}}" scope="{{_options.contentAreaOptions}}"></ws:partial>
     </div>
 </div>
