@@ -11,7 +11,8 @@ define('Controls/HighCharts',
       'use strict';
 
       /**
-       * Component HighCharts
+       * Component HighCharts.
+       *
        * @class Controls/HighCharts
        * @extends Core/Control
        * @mixes Controls/interface/IHighCharts
