@@ -305,7 +305,9 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
                this._resizeInner();
             }
-            this._toggleGradient();
+            if (!(this._getChildContentHeight() < 35)) {
+               this._toggleGradient();
+            }
          },
 
          // Показать скролл
@@ -355,7 +357,9 @@ define('SBIS3.CONTROLS/ScrollContainer', [
             if (this._paging) {
                this._calcPagingSelectedKey(scrollTop);
             }
-            this._toggleGradient();
+            if (!(this._getChildContentHeight() < 35)) {
+               this._toggleGradient();
+            }
          },
 
          _onMouseenter: function() {
@@ -458,7 +462,9 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                 */
                EventBusChannel.subscribe('onRequestTakeScrollbar', this._requestTakeScrollbarHandler);
                EventBusChannel.unsubscribe('onReturnTakeScrollbar', this._returnTakeScrollbarHandler);
-               this._showScrollbar();
+               if (!(this._getChildContentHeight() < 35)) {
+                  this._showScrollbar();
+               }
             }
          },
 
@@ -537,7 +543,9 @@ define('SBIS3.CONTROLS/ScrollContainer', [
             }
             //ресайз может позваться до инита контейнера
             if (this._content) {
-               this._toggleGradient();
+               if (!(this._getChildContentHeight() < 35)) {
+                  this._toggleGradient();
+               }
                /**
                 * В firefox при высоте дочерних элементав < высоты скролла(34px) и резиновой высоте контейнера через max-height, нативный скролл не пропадает.
                 * В такой ситуации content имеет высоту скролла, а должен быть равен высоте дочерних элементав.
@@ -549,7 +557,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                if (cDetection.isIE) {
                   // Баг в ie. При overflow: scroll, если контент не нуждается в скроллировании, то браузер добавляет
                   // 1px для скроллирования.
-                  this._toggleOverflowHidden((this._getScrollHeight() - Math.floor(this._container.height())) <= 1);
+                  this._toggleOverflowHidden(((this._getScrollHeight() - Math.floor(this._container.height())) <= 1) || (this._getChildContentHeight() < 35));
                }
                if (!this._options.takeScrollbarHidden) {
                   this._subscribeTakeScrollbar();
