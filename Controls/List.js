@@ -17,7 +17,7 @@ define('Controls/List', [
       prepareModelConfig: function(cfg) {
          return {
             items: cfg.items,
-            idProperty: cfg.idProperty,
+            keyProperty: cfg.keyProperty,
             displayProperty: cfg.displayProperty,
             markedKey: cfg.markedKey,
             selectedKeys: cfg.selectedKeys,
@@ -28,7 +28,7 @@ define('Controls/List', [
       },
       prepareViewConfig: function(cfg) {
          return {
-            idProperty: cfg.idProperty,
+            keyProperty: cfg.keyProperty,
             itemTemplate: cfg.itemTemplate,
             displayProperty: cfg.displayProperty,
             markedKey: cfg.markedKey
@@ -37,9 +37,10 @@ define('Controls/List', [
    };
 
    /**
-    * Компонент плоского списка, с произвольным шаблоном отображения каждого элемента. Обладает возможностью загрузки/подгрузки данных из источника.
+    * Plain list with custom item template. Can load data from data source.
+    *
     * @class Controls/List
-    * @extends Controls/Control
+    * @extends Core/Control
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IGroupedView

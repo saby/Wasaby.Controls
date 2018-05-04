@@ -48,11 +48,11 @@ define([
       it('Item click', function () {
          var model = new ListViewModel({
             items: data,
-            idProperty: 'id'
+            keyProperty: 'id'
          });
          var cfg = {
             listModel: model,
-            idProperty: 'id',
+            keyProperty: 'id',
             markedKey: 2
          };
          var lv = new ListView(cfg);
@@ -71,11 +71,11 @@ define([
       it('_beforeUpdate', function () {
          var model = new ListViewModel({
             items: data,
-            idProperty: 'id'
+            keyProperty: 'id'
          });
          var cfg = {
             listModel: model,
-            idProperty: 'id',
+            keyProperty: 'id',
             markedKey: 2
          };
          var lv = new ListView(cfg);
@@ -85,12 +85,12 @@ define([
       
          model = new ListViewModel({
             items: data2,
-            idProperty: 'id'
+            keyProperty: 'id'
          });
       
          cfg = {
             listModel: model,
-            idProperty: 'id',
+            keyProperty: 'id',
             markedKey: 2
          };
       

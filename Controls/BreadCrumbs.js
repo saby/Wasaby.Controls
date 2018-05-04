@@ -8,19 +8,18 @@ define('Controls/BreadCrumbs', [
    var _private = {};
 
    /**
-    * Компонент - хлебные крошки
+    * Breadcrumbs.
+    *
     * @class Controls/BreadCrumbs
-    * @extends Controls/Control
+    * @extends Core/Control
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IHighlighter
     * @control
     * @public
-    * @category List
     */
 
    var BreadCrumbs = Control.extend({
-      _controlName: 'Controls/BreadCrumbs'
-
    });
+
    return BreadCrumbs;
 });

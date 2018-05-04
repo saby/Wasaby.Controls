@@ -2,7 +2,7 @@ define('Controls/interface/IFilter', [
 ], function() {
 
    /**
-    * Интерфейс работы фильтра
+    * Filter interface.
     *
     * @mixin Controls/interface/IFilter
     * @public
@@ -10,7 +10,7 @@ define('Controls/interface/IFilter', [
 
    /**
     * @name Controls/interface/IFilter#filter
-    * @cfg {Object} Конфигурация фильтра (объект с ключами полей и их значениями)
+    * @cfg {Object} Filter configuration - object with field names and their values.
     */
 
 });

@@ -37,10 +37,10 @@ define('Controls/List/Mover', [
       moveInSource: function(self, items, target, position) {
          var
             idArray = items.map(function(item) {
-               return cInstance.instanceOfModule(item, 'WS.Data/Entity/Model') ? item.get(self._options.idProperty) : item;
+               return cInstance.instanceOfModule(item, 'WS.Data/Entity/Model') ? item.get(self._options.keyProperty) : item;
             }, self);
 
-         return self._options.sourceController.move(idArray, target.get(self._options.idProperty), {
+         return self._options.sourceController.move(idArray, target.get(self._options.keyProperty), {
             position: position
          });
       },
@@ -58,7 +58,7 @@ define('Controls/List/Mover', [
    /**
     * A class that describes the action of moving list items up/down.
     * @class Controls/List/Mover
-    * @extends Controls/Control
+    * @extends Core/Control
     * @mixes Controls/interface/IReorderMovable
     * @control
     * @author Крайнов Д.О.

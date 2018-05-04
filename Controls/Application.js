@@ -7,19 +7,26 @@ define('Controls/Application',
       'tmpl!Controls/Application/Page',
       'Core/Deferred',
       'Core/BodyClasses',
+      'Core/compatibility',
       'Controls/Application/TouchDetector',
       'Controls/Application/AppData',
       'Core/ConsoleLogger'
    ],
 
    /**
-    * Компонент приложение. не делает НИЧЕГО. На вход принимает конфиг - на выходе шаблон.
-    * Никакой логики внутри нет.
+    * Root component for WS applications. Creates basic html page.
+    *
+    * @class Controls/Application
+    * @extends Core/Control
+    * @control
+    * @public
     */
+
    function(Base,
       template,
       Deferred,
       BodyClasses,
+      compatibility,
       TouchDetector,
       AppData) {
       'use strict';
@@ -58,19 +65,20 @@ define('Controls/Application',
          _mousedownPage: function(ev) {
             this._children.mousedownDetect.start(ev);
          },
-
-         _touchstartPage: function() {
-            TouchDetector.touchHandler();
-         },
          _mousemovePage: function(ev) {
-            TouchDetector.moveHandler();
             this._children.mousemoveDetect.start(ev);
          },
          _mouseupPage: function(ev) {
             this._children.mouseupDetect.start(ev);
          },
          _touchclass: function() {
-            return TouchDetector.getClass();
+            //Данный метод вызывается из вёрстки, и при первой отрисовке еще нет _children (это нормально)
+            //поэтому сами детектим touch с помощью compatibility
+            return  this._children.touchDetector
+               ? this._children.touchDetector.getClass()
+               : compatibility.touch
+                  ? 'ws-is-touch'
+                  : 'ws-is-no-touch';
          },
 
          _beforeMount: function(cfg, context, receivedState) {

@@ -27,7 +27,7 @@ define('Controls/List/ListViewModel',
             ListViewModel.superclass.constructor.apply(this, arguments);
 
             if (cfg.markedKey !== undefined) {
-               this._markedItem = this.getItemById(cfg.markedKey, cfg.idProperty);
+               this._markedItem = this.getItemById(cfg.markedKey, cfg.keyProperty);
             }
 
             this._multiselection = new MultiSelection({
@@ -45,6 +45,7 @@ define('Controls/List/ListViewModel',
             itemsModelCurrent.itemActions =  this._actions[this.getCurrentIndex()];
             itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
             itemsModelCurrent.showActions = !this._editingItemData && (!this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive));
+            itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem.item;
             itemsModelCurrent.multiSelectStatus = this._multiselection.getSelectionStatus(itemsModelCurrent.key);
             itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility === 'visible';
             if (this._editingItemData && itemsModelCurrent.index === this._editingItemData.index) {
@@ -55,13 +56,18 @@ define('Controls/List/ListViewModel',
          },
 
          setMarkedKey: function(key) {
-            this._markedItem = this.getItemById(key, this._options.idProperty);
+            this._markedItem = this.getItemById(key, this._options.keyProperty);
             this._nextVersion();
             this._notify('onListChange');
          },
 
          setActiveItem: function(itemData) {
             this._activeItem = itemData;
+            this._nextVersion();
+         },
+
+         setSwipeItem: function(itemData) {
+            this._swipeItem = itemData;
             this._nextVersion();
          },
 
@@ -89,7 +95,7 @@ define('Controls/List/ListViewModel',
          setItems: function(items) {
             ListViewModel.superclass.setItems.apply(this, arguments);
             if (this._options.markedKey !== undefined) {
-               this._markedItem = this.getItemById(this._options.markedKey, this._options.idProperty);
+               this._markedItem = this.getItemById(this._options.markedKey, this._options.keyProperty);
             }
             this._nextVersion();
             _private.updateIndexes(this);
@@ -98,14 +104,14 @@ define('Controls/List/ListViewModel',
          _setEditingItemData: function(itemData) {
             this._editingItemData = itemData;
             if (itemData && itemData.item) {
-               this.setMarkedKey(itemData.item.get(this._options.idProperty));
+               this.setMarkedKey(itemData.item.get(this._options.keyProperty));
             }
          },
-         setItemActions: function(itemData, actions) {
-            this._actions[itemData.index] = actions;
+         setItemActions: function(item, actions) {
+            this._actions[this.getIndexBySourceItem(item)] = actions;
          },
 
-         __calcSelectedItem: function(display, selKey, idProperty) {
+         __calcSelectedItem: function(display, selKey, keyProperty) {
 
             //TODO надо вычислить индекс
             /*if(!this._markedItem) {

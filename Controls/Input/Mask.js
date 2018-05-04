@@ -16,7 +16,7 @@ define('Controls/Input/Mask',
        * Поле ввода строки заранее определенного формата.
        * В поле уже заранее будут введены символы, определяющие формат, и останется ввести только недостающие символы.
        * @class Controls/Input/Mask
-       * @extends Controls/Control
+       * @extends Core/Control
        * @mixes Controls/Input/interface/IInputTag
        * @mixes Controls/Input/interface/IInputText
        * @mixes Controls/Input/interface/IValidation

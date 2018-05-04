@@ -2,9 +2,9 @@ define('Controls/Toggle/Button', [
 ], function() {
 
    /**
-    * Кнопка, которая может находиться в одном из двух состояний.
+    * Button that switches between different states.
+    *
     * @class Controls/Toggle/Button
-    * @extends Controls/Control
     * @mixes Controls/Toggle/interface/ICheckable
     * @mixes Controls/interface/ITooltip
     * @control
@@ -14,12 +14,12 @@ define('Controls/Toggle/Button', [
 
    /**
     * @name Controls/Toggle/Button#icons
-    * @cfg {Array} Набор иконок
+    * @cfg {Array} Array of icons.
     */
 
    /**
     * @name Controls/Toggle/Button#captions
-    * @cfg {Array} Набор заголовков
+    * @cfg {Array} Array of titles.
     */
 
 });

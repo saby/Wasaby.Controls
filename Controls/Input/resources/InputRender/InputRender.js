@@ -26,13 +26,14 @@ define('Controls/Input/resources/InputRender/InputRender',
 
          getSelection: function(self) {
             var
-               result = self._selection;
+               result = self._selection,
+               val = self._options.viewModel.getDisplayValue();
 
             //Если курсор ещё не был поставлен в поле, то поставим его в конец
             if (!result) {
                result = {
-                  selectionStart: self._options.value ? self._options.value.length : 0,
-                  selectionEnd: self._options.value ? self._options.value.length : 0
+                  selectionStart: val ? val.length : 0,
+                  selectionEnd: val ? val.length : 0
                };
             }
 
@@ -60,11 +61,6 @@ define('Controls/Input/resources/InputRender/InputRender',
          
          _template: template,
 
-         constructor: function(options) {
-            InputRender.superclass.constructor.apply(this, arguments);
-
-         },
-
          _inputHandler: function(e) {
             var
                value = this._options.viewModel.getDisplayValue(),
@@ -91,7 +87,7 @@ define('Controls/Input/resources/InputRender/InputRender',
             _private.setTargetData(e.target, processedData);
             _private.saveSelection(this, e.target);
 
-            this._notify('valueChanged', [this._options.viewModel.getValue()]);
+            this._notify('valueChanged', [processedData.value]);
          },
 
          _keyUpHandler: function(e) {

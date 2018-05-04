@@ -41,14 +41,15 @@ define('SBIS3.CONTROLS/Utils/FilterPanelUtils',
 
          function updatePickerVisibility() {
             var visibility = context.getValue(rootName + '/visibility');
+            var showAdditionalBlock = false;
 
             if (!isEmptyObject(visibility)) {
-               var showAdditionalBlock = Object.keys(visibility).reduce(function (result, element) {
+               showAdditionalBlock = Object.keys(visibility).reduce(function (result, element) {
                   return result || visibility[element] === false;
                }, false);
-
-               context.setValue('additionalFilterVisible', showAdditionalBlock);
             }
+   
+            context.setValue('additionalFilterVisible', showAdditionalBlock);
          }
 
          updatePickerContext();
