@@ -4174,6 +4174,9 @@ define('SBIS3.CONTROLS/ListView',
                this._updatePaging();
             }
          },
+         _prepareAdditionalFilterForCursor: function(filter, direction) {
+            return this._listNavigation.prepareQueryParams(this._getItemsProjection(), direction);
+         },
          _getQueryForCall: function(filter, sorting, offset, limit, direction){
             var
                query = new Query(),
@@ -4184,7 +4187,7 @@ define('SBIS3.CONTROLS/ListView',
                this._dataSource.setOptions(options);
 
                queryFilter = coreClone(filter);
-               var addParams = this._listNavigation.prepareQueryParams(this._getItemsProjection(), direction);
+               var addParams = this._prepareAdditionalFilterForCursor(filter, direction);
                cMerge(queryFilter, addParams.filter);
             }
             /*TODO перенос события для курсоров глубже, делаю под ифом, чтоб не сломать текущий функционал*/
