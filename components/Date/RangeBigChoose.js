@@ -398,10 +398,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
 
        _onSelectionEnded: function () {
          if (this._startDatePicker.validate() && this._endDatePicker.validate()) {
-            this._notify('onChoose', this.getStartValue(), this.getEndValue());
             this._updateHeaderInputsVisibility();
             this._startDatePickerResetActive();
             this._endDatePickerResetActive();
+            this._notify('onChoose', this.getStartValue(), this.getEndValue());
          }
        },
        _onDateRangeSelectionEnded: function () {
@@ -441,13 +441,13 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
             }
             this.cancelSelection();
             this._dateRangePicker.cancelSelection();
-            this._notify('onChoose', this.getStartValue(), this.getEndValue());
             this._updateHeaderInputsVisibility();
             this._startDatePickerResetActive();
             this._endDatePickerResetActive();
             if (this._options._state === states.month) {
                this._monthRangePicker._clearMonthSelection();
             }
+            this._notify('onChoose', this.getStartValue(), this.getEndValue());
          }
       },
 
