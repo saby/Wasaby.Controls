@@ -37,6 +37,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                this.componentOptions = {};
             }
             moduleStubs.require(['cdn!jquery/3.3.1/jquery-min.js', 'Core/constants']).addCallback(function(result) {
+               var constants = result[1];
+
                if (window && window.$) {
                   result[1].$win = $(window);
                   result[1].$doc = $(document);
@@ -51,14 +53,18 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                      'Core/vdom/Synchronizer/resources/DirtyCheckingCompatible',
                      'View/Runner/Text/markupGeneratorCompatible'
                   ]).addCallback(function(result) {
-                  var
-                     elem = $(self._children.compoundBlock);
+                  var tempCompatVal = constants.compat;
+                  constants.compat = true;
+
+                  var elem = $(self._children.compoundBlock);
 
                   self.componentOptions.element = elem;
 
                   self._compoundControl = new (result[0])(self.componentOptions);
 
                   self._subscribeToCommand();
+
+                  constants.compat = tempCompatVal;
                });
 
                (function($) {
