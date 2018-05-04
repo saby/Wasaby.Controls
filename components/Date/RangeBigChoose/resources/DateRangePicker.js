@@ -257,7 +257,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
                start = tmpStart;
                end = new Date(date.getFullYear(), date.getMonth(), date.getDate() - 1);
             }
-            this.setRange(date, DateUtils.getEndOfMonth(date));
+            this.cancelSelection();
          } else {
             start = date;
             end = DateUtils.getEndOfMonth(date);
