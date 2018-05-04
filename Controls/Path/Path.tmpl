@@ -1,0 +1,16 @@
+<div class="controls-Path">
+    <ws:if data="{{_options.items}}">
+        <Controls.Button.Back attr:class="controls-Path__backButton {{_backButtonClass}}"
+                              caption="{{_backButtonCaption}}"
+                              on:click="_onBackButtonClick()"/>
+        <Controls.BreadCrumbs attr:class="controls-Path__breadCrumbs {{_breadCrumbsClass}}"
+                              items="{{_breadCrumbsItems}}"
+                              visibleItems="{{_visibleItems}}"
+                              idProperty="{{_options.idProperty}}"
+                              displayProperty="{{_options.displayProperty}}"
+                              on:itemClick="_onItemClick()"/>
+    </ws:if>
+
+    <Controls.Event.Emitter event="resize"
+                            on:resize="_onResize()"/>
+</div>

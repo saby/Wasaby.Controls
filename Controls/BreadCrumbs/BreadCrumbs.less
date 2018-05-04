@@ -1,0 +1,95 @@
+.controls-BreadCrumbsV {
+   white-space: nowrap;
+}
+
+.controls-BreadCrumbsV__items {
+   display: inline-flex;
+   align-items: center;
+   height: 24px;
+   max-width: calc(100% ~'-' @bread-crumb-home-font-size + 4px); //TODO: не 4px, а отступ у домика
+}
+
+.controls-BreadCrumbsV__crumb {
+   display: inline-flex;
+   align-items: center;
+   flex-shrink: 0;
+   min-width: 0;
+}
+
+.controls-BreadCrumbsV__titleWrapper {
+   flex-shrink: 0;
+   color: #0055BB;
+   cursor: pointer;
+   position: relative;
+   overflow: hidden;
+   min-width: 0;
+}
+
+.controls-BreadCrumbsV__title {
+   .text-overflow();
+}
+
+.controls-BreadCrumbsV__crumb_withOverflow {
+   flex-shrink: 1;
+   min-width: 52px; //TODO: ширина стрелки и текста
+}
+
+.controls-BreadCrumbsV__titleWrapper_withOverflow {
+   flex-shrink: 1;
+   min-width: 36px;
+}
+
+.controls-BreadCrumbsV__title:hover {
+   color: #313E78;
+   text-decoration: underline;
+}
+
+.controls-BreadCrumbsV__arrow {
+   .icon-size-without-important(@bread-crumb-home-font-size);
+   cursor: pointer;
+}
+
+.controls-BreadCrumbsV__measurer {
+   display: inline-flex;
+   top: 0;
+   left: -9999px;
+   position: absolute;
+   white-space: nowrap;
+}
+
+.controls-BreadCrumbsV__home {
+   .icon-size-without-important(@bread-crumb-home-font-size);
+   cursor: pointer;
+   padding-right: 4px;
+}
+
+.controls-BreadCrumbsV__home:hover {
+   color: @bread-crumb-title-hover-color;
+}
+
+.controls-BreadCrumbsV__title_min {
+   min-width: 36px;
+}
+
+.controls-BreadCrumbsV__menuItem {
+   display: inline-flex;
+}
+
+.controls-BreadCrumbsV__menuTitle {
+   .text-overflow();
+   flex-shrink: 1;
+   display: inline-block;
+   width: 100%;
+}
+
+.controls-BreadCrumbsV__indentation {
+   display: inline-flex;
+   flex-shrink: 0;
+   height: 13px;
+   width: 14px;
+   &:last-of-type {
+      background: @bread-crumbs-hier-wrapper-bg no-repeat;
+      position: relative;
+      top: -4px;
+   }
+}
