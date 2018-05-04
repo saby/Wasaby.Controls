@@ -485,7 +485,9 @@ define('SBIS3.CONTROLS/FieldLink',
           _getSelectorAction: memoize(function() {
              return new SelectorAction({
                 mode: this._getOption('selectMode'),
-                visible: false
+                visible: false,
+                tabindex: -1,
+                parent: this
              });
           }, '_getSelectorAction'),
 
