@@ -138,14 +138,14 @@ define('Controls-demo/Layouts/SearchLayout', [
       {
          _template: template,
          _dataSource: new MemorySource({
-            keyProperty: 'id',
+            idProperty: 'id',
             data: sourceData
          }),
          _filterSource: filterSourceData,
          _switchValue: false,
 
          _fastFilterSource: new MemorySource({
-            keyProperty: 'id',
+            idProperty: 'id',
             data: filterData
          }),
          _fastFilterData: filterData,

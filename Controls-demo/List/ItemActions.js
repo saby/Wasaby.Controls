@@ -131,11 +131,11 @@ define('Controls-demo/List/ItemActions', [
                });
             }
             this._viewSource = new MemorySource({
-               keyProperty: 'id',
+               idProperty: 'id',
                data: srcData
             });
             this._viewSource2 = new MemorySource({
-               keyProperty: 'id',
+               idProperty: 'id',
                data: srcMore
             });
          },
@@ -150,7 +150,7 @@ define('Controls-demo/List/ItemActions', [
                });
             }
             this._viewSource = new MemorySource({
-               keyProperty: 'id',
+               idProperty: 'id',
                data: srcMore
             });
          }

@@ -97,7 +97,7 @@ define('Controls-demo/Container/MyScroll',
             Scroll.superclass.constructor.apply(this, arguments);
 
             this._usersSource = new MemorySource({
-               keyProperty: 'id',
+               idProperty: 'id',
                data: srcUsersData
             });
 

@@ -26,7 +26,7 @@ define('Controls-demo/List/Grid/Grid', [
          _template: template,
 
          _viewSource: new MemorySource({
-            keyProperty: 'id',
+            idProperty: 'id',
             data: GridData.catalog
          }),
 

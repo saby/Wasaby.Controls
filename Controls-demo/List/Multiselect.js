@@ -37,7 +37,7 @@ define('Controls-demo/List/Multiselect', [
          constructor: function() {
             ModuleClass.superclass.constructor.apply(this, arguments);
             this._viewSource = new MemorySource({
-               keyProperty: 'id',
+               idProperty: 'id',
                data: srcData
             })
          }

@@ -34,7 +34,7 @@ define('Controls/History/Source', [
     *  <pre>
     *    var solarSystem = new historySource({
      *           originSource: new Memory({
-     *               keyProperty: 'id',
+     *               idProperty: 'id',
      *               data: items
      *           }),
      *           historySource: new historyService({
