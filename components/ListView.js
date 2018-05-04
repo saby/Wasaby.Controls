@@ -4387,6 +4387,10 @@ define('SBIS3.CONTROLS/ListView',
                this._pager = undefined;
                this._pagerContainer = undefined;
             }
+            if (this._mover) {
+               this._mover.destroy();
+               this._mover = undefined;
+            }
             this._destroyEditInPlaceController();
             ListView.superclass.setDataSource.apply(this, arguments);
          },
