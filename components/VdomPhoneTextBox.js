@@ -40,6 +40,7 @@ define('SBIS3.CONTROLS/VdomPhoneTextBox',
 
          _valueChangedHandler: function(event, value) {
             this._notify('onValueChange', value);
+            this._notifyOnPropertyChanged('value');
          },
 
          /**
