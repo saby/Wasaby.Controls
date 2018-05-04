@@ -1143,6 +1143,14 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                cfg.preparedClasses += ' controls-TreeView__hideExpands';
             }
          },
+         _getQueryForCall: function(parentFn, filter, sorting, offset, limit, direction) {
+            if (this._isCursorNavigation() && this._options.saveReloadPosition) {
+               if (typeof this._hierPages[this.getCurrentRoot()] !== 'undefined') {
+                  this.getListNavigation().setPosition(this._hierPages[this.getCurrentRoot()]);
+               }
+            }
+            return parentFn.call(this, filter, sorting, offset, limit, direction);
+         },
          /**
           * Позволяет перезагрузить данные как одной модели, так и всей иерархии из дочерних элементов этой записи.
           * @param {Number} id Идентификатор записи
@@ -1616,12 +1624,18 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
          this.setPage(0, true, true);
          //Если добавить проверку на rootChanged, то при переносе в ту же папку, из которой искали ничего не произойдет
          this._notify('onBeforeSetRoot', key);
-         this._options.currentRoot = (isFakeRoot || (key !== undefined && key !== null)) ? key : this._options.root;
 
          // сохраняем текущую страницу при проваливании в папку
          if (this._options.saveReloadPosition) {
-            this._hierPages[this._previousRoot] = this._getCurrentPage();
+            // Сохраняем ключ узла, в который провалились
+            if (typeof this.getCurrentRoot() === 'undefined') {
+               this._hierPages[null] = this.getSelectedKey();
+            } else {
+               this._hierPages[this.getCurrentRoot()] = this.getSelectedKey();
+            }
          }
+
+         this._options.currentRoot = (isFakeRoot || (key !== undefined && key !== null)) ? key : this._options.root;
 
          if (isFakeRoot) {
             newRoot = Model.fromObject(this._options.root, this.getItems() ? this.getItems().getAdapter() : 'adapter.sbis');
