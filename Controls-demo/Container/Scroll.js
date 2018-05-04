@@ -21,7 +21,7 @@ define('Controls-demo/Container/Scroll',
                });
             }
             this._viewSource = new MemorySource({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: srcData
             });
 

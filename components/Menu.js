@@ -164,12 +164,15 @@ define('SBIS3.CONTROLS/Menu', [
       },
       _getItemTemplate: function(item) {
          var
-            caption = Sanitize(item.get(this._options.displayProperty), {validNodes: {component: true}}),
+            caption = item.get(this._options.displayProperty),
             options = this._getItemConfig({}, item);
 
          if (item.has('escapeCaptionHtml') ? item.get('escapeCaptionHtml') : this._options.escapeHtmlItems) {
             caption = escapeHtml(caption);
+         } else {
+            caption = Sanitize(caption, {validNodes: {component: true}})
          }
+
          if (this._options.additionalProperty && item.get(this._options.additionalProperty)) {
             options.className = (options.className ? options.className : '') + ' controls-MenuItem-additional';
             this._needShowToggleButton = true;

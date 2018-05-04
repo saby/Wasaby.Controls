@@ -107,13 +107,14 @@ define('Controls/Container/List',
                   self._contextObj.hasOwnProperty('searchLayoutField') &&
                   oldContext.get('searchLayoutField').searchValue;
             
-            return newValue && !isEqual(newValue, oldValue) ? _private.searchValueChanged(self, newValue) : false;
+            return !isEqual(newValue, oldValue) ? _private.searchValueChanged(self, newValue) : false;
          }
       };
       
       /**
-       * Container for lists components.
-       * Pass props (like filter, source, navigation) to list inside.
+       * Container for list components.
+       * Passes props (like filter, source, navigation) to list inside.
+       *
        * @author Герасимов Александр
        * @class Controls/Container/List
        * @mixes Controls/Input/interface/ISearch

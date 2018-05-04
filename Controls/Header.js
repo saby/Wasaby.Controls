@@ -7,7 +7,8 @@ define('Controls/Header', [
    'use strict';
 
    /**
-    * Control showing the headers.
+    * Control showing the header.
+    *
     * @class Controls/Header
     * @extends Core/Control
     * @control

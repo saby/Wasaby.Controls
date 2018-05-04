@@ -8,7 +8,8 @@ define('Controls/Toggle/Radio', [
 ], function(Control, SourceController, template, defaultItemTemplate) {
 
    /**
-    * Group of radioButton.
+    * Radio button switch.
+    *
     * @class Controls/Toggle/Radio
     * @extends Core/Control
     * @mixes Controls/interface/ISource

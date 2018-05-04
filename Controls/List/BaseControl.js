@@ -380,6 +380,7 @@ define('Controls/List/BaseControl', [
             });
 
             if (receivedState) {
+               this._sourceController.calculateState(receivedState);
                this._listViewModel.setItems(receivedState);
             } else {
                return _private.reload(this);
@@ -507,7 +508,7 @@ define('Controls/List/BaseControl', [
             }
          }
          if (direction === 'right' || direction === 'left') {
-            var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.viewConfig.idProperty);
+            var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.viewConfig.keyProperty);
             this._listViewModel.setMarkedKey(newKey);
          }
       },
@@ -539,7 +540,7 @@ define('Controls/List/BaseControl', [
       },
 
       _onItemClick: function(e, item) {
-         var newKey = ItemsUtil.getPropertyValue(item, this._options.viewConfig.idProperty);
+         var newKey = ItemsUtil.getPropertyValue(item, this._options.viewConfig.keyProperty);
          this._listViewModel.setMarkedKey(newKey);
       },
 
@@ -621,6 +622,10 @@ define('Controls/List/BaseControl', [
 
       _afterItemsMove: function(event, items, target, position, result) {
          this._notify('afterItemsMove', [items, target, position, result]);
+      },
+
+      _onActionClick: function(e, action, item) {
+         this._notify('actionClick', [action, item]);
       }
    });
 

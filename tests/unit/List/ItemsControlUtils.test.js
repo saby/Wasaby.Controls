@@ -2,9 +2,8 @@
  * Created by am.gerasimov on 06.03.2017.
  */
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
-define(['Controls/List/resources/utils/ItemsUtil', 'WS.Data/Collection/RecordSet'
-   , 'WS.Data/Source/Memory', 'Core/core-instance', 'WS.Data/Types/Enum'],
-   function (DataSourceUtil, ItemsUtil, RecordSet, MemorySource, cInstance, Enum) {
+define(['Controls/List/resources/utils/ItemsUtil', 'WS.Data/Collection/RecordSet', 'WS.Data/Source/Memory', 'Core/core-instance', 'WS.Data/Types/Enum'],
+   function (ItemsUtil, RecordSet, MemorySource, cInstance, Enum) {
 
       'use strict';
 
@@ -92,7 +91,7 @@ define(['Controls/List/resources/utils/ItemsUtil', 'WS.Data/Collection/RecordSet
             it('getDisplayItemById', function () {
                var rs = new RecordSet({
                   rawData: data,
-                  idProperty : 'id'
+                     idProperty : 'id'
                }),
                myEnum = new Enum({
                   dictionary: ['Первый', 'Второй', 'Третий']

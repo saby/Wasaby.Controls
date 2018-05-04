@@ -56,12 +56,12 @@ define('Controls/Input/Search',
          },
 
          _onResetClick: function() {
-            this._notify('onResetClick');
+            this._notify('resetClick');
             this._notifyOnValueChanged('');
          },
 
          _onSearchClick: function() {
-            this._notify('onSearchClick');
+            this._notify('searchClick');
          }
          
       });

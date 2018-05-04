@@ -13,7 +13,7 @@ define('Controls/List/Tree/TreeViewModel', [
             var
                itemParent = item.getParent();
             if (itemParent && !itemParent.isRoot()) {
-               if (this.expandedNodes[ItemsUtil.getPropertyValue(itemParent.getContents(), this.idProperty)]) {
+               if (this.expandedNodes[ItemsUtil.getPropertyValue(itemParent.getContents(), this.keyProperty)]) {
                   return _private.isVisibleItem(itemParent);
                } else {
                   return false;
@@ -32,7 +32,7 @@ define('Controls/List/Tree/TreeViewModel', [
                filter = [];
             filter.push(_private.displayFilter.bind({
                expandedNodes: expandedNodes,
-               idProperty: cfg.idProperty
+               keyProperty: cfg.keyProperty
             }));
             if (cfg.itemsFilterMethod) {
                filter.push(cfg.itemsFilterMethod);
@@ -60,7 +60,7 @@ define('Controls/List/Tree/TreeViewModel', [
 
          toggleExpanded: function(dispItem) {
             var
-               itemId = ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.idProperty);
+               itemId = ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.keyProperty);
             if (this._expandedNodes[itemId]) {
                delete this._expandedNodes[itemId];
             } else {

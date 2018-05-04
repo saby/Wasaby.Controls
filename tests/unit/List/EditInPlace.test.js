@@ -39,7 +39,7 @@ define([
          });
          listModel = new ListViewModel({
             items: items,
-            idProperty: 'id',
+            keyProperty: 'id',
             displayProperty: 'title'
          });
          eip = new EditInPlace();

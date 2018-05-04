@@ -18,7 +18,8 @@ define('Controls/Container/Scroll',
       'use strict';
 
       /**
-       * Компонент - контейнер с узкой стилизованной полосой скролла.
+       * Container with thin scrollbar.
+       *
        * @class Controls/Container/Scroll
        * @extends Core/Control
        * @control
@@ -26,18 +27,18 @@ define('Controls/Container/Scroll',
        * @category Container
        *
        * @name Controls/Container/Scroll#content
-       * @cfg {Content} Содержимое контейнера
+       * @cfg {Content} Container contents.
        *
        * @name Controls/Container/Scroll#shadowVisible
-       * @cfg {Boolean} Наличие тени при прокрутке контента
+       * @cfg {Boolean} Whether shadow should be shown (when content doesn't fit).
        *
        * @name Controls/Container/Scroll#scrollbarVisible
-       * @cfg {Boolean} Наличие полосы прокрутки
+       * @cfg {Boolean} Whether scrollbar should be shown.
        *
        * @name Controls/Container/Scroll#style
-       * @cfg {String} Цветовая схема контейнера. Влияет на цвет тени и полоски скролла. Используется для того чтобы контейнер корректно отображался как на светлом так и на темном фоне.
-       * @variant normal стандартная схема
-       * @variant inverted противоположная схема
+       * @cfg {String} Color scheme (colors of the shadow and scrollbar).
+       * @variant normal Default theme (for bright backgrounds).
+       * @variant inverted Inverted theme (for dark backgrounds).
        */
       var
          _private = {
@@ -325,7 +326,7 @@ define('Controls/Container/Scroll',
             },
 
             /**
-             * Осуществить скролл на заданную величину в пикселях
+             * Scrolls to the given position from the top of the container.
              * @param {Number} offset
              */
             scrollTo: function(offset) {
@@ -333,14 +334,14 @@ define('Controls/Container/Scroll',
             },
 
             /**
-             * Осуществить скролл к верху области
+             * Scrolls to the top of the container.
              */
             scrollToTop: function() {
                _private.setScrollTop(this, 0);
             },
 
             /**
-             * Осуществить скролл к низу области
+             * Scrolls to the bottom of the container.
              */
             scrollToBottom: function() {
                _private.setScrollTop(this, _private.getScrollHeight(this._children.content));
