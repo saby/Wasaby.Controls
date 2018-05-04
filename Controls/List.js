@@ -17,7 +17,7 @@ define('Controls/List', [
       prepareModelConfig: function(cfg) {
          return {
             items: cfg.items,
-            idProperty: cfg.idProperty,
+            keyProperty: cfg.keyProperty,
             displayProperty: cfg.displayProperty,
             markedKey: cfg.markedKey,
             selectedKeys: cfg.selectedKeys,
@@ -28,7 +28,7 @@ define('Controls/List', [
       },
       prepareViewConfig: function(cfg) {
          return {
-            idProperty: cfg.idProperty,
+            keyProperty: cfg.keyProperty,
             itemTemplate: cfg.itemTemplate,
             displayProperty: cfg.displayProperty,
             markedKey: cfg.markedKey

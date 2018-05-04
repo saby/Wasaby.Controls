@@ -508,7 +508,7 @@ define('Controls/List/BaseControl', [
             }
          }
          if (direction === 'right' || direction === 'left') {
-            var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.viewConfig.idProperty);
+            var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.viewConfig.keyProperty);
             this._listViewModel.setMarkedKey(newKey);
          }
       },
@@ -540,7 +540,7 @@ define('Controls/List/BaseControl', [
       },
 
       _onItemClick: function(e, item) {
-         var newKey = ItemsUtil.getPropertyValue(item, this._options.viewConfig.idProperty);
+         var newKey = ItemsUtil.getPropertyValue(item, this._options.viewConfig.keyProperty);
          this._listViewModel.setMarkedKey(newKey);
       },
 

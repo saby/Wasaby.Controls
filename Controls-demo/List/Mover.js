@@ -33,7 +33,7 @@ define('Controls-demo/List/Mover', [
 
       _createSource: function(items) {
          return new Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: cClone(items)
          });
       },

@@ -97,12 +97,12 @@ define('Controls-demo/Container/MyScroll',
             Scroll.superclass.constructor.apply(this, arguments);
 
             this._usersSource = new MemorySource({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: srcUsersData
             });
 
             this._messagesSource = new LocalSession({
-               idProperty: 'id',
+               keyProperty: 'id',
                prefix: 'DSMS'
             });
          },

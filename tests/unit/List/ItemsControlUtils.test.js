@@ -91,7 +91,7 @@ define(['Controls/List/resources/utils/ItemsUtil', 'WS.Data/Collection/RecordSet
             it('getDisplayItemById', function () {
                var rs = new RecordSet({
                   rawData: data,
-                  idProperty : 'id'
+                     idProperty : 'id'
                }),
                myEnum = new Enum({
                   dictionary: ['Первый', 'Второй', 'Третий']

@@ -45,7 +45,7 @@ define('Controls/Dropdown/Opener',
                nodeProperty = (configOptions && configOptions.nodeProperty) || compOptions && compOptions.nodeProperty,
                items = configOptions && configOptions.items,
                hierarchy = new Hierarchy({
-                  idProperty: items.getIdProperty(),
+                  keyProperty: items.keyProperty,
                   parentProperty: parentProperty,
                   nodeProperty: nodeProperty
                }),
