@@ -1026,12 +1026,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             if (!editor) {
                return;
             }
-            var defaults = this._getNodeFormats(this._getCurrentFormatNode().parentNode, ['fontsize', 'color']);
-            for (var prop in defaults) {
-               if (prop in formats && formats[prop] ==/* Не "==="! */ defaults[prop]) {
-                  delete formats[prop];
-               }
-            }
+            var defaults = this.getCurrentFormats();
             if (cConstants.browser.firefox) {
                this._clearBrDataMceBogus();
             }
@@ -1040,11 +1035,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this.setFontStyle(formats.id);
             }
             else {
+               var isTheSame = Object.keys(defaults).every(function (v) { return defaults[v] === formats[v]; });
+               if (isTheSame) {
+                  return;
+               }
                var formatter = editor.formatter;
                for (var i = 0, names = ['title', 'subTitle', 'additionalText', 'forecolor']; i < names.length; i++) {
                   formatter.remove(names[i], {value: undefined}, null, true);
                }
-               var sameFont = formats.fontsize && formats.fontsize === this.getCurrentFormats(['fontsize']).fontsize;
+               var sameFont = formats.fontsize === this.getCurrentFormats(['fontsize']).fontsize;
                //необходимо сначала ставить размер шрифта, тк это сбивает каретку
                if (!sameFont) {
                   this._setFontSize(formats.fontsize);
@@ -1059,12 +1058,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      hasOther = formats[name] || hasOther;
                   }
                }
-               if (formats.color) {
-                  var currentColor = this.getCurrentFormats(['color']).color;
-                  if (formats.color !== currentColor) {
-                     formatter.apply('forecolor', {value: formats.color});
-                     hasOther = true;
-                  }
+               if (formats.color !== this.getCurrentFormats(['color']).color) {
+                  formatter.apply('forecolor', {value:formats.color});
+                  hasOther = true;
                }
                if (sameFont && !hasOther) {
                   // Если указан тот же размер шрифта (и это не размер по умолчанию), и нет других изменений - нужно чтобы были правильно
@@ -2257,6 +2253,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                            if (text.charCodeAt(index - 1) === 65279/*&#xFEFF;*/) {
                               node.nodeValue = 1 < text.length ? text.substring(0, index - 1) + text.substring(index) : '';
                               this._selectNewRng(node, index - 1);
+                           }
+                           else
+                           if (text.length === 2 && text.charCodeAt(0) === 65279/*&#xFEFF;*/) {
+                              // Или если после удаления последнего символа останется только символ &#xFEFF; , - то подготовить к удалению весь узел, если он не текстовый
+                              for ( ; !node.previousSibling && !node.nextSibling; node = node.parentNode) {}
+                              if (node.nodeType === 1) {
+                                 selection.select(node);
+                              }
                            }
                         }
                      }
