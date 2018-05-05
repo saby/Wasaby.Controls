@@ -9,7 +9,8 @@ define('Controls/Input/Phone',
       'use strict';
 
       /**
-       * Поле ввода телефонного номера.
+       * Phone input.
+       *
        * @class Controls/Input/Phone
        * @extends Core/Control
        * @mixes Controls/Input/interface/IInputText

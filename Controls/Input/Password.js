@@ -11,7 +11,8 @@ define('Controls/Input/Password',
    function(Control, template, types, BaseViewModel) {
 
    /**
-    * Поле ввода пароля.
+    * Password input.
+    *
     * @class Controls/Input/Password
     * @extends Core/Control
     * @mixes Controls/Input/interface/IInputText

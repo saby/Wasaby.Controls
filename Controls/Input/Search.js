@@ -11,7 +11,8 @@ define('Controls/Input/Search',
       'use strict';
 
       /**
-       * Строка поиска с кнопкой
+       * Search input.
+       *
        * @class Controls/Input/Search
        * @extends Controls/Input/Text
        * @mixes Controls/Input/interface/ISearch
@@ -22,14 +23,14 @@ define('Controls/Input/Search',
        */
 
       /**
-       * @event Controls/Input/Search#search Происходит при нажатии на кнопку поиска
+       * @event Controls/Input/Search#search Occurs when search button is clicked.
        */
 
       /**
        * @name Controls/Input/Search#style
-       * @cfg {String} Цвет поля поиска
-       * @variant default Серое поле поиска
-       * @variant header Белое поле поиска
+       * @cfg {String} Field style.
+       * @variant default Gray field.
+       * @variant header White field.
        */
 
       var Search = Control.extend({
