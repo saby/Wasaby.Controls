@@ -15,7 +15,8 @@ define('Controls/Input/Suggest',
    function(Control, template, emptyTemplate, footerTemplate, types, BaseViewModel, SearchContextField, FilterContextField) {
       
       /**
-       * Поле ввода с автодополнением
+       * Input that suggests options as you are typing.
+       *
        * @class Controls/Input/Suggest
        * @extends Controls/Input/Text
        * @mixes Controls/Input/interface/ISearch
