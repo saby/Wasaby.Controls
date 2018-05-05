@@ -2409,6 +2409,19 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             editor.on('touchstart', function(e) {
                self._fromTouch = true;
             });
+
+            // Никогда не прокручивать вышележашие скрол-контейнеры !
+            editor.on('scrollIntoView', function (evt) {
+               var needStop = !this._hasScrollContainer;
+               if (!needStop) {
+                  var scrollContainer = this._tinyEditor.selection.getScrollContainer();
+                  needStop = !scrollContainer || !this._scrollContainer[0].contains(scrollContainer);
+               }
+               if (needStop) {
+                  evt.preventDefault();
+                  evt.stopPropagation();
+               }
+            }.bind(this));
          },
 
          _getAdjacentTextNodesValue: function (node, toEnd) {
