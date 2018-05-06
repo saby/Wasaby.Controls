@@ -27,7 +27,8 @@ define('Controls/List/TreeControl', [
    };
 
    /**
-    * Компонент иерархического списка списка, с произвольным шаблоном отображения каждого элемента. Обладает возможностью загрузки/подгрузки данных из источника.
+    * Hierarchical list control with custom item template. Can load data from data source.
+    *
     * @class Controls/List/TreeControl
     * @extends Controls/List/ListControl
     * @control

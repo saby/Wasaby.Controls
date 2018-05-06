@@ -1,7 +1,7 @@
 define('Controls/List/interface/IExplorer', [
 ], function() {
    /**
-    * Интерфейс работы списков в виде иерархия с проваливанием
+    * Interface for hierarchical lists that can open folders.
     *
     * @mixin Controls/List/interface/IExplorer
     * @public
@@ -9,20 +9,20 @@ define('Controls/List/interface/IExplorer', [
 
    /**
     * @typedef {String} explorerViewMode
-    * @variant grid Таблица
-    * @variant list Список
-    * @variant tile Плитка
+    * @variant grid Table.
+    * @variant list List.
+    * @variant tile Tiles.
     */
    /**
     * @name Controls/List/interface/IExplorer#viewMode
-    * @cfg {explorerViewMode} Режим отображения списка
+    * @cfg {explorerViewMode} List view mode.
     */
 
    /**
-    * @event Controls/List/interface/IExplorer#itemOpen Перед проваливанием в папку
+    * @event Controls/List/interface/IExplorer#itemOpen Occurs before opening a folder.
     */
    /**
-    * @event Controls/List/interface/IExplorer#itemOpened После проваливания в папку
+    * @event Controls/List/interface/IExplorer#itemOpened Occurs after the folder was opened.
     */
 
 });
