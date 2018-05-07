@@ -61,6 +61,11 @@ define('Controls/Filter/Button/Panel', [
       _isChanged: false,
       _hasAdditionalParams: false,
 
+      constructor: function(options) {
+         FilterPanel.superclass.constructor.apply(this, arguments);
+         this._options = options;
+      },
+
       _beforeMount: function(options) {
          this._items = clone(options.items);
          this._hasAdditionalParams = _private.hasAdditionalParams(options.items);
