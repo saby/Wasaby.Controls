@@ -130,7 +130,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
                   });
             }
             else {
-               return [{id:'', column:'A', field:emptyTitle}];
+               return [{id:'', column:'A', field:options.emptyTitle}];
             }
          },
 
