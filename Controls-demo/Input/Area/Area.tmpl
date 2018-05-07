@@ -10,13 +10,18 @@
                            validationErrors="{{_validationErrors}}"
                            trim="{{_trim}}"
                            maxLength="{{_maxLength}}"
-                           minLines="{{_minLines}}"
-                           maxLines="{{_maxLines}}"
                            tagStyle="{{_tagStyle}}"
                            readOnly="{{_readOnly}}"
                            on:valueChanged="_eventHandler()"
                            on:inputCompleted="_eventHandler()"
-      />
+      >
+         <ws:minLines>
+            <ws:Number>{{_minLines}}</ws:Number>
+         </ws:minLines>
+         <ws:maxLines>
+            <ws:Number>{{_maxLines}}</ws:Number>
+         </ws:maxLines>
+      </Controls.Input.Area>
    </div>
    <div style="padding: 3em; background-color: rgba(81,81,81,0.11) ">
       <h3>Задайте опции:</h3>

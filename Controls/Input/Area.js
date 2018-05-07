@@ -2,7 +2,7 @@ define('Controls/Input/Area', [
    'Controls/Input/Text',
    'Core/constants',
 
-   /*'WS.Data/Type/descriptor',*/
+   'WS.Data/Type/descriptor',
    'Core/detection',
    'tmpl!Controls/Input/Area/Area',
    'Controls/Input/resources/InputHelper',
@@ -10,8 +10,7 @@ define('Controls/Input/Area', [
    'css!Controls/Input/Area/Area'
 ], function(Text,
    constants,
-
-   /*types,*/
+   types,
    detection,
    template,
    inputHelper) {
@@ -55,8 +54,8 @@ define('Controls/Input/Area', [
       },
 
       /*
-      * Обновляет наличие скролла, в зависимости от того, есть ли скролл на фейковой текст арии
-      */
+       * Обновляет наличие скролла, в зависимости от того, есть ли скролл на фейковой текст арии
+       */
       updateHasScroll: function(self) {
          var fakeArea = self._children.fakeArea;
          var needScroll = fakeArea.scrollHeight - fakeArea.clientHeight > 1;
@@ -166,17 +165,16 @@ define('Controls/Input/Area', [
       };
    };
 
-   //TODO раскомментировать этот блок + зависимость types когда полечат https://online.sbis.ru/opendoc.html?guid=1416c4da-b0e0-402b-9e02-a3885dc6cdb8
-   /*Area.getOptionTypes = function() {
+   Area.getOptionTypes = function() {
       return {
          minLines: types(Number),
          maxLines: types(Number),
          newLineKey: types(String).oneOf([
-          'enter',
-          'ctrlEnter'
+            'enter',
+            'ctrlEnter'
          ])
       };
-   };*/
+   };
 
    //For unit-tests
    Area._private = _private;

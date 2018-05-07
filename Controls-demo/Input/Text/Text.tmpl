@@ -9,13 +9,16 @@
                            constraint="{{_constraint}}"
                            validationErrors="{{_validationErrors}}"
                            trim="{{_trim}}"
-                           maxLength="{{_maxLength}}"
                            tagStyle="{{_tagStyle}}"
                            selectOnClick="{{_selectOnClick}}"
                            on:valueChanged="_eventHandler()"
                            on:inputCompleted="_eventHandler()"
                            readOnly="{{ _readOnly }}"
-      />
+      >
+         <ws:maxLength>
+            <ws:Number>{{_maxLength}}</ws:Number>
+         </ws:maxLength>
+      </Controls.Input.Text>
    </div>
    <div style="padding: 3em; background-color: rgba(81,81,81,0.11)">
       <h3>Задайте опции:</h3>
