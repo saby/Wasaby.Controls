@@ -14,14 +14,20 @@
    .controls-RichEditor__richTextArea {
       .flexbox();
       box-sizing: border-box;
+      border-style: solid;
+      border-width: @border-width_InputRender;
    }
 
    &.ws-enabled .controls-RichEditor__richTextArea {
-      border: 1px solid #EAEAEA;
+      border-color: @border-color_InputRender;
+   }
+
+   &.ws-has-focus .controls-RichEditor__richTextArea {
+      border-color: @border-color_InputRender_active;
    }
 
    &.ws-disabled .controls-RichEditor__richTextArea {
-      border: 1px solid transparent;
+      border-color: transparent;
    }
 
    &.ws-enabled.controls-RichEditor_toolbarExpanded .controls-RichEditor__richTextArea {
