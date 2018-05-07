@@ -4,8 +4,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'tmpl!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/Deferred',
       'Core/moduleStubs',
-      'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
-      'css!Controls/Popup/Templates/Stack/StackTemplate'
+      'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea'
    ],
    function(Control,
       template,
