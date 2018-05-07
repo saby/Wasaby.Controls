@@ -253,7 +253,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                 */
                serviceParams: null,
                /**
-                * @cfg {Array<ExportPreset>} Список пресетов (предустановленных настроек экспорта)
+                * @cfg {Array<ExportPreset>} Список неизменяемых пресетов (предустановленных настроек экспорта)
                 */
                staticPresets: null,
                /**
@@ -284,7 +284,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             },
             // Список имён вложенных под-компонентов
             _SUBVIEW_NAMES: {
-               preset: 'controls-ExportCustomizer-Area__preset',
+               presets: 'controls-ExportCustomizer-Area__presets',
                columnBinder: 'controls-ExportCustomizer-Area__body__columnBinder',
                formatter: 'controls-ExportCustomizer-Area__body__formatter'
             },
@@ -443,7 +443,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             var view = this._views[name];
             if (view && !view.isDestroyed()) {
                var handlers = {
-                  preset: this._onChangePreset,
+                  presets: this._onChangePresets,
                   columnBinder: this._onChangeColumnBinder,
                   formatter: this._onChangeFormatter
                };
@@ -461,7 +461,22 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           *
           * @protected
           */
-         _onChangePreset: function () {
+         _onChangePresets: function () {
+            // Выбран новые предустановленные настройки экспорта
+            var views = this._views;
+            var values = views.columnBinder.getValues();
+            var fieldIds = values.fieldIds;
+            var fileUuid = values.fileUuid;
+            if (fieldIds) {
+               this._options.fieldIds = fieldIds.slice();
+            }
+            if (fileUuid) {
+               this._options.fileUuid = fileUuid;
+            }
+            if (fieldIds || fileUuid) {
+               views.columnBinder.setValues({fieldIds:fieldIds.slice()});
+               views.formatter.setValues({fieldIds:fieldIds.slice(), fileUuid:fileUuid});
+            }
          },
 
          /*
@@ -470,7 +485,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * @protected
           */
          _onChangeColumnBinder: function () {
-            // Изменилась область данных для импортирования
+            // Изменился набор экспортируемых полей
             var views = this._views;
             var values = views.columnBinder.getValues();
             var fieldIds = values.fieldIds;
@@ -486,7 +501,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * @protected
           */
          _onChangeFormatter: function () {
-            // Изменилась область данных для импортирования
+            // Изменилось форматирование эксель-файла
             var values = this._views.formatter.getValues();
             var fileUuid = values.fileUuid;
             if (fileUuid) {

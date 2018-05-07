@@ -1,5 +1,5 @@
 /**
- * Контрол "Форматирование экспортируемого файла настройщика экспорта"
+ * Контрол "Выбор из предустановленных настроек настройщика экспорта"
  *
  * @public
  * @class SBIS3.CONTROLS/ExportCustomizer/_Presets/View
@@ -18,8 +18,17 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
       'use strict';
 
       /**
+       * @typedef {object} ExportPreset Тип, содержащий информацию о преустановленных настройках экспорта
+       * @property {string|number} id Идентификатор пресета
+       * @property {string} title Отображаемое название пресета
+       * @property {Array<string>} fieldIds Список привязки колонок в экспортируемом файле к полям данных
+       * @property {string} fileUuid Uuid шаблона форматирования эксель-файла
+       */
+
+      /**
        * @typedef {object} ExportPresetsResult Тип, описывающий возвращаемые настраиваемые значения компонента
-       * @property {*} * *
+       * @property {Array<string>} fieldIds Список привязки колонок в экспортируемом файле к полям данных
+       * @property {string} fileUuid Uuid шаблона форматирования эксель-файла
        */
 
 
@@ -32,6 +41,18 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                 * @cfg {string} Заголовок компонента
                 */
                title: null,//Определено в шаблоне
+               /**
+                * @cfg {Array<ExportPreset>} Список неизменяемых пресетов
+                */
+               statics: null,
+               /**
+                * @cfg {string} Пространство имён для сохранения пользовательских пресетов
+                */
+               namespace: null,
+               /**
+                * @cfg {string|number} Идентификатор выбранного пресета
+                */
+               selectedId: null
             },
             // Контрол выбора пресета
             _selector: null
@@ -39,6 +60,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
 
          _modifyOptions: function () {
             var options = View.superclass._modifyOptions.apply(this, arguments);
+            options._items = options.statics;
             return options;
          },
 
@@ -94,6 +116,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
          getValues: function () {
             var options = this._options;
             return {
+               fieldIds: options.fieldIds,
+               fileUuid: options.fileUuid
             };
          }
       });
