@@ -59,6 +59,12 @@ define('Controls/Input/Mask',
        * </pre>
        */
 
+      /**
+       * @name Controls/Input/Mask#formatMaskChars
+       * @cfg {Object} The key is the mask character, the value is the input characters,
+       * in the form of regular expression.
+       */
+
       var
          _private = {
             findLastUserEnteredCharPosition: function(value, replacer) {
