@@ -11,14 +11,8 @@ define('Controls/Toolbar', [
    'use strict';
 
    /**
-	* Toolbar
-	* @namespace Controls
-	* @public
-	* @author Крайнов Д.
-	*/
-
-   /**
-    * Toolbar
+    * Toolbar.
+    *
     * @class Controls/Toolbar
     * @extends Core/Control
     * @mixes Controls/Button/interface/ICaption
@@ -29,6 +23,8 @@ define('Controls/Toolbar', [
     * @control
     * @public
     * @category Toolbar
+    * @namespace Controls
+    * @author Крайнов Д.
     */
 
    var _private = {
@@ -48,7 +44,7 @@ define('Controls/Toolbar', [
       getMenuItems: function(items) {
          return tUtil.getMenuItems(items).value(recordSetFactory, {
             adapter: items.getAdapter(),
-            idProperty: items.getIdProperty()
+            idProperty: items.keyProperty
          });
       }
    };

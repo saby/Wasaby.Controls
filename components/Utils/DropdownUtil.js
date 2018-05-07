@@ -6,7 +6,7 @@ define('SBIS3.CONTROLS/Utils/DropdownUtil', [
    'Core/helpers/collection-helpers'
 ], function(coreClone, HistoryController, historyUtil, Query, colHelpers) {
    return {
-      showPicker: function(self, prototype) {
+      showPicker: function(self, prototype, event) {
          var myself = this;
 
          if (!self._historyDeferred || !historyUtil.isEqualHistory(self._options.historyId, this._getHistoryController(self).getHistoryDataSet())) {
@@ -15,15 +15,15 @@ define('SBIS3.CONTROLS/Utils/DropdownUtil', [
             // нужна вычитка данных с БЛ по id позвать списочный метод с нужным фильтром
             self._historyDeferred = this._getHistoryController(self).getUnionIndexesList(self).addCallback(function(data) {
                if (self.getDataSource()) {
-                  myself._loadItems(self, prototype, data);
+                  myself._loadItems(self, prototype, data, event);
                } else {
                   myself._getHistoryController(self).parseHistoryData(data);
-                  myself.callShow(self, prototype);
+                  myself.callShow(self, prototype, event);
                   historyUtil.setHistory(self._options.historyId, self._getHistoryController(self).getHistoryDataSet());
                }
             }).addErrback(function() {
                myself._getHistoryController(self).parseHistoryData();
-               myself.callShow(self, prototype);
+               myself.callShow(self, prototype, event);
             });
          } else {
             if (self._historyDeferred.isReady()) {
@@ -31,12 +31,12 @@ define('SBIS3.CONTROLS/Utils/DropdownUtil', [
                   self.setItems(this._getHistoryController(self).prepareHistory());
                   self._needToRedrawHistory = false;
                }
-               prototype.superclass.showPicker.apply(self, arguments);
+               prototype.superclass.showPicker.call(self, event);
             }
          }
       },
 
-      _loadItems: function(self, prototype, data) {
+      _loadItems: function(self, prototype, data, event) {
          var myself = this,
             query, indexesList;
 
@@ -50,12 +50,12 @@ define('SBIS3.CONTROLS/Utils/DropdownUtil', [
             self.getDataSource().query(query).addCallback(function(result) {
                // заполняем по пунктам, учесть индексы из опций
                myself._getHistoryController(self).setHistoryDataFromRecord(result.getAll(), data);
-               myself.callShow(self, prototype);
+               myself.callShow(self, prototype, event);
                historyUtil.setHistory(self._options.historyId, myself._getHistoryController(self).getHistoryDataSet());
             });
          } else {
-            myself._getHistoryController(self).setHistoryDataFromRecord(null, data);
-            myself.callShow(self, prototype);
+            myself._getHistoryController(self).setHistoryDataFromRecord(self.getItems(), data);
+            myself.callShow(self, prototype, event);
             historyUtil.setHistory(self._options.historyId, this._getHistoryController(self).getHistoryDataSet());
          }
       },
@@ -94,10 +94,10 @@ define('SBIS3.CONTROLS/Utils/DropdownUtil', [
          return query;
       },
 
-      callShow: function(self, prototype) {
+      callShow: function(self, prototype, event) {
          this._getHistoryController(self).prepareHistoryData(); // проставляет свойства в рекорд
          self.setItems(this._getHistoryController(self).prepareHistory()); // заполняем финальный рекорд со всеми записями
-         prototype.superclass.showPicker.apply(self, arguments);
+         prototype.superclass.showPicker.call(self, event);
       }
    };
 });

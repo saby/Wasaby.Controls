@@ -38738,7 +38738,7 @@ var paste = (function () {
       'id': 'mcepastebin',
       'contentEditable': true,
       'data-mce-bogus': 'all',
-      'style': 'position: absolute; top: ' + top + 'px; width: 10px; height: 10px; overflow: hidden; opacity: 0'
+      'style': 'position: absolute; top: ' + top + 'px; width: 0; height: 10px; overflow: hidden; opacity: 0; padding: 0 !important'
     }, pasteBinDefaultContent);
     if (Env.ie || Env.gecko) {
       dom.setStyle(pasteBinElm, 'left', dom.getStyle(body, 'direction', true) === 'rtl' ? 65535 : -65535);

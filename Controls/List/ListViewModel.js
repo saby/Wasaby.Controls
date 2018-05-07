@@ -27,7 +27,7 @@ define('Controls/List/ListViewModel',
             ListViewModel.superclass.constructor.apply(this, arguments);
 
             if (cfg.markedKey !== undefined) {
-               this._markedItem = this.getItemById(cfg.markedKey, cfg.idProperty);
+               this._markedItem = this.getItemById(cfg.markedKey, cfg.keyProperty);
             }
 
             this._multiselection = new MultiSelection({
@@ -56,7 +56,7 @@ define('Controls/List/ListViewModel',
          },
 
          setMarkedKey: function(key) {
-            this._markedItem = this.getItemById(key, this._options.idProperty);
+            this._markedItem = this.getItemById(key, this._options.keyProperty);
             this._nextVersion();
             this._notify('onListChange');
          },
@@ -95,7 +95,7 @@ define('Controls/List/ListViewModel',
          setItems: function(items) {
             ListViewModel.superclass.setItems.apply(this, arguments);
             if (this._options.markedKey !== undefined) {
-               this._markedItem = this.getItemById(this._options.markedKey, this._options.idProperty);
+               this._markedItem = this.getItemById(this._options.markedKey, this._options.keyProperty);
             }
             this._nextVersion();
             _private.updateIndexes(this);
@@ -104,14 +104,14 @@ define('Controls/List/ListViewModel',
          _setEditingItemData: function(itemData) {
             this._editingItemData = itemData;
             if (itemData && itemData.item) {
-               this.setMarkedKey(itemData.item.get(this._options.idProperty));
+               this.setMarkedKey(itemData.item.get(this._options.keyProperty));
             }
          },
          setItemActions: function(item, actions) {
             this._actions[this.getIndexBySourceItem(item)] = actions;
          },
 
-         __calcSelectedItem: function(display, selKey, idProperty) {
+         __calcSelectedItem: function(display, selKey, keyProperty) {
 
             //TODO надо вычислить индекс
             /*if(!this._markedItem) {

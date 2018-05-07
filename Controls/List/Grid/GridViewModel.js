@@ -130,7 +130,7 @@ define('Controls/List/Grid/GridViewModel', [
          _createModel: function(cfg) {
             return new ListViewModel({
                items: cfg.items,
-               idProperty: cfg.idProperty,
+               keyProperty: cfg.keyProperty,
                displayProperty: cfg.displayProperty,
                markedKey: cfg.markedKey,
                multiselect: cfg.multiselect
@@ -312,8 +312,8 @@ define('Controls/List/Grid/GridViewModel', [
             this._prepareResultsColumns(this._options.columns, this._options.multiselect);
          },
 
-         getItemById: function(id, idProperty) {
-            return this._model.getItemById(id, idProperty);
+         getItemById: function(id, keyProperty) {
+            return this._model.getItemById(id, keyProperty);
          },
 
          setMarkedKey: function(key) {
@@ -364,7 +364,7 @@ define('Controls/List/Grid/GridViewModel', [
                   currentColumn = {
                      item: current.item,
                      dispItem: current.dispItem,
-                     idProperty: current.idProperty,
+                     keyProperty: current.keyProperty,
                      displayProperty: current.displayProperty,
                      index: current.index,
                      key: current.key,

@@ -112,8 +112,9 @@ define('Controls/Container/List',
       };
       
       /**
-       * Container for lists components.
-       * Pass props (like filter, source, navigation) to list inside.
+       * Container for list components.
+       * Passes props (like filter, source, navigation) to list inside.
+       *
        * @author Герасимов Александр
        * @class Controls/Container/List
        * @mixes Controls/Input/interface/ISearch

@@ -153,7 +153,7 @@ define('Controls-demo/FastFilter/FastFilter',
 
          _createMemory: function (items) {
             return new Memory({
-               keyProperty: 'id',
+               idProperty: 'id',
                data: items
             });
          },

@@ -14,7 +14,7 @@ define('Controls/List/ItemsView', [
       createListModel: function(cfg) {
          return new ItemsViewModel({
             items: cfg.items,
-            idProperty: cfg.idProperty,
+            keyProperty: cfg.keyProperty,
             displayProperty: cfg.displayProperty
          });
       },

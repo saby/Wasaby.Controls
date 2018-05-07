@@ -47,8 +47,8 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
          parentOptions.tileMode =  cfg.tileMode;
          parentOptions.invisibleItemsTemplate = TemplateUtil.prepareTemplate(cfg._invisibleItemsTemplate);
          if (cfg.itemsHeight) {
-            parentOptions.minWidth = cfg.itemsHeight / 1.4; //Формат A4
-            parentOptions.maxWidth = cfg.itemsHeight * 1.5;
+            parentOptions.minWidth = Math.floor(cfg.itemsHeight / 1.4); //Формат A4
+            parentOptions.maxWidth = Math.ceil(cfg.itemsHeight * 1.5);
          }
 
          if (cfg.tileContentTpl) {
@@ -311,19 +311,16 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
 
       _setDynamicHoveredStyles: function(item) {
          var
-             margin,
-             additionalWidth,
-             additionalHeight;
-         additionalWidth = item.outerWidth() / 2;
-         margin = item.outerWidth(true) / 2 - additionalWidth;
-         additionalHeight = item.outerHeight() / 2;
-         item.css('padding', (additionalHeight / 2) + 'px ' + (additionalWidth / 2) + 'px').css('margin', '' + (-additionalHeight / 2) + 'px ' + (-(additionalWidth / 2 - margin)) + 'px');
+            additionalWidth = Math.floor(item.outerWidth() / 2),
+            margin = Math.floor(item.outerWidth(true) / 2 - additionalWidth),
+            additionalHeight = Math.floor(item.outerHeight() / 2);
+         item.css('padding', Math.ceil(additionalHeight / 2) + 'px ' + Math.ceil(additionalWidth / 2) + 'px').css('margin', '' + Math.floor(-(additionalHeight / 2 - margin)) + 'px ' + Math.floor(-(additionalWidth / 2 - margin)) + 'px');
       },
 
       _setStaticHoveredStyles: function(item) {
          var offset, margin;
          offset = $('.controls-CompositeView__tileTitle', item).outerHeight(true) - (item.hasClass('controls-CompositeView__item-withTitle') ? 25 : 0);
-         margin = (item.outerHeight(true) - item.outerHeight()) / 2;
+         margin = Math.floor((item.outerHeight(true) - item.outerHeight()) / 2);
          item.css('padding-bottom', offset).css('margin-bottom', -(offset - margin));
          $('.controls-CompositeView__tileContainer', item).css('margin-bottom', offset);
       },

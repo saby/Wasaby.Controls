@@ -7,14 +7,14 @@
             source = "{{_viewSource}}"
             on:beforeItemsRemove="_beforeItemsRemove()"
             on:afterItemsRemove="_afterItemsRemove()"
-            idProperty="id">
+            keyProperty="id">
     </Controls.List>
     <Controls.List
             class="removeDemo__list test_list_2"
             on:beforeItemsRemove="_secondListRemoveHandler()"
             on:afterItemsRemove="_secondListRemoveHandler()"
             source = "{{_viewSourceSecond}}"
-            idProperty="id">
+            keyProperty="id">
         <ws:itemTemplate>
             <ws:partial template="tmpl!Controls/List/ItemTemplate">
                 <ws:contentTemplate>
@@ -25,7 +25,7 @@
                                 name="listSecond"
                                 itemActions="{{_itemActionsSecond}}"
                                 source = "{{_viewSourceClone}}"
-                                idProperty="id">
+                                keyProperty="id">
                         </Controls.List>
                     </div>
                 </ws:contentTemplate>

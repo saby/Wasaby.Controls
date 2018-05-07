@@ -14,9 +14,14 @@ define('Controls/Application',
    ],
 
    /**
-    * Компонент приложение. не делает НИЧЕГО. На вход принимает конфиг - на выходе шаблон.
-    * Никакой логики внутри нет.
+    * Root component for WS applications. Creates basic html page.
+    *
+    * @class Controls/Application
+    * @extends Core/Control
+    * @control
+    * @public
     */
+
    function(Base,
       template,
       Deferred,

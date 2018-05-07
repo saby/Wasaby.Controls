@@ -6,7 +6,8 @@ define('Controls/History/Menu',
    function(MenuButton, itemTemplate) {
 
       /**
-        * Кнопка
+        * Button
+        *
         * @class Controls/History/Menu
         * @extends Controls/Button/MenuButton
         * @control

@@ -1374,7 +1374,12 @@ define('SBIS3.CONTROLS/ListView',
                itemActions.hide();
             }
             if (this._virtualScrollController) {
-              this._virtualScrollController._scrollHandler(event, scrollTop);
+               var scrollbarDragging = false;
+               try {
+                  scrollbarDragging = this._getScrollWatcher().getScrollContainerControl().isScrollbarDragging();
+               } catch(e) {}
+
+              this._virtualScrollController._scrollHandler(event, scrollTop, scrollbarDragging);
             }
          },
          _setScrollPagerPosition: function(){
@@ -2167,9 +2172,26 @@ define('SBIS3.CONTROLS/ListView',
                curSelected.addClass('controls-ListView__item__selected__withMarker');
             }
          },
-
+          
          /**
-          *
+          * Перезагружает набор записей представления данных с последующим обновлением отображения.
+          * @remark
+          * Производится запрос на выборку записей из источника данных по установленным параметрам:
+          * <ol>
+          *    <li>Параметры фильтрации, которые устанавливают с помощью опции {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#filter}.</li>
+          *    <li>Параметры сортировки, которые устанавливают с помощью опции {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#sorting}.</li>
+          *    <li>Порядковый номер записи в источнике, с которого будет производиться отбор записей для выборки. Устанавливают с помощью метода {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#setOffset}.</li>
+          *    <li>Масимальное число записей, которые будут присутствовать в выборке. Устанавливают с помощью метода {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#pageSize}.</li>
+          * </ol>
+          * Вызов метода инициирует событие {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#onBeforeDataLoad}. В случае успешной перезагрузки набора записей происходит событие {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#onDataLoad}, а в случае ошибки - {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#onDataLoadError}.
+          * Если источник данных не установлен, производит перерисовку установленного набора данных.
+          * @return {Deferred}
+          * @example
+          * <pre>
+          *    btn.subscribe('onActivated', function() {
+          *       DataGridViewBL.reload();
+          *    });
+          * </pre>
           */
          reload: function (filter, sorting, offset, limit, deepReload, resetPosition) {
             if (this._scrollBinder && this._options.saveReloadPosition){
@@ -2180,6 +2202,11 @@ define('SBIS3.CONTROLS/ListView',
                if (reloadOffset > 0) {
                   this.setInfiniteScroll('both', true);
                }
+            }
+            
+            if (offset === 0 && this._options.infiniteScroll === 'down') {
+               this._lastPageLoaded = false;
+               this._setInfiniteScrollState('down');
             }
 
             // Reset virtual scrolling if it's enabled
@@ -2197,7 +2224,7 @@ define('SBIS3.CONTROLS/ListView',
                this._bottomWrapper.height(0);
             }
 
-            this._reloadInfiniteScrollParams();
+            this._reloadInfiniteScrollParams(offset);
             this._previousGroupBy = undefined;
             // При перезагрузке нужно также почистить hoveredItem, иначе следующее отображение тулбара будет для элемента, которого уже нет (ведь именно из-за этого ниже скрывается тулбар).
             this._clearHoveredItem();
@@ -3162,10 +3189,10 @@ define('SBIS3.CONTROLS/ListView',
             if (this._scrollBinder) {
                // Resets paging if called after reload()
                this._scrollBinder._updateScrollPages(!this._options.virtualScrolling || this._resetPaging);
-               this._resetPaging = false;
             } else if (this._options.infiniteScroll == 'down' && this._options.scrollPaging){
                this._createScrollPager();
             }
+            this._resetPaging = false;
 
             // отправляем команду о перерисовке парентов, и только их. Предполагается, что изменение items
             // у ListView может повлиять только на некоторых парентов
@@ -4403,6 +4430,10 @@ define('SBIS3.CONTROLS/ListView',
                this._pager.destroy();
                this._pager = undefined;
                this._pagerContainer = undefined;
+            }
+            if (this._mover) {
+               this._mover.destroy();
+               this._mover = undefined;
             }
             this._destroyEditInPlaceController();
             ListView.superclass.setDataSource.apply(this, arguments);

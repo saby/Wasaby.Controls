@@ -28,7 +28,7 @@ define([
             }),
             cfg = {
                listModel: new ListViewModel({
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                sourceController: new SourceController({
                   source : new MemorySource({
