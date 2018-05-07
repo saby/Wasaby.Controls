@@ -4,7 +4,7 @@ define('Controls/Popup/Opener/BaseController',
       'Core/Deferred'
    ],
    function(CoreExtend, cDeferred) {
-      var CONTENT_SELECTOR = '.ws-Container__popup-scrolling-content';
+      var CONTENT_SELECTOR = '.controls-Container__popup-scrolling-content';
 
       var _private = {
 

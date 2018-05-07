@@ -1,13 +1,14 @@
 define('Controls/Dropdown/Opener',
    [
       'Controls/Popup/Opener/Sticky',
-      'WS.Data/Relation/Hierarchy',
-      'WS.Data/Type/descriptor'
+      'WS.Data/Relation/Hierarchy'
    ],
-   function(Sticky, Hierarchy, types) {
+   function(Sticky, Hierarchy) {
       /**
-       * Действие открытия прилипающего окна
+       * Opener for dropdown menu.
+       *
        * @class Controls/Dropdown/Opener
+       * @mixes Controls/interface/IDropdown
        * @control
        * @public
        * @category Popup
@@ -38,13 +39,13 @@ define('Controls/Dropdown/Opener',
            * @param config
            */
          checkIcons: function(self, config) {
-            var compOptions = self._options.popupOptions && self._options.popupOptions.componentOptions,
-               configOptions = config.componentOptions,
+            var compOptions = self._options.popupOptions && self._options.popupOptions.templateOptions,
+               configOptions = config.templateOptions,
                parentProperty = (configOptions && configOptions.parentProperty) || compOptions && compOptions.parentProperty,
                nodeProperty = (configOptions && configOptions.nodeProperty) || compOptions && compOptions.nodeProperty,
                items = configOptions && configOptions.items,
                hierarchy = new Hierarchy({
-                  idProperty: items.getIdProperty(),
+                  keyProperty: items.keyProperty,
                   parentProperty: parentProperty,
                   nodeProperty: nodeProperty
                }),
@@ -62,7 +63,7 @@ define('Controls/Dropdown/Opener',
                icon = item.get('icon');
                if (icon) {
                   pid = item.get(parentProperty);
-                  if (!parents.hasOwnProperty(pid)) {
+                  if (!parents.hasOwnProperty(pid) && pid) {
                      iconSize = _private.getIconSize(icon);
                      parents[pid] = [pid, iconSize];
                   }
@@ -82,10 +83,10 @@ define('Controls/Dropdown/Opener',
             }
          },
 
-         setComponentOptions: function(self, config) {
+         setTemplateOptions: function(self, config) {
             var pOptions = self._options.popupOptions || {};
-            if (pOptions.componentOptions && pOptions.componentOptions.headConfig) {
-               pOptions.componentOptions.headConfig.menuStyle = pOptions.componentOptions.headConfig.menuStyle || 'defaultHead';
+            if (pOptions.templateOptions && pOptions.templateOptions.headConfig) {
+               pOptions.templateOptions.headConfig.menuStyle = pOptions.templateOptions.headConfig.menuStyle || 'defaultHead';
             }
             this.checkIcons(self, config);
          },
@@ -97,36 +98,14 @@ define('Controls/Dropdown/Opener',
       };
 
       var DropdownOpener = Sticky.extend({
-         _controlName: 'Controls/Dropdown/Opener',
          _itemTemplateDeferred: undefined,
 
          open: function(config, opener) {
-            _private.setComponentOptions(this, config);
+            _private.setTemplateOptions(this, config);
             _private.setPopupOptions(this, config);
             DropdownOpener.superclass.open.apply(this, arguments);
          }
       });
-
-      DropdownOpener.getOptionTypes = function getOptionTypes() {
-         return {
-            keyProperty: types(String),
-            parentProperty: types(String),
-            nodeProperty: types(String),
-            hasSelectedMarker: types(Boolean),
-            multiselectable: types(Boolean)
-         };
-      };
-
-      DropdownOpener.getDefaultOptions = function getDefaultOptions() {
-         return {
-            keyProperty: undefined,
-            parentProperty: undefined,
-            nodeProperty: undefined,
-            itemTemplate: undefined,
-            hasSelectedMarker: false,
-            multiselectable: false
-         };
-      };
 
       DropdownOpener._private = _private;
       return DropdownOpener;

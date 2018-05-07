@@ -65,9 +65,10 @@ define('Controls/Tabs/Buttons', [
    };
 
    /**
-     * Компонент - корешки закладок
+     * Buttons for tab switching.
+     *
      * @class Controls/Tabs/Buttons
-     * @extends Controls/Control
+     * @extends Core/Control
      * @mixes Controls/interface/ISource
      * @mixes Controls/interface/ISingleSelectable
      * @control
@@ -77,7 +78,7 @@ define('Controls/Tabs/Buttons', [
 
    /**
      * @name Controls/Tabs/Buttons#tabSpaceTemplate
-     * @cfg {Content} Шаблон содержимого области, находящейся на одном уровне с корешками закладок
+     * @cfg {Content} Contents of the area near the tabs.
      */
 
    var TabsButtons = Control.extend({
@@ -108,7 +109,7 @@ define('Controls/Tabs/Buttons', [
          }
       },
       _onItemClick: function(event, key) {
-         this._notify('selectedKeyChanged', key);
+         this._notify('selectedKeyChanged', [key]);
       },
       _prepareItemClass: function(item) {
          return _private.prepareItemClass(item, this._options, this._lastRightOrder);

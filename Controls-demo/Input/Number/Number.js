@@ -14,7 +14,8 @@ define('Controls-demo/Input/Number/Number', [
       _integersLength: 5,
       _precision: 2,
       _onlyPositive: true,
-      _enabled: true,
+      _showEmptyDecimals: false,
+      _readOnly: false,
       _eventResult: '',
 
       _eventHandler: function(e, value) {

@@ -4,7 +4,7 @@
 define('Controls/List/ItemsView', [
    'Core/Control',
    'tmpl!Controls/List/ItemsView',
-   'Controls/List/SimpleList/ItemsViewModel'
+   'Controls/List/ItemsViewModel'
 ], function(BaseControl,
    ItemsRenderTpl,
    ItemsViewModel
@@ -14,7 +14,7 @@ define('Controls/List/ItemsView', [
       createListModel: function(cfg) {
          return new ItemsViewModel({
             items: cfg.items,
-            idProperty: cfg.idProperty,
+            keyProperty: cfg.keyProperty,
             displayProperty: cfg.displayProperty
          });
       },

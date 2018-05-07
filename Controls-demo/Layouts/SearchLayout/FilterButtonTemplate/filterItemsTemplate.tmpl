@@ -1,0 +1,14 @@
+<ws:if data="{{item.id === 'FIO'}}">
+   <Controls.Input.Text bind:value="item.value"/>
+</ws:if>
+<ws:if data="{{item.id === 'firstName'}}">
+   <Controls.Input.Text bind:value="item.value"/>
+</ws:if>
+<ws:if data="{{item.id === 'id'}}">
+   <Controls.Input.Dropdown bind:selectedKeys="item.value"
+                         keyProperty="key"
+                         source="{{item.source}}"/>
+</ws:if>
+<ws:if data="{{item.id === 'checked'}}">
+   <Controls.Toggle.Checkbox bind:value="item.value" caption="checked"/>
+</ws:if>

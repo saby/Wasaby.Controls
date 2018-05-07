@@ -13,5 +13,5 @@ def delete_folders(*exclude):
 root = os.getcwd()
 delete_folders('reg', 'stand')
 
-os.chdir(r'stand/intest')
+os.chdir(r'stand/Intest')
 delete_folders('images', 'pageTemplates', 'regression')

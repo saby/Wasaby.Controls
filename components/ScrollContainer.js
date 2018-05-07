@@ -58,7 +58,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
        * Пример 2:
        * Для перерасчетов размеров SBIS3.CONTROLS/ScrollContainer необходимо:
        * <pre class="brush: html">
-       * control._notify('onResize')
+       * this._notifyOnSizeChanged(true)
        * </pre>
        * control - экземпляр класса любого родительского контрола, в котором есть ScrollContainer
        *

@@ -1,0 +1,16 @@
+<div class="demo-Grid">
+   <div class="demo-Grid__container">
+      <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+         <ws:content>
+            <Controls.TreeGrid
+                          attr:class="demo-Grid__control"
+                          keyProperty="id"
+                          parentProperty="Раздел"
+                          nodeProperty="Раздел@"
+                          source = "{{_viewSource}}"
+                          columns="{{gridColumns}}">
+            </Controls.TreeGrid>
+         </ws:content>
+      </Controls.Container.Scroll>
+   </div>
+</div>

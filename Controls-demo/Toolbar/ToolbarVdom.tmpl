@@ -1,0 +1,17 @@
+<div class="controls-ToolbarVdom" style="padding: 50px;">
+   Пример тулбара: <Controls.Toolbar
+                           name="myToolbar"
+                           parentProperty="parent"
+                           nodeProperty="@parent"
+                           keyProperty="id"
+                           source="{{_getMemorySource(_defaultItems)}}"
+                           on:itemClick="_itemClick()"/>
+   пример плоского тулбара: <Controls.Toolbar
+                                    name="myFlatToolbar"
+                                    keyProperty="id"
+                                    itemTemplateProperty="myTemplate"
+                                    source="{{_getMemorySource(_flatItems)}}"
+                                    on:itemClick="_itemClick()"/>
+   контент идущий за Toolbar'ом
+   <div name="toolbarAnswer">{{_currentClick}}</div>
+</div>

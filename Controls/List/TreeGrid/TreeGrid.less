@@ -1,0 +1,23 @@
+.controls-TreeGrid__row-nodeExpander:before {
+   font-family: @icon-font;
+   font-size: @font-size_TreeDataGridView-expand;
+   color: @color_TreeDataGridView-expand;
+   user-select: none;
+   flex-shrink: 0;
+   cursor: pointer;
+   overflow: hidden;
+   text-align: center;
+}
+.controls-TreeGrid__row-nodeExpander_collapsed:before {
+   content: '\e96e';
+}
+.controls-TreeGrid__row-nodeExpander_expanded:before {
+   content: '\e96d';
+}
+.controls-TreeGrid__row {
+   display: inline-flex;
+}
+.controls-TreeGrid__row-levelPadding {
+   width: 26px;
+   flex-shrink: 0;
+}

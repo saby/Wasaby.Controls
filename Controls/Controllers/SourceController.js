@@ -40,7 +40,7 @@ define('Controls/Controllers/SourceController',
             queryIns = _private.getQueryInstance(filter, sorting, offset, limit);
 
             queryDef = dataSource.query(queryIns).addCallback((function(dataSet) {
-               if (idProperty && idProperty !== dataSet.getIdProperty()) {
+               if (idProperty && idProperty !== dataSet.idProperty) {
                   dataSet.setIdProperty(idProperty);
                }
                return dataSet.getAll();
@@ -181,6 +181,10 @@ define('Controls/Controllers/SourceController',
 
          remove: function(items) {
             return this._source.destroy(items);
+         },
+
+         move: function(items, target, meta) {
+            return this._source.move(items, target, meta);
          },
 
          destroy: function() {

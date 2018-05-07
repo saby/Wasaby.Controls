@@ -1,15 +1,17 @@
-<span attr:class="controls-BaseButton controls-Button_style-{{_style}}{{isEnabled() ? '':'_disabled'}}
-                 controls-Button_type-{{_type}}{{isEnabled() ? '':'_disabled'}}
+<span attr:class="controls-BaseButton controls-Button_style-{{_style}}{{_options.readOnly ? '_disabled':''}}
+                 controls-Button_type-{{_type}}{{_options.readOnly ? '_disabled':''}}
                  controls-Button_type-{{_typeWithSize}}
-                 {{isEnabled() ? 'controls-Button_style-' + _styleWithIconStyle}}"
+                 {{_options.readOnly ?  '':'controls-Button_style-' + _styleWithIconStyle}}"
       attr:title="{{_options.tooltip}}"
       on:click="_clickHandler()">
     <span attr:class="controls-BaseButton__content controls-Button__wrapper_type-{{_typeWithSize}}">
         <ws:if data="{{!!_options.icon}}">
-           <i attr:class="controls-Button__icon {{_options.icon}} {{isEnabled() ? 'controls-Button__icon-' + _styleWithIconStyle}}"></i>
+            <i attr:class="controls-Button__icon {{_options.icon}} {{_options.readOnly ? '':'controls-Button__icon-' + _styleWithIconStyle}}"></i>
         </ws:if>
         <ws:if data="{{!!_options.caption}}">
-           <span attr:class="controls-BaseButton__text controls-Button__text_style-{{_style}} {{_options.icon ? ' controls-Button__text_gap'}}">{{_options.caption}}</span>
+           <span attr:class="controls-BaseButton__text controls-Button__text_style-{{_style}} {{_options.icon ? ' controls-Button__text_gap'}}">
+               <ws:partial template="{{_options.caption}}"/>
+           </span>
         </ws:if>
     </span>
 </span>

@@ -33,7 +33,7 @@
 }
 
 .controls-DropdownList__item-right_hierarchy-padding {
-  padding-right: @padding_DropdownList-hierarchy;
+  padding-right: @spacing_DropdownList_arrowSubMenu;
 }
 .controls-DropdownList__content {
    font-size: @large-text-size;
@@ -50,6 +50,7 @@
 }
 
 .controls-DropdownList__icon {
+   color: @color_primary;
    margin-right: @right_DropdownList-icon;
 }
 
@@ -76,6 +77,8 @@
 }
 
 .controls-DropdownList__arrow {
+   .inline-flexbox();
+   .align-items(center);
    position: absolute;
    right: @right_DropdownList-icon;
    font-family: @default-icon-small-font !important;
@@ -95,10 +98,10 @@
    width: @width-Dropdown-cross;
    height: @height-Dropdown-cross;
    font-size: @font-size-Dropdown-cross;
+   font-family: @default-icon-medium-font;
    right: 0;
    top: 0;
    z-index: 1;
-   font-family: @icon-font;
 }
 
 .controls-MenuButton-header {

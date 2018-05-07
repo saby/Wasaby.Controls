@@ -64,6 +64,7 @@
    }
    .controls-ComboBox__fieldNotEditable {
       display: inline-block;
+      cursor: pointer;
       //Поле ввода нередактируемого комбобокса не должно реагировать на фокус
       &:focus {
          text-overflow: ellipsis;
@@ -86,7 +87,7 @@
    //Чтобы не показывать 2 границы (от комбобокса и от пикера) в настройках пикера стоит offset: -1. Для открытия вниз это работает,
    //а для открытия вверх нужен offset: 1. Переключать offset из комбобокса нереально, т.к. он узнает о том, что пикер открывается вверх
    //уже после расчёта всех отступов. Так что смещаем пикер вниз, если он открывается вверх.
-   margin-top: calc(~"1px +"@default-border-width) !important;
+   margin-top: calc(~"1px + "@default-border-width) !important;
 }
 
 .controls-ComboBox__scrollContainer {

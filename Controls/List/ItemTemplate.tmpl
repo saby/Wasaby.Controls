@@ -1,0 +1,36 @@
+<div attr:class="controls-ListView__itemV{{marker != false && itemData.isSelected ? ' controls-ListView__item__marked'}}
+    {{!!itemData.showActions ? ' controls-ListView__item_showActions'}}
+    {{!!itemData.isActive ? ' controls-ListView__item_active'}}
+    {{!!itemData.isEditing? ' controls-ListView__item_editing'}}"
+     attr:key="{{itemData.dispItem.getHash()}}">
+    <ws:if data="{{itemData.multiSelectVisibility}}">
+        <ws:partial template="{{multiSelectTpl}}" multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" attr:class="controls-ListView__checkbox"/>
+    </ws:if>
+
+    <ws:if data="{{contentTemplate}}">
+        <ws:if data="{{itemData.isEditing}}">
+            <Controls.List.EditInPlace.EditingRow>
+                <ws:partial
+                        template="{{contentTemplate}}"
+                        itemData="{{itemData}}"/>
+            </Controls.List.EditInPlace.EditingRow>
+        </ws:if>
+        <ws:else>
+            <ws:partial
+                    attr:class="controls-ListView__itemContent"
+                    template="{{contentTemplate}}"
+                    itemData="{{itemData}}"/>
+        </ws:else>
+    </ws:if>
+    <ws:else>
+        <div attr:class="controls-ListView__itemContent">{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>
+    </ws:else>
+    <ws:if data="{{itemData.itemActions  && itemData.itemActions.all && itemData.itemActions.all.length}}">
+        <ws:if data="{{itemData.isSwiped}}">
+            <ws:partial template="{{swipeTemplate}}"  itemData="{{itemData}}" itemActionsTemplate="{{itemActionsTemplate}}"/>
+        </ws:if>
+        <ws:else >
+            <ws:partial template="{{itemActionsTemplate}}"  itemData="{{itemData}}"/>
+        </ws:else>
+    </ws:if>
+</div>

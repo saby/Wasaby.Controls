@@ -11,13 +11,15 @@
    on:valueChanged="_valueChangedHandler()"
    on:inputCompleted="_inputCompletedHandler()"
    on:tagHover="_notifyHandler('onTagHover')"
-   on:tagClick="_notifyHandler('onTagClick')">
+   on:tagClick="_notifyHandler('onTagClick')"
+   on:focusout="_focusoutHandler()"
+>
    <ws:content>
 
       <ws:partial
          template="tmpl!Controls/Input/resources/input"
          type="text"
-         enabled="{{isEnabled()}}"
+         readOnly="{{_options.readOnly}}"
       />
 
    </ws:content>

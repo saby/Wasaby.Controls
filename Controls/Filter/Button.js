@@ -10,18 +10,19 @@ define('Controls/Filter/Button',
       'WS.Data/Utils',
       'css!Controls/Filter/Button/Button'
    ],
-   
+
    function(Control, template, moduleStubs, Chain, Utils) {
-      
+
       /**
        * @class Controls/Filter/Button
-       * @extends Controls/Control
+       * @extends Core/Control
+       * @mixin Controls/Filter/Button/interface/IFilterPanel
        * @control
        * @public
        */
-      
+
       'use strict';
-   
+
       var _private = {
          getFilterButtonCompatible: function(self) {
             return moduleStubs.require('Controls/Filter/Button/_FilterCompatible').addCallback(function(_FilterCompatible) {
@@ -34,74 +35,90 @@ define('Controls/Filter/Button',
                return self._filterCompatible;
             });
          },
-   
+
          getText: function(items) {
             var textArr = [];
-      
+
             Chain(items).each(function(item) {
                var textValue = Utils.getItemPropertyValue(item, 'textValue');
-         
+
                if (textValue) {
                   textArr.push(textValue);
                }
             });
-      
+
             return textArr.join(', ');
          },
-         
+
          resolveItems: function(self, items) {
             self._items = items;
             self._text = _private.getText(items);
          }
       };
-      
+
       var FilterButton = Control.extend({
-         
+
          _template: template,
          _oldPanelOpener: null,
          _text: '',
-         
+
+         constructor: function(config) {
+            FilterButton.superclass.constructor.apply(this, arguments);
+            this._onFilterChanged = this._onFilterChanged.bind(this);
+         },
+
          _beforeUpdate: function(options) {
             if (this._options.items !== options.items) {
                _private.resolveItems(this, options.items);
             }
          },
-         
+
          _beforeMount: function(options) {
             if (options.items) {
                _private.resolveItems(this, options.items);
             }
          },
-         
+
          _getFilterState: function() {
-            return this.isEnabled() ? 'default' : 'disabled';
+            return this._options.readOnly ? 'disabled' : 'default';
          },
-   
+
          _clearClick: function() {
             _private.getFilterButtonCompatible(this).addCallback(function(panelOpener) {
                panelOpener.clearFilter();
             });
          },
-   
+
          _openFilterPanel: function() {
-            if (this.isEnabled()) {
+            if (!this._options.readOnly) {
                /* if template - show old component */
                if (this._options.filterTemplate) {
                   _private.getFilterButtonCompatible(this).addCallback(function(panelOpener) {
                      panelOpener.showFilterPanel();
                   });
                } else {
-                  //...soon
+                  this._children.filterStickyOpener.open({
+                     templateOptions: {
+                        items: this._options.items,
+                        itemTemplate: this._options.itemTemplate
+                     },
+                     template: 'Controls/Filter/Button/Panel',
+                     target: this._children.panelTarget
+                  });
                }
             }
+         },
+
+         _onFilterChanged: function(filter) {
+            this._notify('filterChanged', [filter]);
          }
       });
-      
+
       FilterButton.getDefaultOptions = function() {
          return {
             filterAlign: 'right'
          };
       };
-      
+
       return FilterButton;
    });

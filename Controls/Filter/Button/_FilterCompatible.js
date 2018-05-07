@@ -12,8 +12,7 @@ define('Controls/Filter/Button/_FilterCompatible',
    function(extend, stringTransformer, OldPanelOpener, converterFilterStructure) {
       
       /**
-       * @class Controls/Container/Search
-       * @extends Controls/Control
+       * @class Controls/Filter/Button/_FilterCompatible
        * @control
        * @public
        */

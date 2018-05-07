@@ -26,13 +26,14 @@ define('Controls/Input/resources/InputRender/InputRender',
 
          getSelection: function(self) {
             var
-               result = self._selection;
+               result = self._selection,
+               val = self._options.viewModel.getDisplayValue();
 
             //Если курсор ещё не был поставлен в поле, то поставим его в конец
             if (!result) {
                result = {
-                  selectionStart: self._options.value ? self._options.value.length : 0,
-                  selectionEnd: self._options.value ? self._options.value.length : 0
+                  selectionStart: val ? val.length : 0,
+                  selectionEnd: val ? val.length : 0
                };
             }
 
@@ -59,11 +60,6 @@ define('Controls/Input/resources/InputRender/InputRender',
       var InputRender = Control.extend({
          
          _template: template,
-
-         constructor: function(options) {
-            InputRender.superclass.constructor.apply(this, arguments);
-
-         },
 
          _inputHandler: function(e) {
             var
@@ -125,17 +121,17 @@ define('Controls/Input/resources/InputRender/InputRender',
 
             if (this._options.validationErrors && this._options.validationErrors.length) {
                result = 'error';
-            } else if (this.isEnabled()) {
-               result = 'default';
-            } else {
+            } else if (this._options.readOnly) {
                result = 'disabled';
+            } else {
+               result = 'default';
             }
 
             return result;
          },
 
          _focusinHandler: function(e) {
-            if (this.isEnabled() && this._options.selectOnClick) {
+            if (!this._options.readOnly && this._options.selectOnClick) {
                e.target.select();
             }
          },

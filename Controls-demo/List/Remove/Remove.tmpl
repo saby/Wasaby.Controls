@@ -1,30 +1,31 @@
 <div class="removeDemo">
     <Controls.List
-            class="removeDemo__list"
+            class="removeDemo__list test_list_1"
             name="list"
             markedKey="{{1}}"
             itemActions="{{_itemActions}}"
             source = "{{_viewSource}}"
             on:beforeItemsRemove="_beforeItemsRemove()"
             on:afterItemsRemove="_afterItemsRemove()"
-            idProperty="id">
+            keyProperty="id">
     </Controls.List>
     <Controls.List
-            class="removeDemo__list"
+            class="removeDemo__list test_list_2"
             on:beforeItemsRemove="_secondListRemoveHandler()"
             on:afterItemsRemove="_secondListRemoveHandler()"
             source = "{{_viewSourceSecond}}"
-            idProperty="id">
+            keyProperty="id">
         <ws:itemTemplate>
-            <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate">
+            <ws:partial template="tmpl!Controls/List/ItemTemplate">
                 <ws:contentTemplate>
                     <div>
                         <span>List in list</span>
                         <Controls.List
+                                class="test_list_3"
                                 name="listSecond"
                                 itemActions="{{_itemActionsSecond}}"
                                 source = "{{_viewSourceClone}}"
-                                idProperty="id">
+                                keyProperty="id">
                         </Controls.List>
                     </div>
                 </ws:contentTemplate>

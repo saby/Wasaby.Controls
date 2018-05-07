@@ -5,7 +5,7 @@
             source = "{{_viewSource}}"
             markedKey="{{2}}"
             allowEmptySelection="{{false}}"
-            idProperty="id">
+            keyProperty="id">
     </Controls.List>
 
     <h2>Display property</h2>
@@ -13,9 +13,9 @@
             source = "{{_viewSource}}"
             markedKey="{{2}}"
             allowEmptySelection="{{false}}"
-            idProperty="id">
+            keyProperty="id">
         <ws:itemTemplate>
-            <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate"
+            <ws:partial template="tmpl!Controls/List/ItemTemplate"
                         itemData="{{itemTemplate.itemData}}"
                         displayProperty="description"
             ></ws:partial>
@@ -27,9 +27,9 @@
             source = "{{_viewSource}}"
             markedKey="{{2}}"
             allowEmptySelection="{{false}}"
-            idProperty="id">
+            keyProperty="id">
         <ws:itemTemplate>
-            <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate"
+            <ws:partial template="tmpl!Controls/List/ItemTemplate"
                         itemData="{{itemTemplate.itemData}}"
                         marker="{{false}}"
             ></ws:partial>
@@ -42,9 +42,9 @@
             source = "{{_viewSource}}"
             markedKey="{{2}}"
             allowEmptySelection="{{false}}"
-            idProperty="id">
+            keyProperty="id">
         <ws:itemTemplate>
-            <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate"
+            <ws:partial template="tmpl!Controls/List/ItemTemplate"
                         itemData="{{itemTemplate.itemData}}"
             >
                 <ws:contentTemplate>

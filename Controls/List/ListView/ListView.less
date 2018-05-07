@@ -1,0 +1,50 @@
+.controls-ListView__itemV {
+   border-left: 3px solid transparent;
+   cursor: pointer;
+   position: relative;
+}
+
+.controls-ListView__item__marked {
+   border-left: 3px solid @color_ListView-marker;
+}
+
+.controls-ListView__checkbox {
+   float: left;
+   margin: @padding_List-checkbox;
+}
+
+.controls-ListView__itemContent {
+   margin: 0 0 0 @spacing-List-between-checkbox-content + @width_CheckBox;
+   padding: @spacing_List-item_default 0;
+}
+
+.controls-ListView__item_active {
+  background-color: @default-bg-color-hovered-item;
+}
+
+.controls-ListView__item_editing {
+  background-color: @controls-editInPlace-editing-item-bg;
+  >.controls-itemActionsV {
+    display: inline-flex;
+  }
+}
+
+.ws-is-no-touch {
+  .controls-ListView__item_showActions {
+    &:hover {
+      >.controls-itemActionsV {
+        display: inline-flex;
+      }
+    }
+  }
+  .controls-ListView__itemV {
+    &:hover {
+      background-color: @default-bg-color-hovered-item;
+    }
+  }
+  .controls-ListView__item_editing {
+    &:hover {
+      background-color: @controls-editInPlace-editing-item-bg;
+    }
+  }
+}

@@ -1,16 +1,4 @@
 <div class="editInPlaceDemo">
-    <style>
-        .ws-ListView__item {
-            height: 30px;
-            box-sizing: border-box;
-            padding: 3px 4px;
-            display: flex;
-            align-items: center;
-        }
-        .editInPlaceDemo {
-            padding-top: 30px;
-        }
-    </style>
     <div>
         <h3>Simple list</h3>
         <Controls:List
@@ -19,14 +7,15 @@
                 on:beforeItemEdit="_onItemEdit()"
                 on:beforeItemAdd="_onItemAdd()"
                 allowEmptySelection="{{false}}"
-                idProperty="id">
+                keyProperty="id">
             <ws:editingConfig>
                 <ws:Object editOnClick="{{_editOnClick}}"
                            singleEdit="{{_singleEdit}}"
+                           showToolbar="{{_showToolbar}}"
                            autoAdd="{{_autoAdd}}"/>
             </ws:editingConfig>
             <ws:itemTemplate>
-                <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate"
+                <ws:partial template="tmpl!Controls/List/ItemTemplate"
                             itemData="{{itemTemplate.itemData}}">
                     <ws:contentTemplate>
                         <ws:partial template="tmpl!Controls-demo/List/EditInPlace/editingTemplate"
@@ -42,6 +31,7 @@
                 <ws:Controls.Toggle.Checkbox bind:value="_editOnClick" caption="editOnClick"/>
                 <ws:Controls.Toggle.Checkbox bind:value="_singleEdit" caption="singleEdit"/>
                 <ws:Controls.Toggle.Checkbox bind:value="_autoAdd" caption="autoAdd"/>
+                <ws:Controls.Toggle.Checkbox bind:value="_showToolbar" caption="showToolbar"/>
             </div>
         </div>
     </div>
@@ -52,12 +42,12 @@
                 source="{{_viewSource2}}"
                 on:beforeItemAdd="_cancelItemAdd()"
                 allowEmptySelection="{{false}}"
-                idProperty="id">
+                keyProperty="id">
             <ws:editingConfig>
                 <ws:Object editOnClick="{{true}}"/>
             </ws:editingConfig>
             <ws:itemTemplate>
-                <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate"
+                <ws:partial template="tmpl!Controls/List/ItemTemplate"
                             itemData="{{itemTemplate.itemData}}">
                     <ws:contentTemplate>
                         <ws:partial template="tmpl!Controls-demo/List/EditInPlace/editingTemplate"
@@ -75,12 +65,12 @@
                 source="{{_viewSource3}}"
                 on:beforeItemAdd="_deferredItemAdd()"
                 allowEmptySelection="{{false}}"
-                idProperty="id">
+                keyProperty="id">
             <ws:editingConfig>
                 <ws:Object editOnClick="{{true}}"/>
             </ws:editingConfig>
             <ws:itemTemplate>
-                <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate"
+                <ws:partial template="tmpl!Controls/List/ItemTemplate"
                             itemData="{{itemTemplate.itemData}}">
                     <ws:contentTemplate>
                         <ws:partial template="tmpl!Controls-demo/List/EditInPlace/editingTemplate"
@@ -96,12 +86,12 @@
                 name="list4"
                 source="{{_viewSource4}}"
                 allowEmptySelection="{{false}}"
-                idProperty="id">
+                keyProperty="id">
             <ws:editingConfig>
                 <ws:Object editOnClick="{{true}}" item="{{_editingItem}}"/>
             </ws:editingConfig>
             <ws:itemTemplate>
-                <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate"
+                <ws:partial template="tmpl!Controls/List/ItemTemplate"
                             itemData="{{itemTemplate.itemData}}">
                     <ws:contentTemplate>
                         <ws:partial template="tmpl!Controls-demo/List/EditInPlace/editingTemplate"
@@ -117,12 +107,12 @@
                 name="list5"
                 source="{{_viewSource5}}"
                 allowEmptySelection="{{false}}"
-                idProperty="id">
+                keyProperty="id">
             <ws:editingConfig>
                 <ws:Object editOnClick="{{true}}" item="{{_addItem}}"/>
             </ws:editingConfig>
             <ws:itemTemplate>
-                <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate"
+                <ws:partial template="tmpl!Controls/List/ItemTemplate"
                             itemData="{{itemTemplate.itemData}}">
                     <ws:contentTemplate>
                         <ws:partial template="tmpl!Controls-demo/List/EditInPlace/editingTemplate"

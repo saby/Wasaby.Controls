@@ -7,7 +7,7 @@ define([
    'WS.Data/Entity/Model',
    'Core/Deferred',
    'WS.Data/Source/Memory',
-   'Controls/List/SimpleList/ListViewModel'
+   'Controls/List/ListViewModel'
 ], function(EditInPlace, RecordSet, Model, Deferred, Memory, ListViewModel){
    describe('Controls.List.EditInPlace', function () {
       var eip, items, newItem, listModel, data;
@@ -39,7 +39,7 @@ define([
          });
          listModel = new ListViewModel({
             items: items,
-            idProperty: 'id',
+            keyProperty: 'id',
             displayProperty: 'title'
          });
          eip = new EditInPlace();

@@ -1,0 +1,24 @@
+<div class="moveDemo">
+    <span>Standard moving items</span>
+    <Controls.List
+            class="moverDemo__list"
+            name="list"
+            itemActions="{{_itemActions}}"
+            source = "{{_viewSource}}"
+            keyProperty="id">
+    </Controls.List>
+    <span>Move items only to collections</span>
+    <Controls.List
+            class="moverDemo__list"
+            name="listSecond"
+            on:beforeItemsMove="_beforeItemsMoveSecond()"
+            itemActions="{{_itemActionsSecond}}"
+            source = "{{_viewSourceSecond}}"
+            keyProperty="id">
+    </Controls.List>
+    <Controls.Button
+            on:click="_onClick()"
+            caption="Reload">
+    </Controls.Button>
+    <Controls.Popup.Opener.Confirmation name="popupOpener"/>
+</div>

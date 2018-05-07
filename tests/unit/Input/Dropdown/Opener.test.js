@@ -39,16 +39,15 @@ define(
          it('open', () => {
             opener._children.StickyOpener = {
                open: function(cfg) {
-                  let compOptions = cfg.componentOptions;
+                  let compOptions = cfg.templateOptions;
                   assert.isTrue(compOptions.itemTemplate === 'itemTemplate' &&
                      compOptions.headTemplate === 'headTemplate' &&
                      compOptions.footerTemplate === 'footerTemplate');
                }
             };
             opener.open({
-               componentOptions: {
+               templateOptions: {
                   items: {
-                     getIdProperty: () => {},
                      each: () => {}
                   }
                }
@@ -57,24 +56,23 @@ define(
 
          it('check templates config', () => {
             let cfg = {
-               componentOptions: {
+               templateOptions: {
                   items: {
-                      getIdProperty: () => {},
-                      each: () => {}
+                     each: () => {}
                   }
                }
             };
             Opener._private.setPopupOptions(opener, cfg);
             assert.isTrue(cfg.className === config.className);
 
-            Opener._private.setComponentOptions(opener, cfg);
+            Opener._private.setTemplateOptions(opener, cfg);
             let isEqual = true;
             for (let key of Object.keys(config)) {
-               if (config[key] !== cfg.componentOptions[key] && cfg.componentOptions[key] !== undefined) {
+               if (config[key] !== cfg.templateOptions[key] && cfg.templateOptions[key] !== undefined) {
                   isEqual = false;
                }
             }
             assert.isTrue(isEqual);
          });
-      })
+      });
    });

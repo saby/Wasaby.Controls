@@ -6,9 +6,11 @@ define('Controls/Toggle/Checkbox', [
 ], function(Control, template, types) {
 
    /**
-    * Контрол, отображающий стандартный флажок
+    * Basic checkbox.
+    *
     * @class Controls/Toggle/Checkbox
-    * @extends Controls/Control
+    * @extends Core/Control
+    * @mixes Controls/Toggle/interface/ICheckable
     * @mixes Controls/Button/interface/ICaption
     * @mixes Controls/interface/ITooltip
     * @control
@@ -18,17 +20,17 @@ define('Controls/Toggle/Checkbox', [
 
    /**
     * @name Controls/Toggle/Checkbox#triState
-    * @cfg {Boolean} Режим трехпозиционного чекбокса
+    * @cfg {Boolean} Enable three-state mode.
     */
 
    /**
     * @name Controls/Toggle/Checkbox#value
-    * @cfg {Boolean|null} Состояние переключателя
+    * @cfg {Boolean|null} Current state.
     */
 
    /**
-    * @event Controls/Toggle/Checkbox#valueChanged Происходит при изменении состояния переключателя
-    * @param {Boolean|null} value Новое состояние
+    * @event Controls/Toggle/Checkbox#valueChanged Occurs when state changes.
+    * @param {Boolean|null} value New state.
     */
 
    var _private = {

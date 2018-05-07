@@ -3,7 +3,7 @@ define([
    'WS.Data/Source/Memory',
    'WS.Data/Collection/RecordSet',
    'Controls/Controllers/SourceController',
-   'Controls/List/SimpleList/ListViewModel',
+   'Controls/List/ListViewModel',
    'Core/Deferred',
    'Core/core-clone'
 ], function(Remove, MemorySource, RecordSet, SourceController, ListViewModel, Deferred, cClone){
@@ -28,7 +28,7 @@ define([
             }),
             cfg = {
                listModel: new ListViewModel({
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                sourceController: new SourceController({
                   source : new MemorySource({

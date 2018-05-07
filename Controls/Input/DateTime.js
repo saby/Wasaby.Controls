@@ -2,15 +2,14 @@ define('Controls/Input/DateTime', [
 ], function() {
 
    /**
-    * Данный контрол предназначен для ввода даты и времени.
-    * В зависимости от {@link mask маски} возможен ввод:
+    * Control for entering date and time.
+    * Depending on {@link mask mask} can be used to enter:
     * <ol>
-    *    <li>только даты,</li>
-    *    <li>только времени,</li>
-    *    <li>даты и времени.</li>
+    *    <li>just date,</li>
+    *    <li>just time,</li>
+    *    <li>date and time.</li>
     * </ol>
     * @class Controls/Input/DateTime
-    * @extends Controls/Control
     * @mixes Controls/Input/interface/IInputDateTime
     * @mixes Controls/Input/interface/IValidation
     * @mixes Controls/Input/interface/IInputTag
@@ -21,18 +20,18 @@ define('Controls/Input/DateTime', [
 
    /**
     * @name Controls/Input/DateTime#mask
-    * @cfg {String} Формат отображения данных
-    * Необходимо выбрать одну из масок в массиве допустимых значений.
-    * Допустимые символы в маске:
+    * @cfg {String} Data format.
+    *
+    * One of the listed mask must be choosen. Allowed mask chars:
     * <ol>
-    *    <li>D(day) - календарный день.</li>
-    *    <li>M(month) - месяц.</li>
-    *    <li>Y(year) - год.</li>
-    *    <li>H(hour) - час.</li>
-    *    <li>I - минута</li>
-    *    <li>S(second) - секунда.</li>
-    *    <li>U - доля секунды.</li>
-    *    <li>".", "-", ":", "/" - разделители.</li>
+    *    <li>D - day.</li>
+    *    <li>M - month.</li>
+    *    <li>Y - year.</li>
+    *    <li>H - hour.</li>
+    *    <li>I - minute.</li>
+    *    <li>S - second.</li>
+    *    <li>U - millisecond.</li>
+    *    <li>".", "-", ":", "/" - delimiters.</li>
     * </ol>
     * @variant 'DD.MM.YYYY'
     * @variant 'DD.MM.YY'
