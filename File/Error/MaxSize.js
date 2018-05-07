@@ -17,6 +17,10 @@ define("File/Error/MaxSize", ["require", "exports", "tslib", "File/Error"], func
                 details: getDetails(params.fileName, params.maxSize),
                 fileName: params.fileName
             }) || this;
+            /*
+             * https://github.com/Microsoft/TypeScript-wiki/blob/master/Breaking-Changes.md#extending-built-ins-like-error-array-and-map-may-no-longer-work
+             */
+            Object.setPrototypeOf(_this, MaxSizeError.prototype);
             _this.maxSize = params.maxSize;
             return _this;
         }
