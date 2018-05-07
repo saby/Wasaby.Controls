@@ -312,7 +312,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                this.subscribeTo(this._scrollbar, 'onScrollbarEndDrag', this._setScrollbarDragging.bind(this, false));
                this._resizeInner();
             }
-            if (!(this._getChildContentHeight() < 35)) {
+            if (!(this._getChildContentHeight() < 35) && !cDetection.isIE) {
                this._toggleGradient();
             }
          },
@@ -381,7 +381,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
             if (this._paging) {
                this._calcPagingSelectedKey(scrollTop);
             }
-            if (!(this._getChildContentHeight() < 35)) {
+            if (!(this._getChildContentHeight() < 35) && !cDetection.isIE) {
                this._toggleGradient();
             }
          },
@@ -567,7 +567,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
             }
             //ресайз может позваться до инита контейнера
             if (this._content) {
-               if (!(this._getChildContentHeight() < 35)) {
+               if (!(this._getChildContentHeight() < 35) && !cDetection.isIE) {
                   this._toggleGradient();
                }
                /**
