@@ -1,7 +1,9 @@
 define('Controls/Filter/Button/Panel/FilterDropdown', [
    'Core/Control',
-   'tmpl!Controls/Filter/Button/Panel/FilterDropdown/FilterDropdown'
-], function(Control, template) {
+   'WS.Data/Utils',
+   'tmpl!Controls/Filter/Button/Panel/FilterDropdown/FilterDropdown',
+   'css!Controls/Filter/Button/Panel/FilterDropdown/FilterDropdown'
+], function(Control, Utils, template) {
 
    'use strict';
 
@@ -12,8 +14,9 @@ define('Controls/Filter/Button/Panel/FilterDropdown', [
          this._notify('valueChanged', [value]);
       },
 
-      _clickHandler: function(event) {
-         event.stopPropagation();
+      _clickHandler: function() {
+         this._visibility = false;
+         this._notify('valueChanged', [this._options.value, this._visibility]);
       }
 
    });

@@ -13,7 +13,11 @@
    <Controls.Toggle.Checkbox bind:value="item.value" caption="checked"/>
 </ws:if>
 <ws:if data="{{item.id === 'Test1'}}">
-<Controls.Input.Dropdown source="{{item.source}}" keyProperty="key" bind:selectedKeys="item.value"/>
+<Controls.Filter.Button.Panel.FilterDropdown
+        onPanel="{{true}}"
+        source="{{item.source}}"
+        keyProperty="key"
+        bind:selectedKeys="item.value"/>
 </ws:if>
 <ws:if data="{{item.id === 'Test2'}}">
 <Controls.Toggle.Checkbox bind:value="item.value" caption="Test2"/>
