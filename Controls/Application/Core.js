@@ -15,10 +15,11 @@ define('Controls/Application/Core',
          _template: template,
          ctxData: null,
          constructor: function(cfg) {
-            try{
+            try {
                /*TODO: set to presentation service*/
                process.domain.req.compatible = false;
-            }catch(){}
+            } catch (e) {
+            }
 
             AppCore.superclass.constructor.apply(this, arguments);
             this.ctxData = new AppData(cfg);
