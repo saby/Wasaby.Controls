@@ -1,0 +1,31 @@
+<Controls.Container.Search on:deactivated="_deactivated()">
+    <div class="controls-SuggestV">
+        <Controls.Container.Input.Search>
+            <ws:partial template="{{_options.content}}" on:valueChanged="_changeValueHandler()" attr:class="controls-Suggest-Text_style_{{_options.suggestStyle}}"/>
+        </Controls.Container.Input.Search>
+
+        <div if="{{_options.suggestState}}" class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer-style-{{_options.suggestStyle}}">
+            <Controls.Button.Close if="{{_options.suggestStyle === 'overInput'}}" attr:class="controls-Suggest-close" on:click="_close()"/>
+            <Controls.Tabs.Buttons if="{{_tabsSource}}" attr:class="controls-Suggest__tabs" source="{{_tabsSource}}" selectedKey="{{_tabsSelectedKey}}" keyProperty="id" on:selectedKeyChanged="_tabsSelectedKeyChanged()"/>
+            <ws:partial
+                    template="{{_options.suggestTemplate}}"
+                    searchEndCallback="{{_searchEnd}}"
+                    searchStartCallback="{{_searchStart}}"
+                    emptyTemplate="{{_options.emptyTemplate}}"
+                    on:itemClick="_select()"
+            >
+                <ws:footerTemplate>
+                    <ws:if data="{{_options.footerTemplate && _isFooterShown}}">
+                        <ws:partial template="{{ _options.footerTemplate}}" on:click="_showAllClick()"/>
+                    </ws:if>
+                </ws:footerTemplate>
+            </ws:partial>
+        </div>
+        <Controls.Popup.Opener.Stack name="stackOpener">
+            <ws:popupOptions template="Controls/Layout/Suggest/Dialog">
+                <ws:templateOptions template="{{_options.suggestTemplate}}" searchValue="{{_searchValue}}"/>
+                <ws:eventHandlers onResult="{{_select}}"/>
+            </ws:popupOptions>
+        </Controls.Popup.Opener.Stack>
+    </div>
+</Controls.Container.Search>

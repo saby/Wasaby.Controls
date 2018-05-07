@@ -15,6 +15,10 @@ define('Controls/Container/List',
       
       'use strict';
       
+      var SEARCH_CONTEXT_FIELD = 'searchLayoutField';
+      var SEARCH_VALUE_FIELD = 'searchValue';
+      var FILTER_CONTEXT_FIELD = 'filterLayoutField';
+      var FILTER_VALUE_FIELD = 'filter';
       
       var _private = {
          getSearchController: function(self) {
@@ -53,6 +57,7 @@ define('Controls/Container/List',
             /* Копируем объект, чтобы порвать ссылку и опция у списка изменилась*/
             var filterClone = merge({}, self._options.filter);
             self._filter = merge(filterClone, resultFilter);
+            self._searchController.setFilter(self._filter);
          },
          
          abortCallback: function(self, filter) {
@@ -60,7 +65,9 @@ define('Controls/Container/List',
                self._options.searchEndCallback(null, filter);
             }
    
-            _private.updateFilter(self, filter);
+            if (!isEqual(filter, _private.getFilterFromContext(self, self._contextObj))) {
+               _private.updateFilter(self, filter);
+            }
             self._source = self._options.source;
             self._forceUpdate();
          },
@@ -70,7 +77,9 @@ define('Controls/Container/List',
                self._options.searchEndCallback(result, filter);
             }
    
-            _private.updateFilter(self, filter);
+            if (!isEqual(filter, _private.getFilterFromContext(self, self._contextObj))) {
+               _private.updateFilter(self, filter);
+            }
             _private.updateSource(self, result.data);
             self._searchDeferred.callback();
             self._forceUpdate();
@@ -87,27 +96,47 @@ define('Controls/Container/List',
             _private.getSearchController(self).search(value);
          },
          
-         filterChanged: function(self, filter) {
-            _private.updateFilter(self, filter);
-            self._forceUpdate();
+         getValueFromContext: function(context, contextField, valueField) {
+            if(context && context.hasOwnProperty(contextField)) {
+               return context[contextField][valueField];
+            } else {
+               return null;
+            }
          },
          
-         checkFilterValue: function(self, newContext, oldContext) {
-            var newFilter = newContext.filterLayoutField && newContext.filterLayoutField.filter,
-               oldFilter = self._contextObj &&
-                  self._contextObj.hasOwnProperty('filterLayoutField') &&
-                  oldContext.get('filterLayoutField').filter;
-            
-            return newFilter && !isEqual(newFilter, oldFilter) ? _private.filterChanged(self, newFilter) : false;
+         isFilterChanged: function(self, context) {
+            var oldValue = this.getFilterFromContext(self, self._contextObj),
+                newValue = this.getFilterFromContext(self, context);
+            return newValue && !isEqual(oldValue, newValue);
          },
          
-         checkSearchValue: function(self, newContext, oldContext) {
-            var newValue = newContext.searchLayoutField && newContext.searchLayoutField.searchValue,
-               oldValue = self._contextObj &&
-                  self._contextObj.hasOwnProperty('searchLayoutField') &&
-                  oldContext.get('searchLayoutField').searchValue;
+         isSearchValueChanged: function(self, context) {
+            var oldValue = this.getSearchValueFromContext(self, self._contextObj),
+                newValue = this.getSearchValueFromContext(self, context);
+            return !isEqual(oldValue, newValue);
+         },
+         
+         getFilterFromContext: function(self, context) {
+            return this.getValueFromContext(context, FILTER_CONTEXT_FIELD, FILTER_VALUE_FIELD);
+         },
+         
+         getSearchValueFromContext: function(self, context) {
+            return this.getValueFromContext(context, SEARCH_CONTEXT_FIELD, SEARCH_VALUE_FIELD);
+         },
+         
+         checkContextValues: function(self, context) {
+            var isSearchChanged = this.isSearchValueChanged(self, context);
+            var isFilterChanged = this.isFilterChanged(self, context);
+            var filterValue = this.getFilterFromContext(self, context);
+            var searchValue = this.getSearchValueFromContext(self, context);
             
-            return !isEqual(newValue, oldValue) ? _private.searchValueChanged(self, newValue) : false;
+            if (isFilterChanged) {
+               this.updateFilter(self, filterValue);
+            }
+            
+            if (isSearchChanged) {
+               this.searchValueChanged(self, searchValue);
+            }
          }
       };
       
@@ -139,19 +168,19 @@ define('Controls/Container/List',
          },
          
          _beforeMount: function(options, context) {
-            _private.checkFilterValue(this, context);
-            _private.checkSearchValue(this, context);
-            
+            _private.checkContextValues(this, context);
             return this._searchDeferred;
          },
          
          _beforeUpdate: function(options, context) {
-            _private.checkFilterValue(this, context, this.context);
-            _private.checkSearchValue(this, context, this.context);
+            _private.checkContextValues(this, context);
          },
          
          _beforeUnmount: function() {
-            _private.getSearchController(this).abort();
+            if (this._searchController) {
+               this._searchController.abort();
+               this._searchController = null;
+            }
          }
          
       });

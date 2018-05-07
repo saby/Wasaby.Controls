@@ -1,0 +1,15 @@
+<Controls.Layout.Suggest
+        on:choose="_choose()"
+        suggestTemplate="{{_options.suggestTemplate}}"
+        minSearchLength="{{_options.minSearchLength}}"
+        suggestStyle="overInput"
+        bind:suggestState="_suggestState">
+    <Controls.Input.Search
+            value="{{_options.value}}"
+            tagStyle="{{_options.tagStyle}}"
+            placeholder="{{_options.placeholder}}"
+            style="{{_options.style}}"
+            on:valueChanged="_changeValueHandler()"
+            on:resetClick="_resetClick()">
+    </Controls.Input.Search>
+</Controls.Layout.Suggest>

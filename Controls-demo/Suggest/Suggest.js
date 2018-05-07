@@ -88,7 +88,7 @@ define('Controls-demo/Suggest/Suggest', [
       _template: template,
       _suggestValue: '',
       _suggest2Value: '',
-      _tabSelectedKey: 0,
+      _tabsSelectedKey: 0,
       
       constructor: function() {
          VDomSuggest.superclass.constructor.apply(this, arguments);
@@ -106,9 +106,22 @@ define('Controls-demo/Suggest/Suggest', [
          this._suggestSource.query = function() {
             var self = this,
                arg = arguments;
-            var def = Deferred.fromTimer(100);
-            def.addCallback(function() {
-               return origQuery.apply(self, arg);
+            var def = new Deferred();
+            origQuery.apply(self, arg).addCallback(function(result) {
+               Deferred.fromTimer(100).addCallback(function() {
+                  var originAll = result.getAll;
+                  
+                  result.getAll = function() {
+                    var items = originAll.call(result);
+                    items.setMetaData({
+                       tabs: [{id: 1, title: 'Вкладка'}, {id: 2, title: 'Вкладка2'}],
+                       more: items.getMetaData().more,
+                       currentTab: 2
+                    });
+                    return items;
+                  };
+                  def.callback(result);
+               });
             });
             return def;
          };

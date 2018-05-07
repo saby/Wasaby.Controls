@@ -1,50 +1,32 @@
-<div class="controls-SuggestV">
-    <Controls.Container.Search
-            on:deactivated="_deactivated()"
-            on:itemClick="_select()">
-        <div>
-            <Controls.Container.Input.Search>
-                <Controls.Input.resources.InputRender.InputRender
-                        name="suggestText"
-                        autocomplete="{{_options.autocomplete}}"
-                        size="{{ _options.size }}"
-                        viewModel="{{_simpleViewModel}}"
-                        trim="{{_options.trim}}"
-                        selectOnClick="{{_options.selectOnClick}}"
-                        inputCharRegExp="{{_options.inputCharRegExp}}"
-                        constraint="{{_options.constraint}}"
-                        value="{{_options.value}}"
-                        tagStyle="{{_options.tagStyle}}"
-                        placeholder="{{_options.placeholder}}"
-                        validationErrors="{{_options.validationErrors}}"
-                        on:valueChanged="_changeValueHandler()"
-                        attr:class="controls-SuggestV__inputRender">
-                    <ws:content>
-                        <ws:partial template="tmpl!Controls/Input/resources/input"/>
-                    </ws:content>
-                    <ws:afterFieldWrapper>
-                        <div if="{{_searching || _options.value}}" class="controls-SuggestV__afterFieldWrapper">
-                            <div if="{{_searching}}" class="controls-SuggestV__loader"></div>
-                            <div if="{{_options.value}}" class="controls-SuggestV__clear icon-size icon-Close" on:click="_clearClick()"></div>
-                        </div>
-                    </ws:afterFieldWrapper>
-                </Controls.Input.resources.InputRender.InputRender>
-            </Controls.Container.Input.Search>
-
-            <ws:if data="{{_isOpen}}">
-                <div class="controls-SuggestV__suggestionsContainer">
-                    <ws:partial template="{{_options.suggestTemplate}}" searchEndCallback="{{_searchEnd}}" searchStartCallback="{{_searchStart}}"/>
-                    <ws:partial if="{{_options.emptyTemplate && !_searchResult.hasMore}}" template="{{_options.emptyTemplate}}"/>
-                    <ws:partial if="{{_options.footerTemplate && _searchResult.hasMore}}" template="{{_options.footerTemplate}}" on:click="_showAllClick()"/>
-                </div>
-            </ws:if>
-        </div>
-    </Controls.Container.Search>
-
-    <Controls.Popup.Opener.Stack name="stackOpener">
-        <ws:popupOptions template="Controls/Input/resources/Suggest/Dialog">
-            <ws:templateOptions template="{{_options.suggestTemplate}}" searchValue="{{_searchValue}}"/>
-            <ws:eventHandlers onResult="{{_select}}"/>
-        </ws:popupOptions>
-    </Controls.Popup.Opener.Stack>
-</div>
+<Controls.Layout.Suggest
+        on:choose="_choose()"
+        on:searchStart="_searchStart()"
+        on:searchEnd="_searchEnd()"
+        suggestTemplate="{{_options.suggestTemplate}}"
+        minSearchLength="{{_options.minSearchLength}}"
+        bind:suggestState="_suggestState">
+    <Controls.Input.resources.InputRender.InputRender
+            size="{{ _options.size }}"
+            viewModel="{{_simpleViewModel}}"
+            trim="{{_options.trim}}"
+            autocomplete="{{_options.autocomplete}}"
+            selectOnClick="{{_options.selectOnClick}}"
+            inputCharRegExp="{{_options.inputCharRegExp}}"
+            constraint="{{_options.constraint}}"
+            value="{{_options.value}}"
+            tagStyle="{{_options.tagStyle}}"
+            placeholder="{{_options.placeholder}}"
+            validationErrors="{{_options.validationErrors}}"
+            on:valueChanged="_changeValueHandler()"
+            attr:class="controls-SuggestV__inputRender">
+        <ws:content>
+            <ws:partial template="tmpl!Controls/Input/resources/input"/>
+        </ws:content>
+        <ws:afterFieldWrapper>
+            <div if="{{_searchState || _options.value}}" class="controls-SuggestV__afterFieldWrapper">
+                <div if="{{_searchState}}" class="controls-SuggestV__loader"></div>
+                <div if="{{_options.value}}" class="controls-SuggestV__clear icon-size icon-Close" on:click="_clearClick()"></div>
+            </div>
+        </ws:afterFieldWrapper>
+    </Controls.Input.resources.InputRender.InputRender>
+</Controls.Layout.Suggest>

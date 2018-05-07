@@ -27,8 +27,7 @@ define('Controls/Container/Suggest/List',
          
          _template: template,
          
-         constructor: function(options) {
-            List.superclass.constructor.call(this, options);
+         _beforeMount: function(options) {
             if (options.dialogMode) {
                var navigation = clone(options.navigation);
                navigation.view = 'infinity';

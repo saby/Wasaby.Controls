@@ -83,6 +83,10 @@ define('Controls/Controllers/_SearchController',
             }
          },
          
+         setFilter: function(filter) {
+            this._options.filter = filter;
+         },
+         
          abort: function() {
             _private.abort(this);
          }

@@ -3,6 +3,7 @@
         <h3>Suggest</h3>
         <Controls.Input.Suggest
                 bind:value="_suggestValue"
+                bind:tabsSelectedKey="_tabsSelectedKey"
                 displayProperty="text">
             <ws:suggestTemplate>
                 <Controls.Container.Suggest.List searchParam="title" source="{{_suggestSource}}">
@@ -23,29 +24,23 @@
         </Controls.Input.Suggest>
     </div>
     <div class="demo-SuggestWrapper">
-        <h3>Suggest with Tabs</h3>
-        <Controls.Input.Suggest
+        <h3>Search with Suggest</h3>
+        <Controls.Input.Search.Suggest
                 bind:value="_suggest2Value"
                 displayProperty="text">
             <ws:suggestTemplate>
-                <div>
-                    <Controls.Tabs.Buttons displayProperty="title" keyProperty="id" source="{{_tabSource}}"/>
-                    <Controls.Container.Suggest.List searchParam="title" source="{{_suggestSource}}">
-                        <ws:navigation source="page" view="page">
-                            <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
-                        </ws:navigation>
-                        <ws:content>
-                            <Controls:List
-                                    displayProperty="title"
-                                    idProperty="id">
-                            </Controls:List>
-                        </ws:content>
-                    </Controls.Container.Suggest.List>
-                </div>
+                <Controls.Container.Suggest.List attr:class="demo-SuggestList" searchParam="title" source="{{_suggestSource}}">
+                    <ws:navigation source="page" view="page">
+                        <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
+                    </ws:navigation>
+                    <ws:content>
+                        <Controls:List displayProperty="title" idProperty="id"/>
+                    </ws:content>
+                </Controls.Container.Suggest.List>
             </ws:suggestTemplate>
             <ws:minSearchLength>
                 <ws:Number>3</ws:Number>
             </ws:minSearchLength>
-        </Controls.Input.Suggest>
+        </Controls.Input.Search.Suggest>
     </div>
 </div>
