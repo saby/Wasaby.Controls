@@ -1,0 +1,59 @@
+[
+  {
+    "output": "file-resource.package.js",
+    "include": [
+      "File/ResourceGetter/Base",
+      "File/LocalFile",
+      "File/LocalFileLink",
+      "File/HttpFileLink",
+      "File/LocalFile"
+    ]
+  },
+  {
+    "output": "file-error.package.js",
+    "include": [
+      "File/Error",
+      "File/Error/*"
+    ]
+  },
+  {
+    "output": "file-utils.package.js",
+    "include": [
+      "File/utils/*"
+    ]
+  },
+  {
+    "output": "file-attach-base.package.js",
+    "include": [
+      "File/Attach/Base",
+      "File/Attach/Uploader",
+      "File/Attach/Container/Getter",
+      "File/Attach/Container/Source"
+    ]
+  },
+  {
+    "output": "file-attach-lazy.package.js",
+    "include": [
+      "File/Attach/Lazy",
+      "File/Attach/Container/GetterLazy",
+      "File/Attach/Container/SourceLazy"
+    ]
+  },
+  {
+    "output": "file-attach.package.js",
+    "include": [
+      "File/Attach",
+      "File/Attach/Option/*"
+    ]
+  },
+  {
+    "output": "file-photocam.package.js",
+    "include": [
+      "File/ResourceGetter/PhotoCam",
+      "File/ResourceGetter/PhotoCam/*"
+    ],
+    "exclude": [
+      "File/ResourceGetter/PhotoCam/DialogPlugin"
+    ]
+  }
+]
