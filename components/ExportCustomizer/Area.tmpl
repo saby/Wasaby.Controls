@@ -3,8 +3,8 @@
       <div class="controls-ExportCustomizer-Area__head ws-window-titlebar">
          <ws:if data="{{_scopes.presets}}">
             <SBIS3.CONTROLS:ExportCustomizer:_Presets:View
-               className="controls-ExportCustomizer-Area__preset"
-               name="controls-ExportCustomizer-Area__preset"
+               className="controls-ExportCustomizer-Area__presets"
+               name="controls-ExportCustomizer-Area__presets"
                scope="{{_scopes.presets}}"
             />
          </ws:if>
@@ -27,8 +27,8 @@
       <ws:content>
          <ws:if data="{{!dialogMode && _scopes.presets}}">
             <SBIS3.CONTROLS:ExportCustomizer:_Presets:View
-               className="controls-ExportCustomizer-Area__preset"
-               name="controls-ExportCustomizer-Area__preset"
+               className="controls-ExportCustomizer-Area__presets"
+               name="controls-ExportCustomizer-Area__presets"
                scope="{{_scopes.presets}}"
             />
          </ws:if>

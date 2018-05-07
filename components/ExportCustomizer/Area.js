@@ -377,10 +377,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           */
          _reshapeOptions: function (options) {
             options._scopes = {
-               preset: (options.staticPresets && options.staticPresets.length) || options.presetNamespace ? {
-                  staticPresets: options.staticPresets,
-                  presetNamespace: options.presetNamespace,
-                  selectedPresetId: options.selectedPresetId
+               presets: (options.staticPresets && options.staticPresets.length) || options.presetNamespace ? {
+                  statics: options.staticPresets,
+                  namespace: options.presetNamespace,
+                  selectedId: options.selectedPresetId
                } : null,
                columnBinder: {
                   title: options.columnBinderTitle || undefined,
