@@ -19,7 +19,7 @@ define('Controls/Input/Password',
     * @mixes Controls/Input/interface/IInputPlaceholder
     * @mixes Controls/Input/interface/IValidation
     * @mixes Controls/Input/interface/IInputTag
-    * @mixes Controls/Input/PasswordDocs
+    * @mixes Controls/Input/interface/PasswordDocs
     * @control
     * @public
     * @category Input
