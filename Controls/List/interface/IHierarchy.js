@@ -2,7 +2,7 @@ define('Controls/List/interface/IHierarchy', [
 ], function() {
 
    /**
-    * Интерфейс работы списков с наличием иерархии элментов
+    * Interface for hierarchical lists.
     *
     * @mixin Controls/List/interface/IHierarchy
     * @public
@@ -10,22 +10,22 @@ define('Controls/List/interface/IHierarchy', [
 
    /**
     * @name Controls/List/interface/IHierarchy#root
-    * @cfg {String} Идентификатор узла, являющегося корнем выборки
+    * @cfg {String} Identifier of the root node.
     */
 
    /**
     * @name Controls/List/interface/IHierarchy#hasChildrenProperty
-    * @cfg {String} Имя свойства элемента, в котором содержится информация о наличии потомков для данного элемента
+    * @cfg {String} Name of the field that contains information whether the node has children.
     */
 
    /**
     * @name Controls/List/interface/IHierarchy#nodeProperty
-    * @cfg {String} Имя свойства элемента, в котором содержится информация о типе элемента (лист/узел/скрытый узел)
+    * @cfg {String} Name of the field describing the type of the node (list, node, hidden node).
     */
 
    /**
     * @name Controls/List/interface/IHierarchy#parentProperty
-    * @cfg {String} Имя свойства элемента, в котором содержится информация о родительском элементе
+    * @cfg {String} Name of the field that contains information about parent node.
     */
 
 

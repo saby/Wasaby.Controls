@@ -8,7 +8,8 @@ define('Controls/Toggle/DoubleSwitch', [
 ], function(Control, template, toggleTemplate, textTemplate, types) {
 
    /**
-    * Контрол, отображающий переключатель
+    * Double switch (switch between two values).
+    *
     * @class Controls/Toggle/DoubleSwitch
     * @extends Core/Control
     * @mixes Controls/Toggle/interface/ICheckable
@@ -20,14 +21,14 @@ define('Controls/Toggle/DoubleSwitch', [
 
    /**
     * @name Controls/Toggle/DoubleSwitch#captions
-    * @cfg {Array.<String>} Массив заголовков
+    * @cfg {Array.<String>} Array of captions.
     */
 
    /**
     * @name Controls/Toggle/DoubleSwitch#orientation
-    * @cfg {String} Способ отображения
-    * @variant horizontal Горизонтальная ориентация
-    * @variant vertical Вертикальная ориентация
+    * @cfg {String} Display type.
+    * @variant horizontal Horizontal switch.
+    * @variant vertical Vertical switch.
     */
    var _private = {
       checkCaptions: function(captions) {

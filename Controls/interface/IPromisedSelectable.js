@@ -2,7 +2,7 @@ define('Controls/interface/IPromisedSelectable', [
 ], function() {
 
    /**
-    * Интерфейс для выделения в коллекции с неизвестным количеством элементов
+    * Selection interface for collections with unknown number of items.
     *
     * @mixin Controls/interface/IPromisedSelectable
     * @public
@@ -10,33 +10,33 @@ define('Controls/interface/IPromisedSelectable', [
 
    /**
     * @name Controls/interface/IPromisedSelectable#selectedKeys
-    * @cfg {Array} Массив ключевых полей выбранных элементов "бесконечного" списка.
-    * @variant [null] выделено все
-    * @variant [] не выделено ничего
+    * @cfg {Array} Array of selected items' keys.
+    * @variant [null] Everything selected.
+    * @variant [] Nothing selected.
     */
 
    /**
     * @name Controls/interface/IPromisedSelectable#excludedKeys
-    * @cfg {Array} Массив ключевых полей, которые необходимо исключить из набора выбранных элементов "бесконечного" списка.
+    * @cfg {Array} Array of keys for items that should be excluded from the selection.
     */
 
    /**
-    * Инвертировать выделение
+    * Toggle selection.
     * @function Controls/interface/IPromisedSelectable#toggleSelection
     */
 
    /**
-    * @event Controls/interface/IPromisedSelectable#selectedKeysChanged Происходит при изменении массива выделенных записей.
-    * @param {Array} keys массив ключей выбранных элементов коллекции.
-    * @param {Array} added массив добавленных ключей в списке выбранных элементов коллекции.
-    * @param {Array} deleted массив удаленных ключей из списка выбранных элементов коллекции.
+    * @event Controls/interface/IPromisedSelectable#selectedKeysChanged Occurs when selected keys were changed.
+    * @param {Array} keys Array of selected items' keys.
+    * @param {Array} added Array of added keys in selection.
+    * @param {Array} deleted Array of deleted keys in selection.
     */
 
    /**
-    * @event Controls/interface/IPromisedSelectable#excludedKeysChanged Происходит при изменении массива записей исключения выделения.
-    * @param {Array} keys массив ключей, которые необходимо исключить из набора выбранных элементов "бесконечного" списка.
-    * @param {Array} added массив добавленных ключей.
-    * @param {Array} deleted массив удаленных.
+    * @event Controls/interface/IPromisedSelectable#excludedKeysChanged Occurs when excluded keys were changed.
+    * @param {Array} keys Array of excluded items' keys.
+    * @param {Array} added Array of added keys.
+    * @param {Array} deleted Array of deleted keys.
     */
 
 });

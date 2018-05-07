@@ -10,7 +10,8 @@ define('Controls/Input/Dropdown',
    function(Control, template, defaultContentTemplate, SourceController, dropdownUtil) {
 
       /**
-       * Поле выбора из значения списка.
+       * Input for selection from the list of options.
+       *
        * @class Controls/Input/Dropdown
        * @extends Core/Control
        * @mixes Controls/interface/ISource

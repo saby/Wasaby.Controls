@@ -31,6 +31,23 @@ define([
             });
             view.move([rs.at(0)], rs.at(1), 'after');
          });
+         it('should destroy mover after change data source', function () {
+            var target = $('<div><div></div></div>'),
+               rs = new RecordSet({
+                  rawData: [{id: 1},{id:2}]
+               }),
+               view = new ListView({
+                  container: target,
+                  items: rs,
+                  idProperty: 'id'
+               }),
+               dataSource = new Memory({
+                  data: [{id: 1}, {id: 2}]
+               }),
+               mover = view._getMover();
+            view.setDataSource(dataSource);
+            assert.notEqual(view._getMover(), mover)
+         });
       });
       describe('onEndMove', function () {
          it('should trigger onEndMove', function (done) {

@@ -18,7 +18,8 @@ define('Controls/BreadCrumbs', [
    'use strict';
 
    /**
-    * Компонент - хлебные крошки
+    * Breadcrumbs.
+    *
     * @class Controls/BreadCrumbs
     * @extends Core/Control
     * @mixes Controls/interface/ISource
@@ -80,5 +81,6 @@ define('Controls/BreadCrumbs', [
          this._children.menuOpener.close();
       }
    });
+
    return BreadCrumbs;
 });

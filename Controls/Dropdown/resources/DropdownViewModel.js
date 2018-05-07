@@ -18,7 +18,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
 
             this._itemsModel = new ItemsViewModel({
                items: this._getCurrentRootItems(cfg),
-               idProperty: cfg.keyProperty,
+               keyProperty: cfg.keyProperty,
                displayProperty: 'title'
             });
             this._hierarchy = new Hierarchy({

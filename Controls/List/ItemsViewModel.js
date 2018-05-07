@@ -69,12 +69,12 @@ define('Controls/List/ItemsViewModel',
 
             return {
                getPropValue: ItemsUtil.getPropertyValue,
-               idProperty: this._options.idProperty,
+               keyProperty: this._options.keyProperty,
                displayProperty: this._options.displayProperty,
                index: this._curIndex,
                item: dispItem.getContents(),
                dispItem: dispItem,
-               key: ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.idProperty)
+               key: ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.keyProperty)
             };
          },
 
@@ -84,7 +84,7 @@ define('Controls/List/ItemsViewModel',
                dispItem = this._display.at(itemIndex);
             return {
                getPropValue: ItemsUtil.getPropertyValue,
-               idProperty: this._options.idProperty,
+               keyProperty: this._options.keyProperty,
                displayProperty: this._options.displayProperty,
                index: itemIndex,
                item: dispItem.getContents(),
@@ -96,8 +96,8 @@ define('Controls/List/ItemsViewModel',
             return this._curIndex;
          },
 
-         getItemById: function(id, idProperty) {
-            return this._display ? ItemsUtil.getDisplayItemById(this._display, id, idProperty) : undefined;
+         getItemById: function(id, keyProperty) {
+            return this._display ? ItemsUtil.getDisplayItemById(this._display, id, keyProperty) : undefined;
          },
 
          moveItems: function(movedItems, target, position) {

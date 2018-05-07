@@ -12,7 +12,8 @@ define('Controls/List/ListControl', [
    };
 
    /**
-    * Компонент плоского списка, с произвольным шаблоном отображения каждого элемента. Обладает возможностью загрузки/подгрузки данных из источника.
+    * Plain list control with custom item template. Can load data from data source.
+    *
     * @class Controls/List
     * @extends Controls/List/BaseControl
     * @mixes Controls/interface/ISource
