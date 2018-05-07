@@ -44,8 +44,10 @@ define('Controls/Input/Mask',
        *
        * @example
        * <pre>
-       *    1. 'dd.dd' - маска ввода времени.
-       *    2. 'dd.dd.dddd' - маска ввода даты.
+       *    1. 'dd.dd' - the input mask time.
+       *    2. 'dd.dd.dddd' - the input mask date.
+       *    3. 'd\{1,3}l\{1,3}'.
+       *    4. 'd\*' - the input mask infinity number of digits.
        * </pre>
        */
 
