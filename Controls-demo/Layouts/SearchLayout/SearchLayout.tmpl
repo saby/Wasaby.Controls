@@ -22,77 +22,36 @@
                                               <ws:partial
                                                       template="tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate"/>
                                            </ws:itemTemplate>
+                                           <ws:additionalTemplate>
+                                              <ws:partial
+                                                      template="tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/additionalItemsTemplate"/>
+                                           </ws:additionalTemplate>
                                            <ws:items>
                                               <ws:Array>
                                                  <ws:Object id="FIO" value="Name" resetValue="" visibility="{{false}}">
-                                                    <ws:additionalTemplate>
-                                                       <Controls.Button style="linkMain" caption="CheckBox"/>
-                                                    </ws:additionalTemplate>
+
                                                  </ws:Object>
                                                  <ws:Object id="firstName" value="123" resetValue="" visibility="{{false}}">
-                                                    <ws:additionalTemplate>
-                                                       <Controls.Button style="linkMain" caption="FilterText"/>
-                                                    </ws:additionalTemplate>
                                                  </ws:Object>
                                                  <ws:Object id="id" value="{{3}}" resetValue="{{4}}"
                                                             source="{{sourceDropdown}}" visibility="{{false}}">
-                                                    <ws:additionalTemplate>
-                                                       <Controls.Filter.Button.Panel.FilterSelect
-                                                               keyProperty="key">
-                                                          <ws:items>
-                                                             <ws:Array>
-                                                                <ws:Object key="{{2}}" value="Россия"/>
-                                                                <ws:Object key="{{3}}" value="США"/>
-                                                                <ws:Object key="{{4}}" value="UK"/>
-                                                             </ws:Array>
-                                                          </ws:items>
-                                                       </Controls.Filter.Button.Panel.FilterSelect>
-                                                    </ws:additionalTemplate>
                                                  </ws:Object>
                                                  <ws:Object id="checked" value="{{true}}" resetValue="{{false}}" visibility="{{false}}">
-                                                    <ws:additionalTemplate>
-                                                       <Controls.Button style="linkMain" caption="Test1"/>
-                                                    </ws:additionalTemplate>
                                                  </ws:Object>
                                                  <ws:Object id="Test1" value="{{3}}" resetValue="{{2}}" source="{{sourceDropdown}}"
                                                             visibility="{{false}}">
-                                                    <ws:additionalTemplate>
-                                                       <Controls.Filter.Button.Panel.FilterDropdown
-                                                               source="{{sourceDropdown}}"
-                                                               keyProperty="key"
-                                                               selectedKeys="2"/>
-                                                    </ws:additionalTemplate>
                                                  </ws:Object>
                                                  <ws:Object id="Test2" value="" resetValue="{{true}}" visibility="{{false}}">
-                                                    <ws:additionalTemplate>
-                                                       <Controls.Button style="linkMain" caption="Test2"/>
-                                                    </ws:additionalTemplate>
                                                  </ws:Object>
                                                  <ws:Object id="Test3" value="" resetValue="{{true}}" visibility="{{false}}">
-                                                    <ws:additionalTemplate>
-                                                       <Controls.Button style="linkMain" caption="Test3"/>
-                                                    </ws:additionalTemplate>
                                                  </ws:Object>
                                                  <ws:Object id="Test4" value="" resetValue="{{true}}" visibility="{{false}}">
-                                                    <ws:additionalTemplate>
-                                                       <Controls.Button style="linkMain" caption="Test4"/>
-                                                    </ws:additionalTemplate>
                                                  </ws:Object>
                                                  <ws:Object id="Test5" value="" resetValue="{{true}}" visibility="{{false}}">
-                                                    <ws:additionalTemplate>
-                                                       <Controls.Button style="linkMain" caption="Test5"/>
-                                                    </ws:additionalTemplate>
                                                  </ws:Object>
                                                  <ws:Object id="Test6" value="123" resetValue="" visibility="{{false}}">
-                                                    <ws:additionalTemplate>
-                                                       <Controls.Button style="linkMain" caption="Test6"/>
-                                                    </ws:additionalTemplate>
                                                  </ws:Object>
-
                                                  <ws:Object id="Test7" value="{{_value}}" resetValue="{{1}}" visibility="{{false}}">
-                                                    <ws:additionalTemplate>
-                                                       <Controls.Button style="linkMain" caption="List"/>
-                                                    </ws:additionalTemplate>
                                                  </ws:Object>
                                                  <ws:Object id="Test8" value="{{1}}" resetValue="{{true}}" visibility="{{true}}">
                                                  </ws:Object>

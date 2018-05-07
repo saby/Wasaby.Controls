@@ -5,7 +5,9 @@
    <div class="controls-AdditionalParams__items controls-AdditionalParams_maxHeight" name="items">
       <ws:for data="index, item in _options.items">
          <div if="{{!item.visibility}}" class="controls-AdditionalParams__item">
-            <ws:partial template="{{item.additionalTemplate}}" on:click="_clickItemHandler(index)"
+            <ws:partial template="{{_options.additionalTemplate}}"
+                        item="{{item}}"
+                        on:click="_clickItemHandler(index)"
                         on:valueChanged="_valueChangedHandler(index)"
                         on:selectedKeysChanged="_valueChangedHandler(index)"/>
          </div>

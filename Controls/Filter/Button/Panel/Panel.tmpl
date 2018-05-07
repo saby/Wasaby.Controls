@@ -23,6 +23,7 @@
                              on:valueChanged="_valueChangedHandler()"
                              class="controls-FilterPanel__PropertyGrid"/>
       <Controls.Filter.Button.Panel.AdditionalParams if="{{_hasAdditionalParams}}" items="{{_items}}"
+                                                     additionalTemplate="{{_options.additionalTemplate}}"
                                                      on:valueChanged="_valueChangedHandler()"/>
    </div>
    </ws:contentArea>

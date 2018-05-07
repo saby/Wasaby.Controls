@@ -1,0 +1,48 @@
+<ws:if data="{{item.id === 'FIO'}}">
+   <Controls.Button style="linkMain" caption="FIO"/>
+</ws:if>
+<ws:if data="{{item.id === 'firstName'}}">
+<Controls.Button style="linkMain" caption="firstName"/>
+</ws:if>
+<ws:if data="{{item.id === 'id'}}">
+<Controls.Filter.Button.Panel.FilterSelect
+        keyProperty="key">
+   <ws:items>
+      <ws:Array>
+         <ws:Object key="{{2}}" value="Россия"/>
+         <ws:Object key="{{3}}" value="США"/>
+         <ws:Object key="{{4}}" value="UK"/>
+      </ws:Array>
+   </ws:items>
+</Controls.Filter.Button.Panel.FilterSelect>
+</ws:if>
+<ws:if data="{{item.id === 'checked'}}">
+<Controls.Button style="linkMain" caption="Test1"/>
+</ws:if>
+<ws:if data="{{item.id === 'Test1'}}">
+<Controls.Filter.Button.Panel.FilterDropdown
+        source="{{item.source}}"
+        keyProperty="key"
+        selectedKeys="{{2}}"/>
+</ws:if>
+<ws:if data="{{item.id === 'Test2'}}">
+<Controls.Button style="linkMain" caption="Test2"/>
+</ws:if><ws:if data="{{item.id === 'Test3'}}">
+<Controls.Button style="linkMain" caption="Test3"/>
+</ws:if><ws:if data="{{item.id === 'Test4'}}">
+<Controls.Button style="linkMain" caption="Test4"/>
+</ws:if>
+<ws:if data="{{item.id === 'Test5'}}">
+<Controls.Button style="linkMain" caption="FilterText"/>
+</ws:if>
+<ws:if data="{{item.id === 'Test6'}}">
+<Controls.Button style="linkMain" caption="Test6"/>
+</ws:if>
+<ws:if data="{{item.id === 'Test7'}}">
+<Controls.Button style="linkMain" caption="Test7"/>
+</ws:if>
+<ws:if data="{{item.id === 'Test8'}}">
+<Controls.Toggle.Checkbox bind:value="item.value" caption="Test8"/>
+</ws:if>
+
+
