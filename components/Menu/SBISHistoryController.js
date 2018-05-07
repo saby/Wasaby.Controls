@@ -22,7 +22,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
       },
 
       getAdapter: function(self) {
-         return self._adapterf || new SbisAdapter();
+         return self._adapter || new SbisAdapter();
       },
 
       getConfig: function(self) {
