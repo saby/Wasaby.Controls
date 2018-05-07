@@ -118,10 +118,8 @@ define('Controls/Calendar/MonthView/MonthViewModel', [
 
          if (scope.weekend) {
             textColorClass += '-weekend';
-            backgroundColorClass += '-weekend';
          } else {
             textColorClass += '-workday';
-            backgroundColorClass += '-workday';
          }
 
          if (scope.selected) {
