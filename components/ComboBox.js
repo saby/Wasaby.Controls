@@ -596,6 +596,10 @@ define('SBIS3.CONTROLS/ComboBox', [
             targetPart: true,
             activableByClick: false,
             closeOnTargetMove: true,
+            handlers: {
+               onShow: this._revertArrow.bind(this, true),
+               onClose: this._revertArrow.bind(this, false)
+            },
             template : this._dotTplFnPicker
          };
       },
@@ -847,7 +851,6 @@ define('SBIS3.CONTROLS/ComboBox', [
             }
          }
 
-         this._revertArrow(true);
          $('.controls-ComboBox__item', this._picker.getContainer()).bind('mouseenter', function itemMouseEnter(event) {
             //не устанавливаем title на мобильных устройствах:
             //во-первых не нужно, во-вторых на ios из-за установки аттрибута не работает клик
@@ -872,7 +875,6 @@ define('SBIS3.CONTROLS/ComboBox', [
          if (this._picker) {
             $('.controls-ComboBox__item', this._picker.getContainer()).unbind();
          }
-         this._revertArrow(false);
          ComboBox.superclass.hidePicker.apply(this, arguments);
       },
 
