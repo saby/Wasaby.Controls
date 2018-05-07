@@ -97,7 +97,7 @@ define('Controls/Container/List',
          },
          
          getValueFromContext: function(context, contextField, valueField) {
-            if(context && context.hasOwnProperty(contextField)) {
+            if (context && context.hasOwnProperty(contextField)) {
                return context[contextField][valueField];
             } else {
                return null;
@@ -106,13 +106,13 @@ define('Controls/Container/List',
          
          isFilterChanged: function(self, context) {
             var oldValue = this.getFilterFromContext(self, self._contextObj),
-                newValue = this.getFilterFromContext(self, context);
+               newValue = this.getFilterFromContext(self, context);
             return newValue && !isEqual(oldValue, newValue);
          },
          
          isSearchValueChanged: function(self, context) {
             var oldValue = this.getSearchValueFromContext(self, self._contextObj),
-                newValue = this.getSearchValueFromContext(self, context);
+               newValue = this.getSearchValueFromContext(self, context);
             return !isEqual(oldValue, newValue);
          },
          
