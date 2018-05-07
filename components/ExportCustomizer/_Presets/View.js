@@ -9,6 +9,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
    [
       'SBIS3.CONTROLS/CompoundControl',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
+      'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/item',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/footer',
       'css!SBIS3.CONTROLS/ExportCustomizer/_Presets/View'
    ],
@@ -38,15 +39,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
 
          _modifyOptions: function () {
             var options = View.superclass._modifyOptions.apply(this, arguments);
-            //////////////////////////////////////////////////^^^
-            options._items = [
-               {'id':'ID-1', 'title':'Пресет 1'},
-               {'id':'ID-2', 'title':'Пресет 2'},
-               {'id':'ID-3', 'title':'Пресет 3'},
-               {'id':'ID-4', 'title':'Пресет 4'},
-               {'id':'ID-5', 'title':'Пресет 5'}
-            ];
-            //////////////////////////////////////////////////
             return options;
          },
 
@@ -86,9 +78,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   }
                }
             }
-            //////////////////////////////////////////////////
-            console.log('DBG: ExC_Presets.setValues: has=', has, '; values=', values, ';');
-            //////////////////////////////////////////////////
             if (has.xxx) {
             }
             else
