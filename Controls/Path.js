@@ -2,6 +2,7 @@ define('Controls/Path', [
    'Core/Control',
    'Controls/Utils/BreadCrumbsUtil',
    'Controls/List/resources/utils/ItemsUtil',
+   'Controls/Utils/FontLoadUtil',
    'tmpl!Controls/Path/Path',
    'tmpl!Controls/Button/BackButton/Back',
    'css!Controls/Path/Path'
@@ -9,6 +10,7 @@ define('Controls/Path', [
    Control,
    BreadCrumbsUtil,
    ItemsUtil,
+   FontLoadUtil,
    template,
    backButtonTemplate
 ) {
@@ -69,8 +71,10 @@ define('Controls/Path', [
       _afterMount: function() {
          this._oldWidth = this._container.clientWidth;
          if (this._options.items && this._options.items.length > 0) {
-            _private.calculateItems(this, this._options.items);
-            this._forceUpdate();
+            FontLoadUtil.waitForFontLoad('TensorFont').addCallback(function() {
+               _private.calculateItems(this, this._options.items);
+               this._forceUpdate();
+            }.bind(this));
          }
       },
 
