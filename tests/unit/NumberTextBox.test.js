@@ -78,6 +78,13 @@ define(['SBIS3.CONTROLS/NumberTextBox'], function (NumberTextBox) {
                 NTB.setProperty('onlyPositive', false);
                 assert.equal(NTB._getInputValue(), '123.12');
             });
+           it('should not lose triads', function() {
+              NTB.setProperty('integers', 16);
+              NTB.setProperty('decimals', 0);
+              NTB.setProperty('delimiters', true);
+              NTB.setText('123 123 123 123 123');
+              assert.equal(NTB._getInputValue(), '123 123 123 123 123');
+           });
         });
         describe('Caret Position', function () {
             it('Delete last symbol in integer part', function () {

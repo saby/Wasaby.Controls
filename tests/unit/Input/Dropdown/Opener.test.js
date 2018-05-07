@@ -48,7 +48,6 @@ define(
             opener.open({
                templateOptions: {
                   items: {
-                     getIdProperty: () => {},
                      each: () => {}
                   }
                }
@@ -59,7 +58,6 @@ define(
             let cfg = {
                templateOptions: {
                   items: {
-                     getIdProperty: () => {},
                      each: () => {}
                   }
                }

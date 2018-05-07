@@ -2,7 +2,7 @@ define('Controls/interface/IRemovable', [], function() {
 
 
    /**
-    * Interface for remove instances from collection
+    * Interface for item removal in collections.
     *
     * @mixin Controls/interface/IRemovable
     * @public
@@ -11,15 +11,15 @@ define('Controls/interface/IRemovable', [], function() {
    /**
     * @event Controls/interface/IRemovable#beforeItemsRemove Fires before items are removed.
     * @param {Core/EventObject} eventObject The event descriptor.
-    * @param {Array.<String>|Array.<Number>} idArray Array of identifiers of removable items.
+    * @param {Array.<String>|Array.<Number>} idArray Array of identifiers of items to be removed.
     * @returns {*} result If result=false then canceled the logic of removing the items by default.
     */
 
    /**
-    * @event Controls/interface/IRemovable#afterItemsRemove Fires after items are removed.
+    * @event Controls/interface/IRemovable#afterItemsRemove Fires after items were removed.
     * @param {Core/EventObject} eventObject The event descriptor.
-    * @param {Array.<String>|Array.<Number>} idArray Array of identifiers of removable items.
-    * @param {*} result The result of removing items from the data source.
+    * @param {Array.<String>|Array.<Number>} idArray Array of identifiers of removed items.
+    * @param {*} result The result of item removal from the data source.
     */
 
    /**

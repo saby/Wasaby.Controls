@@ -5,7 +5,8 @@ define('Controls/Dropdown/Opener',
    ],
    function(Sticky, Hierarchy) {
       /**
-       * Действие открытия прилипающего окна
+       * Opener for dropdown menu.
+       *
        * @class Controls/Dropdown/Opener
        * @mixes Controls/interface/IDropdown
        * @control
@@ -44,7 +45,7 @@ define('Controls/Dropdown/Opener',
                nodeProperty = (configOptions && configOptions.nodeProperty) || compOptions && compOptions.nodeProperty,
                items = configOptions && configOptions.items,
                hierarchy = new Hierarchy({
-                  idProperty: items.getIdProperty(),
+                  keyProperty: items.keyProperty,
                   parentProperty: parentProperty,
                   nodeProperty: nodeProperty
                }),
@@ -62,7 +63,7 @@ define('Controls/Dropdown/Opener',
                icon = item.get('icon');
                if (icon) {
                   pid = item.get(parentProperty);
-                  if (!parents.hasOwnProperty(pid)) {
+                  if (!parents.hasOwnProperty(pid) && pid) {
                      iconSize = _private.getIconSize(icon);
                      parents[pid] = [pid, iconSize];
                   }
@@ -97,7 +98,6 @@ define('Controls/Dropdown/Opener',
       };
 
       var DropdownOpener = Sticky.extend({
-         _controlName: 'Controls/Dropdown/Opener',
          _itemTemplateDeferred: undefined,
 
          open: function(config, opener) {

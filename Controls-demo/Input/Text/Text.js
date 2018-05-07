@@ -16,11 +16,12 @@ define('Controls-demo/Input/Text/Text', [
       _trim: false,
       _maxLength: '',
       _selectOnClick: false,
+      _readOnly: false,
 
-      valueChangedHandler: function () {
-         if (this._validationErrorsValue){
+      valueChangedHandler: function() {
+         if (this._validationErrorsValue) {
             this._validationErrors = ['Some error'];
-         } else{
+         } else {
             this._validationErrors = null;
          }
       },

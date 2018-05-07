@@ -8,9 +8,10 @@ define('Controls/Toggle/Radio', [
 ], function(Control, SourceController, template, defaultItemTemplate) {
 
    /**
-    * Group of radioButton.
+    * Radio button switch.
+    *
     * @class Controls/Toggle/Radio
-    * @extends Controls/Control
+    * @extends Core/Control
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/ISingleSelectable
     * @control
@@ -66,6 +67,12 @@ define('Controls/Toggle/Radio', [
          }
       }
    });
+
+   Radio.getDefaultOptions = function getDefaultOptions() {
+      return {
+         direction: 'vertical'
+      };
+   };
 
    Radio._private = _private;
 

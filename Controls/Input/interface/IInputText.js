@@ -2,7 +2,7 @@ define('Controls/Input/interface/IInputText', [
 ], function() {
 
    /**
-    * Интерфейс работы текстового поля ввода.
+    * Interface for text inputs.
     *
     * @mixin Controls/Input/interface/IInputText
     * @public
@@ -10,16 +10,16 @@ define('Controls/Input/interface/IInputText', [
 
    /**
     * @name Controls/Input/interface/IInputText#value
-    * @cfg {String} Значение поля.
+    * @cfg {String} Field value.
     */
 
    /**
-    * @event Controls/Input/interface/IInputText#valueChanged Происходит при изменении текста в поле ввода.
-    * @param {String} value Новое значение поля.
+    * @event Controls/Input/interface/IInputText#valueChanged Occurs when field value was changed.
+    * @param {String} value New field value.
     */
 
    /**
-    * @event Controls/Input/interface/IInputText#inputCompleted Происходит при завершении ввода.
-    * @param {String} value Новое значение поля.
+    * @event Controls/Input/interface/IInputText#inputCompleted Occurs when input was completed.
+    * @param {String} value Field value.
     */
 });

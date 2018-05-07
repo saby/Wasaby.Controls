@@ -1,0 +1,59 @@
+//!IMPORTANT лучше чем увеличение веса селектора через BODY тк возможно собирать тему под селектором
+.ws-window.ws-LoadingIndicator__window {
+  background-color: #FCFCFC !important;
+}
+.ws-window-content {
+  background-color: #FFFFFF !important;
+  border-color: #BDBDBD !important;;
+}
+.ws-window-content, .ws-float-area-stack-panel-shadow {
+  .ws-sticky-header__table-header-copy,
+  .ws-sticky-header__block.ws-sticky-header__fixed,
+  .ws-sticky-header__table-header-copy {
+    background-color: #FFFFFF !important;
+  }
+}
+.ws-window-title, .ws-float-area-title {
+  color: #FFFFFF !important;;
+}
+//todo: Контролы на темном заголовке в светлой теме имеют нестандартные цвета. Разобраться с этим.
+.controls-DateRangeBigChoose {
+  .controls-InputRender {
+    background-color: rgba(109, 141, 176, 0.005);
+    color: #E4E4E4;
+  }
+  .controls-Text-InputRender_state_active {
+    border-color: #6d8db0;
+  }
+  .controls-Text-InputRender_state_default {
+    border-color: rgba(109, 141, 176, 0.4) rgba(109, 141, 176, 0.4) #6d8db0 rgba(109, 141, 176, 0.4);
+  }
+  .controls-Text-InputRender_state_default:hover {
+    border-color: #6d8db0;
+  }
+  .controls-DateRangeSlider__normal.ws-enabled {
+    color: #26b8ff;
+  }
+  .controls-DateRangeSlider__value-enabled:hover {
+    color: #b9e9ff;
+  }
+}
+.controls-Link.controls__filter-button__clear-filter {
+  color: #26B8FF;
+  &.ws-disabled {
+    color: #4B688B;
+  }
+}
+.ws-window-overlay {
+  background-color: rgba(0,0,0,.5);
+}
+
+/* Т.к. стилизация строки поиска в шапке панели сейчас сделана на прикладной стороне,
+   а доступа к панели автодополнения у них нет, то делаю вот так.
+   на vdom контролах у нас из коробки можно будет стилизовать компонент для шапки панели. */
+.ws-window-titlebar-custom,
+.ws-window-titlebar {
+  .controls-searchForm__suggest-shown {
+    background-color: #39506a !important;
+  }
+}

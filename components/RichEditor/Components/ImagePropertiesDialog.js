@@ -5,101 +5,137 @@ define('SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog', [
    'Deprecated/Controls/FieldInteger/FieldInteger',
    'Deprecated/Controls/FieldDropdown/FieldDropdown',
    'Deprecated/Controls/FieldLabel/FieldLabel'
-], function(CompoundControl, dotTplFn) {
+], function (CompoundControl, dotTplFn) {
 
 
    var moduleClass = CompoundControl.extend({
       _dotTplFn: dotTplFn,
       $protected: {
-         _options: {
-            
-         }
+         /*_options: {
+         }*/
+         _dialog: null,
+         _applyButton: null,
+         _imageHeight: null,
+         _imageWidth: null,
+         _valueType: null
       },
-      $constructor: function() {
-      },
+      /*$constructor: function () {
+      },*/
 
-      init: function() {
+      init: function () {
          moduleClass.superclass.init.call(this);
 
-         var
-            ctrlDialog = this.getParent(),
-            ctrlApplyButton = this.getChildControlByName("applyButton"),
-            ctrlImageHeight = this.getChildControlByName("imageHeight"),
-            ctrlImageWidth = this.getChildControlByName("imageWidth"),
-            ctrlValueType = this.getChildControlByName('valueType'),
-            options = this._options,
-            $image = options.selectedImage,
-            image = $image[0],
-            naturalHeight = image.naturalHeight,
-            naturalWidth = image.naturalWidth,
-            currentHeight = image.style.height ||  $image.height() + 'px' || '',
-            currentWidth = image.style.width || $image.width() + 'px' ||'',
-            percentSizes = currentHeight.indexOf('%') !== -1 || currentWidth.indexOf('%') !== -1,
-            horizontalAspect = naturalWidth / naturalHeight,
-            verticalAspect = naturalHeight / naturalWidth,
-            updateCtrlImageWidth = function() {
-               var heightValue = ctrlImageHeight.getValue();
-               if (ctrlValueType.getValue() === 'per') {
-                  ctrlImageWidth.setValue(heightValue, undefined, heightValue === 0);
-               } else {
-                  ctrlImageWidth.setValue(heightValue !== null ? heightValue * horizontalAspect : null, undefined, heightValue === 0);
-               }
-            }.bind(ctrlImageHeight),
-            validators =[{
-               validator: function() {
-                  var value = this.getValue();
-                  return value !== 0;
-               },
-               errorMessage: 'Значение не может быть равно нулю!'
-            }],
-            valueTypeChange = function() {
-               if (ctrlValueType.getValue() === 'per') {
-                  ctrlImageWidth.setValue(parseInt(100*$image.width()/options.editorWidth,10));
-                  ctrlImageHeight.setValue(parseInt(100*$image.width()/options.editorWidth,10));
-               } else {
-                  ctrlImageWidth.setValue($image.width());
-                  ctrlImageHeight.setValue( $image.height());
-               }
-            };
+         this._dialog = this.getParent();
+         this._applyButton = this.getChildControlByName('applyButton');
+         this._imageHeight = this.getChildControlByName('imageHeight');
+         this._imageWidth = this.getChildControlByName('imageWidth');
+         this._valueType = this.getChildControlByName('valueType');
 
+         var validators = [{
+            validator: function () {
+               return this.getValue() !== 0;
+            },
+            errorMessage: 'Значение не может быть равно нулю!'
+         }];
+         this._imageWidth.setValidators(validators);
+         this._imageHeight.setValidators(validators);
 
-         ctrlImageHeight.setValidators(validators);
-         ctrlImageWidth.setValidators(validators);
-         ctrlApplyButton.subscribe("onActivated", function() {
-          if (ctrlImageWidth.validate() && ctrlImageHeight.validate()) {
-             this.sendCommand('saveImage');
-             ctrlDialog.close();
-          }
-         }.bind(this));
-         
-         ctrlImageHeight.subscribe("onChange", updateCtrlImageWidth);
-         ctrlValueType.subscribe("onChange", valueTypeChange);
-         
-         ctrlImageWidth.subscribe("onChange", function(){
-            var
-               widthValue = ctrlImageWidth.getValue();
-            if (ctrlValueType.getValue() === 'per') {
-               ctrlImageHeight.setValue(widthValue, undefined, widthValue === 0);
-            } else {
-               ctrlImageHeight.setValue(widthValue !== null ? widthValue * verticalAspect : null, undefined, widthValue === 0);
+         this._bindEvents();
+      },
+
+      _bindEvents: function () {
+         this.subscribeTo(this._dialog, 'onBeforeShow', function () {
+            var options = this._options;
+            var pixelSize = options.pixelSize;
+            var isPercents = this._isInitialUsedPercents();
+            var size;
+            if (isPercents) {
+               var percentValue = this._getInitialPercentValue();
+               size = {width:percentValue, height:percentValue};
             }
-         });
-         
-         ctrlDialog.subscribe("onBeforeShow", function() {
-            ctrlImageHeight.setValue(currentHeight.length ? parseInt(currentHeight, 10) : null, undefined, parseInt(currentHeight, 10) === 0);
-            ctrlImageHeight.setTooltip(parseInt($image.height(), 10));
-            ctrlImageWidth.setValue(currentWidth.length ? parseInt(currentWidth, 10) : null, undefined, parseInt(currentWidth, 10) === 0);
-            ctrlImageWidth.setTooltip(parseInt($image.width(), 10));
-            ctrlValueType.setValue(percentSizes ? 'per' : 'pix');
-         });
-         if (percentSizes) {
-            var
-               basis = currentHeight.indexOf('%') !== -1 ? currentHeight : currentWidth;
-            currentHeight = currentWidth = basis;
+            else {
+               size = pixelSize;
+            }
+            this._imageWidth.setValue(size.width, undefined, !size.width);
+            this._imageWidth.setTooltip(pixelSize.width);
+            this._imageHeight.setValue(size.height, undefined, !size.height);
+            this._imageHeight.setTooltip(pixelSize.height);
+            this._valueType.setValue(isPercents ? 'per' : 'pix');
+         }.bind(this));
+
+         this.subscribeTo(this._applyButton, 'onActivated', function () {
+            if (this._imageWidth.validate() && this._imageHeight.validate()) {
+               this.sendCommand('saveImage');
+               this._dialog.close();
+            }
+         }.bind(this));
+
+         this.subscribeTo(this._imageWidth, 'onChange', this._onSizeChanged.bind(this, true));
+
+         this.subscribeTo(this._imageHeight, 'onChange', this._onSizeChanged.bind(this, false));
+
+         this.subscribeTo(this._valueType, 'onChange', function () {
+            var options = this._options;
+            var size;
+            if (this._isPercents()) {
+               var percentValue = this._getInitialPercentValue();
+               size = {width:percentValue, height:percentValue};
+            }
+            else {
+               size = options.pixelSize;
+            }
+            this._imageWidth.setValue(size.width);
+            this._imageHeight.setValue(size.height);
+         }.bind(this));
+      },
+
+      _onSizeChanged: function (useWidth) {
+         var primary = useWidth ? this._imageWidth : this._imageHeight;
+         var secondary = useWidth ? this._imageHeight : this._imageWidth;
+         var value = primary.getValue();
+         if (this._isPercents()) {
+            if (100 < value) {
+               value = 100;
+               primary.setValue(value, undefined, false);
+            }
+            secondary.setValue(value, undefined, !value);
          }
+         else {
+            var options = this._options;
+            var naturalSize = options.naturalSize;
+            var aspect = useWidth ? naturalSize.height/naturalSize.width : naturalSize.width/naturalSize.height;
+            var maxValue = useWidth ? options.editorWidth : options.editorWidth/aspect;
+            if (maxValue < value) {
+               value = maxValue;
+               primary.setValue(value, undefined, false);
+            }
+            secondary.setValue(value ? value*aspect : null, undefined, !value);
+         }
+      },
+
+      _isInitialUsedPercents: function () {
+         var cssSize = this._options.cssSize;
+         return cssSize.height.indexOf('%') !== -1 || cssSize.width.indexOf('%') !== -1;
+      },
+
+      _getInitialPercentValue: function () {
+         var options = this._options;
+         if (this._isInitialUsedPercents()) {
+            var cssSize = options.cssSize;
+            return parseInt(cssSize.height.indexOf('%') !== -1 ? cssSize.height : cssSize.width);
+         }
+         else {
+            return 100*options.pixelSize.width/options.editorWidth;
+         }
+      },
+
+      _isPercents: function () {
+         return this._valueType.getValue() === 'per';
       }
    });
+
    moduleClass.title = rk('Свойства');
    moduleClass.dimensions = {"autoWidth":false,"autoHeight":false,"resizable":false,"width":260,"height":84};
+
    return moduleClass;
 });

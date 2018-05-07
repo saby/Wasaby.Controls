@@ -1,19 +1,20 @@
 define('Controls/Toggle/interface/ICheckable', [], function() {
 
    /**
-    * Интерфейс работы двухпозиционного переключетеля
+    * Interface for 2-position switch.
+    *
     * @mixin Controls/Toggle/interface/ICheckable
     * @public
     */
 
    /**
     * @name Controls/Toggle/interface/ICheckable#value
-    * @cfg {Boolean} Состояние переключателя
+    * @cfg {Boolean} Current state.
     */
 
    /**
-    * @event Controls/Toggle/interface/ICheckable#valueChanged Происходит при изменении состояния переключателя.
-    * @param {Boolean} value Новое состояние
+    * @event Controls/Toggle/interface/ICheckable#valueChanged Occurs when state changes.
+    * @param {Boolean} value New state.
     */
 
 });

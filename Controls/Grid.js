@@ -10,10 +10,10 @@ define('Controls/Grid', [
    'use strict';
 
    /**
-    * Компонент плоского списка, отображаемого в виде таблицы. Обладает возможностью загрузки/подгрузки данных из источника.
+    * Table-looking list. Can load data from data source.
     *
     * @class Controls/Grid
-    * @extends Controls/Control
+    * @extends Controls/List
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/ISingleSelectable
     * @mixes Controls/interface/IPromisedSelectable

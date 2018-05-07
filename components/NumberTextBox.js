@@ -202,6 +202,14 @@ define('SBIS3.CONTROLS/NumberTextBox', [
          if(this._options.text && !this._options.numericValue) {
              this.setNumericValue(this._options.text);
          }
+         this._inputField.on('input', function() {
+            //При вставке спец. символов не стреляет никаких событий, кроме input. Так что буду тут дёргать setText,
+            //чтобы отфильтровать лишнее
+            if (!self._pasteProcessing) {
+               self._setText(this.value);
+               self._setCaretPosition(self._caretPosition[0] + 1, self._caretPosition[1] + 1);
+            }
+         });
          this._initMirrorInput();
       },
 

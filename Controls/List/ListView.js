@@ -66,12 +66,19 @@ define('Controls/List/ListView', [
          },
 
          _onItemClick: function(e, dispItem) {
-            var item;
-            item = dispItem.getContents();
+            var item = dispItem.getContents();
             this._notify('itemClick', [item], {bubbling: true});
          },
+
          _onItemContextMenu: function(event, itemData) {
             this._notify('itemContextMenu', [itemData, event]);
+         },
+
+         _onItemSwipe: function(event, itemData) {
+            if (event.nativeEvent.direction === 'left' || event.nativeEvent.direction === 'right') {
+               event.currentTarget.focus();
+            }
+            this._notify('itemSwipe', [itemData, event]);
          }
 
       });

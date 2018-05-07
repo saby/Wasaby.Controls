@@ -308,7 +308,9 @@ define('SBIS3.CONTROLS/Storages/SBIS/SBISHistoryStorage', [
          if(!this._historyChannel.hasEventHandlers('onHistoryUpdate')) {
             delete STORAGES[this._options.historyId];
             this._historyChannel.destroy();
+            this._historyChannel = undefined;
          }
+         this._updateHistory = undefined;
          this._historyChannel = undefined;
          this._history = undefined;
          this._SBISStorage = undefined;

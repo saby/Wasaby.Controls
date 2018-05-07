@@ -58,7 +58,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
        * Пример 2:
        * Для перерасчетов размеров SBIS3.CONTROLS/ScrollContainer необходимо:
        * <pre class="brush: html">
-       * control._notify('onResize')
+       * this._notifyOnSizeChanged(true)
        * </pre>
        * control - экземпляр класса любого родительского контрола, в котором есть ScrollContainer
        *
@@ -156,7 +156,12 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                },
                takeScrollbarHidden: true
             },
-            _content: null
+            _content: null,
+
+            /**
+             * Indicates that user drags the scrollbar at the moment.
+             */
+            _scrollbarDragging: false
          },
 
          $constructor: function() {
@@ -303,9 +308,30 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                });
 
                this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
+               this.subscribeTo(this._scrollbar, 'onScrollbarStartDrag', this._setScrollbarDragging.bind(this, true));
+               this.subscribeTo(this._scrollbar, 'onScrollbarEndDrag', this._setScrollbarDragging.bind(this, false));
                this._resizeInner();
             }
-            this._toggleGradient();
+            if (!(this._getChildContentHeight() < 35)) {
+               this._toggleGradient();
+            }
+         },
+
+         /**
+          * Updates scrollbarDragging flag. Indicates that user drags the scrollbar at the moment.
+          *
+          * @param dragging
+          * @private
+          */
+         _setScrollbarDragging: function (dragging) {
+            this._scrollbarDragging = dragging;
+         },
+
+         /**
+          * Return true if the user is dragging the scrollbar.
+          */
+         isScrollbarDragging: function () {
+            return this._scrollbarDragging;
          },
 
          // Показать скролл
@@ -355,7 +381,9 @@ define('SBIS3.CONTROLS/ScrollContainer', [
             if (this._paging) {
                this._calcPagingSelectedKey(scrollTop);
             }
-            this._toggleGradient();
+            if (!(this._getChildContentHeight() < 35)) {
+               this._toggleGradient();
+            }
          },
 
          _onMouseenter: function() {
@@ -458,7 +486,9 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                 */
                EventBusChannel.subscribe('onRequestTakeScrollbar', this._requestTakeScrollbarHandler);
                EventBusChannel.unsubscribe('onReturnTakeScrollbar', this._returnTakeScrollbarHandler);
-               this._showScrollbar();
+               if (!(this._getChildContentHeight() < 35)) {
+                  this._showScrollbar();
+               }
             }
          },
 
@@ -537,7 +567,9 @@ define('SBIS3.CONTROLS/ScrollContainer', [
             }
             //ресайз может позваться до инита контейнера
             if (this._content) {
-               this._toggleGradient();
+               if (!(this._getChildContentHeight() < 35)) {
+                  this._toggleGradient();
+               }
                /**
                 * В firefox при высоте дочерних элементав < высоты скролла(34px) и резиновой высоте контейнера через max-height, нативный скролл не пропадает.
                 * В такой ситуации content имеет высоту скролла, а должен быть равен высоте дочерних элементав.
@@ -549,7 +581,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                if (cDetection.isIE) {
                   // Баг в ie. При overflow: scroll, если контент не нуждается в скроллировании, то браузер добавляет
                   // 1px для скроллирования.
-                  this._toggleOverflowHidden((this._getScrollHeight() - Math.floor(this._container.height())) <= 1);
+                  this._toggleOverflowHidden(((this._getScrollHeight() - Math.floor(this._container.height())) <= 1) || (this._getChildContentHeight() < 35));
                }
                if (!this._options.takeScrollbarHidden) {
                   this._subscribeTakeScrollbar();
