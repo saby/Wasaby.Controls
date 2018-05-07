@@ -1,0 +1,20 @@
+<div class="controls-AdditionalParams">
+   <!--<Controls.Header caption="{[Еще можно отобрать]}" style="primary" size="m" enabled="{{false}}"-->
+   <!--class="controls-FilterPanel__header-title"/>-->
+   <div class="controls-FilterPanel__caption">{[Еще можно отобрать]}</div>
+   <div class="controls-AdditionalParams__items controls-AdditionalParams_maxHeight" name="items">
+      <ws:for data="index, item in _options.items">
+         <div if="{{!item.visibility}}" class="controls-AdditionalParams__item">
+            <ws:partial template="{{item.additionalTemplate}}" on:click="_clickItemHandler(index)"
+                        on:valueChanged="_valueChangedHandler(index)"
+                        on:selectedKeysChanged="_valueChangedHandler(index)"/>
+         </div>
+      </ws:for>
+   </div>
+
+   <div if="{{_arrowVisible}}" class="controls-AdditionalParams__arrow">
+      <Controls.Button.BigSeparator
+              value="{{_isMaxHeight}}"
+              on:click="_clickSeparatorHandler()"/>
+   </div>
+</div>

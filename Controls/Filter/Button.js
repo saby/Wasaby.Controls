@@ -10,9 +10,9 @@ define('Controls/Filter/Button',
       'WS.Data/Utils',
       'css!Controls/Filter/Button/Button'
    ],
-
+   
    function(Control, template, moduleStubs, Chain, Utils) {
-
+      
       /**
        * @class Controls/Filter/Button
        * @extends Core/Control

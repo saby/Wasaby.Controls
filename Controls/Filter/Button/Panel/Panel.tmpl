@@ -1,4 +1,4 @@
-<Controls.Popup.Templates.Dialog.DialogTemplate caption="{{_options.title}}">
+<Controls.Popup.Templates.Dialog.DialogTemplate caption="{{_options.title}}" class="controls-PanelFilter__{{_options.size}}">
    <ws:topArea>
       <div class="controls-FilterPanel__header">
 
@@ -17,9 +17,13 @@
       </div>
    </ws:topArea>
    <ws:contentArea>
+      <div class="controls-FilterPanel__wrapper">
       <Controls.PropertyGrid items="{{_items}}"
                              itemTemplate="{{_options.itemTemplate}}"
                              on:valueChanged="_valueChangedHandler()"
                              class="controls-FilterPanel__PropertyGrid"/>
+      <Controls.Filter.Button.Panel.AdditionalParams if="{{_hasAdditionalParams}}" items="{{_items}}"
+                                                     on:valueChanged="_valueChangedHandler()"/>
+   </div>
    </ws:contentArea>
 </Controls.Popup.Templates.Dialog.DialogTemplate>
