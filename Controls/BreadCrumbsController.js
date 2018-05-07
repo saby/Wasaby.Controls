@@ -17,7 +17,6 @@ define('Controls/BreadCrumbsController', [
       _template: template,
       _visibleItems: [],
       _oldWidth: 0,
-      oldTime: 0,
 
       _afterMount: function() {
          if (this._options.items && this._options.items.length > 0) {
