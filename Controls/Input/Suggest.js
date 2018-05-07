@@ -83,12 +83,14 @@ define('Controls/Input/Suggest',
          _searchEnd: function() {
             this._searchState = false;
          }
+         
          // </editor-fold>
          
       });
       
       
       // <editor-fold desc="OptionsDesc">
+      
       Suggest.getOptionTypes = function() {
          return {
             displayProperty: types(String).required(),
