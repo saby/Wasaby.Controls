@@ -208,10 +208,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          _dotTplFn: tmpl,
          $protected: {
             _options: {
-               /**
-                * @cfg {string} Отображать как часть диалога (опционально)
-                */
-               dialogMode: null,
+               dialogMode: null,// {boolean} Отображать как часть диалога (опционально)
                /**
                 * @cfg {string} Отображать в режиме ожидания (опционально)
                 */
@@ -464,7 +461,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          _onChangePresets: function () {
             // Выбран новые предустановленные настройки экспорта
             var views = this._views;
-            var values = views.columnBinder.getValues();
+            var values = views.presets.getValues();
             var fieldIds = values.fieldIds;
             var fileUuid = values.fileUuid;
             if (fieldIds) {

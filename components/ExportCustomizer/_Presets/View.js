@@ -8,13 +8,14 @@
 define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
    [
       'SBIS3.CONTROLS/CompoundControl',
+      'WS.Data/Collection/RecordSet',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/item',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/footer',
       'css!SBIS3.CONTROLS/ExportCustomizer/_Presets/View'
    ],
 
-   function (CompoundControl, dotTplFn) {
+   function (CompoundControl, RecordSet, dotTplFn) {
       'use strict';
 
       /**
@@ -60,7 +61,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
 
          _modifyOptions: function () {
             var options = View.superclass._modifyOptions.apply(this, arguments);
-            options._items = options.statics;
+            var list = options.statics;
+            if (list && list.length) {
+               options._items = new RecordSet({
+                  rawData: list,
+                  idProperty: 'id'
+               });
+            }
             return options;
          },
 
@@ -69,13 +76,17 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
 
          init: function () {
             View.superclass.init.apply(this, arguments);
-            this._selector = this.getContainer().find('.controls-ExportCustomizer-Presets-View__button');
+            this._selector = this.getChildControlByName('controls-ExportCustomizer-Presets-View__button');
             this._bindEvents();
          },
 
          _bindEvents: function () {
-            /*^^^this.subscribeTo(this._selector, 'onItemActivate', function (evtName) {
-            }.bind(this));*/
+            this.subscribeTo(this._selector, 'onSelectedItemsChange', function (evtName, ids, changes) {
+               var selectedId = ids[0];
+               this._options.selectedId = selectedId;
+               this._selector.getProperty('dictionaries')[0].componentOptions.selectedKey = selectedId;
+               this.sendCommand('subviewChanged');
+            }.bind(this));
          },
 
          /**
@@ -115,10 +126,16 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           */
          getValues: function () {
             var options = this._options;
-            return {
-               fieldIds: options.fieldIds,
-               fileUuid: options.fileUuid
-            };
+            var items = options._items;
+            var selectedId = options.selectedId;
+            if (selectedId && items) {
+               var current = items.getRecordById(selectedId).getRawData();
+               return {
+                  fieldIds: current.fieldIds,
+                  fileUuid: current.fileUuid
+               };
+            }
+            return {};
          }
       });
 

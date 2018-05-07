@@ -3,8 +3,11 @@
       className="controls-ExportCustomizer-Presets-View__button"
       name="controls-ExportCustomizer-Presets-View__button"
       withoutCross="{{true}}"
+      items="{{_items}}"
       idProperty="id"
       displayProperty="title"
+      selectedKeys="{{selectedId ? [selectedId] : []}}"
+      multiselect="{{false}}"
       dictionaries="{{ [{
          'template': 'SBIS3.CONTROLS/ListView',
          'dialogOptions': {
@@ -22,7 +25,7 @@
             'displayProperty': 'title',
             'itemContentTpl': 'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/item',
             'itemsActionsInItemContainer': true,
-            'footerTpl': 'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/footer'
+            '___footerTpl': 'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/footer'
          }
       }] }}"
       >
