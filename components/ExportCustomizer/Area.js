@@ -373,8 +373,19 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * @param {object} options Опции компонента
           */
          _reshapeOptions: function (options) {
+            var staticPresets = options.staticPresets;
+            var hasStaticPresets = !!(staticPresets && staticPresets.length);
+            var currentPreset;
+            if (hasStaticPresets) {
+               var selectedPresetId = options.selectedPresetId;
+               if (selectedPresetId) {
+                  options.staticPresets.some(function (v) { if (v.id === selectedPresetId) { currentPreset = v; } });
+               }
+            }
+            var fieldIds = currentPreset ? currentPreset.fieldIds.slice() : (options.fieldIds ? options.fieldIds.slice() : null);
+            var fileUuid = currentPreset ? currentPreset.fileUuid : options.fileUuid;
             options._scopes = {
-               presets: (options.staticPresets && options.staticPresets.length) || options.presetNamespace ? {
+               presets: hasStaticPresets /*^^^|| options.presetNamespace*/ ? {
                   statics: options.staticPresets,
                   namespace: options.presetNamespace,
                   selectedId: options.selectedPresetId
@@ -384,14 +395,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   columnsTitle: options.columnBinderColumnsTitle || undefined,
                   fieldsTitle: options.columnBinderFieldsTitle || undefined,
                   allFields: options.allFields,
-                  fieldIds: options.fieldIds ? options.fieldIds.slice() : null
+                  fieldIds: fieldIds
                },
                formatter: {
                   title: options.formatterTitle,
                   menuTitle: options.formatterMenuTitle,
                   allFields: options.allFields,
-                  fieldIds: options.fieldIds ? options.fieldIds.slice() : null,
-                  fileUuid: options.fileUuid,
+                  fieldIds: fieldIds,
+                  fileUuid: fileUuid,
                   serviceParams: options.serviceParams
                }
             };
