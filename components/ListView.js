@@ -1353,7 +1353,12 @@ define('SBIS3.CONTROLS/ListView',
                itemActions.hide();
             }
             if (this._virtualScrollController) {
-              this._virtualScrollController._scrollHandler(event, scrollTop);
+               var scrollbarDragging = false;
+               try {
+                  scrollbarDragging = this._getScrollWatcher().getScrollContainerControl().isScrollbarDragging();
+               } catch(e) {}
+
+              this._virtualScrollController._scrollHandler(event, scrollTop, scrollbarDragging);
             }
          },
          _setScrollPagerPosition: function(){
@@ -4386,6 +4391,10 @@ define('SBIS3.CONTROLS/ListView',
                this._pager.destroy();
                this._pager = undefined;
                this._pagerContainer = undefined;
+            }
+            if (this._mover) {
+               this._mover.destroy();
+               this._mover = undefined;
             }
             this._destroyEditInPlaceController();
             ListView.superclass.setDataSource.apply(this, arguments);

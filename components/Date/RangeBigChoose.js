@@ -398,10 +398,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
 
        _onSelectionEnded: function () {
          if (this._startDatePicker.validate() && this._endDatePicker.validate()) {
-            this._notify('onChoose', this.getStartValue(), this.getEndValue());
             this._updateHeaderInputsVisibility();
             this._startDatePickerResetActive();
             this._endDatePickerResetActive();
+            this._notify('onChoose', this.getStartValue(), this.getEndValue());
          }
        },
        _onDateRangeSelectionEnded: function () {
@@ -441,13 +441,13 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
             }
             this.cancelSelection();
             this._dateRangePicker.cancelSelection();
-            this._notify('onChoose', this.getStartValue(), this.getEndValue());
             this._updateHeaderInputsVisibility();
             this._startDatePickerResetActive();
             this._endDatePickerResetActive();
             if (this._options._state === states.month) {
                this._monthRangePicker._clearMonthSelection();
             }
+            this._notify('onChoose', this.getStartValue(), this.getEndValue());
          }
       },
 
@@ -457,7 +457,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
       },
 
       _toggleHeaderInputsVisibility: function (isInputVisible) {
-         if (isEmpty(this._options.quantum) || ('days' in this._options.quantum && Object.keys(this._options.quantum).length === 1)) {
+         if ((isEmpty(this._options.quantum) ||
+               ('days' in this._options.quantum && Object.keys(this._options.quantum).length === 1)) &&
+               this._options.minQuantum === 'day'
+            ) {
             this.getChildControlByName('DateRangeHeader').toggle(!isInputVisible);
             this.getContainer().find('.controls-DateRangeBigChoose__header-period-input').toggleClass('ws-hidden', !isInputVisible);
          } else {

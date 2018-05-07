@@ -71,8 +71,8 @@ define('SBIS3.CONTROLS/SbisDropdownList',
             _historyController: null
          },
 
-         showPicker: function() {
-            DropdownUtil.showPicker(this, SbisDropdownList);
+         showPicker: function(event) {
+            DropdownUtil.showPicker(this, SbisDropdownList, event);
          },
 
          _clickItemHandler: function(e) {
@@ -98,8 +98,17 @@ define('SBIS3.CONTROLS/SbisDropdownList',
 
          setSelectedKeys: function(idArray) {
             var id = idArray && idArray[0];
+            var items = this.getItems();
 
             if (this._historyController && !this._options.multiselect && id) {
+               if (!items.getRecordById(id)) {
+                  this._historyDeferred = null;
+                  this._historyController.addToRecent(id, new Model({
+                     rawData: {},
+                     adapter: items.getAdapter(),
+                     format: items.getFormat().clone()
+                  }));
+               }
                this._historyController.addToHistory(id);
             }
             SbisDropdownList.superclass.setSelectedKeys.apply(this, arguments);

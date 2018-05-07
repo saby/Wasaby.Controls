@@ -25,6 +25,20 @@ define('SBIS3.CONTROLS/Date/RangeSliderBig', [
     * @demo Examples/DateRangeSliderBig/MyDateRangeSliderBig/MyDateRangeSliderBig
     */
    var DateRangeSliderBig = DateRangeSliderBase.extend([DateRangeBigChoosePickerMixin], /** @lends SBIS3.CONTROLS/Date/RangeSliderBig.prototype */{
+      $protected: {
+         _options: {
+
+            // Достаточно одной опции emptyCaption. Но если так делать, то надо немного менять api.
+            // Либо делать что бы одни и те же опции в разных компонентах работали немного по разному.
+            // В новых компонентах надо учесть этот нюанс, в старых что то менять нет смысла.
+            /**
+             * @cfg {Boolean} Отображать ли текстовую информацию о том, что период не задан. Если равна true и период
+             * не указан, то в качестве значения будет от бражаться соответсвующая надпись, иначе пустая строка.
+             * @see emptyCaption
+             */
+            showUndefined: false,
+         }
+      },
       _modifyOptions: function (opts) {
          opts = DateRangeSliderBig.superclass._modifyOptions.apply(this, arguments);
          opts._caption = this._getCaption(opts);
