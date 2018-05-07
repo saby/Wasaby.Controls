@@ -253,12 +253,12 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
          /*redraw может позваться, когда данных еще нет*/
          if (this._getItemsProjection()) {
             this._createAllFolderFooters();
+            // Правильно именно по onDrawItems пересчитывать размеры, т.к. в searchController'e по этому событию вешается
+            // доп. класс "controls-GridView__searchMode", влияющий на отступы
+            this.once('onDrawItems', function() {
+               this._checkBreadCrumbsWidth();
+            });
          }
-         // Правильно именно по onDrawItems пересчитывать размеры, т.к. в searchController'e по этому событию вешается
-         // доп. класс "controls-GridView__searchMode", влияющий на отступы
-         this.once('onDrawItems', function() {
-            this._checkBreadCrumbsWidth();
-         });
       },
       
       _onResizeHandler: function() {
