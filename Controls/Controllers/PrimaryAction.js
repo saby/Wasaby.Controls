@@ -9,8 +9,7 @@ define('Controls/Controllers/PrimaryAction',
       'use strict';
 
       /**
-       * Контроллер главного действия.
-       * Обрабатывает нажатие ctrl + enter (cmd + enter) и посылает событие onActivated
+       * Primary action controller. Catches ctrl+enter (cmd+enter) press and fires 'triggered' event.
        */
 
       return Control.extend({

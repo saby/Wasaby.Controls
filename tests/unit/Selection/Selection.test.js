@@ -16,7 +16,7 @@ define(
       var selection = new Selection({});
 
       selection.setProjection(Projection.getDefaultDisplay(data, {
-         idProperty: 'id'
+         keyProperty: 'id'
       }));
 
       describe('SBIS3.CONTROLS/ListView/resources/MassSelectionController/resources/Selection', function () {

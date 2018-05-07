@@ -7,7 +7,7 @@
                 on:beforeItemEdit="_onItemEdit()"
                 on:beforeItemAdd="_onItemAdd()"
                 allowEmptySelection="{{false}}"
-                idProperty="id">
+                keyProperty="id">
             <ws:editingConfig>
                 <ws:Object editOnClick="{{_editOnClick}}"
                            singleEdit="{{_singleEdit}}"
@@ -42,7 +42,7 @@
                 source="{{_viewSource2}}"
                 on:beforeItemAdd="_cancelItemAdd()"
                 allowEmptySelection="{{false}}"
-                idProperty="id">
+                keyProperty="id">
             <ws:editingConfig>
                 <ws:Object editOnClick="{{true}}"/>
             </ws:editingConfig>
@@ -65,7 +65,7 @@
                 source="{{_viewSource3}}"
                 on:beforeItemAdd="_deferredItemAdd()"
                 allowEmptySelection="{{false}}"
-                idProperty="id">
+                keyProperty="id">
             <ws:editingConfig>
                 <ws:Object editOnClick="{{true}}"/>
             </ws:editingConfig>
@@ -86,7 +86,7 @@
                 name="list4"
                 source="{{_viewSource4}}"
                 allowEmptySelection="{{false}}"
-                idProperty="id">
+                keyProperty="id">
             <ws:editingConfig>
                 <ws:Object editOnClick="{{true}}" item="{{_editingItem}}"/>
             </ws:editingConfig>
@@ -107,7 +107,7 @@
                 name="list5"
                 source="{{_viewSource5}}"
                 allowEmptySelection="{{false}}"
-                idProperty="id">
+                keyProperty="id">
             <ws:editingConfig>
                 <ws:Object editOnClick="{{true}}" item="{{_addItem}}"/>
             </ws:editingConfig>

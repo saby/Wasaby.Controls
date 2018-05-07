@@ -30,7 +30,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/ImagePanel/ImageP
 
             _modifyOptions: function(options) {
                options = ImagePanel.superclass._modifyOptions.apply(this, arguments);
-               options.canMultiSelect = Di.resolve('ImageUploader').canMultiSelect;
+               options.canMultiSelect = options.linkedEditor.canUploadMultiSelect();
                return options;
             },
 
@@ -45,9 +45,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/ImagePanel/ImageP
                this._container.on('mousedown focus', this._blockFocusEvents);
             },
 
-            getFileLoader: function() {
-               return Di.resolve('ImageUploader').getFileLoader(this.getParent());
-            },
             _blockFocusEvents: function(event) {
                var eventsChannel = EventBus.channel('WindowChangeChannel');
                event.preventDefault();
@@ -66,7 +63,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/ImagePanel/ImageP
                   this._notify('onTemplateChange', this._selectedTemplate);
                   this.hide();
                } else {
-                  this.getFileLoader().startFileLoad(target, this._selectedTemplate === COLLAGE_TEMPLATE, this._options.imageFolder).addCallback(function(fileobj) {
+                  var editor = this._options.linkedEditor;
+                  editor.selectAndUploadImage(target, this._options.imageFolder, this._selectedTemplate === COLLAGE_TEMPLATE).addCallback(function(fileobj) {
                      this._notify('onImageChange', this._selectedTemplate, fileobj);
                      this.hide();
                   }.bind(this))

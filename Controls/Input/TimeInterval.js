@@ -2,8 +2,9 @@ define('Controls/Input/TimeInterval', [
 ], function() {
 
    /**
-    * Контрол предназначен для ввода информации о количестве времени с точностью от дня до минуты.
-    * Можно вводить только значения особого формата даты ISO_8601 с точностью от дней до минут.
+    * Input for enter time interval information (with precision from days to minutes).
+    * Only ISO_8601 dates can be entered.
+    *
     * @class Controls/Input/TimeInterval
     * @mixes Controls/Input/interface/IInputText
     * @mixes Controls/Input/interface/IValidation
@@ -15,13 +16,14 @@ define('Controls/Input/TimeInterval', [
 
    /**
     * @name Controls/Input/TimeInterval#mask
-    * @cfg {String} Формат ввода значения временного интервала.
-    * Допустимые символы в маске:
-    * <ol>
-    *    <li>D(day) - календарный день.</li>
-    *    <li>H(hour) - час.</li>
-    *    <li>I - минута.</li>
-    *    <li>":" - используется в качестве разделителя.</li>
+    * @cfg {String} Format of the time interval.
+    *
+    * Allowed mask keys:
+    * <ol>в
+    *    <li>D - day.</li>
+    *    <li>H - hour.</li>
+    *    <li>I - minute.</li>
+    *    <li>":" - used as a delimiter.</li>
     * </ol>
     * @example
     * <pre>

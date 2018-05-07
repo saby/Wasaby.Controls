@@ -12,7 +12,8 @@ define('Controls/Container/Suggest/List',
    function(Control, template, clone) {
       
       /**
-       * Container component for list in Suggest component.
+       * Container for list inside Suggest.
+       *
        * @class Controls/Container/Suggest/List
        * @extends Controls/Control
        * @author Герасимов Александр

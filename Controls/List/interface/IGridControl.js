@@ -2,7 +2,7 @@ define('Controls/List/interface/IGridControl', [
 ], function() {
 
    /**
-    * Интерфейс работы грида (табличного представления)
+    * Interface for Grid (table view).
     *
     * @mixin Controls/List/interface/IGridControl
     * @public
@@ -10,43 +10,43 @@ define('Controls/List/interface/IGridControl', [
 
    /**
     * @name Controls/List/interface/IGridControl#stickyColumnsCount
-    * @cfg {Number} Количество колонок, которые фиксируются при горизонтальном скроле
+    * @cfg {Number} Number of columns that will be fixed when scrolling horizontally.
     */
 
    /**
     * @name Controls/List/interface/IGridControl#stickyFields
-    * @cfg {Array.<String>} Массив полей, по которым формируется "лесенка"
+    * @cfg {Array.<String>} Array of fields that should be sticky.
     */
 
    /**
-    * @typedef {Object} HeaderCell Определяет ячеейку заголовка списка.
-    * @property {String} [title] Текст в ячейке заголовка.
-    * @property {String} [align] Выравнивание текста по горизонтали (left|center|right).
-    * @property {String} [valign] Выравнивание текста по вертикали (top|center|bottom).
-    * @property {Number} [colspan] Количество объединяемых ячеек в строке, включая текущую (>=2).
-    * @property {Number} [rowspan] Количество объединяемых ячеек в колонке, включая текущую (>=2).
-    * @property {String} [template] Шаблон отображения ячейки заголовка.
+    * @typedef {Object} HeaderCell Describer the header cell.
+    * @property {String} [title] Text.
+    * @property {String} [align] Horizontal text align (left|center|right).
+    * @property {String} [valign] Vertical text align (top|center|bottom).
+    * @property {Number} [colspan] Number of grouped cells in a row including the current one (>=2).
+    * @property {Number} [rowspan] Number of grouped cells in a column including the current one (>=2).
+    * @property {String} [template] Template for the header cell.
     */
 
    /**
     * @name Controls/List/interface/IGridControl#header
-    * @cfg {Array.<Array.<HeaderCell>>} Определяет заголовок списка.
+    * @cfg {Array.<Array.<HeaderCell>>} Describes list header.
     */
 
    /**
     * @typedef {Object} Column
-    * @property {Number} [position] Положение колонки в таблице, если не указать соответствует положению в массиве
-    * @property {String} [displayProperty] Название поля (из формата записи), значения которого будут отображены в данной колонке по умолчанию.
-    * @property {String} [template] Шаблон отображения ячейки.
-    * @property {String} [resultTemplate] Шаблон отображения ячейки в строке результатов.
-    * @property {String} [align] Выравнивание текста по горизонтали (left|center|right).
-    * @property {String} [valign] Выравнивание текста по вертикали (top|center|bottom).
-    * @property {String|Number} [width] Ширина колонки (pixels/percent/auto).
+    * @property {Number} [position] Position of a column in a table. If not set, position in the array is used instead.
+    * @property {String} [displayProperty] Name of the field that will shown in the column by default.
+    * @property {String} [template] Cell template.
+    * @property {String} [resultTemplate] Cell template in results row.
+    * @property {String} [align] Horizontal text align (left|center|right).
+    * @property {String} [valign] Vertical text align (top|center|bottom).
+    * @property {String|Number} [width] Column width (pixels/percent/auto).
     */
 
    /**
     * @name Controls/List/interface/IGridControl#columns
-    * @cfg {Array.<Column>} Устанавливает набор колонок списка.
+    * @cfg {Array.<Column>} Describes Grid's columns.
     */
 
 });

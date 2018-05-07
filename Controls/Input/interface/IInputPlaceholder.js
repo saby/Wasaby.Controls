@@ -2,14 +2,15 @@ define('Controls/Input/interface/IInputPlaceholder', [
 ], function() {
 
    /**
-    * Интерфейс для работы с подсказкой в поле ввода
+    * Interface for input placeholder.
+    *
     * @mixin Controls/Input/interface/IInputPlaceholder
     * @public
     */
 
    /**
     * @name Controls/Input/interface/IInputPlaceholder#placeholder
-    * @cfg {String} Текст подсказки внутри поля ввода
+    * @cfg {String} Input's placeholder text.
     */
 
 });

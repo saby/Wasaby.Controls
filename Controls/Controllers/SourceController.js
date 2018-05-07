@@ -40,7 +40,7 @@ define('Controls/Controllers/SourceController',
             queryIns = _private.getQueryInstance(filter, sorting, offset, limit);
 
             queryDef = dataSource.query(queryIns).addCallback((function(dataSet) {
-               if (idProperty && idProperty !== dataSet.getIdProperty()) {
+               if (idProperty && idProperty !== dataSet.idProperty) {
                   dataSet.setIdProperty(idProperty);
                }
                return dataSet.getAll();
@@ -150,7 +150,15 @@ define('Controls/Controllers/SourceController',
          },
 
          hasMoreData: function(direction) {
-            return this._queryParamsController.hasMoreData(direction);
+            if (this._queryParamsController) {
+               return this._queryParamsController.hasMoreData(direction);
+            }
+         },
+
+         calculateState: function(list) {
+            if (this._queryParamsController) {
+               this._queryParamsController.calculateState(list);
+            }
          },
 
          isLoading: function() {
@@ -158,7 +166,9 @@ define('Controls/Controllers/SourceController',
          },
 
          setEdgeState: function(direction) {
-            this._queryParamsController.setEdgeState(direction);
+            if (this._queryParamsController) {
+               this._queryParamsController.setEdgeState(direction);
+            }
          },
 
          create: function(meta) {

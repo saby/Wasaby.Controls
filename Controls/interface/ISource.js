@@ -2,30 +2,30 @@ define('Controls/interface/ISource', [
 ], function() {
 
    /**
-    * Интерфейс для работы с источником данных.
-    * Необходимо использовать в компонентах, использующих источники данных
+    * Interface for components that use data source.
+    *
     * @mixin Controls/interface/ISource
     * @public
     */
 
    /**
     * @name Controls/interface/ISource#source
-    * @cfg Объект, реализующий интерфейс ISource (ISource) с помощью которого осуществляется доступ к данным.
+    * @cfg Object that implements ISource interface for data access.
     */
 
    /**
     * @name Controls/interface/ISource#itemTemplate
-    * @cfg {Function} Шаблон для отображения элемента коллекции.
+    * @cfg {Function} Template for item render.
     */
 
    /**
     * @name Controls/interface/ISource#keyProperty
-    * @cfg {String} Имя свойства элемента, которое является идентификатором записи.
+    * @cfg {String} Name of the item property that uniquely identifies collection item.
     */
 
    /**
     * @name Controls/interface/ISource#itemTemplateProperty
-    * @cfg {String} Имя свойства элемента, в котором содержится шаблон отображения этого элемента. При отсутствии шаблона в поле используется шаблон из опции itemTemplate
+    * @cfg {String} Name of the item property that contains template for item render. If not set, itemTemplate is used instead.
     */
 
 });

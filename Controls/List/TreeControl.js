@@ -12,7 +12,7 @@ define('Controls/List/TreeControl', [
          var
             filter = cClone(self._filter || {}),
             listViewModel = self._children.baseControl.getViewModel(),
-            nodeKey = ItemsUtil.getPropertyValue(dispItem.getContents(), self._options.viewConfig.idProperty);
+            nodeKey = ItemsUtil.getPropertyValue(dispItem.getContents(), self._options.viewConfig.keyProperty);
          if (!self._loadedNodes[nodeKey]) {
             filter[self._options.viewConfig.parentProperty] = nodeKey;
             self._children.baseControl.getSourceController().load(filter, self._sorting).addCallback(function(list) {
@@ -27,7 +27,8 @@ define('Controls/List/TreeControl', [
    };
 
    /**
-    * Компонент иерархического списка списка, с произвольным шаблоном отображения каждого элемента. Обладает возможностью загрузки/подгрузки данных из источника.
+    * Hierarchical list control with custom item template. Can load data from data source.
+    *
     * @class Controls/List/TreeControl
     * @extends Controls/List/ListControl
     * @control
