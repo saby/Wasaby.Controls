@@ -11,6 +11,7 @@ define('SBIS3.CONTROLS/ListView/resources/MassSelectionController/MassSelectionH
              var linkedObject = this._options.linkedObject;
              this.subscribeTo(linkedObject, 'onDrawItems', this._redrawPartiallySelection.bind(this));
              this.subscribeTo(linkedObject, 'onSelectedItemsChange', this._redrawPartiallySelection.bind(this));
+             this.subscribeTo(linkedObject, 'onSetRoot', this._onSetRoot.bind(this));
           },
 
           _createSelection: function() {
@@ -19,6 +20,10 @@ define('SBIS3.CONTROLS/ListView/resources/MassSelectionController/MassSelectionH
                 projection: this._getProjection(),
                 root: root !== undefined ? root : null
              });
+          },
+
+          _onSetRoot: function(event, root) {
+             this._selection.setRoot(root);
           },
 
           //При добавлении элементов в проекцию добавляем их в набор выделенных записей, если:
