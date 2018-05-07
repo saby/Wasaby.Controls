@@ -1,11 +1,18 @@
 <div class="controls-ExportCustomizer-Area{{dialogMode ? ' controls-ExportCustomizer-Area_dialog' : ''}}">
    <ws:if data="{{dialogMode}}">
       <div class="controls-ExportCustomizer-Area__head ws-window-titlebar">
-         <SBIS3.CONTROLS:ExportCustomizer:_Presets:View
-            className="controls-ExportCustomizer-Area__preset"
-            name="controls-ExportCustomizer-Area__preset"
-            scope="{{_scopes.presets}}"
-         />
+         <ws:if data="{{_scopes.presets}}">
+            <SBIS3.CONTROLS:ExportCustomizer:_Presets:View
+               className="controls-ExportCustomizer-Area__preset"
+               name="controls-ExportCustomizer-Area__preset"
+               scope="{{_scopes.presets}}"
+            />
+         </ws:if>
+         <ws:else>
+            <div class="controls-ExportCustomizer-Area__head-title">
+               <ws:if data="{{dialogTitle}}">{{dialogTitle}}</ws:if><ws:else>{[НастройщикЭкспорта@@Настройка экспорта]}</ws:else>
+            </div>
+         </ws:else>
          <SBIS3.CONTROLS:Button
             className="controls-ExportCustomizer-Area__completeButton"
             command="complete" primary="true"
@@ -18,7 +25,7 @@
    </ws:if>
    <SBIS3.CONTROLS:ScrollContainer name="controls-ExportCustomizer-Area__scrollContainer" class="controls-ExportCustomizer-Area__body">
       <ws:content>
-         <ws:if data="{{!dialogMode}}">
+         <ws:if data="{{!dialogMode && _scopes.presets}}">
             <SBIS3.CONTROLS:ExportCustomizer:_Presets:View
                className="controls-ExportCustomizer-Area__preset"
                name="controls-ExportCustomizer-Area__preset"

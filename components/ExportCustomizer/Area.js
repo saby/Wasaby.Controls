@@ -41,6 +41,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
        */
 
       /**
+       * @typedef {object} ExportPreset Тип, содержащий информацию о преустановленных настройках экспорта
+       * @property {string|number} id Идентификатор пресета
+       * @property {string} title Отображаемое название пресета
+       * @property {Array<string>} fieldIds Список привязки колонок в экспортируемом файле к полям данных
+       * @property {string} fileUuid Uuid шаблона форматирования эксель-файла
+       */
+
+      /**
        * @typedef {object} ExportResults Тип, содержащий информацию о результате редактирования
        * @property {string} MethodName Имя списочного метода, результат раболты которого будет сохранён в эксель-файл
        * @property {WS.Data/Entity/Record} [Filter] Параметры фильтрации для списочного метода (опционально)
@@ -91,6 +99,37 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             }
             return value;
          },
+         staticPresets: function (value) {
+            // Если значение есть
+            if (value) {
+               // оно должно быть массивом
+               if (!Array.isArray(value)) {
+                  return new Error('Value must be array');
+               }
+               // И каждый элемент массива должен быть {@link ExportPreset}
+               if (!value.every(function (v) { return (
+                     typeof v === 'object' &&
+                     (v.id && (typeof v.id === 'string' || typeof v.id === 'number') &&
+                        (v.title && typeof v.title === 'string') &&
+                        (v.fieldIds && Array.isArray(v.fieldIds) && v.fieldIds.every(function (v2) { return !!v2 && typeof v2 === 'string'; }))) &&
+                        (v.fileUuid && typeof v.fileUuid === 'string')
+                  ); })) {
+                  return new Error('Array items must be an ExportPreset');
+               }
+            }
+            return value;
+         },
+         presetNamespace: _typeIfDefined.bind(null, 'string'),
+         selectedPresetId: function (value) {
+            // Если значение есть
+            if (value) {
+               // оно должно быть строкой или числом
+               if (typeof value !== 'string' && typeof value !== 'number') {
+                  return new Error('Value must be array');
+               }
+            }
+            return value;
+         },
          allFields: function (value) {
             // Должно быть значение
             if (!value) {
@@ -108,7 +147,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   (v.id && typeof v.id === 'string') &&
                   (v.title && typeof v.title === 'string')
                ); })) {
-               return new Error((isRecordSet ? 'RecordSet' : 'Array') + ' items must be an BrowserColumnInfo');
+               return new Error((isRecordSet ? 'RecordSet' : 'Array') + ' items must be a BrowserColumnInfo');
             }
             return value;
          },
@@ -123,8 +162,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                if (!value.every(function (v) { return !!v && typeof v === 'string'; })) {
                   return new Error('Array items must be none empty strings');
                }
-               return value;
             }
+            return value;
          },
          fieldGroupTitles: _typeIfDefined.bind(null, 'object'),
          fileUuid: _typeIfDefined.bind(null, 'string')
@@ -155,6 +194,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          'formatterTitle',
          'formatterMenuTitle',
          'serviceParams',
+         'staticPresets',
+         'presetNamespace',
+         'selectedPresetId',
          'allFields',
          'fieldIds',
          'fieldGroupTitles',
@@ -210,6 +252,18 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                 * @cfg {ExportServiceParams} Прочие параметры, необходимых для работы БЛ
                 */
                serviceParams: null,
+               /**
+                * @cfg {Array<ExportPreset>} Список пресетов (предустановленных настроек экспорта)
+                */
+               staticPresets: null,
+               /**
+                * @cfg {string} Пространство имён для сохранения пользовательских пресетов
+                */
+               presetNamespace: null,
+               /**
+                * @cfg {string|number} Идентификатор пресета, который будет выбран в списке пресетов
+                */
+               selectedPresetId: null,
                /**
                 * @cfg {Array<BrowserColumnInfo>|WS.Data/Collection/RecordSet<BrowserColumnInfo>} Список объектов с информацией о всех колонках в формате, используемом в браузере
                 */
@@ -323,8 +377,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           */
          _reshapeOptions: function (options) {
             options._scopes = {
-               preset: {
-               },
+               preset: (options.staticPresets && options.staticPresets.length) || options.presetNamespace ? {
+                  staticPresets: options.staticPresets,
+                  presetNamespace: options.presetNamespace,
+                  selectedPresetId: options.selectedPresetId
+               } : null,
                columnBinder: {
                   title: options.columnBinderTitle || undefined,
                   columnsTitle: options.columnBinderColumnsTitle || undefined,

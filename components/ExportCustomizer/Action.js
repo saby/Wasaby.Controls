@@ -36,6 +36,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
        */
 
       /**
+       * @typedef {object} ExportPreset Тип, содержащий информацию о преустановленных настройках экспорта
+       * @property {string|number} id Идентификатор пресета
+       * @property {string} title Отображаемое название пресета
+       * @property {Array<string>} fieldIds Список привязки колонок в экспортируемом файле к полям данных
+       * @property {string} fileUuid Uuid шаблона форматирования эксель-файла
+       */
+
+      /**
        * @typedef {object} ExportResults Тип, содержащий информацию о результате редактирования
        * @property {string} MethodName Имя списочного метода, результат раболты которого будет сохранён в эксель-файл
        * @property {WS.Data/Entity/Record} [Filter] Параметры фильтрации для списочного метода (опционально)
@@ -81,6 +89,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * @param {string} [options.formatterTitle] Заголовок под-компонента "formatter" (опционально)
           * @param {string} [options.formatterMenuTitle] Заголовок меню выбора способа форматирования в под-компоненте "formatter" (опционально)
           * @param {ExportServiceParams} options.serviceParams Прочие параметры, необходимых для работы БЛ
+          * @param {Array<ExportPreset>} options.staticPresets Список пресетов (предустановленных настроек экспорта)
+          * @param {string} options.presetNamespace Пространство имён для сохранения пользовательских пресетов
+          * @param {string|number} options.selectedPresetId Идентификатор пресета, который будет выбран в списке пресетов
           * @param {Array<BrowserColumnInfo>|WS.Data/Collection/RecordSet<BrowserColumnInfo>} options.allFields Список объектов с информацией о всех колонках в формате, используемом в браузере
           * @param {Array<string>} options.fieldIds Список привязки колонок в экспортируемом файле к полям данных
           * @param {object} options.fieldGroupTitles Список отображаемых названий групп полей (если используются идентификаторы групп)
