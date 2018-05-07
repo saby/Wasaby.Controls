@@ -1353,7 +1353,12 @@ define('SBIS3.CONTROLS/ListView',
                itemActions.hide();
             }
             if (this._virtualScrollController) {
-              this._virtualScrollController._scrollHandler(event, scrollTop);
+               var scrollbarDragging = false;
+               try {
+                  scrollbarDragging = this._getScrollWatcher().getScrollContainerControl().isScrollbarDragging();
+               } catch(e) {}
+
+              this._virtualScrollController._scrollHandler(event, scrollTop, scrollbarDragging);
             }
          },
          _setScrollPagerPosition: function(){
@@ -2160,6 +2165,11 @@ define('SBIS3.CONTROLS/ListView',
                   this.setInfiniteScroll('both', true);
                }
             }
+            
+            if (offset === 0 && this._options.infiniteScroll === 'down') {
+               this._lastPageLoaded = false;
+               this._setInfiniteScrollState('down');
+            }
 
             // Reset virtual scrolling if it's enabled
             if (this._options.virtualScrolling && this._virtualScrollController) {
@@ -2176,7 +2186,7 @@ define('SBIS3.CONTROLS/ListView',
                this._bottomWrapper.height(0);
             }
 
-            this._reloadInfiniteScrollParams();
+            this._reloadInfiniteScrollParams(offset);
             this._previousGroupBy = undefined;
             // При перезагрузке нужно также почистить hoveredItem, иначе следующее отображение тулбара будет для элемента, которого уже нет (ведь именно из-за этого ниже скрывается тулбар).
             this._clearHoveredItem();
@@ -3140,10 +3150,10 @@ define('SBIS3.CONTROLS/ListView',
             if (this._scrollBinder) {
                // Resets paging if called after reload()
                this._scrollBinder._updateScrollPages(!this._options.virtualScrolling || this._resetPaging);
-               this._resetPaging = false;
             } else if (this._options.infiniteScroll == 'down' && this._options.scrollPaging){
                this._createScrollPager();
             }
+            this._resetPaging = false;
 
             // отправляем команду о перерисовке парентов, и только их. Предполагается, что изменение items
             // у ListView может повлиять только на некоторых парентов
@@ -4381,6 +4391,10 @@ define('SBIS3.CONTROLS/ListView',
                this._pager.destroy();
                this._pager = undefined;
                this._pagerContainer = undefined;
+            }
+            if (this._mover) {
+               this._mover.destroy();
+               this._mover = undefined;
             }
             this._destroyEditInPlaceController();
             ListView.superclass.setDataSource.apply(this, arguments);

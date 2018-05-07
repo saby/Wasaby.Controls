@@ -8,7 +8,8 @@ define('Controls/Application',
       'Core/Deferred',
       'Core/BodyClasses',
       'Controls/Application/TouchDetector',
-      'Controls/Application/AppData'
+      'Controls/Application/AppData',
+      'Core/ConsoleLogger'
    ],
 
    /**

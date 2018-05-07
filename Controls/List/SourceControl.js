@@ -332,6 +332,7 @@ define('Controls/List/SourceControl', [
             });
 
             if (receivedState) {
+               this._sourceController.calculateState(receivedState);
                this._listViewModel.setItems(receivedState);
             } else {
                return _private.reload(this);
