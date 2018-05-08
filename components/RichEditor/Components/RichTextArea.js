@@ -2106,6 +2106,26 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
              });
 
+            if (BROWSER.firefox) {
+               editor.on('dragstart', function (evt) {
+                  var target = evt.target;
+                  if (target.nodeName === 'IMG') {
+                     this._firefoxDragndropTarget = target;
+                  }
+               });
+
+               editor.on('dragend', function (evt) {
+                  var target = evt.target;
+                  if (target === this._firefoxDragndropTarget) {
+                     var parent = target.parentNode;
+                     if (parent) {
+                        parent.removeChild(target);
+                     }
+                     this._firefoxDragndropTarget = null;
+                  }
+               });
+            }
+
             //БИНДЫ НА СОБЫТИЯ КЛАВИАТУРЫ (ВВОД)
             if (cConstants.browser.isMobileIOS || cConstants.browser.isMobileAndroid) {
                //TODO: https://github.com/tinymce/tinymce/issues/2533
