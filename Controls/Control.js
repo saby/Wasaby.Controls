@@ -2,7 +2,7 @@ define('Controls/Control', [
 ], function() {
 
    /**
-    * Базовый класс компонента
+    * Basic control class.
     * @class Controls/Control
     * @control
     * @public
@@ -12,93 +12,101 @@ define('Controls/Control', [
 
    /**
     * @name Controls/Control#readOnly
-    * @cfg {Boolean} Значение, указывающее, может ли элемент управления реагировать на взаимодействие пользователя.
+    * @cfg {Boolean} Indicates whether control will react to user actions.
     */
 
    /**
-    * Перевести фокус на компонент.
+    * Sets focus on a component.
     * @function Controls/Control#focus
     */
 
    /**
-    * Увести фокус с компонента. Фокус будет переведен на body.
+    * Moves focus from control to body.
     * @function Controls/Control#blur
     */
 
 
    /**
-    * Перед отрисовкой контрола, перед mount контрола в DOM
-    * Выполняется как на клиенте, так и на сервере. Здесь мы можем скорректировать наше состояние
-    * в зависимости от параметров конструктора, которые были сохранены в _options
-    * Вызывается один раз в течение жизненного цикла
-    * На этом методе заканчивается управление жизненным циклом компонента на сервере.
-    * После выполнения шаблонизации контрол будет разрушен и будет вызван _beforeDestroy
+    * This method is called right before control is mounted to DOM.
+    * Runs on both server and client side. The last method that runs on server.
+    * Runs only once in a component's lifecycle.
+    *
+    * At this stage, you can set component's state based on received options.
+    *
     * @function Controls/Control#_beforeMount
     * @param {Object} options
+    * @param {Object} context
     * @param {Object} receivedState
     * @private
     */
 
    /**
-    * После отрисовки контрола. Выполняется на клиенте после синхронизации VDom с реальным Dom
-    * Здесь мы можем впервые обратиться к DOMу, сделать какие-то асинхронные операции,
-    * и при необходимости запланировать перерисовку
-    * Вызывается один раз в течение жизненного цикла
-    * Вызывается только на клиенте
+    * This method is called right after control was mounted to DOM.
+    * Runs only on client side.
+    * Runs only once in a component's lifecycle.
+    *
+    * At this stage, you can access DOM elements and this._children,
+    * run asynchronous operations, and rerender component if necessary.
+    *
     * @function Controls/Control#_afterMount
     * @private
     */
 
    /**
-    * Точка входа перед шаблонизацией. _beforeUpdate точка применения новых
-    * опций для компонента. Здесь мы можем понять измененные опции и как-то повлиять на состяние
-    * Вызывается множество раз за жизненный цикл
-    * Вызывается только на клиенте
+    * This method is called right before new options are applied to control.
+    * Runs only on client side.
+    * Runs many times during component's lifecycle.
+    *
+    * At this stage, you can set component's state based on new options (similar to _beforeMount).
+    *
     * @function Controls/Control#_beforeUpdate
     * @param {Object} newOptions - предыдущие опции компонента
     * @private
     */
 
    /**
-    * Точка завершения шаблонизации и синхронизации. Здесь доступен DOM и
-    * объект this._children
-    * Здесь мы можем выполнить асинхронные операции, потрогать DOM
-    * Вызывается каждый раз после шаблонизации после _beforeUpdate
-    * Вызывается только на клиенте
+    * This method is called right after control was updated.
+    * Always happens after _beforeUpdate.
+    * Runs only on client side.
+    * Runs many times during component's lifecycle.
+    *
+    * At this stage, you can access DOM elements and this._children (similar to _afterMount).
+    *
     * @function Controls/Control#_afterUpdate
     * @param {Object} oldOptions
     * @private
     */
 
    /**
-    * Точка перед разрушением. Точка, когда компонент жив.
-    * Здесь нужно разрушить объекты, которые были созданы в _applyOptions
-    * Вызывается и на клиенте и на сервере
+    * This method is called right before a component is removed from DOM.
+    * Runs on both server and client side.
+    *
     * @function Controls/Control#_beforeUnmount
     * @private
     */
 
 
    /**
-    * Принудительный вызов обновления шаблона
+    * Force update component's template.
+    *
     * @function Controls/Control#_forceUpdate
     * @private
     */
 
    /**
-    * @event Controls/Control#focus Происходит при переходе фокуса на компонент.
+    * @event Controls/Control#focus Occurs when component becomes focused.
     */
 
    /**
-    * @event Controls/Control#blur Происходит при уходе фокуса с компонента.
+    * @event Controls/Control#blur Occurs when component loses focus.
     */
 
    /**
-    * @event Controls/Control#focusIn Происходит при переходе фокуса на дочерний компонент.
+    * @event Controls/Control#focusIn Occurs when child becomes focused.
     */
 
    /**
-    * @event Controls/Control#focusOut Происходит при уходе фокуса с дочернего компонента.
+    * @event Controls/Control#focusOut Occurs when child control loses focus.
     */
 
 });
