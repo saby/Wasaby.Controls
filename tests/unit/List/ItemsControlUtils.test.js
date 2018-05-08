@@ -2,9 +2,8 @@
  * Created by am.gerasimov on 06.03.2017.
  */
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
-define(['Controls/List/resources/utils/DataSourceUtil', 'Controls/List/resources/utils/ItemsUtil', 'WS.Data/Collection/RecordSet'
-   , 'WS.Data/Source/Memory', 'Core/core-instance', 'WS.Data/Types/Enum'],
-   function (DataSourceUtil, ItemsUtil, RecordSet, MemorySource, cInstance, Enum) {
+define(['Controls/List/resources/utils/ItemsUtil', 'WS.Data/Collection/RecordSet', 'WS.Data/Source/Memory', 'Core/core-instance', 'WS.Data/Types/Enum'],
+   function (ItemsUtil, RecordSet, MemorySource, cInstance, Enum) {
 
       'use strict';
 
@@ -48,43 +47,7 @@ define(['Controls/List/resources/utils/DataSourceUtil', 'Controls/List/resources
                }
             }
          });
-
-         describe('DataSourceUtil', function () {
-            var dataSource;
-            beforeEach(function() {
-               dataSource = new MemorySource({
-                  data: data,
-                  idProperty: 'id'
-               });
-            });
-
-            it('prepareSource', function () {
-
-
-               var resSource = DataSourceUtil.prepareSource(dataSource);
-               assert.equal(dataSource, resSource, 'prepareSource doesn\'t returns initial datasource');
-
-               resSource = DataSourceUtil.prepareSource({
-                  module: 'WS.Data/Source/Memory',
-                  options: {
-                     data: data,
-                     idProperty: 'id'
-                  }
-               });
-
-               assert.isTrue(cInstance.instanceOfModule(resSource, 'WS.Data/Source/Memory'), 'prepareSource doesn\'t returns datasource by config');
-               assert.equal('id', resSource.getIdProperty(), 'prepareSource doesn\'t returns datasource by config');
-
-            });
-
-            it('callQuery', function () {
-               DataSourceUtil.callQuery(dataSource, 'id').addCallback(function(list){
-                  assert.isTrue(cInstance.instanceOfModule(list, 'WS.Data/Collection/RecordSet'), 'callQuery doesn\'t returns recordset');
-                  assert.equal('3', list.getCount(), 'callQuery doesn\'t returns recordset width all records by default');
-               })
-            })
-
-         });
+         
          describe('ItemsUtil', function () {
             var proj;
             it('Flat display Array', function () {
@@ -128,7 +91,7 @@ define(['Controls/List/resources/utils/DataSourceUtil', 'Controls/List/resources
             it('getDisplayItemById', function () {
                var rs = new RecordSet({
                   rawData: data,
-                  idProperty : 'id'
+                     idProperty : 'id'
                }),
                myEnum = new Enum({
                   dictionary: ['Первый', 'Второй', 'Третий']

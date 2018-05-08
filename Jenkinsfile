@@ -218,7 +218,7 @@ node('controls') {
                     echo "Выкачиваем demo_stand"
                     dir(workspace) {
                         checkout([$class: 'GitSCM',
-                        branches: [[name: 'master']],
+                        branches: [[name: "rc-${version}"]],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [[
                             $class: 'RelativeTargetDirectory',
@@ -421,6 +421,7 @@ node('controls') {
                 cd ./jinnee/distrib/builder
                 cp -rf /home/sbis/Controls/build-ui/ws /home/sbis/Controls/intest-ps/ui/
                 node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/sbis/Controls/intest-ps/ui --application=/
+                sudo systemctl restart Controls_ps
             """
         }
         writeFile file: "./controls/tests/int/config.ini", text:
@@ -434,7 +435,7 @@ node('controls') {
             SOFT_RESTART = True
             NO_RESOURCES = True
             DELAY_RUN_TESTS = 2
-            TAGS_NOT_TO_START = iOSOnly, tabmessage
+            TAGS_NOT_TO_START = iOSOnly
             ELEMENT_OUTPUT_LOG = locator
             WAIT_ELEMENT_LOAD = 20
             HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/"""

@@ -1,0 +1,33 @@
+.controls-Path {
+   display: flex;
+   align-items: baseline;
+   white-space: nowrap;
+}
+
+.controls-Path__backButton {
+   white-space: nowrap;
+   position: relative;
+}
+
+.controls-Path__breadCrumbs {
+   flex-grow: 1;
+   overflow: hidden;
+}
+
+.controls-Path__backButton_short {
+   flex-shrink: 1;
+   min-width: 48px; //TODO: 36px минимальная ширина текста + 12px ширина иконки
+}
+
+.controls-Path__backButton_half,
+.controls-Path__backButton_short {
+   //TODO: нужно переписывать кнопку назад, сейчас она не умеет обрезаться многоточием
+   .text-overflow();
+}
+
+.controls-Path__backButton_half,
+.controls-Path__breadCrumbs_half {
+   width: 50%;
+   flex-shrink: 1;
+   overflow: hidden;
+}

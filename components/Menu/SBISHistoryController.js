@@ -22,7 +22,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
       },
 
       getAdapter: function(self) {
-         return self._adapterf || new SbisAdapter();
+         return self._adapter || new SbisAdapter();
       },
 
       getConfig: function(self) {
@@ -307,7 +307,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
 
          sourceItems = sourceItems || self._options.oldItems;
          items.forEach(function(id) {
-            oldItem = sourceItems.getRecordById(id);
+            oldItem = sourceItems.getRecordById(id) || self._options.oldItems.getRecordById(id);
             if (oldItem) {
                newItem = new Model({
                   rawData: oldItem.getRawData(),

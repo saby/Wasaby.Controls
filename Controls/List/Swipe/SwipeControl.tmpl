@@ -1,0 +1,17 @@
+<ws:partial
+        template="{{_options.content}}"
+        scope="{{_options}}"
+        on:itemSwipe="_listSwipe()"
+        on:itemClick="_listClick()"
+        on:deactivated="_listDeactivated()">
+    <ws:swipeTemplate>
+        <ws:partial
+                template="tmpl!Controls/List/Swipe/resources/SwipeTemplate"
+                scope="{{itemActionsTemplate}}"
+                swipeConfig="{{_swipeConfig}}"
+                needShowTitle="{{_needShowTitle}}"
+                menuIsShown="{{_options.menuIsShown}}"
+                itemActionsType="{{_options.itemActionsType}}"
+                needShowSeparator="{{_needShowSeparator}}"/>
+    </ws:swipeTemplate>
+</ws:partial>

@@ -13,10 +13,10 @@ define('Controls/Input/Mask',
       'use strict';
 
       /**
-       * Поле ввода строки заранее определенного формата.
-       * В поле уже заранее будут введены символы, определяющие формат, и останется ввести только недостающие символы.
+       * Input for entering text with a specified format.
+       *
        * @class Controls/Input/Mask
-       * @extends Controls/Control
+       * @extends Core/Control
        * @mixes Controls/Input/interface/IInputTag
        * @mixes Controls/Input/interface/IInputText
        * @mixes Controls/Input/interface/IValidation
@@ -28,34 +28,43 @@ define('Controls/Input/Mask',
 
       /**
        * @name Controls/Input/Mask#mask
-       * @cfg {String} Маска ввода текстового значения.
-       * Маска может состоять из ключей,
+       * @cfg {String} Input mask.
+       *
+       * Mask can use the following keys:
        * <ol>
-       *    <li>d - цифра.</li>
-       *    <li>L - заглавная буква.</li>
-       *    <li>l - строчная буква.</li>
-       *    <li>x - буква или цифра.</li>
+       *    <li>d - digit.</li>
+       *    <li>L - uppercase letter.</li>
+       *    <li>l - lowercase letter.</li>
+       *    <li>x - letter or digit.</li>
        * </ol>
-       * разделителей, кванторов +, *, ?, {n[, m]}.
-       * Перед квантором нужно поставить \.
-       * Кванторы должны применяться к ключам.
-       * Задается в формате схожем с регулярным выражением.
-       * В случае регулярного выражения отличие состоит в том, что в качестве обычных символов используются ключи маски и разделители.
+       * delimeters and quantifiers +, *, ?, {n[, m]}.
+       * Quantifiers should be preceded with "\".
+       * Quantifiers should be applied to keys.
+       * Format is similar to regular expressions.
+       *
        * @example
        * <pre>
-       *    1. 'dd.dd' - маска ввода времени.
-       *    2. 'dd.dd.dddd' - маска ввода даты.
+       *    1. 'dd.dd' - the input mask time.
+       *    2. 'dd.dd.dddd' - the input mask date.
+       *    3. 'd\{1,3}l\{1,3}'.
+       *    4. 'd\*' - the input mask infinity number of digits.
        * </pre>
        */
 
       /**
        * @name Controls/Input/Mask#replacer
-       * @cfg {String} Символ для замены недостающих символов для полного заполнения маски.
+       * @cfg {String} Symbol that will be shown when character is not entered.
        * @example
        * <pre>
-       *    Зададим mask='dd.dd', replacer=' ', value='12.34'.
-       *    Если стереть все значение из поля, то в нем после удаления вместо '12.34' появится '  .  '
+       *    For example, mask='dd.dd', replacer=' ', value='12.34'.
+       *    If you erase everything from input, the field will change from '12.34' to '  .  '.
        * </pre>
+       */
+
+      /**
+       * @name Controls/Input/Mask#formatMaskChars
+       * @cfg {Object} The key is the mask character, the value is the input characters,
+       * in the form of regular expression.
        */
 
       var

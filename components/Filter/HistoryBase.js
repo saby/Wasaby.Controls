@@ -171,12 +171,23 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
                                     });
 
                                     if(reportItem) {
-                                       reportItem.value = reportItem.resetValue;
-                                       reportItem.caption = reportItem.hasOwnProperty('resetCaption') ? reportItem.resetCaption : '';
                                        // Если отменили сохранение фильтра, то из сформированной по фильтрам строки, надо вырезать подстроку,
                                        // которая отвечала за отображение этого фильтра
-                                       textValue = textValue.replace(new RegExp(',?\\s?' + reportItem[self._options._filterItemTextProperty]), '');
-                                       textValue = textValue.replace(/\\s{1,}/g, ' ');
+                                       textValue.replace(reportItem[self._options._filterItemTextProperty], function(replacementString, index, fullString) {
+                                          var startIndex = index;
+                                          var endIndex = index + replacementString.length;
+                                          //Если подстрока находится в конце или в середине, то надо не забыть вырезать пробел и запятую
+                                          if (index !== 0 && index + replacementString.length <= fullString.length) {
+                                              startIndex -= 2;
+                                          }
+                                          //Если подстрока находится вначале, то тоже надо вырезать запятую и пробел
+                                          if (index === 0 && replacementString.length !== fullString.length) {
+                                             endIndex += 2;
+                                          }
+                                          textValue = fullString.slice(0, startIndex) + fullString.slice(endIndex, fullString.length);
+                                       });
+                                       reportItem.value = reportItem.resetValue;
+                                       reportItem.caption = reportItem.hasOwnProperty('resetCaption') ? reportItem.resetCaption : '';
                                        reportItem[self._options._filterItemTextProperty] = '';
                                        delete filter[key];
                                     }
@@ -198,6 +209,10 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
                            if (filterStructure) {
                               record.set('filter', FilterHistoryControllerUntil.minimizeStructureToSave(record.get('filter')));
                            }
+
+                           var recordRawData = record.getRawData();
+                           self.sendCommand('historySave', recordRawData);
+                           record.setRawData(recordRawData);
                            record.acceptChanges();
                            deleteReportHistory(item.get('id'), isFavorite, isGlobal);
                            (globalParams ? favoriteAllList : favoriteList).prepend(record);

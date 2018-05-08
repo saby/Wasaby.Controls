@@ -43,6 +43,10 @@ define('SBIS3.CONTROLS/ListView/resources/MassSelectionController/resources/Hier
          this._parentProperty = projection.getParentProperty();
       },
 
+      setRoot: function(root) {
+         this._options.root = root;
+      },
+
       select: function (ids) {
          this._changeTree(ids, true);
          ArraySimpleValuesUtil.removeSubArray(ids, [this._options.root]);

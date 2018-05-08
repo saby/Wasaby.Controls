@@ -39,7 +39,7 @@ define(
 
             dataRsDown = new RecordSet({
                rawData: dataDown,
-               idProperty : 'id'
+               keyProperty : 'id'
             })
 
          });
@@ -128,7 +128,7 @@ define(
                });
                var source = new SbisService({
                   endpoint: 'ОбъектБл',
-                  idProperty: 'id'
+                  keyProperty: 'id'
                });
                pNav.prepareSource(source);
                var options = source.getOptions();
@@ -145,7 +145,7 @@ define(
                });
                var source = new SbisService({
                   endpoint: 'ОбъектБл',
-                  idProperty: 'id'
+                  keyProperty: 'id'
                });
                pNav.prepareSource(source);
                var options = source.getOptions();

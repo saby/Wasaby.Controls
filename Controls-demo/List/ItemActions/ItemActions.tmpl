@@ -4,7 +4,7 @@
             source = "{{_viewSource}}"
             markedKey="{{2}}"
             allowEmptySelection="{{false}}"
-            idProperty="id"
+            keyProperty="id"
             itemActions="{{_itemActions}}"
             on:actionClick="_onActionClick()"
             itemActionVisibilityCallback="{{_showAction}}"
@@ -13,9 +13,9 @@
         <ws:itemTemplate>
             <ws:partial template="tmpl!Controls/List/ItemTemplate">
                 <ws:contentTemplate>
-                    <div style="padding: 4px;" on:click="_contentClick( itemTemplate.itemData)">
-                        <div>{{itemTemplate.itemData.item.get('title')}}</div>
-                        <div style="font-size: 11px; color: grey">{{itemTemplate.itemData.item.get('description')}}</div>
+                    <div style="padding: 3px;" on:click="_contentClick( itemTemplate.itemData)">
+                        <div>{{itemTemplate.itemData.item.title}}</div>
+                        <div style="font-size: 11px; color: grey">{{itemTemplate.itemData.item.description}}</div>
                     </div>
                 </ws:contentTemplate>
             </ws:partial>
@@ -28,7 +28,7 @@
             markedKey="{{2}}"
             allowEmptySelection="{{false}}"
             itemActionsType="outside"
-            idProperty="id"
+            keyProperty="id"
             on:actionClick="_onActionClick()"
             itemActions="{{_itemActions}}"
             itemActionVisibilityCallback="{{_showAction}}"
@@ -38,8 +38,8 @@
             <ws:partial template="tmpl!Controls/List/ItemTemplate">
                 <ws:contentTemplate>
                     <div style="padding: 4px;">
-                        <div>{{itemTemplate.itemData.item.get('title')}}</div>
-                        <div style="font-size: 11px; color: grey">{{itemTemplate.itemData.item.get('description')}}</div>
+                        <div>{{itemTemplate.itemData.item.title}}</div>
+                        <div style="font-size: 11px; color: grey">{{itemTemplate.itemData.item.description}}</div>
                     </div>
                 </ws:contentTemplate>
             </ws:partial>

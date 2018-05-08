@@ -38,7 +38,8 @@ define('SBIS3.CONTROLS/Filter/FavoriteEditDialog',
       var hasFieldsToSave = function(self, record) {
          var toSaveFields = record.get('toSaveFields');
          /* Не даём сохранить запись, если нет параметров для сохранения */
-         return self._options._items.length > Object.keys(toSaveFields).length;
+         /* toSaveField нет, перед непосредственным сохранением записи в историю, поэтому не проверяем */
+         return toSaveFields ? self._options._items.length > Object.keys(toSaveFields).length : true;
       };
 
       var FavoriteEditDialog = FormController.extend({

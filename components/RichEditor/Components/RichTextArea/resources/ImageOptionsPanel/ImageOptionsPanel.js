@@ -141,10 +141,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptions
                }
             },
 
-            getFileLoader: function() {
-               return Di.resolve('ImageUploader').getFileLoader();
-            },
-
             getEditor: function() {
                return Di.resolve('ImageEditor');
             },
@@ -165,7 +161,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptions
                         side: 'left',
                         offset: -100
                      },
-                     element: $('<div></div>')
+                     element: $('<div></div>'),
+                     linkedEditor: this.getParent(),
+                     imageFolder: this.getParent()._options.imageFolder
                   });
                   this._imagePanel.subscribe('onTemplateChange', function(event, template){
                      self._notify('onTemplateChange', template);
@@ -193,7 +191,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptions
                         .addCallback(this.hide.bind(this));
                      break;
                   case "change":
-                     this.getFileLoader().startFileLoad(this._replaceButton._container, false, this._options.imageFolder).addCallback(function(fileobj){
+                     var editor = this.getParent();
+                     editor.selectAndUploadImage(this._replaceButton._container, this._options.imageFolder, false).addCallback(function(fileobj){
                         this._notify('onImageChange', fileobj);
                         this.hide();
                      }.bind(this));

@@ -6,13 +6,13 @@ define('SBIS3.CONTROLS/Action/List/Sum', [
    "SBIS3.CONTROLS/Action/Mixin/DialogMixin",
    "WS.Data/Source/SbisService",
    "WS.Data/Entity/Model",
-   "WS.Data/Entity/Record",
+   "SBIS3.CONTROLS/Utils/SelectionUtil",
    "Core/core-merge",
    "Core/core-clone",
    "Core/core-instance",
    "WS.Data/Adapter/Sbis"
 ],
-    function ( Deferred,ActionBase, ListMixin, DialogMixin, SbisService, Model, Record, cMerge, cClone, cInstance) {
+    function ( Deferred,ActionBase, ListMixin, DialogMixin, SbisService, Model, SelectionUtil, cMerge, cClone, cInstance) {
         'use strict';
         /**
          * Класс, описывающий действие суммирования полей в списке.
@@ -164,7 +164,7 @@ define('SBIS3.CONTROLS/Action/List/Sum', [
                   source = this.getDataSource(),
                   filter = this._getFilterForSum();
 
-               filter.selection = Record.fromObject(selection, source.getAdapter());
+               filter.selection = SelectionUtil.selectionToRecord(selection, source.getAdapter());
 
                return this._sumByFilter(filter);
             },

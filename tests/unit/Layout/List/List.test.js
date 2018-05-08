@@ -1,4 +1,4 @@
-define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/RecordSet'], function(List, Memory, RecordSet) {
+define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/RecordSet', 'Core/Deferred'], function(List, Memory, RecordSet, Deferred) {
    
    if (typeof mocha !== 'undefined') {
       //Из-за того, что загрузка через Core/moduleStubs добавляет в global Lib/Control/LoadingIndicator/LoadingIndicator,
@@ -73,6 +73,7 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/
                { id: 2, title: 'Dmitry' }
             ]
          });
+         listLayout._searchDeferred = new Deferred();
          List._private.searchCallback(listLayout, {data: recordSet}, {testField: 'testValue'});
          assert.deepEqual(recordSet.getRawData(), listLayout._source._$data);
          assert.deepEqual(listLayout._filter, {testField: 'testValue'});

@@ -2,9 +2,9 @@ define('Controls/Input/Lookup', [
 ], function() {
 
    /**
-    * Поле выбора из справочника с единичным выбором.
+    * Input for selection from source (single choice).
+    *
     * @class Controls/Input/Lookup
-    * @extends Controls/Control
     * @mixes Controls/Input/interface/ISearch
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IFilter

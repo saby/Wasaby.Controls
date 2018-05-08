@@ -2,13 +2,14 @@ define('Controls/Input/interface/IDropdownEmptyValue', [
 ], function() {
 
    /**
-    * Интерфейс работы с пустым выделением в выпадающих списках.
+    * Interface for adding "empty selection" to dropdown lists.
+    *
     * @mixin Controls/Input/interface/IDropdownEmptyValue
     * @public
     */
 
    /**
     * @name Controls/Input/interface/IDropdownEmptyValue#emptyValueAllowed
-    * @cfg {Boolean} Добавляет в выпадающий список новый пункт "Не выбрано".
+    * @cfg {Boolean} Adds "Nothing selected" choice to dropdown list.
     */
 });
