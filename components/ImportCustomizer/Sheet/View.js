@@ -18,10 +18,10 @@ define('SBIS3.CONTROLS/ImportCustomizer/Sheet/View',
       var View = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ImportCustomizer/Sheet/View.prototype*/ {
 
          /**
-          * @event change Происходит при измении настраиваемые значения компонента
-          * @param {Core/EventObject} evtName Дескриптор события
-          * @param {object} values Настраиваемые значения компонента:
-          * @param {number} values.sheetIndex Индекс выбранной области данных для импортирования
+          * @typedef {object} ExportSheetResult Тип, описывающий возвращаемые настраиваемые значения компонента
+          * @property {number} sheetIndex Индекс выбранной области данных для импортирования
+          *
+          * @see sheetIndex
           */
 
          _dotTplFn: dotTplFn,
@@ -91,7 +91,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Sheet/View',
           * Получить все настраиваемые значения компонента
           *
           * @public
-          * @return {object}
+          * @return {ExportSheetResult}
           */
          getValues: function () {
             return {
