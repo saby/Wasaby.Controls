@@ -1420,16 +1420,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                        }
                                        editor.execCommand('mceInsertLink', false, linkAttrs);
                                        selection.collapse(false);
-                                       if (cConstants.browser.firefox) {
-                                          // В firefox каретка(курсор ввода) остаётся (и просачивается) внутрь элемента A, нужно принудительно вывести её наружу, поэтому:
-                                          var r = editor.selection.getRng();
-                                          var a = r.endContainer;
-                                          for (; a && a.nodeName !== 'A'; a = a.parentNode) {}
-                                          if (a) {
-                                             editor.selection.select(a);
-                                             editor.selection.collapse(false);
-                                             fre.insertHtml('&#65279;');
-                                             editor.selection.setRng(r);
+                                       if (BROWSER.firefox) {
+                                          // В firefox каретка(курсор ввода) остаётся (и просачивается) внутрь элемента A, нужно принудительно вывести её наружу
+                                          var rng = selection.getRng();
+                                          var node = rng.endContainer;
+                                          if (node.nodeName === 'A') {
+                                             selection.select(node, false);
+                                             selection.collapse(false);
                                           }
                                        }
                                     }
