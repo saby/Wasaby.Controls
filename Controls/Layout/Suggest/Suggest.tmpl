@@ -1,31 +1,35 @@
 <div class="controls-SuggestV">
-
-    <ws:partial template="{{_options.content}}" on:valueChanged="_changeValueHandler()" attr:class="controls-Suggest-Text_style_{{_options.suggestStyle}}"/>
-
-    <div if="{{_options.suggestState}}" class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer-style-{{_options.suggestStyle}}">
-        <Controls.Button.Close if="{{_options.suggestStyle === 'overInput'}}" attr:class="controls-Suggest-close" on:click="_close()"/>
-        <Controls.Tabs.Buttons if="{{_tabsSource}}" attr:class="controls-Suggest__tabs" source="{{_tabsSource}}" selectedKey="{{_tabsSelectedKey}}" keyProperty="id" on:selectedKeyChanged="_tabsSelectedKeyChanged()"/>
+    <ws:template name="suggestTpl">
         <ws:partial
                 template="{{_options.suggestTemplate}}"
                 searchEndCallback="{{_searchEnd}}"
                 searchStartCallback="{{_searchStart}}"
                 emptyTemplate="{{_options.emptyTemplate}}"
                 source="{{_options.source}}"
-                navitaion="{{_options.navigation}}"
+                navigation="{{_options.navigation}}"
                 searchParam="{{_options.searchParam}}"
                 on:itemClick="_select()"
-        >
-            <ws:footerTemplate>
-                <ws:if data="{{_options.footerTemplate && _isFooterShown}}">
-                    <ws:partial template="{{ _options.footerTemplate}}" on:click="_showAllClick()" hasMore="{{_searchResult ? _searchResult.hasMore}}"/>
-                </ws:if>
-            </ws:footerTemplate>
-        </ws:partial>
+        />
+    </ws:template>
+
+    <ws:partial template="{{_options.content}}" on:valueChanged="_changeValueHandler()" attr:class="controls-Suggest-Text_style_{{_options.suggestStyle}}"/>
+
+    <div if="{{_options.suggestState}}" class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer-style-{{_options.suggestStyle}}">
+        <Controls.Button.Close if="{{_options.suggestStyle === 'overInput'}}" attr:class="controls-Suggest-close" on:click="_close()"/>
+        <Controls.Tabs.Buttons if="{{_tabsSource}}" attr:class="controls-Suggest__tabs" source="{{_tabsSource}}" selectedKey="{{_tabsSelectedKey}}" keyProperty="id" on:selectedKeyChanged="_tabsSelectedKeyChanged()"/>
+        <ws:partial template="suggestTpl"/>
+        <ws:if data="{{_options.footerTemplate && _isFooterShown}}">
+            <ws:partial template="{{ _options.footerTemplate}}" on:click="_showAllClick()" hasMore="{{_searchResult ? _searchResult.hasMore}}"/>
+        </ws:if>
     </div>
 
     <Controls.Popup.Opener.Stack name="stackOpener">
         <ws:popupOptions template="Controls/Layout/Suggest/Dialog">
-            <ws:templateOptions template="{{_options.suggestTemplate}}" searchValue="{{_searchValue}}"/>
+            <ws:templateOptions searchValue="{{_searchValue}}">
+                <ws:template>
+                    <ws:partial template="suggestTpl"/>
+                </ws:template>
+            </ws:templateOptions>
             <ws:eventHandlers onResult="{{_select}}"/>
         </ws:popupOptions>
     </Controls.Popup.Opener.Stack>

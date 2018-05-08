@@ -75,6 +75,10 @@ define('Controls/Input/Suggest',
             this._suggestState = false;
             this._notify('valueChanged', ['']);
          },
+         
+         _deactivated: function() {
+            this._suggestState = false;
+         },
    
          _searchStart: function() {
             this._searchState = true;

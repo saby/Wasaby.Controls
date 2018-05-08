@@ -25,6 +25,10 @@ define('Controls/Input/Search/Suggest',
    
          _resetClick: function() {
             this._suggestState = false;
+         },
+   
+         _deactivated: function() {
+            this._suggestState = false;
          }
          
       });

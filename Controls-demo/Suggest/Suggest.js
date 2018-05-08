@@ -116,7 +116,7 @@ define('Controls-demo/Suggest/Suggest', [
                     items.setMetaData({
                        tabs: [{id: 1, title: 'Вкладка'}, {id: 2, title: 'Вкладка2'}],
                        more: items.getMetaData().more,
-                       currentTab: 2
+                       currentTab: 1
                     });
                     return items;
                   };

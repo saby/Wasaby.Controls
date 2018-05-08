@@ -143,10 +143,6 @@ define('Controls/Layout/Suggest',
             _private.updateFilter(this, this._searchValue, this._tabsSelectedKey);
          },
          
-         _deactivated: function() {
-            _private.close(this);
-         },
-         
          _select: function(event, item) {
             item = item || event;
             _private.close(this);

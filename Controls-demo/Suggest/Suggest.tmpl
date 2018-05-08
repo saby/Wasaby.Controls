@@ -7,11 +7,11 @@
                 displayProperty="text"
                 searchParam="title"
                 source="{{_suggestSource}}">
+            <ws:navigation source="page" view="page">
+                <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
+            </ws:navigation>
             <ws:suggestTemplate>
                 <Controls.Container.Suggest.List>
-                    <ws:navigation source="page" view="page">
-                        <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
-                    </ws:navigation>
                     <ws:content>
                         <Controls:List
                                 displayProperty="title"
