@@ -72,6 +72,15 @@ define('SBIS3.CONTROLS/Mixins/DropdownListMixin', [
             },
 
             _bindItemSelect: function () {
+               //TODO На некоторых терминалах для престы неправильно работает mouseup (срабатывает не для того контейнера, над которым сделали тач)
+               //Если на устройстве есть тач - обрабатываем его. если нет, то mouseup
+               //На VDOM компонентах нужно сделать через переопределение метода clickHandler (или его аналоге), который уже имеет в себе костыльную логику, умеющую
+               //определять правильный таргет. Сейчас нет необходимости в пробросе колбэков в пикерМиксин и/или добавлении в нем нового события
+                this._picker.getContainer().bind('touchend', function(e) {
+                   this._clickItemHandler(e);
+                   e.preventDefault();
+                   e.stopPropagation();
+                }.bind(this));
                 this._picker.getContainer().bind('mouseup', this._clickItemHandler.bind(this));
                 this._picker.getContainer().bind('dblclick', this._dblClickItem.bind(this));
             },
