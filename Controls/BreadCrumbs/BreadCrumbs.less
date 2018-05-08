@@ -49,11 +49,6 @@
    min-width: @min-width_BreadCrumbs-text;
 }
 
-.controls-BreadCrumbsV__title:hover {
-   color: @color_BreadCrumbs-title_hovered;
-   text-decoration: underline;
-}
-
 .controls-BreadCrumbsV__arrow {
    .icon(@font-size_BreadCrumbs-arrow);
    cursor: pointer;
@@ -71,10 +66,6 @@
    .icon(@font-size_BreadCrumbs-home);
    cursor: pointer;
    padding-right: @spacing_BreadCrumbs-between-home-and-crumbs;
-}
-
-.controls-BreadCrumbsV__home:hover {
-   color: @bread-crumb-title-hover-color;
 }
 
 .controls-BreadCrumbsV__title_min {
@@ -108,5 +99,16 @@
    &:last-of-type {
       background: @background_BreadCrumbs-corner no-repeat;
       align-self: flex-start;
+   }
+}
+
+.ws-is-no-touch {
+   .controls-BreadCrumbsV__title:hover {
+      color: @color_BreadCrumbs-title_hovered;
+      text-decoration: underline;
+   }
+
+   .controls-BreadCrumbsV__home:hover {
+      color: @bread-crumb-title-hover-color;
    }
 }

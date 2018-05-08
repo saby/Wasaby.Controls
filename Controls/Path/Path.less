@@ -23,9 +23,6 @@
    align-self: center;
    background-color: @background-color_Path-backButtonArrow;
    right: 0;
-   &:hover {
-      color: @color_Path-backButtonArrow_hovered;
-   }
 }
 
 .controls-Path__backButtonArrow_outsideBackButton {
@@ -48,4 +45,10 @@
    width: 50%;
    flex-shrink: 1;
    overflow: hidden;
+}
+
+.ws-is-no-touch {
+   .controls-Path__backButtonArrow:hover {
+      color: @color_Path-backButtonArrow_hovered;
+   }
 }
