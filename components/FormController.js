@@ -445,14 +445,15 @@ function(cContext, coreClone, cMerge, CommandDispatcher, EventBus, Deferred, IoC
        * Показывает индикатор загрузки
        */
       _showLoadingIndicator: forAliveOnly(function(message) {
-         cIndicator.setMessage(message || this._options.indicatorSavingMessage, true);
+//todo поправить LoadingIndicator
+         // cIndicator.setMessage(message || this._options.indicatorSavingMessage, true);
       }),
 
       /**
        * Скрывает индикатор загрузки
        */
       _hideLoadingIndicator: function() {
-         cIndicator.hide();
+         // cIndicator.hide();
       },
       _processError: function(e, hideErrorDialog, eventName) {
          var eResult = this._notify('onFail', e, eventName),

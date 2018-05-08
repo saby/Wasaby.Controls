@@ -2,6 +2,7 @@
  * Created by as.krasilnikov on 21.03.2018.
  */
 define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
+   var PANEL_SHADOW_WIDTH = 5; // минимальный отступ стековой панели от правого края
    return {
 
       /**
@@ -32,7 +33,7 @@ define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
             }
          }
          return {
-            width: width,
+            width: width + PANEL_SHADOW_WIDTH,
             right: right,
             top: top,
             bottom: 0

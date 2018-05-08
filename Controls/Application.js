@@ -111,6 +111,14 @@ define('Controls/Application',
                compat: self.compat
             });
             return def;
+         },
+         _afterMount: function() {
+            //загружаем слой совместимости
+            setTimeout(function() {
+               requirejs(['Controls/Application/CompatiblePopup'], function(CompatiblePopup) {
+                  CompatiblePopup.load();
+               });
+            }, 1000);
          }
       });
 
