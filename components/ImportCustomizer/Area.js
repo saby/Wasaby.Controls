@@ -458,15 +458,25 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             return options;
          },
 
+         /**
+          * Провести обработку опций
+          * @protected
+          * @param {object} options Опции компонента
+          */
          _processOptions: function (options) {
             options._isUsedSubview = this._getSubviewUsings(options);
             if (!options.waitingMode) {
                this._resolveOptions(options);
-               this._validateOptions(options);
+               this._validateOptions(options, this._filterValidatedOptionNames.bind(this));
                this._reshapeOptions(options);
             }
          },
 
+         /**
+          * Создать все необходимые дополнительные опции компонента
+          * @protected
+          * @param {object} options Опции компонента
+          */
          _reshapeOptions: function (options) {
             var isUsedSubview = options._isUsedSubview;
             // Если в опции "fields" нет явных данных типа {@link ImportTargetFields}, то выявить обещание this._fieldsPromise, а опцию сбросить
@@ -537,6 +547,11 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             options._scopes = scopes;
          },
 
+         /**
+          * Разрешить неустановленные собственные опции компонента их значениями по умолчанию из статического метода getDefaultOptions
+          * @protected
+          * @param {object} options Опции компонента
+          */
          _resolveOptions: function (options) {
             var defaultOptions = Area.getDefaultOptions();
             for (var name in defaultOptions) {
@@ -546,33 +561,53 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             }
          },
 
-         _validateOptions: function (options) {
+         /**
+          * Отобрать из указанных имён собственных опций только те, проверки для которых актуальны, учитывая значения других опций
+          * @protected
+          * @param {Array<string>} names Имена собственных опций компонента, для которых имеются валидаторы из статического метода getOptionTypes
+          * @param {object} options Опции компонента
+          * @param {Array<string>}
+          */
+         _filterValidatedOptionNames: function (names, options) {
             if (!options.waitingMode) {
-               var typeValidators = Area.getOptionTypes();
-               if (typeValidators) {
-                  var _remove = function (list) { Array.prototype.slice.call(arguments, 1).forEach(function (item) { var i = list.indexOf(item); if (i !== -1) { list.splice(i, 1); }; }); };
-                  var names = Object.keys(typeValidators);
-                  if (!options.dialogMode) {
-                     _remove(names, 'dialogTitle', 'dialogButtonTitle');
-                  }
-                  var dataType = options.dataType;
-                  if (dataType === Area.DATA_TYPE_EXCEL || dataType === Area.DATA_TYPE_DBF) {
-                     _remove(names, 'mapping');
-                  }
-                  else
-                  if (dataType === Area.DATA_TYPE_CML) {
-                     _remove(names, 'allSheetsTitle', 'columnBindingMenuTitle', 'columnBindingHeadTitle', 'parsers', 'sheets', 'sheetIndex', 'sameSheetConfigs');
-                  }
-                  if (names && names.length) {
-                     for (var i = 0; i < names.length; i++) {
-                        var name = names[i];
-                        var validator = typeValidators[name];
-                        if (validator) {
-                           var err = validator(options[name]);
-                           if (err instanceof Error) {
-                              //IoC.resolve('ILogger').error('ImportCustomizer', err.message);
-                              throw new Error('Wrong option "' + name + '": ' + err.message);
-                           }
+               var _remove = function (list) { Array.prototype.slice.call(arguments, 1).forEach(function (item) { var i = list.indexOf(item); if (i !== -1) { list.splice(i, 1); }; }); };
+               if (!options.dialogMode) {
+                  _remove(names, 'dialogTitle', 'dialogButtonTitle');
+               }
+               var dataType = options.dataType;
+               if (dataType === Area.DATA_TYPE_EXCEL || dataType === Area.DATA_TYPE_DBF) {
+                  _remove(names, 'mapping');
+               }
+               else
+               if (dataType === Area.DATA_TYPE_CML) {
+                  _remove(names, 'allSheetsTitle', 'columnBindingMenuTitle', 'columnBindingHeadTitle', 'parsers', 'sheets', 'sheetIndex', 'sameSheetConfigs');
+               }
+               return names;
+            }
+         },
+
+         /**
+          * Проверить собственные опции компонента на допустимость их значений, используя валидаторы из статического метода getOptionTypes
+          * @protected
+          * @param {object} options Опции компонента
+          * @param {function(Array<string>, object):Array<string>} [namesFilter] Фильт имён опций, которые подлежат проверке. Применяется при необходимости варьировать проверку в зависимости от значений других опций (опционально)
+          */
+         _validateOptions: function (options, namesFilter) {
+            var typeValidators = Area.getOptionTypes();
+            if (typeValidators) {
+               var names = Object.keys(typeValidators);
+               if (namesFilter) {
+                  names = namesFilter.call(null, names, options);
+               }
+               if (names && names.length) {
+                  for (var i = 0; i < names.length; i++) {
+                     var name = names[i];
+                     var validator = typeValidators[name];
+                     if (validator) {
+                        var err = validator(options[name]);
+                        if (err instanceof Error) {
+                           //IoC.resolve('ILogger').error('ImportCustomizer', err.message);
+                           throw new Error('Wrong option "' + name + '": ' + err.message);
                         }
                      }
                   }
