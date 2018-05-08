@@ -81,6 +81,10 @@ define("File/Attach/Container/Source", ["require", "exports", "Core/Deferred"], 
             return wrapper && wrapper.source;
         };
         SourceContainer.prototype.destroy = function () {
+            this._sourceWrappers.forEach(function (wrapper) {
+                var source = wrapper.source;
+                source.destruct && source.destruct();
+            });
             this._sourceWrappers = [];
         };
         return SourceContainer;

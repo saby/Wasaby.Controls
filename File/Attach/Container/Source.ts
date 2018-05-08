@@ -96,6 +96,10 @@ class SourceContainer implements IContainer<ISource> {
         return wrapper && wrapper.source;
     }
     destroy() {
+        this._sourceWrappers.forEach((wrapper: SourceWrapper) => {
+            let source = wrapper.source;
+            source.destruct && source.destruct();
+        });
         this._sourceWrappers = [];
     }
 }
