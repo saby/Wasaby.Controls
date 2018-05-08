@@ -1,0 +1,38 @@
+.controls-RichTextArea {
+   .flexbox();
+   box-sizing: border-box;
+
+   img {
+      //TODO: увелисчить вес селектора
+      outline: none !important;
+      cursor: pointer;
+   }
+}
+
+.controls-RichTextArea__readOnly {
+   border: 1px solid transparent;
+}
+
+.controls-RichTextArea__editable {
+   border: 1px solid @border-color_RichArea_editable;
+}
+
+.controls-RichTextArea__scrollContainer {
+   width: 100%;
+}
+
+.controls-RichTextArea__dataReview {
+   z-index: 1;
+   width: 100%;
+   height: 100%;
+   padding: @padding_RichArea_dataReview; /* отступы у параграфов через padding родительского блока без first-child */
+   .box-sizing(border-box);
+   word-wrap: break-word;
+   .engine-DecoratedLink {
+      display: block;
+   }
+   & > :last-child,
+   & > :last-child li:last-child {
+      margin-bottom: 0;
+   }
+}
