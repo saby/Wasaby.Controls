@@ -65,25 +65,28 @@ define('Controls/Container/DragNDrop',
                   _private.preventClickEvent(startEvent);
                }
                if (this._isDragging) {
-                  this._children.dragMoveDetect.start(this._getDragObject(nativeEvent));
+                  this._children.dragMoveDetect.start(this._getDragObject(nativeEvent, this._startEvent));
                }
             }
          },
 
-         _getDragObject: function(mouseEvent) {
+         _getDragObject: function(mouseEvent, startEvent) {
             return {
                entity: this._dragEntity,
                position: _private.getDragPosition(mouseEvent),
-               offset: _private.getDragOffset(mouseEvent, this._startEvent)
+               offset: _private.getDragOffset(mouseEvent, startEvent)
             };
          },
 
          _mouseUp: function(event) {
-            if (this._isDragging) {
-               this._children.dragEndDetect.start(this._getDragObject(event.nativeEvent));
+            if (this._startEvent) {
+               if (this._isDragging) {
+                  this._isDragging = false;
+                  this._children.dragEndDetect.start(this._getDragObject(event.nativeEvent, this._startEvent));
+               }
+
                this._dragEntity = null;
                this._startEvent = null;
-               this._isDragging = false;
             }
          }
       });
