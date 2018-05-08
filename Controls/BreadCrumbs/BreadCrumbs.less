@@ -55,10 +55,6 @@
    left: -9999px;
    position: absolute;
    white-space: nowrap;
-   * {
-      //т.к. жирность текста все равно не влияет на его ширину, то проще мерять с font-weight: normal, чтобы не дожидаться подгрузки жирной версии шрифта
-      font-weight: normal !important;
-   }
 }
 
 .controls-BreadCrumbsV__home {
@@ -96,4 +92,9 @@
       position: relative;
       top: -4px;
    }
+}
+
+//Класс сделан только для удобства замеров
+.controls-BreadCrumbsV__crumbMeasurer {
+   font-family: @font-family_BreadCrumbs, "Courier New";
 }

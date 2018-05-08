@@ -71,9 +71,11 @@ define('Controls/Path', [
       _afterMount: function() {
          this._oldWidth = this._container.clientWidth;
          if (this._options.items && this._options.items.length > 0) {
-            FontLoadUtil.waitForFontLoad('TensorFont').addCallback(function() {
-               _private.calculateItems(this, this._options.items);
-               this._forceUpdate();
+            FontLoadUtil.waitForFontLoad('controls-BreadCrumbsV__crumbMeasurer').addCallback(function() {
+               FontLoadUtil.waitForFontLoad('controls-Path__backButtonMeasurer').addCallback(function() {
+                  _private.calculateItems(this, this._options.items);
+                  this._forceUpdate();
+               }.bind(this));
             }.bind(this));
          }
       },

@@ -1,30 +1,28 @@
 define('Controls/Utils/FontLoadUtil', [
-   'Core/Deferred'
+   'Core/Deferred',
+   'css!Controls/Utils/FontLoadUtil'
 ], function(Deferred) {
    'use strict';
 
    var
       fallbackFontWidth,
       _private = {
-         isLoaded: function(font) {
+         isLoaded: function(className) {
             var
                measurer = document.createElement('div'),
                loadedFontWidth;
 
-            measurer.style.fontSize = '25px';
-            measurer.style.position = 'absolute';
-            measurer.style.top = '-9999px';
-            measurer.style.left = '-9999px';
-            measurer.style.visibility = 'hidden';
             measurer.innerText = 'test string';
+            measurer.classList.add('controls-FontLoadUtil__measurer');
             document.body.appendChild(measurer);
 
             if (!fallbackFontWidth) {
-               measurer.style.fontFamily = 'Courier New'; //Courier New выбран за то, что он сильно отличается от большей части шрифтов и есть везде
+               measurer.classList.add('controls-FontLoadUtil__measurer_fallback');
                fallbackFontWidth = measurer.clientWidth;
+               measurer.classList.remove('controls-FontLoadUtil__measurer_fallback');
             }
 
-            measurer.style.fontFamily = font + ', Courier New';
+            measurer.classList.add(className);
             loadedFontWidth = measurer.clientWidth;
             document.body.removeChild(measurer);
             return fallbackFontWidth !== loadedFontWidth;
@@ -32,11 +30,11 @@ define('Controls/Utils/FontLoadUtil', [
       };
 
    return {
-      waitForFontLoad: function(font) {
+      waitForFontLoad: function(className) {
          var
             def = new Deferred(),
             checkFontLoad = setInterval(function() {
-               if (_private.isLoaded(font)) {
+               if (_private.isLoaded(className)) {
                   clearInterval(checkFontLoad);
                   def.callback();
                }

@@ -21,7 +21,7 @@ define('Controls/BreadCrumbsController', [
       _afterMount: function() {
          if (this._options.items && this._options.items.length > 0) {
             this._oldWidth = this._container.clientWidth;
-            FontLoadUtil.waitForFontLoad('TensorFont').addCallback(function() {
+            FontLoadUtil.waitForFontLoad('controls-BreadCrumbsV__crumbMeasurer').addCallback(function() {
                BreadCrumbsUtil.calculateBreadCrumbsToDraw(this,  this._options.items, this._oldWidth);
                this._forceUpdate();
             }.bind(this));
