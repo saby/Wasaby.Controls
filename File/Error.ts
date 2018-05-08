@@ -18,7 +18,7 @@ type ErrorParam = {
     details?: string;
 }
 /**
- * Ошибка несоответствия типа выбранного файла
+ * Ошибка файла
  * @class
  * @name File/Error
  * @public

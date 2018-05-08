@@ -27,15 +27,16 @@ type FilePrepareGetter = (filterParams: object) => FilePreparer;
  */
 let filePrepareGetter: FilePrepareGetter;
 
-filePrepareGetter = (filterParams: object) =>  // FilePrepareGetter
-    (files: FileList) =>  // FilePreparer
-        filter(files, filterParams).map(
+filePrepareGetter = (filterParams: object) => { // FilePrepareGetter
+    return (files: FileList) => { // FilePreparer
+        return filter(files, filterParams).map(
             (file) => {
-                if (file instanceof Error){
+                if (file instanceof Error) {
                     return file;
                 }
                 return new LocalFile(file);
             }
         );
-
+    }
+};
 export = filePrepareGetter;

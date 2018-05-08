@@ -3,7 +3,7 @@ define("File/Error/MaxSize", ["require", "exports", "tslib", "File/Error"], func
     var MESSAGE = rk('Размер выбранного файла превышает максимально допустимый');
     var getDetails = function (fileName, size) { return rk("\u0424\u0430\u0439\u043B " + fileName + " \u043F\u0440\u0435\u0432\u044B\u0448\u0430\u0435\u0442 \u0434\u043E\u043F\u0443\u0441\u0442\u0438\u043C\u044B\u0439 \u0440\u0430\u0437\u043C\u0435\u0440 " + size + "\u041C\u0411"); };
     /**
-     * Ошибка несоответствия типа выбранного файла
+     * Ошибка превышения заданного размера выбранного файла
      * @class
      * @name File/Error/MaxSize
      * @public

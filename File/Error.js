@@ -14,7 +14,7 @@
 define("File/Error", ["require", "exports", "tslib"], function (require, exports, tslib_1) {
     "use strict";
     /**
-     * Ошибка несоответствия типа выбранного файла
+     * Ошибка файла
      * @class
      * @name File/Error
      * @public
