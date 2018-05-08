@@ -1,4 +1,4 @@
-define('Controls/Input/RichTextArea/RichAreaModel',
+define('Controls/Input/RichArea/RichAreaModel',
    [
       'Core/core-simpleExtend'
    ],

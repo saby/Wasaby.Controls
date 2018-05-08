@@ -1,8 +1,8 @@
-define('Controls/Input/RichTextArea', [
+define('Controls/Input/RichArea', [
    'Core/Control',
-   'tmpl!Controls/Input/RichTextArea/RichTextArea',
-   'Controls/Input/RichTextArea/RichAreaModel',
-   'css!Controls/Input/RichTextArea/RichTextArea'
+   'tmpl!Controls/Input/RichArea/RichArea',
+   'Controls/Input/RichArea/RichAreaModel',
+   'css!Controls/Input/RichArea/RichArea'
 ], function(Control, template, RichModel) {
    'use strict';
 

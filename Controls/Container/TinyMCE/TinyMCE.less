@@ -24,22 +24,22 @@
    }
 
    &:empty {
-      padding-bottom: 6px;
+      padding-bottom: @padding-bottom_TinyMCE_empty;
    }
 
    &.ws-basic-style {
       & > p, & > pre, & > div {
          margin-top: 0;
          margin-left: 0;
-         margin-right: 16px;
+         margin-right: @margin-right_TinyMCE_blockElements;
       }
       .mce-visual-caret {
-         margin: 0px;
+         margin: 0;
       }
    }
 
    li {
-      margin-bottom: 6px;
+      margin-bottom: @margin-bottom_TinyMCE_listItem;
    }
 
    & > :last-child li:last-child {
@@ -47,11 +47,11 @@
    }
 
    &.ws-basic-style {
-      padding: 2px 0 2px 4px;
-      box-sizing: border-box;
+      padding: @padding__TinyMCE_basicStyle;
+      .box-sizing(border-box);
       word-wrap: break-word;
       table {
-         margin-bottom: 5px;
+         margin-bottom: @margin-bottom_TinyMCE_table;
       }
       outline: none !important;
       img {
