@@ -584,7 +584,7 @@ define('SBIS3.CONTROLS/DropdownList',
                  curSelectionLength = this._currentSelection.length,
                  selectedItemIndex,
                  selected;
-            if (row.length && (e.button === 0)) {
+            if (row.length) {
                if (this._options.multiselect && itemId != this.getDefaultId() && curSelectionLength !== 0 &&
                   (this._checkBoxSelectionStarted) || isCheckBoxClick) {
                   this._checkBoxSelectionStarted = true;
