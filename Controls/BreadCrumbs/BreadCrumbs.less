@@ -1,12 +1,22 @@
+@min-width_BreadCrumbs_withOverflow: @font-size_BreadCrumbs-arrow + @min-width_BreadCrumbs-text;
+
 .controls-BreadCrumbsV {
    white-space: nowrap;
+}
+
+.controls-BreadCrumbsV__wrapper {
+   display: flex;
+   align-items: baseline;
+   overflow: hidden;
+   width: 100%;
 }
 
 .controls-BreadCrumbsV__items {
    display: inline-flex;
    align-items: center;
+   overflow: hidden;
    height: @height_BreadCrumbs-items;
-   max-width: calc(100% ~'-' @font-size_BreadCrumbs-home + @spacing_BreadCrumbs-home);
+   width: 100%;
 }
 
 .controls-BreadCrumbsV__crumb {
@@ -31,7 +41,7 @@
 
 .controls-BreadCrumbsV__crumb_withOverflow {
    flex-shrink: 1;
-   min-width: @font-size_BreadCrumbs-arrow + @min-width_BreadCrumbs-text;
+   min-width: @min-width_BreadCrumbs_withOverflow;
 }
 
 .controls-BreadCrumbsV__titleWrapper_withOverflow {
@@ -45,7 +55,7 @@
 }
 
 .controls-BreadCrumbsV__arrow {
-   .icon-size-without-important(@font-size_BreadCrumbs-arrow);
+   .icon(@font-size_BreadCrumbs-arrow);
    cursor: pointer;
 }
 
@@ -58,9 +68,9 @@
 }
 
 .controls-BreadCrumbsV__home {
-   .icon-size-without-important(@font-size_BreadCrumbs-home);
+   .icon(@font-size_BreadCrumbs-home);
    cursor: pointer;
-   padding-right: @spacing_BreadCrumbs-home;
+   padding-right: @spacing_BreadCrumbs-between-home-and-crumbs;
 }
 
 .controls-BreadCrumbsV__home:hover {

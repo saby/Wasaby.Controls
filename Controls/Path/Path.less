@@ -1,3 +1,5 @@
+@min-width_BackButton_short: @min-width_BreadCrumbs-text + @width-BackButton_size-default + @spacing-BackButton-between-icon-text;
+
 .controls-Path__wrapper {
    display: flex;
    align-items: baseline;
@@ -7,7 +9,6 @@
 .controls-Path__backButton {
    white-space: nowrap;
    position: relative;
-   padding: 0 @spacing_Path-backButton;
 }
 
 .controls-Path__backButton__wrapper {
@@ -17,18 +18,18 @@
 }
 
 .controls-Path__backButtonArrow {
-   .icon-size-without-important(@font-size_BreadCrumbs-backButtonArrow);
+   .icon(@font-size_Path-backButtonArrow);
    position: absolute;
    align-self: center;
    background-color: @background-color_Path-backButtonArrow;
-   right: -@spacing_Path-backButton;
+   right: 0;
    &:hover {
-      color: @color_Path-backButtonArrow;
+      color: @color_Path-backButtonArrow_hovered;
    }
 }
 
-.controls-Path__backButtonArrow_overflow {
-   right: 0;
+.controls-Path__backButtonArrow_outsideBackButton {
+   margin-right: -@font-size_Path-backButtonArrow;
 }
 
 .controls-Path__breadCrumbs {
@@ -38,7 +39,7 @@
 
 .controls-Path__backButton_short {
    flex-shrink: 1;
-   min-width: @min-width_BreadCrumbs-text + @width-BackButton_size-default + @spacing-BackButton-between-icon-text;
+   min-width: @min-width_BackButton_short;
    overflow: hidden;
 }
 
