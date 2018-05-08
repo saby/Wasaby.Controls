@@ -1,0 +1,20 @@
+<div>
+    <style>
+        .themeSwitcher {
+            display: none !important;
+        }
+    </style>
+    <h2>Много крошек</h2>
+    <Controls.BreadCrumbsController items="{{items}}"
+                                    on:itemClick="_onItemClick()" />
+    <h2>Одна крошка</h2>
+    <Controls.BreadCrumbsController items="{{items1}}" />
+    <h2>Две крошки</h2>
+    <Controls.BreadCrumbsController items="{{items2}}" />
+    <h2>Две крошки, но одна из них не может сжиматься</h2>
+    <Controls.BreadCrumbsController items="{{items3}}" />
+    <h2>Path</h2>
+    <Controls.Path items="{{items}}"
+                   on:itemClick="_onItemClick()" />
+    <div class="asLink" on:click="_resetCrumbs()">Сбросить крошки</div>
+</div>

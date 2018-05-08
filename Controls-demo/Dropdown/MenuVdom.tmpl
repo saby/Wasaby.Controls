@@ -43,7 +43,7 @@
    <br />
 
    Со скроллом, шапкой и футером
-   <Controls.Input.Dropdown name="myDropdownList5"
+   <Controls.Input.Dropdown name="myDropdownList5" attr:test_name="hier_dropdown"
                           on:footerClick="footerClickHandler()"
                           bind:selectedKeys="_selectedKeys5"
                           keyProperty="id"
@@ -53,7 +53,7 @@
                           source="{{_getMultiData()}}"/>
    <br />
 
-   <Controls.Button.MenuButton on:onMenuItemActivate="_clickItemsChangedHandler()"
+   <Controls.Button.MenuButton on:onMenuItemActivate="_clickItemsChangedHandler()" attr:test_name="plain_menu"
                   name="myMenuButton1"
                   keyProperty="id"
                   style="buttonDefault"
@@ -114,7 +114,7 @@
                    class="menu-horizontal-revert"
                    source="{{_getHierarchyMenuItems()}}"/>
    дублирование малой иконки
-   <Controls.Button.MenuButton name="myMenuButton8"
+   <Controls.Button.MenuButton name="myMenuButton8" attr:test_name="mirror_small_menu"
                    keyProperty="id"
                    style="linkMain"
                    icon="icon-small icon-Author"
@@ -134,7 +134,7 @@
       <ws:headConfig menuStyle="duplicateHead" />
    </Controls.Button.MenuButton>
    меню с крестом
-   <Controls.Button.MenuButton name="myMenuButton10"
+   <Controls.Button.MenuButton name="myMenuButton10" attr:test_name="cross_menu"
                    keyProperty="id"
                    style="linkMain"
                    icon="icon-medium icon-Author"

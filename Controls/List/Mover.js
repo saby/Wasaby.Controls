@@ -37,10 +37,10 @@ define('Controls/List/Mover', [
       moveInSource: function(self, items, target, position) {
          var
             idArray = items.map(function(item) {
-               return cInstance.instanceOfModule(item, 'WS.Data/Entity/Model') ? item.get(self._options.idProperty) : item;
+               return cInstance.instanceOfModule(item, 'WS.Data/Entity/Model') ? item.get(self._options.keyProperty) : item;
             }, self);
 
-         return self._options.sourceController.move(idArray, target.get(self._options.idProperty), {
+         return self._options.sourceController.move(idArray, target.get(self._options.keyProperty), {
             position: position
          });
       },

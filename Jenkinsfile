@@ -421,6 +421,7 @@ node('controls') {
                 cd ./jinnee/distrib/builder
                 cp -rf /home/sbis/Controls/build-ui/ws /home/sbis/Controls/intest-ps/ui/
                 node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/sbis/Controls/intest-ps/ui --application=/
+                sudo systemctl restart Controls_ps
             """
         }
         writeFile file: "./controls/tests/int/config.ini", text:

@@ -1,0 +1,25 @@
+<Controls.Popup.Templates.Dialog.DialogTemplate caption="{{_options.title}}">
+   <ws:topArea>
+      <div class="controls-FilterPanel__header">
+
+         <ws:if data="{{_options.topTemplate}}">
+            <div class="controls-FilterPanel__header-topTemplate">
+               <ws:partial template="{{_options.topTemplate}}"/>
+            </div>
+         </ws:if>
+         <Controls.Button style="linkMain" readOnly="{{!_isChanged}}" caption="{[По умолчанию]}"
+                          on:click="_resetFilter()"
+                          name="resetButton"
+                          attr:class="controls-FilterPanel__resetButton"/>
+
+         <Controls.Button style="buttonPrimary" caption="{[Отобрать]}" on:click="_applyFilter()"
+                          attr:class="controls-FilterPanel__filterButton"/>
+      </div>
+   </ws:topArea>
+   <ws:contentArea>
+      <Controls.PropertyGrid items="{{_items}}"
+                             itemTemplate="{{_options.itemTemplate}}"
+                             on:valueChanged="_valueChangedHandler()"
+                             class="controls-FilterPanel__PropertyGrid"/>
+   </ws:contentArea>
+</Controls.Popup.Templates.Dialog.DialogTemplate>

@@ -56,7 +56,7 @@ define([
          });
          listViewModel = new ListViewModel({
             items: rs,
-            idProperty: 'id'
+            keyProperty: 'id'
          });
 
          actions = [

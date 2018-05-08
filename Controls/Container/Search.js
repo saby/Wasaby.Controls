@@ -8,7 +8,8 @@ define('Controls/Container/Search',
    function(Control, template, SearchContextField) {
       
       /**
-       * Container component for content that can be filtered by Controls/Input/Search.
+       * Container for content that can be filtered by Controls/Input/Search.
+       *
        * @class Controls/Container/Search
        * @extends Core/Control
        * @author Герасимов Александр

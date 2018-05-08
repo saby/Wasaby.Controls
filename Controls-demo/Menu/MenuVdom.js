@@ -51,7 +51,7 @@ define('Controls-demo/Menu/MenuVdom', [
             // возвращаем historySource
             return new historySource({
                 originSource: new Memory({
-                    idProperty: 'id',
+                   idProperty: 'id',
                     data: items
                 }),
                 historySource: new historyService({
