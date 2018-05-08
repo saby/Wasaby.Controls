@@ -49,6 +49,7 @@ define('Controls/Layout/Suggest',
          },
          
          precessResultData: function(self, resultData) {
+            self._searchResult = resultData;
             if (resultData) {
                var data = resultData.data;
                var metaData = data && data.getMetaData();
@@ -62,23 +63,24 @@ define('Controls/Layout/Suggest',
                   
                   if (metaData[CURRENT_TAB_META_FIELD] && self._tabsSelectedKey !== metaData[CURRENT_TAB_META_FIELD]) {
                      self._tabsSelectedKey = metaData[CURRENT_TAB_META_FIELD];
-                     self._filter = this.getFilterByParams(self, self._searchValue, self._tabsSelectedKey);
                   }
                }
             }
    
             if (!_private.shouldShowSuggest(self, resultData)) {
-               this.close();
+               _private.close(self);
             } else {
                self._isFooterShown = _private.shouldShowFooter(self, resultData);
             }
          },
          
-         getFilterByParams: function(self, searchValue, tabId) {
+         updateFilter: function(self, searchValue, tabId) {
             var filter = {};
-            filter.currentTab = tabId;
+            if (tabId) {
+               filter.currentTab = tabId;
+            }
             filter[self._options.searchParam] = searchValue;
-            return filter;
+            self._filter = filter;
          }
       };
       
@@ -92,6 +94,7 @@ define('Controls/Layout/Suggest',
          _tabsSource: null,
          _filter: null,
          _tabsSelectedKey: null,
+         _searchResult: null,
          
          // <editor-fold desc="LifeCycle">
          
@@ -102,6 +105,7 @@ define('Controls/Layout/Suggest',
          },
    
          _beforeUnmount: function() {
+            this._searchResult = null;
             this._tabsSource = null;
             this._searchStart = null;
             this._searchEnd = null;
@@ -110,9 +114,8 @@ define('Controls/Layout/Suggest',
    
          _getChildContext: function() {
             return {
-               filterLayoutField: new FilterContextField({
-                  filter: this._filter
-               })
+               filterLayoutField: new FilterContextField({ filter: this._filter }),
+               searchLayoutField: new SearchContextField(this._searchValue)
             };
          },
          
@@ -128,6 +131,7 @@ define('Controls/Layout/Suggest',
          _changeValueHandler: function(event, value) {
             this._searchValue = value;
             if (_private.shouldSearch(this, value)) {
+               _private.updateFilter(this, this._searchValue, this._tabsSelectedKey);
                _private.open(this);
             } else {
                _private.close(this);
@@ -136,7 +140,7 @@ define('Controls/Layout/Suggest',
    
          _tabsSelectedKeyChanged: function(event, key) {
             this._tabsSelectedKey = key;
-            this._filter = _private.getFilterByParams(this, this._searchValue, key);
+            _private.updateFilter(this, this._searchValue, this._tabsSelectedKey);
          },
          
          _deactivated: function() {

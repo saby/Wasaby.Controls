@@ -4,9 +4,11 @@
         <Controls.Input.Suggest
                 bind:value="_suggestValue"
                 bind:tabsSelectedKey="_tabsSelectedKey"
-                displayProperty="text">
+                displayProperty="text"
+                searchParam="title"
+                source="{{_suggestSource}}">
             <ws:suggestTemplate>
-                <Controls.Container.Suggest.List searchParam="title" source="{{_suggestSource}}">
+                <Controls.Container.Suggest.List>
                     <ws:navigation source="page" view="page">
                         <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
                     </ws:navigation>
@@ -27,12 +29,14 @@
         <h3>Search with Suggest</h3>
         <Controls.Input.Search.Suggest
                 bind:value="_suggest2Value"
-                displayProperty="text">
+                displayProperty="text"
+                searchParam="title"
+                source="{{_suggestSource}}">
+            <ws:navigation source="page" view="page">
+                <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
+            </ws:navigation>
             <ws:suggestTemplate>
-                <Controls.Container.Suggest.List attr:class="demo-SuggestList" searchParam="title" source="{{_suggestSource}}">
-                    <ws:navigation source="page" view="page">
-                        <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
-                    </ws:navigation>
+                <Controls.Container.Suggest.List attr:class="demo-SuggestList">
                     <ws:content>
                         <Controls:List displayProperty="title" idProperty="id"/>
                     </ws:content>

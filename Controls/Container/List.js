@@ -57,7 +57,7 @@ define('Controls/Container/List',
             /* Копируем объект, чтобы порвать ссылку и опция у списка изменилась*/
             var filterClone = merge({}, self._options.filter);
             self._filter = merge(filterClone, resultFilter);
-            self._searchController.setFilter(self._filter);
+            _private.getSearchController(self).setFilter(self._filter);
          },
          
          abortCallback: function(self, filter) {
@@ -68,6 +68,7 @@ define('Controls/Container/List',
             if (!isEqual(filter, _private.getFilterFromContext(self, self._contextObj))) {
                _private.updateFilter(self, filter);
             }
+            self._searchMode = false;
             self._source = self._options.source;
             self._forceUpdate();
          },
@@ -81,19 +82,31 @@ define('Controls/Container/List',
                _private.updateFilter(self, filter);
             }
             _private.updateSource(self, result.data);
+            self._searchMode = true;
             self._searchDeferred.callback();
             self._forceUpdate();
          },
          
-         searchValueChanged: function(self, value) {
-            if (self._searchDeferred && self._searchDeferred.isReady()) {
-               self._searchDeferred.cancel();
-            }
+         searchValueChanged: function(self, value, filter) {
+            var searchController = _private.getSearchController(self);
+            
             if (self._options.searchStartCallback) {
                self._options.searchStartCallback();
             }
+   
+            _private.cancelSearchDeferred(self);
             self._searchDeferred = new Deferred();
-            _private.getSearchController(self).search(value);
+            
+            if (filter) {
+               searchController.setFilter(filter);
+            }
+            searchController.search(value);
+         },
+         
+         cancelSearchDeferred: function(self) {
+            if (self._searchDeferred && self._searchDeferred.isReady()) {
+               self._searchDeferred.cancel();
+            }
          },
          
          getValueFromContext: function(context, contextField, valueField) {
@@ -125,17 +138,21 @@ define('Controls/Container/List',
          },
          
          checkContextValues: function(self, context) {
-            var isSearchChanged = this.isSearchValueChanged(self, context);
-            var isFilterChanged = this.isFilterChanged(self, context);
-            var filterValue = this.getFilterFromContext(self, context);
+            var filterChanged = this.isFilterChanged(self, context);
+            var searchChanged = this.isSearchValueChanged(self, context);
             var searchValue = this.getSearchValueFromContext(self, context);
+            var filterValue = this.getFilterFromContext(self, context);
             
-            if (isFilterChanged) {
-               this.updateFilter(self, filterValue);
-            }
-            
-            if (isSearchChanged) {
+            if (searchChanged && filterChanged) {
+               this.searchValueChanged(self, searchValue, filterValue);
+            } else if (searchChanged) {
                this.searchValueChanged(self, searchValue);
+            } else if (filterChanged) {
+               if (self._searchMode) {
+                  this.searchValueChanged(self, searchValue, filterValue);
+               } else {
+                  this.updateFilter(self, filterValue);
+               }
             }
          }
       };
@@ -161,6 +178,7 @@ define('Controls/Container/List',
          
          _template: template,
          _searchDeferred: null,
+         _searchMode: false,
          
          constructor: function(options) {
             List.superclass.constructor.call(this, options);
@@ -181,6 +199,7 @@ define('Controls/Container/List',
                this._searchController.abort();
                this._searchController = null;
             }
+            _private.cancelSearchDeferred(this);
          }
          
       });
