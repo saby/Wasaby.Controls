@@ -23,35 +23,35 @@
          <ws:Object id="Test5" value="" resetValue="{{true}}" visibility="{{false}}"/>
          <ws:Object id="Test6" value="123" resetValue="" visibility="{{false}}"/>
          <ws:Object id="Test7" value="{{_value}}" resetValue="{{1}}" visibility="{{false}}"/>
-         <ws:Object id="Test8" value="{{1}}" resetValue="{{true}}" visibility="{{true}}"/>
-
+         <ws:Object id="Test8" value="{{false}}" resetValue="{{true}}" visibility="{{true}}"/>
       </ws:Array>
    </ws:items>
 </Controls.Filter.Button>
 
-<Controls.Filter.Button attr:style="max-width: 200px;">
+<Controls.Filter.Button attr:style="max-width: 200px;"
+                        itemTemplateProperty="template">
    <ws:additionalTemplate>
       <ws:partial
               template="tmpl!Controls-demo/FilterButton/Panel/resources/additionalItemsTemplate2"/>
    </ws:additionalTemplate>
 <ws:items>
    <ws:Array>
-      <ws:Object id="genreKey" value="" resetValue="" visibility="{{false}}" itemTemplateProperty="template">
+      <ws:Object id="genreKey" value="" resetValue="" visibility="{{false}}">
       <ws:template>
          <ws:partial template="tmpl!Controls-demo/FilterButton/Panel/resources/FIO"/>
       </ws:template>
       </ws:Object>
-      <ws:Object id="FIO" value="Lala" resetValue="reset" visibility="{{true}}" itemTemplateProperty="field">
-         <ws:field>
-            <ws:partial template="tmpl!Controls-demo/FilterButton/Panel/resources/FIO"/>
-         </ws:field>
-      </ws:Object>
-      <ws:Object id="country" value="" resetValue="" visibility="{{false}}" itemTemplateProperty="template">
+      <ws:Object id="FIO" value="Lala" resetValue="reset" visibility="{{true}}">
          <ws:template>
             <ws:partial template="tmpl!Controls-demo/FilterButton/Panel/resources/FIO"/>
          </ws:template>
       </ws:Object>
-      <ws:Object id="genreTip" value="" resetValue="" visibility="{{false}}" itemTemplateProperty="template">
+      <ws:Object id="country" value="" resetValue="" visibility="{{false}}">
+         <ws:template>
+            <ws:partial template="tmpl!Controls-demo/FilterButton/Panel/resources/FIO"/>
+         </ws:template>
+      </ws:Object>
+      <ws:Object id="genreTip" value="" resetValue="" visibility="{{false}}">
          <ws:template>
             <ws:partial template="tmpl!Controls-demo/FilterButton/Panel/resources/FIO"/>
          </ws:template>

@@ -1,10 +1,10 @@
-<ws:if data="{{item.id === 'FIO'}}">
+<ws:template name="FIO">
    <Controls.Button style="linkMain" caption="FIO"/>
-</ws:if>
-<ws:if data="{{item.id === 'firstName'}}">
+</ws:template>
+<ws:template name="firstName">
 <Controls.Button style="linkMain" caption="firstName"/>
-</ws:if>
-<ws:if data="{{item.id === 'id'}}">
+</ws:template>
+<ws:template name="id">
 <Controls.Filter.Button.Panel.FilterSelect
         keyProperty="key">
    <ws:items>
@@ -15,30 +15,32 @@
       </ws:Array>
    </ws:items>
 </Controls.Filter.Button.Panel.FilterSelect>
-</ws:if>
-<ws:if data="{{item.id === 'checked'}}">
+</ws:template>
+<ws:template name="checked">
 <Controls.Button style="linkMain" caption="Test1"/>
-</ws:if>
-<ws:if data="{{item.id === 'Test1'}}">
+</ws:template>
+<ws:template name="Test1">
 <Controls.Input.Dropdown
         source="{{item.source}}"
         keyProperty="key"
         selectedKeys="{{1}}"/>
-</ws:if>
-<ws:if data="{{item.id === 'Test2'}}">
+</ws:template>
+<ws:template name="Test2">
 <Controls.Button style="linkMain" caption="Test2"/>
-</ws:if><ws:if data="{{item.id === 'Test3'}}">
+</ws:template><ws:template name="Test3">
 <Controls.Button style="linkMain" caption="Test3"/>
-</ws:if><ws:if data="{{item.id === 'Test4'}}">
+</ws:template><ws:template name="Test4">
 <Controls.Button style="linkMain" caption="Test4"/>
-</ws:if>
-<ws:if data="{{item.id === 'Test5'}}">
+</ws:template>
+<ws:template name="Test5">
 <Controls.Button style="linkMain" caption="FilterText"/>
-</ws:if>
-<ws:if data="{{item.id === 'Test6'}}">
+</ws:template>
+<ws:template name="Test6">
 <Controls.Button style="linkMain" caption="Test6"/>
-</ws:if>
-<ws:if data="{{item.id === 'Test7'}}">
+</ws:template>
+<ws:template name="Test7">
 <Controls.Button style="linkMain" caption="Test7"/>
-</ws:if>
+</ws:template>
+
+<ws:partial template="{{item.id}}" item="{{item}}"/>
 

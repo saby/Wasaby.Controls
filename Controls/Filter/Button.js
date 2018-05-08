@@ -101,6 +101,7 @@ define('Controls/Filter/Button',
                      templateOptions: {
                         items: this._options.items,
                         itemTemplate: this._options.itemTemplate,
+                        itemTemplateProperty: this._options.itemTemplateProperty,
                         additionalTemplate: this._options.additionalTemplate
                      },
                      template: 'Controls/Filter/Button/Panel',
