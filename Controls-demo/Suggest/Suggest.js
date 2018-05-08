@@ -92,6 +92,10 @@ define('Controls-demo/Suggest/Suggest', [
       
       constructor: function() {
          VDomSuggest.superclass.constructor.apply(this, arguments);
+         this._suggestTabSource = new MemorySource({
+            idProperty: 'id',
+            data: sourceData
+         });
          this._suggestSource = new MemorySource({
             idProperty: 'id',
             data: sourceData
@@ -103,7 +107,7 @@ define('Controls-demo/Suggest/Suggest', [
          
          //Чтобы запрос был асинхронным.
          var origQuery = this._suggestSource.query;
-         this._suggestSource.query = function() {
+         this._suggestTabSource.query = function() {
             var self = this,
                arg = arguments;
             var def = new Deferred();
