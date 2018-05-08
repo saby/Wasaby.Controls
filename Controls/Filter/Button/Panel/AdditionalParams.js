@@ -79,6 +79,8 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
 
    });
 
+   AdditionalParams._private = _private;
+
    return AdditionalParams;
 
 });
