@@ -21,7 +21,7 @@ define('Controls-demo/FilterButton/FilterButton',
       var FilterButton = Control.extend({
          
          _template: template
-         
+
       });
       
       return FilterButton;

@@ -1,0 +1,63 @@
+<div style="margin: 20px">
+   <Controls.Filter.Button attr:style="max-width: 200px; margin: 20px">
+   <ws:itemTemplate>
+      <ws:partial
+              template="tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate"/>
+   </ws:itemTemplate>
+   <ws:additionalTemplate>
+      <ws:partial
+              template="tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/additionalItemsTemplate"/>
+   </ws:additionalTemplate>
+   <ws:items>
+      <ws:Array>
+         <ws:Object id="FIO" value="Name" resetValue="" visibility="{{false}}"/>
+         <ws:Object id="firstName" value="123" resetValue="" visibility="{{false}}"/>
+         <ws:Object id="id" value="{{3}}" resetValue="{{4}}"
+                    source="{{sourceDropdown}}" visibility="{{false}}"/>
+         <ws:Object id="checked" value="{{true}}" resetValue="{{false}}" visibility="{{false}}"/>
+         <ws:Object id="Test1" value="{{3}}" resetValue="{{2}}" source="{{sourceDropdown}}"
+                    visibility="{{false}}"/>
+         <ws:Object id="Test2" value="" resetValue="{{true}}" visibility="{{false}}"/>
+         <ws:Object id="Test3" value="" resetValue="{{true}}" visibility="{{false}}"/>
+         <ws:Object id="Test4" value="" resetValue="{{true}}" visibility="{{false}}"/>
+         <ws:Object id="Test5" value="" resetValue="{{true}}" visibility="{{false}}"/>
+         <ws:Object id="Test6" value="123" resetValue="" visibility="{{false}}"/>
+         <ws:Object id="Test7" value="{{_value}}" resetValue="{{1}}" visibility="{{false}}"/>
+         <ws:Object id="Test8" value="{{1}}" resetValue="{{true}}" visibility="{{true}}"/>
+
+      </ws:Array>
+   </ws:items>
+</Controls.Filter.Button>
+
+<Controls.Filter.Button attr:style="max-width: 200px;">
+   <ws:additionalTemplate>
+      <ws:partial
+              template="tmpl!Controls-demo/FilterButton/Panel/resources/additionalItemsTemplate2"/>
+   </ws:additionalTemplate>
+<ws:items>
+   <ws:Array>
+      <ws:Object id="genreKey" value="" resetValue="{{true}}" visibility="{{false}}">
+      <ws:itemTemplateProperty>
+         <ws:partial template="tmpl!Controls-demo/FilterButton/Panel/resources/FIO"/>
+      </ws:itemTemplateProperty>
+      </ws:Object>
+      <ws:Object id="FIO" value="Lala" resetValue="{{true}}" visibility="{{true}}">
+         <ws:itemTemplateProperty>
+            <ws:partial template="tmpl!Controls-demo/FilterButton/Panel/resources/FIO"/>
+         </ws:itemTemplateProperty>
+      </ws:Object>
+      <ws:Object id="country" value="" resetValue="{{true}}" visibility="{{false}}">
+         <ws:itemTemplateProperty>
+            <ws:partial template="tmpl!Controls-demo/FilterButton/Panel/resources/FIO"/>
+         </ws:itemTemplateProperty>
+      </ws:Object>
+      <ws:Object id="genreTip" value="" resetValue="{{true}}" visibility="{{false}}">
+         <ws:itemTemplateProperty>
+            <ws:partial template="tmpl!Controls-demo/FilterButton/Panel/resources/FIO"/>
+         </ws:itemTemplateProperty>
+      </ws:Object>
+   </ws:Array>
+</ws:items>
+</Controls.Filter.Button>
+
+</div>

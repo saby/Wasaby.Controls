@@ -1,0 +1,21 @@
+<ws:if data="{{item.id === 'genreKey'}}">
+   <Controls.Button style="linkMain" caption="genreKey"/>
+</ws:if>
+<ws:if data="{{item.id === 'FIO'}}">
+<Controls.Button style="linkMain" caption="FIO"/>
+</ws:if>
+<ws:if data="{{item.id === 'country'}}">
+<Controls.Filter.Button.Panel.FilterSelect
+        keyProperty="key">
+   <ws:items>
+      <ws:Array>
+         <ws:Object key="{{2}}" value="Россия"/>
+         <ws:Object key="{{3}}" value="США"/>
+         <ws:Object key="{{4}}" value="UK"/>
+      </ws:Array>
+   </ws:items>
+</Controls.Filter.Button.Panel.FilterSelect>
+</ws:if>
+<ws:if data="{{item.id === 'genreTip'}}">
+<Controls.Button style="linkMain" caption="Test1"/>
+</ws:if>
