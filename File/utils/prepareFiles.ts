@@ -2,30 +2,40 @@
 import LocalFile = require("File/LocalFile");
 import filter = require("File/utils/filter");
 
+type FilePreparer = (selectedFiles: FileList | Array<Blob>) => Array<LocalFile | Error>
+type FilePrepareGetter = (filterParams: object) => FilePreparer;
+
 /**
  * Функцию преподготовки файлов, которая пробежиться по набору "сырых" файлов,
  * отфильтрует их по заданным параметрам и обернёт в {@link File/LocalFile}
- * @type {function(selectedFiles: FileList | Array.<Blob>): Array.<File/LocalFile | Error>}
+ * @type {Function}
+ * @param {FileList | Array.<Blob>} files Набор файлов, необходимых для фильтрации и преобразования
+ * @return Array.<File/LocalFile | Error>
  * @name FilePreparer
  */
-
 /**
  * Возвращает функцию преподготовки файлов, которая пробежиться по набору "сырых" файлов,
  * отфильтрует их по заданным параметрам и обернёт в {@link File/LocalFile}
  * @function
- * @param {Object} FilterParam Параметры фильтрации
- * @return {FilePreparer}
+ * @param {Object} filterParams Параметры фильтрации
+ * @return {FilePreparer} Функция фильтрации и преобразования в File/LocalFile
  * @public
  * @author Заляев А.В.
  * @name File/utils/getFilePreparer
  * @see File/utils/filter
  * @see File/LocalFile
  */
-export = (filterParams) => (selectedFiles: FileList) => filter(selectedFiles, filterParams).map(
-    (file) => {
-        if (file instanceof Error){
-            return file;
-        }
-        return new LocalFile(file);
-    }
-)
+let filePrepareGetter: FilePrepareGetter;
+
+filePrepareGetter = (filterParams: object) =>  // FilePrepareGetter
+    (files: FileList) =>  // FilePreparer
+        filter(files, filterParams).map(
+            (file) => {
+                if (file instanceof Error){
+                    return file;
+                }
+                return new LocalFile(file);
+            }
+        );
+
+export = filePrepareGetter;

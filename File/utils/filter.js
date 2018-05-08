@@ -12,15 +12,21 @@ define("File/utils/filter", ["require", "exports", "File/Error/Extension", "File
          * Обход надо делать только по числовому индексу и получать через FileList.item({Number}) или FileList[{Number}]
          */
         for (var i = 0; i < fileList.length; i++) {
-            var file = fileList.item ? fileList.item(i) : fileList[i];
+            var file = fileList instanceof FileList ? fileList.item(i) : fileList[i];
             // По типу
             if (extensions && !extensions.verify(file)) {
-                files.push(new ExtensionsError(file.name, extensions.toString()));
+                files.push(new ExtensionsError({
+                    fileName: file.name,
+                    extensions: extensions.toString()
+                }));
                 continue;
             }
             // По размеру
             if (maxSize && (file.size > maxSize)) {
-                files.push(new MaxSizeError(file.name, maxSize));
+                files.push(new MaxSizeError({
+                    fileName: file.name,
+                    maxSize: maxSize
+                }));
                 continue;
             }
             files.push(file);

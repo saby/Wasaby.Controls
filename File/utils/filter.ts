@@ -20,7 +20,7 @@ type FilterParams = {
  * Функция фильтрации набора файлов по параметрам.
  * Возвращает массив из прошедших фильтрацию файлов и типизированных ошибок, по непрошедшим
  * @function
- * @param {FileList | Array.<Blob>} Набор фильтруемых файлов
+ * @param {FileList | Array.<File>} Набор фильтруемых файлов
  * @param {FilterParams} Параметры фильтрации
  * @return Array.<Error | File>
  * @name File/utils/filter
@@ -28,7 +28,7 @@ type FilterParams = {
  * @author Заляев А.В.
  */
 export = (
-    fileList: FileList | Array<Blob>, {
+    fileList: FileList | Array<File>, {
         extensions,
         maxSize = 0
     }: Partial<FilterParams>
@@ -42,17 +42,23 @@ export = (
      * Обход надо делать только по числовому индексу и получать через FileList.item({Number}) или FileList[{Number}]
      */
     for (let i = 0; i < fileList.length; i++) {
-        let file = fileList.item? fileList.item(i): fileList[i];
+        let file = fileList instanceof FileList? fileList.item(i): fileList[i];
 
         // По типу
         if (extensions && !extensions.verify(file)) {
-            files.push(new ExtensionsError(file.name, extensions.toString()));
+            files.push(new ExtensionsError({
+                fileName: file.name,
+                extensions: extensions.toString()
+            }));
             continue;
         }
 
         // По размеру
         if (maxSize && (file.size > maxSize)) {
-            files.push(new MaxSizeError(file.name, maxSize));
+            files.push(new MaxSizeError({
+                fileName: file.name,
+                maxSize
+            }));
             continue;
         }
 
