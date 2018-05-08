@@ -1,11 +1,11 @@
 define([
    'Core/core-merge',
-   'Controls/Calendar/MonthView',
+   'Controls/Calendar/MonthView/MonthViewModel',
    'SBIS3.CONTROLS/Utils/DateUtil',
    'tests/unit/Calendar/Utils'
 ], function(
    coreMerge,
-   MonthView,
+   MonthViewModel,
    DateUtil,
    calendarTestUtils
 ) {
@@ -15,14 +15,14 @@ define([
       month: new Date(2017, 0, 1)
    };
 
-   describe('Controls/Calendar/MonthView', function() {
+   describe('Controls/Calendar/MonthView/MonthViewModel', function() {
       describe('Initialisation', function() {
 
          it('should create the correct model for the month when creating', function() {
-            let mv, weeks;
+            let mvm, weeks;
 
-            mv = calendarTestUtils.createComponent(MonthView, config);
-            weeks = mv._monthViewModel.getMonthArray();
+            mvm = new MonthViewModel(config);
+            weeks = mvm.getMonthArray();
 
             assert.equal(weeks.length, 6);
             calendarTestUtils.assertMonthView(weeks);
