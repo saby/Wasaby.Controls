@@ -1,8 +1,6 @@
 <div>
     <ws:if data="{{isEditing}}">
-        <ws:Controls.Validate.Input validators="{{validators}}">
-            <ws:partial attr:class="controls-EditingTemplateText__editor" template="{{editorTemplate}}" />
-        </ws:Controls.Validate.Input>
+        <ws:partial attr:class="controls-EditingTemplateText__editor" template="{{editorTemplate}}" />
     </ws:if>
     <ws:else>
         <div class="controls-EditingTemplateText
