@@ -1,8 +1,9 @@
 define('Controls/List/Grid/GridViewModel', [
    'Core/Abstract',
+   'Core/core-clone',
    'Controls/List/SimpleList/ListViewModel',
    'WS.Data/Entity/VersionableMixin'
-], function(Abstract, ListViewModel, VersionableMixin) {
+], function(Abstract, cClone, ListViewModel, VersionableMixin) {
 
    'use strict';
 
@@ -359,7 +360,7 @@ define('Controls/List/Grid/GridViewModel', [
             };
             current.getCurrentColumn = function() {
                var
-                  currentColumn = self._model.getCurrent();
+                  currentColumn = cClone(current);
                currentColumn.columnIndex = current.columnIndex;
                currentColumn.cellClasses = _private.getItemColumnCellClasses(current);
                currentColumn.column = current.columns[current.columnIndex];
