@@ -23,6 +23,7 @@
                on:focusin="_focusinHandler()"
                attr:class="{{ _options.textAlign === 'right' ? 'controls-InputRender__field_textAlign_right' }}"
                value="{{ _options.viewModel.getDisplayValue() }}"
+               autocomplete="{{_options.autocomplete}}"
          />
 
          <ws:if data="{{ !_options.viewModel.getDisplayValue() && isEnabled()}}">

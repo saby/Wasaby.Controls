@@ -1,6 +1,5 @@
 define('Controls/List/Grid/GridView', [
    'Core/Control',
-   'Controls/List/Grid/GridViewModel',
    'tmpl!Controls/List/Grid/GridView',
    'tmpl!Controls/List/Grid/Item',
    'tmpl!Controls/List/Grid/Column',
@@ -12,7 +11,7 @@ define('Controls/List/Grid/GridView', [
    'css!Controls/List/Grid/Grid',
    'css!Controls/List/Grid/OldGrid',
    'Controls/List/SourceControl/Scroll/Emitter'
-], function(Control, GridViewModel, GridTpl, ItemTpl, ColumnTpl, HeaderContentTpl, cDetection) {
+], function(Control, GridTpl, ItemTpl, ColumnTpl, HeaderContentTpl, cDetection) {
 
    'use strict';
 

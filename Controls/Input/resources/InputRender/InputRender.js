@@ -176,7 +176,8 @@ define('Controls/Input/resources/InputRender/InputRender',
             value: '',
             selectOnClick: false,
             style: 'default',
-            inputType: 'Text'
+            inputType: 'Text',
+            autocomplete: true
          };
       };
 
@@ -192,7 +193,8 @@ define('Controls/Input/resources/InputRender/InputRender',
                'attention',
                'error',
                'info'
-            ])
+            ]),
+            autocomplete: types(Boolean)
          };
       };*/
 
