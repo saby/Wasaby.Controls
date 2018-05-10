@@ -919,7 +919,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             this._toggleIndicator(true);
             this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), 0, this._limit);
             return this._callQuery(this._createTreeFilter(id), this.getSorting(), 0, this._limit).addCallback(forAliveOnly(function (list) {
-               if (this._options.saveReloadPosition) {
+               if (this._options.saveReloadPosition && list.getCount()) {
                   this._hierNodesCursor[id] = list.at(list.getCount() - 1).getId();
                }
                this._options._folderHasMore[id] = list.getMetaData().more;
