@@ -246,7 +246,7 @@ define('SBIS3.CONTROLS/Filter/FastData',
          _getValueFromStructure: function (instance) {
             var fsObject = this._filterStructure[this._getFilterSctructureItemIndex(instance.getContainer().attr('data-id'))],
                hasValue = fsObject.hasOwnProperty('value') && fsObject.value !== undefined;
-            return hasValue ? (fsObject.value instanceof Array ? fsObject.value : [fsObject.value]) : [instance.getDefaultId()];
+            return hasValue ? (instance._options.multiselect && fsObject.value instanceof Array ? fsObject.value : [fsObject.value]) : [instance.getDefaultId()];
          },
 
          _setSelectedKeyByFilterStructure: function (instance, value) {
