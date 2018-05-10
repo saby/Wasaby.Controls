@@ -1,0 +1,13 @@
+<div style="margin: 20px">
+   <Controls.Input.ComboBox readOnly="{{true}}"
+                            items="{{_createMemory()}}"
+                            keyProperty="id"
+                            displayProperty="title"
+                            selectedKeys="_selectedKeys"
+                            bind:value="_value"
+
+   />
+
+   <Controls.Input.Area bind:value="ComboboxValue"/>
+
+</div>
