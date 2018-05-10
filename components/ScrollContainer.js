@@ -184,7 +184,10 @@ define('SBIS3.CONTROLS/ScrollContainer', [
          },
 
          _modifyOptionsAfter: function(finalConfig) {
-            delete finalConfig.content;
+            // удаляем опцию content только на сервере, на клиенте опция должна остаться
+            if (typeof window === 'undefined') {
+               delete finalConfig.content;
+            }
          },
 
          init: function() {
