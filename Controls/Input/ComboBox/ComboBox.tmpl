@@ -1,47 +1,55 @@
-<div class="controls-ComboBox" on:valueChanged="_valueChangedHandler()" name="combobox">
-   <Controls.Input.resources.InputRender.InputRender
-        value="{{_options.value}}"
-        size="{{ _options.size }}"
-        inputType="ComboBox"
-        tagStyle="{{_options.tagStyle}}"
-        viewModel="{{_simpleViewModel}}"
-        placeholder="{{_options.placeholder}}"
-        validationErrors="{{_options.validationErrors}}"
-        on:valueChanged="_valueChangedHandler()"
->
+<Controls.Container.Search
+        on:deactivated="_deactivated()"
+        on:itemClick="_select()">
+   <div class="controls-ComboBox" on:valueChanged="_valueChangedHandler()" name="combobox"
+        on:mousedown="_dropdownOpenHandler()">
 
-   <ws:content>
-      <ws:partial
-              template="tmpl!Controls/Input/resources/input"
-              readOnly="{{_options.readOnly}}"
-      />
-   </ws:content>
+      <ws:contentTemplate>
+         <Controls.Input.resources.InputRender.InputRender
+                 value="{{_options.value}}"
+                 size="{{ _options.size }}"
+                 inputType="ComboBox"
+                 tagStyle="{{_options.tagStyle}}"
+                 viewModel="{{_simpleViewModel}}"
+                 placeholder="{{_options.placeholder}}"
+                 validationErrors="{{_options.validationErrors}}"
+                 on:valueChanged="_valueChangedHandler()"
+         >
 
-   <ws:afterFieldWrapper>
-      <Controls.Button.ButtonSeparator
-              bind:value="_isOpen"
-              on:click="_dropdownOpenHandler()"
-      />
-   </ws:afterFieldWrapper>
+            <ws:content>
+               <ws:partial
+                       template="tmpl!Controls/Input/resources/input"
+                       readOnly="{{_options.readOnly}}"
+               />
+            </ws:content>
 
-</Controls.Input.resources.InputRender.InputRender>
-   <div class="controls-ComboBox-dropdown " name="Dropdown"></div>
+            <ws:afterFieldWrapper>
+               <Controls.Button.ButtonSeparator
+                       bind:value="_isOpen"
 
-<Controls.Dropdown.Opener name="DropdownOpener">
-<ws:popupOptions>
-   <ws:eventHandlers onResult="{{_onResult}}"
-   onClose="{{_close}}"/>
-   <ws:templateOptions
-           keyProperty="{{_options.keyProperty}}"
-           parentProperty="{{_options.parentProperty}}"
-           nodeProperty="{{_options.nodeProperty}}"
-           itemTemplateProperty="{{_options.itemTemplateProperty}}"
-           itemTemplate="{{_options.itemTemplate}}"
-           headTemplate="{{_options.headTemplate}}"
-           contentTemplate="{{_options.contentTemplate}}"
-           footerTemplate="{{_options.footerTemplate}}"
-           showHeader="{{_options.showHeader === true ? true : false}}"
-           selectedKeys="{{_options.selectedKeys}}"/>
-</ws:popupOptions>
-</Controls.Dropdown.Opener>
-</div>
+               />
+            </ws:afterFieldWrapper>
+
+         </Controls.Input.resources.InputRender.InputRender>
+      </ws:contentTemplate>
+      <div name="Popup" class="controls-ComboBox-popup"></div>
+
+      <Controls.Dropdown.Opener name="DropdownOpener">
+         <ws:popupOptions>
+            <ws:eventHandlers onResult="{{_onResult}}"
+                              onClose="{{_close}}"/>
+            <ws:templateOptions
+                    keyProperty="{{_options.keyProperty}}"
+                    parentProperty="{{_options.parentProperty}}"
+                    nodeProperty="{{_options.nodeProperty}}"
+                    itemTemplateProperty="{{_options.itemTemplateProperty}}"
+                    itemTemplate="{{_options.itemTemplate}}"
+                    headTemplate="{{_options.headTemplate}}"
+                    contentTemplate="{{_options.contentTemplate}}"
+                    footerTemplate="{{_options.footerTemplate}}"
+                    showHeader="{{_options.showHeader === true ? true : false}}"
+                    selectedKeys="{{_options.selectedKeys}}"/>
+         </ws:popupOptions>
+      </Controls.Dropdown.Opener>
+   </div>
+</Controls.Container.Search>
