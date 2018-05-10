@@ -33,12 +33,17 @@ define('Controls/Utils/FontLoadUtil', [
       waitForFontLoad: function(className) {
          var
             def = new Deferred(),
+            checkFontLoad;
+         if (_private.isLoaded(className)) {
+            def.callback();
+         } else {
             checkFontLoad = setInterval(function() {
                if (_private.isLoaded(className)) {
                   clearInterval(checkFontLoad);
                   def.callback();
                }
             }, 300);
+         }
 
          return def;
       }
