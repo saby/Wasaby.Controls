@@ -9,7 +9,9 @@ define('Controls/Filter/Button',
       'WS.Data/Chain',
       'WS.Data/Utils',
       'WS.Data/Type/descriptor',
-      'css!Controls/Filter/Button/Button'
+      'css!Controls/Filter/Button/Button',
+      'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate',
+      'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/additionalItemsTemplate'
    ],
    
    function(Control, template, moduleStubs, Chain, Utils, types) {
@@ -89,7 +91,7 @@ define('Controls/Filter/Button',
                panelOpener.clearFilter();
             });
          },
-
+   
          _openFilterPanel: function() {
             if (!this._options.readOnly) {
                /* if template - show old component */
@@ -126,9 +128,9 @@ define('Controls/Filter/Button',
    
       FilterButton.getOptionsTypes = function() {
          return {
-            itemTemplate: types(String),
+            itemTemplate: types(Object),
             itemTemplateProperty: types(String),
-            additionalTemplate: types(String),
+            additionalTemplate: types(Object),
             additionalTemplateProperty: types(String)
          };
       };

@@ -3,7 +3,7 @@
    <div class="controls-AdditionalParams__items {{_isMaxHeight ? 'controls-AdditionalParams_maxHeight'}}">
       <ws:for data="index, item in _options.items">
          <div if="{{!item.visibility}}" class="controls-AdditionalParams__item">
-            <ws:partial template="{{item[_options.itemTemplateProperty] || _options.itemTemplate}}"
+            <ws:partial template="{{item[_options.itemTemplateProperty] || _options.itemTemplate.templateName}}"
                         item="{{item}}"
                         on:click="_clickItemHandler(index)"
                         on:valueChanged="_valueChangedHandler(index)"
