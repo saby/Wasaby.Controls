@@ -19,11 +19,10 @@ define('SBIS3.CONTROLS/ImportCustomizer/BaseParams/View',
       var View = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ImportCustomizer/BaseParams/View.prototype*/ {
 
          /**
-          * @typedef {object} ExportBaseParamsResult Тип, описывающий возвращаемые настраиваемые значения компонента
-          * @property {boolean} replaceAllData Заменять ли импортируемыми данными предыдущее содержимое базы данных полностью или нет (только обновлять и добавлять)
-          * @property {*} destination Место назначения для импортирования (таблица в базе данных и т.п.)
-          *
-          * @see replaceAllData
+          * @event change Происходит при измении настраиваемые значения компонента
+          * @param {Core/EventObject} evtName Дескриптор события
+          * @param {object} values Настраиваемые значения компонента:
+          * @param {object} values.replaceAllData Заменять ли импортируемыми данными предыдущее содержимое базы данных полностью или нет (только обновлять и добавлять)
           */
 
          _dotTplFn: dotTplFn,
@@ -68,13 +67,13 @@ define('SBIS3.CONTROLS/ImportCustomizer/BaseParams/View',
             if (!values || typeof values !== 'object') {
                throw new Error('Object required');
             }
-            var options = this._options;
-            var waited = {replaceAllData:false, destination:true};
+            var names = ['replaceAllData', 'destination'];
             var has = {};
+            var options = this._options;
             for (var name in values) {
-               if (name in waited) {
+               if (names.indexOf(name) !== -1) {
                   var value = values[name];
-                  if (waited[name] ? !cObjectIsEqual(value, options[name]) : value !== options[name]) {
+                  if (name !== '' ? value !== options[name] : !cObjectIsEqual(value, options[name])) {
                      has[name] = true;
                      options[name] = value;
                   }
@@ -89,7 +88,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/BaseParams/View',
           * Получить все настраиваемые значения компонента
           *
           * @public
-          * @return {ExportBaseParamsResult}
+          * @return {object}
           */
          getValues: function () {
             var options = this._options;
