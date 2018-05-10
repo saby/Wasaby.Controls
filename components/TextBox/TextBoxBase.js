@@ -213,7 +213,8 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
               *     <option name="size">l</option>
               * </pre>
               */
-            size: 'default'
+            size: 'default',
+            autocomplete: true
          }
       },
 
