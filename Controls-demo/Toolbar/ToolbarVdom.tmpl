@@ -1,12 +1,12 @@
 <div class="controls-ToolbarVdom" style="padding: 50px;">
-   Пример тулбара: <Controls.Toolbar
+   Пример тулбара: <Controls.Toolbar attr:test_name="base"
                            name="myToolbar"
                            parentProperty="parent"
                            nodeProperty="@parent"
                            keyProperty="id"
                            source="{{_getMemorySource(_defaultItems)}}"
                            on:itemClick="_itemClick()"/>
-   пример плоского тулбара: <Controls.Toolbar
+   пример плоского тулбара: <Controls.Toolbar attr:test_name="flat"
                                     name="myFlatToolbar"
                                     keyProperty="id"
                                     itemTemplateProperty="myTemplate"
