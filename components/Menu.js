@@ -357,6 +357,12 @@ define('SBIS3.CONTROLS/Menu', [
          }
          Menu.superclass._drawItemsCallback.apply(this, arguments);
       },
+
+      setItems: function() {
+         this._options.loadFromItems = false;
+         Menu.superclass.setItems.apply(this, arguments);
+      },
+
       _createSubMenu: function(target, parent, isFirstLevel, item) {
          var config = this._getSubMenuConfig(isFirstLevel, item),
             subMenu;
