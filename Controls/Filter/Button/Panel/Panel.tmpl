@@ -25,7 +25,8 @@
                                 class="controls-FilterPanel__PropertyGrid"/>
          <Controls.Filter.Button.Panel.AdditionalParams if="{{_hasAdditionalParams}}"
                                                         items="{{_items}}"
-                                                        additionalTemplate="{{_options.additionalTemplate}}"
+                                                        itemTemplate="{{_options.additionalTemplate}}"
+                                                        itemTemplateProperty="{{_options.additionalTemplateProperty}}"
                                                         on:valueChanged="_valueChangedHandler()"/>
       </div>
    </ws:contentArea>
