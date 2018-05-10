@@ -8,10 +8,11 @@ define('Controls/Filter/Button',
       'Core/moduleStubs',
       'WS.Data/Chain',
       'WS.Data/Utils',
+      'WS.Data/Type/descriptor',
       'css!Controls/Filter/Button/Button'
    ],
    
-   function(Control, template, moduleStubs, Chain, Utils) {
+   function(Control, template, moduleStubs, Chain, Utils, types) {
       
       /**
        * @class Controls/Filter/Button
@@ -120,6 +121,15 @@ define('Controls/Filter/Button',
       FilterButton.getDefaultOptions = function() {
          return {
             filterAlign: 'right'
+         };
+      };
+   
+      FilterButton.getOptionsTypes = function() {
+         return {
+            itemTemplate: types(String).required(),
+            itemTemplateProperty: types(String),
+            additionalTemplate: types(String),
+            additionalTemplateProperty: types(String)
          };
       };
 
