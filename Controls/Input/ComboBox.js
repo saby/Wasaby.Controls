@@ -5,11 +5,11 @@ define('Controls/Input/ComboBox',
       'Controls/Input/resources/InputRender/BaseViewModel',
       'Controls/Controllers/SourceController',
       'WS.Data/Utils',
-
+      'WS.Data/Chain',
       'css!Controls/Input/ComboBox/ComboBox'
    ],
 
-   function(Control, template, BaseViewModel, SourceController, Utils) {
+   function(Control, template, BaseViewModel, SourceController, Utils, Chain) {
 
       /**
        * Control "ComboBox"
@@ -31,19 +31,15 @@ define('Controls/Input/ComboBox',
 
       var _private = {
 
-         loadItems: function(self, source, selectedKeys) {
+         loadItems: function(self, source) {
             self._sourceController = new SourceController({
                source: source
             });
             return self._sourceController.load().addCallback(function(items) {
                self._items = items;
                self._items.setIdProperty(self._options.keyProperty);
-               _private.updateSelectedItem(self, selectedKeys);
+               return items;
             });
-         },
-
-         updateSelectedItem: function(self, selectedKeys) {
-            self.selectedKeys = selectedKeys;
          },
 
          onResult: function(result) {
@@ -77,7 +73,7 @@ define('Controls/Input/ComboBox',
          },
 
          _beforeMount: function(options) {
-            return _private.loadItems(this, options.items, options.selectedKeys);
+            return _private.loadItems(this, options.items);
          },
 
          _beforeUpdate: function() {
@@ -94,11 +90,12 @@ define('Controls/Input/ComboBox',
                      items: this._items,
                      selectedKeys: this.selectedKeys
                   },
-                  target: this._children.Dropdown
+                  target: this._children.Popup
                };
                this._children.DropdownOpener.open(config, this);
             } else {
                this._isOpen = false;
+               this._children.DropdownOpener.close();
             }
          },
 
@@ -107,9 +104,7 @@ define('Controls/Input/ComboBox',
          },
 
          _close: function() {
-            //this._isOpen = false;
-            this._children.DropdownOpener.close();
-            this._forceUpdate();
+            this._isOpen = false;
          }
 
       });
