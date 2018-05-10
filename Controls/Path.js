@@ -53,6 +53,8 @@ define('Controls/Path', [
          } else {
             self._visibleItems = [];
             self._breadCrumbsItems = [];
+            self._backButtonClass = '';
+            self._breadCrumbsClass = '';
          }
       }
    };
@@ -91,6 +93,10 @@ define('Controls/Path', [
 
       _onResize: function() {
          //Пустой обработчик чисто ради того, чтобы при ресайзе запускалась перерисовка
+      },
+
+      _onArrowClick: function() {
+         this._notify('arrowActivated');
       }
    });
    return Path;
