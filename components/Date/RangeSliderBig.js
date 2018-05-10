@@ -36,7 +36,7 @@ define('SBIS3.CONTROLS/Date/RangeSliderBig', [
              * не указан, то в качестве значения будет от бражаться соответсвующая надпись, иначе пустая строка.
              * @see emptyCaption
              */
-            showUndefined: false,
+            showUndefined: false
          }
       },
       _modifyOptions: function (opts) {

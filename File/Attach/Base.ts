@@ -365,7 +365,13 @@ let Base = CoreExtend.extend(Abstract,{
      */
     _chooseNotify(chooseDef: Deferred<Array<IResource | Error>>): Deferred<Array<IResource | Error>> {
         let length;
-        return chooseDef.addCallbacks((files: Array<IResource | Error>) => {
+        return chooseDef.addCallback((files: Array<IResource | Error>) => {
+            // Нет смысла идти дальше, если набор пустой
+            if (!files.length) {
+                return new Deferred().cancel();
+            }
+            return files;
+        }).addCallback((files: Array<IResource | Error>) => {
             length = files.length;
             let eventResults = files.map((file: IResource | Error) => {
                 let event = file instanceof Error? 'onChooseError': "onChosen";
@@ -377,14 +383,17 @@ let Base = CoreExtend.extend(Abstract,{
                 steps: eventResults,
                 stopOnFirstError: false
             }).done().getResult();
-        }, (error) => {
-            this._notify('onChooseError', error);
-            return error;
         }).addCallback((results) => {
             // ParallelDeferred принимает на вход объект или массив, но возвращает всегда объект
             // поэтому соберём обратно в массив
             results.length = length;
             return Array.prototype.slice.call(results).filter(res => !!res);
+        }).addErrback((error) => {
+            // Не зачем уведомлять о ошибке выбора, когда по факту была отмена
+            if (!error.canceled) {
+                this._notify('onChooseError', error);
+            }
+            return error;
         });
     },
     /**

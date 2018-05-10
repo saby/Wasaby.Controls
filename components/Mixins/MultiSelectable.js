@@ -245,15 +245,17 @@ define('SBIS3.CONTROLS/Mixins/MultiSelectable', [
          /* После изменения сорса или item'ов может измениться и формат данных,
             после этого нельзя выделенные элементы держать со старым форматом данных,
             иначе будут возникать конфликты форматов. Просто пересоздадим selectedItems */
-         setDataSource: function () {
-            this.once('onDataLoad', function(event, list) {
-               this._checkNewItemsFormat(list);
-            })
+         setDataSource: function (source, noLoad) {
+            if (!noLoad) {
+               this.once('onDataLoad', function (event, list) {
+                  this._checkNewItemsFormat(list);
+               });
+            }
          },
          setItems: function() {
             this.once('onItemsReady', function() {
                this._checkNewItemsFormat(this.getItems());
-            })
+            });
          },
          _modifyOptions: function(opts) {
             if (opts.selectedItems) {
