@@ -2,6 +2,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
       'SBIS3.CONTROLS/CompoundControl',
       'SBIS3.CONTROLS/ScrollContainer/Scrollbar',
       'tmpl!SBIS3.CONTROLS/ScrollContainer/ScrollContainer',
+      'Core/helpers/Hcontrol/isElementVisible',
       'Core/detection',
       'Core/compatibility',
       'Lib/FloatAreaManager/FloatAreaManager',
@@ -15,6 +16,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
    function (CompoundControl,
              Scrollbar,
              template,
+             isElementVisible,
              cDetection,
              compatibility,
              FloatAreaManager,
@@ -618,7 +620,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
             Array.prototype.forEach.call(this._content.children(), function(item) {
                $item = $(item);
                // Метод outerHeight не учитывает видимость элемента, нужно учесть.
-               height += $item.is(':visible') ? $(item).outerHeight(true) : 0;
+               height += isElementVisible($item) ? $(item).outerHeight(true) : 0;
             });
 
             return height;
