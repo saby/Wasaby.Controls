@@ -4,8 +4,9 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
    'Core/helpers/Object/isEqual',
    'Core/core-clone',
    'tmpl!Controls/Filter/Button/Panel/AdditionalParams/AdditionalParams',
+   'WS.Data/Chain',
    'css!Controls/Filter/Button/Panel/AdditionalParams/AdditionalParams'
-], function(Control, Utils, isEqual, clone, template) {
+], function(Control, Utils, isEqual, clone, template, Chain) {
 
    'use strict';
 
@@ -16,22 +17,19 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
 
       countItems: function(items) {
          var result = 0;
-         for (var i in items) {
-            if (!getPropValue(items[i], 'visibility')) {
+         Chain(items).each(function(elem) {
+            if (!getPropValue(elem, 'visibility')) {
                result++;
             }
-         }
+         });
          return result;
       },
 
       onResize: function(self) {
-         if (_private.countItems(self._options.items) > MAX_NUMBER_ITEMS) {
-            self._arrowVisible = true;
-            self._children.items.classList.add('controls-AdditionalParams_maxHeight');
-         } else if (_private.countItems(self._options.items) <= MAX_NUMBER_ITEMS) {
-            self._arrowVisible = false;
-            self._isMaxHeight = false;
-            self._children.items.classList.remove('controls-AdditionalParams_maxHeight');
+         self._arrowVisible = _private.countItems(self._options.items) > MAX_NUMBER_ITEMS;
+         
+         if (!self._arrowVisible) {
+            self._isMaxHeight = true;
          }
          self._forceUpdate();
       }
@@ -39,7 +37,7 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
 
    var AdditionalParams = Control.extend({
       _template: template,
-      _isMaxHeight: false,
+      _isMaxHeight: true,
       _arrowVisible: false,
 
       _beforeMount: function(options) {
@@ -74,7 +72,6 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
 
       _clickSeparatorHandler: function() {
          this._isMaxHeight = !this._isMaxHeight;
-         this._children.items.classList.toggle('controls-AdditionalParams_maxHeight');
       }
 
    });

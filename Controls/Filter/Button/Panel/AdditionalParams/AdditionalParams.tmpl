@@ -1,6 +1,6 @@
 <div class="controls-AdditionalParams">
    <div class="controls-FilterPanel__caption">{[Еще можно отобрать]}</div>
-   <div class="controls-AdditionalParams__items controls-AdditionalParams_maxHeight" name="items">
+   <div class="controls-AdditionalParams__items {{_isMaxHeight ? 'controls-AdditionalParams_maxHeight'}}">
       <ws:for data="index, item in _options.items">
          <div if="{{!item.visibility}}" class="controls-AdditionalParams__item">
             <ws:partial template="{{_options.additionalTemplate}}"
@@ -14,7 +14,7 @@
 
    <div if="{{_arrowVisible}}" class="controls-AdditionalParams__arrow">
       <Controls.Button.BigSeparator
-              value="{{_isMaxHeight}}"
+              value="{{!_isMaxHeight}}"
               on:click="_clickSeparatorHandler()"/>
    </div>
 </div>
