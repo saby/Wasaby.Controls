@@ -13,7 +13,7 @@ define('Controls/Input/resources/Suggest/Dialog',
       /**
        * Dialog for list in Suggest component.
        * @class Controls/Container/Suggest/List
-       * @extends Controls/Control
+       * @extends Core/Control
        * @author Герасимов Александр
        * @control
        * @public
