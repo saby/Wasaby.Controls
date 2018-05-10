@@ -19,9 +19,14 @@ define('SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View',
       var View = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View.prototype*/ {
 
          /**
-          * @event change Происходит при измении настраиваемые значения компонента
-          * @param {Core/EventObject} evtName Дескриптор события
-          * @param {object} values Настраиваемые значения компонента
+          * @typedef {object} ExportProviderArgsResult Тип, описывающий возвращаемые настраиваемые значения компонента
+          * @property {number} columnCount Количество имеющихся колонок
+          * @property {Array<number>} columns Список индексов колонок, задающих иерархию разделов импортируемых данных
+          * @property {string} hierarchyField Имя поля, хранящего иерархию
+          *
+          * @see columnCount
+          * @see columns
+          * @see hierarchyField
           */
 
          _dotTplFn: dotTplFn,
@@ -156,21 +161,16 @@ define('SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View',
             if (!values || typeof values !== 'object') {
                throw new Error('Object required');
             }
-            var has = {};
             var options = this._options;
+            var waited = {columnCount:false, columns:true, hierarchyField:false};
+            var has = {};
             for (var name in values) {
-               switch (name) {
-                  case 'columnCount':
-                  case 'columns':
-                  case 'hierarchyField':
-                     break;
-                  default:
-                     continue;
-               }
-               var value = values[name];
-               if (name !== 'columns' ? value !== options[name] : !cObjectIsEqual(value, options[name])) {
-                  has[name] = true;
-                  options[name] = value;
+               if (name in waited) {
+                  var value = values[name];
+                  if (waited[name] ? !cObjectIsEqual(value, options[name]) : value !== options[name]) {
+                     has[name] = true;
+                     options[name] = value;
+                  }
                }
             }
             if (has.columnCount) {
@@ -189,7 +189,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View',
           * Получить все настраиваемые значения компонента
           *
           * @public
-          * @return {object}
+          * @return {ExportProviderArgsResult}
           */
          getValues: function () {
             var options = this._options;

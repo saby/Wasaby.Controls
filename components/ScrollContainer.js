@@ -2,6 +2,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
       'SBIS3.CONTROLS/CompoundControl',
       'SBIS3.CONTROLS/ScrollContainer/Scrollbar',
       'tmpl!SBIS3.CONTROLS/ScrollContainer/ScrollContainer',
+      'Core/helpers/Hcontrol/isElementVisible',
       'Core/detection',
       'Core/compatibility',
       'Lib/FloatAreaManager/FloatAreaManager',
@@ -15,6 +16,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
    function (CompoundControl,
              Scrollbar,
              template,
+             isElementVisible,
              cDetection,
              compatibility,
              FloatAreaManager,
@@ -184,7 +186,10 @@ define('SBIS3.CONTROLS/ScrollContainer', [
          },
 
          _modifyOptionsAfter: function(finalConfig) {
-            delete finalConfig.content;
+            // удаляем опцию content только на сервере, на клиенте опция должна остаться
+            if (typeof window === 'undefined') {
+               delete finalConfig.content;
+            }
          },
 
          init: function() {
@@ -312,7 +317,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                this.subscribeTo(this._scrollbar, 'onScrollbarEndDrag', this._setScrollbarDragging.bind(this, false));
                this._resizeInner();
             }
-            if (!(this._getChildContentHeight() < 35)) {
+            if (!(this._getChildContentHeight() < 35) || !cDetection.isIE) {
                this._toggleGradient();
             }
          },
@@ -381,7 +386,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
             if (this._paging) {
                this._calcPagingSelectedKey(scrollTop);
             }
-            if (!(this._getChildContentHeight() < 35)) {
+            if (!(this._getChildContentHeight() < 35) || !cDetection.isIE) {
                this._toggleGradient();
             }
          },
@@ -567,7 +572,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
             }
             //ресайз может позваться до инита контейнера
             if (this._content) {
-               if (!(this._getChildContentHeight() < 35)) {
+               if (!(this._getChildContentHeight() < 35) || !cDetection.isIE) {
                   this._toggleGradient();
                }
                /**
@@ -618,7 +623,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
             Array.prototype.forEach.call(this._content.children(), function(item) {
                $item = $(item);
                // Метод outerHeight не учитывает видимость элемента, нужно учесть.
-               height += $item.is(':visible') ? $(item).outerHeight(true) : 0;
+               height += isElementVisible($item) ? $(item).outerHeight(true) : 0;
             });
 
             return height;

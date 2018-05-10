@@ -41,6 +41,7 @@ define('Controls/Input/Dropdown',
             return instance._sourceController.load().addCallback(function(items) {
                instance._items = items;
                _private.updateSelectedItem(instance, selectedKeys);
+               return items;
             });
          },
          updateSelectedItem: function(instance, selectedKeys) {
