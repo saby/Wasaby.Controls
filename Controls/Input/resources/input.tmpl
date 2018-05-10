@@ -1,11 +1,11 @@
 <ws:if data="{{ enabled }}">
    <input
-      name="input"
-      type="{{ type }}"
-      value="{{value}}"
-      class="controls-InputRender__field"
-      readonly="{{enabled ? '' : 'readonly'}}"
-      autocomplete="off"
+           name="input"
+           type="{{ type }}"
+           value="{{value}}"
+           class="controls-InputRender__field"
+           readonly="{{enabled ? '' : 'readonly'}}"
+           autocomplete="{{autocomplete ? 'off' : 'new-password'}}"
    />
 </ws:if>
 <ws:else>
