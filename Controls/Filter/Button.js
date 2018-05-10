@@ -126,7 +126,7 @@ define('Controls/Filter/Button',
    
       FilterButton.getOptionsTypes = function() {
          return {
-            itemTemplate: types(String).required(),
+            itemTemplate: types(String),
             itemTemplateProperty: types(String),
             additionalTemplate: types(String),
             additionalTemplateProperty: types(String)
