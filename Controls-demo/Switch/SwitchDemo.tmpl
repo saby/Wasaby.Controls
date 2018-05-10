@@ -1,8 +1,8 @@
 <div>
     <h3>Кликабельный</h3>
-    <Controls.Toggle.Switch bind:value="value" caption="On" />
+    <Controls.Toggle.Switch bind:value="value" caption="On" attr:test_name="clicked" />
     <h3>Кликабельный, в режиме чтения</h3>
-    <Controls.Toggle.Switch readOnly="{{true}}" bind:value="value1" caption="On" />
+    <Controls.Toggle.Switch readOnly="{{true}}" bind:value="value1" caption="On" attr:test_name="readonly" />
     <h3>Выключен</h3>
     <Controls.Toggle.Switch bind:value="value" />
     <h3>Включен</h3>
