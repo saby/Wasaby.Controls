@@ -2,9 +2,10 @@ define('Controls/Input/Search/Suggest',
    [
       'Core/Control',
       'tmpl!Controls/Input/Search/Suggest',
+      'WS.Data/Type/descriptor',
       'Controls/Input/Search'
    ],
-   function(Control, template) {
+   function(Control, template, types) {
       
       'use strict';
       
@@ -32,6 +33,20 @@ define('Controls/Input/Search/Suggest',
          }
          
       });
+   
+      Suggest.getOptionTypes = function() {
+         return {
+            displayProperty: types(String).required(),
+            suggestTemplate: types(Array).required(),
+            searchParam: types(String).required()
+         };
+      };
+   
+      Suggest.getDefaultOptions = function() {
+         return {
+            minSearchLength: 3
+         };
+      };
       
       return Suggest;
    }

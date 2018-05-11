@@ -188,7 +188,7 @@ define('Controls/Layout/Suggest',
       // <editor-fold desc="OptionsDesc">
       SuggestLayout.getOptionTypes = function() {
          return {
-            suggestTemplate: types(Array).required()
+            searchParam: types(String).required()
          };
       };
    
@@ -197,7 +197,8 @@ define('Controls/Layout/Suggest',
             emptyTemplate: emptyTemplate,
             footerTemplate: footerTemplate,
             suggestStyle: 'default',
-            suggestState: false
+            suggestState: false,
+            minSearchLength: 3
          };
       };
       

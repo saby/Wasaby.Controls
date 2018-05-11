@@ -98,7 +98,8 @@ define('Controls/Input/Suggest',
       Suggest.getOptionTypes = function() {
          return {
             displayProperty: types(String).required(),
-            suggestTemplate: types(Array).required()
+            suggestTemplate: types(Array).required(),
+            searchParam: types(String).required()
          };
       };
    
