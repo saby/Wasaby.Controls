@@ -1347,7 +1347,7 @@ define('SBIS3.CONTROLS/ListView',
                pagingZIndex: this._pagingZIndex
             });
             // Создаем пейджинг скрытым если включено сохранение позиции при reload, но сам пейджинг выключен
-            // Так как для сохранения страницы все равно нужекн рассчет страниц скролла
+            // Так как для сохранения страницы все равно нужекн расчет страниц скролла
             var hiddenPager = !this._options.scrollPaging && this._options.saveReloadPosition;
             this._scrollBinder.bindScrollPaging(this._scrollPager, hiddenPager);
 
@@ -2227,21 +2227,12 @@ define('SBIS3.CONTROLS/ListView',
           * </pre>
           */
          reload: function (filter, sorting, offset, limit, deepReload, resetPosition) {
-            if (this._scrollBinder && this._options.saveReloadPosition){
-               var reloadOffset = this._getReloadOffset();
-               this._offset = reloadOffset;
-               this._scrollOffset.top = reloadOffset;
-               this._scrollOffset.bottom = reloadOffset;
-               if (reloadOffset > 0) {
-                  this.setInfiniteScroll('both', true);
-               }
-            }
-
+            // todo Если возникнет желание поддержать опциюsaveReloadPositionв плоском списке, то делать это здесь
+            
             if (offset === 0 && this._options.infiniteScroll === 'down') {
                this._lastPageLoaded = false;
                this._setInfiniteScrollState('down');
             }
-
             // Reset virtual scrolling if it's enabled
             if (this._options.virtualScrolling && this._virtualScrollController) {
                this._virtualScrollController.disableScrollHandler(true);
@@ -2556,9 +2547,6 @@ define('SBIS3.CONTROLS/ListView',
             this._headIsChanged = true;
             this._redrawResults();
             ListView.superclass.redraw.apply(this, arguments);
-            if (this._options.saveReloadPosition) {
-               this._getScrollWatcher().scrollTo(0);
-            }
          },
 
          _getEditInPlace: function() {
@@ -3662,17 +3650,13 @@ define('SBIS3.CONTROLS/ListView',
       
                //перезагрузка с сохранением страницы может произойти на нулевой странице
                //TODO: Должен быть один сценарий, для этого нужно, что бы оффсеты всегда считались и обновлялись до запроса
-               if (this._options.saveReloadPosition) {
-                  hasNextPage = this._scrollOffset.top >= 0;
+               if (direction === 'before') {
+                  // А подгрузка вверх должна остановиться на нулевой странице и не запрашивать больше
+                  hasNextPage = this._scrollOffset.top > 0;
+               } else if (this._lastPageLoaded && direction === 'after') {
+                  hasNextPage = offset < this._scrollOffset.bottom;
                } else {
-                  if (direction === 'before') {
-                     // А подгрузка вверх должна остановиться на нулевой странице и не запрашивать больше
-                     hasNextPage = this._scrollOffset.top > 0;
-                  } else if (this._lastPageLoaded && direction === 'after') {
-                     hasNextPage = offset < this._scrollOffset.bottom;
-                  } else {
-                     hasNextPage = ListView.superclass._hasNextPage.apply(this, arguments);
-                  }
+                  hasNextPage = ListView.superclass._hasNextPage.apply(this, arguments);
                }
                return hasNextPage;
             } else {
@@ -4281,6 +4265,9 @@ define('SBIS3.CONTROLS/ListView',
                this._updatePaging();
             }
          },
+         _prepareAdditionalFilterForCursor: function(filter, direction) {
+            return this._listNavigation.prepareQueryParams(this._getItemsProjection(), direction);
+         },
          _getQueryForCall: function(filter, sorting, offset, limit, direction){
             var
                query = new Query(),
@@ -4291,7 +4278,7 @@ define('SBIS3.CONTROLS/ListView',
                this._dataSource.setOptions(options);
 
                queryFilter = coreClone(filter);
-               var addParams = this._listNavigation.prepareQueryParams(this._getItemsProjection(), direction);
+               var addParams = this._prepareAdditionalFilterForCursor(filter, direction);
                cMerge(queryFilter, addParams.filter);
             }
             /*TODO перенос события для курсоров глубже, делаю под ифом, чтоб не сломать текущий функционал*/
