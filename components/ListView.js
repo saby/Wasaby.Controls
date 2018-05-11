@@ -446,6 +446,7 @@ define('SBIS3.CONTROLS/ListView',
             _virtualScrollResetStickyHead: false,
             _setScrollPagerPositionThrottled: null,
             _updateScrollIndicatorTopThrottled: null,
+            _updateScrollIndicatorDownThrottled: null,
             _removedItemsCount: false,
             _loadQueue: {},
             _loadId: 0,
@@ -1015,6 +1016,7 @@ define('SBIS3.CONTROLS/ListView',
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onPageChange', 'onBeginDelete', 'onEndDelete', 'onBeginMove', 'onEndMove');
             this._setScrollPagerPositionThrottled = throttle.call(this._setScrollPagerPosition, 100, true).bind(this);
             this._updateScrollIndicatorTopThrottled = throttle.call(this._updateScrollIndicatorTop, 100, true).bind(this);
+            this._updateScrollIndicatorDownThrottled = throttle.call(this._updateScrollIndicatorDown, 100, true).bind(this);
             this._eventProxyHdl = this._eventProxyHandler.bind(this);
             this._onScrollHandler = this._onScrollHandler.bind(this);
             /* Инициализацию бесконечного скрола производим один раз */
@@ -3611,6 +3613,7 @@ define('SBIS3.CONTROLS/ListView',
             }
 
             this._updateScrollIndicatorTopThrottled();
+            this._updateScrollIndicatorDownThrottled();
 
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
             if (loadAllowed && isContainerVisible && hasNextPage && !this.isLoading()) {
@@ -3638,6 +3641,14 @@ define('SBIS3.CONTROLS/ListView',
             }
             this._loadingIndicator.css('top', top);
          },
+
+         _updateScrollIndicatorDown: function() {
+            var container = this.getContainer();
+            if (this.infiniteScroll === 'down' && this._hasNextPage(this.getItems().getMetaData().more)){
+               container.toggleClass('controls-ListView-scrollIndicator__down', container.hasClass('controls-ListView__indicatorVisible'));
+            }
+         },
+
 
          /**
           *
