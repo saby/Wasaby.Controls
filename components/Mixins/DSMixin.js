@@ -1346,7 +1346,7 @@ define('SBIS3.CONTROLS/Mixins/DSMixin', [
       },
 
       _buildTplItem: function(item, itemTpl){
-         if (this._dontCreateTemplateFunc) {
+         if (this._dontCreateTemplateFunc && typeof itemTpl === 'string') {
             return $(itemTpl);
          }
 
