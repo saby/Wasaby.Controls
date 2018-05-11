@@ -62,7 +62,7 @@
                     <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
                 </ws:navigation>
                 <ws:suggestTemplate>
-                    <Controls.Container.Suggest.List>
+                    <Controls.Container.Suggest.List tabsOptions="{{_tabsOptions}}">
                         <ws:content>
                             <Controls:List
                                     displayProperty="title"
@@ -87,7 +87,7 @@
                     <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
                 </ws:navigation>
                 <ws:suggestTemplate>
-                    <Controls.Container.Suggest.List attr:class="demo-SuggestList">
+                    <Controls.Container.Suggest.List attr:class="demo-SuggestList" tabsOptions="{{_tabsOptions}}">
                         <ws:content>
                             <Controls:List displayProperty="title" idProperty="id"/>
                         </ws:content>

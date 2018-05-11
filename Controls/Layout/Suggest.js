@@ -14,8 +14,7 @@ define('Controls/Layout/Suggest',
       
       'use strict';
       
-      var CURRENT_TAB_META_FIELD = 'currentTab';
-      var TABS_META_FIELD = 'tabs';
+      var CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
       
       var _private = {
          hasMore: function(searchResult) {
@@ -55,12 +54,6 @@ define('Controls/Layout/Suggest',
                var metaData = data && data.getMetaData();
    
                if (metaData) {
-                  if (metaData[TABS_META_FIELD]) {
-                     self._tabsSource = new Memory({
-                        data: metaData[TABS_META_FIELD]
-                     });
-                  }
-                  
                   if (metaData[CURRENT_TAB_META_FIELD] && self._tabsSelectedKey !== metaData[CURRENT_TAB_META_FIELD]) {
                      self._tabsSelectedKey = metaData[CURRENT_TAB_META_FIELD];
                   }

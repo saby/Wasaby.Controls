@@ -35,8 +35,11 @@ define('Controls/Container/Suggest/List',
             } else {
                this._navigation = options.navigation;
             }
+         },
+   
+         _tabsSelectedKeyChanged: function(event, key) {
+            this._notify('tabsSelectedKeyChanged', [key]);
          }
-         
       });
       
       return List;

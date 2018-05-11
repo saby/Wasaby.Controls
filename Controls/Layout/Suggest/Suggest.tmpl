@@ -8,7 +8,9 @@
                 source="{{_options.source}}"
                 navigation="{{_options.navigation}}"
                 searchParam="{{_options.searchParam}}"
+                tabsSelectedKey="{{_tabsSelectedKey}}"
                 on:itemClick="_select()"
+                on:tabsSelectedKeyChanged="_tabsSelectedKeyChanged()"
         />
     </ws:template>
 
@@ -16,7 +18,6 @@
 
     <div if="{{_options.suggestState}}" class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer-style-{{_options.suggestStyle}}">
         <Controls.Button.Close if="{{_options.suggestStyle === 'overInput'}}" attr:class="controls-Suggest-close" on:click="_close()"/>
-        <Controls.Tabs.Buttons if="{{_tabsSource}}" attr:class="controls-Suggest__tabs" source="{{_tabsSource}}" selectedKey="{{_tabsSelectedKey}}" keyProperty="id" on:selectedKeyChanged="_tabsSelectedKeyChanged()"/>
         <ws:partial template="suggestTpl"/>
         <ws:if data="{{_options.footerTemplate && _isFooterShown}}">
             <ws:partial template="{{ _options.footerTemplate}}" on:click="_showAllClick()" hasMore="{{_searchResult ? _searchResult.hasMore}}"/>
