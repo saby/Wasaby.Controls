@@ -45,7 +45,7 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
         *        if (text == 'Воскресение') {
         *           alert('Такого не может быть')
         *        }
-        *     };
+        *     });
         * </pre>
         * @see setText
         */
