@@ -14,9 +14,8 @@ define('Controls/Filter/Button/Panel/FilterDropdown', [
          this._notify('valueChanged', [value]);
       },
 
-      _clickHandler: function() {
-         this._visibility = false;
-         this._notify('valueChanged', [this._options.value, this._visibility]);
+      _resetHandler: function() {
+         this._notify('visibilityChanged', [false]);
       }
 
    });

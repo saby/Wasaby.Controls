@@ -11,10 +11,6 @@ define('Controls/Filter/Button/Panel/FilterSelect', [
 
       _clickHandler: function(event, item) {
          this._notify('valueChanged', [Utils.getItemPropertyValue(item, this._options.keyProperty)]);
-      },
-
-      _clickSeparatorHandler: function(event) {
-         event.stopPropagation();
       }
 
    });

@@ -6,7 +6,7 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
    'tmpl!Controls/Filter/Button/Panel/AdditionalParams/AdditionalParams',
    'WS.Data/Chain',
    'css!Controls/Filter/Button/Panel/AdditionalParams/AdditionalParams'
-], function(Control, Utils, isEqual, clone, template, Chain) {
+], function(Control, Utils, isEqual, Clone, template, Chain) {
 
    'use strict';
 
@@ -41,7 +41,7 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
       _arrowVisible: false,
 
       _beforeMount: function(options) {
-         this.items = clone(options.items);
+         this.items = Clone(options.items);
       },
 
       _afterMount: function() {
@@ -50,7 +50,7 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
 
       _afterUpdate: function() {
          if (!isEqual(this.items, this._options.items)) {
-            this.items = clone(this._options.items);
+            this.items = Clone(this._options.items);
             _private.onResize(this);
          }
       },

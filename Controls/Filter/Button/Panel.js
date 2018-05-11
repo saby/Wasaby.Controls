@@ -3,10 +3,12 @@ define('Controls/Filter/Button/Panel', [
    'WS.Data/Chain',
    'WS.Data/Utils',
    'Core/core-clone',
+   'Core/Deferred',
+   'Core/ParallelDeferred',
    'tmpl!Controls/Filter/Button/Panel/Panel',
    'css!Controls/Filter/Button/Panel/Panel'
 
-], function(Control, Chain, Utils, clone, template) {
+], function(Control, Chain, Utils, Clone, Deferred, ParallelDeferred, template) {
 
    /**
     * Control "Filter panel"
@@ -67,7 +69,7 @@ define('Controls/Filter/Button/Panel', [
       },
 
       _beforeMount: function(options) {
-         this._items = clone(options.items);
+         this._items = Clone(options.items);
          this._hasAdditionalParams = _private.hasAdditionalParams(options.items);
          this._isChanged = _private.isChangedValue(this._items);
       },
@@ -78,7 +80,7 @@ define('Controls/Filter/Button/Panel', [
       },
 
       _valueChangedHandler: function() {
-         this._items = clone(this._items);
+         this._items = Clone(this._items);
       },
 
       _applyFilter: function() {
@@ -88,7 +90,7 @@ define('Controls/Filter/Button/Panel', [
 
       _resetFilter: function() {
          var self = this;
-         this._items = clone(this._items);
+         this._items = Clone(this._items);
          Chain(this._items).each(function(item, index) {
             setPropValue(item, 'value', getPropValue(item, 'resetValue'));
             setPropValue(item, 'visibility', getPropValue(self._options.items[index], 'visibility'));

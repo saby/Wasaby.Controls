@@ -25,15 +25,14 @@ define('Controls/Filter/Button/Panel/FilterText', [
 
    var FilterText = Control.extend({
       _template: template,
-      _visibility: true,
 
-      _beforeMount: function() {
-         this._options.value = true;
+      _afterMount: function() {
+         this._notify('valueChanged', [true]);
       },
 
-      _clickHandler: function() {
-         this._visibility = false;
-         this._notify('valueChanged', [this._options.value, this._visibility]);
+
+      _resetHandler: function() {
+         this._notify('visibilityChanged', [false]);
       }
 
    });

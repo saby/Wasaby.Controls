@@ -2,5 +2,5 @@
    <Controls.Input.Dropdown
         scope="{{_options}}"
         on:selectedKeysChanged="_valueChangedHandler()"/>
-   <span if="{{_options.onPanel}}" class="controls-FilterPanel__iconClose icon-Close icon-disabled" on:click="_clickHandler()"></span>
+   <span class="controls-FilterDropdown__reset icon-Close icon-disabled" on:click="_resetHandler()"></span>
 </div>

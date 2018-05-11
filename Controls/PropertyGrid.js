@@ -1,8 +1,10 @@
 define('Controls/PropertyGrid', [
    'Core/Control',
+   'Core/Deferred',
+   'WS.Data/Chain',
    'tmpl!Controls/PropertyGrid/PropertyGrid',
    'css!Controls/PropertyGrid/PropertyGrid'
-], function(Control, template) {
+], function(Control, Deferred, Chain, template) {
 
    /**
     * Control PropertyGrid
@@ -20,12 +22,14 @@ define('Controls/PropertyGrid', [
    var PropertyGrid = Control.extend({
       _template: template,
 
-      _valueChangedHandler: function(event, index, value, visibility) {
-         if (visibility !== undefined) {
-            this._options.items[index].visibility = visibility;
-         }
+      _valueChangedHandler: function(event, index, value) {
          this._options.items[index].value = value;
          this._notify('valueChanged', [value]);
+      },
+
+      _visibilityChangedHandler: function(event, index, visibility) {
+         this._options.items[index].visibility = visibility;
+         this._notify('valueChanged', [this._options.items[index].value]);
       }
    });
 

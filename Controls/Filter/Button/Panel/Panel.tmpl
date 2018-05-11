@@ -1,4 +1,5 @@
-<Controls.Popup.Templates.Dialog.DialogTemplate caption="{{_options.title}}" class="controls-PanelFilter__{{_options.size}}">
+<Controls.Popup.Templates.Dialog.DialogTemplate caption="{{_options.title}}"
+                                                class="controls-PanelFilter__{{_options.size}}">
    <ws:topArea>
       <div class="controls-FilterPanel__header">
 
@@ -23,11 +24,13 @@
                                 itemTemplateProperty="{{_options.itemTemplateProperty}}"
                                 on:valueChanged="_valueChangedHandler()"
                                 class="controls-FilterPanel__PropertyGrid"/>
-         <Controls.Filter.Button.Panel.AdditionalParams if="{{_hasAdditionalParams}}"
-                                                        items="{{_items}}"
-                                                        itemTemplate="{{_options.additionalTemplate}}"
-                                                        itemTemplateProperty="{{_options.additionalTemplateProperty}}"
-                                                        on:valueChanged="_valueChangedHandler()"/>
+         <ws:if data="{{_hasAdditionalParams}}">
+            <Controls.Filter.Button.Panel.AdditionalParams
+                    items="{{_items}}"
+                    itemTemplate="{{_options.additionalTemplate}}"
+                    itemTemplateProperty="{{_options.additionalTemplateProperty}}"
+                    on:valueChanged="_valueChangedHandler()"/>
+         </ws:if>
       </div>
    </ws:contentArea>
 </Controls.Popup.Templates.Dialog.DialogTemplate>
