@@ -1165,7 +1165,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
          },
          _getQueryForCall: function(parentFn, filter, sorting, offset, limit, direction) {
             // Устанавливаем позицию в listCursorNavigation при загрузке корня
-            if (this._options.saveReloadPosition && filter[this._options.parentProperty] === this.getCurrentRoot()) {
+            if (this._isCursorNavigation() && this._options.saveReloadPosition && filter[this._options.parentProperty] === this.getCurrentRoot()) {
                if (typeof this._hierPages[this.getCurrentRoot()] !== 'undefined') {
                   this.getListNavigation().setPosition(this._hierPages[this.getCurrentRoot()]);
                }
