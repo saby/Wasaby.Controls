@@ -4,7 +4,7 @@ define('Controls/HighChartsDS', [
    'WS.Data/Source/SbisService',
    'WS.Data/Query/Query',
    'css!Controls/HighChartsDS/HighChartsDS'
-], function (Control, template, SbisService, Query) {
+], function(Control, template, SbisService, Query) {
 
    /**
     * Компонент диаграмм работающий с БЛ
@@ -42,7 +42,7 @@ define('Controls/HighChartsDS', [
          _beforeUpdate: function(opts) {
             var self = this;
             if (opts.filter !== _private.getFilter()) {
-               _private.callQuery(opts.filter).addErrback(function () {
+               _private.callQuery(opts.filter).addErrback(function() {
                   self._chartOptions = {
                      credits: {
                         enabled: false
