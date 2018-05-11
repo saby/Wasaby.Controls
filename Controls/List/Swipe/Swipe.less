@@ -23,10 +23,33 @@
   background-image: -ms-linear-gradient(left, transparent,  @backgroun-color_itemActions_swipe_shadow @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe 100%);
   background-image: -o-linear-gradient(left, transparent,  @backgroun-color_itemActions_swipe_shadow @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe 100%);
 }
-
-.controls-itemActionsV__action_icon_big {
-  .icon-size-without-important(@default-icon-size-large, @default-icon-medium-font);
+.controls-itemActionsV__action_padding_swipe {
+  padding: @padding_itemActions_action_swipe;
 }
+
+//каскад избавление от которого слишком дорогостоящее
+.controls-itemActionsV__action_icon {
+  &.icon-primary {
+  color: @color_swipe_icon;
+  }
+  &.controls-itemActionsV__action_icon_small {
+    .icon-size-without-important(@font-size_swipe_icon_small, @default-icon-medium-font);
+  }
+  &.controls-itemActionsV__action_icon_big {
+    .icon-size-without-important(@font-size_swipe_icon_big, @default-icon-medium-font);
+  }
+}
+
+.controls-itemActionsV__action_title_swipe {
+  color: @color_swipe_title;
+  font-size: @font-size_swipe_title;
+  max-width: @max-width_itemActions_title;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-height: @height-size_swipe_title;
+}
+
 .controls-itemActionsV__separator {
   background: @backgroun-color_itemActions_separator;
   flex-shrink: 0;
@@ -68,6 +91,6 @@
 }
 
 .controls-itemActionsV__action_title_lonely {
-  height: @default-icon-size-medium;
-  line-height: @default-icon-size-medium;
+  height: @font-size_swipe_icon_small;
+  line-height: @font-size_swipe_icon_small;
 }
