@@ -106,6 +106,7 @@ define('Controls/Container/List',
          cancelSearchDeferred: function(self) {
             if (self._searchDeferred && self._searchDeferred.isReady()) {
                self._searchDeferred.cancel();
+               self._searchDeferred = null;
             }
          },
          

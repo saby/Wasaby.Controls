@@ -202,7 +202,8 @@ define('Controls/Layout/Suggest',
       };
       
       // </editor-fold>
-      
+   
+      SuggestLayout._private = _private;
       return SuggestLayout;
    }
 );
