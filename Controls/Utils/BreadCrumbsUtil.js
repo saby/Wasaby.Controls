@@ -98,7 +98,7 @@ define('Controls/Utils/BreadCrumbsUtil', [
 
          var
             itemsSizes = _private.getItemsSizes(items),
-            length = itemsSizes.length,
+            length = items.length,
             currentWidth,
             shrinkedItemIndex;
          self._visibleItems = [];

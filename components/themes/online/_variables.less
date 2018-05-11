@@ -985,6 +985,7 @@
 @data-grid-cell-border-width:                   @default-border-width 0;
 @data-grid-cell-separator-color:                #F5F5F5;
 @data-grid-edge-cell-separator-color:           #EAEAEA;
+@background-color_grid_th_topRow_hasText_separator:  @data-grid-edge-cell-separator-color;
 @data-grid-cell-bg:                             transparent;
 @data-grid-td-checkbox-width:                   @width_CheckBox;
 @data-grid-td-visible-checkbox-width:           @width_CheckBox;
@@ -1555,7 +1556,7 @@
 @long-operations-popup-collapsed-header-but-gap-top: @long-operations-popup-header-but-gap-top;
 @long-operations-popup-header-suspended-color: #999999;
 @long-operations-popup-list-time-f-size: 12px;
-@long-operations-popup-list-border-bot: 1px solid #F5F5F5;
+@long-operations-popup-list-border-bot: @default-border-width solid #F5F5F5;
 @long-operations-popup-reg-but-ctr-height: 24px;
 @long-operations-popup-reg-but-line-height: 12px;
 @long-operations-popup-foot-height: 32px;
@@ -1823,6 +1824,7 @@
 
 //VDOM BreadCrumbs
 @font-family_BreadCrumbs:            'TensorFont';
+@background_BreadCrumbs-corner:      url('img/BreadCrumbs_corner.svg');
 
 //VDOM Back
 @font-weight_Back:                    bold;

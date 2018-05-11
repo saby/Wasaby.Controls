@@ -33,6 +33,7 @@ define('SBIS3.CONTROLS/DataGridView',
    'SBIS3.CONTROLS/Utils/TitleUtil',
    'Core/Sanitize',
    'Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager',
+   'Core/helpers/Hcontrol/configStorage',
    'css!SBIS3.CONTROLS/DataGridView/DataGridView'
 ],
    function(
@@ -68,7 +69,8 @@ define('SBIS3.CONTROLS/DataGridView',
       escapeHtml,
       TitleUtil,
       Sanitize,
-      StickyHeaderManager) {
+      StickyHeaderManager,
+      configStorage) {
 
    'use strict';
 
@@ -931,10 +933,25 @@ define('SBIS3.CONTROLS/DataGridView',
          if (!this._thead) {
             this._bindHead();
          }
+   
+         /* Почему приходится чистить самим:
+          1) Мы шаблон шапки исполняем сами, т.е. вызываем функцию, а потом строку вставляем в DOM,
+          поэтому компонентам не проставляется корректно parent.
+          2) Перерисовка шапки может быть вызвана ещё до оживления контролов,
+          поэтому разрушить контролы не получится (нет инстансов),
+          и конфиги остаются висеть в ConfigStorage.
+          */
+         if (this._thead) {
+            this._thead.find('[config]').each(function (index, elem) {
+               if (!elem.wsControl) {
+                  configStorage.deleteKey(elem.getAttribute('config'));
+               }
+            });
+         }
          headData = prepareHeadData(this._options);
          headData.columnsShift = this._getColumnsScrollPosition();
          headData.thumbPosition = this._currentScrollPosition;
-         headMarkup = this._options.headTpl(headData);
+         headMarkup = this._options.headTpl.call(this, headData);
          var body = $('.controls-DataGridView__tbody', this._container);
 
          var newTHead = $(headMarkup);

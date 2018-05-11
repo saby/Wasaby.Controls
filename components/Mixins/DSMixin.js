@@ -1342,6 +1342,10 @@ define('SBIS3.CONTROLS/Mixins/DSMixin', [
       },
 
       _buildTplItem: function(item, itemTpl){
+         if (this._dontCreateTemplateFunc) {
+            return $(itemTpl);
+         }
+
          var dotTemplate = TemplateUtil.prepareTemplate(itemTpl);
 
          if (typeof dotTemplate == 'function') {
