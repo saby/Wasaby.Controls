@@ -1009,8 +1009,9 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
          return rootItems;
       },
 
-      _getItemsForRedrawOnAdd: function(items) {
+      _getItemsForRedrawOnAdd: function(itemsArray) {
          var
+            items = coreClone(itemsArray),
             itemsToAdd = [], start = 0, groupId, groupHash,
             lastItem, breadCrumbs;
          if (this._options.hierarchyViewMode) {
