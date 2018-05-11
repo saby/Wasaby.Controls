@@ -85,11 +85,8 @@ define(
                calcOverflow = ScrollHeightFixUtil._private.calcHeightFixFn(detection);
 
                container = {
-                  children: [
-                     {
-                        offsetHeight: 10
-                     }
-                  ]
+                  offsetHeight: 10,
+                  scrollHeight: 10
                };
                result = calcOverflow(container);
                if (window) {
@@ -99,11 +96,8 @@ define(
                }
 
                container = {
-                  children: [
-                     {
-                        offsetHeight: 40
-                     }
-                  ]
+                  offsetHeight: 40,
+                  scrollHeight: 40
                };
                result = calcOverflow(container);
                if (window) {
