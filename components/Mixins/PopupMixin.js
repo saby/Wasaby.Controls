@@ -764,7 +764,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
       _initWindowSizes: function () {
          this._windowSizes = {
             height: $(window).height() - TouchKeyboardHelper.getKeyboardHeight(),
-            width: $(window).width()
+            width: document.body.clientWidth //Берем ширину документа, т.к. окно браузера может быть меньше минимальной ширины и нужно учитывать горизонтальный скролл
          };
       },
 
