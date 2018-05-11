@@ -21,10 +21,17 @@
    line-height: normal;
    display: inline-block;
    position: relative; //Для позициониования tagStyle
-   //Сбрасываем white-space в значение по умолчанию, чтобы прикладники не могли случайно перебить
-   white-space: normal;
    max-width: 100%; //Чтобы в IE текстбокс не выходил за пределы родителя
    border-style: solid;
+}
+
+//Сбрасываем white-space в значение по умолчанию, чтобы прикладники не могли случайно перебить
+.controls-InputRender_whiteSpace_normal {
+   white-space: normal;
+}
+
+.controls-InputRender_whiteSpace_nowrap {
+   white-space: nowrap;
 }
 
 .controls-Text-InputRender {
@@ -74,6 +81,7 @@
    .flex-shrink(1); //В IE10 по умолчанию flex-shrink: 0
    .reset-browser-input-styles();
    text-overflow: ellipsis;
+   overflow: hidden;
    width: 100%;
    //Иначе в Firefox и Edge input не будет сжиматься
    //https://jsfiddle.net/hr9mvn2o/
