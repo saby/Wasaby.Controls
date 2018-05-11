@@ -10,7 +10,6 @@ define('Controls/Button/Back', [
     * @class Controls/Button/Back
     * @extends Core/Control
     * @mixes Controls/Button/interface/ICaption
-    * @mixes Controls/interface/ITooltip
     * @mixes Controls/Button/interface/IClick
     * @control
     * @public
@@ -18,14 +17,14 @@ define('Controls/Button/Back', [
     */
 
    /**
-    * @name Controls/Button#style
+    * @name Controls/Button/Back#style
     * @cfg {String} Button display style.
     * @variant primary Button will be accented.
     * @variant default Button will be default.
     */
 
    /**
-    * @name Controls/Button#size
+    * @name Controls/Button/Back#size
     * @cfg {String} Button size
     * @variant s Button has small size.
     * @variant m Button has middle size.
