@@ -504,7 +504,11 @@ define('SBIS3.CONTROLS/Mixins/DSMixin', [
              * @see redraw
              * @noShow
              */
-            autoRedraw: true
+            autoRedraw: true,
+            /**
+              *  берет данные из переданных items не посылает запрос dataSource
+              */
+            loadFromItems: false
          },
          _loader: null,
 
@@ -542,7 +546,7 @@ define('SBIS3.CONTROLS/Mixins/DSMixin', [
             IoC.resolve('ILogger').log('ListView', 'Option idProperty is required');
          }
 
-         if (sourceOpt) {
+         if (sourceOpt && !this._options.loadFromItems) {
             this._dataSource = this._prepareSource(sourceOpt);
             this._items = null;
          } else if (itemsOpt) {
