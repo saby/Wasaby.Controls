@@ -64,7 +64,7 @@ define(
                projection.each(function (itemProj) {
                   item = itemProj.getContents();
                   itemTpl = item.get(opts.displayProperty);
-                  if (itemTpl && itemTpl.indexOf('{{') === -1) {
+                  if (itemTpl && typeof itemTpl === 'string' && itemTpl.indexOf('{{') === -1 && itemTpl.indexOf('{[') === -1) {
                      tmpl = itemTpl;
                   } else {
                      tmpl = itemTpl && TemplateUtil.prepareTemplate(itemTpl)({
