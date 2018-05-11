@@ -1072,6 +1072,7 @@ define('SBIS3.CONTROLS/ListView',
                this._listNavigation.analyzeResponseParams(this.getItems());
             }
             ListView.superclass.init.call(this);
+            this._container.on('keyup', this._keyUpHandler.bind(this));
             this._initLoadMoreButton();
          },
 
@@ -1397,6 +1398,16 @@ define('SBIS3.CONTROLS/ListView',
                this._scrollPager.getContainer().css('right', right);
             }
          },
+         _keyUpHandler: function(e) {
+            var
+               selectedKey = this.getSelectedKey();
+            if (e.which === constants.key.enter) {
+               if (selectedKey !== undefined && selectedKey !== null) {
+                  var selectedItem = $("[data-id='" + selectedKey + "']", this._getItemsContainer());
+                  this._elemClickHandler(selectedKey, this.getItems().getRecordById(selectedKey), selectedItem.get(0), e);
+               }
+            }
+         },
          _keyboardHover: function (e) {
             var
                selectedKeys,
@@ -1410,12 +1421,6 @@ define('SBIS3.CONTROLS/ListView',
                   break;
                case constants.key.down:
                   newSelectedItem = this._getNextItemByDOM(selectedKey);
-                  break;
-               case constants.key.enter:
-                  if(selectedKey !== undefined && selectedKey !== null) {
-                     var selectedItem = $("[data-id='" + selectedKey + "']", this._getItemsContainer());
-                     this._elemClickHandler(selectedKey, this.getItems().getRecordById(selectedKey), selectedItem.get(0), e);
-                  }
                   break;
                case constants.key.space:
                   newSelectedItem = this._getNextItemByDOM(selectedKey);
@@ -4686,6 +4691,8 @@ define('SBIS3.CONTROLS/ListView',
                clearTimeout(this._loadingIndicatorTimer);
                this._loadingIndicatorTimer = undefined;
             }
+
+            this._container.off('keyup');
 
             ListView.superclass.destroy.call(this);
             if (this._hasDragMove()) {
