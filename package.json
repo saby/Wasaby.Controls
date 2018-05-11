@@ -56,6 +56,8 @@
       "load-grunt-config": "0.16.0",
       "requirejs": "2.1.18",
       "serve-static": "1.11.x",
-      "ws-unit-testing": "git+https://git.sbis.ru/ws/unit-testing.git#release-2.0"
+      "ws-unit-testing": "git+https://git.sbis.ru/ws/unit-testing.git#release-2.0",
+      "autoprefixer": "^8.4.1",
+      "postcss": "^6.0.22"
    }
 }
