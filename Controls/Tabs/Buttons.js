@@ -95,6 +95,7 @@ define('Controls/Tabs/Buttons', [
          if (options.source) {
             return _private.initItems(options.source, this).addCallback(function(items) {
                this._items = items;
+               return items;
             }.bind(this));
          }
       },
