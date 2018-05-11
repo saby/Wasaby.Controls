@@ -1420,16 +1420,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                        }
                                        editor.execCommand('mceInsertLink', false, linkAttrs);
                                        selection.collapse(false);
-                                       if (cConstants.browser.firefox) {
-                                          // В firefox каретка(курсор ввода) остаётся (и просачивается) внутрь элемента A, нужно принудительно вывести её наружу, поэтому:
-                                          var r = editor.selection.getRng();
-                                          var a = r.endContainer;
-                                          for (; a && a.nodeName !== 'A'; a = a.parentNode) {}
-                                          if (a) {
-                                             editor.selection.select(a);
-                                             editor.selection.collapse(false);
-                                             fre.insertHtml('&#65279;');
-                                             editor.selection.setRng(r);
+                                       if (BROWSER.firefox) {
+                                          // В firefox каретка(курсор ввода) остаётся (и просачивается) внутрь элемента A, нужно принудительно вывести её наружу
+                                          var rng = selection.getRng();
+                                          var node = rng.endContainer;
+                                          if (node.nodeName === 'A') {
+                                             selection.select(node, false);
+                                             selection.collapse(false);
                                           }
                                        }
                                     }
@@ -2106,6 +2103,26 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
              });
 
+            if (BROWSER.firefox) {
+               editor.on('dragstart', function (evt) {
+                  var target = evt.target;
+                  if (target.nodeName === 'IMG') {
+                     this._firefoxDragndropTarget = target;
+                  }
+               });
+
+               editor.on('dragend', function (evt) {
+                  var target = evt.target;
+                  if (target === this._firefoxDragndropTarget) {
+                     var parent = target.parentNode;
+                     if (parent) {
+                        parent.removeChild(target);
+                     }
+                     this._firefoxDragndropTarget = null;
+                  }
+               });
+            }
+
             //БИНДЫ НА СОБЫТИЯ КЛАВИАТУРЫ (ВВОД)
             if (cConstants.browser.isMobileIOS || cConstants.browser.isMobileAndroid) {
                //TODO: https://github.com/tinymce/tinymce/issues/2533
@@ -2409,6 +2426,19 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             editor.on('touchstart', function(e) {
                self._fromTouch = true;
             });
+
+            // Никогда не прокручивать вышележашие скрол-контейнеры !
+            editor.on('scrollIntoView', function (evt) {
+               var needStop = !this._hasScrollContainer;
+               if (!needStop) {
+                  var scrollContainer = this._tinyEditor.selection.getScrollContainer();
+                  needStop = !scrollContainer || !this._scrollContainer[0].contains(scrollContainer);
+               }
+               if (needStop) {
+                  evt.preventDefault();
+                  evt.stopPropagation();
+               }
+            }.bind(this));
          },
 
          _getAdjacentTextNodesValue: function (node, toEnd) {

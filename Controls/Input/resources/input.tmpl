@@ -4,7 +4,7 @@
       type="{{ type }}"
       value="{{value}}"
       class="controls-InputRender__field"
-      autocomplete="off"
+      autocomplete="{{autocomplete ? 'off' : 'new-password'}}"
    />
 </ws:if>
 <ws:else>

@@ -1,0 +1,55 @@
+
+@width_ExportCustomizer-Area-dialog: 450px;
+@padding_ExportCustomizer-Area-dialog: 39px 0 0 0;
+@padding_ExportCustomizer-Area-head: 0 52px 0 12px;
+@color_ExportCustomizer-Area-head-title: #313E78;
+@font-size_ExportCustomizer-Area-head-title: 18px;
+@font-weight_ExportCustomizer-Area-head-title: bold;
+@padding_ExportCustomizer-Area-body: 10px 0;
+@margin_ExportCustomizer-Area-body-box: 0 0 10px 0;
+@border-bottom_ExportCustomizer-Area-body-box: 1px solid #f7f4f0;
+@padding_ExportCustomizer-Area-body-box: 0 12px 10px 12px;
+@padding_ExportCustomizer-Area-body-box-not-pad: 0 0 10px 0;
+@margin_ExportCustomizer-Area-body-columnBinder: 0 0 12px 0;
+
+.controls-ExportCustomizer-Area {
+   box-sizing: border-box;
+}
+
+.controls-ExportCustomizer-Area_dialog {
+   width: @width_ExportCustomizer-Area-dialog;
+   height: 100%;
+   padding: @padding_ExportCustomizer-Area-dialog;
+}
+
+.controls-ExportCustomizer-Area__head {
+   top: 0;
+   .flexbox();
+   .flex-direction(row);
+   .align-items(center);
+   .justify-content(space-between);
+   padding: @padding_ExportCustomizer-Area-head;
+}
+
+.controls-ExportCustomizer-Area__head-title {
+   .flex-grow(1);
+   color: @color_ExportCustomizer-Area-head-title;
+   font-size: @font-size_ExportCustomizer-Area-head-title;
+   font-weight: @font-weight_ExportCustomizer-Area-head-title;
+}
+
+.controls-ExportCustomizer-Area__presets {
+}
+
+.controls-ExportCustomizer-Area__body {
+    box-sizing: border-box;
+    height: 100%;
+    padding: @padding_ExportCustomizer-Area-body;
+}
+
+.controls-ExportCustomizer-Area__body__columnBinder {
+   margin: @margin_ExportCustomizer-Area-body-columnBinder;
+}
+
+.controls-ExportCustomizer-Area__body__formatter {
+}
