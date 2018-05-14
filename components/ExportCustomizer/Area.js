@@ -384,9 +384,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             }
             var fieldIds = currentPreset ? currentPreset.fieldIds.slice() : (options.fieldIds ? options.fieldIds.slice() : null);
             var fileUuid = currentPreset ? currentPreset.fileUuid : options.fileUuid;
+            var serviceParams = options.serviceParams;
             options._scopes = {
                presets: hasStaticPresets /*^^^|| options.presetNamespace*/ ? {
-                  statics: options.staticPresets,
+                  statics: hasStaticPresets ? staticPresets.slice() : null,
                   namespace: options.presetNamespace,
                   selectedId: options.selectedPresetId
                } : null,
@@ -403,7 +404,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   allFields: options.allFields,
                   fieldIds: fieldIds,
                   fileUuid: fileUuid,
-                  serviceParams: options.serviceParams
+                  serviceParams: serviceParams ? cMerge({}, serviceParams) : undefined
                }
             };
          },

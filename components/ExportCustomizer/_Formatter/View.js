@@ -79,7 +79,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             // Контрол выбора способа форматирования
             _formatterMenu: null,
             // Контрол предпросмотра
-            _preview: null
+            _preview: null,
+            // Размер области предпросмотра
+            _previewSize: null
          },
 
          _modifyOptions: function () {
@@ -100,11 +102,18 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                this._exportFormatter = Di.resolve(ExportFormatterName);
                this._formatterMenu = this.getChildControlByName('controls-ExportCustomizer-Formatter-View__formatterMenu');
                this._preview = this.getContainer().find('.controls-ExportCustomizer-Formatter-View__preview img');
+               var previewContainer = this._preview.parent();
+               this._previewSize = {width:previewContainer.width(), height:previewContainer.height()};
                this._bindEvents();
                var options = this._options;
                var fieldIds = options.fieldIds;
-               if (fieldIds && fieldIds.length && !options.fileUuid) {
-                  this._callFormatterMethod('create').addCallback(this._onFormatter.bind(this));
+               if (fieldIds && fieldIds.length) {
+                  if (!options.fileUuid) {
+                     this._callFormatterMethod('create').addCallback(this._onFormatter.bind(this));
+                  }
+                  else {
+                     this._updatePreview();
+                  }
                }
             }
             else {
@@ -212,7 +221,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * @protected
           */
          _updatePreview: function () {
-            var url = this._exportFormatter.getPreviewUrl(this._options.fileUuid);
+            var size = this._previewSize;
+            var url = this._exportFormatter.getPreviewUrl(this._options.fileUuid, size.width, size.height);
             var img = this._preview[0];
             var stopper = new Deferred();
             WaitIndicator.make({target:img.parentNode, delay:1000}, stopper);
