@@ -1,10 +1,8 @@
 define('Controls/PropertyGrid', [
    'Core/Control',
-   'Core/Deferred',
-   'WS.Data/Chain',
    'tmpl!Controls/PropertyGrid/PropertyGrid',
    'css!Controls/PropertyGrid/PropertyGrid'
-], function(Control, Deferred, Chain, template) {
+], function(Control, template) {
 
    /**
     * Control PropertyGrid

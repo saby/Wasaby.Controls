@@ -3,12 +3,10 @@ define('Controls/Filter/Button/Panel', [
    'WS.Data/Chain',
    'WS.Data/Utils',
    'Core/core-clone',
-   'Core/Deferred',
-   'Core/ParallelDeferred',
    'tmpl!Controls/Filter/Button/Panel/Panel',
    'css!Controls/Filter/Button/Panel/Panel'
 
-], function(Control, Chain, Utils, Clone, Deferred, ParallelDeferred, template) {
+], function(Control, Chain, Utils, Clone, template) {
 
    /**
     * Control "Filter panel"
