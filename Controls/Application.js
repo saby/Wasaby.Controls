@@ -53,10 +53,6 @@ define('Controls/Application',
       var Page = Base.extend({
          _template: template,
 
-         getDataId: function() {
-            return 'cfg-pagedata';
-         },
-
          _scrollPage: function(ev) {
             this._children.scrollDetect.start(ev);
          },
@@ -92,11 +88,6 @@ define('Controls/Application',
 
             this._headData = new HeadDataContext();
             self.appDef = new Deferred();
-            this._headData.push(self.appDef);
-            self.appDef.callback({
-               jsLinks: self.jsLinks,
-               cssLinks: self.cssLinks
-            });
             _private.initState(self, receivedState || cfg);
             self.content = cfg.content;
             self.needArea = cfg.compat || self.compat;
@@ -109,6 +100,11 @@ define('Controls/Application',
             self.jsLinks = (context.AppData ? context.AppData.jsLinks : cfg.jsLinks);
             self.BodyClasses = BodyClasses;
 
+            this._headData.push(self.appDef);
+            self.appDef.callback({
+               jsLinks: self.jsLinks,
+               cssLinks: self.cssLinks
+            });
             /**
              * Этот перфоманс нужен, для сохранения состояния с сервера, то есть, cfg - это конфиг, который нам прийдет из файла
              * роутинга и с ним же надо восстанавливаться на клиенте.
