@@ -26,35 +26,34 @@
    &:empty {
       padding-bottom: @padding-bottom_TinyMCE_empty;
    }
-   /*
-   Данные стили необходимы для:
-      1)Отступов внутри компонента, так как бейзик убирает всякие отступы
-      2)Отступов от таблицы отсутствуют в бейзик стайле
-      3)Затенение картинок при ховере
-      4)Убираем отступ от параграфа, если он последний
-   */
+
    &.ws-basic-style {
-      padding: @padding__TinyMCE_basicStyle;
+      //Отступы внутри компонента необходимы, так как отстуствтуют в basic-style
+      padding: @padding__TinyMCE-basicStyle;
       box-sizing: border-box;
       word-wrap: break-word;
       outline: none !important;
       table {
-         margin-bottom: @margin-bottom_TinyMCE_table;
+         //Отступы от таблицы отсутствуют в basic-style
+         margin-bottom: @margin-bottom_TinyMCE-table;
       }
       img {
          &:hover {
-            box-shadow: @box-shadow-sizes_TinyMCE_images @box-shadow-color_TinyMCE_images;
+            //Затенение картинок при ховере
+            box-shadow: @box-shadow_TinyMCE-images;
             box-sizing: border-box;
          }
       }
       & > p:last-of-type {
+         //Необходимо убирать отступ от последнего параграфа, так как есть внутренние отступы контейнера
          margin-bottom: 0;
       }
       .mce-visual-caret {
          margin: 0;
       }
    }
-   //Если последним элементом является элемент списка, то необходимо убрать отступ от него, который есть в бейзик стайл
+   //Если последним элементом является элемент списка, то необходимо убрать отступ от него, который есть в бейзик стайл,
+   //так как есть внутренний отступ контейнера
    & > :last-child li:last-child {
       margin-bottom: 0;
    }
@@ -64,10 +63,7 @@
    }
 }
 
-
-//TODO Убрать зависимость из этого компонента, как добавим плейсхолдер
 .ws-is-ie {
-
    /* Кроме MSIE 12
     * 1174787393 https://online.sbis.ru/opendoc.html?guid=37d3adf2-546a-4c4e-b5a4-010b237ddcb4
    */
@@ -81,12 +77,11 @@
    .controls-TinyMCE.ws-basic-style > p:last-child {
       padding-bottom: 1px;
    }
-
 }
 
 .ws-is-chrome {
    .controls-TinyMCE.ws-basic-style p:empty {
-      min-height: @min-height_TinyMCE_empty-paragraphs;
+      min-height: @min-height_TinyMCE-paragraphs_empty;
    }
 }
 
