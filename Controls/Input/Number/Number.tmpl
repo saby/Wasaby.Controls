@@ -1,6 +1,5 @@
 <Controls.Input.resources.InputRender.InputRender
    name="inputRender"
-   value="{{ _options.value }}"
    size="{{ _options.size }}"
    selectOnClick="{{_options.selectOnClick}}"
    viewModel="{{_numberViewModel}}"
@@ -23,4 +22,7 @@
       />
 
    </ws:content>
+   <ws:value>
+      <ws:String>{{ _options.value }}</ws:String>
+   </ws:value>
 </Controls.Input.resources.InputRender.InputRender>

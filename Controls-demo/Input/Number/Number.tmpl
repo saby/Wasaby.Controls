@@ -7,15 +7,20 @@
          attr:class="test_input"
          bind:value="_text1"
          placeholder="{{_placeholder}}"
-         integersLength="{{_integersLength}}"
          tagStyle="{{_tagStyle}}"
-         precision="{{_precision}}"
          onlyPositive="{{_onlyPositive}}"
          readOnly="{{_readOnly}}"
          showEmptyDecimals="{{_showEmptyDecimals}}"
          on:valueChanged="_eventHandler()"
          on:inputCompleted="_eventHandler()"
-      />
+      >
+         <ws:precision>
+            <ws:Number>{{_precision}}</ws:Number>
+         </ws:precision>
+         <ws:integersLength>
+            <ws:Number>{{_integersLength}}</ws:Number>
+         </ws:integersLength>
+      </Controls.Input.Number>
 
    </div>
    <div style="padding: 3em; background-color: rgba(81,81,81,0.08)">
