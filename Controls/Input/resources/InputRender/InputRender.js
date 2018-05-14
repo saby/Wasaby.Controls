@@ -87,7 +87,7 @@ define('Controls/Input/resources/InputRender/InputRender',
             _private.setTargetData(e.target, processedData);
             _private.saveSelection(this, e.target);
 
-            this._notify('valueChanged', [processedData.value]);
+            this._notify('valueChanged', [this._options.viewModel.getValue()]);
          },
 
          _keyUpHandler: function(e) {
@@ -153,7 +153,7 @@ define('Controls/Input/resources/InputRender/InputRender',
                   after: displayValue.slice(selectionEnd, displayValue.length)
                }, 'insert');
 
-            if (displayValue !== processedData.value) {
+            if (displayValue !== this._options.viewModel.getValue()) {
                this._notify('valueChanged', [this._options.viewModel.getValue()]);
             }
 
