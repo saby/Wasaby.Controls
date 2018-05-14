@@ -5,11 +5,10 @@ define('Controls/Input/ComboBox',
       'Controls/Input/resources/InputRender/BaseViewModel',
       'Controls/Controllers/SourceController',
       'WS.Data/Utils',
-      'WS.Data/Chain',
       'css!Controls/Input/ComboBox/ComboBox'
    ],
 
-   function(Control, template, BaseViewModel, SourceController, Utils, Chain) {
+   function(Control, template, BaseViewModel, SourceController, Utils) {
 
       /**
        * Control "ComboBox"
@@ -59,7 +58,6 @@ define('Controls/Input/ComboBox',
             });
             this._notify('valueChanged', [this._options.value]);
          }
-
       };
 
       var ComboBox = Control.extend({
@@ -108,6 +106,7 @@ define('Controls/Input/ComboBox',
 
          _close: function() {
             this._isOpen = false;
+            this._forceUpdate();
          }
 
       });

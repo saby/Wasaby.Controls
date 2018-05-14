@@ -1,8 +1,7 @@
 <div class="controls-ComboBox"
-     on:valueChanged="_valueChangedHandler()" name="combobox"
+     name="ComboBox"
      on:mousedown="_dropdownOpenHandler()">
 
-   <ws:contentTemplate>
       <Controls.Input.resources.InputRender.InputRender
               value="{{_options.value}}"
               size="{{ _options.size }}"
@@ -29,7 +28,6 @@
          </ws:afterFieldWrapper>
 
       </Controls.Input.resources.InputRender.InputRender>
-   </ws:contentTemplate>
    <div name="Popup" class="controls-ComboBox-popup"></div>
 
    <Controls.Dropdown.Opener name="DropdownOpener">
