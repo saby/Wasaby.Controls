@@ -45,7 +45,7 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
         *        if (text == 'Воскресение') {
         *           alert('Такого не может быть')
         *        }
-        *     };
+        *     });
         * </pre>
         * @see setText
         */
@@ -213,7 +213,8 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
               *     <option name="size">l</option>
               * </pre>
               */
-            size: 'default'
+            size: 'default',
+            autocomplete: true
          }
       },
 

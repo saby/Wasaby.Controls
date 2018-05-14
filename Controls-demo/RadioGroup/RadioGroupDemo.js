@@ -49,17 +49,6 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
                id: "6",
                title: 'Значение6',
                caption: 'caption6'
-            },
-            {
-               id: "7",
-               title: 'Супер Особенный',
-               templateTwo: 'tmpl!Controls-demo/RadioGroup/resources/SingleItemTemplate',
-               caption: 'caption7'
-            },
-            {
-               id: "8",
-               title: 'Значение8',
-               caption: 'caption8'
             }
          ]
       });
