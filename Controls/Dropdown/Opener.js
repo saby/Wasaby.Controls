@@ -20,15 +20,22 @@ define('Controls/Dropdown/Opener',
            * @param icon
            * @returns {*}
            */
-         getIconSize: function(icon) {
+         getIconSize: function(icon, optIconSize) {
             var iconSizes = ['icon-small', 'icon-medium', 'icon-large', 'icon-size'],
                iconSize;
-
-            iconSizes.forEach(function(size) {
-               if (icon.indexOf(size) !== -1) {
-                  iconSize = size;
+            if (optIconSize) {
+               switch (optIconSize) {
+                  case 's': iconSize = iconSizes[0]; break;
+                  case 'm': iconSize = iconSizes[1]; break;
+                  case 'l': iconSize = iconSizes[2]; break;
                }
-            });
+            } else {
+               iconSizes.forEach(function(size) {
+                  if (icon.indexOf(size) !== -1) {
+                     iconSize = size;
+                  }
+               });
+            }
             return iconSize;
          },
 
@@ -42,45 +49,30 @@ define('Controls/Dropdown/Opener',
             var compOptions = self._options.popupOptions && self._options.popupOptions.templateOptions,
                configOptions = config.templateOptions,
                parentProperty = (configOptions && configOptions.parentProperty) || compOptions && compOptions.parentProperty,
-               nodeProperty = (configOptions && configOptions.nodeProperty) || compOptions && compOptions.nodeProperty,
                items = configOptions && configOptions.items,
-               hierarchy = new Hierarchy({
-                  keyProperty: items.keyProperty,
-                  parentProperty: parentProperty,
-                  nodeProperty: nodeProperty
-               }),
+               optIconSize = configOptions && configOptions.iconSize,
                headerIcon = compOptions && (compOptions.headConfig && compOptions.headConfig.icon || compOptions.icon),
                menuStyle = compOptions && compOptions.headConfig && compOptions.headConfig.menuStyle,
                parents = {},
-               iconSize, children, child, pid, i, icon;
+               iconSize, pid, icon;
 
             // необходимо учесть иконку в шапке
             if (headerIcon && menuStyle !== 'cross') {
-               parents['null'] = [null, this.getIconSize(headerIcon)];
+               parents['null'] = [null, this.getIconSize(headerIcon, optIconSize)];
             }
 
             items.each(function(item) {
                icon = item.get('icon');
                if (icon) {
                   pid = item.get(parentProperty);
-                  if (!parents.hasOwnProperty(pid) && pid) {
-                     iconSize = _private.getIconSize(icon);
+                  if (!parents.hasOwnProperty(pid)) {
+                     iconSize = _private.getIconSize(icon, optIconSize);
                      parents[pid] = [pid, iconSize];
                   }
                }
             });
 
-            for (var key in parents) {
-               if (parents.hasOwnProperty(key)) {
-                  children = hierarchy.getChildren(parents[key][0], items);
-                  for (i = 0; i < children.length; i++) {
-                     child = children[i];
-                     if (!child.get('icon')) {
-                        child.set('icon', parents[key][1]);
-                     }
-                  }
-               }
-            }
+            configOptions.iconPadding = parents;
          },
 
          setTemplateOptions: function(self, config) {

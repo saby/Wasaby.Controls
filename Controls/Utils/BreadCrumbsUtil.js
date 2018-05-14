@@ -9,7 +9,34 @@ define('Controls/Utils/BreadCrumbsUtil', [
 ) {
    'use strict';
 
+   var
+      ARROW_WIDTH = 0,
+      HOME_WIDTH = 0,
+      BREAD_CRUMB_MIN_WIDTH = 0,
+      DOTS_WIDTH = 0,
+      initialized;
+
    var _private = {
+      initializeConstants: function() {
+         if (initialized) {
+            return;
+         }
+         ARROW_WIDTH = window && _private.getWidth('<span class="controls-BreadCrumbsV__arrow icon-size icon-DayForward icon-primary action-hover"></span>');
+         HOME_WIDTH = window && _private.getWidth('<div class="controls-BreadCrumbsV__home icon-size icon-Home3 icon-primary"></div>');
+         BREAD_CRUMB_MIN_WIDTH = window && _private.getWidth('<div class="controls-BreadCrumbsV__title_min"></div>');
+         DOTS_WIDTH = window && _private.getWidth(itemTemplate({
+            itemData: {
+               getPropValue: ItemsUtil.getPropertyValue,
+               item: {
+                  title: '...'
+               },
+               isDots: true,
+               hasArrow: true
+            }
+         }));
+         initialized = true;
+      },
+
       getItemData: function(index, items, withOverflow) {
          var
             currentItem = items[index],
@@ -61,30 +88,17 @@ define('Controls/Utils/BreadCrumbsUtil', [
       }
    };
 
-   var
-      ARROW_WIDTH = window && _private.getWidth('<span class="controls-BreadCrumbsV__arrow icon-size icon-DayForward icon-primary action-hover"></span>'),
-      HOME_WIDTH = window && _private.getWidth('<div class="controls-BreadCrumbsV__home icon-size icon-Home3 icon-primary"></div>'),
-      BREAD_CRUMB_MIN_WIDTH = window && _private.getWidth('<div class="controls-BreadCrumbsV__title_min"></div>'),
-      DOTS_WIDTH = window && _private.getWidth(itemTemplate({
-         itemData: {
-            getPropValue: ItemsUtil.getPropertyValue,
-            item: {
-               title: '...'
-            },
-            isDots: true,
-            hasArrow: true
-         }
-      }));
-
    return {
       getWidth: function(element) {
          return _private.getWidth(element);
       },
 
       calculateBreadCrumbsToDraw: function(self, items, availableWidth) {
+         _private.initializeConstants();
+
          var
             itemsSizes = _private.getItemsSizes(items),
-            length = itemsSizes.length,
+            length = items.length,
             currentWidth,
             shrinkedItemIndex;
          self._visibleItems = [];
@@ -153,6 +167,8 @@ define('Controls/Utils/BreadCrumbsUtil', [
       },
 
       getMaxCrumbsWidth: function(items) {
+         _private.initializeConstants();
+
          return _private.getItemsSizes(items, itemsTemplate, itemTemplate).reduce(function(acc, width) {
             return acc + width;
          }, 0) + HOME_WIDTH;

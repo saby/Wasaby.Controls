@@ -35,7 +35,7 @@ define(
          panel._notify = (e, args) => {
             if (e == 'close') {
                isNotifyClose = true;
-            } else if (e == 'filterChanged') {
+            } else if (e == 'sendResult') {
                filter = args[0];
             }
          };

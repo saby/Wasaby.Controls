@@ -132,8 +132,15 @@ define('SBIS3.CONTROLS/WSControls/Buttons/MenuButton', [
             /**
              * @cfg {Boolean} Экранирует текст в пунктах меню, если опция не задана на элементе
              */
-            escapeHtmlItems: false
-         }
+            escapeHtmlItems: false,
+
+            /**
+             * @cfg {Boolean} При открытии меню не перегружает данные из dataSource, а использует уже подгруженные
+             */
+            fromItems: false
+         },
+         // из menu приходит готовый набор элементов и нет необходимости посылать повторно запрос на БЛ
+         _loadFromItems: false
       },
 
       _modifyOptions: function(cfg) {
@@ -245,7 +252,7 @@ define('SBIS3.CONTROLS/WSControls/Buttons/MenuButton', [
             className: this._options.pickerClassName,
 
             //items могли задать через опцию или через setItems
-            items: this._options.items  ||  this._items,
+            items: this._items || this._options.items,
             corner: 'tl',
             filter: this._options.filter,
             enabled: this.isEnabled(),
@@ -267,7 +274,8 @@ define('SBIS3.CONTROLS/WSControls/Buttons/MenuButton', [
             closeOnTargetMove: true,
             targetPart: true,
             footerTpl: this._options.footerTpl,
-            _canScroll: true
+            _canScroll: true,
+            loadFromItems: this._options.fromItems ? this._loadFromItems : false
          };
          if (this._options.historyId) {
             menuconfig['historyId'] = this._options.historyId;
@@ -437,6 +445,7 @@ define('SBIS3.CONTROLS/WSControls/Buttons/MenuButton', [
 
       _dataLoadedCallback: function() {
          var items = this.getItems();
+         this._loadFromItems = true;
 
          if (this._picker) {
             this.hidePicker();

@@ -7,6 +7,7 @@
  */
 var removeInvalidXMLChars = function(valueStr) {
    if (typeof valueStr == "string") {
+      //eslint-disable-next-line no-control-regex
       valueStr = valueStr.replace(/[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD\u10000-\u10FFFF]*/g, "");
    }
    return valueStr;

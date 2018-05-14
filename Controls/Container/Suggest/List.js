@@ -15,7 +15,7 @@ define('Controls/Container/Suggest/List',
        * Container for list inside Suggest.
        *
        * @class Controls/Container/Suggest/List
-       * @extends Controls/Control
+       * @extends Core/Control
        * @author Герасимов Александр
        * @control
        * @public

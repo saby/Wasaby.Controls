@@ -126,7 +126,7 @@ define('Controls/List/Swipe/SwipeControl', [
 
       initSwipeIconSize: function(type) {
          //нечетные типы должны быть с большими иконками
-         return 'controls-itemActionsV__action_icon_' + (type % 2  ? 'default' : 'big');
+         return 'controls-itemActionsV__action_icon_' + (type % 2  ? 'small' : 'big');
       },
 
       initItemsForSwipe: function(self, itemData, actionsHeight) {
@@ -135,8 +135,7 @@ define('Controls/List/Swipe/SwipeControl', [
          self._visibleItemsCount = allActions.length;
 
          for (var i = self._visibleItemsCount - 1; i >= 0; i--) {
-            allActions[i].height = 'auto';
-
+            allActions[i].height = _private.getActionDefaultHeight(self._swipeConfig.type) + 'px';
          }
 
          if (self._swipeConfig.type > ROW_TYPE_THRESHOLD && self._swipeConfig.type <= ONE_COLUMN_TYPE_THRESHOLD) {
@@ -197,7 +196,7 @@ define('Controls/List/Swipe/SwipeControl', [
          } else {
             var
                height = Math.floor((actionsHeight - (oneColumnCount - 1)) / oneColumnCount),
-               firstColumnCount = oneColumnCount % 2
+               firstColumnCount = oneColumnCount % 2 &&  oneColumnCount !== allActions.length / 2
                   ? oneColumnCount - 1
                   : oneColumnCount > allActions.length / 2 //ситуация когда 3 операции и в ервый столбец влезает две
                      ? allActions.length - oneColumnCount
@@ -223,7 +222,7 @@ define('Controls/List/Swipe/SwipeControl', [
       needShowTitle: function(action, type) {
          var
             tempAction = action ? action : {title: true, icon: true}; //menu emulateAction
-         return tempAction.title && (!tempAction.icon || ~TYPES_WITH_TITLE.indexOf(type));
+         return tempAction.title && (!tempAction.icon || !!~TYPES_WITH_TITLE.indexOf(type));
       },
 
       needShowSeparator: function(self, action, itemData, type) {
@@ -302,5 +301,9 @@ define('Controls/List/Swipe/SwipeControl', [
          isTouch: TouchContextField
       };
    };
+
+   //tests
+   SwipeControl._private = _private;
+
    return SwipeControl;
 });
