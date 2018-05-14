@@ -6,16 +6,16 @@ define('Controls/JsLinks/JsLinks',
       'Controls/Async/HeadDataContext'
    ],
 
-   function(Base, Deferred, template, HeadDataContext) {
+   function (Base, Deferred, template, HeadDataContext) {
       'use strict';
 
       var Page = Base.extend({
          _template: template,
-         getDataId: function() {
-            return 'JSLINKS' ;
+         getDataId: function () {
+            return 'JSLINKS';
          },
-         _beforeMount: function(options, context, receivedState) {
-            if(receivedState) {
+         _beforeMount: function (options, context, receivedState) {
+            if (receivedState) {
                this.jsLinks = receivedState;
                return;
             }
@@ -30,7 +30,7 @@ define('Controls/JsLinks/JsLinks',
             return innerDef;
          }
       });
-      Page.contextTypes = function() {
+      Page.contextTypes = function () {
          return {
             headData: HeadDataContext
          };

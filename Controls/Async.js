@@ -12,19 +12,19 @@ define('Controls/Async',
       'use strict';
 
       var Page = Base.extend({
-         _template: function() {
+         _template: function () {
             debugger;
             var res = template.apply(this, arguments);
             var self = this;
-            if(res.addCallback  && !res.isReady()) {
-               if(self.waitDef) {
-                  res.addCallback(function(result) {
+            if (res.addCallback && !res.isReady()) {
+               if (self.waitDef) {
+                  res.addCallback(function (result) {
                      self.waitDef.callback(self.deps);
                      return result;
                   });
                }
             } else {
-               if(self.waitDef) {
+               if (self.waitDef) {
                   self.waitDef.callback(self.deps);
                }
             }
