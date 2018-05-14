@@ -382,7 +382,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   options.staticPresets.some(function (v) { if (v.id === selectedPresetId) { currentPreset = v; } });
                }
             }
-            var fieldIds = currentPreset ? currentPreset.fieldIds.slice() : (options.fieldIds ? options.fieldIds.slice() : null);
+            var fieldIds = currentPreset ? currentPreset.fieldIds : (options.fieldIds ? options.fieldIds : null);
             var fileUuid = currentPreset ? currentPreset.fileUuid : options.fileUuid;
             var serviceParams = options.serviceParams;
             options._scopes = {
@@ -396,13 +396,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   columnsTitle: options.columnBinderColumnsTitle || undefined,
                   fieldsTitle: options.columnBinderFieldsTitle || undefined,
                   allFields: options.allFields,
-                  fieldIds: fieldIds
+                  fieldIds: fieldIds ? fieldIds.slice() : undefined
                },
                formatter: {
                   title: options.formatterTitle,
                   menuTitle: options.formatterMenuTitle,
                   allFields: options.allFields,
-                  fieldIds: fieldIds,
+                  fieldIds: fieldIds ? fieldIds.slice() : undefined,
                   fileUuid: fileUuid,
                   serviceParams: serviceParams ? cMerge({}, serviceParams) : undefined
                }

@@ -41,7 +41,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
        * @private
        * @type {string}
        */
-      var ExportFormatterName = 'ExportFormatter.Excel';
+      var EXPORT_FORMATTER_NAME = 'ExportFormatter.Excel';
+
+      /**
+       * Задержка обновления изображения предпросмотра
+       * @private
+       * @type {number}
+       */
+      var PREVIEW_DELAY = 750;
 
 
 
@@ -98,12 +105,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
 
          init: function () {
             View.superclass.init.apply(this, arguments);
-            if (Di.isRegistered(ExportFormatterName)) {
-               this._exportFormatter = Di.resolve(ExportFormatterName);
+            if (Di.isRegistered(EXPORT_FORMATTER_NAME)) {
+               this._exportFormatter = Di.resolve(EXPORT_FORMATTER_NAME);
                this._formatterMenu = this.getChildControlByName('controls-ExportCustomizer-Formatter-View__formatterMenu');
                this._preview = this.getContainer().find('.controls-ExportCustomizer-Formatter-View__preview img');
-               var previewContainer = this._preview.parent();
-               this._previewSize = {width:previewContainer.width(), height:previewContainer.height()};
                this._bindEvents();
                var options = this._options;
                var fieldIds = options.fieldIds;
@@ -221,7 +226,21 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * @protected
           */
          _updatePreview: function () {
+            this._updatePreviewClear();
+            this._updatePreviewDelay = setTimeout(this._updatePreviewStart.bind(this), PREVIEW_DELAY);
+         },
+         _updatePreviewClear: function () {
+            if (this._updatePreviewDelay) {
+               clearTimeout(this._updatePreviewDelay);
+               this._updatePreviewDelay = null;
+            }
+         },
+         _updatePreviewStart: function () {
             var size = this._previewSize;
+            if (!size) {
+               var previewContainer = this._preview.parent();
+               this._previewSize = size = {width:previewContainer.width(), height:previewContainer.height()};
+            }
             var url = this._exportFormatter.getPreviewUrl(this._options.fileUuid, size.width, size.height);
             var img = this._preview[0];
             var stopper = new Deferred();
@@ -272,6 +291,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             return {
                fileUuid: options.fileUuid
             };
+         },
+
+         /**
+          * Уничтожить экземпляр
+          *
+          * @public
+          */
+         destroy: function () {
+            this._updatePreviewClear();
          }
       });
 
