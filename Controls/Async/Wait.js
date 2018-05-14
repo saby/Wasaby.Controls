@@ -12,7 +12,7 @@ define('Controls/Async/Wait',
       'use strict';
 
       var Page = Base.extend({
-         _template: function () {
+         _template: function() {
             var res = template.apply(this, arguments);
             var self = this;
             if (res.addCallback && !res.isReady()) {
@@ -27,7 +27,7 @@ define('Controls/Async/Wait',
             }
             return res;
          },
-         _beforeMount: function (options, context, recievedState) {
+         _beforeMount: function(options, context) {
             var def = new Deferred();
             this.waitDef = def;
             if (typeof window === 'undefined') {

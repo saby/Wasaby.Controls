@@ -10,7 +10,7 @@ define('Controls/Head/Head',
 
       var Page = Base.extend({
          _template: template,
-         _beforeMount: function (options, context, receivedState) {
+         _beforeMount: function(options, context, receivedState) {
             if (receivedState) {
                this.cssLinks = receivedState;
                return;
@@ -26,11 +26,11 @@ define('Controls/Head/Head',
             return innerDef;
          }
       });
-      Page.contextTypes = function () {
+      Page.contextTypes = function() {
          return {
             headData: HeadDataContext
          };
-      }
+      };
       return Page;
    }
 );

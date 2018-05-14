@@ -12,8 +12,7 @@ define('Controls/Async',
       'use strict';
 
       var Page = Base.extend({
-         _template: function () {
-            debugger;
+         _template: function() {
             var res = template.apply(this, arguments);
             var self = this;
             if (res.addCallback && !res.isReady()) {
@@ -31,7 +30,7 @@ define('Controls/Async',
             return res;
          },
          stateError: false,
-         _beforeMount: function (options, context, recievedState) {
+         _beforeMount: function(options, context, recievedState) {
             var def = new Deferred();
             var defRender = new Deferred();
             var self = this;
@@ -68,12 +67,6 @@ define('Controls/Async',
                   self.stateError = JSON.stringify(e);
                   defRender.callback(false);
                }
-               // setTimeout(function () {
-               //    if (!def.isReady()) {
-               //       self.stateError = 'Loading timeout';
-               //       def.callback(false);
-               //    }
-               // }, 2000);
                context.headData.push(def);
                return defRender;
             }

@@ -11,10 +11,7 @@ define('Controls/JsLinks/JsLinks',
 
       var Page = Base.extend({
          _template: template,
-         getDataId: function () {
-            return 'JSLINKS';
-         },
-         _beforeMount: function (options, context, receivedState) {
+         _beforeMount: function(options, context, receivedState) {
             if (receivedState) {
                this.jsLinks = receivedState;
                return;
@@ -30,11 +27,11 @@ define('Controls/JsLinks/JsLinks',
             return innerDef;
          }
       });
-      Page.contextTypes = function () {
+      Page.contextTypes = function() {
          return {
             headData: HeadDataContext
          };
-      }
+      };
       return Page;
    }
 );
