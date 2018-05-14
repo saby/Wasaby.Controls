@@ -3,7 +3,11 @@ define('Controls-demo/FilterButton/Panel/Panel',
       'Core/Control',
       'WS.Data/Source/Memory',
       'tmpl!Controls-demo/FilterButton/Panel/Panel',
-      'Controls/Filter/Button/Panel'
+      'Controls/Filter/Button/Panel',
+      'tmpl!Controls-demo/FilterButton/Panel/resources/additionalItemsTemplate2',
+      'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate',
+      'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/additionalItemsTemplate',
+      'tmpl!Controls-demo/FilterButton/Panel/resources/FIO'
    ],
 
    function(Control, MemorySource, template) {

@@ -19,7 +19,10 @@ define('Controls-demo/Layouts/SearchLayout', [
    'Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/FilterButtonTemplate',
    'Controls/Container/Input/Search',
    'Controls/Button',
-   'Controls/Input/Dropdown'
+   'Controls/Input/Dropdown',
+   'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate',
+   'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/additionalItemsTemplate'
+
 ], function(BaseControl,
    template,
    MemorySource) {

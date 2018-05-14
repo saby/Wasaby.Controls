@@ -9,9 +9,7 @@ define('Controls/Filter/Button',
       'WS.Data/Chain',
       'WS.Data/Utils',
       'WS.Data/Type/descriptor',
-      'css!Controls/Filter/Button/Button',
-      'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate',
-      'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/additionalItemsTemplate'
+      'css!Controls/Filter/Button/Button'
    ],
    
    function(Control, template, moduleStubs, Chain, Utils, types) {
