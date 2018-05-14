@@ -1,11 +1,12 @@
 define('SBIS3.CONTROLS/VdomPhoneTextBox',
    [
       'SBIS3.CONTROLS/CompoundControl',
+      'SBIS3.CONTROLS/Mixins/FormWidgetMixin',
       'tmpl!SBIS3.CONTROLS/VdomPhoneTextBox/VdomPhoneTextBox',
 
       'SBIS3.CONTROLS/VdomPhoneTextBox/PhoneTextBoxWrapper'
    ],
-   function(CompoundControl, dotTplFn) {
+   function(CompoundControl, FormWidgetMixin, dotTplFn) {
 
       'use strict';
 
@@ -17,7 +18,7 @@ define('SBIS3.CONTROLS/VdomPhoneTextBox',
        * @extends Core/Control
        * @author Журавлев М. С.
        */
-      var VdomPhoneTextBox = CompoundControl.extend(/** @lends SBIS3.CONTROLS/VdomPhoneTextBox.prototype*/{
+      var VdomPhoneTextBox = CompoundControl.extend([FormWidgetMixin],/** @lends SBIS3.CONTROLS/VdomPhoneTextBox.prototype*/{
          _dotTplFn: dotTplFn,
 
          $protected: {
@@ -34,13 +35,19 @@ define('SBIS3.CONTROLS/VdomPhoneTextBox',
             wrapper = this.getChildControlByName('wrapper');
 
             wrapper.subscribe('onValueChange', this._valueChangedHandler.bind(this));
+            wrapper.subscribe('onFocusOut', this.validate.bind(this));
 
             this._wrapper = wrapper;
          },
 
          _valueChangedHandler: function(event, value) {
+            this._options.value = value;
             this._notify('onValueChange', value);
             this._notifyOnPropertyChanged('value');
+         },
+
+         validate: function(value) {
+            this._wrapper.setValidationError(VdomPhoneTextBox.superclass.validate.call(this) === true);
          },
 
          /**
@@ -72,6 +79,7 @@ define('SBIS3.CONTROLS/VdomPhoneTextBox',
           * @see getValue
           */
          setValue: function(value) {
+            this._options.value = value;
             this._wrapper.setValue(value);
          },
 
