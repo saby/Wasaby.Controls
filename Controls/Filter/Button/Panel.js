@@ -27,6 +27,15 @@ define('Controls/Filter/Button/Panel', [
    var setPropValue = Utils.setItemPropertyValue.bind(Utils);
 
    var _private = {
+
+      cloneItems: function(items) {
+         if (items['[WS.Data/Entity/CloneableMixin]']) {
+            return items.clone();
+         } else {
+            return Clone(items);
+         }
+      },
+
       getFilter: function(self) {
          var filter = {};
          Chain(self._items).each(function(item) {
@@ -38,21 +47,23 @@ define('Controls/Filter/Button/Panel', [
       },
 
       isChangedValue: function(items) {
-         for (var i in items) {
-            if (getPropValue(items[i], 'value') !== getPropValue(items[i], 'resetValue') && getPropValue(items[i], 'visibility')) {
-               return true;
+         var isChanged = false;
+         Chain(items).each(function(item) {
+            if (getPropValue(item, 'value') !== getPropValue(item, 'resetValue') && getPropValue(item, 'visibility')) {
+               isChanged = true;
             }
-         }
-         return false;
+         });
+         return isChanged;
       },
 
       hasAdditionalParams: function(items) {
-         for (var i in items) {
-            if (!getPropValue(items[i], 'visibility')) {
-               return true;
+         var hasAdditional = false;
+         Chain(items).each(function(item) {
+            if (!getPropValue(item, 'visibility')) {
+               hasAdditional = true;
             }
-         }
-         return false;
+         });
+         return hasAdditional;
       }
    };
 
@@ -61,13 +72,8 @@ define('Controls/Filter/Button/Panel', [
       _isChanged: false,
       _hasAdditionalParams: false,
 
-      constructor: function(options) {
-         FilterPanel.superclass.constructor.apply(this, arguments);
-         this._options = options;
-      },
-
       _beforeMount: function(options) {
-         this._items = Clone(options.items);
+         this._items = _private.cloneItems(options.items);
          this._hasAdditionalParams = _private.hasAdditionalParams(options.items);
          this._isChanged = _private.isChangedValue(this._items);
       },
@@ -78,7 +84,11 @@ define('Controls/Filter/Button/Panel', [
       },
 
       _valueChangedHandler: function() {
-         this._items = Clone(this._items);
+         this._items = _private.cloneItems(this._items);
+      },
+
+      _visibilityChangedHandler: function() {
+         this._items = _private.cloneItems(this._items);
       },
 
       _applyFilter: function() {
@@ -88,7 +98,7 @@ define('Controls/Filter/Button/Panel', [
 
       _resetFilter: function() {
          var self = this;
-         this._items = Clone(this._items);
+         this._items = _private.cloneItems(this._items);
          Chain(this._items).each(function(item, index) {
             setPropValue(item, 'value', getPropValue(item, 'resetValue'));
             setPropValue(item, 'visibility', getPropValue(self._options.items[index], 'visibility'));

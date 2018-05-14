@@ -23,6 +23,7 @@
                                 itemTemplate="{{_options.itemTemplate}}"
                                 itemTemplateProperty="{{_options.itemTemplateProperty}}"
                                 on:valueChanged="_valueChangedHandler()"
+                                on:visibilityChanged="_visibilityChangedHandler()"
                                 class="controls-FilterPanel__PropertyGrid"/>
          <ws:if data="{{_hasAdditionalParams}}">
             <Controls.Filter.Button.Panel.AdditionalParams

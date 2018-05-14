@@ -1,8 +1,9 @@
 define(
    [
-      'Controls/Filter/Button/Panel'
+      'Controls/Filter/Button/Panel',
+      'WS.Data/Collection/RecordSet',
    ],
-   function(FilterPanel) {
+   function(FilterPanel, RecordSet) {
       describe('FilterPanelVDom', function() {
          var template = 'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate';
          var config = {},
@@ -30,6 +31,7 @@ define(
          config.itemTemplate = template;
 
          var panel = new FilterPanel(config);
+         panel._options = config;
          var isNotifyClose,
             filter;
 
@@ -48,7 +50,7 @@ define(
          });
 
          it('before update', function() {
-            config.items[2].visibility = false;
+            panel._items[2].visibility = false;
             panel._beforeMount(config);
             panel._beforeUpdate();
             assert.isTrue(panel._isChanged);
@@ -77,8 +79,9 @@ define(
          });
 
          it('without add params', function() {
-            items[2].visibility = true;
-            assert.isFalse(FilterPanel._private.hasAdditionalParams(items));
+            panel._beforeMount(config);
+            panel._items[2].visibility = true;
+            assert.isFalse(FilterPanel._private.hasAdditionalParams(panel._items));
          });
 
          it('Close', function() {
@@ -86,5 +89,29 @@ define(
             panel._close();
             assert.isTrue(isNotifyClose);
          });
+
+         it('recordSet', function() {
+            var rs = new RecordSet({
+                  idProperty: 'id',
+                  rawData: items
+               }),
+               options = {};
+            options.items = rs;
+            var panel2 = new FilterPanel(options);
+            panel2._beforeMount(options);
+            panel2._beforeUpdate();
+            assert.isTrue(panel2._isChanged);
+            assert.isTrue(panel2._hasAdditionalParams);
+         });
+
+         it('valueChanged, visibilityChanged', function() {
+            panel._beforeMount(config);
+            panel._valueChangedHandler();
+            assert.deepEqual(panel._items, config.items);
+
+            panel._visibilityChangedHandler();
+            assert.deepEqual(panel._items, config.items);
+         });
+
       });
    });
