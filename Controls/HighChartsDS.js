@@ -2,85 +2,83 @@ define('Controls/HighChartsDS', [
    'Core/Control',
    'tmpl!Controls/HighChartsDS/HighChartsDS',
    'WS.Data/Source/SbisService',
-   'Controls/HighChartsDS/Utils/ParseDataUtil'
-], function(Control, template, SbisService, Utils) {
+   'Controls/HighChartsDS/Utils/ParseDataUtil',
+   'Core/ILogger',
+   'Core/core-clone'
+], function(Control, template, SbisService, Utils, ILogger, cClone) {
 
    /**
     * Компонент диаграмм работающий с БЛ
     */
    var _private = {
-         drawChart: function(self, data) {
+         drawChart: function(self, recordSet) {
             var preparedData;
-            self._currentData.data = data.getAll();
-            preparedData = _private.prepareData(self);
-            _private.mergePreparedData(self._chartOptions, preparedData);
-         },
-         prepareData: function(self) {
-            var
-               data = self._currentData.data,
-               preparedSeries,
-               preparedXAxis,
-               preparedYAxis;
-
-            if (data) {
-               preparedSeries = Utils.recordSetParse(self._wsSeries, data);
-
-               var
-                  parseResult = Utils.parseAxisCommon(self._wsAxis),
-                  parseRsResult;
-
-               preparedXAxis = parseResult.xAxis;
-               preparedYAxis = parseResult.yAxis;
-
-               parseRsResult =  Utils.recordSetParseAxis(preparedXAxis, preparedYAxis, data);
-
-               preparedXAxis = parseRsResult.xAxis;
-               preparedYAxis = parseRsResult.yAxis;
-
-               return {
-                  series: preparedSeries,
-                  xAxis: preparedXAxis,
-                  yAxis: preparedYAxis
-               };
+            if (recordSet) {
+               preparedData = _private.prepareData(self._options.wsSeries, self._options.wsAxis, recordSet);
+               self._chartOptions = _private.mergePreparedData(self._chartOptions, preparedData);
             } else {
-               throw new Error(rk('Данные не загружены'));
+               ILogger.error('HighCharts', 'Data haven`t loaded');
             }
          },
+         prepareData: function(wsSeries, wsAxis, recordSet) {
+            var
+               preparedSeries,
+               tmpXAxis,
+               tmpYAxis,
+               tmpResult,
+               parseRsResult;
+
+            preparedSeries = Utils.recordSetParse(wsSeries, recordSet);
+            
+            tmpResult = Utils.parseAxisCommon(wsAxis);
+            
+            tmpXAxis = tmpResult.xAxis;
+            tmpYAxis = tmpResult.yAxis;
+            
+            parseRsResult =  Utils.recordSetParseAxis(tmpXAxis, tmpYAxis, recordSet);
+
+            return {
+               series: preparedSeries,
+               xAxis: parseRsResult.xAxis,
+               yAxis: parseRsResult.yAxis
+            };
+         },
          mergePreparedData: function(chartOptions, preparedData) {
-            chartOptions.series = preparedData.series;
-            chartOptions.xAxis = preparedData.xAxis;
-            chartOptions.yAxis = preparedData.yAxis;
+            var tmpOpts = cClone(chartOptions);
+            tmpOpts.series = preparedData.series;
+            tmpOpts.xAxis = preparedData.xAxis;
+            tmpOpts.yAxis = preparedData.yAxis;
+            return tmpOpts;
          }
       },
       HighChartsDS = Control.extend({
          _template: template,
          _chartOptions: {},
-         _wsSeries: {},
-         _wsAxis: {},
 
-         _beforeMount: function(opts) {
-            opts.wsSeries && (this._wsSeries = opts.wsSeries);
-            opts.wsAxis && (this._wsAxis = opts.wsAxis);
-            if (opts.dataSource) {
-               this._currentData = opts.dataSource;
-               return this._currentData.query(opts.filter);
+         _beforeMount: function(opts, rs) {
+            var self = this;
+            this._chartOptions = opts.chartOptions;
+            if (Object.keys(rs).length !== 0) {
+               this._recordSet = rs.getAll();
+            } else if (opts.dataSource) {
+               return opts.dataSource.query(opts.filter).addCallback(function(data) {
+                  self._recordSet = data;
+               });
             }
          },
 
          _afterMount: function() {
-            var self = this;
-            if (this._currentData) {
-               this._currentData.addCallback(function(data) {
-                  _private.drawChart(self, data);
-               });
+            if (this._recordSet) {
+               _private.drawChart(this, this._recordSet);
             }
          },
 
          _beforeUpdate: function(opts) {
             var self = this;
             if (opts.filter !== this._options.filter) {
-               this._currentData.query(opts.filter).addCallback(function(data) {
-                  _private.drawChart(self, data);
+               opts.dataSource.query(opts.filter).addCallback(function(data) {
+                  self._recordSet = data.getAll();
+                  _private.drawChart(self, self._recordSet);
                });
             }
          }

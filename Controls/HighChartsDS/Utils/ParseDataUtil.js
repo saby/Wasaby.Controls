@@ -1,64 +1,63 @@
-define('Controls/HighChartsDS/Utils/ParseDataUtils', [], function() {
+define('Controls/HighChartsDS/Utils/ParseDataUtil', ['Core/ILogger'], function(ILogger) {
    return {
       parseAxisCommon: function(wsAxis) {
          var
-            axisOpts = wsAxis,
             axisArr = [],
             xAxisArr = [],
             yAxisArr = [];
 
 
-         for (var i = 0; i < axisOpts.length; i++) {
+         for (var i = 0; i < wsAxis.length; i++) {
             axisArr[i] = {};
 
             /*прокидываем все опции*/
-            if (axisOpts[i].title !== undefined) {
+            if (wsAxis[i].title !== undefined) {
                axisArr[i].title = axisArr[i].title || {};
-               axisArr[i].title.text = axisOpts[i].title;
+               axisArr[i].title.text = wsAxis[i].title;
             } else {
                axisArr[i].title = axisArr[i].title || {};
                axisArr[i].title.text = '';
             }
-            if (axisOpts[i].gridLineWidth !== undefined) {
-               axisArr[i].gridLineWidth = axisOpts[i].gridLineWidth;
+            if (wsAxis[i].gridLineWidth !== undefined) {
+               axisArr[i].gridLineWidth = wsAxis[i].gridLineWidth;
             }
-            if (axisOpts[i].labelsFormatter !== undefined) {
+            if (wsAxis[i].labelsFormatter !== undefined) {
                axisArr[i].labels = axisArr[i].labels || {};
-               axisArr[i].labels.formatter = axisOpts[i].labelsFormatter;
+               axisArr[i].labels.formatter = wsAxis[i].labelsFormatter;
             }
-            if (axisOpts[i].staggerLines !== undefined) {
+            if (wsAxis[i].staggerLines !== undefined) {
                axisArr[i].labels = axisArr[i].labels || {};
-               axisArr[i].labels.staggerLines = parseInt(axisOpts[i].staggerLines, 10);
+               axisArr[i].labels.staggerLines = parseInt(wsAxis[i].staggerLines, 10);
             }
-            if (axisOpts[i].step !== undefined) {
+            if (wsAxis[i].step !== undefined) {
                axisArr[i].labels = axisArr[i].labels || {};
-               axisArr[i].labels.step = parseInt(axisOpts[i].step, 10);
+               axisArr[i].labels.step = parseInt(wsAxis[i].step, 10);
             }
-            if (axisOpts[i].lineWidth !== undefined) {
-               axisArr[i].lineWidth = parseInt(axisOpts[i].lineWidth, 10);
+            if (wsAxis[i].lineWidth !== undefined) {
+               axisArr[i].lineWidth = parseInt(wsAxis[i].lineWidth, 10);
             }
-            if (axisOpts[i].allowDecimals !== undefined) {
-               axisArr[i].allowDecimals = axisOpts[i].allowDecimals;
+            if (wsAxis[i].allowDecimals !== undefined) {
+               axisArr[i].allowDecimals = wsAxis[i].allowDecimals;
             }
-            if (axisOpts[i].min !== undefined) {
-               axisArr[i].min = parseInt(axisOpts[i].min, 10);
+            if (wsAxis[i].min !== undefined) {
+               axisArr[i].min = parseInt(wsAxis[i].min, 10);
             }
-            if (axisOpts[i].max !== undefined) {
-               axisArr[i].max = parseInt(axisOpts[i].max, 10);
+            if (wsAxis[i].max !== undefined) {
+               axisArr[i].max = parseInt(wsAxis[i].max, 10);
             }
-            if (axisOpts[i].linkedTo !== undefined) {
-               axisArr[i].linkedTo = parseInt(axisOpts[i].linkedTo, 10);
+            if (wsAxis[i].linkedTo !== undefined) {
+               axisArr[i].linkedTo = parseInt(wsAxis[i].linkedTo, 10);
             }
-            if (axisOpts[i].opposite) {
+            if (wsAxis[i].opposite) {
                axisArr[i].opposite = true;
             }
 
-            if (axisOpts[i].sourceField !== undefined) {
-               axisArr[i].sourceField = axisOpts[i].sourceField;
+            if (wsAxis[i].sourceField !== undefined) {
+               axisArr[i].sourceField = wsAxis[i].sourceField;
             }
 
             /*прописываем тип, чтоб потом разделить на два массива*/
-            if (axisOpts[i].type == 'yAxis') {
+            if (wsAxis[i].type == 'yAxis') {
                axisArr[i].type = 'yAxis';
             } else {
                axisArr[i].type = 'xAxis';
@@ -86,11 +85,6 @@ define('Controls/HighChartsDS/Utils/ParseDataUtils', [], function() {
       },
 
       recordSetParseAxis: function(xAxisOpts, yAxisOpts, recordSet) {
-         var
-            xAxis = xAxisOpts,
-            yAxis = yAxisOpts,
-            rs = recordSet;
-
          var iterate = function(axis, rec) {
             if (axis) {
                for (var i = 0; i < axis.length; i++) {
@@ -103,72 +97,69 @@ define('Controls/HighChartsDS/Utils/ParseDataUtils', [], function() {
                }
             }
          };
-         rs.each(function(rec) {
-            iterate(xAxis, rec);
-            iterate(yAxis, rec);
+         recordSet.forEach(function(rec) {
+            iterate(xAxisOpts, rec);
+            iterate(yAxisOpts, rec);
          });
 
          return {
-            xAxis: xAxis,
-            yAxis: yAxis
+            xAxis: xAxisOpts,
+            yAxis: yAxisOpts
          };
       },
       recordSetParse: function(wsSeries, recordSet) {
-         var
-            seriesOpts = wsSeries,
-            rs = recordSet,
-            arr = [];
+         var resultArr = [];
 
 
-         rs.each(function(rec) {
+         recordSet.forEach(function(rec) {
 
-            for (var i = 0; i < seriesOpts.length; i++) {
-               if (!arr[i]) {
-                  arr[i] = {
+            for (var i = 0; i < wsSeries.length; i++) {
+               if (!resultArr[i]) {
+                  resultArr[i] = {
                      'data': [],
-                     'type': seriesOpts[i].type,
-                     'name': seriesOpts[i].name ? seriesOpts[i].name : 'График' + i
+                     'type': wsSeries[i].type,
+                     'name': wsSeries[i].name ? wsSeries[i].name : 'График' + i
                   };
                }
-               if (seriesOpts[i].color) {
-                  arr[i].color = seriesOpts[i].color;
+               if (wsSeries[i].color) {
+                  resultArr[i].color = wsSeries[i].color;
                }
-               if (seriesOpts[i].xAxis !== undefined) {
-                  arr[i].xAxis = parseInt(seriesOpts[i].xAxis, 10);
+               if (wsSeries[i].xAxis !== undefined) {
+                  resultArr[i].xAxis = parseInt(wsSeries[i].xAxis, 10);
                }
-               if (seriesOpts[i].yAxis !== undefined) {
-                  arr[i].yAxis = parseInt(seriesOpts[i].yAxis, 10);
+               if (wsSeries[i].yAxis !== undefined) {
+                  resultArr[i].yAxis = parseInt(wsSeries[i].yAxis, 10);
                }
 
-               if (seriesOpts[i].sourceFieldY) {
-                  if (seriesOpts[i].sourceFieldX) {
-                     arr[i].data.push([
-                        rec.get(seriesOpts[i].sourceFieldX),
-                        rec.get(seriesOpts[i].sourceFieldY)
+               if (wsSeries[i].sourceFieldY) {
+                  if (wsSeries[i].sourceFieldX) {
+                     resultArr[i].data.push([
+                        rec.get(wsSeries[i].sourceFieldX),
+                        rec.get(wsSeries[i].sourceFieldY)
                      ]);
                   } else {
-                     arr[i].data.push([rec.get(seriesOpts[i]).sourceFieldY]);
+                     resultArr[i].data.push([rec.get(wsSeries[i]).sourceFieldY]);
                   }
                }
 
-               if (seriesOpts[i].type == 'pie') {
-                  if (seriesOpts[i].sourceField_3) {
-                     arr[i].color = rec.get(seriesOpts[i].sourceField_3);
+               if (wsSeries[i].type == 'pie') {
+                  if (wsSeries[i].sourceField_3) {
+                     resultArr[i].color = rec.get(wsSeries[i].sourceField_3);
                   }
                }
 
-               if ((seriesOpts[i].type == 'areasplinerange') || (seriesOpts[i].type == 'arearange')) {
-                  var lastDataElement = arr[i].data[arr[i].data.length - 1];
-                  if (seriesOpts[i].sourceField_3 && lastDataElement.length == 2) {
-                     lastDataElement.splice(2, rec.get(seriesOpts[i]).sourceField_3);
+               if ((wsSeries[i].type == 'areasplinerange') || (wsSeries[i].type == 'arearange')) {
+                  var lastDataElement = resultArr[i].data[resultArr[i].data.length - 1];
+                  if (wsSeries[i].sourceField_3 && lastDataElement.length == 2) {
+                     lastDataElement.splice(2, 0, rec.get(wsSeries[i]).sourceField_3);
                   } else {
-                     throw new Error(rk('Для графика-области надо определить 3 поля данных (ws-series.sourceField)'));
+                    ILogger.error('HighCharts', 'You must terminate 3 fields of data for area chart');
                   }
                }
 
             }
          });
-         return arr.length ? arr : null;
+         return resultArr.length ? resultArr : null;
       }
    };
 });

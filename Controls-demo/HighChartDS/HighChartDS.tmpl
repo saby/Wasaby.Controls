@@ -5,9 +5,10 @@
             on:click="_updateState()"
     />
     <Controls.HighChartsDS
+            dataSource="{{_dataSource}}"
             chartOptions="{{_chartConfig}}"
-            query="БизнесЛогика.Позвать"
-            instantUpdate="false"
+            wsSeries="{{_wsSeries}}"
+            wsAxis="{{_wsAxis}}"
             filter="{{_filter}}"
     />
 </div>
