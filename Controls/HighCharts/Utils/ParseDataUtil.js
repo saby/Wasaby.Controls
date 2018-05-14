@@ -153,7 +153,7 @@ define('Controls/HighCharts/Utils/ParseDataUtil', ['Core/ILogger'], function(ILo
                   if (wsSeries[i].sourceField_3 && lastDataElement.length == 2) {
                      lastDataElement.splice(2, 0, rec.get(wsSeries[i]).sourceField_3);
                   } else {
-                    ILogger.error('HighCharts', 'You must terminate 3 fields of data for area chart');
+                     ILogger.error('HighCharts', 'You must terminate 3 fields of data for area chart');
                   }
                }
 
