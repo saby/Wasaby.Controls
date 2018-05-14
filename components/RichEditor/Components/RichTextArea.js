@@ -1168,7 +1168,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                case 'alignjustify':
                   isA.align = true;
                   editorCmd = {
-                     'alignleft': 'JustifyNone',
+                     'alignleft': 'JustifyLeft',/*JustifyNone*/
                      'aligncenter': 'JustifyCenter',
                      'alignright': 'JustifyRight',
                      'alignjustify': 'JustifyFull'
@@ -2485,7 +2485,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             }
             return imageUploader.startFileLoad(target, canMultiSelect !== undefined ? canMultiSelect : this.canUploadMultiSelect(), imageFolder || this._options.imageFolder)
                .addErrback(function (err) {
-                  this._showImgError();
+                  // Если это не cancel - показать сообщение об ошибке
+                  if (!(err && err.canceled)) {
+                     this._showImgError();
+                  }
                   return err;
                }.bind(this));
          },
