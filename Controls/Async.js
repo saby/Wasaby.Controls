@@ -17,7 +17,7 @@ define('Controls/Async',
             var self = this;
             if (res.addCallback && !res.isReady()) {
                if (self.waitDef) {
-                  res.addCallback(function (result) {
+                  res.addCallback(function(result) {
                      self.waitDef.callback(self.deps);
                      return result;
                   });
@@ -39,9 +39,9 @@ define('Controls/Async',
                loadModules = [loadModules];
             }
             if (typeof window !== 'undefined') {
-               require(loadModules, function () {
+               require(loadModules, function() {
                   def.callback(true);
-               }, function (e) {
+               }, function(e) {
                   self.stateError = JSON.stringify(e);
                   def.callback(false);
                });
@@ -51,7 +51,7 @@ define('Controls/Async',
                   this.waitDef = def;
                   require(options.loadModules);
                   var modpacker = require('wsmodPacker');
-                  modpacker.collectDependencies(loadModules, options.theme, false, function (err, files) {
+                  modpacker.collectDependencies(loadModules, options.theme, false, function(err, files) {
                      if (err) {
                         self.stateError = JSON.stringify(err);
                         defRender.callback(false);
