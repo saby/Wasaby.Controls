@@ -63,7 +63,7 @@ define('Controls/HighCharts', [
          _beforeMount: function(opts, recordSet) {
             var self = this;
             this._chartOptions = opts.chartOptions;
-            if (recordSet.getCount() !== 0) {
+            if (Object.keys(recordSet).length !== 0) {
                this._recordSet = recordSet;
             } else if (opts.dataSource) {
                return opts.dataSource.query(opts.filter).addCallback(function(data) {

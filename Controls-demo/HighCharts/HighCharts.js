@@ -1,8 +1,7 @@
 define('Controls-demo/HighCharts/HighCharts', [
    'Core/Control',
    'tmpl!Controls-demo/HighCharts/HighCharts',
-   'Controls-demo/HighCharts/HighChartsDemoDS',
-   'css!Controls-demo/HighCharts/HighCharts'
+   'Controls-demo/HighCharts/HighChartsDemoDS'
 ], function(Control, template, DemoDS) {
 
    return Control.extend({
