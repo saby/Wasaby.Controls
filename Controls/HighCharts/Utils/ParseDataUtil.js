@@ -1,4 +1,4 @@
-define('Controls/HighChartsDS/Utils/ParseDataUtil', ['Core/ILogger'], function(ILogger) {
+define('Controls/HighCharts/Utils/ParseDataUtil', ['Core/ILogger'], function(ILogger) {
    return {
       parseAxisCommon: function(wsAxis) {
          var
@@ -97,7 +97,7 @@ define('Controls/HighChartsDS/Utils/ParseDataUtil', ['Core/ILogger'], function(I
                }
             }
          };
-         recordSet.forEach(function(rec) {
+         recordSet.each(function(rec) {
             iterate(xAxisOpts, rec);
             iterate(yAxisOpts, rec);
          });
@@ -111,7 +111,7 @@ define('Controls/HighChartsDS/Utils/ParseDataUtil', ['Core/ILogger'], function(I
          var resultArr = [];
 
 
-         recordSet.forEach(function(rec) {
+         recordSet.each(function(rec) {
 
             for (var i = 0; i < wsSeries.length; i++) {
                if (!resultArr[i]) {

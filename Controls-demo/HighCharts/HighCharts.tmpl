@@ -1,14 +1,14 @@
 <div>
-    <Controls.Button name="button1" caption="Кликни меня"
-                     on:click="changeHighChartOptions()" />
-    <Controls.Button class="test-demo-button" name="toggleButton" caption="{{toggleCaption}}"
-                     on:click="toggleChart()" />
-    <ws:if data="{{need}}">
-        <Controls.HighCharts
-                chartOptions="{{highChartOptions1}}"
-        />
-    </ws:if>
+    <Controls.Button
+            name="button1"
+            caption="Нажмите для подгрузки"
+            on:click="_updateState()"
+    />
     <Controls.HighCharts
-            chartOptions="{{highChartOptions2}}"
+            dataSource="{{_dataSource}}"
+            chartOptions="{{_chartConfig}}"
+            wsSeries="{{_wsSeries}}"
+            wsAxis="{{_wsAxis}}"
+            filter="{{_filter}}"
     />
 </div>
