@@ -26,58 +26,47 @@
    &:empty {
       padding-bottom: @padding-bottom_TinyMCE_empty;
    }
-
-   &.ws-basic-style {
-      & > p, & > pre, & > div {
-         margin-top: 0;
-         margin-left: 0;
-         margin-right: @margin-right_TinyMCE_blockElements;
-      }
-      .mce-visual-caret {
-         margin: 0;
-      }
-   }
-
-   li {
-      margin-bottom: @margin-bottom_TinyMCE_listItem;
-   }
-
-   & > :last-child li:last-child {
-      margin-bottom: 0;
-   }
-
+   /*
+   Данные стили необходимы для:
+      1)Отступов внутри компонента, так как бейзик убирает всякие отступы
+      2)Отступов от таблицы отсутствуют в бейзик стайле
+      3)Затенение картинок при ховере
+      4)Убираем отступ от параграфа, если он последний
+   */
    &.ws-basic-style {
       padding: @padding__TinyMCE_basicStyle;
-      .box-sizing(border-box);
+      box-sizing: border-box;
       word-wrap: break-word;
+      outline: none !important;
       table {
          margin-bottom: @margin-bottom_TinyMCE_table;
       }
-      outline: none !important;
       img {
          &:hover {
-            .box-shadow(0px 0px 5px #587AB0);
-            .box-sizing(border-box);
+            box-shadow: @box-shadow-sizes_TinyMCE_images @box-shadow-color_TinyMCE_images;
+            box-sizing: border-box;
          }
       }
       & > p:last-of-type {
          margin-bottom: 0;
       }
+      .mce-visual-caret {
+         margin: 0;
+      }
+   }
+   //Если последним элементом является элемент списка, то необходимо убрать отступ от него, который есть в бейзик стайл
+   & > :last-child li:last-child {
+      margin-bottom: 0;
    }
 
    img {
-      .user-select();
+      user-select: none;
    }
 }
 
 
 //TODO Убрать зависимость из этого компонента, как добавим плейсхолдер
 .ws-is-ie {
-   .controls-RichEditor__empty {
-      .controls-TinyMCE.ws-basic-style {
-         background-color: rgba(0, 0, 0, 0);
-      }
-   }
 
    /* Кроме MSIE 12
     * 1174787393 https://online.sbis.ru/opendoc.html?guid=37d3adf2-546a-4c4e-b5a4-010b237ddcb4
@@ -97,7 +86,7 @@
 
 .ws-is-chrome {
    .controls-TinyMCE.ws-basic-style p:empty {
-      min-height: 18px;
+      min-height: @min-height_TinyMCE_empty-paragraphs;
    }
 }
 

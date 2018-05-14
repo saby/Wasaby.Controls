@@ -1,10 +1,10 @@
-define('Controls/Container/TinyMCE', [
+define('Controls/Input/RichArea/TinyMCE', [
    'Core/Control',
    'Core/constants',
-   'tmpl!Controls/Container/TinyMCE/TinyMCE',
+   'tmpl!Controls/Input/RichArea/TinyMCE/TinyMCE',
    'Core/moduleStubs',
    'Core/Sanitize',
-   'css!Controls/Container/TinyMCE/TinyMCE'
+   'css!Controls/Input/RichArea/TinyMCE/TinyMCE'
 ], function(Control, cConstants, template, moduleStabs, sanitize) {
    'use strict';
 
