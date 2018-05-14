@@ -1254,9 +1254,10 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
          }
       },
 
-      _getItemsForRedrawOnAdd: function(items) {
+      _getItemsForRedrawOnAdd: function(itemsArray) {
          var
             itemsToAdd = [],
+            items = coreClone(itemsArray),
             groupId, groupHash;
 
          if (items.length && cInstance.instanceOfModule(items[0], 'WS.Data/Display/GroupItem')) {
