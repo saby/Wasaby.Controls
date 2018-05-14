@@ -2654,16 +2654,33 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             if (!(0 < width)) {
                throw new Error('Size is not specified');
             }
-            var promise = new Deferred();
-            var url = imgInfo.filePath || imgInfo.url;
+            var
+               promise = new Deferred(),
+               url = imgInfo.filePath || imgInfo.url,
+               locationOrigin = '',
+               previewerRegExp = /\/previewer(?:\/r\/[0-9]+\/[0-9]+)?/i,
+               indexOfPreviewer,
+               newUrl;
             if (!/\/disk\/api\/v[0-9\.]+\//i.test(url)) {
                // Это не файл, хранящийся на СбисДиск, вернуть как есть
                promise.callback({preview:url, original:url});
                return promise;
             }
-            url = url.replace(/^\/previewer(?:\/r\/[0-9]+\/[0-9]+)?/i, '');
+            indexOfPreviewer = url.search(previewerRegExp);
+            if (indexOfPreviewer > 0) {
+               locationOrigin = url.slice(0, indexOfPreviewer);
+               url = url.replace(locationOrigin, '');
+            }
+            url = url.replace(previewerRegExp, '');
             promise = promise.addCallback(function (size) {
-               return {preview:size ? '/previewer' + '/r/' + size + '/' + size + url : null, original:url};
+               newUrl = '';
+               if (size) {
+                  if (locationOrigin) {
+                     newUrl = locationOrigin;
+                  }
+                  newUrl += '/previewer' + '/r/' + size + '/' + size + url;
+               }
+               return {preview: newUrl, original:url};
             });
             if (0 < width) {
                if (!isPixels && width > 100) {
