@@ -5,7 +5,7 @@ define('Controls/Head/Head',
       'tmpl!Controls/Head/Head',
       'Controls/Async/HeadDataContext'
    ],
-   function (Base, Deferred, template, HeadDataContext) {
+   function(Base, Deferred, template, HeadDataContext) {
       'use strict';
 
       var Page = Base.extend({
@@ -19,7 +19,7 @@ define('Controls/Head/Head',
             var self = this;
             var innerDef = new Deferred();
             self.cssLinks = [];
-            def.addCallback(function (res) {
+            def.addCallback(function(res) {
                self.cssLinks = self.cssLinks.concat(res.cssLinks);
                innerDef.callback(self.cssLinks);
             });

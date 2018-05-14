@@ -8,7 +8,7 @@ define('Controls/Async/Wait',
    /**
     *
     */
-   function (Base, Deferred, template) {
+   function(Base, Deferred, template) {
       'use strict';
 
       var Page = Base.extend({
@@ -16,7 +16,7 @@ define('Controls/Async/Wait',
             var res = template.apply(this, arguments);
             var self = this;
             if (res.addCallback && !res.isReady()) {
-               res.addCallback(function (result) {
+               res.addCallback(function(result) {
                   self.waitDef.callback({});
                   return result;
                });

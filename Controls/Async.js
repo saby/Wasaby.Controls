@@ -8,7 +8,7 @@ define('Controls/Async',
    /**
     *
     */
-   function (Base, Deferred, template) {
+   function(Base, Deferred, template) {
       'use strict';
 
       var Page = Base.extend({

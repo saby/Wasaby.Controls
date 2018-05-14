@@ -1,18 +1,12 @@
 define('Controls/Input/Text', [
    'Core/Control',
    'tmpl!Controls/Input/Text/Text',
-   'Core/Deferred',
-
-   /*'WS.Data/Type/descriptor',*/
    'Controls/Input/Text/ViewModel',
    'Controls/Input/resources/InputHelper',
-
    'css!Controls/Input/resources/InputRender/InputRender',
    'tmpl!Controls/Input/resources/input'
 ], function(Control,
    template,
-            Deferred,
-   /*types,*/
    TextViewModel,
    inputHelper) {
 

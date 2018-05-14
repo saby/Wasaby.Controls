@@ -6,7 +6,7 @@ define('Controls/JsLinks/JsLinks',
       'Controls/Async/HeadDataContext'
    ],
 
-   function (Base, Deferred, template, HeadDataContext) {
+   function(Base, Deferred, template, HeadDataContext) {
       'use strict';
 
       var Page = Base.extend({
