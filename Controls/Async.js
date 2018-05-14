@@ -30,7 +30,7 @@ define('Controls/Async',
             return res;
          },
          stateError: false,
-         _beforeMount: function(options, context, recievedState) {
+         _beforeMount: function(options, context) {
             var def = new Deferred();
             var defRender = new Deferred();
             var self = this;
