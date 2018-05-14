@@ -203,7 +203,11 @@ define('Controls/Container/Scroll',
 
                   def.callback();
 
-                  return def;
+                  // При построении на клиенте не возвращаем def, т.к. используется в старых компонентах
+                  // и там ассинхронного построения
+                  if (typeof window === 'undefined') {
+                     return def;
+                  }
                }
             },
 

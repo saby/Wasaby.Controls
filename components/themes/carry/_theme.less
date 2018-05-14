@@ -56,4 +56,15 @@
   .controls-searchForm__suggest-shown {
     background-color: #39506a !important;
   }
+  .controls-searchForm__suggest:before {
+    content: '';
+    position: absolute;
+    //-1 чтобы перекрыть border
+    left: -1px;
+    right: -1px;
+    height: @padding-top__searchForm_picker;
+    top: 0;
+    background-color: #39506A;
+    
+  }
 }

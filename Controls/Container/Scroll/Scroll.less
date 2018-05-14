@@ -11,11 +11,14 @@
    top: 0;
    right: 0;
    bottom: 0;
+   z-index: 2;
 }
 
 .controls-Scroll__content {
    flex-grow: 1;
    -webkit-overflow-scrolling: touch;
+
+   z-index: 1;
 }
 
 /**
@@ -31,6 +34,7 @@
 .controls-Scroll__shadow {
    left: 0;
    right: 0;
+   z-index: 2;
    position: absolute;
    pointer-events: none;
    height: @height-gradient_Scroll-shadow;
@@ -77,6 +81,7 @@
    position: absolute;
    bottom: 0;
    right: 0;
+   z-index: 2;
 }
 
 .controls-Scroll__content_paging {

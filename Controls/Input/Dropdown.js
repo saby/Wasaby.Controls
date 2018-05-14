@@ -41,6 +41,7 @@ define('Controls/Input/Dropdown',
             return instance._sourceController.load().addCallback(function(items) {
                instance._items = items;
                _private.updateSelectedItem(instance, selectedKeys);
+               return items;
             });
          },
          updateSelectedItem: function(instance, selectedKeys) {
@@ -59,6 +60,7 @@ define('Controls/Input/Dropdown',
          _beforeMount: function(options, context, receivedState) {
             if (receivedState) {
                this._items = receivedState;
+               _private.updateSelectedItem(this, options.selectedKeys);
             } else {
                if (options.source) {
                   return _private.loadItems(this, options.source, options.selectedKeys);

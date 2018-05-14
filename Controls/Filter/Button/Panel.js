@@ -11,7 +11,7 @@ define('Controls/Filter/Button/Panel', [
    /**
     * Control "Filter panel"
     * @class Controls/Filter/Button/Panel
-    * @extends Controls/Control
+    * @extends Core/Control
     * @mixes Controls/Filter/Button/interface/IFilterPanel
     * @control
     * @public

@@ -378,7 +378,7 @@ define('SBIS3.CONTROLS/ComponentBinder/SearchController',
             }
 
             // переводим фокус на view и устанавливаем активным первый элемент, если поле пустое, либо курсор стоит в конце поля ввода
-            if (event.which == constants.key.down && (this.getText() === '' || this.getText().length === this._inputField[0].selectionStart)) {
+            if (event.which == constants.key.down && (!this.getText() || this.getText().length === this._inputField[0].selectionStart)) {
                var selectedIndex = null,
                    itemsProjection = view._getItemsProjection();
                /* При поиске по дереву папки отображаются, как Хлебные крошки

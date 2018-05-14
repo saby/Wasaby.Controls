@@ -13,10 +13,9 @@ define('SBIS3.CONTROLS/ComponentBinder',
        "Core/core-instance",
         'Core/helpers/Function/forAliveOnly',
        "Core/helpers/Object/find",
-       "Core/Deferred",
-       "Core/UserConfig"
+       "Core/Deferred"
     ],
-    function (cAbstract, HistoryController, SearchController, ScrollPagingController, PagingController, BreadCrumbsController, FilterHistoryController, FilterHistoryControllerUntil, DateRangeRelationController, FilterController, cInstance, forAliveOnly, find, Deferred, UserConfig) {
+    function (cAbstract, HistoryController, SearchController, ScrollPagingController, PagingController, BreadCrumbsController, FilterHistoryController, FilterHistoryControllerUntil, DateRangeRelationController, FilterController, cInstance, forAliveOnly, find, Deferred) {
    /**
     * Контроллер для осуществления базового взаимодействия между компонентами.
     *

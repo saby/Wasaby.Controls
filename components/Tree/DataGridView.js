@@ -253,12 +253,12 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
          /*redraw может позваться, когда данных еще нет*/
          if (this._getItemsProjection()) {
             this._createAllFolderFooters();
+            // Правильно именно по onDrawItems пересчитывать размеры, т.к. в searchController'e по этому событию вешается
+            // доп. класс "controls-GridView__searchMode", влияющий на отступы
+            this.once('onDrawItems', function() {
+               this._checkBreadCrumbsWidth();
+            });
          }
-         // Правильно именно по onDrawItems пересчитывать размеры, т.к. в searchController'e по этому событию вешается
-         // доп. класс "controls-GridView__searchMode", влияющий на отступы
-         this.once('onDrawItems', function() {
-            this._checkBreadCrumbsWidth();
-         });
       },
       
       _onResizeHandler: function() {
@@ -696,6 +696,9 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
             if ($target.hasClass('js-controls-TreeView__editArrow') || $target.hasClass('js-controls-ListView__itemCheckBox')) {
                return false;
             } else if (data.get(this._options.nodeProperty)) {
+               if (this._options.saveReloadPosition) {
+                  delete this._hierPages[id];
+               }
                this.setCurrentRoot(id);
                this.reload();
             }
