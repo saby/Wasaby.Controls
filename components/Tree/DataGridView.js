@@ -303,6 +303,16 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
          }
          TreeDataGridView.superclass._drawItemsCallback.apply(this, arguments);
       },
+   
+      _drawItemsCallbackSync: function() {
+         /* Если включен table-layout: auto,
+            то пересчёт размеров надо производить в синхронной фазе с отрисовкой,
+            инчае таблица будет скакать */
+         if (this._container.hasClass('controls-DataGridView__tableLayout-auto')) {
+            this._checkBreadCrumbsWidth();
+         }
+         TreeDataGridView.superclass._drawItemsCallbackSync.apply(this, arguments);
+      },
 
       //Переопределяем метод, потому что в дереве могут присутствовать футеры папок, и если записи добавляются в конец,
       //то они добавятся после футера папки, чего быть не должно. Проверим что записи добавляются в конец и добавим их после
