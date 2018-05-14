@@ -920,7 +920,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), 0, this._limit);
             return this._callQuery(this._createTreeFilter(id), this.getSorting(), 0, this._limit).addCallback(forAliveOnly(function (list) {
                if (this._options.saveReloadPosition && list.getCount()) {
-                  this._hierNodesCursor[id] = list.at(list.getCount() - 1).getId();
+                  this._hierNodesCursor[id] = list.at(list.getCount() - 1).get(this._options.navigation.config.field);
                }
                this._options._folderHasMore[id] = list.getMetaData().more;
                this._options._folderOffsets[id] = 0;
@@ -1148,7 +1148,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                } else {
                   position.push(null);
                }
-               return CursorListNavigationUtils.getNavigationParams([this._options.idProperty], position, 'after');
+               return CursorListNavigationUtils.getNavigationParams([this._options.navigation.config.field], position, 'after');
             } else {
                return parentFn.call(this, filter, direction);
             }
@@ -1378,7 +1378,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
          }
          this._loader = this._callQuery(this._createTreeFilter(id), this.getSorting(), (id ? this._options._folderOffsets[id] : this._options._folderOffsets['null']) + this._limit, this._limit).addCallback(forAliveOnly(function (dataSet) {
             if (this._options.saveReloadPosition) {
-               this._hierNodesCursor[id] = dataSet.at(dataSet.getCount() - 1).getId();
+               this._hierNodesCursor[id] = dataSet.at(dataSet.getCount() - 1).get(this._options.navigation.config.field);
             }
             //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
             //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
@@ -1653,12 +1653,12 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
          this._notify('onBeforeSetRoot', key);
 
          // сохраняем текущую страницу при проваливании в папку
-         if (this._options.saveReloadPosition) {
+         if (this._options.saveReloadPosition && this.getSelectedItem()) {
             // Сохраняем ключ узла, в который провалились
             if (typeof this.getCurrentRoot() === 'undefined') {
-               this._hierPages[null] = this.getSelectedKey();
+               this._hierPages[null] = this.getSelectedItem().get(this._options.navigation.config.field);
             } else {
-               this._hierPages[this.getCurrentRoot()] = this.getSelectedKey();
+               this._hierPages[this.getCurrentRoot()] = this.getSelectedItem().get(this._options.navigation.config.field);
             }
          }
 
