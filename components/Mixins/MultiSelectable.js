@@ -806,7 +806,8 @@ define('SBIS3.CONTROLS/Mixins/MultiSelectable', [
       _syncSelectedItems: function() {
          var self = this,
              selItems = this._options.selectedItems,
-             delItems = [];
+             delItems = [],
+             selItemsClone;
 
          /* Из контекста может прийти null или undefined */
          if(!selItems) return;
@@ -816,7 +817,9 @@ define('SBIS3.CONTROLS/Mixins/MultiSelectable', [
             if(selItems.getCount()) {
                /* Чтобы порвать ссылку на контекст делаем клон,
                   т.к. при любом изменении св-ва надо порвать ссылку на контекст */
-               selItems.clear();
+               selItemsClone = selItems.clone();
+               selItemsClone.clear();
+               this._options.selectedItems = selItemsClone;
                this._onSelectedItemsChangeHandler();
             }
             return;
