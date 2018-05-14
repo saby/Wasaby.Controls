@@ -1749,7 +1749,7 @@ define('SBIS3.CONTROLS/ListView',
                   targetClientRect;
 
                // если механизм вставки операций в строку отключен, то будет брать размеры строк из кеша
-               if (!this._options.itemsActionsInItemContainer) {
+               if (!this._options.itemsActionsInItemContainer && !cDetection.isMobilePlatform) {
                   if (this._needToRecalcRowsSizes || !this._cashRowsSizes) {
                      this._cashRowsSizes = this.getRowsSize();
                      this._needToRecalcRowsSizes = false;
