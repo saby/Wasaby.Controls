@@ -579,7 +579,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                 * Поэтому мы вешаем класс, который убирает нативный скролл, если произойдет такая ситуация.
                 */
                if (cDetection.firefox) {
-                  this._toggleOverflowHidden(this._getScrollHeight() ===  this._container.height() && this._getScrollHeight() < 35);
+                  this._toggleOverflowHidden(this._getScrollHeight() ===  Math.floor(this._container.height()) && this._getScrollHeight() < 35);
                }
                if (cDetection.isIE) {
                   // Баг в ie. При overflow: scroll, если контент не нуждается в скроллировании, то браузер добавляет
