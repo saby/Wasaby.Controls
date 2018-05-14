@@ -45,6 +45,7 @@ define('Controls/Toolbar', [
             instance._items = items;
             instance._menuItems = self.getMenuItems(instance._items);
             instance._needShowMenu = instance._menuItems && instance._menuItems.getCount();
+            return items;
          });
       },
 
