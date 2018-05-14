@@ -275,10 +275,11 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
               и таблица может вылезать за пределы контенера контрола. */
          if ((this._options.startScrollColumn || this.getContainer().hasClass('controls-DataGridView__tableLayout-auto')) && this._isSearchMode()){
             var breadCrumbs = this.getContainer().find('.controls-TreeView__searchBreadCrumbs'),
-                firstCol, firstColWidth, secondCol, cellPadding;
+                firstCol, firstColWidth, secondCol, cellPadding, firstRow;
             
             if(breadCrumbs.length) {
-               firstCol = $('td:first', this._getItemsContainer());
+               firstRow = $('.js-controls-ListView__item:not(".controls-editInPlace"):first', this._getItemsContainer());
+               firstCol = $('td:first', firstRow);
                firstColWidth = this._options.multiselect ? firstCol.outerWidth() : 0;
                secondCol = firstCol.next('td');
    
