@@ -7,9 +7,9 @@ define('SBIS3.CONTROLS/Utils/ControlsValidators', [
    'Core/IoC',
    'Controls/Validate/Validators/IsEmail',
    'Controls/Validate/Validators/IsRequired',
-
+   'SBIS3.CONTROLS/Utils/DateUtil',
    'i18n!SBIS3.CONTROLS/Utils/ControlsValidators'
-],function(CoreValidators, cInstance, IoC, IsEmail, IsRequired) {
+],function(CoreValidators, cInstance, IoC, IsEmail, IsRequired, DateUtil) {
 
    'use strict';
 
@@ -176,6 +176,30 @@ define('SBIS3.CONTROLS/Utils/ControlsValidators', [
          ctrlDigs = (ctrlDigs % 101) % 100;
          //Сравним значения контрольных сумм
          return (ctrlDigs == lastDigs) ? true : rk('Неверная контрольная сумма СНИЛС');
+      },
+
+      /**
+       * Проверяет является ли дата началом месяца.
+       * @returns {Boolean|String}
+       * <ol>
+       *    <li>В случае прохождения валидации возвращает true.</li>
+       *    <li>В случае не прохождения валидации возвращает сообщения "Неверная дата. Дата не является датой начала месяца".</li>
+       * </ol>
+       */
+      startOfMonth: function(value) {
+         return !value || DateUtil.isStartOfMonth(value) || rk('Неверная дата. Дата не является датой начала месяца.');
+      },
+
+      /**
+       * Проверяет является ли дата концом месяца.
+       * @returns {Boolean|String}
+       * <ol>
+       *    <li>В случае прохождения валидации возвращает true.</li>
+       *    <li>В случае не прохождения валидации возвращает сообщения "Неверная дата. Дата не является датой конца месяца".</li>
+       * </ol>
+       */
+      endOfMonth: function(value) {
+         return !value || DateUtil.isEndOfMonth(value) || rk('Неверная дата. Дата не является датой конца месяца.');
       }
    };
 });
