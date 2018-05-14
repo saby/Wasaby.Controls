@@ -47,7 +47,11 @@ define('SBIS3.CONTROLS/VdomPhoneTextBox',
          },
 
          validate: function(value) {
-            this._wrapper.setValidationError(VdomPhoneTextBox.superclass.validate.call(this) === true);
+            var validate = VdomPhoneTextBox.superclass.validate.call(this);
+
+            this._wrapper.setValidationError(validate === true);
+
+            return validate;
          },
 
          /**
