@@ -8,7 +8,7 @@
                 </div>
             </ws:if>
             <ws:else>
-                <Controls.Container.TinyMCE value="{{_options.value}}" on:textChanged="_onTextChanged()" name="tinyMCE"/>
+                <Controls.Input.RichArea.TinyMCE value="{{_options.value}}" on:textChanged="_onTextChanged()" name="tinyMCE"/>
             </ws:else>
         </ws:content>
     </Controls.Container.Scroll>
