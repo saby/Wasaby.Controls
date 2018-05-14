@@ -1749,7 +1749,7 @@ define('SBIS3.CONTROLS/ListView',
                   targetClientRect;
 
                // если механизм вставки операций в строку отключен, то будет брать размеры строк из кеша
-               if (!this._options.itemsActionsInItemContainer) {
+               if (!this._options.itemsActionsInItemContainer && !cDetection.isMobilePlatform) {
                   if (this._needToRecalcRowsSizes || !this._cashRowsSizes) {
                      this._cashRowsSizes = this.getRowsSize();
                      this._needToRecalcRowsSizes = false;
@@ -2229,9 +2229,14 @@ define('SBIS3.CONTROLS/ListView',
          reload: function (filter, sorting, offset, limit, deepReload, resetPosition) {
             // todo Если возникнет желание поддержать опциюsaveReloadPositionв плоском списке, то делать это здесь
             
-            if (offset === 0 && this._options.infiniteScroll === 'down') {
+            if (offset === 0) {
                this._lastPageLoaded = false;
-               this._setInfiniteScrollState('down');
+               this._scrollOffset.top = offset;
+               this._scrollOffset.bottom = offset;
+
+               if (this._options.infiniteScroll === 'down') {
+                   this._setInfiniteScrollState('down');
+               }
             }
             // Reset virtual scrolling if it's enabled
             if (this._options.virtualScrolling && this._virtualScrollController) {

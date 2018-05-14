@@ -696,7 +696,7 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
             if ($target.hasClass('js-controls-TreeView__editArrow') || $target.hasClass('js-controls-ListView__itemCheckBox')) {
                return false;
             } else if (data.get(this._options.nodeProperty)) {
-               if (this._options.saveReloadPosition) {
+               if (this._isCursorNavigation() && this._options.saveReloadPosition) {
                   delete this._hierPages[id];
                }
                this.setCurrentRoot(id);

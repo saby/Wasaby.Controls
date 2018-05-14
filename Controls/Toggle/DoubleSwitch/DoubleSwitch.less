@@ -118,12 +118,14 @@
    color: @color_Switch-text_disabled_unselected;
 }
 
-.ws-is-desktop-platform {
-   .controls-DoubleSwitch__marker_enabled:hover {
-      border-color: @border-color_Switch_marker_enabled_hover;
-   }
+.ws-is-no-touch {
+   .controls-DoubleSwitch:hover {
+      .controls-SwitchCircle__borderCircle_enabled {
+         fill: @fill_RadioGroup_borderCircle_enabled_hovered;
+      }
 
-   .controls-DoubleSwitch__text_enabled_unselected:hover {
-      text-decoration: underline;
+      .controls-DoubleSwitch__text_enabled_unselected {
+         text-decoration: underline;
+      }
    }
 }
