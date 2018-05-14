@@ -51,12 +51,8 @@ define('Controls/Input/ComboBox',
          },
 
          _selectItem: function(item) {
-            this.selectedKeys = getPropValue(item, this._options.keyProperty);
-            this._options.value = getPropValue(item, this._options.displayProperty);
-            this._simpleViewModel.updateOptions({
-               value: this._options.value
-            });
-            this._notify('valueChanged', [this._options.value]);
+            this._selectedKeys = getPropValue(item, this._options.keyProperty);
+            this._notify('valueChanged', [getPropValue(item, this._options.displayProperty)]);
          }
       };
 
@@ -64,13 +60,15 @@ define('Controls/Input/ComboBox',
          _template: template,
          _isOpen: false,
 
-         constructor: function() {
+         constructor: function(options) {
             ComboBox.superclass.constructor.apply(this, arguments);
 
             this._onResult = _private.onResult.bind(this);
             this._close = this._close.bind(this);
 
-            this._simpleViewModel = new BaseViewModel({});
+            this._simpleViewModel = new BaseViewModel({
+               value: options.value
+            });
          },
 
          _beforeMount: function(options) {
@@ -89,7 +87,7 @@ define('Controls/Input/ComboBox',
                var config = {
                   templateOptions: {
                      items: this._items,
-                     selectedKeys: this.selectedKeys
+                     selectedKeys: this._selectedKeys
                   },
                   target: this._children.Popup
                };
@@ -114,7 +112,8 @@ define('Controls/Input/ComboBox',
       ComboBox.getDefaultOptions = function() {
          return {
             readOnly: true,
-            placeholder: 'Выберите...'
+            placeholder: 'Выберите...',
+            width: 200
          };
       };
 
