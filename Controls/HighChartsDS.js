@@ -2,59 +2,87 @@ define('Controls/HighChartsDS', [
    'Core/Control',
    'tmpl!Controls/HighChartsDS/HighChartsDS',
    'WS.Data/Source/SbisService',
-   'WS.Data/Query/Query',
-   'css!Controls/HighChartsDS/HighChartsDS'
-], function(Control, template, SbisService, Query) {
+   'Controls/HighChartsDS/Utils/ParseDataUtil'
+], function(Control, template, SbisService, Utils) {
 
    /**
     * Компонент диаграмм работающий с БЛ
     */
    var _private = {
-         dataSource: {},
+         drawChart: function(self, data) {
+            self._currentData.data = data.getAll();
+            preparedData = _private.prepareData(self);
+            _private.mergePreparedData(self._chartOptions, preparedData);
+         },
+         prepareData: function(self) {
+            var
+               data = self._currentData.data,
+               preparedSeries,
+               preparedXAxis,
+               preparedYAxis;
 
-         wsSeries: {},
-         wsAxis: {},
-         filter: {},
-         initDataSource: function(endpoint) {
-            _private.dataSource = new SbisService({
-               endpoint: endpoint
-            });
+            if (data) {
+               preparedSeries = Utils.recordSetParse(self._wsSeries, data);
+
+               var
+                  parseResult = Utils.parseAxisCommon(self._wsAxis),
+                  parseRsResult;
+
+               preparedXAxis = parseResult.xAxis;
+               preparedYAxis = parseResult.yAxis;
+
+               parseRsResult =  Utils.recordSetParseAxis(preparedXAxis, preparedYAxis, data);
+
+               preparedXAxis = parseRsResult.xAxis;
+               preparedYAxis = parseRsResult.yAxis;
+
+               return {
+                  series: preparedSeries,
+                  xAxis: preparedXAxis,
+                  yAxis: preparedYAxis
+               };
+            }
+            else {
+               throw new Error (rk('Данные не загружены'));
+            }
          },
-         getFilter: function() {
-            return _private.filter;
-         },
-         callQuery: function(filter) {
-            _private.filter = filter || _private.getFilter() || {};
-            return _private.dataSource.call(_private.query, _private.getFilter());
+         mergePreparedData: function(chartOptions, preparedData) {
+            chartOptions.series = preparedData.series;
+            chartOptions.xAxis = preparedData.xAxis;
+            chartOptions.yAxis = preparedData.yAxis;
          }
       },
       HighChartsDS = Control.extend({
          _template: template,
          _chartOptions: {},
+         _wsSeries: {},
+         _wsAxis: {},
 
          _beforeMount: function(opts) {
-            var tmpArr = opts.query.split('.');
-            _private.initDataSource(tmpArr[0]);
-            _private.query = tmpArr[1];
-            this._chartOptions = opts.chartOptions;
+            opts.wsSeries && (this._wsSeries = opts.wsSeries);
+            opts.wsAxis && (this._wsAxis = opts.wsAxis);
+            if (opts.dataSource) {
+               this._currentData = opts.dataSource.query(opts.filter);
+               return this._currentData;
+            }
+         },
+
+         _afterMount: function() {
+            var
+               self = this,
+               preparedData;
+            if(this._currentData) {
+               this._currentData.addCallback(function(data) {
+                  _private.drawChart(self, data);
+               });
+            }
          },
 
          _beforeUpdate: function(opts) {
             var self = this;
-            if (opts.filter !== _private.getFilter()) {
-               _private.callQuery(opts.filter).addErrback(function() {
-                  self._chartOptions = {
-                     credits: {
-                        enabled: false
-                     },
-                     chart: {
-                        type: 'line'
-                     },
-                     series: [{
-                        name: 'USD to EUR',
-                        data: [10, 20]
-                     }]
-                  };
+            if (opts.filter !== this._options.filter) {
+               this._currentData.query(opts.filter).addCallback(function(data) {
+                  _private.drawChart(self, data);
                });
             }
          }
