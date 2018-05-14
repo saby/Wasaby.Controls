@@ -2908,6 +2908,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             };
             text = this._removeEmptyTags(text);
             text = text.replace(/&nbsp;/gi, String.fromCharCode(160));
+
+            //tinyMCE на ipad`e в методе getContent возвращает блоки вида <p class=\"\">text</p>
+            text = text.replace(/ class=\"\"/gi,'');
             for (var name in regs) {
                for (var prev = -1, cur = text.length; cur !== prev; prev = cur, cur = text.length) {
                   text = text.replace(regs[name], substitutes[name] || '');
