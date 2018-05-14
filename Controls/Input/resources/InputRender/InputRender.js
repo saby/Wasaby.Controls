@@ -27,13 +27,14 @@ define('Controls/Input/resources/InputRender/InputRender',
 
          getSelection: function(self) {
             var
-               result = self._selection;
+               result = self._selection,
+               val = self._options.viewModel.getDisplayValue();
 
             //Если курсор ещё не был поставлен в поле, то поставим его в конец
             if (!result) {
                result = {
-                  selectionStart: self._options.value ? self._options.value.length : 0,
-                  selectionEnd: self._options.value ? self._options.value.length : 0
+                  selectionStart: val ? val.length : 0,
+                  selectionEnd: val ? val.length : 0
                };
             }
 
@@ -160,7 +161,7 @@ define('Controls/Input/resources/InputRender/InputRender',
                   after: displayValue.slice(selectionEnd, displayValue.length)
                }, 'insert');
 
-            if (displayValue !== processedData.value) {
+            if (displayValue !== this._options.viewModel.getValue()) {
                this._notify('valueChanged', [this._options.viewModel.getValue()]);
             }
 
