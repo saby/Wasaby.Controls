@@ -10,12 +10,12 @@ define('Controls/HighChartsDS/Utils/ParseDataUtils', [], function() {
 
          for (var i = 0; i < axisOpts.length; i++) {
             axisArr[i] = {};
+
             /*прокидываем все опции*/
             if (axisOpts[i].title !== undefined) {
                axisArr[i].title = axisArr[i].title || {};
                axisArr[i].title.text = axisOpts[i].title;
-            }
-            else {
+            } else {
                axisArr[i].title = axisArr[i].title || {};
                axisArr[i].title.text = '';
             }
@@ -47,7 +47,7 @@ define('Controls/HighChartsDS/Utils/ParseDataUtils', [], function() {
                axisArr[i].max = parseInt(axisOpts[i].max, 10);
             }
             if (axisOpts[i].linkedTo !== undefined) {
-               axisArr[i].linkedTo = parseInt(axisOpts[i].linkedTo, 10)
+               axisArr[i].linkedTo = parseInt(axisOpts[i].linkedTo, 10);
             }
             if (axisOpts[i].opposite) {
                axisArr[i].opposite = true;
@@ -60,8 +60,7 @@ define('Controls/HighChartsDS/Utils/ParseDataUtils', [], function() {
             /*прописываем тип, чтоб потом разделить на два массива*/
             if (axisOpts[i].type == 'yAxis') {
                axisArr[i].type = 'yAxis';
-            }
-            else {
+            } else {
                axisArr[i].type = 'xAxis';
             }
 
@@ -74,8 +73,7 @@ define('Controls/HighChartsDS/Utils/ParseDataUtils', [], function() {
          for (i = 0; i < axisArr.length; i++) {
             if (axisArr[i].type == 'yAxis') {
                yAxisArr.push(axisArr[i]);
-            }
-            else {
+            } else {
                xAxisArr.push(axisArr[i]);
             }
             delete axisArr[i].type;
@@ -105,7 +103,7 @@ define('Controls/HighChartsDS/Utils/ParseDataUtils', [], function() {
                }
             }
          };
-         rs.each(function(rec){
+         rs.each(function(rec) {
             iterate(xAxis, rec);
             iterate(yAxis, rec);
          });
@@ -115,21 +113,21 @@ define('Controls/HighChartsDS/Utils/ParseDataUtils', [], function() {
             yAxis: yAxis
          };
       },
-      recordSetParse : function(wsSeries, recordSet) {
+      recordSetParse: function(wsSeries, recordSet) {
          var
             seriesOpts = wsSeries,
             rs = recordSet,
             arr = [];
 
 
-         rs.each(function(rec){
+         rs.each(function(rec) {
 
             for (var i = 0; i < seriesOpts.length; i++) {
                if (!arr[i]) {
                   arr[i] = {
-                     'data' : [],
-                     'type' : seriesOpts[i].type,
-                     'name' : seriesOpts[i].name ? seriesOpts[i].name : 'График' + i
+                     'data': [],
+                     'type': seriesOpts[i].type,
+                     'name': seriesOpts[i].name ? seriesOpts[i].name : 'График' + i
                   };
                }
                if (seriesOpts[i].color) {
@@ -148,8 +146,7 @@ define('Controls/HighChartsDS/Utils/ParseDataUtils', [], function() {
                         rec.get(seriesOpts[i].sourceFieldX),
                         rec.get(seriesOpts[i].sourceFieldY)
                      ]);
-                  }
-                  else {
+                  } else {
                      arr[i].data.push([rec.get(seriesOpts[i]).sourceFieldY]);
                   }
                }
@@ -164,9 +161,8 @@ define('Controls/HighChartsDS/Utils/ParseDataUtils', [], function() {
                   var lastDataElement = arr[i].data[arr[i].data.length - 1];
                   if (seriesOpts[i].sourceField_3 && lastDataElement.length == 2) {
                      lastDataElement.splice(2, rec.get(seriesOpts[i]).sourceField_3);
-                  }
-                  else {
-                     throw new Error (rk('Для графика-области надо определить 3 поля данных (ws-series.sourceField)'));
+                  } else {
+                     throw new Error(rk('Для графика-области надо определить 3 поля данных (ws-series.sourceField)'));
                   }
                }
 

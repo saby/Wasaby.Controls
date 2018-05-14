@@ -10,6 +10,7 @@ define('Controls/HighChartsDS', [
     */
    var _private = {
          drawChart: function(self, data) {
+            var preparedData;
             self._currentData.data = data.getAll();
             preparedData = _private.prepareData(self);
             _private.mergePreparedData(self._chartOptions, preparedData);
@@ -41,9 +42,8 @@ define('Controls/HighChartsDS', [
                   xAxis: preparedXAxis,
                   yAxis: preparedYAxis
                };
-            }
-            else {
-               throw new Error (rk('Данные не загружены'));
+            } else {
+               throw new Error(rk('Данные не загружены'));
             }
          },
          mergePreparedData: function(chartOptions, preparedData) {
@@ -62,16 +62,14 @@ define('Controls/HighChartsDS', [
             opts.wsSeries && (this._wsSeries = opts.wsSeries);
             opts.wsAxis && (this._wsAxis = opts.wsAxis);
             if (opts.dataSource) {
-               this._currentData = opts.dataSource.query(opts.filter);
-               return this._currentData;
+               this._currentData = opts.dataSource;
+               return this._currentData.query(opts.filter);
             }
          },
 
          _afterMount: function() {
-            var
-               self = this,
-               preparedData;
-            if(this._currentData) {
+            var self = this;
+            if (this._currentData) {
                this._currentData.addCallback(function(data) {
                   _private.drawChart(self, data);
                });
