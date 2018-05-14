@@ -82,6 +82,8 @@
    "Не выбрано": "Not selected",
    "Не выбрано ни одной записи для перемещения": "Have not been selected rows for move",
    "Не указан": "Not specified",
+   "Неверная дата. Дата не является датой начала месяца.": "Invalid date. Date is not the start date of the month",
+   "Неверная дата. Дата не является датой конца месяца.": "Invalid date. Date is not the end of the month",
    "Неверная контрольная сумма СНИЛС": "Invalid SNILS checksum",
    "Нет": "No",
    "Некорректно заполнены обязательные поля": "Incorrect values in required fields",
