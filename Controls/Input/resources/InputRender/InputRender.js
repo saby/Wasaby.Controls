@@ -88,7 +88,7 @@ define('Controls/Input/resources/InputRender/InputRender',
             _private.setTargetData(e.target, processedData);
             _private.saveSelection(this, e.target);
 
-            this._notify('valueChanged', [this._options.viewModel.getValue()]);
+            this._notify('valueChanged', [processedData.value]);
          },
 
          _keyUpHandler: function(e) {
