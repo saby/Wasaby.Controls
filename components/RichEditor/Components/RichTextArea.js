@@ -3143,7 +3143,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      // В MSIE при добавлении новой строки clientHeight и scrollHeight начинают расходиться - нужно их уравнять
                      // 1175015989 https://online.sbis.ru/opendoc.html?guid=d013f54f-683c-465c-b437-6adc64dc294a
                      var diff = contentHeight - content.clientHeight;
-                     $content.css('height', 0 < diff ? content.offsetHeight + diff : content.offsetHeight);
                      if (isChanged) {
                         var parent = content.parentNode;
                         if (parent.clientHeight < contentHeight) {
