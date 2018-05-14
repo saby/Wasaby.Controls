@@ -37,6 +37,9 @@ define(
          it('calcScrollRatio', function() {
             result = Scrollbar._private.calcScrollRatio(200, 100, 50, 400);
             assert.equal(result, 0.25);
+
+            result = Scrollbar._private.calcScrollRatio(100, 100, 100, 100);
+            assert.equal(result, 1);
          });
          it('calcWheelDelta', function() {
             result = Scrollbar._private.calcWheelDelta(false, 80);
