@@ -1,9 +1,10 @@
 define('SBIS3.CONTROLS/Controllers/CursorListNavigation',
    [
       'Core/Abstract',
-      'SBIS3.CONTROLS/Controllers/IListNavigation'
+      'SBIS3.CONTROLS/Controllers/IListNavigation',
+      'SBIS3.CONTROLS/Utils/CursorListNavigation'
    ],
-   function (Abstract, IListNavigation) {
+   function (Abstract, IListNavigation, CursorListNavigationUtils) {
       /**
        * Контроллер, позволяющий связывать компоненты осуществляя базовое взаимодейтсие между ними
        * @author Крайнов Д.О.
@@ -35,23 +36,6 @@ define('SBIS3.CONTROLS/Controllers/CursorListNavigation',
                this._options.config.position = [this._options.config.position];
             }
          },
-         _getCalculatedParams: function() {
-            var sign = '', additionalFilter = {};
-            switch(this._options.config.direction) {
-               case 'after': sign = '>='; break;
-               case 'before': sign = '<='; break;
-               case 'both': sign = '~'; break;
-            }
-
-            for (var i = 0; i < this._options.config.field.length; i++) {
-               additionalFilter[this._options.config.field[i] + sign] = this._options.config.position[i];
-            }
-
-            return {
-               filter : additionalFilter
-            }
-         },
-
          prepareQueryParams: function(projection, scrollDirection) {
             var edgeRecord, filterValue;
 
@@ -86,7 +70,7 @@ define('SBIS3.CONTROLS/Controllers/CursorListNavigation',
                }
                this.setPosition(newPos);
             }
-            var params = this._getCalculatedParams();
+            var params = CursorListNavigationUtils.getNavigationParams(this._options.config.field, this._options.config.position, this._options.config.direction);
 
             //TODO см выше, восстанавливаем
             this.setDirection(prevDirection);

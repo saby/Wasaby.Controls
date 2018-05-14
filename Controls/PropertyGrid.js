@@ -9,7 +9,7 @@ define('Controls/PropertyGrid', [
     * Provides a user interface for browsing and editing the properties of an object.
     *
     * @class Controls/PropertyGrid
-    * @extends Controls/Control
+    * @extends Core/Control
     * @control
     * @public
     * @author Золотова Э.Е.

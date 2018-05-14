@@ -41,6 +41,7 @@ define('Controls/Button/MenuButton',
             });
             return instance._sourceController.load(filter || {}).addCallback(function(items) {
                instance._items = items;
+               return items;
             });
          },
          cssStyleGeneration: function(self, options) {

@@ -64,10 +64,14 @@ define(
                projection.each(function (itemProj) {
                   item = itemProj.getContents();
                   itemTpl = item.get(opts.displayProperty);
-                  tmpl = itemTpl && TemplateUtil.prepareTemplate(itemTpl)({
-                     item: item.getRawData(),
-                     options: opts
-                  }, undefined, context);
+                  if (itemTpl && typeof itemTpl === 'string' && itemTpl.indexOf('{{') === -1 && itemTpl.indexOf('{[') === -1) {
+                     tmpl = itemTpl;
+                  } else {
+                     tmpl = itemTpl && TemplateUtil.prepareTemplate(itemTpl)({
+                        item: item.getRawData(true),
+                        options: opts
+                     }, undefined, context);
+                  }
                   if (item.get('align') === 'left') {
                      if (!firstLeftItem) {
                         firstLeftItem = item;

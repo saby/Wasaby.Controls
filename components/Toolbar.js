@@ -25,7 +25,7 @@ define('SBIS3.CONTROLS/Toolbar', [
                return [];
             }
             arrKeys = arrKeys || [];
-            if (Array.indexOf(arrKeys, key) >= 0) {
+            if (arrKeys.indexOf(key) >= 0) {
                IoC.resolve('ILogger').error('Toolbar', 'getSubItems. Зацикливание в дереве.');
                return [];
             }

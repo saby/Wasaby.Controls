@@ -1,0 +1,145 @@
+.controls-MonthViewVDOM {
+   .flexbox();
+   .flex-direction(column);
+   text-align: center;
+   width: @width_MontView;
+   background: @background_MonthView;
+}
+
+.controls-MonthViewVDOM__table {
+   .flex-shrink(1);
+   .flex-grow(1);
+   .flexbox();
+   .flex-direction(column);
+   .align-items(stretch);
+   width: 100%;
+}
+
+.controls-MonthViewVDOM__tableRow {
+   .flex-grow(1);
+   .flex-shrink(1);
+   flex-basis: @height_MonthView-item;
+   .flexbox();
+   margin-right: 1px;
+   color: @color_MonthView-weekDayHeader;
+}
+
+.controls-MonthViewVDOM__tableHead {
+   font-size: @font-size_MontView-weekDayHeader;
+   text-align: center;
+}
+
+.controls-MonthViewVDOM__item {
+   position: relative;
+   font-size: @font-size_MonthView-item;
+
+   .flex-grow(1);
+   .flex-shrink(1);
+   .flex-basis(0);
+   .flexbox();
+   .align-items(center);
+   .justify-content(center);
+   margin-top: 1px;
+   margin-left: 1px;
+   .box-sizing(content-box);
+}
+
+.ws-is-no-touch {
+   .controls-MonthViewVDOM__hover-selectableItem {
+      &:hover {
+         background: @background_MonthView-item-hover;
+      }
+   }
+
+   .controls-MonthViewVDOM__border-currentMonthDay-unselected {
+      &:hover {
+         outline: 1px solid @border-color__MonthView-item-hover;
+      }
+   }
+}
+
+.controls-MonthViewVDOM__item-selectedStart,
+.controls-MonthViewVDOM__item-selectedEnd,
+.controls-MonthViewVDOM__item-selectedInner,
+.controls-MonthViewVDOM__item-selectedStart-unfinished,
+.controls-MonthViewVDOM__item-selectedEnd-unfinished {
+   outline: 1px solid @border-color__MonthView-item-selected;
+}
+
+.controls-MonthViewVDOM__item-selectedStart,
+.controls-MonthViewVDOM__item-selectedEnd {
+   font-weight: bold;
+}
+
+.controls-MonthViewVDOM__item-selectedStart:before {
+   content: "";
+   position: absolute;
+   height: 100%;
+   width: @width__MonthView-item-selected-startEnd-hover;
+   background-color: @border-color__MonthView-item-selected-startEnd-hover;
+   top: 0;
+   left: -1px;
+   z-index: 1;
+}
+
+.controls-MonthViewVDOM__item-selectedEnd:after {
+   content: "";
+   position: absolute;
+   height: 100%;
+   width:  @width__MonthView-item-selected-startEnd-hover;
+   background-color: @border-color__MonthView-item-selected-startEnd-hover;
+   top: 0;
+   right: -1px;
+}
+
+.controls-MonthViewVDOM__backgroundColor-currentMonthDay-unselected-enabled {
+   background: @background_MonthView-item;
+}
+.controls-MonthViewVDOM__backgroundColor-currentMonthDay-selected-enabled {
+   background: @background_MonthView-item-selected;
+}
+
+.controls-MonthViewVDOM__backgroundColor-currentMonthDay-selected-startend-unfinished-enabled {
+   background: @background_MonthView-item-hover;
+}
+
+.controls-MonthViewVDOM__backgroundColor-currentMonthDay-unselected-disabled {
+   background: greyscale(lighten(@background_MonthView-item, 3%));
+}
+.controls-MonthViewVDOM__backgroundColor-currentMonthDay-selected-disabled {
+   background: greyscale(lighten(@background_MonthView-item-selected, 15%));
+}
+
+.controls-MonthViewVDOM__textColor-currentMonthDay-workday-enabled {
+   color: @color_MonthView-item;
+}
+.controls-MonthViewVDOM__textColor-currentMonthDay-weekend-enabled {
+   color: @color_MonthView-item-weekend;
+}
+.controls-MonthViewVDOM__textColor-currentMonthDay-workday-disabled {
+   color:  greyscale(lighten(@color_MonthView-item, 30%));
+}
+.controls-MonthViewVDOM__textColor-currentMonthDay-weekend-disabled {
+   color: greyscale(lighten(@color_MonthView-item-weekend, 20%));
+}
+
+.controls-MonthViewVDOM__today {
+   color: @color_MonthView-item-today;
+}
+.controls-MonthViewVDOM__item-today-background {
+   position: absolute;
+   top: @background-spacing_MonthView-item-today;
+   bottom: @background-spacing_MonthView-item-today;
+   left: @background-spacing_MonthView-item-today;
+   right: @background-spacing_MonthView-item-today;
+   border-radius: @border-radius_MonthView-item-today;
+   background-color: @background-color_MonthView-item-today;
+}
+
+.controls-MonthViewVDOM__item-title {
+   position: relative;
+}
+
+.controls-MonthViewVDOM__cursor-item {
+   cursor: pointer;
+}
