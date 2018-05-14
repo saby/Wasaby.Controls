@@ -10,6 +10,7 @@ define('Controls/Application',
       'Core/compatibility',
       'Controls/Application/TouchDetector',
       'Controls/Application/AppData',
+      'Controls/Async/HeadDataContext',
       'Core/ConsoleLogger'
    ],
 
@@ -28,7 +29,8 @@ define('Controls/Application',
       BodyClasses,
       compatibility,
       TouchDetector,
-      AppData) {
+      AppData,
+      HeadDataContext) {
       'use strict';
 
       var _private,
@@ -71,6 +73,9 @@ define('Controls/Application',
          _mouseupPage: function(ev) {
             this._children.mouseupDetect.start(ev);
          },
+         _getChildContext: function() {
+            return { headData: this._headData };
+         },
          _touchclass: function() {
             //Данный метод вызывается из вёрстки, и при первой отрисовке еще нет _children (это нормально)
             //поэтому сами детектим touch с помощью compatibility
@@ -85,16 +90,23 @@ define('Controls/Application',
             var self = this,
                def = new Deferred();
 
+            this._headData = new HeadDataContext();
+            self.appDef = new Deferred();
+            this._headData.push(self.appDef);
+            self.appDef.callback({
+               jsLinks: self.jsLinks,
+               cssLinks: self.cssLinks
+            });
             _private.initState(self, receivedState || cfg);
             self.content = cfg.content;
             self.needArea = cfg.compat || self.compat;
             if (!receivedState) {
                receivedState = {};
             }
-            self.cssLinks = receivedState.cssLinks || (context.AppData ? context.AppData.cssLinks : cfg.cssLinks);
+            self.cssLinks = (context.AppData ? context.AppData.cssLinks : cfg.cssLinks);
             self.wsRoot = receivedState.wsRoot || (context.AppData ? context.AppData.wsRoot : cfg.wsRoot);
             self.resourceRoot = receivedState.resourceRoot || (context.AppData ? context.AppData.resourceRoot : cfg.resourceRoot);
-            self.jsLinks = receivedState.jsLinks || (context.AppData ? context.AppData.jsLinks : cfg.jsLinks);
+            self.jsLinks = (context.AppData ? context.AppData.jsLinks : cfg.jsLinks);
             self.BodyClasses = BodyClasses;
 
             /**
@@ -102,8 +114,6 @@ define('Controls/Application',
              * роутинга и с ним же надо восстанавливаться на клиенте.
              */
             def.callback({
-               jsLinks: self.jsLinks,
-               cssLinks: self.cssLinks,
                title: self.title,
                wsRoot: self.wsRoot,
                resourceRoot: self.resourceRoot,

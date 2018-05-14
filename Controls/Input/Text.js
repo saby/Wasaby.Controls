@@ -1,6 +1,7 @@
 define('Controls/Input/Text', [
    'Core/Control',
    'tmpl!Controls/Input/Text/Text',
+   'Core/Deferred',
 
    /*'WS.Data/Type/descriptor',*/
    'Controls/Input/Text/ViewModel',
@@ -10,7 +11,7 @@ define('Controls/Input/Text', [
    'tmpl!Controls/Input/resources/input'
 ], function(Control,
    template,
-
+            Deferred,
    /*types,*/
    TextViewModel,
    inputHelper) {
@@ -82,6 +83,26 @@ define('Controls/Input/Text', [
             maxLength: options.maxLength,
             value: options.value
          });
+      },
+
+      _beforeMount: function(opts, context, receivedState) {
+         if(receivedState) {
+            this.data = receivedState;
+            return;
+         }
+         var self = this;
+         self.data = ['Controls/Button', 'Controls/Input/Text', 'Controls/Button'];
+         var def = new Deferred();
+         var innerDef = new Deferred();
+         def.addCallback(function() {
+            innerDef.callback(self.data);
+            return self.data;
+         });
+
+         setTimeout(function() {
+            def.callback();
+         }, 0);
+         return innerDef;
       },
 
       _beforeUpdate: function(newOptions) {
