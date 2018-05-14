@@ -2,32 +2,29 @@
      name="ComboBox"
      on:mousedown="_dropdownOpenHandler()">
 
-      <Controls.Input.resources.InputRender.InputRender
-              value="{{_options.value}}"
-              size="{{ _options.size }}"
-              inputType="ComboBox"
-              tagStyle="{{_options.tagStyle}}"
-              viewModel="{{_simpleViewModel}}"
-              placeholder="{{_options.placeholder}}"
-              validationErrors="{{_options.validationErrors}}"
-              on:valueChanged="_valueChangedHandler()"
-      >
+   <Controls.Input.resources.InputRender.InputRender
+           value="{{_options.value}}"
+           size="{{ _options.size }}"
+           inputType="ComboBox"
+           tagStyle="{{_options.tagStyle}}"
+           viewModel="{{_simpleViewModel}}"
+           placeholder="{{_options.placeholder}}"
+           validationErrors="{{_options.validationErrors}}"
+           on:valueChanged="_valueChangedHandler()"
+           attr:style="width: {{_options.width + 'px'}}">
 
-         <ws:content>
-            <ws:partial
-                    template="tmpl!Controls/Input/resources/input"
-                    readOnly="{{_options.readOnly}}"
-            />
-         </ws:content>
+      <ws:content>
+         <ws:partial
+                 template="tmpl!Controls/Input/resources/input"
+                 readOnly="{{_options.readOnly}}"/>
+      </ws:content>
 
-         <ws:afterFieldWrapper>
-            <Controls.Button.ButtonSeparator
-                    bind:value="_isOpen"
+      <ws:afterFieldWrapper>
+         <Controls.Button.ButtonSeparator bind:value="_isOpen"/>
+      </ws:afterFieldWrapper>
 
-            />
-         </ws:afterFieldWrapper>
+   </Controls.Input.resources.InputRender.InputRender>
 
-      </Controls.Input.resources.InputRender.InputRender>
    <div name="Popup" class="controls-ComboBox-popup"></div>
 
    <Controls.Dropdown.Opener name="DropdownOpener">
@@ -44,7 +41,8 @@
                  contentTemplate="{{_options.contentTemplate}}"
                  footerTemplate="{{_options.footerTemplate}}"
                  showHeader="{{_options.showHeader === true ? true : false}}"
-                 selectedKeys="{{_options.selectedKeys}}"/>
+                 selectedKeys="{{_options.selectedKeys}}"
+                 width="{{_options.width}}"/>
       </ws:popupOptions>
    </Controls.Dropdown.Opener>
 </div>
