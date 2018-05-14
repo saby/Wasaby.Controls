@@ -15,6 +15,14 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
 
    var _private = {
 
+      cloneItems: function(items) {
+         if (items['[WS.Data/Entity/CloneableMixin]']) {
+            return items.clone();
+         } else {
+            return Clone(items);
+         }
+      },
+
       countItems: function(items) {
          var result = 0;
          Chain(items).each(function(elem) {
@@ -41,7 +49,7 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
       _arrowVisible: false,
 
       _beforeMount: function(options) {
-         this.items = Clone(options.items);
+         this.items = _private.cloneItems(options.items);
       },
 
       _afterMount: function() {
@@ -50,7 +58,7 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
 
       _afterUpdate: function() {
          if (!isEqual(this.items, this._options.items)) {
-            this.items = Clone(this._options.items);
+            this.items = _private.cloneItems(this._options.items);
             _private.onResize(this);
          }
       },
