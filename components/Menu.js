@@ -239,7 +239,6 @@ define('SBIS3.CONTROLS/Menu', [
          this.destroySubObjects();
          this._checkIcons();
          this._needShowToggleButton = false;
-         this._dontCreateTemplateFunc = true;
          Menu.superclass._drawItems.apply(this, arguments);
          this._checkAdditionalItems();
       },
