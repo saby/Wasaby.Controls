@@ -919,7 +919,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             this._toggleIndicator(true);
             this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), 0, this._limit);
             return this._callQuery(this._createTreeFilter(id), this.getSorting(), 0, this._limit).addCallback(forAliveOnly(function (list) {
-               if (this._options.saveReloadPosition && list.getCount()) {
+               if (this._isCursorNavigation() && this._options.saveReloadPosition && list.getCount()) {
                   this._hierNodesCursor[id] = list.at(list.getCount() - 1).get(this._options.navigation.config.field);
                }
                this._options._folderHasMore[id] = list.getMetaData().more;
@@ -1377,7 +1377,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), (id ? this._options._folderOffsets[id] : this._options._folderOffsets['null']) + this._limit, this._limit);
          }
          this._loader = this._callQuery(this._createTreeFilter(id), this.getSorting(), (id ? this._options._folderOffsets[id] : this._options._folderOffsets['null']) + this._limit, this._limit).addCallback(forAliveOnly(function (dataSet) {
-            if (this._options.saveReloadPosition) {
+            if (this._isCursorNavigation() && this._options.saveReloadPosition) {
                this._hierNodesCursor[id] = dataSet.at(dataSet.getCount() - 1).get(this._options.navigation.config.field);
             }
             //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
@@ -1436,7 +1436,6 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
 
       before: {
          _modifyOptions: function(cfg) {
-            cfg.saveReloadPosition = true;
             if (cfg._curRoot !== null && cfg.currentRoot === null) {
                cfg.currentRoot = cfg._curRoot;
             }
@@ -1653,7 +1652,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
          this._notify('onBeforeSetRoot', key);
 
          // сохраняем текущую страницу при проваливании в папку
-         if (this._options.saveReloadPosition && this.getSelectedItem()) {
+         if (this._isCursorNavigation() && this._options.saveReloadPosition && this.getSelectedItem()) {
             // Сохраняем ключ узла, в который провалились
             if (typeof this.getCurrentRoot() === 'undefined') {
                this._hierPages[null] = this.getSelectedItem().get(this._options.navigation.config.field);
