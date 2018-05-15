@@ -36,11 +36,11 @@
 
 .controls-Switch__text {
    margin-left: @margin_Switch-text;
+   cursor: pointer;
 }
 
 .controls-Switch__text_enabled_unselected {
    color: @color_Switch-text_enabled_unselected;
-   cursor: pointer;
 }
 
 .controls-Switch__text_disabled_unselected {
@@ -48,13 +48,7 @@
 }
 
 .ws-is-no-touch {
-   .controls-Switch:hover {
-      .controls-SwitchCircle__borderCircle_enabled {
-         fill: @fill_RadioGroup_borderCircle_enabled_hovered;
-      }
-
-      .controls-Switch__text_enabled_unselected {
-         text-decoration: underline;
-      }
+   .controls-Switch__text_enabled_unselected:hover {
+      text-decoration: underline;
    }
 }

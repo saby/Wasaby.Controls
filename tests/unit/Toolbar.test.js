@@ -69,6 +69,8 @@ define(
             it('check received state', () => {
                toolbar._beforeMount(config, null, records);
                assert.equal(toolbar._items, records);
+               assert.equal(!!toolbar._needShowMenu, true);
+               assert.equal(toolbar._menuItems.getCount(), 3);
             });
             it('need show menu', function() {
                return new Promise((resolve) => {
