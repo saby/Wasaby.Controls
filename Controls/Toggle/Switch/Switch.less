@@ -79,11 +79,11 @@
 
 .controls-Switch__text {
    margin-left: @margin_Switch-text;
+   cursor: pointer;
 }
 
 .controls-Switch__text_enabled_unselected {
    color: @color_Switch-text_enabled_unselected;
-   cursor: pointer;
 }
 
 .controls-Switch__text_disabled_unselected {
@@ -91,12 +91,11 @@
 }
 
 .ws-is-no-touch {
+   .controls-Switch__marker_enabled_checked:hover,
+   .controls-Switch__marker_enabled_unchecked:hover {
+      border-color: @border-color_Switch_marker_enabled_hover;
+   }
    .controls-Switch:hover {
-      .controls-Switch__marker_enabled_checked,
-      .controls-Switch__marker_enabled_unchecked {
-         border-color: @border-color_Switch_marker_enabled_hover;
-      }
-
       .controls-Switch__text_enabled_unselected {
          text-decoration: underline;
       }
