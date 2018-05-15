@@ -1,7 +1,7 @@
 /**
  * Created by as.krasilnikov on 14.05.2018.
  */
-define('Controls/Application/CompatiblePopup', ['Core/Deferred', 'Core/moduleStubs'], function(Deferred, moduleStubs) {
+define('Controls/Popup/Compatible/Layer', ['Core/Deferred', 'Core/moduleStubs'], function(Deferred, moduleStubs) {
    'use strict';
 
    var loadDeferred;

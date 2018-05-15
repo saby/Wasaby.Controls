@@ -115,10 +115,10 @@ define('Controls/Application',
          _afterMount: function() {
             //загружаем слой совместимости
             setTimeout(function() {
-               requirejs(['Controls/Application/CompatiblePopup'], function(CompatiblePopup) {
+               requirejs(['Controls/Popup/Compatible/Layer'], function(CompatiblePopup) {
                   CompatiblePopup.load();
                });
-            }, 1000);
+            }, 5000);
          }
       });
 

@@ -2,7 +2,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
    [
       'Core/Control',
       'tmpl!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
-      'Controls/Application/CompatiblePopup',
+      'Controls/Popup/Compatible/Layer',
       'Lib/Mixins/LikeWindowMixin',
       'Core/moduleStubs',
       'Core/core-debug',
