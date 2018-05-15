@@ -54,7 +54,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
        */
 
       /**
-       * @typedef {object} ExportResults Тип, содержащий информацию о результате редактирования
+       * @typedef {object} ^^^ExportResults Тип, содержащий информацию о результате редактирования
        * @property {string} MethodName Имя списочного метода, результат раболты которого будет сохранён в эксель-файл
        * @property {WS.Data/Entity/Record} [Filter] Параметры фильтрации для списочного метода (опционально)
        * @property {WS.Data/Entity/Record} [Pagination] Навигация для списочного метода (опционально)
@@ -76,8 +76,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
          $protected: {
             _options: {
             },
-            _result: null,
-            _resultHandler: null
+            _result: null
          },
 
          /**
@@ -125,30 +124,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
             if (this._result) {
                return Deferred.fail('Allready open');
             }
-            var inputCall = options.inputCall;
-            if (inputCall) {
-               inputCall = new RemoteCall(inputCall);
-            }
-            var outputCall = options.outputCall;
-            if (outputCall) {
-               outputCall = new RemoteCall(outputCall);
-            }
-            var opts = inputCall || outputCall ? Object.keys(options).reduce(function (r, v) { if (v !== 'inputCall' && v !== 'outputCall') { r[v] = options[v]; }; return r; }, {}) : options;
             this._result = new Deferred();
-            if (inputCall) {
-               inputCall.call(opts).addCallbacks(
-                  function (data) {
-                     this._open(cMerge(opts, data));
-                  }.bind(this),
-                  this._completeWithError.bind(this, true, rk('При анализе файла поизошла ошибка', 'НастройщикЭкспорта'))
-               );
-            }
-            else {
-               this._open(opts);
-            }
-            if (outputCall) {
-               this._resultHandler = outputCall.call.bind(outputCall);
-            }
+            this._open(options);
             return this._result;
          },
 
@@ -238,7 +215,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
             }
             var result = this._result;
             this._result = null;
-            this._resultHandler = null;
             if (result) {
                result.callback(null);
             }
@@ -253,22 +229,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           */
          _complete: function (isSuccess, outcome) {
             var result = this._result;
-            var resultHandler = isSuccess ? this._resultHandler : undefined;
             this._result = null;
-            this._resultHandler = null;
             if (this._areaContainer) {
                this._areaContainer.close();
             }
             if (isSuccess) {
-               if (resultHandler) {
-                  result.dependOn(
-                     resultHandler(outcome)
-                        .addErrback(function (err) { return rk('При отправке данных поизошла ошибка', 'НастройщикЭкспорта'); })
-                  );
-               }
-               else {
-                  result.callback(outcome);
-               }
+               result.callback(outcome);
             }
             else {
                result.errback(outcome);

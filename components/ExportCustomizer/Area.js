@@ -60,7 +60,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
        */
 
       /**
-       * @typedef {object} ExportResults Тип, содержащий информацию о результате редактирования
+       * @typedef {object} ^^^ExportResults Тип, содержащий информацию о результате редактирования
        * @property {string} MethodName Имя списочного метода, результат раболты которого будет сохранён в эксель-файл
        * @property {WS.Data/Entity/Record} [Filter] Параметры фильтрации для списочного метода (опционально)
        * @property {WS.Data/Entity/Record} [Pagination] Навигация для списочного метода (опционально)
@@ -600,7 +600,21 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             this.getValues(true).addCallback(function (data) {
                // И если всё нормально - завершить диалог
                if (data) {
-                  this._notify('onComplete', /*ExportResults:*/data);
+                  var outputCall = this._options.outputCall;
+                  if (outputCall) {
+                     (new RemoteCall(outputCall)).call(data).addCallbacks(
+                        function (result) {
+                           data.result = result;
+                           this._notify('onComplete', /*ExportResults:*/data);
+                        }.bind(this),
+                        function (err) {
+                           this._notify('onFatalError', true, /*err*/rk('При отправке данных поизошла ошибка', 'НастройщикЭкспорта'));
+                        }.bind(this)
+                     );
+                  }
+                  else {
+                     this._notify('onComplete', /*ExportResults:*/data);
+                  }
                }
                /*else {
                   // Иначе пользователь продолжает редактирование
@@ -653,10 +667,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           */
          getValues: function (withValidation) {
             var options = this._options;
-            var data = cMerge({}, options.serviceParams);
-            data.Fields = options.fieldIds;
-            data.Titles = this._selectFields(options.allFields, options.fieldIds, function (v) { return v.title; });
-            data.TemplateId = options.fileUuid;
+            var data = {
+               serviceParams: options.serviceParams,
+               fieldIds: options.fieldIds,
+               columnTitles: this._selectFields(options.allFields, options.fieldIds, function (v) { return v.title; }),
+               fileUuid: options.fileUuid
+            };
             return withValidation
                ?
                   // Прроверить собранные данные
