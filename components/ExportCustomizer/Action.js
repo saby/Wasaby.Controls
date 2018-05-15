@@ -36,6 +36,16 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
        */
 
       /**
+       * @typedef {object} ExportRemoteCall Тип, содержащий информацию для вызова удалённого сервиса для отправки данных вывода. Соответствует вспомогательному классу {@link SBIS3.CONTROLS/Utils/ImportExport/RemoteCall}
+       * @property {string} endpoint Сервис, метод которого будет вызван
+       * @property {string} method Имя вызываемого метода
+       * @property {string} [idProperty] Имя свойства, в котором находится идентификатор (опционально, если вызову это не потребуется)
+       * @property {object} [args] Аргументы вызываемого метода (опционально)
+       * @property {function(object):object} [argsFilter] Фильтр аргументов (опционально)
+       * @property {function(object):object} [resultFilter] Фильтр результатов (опционально)
+       */
+
+      /**
        * @typedef {object} ExportPreset Тип, содержащий информацию о преустановленных настройках экспорта
        * @property {string|number} id Идентификатор пресета
        * @property {string} title Отображаемое название пресета
@@ -45,14 +55,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
 
       /**
        * @typedef {object} ExportResults Тип, содержащий информацию о результате редактирования
-       * @property {string} MethodName Имя списочного метода, результат раболты которого будет сохранён в эксель-файл
-       * @property {WS.Data/Entity/Record} [Filter] Параметры фильтрации для списочного метода (опционально)
-       * @property {WS.Data/Entity/Record} [Pagination] Навигация для списочного метода (опционально)
-       * @property {string} [HierarchyField] Название поля иерархии (опционально)
-       * @property {string} FileName Название результирующего эксель-файла
-       * @property {Array<string>} Fields Список полей для колонок в экспортируемом файле
-       * @property {Array<string>} Titles Список отображаемых названий колонок в экспортируемом файле
-       * @property {string} TemplateId Uuid шаблона форматирования эксель-файла
+       * @property {Array<string>} fieldIds Список полей для колонок в экспортируемом файле
+       * @property {Array<string>} columnTitles Список отображаемых названий колонок в экспортируемом файле
+       * @property {string} fileUuid Uuid шаблона форматирования эксель-файла
+       * @property {ExportServiceParams} serviceParams Прочие параметры, необходимых для работы БЛ
        */
 
       var ExportCustomizerAction = Action.extend([], /**@lends SBIS3.CONTROLS/ExportCustomizer/Action.prototype*/ {
@@ -66,8 +72,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
          $protected: {
             _options: {
             },
-            _result: null,
-            _resultHandler: null
+            _result: null
          },
 
          /**
@@ -96,6 +101,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * @param {Array<string>} options.fieldIds Список привязки колонок в экспортируемом файле к полям данных
           * @param {object} options.fieldGroupTitles Список отображаемых названий групп полей (если используются идентификаторы групп)
           * @param {string} options.fileUuid Uuid шаблона форматирования эксель-файла
+          * @param {ExportRemoteCall} [options.outputCall] Информация для вызова метода удалённого сервиса для отправки данных вывода (опционально)
           * @return {Deferred<ExportResults>}
           */
          execute: function (options) {
@@ -114,30 +120,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
             if (this._result) {
                return Deferred.fail('Allready open');
             }
-            var inputCall = options.inputCall;
-            if (inputCall) {
-               inputCall = new RemoteCall(inputCall);
-            }
-            var outputCall = options.outputCall;
-            if (outputCall) {
-               outputCall = new RemoteCall(outputCall);
-            }
-            var opts = inputCall || outputCall ? Object.keys(options).reduce(function (r, v) { if (v !== 'inputCall' && v !== 'outputCall') { r[v] = options[v]; }; return r; }, {}) : options;
             this._result = new Deferred();
-            if (inputCall) {
-               inputCall.call(opts).addCallbacks(
-                  function (data) {
-                     this._open(cMerge(opts, data));
-                  }.bind(this),
-                  this._completeWithError.bind(this, true, rk('При анализе файла поизошла ошибка', 'НастройщикЭкспорта'))
-               );
-            }
-            else {
-               this._open(opts);
-            }
-            if (outputCall) {
-               this._resultHandler = outputCall.call.bind(outputCall);
-            }
+            this._open(options);
             return this._result;
          },
 
@@ -227,7 +211,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
             }
             var result = this._result;
             this._result = null;
-            this._resultHandler = null;
             if (result) {
                result.callback(null);
             }
@@ -242,22 +225,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           */
          _complete: function (isSuccess, outcome) {
             var result = this._result;
-            var resultHandler = isSuccess ? this._resultHandler : undefined;
             this._result = null;
-            this._resultHandler = null;
             if (this._areaContainer) {
                this._areaContainer.close();
             }
             if (isSuccess) {
-               if (resultHandler) {
-                  result.dependOn(
-                     resultHandler(outcome)
-                        .addErrback(function (err) { return rk('При отправке данных поизошла ошибка', 'НастройщикЭкспорта'); })
-                  );
-               }
-               else {
-                  result.callback(outcome);
-               }
+               result.callback(outcome);
             }
             else {
                result.errback(outcome);
