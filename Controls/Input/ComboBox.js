@@ -70,9 +70,9 @@ define('Controls/Input/ComboBox',
             });
          },
 
-         _beforeMount: function(options, context, recivedState) {
-            if (recivedState) {
-               this._items = recivedState;
+         _beforeMount: function(options, context, receivedState) {
+            if (receivedState) {
+               this._items = receivedState;
             } else if (options.items) {
                return _private.loadItems(this, options.items);
             }
