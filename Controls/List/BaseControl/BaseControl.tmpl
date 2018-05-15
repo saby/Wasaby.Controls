@@ -10,6 +10,7 @@
                 scope="{{_options.viewConfig}}"
                 listModel="{{_listViewModel}}"
                 on:itemClick="_onItemClick()"
+                on:itemContextMenu="_showActionsMenu()"
                 on:itemSwipe="_listSwipe()">
            <ws:viewTemplate>
               <ws:partial template="{{_options.viewName}}"/>
