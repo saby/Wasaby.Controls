@@ -99,6 +99,7 @@ define('SBIS3.CONTROLS/SbisDropdownList',
          setSelectedKeys: function(idArray) {
             var id = idArray && idArray[0];
             var items = this.getItems();
+            var castId = this._historyController.getCastId(id);
 
             if (this._historyController && !this._options.multiselect && id) {
                if (!items.getRecordById(id)) {
@@ -109,7 +110,7 @@ define('SBIS3.CONTROLS/SbisDropdownList',
                      format: items.getFormat().clone()
                   }));
                }
-               this._historyController.addToHistory(id);
+               this._historyController.addToHistory(castId);
             }
             SbisDropdownList.superclass.setSelectedKeys.apply(this, arguments);
          },
