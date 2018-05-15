@@ -133,7 +133,7 @@ define('SBIS3.CONTROLS/SbisDropdownList',
          },
 
          getDefaultId: function() {
-            var id = SbisDropdownList.superclass.getDefaultId.apply(this, arguments);
+            var id = SbisDropdownList.superclass.getDefaultId.call(this, (this._historyController && this._historyController.getOldItems()));
             return (this._historyController && this._historyController.getOriginId(id)) || id;
          },
 
