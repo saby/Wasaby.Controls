@@ -148,6 +148,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          getChildPendingOperations: function() {
             return [];
          },
+
          /**
           *
           * Добавить отложенную асинхронную операцию в очередь ожидания окна.
