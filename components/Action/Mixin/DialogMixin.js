@@ -170,7 +170,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             minWidth: 800,
             opener: cfg.opener,
             template: cfg.template,
-            templateOptions: templateOptions,
+            templateOptions: templateOptions
          };
       },
       //TODO end compatible block for VDOM
