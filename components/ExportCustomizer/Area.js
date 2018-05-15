@@ -11,6 +11,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
       'Core/core-merge',
       'Core/Deferred',
       'SBIS3.CONTROLS/CompoundControl',
+      'SBIS3.CONTROLS/Utils/ImportExport/RemoteCall',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
       'WS.Data/Collection/RecordSet',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/Area',
@@ -19,7 +20,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
       'SBIS3.CONTROLS/ScrollContainer'
    ],
 
-   function (CommandDispatcher, cMerge, Deferred, CompoundControl, InformationPopupManager, RecordSet, tmpl) {
+   function (CommandDispatcher, cMerge, Deferred, CompoundControl, RemoteCall, InformationPopupManager, RecordSet, tmpl) {
       'use strict';
 
       /**
@@ -38,6 +39,16 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
        * @property {WS.Data/Entity/Record} [Pagination] Навигация для списочного метода (опционально)
        * @property {string} [HierarchyField] Название поля иерархии (опционально)
        * @property {string} FileName Название результирующего эксель-файла
+       */
+
+      /**
+       * @typedef {object} ExportRemoteCall Тип, содержащий информацию для вызова удалённого сервиса для отправки данных вывода. Соответствует вспомогательному классу {@link SBIS3.CONTROLS/Utils/ImportExport/RemoteCall}
+       * @property {string} endpoint Сервис, метод которого будет вызван
+       * @property {string} method Имя вызываемого метода
+       * @property {string} [idProperty] Имя свойства, в котором находится идентификатор (опционально, если вызову это не потребуется)
+       * @property {object} [args] Аргументы вызываемого метода (опционально)
+       * @property {function(object):object} [argsFilter] Фильтр аргументов (опционально)
+       * @property {function(object):object} [resultFilter] Фильтр результатов (опционально)
        */
 
       /**
@@ -166,7 +177,25 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             return value;
          },
          fieldGroupTitles: _typeIfDefined.bind(null, 'object'),
-         fileUuid: _typeIfDefined.bind(null, 'string')
+         fileUuid: _typeIfDefined.bind(null, 'string'),
+         outputCall: function (value) {
+            // Если значение есть
+            if (value) {
+               // оно должно быть объектом
+               if (typeof value !== 'object') {
+                  return new Error('Value must be an object');
+               }
+               // и должно быть {@link ExportRemoteCall} - если получится создать экземпляр RemoteCall - значит это {@link ExportRemoteCall}
+               var instance;
+               try {
+                  instance = new RemoteCall(value);
+               }
+               catch (ex) {
+                  return new Error('Value must be an ExportRemoteCall');
+               }
+            }
+            return value;
+         }
       };
 
       /**
@@ -200,7 +229,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          'allFields',
          'fieldIds',
          'fieldGroupTitles',
-         'fileUuid'
+         'fileUuid',
+         'outputCall'
       ];
 
       var Area = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ExportCustomizer/Area.prototype*/ {
@@ -276,7 +306,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                /**
                 * @cfg {string} Uuid шаблона форматирования эксель-файла
                 */
-               fileUuid: null
+               fileUuid: null,
+               /**
+                * @cfg {ExportRemoteCall} Информация для вызова метода удалённого сервиса для отправки данных вывода (опционально)
+                */
+               outputCall: null
                // TODO: добавить валидаторы
             },
             // Список имён вложенных под-компонентов

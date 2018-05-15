@@ -36,6 +36,16 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
        */
 
       /**
+       * @typedef {object} ExportRemoteCall Тип, содержащий информацию для вызова удалённого сервиса для отправки данных вывода. Соответствует вспомогательному классу {@link SBIS3.CONTROLS/Utils/ImportExport/RemoteCall}
+       * @property {string} endpoint Сервис, метод которого будет вызван
+       * @property {string} method Имя вызываемого метода
+       * @property {string} [idProperty] Имя свойства, в котором находится идентификатор (опционально, если вызову это не потребуется)
+       * @property {object} [args] Аргументы вызываемого метода (опционально)
+       * @property {function(object):object} [argsFilter] Фильтр аргументов (опционально)
+       * @property {function(object):object} [resultFilter] Фильтр результатов (опционально)
+       */
+
+      /**
        * @typedef {object} ExportPreset Тип, содержащий информацию о преустановленных настройках экспорта
        * @property {string|number} id Идентификатор пресета
        * @property {string} title Отображаемое название пресета
@@ -96,6 +106,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * @param {Array<string>} options.fieldIds Список привязки колонок в экспортируемом файле к полям данных
           * @param {object} options.fieldGroupTitles Список отображаемых названий групп полей (если используются идентификаторы групп)
           * @param {string} options.fileUuid Uuid шаблона форматирования эксель-файла
+          * @param {ExportRemoteCall} [options.outputCall] Информация для вызова метода удалённого сервиса для отправки данных вывода (опционально)
           * @return {Deferred<ExportResults>}
           */
          execute: function (options) {
