@@ -2477,7 +2477,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             var imageUploader = this._imageUploader;
             if (!imageUploader) {
                if (Di.isRegistered(DI_IMAGE_UPLOADER)) {
-                  this._imageUploader = imageUploader = Di.resolve(DI_IMAGE_UPLOADER).getFileLoader();
+                  this._imageUploader = imageUploader = Di.resolve(DI_IMAGE_UPLOADER).getFileLoader(this);
                }
                else {
                   return Deferred.fail('No image uploader');
