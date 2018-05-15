@@ -5,7 +5,8 @@
    resourceRoot="{{ resourceRoot }}"
    compat="{{ compat }}"
    head="{{ _options.head }}"
-   title="{{ title }}">
+   title="{{ title }}"
+   cssLinks="{{ cssLinks }}">
 </Controls.Application._Head>
 <Controls.Event.Listener name="scrollDetect" register="scroll" attr:fixCompatible="1">
    <Controls.Event.Listener name="resizeDetect" register="resize" attr:fixCompatible="1">
@@ -50,7 +51,7 @@
                         </ws:if>
                         <ws:else data="{{!_options.builderCompatible}}">
                            <div>
-                              <Controls.Application._JsLinks/>
+                              <Controls.Application._JsLinks jsLinks="{{ jsLinks }}"/>
                               <ws:if data="{{ _options.scripts }}">
                                  <ws:for data="i in _options.scripts">
                                     <ws:partial template="{{ i }}"/>

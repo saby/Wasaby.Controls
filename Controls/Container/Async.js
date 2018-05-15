@@ -5,9 +5,6 @@ define('Controls/Container/Async',
       'tmpl!Controls/Container/Async/Async'
    ],
 
-   /**
-    *
-    */
    function(Base, Deferred, template) {
       'use strict';
 

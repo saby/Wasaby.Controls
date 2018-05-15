@@ -87,7 +87,6 @@ define('Controls/Application',
                def = new Deferred();
 
             this._headData = new HeadDataContext(cfg.theme);
-            self.appDef = new Deferred();
             _private.initState(self, receivedState || cfg);
             self.content = cfg.content;
             self.needArea = cfg.compat || self.compat;

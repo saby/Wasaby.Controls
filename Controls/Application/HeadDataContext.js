@@ -26,7 +26,8 @@ define('Controls/Application/HeadDataContext', [
                self.defRender.callback({
                   jsLinks: self.jsLinks || [],
                   cssLinks: self.cssLinks || [],
-                  errorState: self.err
+                  errorState: self.err,
+
                });
             });
          });
