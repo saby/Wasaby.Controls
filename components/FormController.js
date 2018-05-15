@@ -446,14 +446,14 @@ function(cContext, coreClone, cMerge, CommandDispatcher, EventBus, Deferred, IoC
        */
       _showLoadingIndicator: forAliveOnly(function(message) {
 //todo поправить LoadingIndicator
-         // cIndicator.setMessage(message || this._options.indicatorSavingMessage, true);
+         cIndicator.setMessage(message || this._options.indicatorSavingMessage, true);
       }),
 
       /**
        * Скрывает индикатор загрузки
        */
       _hideLoadingIndicator: function() {
-         // cIndicator.hide();
+         cIndicator.hide();
       },
       _processError: function(e, hideErrorDialog, eventName) {
          var eResult = this._notify('onFail', e, eventName),
