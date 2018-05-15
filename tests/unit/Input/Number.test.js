@@ -26,6 +26,25 @@ define(
 
             assert.equal(res, '123');
          });
+         it('trimEmptyDecimals (single zero, no dot)', function() {
+            var
+               res;
+            Number._private.trimEmptyDecimals({
+               _options: {
+                  showEmptyDecimals: false
+               },
+               _numberViewModel: {
+                  getValue: function() {
+                     return '0';
+                  },
+                  updateValue: function(processedVal) {
+                     res = processedVal;
+                  }
+               }
+            });
+
+            assert.equal(res, '0');
+         });
       });
    }
 );
