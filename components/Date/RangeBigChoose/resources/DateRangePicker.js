@@ -459,13 +459,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
       },
 
       _onMonthViewSelectingRangeEndDateChange: function (e, date, _date) {
-         // this._selectionType = selectionType;
          this._selectionRangeEndItem = date;
-         this.forEachMonthView(function(control) {
-            if (!e || e.getTarget() !== control) {
-               control._setSelectionRangeEndItem(date, true);
-            }
-         });
+         this._updateSelectionInInnerComponents();
       },
 
       _onMonthViewBeforeSelectionStarted: function (e, start, end) {
@@ -504,9 +499,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          this._innerComponentsValidateTimer = null;
          this.forEachMonthView(function(control) {
             if (this._isMonthView(control)) {
-               // control._setSelectionType(this._selectionType);
-               control._setSelectionRangeEndItem(this._selectionRangeEndItem, true);
                control.setRange(this.getStartValue(), this.getEndValue(), true);
+               control._setSelectionRangeEndItem(this._selectionRangeEndItem, true);
             }
          }.bind(this));
       },
