@@ -11,7 +11,12 @@ define('Controls/Popup/Compatible/Layer', ['Core/Deferred', 'Core/moduleStubs'],
       'Lib/Control/BaseCompatible/BaseCompatible',
       'Core/vdom/Synchronizer/resources/DirtyCheckingCompatible',
       'View/Runner/Text/markupGeneratorCompatible',
-      'cdn!jquery/3.3.1/jquery-min.js'
+      'cdn!jquery/3.3.1/jquery-min.js',
+      // todo возможно надо грузить весь core-extensions
+      'is!browser?WS.Data/ContextField/Flags',
+      'is!browser?WS.Data/ContextField/Record',
+      'is!browser?WS.Data/ContextField/Enum',
+      'is!browser?WS.Data/ContextField/List'
    ];
 
    return {

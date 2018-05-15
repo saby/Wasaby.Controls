@@ -60,6 +60,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             moduleStubs.require([self._options.template]).addCallback(function(result) {
                CompatiblePopup.load().addCallback(function() { //Это уже должно быть загружено страницей
                   self.templateOptions.element = $(self._children.compoundBlock);
+                  self.templateOptions._compoundArea = self;
                   self._compoundControl = new (result[0])(self.templateOptions);
                   self._subscribeToCommand();
 
@@ -83,7 +84,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          /* from api floatArea, window */
 
          close: function() {
-            var res = this._notify('onBeforeClose');
+            var res = this.handle('onBeforeClose');
             if (res !== false) {
                this._close();
 
@@ -97,6 +98,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          subscribe: function(eventName, handler) {
             var handlers = this[eventName + 'Handler'] || [];
+            this[eventName + 'Handler'] = handlers;
             handlers.push(handler);
          },
          subscribeTo: function(eventName, handler) {
@@ -120,18 +122,15 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                value();
             });
             if (this._options.handlers && this._options.handlers[eventName]) {
+               if (typeof this._options.handlers[eventName] === 'function') {
+                  this._options.handlers[eventName] = [this._options.handlers[eventName]];
+               }
                this._options.handlers[eventName].forEach(function(value) {
                   value();
                });
             }
          },
 
-         getChildPendingOperations: function() {
-
-         },
-         addPendingOperation: function(syncOperationCallback) {
-
-         },
          onBringToFront: function() {
             this.activate();
          },
@@ -146,8 +145,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
 
 
-
-
+         getChildPendingOperations: function() {
+            return [];
+         },
          /**
           *
           * Добавить отложенную асинхронную операцию в очередь ожидания окна.
