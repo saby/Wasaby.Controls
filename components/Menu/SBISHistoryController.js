@@ -693,6 +693,13 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
       },
 
       /**
+       * Возвращает исходный набор элементов
+       */
+      getOldItems: function() {
+         return this._options.oldItems;
+      },
+
+      /**
          * Добавляет пункт в конец в истории.
          * @param {String} origId
          * @param {Record} newItem
