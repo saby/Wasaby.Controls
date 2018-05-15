@@ -2,7 +2,7 @@ define('Controls/Application/_Wait',
    [
       'Core/Control',
       'Core/Deferred',
-      'Controls/Async/HeadDataContext',
+      'Controls/Application/HeadDataContext',
       'tmpl!Controls/Application/_Wait'
    ],
 
