@@ -3507,7 +3507,9 @@ define('SBIS3.CONTROLS/ListView',
                infiniteScroll = this._getOption('infiniteScroll'),
                loadType;
 
-            if (scrollOnEdge && this.getItems()) {
+            /* Не меняем состояние скрола, пока идёт загрузка данных,
+               иначе ломаются проверки в callback'e загрузки данных по скролу. */
+            if (scrollOnEdge && this.getItems() && !this.isLoading()) {
                // Досткролили вверх, но на самом деле подгружаем данные как обычно, а рисуем вверх
                if (type == 'top' && this._infiniteScrollState.reverse) {
                   this._setInfiniteScrollState('down');
