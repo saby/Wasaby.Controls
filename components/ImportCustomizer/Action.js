@@ -164,15 +164,16 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
             if (this._result) {
                return Deferred.fail('Allready open');
             }
-            var inputCall = options.inputCall;
+            var defaults = this._options;
+            var inputCall = options.inputCall || defaults.inputCall;
             if (inputCall) {
                inputCall = new RemoteCall(inputCall);
             }
-            var outputCall = options.outputCall;
+            var outputCall = options.outputCall || defaults.outputCall;
             if (outputCall) {
                outputCall = new RemoteCall(outputCall);
             }
-            var opts = inputCall || outputCall ? Object.keys(options).reduce(function (r, v) { if (v !== 'inputCall' && v !== 'outputCall') { r[v] = options[v]; }; return r; }, {}) : options;
+            var opts = options.inputCall || options.outputCall ? Object.keys(options).reduce(function (r, v) { if (v !== 'inputCall' && v !== 'outputCall') { r[v] = options[v]; }; return r; }, {}) : options;
             this._result = new Deferred();
             if (inputCall) {
                inputCall.call(opts).addCallbacks(
