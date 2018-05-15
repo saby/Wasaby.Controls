@@ -44,12 +44,12 @@
       </ws:if>
 
       <ws:if data="{{_pagingState.visible}}">
-         <ws:Controls.List.Paging class="controls-Scroll__paging"
-                                  stateBegin="{{_pagingState.stateUp}}"
-                                  statePrev="{{_pagingState.stateUp}}"
-                                  stateEnd="{{_pagingState.stateDown}}"
-                                  stateNext="{{_pagingState.stateDown}}"
-                                  on:onArrowClick="_arrowClickHandler()"/>
+         <Controls.List.Paging class="controls-Scroll__paging"
+                               stateBegin="{{_pagingState.stateUp}}"
+                               statePrev="{{_pagingState.stateUp}}"
+                               stateEnd="{{_pagingState.stateDown}}"
+                               stateNext="{{_pagingState.stateDown}}"
+                               on:onArrowClick="_arrowClickHandler()"/>
       </ws:if>
 
       <Controls.Event.Emitter event="resize" on:resize="_resizeHandler()"/>

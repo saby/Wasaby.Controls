@@ -11,22 +11,13 @@ define('Controls-demo/Container/Scroll',
 
          _pagingVisible: true,
 
-         _beforeMount: function() {
-            var srcData = [];
+         _scrollbarVisible: true,
 
-            for (var id = 1; id < 100; id++) {
-               srcData.push({
-                  id: id,
-                  title: 'Record ' + id
-               });
-            }
-            this._viewSource = new MemorySource({
-               idProperty: 'id',
-               data: srcData
-            });
+         _shadowVisible: true,
 
-            this._items = srcData;
-         },
+         _numberOfRecords: 100,
+
+         _innerScroll: false,
 
          _getChildContext: function() {
             return {
