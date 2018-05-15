@@ -2,9 +2,9 @@
  * Вспомогательный класс для вызова sbis-сервисов
  *
  * @public
- * @class SBIS3.CONTROLS/ImportCustomizer/RemoteCall
+ * @class SBIS3.CONTROLS/Utils/ImportExport/RemoteCall
  */
-define('SBIS3.CONTROLS/ImportCustomizer/RemoteCall',
+define('SBIS3.CONTROLS/Utils/ImportExport/RemoteCall',
    [
       'Core/core-merge',
       'WS.Data/Source/SbisService'
@@ -57,7 +57,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/RemoteCall',
          this._resultFilter = options.resultFilter;
       };
 
-      RemoteCall.prototype = /**@lends SBIS3.CONTROLS/ImportCustomizer/RemoteCall.prototype*/ {
+      RemoteCall.prototype = /**@lends SBIS3.CONTROLS/Utils/ImportExport/RemoteCall.prototype*/ {
          /**
           * Вызвать метод удалённого сервиса
           *

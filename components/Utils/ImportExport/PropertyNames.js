@@ -2,9 +2,9 @@
  * Вспомогательный класс для изменения имён свойсв (простых) объектов
  *
  * @public
- * @class SBIS3.CONTROLS/ImportCustomizer/PropertyNames
+ * @class SBIS3.CONTROLS/Utils/ImportExport/PropertyNames
  */
-define('SBIS3.CONTROLS/ImportCustomizer/PropertyNames',
+define('SBIS3.CONTROLS/Utils/ImportExport/PropertyNames',
    [
    ],
 
