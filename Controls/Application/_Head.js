@@ -18,9 +18,9 @@ define('Controls/Application/_Head',
             var def = context.headData.waitAppContent();
             var self = this;
             var innerDef = new Deferred();
-            self.cssLinks = options.cssLinks || [];
+            self.cssLinks = [];
             def.addCallback(function(res) {
-               self.cssLinks = self.cssLinks.concat(res.cssLinks);
+               self.cssLinks = res.cssLinks;
                self.errorState = res.errorState;
                innerDef.callback(self.cssLinks);
                return res;

@@ -19,9 +19,9 @@ define('Controls/Application/_JsLinks',
             var def = context.headData.waitAppContent();
             var self = this;
             var innerDef = new Deferred();
-            self.jsLinks = options.jsLinks || [];
+            self.jsLinks = [];
             def.addCallback(function onLoad(res) {
-               self.jsLinks = self.jsLinks.concat(res.jsLinks);
+               self.jsLinks = res.jsLinks;
                innerDef.callback(self.jsLinks);
                return res;
             });
