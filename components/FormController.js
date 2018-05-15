@@ -206,7 +206,7 @@ function(cContext, coreClone, cMerge, CommandDispatcher, EventBus, Deferred, IoC
          // у панели может быть задан parent и getTopParent вернет не то что надо
          this._panel = this.findParent(function(parent) {
             return cInstance.instanceOfMixin(parent, 'Lib/Mixins/LikeWindowMixin');
-         }) || this.getTopParent();
+         }) || this._options._compoundArea || this.getTopParent();
          this._initHandlers();
          this._subscribeToEvents();
 
@@ -445,6 +445,7 @@ function(cContext, coreClone, cMerge, CommandDispatcher, EventBus, Deferred, IoC
        * Показывает индикатор загрузки
        */
       _showLoadingIndicator: forAliveOnly(function(message) {
+//todo поправить LoadingIndicator
          cIndicator.setMessage(message || this._options.indicatorSavingMessage, true);
       }),
 
