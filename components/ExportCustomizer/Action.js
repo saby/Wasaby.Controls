@@ -54,15 +54,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
        */
 
       /**
-       * @typedef {object} ^^^ExportResults Тип, содержащий информацию о результате редактирования
-       * @property {string} MethodName Имя списочного метода, результат раболты которого будет сохранён в эксель-файл
-       * @property {WS.Data/Entity/Record} [Filter] Параметры фильтрации для списочного метода (опционально)
-       * @property {WS.Data/Entity/Record} [Pagination] Навигация для списочного метода (опционально)
-       * @property {string} [HierarchyField] Название поля иерархии (опционально)
-       * @property {string} FileName Название результирующего эксель-файла
-       * @property {Array<string>} Fields Список полей для колонок в экспортируемом файле
-       * @property {Array<string>} Titles Список отображаемых названий колонок в экспортируемом файле
-       * @property {string} TemplateId Uuid шаблона форматирования эксель-файла
+       * @typedef {object} ExportResults Тип, содержащий информацию о результате редактирования
+       * @property {Array<string>} fieldIds Список полей для колонок в экспортируемом файле
+       * @property {Array<string>} columnTitles Список отображаемых названий колонок в экспортируемом файле
+       * @property {string} fileUuid Uuid шаблона форматирования эксель-файла
+       * @property {ExportServiceParams} serviceParams Прочие параметры, необходимых для работы БЛ
        */
 
       var ExportCustomizerAction = Action.extend([], /**@lends SBIS3.CONTROLS/ExportCustomizer/Action.prototype*/ {
