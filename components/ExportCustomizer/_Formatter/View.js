@@ -300,6 +300,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           */
          destroy: function () {
             this._updatePreviewClear();
+            View.superclass.destroy.apply(this, arguments);
          }
       });
 
