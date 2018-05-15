@@ -93,8 +93,7 @@ define('Controls/Application',
             if (!receivedState) {
                receivedState = {};
             }
-            self.application = cfg.application;
-            this._headData.pushDepComponent(self.application);
+            self.application = (context.AppData ? context.AppData.application : cfg.application);
             self.wsRoot = receivedState.wsRoot || (context.AppData ? context.AppData.wsRoot : cfg.wsRoot);
             self.resourceRoot = receivedState.resourceRoot || (context.AppData ? context.AppData.resourceRoot : cfg.resourceRoot);
             self.BodyClasses = BodyClasses;
