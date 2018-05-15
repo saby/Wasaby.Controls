@@ -4,76 +4,76 @@
 
 define('SBIS3.CONTROLS/ListView',
    [
-   'SBIS3.CONTROLS/Utils/ConfigByClasses',
-   'Core/core-merge',
-   'Core/core-clone',
-   'Core/helpers/Function/shallowClone',
-   'Core/CommandDispatcher',
-   'Core/constants',
-   'Core/Deferred',
-   'Core/IoC',
-   'Core/helpers/String/format',
-   'Lib/Control/CompoundControl/CompoundControl',
-   'Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager',
-   'SBIS3.CONTROLS/Mixins/ItemsControlMixin',
-   'SBIS3.CONTROLS/Mixins/MultiSelectable',
-   'WS.Data/Query/Query',
-   'WS.Data/Entity/Record',
-   'SBIS3.CONTROLS/Mixins/Selectable',
-   'SBIS3.CONTROLS/Mixins/DataBindMixin',
-   'SBIS3.CONTROLS/Mixins/DecorableMixin',
-   'SBIS3.CONTROLS/Mixins/DragNDropMixin',
-   'SBIS3.CONTROLS/Mixins/FormWidgetMixin',
-   'Lib/Mixins/BreakClickBySelectMixin',
-   'SBIS3.CONTROLS/ListView/resources/ItemsToolbar/ItemsToolbar',
-   'tmpl!SBIS3.CONTROLS/ListView/ListView',
-   'SBIS3.CONTROLS/Utils/TemplateUtil',
-   'SBIS3.CONTROLS/ListView/resources/CommonHandlers',
-   'SBIS3.CONTROLS/Utils/ImitateEvents',
-   'Lib/LayoutManager/LayoutManager',
-   'Core/helpers/Hcontrol/configStorage',
-   'SBIS3.CONTROLS/Utils/ScrollWatcher',
-   'WS.Data/Collection/IBind',
-   'tmpl!SBIS3.CONTROLS/ListView/resources/ListViewGroupBy',
-   'tmpl!SBIS3.CONTROLS/ListView/resources/ItemTemplate',
-   'tmpl!SBIS3.CONTROLS/ListView/resources/ItemContentTemplate',
-   'tmpl!SBIS3.CONTROLS/ListView/resources/GroupTemplate',
-   'browser!SBIS3.CONTROLS/Utils/InformationPopupManager',
-   'SBIS3.CONTROLS/Paging',
-   'SBIS3.CONTROLS/ComponentBinder',
-   'WS.Data/Di',
-   'Controls/Utils/ArraySimpleValuesUtil',
-   'Core/core-instance',
-   'Core/LocalStorageNative',
-   'Core/helpers/Function/forAliveDeferred',
-   'Core/helpers/Function/memoize',
-   'Core/helpers/Hcontrol/isElementVisible',
-   'SBIS3.CONTROLS/Utils/Contains',
-   'SBIS3.CONTROLS/Controllers/CursorListNavigation',
-   'WS.Data/Source/SbisService',
-   'Core/detection',
-   'SBIS3.CONTROLS/ListView/resources/Mover',
-   'Core/helpers/Function/throttle',
-   'Core/helpers/Object/isEmpty',
-   'Core/Sanitize',
-   'Core/WindowManager',
-   'SBIS3.CONTROLS/ListView/resources/VirtualScrollController',
-   'SBIS3.CONTROLS/ListView/resources/DragMove/DragMove',
-   'Core/helpers/Function/once',
+      'SBIS3.CONTROLS/Utils/ConfigByClasses',
+      'Core/core-merge',
+      'Core/core-clone',
+      'Core/helpers/Function/shallowClone',
+      'Core/CommandDispatcher',
+      'Core/constants',
+      'Core/Deferred',
+      'Core/IoC',
+      'Core/helpers/String/format',
+      'Lib/Control/CompoundControl/CompoundControl',
+      'Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager',
+      'SBIS3.CONTROLS/Mixins/ItemsControlMixin',
+      'SBIS3.CONTROLS/Mixins/MultiSelectable',
+      'WS.Data/Query/Query',
+      'WS.Data/Entity/Record',
+      'SBIS3.CONTROLS/Mixins/Selectable',
+      'SBIS3.CONTROLS/Mixins/DataBindMixin',
+      'SBIS3.CONTROLS/Mixins/DecorableMixin',
+      'SBIS3.CONTROLS/Mixins/DragNDropMixin',
+      'SBIS3.CONTROLS/Mixins/FormWidgetMixin',
+      'Lib/Mixins/BreakClickBySelectMixin',
+      'SBIS3.CONTROLS/ListView/resources/ItemsToolbar/ItemsToolbar',
+      'tmpl!SBIS3.CONTROLS/ListView/ListView',
+      'SBIS3.CONTROLS/Utils/TemplateUtil',
+      'SBIS3.CONTROLS/ListView/resources/CommonHandlers',
+      'SBIS3.CONTROLS/Utils/ImitateEvents',
+      'Lib/LayoutManager/LayoutManager',
+      'Core/helpers/Hcontrol/configStorage',
+      'SBIS3.CONTROLS/Utils/ScrollWatcher',
+      'WS.Data/Collection/IBind',
+      'tmpl!SBIS3.CONTROLS/ListView/resources/ListViewGroupBy',
+      'tmpl!SBIS3.CONTROLS/ListView/resources/ItemTemplate',
+      'tmpl!SBIS3.CONTROLS/ListView/resources/ItemContentTemplate',
+      'tmpl!SBIS3.CONTROLS/ListView/resources/GroupTemplate',
+      'browser!SBIS3.CONTROLS/Utils/InformationPopupManager',
+      'SBIS3.CONTROLS/Paging',
+      'SBIS3.CONTROLS/ComponentBinder',
+      'WS.Data/Di',
+      'Controls/Utils/ArraySimpleValuesUtil',
+      'Core/core-instance',
+      'Core/LocalStorageNative',
+      'Core/helpers/Function/forAliveDeferred',
+      'Core/helpers/Function/memoize',
+      'Core/helpers/Hcontrol/isElementVisible',
+      'SBIS3.CONTROLS/Utils/Contains',
+      'SBIS3.CONTROLS/Controllers/CursorListNavigation',
+      'WS.Data/Source/SbisService',
+      'Core/detection',
+      'SBIS3.CONTROLS/ListView/resources/Mover',
+      'Core/helpers/Function/throttle',
+      'Core/helpers/Object/isEmpty',
+      'Core/Sanitize',
+      'Core/WindowManager',
+      'SBIS3.CONTROLS/ListView/resources/VirtualScrollController',
+      'SBIS3.CONTROLS/ListView/resources/DragMove/DragMove',
+      'Core/helpers/Function/once',
+      'WS.Data/Collection/RecordSet',
    'SBIS3.CONTROLS/Link',
-   'browser!SBIS3.CONTROLS/ListView/resources/SwipeHandlers',
-   'WS.Data/Collection/RecordSet',
-   'i18n!SBIS3.CONTROLS/ListView',
-   'WS.Data/MoveStrategy/Base',
-   'css!SBIS3.CONTROLS/ListView/ListView',
-   'css!SBIS3.CONTROLS/ListView/resources/ItemActionsGroup/ItemActionsGroup'
-],
-   function (ConfigByClasses, cMerge, shallowClone, coreClone, CommandDispatcher, constants, Deferred, IoC, format, CompoundControl, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
-    Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
-    TemplateUtil, CommonHandlers, ImitateEvents, LayoutManager, configStorage,
-    ScrollWatcher, IBindCollection, groupByTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
-    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, cInstance, LocalStorageNative, forAliveOnly, memoize, isElementVisible, contains, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove, once) {
-     'use strict';
+      'browser!SBIS3.CONTROLS/ListView/resources/SwipeHandlers',
+      'i18n!SBIS3.CONTROLS/ListView',
+      'WS.Data/MoveStrategy/Base',
+      'css!SBIS3.CONTROLS/ListView/ListView',
+      'css!SBIS3.CONTROLS/ListView/resources/ItemActionsGroup/ItemActionsGroup'
+   ],
+   function(ConfigByClasses, cMerge, shallowClone, coreClone, CommandDispatcher, constants, Deferred, IoC, format, CompoundControl, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
+      Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn,
+      TemplateUtil, CommonHandlers, ImitateEvents, LayoutManager, configStorage,
+      ScrollWatcher, IBindCollection, groupByTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
+      Paging, ComponentBinder, Di, ArraySimpleValuesUtil, cInstance, LocalStorageNative, forAliveOnly, memoize, isElementVisible, contains, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove, once, RecordSet) {
+      'use strict';
 
       var
          buildTplArgsLV = function(cfg) {
@@ -1070,6 +1070,7 @@ define('SBIS3.CONTROLS/ListView',
                this._listNavigation.analyzeResponseParams(this.getItems());
             }
             ListView.superclass.init.call(this);
+            this._container.on('keyup', this._keyUpHandler.bind(this));
             this._initLoadMoreButton();
          },
 
@@ -1344,7 +1345,7 @@ define('SBIS3.CONTROLS/ListView',
                pagingZIndex: this._pagingZIndex
             });
             // Создаем пейджинг скрытым если включено сохранение позиции при reload, но сам пейджинг выключен
-            // Так как для сохранения страницы все равно нужекн рассчет страниц скролла
+            // Так как для сохранения страницы все равно нужекн расчет страниц скролла
             var hiddenPager = !this._options.scrollPaging && this._options.saveReloadPosition;
             this._scrollBinder.bindScrollPaging(this._scrollPager, hiddenPager);
 
@@ -1394,6 +1395,16 @@ define('SBIS3.CONTROLS/ListView',
                this._scrollPager.getContainer().css('right', right);
             }
          },
+         _keyUpHandler: function(e) {
+            var
+               selectedKey = this.getSelectedKey();
+            if (e.which === constants.key.enter) {
+               if (selectedKey !== undefined && selectedKey !== null) {
+                  var selectedItem = $("[data-id='" + selectedKey + "']", this._getItemsContainer());
+                  this._elemClickHandler(selectedKey, this.getItems().getRecordById(selectedKey), selectedItem.get(0), e);
+               }
+            }
+         },
          _keyboardHover: function (e) {
             var
                selectedKeys,
@@ -1407,12 +1418,6 @@ define('SBIS3.CONTROLS/ListView',
                   break;
                case constants.key.down:
                   newSelectedItem = this._getNextItemByDOM(selectedKey);
-                  break;
-               case constants.key.enter:
-                  if(selectedKey !== undefined && selectedKey !== null) {
-                     var selectedItem = $("[data-id='" + selectedKey + "']", this._getItemsContainer());
-                     this._elemClickHandler(selectedKey, this.getItems().getRecordById(selectedKey), selectedItem.get(0), e);
-                  }
                   break;
                case constants.key.space:
                   newSelectedItem = this._getNextItemByDOM(selectedKey);
@@ -1734,10 +1739,10 @@ define('SBIS3.CONTROLS/ListView',
          _getElementData: function(target) {
             if (target.length){
                var cont = this._container[0],
-                   targetKey = target[0].getAttribute('data-id'),
-                   item = this.getItems() ? this.getItems().getRecordById(targetKey) : undefined,
-                   projItem = this._options._itemsProjection ? this._options._itemsProjection.getItemBySourceItem(item) : null,
-                   correctTarget = target.hasClass('controls-editInPlace') && projItem ? this._getDomElementByItem(projItem) : target;
+                  targetKey = target[0].getAttribute('data-id'),
+                  targetHash = target[0].getAttribute('data-hash'),item = this.getItems() ? this.getItems().getRecordById(targetKey) : undefined,
+                  projItem = this._options._itemsProjection ? this._options._itemsProjection.getItemBySourceItem(item) : null,
+                  correctTarget = target.hasClass('controls-editInPlace') && projItem ? this._getDomElementByItem(projItem) : target;
 
                //В некоторых версиях 11 IE не успевает рассчитаться ширина узла, вследствие чего correctTarget.offsetWidth == 0
                //Это вызывает неправильное позиционирование тулбара
@@ -1751,14 +1756,13 @@ define('SBIS3.CONTROLS/ListView',
                   container: correctTarget,
                   get position() {
                      // если контейнера нет в DOM'e, то getBoundingClientRect в IE вызовет ошибку
-                      var fakeTarget = {
-                              top: 0,
-                              left: 0
-                          },
-                          containerCords =  cont.getBoundingClientRect(),
-                          targetCords = cDetection.isIE10 && !correctTarget.width() ? fakeTarget: correctTarget[0].getBoundingClientRect();
-
-                      return {
+                     var fakeTarget = {
+                           top: 0,
+                           left: 0
+                        },
+                        containerCords =  cont.getBoundingClientRect(),
+                        targetCords = cDetection.isIE10 && !correctTarget.width() ? fakeTarget: correctTarget[0].getBoundingClientRect();
+                  return {
                         /* При расчётах координат по вертикали учитываем прокрутку
                          * округлять нельзя т.к. в IE координаты дробные и из-за этого происходит смещение "операций над записью"
                          */
@@ -1770,6 +1774,7 @@ define('SBIS3.CONTROLS/ListView',
                   },
                   get size() {
                      var targetSizes = correctTarget[0].getBoundingClientRect();
+
                      return {
                          height: targetSizes.height,
                          width: targetSizes.width
@@ -2194,21 +2199,17 @@ define('SBIS3.CONTROLS/ListView',
           * </pre>
           */
          reload: function (filter, sorting, offset, limit, deepReload, resetPosition) {
-            if (this._scrollBinder && this._options.saveReloadPosition){
-               var reloadOffset = this._getReloadOffset();
-               this._offset = reloadOffset;
-               this._scrollOffset.top = reloadOffset;
-               this._scrollOffset.bottom = reloadOffset;
-               if (reloadOffset > 0) {
-                  this.setInfiniteScroll('both', true);
+            // todo Если возникнет желание поддержать опциюsaveReloadPositionв плоском списке, то делать это здесь
+            
+            if (offset === 0) {
+               this._lastPageLoaded = false;
+               this._scrollOffset.top = offset;
+               this._scrollOffset.bottom = offset;
+
+               if (this._options.infiniteScroll === 'down') {
+                   this._setInfiniteScrollState('down');
                }
             }
-            
-            if (offset === 0 && this._options.infiniteScroll === 'down') {
-               this._lastPageLoaded = false;
-               this._setInfiniteScrollState('down');
-            }
-
             // Reset virtual scrolling if it's enabled
             if (this._options.virtualScrolling && this._virtualScrollController) {
                this._virtualScrollController.disableScrollHandler(true);
@@ -2523,9 +2524,6 @@ define('SBIS3.CONTROLS/ListView',
             this._headIsChanged = true;
             this._redrawResults();
             ListView.superclass.redraw.apply(this, arguments);
-            if (this._options.saveReloadPosition) {
-               this._getScrollWatcher().scrollTo(0);
-            }
          },
 
          _getEditInPlace: function() {
@@ -3463,7 +3461,9 @@ define('SBIS3.CONTROLS/ListView',
                infiniteScroll = this._getOption('infiniteScroll'),
                loadType;
 
-            if (scrollOnEdge && this.getItems()) {
+            /* Не меняем состояние скрола, пока идёт загрузка данных,
+               иначе ломаются проверки в callback'e загрузки данных по скролу. */
+            if (scrollOnEdge && this.getItems() && !this.isLoading()) {
                // Досткролили вверх, но на самом деле подгружаем данные как обычно, а рисуем вверх
                if (type == 'top' && this._infiniteScrollState.reverse) {
                   this._setInfiniteScrollState('down');
@@ -3611,17 +3611,13 @@ define('SBIS3.CONTROLS/ListView',
       
                //перезагрузка с сохранением страницы может произойти на нулевой странице
                //TODO: Должен быть один сценарий, для этого нужно, что бы оффсеты всегда считались и обновлялись до запроса
-               if (this._options.saveReloadPosition) {
-                  hasNextPage = this._scrollOffset.top >= 0;
+               if (direction === 'before') {
+                  // А подгрузка вверх должна остановиться на нулевой странице и не запрашивать больше
+                  hasNextPage = this._scrollOffset.top > 0;
+               } else if (this._lastPageLoaded && direction === 'after') {
+                  hasNextPage = offset < this._scrollOffset.bottom;
                } else {
-                  if (direction === 'before') {
-                     // А подгрузка вверх должна остановиться на нулевой странице и не запрашивать больше
-                     hasNextPage = this._scrollOffset.top > 0;
-                  } else if (this._lastPageLoaded && direction === 'after') {
-                     hasNextPage = offset < this._scrollOffset.bottom;
-                  } else {
-                     hasNextPage = ListView.superclass._hasNextPage.apply(this, arguments);
-                  }
+                  hasNextPage = ListView.superclass._hasNextPage.apply(this, arguments);
                }
                return hasNextPage;
             } else {
@@ -3752,7 +3748,7 @@ define('SBIS3.CONTROLS/ListView',
             return this._getItemsProjection().getCount();
          },
 
-         _updateScrollOffset: function(){ 
+         _updateScrollOffset: function(){
             if (this._infiniteScrollState.mode === 'down' || this._infiniteScrollState.mode == 'demand') {
                //Если навигация по оффсетам, сдвиг произойдет в _onCollectionAddMoveRemove по общему механизму
                if (this._getSourceNavigationType() !== 'Offset') {
@@ -4230,6 +4226,9 @@ define('SBIS3.CONTROLS/ListView',
                this._updatePaging();
             }
          },
+         _prepareAdditionalFilterForCursor: function(filter, direction) {
+            return this._listNavigation.prepareQueryParams(this._getItemsProjection(), direction);
+         },
          _getQueryForCall: function(filter, sorting, offset, limit, direction){
             var
                query = new Query(),
@@ -4240,7 +4239,7 @@ define('SBIS3.CONTROLS/ListView',
                this._dataSource.setOptions(options);
 
                queryFilter = coreClone(filter);
-               var addParams = this._listNavigation.prepareQueryParams(this._getItemsProjection(), direction);
+               var addParams = this._prepareAdditionalFilterForCursor(filter, direction);
                cMerge(queryFilter, addParams.filter);
             }
             /*TODO перенос события для курсоров глубже, делаю под ифом, чтоб не сломать текущий функционал*/
@@ -4640,6 +4639,8 @@ define('SBIS3.CONTROLS/ListView',
                clearTimeout(this._loadingIndicatorTimer);
                this._loadingIndicatorTimer = undefined;
             }
+
+            this._container.off('keyup');
 
             ListView.superclass.destroy.call(this);
             if (this._hasDragMove()) {

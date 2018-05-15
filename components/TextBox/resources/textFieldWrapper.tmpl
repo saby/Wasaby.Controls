@@ -1,7 +1,7 @@
 <input
 	class="controls-InputRender__field controls-TextBox__field js-controls-TextBox__field{{textTransform === 'uppercase' ? ' controls-TextBox__field-uppercase'}}{{textTransform === 'lowercase' ? ' controls-TextBox__field-lowercase'}}"
 	type="{{type || 'text'}}"
-	autocomplete="off"
+	autocomplete="{{autocomplete ? 'off' : 'new-password'}}"
 	value="{{text}}"
 	maxlength="{{maxLength ? maxLength}}"
 	required="true"

@@ -2,14 +2,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
    [
       'Core/Control',
       'tmpl!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
-      'Core/Deferred',
       'Core/moduleStubs',
-      'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
-      'css!Controls/Popup/Templates/Stack/StackTemplate'
+      'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea'
    ],
    function(Control,
       template,
-      Deferred,
       moduleStubs) {
       /**
        * Слой совместимости для открытия старых шаблонов в новых попапах

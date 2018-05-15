@@ -78,11 +78,12 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
           */
 
          /**
-          * @event change Происходит при измении настраиваемые значения компонента
-          * @param {Core/EventObject} evtName Дескриптор события
-          * @param {object} values Настраиваемые значения компонента:
-          * @param {object} values.mapping Перечень соответствий идентификатор поля - индекс колонки
-          * @param {number} values.skippedRows Количество пропускаемых строк в начале
+          * @typedef {object} ExportColumnBindingResult Тип, описывающий возвращаемые настраиваемые значения компонента
+          * @property {object} mapping Перечень соответствий идентификатор поля - индекс колонки
+          * @property {number} skippedRows Количество пропускаемых строк в начале
+          *
+          * @see mapping
+          * @see skippedRows
           */
 
          _dotTplFn: dotTplFn,
@@ -445,7 +446,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
           * Получить все настраиваемые значения компонента
           *
           * @public
-          * @return {object}
+          * @return {ExportColumnBindingResult}
           */
          getValues: function () {
             var options = this._options;

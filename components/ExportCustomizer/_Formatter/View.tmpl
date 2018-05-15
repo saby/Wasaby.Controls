@@ -1,0 +1,25 @@
+<div class="controls-ExportCustomizer-Formatter-View">
+   <div class="controls-ExportCustomizer-Formatter-View__head">
+      <div class="controls-ExportCustomizer-Formatter-View__title">
+         <ws:if data="{{title}}">{{title}}</ws:if><ws:else>{[НастройщикЭкспорта@@Формат отображения]}</ws:else>
+      </div>
+      <SBIS3.CONTROLS:WSControls:Buttons:MenuButton
+         class="controls-ExportCustomizer-Formatter-View__formatterMenu"
+         name="controls-ExportCustomizer-Formatter-View__formatterMenu"
+         caption="{{menuTitle}}"
+         tooltip="{[НастройщикЭкспорта@@Редактировать формат отображения]}"
+         icon="sprite:icon-16 icon-Edit icon-primary"
+         pickerClassName=""
+         items="{{_menuItems}}"
+         idProperty="id"
+         displayProperty="title"
+         handlers="{{undefined}}"
+      />
+   </div>
+   <div
+      class="controls-ExportCustomizer-Formatter-View__preview"
+      title="{[НастройщикЭкспорта@@Редактировать формат отображения в браузере]}"
+      >
+      <img />
+   </div>
+</div>

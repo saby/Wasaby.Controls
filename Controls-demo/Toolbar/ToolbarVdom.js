@@ -16,27 +16,27 @@ define('Controls-demo/Toolbar/ToolbarVdom', [
             {
                id: '1',
                showType: 2,
-               icon: 'icon-medium icon-Time',
+               icon: 'icon-Time',
                '@parent': false,
                parent: null
             },
             {
                id: '3',
-               icon: 'icon-24 icon-Print',
+               icon: 'icon-Print',
                title: 'Распечатать',
                '@parent': false,
                parent: null
             },
             {
                id: '4',
-               icon: 'icon-medium icon-Linked',
+               icon: 'icon-Linked',
                title: 'Связанные документы',
                '@parent': true,
                parent: null
             },
             {
                id: '5',
-               icon: ' icon-medium icon-Link',
+               icon: 'icon-Link',
                title: 'Скопировать в буфер',
                '@parent': false,
                parent: null
@@ -79,12 +79,12 @@ define('Controls-demo/Toolbar/ToolbarVdom', [
             {
                id: '1',
                showType: 2,
-               icon: 'icon-medium icon-Time'
+               icon: 'icon-Time'
             },
             {
                id: '2',
                showType: 2,
-               icon: 'icon-medium icon-Linked',
+               icon: 'icon-Linked',
                title: 'Связанные документы',
                myTemplate: 'tmpl!Controls-demo/Toolbar/resources/itemTemplate'
             },

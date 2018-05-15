@@ -1,0 +1,42 @@
+
+@margin_ExportCustomizer-Formatter-View-head: 0 0 12px 0;
+@padding_ExportCustomizer-Formatter-View-title: 0 12px;
+@font-size_ExportCustomizer-Formatter-View-title: 15px;
+@color_ExportCustomizer-Formatter-View-title: #313E78;
+@margin_ExportCustomizer-Formatter-View-formatterMenu: 0 12px 0 0 ;
+@color_ExportCustomizer-Formatter-View-formatterMenu: #0055BB;
+
+.controls-ExportCustomizer-Formatter-View__head {
+   .flexbox();
+   .flex-direction(row);
+   .align-items(center);
+   margin: @margin_ExportCustomizer-Formatter-View-head;
+}
+
+.controls-ExportCustomizer-Formatter-View__title {
+   display: inline-block;
+   .flex-grow(1);
+   padding: @padding_ExportCustomizer-Formatter-View-title;
+   font-size: @font-size_ExportCustomizer-Formatter-View-title;
+   font-weight: bold;
+   color: @color_ExportCustomizer-Formatter-View-title;
+}
+
+.controls-ExportCustomizer-Formatter-View__formatterMenu {
+   .flex-shrink(0);
+   margin: @margin_ExportCustomizer-Formatter-View-formatterMenu;
+   color: @color_ExportCustomizer-Formatter-View-formatterMenu;
+}
+
+.controls-ExportCustomizer-Formatter-View__formatterMenu .controls-Button__text:hover {
+   text-decoration: underline;
+}
+
+.controls-ExportCustomizer-Formatter-View__preview {
+   min-height: 150px;
+   cursor: pointer;
+}
+
+.controls-ExportCustomizer-Formatter-View__preview img {
+   width: 100%;
+}

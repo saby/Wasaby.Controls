@@ -1,4 +1,6 @@
-.controls-Path {
+@min-width_BackButton_short: @min-width_BreadCrumbs-text + @width-BackButton_size-default + @spacing-BackButton-between-icon-text;
+
+.controls-Path__wrapper {
    display: flex;
    align-items: baseline;
    white-space: nowrap;
@@ -9,6 +11,24 @@
    position: relative;
 }
 
+.controls-Path__backButton__wrapper {
+   position: relative;
+   display: inline-flex;
+   align-items: baseline;
+}
+
+.controls-Path__backButtonArrow {
+   .icon(@font-size_Path-backButtonArrow);
+   position: absolute;
+   align-self: center;
+   background-color: @background-color_Path-backButtonArrow;
+   right: 0;
+}
+
+.controls-Path__backButtonArrow_outsideBackButton {
+   margin-right: -@font-size_Path-backButtonArrow;
+}
+
 .controls-Path__breadCrumbs {
    flex-grow: 1;
    overflow: hidden;
@@ -16,13 +36,8 @@
 
 .controls-Path__backButton_short {
    flex-shrink: 1;
-   min-width: 48px; //TODO: 36px минимальная ширина текста + 12px ширина иконки
-}
-
-.controls-Path__backButton_half,
-.controls-Path__backButton_short {
-   //TODO: нужно переписывать кнопку назад, сейчас она не умеет обрезаться многоточием
-   .text-overflow();
+   min-width: @min-width_BackButton_short;
+   overflow: hidden;
 }
 
 .controls-Path__backButton_half,
@@ -30,4 +45,16 @@
    width: 50%;
    flex-shrink: 1;
    overflow: hidden;
+}
+
+.ws-is-no-touch {
+   .controls-Path__backButtonArrow:hover {
+      color: @color_Path-backButtonArrow_hovered;
+   }
+}
+
+//Класс сделан только для удобства замеров
+.controls-Path__backButtonMeasurer {
+   font-family: @font-family_BreadCrumbs, "Courier New";
+   font-weight: @font-weight_Back;
 }

@@ -2,6 +2,7 @@ define('Controls/Path', [
    'Core/Control',
    'Controls/Utils/BreadCrumbsUtil',
    'Controls/List/resources/utils/ItemsUtil',
+   'Controls/Utils/FontLoadUtil',
    'tmpl!Controls/Path/Path',
    'tmpl!Controls/Button/BackButton/Back',
    'css!Controls/Path/Path'
@@ -9,6 +10,7 @@ define('Controls/Path', [
    Control,
    BreadCrumbsUtil,
    ItemsUtil,
+   FontLoadUtil,
    template,
    backButtonTemplate
 ) {
@@ -53,6 +55,8 @@ define('Controls/Path', [
          } else {
             self._visibleItems = [];
             self._breadCrumbsItems = [];
+            self._backButtonClass = '';
+            self._breadCrumbsClass = '';
          }
       }
    };
@@ -69,8 +73,12 @@ define('Controls/Path', [
       _afterMount: function() {
          this._oldWidth = this._container.clientWidth;
          if (this._options.items && this._options.items.length > 0) {
-            _private.calculateItems(this, this._options.items);
-            this._forceUpdate();
+            FontLoadUtil.waitForFontLoad('controls-BreadCrumbsV__crumbMeasurer').addCallback(function() {
+               FontLoadUtil.waitForFontLoad('controls-Path__backButtonMeasurer').addCallback(function() {
+                  _private.calculateItems(this, this._options.items);
+                  this._forceUpdate();
+               }.bind(this));
+            }.bind(this));
          }
       },
 
@@ -91,6 +99,10 @@ define('Controls/Path', [
 
       _onResize: function() {
          //Пустой обработчик чисто ради того, чтобы при ресайзе запускалась перерисовка
+      },
+
+      _onArrowClick: function() {
+         this._notify('arrowActivated');
       }
    });
    return Path;

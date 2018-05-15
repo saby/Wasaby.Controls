@@ -98,23 +98,24 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptions
                     }
                 }
             },
+
+            _getLinkedContainer: function () {
+               var richTextArea = this.getParent();
+               var richTextAreaContainer = richTextArea.getContainer();
+               var srcollSelector = '.controls-ScrollContainer__content';
+               var srcollContainer = richTextAreaContainer.find(srcollSelector);
+               if (srcollContainer.length && srcollContainer[0].clientHeight < srcollContainer[0].scrollHeight) {
+                  return srcollContainer;
+               }
+               var srcollContainer = richTextAreaContainer.parent(srcollSelector);
+               return srcollContainer.length ? srcollContainer : richTextArea.getInputContainer();
+            },
+
             recalcPosition: function() {
                //todo: убрать при переходе на контекстное меню
                ImageOptionsPanel.superclass.recalcPosition.apply(this, arguments);
                this.updateTemplate();
-               var
-                  parent = this.getParent(),
-                  parentContainer = parent.getContainer(),
-                  srcollSelector = '.controls-ScrollContainer__content',
-                  srcollContainer = parentContainer.find(srcollSelector),
-                  linkedContainer;
-               if (srcollContainer.length) {
-                  linkedContainer = srcollContainer;
-               }
-               else {
-                  var srcollParent = parentContainer.parent(srcollSelector);
-                  linkedContainer = srcollParent.length ? srcollParent : parent.getInputContainer(); // всегда считаем  показ панели от поля ввода редактора
-               }
+               var linkedContainer = this._getLinkedContainer();
                var
                   inputOffset = linkedContainer.offset().top,
                   panelOffset = this._container.offset().top,

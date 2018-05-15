@@ -1,9 +1,11 @@
 <div class="controls-ToolBarV">
     <div class="controls-ToolBarV_content {{!_needShowMenu ? 'controls-ToolBarV_content__resetMargin'}}">
         <ws:for data="item in _items">
-            <ws:partial if="{{item.showType !== showType.MENU && !item[_parentProperty] && item[_parentProperty] !== 0}}"
-                        template="{{item[_options.itemTemplateProperty] || itemTemplate || _defaultItemTemplate}}"
-                        item="{{item}}"/>
+            <ws:if data="{{item.showType !== showType.MENU && !item[_parentProperty] && item[_parentProperty] !== 0}}">
+                <ws:partial template="{{item[_options.itemTemplateProperty] || itemTemplate || _defaultItemTemplate}}"
+                            item="{{item}}"
+                            size="{{_options.size}}"/>
+            </ws:if>
         </ws:for>
     <div if="{{_needShowMenu}}" class="controls-ToolBarV__menuOpen controls-ToolbarV_item__styled"  name="popupTarget" on:click="_showMenu()">
         <i class="icon-medium icon-ExpandDown"/>
@@ -17,6 +19,7 @@
                     keyProperty="{{_options.keyProperty}}"
                     parentProperty="{{_options.parentProperty}}"
                     nodeProperty="{{_options.nodeProperty}}"
+                    iconSize="{{_options.size}}"
                     showHeader="{{true}}">
                 <ws:headConfig menuStyle="cross" />
             </ws:templateOptions>

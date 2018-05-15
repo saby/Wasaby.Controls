@@ -70,7 +70,7 @@ class SourceContainer implements IContainer<ISource> {
      * @see File/LocalFileLink
      * @see File/HttpFileLink
      */
-    get(file: IResource): Deferred.<ISource> {
+    get(file: IResource): Deferred<ISource> {
         let source = this._get(file);
         return Deferred.success(
             source ||
@@ -96,6 +96,10 @@ class SourceContainer implements IContainer<ISource> {
         return wrapper && wrapper.source;
     }
     destroy() {
+        this._sourceWrappers.forEach((wrapper: SourceWrapper) => {
+            let source = wrapper.source;
+            source.destruct && source.destruct();
+        });
         this._sourceWrappers = [];
     }
 }

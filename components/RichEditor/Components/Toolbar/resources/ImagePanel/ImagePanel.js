@@ -3,12 +3,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/ImagePanel/ImageP
       'SBIS3.CONTROLS/CompoundControl',
       'SBIS3.CONTROLS/Mixins/PopupMixin',
       'Lib/Mixins/LikeWindowMixin',
-      'WS.Data/Di',
       'tmpl!SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/ImagePanel/ImagePanel',
       "Core/EventBus",
       'SBIS3.CONTROLS/RichEditor/Components/_ImageUploader',
       'css!SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/ImagePanel/ImagePanel'
-   ], function(CompoundControl, PopupMixin, LikeWindowMixin, Di, dotTplFn, EventBus) {
+   ], function(CompoundControl, PopupMixin, LikeWindowMixin, dotTplFn, EventBus) {
       'use strict';
 
       var

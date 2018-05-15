@@ -1,6 +1,10 @@
 <div attr:class="controls-DropdownList__row {{itemData.isSelected ? 'controls-DropdownList__selected'}} controls-DropdownList__item-right_{{itemData.hasChildren || hierarchyPadding ? 'hierarchy-padding': 'default-padding'}}"
      on:click="_itemClickHandler(itemData.item)" on:mouseenter="_itemMouseEnter(itemData.item, itemData.hasChildren)">
-   <div if="{{itemData.icon}}" class="controls-DropdownList__icon {{itemData.icon}}"></div>
+   {{debug()}}
+   <ws:if data="{{itemData.icon || (iconPadding[itemData.getPropValue(itemData.item, parentProperty)])[1]}}">
+      <div class="controls-DropdownList__icon {{(iconPadding[itemData.getPropValue(itemData.item, parentProperty)])[1]}} {{itemData.icon}}"></div>
+   </ws:if>
+
    <div class="controls-DropdownList__content">
       <ws:if data="{{contentTemplate}}">
          <ws:partial

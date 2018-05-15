@@ -352,7 +352,13 @@ define("File/Attach/Base", ["require", "exports", "Core/Abstract", "Core/core-si
         _chooseNotify: function (chooseDef) {
             var _this = this;
             var length;
-            return chooseDef.addCallbacks(function (files) {
+            return chooseDef.addCallback(function (files) {
+                // Нет смысла идти дальше, если набор пустой
+                if (!files.length) {
+                    return new Deferred().cancel();
+                }
+                return files;
+            }).addCallback(function (files) {
                 length = files.length;
                 var eventResults = files.map(function (file) {
                     var event = file instanceof Error ? 'onChooseError' : "onChosen";
@@ -362,14 +368,17 @@ define("File/Attach/Base", ["require", "exports", "Core/Abstract", "Core/core-si
                     steps: eventResults,
                     stopOnFirstError: false
                 }).done().getResult();
-            }, function (error) {
-                _this._notify('onChooseError', error);
-                return error;
             }).addCallback(function (results) {
                 // ParallelDeferred принимает на вход объект или массив, но возвращает всегда объект
                 // поэтому соберём обратно в массив
                 results.length = length;
                 return Array.prototype.slice.call(results).filter(function (res) { return !!res; });
+            }).addErrback(function (error) {
+                // Не зачем уведомлять о ошибке выбора, когда по факту была отмена
+                if (!error.canceled) {
+                    _this._notify('onChooseError', error);
+                }
+                return error;
             });
         },
         /**

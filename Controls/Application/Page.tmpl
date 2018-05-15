@@ -29,50 +29,53 @@
             <Controls.Event.Listener name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
                <Controls.Popup.Manager>
                   <Controls.Application.TouchDetector name="touchDetector">
-                     <body
-                        class="{{BodyClasses()}} {{_options.bodyClass}} {{_touchclass()}}"
-                        id="body"
-                        key="1_2_"
-                        on:scroll="_scrollPage()"
-                        on:resize="_resizePage()"
-                        on:mousemove="_mousemovePage()"
-                        on:mousedown="_mousedownPage()"
-                        on:mouseup="_mouseupPage()">
-                     <ws:if data="{{needArea}}">
-                        <div class="ws-focus-in"></div>
-                     </ws:if>
-                     <ws:if data="{{ content.content }}">
-                        <ws:partial template="{{ content.content }}" scope="{{ templateConfig }}"/>
-                     </ws:if>
-                     <Controls.Popup.Manager.Container attr:id="popup" eventHandler="{{content._managerEventHandler}}"/>
-                     <script key="config" type="text/javascript" src="{{wsRoot}}ext/requirejs/bundles.js"></script>
-                     <script key="require" type="text/javascript" src="/cdn/requirejs/2.3.5-p3/require-min.js"></script>
-                     <script key="contents" type="text/javascript" src="{{resourceRoot}}/contents.js"></script>
-                     <script key="config" type="text/javascript" src="{{wsRoot}}ext/requirejs/config.js"></script>
+                     <Controls.Container.DragNDrop name="dragNDropContainer">
+                        <body
+                           class="{{BodyClasses()}} {{_options.bodyClass}} {{_touchclass()}}"
+                           id="body"
+                           key="1_2_"
+                           on:scroll="_scrollPage()"
+                           on:resize="_resizePage()"
+                           on:mousemove="_mousemovePage()"
+                           on:mousedown="_mousedownPage()"
+                           on:mouseup="_mouseupPage()">
+                        <ws:if data="{{needArea}}">
+                           <div class="ws-focus-in"></div>
+                        </ws:if>
+                        <ws:if data="{{ content.content }}">
+                           <ws:partial template="{{ content.content }}" scope="{{ templateConfig }}"/>
+                        </ws:if>
+                        <Controls.Popup.Manager.Container attr:id="popup" eventHandler="{{content._managerEventHandler}}"/>
+                        
+                        <script key="bundles" type="text/javascript" src="{{wsRoot}}ext/requirejs/bundles.js"></script>
+                        <script key="require" type="text/javascript" src="/cdn/requirejs/2.3.5-p3/require-min.js"></script>
+                        <script key="contents" type="text/javascript" src="{{resourceRoot}}/contents.js"></script>
+                        <script key="config" type="text/javascript" src="{{wsRoot}}ext/requirejs/config.js"></script>
 
 
-                     <ws:if data="{{_options.builder && _options.builderCompatible}}">
-                        <ws:partial template="tmpl!Controls/Application/builderRunnerCompatible"
-                                    _options="{{_options}}"/>
-                     </ws:if>
-                     <ws:if data="{{_options.builder && !_options.builderCompatible}}">
-                        <ws:partial template="tmpl!Controls/Application/builderRunner"
-                                    _options="{{_options}}"/>
-                     </ws:if>
-                     <ws:else data="{{!_options.builderCompatible}}">
-                        <div>
-                           <ws:partial template="tmpl!Controls/Application/startApplicationScript" compat="{{compat}}"
-                                       jsLinks="{{jsLinks}}"
+                        <ws:if data="{{_options.builder && _options.builderCompatible}}">
+                           <ws:partial template="tmpl!Controls/Application/builderRunnerCompatible"
                                        _options="{{_options}}"/>
+                        </ws:if>
+                        <ws:if data="{{_options.builder && !_options.builderCompatible}}">
+                           <ws:partial template="tmpl!Controls/Application/builderRunner"
+                                       _options="{{_options}}"/>
+                        </ws:if>
+                        <ws:else data="{{!_options.builderCompatible}}">
+                           <div>
+                              <ws:partial template="tmpl!Controls/Application/startApplicationScript" compat="{{compat}}"
+                                          jsLinks="{{jsLinks}}"
+                                          _options="{{_options}}"/>
 
-                           <ws:if data="{{ _options.scripts }}">
-                              <ws:for data="i in _options.scripts">
-                                 <ws:partial template="{{ i }}"/>
-                              </ws:for>
-                           </ws:if>
-                        </div>
-                     </ws:else>
-                     </body>
+                              <ws:if data="{{ _options.scripts }}">
+                                 <ws:for data="i in _options.scripts">
+                                    <ws:partial template="{{ i }}"/>
+                                 </ws:for>
+                              </ws:if>
+                           </div>
+                        </ws:else>
+                        </body>
+                     </Controls.Container.DragNDrop>
                   </Controls.Application.TouchDetector>
                </Controls.Popup.Manager>
             </Controls.Event.Listener>

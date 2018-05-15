@@ -309,6 +309,9 @@ define('SBIS3.CONTROLS/Mixins/TreeViewMixin', [
             if (property === 'expanded') {
                this._onChangeItemExpanded(item);
             }
+            if (item.isNode && item.isNode()) {
+               this._createFolderFooter(item);
+            }
          }
       },
 

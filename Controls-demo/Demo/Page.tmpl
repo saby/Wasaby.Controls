@@ -9,6 +9,6 @@
       </div>
       <link rel="stylesheet" type="text/css" id="controlsThemeStyle" href="{{_theme}}.css"/>
       <Controls.Button if="{{componentName !== 'Controls-demo/Index'}}" attr:id="Back" caption="Назад" style="linkMain" icon="icon-16 icon-DayBackward icon-primary" on:click="backClickHdl()" />
-      <ws:partial attr:id="newListView" template="{{componentName}}" />
+      <ws:partial attr:id="newListView" attr:class="ControlsDemo-Page_content" template="{{componentName}}" />
    </div>
 </ws:partial>

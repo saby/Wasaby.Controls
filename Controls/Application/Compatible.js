@@ -21,6 +21,11 @@ define('Controls/Application/Compatible', [
       _template: template,
       _wasPatched: false,
       _beforeMount: function() {
+         try {
+            /*TODO: set to presentation service*/
+            process.domain.req.compatible = true;
+         } catch (e) {
+         }
          var rightsInitialized = new Deferred();
          this._forceUpdate = function() {
             return;

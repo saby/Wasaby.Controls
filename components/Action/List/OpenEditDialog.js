@@ -682,7 +682,7 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
             isFormController: true,
             handlers: {
                onAfterClose: function (e, meta) {
-                  self._notifyOnExecuted(meta, this._record);
+                  self._notifyOnExecuted(meta);
                   self._clearVariables();
                },
                //При множественном клике панель может начать закрываться раньше, чем откроется, в этом случае
@@ -690,6 +690,11 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
                onDestroy: self._clearVariables.bind(self)
             }
          });
+      },
+
+      _notifyOnExecuted: function(meta) {
+         var record = this._dialog && this._dialog._record;
+         OpenEditDialog.superclass._notifyOnExecuted.call(this, meta, record);
       },
 
       _clearVariables: function() {

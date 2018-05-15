@@ -77,6 +77,8 @@
 }
 
 .controls-DropdownList__arrow {
+   .inline-flexbox();
+   .align-items(center);
    position: absolute;
    right: @right_DropdownList-icon;
    font-family: @default-icon-small-font !important;
@@ -99,7 +101,7 @@
    font-family: @default-icon-medium-font;
    right: 0;
    top: 0;
-   z-index: 1;
+   z-index: 2;
 }
 
 .controls-MenuButton-header {
@@ -113,7 +115,7 @@
    .flexbox();
    .justify-content(center);
    .align-items(center);
-   z-index: 1;
+   z-index: 2;
 }
 
 .control-MenuButton-duplicate-head_medium {

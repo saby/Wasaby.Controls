@@ -6,6 +6,7 @@
             <Controls.Container.Input.Search>
                 <Controls.Input.resources.InputRender.InputRender
                         name="suggestText"
+                        autocomplete="{{autocomplete ? 'off' : 'new-password'}}"
                         size="{{ _options.size }}"
                         viewModel="{{_simpleViewModel}}"
                         trim="{{_options.trim}}"

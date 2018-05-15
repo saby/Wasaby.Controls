@@ -20,11 +20,18 @@ define('Controls/Toolbar', [
     * @mixes Controls/Button/interface/IIcon
     * @mixes Controls/interface/ITooltip
     * @mixes Controls/interface/ISource
+    * @mixes Controls/List/interface/IHierarchy
     * @control
     * @public
     * @category Toolbar
     * @namespace Controls
     * @author Крайнов Д.
+    */
+
+   /**
+    * @name Controls/Button#size
+    * @cfg {String} Size of the Toolbar.
+    * @variant m Button has medium size.
     */
 
    var _private = {
@@ -38,13 +45,14 @@ define('Controls/Toolbar', [
             instance._items = items;
             instance._menuItems = self.getMenuItems(instance._items);
             instance._needShowMenu = instance._menuItems && instance._menuItems.getCount();
+            return items;
          });
       },
 
       getMenuItems: function(items) {
          return tUtil.getMenuItems(items).value(recordSetFactory, {
             adapter: items.getAdapter(),
-            idProperty: items.keyProperty
+            idProperty: items.getIdProperty()
          });
       }
    };
@@ -102,7 +110,8 @@ define('Controls/Toolbar', [
       _showMenu: function() {
          var config = {
             templateOptions: {
-               items: this._menuItems
+               items: this._menuItems,
+               iconSize: this._options.size
             },
             target: this._children.popupTarget
          };
@@ -116,6 +125,12 @@ define('Controls/Toolbar', [
          }
       }
    });
+
+   Toolbar.getDefaultOptions = function() {
+      return {
+         size: 'm'
+      };
+   };
 
    Toolbar._private = _private;
 

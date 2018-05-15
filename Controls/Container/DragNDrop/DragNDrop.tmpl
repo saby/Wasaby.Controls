@@ -1,0 +1,13 @@
+<Controls.Event.Listener name="dragMoveDetect" register="dragMove" attr:fixCompatible="1">
+   <Controls.Event.Listener name="dragEndDetect" register="dragEnd" attr:fixCompatible="1">
+      <ws:partial
+              template="{{_options.content}}"
+              scope="{{_options}}"
+              attr:class="controls-DragNDrop"
+              on:mousemove="_mouseMove()"
+              on:mouseup="_mouseUp()"
+              on:_startDragNDrop="_startDragNDrop()">
+      </ws:partial>
+   </Controls.Event.Listener>
+</Controls.Event.Listener>
+

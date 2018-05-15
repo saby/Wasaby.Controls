@@ -35,14 +35,12 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
           */
 
          /**
-          * @event change Происходит при измении настраиваемые значения компонента
-          * @param {Core/EventObject} evtName Дескриптор события
-          * @param {object} values Настраиваемые значения компонента:
-          * @param {ImportTargetFields} [values.fields]  Полный список полей (опционально)
-          * @param {function(object|WS.Data/Entity/Record):ImportSimpleItem} [values.fieldFilter] Фильтр полей (опционально)
-          * @param {string} [values.fieldProperty] Имя специального ключевого свойства (опционально)
-          * @param {object} [values.variants] Набор вариантов сопоставления (опционально)
-          * @param {object} [values.mapping] Перечень соответствий специальный ключ поля - идентификатор варианта (опционально)
+          * @typedef {object} ExportMapperResult Тип, описывающий возвращаемые настраиваемые значения компонента
+          * @property {ImportTargetFields} [fields]  Полный список полей (опционально)
+          * @property {function(object|WS.Data/Entity/Record):ImportSimpleItem} [fieldFilter] Фильтр полей (опционально)
+          * @property {string} [fieldProperty] Имя специального ключевого свойства (опционально)
+          * @property {object} [variants] Набор вариантов сопоставления (опционально)
+          * @property {object} [mapping] Перечень соответствий специальный ключ поля - идентификатор варианта (опционально)
           *
           * @see fields
           * @see fieldFilter
@@ -225,22 +223,15 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
             }
             var options = this._options;
             var fieldsBefore = !!options.fields;
+            var waited = {fields:true, fieldFilter:false, fieldProperty:false, variants:true, mapping:true};
             var has = {};
             for (var name in values) {
-               switch (name) {
-                  case 'fields':
-                  case 'fieldFilter':
-                  case 'fieldProperty':
-                  case 'variants':
-                  case 'mapping':
-                     break;
-                  default:
-                     continue;
-               }
-               var value = values[name];
-               if (name === 'fieldFilter' || name === 'fieldProperty' ? value !== options[name] : !cObjectIsEqual(value, options[name])) {
-                  has[name] = true;
-                  options[name] = value;
+               if (name in waited) {
+                  var value = values[name];
+                  if (waited[name] ? !cObjectIsEqual(value, options[name]) : value !== options[name]) {
+                     has[name] = true;
+                     options[name] = value;
+                  }
                }
             }
             if (has.fields || has.fieldFilter || has.fieldProperty || has.variants || has.mapping) {
@@ -256,7 +247,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Mapper/View',
           * Получить все настраиваемые значения компонента
           *
           * @public
-          * @return {object}
+          * @return {ExportMapperResult}
           */
          getValues: function () {
             var options = this._options;

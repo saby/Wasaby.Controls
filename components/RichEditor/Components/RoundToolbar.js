@@ -6,12 +6,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RoundToolbar', [
    'SBIS3.CONTROLS/RichEditor/Components/ToolbarBase',
    'tmpl!SBIS3.CONTROLS/RichEditor/Components/RoundToolbar/RichEditorRoundToolbar',
    'SBIS3.CONTROLS/RichEditor/Components/RoundToolbar/resources/config',
-   'WS.Data/Di',
    'SBIS3.CONTROLS/Menu/MenuIcon',
    'SBIS3.CONTROLS/Button/IconButton',
    'css!SBIS3.CONTROLS/RichEditor/Components/RoundToolbar/RichEditorRoundToolbar',
    'SBIS3.CONTROLS/Button/IconButton'
-], function(RichEditorToolbarBase, dotTplFn, defaultConfig, Di) {
+], function(RichEditorToolbarBase, dotTplFn, defaultConfig) {
 
    'use strict';
    var

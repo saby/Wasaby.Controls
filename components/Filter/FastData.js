@@ -246,7 +246,7 @@ define('SBIS3.CONTROLS/Filter/FastData',
          _getValueFromStructure: function (instance) {
             var fsObject = this._filterStructure[this._getFilterSctructureItemIndex(instance.getContainer().attr('data-id'))],
                hasValue = fsObject.hasOwnProperty('value') && fsObject.value !== undefined;
-            return hasValue ? (fsObject.value instanceof Array ? fsObject.value : [fsObject.value]) : [instance.getDefaultId()];
+            return hasValue ? (instance._options.multiselect && fsObject.value instanceof Array ? fsObject.value : [fsObject.value]) : [instance.getDefaultId()];
          },
 
          _setSelectedKeyByFilterStructure: function (instance, value) {
@@ -267,7 +267,7 @@ define('SBIS3.CONTROLS/Filter/FastData',
             }
             //Проверки на текущем наборе данных недостаточно, multiSelectable может пойти на БЛ за записью с указанным ключом.
             //todo Нужно рассмотреть возможность отказаться от этого поведения, выписал задачу в 230 https://inside.tensor.ru/opendoc.html?guid=a40189c0-f472-46cf-bd3c-44e641d3ebb9&des=
-            if (instance.getDataSource() && newKeys[0] !== null){
+            if (instance.getDataSource() && newKeys.length && newKeys[0] !== null){
                instance.getDataSource().read(newKeys[0]).addCallbacks(
                   function () {
                      def.callback(newKeys);

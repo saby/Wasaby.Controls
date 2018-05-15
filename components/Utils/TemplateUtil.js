@@ -2,7 +2,7 @@
  * Created by am.gerasimov on 19.01.2016.
  */
 //Приходится пока что реквайрить dot, потому что очень многие задают шаблоны стркоами
-define('SBIS3.CONTROLS/Utils/TemplateUtil', ['Core/js-template-doT'], function() {
+define('SBIS3.CONTROLS/Utils/TemplateUtil', ['Core/js-template-doT', 'View/Runner/requireHelper', 'require'], function(doT, requireHelper, requirejs) {
 
     /**
      * @class SBIS3.CONTROLS/Utils/TemplateUtil
@@ -32,9 +32,17 @@ define('SBIS3.CONTROLS/Utils/TemplateUtil', ['Core/js-template-doT'], function()
 
          switch (typeof tpl) {
             case 'string' :
-               template = tpl.indexOf('html!') === 0 || tpl.indexOf('tmpl!') === 0 || global.requirejs.defined(tpl)?
-                   global.requirejs(tpl) :
-                   doT.template(tpl);
+               if (tpl.indexOf('html!') === 0 || tpl.indexOf('tmpl!') === 0) {
+                  template = requirejs(tpl);
+               } else if (requireHelper.defined(tpl)) {
+                  template = requirejs(tpl);
+               } else if (tpl.indexOf('{{') === -1 && tpl.indexOf('{[') === -1) {
+                  // хак для ускорения работы, делаем проверку, что строка - безопасна и в ней не лежит текст или название шаблона,
+                  // и ее не надо никак обрабатывать - ни строить функцию, ни пытаться искать шаблон
+                  template = function () {return tpl};
+               } else {
+                  template = doT.template(tpl);
+               }
                break;
             case 'function' :
                template = tpl;

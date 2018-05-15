@@ -25,6 +25,14 @@
   white-space: nowrap;
   overflow: hidden;
   .baseline-fix();
+  //На момент вставки в форматном поле могу образоваться p и br
+  //они могут растягивать поле и ломать базовую линию
+  //скрываем их пока идёт вставка текста
+  &.controls-InputRender__field_pasteProcessing {
+    p,br {
+      display: none;
+    }
+  }
 }
 
 .ws-is-firefox {

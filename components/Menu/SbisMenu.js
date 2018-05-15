@@ -118,7 +118,7 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
 
       show: function() {
          var self = this;
-         if (!this._historyDeferred || !historyUtil.isEqualHistory(self._options.historyId, this._getHistoryController().getHistoryDataSet())) {
+         if (this._needToReloadData()) {
             this._getHistoryController().initRecordSet();
             this._historyDeferred = this._getHistoryController().getUnionIndexesList(self).addCallback(function(data) {
                self._getHistoryController().parseHistoryData(data); // считывает данные
@@ -166,6 +166,13 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
          cfg.groupSeparator = item.get('groupSeparator');
 
          return SbisMenu.superclass._getItemConfig.apply(this, arguments);
+      },
+
+      _needToReloadData: function() {
+         // если ещё не было запроса
+         // если запрос отработал, то можно проверить с локальными т.к. данные пришли и есть с чем проверять
+         return !this._historyDeferred ||
+         (this._historyDeferred.isReady() && !historyUtil.isEqualHistory(this._options.historyId, this._getHistoryController().getHistoryDataSet()));
       },
 
       _itemActivatedHandler: function(id, event) {

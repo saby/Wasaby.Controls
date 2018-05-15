@@ -373,6 +373,25 @@ define('SBIS3.CONTROLS/TextArea', [
          modifyHeightClasses(this._inputField.get(0), hClasses, this._options.size);
       },
 
+      /**
+       * Метод установки максимального количества строк.
+       * @param count Количество строк, больше которого высота не увеличивается.
+       * @example
+       * <pre>
+       *     if (textArea.getText().length > 300) {
+        *        textArea.setMaxLinesCount(7);
+        *     }
+       * </pre>
+       * @see maxLinesCount
+       */
+      setMaxLinesCount: function(count) {
+         var cnt = parseInt(count, 10);
+         this._options.maxLinesCount = cnt;
+         this._inputField.trigger('autosize.resize');
+         var hClasses = generateClassesName(this._options.maxLinesCount, cnt, this._options.size);
+         modifyHeightClasses(this._inputField.get(0), hClasses, this._options.size);
+      },
+
       _drawText: function(text) {
          if (this._inputField.val() != text) {
             this._inputField.val(text || '');

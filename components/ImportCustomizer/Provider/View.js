@@ -27,12 +27,14 @@ define('SBIS3.CONTROLS/ImportCustomizer/Provider/View',
           */
 
          /**
-          * @event change Происходит при измении настраиваемые значения компонента
-          * @param {Core/EventObject} evtName Дескриптор события
-          * @param {object} values Настраиваемые значения компонента:
-          * @param {string} values.parser Имя(идентификатор) выбранного провайдера парсинга импортируемых данных
-          * @param {number} values.skippedRows Количество пропускаемых строк в начале
-          * @param {string} values.separator Символы-разделители
+          * @typedef {object} ExportProviderResult Тип, описывающий возвращаемые настраиваемые значения компонента
+          * @property {string} parser Имя(идентификатор) выбранного провайдера парсинга импортируемых данных
+          * @property {number} skippedRows Количество пропускаемых строк в начале
+          * @property {string} separator Символы-разделители
+          *
+          * @see parser
+          * @see skippedRows
+          * @see separator
           */
 
          _dotTplFn: dotTplFn,
@@ -110,13 +112,13 @@ define('SBIS3.CONTROLS/ImportCustomizer/Provider/View',
             if (!values || typeof values !== 'object') {
                throw new Error('Object required');
             }
-            var names = ['parser', 'skippedRows', 'separator'];
-            var has = {};
             var options = this._options;
+            var waited = {parser:false, skippedRows:false, separator:false};
+            var has = {};
             for (var name in values) {
-               if (names.indexOf(name) !== -1) {
+               if (name in waited) {
                   var value = values[name];
-                  if (options[name] !== value) {
+                  if (waited[name] ? !cObjectIsEqual(value, options[name]) : value !== options[name]) {
                      has[name] = true;
                      options[name] = value;
                   }
@@ -141,7 +143,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Provider/View',
           * Получить все настраиваемые значения компонента
           *
           * @public
-          * @return {object}
+          * @return {ExportProviderResult}
           */
          getValues: function () {
             var options = this._options;

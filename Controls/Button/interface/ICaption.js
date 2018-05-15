@@ -2,14 +2,15 @@ define('Controls/Button/interface/ICaption', [
 ], function() {
 
    /**
-    * Интерфейс работы кнопок
+    * Button caption interface.
+    *
     * @mixin Controls/Button/interface/ICaption
     * @public
     */
 
    /**
     * @name Controls/Button/interface/ICaption#caption
-    * @cfg {String} Заголовок
+    * @cfg {String} Button text.
     */
 
 });

@@ -5,6 +5,8 @@ const helpers = require('./helpers'),
    path = require('path'),
    humanize = require('humanize'),
    less = require('less'),
+   postcss = require('postcss'),
+   autoprefixer = require('autoprefixer'),
    getModuleNameRegExp = new RegExp('\/resources\/([^/]+)'),
    DEFAULT_THEME = 'online',
    themes = ['online'];
@@ -73,12 +75,15 @@ module.exports = function less1by1Task(grunt) {
          let newName = `${path.dirname(filePath)}/${path.basename(filePath, '.less')}${suffix}.css`;
 
          if (output) {
-            fs.writeFile(newName, output.css, function writeFileCb(writeFileError) {
-               if (writeFileError) {
-                  errors.push(`\n\n Не могу записать файл. Ошибка: ${writeFileError.message}.`);
-               }
-
-               // grunt.log.ok(`file ${filePath} successfuly compiled. Theme: ${theme}`);
+            const postcssOptions = {
+               from: null //глушу warning postcss про генерацию source map. Все равно локально они нам не нужны
+            };
+            postcss([autoprefixer({ browsers: ['last 2 versions', 'ie>=10'] })]).process(output.css, postcssOptions).then(postcssOutput => {
+               fs.writeFile(newName, postcssOutput.css, function writeFileCb(writeFileError) {
+                  if (writeFileError) {
+                     errors.push(`\n\n Не могу записать файл. Ошибка: ${writeFileError.message}.`);
+                  }
+               });
             });
          }
       });

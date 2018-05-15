@@ -1,12 +1,22 @@
+@min-width_BreadCrumbs_withOverflow: @font-size_BreadCrumbs-arrow + @min-width_BreadCrumbs-text;
+
 .controls-BreadCrumbsV {
    white-space: nowrap;
+}
+
+.controls-BreadCrumbsV__wrapper {
+   display: flex;
+   align-items: baseline;
+   overflow: hidden;
+   width: 100%;
 }
 
 .controls-BreadCrumbsV__items {
    display: inline-flex;
    align-items: center;
-   height: 24px;
-   max-width: calc(100% ~'-' @bread-crumb-home-font-size + 4px); //TODO: не 4px, а отступ у домика
+   overflow: hidden;
+   height: @height_BreadCrumbs-items;
+   width: 100%;
 }
 
 .controls-BreadCrumbsV__crumb {
@@ -18,7 +28,6 @@
 
 .controls-BreadCrumbsV__titleWrapper {
    flex-shrink: 0;
-   color: #0055BB;
    cursor: pointer;
    position: relative;
    overflow: hidden;
@@ -27,25 +36,21 @@
 
 .controls-BreadCrumbsV__title {
    .text-overflow();
+   color: @color_BreadCrumbs-title;
 }
 
 .controls-BreadCrumbsV__crumb_withOverflow {
    flex-shrink: 1;
-   min-width: 52px; //TODO: ширина стрелки и текста
+   min-width: @min-width_BreadCrumbs_withOverflow;
 }
 
 .controls-BreadCrumbsV__titleWrapper_withOverflow {
    flex-shrink: 1;
-   min-width: 36px;
-}
-
-.controls-BreadCrumbsV__title:hover {
-   color: #313E78;
-   text-decoration: underline;
+   min-width: @min-width_BreadCrumbs-text;
 }
 
 .controls-BreadCrumbsV__arrow {
-   .icon-size-without-important(@bread-crumb-home-font-size);
+   .icon(@font-size_BreadCrumbs-arrow);
    cursor: pointer;
 }
 
@@ -58,21 +63,25 @@
 }
 
 .controls-BreadCrumbsV__home {
-   .icon-size-without-important(@bread-crumb-home-font-size);
+   .icon(@font-size_BreadCrumbs-home);
    cursor: pointer;
-   padding-right: 4px;
-}
-
-.controls-BreadCrumbsV__home:hover {
-   color: @bread-crumb-title-hover-color;
+   padding-right: @spacing_BreadCrumbs-between-home-and-crumbs;
 }
 
 .controls-BreadCrumbsV__title_min {
-   min-width: 36px;
+   //класс существует только для удобства замеров
+   min-width: @min-width_BreadCrumbs-text;
+}
+
+.controls-BreadCrumbsController__menu {
+   max-width: @max-width_BreadCrumbs-menu;
 }
 
 .controls-BreadCrumbsV__menuItem {
+   .baseline-fix();
    display: inline-flex;
+   align-items: center;
+   height: @height_BreadCrumbs-menuItem;
 }
 
 .controls-BreadCrumbsV__menuTitle {
@@ -85,11 +94,26 @@
 .controls-BreadCrumbsV__indentation {
    display: inline-flex;
    flex-shrink: 0;
-   height: 13px;
-   width: 14px;
+   height: @height_BreadCrumbs-corner;
+   width: @width_BreadCrumbs-corner;
    &:last-of-type {
-      background: @bread-crumbs-hier-wrapper-bg no-repeat;
-      position: relative;
-      top: -4px;
+      background: @background_BreadCrumbs-corner no-repeat;
+      align-self: flex-start;
    }
+}
+
+.ws-is-no-touch {
+   .controls-BreadCrumbsV__title:hover {
+      color: @color_BreadCrumbs-title_hovered;
+      text-decoration: underline;
+   }
+
+   .controls-BreadCrumbsV__home:hover {
+      color: @bread-crumb-title-hover-color;
+   }
+}
+
+//Класс сделан только для удобства замеров
+.controls-BreadCrumbsV__crumbMeasurer {
+   font-family: @font-family_BreadCrumbs, "Courier New";
 }
