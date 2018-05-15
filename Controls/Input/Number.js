@@ -22,7 +22,7 @@ define('Controls/Input/Number', [
       trimEmptyDecimals: function(self) {
          if (!self._options.showEmptyDecimals) {
             var
-               processedVal = self._numberViewModel.getValue().replace(/\.?0*$/g, '');
+               processedVal = self._numberViewModel.getValue().replace(/\.0*$/g, '');
             self._numberViewModel.updateValue(processedVal);
          }
       }
