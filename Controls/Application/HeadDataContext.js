@@ -22,6 +22,7 @@ define('Controls/Application/HeadDataContext', [
                   self.jsLinks = files.js;
                   self.cssLinks = files.css;
                }
+
                // self.defRender.callback({
                //    jsLinks: components,
                //    cssLinks: components,
