@@ -10,7 +10,7 @@ define('Controls/Application',
       'Core/compatibility',
       'Controls/Application/TouchDetector',
       'Controls/Application/AppData',
-      'Controls/Async/HeadDataContext',
+      'Controls/Application/HeadDataContext',
       'Core/ConsoleLogger'
    ],
 
@@ -86,7 +86,7 @@ define('Controls/Application',
             var self = this,
                def = new Deferred();
 
-            this._headData = new HeadDataContext();
+            this._headData = new HeadDataContext(cfg.theme);
             self.appDef = new Deferred();
             _private.initState(self, receivedState || cfg);
             self.content = cfg.content;
@@ -99,12 +99,6 @@ define('Controls/Application',
             self.resourceRoot = receivedState.resourceRoot || (context.AppData ? context.AppData.resourceRoot : cfg.resourceRoot);
             self.jsLinks = (context.AppData ? context.AppData.jsLinks : cfg.jsLinks);
             self.BodyClasses = BodyClasses;
-
-            this._headData.push(self.appDef);
-            self.appDef.callback({
-               jsLinks: self.jsLinks,
-               cssLinks: self.cssLinks
-            });
 
             /**
              * Этот перфоманс нужен, для сохранения состояния с сервера, то есть, cfg - это конфиг, который нам прийдет из файла

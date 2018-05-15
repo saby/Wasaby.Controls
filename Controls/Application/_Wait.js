@@ -1,14 +1,12 @@
-define('Controls/Async/Wait',
+define('Controls/Application/_Wait',
    [
       'Core/Control',
       'Core/Deferred',
-      'tmpl!Controls/Async/Wait'
+      'Controls/Async/HeadDataContext',
+      'tmpl!Controls/Application/_Wait'
    ],
 
-   /**
-    *
-    */
-   function(Base, Deferred, template) {
+   function(Base, Deferred, HeadDataContext, template) {
       'use strict';
 
       var Page = Base.extend({
@@ -30,12 +28,16 @@ define('Controls/Async/Wait',
          _beforeMount: function(options, context) {
             var def = new Deferred();
             this.waitDef = def;
-            if (typeof window === 'undefined') {
-               context.headData.push(def);
+            if(typeof window === 'undefined') {
+               context.headData.pushWaiterDeferred(this.waitDef);
             }
-
          }
       });
+      Page.contextTypes = function() {
+         return {
+            headData: HeadDataContext
+         };
+      }
       return Page;
    }
 );

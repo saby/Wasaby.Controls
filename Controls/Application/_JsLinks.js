@@ -1,9 +1,9 @@
-define('Controls/JsLinks/JsLinks',
+define('Controls/Application/_JsLinks',
    [
       'Core/Control',
       'Core/Deferred',
-      'tmpl!Controls/JsLinks/JsLinks',
-      'Controls/Async/HeadDataContext'
+      'tmpl!Controls/Application/_JsLinks',
+      'Controls/Application/HeadDataContext'
    ],
 
    function(Base, Deferred, template, HeadDataContext) {
@@ -16,13 +16,14 @@ define('Controls/JsLinks/JsLinks',
                this.jsLinks = receivedState;
                return;
             }
-            var def = context.headData.waitForAllAsync();
+            var def = context.headData.waitAppContent();
             var self = this;
             var innerDef = new Deferred();
             self.jsLinks = [];
             def.addCallback(function onLoad(res) {
-               self.jsLinks = self.jsLinks.concat(res.jsLinks);
+               self.jsLinks = res.jsLinks;
                innerDef.callback(self.jsLinks);
+               return res;
             });
             return innerDef;
          }

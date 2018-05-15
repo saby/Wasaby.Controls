@@ -1,0 +1,24 @@
+<head key="1_1_">
+   <script key="ws-config">
+      window.wsConfig = {
+         wsRoot: '{{_options.wsRoot}}',
+         resourceRoot: '{{_options.resourceRoot}}',
+         compatible: {{_options.compat}}
+      };
+   </script>
+   <ws:if data="{{ _options.head }}">
+      <ws:for data="i in _options.head">
+         <ws:partial template="{{ i }}"/>
+      </ws:for>
+   </ws:if>
+   <link rel="stylesheet" href="{{_options.wsRoot}}css/core.css" type="text/css" key="core-css"/>
+   <ws:if data="{{ cssLinks }}">
+      <ws:for data="index, value in cssLinks">
+         <link rel="stylesheet" href="{{ value }}" type="text/css" key="{{ 'css_' + index }}"/>
+      </ws:for>
+   </ws:if>
+   <title key="title">{{ _options.title }}</title>
+   <meta name="viewport" content="width=device-width, initial-scale=1"/>
+   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+   {{ errorState }}
+</head>

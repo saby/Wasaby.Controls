@@ -1,12 +1,12 @@
 <html attr:lang="ru" attr:xml:lang="ru" attr:xmlns="http://www.w3.org/1999/xhtml" attr:key="1_" attr:id="root"
       attr:component="Controls/Application">
-<Controls.Head.Head
+<Controls.Application._Head
    wsRoot="{{ wsRoot }}"
    resourceRoot="{{ resourceRoot }}"
    compat="{{ compat }}"
    head="{{ _options.head }}"
    title="{{ title }}">
-</Controls.Head.Head>
+</Controls.Application._Head>
 <Controls.Event.Listener name="scrollDetect" register="scroll" attr:fixCompatible="1">
    <Controls.Event.Listener name="resizeDetect" register="resize" attr:fixCompatible="1">
       <Controls.Event.Listener name="mousemoveDetect" register="mousemove" attr:fixCompatible="1">
@@ -28,9 +28,9 @@
                            <div class="ws-focus-in"></div>
                         </ws:if>
                         <ws:if data="{{ content.content }}">
-                           <Controls.Async.Wait>
+                           <Controls.Application._Wait>
                               <ws:partial template="{{ content.content }}" scope="{{ templateConfig }}"/>
-                           </Controls.Async.Wait>
+                           </Controls.Application._Wait>
                         </ws:if>
                         <Controls.Popup.Manager.Container attr:id="popup" eventHandler="{{content._managerEventHandler}}"/>
                         
@@ -50,7 +50,7 @@
                         </ws:if>
                         <ws:else data="{{!_options.builderCompatible}}">
                            <div>
-                              <Controls.JsLinks.JsLinks/>
+                              <Controls.Application._JsLinks/>
                               <ws:if data="{{ _options.scripts }}">
                                  <ws:for data="i in _options.scripts">
                                     <ws:partial template="{{ i }}"/>
