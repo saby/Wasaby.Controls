@@ -983,9 +983,7 @@ define('SBIS3.CONTROLS/ListView',
             _inScrollContainerControl: false,
             _allowMouseMoveEvent: true,
             _loadingIndicatorTimer: undefined, // Таймаут отображения крутилки в индикаторе загрузки
-            _horisontalDragNDrop: false,
-            _cashRowsSizes: null,
-            _needToRecalcRowsSizes: false
+            _horisontalDragNDrop: false
          },
 
          $constructor: function () {
@@ -1355,7 +1353,6 @@ define('SBIS3.CONTROLS/ListView',
             if (this.isVisible() && itemActions && itemActions.isItemActionsMenuVisible()){
                itemActions.hide();
             }
-            this._needToRecalcRowsSizes = true;
             if (this._virtualScrollController) {
                var scrollbarDragging = false;
                try {
@@ -1724,17 +1721,7 @@ define('SBIS3.CONTROLS/ListView',
                   targetKey = target[0].getAttribute('data-id'),
                   targetHash = target[0].getAttribute('data-hash'),item = this.getItems() ? this.getItems().getRecordById(targetKey) : undefined,
                   projItem = this._options._itemsProjection ? this._options._itemsProjection.getItemBySourceItem(item) : null,
-                  correctTarget = target.hasClass('controls-editInPlace') && projItem ? this._getDomElementByItem(projItem) : target,
-                  targetClientRect;
-
-               // если механизм вставки операций в строку отключен, то будет брать размеры строк из кеша
-               if (!this._options.itemsActionsInItemContainer) {
-                  if (this._needToRecalcRowsSizes || !this._cashRowsSizes) {
-                     this._cashRowsSizes = this.getRowsSize();
-                     this._needToRecalcRowsSizes = false;
-                  }
-                  targetClientRect = this._cashRowsSizes.getRecordById(targetHash);
-               }
+                  correctTarget = target.hasClass('controls-editInPlace') && projItem ? this._getDomElementByItem(projItem) : target;
 
                //В некоторых версиях 11 IE не успевает рассчитаться ширина узла, вследствие чего correctTarget.offsetWidth == 0
                //Это вызывает неправильное позиционирование тулбара
@@ -1753,17 +1740,8 @@ define('SBIS3.CONTROLS/ListView',
                            left: 0
                         },
                         containerCords =  cont.getBoundingClientRect(),
-                        targetCords ;
-
-                     if(cDetection.isIE10 && !correctTarget.width()) {
-                        targetCords = fakeTarget;
-                     } else {
-                        if (targetClientRect) {
-                           targetCords = targetClientRect.get('data');
-                        } else {
-                           targetCords = correctTarget[0].getBoundingClientRect();
-                        }
-                     }return {
+                        targetCords = cDetection.isIE10 && !correctTarget.width() ? fakeTarget: correctTarget[0].getBoundingClientRect();
+                  return {
                         /* При расчётах координат по вертикали учитываем прокрутку
                          * округлять нельзя т.к. в IE координаты дробные и из-за этого происходит смещение "операций над записью"
                          */
@@ -1774,13 +1752,7 @@ define('SBIS3.CONTROLS/ListView',
                   set position(value) {
                   },
                   get size() {
-                     var targetSizes;
-
-                     if (targetClientRect) {
-                        targetSizes = targetClientRect.get('data');
-                     } else {
-                        targetSizes = correctTarget[0].getBoundingClientRect();
-                     }
+                     var targetSizes = correctTarget[0].getBoundingClientRect();
 
                      return {
                          height: targetSizes.height,
@@ -2191,9 +2163,14 @@ define('SBIS3.CONTROLS/ListView',
          reload: function (filter, sorting, offset, limit, deepReload, resetPosition) {
             // todo Если возникнет желание поддержать опциюsaveReloadPositionв плоском списке, то делать это здесь
             
-            if (offset === 0 && this._options.infiniteScroll === 'down') {
+            if (offset === 0) {
                this._lastPageLoaded = false;
-               this._setInfiniteScrollState('down');
+               this._scrollOffset.top = offset;
+               this._scrollOffset.bottom = offset;
+
+               if (this._options.infiniteScroll === 'down') {
+                   this._setInfiniteScrollState('down');
+               }
             }
             // Reset virtual scrolling if it's enabled
             if (this._options.virtualScrolling && this._virtualScrollController) {
@@ -3180,22 +3157,6 @@ define('SBIS3.CONTROLS/ListView',
             // у ListView может повлиять только на некоторых парентов
             this.sendCommand('resizeYourself');
             this._onResizeHandler();
-            this._needToRecalcRowsSizes = true;
-         },
-
-         getRowsSize: function() {
-            var rows = this._container.find('.controls-DataGridView__tbody > .controls-ListView__item');
-            var sizes = [];
-            for (var i = 0; i < rows.length; i++) {
-               sizes.push({
-                  id: rows[i].getAttribute('data-hash'),
-                  data: rows[i].getBoundingClientRect()
-               });
-            }
-            return new RecordSet({
-               rawData: sizes,
-               idProperty: 'id'
-            });
          },
 
          _drawItemsCallbackSync: function() {
@@ -3217,14 +3178,12 @@ define('SBIS3.CONTROLS/ListView',
                   this._virtualScrollShouldReset = false;
                }
             }
-            this._needToRecalcRowsSizes = true;
             this._updateHoveredItemAfterRedraw();
          },
          // TODO: скроллим вниз при первой загрузке, если пользователь никуда не скролил
          _onResizeHandler: function(){
             ListView.superclass._onResizeHandler.call(this);
             this._onResizeHandlerInner();
-            this._needToRecalcRowsSizes = true;
          },
 
          _onResizeHandlerInner: function(){
@@ -3463,7 +3422,9 @@ define('SBIS3.CONTROLS/ListView',
                infiniteScroll = this._getOption('infiniteScroll'),
                loadType;
 
-            if (scrollOnEdge && this.getItems()) {
+            /* Не меняем состояние скрола, пока идёт загрузка данных,
+               иначе ломаются проверки в callback'e загрузки данных по скролу. */
+            if (scrollOnEdge && this.getItems() && !this.isLoading()) {
                // Досткролили вверх, но на самом деле подгружаем данные как обычно, а рисуем вверх
                if (type == 'top' && this._infiniteScrollState.reverse) {
                   this._setInfiniteScrollState('down');

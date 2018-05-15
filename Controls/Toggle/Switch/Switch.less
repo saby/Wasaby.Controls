@@ -1,4 +1,4 @@
-.controls-Switch {
+.controls-Switch__wrapper {
    .inline-flexbox();
    .align-items(center);
    .justify-content(center);
@@ -90,13 +90,15 @@
    color: @color_Switch-text_disabled_unselected;
 }
 
-.ws-is-desktop-platform {
-   .controls-Switch__marker_enabled_checked:hover,
-   .controls-Switch__marker_enabled_unchecked:hover {
-      border-color: @border-color_Switch_marker_enabled_hover;
-   }
+.ws-is-no-touch {
+   .controls-Switch:hover {
+      .controls-Switch__marker_enabled_checked,
+      .controls-Switch__marker_enabled_unchecked {
+         border-color: @border-color_Switch_marker_enabled_hover;
+      }
 
-   .controls-Switch__text_enabled_unselected:hover {
-      text-decoration: underline;
+      .controls-Switch__text_enabled_unselected {
+         text-decoration: underline;
+      }
    }
 }

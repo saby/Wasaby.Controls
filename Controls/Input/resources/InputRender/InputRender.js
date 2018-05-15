@@ -5,10 +5,11 @@ define('Controls/Input/resources/InputRender/InputRender',
       /*'WS.Data/Type/descriptor',*/
       'tmpl!Controls/Input/resources/InputRender/InputRender',
       'Controls/Input/resources/RenderHelper',
+      'Core/detection',
 
       'css!Controls/Input/resources/InputRender/InputRender'
    ],
-   function(Control, /*types,*/ template, RenderHelper) {
+   function(Control, /*types,*/ template, RenderHelper, cDetection) {
 
       'use strict';
 
@@ -26,13 +27,14 @@ define('Controls/Input/resources/InputRender/InputRender',
 
          getSelection: function(self) {
             var
-               result = self._selection;
+               result = self._selection,
+               val = self._options.viewModel.getDisplayValue();
 
             //Если курсор ещё не был поставлен в поле, то поставим его в конец
             if (!result) {
                result = {
-                  selectionStart: self._options.value ? self._options.value.length : 0,
-                  selectionEnd: self._options.value ? self._options.value.length : 0
+                  selectionStart: val ? val.length : 0,
+                  selectionEnd: val ? val.length : 0
                };
             }
 
@@ -59,11 +61,6 @@ define('Controls/Input/resources/InputRender/InputRender',
       var InputRender = Control.extend({
          
          _template: template,
-
-         constructor: function(options) {
-            InputRender.superclass.constructor.apply(this, arguments);
-
-         },
 
          _inputHandler: function(e) {
             var
@@ -136,7 +133,14 @@ define('Controls/Input/resources/InputRender/InputRender',
 
          _focusinHandler: function(e) {
             if (this.isEnabled() && this._options.selectOnClick) {
-               e.target.select();
+               //In IE, the focus event happens earlier than the selection event, so we should use setTimeout
+               if (cDetection.isIE) {
+                  setTimeout(function() {
+                     e.target.select();
+                  });
+               } else {
+                  e.target.select();
+               }
             }
          },
 
@@ -157,7 +161,7 @@ define('Controls/Input/resources/InputRender/InputRender',
                   after: displayValue.slice(selectionEnd, displayValue.length)
                }, 'insert');
 
-            if (displayValue !== processedData.value) {
+            if (displayValue !== this._options.viewModel.getValue()) {
                this._notify('valueChanged', [this._options.viewModel.getValue()]);
             }
 

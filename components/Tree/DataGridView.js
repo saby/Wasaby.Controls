@@ -275,10 +275,11 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
               и таблица может вылезать за пределы контенера контрола. */
          if ((this._options.startScrollColumn || this.getContainer().hasClass('controls-DataGridView__tableLayout-auto')) && this._isSearchMode()){
             var breadCrumbs = this.getContainer().find('.controls-TreeView__searchBreadCrumbs'),
-                firstCol, firstColWidth, secondCol, cellPadding;
+                firstCol, firstColWidth, secondCol, cellPadding, firstRow;
             
             if(breadCrumbs.length) {
-               firstCol = $('td:first', this._getItemsContainer());
+               firstRow = $('.js-controls-ListView__item:not(".controls-editInPlace"):first', this._getItemsContainer());
+               firstCol = $('td:first', firstRow);
                firstColWidth = this._options.multiselect ? firstCol.outerWidth() : 0;
                secondCol = firstCol.next('td');
    
@@ -302,6 +303,16 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
             }.bind(this));
          }
          TreeDataGridView.superclass._drawItemsCallback.apply(this, arguments);
+      },
+   
+      _drawItemsCallbackSync: function() {
+         /* Если включен table-layout: auto,
+            то пересчёт размеров надо производить в синхронной фазе с отрисовкой,
+            инчае таблица будет скакать */
+         if (this._container.hasClass('controls-DataGridView__tableLayout-auto')) {
+            this._checkBreadCrumbsWidth();
+         }
+         TreeDataGridView.superclass._drawItemsCallbackSync.apply(this, arguments);
       },
 
       //Переопределяем метод, потому что в дереве могут присутствовать футеры папок, и если записи добавляются в конец,
@@ -696,7 +707,7 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
             if ($target.hasClass('js-controls-TreeView__editArrow') || $target.hasClass('js-controls-ListView__itemCheckBox')) {
                return false;
             } else if (data.get(this._options.nodeProperty)) {
-               if (this._options.saveReloadPosition) {
+               if (this._isCursorNavigation() && this._options.saveReloadPosition) {
                   delete this._hierPages[id];
                }
                this.setCurrentRoot(id);

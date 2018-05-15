@@ -75,7 +75,11 @@ define('Controls/Container/Scroll/Scrollbar',
              * @return {number} отношение высот отображения скрытого контента и самого скрытого контента.
              */
             calcScrollRatio: function(scrollbarHeight, scrollbarAvailableHeight, thumbHeight, contentHeight) {
-               return (scrollbarAvailableHeight - thumbHeight) / (contentHeight - scrollbarHeight);
+               /**
+                * If the content size is equal to the scrollbar size, then scrollRatio is not defined.
+                * Thats why, we consider it equal 1.
+                */
+               return (scrollbarAvailableHeight - thumbHeight) / (contentHeight - scrollbarHeight) || 1;
             },
 
             /**
