@@ -16,11 +16,16 @@
 .ws-window-title, .ws-float-area-title {
   color: #FFFFFF !important;;
 }
-//todo: Контролы на темном заголовке в светлой теме имеют нестандартные цвета. Разобраться с этим.
+//todo: Контролы на темном заголовке в светлой теме имеют нестандартные цвета. На данный момент нет средств что бы
+// можно было стилизовать контрол(сделать что бы он выглядел как темный в светлой теме).
+// Бедет делаться в рамках перехода на vdom.
 .controls-DateRangeBigChoose {
   .controls-InputRender {
     background-color: rgba(109, 141, 176, 0.005);
     color: #E4E4E4;
+  }
+  .controls-InputRender__field {
+    caret-color: #E4E4E4;
   }
   .controls-Text-InputRender_state_active {
     border-color: #6d8db0;
