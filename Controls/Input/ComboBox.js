@@ -39,18 +39,17 @@ define('Controls/Input/ComboBox',
             });
             return self._sourceController.load().addCallback(function(items) {
                self._items = items;
-               self._items.setIdProperty(self._options.keyProperty);
                return items;
             });
          },
 
          onResult: function(result) {
-            _private._selectItem.apply(this, result.data);
+            _private.selectItem.apply(this, result.data);
             this._children.DropdownOpener.close();
             this._isOpen = false;
          },
 
-         _selectItem: function(item) {
+         selectItem: function(item) {
             this._selectedKeys = getPropValue(item, this._options.keyProperty);
             this._notify('valueChanged', [getPropValue(item, this._options.displayProperty)]);
          }
@@ -71,8 +70,12 @@ define('Controls/Input/ComboBox',
             });
          },
 
-         _beforeMount: function(options) {
-            return _private.loadItems(this, options.items);
+         _beforeMount: function(options, context, recivedState) {
+            if (recivedState) {
+               this._items = recivedState;
+            } else if (options.items) {
+               return _private.loadItems(this, options.items);
+            }
          },
 
          _beforeUpdate: function() {
@@ -81,7 +84,7 @@ define('Controls/Input/ComboBox',
             });
          },
 
-         _dropdownOpenHandler: function() {
+         _open: function() {
             if (!this._isOpen) {
                this._isOpen = true;
                var config = {

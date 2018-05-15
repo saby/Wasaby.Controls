@@ -1,6 +1,6 @@
 <div class="controls-ComboBox"
      name="ComboBox"
-     on:mousedown="_dropdownOpenHandler()">
+     on:mousedown="_open()">
 
    <Controls.Input.resources.InputRender.InputRender
            value="{{_options.value}}"
@@ -10,8 +10,7 @@
            viewModel="{{_simpleViewModel}}"
            placeholder="{{_options.placeholder}}"
            validationErrors="{{_options.validationErrors}}"
-           on:valueChanged="_valueChangedHandler()"
-           attr:style="width: {{_options.width + 'px'}}">
+           on:valueChanged="_valueChangedHandler()">
 
       <ws:content>
          <ws:partial
