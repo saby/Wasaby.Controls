@@ -117,9 +117,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                if (!value.every(function (v) { return (
                      typeof v === 'object' &&
                      (v.id && (typeof v.id === 'string' || typeof v.id === 'number') &&
-                        (v.title && typeof v.title === 'string') &&
-                        (v.fieldIds && Array.isArray(v.fieldIds) && v.fieldIds.every(function (v2) { return !!v2 && typeof v2 === 'string'; }))) &&
-                        (v.fileUuid && typeof v.fileUuid === 'string')
+                     (v.title && typeof v.title === 'string') &&
+                     (v.fieldIds && Array.isArray(v.fieldIds) && v.fieldIds.every(function (v2) { return !!v2 && typeof v2 === 'string'; }))) &&
+                     (v.fileUuid && typeof v.fileUuid === 'string')
                   ); })) {
                   return new Error('Array items must be an ExportPreset');
                }
@@ -412,8 +412,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   options.staticPresets.some(function (v) { if (v.id === selectedPresetId) { currentPreset = v; } });
                }
             }
-            var fieldIds = currentPreset ? currentPreset.fieldIds : (options.fieldIds ? options.fieldIds : null);
-            var fileUuid = currentPreset ? currentPreset.fileUuid : options.fileUuid;
+            if (currentPreset) {
+               options.fieldIds = currentPreset.fieldIds.slice();
+               options.fileUuid = currentPreset.fileUuid;
+            }
+            var fieldIds = options.fieldIds;
+            var fileUuid = options.fileUuid;
             var serviceParams = options.serviceParams;
             options._scopes = {
                presets: hasStaticPresets /*^^^|| options.presetNamespace*/ ? {
@@ -426,14 +430,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   columnsTitle: options.columnBinderColumnsTitle || undefined,
                   fieldsTitle: options.columnBinderFieldsTitle || undefined,
                   allFields: options.allFields,
-                  fieldIds: fieldIds ? fieldIds.slice() : undefined
+                  fieldIds: fieldIds && fieldIds.length ? fieldIds.slice() : undefined
                },
                formatter: {
                   title: options.formatterTitle,
                   menuTitle: options.formatterMenuTitle,
                   allFields: options.allFields,
-                  fieldIds: fieldIds ? fieldIds.slice() : undefined,
-                  fileUuid: fileUuid,
+                  fieldIds: fieldIds && fieldIds.length ? fieldIds.slice() : undefined,
+                  fileUuid: fileUuid || undefined,
                   serviceParams: serviceParams ? cMerge({}, serviceParams) : undefined
                }
             };
