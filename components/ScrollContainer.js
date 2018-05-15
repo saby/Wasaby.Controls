@@ -5,7 +5,6 @@ define('SBIS3.CONTROLS/ScrollContainer', [
       'Core/helpers/Hcontrol/isElementVisible',
       'Core/detection',
       'Core/compatibility',
-      'Lib/FloatAreaManager/FloatAreaManager',
       'Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager',
       'Core/constants',
       'Core/EventBus',
@@ -19,7 +18,6 @@ define('SBIS3.CONTROLS/ScrollContainer', [
              isElementVisible,
              cDetection,
              compatibility,
-             FloatAreaManager,
              StickyHeaderManager,
              constants,
              EventBus,
@@ -261,10 +259,6 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                this._hideBrowserScrollbar();
                this._hideBrowserScrollbar = this._hideBrowserScrollbar.bind(this);
                ScrollWidthController.add(this._hideBrowserScrollbar);
-
-               // task: 1173330288
-               // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
-               FloatAreaManager._scrollableContainers[this.getId()] = this.getContainer().find('.controls-ScrollContainer__content');
 
                this._initPaging();
                this._resizeInner();
@@ -659,9 +653,6 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                .unsubscribe('onRequestTakeScrollbar',  this._requestTakeScrollbarHandler);
 
             ScrollContainer.superclass.destroy.call(this);
-            // task: 1173330288
-            // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
-            delete FloatAreaManager._scrollableContainers[ this.getId() ];
          },
          //region retail_offlain
          _bindOfflainEvents: function() {

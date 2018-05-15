@@ -140,9 +140,26 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             requirejs([componentName], function(Component) {
                try {
                   if (this._isNewEnvironment()) {
-                     //TODO тут кучу проверок в зависимости от конфига разные контроллеры грузить и конфиги между старыми и новыми синхронизировать
-                     requirejs(['Controls/Popup/Manager/ManagerController', 'Controls/Popup/Opener/Sticky/StickyController'], function(ManagerController, StickyStrategy) {
-                        ManagerController.show(self._getVDOMConfig(config), StickyStrategy);
+
+                     var deps = ['Controls/Popup/Opener/BaseOpener'];
+                     if (meta.mode === 'floatArea' && config.isStack === true) {
+                        deps.push('Controls/Popup/Opener/Stack/StackController');
+                        config._type = 'stack';
+                        config.className = 'controls-Stack';
+                     } else if (meta.mode === 'floatArea' && config.isStack === false) {
+                        deps.push('Controls/Popup/Opener/Sticky/StickyController');
+                        config._type = 'sticky';
+                     } else {
+                        deps.push('Controls/Popup/Opener/Dialog/DialogController');
+                        config._type = 'dialog';
+                     }
+
+                     requirejs(deps, function(BaseOpener, Strategy) {
+                        var CoreTemplate = requirejs(config.template);
+                        config._initCompoundArea = function(compoundArea) {
+                           self._dialog = compoundArea;
+                        };
+                        BaseOpener.showDialog(CoreTemplate, config, Strategy);
                      });
                   } else {
                      this._dialog = new Component(config);
@@ -160,18 +177,6 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
       //TODO start compatible block for VDOM
       _isNewEnvironment: function () {
          return !!document.getElementsByTagName('html')[0].controlNodes;
-      },
-
-      _getVDOMConfig: function(cfg) {
-         var templateOptions = cfg.componentOptions;
-         // templateOptions.component = "Controls-demo/Popup/Env/template/oldTemplate";
-         return {
-            maxWidth: 900,
-            minWidth: 800,
-            opener: cfg.opener,
-            template: cfg.template,
-            templateOptions: templateOptions
-         };
       },
       //TODO end compatible block for VDOM
       
