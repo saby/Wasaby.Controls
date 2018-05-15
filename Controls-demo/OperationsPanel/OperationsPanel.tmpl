@@ -1,0 +1,23 @@
+<div class="controls-OperationsPanel_demo">
+    <div>
+        <span>open/close-panel -></span>
+        <i on:click="_openClick()" class="icon-medium {{_panelVisible ? 'icon-MarkCollapseBold' : 'icon-MarkExpandBold'}}"/>
+    </div>
+    <ws:if data="{{_panelVisible}}">
+        <Controls.OperationsPanel
+                attr:style="width:{{_width}}{{ _px ? 'px' : '%'}}; max-width:100%;"
+                name="myPanel"
+                massSelector="{{true}}"
+                parentProperty="parent"
+                nodeProperty="@parent"
+                keyProperty="id"
+                testOnlyForAutoUpdate="{{_width}}"
+                testOnlyForAutoUpdate2="{{_px}}"
+                source="{{_panelSource}}"
+                on:itemClick="_itemClick()"/>
+        <div name="toolbarAnswer">{{_currentClick}}</div>
+    </ws:if>
+    <div>
+        ширина:   <Controls.Input.Text attr:id="widthInput" bind:value="_width"/> <Controls.Toggle.DoubleSwitch bind:value="_px" captions="{{['px', '%']}}" />
+    </div>
+</div>
