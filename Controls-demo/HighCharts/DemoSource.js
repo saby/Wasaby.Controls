@@ -1,8 +1,8 @@
-define('Controls-demo/HighCharts/HighChartsDemoDS', [
+define('Controls-demo/HighCharts/DemoSource', [
    'WS.Data/Source/Memory',
    'Core/Deferred',
    'WS.Data/Collection/RecordSet'
-], function (MemorySource, Deferred, RecordSet) {
+], function(MemorySource, Deferred, RecordSet) {
    var DemoSource = MemorySource.extend({
       query: function() {
          var arr = new RecordSet({

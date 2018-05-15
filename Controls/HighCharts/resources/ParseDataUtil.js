@@ -1,4 +1,4 @@
-define('Controls/HighCharts/Utils/ParseDataUtil', ['Core/ILogger'], function(ILogger) {
+define('Controls/HighCharts/resources/ParseDataUtil', ['Core/ILogger'], function(ILogger) {
    return {
       parseAxisCommon: function(wsAxis) {
          var
@@ -138,7 +138,7 @@ define('Controls/HighCharts/Utils/ParseDataUtil', ['Core/ILogger'], function(ILo
                         rec.get(wsSeries[i].sourceFieldY)
                      ]);
                   } else {
-                     resultArr[i].data.push([rec.get(wsSeries[i]).sourceFieldY]);
+                     resultArr[i].data.push([rec.get(wsSeries[i].sourceFieldY)]);
                   }
                }
 

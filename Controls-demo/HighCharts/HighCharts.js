@@ -1,8 +1,8 @@
 define('Controls-demo/HighCharts/HighCharts', [
    'Core/Control',
    'tmpl!Controls-demo/HighCharts/HighCharts',
-   'Controls-demo/HighCharts/HighChartsDemoDS'
-], function(Control, template, DemoDS) {
+   'Controls-demo/HighCharts/DemoSource'
+], function(Control, template, DemoSource) {
 
    return Control.extend({
       _template: template,
@@ -11,7 +11,7 @@ define('Controls-demo/HighCharts/HighCharts', [
          this._filter = {
             'asd': 123
          };
-         this._dataSource = new DemoDS();
+         this._dataSource = new DemoSource();
       },
       _chartConfig: {
          credits: {

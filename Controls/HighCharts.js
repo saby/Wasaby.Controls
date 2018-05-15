@@ -1,29 +1,88 @@
 define('Controls/HighCharts', [
    'Core/Control',
    'tmpl!Controls/HighCharts/HighCharts',
-   'Controls/HighCharts/Utils/ParseDataUtil',
+   'Controls/HighCharts/resources/ParseDataUtil',
    'Core/ILogger',
    'Core/core-clone'
-], function(Control, template, Utils, ILogger, cClone) {
+], function(Control, template, ParseDataUtil, ILogger, cClone) {
 
    /**
-    * Component HighChartsLight
+    * Component HighCharts
     * @class Controls/HighCharts
     * @extends Core/Control
     * @mixes Controls/interface/IHighCharts
     * @control
     * @authors Volotskoy V.D., Sukhoruchkin A.S.
     */
+
+   /**
+    * @typedef {Object} chartType
+    * @variant line Line chart
+    * @variant spline Polynomial line chart
+    * @variant pie Pie chart
+    * @variant column Column chart
+    * @variant bar Column horizontal chart
+    * @variant area Area chart
+    * @variant areaspline Polynomial area chart
+    * @variant scatter Dot chart
+    * @variant arearange Interval chart
+    * @variant areasplinerange Polynomial interval chart
+    */
+
+   /**
+    * @typedef {Object} wsSeries
+    * @property {chartType} [type=line] Type of chart
+    * @property {string} name Chart name
+    * @property {string} sourceFieldX Source field for X axis (For pie charts - for title of slice)
+    * @property {string} sourceFieldY Source field for Y axis (For pie charts - for value of slice)
+    * @property {string} sourceField_3 Source field for intervals (For pie charts - for color of slice)
+    * @property {string} color Color of chart
+    * @property {Number} xAxis Number of related X axis
+    * @property {Number} yAxis Number of related Y axis
+    */
+
+   /**
+    * @typedef {Object} typeAxis
+    * @variant xAxis Horizontal axis
+    * @variant yAxis Vertical axis
+    */
+
+   /**
+    * @typedef {Object} wsAxis
+    * @property {typeAxis} [type=xAxis] Type of axis
+    * @property {String} sourceField Source data field
+    * @property {String} title Title
+    * @property {Number} [gridLineWidth=0] Line width of grid
+    * @property {function} labelsFormatter Render function for labels
+    * @property {Number} [staggerLines=0] Quantity of lines for label render
+    * @property {Number} [step=0] Step for label sign
+    * @property {Number} [lineWidth=1] LineWidth
+    * @property {Boolean} [allowDecimals=true] Allow decimals value
+    * @property {Number} min Minimal value
+    * @property {Number} max Maximum value
+    * @property {Boolean} opposite Place axis opposite standart position
+    * @property {Number} linkedTo Number of related axis
+    * @translatable title
+    */
+
+   /**
+    * @name Controls/HighCharts#wsSeries
+    * @cfg {wsSeries[]} Array of charts
+    */
+
+   /**
+    * @name Controls/HighCharts#wsAxis
+    * @cfg {wsAxis[]} Array of axis
+    */
+
+
    var _private = {
-         drawChart: function(self, recordSet) {
-            var preparedData;
-            if (recordSet) {
-               preparedData = _private.prepareData(self._options.wsSeries, self._options.wsAxis, recordSet);
-               self._chartOptions = _private.mergePreparedData(self._chartOptions, preparedData);
-               self._forceUpdate();
-            } else {
-               ILogger.error('HighCharts', 'Data haven`t loaded');
-            }
+         reload: function(self, wsSeries, wsAxis, recordSet) {
+            var preparedData = _private.prepareData(wsSeries, wsAxis, recordSet);
+            _private.drawChart(self, preparedData);
+         },
+         drawChart: function(self, preparedData) {
+            self._chartOptions = _private.mergePreparedData(self._chartOptions, preparedData);
          },
          prepareData: function(wsSeries, wsAxis, recordSet) {
             var
@@ -33,14 +92,14 @@ define('Controls/HighCharts', [
                tmpResult,
                parseRsResult;
 
-            preparedSeries = Utils.recordSetParse(wsSeries, recordSet);
+            preparedSeries = ParseDataUtil.recordSetParse(wsSeries, recordSet);
             
-            tmpResult = Utils.parseAxisCommon(wsAxis);
+            tmpResult = ParseDataUtil.parseAxisCommon(wsAxis);
             
             tmpXAxis = tmpResult.xAxis;
             tmpYAxis = tmpResult.yAxis;
             
-            parseRsResult =  Utils.recordSetParseAxis(tmpXAxis, tmpYAxis, recordSet);
+            parseRsResult =  ParseDataUtil.recordSetParseAxis(tmpXAxis, tmpYAxis, recordSet);
 
             return {
                series: preparedSeries,
@@ -56,38 +115,44 @@ define('Controls/HighCharts', [
             return tmpOpts;
          }
       },
-      HighChartsDS = Control.extend({
+      HighCharts = Control.extend({
          _template: template,
          _chartOptions: {},
+         _highChartsData: null,
 
-         _beforeMount: function(opts, recordSet) {
+         _beforeMount: function(opts, context, recievedState) {
             var self = this;
             this._chartOptions = opts.chartOptions;
-            if (Object.keys(recordSet).length !== 0) {
-               this._recordSet = recordSet;
+            if (recievedState) {
+               this._highChartsData = recievedState;
             } else if (opts.dataSource) {
                return opts.dataSource.query(opts.filter).addCallback(function(data) {
-                  self._recordSet = data;
+                  self._highChartsData = data;
+                  return data;
                });
             }
          },
 
-         _afterMount: function() {
-            if (this._recordSet) {
-               _private.drawChart(this, this._recordSet);
+         _afterMount: function(opts) {
+            if (this._highChartsData) {
+               _private.reload(this, opts.wsSeries, opts.wsAxis, this._highChartsData);
+
+               //Необходимо вызовать forceUpdate в afterMount, так как не вызовется update дочернего компонента
+               this._forceUpdate();
             }
          },
 
          _beforeUpdate: function(opts) {
             var self = this;
-            if (opts.filter !== this._options.filter) {
+            if (opts.filter !== this._options.filter && opts.dataSource) {
                opts.dataSource.query(opts.filter).addCallback(function(data) {
-                  self._recordSet = data;
-                  _private.drawChart(self, self._recordSet);
+                  if (data) {
+                     _private.reload(self, opts.wsSeries, opts.wsAxis, data);
+                  }
                });
             }
          }
       });
 
-   return HighChartsDS;
+   return HighCharts;
 });
