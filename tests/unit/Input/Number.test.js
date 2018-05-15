@@ -7,7 +7,7 @@ define(
       'use strict';
 
       describe('Controls.Input.Number', function() {
-         it('trimEmptyDecimals ("000" at the ond of string)', function() {
+         it('trimEmptyDecimals ("000" at the end of string)', function() {
             var
                res;
             Number._private.trimEmptyDecimals({
@@ -27,7 +27,7 @@ define(
             assert.equal(res, '123');
          });
 
-         it('trimEmptyDecimals ("." at the ond of string)', function() {
+         it('trimEmptyDecimals ("." at the end of string)', function() {
             var
                res;
             Number._private.trimEmptyDecimals({
@@ -47,7 +47,7 @@ define(
             assert.equal(res, '123');
          });
 
-         it('trimEmptyDecimals ("456" at the ond of string)', function() {
+         it('trimEmptyDecimals ("456" at the end of string)', function() {
             var
                res;
             Number._private.trimEmptyDecimals({
