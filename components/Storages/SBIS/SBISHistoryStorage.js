@@ -176,7 +176,7 @@ define('SBIS3.CONTROLS/Storages/SBIS/SBISHistoryStorage', [
                /* Пока нет нормального механизма хранения данных (хранилища),
                 в планах на январь фервраль. Пока просто подписываюсь на изменения LocalStorage. */
                if(key === self._options.historyId) {
-                  STORAGES[self._options.historyId] = this._localStorage.getItem(key);
+                  STORAGES[self._options.historyId] = historyLoadCallback(self._localStorage.getItem(key), self._options.serialize);
                }
             }.bind(this));
          }
