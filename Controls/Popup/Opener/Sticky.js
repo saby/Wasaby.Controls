@@ -8,6 +8,7 @@ define('Controls/Popup/Opener/Sticky',
       /**
        * Действие открытия окна
        * @class Controls/Popup/Opener/Sticky
+       * @mixes Controls/interface/IStickyOpener
        * @control
        * @public
        * @category Popup
@@ -18,7 +19,7 @@ define('Controls/Popup/Opener/Sticky',
          /**
           * Открыть всплывающее окно
           * @function Controls/Popup/Opener/Sticky#open
-          * @param config конфигурация попапа
+          * @param config конфигурация попапа (popupOptions).
           */
          open: function(config) {
             Base.prototype.open.call(this, config, Strategy);

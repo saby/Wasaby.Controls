@@ -11,6 +11,7 @@ define('Controls/Popup/Opener/BaseOpener',
        * Базовый опенер
        * @category Popup
        * @class Controls/Popup/Opener/Base
+       * @mixes Controls/interface/IOpener
        * @control
        * @author Лощинин Дмитрий
        */
