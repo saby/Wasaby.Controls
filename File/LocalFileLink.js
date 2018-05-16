@@ -35,7 +35,7 @@ define("File/LocalFileLink", ["require", "exports"], function (require, exports)
          * @name File/LocalFileLink#getMeta
          */
         LocalFileLink.prototype.getMeta = function () {
-            return this.meta;
+            return this.meta || {};
         };
         return LocalFileLink;
     }());
