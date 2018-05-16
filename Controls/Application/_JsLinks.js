@@ -12,8 +12,10 @@ define('Controls/Application/_JsLinks',
       var Page = Base.extend({
          _template: template,
          _beforeMount: function(options, context, receivedState) {
-            if (receivedState) {
-               this.jsLinks = receivedState;
+            if(typeof window !== 'undefined') {
+               if (receivedState) {
+                  this.jsLinks = receivedState;
+               }
                return;
             }
             var def = context.headData.waitAppContent();

@@ -11,8 +11,10 @@ define('Controls/Application/_Head',
       var Page = Base.extend({
          _template: template,
          _beforeMount: function(options, context, receivedState) {
-            if (receivedState) {
-               this.cssLinks = receivedState;
+            if(typeof window !== 'undefined') {
+               if (receivedState) {
+                  this.cssLinks = receivedState;
+               }
                return;
             }
             var def = context.headData.waitAppContent();
