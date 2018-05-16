@@ -5,7 +5,7 @@
    {{ !isEnabled() ? 'controls-' + _options.inputType + '-InputRender_state_disabled_' + (_options.multiline ? 'multiLine' : 'singleLine') }}
    controls-InputRender_size_{{ (_options.size ? _options.size : 'default') + (_options.multiline ? '_multiLine' : '_singleLine') }}
    controls-{{ _options.inputType }}-InputRender_padding{{ _options.sidePadding ? _options.sidePadding : 'Both' }}
-   {{ _options.readOnly && !_options.multiline ? 'controls-InputRender_whiteSpace_nowrap' : 'controls-InputRender_whiteSpace_normal' }}"
+   {{ !isEnabled() && !_options.multiline ? 'controls-InputRender_whiteSpace_nowrap' : 'controls-InputRender_whiteSpace_normal' }}"
      title="{{tooltip}}">
    <div class="controls-InputRender__wrapper controls-InputRender__wrapper_{{ _options.multiline ? 'multiLine' : 'singleLine' }}">
       <div class="controls-InputRender__fieldWrapper controls-InputRender__fieldWrapper{{_options.multiline ? '_multiLine' : '_singleLine'}}">
