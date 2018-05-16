@@ -93,7 +93,16 @@ define('Controls/Input/ComboBox',
                      selectedKeys: this._selectedKeys,
                      width: this._container.offsetWidth
                   },
-                  target: this._children.Popup
+                  target: this._container,
+                  corner: {
+                     vertical: 'bottom'
+                  },
+                  horizontalAlign: {
+                     offset: 13
+                  },
+                  verticalAlign: {
+                     offset: 5
+                  }
                };
                this._children.DropdownOpener.open(config, this);
             } else {
@@ -116,8 +125,7 @@ define('Controls/Input/ComboBox',
       ComboBox.getDefaultOptions = function() {
          return {
             readOnly: true,
-            placeholder: 'Выберите...',
-            width: 200
+            placeholder: 'Выберите...'
          };
       };
 

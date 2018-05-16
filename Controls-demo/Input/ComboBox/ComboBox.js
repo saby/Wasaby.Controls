@@ -53,7 +53,8 @@ define('Controls-demo/Input/ComboBox/ComboBox',
                data: this._defaultItems
             });
          },
-         _selectedKeys: '3'
+         _selectedKeys: '3',
+         _value: ''
       });
 
       return ComboBox;
