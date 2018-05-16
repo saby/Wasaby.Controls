@@ -53,6 +53,11 @@ define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/Res
         var uid = element.getAttribute("id").replace(OVERLAY_ID_PREFIX, "");
         return areas[uid];
     };
+    /**
+     * Зафиксировано ли перемещения файла над окном.
+     * Необходим для того чтобы не рисовать повторно перекрывающие области для перемещения в них файлов
+     * @type {Boolean}
+     */
     var isDrag;
     // Удаление обёрточных элементов
     var dragEnd = function () {
@@ -93,13 +98,23 @@ define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/Res
             dragEnd();
         }
     };
+    var isNeedOverlay = function (dataTransfer) {
+        /**
+         * В большенстве браузеров при переносе файлов dataTransfer.types == ['Files']
+         * И хватает только проверки первого элемента, но некоторые браузеры в зависимости от версии добавляют свои типы
+         * например ["application/x-moz-file", "Files"]
+         *
+         * Ещё может расходиться регистр => Array.prototype.include не совсем подходит
+         * Поэтому самое простое это склеить типы в строку, привести к единому регистру и найти вхождение
+         */
+        var containFileType = dataTransfer.types.join(',').toLowerCase().indexOf('files') >= 0;
+        return containFileType && !isDrag && !!areaCount;
+    };
     // обработчики событий drag&drop на документе
     var globalHandlers = {
         dragenter: function (event) {
-            var dataTransfer = event.dataTransfer;
-            var type = (dataTransfer.types[0] || "").toLowerCase();
             // Если обёртки готовы для всех элементов или событие не содержит файлы, то выходим
-            if (isDrag || !areaCount || type !== "files") {
+            if (!isNeedOverlay(event.dataTransfer)) {
                 return;
             }
             // иначе создаём обёртки и вешаем обработчики
