@@ -102,6 +102,16 @@ define('Controls/List/interface/IListControl', [
     */
 
    /**
+    * @name Controls/List/interface/IListControl#dataLoadCallback
+    * @cfg {Function} Callback function that will be called when list data loaded by source
+    */
+
+   /**
+    * @name Controls/List/interface/IListControl#dataLoadErrback
+    * @cfg {Function} Callback function that will be called when data loading fail
+    */
+
+   /**
     * @function Controls/List/interface/IListControl#reload
     * Reloads list data and view.
     */
