@@ -199,7 +199,6 @@ define('Controls-demo/List/Swipe', [
                id: 4,
                icon: 'icon-Erase icon-error',
                title: 'delete pls',
-               showType: showType.TOOLBAR,
                handler: function() {
                   console.log('action delete Click');
                }
@@ -244,7 +243,6 @@ define('Controls-demo/List/Swipe', [
                id: 3,
                icon: 'icon-primary icon-Profile',
                title: 'profile',
-               showType: showType.MENU_TOOLBAR,
                handler: function() {
                   console.log('action profile Click');
                }
@@ -253,27 +251,26 @@ define('Controls-demo/List/Swipe', [
                id: 4,
                icon: 'icon-Erase icon-error',
                title: 'delete pls',
-               showType: showType.TOOLBAR,
                handler: function() {
                   console.log('action delete Click');
-               }
-            }, {
-               id: 5,
-               title: 'прочитано',
-
-               showType: showType.TOOLBAR,
-               handler: function() {
-                  console.log('action read Click');
                }
             },
       
             {
-               id: 6,
+               id: 5,
                icon: 'icon-Lightning icon-error',
                title: 'шестая кнопочка',
                showType: showType.TOOLBAR,
                handler: function() {
                   console.log('action delete Click');
+               }
+            }, {
+               id: 6,
+               title: 'прочитано',
+
+               showType: showType.TOOLBAR,
+               handler: function() {
+                  console.log('action read Click');
                }
             },
          
@@ -309,7 +306,6 @@ define('Controls-demo/List/Swipe', [
                id: 3,
                icon: 'icon-primary icon-Profile',
                title: 'profile',
-               showType: showType.MENU_TOOLBAR,
                handler: function() {
                   console.log('action profile Click');
                }
@@ -318,7 +314,6 @@ define('Controls-demo/List/Swipe', [
                id: 4,
                icon: 'icon-Erase icon-error',
                title: 'delete pls',
-               showType: showType.TOOLBAR,
                handler: function() {
                   console.log('action delete Click');
                }
@@ -326,7 +321,6 @@ define('Controls-demo/List/Swipe', [
                id: 5,
                title: 'прочитано',
                icon: 'icon-primary icon-CbPlus',
-               showType: showType.TOOLBAR,
                handler: function() {
                   console.log('action read Click');
                }
@@ -364,8 +358,8 @@ define('Controls-demo/List/Swipe', [
    var ModuleClass = BaseControl.extend(
       {
          _actions: [2, 3, 4, 5, 6, 7, 8],
-         _heightS: [37, 38, 52, 72, 73, 75, 85, 92, 107, 108, 109, 110, 120, 133, 134, 157, 158, 169, 170, 181, 182, 184, 223, 224, 263, 264, 303, 304, 350, 400, 500, 600 ],
-         _height: '36px',
+         _heightS: [37, 38, 44, 52, 72, 73, 75, 85, 92, 107, 108, 109, 110, 120, 133, 134, 157, 158, 169, 170, 181, 182, 184, 223, 224, 263, 264, 303, 304, 350, 400, 500, 600 ],
+         _height: 37,
          _itemActions: _actionsArrays[5],
          _template: template,
          _onActionClick: function(event, action, item) {
@@ -386,7 +380,7 @@ define('Controls-demo/List/Swipe', [
 
          },
          _onHeightClick: function(event, height) {
-            this._height = height + 'px';
+            this._height = height;
             this._forceUpdate();
          },
          _onActClick: function(event, act) {

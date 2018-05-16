@@ -2,6 +2,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
       'SBIS3.CONTROLS/CompoundControl',
       'SBIS3.CONTROLS/ScrollContainer/Scrollbar',
       'tmpl!SBIS3.CONTROLS/ScrollContainer/ScrollContainer',
+      'Core/helpers/Hcontrol/isElementVisible',
       'Core/detection',
       'Core/compatibility',
       'Lib/FloatAreaManager/FloatAreaManager',
@@ -15,6 +16,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
    function (CompoundControl,
              Scrollbar,
              template,
+             isElementVisible,
              cDetection,
              compatibility,
              FloatAreaManager,
@@ -184,7 +186,10 @@ define('SBIS3.CONTROLS/ScrollContainer', [
          },
 
          _modifyOptionsAfter: function(finalConfig) {
-            delete finalConfig.content;
+            // удаляем опцию content только на сервере, на клиенте опция должна остаться
+            if (typeof window === 'undefined') {
+               delete finalConfig.content;
+            }
          },
 
          init: function() {
@@ -312,9 +317,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                this.subscribeTo(this._scrollbar, 'onScrollbarEndDrag', this._setScrollbarDragging.bind(this, false));
                this._resizeInner();
             }
-            if (!(this._getChildContentHeight() < 35) || !cDetection.isIE) {
-               this._toggleGradient();
-            }
+            this._toggleGradient();
          },
 
          /**
@@ -381,9 +384,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
             if (this._paging) {
                this._calcPagingSelectedKey(scrollTop);
             }
-            if (!(this._getChildContentHeight() < 35) || !cDetection.isIE) {
-               this._toggleGradient();
-            }
+            this._toggleGradient();
          },
 
          _onMouseenter: function() {
@@ -486,9 +487,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                 */
                EventBusChannel.subscribe('onRequestTakeScrollbar', this._requestTakeScrollbarHandler);
                EventBusChannel.unsubscribe('onReturnTakeScrollbar', this._returnTakeScrollbarHandler);
-               if (!(this._getChildContentHeight() < 35)) {
-                  this._showScrollbar();
-               }
+               this._showScrollbar();
             }
          },
 
@@ -567,21 +566,19 @@ define('SBIS3.CONTROLS/ScrollContainer', [
             }
             //ресайз может позваться до инита контейнера
             if (this._content) {
-               if (!(this._getChildContentHeight() < 35) || !cDetection.isIE) {
-                  this._toggleGradient();
-               }
+               this._toggleGradient();
                /**
                 * В firefox при высоте дочерних элементав < высоты скролла(34px) и резиновой высоте контейнера через max-height, нативный скролл не пропадает.
                 * В такой ситуации content имеет высоту скролла, а должен быть равен высоте дочерних элементав.
                 * Поэтому мы вешаем класс, который убирает нативный скролл, если произойдет такая ситуация.
                 */
                if (cDetection.firefox) {
-                  this._toggleOverflowHidden(this._getChildContentHeight() < 35);
+                  this._toggleOverflowHidden(this._getScrollHeight() ===  Math.floor(this._container.height()) && this._getScrollHeight() < 35);
                }
                if (cDetection.isIE) {
                   // Баг в ie. При overflow: scroll, если контент не нуждается в скроллировании, то браузер добавляет
                   // 1px для скроллирования.
-                  this._toggleOverflowHidden(((this._getScrollHeight() - Math.floor(this._container.height())) <= 1) || (this._getChildContentHeight() < 35));
+                  this._toggleOverflowHidden(((this._getScrollHeight() - Math.floor(this._container.height())) <= 1));
                }
                if (!this._options.takeScrollbarHidden) {
                   this._subscribeTakeScrollbar();
@@ -618,7 +615,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
             Array.prototype.forEach.call(this._content.children(), function(item) {
                $item = $(item);
                // Метод outerHeight не учитывает видимость элемента, нужно учесть.
-               height += $item.is(':visible') ? $(item).outerHeight(true) : 0;
+               height += isElementVisible($item) ? $(item).outerHeight(true) : 0;
             });
 
             return height;

@@ -9,19 +9,6 @@ define('Controls/Container/Scroll/ScrollHeightFixUtil',
       var _private = {
 
          /**
-          * Расчитать сумму высот дочерних нод.
-          * @param container
-          * @return {number}
-          */
-         calcChildrenHeight: function(container) {
-            return Array.prototype.reduce.call(container.children, function(height, item) {
-               height += item.offsetHeight;
-
-               return height;
-            }, 0);
-         },
-
-         /**
           * Расчитать функцию расчета значения для css свойства overflow.
           * @param detection
           * @return {function}
@@ -37,7 +24,7 @@ define('Controls/Container/Scroll/ScrollHeightFixUtil',
                       * через max-height, нативный скролл не пропадает.
                       * В такой ситуации content имеет высоту скролла, а должен быть равен высоте дочерних элементов.
                       */
-                     return _private.calcChildrenHeight(container) < 35;
+                     return container.scrollHeight === container.offsetHeight && container.scrollHeight < 35;
                   }
                };
             } else if (detection.isIE) {

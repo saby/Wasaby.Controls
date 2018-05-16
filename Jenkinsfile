@@ -14,8 +14,8 @@ def gitlabStatusUpdate() {
 
 
 node('controls') {
-    echo "Читаем settings_${version}.props"
-    def props = readProperties file: "/home/jenkins/shared_autotest87/settings_${version}.props"
+    echo "Читаем настройки из файла version_application.txt"
+    def props = readProperties file: "/home/sbis/mount_test-osr-source_d/Платформа/${version}/version_application.txt"
     echo "Генерируем параметры"
     properties([
     disableConcurrentBuilds(),
@@ -73,7 +73,7 @@ node('controls') {
 		echo "Назначаем переменные"
         def server_address=props["SERVER_ADDRESS"]
 		def smoke_server_address=props["SMOKE_SERVER_ADDRESS"]
-		def stream_number=props["stream_number"]
+		def stream_number=props["snit"]
         def ver = version.replaceAll('.','')
 		def python_ver = 'python3'
         def SDK = ""

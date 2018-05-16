@@ -32,8 +32,8 @@
     height: 0;
     top:0;
     border-top: @height_itemAction_outside solid @default-bg-color-hovered-item;
-    border-left: @width_itemActions_outside_after solid transparent;
-    left: -@width_itemActions_outside_after;
+    border-left: @width_itemActions_outside_bevel solid transparent;
+    left: -@width_itemActions_outside_bevel;
   }
 }
 
@@ -50,11 +50,12 @@
   justify-content: center;
   flex-direction: column;
   box-sizing: border-box;
-  padding: @padding_itemActions_action;
   flex-shrink: 0;
   position: relative;
 }
-
+.controls-itemActionsV__action_padding {
+  padding: @padding_itemActions_action;
+}
 .controls-itemActionsV__action_bordered {
   .closeButton();
   display: inline-flex;;
@@ -79,14 +80,9 @@
   .icon-size-without-important(@default-icon-size-medium, @default-icon-medium-font);
 }
 
-
 .controls-itemActionsV__action_title {
   color: @color_Link-text;
   font-size:@small-text-size;
-  max-width: @max-width_itemActions_title;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   min-height: @default-icon-size;
 }
 

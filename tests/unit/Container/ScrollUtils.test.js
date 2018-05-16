@@ -16,29 +16,6 @@ define(
             return constWidthScrollbar;
          };
 
-         it('calcChildHeight', function() {
-            var container = {
-               children: [
-                  {
-                     offsetHeight: 10
-                  },
-                  {
-                     offsetHeight: 20
-                  },
-                  {
-                     offsetHeight: 30
-                  },
-                  {
-                     offsetHeight: 40
-                  },
-                  {
-                     offsetHeight: 50
-                  }
-               ]
-            };
-            result = ScrollHeightFixUtil._private.calcChildrenHeight(container);
-            assert.equal(result, 150);
-         });
          describe('calcOverflow', function() {
             var container, calcOverflow;
             it('chrome', function() {
@@ -85,11 +62,8 @@ define(
                calcOverflow = ScrollHeightFixUtil._private.calcHeightFixFn(detection);
 
                container = {
-                  children: [
-                     {
-                        offsetHeight: 10
-                     }
-                  ]
+                  offsetHeight: 10,
+                  scrollHeight: 10
                };
                result = calcOverflow(container);
                if (window) {
@@ -99,11 +73,8 @@ define(
                }
 
                container = {
-                  children: [
-                     {
-                        offsetHeight: 40
-                     }
-                  ]
+                  offsetHeight: 40,
+                  scrollHeight: 40
                };
                result = calcOverflow(container);
                if (window) {

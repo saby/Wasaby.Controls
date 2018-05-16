@@ -5,6 +5,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
    "Core/constants",
    "Core/CommandDispatcher",
    "Core/Deferred",
+   'SBIS3.CONTROLS/Utils/CursorListNavigation',
    "WS.Data/Display/Tree",
    "WS.Data/Collection/IBind",
    "tmpl!SBIS3.CONTROLS/Mixins/TreeMixin/resources/searchRender",
@@ -20,7 +21,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
    "SBIS3.CONTROLS/BreadCrumbs",
    "tmpl!SBIS3.CONTROLS/DataGridView/resources/DataGridViewGroupBy",
    "WS.Data/Adapter/Sbis"
-], function (coreClone, cMerge, TreeDataReload, constants, CommandDispatcher, Deferred, TreeProjection, IBindCollection, searchRender, Model, HierarchyRelation, cInstance, TemplateUtil, forAliveOnly, IoC, isEmpty, isPlainObject, runDelayed) {
+], function (coreClone, cMerge, TreeDataReload, constants, CommandDispatcher, Deferred, CursorListNavigationUtils, TreeProjection, IBindCollection, searchRender, Model, HierarchyRelation, cInstance, TemplateUtil, forAliveOnly, IoC, isEmpty, isPlainObject, runDelayed) {
 
    var createDefaultProjection = function(items, cfg) {
       var
@@ -747,7 +748,8 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
          _loadedNodes: {},
          _previousRoot: undefined,
          _hier: [],
-         _hierPages: {}
+         _hierPages: {},
+         _hierNodesCursor: {}
       },
 
       $constructor : function() {
@@ -917,6 +919,9 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             this._toggleIndicator(true);
             this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), 0, this._limit);
             return this._callQuery(this._createTreeFilter(id), this.getSorting(), 0, this._limit).addCallback(forAliveOnly(function (list) {
+               if (this._isCursorNavigation() && this._options.saveReloadPosition && list.getCount()) {
+                  this._hierNodesCursor[id] = list.at(list.getCount() - 1).get(this._options.navigation.config.field);
+               }
                this._options._folderHasMore[id] = list.getMetaData().more;
                this._options._folderOffsets[id] = 0;
                this._loadedNodes[id] = true;
@@ -1009,8 +1014,9 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
          return rootItems;
       },
 
-      _getItemsForRedrawOnAdd: function(items) {
+      _getItemsForRedrawOnAdd: function(itemsArray) {
          var
+            items = coreClone(itemsArray),
             itemsToAdd = [], start = 0, groupId, groupHash,
             lastItem, breadCrumbs;
          if (this._options.hierarchyViewMode) {
@@ -1132,6 +1138,21 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
          }
       },
       around: {
+         _prepareAdditionalFilterForCursor: function(parentFn, filter, direction) {
+            var
+               position = [],
+               nodeId = filter[this._options.parentProperty];
+            if (nodeId !== this.getCurrentRoot()) {
+               if (typeof this._hierNodesCursor[nodeId] !== 'undefined') {
+                  position.push(this._hierNodesCursor[nodeId]);
+               } else {
+                  position.push(null);
+               }
+               return CursorListNavigationUtils.getNavigationParams([this._options.navigation.config.field], position, 'after');
+            } else {
+               return parentFn.call(this, filter, direction);
+            }
+         },
          _prepareClassesByConfig: function(parentFn, cfg) {
             parentFn(cfg);
             if (cfg.expanderDisplayMode === 'withChild') {
@@ -1142,6 +1163,15 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             } else if (cfg.expanderDisplayMode === 'never') {
                cfg.preparedClasses += ' controls-TreeView__hideExpands';
             }
+         },
+         _getQueryForCall: function(parentFn, filter, sorting, offset, limit, direction) {
+            // Устанавливаем позицию в listCursorNavigation при загрузке корня
+            if (this._isCursorNavigation() && this._options.saveReloadPosition && filter[this._options.parentProperty] === this.getCurrentRoot()) {
+               if (typeof this._hierPages[this.getCurrentRoot()] !== 'undefined') {
+                  this.getListNavigation().setPosition(this._hierPages[this.getCurrentRoot()]);
+               }
+            }
+            return parentFn.call(this, filter, sorting, offset, limit, direction);
          },
          /**
           * Позволяет перезагрузить данные как одной модели, так и всей иерархии из дочерних элементов этой записи.
@@ -1350,6 +1380,9 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), (id ? this._options._folderOffsets[id] : this._options._folderOffsets['null']) + this._limit, this._limit);
          }
          this._loader = this._callQuery(this._createTreeFilter(id), this.getSorting(), (id ? this._options._folderOffsets[id] : this._options._folderOffsets['null']) + this._limit, this._limit).addCallback(forAliveOnly(function (dataSet) {
+            if (this._isCursorNavigation() && this._options.saveReloadPosition) {
+               this._hierNodesCursor[id] = dataSet.at(dataSet.getCount() - 1).get(this._options.navigation.config.field);
+            }
             //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
             //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
             self._notify('onDataMerge', dataSet);
@@ -1438,6 +1471,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             this._lastDrawn = undefined;
             this._lastPath = [];
             this._loadedNodes = {};
+            this._hierNodesCursor = {};
             // При перезагрузке приходят новые данные, т.ч. сбрасываем объект, хранящий список узлов с "есть ещё"
             this._options._folderHasMore = {};
          },
@@ -1619,12 +1653,18 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
          this.setPage(0, true, true);
          //Если добавить проверку на rootChanged, то при переносе в ту же папку, из которой искали ничего не произойдет
          this._notify('onBeforeSetRoot', key);
-         this._options.currentRoot = (isFakeRoot || (key !== undefined && key !== null)) ? key : this._options.root;
 
          // сохраняем текущую страницу при проваливании в папку
-         if (this._options.saveReloadPosition) {
-            this._hierPages[this._previousRoot] = this._getCurrentPage();
+         if (this._isCursorNavigation() && this._options.saveReloadPosition && this.getSelectedItem()) {
+            // Сохраняем ключ узла, в который провалились
+            if (typeof this.getCurrentRoot() === 'undefined') {
+               this._hierPages[null] = this.getSelectedItem().get(this._options.navigation.config.field);
+            } else {
+               this._hierPages[this.getCurrentRoot()] = this.getSelectedItem().get(this._options.navigation.config.field);
+            }
          }
+
+         this._options.currentRoot = (isFakeRoot || (key !== undefined && key !== null)) ? key : this._options.root;
 
          if (isFakeRoot) {
             newRoot = Model.fromObject(this._options.root, this.getItems() ? this.getItems().getAdapter() : 'adapter.sbis');

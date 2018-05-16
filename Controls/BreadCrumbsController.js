@@ -2,11 +2,13 @@ define('Controls/BreadCrumbsController', [
    'Core/Control',
    'Controls/Utils/BreadCrumbsUtil',
    'Controls/List/resources/utils/ItemsUtil',
+   'Controls/Utils/FontLoadUtil',
    'tmpl!Controls/BreadCrumbsController/BreadCrumbsController'
 ], function(
    Control,
    BreadCrumbsUtil,
    ItemsUtil,
+   FontLoadUtil,
    template
 ) {
    'use strict';
@@ -17,11 +19,12 @@ define('Controls/BreadCrumbsController', [
       _oldWidth: 0,
 
       _afterMount: function() {
-         //TODO: нужно приделать костыли для браузеров без preload, но сейчас это сделать не получится, т.к. демки в IE не взлетают
          if (this._options.items && this._options.items.length > 0) {
             this._oldWidth = this._container.clientWidth;
-            BreadCrumbsUtil.calculateBreadCrumbsToDraw(this,  this._options.items, this._oldWidth);
-            this._forceUpdate();
+            FontLoadUtil.waitForFontLoad('controls-BreadCrumbsV__crumbMeasurer').addCallback(function() {
+               BreadCrumbsUtil.calculateBreadCrumbsToDraw(this,  this._options.items, this._oldWidth);
+               this._forceUpdate();
+            }.bind(this));
          }
       },
 

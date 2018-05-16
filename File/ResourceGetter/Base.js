@@ -18,7 +18,7 @@ define("File/ResourceGetter/Base", ["require", "exports"], function (require, ex
      * @public
      * @class
      * @name File/ResourceGetter/Base
-     * @implements IResourceGetter
+     * @implements File/IResourceGetter
      * @author Заляев А.В.
      * @abstract
      */
@@ -44,8 +44,8 @@ define("File/ResourceGetter/Base", ["require", "exports"], function (require, ex
      * </pre>
      * Выбор из файловой системы:
      * <pre>
-     *    require(['File/ResourceGetter/FileSystem'], function (FileSystemGetter) {
-     *       var getter = new FileSystemGetter({
+     *    require(['File/ResourceGetter/FileSystem'], function (FileSystem) {
+     *       var getter = new FileSystem({
      *          extensions: ["png", "jpg"]
      *       });
      *       getter.getFiles().addCallbacks(function(files){ // files: Array<File/LocalFile | Error>
@@ -71,7 +71,7 @@ define("File/ResourceGetter/Base", ["require", "exports"], function (require, ex
      * @abstract
      * @method
      * @name File/ResourceGetter/Base#canExec
-     * @return {Core/Deferred.<boolean>}
+     * @return {Core/Deferred.<Boolean>}
      * @example
      * Доступны ли сканеры:
      * <pre>
@@ -85,14 +85,14 @@ define("File/ResourceGetter/Base", ["require", "exports"], function (require, ex
      *    });
      * </pre>
      */
-    var IResourceGetterBase = /** @class */ (function () {
-        function IResourceGetterBase() {
+    var ResourceGetterBase = /** @class */ (function () {
+        function ResourceGetterBase() {
             this._isDestroyed = false;
         }
-        IResourceGetterBase.prototype.destroy = function () {
+        ResourceGetterBase.prototype.destroy = function () {
             this._isDestroyed = true;
         };
-        IResourceGetterBase.prototype.isDestroyed = function () {
+        ResourceGetterBase.prototype.isDestroyed = function () {
             return this._isDestroyed;
         };
         /**
@@ -101,10 +101,10 @@ define("File/ResourceGetter/Base", ["require", "exports"], function (require, ex
          * @name File/ResourceGetter/Base#getType
          * @return {String}
          */
-        IResourceGetterBase.prototype.getType = function () {
+        ResourceGetterBase.prototype.getType = function () {
             return this.name || "";
         };
-        return IResourceGetterBase;
+        return ResourceGetterBase;
     }());
-    return IResourceGetterBase;
+    return ResourceGetterBase;
 });

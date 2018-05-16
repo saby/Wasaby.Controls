@@ -5,10 +5,11 @@ define('Controls/Input/resources/InputRender/InputRender',
       /*'WS.Data/Type/descriptor',*/
       'tmpl!Controls/Input/resources/InputRender/InputRender',
       'Controls/Input/resources/RenderHelper',
+      'Core/detection',
 
       'css!Controls/Input/resources/InputRender/InputRender'
    ],
-   function(Control, /*types,*/ template, RenderHelper) {
+   function(Control, /*types,*/ template, RenderHelper, cDetection) {
 
       'use strict';
 
@@ -132,7 +133,14 @@ define('Controls/Input/resources/InputRender/InputRender',
 
          _focusinHandler: function(e) {
             if (!this._options.readOnly && this._options.selectOnClick) {
-               e.target.select();
+               //In IE, the focus event happens earlier than the selection event, so we should use setTimeout
+               if (cDetection.isIE) {
+                  setTimeout(function() {
+                     e.target.select();
+                  });
+               } else {
+                  e.target.select();
+               }
             }
          },
 
@@ -153,7 +161,7 @@ define('Controls/Input/resources/InputRender/InputRender',
                   after: displayValue.slice(selectionEnd, displayValue.length)
                }, 'insert');
 
-            if (displayValue !== processedData.value) {
+            if (displayValue !== this._options.viewModel.getValue()) {
                this._notify('valueChanged', [this._options.viewModel.getValue()]);
             }
 
@@ -172,7 +180,8 @@ define('Controls/Input/resources/InputRender/InputRender',
             value: '',
             selectOnClick: false,
             style: 'default',
-            inputType: 'Text'
+            inputType: 'Text',
+            autocomplete: true
          };
       };
 
@@ -188,7 +197,8 @@ define('Controls/Input/resources/InputRender/InputRender',
                'attention',
                'error',
                'info'
-            ])
+            ]),
+            autocomplete: types(Boolean)
          };
       };*/
 

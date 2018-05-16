@@ -7,40 +7,42 @@ define([
    'WS.Data/Source/Memory',
    'WS.Data/Collection/RecordSet',
    'Controls/List/ListViewModel',
+   'Controls/Utils/Toolbar',
+   'Core/core-instance',
    'Controls/List/ListView'
-], function(BaseControl, ItemsUtil, MemorySource, RecordSet, ListViewModel){
-   describe('Controls.List.BaseControl', function () {
+], function(BaseControl, ItemsUtil, MemorySource, RecordSet, ListViewModel, tUtil, cInstance) {
+   describe('Controls.List.BaseControl', function() {
       var data, display, result, source, rs;
       beforeEach(function() {
          data = [
             {
-               id : 1,
-               title : 'Первый',
+               id: 1,
+               title: 'Первый',
                type: 1
             },
             {
-               id : 2,
-               title : 'Второй',
+               id: 2,
+               title: 'Второй',
                type: 2
             },
             {
-               id : 3,
-               title : 'Третий',
+               id: 3,
+               title: 'Третий',
                type: 2
             },
             {
-               id : 4,
-               title : 'Четвертый',
+               id: 4,
+               title: 'Четвертый',
                type: 1
             },
             {
-               id : 5,
-               title : 'Пятый',
+               id: 5,
+               title: 'Пятый',
                type: 2
             },
             {
-               id : 6,
-               title : 'Шестой',
+               id: 6,
+               title: 'Шестой',
                type: 2
             }
          ];
@@ -51,18 +53,18 @@ define([
          rs = new RecordSet({
             idProperty: 'id',
             rawData: data
-         })
+         });
       });
-      it('life cycle', function (done) {
+      it('life cycle', function(done) {
 
          var filter = {1: 1, 2: 2};
          var cfg = {
-            viewName : 'Controls/List/ListView',
+            viewName: 'Controls/List/ListView',
             viewConfig: {
                keyProperty: 'id'
             },
             viewModelConfig: {
-               items : [],
+               items: [],
                keyProperty: 'id'
             },
             viewModelConstructor: ListViewModel,
@@ -94,14 +96,14 @@ define([
 
          var filter2 = {3: 3};
          cfg = {
-            viewName : 'Controls/List/ListView',
+            viewName: 'Controls/List/ListView',
             source: source,
             viewModelConstructor: ListViewModel,
             viewModelConfig: {
-               items : [],
+               items: [],
                keyProperty: 'id'
             },
-            filter : filter2
+            filter: filter2
          };
 
          ctrl._beforeUpdate(cfg);
@@ -109,17 +111,17 @@ define([
          assert.deepEqual(filter2, ctrl._filter, 'incorrect filter before updating');
 
          //сорс грузит асинхронном
-         setTimeout(function(){
+         setTimeout(function() {
             ctrl._afterUpdate();
             ctrl._beforeUnmount();
             done();
-         },100);
+         }, 100);
 
 
 
       });
 
-      it('loadToDirection down', function (done) {
+      it('loadToDirection down', function(done) {
 
          var source = new MemorySource({
             idProperty: 'id',
@@ -127,13 +129,13 @@ define([
          });
 
          var cfg = {
-            viewName : 'Controls/List/ListView',
+            viewName: 'Controls/List/ListView',
             source: source,
             viewConfig: {
                keyProperty: 'id'
             },
             viewModelConfig: {
-               items : [],
+               items: [],
                keyProperty: 'id'
             },
             viewModelConstructor: ListViewModel,
@@ -160,31 +162,31 @@ define([
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
-         setTimeout(function(){
+         setTimeout(function() {
             BaseControl._private.loadToDirection(ctrl, 'down');
-            setTimeout(function(){
+            setTimeout(function() {
                assert.equal(6, BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
                assert.isTrue(dataLoadFired, 'onDataLoad event is not fired');
                done();
-            }, 100)
-         },100);
+            }, 100);
+         }, 100);
 
       });
 
-      it('loadToDirection down', function (done) {
+      it('loadToDirection down', function(done) {
          var source = new MemorySource({
             idProperty: 'id',
             data: data
          });
 
          var cfg = {
-            viewName : 'Controls/List/ListView',
+            viewName: 'Controls/List/ListView',
             source: source,
             viewConfig: {
                keyProperty: 'id'
             },
             viewModelConfig: {
-               items : rs,
+               items: rs,
                keyProperty: 'id'
             },
             viewModelConstructor: ListViewModel,
@@ -201,17 +203,17 @@ define([
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
-         setTimeout(function(){
+         setTimeout(function() {
             BaseControl._private.loadToDirection(ctrl, 'up');
-            setTimeout(function(){
+            setTimeout(function() {
                assert.equal(6, BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
                done();
-            }, 100)
-         },100);
+            }, 100);
+         }, 100);
 
       });
 
-      it('onScrollLoadEdge', function (done) {
+      it('onScrollLoadEdge', function(done) {
          var rs = new RecordSet({
             idProperty: 'id',
             rawData: data
@@ -223,18 +225,18 @@ define([
          });
 
          var cfg = {
-            viewName : 'Controls/List/ListView',
+            viewName: 'Controls/List/ListView',
             source: source,
             viewConfig: {
                keyProperty: 'id'
             },
             viewModelConfig: {
-               items : rs,
+               items: rs,
                keyProperty: 'id'
             },
             viewModelConstructor: ListViewModel,
             navigation: {
-               view : 'infinity',
+               view: 'infinity',
                source: 'page',
                sourceConfig: {
                   pageSize: 3,
@@ -248,18 +250,18 @@ define([
          ctrl._beforeMount(cfg);
 
          //два таймаута, первый - загрузка начального рекордсета, второй - на последюущий запрос
-         setTimeout(function(){
+         setTimeout(function() {
             BaseControl._private.onScrollLoadEdge(ctrl, 'down');
             setTimeout(function() {
                assert.equal(6, ctrl._listViewModel.getCount(), 'Items wasn\'t load');
                done();
-            },100);
+            }, 100);
          }, 100);
 
 
       });
 
-      it('processLoadError', function () {
+      it('processLoadError', function() {
          var cfg = {};
          var ctrl = new BaseControl(cfg);
          var error = {message: 'error'};
@@ -273,18 +275,20 @@ define([
          assert.equal(error, result, 'Event doesn\'t return instance of Error');
       });
 
-      it('indicator', function () {
+      it('indicator', function() {
          var cfg = {};
          var ctrl = new BaseControl(cfg);
 
          BaseControl._private.showIndicator(ctrl);
          assert.equal(ctrl._loadingState, 'all', 'Wrong loading state');
          assert.equal(ctrl._loadingIndicatorState, 'all', 'Wrong loading state');
+
          //картинка должен появляться через 2000 мс, проверим, что её нет сразу
          assert.isFalse(!!ctrl._showLoadingIndicatorImage, 'Wrong loading indicator image state');
 
          //искуственно покажем картинку
          ctrl._showLoadingIndicatorImage = true;
+
          //и вызовем скрытие
          BaseControl._private.hideIndicator(ctrl);
          assert.equal(ctrl._loadingState, null, 'Wrong loading state');
@@ -292,7 +296,7 @@ define([
          assert.isFalse(!!ctrl._showLoadingIndicatorImage, 'Wrong loading indicator image state');
       });
 
-      it('scrollToEdge_load', function (done) {
+      it('scrollToEdge_load', function(done) {
          var rs = new RecordSet({
             idProperty: 'id',
             rawData: data
@@ -304,13 +308,13 @@ define([
          });
 
          var cfg = {
-            viewName : 'Controls/List/ListView',
+            viewName: 'Controls/List/ListView',
             source: source,
             viewConfig: {
                keyProperty: 'id'
             },
             viewModelConfig: {
-               items : rs,
+               items: rs,
                keyProperty: 'id'
             },
             viewModelConstructor: ListViewModel,
@@ -329,17 +333,17 @@ define([
 
 
          //два таймаута, первый - загрузка начального рекордсета, второй - на последюущий запрос
-         setTimeout(function(){
+         setTimeout(function() {
             BaseControl._private.scrollToEdge(ctrl, 'down');
             setTimeout(function() {
                assert.equal(3, ctrl._listViewModel.getCount(), 'Items wasn\'t load');
                done();
-            },100);
+            }, 100);
          }, 100);
 
       });
 
-      it('ScrollPagingController', function (done) {
+      it('ScrollPagingController', function(done) {
          var rs = new RecordSet({
             idProperty: 'id',
             rawData: data
@@ -351,18 +355,18 @@ define([
          });
 
          var cfg = {
-            viewName : 'Controls/List/ListView',
+            viewName: 'Controls/List/ListView',
             source: source,
             viewConfig: {
                keyProperty: 'id'
             },
             viewModelConfig: {
-               items : rs,
+               items: rs,
                keyProperty: 'id'
             },
             viewModelConstructor: ListViewModel,
             navigation: {
-               view : 'infinity',
+               view: 'infinity',
                viewConfig: {
                   pagingMode: 'direct'
                }
@@ -376,25 +380,25 @@ define([
          BaseControl._private.onScrollShow(ctrl);
 
          //скроллпэйджиг контроллер создается асинхронном
-         setTimeout(function(){
+         setTimeout(function() {
             assert.isTrue(!!ctrl._scrollPagingCtr, 'ScrollPagingController wasn\'t created');
 
 
             //прокручиваем к низу, проверяем состояние пэйджинга
             BaseControl._private.onScrollListEdge(ctrl, 'down');
-            assert.deepEqual({stateBegin: "normal", statePrev: "normal", stateNext: "disabled", stateEnd: "disabled"}, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll to bottom');
+            assert.deepEqual({stateBegin: 'normal', statePrev: 'normal', stateNext: 'disabled', stateEnd: 'disabled'}, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll to bottom');
 
             BaseControl._private.handleListScroll(ctrl, '200');
-            assert.deepEqual({stateBegin: "normal", statePrev: "normal", stateNext: "normal", stateEnd: "normal"}, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
+            assert.deepEqual({stateBegin: 'normal', statePrev: 'normal', stateNext: 'normal', stateEnd: 'normal'}, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
 
             BaseControl._private.onScrollHide(ctrl);
             assert.deepEqual(null, ctrl._pagingCfg, 'Wrong state of paging');
 
             done();
-         }, 100)
+         }, 100);
       });
 
-      it('scrollToEdge without load', function (done) {
+      it('scrollToEdge without load', function(done) {
          var rs = new RecordSet({
             idProperty: 'id',
             rawData: data
@@ -406,13 +410,13 @@ define([
          });
 
          var cfg = {
-            viewName : 'Controls/List/ListView',
+            viewName: 'Controls/List/ListView',
             source: source,
             viewConfig: {
                keyProperty: 'id'
             },
             viewModelConfig: {
-               items : rs,
+               items: rs,
                keyProperty: 'id'
             },
             viewModelConstructor: ListViewModel,
@@ -423,7 +427,7 @@ define([
                   page: 0,
                   mode: 'totalCount'
                },
-               view : 'infinity',
+               view: 'infinity',
                viewConfig: {
                   pagingMode: 'direct'
                }
@@ -434,11 +438,12 @@ define([
          ctrl._beforeMount(cfg);
 
          //дождемся загрузки списка
-         setTimeout(function(){
+         setTimeout(function() {
             result = false;
             ctrl._notify = function(event, dir) {
                result = dir;
             };
+
             //прокручиваем к низу, проверяем состояние пэйджинга
             BaseControl._private.scrollToEdge(ctrl, 'down');
             assert.equal(result, 'bottom', 'List wasn\'t scrolled to bottom');
@@ -447,10 +452,10 @@ define([
             assert.equal(result, 'top', 'List wasn\'t scrolled to top');
 
             done();
-         }, 100)
+         }, 100);
       });
 
-      it('__onPagingArrowClick', function (done) {
+      it('__onPagingArrowClick', function(done) {
          var rs = new RecordSet({
             idProperty: 'id',
             rawData: data
@@ -462,13 +467,13 @@ define([
          });
 
          var cfg = {
-            viewName : 'Controls/List/ListView',
+            viewName: 'Controls/List/ListView',
             source: source,
             viewConfig: {
                keyProperty: 'id'
             },
             viewModelConfig: {
-               items : rs,
+               items: rs,
                keyProperty: 'id'
             },
             viewModelConstructor: ListViewModel,
@@ -479,7 +484,7 @@ define([
                   page: 0,
                   mode: 'totalCount'
                },
-               view : 'infinity',
+               view: 'infinity',
                viewConfig: {
                   pagingMode: 'direct'
                }
@@ -493,7 +498,7 @@ define([
          BaseControl._private.onScrollShow(ctrl);
 
          //скроллпэйджиг контроллер создается асинхронном
-         setTimeout(function(){
+         setTimeout(function() {
             ctrl._notify = function(eventName, type) {
                result = type;
             };
@@ -515,10 +520,10 @@ define([
             assert.equal('pageUp', result[0], 'Wrong state of scroll after clicking to Prev');
 
             done();
-         }, 100)
+         }, 100);
       });
 
-      it('__onEmitScroll', function (done) {
+      it('__onEmitScroll', function(done) {
          var rs = new RecordSet({
             idProperty: 'id',
             rawData: data
@@ -530,13 +535,13 @@ define([
          });
 
          var cfg = {
-            viewName : 'Controls/List/ListView',
+            viewName: 'Controls/List/ListView',
             source: source,
             viewConfig: {
                keyProperty: 'id'
             },
             viewModelConfig: {
-               items : rs,
+               items: rs,
                keyProperty: 'id'
             },
             viewModelConstructor: ListViewModel,
@@ -547,7 +552,7 @@ define([
                   page: 0,
                   mode: 'totalCount'
                },
-               view : 'infinity',
+               view: 'infinity',
                viewConfig: {
                   pagingMode: 'direct'
                }
@@ -561,7 +566,7 @@ define([
          BaseControl._private.onScrollShow(ctrl);
 
          //скроллпэйджиг контроллер создается асинхронном
-         setTimeout(function(){
+         setTimeout(function() {
             ctrl._notify = function(eventName, type) {
                result = type;
             };
@@ -578,10 +583,10 @@ define([
             ctrl.reload();
 
             done();
-         }, 100)
+         }, 100);
       });
 
-      it('_onCheckBoxClick', function () {
+      it('_onCheckBoxClick', function() {
          var rs = new RecordSet({
             idProperty: 'id',
             rawData: data
@@ -593,16 +598,16 @@ define([
          });
 
          var cfg = {
-            selectedKeys : [1, 3],
-            viewName : 'Controls/List/ListView',
+            selectedKeys: [1, 3],
+            viewName: 'Controls/List/ListView',
             source: source,
             viewConfig: {
                keyProperty: 'id'
             },
             viewModelConfig: {
-               items : rs,
+               items: rs,
                keyProperty: 'id',
-               selectedKeys : [1, 3]
+               selectedKeys: [1, 3]
             },
             viewModelConstructor: ListViewModel,
             navigation: {
@@ -612,7 +617,7 @@ define([
                   page: 0,
                   mode: 'totalCount'
                },
-               view : 'infinity',
+               view: 'infinity',
                viewConfig: {
                   pagingMode: 'direct'
                }
@@ -635,15 +640,15 @@ define([
                test: 'test'
             };
             var cfg = {
-               viewName : 'Controls/List/ListView',
+               viewName: 'Controls/List/ListView',
                source: source,
                viewConfig: {
                   keyProperty: 'id'
                },
                viewModelConfig: {
-                  items : rs,
+                  items: rs,
                   keyProperty: 'id',
-                  selectedKeys : [1, 3]
+                  selectedKeys: [1, 3]
                },
                viewModelConstructor: ListViewModel,
                navigation: {
@@ -653,7 +658,7 @@ define([
                      page: 0,
                      mode: 'totalCount'
                   },
-                  view : 'infinity',
+                  view: 'infinity',
                   viewConfig: {
                      pagingMode: 'direct'
                   }
@@ -676,15 +681,15 @@ define([
                test: 'test'
             };
             var cfg = {
-               viewName : 'Controls/List/ListView',
+               viewName: 'Controls/List/ListView',
                source: source,
                viewConfig: {
                   keyProperty: 'id'
                },
                viewModelConfig: {
-                  items : rs,
+                  items: rs,
                   keyProperty: 'id',
-                  selectedKeys : [1, 3]
+                  selectedKeys: [1, 3]
                },
                viewModelConstructor: ListViewModel,
                navigation: {
@@ -694,7 +699,7 @@ define([
                      page: 0,
                      mode: 'totalCount'
                   },
-                  view : 'infinity',
+                  view: 'infinity',
                   viewConfig: {
                      pagingMode: 'direct'
                   }
@@ -720,15 +725,15 @@ define([
                test2: 'test'
             };
             var cfg = {
-               viewName : 'Controls/List/ListView',
+               viewName: 'Controls/List/ListView',
                source: source,
                viewConfig: {
                   keyProperty: 'id'
                },
                viewModelConfig: {
-                  items : rs,
+                  items: rs,
                   keyProperty: 'id',
-                  selectedKeys : [1, 3]
+                  selectedKeys: [1, 3]
                },
                viewModelConstructor: ListViewModel,
                navigation: {
@@ -738,7 +743,7 @@ define([
                      page: 0,
                      mode: 'totalCount'
                   },
-                  view : 'infinity',
+                  view: 'infinity',
                   viewConfig: {
                      pagingMode: 'direct'
                   }
@@ -761,15 +766,15 @@ define([
                test2: 'test'
             };
             var cfg = {
-               viewName : 'Controls/List/ListView',
+               viewName: 'Controls/List/ListView',
                source: source,
                viewConfig: {
                   keyProperty: 'id'
                },
                viewModelConfig: {
-                  items : rs,
+                  items: rs,
                   keyProperty: 'id',
-                  selectedKeys : [1, 3]
+                  selectedKeys: [1, 3]
                },
                viewModelConstructor: ListViewModel,
                navigation: {
@@ -779,7 +784,7 @@ define([
                      page: 0,
                      mode: 'totalCount'
                   },
-                  view : 'infinity',
+                  view: 'infinity',
                   viewConfig: {
                      pagingMode: 'direct'
                   }
@@ -799,15 +804,15 @@ define([
                test: 'test'
             };
             var cfg = {
-               viewName : 'Controls/List/ListView',
+               viewName: 'Controls/List/ListView',
                source: source,
                viewConfig: {
                   keyProperty: 'id'
                },
                viewModelConfig: {
-                  items : rs,
+                  items: rs,
                   keyProperty: 'id',
-                  selectedKeys : [1, 3]
+                  selectedKeys: [1, 3]
                },
                viewModelConstructor: ListViewModel,
                navigation: {
@@ -817,7 +822,7 @@ define([
                      page: 0,
                      mode: 'totalCount'
                   },
-                  view : 'infinity',
+                  view: 'infinity',
                   viewConfig: {
                      pagingMode: 'direct'
                   }
@@ -825,11 +830,11 @@ define([
             };
             var ctrl = new BaseControl(cfg);
             ctrl._listViewModel = new ListViewModel({ //аналог beforemount
-               items : rs,
+               items: rs,
                keyProperty: 'id',
-               selectedKeys : [1, 3]
+               selectedKeys: [1, 3]
             });
-            ctrl._children = {itemActions: {updateItemActions : function() {}}};
+            ctrl._children = {itemActions: {updateItemActions: function() {}}};
             ctrl._notify = function(e, options) {
                assert.equal(options[0], opt);
             };
@@ -844,15 +849,15 @@ define([
                test2: 'test'
             };
             var cfg = {
-               viewName : 'Controls/List/ListView',
+               viewName: 'Controls/List/ListView',
                source: source,
                viewConfig: {
                   keyProperty: 'id'
                },
                viewModelConfig: {
-                  items : rs,
+                  items: rs,
                   keyProperty: 'id',
-                  selectedKeys : [1, 3]
+                  selectedKeys: [1, 3]
                },
                viewModelConstructor: ListViewModel,
                navigation: {
@@ -862,7 +867,7 @@ define([
                      page: 0,
                      mode: 'totalCount'
                   },
-                  view : 'infinity',
+                  view: 'infinity',
                   viewConfig: {
                      pagingMode: 'direct'
                   }
@@ -870,11 +875,11 @@ define([
             };
             var ctrl = new BaseControl(cfg);
             ctrl._listViewModel = new ListViewModel({ //аналог beforemount
-               items : rs,
+               items: rs,
                keyProperty: 'id',
-               selectedKeys : [1, 3]
+               selectedKeys: [1, 3]
             });
-            ctrl._children = {itemActions: {updateItemActions : function() {}}};
+            ctrl._children = {itemActions: {updateItemActions: function() {}}};
             ctrl._notify = function(e, options) {
                assert.equal(options[0], opt);
                return newOpt;
@@ -888,15 +893,15 @@ define([
                test: 'test'
             };
             var cfg = {
-               viewName : 'Controls/List/ListView',
+               viewName: 'Controls/List/ListView',
                source: source,
                viewConfig: {
                   keyProperty: 'id'
                },
                viewModelConfig: {
-                  items : rs,
+                  items: rs,
                   keyProperty: 'id',
-                  selectedKeys : [1, 3]
+                  selectedKeys: [1, 3]
                },
                viewModelConstructor: ListViewModel,
                navigation: {
@@ -906,7 +911,7 @@ define([
                      page: 0,
                      mode: 'totalCount'
                   },
-                  view : 'infinity',
+                  view: 'infinity',
                   viewConfig: {
                      pagingMode: 'direct'
                   }
@@ -914,16 +919,332 @@ define([
             };
             var ctrl = new BaseControl(cfg);
             ctrl._listViewModel = new ListViewModel({ //аналог beforemount
-               items : rs,
+               items: rs,
                keyProperty: 'id',
-               selectedKeys : [1, 3]
+               selectedKeys: [1, 3]
             });
-            ctrl._children = {itemActions: {updateItemActions : function() {}}};
+            ctrl._children = {itemActions: {updateItemActions: function() {}}};
             ctrl._notify = function(e, options) {
                assert.equal(options[0], opt);
             };
             ctrl._onAfterItemEndEdit({}, opt);
          });
       });
-   })
+
+      describe('ItemActions', function() {
+         var
+            actions = [
+               {
+                  id: 0,
+                  title: 'прочитано',
+                  showType: tUtil.showType.TOOLBAR,
+                  handler: function() {
+                     console.log('action read Click');
+                  }
+               },
+               {
+                  id: 1,
+                  icon: 'icon-primary icon-PhoneNull',
+                  title: 'phone',
+                  showType: tUtil.showType.MENU,
+                  handler: function(item) {
+                     console.log('action phone Click ', item);
+                  }
+               },
+               {
+                  id: 2,
+                  icon: 'icon-primary icon-EmptyMessage',
+                  title: 'message',
+                  showType: tUtil.showType.MENU,
+                  handler: function() {
+                     alert('Message Click');
+                  }
+               },
+               {
+                  id: 3,
+                  icon: 'icon-primary icon-Profile',
+                  title: 'profile',
+                  showType: tUtil.showType.MENU_TOOLBAR,
+                  handler: function() {
+                     console.log('action profile Click');
+                  }
+               },
+               {
+                  id: 4,
+                  icon: 'icon-Erase icon-error',
+                  title: 'delete pls',
+                  showType: tUtil.showType.TOOLBAR,
+                  handler: function() {
+                     console.log('action delete Click');
+                  }
+               },
+               {
+                  id: 5,
+                  icon: 'icon-done icon-Admin',
+                  title: 'delete pls',
+                  showType: tUtil.showType.TOOLBAR,
+                  handler: function() {
+                     console.log('action delete Click');
+                  }
+               }
+            ];
+         it('showActionsMenu context', function() {
+            var callBackCount = 0;
+            var cfg = {
+                  viewName: 'Controls/List/ListView',
+                  viewConfig: {
+                     idProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: [],
+                     idProperty: 'id'
+                  },
+                  viewModelConstructor: ListViewModel,
+                  source: source
+               },
+               instance = new BaseControl(cfg),
+               fakeEvent = {
+                  type: 'itemcontextmenu'
+
+               },
+               childEvent = {
+                  nativeEvent: {
+                     preventDefault: function() {
+                        callBackCount++;
+                     }
+                  },
+                  stopImmediatePropagation: function() {
+                     callBackCount++;
+                  }
+               },
+               itemData = {
+                  itemActions: {all: actions}
+               };
+            instance._children = {
+               itemActionsOpener: {
+                  open: function(args) {
+                     callBackCount++;
+                     assert.isFalse(args.target);
+                     assert.isTrue(cInstance.instanceOfModule(args.templateOptions.items, 'WS.Data/Collection/RecordSet'));
+                  }
+               }
+            };
+
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg);
+            instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
+            assert.equal(itemData, instance._listViewModel._activeItem);
+            assert.isTrue(itemData.contextEvent);
+            assert.equal(callBackCount, 3);
+
+            //dont show by long tap
+            instance._isTouch = true;
+            instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
+         });
+
+         it('showActionsMenu no context', function() {
+            var callBackCount = 0;
+            var
+               cfg = {
+                  viewName: 'Controls/List/ListView',
+                  viewConfig: {
+                     idProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: [],
+                     idProperty: 'id'
+                  },
+                  viewModelConstructor: ListViewModel,
+                  source: source
+               },
+               instance = new BaseControl(cfg),
+               target = 123,
+               fakeEvent = {
+                  type: 'click'
+
+               },
+               childEvent = {
+                  target: target,
+                  nativeEvent: {
+                     preventDefault: function() {
+                        callBackCount++;
+                     }
+                  },
+                  stopImmediatePropagation: function() {
+                     callBackCount++;
+                  }
+               },
+               itemData = {
+                  itemActions: {all: actions}
+               };
+            instance._children = {
+               itemActionsOpener: {
+                  open: function(args) {
+                     callBackCount++;
+                     assert.equal(target, args.target);
+                     assert.isTrue(cInstance.instanceOfModule(args.templateOptions.items, 'WS.Data/Collection/RecordSet'));
+                  }
+               }
+            };
+
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg);
+            instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
+            assert.equal(itemData, instance._listViewModel._activeItem);
+            assert.isFalse(itemData.contextEvent);
+            assert.equal(callBackCount, 3);
+         });
+
+         it('closeActionsMenu', function() {
+            var callBackCount = 0;
+            var
+               cfg = {
+                  viewName: 'Controls/List/ListView',
+                  viewConfig: {
+                     idProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: [],
+                     idProperty: 'id'
+                  },
+                  viewModelConstructor: ListViewModel,
+                  source: source
+               },
+               instance = new BaseControl(cfg),
+               target = '123',
+               fakeEvent = {
+                  target: target,
+                  type: 'click',
+                  stopPropagation: function() {
+                     callBackCount++;
+                  }
+               };
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg);
+            instance._children = {
+               itemActionsOpener: {
+                  close: function() {
+                     callBackCount++;
+                  }
+               }
+            };
+            instance._listViewModel._activeItem = {
+               item: true
+            };
+            instance._closeActionsMenu({
+               action: 'itemClick',
+               event: fakeEvent,
+               data: [{
+                  getRawData: function() {
+                     callBackCount++;
+                     return {
+                        handler: function() {
+                           callBackCount++;
+                        }
+                     };
+                  }
+               }]});
+            assert.equal(instance._listViewModel._activeItem, null);
+            assert.equal(callBackCount, 4);
+         });
+
+         it('_listSwipe  multiSelectStatus = 1', function(done) {
+            var callBackCount = 0;
+            var
+               cfg = {
+                  viewName: 'Controls/List/ListView',
+                  viewConfig: {
+                     idProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: [],
+                     idProperty: 'id'
+                  },
+                  viewModelConstructor: ListViewModel,
+                  source: source
+               },
+               instance = new BaseControl(cfg),
+               itemData,
+               childEvent = {
+                  nativeEvent: {
+                     direction: 'left'
+                  }
+               };
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg).addCallback(function() {
+               instance._children = {
+                  itemActionsOpener: {
+                     close: function() {
+                        callBackCount++;
+                     }
+                  }
+               };
+               instance._listViewModel.reset();
+               instance._listViewModel.goToNext();
+               itemData = instance._listViewModel.getCurrent();
+               itemData.multiSelectVisibility = true;
+               itemData.multiSelectStatus = 1;
+
+               instance._listSwipe({}, itemData, childEvent);
+               assert.equal(callBackCount, 1);
+               childEvent = {
+                  nativeEvent: {
+                     direction: 'right'
+                  }
+               };
+
+               instance._listSwipe({}, itemData, childEvent);
+               assert.equal(callBackCount, 2);
+               done();
+
+            });
+            return done;
+         });
+
+         it('_listSwipe  multiSelectStatus = 0', function(done) {
+            var callBackCount = 0;
+            var
+               cfg = {
+                  viewName: 'Controls/List/ListView',
+                  viewConfig: {
+                     idProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: [],
+                     idProperty: 'id'
+                  },
+                  viewModelConstructor: ListViewModel,
+                  source: source
+               },
+               instance = new BaseControl(cfg),
+               itemData,
+               childEvent = {
+                  nativeEvent: {
+                     direction: 'right'
+                  }
+               };
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg).addCallback(function() {
+               instance._children = {
+                  itemActionsOpener: {
+                     close: function() {
+                        callBackCount++;
+                     }
+                  }
+               };
+               instance._listViewModel.reset();
+               instance._listViewModel.goToNext();
+               itemData = instance._listViewModel.getCurrent();
+               itemData.multiSelectVisibility = true;
+               itemData.multiSelectStatus = 0;
+               instance._listSwipe({}, itemData, childEvent);
+               assert.equal(callBackCount, 1);
+               done();
+
+            });
+            return done;
+         });
+
+      });
+   });
 });

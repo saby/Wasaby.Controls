@@ -177,7 +177,7 @@ define('SBIS3.CONTROLS/Mixins/EditAtPlaceMixin',
                   style: 'bordered',
                   size: 's',
                   primary: true, //Нужно, чтобы кнопка была дефолтной в своей области. иначе ctrl+enter вызовет обработчик дефолтной кнопки, расположенной выше.
-                  icon: 'sprite:icon-16 icon-Yes icon-done action-hover'
+                  icon: 'sprite:icon-16 icon-Yes icon-done'
                });
                container.append(this._cntrlPanel);
                this._okButton.subscribe('onActivated', function() {

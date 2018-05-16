@@ -60,6 +60,7 @@ define('Controls/Input/Dropdown',
          _beforeMount: function(options, context, receivedState) {
             if (receivedState) {
                this._items = receivedState;
+               _private.updateSelectedItem(this, options.selectedKeys);
             } else {
                if (options.source) {
                   return _private.loadItems(this, options.source, options.selectedKeys);

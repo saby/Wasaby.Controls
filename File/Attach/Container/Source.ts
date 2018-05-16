@@ -70,7 +70,7 @@ class SourceContainer implements IContainer<ISource> {
      * @see File/LocalFileLink
      * @see File/HttpFileLink
      */
-    get(file: IResource): Deferred.<ISource> {
+    get(file: IResource): Deferred<ISource> {
         let source = this._get(file);
         return Deferred.success(
             source ||
