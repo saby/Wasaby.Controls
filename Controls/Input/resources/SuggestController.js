@@ -79,7 +79,8 @@ define('Controls/Input/resources/SuggestController',
                   template: self._options.suggestTemplate,
                   source: self._options.source,
                   showAllOpener: self._options.showAllOpener,
-                  filter: _private.getSearchFilter(self, self._value)
+                  filter: _private.getSearchFilter(self, self._value),
+                  emptyTemplate: self._options.emptyTemplate
                }
             };
          },
@@ -122,6 +123,13 @@ define('Controls/Input/resources/SuggestController',
          search: function(searchValue) {
             this._value = searchValue;
             _private.onChangeValueHandler(this);
+         },
+         
+         setEmptyTemplate: function(emptyTemplate) {
+            this._options.emptyTemplate = emptyTemplate;
+            if (this._suggestPopupController) {
+               this._suggestPopupController.setEmptyTemplate(emptyTemplate);
+            }
          },
       
          abort: function() {

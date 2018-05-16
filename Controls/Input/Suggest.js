@@ -115,6 +115,9 @@ define('Controls/Input/Suggest',
             this._simpleViewModel.updateOptions({
                value: newOptions.value
             });
+            if (newOptions.emptyTemplate !== this._options.emptyTemplate && this._suggestController) {
+               this._suggestController.setEmptyTemplate(newOptions.emptyTemplate);
+            }
          },
          
          destroy: function() {
