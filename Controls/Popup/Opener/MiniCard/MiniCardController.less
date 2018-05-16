@@ -1,11 +1,30 @@
 .controls-MiniCardController {
-   transition: opacity @animation-duration_MiniCard;
+   animation-duration: @animation-duration_MiniCard;
+   animation-fill-mode: forwards;
 }
 
 .controls-MiniCardController_open {
-   opacity: 1;
+   animation-name: openingMiniCard;
 }
 
 .controls-MiniCardController_close {
-   opacity: 0;
+   animation-name: closingMiniCard;
+}
+
+@keyframes openingMiniCard {
+   from {
+      opacity: 0;
+   }
+   to {
+      opacity: 1;
+   }
+}
+
+@keyframes closingMiniCard {
+   from {
+      opacity: 1;
+   }
+   to {
+      opacity: 0;
+   }
 }

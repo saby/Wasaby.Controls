@@ -9,79 +9,70 @@ define('Controls/Popup/Opener/MiniCard',
       'use strict';
 
       var _private = {
-         target: null,
-
-         openingTimerId: null,
-
-         closingTimerId: null,
-
          displayDuration: 1500,
 
-         animationDuration: 500,
+         cleatTimeout: function(self, type) {
+            var nameTimer = '_' + type + 'TimerId';
 
-         cleatTimeout: function(type) {
-            var nameTimer = type + 'TimerId';
-
-            if (_private[nameTimer]) {
-               clearTimeout(_private[nameTimer]);
-               _private[nameTimer] = null;
+            if (self[nameTimer]) {
+               clearTimeout(self[nameTimer]);
+               self[nameTimer] = null;
             }
          },
 
          open: function(self, cfg) {
             var myCfg = cClone(cfg);
 
-            myCfg.className = 'controls-MiniCardController controls-MiniCardController_close';
+            myCfg.className = 'controls-MiniCardController controls-MiniCardController_open';
             MiniCard.superclass.open.call(self, myCfg, Controller);
-
-            this.target = myCfg.target;
          }
       };
 
       var MiniCard = Base.extend({
+         _openingTimerId: null,
+
+         _closingTimerId: null,
+
          open: function(cfg, type) {
-            var
-               self = this,
-               duration = 0;
+            var self = this;
 
-            /**
-             * You need to finish opening the previous mini card.
-             */
-            _private.cleatTimeout('opening');
-
-            /**
-             * If the previous mini card is open, then it must be closed before opening a new mini card.
-             */
-            if (this.isOpened()) {
-               this.close(type);
-               duration += _private.animationDuration;
-            }
+            _private.cleatTimeout(this, 'closing');
 
             if (type === 'hover') {
-               duration += _private.displayDuration;
-            }
-
-            if (duration) {
-               _private.openingTimerId = setTimeout(function() {
-                  _private.openingTimerId = null;
+               this._openingTimerId = setTimeout(function() {
+                  self.openingTimerId = null;
 
                   _private.open(self, cfg);
-               }, duration);
+               }, _private.displayDuration);
             } else {
                _private.open(self, cfg);
             }
          },
          
          close: function(type) {
-            _private.target = null;
+            var self = this;
+
+            _private.cleatTimeout(this, 'opening');
 
             if (type === 'hover') {
-               _private.closingTimerId = setTimeout(function() {
-                  _private.closingTimerId = null;
+               this._closingTimerId = setTimeout(function() {
+                  self.closingTimerId = null;
 
-                  MiniCard.superclass.close.call(this);
+                  MiniCard.superclass.close.call(self);
                }, _private.displayDuration);
+            } else {
+               MiniCard.superclass.close.call(this);
             }
+         },
+
+         /**
+          * Cancel a delay in opening or closing.
+          * @param {String} action Action to be undone.
+          * @variant opening
+          * @variant closing
+          */
+         cancel: function(action) {
+            _private.cleatTimeout(this, action);
          }
       });
 

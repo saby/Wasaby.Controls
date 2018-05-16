@@ -1,13 +1,14 @@
 <div class="ControlsDemo-MiniCard">
-   <img src="MiniCard/image/Максим.png" alt="Максим" on:mouseenter="_mouseenterHandler()" name="Maxim"/>
-   <img src="MiniCard/image/Андрей.png" alt="Андрей" on:mouseenter="_mouseenterHandler()" name="Andrei"/>
-   <img src="MiniCard/image/Валера.png" alt="Валера" on:mouseenter="_mouseenterHandler()" name="Valera"/>
-   <Controls.Popup.Opener.MiniCard name="miniCard">
-      <ws:popupOptions template="tmpl!Controls-demo/MiniCard/Content">
-         <ws:corner vertical="bottom" horizontal="right"/>
-      </ws:popupOptions>
-   </Controls.Popup.Opener.MiniCard>
-   <Controls.Button caption="open" on:click="_open()"/>
-   <Controls.Button caption="close" on:click="_close()"/>
-   <div>{{_activeTarget}}</div>
+   <ws:for data="image in ['Андрей', 'Валера', 'Максим', 'Пиратик', 'Максим']">
+      <Controls.MiniCard>
+         <ws:target>
+            <img src="MiniCard/image/{{image}}.png"/>
+         </ws:target>
+         <ws:miniCard>
+            <div attr:style="padding: 50px; border: 2px solid red;">
+               <img src="MiniCard/image/{{image}}.png" style="height: 150px; width: 150px;"/>
+            </div>
+         </ws:miniCard>
+      </Controls.MiniCard>
+   </ws:for>
 </div>
