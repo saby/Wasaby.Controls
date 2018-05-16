@@ -8,9 +8,7 @@ define('Controls-demo/HighCharts/HighCharts', [
       _template: template,
 
       _beforeMount: function() {
-         this._filter = {
-            'asd': 123
-         };
+         this._filter = '1';
          this._dataSource = new DemoSource();
       },
       _chartConfig: {
@@ -30,9 +28,11 @@ define('Controls-demo/HighCharts/HighCharts', [
          title: 'Прикол'
       }],
       _updateState: function() {
-         this._filter = {
-            'asd': 123
-         };
+         if (this._filter === '1') {
+            this._filter = '2';
+         } else {
+            this._filter = '1';
+         }
       }
    });
 });

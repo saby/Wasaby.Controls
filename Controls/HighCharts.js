@@ -127,8 +127,8 @@ define('Controls/HighCharts', [
                this._highChartsData = recievedState;
             } else if (opts.dataSource) {
                return opts.dataSource.query(opts.filter).addCallback(function(data) {
-                  self._highChartsData = data;
-                  return data;
+                  self._highChartsData = data.getAll();
+                  return self._highChartsData;
                });
             }
          },
@@ -137,7 +137,7 @@ define('Controls/HighCharts', [
             if (this._highChartsData) {
                _private.reload(this, opts.wsSeries, opts.wsAxis, this._highChartsData);
 
-               //Необходимо вызовать forceUpdate в afterMount, так как не вызовется update дочернего компонента
+               //Have to call forceUpdate in afterMount, because afterMount can`t update children components
                this._forceUpdate();
             }
          },
@@ -147,7 +147,7 @@ define('Controls/HighCharts', [
             if (opts.filter !== this._options.filter && opts.dataSource) {
                opts.dataSource.query(opts.filter).addCallback(function(data) {
                   if (data) {
-                     _private.reload(self, opts.wsSeries, opts.wsAxis, data);
+                     _private.reload(self, opts.wsSeries, opts.wsAxis, data.getAll());
                   }
                });
             }
