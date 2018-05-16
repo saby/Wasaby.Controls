@@ -59,6 +59,14 @@ define('Controls/Popup/Manager',
             return false;
          },
 
+         popupAnimated: function(id) {
+            var element = ManagerController.find(id);
+            if (element) {
+               element.strategy.elementAnimated(element, this.getItemContainer(id));
+            }
+            return false;
+         },
+
          fireEventHandler: function(id, event, eventArg) {
             var element = ManagerController.find(id);
             if (element && element.popupOptions.eventHandlers && element.popupOptions.eventHandlers.hasOwnProperty(event)) {

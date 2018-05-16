@@ -477,13 +477,16 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
          _needToRedrawHistory: false,
          _count: 0,
          _originalIdProperty: null,
-         _adapter: null
+         _adapter: null,
+         // хранит исходный тип идентификатора. необходим для того чтобы привести синтетический id к исходному типу
+         _idType: null
       },
 
       $constructor: function() {
          if (this._options.oldItems) {
             this._originalIdProperty = this._options.oldItems.getIdProperty();
             this._adapter = this._options.oldItems.getAdapter();
+            this._idType = this._options.oldItems.getCount() && typeof this._options.oldItems.at(0).getId() === 'number' ? 'number'  : 'string';
          }
       },
 
@@ -504,6 +507,21 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
 
       getOriginalIdProperty: function() {
          return this._originalIdProperty;
+      },
+
+      getIdType: function() {
+         return this._idType;
+      },
+
+
+      /**
+       * Возвращает приведенный к опредленному типу id.
+       * Возвращаемый тип определяется по исходным элементам
+       * @param id - идентификатор элемента
+       * @public
+       */
+      getCastId: function(id) {
+         return this.getIdType() === 'number' ? parseInt(id, 10) : (id + '');
       },
 
       /**
@@ -690,6 +708,13 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
          */
       getPinned: function() {
          return this._pinned;
+      },
+
+      /**
+       * Возвращает исходный набор элементов
+       */
+      getOldItems: function() {
+         return this._options.oldItems;
       },
 
       /**

@@ -1044,8 +1044,8 @@ define('SBIS3.CONTROLS/DropdownList',
           * Получить ключ элемента для выбора "по умолчанию"
           * @returns {*|String|Number}
           */
-         getDefaultId: function() {
-            var items = this.getItems();
+         getDefaultId: function(rawItems) {
+            var items = rawItems || this.getItems();
             if (this._options.emptyValue || !items) {
                return null;
             }

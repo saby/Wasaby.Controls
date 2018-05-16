@@ -14,7 +14,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
       'Lib/Control/FloatArea/FloatArea',
       'SBIS3.CONTROLS/Action',
       'SBIS3.CONTROLS/ImportCustomizer/Area',
-      'SBIS3.CONTROLS/ImportCustomizer/RemoteCall'
+      'SBIS3.CONTROLS/Utils/ImportExport/RemoteCall'
    ],
 
    function (cMerge, Deferred, FloatArea, Action, Area, RemoteCall) {
@@ -23,7 +23,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
       var ImportCustomizerAction = Action.extend([], /**@lends SBIS3.CONTROLS/ImportCustomizer/Action.prototype*/ {
 
          /**
-          * @typedef {object} ImportRemoteCall Тип, содержащий информацию для вызова удалённого сервиса для получения данных ввода или отправки данных вывода. Соответствует вспомогательному классу {@link SBIS3.CONTROLS/ImportCustomizer/RemoteCall}
+          * @typedef {object} ImportRemoteCall Тип, содержащий информацию для вызова удалённого сервиса для получения данных ввода или отправки данных вывода. Соответствует вспомогательному классу {@link SBIS3.CONTROLS/Utils/ImportExport/RemoteCall}
           * @property {string} endpoint Сервис, метод которого будет вызван
           * @property {string} method Имя вызываемого метода
           * @property {string} [idProperty] Имя свойства, в котором находится идентификатор (опционально, если вызову это не потребуется)
@@ -164,15 +164,16 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
             if (this._result) {
                return Deferred.fail('Allready open');
             }
-            var inputCall = options.inputCall;
+            var defaults = this._options;
+            var inputCall = options.inputCall || defaults.inputCall;
             if (inputCall) {
                inputCall = new RemoteCall(inputCall);
             }
-            var outputCall = options.outputCall;
+            var outputCall = options.outputCall || defaults.outputCall;
             if (outputCall) {
                outputCall = new RemoteCall(outputCall);
             }
-            var opts = inputCall || outputCall ? Object.keys(options).reduce(function (r, v) { if (v !== 'inputCall' && v !== 'outputCall') { r[v] = options[v]; }; return r; }, {}) : options;
+            var opts = options.inputCall || options.outputCall ? Object.keys(options).reduce(function (r, v) { if (v !== 'inputCall' && v !== 'outputCall') { r[v] = options[v]; }; return r; }, {}) : options;
             this._result = new Deferred();
             if (inputCall) {
                inputCall.call(opts).addCallbacks(

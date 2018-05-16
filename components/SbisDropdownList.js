@@ -109,7 +109,7 @@ define('SBIS3.CONTROLS/SbisDropdownList',
                      format: items.getFormat().clone()
                   }));
                }
-               this._historyController.addToHistory(id);
+               this._historyController.addToHistory(this._historyController.getCastId(id));
             }
             SbisDropdownList.superclass.setSelectedKeys.apply(this, arguments);
          },
@@ -133,7 +133,7 @@ define('SBIS3.CONTROLS/SbisDropdownList',
          },
 
          getDefaultId: function() {
-            var id = SbisDropdownList.superclass.getDefaultId.apply(this, arguments);
+            var id = SbisDropdownList.superclass.getDefaultId.call(this, (this._historyController && this._historyController.getOldItems()));
             return (this._historyController && this._historyController.getOriginId(id)) || id;
          },
 
