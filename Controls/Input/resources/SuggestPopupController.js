@@ -119,7 +119,7 @@ define('Controls/Input/resources/SuggestPopupController',
          },
          
          setEmptyTemplate: function(emptyTemplate) {
-           this._emptyTemplate = emptyTemplate;
+            this._emptyTemplate = emptyTemplate;
          },
          
          keyDown: function(event) {
