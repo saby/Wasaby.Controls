@@ -96,12 +96,6 @@ define('Controls/Input/ComboBox',
                   target: this._container,
                   corner: {
                      vertical: 'bottom'
-                  },
-                  horizontalAlign: {
-                     offset: 13
-                  },
-                  verticalAlign: {
-                     offset: 5
                   }
                };
                this._children.DropdownOpener.open(config, this);
