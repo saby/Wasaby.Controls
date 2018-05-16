@@ -1,9 +1,10 @@
 define(
    [
       'Controls/Input/Dropdown',
-      'WS.Data/Source/Memory'
+      'WS.Data/Source/Memory',
+      'WS.Data/Collection/RecordSet'
    ],
-   (Dropdown, Memory) => {
+   (Dropdown, Memory, RecordSet) => {
       describe('Dropdown', () => {
          let items = [
             {
@@ -61,8 +62,12 @@ define(
             })
          });
          it('check received state', () => {
-            dropdownList._beforeMount(config, null, items);
-            assert.equal(dropdownList._items, items);
+            let itemsRS = new RecordSet({
+               idProperty: 'id',
+               rawData: items
+            });
+            dropdownList._beforeMount(config, null, itemsRS);
+            assert.equal(dropdownList._items, itemsRS);
          });
 
          it('update text', () => {
