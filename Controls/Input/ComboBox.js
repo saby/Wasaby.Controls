@@ -90,7 +90,8 @@ define('Controls/Input/ComboBox',
                var config = {
                   templateOptions: {
                      items: this._items,
-                     selectedKeys: this._selectedKeys
+                     selectedKeys: this._selectedKeys,
+                     width: this._container.offsetWidth
                   },
                   target: this._children.Popup
                };
