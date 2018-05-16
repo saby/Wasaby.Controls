@@ -1,6 +1,8 @@
 /* На основе SBIS3.CORE.SwitchableAreaItem */
-define(['Lib/Control/CompoundControl/CompoundControl', 'Core/helpers/random-helpers', 'Core/Deferred', 'Core/ParallelDeferred'],
-   function(CompoundControl, randHelpers, Deferred, ParallelDeferred) {
+define('SBIS3.CONTROLS/SwitchableArea/SwitchableAreaItem',
+   [
+      'Lib/Control/CompoundControl/CompoundControl', 'Core/helpers/random-helpers', 'Core/Deferred', 'Core/ParallelDeferred'
+   ], function(CompoundControl, randHelpers, Deferred, ParallelDeferred) {
       'use strict';
 
       /**
