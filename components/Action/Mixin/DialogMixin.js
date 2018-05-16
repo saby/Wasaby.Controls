@@ -145,7 +145,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                      if (meta.mode === 'floatArea' && config.isStack === true) {
                         deps.push('Controls/Popup/Opener/Stack/StackController');
                         config._type = 'stack';
-                        config.className = 'controls-Stack';
+                        config.className = (config.className || '') + ' controls-Stack';
                      } else if (meta.mode === 'floatArea' && config.isStack === false) {
                         deps.push('Controls/Popup/Opener/Sticky/StickyController');
                         config._type = 'sticky';
