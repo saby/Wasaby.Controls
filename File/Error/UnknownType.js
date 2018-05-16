@@ -2,7 +2,7 @@ define("File/Error/UnknownType", ["require", "exports", "tslib", "File/Error"], 
     "use strict";
     var MESSAGE = rk('Неизвестный тип файла');
     /**
-     * Ошибка превышения заданного размера выбранного файла
+     * Ошибка, когда не смогли определить тип файла
      * @class
      * @name File/Error/UnknownType
      * @public

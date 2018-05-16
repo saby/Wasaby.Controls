@@ -2,7 +2,7 @@ define("File/Error/UploadFolder", ["require", "exports", "tslib", "File/Error"],
     "use strict";
     var MESSAGE = rk('Загрузка папок не поддерживается браузером');
     /**
-     * Ошибка превышения заданного размера выбранного файла
+     * Ошибка невозможности загрузки браузером папки, полученной путём D&D
      * @class
      * @name File/Error/UploadFolder
      * @public

@@ -1,25 +1,20 @@
-/// <amd-module name="File/Error/UnknownType" />
+/// <amd-module name="File/Error/UploadFolder" />
 import FileError = require('File/Error');
 
-const MESSAGE = rk('Неизвестный тип файла');
-
-/**
- * @cfg {String} Максимально допустимый размер файла
- * @name File/Error/MaxSize#maxSize
- */
+const MESSAGE = rk('Загрузка папок не поддерживается браузером');
 
 type ErrorParam = {
     fileName: string;
 }
 
 /**
- * Ошибка превышения заданного размера выбранного файла
+ * Ошибка невозможности загрузки браузером папки, полученной путём D&D
  * @class
- * @name File/Error/UnknownType
+ * @name File/Error/UploadFolder
  * @public
  * @extends File/Error
  */
-class UnknownTypeError extends FileError {
+class UploadFolderError extends FileError {
     public maxSize: number;
     constructor(params: ErrorParam) {
         super({
@@ -29,8 +24,8 @@ class UnknownTypeError extends FileError {
         /*
          * https://github.com/Microsoft/TypeScript-wiki/blob/master/Breaking-Changes.md#extending-built-ins-like-error-array-and-map-may-no-longer-work
          */
-        Object.setPrototypeOf(this, UnknownTypeError.prototype);
+        Object.setPrototypeOf(this, UploadFolderError.prototype);
     }
 }
 
-export = UnknownTypeError;
+export = UploadFolderError;

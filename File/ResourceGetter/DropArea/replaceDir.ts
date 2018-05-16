@@ -1,9 +1,8 @@
 /// <amd-module name="File/ResourceGetter/DropArea/replaceDir" />
 import ParallelDeferred = require("Core/ParallelDeferred");
 import Deferred = require("Core/Deferred");
-
-const DROP_FOLDER_ERROR = rk('Загрузка папки не поддерживается браузером');
-const UNKNOWN_FILE_TYPE = rk('Неизвестный тип файла');
+import UnknownTypeError = require("File/Error/UnknownType");
+import UploadFolderError = require("File/Error/UploadFolder");
 
 type DirectoryReader = {
     readEntries(successCallback: (entries: Array<Entry>) => void): void;
@@ -78,7 +77,9 @@ travel = (entry: Entry, path: string): Deferred<TravelResult> => {
     if (entry.isDirectory) {
         return readDirectory(entry, path + entry.name + "/");
     }
-    return Deferred.fail(UNKNOWN_FILE_TYPE);
+    return Deferred.fail(new UnknownTypeError({
+        fileName: entry.name
+    }));
 };
 /**
  * Обходит содержимое набора из Entry
@@ -160,7 +161,9 @@ let replaceDir = ({items, files}: DataTransfer): Deferred<FileList | Array<File 
             result.push(file);
             continue;
         }
-        result.push(new Error(DROP_FOLDER_ERROR));
+        result.push(new UploadFolderError({
+            fileName: file.name
+        }));
     }
     return Deferred.success(result);
 };
