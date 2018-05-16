@@ -241,12 +241,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                var previewContainer = this._preview.parent();
                this._previewSize = size = {width:previewContainer.width(), height:previewContainer.height()};
             }
-            var url = this._exportFormatter.getPreviewUrl(this._options.fileUuid, size.width, size.height);
-            var img = this._preview[0];
-            var stopper = new Deferred();
-            WaitIndicator.make({target:img.parentNode, delay:1000}, stopper);
-            img.onload = img.onerror = stopper.callback.bind(stopper);
-            img.src = url;
+            this._exportFormatter.getPreviewUrl(this._options.fileUuid, size.width, size.height).addCallback(function (url) {
+               var img = this._preview[0];
+               var stopper = new Deferred();
+               WaitIndicator.make({target:img.parentNode, delay:1000}, stopper);
+               img.onload = img.onerror = stopper.callback.bind(stopper);
+               img.src = url;
+            }.bind(this));
          },
 
          /**
