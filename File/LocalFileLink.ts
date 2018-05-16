@@ -30,7 +30,7 @@ class LocalFileLink {
      * @name File/LocalFileLink#getMeta
      */
     getMeta(): any {
-        return this.meta;
+        return this.meta || {};
     }
 }
 export  = LocalFileLink;
