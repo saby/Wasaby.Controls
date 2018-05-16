@@ -75,8 +75,12 @@ define(
          });
 
          it('check received state', () => {
-            dropdownList._beforeMount(config, null, itemsRecords);
-            assert.deepEqual(dropdownList._items.getRawData(), itemsRecords.getRawData());
+            let itemsRS = new RecordSet({
+               idProperty: 'id',
+               rawData: items
+            });
+            dropdownList._beforeMount(config, null, itemsRS);
+            assert.equal(dropdownList._items, itemsRS);
          });
 
          it('update text', () => {
