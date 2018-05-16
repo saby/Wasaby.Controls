@@ -359,6 +359,9 @@ define('Controls/List/Grid/GridViewModel', [
             current.isEndColumn = function() {
                return current.columnIndex < current.columns.length;
             };
+            current.isEndingColumn = function() {
+               return current.columnIndex === current.columns.length-1;
+            };
             current.getCurrentColumn = function() {
                var
                   currentColumn = {
@@ -467,6 +470,10 @@ define('Controls/List/Grid/GridViewModel', [
 
          setItems: function(items) {
             this._model.setItems(items);
+         },
+
+         setItemActions: function (item, actions) {
+            this._model.setItemActions(item, actions);
          },
 
          appendItems: function(items) {
