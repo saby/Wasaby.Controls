@@ -59,18 +59,14 @@ define('Controls/Input/ComboBox',
          _template: template,
          _isOpen: false,
 
-         constructor: function(options) {
-            ComboBox.superclass.constructor.apply(this, arguments);
-
+         _beforeMount: function(options, context, receivedState) {
             this._onResult = _private.onResult.bind(this);
             this._close = this._close.bind(this);
 
             this._simpleViewModel = new BaseViewModel({
                value: options.value
             });
-         },
 
-         _beforeMount: function(options, context, receivedState) {
             if (receivedState) {
                this._items = receivedState;
             } else if (options.items) {
