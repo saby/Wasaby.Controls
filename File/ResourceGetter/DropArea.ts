@@ -6,6 +6,7 @@ import Deferred = require("Core/Deferred");
 import LocalFile = require("File/LocalFile");
 import random = require("Core/helpers/random-helpers");
 import ExtensionsHelper = require("File/utils/ExtensionsHelper");
+import replaceDir = require("File/ResourceGetter/DropArea/replaceDir");
 
 type Handler = (files: FileList) => void;
 /**
@@ -137,7 +138,9 @@ let overlayHandlers = {
         event.stopPropagation();
         let target = dropAreas.indexOf(event.target) === -1? <HTMLElement> event.target.parentNode: event.target;
         let area = getArea(target);
-        area.handler(event.dataTransfer.files);
+        replaceDir(event.dataTransfer.files).addCallback((files) => {
+            area.handler(files);
+        });
         dragEnd();
     }
 };

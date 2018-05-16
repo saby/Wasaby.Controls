@@ -41,20 +41,18 @@ define("File/Attach/Uploader", ["require", "exports", "File/Attach/Container/Sou
          */
         Uploader.prototype.upload = function (files, meta, handlers) {
             var _this = this;
-            var uploadDefArray;
-            uploadDefArray = files.map(function (file) {
-                return _this._uploadFile(file, meta);
-            });
-            var len = uploadDefArray.length;
+            var len = files.length;
             return new ParallelDeferred({
-                steps: uploadDefArray,
-                stopOnFirstError: false
+                steps: files.map(function (file) {
+                    return function () {
+                        return _this._uploadFile(file, meta);
+                    };
+                }),
+                stopOnFirstError: false,
+                maxRunningCount: 1 // Очередь загрузки
             }).done().getResult().addCallbacks(function (results) {
-                var array = results;
-                if (!(results instanceof Array)) {
-                    array.length = len;
-                    array = Array.prototype.slice.call(array);
-                }
+                results.length = len;
+                var array = Array.prototype.slice.call(results);
                 _this._notify("onLoaded", array);
                 return array;
             }, function (error) {
