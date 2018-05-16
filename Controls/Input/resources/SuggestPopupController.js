@@ -99,6 +99,8 @@ define('Controls/Input/resources/SuggestPopupController',
             return  _private.search(self).addCallback(function(searchResult) {
                if (_private.needShowPopup(self, searchResult)) {
                   _private.showPopup(self);
+               } else {
+                  self._popupOpener.close();
                }
             });
          },
@@ -114,6 +116,10 @@ define('Controls/Input/resources/SuggestPopupController',
          
          setPopupOptions: function(options) {
             this._popupOptions = options;
+         },
+         
+         setEmptyTemplate: function(emptyTemplate) {
+           this._emptyTemplate = emptyTemplate;
          },
          
          keyDown: function(event) {
