@@ -1141,7 +1141,14 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
          _prepareAdditionalFilterForCursor: function(parentFn, filter, direction) {
             var
                position = [],
-               nodeId = filter[this._options.parentProperty];
+               nodeId = filter[this._options.parentProperty],
+               curRoot = this.getCurrentRoot();
+            if (typeof nodeId === 'undefined') {
+               nodeId = null;
+            }
+            if (typeof curRoot === 'undefined') {
+               curRoot = null;
+            }
             if (nodeId !== this.getCurrentRoot()) {
                if (typeof this._hierNodesCursor[nodeId] !== 'undefined') {
                   position.push(this._hierNodesCursor[nodeId]);
@@ -1165,10 +1172,19 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             }
          },
          _getQueryForCall: function(parentFn, filter, sorting, offset, limit, direction) {
+            var
+               filterRoot = filter[this._options.parentProperty],
+               curRoot = this.getCurrentRoot();
+            if (typeof filterRoot === 'undefined') {
+               filterRoot = null;
+            }
+            if (typeof curRoot === 'undefined') {
+               curRoot = null;
+            }
             // Устанавливаем позицию в listCursorNavigation при загрузке корня
-            if (this._isCursorNavigation() && this._options.saveReloadPosition && filter[this._options.parentProperty] === this.getCurrentRoot()) {
-               if (typeof this._hierPages[this.getCurrentRoot()] !== 'undefined') {
-                  this.getListNavigation().setPosition(this._hierPages[this.getCurrentRoot()]);
+            if (this._isCursorNavigation() && this._options.saveReloadPosition && filterRoot === curRoot) {
+               if (typeof this._hierPages[curRoot] !== 'undefined') {
+                  this.getListNavigation().setPosition(this._hierPages[curRoot]);
                }
             }
             return parentFn.call(this, filter, sorting, offset, limit, direction);
