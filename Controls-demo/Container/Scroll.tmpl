@@ -9,9 +9,10 @@
    <Controls.Container.Scroll attr:style="height: 50%; width: 50%; margin: auto;"
                               scrollbarVisible="{{_scrollbarVisible}}"
                               shadowVisible="{{_shadowVisible}}">
+							  attr:test_name="Scroll_1"
       <div>
          <ws:if data="{{_innerScroll}}">
-            <Controls.Container.Scroll attr:style="height: 300px;">
+            <Controls.Container.Scroll attr:style="height: 300px;" attr:test_name="Scroll_2">
                <ws:for data="index in _numberOfRecords">
                   <div>Record {{index + 1}}</div>
                </ws:for>
