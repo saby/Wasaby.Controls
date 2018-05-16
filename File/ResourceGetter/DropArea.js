@@ -103,7 +103,7 @@ var overlayHandlers = {
         event.stopPropagation();
         var target = dropAreas.indexOf(event.target) === -1 ? event.target.parentNode : event.target;
         var area = getArea(target);
-        replaceDir(event.dataTransfer.files).addCallback(function (files) {
+        replaceDir(event.dataTransfer).addCallback(function (files) {
             area.handler(files);
         });
         dragEnd();

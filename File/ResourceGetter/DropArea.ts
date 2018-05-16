@@ -138,7 +138,7 @@ let overlayHandlers = {
         event.stopPropagation();
         let target = dropAreas.indexOf(event.target) === -1? <HTMLElement> event.target.parentNode: event.target;
         let area = getArea(target);
-        replaceDir(event.dataTransfer.files).addCallback((files) => {
+        replaceDir(event.dataTransfer).addCallback((files) => {
             area.handler(files);
         });
         dragEnd();
