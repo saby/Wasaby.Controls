@@ -1,9 +1,10 @@
 define(
    [
       'Controls/Input/Dropdown',
-      'WS.Data/Source/Memory'
+      'WS.Data/Source/Memory',
+      'WS.Data/Collection/RecordSet'
    ],
-   (Dropdown, Memory) => {
+   (Dropdown, Memory, RecordSet) => {
       describe('Dropdown', () => {
          let items = [
             {
@@ -41,6 +42,11 @@ define(
             }
          ];
 
+         let itemsRecords = new RecordSet({
+            idProperty: 'id',
+            rawData: items
+         });
+
          let config = {
             selectedKeys: '2',
             keyProperty: 'id',
@@ -60,9 +66,17 @@ define(
                dropdownList._beforeMount(config).addCallback(resolve);
             })
          });
+
+         it('before mount', (done) => {
+            dropdownList._beforeMount(config).addCallback(function (items) {
+               assert.deepEqual(items.getRawData(), itemsRecords.getRawData());
+               done();
+            });
+         });
+
          it('check received state', () => {
-            dropdownList._beforeMount(config, null, items);
-            assert.equal(dropdownList._items, items);
+            dropdownList._beforeMount(config, null, itemsRecords);
+            assert.deepEqual(dropdownList._items.getRawData(), itemsRecords.getRawData());
          });
 
          it('update text', () => {
