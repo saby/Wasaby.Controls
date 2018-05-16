@@ -1,6 +1,6 @@
 /// <amd-module name="File/ResourceGetter/DropArea" />
 /// <amd-dependency path="css!File/ResourceGetter/DropArea" />
-define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/ResourceGetter/Base", "Core/Deferred", "Core/helpers/random-helpers", "File/utils/ExtensionsHelper", "File/utils/getFilePreparer", "css!File/ResourceGetter/DropArea"], function (require, exports, tslib_1, IResourceGetterBase, Deferred, random, ExtensionsHelper, getFilePreparer) {
+define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/ResourceGetter/Base", "Core/Deferred", "Core/helpers/random-helpers", "File/utils/ExtensionsHelper", "css!File/ResourceGetter/DropArea"], function (require, exports, tslib_1, IResourceGetterBase, Deferred, random, ExtensionsHelper) {
     "use strict";
     var OVERLAY_ID_PREFIX = "DropArea-";
     var OVERLAY_CLASS = 'DropArea_overlay';
@@ -148,11 +148,6 @@ define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/Res
          */
         extensions: null,
         /**
-         * @cfg {Number} Максимальный размер файла доступный для выбора (в МБ)
-         * @name File/ResourceGetter/DropArea#maxSize
-         */
-        maxSize: undefined,
-        /**
          * @cfg {HTMLElement} DOM элемент для перетаскивания файлов
          * @name File/ResourceGetter/DropArea#element
          */
@@ -201,11 +196,7 @@ define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/Res
             areas[_this._uid] = {
                 element: element, innerClass: innerClass, dragText: dragText, dropText: dropText,
                 handler: function (files) {
-                    var filePreparer = getFilePreparer({
-                        extensions: _this._extensions,
-                        maxSize: _this._options.maxSize
-                    });
-                    var result = filePreparer(files);
+                    var result = _this._extensions.verifyAndReplace(files);
                     _this._options.ondrop.call(_this, result);
                     if (_this._selectDef) {
                         _this._selectDef.callback(result);
