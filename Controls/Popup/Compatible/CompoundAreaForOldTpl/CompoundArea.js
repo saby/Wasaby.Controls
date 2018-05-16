@@ -7,6 +7,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/moduleStubs',
       'Core/core-debug',
       'Core/Deferred',
+      'Core/EventObject',
       'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea'
    ],
    function(Control,
@@ -15,7 +16,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       LikeWindowMixin,
       moduleStubs,
       coreDebug,
-      cDeferred) {
+      cDeferred,
+      EventObject) {
       /**
        * Слой совместимости для открытия старых шаблонов в новых попапах
       **/
@@ -57,6 +59,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                this._options._initCompoundArea(this);
             }
 
+            this._parent = this._options.parent;
+            this._logicParent = this._options.parent;
+
             moduleStubs.require([self._options.template]).addCallback(function(result) {
                CompatiblePopup.load().addCallback(function() { //Это уже должно быть загружено страницей
                   self.templateOptions.element = $(self._children.compoundBlock);
@@ -72,25 +77,27 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._compoundControl.subscribe('onCommandCatch', this._commandHandler);
          },
          _commandHandler: function(event, commandName) {
-            switch (commandName) {
-               case 'close':
-                  this._close();
+            if (commandName === 'close') {
+               this._close();
             }
          },
          _close: function() {
-            this._notify('close');
+            if (this.handle('onBeforeClose') !== false) {
+               this.close();
+            }
+         },
+         closeHandler: function(e) {
+            e.stopPropagation();
+            this._close();
          },
 
          /* from api floatArea, window */
 
          close: function() {
-            var res = this.handle('onBeforeClose');
-            if (res !== false) {
-               this._close();
+            this._notify('close');
 
-               this.handle('onClose');
-               this.handle('onAfterClose');
-            }
+            this.handle('onClose');
+            this.handle('onAfterClose');
          },
          _getTemplateComponent: function() {
             return this._compoundControl;
@@ -118,17 +125,25 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
          handle: function(eventName) {
             var handlers = this[eventName + 'Handler'] || [];
+            var eventState = new EventObject(eventName, this);
+
             handlers.forEach(function(value) {
-               value();
+               if (eventState.getResult() !== false) {
+                  value(eventState);
+               }
             });
             if (this._options.handlers && this._options.handlers[eventName]) {
                if (typeof this._options.handlers[eventName] === 'function') {
                   this._options.handlers[eventName] = [this._options.handlers[eventName]];
                }
                this._options.handlers[eventName].forEach(function(value) {
-                  value();
+                  if (eventState.getResult() !== false) {
+                     value(eventState);
+                  }
                });
             }
+
+            return eventState.getResult();
          },
 
          onBringToFront: function() {
