@@ -48,6 +48,12 @@ define('Controls-demo/Popup/PopupPage',
             });
          },
 
+         openOldTemplate: function () {
+            this._children.openOldTemplate.open({
+               opener: this._children.stackButton2
+            });
+         },
+
          _onResult: function (result) {
             if( result ){
                alert(result);

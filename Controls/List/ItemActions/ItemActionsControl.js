@@ -159,7 +159,8 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          itemActionsType: 'inside',
          itemActionVisibilityCallback: function() {
             return true;
-         }
+         },
+         itemActions: []
       };
    };
 

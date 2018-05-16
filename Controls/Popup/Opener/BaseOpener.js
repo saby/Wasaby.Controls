@@ -36,14 +36,9 @@ define('Controls/Popup/Opener/BaseOpener',
                   cfg.opener = this;
                }
                this._getTemplate(cfg).addCallback(function(tpl) {
-                  if (self._isVDOMTemplate(tpl)) {
-                     self._popupId = ManagerController.show(cfg, strategy);
-                  } else {
-                     requirejs(['Controls/Popup/Compatible/BaseOpener'], function(CompatibleOpener) {
-                        CompatibleOpener._prepareConfigForOldTemplate(cfg, tpl);
-                        self._popupId = ManagerController.show(cfg, strategy);
-                     });
-                  }
+                  Base.showDialog(tpl, cfg, strategy).addCallback(function(popupId) {
+                     self._popupId = popupId;
+                  });
                });
             }
          },
@@ -80,15 +75,32 @@ define('Controls/Popup/Opener/BaseOpener',
           */
          isOpened: function() {
             return !!ManagerController.find(this._popupId);
-         },
-
-         //TODO Compatible
-         _isVDOMTemplate: function(templateClass) {
-            //на VDOM классах есть св-во _template.
-            //Если его нет, но есть _stable, значит это функция от tmpl файла
-            return !!templateClass.prototype._template || !!templateClass.stable;
          }
       });
+      Base.showDialog = function(rootTpl, cfg, strategy) {
+         var def = new Deferred(),
+            popupId = null;
+
+         if (Base.isVDOMTemplate(rootTpl) && !(cfg.templateOptions && cfg.templateOptions._initCompoundArea)) {
+            popupId = ManagerController.show(cfg, strategy);
+            def.callback(popupId);
+         } else {
+            requirejs(['Controls/Popup/Compatible/BaseOpener'], function(CompatibleOpener) {
+               CompatibleOpener._prepareConfigForOldTemplate(cfg, rootTpl);
+               popupId = ManagerController.show(cfg, strategy);
+               def.callback(popupId);
+            });
+         }
+         return def;
+      };
+
+      //TODO Compatible
+      Base.isVDOMTemplate = function(templateClass) {
+         //на VDOM классах есть св-во _template.
+         //Если его нет, но есть _stable, значит это функция от tmpl файла
+         return !!templateClass.prototype._template || !!templateClass.stable;
+      };
+
       return Base;
    }
 );

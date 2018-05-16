@@ -3,13 +3,16 @@
       window.wsConfig = {
          wsRoot: '{{_options.wsRoot}}',
          resourceRoot: '{{_options.resourceRoot}}',
-         compatible: {{_options.compat}}
+         compatible: {{ _options.compat }}
       };
    </script>
+   <style>
+      .ws-hidden {
+         display: none;
+      }
+   </style>
    <ws:if data="{{ _options.head }}">
-      <ws:for data="i in _options.head">
-         <ws:partial template="{{ i }}"/>
-      </ws:for>
+      <ws:partial template="{{ _options.head }}"/>
    </ws:if>
    <link rel="stylesheet" href="{{_options.wsRoot}}css/core.css" type="text/css" key="core-css"/>
    <ws:if data="{{ cssLinks }}">
