@@ -1,8 +1,49 @@
 .controls-Stack {
-   .box-shadow(@controls-Popup-stack-shadow);
-   border-left: 1px solid #BDBDBD;
-   transition: width @controls-Popup-animate-duration;
+   overflow: hidden;
+   padding-left: @controls-Popup-stack-shadow-padding;
    .controls-Popup__template {
+      -webkit-animation-duration: @controls-Popup-animate-duration;
+      -moz-animation-duration: @controls-Popup-animate-duration;
+      -o-animation-duration: @controls-Popup-animate-duration;
+      animation-duration: @controls-Popup-animate-duration;
+
+      -webkit-animation-fill-mode: both;
+      -moz-animation-fill-mode: both;
+      -o-animation-fill-mode: both;
+      animation-fill-mode: both;
+
+      -webkit-animation-name: fadeShow;
+      -moz-animation-name: fadeShow;
+      -o-animation-name: fadeShow;
+      animation-name: fadeShow;
+
       width: 100%;
+      position: relative;
+      border-left: 1px solid #BDBDBD;
+      .box-shadow(@controls-Popup-stack-shadow);
+      &.controls-Stack_hide {
+         -webkit-animation-name: stackHide;
+         -moz-animation-name: stackHide;
+         -o-animation-name: stackHide;
+         animation-name: stackHide;
+      }
+   }
+}
+
+@keyframes stackHide {
+   0% {
+      left: 0;
+   }
+   100% {
+      left: 100%;
+   }
+}
+
+@keyframes fadeShow {
+   0% {
+      left: 100%;
+   }
+   100% {
+      left: 0;
    }
 }

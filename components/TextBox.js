@@ -522,7 +522,7 @@ define('SBIS3.CONTROLS/TextBox', [
             this._setTextByKeyboard(newText);
          }
          var key = event.which || event.keyCode;
-         if (Array.indexOf([constants.key.up, constants.key.down], key) >= 0) {
+         if ([constants.key.up, constants.key.down].indexOf(key) >= 0) {
             event.stopPropagation();
          }
       },
