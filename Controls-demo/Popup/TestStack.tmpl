@@ -13,6 +13,22 @@
                     </ws:popupOptions>
                 </Controls.Popup.Opener.Stack>
                 <Controls.Button caption="{{_options.type === 'sticky' ? '123' : 'Открыть stack'}}" on:click="_onClick()"/>
+                <br/>
+                <Controls.Button caption="Открыть через OpenEditDialog (TestStack, dialog)" on:click="_openOldPanel('Controls-demo/Popup/TestStack', 'dialog')"/>
+                <br/>
+                <Controls.Button caption="Открыть через OpenEditDialog (TestStack, floatArea, stack)" on:click="_openOldPanel('Controls-demo/Popup/TestStack', 'floatArea', true)"/>
+                <br/>
+                <Controls.Button caption="Открыть через OpenEditDialog (TestStack, floatArea, not stack)" on:click="_openOldPanel('Controls-demo/Popup/TestStack', 'floatArea', false)"/>
+                <br/>
+                <Controls.Button caption="Открыть через OpenEditDialog (MyTextBox, dialog)" on:click="_openOldPanel('Examples/TextBox/MyTextBox/MyTextBox', 'dialog')"/>
+                <br/>
+                <Controls.Button caption="Открыть через OpenEditDialog (MyTextBox, floatArea)" on:click="_openOldPanel('Examples/TextBox/MyTextBox/MyTextBox', 'floatArea', true)"/>
+                <br/>
+                <Controls.Button caption="Открыть через OpenEditDialog (MyTextBox, floatArea, not stack)" on:click="_openOldPanel('Examples/TextBox/MyTextBox/MyTextBox', 'floatArea', false)"/>
+
+                <br/>
+                <Controls.Button caption="Открыть через OpenEditDialog (FormController, dialog)" on:click="_openOldPanel('Examples/DialogRecord/DialogRecord/SimpleListEditDialog/SimpleListEditDialog', 'dialog')"/>
+
             </div>
         </ws:contentArea>
     </Controls.Popup.Templates.Stack.StackTemplate>

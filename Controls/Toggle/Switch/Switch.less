@@ -1,4 +1,4 @@
-.controls-Switch {
+.controls-Switch__wrapper {
    .inline-flexbox();
    .align-items(center);
    .justify-content(center);
@@ -36,18 +36,18 @@
 
 .controls-Switch__text {
    margin-left: @margin_Switch-text;
+   cursor: pointer;
 }
 
 .controls-Switch__text_enabled_unselected {
    color: @color_Switch-text_enabled_unselected;
-   cursor: pointer;
 }
 
 .controls-Switch__text_disabled_unselected {
    color: @color_Switch-text_disabled_unselected;
 }
 
-.ws-is-desktop-platform {
+.ws-is-no-touch {
    .controls-Switch__text_enabled_unselected:hover {
       text-decoration: underline;
    }

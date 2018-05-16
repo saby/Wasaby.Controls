@@ -229,7 +229,7 @@ define('Controls/Container/Scroll',
             },
 
             _beforeUpdate: function(options, context) {
-               this._pagingState.visible = context.ScrollData && context.ScrollData.pagingVisible;
+               this._pagingState.visible = context.ScrollData && context.ScrollData.pagingVisible && this._displayState.hasScroll;
             },
 
             _afterUpdate: function() {

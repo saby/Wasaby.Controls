@@ -24,7 +24,12 @@ define('Controls/Popup/Opener/Stack',
           */
          open: function(config) {
             config.className += ' ' + POPUP_CLASS;
+            this._setCompatibleConfig(config);
             return Base.prototype.open.call(this, config, Strategy);
+         },
+
+         _setCompatibleConfig: function(config) {
+            config._type = 'stack'; //for compoundArea
          }
       });
 

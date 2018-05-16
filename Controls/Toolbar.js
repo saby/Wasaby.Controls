@@ -45,6 +45,7 @@ define('Controls/Toolbar', [
             instance._items = items;
             instance._menuItems = self.getMenuItems(instance._items);
             instance._needShowMenu = instance._menuItems && instance._menuItems.getCount();
+            return items;
          });
       },
 
@@ -75,6 +76,8 @@ define('Controls/Toolbar', [
       _beforeMount: function(options, context, receivedState) {
          if (receivedState) {
             this._items = receivedState;
+            this._menuItems = _private.getMenuItems(this._items);
+            this._needShowMenu = this._menuItems && this._menuItems.getCount();
          } else {
             if (options.source) {
                return _private.loadItems(this, options.source);

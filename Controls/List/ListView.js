@@ -71,7 +71,7 @@ define('Controls/List/ListView', [
          },
 
          _onItemContextMenu: function(event, itemData) {
-            this._notify('itemContextMenu', [itemData, event]);
+            this._notify('itemContextMenu', [itemData, event, true]);
          },
 
          _onItemSwipe: function(event, itemData) {
