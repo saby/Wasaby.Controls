@@ -66,21 +66,19 @@ class Uploader {
      * @method
      */
     upload(files: Array<IResource>, meta?: {}, handlers?: CreateHandlers): Deferred<Array<Model | Error>> {
-        let uploadDefArray: Array<Deferred<Model | Error>>;
-
-        uploadDefArray = files.map((file: IResource) => {
-            return this._uploadFile(file, meta);
-        });
-        let len = uploadDefArray.length;
+        let len = files.length;
         return new ParallelDeferred({
-            steps:            uploadDefArray,
-            stopOnFirstError: false
+            steps: files.map((file: IResource) => {
+                return () => {
+                    return this._uploadFile(file, meta);
+                }
+            }),
+            stopOnFirstError: false,
+            maxRunningCount: 1 // Очередь загрузки
         }).done().getResult().addCallbacks((results) => {
-            let array = results;
-            if (!(results instanceof Array)) {
-                array.length = len;
-                array = Array.prototype.slice.call(array);
-            }
+            results.length = len;
+            let array = Array.prototype.slice.call(results);
+
             this._notify("onLoaded", array);
             return array;
         }, (error) => {

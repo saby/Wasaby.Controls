@@ -53,10 +53,10 @@ class ExtensionsHelper {
 
     /**
      * Проверяет валидность файлов переданного FileList и заменяет их на {@link File/LocalFile} либо на объект ошибки
-     * @param {FileList} fileList
+     * @param {FileList | Array.<File | Error>} fileList
      * @return {Array.<LocalFile | Error>} Массив обёрток над локальными файлами или ошибок
      */
-    verifyAndReplace(fileList: FileList): Array<LocalFile | Error> {
+    verifyAndReplace(fileList: FileList | Array<File | Error>): Array<LocalFile | Error> {
         let files = [];
 
         /*
@@ -66,7 +66,11 @@ class ExtensionsHelper {
          */
         for (let i = 0; i < fileList.length; i++) {
             let error: Error;
-            let file = fileList.item && fileList.item(i) || fileList[i];
+            let file = fileList instanceof FileList? fileList.item(i): fileList[i];
+            if (file instanceof Error) {
+                files.push(file);
+                continue;
+            }
             if (this.extensions.length && !this.verify(file)) {
                 error = new ExtensionsError(file.name);
             }
