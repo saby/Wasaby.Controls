@@ -1,6 +1,6 @@
 /// <amd-module name="File/ResourceGetter/DropArea" />
 /// <amd-dependency path="css!File/ResourceGetter/DropArea" />
-define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/ResourceGetter/Base", "Core/Deferred", "Core/helpers/random-helpers", "File/utils/ExtensionsHelper", "css!File/ResourceGetter/DropArea"], function (require, exports, tslib_1, IResourceGetterBase, Deferred, random, ExtensionsHelper) {
+define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/ResourceGetter/Base", "Core/Deferred", "Core/helpers/random-helpers", "File/utils/ExtensionsHelper", "File/ResourceGetter/DropArea/replaceDir", "css!File/ResourceGetter/DropArea"], function (require, exports, tslib_1, IResourceGetterBase, Deferred, random, ExtensionsHelper, replaceDir) {
     "use strict";
     var OVERLAY_ID_PREFIX = "DropArea-";
     var OVERLAY_CLASS = 'DropArea_overlay';
@@ -94,7 +94,9 @@ define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/Res
             event.stopPropagation();
             var target = dropAreas.indexOf(event.target) === -1 ? event.target.parentNode : event.target;
             var area = getArea(target);
-            area.handler(event.dataTransfer.files);
+            replaceDir(event.dataTransfer).addCallback(function (files) {
+                area.handler(files);
+            });
             dragEnd();
         }
     };
