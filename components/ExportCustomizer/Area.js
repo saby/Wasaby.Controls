@@ -430,8 +430,20 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   selectedId: options.selectedPresetId
                };
             }
+            var allFields = options.allFields;
             var fieldIds = options.fieldIds;
             var fileUuid = options.fileUuid;
+            if (fieldIds && fieldIds.length) {
+               // Иногда, fieldIds содержат идентификаторы, отсутствующие в allFields, отбросить их
+               var isRecordSet = allFields instanceof RecordSet;
+               var len = fieldIds.length;
+               fieldIds = fieldIds.filter(function (fieldId) {
+                  return isRecordSet ? !!allFields.getRecordById(fieldId) : allFields.some(function (field) { return field.id === fieldId; });
+               });
+               if (len !== fieldIds.length) {
+                  options.fieldIds = fieldIds;
+               }
+            }
             var serviceParams = options.serviceParams;
             options._scopes = {
                presets: presetsOptions,
@@ -439,13 +451,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   title: options.columnBinderTitle || undefined,
                   columnsTitle: options.columnBinderColumnsTitle || undefined,
                   fieldsTitle: options.columnBinderFieldsTitle || undefined,
-                  allFields: options.allFields,
+                  allFields: allFields,
                   fieldIds: fieldIds && fieldIds.length ? fieldIds.slice() : undefined
                },
                formatter: {
                   title: options.formatterTitle,
                   menuTitle: options.formatterMenuTitle,
-                  allFields: options.allFields,
+                  allFields: allFields,
                   fieldIds: fieldIds && fieldIds.length ? fieldIds.slice() : undefined,
                   fileUuid: fileUuid || undefined,
                   serviceParams: serviceParams ? cMerge({}, serviceParams) : undefined
