@@ -151,8 +151,8 @@ define('Controls/HighCharts', [
                preparedData;
             if (opts.filter !== this._options.filter && opts.dataSource) {
                _private.loadData(opts.dataSource, opts.filter).addCallback(function(recordSet) {
-                     preparedData = _private.prepareData(opts.wsSeries, opts.wsAxis, recordSet);
-                     _private.drawChart(self, preparedData);
+                  preparedData = _private.prepareData(opts.wsSeries, opts.wsAxis, recordSet);
+                  _private.drawChart(self, preparedData);
                });
             }
          }
