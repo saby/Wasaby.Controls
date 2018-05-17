@@ -68,7 +68,7 @@ let getFile = (entry: Entry, path: string): Deferred<FileWithDir> => {
  * @return {Core/Deferred.<Array.<File | Error>>}
  */
 let readDirectory = (entry: Entry, path: string) => {
-    let deferred  = new Deferred<Resources>();
+    let deferred = new Deferred<Resources>();
     let dirReader = entry.createReader();
     dirReader.readEntries((entries: Array<Entry>) => {
         deferred.dependOn(readEntries(entries, path));
