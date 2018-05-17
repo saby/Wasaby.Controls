@@ -13,10 +13,10 @@
                <ws:partial template="{{itemData.getCurrentColumn().template}}"
                            attr:class="{{itemData.getCurrentColumn().withLadder ? 'controls-Grid__row-cell__content_withLadder'}}"
                            contentData="{{itemData.getCurrentColumn()}}" />
-               <ws:if data="{{itemData.isEndingColumn() && itemData.itemActions  && itemData.itemActions.all && itemData.itemActions.all.length}}">
-                  <ws:partial template="{{itemActionsTemplate}}"  itemData="{{itemData}}"/>
-               </ws:if>
             </ws:else>
+            <ws:if data="{{itemData.isEndingColumn() && itemData.itemActions  && itemData.itemActions.all && itemData.itemActions.all.length}}">
+               <ws:partial template="{{itemActionsTemplate}}"  itemData="{{itemData}}"/>
+            </ws:if>
          </div>
       </ws:for>
    </ws:else>

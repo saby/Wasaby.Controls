@@ -25,15 +25,27 @@
 .controls-ListView__item_editing {
   background-color: @controls-editInPlace-editing-item-bg;
   >.controls-itemActionsV {
-    display: inline-flex;
+     display: inline-flex;
   }
+}
+
+.controls-ListView__item_editing {
+   .controls-itemActionsV {
+      display: none;
+   }
+}
+
+.controls-ListView__item_showActions {
+   .controls-itemActionsV {
+      display: none;
+   }
 }
 
 .ws-is-no-touch {
   .controls-ListView__item_showActions {
     &:hover {
       >.controls-itemActionsV {
-        display: inline-flex;
+         display: inline-flex;
       }
     }
   }
