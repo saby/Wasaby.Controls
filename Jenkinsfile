@@ -417,30 +417,10 @@ node('controls') {
                 ],
                     "output" : "/resources/Core.module.js"
                 }"""
-            writeFile file: "${workspace}/jinnee/data/modules.json", text:"""
-                ["${workspace}/controls/Examples",
-                "${workspace}controls/tests/stand/Intest",
-                "${workspace}controls/tests/stand/client/MDL",
-                "${workspace}controls/tests/stand/client/MdlModule",
-                "${workspace}controls/tests/sbis3-app-engine/client/SBIS3.ENGINE",
-                "${workspace}/Tema_Skrepka",
-                "${workspace}/View",
-                "${workspace}/File",
-                "${workspace}/WI.SBIS",
-                "${workspace}/WS.Core",
-                "${workspace}/WS.Data",
-                "${workspace}/WS.Deprecated",
-                "${workspace}/controls/tests/WSTest",
-                "${workspace}/Controls",
-                "${workspace}/SBIS3.CONTROLS",
-                "${workspace}/controls/Controls-demo",
-                "${workspace}/SBIS3.Plugin",
-                "${workspace}/jinnee/ws"]
-            """
             sh """
                 cd ./jinnee/distrib/builder
                 cp -rf ${workspace}/jinnee/ws /home/sbis/Controls/intest-ps/ui/
-                node ./node_modules/grunt-cli/bin/grunt i18n --root=/home/sbis/Controls/intest-ps/ui --application=/ --json-generate=true --modules=${workspace}/jinnee/data/modules.json --includes=false --json-cache="${workspace}/jinnee/date/json_cache"
+                node ./node_modules/grunt-cli/bin/grunt xhtmlmin --root=/home/sbis/Controls/intest-ps/ui --application=/"
                 node ./node_modules/grunt-cli/bin/grunt xhtml-build --root=/home/sbis/Controls/intest-ps/ui --application=/
                 node ./node_modules/grunt-cli/bin/grunt tmpl-build --root=/home/sbis/Controls/intest-ps/ui --application=/
                 node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/sbis/Controls/intest-ps/ui --application=/
