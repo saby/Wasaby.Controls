@@ -25,7 +25,7 @@ define('Controls-demo/HighCharts/HighCharts', [
          type: 'pie'
       }],
       _wsAxis: [{
-         title: 'Прикол'
+         title: 'Title'
       }],
       _updateState: function() {
          if (this._filter === '1') {
