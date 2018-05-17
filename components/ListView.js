@@ -60,8 +60,7 @@ define('SBIS3.CONTROLS/ListView',
       'SBIS3.CONTROLS/ListView/resources/VirtualScrollController',
       'SBIS3.CONTROLS/ListView/resources/DragMove/DragMove',
       'Core/helpers/Function/once',
-      'WS.Data/Collection/RecordSet',
-   'SBIS3.CONTROLS/Link',
+      'SBIS3.CONTROLS/Link',
       'browser!SBIS3.CONTROLS/ListView/resources/SwipeHandlers',
       'i18n!SBIS3.CONTROLS/ListView',
       'WS.Data/MoveStrategy/Base',
@@ -72,7 +71,7 @@ define('SBIS3.CONTROLS/ListView',
       Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn,
       TemplateUtil, CommonHandlers, ImitateEvents, LayoutManager, configStorage,
       ScrollWatcher, IBindCollection, groupByTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
-      Paging, ComponentBinder, Di, ArraySimpleValuesUtil, cInstance, LocalStorageNative, forAliveOnly, memoize, isElementVisible, contains, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove, once, RecordSet) {
+      Paging, ComponentBinder, Di, ArraySimpleValuesUtil, cInstance, LocalStorageNative, forAliveOnly, memoize, isElementVisible, contains, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove, once) {
       'use strict';
 
       var
