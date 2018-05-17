@@ -1,11 +1,18 @@
 define([
-   'Controls/Utils/BreadCrumbsUtil'
+   'Controls/Utils/BreadCrumbsUtil',
+   'Controls/Utils/FontLoadUtil',
+   'Core/Deferred'
 ], function(
-   BreadCrumbsUtil
+   BreadCrumbsUtil,
+   FontLoadUtil,
+   Deferred
 ) {
    describe('Controls.Utils.BreadCrumbsUtil', function() {
       var data;
       beforeEach(function() {
+         FontLoadUtil.waitForFontLoad = function() {
+            return Deferred.success();
+         };
          if (!window) {
             document = {
                createElement: function() {

@@ -7,14 +7,13 @@
  */
 define('SBIS3.CONTROLS/ExportCustomizer/Action',
    [
-      'Core/core-merge',
       'Core/Deferred',
       'Lib/Control/FloatArea/FloatArea',
       'SBIS3.CONTROLS/Action',
       'SBIS3.CONTROLS/ExportCustomizer/Area'
    ],
 
-   function (cMerge, Deferred, FloatArea, Action, Area) {
+   function (Deferred, FloatArea, Action, Area) {
       'use strict';
 
       /**

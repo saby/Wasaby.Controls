@@ -7,6 +7,7 @@ import LocalFile = require("File/LocalFile");
 import random = require("Core/helpers/random-helpers");
 import ExtensionsHelper = require("File/utils/ExtensionsHelper");
 import getFilePreparer = require("File/utils/getFilePreparer");
+import replaceDir = require("File/ResourceGetter/DropArea/replaceDir");
 
 type Handler = (files: FileList) => void;
 /**
@@ -98,6 +99,11 @@ let getArea = (element: HTMLElement) => {
     return areas[uid];
 };
 
+/**
+ * Зафиксировано ли перемещения файла над окном.
+ * Необходим для того чтобы не рисовать повторно перекрывающие области для перемещения в них файлов
+ * @type {Boolean}
+ */
 let isDrag: boolean;
 
 // Удаление обёрточных элементов
@@ -138,18 +144,29 @@ let overlayHandlers = {
         event.stopPropagation();
         let target = dropAreas.indexOf(event.target) === -1? <HTMLElement> event.target.parentNode: event.target;
         let area = getArea(target);
-        area.handler(event.dataTransfer.files);
+        replaceDir(event.dataTransfer).addCallback((files) => {
+            area.handler(files);
+        });
         dragEnd();
     }
+};
+let isNeedOverlay = (dataTransfer): boolean => {
+    /**
+     * В большенстве браузеров при переносе файлов dataTransfer.types == ['Files']
+     * И хватает только проверки первого элемента, но некоторые браузеры в зависимости от версии добавляют свои типы
+     * например ["application/x-moz-file", "Files"]
+     *
+     * Ещё может расходиться регистр => Array.prototype.include не совсем подходит
+     * Поэтому самое простое это склеить типы в строку, привести к единому регистру и найти вхождение
+     */
+    let containFileType = dataTransfer.types.join(',').toLowerCase().indexOf('files') >= 0;
+    return containFileType && !isDrag && !!areaCount
 };
 // обработчики событий drag&drop на документе
 let globalHandlers = {
     dragenter(event: HTMLDragEvent) {
-        let dataTransfer = event.dataTransfer;
-        let type = (dataTransfer.types[0] || "").toLowerCase();
-
         // Если обёртки готовы для всех элементов или событие не содержит файлы, то выходим
-        if (isDrag || !areaCount || type !== "files") {
+        if (!isNeedOverlay(event.dataTransfer)) {
             return
         }
         // иначе создаём обёртки и вешаем обработчики

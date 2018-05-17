@@ -47,6 +47,7 @@ define('Controls/Toggle/Radio', [
          } else {
             return _private.initItems(options.source, this).addCallback(function(items) {
                this._items = items;
+               return items;
             }.bind(this));
          }
       },

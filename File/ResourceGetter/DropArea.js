@@ -1,6 +1,6 @@
 /// <amd-module name="File/ResourceGetter/DropArea" />
 /// <amd-dependency path="css!File/ResourceGetter/DropArea" />
-define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/ResourceGetter/Base", "Core/Deferred", "Core/helpers/random-helpers", "File/utils/ExtensionsHelper", "File/utils/getFilePreparer", "css!File/ResourceGetter/DropArea"], function (require, exports, tslib_1, IResourceGetterBase, Deferred, random, ExtensionsHelper, getFilePreparer) {
+define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/ResourceGetter/Base", "Core/Deferred", "Core/helpers/random-helpers", "File/utils/ExtensionsHelper", "css!File/ResourceGetter/DropArea"], function (require, exports, tslib_1, IResourceGetterBase, Deferred, random, ExtensionsHelper) {
     "use strict";
     var OVERLAY_ID_PREFIX = "DropArea-";
     var OVERLAY_CLASS = 'DropArea_overlay';
@@ -53,6 +53,11 @@ define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/Res
         var uid = element.getAttribute("id").replace(OVERLAY_ID_PREFIX, "");
         return areas[uid];
     };
+    /**
+     * Зафиксировано ли перемещения файла над окном.
+     * Необходим для того чтобы не рисовать повторно перекрывающие области для перемещения в них файлов
+     * @type {Boolean}
+     */
     var isDrag;
     // Удаление обёрточных элементов
     var dragEnd = function () {
@@ -93,13 +98,23 @@ define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/Res
             dragEnd();
         }
     };
+    var isNeedOverlay = function (dataTransfer) {
+        /**
+         * В большенстве браузеров при переносе файлов dataTransfer.types == ['Files']
+         * И хватает только проверки первого элемента, но некоторые браузеры в зависимости от версии добавляют свои типы
+         * например ["application/x-moz-file", "Files"]
+         *
+         * Ещё может расходиться регистр => Array.prototype.include не совсем подходит
+         * Поэтому самое простое это склеить типы в строку, привести к единому регистру и найти вхождение
+         */
+        var containFileType = dataTransfer.types.join(',').toLowerCase().indexOf('files') >= 0;
+        return containFileType && !isDrag && !!areaCount;
+    };
     // обработчики событий drag&drop на документе
     var globalHandlers = {
         dragenter: function (event) {
-            var dataTransfer = event.dataTransfer;
-            var type = (dataTransfer.types[0] || "").toLowerCase();
             // Если обёртки готовы для всех элементов или событие не содержит файлы, то выходим
-            if (isDrag || !areaCount || type !== "files") {
+            if (!isNeedOverlay(event.dataTransfer)) {
                 return;
             }
             // иначе создаём обёртки и вешаем обработчики
@@ -147,11 +162,6 @@ define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/Res
          * @name File/ResourceGetter/DropArea#extensions
          */
         extensions: null,
-        /**
-         * @cfg {Number} Максимальный размер файла доступный для выбора (в МБ)
-         * @name File/ResourceGetter/DropArea#maxSize
-         */
-        maxSize: undefined,
         /**
          * @cfg {HTMLElement} DOM элемент для перетаскивания файлов
          * @name File/ResourceGetter/DropArea#element
@@ -201,11 +211,7 @@ define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/Res
             areas[_this._uid] = {
                 element: element, innerClass: innerClass, dragText: dragText, dropText: dropText,
                 handler: function (files) {
-                    var filePreparer = getFilePreparer({
-                        extensions: _this._extensions,
-                        maxSize: _this._options.maxSize
-                    });
-                    var result = filePreparer(files);
+                    var result = _this._extensions.verifyAndReplace(files);
                     _this._options.ondrop.call(_this, result);
                     if (_this._selectDef) {
                         _this._selectDef.callback(result);
