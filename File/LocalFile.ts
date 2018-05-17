@@ -46,7 +46,7 @@ class LocalFile {
      * @method
      */
     getMeta(): any {
-        return this._meta;
+        return this._meta || {};
     }
 }
 export  = LocalFile;

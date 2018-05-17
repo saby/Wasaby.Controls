@@ -2,7 +2,7 @@
  * Created by as.avramenko on 06.07.2017.
  */
 
-define(
+define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/AreaSelectableModel',
    [
       'WS.Data/Entity/Model'
    ],

@@ -1,4 +1,4 @@
-define('SBIS3.CONTROLS/Browser/design/DesignPlugin',
+define('SBIS3.CONTROLS/Browser/design/designPlugin',
    [
       'SBIS3.CONTROLS/Browser',
       'css!SBIS3.CONTROLS/Browser/design/design'

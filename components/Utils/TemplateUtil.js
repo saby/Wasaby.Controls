@@ -36,6 +36,10 @@ define('SBIS3.CONTROLS/Utils/TemplateUtil', ['Core/js-template-doT', 'View/Runne
                   template = requirejs(tpl);
                } else if (requireHelper.defined(tpl)) {
                   template = requirejs(tpl);
+               } else if (tpl.indexOf('{{') === -1 && tpl.indexOf('{[') === -1) {
+                  // хак для ускорения работы, делаем проверку, что строка - безопасна и в ней не лежит текст или название шаблона,
+                  // и ее не надо никак обрабатывать - ни строить функцию, ни пытаться искать шаблон
+                  template = function () {return tpl};
                } else {
                   template = doT.template(tpl);
                }

@@ -161,7 +161,7 @@ define('Controls/Input/resources/InputRender/InputRender',
                   after: displayValue.slice(selectionEnd, displayValue.length)
                }, 'insert');
 
-            if (displayValue !== processedData.value) {
+            if (displayValue !== this._options.viewModel.getValue()) {
                this._notify('valueChanged', [this._options.viewModel.getValue()]);
             }
 

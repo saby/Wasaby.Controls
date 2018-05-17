@@ -1168,7 +1168,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                case 'alignjustify':
                   isA.align = true;
                   editorCmd = {
-                     'alignleft': 'JustifyNone',
+                     'alignleft': 'JustifyLeft',/*JustifyNone*/
                      'aligncenter': 'JustifyCenter',
                      'alignright': 'JustifyRight',
                      'alignjustify': 'JustifyFull'
@@ -2477,7 +2477,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             var imageUploader = this._imageUploader;
             if (!imageUploader) {
                if (Di.isRegistered(DI_IMAGE_UPLOADER)) {
-                  this._imageUploader = imageUploader = Di.resolve(DI_IMAGE_UPLOADER).getFileLoader();
+                  this._imageUploader = imageUploader = Di.resolve(DI_IMAGE_UPLOADER).getFileLoader(this);
                }
                else {
                   return Deferred.fail('No image uploader');
@@ -2485,7 +2485,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             }
             return imageUploader.startFileLoad(target, canMultiSelect !== undefined ? canMultiSelect : this.canUploadMultiSelect(), imageFolder || this._options.imageFolder)
                .addErrback(function (err) {
-                  this._showImgError();
+                  // Если это не cancel - показать сообщение об ошибке
+                  if (!(err && err.canceled)) {
+                     this._showImgError();
+                  }
                   return err;
                }.bind(this));
          },
@@ -3143,7 +3146,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      // В MSIE при добавлении новой строки clientHeight и scrollHeight начинают расходиться - нужно их уравнять
                      // 1175015989 https://online.sbis.ru/opendoc.html?guid=d013f54f-683c-465c-b437-6adc64dc294a
                      var diff = contentHeight - content.clientHeight;
-                     $content.css('height', 0 < diff ? content.offsetHeight + diff : content.offsetHeight);
                      if (isChanged) {
                         var parent = content.parentNode;
                         if (parent.clientHeight < contentHeight) {

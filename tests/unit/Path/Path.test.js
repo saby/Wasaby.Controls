@@ -1,9 +1,13 @@
 define([
    'Controls/Path',
-   'Controls/Utils/BreadCrumbsUtil'
+   'Controls/Utils/BreadCrumbsUtil',
+   'Controls/Utils/FontLoadUtil',
+   'Core/Deferred'
 ], function(
    Path,
-   BreadCrumbsUtil
+   BreadCrumbsUtil,
+   FontLoadUtil,
+   Deferred
 ) {
    describe('Controls.Path', function() {
       var path, data, getWidth, getMaxCrumbsWidth, calculateBreadCrumbsToDraw;
@@ -24,6 +28,9 @@ define([
       }
 
       beforeEach(function() {
+         FontLoadUtil.waitForFontLoad = function() {
+            return Deferred.success();
+         };
          data = [
             {
                id: 1,

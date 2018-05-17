@@ -322,7 +322,7 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
             offset, margin,
             boundingClientRect = item.get(0).getBoundingClientRect();
          offset = $('.controls-CompositeView__tileTitle', item).outerHeight(true) - (item.hasClass('controls-CompositeView__item-withTitle') ? 25 : 0);
-         margin = Math.floor((item.outerHeight(true) - boundingClientRect.height) / 2);
+         margin = (Math.floor(item.outerHeight(true)) - Math.floor(boundingClientRect.height)) / 2;
          item.css('padding-bottom', offset).css('margin-bottom', -(offset - margin));
          $('.controls-CompositeView__tileContainer', item).css('margin-bottom', offset);
       },

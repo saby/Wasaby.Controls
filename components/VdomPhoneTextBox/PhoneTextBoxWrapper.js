@@ -54,6 +54,11 @@ define('SBIS3.CONTROLS/VdomPhoneTextBox/PhoneTextBoxWrapper',
             this._forceUpdate();
          },
 
+         setValidationError: function(validationError) {
+            this._validationErrors = validationError || [validationError];
+            this._forceUpdate();
+         },
+
          getDisplayValue: function() {
             return this._children.phone._viewModel.getDisplayValue();
          }
