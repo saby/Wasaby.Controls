@@ -7,6 +7,7 @@
  */
 define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
    [
+      'Core/Deferred',
       'SBIS3.CONTROLS/CompoundControl',
       'WS.Data/Collection/RecordSet',
       'WS.Data/Di',
@@ -16,7 +17,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
       'css!SBIS3.CONTROLS/ExportCustomizer/_Presets/View'
    ],
 
-   function (CompoundControl, RecordSet, Di, dotTplFn) {
+   function (Deferred, CompoundControl, RecordSet, Di, dotTplFn) {
       'use strict';
 
       /**
@@ -107,14 +108,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                this._storage.load(this._options.namespace).addCallback(function (presets) {
                   presets.forEach(function (v) { v.isStorable = true; });
                   this._customs = presets;
-                  var options = this._options;
-                  var selector = this._selector;
-                  var items = options._items = this._makeItems(options);
-                  selector.setItems(items);
-                  this._updateSelectorListOptions('items', items);
-                  var selectedId = this._makeSelectedId(options);
-                  selector.setSelectedKeys([selectedId]);
-                  this._updateSelectorListOptions('selectedKey', selectedId);
+                  this._updateSelector();
                }.bind(this));
             }
          },
@@ -176,8 +170,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
          _onHoverItem: function (evtName, item) {
             var model = item.record;
             if (model) {
-               var actions = this._makeItemsActions(model.get('isStorable'));
                var listView = evtName.getTarget();
+               var actions = this._makeItemsActions(listView, model.get('isStorable'));
                var itemsActionsGroup = listView.getItemsActions();
                if (itemsActionsGroup) {
                   itemsActionsGroup.setItems(actions);
@@ -192,21 +186,22 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * Обработчик события - нажатие на кнопку действия для элемента списочного контрола
           *
           * @protected
-          * @param {jQuery} itemContaner Контейнер элемента
+          * @param {object} listView Списочный контрол
+          * @param {jQuery} itemContainer Контейнер элемента
           * @param {string} id Идентификатор пресета
           * @param {WS.Data/Entity/Model} model Модель пресета
           * @param {string} action Вид действия
           */
-         _onItemAction: function (itemContaner, id, model, action) {
+         _onItemAction: function (listView, itemContainer, id, model, action) {
             switch (action) {
                case 'clone':
-                  this._clonePreset(id);
+                  this._clonePreset(id, listView);
                   break;
                case 'edit':
-                  this._editPreset(id);
+                  this._editPreset(id, listView);
                   break;
                case 'delete':
-                  this._deletePreset(id);
+                  this._deletePreset(id, listView);
                   break;
             }
          },
@@ -215,9 +210,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * Приготовить список доступных действий пользователя
           *
           * @protected
+          * @param {object} listView Списочный контрол
+          * @param {boolena} useAllActions Использовать все действия
           * @return {object[]}
           */
-         _makeItemsActions: function (useAllActions) {
+         _makeItemsActions: function (listView, useAllActions) {
             return (useAllActions ? Object.keys(_ACTIONS) : ['clone']).map(function (name) {
                var action = _ACTIONS[name];
                return {
@@ -226,7 +223,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   caption: action.title,
                   tooltip: action.title,
                   isMainAction: true,
-                  onActivated: this._onItemAction.bind(this)
+                  onActivated: this._onItemAction.bind(this, listView)
                };
             }.bind(this));
          },
@@ -236,8 +233,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           *
           * @protected
           * @param {string|number} id Идентификатор пресета
+          * @param {object} listView Списочный контрол
+          * @return {Core/Deferred}
           */
-         _clonePreset: function (id) {
+         _clonePreset: function (id, listView) {
          },
 
          /**
@@ -245,8 +244,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           *
           * @protected
           * @param {string|number} id Идентификатор пресета
+          * @param {object} listView Списочный контрол
+          * @return {Core/Deferred}
           */
-         _editPreset: function (id) {
+         _editPreset: function (id, listView) {
          },
 
          /**
@@ -254,9 +255,45 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           *
           * @protected
           * @param {string|number} id Идентификатор пресета
+          * @param {object} listView Списочный контрол
+          * @return {Core/Deferred}
           */
-         _deletePreset: function (id) {
-
+         _deletePreset: function (id, listView) {
+            var customs = this._customs;
+            var index;
+            var done;
+            if (customs && customs.length) {
+               for (var i = 0; i < customs.length; i++) {
+                  var unit = customs[i];
+                  if (unit.id === id) {
+                     if (unit.isStorable) {
+                        customs.splice(i, 1);
+                        index = i;
+                        done = true;
+                     }
+                     break;
+                  }
+               }
+            }
+            if (done) {
+               var options = this._options;
+               return this._storage.save(options.namespace, customs).addCallback(function (/*isSuccess*/) {
+                  //if (isSuccess) {
+                     if (options.selectedId === id) {
+                        options.selectedId = customs.length ? customs[index < customs.length ? index : index - 1].id : null;
+                        //this.sendCommand('subviewChanged');
+                     }
+                     this._updateSelector();
+                     listView.setItems(options._items);
+                     listView.setSelectedKey(options._selectedId);
+                     listView.redraw();
+                  //}
+                  return true/*isSuccess*/;
+               }.bind(this));
+            }
+            else {
+               return Deferred.success(false);
+            }
          },
 
          /**
@@ -268,6 +305,23 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           */
          _updateSelectorListOptions: function (name, value) {
             this._selector.getProperty('dictionaries')[0].componentOptions[name] = value;
+         },
+
+         /**
+          * Обновить данные селектора
+          *
+          * @protected
+          */
+         _updateSelector: function () {
+            var options = this._options;
+            var selector = this._selector;
+            var items = options._items = this._makeItems(options);
+            selector.setItems(items);
+            this._updateSelectorListOptions('items', items);
+            var selectedId = this._makeSelectedId(options);
+            options._selectedId = selectedId;
+            selector.setSelectedKeys([selectedId]);
+            this._updateSelectorListOptions('selectedKey', selectedId);
          },
 
          /**
