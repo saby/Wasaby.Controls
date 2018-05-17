@@ -4,17 +4,17 @@
    <Controls.Input.resources.InputRender.InputRender
            value="{{_options.value}}"
            size="{{ _options.size }}"
-           inputType="ComboBox"
            tagStyle="{{_options.tagStyle}}"
            viewModel="{{_simpleViewModel}}"
            placeholder="{{_options.placeholder}}"
            validationErrors="{{_options.validationErrors}}"
-           on:valueChanged="_valueChangedHandler()">
+           on:valueChanged="_valueChangedHandler()"
+            class="controls-ComboBox-InputRender">
 
       <ws:content>
          <ws:partial
                  template="tmpl!Controls/Input/resources/input"
-                 readOnly="{{_options.readOnly}}"/>
+                 readOnly="{{!_options.editable}}"/>
       </ws:content>
 
       <ws:afterFieldWrapper>

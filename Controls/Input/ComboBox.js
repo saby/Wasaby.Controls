@@ -114,7 +114,7 @@ define('Controls/Input/ComboBox',
 
       ComboBox.getDefaultOptions = function() {
          return {
-            readOnly: true,
+            editable: false,
             placeholder: 'Выберите...'
          };
       };
