@@ -40,8 +40,18 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
        * @private
        * @type {string}
        */
-      var EXPORT_PRESETS_LOADER_NAME = 'ExportPresets.Loader';
+      var _DI_STORAGE_NAME = 'ExportPresets.Loader';
 
+      /**
+       * Список доступных действий пользователя
+       * @protected
+       * @type {object[]}
+       */
+      var _ACTIONS = {
+         clone: {title:rk('Дублировать', 'НастройщикЭкспорта'), icon:'sprite:icon-16 icon-Copy icon-primary action-hover'},
+         edit: {title:rk('Редактировать', 'НастройщикЭкспорта'), icon:'sprite:icon-16 icon-Edit icon-primary action-hover'},
+         'delete': {title:rk('Удалить', 'НастройщикЭкспорта'), icon:'sprite:icon-16 icon-Erase icon-error'}
+      };
 
 
       var View = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ExportCustomizer/_Presets/View.prototype*/ {
@@ -85,13 +95,17 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
 
          init: function () {
             View.superclass.init.apply(this, arguments);
-            if (Di.isRegistered(EXPORT_PRESETS_LOADER_NAME)) {
-               this._storage = Di.resolve(EXPORT_PRESETS_LOADER_NAME);
+            if (Di.isRegistered(_DI_STORAGE_NAME)) {
+               this._storage = Di.resolve(_DI_STORAGE_NAME);
             }
             this._selector = this.getChildControlByName('controls-ExportCustomizer-Presets-View__button');
             this._bindEvents();
             if (this._storage) {
+               this._updateSelectorListOptions('handlers', {
+                  onChangeHoveredItem: this._onHoverItem.bind(this)
+               });
                this._storage.load(this._options.namespace).addCallback(function (presets) {
+                  presets.forEach(function (v) { v.isStorable = true; });
                   this._customs = presets;
                   var options = this._options;
                   var selector = this._selector;
@@ -150,6 +164,99 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                var selectedId = options.selectedId;
                return selectedId && items.getRecordById(selectedId) ? selectedId : items.at(0).getId();
             }
+         },
+
+         /**
+          * Обработчик события - наведение курсора на элемент списочного контрола
+          *
+          * @protected
+          * @param {Core/EventObject} evtName Дескриптор события
+          * @param {object} item Объект, представляющий информацию об элемент списочного контрола
+          */
+         _onHoverItem: function (evtName, item) {
+            var model = item.record;
+            if (model) {
+               var actions = this._makeItemsActions(model.get('isStorable'));
+               var listView = evtName.getTarget();
+               var itemsActionsGroup = listView.getItemsActions();
+               if (itemsActionsGroup) {
+                  itemsActionsGroup.setItems(actions);
+               }
+               else {
+                  listView.setItemsActions(actions);
+               }
+            }
+         },
+
+         /**
+          * Обработчик события - нажатие на кнопку действия для элемента списочного контрола
+          *
+          * @protected
+          * @param {jQuery} itemContaner Контейнер элемента
+          * @param {string} id Идентификатор пресета
+          * @param {WS.Data/Entity/Model} model Модель пресета
+          * @param {string} action Вид действия
+          */
+         _onItemAction: function (itemContaner, id, model, action) {
+            switch (action) {
+               case 'clone':
+                  this._clonePreset(id);
+                  break;
+               case 'edit':
+                  this._editPreset(id);
+                  break;
+               case 'delete':
+                  this._deletePreset(id);
+                  break;
+            }
+         },
+
+         /**
+          * Приготовить список доступных действий пользователя
+          *
+          * @protected
+          * @return {object[]}
+          */
+         _makeItemsActions: function (useAllActions) {
+            return (useAllActions ? Object.keys(_ACTIONS) : ['clone']).map(function (name) {
+               var action = _ACTIONS[name];
+               return {
+                  name: name,
+                  icon: action.icon,
+                  caption: action.title,
+                  tooltip: action.title,
+                  isMainAction: true,
+                  onActivated: this._onItemAction.bind(this)
+               };
+            }.bind(this));
+         },
+
+         /**
+          * Клонировать пресет
+          *
+          * @protected
+          * @param {string|number} id Идентификатор пресета
+          */
+         _clonePreset: function (id) {
+         },
+
+         /**
+          * Редактировать пресет
+          *
+          * @protected
+          * @param {string|number} id Идентификатор пресета
+          */
+         _editPreset: function (id) {
+         },
+
+         /**
+          * Удалить пресет
+          *
+          * @protected
+          * @param {string|number} id Идентификатор пресета
+          */
+         _deletePreset: function (id) {
+
          },
 
          /**
