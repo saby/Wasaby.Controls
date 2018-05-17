@@ -31,7 +31,6 @@ define('Controls-demo/Popup/TestStack',
                new OpenEditDialog().execute({
                   template: tplName,
                   mode: mode,
-                  initializingWay: 'local',
                   item: new Record(),
                   dialogOptions: {
                      isStack: isStack
