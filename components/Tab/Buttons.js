@@ -10,11 +10,10 @@ define(
       'tmpl!SBIS3.CONTROLS/Tab/Buttons/resources/SpaceTemplate',
       'SBIS3.CONTROLS/Utils/TemplateUtil',
       'Core/core-instance',
-      'View/Runner/requireHelper',
       'SBIS3.CONTROLS/Tab/Button',
       'css!SBIS3.CONTROLS/Tab/Buttons/TabButtons'
    ],
-   function (RadioGroupBase, TabButtonsTpl, ItemTemplate, SpaceTemplate, TemplateUtil, cInstance, requireHelper) {
+   function (RadioGroupBase, TabButtonsTpl, ItemTemplate, SpaceTemplate, TemplateUtil, cInstance) {
 
       'use strict';
 
