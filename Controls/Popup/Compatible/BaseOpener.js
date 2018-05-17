@@ -29,7 +29,7 @@ function(cDeferred, CompoundArea) {
 
       //Берем размеры либо с опций, либо с дименшенов
       _setSizes: function(cfg, templateClass) {
-         var dimensions = templateClass.dimensions || {};
+         var dimensions = templateClass.dimensions || templateClass.prototype.dimensions || {};
          if (!cfg.minWidth) {
             cfg.minWidth = dimensions.minWidth ? parseInt(dimensions.minWidth, 10) : null;
          }
@@ -37,8 +37,8 @@ function(cDeferred, CompoundArea) {
             cfg.maxWidth = dimensions.maxWidth ? parseInt(dimensions.maxWidth, 10) : null;
          }
 
-         cfg.minWidth = cfg.minWidth || cfg.maxWidth;
-         cfg.maxWidth = cfg.maxWidth || cfg.minWidth;
+         cfg.minWidth = cfg.minWidth || cfg.maxWidth || 900;
+         cfg.maxWidth = cfg.maxWidth || cfg.minWidth || 900;
       }
    };
 }
