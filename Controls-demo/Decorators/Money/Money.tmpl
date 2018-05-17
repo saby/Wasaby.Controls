@@ -1,0 +1,22 @@
+<div>
+   <ws:template name="example">
+      <div class="controlsDemo-Money__example">
+         <div>{{name}}</div>
+         <Controls.Decorators.Money number="{{20}}" type="{{name}}"/>
+         <Controls.Decorators.Money number="{{20.1}}" type="{{name}}"/>
+         <Controls.Decorators.Money number="{{20.18}}" type="{{name}}"/>
+      </div>
+   </ws:template>
+   <h1>Money</h1>
+   <div class="controlsDemo-Money__examples">
+      <div class="controlsDemo-Money__example">
+         <div>number</div>
+         <div>20</div>
+         <div>20.1</div>
+         <div>20.18</div>
+      </div>
+      <ws:for data="exampleName in _exampleNames">
+         <ws:partial template="example" name="{{exampleName}}"/>
+      </ws:for>
+   </div>
+</div>
