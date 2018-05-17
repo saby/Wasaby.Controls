@@ -6,10 +6,8 @@
    <Controls.Popup.Opener.MiniCard name="openerMiniCard">
       <ws:popupOptions template="Controls/MiniCard/OpenerTemplate">
          <ws:corner vertical="bottom" horizontal="right"/>
-         <ws:templateOptions content="{{_options.miniCard}}"/>
+         <ws:templateOptions content="{{_options.template}}"/>
          <ws:eventHandlers onResult="{{_result}}"></ws:eventHandlers>
       </ws:popupOptions>
    </Controls.Popup.Opener.MiniCard>
-
-   <Controls.Event.Emitter event="mousedown" on:mousedown="_close('click')"/>
 </div>

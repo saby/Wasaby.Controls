@@ -17,12 +17,20 @@ define('Controls/MiniCard',
        * @name Controls/MiniCard#target
        * @cfg {Content} The content to which the logic of opening and closing the mini card is added.
        *
-       * @name Controls/MiniCard#miniCard
+       * @name Controls/MiniCard#template
        * @cfg {Content} Mini card contents.
        */
       var _private = {
          stopPropagation: function(event) {
             event.stopPropagation();
+         },
+
+         getType: function(eventType) {
+            if (eventType === 'mouseenter' || eventType === 'mouseleave') {
+               return 'hover';
+            } else {
+               return 'click';
+            }
          }
       };
 
@@ -33,18 +41,22 @@ define('Controls/MiniCard',
             this._result = this._result.bind(this);
          },
 
-         _open: function(event, type) {
+         _open: function(event) {
+            var type = _private.getType(event.type);
+
             this._children.openerMiniCard.open({
                target: event.target
             }, type);
          },
 
-         _close: function(event, type) {
+         _close: function(event) {
+            var type = _private.getType(event.type);
+
             this._children.openerMiniCard.close(type);
          },
 
          _targetMousedownHandler: function(event) {
-            this._open(event, 'click');
+            this._open(event);
             _private.stopPropagation(event);
          },
 

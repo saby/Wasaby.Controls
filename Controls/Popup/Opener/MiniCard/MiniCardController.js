@@ -10,17 +10,6 @@ define('Controls/Popup/Opener/MiniCard/MiniCardController',
 
       'use strict';
 
-      var _private = {
-         reverseAnimationNames: {
-            'open': 'close',
-            'close': 'open'
-         },
-         startAnimation: function(name, container) {
-            container.classList.add('controls-MiniCardController_' + name);
-            container.classList.remove('controls-MiniCardController_' + this.reverseAnimationNames[name]);
-         }
-      };
-
       var MiniCardController = StickyController.constructor.extend({
          _openedPopupId: null,
 
@@ -42,7 +31,7 @@ define('Controls/Popup/Opener/MiniCard/MiniCardController',
             this._openedPopupId = null;
             this._destroyDeferred = new Deferred();
 
-            _private.startAnimation('close', container);
+            container.classList.add('controls-MiniCardController_close');
 
             return this._destroyDeferred;
          },

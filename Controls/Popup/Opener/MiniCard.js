@@ -23,7 +23,8 @@ define('Controls/Popup/Opener/MiniCard',
          open: function(self, cfg) {
             var myCfg = cClone(cfg);
 
-            myCfg.className = 'controls-MiniCardController controls-MiniCardController_open';
+            myCfg.closeByExternalClick = true;
+            myCfg.className = 'controls-MiniCardController';
             MiniCard.superclass.open.call(self, myCfg, Controller);
          }
       };
