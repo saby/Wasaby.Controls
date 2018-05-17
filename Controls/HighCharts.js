@@ -77,7 +77,7 @@ define('Controls/HighCharts', [
 
 
    var _private = {
-         reload: function(self, wsSeries, wsAxis, recordSet) {
+         redraw: function(self, wsSeries, wsAxis, recordSet) {
             var preparedData = _private.prepareData(wsSeries, wsAxis, recordSet);
             _private.drawChart(self, preparedData);
          },
@@ -118,24 +118,24 @@ define('Controls/HighCharts', [
       HighCharts = Control.extend({
          _template: template,
          _chartOptions: {},
-         _highChartsData: null,
+         _highChartsRecordSet: null,
 
-         _beforeMount: function(opts, context, recievedState) {
+         _beforeMount: function(opts, context, receivedState) {
             var self = this;
             this._chartOptions = opts.chartOptions;
-            if (recievedState) {
-               this._highChartsData = recievedState;
+            if (receivedState) {
+               this._highChartsRecordSet = receivedState;
             } else if (opts.dataSource) {
                return opts.dataSource.query(opts.filter).addCallback(function(data) {
-                  self._highChartsData = data.getAll();
-                  return self._highChartsData;
+                  self._highChartsRecordSet = data.getAll();
+                  return self._highChartsRecordSet;
                });
             }
          },
 
          _afterMount: function(opts) {
-            if (this._highChartsData) {
-               _private.reload(this, opts.wsSeries, opts.wsAxis, this._highChartsData);
+            if (this._highChartsRecordSet) {
+               _private.redraw(this, opts.wsSeries, opts.wsAxis, this._highChartsRecordSet);
 
                //Have to call forceUpdate in afterMount, because afterMount can`t update children components
                this._forceUpdate();
@@ -147,7 +147,7 @@ define('Controls/HighCharts', [
             if (opts.filter !== this._options.filter && opts.dataSource) {
                opts.dataSource.query(opts.filter).addCallback(function(data) {
                   if (data) {
-                     _private.reload(self, opts.wsSeries, opts.wsAxis, data.getAll());
+                     _private.redraw(self, opts.wsSeries, opts.wsAxis, data.getAll());
                   }
                });
             }
