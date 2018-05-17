@@ -77,9 +77,10 @@ define('Controls/HighCharts', [
 
 
    var _private = {
-         redraw: function(self, wsSeries, wsAxis, recordSet) {
-            var preparedData = _private.prepareData(wsSeries, wsAxis, recordSet);
-            _private.drawChart(self, preparedData);
+         loadData: function(dataSource, filter) {
+            return dataSource.query(filter).addCallback(function(dataSet) {
+               return dataSet.getAll();
+            });
          },
          drawChart: function(self, preparedData) {
             self._chartOptions = _private.mergePreparedData(self._chartOptions, preparedData);
@@ -126,16 +127,18 @@ define('Controls/HighCharts', [
             if (receivedState) {
                this._highChartsRecordSet = receivedState;
             } else if (opts.dataSource) {
-               return opts.dataSource.query(opts.filter).addCallback(function(data) {
-                  self._highChartsRecordSet = data.getAll();
+               return _private.loadData(opts.dataSource, opts.filter).addCallback(function(recordSet) {
+                  self._highChartsRecordSet = recordSet;
                   return self._highChartsRecordSet;
                });
             }
          },
 
          _afterMount: function(opts) {
+            var preparedData;
             if (this._highChartsRecordSet) {
-               _private.redraw(this, opts.wsSeries, opts.wsAxis, this._highChartsRecordSet);
+               preparedData = _private.prepareData(opts.wsSeries, opts.wsAxis, this._highChartsRecordSet);
+               _private.drawChart(this, preparedData);
 
                //Have to call forceUpdate in afterMount, because afterMount can`t update children components
                this._forceUpdate();
@@ -143,12 +146,13 @@ define('Controls/HighCharts', [
          },
 
          _beforeUpdate: function(opts) {
-            var self = this;
+            var
+               self = this,
+               preparedData;
             if (opts.filter !== this._options.filter && opts.dataSource) {
-               opts.dataSource.query(opts.filter).addCallback(function(data) {
-                  if (data) {
-                     _private.redraw(self, opts.wsSeries, opts.wsAxis, data.getAll());
-                  }
+               _private.loadData(opts.dataSource, opts.filter).addCallback(function(recordSet) {
+                     preparedData = _private.prepareData(opts.wsSeries, opts.wsAxis, recordSet);
+                     _private.drawChart(self, preparedData);
                });
             }
          }

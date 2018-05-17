@@ -10,7 +10,7 @@ define('Controls/HighCharts/resources/ParseDataUtil', ['Core/ILogger'], function
          for (var i = 0; i < wsAxis.length; i++) {
             axisArr[i] = {};
 
-            /*прокидываем все опции*/
+            //Merge options from wsAxis to control options
             if (wsAxis[i].title !== undefined) {
                axisArr[i].title = axisArr[i].title || {};
                axisArr[i].title.text = wsAxis[i].title;
@@ -56,19 +56,18 @@ define('Controls/HighCharts/resources/ParseDataUtil', ['Core/ILogger'], function
                axisArr[i].sourceField = wsAxis[i].sourceField;
             }
 
-            /*прописываем тип, чтоб потом разделить на два массива*/
+            //Write down type to split to two arrays
             if (wsAxis[i].type == 'yAxis') {
                axisArr[i].type = 'yAxis';
             } else {
                axisArr[i].type = 'xAxis';
             }
 
-            /*опции которые задаем по умолчанию всегда*/
+            //Put default options
             axisArr[i].tickmarkPlacement = 'on';
          }
 
-
-         /*разделяем массив осей на x и y*/
+         //Split array of axis for xAxis and yAxis arrays
          for (i = 0; i < axisArr.length; i++) {
             if (axisArr[i].type == 'yAxis') {
                yAxisArr.push(axisArr[i]);
