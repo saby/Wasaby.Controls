@@ -29,15 +29,27 @@ define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
                   }
                }
             } else {
-               return null;
+               return {
+                  width: width + PANEL_SHADOW_WIDTH,
+                  right: this._getContentOffset(),
+                  top: 0,
+                  bottom: 0
+               };
             }
          }
          return {
             width: width + PANEL_SHADOW_WIDTH,
-            right: right,
+            right: right + this._getContentOffset(),
             top: top,
             bottom: 0
          };
+      },
+      _getContentOffset: function() {
+         var contentArea = document.getElementsByClassName('controls-content')[0];
+         if (contentArea) {
+            return document.body.offsetWidth - contentArea.getBoundingClientRect().width;
+         }
+         return 0;
       }
    };
 });
