@@ -440,7 +440,7 @@ node('controls') {
             sh """
                 cd ./jinnee/distrib/builder
                 cp -rf ${workspace}/jinnee/ws /home/sbis/Controls/intest-ps/ui/
-                node ./node_modules/grunt-cli/bin/grunt i18n --root=/home/sbis/Controls/intest-ps/ui --application=/ --json-generate=true --modules=${workspace}/jinnee/data/modules.json --includes=false —json-cache="${workspace}/jinnee/date/json_cache"
+                node ./node_modules/grunt-cli/bin/grunt i18n --root=/home/sbis/Controls/intest-ps/ui --application=/ --json-generate=true --modules=${workspace}/jinnee/data/modules.json --includes=false --json-cache="${workspace}/jinnee/date/json_cache"
                 node ./node_modules/grunt-cli/bin/grunt xhtml-build --root=/home/sbis/Controls/intest-ps/ui --application=/
                 node ./node_modules/grunt-cli/bin/grunt tmpl-build --root=/home/sbis/Controls/intest-ps/ui --application=/
                 node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/sbis/Controls/intest-ps/ui --application=/
