@@ -24,7 +24,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       EventObject) {
 
       function removeOperation(operation, array) {
-         var  idx = arrayFindIndex(array, function(op) { return op === operation; });
+         var  idx = arrayFindIndex(array, function(op) {
+            return op === operation; 
+         });
          array.splice(idx, 1);
       }
 
@@ -213,7 +215,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
 
 
-         _removeOpFromCollections: function (operation) {
+         _removeOpFromCollections: function(operation) {
             removeOperation(operation, this._producedPendingOperations);
             removeOperation(operation, allProducedPendingOperations);
          },

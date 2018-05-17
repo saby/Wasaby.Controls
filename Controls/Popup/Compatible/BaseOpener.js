@@ -37,8 +37,8 @@ function(cDeferred, CompoundArea) {
             cfg.maxWidth = dimensions.maxWidth ? parseInt(dimensions.maxWidth, 10) : null;
          }
 
-         cfg.minWidth = cfg.minWidth || cfg.maxWidth || 900;
-         cfg.maxWidth = cfg.maxWidth || cfg.minWidth || 900;
+         cfg.minWidth = cfg.minWidth || cfg.maxWidth;
+         cfg.maxWidth = cfg.maxWidth || cfg.minWidth;
       }
    };
 }
