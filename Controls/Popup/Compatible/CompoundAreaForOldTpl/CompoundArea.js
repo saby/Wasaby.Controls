@@ -93,7 +93,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   self.templateOptions._compoundArea = self;
                   self._compoundControl = new (result[0])(self.templateOptions);
                   self._subscribeToCommand();
-
                   self.handle('onAfterShow'); // todo здесь надо звать хэндлер который пытается подписаться на onAfterShow, попробуй подключить FormController и словить подпись
                });
             });
