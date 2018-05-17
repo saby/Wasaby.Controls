@@ -16,7 +16,7 @@
     "importHelpers": true
   },
   "include": [
-    "../File/**/*",
+    "./File/**/*",
     "core.d.ts",
     "tslib.js"
   ],
