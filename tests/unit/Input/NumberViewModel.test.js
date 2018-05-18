@@ -785,6 +785,23 @@ define(
                      position: 6
                   },
                   inputType: 'insert'
+               },
+
+               {
+                  testName: 'Insert minus at string start when it contains some value',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '',
+                     insert: '-',
+                     after: '1',
+                     delete: ''
+                  },
+                  result: {
+                     value: '-1.0',
+                     position: 1
+                  },
+                  inputType: 'insert'
                }
             ];
 
