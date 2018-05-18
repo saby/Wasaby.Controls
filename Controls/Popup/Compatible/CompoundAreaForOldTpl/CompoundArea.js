@@ -195,26 +195,16 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          handle: function(eventName) {
             var handlers = this[eventName + 'Handler'] || [];
             var eventState = new EventObject(eventName, this);
+            var self = this;
 
             if (handlers[eventName] === 'function') {
                handlers[eventName] = [this._options.handlers[eventName]];
             }
             handlers.forEach(function(value) {
                if (eventState.getResult() !== false) {
-                     value(eventState);
-                  // value(eventState);
-                  }
-               });
-            // if (this._options.handlers && this._options.handlers[eventName]) {
-            //    if (typeof this._options.handlers[eventName] === 'function') {
-            //       this._options.handlers[eventName] = [this._options.handlers[eventName]];
-            //    }
-            //    this._options.handlers[eventName].forEach(function(value) {
-            //       if (eventState.getResult() !== false) {
-            //          value.apply(self._compoundControl, [eventState]);
-            //       }
-            //    });
-            // }
+                  value.apply(self._compoundControl, [eventState]);
+               }
+            });
 
             return eventState.getResult();
          },
@@ -230,8 +220,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             if (this.isDestroyed()) {
                return;
             }
-
-            this._destroyDef.callback();
 
             var ops = this._producedPendingOperations;
             while (ops.length > 0) {
