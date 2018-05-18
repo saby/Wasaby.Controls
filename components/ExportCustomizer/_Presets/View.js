@@ -11,6 +11,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
       'Core/Deferred',
       'Core/helpers/Object/isEqual',
       'SBIS3.CONTROLS/CompoundControl',
+      'SBIS3.CONTROLS/Utils/ItemNamer',
       'WS.Data/Collection/RecordSet',
       'WS.Data/Di',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
@@ -19,7 +20,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
       'css!SBIS3.CONTROLS/ExportCustomizer/_Presets/View'
    ],
 
-   function (cMerge, Deferred, cObjectIsEqual, CompoundControl, RecordSet, Di, dotTplFn) {
+   function (cMerge, Deferred, cObjectIsEqual, CompoundControl, ItemNamer, RecordSet, Di, dotTplFn) {
       'use strict';
 
       /**
@@ -122,8 +123,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
          _bindEvents: function () {
             this.subscribeTo(this._selector, 'onSelectedItemsChange', function (evtName, ids, changes) {
                var selectedId = ids[0];
+               var prevId = changes.removed[0];
                this._options.selectedId = selectedId;
                this._updateSelectorListOptions('selectedKey', selectedId);
+               //TODO: проверить, что у старого и нового пресета действительно различаются fieldIds и fileUuid (например, после клонирования)
                this.sendCommand('subviewChanged');
             }.bind(this));
          },
@@ -263,7 +266,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             }
             if (preset) {
                preset.id = _makeId();
-               //^^^preset.title = ;
+               preset.title = ItemNamer.make(preset.title, [{list:statics, property:'title'}, {list:customs, property:'title'}]);
                customs.splice(index, 0, preset);
                return this._storage.save(options.namespace, customs).addCallback(function (/*isSuccess*/) {
                   //if (isSuccess) {
@@ -460,8 +463,16 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
        * @return {string}
        */
       var _makeId = function () {
-         return (new Date()).getTime() + '';//^^^@@@
+         return _uniqueHex(32);
       };
+
+      /**
+       * Сгенерировать случайную hex-строку указанной длины
+       * @protected
+       * @param {number} n Длина строки
+       * @return {string}
+       */
+      var _uniqueHex = function(n){var l=[];for(var i=0;i<n;i++){l[i]=Math.round(15*Math.random()).toString(16)}return l.join('')};
 
 
 
