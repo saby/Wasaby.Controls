@@ -9,11 +9,7 @@ define('Controls-demo/Suggest/Suggest', [
    'tmpl!Controls-demo/Suggest/Suggest',
    'WS.Data/Source/Memory',
    'Core/Deferred',
-   'css!Controls-demo/Suggest/Suggest',
-   'Controls/Input/Suggest',
-   'Controls/List',
-   'Controls/Container/List',
-   'Controls/Tabs/Buttons'
+   'css!Controls-demo/Suggest/Suggest'
 ], function(Control, template, MemorySource, Deferred) {
    
    'use strict';
@@ -79,15 +75,12 @@ define('Controls-demo/Suggest/Suggest', [
       { id: 59, title: 'Sasha', text: 'test', tabsSelectedKey: 2 }
    ];
    
-   var tabSourceData = [
-      { id: 0, title: 'Сотрудники', text: 'test' },
-      { id: 1, title: 'Контрагенты', text: 'test' }
-   ];
-   
    var VDomSuggest = Control.extend({
       _template: template,
       _suggestValue: '',
       _suggest2Value: '',
+      _suggest3Value: '',
+      _suggest4Value: '',
       _tabsSelectedKey: 0,
       
       constructor: function() {
@@ -100,14 +93,6 @@ define('Controls-demo/Suggest/Suggest', [
             idProperty: 'id',
             data: sourceData
          });
-         this._tabsOptions = {
-            source: new MemorySource({
-               idProperty: 'id',
-               data: tabSourceData
-            }),
-            keyProperty: 'id',
-            displayProperty: 'title'
-         };
          
          //Чтобы запрос был асинхронным.
          var origQuery = this._suggestSource.query;
@@ -123,8 +108,7 @@ define('Controls-demo/Suggest/Suggest', [
                     var items = originAll.call(result);
                     items.setMetaData({
                        tabs: [{id: 1, title: 'Вкладка'}, {id: 2, title: 'Вкладка2'}],
-                       more: items.getMetaData().more,
-                       tabsSelectedKey: 1
+                       more: items.getMetaData().more
                     });
                     return items;
                   };

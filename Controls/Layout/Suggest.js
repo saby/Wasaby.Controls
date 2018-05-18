@@ -3,14 +3,12 @@ define('Controls/Layout/Suggest',
       'Core/Control',
       'tmpl!Controls/Layout/Suggest/Suggest',
       'tmpl!Controls/Layout/Suggest/empty',
-      'tmpl!Controls/Layout/Suggest/footer',
       'WS.Data/Type/descriptor',
       'Controls/Container/Search/SearchContextField',
       'Controls/Container/Filter/FilterContextField',
-      'WS.Data/Source/Memory',
       'css!Controls/Layout/Suggest/Suggest'
    ],
-   function(Control, template, emptyTemplate, footerTemplate, types, SearchContextField, FilterContextField, Memory) {
+   function(Control, template, emptyTemplate, types, SearchContextField, FilterContextField) {
       
       'use strict';
       
@@ -143,12 +141,16 @@ define('Controls/Layout/Suggest',
          },
          
          _searchStart: function() {
-            this._notify('searchStart');
+            if (this._options.searchStartCallback) {
+               this._options.searchStartCallback();
+            }
          },
          
          _searchEnd: function(result) {
             _private.precessResultData(this, result);
-            this._notify('searchEnd', [result]);
+            if (this._options.searchEndCallback) {
+               this._options.searchEndCallback();
+            }
             this._forceUpdate();
          },
          
@@ -188,7 +190,9 @@ define('Controls/Layout/Suggest',
       SuggestLayout.getDefaultOptions = function() {
          return {
             emptyTemplate: emptyTemplate,
-            footerTemplate: footerTemplate,
+            footerTemplate: {
+               templateName: 'tmpl!Controls/Layout/Suggest/footer'
+            },
             suggestStyle: 'default',
             suggestState: false,
             minSearchLength: 3

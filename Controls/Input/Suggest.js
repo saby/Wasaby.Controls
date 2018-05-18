@@ -42,8 +42,9 @@ define('Controls/Input/Suggest',
          
          // <editor-fold desc="LifeCycle">
          
-         constructor: function(options) {
-            Suggest.superclass.constructor.call(this, options);
+         _beforeMount: function(options) {
+            this._searchStart = this._searchStart.bind(this);
+            this._searchEnd = this._searchEnd.bind(this);
             _private.initViewModel(this, options || {});
          },
          
@@ -98,7 +99,7 @@ define('Controls/Input/Suggest',
       Suggest.getOptionTypes = function() {
          return {
             displayProperty: types(String).required(),
-            suggestTemplate: types(Array).required(),
+            suggestTemplate: types(Object).required(),
             searchParam: types(String).required()
          };
       };

@@ -78,11 +78,10 @@ define('Controls/Container/List',
                self._options.searchEndCallback(result, filter);
             }
    
-            if (!isEqual(filter, _private.getFilterFromContext(self, self._contextObj))) {
+            if (!isEqual(filter, _private.getFilterFromContext(self, self._contextObj)) || !isEqual(filter, self._filter)) {
                _private.updateFilter(self, filter);
             }
             _private.updateSource(self, result.data);
-            self._searchMode = true;
             self._searchDeferred.callback();
             self._forceUpdate();
          },
@@ -100,6 +99,7 @@ define('Controls/Container/List',
             if (filter) {
                searchController.setFilter(filter);
             }
+            self._searchMode = true;
             searchController.search(value);
          },
          
@@ -111,7 +111,7 @@ define('Controls/Container/List',
          },
          
          getValueFromContext: function(context, contextField, valueField) {
-            if (context && context.hasOwnProperty(contextField)) {
+            if (context && context[contextField]) {
                return context[contextField][valueField];
             } else {
                return null;
@@ -120,8 +120,18 @@ define('Controls/Container/List',
          
          isFilterChanged: function(self, context) {
             var oldValue = this.getFilterFromContext(self, self._contextObj),
-               newValue = this.getFilterFromContext(self, context);
-            return newValue && !isEqual(oldValue, newValue);
+                newValue = this.getFilterFromContext(self, context),
+                changed = false;
+            
+            if (newValue) {
+               if (self._searchMode) {
+                  /* if search mode on, filter will be changed after search */
+                  changed = !isEqual( _private.getSearchController(self).getFilter(), newValue);
+               } else {
+                  changed = !isEqual(oldValue, newValue);
+               }
+            }
+            return changed;
          },
          
          isSearchValueChanged: function(self, context) {

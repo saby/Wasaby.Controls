@@ -37,7 +37,7 @@ define('Controls/Input/Search/Suggest',
       Suggest.getOptionTypes = function() {
          return {
             displayProperty: types(String).required(),
-            suggestTemplate: types(Array).required(),
+            suggestTemplate: types(Object).required(),
             searchParam: types(String).required()
          };
       };

@@ -1,26 +1,32 @@
 <div class="controls-SuggestV">
     <ws:template name="suggestTpl">
-        <ws:partial
-                template="{{_options.suggestTemplate}}"
-                searchEndCallback="{{_searchEnd}}"
-                searchStartCallback="{{_searchStart}}"
-                emptyTemplate="{{_options.emptyTemplate}}"
-                source="{{_options.source}}"
-                navigation="{{_options.navigation}}"
-                searchParam="{{_options.searchParam}}"
-                tabsSelectedKey="{{_tabsSelectedKey}}"
-                on:itemClick="_select()"
-                on:tabsSelectedKeyChanged="_tabsSelectedKeyChanged()"
-        />
+        <Controls.Container.Async templateName="Controls/Layout/Suggest/_SuggestListWrapper" on:itemClick="_select()" on:tabsSelectedKeyChanged="_tabsSelectedKeyChanged()">
+            <ws:templateOptions templateName="{{_options.suggestTemplate.templateName}}"
+                                templateOptions="{{_options.suggestTemplate.templateOptions}}"
+                                searchEndCallback="{{_searchEnd}}"
+                                searchStartCallback="{{_searchStart}}"
+                                emptyTemplate="{{_options.emptyTemplate}}"
+                                source="{{_options.source}}"
+                                minSearchLength="{{_options.minSearchLength}}"
+                                navigation="{{_options.navigation}}"
+                                searchParam="{{_options.searchParam}}"
+                                tabsSelectedKey="{{_tabsSelectedKey}}"/>
+        </Controls.Container.Async>
     </ws:template>
 
     <ws:partial template="{{_options.content}}" on:valueChanged="_changeValueHandler()" attr:class="controls-Suggest-Text_style_{{_options.suggestStyle}}"/>
 
     <div if="{{_options.suggestState}}" class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer-style-{{_options.suggestStyle}}">
-        <Controls.Button.Close if="{{_options.suggestStyle === 'overInput'}}" attr:class="controls-Suggest-close" on:click="_close()"/>
+        <ws:if data="{{_options.suggestStyle === 'overInput'}}">
+            <Controls.Container.Async templateName="Controls/Button/Close" attr:class="controls-Suggest-close" on:click="_close()"/>
+        </ws:if>
+
         <ws:partial template="suggestTpl"/>
-        <ws:if data="{{_options.footerTemplate && _isFooterShown}}">
-            <ws:partial template="{{ _options.footerTemplate}}" on:click="_showAllClick()" hasMore="{{_searchResult ? _searchResult.hasMore}}"/>
+
+        <ws:if data="{{_isFooterShown}}">
+            <Controls.Container.Async templateName="{{ _options.footerTemplate.templateName }}" on:click="_showAllClick()">
+                <ws:templateOptions hasMore="{{_searchResult ? _searchResult.hasMore}}"/>
+            </Controls.Container.Async>
         </ws:if>
     </div>
 

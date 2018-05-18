@@ -4,8 +4,9 @@
             <Controls.Container.Scroll attr:class="controls-ScrollContainer__flex">
                 <ws:content>
                     <ws:partial template="{{_options.template}}"
-                                dialogMode="{{true}}"
-                                on:itemClick="_itemClick()"/>
+                                on:itemClick="_itemClick()">
+                        <ws:templateOptions dialogMode="{{true}}"/>
+                    </ws:partial>
                 </ws:content>
             </Controls.Container.Scroll>
         </ws:contentArea>

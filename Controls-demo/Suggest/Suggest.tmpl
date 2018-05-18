@@ -4,23 +4,13 @@
             <h3>Suggest</h3>
             <Controls.Input.Suggest
                     bind:value="_suggestValue"
-                    bind:tabsSelectedKey="_tabsSelectedKey"
                     displayProperty="text"
                     searchParam="title"
                     source="{{_suggestSource}}">
                 <ws:navigation source="page" view="page">
                     <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
                 </ws:navigation>
-                <ws:suggestTemplate>
-                    <Controls.Container.Suggest.List>
-                        <ws:content>
-                            <Controls:List
-                                    displayProperty="title"
-                                    idProperty="id">
-                            </Controls:List>
-                        </ws:content>
-                    </Controls.Container.Suggest.List>
-                </ws:suggestTemplate>
+                <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTemplate"/>
                 <ws:minSearchLength>
                     <ws:Number>3</ws:Number>
                 </ws:minSearchLength>
@@ -36,13 +26,7 @@
                 <ws:navigation source="page" view="page">
                     <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
                 </ws:navigation>
-                <ws:suggestTemplate>
-                    <Controls.Container.Suggest.List attr:class="demo-SuggestList">
-                        <ws:content>
-                            <Controls:List displayProperty="title" idProperty="id"/>
-                        </ws:content>
-                    </Controls.Container.Suggest.List>
-                </ws:suggestTemplate>
+                <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTemplate"/>
                 <ws:minSearchLength>
                     <ws:Number>3</ws:Number>
                 </ws:minSearchLength>
@@ -53,24 +37,14 @@
         <div class="demo-SuggestWrapper">
             <h3>Suggest with tabs</h3>
             <Controls.Input.Suggest
-                    bind:value="_suggestValue"
-                    bind:tabsSelectedKey="_tabsSelectedKey"
+                    bind:value="_suggest3Value"
                     displayProperty="text"
                     searchParam="title"
                     source="{{_suggestTabSource}}">
                 <ws:navigation source="page" view="page">
                     <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
                 </ws:navigation>
-                <ws:suggestTemplate>
-                    <Controls.Container.Suggest.List tabsOptions="{{_tabsOptions}}">
-                        <ws:content>
-                            <Controls:List
-                                    displayProperty="title"
-                                    idProperty="id">
-                            </Controls:List>
-                        </ws:content>
-                    </Controls.Container.Suggest.List>
-                </ws:suggestTemplate>
+                <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTabTemplate"/>
                 <ws:minSearchLength>
                     <ws:Number>3</ws:Number>
                 </ws:minSearchLength>
@@ -79,20 +53,14 @@
         <div class="demo-SuggestWrapper">
             <h3>Search suggest with tabs</h3>
             <Controls.Input.Search.Suggest
-                    bind:value="_suggest2Value"
+                    bind:value="_suggest4Value"
                     displayProperty="text"
                     searchParam="title"
                     source="{{_suggestTabSource}}">
                 <ws:navigation source="page" view="page">
                     <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
                 </ws:navigation>
-                <ws:suggestTemplate>
-                    <Controls.Container.Suggest.List attr:class="demo-SuggestList" tabsOptions="{{_tabsOptions}}">
-                        <ws:content>
-                            <Controls:List displayProperty="title" idProperty="id"/>
-                        </ws:content>
-                    </Controls.Container.Suggest.List>
-                </ws:suggestTemplate>
+                <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTabTemplate"/>
                 <ws:minSearchLength>
                     <ws:Number>3</ws:Number>
                 </ws:minSearchLength>
