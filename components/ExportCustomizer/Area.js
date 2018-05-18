@@ -556,6 +556,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             var fieldIds = values.fieldIds;
             if (fieldIds) {
                this._options.fieldIds = fieldIds.slice();
+               var presetsView = views.presets;
+               if (presetsView) {
+                  presetsView.setValues({fieldIds:fieldIds.slice()});
+               }
                views.formatter.setValues({fieldIds:fieldIds.slice()});
             }
          },
@@ -571,6 +575,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             var fileUuid = values.fileUuid;
             if (fileUuid) {
                this._options.fileUuid = fileUuid;
+               var presetsView = views.presets;
+               if (presetsView) {
+                  presetsView.setValues({fileUuid:fileUuid});
+               }
             }
          },
 
@@ -622,6 +630,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             this.getValues(true).addCallback(function (data) {
                // И если всё нормально - завершить диалог
                if (data) {
+                  var presetsView = this._views.presets;
+                  if (presetsView) {
+                     presetsView.save();
+                  }
                   var outputCall = this._options.outputCall;
                   if (outputCall) {
                      (new RemoteCall(outputCall)).call(data).addCallbacks(

@@ -8,6 +8,7 @@
 define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
    [
       'Core/Deferred',
+      'Core/helpers/Object/isEqual',
       'SBIS3.CONTROLS/CompoundControl',
       'WS.Data/Collection/RecordSet',
       'WS.Data/Di',
@@ -17,7 +18,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
       'css!SBIS3.CONTROLS/ExportCustomizer/_Presets/View'
    ],
 
-   function (Deferred, CompoundControl, RecordSet, Di, dotTplFn) {
+   function (Deferred, cObjectIsEqual, CompoundControl, RecordSet, Di, dotTplFn) {
       'use strict';
 
       /**
@@ -80,6 +81,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             _storage: null,
             // Список пользовательских пресетов
             _customs: null,
+            // Текущий список привязки колонок в экспортируемом файле к полям данных
+            _fieldIds: null,
+            // Текущий uuid шаблона форматирования эксель-файла
+            _fileUuid: null,
             // Контрол выбора пресета
             _selector: null
          },
@@ -325,6 +330,31 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
          },
 
          /**
+          * Сохранить текущий пресет, если это возможно и необходимо
+          *
+          * @public
+          * return {Core/Deferred}
+          */
+         save: function () {
+            if (this._storage) {
+               var fieldIds = this._fieldIds;
+               var fileUuid = this._fileUuid;
+               if (fieldIds && fieldIds.length && fileUuid) {
+                  var options = this._options;
+                  var customs = options.customs;
+                  var selectedId = options.selectedId;
+                  var preset; customs.some(function (v) { if (v.id === selectedId) { preset = v; return true; } });
+                  if (preset) {
+                     preset.fieldIds = fieldIds;
+                     preset._fileUuid = _fileUuid;
+                     return this._storage.save(options.namespace, customs);
+                  }
+               }
+            }
+            return Deferred.success(false);
+         },
+
+         /**
           * Установить указанные настраиваемые значения компонента
           *
           * @public
@@ -334,8 +364,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             if (!values || typeof values !== 'object') {
                throw new Error('Object required');
             }
-            var options = this._options;
-            /*^^^var waited = {xxx:true, yyy:false};
+            if (values.fieldIds && !cObjectIsEqual(values.fieldIds, this._fieldIds)) {
+               this._fieldIds = values.fieldIds;
+            }
+            if (values.fileUuid && values.fileUuid !== this._fileUuid) {
+               this._fileUuid = values.fileUuid;
+            }
+            /*^^^var options = this._options;
+            var waited = {statics:true, namespace:false, selectedId:false};
             var has = {};
             for (var name in values) {
                if (name in waited) {
@@ -346,10 +382,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   }
                }
             }
-            if (has.xxx) {
+            if (has.statics) {
             }
             else
-            if (has.yyy) {
+            if (has.namespace) {
+            }
+            else
+            if (has.selectedId) {
             }*/
          },
 
