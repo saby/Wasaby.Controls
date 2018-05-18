@@ -1,7 +1,7 @@
 <Controls.Input.resources.InputRender.InputRender
    name="inputRender"
    autocomplete="{{_options.autocomplete}}"
-   value="{{ _options.value }}"
+   value="{{ _numberViewModel.getDisplayValue() }}"
    size="{{ _options.size }}"
    selectOnClick="{{_options.selectOnClick}}"
    viewModel="{{_numberViewModel}}"
@@ -13,6 +13,7 @@
    on:inputCompleted="_inputCompletedHandler()"
    on:tagHover="_notifyHandler('onTagHover')"
    on:tagClick="_notifyHandler('onTagClick')"
+   on:focusin="_focusinHandler()"
    on:focusout="_focusoutHandler()"
 >
    <ws:content>
@@ -21,6 +22,7 @@
          template="tmpl!Controls/Input/resources/input"
          type="text"
          readOnly="{{_options.readOnly}}"
+         value="{{ _numberViewModel.getDisplayValue() }}"
       />
 
    </ws:content>
