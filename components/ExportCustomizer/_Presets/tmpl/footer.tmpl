@@ -1,7 +1,10 @@
 <SBIS3.CONTROLS:Link
    className="controls-ExportCustomizer-Presets-View__add"
+   handlers="{{ {
+         'onActivated': _footerHandler
+      } }}"
    >
    <ws:caption>
-      <ws:if data="{{presetsAddTitle}}">{{presetsAddTitle}}</ws:if><ws:else>{[НастройщикЭкспорта@@+ Новый шаблон]}</ws:else>
+      <ws:if data="{{_footerTitle}}">{{_footerTitle}}</ws:if><ws:else>{[НастройщикЭкспорта@@+ Новый шаблон]}</ws:else>
    </ws:caption>
 </SBIS3.CONTROLS:Link>

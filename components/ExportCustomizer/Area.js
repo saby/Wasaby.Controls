@@ -571,7 +571,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           */
          _onChangeFormatter: function () {
             // Изменилось форматирование эксель-файла
-            var values = this._views.formatter.getValues();
+            var views = this._views;
+            var values = views.formatter.getValues();
             var fileUuid = values.fileUuid;
             if (fileUuid) {
                this._options.fileUuid = fileUuid;
