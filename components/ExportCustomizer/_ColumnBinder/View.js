@@ -99,6 +99,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
          _bindEvents: function () {
             //При клике по строке списка колонок
             this.subscribeTo(this._grid, 'onItemActivate', this._onEdit.bind(this));
+            this.subscribeTo(this._grid, 'onEndMove', function (evtName, dragObject) {
+               var items = this._grid.getItems();
+               var fieldIds = []; items.each(function (v) { fieldIds.push(v.getId()); });
+               this._options.fieldIds = fieldIds;
+               this._redraw();
+            }.bind(this));
          },
 
          /**
