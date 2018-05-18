@@ -7,6 +7,7 @@
  */
 define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
    [
+      'Core/core-merge',
       'Core/Deferred',
       'Core/helpers/Object/isEqual',
       'SBIS3.CONTROLS/CompoundControl',
@@ -18,7 +19,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
       'css!SBIS3.CONTROLS/ExportCustomizer/_Presets/View'
    ],
 
-   function (Deferred, cObjectIsEqual, CompoundControl, RecordSet, Di, dotTplFn) {
+   function (cMerge, Deferred, cObjectIsEqual, CompoundControl, RecordSet, Di, dotTplFn) {
       'use strict';
 
       /**
@@ -198,17 +199,19 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * @param {string} action Вид действия
           */
          _onItemAction: function (listView, itemContainer, id, model, action) {
-            switch (action) {
-               case 'clone':
-                  this._clonePreset(id, listView);
-                  break;
-               case 'edit':
-                  this._editPreset(id, listView);
-                  break;
-               case 'delete':
-                  this._deletePreset(id, listView);
-                  break;
-            }
+            var method = {
+               'clone': '_clonePreset',
+               'edit': '_editPreset',
+               'delete': '_deletePreset'
+            }[action];
+            this[method](id, listView).addCallback(function (isSuccess) {
+               if (isSuccess) {
+                  this._updateSelector();
+                  var options = this._options;
+                  listView.setItems(options._items);
+                  listView.setSelectedKey(options._selectedId);
+               }
+            }.bind(this));
          },
 
          /**
@@ -242,6 +245,36 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * @return {Core/Deferred}
           */
          _clonePreset: function (id, listView) {
+            var options = this._options;
+            var statics = options.statics;
+            var customs = this._customs;
+            var preset;
+            var index = _findIndexById(statics, id);
+            if (index !== -1) {
+               preset = cMerge({isStorable:true}, statics[index]);
+               index = 0;
+            }
+            else {
+               index = _findIndexById(customs, id);
+               if (index !== -1) {
+                  preset = cMerge({}, customs[index]);
+                  index++;
+               }
+            }
+            if (preset) {
+               preset.id = _makeId();
+               //^^^preset.title = ;
+               customs.splice(index, 0, preset);
+               return this._storage.save(options.namespace, customs).addCallback(function (/*isSuccess*/) {
+                  //if (isSuccess) {
+                     options.selectedId = preset.id;
+                  //}
+                  return true/*isSuccess*/;
+               }.bind(this));
+            }
+            else {
+               return Deferred.success(false);
+            }
          },
 
          /**
@@ -265,22 +298,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           */
          _deletePreset: function (id, listView) {
             var customs = this._customs;
-            var index;
-            var done;
-            if (customs && customs.length) {
-               for (var i = 0; i < customs.length; i++) {
-                  var unit = customs[i];
-                  if (unit.id === id) {
-                     if (unit.isStorable) {
-                        customs.splice(i, 1);
-                        index = i;
-                        done = true;
-                     }
-                     break;
-                  }
-               }
-            }
-            if (done) {
+            var index = _findIndexById(customs, id);
+            if (index !== -1) {
+               customs.splice(index, 1);
                var options = this._options;
                return this._storage.save(options.namespace, customs).addCallback(function (/*isSuccess*/) {
                   //if (isSuccess) {
@@ -288,9 +308,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                         options.selectedId = customs.length ? customs[index < customs.length ? index : index - 1].id : null;
                         //this.sendCommand('subviewChanged');
                      }
-                     this._updateSelector();
-                     listView.setItems(options._items);
-                     listView.setSelectedKey(options._selectedId);
                   //}
                   return true/*isSuccess*/;
                }.bind(this));
@@ -350,7 +367,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   }
                }
             }
-            return Deferred.success(false);
+            return Deferred.success(null);
          },
 
          /**
@@ -411,6 +428,42 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             return {};
          }
       });
+
+
+
+      // Private methods:
+
+      /**
+       * Найти индекс элемента массива по его идентификатору
+       *
+       * @private
+       * @param {Array<object>} list Массив объектов (имеющих свойство "id")
+       * @param {string|number} id Идентификатор элемента
+       * @return {number}
+       */
+      var _findIndexById = function (list, id) {
+         if (list && list.length) {
+            for (var i = 0; i < list.length; i++) {
+               var o = list[i];
+               if (o.id === id) {
+                  return i;
+               }
+            }
+         }
+         return -1;
+      };
+
+      /**
+       * Создать новый идентификатору
+       *
+       * @private
+       * @return {string}
+       */
+      var _makeId = function () {
+         return (new Date()).getTime() + '';//^^^@@@
+      };
+
+
 
       return View;
    }
