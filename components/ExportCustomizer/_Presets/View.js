@@ -291,7 +291,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                      this._updateSelector();
                      listView.setItems(options._items);
                      listView.setSelectedKey(options._selectedId);
-                     listView.redraw();
                   //}
                   return true/*isSuccess*/;
                }.bind(this));
