@@ -235,6 +235,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                this._updatePreviewDelay = null;
             }
          },
+         _updatePreviewClearStop: function () {
+            var stopper = this._updatePreviewStopper;
+            if (stopper) {
+               stopper.callback();
+               this._updatePreviewStopper = null;
+            }
+         },
          _updatePreviewStart: function () {
             var size = this._previewSize;
             if (!size) {
@@ -242,10 +249,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                this._previewSize = size = {width:previewContainer.width(), height:previewContainer.height()};
             }
             this._exportFormatter.getPreviewUrl(this._options.fileUuid, size.width, size.height).addCallback(function (url) {
+               this._updatePreviewClearStop();
                var img = this._preview[0];
-               var stopper = new Deferred();
+               var stopper = this._updatePreviewStopper = new Deferred();
                WaitIndicator.make({target:img.parentNode, delay:1000}, stopper);
-               img.onload = img.onerror = stopper.callback.bind(stopper);
+               img.onload = img.onerror = this._updatePreviewClearStop.bind(this);
                img.src = url;
             }.bind(this));
          },
