@@ -10,7 +10,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/Deferred',
       'Core/IoC',
       'Core/EventObject',
-      'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea'
+      'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
+      'Core/Abstract.compatible',
+      'Lib/Control/Control.compatible',
+      'Lib/Control/AreaAbstract/AreaAbstract.compatible',
+      'Lib/Control/BaseCompatible/BaseCompatible',
+      'WS.Data/Entity/InstantiableMixin'
    ],
    function(Control,
       template,
@@ -37,10 +42,34 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       var logger = IoC.resolve('ILogger');
       var allProducedPendingOperations = [];
 
+
+      var AbstractCompatible,
+         ControlCompatible,
+         AreaAbstractCompatible,
+         BaseCompatible,
+         InstantiableMixin;
+      //На сервере всегда надо подтянуть слой, потому что контролы могут строиться для разных клиентов
+      //и для разных страниц
+      if (typeof process === 'undefined' || !process.domain ||
+         !process.domain.req || process.domain.req.compatible!==false){
+         AbstractCompatible = require.defined('Core/Abstract.compatible') && require('Core/Abstract.compatible');
+         ControlCompatible = require.defined('Lib/Control/Control.compatible') && require('Lib/Control/Control.compatible');
+         AreaAbstractCompatible = require.defined('Lib/Control/AreaAbstract/AreaAbstract.compatible') && require('Lib/Control/AreaAbstract/AreaAbstract.compatible');
+         BaseCompatible = require.defined('Lib/Control/BaseCompatible/BaseCompatible') && require('Lib/Control/BaseCompatible/BaseCompatible');
+         InstantiableMixin = require.defined('WS.Data/Entity/InstantiableMixin') && require('WS.Data/Entity/InstantiableMixin');
+
+         Control.loadCompatible();
+      }
+
       /**
        * Слой совместимости для открытия старых шаблонов в новых попапах
       **/
-      var CompoundArea = Control.extend([LikeWindowMixin], {
+      var CompoundArea = Control.extend([AbstractCompatible || {},
+         ControlCompatible || {},
+         AreaAbstractCompatible||{},
+         BaseCompatible||{},
+         InstantiableMixin,
+         LikeWindowMixin], {
          _template: template,
          templateOptions: null,
          compatible: null,
@@ -59,16 +88,18 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          _beforeMount: function() {
             this._commandHandler = this._commandHandler.bind(this);
-
-            this.handle('onBeforeShow');
-            this.handle('onShow');
          },
 
-         shouldUpdate: function() {
+         _shouldUpdate: function() {
             return false;
          },
 
          _afterMount: function() {
+            this.deprecatedContr(this._options);
+
+            this.handle('onBeforeShow');
+            this.handle('onShow');
+
             var
                self = this;
             if (this._options.templateOptions) {
@@ -77,20 +108,22 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                this.templateOptions = {};
             }
             if (this._options._initCompoundArea) {
+               this._options._initCompoundArea(this);
+            }
+
                this._pending = this._pending || [];
                this._pendingTrace = this._pendingTrace || [];
                this._waiting = this._waiting || [];
 
-               this._options._initCompoundArea(this);
-            }
-
             this._parent = this._options.parent;
             this._logicParent = this._options.parent;
+            this._options.parent = null;
 
             moduleStubs.require([self._options.template]).addCallback(function(result) {
                CompatiblePopup.load().addCallback(function() { //Это уже должно быть загружено страницей
                   self.templateOptions.element = $(self._children.compoundBlock);
                   self.templateOptions._compoundArea = self;
+                  self.templateOptions.parent = self;
                   self._compoundControl = new (result[0])(self.templateOptions);
                   self._subscribeToCommand();
                   self.handle('onAfterShow'); // todo здесь надо звать хэндлер который пытается подписаться на onAfterShow, попробуй подключить FormController и словить подпись
@@ -123,6 +156,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          /* from api floatArea, window */
 
+         getParent: function() {
+            return null;
+         },
          close: function() {
             this._notify('close');
 
@@ -131,6 +167,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
          _getTemplateComponent: function() {
             return this._compoundControl;
+         },
+         hasCompatible: function() {
+            return true;
          },
 
          subscribe: function(eventName, handler) {
@@ -157,33 +196,42 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             var handlers = this[eventName + 'Handler'] || [];
             var eventState = new EventObject(eventName, this);
 
+            if (handlers[eventName] === 'function') {
+               handlers[eventName] = [this._options.handlers[eventName]];
+            }
             handlers.forEach(function(value) {
                if (eventState.getResult() !== false) {
-                  value(eventState);
-               }
-            });
-            if (this._options.handlers && this._options.handlers[eventName]) {
-               if (typeof this._options.handlers[eventName] === 'function') {
-                  this._options.handlers[eventName] = [this._options.handlers[eventName]];
-               }
-               this._options.handlers[eventName].forEach(function(value) {
-                  if (eventState.getResult() !== false) {
                      value(eventState);
+                  // value(eventState);
                   }
                });
-            }
+            // if (this._options.handlers && this._options.handlers[eventName]) {
+            //    if (typeof this._options.handlers[eventName] === 'function') {
+            //       this._options.handlers[eventName] = [this._options.handlers[eventName]];
+            //    }
+            //    this._options.handlers[eventName].forEach(function(value) {
+            //       if (eventState.getResult() !== false) {
+            //          value.apply(self._compoundControl, [eventState]);
+            //       }
+            //    });
+            // }
 
             return eventState.getResult();
          },
 
-         onBringToFront: function() {
-            this.activate();
+         getContainer: function() {
+            return $(this._container);
          },
 
          isDestroyed: function() {
             return this._destroyed;
          },
          destroy: function() {
+            if (this.isDestroyed()) {
+               return;
+            }
+
+            this._destroyDef.callback();
 
             var ops = this._producedPendingOperations;
             while (ops.length > 0) {
