@@ -43,7 +43,7 @@ define('SBIS3.CONTROLS/Filter/FastData',
 
       var buildTplArgs = function(cfg) {
          var tplOptions = cfg._buildTplArgsSt.call(this, cfg);
-         tplOptions.fix165c4103 = cfg.fix165c4103;
+         tplOptions._fix165c4103 = cfg._fix165c4103;
          return tplOptions;
       };
 
@@ -55,7 +55,7 @@ define('SBIS3.CONTROLS/Filter/FastData',
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
-               fix165c4103: false, //опция Ярика, в 310 по умолчанию для кнопки внутри ddl включена
+               _fix165c4103: false, //опция Ярика, в 310 по умолчанию для кнопки внутри ddl включена
                _canServerRender: true,
                _buildTplArgs: buildTplArgs,
                itemTpl: ItemTpl,
