@@ -258,6 +258,9 @@ define('Controls/Calendar/Controllers/RangeSelectionController', [
        * @private
        */
       _getDisplayedRangeEdges: function(item) {
+         if (this._selectionType === Component.SELECTION_TYPES.single) {
+            return [item, item];
+         }
          if (item > this._selectionBaseValue) {
             return [this._selectionBaseValue, item];
          } else {
