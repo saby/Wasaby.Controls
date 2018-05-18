@@ -9,7 +9,7 @@
    title="{{tooltip ? tooltip : ' '}}"
    required="true"
    placeholder="{{' '}}"
->{{ text|sanitize:{'escapeComments':true} }}</textarea>
+>{{ text|sanitize }}</textarea>
 <!-- В Safari и на iOS если во flex-контейнере лежит пустая textarea или input, то базовая линия высчитывается неправильно,
 но если задать пробел в качестве плейсхолдера, то она встаёт на место https://jsfiddle.net/5mk21u7L/-->
 <ws:if data="{{ enabled && placeholder }}">
@@ -18,4 +18,4 @@
 <div class="controls-TextArea__view__size__{{!! size ? size : 'm'}}
             {{ heightclassName ? heightclassName }}
             {{ !text ? 'controls-TextArea__view_empty'}}
-            controls-TextArea__view">{{ (text ? wrapUrls(escapeHtml(text)) : placeholder && enabled ? placeholder)|sanitize:{'escapeComments':true} }}</div>
+            controls-TextArea__view">{{ (text ? wrapUrls(escapeHtml(text)) : placeholder && enabled ? placeholder)|sanitize }}</div>
