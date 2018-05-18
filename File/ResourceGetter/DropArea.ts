@@ -6,7 +6,7 @@ import Deferred = require("Core/Deferred");
 import LocalFile = require("File/LocalFile");
 import random = require("Core/helpers/random-helpers");
 import ExtensionsHelper = require("File/utils/ExtensionsHelper");
-import getFilePreparer = require("File/utils/getFilePreparer");
+import getFilePreparer = require("File/utils/filePrepareGetter");
 import replaceDir = require("File/ResourceGetter/DropArea/replaceDir");
 
 type Handler = (files: FileList) => void;
