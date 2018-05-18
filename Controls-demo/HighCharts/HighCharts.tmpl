@@ -1,8 +1,18 @@
 <div>
     <Controls.Button
             name="button1"
-            caption="Нажмите для подгрузки"
-            on:click="_updateState()"
+            caption="Нажмите для смены фильтра"
+            on:click="_updateFilter()"
+    />
+    <Controls.Button
+            name="button2"
+            caption="Нажмите для смены настроек"
+            on:click="_updateConfig()"
+    />
+    <Controls.Button
+            name="button3"
+            caption="Нажмите для смены фильтра и настроек"
+            on:click="_updateConfigNFilter()"
     />
     <Controls.HighCharts
             dataSource="{{_dataSource}}"

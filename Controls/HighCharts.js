@@ -3,8 +3,8 @@ define('Controls/HighCharts', [
    'tmpl!Controls/HighCharts/HighCharts',
    'Controls/HighCharts/resources/ParseDataUtil',
    'Core/ILogger',
-   'Core/core-clone'
-], function(Control, template, ParseDataUtil, ILogger, cClone) {
+   'Core/core-merge'
+], function(Control, template, ParseDataUtil, ILogger, cMerge) {
 
    /**
     * Component HighCharts
@@ -83,7 +83,7 @@ define('Controls/HighCharts', [
             });
          },
          drawChart: function(self, preparedData) {
-            self._chartOptions = _private.mergePreparedData(self._chartOptions, preparedData);
+            self._chartOptions = _private.mergeNewOptions(self._chartOptions, preparedData);
          },
          prepareData: function(wsSeries, wsAxis, recordSet) {
             var
@@ -108,12 +108,8 @@ define('Controls/HighCharts', [
                yAxis: parseRsResult.yAxis
             };
          },
-         mergePreparedData: function(chartOptions, preparedData) {
-            var tmpOpts = cClone(chartOptions);
-            tmpOpts.series = preparedData.series;
-            tmpOpts.xAxis = preparedData.xAxis;
-            tmpOpts.yAxis = preparedData.yAxis;
-            return tmpOpts;
+         mergeNewOptions: function(chartOptions, newOptions) {
+            return cMerge({}, cMerge(chartOptions, newOptions));
          }
       },
       HighCharts = Control.extend({
@@ -149,7 +145,10 @@ define('Controls/HighCharts', [
             var
                self = this,
                preparedData;
-            if (opts.filter !== this._options.filter && opts.dataSource) {
+            if (opts.chartOptions !== self._chartOptions) {
+               self._chartOptions = _private.mergeNewOptions(self._chartOptions, opts.chartOptions);
+            }
+            if (opts.dataSource && (opts.filter !== this._options.filter || opts.dataSource !== self._options.dataSource)) {
                _private.loadData(opts.dataSource, opts.filter).addCallback(function(recordSet) {
                   preparedData = _private.prepareData(opts.wsSeries, opts.wsAxis, recordSet);
                   _private.drawChart(self, preparedData);
