@@ -192,17 +192,29 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * @param {object} item Объект, представляющий информацию об элемент списочного контрола
           */
          _onHoverItem: function (evtName, item) {
-            var model = item.record;
-            if (model) {
-               var listView = evtName.getTarget();
-               var actions = this._makeItemsActions(listView, model.get('isStorable'));
-               var itemsActionsGroup = listView.getItemsActions();
-               if (itemsActionsGroup) {
-                  itemsActionsGroup.setItems(actions);
+            var listView = evtName.getTarget();
+            if (!listView.isEdit()) {
+               var model = item.record;
+               if (model) {
+                  this._updateItemsActions(listView, this._makeItemsActions(listView, model.get('isStorable')));
                }
-               else {
-                  listView.setItemsActions(actions);
-               }
+            }
+         },
+
+         /**
+          * Обновить список доступных действий пользователя у списочного контрола
+          *
+          * @protected
+          * @param {object} listView Списочный контрол
+          * @param {Array<object>} actions Список объектов, описывающих действия пользователя
+          */
+         _updateItemsActions: function (listView, actions) {
+            var itemsActionsGroup = listView.getItemsActions();
+            if (itemsActionsGroup) {
+               itemsActionsGroup.setItems(actions);
+            }
+            else {
+               listView.setItemsActions(actions);
             }
          },
 
@@ -232,7 +244,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                'edit': '_editPreset',
                'delete': '_deletePreset'
             }[action];
-            this[method](id).addCallback(this._afterItemAction.bind(this, listView));
+            this[method](id, listView).addCallback(this._afterItemAction.bind(this, listView));
          },
 
          /**
@@ -332,9 +344,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           *
           * @protected
           * @param {string|number} id Идентификатор пресета
+          * @param {object} listView Списочный контрол
           * @return {Core/Deferred}
           */
-         _editPreset: function (id) {
+         _editPreset: function (id, listView) {
+            var presetInfo = this._findPresetById(id, true);
+            if (presetInfo) {
+               this._updateItemsActions(listView, []);
+               listView.sendCommand('beginEdit', id)
+            }
             return Deferred.success(false);
          },
 
@@ -465,26 +483,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             if (values.fileUuid && values.fileUuid !== this._fileUuid) {
                this._fileUuid = values.fileUuid;
             }
-            /*^^^var options = this._options;
-            var waited = {statics:true, namespace:false, selectedId:false};
-            var has = {};
-            for (var name in values) {
-               if (name in waited) {
-                  var value = values[name];
-                  if (waited[name] ? !cObjectIsEqual(value, options[name]) : value !== options[name]) {
-                     has[name] = true;
-                     options[name] = value;
-                  }
-               }
-            }
-            if (has.statics) {
-            }
-            else
-            if (has.namespace) {
-            }
-            else
-            if (has.selectedId) {
-            }*/
          },
 
          /**
