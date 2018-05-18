@@ -48,10 +48,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          AreaAbstractCompatible,
          BaseCompatible,
          InstantiableMixin;
+
       //На сервере всегда надо подтянуть слой, потому что контролы могут строиться для разных клиентов
       //и для разных страниц
       if (typeof process === 'undefined' || !process.domain ||
-         !process.domain.req || process.domain.req.compatible!==false){
+         !process.domain.req || process.domain.req.compatible !== false) {
          AbstractCompatible = require.defined('Core/Abstract.compatible') && require('Core/Abstract.compatible');
          ControlCompatible = require.defined('Lib/Control/Control.compatible') && require('Lib/Control/Control.compatible');
          AreaAbstractCompatible = require.defined('Lib/Control/AreaAbstract/AreaAbstract.compatible') && require('Lib/Control/AreaAbstract/AreaAbstract.compatible');
@@ -66,8 +67,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       **/
       var CompoundArea = Control.extend([AbstractCompatible || {},
          ControlCompatible || {},
-         AreaAbstractCompatible||{},
-         BaseCompatible||{},
+         AreaAbstractCompatible || {},
+         BaseCompatible || {},
          InstantiableMixin,
          LikeWindowMixin], {
          _template: template,
@@ -111,9 +112,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                this._options._initCompoundArea(this);
             }
 
-               this._pending = this._pending || [];
-               this._pendingTrace = this._pendingTrace || [];
-               this._waiting = this._waiting || [];
+            this._pending = this._pending || [];
+            this._pendingTrace = this._pendingTrace || [];
+            this._waiting = this._waiting || [];
 
             this._parent = this._options.parent;
             this._logicParent = this._options.parent;
