@@ -83,6 +83,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          waitingMode: _typeIfDefined.bind(null, 'boolean'),
          dialogTitle: _typeIfDefined.bind(null, 'string'),
          dialogButtonTitle: _typeIfDefined.bind(null, 'string'),
+         presetAddNewTitle: _typeIfDefined.bind(null, 'string'),
+         presetNewPresetTitle: _typeIfDefined.bind(null, 'string'),
          columnBinderTitle: _typeIfDefined.bind(null, 'string'),
          columnBinderColumnsTitle: _typeIfDefined.bind(null, 'string'),
          columnBinderFieldsTitle: _typeIfDefined.bind(null, 'string'),
@@ -214,6 +216,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          'dialogTitle',
          'dialogButtonTitle',
          'columnBinderTitle',
+         'presetAddNewTitle',
+         'presetNewPresetTitle',
          'columnBinderColumnsTitle',
          'columnBinderFieldsTitle',
          'columnBinderEmptyTitle',
@@ -249,6 +253,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                 * @cfg {string} Подпись кнопки диалога применения результата редактирования (опционально)
                 */
                dialogButtonTitle: null,//Определено в шаблоне
+               /**
+                * @cfg {string} Надпись на кнопке добавления нового пресета в под-компоненте "presets" (опционально)
+                */
+               presetAddNewTitle: null,
+               /**
+                * @cfg {string} Название для нового пресета в под-компоненте "presets" (опционально)
+                */
+               presetNewPresetTitle: null,
                /**
                 * @cfg {string} Заголовок под-компонента "columnBinder" (опционально)
                 */
@@ -425,6 +437,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   options.fileUuid = currentPreset.fileUuid;
                }
                presetsOptions = {
+                  addNewTitle: options.presetAddNewTitle,
+                  newPresetTitle: options.presetNewPresetTitle,
                   statics: hasStaticPresets ? staticPresets.slice() : null,
                   namespace: options.presetNamespace,
                   selectedId: options.selectedPresetId
@@ -556,6 +570,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             var fieldIds = values.fieldIds;
             if (fieldIds) {
                this._options.fieldIds = fieldIds.slice();
+               var presetsView = views.presets;
+               if (presetsView) {
+                  presetsView.setValues({fieldIds:fieldIds.slice()});
+               }
                views.formatter.setValues({fieldIds:fieldIds.slice()});
             }
          },
@@ -567,10 +585,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           */
          _onChangeFormatter: function () {
             // Изменилось форматирование эксель-файла
-            var values = this._views.formatter.getValues();
+            var views = this._views;
+            var values = views.formatter.getValues();
             var fileUuid = values.fileUuid;
             if (fileUuid) {
                this._options.fileUuid = fileUuid;
+               var presetsView = views.presets;
+               if (presetsView) {
+                  presetsView.setValues({fileUuid:fileUuid});
+               }
             }
          },
 
@@ -622,6 +645,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             this.getValues(true).addCallback(function (data) {
                // И если всё нормально - завершить диалог
                if (data) {
+                  var presetsView = this._views.presets;
+                  if (presetsView) {
+                     presetsView.save();
+                  }
                   var outputCall = this._options.outputCall;
                   if (outputCall) {
                      (new RemoteCall(outputCall)).call(data).addCallbacks(

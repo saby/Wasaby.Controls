@@ -86,6 +86,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * @param {object} options Входные аргументы("мета-данные") настройщика экспорта:
           * @param {string} [options.dialogTitle] Заголовок диалога настройщика экспорта (опционально)
           * @param {string} [options.dialogButtonTitle] Подпись кнопки диалога применения результата редактирования (опционально)
+          * @param {string} [options.presetAddNewTitle] Надпись на кнопке добавления нового пресета в под-компоненте "presets" (опционально)
+          * @param {string} [options.presetNewPresetTitle] Название для нового пресета в под-компоненте "presets" (опционально)
           * @param {string} [options.columnBinderTitle] Заголовок под-компонента "columnBinder" (опционально)
           * @param {string} [options.columnBinderColumnsTitle] Заголовок столбца колонок файла в таблице соответствия под-компонента "columnBinder" (опционально)
           * @param {string} [options.columnBinderFieldsTitle] Заголовок столбца полей данных в таблице соответствия под-компонента "columnBinder" (опционально)
