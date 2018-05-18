@@ -324,8 +324,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                /**
                 * @cfg {ExportRemoteCall} Информация для вызова метода удалённого сервиса для отправки данных вывода (опционально)
                 */
-               outputCall: null
+               outputCall: null,
                // TODO: добавить валидаторы
+               validators: [
+                  {
+                     validator: function (data, optionGetter) { return !!(data.fieldIds && data.fieldIds.length); },
+                     errorMessage: rk('Не выбрано ни одной колонки для экспорта', 'НастройщикИмпорта')
+                  }
+               ]
             },
             // Список имён вложенных под-компонентов
             _SUBVIEW_NAMES: {
@@ -720,7 +726,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                serviceParams: options.serviceParams,
                fieldIds: options.fieldIds,
                columnTitles: this._selectFields(options.allFields, options.fieldIds, function (v) { return v.title; }),
-               fileUuid: options.fileUuid
+               fileUuid: options.fileUuid || null//Если значначение пусто, значит стилевого шаблона нет. БЛ в таком случае безальтернативно требует значения null
             };
             return withValidation
                ?
