@@ -52,7 +52,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
        */
 
       /**
-       * @typedef {object} ExportPreset Тип, содержащий информацию о преустановленных настройках экспорта
+       * @typedef {object} ExportPreset Тип, содержащий информацию о предустановленных настройках экспорта
        * @property {string|number} id Идентификатор пресета
        * @property {string} title Отображаемое название пресета
        * @property {Array<string>} fieldIds Список привязки колонок в экспортируемом файле к полям данных
@@ -106,6 +106,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             }
             return value;
          },
+         usePresets: _typeIfDefined.bind(null, 'boolean'),
          staticPresets: function (value) {
             // Если значение есть
             if (value) {
@@ -219,6 +220,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          'formatterTitle',
          'formatterMenuTitle',
          'serviceParams',
+         'usePresets',
          'staticPresets',
          'presetNamespace',
          'selectedPresetId',
@@ -276,19 +278,23 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                 */
                serviceParams: null,
                /**
-                * @cfg {Array<ExportPreset>} Список неизменяемых пресетов (предустановленных настроек экспорта)
+                * @cfg {boolean} Использовать пресеты (предустановленных настроек экспорта)
+                */
+               usePresets: null,
+               /**
+                * @cfg {Array<ExportPreset>} Список неизменяемых пресетов (предустановленных настроек экспорта) (опционально)
                 */
                staticPresets: null,
                /**
-                * @cfg {string} Пространство имён для сохранения пользовательских пресетов
+                * @cfg {string} Пространство имён для сохранения пользовательских пресетов (опционально)
                 */
                presetNamespace: null,
                /**
-                * @cfg {string|number} Идентификатор пресета, который будет выбран в списке пресетов
+                * @cfg {string|number} Идентификатор пресета, который будет выбран в списке пресетов (опционально)
                 */
                selectedPresetId: null,
                /**
-                * @cfg {Array<BrowserColumnInfo>|WS.Data/Collection/RecordSet<BrowserColumnInfo>} Список объектов с информацией о всех колонках в формате, используемом в браузере
+                * @cfg {Array<BrowserColumnInfo>|WS.Data/Collection/RecordSet<BrowserColumnInfo>} Список объектов с информацией о всех колонках в формате, используемом в браузере (опционально)
                 */
                allFields: null,
                /**
@@ -403,39 +409,55 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * @param {object} options Опции компонента
           */
          _reshapeOptions: function (options) {
-            var staticPresets = options.staticPresets;
-            var hasStaticPresets = !!(staticPresets && staticPresets.length);
-            var currentPreset;
-            if (hasStaticPresets) {
-               var selectedPresetId = options.selectedPresetId;
-               if (selectedPresetId) {
-                  options.staticPresets.some(function (v) { if (v.id === selectedPresetId) { currentPreset = v; } });
+            var presetsOptions;
+            if (options.usePresets) {
+               var staticPresets = options.staticPresets;
+               var hasStaticPresets = !!(staticPresets && staticPresets.length);
+               var currentPreset;
+               if (hasStaticPresets) {
+                  var selectedPresetId = options.selectedPresetId;
+                  if (selectedPresetId) {
+                     options.staticPresets.some(function (v) { if (v.id === selectedPresetId) { currentPreset = v; } });
+                  }
                }
-            }
-            if (currentPreset) {
-               options.fieldIds = currentPreset.fieldIds.slice();
-               options.fileUuid = currentPreset.fileUuid;
-            }
-            var fieldIds = options.fieldIds;
-            var fileUuid = options.fileUuid;
-            var serviceParams = options.serviceParams;
-            options._scopes = {
-               presets: hasStaticPresets /*^^^|| options.presetNamespace*/ ? {
+               if (currentPreset) {
+                  options.fieldIds = currentPreset.fieldIds.slice();
+                  options.fileUuid = currentPreset.fileUuid;
+               }
+               presetsOptions = {
                   statics: hasStaticPresets ? staticPresets.slice() : null,
                   namespace: options.presetNamespace,
                   selectedId: options.selectedPresetId
-               } : null,
+               };
+            }
+            var allFields = options.allFields;
+            var fieldIds = options.fieldIds;
+            var fileUuid = options.fileUuid;
+            if (fieldIds && fieldIds.length) {
+               // Иногда, fieldIds содержат идентификаторы, отсутствующие в allFields, отбросить их
+               var isRecordSet = allFields instanceof RecordSet;
+               var len = fieldIds.length;
+               fieldIds = fieldIds.filter(function (fieldId) {
+                  return isRecordSet ? !!allFields.getRecordById(fieldId) : allFields.some(function (field) { return field.id === fieldId; });
+               });
+               if (len !== fieldIds.length) {
+                  options.fieldIds = fieldIds;
+               }
+            }
+            var serviceParams = options.serviceParams;
+            options._scopes = {
+               presets: presetsOptions,
                columnBinder: {
                   title: options.columnBinderTitle || undefined,
                   columnsTitle: options.columnBinderColumnsTitle || undefined,
                   fieldsTitle: options.columnBinderFieldsTitle || undefined,
-                  allFields: options.allFields,
+                  allFields: allFields,
                   fieldIds: fieldIds && fieldIds.length ? fieldIds.slice() : undefined
                },
                formatter: {
                   title: options.formatterTitle,
                   menuTitle: options.formatterMenuTitle,
-                  allFields: options.allFields,
+                  allFields: allFields,
                   fieldIds: fieldIds && fieldIds.length ? fieldIds.slice() : undefined,
                   fileUuid: fileUuid || undefined,
                   serviceParams: serviceParams ? cMerge({}, serviceParams) : undefined
