@@ -16,6 +16,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
       'WS.Data/Di',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/item',
+      'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/edit',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/footer',
       'css!SBIS3.CONTROLS/ExportCustomizer/_Presets/View'
    ],
@@ -426,7 +427,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                var fileUuid = this._fileUuid;
                if (fieldIds && fieldIds.length && fileUuid) {
                   var options = this._options;
-                  var customs = options.customs;
+                  var customs = this._customs;
                   var selectedId = options.selectedId;
                   var preset; customs.some(function (v) { if (v.id === selectedId) { preset = v; return true; } });
                   if (preset) {
