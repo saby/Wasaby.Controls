@@ -109,7 +109,7 @@ define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/Res
          * Ещё может расходиться регистр => Array.prototype.include не совсем подходит
          * Поэтому самое простое это склеить типы в строку, привести к единому регистру и найти вхождение
          */
-        var containFileType = dataTransfer.types.join(',').toLowerCase().indexOf('files') >= 0;
+        var containFileType = Array.prototype.join.call(dataTransfer.types, ',').toLowerCase().indexOf('files') >= 0;
         return containFileType && !isDrag && !!areaCount;
     };
     // обработчики событий drag&drop на документе

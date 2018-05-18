@@ -150,7 +150,7 @@ let overlayHandlers = {
         dragEnd();
     }
 };
-let isNeedOverlay = (dataTransfer): boolean => {
+let isNeedOverlay = (dataTransfer: DataTransfer): boolean => {
     /**
      * В большенстве браузеров при переносе файлов dataTransfer.types == ['Files']
      * И хватает только проверки первого элемента, но некоторые браузеры в зависимости от версии добавляют свои типы
@@ -159,7 +159,7 @@ let isNeedOverlay = (dataTransfer): boolean => {
      * Ещё может расходиться регистр => Array.prototype.include не совсем подходит
      * Поэтому самое простое это склеить типы в строку, привести к единому регистру и найти вхождение
      */
-    let containFileType = dataTransfer.types.join(',').toLowerCase().indexOf('files') >= 0;
+    let containFileType = Array.prototype.join.call(dataTransfer.types, ',').toLowerCase().indexOf('files') >= 0;
     return containFileType && !isDrag && !!areaCount
 };
 // обработчики событий drag&drop на документе
