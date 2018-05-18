@@ -1098,6 +1098,7 @@ define('SBIS3.CONTROLS/DropdownList',
                   'multiselect' : this._options.multiselect,
                   'footerTpl' : this._options.footerTpl,
                   'hasHead': type == 'duplicateHeader' || type == 'titleHeader' || type == 'customHeader',
+                  _fix165c4103: this._options._fix165c4103,
                   'hasCloseButton': isFastDataFilterType
                })
             };
