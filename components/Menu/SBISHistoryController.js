@@ -107,7 +107,9 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
 
             item.set('visible', true);
             item.set('pinned', true);
-            oldElement.set('pinned', true);
+            if (oldElement) {
+               oldElement.set('pinned', true);
+            }
             self._count++;
          });
 
