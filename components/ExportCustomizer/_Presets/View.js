@@ -58,6 +58,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
          'delete': {title:rk('Удалить', 'НастройщикЭкспорта'), icon:'sprite:icon-16 icon-Erase icon-error'}
       };
 
+      /**
+       * Сообщение об ошибке при редактировании названия пресета
+       * @protected
+       * @type {string}
+       */
+      var _TITLE_ERROR = rk('Название шаблона не может быть пустым и должно отличаться от названий других шаблонов', 'НастройщикЭкспорта');
+
+
 
       var View = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ExportCustomizer/_Presets/View.prototype*/ {
          _dotTplFn: dotTplFn,
@@ -119,7 +127,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             this._bindEvents();
             if (this._storage) {
                this._updateSelectorListOptions('handlers', {
-                  onChangeHoveredItem: this._onHoverItem.bind(this)
+                  onChangeHoveredItem: this._onHoverItem.bind(this),
+                  onEndEdit: function (evtName, model, withSaving) {
+                     if (withSaving) {
+                        this._storage.save(this._options.namespace, this._customs);
+                     }
+                  }.bind(this),
                });
                this._updateSelectorListOptions('footerTpl', 'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/footer');
                this._updateSelectorListOptions('_footerHandler', this._onAdd.bind(this));
@@ -244,7 +257,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                'edit': '_editPreset',
                'delete': '_deletePreset'
             }[action];
-            this[method](id, listView).addCallback(this._afterItemAction.bind(this, listView));
+            var promise = this[method](id, listView);
+            if (promise) {
+               promise.addCallback(this._afterItemAction.bind(this, listView));
+            }
          },
 
          /**
@@ -351,9 +367,22 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             var presetInfo = this._findPresetById(id, true);
             if (presetInfo) {
                this._updateItemsActions(listView, []);
-               listView.sendCommand('beginEdit', id)
+               listView.sendCommand('beginEdit', id).addCallback(
+                  function (model) {
+                     var titles = []; this._options._items.each(function (v) { titles.push(v.get('title')); });
+                     listView._editInPlace.getChildControlByName('controls-ExportCustomizer-Presets-View__input').setValidators([{
+                        option: 'text',
+                        validator: function (list, value) {
+                           if (value) {
+                              var v = value.trim();
+                              return !!v && list.indexOf(v) === -1;
+                           }
+                        }.bind(null, titles),
+                        errorMessage: _TITLE_ERROR
+                     }]);
+                  }.bind(this)
+               );
             }
-            return Deferred.success(false);
          },
 
          /**
