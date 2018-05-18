@@ -83,7 +83,7 @@ define('Controls-demo/List/Grid/Grid', [
          _template: template,
 
          _showAction: function(action, item) {
-            if (item.get('id') === 2) {
+            if (item.get('id') === '471329') {
                if (action.id === 2 || action.id === 3) {
                   return false;
                } else {
@@ -94,7 +94,7 @@ define('Controls-demo/List/Grid/Grid', [
             if (action.id === 5) {
                return false;
             }
-            if (item.get('id') === 4) {
+            if (item.get('id') === '448390') {
                return false;
             }
 
@@ -102,7 +102,6 @@ define('Controls-demo/List/Grid/Grid', [
          },
          _onActionClick: function(event, action, item) {
             console.log(arguments);
-            this.__lastClicked = action.title;
          },
          _itemActions: _firstItemActionsArray,
 
