@@ -125,6 +125,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                var selectedId = ids[0];
                var prevId = changes.removed[0];
                this._options.selectedId = selectedId;
+               //this._fieldIds = ;
+               //this._fileUuid = ;
                this._updateSelectorListOptions('selectedKey', selectedId);
                //TODO: проверить, что у старого и нового пресета действительно различаются fieldIds и fileUuid (например, после клонирования)
                this.sendCommand('subviewChanged');
@@ -364,9 +366,18 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   var selectedId = options.selectedId;
                   var preset; customs.some(function (v) { if (v.id === selectedId) { preset = v; return true; } });
                   if (preset) {
-                     preset.fieldIds = fieldIds;
-                     preset._fileUuid = _fileUuid;
-                     return this._storage.save(options.namespace, customs);
+                     var need;
+                     if (!cObjectIsEqual(preset.fieldIds, fieldIds)) {
+                        preset.fieldIds = fieldIds;
+                        need = true;
+                     }
+                     if (preset.fileUuid !== fileUuid) {
+                        preset._fileUuid = fileUuid;
+                        need = true;
+                     }
+                     if (need) {
+                        return this._storage.save(options.namespace, customs);
+                     }
                   }
                }
             }
