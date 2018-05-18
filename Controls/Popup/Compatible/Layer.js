@@ -11,7 +11,7 @@ define('Controls/Popup/Compatible/Layer', ['Core/Deferred', 'Core/moduleStubs'],
       'Lib/Control/BaseCompatible/BaseCompatible',
       'Core/vdom/Synchronizer/resources/DirtyCheckingCompatible',
       'View/Runner/Text/markupGeneratorCompatible',
-      'cdn!jquery/3.3.1/jquery-min.js',
+      'Core/nativeExtensions',
 
       // todo возможно надо грузить весь core-extensions
       'is!browser?WS.Data/ContextField/Flags',
@@ -25,7 +25,7 @@ define('Controls/Popup/Compatible/Layer', ['Core/Deferred', 'Core/moduleStubs'],
          if (!loadDeferred) {
             loadDeferred = new Deferred();
 
-            moduleStubs.require(['Core/constants']).addCallback(function(result) {
+            moduleStubs.require(['Core/constants',  'cdn!jquery/3.3.1/jquery-min.js']).addCallback(function(result) {
                var constants = result[0];
                if (window && window.$) {
                   constants.$win = $(window);

@@ -1142,7 +1142,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             var
                position = [],
                nodeId = filter[this._options.parentProperty];
-            if (nodeId !== this.getCurrentRoot()) {
+            if (nodeId !== this.getCurrentRoot() && !(typeof nodeId === 'undefined' && this.getCurrentRoot() === null)) {
                if (typeof this._hierNodesCursor[nodeId] !== 'undefined') {
                   position.push(this._hierNodesCursor[nodeId]);
                } else {
@@ -1165,10 +1165,16 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             }
          },
          _getQueryForCall: function(parentFn, filter, sorting, offset, limit, direction) {
+            var
+               curRoot;
             // Устанавливаем позицию в listCursorNavigation при загрузке корня
             if (this._isCursorNavigation() && this._options.saveReloadPosition && filter[this._options.parentProperty] === this.getCurrentRoot()) {
-               if (typeof this._hierPages[this.getCurrentRoot()] !== 'undefined') {
-                  this.getListNavigation().setPosition(this._hierPages[this.getCurrentRoot()]);
+               curRoot = this.getCurrentRoot();
+               if (typeof curRoot === 'undefined') {
+                  curRoot = null;
+               }
+               if (typeof this._hierPages[curRoot] !== 'undefined') {
+                  this.getListNavigation().setPosition(this._hierPages[curRoot]);
                }
             }
             return parentFn.call(this, filter, sorting, offset, limit, direction);
