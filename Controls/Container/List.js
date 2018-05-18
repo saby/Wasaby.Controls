@@ -120,13 +120,13 @@ define('Controls/Container/List',
          
          isFilterChanged: function(self, context) {
             var oldValue = this.getFilterFromContext(self, self._contextObj),
-                newValue = this.getFilterFromContext(self, context),
-                changed = false;
+               newValue = this.getFilterFromContext(self, context),
+               changed = false;
             
             if (newValue) {
                if (self._searchMode) {
                   /* if search mode on, filter will be changed after search */
-                  changed = !isEqual( _private.getSearchController(self).getFilter(), newValue);
+                  changed = !isEqual(_private.getSearchController(self).getFilter(), newValue);
                } else {
                   changed = !isEqual(oldValue, newValue);
                }
