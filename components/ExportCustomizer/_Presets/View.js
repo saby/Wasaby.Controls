@@ -123,13 +123,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
          _bindEvents: function () {
             this.subscribeTo(this._selector, 'onSelectedItemsChange', function (evtName, ids, changes) {
                var selectedId = ids[0];
-               var prevId = changes.removed[0];
+               var preset = this._findPresetById(selectedId);
+               this._fieldIds = preset.fieldIds;
+               this._fileUuid = preset.fileUuid;
                this._options.selectedId = selectedId;
-               //this._fieldIds = ;
-               //this._fileUuid = ;
                this._updateSelectorListOptions('selectedKey', selectedId);
-               //TODO: проверить, что у старого и нового пресета действительно различаются fieldIds и fileUuid (например, после клонирования)
-               this.sendCommand('subviewChanged');
+               var prevPreset = this._findPresetById(changes.removed[0]);
+               if (!prevPreset || !cObjectIsEqual(preset.fieldIds, prevPreset.fieldIds) || preset.fileUuid !== prevPreset.fileUuid) {
+                  this.sendCommand('subviewChanged');
+               }
             }.bind(this));
          },
 
@@ -209,7 +211,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                'edit': '_editPreset',
                'delete': '_deletePreset'
             }[action];
-            this[method](id, listView).addCallback(function (isSuccess) {
+            this[method](id/*, listView*/).addCallback(function (isSuccess) {
                if (isSuccess) {
                   this._updateSelector();
                   var options = this._options;
@@ -249,27 +251,16 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * @param {object} listView Списочный контрол
           * @return {Core/Deferred}
           */
-         _clonePreset: function (id, listView) {
+         _clonePreset: function (id/*, listView*/) {
             var options = this._options;
-            var statics = options.statics;
-            var customs = this._customs;
-            var preset;
-            var index = _findIndexById(statics, id);
-            if (index !== -1) {
-               preset = cMerge({isStorable:true}, statics[index]);
-               index = 0;
-            }
-            else {
-               index = _findIndexById(customs, id);
-               if (index !== -1) {
-                  preset = cMerge({}, customs[index]);
-                  index++;
-               }
-            }
-            if (preset) {
+            var presetInfo = this._findPresetById(id, true);
+            if (presetInfo) {
+               var customs = this._customs;
+               var preset = cMerge({}, presetInfo.preset);
+               preset.isStorable = true;
                preset.id = _makeId();
-               preset.title = ItemNamer.make(preset.title, [{list:statics, property:'title'}, {list:customs, property:'title'}]);
-               customs.splice(index, 0, preset);
+               preset.title = ItemNamer.make(preset.title, [{list:options.statics, property:'title'}, {list:customs, property:'title'}]);
+               customs.splice(!presetInfo.isStorable ? 0 : presetInfo.index + 1, 0, preset);
                return this._storage.save(options.namespace, customs).addCallback(function (/*isSuccess*/) {
                   //if (isSuccess) {
                      options.selectedId = preset.id;
@@ -290,7 +281,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * @param {object} listView Списочный контрол
           * @return {Core/Deferred}
           */
-         _editPreset: function (id, listView) {
+         _editPreset: function (id/*, listView*/) {
          },
 
          /**
@@ -301,7 +292,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * @param {object} listView Списочный контрол
           * @return {Core/Deferred}
           */
-         _deletePreset: function (id, listView) {
+         _deletePreset: function (id/*, listView*/) {
             var customs = this._customs;
             var index = _findIndexById(customs, id);
             if (index !== -1) {
@@ -311,7 +302,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   //if (isSuccess) {
                      if (options.selectedId === id) {
                         options.selectedId = customs.length ? customs[index < customs.length ? index : index - 1].id : null;
-                        //this.sendCommand('subviewChanged');
+                        //^^^this.sendCommand('subviewChanged');
                      }
                   //}
                   return true/*isSuccess*/;
@@ -319,6 +310,27 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             }
             else {
                return Deferred.success(false);
+            }
+         },
+
+         /**
+          * Найти пресет по его идентификатору
+          *
+          * @protected
+          * @param {string|number} id Идентификатор пресета
+          * @param {boolean} extendedResult Вернуть результат в расширенном виде
+          * @return {ExportPreset|object}
+          */
+         _findPresetById: function (id, extendedResult) {
+            var statics = this._options.statics;
+            var index = _findIndexById(statics, id);
+            if (index !== -1) {
+               return extendedResult ? {preset:statics[index], index:index} : statics[index];
+            }
+            var customs = this._customs;
+            index = _findIndexById(customs, id);
+            if (index !== -1) {
+               return extendedResult ? {preset:customs[index], index:index, isStorable:true} : customs[index];
             }
          },
 
