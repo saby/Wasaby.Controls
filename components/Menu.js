@@ -399,7 +399,8 @@ define('SBIS3.CONTROLS/Menu', [
             },
             closeByExternalOver: true,
             targetPart: true,
-            item: item
+            item: item,
+            _canScroll: true
          };
          config = this._onMenuConfig(config, isFirstLevel, item);
          return config;
