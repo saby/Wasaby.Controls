@@ -86,6 +86,7 @@ define('Controls/Input/Number/ViewModel',
 
          updateValue: function(value) {
             this._options.value = value;
+            return value;
          }
       });
 

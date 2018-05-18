@@ -4,14 +4,17 @@ define('Controls/Input/Number', [
    'WS.Data/Type/descriptor',
    'Controls/Input/Number/ViewModel',
    'Controls/Input/resources/InputHelper',
+   'Core/helpers/Function/runDelayed',
 
    'Controls/Input/resources/InputRender/InputRender',
    'tmpl!Controls/Input/resources/input'
-], function(Control,
+], function(
+   Control,
    template,
    types,
    NumberViewModel,
-   inputHelper) {
+   inputHelper,
+   runDelayed) {
 
    'use strict';
    var
@@ -138,6 +141,19 @@ define('Controls/Input/Number', [
          var
             val = parseFloat(value.replace(/ /g, ''));
          return isNaN(val) ? undefined : val;
+      },
+
+      _focusinHandler: function() {
+         var
+            self = this,
+            value = this._numberViewModel.getValue();
+
+         if (value && value.indexOf('.') === -1) {
+            value = this._numberViewModel.updateValue(value + '.0');
+            runDelayed(function() {
+               self._children.input.setSelectionRange(value.length - 2, value.length - 2);
+            });
+         }
       },
 
       _focusoutHandler: function() {

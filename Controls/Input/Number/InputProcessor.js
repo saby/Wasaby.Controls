@@ -142,7 +142,13 @@ define('Controls/Input/Number/InputProcessor',
 
                   if (splitValue.insert === '-') {
                      //Inserting '-' after '0' should result in '-0'
-                     if (splitValue.before === '0' || splitValue.before === '') {
+                     if (splitValue.before === '0' && (splitValue.after === '' || splitValue.after === '.0')) {
+                        splitValue.before = '-0';
+                        splitValue.insert = '';
+                     }
+
+                     //Inserting '-' in empty field should result in '-0.0'
+                     if (splitValue.before === '' && splitValue.after === '' || splitValue.after === '.0') {
                         splitValue.before = '-0';
                         splitValue.insert = '';
                      }
