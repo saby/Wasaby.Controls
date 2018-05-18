@@ -419,7 +419,10 @@ node('controls') {
                 }"""
             sh """
                 cd ./jinnee/distrib/builder
-                cp -rf /home/sbis/Controls/build-ui/ws /home/sbis/Controls/intest-ps/ui/
+                cp -rf ${workspace}/jinnee/ws /home/sbis/Controls/intest-ps/ui/
+                node ./node_modules/grunt-cli/bin/grunt xhtmlmin --root=/home/sbis/Controls/intest-ps/ui --application=/
+                node ./node_modules/grunt-cli/bin/grunt xhtml-build --root=/home/sbis/Controls/intest-ps/ui --application=/
+                node ./node_modules/grunt-cli/bin/grunt tmpl-build --root=/home/sbis/Controls/intest-ps/ui --application=/
                 node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/sbis/Controls/intest-ps/ui --application=/
                 sudo systemctl restart Controls_ps
             """

@@ -35,7 +35,7 @@ define("File/HttpFileLink", ["require", "exports"], function (require, exports) 
          * @name File/HttpFileLink#getMeta
          */
         HttpFileLink.prototype.getMeta = function () {
-            return this.meta;
+            return this.meta || {};
         };
         return HttpFileLink;
     }());
