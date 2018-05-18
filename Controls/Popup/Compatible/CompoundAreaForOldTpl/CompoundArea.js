@@ -95,7 +95,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             return false;
          },
 
-         _afterMount: function() {
+         _afterMount: function(cfg) {
+            this._options = cfg;
             this.deprecatedContr(this._options);
 
             this.handle('onBeforeShow');
