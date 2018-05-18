@@ -16,7 +16,6 @@
             keyProperty="id">
         <ws:itemTemplate>
             <ws:partial template="tmpl!Controls/List/ItemTemplate"
-                        itemData="{{itemTemplate.itemData}}"
                         displayProperty="description"
             ></ws:partial>
         </ws:itemTemplate>
@@ -30,7 +29,6 @@
             keyProperty="id">
         <ws:itemTemplate>
             <ws:partial template="tmpl!Controls/List/ItemTemplate"
-                        itemData="{{itemTemplate.itemData}}"
                         marker="{{false}}"
             ></ws:partial>
         </ws:itemTemplate>
@@ -44,9 +42,7 @@
             allowEmptySelection="{{false}}"
             keyProperty="id">
         <ws:itemTemplate>
-            <ws:partial template="tmpl!Controls/List/ItemTemplate"
-                        itemData="{{itemTemplate.itemData}}"
-            >
+            <ws:partial template="tmpl!Controls/List/ItemTemplate">
                 <ws:contentTemplate>
                     <div style="padding: 4px;">
                         <div>{{itemTemplate.itemData.item.get('title')}}</div>
