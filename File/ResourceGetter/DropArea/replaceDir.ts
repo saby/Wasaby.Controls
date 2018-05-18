@@ -8,7 +8,7 @@ const UNKNOWN_FILE_TYPE = rk('Неизвестный тип файла');
 type DirectoryReader = {
     readEntries(successCallback: (entries: Array<Entry>) => void): void;
 }
-type Entry = {
+type Entry = null | {
     isFile: boolean;
     isDirectory: boolean;
     name: string;
@@ -16,16 +16,13 @@ type Entry = {
     createReader(): DirectoryReader;
 }
 type FileWithDir = File & {
-    filepath: string;
+    filepath?: string;
 }
 
 type MultipleArray<T> = Array<T | Array<T>>;
 
-type FileOrError = FileWithDir | Error;
-type TravelResult = FileOrError | Array<FileOrError>;
-
-let travel: (entry: Entry, path: string) => Deferred<TravelResult>;
-let travelInEntries: (entries: Array<Entry>, path: string) => Deferred<Array<FileOrError>>;
+type Resource = FileWithDir | Error;
+type Resources = Array<Resource>
 
 /**
  * Развёртка двумерного массива в одномерный
@@ -35,6 +32,21 @@ let travelInEntries: (entries: Array<Entry>, path: string) => Deferred<Array<Fil
 let toPlainArray = <T>(array: MultipleArray<T>): Array<T> => {
     return Array.prototype.concat.apply([], array);
 };
+
+let getParallelDeferred = <T>(steps): Deferred<Array<T>> => {
+    let length = steps.length;
+    return new ParallelDeferred<T>({
+        steps,
+        stopOnFirstError: false
+    }).done().getResult().addCallback<Array<T>>((results) => {
+        results.length = length;
+        return Array.prototype.slice.call(results)
+    });
+};
+
+/// region File Entry
+
+let readEntries: (entries: Array<Entry>, path: string) => Deferred<Resources>;
 
 /**
  * Читает и возвращает файл из Entry, добавляя ему относиттельный путь
@@ -57,10 +69,10 @@ let getFile = (entry: Entry, path: string): Deferred<FileWithDir> => {
  * @return {Core/Deferred.<Array.<File | Error>>}
  */
 let readDirectory = (entry: Entry, path: string) => {
-    let deferred = new Deferred<Array<FileOrError>>();
+    let deferred  = new Deferred<Resources>();
     let dirReader = entry.createReader();
     dirReader.readEntries((entries: Array<Entry>) => {
-        deferred.dependOn(travelInEntries(entries, path));
+        deferred.dependOn(readEntries(entries, path));
     });
     return deferred;
 };
@@ -71,14 +83,16 @@ let readDirectory = (entry: Entry, path: string) => {
  * @param {string} path Путь до файла
  * @return {Core/Deferred.<File | Error>}
  */
-travel = (entry: Entry, path: string): Deferred<TravelResult> => {
+let readEntry = (entry: Entry, path: string): Deferred<Resource | Resources> => {
+    if (!entry) {
+        return Deferred.fail(UNKNOWN_FILE_TYPE);
+    }
     if (entry.isFile) {
         return getFile(entry, path);
     }
     if (entry.isDirectory) {
         return readDirectory(entry, path + entry.name + "/");
     }
-    return Deferred.fail(UNKNOWN_FILE_TYPE);
 };
 /**
  * Обходит содержимое набора из Entry
@@ -86,38 +100,93 @@ travel = (entry: Entry, path: string): Deferred<TravelResult> => {
  * @param {string} path Путь до файла
  * @return {Core/Deferred.<Array.<File | Error>>}
  */
-travelInEntries = (entries: Array<Entry>, path: string): Deferred<Array<FileOrError>> => {
-    let length = entries.length;
-
-    return new ParallelDeferred<TravelResult>({
-        steps: entries.map((entry: Entry) => {
-            return travel(entry, path)
-        }),
-        stopOnFirstError: false
-    }).done().getResult().addCallback<Array<FileOrError>>((results) => {
-        /*
-         * results:
-         * а) объект с ключами в виде числа
-         * б) содержит в себе либо <File | Error> или <Array<File | Error>>
-         * Поэтому собираем из него массив и избавляемся от двумерности
-         */
-        results.length = length;
-        return toPlainArray(Array.prototype.slice.call(results))
+readEntries = (entries: Array<Entry>, path: string): Deferred<Resources> => {
+    return getParallelDeferred<Resource | Resources>(
+        entries.map((entry: Entry) => {
+            return readEntry(entry, path)
+        })
+    ).addCallback<Resources>((results) => {
+        // избавляемся от двумерности
+        return toPlainArray(results)
     });
 };
+
 /**
  * Преобразует данные из объекта DataTransferItemList в массив WebKitEntry и запускает рекурсивный обход по ним
  * @param {DataTransferItemList} items
  * @return {Deferred.<Array.<File | Error>>}
  */
-let getFromTransferItems = (items: DataTransferItemList): Deferred<Array<File | Error>> => {
-    let entries = [];
-    let length = items.length;
-    for (let i = 0; i < length; i++) {
-        entries.push(items[i].webkitGetAsEntry())
-    }
-    return travelInEntries(entries, "");
+let getFromEntries = (items: DataTransferItemList): Deferred<Resources> => {
+    /*
+     * При перемещении файла в DataTransfer.items могут оказаться "лишние" элементы
+     * если например переносить .url файл
+     * dataTransfer.items для него будет выглядить примерно так:
+     * [{kind: 'string', type: 'text/plain'}, {kind: 'string', type: 'text/uri-list'}, {kind: 'file', type: '}]
+     */
+    let entries = Array.prototype.filter.call(items, (item) => {
+        return item.kind == 'file'
+    }).map(item => {
+        return item.webkitGetAsEntry()
+    });
+    return readEntries(entries, "");
 };
+
+/// endregion File Entry
+
+/// region FileReader
+/**
+ * Возвращает экземпляр FileReader, привязанный к Deferred'у для попытки чтения файла
+ * @param {Core/Deferred} deferred
+ * @return {FileReader}
+ */
+let getReader = (deferred: Deferred<void>): FileReader => {
+    let releaseReader = (reader: FileReader) => {
+        reader.onprogress = reader.onerror = null;
+    };
+    let reader = new FileReader();
+    reader.onprogress = () => {
+        reader.abort(); // Читать весь файл не нужно.
+        deferred.callback();
+        releaseReader(reader);
+    };
+    reader.onerror = () => {
+        deferred.errback();
+        releaseReader(reader);
+    };
+    return reader;
+};
+
+/**
+ * Преобразование помощью FileReader
+ * Если попали сюда, значит папку мы уже не загрузим никак, поэтому
+ * Чтение через FileReader падает с ошибкой, если передать ему директорию на них вернём ошибку,
+ * остальные непонятные файлы без типов отдадим на загрузку
+ *
+ * @param {FileList} files
+ * @return {Core/Deferred.<FileList | Array.<File | Error>>}
+ */
+let getFromFileReader = (files: FileList): Deferred<Resources> => {
+    let steps = Array.prototype.map.call(files, (file: File) => {
+        let deferred = new Deferred<void>();
+        deferred.addCallbacks<Resource>(() => {
+            return file;
+        }, () => {
+            return new Error(DROP_FOLDER_ERROR);
+        });
+
+        let reader = getReader(deferred);
+        try {
+            reader.readAsArrayBuffer(file);
+        } catch (error) {
+            reader.onerror(error);
+        }
+
+        return deferred;
+    });
+
+    return getParallelDeferred<Resource>(steps);
+};
+/// endregion FileReader
 
 /**
  * Обходит объект DataTransfer, полученный путём D&D
@@ -130,39 +199,39 @@ let getFromTransferItems = (items: DataTransferItemList): Deferred<Array<File | 
  * @return {Core/Deferred.<FileList | Array.<File | Error>>}
  * @private
  */
-let replaceDir = ({items, files}: DataTransfer): Deferred<FileList | Array<File | Error>> => {
+let replaceDir = ({items, files}: DataTransfer): Deferred<FileList | Resources> => {
     let len = files.length;
     if (!len) {
         return Deferred.success([]);
     }
-    let isIncludeDir: boolean;
+    let isIncludeUnknownType: boolean;
 
-    for (let i = 0; i< len; i++) {
+    for (let i = 0; i < len; i++) {
         let file = files[i];
         if (!file.type) {
-            isIncludeDir = true;
+            isIncludeUnknownType = true;
             break;
         }
     }
     // Если нету директорий вернём как есть
-    if (!isIncludeDir) {
+    if (!isIncludeUnknownType) {
         return Deferred.success(files);
     }
     // Если есть поддержка чтения директорий
     if (items[0].webkitGetAsEntry) {
-        return getFromTransferItems(items);
+        return getFromEntries(items);
     }
-    let result: Array<File | Error> = [];
-    for (let i = 0; i< len; i++) {
-        let file = files[i];
-        // Если просто файл, то вернём как есть
+    // Читать директории не можем, но можем определить файлы без типов
+    if (typeof FileReader !== 'undefined') {
+        return getFromFileReader(files);
+    }
+    // Не можем определить где директория, где просто отсуствует тип, заменяем на ошибку
+    return Deferred.success(Array.prototype.map.call(files, file => {
         if (!file.type) {
-            result.push(file);
-            continue;
+            return new Error(UNKNOWN_FILE_TYPE);
         }
-        result.push(new Error(DROP_FOLDER_ERROR));
-    }
-    return Deferred.success(result);
+        return file;
+    }))
 };
 
 export = replaceDir;
