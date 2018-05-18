@@ -720,7 +720,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                serviceParams: options.serviceParams,
                fieldIds: options.fieldIds,
                columnTitles: this._selectFields(options.allFields, options.fieldIds, function (v) { return v.title; }),
-               fileUuid: options.fileUuid
+               fileUuid: options.fileUuid || null//Если значначение пусто, значит стилевого шаблона нет. БЛ в таком случае безальтернативно требует значения null
             };
             return withValidation
                ?
