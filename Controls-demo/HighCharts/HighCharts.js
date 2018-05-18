@@ -43,7 +43,7 @@ define('Controls-demo/HighCharts/HighCharts', [
          type: 'pie'
       }],
       _wsAxis: [{
-         title: 'Прикол'
+         title: 'Title'
       }],
       _updateConfig: function() {
          if (this._configState === '1') {
