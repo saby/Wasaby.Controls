@@ -55,7 +55,7 @@ define('SBIS3.CONTROLS/Filter/FastData',
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
-               _fix165c4103: false, //опция Ярика, в 310 по умолчанию для кнопки внутри ddl включена
+               _fix165c4103: true, //опция Ярика, в 310 по умолчанию для кнопки внутри ddl включена
                _canServerRender: true,
                _buildTplArgs: buildTplArgs,
                itemTpl: ItemTpl,
