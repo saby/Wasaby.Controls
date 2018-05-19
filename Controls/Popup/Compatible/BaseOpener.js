@@ -5,7 +5,7 @@ define('Controls/Popup/Compatible/BaseOpener', [
    'Core/Deferred',
    'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea'
 ],
-function(cDeferred, CompoundArea) {
+function() {
    /**
        * Слой совместимости для базового опенера для открытия старых шаблонов
        */
