@@ -803,7 +803,7 @@ define('SBIS3.CONTROLS/DropdownList',
                pickerContainer = this._getPickerContainer();
                this._pickerListContainer = $('.controls-DropdownList__list', pickerContainer);
                this._pickerCloseContainer = $('.controls-DropdownList__close-picker', pickerContainer);
-               this._pickerCloseContainer.click(this.hidePicker.bind(this));
+               this._pickerCloseContainer.on('click touchend', this.hidePicker.bind(this)); //ipad лагает и не ловит click
                this._pickerBodyContainer = $('.controls-DropdownList__body', pickerContainer);
                this._pickerHeadContainer = $('.controls-DropdownList__header', pickerContainer);
                this._pickerFooterContainer = $('.controls-DropdownList__footer', pickerContainer);
