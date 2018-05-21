@@ -2484,6 +2484,9 @@ define('SBIS3.CONTROLS/ListView',
             this._destroyEditInPlace();
             this._headIsChanged = true;
             this._redrawResults();
+            if (this._scrollBinder) {
+               this._scrollBinder.moreThanTwo(false);
+            }
             ListView.superclass.redraw.apply(this, arguments);
          },
 
@@ -3218,6 +3221,9 @@ define('SBIS3.CONTROLS/ListView',
             ListView.superclass._removeItems.call(this, items);
             if (this.isInfiniteScroll()) {
                this._preScrollLoading();
+            }
+            if (this._scrollBinder) {
+               this._scrollBinder.moreThanTwo(false);
             }
          },
 
