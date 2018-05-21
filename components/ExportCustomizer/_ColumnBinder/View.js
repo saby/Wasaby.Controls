@@ -186,6 +186,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
                   applyButtonTitle: rk('Выбрать', 'НастройщикЭкспорта'),
                   groupTitles: options.fieldGroupTitles,
                   preserveOrder: true,
+                  singleSelect: !!fieldId,
                   ignoreFixed: true// TODO: Добавить в редактор колонок опцию ignoreFixed
                }
             ).addCallback(function (resultColumnsConfig) {
