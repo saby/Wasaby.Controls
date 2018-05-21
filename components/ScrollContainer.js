@@ -375,7 +375,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
 
          _onScroll: function(event) {
             var scrollTop = this._getScrollTop();
-
+            
             if (this._scrollbar){
                this._scrollbar.setPosition(scrollTop);
             }
