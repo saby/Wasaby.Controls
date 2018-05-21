@@ -116,7 +116,11 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                /**
                 * @cfg {boolean} Указывает на необходимость сохранять порядок следования колонок таким, каким он был передан в опциях columns и selectedColumns. В отстутствии этой опции выбранные колонки будут подняты вверх, не выбранные - уйдут вниз. Опция действует только при выключенном перемещнении пользователем пунктов списка колонок (moveolumns==false) (опционально)
                 */
-               preserveOrder: false
+               preserveOrder: false,
+               /**
+                * @cfg {boolean} Выбранной может быть только одна колонка (опционально)
+                */
+               singleSelect: false
             },
             _childNames: {
                presetView: 'controls-Browser-ColumnsEditor-Editing-Area__Preset',
@@ -145,6 +149,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
             cfg.hasGroups = !!cfg._groups && 0 < cfg._groups.length;
             cfg._optsSelectable.onItemClick = _onItemClick;
             cfg._optsSelectable.onSelectedItemsChange = _onSelectedItemsChange;
+            cfg._optsSelectable.canMultiselect = !cfg.singleSelect;
             return cfg;
          },
 
@@ -159,9 +164,11 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
             this._presetView = options.usePresets ? _getChildComponent(this, this._childNames.presetView) : null;
             this._fixedView = _getChildComponent(this, this._childNames.fixedView);
             this._selectableView = this.getChildControlByName(this._childNames.selectableView);
-            this._operationsMark = this.getChildControlByName(this._childNames.operationsMark);
+            this._operationsMark = _getChildComponent(this, this._childNames.operationsMark);
 
-            this._operationsMark.setLinkedView(this._selectableView);
+            if (this._operationsMark) {
+               this._operationsMark.setLinkedView(this._selectableView);
+            }
 
             if (this._presetView) {
                //PresetCache.subscribe(options.presetNamespace, 'onCacheError', function () {});

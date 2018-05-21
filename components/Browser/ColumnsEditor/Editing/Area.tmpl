@@ -47,17 +47,19 @@
          </div>
       </ws:if>
    </div>
-   <div class="controls-Browser-ColumnsEditor-Editing-Area__OperationsMark">
-      <SBIS3.CONTROLS:OperationsPanel:Mark name="controls-Browser-ColumnsEditor-Editing-Area__OperationsMark">
-         <ws:items>
-            <ws:Array>
-               <ws:Object name="selectCurrentPage" title="{[Все]}"/>
-               <ws:Object name="removeSelection" title="{[Снять]}"/>
-               <ws:Object name="invertSelection" title="{[Инвертировать]}"/>
-            </ws:Array>
-         </ws:items>
-      </SBIS3.CONTROLS:OperationsPanel:Mark>
-   </div>
+   <ws:if data="{{_optsSelectable.canMultiselect}}">
+      <div class="controls-Browser-ColumnsEditor-Editing-Area__OperationsMark">
+         <SBIS3.CONTROLS:OperationsPanel:Mark name="controls-Browser-ColumnsEditor-Editing-Area__OperationsMark">
+            <ws:items>
+               <ws:Array>
+                  <ws:Object name="selectCurrentPage" title="{[Все]}"/>
+                  <ws:Object name="removeSelection" title="{[Снять]}"/>
+                  <ws:Object name="invertSelection" title="{[Инвертировать]}"/>
+               </ws:Array>
+            </ws:items>
+         </SBIS3.CONTROLS:OperationsPanel:Mark>
+      </div>
+   </ws:if>
    <SBIS3.CONTROLS:ScrollContainer class="controls-Browser-ColumnsEditor-Editing-Area__body controls-ScrollContainer__flex">
       <ws:content>
          <ws:if data="{{ _optsFixed.items && _optsFixed.items.length }}">
@@ -85,7 +87,7 @@
             selectedKeys="{{_optsSelectable.markedKeys}}"
             itemTpl="tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/templates/selectableItem"
             itemContentTpl="tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/templates/selectableItemContent"
-            multiselect="{{ true }}"
+            multiselect="{{_optsSelectable.canMultiselect}}"
             >
             <ws:handlers
                onItemClick="{{_optsSelectable.onItemClick}}"

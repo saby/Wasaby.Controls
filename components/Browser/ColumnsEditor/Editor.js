@@ -260,6 +260,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
                   useOriginPresetTitle: _selectValue('useOriginPresetTitle', allSources, 'boolean'),
                   moveColumns: _selectValue('moveColumns', edDefSources, 'boolean'),
                   preserveOrder: _selectValue('preserveOrder', edDefSources, 'boolean'),
+                  singleSelect: _selectValue('singleSelect', edDefSources, 'boolean'),
                   handlers: {
                      onComplete: this._onAreaComplete.bind(this)
                   }
