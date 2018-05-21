@@ -2,11 +2,14 @@
    display: inline-block;
 }
 
+.controls-BackButton_style-default, .controls-BackButton_style-primary {
+   display: inline-flex;
+}
+
 .controls-BackButton_style-primary:before, .controls-BackButton_style-default:before {
    display: inline-block;
    width: 100%;
    height: 100%;
-   overflow: hidden;
 }
 
 .controls-BackButton_style-default:before {
@@ -18,7 +21,7 @@
 .controls-BackButton_style-primary:before {
    background-image: @content-BackButton_style-primary;
    background-repeat: no-repeat;
-   content: ''
+   content: '';
 }
 
 .controls-BackButton__wrapper:active {
