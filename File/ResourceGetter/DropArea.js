@@ -1,6 +1,6 @@
 /// <amd-module name="File/ResourceGetter/DropArea" />
 /// <amd-dependency path="css!File/ResourceGetter/DropArea" />
-define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/ResourceGetter/Base", "Core/Deferred", "Core/helpers/random-helpers", "File/utils/ExtensionsHelper", "File/utils/getFilePreparer", "File/ResourceGetter/DropArea/replaceDir", "css!File/ResourceGetter/DropArea"], function (require, exports, tslib_1, IResourceGetterBase, Deferred, random, ExtensionsHelper, getFilePreparer, replaceDir) {
+define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/ResourceGetter/Base", "Core/Deferred", "Core/helpers/random-helpers", "File/utils/ExtensionsHelper", "File/utils/filePrepareGetter", "File/ResourceGetter/DropArea/replaceDir", "css!File/ResourceGetter/DropArea"], function (require, exports, tslib_1, IResourceGetterBase, Deferred, random, ExtensionsHelper, getFilePreparer, replaceDir) {
     "use strict";
     var OVERLAY_ID_PREFIX = "DropArea-";
     var OVERLAY_CLASS = 'DropArea_overlay';
