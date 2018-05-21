@@ -264,6 +264,8 @@ define('SBIS3.CONTROLS/Action/List/Save', [
                     //В таком случае нам не надо продолжать сохранение.
                     result.errback();
                  }
+              }).addErrback(function() {
+                 result.callback(meta.columns);
               });
            } else {
               //Сюда мы попадаем если команда showColumnsEditor не была обработана.
