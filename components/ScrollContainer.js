@@ -375,19 +375,19 @@ define('SBIS3.CONTROLS/ScrollContainer', [
 
          _onScroll: function(event) {
             var scrollTop = this._getScrollTop();
-            // При вводе очень длинных параграфов, не умещающихся в одну строку, при переполнении строки, строго
-            // через раз скрол-контейнер не докручивается на 2 пикселя, вероятно из-за округлений при расчётах размеров.
-            // Будем вручную докручивать скрол-контейнер, если до конца не хватает не более 2px.
-            // https://online.sbis.ru/opendoc.html?guid=668d201a-1574-4d07-a49d-67ab6e44bce7
-            var parScrTop = this._getScrollHeight() - this._getContainerHeight();
-            if (parScrTop - scrollTop <= 2){
-               this._content[0].scrollTop = parScrTop;
-            }
             if (this._scrollbar){
                this._scrollbar.setPosition(scrollTop);
             }
             if (this._paging) {
                this._calcPagingSelectedKey(scrollTop);
+            }
+            // При вводе очень длинных параграфов, не умещающихся в одну строку, при переполнении строки, строго
+            // через раз скрол-контейнер не докручивается на 2 пикселя, вероятно из-за округлений при расчётах размеров.
+            // Будем вручную докручивать скрол-контейнер, если до конца не хватает не более 2px.
+            // https://online.sbis.ru/opendoc.html?guid=668d201a-1574-4d07-a49d-67ab6e44bce7
+            var diff = this._getScrollHeight() - this._getContainerHeight();
+            if (diff - scrollTop <= 2){
+               this._content[0].scrollTop = diff;
             }
             this._toggleGradient();
          },
