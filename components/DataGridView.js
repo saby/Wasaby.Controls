@@ -1661,7 +1661,7 @@ define('SBIS3.CONTROLS/DataGridView',
          DataGridView.superclass.setMultiselect.apply(this, arguments);
          // При установке multiselect создается отдельная td'шка под checkbox, которая не учитывается при редактировании по месту.
          // Обновим список колонок для редактирования по месту
-         this._updateEditInPlaceColumns();
+         this._updateEditInPlaceColumns(this._options.columns);
 
          if(this.getItems()) {
             this.redraw();
