@@ -61,8 +61,14 @@ define('SBIS3.CONTROLS/ComponentBinder/ScrollPagingController',
    
          //Если есть страницы - покажем paging
          /*Новое требование, если страниц всего две (посчитали две и ЕстьЕще false) то пэйджинг не показываем*/
-         if (pagingVisibility && pagesCount <= 2 && !(view._hasNextPage(view.getItems().getMetaData().more, view._scrollOffset.bottom, 'after'))) {
-            pagingVisibility = false;
+         if (pagingVisibility) {
+            if (!this._moreThan2 && pagesCount <= 2 && !(view._hasNextPage(view.getItems().getMetaData().more, view._scrollOffset.bottom, 'after'))) {
+               pagingVisibility = false;
+            }
+         }
+         else {
+            //Если пэйджинг был показан то потом не надо будет проверять условие на количество страниц
+            this._moreThan2 = true;
          }
 
          /* Если пэйджинг скрыт - паддинг не нужен */
@@ -73,6 +79,7 @@ define('SBIS3.CONTROLS/ComponentBinder/ScrollPagingController',
    
    var ScrollPagingController = cAbstract.extend({
       $protected: {
+         _moreThan2: false,
          _freezePaging: false,
          _options: {
             view: null,
@@ -214,6 +221,10 @@ define('SBIS3.CONTROLS/ComponentBinder/ScrollPagingController',
       //когда ListView скрыт следить за скроллом и переключать пэйджинг не надо вообще
       freezePaging: function(state) {
          this._freezePaging = state;
+      },
+
+      moreThanTwo: function(state) {
+         this._moreThan2 = state;
       },
 
       _updateCachedSizes: function(){
