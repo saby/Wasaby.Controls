@@ -83,7 +83,7 @@ define('SBIS3.CONTROLS/ComponentBinder/SearchController',
 
          filter[searchParamName] = text;
          if(self._options.hierarchyViewMode) {
-            view._options.hierarchyViewMode = true;
+            view._setHierarchyViewMode(true);
             // При включении режима поиска - отключаем virtualScrolling (в настоящий момент мы не умеем совмещать
             // отображение путей до найденных записей и virtualScrolling)
             if (view._virtualScrollController) {
@@ -221,7 +221,7 @@ define('SBIS3.CONTROLS/ComponentBinder/SearchController',
          });
          this._searchMode = false;
          if(this._options.hierarchyViewMode) {
-            view._options.hierarchyViewMode = false;
+            view._setHierarchyViewMode(false);
             // При включении режима поиска - отключаем virtualScrolling (в настоящий момент мы не умеем совмещать
             // отображение путей до найденных записей и virtualScrolling)
             if (view._virtualScrollController) {
