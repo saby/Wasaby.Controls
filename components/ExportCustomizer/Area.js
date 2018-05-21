@@ -60,6 +60,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
        */
 
       /**
+       * @typedef {object} ExportValidator Тип, описывающий валидаторы результатов редактирования
+       * @property {function(object, function):(boolean|string)} validator Функция проверки. Принимает два аргумента. Первый - объект с проверяемыми данными. Второй - геттер опции по её имени. Геттер позволяет получить доступ к опциям, которые есть в настройщике экспорта в момент валидации. Должна возвратить либо логическое значение, показывающее пройдена ли проверка, либо строку с сообщением об ошибке
+       * @property {Array<*>} [params] Дополнительные аргументы функции проверки, будут добавлены после основных (опционально)
+       * @property {string} [errorMessage] Сообщение об ошибке по умолчанию (опционально)
+       * @property {boolean} [noFailOnError] Указывает на то, что если проверка не пройдена, это не является фатальным. В таком случае пользователю будет показан диалог с просьбой о подтверждении (опционально)
+       */
+
+      /**
        * @typedef {object} ExportResults Тип, содержащий информацию о результате редактирования
        * @property {Array<string>} fieldIds Список полей для колонок в экспортируемом файле
        * @property {Array<string>} columnTitles Список отображаемых названий колонок в экспортируемом файле
@@ -177,6 +185,25 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          },
          fieldGroupTitles: _typeIfDefined.bind(null, 'object'),
          fileUuid: _typeIfDefined.bind(null, 'string'),
+         validators: function (value) {
+            // Если значение есть, то оно должна быть массивом
+            if (value && !Array.isArray(value)) {
+               return new Error('Value must be an Array');
+            }
+            if (value) {
+               // И каждый элемент массива должен быть {@link ExportValidator}
+               if (!value.every(function (v) { return (
+                     typeof v === 'object' &&
+                     (v.validator && typeof v.validator === 'function') &&
+                     (!v.params || Array.isArray(params)) &&
+                     (!v.errorMessage || typeof v.errorMessage === 'string') &&
+                     (!v.noFailOnError || typeof v.noFailOnError === 'boolean')
+                  ); })) {
+                  return new Error('Value items must be an ExportValidator');
+               }
+            }
+            return value;
+         },
          outputCall: function (value) {
             // Если значение есть
             if (value) {
@@ -204,6 +231,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
        * @type {object}
        */
       var _DEFAULT_OPTIONS = {
+         validators: [{
+            validator: function (data, optionGetter) { return !!(data.fieldIds && data.fieldIds.length); },
+            errorMessage: rk('Не выбрано ни одной колонки для экспорта', 'НастройщикЭкспорта')
+         }]
       };
 
       /**
@@ -232,6 +263,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          'fieldIds',
          'fieldGroupTitles',
          'fileUuid',
+         'validators',
          'outputCall'
       ];
 
@@ -322,16 +354,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                 */
                fileUuid: null,
                /**
+                * @cfg {Array<ExportValidator>} Список валидаторов результатов редактирования (опционально)
+                */
+               validators: null,
+               /**
                 * @cfg {ExportRemoteCall} Информация для вызова метода удалённого сервиса для отправки данных вывода (опционально)
                 */
-               outputCall: null,
-               // TODO: добавить валидаторы
-               validators: [
-                  {
-                     validator: function (data, optionGetter) { return !!(data.fieldIds && data.fieldIds.length); },
-                     errorMessage: rk('Не выбрано ни одной колонки для экспорта', 'НастройщикИмпорта')
-                  }
-               ]
+               outputCall: null
             },
             // Список имён вложенных под-компонентов
             _SUBVIEW_NAMES: {
