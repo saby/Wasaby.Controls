@@ -143,7 +143,14 @@ define('SBIS3.CONTROLS/LongOperations/List',
                         switch (evtName.name) {
                            case 'onlongoperationchanged':
                               if (evt.changed === 'progress') {
-                                 model.set('progressCurrent', evt.progress.value);
+                                 var previous = model.get('progressCurrent') || 0;
+                                 var value = evt.progress.value || 0;
+                                 // Для STOMP-событий не гарантирован ни сам факт доставки события, ни сохранение порядка доставляемых событий. Поэтому иногда более старые события прогресса приходят позже более новых, - игнорировать их тогда
+                                 // 1175306978 https://online.sbis.ru/opendoc.html?guid=c0f247b7-1b4f-4f9a-8b06-bc33cab61f82
+                                 if (value <= previous) {
+                                    return;
+                                 }
+                                 model.set('progressCurrent', value);
                                  model.set('progressTotal', evt.progress.total);
                                  dontReload = true;
                               }
