@@ -960,6 +960,16 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             breadCrumbsInst.redraw();
          });
       },
+      _setHierarchyViewMode: function(value) {
+         if (this._options.hierarchyViewMode !== value) {
+            this._options.hierarchyViewMode = value;
+            if (this._isCursorNavigation() && this._options.saveReloadPosition) {
+               // При переключении режима обнуляем запомненные позиции курсора
+               this._hierPages = {};
+               this._hierNodesCursor = {};
+            }
+         }
+      },
       /**
        * Получить список записей для отрисовки
        * @private
@@ -980,7 +990,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             this.setInfiniteScroll(this._options.infiniteScroll, true);
             this.setHighlightText('', false);
             this.setFilter(filter, true);
-            this._options.hierarchyViewMode = false;
+            this._setHierarchyViewMode(false);
             if (this._options.task1173671799 && !this._options.allowEnterToFolder) {
                crumbPath.forEach(function(id) {
                   self._options.openedPath[id] = true;
