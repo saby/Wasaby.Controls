@@ -1,4 +1,4 @@
-define("File/utils/getFilePreparer", ["require", "exports", "File/LocalFile", "File/utils/filter"], function (require, exports, LocalFile, filter) {
+define("File/utils/filePrepareGetter", ["require", "exports", "File/LocalFile", "File/utils/filter"], function (require, exports, LocalFile, filter) {
     "use strict";
     /**
      * Функцию преподготовки файлов, которая пробежиться по набору "сырых" файлов,

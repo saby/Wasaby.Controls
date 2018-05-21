@@ -1,5 +1,5 @@
 /// <amd-module name="File/ResourceGetter/FileSystem" />
-define("File/ResourceGetter/FileSystem", ["require", "exports", "tslib", "File/ResourceGetter/Base", "Core/Deferred", "File/utils/ExtensionsHelper", "File/utils/getFilePreparer"], function (require, exports, tslib_1, ResourceGetterBase, Deferred, ExtensionsHelper, getFilePreparer) {
+define("File/ResourceGetter/FileSystem", ["require", "exports", "tslib", "File/ResourceGetter/Base", "Core/Deferred", "File/utils/ExtensionsHelper", "File/utils/filePrepareGetter"], function (require, exports, tslib_1, ResourceGetterBase, Deferred, ExtensionsHelper, getFilePreparer) {
     "use strict";
     var SEC = 1000;
     var MIN = 60 * SEC;
@@ -24,7 +24,8 @@ define("File/ResourceGetter/FileSystem", ["require", "exports", "tslib", "File/R
          * но сделает это синхронно
          *
          * Если же не выносить через setTimeout то можем получить ситуацию, когда окошко выбора файлов открывается,
-         * а фокус в этот момет придёт другому контролу и обработчик сработает, а мы соответственно будем бумать, что окно закрылось
+         * а фокус в этот момет придёт другому контролу и обработчик сработает,
+         * а мы соответственно будем бумать, что окно закрылось
          */
         setTimeout(function () {
             document.addEventListener("focusin", focus);

@@ -188,37 +188,38 @@ define(
          });
 
          describe('Stack', function () {
+            let stackShadowWidth = 5;
             it('first stack positioning', function() {
                var position = Stack.getPosition(0, {top: 0, right: 0}, 1000, 1600);
-               assert.isTrue(position.width === 1000);
+               assert.isTrue(position.width === 1000 + stackShadowWidth);
                assert.isTrue(position.top === 0);
                assert.isTrue(position.right === 0);
                assert.isTrue(position.bottom === 0);
             });
             it('first stack positioning from target', function() {
                var position = Stack.getPosition(0, {top: 100, right: 100}, 1000, 1600);
-               assert.isTrue(position.width === 1000);
+               assert.isTrue(position.width === 1000 + stackShadowWidth);
                assert.isTrue(position.top === 100);
                assert.isTrue(position.right === 100);
                assert.isTrue(position.bottom === 0);
             });
             it('current panel is broader then previous', function() {
                var position = Stack.getPosition(1, {top: 0, right: 0}, 1200, 1600, 1000, 0);
-               assert.isTrue(position.width === 1200);
+               assert.isTrue(position.width === 1200 + stackShadowWidth);
                assert.isTrue(position.top === 0);
                assert.isTrue(position.right === 0);
                assert.isTrue(position.bottom === 0);
             });
             it('previous width is equal current width', function() {
                var position = Stack.getPosition(1, {top: 0, right: 0}, 1000, 1600, 1000, 0);
-               assert.isTrue(position.width === 1000);
+               assert.isTrue(position.width === 1000 + stackShadowWidth);
                assert.isTrue(position.top === 0);
                assert.isTrue(position.right === 100);
                assert.isTrue(position.bottom === 0);
             });
             it('previous width is equal current width from target', function() {
                var position = Stack.getPosition(1, {top: 100, right: 100}, 1000, 1600, 1000, 100);
-               assert.isTrue(position.width === 1000);
+               assert.isTrue(position.width === 1000 + stackShadowWidth);
                assert.isTrue(position.top === 100);
                assert.isTrue(position.right === 200);
                assert.isTrue(position.bottom === 0);

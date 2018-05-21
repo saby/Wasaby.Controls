@@ -44,6 +44,13 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
             this._notify('close', [], {bubbling: true});
          }
       });
+
+      DialogTemplate.getDefaultOptions = function() {
+         return {
+            captionStyle: 'default'
+         };
+      };
+
       return DialogTemplate;
    }
 );
