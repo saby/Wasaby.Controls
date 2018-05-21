@@ -147,7 +147,7 @@ define('Controls/Input/Number', [
             self = this,
             value = this._numberViewModel.getValue();
 
-         if (value && value.indexOf('.') === -1) {
+         if (this._options.precision !== 0 && value && value.indexOf('.') === -1) {
             value = this._numberViewModel.updateValue(value + '.0');
             runDelayed(function() {
                self._children.input.setSelectionRange(value.length - 2, value.length - 2);
