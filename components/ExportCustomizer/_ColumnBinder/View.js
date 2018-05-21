@@ -184,8 +184,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
                {
                   title: fieldId ? rk('Выберите поле данных', 'НастройщикЭкспорта') : rk('Выбор полей данных', 'НастройщикЭкспорта'),
                   applyButtonTitle: rk('Выбрать', 'НастройщикЭкспорта'),
+                  width: this._container.width(),
                   groupTitles: options.fieldGroupTitles,
                   preserveOrder: true,
+                  multiselect: !fieldId,
                   moveColumns: false,
                   ignoreFixed: true// TODO: Добавить в редактор колонок опцию ignoreFixed
                }
