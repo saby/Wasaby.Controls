@@ -119,21 +119,8 @@
 }
 .controls-Grid__row:hover .controls-Grid__row-cell {
    background-color: @background-color_Grid-row_hover;
-   > .controls-itemActionsV_inside {
-      visibility: unset;
-   }
-   > .controls-itemActionsV_outside {
+   > .controls-itemActionsV {
       display: inline-flex;
-   }
-}
-.controls-Grid__row-cell {
-   .controls-itemActionsV_outside {
-      display: none;
-   }
-
-   .controls-itemActionsV_inside {
-      display: contents;
-      visibility: hidden;
    }
 }
 .controls-Grid__row-cell_rowSpacing_default {
