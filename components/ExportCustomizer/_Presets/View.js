@@ -132,7 +132,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                      if (withSaving) {
                         this._storage.save(this._options.namespace, this._customs);
                      }
-                  }.bind(this),
+                  }.bind(this)
                });
                this._updateSelectorListOptions('footerTpl', 'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/footer');
                this._updateSelectorListOptions('_footerHandler', this._onAdd.bind(this));
