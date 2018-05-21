@@ -950,9 +950,6 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
                   this._startDatePickerResetActive();
                   this._datePickerSetActive(this._endDatePicker, DateUtil.getEndOfYear(item));
                }
-            } else {
-               this._datePickerSetActive(this._startDatePicker);
-               // this._datePickerSetActive(this._endDatePicker);
             }
          }
       },
