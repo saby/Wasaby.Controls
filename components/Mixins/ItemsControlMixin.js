@@ -2233,8 +2233,11 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
       _fillItemInstances: function () {
          var childControls = this.getChildControls();
          for (var i = 0; i < childControls.length; i++) {
-            if (childControls[i].getContainer().hasClass('controls-ListView__item')) {
-               var hash = childControls[i].getContainer().attr('data-hash');
+            var container = childControls[i].getContainer();
+            //контейнера у контрола может не оказаться, многие создают контролы из кода без привязки к DOM например Action
+            //проверим наличие контейнера, это заведомо не тот контрол, который нам нужен
+            if (container && container.hasClass('controls-ListView__item')) {
+               var hash = container.attr('data-hash');
                //Проверяем на то, что найденный элемент принадлежит именно текущему инстансу, а не вложенным.
                if (this._getItemsProjection().getByHash(hash)) {
                   this._itemsInstances[hash] = childControls[i];
