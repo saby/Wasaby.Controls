@@ -222,9 +222,9 @@ define('SBIS3.CONTROLS/ListView',
           * @param {Object} RecordSet - {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/working-with-data/icollection/#wsdatacollectionrecordset RecordSet} с загруженными данными
           * @example
           * <pre>
-          *     DataGridView.subscribe('onDataMerge', function(event, dataSet) {
-          *        //Если в загруженном датасете есть данные, отрисуем их количество
-          *        var count = dataSet.getCount();
+          *     DataGridView.subscribe('onDataMerge', function(event, recordSet) {
+          *        // Если в загруженном рекордсете есть данные, отрисуем их количество
+          *        var count = recordSet.getCount();
           *        if (count){
           *           self.drawItemsCounter(count);
           *        }
