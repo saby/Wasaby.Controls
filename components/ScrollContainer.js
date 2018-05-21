@@ -381,6 +381,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
             if (this._paging) {
                this._calcPagingSelectedKey(scrollTop);
             }
+            
             this._toggleGradient();
          },
 
