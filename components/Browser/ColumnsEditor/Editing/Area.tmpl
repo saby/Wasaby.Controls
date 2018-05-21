@@ -47,7 +47,7 @@
          </div>
       </ws:if>
    </div>
-   <ws:if data="{{_optsSelectable.canMultiselect}}">
+   <ws:if data="{{_optsSelectable.multiselect}}">
       <div class="controls-Browser-ColumnsEditor-Editing-Area__OperationsMark">
          <SBIS3.CONTROLS:OperationsPanel:Mark name="controls-Browser-ColumnsEditor-Editing-Area__OperationsMark">
             <ws:items>
@@ -87,7 +87,7 @@
             selectedKeys="{{_optsSelectable.markedKeys}}"
             itemTpl="tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/templates/selectableItem"
             itemContentTpl="tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/templates/selectableItemContent"
-            multiselect="{{_optsSelectable.canMultiselect}}"
+            multiselect="{{_optsSelectable.multiselect}}"
             >
             <ws:handlers
                onItemClick="{{_optsSelectable.onItemClick}}"

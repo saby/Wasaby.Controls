@@ -118,9 +118,9 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                 */
                preserveOrder: false,
                /**
-                * @cfg {boolean} Выбранной может быть только одна колонка (опционально)
+                * @cfg {boolean} Разрешён ли множественный выбор колонок (опционально)
                 */
-               singleSelect: false
+               multiselect: true
             },
             _childNames: {
                presetView: 'controls-Browser-ColumnsEditor-Editing-Area__Preset',
@@ -149,7 +149,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
             cfg.hasGroups = !!cfg._groups && 0 < cfg._groups.length;
             cfg._optsSelectable.onItemClick = _onItemClick;
             cfg._optsSelectable.onSelectedItemsChange = _onSelectedItemsChange;
-            cfg._optsSelectable.canMultiselect = !cfg.singleSelect;
+            cfg._optsSelectable.multiselect = !!cfg.multiselect;
             return cfg;
          },
 
