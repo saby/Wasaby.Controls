@@ -234,7 +234,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * @param {Core/EventObject} evtName Дескриптор события
           */
          _onAdd: function (evtName) {
-            this._addPreset().addCallback(this._afterItemAction.bind(this, evtName.getTarget().getParent()));
+            var listView = evtName.getTarget().getParent();
+            this._addPreset().addCallback(function (isSuccess) {
+               this._afterItemAction(listView, isSuccess);
+               this._editPreset(this._options.selectedId, listView);
+            }.bind(this));
          },
 
          /**
@@ -255,7 +259,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             }[action];
             var promise = this[method](id, listView);
             if (promise) {
-               promise.addCallback(this._afterItemAction.bind(this, listView));
+               var callbacks = {
+                  'clone': function (isSuccess) {
+                     this._afterItemAction(listView, isSuccess);
+                     this._editPreset(this._options.selectedId, listView);
+                  }.bind(this),
+                  'delete': this._afterItemAction.bind(this, listView)
+               };
+               promise.addCallback(callbacks[action]);
             }
          },
 
@@ -360,7 +371,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * @protected
           * @param {string|number} id Идентификатор пресета
           * @param {object} listView Списочный контрол
-          * @return {Core/Deferred}
           */
          _editPreset: function (id, listView) {
             var presetInfo = this._findPresetById(id, true);
