@@ -209,7 +209,7 @@ define('SBIS3.CONTROLS/Action/Selector/SelectorController', [
                 selection,
                 dataSource,
                 self = this;
-             if (this._linkedObject && this._linkedObject._options.useSelectAll) {
+             if (this._linkedObject && this._linkedObject._options.useSelectAll && this._options.multiselect) {
                 filter = coreClone(this._linkedObject.getFilter());
                 dataSource = this._linkedObject.getDataSource();
                 //Закончить выбор элементов можно двумя способами:
