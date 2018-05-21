@@ -1661,12 +1661,15 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
          this._notify('onBeforeSetRoot', key);
 
          // сохраняем текущую страницу при проваливании в папку
-         if (this._isCursorNavigation() && this._options.saveReloadPosition && this.getSelectedItem()) {
-            // Сохраняем ключ узла, в который провалились
-            if (typeof this.getCurrentRoot() === 'undefined') {
-               this._hierPages[null] = this.getSelectedItem().get(this._options.navigation.config.field);
-            } else {
-               this._hierPages[this.getCurrentRoot()] = this.getSelectedItem().get(this._options.navigation.config.field);
+         if (this._isCursorNavigation() && this._options.saveReloadPosition) {
+            this.getListNavigation().setPosition(null);
+            if (this.getSelectedItem()) {
+               // Сохраняем ключ узла, в который провалились
+               if (typeof this.getCurrentRoot() === 'undefined') {
+                  this._hierPages[null] = this.getSelectedItem().get(this._options.navigation.config.field);
+               } else {
+                  this._hierPages[this.getCurrentRoot()] = this.getSelectedItem().get(this._options.navigation.config.field);
+               }
             }
          }
 
