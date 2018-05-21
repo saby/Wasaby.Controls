@@ -40,6 +40,9 @@
    }
 
    .controls-RichEditor__editorFrame {
+      // Вместо clearfix используем overflow: hidden. Если чешуться руки и хочется добавить clearfix - не делай этого!
+      // https://online.sbis.ru/opendoc.html?guid=2f2422e4-fe69-4ad9-ad85-a2b44b42884d
+      overflow: hidden;
       z-index: 1;
       width: 100%;
       position: relative;
