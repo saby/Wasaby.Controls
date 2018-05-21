@@ -10,20 +10,24 @@
 }
 
 .controls-BackButton_style-default:before {
-   content: @content-BackButton_style-default;
+   background-image: @content-BackButton_style-default;
+   background-repeat: no-repeat;
+   content: '';
 }
 
 .controls-BackButton_style-primary:before {
-   content: @content-BackButton_style-primary;
+   background-image: @content-BackButton_style-primary;
+   background-repeat: no-repeat;
+   content: ''
 }
 
 .controls-BackButton__wrapper:active {
    .controls-BackButton_style-primary:before {
-      content: @content-BackButton_style-primary_hovered;
+      background-image: @content-BackButton_style-primary_hovered;
    }
 
    .controls-BackButton_style-default:before {
-      content: @content-BackButton_style-default_hovered;
+      background-image: @content-BackButton_style-default_hovered;
    }
 
    .controls-BackButton__caption_style-default {
@@ -38,11 +42,11 @@
 .ws-is-no-touch {
    .controls-BackButton__wrapper:hover {
       .controls-BackButton_style-primary:before {
-         content: @content-BackButton_style-primary_hovered;
+         background-image: @content-BackButton_style-primary_hovered;
       }
 
       .controls-BackButton_style-default:before {
-         content: @content-BackButton_style-default_hovered;
+         background-image: @content-BackButton_style-default_hovered;
       }
 
       .controls-BackButton__caption_style-default {
@@ -57,19 +61,16 @@
 
 .controls-BackButton__caption_size-s {
    font-weight: @font-weight_Back;
-   font-size: @font-size_Header__caption_size-default;
    padding-left: @spacing-BackButton-between-icon-text;
 }
 
 .controls-BackButton__caption_size-m {
    font-weight: @font-weight_Back;
-   font-size: @font-size_Header__caption_size-l;
    padding-left: @spacing-BackButton-between-icon-text;
 }
 
 .controls-BackButton__caption_size-l {
    font-weight: @font-weight_Back;
-   font-size: @font-size_Header__caption_size-xl;
    padding-left: @spacing-BackButton-between-icon-text_big;
 }
 
@@ -82,8 +83,8 @@
 }
 
 .controls-BackButton_size-l {
-    width: @width-BackButton_size-l;
-    height: @height-BackButton_size-l;
+   width: @width-BackButton_size-l;
+   height: @height-BackButton_size-l;
 }
 
 .controls-BackButton_size-m {
@@ -96,11 +97,40 @@
    height: @height-BackButton_size-s;
 }
 
+.controls-BackButton_size-l:before {
+   background-size: @width-BackButton_size-l @height-BackButton_size-l;
+}
+
+.controls-BackButton_size-m:before {
+   background-size: @width-BackButton_size-default @height-BackButton_size-default;
+}
+
+.controls-BackButton_size-s:before {
+   background-size: @width-BackButton_size-s @height-BackButton_size-s;
+}
+
 .controls-BackButton__wrapper {
    display: inline-flex;
-   align-items: baseline;
+   align-items: center;
    cursor: pointer;
    max-width: 100%;
+   height: @height-BackButton;
+}
+
+.controls-BackButton__wrapper_l {
+   font-size: @font-size_Header__caption_size-xl;
+}
+
+.controls-BackButton__wrapper_m {
+   font-size: @font-size_Header__caption_size-l;
+}
+
+.controls-BackButton__wrapper_s {
+   font-size: @font-size_Header__caption_size-default;
+}
+
+.controls-BackButton__wrapper:before {
+   content: "\200b";
 }
 
 .controls-ButtonBack__caption {
