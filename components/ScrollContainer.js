@@ -375,13 +375,6 @@ define('SBIS3.CONTROLS/ScrollContainer', [
 
          _onScroll: function(event) {
             var scrollTop = this._getScrollTop();
-
-            if (this._scrollbar){
-               this._scrollbar.setPosition(scrollTop);
-            }
-            if (this._paging) {
-               this._calcPagingSelectedKey(scrollTop);
-            }
             // При вводе очень длинных параграфов, не умещающихся в одну строку, при переполнении строки, строго
             // через раз скрол-контейнер не докручивается на 2 пикселя, вероятно из-за округлений при расчётах размеров.
             // Будем вручную докручивать скрол-контейнер, если до конца не хватает не более 2px.
@@ -390,7 +383,12 @@ define('SBIS3.CONTROLS/ScrollContainer', [
             if (parScrTop - scrollTop <= 2){
                this._content[0].scrollTop = parScrTop;
             }
-            
+            if (this._scrollbar){
+               this._scrollbar.setPosition(scrollTop);
+            }
+            if (this._paging) {
+               this._calcPagingSelectedKey(scrollTop);
+            }
             this._toggleGradient();
          },
 
