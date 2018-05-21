@@ -121,37 +121,6 @@ define(
             assert.equal(suggestValue, '', 'Wrong value after clear');
             assert.isTrue(focused, 'Suggest is not focused after clear');
          });
-   
-         it('_focusOut', function(done) {
-            //тестирует фокус, проверяем только на клиенте
-            if (typeof document === 'undefined') {
-               this.skip();
-            }
-            var suggestDomNode = document.createElement('div');
-            var focusOutHandlerCalled = false;
-            
-            document.body.append(suggestDomNode);
-            
-            var suggest = new Suggest();
-            suggest.mountToDom(suggestDomNode, {}, suggest);
-            suggest._focusOut = function() {
-               focusOutHandlerCalled = true;
-            };
-   
-            /* Таймаут для синхронизации VDOM'a */
-            setTimeout(function() {
-               /* Устанавливаем фокус в саггест */
-               var eventFocus = new Event('focus');
-               eventFocus.relatedTarget = document.body;
-               suggest._container.find('.controls-InputRender')[0].dispatchEvent(eventFocus);
-               /* Уводим фокус с саггеста */
-               var eventBlur = new Event('focusout');
-               eventBlur.relatedTarget =  $('<div/>')[0];
-               suggest._container.find('.controls-InputRender')[0].dispatchEvent(eventBlur);
-               assert.isTrue(focusOutHandlerCalled, 'Event handler on focusOut is not called');
-               done();
-            }, 50);
-         });
          
       });
       
