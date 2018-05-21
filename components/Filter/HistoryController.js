@@ -66,18 +66,21 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
                 * фильтры которые надо сохранять в историю
                 */
                 filtersForHistory: []
-             }
+             },
+             
+             historyReady: null
           },
 
           $constructor: function() {
              /* Делаем клон, т.к. сериализация производится один раз, и создаётся лишь один экземпляр объекта,
                 и его портить нельзя */
              var self = this;
-             self.getHistory(true).addCallback(function(history) {
+             
+             this._onHistoryReady(function(history) {
                 self._listHistory = new List({items: coreClone(history) || []});
                 self._prepareListHistory();
-                return history;
              });
+             
              this._changeHistoryFnc = this._changeHistoryHandler.bind(this);
              this._applyHandlerDebounced = debounce.call(forAliveOnly(this._onApplyFilterHandler, this)).bind(this);
 
@@ -114,6 +117,16 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
                    this._options.view.setCurrentRoot(hashFilters[this._options.view.getParentProperty()]);
                 }
              }
+          },
+          
+          _onHistoryReady: function(callback) {
+             if (!this._historyReady) {
+                this._historyReady = this.getHistory(true);
+             }
+             this._historyReady.addCallback(function(res) {
+                callback(res);
+                return res;
+             });
           },
 
           _changeHistoryHandler: function(e, id, newHistory, activeFilter, saveDeferred) {
@@ -222,9 +235,11 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
 
              /* Если это дефолтный фильтр, то сохранять в историю не надо */
              if(!fb.getLinkedContext().getValue('filterChanged')) {
-                /* Если применили дефолтный фильтр, то надо сбросить текущий активный */
-                self.clearActiveFilter();
-                self.saveToUserParams();
+                self._onHistoryReady(function() {
+                   /* Если применили дефолтный фильтр, то надо сбросить текущий активный */
+                   self.clearActiveFilter();
+                   self.saveToUserParams();
+                });
                 return;
              }
 
