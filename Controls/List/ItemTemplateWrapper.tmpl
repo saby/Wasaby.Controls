@@ -1,0 +1,26 @@
+<ws:if data="{{itemData.isEditing}}">
+    <Controls.List.EditInPlace.EditingRow on:deactivated="_onRowDeactivated()">
+        <ws:partial
+                on:click="_onItemClick(itemData.dispItem)"
+                on:contextmenu="_onItemContextMenu(itemData)"
+                on:swipe="_onItemSwipe(itemData)"
+                itemActionsTemplate="{{itemActionsTemplate}}"
+                swipeTemplate="{{swipeTemplate}}"
+                multiSelectTpl="{{multiSelectTpl}}"
+                template="{{itemTemplate}}"
+                contentTemplate="{{itemContentTemplate}}"
+                itemData="{{itemData}}"/>
+    </Controls.List.EditInPlace.EditingRow>
+</ws:if>
+<ws:else>
+    <ws:partial
+            on:click="_onItemClick(itemData.dispItem)"
+            on:contextmenu="_onItemContextMenu(itemData)"
+            on:swipe="_onItemSwipe(itemData)"
+            itemActionsTemplate="{{itemActionsTemplate}}"
+            swipeTemplate="{{swipeTemplate}}"
+            multiSelectTpl="{{multiSelectTpl}}"
+            template="{{itemTemplate}}"
+            contentTemplate="{{itemContentTemplate}}"
+            itemData="{{itemData}}"/>
+</ws:else>
