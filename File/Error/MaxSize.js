@@ -13,8 +13,8 @@ define("File/Error/MaxSize", ["require", "exports", "tslib", "File/Error"], func
         tslib_1.__extends(MaxSizeError, _super);
         function MaxSizeError(params) {
             var _this = _super.call(this, {
-                message: MESSAGE,
-                details: getDetails(params.fileName, params.maxSize),
+                message: params.message || MESSAGE,
+                details: params.details || getDetails(params.fileName, params.maxSize),
                 fileName: params.fileName
             }) || this;
             /*
