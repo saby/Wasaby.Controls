@@ -315,7 +315,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
                   }
                }
             }
-            var args = [hasIndex ? index : list.length, 0];
+            var args = [hasIndex ? index : list.length, hasIndex ? 1 : 0];
             args.push.apply(args, items);
             list.splice.apply(list, args);
          }
