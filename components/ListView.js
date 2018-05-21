@@ -223,7 +223,7 @@ define('SBIS3.CONTROLS/ListView',
           * @example
           * <pre>
           *     DataGridView.subscribe('onDataMerge', function(event, recordSet) {
-          *        //Если в загруженном рекордсете есть данные, отрисуем их количество
+          *        // Если в загруженном рекордсете есть данные, отрисуем их количество
           *        var count = recordSet.getCount();
           *        if (count){
           *           self.drawItemsCounter(count);
