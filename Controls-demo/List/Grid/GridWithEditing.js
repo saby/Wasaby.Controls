@@ -1,6 +1,6 @@
 define('Controls-demo/List/Grid/GridWithEditing', [
    'Core/Control',
-   'Controls-demo/List/Grid/GridData',
+   'Controls-demo/List/Grid/GridWithEditingData',
    'tmpl!Controls-demo/List/Grid/GridWithEditing',
    'WS.Data/Source/Memory',
    'tmpl!Controls-demo/List/Tree/treeEditingTemplate',
@@ -17,7 +17,7 @@ define('Controls-demo/List/Grid/GridWithEditing', [
    'Controls/Container/Scroll',
    'Controls/Grid',
    'Controls/Render/Money/Money'
-], function (BaseControl, GridData, template, MemorySource) {
+], function(BaseControl, GridData, template, MemorySource) {
 
    'use strict';
 
@@ -51,7 +51,7 @@ define('Controls-demo/List/Grid/GridWithEditing', [
                template: 'tmpl!Controls-demo/List/Grid/DemoBalancePrice'
             },
             {
-               displayProperty: 'id',
+               displayProperty: 'description',
                width: 'auto',
                align: 'right',
                template: 'tmpl!Controls-demo/List/Tree/treeEditingTemplate'
@@ -82,7 +82,7 @@ define('Controls-demo/List/Grid/GridWithEditing', [
                align: 'right'
             },
             {
-               title: 'id',
+               title: 'Описание',
                align: 'right'
             },
             {
