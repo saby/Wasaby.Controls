@@ -13,24 +13,24 @@
 }
 
 .controls-BackButton_style-default:before {
-   background-image: @content-BackButton_style-default;
+   background-image: @background-image-BackButton_style-default;
    background-repeat: no-repeat;
    content: '';
 }
 
 .controls-BackButton_style-primary:before {
-   background-image: @content-BackButton_style-primary;
+   background-image: @background-image-BackButton_style-primary;
    background-repeat: no-repeat;
    content: '';
 }
 
 .controls-BackButton__wrapper:active {
    .controls-BackButton_style-primary:before {
-      background-image: @content-BackButton_style-primary_hovered;
+      background-image: @background-image-BackButton_style-primary_hovered;
    }
 
    .controls-BackButton_style-default:before {
-      background-image: @content-BackButton_style-default_hovered;
+      background-image: @background-image-BackButton_style-default_hovered;
    }
 
    .controls-BackButton__caption_style-default {
@@ -45,11 +45,11 @@
 .ws-is-no-touch {
    .controls-BackButton__wrapper:hover {
       .controls-BackButton_style-primary:before {
-         background-image: @content-BackButton_style-primary_hovered;
+         background-image: @background-image-BackButton_style-primary_hovered;
       }
 
       .controls-BackButton_style-default:before {
-         background-image: @content-BackButton_style-default_hovered;
+         background-image: @background-image-BackButton_style-default_hovered;
       }
 
       .controls-BackButton__caption_style-default {
