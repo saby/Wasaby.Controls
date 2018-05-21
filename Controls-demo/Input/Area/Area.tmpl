@@ -10,18 +10,13 @@
                            validationErrors="{{_validationErrors}}"
                            trim="{{_trim}}"
                            maxLength="{{_maxLength}}"
+                           minLines="{{_minLines}}"
+                           maxLines="{{_maxLines}}"
                            tagStyle="{{_tagStyle}}"
                            readOnly="{{_readOnly}}"
                            on:valueChanged="_eventHandler()"
                            on:inputCompleted="_eventHandler()"
-      >
-         <ws:minLines>
-            <ws:Number>{{_minLines}}</ws:Number>
-         </ws:minLines>
-         <ws:maxLines>
-            <ws:Number>{{_maxLines}}</ws:Number>
-         </ws:maxLines>
-      </Controls.Input.Area>
+      />
    </div>
    <div style="padding: 3em; background-color: rgba(81,81,81,0.11) ">
       <h3>Задайте опции:</h3>
@@ -35,9 +30,9 @@
       <Controls.Label name="myLabel1" caption="maxLength"/>
       <Controls.Input.Text attr:id="maxLength" bind:value="_maxLength"/>
       <Controls.Label name="myLabel1" caption="minLines"/>
-      <Controls.Input.Text attr:id="minLines" bind:value="_minLines"/>
+      <Controls.Input.Number attr:id="minLines" bind:value="_minLines"/>
       <Controls.Label name="myLabel1" caption="maxLines"/>
-      <Controls.Input.Text attr:id="maxLines" bind:value="_maxLines"/>
+      <Controls.Input.Number attr:id="maxLines" bind:value="_maxLines"/>
       <div>
          <Controls.Toggle.Checkbox attr:id="trim" readOnly="{{false}}" bind:value="_trim" caption="trim"/>
          <Controls.Toggle.Checkbox attr:id="validationErrors" on:valueChanged="valueChangedHandler()" readOnly="{{false}}"
