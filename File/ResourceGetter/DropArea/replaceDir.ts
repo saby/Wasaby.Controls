@@ -189,10 +189,16 @@ let getFromFileReader = (files: FileList): Deferred<Resources> => {
 /// endregion FileReader
 
 /**
- * Обходит объект DataTransfer, полученный путём D&D
- * Если среди полученных файлов нету директорий вернёт FileList как есть
- * Иначе проверяет доступность api чтения файлов внутри директории и использует его, добавляя содержимое в выборку,
- * либо заменяет директории на ошибки, что браузер не умеет их грузить
+ * Т.к. нету нормальной возможности грузить директории на сервис, но есть возможность получать их через D&D
+ * Надо обойти полученный FileList на наличие "непонятных" файлов, у которых нету типа
+ * 1) Если таковых нет, то ввозвращаем исходный FileList без изменений
+ * 2) Иначе, по возможности, получаем File-Entry соответствующий полученному файлу
+ * из него уже можно точно сказать директория это или нет и прочитать рекурсивно содержиое вложенных директорий
+ * и склеив содержимое в итоговую выборку, пометив каждый полученный файл путём до него относительно
+ * первой переданной директории
+ * 3) Если такой возможности нет, то через FileReader пытаемся понять, файл это или директория,
+ * и заменяем директории на ошибки, что не браузер умеет их грузить
+ * 4) Либо же заменяем все "непонятнын" файлы на ошибки, чтобы ничего не обвалить при загрузке
  *
  * @param {DataTransferItemList} items
  * @param {FileList} files
@@ -200,12 +206,13 @@ let getFromFileReader = (files: FileList): Deferred<Resources> => {
  * @private
  */
 let replaceDir = ({items, files}: DataTransfer): Deferred<FileList | Resources> => {
+    // dnd папки в IE стрельнёт событием, но не даст файлов
     let len = files.length;
     if (!len) {
         return Deferred.success([]);
     }
-    let isIncludeUnknownType: boolean;
 
+    let isIncludeUnknownType: boolean;
     for (let i = 0; i < len; i++) {
         let file = files[i];
         if (!file.type) {
@@ -213,18 +220,24 @@ let replaceDir = ({items, files}: DataTransfer): Deferred<FileList | Resources> 
             break;
         }
     }
-    // Если нету директорий вернём как есть
+    // Если нету файлов с неизвестным типом, то вернём как есть
     if (!isIncludeUnknownType) {
         return Deferred.success(files);
     }
-    // Если есть поддержка чтения директорий
-    if (items[0].webkitGetAsEntry) {
+
+    /*
+     * Если есть поддержка чтения директорий через DataTransferItem.[webkit]GetAsEntry
+     * наличие DataTransferItemList, или его заполненость, так же не гарантируется
+     */
+    if (items && items[0] && items[0].webkitGetAsEntry) {
         return getFromEntries(items);
     }
+
     // Читать директории не можем, но можем определить файлы без типов
     if (typeof FileReader !== 'undefined') {
         return getFromFileReader(files);
     }
+
     // Не можем определить где директория, где просто отсуствует тип, заменяем на ошибку
     return Deferred.success(Array.prototype.map.call(files, file => {
         if (!file.type) {
