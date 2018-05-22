@@ -73,9 +73,11 @@
                                           _options="{{_options}}"/>
 
                               <span id="cssBundles" style="display:none;">
-                                 <ws:for data="link in cssBundles">
-                                    {{ 'define("css!' + link + '", "");' }}
-                                 </ws:for>
+                                 <ws:if data="{{ cssBundles }}">
+                                    <ws:for data="link in cssBundles">>
+                                       {{ 'define("css!' + link + '", "");' }}
+                                    </ws:for>
+                                 </ws:if>
                               </span>
 
                               <script>
