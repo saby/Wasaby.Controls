@@ -75,6 +75,7 @@ define('Controls/Container/Scroll',
             setScrollTop: function(self, scrollTop) {
                self._children.content.scrollTop = scrollTop;
                self._scrollTop = scrollTop;
+               this._notify('scroll', [scrollTop]);
             },
 
             calcHasScroll: function(self) {
