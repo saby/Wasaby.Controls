@@ -476,10 +476,6 @@ define('Controls/List/Grid/GridViewModel', [
             this._model.setItems(items);
          },
 
-         setItemActions: function(item, actions) {
-            this._model.setItemActions(item, actions);
-         },
-
          setActiveItem: function(itemData) {
             this._model.setActiveItem(itemData);
          },
