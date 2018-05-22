@@ -265,6 +265,8 @@ define('SBIS3.CONTROLS/Action/List/Save', [
                     result.errback();
                  }
               }).addErrback(function() {
+                 //Сюда мы попадаем если команда showColumnsEditor была обработана, но диалог выбора колонок
+                 //не смог отработать и не был показан, тогда продолжим сохранение с текущим набором колонок.
                  result.callback(meta.columns);
               });
            } else {
