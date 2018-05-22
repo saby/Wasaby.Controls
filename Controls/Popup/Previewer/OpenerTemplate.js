@@ -1,7 +1,7 @@
-define('Controls/MiniCard/OpenerTemplate',
+define('Controls/Popup/Previewer/OpenerTemplate',
    [
       'Core/Control',
-      'tmpl!Controls/MiniCard/OpenerTemplate'
+      'tmpl!Controls/Popup/Previewer/OpenerTemplate'
    ],
    function(Control, template) {
 

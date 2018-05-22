@@ -11,7 +11,7 @@ define('Controls/Popup/Opener/MiniCard',
       var _private = {
          displayDuration: 1500,
 
-         cleatTimeout: function(self, type) {
+         clearTimeout: function(self, type) {
             var nameTimer = '_' + type + 'TimerId';
 
             if (self[nameTimer]) {
@@ -37,7 +37,7 @@ define('Controls/Popup/Opener/MiniCard',
          open: function(cfg, type) {
             var self = this;
 
-            _private.cleatTimeout(this, 'closing');
+            _private.clearTimeout(this, 'closing');
 
             if (type === 'hover') {
                this._openingTimerId = setTimeout(function() {
@@ -53,7 +53,7 @@ define('Controls/Popup/Opener/MiniCard',
          close: function(type) {
             var self = this;
 
-            _private.cleatTimeout(this, 'opening');
+            _private.clearTimeout(this, 'opening');
 
             if (type === 'hover') {
                this._closingTimerId = setTimeout(function() {
@@ -73,7 +73,7 @@ define('Controls/Popup/Opener/MiniCard',
           * @variant closing
           */
          cancel: function(action) {
-            _private.cleatTimeout(this, action);
+            _private.clearTimeout(this, action);
          }
       });
 

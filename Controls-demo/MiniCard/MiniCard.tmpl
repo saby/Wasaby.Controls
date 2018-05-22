@@ -1,14 +1,14 @@
 <div class="ControlsDemo-MiniCard">
-   <ws:for data="image in ['Андрей', 'Валера', 'Максим', 'Пиратик', 'Максим']">
-      <Controls.MiniCard>
-         <ws:target>
+   <ws:for data="image in ['Андрей', 'Валера', 'Максим']">
+      <Controls.Popup.Previewer>
+         <ws:content>
             <img src="MiniCard/image/{{image}}.png"/>
-         </ws:target>
+         </ws:content>
          <ws:template>
             <div attr:style="padding: 50px; border: 2px solid red;">
                <img src="MiniCard/image/{{image}}.png" style="height: 150px; width: 150px;"/>
             </div>
          </ws:template>
-      </Controls.MiniCard>
+      </Controls.Popup.Previewer>
    </ws:for>
 </div>

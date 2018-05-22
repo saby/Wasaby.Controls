@@ -1,7 +1,7 @@
-define('Controls/MiniCard',
+define('Controls/Popup/Previewer',
    [
       'Core/Control',
-      'tmpl!Controls/MiniCard/MiniCard',
+      'tmpl!Controls/Popup/Previewer/Previewer',
 
       'Controls/Popup/Opener/MiniCard'
    ],
@@ -10,21 +10,17 @@ define('Controls/MiniCard',
       'use strict';
 
       /**
-       * @class Controls/MiniCard
+       * @class Controls/Popup/Previewer
        * @extends Core/Control
        * @public
        *
-       * @name Controls/MiniCard#target
+       * @name Controls/Popup/Previewer#content
        * @cfg {Content} The content to which the logic of opening and closing the mini card is added.
        *
-       * @name Controls/MiniCard#template
+       * @name Controls/Popup/Previewer#template
        * @cfg {Content} Mini card contents.
        */
       var _private = {
-         stopPropagation: function(event) {
-            event.stopPropagation();
-         },
-
          getType: function(eventType) {
             if (eventType === 'mouseenter' || eventType === 'mouseleave') {
                return 'hover';
@@ -34,11 +30,11 @@ define('Controls/MiniCard',
          }
       };
 
-      var MiniCard = Control.extend({
+      var Previewer = Control.extend({
          _template: template,
 
          _beforeMount: function() {
-            this._result = this._result.bind(this);
+            this._resultHandler = this._resultHandler.bind(this);
          },
 
          _open: function(event) {
@@ -55,24 +51,29 @@ define('Controls/MiniCard',
             this._children.openerMiniCard.close(type);
          },
 
-         _targetMousedownHandler: function(event) {
-            this._open(event);
-            _private.stopPropagation(event);
-         },
-
-         _miniCardMousedownHandler: function(event) {
-            _private.stopPropagation(event);
-         },
 
          _cancel: function(event, action) {
             this._children.openerMiniCard.cancel(action);
          },
 
-         _stopPropagation: function(event) {
-            _private.stopPropagation(event);
+         _contentMousedownHandler: function(event) {
+            this._open(event);
+            event.stopPropagation();
          },
 
-         _result: function(event) {
+         _contentMouseenterHandler: function(event) {
+            this._open(event);
+         },
+
+         _contentMouseleaveHandler: function(event) {
+            this._close(event);
+         },
+
+         _miniCardMousedownHandler: function(event) {
+            event.stopPropagation();
+         },
+
+         _resultHandler: function(event) {
             switch (event.type) {
                case 'mouseenter':
                   this._cancel(event, 'closing');
@@ -81,12 +82,12 @@ define('Controls/MiniCard',
                   this._close(event, 'hover');
                   break;
                case 'mousedown':
-                  this._stopPropagation(event);
+                  event.stopPropagation();
                   break;
             }
          }
       });
 
-      return MiniCard;
+      return Previewer;
    }
 );

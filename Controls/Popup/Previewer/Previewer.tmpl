@@ -1,0 +1,13 @@
+<div>
+   <ws:partial template="{{_options.content}}"
+               on:mousedown="_contentMousedownHandler()"
+               on:mouseenter="_contentMouseenterHandler()"
+               on:mouseleave="_contentMouseleaveHandler()"/>
+   <Controls.Popup.Opener.MiniCard name="openerMiniCard">
+      <ws:popupOptions template="Controls/Popup/Previewer/OpenerTemplate">
+         <ws:corner vertical="bottom" horizontal="right"/>
+         <ws:templateOptions content="{{_options.template}}"/>
+         <ws:eventHandlers onResult="{{_resultHandler}}"></ws:eventHandlers>
+      </ws:popupOptions>
+   </Controls.Popup.Opener.MiniCard>
+</div>
