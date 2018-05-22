@@ -69,7 +69,7 @@
                         <ws:else data="{{!_options.builderCompatible}}">
                            <div>
                               <ws:partial template="tmpl!Controls/Application/startApplicationScript" compat="{{compat}}"
-                                          jsLinks="{{jsLinks}}"
+                                          jsLinks="{{ jsLinks }}"
                                           _options="{{_options}}"/>
 
                               <ws:if data="{{ _options.scripts }}">
