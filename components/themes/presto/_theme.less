@@ -544,3 +544,18 @@ body {
     }
   }
 }
+
+.controls-BreadCrumbs__smallItems {
+  top: 1px;
+  &.controls-BreadCrumbs .controls-BreadCrumbs__itemsContainer, .controls-BreadCrumbs__crumb {
+    .inline-flexbox();
+  }
+  &.controls-BreadCrumbs {
+    .controls-BreadCrumbs__arrow, .controls-BreadCrumbs__title {
+      top: auto;
+    }
+    .controls-BreadCrumbs__crumb:first-child .controls-BreadCrumbs__arrow.icon-size {
+      display: none;
+    }
+  }
+}
