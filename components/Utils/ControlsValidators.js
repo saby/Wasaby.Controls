@@ -2,14 +2,13 @@
  * Created by am.gerasimov on 01.02.2016.
  */
 define('SBIS3.CONTROLS/Utils/ControlsValidators', [
-   'Lib/CoreValidators/CoreValidators',
    'Core/core-instance',
    'Core/IoC',
    'Controls/Validate/Validators/IsEmail',
    'Controls/Validate/Validators/IsRequired',
    'SBIS3.CONTROLS/Utils/DateUtil',
    'i18n!SBIS3.CONTROLS/Utils/ControlsValidators'
-],function(CoreValidators, cInstance, IoC, IsEmail, IsRequired, DateUtil) {
+],function(cInstance, IoC, IsEmail, IsRequired, DateUtil) {
 
    'use strict';
 
@@ -20,7 +19,36 @@ define('SBIS3.CONTROLS/Utils/ControlsValidators', [
          }
       };
 
-      return CoreValidators.inn.call(obj, innLen);
+      return validateInn.call(obj, innLen);
+   }
+
+   /**
+    * Проверяет строку на соответствие формату идентификационного номера налогоплательщика (ИНН).
+    * @param {Number|String} [innLen] Устанавливает длину строки, которой должен соответствовать введённый ИНН.
+    * @returns {Boolean|String}
+    * <ol>
+    *    <li>В случае прохождения валидации возвращает true.</li>
+    *    <li>В случае не прохождения валидации возвращает сообщение "ИНН должен состоять из 10 или 12 цифр".</li>
+    * </ol>
+    * @see innCheckValue
+    * @see innCheckSum
+    */
+   function validateInn(innLen) {
+      innLen = parseInt(innLen, 10) || 0;
+      var value = getValueForValidation(this.getValue());
+      if(value === ''){
+         return true;
+      }
+
+      var
+         valLen = ('' + value).length,
+         isNumbers = (/^([0-9]+)$/).test(value),
+         isCorrectLength = (innLen > 0) ?  (('' + value).length == innLen) : (valLen === 10 || valLen === 12);
+      if(!isNumbers || !isCorrectLength){
+         return rk('ИНН должен состоять из') + ' ' + (innLen > 0 ? innLen : rk('10 или 12')) + ' ' + rk('цифр');
+      }
+
+      return obj.innCheckSum.apply( this );
    }
 
 
