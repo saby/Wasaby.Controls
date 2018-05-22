@@ -23,25 +23,36 @@ define('Controls/Popup/Opener/BaseOpener',
          /**
           * Открыть всплывающую панель
           * @function Controls/Popup/Opener/Base#open
-          * @param config конфигурация попапа
+          * @param popupOptions конфигурация попапа
           * @param strategy стратегия позиционирования попапа
           */
-         open: function(config, strategy) {
-            var cfg = this._options.popupOptions ? CoreClone(this._options.popupOptions) : {};
+         open: function(popupOptions, strategy) {
             var self = this;
-            CoreMerge(cfg, config || {});
+            var cfg = this._getConfig(popupOptions);
+
             if (this.isOpened()) {
                this._popupId = ManagerController.update(this._popupId, cfg);
             } else {
-               if (!cfg.opener) {
-                  cfg.opener = this;
-               }
-               this._getTemplate(cfg).addCallback(function(tpl) {
-                  Base.showDialog(tpl, cfg, strategy).addCallback(function(popupId) {
-                     self._popupId = popupId;
+               if (cfg.isCompoundTemplate) {
+                  requirejs(['Controls/Popup/Compatible/Layer'], function(Layer) {
+                     Layer.load().addCallback(function() { //Если Application не успел загрузить совместимость - грузим сами
+                        self._openPopup(cfg, strategy);
+                     });
                   });
-               });
+               }
+               else {
+                  self._openPopup(cfg, strategy);
+               }
             }
+         },
+
+         _openPopup: function(cfg, strategy) {
+            var self = this;
+            this._getTemplate(cfg).addCallback(function(tpl) {
+               Base.showDialog(tpl, cfg, strategy).addCallback(function(popupId) {
+                  self._popupId = popupId;
+               });
+            });
          },
 
          //Ленивая загрузка шаблона
@@ -57,6 +68,13 @@ define('Controls/Popup/Opener/BaseOpener',
                }.bind(this));
             }
             return this._openerListDeferred;
+         },
+
+         _getConfig: function(popupOptions) {
+            var cfg = this._options.popupOptions ? CoreClone(this._options.popupOptions) : {};
+            CoreMerge(cfg, popupOptions || {});
+            cfg.opener = cfg.opener || this;
+            return cfg;
          },
 
          /**
