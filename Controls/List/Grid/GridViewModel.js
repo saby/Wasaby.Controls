@@ -356,7 +356,7 @@ define('Controls/List/Grid/GridViewModel', [
             current.goToNextColumn = function() {
                current.columnIndex++;
             };
-            current.lastColumn = function() {
+            current.getLastColumnIndex = function() {
                return current.columns.length - 1;
             };
             current.getCurrentColumn = function() {
