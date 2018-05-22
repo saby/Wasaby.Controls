@@ -1,4 +1,4 @@
-#!groovy
+`#!groovy
 echo "Задаем параметры сборки"
 def version = "3.18.210"
 
@@ -36,7 +36,7 @@ node('controls') {
                 description: '',
                 name: 'ws_data_revision'),
             string(
-                defaultValue: "rc-${version}",
+                defaultValue: props["engine"],
                 description: '',
                 name: 'branch_engine'),
             string(
