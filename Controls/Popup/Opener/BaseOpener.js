@@ -33,9 +33,9 @@ define('Controls/Popup/Opener/BaseOpener',
             if (this.isOpened()) {
                this._popupId = ManagerController.update(this._popupId, cfg);
             } else {
-               if (cfg.isCompoundTemplate) {
+               if (cfg.isCompoundTemplate) { //TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
                   requirejs(['Controls/Popup/Compatible/Layer'], function(Layer) {
-                     Layer.load().addCallback(function() { //Если Application не успел загрузить совместимость - грузим сами
+                     Layer.load().addCallback(function() {
                         self._openPopup(cfg, strategy);
                      });
                   });
