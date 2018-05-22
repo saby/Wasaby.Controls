@@ -1519,7 +1519,11 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                 hierarchy = coreClone(this._hier),
                 self = this,
                 previousRoot = this._previousRoot,
+                curRoot = this.getCurrentRoot(),
                 item;
+            if (typeof curRoot === 'undefined') {
+               curRoot = null;
+            }
             if (this._options.expand) {
                this._applyExpandToItems(this.getItems());
             }
@@ -1549,15 +1553,24 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                   }
                } else {
                   /*иначе вход в папку*/
-                  for (var i = 0; i < this._getItemsProjection().getCount(); i++) {
-                     item = this._getItemsProjection() && this._getItemsProjection().at(i);
-                     if (item && !cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
-                        this.setSelectedKey(item.getContents().getId());
-                        if (!this._container.parents('.controls-ListView').length) {
-                           //todo Это единственный на текущий момент способ проверить, что наш контейнер уже в контейнере ListView и тогда осуществлять scrollTo не нужно!
-                           this._scrollToItem(item.getContents().getId());
+                  // Если используется курсор и сохранение позиции при перезагрузке, то находим запись, сохраненную ранее и скролим до неё
+                  // https://online.sbis.ru/opendoc.html?guid=178ddc57-9e78-4136-8257-44ebb28a2d44
+                  if (this._isCursorNavigation() && this._options.saveReloadPosition && typeof this._hierPages[curRoot] !== 'undefined') {
+                     item = this.getItems().at(this.getItems().getIndexByValue(this._options.navigation.config.field, this._hierPages[curRoot]));
+                  } else {
+                     for (var i = 0; i < this._getItemsProjection().getCount(); i++) {
+                        item = this._getItemsProjection() && this._getItemsProjection().at(i);
+                        if (item && !cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
+                           item = item.getContents();
+                           break;
                         }
-                        break;
+                     }
+                  }
+                  if (item) {
+                     this.setSelectedKey(item.getId());
+                     if (!this._container.parents('.controls-ListView').length) {
+                        //todo Это единственный на текущий момент способ проверить, что наш контейнер уже в контейнере ListView и тогда осуществлять scrollTo не нужно!
+                        this._scrollToItem(item.getId());
                      }
                   }
                }
