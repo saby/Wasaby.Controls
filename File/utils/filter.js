@@ -13,6 +13,11 @@ define("File/utils/filter", ["require", "exports", "File/Error/Extension", "File
          */
         for (var i = 0; i < fileList.length; i++) {
             var file = fileList instanceof FileList ? fileList.item(i) : fileList[i];
+            // Если пришла уже ошибка из внутренней фильтрации ResourceGetter
+            if (file instanceof Error) {
+                files.push(file);
+                continue;
+            }
             // По типу
             if (extensions && !extensions.verify(file)) {
                 files.push(new ExtensionsError({

@@ -21,19 +21,21 @@ define('Controls/Utils/BreadCrumbsUtil', [
          if (initialized) {
             return;
          }
-         ARROW_WIDTH = window && _private.getWidth('<span class="controls-BreadCrumbsV__arrow icon-size icon-DayForward icon-primary action-hover"></span>');
-         HOME_WIDTH = window && _private.getWidth('<div class="controls-BreadCrumbsV__home icon-size icon-Home3 icon-primary"></div>');
-         BREAD_CRUMB_MIN_WIDTH = window && _private.getWidth('<div class="controls-BreadCrumbsV__title_min"></div>');
-         DOTS_WIDTH = window && _private.getWidth(itemTemplate({
-            itemData: {
-               getPropValue: ItemsUtil.getPropertyValue,
-               item: {
-                  title: '...'
-               },
-               isDots: true,
-               hasArrow: true
-            }
-         }));
+         if (window) {
+            ARROW_WIDTH = _private.getWidth('<span class="controls-BreadCrumbsV__arrow icon-size icon-DayForward icon-primary action-hover"></span>');
+            HOME_WIDTH = _private.getWidth('<div class="controls-BreadCrumbsV__home icon-size icon-Home3 icon-primary"></div>');
+            BREAD_CRUMB_MIN_WIDTH = _private.getWidth('<div class="controls-BreadCrumbsV__title_min"></div>');
+            DOTS_WIDTH = _private.getWidth(itemTemplate({
+               itemData: {
+                  getPropValue: ItemsUtil.getPropertyValue,
+                  item: {
+                     title: '...'
+                  },
+                  isDots: true,
+                  hasArrow: true
+               }
+            }));
+         }
          initialized = true;
       },
 

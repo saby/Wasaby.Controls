@@ -5,7 +5,7 @@ define('Controls/Popup/Compatible/BaseOpener', [
    'Core/Deferred',
    'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea'
 ],
-function(cDeferred, CompoundArea) {
+function() {
    /**
        * Слой совместимости для базового опенера для открытия старых шаблонов
        */
@@ -24,12 +24,21 @@ function(cDeferred, CompoundArea) {
          }
 
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
-         this._setDimensions(cfg, templateClass);
+         this._setSizes(cfg, templateClass);
       },
-      _setDimensions: function(cfg, templateClass) {
-         var dimensions = templateClass.dimensions || {};
-         cfg.minWidth = dimensions.minWidth ? parseInt(dimensions.minWidth, 10) : null;
-         cfg.maxWidth = dimensions.maxWidth ? parseInt(dimensions.maxWidth, 10) : null;
+
+      //Берем размеры либо с опций, либо с дименшенов
+      _setSizes: function(cfg, templateClass) {
+         var dimensions = templateClass.dimensions || templateClass.prototype.dimensions || {};
+         if (!cfg.minWidth) {
+            cfg.minWidth = dimensions.minWidth ? parseInt(dimensions.minWidth, 10) : null;
+         }
+         if (!cfg.maxWidth) {
+            cfg.maxWidth = dimensions.maxWidth ? parseInt(dimensions.maxWidth, 10) : null;
+         }
+
+         cfg.minWidth = cfg.minWidth || cfg.maxWidth;
+         cfg.maxWidth = cfg.maxWidth || cfg.minWidth;
       }
    };
 }

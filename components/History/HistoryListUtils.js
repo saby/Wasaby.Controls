@@ -5,26 +5,43 @@ define('SBIS3.CONTROLS/History/HistoryListUtils', [
 ], function(HistoryList, ParallelDeferred, Deferred) {
 
    return {
-      getHistoryList: function(historyId, isFavorite, isGlobal) {
+      getHistoryList: function(historyId, isFavorite, isGlobal, self) {
          if(isFavorite && !isGlobal) {
             historyId += '-favorite';
          }
-
-         return new HistoryList({
-            historyId: historyId,
-            isGlobalUserConfig: !!isGlobal
-         });
+         
+         if (self && self._historyLists) {
+            var listName;
+            if (isGlobal) {
+               listName = 'globalList';
+            } else if (isFavorite) {
+               listName = 'favoriteList';
+            } else {
+               listName = 'list';
+            }
+            
+            return self._historyLists[listName];
+         } else {
+            return new HistoryList({
+               historyId: historyId,
+               isGlobalUserConfig: !!isGlobal
+            });
+         }
       },
-      getHistoryLists: function(historyId) {
+      getHistoryLists: function(historyId, instance) {
          var
             result = {},
             self = this,
             historyLists = [{name: 'list', args: []}, {name: 'favoriteList', args: [true]}, {name: 'globalList', args: [false, true]}];
 
-         historyLists.forEach(function(value) {
-            value.args.unshift(historyId);
-            result[value.name] = self.getHistoryList.apply(self, value.args);
-         });
+         if (instance && instance._historyLists) {
+            result = instance._historyLists;
+         } else {
+            historyLists.forEach(function(value) {
+               value.args.unshift(historyId);
+               result[value.name] = self.getHistoryList.apply(self, value.args);
+            });
+         }
 
          return result;
       },
@@ -36,6 +53,7 @@ define('SBIS3.CONTROLS/History/HistoryListUtils', [
          for (var listName in historyLists) {
             if (historyLists.hasOwnProperty(listName)) {
                result |= historyLists[listName].getCount();
+               historyLists[listName].destroy();
             }
          }
 

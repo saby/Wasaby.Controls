@@ -30,7 +30,7 @@ class HttpFileLink {
      * @name File/HttpFileLink#getMeta
      */
     getMeta(): any {
-        return this.meta;
+        return this.meta || {};
     }
 }
 export  = HttpFileLink;

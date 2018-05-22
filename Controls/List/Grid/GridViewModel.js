@@ -506,6 +506,10 @@ define('Controls/List/Grid/GridViewModel', [
             return this._model.getCount();
          },
 
+         setItemActions: function(item, actions) {
+            this._model.setItemActions(item, actions);
+         },
+
          destroy: function() {
             this._model.destroy();
             GridViewModel.superclass.destroy.apply(this, arguments);
