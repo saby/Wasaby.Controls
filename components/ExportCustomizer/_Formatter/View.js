@@ -41,7 +41,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
        * @private
        * @type {string}
        */
-      var ExportFormatterName = 'ExportFormatter.Excel';
+      var EXPORT_FORMATTER_NAME = 'ExportFormatter.Excel';
+
+      /**
+       * Задержка обновления изображения предпросмотра
+       * @private
+       * @type {number}
+       */
+      var PREVIEW_DELAY = 750;
 
 
 
@@ -79,7 +86,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             // Контрол выбора способа форматирования
             _formatterMenu: null,
             // Контрол предпросмотра
-            _preview: null
+            _preview: null,
+            // Размер области предпросмотра
+            _previewSize: null
          },
 
          _modifyOptions: function () {
@@ -96,15 +105,20 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
 
          init: function () {
             View.superclass.init.apply(this, arguments);
-            if (Di.isRegistered(ExportFormatterName)) {
-               this._exportFormatter = Di.resolve(ExportFormatterName);
+            if (Di.isRegistered(EXPORT_FORMATTER_NAME)) {
+               this._exportFormatter = Di.resolve(EXPORT_FORMATTER_NAME);
                this._formatterMenu = this.getChildControlByName('controls-ExportCustomizer-Formatter-View__formatterMenu');
                this._preview = this.getContainer().find('.controls-ExportCustomizer-Formatter-View__preview img');
                this._bindEvents();
                var options = this._options;
                var fieldIds = options.fieldIds;
-               if (fieldIds && fieldIds.length && !options.fileUuid) {
-                  this._callFormatterMethod('create').addCallback(this._onFormatter.bind(this));
+               if (fieldIds && fieldIds.length) {
+                  if (!options.fileUuid) {
+                     this._callFormatterMethod('create').addCallback(this._onFormatter.bind(this));
+                  }
+                  else {
+                     this._updatePreview();
+                  }
                }
             }
             else {
@@ -212,12 +226,36 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * @protected
           */
          _updatePreview: function () {
-            var url = this._exportFormatter.getPreviewUrl(this._options.fileUuid);
-            var img = this._preview[0];
-            var stopper = new Deferred();
-            WaitIndicator.make({target:img.parentNode, delay:1000}, stopper);
-            img.onload = img.onerror = stopper.callback.bind(stopper);
-            img.src = url;
+            this._updatePreviewClear();
+            this._updatePreviewDelay = setTimeout(this._updatePreviewStart.bind(this), PREVIEW_DELAY);
+         },
+         _updatePreviewClear: function () {
+            if (this._updatePreviewDelay) {
+               clearTimeout(this._updatePreviewDelay);
+               this._updatePreviewDelay = null;
+            }
+         },
+         _updatePreviewClearStop: function () {
+            var stopper = this._updatePreviewStopper;
+            if (stopper) {
+               stopper.callback();
+               this._updatePreviewStopper = null;
+            }
+         },
+         _updatePreviewStart: function () {
+            var size = this._previewSize;
+            if (!size) {
+               var previewContainer = this._preview.parent();
+               this._previewSize = size = {width:previewContainer.width(), height:previewContainer.height()};
+            }
+            this._exportFormatter.getPreviewUrl(this._options.fileUuid, size.width, size.height).addCallback(function (url) {
+               this._updatePreviewClearStop();
+               var img = this._preview[0];
+               var stopper = this._updatePreviewStopper = new Deferred();
+               WaitIndicator.make({target:img.parentNode, delay:1000}, stopper);
+               img.onload = img.onerror = this._updatePreviewClearStop.bind(this);
+               img.src = url;
+            }.bind(this));
          },
 
          /**
@@ -262,6 +300,16 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             return {
                fileUuid: options.fileUuid
             };
+         },
+
+         /**
+          * Уничтожить экземпляр
+          *
+          * @public
+          */
+         destroy: function () {
+            this._updatePreviewClear();
+            View.superclass.destroy.apply(this, arguments);
          }
       });
 

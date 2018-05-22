@@ -35,7 +35,15 @@ define('SBIS3.CONTROLS/Filter/Button/Area',
                   if(HistoryListUtils.hasHistory(self._options.historyId)) {
                      self.getContainer().find('.controls__filterButton__area-secondColumn').removeClass('ws-hidden');
                      self.subscribeTo(self.getChildControlByName('filterHistory'), 'onItemActivate', self._applyFromHistory.bind(self));
+                     self._notifyOnSizeChanged();
                   }
+                  self.once('onDestroy', function() {
+                     for (var i  in res) {
+                        if (res.hasOwnProperty(i)) {
+                           res[i].destroy();
+                        }
+                     }
+                  });
                   return res;
                });
             }

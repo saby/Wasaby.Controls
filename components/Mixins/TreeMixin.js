@@ -919,8 +919,8 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             this._toggleIndicator(true);
             this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), 0, this._limit);
             return this._callQuery(this._createTreeFilter(id), this.getSorting(), 0, this._limit).addCallback(forAliveOnly(function (list) {
-               if (this._options.saveReloadPosition && list.getCount()) {
-                  this._hierNodesCursor[id] = list.at(list.getCount() - 1).getId();
+               if (this._isCursorNavigation() && this._options.saveReloadPosition && list.getCount()) {
+                  this._hierNodesCursor[id] = list.at(list.getCount() - 1).get(this._options.navigation.config.field);
                }
                this._options._folderHasMore[id] = list.getMetaData().more;
                this._options._folderOffsets[id] = 0;
@@ -960,6 +960,16 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             breadCrumbsInst.redraw();
          });
       },
+      _setHierarchyViewMode: function(value) {
+         if (this._options.hierarchyViewMode !== value) {
+            this._options.hierarchyViewMode = value;
+            if (this._isCursorNavigation() && this._options.saveReloadPosition) {
+               // При переключении режима обнуляем запомненные позиции курсора
+               this._hierPages = {};
+               this._hierNodesCursor = {};
+            }
+         }
+      },
       /**
        * Получить список записей для отрисовки
        * @private
@@ -980,7 +990,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             this.setInfiniteScroll(this._options.infiniteScroll, true);
             this.setHighlightText('', false);
             this.setFilter(filter, true);
-            this._options.hierarchyViewMode = false;
+            this._setHierarchyViewMode(false);
             if (this._options.task1173671799 && !this._options.allowEnterToFolder) {
                crumbPath.forEach(function(id) {
                   self._options.openedPath[id] = true;
@@ -1142,13 +1152,14 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             var
                position = [],
                nodeId = filter[this._options.parentProperty];
-            if (nodeId !== this.getCurrentRoot()) {
+            if (nodeId !== this.getCurrentRoot() && !(typeof nodeId === 'undefined' && this.getCurrentRoot() === null) &&
+               !(nodeId === null && typeof this.getCurrentRoot() === 'undefined')) {
                if (typeof this._hierNodesCursor[nodeId] !== 'undefined') {
                   position.push(this._hierNodesCursor[nodeId]);
                } else {
                   position.push(null);
                }
-               return CursorListNavigationUtils.getNavigationParams([this._options.idProperty], position, 'after');
+               return CursorListNavigationUtils.getNavigationParams([this._options.navigation.config.field], position, 'after');
             } else {
                return parentFn.call(this, filter, direction);
             }
@@ -1165,10 +1176,16 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             }
          },
          _getQueryForCall: function(parentFn, filter, sorting, offset, limit, direction) {
+            var
+               curRoot;
             // Устанавливаем позицию в listCursorNavigation при загрузке корня
             if (this._isCursorNavigation() && this._options.saveReloadPosition && filter[this._options.parentProperty] === this.getCurrentRoot()) {
-               if (typeof this._hierPages[this.getCurrentRoot()] !== 'undefined') {
-                  this.getListNavigation().setPosition(this._hierPages[this.getCurrentRoot()]);
+               curRoot = this.getCurrentRoot();
+               if (typeof curRoot === 'undefined') {
+                  curRoot = null;
+               }
+               if (typeof this._hierPages[curRoot] !== 'undefined') {
+                  this.getListNavigation().setPosition(this._hierPages[curRoot]);
                }
             }
             return parentFn.call(this, filter, sorting, offset, limit, direction);
@@ -1380,8 +1397,8 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), (id ? this._options._folderOffsets[id] : this._options._folderOffsets['null']) + this._limit, this._limit);
          }
          this._loader = this._callQuery(this._createTreeFilter(id), this.getSorting(), (id ? this._options._folderOffsets[id] : this._options._folderOffsets['null']) + this._limit, this._limit).addCallback(forAliveOnly(function (dataSet) {
-            if (this._options.saveReloadPosition) {
-               this._hierNodesCursor[id] = dataSet.at(dataSet.getCount() - 1).getId();
+            if (this._isCursorNavigation() && this._options.saveReloadPosition) {
+               this._hierNodesCursor[id] = dataSet.at(dataSet.getCount() - 1).get(this._options.navigation.config.field);
             }
             //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
             //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
@@ -1439,7 +1456,6 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
 
       before: {
          _modifyOptions: function(cfg) {
-            cfg.saveReloadPosition = true;
             if (cfg._curRoot !== null && cfg.currentRoot === null) {
                cfg.currentRoot = cfg._curRoot;
             }
@@ -1656,12 +1672,15 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
          this._notify('onBeforeSetRoot', key);
 
          // сохраняем текущую страницу при проваливании в папку
-         if (this._options.saveReloadPosition) {
-            // Сохраняем ключ узла, в который провалились
-            if (typeof this.getCurrentRoot() === 'undefined') {
-               this._hierPages[null] = this.getSelectedKey();
-            } else {
-               this._hierPages[this.getCurrentRoot()] = this.getSelectedKey();
+         if (this._isCursorNavigation() && this._options.saveReloadPosition) {
+            this.getListNavigation().setPosition(null);
+            if (this.getSelectedItem()) {
+               // Сохраняем ключ узла, в который провалились
+               if (typeof this.getCurrentRoot() === 'undefined') {
+                  this._hierPages[null] = this.getSelectedItem().get(this._options.navigation.config.field);
+               } else {
+                  this._hierPages[this.getCurrentRoot()] = this.getSelectedItem().get(this._options.navigation.config.field);
+               }
             }
          }
 

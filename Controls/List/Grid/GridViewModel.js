@@ -119,9 +119,16 @@ define('Controls/List/Grid/GridViewModel', [
          },
 
          constructor: function(cfg) {
+            var
+               self = this;
             this._options = cfg;
             GridViewModel.superclass.constructor.apply(this, arguments);
             this._model = this._createModel(cfg);
+            this._model.subscribe('onListChange', function() {
+               self._markedItem = self.getItemById(self._options.markedKey, self._options.idProperty);
+               self._nextVersion();
+               self._notify('onListChange');
+            });
             this._prepareHeaderColumns(this._options.header, this._options.multiselect);
             this._prepareResultsColumns(this._options.columns, this._options.multiselect);
             this._prepareColgroupColumns(this._options.columns, this._options.multiselect);
@@ -479,6 +486,10 @@ define('Controls/List/Grid/GridViewModel', [
 
          getCount: function() {
             return this._model.getCount();
+         },
+
+         setItemActions: function(item, actions) {
+            this._model.setItemActions(item, actions);
          },
 
          destroy: function() {

@@ -5,7 +5,6 @@ define('SBIS3.CONTROLS/ScrollContainer', [
       'Core/helpers/Hcontrol/isElementVisible',
       'Core/detection',
       'Core/compatibility',
-      'Lib/FloatAreaManager/FloatAreaManager',
       'Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager',
       'Core/constants',
       'Core/EventBus',
@@ -19,7 +18,6 @@ define('SBIS3.CONTROLS/ScrollContainer', [
              isElementVisible,
              cDetection,
              compatibility,
-             FloatAreaManager,
              StickyHeaderManager,
              constants,
              EventBus,
@@ -262,10 +260,6 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                this._hideBrowserScrollbar = this._hideBrowserScrollbar.bind(this);
                ScrollWidthController.add(this._hideBrowserScrollbar);
 
-               // task: 1173330288
-               // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
-               FloatAreaManager._scrollableContainers[this.getId()] = this.getContainer().find('.controls-ScrollContainer__content');
-
                this._initPaging();
                this._resizeInner();
          },
@@ -317,9 +311,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                this.subscribeTo(this._scrollbar, 'onScrollbarEndDrag', this._setScrollbarDragging.bind(this, false));
                this._resizeInner();
             }
-            if (!(this._getChildContentHeight() < 35) || !cDetection.isIE) {
-               this._toggleGradient();
-            }
+            this._toggleGradient();
          },
 
          /**
@@ -379,16 +371,14 @@ define('SBIS3.CONTROLS/ScrollContainer', [
 
          _onScroll: function(event) {
             var scrollTop = this._getScrollTop();
-
+            
             if (this._scrollbar){
                this._scrollbar.setPosition(scrollTop);
             }
             if (this._paging) {
                this._calcPagingSelectedKey(scrollTop);
             }
-            if (!(this._getChildContentHeight() < 35) || !cDetection.isIE) {
-               this._toggleGradient();
-            }
+            this._toggleGradient();
          },
 
          _onMouseenter: function() {
@@ -491,9 +481,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                 */
                EventBusChannel.subscribe('onRequestTakeScrollbar', this._requestTakeScrollbarHandler);
                EventBusChannel.unsubscribe('onReturnTakeScrollbar', this._returnTakeScrollbarHandler);
-               if (!(this._getChildContentHeight() < 35)) {
-                  this._showScrollbar();
-               }
+               this._showScrollbar();
             }
          },
 
@@ -572,21 +560,19 @@ define('SBIS3.CONTROLS/ScrollContainer', [
             }
             //ресайз может позваться до инита контейнера
             if (this._content) {
-               if (!(this._getChildContentHeight() < 35) || !cDetection.isIE) {
-                  this._toggleGradient();
-               }
+               this._toggleGradient();
                /**
                 * В firefox при высоте дочерних элементав < высоты скролла(34px) и резиновой высоте контейнера через max-height, нативный скролл не пропадает.
                 * В такой ситуации content имеет высоту скролла, а должен быть равен высоте дочерних элементав.
                 * Поэтому мы вешаем класс, который убирает нативный скролл, если произойдет такая ситуация.
                 */
                if (cDetection.firefox) {
-                  this._toggleOverflowHidden(this._getScrollHeight() ===  this._container.height() && this._getScrollHeight() < 35);
+                  this._toggleOverflowHidden(this._getScrollHeight() ===  Math.floor(this._container.height()) && this._getScrollHeight() < 35);
                }
                if (cDetection.isIE) {
                   // Баг в ie. При overflow: scroll, если контент не нуждается в скроллировании, то браузер добавляет
                   // 1px для скроллирования.
-                  this._toggleOverflowHidden(((this._getScrollHeight() - Math.floor(this._container.height())) <= 1) || (this._getChildContentHeight() < 35));
+                  this._toggleOverflowHidden(((this._getScrollHeight() - Math.floor(this._container.height())) <= 1));
                }
                if (!this._options.takeScrollbarHidden) {
                   this._subscribeTakeScrollbar();
@@ -667,9 +653,6 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                .unsubscribe('onRequestTakeScrollbar',  this._requestTakeScrollbarHandler);
 
             ScrollContainer.superclass.destroy.call(this);
-            // task: 1173330288
-            // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
-            delete FloatAreaManager._scrollableContainers[ this.getId() ];
          },
          //region retail_offlain
          _bindOfflainEvents: function() {

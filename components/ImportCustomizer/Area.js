@@ -12,7 +12,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
       'Core/Deferred',
       //'Core/IoC',
       'SBIS3.CONTROLS/CompoundControl',
-      'SBIS3.CONTROLS/ImportCustomizer/RemoteCall',
+      'SBIS3.CONTROLS/Utils/ImportExport/RemoteCall',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
       'WS.Data/Collection/RecordSet',
       'WS.Data/Type/descriptor',
@@ -28,7 +28,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
       'use strict';
 
       /**
-       * @typedef {object} ImportRemoteCall Тип, содержащий информацию для вызова удалённого сервиса для получения данных ввода или отправки данных вывода. Соответствует вспомогательному классу {@link SBIS3.CONTROLS/ImportCustomizer/RemoteCall}
+       * @typedef {object} ImportRemoteCall Тип, содержащий информацию для вызова удалённого сервиса для получения данных ввода или отправки данных вывода. Соответствует вспомогательному классу {@link SBIS3.CONTROLS/Utils/ImportExport/RemoteCall}
        * @property {string} endpoint Сервис, метод которого будет вызван
        * @property {string} method Имя вызываемого метода
        * @property {string} [idProperty] Имя свойства, в котором находится идентификатор (опционально, если вызову это не потребуется)
@@ -1311,7 +1311,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
        *
        * @private
        * @param {*} fields Аргумент
-       * @param {boolean} normalize В случае успеха возвращать экземпляр SBIS3.CONTROLS/ImportCustomizer/RemoteCall
+       * @param {boolean} normalize В случае успеха возвращать экземпляр SBIS3.CONTROLS/Utils/ImportExport/RemoteCall
        * @return {Error|*}
        */
       var _validateImportRemoteCall = function (call, normalize) {

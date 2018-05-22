@@ -6,7 +6,7 @@
       items="{{_items}}"
       idProperty="id"
       displayProperty="title"
-      selectedKeys="{{selectedId ? [selectedId] : []}}"
+      selectedKeys="{{_selectedId ? [_selectedId] : []}}"
       multiselect="{{false}}"
       dictionaries="{{ [{
          'template': 'SBIS3.CONTROLS/ListView',
@@ -20,12 +20,15 @@
          'componentOptions': {
             'className': 'controls-ExportCustomizer-Presets-View__list controls-ListView__orangeMarker',
             'items': _items,
-            'selectedKey': selectedId,
+            'selectedKey': _selectedId,
             'idProperty': 'id',
             'displayProperty': 'title',
             'itemContentTpl': 'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/item',
+            'itemsActions': [],
+            'editMode': 'toolbar|single',
+            'editingTemplate': 'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/edit',
             'itemsActionsInItemContainer': true,
-            '___footerTpl': 'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/footer'
+            '_footerTitle': addNewTitle
          }
       }] }}"
       >

@@ -174,7 +174,7 @@ define('SBIS3.CONTROLS/Spoiler', [
          var
             titleContainer = this._getTitleContainer()[0];
          Spoiler.superclass._notifyOnActivated.apply(this, arguments);
-         if (originalEvent.target === titleContainer || contains(titleContainer, originalEvent.target)) {
+         if (contains(titleContainer, originalEvent.target)) {
             this.toggleExpanded();
          }
       }

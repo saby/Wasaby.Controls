@@ -11,6 +11,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
       'Core/core-merge',
       'Core/Deferred',
       'SBIS3.CONTROLS/CompoundControl',
+      'SBIS3.CONTROLS/Utils/ImportExport/RemoteCall',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
       'WS.Data/Collection/RecordSet',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/Area',
@@ -19,7 +20,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
       'SBIS3.CONTROLS/ScrollContainer'
    ],
 
-   function (CommandDispatcher, cMerge, Deferred, CompoundControl, InformationPopupManager, RecordSet, tmpl) {
+   function (CommandDispatcher, cMerge, Deferred, CompoundControl, RemoteCall, InformationPopupManager, RecordSet, tmpl) {
       'use strict';
 
       /**
@@ -41,7 +42,17 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
        */
 
       /**
-       * @typedef {object} ExportPreset Тип, содержащий информацию о преустановленных настройках экспорта
+       * @typedef {object} ExportRemoteCall Тип, содержащий информацию для вызова удалённого сервиса для отправки данных вывода. Соответствует вспомогательному классу {@link SBIS3.CONTROLS/Utils/ImportExport/RemoteCall}
+       * @property {string} endpoint Сервис, метод которого будет вызван
+       * @property {string} method Имя вызываемого метода
+       * @property {string} [idProperty] Имя свойства, в котором находится идентификатор (опционально, если вызову это не потребуется)
+       * @property {object} [args] Аргументы вызываемого метода (опционально)
+       * @property {function(object):object} [argsFilter] Фильтр аргументов (опционально)
+       * @property {function(object):object} [resultFilter] Фильтр результатов (опционально)
+       */
+
+      /**
+       * @typedef {object} ExportPreset Тип, содержащий информацию о предустановленных настройках экспорта
        * @property {string|number} id Идентификатор пресета
        * @property {string} title Отображаемое название пресета
        * @property {Array<string>} fieldIds Список привязки колонок в экспортируемом файле к полям данных
@@ -49,15 +60,19 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
        */
 
       /**
+       * @typedef {object} ExportValidator Тип, описывающий валидаторы результатов редактирования
+       * @property {function(object, function):(boolean|string)} validator Функция проверки. Принимает два аргумента. Первый - объект с проверяемыми данными. Второй - геттер опции по её имени. Геттер позволяет получить доступ к опциям, которые есть в настройщике экспорта в момент валидации. Должна возвратить либо логическое значение, показывающее пройдена ли проверка, либо строку с сообщением об ошибке
+       * @property {Array<*>} [params] Дополнительные аргументы функции проверки, будут добавлены после основных (опционально)
+       * @property {string} [errorMessage] Сообщение об ошибке по умолчанию (опционально)
+       * @property {boolean} [noFailOnError] Указывает на то, что если проверка не пройдена, это не является фатальным. В таком случае пользователю будет показан диалог с просьбой о подтверждении (опционально)
+       */
+
+      /**
        * @typedef {object} ExportResults Тип, содержащий информацию о результате редактирования
-       * @property {string} MethodName Имя списочного метода, результат раболты которого будет сохранён в эксель-файл
-       * @property {WS.Data/Entity/Record} [Filter] Параметры фильтрации для списочного метода (опционально)
-       * @property {WS.Data/Entity/Record} [Pagination] Навигация для списочного метода (опционально)
-       * @property {string} [HierarchyField] Название поля иерархии (опционально)
-       * @property {string} FileName Название результирующего эксель-файла
-       * @property {Array<string>} Fields Список полей для колонок в экспортируемом файле
-       * @property {Array<string>} Titles Список отображаемых названий колонок в экспортируемом файле
-       * @property {string} TemplateId Uuid шаблона форматирования эксель-файла
+       * @property {Array<string>} fieldIds Список полей для колонок в экспортируемом файле
+       * @property {Array<string>} columnTitles Список отображаемых названий колонок в экспортируемом файле
+       * @property {string} fileUuid Uuid шаблона форматирования эксель-файла
+       * @property {ExportServiceParams} serviceParams Прочие параметры, необходимых для работы БЛ
        */
 
       var _typeIfDefined = function (type, value) {
@@ -76,6 +91,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          waitingMode: _typeIfDefined.bind(null, 'boolean'),
          dialogTitle: _typeIfDefined.bind(null, 'string'),
          dialogButtonTitle: _typeIfDefined.bind(null, 'string'),
+         presetAddNewTitle: _typeIfDefined.bind(null, 'string'),
+         presetNewPresetTitle: _typeIfDefined.bind(null, 'string'),
          columnBinderTitle: _typeIfDefined.bind(null, 'string'),
          columnBinderColumnsTitle: _typeIfDefined.bind(null, 'string'),
          columnBinderFieldsTitle: _typeIfDefined.bind(null, 'string'),
@@ -99,6 +116,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             }
             return value;
          },
+         usePresets: _typeIfDefined.bind(null, 'boolean'),
          staticPresets: function (value) {
             // Если значение есть
             if (value) {
@@ -110,9 +128,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                if (!value.every(function (v) { return (
                      typeof v === 'object' &&
                      (v.id && (typeof v.id === 'string' || typeof v.id === 'number') &&
-                        (v.title && typeof v.title === 'string') &&
-                        (v.fieldIds && Array.isArray(v.fieldIds) && v.fieldIds.every(function (v2) { return !!v2 && typeof v2 === 'string'; }))) &&
-                        (v.fileUuid && typeof v.fileUuid === 'string')
+                     (v.title && typeof v.title === 'string') &&
+                     (v.fieldIds && Array.isArray(v.fieldIds) && v.fieldIds.every(function (v2) { return !!v2 && typeof v2 === 'string'; }))) &&
+                     (v.fileUuid && typeof v.fileUuid === 'string')
                   ); })) {
                   return new Error('Array items must be an ExportPreset');
                }
@@ -166,7 +184,44 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             return value;
          },
          fieldGroupTitles: _typeIfDefined.bind(null, 'object'),
-         fileUuid: _typeIfDefined.bind(null, 'string')
+         fileUuid: _typeIfDefined.bind(null, 'string'),
+         validators: function (value) {
+            // Если значение есть, то оно должна быть массивом
+            if (value && !Array.isArray(value)) {
+               return new Error('Value must be an Array');
+            }
+            if (value) {
+               // И каждый элемент массива должен быть {@link ExportValidator}
+               if (!value.every(function (v) { return (
+                     typeof v === 'object' &&
+                     (v.validator && typeof v.validator === 'function') &&
+                     (!v.params || Array.isArray(params)) &&
+                     (!v.errorMessage || typeof v.errorMessage === 'string') &&
+                     (!v.noFailOnError || typeof v.noFailOnError === 'boolean')
+                  ); })) {
+                  return new Error('Value items must be an ExportValidator');
+               }
+            }
+            return value;
+         },
+         outputCall: function (value) {
+            // Если значение есть
+            if (value) {
+               // оно должно быть объектом
+               if (typeof value !== 'object') {
+                  return new Error('Value must be an object');
+               }
+               // и должно быть {@link ExportRemoteCall} - если получится создать экземпляр RemoteCall - значит это {@link ExportRemoteCall}
+               var instance;
+               try {
+                  instance = new RemoteCall(value);
+               }
+               catch (ex) {
+                  return new Error('Value must be an ExportRemoteCall');
+               }
+            }
+            return value;
+         }
       };
 
       /**
@@ -176,6 +231,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
        * @type {object}
        */
       var _DEFAULT_OPTIONS = {
+         validators: [{
+            validator: function (data, optionGetter) { return !!(data.fieldIds && data.fieldIds.length); },
+            errorMessage: rk('Не выбрано ни одной колонки для экспорта', 'НастройщикЭкспорта')
+         }]
       };
 
       /**
@@ -188,19 +247,24 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          'dialogTitle',
          'dialogButtonTitle',
          'columnBinderTitle',
+         'presetAddNewTitle',
+         'presetNewPresetTitle',
          'columnBinderColumnsTitle',
          'columnBinderFieldsTitle',
          'columnBinderEmptyTitle',
          'formatterTitle',
          'formatterMenuTitle',
          'serviceParams',
+         'usePresets',
          'staticPresets',
          'presetNamespace',
          'selectedPresetId',
          'allFields',
          'fieldIds',
          'fieldGroupTitles',
-         'fileUuid'
+         'fileUuid',
+         'validators',
+         'outputCall'
       ];
 
       var Area = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ExportCustomizer/Area.prototype*/ {
@@ -221,6 +285,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                 * @cfg {string} Подпись кнопки диалога применения результата редактирования (опционально)
                 */
                dialogButtonTitle: null,//Определено в шаблоне
+               /**
+                * @cfg {string} Надпись на кнопке добавления нового пресета в под-компоненте "presets" (опционально)
+                */
+               presetAddNewTitle: null,
+               /**
+                * @cfg {string} Название для нового пресета в под-компоненте "presets" (опционально)
+                */
+               presetNewPresetTitle: null,
                /**
                 * @cfg {string} Заголовок под-компонента "columnBinder" (опционально)
                 */
@@ -250,19 +322,23 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                 */
                serviceParams: null,
                /**
-                * @cfg {Array<ExportPreset>} Список неизменяемых пресетов (предустановленных настроек экспорта)
+                * @cfg {boolean} Использовать пресеты (предустановленных настроек экспорта)
+                */
+               usePresets: null,
+               /**
+                * @cfg {Array<ExportPreset>} Список неизменяемых пресетов (предустановленных настроек экспорта) (опционально)
                 */
                staticPresets: null,
                /**
-                * @cfg {string} Пространство имён для сохранения пользовательских пресетов
+                * @cfg {string} Пространство имён для сохранения пользовательских пресетов (опционально)
                 */
                presetNamespace: null,
                /**
-                * @cfg {string|number} Идентификатор пресета, который будет выбран в списке пресетов
+                * @cfg {string|number} Идентификатор пресета, который будет выбран в списке пресетов (опционально)
                 */
                selectedPresetId: null,
                /**
-                * @cfg {Array<BrowserColumnInfo>|WS.Data/Collection/RecordSet<BrowserColumnInfo>} Список объектов с информацией о всех колонках в формате, используемом в браузере
+                * @cfg {Array<BrowserColumnInfo>|WS.Data/Collection/RecordSet<BrowserColumnInfo>} Список объектов с информацией о всех колонках в формате, используемом в браузере (опционально)
                 */
                allFields: null,
                /**
@@ -276,8 +352,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                /**
                 * @cfg {string} Uuid шаблона форматирования эксель-файла
                 */
-               fileUuid: null
-               // TODO: добавить валидаторы
+               fileUuid: null,
+               /**
+                * @cfg {Array<ExportValidator>} Список валидаторов результатов редактирования (опционально)
+                */
+               validators: null,
+               /**
+                * @cfg {ExportRemoteCall} Информация для вызова метода удалённого сервиса для отправки данных вывода (опционально)
+                */
+               outputCall: null
             },
             // Список имён вложенных под-компонентов
             _SUBVIEW_NAMES: {
@@ -373,37 +456,60 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * @param {object} options Опции компонента
           */
          _reshapeOptions: function (options) {
-            var staticPresets = options.staticPresets;
-            var hasStaticPresets = !!(staticPresets && staticPresets.length);
-            var currentPreset;
-            if (hasStaticPresets) {
-               var selectedPresetId = options.selectedPresetId;
-               if (selectedPresetId) {
-                  options.staticPresets.some(function (v) { if (v.id === selectedPresetId) { currentPreset = v; } });
+            var presetsOptions;
+            if (options.usePresets) {
+               var staticPresets = options.staticPresets;
+               var hasStaticPresets = !!(staticPresets && staticPresets.length);
+               var currentPreset;
+               if (hasStaticPresets) {
+                  var selectedPresetId = options.selectedPresetId;
+                  if (selectedPresetId) {
+                     options.staticPresets.some(function (v) { if (v.id === selectedPresetId) { currentPreset = v; } });
+                  }
                }
-            }
-            var fieldIds = currentPreset ? currentPreset.fieldIds.slice() : (options.fieldIds ? options.fieldIds.slice() : null);
-            var fileUuid = currentPreset ? currentPreset.fileUuid : options.fileUuid;
-            options._scopes = {
-               presets: hasStaticPresets /*^^^|| options.presetNamespace*/ ? {
-                  statics: options.staticPresets,
+               if (currentPreset) {
+                  options.fieldIds = currentPreset.fieldIds.slice();
+                  options.fileUuid = currentPreset.fileUuid;
+               }
+               presetsOptions = {
+                  addNewTitle: options.presetAddNewTitle,
+                  newPresetTitle: options.presetNewPresetTitle,
+                  statics: hasStaticPresets ? staticPresets.slice() : null,
                   namespace: options.presetNamespace,
                   selectedId: options.selectedPresetId
-               } : null,
+               };
+            }
+            var allFields = options.allFields;
+            var fieldIds = options.fieldIds;
+            var fileUuid = options.fileUuid;
+            if (fieldIds && fieldIds.length) {
+               // Иногда, fieldIds содержат идентификаторы, отсутствующие в allFields, отбросить их
+               var isRecordSet = allFields instanceof RecordSet;
+               var len = fieldIds.length;
+               fieldIds = fieldIds.filter(function (fieldId) {
+                  return isRecordSet ? !!allFields.getRecordById(fieldId) : allFields.some(function (field) { return field.id === fieldId; });
+               });
+               if (len !== fieldIds.length) {
+                  options.fieldIds = fieldIds;
+               }
+            }
+            var serviceParams = options.serviceParams;
+            options._scopes = {
+               presets: presetsOptions,
                columnBinder: {
                   title: options.columnBinderTitle || undefined,
                   columnsTitle: options.columnBinderColumnsTitle || undefined,
                   fieldsTitle: options.columnBinderFieldsTitle || undefined,
-                  allFields: options.allFields,
-                  fieldIds: fieldIds
+                  allFields: allFields,
+                  fieldIds: fieldIds && fieldIds.length ? fieldIds.slice() : undefined
                },
                formatter: {
                   title: options.formatterTitle,
                   menuTitle: options.formatterMenuTitle,
-                  allFields: options.allFields,
-                  fieldIds: fieldIds,
-                  fileUuid: fileUuid,
-                  serviceParams: options.serviceParams
+                  allFields: allFields,
+                  fieldIds: fieldIds && fieldIds.length ? fieldIds.slice() : undefined,
+                  fileUuid: fileUuid || undefined,
+                  serviceParams: serviceParams ? cMerge({}, serviceParams) : undefined
                }
             };
          },
@@ -499,6 +605,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             var fieldIds = values.fieldIds;
             if (fieldIds) {
                this._options.fieldIds = fieldIds.slice();
+               var presetsView = views.presets;
+               if (presetsView) {
+                  presetsView.setValues({fieldIds:fieldIds.slice()});
+               }
                views.formatter.setValues({fieldIds:fieldIds.slice()});
             }
          },
@@ -510,10 +620,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           */
          _onChangeFormatter: function () {
             // Изменилось форматирование эксель-файла
-            var values = this._views.formatter.getValues();
+            var views = this._views;
+            var values = views.formatter.getValues();
             var fileUuid = values.fileUuid;
             if (fileUuid) {
                this._options.fileUuid = fileUuid;
+               var presetsView = views.presets;
+               if (presetsView) {
+                  presetsView.setValues({fileUuid:fileUuid});
+               }
             }
          },
 
@@ -565,7 +680,25 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             this.getValues(true).addCallback(function (data) {
                // И если всё нормально - завершить диалог
                if (data) {
-                  this._notify('onComplete', /*ExportResults:*/data);
+                  var presetsView = this._views.presets;
+                  if (presetsView) {
+                     presetsView.save();
+                  }
+                  var outputCall = this._options.outputCall;
+                  if (outputCall) {
+                     (new RemoteCall(outputCall)).call(data).addCallbacks(
+                        function (result) {
+                           data.result = result;
+                           this._notify('onComplete', /*ExportResults:*/data);
+                        }.bind(this),
+                        function (err) {
+                           this._notify('onFatalError', true, /*err*/rk('При отправке данных поизошла ошибка', 'НастройщикЭкспорта'));
+                        }.bind(this)
+                     );
+                  }
+                  else {
+                     this._notify('onComplete', /*ExportResults:*/data);
+                  }
                }
                /*else {
                   // Иначе пользователь продолжает редактирование
@@ -618,10 +751,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           */
          getValues: function (withValidation) {
             var options = this._options;
-            var data = cMerge({}, options.serviceParams);
-            data.Fields = options.fieldIds;
-            data.Titles = this._selectFields(options.allFields, options.fieldIds, function (v) { return v.title; });
-            data.TemplateId = options.fileUuid;
+            var data = {
+               serviceParams: options.serviceParams,
+               fieldIds: options.fieldIds,
+               columnTitles: this._selectFields(options.allFields, options.fieldIds, function (v) { return v.title; }),
+               fileUuid: options.fileUuid || null//Если значначение пусто, значит стилевого шаблона нет. БЛ в таком случае безальтернативно требует значения null
+            };
             return withValidation
                ?
                   // Прроверить собранные данные

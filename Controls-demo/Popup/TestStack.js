@@ -1,9 +1,12 @@
 define('Controls-demo/Popup/TestStack',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Popup/TestStack'
+      'tmpl!Controls-demo/Popup/TestStack',
+      'SBIS3.CONTROLS/Action/List/OpenEditDialog',
+      'WS.Data/Entity/Record',
+      'require'
    ],
-   function (Control, template) {
+   function (Control, template, OpenEditDialog, Record, require) {
       'use strict';
 
       var TestDialog = Control.extend({
@@ -22,6 +25,18 @@ define('Controls-demo/Popup/TestStack',
                   maxWidth: 600
                });
             }
+         },
+         _openOldPanel: function (event, tplName, mode, isStack) {
+            require([tplName], function () {
+               new OpenEditDialog().execute({
+                  template: tplName,
+                  mode: mode,
+                  item: new Record(),
+                  dialogOptions: {
+                     isStack: isStack
+                  }
+               });
+            });
          }
       });
 

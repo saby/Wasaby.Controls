@@ -60,9 +60,7 @@
                                         <div>
                                             <Controls.List keyProperty="id" name="list" >
                                                 <ws:itemTemplate>
-                                                    <ws:partial template="tmpl!Controls/List/ItemTemplate"
-                                                                itemData="{{itemTemplate.itemData}}"
-                                                    >
+                                                    <ws:partial template="tmpl!Controls/List/ItemTemplate">
                                                         <ws:contentTemplate>
                                                             <div style="padding: 4px; display: flex; justify-content: space-between">
                                                                 <div style="width: 200px">{{itemTemplate.itemData.item.get('firstName')}}</div>

@@ -4,10 +4,11 @@ define('Controls/Popup/Manager',
       'tmpl!Controls/Popup/Manager',
       'Controls/Popup/Manager/ManagerController',
       'Core/helpers/random-helpers',
+      'Core/patchRequireJS',
       'WS.Data/Collection/List'
    ],
 
-   function(Control, template, ManagerController, Random, List) {
+   function(Control, template, ManagerController, Random, patchRequireJS, List) {
       'use strict';
 
       var _private = {
@@ -56,6 +57,14 @@ define('Controls/Popup/Manager',
          popupClose: function(id) {
             _private.fireEventHandler(id, 'onClose');
             ManagerController.remove(id, this.getItemContainer(id));
+            return false;
+         },
+
+         popupAnimated: function(id) {
+            var element = ManagerController.find(id);
+            if (element) {
+               element.strategy.elementAnimated(element, this.getItemContainer(id));
+            }
             return false;
          },
 

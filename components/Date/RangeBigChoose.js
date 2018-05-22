@@ -8,6 +8,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
    "SBIS3.CONTROLS/Mixins/RangeMixin",
    "SBIS3.CONTROLS/Mixins/DateRangeMixin",
    "SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin",
+   'SBIS3.CONTROLS/Utils/ControlsValidators',
    "SBIS3.CONTROLS/Utils/DateUtil",
    'SBIS3.CONTROLS/Utils/DateControls',
    "Core/helpers/event-helpers",
@@ -28,7 +29,23 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
    'css!SBIS3.CONTROLS/Date/RangeBigChoose/DateRangeBigChoose',
    'SBIS3.CONTROLS/ScrollContainer'
 
-], function ( constants, detection, CompoundControl, dotTplFn, headerTpl, yearsPanelTpl, RangeMixin, DateRangeMixin, RangeSelectableViewMixin, DateUtil, DateControlsUtil, eHelpers, isEmpty, rangeBigChooseUtils) {
+], function(
+   constants,
+   detection,
+   CompoundControl,
+   dotTplFn,
+   headerTpl,
+   yearsPanelTpl,
+   RangeMixin,
+   DateRangeMixin,
+   RangeSelectableViewMixin,
+   ControlsValidators,
+   DateUtil,
+   DateControlsUtil,
+   eHelpers,
+   isEmpty,
+   rangeBigChooseUtils
+) {
    'use strict';
 
    var
@@ -320,6 +337,18 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          }
          options.yearStateEnabled = rangeBigChooseUtils.isYearStateEnabled(options);
          options.monthStateEnabled = rangeBigChooseUtils.isMonthStateEnabled(options);
+
+         if (options.minQuantum === 'month') {
+            options.startValueValidators.push({
+               'validator': ControlsValidators.startOfMonth,
+               'option': 'date'
+            });
+            options.endValueValidators.push({
+               'validator': ControlsValidators.endOfMonth,
+               'option': 'date'
+            });
+         }
+
          return options;
       },
 
@@ -458,8 +487,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
 
       _toggleHeaderInputsVisibility: function (isInputVisible) {
          if ((isEmpty(this._options.quantum) ||
-               ('days' in this._options.quantum && Object.keys(this._options.quantum).length === 1)) &&
-               this._options.minQuantum === 'day'
+               ('days' in this._options.quantum && Object.keys(this._options.quantum).length === 1))
             ) {
             this.getChildControlByName('DateRangeHeader').toggle(!isInputVisible);
             this.getContainer().find('.controls-DateRangeBigChoose__header-period-input').toggleClass('ws-hidden', !isInputVisible);
@@ -922,9 +950,6 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
                   this._startDatePickerResetActive();
                   this._datePickerSetActive(this._endDatePicker, DateUtil.getEndOfYear(item));
                }
-            } else {
-               this._datePickerSetActive(this._startDatePicker);
-               // this._datePickerSetActive(this._endDatePicker);
             }
          }
       },

@@ -63,6 +63,10 @@ define('SBIS3.CONTROLS/Filter/HistoryView',
                    self.setItems(history.clone());
                    return history;
                 });
+                
+                this.once('onDestroy', function() {
+                   historyController.destroy();
+                });
              }
           }
        });

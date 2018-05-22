@@ -92,8 +92,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          // 1175061954 https://online.sbis.ru/opendoc.html?guid=296b17cf-d7e9-4ff3-b4d9-e192627b41a1
          TINYMCE_URL_BASE = cConstants.browser.isIE && _getTrueIEVersion() < 11 ? 'SBIS3.CONTROLS/RichEditor/third-party/tinymce46-ie10' : 'SBIS3.CONTROLS/RichEditor/third-party/tinymce',
          EDITOR_MODULES = [
-            'css!' + TINYMCE_URL_BASE + '/skins/lightgray/skin',
-            'css!' + TINYMCE_URL_BASE + '/skins/lightgray/content.inline',
             TINYMCE_URL_BASE + '/tinymce'
          ],
          constants = {
@@ -208,6 +206,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                 */
                singleLine: false,
                editorConfig: {
+                  theme: false,
                   className: null,
                   plugins: 'media,paste,lists,noneditable,codesample',
                   codesample_content_css: false,
@@ -1168,7 +1167,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                case 'alignjustify':
                   isA.align = true;
                   editorCmd = {
-                     'alignleft': 'JustifyNone',
+                     'alignleft': 'JustifyLeft',/*JustifyNone*/
                      'aligncenter': 'JustifyCenter',
                      'alignright': 'JustifyRight',
                      'alignjustify': 'JustifyFull'
@@ -2477,7 +2476,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             var imageUploader = this._imageUploader;
             if (!imageUploader) {
                if (Di.isRegistered(DI_IMAGE_UPLOADER)) {
-                  this._imageUploader = imageUploader = Di.resolve(DI_IMAGE_UPLOADER).getFileLoader();
+                  this._imageUploader = imageUploader = Di.resolve(DI_IMAGE_UPLOADER).getFileLoader(this);
                }
                else {
                   return Deferred.fail('No image uploader');
@@ -2485,7 +2484,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             }
             return imageUploader.startFileLoad(target, canMultiSelect !== undefined ? canMultiSelect : this.canUploadMultiSelect(), imageFolder || this._options.imageFolder)
                .addErrback(function (err) {
-                  this._showImgError();
+                  // Если это не cancel - показать сообщение об ошибке
+                  if (!(err && err.canceled)) {
+                     this._showImgError();
+                  }
                   return err;
                }.bind(this));
          },
@@ -2654,16 +2656,33 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             if (!(0 < width)) {
                throw new Error('Size is not specified');
             }
-            var promise = new Deferred();
-            var url = imgInfo.filePath || imgInfo.url;
+            var
+               promise = new Deferred(),
+               url = imgInfo.filePath || imgInfo.url,
+               locationOrigin = '',
+               previewerRegExp = /\/previewer(?:\/r\/[0-9]+\/[0-9]+)?/i,
+               indexOfPreviewer,
+               newUrl;
             if (!/\/disk\/api\/v[0-9\.]+\//i.test(url)) {
                // Это не файл, хранящийся на СбисДиск, вернуть как есть
                promise.callback({preview:url, original:url});
                return promise;
             }
-            url = url.replace(/^\/previewer(?:\/r\/[0-9]+\/[0-9]+)?/i, '');
+            indexOfPreviewer = url.search(previewerRegExp);
+            if (indexOfPreviewer > 0) {
+               locationOrigin = url.slice(0, indexOfPreviewer);
+               url = url.replace(locationOrigin, '');
+            }
+            url = url.replace(previewerRegExp, '');
             promise = promise.addCallback(function (size) {
-               return {preview:size ? '/previewer' + '/r/' + size + '/' + size + url : null, original:url};
+               newUrl = '';
+               if (size) {
+                  if (locationOrigin) {
+                     newUrl = locationOrigin;
+                  }
+                  newUrl += '/previewer' + '/r/' + size + '/' + size + url;
+               }
+               return {preview: newUrl, original:url};
             });
             if (0 < width) {
                if (!isPixels && width > 100) {
@@ -2908,6 +2927,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             };
             text = this._removeEmptyTags(text);
             text = text.replace(/&nbsp;/gi, String.fromCharCode(160));
+
+            //tinyMCE на ipad`e в методе getContent возвращает блоки вида <p class=\"\">text</p>
+            text = text.replace(/ class=\"\"/gi,'');
             for (var name in regs) {
                for (var prev = -1, cur = text.length; cur !== prev; prev = cur, cur = text.length) {
                   text = text.replace(regs[name], substitutes[name] || '');
@@ -3123,20 +3145,21 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      // В MSIE при добавлении новой строки clientHeight и scrollHeight начинают расходиться - нужно их уравнять
                      // 1175015989 https://online.sbis.ru/opendoc.html?guid=d013f54f-683c-465c-b437-6adc64dc294a
                      var diff = contentHeight - content.clientHeight;
-                     $content.css('height', 0 < diff ? content.offsetHeight + diff : content.offsetHeight);
                      if (isChanged) {
                         var parent = content.parentNode;
-                        if (parent.clientHeight < contentHeight) {
-                           // Также, если прокрутка уже задействована и текущий рэнж находится в самом низу области редактирования. Определяем это по
-                           // расстоянию от нижнего края рэнжа до нижнего края области минус увеличение высоты (diff) и минус нижний отступ области
-                           // редактирования - оно должно быть "небольшим", то есть меньше некоторого порогового значения (2)
-                           var rect0 = content.getBoundingClientRect();
-                           var rect1 = this._tinyEditor.selection.getBoundingClientRect();
-                           if (rect0.bottom - rect1.bottom - diff - parseInt($content.css('padding-bottom')) < 2) {
-                              var scrollTop = parent.scrollHeight - parent.offsetHeight;
-                              if (parent.scrollTop < scrollTop) {
-                                 // И если при всём этом область редактирования недопрокручена до самого конца - подскролить её до конца
-                                 parent.scrollTop = scrollTop;
+                        if (this._tinyEditor.selection.getBoundingClientRect()) {
+                           if (parent.clientHeight < contentHeight) {
+                              // Также, если прокрутка уже задействована и текущий рэнж находится в самом низу области редактирования. Определяем это по
+                              // расстоянию от нижнего края рэнжа до нижнего края области минус увеличение высоты (diff) и минус нижний отступ области
+                              // редактирования - оно должно быть "небольшим", то есть меньше некоторого порогового значения (2)
+                              var rect0 = content.getBoundingClientRect();
+                              var rect1 = this._tinyEditor.selection.getBoundingClientRect();
+                              if (rect0.bottom - rect1.bottom - diff - parseInt($content.css('padding-bottom')) < 2) {
+                                 var scrollTop = parent.scrollHeight - parent.offsetHeight;
+                                 if (parent.scrollTop < scrollTop) {
+                                    // И если при всём этом область редактирования недопрокручена до самого конца - подскролить её до конца
+                                    parent.scrollTop = scrollTop;
+                                 }
                               }
                            }
                         }
