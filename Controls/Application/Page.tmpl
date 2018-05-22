@@ -69,8 +69,19 @@
                         <ws:else data="{{!_options.builderCompatible}}">
                            <div>
                               <ws:partial template="tmpl!Controls/Application/startApplicationScript" compat="{{compat}}"
-                                          jsLinks="{{ jsLinks }}"
+                                          jsLinks="{{jsLinks}}"
                                           _options="{{_options}}"/>
+
+                              <span id="cssBundles" styles="display:none;">
+                                 <ws:for data="link in cssBundles">
+                                    {{ 'define("' + link + '", "");' }}
+                                 </ws:for>
+                              </span>
+
+                              <script>
+                                 var cssBundles = document.getElementById('cssBundles');
+                                 eval(cssBundles.innerText);
+                              </script>
 
                               <ws:if data="{{ _options.scripts }}">
                                  <ws:for data="i in _options.scripts">
