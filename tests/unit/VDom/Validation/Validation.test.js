@@ -41,7 +41,7 @@ define([
       }
 
       it('SimpleCase - Validation1 - single validator', function (done) {
-         global.requirejs(['Core/Control', 'js!ControlsSandbox/Validation/Validation1/Validation1'], function (CoreControl, Component) {
+         global.requirejs(['Core/Control', 'ControlsSandbox/Validation/Validation1/Validation1'], function (CoreControl, Component) {
             var element = $('#component123');
             testControl = CoreControl.createControl(Component, {element: element}, element);
 
@@ -82,7 +82,7 @@ define([
       });
 
       it('SimpleCase - Form1 - single validator', function (done) {
-         global.requirejs(['Core/Control', 'js!ControlsSandbox/Validation/Form1/Form1'], function (CoreControl, Component) {
+         global.requirejs(['Core/Control', 'ControlsSandbox/Validation/Form1/Form1'], function (CoreControl, Component) {
             var element = $('#component123');
             testControl = CoreControl.createControl(Component, {element: element}, element);
 
@@ -106,7 +106,7 @@ define([
       });
 
       it('SimpleCase - Form2 - multiple validators', function (done) {
-         global.requirejs(['Core/Control', 'js!ControlsSandbox/Validation/Form2/Form2'], function (CoreControl, Component) {
+         global.requirejs(['Core/Control', 'ControlsSandbox/Validation/Form2/Form2'], function (CoreControl, Component) {
             var element = $('#component123');
             testControl = CoreControl.createControl(Component, {element: element}, element);
 
