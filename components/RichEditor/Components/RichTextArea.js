@@ -2040,6 +2040,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                //Замена переносов строк на <br>
                html = html.replace(/([^>])\n(?!<)/gi, '$1<br />');
+
+               // В ie после вставки текста из Word, после текста появляется лишняя строка
+               // https://online.sbis.ru/opendoc.html?guid=8677c08d-c2c2-4320-8ed1-9c097a4c4895
+               if(cConstants.browser.isIE) {
+                  html = html.replace(/(<br>)*<\/p>$/, "<\/p>");
+                  html = html.replace(/(<br>)*$/, "");
+               }
+
                // Замена отступов после переноса строки и в первой строке
                // пробелы заменяются с чередованием '&nbsp;' + ' '
                html = this._replaceWhitespaces(html);
