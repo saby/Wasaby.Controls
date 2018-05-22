@@ -6,6 +6,8 @@ define('Controls/Application/_JsLinks',
       'Controls/Application/HeadDataContext'
    ],
 
+   // Component for adding jsLinks into html. Waits for Application's content drawn,
+
    function(Base, Deferred, template, HeadDataContext) {
       'use strict';
 

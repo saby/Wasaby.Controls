@@ -8,6 +8,8 @@ define('Controls/Application/_Head',
    function(Base, Deferred, template, HeadDataContext) {
       'use strict';
 
+      //Component for <head> html-node
+
       var Page = Base.extend({
          _template: template,
          _beforeMount: function(options, context, receivedState) {

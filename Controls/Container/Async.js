@@ -2,13 +2,30 @@ define('Controls/Container/Async',
    [
       'Core/Control',
       'Core/Deferred',
+      'Controls/Application/HeadDataContext',
       'tmpl!Controls/Container/Async/Async'
    ],
 
-   function(Base, Deferred, template) {
+   function(Base, Deferred, HeadDataContext, template) {
       'use strict';
 
-      var Page = Base.extend({
+
+      /**
+       * Container for asynchronously loading components.
+       *
+       * @class Controls/Container/Async
+       * @extends Core/Control
+       * @control
+       * @public
+       * @category Container
+       *
+       * @name Controls/Container/Async#content
+       * @cfg {Content} Container contents.
+       *
+       * @name Controls/Container/Async#templateName
+       * @cfg {String} Name of asynchronously loading component
+       */
+      var Async = Base.extend({
          _template: template,
          _beforeMount: function(options, context) {
             if (typeof window !== 'undefined') {
@@ -22,6 +39,11 @@ define('Controls/Container/Async',
             require(options.templateName);
          }
       });
-      return Page;
+      Async.contextTypes = function() {
+         return {
+            headData: HeadDataContext
+         };
+      };
+      return Async;
    }
 );
