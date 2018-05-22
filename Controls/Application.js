@@ -95,8 +95,8 @@ define('Controls/Application',
             self.wsRoot = receivedState.wsRoot || (context.AppData ? context.AppData.wsRoot : cfg.wsRoot);
             self.resourceRoot = receivedState.resourceRoot || (context.AppData ? context.AppData.resourceRoot : cfg.resourceRoot);
             self.jsLinks = receivedState.jsLinks || (context.AppData ? context.AppData.jsLinks : cfg.jsLinks);
+            self.cssBundles = receivedState.cssBundles || (context.AppData ? context.AppData.cssBundles : cfg.cssBundles);
             self.BodyClasses = BodyClasses;
-
             /**
              * Этот перфоманс нужен, для сохранения состояния с сервера, то есть, cfg - это конфиг, который нам прийдет из файла
              * роутинга и с ним же надо восстанавливаться на клиенте.
@@ -104,6 +104,7 @@ define('Controls/Application',
             def.callback({
                jsLinks: self.jsLinks,
                cssLinks: self.cssLinks,
+               cssBundles: self.cssBundles,
                title: self.title,
                wsRoot: self.wsRoot,
                resourceRoot: self.resourceRoot,
