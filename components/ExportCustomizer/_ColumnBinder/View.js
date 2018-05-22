@@ -99,6 +99,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
          _bindEvents: function () {
             //При клике по строке списка колонок
             this.subscribeTo(this._grid, 'onItemActivate', this._onEdit.bind(this));
+            this.subscribeTo(this._grid, 'onEndMove', function (evtName, dragObject) {
+               var items = this._grid.getItems();
+               var fieldIds = []; items.each(function (v) { fieldIds.push(v.getId()); });
+               this._options.fieldIds = fieldIds;
+               this._redraw();
+            }.bind(this));
          },
 
          /**
@@ -178,8 +184,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
                {
                   title: fieldId ? rk('Выберите поле данных', 'НастройщикЭкспорта') : rk('Выбор полей данных', 'НастройщикЭкспорта'),
                   applyButtonTitle: rk('Выбрать', 'НастройщикЭкспорта'),
+                  width: this._container.width(),
                   groupTitles: options.fieldGroupTitles,
                   preserveOrder: true,
+                  multiselect: !fieldId,
+                  moveColumns: false,
                   ignoreFixed: true// TODO: Добавить в редактор колонок опцию ignoreFixed
                }
             ).addCallback(function (resultColumnsConfig) {
@@ -309,7 +318,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
                   }
                }
             }
-            var args = [hasIndex ? index : list.length, 0];
+            var args = [hasIndex ? index : list.length, hasIndex ? 1 : 0];
             args.push.apply(args, items);
             list.splice.apply(list, args);
          }

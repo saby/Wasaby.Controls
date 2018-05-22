@@ -222,9 +222,9 @@ define('SBIS3.CONTROLS/ListView',
           * @param {Object} RecordSet - {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/working-with-data/icollection/#wsdatacollectionrecordset RecordSet} с загруженными данными
           * @example
           * <pre>
-          *     DataGridView.subscribe('onDataMerge', function(event, dataSet) {
-          *        //Если в загруженном датасете есть данные, отрисуем их количество
-          *        var count = dataSet.getCount();
+          *     DataGridView.subscribe('onDataMerge', function(event, recordSet) {
+          *        // Если в загруженном рекордсете есть данные, отрисуем их количество
+          *        var count = recordSet.getCount();
           *        if (count){
           *           self.drawItemsCounter(count);
           *        }
@@ -1532,7 +1532,7 @@ define('SBIS3.CONTROLS/ListView',
                      itemsProjection.getRoot().getContents().get(recordItems.getIdProperty()) == id);
                },
                siblingItem;
-            if (index === -1 && isRootId(id)) {
+            if (index === -1 && id && isRootId(id)) {
                index = 0;
             }
             if (isNext) {
@@ -2524,6 +2524,9 @@ define('SBIS3.CONTROLS/ListView',
             this._destroyEditInPlace();
             this._headIsChanged = true;
             this._redrawResults();
+            if (this._scrollBinder) {
+               this._scrollBinder.moreThanTwo(false);
+            }
             ListView.superclass.redraw.apply(this, arguments);
          },
 
@@ -3259,6 +3262,9 @@ define('SBIS3.CONTROLS/ListView',
             ListView.superclass._removeItems.call(this, items);
             if (this.isInfiniteScroll()) {
                this._preScrollLoading();
+            }
+            if (this._scrollBinder) {
+               this._scrollBinder.moreThanTwo(false);
             }
          },
 

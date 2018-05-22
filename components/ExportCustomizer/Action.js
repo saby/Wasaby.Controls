@@ -53,6 +53,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
        */
 
       /**
+       * @typedef {object} ExportValidator Тип, описывающий валидаторы результатов редактирования
+       * @property {function(object, function):(boolean|string)} validator Функция проверки. Принимает два аргумента. Первый - объект с проверяемыми данными. Второй - геттер опции по её имени. Геттер позволяет получить доступ к опциям, которые есть в настройщике экспорта в момент валидации. Должна возвратить либо логическое значение, показывающее пройдена ли проверка, либо строку с сообщением об ошибке
+       * @property {Array<*>} [params] Дополнительные аргументы функции проверки, будут добавлены после основных (опционально)
+       * @property {string} [errorMessage] Сообщение об ошибке по умолчанию (опционально)
+       * @property {boolean} [noFailOnError] Указывает на то, что если проверка не пройдена, это не является фатальным. В таком случае пользователю будет показан диалог с просьбой о подтверждении (опционально)
+       */
+
+      /**
        * @typedef {object} ExportResults Тип, содержащий информацию о результате редактирования
        * @property {Array<string>} fieldIds Список полей для колонок в экспортируемом файле
        * @property {Array<string>} columnTitles Список отображаемых названий колонок в экспортируемом файле
@@ -86,6 +94,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * @param {object} options Входные аргументы("мета-данные") настройщика экспорта:
           * @param {string} [options.dialogTitle] Заголовок диалога настройщика экспорта (опционально)
           * @param {string} [options.dialogButtonTitle] Подпись кнопки диалога применения результата редактирования (опционально)
+          * @param {string} [options.presetAddNewTitle] Надпись на кнопке добавления нового пресета в под-компоненте "presets" (опционально)
+          * @param {string} [options.presetNewPresetTitle] Название для нового пресета в под-компоненте "presets" (опционально)
           * @param {string} [options.columnBinderTitle] Заголовок под-компонента "columnBinder" (опционально)
           * @param {string} [options.columnBinderColumnsTitle] Заголовок столбца колонок файла в таблице соответствия под-компонента "columnBinder" (опционально)
           * @param {string} [options.columnBinderFieldsTitle] Заголовок столбца полей данных в таблице соответствия под-компонента "columnBinder" (опционально)
@@ -101,6 +111,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * @param {Array<string>} options.fieldIds Список привязки колонок в экспортируемом файле к полям данных
           * @param {object} options.fieldGroupTitles Список отображаемых названий групп полей (если используются идентификаторы групп)
           * @param {string} options.fileUuid Uuid шаблона форматирования эксель-файла
+          * @param {Array<ExportValidator>} options.validators Список валидаторов результатов редактирования (опционально)
           * @param {ExportRemoteCall} [options.outputCall] Информация для вызова метода удалённого сервиса для отправки данных вывода (опционально)
           * @return {Deferred<ExportResults>}
           */
