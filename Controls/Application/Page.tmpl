@@ -72,9 +72,9 @@
                                           jsLinks="{{jsLinks}}"
                                           _options="{{_options}}"/>
 
-                              <span id="cssBundles" styles="display:none;">
+                              <span id="cssBundles" style="display:none;">
                                  <ws:for data="link in cssBundles">
-                                    {{ 'define("' + link + '", "");' }}
+                                    {{ 'define("css!' + link + '", "");' }}
                                  </ws:for>
                               </span>
 
