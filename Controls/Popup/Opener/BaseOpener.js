@@ -39,8 +39,7 @@ define('Controls/Popup/Opener/BaseOpener',
                         self._openPopup(cfg, strategy);
                      });
                   });
-               }
-               else {
+               } else {
                   self._openPopup(cfg, strategy);
                }
             }
