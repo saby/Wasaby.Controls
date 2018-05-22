@@ -12,9 +12,6 @@ define('SBIS3.CONTROLS/Image',
       'Lib/Control/CompoundControl/CompoundControl',
       'WS.Data/Source/SbisService',
       'tmpl!SBIS3.CONTROLS/Image/Image',
-      'Lib/File/Attach/LazyAttach',
-      'Lib/File/ResourceGetter/FSGetter',
-      'Lib/File/LocalFile',
       'Core/Indicator',
       'Core/helpers/Hcontrol/toggleLocalIndicator',
       'Transport/prepareGetRPCInvocationURL',
@@ -22,6 +19,7 @@ define('SBIS3.CONTROLS/Image',
       'SBIS3.CONTROLS/ControlHierarchyManager',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
       'Core/helpers/Function/debounce',
+      'SBIS3.CONTROLS/ImageAttacher',
       'SBIS3.CONTROLS/Link',
       'SBIS3.CONTROLS/Menu/MenuLink',
       'i18n!SBIS3.CONTROLS/Image',
@@ -35,9 +33,6 @@ define('SBIS3.CONTROLS/Image',
       CompoundControl,
       SbisService,
       dotTplFn,
-      LazyAttach,
-      FSGetter,
-      LocalFile,
       Indicator,
       toggleLocalIndicator,
       prepareGetRPCInvocationURL,
@@ -901,42 +896,21 @@ define('SBIS3.CONTROLS/Image',
               * @return {Lib/File/Attach/LazyAttach}
               * @private
               */
-            _getAttach: function() {
-               var self = this;
-               var attach = self._attach;
-               if (!attach) {
-                  self._attach = attach = new LazyAttach({
-                     multiSelect: false
-                  });
-
-                  var cont = document.createElement('div');
-                  self.getContainer().append(cont);
-                  var fsGetter = new FSGetter({
-                     multiSelect: false,
-                     element: cont,
-                     extensions: ['image']
-                  });
-                  attach.registerGetter(fsGetter);
-                  attach.registerLazyGetter('PhotoCam', 'Lib/File/ResourceGetter/PhotoCam', {
-                     openDialog: {
-                        dialogOptions: {
-                           opener: self
-                        }
-                     }
-                  });
+            _getAttach: function () {
+               if (this._attach) {
+                  return this._attach;
                }
-               var dataSource = self.getDataSource();
-               if (dataSource) {
-                  attach.registerLazySource(LocalFile, 'WS.Data/Source/SbisFile', {
-                     endpoint: {
+               var dataSource = this.getDataSource();
+               var cont = document.createElement('div');
+               this.getContainer().append(cont);
 
-                        //todo Удалить, временная опция для поддержки смены логотипа компании
-                        contract: self._options.linkedObject || dataSource.getEndpoint().contract
-                     },
-                     binding: dataSource.getBinding()
-                  });
-               }
-               return attach;
+               this._attach = Di.create('SBIS3.CONTROLS/ImageAttacher', {
+                  element: cont,
+                  opener: this,
+                  //todo Удалить, временная опция для поддержки смены логотипа компании
+                  contract: this._options.linkedObject || dataSource.getEndpoint().contract,
+                  binding: dataSource.getBinding()
+               });
             },
 
             /**
