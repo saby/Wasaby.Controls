@@ -4,7 +4,8 @@ define('Controls/List/EditInPlace', [
    'Core/Deferred',
    'WS.Data/Entity/Record',
    'WS.Data/Display/CollectionItem',
-   'Controls/List/resources/utils/ItemsUtil'
+   'Controls/List/resources/utils/ItemsUtil',
+   'css!Controls/List/EditInPlace/Text'
 ], function(Control, template, Deferred, Record, CollectionItem, ItemsUtil) {
 
    var
@@ -250,7 +251,6 @@ define('Controls/List/EditInPlace', [
        * @variant {ItemEditOptions} options Options of editing.
        * @returns {Core/Deferred}
        */
-      //TODO: управлять индикатором загрузки
       editItem: function(options) {
          var self = this,
             editingItemIndex = _private.getEditingItemIndex(this, this._editingItem, this._options.listModel),
@@ -270,7 +270,6 @@ define('Controls/List/EditInPlace', [
        * @param {AddItemOptions} options Options of adding.
        * @returns {Core/Deferred}
        */
-      //TODO: управлять индикатором загрузки
       addItem: function(options) {
          var self = this;
          return this.commitEdit().addCallback(function() {

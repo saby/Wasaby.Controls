@@ -1,5 +1,5 @@
 <div class="controls-Dropdown" on:click="_open()">
-   <ws:partial template="{{_options.contentTemplate || _defaultContentTemplate}}" scope="{{...}}"/>
+   <ws:partial template="{{_options.contentTemplate || _defaultContentTemplate}}" text="{{_updateText(_selectedItem, displayProperty || 'title')}}" icon="{{_icon}}" contentTemplate="{{contentTemplate}}"/>
 
    <Controls.Dropdown.Opener name="DropdownOpener">
       <ws:popupOptions>

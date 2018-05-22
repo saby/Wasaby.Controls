@@ -1,12 +1,13 @@
 /// <amd-module name="File/ResourceGetter/DropArea" />
 /// <amd-dependency path="css!File/ResourceGetter/DropArea" />
-define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/ResourceGetter/Base", "Core/Deferred", "Core/helpers/random-helpers", "File/utils/ExtensionsHelper", "File/utils/getFilePreparer", "File/ResourceGetter/DropArea/replaceDir", "css!File/ResourceGetter/DropArea"], function (require, exports, tslib_1, IResourceGetterBase, Deferred, random, ExtensionsHelper, getFilePreparer, replaceDir) {
+define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/ResourceGetter/Base", "Core/Deferred", "Core/helpers/random-helpers", "File/utils/ExtensionsHelper", "File/utils/filePrepareGetter", "File/ResourceGetter/DropArea/replaceDir", "css!File/ResourceGetter/DropArea"], function (require, exports, tslib_1, IResourceGetterBase, Deferred, random, ExtensionsHelper, getFilePreparer, replaceDir) {
     "use strict";
     var OVERLAY_ID_PREFIX = "DropArea-";
     var OVERLAY_CLASS = 'DropArea_overlay';
     var GLOBAL = (function () { return this || (0, eval)('this'); }());
     var DOC = GLOBAL.document;
     var IS_SUPPORT = DOC && DOC.body;
+    var DRAG_END_TIMEOUT = 200;
     var areas = Object.create(null);
     var areaCount = 0;
     var dropAreas = [];
@@ -59,6 +60,11 @@ define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/Res
      * @type {Boolean}
      */
     var isDrag;
+    /**
+     * Таймер удаления обёрток
+     * @type {Number}
+     */
+    var dragEndTimeout;
     // Удаление обёрточных элементов
     var dragEnd = function () {
         isDrag = false;
@@ -109,12 +115,13 @@ define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/Res
          * Ещё может расходиться регистр => Array.prototype.include не совсем подходит
          * Поэтому самое простое это склеить типы в строку, привести к единому регистру и найти вхождение
          */
-        var containFileType = dataTransfer.types.join(',').toLowerCase().indexOf('files') >= 0;
+        var containFileType = Array.prototype.join.call(dataTransfer.types, ',').toLowerCase().indexOf('files') >= 0;
         return containFileType && !isDrag && !!areaCount;
     };
     // обработчики событий drag&drop на документе
     var globalHandlers = {
         dragenter: function (event) {
+            clearTimeout(dragEndTimeout);
             // Если обёртки готовы для всех элементов или событие не содержит файлы, то выходим
             if (!isNeedOverlay(event.dataTransfer)) {
                 return;
@@ -129,15 +136,24 @@ define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/Res
                 }
             }
         },
-        dragleave: function (event) {
-            // Если покинули область окна браузера, то убираем наши обёртки
-            if (!event.relatedTarget) {
-                dragEnd();
-            }
+        dragleave: function () {
+            /**
+             * Под win-10 в IE/Edge в event.relatedTarget постоянно лежит null
+             * Хоть и поддержка свойства как бы есть
+             * Что не даёт по его отсуствию понять что D&D вышел за пределы окна браузера,
+             * или же на другой элемент, чтобы скрыть области обёртки
+             *
+             * Поэтому при покидании области создаём таймаут по которому удалим их
+             * Или же скидываем его если сдектектим dragenter, либо dragover
+             */
+            dragEndTimeout = setTimeout(dragEnd, DRAG_END_TIMEOUT);
         },
-        drop: function (event) {
+        drop: function () {
             // Если бросили файл в произвольную область - просто убераем наши обёртки
             dragEnd();
+        },
+        dragover: function () {
+            clearTimeout(dragEndTimeout);
         }
     };
     /// endregion event handlers

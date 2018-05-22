@@ -960,6 +960,16 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             breadCrumbsInst.redraw();
          });
       },
+      _setHierarchyViewMode: function(value) {
+         if (this._options.hierarchyViewMode !== value) {
+            this._options.hierarchyViewMode = value;
+            if (this._isCursorNavigation() && this._options.saveReloadPosition) {
+               // При переключении режима обнуляем запомненные позиции курсора
+               this._hierPages = {};
+               this._hierNodesCursor = {};
+            }
+         }
+      },
       /**
        * Получить список записей для отрисовки
        * @private
@@ -980,7 +990,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             this.setInfiniteScroll(this._options.infiniteScroll, true);
             this.setHighlightText('', false);
             this.setFilter(filter, true);
-            this._options.hierarchyViewMode = false;
+            this._setHierarchyViewMode(false);
             if (this._options.task1173671799 && !this._options.allowEnterToFolder) {
                crumbPath.forEach(function(id) {
                   self._options.openedPath[id] = true;
@@ -1142,7 +1152,8 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             var
                position = [],
                nodeId = filter[this._options.parentProperty];
-            if (nodeId !== this.getCurrentRoot() && !(typeof nodeId === 'undefined' && this.getCurrentRoot() === null)) {
+            if (nodeId !== this.getCurrentRoot() && !(typeof nodeId === 'undefined' && this.getCurrentRoot() === null) &&
+               !(nodeId === null && typeof this.getCurrentRoot() === 'undefined')) {
                if (typeof this._hierNodesCursor[nodeId] !== 'undefined') {
                   position.push(this._hierNodesCursor[nodeId]);
                } else {
@@ -1661,12 +1672,15 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
          this._notify('onBeforeSetRoot', key);
 
          // сохраняем текущую страницу при проваливании в папку
-         if (this._isCursorNavigation() && this._options.saveReloadPosition && this.getSelectedItem()) {
-            // Сохраняем ключ узла, в который провалились
-            if (typeof this.getCurrentRoot() === 'undefined') {
-               this._hierPages[null] = this.getSelectedItem().get(this._options.navigation.config.field);
-            } else {
-               this._hierPages[this.getCurrentRoot()] = this.getSelectedItem().get(this._options.navigation.config.field);
+         if (this._isCursorNavigation() && this._options.saveReloadPosition) {
+            this.getListNavigation().setPosition(null);
+            if (this.getSelectedItem()) {
+               // Сохраняем ключ узла, в который провалились
+               if (typeof this.getCurrentRoot() === 'undefined') {
+                  this._hierPages[null] = this.getSelectedItem().get(this._options.navigation.config.field);
+               } else {
+                  this._hierPages[this.getCurrentRoot()] = this.getSelectedItem().get(this._options.navigation.config.field);
+               }
             }
          }
 
