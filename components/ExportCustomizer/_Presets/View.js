@@ -16,7 +16,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
       'WS.Data/Di',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/item',
-      'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/edit',
+      /*^^^'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/edit',*/
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/footer',
       'css!SBIS3.CONTROLS/ExportCustomizer/_Presets/View'
    ],
@@ -105,7 +105,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             // Текущий uuid шаблона форматирования эксель-файла
             _fileUuid: null,
             // Контрол выбора пресета
-            _selector: null
+            _selector: null,
+            // Контрол редактирования пресета
+            _editor: null
          },
 
          _modifyOptions: function () {
@@ -123,16 +125,17 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             if (Di.isRegistered(_DI_STORAGE_NAME)) {
                this._storage = Di.resolve(_DI_STORAGE_NAME);
             }
-            this._selector = this.getChildControlByName('controls-ExportCustomizer-Presets-View__button');
+            this._selector = this.getChildControlByName('controls-ExportCustomizer-Presets-View__selector');
+            this._editor = this.getChildControlByName('controls-ExportCustomizer-Presets-View__editor');
             this._bindEvents();
             if (this._storage) {
                this._updateSelectorListOptions('handlers', {
-                  onChangeHoveredItem: this._onHoverItem.bind(this),
+                  onChangeHoveredItem: this._onHoverItem.bind(this)/*^^^,
                   onEndEdit: function (evtName, model, withSaving) {
                      if (withSaving) {
                         this._storage.save(this._options.namespace, this._customs);
                      }
-                  }.bind(this)
+                  }.bind(this)*/
                });
                this._updateSelectorListOptions('footerTpl', 'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/footer');
                this._updateSelectorListOptions('_footerHandler', this._onAdd.bind(this));
@@ -202,12 +205,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           */
          _onHoverItem: function (evtName, item) {
             var listView = evtName.getTarget();
-            if (!listView.isEdit()) {
+            /*^^^if (!listView.isEdit()) {*/
                var model = item.record;
                if (model) {
                   this._updateItemsActions(listView, this._makeItemsActions(listView, model.get('isStorable')));
                }
-            }
+               /*^^^}*/
          },
 
          /**
@@ -237,7 +240,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             var listView = evtName.getTarget().getParent();
             this._addPreset().addCallback(function (isSuccess) {
                this._afterItemAction(listView, isSuccess);
-               this._editPreset(this._options.selectedId, listView);
+               /*^^^this._editPreset(this._options.selectedId, listView);*/
             }.bind(this));
          },
 
@@ -262,7 +265,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                var callbacks = {
                   'clone': function (isSuccess) {
                      this._afterItemAction(listView, isSuccess);
-                     this._editPreset(this._options.selectedId, listView);
+                     /*^^^this._editPreset(this._options.selectedId, listView);*/
                   }.bind(this),
                   'delete': this._afterItemAction.bind(this, listView)
                };
@@ -373,7 +376,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * @param {object} listView Списочный контрол
           */
          _editPreset: function (id, listView) {
-            var presetInfo = this._findPresetById(id, true);
+            /*^^^var presetInfo = this._findPresetById(id, true);
             if (presetInfo) {
                this._updateItemsActions(listView, []);
                listView.sendCommand('beginEdit', id).addCallback(
@@ -391,7 +394,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                      }]);
                   }.bind(this)
                );
-            }
+            }*/
          },
 
          /**
