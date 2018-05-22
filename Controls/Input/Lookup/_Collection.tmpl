@@ -1,0 +1,15 @@
+<div class="controls-Lookup__collection">
+    <ws:for data="index, item in _items">
+        <ws:partial
+                template="{{_options.itemTemplate}}"
+                item="{{item}}"
+                displayProperty="{{_options.displayProperty}}"
+                size="{{_options.size}}"
+                style="{{_options.style}}"
+                isSingleItem="{{_items.getCount() === 1}}"
+                isLastItem="{{_items.getCount() === index + 1}}"
+                readyOnly="{{_options.readOnly}}"
+                on:click="_itemClick(item)"
+        />
+    </ws:for>
+</div>

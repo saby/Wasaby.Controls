@@ -1,0 +1,16 @@
+<div class="controls-Lookup__item controls-Lookup__item-{{isSingleItem ? 'single' : 'multi'}}">
+    <div class="controls-Lookup__item__caption controls-Lookup__item__caption-style-{{style}} controls-Lookup__item__caption-size-{{size}}">
+        <ws:if data="{{contentTemplate}}">
+            <ws:partial template="{{contentTemplate}}" item="{{item}}"/>
+        </ws:if>
+        <ws:else>
+            {{item.get(displayProperty || 'title')}}
+        </ws:else>
+    </div>
+    <ws:if data="{{!readOnly}}">
+        <div class="controls-Lookup__item__cross icon-CloseNew"></div>
+    </ws:if>
+    <ws:if data="{{!isLastItem}}">
+        ,
+    </ws:if>
+</div>
