@@ -16,7 +16,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
       'WS.Data/Di',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/item',
-      /*^^^'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/edit',*/
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/footer',
       'css!SBIS3.CONTROLS/ExportCustomizer/_Presets/View'
    ],
@@ -117,8 +116,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             return options;
          },
 
-         /*$constructor: function () {
-         },*/
+         $constructor: function () {
+            this.getLinkedContext().setValue('editedTitle', '');
+         },/*^^^*/
 
          init: function () {
             View.superclass.init.apply(this, arguments);
@@ -126,13 +126,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                this._storage = Di.resolve(_DI_STORAGE_NAME);
             }
             this._selector = this.getChildControlByName('controls-ExportCustomizer-Presets-View__selector');
-            this._editor = this.getChildControlByName('controls-ExportCustomizer-Presets-View__editor');
-            this._bindEvents();
             if (this._storage) {
+               this._editor = this.getChildControlByName('controls-ExportCustomizer-Presets-View__editor');
                this._updateSelectorListOptions('handlers', {
                   onChangeHoveredItem: this._onHoverItem.bind(this)/*^^^,
                   onEndEdit: function (evtName, model, withSaving) {
                      if (withSaving) {
+                        // TODO: Обособить метод сохранения с пересбором customs
                         this._storage.save(this._options.namespace, this._customs);
                      }
                   }.bind(this)*/
@@ -145,6 +145,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   this._updateSelector();
                }.bind(this));
             }
+            this._bindEvents();
          },
 
          _bindEvents: function () {
@@ -154,8 +155,18 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                this._selectPreset(preset);
                this._updateSelectorListOptions('selectedKey', selectedId);
                var prevPreset = this._findPresetById(changes.removed[0]);
-               this. _sendUpdateCommand(prevPreset, preset);
+               this._sendUpdateCommand(prevPreset, preset);
             }.bind(this));
+            var editor = this._editor;
+            if (editor) {
+               this.subscribeTo(editor, 'onApply', function (evtName) {
+                  var text = editor.getText();
+                  var options = this._options;
+                  var preset = this._findPresetById(options.selectedId);
+                  this._switchEditor(false);
+               }.bind(this));
+               this.subscribeTo(editor, 'onCancel', this._switchEditor.bind(this, false));
+            }
          },
 
          /**
@@ -205,12 +216,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           */
          _onHoverItem: function (evtName, item) {
             var listView = evtName.getTarget();
-            /*^^^if (!listView.isEdit()) {*/
-               var model = item.record;
-               if (model) {
-                  this._updateItemsActions(listView, this._makeItemsActions(listView, model.get('isStorable')));
-               }
-               /*^^^}*/
+            var model = item.record;
+            if (model) {
+               this._updateItemsActions(listView, this._makeItemsActions(listView, model.get('isStorable')));
+            }
          },
 
          /**
@@ -240,7 +249,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             var listView = evtName.getTarget().getParent();
             this._addPreset().addCallback(function (isSuccess) {
                this._afterItemAction(listView, isSuccess);
-               /*^^^this._editPreset(this._options.selectedId, listView);*/
+               this._startEditingMode(listView);
             }.bind(this));
          },
 
@@ -265,7 +274,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                var callbacks = {
                   'clone': function (isSuccess) {
                      this._afterItemAction(listView, isSuccess);
-                     /*^^^this._editPreset(this._options.selectedId, listView);*/
+                     this._startEditingMode(listView);
                   }.bind(this),
                   'delete': this._afterItemAction.bind(this, listView)
                };
@@ -280,6 +289,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * @param {object} listView Списочный контрол
           * @param {bolean} isSuccess Сохранение изменений прошло успешно
           */
+         // TODO: Переименовать в _updateListView
+         // TODO: Сделать функцию ifSuccess = function (f) { return function (isSuccess) { if (isSuccess) { f.call(); } }; }
+         // TODO: Добавить аргумент для неполного обновления (без items) ???
          _afterItemAction: function (listView, isSuccess) {
             if (isSuccess) {
                this._updateSelector();
@@ -333,7 +345,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   var items = options._items;
                   var prevPreset = items ? items.getRecordById(options.selectedId) : null;
                   this._selectPreset(preset);
-                  this. _sendUpdateCommand(prevPreset, preset);
+                  //^^^this._sendUpdateCommand(prevPreset, preset);
                //}
                return true/*isSuccess*/;
             }.bind(this));
@@ -359,6 +371,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                return this._storage.save(options.namespace, customs).addCallback(function (/*isSuccess*/) {
                   //if (isSuccess) {
                      this._selectPreset(preset);
+                     this._sendUpdateCommand(prevPreset, preset);
                   //}
                   return true/*isSuccess*/;
                }.bind(this));
@@ -376,25 +389,18 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * @param {object} listView Списочный контрол
           */
          _editPreset: function (id, listView) {
-            /*^^^var presetInfo = this._findPresetById(id, true);
-            if (presetInfo) {
-               this._updateItemsActions(listView, []);
-               listView.sendCommand('beginEdit', id).addCallback(
-                  function (model) {
-                     var titles = []; this._options._items.each(function (v) { titles.push(v.get('title')); });
-                     listView._editInPlace.getChildControlByName('controls-ExportCustomizer-Presets-View__input').setValidators([{
-                        option: 'text',
-                        validator: function (list, value) {
-                           if (value) {
-                              var v = value.trim();
-                              return !!v && list.indexOf(v) === -1;
-                           }
-                        }.bind(null, titles),
-                        errorMessage: _TITLE_ERROR
-                     }]);
-                  }.bind(this)
-               );
-            }*/
+            var preset = this._findPresetById(id);
+            if (preset) {
+               var options = this._options;
+               if (options.selectedId !== id) {
+                  var prevPreset =this._findPresetById(options.selectedId) ;
+                  this._selectPreset(preset);
+                  // TODO: Включиить _sendUpdateCommand в _selectPreset
+                  this._sendUpdateCommand(prevPreset, preset);
+                  this._afterItemAction(listView, true);
+               }
+               this._startEditingMode(listView);
+            }
          },
 
          /**
@@ -416,7 +422,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                      if (options.selectedId === id) {
                         var preset = customs.length ? customs[index < customs.length ? index : index - 1] : null;
                         this._selectPreset(preset);
-                        this. _sendUpdateCommand(prevPreset, preset);
+                        this._sendUpdateCommand(prevPreset, preset);
                      }
                   //}
                   return true/*isSuccess*/;
@@ -425,6 +431,47 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             else {
                return Deferred.success(false);
             }
+         },
+
+         /**
+          * Включить моду редактирования
+          *
+          * @protected
+          * @param {object} listView Списочный контрол
+          */
+         _startEditingMode: function (listView) {
+            var options = this._options;
+            var preset = this._findPresetById(options.selectedId);
+            if (preset && preset.isStorable) {
+               var picker = listView.getParent();
+               picker.close();
+               this._switchEditor(true);
+               var editor = this._editor;
+               this.getLinkedContext().setValue('editedTitle', preset.title);
+               editor._clickHandler();
+               var titles = []; options._items.each(function (v) { if (v.getId() !== preset.id) { titles.push(v.get('title')); } });
+               editor.setValidators([{
+                  option: 'text',
+                  validator: function (list, value) {
+                     if (value) {
+                        var v = value.trim();
+                        return !!v && list.indexOf(v) === -1;
+                     }
+                  }.bind(null, titles),
+                  errorMessage: _TITLE_ERROR
+               }]);
+            }
+         },
+
+         /**
+          * Переключить видимость редактора
+          *
+          * @protected
+          * @param {boolean} isVisible Редактор будет показывться
+          */
+         _switchEditor: function (isVisible) {
+            this._selector.setVisible(!isVisible);
+            this._editor.setVisible(!!isVisible);
          },
 
          /**
