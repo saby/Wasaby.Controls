@@ -18,13 +18,19 @@ define('Controls/Decorators/Highlight',
        * @control
        * @public
        * @category Decorators
-       *
+       */
+
+      /**
        * @name Controls/Decorators/Highlight#text
        * @cfg {String} The text in which to search.
-       *
+       */
+
+      /**
        * @name Controls/Decorators/Highlight#highlight
        * @cfg {String} Text to search.
-       *
+       */
+
+      /**
        * @name Controls/Decorators/Highlight#class
        * @cfg {String} Class for highlight.
        */

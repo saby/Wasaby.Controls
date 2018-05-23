@@ -16,10 +16,14 @@ define('Controls/Decorators/WrapURLs',
        * @control
        * @public
        * @category Decorators
-       *
+       */
+
+      /**
        * @name Controls/Decorators/WrapURLs#text
        * @cfg {String} Text to convert.
-       *
+       */
+
+      /**
        * @name Controls/Decorators/WrapURLs#newTab
        * @cfg {Boolean} Open link in new tab.
        */

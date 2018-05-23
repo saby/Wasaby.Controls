@@ -19,10 +19,14 @@ define('Controls/Decorators/Money',
        * @control
        * @public
        * @category Decorators
-       *
+       */
+
+      /**
        * @name Controls/Decorators/Money#number
        * @cfg {Number} Number to convert.
-       *
+       */
+
+      /**
        * @name Controls/Decorators/Money#type
        * @cfg {String} The type with which you want to display money.
        * @variant accentResults
