@@ -1,6 +1,6 @@
 define([
    'Controls/List/Controllers/VirtualScroll',
-   'Controls/List/SimpleList/ListViewModel',
+   'Controls/List/ListViewModel',
    'WS.Data/Collection/RecordSet'
 ], function(VirtualScroll, ListViewModel, RecordSet) {
 
@@ -17,14 +17,14 @@ define([
          }
 
          var items = new RecordSet({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: srcData,
             adapter: 'adapter.json'
          });
 
          return new ListViewModel({
             items: items,
-            idProperty: 'id',
+            keyProperty: 'id',
             displayProperty: 'title'
          });
       }

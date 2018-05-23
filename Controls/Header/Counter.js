@@ -9,7 +9,7 @@ define('Controls/Header/Counter', [
    /**
     * Control showing the counter.
     * @class Controls/Header/Counter
-    * @extends Controls/Control
+    * @extends Core/Control
     * @control
     * @public
     */

@@ -3,9 +3,9 @@
  */
 define('Controls/List', [
    'Core/Control',
-   'tmpl!Controls/List/SimpleList',
-   'Controls/List/SimpleList/ListViewModel',
-   'Controls/List/SimpleList/ListView',
+   'tmpl!Controls/List/List',
+   'Controls/List/ListViewModel',
+   'Controls/List/ListView',
    'Controls/List/EditInPlace'
 ], function(Control,
    ListControlTpl,
@@ -14,31 +14,42 @@ define('Controls/List', [
    'use strict';
 
    var _private = {
-      createListModel: function(cfg) {
-         return new ListViewModel({
+      prepareModelConfig: function(cfg) {
+         return {
             items: cfg.items,
-            idProperty: cfg.idProperty,
+            keyProperty: cfg.keyProperty,
             displayProperty: cfg.displayProperty,
             markedKey: cfg.markedKey,
             selectedKeys: cfg.selectedKeys,
             excludedKeys: cfg.excludedKeys,
             multiSelectVisibility: cfg.multiSelectVisibility,
             itemsReadyCallback: cfg.itemsReadyCallback
-         });
+         };
+      },
+      prepareViewConfig: function(cfg) {
+         return {
+            keyProperty: cfg.keyProperty,
+            itemTemplate: cfg.itemTemplate,
+            displayProperty: cfg.displayProperty,
+            markedKey: cfg.markedKey
+         };
       }
    };
 
    /**
-    * Компонент плоского списка, с произвольным шаблоном отображения каждого элемента. Обладает возможностью загрузки/подгрузки данных из источника.
+    * Plain list with custom item template. Can load data from data source.
+    *
     * @class Controls/List
-    * @extends Controls/Control
+    * @extends Core/Control
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IGroupedView
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
+    * @mixes Controls/interface/IReorderMovable
     * @mixes Controls/List/interface/IListControl
+    * @mixes Controls/interface/IRemovable
     * @control
     * @author Крайнов Д.О.
     * @public
@@ -64,14 +75,31 @@ define('Controls/List', [
       _topPlaceholderHeight: 0,
       _bottomPlaceholderHeight: 0,
 
+      _viewModelConstructor: null,
+      _viewModelConfig: null,
+      _viewConfig: null,
+
       _beforeMount: function(newOptions) {
-         this._viewModel = _private.createListModel(newOptions);
+         this._viewModelConstructor = this._getModelConstructor();
+         this._viewModelConfig = this._prepareModelConfig(newOptions);
+         this._viewConfig = this._prepareViewConfig(newOptions);
       },
 
       _afterMount: function() {
 
       },
 
+      _getModelConstructor: function() {
+         return ListViewModel;
+      },
+
+      _prepareModelConfig: function(cfg) {
+         return _private.prepareModelConfig(cfg);
+      },
+
+      _prepareViewConfig: function(cfg) {
+         return _private.prepareViewConfig(cfg);
+      },
 
       _beforeUpdate: function(newOptions) {
          if (newOptions.items && (newOptions.items !== this._options.items)) {
@@ -81,6 +109,10 @@ define('Controls/List', [
          }
       },
 
+      reload: function() {
+         this._children.listControl.reload();
+      },
+
 
       /**
        * Starts editing in place.
@@ -88,7 +120,7 @@ define('Controls/List', [
        * @returns {Core/Deferred}
        */
       editItem: function(options) {
-         this._children.sourceControl.editItem(options);
+         this._children.listControl.editItem(options);
       },
 
       /**
@@ -97,7 +129,7 @@ define('Controls/List', [
        * @returns {Core/Deferred}
        */
       addItem: function(options) {
-         this._children.sourceControl.addItem(options);
+         this._children.listControl.addItem(options);
       },
 
       _onBeforeItemAdd: function(e, options) {
@@ -129,7 +161,27 @@ define('Controls/List', [
       },
 
       removeItems: function(items) {
-         this._children.sourceControl.removeItems(items);
+         this._children.listControl.removeItems(items);
+      },
+
+      moveItemUp: function(item) {
+         this._children.listControl.moveItemUp(item);
+      },
+
+      moveItemDown: function(item) {
+         this._children.listControl.moveItemDown(item);
+      },
+
+      moveItems: function(items, target, position) {
+         this._children.listControl.moveItems(items, target, position);
+      },
+
+      _beforeItemsMove: function(event, items, target, position) {
+         return this._notify('beforeItemsMove', [items, target, position]);
+      },
+
+      _afterItemsMove: function(event, items, target, position, result) {
+         this._notify('afterItemsMove', [items, target, position, result]);
       }
    });
 

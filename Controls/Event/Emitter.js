@@ -1,7 +1,4 @@
 /**
- * Created by dv.zuev on 18.01.2018.
- */
-/**
  * Created by dv.zuev on 17.01.2018.
  *
  * Вставляем в tmpl:

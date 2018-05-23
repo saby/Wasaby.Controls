@@ -26,10 +26,10 @@ define('SBIS3.CONTROLS/FieldLink',
        "WS.Data/Collection/List",
        "SBIS3.CONTROLS/Utils/ItemsSelectionUtil",
        "Core/helpers/Object/find",
+       "SBIS3.CONTROLS/Action/SelectorAction",
        "SBIS3.CONTROLS/FieldLink/resources/ItemsCollection",
        "SBIS3.CONTROLS/Utils/TemplateUtil",
        "SBIS3.CONTROLS/Button/IconButton",
-       "SBIS3.CONTROLS/Action/SelectorAction",
        'SBIS3.CONTROLS/FieldLink/Link',
        "SBIS3.CONTROLS/Menu/MenuIcon",
        "i18n!SBIS3.CONTROLS/FieldLink",
@@ -73,7 +73,8 @@ define('SBIS3.CONTROLS/FieldLink',
         ToSourceModel,
         List,
         ItemsSelectionUtil,
-        objectFind
+        objectFind,
+        SelectorAction
     ) {
 
        'use strict';
@@ -480,9 +481,14 @@ define('SBIS3.CONTROLS/FieldLink',
                 }
              }
           },
-
+   
           _getSelectorAction: memoize(function() {
-             return this.getChildControlByName('FieldLinkSelectorAction');
+             return new SelectorAction({
+                mode: this._getOption('selectMode'),
+                visible: false,
+                tabindex: -1,
+                parent: this
+             });
           }, '_getSelectorAction'),
 
            _getShowAllConfig: function(){
@@ -568,7 +574,7 @@ define('SBIS3.CONTROLS/FieldLink',
            * @example
            * @param {String|Object.<String, *>} template Компонент или конфигурация (объект) компонета, который будет использован для построения справочника.
            * @param {Object} componentOptions Опции, которые будут использованы в компоненте при построении справочника.
-           * Подробное описание можно прочесть {@link SBIS3.CONTROLS/FieldLink/dictionaries.typedef здесь}.
+           * Подробное описание можно прочесть {@link SBIS3.CONTROLS/FieldLink/Dictionaries.typedef здесь}.
            * @example
            * <pre>
            *     this.showSelector(

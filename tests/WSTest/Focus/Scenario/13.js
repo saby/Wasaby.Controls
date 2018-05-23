@@ -1,12 +1,12 @@
 /**
  * Created by nv.belotelov on 14.07.2017.
  */
-define('js!WSTest/Focus/Scenario/13', [
-   'js!WSTest/Focus/TestFocusHelpers',
+define('WSTest/Focus/Scenario/13', [
+   'WSTest/Focus/TestFocusHelpers',
    'Lib/Control/Window/Window',
    'tmpl!WSTest/Focus/Case1',
-   'js!WSTest/Focus/Case13',
-   'js!WSTest/Focus/CaseControl',
+   'WSTest/Focus/Case13',
+   'WSTest/Focus/CaseControl',
    'css!' + wsConfig.wsRoot + 'css/core.css',
    'css!' + wsConfig.wsRoot + 'css/themes/wi_scheme.css'
 ], function (fHelpers,

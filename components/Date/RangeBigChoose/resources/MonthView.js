@@ -17,21 +17,21 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthView', [
             cssClassName: 'controls-DateRangeBigChoose-MonthView'
          }
       },
-      $constructor: function () {
+      $constructor: function() {
          this._publish('onActivated', 'onMonthActivated', 'onSelectionStarted', 'onSelectingRangeEndDateChange');
       },
 
-      init: function () {
+      init: function() {
          MonthView.superclass.init.call(this);
 
          var self = this,
             container = this.getContainer();
          
-         container.find('.' + this._MONTH_VIEW_CSS_CLASSES.CAPTION).click(function () {
+         container.find('.' + this._MONTH_VIEW_CSS_CLASSES.CAPTION).click(function() {
             self._notify('onActivated');
          });
          
-         container.find('.' + this._MONTH_VIEW_CSS_CLASSES.TABLE).click(function () {
+         container.find('.' + this._MONTH_VIEW_CSS_CLASSES.TABLE).click(function() {
             self._notify('onMonthActivated');
          });
       },

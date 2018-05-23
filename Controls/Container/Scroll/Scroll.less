@@ -2,15 +2,7 @@
    position: relative;
    // Таким образом мы скрываем нативный скролл.
    overflow: hidden;
-
-   display: -webkit-box;
-   display: -webkit-flex;
-   display: -ms-flexbox;
    display: flex;
-
-   -webkit-flex-direction: column;
-   -moz-flex-direction: column;
-   -ms-flex-direction: column;
    flex-direction: column;
 }
 
@@ -23,12 +15,9 @@
 }
 
 .controls-Scroll__content {
-   -webkit-overflow-scrolling: touch;
-
-   -webkit-flex-grow: 1;
-   -ms-flex-positive: 1;
-   -ms-flex-grow: 1;
    flex-grow: 1;
+   display: flex;
+   -webkit-overflow-scrolling: touch;
 
    z-index: 1;
 }
@@ -87,4 +76,15 @@
    height: 100px;
    overflow: scroll;
    top: -9999px;
+}
+
+.controls-Scroll__paging {
+   position: absolute;
+   bottom: 0;
+   right: 0;
+   z-index: 2;
+}
+
+.controls-Scroll__content_paging {
+   padding-bottom: @height_Paging-button;
 }

@@ -16,7 +16,7 @@ define('Controls/Popup/Opener/Notification/NotificationController',
        * @control
        * @public
        * @category Popup
-       * @extends Controls/Control
+       * @extends Controls/Popup/Opener/BaseController
        */
       var NotificationController = BaseController.extend({
          elementCreated: function(cfg) {

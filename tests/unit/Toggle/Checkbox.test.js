@@ -1,4 +1,4 @@
-define(['js!Controls/Toggle/Checkbox'], function (Checkbox) {
+define(['Controls/Toggle/Checkbox'], function (Checkbox) {
    var CB, changeValue, eventValue;
    describe('Controls/Toggle/Checkbox', function () {
       describe('click to checkbox', function () {

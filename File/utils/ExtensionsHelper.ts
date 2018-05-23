@@ -2,8 +2,6 @@
 
 import MimeTypes = require("json!File/utils/MimeTypes");
 import MediaTypes = require("json!File/utils/MediaTypes");
-import LocalFile = require("File/LocalFile");
-import ExtensionsError = require("File/utils/ExtensionsError");
 
 let isMediaType = (type: string) => {
     return (type == 'audio' || type == 'video' || type == 'image') || false;
@@ -31,6 +29,9 @@ class ExtensionsHelper {
      * @returns {Boolean}
      */
     verify(file: File): boolean {
+        if (!this.extensions.length) {
+            return true;
+        }
         let fileExt = ((file.name.match(/^\S[\S\s]*\.([\S]+)$/) || [])[1] || "").toLowerCase();
         if (this.extensions.indexOf(fileExt) > -1) {
             return true;
@@ -49,34 +50,6 @@ class ExtensionsHelper {
             }
         }
         return false;
-    }
-
-    /**
-     * Проверяет валидность файлов переданного FileList и заменяет их на {@link File/LocalFile} либо на объект ошибки
-     * @param {FileList | Array.<File | Error>} fileList
-     * @return {Array.<LocalFile | Error>} Массив обёрток над локальными файлами или ошибок
-     */
-    verifyAndReplace(fileList: FileList | Array<File | Error>): Array<LocalFile | Error> {
-        let files = [];
-
-        /*
-         * Нельзя обходить FileList через "for in" + ".hasOwnProperty"
-         * https://w3c.github.io/FileAPI/#filelist-section
-         * Обход надо делать только по числовому индексу и получать через FileList.item({Number}) или FileList[{Number}]
-         */
-        for (let i = 0; i < fileList.length; i++) {
-            let error: Error;
-            let file = fileList instanceof FileList? fileList.item(i): fileList[i];
-            if (file instanceof Error) {
-                files.push(file);
-                continue;
-            }
-            if (this.extensions.length && !this.verify(file)) {
-                error = new ExtensionsError(file.name);
-            }
-            files.push(error || new LocalFile(file));
-        }
-        return files;
     }
     /**
      * Формирует строку mime-types
@@ -114,6 +87,9 @@ class ExtensionsHelper {
             existsMimes.map(ext => MimeTypes[ext]),
             mediaTypes.map(ext => (ext + '/*'))
         ).join(",");
+    }
+    toString(): string {
+        return  this.rawExtensions.join(", ");
     }
 }
 export = ExtensionsHelper;

@@ -21,7 +21,7 @@ import IResource = require("File/IResource");
  * @public
  * @class
  * @name File/ResourceGetter/Base
- * @implements IResourceGetter
+ * @implements File/IResourceGetter
  * @author Заляев А.В.
  * @abstract
  */
@@ -74,7 +74,7 @@ import IResource = require("File/IResource");
  * @abstract
  * @method
  * @name File/ResourceGetter/Base#canExec
- * @return {Core/Deferred.<boolean>}
+ * @return {Core/Deferred.<Boolean>}
  * @example
  * Доступны ли сканеры:
  * <pre>
@@ -89,7 +89,7 @@ import IResource = require("File/IResource");
  * </pre>
  */
 
-abstract class IResourceGetterBase implements IResourceGetter /** @lends File/ResourceGetter/Base.prototype*/{
+abstract class ResourceGetterBase implements IResourceGetter /** @lends File/ResourceGetter/Base.prototype*/{
     protected name: string;
     private _isDestroyed: boolean = false;
     abstract getFiles(): Deferred<Array<IResource | Error>>;
@@ -111,4 +111,4 @@ abstract class IResourceGetterBase implements IResourceGetter /** @lends File/Re
     }
 }
 
-export = IResourceGetterBase;
+export = ResourceGetterBase;

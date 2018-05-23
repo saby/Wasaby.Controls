@@ -3,9 +3,11 @@
   box-sizing: border-box;
   .user-select();
 }
+
 .controls-Button__wrapper_type-iconButtonBordered_size-m, .controls-Button__wrapper_type-iconButtonBordered_size-l {
   justify-content: center;
 }
+
 .controls-Button_type-iconButtonBordered, .controls-Button_type-iconButtonBordered_disabled {
   border-radius: @border-radius-IconButton;
   border-style: @border-style-IconButton;
@@ -13,35 +15,44 @@
   background-color: @background-color-IconButton;
   box-shadow: @box-shadow-IconButton;
 }
+
 .controls-Button_type-iconButtonBordered {
   cursor: pointer;
   border-color: @border-color-IconButton;
 }
+
 .controls-Button_type-iconButtonBordered_size-m {
   height: @height-IconButton_size-m;
   width: @width-IconButton_size-m;
 }
+
 .controls-Button_type-iconButtonBordered_size-l {
   height: @height-IconButton_size-l;
   width: @width-IconButton_size-l;
 }
+
 .controls-Button_type-iconButtonBordered_disabled {
   color: @color-Button_type-IconButton_disabled;
   border-color: @border-color-IconButton_disabled;
 }
+
 .ws-is-no-touch {
   .controls-Button_type-iconButtonBordered:hover {
     background-color: @background-color-IconButton_hovered;
   }
+
   .controls-Button_style-iconButtonBordered_iconStyle-done:hover {
     border-color: @color-Icon_style_done;
   }
+
   .controls-Button_style-iconButtonBordered_iconStyle-error:hover {
     border-color: @color-Icon_style_error;
   }
+
   .controls-Button_style-iconButtonBordered_iconStyle-attention:hover {
     border-color: @color-Icon_style_attention;
   }
+
   .controls-Button_style-iconButtonBordered_iconStyle-default:hover {
     border-color: @color-IconButton__border_iconStyle-primary_hovered;
     .controls-Button__icon-iconButtonBordered_iconStyle-default {
@@ -49,124 +60,156 @@
     }
   }
 }
+
 .controls-Button_type-iconButtonBordered:active {
   background-color: @background-color-IconButton_hovered;
   box-shadow: @box-shadow-IconButton_activated;
 }
+
 .controls-Button_style-iconButtonBordered_iconStyle-done:active {
   border-color: @color-Icon_style_done;
 }
+
 .controls-Button_style-iconButtonBordered_iconStyle-error:active {
   border-color: @color-Icon_style_error;
 }
+
 .controls-Button_style-iconButtonBordered_iconStyle-attention:active {
   border-color: @color-Icon_style_attention;
 }
+
 .controls-Button_style-iconButtonBordered_iconStyle-default:active {
   border-color: @color-IconButton__border_iconStyle-primary_hovered;
   .controls-Button__icon-iconButtonBordered_iconStyle-default {
     color: @color-IconButtonBordered_default_hovered;
   }
 }
+
 .controls-Button_type-link {
   cursor: pointer;
 }
+
 .controls-Button_type-link_size-s{
   font-size: @font-size_Link-s;
 }
+
 .controls-Button_type-link_size-m{
   font-size: @font-size_Link-m;
 }
+
 .controls-Button_type-link_size-l{
   font-size: @font-size_Link-l;
 }
+
 .controls-Button_type-link_size-xl{
   font-size: @font-size_Link-xl;
 }
+
 .controls-Button_style-link-main {
   color: @color_Link-main-text;
 }
+
 .controls-Button_style-link-main2 {
   color: @color_Link-main2-text;
 }
+
 .controls-Button_style-link-main3 {
   color: @color_Link-main3-text;
   .controls-BaseButton__text {
     text-decoration: underline;
   }
 }
+
 .controls-Button_style-link-additional {
   color: @color_Link-additional-text;
 }
+
 .controls-Button_style-link-additional2 {
   color: @color_Link-additional2-text;
 }
+
 .controls-Button_style-link-additional3 {
   color: @color_Link-additional3-text;
 }
+
 .controls-Button_style-link-additional4 {
   color: @color_Link-additional4-text;
 }
+
 .controls-Button_style-link-additional5 {
   color: @color_Link-additional5-text;
 }
+
 .ws-is-no-touch {
   .controls-Button_style-link-main:hover {
-    .controls-Button__icon-link-main_iconStyle-default {
-      color: @color_Link-main-text_hovered;
-    }
-    color: @color_Link-main-text_hovered;
+     .controls-Button__icon-link-main_iconStyle-default {
+        color: @color_Link-main-text_hovered;
+     }
+     color: @color_Link-main-text_hovered;
   }
+
   .controls-Button_style-link-main3:hover {
     color: @color_Link-main3-text_hovered;
   }
+
   .controls-Button_type-link:hover{
     .controls-BaseButton__text {
       text-decoration: underline;
     }
   }
 }
+
 .controls-Button_type-link_disabled {
   color: @color_Link-Vdom-text_disabled;
 }
+
 .controls-Button_type-button {
   cursor: pointer;
   min-width: @min-width_Button-Vdom;
   box-shadow: @box-shadow_Button;
 }
+
 .controls-Button_type-button:active {
   box-shadow: @box-shadow_Button_active;
 }
+
 .controls-Button_type-button_disabled{
   min-width: @min-width_Button-Vdom;
   cursor: default;
   color: @color_Button-Vdom-disabled;
   border-color: @border-color_Button-Vdom_disabled;
 }
+
 .controls-Button_style-primary, .controls-Button_style-primary-add {
   color: @color_Button-Vdom-text_primary;
   border-color: @border-color_Button_primary;
   background: @background_Button_primary;
 }
+
 .controls-Button_style-primary:active, .controls-Button_style-primary-add:active {
   border-color: @border-color_Button_primary_hovered;
   background: @background_Button_primary_active;
 }
+
 .controls-Button_style-default {
   color: @color_Button-Vdom-text_default;
   border-color: @border-color_Button;
   background: @background_Button_default;
 }
+
 .controls-Button_style-default:active {
   border-color: @border-color_Button_hovered;
   background: @background_Button_default_active;
 }
+
 .controls-Button_style-default_disabled {
-  background: @background_Button-default_disabled;
+   background: @background_Button-default_disabled;
 }
+
 .controls-Button_style-primary_disabled, .controls-Button_style-primary-add_disabled {
-  background: @background_Button-primary_disabled;
+   background: @background_Button-primary_disabled;
 }
+
 .controls-Button_type-button_size-m {
   height: @height_Button_m;
   font-size: @font-size_Button-Vdom_m;
@@ -174,6 +217,7 @@
   border-width: @border-width_Button-Vdom;
   .border-radius(@border-radius_Button_default);
 }
+
 .controls-Button_type-button_size-l {
   font-size: @font-size_Button-Vdom_l;
   border-style: solid;
@@ -181,44 +225,56 @@
   border-width: @border-width_Button-Vdom;
   .border-radius(@border-radius_Button_l);
 }
+
 .controls-Button__icon-primary-add_iconStyle-default {
-  color: @color_Button-style-addButton-icon;
+   color: @color_Button-style-addButton-icon;
 }
+
 .controls-Button__icon-default_iconStyle-default, .controls-Button__icon-default-big_iconStyle-default {
-  color: @color_Button-icon;
+   color: @color_Button-icon;
 }
 .controls-Button__text_style-default {
   .text-overflow();
 }
+
 .controls-Button__icon-primary_iconStyle-default, .controls-Button__icon-primary-big_iconStyle-default {
-  color: @color_Button-icon_primary;
+   color: @color_Button-icon_primary;
 }
+
 .controls-Button__icon-link-main_iconStyle-default {
-  color: @color_Link-main-icon;
+   color: @color_Link-main-icon;
 }
+
 .controls-Button__icon-iconButtonBordered_iconStyle-default {
-  color: @color-IconButtonBordered_default;
+   color: @color-IconButtonBordered_default;
 }
+
 //Icon
 .controls-Button__icon-iconButtonBordered_iconStyle-attention {
   color: @color-Icon_style_attention;
 }
+
 .controls-Button__icon-iconButtonBordered_iconStyle-done {
   color: @color-Icon_style_done;
 }
+
 .controls-Button__icon-iconButtonBordered_iconStyle-error {
   color: @color-Icon_style_error;
 }
+
 .controls-Button__text_style-default {
   .text-overflow();
 }
+
 .controls-Button__text_style-primary {
   .text-overflow();
 }
+
 .controls-Button__wrapper_type-button_size-m {
   padding: @padding_Button-wrapper_default;
   .justify-content(center);
 }
+
 .controls-Button__wrapper_type-button_size-l {
   padding: @padding_Button-Vdom-wrapper_l;
   .justify-content(center);
@@ -234,21 +290,24 @@
     content: "\200b";
   }
 }
+
 .controls-Button_style-primary-add:active {
-  .controls-Button__icon-primary-add_iconStyle-default {
-    color: @color_Button-style-addButton-icon_hovered;
-  }
-}
-.ws-is-no-touch {
-  .controls-Button_style-primary-add:hover {
-    .controls-Button__icon-primary-add_iconStyle-default {
+   .controls-Button__icon-primary-add_iconStyle-default {
       color: @color_Button-style-addButton-icon_hovered;
-    }
-  }
+   }
+}
+
+.ws-is-no-touch {
+   .controls-Button_style-primary-add:hover {
+      .controls-Button__icon-primary-add_iconStyle-default {
+         color: @color_Button-style-addButton-icon_hovered;
+      }
+   }
   .controls-Button_style-primary:hover, .controls-Button_style-primary-add:hover {
     border-color: @border-color_Button_primary_hovered;
     background: @background_Button_primary_hovered;
   }
+
   .controls-Button_style-primary:active, .controls-Button_style-primary-add:active {
     background: @background_Button_primary_active;
   }

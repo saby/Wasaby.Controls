@@ -29,7 +29,7 @@ define('Controls-demo/Popup/PopupPage',
             this._children.sticky.open({
                target: this._children.stickyButton._container,
                opener: this._children.stickyButton,
-               componentOptions: {
+               templateOptions: {
                   type: this._firstClick ? 'sticky' : 'dialog'
                }
             });
@@ -45,6 +45,12 @@ define('Controls-demo/Popup/PopupPage',
          openStack: function () {
             this._children.stack.open({
                opener: this._children.stackButton
+            });
+         },
+
+         openOldTemplate: function () {
+            this._children.openOldTemplate.open({
+               opener: this._children.stackButton2
             });
          },
 

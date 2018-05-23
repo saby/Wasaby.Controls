@@ -8,7 +8,7 @@ define('Controls/List/resources/utils/ItemsUtil', [
 
       getDefaultDisplayFlat: function(items, cfg) {
          var projCfg = {};
-         projCfg.idProperty = cfg.idProperty;
+         projCfg.keyProperty = cfg.keyProperty;
          if (cfg.itemsSortMethod) {
             projCfg.sort = cfg.itemsSortMethod;
          }
@@ -44,14 +44,14 @@ define('Controls/List/resources/utils/ItemsUtil', [
       },
 
       //TODO это наверное к Лехе должно уехать
-      getDisplayItemById: function(display, id, idProperty) {
+      getDisplayItemById: function(display, id, keyProperty) {
          var list = display.getCollection();
          if (cInstance.instanceOfModule(list, 'WS.Data/Collection/RecordSet')) {
             return display.getItemBySourceItem(list.getRecordById(id));
          } else {
             var resItem;
             display.each(function(item, i) {
-               if (ItemsUtil.getPropertyValue(item.getContents(), idProperty) == id) {
+               if (ItemsUtil.getPropertyValue(item.getContents(), keyProperty) == id) {
                   resItem = item;
                }
             });

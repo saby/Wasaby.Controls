@@ -5,5 +5,5 @@ node -v
 npm install
 
 node depencyCollector
-py build.py
+python build.py
 node node_modules/ws-unit-testing/cover test-isolated

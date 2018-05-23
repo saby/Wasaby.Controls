@@ -500,7 +500,7 @@ define('SBIS3.CONTROLS/DataGridView',
              * <pre>
              *    <ws:if data="{{ ladder.isPrimary(item, 'responsibleId') }}">
              *     <div class='edo-Browser-Responsible__photo'>
-             *      <ws:partial template="tmpl!SBIS3.Person.PersonsCollage" scope="{{ item.responsible.collageData }}"/>
+             *      <ws:partial template="tmpl!Person/Collage/Collage" scope="{{ item.responsible.collageData }}"/>
              *      </div>
              *     </ws:if>
              * </pre>
@@ -1661,7 +1661,7 @@ define('SBIS3.CONTROLS/DataGridView',
          DataGridView.superclass.setMultiselect.apply(this, arguments);
          // При установке multiselect создается отдельная td'шка под checkbox, которая не учитывается при редактировании по месту.
          // Обновим список колонок для редактирования по месту
-         this._updateEditInPlaceColumns();
+         this._updateEditInPlaceColumns(this._options.columns);
 
          if(this.getItems()) {
             this.redraw();

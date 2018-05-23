@@ -18,57 +18,57 @@ define('Controls/Input/Text', [
    'use strict';
 
    /**
-       * Однострочное текстовое поле ввода.
-       * @class Controls/Input/Text
-       * @extends Controls/Control
-       * @mixes Controls/Input/interface/IInputText
-       * @mixes Controls/Input/interface/IInputPlaceholder
-       * @mixes Controls/Input/interface/IValidation
-       * @mixes Controls/Input/interface/IInputTag
-       * @control
-       * @public
-       * @category Input
-       * @author Журавлев Максим Сергеевич
-       * @demo Controls-demo/Input/Text/Text
-       */
+    * Single-line text input.
+    *
+    * @class Controls/Input/Text
+    * @extends Core/Control
+    * @mixes Controls/Input/interface/IInputText
+    * @mixes Controls/Input/interface/IInputPlaceholder
+    * @mixes Controls/Input/interface/IValidation
+    * @mixes Controls/Input/interface/IInputTag
+    * @control
+    * @public
+    * @category Input
+    * @author Журавлев Максим Сергеевич
+    * @demo Controls-demo/Input/Text/Text
+    */
 
 
    /**
-       * @name Controls/Input/Text#maxLength
-       * @cfg {Number} Максимальное количество символов, которое может содержать поле ввода
-       */
+    * @name Controls/Input/Text#maxLength
+    * @cfg {Number} Maximum number of characters that user can enter in the field.
+    */
 
    /**
-       * @name Controls/Input/Text#trim
-       * @cfg {Boolean} Режим обрезки пробелов в начале и конце добавляемого текста
-       * @variant true Обрезать пробелы.
-       * @variant false Не обрезать пробелы.
-       */
+    * @name Controls/Input/Text#trim
+    * @cfg {Boolean} If true, removes whitespaces from both sides of a string when input is completed.
+    * @variant true Remove whitespaces.
+    * @variant false Do not remove whitespaces.
+    */
 
    /**
-          * @name Controls/Input/Text#selectOnClick
-          * @cfg {Boolean} Определяет режим выделения текста в поле ввода при получении фокуса
-          * @variant true Выделять текст.
-          * @variant false Не выделять текст.
-          */
+    * @name Controls/Input/Text#selectOnClick
+    * @cfg {Boolean} If true, text is selected when input is clicked.
+    * @variant true Select text on click.
+    * @variant false Do not select text on click.
+    */
 
    /**
-          * @name  Controls/Input/Text#constraint
-          * @cfg {String} Устанавливает регулярное выражение, в соответствии с которым будет осуществляться валидация вводимых символов.
-          * @remark
-          * Служит для фильтрации вводимых символов в поле ввода по условию, установленному регулярным выражением.
-          * Каждый вводимый символ будет проверяться на соответствие указанному в этой опции регулярному выражению;
-          * несоответствующие символы ввести будет невозможно.
-          * @example
-          * Разрешен ввод только цифр:
-          * <pre class="brush:xml">
-          *     <option name="constraint">[0-9]</option>
-          * </pre>
-          * Разрешен ввод только кириллицы:
-          * <pre class="brush:xml">
-          *     <option name="constraint">[а-яА-ЯёЁ]</option>
-          * </pre>
-          */
+    * @name  Controls/Input/Text#constraint
+    * @cfg {String} Regular expression for input filtration.
+    * @remark
+    * Every entered character is checked with a given regular expression. If symbo does not
+    * comply with the expression, if will not be entered.
+    * @example
+    * Allow only digits:
+    * <pre class="brush:xml">
+    *     <option name="constraint">[0-9]</option>
+    * </pre>
+    * Allow only cyrillic letters:
+    * <pre class="brush:xml">
+    *     <option name="constraint">[а-яА-ЯёЁ]</option>
+    * </pre>
+    */
 
    var TextBox = Control.extend({
       _template: template,

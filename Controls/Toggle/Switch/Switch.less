@@ -34,49 +34,6 @@
    background-color: @background-color_Switch-line_disabled;
 }
 
-.controls-Switch__marker {
-   display: inline-block;
-   width: @size_Switch-marker;
-   height: @size_Switch-marker;
-   border-style: solid;
-   border-width: @border-width_Switch-marker;
-   border-radius: 100%;
-   box-sizing: border-box;
-   position: relative;
-}
-
-.controls-Switch__marker_enabled_checked,
-.controls-Switch__marker_disabled_checked {
-   &:before {
-      content: '';
-      width: @size_Switch-dot;
-      height: @size_Switch-dot;
-      border-radius: 100%;
-      display: inline-block; //Для псевдоэлементов в IE нужно высталять хоть какой-нибудь display, иначе они не отображаются
-      //Не получится выровнять с помощью флексов, т.к. IE ставит не по центру, а вообще случайным образом: https://jsfiddle.net/n1gyq4to/
-      position: absolute;
-      margin: (@size_Switch-marker - @size_Switch-dot) / 2 - @border-width_Switch-marker;
-   }
-}
-
-.controls-Switch__marker_enabled_checked:before {
-   background: @background_Switch-dot_enabled;
-}
-
-.controls-Switch__marker_disabled_checked:before {
-   background: @background_Switch-dot_disabled;
-}
-
-.controls-Switch__marker_enabled_checked,
-.controls-Switch__marker_enabled_unchecked {
-   border-color: @border-color_Switch-marker_enabled;
-}
-
-.controls-Switch__marker_disabled_checked,
-.controls-Switch__marker_disabled_unchecked {
-   border-color: @border-color_Switch-marker_disabled;
-}
-
 .controls-Switch__text {
    margin-left: @margin_Switch-text;
    cursor: pointer;
@@ -91,13 +48,7 @@
 }
 
 .ws-is-no-touch {
-   .controls-Switch__marker_enabled_checked:hover,
-   .controls-Switch__marker_enabled_unchecked:hover {
-      border-color: @border-color_Switch_marker_enabled_hover;
-   }
-   .controls-Switch:hover {
-      .controls-Switch__text_enabled_unselected {
-         text-decoration: underline;
-      }
+   .controls-Switch__text_enabled_unselected:hover {
+      text-decoration: underline;
    }
 }

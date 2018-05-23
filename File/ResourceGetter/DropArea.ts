@@ -6,6 +6,7 @@ import Deferred = require("Core/Deferred");
 import LocalFile = require("File/LocalFile");
 import random = require("Core/helpers/random-helpers");
 import ExtensionsHelper = require("File/utils/ExtensionsHelper");
+import getFilePreparer = require("File/utils/filePrepareGetter");
 import replaceDir = require("File/ResourceGetter/DropArea/replaceDir");
 
 type Handler = (files: FileList) => void;
@@ -232,6 +233,11 @@ const OPTION = {
      */
     extensions: null,
     /**
+     * @cfg {Number} Максимальный размер файла доступный для выбора (в МБ)
+     * @name File/ResourceGetter/DropArea#maxSize
+     */
+    maxSize: undefined,
+    /**
      * @cfg {HTMLElement} DOM элемент для перетаскивания файлов
      * @name File/ResourceGetter/DropArea#element
      */
@@ -284,7 +290,11 @@ class DropArea extends IResourceGetterBase {
         areas[this._uid] = {
             element, innerClass, dragText, dropText,
             handler: (files: FileList) => {
-                let result = this._extensions.verifyAndReplace(files);
+                let filePreparer = getFilePreparer({
+                    extensions: this._extensions,
+                    maxSize: this._options.maxSize
+                });
+                let result = filePreparer(files);
                 this._options.ondrop.call(this, result);
                 if (this._selectDef) {
                     this._selectDef.callback(result);

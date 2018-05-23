@@ -25,7 +25,7 @@ define('Controls/Input/Number', [
       trimEmptyDecimals: function(self) {
          if (!self._options.showEmptyDecimals) {
             var
-               processedVal = self._numberViewModel.getValue().replace(/\.0+$/g, '');
+               processedVal = self._numberViewModel.getValue().replace(/\.0*$/g, '');
             self._numberViewModel.updateValue(processedVal);
          }
       }
@@ -34,9 +34,10 @@ define('Controls/Input/Number', [
    NumberInput = Control.extend({
 
       /**
-       * Поле ввода числа.
+       * Number input.
+       *
        * @class Controls/Input/Number
-       * @extends Controls/Control
+       * @extends Core/Control
        * @mixes Controls/Input/interface/IInputNumber
        * @mixes Controls/Input/interface/IInputPlaceholder
        * @mixes Controls/Input/interface/IValidation
@@ -50,27 +51,27 @@ define('Controls/Input/Number', [
 
       /**
        * @name Controls/Input/Number#precision
-       * @cfg {Number} Количество знаков после запятой
+       * @cfg {Number} Number of characters in decimal part.
        */
 
       /**
        * @name Controls/Input/Number#onlyPositive
-       * @cfg {Boolean} Ввод только положительных чисел
+       * @cfg {Boolean} Allow only positive numbers.
        */
 
       /**
        * @name Controls/Input/Number#integersLength
-       * @cfg {Number} Количество знаков до запятой
+       * @cfg {Number} Maximum integer part length.
        */
 
       /**
        * @name Controls/Input/Number#showEmptyDecimals
-       * @cfg {Boolean} Показывать нулевую дробную часть
+       * @cfg {Boolean} Show zeros when decimal part wasn't entered.
        */
 
       /**
        * @name Controls/Input/Number#textAlign
-       * @cfg {String} Выравнивание текста.
+       * @cfg {String} Text align.
        * @variant 'left' default
        * @variant 'right'
        */

@@ -1,0 +1,50 @@
+.controls-ToolBarV {
+  display: inline-block;
+}
+.controls-ToolbarV_item {
+  .inline-flexbox();
+  cursor: pointer;
+  margin-right: @controls-toolbar-default-margin;
+}
+.controls-ToolbarV_item:before {
+  content: "\200b";
+}
+.controls-ToolBarV_content {
+  height: 100%;
+  width: 100%;
+  .inline-flexbox();
+  .align-items(center);
+
+  &:before {
+    content: "\200b";
+  }
+}
+.controls-ToolBarV_content__resetMargin {
+  margin-right: -@controls-toolbar-default-margin;
+}
+.controls-ToolbarV__item_icon_m {
+  .icon-size-without-important(@default-icon-size-medium);
+}
+.controls-ToolbarV__item_title {
+  white-space: nowrap;
+}
+.controls-ToolBarV__menuOpen {
+  .inline-flexbox();
+}
+.controls-ToolbarV_item__styled {
+  color: @color_primary;
+}
+.controls-ToolbarV_item__styled:active {
+  color: @color_Link-text_active;
+}
+.controls-ToolbarV__item_title:active {
+  text-decoration: underline;
+}
+.ws-is-no-touch {
+  .controls-ToolbarV_item__styled:hover {
+    color: @color_Link-text_active;
+  }
+  .controls-ToolbarV__item_title:hover {
+    text-decoration: underline;
+  }
+}

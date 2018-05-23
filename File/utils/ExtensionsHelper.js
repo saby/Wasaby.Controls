@@ -1,5 +1,5 @@
 /// <amd-module name="File/utils/ExtensionsHelper" />
-define("File/utils/ExtensionsHelper", ["require", "exports", "json!File/utils/MimeTypes", "json!File/utils/MediaTypes", "File/LocalFile", "File/utils/ExtensionsError"], function (require, exports, MimeTypes, MediaTypes, LocalFile, ExtensionsError) {
+define("File/utils/ExtensionsHelper", ["require", "exports", "json!File/utils/MimeTypes", "json!File/utils/MediaTypes"], function (require, exports, MimeTypes, MediaTypes) {
     "use strict";
     var isMediaType = function (type) {
         return (type == 'audio' || type == 'video' || type == 'image') || false;
@@ -26,6 +26,9 @@ define("File/utils/ExtensionsHelper", ["require", "exports", "json!File/utils/Mi
          * @returns {Boolean}
          */
         ExtensionsHelper.prototype.verify = function (file) {
+            if (!this.extensions.length) {
+                return true;
+            }
             var fileExt = ((file.name.match(/^\S[\S\s]*\.([\S]+)$/) || [])[1] || "").toLowerCase();
             if (this.extensions.indexOf(fileExt) > -1) {
                 return true;
@@ -42,32 +45,6 @@ define("File/utils/ExtensionsHelper", ["require", "exports", "json!File/utils/Mi
                 }
             }
             return false;
-        };
-        /**
-         * Проверяет валидность файлов переданного FileList и заменяет их на {@link File/LocalFile} либо на объект ошибки
-         * @param {FileList | Array.<File | Error>} fileList
-         * @return {Array.<LocalFile | Error>} Массив обёрток над локальными файлами или ошибок
-         */
-        ExtensionsHelper.prototype.verifyAndReplace = function (fileList) {
-            var files = [];
-            /*
-             * Нельзя обходить FileList через "for in" + ".hasOwnProperty"
-             * https://w3c.github.io/FileAPI/#filelist-section
-             * Обход надо делать только по числовому индексу и получать через FileList.item({Number}) или FileList[{Number}]
-             */
-            for (var i = 0; i < fileList.length; i++) {
-                var error = void 0;
-                var file = fileList instanceof FileList ? fileList.item(i) : fileList[i];
-                if (file instanceof Error) {
-                    files.push(file);
-                    continue;
-                }
-                if (this.extensions.length && !this.verify(file)) {
-                    error = new ExtensionsError(file.name);
-                }
-                files.push(error || new LocalFile(file));
-            }
-            return files;
         };
         /**
          * Формирует строку mime-types
@@ -101,6 +78,9 @@ define("File/utils/ExtensionsHelper", ["require", "exports", "json!File/utils/Mi
              * то просто клеим их с медиа типами, если они указаны
              */
             return [].concat(existsMimes.map(function (ext) { return MimeTypes[ext]; }), mediaTypes.map(function (ext) { return (ext + '/*'); })).join(",");
+        };
+        ExtensionsHelper.prototype.toString = function () {
+            return this.rawExtensions.join(", ");
         };
         return ExtensionsHelper;
     }());

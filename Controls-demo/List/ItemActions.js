@@ -14,7 +14,17 @@ define('Controls-demo/List/ItemActions', [
 
 ) {
    'use strict';
+   var showType = {
 
+      //show only in Menu
+      MENU: 0,
+
+      //show in Menu and Toolbar
+      MENU_TOOLBAR: 1,
+
+      //show only in Toolbar
+      TOOLBAR: 2
+   };
    var srcData = [
          {
             id: 1,
@@ -37,7 +47,7 @@ define('Controls-demo/List/ItemActions', [
          {
             id: 5,
             title: 'прочитано',
-            additional: true,
+            showType: showType.TOOLBAR,
             handler: function() {
                console.log('action read Click');
             }
@@ -62,7 +72,7 @@ define('Controls-demo/List/ItemActions', [
             id: 3,
             icon: 'icon-primary icon-Profile',
             title: 'profile',
-            main: true,
+            showType: showType.MENU_TOOLBAR,
             handler: function() {
                console.log('action profile Click');
             }
@@ -71,7 +81,7 @@ define('Controls-demo/List/ItemActions', [
             id: 4,
             icon: 'icon-Erase icon-error',
             title: 'delete pls',
-            additional: true,
+            showType: showType.TOOLBAR,
             handler: function() {
                console.log('action delete Click');
             }

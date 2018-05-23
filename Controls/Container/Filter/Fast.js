@@ -16,7 +16,7 @@ define('Controls/Container/Filter/Fast',
        * Receives props from context and pass to FastFilter.
        * Should be located inside Controls/Container/Filter.
        * @class Controls/Container/Filter/Fast
-       * @extends Controls/Control
+       * @extends Core/Control
        * @author Герасимов Александр
        * @control
        * @public

@@ -11,12 +11,12 @@ def delete_folders(*exclude):
 
 # удаление лишних папок со страницами тестов
 root = os.getcwd()
-dirs_for_del = ['reg', 'unit', r'stand/intest/regression']
+dirs_for_del = ['reg', 'unit', r'stand/Intest/regression']
 for tmp_dir in dirs_for_del:
     if os.path.exists(tmp_dir):
         shutil.rmtree(tmp_dir)
 
-os.chdir(r'stand/intest/integration')
+os.chdir(r'stand/Intest/integration')
 delete_folders('_VDOM', '_Grids', 'IntComboBox', 'IntDropdownList')
 
 os.chdir(r'_Grids')

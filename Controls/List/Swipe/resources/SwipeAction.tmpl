@@ -1,0 +1,14 @@
+<div class="controls-itemActionsV__action controls-itemActionsV__action_padding_swipe"
+      title="{{!!action.title ? action.title}}"
+      style="{{'height:' + action.height}}"
+      on:click="_onActionClick(action, itemData)">
+    <ws:if data="{{!!action.icon}}">
+        <i class="{{action.icon}} {{swipeConfig.swipeIconSize}}"/>
+    </ws:if>
+    <ws:else data="{{needShowTitle(false, swipeConfig.type)}} ">
+        <i class="controls-itemActionsV__action_icon icon-size {{swipeConfig.swipeIconSize}}"/>
+    </ws:else>
+    <ws:if data="{{needShowTitle(action, swipeConfig.type)}}">
+        <span class="controls-itemActionsV__action_title_swipe {{swipeConfig.bigTitle ? 'controls-itemActionsV__action_title_lonely'}}">{{action.title}}</span>
+    </ws:if>
+</div>

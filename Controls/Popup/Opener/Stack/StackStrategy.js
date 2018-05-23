@@ -2,6 +2,8 @@
  * Created by as.krasilnikov on 21.03.2018.
  */
 define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
+   var PANEL_SHADOW_WIDTH = 5; // Отступ контейнера под тень
+   var PANEL_MIN_INDENT = 100; // Минимальное расстояние между панелями
    return {
 
       /**
@@ -15,24 +17,18 @@ define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
        * @param prevRight отступ справа предыдущей панели
        */
       getPosition: function(index, tCoords, width, maxWidth, prevWidth, prevRight) {
-         var
-            top = tCoords.top,
+         var top = tCoords.top,
             right = tCoords.right;
          if (index !== 0) {
             if (prevWidth) {
-               var rightCalc = 100 - (width - prevWidth - prevRight);
+               var rightCalc = PANEL_MIN_INDENT - (width - prevWidth - prevRight);
                if (rightCalc > 0) {
-                  right = Math.max(100, rightCalc);
-                  if ((width + right) > maxWidth) {
-                     return null;
-                  }
+                  right = Math.max(PANEL_MIN_INDENT, rightCalc);
                }
-            } else {
-               return null;
             }
          }
          return {
-            width: width,
+            width: width + PANEL_SHADOW_WIDTH,
             right: right,
             top: top,
             bottom: 0

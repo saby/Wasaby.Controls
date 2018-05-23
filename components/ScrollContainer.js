@@ -2,9 +2,9 @@ define('SBIS3.CONTROLS/ScrollContainer', [
       'SBIS3.CONTROLS/CompoundControl',
       'SBIS3.CONTROLS/ScrollContainer/Scrollbar',
       'tmpl!SBIS3.CONTROLS/ScrollContainer/ScrollContainer',
+      'Core/helpers/Hcontrol/isElementVisible',
       'Core/detection',
       'Core/compatibility',
-      'Lib/FloatAreaManager/FloatAreaManager',
       'Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager',
       'Core/constants',
       'Core/EventBus',
@@ -15,9 +15,9 @@ define('SBIS3.CONTROLS/ScrollContainer', [
    function (CompoundControl,
              Scrollbar,
              template,
+             isElementVisible,
              cDetection,
              compatibility,
-             FloatAreaManager,
              StickyHeaderManager,
              constants,
              EventBus,
@@ -58,7 +58,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
        * Пример 2:
        * Для перерасчетов размеров SBIS3.CONTROLS/ScrollContainer необходимо:
        * <pre class="brush: html">
-       * control._notify('onResize')
+       * this._notifyOnSizeChanged(true)
        * </pre>
        * control - экземпляр класса любого родительского контрола, в котором есть ScrollContainer
        *
@@ -259,10 +259,6 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                this._hideBrowserScrollbar();
                this._hideBrowserScrollbar = this._hideBrowserScrollbar.bind(this);
                ScrollWidthController.add(this._hideBrowserScrollbar);
-
-               // task: 1173330288
-               // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
-               FloatAreaManager._scrollableContainers[this.getId()] = this.getContainer().find('.controls-ScrollContainer__content');
 
                this._initPaging();
                this._resizeInner();
@@ -613,7 +609,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
             Array.prototype.forEach.call(this._content.children(), function(item) {
                $item = $(item);
                // Метод outerHeight не учитывает видимость элемента, нужно учесть.
-               height += $item.is(':visible') ? $(item).outerHeight(true) : 0;
+               height += isElementVisible($item) ? $(item).outerHeight(true) : 0;
             });
 
             return height;
@@ -657,9 +653,6 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                .unsubscribe('onRequestTakeScrollbar',  this._requestTakeScrollbarHandler);
 
             ScrollContainer.superclass.destroy.call(this);
-            // task: 1173330288
-            // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
-            delete FloatAreaManager._scrollableContainers[ this.getId() ];
          },
          //region retail_offlain
          _bindOfflainEvents: function() {

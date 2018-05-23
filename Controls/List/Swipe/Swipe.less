@@ -1,0 +1,97 @@
+@keyframes itemActionsSwipe {
+  0% {
+    max-width:0;
+  }
+  100% {
+    max-width:100%;
+  }
+}
+.controls-itemActionsV_swipe {
+  align-items:center;
+  display: inline-flex;
+  position:absolute;
+  .animation(itemActionsSwipe, 1s);
+  height: 100%;
+  right: 0;
+  bottom: 0;
+  padding: 0 @padding_itemActions_action 0 @padding_itemActions_action + @width_itemActions_swipeShadow;
+  overflow:hidden;
+  box-sizing: border-box;
+  background-color: transparent;
+  background-image: -webkit-linear-gradient(left, transparent,  @backgroun-color_itemActions_swipe_shadow @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe 100%);
+  background-image: -moz-linear-gradient(left, transparent, @backgroun-color_itemActions_swipe_shadow @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe 100%);
+  background-image: -ms-linear-gradient(left, transparent,  @backgroun-color_itemActions_swipe_shadow @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe 100%);
+  background-image: -o-linear-gradient(left, transparent,  @backgroun-color_itemActions_swipe_shadow @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe 100%);
+  background-image: linear-gradient(to right, transparent,  @backgroun-color_itemActions_swipe_shadow @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe 100%);
+}
+.controls-itemActionsV__action_padding_swipe {
+  padding: @padding_itemActions_action_swipe;
+}
+
+//каскад избавление от которого слишком дорогостоящее
+.controls-itemActionsV__action_icon {
+  &.icon-primary {
+  color: @color_swipe_icon;
+  }
+  &.controls-itemActionsV__action_icon_small {
+    .icon-size-without-important(@font-size_swipe_icon_small, @default-icon-medium-font);
+  }
+  &.controls-itemActionsV__action_icon_big {
+    .icon-size-without-important(@font-size_swipe_icon_big, @default-icon-medium-font);
+  }
+}
+
+.controls-itemActionsV__action_title_swipe {
+  color: @color_swipe_title;
+  font-size: @font-size_swipe_title;
+  max-width: @max-width_itemActions_title;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-height: @height-size_swipe_title;
+}
+
+.controls-itemActionsV__separator {
+  background: @backgroun-color_itemActions_separator;
+  flex-shrink: 0;
+  display: block;
+}
+
+.controls-itemActionsV__separator_vertical {
+  width: @width_itemActions_separator;
+  height: calc(100% ~'-' 2 * @margin_itemActions_separator); //2 тк отсутпы сверху и снизу
+  margin: @margin_itemActions_separator 0;
+}
+
+.controls-itemActionsV__separator_horizontal {
+  width: calc(100% ~'-' @margin_itemActions_separator);
+  height: @width_itemActions_separator;
+  margin: 0 @margin_itemActions_separator;
+}
+
+.controls-itemActionsV__separator_horizontal_first {
+  margin: 0 @margin_itemActions_separator 0 0;
+}
+
+.controls-itemActionsV__separator_horizontal_second {
+  margin: 0 0 0 @margin_itemActions_separator;
+}
+
+.controls-itemActionsV_row,
+.controls-itemActionsV_column {
+  display: inline-flex;
+  height: 100%;
+}
+
+.controls-itemActionsV_column {
+  flex-direction: column;
+}
+
+.controls-itemActionsV_column_full {
+  justify-content: space-around;
+}
+
+.controls-itemActionsV__action_title_lonely {
+  height: @font-size_swipe_icon_small;
+  line-height: @font-size_swipe_icon_small;
+}

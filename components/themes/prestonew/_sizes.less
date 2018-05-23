@@ -1,0 +1,762 @@
+@multiplier:                   1;
+//default-sizes
+@icon-size_default:            round(37px * @multiplier);
+@icon-size_default_medium:     round(50px * @multiplier);
+@icon-size_default_large:      round(84px * @multiplier);
+//старые default-sizes
+@default-height:               round(84px * @multiplier);
+@default-border-width:         2px;
+@default-text-size:            round(32px * @multiplier);
+@small-text-size:              round(24px * @multiplier);
+@large-text-size:              round(32px * @multiplier);
+@huge-text-size:               round(40px * @multiplier);
+@default-icon-size:            round(37px * @multiplier);
+@default-icon-size-medium:     round(50px * @multiplier);
+@default-icon-size-large:      round(84px * @multiplier);
+@default-line-height:          round(41px * @multiplier);
+@default-base-line-height:     round(80px * @multiplier);//todo:   @default-height - 2 * @default-border-width
+@default-padding:              round(14px * @multiplier);
+@default-padding-small:        round(7px * @multiplier);
+//InputRender
+@height_InputRender_m:                                round(84px * @multiplier);
+@height_InputRender_l:                                round(84px * @multiplier);
+@font-size_InputRender_m:                             round(32px * @multiplier);
+@font-size_InputRender_l:                             round(40px * @multiplier);
+@padding_InputRender:                                 0 round(14px * @multiplier);
+@horizontal-padding_InputRender:                      round(14px * @multiplier);
+@width_InputRender-tagStyle:                          round(14px * @multiplier);
+@height_InputRender-tagStyle:                         round(14px * @multiplier);
+@border-width_InputRender:                            2px;
+//textarea
+@min-height_TextArea:                             round(42px * @multiplier);
+@padding_TextArea-container:                      round(19px * @multiplier) 0 round(19px * @multiplier) round(14px * @multiplier);
+@padding_TextArea-field:                          0 round(14px * @multiplier) 0 0;
+//NumberTextBox
+@icon-size_NumberTextBox-arrow:                   round(84px * @multiplier);
+//ComboBox
+@icon-size_ComboBox-Arrow:                        @default-icon-size-large;
+@spacing_ComboBox-Arrow:                          0px;
+@font-size_ComboBox-picker:                       round(32px * @multiplier);
+@padding_ComboBox-item:                           round(32px * @multiplier) round(16px * @multiplier);
+//suggest-text-box
+@suggest-text-box-icon-size:                      @default-icon-size-large;
+//search-form
+@search-border-radius:                            0;
+@search-button-wrapper-padding:                   0;
+@search-loop-size:                                round(80px * @multiplier);
+@search-form-icon-padding:                        0;
+@padding_SearchForm:                              0 round(15px * @multiplier);
+@top_searchForm_picker_closeButton:               round(8px * @multiplier);
+@margin-left__searchForm_picker:                  -(@default-border-width + @top_searchForm_picker_closeButton);
+@margin-top__searchForm_picker:                   -(@padding-top__searchForm_picker + @default-border-width - @top_searchForm_picker_closeButton);
+@padding-top__searchForm_picker:                  (@top_searchForm_picker_closeButton * 2) + @height_InputRender_m;
+//fieldLink
+@icon-size_FieldLink-button:                      round(80px * @multiplier); //todo: при переходе на cbuc-icons отказаться от этого щита
+@width_FieldLink-item-cross:                      @default-height;
+@fieldLink-showAll-shadow-width:                  round(28px * @multiplier);
+//treeview
+@tree-view-folder-text-size:                      @default-text-size;
+//button
+@border-radius_Button_m:                            1px;
+//area-blocks
+@spacing_Block:                                   round(8px * @multiplier);
+@border-width_Block:                              1px;
+@border-radius_Block:                             1px;
+//back-button
+@back-button-margin-before:                       0 4px 0 0;//todo: romanov
+@back-button-padding-before:                      1px 0;//todo: romanov
+//popup
+@menu-link-menu-revert-item-container-padding:    0px;//todo romanov
+//menuItem
+@margin_MenuItem-text:                           0px;//todo romanov
+@controls-filterButton-margin-value:              0px;
+//date-range
+@date-range-slider-year-state-width:                                  136px;//todo: mironov
+@date-range-slider-value-min-width:                                   124px;//todo: mironov
+@date-range-slider-height:                                            round(40px * @multiplier);
+@date-range-slider-value-padding:                                     0px;//todo: mironov
+@date-range-slider-prev-next-buttons-font-size:                       @date-range-slider-font-size;//todo: mironov
+@date-range-choose-year-state-width:                                  136px;//todo: mironov
+@date-range-choose-current-value-padding-left-right:                  0px;//todo: mironov
+@date-range-choose-year-padding-left:                                 12px;//todo: mironov
+@date-range-choose-quarter-caption-height:                            3*@date-range-choose-standart-line-height;//todo: mironov
+@date-range-choose-width:                                             204px;//todo: mironov
+@date-range-choose-home-button-size:                                  40px;//todo: mironov
+@date-range-choose-home-button-font-size:                             32px;//todo: mironov
+@date-range-choose-home-button-line-height:                           40px;//todo: mironov
+//listview
+@listView-check-box-left:                                3px;//todo: juravlev
+@listView-check-box-top:                                 7px;//todo: juravlev
+@list-view-actions-menu-margin:                          3px 0 0 0;//todo: romanov
+@list-view-actions-menu-item-padding-right:              round(104px * @multiplier);
+@list-view-items-toolbar-context-icon-size:              round(56px * @multiplier);
+@list-view-context-menu-close-top:                       round(40px * @multiplier);
+@list-view-context-menu-close-right:                     round(24px * @multiplier);
+//grid
+@data-grid-check-box-left:                               0px;//todo: juravlev
+//image
+@editdialog-template-minwidth:                           510px;//todo: borisov
+//submit-popup
+@controls-SubmitPopup-size-big-width:                    800px;//todo: stepin
+@controls-SubmitPopup-button-mini-min-width:             150px;//todo: stepin
+//dd-list
+@DropdownList-picker-menu-font-size:                     @default-text-size;//todo: krasilnikov
+@DropdownList-picker-margin-top:                         0;//todo: krasilnikov
+@DropdownList-picker-border:                             0;//todo: krasilnikov
+@DropdownList-picker-padding:                            0;//todo: krasilnikov
+@DropdownList-picker-head-padding:                       0 round(16px * @multiplier);//todo: krasilnikov
+@DropdownList-picker-head-duplicate-type-top-padding:    0px;//todo: krasilnikov
+@DropdownList-picker-menu-item-padding:                  round(5px * @multiplier) round(16px * @multiplier);
+@border-width_DropDownList_picker:                       @default-border-width;
+//MoveDialog
+@controls-movedialog-min-width:                 536px;
+@controls-movedialog-max-width:                 536px;
+@controls-movedialog-width:                     536px;
+//time-header:
+@time-header-icon-size:							@default-icon-size-large;
+//missspell
+@miss-spell-padding:                            @default-padding;
+//--------------------------------------------------------------------------------------------------------------------//
+@icon-small-size:                         round(37px * @multiplier);
+@icon-medium-size:                        round(50px * @multiplier);
+@icon-large-size:                         @default-height;
+@closeButtonWidth:                        @default-height;
+@closeButtonHeight:                       @default-height;
+@font-popup-size:                         @huge-text-size;
+@font-folder-size:                        @default-text-size;
+@check-box-default-font-size:             @default-text-size;
+@link-line-height:                        normal;
+@height_Link:                             auto;
+@font-size_Link:                          @default-text-size;
+@link-icon-field-margin:                  0 0 0 round(4px * @multiplier);
+@width_IconButton_bordered_size-m:          auto;
+@height_IconButton_bordered_size-m:         round(64px * @multiplier);
+@line-height_IconButton_bordered_size-m:    round(62px * @multiplier);
+@border-radius:                           0;
+@border-width_IconButton_bordered:                0px;
+//ListView
+@list-view-items-toolbar-icon-button-border-width:0;
+@list-view-items-toolbar-icon-button-border-radius:0;
+@list-view-items-toolbar-icon-button-border-font-size:@icon-large-size;
+@height_IconButton_bordered_size-s:    @icon-large-size;
+@width_IconButton_bordered_size-s:     @icon-large-size;
+@icon-button-edit-round-border-line-height:@icon-large-size;
+@listView-empty-data-padding-top:         round(54px * @multiplier);
+//Button
+@button-height:                           @default-height;
+@font-size_Button_m:                      round(40px * @multiplier);
+@min-width_Button:                        round(24px * @multiplier);
+@padding_Button-wrapper_m:                0 round(14px * @multiplier);
+@button-icon-top-offset:                  round(12px * @multiplier);                     // top offset of 16x16 icon
+@spacing_Button-between-icon-text:                         round(4px * @multiplier);                      // gap between icon and text
+@button-icon-text-margin:                 0 round(8px * @multiplier) 0 round(28px * @multiplier);             // margin of text following 16x16 icon
+@button-icon-big-top-offset:              round(8px * @multiplier);                     // top offset of 24x24 icon
+@button-icon-left-offset:                 round(14px * @multiplier);
+@button-icon-medium-left-offset:          0px; //calc (0 - 2px) - invalid, calc(0px - 2px) - valid
+@button-icon-large-left-offset:           0px; //calc (0 - 2px) - invalid, calc(0px - 2px) - valid
+@button-icon-big-text-margin:             0 round(8px * @multiplier) 0 round(36px * @multiplier);             // margin of text following 24x24 icon
+@button-text-margin:                      0 round(16px * @multiplier) 0 round(16px * @multiplier);
+@button-text-margin-left:                 round(16px * @multiplier);
+@button-text-margin-right:                round(16px * @multiplier);
+@button-text-padding:                     0;                        // padding of text
+@button-ipad-line-height:                 normal;
+//FilterPanelChooser
+@controls-filterButton-area-header-height:             @default-height;
+@filter-panel-chooser-list-view-item-padding:          0 0 0 round(24px * @multiplier);
+@filter-panel-chooser-list-view-check-box-top:         round(6px * @multiplier);
+@filter-panel-chooser-list-view-check-box-left:        round(4px * @multiplier);
+@filter-panel-chooser-list-view-title-max-height:      round(144px * @multiplier);
+@filter-panel-chooser-list-view-title-shadow-height:   round(32px * @multiplier);
+@border-width_Button:                                  2px;
+// Big button
+@padding_Button-wrapper_l:                @padding_Button-wrapper_m;
+@button-big-icon-top-offset:              round(20px * @multiplier);                           // top offset of 16x16 icon
+@button-big-icon-left-offset:             round(16px * @multiplier);
+@button-big-icon-text-margin:             @button-icon-text-margin;         // margin of text following 16x16 icon
+@button-big-icon-big-top-offset:          round(15px * @multiplier);
+@height_Button_l:                         @button-height;
+@border-radius_Button_l:                  0;
+@font-size_Button_l:                      @font-size_Button_m;
+//Button group
+@button-group-horizontal-item-margin:     0 round(24px * @multiplier) 0 0;
+@button-group-vertical-item-margin:       0 0 round(25px * @multiplier) 0;
+// Normal default button
+@button-checked-border-width:             @border-width_Button;
+@button-checked-padding:                  @padding_Button-wrapper_default;
+// Tab button
+@tab-button-large-secondAddText-font-size:round(13px * @multiplier);
+//Radio button
+@radio-button-text-margin:                0;
+@radio-button-height:                     auto;
+@radio-button-lineheight:                 normal;
+@radio-button-icon-width:                 round(26px * @multiplier);
+@radio-button-icon-height:                round(26px * @multiplier);
+@radio-button-icon-line-height:           normal;
+@radio-button-icon-border-radius:         round(26px * @multiplier);
+@radio-button-dot-size:                   round(26px * @multiplier);
+@radio-button-dot-margin:                 round(-3px * @multiplier)  0 0 round(-3px * @multiplier);
+@radio-button-icon-border-width:          round(3px * @multiplier);
+@radio-button-text-font-size:             round(32px * @multiplier);
+//Checkbox
+@height_CheckBox:                         round(50px * @multiplier);
+@check-box-icon-successful-size:          round(50px * @multiplier);
+@check-box-font-size:                     round(32px * @multiplier);
+@check-box-icon-successful-top:           round(-4px * @multiplier);
+@check-box-icon-successful-top-ie:        round(21px * @multiplier);
+@check-box-icon-successful-left:          round(6px * @multiplier);
+@check-box-icon-null-size:                round(18px * @multiplier);
+@check-box-caption-padding:               round(9px * @multiplier) 0;
+@check-box-icon-box-size:                 round(32px * @multiplier);
+@check-box-caption-line-height:           round(32px * @multiplier);
+@spacing_CheckBox-between-icon-caption:   round(9px * @multiplier) 0;
+@margin-left-CheckBox__icon_size:         @width_CheckBox;
+@font-size__checkBox:                     round(32px * @multiplier);
+//Switcher
+@switcher-dot-margin:                     0;
+@switcher-dot-margin-hover:               0;
+@switcher-dot-radius:                     round(6px * @multiplier);
+@switcher-btn-radius:                     round(28px * @multiplier);
+@switcher-btn-border-width:	              round(3px * @multiplier);
+@switcher-btn-border-hover:               round(3px * @multiplier);
+@switcher-btn-margin:                     round(10px * @multiplier);
+@switcher-border-radius:                  round(28px * @multiplier);
+@switcher-width:                          round(100px * @multiplier);;
+@switcher-height:                         round(50px * @multiplier);
+@switcher-hover-border-width:             2px;
+@switcherline-height:                     2px;
+@switcherline-width:                      round(70px * @multiplier);
+@switcher-btn-size:                       round(26px * @multiplier);
+@switcher-btn-hover-border-width:         @switcher-btn-border-width;
+//SwitcherDouble
+@switcher-do-text-margin:                 round(16px * @multiplier);
+//Menu
+@font-size_Popup:                         @huge-text-size; // откатил размер из-за того, что меню стало меньше чем кнпока т.к. в самих кнопках размер шрифта используется больший
+@menu-subpopup-margin:                    0;
+@menu-expand-width:                       @icon-large-size;
+@menu-expand-height:                      @icon-large-size;
+@menu-expand-top-offset:                  round(8px * @multiplier);;
+@menu-expand-right-offset:                0;
+@height_Menu-header:                      round(100px * @multiplier);
+@menu-expand-icon-font-size:              @icon-large-size;
+@menu-big-header-height:                  round(32px * @multiplier);
+@padding_Menu-header:                     round(4px * @multiplier) round(16px * @multiplier);;
+@font-weight_Menu-header:                normal;
+@menu-item-expand-padding-right:          @menu-expand-width;
+//Menu item
+@height_MenuItem:                        round(100px * @multiplier);
+@font-size_MenuItem:                     @default-text-size;
+@margin_MenuItem-icon_small:                round(6px * @multiplier) 0 round(1px * @multiplier) round(6px * @multiplier);
+@padding_MenuItem:               0 round(16px * @multiplier);
+@top_MenuItem-icon:               round(8px * @multiplier);
+@left_MenuItem-icon:              0;
+@top_MenuItem-icon_medium:             0;
+@top_MenuItem-icon_medium-big:         0;
+@left_MenuItem-icon_medium:            0;
+@line-height_MenuItem:                   round(100px * @multiplier);
+@padding_MenuItem-icon_small:                    round(56px * @multiplier);
+@padding_MenuItem-icon_medium:                    round(70px * @multiplier);
+@padding_MenuItem-icon_large:                    round(100px * @multiplier);
+// Menu
+@menu-button-menu-margin:                 -10px 0 0 -2px;
+@menu-icon-menu-margin:                   round(-10px * @multiplier) 0 0 round(-7px * @multiplier);
+@menu-icon-big-menu-margin:               round(-10px * @multiplier) 0 0 round(10px * @multiplier);
+@menu-icon-menu-large-margin:             round(-10px * @multiplier) 0 0 round(-18px * @multiplier);
+@padding_Menu:                            0;
+//Menu link
+@menu-link-menu-margin:                   round(-31px * @multiplier) 0 0 round(-18px * @multiplier);
+@padding_Menu-container:	  0;
+@menu-link-header-font-size:              @default-text-size;
+// Search form
+@search-button-wrapper-padding:				0;
+// Suggest
+@suggest-list-footer-height:              round(88px * @multiplier);
+@suggest-list-footer-padding:             0 round(24px * @multiplier);
+//Date picker
+@date-picker-button-margin-left:          0;
+@date-picker-button-vertical-align:       top;
+//Calendar
+@calendar-width:                          auto;
+//Month picker
+@month-picker-arrow-width:                round(8px * @multiplier);
+@month-picker-left-arrow-border-width:    round(8px * @multiplier) round(8px * @multiplier) round(8px * @multiplier) 0;
+@month-picker-field-height:               round(24px * @multiplier);
+@month-picker-right-arrow-border-width:   round(8px * @multiplier) round(8px * @multiplier) round(8px * @multiplier) 0;
+//Date Range
+@date-range-dash-width:                   round(14px * @multiplier);
+@date-range-dash-margin:                  0 round(8px * @multiplier) round(8px * @multiplier) round(8px * @multiplier);
+@date-range-button-vertical-align:        top;
+@date-range-button-size_default:          @default-icon-size-large;
+@date-range-button-line-height_default:   @default-height;
+@date-range-button-size_m:                @default-icon-size-large;
+@date-range-button-line-height_m:         @height_InputRender_m;
+@date-range-button-margin:                0;
+//Date Range Slider
+@date-range-slider-margin-top:            round(-32px * @multiplier);
+@date-range-slider-font-size:             round(32px * @multiplier);
+@date-range-slider-value-font-weight:     normal;
+//Date Range Choose
+@date-range-choose-border-width:          0; // В _theme.less прописан бордер у флоат арии
+@date-range-choose-border-hover-width:    0;
+@date-range-choose-month-height:          round(52px * @multiplier);
+@date-range-choose-short-width:           round(448px * @multiplier);
+@date-range-choose-font-size:             round(28px * @multiplier);
+@date-range-choose-current-value-font-size:round(32px * @multiplier);
+@date-range-choose-current-value-font-weight:normal;
+@date-range-choose-current-value-height:  round(100px * @multiplier);
+@date-range-choose-current-value-line-height:@date-range-choose-current-value-height;
+@date-range-choose-year-height:           @default-height;
+@date-range-choose-year-font-size:        round(32px * @multiplier);
+@date-range-choose-year-margin-bottom:    round(8px * @multiplier);
+@date-range-choose-year-prev-next-btns-font-size:round(42px * @multiplier);
+@date-range-choose-year-line-height:      @default-height;
+@date-range-choose-year-prev-next-btns-width:@date-range-choose-year-height;
+@date-range-choose-year-prev-next-btns-font-size:round(42px * @multiplier);
+@date-range-choose-home-icon-width:       round(32px * @multiplier);
+@controls-date-range-year-marginleft:     round(11px * @multiplier);
+// Date Range Big Choose
+@padding-left_DateRangeBigChoose-header:                                 0;
+@padding-right_DateRangeBigChoose-state-button:                          round(24px * @multiplier);
+@height_DateRangeBigChoose-years:                                        round(100px * @multiplier);
+@width_DateRangeBigChoose-years-leftRight:                               round(84px * @multiplier);
+@color_DateRangeBigChoose-DateRangePickerItem-months-button:             round(28px * @multiplier);
+@width_DateRangeBigChoose-dates-header-year:                             round(152px * @multiplier);
+@margin_DateRangeBigChoose-header-applyButton:                           round(8px * @multiplier);
+@width_DateRangeBigChoose-header-dash:                                   round(8px * @multiplier);
+@margin_DateRangeBigChoose-header-dash:                                  round(42px * @multiplier) round(8px * @multiplier) round(8px * @multiplier);
+@width_DateRangeBigChoose-header-closeButton:                            round(50px * @multiplier);
+@height_DateRangeBigChoose-years-rangeButton:                            @default-height;
+@font-size_DateRangeBigChoose-years-rangeButton:                         round(28px * @multiplier);
+@height_DateRangeBigChoose-body:                                         round(600px * @multiplier);
+@height_DateRangeBigChoose-MonthRangePickerItem-monthWrapper:            round(142px * @multiplier);
+//Edit at place
+@edit-at-place-wrapper-text-area-padding:             round(5px * @multiplier);
+@edit-at-place-wrapper-border-width:                  1px;
+@edit-at-place-editor-overlay-margin:                 round(-10px * @multiplier) 0 0 round(-10px * @multiplier);
+@edit-at-place-editor-overlay-padding:                round(10px * @multiplier) ;
+@edit-at-place-editor-overlay-border:                 none;
+@edit-at-place-editor-overlay-border-radius:          round(3px * @multiplier);
+//List view
+@controls-view-padding-S:                 round(9px * @multiplier);
+@listView-servicefooter-height:           round(41px * @multiplier);
+@listView-loadmorebutton-font-size:       round(24px * @multiplier);
+@list-view-actions-item-height:           @icon-small-size;
+@list-view-actions-margin:                0 round(4px * @multiplier);
+@list-view-actions-icon-top:              round(23px * @multiplier);
+@list-view-actions-menu-text-margin:      round(18px * @multiplier) 0 round(8px * @multiplier) round(98px * @multiplier);
+@list-view-items-toolbar-elements-margin: 0 round(4px * @multiplier);
+@list-view-items-toolbar-line-height:     round(49px * @multiplier);
+@list-view-items-toolbar-vertical-line-height:round(24px * @multiplier);
+@list-view-items-toolbar-icon-size:       round(56px * @multiplier);;
+@list-view-items-toolbar-menu-icon-size:  @icon-large-size;
+@touch-mode-items-toolbar-icon-margin-top:round(-24px * @multiplier);
+@list-view-actions-menu-icon-width:       @icon-small-size;
+@list-view-actions-menu-close-top:        round(40px * @multiplier);
+@list-view-actions-menu-close-right:      round(24px * @multiplier);
+@list-view-actions-menu-close-height:     round(56px * @multiplier);
+@list-view-actions-menu-close-width:      round(56px * @multiplier);
+@listView-empty-data-font-size:           round(28px * @multiplier);
+@list-view-scroll-height:                 round(100px * @multiplier);
+@controls-AjaxLoader-size:                round(100px * @multiplier);
+@controls-AjaxLoader-block-padding:       0;
+@controls-AjaxLoader-background:          none;
+@scrollPaging-padding:                    round(103px * @multiplier);
+//Tree view
+@tree-view-expand-width:                  round(50px * @multiplier);
+@height_TreeDataGridView-expand:          auto;
+@font-size_TreeDataGridView-expand:       round(50px * @multiplier);
+@width-TreeDataGridView-levelPadding:     round(58px * @multiplier);
+@padding_TreeDataGridView-expand:         0 round(8px * @multiplier) 0 0;
+@top_TreeDataGridView-editArrow:          round(5px * @multiplier);
+@tree-view-expand-open-border-width:      round(8px * @multiplier) round(8px * @multiplier) 0 round(8px * @multiplier);
+@tree-view-item-content-margin:           0 0 0 round(20px * @multiplier);
+@tree-view-child-container-padding:       @tree-view-item-content-margin;
+@tree-view-hier-wrapper-width:            round(20px * @multiplier);
+@tree-view-hier-wrapper-height:           round(20px * @multiplier);
+//Group
+@height_ListView-GroupBy:                 round(50px * @multiplier);
+//Data grid
+@data-grid-header-cell-height:            round(50px * @multiplier);
+@data-grid-cell-line-height:              round(44px * @multiplier);
+@data-grid-results-cell-line-height:      @data-grid-cell-line-height;
+@data-grid-header-cell-padding:           @data-grid-cell-padding;
+@data-grid-header-cell-padding-side:      round(10px * @multiplier);
+@data-grid-header-cell-font-size:         round(24px * @multiplier);
+@font-size_DataGridView-headerIcon:       round(42px * @multiplier);
+@data-grid-header-cell-sorting-icon-size: round(28px * @multiplier);
+@data-grid-cell-height:                   round(50px * @multiplier);
+@data-grid-cell-padding:                  0 @data-grid-cell-padding-right;
+@data-grid-cell-padding-right:            round(8px * @multiplier);
+@data-grid-check-box-top:                 -@default-border-width;
+@data-grid-money-header-cell-padding:     round(40px * @multiplier);
+@data-grid-money-header-cell-padding-last:round(56px * @multiplier);
+@data-grid-money-header-cell-padding-last_XL: round(56px * @multiplier);
+@data-grid-partScroll-arrowLeft-top-shift: floor(-22px * @multiplier); //ceil(-x) = x
+@data-grid-partScroll-arrowRight-top-shift:@data-grid-partScroll-arrowLeft-top-shift;
+@data-grid-partScroll-thumb-margin:       round(50px * @multiplier);
+@data-grid-results-cell-padding:          @data-grid-cell-padding;
+// PrintDialog
+//По какой-то причине Firefox берёт font-size не из html, а свой, причем только при расчёте этой ширины
+//MergeDialog
+@controls-MergeDialogTemplate-height:                                       round(588px * @multiplier);
+@controls-MergeDialogTemplate-hint-font-size:                               @small-text-size;
+@controls-MergeDialogTemplate-treeDataGridView-padding-bottom:              round(24px * @multiplier);
+@controls-MergeDialogTemplate-treeDataGridView-first-cell-width:            round(28px * @multiplier);
+//OperationsPanel
+@controls-OperationsPanel-height:                                       round(100px * @multiplier);
+@controls-OperationsPanel-actions-margin:                               0 round(8px * @multiplier);
+@controls-OperationsPanel-menu-icon-size:                               @icon-large-size;
+@controls-OperationsPanel-menu-padding-right:                           @controls-OperationsPanel-menu-icon-size;
+@controls-OperationsPanel-separator-width:                              2px;
+@controls-OperationsPanel-separator-height:                             round(54px * @multiplier);
+@controls-OperationsMark-separator-line-height:                         round(70px * @multiplier);
+@right_OperationsPanel-menu-closeButton:                      0px;
+//OperationsPanelButton
+@controls-OperationsPanelButton-vert-height:round(100px * @multiplier);
+@controls-OperationsPanelButton-font-size: @icon-large-size;
+//EditInPlace
+@controls-editInPlace-editor-padding:     round(8px * @multiplier);
+//MultiView
+@multiView-tile-item-min-width:           round(128px * @multiplier);
+@multiView-tile-item-image-margin:        round(10px * @multiplier) round(40px * @multiplier);
+@multiView-tile-item-text-margin:         round(7px * @multiplier);
+//DropdownList
+@DropdownList-picker-head-weight:           normal;
+@DropdownList-picker-head-height:           round(100px * @multiplier);
+@DropdownList-picker-max-width:             round(800px * @multiplier);
+//ProgressBar
+@controls-ProgressBar-height:             round(37px * @multiplier);
+@controls-ProgressBar-width:              round(400px * @multiplier);
+@controls-ProgressBar-border-radius:      0;
+@controls-ProgressBar-value-padding:      0 round(6px * @multiplier);
+@controls-ProgressBar-value-font-size:    round(28px * @multiplier);
+//Pager
+@controls-Pager-height:                   round(88px * @multiplier); //3 rem - button + 2px *2 border
+//FilterButton
+@controls-filterButton-button-width:	   @default-height;
+@controls-filterButton-height:            @default-height;
+@controls-filterButton-button-height:		round(84px * @multiplier);
+@controls-Popup-closeButton-top:          8px;
+@controls-filterButton-picker-close-top:  @top_window_button;
+@controls-filterButton-button-margin:     0;
+@controls-filterButton-button-verSide-margin: 0px;
+@controls-filterButton-button-empty-left-margin:   0px;
+@controls-filterButton-button-margin-right-align:round(8px * @multiplier) 0 round(8px * @multiplier) round(8px * @multiplier);
+@controls-filterButton-area-text-weight:	normal;
+@controls-filterButton-header-vertical-spacing: round(8px * @multiplier);
+@controls-filterButton-area-header-padding:@controls-filterButton-header-vertical-spacing @default-height @controls-filterButton-header-vertical-spacing round(24px * @multiplier);
+@controls-filterButton-area-text-size:    round(40px * @multiplier);
+@controls-filterButton-area-text-margin:   0 round(24px * @multiplier) 0 0;
+@controls-filterButton-clear-margin-right: round(24px * @multiplier);
+@controls-filterButton-area-content-margin:0 round(8px * @multiplier) round(24px * @multiplier) round(24px * @multiplier);
+@controls-filterButton-line-height:       round(31px * @multiplier);
+@controls-filterButton-filterLine-margin: 0;
+@size_FilterButton_icon:                  @default-icon-size-large;
+@controls-filterButton-area-header-width:    round(667px * @multiplier);
+//BackButton
+@back-button-font-size:                   round(40px * @multiplier);
+@back-button-height:                      round(50px * @multiplier);
+//BreadCrumbs
+@breadcrumbs-top:                         0;
+@breadcrumbs-smallItems-font-size:        round(28px * @multiplier);
+@breadcrumbs-arrow-top:                   1px;
+@breadcrumbs-small-items-top:             0;
+// EditDialog
+@editdialog-applybutton-right:            round(90px * @multiplier); //ширина кнопки закрытия окна 36px +.07rem; на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)
+@editdialog-window-title-margin-right:    round(308px * @multiplier); //ширина кнопки закрытия окна 36px + 90px ширина кнопки сохранить +.07rem; на небольшой отступ между ними
+//MoveDialog
+@controls-Paging-item-width:              round(24px * @multiplier);
+@controls-Paging-btn-margin:              0 round(8px * @multiplier) 0 0;
+@controls-Paging-btn-padding:             round(8px * @multiplier);
+@controls-Paging-padding:                 0;
+@controls-movedialog-min-height:          round(100px * @multiplier);
+@controls-movedialog-max-width:           round(700px * @multiplier);
+@controls-movedialog-width:               round(700px * @multiplier);
+//ScrollContainer
+@controls-ScrollContainer-top-gradient-height:round(24px * @multiplier);
+//Scrollbar
+@controls-Scrollbar-width:                round(10px * @multiplier);
+@controls-Scrollbar-animated-width:       @controls-Scrollbar-width;
+@controls-Scrollbar-animated-right:       0;
+@controls-Scrollbar-animate-duration:     0;
+@controls-Scrollbar-thumb-border-radius:  round(5px * @multiplier);
+@controls-Scrollbar-min-height:           round(100px * @multiplier);
+@controls-Scrollbar-thumb-margin:         round(8px * @multiplier) 0;
+@controls-Scrollbar-thumb-padding:        0px round(7px * @multiplier);
+//InformationPopup
+@controls-InformationPopup-closeButton-top:              6px;
+@controls-InformationPopup-closeButton-right:            6px;
+@controls-InformationPopup-closeButton-width:            round(50px * @multiplier);
+@controls-InformationPopup-closeButton-height:           round(50px * @multiplier);
+@controls-InformationPopup-closeButton-font-size:        round(50px * @multiplier);
+//SubmitPopup
+@controls-SubmitPopup-size-standard-width:round(784px * @multiplier);
+@controls-SubmitPopup-button-min-width:   round(280px * @multiplier);
+@controls-SubmitPopup-button-height:      @default-height;
+@controls-SubmitPopup-button-margin:      round(4px * @multiplier);
+@controls-SubmitPopup-message-font-weight:normal;
+@controls-SubmitPopup-message-font-size:  round(32px * @multiplier);
+@controls-SubmitPopup-message-margin-bottom:round(16px * @multiplier);
+@controls-SubmitPopup-details-color:      #8991A9;
+@controls-SubmitPopup-details-font-size:  round(28px * @multiplier);
+@controls-SubmitPopup-body-padding:       round(45px * @multiplier);
+@controls-SubmitPopup-border-top:         none;
+@controls-SubmitPopup-border-bottom:      none;
+@controls-SubmitPopup-border-left:        none;
+@controls-SubmitPopup-border-right:       none;
+//LongOperations
+@long-operations-list-time-ctr-f-size: 16px;
+@long-operations-list-state-ctr-margin-lf: -16px;
+@long-operations-popup-collapsed-width: 420px;
+@long-operations-popup-collapsed-max-width: 420px;
+@long-operations-popup-exp-width: 600px;
+@long-operations-popup-exp-max-width: 600px;
+@long-operations-popup-header-height: 60px;
+@long-operations-popup-header-pad-rt: 54px;
+@long-operations-popup-header-icon-size: 32px;
+@long-operations-popup-header-caption-f-size: 32px;
+@long-operations-popup-header-caption-line-height: 52px;
+@long-operations-popup-collapsed-header-caption-f-size: 24px;
+@long-operations-popup-header-result-max-width: 210px;
+@long-operations-popup-header-result-min-width: 86px;
+@long-operations-popup-header-but-f-size: 24px;
+@long-operations-popup-header-but-gap-top: 7px;
+@long-operations-popup-collapsed-header-but-gap-top: 0px;
+@long-operations-popup-list-time-f-size: 21px;
+@long-operations-popup-list-border-bot: 0px none;
+@long-operations-popup-reg-but-ctr-height: 50px;
+@long-operations-popup-reg-but-line-height: 50px;
+@long-operations-popup-foot-height: 50px;
+@long-operations-popup-foot-bg: #354b62;
+@long-operations-popup-foot-f-size: 16px;
+@long-operations-popup-foot-but-gap-top: 12px;
+@long-operations-reg-filter-width: 220px;
+@long-operations-reg-filter-height: 46px;
+@long-operations-reg-filter-title-height: 40px;
+//TabButton
+@tab-button-height:                       round(100px * @multiplier);
+@tab-button-inner-line-height:            round(100px * @multiplier);
+@tab-button-inner-height:                 round(100px * @multiplier);
+@tab-button-checked-height:               round(100px * @multiplier);
+@tab-button-simple-inner-padding:         0 round(24px * @multiplier) 0 round(24px * @multiplier);
+@tab-control-smple-bottomline-height:     round(6px * @multiplier);
+@tab-button-font-size:                    round(40px * @multiplier);
+@tab-button-main-text-line-height:        @tab-button-height;
+@tab-button-checked-font-size:            round(40px * @multiplier);
+@tab-button-checked-inner-font-size:      round(40px * @multiplier);
+@tab-button-large-inner-max-width:		   100%;
+@tab-button-inner-padding:                0 round(24px * @multiplier) 0 round(24px * @multiplier);
+@tab-button-inner-wrapper-height:         100%;
+@tab-button-inner-after-height:           round(54px * @multiplier);
+@tab-button-inner-after-bottom:           round(23px * @multiplier);
+@tab-button-inner-after-width:            @default-border-width;
+@tab-button-ff-inner-height:              @tab-button-inner-height;
+//Browser
+@controls-Paging-btn-width:               @default-height;
+@controls-Paging-btn-height:              @default-height;
+@controls-Paging-item-width:              @default-height;
+//sundry
+@paging-font-size:                        @default-height;
+@scrollpager-border:                      none;
+@scrollpager-bottom:                      round(9px * @multiplier);
+@height_ListView_ScrollPager:             @default-height;
+@closeBigButtonWidth:                     @default-height;
+@width_DateRangeBigChoose:		   		   round(722px * @multiplier);
+@tab-buttons-height:							   round(100px * @multiplier);
+@button-without-caption-min-width:          round(84px * @multiplier);
+@controls-toolbar-default-margin:			0;
+@controls-SelectorButton-line-height:		round(40px * @multiplier);
+@controls-SelectorButton-height:				round(40px * @multiplier);
+@margin_MenuItem-icon_large:						0 0 0 @default-height;
+@margin_MenuItem-icon_medium:						0 0 0 round(50px * @multiplier);
+@margin_MenuItem-icon_small:						0 0 0 round(37px * @multiplier);
+@tab-buttons-border-bottom-height:        1px;
+@commands-button-close-icon:              @icon-large-size;
+@commands-button-close-button-size:       @icon-large-size;
+@commands-button-close-button-top:        round(4px * @multiplier);
+@commands-button-close-button-glyph-top:  @commands-button-close-button-top;
+@commands-button-margin:                  round(-10px * @multiplier) round(-87px * @multiplier) 0 0;
+@DropdownList-height: 					  @default-height;
+@DropdownList-footer-buttonsBlock-height: round(100px * @multiplier);
+@DropdownList-picker-close-btn-top:       0;
+@DropdownList-picker-close-btn-right:     0;
+@DropdownList-picker-menu-item-height:    @default-height;
+@DropdownList-picker-menu-item-height-ff: round(112px * @multiplier);
+@DropdownList-after-caption-top:          0;
+@width_TreeDataGridView-copyArrow:        round(28px * @multiplier);
+@bread-crumbs-menu-padding:               0;
+@back-button-width-before:                round(20px * @multiplier);
+@padding_Menu-submenu:                   @bread-crumbs-menu-padding;
+//TimeHeader
+@time-header-height:                      round(100px * @multiplier);
+@time-header-font-size:                   round(40px * @multiplier);
+@time-header-title-margin-left:           round(24px * @multiplier);
+@time-header-toggle-time-margin-left:     round(32px * @multiplier);
+@time-header-home-button-margin-left:     round(8px * @multiplier);
+@time-header-margin:                      0;
+@time-header-offset-start-block:          0;
+// ClockPicker
+@clock-picker-height:                     round(542px * @multiplier);
+@clock-picker-width:                      round(558px * @multiplier);
+@clock-picker-outer-tick-radius:          round(35px * @multiplier);
+@clock-picker-inner-tick-radius:          round(28px * @multiplier);
+@clock-picker-outer-circle-radius:        round(220px * @multiplier);
+@clock-picker-inner-circle-radius:        round(140px * @multiplier);
+@clock-picker-unit-time-font-size:        round(48px * @multiplier);
+@clock-picker-arrow-width:                1px;
+@clock-picker-arrow-tip-border-width:     @default-border-width;
+//ddlist
+@DropdownList-footer-multisel-buttonsBlock-h:         round(100px * @multiplier);
+@DropdownList-checkbox-bottom:                        0;
+@DropdownList-picker-max-height:                      round(560px * @multiplier);
+@DropdownList-footer-select-top:                      round(8px * @multiplier);
+@DropdownList-picker-menu-line-height:                round(91px * @multiplier);
+@DropdownList-after-caption-wrapper-top:              0;
+@DropdownList-footer-hasMore-left:                    round(16px * @multiplier);
+@DropdownList-footer-hasMore-left-multiselect:        round(66px * @multiplier);
+@DropdownList-footer-hasMore-top-multiselect:         round(28px * @multiplier);
+@DropdownList-footer-hasMore-top:                     round(28px * @multiplier);
+@DropdownList-footer-select-icon-container-size:      @default-height;
+@DropdownList-footer-select-icon-size:                round(64px * @multiplier);
+//money
+@money-decorator-integer-accent-results-font-size: @large-text-size;
+@money-decorator-fraction-font-size:round(24px * @multiplier);
+//sundry
+@header-height:                           @default-height;
+@header-font-size:                        round(40px * @multiplier);
+@header-padding-left:                     0;
+@bottomStyle-items-toolbar-height:        round(50px * @multiplier);
+@bottomStyle-items-toolbar-width:         round(42px * @multiplier);
+@bottomStyle-items-toolbar-margin:        0;
+@list-view-items-toolbar-locked-right:    @list-view-items-toolbar-right;
+@list-view-items-toolbar-locked-margin-right: -4px;
+@bottomStyle-padding-bottom:              round(50px * @multiplier);
+@bottomStyle-items-toolbar-margin-top:    round(8px * @multiplier);
+@image-bar-height:                        round(100px * @multiplier);
+@image-bar-horizontal-padding:            0;
+@font-size_MoneyTextBox-decimals:         @default-text-size;
+@controls-toolbar-item-vertical-align:    baseline;
+@DropdownList-picker-offset:              round(-11px * @multiplier) 0 0 round(-19px * @multiplier);
+@DropdownList-picker-fastdatafilter-offset: round(-11px * @multiplier) 0 0 round(-19px * @multiplier);
+@DropdownList-picker-fdf-left:            round(-20px * @multiplier);
+@dropdown-list-item-padding:              round(5px * @multiplier) @default-height round(3px * @multiplier) round(16px * @multiplier);
+@list-view-items-toolbar-bottom:          round(6px * @multiplier);
+@controls-view-eip-padding-DEFAULT:       round(8px * @multiplier);
+@controls-view-padding-DEFAULT:           round(24px * @multiplier);
+@tree-view-padding-left-DEFAULT:          round(8px * @multiplier);
+@controls-NotificationPopup-border:       none;
+@controls-NotificationPopup-border-top:   @controls-NotificationPopup-border;
+@controls-NotificationPopup-border-right: @controls-NotificationPopup-border;
+@controls-NotificationPopup-border-left:  @controls-NotificationPopup-border;
+@controls-NotificationPopup-header-padding:     round(8px * @multiplier);
+@long-operations-popup-header-line-height:      60px;
+@controls-SubmitPopup-footer-border-top:        none;
+@link-icon-margin:                        -@default-border-width 0 0;
+@radio-button-icon-margin:                ceil(6px * @multiplier) round(16px * @multiplier) 0 0;
+@back-button-text-fontweight:             @default-font-weight;
+//printDialog
+@printDialog-activate-right:              round(92px * @multiplier); //ширина кнопки 84px+8px отступ
+//back-button
+@back-arrow-width-h3:             round(21px * @multiplier);
+@back-arrow-height-h3:            round(21px * @multiplier);
+//engine-browser
+@browser-search-margin:           round(8px * @multiplier);
+@width_browser_search:            round(600px * @multiplier);
+@width_browser_search_small:      round(350px * @multiplier);
+@browser-top-template-padding:    @browser-search-margin;
+@padding-left_Browser-backButton: round(16px * @multiplier);
+
+@DropdownList-picker-title-type-margin-top: round(-8px * @multiplier);
+@tab-button-simple-inner-bottom-height:   round(8px * @multiplier);
+//waitIndicator
+@wait-indicator-size:             round(74px * @multiplier);
+@wait-indicator-gap:              round(13px * @multiplier);
+@wait-indicator-font-size:        round(24px * @multiplier);
+@wait-indicator-min-text-width:   round(187px * @multiplier);
+@wait-indicator-labeled-width:    round(386px * @multiplier);
+@border-radius_WaitIndicator:     round(16px * @multiplier);
+@wait-indicator-small-size:       round(42px * @multiplier);
+@wait-indicator-small-gap:        round(13px * @multiplier);
+//header
+@header-font-weight:              @default-font-weight;
+@font-weight_Header:              normal;
+//popup,floatarea,window
+@top_window_button:               round(8px * @multiplier);
+
+//Marker
+@background-size_Marker:                          round(5px * @multiplier);
+
+//money
+@money-decorator-integer-basic-registry-font-size: round(28px * @multiplier);
+
+//link
+@height_Button_m:                   round(58px * @multiplier);
+@min-width_Button-Vdom:                  round(86px * @multiplier);
+@font-size_Link-s:                  round(21px * @multiplier);
+@font-size_Link-m:                  round(24px * @multiplier);
+@font-size_Link-l:                  round(28px * @multiplier);
+@font-size_Link-xl:                 round(32px * @multiplier);
+@font-size_Button-Vdom_m:           round(32px * @multiplier);
+@border-width_Button-Vdom:          0;
+@border-radius_Button_default:      1px;
+@font-size_Button-Vdom_l:           round(40px * @multiplier);
+@height_Button-Vdom_l:              round(78px * @multiplier);
+/*@border-radius_Button_l:            1px;*/
+@padding_Button-wrapper_default:    0 round(16px * @multiplier);
+@padding_Button-Vdom-wrapper_l:     round(16px * @multiplier);
+@spacing_Button-Vdom-between-icon-text:  round(8px * @multiplier);
+
+//Input/Area
+@width_InputArea: round(340px * @multiplier);
+@vertical-padding_InputArea: round(7px * @multiplier);
+
+//headers
+@font-size_Header__caption_size-xl:   round(40px * @multiplier);
+@font-size_Header__caption_size-l:    round(32px * @multiplier);
+@font-size_Header__caption_size-default: round(28px * @multiplier);
+@font-size_Header__caption_size-s:    round(24px * @multiplier);
+@padding_HeaderCounter-between-counter-caption: round(8px * @multiplier);
+@font-size_HeaderCounter_size-h3:     round(32px * @multiplier);
+@font-size_HeaderCounter_size-h7:     round(28px * @multiplier);
+@font-size_HeaderCounter_size-h6:     round(24px * @multiplier);
+@padding_Header-between-counter-caption: round(8px * @multiplier);
+@width-HeaderSeparator:               round(14px * @multiplier);
+@height-HeaderSeparator:              round(23px * @multiplier);
+@size-Header__icon_size-default:      round(42px * @multiplier);
+@width-Header__icon_size-default:     round(42px * @multiplier);
+@height-Header__icon_size-default:    round(42px * @multiplier);
+@size-Header__icon_size-big:          round(52px * @multiplier);
+@width-Header__icon_size-big:         round(52px * @multiplier);
+@height-Header__icon_size-big:        round(52px * @multiplier);
+@size-Separator__icon:                round(42px * @multiplier);
+
+//radioGroup
+@height_RadioItem:                        round(50px * @multiplier);
+@font-size_RadioItem_size-l:              round(32px * @multiplier);
+@font-size_RadioItem_size-m:              round(32px * @multiplier);
+@stroke-width_RadioGroup_borderCircle:    round(3px * @multiplier);
+@spacing-between-radioItems_horizontal:   round(24px * @multiplier);
+@spacing-between-radioItems_vertical:     0;
+@spacing-between-radioItem-icon-caption:  round(16px * @multiplier);
+@width_RadioItem_svg:                     round(26px * @multiplier);
+@height_RadioItem_svg:                    round(26px * @multiplier);
+
+//backButton
+@width-BackButton_size-l:              round(14px * @multiplier);
+@height-BackButton_size-l:             round(23px * @multiplier);
+@width-BackButton_size-default:        round(14px * @multiplier);
+@height-BackButton_size-default:       round(23px * @multiplier);
+@width-BackButton_size-s:              round(14px * @multiplier);
+@height-BackButton_size-s:             round(23px * @multiplier);
+@spacing-BackButton-between-icon-text: round(16px * @multiplier);
+@spacing-BackButton-between-icon-text_big: round(16px * @multiplier);
+@spacing-Separator-between-icon-text:     0;
+//icon-button
+@box-shadow-IconButton:                  0px 1px 4px @color-IconButton__shadow;
+@height-IconButton_size-m:               round(44px * @multiplier);
+@width-IconButton_size-m:                round(44px * @multiplier);
+@height-IconButton_size-l:               round(58px * @multiplier);
+@width-IconButton_size-l:                round(58px * @multiplier);
+@border-radius-IconButton:               1px;
+@border-width-IconButton:                none;
+@border-style-IconButton:                none;
+@box-shadow-IconButton_activated:        none;

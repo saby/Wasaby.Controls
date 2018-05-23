@@ -1,7 +1,4 @@
 /**
- * Created by kraynovdo on 15.02.2018.
- */
-/**
  * Created by dv.zuev on 17.01.2018.
  * Компонент слушает события "снизу". События register и сохраняет Emmitterы в списке
  * то есть, кто-то снизу сможет услышать события верхних компонентов через это отношение
@@ -121,6 +118,7 @@ define('Controls/Layout/Scroll',
 
          start: function(self, eventType, scrollTop) {
             self._registrar.start(eventType, scrollTop);
+            self._notify(eventType, [scrollTop]);
          }
       };
 
@@ -171,8 +169,9 @@ define('Controls/Layout/Scroll',
             _private.doScroll(this, scrollParam, this._container);
          },
 
-
-
+         doScroll: function(scrollParam) {
+            _private.doScroll(this, scrollParam, this._container);
+         },
 
          _unRegisterIt: function(event, registerType, component) {
             if (registerType === 'listScroll') {

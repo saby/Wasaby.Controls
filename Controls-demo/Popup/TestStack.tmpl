@@ -1,0 +1,35 @@
+<div style="height: 100%; min-width: 500px; max-width: 700px;">
+    <Controls.Popup.Templates.Stack.StackTemplate caption="PopupManager">
+        <ws:topArea>
+            <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
+                <Controls.Button caption="Закрыть {{_options.type}}" on:click="_close()"/>
+            </div>
+        </ws:topArea>
+        <ws:contentArea>
+            <div style="margin-left: 8px; margin-top: 8px;">
+                <Controls.Popup.Opener.Stack name="stack">
+                    <ws:popupOptions template="Controls-demo/Popup/TestStack">
+                        <ws:componentOptions type="stack"/>
+                    </ws:popupOptions>
+                </Controls.Popup.Opener.Stack>
+                <Controls.Button caption="{{_options.type === 'sticky' ? '123' : 'Открыть stack'}}" on:click="_onClick()"/>
+                <br/>
+                <Controls.Button caption="Открыть через OpenEditDialog (TestStack, dialog)" on:click="_openOldPanel('Controls-demo/Popup/TestStack', 'dialog')"/>
+                <br/>
+                <Controls.Button caption="Открыть через OpenEditDialog (TestStack, floatArea, stack)" on:click="_openOldPanel('Controls-demo/Popup/TestStack', 'floatArea', true)"/>
+                <br/>
+                <Controls.Button caption="Открыть через OpenEditDialog (TestStack, floatArea, not stack)" on:click="_openOldPanel('Controls-demo/Popup/TestStack', 'floatArea', false)"/>
+                <br/>
+                <Controls.Button caption="Открыть через OpenEditDialog (MyTextBox, dialog)" on:click="_openOldPanel('Examples/TextBox/MyTextBox/MyTextBox', 'dialog')"/>
+                <br/>
+                <Controls.Button caption="Открыть через OpenEditDialog (MyTextBox, floatArea)" on:click="_openOldPanel('Examples/TextBox/MyTextBox/MyTextBox', 'floatArea', true)"/>
+                <br/>
+                <Controls.Button caption="Открыть через OpenEditDialog (MyTextBox, floatArea, not stack)" on:click="_openOldPanel('Examples/TextBox/MyTextBox/MyTextBox', 'floatArea', false)"/>
+
+                <br/>
+                <Controls.Button caption="Открыть через OpenEditDialog (FormController, dialog)" on:click="_openOldPanel('Examples/DialogRecord/DialogRecord/SimpleListEditDialog/SimpleListEditDialog', 'dialog')"/>
+
+            </div>
+        </ws:contentArea>
+    </Controls.Popup.Templates.Stack.StackTemplate>
+</div>

@@ -11,7 +11,8 @@ define('Controls/Container/Scroll/Scrollbar',
       'use strict';
 
       /**
-       * Класс контрола "Тонкий скролл".
+       * Thin scrollbar.
+       *
        * @class Controls/Container/resources/Scrollbar
        * @extends Core/Control
        *

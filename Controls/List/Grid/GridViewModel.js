@@ -1,9 +1,8 @@
 define('Controls/List/Grid/GridViewModel', [
    'Core/Abstract',
-   'Core/core-clone',
-   'Controls/List/SimpleList/ListViewModel',
+   'Controls/List/ListViewModel',
    'WS.Data/Entity/VersionableMixin'
-], function(Abstract, cClone, ListViewModel, VersionableMixin) {
+], function(Abstract, ListViewModel, VersionableMixin) {
 
    'use strict';
 
@@ -92,7 +91,6 @@ define('Controls/List/Grid/GridViewModel', [
       },
 
       GridViewModel = Abstract.extend([VersionableMixin], {
-
          _model: null,
          _columnTemplate: null,
 
@@ -121,18 +119,29 @@ define('Controls/List/Grid/GridViewModel', [
          },
 
          constructor: function(cfg) {
+            var
+               self = this;
             this._options = cfg;
             GridViewModel.superclass.constructor.apply(this, arguments);
-            this._model = new ListViewModel({
-               items: cfg.items,
-               idProperty: cfg.idProperty,
-               displayProperty: cfg.displayProperty,
-               markedKey: cfg.markedKey,
-               multiselect: cfg.multiselect
+            this._model = this._createModel(cfg);
+            this._model.subscribe('onListChange', function() {
+               self._markedItem = self.getItemById(self._options.markedKey, self._options.idProperty);
+               self._nextVersion();
+               self._notify('onListChange');
             });
             this._prepareHeaderColumns(this._options.header, this._options.multiselect);
             this._prepareResultsColumns(this._options.columns, this._options.multiselect);
             this._prepareColgroupColumns(this._options.columns, this._options.multiselect);
+         },
+
+         _createModel: function(cfg) {
+            return new ListViewModel({
+               items: cfg.items,
+               keyProperty: cfg.keyProperty,
+               displayProperty: cfg.displayProperty,
+               markedKey: cfg.markedKey,
+               multiselect: cfg.multiselect
+            });
          },
 
          setColumnTemplate: function(columnTpl) {
@@ -310,13 +319,12 @@ define('Controls/List/Grid/GridViewModel', [
             this._prepareResultsColumns(this._options.columns, this._options.multiselect);
          },
 
-         getItemById: function(id, idProperty) {
-            return this._model.getItemById(id, idProperty);
+         getItemById: function(id, keyProperty) {
+            return this._model.getItemById(id, keyProperty);
          },
 
          setMarkedKey: function(key) {
             this._model.setMarkedKey(key);
-            this._nextVersion();
             this._notify('onListChange');
          },
 
@@ -360,7 +368,15 @@ define('Controls/List/Grid/GridViewModel', [
             };
             current.getCurrentColumn = function() {
                var
-                  currentColumn = cClone(current);
+                  currentColumn = {
+                     item: current.item,
+                     dispItem: current.dispItem,
+                     keyProperty: current.keyProperty,
+                     displayProperty: current.displayProperty,
+                     index: current.index,
+                     key: current.key,
+                     getPropValue: current.getPropValue
+                  };
                currentColumn.columnIndex = current.columnIndex;
                currentColumn.cellClasses = _private.getItemColumnCellClasses(current);
                currentColumn.column = current.columns[current.columnIndex];
@@ -453,7 +469,6 @@ define('Controls/List/Grid/GridViewModel', [
 
          updateIndexes: function(startIndex, stopIndex) {
             this._model.updateIndexes(startIndex, stopIndex);
-            this._nextVersion();
             this._notify('onListChange');
          },
 
@@ -471,6 +486,10 @@ define('Controls/List/Grid/GridViewModel', [
 
          getCount: function() {
             return this._model.getCount();
+         },
+
+         setItemActions: function(item, actions) {
+            this._model.setItemActions(item, actions);
          },
 
          destroy: function() {

@@ -1,5 +1,5 @@
 /// <amd-module name="File/ResourceGetter/FileSystem" />
-define("File/ResourceGetter/FileSystem", ["require", "exports", "tslib", "File/ResourceGetter/Base", "Core/Deferred", "File/utils/ExtensionsHelper"], function (require, exports, tslib_1, IResourceGetterBase, Deferred, ExtensionsHelper) {
+define("File/ResourceGetter/FileSystem", ["require", "exports", "tslib", "File/ResourceGetter/Base", "Core/Deferred", "File/utils/ExtensionsHelper", "File/utils/filePrepareGetter"], function (require, exports, tslib_1, ResourceGetterBase, Deferred, ExtensionsHelper, getFilePreparer) {
     "use strict";
     var SEC = 1000;
     var MIN = 60 * SEC;
@@ -24,7 +24,8 @@ define("File/ResourceGetter/FileSystem", ["require", "exports", "tslib", "File/R
          * но сделает это синхронно
          *
          * Если же не выносить через setTimeout то можем получить ситуацию, когда окошко выбора файлов открывается,
-         * а фокус в этот момет придёт другому контролу и обработчик сработает, а мы соответственно будем бумать, что окно закрылось
+         * а фокус в этот момет придёт другому контролу и обработчик сработает,
+         * а мы соответственно будем бумать, что окно закрылось
          */
         setTimeout(function () {
             document.addEventListener("focusin", focus);
@@ -65,7 +66,12 @@ define("File/ResourceGetter/FileSystem", ["require", "exports", "tslib", "File/R
          * По умолчанию: document.body
          * @name File/ResourceGetter/FileSystem#element
          */
-        element: null
+        element: null,
+        /**
+         * @cfg {Number} Максимальный размер файла доступный для выбора (в МБ)
+         * @name File/ResourceGetter/FileSystem#maxSize
+         */
+        maxSize: undefined
     };
     var createInput = function (_a) {
         var parent = _a.parent, mime = _a.mime, multiSelect = _a.multiSelect;
@@ -124,7 +130,6 @@ define("File/ResourceGetter/FileSystem", ["require", "exports", "tslib", "File/R
          * @see File/LocalFile
          */
         FileSystem.prototype.getFiles = function () {
-            var _this = this;
             if (this.isDestroyed()) {
                 return Deferred.fail("Resource getter is destroyed");
             }
@@ -149,9 +154,14 @@ define("File/ResourceGetter/FileSystem", ["require", "exports", "tslib", "File/R
                 multiSelect: this._options.multiSelect,
                 parent: this._options.element
             });
-            var def = new Deferred();
-            // убираем отработанные input'ы
-            def.addBoth(function (result) {
+            var def = new Deferred().
+                // Фильтруем и преобразуем выбранные файлы в массив из ошибок или LocalFile
+                addCallback(getFilePreparer({
+                extensions: this._extensions,
+                maxSize: this._options.maxSize
+            })).
+                // убираем отработанные input'ы
+                addBoth(function (result) {
                 input.remove && input.remove();
                 return result;
             });
@@ -163,10 +173,10 @@ define("File/ResourceGetter/FileSystem", ["require", "exports", "tslib", "File/R
             });
             // Заускаем deferred по событию
             input.onchange = function () {
-                // timeout для уже не нужен
+                // timeout уже не нужен
                 clearTimeout();
                 var selectedFiles = input.files;
-                def.callback(_this._extensions.verifyAndReplace(selectedFiles));
+                def.callback(selectedFiles);
             };
             input.click();
             return def;
@@ -181,6 +191,6 @@ define("File/ResourceGetter/FileSystem", ["require", "exports", "tslib", "File/R
             return Deferred.success(!this.isDestroyed());
         };
         return FileSystem;
-    }(IResourceGetterBase));
+    }(ResourceGetterBase));
     return FileSystem;
 });

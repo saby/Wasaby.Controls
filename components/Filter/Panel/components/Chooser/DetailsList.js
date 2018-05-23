@@ -11,7 +11,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DetailsList', [
 
    /**
     * Класс редактора "Детализация".
-    * Применяется для панели фильтрации (см. {@link SBIS3.CONTROLS/Filter/FilterPanelItem.typedef FilterPanelItem}).
+    * Применяется для панели фильтрации (см. {@link https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/Filter/FilterPanel/typedefs/FilterPanelItem/ FilterPanelItem}).
     * <br/>
     * Реализует выборку идентификаторов из ListView.
     * <br/>

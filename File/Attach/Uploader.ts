@@ -26,9 +26,6 @@ class Uploader {
     /**
      * @cfg {File/Attach/Container/Source} container
      */
-    /**
-     * @cfg {String} fileProperty Имя параметра, содержащее отправляемый файл
-     */
     private _container: SourceContainer;
     /**
      * @cfg {Function} notify Обработчик событий источников данных
@@ -43,12 +40,11 @@ class Uploader {
     /**
      *
      * @param {File/Attach/Container/Source} container
-     * @param {String} fileProperty
      * @param {Function} notify
      * @constructor
      * @name File/Attach/Uploader
      */
-    constructor(container: SourceContainer, private fileProperty: string = "File", notify) {
+    constructor(container: SourceContainer, notify) {
         if (!container || !(container instanceof SourceContainer)) {
             throw new Error("Invalid arguments");
         }

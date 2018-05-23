@@ -9,7 +9,7 @@ define('Controls/Button/ButtonSeparator', [
    /**
     * Control showing the separator button.
     * @class Controls/Button/ButtonSeparator
-    * @extends Controls/Control
+    * @extends Core/Control
     * @control
     * @public
     */

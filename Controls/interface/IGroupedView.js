@@ -2,7 +2,7 @@ define('Controls/interface/IGroupedView', [
 ], function() {
 
    /**
-    * Интерфейс для работы с группировкой.
+    * Interface for components implementing item grouping.
     *
     * @mixin Controls/interface/IGroupedView
     * @public
@@ -11,13 +11,13 @@ define('Controls/interface/IGroupedView', [
 
    /**
     * @typedef {Object} TItemsGroup
-    * @property {Function} method - метод, по которому строится группировка. Для каждого элемента коллекции должен возвращать идентификатор, соотвествующей ему группы
-    * @property {String} template - шаблон группы
+    * @property {Function} method Function that returns group identifier for a given item.
+    * @property {String} template Group template.
     */
 
    /**
     * @name Controls/interface/IGroupedView#itemsGroup
-    * @cfg {TItemsGroup} кофигурация группировки записей. Включает в себя метод, возвращающий идентификатор группы для переданной в него записи, а так же шаблон отрисовки группы.
+    * @cfg {TItemsGroup} Configuration for item grouping. Includes grouping function and group template.
     */
 
 });

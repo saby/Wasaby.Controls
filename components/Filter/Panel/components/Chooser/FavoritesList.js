@@ -37,7 +37,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/FavoritesList', [
      * Чтобы открыть справочник и произвести выбор записей, используйте кнопку "Ещё" или команду {@link showDictionary}.
      *
      * <h2>Конфигурация редактора</h2>
-     * Чтобы изменить конфигурацию редактора, используют подопцию *properties* (см. {@link SBIS3.CONTROLS/Filter/FilterPanelItem.typedef}) в {@link SBIS3.CONTROLS/Filter/FilterPanel#items}.
+     * Чтобы изменить конфигурацию редактора, используют подопцию *properties* (см. {@link https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/Filter/FilterPanel/typedefs/FilterPanelItem/}) в {@link SBIS3.CONTROLS/Filter/FilterPanel#items}.
      * По умолчанию для списка вы можете переопределить следующие опции: {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#idProperty}, {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#displayProperty}, {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#items} и {@link SBIS3.CONTROLS/Mixins/MultiSelectable#selectedKeys}.
      * Опции, для которых конфигурация фиксирована: {@link SBIS3.CONTROLS/ListView#multiselect}=true, {@link SBIS3.CONTROLS/ListView#itemsDragNDrop}=false и {@link  SBIS3.CONTROLS/ListView#itemsActions}=&#91;&#93;.
      *

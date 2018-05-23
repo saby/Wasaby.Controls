@@ -31,7 +31,7 @@
             <!--TODO контейнер убрать https://online.sbis.ru/opendoc.html?guid=25000158-64ff-4db9-9605-a986cbc37b0f-->
             <div class="controls-InputRender__wrapper">
                <ws:partial
-                     template="{{ isEnabled() ? 'enabledArea' : 'disabledArea' }}"
+                     template="{{ _options.readOnly ? 'disabledArea' : 'enabledArea' }}"
                      attr:class="controls-InputArea__field
                        controls-InputArea__realField
                        controls-InputRender__field

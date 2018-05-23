@@ -4,21 +4,22 @@ define('Controls/Container/Scroll',
       'Core/Deferred',
       'Core/detection',
       'Core/helpers/Object/isEqual',
+      'Controls/Container/Scroll/Context',
       'Controls/Container/Scroll/ScrollWidthUtil',
       'Controls/Container/Scroll/ScrollHeightFixUtil',
       'tmpl!Controls/Container/Scroll/Scroll',
-
       'Controls/Layout/Scroll',
       'Controls/Event/Emitter',
       'Controls/Container/Scroll/Scrollbar',
       'css!Controls/Container/Scroll/Scroll'
    ],
-   function(Control, Deferred, detection, isEqual, ScrollWidthUtil, ScrollHeightFixUtil, template) {
+   function(Control, Deferred, detection, isEqual, ScrollData, ScrollWidthUtil, ScrollHeightFixUtil, template) {
 
       'use strict';
 
       /**
-       * Компонент - контейнер с узкой стилизованной полосой скролла.
+       * Container with thin scrollbar.
+       *
        * @class Controls/Container/Scroll
        * @extends Core/Control
        * @control
@@ -26,18 +27,18 @@ define('Controls/Container/Scroll',
        * @category Container
        *
        * @name Controls/Container/Scroll#content
-       * @cfg {Content} Содержимое контейнера
+       * @cfg {Content} Container contents.
        *
        * @name Controls/Container/Scroll#shadowVisible
-       * @cfg {Boolean} Наличие тени при прокрутке контента
+       * @cfg {Boolean} Whether shadow should be shown (when content doesn't fit).
        *
        * @name Controls/Container/Scroll#scrollbarVisible
-       * @cfg {Boolean} Наличие полосы прокрутки
+       * @cfg {Boolean} Whether scrollbar should be shown.
        *
        * @name Controls/Container/Scroll#style
-       * @cfg {String} Цветовая схема контейнера. Влияет на цвет тени и полоски скролла. Используется для того чтобы контейнер корректно отображался как на светлом так и на темном фоне.
-       * @variant normal стандартная схема
-       * @variant inverted противоположная схема
+       * @cfg {String} Color scheme (colors of the shadow and scrollbar).
+       * @variant normal Default theme (for bright backgrounds).
+       * @variant inverted Inverted theme (for dark backgrounds).
        */
       var
          _private = {
@@ -120,7 +121,7 @@ define('Controls/Container/Scroll',
 
             updateDisplayState: function(self, displayState) {
                self._displayState.hasScroll = displayState.hasScroll;
-               self._displayState.heightFix = displayState.haheightFixsScroll;
+               self._displayState.heightFix = displayState.heightFix;
                self._displayState.contentHeight = displayState.contentHeight;
                self._displayState.shadowPosition = displayState.shadowPosition;
             }
@@ -154,12 +155,23 @@ define('Controls/Container/Scroll',
 
             _displayState: null,
 
+            _pagingState: null,
+
             _beforeMount: function(options, context, receivedState) {
                var
                   self = this,
                   def;
 
                this._displayState = {};
+               if (context.ScrollData && context.ScrollData.pagingVisible) {
+                  this._pagingState = {
+                     visible: true,
+                     stateUp: 'disabled',
+                     stateDown: 'normal'
+                  };
+               } else {
+                  this._pagingState = {};
+               }
 
                if (receivedState) {
                   _private.updateDisplayState(this, receivedState.displayState);
@@ -216,11 +228,16 @@ define('Controls/Container/Scroll',
                }
             },
 
+            _beforeUpdate: function(options, context) {
+               this._pagingState.visible = context.ScrollData && context.ScrollData.pagingVisible && this._displayState.hasScroll;
+            },
+
             _afterUpdate: function() {
                var displayState = _private.calcDisplayState(this);
 
                if (!isEqual(this._displayState, displayState)) {
                   this._displayState = displayState;
+
                   this._forceUpdate();
                }
             },
@@ -243,6 +260,40 @@ define('Controls/Container/Scroll',
                      this._notify('scrollbarTaken', [], {bubbling: true});
                   }
                }
+            },
+
+            _arrowClickHandler: function(event, btnName) {
+               var scrollParam;
+
+               switch (btnName) {
+                  case 'Begin':
+                     scrollParam = 'top';
+                     break;
+                  case 'End':
+                     scrollParam = 'bottom';
+                     break;
+                  case 'Prev':
+                     scrollParam = 'pageUp';
+                     break;
+                  case 'Next':
+                     scrollParam = 'pageDown';
+                     break;
+               }
+
+               this._children.scrollLayout.doScroll(scrollParam);
+            },
+
+            _scrollReachTopHandler: function() {
+               this._pagingState.stateUp = 'disabled';
+            },
+
+            _scrollReachBottomHandler: function() {
+               this._pagingState.stateDown = 'disabled';
+            },
+
+            _scrollMoveHandler: function() {
+               this._pagingState.stateUp = 'normal';
+               this._pagingState.stateDown = 'normal';
             },
 
             _mouseenterHandler: function() {
@@ -287,7 +338,7 @@ define('Controls/Container/Scroll',
             },
 
             /**
-             * Осуществить скролл на заданную величину в пикселях
+             * Scrolls to the given position from the top of the container.
              * @param {Number} offset
              */
             scrollTo: function(offset) {
@@ -295,14 +346,14 @@ define('Controls/Container/Scroll',
             },
 
             /**
-             * Осуществить скролл к верху области
+             * Scrolls to the top of the container.
              */
             scrollToTop: function() {
                _private.setScrollTop(this, 0);
             },
 
             /**
-             * Осуществить скролл к низу области
+             * Scrolls to the bottom of the container.
              */
             scrollToBottom: function() {
                _private.setScrollTop(this, _private.getScrollHeight(this._children.content));
@@ -314,6 +365,12 @@ define('Controls/Container/Scroll',
             style: 'normal',
             shadowVisible: true,
             scrollbarVisible: true
+         };
+      };
+
+      Scroll.contextTypes = function() {
+         return {
+            ScrollData: ScrollData
          };
       };
 

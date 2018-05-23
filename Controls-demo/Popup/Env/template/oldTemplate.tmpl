@@ -1,0 +1,27 @@
+<div style="height:350px;min-width: 250px;max-width: 500px;border: 1px solid #ccc">
+   <SBIS3.CONTROLS.TextBox text="sdfsdjfds" />
+   <br />
+   <SBIS3.CONTROLS.ComboBox
+      name="ComboBox 1"
+      class="position width170"
+      selectOnClick="{{true}}"
+      idProperty="key"
+      multilineDisplay="{{true}}"
+      displayProperty="title"
+      allowEmptySelection="{{true}}"
+      itemTpl="{{myItemTpl}}"
+      selectedKey="1"
+      editable="{{false}}"
+      pickerClassName="controls-ComboBox__markDefaultItem"
+      text="Не выбрано...">
+      <ws:items>
+         <ws:Array>
+            <ws:Object key="1" title="Пункт 1"/>
+            <ws:Object key="2" title="Пункт 2"/>
+            <ws:Object key="3" title="Пункт 3"/>
+         </ws:Array>
+      </ws:items>
+   </SBIS3.CONTROLS.ComboBox>
+   <br />
+   <SBIS3.CONTROLS.Button name='close' caption="close" />
+</div>

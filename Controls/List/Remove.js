@@ -22,6 +22,17 @@ define('Controls/List/Remove', [
       }
    };
 
+   /**
+   * Control for deleting instances from collection of list
+   * @class Controls/Remove
+   * @extends Core/Control
+   * @mixes Controls/interface/IRemovable
+   * @control
+   * @author Sukhoruchkin A.S.
+   * @public
+   * @category List
+   */
+    
    return Control.extend({
       _template: template,
 

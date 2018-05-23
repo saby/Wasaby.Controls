@@ -1,7 +1,7 @@
 <div class="controls-FilterButton__demo">
     <div class="controls-FilterButton__demo-row_right">
         <div class="controls-FilterButton__demo-row">
-            <Controls.Button enabled="{{true}}" caption="Тест базовой линии" style="link"/>
+            <Controls.Button readOnly="{{false}}" caption="Тест базовой линии" style="link"/>
             Тест базовой линии
             <Controls.Filter.Button attr:style="max-width: 200px;" filterTemplate="js!SBIS3.DOCS.FBPanel">
                 <ws:items>
@@ -16,9 +16,9 @@
             </Controls.Filter.Button>
         </div>
         <div class="controls-FilterButton__demo-row">
-            <Controls.Button enabled="{{false}}" caption="Тест базовой линии"/>
+            <Controls.Button readOnly="{{true}}" caption="Тест базовой линии"/>
             Тест базовой линии
-            <Controls.Filter.Button attr:style="max-width: 200px;" enabled="{{false}}" filterTemplate="js!SBIS3.DOCS.FBPanel">
+            <Controls.Filter.Button attr:style="max-width: 200px;" readOnly="{{true}}" filterTemplate="js!SBIS3.DOCS.FBPanel">
                 <ws:items>
                     <ws:Array>
                         <ws:Object id="genreKey" caption="genreTxt"/>
@@ -45,10 +45,10 @@
             </ws:items>
         </Controls.Filter.Button>
         Тест базовой линии
-        <Controls.Button enabled="{{true}}" caption="Тест базовой линии" style="link"/>
+        <Controls.Button readOnly="{{false}}" caption="Тест базовой линии" style="link"/>
     </div>
     <div class="controls-FilterButton__demo-row">
-        <Controls.Filter.Button attr:style="max-width: 200px;" filterAlign="left" enabled="{{false}}" filterTemplate="js!SBIS3.DOCS.FBPanel">
+        <Controls.Filter.Button attr:style="max-width: 200px;" filterAlign="left" readOnly="{{true}}" filterTemplate="js!SBIS3.DOCS.FBPanel">
             <ws:items>
                 <ws:Array>
                     <ws:Object id="genreKey" caption="genreTxt"/>
@@ -60,7 +60,7 @@
             </ws:items>
         </Controls.Filter.Button>
         Тест базовой линии
-        <Controls.Button enabled="{{false}}" caption="Тест базовой линии"/>
+        <Controls.Button readOnly="{{true}}" caption="Тест базовой линии"/>
     </div>
     </div>
 </div>

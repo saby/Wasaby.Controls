@@ -1,15 +1,15 @@
 /**
  * Created by nv.belotelov on 14.07.2017.
  */
-define('js!WSTest/Focus/Scenario/32', [
+define('WSTest/Focus/Scenario/32', [
    'Core/constants',
-   'js!WSTest/Focus/TestFocusHelpers',
+   'WSTest/Focus/TestFocusHelpers',
    'Deprecated/Controls/Button/Button',
    'Lib/Control/Window/Window',
    'tmpl!WSTest/Focus/Case32',
    'Lib/Control/CompoundControl/CompoundControl',
    'Lib/Mixins/CompoundActiveFixMixin',
-   'js!WSTest/Focus/Case13'
+   'WSTest/Focus/Case13'
 ], function (cConstants,
              fHelpers,
              Button,

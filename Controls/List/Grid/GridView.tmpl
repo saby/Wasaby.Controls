@@ -1,18 +1,18 @@
 <div class="controls-Grid">
-   <div class="controls-Grid__wrapper" style="grid-template-columns: {{_prepareGridTemplateColumns(_gridViewModel.getColumns(), _gridViewModel.getMultiselect())}};">
+   <div class="controls-Grid__wrapper" style="grid-template-columns: {{_prepareGridTemplateColumns(_listModel.getColumns(), _listModel.getMultiselect())}};">
       <ws:if data="{{isNotFullGridSupport}}">
-         <ws:partial template="tmpl!Controls/List/Grid/ColGroup" listModel="{{_gridViewModel}}"/>
+         <ws:partial template="tmpl!Controls/List/Grid/ColGroup" listModel="{{_listModel}}"/>
       </ws:if>
-      <ws:if data="{{_gridViewModel.getHeader()}}">
-         <ws:partial template="tmpl!Controls/List/Grid/Header" listModel="{{_gridViewModel}}" defaultHeaderContent="{{_headerContentTemplate}}"/>
+      <ws:if data="{{_listModel.getHeader()}}">
+         <ws:partial template="tmpl!Controls/List/Grid/Header" listModel="{{_listModel}}" defaultHeaderContent="{{_headerContentTemplate}}"/>
       </ws:if>
-      <ws:if data="{{_gridViewModel.getResults() && _gridViewModel.getResults().position === 'top'}}">
-         <ws:partial template="tmpl!Controls/List/Grid/Results" userTemplate="{{_gridViewModel.getResults().template}}" listModel="{{_gridViewModel}}"/>
+      <ws:if data="{{_listModel.getResults() && _listModel.getResults().position === 'top'}}">
+         <ws:partial template="tmpl!Controls/List/Grid/Results" userTemplate="{{_listModel.getResults().template}}" listModel="{{_listModel}}"/>
       </ws:if>
-      <ws:partial template="tmpl!Controls/List/resources/For" listModel="{{_gridViewModel}}" itemTemplate="{{_itemTemplate ? _itemTemplate : _defItemTemplate}}"/>
-      <ws:if data="{{_gridViewModel.getResults() && _gridViewModel.getResults().position === 'bottom'}}">
-         <ws:partial template="tmpl!Controls/List/Grid/Results" userTemplate="{{_gridViewModel.getResults().template}}" listModel="{{_gridViewModel}}"/>
+      <ws:partial template="tmpl!Controls/List/resources/For" listModel="{{_listModel}}" itemTemplate="{{_itemTemplate}}"/>
+      <ws:if data="{{_listModel.getResults() && _listModel.getResults().position === 'bottom'}}">
+         <ws:partial template="tmpl!Controls/List/Grid/Results" userTemplate="{{_listModel.getResults().template}}" listModel="{{_listModel}}"/>
       </ws:if>
    </div>
-   <Controls:List:SourceControl:Scroll:Emitter on:emitListScroll="__onEmitScroll()" name="ScrollEmitter"/>
+   <Controls.List.BaseControl.Scroll.Emitter on:emitListScroll="__onEmitScroll()" name="ScrollEmitter"/>
 </div>

@@ -125,6 +125,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
 
       _createComponent: function(config, meta) {
          var componentName = (meta.mode == 'floatArea') ? 'Lib/Control/FloatArea/FloatArea' : 'Lib/Control/Dialog/Dialog',
+             self = this,
              resetWidth;
          
          if (this._isNeedToRedrawDialog()){
@@ -138,7 +139,31 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             this._isExecuting = true;
             requirejs([componentName], function(Component) {
                try {
-                  this._dialog = new Component(config);
+                  if (this._isNewEnvironment()) {
+
+                     var deps = ['Controls/Popup/Opener/BaseOpener'];
+                     if (meta.mode === 'floatArea' && config.isStack === true) {
+                        deps.push('Controls/Popup/Opener/Stack/StackController');
+                        config._type = 'stack';
+                        config.className = (config.className || '') + ' controls-Stack';
+                     } else if (meta.mode === 'floatArea' && config.isStack === false) {
+                        deps.push('Controls/Popup/Opener/Sticky/StickyController');
+                        config._type = 'sticky';
+                     } else {
+                        deps.push('Controls/Popup/Opener/Dialog/DialogController');
+                        config._type = 'dialog';
+                     }
+
+                     requirejs(deps, function(BaseOpener, Strategy) {
+                        var CoreTemplate = requirejs(config.template);
+                        config._initCompoundArea = function(compoundArea) {
+                           self._dialog = compoundArea;
+                        };
+                        BaseOpener.showDialog(CoreTemplate, config, Strategy);
+                     });
+                  } else {
+                     this._dialog = new Component(config);
+                  }
                }
                catch (error) {
                   this._finishExecuteDeferred(error);
@@ -147,10 +172,18 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
 
          }
       },
+
+
+      //TODO start compatible block for VDOM
+      _isNewEnvironment: function () {
+         return !!document.getElementsByTagName('html')[0].controlNodes;
+      },
+      //TODO end compatible block for VDOM
+      
       _documentClickHandler: function (event) {
          //Клик по связному списку приводит к перерисовке записи в панели, а не открытию новой при autoHide = true
          if (this._dialog && this._openedPanelConfig.mode === 'floatArea' && this._dialog.isVisible() && this._openedPanelConfig.autoHide) {
-            if (this._needCloseDialog(event.target)) {
+            if (this._needCloseDialog(event.target) && !this._isClickToScroll(event)) {
                this._dialog.close();
             }
          }
@@ -171,6 +204,12 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
          //Если кликнули по инфобоксу или информационному окну - popup закрывать не нужно
          var infoBox = $(target).closest('.ws-info-box, .controls-InformationPopup, .ws-window-overlay, .js-controls-NotificationStackPopup');
          return !!infoBox.length;
+      },
+
+      //При клике по нативному скроллу на странице не закрываем панель
+      _isClickToScroll: function(event) {
+         var hasContainerScroll = event.target.scrollWidth - event.target.offsetWidth > 0;
+         return hasContainerScroll && event.target.offsetHeight - event.clientY < 17;
       },
       _resetComponentOptions: function() {
          //FloatArea предоставляет возможность перерисовать текущий установленный шаблон. При перерисовке сохраняются все опции, которые были установлены как на FloatArea, так и на редактируемом компоненте.

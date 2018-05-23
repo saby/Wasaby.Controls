@@ -11,8 +11,8 @@
          tagStyle="{{_tagStyle}}"
          precision="{{_precision}}"
          onlyPositive="{{_onlyPositive}}"
+         readOnly="{{_readOnly}}"
          showEmptyDecimals="{{_showEmptyDecimals}}"
-         enabled="{{_enabled}}"
          on:valueChanged="_eventHandler()"
          on:inputCompleted="_eventHandler()"
       />
@@ -30,9 +30,9 @@
       <Controls.Label name="myLabel1" caption="precision"/>
       <Controls.Input.Number attr:id="precision" bind:value="_precision" attr:class="test_precision"/>
       <div>
-         <Controls.Toggle.Checkbox attr:id="enabled" enabled="{{true}}" bind:value="_enabled" caption="enabled"/>
-         <Controls.Toggle.Checkbox attr:id="onlyPositive" enabled="{{true}}" bind:value="_onlyPositive" caption="onlyPositive"/>
-         <Controls.Toggle.Checkbox attr:id="showEmptyDecimals" enabled="{{true}}" bind:value="_showEmptyDecimals" caption="showEmptyDecimals"/>
+         <Controls.Toggle.Checkbox attr:id="enabled" readOnly="{{false}}" bind:value="_readOnly" caption="readOnly"/>
+         <Controls.Toggle.Checkbox attr:id="onlyPositive" readOnly="{{false}}" bind:value="_onlyPositive" caption="onlyPositive"/>
+         <Controls.Toggle.Checkbox attr:id="showEmptyDecimals" readOnly="{{false}}" bind:value="_showEmptyDecimals" caption="showEmptyDecimals"/>
       </div>
    </div>
    <div hidden="hidden" id="event_test">{{ _eventResult }}</div>

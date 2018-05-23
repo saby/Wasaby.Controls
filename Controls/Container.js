@@ -10,7 +10,7 @@ define('Controls/Container', [
    /**
     * Временная заглушка, чтоб заработал раздел Container
     * @class Controls/Container
-    * @extends Controls/Control
+    * @extends Core/Control
     * @control
     * @public
     * @category List

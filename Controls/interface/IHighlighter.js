@@ -2,7 +2,9 @@ define('Controls/interface/IHighlighter', [
 ], function() {
 
    /**
-    * Интерфейс для работы с подсветкой. В компонент можно добавлять разные типы подсветки. Это подсветка поиска, подсветка цветом или подсветка валидации. Данная подсветка будет активироваться при ее наличии в момент отрисовки шаблона элемента списка.
+    * Highlighting interface. Different types of highlighter can be used in a component:
+    * search highlighter, validation highlighter, etc. Highlighter is used when rendering list items.
+    *
     * @mixin Controls/interface/IHighlighter
     * @public
     */
@@ -13,6 +15,6 @@ define('Controls/interface/IHighlighter', [
 
    /**
     * @name Controls/interface/IHighlighter#highlighter
-    * @cfg {Array.<Highlighter>} Массив выделителей
+    * @cfg {Array.<Highlighter>} Array of highlighters.
     */
 });

@@ -16,12 +16,12 @@
     "importHelpers": true
   },
   "include": [
-    "../File/*",
+    "../File/**/*",
     "core.d.ts",
     "tslib.js"
   ],
   "exclude": [
-    "node_modules",
+    "../node_modules",
     "../SBIS3.CONTROLS"
   ]
 }

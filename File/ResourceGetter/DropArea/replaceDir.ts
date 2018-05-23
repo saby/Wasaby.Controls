@@ -1,9 +1,8 @@
 /// <amd-module name="File/ResourceGetter/DropArea/replaceDir" />
 import ParallelDeferred = require("Core/ParallelDeferred");
 import Deferred = require("Core/Deferred");
-
-const DROP_FOLDER_ERROR = rk('Загрузка папки не поддерживается браузером');
-const UNKNOWN_FILE_TYPE = rk('Неизвестный тип файла');
+import UnknownTypeError = require("File/Error/UnknownType");
+import UploadFolderError = require("File/Error/UploadFolder");
 
 type DirectoryReader = {
     readEntries(successCallback: (entries: Array<Entry>) => void): void;
@@ -69,7 +68,7 @@ let getFile = (entry: Entry, path: string): Deferred<FileWithDir> => {
  * @return {Core/Deferred.<Array.<File | Error>>}
  */
 let readDirectory = (entry: Entry, path: string) => {
-    let deferred  = new Deferred<Resources>();
+    let deferred = new Deferred<Resources>();
     let dirReader = entry.createReader();
     dirReader.readEntries((entries: Array<Entry>) => {
         deferred.dependOn(readEntries(entries, path));
@@ -85,7 +84,9 @@ let readDirectory = (entry: Entry, path: string) => {
  */
 let readEntry = (entry: Entry, path: string): Deferred<Resource | Resources> => {
     if (!entry) {
-        return Deferred.fail(UNKNOWN_FILE_TYPE);
+        return Deferred.fail(new UnknownTypeError({
+            fileName: path + ""
+        }));
     }
     if (entry.isFile) {
         return getFile(entry, path);
@@ -171,7 +172,9 @@ let getFromFileReader = (files: FileList): Deferred<Resources> => {
         deferred.addCallbacks<Resource>(() => {
             return file;
         }, () => {
-            return new Error(DROP_FOLDER_ERROR);
+            return new UploadFolderError({
+                fileName: file.name
+            })
         });
 
         let reader = getReader(deferred);
@@ -241,7 +244,9 @@ let replaceDir = ({items, files}: DataTransfer): Deferred<FileList | Resources> 
     // Не можем определить где директория, где просто отсуствует тип, заменяем на ошибку
     return Deferred.success(Array.prototype.map.call(files, file => {
         if (!file.type) {
-            return new Error(UNKNOWN_FILE_TYPE);
+            return new UploadFolderError({
+                fileName: file.name
+            });
         }
         return file;
     }))

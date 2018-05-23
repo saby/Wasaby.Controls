@@ -10,7 +10,9 @@ define('Controls-demo/Dropdown/MenuVdom', [
    'tmpl!Controls-demo/Dropdown/resources/headerTemplate',
    'tmpl!Controls-demo/Dropdown/resources/footerTemplate',
    'tmpl!Controls-demo/Dropdown/resources/contentTemplate',
-   'css!Controls-demo/Dropdown/MenuVdom'
+   'css!Controls-demo/Dropdown/MenuVdom',
+   'WS.Data/Collection/RecordSet' //TODO: удалить это когда появится асинк и технология патчинга jsLinks
+   //сейчас зависимость тянется асинхронно и десериализовать данные пытаемся раньше, чем это произойдет
 ], function(Control, template, cClone, Memory) {
    'use strict';
 

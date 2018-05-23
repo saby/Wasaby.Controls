@@ -1,7 +1,5 @@
-define("File/ResourceGetter/DropArea/replaceDir", ["require", "exports", "Core/ParallelDeferred", "Core/Deferred"], function (require, exports, ParallelDeferred, Deferred) {
+define("File/ResourceGetter/DropArea/replaceDir", ["require", "exports", "Core/ParallelDeferred", "Core/Deferred", "File/Error/UnknownType", "File/Error/UploadFolder"], function (require, exports, ParallelDeferred, Deferred, UnknownTypeError, UploadFolderError) {
     "use strict";
-    var DROP_FOLDER_ERROR = rk('Загрузка папки не поддерживается браузером');
-    var UNKNOWN_FILE_TYPE = rk('Неизвестный тип файла');
     /**
      * Развёртка двумерного массива в одномерный
      * @param {Array<T | Array<T>>} array
@@ -58,7 +56,9 @@ define("File/ResourceGetter/DropArea/replaceDir", ["require", "exports", "Core/P
      */
     var readEntry = function (entry, path) {
         if (!entry) {
-            return Deferred.fail(UNKNOWN_FILE_TYPE);
+            return Deferred.fail(new UnknownTypeError({
+                fileName: path + ""
+            }));
         }
         if (entry.isFile) {
             return getFile(entry, path);
@@ -138,7 +138,9 @@ define("File/ResourceGetter/DropArea/replaceDir", ["require", "exports", "Core/P
             deferred.addCallbacks(function () {
                 return file;
             }, function () {
-                return new Error(DROP_FOLDER_ERROR);
+                return new UploadFolderError({
+                    fileName: file.name
+                });
             });
             var reader = getReader(deferred);
             try {
@@ -202,7 +204,9 @@ define("File/ResourceGetter/DropArea/replaceDir", ["require", "exports", "Core/P
         // Не можем определить где директория, где просто отсуствует тип, заменяем на ошибку
         return Deferred.success(Array.prototype.map.call(files, function (file) {
             if (!file.type) {
-                return new Error(UNKNOWN_FILE_TYPE);
+                return new UploadFolderError({
+                    fileName: file.name
+                });
             }
             return file;
         }));

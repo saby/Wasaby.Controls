@@ -16,15 +16,13 @@ import SourceContainer = require("File/Attach/Container/Source");
 import moduleStubs = require("Core/moduleStubs");
 
 const UPLOADER_LINK = "File/Attach/Uploader";
-const EMPTY_SELECTED_ERROR = rk("Нет выбранных ресурсов для загрузки");
 /**
  * Класс, реализующий выбор и загрузку файлов через разные источники данных
  * <br/>
  * Выбор и загрузка ресурсов:
  * <pre>
  *   var attach = new Base({
- *      multiSelect: false,
- *      fileProperty: "Файл"
+ *      multiSelect: false
  *   });
  *
  *   var scanner = new ScannerGetter();
@@ -72,17 +70,14 @@ let Base = CoreExtend.extend(Abstract,{
     _$options: {
         /**
          * @cfg {Boolean} Множественный выбор.
-         * * true - результат выбора ресурсов .choose попаддёт во внутренее состояние для загрузки вместе
-         * с результатом предыдущих выборок
-         * * false - внутренее состояние для загрузки будет содержать только результат последней выборки
+         * <ul>
+         * <li> true - результат выбора ресурсов .choose попаддёт во внутренее состояние для загрузки вместе
+         * с результатом предыдущих выборок </li>
+         * <li> false - внутренее состояние для загрузки будет содержать только результат последней выборки </li>
+         * </ul>
          * @name File/Attach/Base#multiSelect
          */
         multiSelect: true,
-        /**
-         * @cfg {String} Имя параметра, содержащее файл при отправке на сервер
-         * @name File/Attach/Base#fileProperty
-         */
-        fileProperty: "File"
     },
     constructor(opt) {
         Base.superclass.constructor.apply(this, arguments);
@@ -91,7 +86,7 @@ let Base = CoreExtend.extend(Abstract,{
         this._sourceContainer = new SourceContainer();
         this._uploadHandlers = {};
         this._publish('onProgress', 'onWarning', 'onLoadedFolder', 'onChosen', 'onChooseError',
-            'onLoaded', 'onLoadError', 'onLoadResourceError', 'onLoadedResource'
+            'onLoaded', 'onLoadError', 'onLoadResourceError', 'onLoadedResource', 'onBeforeLoad'
         );
     },
 
@@ -223,7 +218,7 @@ let Base = CoreExtend.extend(Abstract,{
     /**
      * Загрузка выбранных ресурсов.
      * При отсутствии ресурсов во внутреннем состоянии, возвращаеммый Deferred будет завершен ошибкой.
-     * @param {*} [meta] Дополнительные мета-данные для отправки. Сигнатура зависит от конечного сервиса загрузки
+     * @param {Object} [meta] Дополнительные мета-данные для отправки. Сигнатура зависит от конечного сервиса загрузки
      * @return {Core/Deferred.<Array.<WS.Data/Entity/Model | Error>>} Набор, содержащий модели с результатами,
      * либо ошибками загрузки
      * @example
@@ -259,18 +254,27 @@ let Base = CoreExtend.extend(Abstract,{
      * @see File/Attach/Base#getSelectedResource
      * @see WS.Data/Entity/Model
      */
-    upload(meta?: Object): Deferred<Array<Model | Error>> {
+    upload(meta?: object): Deferred<Array<Model | Error>> {
         /*
          * забираем выбранные файлы себе, очищая набор,
          * чтобы файлы, выбранные после начала upload, не попали в текущую пачку загрузки
          */
         let files = this.getSelectedResource();
         if (!files.length) {
-            return Deferred.fail(EMPTY_SELECTED_ERROR);
+            return new Deferred().cancel();
         }
         this.clearSelectedResource();
-        return this._getUploader().addCallback((loader: Uploader) => {
-            return loader.upload(files, meta);
+        let _meta = Object.assign({}, meta);
+        return Deferred.callbackWrapper(this._notify('onBeforeLoad', files, _meta), (result) => {
+            if (result === false) {
+                return new Deferred().cancel();
+            }
+            _meta = result || meta;
+            return Deferred.success();
+        }).addCallback(() => {
+            return this._getUploader()
+        }).addCallback((loader: Uploader) => {
+            return loader.upload(files, _meta);
         });
     },
     /**
@@ -286,7 +290,7 @@ let Base = CoreExtend.extend(Abstract,{
         }
         return moduleStubs.require([UPLOADER_LINK]).addCallback((modules) => {
             let Uploader = modules[0];
-            this._loader = new Uploader(this._sourceContainer, this._$options.fileProperty, (...args) => {
+            this._loader = new Uploader(this._sourceContainer, (...args) => {
                 this._notify(...args);
             });
             return this._loader;
@@ -473,7 +477,7 @@ export = Base;
  * @name File/Attach/Base#onLoadedResource
  * @param {Core/EventObject} eventObject Дескриптор события.
  * @param {File/IResource} resource загружаемый ресурс
- * @param {Model} model Результат загрузки
+ * @param {WS.Data/Entity/Model} model Результат загрузки
  *
  * @see File/LocalFile
  * @see File/LocalFileLink
@@ -505,6 +509,34 @@ export = Base;
  *    attach.subscribe('onChosen', function(event, fileData) {
  *       var blurImage = addFilter(fileData, "blur", 0.5);
  *       event.setResult(blurImage);
+ *    });
+ * </pre>
+ *
+ * @see File/LocalFile
+ * @see File/LocalFileLink
+ * @see File/HttpFileLink
+ */
+/**
+ * @event onBeforeLoad
+ * Событые выбора ресурса
+ * <wiTag group="Управление">
+ * Обработка результата:
+ * <ul>
+ *     <li> false - отмена загрузки. При этом ресурсы, предназначенные для загрузки пропадут из внутреннего состояния
+ *     и не попадут в вледующую загрузку </li>
+ *     <li> object - объект дополнительных данных для запроса meta будет заменён на переданный результат </li>
+ * </ul>
+ *
+ * @name File/Attach/Base#onBeforeLoad
+ * @param {Core/EventObject} eventObject Дескриптор события.
+ * @param {Array.<File/IResource>} resource загружаемый ресурс
+ * @param {Object} meta Дополнительные мета-данные для отправки.
+ * @example
+ * <pre>
+ *    attach.subscribe('onBeforeLoad', function(event, files, meta) {
+ *       if (isEmpty(meta)) {
+ *          event.setResult(self.getUploadParam())
+ *       }
  *    });
  * </pre>
  *

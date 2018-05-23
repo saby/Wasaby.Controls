@@ -1,27 +1,33 @@
 define('Controls/List/ItemActions/ItemActionsControl', [
    'Core/Control',
    'tmpl!Controls/List/ItemActions/ItemActionsControl',
-   'WS.Data/Collection/RecordSet',
+   'Controls/Utils/Toolbar',
+   'Controls/List/ItemActions/Utils/Actions',
    'css!Controls/List/ItemActions/ItemActions'
 ], function(
    Control,
    template,
-   RecordSet
+   tUtil,
+   aUtil
 ) {
    'use strict';
 
+   var
+      ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon  icon-size';
+
    var _private = {
 
-      bindHandlers: function(self) {
-         self._closeActionsMenu = self._closeActionsMenu.bind(self);
+      sortActions: function(first, second) {
+         return  (second.showType || 0) - (first.showType || 0);
       },
 
-      fillItemActions: function(item, itemActions, itemActionVisibilityCallback) {
+      fillItemAllActions: function(item, itemActions, itemActionVisibilityCallback) {
          var actions = [];
+         itemActions.sort(_private.sortActions);
          itemActions.forEach(function(action) {
             if (!itemActionVisibilityCallback || itemActionVisibilityCallback(action, item)) {
-               if (action.icon && !~action.icon.indexOf('controls-itemActionsV__action_icon')) {
-                  action.icon += ' controls-itemActionsV__action_icon icon-size';
+               if (action.icon && !~action.icon.indexOf(ACTION_ICON_CLASS)) {
+                  action.icon += ' ' + ACTION_ICON_CLASS;
                   if (~action.icon.indexOf('icon-done')) {
                      action.iconDone = true;
                   }
@@ -35,79 +41,85 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          return actions;
       },
 
+      updateItemActions: function(item, options, isEditingItem, self) {
+         var
+            all = _private.fillItemAllActions(item, options.itemActions, options.itemActionVisibilityCallback),
+
+            showed = options.itemActionsType === 'outside'
+               ? all
+               : all.filter(function(action) {
+                  return action.showType === tUtil.showType.TOOLBAR || action.showType === tUtil.showType.MENU_TOOLBAR;
+               });
+
+         if (isEditingItem && options.showToolbar) {
+            showed.push({
+               icon: 'icon-Yes icon-done ' + ACTION_ICON_CLASS,
+               style: 'bordered',
+               iconDone: true,
+               handler: function(item) {
+                  this._applyEdit(item);
+               }.bind(self)
+            });
+            showed.push({
+               icon: 'icon-Close icon-primary ' + ACTION_ICON_CLASS,
+               style: 'bordered',
+               handler: function(item) {
+                  this._cancelEdit(item);
+               }.bind(self)
+            });
+         }
+
+         if (_private.needActionsMenu(all, options.itemActionsType)) {
+            showed.push({
+               title: 'Еще',
+               icon: 'icon-ExpandDown icon-primary ' + ACTION_ICON_CLASS,
+               isMenu: true
+            });
+         }
+
+         options.listModel.setItemActions(item, {
+            all: all,
+            showed: showed
+         });
+      },
+
       updateActions: function(options) {
          if (options.itemActions) {
             for (options.listModel.reset();  options.listModel.isEnd();  options.listModel.goToNext()) {
-               var itemData = options.listModel.getCurrent();
-               options.listModel.setItemActions(itemData, _private.fillItemActions(itemData.item, options.itemActions, options.itemActionVisibilityCallback));
+               var
+                  item = options.listModel.getCurrent().item;
+               _private.updateItemActions(item, options);
             }
          }
       },
-      needActionsMenu: function(actions) {
-         var
-            main = 0,
-            additional = 0;
-         actions.forEach(function(action) {
-            if (action.main) {
-               main++;
-            }
-            if (action.additional) {
-               additional++;
-            }
-         });
-         return (additional + main !==  actions.length);
-      },
-      showActionsMenu: function(self, event, itemData, childEvent) {
-         var
-            context = event.type === 'itemcontextmenu',
-            showActions = context && itemData.itemActions
-               ? itemData.itemActions
-               : itemData.itemActions && itemData.itemActions.filter(function(action) {
-                  return !action.additional;
-               });
-         if (showActions && !itemData.isEditing) {
-            var
-               rs = new RecordSet({rawData: showActions}),
-               realEvent =  childEvent ? childEvent : event;
-            realEvent.nativeEvent.preventDefault();
-            itemData.contextEvent = context;
-            self._options.listModel.setActiveItem(itemData);
-            self._children['itemActionsOpener'].open({
-               target: !context ? event.target : false,
-               componentOptions: {items: rs}
-            });
-         }
-      },
-      closeActionsMenu: function(self, args) {
-         var
-            actionName = args && args.action,
-            event = args && args.event;
 
-         //todo: Особая логика событий попапа, исправить как будут нормально приходить аргументы
-         if (actionName === 'itemClick') {
-            var action = args.data && args.data[0] && args.data[0].getRawData();
-            self._onActionClick(event, action, self._options.listModel._activeItem.item);
-         }
-         self._children['itemActionsOpener'].close();
-         self._options.listModel.setActiveItem(false);
-         self._forceUpdate();
-      },
       updateModel: function(options, newOptions) {
          _private.updateActions(newOptions);
          newOptions.listModel.subscribe('onListChange', function() {
             _private.updateActions(options);
          });
+      },
+
+      needActionsMenu: function(actions, itemActionsType) {
+         var
+            main = 0,
+            additional = 0;
+         actions && actions.forEach(function(action) {
+            if (action.showType === tUtil.showType.MENU_TOOLBAR) {
+               main++;
+            }
+            if (action.showType === tUtil.showType.TOOLBAR) {
+               additional++;
+            }
+         });
+
+         return actions && (additional + main !==  actions.length) && itemActionsType !== 'outside';
       }
    };
 
    var ItemActionsControl = Control.extend({
 
       _template: template,
-
-      constructor: function(cfg) {
-         ItemActionsControl.superclass.constructor.apply(this, arguments);
-         _private.bindHandlers(this);
-      },
 
       _beforeMount: function(newOptions) {
          if (newOptions.listModel) {
@@ -119,46 +131,36 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          if (newOptions.listModel && (this._options.listModel !== newOptions.listModel)) {
             _private.updateModel(this._options, newOptions);
          }
+
+         if (newOptions.itemActions && (this._options.itemActions !== newOptions.itemActions)) {
+            _private.updateActions(newOptions);
+         }
       },
 
-      _onActionClick: function(event, action, item) {
-         event.stopPropagation();
-         this._notify('actionClick', [action, item], {bubbling: true});
-         action.handler && action.handler(item);
+      _onActionClick: function(event, action, itemData) {
+         aUtil.actionClick(this, event, action, itemData);
       },
 
-      _needActionsMenu: function(actions) {
-         return _private.needActionsMenu(actions);
-      },
-
-      _showActionsMenu: function(event, itemData, childEvent) {
-         _private.showActionsMenu(this, event, itemData, childEvent);
-      },
-
-      _closeActionsMenu: function(args) {
-         _private.closeActionsMenu(this, args);
-      },
-
-      _applyEdit: function(event, item) {
-         event.stopPropagation();
+      _applyEdit: function(item) {
          this._notify('commitActionClick', [item]);
       },
 
-      _cancelEdit: function(event, item) {
-         event.stopPropagation();
+      _cancelEdit: function(item) {
          this._notify('cancelActionClick', [item]);
       },
-      updateActions: function() {
-         _private.updateActions(this._options);
+
+      updateItemActions: function(item, isEditingItem) {
+         _private.updateItemActions(item, this._options, isEditingItem, this);
       }
    });
 
    ItemActionsControl.getDefaultOptions = function() {
       return {
-         itemActionsType: 'inline',
+         itemActionsType: 'inside',
          itemActionVisibilityCallback: function() {
             return true;
-         }
+         },
+         itemActions: []
       };
    };
 

@@ -1,0 +1,107 @@
+.controls-StackTemplate {
+   display: flex;
+   flex-direction: column;
+   flex-grow: 1;
+   flex-shrink: 1;
+   height: 100%;
+   background-color: @default-bg-color;
+   position: relative;
+   overflow: hidden;
+}
+
+.controls-StackTemplate__top-area {
+   display: flex;
+   flex-shrink: 0;
+   min-height: @min-height_stackTemplate_head;
+   background: @background_stackTemplate_head;
+   border-bottom: @border-bottom_stackTemplate_head;
+}
+
+.controls-StackTemplate__content-area {
+   display: flex;
+   flex-direction: column;
+   flex-grow: 1;
+   flex-shrink: 1;
+   background: @background_stackTemplate_content;
+}
+
+.controls-StackTemplate__top-area-content {
+   width: 100%;
+   flex-shrink: 1;
+   display: flex;
+   align-items: baseline;
+   margin: @spacing_stackTemplate_head;
+   overflow: hidden;
+}
+
+.controls-StackTemplate__close_button {
+   position: absolute;
+   top: @top-space_stackTemplate_close-button;
+   right: 0;
+   cursor: pointer;
+   z-index: 1;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   &:before {
+      content: @content_CloseButton_icon;
+   }
+}
+
+.controls-StackTemplate__close_button_standart {
+   border-style: solid;
+   width: @width_CloseButton - extract(@border-width_CloseButton, 2) - extract(@border-width_CloseButton, 4);
+   height: @height_CloseButton - extract(@border-width_CloseButton, 1) - extract(@border-width_CloseButton, 3);
+   font-family: @default-icon-font;
+   line-height: @height_CloseButton;
+   font-size: @font-size_CloseButton;
+   box-shadow: @box-shadow_CloseButton;
+   border-width: @border-width_CloseButton;
+   border-color: @border-color_CloseButton;
+   border-radius: @border-radius_CloseButton;
+   background-color: @background-color_CloseButton;
+   &:before {
+      color: @color_CloseButton-icon;
+      text-shadow: @text-shadow_Button;
+   }
+   &:active {
+      box-shadow: none;
+   }
+}
+
+.controls-StackTemplate__caption {
+   max-width: 50%;
+   cursor: default;
+   display: flex;
+   height: @min-height_stackTemplate_head;
+   align-items: center;
+   flex-shrink: 1;
+}
+
+.controls-StackTemplate__caption_text {
+   text-overflow: ellipsis;
+   overflow: hidden;
+   white-space: nowrap;
+}
+
+.controls-StackTemplate__caption_style_default {
+   color: @color_stackTemplate_head;
+   font-size: @font-size_stackTemplate_head;
+   font-weight: 700;
+}
+
+.controls-StackTemplate__caption_style_accent {
+   color: #D94700;
+   font-size: 18px;
+   font-weight: 700;
+}
+.controls-StackTemplate__caption_style_small {
+   color: #8991A9;
+   font-size: 14px;
+   font-weight: normal;
+}
+
+.controls-StackTemplate__bottomArea {
+   background: @background_stackTemplate_footer;
+   border-top: @border-bottom_stackTemplate_footer;
+}

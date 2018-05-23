@@ -2,7 +2,7 @@
    <div>From source:</div>
    <div class="row-filter-inline">
       <Controls.Filter.Button/>
-      <Controls.Filter.FastFilter bind:selectedKeys="_selectedKeys3"
+      <Controls.Filter.Fast bind:selectedKeys="_selectedKeys3"
                                 source="{{_getDefaultMemory()}}"
 
       />
@@ -11,7 +11,7 @@
    <div>From items: </div>
    <div class="row-filter-inline">
       <Controls.Filter.Button/>
-      <Controls.Filter.FastFilter bind:selectedKeys="_selectedKeysItems"
+      <Controls.Filter.Fast bind:selectedKeys="_selectedKeysItems"
                                 source="{{_getDefaultMemory()}}"
                                 items="{{dataSourceDemoItems}}"
 

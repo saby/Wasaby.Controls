@@ -11,7 +11,8 @@ define('Controls/Input/Search',
       'use strict';
 
       /**
-       * Строка поиска с кнопкой
+       * Search input.
+       *
        * @class Controls/Input/Search
        * @extends Controls/Input/Text
        * @mixes Controls/Input/interface/ISearch
@@ -22,14 +23,14 @@ define('Controls/Input/Search',
        */
 
       /**
-       * @event Controls/Input/Search#search Происходит при нажатии на кнопку поиска
+       * @event Controls/Input/Search#search Occurs when search button is clicked.
        */
 
       /**
        * @name Controls/Input/Search#style
-       * @cfg {String} Цвет поля поиска
-       * @variant default Серое поле поиска
-       * @variant header Белое поле поиска
+       * @cfg {String} Field style.
+       * @variant default Gray field.
+       * @variant header White field.
        */
 
       var Search = Control.extend({
@@ -49,31 +50,21 @@ define('Controls/Input/Search',
 
          _notifyOnValueChanged: function(value) {
             this._notify('valueChanged', [value]);
-            this._applySearch(value);
          },
 
          _valueChangedHandler: function(event, value) {
             this._notifyOnValueChanged(value);
          },
 
-         //Собственно поиск
-         _applySearch: function(value) {
-            this._notify('search', [value]);
-         },
-
          _onResetClick: function() {
+            this._notify('resetClick');
             this._notifyOnValueChanged('');
          },
 
          _onSearchClick: function() {
-            this._applySearch(this._options.value);
-         },
-
-         _keyDownHandler: function(event) {
-            if (event.nativeEvent.keyCode == 13) {
-               this._applySearch(this._options.value);
-            }
+            this._notify('searchClick');
          }
+         
       });
 
       Search.getOptionTypes = function getOptionsTypes() {

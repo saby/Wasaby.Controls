@@ -1,16 +1,17 @@
 'use strict';
 var express = require('express'),
-    path = require('path'),
-    http = require('http'),//###
-    https = require('https'),
-    cookieParser = require('cookie-parser'),
-    fs = require('fs'),
-    spawn = require('child_process').spawn,
-    bodyParser = require('body-parser'),
-    serveStatic = require('serve-static'),
-    app = express();
+   path = require('path'),
+   http = require('http'), //###
+   https = require('https'),
+   cookieParser = require('cookie-parser'),
+   fs = require('fs'),
+   spawn = require('child_process').spawn,
+   bodyParser = require('body-parser'),
+   serveStatic = require('serve-static'),
+   app = express();
 
 var resourcesPath = path.join('', 'components');
+
 //Run testing server
 require('./test-server');
 
@@ -31,30 +32,18 @@ var collectDeps = spawn('node', ['depencyCollector']);
 collectDeps.stdout.pipe(process.stdout);
 collectDeps.stderr.pipe(process.stderr);
 collectDeps.on('close', function(code) {
-    console.log('deps collected successfuly');
+   console.log('deps collected successfuly');
 });
 
 // Кошерный редирект на CDN, который РАБОТАЕТ
 app.get('/cdn*', function(req, res) {
-  res.redirect('https://localhost:' + port + req.url);
-});
-
-app.post('/theme-preview/get-theme/', function(req, res)  {
-  req.on('data', function(data) {
-        var themeName = JSON.parse(data.toString()).name;
-        if (!themeName) {
-            res.send('err occured');
-        }
-        fs.readFile(process.cwd() + '/themes/' + themeName + '/variables.less', function(err, data) {
-            res.send(data);
-        });
-    });
+   res.redirect('https://localhost:' + port + req.url);
 });
 
 
 // Простой прокси для перенаправления запросов от демо к сервисам Sbis.ru
-var simpleProxy = function (proxyParams, req, res) {
-   var subReq = function (host, args, content, onResult) {
+var simpleProxy = function(proxyParams, req, res) {
+   var subReq = function(host, args, content, onResult) {
       args.host = host;
       args.hostname = host;
       args.port = req.port || 443;
@@ -71,19 +60,19 @@ var simpleProxy = function (proxyParams, req, res) {
       }
       var rq = https.request(
          args,
-         function (rs) {
-            rs.on('data', function (data) {
+         function(rs) {
+            rs.on('data', function(data) {
                onResult.call(null, rs.statusCode, rs.headers, data);
             });
          });
-      rq.on('error', function (err) {
+      rq.on('error', function(err) {
          console.error('Subrequest error: ' + err);
          res.sendStatus(500);
       });
       rq.end(data);
    };
 
-   var pass = function (cookies, setCookies, fixPath) {
+   var pass = function(cookies, setCookies, fixPath) {
       var reqPath = fixPath ? fixPath(req.path, cookies) : req.path;
       if (req.route.path.charAt(req.route.path.length - 1) === '/' && reqPath.charAt(reqPath.length - 1) !== '/') {
          reqPath = reqPath + '/';
@@ -94,11 +83,13 @@ var simpleProxy = function (proxyParams, req, res) {
             method: req.method,
             path: reqPath,
             headers: Object.assign({}, req.headers, {
-               cookie: Object.keys(cookies).map(function (n) { return n + '=' + cookies[n]; }).join('; ')
+               cookie: Object.keys(cookies).map(function(n) {
+                  return n + '=' + cookies[n]; 
+               }).join('; ')
             })
          },
          req.body || null,
-         function (status, headers, data) {
+         function(status, headers, data) {
             if (setCookies) {
                var list = headers['set-cookie'] = headers['set-cookie'] || [];
                for (var i = 0; i < setCookies.length; i++) {
@@ -117,12 +108,15 @@ var simpleProxy = function (proxyParams, req, res) {
 
    var cookies;
    if (authHost === proxyParams.host) {
-      cookies = cookieNames.reduce(function (acc, n) { var k = authHost + '-' + n; if (req.cookies[k]) { acc[n] = req.cookies[k]; } return acc; }, {});
+      cookies = cookieNames.reduce(function(acc, n) {
+         var k = authHost + '-' + n; if (req.cookies[k]) {
+            acc[n] = req.cookies[k]; 
+         } return acc; 
+      }, {});
       if (!simpleProxy.authCookies || !simpleProxy.authCookies[authHost]) {
          (simpleProxy.authCookies = simpleProxy.authCookies || {})[authHost] = cookies;
       }
-   }
-   else {
+   } else {
       cookies = simpleProxy.authCookies ? simpleProxy.authCookies[authHost] : null;
    }
 
@@ -141,8 +135,8 @@ var simpleProxy = function (proxyParams, req, res) {
             'x-originalmethodname': '0KHQkNCfLkF1dGhlbnRpY2F0ZQ=='
          })
       },
-      {"jsonrpc":"2.0","protocol":4,"method":"САП.Authenticate","params":{"data":{"s":[{"t":"Строка","n":"login"},{"t":"Строка","n":"password"},{"t":"Строка","n":"machine_name"},{"t":"Строка","n":"machine_id"},{"t":"Логическое","n":"license_extended"},{"t":"Строка","n":"license_session_id"},{"t":"Логическое","n":"stranger"},{"t":"Логическое","n":"from_browser"}],"d":[proxyParams.user,proxyParams.password,process.env.COMPUTERNAME,null,false,null,false,true],"_mustRevive":true,"_type":"record"}},"id":1},
-      function (status, headers, data) {
+      {'jsonrpc': '2.0', 'protocol': 4, 'method': 'САП.Authenticate', 'params': {'data': {'s': [{'t': 'Строка', 'n': 'login'}, {'t': 'Строка', 'n': 'password'}, {'t': 'Строка', 'n': 'machine_name'}, {'t': 'Строка', 'n': 'machine_id'}, {'t': 'Логическое', 'n': 'license_extended'}, {'t': 'Строка', 'n': 'license_session_id'}, {'t': 'Логическое', 'n': 'stranger'}, {'t': 'Логическое', 'n': 'from_browser'}], 'd': [proxyParams.user, proxyParams.password, process.env.COMPUTERNAME, null, false, null, false, true], '_mustRevive': true, '_type': 'record'}}, 'id': 1},
+      function(status, headers, data) {
          var lines = [];
          var cookies = {};
          var re = /[\s]*(domain=[a-z0-9\-\.]*|secure|httponly);/gi;
@@ -160,8 +154,7 @@ var simpleProxy = function (proxyParams, req, res) {
          if (Object.keys(cookies).length === cookieNames.length) {
             (simpleProxy.authCookies = simpleProxy.authCookies || {})[authHost] = cookies;
             pass(cookies, lines, proxyParams.fixPath);
-         }
-         else {
+         } else {
             if (simpleProxy.authCookies) {
                delete simpleProxy.authCookies[authHost];
             }
@@ -184,14 +177,14 @@ var PROXY_PARAMS = {
 app.get('/!hash/', simpleProxy.bind(null, PROXY_PARAMS));
 app.post('/long-requests/service/', simpleProxy.bind(null, PROXY_PARAMS));
 app.post('/' + PROXY_PARAMS.host + '/service/', simpleProxy.bind(null, Object.assign({}, PROXY_PARAMS, {
-   fixPath: function (reqPath, cookies) {
+   fixPath: function(reqPath, cookies) {
       return reqPath.substring(PROXY_PARAMS.host.length + 1);
    }
 })));
 
 app.get('/stomp/s-:sid/info', simpleProxy.bind(null, {
    host: 'stomp-test-online.sbis.ru',
-   fixPath: function (reqPath, cookies) {
+   fixPath: function(reqPath, cookies) {
       return '/stomp/s-' + cookies['sid'] + '/info';
    }
 }));

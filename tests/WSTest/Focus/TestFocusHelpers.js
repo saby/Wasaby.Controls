@@ -1,7 +1,7 @@
 /**
  * Created by nv.belotelov on 14.07.2017.
  */
-define('js!WSTest/Focus/TestFocusHelpers', [
+define('WSTest/Focus/TestFocusHelpers', [
    'Core/constants'
 ], function (cConstants) {
    'use strict';

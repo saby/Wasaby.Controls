@@ -10,9 +10,7 @@
 
    <ws:content>
       <ws:partial
-              template="tmpl!Controls/Input/resources/input"
-              on:keydown="_keyDownHandler()"
-      />
+              template="tmpl!Controls/Input/resources/input"/>
    </ws:content>
 
    <ws:afterFieldWrapper>
@@ -22,7 +20,7 @@
               class="controls-Search__reset icon-Close"
               title="{{rk('Очистить результаты поиска')}}"
               on:click="_onResetClick()"></div>
-         <div class="controls-Search__search controls-Search__search_state{{!isEnabled() ? '_disabled' : '_default'}} icon-Search2"
+         <div class="controls-Search__search controls-Search__search_state{{_options.readOnly ? '_disabled' : '_default'}} icon-Search2"
               on:click="_onSearchClick()"></div>
       </div>
    </ws:afterFieldWrapper>

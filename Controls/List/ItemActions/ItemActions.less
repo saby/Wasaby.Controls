@@ -1,9 +1,15 @@
 .controls-itemActionsV {
-  .align-items(center);
+  align-items:center;
   display: none;
   position:absolute;
 }
-.controls-itemActionsV_inline {
+
+.controls-itemActionsV_invisible {
+  visibility: hidden;
+  display: inline-flex;
+}
+
+.controls-itemActionsV_inside {
   right: 0;
   bottom: 0;
   padding: @padding_itemActions_inside;
@@ -26,47 +32,58 @@
     height: 0;
     top:0;
     border-top: @height_itemAction_outside solid @default-bg-color-hovered-item;
-    border-left: @width_itemActions_outside_after solid transparent;
-    left: -@width_itemActions_outside_after;
+    border-left: @width_itemActions_outside_bevel solid transparent;
+    left: -@width_itemActions_outside_bevel;
   }
 }
+
 .controls-itemActionsV_editing {
   background-color: @controls-editInPlace-editing-item-bg;
   &:before {
     border-top-color: @controls-editInPlace-editing-item-bg;
   }
 }
-.controls-itemActionsV__action, .controls-itemActionsV__menuOpen {
-  .inline-flexbox();
-  .align-items(center);
-  height: 100%;
-  margin: @margin_itemActions_action;
+
+.controls-itemActionsV__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  position: relative;
+}
+.controls-itemActionsV__action_padding {
+  padding: @padding_itemActions_action;
 }
 .controls-itemActionsV__action_bordered {
   .closeButton();
-  .inline-flexbox();
-  .align-items(center);
-  .justify-content(center);
-  //todo: cascade
-  .controls-itemActionsV__action_icon {
-    .icon-size-without-important(@default-icon-size);
-  }
+  display: inline-flex;;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
 }
+
 .controls-itemActionsV__action_done {
   &:hover {
     border-color: @success-color;
   }
 }
+
 .controls-itemActionsV__action_error {
   &:hover {
     border-color: @error-color;
   }
 }
-.controls-itemActionsV__action_icon, .controls-itemActionsV__menuOpen_icon {
+
+.controls-itemActionsV__action_icon {
   .icon-size-without-important(@default-icon-size-medium, @default-icon-medium-font);
 }
+
 .controls-itemActionsV__action_title {
   color: @color_Link-text;
+  font-size:@small-text-size;
+  min-height: @default-icon-size;
 }
 
 .controls-itemActionsV__menu {
@@ -74,6 +91,7 @@
   margin-top: -6px;
   margin-left: 6px - 2px;//border or ya hz chto eto takoe
 }
+
 .ws-is-no-touch {
   .controls-itemActionsV__action_title {
     &:hover {
@@ -81,4 +99,7 @@
       text-decoration: underline;
     }
   }
+}
+.controls-itemActionsV_swiped {
+  display: inline-flex;
 }

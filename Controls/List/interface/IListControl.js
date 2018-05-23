@@ -2,7 +2,7 @@ define('Controls/List/interface/IListControl', [
 ], function() {
 
    /**
-    * Интерфейс работы списков.
+    * Interface for lists.
     *
     * @mixin Controls/List/interface/IListControl
     * @public
@@ -10,58 +10,58 @@ define('Controls/List/interface/IListControl', [
 
    /**
     * @name Controls/List/interface/IListControl#contextMenuEnabled
-    * @cfg {Boolean} Показывать ли контекстное меню при клике на правую кнопку мыши
+    * @cfg {Boolean} Determines whether context menu should be shown on right-click.
     */
 
    /**
     * @name Controls/List/interface/IListControl#emptyTemplate
-    * @cfg {Function} Шаблон отображения пустого списка
+    * @cfg {Function} Template for the empty list.
     */
 
    /**
     * @name Controls/List/interface/IListControl#footerTemplate
-    * @cfg {Function} Устанавливает шаблон, который будет отображаться под элементами коллекции.
+    * @cfg {Function} Template that will be rendered below the list.
     */
 
    /**
     * @typedef {String} ResultsPosition
-    * @variant top отобразить перед списком
-    * @variant bottom отобразить после списка
+    * @variant top Show results above the list.
+    * @variant bottom Show results below the list.
     */
 
    /**
     * @typedef {Object} Results
-    * @property {Function} template шаблон отображения
-    * @property {ResultsPosition} position позиция в списке
+    * @property {Function} template Results template.
+    * @property {ResultsPosition} position Results position.
     */
 
    /**
     * @name Controls/List/interface/IListControl#results
-    * @cfg {Results} Настройки отображения строки итогов
+    * @cfg {Results} Results row config.
     */
 
    /**
     * @typedef {Object} VirtualScrollConfig
-    * @property {Number} maxVisibleItems Максимальное количество отображаемых элементов списка
+    * @property {Number} maxVisibleItems Maximum number of rendered items.
     */
 
    /**
     * @name Controls/List/interface/IListControl#virtualScrollConfig
-    * @cfg {VirtualScrollConfig} Конфигурация виртуального скролла
+    * @cfg {VirtualScrollConfig} Virtual scroll config.
     */
 
    /**
     * @name Controls/List/interface/IListControl#sorting
-    * @cfg {Object} Конфигурация сортировки (ключи объекта - названия полей; значения - тип сортировки: 'ASC' - по возрастанию или 'DESC' - по убыванию)
+    * @cfg {Object} Sorting config (object keys - field names; values - sorting type: 'ASC' - ascending or 'DESC' - descending).
     */
 
    /**
     * @name Controls/List/interface/IListControl#multiSelectVisibility
-    * @cfg {Boolean} Разрешен ли множественный выбор.
-    * @variant visible Показывать всегда
-    * @variant hidden Никогда не показывать
-    * @variant onhover Показывать только по ховеру
-    * @variant null По умолчанию
+    * @cfg {Boolean} Whether multiple selection is enabled.
+    * @variant visible Show.
+    * @variant hidden Do not show.
+    * @variant onhover Show on hover.
+    * @variant null Default.
     */
 
    /**
@@ -86,56 +86,66 @@ define('Controls/List/interface/IListControl', [
 
    /**
     * @name Controls/List/interface/IListControl#markedKey
-    * @cfg {Number} Идентификатор элемента коллекции на котором установлен маркер
+    * @cfg {Number} Identifier of the marked collection item.
     */
 
    /**
     * @name Controls/List/interface/IListControl#uniqueKeys
-    * @cfg {String} Стратегия действий с подгружаемыми в список записями
-    * @variant true Мержить, при этом записи с одинаковыми id схлопнутся в одну
-    * @variant false Добавлять, при этом записи с одинаковыми id будут выводиться в списке
+    * @cfg {String} Strategy for loading new list items.
+    * @variant true Merge, items with the same identifier will be combined into one.
+    * @variant false Add, items with the same identifier will be shown in the list.
     */
 
    /**
     * @name Controls/List/interface/IListControl#itemsReadyCallback
-    * @cfg {Function} Коллбэк функция вызывающаяся в момент готовности инстанса списочных данных
+    * @cfg {Function} Callback function that will be called when list data instance is ready.
+    */
+
+   /**
+    * @name Controls/List/interface/IListControl#dataLoadCallback
+    * @cfg {Function} Callback function that will be called when list data loaded by source
+    */
+
+   /**
+    * @name Controls/List/interface/IListControl#dataLoadErrback
+    * @cfg {Function} Callback function that will be called when data loading fail
     */
 
    /**
     * @function Controls/List/interface/IListControl#reload
-    * Перезагружает набор записей представления данных с последующим обновлением отображения
+    * Reloads list data and view.
     */
 
    /**
     * @function Controls/List/interface/IListControl#reloadItem
-    * Перезагружает модель из источника данных, мержит изменения к текущим данным и перерисовывает запись
+    * Loads model from data source, merges changes into the current data and renders the item.
     */
 
    /**
     * @function Controls/List/interface/IListControl#scrollToTop
-    * Прокручивает табличное представление в самый вверх
+    * Scrolls list to the top.
     */
 
    /**
     * @function Controls/List/interface/IListControl#scrollToBottom
-    * Прокручивает табличное представление в самый низ
+    * Scrolls list to the bottom.
     */
 
    /**
     * @function Controls/List/interface/IListControl#scrollToItem
-    * Прокручивает табличное представление к указанному элементу
+    * Scrolls list to the specified item.
     */
 
    /**
-    * @event Controls/List/interface/IListControl#itemClicked Происходит при клике по строке
+    * @event Controls/List/interface/IListControl#itemClicked Occurs when list item is clicked.
     */
 
    /**
-    * @event Controls/List/interface/IListControl#dataLoaded Происходит при загрузке данных
+    * @event Controls/List/interface/IListControl#dataLoaded Occurs when data is loaded.
     */
 
    /**
-    * @event  Controls/List/interface/IListControl#markedKeyChanged Происходит при выборе записи
-    * @param {Number} key ключ выбранного элемента коллекции.
+    * @event  Controls/List/interface/IListControl#markedKeyChanged Occurs when list item was selected (marked).
+    * @param {Number} key Key of the selected item.
     */
 });

@@ -126,7 +126,7 @@ define('Controls/History/Source', [
       getItemsWithHistory: function(self, history, oldItems) {
          var items = new RecordSet({
             adapter: oldItems.getAdapter(),
-            idProperty: oldItems.getIdProperty(),
+            keyProperty: oldItems.keyProperty,
             format: oldItems.getFormat().clone()
          });
          var filteredHistory, historyIds;
@@ -184,7 +184,7 @@ define('Controls/History/Source', [
       fillFrequentItems: function(self, history, oldItems, items) {
          var config = {
             adapter: items.getAdapter(),
-            idProperty: items.getIdProperty(),
+            keyProperty: items.keyProperty,
             format: items.getFormat()
          };
          var frequentItems = new RecordSet(config);
@@ -293,7 +293,7 @@ define('Controls/History/Source', [
                newItems = _private.getItemsWithHistory(self, self._history, self._oldItems);
                return new DataSet({
                   rawData: newItems.getRawData(),
-                  idProperty: newItems.getIdProperty()
+                  keyProperty: newItems.keyProperty
                });
             });
          }

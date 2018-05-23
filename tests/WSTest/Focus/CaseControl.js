@@ -1,4 +1,4 @@
-define('js!WSTest/Focus/CaseControl', [
+define('WSTest/Focus/CaseControl', [
    'Lib/Control/CompoundControl/CompoundControl'
 ], function(CompoundControl) {
 

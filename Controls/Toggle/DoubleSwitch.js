@@ -4,13 +4,15 @@ define('Controls/Toggle/DoubleSwitch', [
    'tmpl!Controls/Toggle/DoubleSwitch/resources/DoubleSwitchToggle',
    'tmpl!Controls/Toggle/DoubleSwitch/resources/DoubleSwitchText',
    'WS.Data/Type/descriptor',
-   'css!Controls/Toggle/DoubleSwitch/DoubleSwitch'
+   'css!Controls/Toggle/DoubleSwitch/DoubleSwitch',
+   'css!Controls/Toggle/resources/SwitchCircle/SwitchCircle'
 ], function(Control, template, toggleTemplate, textTemplate, types) {
 
    /**
-    * Контрол, отображающий переключатель
+    * Double switch (switch between two values).
+    *
     * @class Controls/Toggle/DoubleSwitch
-    * @extends Controls/Control
+    * @extends Core/Control
     * @mixes Controls/Toggle/interface/ICheckable
     * @mixes Controls/interface/ITooltip
     * @control
@@ -20,14 +22,14 @@ define('Controls/Toggle/DoubleSwitch', [
 
    /**
     * @name Controls/Toggle/DoubleSwitch#captions
-    * @cfg {Array.<String>} Массив заголовков
+    * @cfg {Array.<String>} Array of captions.
     */
 
    /**
     * @name Controls/Toggle/DoubleSwitch#orientation
-    * @cfg {String} Способ отображения
-    * @variant horizontal Горизонтальная ориентация
-    * @variant vertical Вертикальная ориентация
+    * @cfg {String} Display type.
+    * @variant horizontal Horizontal switch.
+    * @variant vertical Vertical switch.
     */
    var _private = {
       checkCaptions: function(captions) {
@@ -53,13 +55,13 @@ define('Controls/Toggle/DoubleSwitch', [
       },
 
       _clickTextHandler: function(e, _nextValue) {
-         if (this._options.value !== _nextValue && this.isEnabled()) {
+         if (this._options.value !== _nextValue && !this._options.readOnly) {
             _private.notifyChanged(this);
          }
       },
 
       _clickToggleHandler: function(e) {
-         if (this.isEnabled()) {
+         if (!this._options.readOnly) {
             _private.notifyChanged(this);
          }
       },

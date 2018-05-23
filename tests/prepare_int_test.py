@@ -13,7 +13,7 @@ def delete_folders(*exclude):
 root = os.getcwd()
 delete_folders('int', 'stand', 'WSTest')
 
-os.chdir(r'stand/intest/regression')
+os.chdir(r'stand/Intest/regression')
 root_regr = os.getcwd()
 delete_folders('CssRichEditor', 'CssDataGridView')
 

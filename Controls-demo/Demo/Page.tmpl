@@ -1,5 +1,5 @@
 <ws:partial template="Controls/Application" scope="{{_options}}" bodyClass="controls-default-bg">
-   <div class="ControlsDemo-Page">
+   <div class="ControlsDemo-Page ws-flexbox ws-flex-column">
       <div class="themeSwitcher">
          <div class="theme_button" on:click="changeTheme('online')">online</div>
          <div class="theme_button" on:click="changeTheme('carry_m')">carry_m</div>
@@ -9,6 +9,6 @@
       </div>
       <link rel="stylesheet" type="text/css" id="controlsThemeStyle" href="{{_theme}}.css"/>
       <Controls.Button if="{{componentName !== 'Controls-demo/Index'}}" attr:id="Back" caption="Назад" style="linkMain" icon="icon-16 icon-DayBackward icon-primary" on:click="backClickHdl()" />
-      <ws:partial attr:id="newListView" template="{{componentName}}" />
+      <ws:partial attr:id="newListView" attr:class="ControlsDemo-Page_content" template="{{componentName}}" />
    </div>
 </ws:partial>

@@ -164,7 +164,7 @@ define(['Controls/Button'], function (Button) {
          
          it('click to enabled button', function () {
             var opt = {
-               enabled: true
+               readOnly: false
             };
             btn.saveOptions(opt);
             btn._clickHandler(customEvent);
@@ -173,7 +173,7 @@ define(['Controls/Button'], function (Button) {
 
          it('click to disabled button', function () {
             var opt = {
-               enabled: false
+               readOnly: true
             };
             btn.saveOptions(opt);
             btn._clickHandler(customEvent);

@@ -206,7 +206,7 @@ function(cContext, coreClone, cMerge, CommandDispatcher, EventBus, Deferred, IoC
          // у панели может быть задан parent и getTopParent вернет не то что надо
          this._panel = this.findParent(function(parent) {
             return cInstance.instanceOfMixin(parent, 'Lib/Mixins/LikeWindowMixin');
-         }) || this.getTopParent();
+         }) || this._options._compoundArea || this.getTopParent();
          this._initHandlers();
          this._subscribeToEvents();
 
@@ -445,6 +445,7 @@ function(cContext, coreClone, cMerge, CommandDispatcher, EventBus, Deferred, IoC
        * Показывает индикатор загрузки
        */
       _showLoadingIndicator: forAliveOnly(function(message) {
+//todo поправить LoadingIndicator
          cIndicator.setMessage(message || this._options.indicatorSavingMessage, true);
       }),
 
@@ -625,6 +626,8 @@ function(cContext, coreClone, cMerge, CommandDispatcher, EventBus, Deferred, IoC
        * @param {Object} [config] Конфигурация команды.
        * @param {Boolean} [config.hideIndicator=false] Не показывать индикатор.
        * @param {Boolean} [config.closePanelAfterSubmit=true] Закрывать диалог после выполнения команды.
+       * @param {Boolean} [config.hideErrorDialog=true] Не показывать сообещние при ошибке.
+       * @param {Object} [config.destroyMeta] Дополнительные мета данные, которые будут переданы при удалении модели из источника данных
        * @remark
        * При удалении происходит событие {@link onDestroyModel}.
        * Источник данных диалога устанавливают с помощью опции {@link dataSource}.
@@ -643,9 +646,9 @@ function(cContext, coreClone, cMerge, CommandDispatcher, EventBus, Deferred, IoC
             destroyConfig = {
                hideIndicator: config.hideIndicator !== undefined ? config.hideIndicator : true,
                eventName: 'onDestroyModel',
-               hideErrorDialog: true
+               hideErrorDialog: config.hideErrorDialog !== undefined ? config.hideErrorDialog : true
             },
-            def = this._dataSource.destroy(this._getRecordId());
+            def = this._dataSource.destroy(this._getRecordId(), config.destroyMeta);
 
          return this._prepareSyncOperation(def, config, destroyConfig).addBoth(function(data) {
             self._newRecord = false;

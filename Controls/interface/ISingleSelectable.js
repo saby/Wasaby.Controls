@@ -2,7 +2,7 @@ define('Controls/interface/ISingleSelectable', [
 ], function() {
 
    /**
-    * Интерфейс для выбора элемента из коллекции
+    * Interface for item selection from collection.
     *
     * @mixin Controls/interface/ISingleSelectable
     * @public
@@ -10,12 +10,12 @@ define('Controls/interface/ISingleSelectable', [
 
    /**
     * @name Controls/interface/ISingleSelectable#selectedKey
-    * @cfg {Number} Идентификатор выбранного элемента коллекции.
+    * @cfg {Number} Identifier of selected item.
     */
 
    /**
-    * @event Controls/interface/ISingleSelectable#selectedKeyChanged Происходит при выборе записи
-    * @param {Number} key ключ выбранного элемента коллекции.
+    * @event Controls/interface/ISingleSelectable#selectedKeyChanged Occurs when selected item changes.
+    * @param {Number} key Identifier of selected item.
     */
 
 });

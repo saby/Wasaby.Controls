@@ -2,7 +2,7 @@ define('Controls/Input/interface/ISearch', [
 ], function() {
 
    /**
-    * Интерфейс поиска внутри поля
+    * Interface for Search inputs.
     *
     * @mixin Controls/Input/interface/ISearch
     * @public
@@ -10,16 +10,16 @@ define('Controls/Input/interface/ISearch', [
 
    /**
     * @name Controls/Input/interface/ISearch#searchParam
-    * @cfg {String} Название поля для поиска
+    * @cfg {String} Name of the field that search should operate on.
     */
 
    /**
     * @name Controls/Input/interface/ISearch#minSearchLength
-    * @cfg {Number} Минимальное количество символов для поискового запроса
+    * @cfg {Number} Minimum query length to start searching.
     */
 
    /**
     * @name Controls/Input/interface/ISearch#searchDelay
-    * @cfg {Number} Время задержки перед выполнением поиска
+    * @cfg {Number} Delay before search starts.
     */
 });

@@ -16,6 +16,7 @@
    position: relative;
    color: @color_DropdownList-item;
    min-height: @height_DropdownList-item;
+   height: @height_DropdownList-item;
    .flexbox();
    .align-items(center);
    padding-left: @padding_DropdownList-default;
@@ -33,7 +34,7 @@
 }
 
 .controls-DropdownList__item-right_hierarchy-padding {
-  padding-right: @padding_DropdownList-hierarchy;
+  padding-right: @spacing_DropdownList_arrowSubMenu;
 }
 .controls-DropdownList__content {
    font-size: @large-text-size;
@@ -50,6 +51,7 @@
 }
 
 .controls-DropdownList__icon {
+   color: @color_primary;
    margin-right: @right_DropdownList-icon;
 }
 
@@ -76,7 +78,10 @@
 }
 
 .controls-DropdownList__arrow {
+   .inline-flexbox();
+   .align-items(center);
    position: absolute;
+   top: @top_DropdownList-icon;
    right: @right_DropdownList-icon;
    font-family: @default-icon-small-font !important;
    font-size: @menu-expand-icon-font-size;
@@ -95,10 +100,10 @@
    width: @width-Dropdown-cross;
    height: @height-Dropdown-cross;
    font-size: @font-size-Dropdown-cross;
+   font-family: @default-icon-medium-font;
    right: 0;
    top: 0;
-   z-index: 1;
-   font-family: @icon-font;
+   z-index: 2;
 }
 
 .controls-MenuButton-header {
@@ -112,7 +117,7 @@
    .flexbox();
    .justify-content(center);
    .align-items(center);
-   z-index: 1;
+   z-index: 2;
 }
 
 .control-MenuButton-duplicate-head_medium {

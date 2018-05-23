@@ -28,11 +28,11 @@
    }
 
    .controls-BackButton__caption_style-default {
-      color: @color_Header__caption_style-deafult_hovered;
+      color: @color-BackButton__caption_style-default_hovered;
    }
 
    .controls-BackButton__caption_style-primary {
-      color: @color_Header__caption_style-primary_hovered;
+      color: @color-BackButton__caption_style-primary_hovered;
    }
 }
 
@@ -47,36 +47,36 @@
       }
 
       .controls-BackButton__caption_style-default {
-         color: @color_Header__caption_style-deafult_hovered;
+         color: @color-BackButton__caption_style-default_hovered;
       }
 
       .controls-BackButton__caption_style-primary {
-         color: @color_Header__caption_style-primary_hovered;
+         color: @color-BackButton__caption_style-primary_hovered;
       }
    }
 }
 
 .controls-BackButton__caption_size-s{
-   font-weight: bold;
+   font-weight: @font-weight_Back;
    font-size: @font-size_Header__caption_size-default;
 }
 
 .controls-BackButton__caption_size-m{
-   font-weight: bold;
+   font-weight: @font-weight_Back;
    font-size: @font-size_Header__caption_size-l;
 }
 
 .controls-BackButton__caption_size-l{
-   font-weight: bold;
+   font-weight: @font-weight_Back;
    font-size: @font-size_Header__caption_size-xl;
 }
 
 .controls-BackButton__caption_style-primary {
-   color: @color_Header__caption_style-primary;
+   color: @color-BackButton__caption_style-primary;
 }
 
 .controls-BackButton__caption_style-default {
-   color: @color_Header__caption_style-deafult;
+   color: @color-BackButton__caption_style-default;
 }
 
 .controls-BackButton_size-l {
@@ -99,7 +99,11 @@
 
 .controls-BackButton__wrapper {
    display: inline-flex;
-   align-items: center;
+   align-items: baseline;
    cursor: pointer;
+   max-width: 100%;
 }
 
+.controls-ButtonBack__caption {
+   .text-overflow();
+}

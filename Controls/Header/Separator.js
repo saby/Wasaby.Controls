@@ -9,7 +9,7 @@ define('Controls/Header/Separator', [
    /**
     * Control showing the right arrow icon.
     * @class Controls/Header
-    * @extends Controls/Control
+    * @extends Core/Control
     * @control
     * @public
     */

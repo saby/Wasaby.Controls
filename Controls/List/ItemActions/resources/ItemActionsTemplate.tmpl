@@ -1,0 +1,10 @@
+<div attr:class="controls-itemActionsV
+            controls-itemActionsV_{{itemActionsType}}
+            {{itemData.isEditing ? 'controls-itemActionsV_editing'}}
+            {{menuIsShown ? 'controls-itemActionsV_invisible'}}
+            {{itemData.isSwiped ? 'controls-itemActionsV_swiped'}}">
+    <ws:partial
+            template="tmpl!Controls/List/ItemActions/resources/ItemActionsFor"
+            itemData="{{itemData}}"
+            showedActions="{{itemData.itemActions.showed}}"/>
+</div>

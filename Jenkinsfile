@@ -1,6 +1,6 @@
 #!groovy
 echo "Задаем параметры сборки"
-def version = "3.18.210"
+def version = "3.18.300"
 
 def gitlabStatusUpdate() {
     if ( currentBuild.currentResult == "ABORTED" ) {
@@ -14,8 +14,8 @@ def gitlabStatusUpdate() {
 
 
 node('controls') {
-    echo "Читаем settings_${version}.props"
-    def props = readProperties file: "/home/jenkins/shared_autotest87/settings_${version}.props"
+    echo "Читаем настройки из файла version_application.txt"
+    def props = readProperties file: "/home/sbis/mount_test-osr-source_d/Платформа/${version}/version_application.txt"
     echo "Генерируем параметры"
     properties([
     disableConcurrentBuilds(),
@@ -73,7 +73,7 @@ node('controls') {
 		echo "Назначаем переменные"
         def server_address=props["SERVER_ADDRESS"]
 		def smoke_server_address=props["SMOKE_SERVER_ADDRESS"]
-		def stream_number=props["stream_number"]
+		def stream_number=props["snit"]
         def ver = version.replaceAll('.','')
 		def python_ver = 'python3'
         def SDK = ""
@@ -388,10 +388,10 @@ node('controls') {
                 [Тест]
                 Адрес=http://${env.NODE_NAME}:10010"""
             // Копируем шаблоны
-            sh """cp -f ./controls/tests/stand/intest/pageTemplates/branch/* ./controls/tests/stand/intest/pageTemplates"""
-            sh """cp -fr ./controls/Examples/ ./controls/tests/stand/intest/Examples/"""
+            sh """cp -f ./controls/tests/stand/Intest/pageTemplates/branch/* ./controls/tests/stand/Intest/pageTemplates"""
+            sh """cp -fr ./controls/Examples/ ./controls/tests/stand/Intest/Examples/"""
             sh """
-                cd "${workspace}/controls/tests/stand/intest/"
+                cd "${workspace}/controls/tests/stand/Intest/"
                 sudo python3 "change_theme.py" ${params.theme}
                 cd "${workspace}"
 
@@ -419,7 +419,10 @@ node('controls') {
                 }"""
             sh """
                 cd ./jinnee/distrib/builder
-                cp -rf /home/sbis/Controls/build-ui/ws /home/sbis/Controls/intest-ps/ui/
+                cp -rf ${workspace}/jinnee/ws /home/sbis/Controls/intest-ps/ui/
+                node ./node_modules/grunt-cli/bin/grunt xhtmlmin --root=/home/sbis/Controls/intest-ps/ui --application=/
+                node ./node_modules/grunt-cli/bin/grunt xhtml-build --root=/home/sbis/Controls/intest-ps/ui --application=/
+                node ./node_modules/grunt-cli/bin/grunt tmpl-build --root=/home/sbis/Controls/intest-ps/ui --application=/
                 node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/sbis/Controls/intest-ps/ui --application=/
                 sudo systemctl restart Controls_ps
             """

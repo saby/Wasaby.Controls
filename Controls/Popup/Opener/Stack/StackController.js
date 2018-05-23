@@ -7,7 +7,7 @@ define('Controls/Popup/Opener/Stack/StackController',
       'Core/Deferred',
       'Core/constants'
    ],
-   function(BaseController, StackStrategy, List, TargetCoords, cDeferred, cConstants) {
+   function(BaseController, StackStrategy, List, TargetCoords, Deferred, cConstants) {
       'use strict';
 
       var MINIMAL_PANEL_WIDTH = 50; // минимальная ширина стековой панели, todo уйдет в css после доработки по заданию размеров для панели
@@ -26,7 +26,9 @@ define('Controls/Popup/Opener/Stack/StackController',
             if (!minWidth) {
                minWidth = MINIMAL_PANEL_WIDTH;
             }
-            if (!maxWidth) {
+            if (isNaN(maxWidth)) { //не смогли привести к инту - берем по шаблону
+               return undefined;
+            } else if (!maxWidth) {
                maxWidth = this.getMaxPanelWidth(wWidth);
             }
             var
@@ -48,13 +50,18 @@ define('Controls/Popup/Opener/Stack/StackController',
             return wWidth - MINIMAL_PANEL_DISTANCE;
          },
          getStackParentCoords: function() {
-            var elements = document.getElementsByClassName('ws-Popup__stack-target-container');
+            var elements = document.getElementsByClassName('controls-Popup__stack-target-container');
             var targetCoords = TargetCoords.get(elements && elements.length ? elements[0] : document.body);
 
             return {
                top: targetCoords.top,
                right: window.innerWidth - targetCoords.right
             };
+         },
+         elementDestroyed: function(instance, element) {
+            instance._stack.remove(element);
+            instance._update();
+            instance._destroyDeferred.callback();
          }
       };
 
@@ -67,9 +74,11 @@ define('Controls/Popup/Opener/Stack/StackController',
        */
 
       var StackController = BaseController.extend({
+         _destroyDeferred: undefined,
          constructor: function(cfg) {
             StackController.superclass.constructor.call(this, cfg);
             this._stack = new List();
+            _private.elementDestroyed.bind(this);
          },
 
          elementCreated: function(item, container) {
@@ -89,22 +98,20 @@ define('Controls/Popup/Opener/Stack/StackController',
          },
 
          elementDestroyed: function(element, container) {
-            var
-               self = this,
-               def = new cDeferred();
+            this._destroyDeferred = new Deferred();
             if (cConstants.browser.chrome && !cConstants.browser.isMobilePlatform) {
-               container.addEventListener('transitionend', function() {
-                  self._stack.remove(element);
-                  self._update();
-                  def.callback();
-               });
-               container.style.width = '0';
+               this._getTemplateContainer(container).classList.add('controls-Stack_hide');
             } else {
-               self._stack.remove(element);
-               self._update();
-               def.callback();
+               this.elementDestroyed(element, container);
             }
-            return def;
+            return this._destroyDeferred;
+         },
+
+         elementAnimated: function(element, container) {
+            var templateContainer = this._getTemplateContainer(container);
+            if (templateContainer.classList.contains('controls-Stack_hide')) {
+               _private.elementDestroyed(this, element);
+            }
          },
 
          getDefaultPosition: function() {
@@ -131,7 +138,10 @@ define('Controls/Popup/Opener/Stack/StackController',
             var width = item ? _private.getPanelWidth(item.popupOptions.minWidth, item.popupOptions.maxWidth, window.innerWidth) : 0;
             var maxPanelWidth = _private.getMaxPanelWidth(window.innerWidth);
             return StackStrategy.getPosition(index, tCoords, width, maxPanelWidth, prevData.width, prevData.right);
-         }
+         },
+         _getTemplateContainer: function(container) {
+            return container.getElementsByClassName('controls-Popup__template')[0];
+         },
       });
 
       return new StackController();

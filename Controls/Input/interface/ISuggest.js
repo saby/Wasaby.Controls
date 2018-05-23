@@ -2,7 +2,7 @@ define('Controls/Input/interface/ISuggest', [
 ], function() {
 
    /**
-    * Интерфейс работы Input.Suggest
+    * Interface for Input.Suggest.
     *
     * @mixin Controls/Input/interface/ISuggest
     * @public
@@ -10,27 +10,27 @@ define('Controls/Input/interface/ISuggest', [
 
    /**
     * @name Controls/Input/interface/ISuggest#suggestTemplate
-    * @cfg {Function} Основной шаблон отображения саггеста
+    * @cfg {Function} Primary suggest template (showing search results).
     */
    
    /**
     * @name Controls/Input/interface/ISuggest#emptyTemplate
-    * @cfg {Function} Шаблон, который отображается при отсутствии данных в саггесте
-    * @remark Если не установить опцию, то пустой саггест отображаться не будет.
+    * @cfg {Function} Template that's rendered when no result were found.
+    * @remark If option isn't set, empty suggest won't appear.
     */
 
    /**
     * @name Controls/Input/interface/ISuggest#suggestFooterTemplate
-    * @cfg {Function} Шаблон для отображения футера (кнопка 'показать все')
+    * @cfg {Function} Footer template ('show all' button).
     */
 
    /**
     * @name Controls/Input/interface/ISuggest#historyId
-    * @cfg {String} Уникальный идентификатор для хранения истории ввода
+    * @cfg {String} Unique id to save input history.
     */
 
    /**
-    * @event Controls/Input/interface/ISuggest#choose Происходит при выборе из автодополнения.
-    * @param {String} value Новое значение поля.
+    * @event Controls/Input/interface/ISuggest#choose Occurs when user selects item from suggest.
+    * @param {String} value Selected value.
     */
 });

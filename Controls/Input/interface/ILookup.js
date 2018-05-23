@@ -5,7 +5,7 @@ define('Controls/Input/interface/ILookup', [
 ], function() {
 
    /**
-    * Интерфейс поиска внутри поля
+    * Interface for Input.Lookup.
     *
     * @mixin Controls/Input/interface/ILookup
     * @public
@@ -13,6 +13,6 @@ define('Controls/Input/interface/ILookup', [
 
    /**
     * @name Controls/Input/interface/ILookup#lookupTemplate
-    * @cfg {Function} Шаблон панели выбора
+    * @cfg {Function} Template for lookup panel.
     */
 });

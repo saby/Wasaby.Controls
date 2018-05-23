@@ -2,25 +2,29 @@ define('Controls-demo/Container/Scroll',
    [
       'Core/Control',
       'WS.Data/Source/Memory',
+      'Controls/Container/Scroll/Context',
       'tmpl!Controls-demo/Container/Scroll'
    ],
-   function(Control, MemorySource, template) {
+   function(Control, MemorySource, ScrollData, template) {
       return Control.extend({
          _template: template,
 
-         _beforeMount: function() {
-            var srcData = [];
+         _pagingVisible: true,
 
-            for (var id = 1; id < 100; id++) {
-               srcData.push({
-                  id: id,
-                  title: 'Record ' + id
-               });
-            }
-            this._viewSource = new MemorySource({
-               idProperty: 'id',
-               data: srcData
-            });
+         _scrollbarVisible: true,
+
+         _shadowVisible: true,
+
+         _numberOfRecords: 100,
+
+         _innerScroll: false,
+
+         _getChildContext: function() {
+            return {
+               ScrollData: new ScrollData({
+                  pagingVisible: this._pagingVisible
+               })
+            };
          }
       });
    }

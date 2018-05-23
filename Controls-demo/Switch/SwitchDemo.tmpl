@@ -2,7 +2,7 @@
     <h3>Кликабельный</h3>
     <Controls.Toggle.Switch bind:value="value" caption="On" />
     <h3>Кликабельный, в режиме чтения</h3>
-    <Controls.Toggle.Switch enabled="{{false}}" bind:value="value1" caption="On" />
+    <Controls.Toggle.Switch readOnly="{{true}}" bind:value="value1" caption="On" />
     <h3>Выключен</h3>
     <Controls.Toggle.Switch bind:value="value" />
     <h3>Включен</h3>
@@ -12,13 +12,13 @@
     <h3>Включен, с caption</h3>
     <Controls.Toggle.Switch bind:value="value1" caption = "On"/>
     <h3>В режиме чтения, выключен</h3>
-    <Controls.Toggle.Switch enabled="{{false}}" bind:value="value" />
+    <Controls.Toggle.Switch readOnly="{{true}}" bind:value="value" />
     <h3>В режиме чтения, включен</h3>
-    <Controls.Toggle.Switch enabled="{{false}}" bind:value="value1"/>
+    <Controls.Toggle.Switch readOnly="{{true}}" bind:value="value1"/>
     <h3>В режиме чтения, выключен, с caption</h3>
-    <Controls.Toggle.Switch enabled="{{false}}" caption = "On" bind:value="value"/>
+    <Controls.Toggle.Switch readOnly="{{true}}" caption = "On" bind:value="value"/>
     <h3>В режиме чтения, включен, с caption</h3>
-    <Controls.Toggle.Switch enabled="{{false}}" bind:value="value1" caption = "On"/>
+    <Controls.Toggle.Switch readOnly="{{true}}" bind:value="value1" caption = "On"/>
     <h3>Базовая линия</h3>
     baseline<Controls.Toggle.Switch caption = "On" bind:value="value"/>
 </div>

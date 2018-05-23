@@ -148,7 +148,7 @@ define('Controls/List/EditInPlace', [
          getEditingItemIndex: function(self, editingItem, listModel) {
             var
                index = listModel.getCount(),
-               originalItem = listModel.getItemById(ItemsUtil.getPropertyValue(editingItem, listModel._options.idProperty), listModel._options.idProperty);
+               originalItem = listModel.getItemById(ItemsUtil.getPropertyValue(editingItem, listModel._options.keyProperty), listModel._options.keyProperty);
 
             if (originalItem) {
                index = listModel.getIndexBySourceItem(originalItem.getContents());
@@ -239,7 +239,7 @@ define('Controls/List/EditInPlace', [
                this._editingItem = newOptions.editingConfig.item;
                this._setEditingItemData(this._editingItem, newOptions.listModel);
                if (!this._isAdd) {
-                  this._originalItem = newOptions.listModel.getItemById(this._editingItem.get(newOptions.listModel._options.idProperty), newOptions.listModel._options.idProperty).getContents();
+                  this._originalItem = newOptions.listModel.getItemById(this._editingItem.get(newOptions.listModel._options.keyProperty), newOptions.listModel._options.keyProperty).getContents();
                }
             }
          }
@@ -343,17 +343,17 @@ define('Controls/List/EditInPlace', [
          this._isAdd = index === listModel.getCount();
          this._editingItemProjection = this._isAdd
             ? new CollectionItem({ contents: this._editingItem })
-            : listModel.getItemById(ItemsUtil.getPropertyValue(this._editingItem, listModel._options.idProperty), listModel._options.idProperty);
+            : listModel.getItemById(ItemsUtil.getPropertyValue(this._editingItem, listModel._options.keyProperty), listModel._options.keyProperty);
          this._editingItemData = {
             getPropValue: ItemsUtil.getPropertyValue,
-            idProperty: listModel._options.idProperty,
+            keyProperty: listModel._options.keyProperty,
             displayProperty: listModel._options.displayProperty,
             index: this._isAdd ? listModel.getCount() : index,
             item: this._editingItem,
             dispItem: this._editingItemProjection,
             isEditing: true,
             isSelected: !listModel._markedItem,
-            key: ItemsUtil.getPropertyValue(this._editingItemProjection.getContents(), listModel._options.idProperty)
+            key: ItemsUtil.getPropertyValue(this._editingItemProjection.getContents(), listModel._options.keyProperty)
          };
          listModel._setEditingItemData(this._editingItemData);
       },

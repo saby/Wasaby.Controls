@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="33" height="44" viewBox="0 0 33 44">
+  <defs>
+    <style>
+      .cls-1 {
+        stroke: #8991a9;
+      }
+    </style>
+  </defs>
+  <title>путь</title>
+  <polyline class="cls-1" points="0 0, 0 44, 0 44, 33 44" fill="none"/>
+</svg>

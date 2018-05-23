@@ -33,7 +33,7 @@ define('Controls-demo/Input/DeprecatedText/TextVdom', [
 		_text2: 'with value',
 		_text3: 'with value', _constraint3: "[0-9]", _maxLength3: 5, _selectOnClick3: true,
 		_text4:'', _trim4: true,
-		_text5: '', _readOnly5: true, _enabled5: false,
+		_text5: '', _readOnly5: true,
 		
 		_afterMount: function(){
 			this._children['TextBox_6'].paste('ABC')

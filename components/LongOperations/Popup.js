@@ -64,7 +64,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
 
             _activeOperation: null,
             _firstOperationMode: false,
-            _floatAreaMode: false,
+            _floatArea: null,
 
             _longOpList: null,
 
@@ -252,7 +252,8 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
           * Метод показывает floatArea.
           */
          _showRegistry: function () {
-            var floatArea = new FloatArea({
+            this._onFloatAreaClose_b = this._onFloatAreaClose_b || this._onFloatAreaClose.bind(this)
+            this._floatArea = new FloatArea({
                title: rk('Все операции'),
                template: 'SBIS3.CONTROLS/LongOperations/Registry',
                componentOptions: {
@@ -268,25 +269,18 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                autoCloseOnHide: true,
                maxWidth: 1000
             });
+            this._floatArea.once('onAfterClose', this._onFloatAreaClose_b);
 
-            //Скрываем нашу панель, во время работы с floatArea, она не нужна
-            this._toggleFloatAreaMode(true);
+            //Скрываем нашу панель, во время работы с floatArea, она не нужна (Т.к. setVisible(false) вызовет событие onClose с последующим вызовом destroy менеджером информационных окон, то просто меняем стиль)
+            this.getContainer().css('visibility', 'hidden');
 
             this._notify('onSizeChange');
-
-            this.subscribeOnceTo(floatArea, 'onAfterClose', function () {
-               this._toggleFloatAreaMode(false);
-               this._notify('onSizeChange');
-            }.bind(this));
          },
 
-         /**
-          * Переключить floatArea-моду
-          */
-         _toggleFloatAreaMode: function (toggle) {
-            this._floatAreaMode = !!toggle;
-            //Скрываем панель, во время работы с floatArea, она не нужна
-            this.setVisible(!toggle);
+         _onFloatAreaClose: function () {
+            this._floatArea = null;
+            this.getContainer().css('visibility', 'visible');
+            this._notify('onSizeChange');
          },
 
          /**
@@ -574,7 +568,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                setTimeout(function () {
                   if (!self.isDestroyed() && self.isVisible()
                         //Если активен режим с floatArea (открыт журнал), то просто скрываем ромашку. Анимация не нужна.
-                        && !self._floatAreaMode) {
+                        && !self._floatArea) {
                      var _moveTo = function ($target, zIndex, $element) {
                         var offset = $target.offset();
                         $element
@@ -616,6 +610,9 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
          destroy: function () {
             this._tabChannel.destroy();
             this._tabChannel = null;
+            if (this._floatArea) {
+               this._floatArea.unsubscribe('onAfterClose', this._onFloatAreaClose_b);
+            }
 
             var container = this.getContainer();
             [

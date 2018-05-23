@@ -1,4 +1,4 @@
-<div style="margin: 32px; display: flex; flex-direction: column; width: 18em;">
+<div style="margin: 32px; display: flex; flex-direction: column; width: 18em;" class="test_root_div">
    <div style="padding: 3em; background-color: rgba(38,59,74,0.22)">
       <h2>Text</h2>
       <Controls.Label name="myLabel1" caption="Пример"/>
@@ -14,6 +14,7 @@
                            selectOnClick="{{_selectOnClick}}"
                            on:valueChanged="_eventHandler()"
                            on:inputCompleted="_eventHandler()"
+                           readOnly="{{ _readOnly }}"
       />
    </div>
    <div style="padding: 3em; background-color: rgba(81,81,81,0.11)">
@@ -28,11 +29,12 @@
       <Controls.Label name="myLabel1" caption="maxLength"/>
       <Controls.Input.Text attr:id="maxLength" bind:value="_maxLength"/>
       <div>
-         <Controls.Toggle.Checkbox attr:id="trim" enabled="{{true}}" bind:value="_trim" caption="trim"/>
-         <Controls.Toggle.Checkbox attr:id="validationErrors" on:valueChanged="valueChangedHandler()" enabled="{{true}}"
+         <Controls.Toggle.Checkbox attr:id="trim" bind:value="_trim" caption="trim"/>
+         <Controls.Toggle.Checkbox attr:id="validationErrors" on:valueChanged="valueChangedHandler()"
                                       bind:value="_validationErrorsValue" caption="validationErrors"/>
          <br/>
-         <Controls.Toggle.Checkbox attr:id="selectOnClick" enabled="{{true}}" bind:value="_selectOnClick" caption="selectOnClick"/>
+         <Controls.Toggle.Checkbox attr:id="selectOnClick" bind:value="_selectOnClick" caption="selectOnClick"/>
+         <Controls.Toggle.Checkbox attr:id="readOnly" bind:value="_readOnly" caption="readOnly"/>
       </div>
    </div>
    <div hidden="hidden" id="event_test">{{ _eventResult }}</div>

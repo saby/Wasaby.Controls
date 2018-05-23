@@ -1,0 +1,104 @@
+<div class="controls-BaseControl" on:showIndicator="_showIndicator()" on:hideIndicator="_hideIndicator()">
+    <div class="controls-BaseControl__trigger controls-BaseControl__topListTrigger" name="topListTrigger"></div>
+    <div class="controls-BaseControl__topPlaceholder" style="height: {{_topPlaceholderHeight}}px;"></div>
+    <div class="controls-BaseControl__trigger controls-BaseControl__topLoadTrigger" name="topLoadTrigger" style="bottom: -{{_loadOffset}}px;"></div>
+
+    <ws:if data="{{_listViewModel}}">
+        <ws:partial
+                template="{{ _options.content }}"
+                name="listView"
+                scope="{{_options.viewConfig}}"
+                listModel="{{_listViewModel}}"
+                on:itemClick="_onItemClick()"
+                on:itemContextMenu="_showActionsMenu()"
+                on:itemSwipe="_listSwipe()">
+           <ws:viewTemplate>
+              <ws:partial template="{{_options.viewName}}"/>
+           </ws:viewTemplate>
+           <ws:multiSelectTpl>
+              <ws:partial template ="{{_multiSelectTpl}}"/>
+           </ws:multiSelectTpl>
+        </ws:partial>
+        <Controls.List.Mover ws:content="listView"
+                             name="moveControl"
+                             keyProperty="{{_options.viewConfig.keyProperty}}"
+                             on:beforeItemsMove="_beforeItemsMove()"
+                             on:afterItemsMove="_afterItemsMove()"
+                             sourceController="{{_sourceController}}"
+                             listModel="{{_listViewModel}}"/>
+       <Controls.List.EditInPlace ws:content="listView"
+                                  name="editInPlace"
+                                  editingConfig="{{_options.editingConfig}}"
+                                  on:beforeItemAdd="_onBeforeItemAdd()"
+                                  on:beforeItemEdit="_onBeforeItemEdit()"
+                                  on:afterItemEdit="_onAfterItemEdit()"
+                                  on:beforeItemEndEdit="_onBeforeItemEndEdit()"
+                                  on:afterItemEndEdit="_onAfterItemEndEdit()"
+                                  listModel="{{_listViewModel}}"
+                                  source="{{_BaseController}}" />
+       <Controls.List.Remove ws:content="listView"
+                             name="removeControl"
+                             sourceController="{{_sourceController}}"
+                             listModel="{{_listViewModel}}"
+                             on:beforeItemsRemove="_beforeItemsRemove()"
+                             on:afterItemsRemove="_afterItemsRemove()"/>
+        <Controls.List.ItemActions.ItemActionsControl
+                ws:content="listView"
+                on:commitActionClick="_commitEditActionHandler()"
+                on:cancelActionClick="_cancelEditActionHandler()"
+                on:menuActionsClick="_showActionsMenu()"
+                on:actionClick="_onActionClick()"
+                showToolbar="{{_options.editingConfig.showToolbar}}"
+                name="itemActions"
+                listModel="{{_listViewModel}}"
+                menuIsShown="{{_menuIsShown}}"
+                itemActions="{{_options.itemActions}}"
+                itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
+                itemActionsType="{{_options.itemActionsType}}"/>
+        <Controls.List.Swipe.SwipeControl
+                ws:content="listView"
+                on:menuActionsClick="_showActionsMenu()"
+                on:closeSwipe="_closeSwipe()"
+                menuIsShown="{{_menuIsShown}}"
+                listModel="{{_listViewModel}}"
+                itemActions="{{_options.itemActions}}"
+                name="swipeControl"/>
+    </ws:if>
+
+    <ws:if data="{{_options.emptyTemplate && _listViewModel && !_listViewModel.getCount()}}">
+        <ws:partial template="{{_options.emptyTemplate}}"/>
+    </ws:if>
+
+    <div class="controls-BaseControl__trigger controls-BaseControl__bottomLoadTrigger" name="bottomLoadTrigger" style="top: -{{_loadOffset}}px;"></div>
+    <div class="controls-BaseControl__bottomPlaceholder" style="height: {{_bottomPlaceholderHeight}}px;"></div>
+    <div class="controls-BaseControl__trigger controls-BaseControl__bottomListTrigger" name="bottomListTrigger"></div>
+
+    <Controls.List.BaseControl.Scroll.Emitter on:emitListScroll="__onEmitScroll()" name="ScrollEmitter"/>
+
+    <ws:if data="{{_pagingCfg}}">
+       <div class="controls-BaseControl__pagingContainer">
+          <Controls.List.Paging attr:class="controls-BaseControl__scrollPaging" scope="{{_pagingCfg}}" on:onArrowClick="__onPagingArrowClick()"></Controls.List.Paging>
+       </div>
+    </ws:if>
+    <ws:if data="{{_loadingIndicatorState}}">
+        <div class="controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-{{_loadingIndicatorState}}">
+            <ws:if data="{{_showLoadingIndicatorImage}}">
+                <div class="controls-BaseControl__loadingIndicatorImg"></div>
+            </ws:if>
+        </div>
+    </ws:if>
+    <Controls.Dropdown.Opener
+            name="itemActionsOpener"
+            keyProperty="id"
+            menuStyle="cross"
+            className="controls-itemActionsV__menu">
+        <ws:popupOptions closeByExternalClick="{{true}}">
+            <ws:corner vertical="top" horizontal="right"/>
+            <ws:horizontalAlign side="left"/>
+            <ws:eventHandlers onResult="{{_closeActionsMenu}}" onClose="{{_closeActionsMenu}}"/>
+            <ws:templateOptions showHeader="{{true}}">
+                <ws:headConfig menuStyle="cross" />
+            </ws:templateOptions>
+        </ws:popupOptions>
+    </Controls.Dropdown.Opener>
+</div>

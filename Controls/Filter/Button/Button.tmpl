@@ -1,4 +1,4 @@
-<div class="controls-FilterButton">
+<div class="controls-FilterButton" name="panelTarget">
     <div class="controls-FilterButton__wrapper">
         <ws:if data="{{_text}}">
             <div class="controls-FilterButton__text-wrapper controls-FilterButton__text-wrapper_state_{{_getFilterState()}}"
@@ -10,7 +10,7 @@
                     {{_text}}
                 </div>
             </div>
-            <ws:if data="{{isEnabled()}}">
+            <ws:if data="{{!_options.readOnly}}">
                 <div class="controls-FilterButton__clear icon-Close" on:click="_clearClick()"></div>
             </ws:if>
         </ws:if>
@@ -24,4 +24,11 @@
     <ws:if data="{{_options.filterTemplate}}">
         <div class="controls-FilterButton__oldTemplate controls-FilterButton__oldTemplate_{{_options.filterAlign}}"></div>
     </ws:if>
+
+   <Controls.Popup.Opener.Sticky name="filterStickyOpener">
+       <ws:popupOptions  closeByExternalClick="{{true}}">
+           <ws:eventHandlers onResult="{{_onFilterChanged}}"/>
+       </ws:popupOptions>
+   </Controls.Popup.Opener.Sticky>
+
 </div>

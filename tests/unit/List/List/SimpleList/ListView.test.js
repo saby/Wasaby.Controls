@@ -2,8 +2,8 @@
  * Created by kraynovdo on 23.10.2017.
  */
 define([
-   'Controls/List/SimpleList/ListView',
-   'Controls/List/SimpleList/ListViewModel'
+   'Controls/List/ListView',
+   'Controls/List/ListViewModel'
 ], function(ListView, ListViewModel){
    describe('Controls.List.ListView', function () {
       var data, data2, display;
@@ -48,30 +48,34 @@ define([
       it('Item click', function () {
          var model = new ListViewModel({
             items: data,
-            idProperty: 'id'
+            keyProperty: 'id'
          });
          var cfg = {
             listModel: model,
-            idProperty: 'id',
+            keyProperty: 'id',
             markedKey: 2
          };
          var lv = new ListView(cfg);
          lv.saveOptions(cfg);
          lv._beforeMount(cfg);
 
-         var dispItem = lv._listModel._itemsModel._display.at(2);
+         var dispItem = lv._listModel._display.at(2);
+         var notifyResult = null;
+         lv._notify = function(e, args) {
+            notifyResult = args[0];
+         };
          lv._onItemClick({}, dispItem);
-         assert.equal(dispItem, lv._listModel._markedItem, 'Incorrect selected item before updating');
+         assert.equal(notifyResult, dispItem.getContents(), 'Incorrect selected item before updating');
       });
    
       it('_beforeUpdate', function () {
          var model = new ListViewModel({
             items: data,
-            idProperty: 'id'
+            keyProperty: 'id'
          });
          var cfg = {
             listModel: model,
-            idProperty: 'id',
+            keyProperty: 'id',
             markedKey: 2
          };
          var lv = new ListView(cfg);
@@ -81,12 +85,12 @@ define([
       
          model = new ListViewModel({
             items: data2,
-            idProperty: 'id'
+            keyProperty: 'id'
          });
       
          cfg = {
             listModel: model,
-            idProperty: 'id',
+            keyProperty: 'id',
             markedKey: 2
          };
       

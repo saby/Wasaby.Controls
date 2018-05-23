@@ -45,7 +45,7 @@ define('Controls-demo/List/Remove', [
          return [{
             id: 0,
             icon: 'icon-Erase icon-error',
-            main: true,
+            showType: 2,
             handler: function(item) {
                self._children[listName].removeItems([item.getId()]);
             }

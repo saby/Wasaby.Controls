@@ -223,7 +223,7 @@ define('SBIS3.CONTROLS/ListView',
           * @example
           * <pre>
           *     DataGridView.subscribe('onDataMerge', function(event, recordSet) {
-          *        //Если в загруженном рекордсете есть данные, отрисуем их количество
+          *        // Если в загруженном рекордсете есть данные, отрисуем их количество
           *        var count = recordSet.getCount();
           *        if (count){
           *           self.drawItemsCounter(count);
@@ -445,6 +445,7 @@ define('SBIS3.CONTROLS/ListView',
             _virtualScrollResetStickyHead: false,
             _setScrollPagerPositionThrottled: null,
             _updateScrollIndicatorTopThrottled: null,
+            _updateScrollIndicatorDownThrottled: null,
             _removedItemsCount: false,
             _loadQueue: {},
             _loadId: 0,
@@ -703,12 +704,14 @@ define('SBIS3.CONTROLS/ListView',
                /**
                 * @cfg {String|null} Устанавливает режим подгрузки данных по скроллу.
                 * @remark
-                * По умолчанию, подгрузка осуществляется "вниз". Мы поскроллили и записи подгрузились вниз.
+                * По умолчанию подгрузка осуществляется "вниз". Мы поскроллили и записи подгрузились вниз.
                 * Но можно настроить скролл так, что записи будут загружаться по скроллу к верхней границе контейнера.
-                * Важно. Запросы к БЛ все так же будут уходить с увеличением номера страницы. V
+                * Важно! Запросы к БЛ все так же будут уходить с увеличением номера страницы.
                 * Может использоваться для загрузки истории сообщений, например.
-                * @variant down Подгружать данные при достижении дна контейнера (подгрузка "вниз").
-                * @variant up Подгружать данные при достижении верха контейнера (подгрузка "вверх").
+                * Подробное описание можно посмотреть в документах по настройке <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/navigations/infinite-scroll/">скроллинга</a> и <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/navigations/cursor/">курсора</a>.
+                * @variant down Подгружать данные при достижении нижней границы контейнера (подгрузка "вниз").
+                * @variant up Подгружать данные при достижении верхней границы контейнера (подгрузка "вверх").
+                * @variant both Подгружать данные в обе стороны ("вверх" и "вниз").
                 * @variant demand Подгружать данные при нажатии на кнопку "Еще...".
                 * Если метод возвращает n:true/false, то кнопка будет рисовать просто "Еще...".
                 * Если метод возвращает n: число записей - будет выводить число (например, "Еще 30").
@@ -900,20 +903,39 @@ define('SBIS3.CONTROLS/ListView',
                 */
                /**
                 * @cfg {ListViewNavigation} Устанавливает конфиг для контроллера навигации ListView
+                * Опция применяется для настройки {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/navigations/cursor/ навигации по курсору}.
                 * @example
-                * Пример 1:
-                * navigation: {
-                *    type: 'cursor',
-                *    config: {
-                *       field: 'timestamp',
-                *       position: 150
-                *    }
-                * }
-                * Пример 2:
-                * <ws:navigation type="cursor">
-                *    <ws:config field="Курсор" direction="both" position="{{ null }}"/>
-                * </ws:navigation>
+                * Пример:
                 *
+                * <pre>
+                * // Импортируем компонент прямо в исходном коде.
+                * require(['SBIS3.CONTROLS/ListView'], function(List) {
+                *
+                *    // Инициализируем компонент, передаём конфигурацию.
+                *    var list = new List({
+                *
+                *       // Настройка навигации по списку.
+                *       navigation: {
+                *
+                *          // Тип навигации - "курсор".
+                *          type: 'cursor',
+                *
+                *          // Конфигурация для типа навигации.
+                *          config: {
+                *
+                *             // В таблице БД индекс создан по полю 'timestamp'.
+                *             field: 'timestamp',
+                *
+                *             // Курсор устанавливается на записи со значением timestamp=40.
+                *             position: 40,
+                *
+                *             // Направление выборки - вверх.
+                *             direction: 'before'
+                *          }
+                *       }
+                *    });
+                * });
+                * </pre>
                 */
                navigation: null,
                /**
@@ -991,6 +1013,7 @@ define('SBIS3.CONTROLS/ListView',
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onPageChange', 'onBeginDelete', 'onEndDelete', 'onBeginMove', 'onEndMove');
             this._setScrollPagerPositionThrottled = throttle.call(this._setScrollPagerPosition, 100, true).bind(this);
             this._updateScrollIndicatorTopThrottled = throttle.call(this._updateScrollIndicatorTop, 100, true).bind(this);
+            this._updateScrollIndicatorDownThrottled = throttle.call(this._updateScrollIndicatorDown, 100, true).bind(this);
             this._eventProxyHdl = this._eventProxyHandler.bind(this);
             this._onScrollHandler = this._onScrollHandler.bind(this);
             /* Инициализацию бесконечного скрола производим один раз */
@@ -1509,7 +1532,7 @@ define('SBIS3.CONTROLS/ListView',
                      itemsProjection.getRoot().getContents().get(recordItems.getIdProperty()) == id);
                },
                siblingItem;
-            if (index === -1 && isRootId(id)) {
+            if (index === -1 && id && isRootId(id)) {
                index = 0;
             }
             if (isNext) {
@@ -2155,9 +2178,26 @@ define('SBIS3.CONTROLS/ListView',
                curSelected.addClass('controls-ListView__item__selected__withMarker');
             }
          },
-
+          
          /**
-          *
+          * Перезагружает набор записей представления данных с последующим обновлением отображения.
+          * @remark
+          * Производится запрос на выборку записей из источника данных по установленным параметрам:
+          * <ol>
+          *    <li>Параметры фильтрации, которые устанавливают с помощью опции {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#filter}.</li>
+          *    <li>Параметры сортировки, которые устанавливают с помощью опции {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#sorting}.</li>
+          *    <li>Порядковый номер записи в источнике, с которого будет производиться отбор записей для выборки. Устанавливают с помощью метода {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#setOffset}.</li>
+          *    <li>Масимальное число записей, которые будут присутствовать в выборке. Устанавливают с помощью метода {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#pageSize}.</li>
+          * </ol>
+          * Вызов метода инициирует событие {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#onBeforeDataLoad}. В случае успешной перезагрузки набора записей происходит событие {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#onDataLoad}, а в случае ошибки - {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#onDataLoadError}.
+          * Если источник данных не установлен, производит перерисовку установленного набора данных.
+          * @return {Deferred}
+          * @example
+          * <pre>
+          *    btn.subscribe('onActivated', function() {
+          *       DataGridViewBL.reload();
+          *    });
+          * </pre>
           */
          reload: function (filter, sorting, offset, limit, deepReload, resetPosition) {
             // todo Если возникнет желание поддержать опциюsaveReloadPositionв плоском списке, то делать это здесь
@@ -2573,7 +2613,8 @@ define('SBIS3.CONTROLS/ListView',
          //ListView, валидация редактирования не вызывается. Сейчас есть сценарий, когда редактирование
          //располагается на карточке, и при попытке провалидировать карточку перед сохранением, результат
          //будет true, но редактирование может быть невалидно.
-         validate: function() {
+         //Для того, чтобы валидация для неизменной записи запускалась, необходимо использовать режим PendingAll.
+          validate: function() {
             var
                editingIsValid = true;
             if (this.isEdit()) {
@@ -3531,6 +3572,7 @@ define('SBIS3.CONTROLS/ListView',
             }
 
             this._updateScrollIndicatorTopThrottled();
+            this._updateScrollIndicatorDownThrottled();
 
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
             if (loadAllowed && isContainerVisible && hasNextPage && !this.isLoading()) {
@@ -3558,6 +3600,14 @@ define('SBIS3.CONTROLS/ListView',
             }
             this._loadingIndicator.css('top', top);
          },
+
+         _updateScrollIndicatorDown: function() {
+            var container = this.getContainer();
+            if (this.infiniteScroll === 'down' && this._hasNextPage(this.getItems().getMetaData().more)){
+               container.toggleClass('controls-ListView-scrollIndicator__down', container.hasClass('controls-ListView__indicatorVisible'));
+            }
+         },
+
 
          /**
           *

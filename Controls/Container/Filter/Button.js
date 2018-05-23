@@ -16,7 +16,7 @@ define('Controls/Container/Filter/Button',
        * Receives props from context and pass to FilterButton.
        * Should be located inside Controls/Container/Filter.
        * @class Controls/Container/Filter/Button
-       * @extends Controls/Control
+       * @extends Core/Control
        * @author Герасимов Александр
        * @control
        * @public

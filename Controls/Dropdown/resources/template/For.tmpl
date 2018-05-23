@@ -2,9 +2,10 @@
    <ws:for data="listModel.reset(); listModel.isEnd(); listModel.goToNext();">
       <ws:partial
          template="{{listModel.getCurrent().template || itemTemplate || defaultItemTemplate}}"
-         defaultItemTemplate="{{defaultItemTemplate}}"
          itemData="{{listModel.getCurrent()}}"
          resultHandler="{{resultHandler}}"
-         hierarchyPadding="{{hierarchyPadding}}"/>
+         hierarchyPadding="{{hierarchyPadding}}"
+         parentProperty="{{parentProperty}}"
+         iconPadding="{{iconPadding}}"/>
    </ws:for>
 </div>

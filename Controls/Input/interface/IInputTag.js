@@ -2,14 +2,15 @@ define('Controls/Input/interface/IInputTag', [
 ], function() {
 
    /**
-    * Интерфейс работы c тегами (цветными информационными ярлыками) в полях ввода
+    * Interface for input tags (colored indicators in the right top corner).
+    *
     * @mixin Controls/Input/interface/IInputTag
     * @public
     */
 
    /**
     * @name Controls/Input/interface/IInputTag#tagStyle
-    * @cfg {String | undefined} Тип тега (цветной информационный ярлык)
+    * @cfg {String | undefined} Tag style (colored indicator).
     * @variant primary
     * @variant done
     * @variant attention
@@ -18,10 +19,10 @@ define('Controls/Input/interface/IInputTag', [
     */
 
    /**
-    * @event Controls/Input/interface/IInputTag#tagClick Происходит при клике по тегу (информационному ярлыку)
+    * @event Controls/Input/interface/IInputTag#tagClick Occurs when input tag was clicked.
     */
 
    /**
-    * @event Controls/Input/interface/IInputTag#tagHover Происходит, когда курсор мыши входит в область тега (информационного ярлыка)
+    * @event Controls/Input/interface/IInputTag#tagHover Occurs when mouse enters tag area.
     */
 });

@@ -48,11 +48,23 @@ define('SBIS3.CONTROLS/DropdownList',
        * <br/>
        * Вы можете связать опцию items с полем контекста, в котором хранятся данные с типом значения перечисляемое - {@link WS.Data/Type/Enum}. Если эти данные хранят состояние выбранного значения, то в контрол будет установлено выбранное значение.
        * <pre>
-       *    <component data-component="SBIS3.CONTROLS/DropdownList">
-       *       <options name="items" type="array" bind="record/MyEnumField"></options>
-       *       <option name="idProperty">@Идентификатор</option>
-       *       <option name="displayProperty">Описание</option>
-       *    </component>
+       *    <SBIS3.CONTROLS.DropdownList
+       *       idProperty="key"
+       *       displayProperty="title"
+       *       multiselect="{{false}}">
+       *       <ws:selectedKeys>
+       *          <ws:Array>
+       *             <ws:String>{{ 'type' | mutable }}</ws:String>
+       *          </ws:Array>
+       *       </ws:selectedKeys>
+       *       <ws:items>
+       *          <ws:Array>
+       *             <ws:Object key="{{ 0 }}" title="{[ Все типы ]}" />
+       *             <ws:Object key="{{ 1 }}" title="{[ Обсуждения ]}" />
+       *             <ws:Object key="{{ 2 }}" title="{[ Новости ]}" />
+       *          </ws:Array>
+       *       </ws:items>
+       *    </SBIS3.CONTROLS.DropdownList>
        * </pre>
        *
        * @class SBIS3.CONTROLS/DropdownList
@@ -224,7 +236,7 @@ define('SBIS3.CONTROLS/DropdownList',
                 * </pre>
                 * Передача шаблона в опцию компонента:
                 * <pre>
-                *    <option name="headTemplate" type="ref">{{@it.myHeadTemplate}}</option>
+                *    headTemplate="{{@it.myHeadTemplate}}"
                 * </pre>
                 * Шаблон, который используется по умолчанию:
                 * <pre>
@@ -262,7 +274,7 @@ define('SBIS3.CONTROLS/DropdownList',
                 * </pre>
                 * Передача шаблона в опцию компонента:
                 * <pre>
-                *    <option name="headPickerTemplate" type="ref">{{@it.myHeadPickerTemplate}}</option>
+                *    headPickerTemplate="{{myHeadPickerTemplate}}"
                 * </pre>
                 * Шаблон, который используется по умолчанию:
                 * <pre>
@@ -304,7 +316,7 @@ define('SBIS3.CONTROLS/DropdownList',
                 * </pre>
                 * Передача шаблона в опцию компонента:
                 * <pre>
-                *     <option name="itemTpl" type="ref">{{@it.newItemTpl}}</option>
+                *    itemTpl="{{ newItemTpl }}"
                 * </pre>
                 * Шаблон, который используется по умолчанию:
                 * <pre>
@@ -1086,7 +1098,6 @@ define('SBIS3.CONTROLS/DropdownList',
                   'multiselect' : this._options.multiselect,
                   'footerTpl' : this._options.footerTpl,
                   'hasHead': type == 'duplicateHeader' || type == 'titleHeader' || type == 'customHeader',
-                  _fix165c4103: this._options._fix165c4103,
                   'hasCloseButton': isFastDataFilterType
                })
             };

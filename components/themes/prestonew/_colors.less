@@ -1,0 +1,446 @@
+@disabled-color:                         #8991A9;
+//default-colors
+@additional-color:                       #8991A9;
+@default-text-color:                     #e4e4e4;
+@default-border-color:                   rgba(96,170,221,.15);
+@default-border-color-second:            #26B8FF;
+@default-border-color-hover:             rgba(96,170,221,.3);
+@default-border-color-active:            rgba(96,170,221,.3);
+@default-border-color-bottom-disabled:   rgba(96,170,221,.3);
+@default-placeholder-color:              rgba(96,170,221,.2);
+@default-bg-color:                       #1D2834;
+@error-bg-color:                         #472e35;
+//icons
+@color_primary:                     #26B8FF;
+//InputRender
+@background-color_InputRender:           transparent;
+//MoneyTextBox
+@color_MoneyTextBox-decimals:            @default-text-color;
+//search-form
+@search-background:                      rgba(150, 159, 168, 0.15);
+@search-border-color-active:             rgba(150, 159, 168, 0.4);
+@search-form-icon-color:                 @default-text-color;
+@search-form-icon-reset-color:           @default-text-color;
+@search-form-icon-search-hover-color:    #BBE9FF;
+//menu
+@background-color_Menu:                    #f0f5fb;
+//date-range
+@date-range-choose-current-value-bg-hover-color:  @date-range-choose-current-value-bg-color;//todo: mironov
+@date-range-choose-year-wrapper-bg-color:         @date-range-choose-item-bg-color;//todo: mironov
+@date-range-choose-caption-background-color:      @date-range-choose-item-bg-color;//todo: mironov
+//grid
+@background-color_DataGridView-notScrolledCell:   @background-color_DataGridView-item_multiselected;//todo: gerasimov
+//filter-line
+@controls-filterLine-link-hover-color:            @controls-filterLine-link-color;//todo: gerasimov
+//dd-list
+@DropdownList-header-bg:                          #C1D7F0;//todo: krasilnikov
+@DropdownList-footer-hasMore-hover-color:         @DropdownList-picker-menu-item-base-color;
+//suggest-text-box
+@suggest-text-box-bg-show-picker-color:           #F0F5FB;
+@suggest-text-box-bg-show-picker-font-color:      #273B4D;
+@border-color_SuggestTextBox_withPicker:          @accent-color;
+//--------------------------------------------------------------------------------------------------------------------//
+//button
+@color_Button_primary:                            @color_Button;
+@color-IconButton__border_iconStyle-primary_hovered:          #cccccc;
+@color-Button_type-IconButton_disabled:           #4B688B;
+@border-color-IconButton_disabled:                rgba(64, 90, 119, 0.3);
+@border-color-IconButton:                         rgba(0, 0, 0, 0.05);
+@color-IconButton__shadow:                        rgba(0, 0, 0, 0.35);
+@background-color-IconButton:                     rgba(64, 90, 119, 0.3);
+@background-color-IconButton_hovered:             rgba(58, 81, 107, 0.35);
+   //Scrollbar
+@controls-Scrollbar-dark-hover-thumb-color:rgba(131, 158, 188, 0.2);
+@controls-Scrollbar-dark-active-thumb-color:rgba(131, 158, 188, 0.25);
+@controls-Scrollbar-light-hover-thumb-color:rgba(0, 0, 0, 0.10);
+@controls-Scrollbar-light-active-thumb-color:rgba(0, 0, 0, 0.15);
+// BackButton
+@back-button-arrow-hover-color:           @default-hover-color;
+// BreadCrumbs
+@bread-crumb-title-color:                 @gray-lamantin-color;
+@bread-crumb-title-hover-color:           @default-hover-color;
+//TimeHeader
+@time-header-background-color:            @time-picker-background-color;
+@time-header-title-color:                 @innacent-color;
+//TimePicker
+@time-picker-background-color:            @basic-block-bg-color;
+//ToggleTime
+@toggle-time-passive-hover-text-decoration:none;
+@toggle-time-passive-color:               @default-text-color;
+//infobox
+@Infobox-cross-color:                                 @default-text-color;
+@Infobox-cross-color-hover:                           #B9E9FF;
+//money
+@money-decorator-integer-accent-results-font-color:#FFCC99;
+@money-decorator-integer-no-accent-results-font-color:#8991A9;
+@money-decorator-integer-group-font-color:#8991A9;
+@money-decorator-integer-no-basic-registry-font-color:#8991A9;
+@money-decorator-integer-accent-registry-font-color:@default-text-color;
+@money-decorator-integer-no-accent-registry-font-color:#8991A9;
+//SubmitPopup
+@controls-SubmitPopup-message-color:      @default-text-color;
+//colors
+@primary-color:                           #FF7033;
+@warning-color:                           #FA9C33;
+@accent-color:                            #26B8FF;
+@default-bg-color-hovered-item:           #2A3C4D;
+@default-hover-color:                     #B9E9FF;//Переменную нужно удалить, она дублирует @default-bg-color-hovered-item
+@gray-lamantin-color:                     #8991A9;
+@acent-color2:                            #354B62;//Цвет акцентной плашки
+// TODO: Используется только в prestonew, в других темах вместо нее используется @default-bg-color. Выпилить.
+// https://online.sbis.ru/opendoc.html?guid=f5f36c75-e461-4e1c-82fc-4079c3cafa90
+@basic-block-bg-color:                    #2C3E50; //Основной Фон при блочной вёрстке, верхний и нижний разделитель реестра, вверхняя граница полей ввода и вкладок не в фокусе
+@highlight-text-bg:                       #354B62;
+@icon-active-color:                       #B9E9FF;
+//todo: удалить эту переменную
+@default-disabled-color:                  @disabled-color;
+@black-color:                             #8991A9;
+@gray-color:                              #3b5d79;
+@gray-light-color:                        #eee;
+@secondary-color:                         #4e5762;
+@back-button-caption-hover-color :         rgb(185, 233, 255);
+@back-button-caption-active-color:        @back-button-caption-hover-color;
+@blue-dark-color:                         #8991A9;
+@darkcyan-color: 						  #B9E9FF;
+@default-itemHover-color:                 #1b2530;//Переменную нужно удалить, она дублирует @default-bg-color-hovered-item
+@default-itemSelected-color:              @primary-color;
+@hover-color:                             @primary-color;
+//Icon
+@color-IconButtonBordered_default:             #587AB0;
+@color-IconButtonBordered_default_hovered:     #B9E9FF;
+@color-Icon_style_attention:                   #fec63f;
+@color-Icon_style_done:                        #72be44;
+@color-Icon_style_error:                       #ef463a;
+//Link
+@color_Link-main_text:                    #26B8FF;
+@color_Link-main_text_hovered:            #B9E9FF;
+@color_Link-main2_text:                   #8991A9;
+@color_Link-main3_text:                   #8991A9;
+@color_Link-main3_text_hovered:           #B9E9FF;
+@color_Link-Vdom_text_disabled:           #4B688B;
+@color_Link-icon_disabled:                @color_Link-text_disabled;
+@color_Link-additional:                   #FFCC99;
+@color_Link-additional-2:                 #839EBC;
+@color_Link-additional-3:                 #FFFFFF;
+@border-color_Button_primary:             transparent;
+@border-color_Button_primary_hovered:     transparent;
+@background_Button_primary:               #FF7033;
+@background_Button_default:               #567395;
+@box-shadow_Button:                       0px, 1px, 4px, rgba(0,0,0, .5);
+@box-shadow_Button_active:                none;
+@background_Button_primary_active:        #FA6019;
+@background_Button_default_active:        #516B8C;
+@background_Button-primary_disabled:      @background_Button_primary;
+@background_Button-default_disabled:      @background_Button_default;
+@color_Button-Vdom-disabled:              rgba(255,255,255, .15);
+@color_Button-Vdom-text_primary:           #FFFFFF;
+@color_Button-Vdom-text_default:           #FFFFFF;
+@color_Button-icon:                       #FFFFFF;
+@color_Button-icon_primary:               #FFFFFF;
+@color_Link-main-icon:                    #839EBC;
+//---------------------------------------------------
+@color_Link-text:                         #26B8FF;
+@color_Link-text_hovered:                   #B9E9FF;
+@color_Link-additional:                   #8991A9;
+@color_Link-text_disabled:                rgba(102,170,221, .2);
+@link-header-hover-color:                 @default-hover-color;
+@link-subheader-hover-color:              @link-header-hover-color;
+@border-color_Button_primary:             @background_Button_primary;
+@background_Button_primary:               @primary-color;
+@background_Button_primary_hovered:                 #FA6019;
+@button-primary-active-text-color:        @button-active-text-color;
+@background_Button_primary_active:        @background_Button_primary_hovered;
+@border-color_Button_primary_hovered:     @background_Button_primary_hovered;
+@background_Button_disabled:              #567395;
+@color_Button-icon_disabled:              @color_Button_disabled;
+@button-primary-hover-text-color:         @default-text-color;
+@button-checked-bg:                       @background_Button_active;
+@icon-button-round-icon-color-hover:      @icon-active-color;
+@color_Link-icon_hovered:                 #B9E9FF;
+@background_Button_active:                        #516B8C;
+@background_Button_hovered:                         #516B8C;
+@background_Button:                         #567395;
+@border-color_Button:                     @background_Button;
+@border-color_Button_hovered:             @background_Button_hovered;
+@button-checked-border-color:             rgba(38, 184, 255, 1);
+@color_Button_disabled:                   rgba(255, 255, 255, 0.15);
+//Radio button
+@radio-button-text-color:                 @innacent-color;
+@radio-button-hover-text-color:           @innacent-color;
+@radio-button-checked-text-color:         @default-text-color;
+@radio-button-checked-hover-text-color:   @default-text-color;
+@radio-button-disabled-text-color:        @gray-color;
+@radio-button-icon-bg:                    transparent;
+@radio-button-icon-border-color:          #2C4458;
+@radio-button-icon-border-color-checked:  @primary-color;
+@radio-button-hover-icon-border-color:    @primary-color;
+@radio-button-dot-color:                  @primary-color;
+@check-box-icon-box-color:                rgba(102, 170, 221, .4);
+@check-box-disabled-color:                #4B688B;
+@check-box-checked-disabled-color:        @darkcyan-color;
+@color_checkBox-iconBox:                  rgba(102, 170, 221, .4);
+@color_checkBox_disabled:                 #37536C;
+@color_checkBox-caption_enabled:          @default-text-color;
+@color_checkBox-icon_enabled:             @primary-color;
+//checkbox
+@color_CheckBox__iconBox:                       rgba(109, 141, 176, .6);
+@color_CheckBox__iconBox_disabled:              #4B688B;
+@color_CheckBox_disabled:                       #B9E9FF;
+@color_CheckBox___caption_disabled:             #4B688B;
+@color_CheckBox-caption_enabled:                #E4E4E4;
+@color_CheckBox-icon_enabled:                   #FF7033;
+//Switcher
+@switcher-btn-bg-color:                   @basic-block-bg-color;
+@switcher-btn-color-inactive:					@disabled-color;
+@switcher-line-color:							@disabled-color;
+@switcher-btn-color:                      @primary-color;
+@switcher-btn-bg-color-disabled:          @basic-block-bg-color;
+@switcher-do-unselected-text-color:       @disabled-color;
+@switcher-do-disabled-text-color:         #37536C;
+@switcher-border-color:                   #37536C;
+@switcher-disabled-color:                 #37536C;
+//Menu
+@background-color_Menu-header:                    #26B8FF;
+@border-color_Menu:                       @default-border-color-second;
+@menu-expand-border-color:                transparent transparent transparent @primary-color;
+@menu-expand-bg:                          transparent;
+@menu-expand-hover-border-color:          transparent transparent transparent @secondary-color;
+@color_Menu-header:              @default-text-color;
+@padding_Menu-header-iconcolor:                  @color_Menu-header;
+//Menu item
+@color_MenuItem:                    #273B4D;
+@menu-item-bg:                            #f0f5fb;
+@background_MenuItem_hovered:                      #E0ECF5;
+// Menu
+@menu-button-menu-border-color:           #26B8FF;
+@menu-link-header-bg-color:               @background-color_Menu-header;
+//Text box
+@text-box-focus-bg:                       #324352;
+// Suggest
+@suggest-picker-color:                    #273B4D;
+@suggest-list-hover-color:                #E0ECF5;
+//Calendar
+@calendar-bg:                             @basic-block-bg-color;
+@calendar-day-cell-text-color:            @default-text-color;
+@calendar-day-cell-bg:                    @secondary-color;
+@calendar-day-cell-hover-text-color:      @black-color;
+@calendar-day-cell-hover-bg:              @default-color;
+@calendar-day-cell-active-text-color:     @secondary-color;
+@calendar-day-cell-active-bg:             @primary-color;
+@calendar-day-cell-active-hover-text-color:@calendar-day-cell-hover-text-color;
+@calendar-day-cell-active-hover-bg:       @calendar-day-cell-hover-bg;
+//fieldlink
+@border-color_FieldLink_picker:           #ccc;
+@color_FieldLink-showSelectorButton:      @default-text-color;
+@fieldLink-picker-show-color:		      #F0F5FB; //используется только в prestonew и carrynew
+@fieldLink-picker-show-field-color:       rgb(58, 73, 81); //используется только в prestonew и carrynew
+
+//FieldLink_Link
+@color_FieldLink-Link_enabled:            #26B8FF;
+@color_FieldLink-Link_enabled_hover:      @default-hover-color;
+
+//MonthView
+@background_MonthView:                    #2c3e50;
+@color_MonthView-item:                    #fff;
+@background_MonthView-item:               #f2f2f2;
+@color_MonthView-item-hover:              @color_MonthView-item;
+@background_MonthView-item-hover:         #e5ecf4;
+@background_MonthView-item-selected:      #ffc37e;
+//@background_MonthView-item-selected-hover:@background_MonthView-item-selected;
+//MonthPicker
+@month-picker-left-arrow-bg:              transparent;
+@month-picker-left-arrow-border-color:    transparent @primary-color transparent transparent;
+@month-picker-left-arrow-hover-border-color:transparent darken(@primary-color, 10%) transparent transparent;
+@month-picker-left-arrow-hover-bg:        @month-picker-left-arrow-bg;
+@month-picker-right-arrow-border-color:   transparent transparent transparent @primary-color;
+@month-picker-right-arrow-bg:             transparent;
+@month-picker-right-arrow-hover-border-color:transparent transparent transparent darken(@primary-color, 10%);
+@month-picker-right-arrow-hover-bg:       @month-picker-right-arrow-bg;
+@month-picker-wrapper-bg:                 @text-box-focus-bg;
+@month-picker-item-text-color:            @default-text-color;
+@month-picker-item-hover-text-color:      @black-color;
+@month-picker-item-hover-bg:              @default-color;
+@month-picker-item-active-text-color:     @secondary-color;
+@month-picker-item-active-bg:             @primary-color;
+//Data Range
+@date-range-dash-color:                   rgba(96, 170, 221, 0.2);
+//Data Range Slider
+@date-range-slider-prev-next-buttons-hover-color:@blue-dark-color;
+//Date Range Choose
+@date-range-choose-border-color:          @default-border-color-second;
+@date-range-choose-item-bg-color:         @basic-block-bg-color;
+@date-range-choose-bg-hover-color:        #293a4b;
+@date-range-choose-years-only-bg-color:   @basic-block-bg-color;
+@date-range-choose-bg-color:              @basic-block-bg-color;
+@date-range-choose-current-value-color:   #fff;
+@date-range-choose-current-value-bg-color:#26b8ff;
+//Date Range Big
+@background-color_DateRangeBigChoose:                                    #2c3e50;
+@border-color_DateRangeBigChoose:	                                     #3f566d;
+@background-color__DateRangeBigChoose-header:                            #2c3e50;
+@color_DateRangeBigChoose-DateRangePickerItem-months-button:             #26B8FF;
+//Edit at place
+@edit-at-place-editor-overlay-bg:         darken(@secondary-color, 5%) !important;
+//List view
+@list-view-items-toolbar-locked-bg:       @controls-editInPlace-editor-bg;
+@list-view-actions-active-bg:             @data-grid-bg;
+@listView-empty-data-color:               @disabled-color;
+@list-view-context-menu-close-color:      #8991A9;
+@list-view-context-menu-close-hover-color:#313E78;
+//Tree view
+@color_TreeDataGridView-expand:                     @gray-lamantin-color;
+@color_TreeDataGridView-expand_hovered:             @darkcyan-color;
+@color_TreeDataGridView-expandHidden:               @gray-lamantin-color;
+@color_TreeDataGridView-expandHidden_hovered:       @gray-lamantin-color;
+//Data grid
+@data-grid-row-hover-bg:                  #2A3C4D;//Переменную нужно удалить, она дублирует @background-color_DataGridView-item_hovered
+@background-color_DataGridView-item_multiselected: @data-grid-row-bg;
+@data-grid-edge-cell-separator-color:     rgba(0, 0, 0, 0.1);
+@background-color_grid_th_topRow_hasText_separator:   rgba(137, 145, 169, .3);
+@data-grid-cell-separator-color:          rgba(0, 0, 0, 0.1);
+@background-color_DataGridView-notScrolledCell:@basic-block-bg-color;
+@data-grid-results-color:                 #FFCC99;
+//MergeDialog
+@controls-MergeDialogTemplate-hint-font-color:                              @default-text-color;
+@controls-OperationsPanel-bg:             #354B62;
+@controls-OperationsPanel-separator-bg:   #38546C;
+@controls-OperationsPanelButton-active-icon-color:#B9E9FF;
+@controls-OperationsPanelButton-color:    #E4E4E4;
+@multiView-tile-selected-item-bg:         #E7F0F9;
+//DropdownList
+@DropdownList-border-color:                 @default-text-color;
+@DropdownList-linkStyleHoverColor:		     rgb(187, 233, 255);
+@DropdownList-disabled-text:                #37536C;
+@DropdownList-picker-title-type-header-bg:  #26B8FF;
+@DropdownList-picker-head-color:            #E4E4E4;
+//ProgressBar
+@controls-ProgressBar-first-color:        #26B8FF;
+@controls-ProgressBar-last-color:         @controls-ProgressBar-first-color;
+@controls-ProgressBar-border-color:       rgba(102, 170, 221, .15);;
+@controls-ProgressBar-background-color:   #354B62;
+@controls-ProgressBar-value-color:        @default-text-color;
+//Pager
+@controls-Pager-amount-text:              #999999;
+//FilterButton
+@controls-filterButton-picker-bg:         #2C3E50;
+@controls-filterButton-area-text-color:   @default-text-color;
+@fieldLink-FilterButton-color:                           #26B8FF;
+@fieldLink-FilterButton-color-hover:                     @default-hover-color;
+//FilterLine
+@controls-filterLine-link-color:          #26B8FF;
+
+//InformationPopup
+@controls-InformationPopup-bg:                           #2C3E50;
+@controls-InformationPopup-default-status-border-color:  @default-border-color-second;
+@controls-InformationPopup-closeButton-color:            #8991A9;
+@controls-InformationPopup-closeButton-hover-color:      #B9E9FF;
+//LongOperations
+@long-operations-list-group-title-bg: #4e5762;
+@long-operations-list-group-title-color: #ffffff;
+@long-operations-popup-header-caption-color: @default-text-color;
+@long-operations-popup-collapsed-header-caption-color: @long-operations-popup-header-caption-color;
+@long-operations-popup-header-suspended-color: @disabled-color;
+@long-operations-popup-foot-color: @disabled-color;
+@long-operations-popup-foot-accent-color: @default-text-color;
+@long-operations-popup-foot-but-hover-color: #b9e9ff !important;
+//TabButton
+@tab-button-simple-inner-color:           @disabled-color;
+@tab-button-color:                        #8991A9;;
+@tab-control-background-color:			   transparent;
+@tab-button-checked-inner-color:          rgb(255, 204, 153);
+@tab-button-simple-inner-checked-color:   rgb(255, 204, 153);
+@tab-button-simple-checked-bottomline-color:@primary-color;
+@tab-button-simple-hover-bottomline-color: @innacent-color;
+@tab-button-inner-after-bg-color:         rgba(102,170,221, .2);
+@tab-button-checked-inner-bg:             transparent;
+@scrollpager-bg:                          transparent;
+
+//sundry
+@dropdownlist-item-text-color:            #202835;
+@controls-editInPlace-editor-bg:			   #354B62;
+@scroll-pager-bg:							      transparent;
+@DropdownList-picker-menu-item-color:     #F0F5FB;
+@DropdownList-picker-menu-item-hover:     #E0ECF5;
+@DropdownList-picker-menu-item-base-color: @color_MenuItem;
+@DropdownList-picker-bg:                  #E1ECF6;
+// ClockPicker
+@clock-picker-tick-hover-background-color:#273B4D;
+@clock-picker-inner-tick-background-color:#354B62;
+@clock-picker-outer-circle-border-color:  @clock-picker-inner-tick-background-color;
+@clock-picker-unit-time-color:            @clock-picker-inner-tick-background-color;
+@clock-picker-arrow-color:                @accent-color;
+@clock-picker-arrow-tip-color:            @default-text-color;
+//sundry
+@controls-filterButton-picker-border-color:@default-border-color-second;
+@bottomStyle-items-toolbar-border-color:  #293A4B;
+@image-bar-bg-color:                      rgba(102,170,221, .5);
+@header-color:                            #FC9;
+@header-color-hover:                      @default-hover-color;
+@back-button-text-color:                  #FFCC99;
+@commands-button-close-icon-color:        @color_primary;
+@controls-SubmitPopup-footer-bg:          inherit;
+//back-button
+@border-arrow-fill-blue:                  transparent;
+@border-arrow-fill-orange:                transparent;
+@arrow-fill-blue:                         @header-color;
+@arrow-fill-orange:                       @back-button-text-color;
+@suggest-picker-bg-color:                 #f0f5fb;
+//waitIndicator
+@wait-indicator-overlay-default:          rgba(0, 0, 0, 0.35);
+@background-color_WaitIndicator:          #2C3E50;
+//area-blocks
+@bg_BlockLayout:                         @default-bg-color;
+@bg_Block_style-1:                       #23303E;
+@bg_BlockSeparator:                      rgba(0, 0, 0, .1);
+@border-color_Block:                     #273749;
+@box-shadow_Block:                       0px 2px 6px rgba(0, 0, 0, .5);
+
+@color_asLink:                           @color_Link-text;
+@color_asLink_hovered:                   @color_Link-text_hovered;
+
+//radioGroup
+@fill_RadioGroup_innerCircle_selected_enabled:     #FF7033;
+@fill_RadioGroup_innerCircle_selected_disabled:    #B9E9FF;
+@fill_RadioGroup_innerCircle_unselected:           none;
+@fill_RadioGroup_borderCircle:                     none;
+@fill_RadioGroup_borderCircle_enabled:           #839EBC;
+@fill_RadioGroup_borderCircle_disabled:          #4B688B;
+@fill_RadioGroup_borderCircle_enabled_hovered:   #FF7033;
+@color_RadioItem_caption_selected_size-m:          #E4E4E4;
+@color_RadioItem_caption_selected_size-l:          #E4E4E4;
+@color_RadioItem_caption_unselected_disabled:      #4B688B;
+@color_RadioItem_caption_unselected_enabled:       #8991A9;
+@color_RadioItem_caption_selected_size-l_disabled: #E4E4E4;
+
+//headers
+@color-BackButton__caption_style-default:      #FFCC99;
+@color-BackButton__caption_style-primary:      #FFCC99;
+@color_Header__caption_style-default:          #FFFFFF;
+@color_Header__caption_style-primary:          #FFCC99;
+@color-BackButton__caption_style-default_hovered: @color_Header__caption_style-default_hovered;
+@color-BackButton__caption_style-primary_hovered: @color_Header__caption_style-primary_hovered;
+@color_Header__caption_style-default_hovered:  #B9E9FF;
+@color_Header__caption_style-primary_hovered:  #B9E9FF;
+@color_HeaderCounter_style-default_hovered:    #26B8FF;
+@color_HeaderCounter_style-primary_hovered:    #B9E9FF;
+@color_HeaderCounter_style-primary:            #839EBC;
+@color_HeaderCounter_style-default:            #B9E9FF;
+@color_HeaderCounter_style-disabled:           #4B688B;
+@color-Separator__icon_style-Accent:              #26B8FF;
+@color-Separator__icon_style-Main:                #FFCC99;
+@color-Separator__icon_style-Additional:          #839EBC;
+@color-Separator__icon_style-Accent_hovered:      #B9E9FF;
+@color-Separator__icon_style-Main_hovered:        #B9E9FF;
+@color-Separator__icon_style-Additional_hovered:  #B9E9FF;
+@fill-HeaderSeparator__icon_style-primary:     #839EBC;
+@fill-HeaderSeparator__icon_style-default:     #26B8FF;
+@fill-HeaderSeparator__icon_style-primary_hovered:     #B9E9FF;
+@fill-HeaderSeparator__icon_style-default_hovered:     #B9E9FF;
+@content_forwardArrowPrimary:                                                                                                  url('img/ForwarArrowPrimary.svg');
+@content_forwardArrowPrimaryHovered:                                                                                           url('img/ForwarArrowDefaultHovered.svg');
+@content_forwardArrowDefault:                                                                                                  url('img/ForwarArrowDefault.svg');
+@content_forwardArrowDefaultHovered:                                                                                           url('img/ForwarArrowDefaultHovered.svg');
+@content-BackButton_style-default:                                                                                                     url('img/BackArrowOrangePresto.svg');
+@content-BackButton_style-primary:                                                                                                     url('img/BackArrowOrangePresto.svg');
+@content-BackButton_style-default_hovered:                                                                                             url('img/BackArrowHoveredPresto.svg');
+@content-BackButton_style-primary_hovered:                                                                                             url('img/BackArrowHoveredPresto.svg');

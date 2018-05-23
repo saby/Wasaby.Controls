@@ -2,7 +2,9 @@
       <ws:partial
               on:click="_onItemClick(listModel.getCurrent().dispItem)"
               on:contextmenu="_onItemContextMenu(listModel.getCurrent())"
+              on:swipe="_onItemSwipe(listModel.getCurrent())"
               itemActionsTemplate="{{itemActionsTemplate}}"
+              swipeTemplate="{{swipeTemplate}}"
               multiSelectTpl="{{multiSelectTpl}}"
               template="{{itemTemplate}}"
               contentTemplate="{{itemContentTemplate}}"

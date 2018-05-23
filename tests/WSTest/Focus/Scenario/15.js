@@ -1,13 +1,13 @@
 /**
  * Created by nv.belotelov on 14.07.2017.
  */
-define('js!WSTest/Focus/Scenario/15', [
+define('WSTest/Focus/Scenario/15', [
    'Core/constants',
    'SBIS3.CONTROLS/TextBox',
-   'js!WSTest/Focus/TestFocusHelpers',
+   'WSTest/Focus/TestFocusHelpers',
    'Lib/Control/Window/Window',
-   'js!WSTest/Focus/Case15Parent',
-   'js!WSTest/Focus/Case15',
+   'WSTest/Focus/Case15Parent',
+   'WSTest/Focus/Case15',
    'css!' + wsConfig.wsRoot + 'css/core.css',
    'css!' + wsConfig.wsRoot + 'css/themes/wi_scheme.css'
 ], function (cConstants,

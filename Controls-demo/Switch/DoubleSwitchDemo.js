@@ -10,7 +10,7 @@ define('Controls-demo/Switch/DoubleSwitchDemo', [
       {
          _template: template,
          value: false,
-         value1: true,
+         value1: true
       });
    return ModuleClass;
 });

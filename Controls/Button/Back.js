@@ -8,7 +8,7 @@ define('Controls/Button/Back', [
    /**
     * Button "Back".
     * @class Controls/Button/Back
-    * @extends Controls/Control
+    * @extends Core/Control
     * @mixes Controls/Button/interface/ICaption
     * @mixes Controls/interface/ITooltip
     * @mixes Controls/Button/interface/IClick

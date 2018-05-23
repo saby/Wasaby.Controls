@@ -78,15 +78,13 @@ define('SBIS3.CONTROLS/Mixins/Selectable', [
               * @cfg {Boolean} Разрешить отсутствие выбранного элемента в группе
               * @example
               * <pre>
-              *     <option name="allowEmptySelection">false</option>
+              *     allowEmptySelection="{{false}}"
               * </pre>
               * @remark
               * Опция нужна, например, для создания пустой группы радиокнопок - без выбранного элемента.
-              * При этом после задания значения вернуть коллекцию к состоянию без выбранного элемента можно только
-              * методом {@link setSelectedKey}.
+              * Опцию {@link emptyValue} корректно использовать только с allowEmptySelection: true.
               * @see selectedKey
-              * @see setSelectedKey
-              * @see getSelectedKey
+              * @see emptyValue
               * @see SBIS3.CONTROLS/Mixins/DSMixin#idProperty
               */
             allowEmptySelection : true

@@ -219,6 +219,7 @@ define('SBIS3.CONTROLS/TextBox', [
       
                if(userPasteResult !== false){
                   self._pasteProcessing++;
+                  self._inputField.addClass('controls-InputRender__field_pasteProcessing')
                   /* зачем делаем setTimeout?
                      в момент события в поле ввода нет перенесенных данных,
                      поэтому вставка выполняется с задержкой, чтобы браузер самостоятельно обработал данные из буфера обмена(изображение, верстка)
@@ -226,6 +227,7 @@ define('SBIS3.CONTROLS/TextBox', [
                   window.setTimeout(function(){
                      self._pasteProcessing--;
                      if (!self._pasteProcessing) {
+                        self._inputField.removeClass('controls-InputRender__field_pasteProcessing');
                         self._pasteHandler(event);
                      }
                   }, 100);
@@ -520,7 +522,7 @@ define('SBIS3.CONTROLS/TextBox', [
             this._setTextByKeyboard(newText);
          }
          var key = event.which || event.keyCode;
-         if (Array.indexOf([constants.key.up, constants.key.down], key) >= 0) {
+         if ([constants.key.up, constants.key.down].indexOf(key) >= 0) {
             event.stopPropagation();
          }
       },

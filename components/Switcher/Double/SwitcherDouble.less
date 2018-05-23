@@ -68,7 +68,7 @@ body:not(.ws-is-mobile-platform) .ws-enabled.controls-SwitcherDouble .controls-S
       @offset: (@switcher-width - @switcher-height) / 2;
       vertical-align: top;
       .rotate(-90deg);
-      margin: @offset -@offset @offset calc(~"-@{offset} - 1px");
+      margin: @offset -@offset @offset calc(~"0px - @{offset} - 1px");
       //rotate не позволяет хрому корректно рендерить бордер радиус
       //у элементов с нечетными параметрами width/height
       //https://jsfiddle.net/qh3ggjvz/

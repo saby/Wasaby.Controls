@@ -1,5 +1,5 @@
 define('Controls/List/Grid/GridView', [
-   'Core/Control',
+   'Controls/List/ListView',
    'tmpl!Controls/List/Grid/GridView',
    'tmpl!Controls/List/Grid/Item',
    'tmpl!Controls/List/Grid/Column',
@@ -10,8 +10,8 @@ define('Controls/List/Grid/GridView', [
    'tmpl!Controls/List/Grid/ColGroup',
    'css!Controls/List/Grid/Grid',
    'css!Controls/List/Grid/OldGrid',
-   'Controls/List/SourceControl/Scroll/Emitter'
-], function(Control, GridTpl, ItemTpl, ColumnTpl, HeaderContentTpl, cDetection) {
+   'Controls/List/BaseControl/Scroll/Emitter'
+], function(ListView, GridTpl, DefaultItemTpl, ColumnTpl, HeaderContentTpl, cDetection) {
 
    'use strict';
 
@@ -29,24 +29,18 @@ define('Controls/List/Grid/GridView', [
             return result;
          }
       },
-      Grid = Control.extend({
+      GridView = ListView.extend({
          _template: GridTpl,
-         _defItemTemplate: ItemTpl,
-         _itemTemplate: null,
+         _defaultItemTemplate: DefaultItemTpl,
          _headerContentTemplate: HeaderContentTpl,
-         _gridViewModel: null,
          _prepareGridTemplateColumns: _private.prepareGridTemplateColumns,
          isNotFullGridSupport: cDetection.isNotFullGridSupport,
          isIE: cDetection.isIE,
          isSafari11: cDetection.safari11,
 
          _beforeMount: function(cfg) {
-            Grid.superclass._beforeMount.apply(this, arguments);
-
-            this._itemTemplate = cfg.itemTemplate;
-
-            this._gridViewModel = cfg.listModel;
-            this._gridViewModel.setColumnTemplate(ColumnTpl);
+            GridView.superclass._beforeMount.apply(this, arguments);
+            this._listModel.setColumnTemplate(ColumnTpl);
 
             if (cDetection.isNotFullGridSupport || cDetection.isIE) {
                var tmp = cfg.columns,
@@ -70,9 +64,9 @@ define('Controls/List/Grid/GridView', [
 
          _afterMount: function() {
             var
-               results = this._gridViewModel.getResults(),
-               header = this._gridViewModel.getHeader();
-            Grid.superclass._afterMount.apply(this, arguments);
+               results = this._listModel.getResults(),
+               header = this._listModel.getHeader();
+            GridView.superclass._afterMount.apply(this, arguments);
             if (!cDetection.isNotFullGridSupport) {
                if (results) {
                   var
@@ -93,10 +87,10 @@ define('Controls/List/Grid/GridView', [
          
          __onEmitScroll: function(e, type, params) {
             if (!cDetection.isNotFullGridSupport && type === 'scrollMove') {
-               this._gridViewModel.setCellBottomShadowVisibly(params.scrollTop !== 0);
+               this._listModel.setCellBottomShadowVisibly(params.scrollTop !== 0);
             }
          }
       });
 
-   return Grid;
+   return GridView;
 });

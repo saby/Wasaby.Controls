@@ -1,66 +1,68 @@
-<ws:template name="scrollTpl">
-   <div class="controls-Scroll">
-      <Controls.Layout.Scroll scope="{{_options}}">
-         <div name="content"
-              style="{{displayState.heightFix ? '' : styleHideScrollbar}}"
-              class="controls-Scroll__content
-                  {{hasHover ? 'controls-Scroll__content_possibleScroll'}}
-                  {{displayState.heightFix ? 'controls-Scroll__content_hidden' : 'controls-Scroll__content_scroll'}}"
-              on:resize="_resizeHandler()"
-              on:scroll="_scrollHandler()">
-            <ws:partial template="{{optContent}}"/>
-         </div>
-      </Controls.Layout.Scroll>
+<ws:template name="content">
+   <Controls.Layout.Scroll scope="{{_options}}" name="scrollLayout">
+      <div name="content"
+           style="{{_displayState.heightFix ? '' : _styleHideScrollbar}}"
+           class="ws-flex-grow-1 controls-Scroll__content
+                  {{_hasHover ? 'controls-Scroll__content_possibleScroll'}}
+                  {{_displayState.heightFix ? 'controls-Scroll__content_hidden' : 'controls-Scroll__content_scroll'}}"
+           on:resize="_resizeHandler()"
+           on:scroll="_scrollHandler()">
+         <ws:partial template="{{_options.content}}"/>
+      </div>
+   </Controls.Layout.Scroll>
+</ws:template>
 
-      <ws:if data="{{!useNativeScrollbar && scrollbarVisible && (hasHover || dragging)}}">
+<ws:template name="scrollTpl">
+   <div class="controls-Scroll ws-flexbox ws-flex-column">
+      <ws:if data="{{_pagingState.visible}}">
+         <ws:partial template="content"
+                     attr:class="controls-Scroll__content_paging"
+                     on:listTop="_scrollReachTopHandler()"
+                     on:scrollMove="_scrollMoveHandler()"
+                     on:listBottom="_scrollReachBottomHandler()"/>
+      </ws:if>
+      <ws:else>
+         <ws:partial template="content"/>
+      </ws:else>
+
+      <ws:if data="{{!_useNativeScrollbar && _options.scrollbarVisible && (_hasHover || _dragging)}}">
          <Controls.Container.Scroll.Scrollbar
-            position="{{scrollTop}}"
-            style="{{style}}"
-            contentHeight="{{displayState.contentHeight}}"
+            position="{{_scrollTop}}"
+            style="{{_options.style}}"
+            contentHeight="{{_displayState.contentHeight}}"
             attr:class="controls-Scroll__scrollbar"
             on:positionChanged="_positionChangedHandler()"
             on:draggingChanged="_draggingChangedHandler()"/>
       </ws:if>
-      <ws:if data="{{shadowVisible && displayState.hasScroll}}">
-         <ws:if data="{{displayState.shadowPosition.indexOf('top') > -1}}">
+      <ws:if data="{{_options.shadowVisible && _displayState.hasScroll}}">
+         <ws:if data="{{_displayState.shadowPosition.indexOf('top') > -1}}">
             <div class="controls-Scroll__shadow controls-Scroll__shadow_top"></div>
          </ws:if>
-         <ws:if data="{{displayState.shadowPosition.indexOf('bottom') > -1}}">
+         <ws:if data="{{_displayState.shadowPosition.indexOf('bottom') > -1}}">
             <div class="controls-Scroll__shadow controls-Scroll__shadow_bottom"></div>
          </ws:if>
+      </ws:if>
+
+      <ws:if data="{{_pagingState.visible}}">
+         <Controls.List.Paging class="controls-Scroll__paging"
+                               stateBegin="{{_pagingState.stateUp}}"
+                               statePrev="{{_pagingState.stateUp}}"
+                               stateEnd="{{_pagingState.stateDown}}"
+                               stateNext="{{_pagingState.stateDown}}"
+                               on:onArrowClick="_arrowClickHandler()"/>
       </ws:if>
 
       <Controls.Event.Emitter event="resize" on:resize="_resizeHandler()"/>
    </div>
 </ws:template>
 
-<ws:if data="{{!_useNativeScrollbar}}">
+<ws:if data="{{_useNativeScrollbar}}">
+   <ws:partial template="scrollTpl"/>
+</ws:if>
+<ws:else>
    <ws:partial template="scrollTpl"
-               scrollbarVisible="{{_options.scrollbarVisible}}"
-               useNativeScrollbar="{{_useNativeScrollbar}}"
-               hasHover="{{_hasHover}}"
-               dragging="{{_dragging}}"
-               style="{{_options.style}}"
-               scrollTop="{{_scrollTop}}"
-               displayState="{{_displayState}}"
-               shadowVisible="{{_options.shadowVisible}}"
-               styleHideScrollbar="{{_styleHideScrollbar}}"
-               optContent="{{_options.content}}"
                on:mouseenter="_mouseenterHandler()"
                on:mouseleave="_mouseleaveHandler()"
                on:scrollbarTaken="_scrollbarTakenHandler()"
                on:scrollbarReleased="_scrollbarReleasedHandler()"/>
-</ws:if>
-<ws:else>
-   <ws:partial template="scrollTpl"
-               scrollbarVisible="{{_options.scrollbarVisible}}"
-               useNativeScrollbar="{{_useNativeScrollbar}}"
-               hasHover="{{_hasHover}}"
-               displayState="{{_displayState}}"
-               dragging="{{_dragging}}"
-               style="{{_options.style}}"
-               scrollTop="{{_scrollTop}}"
-               shadowVisible="{{_options.shadowVisible}}"
-               styleHideScrollbar="{{_styleHideScrollbar}}"
-               optContent="{{_options.content}}"/>
 </ws:else>

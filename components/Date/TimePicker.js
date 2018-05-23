@@ -17,17 +17,19 @@ define('SBIS3.CONTROLS/Date/TimePicker',
        *
        * @class SBIS3.CONTROLS/Date/TimePicker
        * @extend SBIS3.CONTROLS/CompoundControl
+       * @demo Examples/Time/ClockPicker/ClockPicker
        *
-       * @initial
+       * @example
        * Пример инициализации контрола.
+       * <pre>
+       *    <SBIS3.CONTROLS.Date.TimePicker
+       *       time="2017-10-20 20:17"
+       *       mode="minutes"
+       *    />
+       * </pre>
        * Результат: TimePicker с выбором минут, стрелкой показывающей на 17, шапкой со временем 20:17
        * и подсвеченным временем 17. При смене представления на hours(см. {@link setMode})
        * будет TimePicker с выбором часов, стрелкой показывающей на 20, и шапкой с подсвеченным временем 20.
-       *
-       * <SBIS3.CONTROLS.Date.TimePicker
-       *    time="2017-10-20 20:17"
-       *    mode="minutes"
-       * />
        *
        * @control
        * @public

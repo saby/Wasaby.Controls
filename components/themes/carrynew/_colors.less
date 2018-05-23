@@ -1,0 +1,325 @@
+//default-colors
+@additional-color:                                                                                                      #8991A9;
+@default-border-color-second:                                                                                           #0055BB;
+@default-text-color:                                                                                                    #000;
+@default-border-color:                                                                                                  #eaeaea;
+@default-border-color-hover:                                                                                            #cccccc;
+@default-border-color-active:                                                                                           #cccccc;
+@default-border-color-bottom-disabled:                                                                                  #cccccc;
+@default-placeholder-color:                                                                                             #cccccc;
+@default-bg-color:                                                                                                      #ffffff;
+@error-bg-color:                                                                                                        #fadadd;
+//icons
+@color_primary:                                                                                                    #2D68B5;
+//InputRender
+@background-color_InputRender:                                                                                          @default-bg-color;
+//search-form
+@search-form-icon-color:                                                                                                #2D68B5;
+@search-form-icon-reset-color:                                                                                          #2D68B5;
+@search-form-icon-search-hover-color:                                                                                   #313E78;
+//ComboBox
+@color_ComboBox-Arrow_active:                                                                                           @color_Link-icon_hovered;
+@background_ComboBox-item_hover:                                                                                        #f0f5fb;
+@color_ComboBox-item:                                                                                                   @default-text-color;
+//menu
+@background-color_Menu:                                                                                                   @default-bg-color;
+@menu-button-menu-border-color:                                                                                         #0055BB;
+//back-button
+@border-arrow-fill-blue:                                                                                                transparent;
+@border-arrow-fill-orange:                                                                                              transparent;
+@arrow-fill-blue:                                                                                                       @primary-color;
+@arrow-fill-orange:                                                                                                     @primary-color;
+
+//FieldLink
+@border-color_FieldLink_picker:                                                                                         @default-border-color-active;
+@color_FieldLink-showSelectorButton:                                                                                    #2D68B5;
+@fieldLink-picker-show-color:                                                                                           @white-color; //используется только в prestonew и carrynew
+@fieldLink-picker-show-field-color:                                                                                     @default-text-color; //используется только в prestonew и carrynew
+
+//FieldLink_Link
+@color_FieldLink-Link_enabled:                                                                                          #2D68B5;
+@color_FieldLink-Link_enabled_hover:                                                                                    #313E78;
+
+// MonthView
+@background_MonthView:                    @default-bg-color;
+@color_MonthView-day-cell:                @default-text-color;
+
+//неразобранные переменные
+// TODO: Используется только в prestonew, в других темах вместо нее используется @default-bg-color. Выпилить.
+// https://online.sbis.ru/opendoc.html?guid=f5f36c75-e461-4e1c-82fc-4079c3cafa90
+@basic-block-bg-color:					      #f3f3f3; //Основной Фон при блочной вёрстке, верхний и нижний разделитель реестра, вверхняя граница полей ввода и вкладок не в фокусе
+// Default vars
+@default-text-color:                      #000;
+@default-color:                           #26B8FF;
+@disabled-color:                          #CCCCCC;
+@innacent-color:                     	   #8991A9;
+@error-color:                             #EF463A;
+@warning-color:                           #FA9C33;
+@success-color:                           #72BE44;
+@accent-color:							         #26B8FF;
+@acent-color2:                            #F8F8F8;//Цвет акцентной плашки
+@default-hover-color:                     #E0ECF5;//Переменную нужно удалить, она дублирует @default-bg-color-hovered-item
+@innacent-color2:						         #999999; //Неакцентные элементы, заголовки таблиц, комментарии
+@black-color:                             #333;
+@gray-color:                              #3b5d79;
+@gray-light-color:                        #eee;
+@primary-color:                           #FF7033;
+@secondary-color:                         #4e5762;
+@back-button-caption-hover-color :        @primary-color;
+@back-button-arrow-hover-color :          @primary-color;
+@bread-crumb-title-hover-color:           @primary-color;
+@blue-dark-color:							      rgb(49, 62, 120);
+@darkcyan-color: 							      #8991A9;
+@default-bg-color-hovered-item:           #E0ECF5;
+@default-itemHover-color:                 @default-hover-color;//Переменную нужно удалить, она дублирует @default-bg-color-hovered-item
+@color_primary:                      #2D68B5;
+@color_Link-text:                         #2D68B5;
+@color_Link-text_hovered:                   #313e78;
+@color_Link-text_disabled:                @disabled-color;
+@link-header-hover-color:                 #FF7033;
+// Normal button
+@color_Link-icon_hovered:                 #313E78;
+// Normal primary button
+@button-primary-active-text-color:        @color_Button_primary;
+@button-big-hover-bg:                     #ff7033;
+@button-big-bg:                           #fd8a6b;
+@button-hover-text-color:                 #000;
+@button-primary-hover-text-color:         #fff;
+// Radio button
+@radio-button-text-color:                 @innacent-color;
+@radio-button-checked-text-color:         @default-text-color;
+@radio-button-checked-hover-text-color:   @radio-button-hover-text-color;
+@radio-button-icon-border-color:          #E4E4E4;
+// Checkbox
+@check-box-icon-box-color:                #8991A9;
+@check-box-disabled-color:                #CCC;
+@check-box-checked-disabled-color:        @blue-dark-color;
+@color_checkBox-iconBox:                  #8991A9;
+@color_checkBox_disabled:                 #CCC;
+@color_checkBox-caption_enabled:          @default-text-color;
+@color_checkBox-icon_enabled:             primary-color;
+//checkbox Vdom
+@color_CheckBox__iconBox:                       rgba(109, 141, 176, .6);
+@color_CheckBox__iconBox_disabled:              #CCCCCC;
+@color_CheckBox_disabled:                       #313E78;
+@color_CheckBox___caption_disabled:             #CCCCCC;
+@color_CheckBox-caption_enabled:                #000000;
+@color_CheckBox-icon_enabled:                   #FF7033;
+// Switcher
+@switcher-btn-bg-color:                   #fff;
+@switcher-do-unselected-text-color:       #8991A9;
+@switcher-do-disabled-text-color:         @gray-ccc-color;
+@switcher-btn-bg-color-disabled:          white;
+@switcher-border-color:                   #E4E4E4;
+@switcher-disabled-color:                 @disabled-color;
+// Menu
+@color_Menu-header:              #fff;
+//MenuItem
+@background_MenuItem_hovered:                      #F0F5FB;
+// Text box
+@text-box-focus-bg:                       #fff;
+
+// Calendar
+@calendar-bg:                             darken(@secondary-color, 5%);
+
+// MonthView //
+@month-view-bg:                           @white-color;
+@month-view-day-cell-text-color:          inherit;
+@date-range-dash-color:                   #cccccc;
+// Date Range Choose
+@date-range-choose-item-bg-color:         #FFF;
+@date-range-choose-bg-hover-color:        #f0f5fb;
+@date-range-choose-years-only-bg-color :  #FFF;
+@date-range-choose-bg-color:              #FFF;
+
+// Date Range Big
+@background-color_DateRangeBigChoose:                    @default-bg-color;
+@border-color_DateRangeBigChoose:                        #eaeaea;
+@background-color__DateRangeBigChoose-header:            #fff;
+@color_DateRangeBigChoose-DateRangePickerItem-months-button:  #2d68b5;
+
+@list-view-items-toolbar-locked-bg:       @default-hover-color;
+@controls-editInPlace-editor-bg:          #F5F5F5;
+// Tree view
+@color_TreeDataGridView-expand:                 @blue-dark-color;
+@color_TreeDataGridView-expand_hovered:         #0055BB;
+@color_TreeDataGridView-expandHidden:           @gray-lamantin-color;
+@color_TreeDataGridView-expandHidden_hovered:   @blue-dark-color;
+// Data grid //
+@data-grid-row-hover-bg:                        @default-hover-color;//Переменную нужно удалить, она дублирует @background-color_DataGridView-item_hovered
+@data-grid-edge-cell-separator-color:           #EAEAEA;
+@background-color_grid_th_topRow_hasText_separator:  @data-grid-edge-cell-separator-color;
+@background-color_DataGridView-notScrolledCell: @default-bg-color;
+@data-grid-results-color:                 #313E78;
+// OperationsPanel
+@controls-OperationsPanel-bg:                       #F0F5FB;
+@controls-OperationsPanel-separator-bg:             #CCC;
+// OperationsPanelButton
+@controls-OperationsPanelButton-color:    #FFFFFF;
+// DropdownList
+@DropdownList-picker-menu-item-base-color: #000;
+@DropdownList-border-color:               #000;
+@DropdownList-disabled-text:              #CCC;
+@DropdownList-picker-head-color:          #FFFFFF;
+//ProgressBar
+@ProgressBar-first-color:                 #2D68B5;
+@ProgressBar-border-color:                #EAEAEA;
+@ProgressBar-background-color:            #F5F5F5;
+@ProgressBar-value-color:                 @disabled-color;
+//FilterButton
+@controls-filterButton-picker-bg:         @white-color;
+@controls-filterButton-area-text-color:   #313E78;
+@fieldLink-FilterButton-color:            #2D68B5;
+@fieldLink-FilterButton-color-hover:      @color_Link-text_hovered;
+
+//FilterLine
+@controls-filterLine-link-color:          #2D68B5;
+//Scrollbar
+@controls-Scrollbar-dark-hover-thumb-color:rgba(131, 158, 188, 0.2);
+@controls-Scrollbar-dark-active-thumb-color:rgba(131, 158, 188, 0.25);
+@controls-Scrollbar-light-hover-thumb-color:rgba(0, 0, 0, 0.10);
+@controls-Scrollbar-light-active-thumb-color:rgba(0, 0, 0, 0.15);
+//InformationPopup
+@controls-InformationPopup-bg:                           #fff;
+@controls-InformationPopup-closeButton-color:            #CCCCCC;
+@controls-InformationPopup-closeButton-hover-color:      #313E78;
+//SubmitPopup
+@controls-SubmitPopup-message-color:      #000;
+@tab-button-checked-inner-color:          rgb(44, 62, 80);
+@tab-button-simple-inner-checked-color:   rgb(44, 62, 80);
+@tab-button-simple-inner-color:           #8991A9;
+@tab-button-inner-after-bg-color:         #ccc;
+//Browser
+@data-grid-cell-separator-color:          #F5F5F5;
+@header-color:                            #D94700;
+@header-color-hover:                      #FF7033;
+//TimeHeader
+@time-header-title-color:                 @black-color;
+@toggle-time-passive-color:               #CCC;
+@toggle-time-active-color:                #313E78;
+//ClockPicker
+@clock-picker-inner-tick-background-color:#EAEAEA;
+@clock-picker-outer-circle-border-color:  @clock-picker-inner-tick-background-color;
+@clock-picker-arrow-color:                #313E78;
+@clock-picker-arrow-tip-color:            @clock-picker-arrow-color;
+@clock-picker-tick-hover-background-color:#F0F5FB;
+//money
+@money-decorator-integer-accent-results-font-color:#313E78;
+//infobox
+@Infobox-cross-color:                     #2D68B5;
+@Infobox-cross-color-hover:               #313E78;
+//sundry
+@DropdownList-picker-menu-item-color:     #fff;
+@DropdownList-picker-bg:                  #fff;
+@DropdownList-picker-menu-item-color:     #FFFFFF;
+@DropdownList-picker-menu-item-hover:     #F0F5FB;
+@image-bar-bg-color:                      rgba(255, 255, 255, .5);
+@icon-color-disabled:                     #ccc !important;
+@bottomStyle-items-toolbar-border-color:        #F3F3F3;
+@highlight-text-bg:                       #fffecf;
+@bottomStyle-items-toolbar-border-color:  #E0ECF5;
+@DropdownList-linkStyleHoverColor:		      #313E78;
+@back-button-text-color:                     #313E78;
+@icon-active-color:                          #313E78;
+@long-operations-list-group-title-bg: #4e5762;
+@long-operations-list-group-title-color: #ffffff;
+// SUGGEST //
+@suggest-picker-color:                    #000000;
+@suggest-list-hover-color:                #F0F5FB;
+@suggest-picker-bg-color:                 #ffffff;
+@border-color_SuggestTextBox_withPicker:  #0055BB;
+
+//waitIndicator
+@wait-indicator-overlay-default:          rgba(255, 255, 255, 0.05);
+@wait-indicator-overlay-dark:             rgba(0, 0, 0, 0.1);
+@background-color_WaitIndicator:          #FFFFFF;
+//area-blocks
+@bg_Block_style-1:                       @acent-color2;
+@border-color_Block:                     @default-bg-color;
+//Icon
+@color-IconButtonBordered_default:             #587AB0;
+@color-IconButtonBordered_default_hovered:     #313E78;
+@color-Icon_style_attention:                   #fec63f;
+@color-Icon_style_done:                        #72be44;
+@color-Icon_style_error:                       #ef463a;
+//button
+@color_Link-main-text:                    #2D68B5;
+@color_Link-main-text_hovered:            #313E78;
+@color_Link-main2-text:                   #8991A9;
+@color_Link-main3-text:                   #8991A9;
+@color_Link-main3-text_hovered:           #313E78;
+@color_Link-text_disabled:                #CCCCCC;
+@color_Link-icon_disabled:                #CCCCCC;
+@color_Link-additional:                   #313E78;
+@color_Link-additional-2:                 #999999;
+@color_Link-additional-3:                 #000000;
+@border-color_Button_primary:             transparent;
+@border-color_Button_primary_hovered:     transparent;
+@background_Button_primary:               #FF7033;
+@background_Button_default:               #567395;
+@box-shadow_Button:                       0px 1px 4px rgba(0,0,0, .5);
+@box-shadow_Button_active:                none;
+@background_Button_primary_active:        #FA6019;
+@background_Button_default_active:        #516B8C;
+@color_Link-Vdom-text_disabled:           #CCCCCC;
+@background_Button_disabled:              #567395;
+@background_Button-primary_disabled:      @background_Button_primary;
+@background_Button-default_disabled:      @background_Button_default;
+@color_Button-Vdom-disabled:              rgba(255,255,255, .15);
+@color_Button-Vdom-text_primary:           #FFFFFF;
+@color_Button-Vdom-text_default:           #FFFFFF;
+@color_Link-main-icon:                     #587AB0;
+
+//radioGroup
+@fill_RadioGroup_innerCircle_selected_enabled:     #FF7033;
+@fill_RadioGroup_innerCircle_selected_disabled:    #313E78;
+@fill_RadioGroup_innerCircle_unselected:           none;
+@fill_RadioGroup_borderCircle:                     none;
+@fill_RadioGroup_borderCircle_enabled:           #8991A9;
+@fill_RadioGroup_borderCircle_disabled:          #CCCCCC;
+@fill_RadioGroup_borderCircle_enabled_hovered:   #FF7033;
+@color_RadioItem_caption_selected_size-m:          #000000;
+@color_RadioItem_caption_selected_size-l:          #000000;
+@color_RadioItem_caption_unselected_disabled:      #CCCCCC;
+@color_RadioItem_caption_unselected_enabled:       #8991A9;
+@color_RadioItem_caption_selected_size-l_disabled: #000000;
+
+//headers
+@color-BackButton__caption_style-default:      #313E78;
+@color-BackButton__caption_style-primary:      #313E78;
+@color_Header__caption_style-default:          #D94700;
+@color_Header__caption_style-primary:          #313E78;
+@color-BackButton__caption_style-default_hovered: @color_Header__caption_style-default_hovered;
+@color-BackButton__caption_style-primary_hovered: @color_Header__caption_style-default_hovered;
+@color_Header__caption_style-default_hovered:  #FF7033;
+@color_Header__caption_style-primary_hovered:  #2D68B5;
+@color_HeaderCounter_style-default_hovered:    @color_Header__caption_style-default_hovered;
+@color_HeaderCounter_style-primary_hovered:    @color_Header__caption_style-primary_hovered;
+@color_HeaderCounter_style-primary:            @color_Header__caption_style-primary;
+@color_HeaderCounter_style-default:            @color_Header__caption_style-default;
+@color_HeaderCounter_style-disabled:           #CCCCCC;
+@color-Separator__icon_style-Accent:              #313E78;
+@color-Separator__icon_style-Main:                #D94700;
+@color-Separator__icon_style-Additional:          #8991A9;
+@color-Separator__icon_style-Accent_hovered:      #2D68B5;
+@color-Separator__icon_style-Main_hovered:        #FF7033;
+@color-Separator__icon_style-Additional_hovered:  #313E78;
+@fill-HeaderSeparator__icon_style-primary:     #D94700;
+@fill-HeaderSeparator__icon_style-default:     #313E78;
+@fill-HeaderSeparator__icon_style-primary_hovered:     #FF7033;
+@fill-HeaderSeparator__icon_style-default_hovered:     #2D68B5;
+@content_forwardArrowPrimary:                                                                                                  url('img/ForwarArrowPrimary.svg');
+@content_forwardArrowPrimaryHovered:                                                                                           url('img/ForwarArrowPrimary.svg');
+@content_forwardArrowDefault:                                                                                                  url('img/ForwarArrowPrimary.svg');
+@content_forwardArrowDefaultHovered:                                                                                           url('img/ForwarArrowPrimary.svg');
+@content-BackButton_style-default:                                                                                              url('img/BackArrowOrangeCarry.svg');
+@content-BackButton_style-primary:                                                                                              url('img/BackArrowOrangeCarry.svg');
+@content-BackButton_style-default_hovered:                                                                                      url('img/BackArrowHoveredCarry.svg');
+@content-BackButton_style-primary_hovered:                                                                                      url('img/BackArrowHoveredCarry.svg');
+@color-IconButton__border_iconStyle-primary_hovered:          #cccccc;
+@color-Button_type-IconButton_disabled:           #CCCCCC;
+@border-color-IconButton_disabled:                #F2F2F2;
+@border-color-IconButton:                        rgba(0, 0, 0, 0.05);
+@color-IconButton__shadow:                        rgba(0, 0, 0, 0.15);
+@background-color-IconButton:                     #F2F2F2;
+@background-color-IconButton_hovered:             #EAEAEA;

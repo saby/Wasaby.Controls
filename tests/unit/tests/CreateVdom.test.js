@@ -5,7 +5,7 @@
  * Created by dv.zuev on 11.06.2017.
  */
 define([
-   'js!WSTest/VdomCompoundVdom/VdomCompoundVdom'
+   'WSTest/VdomCompoundVdom/VdomCompoundVdom'
 ], function (VdomCompoundVdom) {
    'use strict';
 

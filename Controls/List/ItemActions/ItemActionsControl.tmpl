@@ -1,25 +1,11 @@
-<div>
-    <ws:partial
-            template="{{_options.content}}"
-            scope="{{_options}}"
-            on:itemContextMenu="_showActionsMenu()">
-        <ws:itemActionsTemplate>
-            <ws:partial
-                    template="tmpl!Controls/List/ItemActions/ItemActionsTemplate"
-                    itemActionsType="{{_options.itemActionsType}}"
-                    scope="{{itemActionsTemplate}}"
-                    needActionsMenu="{{_needActionsMenu}}"/>
-        </ws:itemActionsTemplate>
-    </ws:partial>
-    <Controls.Dropdown.Opener
-            name="itemActionsOpener"
-            keyProperty="id"
-            menuStyle="cross"
-            className="controls-itemActionsV__menu">
-        <ws:popupOptions closeByExternalClick="{{true}}">
-            <ws:corner vertical="top" horizontal="right"/>
-            <ws:horizontalAlign side="left"/>
-            <ws:eventHandlers onResult="{{_closeActionsMenu}}" onClose="{{_closeActionsMenu}}"/>
-        </ws:popupOptions>
-    </Controls.Dropdown.Opener>
-</div>
+<ws:partial
+        template="{{_options.content}}"
+        scope="{{_options}}">
+    <ws:itemActionsTemplate>
+        <ws:partial
+                menuIsShown="{{_options.menuIsShown}}"
+                template="tmpl!Controls/List/ItemActions/resources/ItemActionsTemplate"
+                itemActionsType="{{_options.itemActionsType}}"
+                scope="{{itemActionsTemplate}}"/>
+    </ws:itemActionsTemplate>
+</ws:partial>

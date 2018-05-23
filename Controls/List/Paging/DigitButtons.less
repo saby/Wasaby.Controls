@@ -1,11 +1,25 @@
-.ws-DigitButtons__ellipsis {
-   width: 24px;
+.controls-DigitButtons__ellipsis {
+   width: @width_Paging-ellipsis;
+   color: @color_Paging-ellipsis-text;
+   background-color: @background-color_Paging-ellispis;
+   font-size: @font-size_Paging-button;
 }
-.ws-DigitButtons__digit {
-   border-bottom: 3px solid transparent;
-   min-width: 28px;
+.controls-DigitButtons__digit {
+   border-style: solid;
+   border-width: @border-width_Paging-digit-button;
+   min-width: @width_Paging-digit-button;
+   background-color: @background-color_Paging-button;
    cursor: pointer;
+   box-sizing: border-box;
+   color: @color_Paging-digit-text;
+   font-size: @font-size_Paging-button;
 }
-.ws-DigitButtons__digit__selected {
-   border-bottom: 3px solid #FF7033;
+.ws-is-no-touch .controls-DigitButtons__digit:hover {
+   background-color: @background-color_Paging-button_hover;
+}
+.controls-DigitButtons__digit__unselected {
+   border-color: transparent;
+}
+.controls-DigitButtons__digit__selected {
+   border-color: @border-color_Paging-digit_active;
 }

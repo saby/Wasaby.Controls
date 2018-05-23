@@ -26,7 +26,7 @@ define('Controls/Popup/Manager/Popup',
           */
 
          /**
-          * @name Controls/Popup/Manager/Popup#componentOptions
+          * @name Controls/Popup/Manager/Popup#templateOptions
           * @cfg {Object} Опции компонента
           */
 
@@ -43,6 +43,9 @@ define('Controls/Popup/Manager/Popup',
          _close: function() {
             this._notify('popupClose', [this._options.id], {bubbling: true});
          },
+         _animated: function() {
+            this._notify('popupAnimated', [this._options.id], {bubbling: true});
+         },
 
          /**
           * Обновить popup
@@ -58,26 +61,6 @@ define('Controls/Popup/Manager/Popup',
           */
          _sendResult: function(event, result) {
             this._notify('popupResult', [this._options.id, result], {bubbling: true});
-         },
-
-         /**
-          * Обработчик установки фокуса.
-          * @function Controls/Popup/Manager/Popup#_focusIn
-          * @param event
-          * @param focusedControl
-          */
-         _focusIn: function(event, focusedControl) {
-            this._notify('popupFocusIn', [this._options.id, focusedControl], {bubbling: true});
-         },
-
-         /**
-          * Обработчик потери фокуса.
-          * @function Controls/Popup/Manager/Popup#_focusOut
-          * @param event
-          * @param focusedControl
-          */
-         _focusOut: function(event, focusedControl) {
-            this._notify('popupFocusOut', [this._options.id, focusedControl], {bubbling: true});
          },
 
          /**
@@ -102,7 +85,6 @@ define('Controls/Popup/Manager/Popup',
             }
          }
       });
-
       return Popup;
    }
 );

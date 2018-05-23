@@ -16,7 +16,7 @@ define('Controls/Popup/Opener/Dialog/DialogController',
        * @control
        * @public
        * @category Popup
-       * @extends Controls/Control
+       * @extends Controls/Popup/Opener/BaseController
        */
       var DialogController = BaseController.extend({
          elementCreated: function(cfg, container) {

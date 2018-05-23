@@ -21,7 +21,7 @@ define(
       'i18n!SBIS3.CONTROLS/Calendar',
       'css!SBIS3.CONTROLS/Date/MonthView/MonthView'
    ],
-   function (constants, detection, isEmpty, CompoundControl, RangeMixin, DateRangeMixin, RangeSelectableViewMixin, DateUtil, ifEnabled, monthViewTableBodyTpl, dotTplFn, dayTmpl, merge) {
+   function(constants, detection, isEmpty, CompoundControl, RangeMixin, DateRangeMixin, RangeSelectableViewMixin, DateUtil, ifEnabled, monthViewTableBodyTpl, dotTplFn, dayTmpl, merge) {
 
       'use strict';
 
@@ -42,7 +42,7 @@ define(
        */
       // var selectionTypes = {WEEK: 'week', DAY: 'day'};
 
-       var sortNumber = function (a, b) {
+       var sortNumber = function(a, b) {
           return a - b;
       };
 
@@ -147,11 +147,11 @@ define(
             return opts;
          },
 
-         $constructor: function () {
+         $constructor: function() {
             this._publish('onSelectionChange');
          },
 
-         init: function () {
+         init: function() {
             MonthView.superclass.init.call(this);
 
             if (!this._options.month) {
@@ -162,7 +162,7 @@ define(
             this._attachEvents();
          },
 
-         _attachEvents: function () {
+         _attachEvents: function() {
             var self = this,
                container = this.getContainer(),
                itemCssClass = ['.', this._SELECTABLE_RANGE_CSS_CLASSES.item].join('');
@@ -170,18 +170,18 @@ define(
             container.on('click.monthView', itemCssClass, this._onDayMouseClick.bind(this));
 
             if (!detection.isMobileIOS) {
-               container.on('mouseenter.monthView', itemCssClass, function () {
+               container.on('mouseenter.monthView', itemCssClass, function() {
                   self._onDayMouseEnter($(this));
                });
                container.on('mouseleave.monthView', this._onRangeControlMouseLeave.bind(this));
             }
          },
 
-         _detachEvents: function () {
+         _detachEvents: function() {
             this.getContainer().off('.monthView');
          },
 
-         _onDayMouseClick: ifEnabled(function (event) {
+         _onDayMouseClick: ifEnabled(function(event) {
             var t = $(event.currentTarget),
                date = this._getItemDate(t),
                range = this.updateRange(date, date);
@@ -189,7 +189,7 @@ define(
             this._onRangeItemElementClick(range[0], range[1]);
          }),
 
-         updateRange: function (startDate, endDate) {
+         updateRange: function(startDate, endDate) {
             if (isEmpty(this._options.quantum)) {
                return this._normalizeRange(startDate, endDate);
             }
@@ -266,29 +266,29 @@ define(
             }
          },
 
-         _getDayRange: function (startDate, endDate, quantum) {
+         _getDayRange: function(startDate, endDate, quantum) {
             var date = new Date(startDate);
             if (startDate <= endDate) {
                date.setDate(date.getDate() + quantum - 1);
-               return [startDate, date]
+               return [startDate, date];
             } else {
                date.setDate(date.getDate() - quantum + 1);
-               return [date, startDate]
+               return [date, startDate];
             }
          },
 
-         _getWeekRange: function (startDate, endDate, quantum) {
+         _getWeekRange: function(startDate, endDate, quantum) {
             var date = new Date(startDate);
             if (startDate <= endDate) {
                date.setDate(date.getDate() + quantum - 1);
-               return [startDate, date]
+               return [startDate, date];
             } else {
                date.setDate(date.getDate() - quantum + 1);
-               return [date, startDate]
+               return [date, startDate];
             }
          },
 
-         _getUpdatedRange: function (start, end, newRangeStart, newRangeEnd) {
+         _getUpdatedRange: function(start, end, newRangeStart, newRangeEnd) {
             var range;
 
             if (newRangeStart) {
@@ -305,7 +305,7 @@ define(
             return range;
          },
 
-         _onDayBorderMouseClick: function (element, event) {
+         _onDayBorderMouseClick: function(element, event) {
             var date, startDate, endDate;
             // Если пользователь уже иницировал выделение, то клики обрабатываем в обработчике клика по ячеке(_onDayMouseClick)
             if (this.isSelectionProcessing()) {
@@ -324,12 +324,12 @@ define(
             }
          },
 
-         _onDayMouseEnter: ifEnabled(function (element) {
+         _onDayMouseEnter: ifEnabled(function(element) {
             var date = this._getItemDate(element);
             this._onRangeItemElementMouseEnter(date);
          }),
 
-         _onMouseLeave: ifEnabled(function () {
+         _onMouseLeave: ifEnabled(function() {
             var hoveredCls = ['.', this._MONTH_VIEW_CSS_CLASSES.WEEK_HOVERED].join('');
             this.getContainer().find(hoveredCls).removeClass(this._MONTH_VIEW_CSS_CLASSES.WEEK_HOVERED);
          }),
@@ -339,7 +339,7 @@ define(
           * @param date {Date} дата
           * @param silent
           */
-         setStartValue: function (date, silent) {
+         setStartValue: function(date, silent) {
             var changed = false;
             date = this._normalizeDate(date);
 
@@ -355,7 +355,7 @@ define(
           * @param date {Date} дата
           * @param silent
           */
-         setEndValue: function (date, silent) {
+         setEndValue: function(date, silent) {
             var changed = false;
             date = this._normalizeDate(date);
 
@@ -371,7 +371,7 @@ define(
           * @param month
           * @returns {boolean}
           */
-         setMonth: function (month) {
+         setMonth: function(month) {
             var oldMonth = this._options.month;
             month = DateUtil.normalizeMonth(month);
             if (month === oldMonth ||
@@ -390,30 +390,30 @@ define(
           * Возвращает отображаемый месяц
           * @returns {undefined|*|number|Date|null}
           */
-         getMonth: function () {
+         getMonth: function() {
             return this._options.month;
          },
 
-         getCaptionType: function () {
+         getCaptionType: function() {
             return this._options.captionType;
          },
 
-         getCaptionFormat: function () {
+         getCaptionFormat: function() {
             return this._options.captionFormat;
          },
 
-         isShowWeekdays: function () {
+         isShowWeekdays: function() {
             return this._options.showWeekdays;
          },
 
-         _updateCaption: function () {
+         _updateCaption: function() {
             if (!this._options.captionType) {
                return;
             }
             this.getContainer().find('.' + this._MONTH_VIEW_CSS_CLASSES.CAPTION).text(this._options.month.strftime(this.getCaptionFormat()));
          },
 
-         _getDaysArray: function () {
+         _getDaysArray: function() {
             var
                date = this._options.month,
                today = new Date(),
@@ -494,21 +494,21 @@ define(
             }));
          },
 
-         _getItemDate: function (jqObj) {
+         _getItemDate: function(jqObj) {
             if (!jqObj.hasClass(this._SELECTABLE_RANGE_CSS_CLASSES.item)) {
                jqObj = jqObj.closest(['.', this._SELECTABLE_RANGE_CSS_CLASSES.item].join(''));
             }
             return new Date( this._options.month.getFullYear(), this._options.month.getMonth(), jqObj.attr(this._selectedRangeItemIdAtr), 0, 0, 0, 0 );
          },
 
-         _setSelectionRangeEndItem: function (item) {
+         _setSelectionRangeEndItem: function(item) {
             if (item && this._selectingRangeEnd && item.getTime() === this._selectingRangeEnd.getTime()) {
                return false;
             }
             return MonthView.superclass._setSelectionRangeEndItem.call(this, item);
          },
 
-         _getSelectedRangeItemsIds: function (start, end) {
+         _getSelectedRangeItemsIds: function(start, end) {
             var items = [],
                monthStartDate = new Date(this.getMonth().getFullYear(), this.getMonth().getMonth(), 1),
                monthEndDate = new Date(this.getMonth().getFullYear(), this.getMonth().getMonth() + 1, 0),
@@ -535,7 +535,7 @@ define(
             return {items: items, start: startId, end: endId};
          },
 
-         cancelSelection: function () {
+         cancelSelection: function() {
             var canceled = MonthView.superclass.cancelSelection.call(this);
             // if (canceled) {
             //    this._selectionType = null;
@@ -564,7 +564,7 @@ define(
           * @param today
           * @private
           */
-         _pushDayIntoArray: function (array, date, day, isCalendar, today, month, firstDayOfMonth, lastDayOfMonth) {
+         _pushDayIntoArray: function(array, date, day, isCalendar, today, month, firstDayOfMonth, lastDayOfMonth) {
             var obj = {},
                selectionRangeEndItem = this._getSelectionRangeEndItem(),
                range = this._getUpdatedRange(this.getStartValue(), this.getEndValue(), selectionRangeEndItem),
@@ -610,7 +610,7 @@ define(
             array.push(obj);
          },
 
-         _prepareClass: function (scope) {
+         _prepareClass: function(scope) {
             scope = scope.value;
 
             var textColorClass = 'controls-MonthView__textColor',
@@ -710,7 +710,7 @@ define(
                css.push('controls-MonthView__lastDayOfMonth');
             }
 
-            return css.join(' ')
+            return css.join(' ');
          },
 
          validateRangeSelectionItemsView: function() {
@@ -747,7 +747,7 @@ define(
             }
          },
 
-         _drawCurrentRangeSelection: function () {
+         _drawCurrentRangeSelection: function() {
             var days = this._getDaysArray(),
                domDays = this.getContainer().find('tbody>tr'),
                week, domWeek;
@@ -762,7 +762,7 @@ define(
                }
             }
          },
-         _updateCssClasses: function ($element, classes) {
+         _updateCssClasses: function($element, classes) {
             var keep = this._getItemKeepCssClasses(),
                keepClasses = [];
             for (var i = 0; i < keep.length; i++){
@@ -774,7 +774,7 @@ define(
             $element.removeClass().addClass(keepClasses.join(' '));
          },
 
-         _getItemKeepCssClasses: function () {
+         _getItemKeepCssClasses: function() {
             return [
                   this._MONTH_VIEW_CSS_CLASSES.DAY,
                   this._SELECTABLE_RANGE_CSS_CLASSES.item,
@@ -790,7 +790,7 @@ define(
           * @returns {Date}
           * @private
           */
-         _normalizeDate: function (date) {
+         _normalizeDate: function(date) {
             date = DateUtil.valueToDate(date);
             if(!(date instanceof Date)) {
                return null;

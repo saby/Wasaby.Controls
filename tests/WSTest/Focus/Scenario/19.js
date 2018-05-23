@@ -1,13 +1,13 @@
 /**
  * Created by nv.belotelov on 14.07.2017.
  */
-define('js!WSTest/Focus/Scenario/19', [
+define('WSTest/Focus/Scenario/19', [
    'Core/constants',
-   'js!WSTest/Focus/TestFocusHelpers',
+   'WSTest/Focus/TestFocusHelpers',
    'Lib/Control/Window/Window',
    'css!' + wsConfig.wsRoot + 'css/core.css',
    'css!' + wsConfig.wsRoot + 'css/themes/wi_scheme.css',
-   'js!WSTest/Focus/Case19'
+   'WSTest/Focus/Case19'
 ], function (cConstants,
              fHelpers,
              W) {

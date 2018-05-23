@@ -14,26 +14,37 @@
                                     </ws:content>
                                 </Controls.Container.Input.Search>
                                 <Controls.Container.Filter.Fast>
-                                    <ws:content>
-                                        <Controls.Filter.FastFilter bind:selectedKeys="_value"/>
-                                    </ws:content>
+                                   <Controls.Filter.Fast bind:value="_value"/>
                                 </Controls.Container.Filter.Fast>
                                 <Controls.Container.Filter.Button>
-                                    <ws:content>
-                                        <Controls.Filter.Button filterTemplate="Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/FilterButtonTemplate">
+                                        <Controls.Filter.Button>
+                                           <ws:itemTemplate>
+                                              <ws:partial
+                                                      template="tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate"/>
+                                           </ws:itemTemplate>
+                                           <ws:items>
+                                              <ws:Array>
+                                                 <ws:Object id="FIO" value="Name" resetValue="">
+                                                 </ws:Object>
+                                                 <ws:Object id="firstName" value="123" resetValue="">
+                                                 </ws:Object>
+                                                 <ws:Object id="id" value="{{3}}" resetValue="{{4}}"
+                                                            source="{{sourceDropdown}}">
+                                                 </ws:Object>
+                                                 <ws:Object id="checked" value="{{true}}" resetValue="{{false}}">
+                                                 </ws:Object>
+                                              </ws:Array>
+                                           </ws:items>
                                         </Controls.Filter.Button>
-                                    </ws:content>
                                 </Controls.Container.Filter.Button>
                             </div>
                             <div class="controls-demo__LayoutInner">
                                 <Controls.Container.List searchParam="firstName" source="{{_dataSource}}">
                                     <ws:content>
                                         <div>
-                                            <Controls.List idProperty="id" name="list" >
+                                            <Controls.List keyProperty="id" name="list" >
                                                 <ws:itemTemplate>
-                                                    <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate"
-                                                                itemData="{{itemTemplate.itemData}}"
-                                                    >
+                                                    <ws:partial template="tmpl!Controls/List/ItemTemplate">
                                                         <ws:contentTemplate>
                                                             <div style="padding: 4px; display: flex; justify-content: space-between">
                                                                 <div style="width: 200px">{{itemTemplate.itemData.item.get('firstName')}}</div>

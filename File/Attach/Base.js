@@ -1,15 +1,13 @@
 define("File/Attach/Base", ["require", "exports", "Core/Abstract", "Core/core-simpleExtend", "Core/Deferred", "Core/ParallelDeferred", "File/Attach/Container/Getter", "File/Attach/Container/Source", "Core/moduleStubs"], function (require, exports, Abstract, CoreExtend, Deferred, ParallelDeferred, GetterContainer, SourceContainer, moduleStubs) {
     "use strict";
     var UPLOADER_LINK = "File/Attach/Uploader";
-    var EMPTY_SELECTED_ERROR = rk("Нет выбранных ресурсов для загрузки");
     /**
      * Класс, реализующий выбор и загрузку файлов через разные источники данных
      * <br/>
      * Выбор и загрузка ресурсов:
      * <pre>
      *   var attach = new Base({
-     *      multiSelect: false,
-     *      fileProperty: "Файл"
+     *      multiSelect: false
      *   });
      *
      *   var scanner = new ScannerGetter();
@@ -57,17 +55,14 @@ define("File/Attach/Base", ["require", "exports", "Core/Abstract", "Core/core-si
         _$options: {
             /**
              * @cfg {Boolean} Множественный выбор.
-             * * true - результат выбора ресурсов .choose попаддёт во внутренее состояние для загрузки вместе
-             * с результатом предыдущих выборок
-             * * false - внутренее состояние для загрузки будет содержать только результат последней выборки
+             * <ul>
+             * <li> true - результат выбора ресурсов .choose попаддёт во внутренее состояние для загрузки вместе
+             * с результатом предыдущих выборок </li>
+             * <li> false - внутренее состояние для загрузки будет содержать только результат последней выборки </li>
+             * </ul>
              * @name File/Attach/Base#multiSelect
              */
             multiSelect: true,
-            /**
-             * @cfg {String} Имя параметра, содержащее файл при отправке на сервер
-             * @name File/Attach/Base#fileProperty
-             */
-            fileProperty: "File"
         },
         constructor: function (opt) {
             Base.superclass.constructor.apply(this, arguments);
@@ -75,7 +70,7 @@ define("File/Attach/Base", ["require", "exports", "Core/Abstract", "Core/core-si
             this._getterContainer = new GetterContainer();
             this._sourceContainer = new SourceContainer();
             this._uploadHandlers = {};
-            this._publish('onProgress', 'onWarning', 'onLoadedFolder', 'onChosen', 'onChooseError', 'onLoaded', 'onLoadError', 'onLoadResourceError', 'onLoadedResource');
+            this._publish('onProgress', 'onWarning', 'onLoadedFolder', 'onChosen', 'onChooseError', 'onLoaded', 'onLoadError', 'onLoadResourceError', 'onLoadedResource', 'onBeforeLoad');
         },
         /// region IAttacher
         /**
@@ -203,7 +198,7 @@ define("File/Attach/Base", ["require", "exports", "Core/Abstract", "Core/core-si
         /**
          * Загрузка выбранных ресурсов.
          * При отсутствии ресурсов во внутреннем состоянии, возвращаеммый Deferred будет завершен ошибкой.
-         * @param {*} [meta] Дополнительные мета-данные для отправки. Сигнатура зависит от конечного сервиса загрузки
+         * @param {Object} [meta] Дополнительные мета-данные для отправки. Сигнатура зависит от конечного сервиса загрузки
          * @return {Core/Deferred.<Array.<WS.Data/Entity/Model | Error>>} Набор, содержащий модели с результатами,
          * либо ошибками загрузки
          * @example
@@ -240,17 +235,27 @@ define("File/Attach/Base", ["require", "exports", "Core/Abstract", "Core/core-si
          * @see WS.Data/Entity/Model
          */
         upload: function (meta) {
+            var _this = this;
             /*
              * забираем выбранные файлы себе, очищая набор,
              * чтобы файлы, выбранные после начала upload, не попали в текущую пачку загрузки
              */
             var files = this.getSelectedResource();
             if (!files.length) {
-                return Deferred.fail(EMPTY_SELECTED_ERROR);
+                return new Deferred().cancel();
             }
             this.clearSelectedResource();
-            return this._getUploader().addCallback(function (loader) {
-                return loader.upload(files, meta);
+            var _meta = Object.assign({}, meta);
+            return Deferred.callbackWrapper(this._notify('onBeforeLoad', files, _meta), function (result) {
+                if (result === false) {
+                    return new Deferred().cancel();
+                }
+                _meta = result || meta;
+                return Deferred.success();
+            }).addCallback(function () {
+                return _this._getUploader();
+            }).addCallback(function (loader) {
+                return loader.upload(files, _meta);
             });
         },
         /**
@@ -267,7 +272,7 @@ define("File/Attach/Base", ["require", "exports", "Core/Abstract", "Core/core-si
             }
             return moduleStubs.require([UPLOADER_LINK]).addCallback(function (modules) {
                 var Uploader = modules[0];
-                _this._loader = new Uploader(_this._sourceContainer, _this._$options.fileProperty, function () {
+                _this._loader = new Uploader(_this._sourceContainer, function () {
                     var args = [];
                     for (var _i = 0; _i < arguments.length; _i++) {
                         args[_i] = arguments[_i];
@@ -457,7 +462,7 @@ define("File/Attach/Base", ["require", "exports", "Core/Abstract", "Core/core-si
  * @name File/Attach/Base#onLoadedResource
  * @param {Core/EventObject} eventObject Дескриптор события.
  * @param {File/IResource} resource загружаемый ресурс
- * @param {Model} model Результат загрузки
+ * @param {WS.Data/Entity/Model} model Результат загрузки
  *
  * @see File/LocalFile
  * @see File/LocalFileLink
@@ -489,6 +494,34 @@ define("File/Attach/Base", ["require", "exports", "Core/Abstract", "Core/core-si
  *    attach.subscribe('onChosen', function(event, fileData) {
  *       var blurImage = addFilter(fileData, "blur", 0.5);
  *       event.setResult(blurImage);
+ *    });
+ * </pre>
+ *
+ * @see File/LocalFile
+ * @see File/LocalFileLink
+ * @see File/HttpFileLink
+ */
+/**
+ * @event onBeforeLoad
+ * Событые выбора ресурса
+ * <wiTag group="Управление">
+ * Обработка результата:
+ * <ul>
+ *     <li> false - отмена загрузки. При этом ресурсы, предназначенные для загрузки пропадут из внутреннего состояния
+ *     и не попадут в вледующую загрузку </li>
+ *     <li> object - объект дополнительных данных для запроса meta будет заменён на переданный результат </li>
+ * </ul>
+ *
+ * @name File/Attach/Base#onBeforeLoad
+ * @param {Core/EventObject} eventObject Дескриптор события.
+ * @param {Array.<File/IResource>} resource загружаемый ресурс
+ * @param {Object} meta Дополнительные мета-данные для отправки.
+ * @example
+ * <pre>
+ *    attach.subscribe('onBeforeLoad', function(event, files, meta) {
+ *       if (isEmpty(meta)) {
+ *          event.setResult(self.getUploadParam())
+ *       }
  *    });
  * </pre>
  *

@@ -8,9 +8,10 @@ define('Controls/Explorer', [
    var _private = {};
 
    /**
-    * Компонент иерархического списка, с возможностью распахивания, а так же проваливания в узлы. Обладает возможностью загрузки/подгрузки данных из источника.
+    * Hierarchical list that can expand and go inside the folders. Can load data from data source.
+    *
     * @class Controls/Explorer
-    * @extends Controls/Control
+    * @extends Core/Control
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IGroupedView

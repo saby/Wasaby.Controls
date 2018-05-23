@@ -253,7 +253,7 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
 
                function checkItems(view) {
                   var viewBlock = view.getContainer().parent();
-                  viewBlock.toggleClass('ws-hidden', !view.getItems().getCount());
+                  viewBlock.toggleClass('ws-hidden', !view.getItems() || !view.getItems().getCount());
                }
    
                listsDef.getResult().addCallback(function(res) {

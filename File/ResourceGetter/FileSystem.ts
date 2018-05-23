@@ -1,9 +1,10 @@
 /// <amd-module name="File/ResourceGetter/FileSystem" />
 
-import IResourceGetterBase = require("File/ResourceGetter/Base");
+import ResourceGetterBase = require("File/ResourceGetter/Base");
 import Deferred = require("Core/Deferred");
 import LocalFile = require("File/LocalFile");
 import ExtensionsHelper = require("File/utils/ExtensionsHelper");
+import getFilePreparer = require("File/utils/filePrepareGetter");
 
 const SEC = 1000;
 const MIN = 60 * SEC;
@@ -29,7 +30,8 @@ let setTimeoutAfterFocus = (handler) => {
      * но сделает это синхронно
      *
      * Если же не выносить через setTimeout то можем получить ситуацию, когда окошко выбора файлов открывается,
-     * а фокус в этот момет придёт другому контролу и обработчик сработает, а мы соответственно будем бумать, что окно закрылось
+     * а фокус в этот момет придёт другому контролу и обработчик сработает,
+     * а мы соответственно будем бумать, что окно закрылось
      */
     setTimeout(() => {
         document.addEventListener("focusin", focus);
@@ -42,6 +44,7 @@ type Options = {
     multiSelect: boolean;
     extensions: Array<string>;
     element: HTMLElement;
+    maxSize: number;
 }
 const OPTION: Options = {
     /**
@@ -75,7 +78,12 @@ const OPTION: Options = {
      * По умолчанию: document.body
      * @name File/ResourceGetter/FileSystem#element
      */
-    element: null
+    element: null,
+    /**
+     * @cfg {Number} Максимальный размер файла доступный для выбора (в МБ)
+     * @name File/ResourceGetter/FileSystem#maxSize
+     */
+    maxSize: undefined
 };
 type CreateConfig = {
     mime: string;
@@ -121,7 +129,7 @@ let createInput = ({parent, mime, multiSelect}: CreateConfig) => {
  * @public
  * @author Заляев А.В.
  */
-class FileSystem extends IResourceGetterBase {
+class FileSystem extends ResourceGetterBase {
     protected name = "FileSystem";
     private _extensions: ExtensionsHelper;
     private _mime: string;
@@ -169,12 +177,17 @@ class FileSystem extends IResourceGetterBase {
             multiSelect: this._options.multiSelect,
             parent: this._options.element
         });
-        let def: Deferred<Array<LocalFile | Error>> = new Deferred();
-        // убираем отработанные input'ы
-        def.addBoth((result) => {
-            input.remove && input.remove();
-            return result;
-        });
+        let def: Deferred<Array<LocalFile | Error>> = new Deferred().
+            // Фильтруем и преобразуем выбранные файлы в массив из ошибок или LocalFile
+            addCallback(getFilePreparer({
+                extensions: this._extensions,
+                maxSize: this._options.maxSize
+            })).
+            // убираем отработанные input'ы
+            addBoth((result) => {
+                input.remove && input.remove();
+                return result;
+            });
         // Убиваем из памяти отменённый deferred
         let clearTimeout = setTimeoutAfterFocus(() => {
             if (!def.isReady()) {
@@ -183,11 +196,11 @@ class FileSystem extends IResourceGetterBase {
         });
         // Заускаем deferred по событию
         input.onchange = () => {
-            // timeout для уже не нужен
+            // timeout уже не нужен
             clearTimeout();
 
             let selectedFiles: FileList = input.files;
-            def.callback(this._extensions.verifyAndReplace(selectedFiles));
+            def.callback(selectedFiles);
         };
         input.click();
         return def;
