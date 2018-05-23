@@ -148,9 +148,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                var preset = this._findPresetById(selectedId);
                this._selectPreset(preset);
                this._updateSelectorListOptions('selectedKey', selectedId);
-               var prevPreset = this._findPresetById(changes.removed[0]);
-               this._sendUpdateCommand(prevPreset, preset);
             }.bind(this));
+
             var editor = this._editor;
             if (editor) {
                this.subscribeTo(editor, 'onApply', function (evtName) {
@@ -165,6 +164,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                      /*}*/
                   }.bind(this));
                }.bind(this));
+
                this.subscribeTo(editor, 'onCancel', this._switchEditor.bind(this, false));
             }
          },
@@ -298,7 +298,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * @param {object} listView Списочный контрол
           * @param {bolean} isSuccess Сохранение изменений прошло успешно
           */
-         // TODO: Добавить аргумент для неполного обновления (без items) ???
          _updateListView: function (listView) {
             this._updateSelector();
             var options = this._options;
@@ -347,10 +346,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             customs.push(preset);
             return this._storage.save(options.namespace, customs).addCallback(function (/*isSuccess*/) {
                //if (isSuccess) {
-                  var items = options._items;
-                  var prevPreset = items ? items.getRecordById(options.selectedId) : null;
                   this._selectPreset(preset);
-                  this._sendUpdateCommand(prevPreset, preset);
                //}
                return true/*isSuccess*/;
             }.bind(this));
@@ -376,7 +372,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                return this._storage.save(options.namespace, customs).addCallback(function (/*isSuccess*/) {
                   //if (isSuccess) {
                      this._selectPreset(preset);
-                     //^^^this._sendUpdateCommand(prevPreset, preset);
                   //}
                   return true/*isSuccess*/;
                }.bind(this));
@@ -398,10 +393,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             if (preset) {
                var options = this._options;
                if (options.selectedId !== id) {
-                  var prevPreset =this._findPresetById(options.selectedId) ;
                   this._selectPreset(preset);
-                  // TODO: Включиить _sendUpdateCommand в _selectPreset
-                  this._sendUpdateCommand(prevPreset, preset);
                   this._updateListView(listView);
                }
                this._startEditingMode(listView);
@@ -426,8 +418,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   //if (isSuccess) {
                      if (options.selectedId === id) {
                         var preset = customs.length ? customs[index < customs.length ? index : index - 1] : null;
-                        this._selectPreset(preset);
-                        this._sendUpdateCommand(prevPreset, preset);
+                        this._selectPreset(preset, prevPreset);
                      }
                   //}
                   return true/*isSuccess*/;
@@ -484,11 +475,18 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           *
           * @protected
           * @param {ExportPreset} preset Новый выбранный пресет
+          * @param {ExportPreset} [previous] Предыдущий выбранный пресет (опционально, на случай, когда невозможно его определить, например при удалении)
           */
-         _selectPreset: function (preset) {
-            this._options.selectedId = preset ? preset.id : null;
+         _selectPreset: function (preset, previous) {
+            var options = this._options;
+            if (previous === undefined) {
+               var selectedId = options.selectedId;
+               previous = selectedId ? this._findPresetById(selectedId) : null;
+            }
+            options.selectedId = preset ? preset.id : null;
             this._fieldIds = preset ? preset.fieldIds : null;
             this._fileUuid = preset ? preset.fileUuid : null;
+            this._sendUpdateCommand(previous, preset);
          },
 
          /**
