@@ -96,6 +96,7 @@ define('Controls/Application',
             self.resourceRoot = receivedState.resourceRoot || (context.AppData ? context.AppData.resourceRoot : cfg.resourceRoot);
             self.jsLinks = receivedState.jsLinks || (context.AppData ? context.AppData.jsLinks : cfg.jsLinks);
             self.product = receivedState.product || (context.AppData ? context.AppData.product : cfg.product);
+            self.cssBundles = receivedState.cssBundles || (context.AppData ? context.AppData.cssBundles : cfg.cssBundles);
             self.BodyClasses = BodyClasses;
 
             /**
@@ -105,6 +106,7 @@ define('Controls/Application',
             def.callback({
                jsLinks: self.jsLinks,
                cssLinks: self.cssLinks,
+               cssBundles: self.cssBundles,
                title: self.title,
                wsRoot: self.wsRoot,
                resourceRoot: self.resourceRoot,
