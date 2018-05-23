@@ -100,12 +100,6 @@
 .controls-Grid__row {
    display: contents;
 }
-.controls-Grid__row_last_outside {
-   margin-bottom: @margin-bottom_Grid__actions_outside;
-}
-.controls-Grid__row_last_inside {
-   margin-bottom: @margin-bottom_Grid__actions_inside;
-}
 .controls-Grid__row-cell {
    min-height: @min-height_Grid-row;
    position: relative;
@@ -260,4 +254,12 @@
    left: @padding_Grid-checkbox-icon-left;
    font-size: @font-size_Grid-checkbox-icon;
    color: @color_Grid-checkbox-icon;
+}
+// for correct view actions in last row
+.controls-Grid_outside {
+   margin-bottom: @margin-bottom_Grid__actions_outside;
+}
+
+.controls-Grid_inside {
+   margin-bottom: @margin-bottom_Grid__actions_inside;
 }

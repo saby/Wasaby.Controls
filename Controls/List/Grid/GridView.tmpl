@@ -1,4 +1,4 @@
-<div class="controls-Grid">
+<div class="controls-Grid controls-Grid_{{_options.itemActionsType}}">
    <div class="controls-Grid__wrapper" style="grid-template-columns: {{_prepareGridTemplateColumns(_listModel.getColumns(), _listModel.getMultiselect())}};">
       <ws:if data="{{isNotFullGridSupport}}">
          <ws:partial template="tmpl!Controls/List/Grid/ColGroup" listModel="{{_listModel}}"/>
