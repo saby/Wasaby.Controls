@@ -171,36 +171,6 @@ define('SBIS3.CONTROLS/Mixins/DSMixin', [
               * либо через источник данных методом {@link setDataSource}.
               * Опция {@link SBIS3.CONTROLS/Mixins/TreeMixin#hierField} устанавливает поле,
               * по которому будет построена иерархия.
-              * @example
-              * Задаем набор данных для отображения календаря; использован класс {@link SBIS3.CONTROLS/Tree/DataGridView}:
-              * ![](/DSMixin01.png)
-              * фрагмент верстки:
-              * <pre class="brush:xml">
-              *     <option name="idProperty">id</option>
-              *     <option name="displayProperty">title</option>
-              *     <option name="parentProperty" value="parent"></option>
-              *     <option name="nodeProperty" value="parent@"></option>
-              *     <options name="items" type="array">
-              *        <options>
-              *           <option name="id">I</option>
-              *           <option name="title">квартал 1</option>
-              *           <option name="parent" value="null" type="null"></option>
-              *           <option name="parent@" value="true" type="boolean"></option>
-              *        </options>
-              *        <options>
-              *           <option name="id">01</option>
-              *           <option name="title">январь</option>
-              *           <option name="parent" value="I"></option>
-              *           <option name="parent@" value="null" type="null"></option>
-              *        </options>
-              *        <options>
-              *           <option name="id">02</option>
-              *           <option name="title">февраль</option>
-              *           <option name="parent" value="I"></option>
-              *           <option name="parent@" value="null" type="null"></option>
-              *        </options>
-              *     </options>
-              * </pre>
               * @see setItems
               * @see idProperty
               * @see displayProperty
