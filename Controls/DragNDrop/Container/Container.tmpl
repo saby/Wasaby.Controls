@@ -1,0 +1,11 @@
+<Controls.Event.Listener name="dragResetDetect" register="dragReset" attr:fixCompatible="1">
+   <Controls.Event.Listener name="dragInitDetect" register="dragInit" attr:fixCompatible="1">
+      <ws:partial
+              template="{{_options.content}}"
+              scope="{{_options}}"
+              attr:class="controls-DragNDrop"
+              on:_dragInit="_dragInit()"
+              on:_dragReset="_dragReset()">
+      </ws:partial>
+   </Controls.Event.Listener>
+</Controls.Event.Listener>

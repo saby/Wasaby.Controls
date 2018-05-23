@@ -1,12 +1,12 @@
-define('Controls-demo/Container/DragNDrop/Notes/Notes', [
+define('Controls-demo/DragNDrop/Notes', [
    'Core/Control',
    'Core/core-clone',
    'Core/core-instance',
    'WS.Data/Source/Memory',
-   'tmpl!Controls-demo/Container/DragNDrop/Notes/Notes',
-   'Controls-demo/Container/DragNDrop/Notes/EntityTriangle',
-   'Controls-demo/Container/DragNDrop/Notes/EntityNote',
-   'css!Controls-demo/Container/DragNDrop/Notes/Notes'
+   'tmpl!Controls-demo/DragNDrop/Notes/Notes',
+   'Controls-demo/DragNDrop/Notes/EntityTriangle',
+   'Controls-demo/DragNDrop/Notes/EntityNote',
+   'css!Controls-demo/DragNDrop/Notes/Notes'
 ], function(BaseControl, cClone, cInstance, Memory, template, EntityTriangle, EntityNote) {
    'use strict';
 
@@ -40,28 +40,23 @@ define('Controls-demo/Container/DragNDrop/Notes/Notes', [
       }],
       _startPosition: undefined,
       _startSize: undefined,
+      _draggingItemId: undefined,
 
       reload: function() {
          this._children.notesList.reload();
       },
 
       _onMouseDownTriangle: function(event, itemData) {
-         var entity = new EntityTriangle({
+         this._children.dragNDrop.startDragNDrop(new EntityTriangle({
             item: itemData.item
-         });
-         this._children.dragNDrop.startDragNDrop(entity, event, {
-            useAvatar: false
-         });
+         }), event);
          event.stopPropagation();
       },
 
       _onMouseDownNote: function(event, itemData) {
-         var entity = new EntityNote({
+         this._children.dragNDrop.startDragNDrop(new EntityNote({
             item: itemData.item
-         });
-         this._children.dragNDrop.startDragNDrop(entity, event, {
-            useAvatar: false
-         });
+         }), event);
       },
 
       _beforeMount: function() {
@@ -71,14 +66,11 @@ define('Controls-demo/Container/DragNDrop/Notes/Notes', [
          });
       },
 
-      _afterDragStart: function(event, dragObject) {
-         var
-            item,
-            entity = dragObject.entity;
+      _dragStart: function(event, dragObject) {
+         var entity = dragObject.entity;
 
-         if (cInstance.instanceOfModule(entity, 'Controls-demo/Container/DragNDrop/Notes/EntityNote')) {
-            item = entity.getItem();
-            item.set('dragging', true);
+         if (cInstance.instanceOfModule(entity, 'Controls-demo/DragNDrop/Notes/EntityNote')) {
+            this._draggingItemId = entity.getItem().get('id');
          }
       },
 
@@ -87,14 +79,14 @@ define('Controls-demo/Container/DragNDrop/Notes/Notes', [
             item,
             entity = dragObject.entity;
 
-         if (cInstance.instanceOfModule(entity, 'Controls-demo/Container/DragNDrop/Notes/EntityNote')) {
+         if (cInstance.instanceOfModule(entity, 'Controls-demo/DragNDrop/Notes/EntityNote')) {
             item = entity.getItem();
             if (!this._allowDrop(item.getId(), dragObject.position)) {
                item.set('position', entity.getStartPosition());
             }
-            item.set('dragging', false);
+            this._draggingItemId = null;
             this._viewSource.update(item);
-         } else if (cInstance.instanceOfModule(entity, 'Controls-demo/Container/DragNDrop/Notes/EntityTriangle')) {
+         } else if (cInstance.instanceOfModule(entity, 'Controls-demo/DragNDrop/Notes/EntityTriangle')) {
             this._viewSource.update(entity.getItem());
          }
       },
@@ -123,14 +115,14 @@ define('Controls-demo/Container/DragNDrop/Notes/Notes', [
             maxTop, maxLeft,
             entity = dragObject.entity;
 
-         if (cInstance.instanceOfModule(entity, 'Controls-demo/Container/DragNDrop/Notes/EntityTriangle')) {
+         if (cInstance.instanceOfModule(entity, 'Controls-demo/DragNDrop/Notes/EntityTriangle')) {
             height = entity.getStartSize().height + dragObject.offset.y;
             width = entity.getStartSize().width + dragObject.offset.x;
             entity.getItem().set('size', {
                height: height < 50 ? 50 : (height > 500 ? 500 : height),
                width: width < 150 ? 150 : (width > 500 ? 500 : width)
             });
-         } else if (cInstance.instanceOfModule(entity, 'Controls-demo/Container/DragNDrop/Notes/EntityNote')) {
+         } else if (cInstance.instanceOfModule(entity, 'Controls-demo/DragNDrop/Notes/EntityNote')) {
             size = entity.getItem().get('size');
             top = entity.getStartPosition().top + dragObject.offset.y;
             left = entity.getStartPosition().left + dragObject.offset.x;

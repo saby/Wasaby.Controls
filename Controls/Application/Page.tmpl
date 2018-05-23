@@ -34,7 +34,7 @@
             <Controls.Event.Listener name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
                <Controls.Popup.Manager>
                   <Controls.Application.TouchDetector name="touchDetector">
-                     <Controls.Container.DragNDrop name="dragNDropContainer">
+                     <Controls.DragNDrop.Container name="dragNDropContainer">
                         <body
                            class="{{BodyClasses()}} {{_options.bodyClass}} {{_touchclass()}}"
                            id="body"
@@ -93,7 +93,7 @@
                            </div>
                         </ws:else>
                         </body>
-                     </Controls.Container.DragNDrop>
+                     </Controls.DragNDrop.Container>
                   </Controls.Application.TouchDetector>
                </Controls.Popup.Manager>
             </Controls.Event.Listener>
