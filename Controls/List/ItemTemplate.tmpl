@@ -8,20 +8,10 @@
     </ws:if>
 
     <ws:if data="{{contentTemplate}}">
-        <ws:if data="{{itemData.isEditing}}">
-            <Controls.List.EditInPlace.EditingRow>
-                <ws:partial
-                        attr:class="controls-ListView__itemContent"
-                        template="{{contentTemplate}}"
-                        itemData="{{itemData}}"/>
-            </Controls.List.EditInPlace.EditingRow>
-        </ws:if>
-        <ws:else>
-            <ws:partial
-                    attr:class="controls-ListView__itemContent"
-                    template="{{contentTemplate}}"
-                    itemData="{{itemData}}"/>
-        </ws:else>
+        <ws:partial
+                attr:class="controls-ListView__itemContent"
+                template="{{contentTemplate}}"
+                itemData="{{itemData}}"/>
     </ws:if>
     <ws:else>
         <div attr:class="controls-ListView__itemContent">{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>
