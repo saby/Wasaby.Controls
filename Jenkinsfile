@@ -1,4 +1,4 @@
-`#!groovy
+#!groovy
 echo "Задаем параметры сборки"
 def version = "3.18.350"
 
