@@ -104,6 +104,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
                var fieldIds = []; items.each(function (v) { fieldIds.push(v.getId()); });
                this._options.fieldIds = fieldIds;
                this._redraw();
+               this.sendCommand('subviewChanged');
             }.bind(this));
          },
 
