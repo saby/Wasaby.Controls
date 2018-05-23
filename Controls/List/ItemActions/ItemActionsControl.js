@@ -96,7 +96,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
       updateModel: function(options, newOptions) {
          _private.updateActions(newOptions);
          newOptions.listModel.subscribe('onListChange', function() {
-            _private.updateActions(options);
+            _private.updateActions(newOptions);
          });
       },
 
