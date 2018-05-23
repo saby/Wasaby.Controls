@@ -26,9 +26,9 @@ define('SBIS3.CONTROLS/FloatArea', [
  *    </li>
  * </ol>
  * @author Крайнов Д.О.
- * @class Lib/Control/FloatArea/FloatArea
+ * @class SBIS3.CONTROLS/FloatArea
  * @cssModifier ws-float-area-header-background Класс, задающий цвет пользовательской шапки.
- * @extends Lib/Control/TemplatedArea/TemplatedArea
+ * @extends Lib/Control/CompoundControl/CompoundControl
  * @control
  * @public
  */
