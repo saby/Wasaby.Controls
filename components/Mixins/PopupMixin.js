@@ -1303,6 +1303,11 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             cWindowManager.setHidden(this._zIndex);
             cWindowManager.releaseZIndex(this._zIndex);
             ControlHierarchyManager.removeNode(this);
+            
+            if(ControlHierarchyManager.getTopWindow() === this) {
+               ControlHierarchyManager.setTopWindow(null);
+            }
+            
             this._unsubscribeTargetMove();
             EventBus.globalChannel().unsubscribe('MobileInputFocus', this._touchKeyboardMoveHandler);
             EventBus.globalChannel().unsubscribe('MobileInputFocusOut', this._touchKeyboardMoveHandler);
