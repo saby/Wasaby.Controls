@@ -294,6 +294,11 @@ define(
             if (newRangeStart) {
                return this.updateRange(start, newRangeStart);
             } else {
+               if (!start && end) {
+                  start = -Infinity;
+               } else if (!end && start) {
+                  end = Infinity;
+               }
                range = this._normalizeRange(start, end);
             }
 
@@ -508,7 +513,8 @@ define(
                monthStartDate = new Date(this.getMonth().getFullYear(), this.getMonth().getMonth(), 1),
                monthEndDate = new Date(this.getMonth().getFullYear(), this.getMonth().getMonth() + 1, 0),
                startItem = start, endItem = end,
-               startId = start.getDate(), endId = end.getDate();
+               startId = start === -Infinity ? monthStartDate.getDate() : start.getDate(),
+               endId = end === Infinity ? monthEndDate.getDate() : end.getDate();
 
             if (start > monthEndDate || end < monthStartDate) {
                return {items: items, start: null, end: null};
@@ -595,7 +601,7 @@ define(
             obj.selectedUnfinishedEnd = this.isSelectionProcessing() && DateUtil.isDatesEqual(date, endDate) &&
                isSelectionForvard && !DateUtil.isDatesEqual(startDate, endDate);
 
-            obj.selectedInner = (date && startDate && endDate && date.getTime() > startDate.getTime() && date.getTime() < endDate.getTime());
+            obj.selectedInner = (date && startDate && endDate && date > startDate && date < endDate);
             
             if (this._options.dayFormatter) {
                merge(obj, this._options.dayFormatter(date) || {});
@@ -713,19 +719,12 @@ define(
                range = this._getUpdatedRange(this._displayedStartValue, this._displayedEndValue, this._displayedRangeSelectionEnd),
                newRange = this._getUpdatedRange(this.getStartValue(), this.getEndValue(), this._getSelectionRangeEndItem());
 
-            // Если задана только одна граница периода, то считаем что длинна периода 1 день и,
-            // соответсвенно, другая граница равна противоположной.
-            range[0] = range[0] || range[1];
-            range[1] = range[1] || range[0];
-            newRange[0] = newRange[0] || newRange[1];
-            newRange[1] = newRange[1] || newRange[0];
-
             if ((DateUtil.isRangesOverlaps(currentMonthStart, currentMontEnd, range[0], range[1]) || // обновляем если старый выбранный или новый период пересекаются с отображаемым месяцем
                   DateUtil.isRangesOverlaps(currentMonthStart, currentMontEnd, newRange[0], newRange[1])) &&
                   // не обновляем если отображаемый месяц полностью входит в старый и новый периоды
                   !(range[0] < currentMonthStart && newRange[0] < currentMonthStart && range[1] > currentMontEnd && newRange[1] > currentMontEnd)
                ) {
-                MonthView.superclass.validateRangeSelectionItemsView.apply(this, arguments);
+               MonthView.superclass.validateRangeSelectionItemsView.apply(this, arguments);
             }
          },
 
