@@ -127,6 +127,7 @@ define('Controls/DragNDrop/Controller',
                entity: this._dragEntity
             };
             if (mouseEvent && startEvent) {
+               result.domEvent = mouseEvent;
                result.position = _private.getDragPosition(mouseEvent);
                result.offset = _private.getDragOffset(mouseEvent, startEvent);
             }
@@ -135,14 +136,18 @@ define('Controls/DragNDrop/Controller',
 
          _afterMount: function() {
             this._notify('register', ['mousemove', this, this._onMouseMove], {bubbling: true});
+            this._notify('register', ['touchmove', this, this._onMouseMove], {bubbling: true});
             this._notify('register', ['mouseup', this, this._onMouseUp], {bubbling: true});
+            this._notify('register', ['touchend', this, this._onMouseUp], {bubbling: true});
             this._notify('register', ['dragInit', this, this._onDragInit], {bubbling: true});
             this._notify('register', ['dragReset', this, this._onDragReset], {bubbling: true});
          },
 
          _beforeUnmount: function() {
             this._notify('unregister', ['mousemove', this], {bubbling: true});
+            this._notify('unregister', ['touchmove', this], {bubbling: true});
             this._notify('unregister', ['mouseup', this], {bubbling: true});
+            this._notify('unregister', ['touchend', this], {bubbling: true});
             this._notify('unregister', ['dragInit', this], {bubbling: true});
             this._notify('unregister', ['dragReset', this], {bubbling: true});
          }

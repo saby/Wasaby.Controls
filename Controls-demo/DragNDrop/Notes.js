@@ -115,6 +115,7 @@ define('Controls-demo/DragNDrop/Notes', [
             maxTop, maxLeft,
             entity = dragObject.entity;
 
+         dragObject.domEvent.preventDefault();
          if (cInstance.instanceOfModule(entity, 'Controls-demo/DragNDrop/Notes/EntityTriangle')) {
             height = entity.getStartSize().height + dragObject.offset.y;
             width = entity.getStartSize().width + dragObject.offset.x;
