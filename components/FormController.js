@@ -483,9 +483,12 @@ function(cContext, coreClone, cMerge, CommandDispatcher, EventBus, Deferred, IoC
        */
       _closePanel: function(result) {
          //Если задача открыта в новом окне, то FormController лежит не во floatArea => нет панели, которую нужно закрывать
-         if (this._panel.close) {
-            this._panel.close(result);
+         if (!this.isDestroyed()) {
+            if (this._panel.close) {
+               this._panel.close(result);
+            }
          }
+         
       },
 
       /**
