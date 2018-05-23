@@ -253,7 +253,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
          _onAdd: function (evtName) {
             var listView = evtName.getTarget().getParent();
             this._addPreset().addCallback(function (isSuccess) {
-               this._afterItemAction(listView, isSuccess);
+               if (isSuccess) {
+                  this._updateListView(listView);
+               }
                this._startEditingMode(listView);
             }.bind(this));
          },
@@ -278,10 +280,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             if (promise) {
                var callbacks = {
                   'clone': function (isSuccess) {
-                     this._afterItemAction(listView, isSuccess);
+                     if (isSuccess) {
+                        this._updateListView(listView);
+                     }
                      this._startEditingMode(listView);
                   }.bind(this),
-                  'delete': this._afterItemAction.bind(this, listView)
+                  'delete': _ifSuccess(this._updateListView.bind(this, listView))
                };
                promise.addCallback(callbacks[action]);
             }
@@ -294,16 +298,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * @param {object} listView Списочный контрол
           * @param {bolean} isSuccess Сохранение изменений прошло успешно
           */
-         // TODO: Переименовать в _updateListView
-         // TODO: Сделать функцию ifSuccess = function (f) { return function (isSuccess) { if (isSuccess) { f.call(); } }; }
          // TODO: Добавить аргумент для неполного обновления (без items) ???
-         _afterItemAction: function (listView, isSuccess) {
-            if (isSuccess) {
-               this._updateSelector();
-               var options = this._options;
-               listView.setItems(options._items);
-               listView.setSelectedKey(options.selectedId);
-            }
+         _updateListView: function (listView) {
+            this._updateSelector();
+            var options = this._options;
+            listView.setItems(options._items);
+            listView.setSelectedKey(options.selectedId);
          },
 
          /**
@@ -402,7 +402,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   this._selectPreset(preset);
                   // TODO: Включиить _sendUpdateCommand в _selectPreset
                   this._sendUpdateCommand(prevPreset, preset);
-                  this._afterItemAction(listView, true);
+                  this._updateListView(listView);
                }
                this._startEditingMode(listView);
             }
@@ -626,6 +626,17 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
 
 
       // Private methods:
+
+      /**
+       * Обернуть указанную функцию новой, которая будет вызывать исходную только при значении аргумента эквивалентном true
+       *
+       * @private
+       * @param {function} func Оборачиваемая функция
+       * @return {function}
+       */
+      var _ifSuccess = function (func) {
+         return function (isSuccess) { if (isSuccess) { func.call(); } };
+      };
 
       /**
        * Найти индекс элемента массива по его идентификатору
