@@ -79,7 +79,8 @@ define('SBIS3.CONTROLS/Utils/DropdownUtil', [
                additionalProperty: self._options.additionalProperty,
                subContainers: self._subContainers,
                parentProperty: self._options.parentProperty,
-               maxCountRecent: 10
+               maxCountRecent: 10,
+               maxHistoryLength: 10
             });
          }
          return self._historyController;
