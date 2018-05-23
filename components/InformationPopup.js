@@ -62,7 +62,7 @@ define('SBIS3.CONTROLS/InformationPopup',
 
          _modifyOptions: function(options) {
             InformationPopup.superclass._modifyOptions.call(this, options);
-
+//Тест rc
             options.crossStyle = 'light';
 
             return options;
