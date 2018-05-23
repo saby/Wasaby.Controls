@@ -226,7 +226,7 @@ define(
             });
             it('hidden stack positioning', function() {
                var position = Stack.getPosition(2, {top: 0, right: 0}, 1000, 1600, 1900, 0);
-               assert.isTrue(position === null);
+               assert.isTrue(position.hidden === true);
             });
          });
 

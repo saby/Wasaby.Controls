@@ -17,21 +17,23 @@ define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
        * @param prevRight отступ справа предыдущей панели
        */
       getPosition: function(index, tCoords, width, maxWidth, prevWidth, prevRight) {
-         var top = tCoords.top,
-            right = tCoords.right;
+         var right = tCoords.right,
+            isHidden;
          if (index !== 0) {
             if (prevWidth) {
-               var rightCalc = PANEL_MIN_INDENT - (width - prevWidth - prevRight);
+               var rightCalc = PANEL_MIN_INDENT - ((width + right) - (prevWidth + prevRight));
                if (rightCalc > 0) {
-                  right = Math.max(PANEL_MIN_INDENT, rightCalc);
+                  right += rightCalc;
                }
+               isHidden = width + right > document.body.clientWidth;
             }
          }
          return {
             width: width + PANEL_SHADOW_WIDTH,
             right: right,
-            top: top,
-            bottom: 0
+            top: tCoords.top,
+            bottom: 0,
+            hidden: isHidden
          };
       }
    };
