@@ -106,7 +106,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             // Контрол выбора пресета
             _selector: null,
             // Контрол редактирования пресета
-            _editor: null
+            _editor: null,
+            // Компонент находится в моде редактирования
+            _isEditMode: null
          },
 
          _modifyOptions: function () {
@@ -466,7 +468,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * @param {boolean} isVisible Редактор будет показывться
           */
          _switchEditor: function (isVisible) {
-            var isEditing = !!isVisible;
+            var isEditing = this._isEditMode = !!isVisible;
             this._selector.setVisible(!isEditing);
             this._editor.setVisible(isEditing);
          },
@@ -595,7 +597,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * return {Core/Deferred}
           */
          save: function () {
-            return this._storage ? this._saveSelectedPreset() : Deferred.success(null);
+            return this._storage /*&& this._isEditMode*/ ? this._saveSelectedPreset() : Deferred.success(null);
          },
 
          /**
