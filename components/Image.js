@@ -19,7 +19,7 @@ define('SBIS3.CONTROLS/Image',
       'SBIS3.CONTROLS/ControlHierarchyManager',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
       'Core/helpers/Function/debounce',
-      'SBIS3.CONTROLS/ImageAttacher',
+      'WS.Data/Di',
       'SBIS3.CONTROLS/Link',
       'SBIS3.CONTROLS/Menu/MenuLink',
       'i18n!SBIS3.CONTROLS/Image',
@@ -39,7 +39,8 @@ define('SBIS3.CONTROLS/Image',
       SourceUtil,
       ControlHierarchyManager,
       InformationPopupManager,
-      debounce
+      debounce,
+      Di
    ) {
       'use strict';
 
@@ -901,16 +902,13 @@ define('SBIS3.CONTROLS/Image',
                   return this._attach;
                }
                var dataSource = this.getDataSource();
-               var cont = document.createElement('div');
-               this.getContainer().append(cont);
-
-               this._attach = Di.create('SBIS3.CONTROLS/ImageAttacher', {
-                  element: cont,
+               this._attach = Di.create('ImageAttachGetter', {
                   opener: this,
                   //todo Удалить, временная опция для поддержки смены логотипа компании
                   contract: this._options.linkedObject || dataSource.getEndpoint().contract,
                   binding: dataSource.getBinding()
                });
+               return this._attach;
             },
 
             /**
