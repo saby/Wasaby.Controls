@@ -92,7 +92,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                 */
                namespace: null,
                /**
-                * @cfg {string|number} Идентификатор выбранного пресета
+                * @cfg {string|number} Идентификатор выбранного пресета. Если будет указан пустое значение (null или пустая строка), то это будет воспринято как указание создать новый пустой пресет и выбрать его. Если значение не будет указано вовсе (или будет указано значение undefined), то это будет воспринято как указание выбрать пресет, который был выбран в прошлый раз (опционально)
                 */
                selectedId: null
             },
@@ -434,6 +434,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             this._options.selectedId = preset ? preset.id : null;
             this._fieldIds = preset ? preset.fieldIds : null;
             this._fileUuid = preset ? preset.fileUuid : null;
+            this._storeSelectedId();
          },
 
          /**
@@ -447,6 +448,33 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             if (!previous || !current || !cObjectIsEqual(previous.fieldIds, current.fieldIds) || previous.fileUuid !== current.fileUuid) {
                this.sendCommand('subviewChanged');
             }
+         },
+
+         /**
+          * Сохранить идентификатор выбранного пресета для дальнейшего использования
+          *
+          * @protected
+          */
+         _storeSelectedId: function () {
+            var options = this._options;
+            var selectedId = options.selectedId;
+            var key = options.namespace + 'preset';
+            if (selectedId) {
+               localStorage.setItem(key, selectedId);
+            }
+            else {
+               localStorage.removeItem(key);
+            }
+         },
+
+         /**
+          * Получитиь сохранённый идентификатор выбранного пресета
+          *
+          * @protected
+          * @return {string}
+          */
+         _getStoredSelectedId: function () {
+            return localStorage.getItem(this._options.namespace + 'preset');
          },
 
          /**
@@ -585,7 +613,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
          if (list && list.length) {
             for (var i = 0; i < list.length; i++) {
                var o = list[i];
-               if (o.id === id) {
+               if (o.id ==/*Не ===*/ id) {
                   return i;
                }
             }
