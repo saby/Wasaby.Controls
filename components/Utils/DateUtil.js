@@ -131,7 +131,7 @@ define('SBIS3.CONTROLS/Utils/DateUtil',[], function() {
        * @returns {boolean} если даты одинаковые, то возвращает true, иначе false
        */
       isDatesEqual: function (date1, date2) {
-         return date1 === date2 || (date1 && date2 && date1.getTime() === date2.getTime());
+         return date1 === date2 || (date1 instanceof Date && date2 instanceof Date && date1.getTime() === date2.getTime());
       },
       /**
        * Проверяет однаковые ли года в датах
@@ -342,7 +342,13 @@ define('SBIS3.CONTROLS/Utils/DateUtil',[], function() {
          if (!startDate1 || !endDate1 || !startDate2 || !endDate2) {
             return false;
          }
-         return Math.max(startDate1.getTime(), startDate2.getTime()) <= Math.min(endDate1.getTime(), endDate2.getTime())
+
+         startDate1 = startDate1 instanceof Date ? startDate1.getTime() : startDate1;
+         endDate1 = endDate1 instanceof Date ? endDate1.getTime() : endDate1;
+         startDate2 = startDate2 instanceof Date ? startDate2.getTime() : startDate2;
+         endDate2 = endDate2 instanceof Date ? endDate2.getTime() : endDate2;
+
+         return Math.max(startDate1, startDate2) <= Math.min(endDate1, endDate2);
       }
    };
 
