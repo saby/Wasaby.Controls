@@ -153,11 +153,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             var editor = this._editor;
             if (editor) {
                this.subscribeTo(editor, 'onApply', function (evtName) {
-                  var options = this._options;
-                  var preset = this._findPresetById(options.selectedId);
+                  var preset = this._findPresetById(this._options.selectedId);
                   preset.title = editor.getText();
-                  // TODO: Обособить метод сохранения с пересбором customs
-                  this.save()/*this._storage.save(options.namespace, this._customs)*/.addCallback(function (/*isSuccess*/) {
+                  this._saveSelectedPreset().addCallback(function (/*isSuccess*/) {
                      /*if (isSuccess) {*/
                         this._switchEditor(false);
                         this._updateSelector();
@@ -344,7 +342,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                isStorable: true
             };
             customs.push(preset);
-            return this._storage.save(options.namespace, customs).addCallback(function (/*isSuccess*/) {
+            return this._saveCustoms().addCallback(function (/*isSuccess*/) {
                //if (isSuccess) {
                   this._selectPreset(preset);
                //}
@@ -360,16 +358,19 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * @return {Core/Deferred}
           */
          _clonePreset: function (id) {
-            var options = this._options;
             var presetInfo = this._findPresetById(id, true);
             if (presetInfo) {
                var customs = this._customs;
-               var preset = cMerge({}, presetInfo.preset);
-               preset.isStorable = true;
-               preset.id = _makeId();
-               preset.title = ItemNamer.make(preset.title, [{list:options.statics, property:'title'}, {list:customs, property:'title'}]);
+               var pattern = presetInfo.preset;
+               var preset = {
+                  id: _makeId(),
+                  title: ItemNamer.make(pattern.title, [{list:this._options.statics, property:'title'}, {list:customs, property:'title'}]),
+                  fieldIds: pattern.fieldIds.slice(),
+                  fileUuid: null,
+                  isStorable: true
+               };
                customs.splice(!presetInfo.isStorable ? 0 : presetInfo.index + 1, 0, preset);
-               return this._storage.save(options.namespace, customs).addCallback(function (/*isSuccess*/) {
+               return this._saveCustoms().addCallback(function (/*isSuccess*/) {
                   //if (isSuccess) {
                      this._selectPreset(preset);
                   //}
@@ -413,10 +414,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             if (index !== -1) {
                var prevPreset = customs[index];
                customs.splice(index, 1);
-               var options = this._options;
-               return this._storage.save(options.namespace, customs).addCallback(function (/*isSuccess*/) {
+               return this._saveCustoms().addCallback(function (/*isSuccess*/) {
                   //if (isSuccess) {
-                     if (options.selectedId === id) {
+                     if (this._options.selectedId === id) {
                         var preset = customs.length ? customs[index < customs.length ? index : index - 1] : null;
                         this._selectPreset(preset, prevPreset);
                      }
@@ -466,8 +466,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * @param {boolean} isVisible Редактор будет показывться
           */
          _switchEditor: function (isVisible) {
-            this._selector.setVisible(!isVisible);
-            this._editor.setVisible(!!isVisible);
+            var isEditing = !!isVisible;
+            this._selector.setVisible(!isEditing);
+            this._editor.setVisible(isEditing);
          },
 
          /**
@@ -551,37 +552,50 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
          },
 
          /**
+          * Сохранить пользовательские пресеты
+          *
+          * @protected
+          * @return {Core/Deferred}
+          */
+         _saveCustoms: function () {
+            return this._storage.save(this._options.namespace, this._customs);
+         },
+
+         /**
           * Сохранить текущий пресет, если это возможно и необходимо
+          *
+          * @protected
+          * @return {Core/Deferred}
+          */
+         _saveSelectedPreset: function () {
+            var preset = this._findPresetById(this._options.selectedId);
+            if (preset && preset.isStorable) {
+               var fieldIds = this._fieldIds || [];
+               var fileUuid = this._fileUuid || null;
+               var need;
+               if (!cObjectIsEqual(preset.fieldIds, fieldIds)) {
+                  preset.fieldIds = fieldIds.slice();
+                  need = true;
+               }
+               if (preset.fileUuid !== fileUuid) {
+                  preset._fileUuid = fileUuid;
+                  need = true;
+               }
+               if (need) {
+                  return this._saveCustoms();
+               }
+            }
+            return Deferred.success(null);
+         },
+
+         /**
+          * Сохранить данные компонента (перед закрытием)
           *
           * @public
           * return {Core/Deferred}
           */
          save: function () {
-            if (this._storage) {
-               var fieldIds = this._fieldIds;
-               var fileUuid = this._fileUuid;
-               if (fieldIds && fieldIds.length && fileUuid) {
-                  var options = this._options;
-                  var customs = this._customs;
-                  var selectedId = options.selectedId;
-                  var preset; customs.some(function (v) { if (v.id === selectedId) { preset = v; return true; } });
-                  if (preset) {
-                     var need;
-                     if (!cObjectIsEqual(preset.fieldIds, fieldIds)) {
-                        preset.fieldIds = fieldIds;
-                        need = true;
-                     }
-                     if (preset.fileUuid !== fileUuid) {
-                        preset._fileUuid = fileUuid;
-                        need = true;
-                     }
-                     if (need) {
-                        return this._storage.save(options.namespace, customs);
-                     }
-                  }
-               }
-            }
-            return Deferred.success(null);
+            return this._storage ? this._saveSelectedPreset() : Deferred.success(null);
          },
 
          /**
