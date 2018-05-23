@@ -2,7 +2,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
    [
       'Core/Control',
       'tmpl!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
-      'Controls/Popup/Compatible/Layer',
       'Lib/Mixins/LikeWindowMixin',
       'Core/helpers/Array/findIndex',
       'Core/moduleStubs',
@@ -19,7 +18,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
    ],
    function(Control,
       template,
-      CompatiblePopup,
       LikeWindowMixin,
       arrayFindIndex,
       moduleStubs,
@@ -122,14 +120,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._options.parent = null;
 
             moduleStubs.require([self._options.template]).addCallback(function(result) {
-               CompatiblePopup.load().addCallback(function() { //Это уже должно быть загружено страницей
-                  self.templateOptions.element = $(self._children.compoundBlock);
-                  self.templateOptions._compoundArea = self;
-                  self.templateOptions.parent = self;
-                  self._compoundControl = new (result[0])(self.templateOptions);
-                  self._subscribeToCommand();
-                  self.handle('onAfterShow'); // todo здесь надо звать хэндлер который пытается подписаться на onAfterShow, попробуй подключить FormController и словить подпись
-               });
+               self.templateOptions.element = $(self._children.compoundBlock);
+               self.templateOptions._compoundArea = self;
+               self.templateOptions.parent = self;
+               self._compoundControl = new (result[0])(self.templateOptions);
+               self._subscribeToCommand();
+               self.handle('onAfterShow'); // todo здесь надо звать хэндлер который пытается подписаться на onAfterShow, попробуй подключить FormController и словить подпись
             });
          },
          _subscribeToCommand: function() {

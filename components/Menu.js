@@ -194,6 +194,7 @@ define('SBIS3.CONTROLS/Menu', [
                visible: visible === undefined ? true : visible,
                icon: item.get('icon'),
                tooltip: item.get('tooltip'),
+               multiline: item.get('multiline'),
                allowChangeEnable: item.get('allowChangeEnable') !== undefined ? item.get('allowChangeEnable') : this._options.allowChangeEnable
             };
 

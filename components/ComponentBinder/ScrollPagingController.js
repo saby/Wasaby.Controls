@@ -65,11 +65,12 @@ define('SBIS3.CONTROLS/ComponentBinder/ScrollPagingController',
             if (!this._moreThan2 && pagesCount <= 2 && !(view._hasNextPage(view.getItems().getMetaData().more, view._scrollOffset.bottom, 'after'))) {
                pagingVisibility = false;
             }
+            else {
+               //Если пэйджинг был показан то потом не надо будет проверять условие на количество страниц
+               this._moreThan2 = true;
+            }
          }
-         else {
-            //Если пэйджинг был показан то потом не надо будет проверять условие на количество страниц
-            this._moreThan2 = true;
-         }
+
 
          /* Если пэйджинг скрыт - паддинг не нужен */
          view.getContainer().toggleClass('controls-ScrollPaging__pagesPadding', pagingVisibility);
