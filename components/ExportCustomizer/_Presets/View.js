@@ -158,7 +158,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   var preset = this._findPresetById(options.selectedId);
                   preset.title = editor.getText();
                   // TODO: Обособить метод сохранения с пересбором customs
-                  this._storage.save(options.namespace, this._customs).addCallback(function (/*isSuccess*/) {
+                  this.save()/*this._storage.save(options.namespace, this._customs)*/.addCallback(function (/*isSuccess*/) {
                      /*if (isSuccess) {*/
                         this._switchEditor(false);
                         this._updateSelector();
