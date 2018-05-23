@@ -156,7 +156,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
             var defaults = this._options;
             Area.getOwnOptionNames().forEach(function (name) {
                var value = options[name];
-               componentOptions[name] = value !=/*Не !==*/ null ? value : defaults[name];
+               componentOptions[name] = value !== undefined ? value : defaults[name];
             });
             this._areaContainer = new FloatArea({
                opener: this,
