@@ -948,7 +948,6 @@ function(cContext, coreClone, cMerge, CommandDispatcher, EventBus, Deferred, IoC
          window.removeEventListener('beforeunload', this._onBeforeUnloadHandler);
          this._resetUrl();
          this._options.record = null;
-         this._panel._record = null;
          this._panel = null;
          this._unsubscribeFromRecordChange();
          FormController.superclass.destroy.apply(this, arguments);

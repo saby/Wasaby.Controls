@@ -249,6 +249,9 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             onAfterShow: function () {
                self._isExecuting = false;
                self._notify('onAfterShow', this);
+            },
+            onDestroy: function() {
+               this._record = null;
             }
          };
          for (var name in handlers) {
