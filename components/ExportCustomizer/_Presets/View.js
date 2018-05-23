@@ -118,7 +118,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
 
          $constructor: function () {
             this.getLinkedContext().setValue('editedTitle', '');
-         },/*^^^*/
+         },
 
          init: function () {
             View.superclass.init.apply(this, arguments);
@@ -129,13 +129,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             if (this._storage) {
                this._editor = this.getChildControlByName('controls-ExportCustomizer-Presets-View__editor');
                this._updateSelectorListOptions('handlers', {
-                  onChangeHoveredItem: this._onHoverItem.bind(this)/*^^^,
-                  onEndEdit: function (evtName, model, withSaving) {
-                     if (withSaving) {
-                        // TODO: Обособить метод сохранения с пересбором customs
-                        this._storage.save(this._options.namespace, this._customs);
-                     }
-                  }.bind(this)*/
+                  onChangeHoveredItem: this._onHoverItem.bind(this)
                });
                this._updateSelectorListOptions('footerTpl', 'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/footer');
                this._updateSelectorListOptions('_footerHandler', this._onAdd.bind(this));
@@ -160,10 +154,16 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             var editor = this._editor;
             if (editor) {
                this.subscribeTo(editor, 'onApply', function (evtName) {
-                  var text = editor.getText();
                   var options = this._options;
                   var preset = this._findPresetById(options.selectedId);
-                  this._switchEditor(false);
+                  preset.title = editor.getText();
+                  // TODO: Обособить метод сохранения с пересбором customs
+                  this._storage.save(options.namespace, this._customs).addCallback(function (/*isSuccess*/) {
+                     /*if (isSuccess) {*/
+                        this._switchEditor(false);
+                        this._updateSelector();
+                     /*}*/
+                  }.bind(this));
                }.bind(this));
                this.subscribeTo(editor, 'onCancel', this._switchEditor.bind(this, false));
             }
@@ -345,7 +345,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   var items = options._items;
                   var prevPreset = items ? items.getRecordById(options.selectedId) : null;
                   this._selectPreset(preset);
-                  //^^^this._sendUpdateCommand(prevPreset, preset);
+                  this._sendUpdateCommand(prevPreset, preset);
                //}
                return true/*isSuccess*/;
             }.bind(this));
