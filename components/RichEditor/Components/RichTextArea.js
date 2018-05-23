@@ -2040,6 +2040,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                //Замена переносов строк на <br>
                html = html.replace(/([^>])\n(?!<)/gi, '$1<br />');
+               if (cConstants.browser.isIE) {
+                  // В ie при копировании текста между задачами появлялись большие отступы, если в выделение
+                  // попадал текст кнопок интерфейса ("Прикрепить", "Создать", "Подзадача" и т.п.). Также в выделение
+                  // попадали иконки этих кнопок, потому их необходимо убрать вручную.
+                  // https://online.sbis.ru/opendoc.html?guid=f76a1158-4c07-4cc7-ae6b-b980ecb491fb
+                  html = html.replace(/(<p><br><\/p>)|(<p><\/p>)*/gm,"");
+                  html = html.replace(/(<p><br>)/gm,"<p>");
+                  html = html.replace(String.fromCharCode(58993),"");
+                  html = html.replace(String.fromCharCode(58884),"");
+                  html = html.replace(String.fromCharCode(58990),"");
+               }
                // Замена отступов после переноса строки и в первой строке
                // пробелы заменяются с чередованием '&nbsp;' + ' '
                html = this._replaceWhitespaces(html);
