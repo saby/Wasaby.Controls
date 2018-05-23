@@ -1,4 +1,4 @@
-define(['Controls/List/Grid/GridViewModel', 'Controls/List/resources/utils/ItemsUtil', 'WS.Data/Collection/RecordSet'], function(GridViewModel, ItemsUtil, RecordSet) {
+define(['Controls/List/Grid/GridViewModel', 'WS.Data/Collection/RecordSet'], function(GridViewModel) {
    var
       gridData = [
          {
@@ -117,7 +117,6 @@ define(['Controls/List/Grid/GridViewModel', 'Controls/List/resources/utils/Items
 
          it('columns', function() {
             function checkBaseProperties(checkedColumn, expectedData) {
-               debugger;
                assert.equal(expectedData.columnIndex, checkedColumn.columnIndex, 'Incorrect value "columnIndex" when checking columns.');
                assert.deepEqual(expectedData.column, checkedColumn.column, 'Incorrect value "column" when checking columns.');
                assert.deepEqual(expectedData.item, checkedColumn.item, 'Incorrect value "item" when checking columns.');

@@ -92,5 +92,7 @@ define('Controls/List/Grid/GridView', [
          }
       });
 
+   GridView._private = _private;
+
    return GridView;
 });
