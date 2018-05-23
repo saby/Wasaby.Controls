@@ -25,16 +25,30 @@ define('Controls/Container/Scroll',
        * @control
        * @public
        * @category Container
-       *
+       */
+
+      /**
+       * @event scroll Scrolling content.
+       * @param {SyntheticEvent} eventObject.
+       * @param {Number} scrollTop Top position of content relative to container.
+       */
+
+      /**
        * @name Controls/Container/Scroll#content
        * @cfg {Content} Container contents.
-       *
+       */
+
+      /**
        * @name Controls/Container/Scroll#shadowVisible
        * @cfg {Boolean} Whether shadow should be shown (when content doesn't fit).
-       *
+       */
+
+      /**
        * @name Controls/Container/Scroll#scrollbarVisible
        * @cfg {Boolean} Whether scrollbar should be shown.
-       *
+       */
+
+      /**
        * @name Controls/Container/Scroll#style
        * @cfg {String} Color scheme (colors of the shadow and scrollbar).
        * @variant normal Default theme (for bright backgrounds).
