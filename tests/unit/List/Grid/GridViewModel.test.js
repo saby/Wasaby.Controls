@@ -85,55 +85,55 @@ define(['Controls/List/Grid/GridViewModel', 'Controls/List/resources/utils/Items
             current = gridViewModel.getCurrent();
 
          it('configuration', function() {
-            assert.equal(cfg.keyProperty, current.keyProperty, 'Incorrect property value on getCurrent()');
-            assert.equal(cfg.displayProperty, current.displayProperty, 'Incorrect property value on getCurrent()');
-            assert.isTrue(current.multiselect, 'Incorrect property value on getCurrent()');
-            assert.deepEqual([{}].concat(gridColumns), current.columns, 'Incorrect property value on getCurrent()');
+            assert.equal(cfg.keyProperty, current.keyProperty, 'Incorrect value "current.keyProperty".');
+            assert.equal(cfg.displayProperty, current.displayProperty, 'Incorrect value "current.displayProperty".');
+            assert.isTrue(current.multiselect, 'Incorrect value "current.multiselect".');
+            assert.deepEqual([{}].concat(gridColumns), current.columns, 'Incorrect value "current.columns".');
             // TODO: Turn on after support itemActions in the grid
-            // assert.equal(itemActions, current.itemActions, 'Incorrect property value on getCurrent()');
-            assert.isFalse(current.ladderSupport, 'Incorrect property value on getCurrent()');
-            assert.equal('XL', current.leftPadding, 'Incorrect property value on getCurrent()');
-            assert.equal('L', current.rightPadding, 'Incorrect property value on getCurrent()');
-            assert.equal('L', current.rowSpacing, 'Incorrect property value on getCurrent()');
-            assert.isTrue(current.showRowSeparator, 'Incorrect property value on getCurrent()');
+            // assert.equal(itemActions, current.itemActions, 'Incorrect value "current.".');
+            assert.isFalse(current.ladderSupport, 'Incorrect value "current.ladderSupport".');
+            assert.equal('XL', current.leftPadding, 'Incorrect value "current.leftPadding".');
+            assert.equal('L', current.rightPadding, 'Incorrect value "current.rightPadding".');
+            assert.equal('L', current.rowSpacing, 'Incorrect value "current.rowSpacing".');
+            assert.isTrue(current.showRowSeparator, 'Incorrect value "current.showRowSeparator".');
          });
 
          it('item', function() {
-            assert.equal(gridData[0][cfg.keyProperty], current.key, 'Incorrect property value on getCurrent()');
-            assert.equal(0, current.index, 'Incorrect property value on getCurrent()');
-            assert.deepEqual(gridData[0], current.item, 'Incorrect property value on getCurrent()');
-            assert.deepEqual(gridData[0], current.dispItem.getContents(), 'Incorrect property value on getCurrent()');
-            assert.equal(gridData[0][cfg.displayProperty], current.getPropValue(current.item, cfg.displayProperty), 'Incorrect property value on getCurrent()');
+            assert.equal(gridData[0][cfg.keyProperty], current.key, 'Incorrect value "current.keyProperty".');
+            assert.equal(0, current.index, 'Incorrect value "current.index".');
+            assert.deepEqual(gridData[0], current.item, 'Incorrect value "current.item".');
+            assert.deepEqual(gridData[0], current.dispItem.getContents(), 'Incorrect value "current.dispItem".');
+            assert.equal(gridData[0][cfg.displayProperty], current.getPropValue(current.item, cfg.displayProperty), 'Incorrect value "current.displayProperty".');
          });
 
          it('state', function() {
-            assert.isTrue(current.isSelected, 'Incorrect field set on getCurrent()');
-            assert.equal(undefined, current.isActive, 'Incorrect property value on getCurrent()');
-            assert.equal(0, current.multiSelectStatus, 'Incorrect property value on getCurrent()');
-            assert.isFalse(current.multiSelectVisibility, 'Incorrect property value on getCurrent()');
-            assert.isTrue(current.showActions, 'Incorrect property value on getCurrent()');
-            assert.equal(undefined, current.isSwiped, 'Incorrect property value on getCurrent()');
+            assert.isTrue(current.isSelected, 'Incorrect value "current.isSelected".');
+            assert.equal(undefined, current.isActive, 'Incorrect value "current.isActive".');
+            assert.equal(0, current.multiSelectStatus, 'Incorrect value "current.multiSelectStatus".');
+            assert.isFalse(current.multiSelectVisibility, 'Incorrect value "current.multiSelectVisibility".');
+            assert.isTrue(current.showActions, 'Incorrect value "current.showActions".');
+            assert.equal(undefined, current.isSwiped, 'Incorrect value "current.isSwiped".');
          });
 
          it('columns', function() {
             function checkBaseProperties(checkedColumn, expectedData) {
                debugger;
-               assert.equal(expectedData.columnIndex, checkedColumn.columnIndex, 'Incorrect property value on getCurrentColumn()');
-               assert.deepEqual(expectedData.column, checkedColumn.column, 'Incorrect property value on getCurrentColumn()');
-               assert.deepEqual(expectedData.item, checkedColumn.item, 'Incorrect property value on getCurrentColumn()');
-               assert.deepEqual(expectedData.item, checkedColumn.dispItem.getContents(), 'Incorrect property value on getCurrentColumn()');
-               assert.equal(expectedData.keyProperty, checkedColumn.keyProperty, 'Incorrect property value on getCurrentColumn()');
-               assert.equal(expectedData.displayProperty, checkedColumn.displayProperty, 'Incorrect property value on getCurrentColumn()');
-               assert.equal(expectedData.item[expectedData.keyProperty], checkedColumn.key, 'Incorrect property value on getCurrentColumn()');
+               assert.equal(expectedData.columnIndex, checkedColumn.columnIndex, 'Incorrect value "columnIndex" when checking columns.');
+               assert.deepEqual(expectedData.column, checkedColumn.column, 'Incorrect value "column" when checking columns.');
+               assert.deepEqual(expectedData.item, checkedColumn.item, 'Incorrect value "item" when checking columns.');
+               assert.deepEqual(expectedData.item, checkedColumn.dispItem.getContents(), 'Incorrect value "dispItem" when checking columns.');
+               assert.equal(expectedData.keyProperty, checkedColumn.keyProperty, 'Incorrect value "keyProperty" when checking columns.');
+               assert.equal(expectedData.displayProperty, checkedColumn.displayProperty, 'Incorrect value "displayProperty" when checking columns.');
+               assert.equal(expectedData.item[expectedData.keyProperty], checkedColumn.key, 'Incorrect value "getPropValue(item, displayProperty)" when checking columns.');
                assert.equal(expectedData.item[expectedData.displayProperty],
-                  checkedColumn.getPropValue(checkedColumn.item, expectedData.displayProperty), 'Incorrect property value on getCurrentColumn()');
-               assert.equal(expectedData.template, checkedColumn.template, 'Incorrect property value on getCurrentColumn()');
-               assert.equal(expectedData.cellClasses, checkedColumn.cellClasses, 'Incorrect property value on getCurrentColumn()');
+                  checkedColumn.getPropValue(checkedColumn.item, expectedData.displayProperty), 'Incorrect value "" when checking columns.');
+               assert.equal(expectedData.template, checkedColumn.template, 'Incorrect value "template" when checking columns.');
+               assert.equal(expectedData.cellClasses, checkedColumn.cellClasses, 'Incorrect value "cellClasses" when checking columns.');
             }
 
             // check first column (multiselect checkbox column)
-            assert.equal(0, current.columnIndex, 'Incorrect property value on getCurrent()');
-            assert.isTrue(current.isEndColumn(), 'Incorrect property value on getCurrentColumn()');
+            assert.equal(0, current.columnIndex, 'Incorrect value "current.columnIndex".');
+            assert.isTrue(current.isEndColumn(), 'Incorrect value "current.isEndColumn()".');
             checkBaseProperties(current.getCurrentColumn(), {
                columnIndex: 0,
                keyProperty: cfg.keyProperty,
@@ -147,8 +147,8 @@ define(['Controls/List/Grid/GridViewModel', 'Controls/List/resources/utils/Items
 
             // check next column
             current.goToNextColumn();
-            assert.equal(1, current.columnIndex, 'Incorrect property value on getCurrent()');
-            assert.isTrue(current.isEndColumn(), 'Incorrect property value on getCurrent()');
+            assert.equal(1, current.columnIndex, 'Incorrect value "current.columnIndex" after "goToNextColumn()".');
+            assert.isTrue(current.isEndColumn(), 'Incorrect value "current.isEndColumn()" after "goToNextColumn()".');
             checkBaseProperties(current.getCurrentColumn(), {
                columnIndex: 1,
                keyProperty: cfg.keyProperty,
@@ -162,8 +162,8 @@ define(['Controls/List/Grid/GridViewModel', 'Controls/List/resources/utils/Items
 
             // check next column
             current.goToNextColumn();
-            assert.equal(2, current.columnIndex, 'Incorrect property value on getCurrent()');
-            assert.isTrue(current.isEndColumn(), 'Incorrect property value on getCurrent()');
+            assert.equal(2, current.columnIndex, 'Incorrect value "current.columnIndex" after "goToNextColumn()".');
+            assert.isTrue(current.isEndColumn(), 'Incorrect value "current.isEndColumn()" after "goToNextColumn()".');
             checkBaseProperties(current.getCurrentColumn(), {
                columnIndex: 2,
                keyProperty: cfg.keyProperty,
@@ -178,8 +178,8 @@ define(['Controls/List/Grid/GridViewModel', 'Controls/List/resources/utils/Items
 
             // check last column
             current.goToNextColumn();
-            assert.equal(3, current.columnIndex, 'Incorrect property value on getCurrent()');
-            assert.isTrue(current.isEndColumn(), 'Incorrect property value on getCurrent()');
+            assert.equal(3, current.columnIndex, 'Incorrect value "current.columnIndex" after "goToNextColumn()".');
+            assert.isTrue(current.isEndColumn(), 'Incorrect value "current.isEndColumn()" after "goToNextColumn()".');
             checkBaseProperties(current.getCurrentColumn(), {
                columnIndex: 3,
                keyProperty: cfg.keyProperty,
@@ -194,70 +194,25 @@ define(['Controls/List/Grid/GridViewModel', 'Controls/List/resources/utils/Items
 
             // check the absence of other columns
             current.goToNextColumn();
-            assert.equal(4, current.columnIndex, 'Incorrect property value on getCurrent()');
-            assert.isFalse(current.isEndColumn(), 'Incorrect property value on getCurrent()');
+            assert.equal(4, current.columnIndex, 'Incorrect value "current.columnIndex" after "goToNextColumn()".');
+            assert.isFalse(current.isEndColumn(), 'Incorrect value "current.isEndColumn()" after "goToNextColumn()".');
 
-            // check reset column index
-            /*
-            columnIndex: 0
-            getCurrentColumn: ƒ ()
-            goToNextColumn: ƒ ()
-            isEndColumn: ƒ ()
-            resetColumnIndex: ƒ ()
-            */
+            // check reset column index and retest first column
+            current.resetColumnIndex();
+
+            assert.equal(0, current.columnIndex, 'Incorrect value "current.columnIndex" after "resetColumnIndex()".');
+            assert.isTrue(current.isEndColumn(), 'Incorrect value "current.isEndColumn()" after "resetColumnIndex()".');
+            checkBaseProperties(current.getCurrentColumn(), {
+               columnIndex: 0,
+               keyProperty: cfg.keyProperty,
+               displayProperty: cfg.displayProperty,
+               column: {},
+               item: gridData[0],
+               template: null,
+               cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow ' +
+                  'controls-Grid__row-cell-checkbox controls-Grid__row-cell_rowSpacing_default controls-Grid__row-cell_withSelectionMarker'
+            });
          });
       });
-
-
-      /*it('Selection', function () {
-         var cfg = {
-            items: data,
-            keyProperty: 'id',
-            displayProperty: 'title',
-            markedKey: 2
-         };
-
-         var iv = new ListViewModel(cfg);
-         var marItem = iv._markedItem;
-         assert.equal(iv._display.at(1), marItem, 'Incorrect selectedItem');
-
-
-         iv.setMarkedKey(3);
-         marItem = iv._markedItem;
-         assert.equal(iv._display.at(2), marItem, 'Incorrect selectedItem');
-         assert.equal(1, iv.getVersion(), 'Incorrect version appendItems');
-      });
-
-
-
-      it('multiSelection', function () {
-         var rs1 = new RecordSet({
-            rawData: data,
-            idProperty : 'id'
-         });
-
-
-         var cfg;
-
-         cfg = {
-            items: data,
-            keyProperty: 'id',
-            displayProperty: 'title',
-            selectedKeys: [1, 3]
-         };
-
-         var iv = new ListViewModel(cfg);
-         assert.isTrue(!!iv._multiselection, 'ListViewModel: MultiSelection instance wasn\'t create');
-         assert.deepEqual([1, 3], iv._multiselection._selectedKeys, 'ListViewModel: MultiSelection has wrong selected keys');
-
-         iv.select([2]);
-         assert.deepEqual([1, 3, 2], iv._multiselection._selectedKeys, 'ListViewModel: MultiSelection has wrong selected keys');
-         assert.equal(1, iv.getVersion(), 'Incorrect version appendItems');
-
-         iv.unselect([1]);
-         assert.deepEqual([3, 2], iv._multiselection._selectedKeys, 'ListViewModel: MultiSelection has wrong selected keys');
-         assert.equal(2, iv.getVersion(), 'Incorrect version appendItems');
-      });*/
    });
-
 });
