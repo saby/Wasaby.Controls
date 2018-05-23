@@ -3147,7 +3147,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      var diff = contentHeight - content.clientHeight;
                      if (isChanged) {
                         var parent = content.parentNode;
-                        if (this._tinyEditor.selection.getBoundingClientRect()) {
+                        if (this._tinyEditor) {
                            if (parent.clientHeight < contentHeight) {
                               // Также, если прокрутка уже задействована и текущий рэнж находится в самом низу области редактирования. Определяем это по
                               // расстоянию от нижнего края рэнжа до нижнего края области минус увеличение высоты (diff) и минус нижний отступ области
