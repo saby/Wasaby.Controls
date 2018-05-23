@@ -1,5 +1,5 @@
 <div>
-   <ws:for data="path in _parseText">
+   <ws:for data="path in _parsedText">
       <ws:if data="{{path.type === 'found'}}">
          <span class="{{_options.class || 'controls-Highlight_found'}}">{{path.value}}</span>
       </ws:if>

@@ -9,11 +9,11 @@ define(
       describe('Controls.Decorators.WrapURLs', function() {
          var result;
 
-         describe('getParseText', function() {
-            var getParseText = WrapURLs._private.getParseText.bind(WrapURLs._private);
+         describe('parseText', function() {
+            var parseText = WrapURLs._private.parseText.bind(WrapURLs._private);
 
             it('Simple URL', function() {
-               result = getParseText('http://regexpal.com/');
+               result = parseText('http://regexpal.com/');
                assert.deepEqual(result, [{
                   type: 'link',
                   href: 'http://regexpal.com/',
@@ -22,7 +22,7 @@ define(
                }]);
             });
             it('Simple URL with whitespaces', function() {
-               result = getParseText('  http://regexpal.com/    ');
+               result = parseText('  http://regexpal.com/    ');
                assert.deepEqual(result, [
                   {
                      type: 'text',
@@ -43,7 +43,7 @@ define(
                ]);
             });
             it('Simple URL with params', function() {
-               result = getParseText('http://regexpal.com/home.php?request=q&theme=2');
+               result = parseText('http://regexpal.com/home.php?request=q&theme=2');
                assert.deepEqual(result, [{
                   type: 'link',
                   href: 'http://regexpal.com/home.php?request=q&theme=2',
@@ -52,7 +52,7 @@ define(
                }]);
             });
             it('Ru link', function() {
-               result = getParseText('http://почта.рф/');
+               result = parseText('http://почта.рф/');
                assert.deepEqual(result, [{
                   type: 'link',
                   href: 'http://почта.рф/',
@@ -61,7 +61,7 @@ define(
                }]);
             });
             it('Link with brackets', function() {
-               result = getParseText('http://sometext/(test)');
+               result = parseText('http://sometext/(test)');
                assert.deepEqual(result, [{
                   type: 'link',
                   href: 'http://sometext/(test)',
@@ -70,7 +70,7 @@ define(
                }]);
             });
             it('Link with port', function() {
-               result = getParseText('http://ya.ru:80');
+               result = parseText('http://ya.ru:80');
                assert.deepEqual(result, [{
                   type: 'link',
                   href: 'http://ya.ru:80',
@@ -79,7 +79,7 @@ define(
                }]);
             });
             it('Link inside text', function() {
-               result = getParseText('find here: http://ya.ru/, please');
+               result = parseText('find here: http://ya.ru/, please');
                assert.deepEqual(result, [
                   {
                      type: 'text',
@@ -100,7 +100,7 @@ define(
                ]);
             });
             it('Symbol \' inside link', function() {
-               result = getParseText('https://wiki.postgresql.org/wiki/What\'s_new_in_PostgreSQL_9.5');
+               result = parseText('https://wiki.postgresql.org/wiki/What\'s_new_in_PostgreSQL_9.5');
                assert.deepEqual(result, [{
                   type: 'link',
                   href: 'https://wiki.postgresql.org/wiki/What\'s_new_in_PostgreSQL_9.5',
@@ -109,7 +109,7 @@ define(
                }]);
             });
             it('Link with anchor', function() {
-               result = getParseText('http://axure.tensor.ru/ereport/#p=реестр_по_приложению_№4');
+               result = parseText('http://axure.tensor.ru/ereport/#p=реестр_по_приложению_№4');
                assert.deepEqual(result, [{
                   type: 'link',
                   href: 'http://axure.tensor.ru/ereport/#p=реестр_по_приложению_№4',
@@ -118,7 +118,7 @@ define(
                }]);
             });
             it('Link ends dot', function() {
-               result = getParseText('http://regexpal.com/home.php?request=q&theme=2.');
+               result = parseText('http://regexpal.com/home.php?request=q&theme=2.');
                assert.deepEqual(result, [{
                   type: 'link',
                   href: 'http://regexpal.com/home.php?request=q&theme=2',
@@ -127,7 +127,7 @@ define(
                }]);
             });
             it('Simple mail', function() {
-               result = getParseText('e@mail.ru');
+               result = parseText('e@mail.ru');
                assert.deepEqual(result, [{
                   type: 'email',
                   addres: 'e@mail.ru',
@@ -135,7 +135,7 @@ define(
                }]);
             });
             it('Mail with seperators', function() {
-               result = getParseText('my-e.ma@il.ru');
+               result = parseText('my-e.ma@il.ru');
                assert.deepEqual(result, [{
                   type: 'email',
                   addres: 'my-e.ma@il.ru',
@@ -143,7 +143,7 @@ define(
                }]);
             });
             it('Ru mail', function() {
-               result = getParseText('почтальон@почта.рф');
+               result = parseText('почтальон@почта.рф');
                assert.deepEqual(result, [{
                   type: 'email',
                   addres: 'почтальон@почта.рф',
@@ -151,7 +151,7 @@ define(
                }]);
             });
             it('Colon mail', function() {
-               result = getParseText('git@git.sbis.ru:');
+               result = parseText('git@git.sbis.ru:');
                assert.deepEqual(result, [{
                   type: 'email',
                   addres: 'git@git.sbis.ru',
@@ -159,7 +159,7 @@ define(
                }]);
             });
             it('After colon mail', function() {
-               result = getParseText('git@git.sbis.ru: abc');
+               result = parseText('git@git.sbis.ru: abc');
                assert.deepEqual(result, [
                   {
                      type: 'email',
@@ -174,7 +174,7 @@ define(
                ]);
             });
             it('Top level domailn mail', function() {
-               result = getParseText('email@topleveldomain');
+               result = parseText('email@topleveldomain');
                assert.deepEqual(result, [{
                   type: 'text',
                   value: 'email@topleveldomain',
@@ -182,7 +182,7 @@ define(
                }]);
             });
             it('www', function() {
-               result = getParseText('www.yandex.ru text after');
+               result = parseText('www.yandex.ru text after');
                assert.deepEqual(result, [
                   {
                      type: 'link',
@@ -198,7 +198,7 @@ define(
                ]);
             });
             it('Space after protocol before www', function() {
-               result = getParseText('https:// www.youtube.com/watch?v=_avffmEHKf8');
+               result = parseText('https:// www.youtube.com/watch?v=_avffmEHKf8');
                assert.deepEqual(result, [
                   {
                      type: 'text',
@@ -214,7 +214,7 @@ define(
                ]);
             });
             it('www without dot', function() {
-               result = getParseText('wwwanytext');
+               result = parseText('wwwanytext');
                assert.deepEqual(result, [{
                   type: 'text',
                   value: 'wwwanytext',
@@ -222,7 +222,7 @@ define(
                }]);
             });
             it('Star url', function() {
-               result = getParseText('http://www.123assess.com/te/tbm/servlet?aid=gTXJuESfVsj7qTRkHepNsA**&mid=Olnl6KgvpofmSElvN69BeA**');
+               result = parseText('http://www.123assess.com/te/tbm/servlet?aid=gTXJuESfVsj7qTRkHepNsA**&mid=Olnl6KgvpofmSElvN69BeA**');
                assert.deepEqual(result, [{
                   type: 'link',
                   href: 'http://www.123assess.com/te/tbm/servlet?aid=gTXJuESfVsj7qTRkHepNsA**&mid=Olnl6KgvpofmSElvN69BeA**',

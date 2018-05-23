@@ -27,10 +27,10 @@ define('Controls/Decorators/WrapURLs',
       var _private = {
          parseRegExp: /(?:(((?:https?|ftp|file):\/\/|www\.)\S+?)|(\S+@\S+(?:\.\S{2,6}?))|(\S*?))([.,:]?(?:\s|$))/g,
 
-         getParseText: function(text) {
+         parseText: function(text) {
             var
                node = {},
-               parseText = [],
+               parsedText = [],
                exec;
 
             while (exec = this.parseRegExp.exec(text)) {
@@ -60,25 +60,25 @@ define('Controls/Decorators/WrapURLs',
                }
 
                node.end = exec[5];
-               parseText.push(node);
+               parsedText.push(node);
             }
 
-            return parseText;
+            return parsedText;
          }
       };
 
       var WrapURLs = Control.extend({
          _template: template,
 
-         _parseText: null,
+         _parsedText: null,
 
          _beforeMount: function(options) {
-            this._parseText = _private.getParseText(options.text);
+            this._parsedText = _private.parseText(options.text);
          },
 
          _beforeUpdate: function(newOptions) {
             if (newOptions.text !== this._options.text) {
-               this._parseText = _private.getParseText(newOptions.text);
+               this._parsedText = _private.parseText(newOptions.text);
             }
          }
       });

@@ -32,15 +32,26 @@ define('Controls/Decorators/Highlight',
       var _private = {
          separatorsRegExp: /\s/g,
 
+         /**
+           * Get the string to search converted to a regular expression.
+           * @example
+           * <pre>
+           *    var highlight = 'Текст для подсветки';
+           *    var highlightRegExp = getHighlightRegExp(highlight);
+           *    console.log(highlightRegExp) // /(Текст)?( ?для)?( ?подсветки)?/gi
+           * </pre>
+           * @param highlight Text to search.
+           * @returns {RegExp}
+           */
          getHighlightRegExp: function(highlight) {
             var highlightRegExpString = highlight.replace(this.separatorsRegExp, ')?(\\s?');
 
             return new RegExp('(' + highlightRegExpString + ')?', 'gi');
          },
 
-         getParseText: function(text, highlight) {
+         parseText: function(text, highlight) {
             var
-               parseText = [],
+               parsedText = [],
                highlightRegExp = this.getHighlightRegExp(highlight),
                exec, foundText, startingPosition;
 
@@ -49,7 +60,7 @@ define('Controls/Decorators/Highlight',
 
                if (foundText) {
                   if (startingPosition !== undefined) {
-                     parseText.push({
+                     parsedText.push({
                         type: 'text',
                         value: text.substring(startingPosition, exec.index)
                      });
@@ -57,7 +68,7 @@ define('Controls/Decorators/Highlight',
                      startingPosition = undefined;
                   }
 
-                  parseText.push({
+                  parsedText.push({
                      type: 'found',
                      value: foundText
                   });
@@ -71,28 +82,28 @@ define('Controls/Decorators/Highlight',
             }
 
             if (!(startingPosition === undefined || startingPosition === text.length)) {
-               parseText.push({
+               parsedText.push({
                   type: 'text',
                   value: text.substring(startingPosition)
                });
             }
 
-            return parseText;
+            return parsedText;
          }
       };
 
       var Highlight = Control.extend({
          _template: template,
 
-         _parseText: null,
+         _parsedText: null,
 
          _beforeMount: function(options) {
-            this._parseText = _private.getParseText(options.text, options.highlight);
+            this._parsedText = _private.parseText(options.text, options.highlight);
          },
 
          _beforeUpdate: function(newOptions) {
             if (newOptions.text !== this._options.text || newOptions.highlight !== this._options.highlight) {
-               this._parseText = _private.getParseText(newOptions.text, newOptions.highlight);
+               this._parsedText = _private.parseText(newOptions.text, newOptions.highlight);
             }
          }
       });

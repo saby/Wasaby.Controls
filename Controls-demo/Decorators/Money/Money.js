@@ -26,6 +26,6 @@ define('Controls-demo/Decorators/Money/Money',
                'noAccentRegistry'
             ];
          }
-      })
+      });
    }
 );

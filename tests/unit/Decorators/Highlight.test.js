@@ -9,11 +9,11 @@ define(
       describe('Controls.Decorators.Highlight', function() {
          var result;
 
-         describe('getParseText', function() {
-            var getParseText = Highlight._private.getParseText.bind(Highlight._private);
+         describe('parseText', function() {
+            var parseText = Highlight._private.parseText.bind(Highlight._private);
 
             it('Highlights text', function() {
-               result = getParseText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc consectetur.', 'ip');
+               result = parseText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc consectetur.', 'ip');
                assert.deepEqual(result, [
                   {
                      type: 'text',
@@ -38,7 +38,7 @@ define(
                ]);
             });
             it('Does not highlight unmatched', function() {
-               result = getParseText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc consectetur.', 'sits');
+               result = parseText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc consectetur.', 'sits');
                assert.deepEqual(result, [{
                   type: 'text',
                   value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc consectetur.'

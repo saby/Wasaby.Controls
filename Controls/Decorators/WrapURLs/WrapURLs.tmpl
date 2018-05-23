@@ -1,5 +1,5 @@
 <div>
-   <ws:for data="path in _parseText">
+   <ws:for data="path in _parsedText">
       <ws:if data="{{path.type === 'link'}}">
          <a rel="noreferrer" href="{{path.www ? 'http://'}}{{path.href}}" target="{{_options.newTab ? '_blank'}}">{{path.href}}</a>
       </ws:if>

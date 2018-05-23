@@ -37,11 +37,11 @@ define('Controls/Decorators/Money',
       var _private = {
          searchPaths: /([0-9]*?)(\.[0-9]{2})/,
 
-         getParseNumber: function(number) {
+         parseNumber: function(number) {
             var exec = this.searchPaths.exec(number.toFixed(2));
 
             if (!exec) {
-               IoC.resolve('ILogger').log('Controls/Decorators/Money', 'Задана некорректная опция number: ' + number + '.');
+               IoC.resolve('ILogger').error('Controls/Decorators/Money', 'That is not a valid option number: ' + number + '.');
                exec = ['0.00', '0', '.00'];
             }
 
@@ -56,15 +56,15 @@ define('Controls/Decorators/Money',
       var Money = Control.extend({
          _template: template,
 
-         _parseNumber: null,
+         _parsedNumber: null,
 
          _beforeMount: function(options) {
-            this._parseNumber = _private.getParseNumber(options.number);
+            this._parsedNumber = _private.parseNumber(options.number);
          },
 
          _beforeUpdate: function(newOptions) {
             if (newOptions.number !== this._options.number) {
-               this._parseNumber = _private.getParseNumber(newOptions.number);
+               this._parsedNumber = _private.parseNumber(newOptions.number);
             }
          }
       });
