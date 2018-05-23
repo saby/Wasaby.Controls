@@ -494,5 +494,7 @@ define('Controls/List/Grid/GridViewModel', [
          }
       });
 
+   GridViewModel._private = _private;
+
    return GridViewModel;
 });

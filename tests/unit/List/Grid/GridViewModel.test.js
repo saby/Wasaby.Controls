@@ -1,4 +1,4 @@
-define(['Controls/List/Grid/GridViewModel', 'WS.Data/Collection/RecordSet'], function(GridViewModel) {
+define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collection/RecordSet'], function(GridViewModel, cMerge) {
    var
       gridData = [
          {
@@ -61,26 +61,108 @@ define(['Controls/List/Grid/GridViewModel', 'WS.Data/Collection/RecordSet'], fun
             align: 'right'
          }
       ],
-      itemActions = [];
+      itemActions = [],
+      cfg = {
+         keyProperty: 'id',
+         displayProperty: 'title',
+         markedKey: '123',
+         multiselect: true,
+         header: gridHeader,
+         columns: gridColumns,
+         items: gridData,
+         itemActions: itemActions,
+         ladderSupport: false,
+         leftPadding: 'XL',
+         rightPadding: 'L',
+         rowSpacing: 'L',
+         showRowSeparator: true
+      };
 
    describe('Controls.List.Grid.GridViewModel', function() {
+      describe('"_private" block', function() {
+         it('getPaddingCellClasses', function() {
+            var
+               paramsWithoutMultiselect = {
+                  columns: gridColumns,
+                  multiselect: false,
+                  leftPadding: 'XL',
+                  rightPadding: 'L',
+                  rowSpacing: 'L'
+               },
+               paramsWithMultiselect = {
+                  columns: [{}].concat(gridColumns),
+                  multiselect: true,
+                  leftPadding: 'XL',
+                  rightPadding: 'L',
+                  rowSpacing: 'L'
+               },
+               expectedResultWithoutMultiselect = [
+                  ' controls-Grid__cell_spacingRight controls-Grid__cell_spacingFirstCol_XL controls-Grid__row-cell_rowSpacing_L',
+                  ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__row-cell_rowSpacing_L controls-Grid__row-cell_halign_right',
+                  ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_L controls-Grid__row-cell_rowSpacing_L controls-Grid__row-cell_halign_right' ],
+               expectedResultWithMultiselect = [
+                  ' controls-Grid__cell_spacingRight controls-Grid__row-cell_rowSpacing_L',
+                  ' controls-Grid__cell_spacingRight controls-Grid__row-cell_rowSpacing_L',
+                  ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__row-cell_rowSpacing_L controls-Grid__row-cell_halign_right',
+                  ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_L controls-Grid__row-cell_rowSpacing_L controls-Grid__row-cell_halign_right' ];
+            assert.equal(expectedResultWithoutMultiselect[0],
+               GridViewModel._private.getPaddingCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 0})),
+               'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithoutMultiselect)".');
+            assert.equal(expectedResultWithoutMultiselect[1],
+               GridViewModel._private.getPaddingCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 1})),
+               'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithoutMultiselect)".');
+            assert.equal(expectedResultWithoutMultiselect[2],
+               GridViewModel._private.getPaddingCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 2})),
+               'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithoutMultiselect)".');
+
+            assert.equal(expectedResultWithMultiselect[0],
+               GridViewModel._private.getPaddingCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 0})),
+               'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithMultiselect)".');
+            assert.equal(expectedResultWithMultiselect[1],
+               GridViewModel._private.getPaddingCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 1})),
+               'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithMultiselect)".');
+            assert.equal(expectedResultWithMultiselect[2],
+               GridViewModel._private.getPaddingCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 2})),
+               'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithMultiselect)".');
+            assert.equal(expectedResultWithMultiselect[3],
+               GridViewModel._private.getPaddingCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 3})),
+               'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithMultiselect)".');
+         });
+         it('getItemColumnCellClasses', function() {
+            var
+               gridViewModel = new GridViewModel(cfg),
+               current = gridViewModel.getCurrent();
+            var
+               expectedResult = [
+                  'controls-Grid__row-cell controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow ' +
+                     'controls-Grid__row-cell-checkbox controls-Grid__row-cell_rowSpacing_default controls-Grid__row-cell_withSelectionMarker',
+                  'controls-Grid__row-cell controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow ' +
+                     'controls-Grid__cell_spacingRight controls-Grid__row-cell_rowSpacing_L controls-Grid__row-cell_rowSpacing_default',
+                  'controls-Grid__row-cell controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow ' +
+                     'controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__row-cell_rowSpacing_L ' +
+                     'controls-Grid__row-cell_halign_right controls-Grid__row-cell_rowSpacing_default',
+                  'controls-Grid__row-cell controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow ' +
+                     'controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_L controls-Grid__row-cell_rowSpacing_L ' +
+                     'controls-Grid__row-cell_halign_right controls-Grid__row-cell_rowSpacing_default' ];
+            assert.equal(expectedResult[0],
+               GridViewModel._private.getItemColumnCellClasses(current),
+               'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
+            current.goToNextColumn();
+            assert.equal(expectedResult[1],
+               GridViewModel._private.getItemColumnCellClasses(current),
+               'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
+            current.goToNextColumn();
+            assert.equal(expectedResult[2],
+               GridViewModel._private.getItemColumnCellClasses(current),
+               'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
+            current.goToNextColumn();
+            assert.equal(expectedResult[3],
+               GridViewModel._private.getItemColumnCellClasses(current),
+               'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
+         });
+      });
       describe('getCurrent', function() {
          var
-            cfg = {
-               keyProperty: 'id',
-               displayProperty: 'title',
-               markedKey: '123',
-               multiselect: true,
-               header: gridHeader,
-               columns: gridColumns,
-               items: gridData,
-               itemActions: itemActions,
-               ladderSupport: false,
-               leftPadding: 'XL',
-               rightPadding: 'L',
-               rowSpacing: 'L',
-               showRowSeparator: true
-            },
             gridViewModel = new GridViewModel(cfg),
             current = gridViewModel.getCurrent();
 
