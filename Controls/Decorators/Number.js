@@ -29,7 +29,7 @@ define('Controls/Decorators/Number',
        */
 
       var _private = {
-         formatNumber: function (number, fractionSize) {
+         formatNumber: function(number, fractionSize) {
             var numberString;
 
             if (fractionSize !== undefined) {
