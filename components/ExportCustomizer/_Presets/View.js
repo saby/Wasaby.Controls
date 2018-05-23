@@ -112,7 +112,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
          _modifyOptions: function () {
             var options = View.superclass._modifyOptions.apply(this, arguments);
             options._items = this._makeItems(options);
-            options._selectedId = this._makeSelectedId(options);
+            this._checkSelectedId(options);
             return options;
          },
 
@@ -199,12 +199,17 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * @param {object} options Опции компонента
           * @return {string|number}
           */
-         _makeSelectedId: function (options) {
-            var items = options._items;
-            if (items && items.getCount()) {
-               var selectedId = options.selectedId;
-               return selectedId && items.getRecordById(selectedId) ? selectedId : items.at(0).getId();
+         _checkSelectedId: function (options) {
+            var selectedId = options.selectedId;
+            var statics = options.statics;
+            if (_findIndexById(statics, selectedId) === -1) {
+               var customs = this._customs;
+               var hasCustoms = !!(customs && customs.length);
+               if (!hasCustoms || _findIndexById(customs, selectedId) === -1) {
+                  options.selectedId = selectedId = statics && statics.length ? statics[0].id : (hasCustoms ? customs[0].id : undefined);
+               }
             }
+            return selectedId;
          },
 
          /**
@@ -297,7 +302,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                this._updateSelector();
                var options = this._options;
                listView.setItems(options._items);
-               listView.setSelectedKey(options._selectedId);
+               listView.setSelectedKey(options.selectedId);
             }
          },
 
@@ -371,7 +376,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                return this._storage.save(options.namespace, customs).addCallback(function (/*isSuccess*/) {
                   //if (isSuccess) {
                      this._selectPreset(preset);
-                     this._sendUpdateCommand(prevPreset, preset);
+                     //^^^this._sendUpdateCommand(prevPreset, preset);
                   //}
                   return true/*isSuccess*/;
                }.bind(this));
@@ -542,8 +547,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             var items = options._items = this._makeItems(options);
             selector.setItems(items);
             this._updateSelectorListOptions('items', items);
-            var selectedId = this._makeSelectedId(options);
-            options._selectedId = selectedId;
+            var selectedId = this._checkSelectedId(options);
             selector.setSelectedKeys([selectedId]);
             this._updateSelectorListOptions('selectedKey', selectedId);
          },
