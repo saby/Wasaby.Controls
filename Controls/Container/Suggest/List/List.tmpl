@@ -4,7 +4,7 @@
             <ws:templateOptions displayProperty="{{_options.tabsOptions.displayProperty}}"
                                 keyProperty="{{_options.tabsOptions.keyProperty}}"
                                 source="{{_options.tabsOptions.source}}"
-                                selectedKey="{{_suggestListOptions.tabsSelectedKey}}"/>
+                                selectedKey="{{_suggestListOptions.tabsSelectedKey || _options.tabsOptions.selectedKey}}"/>
         </Controls.Container.Async>
     </ws:if>
     <Controls.Container.List scope="{{_suggestListOptions}}" navigation="{{_navigation}}" content="{{_options.content}}"/>

@@ -72,6 +72,15 @@ define('Controls/Layout/Suggest',
             }
             filter[self._options.searchParam] = searchValue;
             self._filter = filter;
+         },
+         
+         updateSuggestState: function(self) {
+            if (_private.shouldSearch(self, self._searchValue)) {
+               _private.updateFilter(self, self._searchValue, self._tabsSelectedKey);
+               _private.open(self);
+            } else {
+               _private.close(self);
+            }
          }
       };
       
@@ -121,12 +130,11 @@ define('Controls/Layout/Suggest',
          
          _changeValueHandler: function(event, value) {
             this._searchValue = value;
-            if (_private.shouldSearch(this, value)) {
-               _private.updateFilter(this, this._searchValue, this._tabsSelectedKey);
-               _private.open(this);
-            } else {
-               _private.close(this);
-            }
+            _private.updateSuggestState(this);
+         },
+   
+         _inputActivated: function() {
+            _private.updateSuggestState(this);
          },
    
          _tabsSelectedKeyChanged: function(event, key) {

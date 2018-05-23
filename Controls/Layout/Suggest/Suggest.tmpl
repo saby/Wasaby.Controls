@@ -14,7 +14,7 @@
         </Controls.Container.Async>
     </ws:template>
 
-    <ws:partial template="{{_options.content}}" on:valueChanged="_changeValueHandler()" attr:class="controls-Suggest-Text_style_{{_options.suggestStyle}}"/>
+    <ws:partial template="{{_options.content}}" on:valueChanged="_changeValueHandler()" on:activated="_inputActivated()" attr:class="controls-Suggest-Text_style_{{_options.suggestStyle}}"/>
 
     <div if="{{_options.suggestState}}" class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer-style-{{_options.suggestStyle}}">
         <ws:if data="{{_options.suggestStyle === 'overInput'}}">
