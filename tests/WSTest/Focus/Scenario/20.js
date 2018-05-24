@@ -23,7 +23,7 @@ define('WSTest/Focus/Scenario/20', [
    var caseControlName = 'WSTest/Focus/Case20';
    return function scenario20(done) {//TODO Фокус остается на TextBox1
       var wnd = new W({
-         template: 'js!' + caseControlName,
+         template: caseControlName,
          top: 0,
          width: '500px',
          height: '200px'

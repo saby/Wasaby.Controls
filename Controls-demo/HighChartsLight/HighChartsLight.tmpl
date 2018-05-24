@@ -1,0 +1,14 @@
+<div>
+    <Controls.Button name="button1" caption="Кликни меня"
+                     on:click="changeHighChartOptions()" />
+    <Controls.Button class="test-demo-button" name="toggleButton" caption="{{toggleCaption}}"
+                     on:click="toggleChart()" />
+    <ws:if data="{{need}}">
+        <Controls.HighChartsLight
+                chartOptions="{{highChartOptions1}}"
+        />
+    </ws:if>
+    <Controls.HighChartsLight
+            chartOptions="{{highChartOptions2}}"
+    />
+</div>
