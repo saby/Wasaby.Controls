@@ -71,6 +71,12 @@ define('Controls/Application',
          _mouseupPage: function(ev) {
             this._children.mouseupDetect.start(ev);
          },
+         _touchmovePage: function(ev) {
+            this._children.touchmoveDetect.start(ev);
+         },
+         _touchendPage: function(ev) {
+            this._children.touchendDetect.start(ev);
+         },
          _touchclass: function() {
             //Данный метод вызывается из вёрстки, и при первой отрисовке еще нет _children (это нормально)
             //поэтому сами детектим touch с помощью compatibility

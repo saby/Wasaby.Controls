@@ -1,5 +1,5 @@
-define('Controls-demo/Container/DragNDrop/Notes/EntityNote', ['Controls/Controllers/DragNDrop/Entity/Item', 'WS.Data/Di'],
-   function(Entity, Di) {
+define('Controls-demo/DragNDrop/Notes/EntityNote', ['Controls/DragNDrop/Entity/Item'],
+   function(Entity) {
       'use strict';
 
       var EntityNote = Entity.extend({
@@ -14,6 +14,5 @@ define('Controls-demo/Container/DragNDrop/Notes/EntityNote', ['Controls/Controll
          }
       });
 
-      Di.register('dragentity.note', EntityNote);
       return EntityNote;
    });
