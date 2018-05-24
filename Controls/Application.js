@@ -71,6 +71,12 @@ define('Controls/Application',
          _mouseupPage: function(ev) {
             this._children.mouseupDetect.start(ev);
          },
+         _touchmovePage: function(ev) {
+            this._children.touchmoveDetect.start(ev);
+         },
+         _touchendPage: function(ev) {
+            this._children.touchendDetect.start(ev);
+         },
          _touchclass: function() {
             //Данный метод вызывается из вёрстки, и при первой отрисовке еще нет _children (это нормально)
             //поэтому сами детектим touch с помощью compatibility
@@ -95,8 +101,17 @@ define('Controls/Application',
             self.wsRoot = receivedState.wsRoot || (context.AppData ? context.AppData.wsRoot : cfg.wsRoot);
             self.resourceRoot = receivedState.resourceRoot || (context.AppData ? context.AppData.resourceRoot : cfg.resourceRoot);
             self.jsLinks = receivedState.jsLinks || (context.AppData ? context.AppData.jsLinks : cfg.jsLinks);
+            self.cssBundles = receivedState.cssBundles || (context.AppData ? context.AppData.cssBundles : cfg.cssBundles);
             self.BodyClasses = BodyClasses;
 
+            if (receivedState && context.AppData) {
+               context.AppData.cssLinks = self.cssLinks;
+               context.AppData.wsRoot = self.wsRoot;
+               context.AppData.resourceRoot = self.resourceRoot;
+               context.AppData.jsLinks = self.jsLinks;
+               context.AppData.application = self.application;
+            }
+            
             /**
              * Этот перфоманс нужен, для сохранения состояния с сервера, то есть, cfg - это конфиг, который нам прийдет из файла
              * роутинга и с ним же надо восстанавливаться на клиенте.
@@ -104,6 +119,7 @@ define('Controls/Application',
             def.callback({
                jsLinks: self.jsLinks,
                cssLinks: self.cssLinks,
+               cssBundles: self.cssBundles,
                title: self.title,
                wsRoot: self.wsRoot,
                resourceRoot: self.resourceRoot,

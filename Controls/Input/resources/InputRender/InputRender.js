@@ -2,14 +2,14 @@ define('Controls/Input/resources/InputRender/InputRender',
    [
       'Core/Control',
 
-      /*'WS.Data/Type/descriptor',*/
+      'WS.Data/Type/descriptor',
       'tmpl!Controls/Input/resources/InputRender/InputRender',
       'Controls/Input/resources/RenderHelper',
       'Core/detection',
 
       'css!Controls/Input/resources/InputRender/InputRender'
    ],
-   function(Control, /*types,*/ template, RenderHelper, cDetection) {
+   function(Control, types, template, RenderHelper, cDetection) {
 
       'use strict';
 
@@ -59,7 +59,7 @@ define('Controls/Input/resources/InputRender/InputRender',
       };
 
       var InputRender = Control.extend({
-         
+
          _template: template,
 
          _inputHandler: function(e) {
@@ -185,12 +185,10 @@ define('Controls/Input/resources/InputRender/InputRender',
          };
       };
 
-      //TODO расскоментировать этот блок + зависимость types когда полечат https://online.sbis.ru/opendoc.html?guid=1416c4da-b0e0-402b-9e02-a3885dc6cdb8
-      /*InputRender.getOptionTypes = function() {
+      InputRender.getOptionTypes = function() {
          return {
             value: types(String),
             selectOnClick: types(Boolean),
-            prepareValue: types(Function).required(),
             tagStyle: types(String).oneOf([
                'primary',
                'done',
@@ -200,7 +198,7 @@ define('Controls/Input/resources/InputRender/InputRender',
             ]),
             autocomplete: types(Boolean)
          };
-      };*/
+      };
 
       return InputRender;
    }
