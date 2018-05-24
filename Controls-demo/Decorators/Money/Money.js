@@ -23,7 +23,8 @@ define('Controls-demo/Decorators/Money/Money',
                'basicRegistry',
                'noBasicRegistry',
                'accentRegistry',
-               'noAccentRegistry'
+               'noAccentRegistry',
+               'error'
             ];
          }
       });

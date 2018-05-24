@@ -30,15 +30,20 @@ define('Controls/Decorators/Number',
 
       var _private = {
          formatNumber: function(number, fractionSize) {
-            var numberString;
-
-            if (fractionSize !== undefined) {
-               numberString = number.toFixed(fractionSize);
+            if (typeof fractionSize === 'number') {
+               number = number.toFixed(fractionSize);
             } else {
-               numberString = String(number);
+               number = String(number);
             }
 
-            return numberString.replace(/(?=(\d{3})+\.)/g, ' ');
+            /**
+             * Create an array of integer and fractional parts.
+             * Divide the integer part into triads.
+             */
+            number = number.split('.');
+            number[0] = number[0].replace(/(\d)(?=(\d{3})+$)/g, '$& ');
+
+            return number.join('.');
          }
       };
 

@@ -36,6 +36,7 @@ define('Controls/Decorators/Money',
        * @variant noBasicRegistry
        * @variant accentRegistry
        * @variant noAccentRegistry
+       * @variant error
        */
 
       var _private = {
