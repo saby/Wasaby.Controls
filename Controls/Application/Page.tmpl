@@ -72,14 +72,11 @@
                                           jsLinks="{{jsLinks}}"
                                           _options="{{_options}}"/>
 
-                              <ws:for data="{{ i in cssBundles }}">
-                                 <script>define('css!{{i}}', '');</script>
-                              </ws:for>
-
-                              <script>
-                                 var cssBundles = document.getElementById('cssBundles');
-                                 eval(cssBundles.innerText);
-                              </script>
+                              <ws:if data="{{cssBundles}}">
+                                 <ws:for data="{{ i in cssBundles }}">
+                                    <script>define('css!{{i}}', '');</script>
+                                 </ws:for>
+                              </ws:if>
 
                               <ws:if data="{{ _options.scripts }}">
                                  <ws:for data="i in _options.scripts">
