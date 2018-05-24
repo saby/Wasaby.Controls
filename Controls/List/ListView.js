@@ -79,6 +79,10 @@ define('Controls/List/ListView', [
                event.currentTarget.focus();
             }
             this._notify('itemSwipe', [itemData, event]);
+         },
+
+         _onRowDeactivated: function(event, eventOptions) {
+            this._notify('rowDeactivated', [eventOptions]);
          }
 
       });

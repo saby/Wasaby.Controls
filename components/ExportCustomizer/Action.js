@@ -1,6 +1,9 @@
 /**
  * Исполняемое действие "Настройщик экспорта"
  *
+ * Для того, чтобы возможно было использовать сохранямые и редактируемые пресеты (предустановленные сочетания параметров экспорта), необходимо подключить модуль 'SBIS3.ENGINE/Controls/ExportPresets/Loader'
+ * Для того, чтобы возможно было использовать редактируемые стилевые шаблоны эксель файла, необходимо подключить модуль 'PrintingTemplates/ExportFormatter/Excel'
+ *
  * @public
  * @class SBIS3.CONTROLS/ExportCustomizer/Action
  * @extends SBIS3.CONTROLS/Action
@@ -106,7 +109,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * @param {boolean} [options.usePresets] Использовать пресеты (предустановленных настроек экспорта) (опционально)
           * @param {Array<ExportPreset>} options.staticPresets Список пресетов (предустановленных настроек экспорта) (опционально)
           * @param {string} options.presetNamespace Пространство имён для сохранения пользовательских пресетов (опционально)
-          * @param {string|number} options.selectedPresetId Идентификатор пресета, который будет выбран в списке пресетов (опционально)
+          * @param {string|number} options.selectedPresetId Идентификатор пресета, который будет выбран в списке пресетов. Если будет указан пустое значение (null или пустая строка), то это будет воспринято как указание создать новый пустой пресет и выбрать его. Если значение не будет указано вовсе (или будет указано значение undefined), то это будет воспринято как указание выбрать пресет, который был выбран в прошлый раз (опционально)
           * @param {Array<BrowserColumnInfo>|WS.Data/Collection/RecordSet<BrowserColumnInfo>} options.allFields Список объектов с информацией о всех колонках в формате, используемом в браузере
           * @param {Array<string>} options.fieldIds Список привязки колонок в экспортируемом файле к полям данных
           * @param {object} options.fieldGroupTitles Список отображаемых названий групп полей (если используются идентификаторы групп)
@@ -153,7 +156,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
             var defaults = this._options;
             Area.getOwnOptionNames().forEach(function (name) {
                var value = options[name];
-               componentOptions[name] = value !=/*Не !==*/ null ? value : defaults[name];
+               componentOptions[name] = value !== undefined ? value : defaults[name];
             });
             this._areaContainer = new FloatArea({
                opener: this,
