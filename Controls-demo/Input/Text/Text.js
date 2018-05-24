@@ -14,7 +14,7 @@ define('Controls-demo/Input/Text/Text', [
       _validationErrors: '',
       _validationErrorsValue: false,
       _trim: false,
-      _maxLength: '',
+      _maxLength: 100,
       _selectOnClick: false,
       _readOnly: false,
 

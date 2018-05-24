@@ -1,7 +1,6 @@
 <Controls.Input.resources.InputRender.InputRender
    name="inputRender"
    autocomplete="{{_options.autocomplete}}"
-   value="{{ _numberViewModel.getDisplayValue() }}"
    size="{{ _options.size }}"
    selectOnClick="{{_options.selectOnClick}}"
    viewModel="{{_numberViewModel}}"
@@ -22,7 +21,6 @@
          template="tmpl!Controls/Input/resources/input"
          type="text"
          readOnly="{{_options.readOnly}}"
-         value="{{ _numberViewModel.getDisplayValue() }}"
       />
 
    </ws:content>

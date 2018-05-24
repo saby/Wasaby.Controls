@@ -1,7 +1,7 @@
 <span class="controls-MenuItem{{historyItem && pinned ? ' controls-Menu-item-user-pinned'}}{{groupSeparator ? ' control-SbisMenu-item__historySeparator'}}" title="{{tooltip|orEmpty|escapeTagsFromStr:''}}">
     <span class="controls-MenuItem__content">
         <i if="{{ icon }}" class="controls-MenuItem__icon icon-size js-controls-MenuItem__icon {{_iconClass}}" unselectable="on"></i>
-        <span if="{{ caption }}" class="controls-MenuItem__text js-controls-MenuItem__text" unselectable="on">{{ caption|sanitize:_sanitizeOpts }}</span>
+        <span if="{{ caption }}" class="controls-MenuItem__text js-controls-MenuItem__text{{!multiline ? ' controls-MenuItem__text_ellipsis'}}" unselectable="on">{{ caption|sanitize:_sanitizeOpts }}</span>
     </span>
     <ws:if data="{{ pinned !== undefined }}">
         <span class="{{ !pinned || historyItem && pinned ? 'controls-Menu-item-pin'}}"></span>

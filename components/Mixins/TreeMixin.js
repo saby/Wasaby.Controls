@@ -965,6 +965,8 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             this._options.hierarchyViewMode = value;
             if (this._isCursorNavigation() && this._options.saveReloadPosition) {
                // При переключении режима обнуляем запомненные позиции курсора
+               // https://online.sbis.ru/opendoc.html?guid=c8920dc6-2fe4-475d-944e-2c2aa4018deb
+               this.getListNavigation().setPosition(null);
                this._hierPages = {};
                this._hierNodesCursor = {};
             }
@@ -1522,7 +1524,11 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                 hierarchy = coreClone(this._hier),
                 self = this,
                 previousRoot = this._previousRoot,
+                curRoot = this.getCurrentRoot(),
                 item;
+            if (typeof curRoot === 'undefined') {
+               curRoot = null;
+            }
             if (this._options.expand) {
                this._applyExpandToItems(this.getItems());
             }
@@ -1552,15 +1558,24 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                   }
                } else {
                   /*иначе вход в папку*/
-                  for (var i = 0; i < this._getItemsProjection().getCount(); i++) {
-                     item = this._getItemsProjection() && this._getItemsProjection().at(i);
-                     if (item && !cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
-                        this.setSelectedKey(item.getContents().getId());
-                        if (!this._container.parents('.controls-ListView').length) {
-                           //todo Это единственный на текущий момент способ проверить, что наш контейнер уже в контейнере ListView и тогда осуществлять scrollTo не нужно!
-                           this._scrollToItem(item.getContents().getId());
+                  // Если используется курсор и сохранение позиции при перезагрузке, то находим запись, сохраненную ранее и скролим до неё
+                  // https://online.sbis.ru/opendoc.html?guid=178ddc57-9e78-4136-8257-44ebb28a2d44
+                  if (this._isCursorNavigation() && this._options.saveReloadPosition && typeof this._hierPages[curRoot] !== 'undefined') {
+                     item = this.getItems().at(this.getItems().getIndexByValue(this._options.navigation.config.field, this._hierPages[curRoot]));
+                  } else {
+                     for (var i = 0; i < this._getItemsProjection().getCount(); i++) {
+                        item = this._getItemsProjection() && this._getItemsProjection().at(i);
+                        if (item && !cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
+                           item = item.getContents();
+                           break;
                         }
-                        break;
+                     }
+                  }
+                  if (item) {
+                     this.setSelectedKey(item.getId());
+                     if (!this._container.parents('.controls-ListView').length) {
+                        //todo Это единственный на текущий момент способ проверить, что наш контейнер уже в контейнере ListView и тогда осуществлять scrollTo не нужно!
+                        this._scrollToItem(item.getId());
                      }
                   }
                }
@@ -1644,6 +1659,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
       setCurrentRoot: function(key) {
          var
             newRoot,
+            curRoot,
             filter = this.getFilter() || {},
             isFakeRoot = isPlainObject(this._options.root) && this._options.root[this._options.idProperty] === key;
          // Internet Explorer при удалении элемента сбрасывает фокус не выше по иерархии, а просто "в никуда" (document.activeElement === null).
@@ -1676,10 +1692,16 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             this.getListNavigation().setPosition(null);
             if (this.getSelectedItem()) {
                // Сохраняем ключ узла, в который провалились
+               curRoot = this.getCurrentRoot();
                if (typeof this.getCurrentRoot() === 'undefined') {
-                  this._hierPages[null] = this.getSelectedItem().get(this._options.navigation.config.field);
+                  curRoot = null;
+               }
+               if (this.getSelectedItem().get(this._options.parentProperty) === curRoot) {
+                  this._hierPages[curRoot] = this.getSelectedItem().get(this._options.navigation.config.field);
                } else {
-                  this._hierPages[this.getCurrentRoot()] = this.getSelectedItem().get(this._options.navigation.config.field);
+                  // Мы можем перейти в узел раскрыв дерево, а значит нужно сохранить курсор для родителя узла в который мы провалились
+                  // https://online.sbis.ru/opendoc.html?guid=8e6b6c2b-9dc4-44ef-8cad-8662f2ec65d8
+                  this._hierPages[this.getSelectedItem().get(this._options.parentProperty)] = this.getSelectedItem().get(this._options.navigation.config.field);
                }
             }
          }
