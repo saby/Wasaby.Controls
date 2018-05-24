@@ -1,0 +1,22 @@
+<div class="demo-Grid">
+    <div class="demo-Grid__container">
+        <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+            <ws:content>
+                <Controls.Grid
+                        attr:class="demo-Grid__control"
+                        keyProperty="id"
+                        displayProperty="title"
+                        markedKey="{{448390}}"
+                        multiselect="{{true}}"
+                        header="{{gridHeader}}"
+                        itemTemplate="tmpl!Controls-demo/List/Grid/DemoItem"
+                        source = "{{_viewSource}}"
+                        columns="{{gridColumns}}">
+                    <ws:editingConfig>
+                        <ws:Object editOnClick="{{true}}"/>
+                    </ws:editingConfig>
+                </Controls.Grid>
+            </ws:content>
+        </Controls.Container.Scroll>
+    </div>
+</div>

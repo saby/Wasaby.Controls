@@ -10,7 +10,7 @@ define('Controls-demo/Input/Number/Number', [
       _template: template,
       _placeholder: '',
       _text1: '',
-      _tagStyle: '',
+      _tagStyle: 'primary',
       _integersLength: 5,
       _precision: 2,
       _onlyPositive: true,

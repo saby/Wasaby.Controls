@@ -1,4 +1,4 @@
-define('Controls-demo/Container/DragNDrop/Notes/EntityTriangle', ['Controls/Controllers/DragNDrop/Entity/Item'],
+define('Controls-demo/DragNDrop/Notes/EntityTriangle', ['Controls/DragNDrop/Entity/Item'],
    function(Entity) {
       'use strict';
 
