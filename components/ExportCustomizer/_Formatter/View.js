@@ -280,12 +280,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                   }
                }
             }
-            if (has.fieldIds) {
+            if (has.fieldIds || has.fileUuid) {
                this._callFormatterMethod(options.fileUuid ? 'update' : 'create').addCallback(this._onFormatter.bind(this));
-            }
-            else
-            if (has.fileUuid) {
-               this._callFormatterMethod('update').addCallback(this._onFormatter.bind(this));
             }
          },
 
