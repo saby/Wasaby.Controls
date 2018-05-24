@@ -18,17 +18,10 @@ define('Controls/Input/Lookup/_Collection',
                   source: source
                });
             }
-            self.sourceController.load().addCallback(function(result) {
-               return _private.loadItemsCallback(self, result);
+            return self.sourceController.load().addCallback(function(result) {
+               self._items = result;
+               return result;
             });
-         },
-         
-         loadItemsCallback: function(self, result) {
-            self._items = result;
-            if (self._mounted) {
-               self._forceUpdate();
-            }
-            return result;
          }
       };
       
@@ -44,8 +37,13 @@ define('Controls/Input/Lookup/_Collection',
          },
          
          _beforeUpdate: function(newOptions) {
+            var self = this;
+            
             if (newOptions.source !== this._options.source) {
-               _private.loadItems(this, newOptions.source);
+               _private.loadItems(this, newOptions.source).addCallback(function(result) {
+                  self._forceUpdate();
+                  return result;
+               });
             }
          },
          
@@ -58,7 +56,8 @@ define('Controls/Input/Lookup/_Collection',
          return {
             size: 'default',
             style: 'default',
-            itemTemplate: ItemTemplate
+            itemTemplate: ItemTemplate,
+            clickable: false
          };
       };
       

@@ -1,5 +1,7 @@
 <div class="controls-Lookup__item controls-Lookup__item-{{isSingleItem ? 'single' : 'multi'}}">
-    <div class="controls-Lookup__item__caption controls-Lookup__item__caption-style-{{style}} controls-Lookup__item__caption-size-{{size}}">
+    <div class="controls-Lookup__item__caption controls-Lookup__item__caption-style-{{style}}
+                controls-Lookup__item__caption-size-{{size}}
+                {{clickable ? 'controls-Lookup__item__caption-clickable'}}">
         <ws:if data="{{contentTemplate}}">
             <ws:partial template="{{contentTemplate}}" item="{{item}}"/>
         </ws:if>
