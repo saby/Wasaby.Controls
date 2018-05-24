@@ -5,7 +5,7 @@
    <div attr:class="controls-MonthViewVDOM__table">
       <div if="{{_options.showWeekdays}}" attr:class="controls-MonthViewVDOM__tableRow controls-MonthView__tableHead">
          <div for="day in _days" attr:class="controls-MonthViewVDOM__item">
-            {{ day }}
+            {{ day.caption }}
          </div>
       </div>
       <ws:partial
