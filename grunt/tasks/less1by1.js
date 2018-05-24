@@ -132,7 +132,7 @@ module.exports = function less1by1Task(grunt) {
                            !~filepath.indexOf('_header.less') &&
                            !~filepath.indexOf('_mixins.less') &&
                            !~filepath.indexOf('_typograpy.less') &&
-                           !~filepath.indexOf('_general.less') &&
+                           !~filepath.indexOf('general.less') &&
                            !~filepath.indexOf('_flex.less') &&
                            !~filepath.indexOf('_defaults.less') &&
                            !~filepath.indexOf('_theme-fixme.less') &&
