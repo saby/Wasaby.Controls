@@ -321,11 +321,22 @@ define('Controls/List/EditInPlace', [
          }
       },
 
-      _onItemClick: function(e, record) {
+      _onItemClick: function(e, record, originalEvent) {
          if (this._options.editingConfig && this._options.editingConfig.editOnClick) {
             this.editItem({
                item: record
             });
+         }
+
+         this._clientX = originalEvent.nativeEvent.clientX;
+         this._clientY = originalEvent.nativeEvent.clientY;
+      },
+
+      _afterUpdate: function() {
+         if (this._clientX && this._clientY) {
+            document.elementFromPoint(this._clientX, this._clientY).focus();
+            this._clientX = null;
+            this._clientY = null;
          }
       },
 

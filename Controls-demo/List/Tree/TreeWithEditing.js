@@ -33,7 +33,7 @@ define('Controls-demo/List/Tree/TreeWithEditing', [
             },
             {
                displayProperty: 'Описание',
-               width: 'auto',
+               width: '1fr',
                template: treeEditingTemplate
             }
          ]
