@@ -4,8 +4,11 @@
 .controls-Checkbox__wrapper {
    cursor:pointer;
    display: inline-flex;
-   font-size: @font-size__checkBox;
    align-items: center;
+   font-size: @font-size__checkBox;
+}
+.controls-Checkbox__wrapper:before {
+   content: '\200b';
 }
 .controls-Checkbox__icon-border-color__enabled {
    color: @color_CheckBox__iconBox;
@@ -20,14 +23,14 @@
    color: @color_CheckBox___caption_disabled;
 }
 .controls-Checkbox__caption {
-   margin-left: @margin-left-CheckBox__icon_size;
    word-wrap: break-word;
    padding: @spacing_CheckBox-between-icon-caption;
 }
 .controls-Checkbox__icon {
-   position: absolute;
+   position: relative;
    .checkbox-border-size();
    .checkbox();
+   flex-shrink: 0;
 }
 .controls-Checkbox__icon:before {
    content: '';

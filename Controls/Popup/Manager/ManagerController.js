@@ -41,6 +41,10 @@ define('Controls/Popup/Manager/ManagerController', [],
             return this._manager.remove(id);
          },
 
+         popupUpdated: function(id) {
+            return this._manager._eventHandler(null, 'popupUpdated', id);
+         },
+
          /**
           * Найти popup
           */

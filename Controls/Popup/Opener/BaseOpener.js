@@ -13,6 +13,7 @@ define('Controls/Popup/Opener/BaseOpener',
        * @class Controls/Popup/Opener/Base
        * @mixes Controls/interface/IOpener
        * @control
+       * @public
        * @author Лощинин Дмитрий
        */
       var Base = Control.extend({
@@ -60,7 +61,7 @@ define('Controls/Popup/Opener/BaseOpener',
                return (new Deferred()).callback(config.template);
             } else if (requirejs.defined(config.template)) {
                return (new Deferred()).callback(requirejs(config.template));
-            } else if (!this._openerListDeferred) {
+            } else if (!this._openerListDeferred || this._openerListDeferred.isReady()) {
                this._openerListDeferred = new Deferred();
                requirejs([config.template], function(template) {
                   this._openerListDeferred.callback(template);
