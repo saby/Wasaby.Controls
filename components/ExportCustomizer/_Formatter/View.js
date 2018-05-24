@@ -114,7 +114,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                var fieldIds = options.fieldIds;
                if (fieldIds && fieldIds.length) {
                   if (!options.fileUuid) {
-                     this._callFormatterMethod('create').addCallback(this._onFormatter.bind(this));
+                     this._callFormatterMethod('create').addCallback(this._onFormatter.bind(this, 'create'));
                   }
                   else {
                      this._updatePreview();
@@ -144,7 +144,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             var options = this._options;
             var fieldIds = options.fieldIds;
             if (fieldIds && fieldIds.length) {
-               this._callFormatterMethod(useApp ? 'openApp' : 'open').addCallback(this._onFormatter.bind(this));
+               var method = useApp ? 'openApp' : 'open';
+               this._callFormatterMethod(method).addCallback(this._onFormatter.bind(this, method));
             }
          },
 
@@ -152,7 +153,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * Вызвать метод форматера
           *
           * @protected
-          * @param {object} values Набор из нескольких значений, которые необходимо изменить
+          * @param {string} method Имя метода
           * return {Core/Deferred}
           */
          _callFormatterMethod: function (method) {
@@ -209,11 +210,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * Обработчик обратного вызова после выполнения методов форматера
           *
           * @protected
+          * @param {string} method Имя метода
           * @param {string} fileUuid Uuid шаблона форматирования эксель-файла
           */
-         _onFormatter: function (fileUuid) {
+         _onFormatter: function (method, fileUuid) {
             var options = this._options;
-            if (fileUuid && !options.fileUuid) {
+            if (method === 'create' && fileUuid) {
                options.fileUuid = fileUuid;
                this.sendCommand('subviewChanged');
             }
@@ -281,7 +283,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                }
             }
             if (has.fieldIds || has.fileUuid) {
-               this._callFormatterMethod(options.fileUuid ? 'update' : 'create').addCallback(this._onFormatter.bind(this));
+               var method = options.fileUuid ? 'update' : 'create';
+               this._callFormatterMethod(method).addCallback(this._onFormatter.bind(this, method));
             }
          },
 
