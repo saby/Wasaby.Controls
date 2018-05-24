@@ -242,6 +242,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                this._unregisterPendingOperation(operation);
             }
 
+            if (this._parent) {
+               this._parent._childsMapId = this._parent._childsMapId || {};
+               this._parent._childsMapName = this._parent._childsMapName || {};
+               this._parent._childsTabindex = this._parent._childsTabindex || {};
+            }
+
             CompoundArea.superclass.destroy.apply(this, arguments);
          },
 
