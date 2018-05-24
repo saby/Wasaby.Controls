@@ -1,3 +1,5 @@
 <div>
-   <Controls.Event.Emitter if="{{_options.targetTracking}}" event="listScroll" on:listScroll="_scrollHandler()"/>
+   <ws:if data="{{_options.targetTracking}}">
+      <Controls.Event.Emitter event="listScroll" on:listScroll="_scrollHandler()"/>
+   </ws:if>
 </div>
