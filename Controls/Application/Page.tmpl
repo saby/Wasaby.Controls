@@ -25,6 +25,11 @@
          <link rel="stylesheet" href="{{ value }}" type="text/css" key="{{ 'css_' + index }}"/>
       </ws:for>
    </ws:if>
+   <ws:if data="{{cssBundles}}">
+      <ws:for data="i in cssBundles">
+         <script>define('css!{{i}}', '');</script>
+      </ws:for>
+   </ws:if>
    <title key="title">{{ title }}</title>
 </head>
 <Controls.Event.Listener name="scrollDetect" register="scroll" attr:fixCompatible="1">
@@ -80,12 +85,6 @@
                                                 compat="{{compat}}"
                                                 jsLinks="{{jsLinks}}"
                                                 _options="{{_options}}"/>
-
-                                    <ws:if data="{{cssBundles}}">
-                                       <ws:for data="{{ i in cssBundles }}">
-                                          <script>define('css!{{i}}', '');</script>
-                                       </ws:for>
-                                    </ws:if>
 
                                     <ws:if data="{{ _options.scripts }}">
                                        <ws:for data="i in _options.scripts">
