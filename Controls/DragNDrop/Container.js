@@ -8,12 +8,12 @@ define('Controls/DragNDrop/Container',
       return Control.extend({
          _template: template,
 
-         _dragInit: function(event, dragObject) {
-            this._children.dragInitDetect.start(dragObject);
+         _documentDragStart: function(event, dragObject) {
+            this._children.dragStartDetect.start(dragObject);
          },
 
-         _dragReset: function(event, dragObject) {
-            this._children.dragResetDetect.start(dragObject);
+         _documentDragEnd: function(event, dragObject) {
+            this._children.dragEndDetect.start(dragObject);
          }
       });
    });

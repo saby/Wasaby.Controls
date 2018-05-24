@@ -86,13 +86,11 @@ define('Controls/DragNDrop/Controller',
 
          _dragStart: function(dragObject) {
             this._notify('dragStart', [dragObject]);
-            this._notify('_dragInit', [dragObject], {bubbling: true});
+            this._notify('_documentDragStart', [dragObject], {bubbling: true});
          },
 
-         _onDragInit: function(dragObject) {
-            if (!this._isDragging) {
-               this._notify('dragInit', [dragObject]);
-            }
+         _documentDragStart: function(dragObject) {
+            this._notify('documentDragStart', [dragObject]);
          },
 
          _dragMove: function(dragObject) {
@@ -113,13 +111,11 @@ define('Controls/DragNDrop/Controller',
 
          _dragEnd: function(dragObject) {
             this._notify('dragEnd', [dragObject]);
-            this._notify('_dragReset', [dragObject], {bubbling: true});
+            this._notify('_documentDragEnd', [dragObject], {bubbling: true});
          },
 
-         _onDragReset: function(dragObject) {
-            if (!this._isDragging) {
-               this._notify('dragReset', [dragObject]);
-            }
+         _documentDragEnd: function(dragObject) {
+            this._notify('documentDragEnd', [dragObject]);
          },
 
          _getDragObject: function(mouseEvent, startEvent) {
@@ -139,8 +135,8 @@ define('Controls/DragNDrop/Controller',
             this._notify('register', ['touchmove', this, this._onMouseMove], {bubbling: true});
             this._notify('register', ['mouseup', this, this._onMouseUp], {bubbling: true});
             this._notify('register', ['touchend', this, this._onMouseUp], {bubbling: true});
-            this._notify('register', ['dragInit', this, this._onDragInit], {bubbling: true});
-            this._notify('register', ['dragReset', this, this._onDragReset], {bubbling: true});
+            this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
+            this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
          },
 
          _beforeUnmount: function() {
@@ -148,8 +144,8 @@ define('Controls/DragNDrop/Controller',
             this._notify('unregister', ['touchmove', this], {bubbling: true});
             this._notify('unregister', ['mouseup', this], {bubbling: true});
             this._notify('unregister', ['touchend', this], {bubbling: true});
-            this._notify('unregister', ['dragInit', this], {bubbling: true});
-            this._notify('unregister', ['dragReset', this], {bubbling: true});
+            this._notify('unregister', ['documentDragStart', this], {bubbling: true});
+            this._notify('unregister', ['documentDragEnd', this], {bubbling: true});
          }
       });
 
