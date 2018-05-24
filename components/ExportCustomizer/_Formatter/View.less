@@ -28,19 +28,22 @@
    .flex-shrink(0);
    margin: @margin_ExportCustomizer-Formatter-View-formatterMenu;
    padding: @padding_ExportCustomizer-Formatter-View-formatterMenu;
+}
+
+.controls-ExportCustomizer-Formatter-View__formatterMenu.ws-enabled {
    color: @color_ExportCustomizer-Formatter-View-formatterMenu;
 }
 
-.controls-ExportCustomizer-Formatter-View__formatterMenu .controls-Button__text:hover {
+.controls-ExportCustomizer-Formatter-View__formatterMenu.ws-enabled .controls-Button__text:hover {
    text-decoration: underline;
 }
 
 .controls-ExportCustomizer-Formatter-View__preview {
    height: @height_ExportCustomizer-Formatter-View-preview;
    overflow: hidden;
-   cursor: pointer;
 }
 
-.controls-ExportCustomizer-Formatter-View__preview img {
+.controls-ExportCustomizer-Formatter-View__preview img.ws-enabled {
    width: 100%;
+   cursor: pointer;
 }
