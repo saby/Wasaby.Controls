@@ -104,6 +104,14 @@ define('Controls/Application',
             self.cssBundles = receivedState.cssBundles || (context.AppData ? context.AppData.cssBundles : cfg.cssBundles);
             self.BodyClasses = BodyClasses;
 
+            if (receivedState && context.AppData) {
+               context.AppData.cssLinks = self.cssLinks;
+               context.AppData.wsRoot = self.wsRoot;
+               context.AppData.resourceRoot = self.resourceRoot;
+               context.AppData.jsLinks = self.jsLinks;
+               context.AppData.application = self.application;
+            }
+            
             /**
              * Этот перфоманс нужен, для сохранения состояния с сервера, то есть, cfg - это конфиг, который нам прийдет из файла
              * роутинга и с ним же надо восстанавливаться на клиенте.
