@@ -61,4 +61,9 @@ define('Controls/interface/IStickyOpener', [], function() {
     * @name Controls/interface/IStickyOpener#popupOptions.corner
     * @cfg {HorizontalAlign} Sets the popup build point
     */
+
+   /**
+    * @name Controls/interface/IStickyOpener#targetTracking
+    * @cfg {Boolean} Popup follows the target
+    */
 });
