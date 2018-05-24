@@ -1,6 +1,7 @@
 define('SBIS3.CONTROLS/Date/RangeChoose',[
    'Core/constants',
    "Core/Deferred",
+   'Core/detection',
    "Core/IoC",
    "Lib/Control/CompoundControl/CompoundControl",
    "tmpl!SBIS3.CONTROLS/Date/RangeChoose/DateRangeChoose",
@@ -11,7 +12,7 @@ define('SBIS3.CONTROLS/Date/RangeChoose',[
    "SBIS3.CONTROLS/Button/IconButton",
    "SBIS3.CONTROLS/Link",
    'css!SBIS3.CONTROLS/Date/RangeChoose/DateRangeChoose'
-], function (constants, Deferred, IoC, CompoundControl, dotTplFn, RangeMixin, DateRangeMixin, eHelpers, dateHelpers) {
+], function (constants, Deferred, detection, IoC, CompoundControl, dotTplFn, RangeMixin, DateRangeMixin, eHelpers, dateHelpers) {
    'use strict';
     /**
      * @class SBIS3.CONTROLS/Date/RangeChoose
@@ -102,7 +103,9 @@ define('SBIS3.CONTROLS/Date/RangeChoose',[
              *
              * @see updateIcons
              */
-            iconsHandler: null
+            iconsHandler: null,
+
+            _fix165c4103: true
          },
          _cssDateRangeChoose: {
             selected: 'controls-DateRangeChoose__selected',
@@ -175,8 +178,8 @@ define('SBIS3.CONTROLS/Date/RangeChoose',[
       },
 
       init: function () {
-         var self = this,
-            container = this.getContainer();
+         var container = this.getContainer(),
+            eventName;
 
          DateRangeChoose.superclass.init.call(this);
 
@@ -190,45 +193,44 @@ define('SBIS3.CONTROLS/Date/RangeChoose',[
             container.addClass(this._cssDateRangeChoose.showCheckboxes);
          }
 
-         container.find(['.', this._cssDateRangeChoose.currentValue].join('')).click(this._onHeaderClick.bind(this));
+         container.on('click', ['.', this._cssDateRangeChoose.currentValue].join(''), this._onHeaderClick.bind(this));
 
-         // TODO: вынести в отдельные функции
-         container.find(['.', this._cssDateRangeChoose.halfYearCaption].join('')).mouseenter(
-            function (e) {
-               $(e.target).closest(['.', this._cssDateRangeChoose.halfYear].join('')).addClass(this._cssDateRangeChoose.selected);
-            }.bind(this)
-         ).mouseleave(
-            function (e) {
-               $(e.target).closest(['.', this._cssDateRangeChoose.halfYear].join('')).removeClass(this._cssDateRangeChoose.selected);
-            }.bind(this)
-         );
+         eventName = detection.isMobileIOS ? 'touchstart' : 'mouseenter';
+         container.on(eventName, ['.', this._cssDateRangeChoose.halfYearCaption].join(''), function(e) {
+            $(e.target).closest(['.', this._cssDateRangeChoose.halfYear].join('')).addClass(this._cssDateRangeChoose.selected);
+         }.bind(this));
+         container.on(eventName, ['.', this._cssDateRangeChoose.quarterCaption].join(''), function(e) {
+            $(e.target).closest(['.', this._cssDateRangeChoose.quarter].join('')).addClass(this._cssDateRangeChoose.selected);
+         }.bind(this));
 
-         container.find(['.', this._cssDateRangeChoose.quarterCaption].join('')).mouseenter(
-            function (e) {
-               $(e.target).closest(['.', this._cssDateRangeChoose.quarter].join('')).addClass(this._cssDateRangeChoose.selected);
-            }.bind(this)
-         ).mouseleave(
-            function (e) {
-               $(e.target).closest(['.', this._cssDateRangeChoose.quarter].join('')).removeClass(this._cssDateRangeChoose.selected);
-            }.bind(this)
-         );
 
-         if (this._options.showYears) {
-            container.find(['.', this._cssDateRangeChoose.yearButton].join('')).click(this._onYearClick.bind(this));
-         }
+         eventName = detection.isMobileIOS ? 'touchend' : 'mouseleave';
+         container.on(eventName, ['.', this._cssDateRangeChoose.halfYearCaption].join(''), function(e) {
+            $(e.target).closest(['.', this._cssDateRangeChoose.halfYear].join('')).removeClass(this._cssDateRangeChoose.selected);
+         }.bind(this));
+         container.on(eventName, ['.', this._cssDateRangeChoose.quarterCaption].join(''), function(e) {
+            $(e.target).closest(['.', this._cssDateRangeChoose.quarter].join('')).removeClass(this._cssDateRangeChoose.selected);
+         }.bind(this));
+
          container.on('mouseleave mouseenter', ['.', this._cssDateRangeChoose.yearButton].join(''), this._onMouseOver.bind(this));
 
-         container.find('.controls-DateRangeChoose__year-prev').click(this._onPrevYearBtnClick.bind(this));
-         container.find('.controls-DateRangeChoose__year-next').click(this._onNextYearBtnClick.bind(this));
-         container.find('.controls-DateRangeChoose__yearsMode-prev').click(this._onNextYearBtnClick.bind(this));
-         container.find('.controls-DateRangeChoose__yearsMode-next').click(this._onPrevYearBtnClick.bind(this));
+         container.on('click', '.controls-DateRangeChoose__year-prev', this._onPrevYearBtnClick.bind(this));
+         container.on('click', '.controls-DateRangeChoose__year-next', this._onNextYearBtnClick.bind(this));
+         container.on('click', '.controls-DateRangeChoose__yearsMode-prev', this._onNextYearBtnClick.bind(this));
+         container.on('click', '.controls-DateRangeChoose__yearsMode-next', this._onPrevYearBtnClick.bind(this));
          eHelpers.wheel(container.find(['.', this._cssDateRangeChoose.yearsModeWrapper].join('')), this._onMouseWheel.bind(this));
 
-         container.find(['.', this._cssDateRangeChoose.halfYearCaption].join('')).click(this._onHalfYearClick.bind(this));
-         container.find(['.', this._cssDateRangeChoose.quarterCaption].join('')).click(this._onQuarterClick.bind(this));
          container.find(['.', this._cssDateRangeChoose.month].join('')).click(this._onMonthClick.bind(this));
 
-         container.find(['.', this._cssDateRangeChoose.yearsModeWrapper, '>*'].join('')).click(this._onYearsModeWrapperClick.bind(this));
+         // На IOS события click проходят только со второго раза, подписываемся на touchEnd
+         eventName = detection.isMobileIOS ? 'touchend' : 'click';
+         container.on(eventName, ['.', this._cssDateRangeChoose.quarterCaption].join(''), this._onQuarterClick.bind(this));
+         container.on(eventName, ['.', this._cssDateRangeChoose.halfYearCaption].join(''), this._onHalfYearClick.bind(this));
+         if (this._options.showYears) {
+            container.on(eventName, ['.', this._cssDateRangeChoose.yearButton].join(''), this._onYearClick.bind(this));
+         }
+
+         container.on('click', ['.', this._cssDateRangeChoose.yearsModeWrapper, '>*'].join(''), this._onYearsModeWrapperClick.bind(this));
 
          this.getChildControlByName('HomeButton').subscribe('onActivated', this._onHomeClick.bind(this));
 
@@ -602,6 +604,11 @@ define('SBIS3.CONTROLS/Date/RangeChoose',[
          } else {
             return currentYear;
          }
+      },
+
+      destroy: function() {
+         this._container.off('touchstart touchend mouseenter mouseleave click');
+         DateRangeChoose.superclass.destroy.apply(this, arguments);
       }
    });
 

@@ -30,9 +30,9 @@
       <Controls.Label name="myLabel1" caption="maxLength"/>
       <Controls.Input.Text attr:id="maxLength" bind:value="_maxLength"/>
       <Controls.Label name="myLabel1" caption="minLines"/>
-      <Controls.Input.Text attr:id="minLines" bind:value="_minLines"/>
+      <Controls.Input.Number attr:id="minLines" bind:value="_minLines" precision="{{0}}"/>
       <Controls.Label name="myLabel1" caption="maxLines"/>
-      <Controls.Input.Text attr:id="maxLines" bind:value="_maxLines"/>
+      <Controls.Input.Number attr:id="maxLines" bind:value="_maxLines" precision="{{0}}"/>
       <div>
          <Controls.Toggle.Checkbox attr:id="trim" readOnly="{{false}}" bind:value="_trim" caption="trim"/>
          <Controls.Toggle.Checkbox attr:id="validationErrors" on:valueChanged="valueChangedHandler()" readOnly="{{false}}"

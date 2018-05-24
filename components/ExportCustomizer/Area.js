@@ -1,6 +1,9 @@
 /**
  * Контрол "Область редактирования настройщика экспорта"
  *
+ * Для того, чтобы возможно было использовать сохранямые и редактируемые пресеты (предустановленные сочетания параметров экспорта), необходимо подключить модуль 'SBIS3.ENGINE/Controls/ExportPresets/Loader'
+ * Для того, чтобы возможно было использовать редактируемые стилевые шаблоны эксель файла, необходимо подключить модуль 'PrintingTemplates/ExportFormatter/Excel'
+ *
  * @public
  * @class SBIS3.CONTROLS/ExportCustomizer/Area
  * @extends SBIS3.CONTROLS/CompoundControl
@@ -57,6 +60,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
        * @property {string} title Отображаемое название пресета
        * @property {Array<string>} fieldIds Список привязки колонок в экспортируемом файле к полям данных
        * @property {string} fileUuid Uuid шаблона форматирования эксель-файла
+       */
+
+      /**
+       * @typedef {object} ExportValidator Тип, описывающий валидаторы результатов редактирования
+       * @property {function(object, function):(boolean|string)} validator Функция проверки. Принимает два аргумента. Первый - объект с проверяемыми данными. Второй - геттер опции по её имени. Геттер позволяет получить доступ к опциям, которые есть в настройщике экспорта в момент валидации. Должна возвратить либо логическое значение, показывающее пройдена ли проверка, либо строку с сообщением об ошибке
+       * @property {Array<*>} [params] Дополнительные аргументы функции проверки, будут добавлены после основных (опционально)
+       * @property {string} [errorMessage] Сообщение об ошибке по умолчанию (опционально)
+       * @property {boolean} [noFailOnError] Указывает на то, что если проверка не пройдена, это не является фатальным. В таком случае пользователю будет показан диалог с просьбой о подтверждении (опционально)
        */
 
       /**
@@ -177,6 +188,25 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          },
          fieldGroupTitles: _typeIfDefined.bind(null, 'object'),
          fileUuid: _typeIfDefined.bind(null, 'string'),
+         validators: function (value) {
+            // Если значение есть, то оно должна быть массивом
+            if (value && !Array.isArray(value)) {
+               return new Error('Value must be an Array');
+            }
+            if (value) {
+               // И каждый элемент массива должен быть {@link ExportValidator}
+               if (!value.every(function (v) { return (
+                     typeof v === 'object' &&
+                     (v.validator && typeof v.validator === 'function') &&
+                     (!v.params || Array.isArray(params)) &&
+                     (!v.errorMessage || typeof v.errorMessage === 'string') &&
+                     (!v.noFailOnError || typeof v.noFailOnError === 'boolean')
+                  ); })) {
+                  return new Error('Value items must be an ExportValidator');
+               }
+            }
+            return value;
+         },
          outputCall: function (value) {
             // Если значение есть
             if (value) {
@@ -204,6 +234,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
        * @type {object}
        */
       var _DEFAULT_OPTIONS = {
+         validators: [{
+            validator: function (data, optionGetter) { return !!(data.fieldIds && data.fieldIds.length); },
+            errorMessage: rk('Не выбрано ни одной колонки для экспорта', 'НастройщикЭкспорта')
+         }]
       };
 
       /**
@@ -232,6 +266,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          'fieldIds',
          'fieldGroupTitles',
          'fileUuid',
+         'validators',
          'outputCall'
       ];
 
@@ -302,7 +337,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                 */
                presetNamespace: null,
                /**
-                * @cfg {string|number} Идентификатор пресета, который будет выбран в списке пресетов (опционально)
+                * @cfg {string|number} Идентификатор пресета, который будет выбран в списке пресетов. Если будет указан пустое значение (null или пустая строка), то это будет воспринято как указание создать новый пустой пресет и выбрать его. Если значение не будет указано вовсе (или будет указано значение undefined), то это будет воспринято как указание выбрать пресет, который был выбран в прошлый раз (опционально)
                 */
                selectedPresetId: null,
                /**
@@ -322,10 +357,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                 */
                fileUuid: null,
                /**
+                * @cfg {Array<ExportValidator>} Список валидаторов результатов редактирования (опционально)
+                */
+               validators: null,
+               /**
                 * @cfg {ExportRemoteCall} Информация для вызова метода удалённого сервиса для отправки данных вывода (опционально)
                 */
                outputCall: null
-               // TODO: добавить валидаторы
             },
             // Список имён вложенных под-компонентов
             _SUBVIEW_NAMES: {
@@ -720,7 +758,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                serviceParams: options.serviceParams,
                fieldIds: options.fieldIds,
                columnTitles: this._selectFields(options.allFields, options.fieldIds, function (v) { return v.title; }),
-               fileUuid: options.fileUuid
+               fileUuid: options.fileUuid || null//Если значначение пусто, значит стилевого шаблона нет. БЛ в таком случае безальтернативно требует значения null
             };
             return withValidation
                ?

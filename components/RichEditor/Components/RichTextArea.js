@@ -92,8 +92,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          // 1175061954 https://online.sbis.ru/opendoc.html?guid=296b17cf-d7e9-4ff3-b4d9-e192627b41a1
          TINYMCE_URL_BASE = cConstants.browser.isIE && _getTrueIEVersion() < 11 ? 'SBIS3.CONTROLS/RichEditor/third-party/tinymce46-ie10' : 'SBIS3.CONTROLS/RichEditor/third-party/tinymce',
          EDITOR_MODULES = [
-            'css!' + TINYMCE_URL_BASE + '/skins/lightgray/skin',
-            'css!' + TINYMCE_URL_BASE + '/skins/lightgray/content.inline',
             TINYMCE_URL_BASE + '/tinymce'
          ],
          constants = {
@@ -208,6 +206,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                 */
                singleLine: false,
                editorConfig: {
+                  theme: false,
                   className: null,
                   plugins: 'media,paste,lists,noneditable,codesample',
                   codesample_content_css: false,
@@ -3148,7 +3147,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      var diff = contentHeight - content.clientHeight;
                      if (isChanged) {
                         var parent = content.parentNode;
-                        if (this._tinyEditor.selection.getBoundingClientRect()) {
+                        if (this._tinyEditor) {
                            if (parent.clientHeight < contentHeight) {
                               // Также, если прокрутка уже задействована и текущий рэнж находится в самом низу области редактирования. Определяем это по
                               // расстоянию от нижнего края рэнжа до нижнего края области минус увеличение высоты (diff) и минус нижний отступ области

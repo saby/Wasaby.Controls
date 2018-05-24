@@ -1,0 +1,17 @@
+<div class="demo-Grid">
+    <div class="demo-Grid__container">
+        <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+            <Controls.TreeGrid
+                    attr:class="demo-Grid__control"
+                    keyProperty="id"
+                    parentProperty="Раздел"
+                    nodeProperty="Раздел@"
+                    source = "{{_viewSource}}"
+                    columns="{{gridColumns}}">
+                <ws:editingConfig>
+                    <ws:Object editOnClick="{{true}}"/>
+                </ws:editingConfig>
+            </Controls.TreeGrid>
+        </Controls.Container.Scroll>
+    </div>
+</div>

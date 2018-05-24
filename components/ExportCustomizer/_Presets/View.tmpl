@@ -1,12 +1,12 @@
 <div class="controls-ExportCustomizer-Presets-View">
    <SBIS3.CONTROLS:SelectorButton
-      className="controls-ExportCustomizer-Presets-View__button"
-      name="controls-ExportCustomizer-Presets-View__button"
+      className="controls-ExportCustomizer-Presets-View__selector"
+      name="controls-ExportCustomizer-Presets-View__selector"
       withoutCross="{{true}}"
       items="{{_items}}"
       idProperty="id"
       displayProperty="title"
-      selectedKeys="{{_selectedId ? [_selectedId] : []}}"
+      selectedKeys="{{selectedId ? [selectedId] : []}}"
       multiselect="{{false}}"
       dictionaries="{{ [{
          'template': 'SBIS3.CONTROLS/ListView',
@@ -20,11 +20,12 @@
          'componentOptions': {
             'className': 'controls-ExportCustomizer-Presets-View__list controls-ListView__orangeMarker',
             'items': _items,
-            'selectedKey': _selectedId,
+            'selectedKey': selectedId,
             'idProperty': 'id',
             'displayProperty': 'title',
             'itemContentTpl': 'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/item',
             'itemsActions': [],
+            'editMode': 'toolbar|single',
             'editingTemplate': 'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/edit',
             'itemsActionsInItemContainer': true,
             '_footerTitle': addNewTitle
@@ -38,4 +39,22 @@
          <ws:if data="{{presetsTooltip}}">{{presetsTooltip}}</ws:if><ws:else>{[НастройщикЭкспорта@@Выбрать другой шаблон]}</ws:else>
       </ws:tooltip>
    </SBIS3.CONTROLS:SelectorButton>
+   <SBIS3.CONTROLS.EditAtPlace
+      className="controls-ExportCustomizer-Presets-View__editor"
+      name="controls-ExportCustomizer-Presets-View__editor"
+      enableControlPanel="{{true}}"
+      editInPopup="{{false}}"
+      visible="{{false}}"
+      text="{{'editedTitle'|mutable}}"
+      >
+      <ws:editorTpl>
+         <SBIS3.CONTROLS.TextBox
+            className="controls-ExportCustomizer-Presets-View__input"
+            name="controls-ExportCustomizer-Presets-View__input"
+            maxLength="64"
+            text="{{'editedTitle'|mutable}}"
+         />
+      </ws:editorTpl>
+   </SBIS3.CONTROLS.EditAtPlace>
+
 </div>

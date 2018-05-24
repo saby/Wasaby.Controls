@@ -105,6 +105,8 @@ define('Controls/List/ListViewModel',
             this._editingItemData = itemData;
             if (itemData && itemData.item) {
                this.setMarkedKey(itemData.item.get(this._options.keyProperty));
+            } else {
+               this._nextVersion();
             }
          },
          setItemActions: function(item, actions) {
