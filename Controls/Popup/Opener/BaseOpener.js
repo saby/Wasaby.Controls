@@ -13,6 +13,7 @@ define('Controls/Popup/Opener/BaseOpener',
        * @class Controls/Popup/Opener/Base
        * @mixes Controls/interface/IOpener
        * @control
+       * @public
        * @author Лощинин Дмитрий
        */
       var Base = Control.extend({
