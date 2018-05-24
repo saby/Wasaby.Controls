@@ -25,7 +25,7 @@
     <ws:else>
         <div attr:class="controls-ListView__itemContent">{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>
     </ws:else>
-    <ws:if data="{{itemData.itemActions  && itemData.itemActions.all && itemData.itemActions.all.length}}">
+    <ws:if data="{{itemData.itemActions  && itemData.itemActions.all && itemData.itemActions.showed.length}}">
         <ws:if data="{{itemData.isSwiped}}">
             <ws:partial template="{{swipeTemplate}}"  itemData="{{itemData}}" itemActionsTemplate="{{itemActionsTemplate}}"/>
         </ws:if>

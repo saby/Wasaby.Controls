@@ -93,10 +93,10 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          }
       },
 
-      updateModel: function(options, newOptions) {
+      updateModel: function(newOptions) {
          _private.updateActions(newOptions);
          newOptions.listModel.subscribe('onListChange', function() {
-            _private.updateActions(options);
+            _private.updateActions(newOptions);
          });
       },
 
@@ -123,13 +123,13 @@ define('Controls/List/ItemActions/ItemActionsControl', [
 
       _beforeMount: function(newOptions) {
          if (newOptions.listModel) {
-            _private.updateModel(this._options, newOptions);
+            _private.updateModel(newOptions);
          }
       },
 
       _beforeUpdate: function(newOptions) {
          if (newOptions.listModel && (this._options.listModel !== newOptions.listModel)) {
-            _private.updateModel(this._options, newOptions);
+            _private.updateModel(newOptions);
          }
 
          if (newOptions.itemActions && (this._options.itemActions !== newOptions.itemActions)) {
