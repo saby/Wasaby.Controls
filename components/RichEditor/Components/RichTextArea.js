@@ -2046,6 +2046,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if(cConstants.browser.isIE) {
                   html = html.replace(/(<br>)*<\/p>$/, "<\/p>");
                   html = html.replace(/(<br>)*$/, "");
+                  // В ie при копировании текста между задачами появлялись большие отступы, если в выделение
+                  // попадал текст кнопок интерфейса ("Прикрепить", "Создать", "Подзадача" и т.п.).
+                  // https://online.sbis.ru/opendoc.html?guid=f76a1158-4c07-4cc7-ae6b-b980ecb491fb
+                  html = html.replace(/(<p><br><\/p>)|(<p><\/p>)*/gm,"");
+                  html = html.replace(/(<p><br>)/gm,"<p>");
                }
 
                // Замена отступов после переноса строки и в первой строке
