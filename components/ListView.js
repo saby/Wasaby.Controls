@@ -2721,7 +2721,9 @@ define('SBIS3.CONTROLS/ListView',
                targetElement = this._getDomElementByItem(item);
 
             if (toolbarTarget && targetElement && toolbarTarget.container.get(0) === targetElement.get(0)) {
-               if (toolbar.isToolbarLocking() && this._options.itemsActionsInItemContainer) {
+               // Нужно всегда при перерисовке записи разблокировать тулбар, иначе будет зависший канал от trackElement
+               // https://online.sbis.ru/opendoc.html?guid=62f91f28-78ab-4022-9727-7b951536f771
+               if (toolbar.isToolbarLocking()) {
                   toolbar.unlockToolbar();
                }
                toolbar.hide();
@@ -2735,7 +2737,7 @@ define('SBIS3.CONTROLS/ListView',
                toolbarTarget.container = this._getDomElementByItem(item);
                toolbar.setCurrentTarget(toolbarTarget);
             }
-            return redrawResult
+            return redrawResult;
          },
 
          _showToolbar: function(model) {
