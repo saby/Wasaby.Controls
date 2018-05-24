@@ -8,25 +8,15 @@
     </ws:if>
 
     <ws:if data="{{contentTemplate}}">
-        <ws:if data="{{itemData.isEditing}}">
-            <Controls.List.EditInPlace.EditingRow>
-                <ws:partial
-                        attr:class="controls-ListView__itemContent"
-                        template="{{contentTemplate}}"
-                        itemData="{{itemData}}"/>
-            </Controls.List.EditInPlace.EditingRow>
-        </ws:if>
-        <ws:else>
-            <ws:partial
-                    attr:class="controls-ListView__itemContent"
-                    template="{{contentTemplate}}"
-                    itemData="{{itemData}}"/>
-        </ws:else>
+        <ws:partial
+                attr:class="controls-ListView__itemContent"
+                template="{{contentTemplate}}"
+                itemData="{{itemData}}"/>
     </ws:if>
     <ws:else>
         <div attr:class="controls-ListView__itemContent">{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>
     </ws:else>
-    <ws:if data="{{itemData.itemActions  && itemData.itemActions.all && itemData.itemActions.all.length}}">
+    <ws:if data="{{itemData.itemActions  && itemData.itemActions.all && itemData.itemActions.showed.length}}">
         <ws:if data="{{itemData.isSwiped}}">
             <ws:partial template="{{swipeTemplate}}"  itemData="{{itemData}}" itemActionsTemplate="{{itemActionsTemplate}}"/>
         </ws:if>

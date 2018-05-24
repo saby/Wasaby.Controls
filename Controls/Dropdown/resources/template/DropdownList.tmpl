@@ -7,23 +7,16 @@
                   scope="{{_headConfig}}"/>
    </ws:if>
    <Controls.Container.Scroll attr:class="controls-ScrollContainer__flex controls-DropdownList__scroll">
-      <ws:content>
-         <ws:if data="{{_options.contentTemplate}}">
-            <ws:partial template="{{_options.contentTemplate}}" scope="{{...}}"/>
-         </ws:if>
-         <ws:else>
-            <ws:partial template="tmpl!Controls/Dropdown/resources/template/For" listModel="{{_listModel}}"
-                        itemTemplate="{{_options.itemTemplate}}"
-                        defaultItemTemplate="{{_defaultItemTemplate}}"
-                        hierarchyPadding="{{(_options.headConfig.menuStyle === 'cross') ? true : false}}"
-                        parentProperty="{{_options.parentProperty}}"
-                        iconPadding="{{_options.iconPadding}}"
-                        resultHandler="{{resultHandler}}"></ws:partial>
-         </ws:else>
-      </ws:content>
+      <ws:partial template="tmpl!Controls/Dropdown/resources/template/For" listModel="{{_listModel}}"
+                  itemTemplate="{{_options.itemTemplate}}"
+                  defaultItemTemplate="{{_defaultItemTemplate}}"
+                  hierarchyPadding="{{(_options.headConfig.menuStyle === 'cross') ? true : false}}"
+                  parentProperty="{{_options.parentProperty}}"
+                  iconPadding="{{_options.iconPadding}}"
+                  resultHandler="{{resultHandler}}"></ws:partial>
    </Controls.Container.Scroll>
    <div if="{{_options.footerTemplate}}" class="controls-DropdownList__footer" on:click="_footerClick()">
-      <ws:partial template="{{_options.footerTemplate}}" />
+      <ws:partial template="{{_options.footerTemplate}}"/>
    </div>
    <!--todo Emitter должен переехать в попап, когда будем делать попапы, показывающиеся при наведении мыши-->
    <Controls:Event:Emitter if="{{_hasHierarchy}}" event="mousemove" on:mousemove="_mousemoveHandler()"/>

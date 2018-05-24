@@ -1,9 +1,9 @@
-define('Controls-demo/Container/DragNDrop', [
+define('Controls-demo/DragNDrop/Container', [
    'Core/Control',
    'Core/core-clone',
    'WS.Data/Source/Memory',
-   'tmpl!Controls-demo/Container/DragNDrop/DragNDrop',
-   'css!Controls-demo/Container/DragNDrop/DragNDrop'
+   'tmpl!Controls-demo/DragNDrop/Container/Container',
+   'css!Controls-demo/DragNDrop/Container/Container'
 ], function(BaseControl, cClone, Memory, template) {
    'use strict';
 
