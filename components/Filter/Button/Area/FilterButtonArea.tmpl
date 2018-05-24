@@ -33,7 +33,7 @@
                                 scope="{{ componentOptions }}"
                                 tabindex="0"
                         />
-                        <SBIS3.CONTROLS:Filter:Button:History if="{{ viewMode === 'oneColumn' && historyController }}" name="filterHistory" tabindex="0" />
+                        <SBIS3.CONTROLS:Filter:Button:History if="{{ viewMode === 'oneColumn' && historyController }}" name="filterHistory" tabindex="0" visible="{{ hasHistory }}"/>
                     </div>
                 </div>
                 <div if="{{ viewMode === 'twoColumns' }}" class="controls__filterButton__area-secondColumn ws-hidden">

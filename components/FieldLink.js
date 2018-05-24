@@ -574,7 +574,7 @@ define('SBIS3.CONTROLS/FieldLink',
            * @example
            * @param {String|Object.<String, *>} template Компонент или конфигурация (объект) компонета, который будет использован для построения справочника.
            * @param {Object} componentOptions Опции, которые будут использованы в компоненте при построении справочника.
-           * Подробное описание можно прочесть {@link SBIS3.CONTROLS/FieldLink/dictionaries.typedef здесь}.
+           * Подробное описание можно прочесть {@link SBIS3.CONTROLS/FieldLink/Dictionaries.typedef здесь}.
            * @example
            * <pre>
            *     this.showSelector(

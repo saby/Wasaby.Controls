@@ -107,7 +107,9 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
 
             item.set('visible', true);
             item.set('pinned', true);
-            oldElement.set('pinned', true);
+            if (oldElement) {
+               oldElement.set('pinned', true);
+            }
             self._count++;
          });
 
@@ -206,6 +208,20 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
          return recentItems;
       },
 
+      getFilteredOldItems: function(self, curHistoryLength) {
+         var oldItems;
+         var length = curHistoryLength;
+         var isCondition;
+
+         oldItems = !self._options.maxHistoryLength ? self._options.oldItems : Chain(self._options.oldItems).filter(function() {
+            isCondition = length < self._options.maxHistoryLength;
+            length++;
+            return isCondition;
+         }).value(recordSetFactory, this.getConfig(self));
+
+         return oldItems;
+      },
+
       processHistory: function(self) {
          var processedItems = new RecordSet({
                adapter: this.getAdapter(self),
@@ -246,7 +262,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
          if (processedItems.getCount()) {
             indexLastHistoryItem = processedItems.getCount() - 1;
          }
-         processedItems.append(self._options.oldItems);
+         processedItems.append(_private.getFilteredOldItems(self, processedItems.getCount()));
 
          // скрываем лишние
          if (processedItems.getCount() > 11 && self._options.additionalProperty) {
@@ -465,7 +481,8 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
             maxCountRecent: 3,
             oldItems: null,
             subContainers: null,
-            parentProperty: null
+            parentProperty: null,
+            maxHistoryLength: null
          },
          _historyDataSource: null,
          _historyDeferred: null,

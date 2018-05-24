@@ -1,4 +1,4 @@
-<html attr:lang="ru" attr:xml:lang="ru" attr:xmlns="http://www.w3.org/1999/xhtml" attr:key="1_" attr:id="root"
+<html attr:lang="ru" attr:xml:lang="ru" attr:xmlns="http://www.w3.org/1999/xhtml" attr:key="_" attr:id="root"
       attr:component="Controls/Application">
 <head key="1_1_">
    <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -71,6 +71,19 @@
                               <ws:partial template="tmpl!Controls/Application/startApplicationScript" compat="{{compat}}"
                                           jsLinks="{{jsLinks}}"
                                           _options="{{_options}}"/>
+
+                              <span id="cssBundles" style="display:none;">
+                                 <ws:if data="{{ cssBundles }}">
+                                    <ws:for data="link in cssBundles">>
+                                       {{ 'define("css!' + link + '", "");' }}
+                                    </ws:for>
+                                 </ws:if>
+                              </span>
+
+                              <script>
+                                 var cssBundles = document.getElementById('cssBundles');
+                                 eval(cssBundles.innerText);
+                              </script>
 
                               <ws:if data="{{ _options.scripts }}">
                                  <ws:for data="i in _options.scripts">
