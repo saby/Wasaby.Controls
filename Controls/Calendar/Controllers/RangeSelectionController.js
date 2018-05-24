@@ -102,7 +102,7 @@ define('Controls/Calendar/Controllers/RangeSelectionController', [
     * в данный момент происходит взаимодействие.
     *
     * @class Controls/Calendar/Controllers/RangeSelectionController
-    * @extends Core/Abstract
+    * @extends Core/Control
     * @mixes Controls/Calendar/interface/IRangeSelectable
     * @author Миронов А.Ю.
     */
