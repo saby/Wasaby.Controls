@@ -25,7 +25,7 @@ define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
                if (rightCalc > 0) {
                   right += rightCalc;
                }
-               isHidden = width + right > document.body.clientWidth;
+               isHidden = width + right > this.getWindowSizes().width;
             }
          }
          return {
@@ -34,6 +34,12 @@ define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
             top: tCoords.top,
             bottom: 0,
             hidden: isHidden
+         };
+      },
+      getWindowSizes: function() {
+         return {
+            width: window.innerWidth,
+            height: window.innerHeight
          };
       }
    };
