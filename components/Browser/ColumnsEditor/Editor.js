@@ -261,7 +261,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
                   useOriginPresetTitle: _selectValue('useOriginPresetTitle', allSources, 'boolean'),
                   moveColumns: _selectValue('moveColumns', edDefSources, 'boolean'),
                   preserveOrder: _selectValue('preserveOrder', edDefSources, 'boolean'),
-                  multiselect: _selectValue('multiselect', edDefSources, 'boolean'),
+                  multiselect: _selectValue('multiselect', edDefSources, 'boolean', true),
                   handlers: {
                      onComplete: this._onAreaComplete.bind(this)
                   }
@@ -314,7 +314,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
 
       // Приватные свойства
 
-      var _selectValue = function (name, sources, type) {
+      var _selectValue = function (name, sources, type, defaultValue) {
          var noType = !type;
          for (var i = 0; i < sources.length; i++) {
             var src = sources[i];
@@ -325,6 +325,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
                }
             }
          }
+         return defaultValue;
       };
 
 

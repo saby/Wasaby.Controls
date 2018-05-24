@@ -262,7 +262,10 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
                      checkItems(self._favoriteView);
                   });
    
-                  self._favoriteView.getItems().prepend(favoriteAllList.getHistory().clone());
+                  /* записей может не быть, пока грузится история */
+                  if (self._favoriteView.getItems()) {
+                     self._favoriteView.getItems().prepend(favoriteAllList.getHistory().clone());
+                  }
    
                   self.processViews(function(view) {
                      self.subscribeTo(view, 'onItemActivate', function(event, itemObj) {
