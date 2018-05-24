@@ -28,9 +28,9 @@ define('Controls/Input/Lookup/_Collection',
       var Collection = Control.extend({
          _template: template,
          
-         _beforeMount: function(options, context, recivedState) {
-            if (recivedState) {
-               this._items = recivedState;
+         _beforeMount: function(options, context, receivedState) {
+            if (receivedState) {
+               this._items = receivedState;
             } else {
                return _private.loadItems(this, options.source);
             }
