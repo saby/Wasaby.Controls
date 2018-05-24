@@ -1,7 +1,7 @@
 <div style="margin: 20px">
-   <Controls.Input.ComboBox items="{{_createMemory()}}"
+   <Controls.Input.ComboBox source="{{_createMemory()}}"
                             keyProperty="id"
                             displayProperty="title"
-                            bind:value="_value"
+                            bind:selectedKey="_selKey"
                             attr:style="width: 200px;"/>
 </div>

@@ -1,4 +1,6 @@
-<div class="controls-DropdownList__popup" style="width: {{_options.width ? _options.width + 'px'}}">
+<div class="controls-DropdownList__popup
+            controls-DropdownList__popup-shadow-{{_options.typeShadow}}"
+            style="width: {{_options.width ? _options.width + 'px'}}">
    <ws:if data="{{_options.showHeader}}">
       <ws:partial template="{{_options.headTemplate ? _options.headTemplate : _defaultHeadTemplate}}"
                   defaultContentHeadTemplate="{{_defaultContentHeadTemplate}}"
@@ -37,4 +39,3 @@
       </ws:popupOptions>
    </Controls:Dropdown:Opener>
 </div>
-

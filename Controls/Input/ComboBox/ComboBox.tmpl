@@ -1,44 +1,35 @@
-<div class="controls-ComboBox"
-     on:mousedown="_open()">
+<Controls.Container.Dropdown
+        scope="{{_options}}"
+        corner="{{_corner}}"
+        width="{{_width}}"
+        class="controls-ComboBox"
+        close="{{_onClose}}"
+        bind:selectedKeys="_options.selectedKey"
+        className="controls-ComboBox-popup"
+        classNameShadow="controls-ComboBox__popup-shadow"
+        popupTarget="{{_popupTarget}}"
+        on:selectedItemChanged="_selectedItemChangedHandler()"
+        on:mousedown="_open()"
+>
 
-   <Controls.Input.resources.InputRender.InputRender
-           value="{{_options.value}}"
-           size="{{ _options.size }}"
-           tagStyle="{{_options.tagStyle}}"
-           viewModel="{{_simpleViewModel}}"
-           placeholder="{{_options.placeholder}}"
-           validationErrors="{{_options.validationErrors}}"
-           on:valueChanged="_valueChangedHandler()"
-            class="controls-ComboBox-InputRender">
+      <Controls.Input.resources.InputRender.InputRender
+              bind:value="_value"
+              size="{{_options.size}}"
+              tagStyle="{{_options.tagStyle}}"
+              viewModel="{{_simpleViewModel}}"
+              placeholder="{{_options.placeholder}}"
+              validationErrors="{{_options.validationErrors}}"
+              class="controls-ComboBox-InputRender">
 
-      <ws:content>
-         <ws:partial
-                 template="tmpl!Controls/Input/resources/input"
-                 readOnly="{{!_options.editable}}"/>
-      </ws:content>
+         <ws:content>
+            <ws:partial
+                    template="tmpl!Controls/Input/resources/input"
+                    readOnly="{{!_options.editable}}"/>
+         </ws:content>
 
-      <ws:afterFieldWrapper>
-         <Controls.Button.ButtonSeparator bind:value="_isOpen"/>
-      </ws:afterFieldWrapper>
+         <ws:afterFieldWrapper>
+            <Controls.Button.ButtonSeparator bind:value="_isOpen"/>
+         </ws:afterFieldWrapper>
 
-   </Controls.Input.resources.InputRender.InputRender>
-
-   <Controls.Dropdown.Opener name="DropdownOpener"
-                             className="controls-Combobox-popup">
-      <ws:popupOptions>
-         <ws:eventHandlers onResult="{{_onResult}}"
-                           onClose="{{_close}}"/>
-         <ws:templateOptions
-                 keyProperty="{{_options.keyProperty}}"
-                 parentProperty="{{_options.parentProperty}}"
-                 nodeProperty="{{_options.nodeProperty}}"
-                 itemTemplateProperty="{{_options.itemTemplateProperty}}"
-                 itemTemplate="{{_options.itemTemplate}}"
-                 headTemplate="{{_options.headTemplate}}"
-                 contentTemplate="{{_options.contentTemplate}}"
-                 footerTemplate="{{_options.footerTemplate}}"
-                 showHeader="{{_options.showHeader === true ? true : false}}"
-                 selectedKeys="{{_options.selectedKeys}}"/>
-      </ws:popupOptions>
-   </Controls.Dropdown.Opener>
-</div>
+      </Controls.Input.resources.InputRender.InputRender>
+</Controls.Container.Dropdown>

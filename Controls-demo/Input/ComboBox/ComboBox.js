@@ -49,12 +49,13 @@ define('Controls-demo/Input/ComboBox/ComboBox',
          ],
          _createMemory: function() {
             return new Memory({
-               keyProperty: 'id',
+               idProperty: 'id',
                data: this._defaultItems
             });
          },
          _selectedKeys: '3',
-         _value: ''
+         _value: '',
+         _selKey: '1'
       });
 
       return ComboBox;

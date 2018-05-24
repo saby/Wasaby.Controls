@@ -32,82 +32,46 @@ define('Controls/Input/ComboBox',
       var getPropValue = Utils.getItemPropertyValue.bind(Utils);
 
       var _private = {
-
-         loadItems: function(self, source) {
-            self._sourceController = new SourceController({
-               source: source
-            });
-            return self._sourceController.load().addCallback(function(items) {
-               self._items = items;
-               return items;
-            });
-         },
-
-         onResult: function(result) {
-            _private.selectItem.apply(this, result.data);
-            this._children.DropdownOpener.close();
+         close: function() {
             this._isOpen = false;
-         },
-
-         selectItem: function(item) {
-            this._selectedKeys = getPropValue(item, this._options.keyProperty);
-            this._notify('valueChanged', [getPropValue(item, this._options.displayProperty)]);
+            this._forceUpdate();
          }
       };
 
       var ComboBox = Control.extend({
          _template: template,
+         _value: '',
+         _popupTarget: null,
          _isOpen: false,
 
-         _beforeMount: function(options, context, receivedState) {
-            this._onResult = _private.onResult.bind(this);
-            this._close = this._close.bind(this);
-
+         _beforeMount: function(options) {
+            this._onClose = _private.close.bind(this);
+            this._value = options.value;
             this._simpleViewModel = new BaseViewModel({
-               value: options.value
+               value: this._value
             });
-
-            if (receivedState) {
-               this._items = receivedState;
-            } else if (options.items) {
-               return _private.loadItems(this, options.items);
-            }
          },
 
-         _beforeUpdate: function() {
-            this._simpleViewModel.updateOptions({
-               value: this._options.value
-            });
+         _afterMount: function() {
+            this._popupTarget = this._container;
+            this._corner = {
+               vertical: 'bottom'
+            };
+            this._width = this._container.offsetWidth;
+            this._forceUpdate();
          },
 
          _open: function() {
-            if (!this._isOpen) {
-               this._isOpen = true;
-               var config = {
-                  templateOptions: {
-                     items: this._items,
-                     selectedKeys: this._selectedKeys,
-                     width: this._container.offsetWidth
-                  },
-                  target: this._container,
-                  corner: {
-                     vertical: 'bottom'
-                  }
-               };
-               this._children.DropdownOpener.open(config, this);
-            } else {
-               this._isOpen = false;
-               this._children.DropdownOpener.close();
-            }
+            this._isOpen = !this._isOpen;
          },
 
-         _valueChangedHandler: function(e, value) {
-            this._notify('valueChanged', [value]);
-         },
-
-         _close: function() {
+         _selectedItemChangedHandler: function(event, selectedItem) {
+            this._value = getPropValue(selectedItem, this._options.displayProperty);
+            this._simpleViewModel.updateOptions({
+               value: this._value
+            });
+            this._notify('valueChanged', [this._value]);
             this._isOpen = false;
-            this._forceUpdate();
          }
 
       });
