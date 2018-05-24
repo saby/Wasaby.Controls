@@ -2736,6 +2736,10 @@ define('SBIS3.CONTROLS/ListView',
             if (toolbarTarget && targetElement && toolbarTarget.container.get(0) === targetElement.get(0)) {
                toolbarTarget.container = this._getDomElementByItem(item);
                toolbar.setCurrentTarget(toolbarTarget);
+               if (this.isEdit()) { // https://online.sbis.ru/opendoc.html?guid=62f91f28-78ab-4022-9727-7b951536f771
+                  toolbar.show(toolbarTarget);
+                  toolbar.lockToolbar();
+               }
             }
             return redrawResult;
          },
