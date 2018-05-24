@@ -27,7 +27,7 @@ define('Controls/Decorators/Money',
        */
 
       /**
-       * @name Controls/Decorators/Money#type
+       * @name Controls/Decorators/Money#style
        * @cfg {String} The type with which you want to display money.
        * @variant accentResults
        * @variant noAccentResults
