@@ -143,11 +143,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             this._selector = this.getChildControlByName('controls-ExportCustomizer-Presets-View__selector');
             if (this._storage) {
                this._editor = this.getChildControlByName('controls-ExportCustomizer-Presets-View__editor');
+
                this._updateSelectorListOptions('handlers', {
                   onChangeHoveredItem: this._onHoverItem.bind(this)
                });
                this._updateSelectorListOptions('footerTpl', 'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/footer');
                this._updateSelectorListOptions('_footerHandler', this._onAdd.bind(this));
+            }
+            this._bindEvents();
+            if (this._storage) {
                this._storage.load(this._options.namespace).addCallback(function (presets) {
                   presets.forEach(function (v) { v.isStorable = true; });
                   this._customs = presets;
@@ -159,9 +163,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                      this._needNewPreset = null;
                   }
                   this._updateSelector();
+                  this.sendCommand('subviewChanged');
                }.bind(this));
             }
-            this._bindEvents();
+            else {
+               this.sendCommand('subviewChanged');
+            }
          },
 
          _bindEvents: function () {
@@ -275,6 +282,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             this._addPreset().addCallback(_ifSuccess(function () {
                this._updateListView(listView);
                this._startEditingMode(listView);
+               this.sendCommand('subviewChanged');
             }.bind(this)));
          },
 

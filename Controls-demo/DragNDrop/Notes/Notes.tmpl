@@ -1,4 +1,7 @@
-<div>
+<Controls.DragNDrop.Controller name="dragNDrop"
+                               on:dragStart="_dragStart()"
+                               on:dragMove="_dragMove()"
+                               on:dragEnd="_dragEnd()">
     <Controls.List
             class="notes"
             name="notesList"
@@ -10,7 +13,7 @@
             <ws:partial template="tmpl!Controls/List/ItemTemplate"
                         on:mousedown="_onMouseDownNote(itemTemplate.itemData)"
                         on:touchstart="_onMouseDownNote(itemTemplate.itemData)"
-                        attr:class="{{'notes-item ' + (itemTemplate.itemData.item.get('dragging') ? 'notes-draggingItem')}}"
+                        attr:class="{{'notes-item ' + (itemTemplate.itemData.item.get('id') === _draggingItemId ? 'notes-draggingItem')}}"
                         attr:style="{{'top:' + itemTemplate.itemData.item.position.top + 'px;' +
                                       'left:' + itemTemplate.itemData.item.position.left + 'px;' +
                                       'width:' + itemTemplate.itemData.item.size.width + 'px;' +
@@ -26,8 +29,4 @@
             </ws:partial>
         </ws:itemTemplate>
     </Controls.List>
-    <Controls.Controllers.DragNDrop name="dragNDrop"
-                                    on:afterDragStart="_afterDragStart()"
-                                    on:dragEnd="_dragEnd()"
-                                    on:dragMove="_dragMove()"/>
-</div>
+</Controls.DragNDrop.Controller>
