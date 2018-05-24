@@ -2,14 +2,19 @@
       attr:component="Controls/Application">
 <head key="1_1_">
    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-   
+   <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
    <script key="ws-config">
       window.wsConfig = {
          wsRoot: '{{wsRoot}}',
          resourceRoot: '{{resourceRoot}}',
-         compatible: {{compat}}
-      };
+         compatible: {
+      {
+         compat
+      }
+      }
+      }
+      ;
    </script>
    <style>
       .ws-hidden {
@@ -54,12 +59,16 @@
                               <ws:if data="{{ content.content }}">
                                  <ws:partial template="{{ content.content }}" scope="{{ templateConfig }}"/>
                               </ws:if>
-                              <Controls.Popup.Manager.Container attr:id="popup" eventHandler="{{content._managerEventHandler}}"/>
+                              <Controls.Popup.Manager.Container attr:id="popup"
+                                                                eventHandler="{{content._managerEventHandler}}"/>
 
-                              <script key="bundles" type="text/javascript" src="{{wsRoot}}ext/requirejs/bundles.js"></script>
-                              <script key="require" type="text/javascript" src="/cdn/requirejs/2.3.5-p3/require-min.js"></script>
+                              <script key="bundles" type="text/javascript"
+                                      src="{{wsRoot}}ext/requirejs/bundles.js"></script>
+                              <script key="require" type="text/javascript"
+                                      src="/cdn/requirejs/2.3.5-p3/require-min.js"></script>
                               <script key="contents" type="text/javascript" src="{{resourceRoot}}/contents.js"></script>
-                              <script key="config" type="text/javascript" src="{{wsRoot}}ext/requirejs/config.js"></script>
+                              <script key="config" type="text/javascript"
+                                      src="{{wsRoot}}ext/requirejs/config.js"></script>
 
 
                               <ws:if data="{{_options.builder && _options.builderCompatible}}">
@@ -72,22 +81,16 @@
                               </ws:if>
                               <ws:else data="{{!_options.builderCompatible}}">
                                  <div>
-                                    <ws:partial template="tmpl!Controls/Application/startApplicationScript" compat="{{compat}}"
+                                    <ws:partial template="tmpl!Controls/Application/startApplicationScript"
+                                                compat="{{compat}}"
                                                 jsLinks="{{jsLinks}}"
                                                 _options="{{_options}}"/>
 
-                                    <span id="cssBundles" style="display:none;">
-                                       <ws:if data="{{ cssBundles }}">
-                                          <ws:for data="link in cssBundles">>
-                                             {{ 'define("css!' + link + '", "");' }}
-                                          </ws:for>
-                                       </ws:if>
-                                    </span>
-
-                                    <script>
-                                       var cssBundles = document.getElementById('cssBundles');
-                                       eval(cssBundles.innerText);
-                                    </script>
+                                    <ws:if data="{{cssBundles}}">
+                                       <ws:for data="{{ i in cssBundles }}">
+                                          <script>define('css!{{i}}', '');</script>
+                                       </ws:for>
+                                    </ws:if>
 
                                     <ws:if data="{{ _options.scripts }}">
                                        <ws:for data="i in _options.scripts">
