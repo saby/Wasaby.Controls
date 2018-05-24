@@ -1,12 +1,12 @@
 define('Controls/Controllers/QueryParamsController/Offset',
-   ['Core/Abstract', 'WS.Data/Source/SbisService'],
-   function(Abstract, SbisService) {
+   ['Core/core-simpleExtend', 'WS.Data/Source/SbisService'],
+   function(cExtend, SbisService) {
       /**
        *
        * @author Крайнов Дмитрий
        * @public
        */
-      var OffsetNavigation = Abstract.extend({
+      var OffsetNavigation = cExtend.extend({
          constructor: function(cfg) {
             this._options = cfg;
             OffsetNavigation.superclass.constructor.apply(this, arguments);
@@ -36,6 +36,10 @@ define('Controls/Controllers/QueryParamsController/Offset',
 
          setEdgeState: function(direction) {
 
+         },
+
+         destroy: function() {
+            this._options = null;
          }
       });
 

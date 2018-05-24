@@ -1,12 +1,12 @@
 define('Controls/Controllers/QueryParamsController/Position',
-   ['Core/Abstract', 'WS.Data/Source/SbisService'],
-   function(Abstract, SbisService) {
+   ['Core/core-simpleExtend', 'WS.Data/Source/SbisService'],
+   function(cExtend, SbisService) {
       /**
        *
        * @author Крайнов Дмитрий
        * @public
        */
-      var PositionNavigation = Abstract.extend({
+      var PositionNavigation = cExtend.extend({
          constructor: function(cfg) {
             this._options = cfg;
             PositionNavigation.superclass.constructor.apply(this, arguments);
@@ -36,6 +36,10 @@ define('Controls/Controllers/QueryParamsController/Position',
 
          setEdgeState: function(direction) {
 
+         },
+
+         destroy: function() {
+            this._options = null;
          }
       });
 
