@@ -1,12 +1,12 @@
 define('Controls/Controllers/QueryParamsController/Page',
-   ['Core/Abstract', 'WS.Data/Source/SbisService'],
-   function(Abstract, SbisService) {
+   ['Core/core-simpleExtend', 'WS.Data/Source/SbisService'],
+   function(cExtend, SbisService) {
       /**
        *
        * @author Крайнов Дмитрий
        * @public
        */
-      var PageNavigation = Abstract.extend({
+      var PageNavigation = cExtend.extend({
          _nextPage: 1,
          _prevPage: -1,
          _more: null,
@@ -98,6 +98,10 @@ define('Controls/Controllers/QueryParamsController/Page',
             } else {
                throw new Error('Wrong argument Direction in NavigationController::setEdgeState');
             }
+         },
+
+         destroy: function() {
+            this._options = null;
          }
       });
 
