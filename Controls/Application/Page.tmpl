@@ -72,13 +72,9 @@
                                           jsLinks="{{jsLinks}}"
                                           _options="{{_options}}"/>
 
-                              <span id="cssBundles" style="display:none;">
-                                 <ws:if data="{{ cssBundles }}">
-                                    <ws:for data="link in cssBundles">>
-                                       {{ 'define("css!' + link + '", "");' }}
-                                    </ws:for>
-                                 </ws:if>
-                              </span>
+                              <ws:for data="{{ i in cssBundles }}">
+                                 <script>define('css!{{i}}', '');</script>
+                              </ws:for>
 
                               <script>
                                  var cssBundles = document.getElementById('cssBundles');
