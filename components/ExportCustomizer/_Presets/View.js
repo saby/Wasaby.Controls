@@ -282,6 +282,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             this._addPreset().addCallback(_ifSuccess(function () {
                this._updateListView(listView);
                this._startEditingMode(listView);
+               this.sendCommand('subviewChanged');
             }.bind(this)));
          },
 
