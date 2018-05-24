@@ -15,8 +15,8 @@ define('Controls-demo/Input/Area/Area', [
       _validationErrorsValue: false,
       _trim: false,
       _maxLength: '',
-      _minLines: '',
-      _maxLines: '',
+      _minLines: 1,
+      _maxLines: 1,
       _readOnly: false,
 
       valueChangedHandler: function () {
