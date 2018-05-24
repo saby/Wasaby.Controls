@@ -8,9 +8,10 @@ define([
    'WS.Data/Collection/RecordSet',
    'Controls/List/ListViewModel',
    'Controls/Utils/Toolbar',
+   'Core/Deferred',
    'Core/core-instance',
    'Controls/List/ListView'
-], function(BaseControl, ItemsUtil, MemorySource, RecordSet, ListViewModel, tUtil, cInstance) {
+], function(BaseControl, ItemsUtil, MemorySource, RecordSet, ListViewModel, tUtil, cDeferred, cInstance) {
    describe('Controls.List.BaseControl', function() {
       var data, display, result, source, rs;
       beforeEach(function() {
@@ -124,6 +125,54 @@ define([
 
 
       });
+
+      it('errback to callback', function(done) {
+
+         var source = new MemorySource({
+            idProperty: 'id',
+            data: data
+         });
+
+
+         var cfg = {
+            viewName: 'Controls/List/ListView',
+            source: source,
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: ListViewModel
+         };
+
+         var ctrl = new BaseControl(cfg);
+
+
+         ctrl.saveOptions(cfg);
+         ctrl._beforeMount(cfg);
+
+         //waiting for first load
+         setTimeout(function() {
+
+            //emulate loading error
+            ctrl._sourceController.load = function() {
+               var def = new cDeferred();
+               def.errback();
+               return def;
+            };
+
+            BaseControl._private.reload(ctrl).addCallback(function() {
+               done();
+            }).addErrback(function() {
+               assert.isTrue(false, 'reload() returns errback');
+               done();
+            });
+         }, 100);
+
+      });
+
 
       it('loadToDirection down', function(done) {
 
