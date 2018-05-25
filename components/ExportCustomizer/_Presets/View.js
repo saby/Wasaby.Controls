@@ -302,6 +302,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                'edit': '_editPreset',
                'delete': '_deletePreset'
             }[action];
+            listView.setSelectedKey(this._options.selectedId);
             var promise = this[method](id, listView);
             if (promise) {
                var callbacks = {
