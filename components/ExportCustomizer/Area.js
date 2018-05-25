@@ -460,7 +460,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           */
          _reshapeOptions: function (options) {
             var presetsOptions;
-            if (options.usePresets) {
+            var usePresets = options.usePresets;
+            if (usePresets) {
                var staticPresets = options.staticPresets;
                var hasStaticPresets = !!(staticPresets && staticPresets.length);
                var currentPreset;
@@ -485,7 +486,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             var allFields = options.allFields;
             var fieldIds = options.fieldIds;
             var fileUuid = options.fileUuid;
-            if (fieldIds && fieldIds.length) {
+            if (!usePresets && fieldIds && fieldIds.length) {
                // Иногда, fieldIds содержат идентификаторы, отсутствующие в allFields, отбросить их
                var isRecordSet = allFields instanceof RecordSet;
                var len = fieldIds.length;
@@ -504,14 +505,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   columnsTitle: options.columnBinderColumnsTitle || undefined,
                   fieldsTitle: options.columnBinderFieldsTitle || undefined,
                   allFields: allFields,
-                  fieldIds: fieldIds && fieldIds.length ? fieldIds.slice() : undefined
+                  fieldIds: !usePresets && fieldIds && fieldIds.length ? fieldIds.slice() : undefined
                },
                formatter: {
                   title: options.formatterTitle,
                   menuTitle: options.formatterMenuTitle,
                   allFields: allFields,
-                  fieldIds: fieldIds && fieldIds.length ? fieldIds.slice() : undefined,
-                  fileUuid: fileUuid || undefined,
+                  fieldIds: !usePresets && fieldIds && fieldIds.length ? fieldIds.slice() : undefined,
+                  fileUuid: !usePresets && fileUuid ? fileUuid : undefined,
                   serviceParams: serviceParams ? cMerge({}, serviceParams) : undefined
                }
             };
