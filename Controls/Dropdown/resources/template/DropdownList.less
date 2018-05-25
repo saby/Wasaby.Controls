@@ -3,9 +3,18 @@
    .flex-direction(column);
    max-height: @max-height_DropdownList;
    border: @border-size_DropdownList solid @border-color_DropdownList;
-   background: @background_DropdownList ;
-   .box-shadow(@shadow_DropdownList)
+   background: @background_DropdownList;
+   box-sizing: border-box;
 }
+
+.controls-DropdownList__popup-shadow-default {
+   .box-shadow(@shadow_DropdownList-default)
+}
+
+.controls-DropdownList__popup-shadow-withoutTop{
+   .box-shadow(@shadow_DropdownList-withoutTop);
+}
+
 .controls-DropdownList__scroll {
    max-height: 100%;
    padding: @padding_DropdownList-content;

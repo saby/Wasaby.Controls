@@ -2,13 +2,11 @@ define('Controls/Button/MenuButton',
    [
       'Core/Control',
       'tmpl!Controls/Button/Menu/MenuButton',
-      'Controls/Controllers/SourceController',
-      'Controls/Input/Dropdown/Util',
       'Controls/Button/Classes',
       'css!Controls/Button/Menu/MenuButton',
       'Controls/Button'
    ],
-   function(Control, template, SourceController, dropdownUtil, Classes, menuHeadTemplate) {
+   function(Control, template, Classes) {
 
       /**
         * MenuButton
@@ -35,15 +33,7 @@ define('Controls/Button/MenuButton',
         */
 
       var _private = {
-         loadItems: function(instance, source, filter) {
-            instance._sourceController = new SourceController({
-               source: source
-            });
-            return instance._sourceController.load(filter || {}).addCallback(function(items) {
-               instance._items = items;
-               return items;
-            });
-         },
+
          cssStyleGeneration: function(self, options) {
             var sizes = ['small', 'medium', 'large'],
                menuStyle = options.headConfig && options.headConfig.menuStyle,
@@ -71,37 +61,20 @@ define('Controls/Button/MenuButton',
 
       var MenuButton = Control.extend({
          _template: template,
-         _menuHeadTemplate: menuHeadTemplate,
+
          constructor: function(config) {
             _private.cssStyleGeneration(this, config);
             config.headCaption = config.headCaption || config.caption;
             MenuButton.superclass.constructor.apply(this, arguments);
-            this._onResult = this._onResult.bind(this);
          },
-         _beforeMount: function(options, context, receivedState) {
-            if (receivedState) {
-               this._items = receivedState;
-            } else {
-               if (options.source) {
-                  return _private.loadItems(this, options.source, options.filter);
-               }
-            }
+
+         _afterMount: function() {
+            this._popupTarget = this._container;
+            this._forceUpdate();
          },
-         _beforeUpdate: function(newOptions) {
-            if (newOptions.source && newOptions.source !== this._options.source) {
-               return _private.loadItems(this, newOptions.source);
-            }
-         },
-         _open: function() {
-            dropdownUtil.open(this, this._children.popupTarget._container);
-         },
-         _onResult: function(result) {
-            if (result.action === 'itemClick') {
-               this._notify('onMenuItemActivate', result.data);
-               if (!result.data[0].get('@parent')) {
-                  this._children.DropdownOpener.close();
-               }
-            }
+
+         _selectedItemChangedHandler: function(event, result) {
+            this._notify('onMenuItemActivate', result);
          }
       });
 
