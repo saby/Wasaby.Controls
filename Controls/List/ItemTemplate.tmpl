@@ -4,7 +4,7 @@
     {{!!itemData.isEditing? ' controls-ListView__item_editing'}}"
      attr:key="{{itemData.dispItem.getHash()}}">
     <ws:if data="{{itemData.multiSelectVisibility}}">
-        <ws:partial template="{{multiSelectTpl}}" multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" attr:class="controls-ListView__checkbox"/>
+        <ws:partial template="{{multiSelectTpl}}" multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" attr:class="controls-ListView__checkbox js-controls-ListView__notEditable"/>
     </ws:if>
 
     <ws:if data="{{contentTemplate}}">
