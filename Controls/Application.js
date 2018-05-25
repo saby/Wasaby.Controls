@@ -86,7 +86,7 @@ define('Controls/Application',
             var self = this,
                def = new Deferred();
 
-            this._headData = new HeadDataContext(cfg.theme);
+            self._headData = new HeadDataContext(cfg.theme);
             _private.initState(self, receivedState || cfg);
             self.content = cfg.content;
             self.needArea = cfg.compat || self.compat;
@@ -98,6 +98,7 @@ define('Controls/Application',
             self.resourceRoot = receivedState.resourceRoot || (context.AppData ? context.AppData.resourceRoot : cfg.resourceRoot);
             self.BodyClasses = BodyClasses;
 
+            self._headData.pushDepComponent(self.application);
             /**
              * Этот перфоманс нужен, для сохранения состояния с сервера, то есть, cfg - это конфиг, который нам прийдет из файла
              * роутинга и с ним же надо восстанавливаться на клиенте.

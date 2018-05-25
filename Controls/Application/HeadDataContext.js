@@ -17,6 +17,11 @@ define('Controls/Application/HeadDataContext', [
       modDeps = { links: {}, nodes: {} };
    }
 
+   /**
+    * Checks if bundle has any css
+    * @param bundle
+    * @returns {boolean}
+    */
    function hasCss(bundle) {
       if (!Array.isArray(bundle)) {
          return false;
@@ -29,6 +34,11 @@ define('Controls/Application/HeadDataContext', [
       return false;
    }
 
+   /**
+    * Gets css-bundles
+    * @param jsLinks
+    * @returns {{}}
+    */
    function getDependentCss(jsLinks) {
       function cropBundleName(s) {
          if (s.indexOf('.min')) {
@@ -68,6 +78,11 @@ define('Controls/Application/HeadDataContext', [
       return dependCssLinks;
    }
 
+   /**
+    * Checks if dependency is a part of any bundle and remove from allDeps
+    * @param allDeps
+    * @returns {{}} Object, that contains all necessary bundles
+    */
    function checkForBundles(allDeps) {
       function removeAllFromObject(obj, els) {
          for (var i = 0; i < els.length; i++) {
@@ -126,7 +141,8 @@ define('Controls/Application/HeadDataContext', [
 
       var allDeps = {};
       recursiveWalker(allDeps, deps);
-      var jsBundles = checkForBundles(allDeps); //Find all bundles, and removes dependencies that are included in bundles
+      IoC.resolve('ILogger').error('ALLDEPS:    ', [Object.keys(allDeps)]);
+      var jsBundles = checkForBundles(allDeps); // Find all bundles, and removes dependencies that are included in bundles
       var cssBundles = getDependentCss(jsBundles);
       var files = { js: [], css: [] };
       for (var key in jsBundles) {
@@ -158,6 +174,7 @@ define('Controls/Application/HeadDataContext', [
          this.waiterDef = def;
          this.waiterDef.addCallback(function() {
             var components = Object.keys(self.depComponentsMap);
+            IoC.resolve('ILogger').error('COMPONENTS:            ', [components]);
             collectDependencies(components, function(err, files) {
                if (err) {
                   self.err = err;
@@ -170,8 +187,7 @@ define('Controls/Application/HeadDataContext', [
                self.defRender.callback({
                   jsLinks: self.jsLinks || [],
                   cssLinks: self.cssLinks || [],
-                  errorState: self.err,
-
+                  errorState: self.err
                });
             });
          });
