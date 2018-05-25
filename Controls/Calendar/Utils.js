@@ -60,14 +60,19 @@ define('Controls/Calendar/Utils', [
       /**
        * Получить массив недель (строка) с массивом дней (ячейка) для MonthTableBody
        * @param {Date} date месяц
+       * @param {String} mode
+       * @variant current Returns only the current month
+       * @variant extended Returns 6 weeks. Returns the first week of the current complete month,
+       * the last complete week and if the current month includes less than 6 weeks, then the weeks
+       * of the next month.
        * @returns {Array}
        */
-      getWeeksArray: function(date) {
+      getWeeksArray: function(date, mode) {
          var
             weeksArray = [],
             year = date.getFullYear(),
             month = date.getMonth() + 1,
-            weeksInMonth = this.getWeeksInMonth(year, month),
+            weeksInMonth = mode === 'extended' ? 6 : this.getWeeksInMonth(year, month),
             monthDate = this.getFirstDayOffset(year, month) * -1 + 1;
 
 
