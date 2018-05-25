@@ -467,8 +467,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             var preset = this._findPresetById(options.selectedId);
             if (preset && preset.isStorable) {
                if (listView) {
-                  var picker = listView.getParent();
-                  picker.close();
+                  listView.sendCommand('close');
                }
                this._switchEditor(true);
                var editor = this._editor;
@@ -591,7 +590,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * @param {*} value Значение опции
           */
          _updateSelectorListOptions: function (name, value) {
-            this._selector.getProperty('dictionaries')[0].componentOptions[name] = value;
+            this._selector.getProperty('dictionaries')[0].componentOptions.scope[name] = value;
          },
 
          /**
