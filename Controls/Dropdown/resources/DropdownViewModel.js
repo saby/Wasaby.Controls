@@ -3,13 +3,13 @@
  */
 define('Controls/Dropdown/resources/DropdownViewModel',
    [
-      'Core/Abstract',
+      'Controls/List/BaseViewModel',
       'WS.Data/Chain',
       'Controls/List/ItemsViewModel',
       'WS.Data/Relation/Hierarchy'
    ],
-   function(Abstract, Chain, ItemsViewModel, Hierarchy) {
-      var DropdownViewModel = Abstract.extend({
+   function(BaseViewModel, Chain, ItemsViewModel, Hierarchy) {
+      var DropdownViewModel = BaseViewModel.extend({
          _itemsModel: null,
 
          constructor: function(cfg) {
