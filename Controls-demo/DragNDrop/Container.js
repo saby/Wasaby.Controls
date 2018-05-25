@@ -2,9 +2,11 @@ define('Controls-demo/DragNDrop/Container', [
    'Core/Control',
    'Core/core-clone',
    'WS.Data/Source/Memory',
+   'Controls-demo/DragNDrop/ListEntity',
    'tmpl!Controls-demo/DragNDrop/Container/Container',
-   'css!Controls-demo/DragNDrop/Container/Container'
-], function(BaseControl, cClone, Memory, template) {
+   'css!Controls-demo/DragNDrop/Container/Container',
+   'Controls/DragNDrop/Avatar'
+], function(BaseControl, cClone, Memory, ListEntity, template) {
    'use strict';
 
    var ModuleClass = BaseControl.extend({
@@ -17,11 +19,18 @@ define('Controls-demo/DragNDrop/Container', [
          this._viewSourceThird = this._createSource(this._createItems(8, 12));
       },
 
-      _dragStart: function(event, entity) {
-         if (entity.getModel().getId() === 1) {
-            return false;
-         }
+      _beforeDragStart: function(event, items) {
+         var hasBadItems = false;
+         items.forEach(function(item) {
+            if (item.getId() === 0) {
+               hasBadItems = true;
+            }
+         });
+         return hasBadItems ? false : new ListEntity({
+            items: items
+         });
       },
+
 
       _createSource: function(items) {
          return new Memory({

@@ -1,7 +1,8 @@
 <div attr:class="controls-ListView__itemV{{marker != false && itemData.isSelected ? ' controls-ListView__item__marked'}}
     {{!!itemData.showActions ? ' controls-ListView__item_showActions'}}
     {{!!itemData.isActive ? ' controls-ListView__item_active'}}
-    {{!!itemData.isEditing? ' controls-ListView__item_editing'}}"
+    {{!!itemData.isEditing ? ' controls-ListView__item_editing'}}
+    {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}"
      attr:key="{{itemData.dispItem.getHash()}}">
     <ws:if data="{{itemData.multiSelectVisibility}}">
         <ws:partial template="{{multiSelectTpl}}" multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" attr:class="controls-ListView__checkbox"/>

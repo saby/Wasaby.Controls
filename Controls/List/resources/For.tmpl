@@ -3,6 +3,8 @@
               on:click="_onItemClick(listModel.getCurrent().dispItem)"
               on:contextmenu="_onItemContextMenu(listModel.getCurrent())"
               on:swipe="_onItemSwipe(listModel.getCurrent())"
+              on:mousedown="_onItemMouseDown(listModel.getCurrent())"
+              on:mouseenter="_onItemMouseEnter(listModel.getCurrent())"
               itemActionsTemplate="{{itemActionsTemplate}}"
               swipeTemplate="{{swipeTemplate}}"
               multiSelectTpl="{{multiSelectTpl}}"

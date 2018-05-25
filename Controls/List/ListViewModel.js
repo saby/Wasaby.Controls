@@ -19,6 +19,7 @@ define('Controls/List/ListViewModel',
       
       var ListViewModel = ItemsViewModel.extend([VersionableMixin], {
          _markedItem: null,
+         _draggingItem: null,
          _actions: null,
 
          constructor: function(cfg) {
@@ -52,6 +53,9 @@ define('Controls/List/ListViewModel',
                itemsModelCurrent.isEditing = true;
                itemsModelCurrent.item = this._editingItemData.item;
             }
+            if (this._draggingItem && this._draggingItem.get(this._options.keyProperty) === itemsModelCurrent.item.get(this._options.keyProperty)) {
+               itemsModelCurrent.isDragging = true;
+            }
             return itemsModelCurrent;
          },
 
@@ -64,6 +68,12 @@ define('Controls/List/ListViewModel',
          setActiveItem: function(itemData) {
             this._activeItem = itemData;
             this._nextVersion();
+         },
+
+         setDraggingItem: function(item) {
+            this._draggingItem = item;
+            this._nextVersion();
+            this._notify('onListChange');
          },
 
          setSwipeItem: function(itemData) {

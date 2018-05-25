@@ -1,0 +1,14 @@
+<Controls.DragNDrop.Controller
+        on:dragInit="_dragInit()"
+        on:dragReset="_dragReset()">
+   <div class="{{'basket ' + (_isDragEnter ? 'basket-dragEnter')}}">
+      <div class="{{_canDrop ? 'basket-canDrop'}}">
+         <ws:if data="{{_items.length > 0}}">
+            <span>Товаров в корзине: {{_items.length}}</span>
+         </ws:if>
+         <ws:else>
+            <span>Корзина пуста</span>
+         </ws:else>
+      </div>
+   </div>
+</Controls.DragNDrop.Controller>

@@ -95,6 +95,9 @@ define('Controls/DragNDrop/Controller',
 
          _dragMove: function(dragObject) {
             this._notify('dragMove', [dragObject]);
+            if (this._options.dragAvatarTemplate) {
+               this._notify('_updateDragAvatar', [dragObject, this._options.dragAvatarTemplate], {bubbling: true});
+            }
          },
 
          _mouseEnter: function() {

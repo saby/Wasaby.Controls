@@ -634,6 +634,31 @@ define('Controls/List/BaseControl', [
 
       _onActionClick: function(e, action, item) {
          this._notify('actionClick', [action, item]);
+      },
+
+      _dragEnd: function(event, dragObject) {
+         return this._notify('dragEnd', [dragObject]);
+      },
+
+      _itemMouseDown: function(event, itemData, domEvent) {
+         var
+            items,
+            dragStartResult;
+         if (this._options.itemsDragNDrop) {
+            items = [itemData.item];
+            dragStartResult = this._notify('beforeDragStart', [items]);
+            if (dragStartResult !== false) {
+               this._children.dragNDropController.startDragNDrop(dragStartResult, domEvent);
+            }
+         }
+      },
+
+      _dragStart: function(event, dragObject) {
+         return this._notify('dragStart', [dragObject]);
+      },
+
+      _itemMouseEnter: function() {
+
       }
    });
 

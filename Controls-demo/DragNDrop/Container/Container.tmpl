@@ -1,13 +1,16 @@
 <div>
     <span>First List</span>
     <Controls.List
-            on:dragStart="_dragStart()"
+            on:beforeDragStart="_beforeDragStart()"
             class="DND-list"
             itemsDragNDrop="{{true}}"
             displayProperty="title"
             name="list"
-            source = "{{_viewSource}}"
+            source="{{_viewSource}}"
             idProperty="id">
+        <ws:dragAvatarTemplate>
+            <div>123</div>
+        </ws:dragAvatarTemplate>
     </Controls.List>
     <span>Second List (itemsDragNDrop = false)</span>
     <Controls.List
@@ -33,4 +36,5 @@
             on:click="_onClick()"
             caption="Reload">
     </Controls.Button>
+    <Controls-demo.DragNDrop.Basket/>
 </div>
