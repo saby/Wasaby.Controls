@@ -113,6 +113,7 @@ define('SBIS3.CONTROLS/FieldLink/resources/ItemsCollection', [
                   }
                },
                function (id) {
+                  self._parentFieldLink.setActive(true);
                   if (id !== undefined) {
                      self._notify('onItemActivate', id);
                   }
