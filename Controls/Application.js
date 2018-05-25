@@ -10,6 +10,7 @@ define('Controls/Application',
       'Core/compatibility',
       'Controls/Application/TouchDetector',
       'Controls/Application/AppData',
+      'Controls/Application/HeadDataContext',
       'Core/ConsoleLogger'
    ],
 
@@ -28,7 +29,8 @@ define('Controls/Application',
       BodyClasses,
       compatibility,
       TouchDetector,
-      AppData) {
+      AppData,
+      HeadDataContext) {
       'use strict';
 
       var _private,
@@ -51,10 +53,6 @@ define('Controls/Application',
       var Page = Base.extend({
          _template: template,
 
-         getDataId: function() {
-            return 'cfg-pagedata';
-         },
-
          _scrollPage: function(ev) {
             this._children.scrollDetect.start(ev);
          },
@@ -70,6 +68,9 @@ define('Controls/Application',
          },
          _mouseupPage: function(ev) {
             this._children.mouseupDetect.start(ev);
+         },
+         _getChildContext: function() {
+            return {headData: this._headData};
          },
          _touchmovePage: function(ev) {
             this._children.touchmoveDetect.start(ev);
@@ -91,18 +92,22 @@ define('Controls/Application',
             var self = this,
                def = new Deferred();
 
+            self._headData = new HeadDataContext(cfg.theme);
             _private.initState(self, receivedState || cfg);
             self.content = cfg.content;
             self.needArea = cfg.compat || self.compat;
             if (!receivedState) {
                receivedState = {};
             }
-            self.cssLinks = receivedState.cssLinks || (context.AppData ? context.AppData.cssLinks : cfg.cssLinks);
+            self.application = (context.AppData ? context.AppData.application : cfg.application);
             self.wsRoot = receivedState.wsRoot || (context.AppData ? context.AppData.wsRoot : cfg.wsRoot);
             self.resourceRoot = receivedState.resourceRoot || (context.AppData ? context.AppData.resourceRoot : cfg.resourceRoot);
+            self.BodyClasses = BodyClasses;
             self.jsLinks = receivedState.jsLinks || (context.AppData ? context.AppData.jsLinks : cfg.jsLinks);
             self.cssBundles = receivedState.cssBundles || (context.AppData ? context.AppData.cssBundles : cfg.cssBundles);
             self.BodyClasses = BodyClasses;
+
+            self._headData.pushDepComponent(self.application);
 
             if (receivedState && context.AppData) {
                context.AppData.cssLinks = self.cssLinks;
@@ -117,6 +122,7 @@ define('Controls/Application',
              * роутинга и с ним же надо восстанавливаться на клиенте.
              */
             def.callback({
+               application: self.application,
                jsLinks: self.jsLinks,
                cssLinks: self.cssLinks,
                cssBundles: self.cssBundles,
