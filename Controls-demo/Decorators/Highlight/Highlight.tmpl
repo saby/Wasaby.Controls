@@ -1,0 +1,9 @@
+<div>
+   <h1>WrapURLs</h1>
+   <Controls.Input.Area minLines="{{5}}" bind:value="_value1" on:inputCompleted="_wrapInputCompletedHandler()"/>
+   <Controls.Input.Area minLines="{{5}}" bind:value="_value2" on:inputCompleted="_highlightInputCompletedHandler()"/>
+
+   <ws:if data="{{_wrapText && _highlightText}}">
+      <Controls.Decorators.Highlight text="{{_wrapText}}" highlight="{{_highlightText}}"/>
+   </ws:if>
+</div>

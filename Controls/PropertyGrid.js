@@ -23,6 +23,11 @@ define('Controls/PropertyGrid', [
       _valueChangedHandler: function(event, index, value) {
          this._options.items[index].value = value;
          this._notify('valueChanged', [value]);
+      },
+
+      _visibilityChangedHandler: function(event, index, visibility) {
+         this._options.items[index].visibility = visibility;
+         this._notify('visibilityChanged', [visibility]);
       }
    });
 

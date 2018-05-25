@@ -1,9 +1,24 @@
-define('Controls/Calendar/Utils', [], function() {
+define('Controls/Calendar/Utils', [
+   'Core/constants'
+], function(constants) {
       
    'use strict';
       
    var Utils = {
-         
+
+      /**
+        * Returns the list of days of the week
+        * @returns {Array}
+        */
+      getWeekdaysCaptions: function() {
+         var days = constants.Date.daysSmall.slice(1);
+         days.push(constants.Date.daysSmall[0]);
+
+         return days.map(function(value, index) {
+            return {caption: value, weekend: index === 5 || index === 6};
+         });
+      },
+
       /**
           * Получить смещение первого дня месяца (количество дней перед первым числом)
           * @param {Number} year год

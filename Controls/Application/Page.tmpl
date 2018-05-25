@@ -8,13 +8,8 @@
       window.wsConfig = {
          wsRoot: '{{wsRoot}}',
          resourceRoot: '{{resourceRoot}}',
-         compatible: {
-      {
-         compat
-      }
-      }
-      }
-      ;
+         compatible: {{ compat }}
+      };
    </script>
    <style>
       .ws-hidden {
@@ -87,11 +82,10 @@
                                                 _options="{{_options}}"/>
 
                                     <ws:if data="{{cssBundles}}">
-                                       <ws:for data="{{ i in cssBundles }}">
+                                       <ws:for data="i in cssBundles">
                                           <script>define('css!{{i}}', '');</script>
                                        </ws:for>
                                     </ws:if>
-
                                     <ws:if data="{{ _options.scripts }}">
                                        <ws:for data="i in _options.scripts">
                                           <ws:partial template="{{ i }}"/>

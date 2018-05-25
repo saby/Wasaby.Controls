@@ -137,7 +137,7 @@ define('Controls/List/interface/IListControl', [
     */
 
    /**
-    * @event Controls/List/interface/IListControl#itemClicked Occurs when list item is clicked.
+    * @event Controls/List/interface/IListControl#itemClick Occurs when list item is clicked.
     */
 
    /**

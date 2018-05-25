@@ -8,11 +8,12 @@ define('Controls/Filter/Button',
       'Core/moduleStubs',
       'WS.Data/Chain',
       'WS.Data/Utils',
+      'WS.Data/Type/descriptor',
       'css!Controls/Filter/Button/Button'
    ],
-
-   function(Control, template, moduleStubs, Chain, Utils) {
-
+   
+   function(Control, template, moduleStubs, Chain, Utils, types) {
+      
       /**
        * @class Controls/Filter/Button
        * @extends Core/Control
@@ -88,7 +89,7 @@ define('Controls/Filter/Button',
                panelOpener.clearFilter();
             });
          },
-
+   
          _openFilterPanel: function() {
             if (!this._options.readOnly) {
                /* if template - show old component */
@@ -100,7 +101,10 @@ define('Controls/Filter/Button',
                   this._children.filterStickyOpener.open({
                      templateOptions: {
                         items: this._options.items,
-                        itemTemplate: this._options.itemTemplate
+                        itemTemplate: this._options.itemTemplate,
+                        itemTemplateProperty: this._options.itemTemplateProperty,
+                        additionalTemplate: this._options.additionalTemplate,
+                        additionalTemplateProperty: this._options.additionalTemplateProperty
                      },
                      template: 'Controls/Filter/Button/Panel',
                      target: this._children.panelTarget
@@ -117,6 +121,15 @@ define('Controls/Filter/Button',
       FilterButton.getDefaultOptions = function() {
          return {
             filterAlign: 'right'
+         };
+      };
+   
+      FilterButton.getOptionsTypes = function() {
+         return {
+            itemTemplate: types(Object),
+            itemTemplateProperty: types(String),
+            additionalTemplate: types(Object),
+            additionalTemplateProperty: types(String)
          };
       };
 
