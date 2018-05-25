@@ -40,7 +40,6 @@ define('Controls/Input/ComboBox',
 
       var ComboBox = Control.extend({
          _template: template,
-         _value: '',
          _popupTarget: null,
          _isOpen: false,
 

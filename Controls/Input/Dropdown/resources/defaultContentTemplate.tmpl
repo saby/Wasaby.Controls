@@ -3,8 +3,8 @@
       <ws:partial template="{{contentTemplate}}" scope="{{...}}" />
    </ws:if>
    <ws:else>
-      <div if="{{_icon}}" class="controls-Dropdown__icon"><div class="{{_icon}}"></div></div>
-      <div if="{{!_icon}}" class="controls-Dropdown__text">{{_updateText(_selectedItem, displayProperty || 'title')}}</div>
+      <div if="{{icon}}" class="controls-Dropdown__icon"><div class="{{icon}}"></div></div>
+      <div if="{{!icon}}" class="controls-Dropdown__text">{{text}}</div>
    </ws:else>
 
 </div>

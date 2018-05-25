@@ -13,7 +13,7 @@ define('Controls/Container/Dropdown',
           *
           * @class Controls/Container/Dropdown
           * @extends Core/Control
-          * @author Золотова Элина
+          * @author Золотова Э.Е.
           * @control
           * @public
           */
@@ -21,15 +21,6 @@ define('Controls/Container/Dropdown',
       'use strict';
 
       var _private = {
-         getText: function(selectedItems) {
-            var text = selectedItems[0].get('title');
-
-            // if (selectedItems.length > 1) {
-            //    text += ' и еще' + (selectedItems.length - 1)
-            // }
-            return text;
-         },
-
          loadItems: function(instance, source, selectedKeys) {
             instance._sourceController = new SourceController({
                source: source
@@ -43,14 +34,15 @@ define('Controls/Container/Dropdown',
 
          updateSelectedItem: function(instance, selectedKeys) {
             instance._selectedItem = instance._items.getRecordById(selectedKeys);
-            instance._icon = instance._selectedItem.get('icon');
          },
 
          onResult: function(result) {
             switch (result.action) {
                case 'itemClick':
                   _private.selectItem.apply(this, result.data);
-                  this._children.DropdownOpener.close();
+                  if (!result.data[0].get('@parent')) {
+                     this._children.DropdownOpener.close();
+                  }
                   break;
                case 'footerClick':
                   this._notify('footerClick', [result.event]);
@@ -58,7 +50,6 @@ define('Controls/Container/Dropdown',
          },
 
          selectItem: function(item) {
-            this._isOpen = false;
             var key = item.get(this._options.keyProperty);
             this._notify('selectedKeysChanged', [key]);
             this._notify('selectedItemChanged', [item]);
@@ -67,8 +58,6 @@ define('Controls/Container/Dropdown',
 
       var Dropdown = Control.extend({
          _template: template,
-         _defaultContentTemplate: defaultContentTemplate,
-         _isOpen: false,
 
          _beforeMount: function(options, context, receivedState) {
             this._onResult = _private.onResult.bind(this);
@@ -83,7 +72,9 @@ define('Controls/Container/Dropdown',
          },
 
          _afterMount: function() {
-            this._notify('selectedItemChanged', [this._selectedItem]);
+            if (this._selectedItem !== undefined) {
+               this._notify('selectedItemChanged', [this._selectedItem]);
+            }
          },
 
          _beforeUpdate: function(newOptions) {
@@ -96,11 +87,9 @@ define('Controls/Container/Dropdown',
          },
 
          _open: function() {
-            this._isOpen = true;
             var config = {
                templateOptions: {
                   items: this._items,
-                  defaultItemTemplate: this._defaultItemTemplate,
                   width: this._options.width ? this._options.width : undefined
                },
                target: this._options.popupTarget,

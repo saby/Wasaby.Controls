@@ -6,11 +6,10 @@
         close="{{_onClose}}"
         bind:selectedKeys="_options.selectedKey"
         className="controls-ComboBox-popup"
-        classNameShadow="controls-ComboBox__popup-shadow"
+        typeShadow="withoutTop"
         popupTarget="{{_popupTarget}}"
         on:selectedItemChanged="_selectedItemChangedHandler()"
-        on:mousedown="_open()"
->
+        on:mousedown="_open()">
 
       <Controls.Input.resources.InputRender.InputRender
               bind:value="_value"
