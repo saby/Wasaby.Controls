@@ -7,8 +7,7 @@ define('Controls/Application/AppData', [
    return DataContext.extend({
       jsLinks: [],
       constructor: function(cfg) {
-         this.jsLinks = cfg.jsLinks;
-         this.cssLinks = cfg.cssLinks;
+         this.application = cfg.application;
          this.wsRoot = cfg.wsRoot;
          this.resourceRoot = cfg.resourceRoot;
          this.product = cfg.product;
