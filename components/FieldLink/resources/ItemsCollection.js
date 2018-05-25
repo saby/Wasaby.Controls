@@ -226,6 +226,7 @@ define('SBIS3.CONTROLS/FieldLink/resources/ItemsCollection', [
                targetPart: true,
                cssClassName: pickerClasses.join(' '),
                activableByClick: false,
+               _canScroll: true,
                verticalAlign: {
                   side: 'top'
                },
