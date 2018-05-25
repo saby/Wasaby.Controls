@@ -47,7 +47,7 @@ node('controls') {
                 choices: "online\npresto\ncarry\ngenie",
                 description: '',
                 name: 'theme'),
-            choice(choices: "chrome\nff\nie", description: '', name: 'browser_type'),
+            choice(choices: "chrome\nff\nie\nedge", description: '', name: 'browser_type'),
             booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов", name: 'run_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
@@ -483,7 +483,9 @@ node('controls') {
                 #BRANCH=True
                 [regression]
                 IMAGE_DIR = capture
-                RUN_REGRESSION=True"""
+                RUN_REGRESSION=True
+				[filestostart]
+				test_vdom_header.py"""
         }
         def run_test_fail = ""
         if (params.RUN_ONLY_FAIL_TEST == true){
@@ -493,7 +495,7 @@ node('controls') {
         stage("Запуск тестов интеграционных и верстки"){
             def site = "http://${NODE_NAME}:30010"
             site.trim()
-			if ("${params.browser_type}" != "ff"){
+			if ("${params.browser_type}" == "chrome"){
 				dir("./controls/tests/int"){
 					tmp_smoke = sh returnStatus:true, script: """
 						source /home/sbis/venv_for_test/bin/activate
