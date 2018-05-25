@@ -223,13 +223,23 @@ define('SBIS3.CONTROLS/WSControls/Buttons/MenuButton', [
        * Показывает меню у кнопки
        */
       showPicker: function() {
-         var self = this;
-         _getContextMenu(function() {
-            MenuButton.superclass.showPicker.call(self);
-            self._picker.subscribe('ondrawitems', function() {
-               self._checkItemsIcons(self._picker.getItems());
+         var self = this,
+            loadContextMenu = function() {
+               _getContextMenu(function() {
+                  MenuButton.superclass.showPicker.call(self);
+                  self._picker.subscribe('ondrawitems', function() {
+                     self._checkItemsIcons(self._picker.getItems());
+                  });
+               }, self._options.historyId);
+            };
+         if (!self._options.footerTpl && self._options.footerTemplateName) {
+            requirejs([self._options.footerTemplateName], function(footerTpl) {
+               self._options.footerTpl = footerTpl;
+               loadContextMenu();
             });
-         }, self._options.historyId);
+         } else {
+            loadContextMenu();
+         }
 
       },
 
