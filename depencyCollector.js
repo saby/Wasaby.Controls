@@ -44,7 +44,8 @@ var contents = {
 contents["requirejsPaths"] = {
    "SBIS3.CONTROLS": "components",
    "View": "sbis3-ws/View",
-   "WSTest": "tests/WSTest"
+   "WSTest": "tests/WSTest",
+   "ControlsSandbox": "pages/sandbox"
 };
 fs.writeFileSync(path.join(__dirname, 'components/contents.json'), JSON.stringify(contents, null, 3));
 contents["modules"] = {
