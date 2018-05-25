@@ -22,7 +22,7 @@
    <link rel="stylesheet" href="{{wsRoot}}css/core.css" type="text/css" key="core-css"/>
    <ws:if data="{{ cssLinks }}">
       <ws:for data="index, value in cssLinks">
-         <link rel="stylesheet" href="{{ value }}" type="text/css" key="{{ 'css_' + index }}"/>
+         <link rel="stylesheet" href="{{ value }}" type="text/css" key="{{ 'css_' + index }}" data-vdomignore="true"/>
       </ws:for>
    </ws:if>
    <title key="title">{{ title }}</title>
@@ -83,7 +83,7 @@
 
                                     <ws:if data="{{cssBundles}}">
                                        <ws:for data="i in cssBundles">
-                                          <script>define('css!{{i}}', '');</script>
+                                          <script data-vdomignore="true">define('css!{{i}}', '');</script>
                                        </ws:for>
                                     </ws:if>
                                     <ws:if data="{{ _options.scripts }}">
