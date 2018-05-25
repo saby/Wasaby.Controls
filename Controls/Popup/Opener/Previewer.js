@@ -1,8 +1,8 @@
-define('Controls/Popup/Opener/MiniCard',
+define('Controls/Popup/Opener/Previewer',
    [
       'Core/core-clone',
       'Controls/Popup/Opener/BaseOpener',
-      'Controls/Popup/Opener/MiniCard/MiniCardController'
+      'Controls/Popup/Opener/Previewer/PreviewerController'
    ],
    function(cClone, Base, Controller) {
 
@@ -24,12 +24,12 @@ define('Controls/Popup/Opener/MiniCard',
             var myCfg = cClone(cfg);
 
             myCfg.closeByExternalClick = true;
-            myCfg.className = 'controls-MiniCardController';
-            MiniCard.superclass.open.call(self, myCfg, Controller);
+            myCfg.className = 'controls-PreviewerController';
+            Previewer.superclass.open.call(self, myCfg, Controller);
          }
       };
 
-      var MiniCard = Base.extend({
+      var Previewer = Base.extend({
          _openingTimerId: null,
 
          _closingTimerId: null,
@@ -59,10 +59,10 @@ define('Controls/Popup/Opener/MiniCard',
                this._closingTimerId = setTimeout(function() {
                   self.closingTimerId = null;
 
-                  MiniCard.superclass.close.call(self);
+                  Previewer.superclass.close.call(self);
                }, _private.displayDuration);
             } else {
-               MiniCard.superclass.close.call(this);
+               Previewer.superclass.close.call(this);
             }
          },
 
@@ -77,5 +77,5 @@ define('Controls/Popup/Opener/MiniCard',
          }
       });
 
-      return MiniCard;
+      return Previewer;
    });

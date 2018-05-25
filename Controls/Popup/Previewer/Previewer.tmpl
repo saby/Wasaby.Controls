@@ -3,11 +3,11 @@
                on:mousedown="_contentMousedownHandler()"
                on:mouseenter="_contentMouseenterHandler()"
                on:mouseleave="_contentMouseleaveHandler()"/>
-   <Controls.Popup.Opener.MiniCard name="openerMiniCard">
+   <Controls.Popup.Opener.Previewer name="openerPreviewer">
       <ws:popupOptions template="Controls/Popup/Previewer/OpenerTemplate">
          <ws:corner vertical="bottom" horizontal="right"/>
          <ws:templateOptions content="{{_options.template}}"/>
          <ws:eventHandlers onResult="{{_resultHandler}}"></ws:eventHandlers>
       </ws:popupOptions>
-   </Controls.Popup.Opener.MiniCard>
+   </Controls.Popup.Opener.Previewer>
 </div>

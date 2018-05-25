@@ -1,16 +1,16 @@
-define('Controls/Popup/Opener/MiniCard/MiniCardController',
+define('Controls/Popup/Opener/Previewer/PreviewerController',
    [
       'Core/Deferred',
       'Controls/Popup/Manager/ManagerController',
       'Controls/Popup/Opener/Sticky/StickyController',
 
-      'css!Controls/Popup/Opener/MiniCard/MiniCardController'
+      'css!Controls/Popup/Opener/Previewer/PreviewerController'
    ],
    function(Deferred, ManagerController, StickyController) {
 
       'use strict';
 
-      var MiniCardController = StickyController.constructor.extend({
+      var PreviewerController = StickyController.constructor.extend({
          _openedPopupId: null,
 
          _destroyDeferred: null,
@@ -24,25 +24,25 @@ define('Controls/Popup/Opener/MiniCard/MiniCardController',
             }
             this._openedPopupId = id;
 
-            return MiniCardController.superclass.elementCreated.apply(this, arguments);
+            return PreviewerController.superclass.elementCreated.apply(this, arguments);
          },
 
          elementDestroyed: function(element, container) {
             this._openedPopupId = null;
             this._destroyDeferred = new Deferred();
 
-            container.classList.add('controls-MiniCardController_close');
+            container.classList.add('controls-PreviewerController_close');
 
             return this._destroyDeferred;
          },
 
          elementAnimated: function(element, container) {
-            if (container.classList.contains('controls-MiniCardController_close')) {
+            if (container.classList.contains('controls-PreviewerController_close')) {
                this._destroyDeferred.callback();
             }
          }
       });
 
-      return new MiniCardController();
+      return new PreviewerController();
    }
 );

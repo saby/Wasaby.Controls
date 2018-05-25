@@ -3,7 +3,7 @@ define('Controls/Popup/Previewer',
       'Core/Control',
       'tmpl!Controls/Popup/Previewer/Previewer',
 
-      'Controls/Popup/Opener/MiniCard'
+      'Controls/Popup/Opener/Previewer'
    ],
    function(Control, template) {
 
@@ -40,7 +40,7 @@ define('Controls/Popup/Previewer',
          _open: function(event) {
             var type = _private.getType(event.type);
 
-            this._children.openerMiniCard.open({
+            this._children.openerPreviewer.open({
                target: event.target
             }, type);
          },
@@ -48,12 +48,12 @@ define('Controls/Popup/Previewer',
          _close: function(event) {
             var type = _private.getType(event.type);
 
-            this._children.openerMiniCard.close(type);
+            this._children.openerPreviewer.close(type);
          },
 
 
          _cancel: function(event, action) {
-            this._children.openerMiniCard.cancel(action);
+            this._children.openerPreviewer.cancel(action);
          },
 
          _contentMousedownHandler: function(event) {
