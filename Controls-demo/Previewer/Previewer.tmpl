@@ -5,9 +5,13 @@
             <img src="Previewer/image/{{image}}.png"/>
          </ws:content>
          <ws:template>
-            <div attr:style="padding: 50px; border: 2px solid red;">
-               <img src="Previewer/image/{{image}}.png" style="height: 150px; width: 150px;"/>
-            </div>
+            <Controls.Popup.Templates.Dialog.DialogTemplate>
+               <ws:contentArea>
+                  <div attr:style="padding: 50px; border: 2px solid red;">
+                     <img src="Previewer/image/{{image}}.png" style="height: 150px; width: 150px;"/>
+                  </div>
+               </ws:contentArea>
+            </Controls.Popup.Templates.Dialog.DialogTemplate>
          </ws:template>
       </Controls.Popup.Previewer>
    </ws:for>
