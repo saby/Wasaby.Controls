@@ -106,8 +106,6 @@ define('Controls/List/Grid/GridViewModel', [
          _colgroupColumns: [],
          _curColgroupColumnIndex: 0,
 
-         _cellBottomShadowVisibly: false,
-
          _withLadder: false,
          _drawLadder: false,
          _ladder: {
@@ -146,10 +144,6 @@ define('Controls/List/Grid/GridViewModel', [
 
          setColumnTemplate: function(columnTpl) {
             this._columnTemplate = columnTpl;
-         },
-
-         setCellBottomShadowVisibly: function(value) {
-            this._cellBottomShadowVisibly = value;
          },
 
          // -----------------------------------------------------------

@@ -27,6 +27,35 @@ define('Controls/List/Grid/GridView', [
                result += column.width ? column.width + ' ' : '1fr ';
             });
             return result;
+         },
+         prepareColumnsIfPartialGridSupport: function(columns) {
+            for (var i = 0; i < columns.length; i++) {
+               if (columns[i].width === '1fr') {
+                  columns[i].width = 'auto';
+               } else if (columns[i].width === 'auto') {
+                  columns[i].width = '1px';
+               }
+            }
+         },
+         prepareHeaderAndResultsIfFullGridSupport: function(results, header, container) {
+            var
+               resultsPadding,
+               cells;
+            if (results) {
+               if (results.position === 'top') {
+                  if (header) {
+                     resultsPadding = this._container.getElementsByClassName('controls-Grid__header-cell')[0].getBoundingClientRect().height + 'px';
+                  } else {
+                     resultsPadding = '0';
+                  }
+               } else {
+                  resultsPadding = 'calc(100% - ' + this._container.getElementsByClassName('controls-Grid__results-cell')[0].getBoundingClientRect().height + 'px)';
+               }
+               cells = container.getElementsByClassName('controls-Grid__results-cell');
+               Array.prototype.forEach.call(cells, function(elem) {
+                  elem.style.top = resultsPadding;
+               });
+            }
          }
       },
       GridView = ListView.extend({
@@ -41,53 +70,15 @@ define('Controls/List/Grid/GridView', [
          _beforeMount: function(cfg) {
             GridView.superclass._beforeMount.apply(this, arguments);
             this._listModel.setColumnTemplate(ColumnTpl);
-
-            if (cDetection.isNotFullGridSupport || cDetection.isIE) {
-               var tmp = cfg.columns,
-                  temp = function(tmp) {
-                     var tmps = tmp;
-                     var i;
-                     for (i = 0; i < tmps.length; i++) {
-                        if (tmps[i].width == '1fr') {
-                           tmps[i].width = 'auto';
-                        } else {
-                           if (tmps[i].width == 'auto') {
-                              tmps[i].width = '1px';
-                           }
-                        }
-                     }
-                     return tmps;
-                  };
-               temp(tmp);
+            if (cDetection.isNotFullGridSupport) {
+               this._private.prepareColumnsIfPartialGridSupport(cfg.columns);
             }
          },
 
          _afterMount: function() {
-            var
-               results = this._listModel.getResults(),
-               header = this._listModel.getHeader();
             GridView.superclass._afterMount.apply(this, arguments);
             if (!cDetection.isNotFullGridSupport) {
-               if (results) {
-                  var
-                     resultsPadding = '';
-                  if (results.position === 'top') {
-                     if (header) {
-                        resultsPadding = this._container.getElementsByClassName('controls-Grid__header-cell')[0].getBoundingClientRect().height + 'px';
-                     } else {
-                        resultsPadding = '0';
-                     }
-                  } else {
-                     resultsPadding = 'calc(100% - ' + this._container.getElementsByClassName('controls-Grid__results-cell')[0].getBoundingClientRect().height + 'px)';
-                  }
-                  $(this._container).find('.controls-Grid__results-cell').css('top', resultsPadding);
-               }
-            }
-         },
-         
-         __onEmitScroll: function(e, type, params) {
-            if (!cDetection.isNotFullGridSupport && type === 'scrollMove') {
-               this._listModel.setCellBottomShadowVisibly(params.scrollTop !== 0);
+               this._private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResults(), this._listModel.getHeader(), this._container);
             }
          }
       });
