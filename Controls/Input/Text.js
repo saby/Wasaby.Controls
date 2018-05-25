@@ -1,69 +1,71 @@
 define('Controls/Input/Text', [
    'Core/Control',
    'tmpl!Controls/Input/Text/Text',
+   'WS.Data/Type/descriptor',
    'Controls/Input/Text/ViewModel',
    'Controls/Input/resources/InputHelper',
    'css!Controls/Input/resources/InputRender/InputRender',
    'tmpl!Controls/Input/resources/input'
 ], function(Control,
    template,
+   types,
    TextViewModel,
    inputHelper) {
 
    'use strict';
 
    /**
-    * Single-line text input.
-    *
-    * @class Controls/Input/Text
-    * @extends Core/Control
-    * @mixes Controls/Input/interface/IInputText
-    * @mixes Controls/Input/interface/IInputPlaceholder
-    * @mixes Controls/Input/interface/IValidation
-    * @mixes Controls/Input/interface/IInputTag
-    * @control
-    * @public
-    * @category Input
-    * @author Журавлев Максим Сергеевич
-    * @demo Controls-demo/Input/Text/Text
-    */
+       * Single-line text input.
+       *
+       * @class Controls/Input/Text
+       * @extends Core/Control
+       * @mixes Controls/Input/interface/IInputText
+       * @mixes Controls/Input/interface/IInputPlaceholder
+       * @mixes Controls/Input/interface/IValidation
+       * @mixes Controls/Input/interface/IInputTag
+       * @control
+       * @public
+       * @category Input
+       * @author Журавлев Максим Сергеевич
+       * @demo Controls-demo/Input/Text/Text
+       */
 
 
    /**
-    * @name Controls/Input/Text#maxLength
-    * @cfg {Number} Maximum number of characters that user can enter in the field.
-    */
+       * @name Controls/Input/Text#maxLength
+       * @cfg {Number} Maximum number of characters that user can enter in the field.
+       */
 
    /**
-    * @name Controls/Input/Text#trim
-    * @cfg {Boolean} If true, removes whitespaces from both sides of a string when input is completed.
-    * @variant true Remove whitespaces.
-    * @variant false Do not remove whitespaces.
-    */
+       * @name Controls/Input/Text#trim
+       * @cfg {Boolean} If true, removes whitespaces from both sides of a string when input is completed.
+       * @variant true Remove whitespaces.
+       * @variant false Do not remove whitespaces.
+       */
 
    /**
-    * @name Controls/Input/Text#selectOnClick
-    * @cfg {Boolean} If true, text is selected when input is clicked.
-    * @variant true Select text on click.
-    * @variant false Do not select text on click.
-    */
+       * @name Controls/Input/Text#selectOnClick
+       * @cfg {Boolean} If true, text is selected when input is clicked.
+       * @variant true Select text on click.
+       * @variant false Do not select text on click.
+       */
 
    /**
-    * @name  Controls/Input/Text#constraint
-    * @cfg {String} Regular expression for input filtration.
-    * @remark
-    * Every entered character is checked with a given regular expression. If symbo does not
-    * comply with the expression, if will not be entered.
-    * @example
-    * Allow only digits:
-    * <pre class="brush:xml">
-    *     <option name="constraint">[0-9]</option>
-    * </pre>
-    * Allow only cyrillic letters:
-    * <pre class="brush:xml">
-    *     <option name="constraint">[а-яА-ЯёЁ]</option>
-    * </pre>
-    */
+       * @name  Controls/Input/Text#constraint
+       * @cfg {String} Regular expression for input filtration.
+       * @remark
+       * Every entered character is checked with a given regular expression. If symbo does not
+       * comply with the expression, if will not be entered.
+       * @example
+       * Allow only digits:
+       * <pre class="brush:xml">
+       *     <option name="constraint">[0-9]</option>
+       * </pre>
+       * Allow only cyrillic letters:
+       * <pre class="brush:xml">
+       *     <option name="constraint">[а-яА-ЯёЁ]</option>
+       * </pre>
+       */
 
    var TextBox = Control.extend({
       _template: template,
@@ -126,17 +128,16 @@ define('Controls/Input/Text', [
       };
    };
 
-   //TODO расскоментировать этот блок + зависимость types когда полечат https://online.sbis.ru/opendoc.html?guid=1416c4da-b0e0-402b-9e02-a3885dc6cdb8
-   /*TextBox.getOptionTypes = function() {
-       return {
-       trim: types(Boolean),
-       selectOnClick: types(Boolean),
-       placeholder: types(String),
-       constraint: types(String),
-       value: types(String),
-       maxLength: types(Number)
-       };
-       };*/
+   TextBox.getOptionTypes = function() {
+      return {
+         trim: types(Boolean),
+         selectOnClick: types(Boolean),
+         placeholder: types(String),
+         constraint: types(String),
+         value: types(String),
+         maxLength: types(Number)
+      };
+   };
 
    return TextBox;
 }

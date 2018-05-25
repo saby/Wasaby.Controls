@@ -1,6 +1,10 @@
 define('Controls/Calendar/interface/IMonth', [
    'WS.Data/Type/descriptor',
-], function(types) {
+   'SBIS3.CONTROLS/Utils/DateUtil'
+], function(
+   types,
+   dateUtil
+) {
    'use strict';
 
    /**
@@ -23,7 +27,7 @@ define('Controls/Calendar/interface/IMonth', [
              *     <option name="month">2015-03-07T21:00:00.000Z</option>
              * </pre>
              */
-            month: null,
+            month: dateUtil.getStartOfMonth(new Date()),
 
             /**
              * @name Controls/Calendar/interface/IMonth#showCaption

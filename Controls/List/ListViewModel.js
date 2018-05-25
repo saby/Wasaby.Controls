@@ -2,8 +2,8 @@
  * Created by kraynovdo on 16.11.2017.
  */
 define('Controls/List/ListViewModel',
-   ['Core/Abstract', 'Controls/List/ItemsViewModel', 'Controls/Controllers/Multiselect/Selection', 'WS.Data/Entity/VersionableMixin'],
-   function(Abstract, ItemsViewModel, MultiSelection, VersionableMixin) {
+   ['Controls/List/ItemsViewModel', 'Controls/Controllers/Multiselect/Selection', 'WS.Data/Entity/VersionableMixin'],
+   function(ItemsViewModel, MultiSelection, VersionableMixin) {
       /**
        *
        * @author Крайнов Дмитрий
@@ -105,6 +105,8 @@ define('Controls/List/ListViewModel',
             this._editingItemData = itemData;
             if (itemData && itemData.item) {
                this.setMarkedKey(itemData.item.get(this._options.keyProperty));
+            } else {
+               this._nextVersion();
             }
          },
          setItemActions: function(item, actions) {

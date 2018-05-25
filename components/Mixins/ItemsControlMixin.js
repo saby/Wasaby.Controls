@@ -1368,7 +1368,11 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
             lastItemsIndex = this._virtualScrollController._currentWindow[1] + 1;
          }
 
-         if (newItemsIndex == 0 || newItemsIndex == lastItemsIndex) {
+         // Если предыдущий элемент - группа, которую не нужно рисовать (groupId === "false"), то элемент вставлять нужно в самое начало
+         // https://online.sbis.ru/opendoc.html?guid=c4bfa6df-6518-4ea1-b8d4-66fce5b524f5
+         if (newItemsIndex === 1 && cInstance.instanceOfModule(prevItem, 'WS.Data/Display/GroupItem') && prevItem.getContents() === false) {
+            prepend = true;
+         } else if (newItemsIndex == 0 || newItemsIndex == lastItemsIndex) {
             prepend = newItemsIndex == 0;
             // Если добавляется первый в списке элемент + это узел + включена группировка (для узлов группы не рисуются), то
             // предыдущим элементом будет группа, которая фактически не рисуется, а значит и DOM элемент будет не найден, а
@@ -2229,8 +2233,11 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
       _fillItemInstances: function () {
          var childControls = this.getChildControls();
          for (var i = 0; i < childControls.length; i++) {
-            if (childControls[i].getContainer().hasClass('controls-ListView__item')) {
-               var hash = childControls[i].getContainer().attr('data-hash');
+            var container = childControls[i].getContainer();
+            //контейнера у контрола может не оказаться, многие создают контролы из кода без привязки к DOM например Action
+            //проверим наличие контейнера, это заведомо не тот контрол, который нам нужен
+            if (container && container.hasClass('controls-ListView__item')) {
+               var hash = container.attr('data-hash');
                //Проверяем на то, что найденный элемент принадлежит именно текущему инстансу, а не вложенным.
                if (this._getItemsProjection().getByHash(hash)) {
                   this._itemsInstances[hash] = childControls[i];

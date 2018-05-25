@@ -48,7 +48,7 @@ define("File/LocalFile", ["require", "exports"], function (require, exports) {
          * @method
          */
         LocalFile.prototype.getMeta = function () {
-            return this._meta;
+            return this._meta || {};
         };
         return LocalFile;
     }());

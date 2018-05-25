@@ -26,6 +26,9 @@ define('Controls/Application/_JsLinks',
             self.jsLinks = [];
             def.addCallback(function onLoad(res) {
                self.jsLinks = res.jsLinks;
+               for(var i = 0; i < res.cssLinks.length; i++) {
+                  self.cssLinks.push([i].split(/.css$/)[0]);
+               }
                innerDef.callback(self.jsLinks);
                return res;
             });

@@ -194,6 +194,7 @@ define('SBIS3.CONTROLS/Menu', [
                visible: visible === undefined ? true : visible,
                icon: item.get('icon'),
                tooltip: item.get('tooltip'),
+               multiline: item.get('multiline'),
                allowChangeEnable: item.get('allowChangeEnable') !== undefined ? item.get('allowChangeEnable') : this._options.allowChangeEnable
             };
 
@@ -351,6 +352,10 @@ define('SBIS3.CONTROLS/Menu', [
                      }
                      mySubmenu = self._subMenus[id];
                      mySubmenu.show();
+                     /* Само меню не должно вызывать перерасчёта у соседних элементов,
+                      т.к. создаётся абсолютом в body, однако, в меню могу лежать контролы,
+                      которым требуется расчитывать ширину, поэтому запускаем расчёты только для дочерних */
+                     mySubmenu._resizeChilds();
                   }
                });
             }
@@ -399,7 +404,8 @@ define('SBIS3.CONTROLS/Menu', [
             },
             closeByExternalOver: true,
             targetPart: true,
-            item: item
+            item: item,
+            _canScroll: true
          };
          config = this._onMenuConfig(config, isFirstLevel, item);
          return config;

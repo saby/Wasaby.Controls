@@ -8,9 +8,10 @@ define([
    'WS.Data/Collection/RecordSet',
    'Controls/List/ListViewModel',
    'Controls/Utils/Toolbar',
+   'Core/Deferred',
    'Core/core-instance',
    'Controls/List/ListView'
-], function(BaseControl, ItemsUtil, MemorySource, RecordSet, ListViewModel, tUtil, cInstance) {
+], function(BaseControl, ItemsUtil, MemorySource, RecordSet, ListViewModel, tUtil, cDeferred, cInstance) {
    describe('Controls.List.BaseControl', function() {
       var data, display, result, source, rs;
       beforeEach(function() {
@@ -56,7 +57,7 @@ define([
          });
       });
       it('life cycle', function(done) {
-
+         var dataLoadFired = false;
          var filter = {1: 1, 2: 2};
          var cfg = {
             viewName: 'Controls/List/ListView',
@@ -98,6 +99,9 @@ define([
          cfg = {
             viewName: 'Controls/List/ListView',
             source: source,
+            dataLoadCallback: function() {
+               dataLoadFired = true;
+            },
             viewModelConstructor: ListViewModel,
             viewModelConfig: {
                items: [],
@@ -110,8 +114,9 @@ define([
          assert.isTrue(ctrl._sourceController !== oldSourceCtrl, '_dataSourceController wasn\'t changed before updating');
          assert.deepEqual(filter2, ctrl._filter, 'incorrect filter before updating');
 
-         //сорс грузит асинхронном
+         //сорс грузит асинхронно
          setTimeout(function() {
+            assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
             ctrl._afterUpdate();
             ctrl._beforeUnmount();
             done();
@@ -121,6 +126,54 @@ define([
 
       });
 
+      it('errback to callback', function(done) {
+
+         var source = new MemorySource({
+            idProperty: 'id',
+            data: data
+         });
+
+
+         var cfg = {
+            viewName: 'Controls/List/ListView',
+            source: source,
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: ListViewModel
+         };
+
+         var ctrl = new BaseControl(cfg);
+
+
+         ctrl.saveOptions(cfg);
+         ctrl._beforeMount(cfg);
+
+         //waiting for first load
+         setTimeout(function() {
+
+            //emulate loading error
+            ctrl._sourceController.load = function() {
+               var def = new cDeferred();
+               def.errback();
+               return def;
+            };
+
+            BaseControl._private.reload(ctrl).addCallback(function() {
+               done();
+            }).addErrback(function() {
+               assert.isTrue(false, 'reload() returns errback');
+               done();
+            });
+         }, 100);
+
+      });
+
+
       it('loadToDirection down', function(done) {
 
          var source = new MemorySource({
@@ -128,8 +181,13 @@ define([
             data: data
          });
 
+         var dataLoadFired = false;
+
          var cfg = {
             viewName: 'Controls/List/ListView',
+            dataLoadCallback: function() {
+               dataLoadFired = true;
+            },
             source: source,
             viewConfig: {
                keyProperty: 'id'
@@ -148,17 +206,10 @@ define([
                }
             }
          };
-         var dataLoadFired = false;
+
          var ctrl = new BaseControl(cfg);
-         
-         var originNotify = ctrl._notify;
-         ctrl._notify = function(event) {
-            if (event === 'onDataLoad') {
-               dataLoadFired = true;
-            }
-            originNotify.apply(ctrl, arguments);
-         };
-         
+
+
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
@@ -166,7 +217,7 @@ define([
             BaseControl._private.loadToDirection(ctrl, 'down');
             setTimeout(function() {
                assert.equal(6, BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
-               assert.isTrue(dataLoadFired, 'onDataLoad event is not fired');
+               assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
                done();
             }, 100);
          }, 100);
@@ -267,12 +318,12 @@ define([
          var error = {message: 'error'};
 
          result = false;
-         ctrl._notify = function(eventName, error) {
-            result = error[0];
+         var userErrback = function(error) {
+            result = error;
          };
-         BaseControl._private.processLoadError(ctrl, error);
+         BaseControl._private.processLoadError(ctrl, error, userErrback);
 
-         assert.equal(error, result, 'Event doesn\'t return instance of Error');
+         assert.equal(error, result, 'UserErrback doesn\'t return instance of Error');
       });
 
       it('indicator', function() {

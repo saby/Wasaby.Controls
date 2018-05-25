@@ -1,8 +1,7 @@
 <Controls.Container.Scroll shadowVisibility="{{showShadow}}" scrollbarVisibility="{{showScrollbar}}">
    <Controls.List source="{{messagesSource}}" keyProperty="id" name="{{nameList}}">
       <ws:itemTemplate>
-         <ws:partial itemData="{{itemTemplate.itemData}}"
-                     template="tmpl!Controls/List/ItemTemplate">
+         <ws:partial template="tmpl!Controls/List/ItemTemplate">
             <ws:contentTemplate>
                <div>
                   <ws:partial user="{{users.getRecordById(itemTemplate.itemData.item.get('user'))}}"

@@ -1,10 +1,12 @@
 
-@margin_ExportCustomizer-Formatter-View-head: 0 0 12px 0;
+@margin_ExportCustomizer-Formatter-View-head: 0 0 6px 0;
 @padding_ExportCustomizer-Formatter-View-title: 0 12px;
 @font-size_ExportCustomizer-Formatter-View-title: 15px;
 @color_ExportCustomizer-Formatter-View-title: #313E78;
 @margin_ExportCustomizer-Formatter-View-formatterMenu: 0 12px 0 0 ;
+@padding_ExportCustomizer-Formatter-View-formatterMenu: 8px 0 6px 0;
 @color_ExportCustomizer-Formatter-View-formatterMenu: #0055BB;
+@height_ExportCustomizer-Formatter-View-preview: 150px;
 
 .controls-ExportCustomizer-Formatter-View__head {
    .flexbox();
@@ -25,6 +27,7 @@
 .controls-ExportCustomizer-Formatter-View__formatterMenu {
    .flex-shrink(0);
    margin: @margin_ExportCustomizer-Formatter-View-formatterMenu;
+   padding: @padding_ExportCustomizer-Formatter-View-formatterMenu;
    color: @color_ExportCustomizer-Formatter-View-formatterMenu;
 }
 
@@ -33,7 +36,8 @@
 }
 
 .controls-ExportCustomizer-Formatter-View__preview {
-   min-height: 150px;
+   height: @height_ExportCustomizer-Formatter-View-preview;
+   overflow: hidden;
    cursor: pointer;
 }
 

@@ -1,20 +1,22 @@
 /**
  * Исполняемое действие "Настройщик экспорта"
  *
+ * Для того, чтобы возможно было использовать сохранямые и редактируемые пресеты (предустановленные сочетания параметров экспорта), необходимо подключить модуль 'SBIS3.ENGINE/Controls/ExportPresets/Loader'
+ * Для того, чтобы возможно было использовать редактируемые стилевые шаблоны эксель файла, необходимо подключить модуль 'PrintingTemplates/ExportFormatter/Excel'
+ *
  * @public
  * @class SBIS3.CONTROLS/ExportCustomizer/Action
  * @extends SBIS3.CONTROLS/Action
  */
 define('SBIS3.CONTROLS/ExportCustomizer/Action',
    [
-      'Core/core-merge',
       'Core/Deferred',
       'Lib/Control/FloatArea/FloatArea',
       'SBIS3.CONTROLS/Action',
       'SBIS3.CONTROLS/ExportCustomizer/Area'
    ],
 
-   function (cMerge, Deferred, FloatArea, Action, Area) {
+   function (Deferred, FloatArea, Action, Area) {
       'use strict';
 
       /**
@@ -46,11 +48,19 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
        */
 
       /**
-       * @typedef {object} ExportPreset Тип, содержащий информацию о преустановленных настройках экспорта
+       * @typedef {object} ExportPreset Тип, содержащий информацию о предустановленных настройках экспорта
        * @property {string|number} id Идентификатор пресета
        * @property {string} title Отображаемое название пресета
        * @property {Array<string>} fieldIds Список привязки колонок в экспортируемом файле к полям данных
        * @property {string} fileUuid Uuid шаблона форматирования эксель-файла
+       */
+
+      /**
+       * @typedef {object} ExportValidator Тип, описывающий валидаторы результатов редактирования
+       * @property {function(object, function):(boolean|string)} validator Функция проверки. Принимает два аргумента. Первый - объект с проверяемыми данными. Второй - геттер опции по её имени. Геттер позволяет получить доступ к опциям, которые есть в настройщике экспорта в момент валидации. Должна возвратить либо логическое значение, показывающее пройдена ли проверка, либо строку с сообщением об ошибке
+       * @property {Array<*>} [params] Дополнительные аргументы функции проверки, будут добавлены после основных (опционально)
+       * @property {string} [errorMessage] Сообщение об ошибке по умолчанию (опционально)
+       * @property {boolean} [noFailOnError] Указывает на то, что если проверка не пройдена, это не является фатальным. В таком случае пользователю будет показан диалог с просьбой о подтверждении (опционально)
        */
 
       /**
@@ -87,6 +97,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * @param {object} options Входные аргументы("мета-данные") настройщика экспорта:
           * @param {string} [options.dialogTitle] Заголовок диалога настройщика экспорта (опционально)
           * @param {string} [options.dialogButtonTitle] Подпись кнопки диалога применения результата редактирования (опционально)
+          * @param {string} [options.presetAddNewTitle] Надпись на кнопке добавления нового пресета в под-компоненте "presets" (опционально)
+          * @param {string} [options.presetNewPresetTitle] Название для нового пресета в под-компоненте "presets" (опционально)
           * @param {string} [options.columnBinderTitle] Заголовок под-компонента "columnBinder" (опционально)
           * @param {string} [options.columnBinderColumnsTitle] Заголовок столбца колонок файла в таблице соответствия под-компонента "columnBinder" (опционально)
           * @param {string} [options.columnBinderFieldsTitle] Заголовок столбца полей данных в таблице соответствия под-компонента "columnBinder" (опционально)
@@ -94,13 +106,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * @param {string} [options.formatterTitle] Заголовок под-компонента "formatter" (опционально)
           * @param {string} [options.formatterMenuTitle] Заголовок меню выбора способа форматирования в под-компоненте "formatter" (опционально)
           * @param {ExportServiceParams} options.serviceParams Прочие параметры, необходимых для работы БЛ
-          * @param {Array<ExportPreset>} options.staticPresets Список пресетов (предустановленных настроек экспорта)
-          * @param {string} options.presetNamespace Пространство имён для сохранения пользовательских пресетов
-          * @param {string|number} options.selectedPresetId Идентификатор пресета, который будет выбран в списке пресетов
+          * @param {boolean} [options.usePresets] Использовать пресеты (предустановленных настроек экспорта) (опционально)
+          * @param {Array<ExportPreset>} options.staticPresets Список пресетов (предустановленных настроек экспорта) (опционально)
+          * @param {string} options.presetNamespace Пространство имён для сохранения пользовательских пресетов (опционально)
+          * @param {string|number} options.selectedPresetId Идентификатор пресета, который будет выбран в списке пресетов. Если будет указан пустое значение (null или пустая строка), то это будет воспринято как указание создать новый пустой пресет и выбрать его. Если значение не будет указано вовсе (или будет указано значение undefined), то это будет воспринято как указание выбрать пресет, который был выбран в прошлый раз (опционально)
           * @param {Array<BrowserColumnInfo>|WS.Data/Collection/RecordSet<BrowserColumnInfo>} options.allFields Список объектов с информацией о всех колонках в формате, используемом в браузере
           * @param {Array<string>} options.fieldIds Список привязки колонок в экспортируемом файле к полям данных
           * @param {object} options.fieldGroupTitles Список отображаемых названий групп полей (если используются идентификаторы групп)
           * @param {string} options.fileUuid Uuid шаблона форматирования эксель-файла
+          * @param {Array<ExportValidator>} options.validators Список валидаторов результатов редактирования (опционально)
           * @param {ExportRemoteCall} [options.outputCall] Информация для вызова метода удалённого сервиса для отправки данных вывода (опционально)
           * @return {Deferred<ExportResults>}
           */
@@ -142,7 +156,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
             var defaults = this._options;
             Area.getOwnOptionNames().forEach(function (name) {
                var value = options[name];
-               componentOptions[name] = value !=/*Не !==*/ null ? value : defaults[name];
+               componentOptions[name] = value !== undefined ? value : defaults[name];
             });
             this._areaContainer = new FloatArea({
                opener: this,

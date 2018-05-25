@@ -11,7 +11,9 @@ let getDetails = (fileName, size) => rk(`Файл ${fileName} превышает
 
 type ErrorParam = {
     fileName: string;
-    maxSize: number
+    maxSize: number;
+    message?: string;
+    details?: string;
 }
 
 /**
@@ -25,8 +27,8 @@ class MaxSizeError extends FileError {
     public maxSize: number;
     constructor(params: ErrorParam) {
         super({
-            message: MESSAGE,
-            details: getDetails(params.fileName, params.maxSize),
+            message: params.message || MESSAGE,
+            details: params.details || getDetails(params.fileName, params.maxSize),
             fileName: params.fileName
         });
         /*

@@ -30,14 +30,18 @@ define('Controls/List/BaseControl', [
    'use strict';
 
    var _private = {
-      reload: function(self) {
+      reload: function(self, userCallback, userErrback) {
          if (self._sourceController) {
             _private.showIndicator(self);
-            return self._sourceController.load(self._filter, self._sorting).addCallback(function(list) {
 
-               //todo события не работают до маунта в дом, решить что с этим делать
-               //https://online.sbis.ru/opendoc.html?guid=1e98cfd2-f855-448e-adff-43ab8339e961
-               //self._notify('onDataLoad', [list]);
+            //Need to create new Deffered, returned success result
+            //load() method may be fired with errback
+            var resDeferred = new Deferred();
+            self._sourceController.load(self._filter, self._sorting).addCallback(function(list) {
+
+               if (userCallback && userCallback instanceof Function) {
+                  userCallback(list);
+               }
 
                _private.hideIndicator(self);
 
@@ -49,21 +53,26 @@ define('Controls/List/BaseControl', [
 
 
                _private.handleListScroll(self, 0);
-               return list;
+               resDeferred.callback(list);
             }).addErrback(function(error) {
-               return _private.processLoadError(self, error);
+               _private.processLoadError(self, error, userErrback);
+               resDeferred.callback(null);
             });
+
+            return resDeferred;
          } else {
             IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
          }
       },
 
-      loadToDirection: function(self, direction) {
+      loadToDirection: function(self, direction, userCallback, userErrback) {
          _private.showIndicator(self, direction);
          if (self._sourceController) {
             return self._sourceController.load(self._filter, self._sorting, direction).addCallback(function(addedItems) {
 
-               self._notify('onDataLoad', [addedItems]);
+               if (userCallback && userCallback instanceof Function) {
+                  userCallback(addedItems, direction);
+               }
 
                _private.hideIndicator(self);
 
@@ -79,7 +88,7 @@ define('Controls/List/BaseControl', [
                //обновить начало/конец видимого диапазона записей и высоты распорок
                //_private.applyVirtualWindow(self, self._virtualScroll.getVirtualWindow());
             }).addErrback(function(error) {
-               return _private.processLoadError(self, error);
+               return _private.processLoadError(self, error, userErrback);
             });
          } else {
             IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
@@ -87,10 +96,15 @@ define('Controls/List/BaseControl', [
       },
 
 
-      processLoadError: function(self, error) {
+      processLoadError: function(self, error, userErrback) {
          if (!error.canceled) {
             _private.hideIndicator(self);
-            if (self._notify('onDataLoadError', [error]) !== true && !error._isOfflineMode) {//Не показываем ошибку, если было прервано соединение с интернетом
+
+            if (userErrback && userErrback instanceof Function) {
+               userErrback(error);
+            }
+
+            if (!(error.processed || error._isOfflineMode)) {//Не показываем ошибку, если было прервано соединение с интернетом
                //TODO новые попапы
                /*InformationPopupManager.showMessageDialog(
 
@@ -108,7 +122,7 @@ define('Controls/List/BaseControl', [
       onScrollLoadEdge: function(self, direction) {
          if (self._options.navigation && self._options.navigation.view === 'infinity') {
             if (self._sourceController.hasMoreData(direction) && !self._sourceController.isLoading()) {
-               _private.loadToDirection(self, direction);
+               _private.loadToDirection(self, direction, self._options.dataLoadCallback, self._options.dataLoadErrback);
             }
          }
       },
@@ -122,7 +136,7 @@ define('Controls/List/BaseControl', [
       scrollToEdge: function(self, direction) {
          if (self._sourceController && self._sourceController.hasMoreData(direction)) {
             self._sourceController.setEdgeState(direction);
-            _private.reload(self).addCallback(function() {
+            _private.reload(self, self._options.dataLoadCallback, self._options.dataLoadErrback).addCallback(function() {
                if (direction === 'up') {
                   self._notify('doScroll', ['top'], {bubbling: true});
                } else {
@@ -384,7 +398,7 @@ define('Controls/List/BaseControl', [
                this._sourceController.calculateState(receivedState);
                this._listViewModel.setItems(receivedState);
             } else {
-               return _private.reload(this);
+               return _private.reload(this, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
             }
          }
       },
@@ -441,7 +455,7 @@ define('Controls/List/BaseControl', [
          }
 
          if (filterChanged || sourceChanged) {
-            _private.reload(this);
+            _private.reload(this, newOptions.dataLoadCallback,  newOptions.dataLoadErrback);
          }
 
       },
@@ -537,7 +551,7 @@ define('Controls/List/BaseControl', [
       },
 
       reload: function() {
-         return _private.reload(this);
+         return _private.reload(this, this._options.dataLoadCallback, this._options.dataLoadErrback);
       },
 
       _onItemClick: function(e, item) {

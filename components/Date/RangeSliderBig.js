@@ -80,6 +80,12 @@ define('SBIS3.CONTROLS/Date/RangeSliderBig', [
                validator.validator === ControlsValidators.required;
          }).map(getValidator);
          return config;
+      },
+
+      showPicker: function() {
+         if (this.isEnabled()) {
+            DateRangeSliderBig.superclass.showPicker.apply(this, arguments);
+         }
       }
    });
    return DateRangeSliderBig;

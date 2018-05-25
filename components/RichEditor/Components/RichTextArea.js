@@ -92,8 +92,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          // 1175061954 https://online.sbis.ru/opendoc.html?guid=296b17cf-d7e9-4ff3-b4d9-e192627b41a1
          TINYMCE_URL_BASE = cConstants.browser.isIE && _getTrueIEVersion() < 11 ? 'SBIS3.CONTROLS/RichEditor/third-party/tinymce46-ie10' : 'SBIS3.CONTROLS/RichEditor/third-party/tinymce',
          EDITOR_MODULES = [
-            'css!' + TINYMCE_URL_BASE + '/skins/lightgray/skin',
-            'css!' + TINYMCE_URL_BASE + '/skins/lightgray/content.inline',
             TINYMCE_URL_BASE + '/tinymce'
          ],
          constants = {
@@ -208,6 +206,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                 */
                singleLine: false,
                editorConfig: {
+                  theme: false,
                   className: null,
                   plugins: 'media,paste,lists,noneditable,codesample',
                   codesample_content_css: false,
@@ -2041,6 +2040,19 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                //Замена переносов строк на <br>
                html = html.replace(/([^>])\n(?!<)/gi, '$1<br />');
+
+               // В ie после вставки текста из Word, после текста появляется лишняя строка
+               // https://online.sbis.ru/opendoc.html?guid=8677c08d-c2c2-4320-8ed1-9c097a4c4895
+               if(cConstants.browser.isIE) {
+                  html = html.replace(/(<br>)*<\/p>$/, "<\/p>");
+                  html = html.replace(/(<br>)*$/, "");
+                  // В ie при копировании текста между задачами появлялись большие отступы, если в выделение
+                  // попадал текст кнопок интерфейса ("Прикрепить", "Создать", "Подзадача" и т.п.).
+                  // https://online.sbis.ru/opendoc.html?guid=f76a1158-4c07-4cc7-ae6b-b980ecb491fb
+                  html = html.replace(/(<p><br><\/p>)|(<p><\/p>)*/gm,"");
+                  html = html.replace(/(<p><br>)/gm,"<p>");
+               }
+
                // Замена отступов после переноса строки и в первой строке
                // пробелы заменяются с чередованием '&nbsp;' + ' '
                html = this._replaceWhitespaces(html);
@@ -3148,17 +3160,19 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      var diff = contentHeight - content.clientHeight;
                      if (isChanged) {
                         var parent = content.parentNode;
-                        if (parent.clientHeight < contentHeight) {
-                           // Также, если прокрутка уже задействована и текущий рэнж находится в самом низу области редактирования. Определяем это по
-                           // расстоянию от нижнего края рэнжа до нижнего края области минус увеличение высоты (diff) и минус нижний отступ области
-                           // редактирования - оно должно быть "небольшим", то есть меньше некоторого порогового значения (2)
-                           var rect0 = content.getBoundingClientRect();
-                           var rect1 = this._tinyEditor.selection.getBoundingClientRect();
-                           if (rect0.bottom - rect1.bottom - diff - parseInt($content.css('padding-bottom')) < 2) {
-                              var scrollTop = parent.scrollHeight - parent.offsetHeight;
-                              if (parent.scrollTop < scrollTop) {
-                                 // И если при всём этом область редактирования недопрокручена до самого конца - подскролить её до конца
-                                 parent.scrollTop = scrollTop;
+                        if (this._tinyEditor) {
+                           if (parent.clientHeight < contentHeight) {
+                              // Также, если прокрутка уже задействована и текущий рэнж находится в самом низу области редактирования. Определяем это по
+                              // расстоянию от нижнего края рэнжа до нижнего края области минус увеличение высоты (diff) и минус нижний отступ области
+                              // редактирования - оно должно быть "небольшим", то есть меньше некоторого порогового значения (2)
+                              var rect0 = content.getBoundingClientRect();
+                              var rect1 = this._tinyEditor.selection.getBoundingClientRect();
+                              if (rect0.bottom - rect1.bottom - diff - parseInt($content.css('padding-bottom')) < 2) {
+                                 var scrollTop = parent.scrollHeight - parent.offsetHeight;
+                                 if (parent.scrollTop < scrollTop) {
+                                    // И если при всём этом область редактирования недопрокручена до самого конца - подскролить её до конца
+                                    parent.scrollTop = scrollTop;
+                                 }
                               }
                            }
                         }

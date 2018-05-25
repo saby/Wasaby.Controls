@@ -156,7 +156,7 @@ body .ws-window.ws-LoadingIndicator__window {
   box-shadow: none;
 }
 
-.controls-ComboBox__item, .controls-DropdownList__item, .controls-MenuItem {
+.controls-ComboBox__item, .controls-MenuItem {
   position: relative;
   &:before {
     .separator();
@@ -167,7 +167,7 @@ body .ws-window.ws-LoadingIndicator__window {
     display: none;
   }
 }
-.controls-DropdownList__item:first-child {
+.controls-DropdownList__item {
   &:after {
     .separator();
   }
@@ -177,11 +177,6 @@ body .ws-window.ws-LoadingIndicator__window {
     //Пока нет стандартных размеров для средних кнопок в темах оформления, задаю вручную
     width: round(58px * @multiplier);
     height: round(58px * @multiplier);
-  }
-  &.controls-DropdownList__item {
-    &:after {
-      left: @padding_DropDownList_item_child_text;
-    }
   }
 }
 //todo: поддержать в компоненте
@@ -541,6 +536,21 @@ body {
     // необходимо переверстать хлебные крошки на флекс
     &.controls-BreadCrumbs__smallItems .controls-BreadCrumbs__arrow {
       top: @bread-crumb-crumb-home-top;
+    }
+  }
+}
+
+.controls-BreadCrumbs__smallItems {
+  top: 1px;
+  &.controls-BreadCrumbs .controls-BreadCrumbs__itemsContainer, .controls-BreadCrumbs__crumb {
+    .inline-flexbox();
+  }
+  &.controls-BreadCrumbs {
+    .controls-BreadCrumbs__arrow, .controls-BreadCrumbs__title {
+      top: auto;
+    }
+    .controls-BreadCrumbs__crumb:first-child .controls-BreadCrumbs__arrow.icon-size {
+      display: none;
     }
   }
 }

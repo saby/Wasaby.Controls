@@ -145,7 +145,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                      if (meta.mode === 'floatArea' && config.isStack === true) {
                         deps.push('Controls/Popup/Opener/Stack/StackController');
                         config._type = 'stack';
-                        config.className = 'controls-Stack';
+                        config.className = (config.className || '') + ' controls-Stack';
                      } else if (meta.mode === 'floatArea' && config.isStack === false) {
                         deps.push('Controls/Popup/Opener/Sticky/StickyController');
                         config._type = 'sticky';
@@ -183,7 +183,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
       _documentClickHandler: function (event) {
          //Клик по связному списку приводит к перерисовке записи в панели, а не открытию новой при autoHide = true
          if (this._dialog && this._openedPanelConfig.mode === 'floatArea' && this._dialog.isVisible() && this._openedPanelConfig.autoHide) {
-            if (this._needCloseDialog(event.target)) {
+            if (this._needCloseDialog(event.target) && !this._isClickToScroll(event)) {
                this._dialog.close();
             }
          }
@@ -204,6 +204,12 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
          //Если кликнули по инфобоксу или информационному окну - popup закрывать не нужно
          var infoBox = $(target).closest('.ws-info-box, .controls-InformationPopup, .ws-window-overlay, .js-controls-NotificationStackPopup');
          return !!infoBox.length;
+      },
+
+      //При клике по нативному скроллу на странице не закрываем панель
+      _isClickToScroll: function(event) {
+         var hasContainerScroll = event.target.scrollWidth - event.target.offsetWidth > 0;
+         return hasContainerScroll && event.target.offsetHeight - event.clientY < 17;
       },
       _resetComponentOptions: function() {
          //FloatArea предоставляет возможность перерисовать текущий установленный шаблон. При перерисовке сохраняются все опции, которые были установлены как на FloatArea, так и на редактируемом компоненте.

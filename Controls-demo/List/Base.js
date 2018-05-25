@@ -40,7 +40,7 @@ define('Controls-demo/List/Base', [
             this._viewSource = new MemorySource({
                idProperty: 'id',
                data: srcData
-            })
+            });
          }
       });
    return ModuleClass;

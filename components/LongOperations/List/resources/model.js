@@ -1,4 +1,4 @@
-define(
+define('SBIS3.CONTROLS/LongOperations/List/resources/model',
    [
       'WS.Data/Entity/Model',
       'SBIS3.CONTROLS/LongOperations/Entry'

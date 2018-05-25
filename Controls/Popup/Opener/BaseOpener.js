@@ -11,7 +11,9 @@ define('Controls/Popup/Opener/BaseOpener',
        * Базовый опенер
        * @category Popup
        * @class Controls/Popup/Opener/Base
+       * @mixes Controls/interface/IOpener
        * @control
+       * @public
        * @author Лощинин Дмитрий
        */
       var Base = Control.extend({
@@ -22,25 +24,35 @@ define('Controls/Popup/Opener/BaseOpener',
          /**
           * Открыть всплывающую панель
           * @function Controls/Popup/Opener/Base#open
-          * @param config конфигурация попапа
+          * @param popupOptions конфигурация попапа
           * @param strategy стратегия позиционирования попапа
           */
-         open: function(config, strategy) {
-            var cfg = this._options.popupOptions ? CoreClone(this._options.popupOptions) : {};
+         open: function(popupOptions, strategy) {
             var self = this;
-            CoreMerge(cfg, config || {});
+            var cfg = this._getConfig(popupOptions);
+
             if (this.isOpened()) {
                this._popupId = ManagerController.update(this._popupId, cfg);
             } else {
-               if (!cfg.opener) {
-                  cfg.opener = this;
-               }
-               this._getTemplate(cfg).addCallback(function(tpl) {
-                  Base.showDialog(tpl, cfg, strategy).addCallback(function(popupId) {
-                     self._popupId = popupId;
+               if (cfg.isCompoundTemplate) { //TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
+                  requirejs(['Controls/Popup/Compatible/Layer'], function(Layer) {
+                     Layer.load().addCallback(function() {
+                        self._openPopup(cfg, strategy);
+                     });
                   });
-               });
+               } else {
+                  self._openPopup(cfg, strategy);
+               }
             }
+         },
+
+         _openPopup: function(cfg, strategy) {
+            var self = this;
+            this._getTemplate(cfg).addCallback(function(tpl) {
+               Base.showDialog(tpl, cfg, strategy).addCallback(function(popupId) {
+                  self._popupId = popupId;
+               });
+            });
          },
 
          //Ленивая загрузка шаблона
@@ -49,13 +61,20 @@ define('Controls/Popup/Opener/BaseOpener',
                return (new Deferred()).callback(config.template);
             } else if (requirejs.defined(config.template)) {
                return (new Deferred()).callback(requirejs(config.template));
-            } else if (!this._openerListDeferred) {
+            } else if (!this._openerListDeferred || this._openerListDeferred.isReady()) {
                this._openerListDeferred = new Deferred();
                requirejs([config.template], function(template) {
                   this._openerListDeferred.callback(template);
                }.bind(this));
             }
             return this._openerListDeferred;
+         },
+
+         _getConfig: function(popupOptions) {
+            var cfg = this._options.popupOptions ? CoreClone(this._options.popupOptions) : {};
+            CoreMerge(cfg, popupOptions || {});
+            cfg.opener = cfg.opener || this;
+            return cfg;
          },
 
          /**

@@ -3,6 +3,7 @@
  */
 define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
    var PANEL_SHADOW_WIDTH = 5; // Отступ контейнера под тень
+   var PANEL_MIN_INDENT = 100; // Минимальное расстояние между панелями
    return {
 
       /**
@@ -16,27 +17,29 @@ define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
        * @param prevRight отступ справа предыдущей панели
        */
       getPosition: function(index, tCoords, width, maxWidth, prevWidth, prevRight) {
-         var
-            top = tCoords.top,
-            right = tCoords.right;
+         var right = tCoords.right,
+            isHidden;
          if (index !== 0) {
             if (prevWidth) {
-               var rightCalc = 100 - (width - prevWidth - prevRight);
+               var rightCalc = PANEL_MIN_INDENT - ((width + right) - (prevWidth + prevRight));
                if (rightCalc > 0) {
-                  right = Math.max(100, rightCalc);
-                  if ((width + right) > maxWidth) {
-                     return null;
-                  }
+                  right += rightCalc;
                }
-            } else {
-               return null;
+               isHidden = width + right > this.getWindowSizes().width;
             }
          }
          return {
             width: width + PANEL_SHADOW_WIDTH,
             right: right,
-            top: top,
-            bottom: 0
+            top: tCoords.top,
+            bottom: 0,
+            hidden: isHidden
+         };
+      },
+      getWindowSizes: function() {
+         return {
+            width: window.innerWidth,
+            height: window.innerHeight
          };
       }
    };
