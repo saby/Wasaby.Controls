@@ -74,7 +74,7 @@ define('Controls/Button/MenuButton',
          },
 
          _selectedItemChangedHandler: function(event, result) {
-            this._notify('onMenuItemActivate', result);
+            this._notify('onMenuItemActivate', [result]);
          }
       });
 
