@@ -98,5 +98,7 @@ define('Controls/Calendar/MonthSlider', [
       return coreMerge({}, IMonth.getOptionTypes());
    };
 
+   Component._private = _private;
+
    return Component;
 });
