@@ -3,8 +3,9 @@
  */
 define('SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil',[
    'Core/constants',
-   'Core/markup/ParserUtilities'
-], function (constants, Parser) {
+   'Core/markup/ParserUtilities',
+   'WS.Data/Source/SbisService'
+], function (constants, Parser, SbisService) {
    'use strict';
    /**
     * Утилиты для работы с контентом полученным из Богатого текстового редактора
@@ -180,6 +181,72 @@ define('SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil',[
          replaceDecoratedLinks(parsed);
 
          return parsed.innerHTML();
+      },
+
+
+      replaceAnchorsToSvg: function(content) {
+         var i = 0,
+            anchors = [];
+         if (content.childNodes) {
+            while(i < content.childNodes.length) {
+               var className = getAttribute(content.childNodes[i], 'class');
+               if (className === 'LinkDecorator__outerplaceholder') {
+                  anchors.join(getAttribute(content.childNodes[i], 'href'))
+               }
+            }
+         }
+         if (anchors) {
+            require(['WS.Data/Source/SbisService'], function(SbisService) {
+               var source = new SbisService({
+                  endpoint: {
+                     address: '/linkdecorator/service/',
+                     contract: 'LinkDecorator'
+                  }
+               });
+               source.call('DecorateAsSvgText', {
+                  LinksArray: anchors
+               }).addCallback( function(SVGRecordSet) {
+                  console.log(SVGRecordSet.getRawData());
+
+                  var data = new Record({
+                     rawData: SVGRecordSet.getRawData(),
+                  })
+
+                  //Используем atob для декодирования base64
+                  for (i; i < data.d.length; i++) {
+                     replace(/<a[a-zA-Z="_:.\/0-9\s]*>[a-zA-Z="_:.\/0-9\s]*<\/a>/, atob(data.d[i][1]));
+                  }
+
+                  //replace/метод с внутренностями похожими на unDecorateLinks
+
+                  //smart replace ???
+
+
+               });
+            });
+         } else {
+            //return new Deferred().callback(content);
+         }
+
+         //return deferred;
+
+         /*
+            find anchors in text
+
+            if (anchors) {
+               new sbisService({params}).call().addCallback(function(SVGRecordset)) {
+
+               try  replace with regexp
+
+               see  unDecorateLinks method
+
+               smart replace;
+
+            }
+          else {
+            return new deferred().callback(text);
+
+         return deferred;*/
       }
    };
 
