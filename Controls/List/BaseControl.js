@@ -366,7 +366,6 @@ define('Controls/List/BaseControl', [
 
       constructor: function(cfg) {
          BaseControl.superclass.constructor.apply(this, arguments);
-         this._publish('onDataLoad');
       },
 
       _beforeMount: function(newOptions, context, receivedState) {
