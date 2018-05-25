@@ -2,14 +2,14 @@
  * Created by am.gerasimov on 01.02.2016.
  */
 define('SBIS3.CONTROLS/Utils/ControlsValidators', [
-   'Lib/CoreValidators/CoreValidators',
+   'SBIS3.CONTROLS/Utils/InnUtils',
    'Core/core-instance',
    'Core/IoC',
    'Controls/Validate/Validators/IsEmail',
    'Controls/Validate/Validators/IsRequired',
    'SBIS3.CONTROLS/Utils/DateUtil',
    'i18n!SBIS3.CONTROLS/Utils/ControlsValidators'
-],function(CoreValidators, cInstance, IoC, IsEmail, IsRequired, DateUtil) {
+],function(InnUtils, cInstance, IoC, IsEmail, IsRequired, DateUtil) {
 
    'use strict';
 
@@ -20,7 +20,7 @@ define('SBIS3.CONTROLS/Utils/ControlsValidators', [
          }
       };
 
-      return CoreValidators.inn.call(obj, innLen);
+      return InnUtils.inn.call(obj, innLen);
    }
 
 
