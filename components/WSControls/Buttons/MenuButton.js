@@ -250,7 +250,7 @@ define('SBIS3.CONTROLS/WSControls/Buttons/MenuButton', [
             }));
             loadDependencies.done().getResult().addCallback(finalCallBack);
          } else {
-            loadContextMenu.addCallback(finalCallBack);
+            loadContextMenu().addCallback(finalCallBack);
          }
       },
 
