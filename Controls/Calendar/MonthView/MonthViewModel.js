@@ -133,25 +133,15 @@ define('Controls/Calendar/MonthView/MonthViewModel', [
             backgroundColorClass += '-unselected';
          }
 
-         if (scope.enabled) {
-            textColorClass += '-enabled';
-            backgroundColorClass += '-enabled';
-         } else {
-            textColorClass += '-disabled';
-            backgroundColorClass += '-disabled';
-         }
-
          css.push(textColorClass, backgroundColorClass);
 
          // Оставляем старые классы т.к. они используются в большом выборе периода до его редизайна
          // TODO: Выпилить старые классы
          if (scope.isCurrentMonth) {
             // if (scope.selectionEnabled) {
-            if (scope.enabled) {
-               css.push('controls-MonthViewVDOM__cursor-item');
-               if (!scope.selected) {
-                  css.push('controls-MonthViewVDOM__border-currentMonthDay-unselected');
-               }
+            css.push('controls-MonthViewVDOM__cursor-item');
+            if (!scope.selected) {
+               css.push('controls-MonthViewVDOM__border-currentMonthDay-unselected');
             }
             css.push('controls-MonthViewVDOM__selectableItem');
             if (scope.enabled && scope.selectionEnabled) {

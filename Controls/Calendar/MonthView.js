@@ -61,13 +61,11 @@ define('Controls/Calendar/MonthView', [
       _monthViewModel: null,
 
       _updateView: function(options) {
-         var days = constants.Date.days;
 
          // локализация может поменяться в рантайме, берем актуальный перевод месяцев при каждой инициализации компонента
          // В массиве дни недели находятся в таком же порядке как возвращаемые значения метода Date.prototype.getDay()
          // Перемещаем воскресение из начала массива в конец
-         this._days = days.slice(1);
-         this._days.push(days[0]);
+         this._days = calendarUtils.getWeekdaysCaptions();
          
          this._month = options.month || new Date();
          this._month = DateUtil.normalizeMonth(this._month);
