@@ -1,8 +1,7 @@
 define('Controls/Application/HeadDataContext', [
    'Core/DataContext',
    'Core/Deferred',
-   'Core/IoC'
-], function(DataContext, Deferred, IoC) {
+], function(DataContext, Deferred) {
    var bundles;
    try {
       bundles = require('json!WS.Core/ext/requirejs/bundles');
@@ -141,7 +140,6 @@ define('Controls/Application/HeadDataContext', [
 
       var allDeps = {};
       recursiveWalker(allDeps, deps);
-      IoC.resolve('ILogger').error('ALLDEPS:    ', [Object.keys(allDeps)]);
       var jsBundles = checkForBundles(allDeps); // Find all bundles, and removes dependencies that are included in bundles
       var cssBundles = getDependentCss(jsBundles);
       var files = { js: [], css: [] };
@@ -174,7 +172,6 @@ define('Controls/Application/HeadDataContext', [
          this.waiterDef = def;
          this.waiterDef.addCallback(function() {
             var components = Object.keys(self.depComponentsMap);
-            IoC.resolve('ILogger').error('COMPONENTS:            ', [components]);
             collectDependencies(components, function(err, files) {
                if (err) {
                   self.err = err;
