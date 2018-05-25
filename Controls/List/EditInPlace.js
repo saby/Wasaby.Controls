@@ -323,20 +323,23 @@ define('Controls/List/EditInPlace', [
 
       _onItemClick: function(e, record, originalEvent) {
          if (this._options.editingConfig && this._options.editingConfig.editOnClick) {
-            this.editItem({
-               item: record
-            });
+            if (originalEvent.target.closest('.js-controls-ListView__notEditable')) {
+               this.commitEdit();
+            } else {
+               this.editItem({
+                  item: record
+               });
+               this._clientX = originalEvent.nativeEvent.clientX;
+               this._clientY = originalEvent.nativeEvent.clientY;
+            }
          }
-
-         this._clientX = originalEvent.nativeEvent.clientX;
-         this._clientY = originalEvent.nativeEvent.clientY;
       },
 
       _afterUpdate: function() {
          var target;
          if (this._clientX && this._clientY) {
             target = document.elementFromPoint(this._clientX, this._clientY);
-            if (target.tagName === 'INPUT' || target.tagName === 'TAGNAME') {
+            if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
                target.focus();
             }
             this._clientX = null;
