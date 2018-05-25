@@ -333,8 +333,12 @@ define('Controls/List/EditInPlace', [
       },
 
       _afterUpdate: function() {
+         var target;
          if (this._clientX && this._clientY) {
-            document.elementFromPoint(this._clientX, this._clientY).focus();
+            target = document.elementFromPoint(this._clientX, this._clientY);
+            if (target.tagName === 'INPUT' || target.tagName === 'TAGNAME') {
+               target.focus();
+            }
             this._clientX = null;
             this._clientY = null;
          }
