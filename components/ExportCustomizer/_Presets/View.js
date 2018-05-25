@@ -497,7 +497,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
          _switchEditor: function (isVisible) {
             var isEditing = this._isEditMode = !!isVisible;
             this._selector.setVisible(!isEditing);
-            this._editor.setVisible(isEditing);
+            var editor = this._editor;
+            editor.setVisible(isEditing);
+            if (!isEditing) {
+               editor.clearMark();
+            }
          },
 
          /**
