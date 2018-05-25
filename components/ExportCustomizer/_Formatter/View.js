@@ -266,11 +266,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                function (url) {
                   img.onload = img.onerror = this._updatePreviewClearStop.bind(this);
                   img.src = url;
+                  img.title = options.previewTitle;
+                  this._preview.removeClass('ws-disabled').addClass('ws-enabled');
                }.bind(this),
                this._updatePreviewClearStop.bind(this)
             );
-            img.title = options.previewTitle;
-            this._preview.removeClass('ws-disabled').addClass('ws-enabled');
          }, PREVIEW_DELAY),
 
          /**
