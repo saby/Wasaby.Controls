@@ -3,7 +3,6 @@ define('Controls/Application/HeadDataContext', [
    'Core/Deferred',
    'Core/IoC'
 ], function(DataContext, Deferred, IoC) {
-   var logger = IoC.resolve('ILogger');
    var bundles;
    try {
       bundles = require('json!WS.Core/ext/requirejs/bundles');
@@ -14,7 +13,7 @@ define('Controls/Application/HeadDataContext', [
    var modDeps;
    try {
       modDeps = require('json!resources/module-dependencies');
-   } catch(e) {
+   } catch (e) {
       modDeps = { links: {}, nodes: {} };
    }
 
@@ -50,7 +49,7 @@ define('Controls/Application/HeadDataContext', [
          croppedBundleNames.push(cropBundleName(bundleNames[i]));
       }
       for (var key in jsLinks) {
-         if(jsLinks.hasOwnProperty(key)) {
+         if (jsLinks.hasOwnProperty(key)) {
             var croppedJsLink = cropBundleName(key);
             var needLoadCssBundle = false;
             var bundleIdx = croppedBundleNames.indexOf(croppedJsLink);
@@ -131,12 +130,12 @@ define('Controls/Application/HeadDataContext', [
       var cssBundles = getDependentCss(jsBundles);
       var files = { js: [], css: [] };
       for (var key in jsBundles) {
-         if(jsBundles.hasOwnProperty(key)) {
+         if (jsBundles.hasOwnProperty(key)) {
             files.js.push(fixLink(key, 'js'));
          }
       }
       for (var key in cssBundles) {
-         if(cssBundles.hasOwnProperty(key)) {
+         if (cssBundles.hasOwnProperty(key)) {
             files.css.push(fixLink(key, 'css'));
          }
       }
