@@ -104,8 +104,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
             //При клике по пустому списку колонок
             this.subscribeTo(grid, 'onClick', function (evtName) {
                var items = grid.getItems();
-               if (items.getCount() === 1 && !items.at(0).getId()) {
-                  this._onAdd();
+               if (items && items.getCount() === 1 && !items.at(0).getId()) {
+                  this._onEdit();
                }
             }.bind(this));
 
@@ -175,9 +175,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
           * Открыть редактор колонок
           * @protected
           * @param {string} fieldId Идентификатор текущего поля
+          * @param {boolean} singleMode Открывать редактор колонок без возможности множественного выделения
           * @return {Core/Deferred<Array<string>>}
           */
-         _openColumnsEditor: function (fieldId) {
+         _openColumnsEditor: function (fieldId, singleMode) {
             if (!this._columnsEditor) {
                this._columnsEditor = new ColumnsEditor();
             }
@@ -201,7 +202,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
                   width: this._container.width(),
                   groupTitles: options.fieldGroupTitles,
                   preserveOrder: true,
-                  multiselect: !fieldId,
+                  multiselect: !singleMode,
                   moveColumns: false,
                   ignoreFixed: true// TODO: Добавить в редактор колонок опцию ignoreFixed
                }
@@ -227,8 +228,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
           * @param {object} data Информация о редактируемой строке (id, item)
           */
          _onEdit: function (evtName, data) {
-            var fieldId = data.id;
-            this._openColumnsEditor(fieldId).addCallback(this._replaceField.bind(this, fieldId));
+            var fieldId = data ? data.id : null;
+            this._openColumnsEditor(fieldId, true).addCallback(this._replaceField.bind(this, fieldId));
          },
 
          /**
