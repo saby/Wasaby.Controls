@@ -585,17 +585,17 @@ define('Controls/List/BaseControl', [
          return this._notify('beforeItemEdit', [options]);
       },
 
-      _onAfterItemEdit: function(e, item) {
-         this._notify('afterItemEdit', [item]);
+      _onAfterItemEdit: function(e, item, isAdd) {
+         this._notify('afterItemEdit', [item, isAdd]);
          this._children.itemActions.updateItemActions(item, true);
       },
 
-      _onBeforeItemEndEdit: function(e, options) {
-         return this._notify('beforeItemEndEdit', [options]);
+      _onBeforeItemEndEdit: function(e, item, commit, isAdd) {
+         return this._notify('beforeItemEndEdit', [item, commit, isAdd]);
       },
 
-      _onAfterItemEndEdit: function(e, item) {
-         this._notify('beforeItemEndEdit', [item]);
+      _onAfterItemEndEdit: function(e, item, isAdd) {
+         this._notify('beforeItemEndEdit', [item, isAdd]);
          this._children.itemActions.updateItemActions(item);
       },
 
