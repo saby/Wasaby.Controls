@@ -141,7 +141,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                try {
                   if (this._isNewEnvironment()) {
 
-                     var deps = ['Controls/Popup/Opener/BaseOpener'];
+                     var deps = ['Controls/Popup/Opener/BaseOpener', 'Controls/Popup/Compatible/Layer'];
                      if (meta.mode === 'floatArea' && config.isStack === true) {
                         deps.push('Controls/Popup/Opener/Stack/StackController');
                         config._type = 'stack';
@@ -154,12 +154,14 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                         config._type = 'dialog';
                      }
 
-                     requirejs(deps, function(BaseOpener, Strategy) {
-                        var CoreTemplate = requirejs(config.template);
-                        config._initCompoundArea = function(compoundArea) {
-                           self._dialog = compoundArea;
-                        };
-                        BaseOpener.showDialog(CoreTemplate, config, Strategy);
+                     requirejs(deps, function(BaseOpener, CompatibleLayer, Strategy) {
+                        CompatibleLayer.load().addCallback(function() {
+                           var CoreTemplate = requirejs(config.template);
+                           config._initCompoundArea = function(compoundArea) {
+                              self._dialog = compoundArea;
+                           };
+                           BaseOpener.showDialog(CoreTemplate, config, Strategy);
+                        });
                      });
                   } else {
                      this._dialog = new Component(config);
