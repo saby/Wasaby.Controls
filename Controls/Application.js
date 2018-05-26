@@ -103,17 +103,12 @@ define('Controls/Application',
             self.wsRoot = receivedState.wsRoot || (context.AppData ? context.AppData.wsRoot : cfg.wsRoot);
             self.resourceRoot = receivedState.resourceRoot || (context.AppData ? context.AppData.resourceRoot : cfg.resourceRoot);
             self.BodyClasses = BodyClasses;
-            self.jsLinks = receivedState.jsLinks || (context.AppData ? context.AppData.jsLinks : cfg.jsLinks);
-            self.cssBundles = receivedState.cssBundles || (context.AppData ? context.AppData.cssBundles : cfg.cssBundles);
-            self.BodyClasses = BodyClasses;
 
             self._headData.pushDepComponent(self.application);
 
             if (receivedState && context.AppData) {
-               context.AppData.cssLinks = self.cssLinks;
                context.AppData.wsRoot = self.wsRoot;
                context.AppData.resourceRoot = self.resourceRoot;
-               context.AppData.jsLinks = self.jsLinks;
                context.AppData.application = self.application;
             }
             
@@ -123,9 +118,6 @@ define('Controls/Application',
              */
             def.callback({
                application: self.application,
-               jsLinks: self.jsLinks,
-               cssLinks: self.cssLinks,
-               cssBundles: self.cssBundles,
                title: self.title,
                wsRoot: self.wsRoot,
                resourceRoot: self.resourceRoot,

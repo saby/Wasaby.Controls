@@ -5,8 +5,7 @@
    resourceRoot="{{ resourceRoot }}"
    compat="{{ compat }}"
    head="{{ _options.head }}"
-   title="{{ title }}"
-   cssLinks="{{ cssLinks }}">
+   title="{{ title }}" >
 </Controls.Application._Head>
 <Controls.Event.Listener name="scrollDetect" register="scroll" attr:fixCompatible="1">
    <Controls.Event.Listener name="resizeDetect" register="resize" attr:fixCompatible="1">
@@ -60,16 +59,10 @@
                                  <div>
                                     <ws:partial template="tmpl!Controls/Application/startApplicationScript"
                                                 compat="{{compat}}"
-                                                jsLinks="{{jsLinks}}"
                                                 _options="{{_options}}"/>
 
-                                    <Controls.Application._JsLinks jsLinks="{{ jsLinks }}" attr:tabindex="-1" />
+                                    <Controls.Application._JsLinks attr:tabindex="-1" />
 
-                                    <ws:if data="{{cssBundles}}">
-                                       <ws:for data="i in cssBundles">
-                                          <script>define('css!{{i}}', '');</script>
-                                       </ws:for>
-                                    </ws:if>
                                     <ws:if data="{{ _options.scripts }}">
                                        <ws:for data="i in _options.scripts">
                                           <ws:partial template="{{ i }}"/>

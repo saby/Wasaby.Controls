@@ -14,9 +14,6 @@ define('Controls/Application/_Head',
          _template: template,
          _beforeMount: function(options, context, receivedState) {
             if (typeof window !== 'undefined') {
-               if (receivedState) {
-                  this.cssLinks = receivedState;
-               }
                return;
             }
             var def = context.headData.waitAppContent();
@@ -26,7 +23,7 @@ define('Controls/Application/_Head',
             def.addCallback(function(res) {
                self.cssLinks = res.cssLinks;
                self.errorState = res.errorState;
-               innerDef.callback(self.cssLinks);
+               innerDef.callback(true);
                return res;
             });
             return innerDef;
