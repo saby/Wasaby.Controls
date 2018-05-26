@@ -5,6 +5,7 @@ var fs = require('fs'),
    path = require('path'),
    jsModules = {},
    baseResources = path.join(__dirname, 'components'),
+   sbisFileResources = 'sbis3-app-engine',
    demoResources = path.join(__dirname, 'Examples'),
    testResources = path.join(__dirname, 'tests'),
    wsResources = path.join(__dirname, 'sbis3-ws'),
@@ -33,6 +34,7 @@ var fs = require('fs'),
     };
 
 dirWalker(baseResources);
+dirWalker(sbisFileResources);
 dirWalker(demoResources);
 dirWalker(testResources);
 dirWalker(sandBoxResources);
@@ -42,6 +44,7 @@ var contents = {
    jsModules: jsModules
 };
 contents["requirejsPaths"] = {
+   "SbisFile":  "../sbis3-app-engine/client/SbisFile",
    "SBIS3.CONTROLS": "components",
    "View": "sbis3-ws/View",
    "WSTest": "tests/WSTest"
