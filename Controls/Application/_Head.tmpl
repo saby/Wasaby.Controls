@@ -17,7 +17,7 @@
    <link rel="stylesheet" href="{{_options.wsRoot}}css/core.css" type="text/css" key="core-css"/>
    <ws:if data="{{ cssLinks }}">
       <ws:for data="index, value in cssLinks">
-         <link rel="stylesheet" href="{{ value }}" type="text/css" key="{{ 'css_' + index }}"/>
+         <link rel="stylesheet" href="{{ value }}" type="text/css" key="{{ 'css_' + index }}" data-vdomignore="true"/>
       </ws:for>
    </ws:if>
    <title key="title">{{ _options.title }}</title>

@@ -15,9 +15,6 @@ define('Controls/Application/_JsLinks',
          _template: template,
          _beforeMount: function(options, context, receivedState) {
             if (typeof window !== 'undefined') {
-               if (receivedState) {
-                  this.jsLinks = receivedState;
-               }
                return;
             }
             var def = context.headData.waitAppContent();
@@ -30,7 +27,7 @@ define('Controls/Application/_JsLinks',
                for (var i = 0; i < res.cssLinks.length; i++) {
                   self.cssLinks.push(res.cssLinks[i].split(/.css$/)[0]);
                }
-               innerDef.callback(self.jsLinks);
+               innerDef.callback(true);
                return res;
             });
             return innerDef;
