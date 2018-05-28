@@ -8,11 +8,13 @@ define('Controls/List/MassSelector', [
       _excludedKeys: null,
       _selectedKeys: null,
       _items: null,
+      _all: false,
 
       _beforeMount: function(newOptions, context) {
          this._itemsReadyCallback = this._itemsReady.bind(this);
          this._selectedKeys = context.selection.selectedKeys;
          this._excludedKeys = context.selection.excludedKeys;
+         this._all = this._selectedKeys && this._selectedKeys[0] === null;
       },
 
       _beforeUpdate: function(newOptions, context) {
@@ -25,6 +27,7 @@ define('Controls/List/MassSelector', [
             this._items
          ) {
             //todo: оптимизировать
+            this._all = true;
             this._selectedKeys = [];
             this._items.forEach(
                function(item) {
@@ -38,18 +41,18 @@ define('Controls/List/MassSelector', [
       },
 
       _selectedKeysChangedHandler: function(event, selectedKeys) {
-         var selected = this._selectedKeys,
+         var selected,
             excluded = this._excludedKeys;
 
-         if (this._selectedKeys && this._selectedKeys[0] === null) {
-            //todo: оптимизировать
+         if (this._all) {
             excluded = [];
             this._items.forEach(function(item) {
                var key = item.getId();
-               if (selected.indexOf(key) < 0) {
+               if (selectedKeys.indexOf(key) < 0) {
                   excluded.push(key);
                }
             });
+            selected = [null];
          } else if (this._items.getCount() === selectedKeys.length) {
             selected = [null];
             excluded = [];
