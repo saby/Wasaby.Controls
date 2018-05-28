@@ -75,7 +75,6 @@ define('Controls/Button', [
          self._styleWithIconStyle = currentButtonClass.style + '_iconStyle-' + options.iconStyle;
       }
    };
-
    var Button = Control.extend({
       _template: template,
 

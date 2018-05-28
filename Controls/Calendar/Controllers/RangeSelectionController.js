@@ -102,7 +102,7 @@ define('Controls/Calendar/Controllers/RangeSelectionController', [
     * в данный момент происходит взаимодействие.
     *
     * @class Controls/Calendar/Controllers/RangeSelectionController
-    * @extends Core/Abstract
+    * @extends Core/Control
     * @mixes Controls/Calendar/interface/IRangeSelectable
     * @author Миронов А.Ю.
     */
@@ -258,6 +258,9 @@ define('Controls/Calendar/Controllers/RangeSelectionController', [
        * @private
        */
       _getDisplayedRangeEdges: function(item) {
+         if (this._selectionType === Component.SELECTION_TYPES.single) {
+            return [item, item];
+         }
          if (item > this._selectionBaseValue) {
             return [this._selectionBaseValue, item];
          } else {

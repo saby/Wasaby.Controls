@@ -2040,6 +2040,19 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                //Замена переносов строк на <br>
                html = html.replace(/([^>])\n(?!<)/gi, '$1<br />');
+
+               // В ie после вставки текста из Word, после текста появляется лишняя строка
+               // https://online.sbis.ru/opendoc.html?guid=8677c08d-c2c2-4320-8ed1-9c097a4c4895
+               if(cConstants.browser.isIE) {
+                  html = html.replace(/(<br>)*<\/p>$/, "<\/p>");
+                  html = html.replace(/(<br>)*$/, "");
+                  // В ie при копировании текста между задачами появлялись большие отступы, если в выделение
+                  // попадал текст кнопок интерфейса ("Прикрепить", "Создать", "Подзадача" и т.п.).
+                  // https://online.sbis.ru/opendoc.html?guid=f76a1158-4c07-4cc7-ae6b-b980ecb491fb
+                  html = html.replace(/(<p><br><\/p>)|(<p><\/p>)*/gm,"");
+                  html = html.replace(/(<p><br>)/gm,"<p>");
+               }
+
                // Замена отступов после переноса строки и в первой строке
                // пробелы заменяются с чередованием '&nbsp;' + ' '
                html = this._replaceWhitespaces(html);
