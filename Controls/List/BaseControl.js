@@ -11,6 +11,7 @@ define('Controls/List/BaseControl', [
    'WS.Data/Collection/RecordSet',
    'Controls/Utils/Toolbar',
    'Controls/List/ItemActions/Utils/Actions',
+   'Core/core-clone',
    'Controls/List/EditInPlace',
    'Controls/List/ItemActions/ItemActionsControl',
    'css!Controls/List/BaseControl/BaseControl'
@@ -25,7 +26,8 @@ define('Controls/List/BaseControl', [
    multiSelectTpl,
    RecordSet,
    tUtil,
-   aUtil
+   aUtil,
+   cClone
 ) {
    'use strict';
 
@@ -275,10 +277,6 @@ define('Controls/List/BaseControl', [
          model.subscribe('onListChange', function() {
             self._forceUpdate();
          });
-
-         model.subscribe('selectionChanged', function(event, selection) {
-            self._notify('selectionChanged', [selection]);
-         });
       },
 
       showActionsMenu: function(self, event, itemData, childEvent, showAll) {
@@ -466,10 +464,6 @@ define('Controls/List/BaseControl', [
             this._listViewModel.select(newOptions.selectedKeys);
          }
 
-         if (this._options.excludedKeys !== newOptions.excludedKeys) {
-            this._listViewModel.unselect(newOptions.excludedKeys);
-         }
-
       },
 
       _beforeUnmount: function() {
@@ -516,11 +510,13 @@ define('Controls/List/BaseControl', [
       },
 
       _onCheckBoxClick: function(e, key, status) {
-         if (status === 1) {
-            this._listViewModel.unselect([key]);
+         var selectedKeys = cClone(this._options.selectedKeys) || [];
+         if (!!status) {
+            selectedKeys.splice(selectedKeys.indexOf(key), 1);
          } else {
-            this._listViewModel.select([key]);
+            selectedKeys.push(key);
          }
+         this._notify('selectedKeysChanged', [selectedKeys]);
       },
 
       _listSwipe: function(event, itemData, childEvent) {

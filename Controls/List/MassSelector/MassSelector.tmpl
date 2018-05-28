@@ -2,7 +2,6 @@
    template="{{_options.content}}"
    scope="{{_options}}"
    on:selectedKeysChanged="_selectedKeysChangedHandler()"
-   on:excludedKeysChanged="_excludedKeysChangedHandler()"
-   excludedKeys="{{excludedKeys}}"
-   selectedKeys="{{selectedKeys}}"
+   selectedKeys="{{_selectedKeys}}"
+   itemsReadyCallback="{{_itemsReadyCallback}}"
 />

@@ -1,41 +1,49 @@
 define('Controls/Container/MassSelector', [
    'Core/Control',
    'tmpl!Controls/Container/MassSelector/MassSelector',
-   'Controls/Container/MassSelector/MassSelectorContextField'
-], function(
-   Control,
-   template,
-   MassSelectorContextField
-) {
+   'Controls/Container/MassSelector/MassSelectorContextField',
+   'Controls/Controllers/Multiselect/Selection'
+], function(Control, template, MassSelectorContextField, MultiSelection) {
    return Control.extend({
-
+      //todo: весь модуль
       _template: template,
-      _selectedKeys: null,
-      _excludedKeys: null,
+      _multiselection: null,
 
-      _updateSelection: function(selectedKeys, excludedKeys) {
-         this._context = new MassSelectorContextField(selectedKeys, excludedKeys);
+      _updateSelection: function() {
+         var selection = this._multiselection.getSelection();
+         this._context = new MassSelectorContextField(
+            selection.selected,
+            selection.excluded
+         );
       },
 
-      _beforeMount: function() {
-         this._context = new MassSelectorContextField(null, null);
+      _beforeMount: function(newOptions) {
+         this._multiselection = new MultiSelection({
+            selectedKeys: newOptions.selectedKeys,
+            excludedKeys: newOptions.excludedKeys
+         });
+
+         var selection = this._multiselection.getSelection();
+
+         this._context = new MassSelectorContextField(
+            selection.selected,
+            selection.excluded
+         );
       },
 
-      _selectedKeysChangedHandler: function(event, selectedKeys) {
-         this._selectedKeys = selectedKeys;
-         this._updateSelection(this._selectedKeys, this._excludedKeys);
+      _selectedKeysChangedHandler: function(event, selectedKeys, excludedKeys) {
+         this._multiselection.unselectAll();
+         this._multiselection.select(selectedKeys);
+         this._multiselection.unselect(excludedKeys);
+         this._updateSelection();
       },
 
-      _excludedKeysChangedHandler: function(event, excludedKeys) {
-         this._excludedKeys = excludedKeys;
-         this._updateSelection(this._selectedKeys, this._excludedKeys);
+      _selectedTypeChangedHandler: function(event, typeName) {
+         this._multiselection[typeName]();
+         this._updateSelection();
       },
 
-      // Объявляем функцию, которая возвращает поля Контекста и их значения.
-      // Имя функции фиксировано.
       _getChildContext: function() {
-
-         // Возвращает объект.
          return {
             selection: this._context
          };

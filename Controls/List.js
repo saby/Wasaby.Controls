@@ -21,7 +21,6 @@ define('Controls/List', [
             displayProperty: cfg.displayProperty,
             markedKey: cfg.markedKey,
             selectedKeys: cfg.selectedKeys,
-            excludedKeys: cfg.excludedKeys,
             multiSelectVisibility: cfg.multiSelectVisibility,
             itemsReadyCallback: cfg.itemsReadyCallback
          };
@@ -182,11 +181,6 @@ define('Controls/List', [
 
       _afterItemsMove: function(event, items, target, position, result) {
          this._notify('afterItemsMove', [items, target, position, result]);
-      },
-
-      _selectedKeysChangedHandler: function(event, selection) {
-         this._notify('selectedKeysChanged', [selection.selected]);
-         this._notify('excludedKeysChanged', [selection.excluded]);
       }
    });
 

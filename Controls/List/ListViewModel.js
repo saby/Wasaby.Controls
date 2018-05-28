@@ -20,6 +20,7 @@ define('Controls/List/ListViewModel',
       var ListViewModel = ItemsViewModel.extend([VersionableMixin], {
          _markedItem: null,
          _actions: null,
+         _selectedKeys: null,
 
          constructor: function(cfg) {
             var self = this;
@@ -30,10 +31,7 @@ define('Controls/List/ListViewModel',
                this._markedItem = this.getItemById(cfg.markedKey, cfg.keyProperty);
             }
 
-            this._multiselection = new MultiSelection({
-               selectedKeys: cfg.selectedKeys,
-               excludedKeys: cfg.excludedKeys
-            });
+            this._selectedKeys =  cfg.selectedKeys || [];
 
             //TODO надо ли?
             _private.updateIndexes(self);
@@ -46,7 +44,7 @@ define('Controls/List/ListViewModel',
             itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
             itemsModelCurrent.showActions = !this._editingItemData && (!this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive));
             itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem.item;
-            itemsModelCurrent.multiSelectStatus = this._multiselection.getSelectionStatus(itemsModelCurrent.key);
+            itemsModelCurrent.multiSelectStatus = this._selectedKeys.indexOf(itemsModelCurrent.key) >= 0;
             itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility === 'visible';
             if (this._editingItemData && itemsModelCurrent.index === this._editingItemData.index) {
                itemsModelCurrent.isEditing = true;
@@ -71,19 +69,9 @@ define('Controls/List/ListViewModel',
             this._nextVersion();
          },
 
-         _changeSelection: function(keys, methodName) {
-            this._multiselection[methodName](keys);
-            this._nextVersion();
-            this._notify('onListChange');
-            this._notify('selectionChanged', this._multiselection.getSelection());
-         },
-
          select: function(keys) {
-            this._changeSelection(keys, 'select');
-         },
-
-         unselect: function(keys) {
-            this._changeSelection(keys, 'unselect');
+            this._selectedKeys = keys;
+            this._nextVersion();
          },
 
          updateIndexes: function(startIndex, stopIndex) {

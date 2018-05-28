@@ -75,11 +75,6 @@ define('Controls/OperationsPanel', [
          this._notify('itemClick', [item]);
       },
 
-      __test : function() {
-         console.log('заходит');
-         this._notify('selectedKeysChanged', [[null]], { bubbling: true }); //test
-      },
-
       _onResize: function() {
          //Пустой обработчик чисто ради того, чтобы при ресайзе запускалась перерисовка
       }
