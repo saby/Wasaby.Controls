@@ -11,12 +11,21 @@ define('Controls/Popup/Opener/Previewer',
       var _private = {
          displayDuration: 1500,
 
-         clearTimeout: function(self, type) {
-            var nameTimer = '_' + type + 'TimerId';
+         clearOpeningTimeout: function(self) {
+            var id = self._openingTimerId;
 
-            if (self[nameTimer]) {
-               clearTimeout(self[nameTimer]);
-               self[nameTimer] = null;
+            if (id) {
+               clearTimeout(id);
+               self._openingTimerId = null;
+            }
+         },
+
+         clearClosingTimeout: function(self) {
+            var id = self._closingTimerId;
+
+            if (id) {
+               clearTimeout(id);
+               self._closingTimerId = null;
             }
          },
 
@@ -37,7 +46,7 @@ define('Controls/Popup/Opener/Previewer',
          open: function(cfg, type) {
             var self = this;
 
-            _private.clearTimeout(this, 'closing');
+            _private.clearClosingTimeout(this);
 
             if (type === 'hover') {
                this._openingTimerId = setTimeout(function() {
@@ -53,7 +62,7 @@ define('Controls/Popup/Opener/Previewer',
          close: function(type) {
             var self = this;
 
-            _private.clearTimeout(this, 'opening');
+            _private.clearOpeningTimeout(this);
 
             if (type === 'hover') {
                this._closingTimerId = setTimeout(function() {
@@ -73,7 +82,14 @@ define('Controls/Popup/Opener/Previewer',
           * @variant closing
           */
          cancel: function(action) {
-            _private.clearTimeout(this, action);
+            switch (action) {
+               case 'opening':
+                  _private.clearOpeningTimeout(this);
+                  break;
+               case 'closing':
+                  _private.clearClosingTimeout(this);
+                  break;
+            }
          }
       });
 
