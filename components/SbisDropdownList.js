@@ -72,7 +72,9 @@ define('SBIS3.CONTROLS/SbisDropdownList',
          },
 
          showPicker: function(event) {
-            DropdownUtil.showPicker(this, SbisDropdownList, event);
+            if (!event || !$(event.target).hasClass('controls-DropdownList__crossIcon')) {
+               DropdownUtil.showPicker(this, SbisDropdownList, event);
+            }
          },
 
          _clickItemHandler: function(e) {
