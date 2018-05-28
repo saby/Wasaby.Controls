@@ -1,0 +1,38 @@
+<div style="margin: 20px">
+   <Controls.Filter.Button attr:style="max-width: 200px; margin: 20px">
+   <ws:itemTemplate templateName="tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate" />
+   <ws:additionalTemplate templateName="tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/additionalItemsTemplate" />
+   <ws:items>
+      <ws:Array>
+         <ws:Object id="FIO" value="Name" resetValue="" visibility="{{false}}"/>
+         <ws:Object id="firstName" value="123" resetValue="" visibility="{{false}}"/>
+         <ws:Object id="id" value="{{3}}" resetValue="{{4}}"
+                    source="{{sourceDropdown}}" visibility="{{false}}"/>
+         <ws:Object id="checked" value="{{true}}" resetValue="{{false}}" visibility="{{false}}"/>
+         <ws:Object id="Test1" value="{{3}}" resetValue="{{2}}" source="{{sourceDropdown}}"
+                    visibility="{{false}}"/>
+         <ws:Object id="Test2" value="" resetValue="{{true}}" visibility="{{false}}"/>
+         <ws:Object id="Test3" value="" resetValue="{{true}}" visibility="{{false}}"/>
+         <ws:Object id="Test4" value="" resetValue="{{true}}" visibility="{{false}}"/>
+         <ws:Object id="Test5" value="" resetValue="{{true}}" visibility="{{false}}"/>
+         <ws:Object id="Test6" value="123" resetValue="" visibility="{{false}}"/>
+         <ws:Object id="Test7" value="{{_value}}" resetValue="{{1}}" visibility="{{false}}"/>
+         <ws:Object id="Test8" value="{{false}}" resetValue="{{true}}" visibility="{{true}}"/>
+      </ws:Array>
+   </ws:items>
+</Controls.Filter.Button>
+
+<Controls.Filter.Button attr:style="max-width: 200px;"
+                        itemTemplateProperty="template">
+   <ws:additionalTemplate templateName="tmpl!Controls-demo/FilterButton/Panel/resources/additionalItemsTemplate2" />
+<ws:items>
+   <ws:Array>
+      <ws:Object id="genreKey" value="" resetValue="" visibility="{{false}}" template="tmpl!Controls-demo/FilterButton/Panel/resources/FIO" />
+      <ws:Object id="FIO" value="Lala" resetValue="reset" visibility="{{true}}" template="tmpl!Controls-demo/FilterButton/Panel/resources/FIO" />
+      <ws:Object id="country" value="" resetValue="" visibility="{{false}}" template="tmpl!Controls-demo/FilterButton/Panel/resources/FIO" />
+      <ws:Object id="genreTip" value="" resetValue="" visibility="{{false}}" template="tmpl!Controls-demo/FilterButton/Panel/resources/FIO" />
+   </ws:Array>
+</ws:items>
+</Controls.Filter.Button>
+
+</div>

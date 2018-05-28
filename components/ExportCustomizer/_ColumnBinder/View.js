@@ -97,8 +97,28 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
          },
 
          _bindEvents: function () {
+            var grid = this._grid;
             //При клике по строке списка колонок
-            this.subscribeTo(this._grid, 'onItemActivate', this._onEdit.bind(this));
+            this.subscribeTo(grid, 'onItemActivate', this._onEdit.bind(this));
+
+            //При клике по пустому списку колонок
+            this.subscribeTo(grid, 'onClick', function (evtName) {
+               var items = grid.getItems();
+               if (items && items.getCount() === 1 && !items.at(0).getId()) {
+                  this._onEdit();
+               }
+            }.bind(this));
+
+            //При изменении порядка строк в списке колонок
+            this.subscribeTo(grid, 'onEndMove', function (evtName, dragObject) {
+               var items = grid.getItems();
+               if (items && 1 < items.getCount()) {
+                  var fieldIds = []; items.each(function (v) { fieldIds.push(v.getId()); });
+                  this._options.fieldIds = fieldIds;
+                  this._redraw();
+                  this.sendCommand('subviewChanged');
+               }
+            }.bind(this));
          },
 
          /**
@@ -155,9 +175,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
           * Открыть редактор колонок
           * @protected
           * @param {string} fieldId Идентификатор текущего поля
+          * @param {boolean} singleMode Открывать редактор колонок без возможности множественного выделения
           * @return {Core/Deferred<Array<string>>}
           */
-         _openColumnsEditor: function (fieldId) {
+         _openColumnsEditor: function (fieldId, singleMode) {
             if (!this._columnsEditor) {
                this._columnsEditor = new ColumnsEditor();
             }
@@ -178,8 +199,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
                {
                   title: fieldId ? rk('Выберите поле данных', 'НастройщикЭкспорта') : rk('Выбор полей данных', 'НастройщикЭкспорта'),
                   applyButtonTitle: rk('Выбрать', 'НастройщикЭкспорта'),
+                  width: this._container.width(),
                   groupTitles: options.fieldGroupTitles,
                   preserveOrder: true,
+                  multiselect: !singleMode,
+                  autoApply: !!singleMode,
+                  moveColumns: false,
                   ignoreFixed: true// TODO: Добавить в редактор колонок опцию ignoreFixed
                }
             ).addCallback(function (resultColumnsConfig) {
@@ -204,8 +229,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
           * @param {object} data Информация о редактируемой строке (id, item)
           */
          _onEdit: function (evtName, data) {
-            var fieldId = data.id;
-            this._openColumnsEditor(fieldId).addCallback(this._replaceField.bind(this, fieldId));
+            var fieldId = data ? data.id : null;
+            this._openColumnsEditor(fieldId, true).addCallback(this._replaceField.bind(this, fieldId));
          },
 
          /**
@@ -309,7 +334,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
                   }
                }
             }
-            var args = [hasIndex ? index : list.length, 0];
+            var args = [hasIndex ? index : list.length, hasIndex ? 1 : 0];
             args.push.apply(args, items);
             list.splice.apply(list, args);
          }

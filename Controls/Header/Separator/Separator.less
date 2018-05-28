@@ -1,39 +1,45 @@
-.controls-HeaderSeparator__icon_style-primary, .controls-HeaderSeparator__icon_style-default {
-   padding-left: 10px;
-   cursor: pointer;
-}
-
-.controls-HeaderSeparator__icon_style-default {
-   content: @content_forwardArrowDefault;
-}
-
-.controls-HeaderSeparator__icon_style-primary{
-   content: @content_forwardArrowPrimary;
-}
-
-.ws-is-no-touch {
-   .controls-HeaderSeparator__icon_style-default:hover {
-      content: @content_forwardArrowDefaultHovered;
-   }
-
-   .controls-HeaderSeparator__icon_style-primary:hover {
-      content: @content_forwardArrowPrimaryHovered;
-   }
-}
-
-.controls-HeaderSeparator__icon_style-default:active {
-   content: @content_forwardArrowDefaultHovered;
-}
-
-.controls-HeaderSeparator__icon_style-primary:active {
-   content: @content_forwardArrowPrimaryHovered;
-}
-
 .controls-HeaderSeparator_size {
    width: @width-HeaderSeparator;
    height: @height-HeaderSeparator;
+   padding-left: @padding-left_HeaderSeparator;
+}
+
+.controls-HeaderSeparator__wrapper {
+   display: inline-flex;
+   align-items: center;
+}
+
+.controls-HeaderSeparator__wrapper:before {
+   content: '\200b';
 }
 
 .controls-HeaderSeparator {
    display: inline-block;
+   cursor: pointer;
+}
+
+.controls-HeaderSeparator__icon_style-default {
+   fill: @fill_HeaderSeparator_default;
+}
+
+.controls-HeaderSeparator__icon_style-primary {
+   fill: @fill_HeaderSeparator_primary;
+}
+
+.controls-HeaderSeparator__icon_style-default:active {
+   fill: @fill_HeaderSeparator_default_hovered;
+}
+
+.controls-HeaderSeparator__icon_style-primary:active {
+   fill: @fill_HeaderSeparator_primary_hovered;
+}
+
+.ws-is-no-touch {
+   .controls-HeaderSeparator__icon_style-default:hover {
+      fill: @fill_HeaderSeparator_default_hovered;
+   }
+
+   .controls-HeaderSeparator__icon_style-primary:hover {
+      fill: @fill_HeaderSeparator_primary_hovered;
+   }
 }

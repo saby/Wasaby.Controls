@@ -4,7 +4,8 @@ define('Controls/List/EditInPlace', [
    'Core/Deferred',
    'WS.Data/Entity/Record',
    'WS.Data/Display/CollectionItem',
-   'Controls/List/resources/utils/ItemsUtil'
+   'Controls/List/resources/utils/ItemsUtil',
+   'css!Controls/List/EditInPlace/Text'
 ], function(Control, template, Deferred, Record, CollectionItem, ItemsUtil) {
 
    var
@@ -250,7 +251,6 @@ define('Controls/List/EditInPlace', [
        * @variant {ItemEditOptions} options Options of editing.
        * @returns {Core/Deferred}
        */
-      //TODO: управлять индикатором загрузки
       editItem: function(options) {
          var self = this,
             editingItemIndex = _private.getEditingItemIndex(this, this._editingItem, this._options.listModel),
@@ -270,7 +270,6 @@ define('Controls/List/EditInPlace', [
        * @param {AddItemOptions} options Options of adding.
        * @returns {Core/Deferred}
        */
-      //TODO: управлять индикатором загрузки
       addItem: function(options) {
          var self = this;
          return this.commitEdit().addCallback(function() {
@@ -318,18 +317,33 @@ define('Controls/List/EditInPlace', [
                case 27: //Esc
                   this.cancelEdit();
                   break;
-               case 9: //Tab //TODO: для грида это не подойдет, так что надо перейти на _onRowDeactivated после решения проблем с ним
-                  _private.editNextRow(this, !e.nativeEvent.shiftKey);
-                  break;
             }
          }
       },
 
-      _onItemClick: function(e, record) {
+      _onItemClick: function(e, record, originalEvent) {
          if (this._options.editingConfig && this._options.editingConfig.editOnClick) {
-            this.editItem({
-               item: record
-            });
+            if (originalEvent.target.closest('.js-controls-ListView__notEditable')) {
+               this.commitEdit();
+            } else {
+               this.editItem({
+                  item: record
+               });
+               this._clientX = originalEvent.nativeEvent.clientX;
+               this._clientY = originalEvent.nativeEvent.clientY;
+            }
+         }
+      },
+
+      _afterUpdate: function() {
+         var target;
+         if (this._clientX && this._clientY) {
+            target = document.elementFromPoint(this._clientX, this._clientY);
+            if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+               target.focus();
+            }
+            this._clientX = null;
+            this._clientY = null;
          }
       },
 
@@ -358,15 +372,12 @@ define('Controls/List/EditInPlace', [
          listModel._setEditingItemData(this._editingItemData);
       },
 
-      // _onRowDeactivated: function(e, isTabPressed) {
-      //TODO: по табу стреляет несколько раз на одной и той же строке, надо Шипину показать
-      //TODO: про таб знаем, а про шифт нет, нужно доработать немножко
-      // if (isTabPressed) {
-      // _private.editNextRow(this, true);
-      // console.log('ушёл фокус со строки по табу');
-      // }
-      // e.stopPropagation();
-      // },
+      _onRowDeactivated: function(e, eventOptions) {
+         if (eventOptions.isTabPressed) {
+            _private.editNextRow(this, !eventOptions.isShiftKey);
+         }
+         e.stopPropagation();
+      },
 
       _beforeUnmount: function() {
          _private.resetVariables(this);

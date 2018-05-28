@@ -1,8 +1,7 @@
 define('Controls/List/Grid/GridViewModel', [
-   'Core/Abstract',
-   'Controls/List/ListViewModel',
-   'WS.Data/Entity/VersionableMixin'
-], function(Abstract, ListViewModel, VersionableMixin) {
+   'Controls/List/BaseViewModel',
+   'Controls/List/ListViewModel'
+], function(BaseViewModel, ListViewModel) {
 
    'use strict';
 
@@ -90,7 +89,7 @@ define('Controls/List/Grid/GridViewModel', [
          }
       },
 
-      GridViewModel = Abstract.extend([VersionableMixin], {
+      GridViewModel = BaseViewModel.extend({
          _model: null,
          _columnTemplate: null,
 
@@ -375,7 +374,8 @@ define('Controls/List/Grid/GridViewModel', [
                      displayProperty: current.displayProperty,
                      index: current.index,
                      key: current.key,
-                     getPropValue: current.getPropValue
+                     getPropValue: current.getPropValue,
+                     isEditing: current.isEditing
                   };
                currentColumn.columnIndex = current.columnIndex;
                currentColumn.cellClasses = _private.getItemColumnCellClasses(current);
@@ -482,6 +482,23 @@ define('Controls/List/Grid/GridViewModel', [
 
          prependItems: function(items) {
             this._model.prependItems(items);
+         },
+
+         setItemActions: function(item, actions) {
+            this._model.setItemActions(item, actions);
+         },
+
+         _setEditingItemData: function(itemData) {
+            this._model._setEditingItemData(itemData);
+            this._nextVersion();
+         },
+
+         getIndexBySourceItem: function(item) {
+            return this._model.getIndexBySourceItem(item);
+         },
+
+         at: function(index) {
+            return this._model.at(index);
          },
 
          getCount: function() {

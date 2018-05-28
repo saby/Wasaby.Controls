@@ -8,6 +8,7 @@
 define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
    [
       'Core/Deferred',
+      'Core/helpers/Function/debounce',
       'Core/helpers/Object/isEqual',
       'SBIS3.CONTROLS/CompoundControl',
       'SBIS3.CONTROLS/WaitIndicator',
@@ -17,7 +18,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
       'css!SBIS3.CONTROLS/ExportCustomizer/_Formatter/View'
    ],
 
-   function (Deferred, cObjectIsEqual, CompoundControl, WaitIndicator, RecordSet, Di, dotTplFn) {
+   function (Deferred, coreDebounce, cObjectIsEqual, CompoundControl, WaitIndicator, RecordSet, Di, dotTplFn) {
       'use strict';
 
       /**
@@ -64,6 +65,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                 * @cfg {string} Заголовок меню выбора способа форматирования
                 */
                menuTitle: rk('Редактировать', 'НастройщикЭкспорта'),
+               /**
+                * @cfg {string} Подпись на изображении предпросмотра
+                */
+               previewTitle: rk('Редактировать формат отображения в браузере', 'НастройщикЭкспорта'),
                /**
                 * @cfg {ExportServiceParams} Прочие параметры, необходимых для работы БЛ
                 */
@@ -114,7 +119,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                var fieldIds = options.fieldIds;
                if (fieldIds && fieldIds.length) {
                   if (!options.fileUuid) {
-                     this._callFormatterMethod('create').addCallback(this._onFormatter.bind(this));
+                     this._callFormatterMethod('create').addCallback(this._onFormatter.bind(this, 'create'));
                   }
                   else {
                      this._updatePreview();
@@ -131,6 +136,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             this.subscribeTo(this._formatterMenu, 'onMenuItemActivate', function (evtName, selectedId) {
                this._startFormatEditing(selectedId === 'app');
             }.bind(this));
+
             this._preview.on('click', this._startFormatEditing.bind(this, false));
          },
 
@@ -144,7 +150,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             var options = this._options;
             var fieldIds = options.fieldIds;
             if (fieldIds && fieldIds.length) {
-               this._callFormatterMethod(useApp ? 'openApp' : 'open').addCallback(this._onFormatter.bind(this));
+               var method = useApp ? 'openApp' : 'open';
+               this._callFormatterMethod(method).addCallback(this._onFormatter.bind(this, method));
             }
          },
 
@@ -152,7 +159,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * Вызвать метод форматера
           *
           * @protected
-          * @param {object} values Набор из нескольких значений, которые необходимо изменить
+          * @param {string} method Имя метода
           * return {Core/Deferred}
           */
          _callFormatterMethod: function (method) {
@@ -169,7 +176,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             }
             var formatter = this._exportFormatter;
             return formatter[method].apply(formatter, args).addErrback(function (err) {
-               //^^^
                return err;
             });
          },
@@ -209,11 +215,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * Обработчик обратного вызова после выполнения методов форматера
           *
           * @protected
+          * @param {string} method Имя метода
           * @param {string} fileUuid Uuid шаблона форматирования эксель-файла
           */
-         _onFormatter: function (fileUuid) {
+         _onFormatter: function (method, fileUuid) {
             var options = this._options;
-            if (fileUuid && !options.fileUuid) {
+            if (method === 'create' && fileUuid) {
                options.fileUuid = fileUuid;
                this.sendCommand('subviewChanged');
             }
@@ -226,29 +233,45 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * @protected
           */
          _updatePreview: function () {
-            this._updatePreviewClear();
-            this._updatePreviewDelay = setTimeout(this._updatePreviewStart.bind(this), PREVIEW_DELAY);
-         },
-         _updatePreviewClear: function () {
-            if (this._updatePreviewDelay) {
-               clearTimeout(this._updatePreviewDelay);
-               this._updatePreviewDelay = null;
+            var fieldIds = this._options.fieldIds;
+            if (fieldIds && fieldIds.length) {
+               this._updatePreviewStart();
+            }
+            else {
+               var img = this._preview[0];
+               img.src = '';
+               img.title = '';
+               this._preview.removeClass('ws-enabled').addClass('ws-disabled');
             }
          },
-         _updatePreviewStart: function () {
+         _updatePreviewClearStop: function () {
+            var stopper = this._updatePreviewStopper;
+            if (stopper) {
+               stopper.callback();
+               this._updatePreviewStopper = null;
+            }
+         },
+         _updatePreviewStart: coreDebounce(function () {
             var size = this._previewSize;
             if (!size) {
                var previewContainer = this._preview.parent();
                this._previewSize = size = {width:previewContainer.width(), height:previewContainer.height()};
             }
-            this._exportFormatter.getPreviewUrl(this._options.fileUuid, size.width, size.height).addCallback(function (url) {
-               var img = this._preview[0];
-               var stopper = new Deferred();
-               WaitIndicator.make({target:img.parentNode, delay:1000}, stopper);
-               img.onload = img.onerror = stopper.callback.bind(stopper);
-               img.src = url;
-            }.bind(this));
-         },
+            this._updatePreviewClearStop();
+            var img = this._preview[0];
+            var stopper = this._updatePreviewStopper = new Deferred();
+            WaitIndicator.make({target:img.parentNode, delay:1000}, stopper);
+            var options = this._options;
+            this._exportFormatter.getPreviewUrl(options.fileUuid, size.width, size.height).addCallbacks(
+               function (url) {
+                  img.onload = img.onerror = this._updatePreviewClearStop.bind(this);
+                  img.src = url;
+                  img.title = options.previewTitle;
+                  this._preview.removeClass('ws-disabled').addClass('ws-enabled');
+               }.bind(this),
+               this._updatePreviewClearStop.bind(this)
+            );
+         }, PREVIEW_DELAY),
 
          /**
           * Установить указанные настраиваемые значения компонента
@@ -272,12 +295,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                   }
                }
             }
-            if (has.fieldIds) {
-               this._callFormatterMethod(options.fileUuid ? 'update' : 'create').addCallback(this._onFormatter.bind(this));
-            }
-            else
-            if (has.fileUuid) {
-               this._callFormatterMethod('update').addCallback(this._onFormatter.bind(this));
+            if (has.fieldIds || has.fileUuid) {
+               var method = options.fileUuid ? 'update' : 'create';
+               this._callFormatterMethod(method).addCallback(this._onFormatter.bind(this, method));
+               var fieldIds = options.fieldIds;
+               this._formatterMenu.setEnabled(!!(fieldIds && fieldIds.length));
             }
          },
 
@@ -300,7 +322,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * @public
           */
          destroy: function () {
-            this._updatePreviewClear();
+            this._updatePreviewClearStop();
             View.superclass.destroy.apply(this, arguments);
          }
       });

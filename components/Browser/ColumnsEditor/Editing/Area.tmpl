@@ -1,21 +1,23 @@
 <div class="controls-Browser-ColumnsEditor-Editing-Area{{!(usePresets && ((staticPresets && staticPresets.length) || presetNamespace)) ? ' controls-Browser-ColumnsEditor-Editing-Area_low' : ''}}">
-   <div class="controls-Browser-ColumnsEditor-Editing-Area__head">
+   <div class="controls-Browser-ColumnsEditor-Editing-Area__head ws-float-area-header-background">
       <div class="controls-Browser-ColumnsEditor-Editing-Area__head-title">
          <div class="controls-Browser-ColumnsEditor-Editing-Area__head-title-left">
             <ws:if data="{{title}}">{{title}}</ws:if>
             <ws:else>{[РедакторКолонок@@Отображение колонок]}</ws:else>
          </div>
-         <div class="controls-Browser-ColumnsEditor-Editing-Area__head-title-right">
-            <SBIS3.CONTROLS:Button
-               class="controls-Browser-ColumnsEditor-Editing-Area__ApplyColumnsButton"
-               command="applyColumns" primary="true"
-               >
-               <ws:caption>
-                  <ws:if data="{{applyButtonTitle}}">{{applyButtonTitle}}</ws:if>
-                  <ws:else>{[РедакторКолонок@@Применить]}</ws:else>
-               </ws:caption>
-            </SBIS3.CONTROLS:Button>
-         </div>
+         <ws:if data="{{multiselect || !autoApply}}">
+            <div class="controls-Browser-ColumnsEditor-Editing-Area__head-title-right">
+               <SBIS3.CONTROLS:Button
+                  class="controls-Browser-ColumnsEditor-Editing-Area__ApplyColumnsButton"
+                  command="applyColumns" primary="true"
+                  >
+                  <ws:caption>
+                     <ws:if data="{{applyButtonTitle}}">{{applyButtonTitle}}</ws:if>
+                     <ws:else>{[РедакторКолонок@@Применить]}</ws:else>
+                  </ws:caption>
+               </SBIS3.CONTROLS:Button>
+            </div>
+         </ws:if>
       </div>
       <ws:if data="{{usePresets && ((staticPresets && staticPresets.length) || presetNamespace)}}">
          <div class="controls-Browser-ColumnsEditor-Editing-Area__head-preset">
@@ -47,17 +49,19 @@
          </div>
       </ws:if>
    </div>
-   <div class="controls-Browser-ColumnsEditor-Editing-Area__OperationsMark">
-      <SBIS3.CONTROLS:OperationsPanel:Mark name="controls-Browser-ColumnsEditor-Editing-Area__OperationsMark">
-         <ws:items>
-            <ws:Array>
-               <ws:Object name="selectCurrentPage" title="{[Все]}"/>
-               <ws:Object name="removeSelection" title="{[Снять]}"/>
-               <ws:Object name="invertSelection" title="{[Инвертировать]}"/>
-            </ws:Array>
-         </ws:items>
-      </SBIS3.CONTROLS:OperationsPanel:Mark>
-   </div>
+   <ws:if data="{{_optsSelectable.multiselect}}">
+      <div class="controls-Browser-ColumnsEditor-Editing-Area__OperationsMark">
+         <SBIS3.CONTROLS:OperationsPanel:Mark name="controls-Browser-ColumnsEditor-Editing-Area__OperationsMark">
+            <ws:items>
+               <ws:Array>
+                  <ws:Object name="selectCurrentPage" title="{[Все]}"/>
+                  <ws:Object name="removeSelection" title="{[Снять]}"/>
+                  <ws:Object name="invertSelection" title="{[Инвертировать]}"/>
+               </ws:Array>
+            </ws:items>
+         </SBIS3.CONTROLS:OperationsPanel:Mark>
+      </div>
+   </ws:if>
    <SBIS3.CONTROLS:ScrollContainer class="controls-Browser-ColumnsEditor-Editing-Area__body controls-ScrollContainer__flex">
       <ws:content>
          <ws:if data="{{ _optsFixed.items && _optsFixed.items.length }}">
@@ -73,7 +77,7 @@
             />
          </ws:if>
          <SBIS3.CONTROLS:ListView
-            class="controls-Browser-ColumnsEditor-Editing-Area__SelectableList{{moveColumns ? ' controls-Browser-ColumnsEditor-Editing-Area__SelectableList_movable' : ''}}"
+            class="controls-Browser-ColumnsEditor-Editing-Area__SelectableList{{moveColumns ? ' controls-Browser-ColumnsEditor-Editing-Area__SelectableList_movable' : ''}}{{!_optsSelectable.multiselect ? ' controls-ListView__hideCheckBoxes controls-ListView__orangeMarker' : ''}}"
             name="controls-Browser-ColumnsEditor-Editing-Area__SelectableList"
             items="{{ _optsSelectable.items }}"
             easyGroup="{{ true }}"
@@ -85,7 +89,7 @@
             selectedKeys="{{_optsSelectable.markedKeys}}"
             itemTpl="tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/templates/selectableItem"
             itemContentTpl="tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/templates/selectableItemContent"
-            multiselect="{{ true }}"
+            multiselect="{{_optsSelectable.multiselect}}"
             >
             <ws:handlers
                onItemClick="{{_optsSelectable.onItemClick}}"

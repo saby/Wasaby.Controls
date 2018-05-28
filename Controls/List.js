@@ -140,16 +140,16 @@ define('Controls/List', [
          return this._notify('beforeItemEdit', [options]);
       },
 
-      _onAfterItemEdit: function(e, options) {
-         this._notify('afterItemEdit', [options]);
+      _onAfterItemEdit: function(e, item, isAdd) {
+         this._notify('afterItemEdit', [item, isAdd]);
       },
 
-      _onBeforeItemEndEdit: function(e, options) {
-         return this._notify('beforeItemEndEdit', [options]);
+      _onBeforeItemEndEdit: function(e, item, commit, isAdd) {
+         return this._notify('beforeItemEndEdit', [item, commit, isAdd]);
       },
 
-      _onAfterItemEndEdit: function(e, options) {
-         this._notify('beforeItemEndEdit', [options]);
+      _onAfterItemEndEdit: function(e, item, isAdd) {
+         this._notify('afterItemEndEdit', [item, isAdd]);
       },
 
       _beforeItemsRemove: function(event, items) {

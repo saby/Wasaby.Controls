@@ -533,7 +533,7 @@ define('SBIS3.CONTROLS/Image',
                Indicator.hide();
 
                // игнорируем HTTPError офлайна, если они обработаны
-               if (!(error._isOfflineMode && error.processed)) {
+               if (!(error._isOfflineMode && error.processed) && !(error.canceled)) {
                   var
                      config = error._isOfflineMode ? {
                         message: 'Отсутствует соединение с интернет',

@@ -3,8 +3,8 @@
    <script key="cookie-s" type="text/javascript" src="/cdn/jquery-cookie/04-04-2014/jquery-cookie-min.js"  data-pack-name="skip"></script>
    <script key="init_script">
       require(['Core/app-init', 'Core/constants'], function(appinit, constants, rights){
-         constants.$body = body;
-         constants.$window = window;
+         constants.$body = $(document.body);
+         constants.$window = $(window);
          appinit();
          require(['bootup-min',
           'Core/nativeExtensions',

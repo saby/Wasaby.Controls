@@ -30,8 +30,8 @@
 @icon-color-disabled:                    @default-disabled-color;
 //InputRender
 @border-color_InputRender:                           @default-border-color @default-border-color @default-border-color-active @default-border-color;
-@border-color_InputRender_hover:                     @default-border-color-hover;
-@border-color_InputRender_active:                    @default-border-color-active;
+@border-color_InputRender_hover:                     @default-border-color @default-border-color #AAB0C1 @default-border-color;
+@border-color_InputRender_active:                    @default-border-color @default-border-color #AAB0C1 @default-border-color;
 @border-color_InputRender_disabled:                  transparent transparent @default-border-color-bottom-disabled transparent;
 @border-color_InputRender_error:                     @default-border-color-error;
 @background-color_InputRender:                       @default-bg-color;
@@ -66,6 +66,7 @@
 @color_FieldLink-item-caption_big:                @accent-color;
 @background_FieldLink-showAllLinks_disabled:      @default-bg-color;
 @color_FieldLink_dropAllLinks:                    @color_FieldLink-Link_enabled;
+@color_FieldLink_item-cross:                      @disabled-color;
 
 //DropdownList
 @background_DropdownList:                #FFFFFF;
@@ -82,6 +83,15 @@
 @color_FieldLink-Link_enabled:             #8991A9;
 @color_FieldLink-Link_enabled_hover:       #313E78;
 @color_FieldLink-Link_disabled:            #8991A9;
+
+//StackTemplate
+@border-left_stackTemplate:                1px solid #F8F8F8;
+@background_stackTemplate_head:            #F8F8F8;
+@background_stackTemplate_content:         #FFFFFF;
+@background_stackTemplate_footer:          #F8F8F8;
+@border-bottom_stackTemplate_footer:       1px solid #F0F0F0;
+@border-bottom_stackTemplate_head:         1px solid #F0F0F0;
+@color_stackTemplate_head:                 #313E78;
 
 //search-form
 @border-color_SearchForm:                   transparent;
@@ -109,6 +119,10 @@
 @color_MonthView-item-weekend:              #D94700;
 @background-color_MonthView-item-today:     #DA4600;
 @color_MonthView-item-today:                #FFFFFF;
+// MonthSlider
+@color_MonthSlider-header-title:            @default-color;
+@color_MonthSlider-header-button:           @color_primary;
+@color_MonthSlider-header-button_hovered:   @default-hover-color;
 // DateRangeBigChoose
 @border-color_DateRangeBigChoose-range-unselected-hover:    #8991A9;
 @border-color_DateRangeBigChoose-range-selected-inner:      #8991A9;
@@ -393,6 +407,12 @@
 @color_FilterButton-text:                #0055bb;
 @color_FilterButton-text_hover:          #313E78;
 
+//Lookup
+@color_Lookup_item-cross:                      #CCCCCC;
+@color_Lookup_item-size:                       16px;
+@color_Lookup_item-accent:                     #313E78;
+@color_Lookup_item-primary:                    #D94700;
+
 //headers
 @color-BackButton__caption_style-default:      #D94700;
 @color-BackButton__caption_style-primary:      #313E78;
@@ -413,8 +433,12 @@
 @color-Separator__icon_style-Accent_hovered:      #313E78;
 @color-Separator__icon_style-Main_hovered:        #FF7033;
 @color-Separator__icon_style-Additional_hovered:  #313E78;
-@fill-HeaderSeparator__icon_style-primary:     #729EE6;
-@fill-HeaderSeparator__icon_style-default:     #729EE6;
+@fill_HeaderSeparator_default:                     #729EE6;
+@fill_HeaderSeparator_primary:                     #729EE6;
+@fill_HeaderSeparator_default_hovered:             #729EE6;
+@fill_HeaderSeparator_primary_hovered:             #729EE6;
+@color_BigSeparator-icon:                         #8991A9;
+@color_BigSeparator-icon_hovered:                 #313E78;
 
 //BreadCrumbs
 @color_BreadCrumbs-title:                          #0055BB;
@@ -445,3 +469,5 @@
 
 //FilterPanel
 @color_FilterPanel-caption:                  #313e78;
+//AdditionalParams
+@color_AdditionalParams-item:                 #313E78;

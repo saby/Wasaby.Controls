@@ -5,6 +5,7 @@
 @color_ExportCustomizer-Area-head-title: #313E78;
 @font-size_ExportCustomizer-Area-head-title: 18px;
 @font-weight_ExportCustomizer-Area-head-title: bold;
+@max-width_ExportCustomizer-Area__presets: 280px;
 @padding_ExportCustomizer-Area-body: 10px 0;
 @margin_ExportCustomizer-Area-body-box: 0 0 10px 0;
 @border-bottom_ExportCustomizer-Area-body-box: 1px solid #f7f4f0;
@@ -32,13 +33,24 @@
 }
 
 .controls-ExportCustomizer-Area__head-title {
-   .flex-grow(1);
    color: @color_ExportCustomizer-Area-head-title;
    font-size: @font-size_ExportCustomizer-Area-head-title;
    font-weight: @font-weight_ExportCustomizer-Area-head-title;
 }
 
+.controls-ExportCustomizer-Area__head-title,
 .controls-ExportCustomizer-Area__presets {
+   .flex-grow(1);
+   max-width: @max-width_ExportCustomizer-Area__presets;
+   overflow: hidden;
+}
+
+.controls-ExportCustomizer-Area__presets {
+   font-weight: normal;
+}
+
+.controls-ExportCustomizer-Area__completeButton {
+   .flex-shrink(0);
 }
 
 .controls-ExportCustomizer-Area__body {

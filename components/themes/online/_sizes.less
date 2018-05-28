@@ -78,6 +78,13 @@
 @top_searchForm_picker_closeButton:6px;
 @width_browser_search:             300px;
 @width_browser_search_small:       184px;
+
+//StackTemplate
+@min-height_stackTemplate_head:                 38px;
+@font-size_stackTemplate_head:                  18px;
+@spacing_stackTemplate_head:                    0 52px 0 12px;
+@top-space_stackTemplate_close-button:          5px;
+
 //FieldLink
 @icon-size_FieldLink-button:                    @default-icon-size;
 @border-width_FieldLink-picker:                 @default-border-width;
@@ -110,12 +117,20 @@
 @size_DateRangeBigChoose__stateButton_icon:                   16px;
 @size_DateRangeBigChoose__homeBtn_icon:                       16px;
 
+// MonthSlider
+@height_MonthSlider:                   300px;
+@height_MonthSlider-header:            28px;
+@margin-left_MonthSlider-home-button:  8px;
+@font-size_MonthSlider-header-title:   15px;
+@min-width_MonthSlider-header-title:   110px;
+@height_MonthSlider-weekdays:          39px;
+
 // DateRangeSlider
 @margin-top_DateRangeSlider_years-only:                  @date-range-slider-margin-top - @date-range-choose-year-height;
 
 // DateRangeBigChoose
 @width_DateRangeBigChoose:                               364px;
-@height_DateRangeBigChoose-header:                       45px;
+@height_DateRangeBigChoose-header:                       44px;
 @padding-left_DateRangeBigChoose-header:                 10px;
 @border-width_DateRangeBigChoose:                        1px;
 @padding-right_DateRangeBigChoose-state-button:          12px;
@@ -234,9 +249,9 @@
 //TreeDataGridView
 @font-size_TreeDataGridView-folderTitle:                  inherit;
 @width_TreeDataGridView-expand:                           16px;
-@padding_TreeDataGridView-expand:                         0 6px 0 4px;
+@padding_TreeDataGridView-expand:                         0 4px 0 4px;
 @height_TreeDataGridView-expand:                          20px;
-@width-TreeDataGridView-levelPadding:                     26px;
+@width-TreeDataGridView-levelPadding:                     24px;
 @font-size_TreeDataGridView-expand:                       @icon-small-size;
 @top_TreeDataGridView-editArrow:                          2px;
 @font-size_TreeDataGridView-editArrow:                    16px;
@@ -256,6 +271,7 @@
 @margin-top_DropdownList:       -6px;
 @margin-left_DropdownList:      -13px;
 @right_DropdownList-icon:       6px;
+@top_DropdownList-icon:         (@height_DropdownList-item - @menu-expand-height) / 2;
 @padding_DropdownList-head:     @padding_DropdownList-default;
 @offset_DropdownList-submenu:   -3px;
 
@@ -418,6 +434,10 @@
 //FilterButton
 @font-size_FilterButton-icon:            @icon-size_default_medium;
 @font-size_FilterButton-text:            @default-text-size;
+
+//Lookup
+@spacing_Lookup-item:                    4px;
+
 //itemActions
 @height_itemActions_inside:              24px;
 @height_itemAction_outside:              29px;
@@ -440,6 +460,8 @@
 @width-HeaderSeparator:                6px;
 @height-HeaderSeparator:               10px;
 @size-Separator__icon:                 16px;
+@padding-left_HeaderSeparator:         10px;
+@size-BigSeparator__icon:              26px;
 //backButton
 @width-BackButton_size-l:              10px;
 @height-BackButton_size-l:             14px;
@@ -451,6 +473,7 @@
 @spacing-BackButton-between-icon-text_big: 2px;
 @spacing-Separator-between-icon-text:     4px;
 @font-size_BackButton-arrow:           @default-icon-size;
+@height-BackButton:                    24px;
 
 //radioGroup
 @height_RadioItem:                        24px;
@@ -495,11 +518,21 @@
 @box-shadow-IconButton_activated:        none;
 
 //FilterPanel
+@width_FilterPanel_default:                                    400px;
+@font-size_FilterPanel-caption:                                15px;
 @spacing_FilterPanel-between-filterButton-closeButton:         4px;
 @margin_FilterPanel-resetButton-title:                         0 16px 0 0;
-@margin_FilterPanel__PropertyGrid:                             0 12px 12px 34px;
+@margin_FilterPanel__PropertyGrid:                             0 12px 2px 34px;
 @spacing_FilterPanel-header-topTemplate:                       0 16px;
 @height_FilterPanel-header:                                    44px;
+@height_FilterPanel-item:                                      24px;
+@spacing-bottom_FilterPanel:                                   6px;
 //PropertyGrid
 @height_PropertyGrid-item:                                     28px;
 @spacing_PropertyGrid-dropdownList:         0px;
+//AdditionalParams
+@max-height_FilterPanel-items:              120px;
+@spacing_AdditionalParams-items:            0 12px 0 34px;
+@height_AdditionalParams-arrow:             26px;
+@margin_AdditionalParams:                   6px;
+@margin_AdditionalParams-caption:           6px 0 6px 12px;

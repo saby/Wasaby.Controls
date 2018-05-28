@@ -30178,8 +30178,15 @@ var modern = (function () {
   var renderUI = function (editor, theme, args) {
     var skinUrl = getSkinUrl(editor);
     if (skinUrl) {
-      args.skinUiCss = skinUrl + '/skin.min.css';
-      editor.contentCSS.push(skinUrl + '/content' + (editor.inline ? '.inline' : '') + '.min.css');
+      var contents = contents || global.contents;
+      var ext;
+      if (contents && contents.buildMode === 'debug') {
+        ext = '.css';
+      } else {
+        ext = '.min.css';
+      }
+      args.skinUiCss = skinUrl + '/skin' + ext;
+      editor.contentCSS.push(skinUrl + '/content' + (editor.inline ? '.inline' : '') + ext);
     }
     $_75hp8dtljedwgog7.setup(editor, theme);
     return isInline(editor) ? $_dr7an3szjedwgodm.render(editor, theme, args) : $_h8yfesgjedwgoce.render(editor, theme, args);

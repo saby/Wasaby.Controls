@@ -1,11 +1,11 @@
 <div on:changeValue="checkEvent()" style="margin-top: 30px;">
     включенный чекбокс с заголовком и состоянием не определен (readOnly=false triState=true tooltip="Podskazka" caption="caption")
     <br/>
-    <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_value" caption="caption" triState="{{true}}" tooltip="Podskazka"/>
+    <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_value" caption="caption" triState="{{true}}" tooltip="Podskazka" attr:test_name="box"/>
     <br/>
     выключенный чекбокс c заголовком и с состоянием не определен (readOnly=true triState=true tooltip="Podskazka" caption="caption")
     <br/>
-    <Controls.Toggle.Checkbox caption="caption" readOnly="{{true}}" bind:value="_value" triState="{{true}}" tooltip="Podskazka"/>
+    <Controls.Toggle.Checkbox caption="caption" readOnly="{{true}}" bind:value="_value" triState="{{true}}" tooltip="Podskazka" attr:test_name="disabled_box"/>
     <br/>
     включенный чекбокс без заголовка (readOnly=false triState=false tooltip="Podskazka")
     <br/>
@@ -13,9 +13,11 @@
     <br/>
     выключенный чекбокс без заголовка и с базовой линией (readOnly=true triState=false tooltip="Podskazka")
     <br/>
-    base line
-    <Controls.Toggle.Checkbox readOnly="{{true}}" bind:value="_value" tooltip="Podskazka"/>
-    base line
+    <div>
+        base line
+        <Controls.Toggle.Checkbox readOnly="{{true}}" bind:value="_value" tooltip="Podskazka"/>
+        base line
+    </div>
     <br/>
     включенный чекбокс с длинным заголовком и фиксированной шириной(100px) (readOnly=false triState=false tooltip="Podskazka" caption="first word, second word")
     <br/>
