@@ -45,24 +45,31 @@ define('Controls/List/Grid/GridViewModel', [
             return preparedClasses;
          },
 
+         prepareRowSeparatorClasses: function(showRowSeparator, rowIndex, rowCount) {
+            var
+               result = '';
+            if (showRowSeparator) {
+               if (rowIndex === 0) {
+                  result += ' controls-Grid__row-cell_firstRow';
+                  result += ' controls-Grid__row-cell_withRowSeparator_firstRow';
+               } else {
+                  if (rowIndex === rowCount - 1) {
+                     result += ' controls-Grid__row-cell_lastRow';
+                     result += ' controls-Grid__row-cell_withRowSeparator_lastRow';
+                  }
+               }
+               result += ' controls-Grid__row-cell_withRowSeparator';
+            } else {
+               result += ' controls-Grid__row-cell_withoutRowSeparator';
+            }
+            return result;
+         },
+
          getItemColumnCellClasses: function(current) {
             var
                cellClasses = 'controls-Grid__row-cell';
 
-            if (current.showRowSeparator) {
-               if (current.index === 0) {
-                  cellClasses += ' controls-Grid__row-cell_firstRow';
-                  cellClasses += ' controls-Grid__row-cell_withRowSeparator_firstRow';
-               } else {
-                  if (current.index === current.dispItem.getOwner().getCount() - 1) {
-                     cellClasses += ' controls-Grid__row-cell_lastRow';
-                     cellClasses += ' controls-Grid__row-cell_withRowSeparator_lastRow';
-                  }
-                  cellClasses += ' controls-Grid__row-cell_withRowSeparator';
-               }
-            } else {
-               cellClasses += ' controls-Grid__row-cell_withoutRowSeparator';
-            }
+            cellClasses += _private.prepareRowSeparatorClasses(current.showRowSeparator, current.index, current.dispItem.getOwner().getCount() - 1);
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
             if (current.multiselect && current.columnIndex === 0) {
