@@ -178,9 +178,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             }.bind(this));
 
             var editor = this._editor;
+            var options = this._options;
             if (editor) {
                this.subscribeTo(editor, 'onApply', function (evtName) {
-                  var preset = this._findPresetById(this._options.selectedId);
+                  var preset = this._findPresetById(options.selectedId);
                   preset.title = editor.getText();
                   delete preset.isUnreal;
                   this._saveSelectedPreset().addCallback(function (/*isSuccess*/) {
@@ -191,7 +192,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   }.bind(this));
                }.bind(this));
 
-               this.subscribeTo(editor, 'onCancel', this._endEditingMode.bind(this));
+               this.subscribeTo(editor, 'onCancel', function (evtName) {
+                  var presetInfo = this._findPresetById(options.selectedId, true);
+                  if (presetInfo && presetInfo.preset.isUnreal) {
+                     this._customs.splice(presetInfo.index, 1);
+                     // TODO: Предыдущий пресет
+                  }
+                  this._endEditingMode();
+               }.bind(this));
             }
          },
 
@@ -211,7 +219,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             var customs = this._customs;
             if (customs && customs.length) {
                for (var i = 0; i < customs.length; i++) {
-                  var preset = [i];
+                  var preset = customs[i];
                   if (!preset.isUnreal) {
                      list.push(preset);
                   }
