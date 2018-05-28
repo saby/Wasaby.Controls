@@ -146,7 +146,9 @@ define('Controls/Container/Suggest/Layout',
          },
    
          _inputActivated: function() {
-            _private.updateSuggestState(this);
+            if (this._options.minSearchLength === 0) {
+               _private.updateSuggestState(this);
+            }
          },
    
          _tabsSelectedKeyChanged: function(event, key) {
