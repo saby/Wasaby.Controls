@@ -1,7 +1,8 @@
 define('Controls/Application/HeadDataContext', [
    'Core/DataContext',
    'Core/Deferred',
-], function(DataContext, Deferred) {
+   'Core/cookie'
+], function(DataContext, Deferred, cookie) {
    var bundles;
    try {
       bundles = require('json!WS.Core/ext/requirejs/bundles');
@@ -13,7 +14,7 @@ define('Controls/Application/HeadDataContext', [
    try {
       modDeps = require('json!resources/module-dependencies');
    } catch (e) {
-      modDeps = { links: {}, nodes: {} };
+      modDeps = {links: {}, nodes: {}};
    }
 
    /**
@@ -88,6 +89,7 @@ define('Controls/Application/HeadDataContext', [
             delete obj[els[i]];
          }
       }
+
       function findBundle(str) {
          for (var key in bundles) {
             if (~bundles[key].indexOf(str)) {
@@ -96,6 +98,7 @@ define('Controls/Application/HeadDataContext', [
          }
          return null;
       }
+
       var jsBundles = {};
       for (var key in allDeps) {
          if (allDeps.hasOwnProperty(key)) {
@@ -140,24 +143,26 @@ define('Controls/Application/HeadDataContext', [
 
       var allDeps = {};
       recursiveWalker(allDeps, deps);
-      var jsBundles = checkForBundles(allDeps); // Find all bundles, and removes dependencies that are included in bundles
-      var cssBundles = getDependentCss(jsBundles);
-      var files = { js: [], css: [] };
-      for (var key in jsBundles) {
-         if (jsBundles.hasOwnProperty(key)) {
-            files.js.push(fixLink(key, 'js'));
+      var files = {js: [], css: []};
+      if (cookie.get('s3debug') === 'true') {
+         var jsBundles = checkForBundles(allDeps); // Find all bundles, and removes dependencies that are included in bundles
+         var cssBundles = getDependentCss(jsBundles);
+         for (var key in jsBundles) {
+            if (jsBundles.hasOwnProperty(key)) {
+               files.js.push(fixLink(key, 'js'));
+            }
          }
-      }
-      for (var key in cssBundles) {
-         if (cssBundles.hasOwnProperty(key)) {
-            files.css.push(fixLink(key, 'css'));
+         for (var key in cssBundles) {
+            if (cssBundles.hasOwnProperty(key)) {
+               files.css.push(fixLink(key, 'css'));
+            }
          }
-      }
-      for (var key in allDeps) {
-         if (key.indexOf('css!') === 0) {
-            files.css.push(fixLink(key, 'css'));
-         } else if (key.indexOf('tmpl!') !== 0) {
-            files.js.push(fixLink(key, 'js'));
+         for (var key in allDeps) {
+            if (key.indexOf('css!') === 0) {
+               files.css.push(fixLink(key, 'css'));
+            } else if (key.indexOf('tmpl!') !== 0) {
+               files.js.push(fixLink(key, 'js'));
+            }
          }
       }
       return callback(undefined, files);
