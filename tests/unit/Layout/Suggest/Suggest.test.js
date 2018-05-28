@@ -1,6 +1,6 @@
-define(['Controls/Layout/Suggest', 'WS.Data/Collection/List'], function(Suggest, List){
+define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List'], function(Suggest, List){
    
-   describe('Controls.Layout.Suggest', function () {
+   describe('Controls.Container.Suggest.Layout', function () {
    
       var hasMoreTrue = {
          hasMore: true

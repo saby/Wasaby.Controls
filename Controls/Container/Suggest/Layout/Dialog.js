@@ -1,9 +1,9 @@
-define('Controls/Layout/Suggest/Dialog',
+define('Controls/Container/Suggest/Layout/Dialog',
    [
       'Core/Control',
-      'tmpl!Controls/Layout/Suggest/Dialog',
+      'tmpl!Controls/Container/Suggest/Layout/Dialog',
       'Controls/Container/Search/SearchContextField',
-      'css!Controls/Layout/Suggest/Dialog',
+      'css!Controls/Container/Suggest/Layout/Dialog',
       'Controls/Container/Scroll',
       'Controls/Popup/Templates/Dialog/DialogTemplate'
    ],

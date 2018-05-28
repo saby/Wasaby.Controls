@@ -1,12 +1,12 @@
-define('Controls/Layout/Suggest',
+define('Controls/Container/Suggest/Layout',
    [
       'Core/Control',
-      'tmpl!Controls/Layout/Suggest/Suggest',
-      'tmpl!Controls/Layout/Suggest/empty',
+      'tmpl!Controls/Container/Suggest/Layout/Suggest',
+      'tmpl!Controls/Container/Suggest/Layout/empty',
       'WS.Data/Type/descriptor',
       'Controls/Container/Search/SearchContextField',
       'Controls/Container/Filter/FilterContextField',
-      'css!Controls/Layout/Suggest/Suggest'
+      'css!Controls/Container/Suggest/Layout/Suggest'
    ],
    function(Control, template, emptyTemplate, types, SearchContextField, FilterContextField) {
       
@@ -83,7 +83,20 @@ define('Controls/Layout/Suggest',
             }
          }
       };
-      
+   
+      /**
+       * Container for Input's that using suggest.
+       *
+       * @class Controls/Container/Suggest/Layout
+       * @extends Core/Control
+       * @mixes Controls/Input/interface/ISearch
+       * @mixes Controls/interface/ISource
+       * @mixes Controls/interface/IFilter
+       * @mixes Controls/Input/interface/ISuggest
+       * @mixes Controls/interface/INavigation
+       * @control
+       * @category Input
+       */
       var SuggestLayout = Control.extend({
          
          _template: template,
@@ -166,7 +179,7 @@ define('Controls/Layout/Suggest',
             var self = this;
             
             //loading showAll templates
-            requirejs(['Controls/Layout/Suggest/Dialog'], function() {
+            requirejs(['Controls/Container/Suggest/Layout/Dialog'], function() {
                self._children.stackOpener.open({});
             });
             _private.close(this);
@@ -199,7 +212,7 @@ define('Controls/Layout/Suggest',
          return {
             emptyTemplate: emptyTemplate,
             footerTemplate: {
-               templateName: 'tmpl!Controls/Layout/Suggest/footer'
+               templateName: 'tmpl!Controls/Container/Suggest/Layout/footer'
             },
             suggestStyle: 'default',
             suggestState: false,

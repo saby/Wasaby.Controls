@@ -6,7 +6,7 @@ define('Controls/Container/Suggest/List',
       'Core/Control',
       'tmpl!Controls/Container/Suggest/List/List',
       'Core/core-clone',
-      'Controls/Layout/Suggest/_SuggestOptionsField'
+      'Controls/Container/Suggest/Layout/_SuggestOptionsField'
    ],
    
    function(Control, template, clone, _SuggestOptionsField) {

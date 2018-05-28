@@ -1,8 +1,8 @@
-define('Controls/Layout/Suggest/_SuggestListWrapper',
+define('Controls/Container/Suggest/Layout/_SuggestListWrapper',
    [
       'Core/Control',
-      'tmpl!Controls/Layout/Suggest/_SuggestListWrapper',
-      'Controls/Layout/Suggest/_SuggestOptionsField',
+      'tmpl!Controls/Container/Suggest/Layout/_SuggestListWrapper',
+      'Controls/Container/Suggest/Layout/_SuggestOptionsField',
       'Controls/Container/Async'
    ],
    

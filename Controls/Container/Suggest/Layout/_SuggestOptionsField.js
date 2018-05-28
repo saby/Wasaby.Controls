@@ -1,7 +1,7 @@
 /**
  * Context field for Suggest options
  */
-define('Controls/Layout/Suggest/_SuggestOptionsField', ['Core/DataContext'], function(DataContext) {
+define('Controls/Container/Suggest/Layout/_SuggestOptionsField', ['Core/DataContext'], function(DataContext) {
    
    'use strict';
    

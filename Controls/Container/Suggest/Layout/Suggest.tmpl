@@ -1,7 +1,7 @@
 <div class="controls-SuggestV">
     <ws:template name="suggestTpl">
-        <Controls.Container.Async templateName="Controls/Layout/Suggest/_SuggestListWrapper">
-            <ws:partial template="{{'Controls/Layout/Suggest/_SuggestListWrapper'}}"
+        <Controls.Container.Async templateName="Controls/Container/Suggest/Layout/_SuggestListWrapper">
+            <ws:partial template="{{'Controls/Container/Suggest/Layout/_SuggestListWrapper'}}"
                         on:itemClick="_select()"
                         on:tabsSelectedKeyChanged="_tabsSelectedKeyChanged()"
                         templateName="{{_options.suggestTemplate.templateName}}"
@@ -40,7 +40,7 @@
     </ws:if>
 
     <Controls.Popup.Opener.Stack name="stackOpener">
-        <ws:popupOptions template="Controls/Layout/Suggest/Dialog">
+        <ws:popupOptions template="Controls/Container/Suggest/Layout/Dialog">
             <ws:templateOptions searchValue="{{_searchValue}}">
                 <ws:template>
                     <ws:partial template="suggestTpl"/>
