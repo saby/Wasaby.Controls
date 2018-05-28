@@ -52,7 +52,7 @@ define('Controls-demo/List/Grid/GridWithEditing', [
             },
             {
                displayProperty: 'description',
-               width: 'auto',
+               width: '1fr',
                align: 'right',
                template: 'tmpl!Controls-demo/List/Tree/treeEditingTemplate'
             },

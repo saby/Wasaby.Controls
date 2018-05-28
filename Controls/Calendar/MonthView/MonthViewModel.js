@@ -48,6 +48,7 @@ define('Controls/Calendar/MonthView/MonthViewModel', [
       _normalizeState: function(state) {
          return {
             month: DateUtil.normalizeDate(state.month),
+            mode: state.mode,
             enabled: state.enabled
          };
       },
@@ -68,6 +69,7 @@ define('Controls/Calendar/MonthView/MonthViewModel', [
             firstDateOfMonth = DateUtil.getStartOfMonth(today),
             lastDateOfMonth = DateUtil.getEndOfMonth(today);
 
+         obj.mode = state.mode;
          obj.date = date;
          obj.day = date.getDate();
          obj.dayOfWeek = date.getDay() ? date.getDay() - 1 : 6;
@@ -92,7 +94,7 @@ define('Controls/Calendar/MonthView/MonthViewModel', [
 
       _getDaysArray: function(state) {
          state = state || this._state;
-         var weeks = calendarUtils.getWeeksArray(state.month);
+         var weeks = calendarUtils.getWeeksArray(state.month, state.mode);
 
          return weeks.map(function(weekArray) {
             return weekArray.map(function(day) {
