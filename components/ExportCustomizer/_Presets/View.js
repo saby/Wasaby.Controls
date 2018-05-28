@@ -152,9 +152,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             }
             this._bindEvents();
             if (this._storage) {
-               this._storage.load(this._options.namespace).addCallback(function (presets) {
-                  presets.forEach(function (v) { v.isStorable = true; });
-                  this._customs = presets;
+               this._loadCustoms().addCallback(function () {
                   if (this._needNewPreset) {
                      this._addPreset().addCallback(_ifSuccess(function () {
                         this._updateSelector();
@@ -604,6 +602,18 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             var selectedId = this._checkSelectedId(options);
             selector.setSelectedKeys([selectedId]);
             this._updateSelectorListOptions('selectedKey', selectedId);
+         },
+
+         /**
+          * Загрузить пользовательские пресеты
+          *
+          * @protected
+          * @return {Core/Deferred}
+          */
+         _loadCustoms: function () {
+            return this._storage.load(this._options.namespace).addCallback(function (presets) {
+               this._customs = presets;
+            }.bind(this));
          },
 
          /**
