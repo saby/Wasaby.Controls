@@ -144,7 +144,7 @@ define('Controls/Application/HeadDataContext', [
       var allDeps = {};
       recursiveWalker(allDeps, deps);
       var files = {js: [], css: []};
-      if (cookie.get('s3debug') === 'true') {
+      if (cookie.get('s3debug') !== 'true') {
          var jsBundles = checkForBundles(allDeps); // Find all bundles, and removes dependencies that are included in bundles
          var cssBundles = getDependentCss(jsBundles);
          for (var key in jsBundles) {
