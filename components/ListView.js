@@ -2762,7 +2762,9 @@ define('SBIS3.CONTROLS/ListView',
                targetElement = this._getDomElementByItem(item);
 
             if (toolbarTarget && targetElement && toolbarTarget.container.get(0) === targetElement.get(0)) {
-               if (toolbar.isToolbarLocking() && this._options.itemsActionsInItemContainer) {
+               // Нужно всегда при перерисовке записи разблокировать тулбар, иначе будет зависший канал от trackElement
+               // https://online.sbis.ru/opendoc.html?guid=62f91f28-78ab-4022-9727-7b951536f771
+               if (toolbar.isToolbarLocking()) {
                   toolbar.unlockToolbar();
                }
                toolbar.hide();
@@ -2775,8 +2777,12 @@ define('SBIS3.CONTROLS/ListView',
             if (toolbarTarget && targetElement && toolbarTarget.container.get(0) === targetElement.get(0)) {
                toolbarTarget.container = this._getDomElementByItem(item);
                toolbar.setCurrentTarget(toolbarTarget);
+               if (this.isEdit()) { // https://online.sbis.ru/opendoc.html?guid=62f91f28-78ab-4022-9727-7b951536f771
+                  toolbar.show(toolbarTarget);
+                  toolbar.lockToolbar();
+               }
             }
-            return redrawResult
+            return redrawResult;
          },
 
          _showToolbar: function(model) {
@@ -4382,6 +4388,10 @@ define('SBIS3.CONTROLS/ListView',
                   this._getScrollWatcher().scrollTo('bottom');
                }
                this._lastPageLoaded = true;
+               /* Грузим последнюю страницу = > страниц точно больше 2ух. */
+               if (this._scrollBinder) {
+                  this._scrollBinder.moreThanTwo(true);
+               }
             }.bind(this);
             if (noLoad){
                this._offset = -1;

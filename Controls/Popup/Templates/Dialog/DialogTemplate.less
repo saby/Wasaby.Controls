@@ -1,8 +1,8 @@
 .controls-DialogTemplate {
-   .flexbox();
-   .flex-direction(column);
-   .flex-grow(1);
-   .flex-shrink(1);
+   display: flex;
+   flex-direction: column;
+   flex-grow: 1;
+   flex-shrink: 1;
    height: 100%;
    background-color: @default-bg-color;
    position: relative;
@@ -12,16 +12,17 @@
 }
 
 .controls-DialogTemplate__top-area {
-   .flexbox();
-   .flex-shrink(0);
-   height: 44px;
+   display: flex;
+   flex-shrink: 0;
+   min-height: 44px; //todo themes
 }
 
 .controls-DialogTemplate__content-area {
-   .flexbox();
-   .flex-direction(column);
-   .flex-grow(1);
-   .flex-shrink(1);
+   display: flex;
+   height: 100%;
+   flex-direction: column;
+   flex-grow: 1;
+   flex-shrink: 1;
    min-height: 1px;
 }
 
@@ -29,18 +30,20 @@
    width: 100%;
    flex-shrink: 1;
    display: flex;
-   .align-items(baseline);
-   margin: 0 12px;
+   align-items: baseline;
+   margin: @spacing_stackTemplate_head;
+   overflow: hidden;
 }
 
 .controls-DialogTemplate__close_button {
-   position: relative;
-   top: 5px;
+   position: absolute;
+   top: 8px; //todo themes
+   right: 0;
    cursor: pointer;
    z-index: 1;
-   .flexbox();
-   .align-items(center);
-   .justify-content(center);
+   display: flex;
+   align-items: center;
+   justify-content: center;
    &:before {
       content: @content_CloseButton_icon;
    }
@@ -68,16 +71,19 @@
 }
 
 .controls-DialogTemplate__caption {
-   font-family: TensorFont, sans-serif !important;
-   font-size: 18px !important;
+   color: #313F78;
+   font-size: @font-size_stackTemplate_head;
    font-weight: 700 !important;
+   max-width: 50%;
    cursor: default;
+   height: 44px; //todo themes value equal min-height
+   align-items: center;
+   flex-shrink: 1;
+   display: flex;
+}
+
+.controls-DialogTemplate__caption_text {
    text-overflow: ellipsis;
    overflow: hidden;
-   box-sizing: border-box;
    white-space: nowrap;
-   max-width: calc(52%);
-   line-height: 34px;
-   .flex-shrink(1);
-   color: #313F78;
 }

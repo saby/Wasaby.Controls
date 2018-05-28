@@ -5,8 +5,13 @@ define('SBIS3.CONTROLS/WSControls/Buttons/MenuButton', [
    'Core/IoC',
    'Core/detection',
    'Core/Sanitize',
-   'Core/helpers/String/escapeHtml'
-], function(Button, PickerMixin, DSMixin, IoC, detection, Sanitize, escapeHtml) {
+   'Core/helpers/String/escapeHtml',
+   'Core/Deferred',
+   'Core/ParallelDeferred',
+   'Core/moduleStubs'
+], function(
+   Button, PickerMixin, DSMixin, IoC, detection, Sanitize, escapeHtml, Deferred, ParallelDeferred, moduleStubs
+) {
 
    'use strict';
    
@@ -223,14 +228,30 @@ define('SBIS3.CONTROLS/WSControls/Buttons/MenuButton', [
        * Показывает меню у кнопки
        */
       showPicker: function() {
-         var self = this;
-         _getContextMenu(function() {
-            MenuButton.superclass.showPicker.call(self);
-            self._picker.subscribe('ondrawitems', function() {
-               self._checkItemsIcons(self._picker.getItems());
-            });
-         }, self._options.historyId);
-
+         var self = this,
+            loadContextMenu = function() {
+               var loadDef = new Deferred();
+               _getContextMenu(function() {
+                  loadDef.callback();
+               }, self._options.historyId);
+               return loadDef;
+            },
+            finalCallBack = function() {
+               MenuButton.superclass.showPicker.call(self);
+               self._picker.subscribe('ondrawitems', function() {
+                  self._checkItemsIcons(self._picker.getItems());
+               });
+            };
+         if (!self._options.footerTpl && self._options.footerTemplateName) {
+            var loadDependencies = new ParallelDeferred();
+            loadDependencies.push(loadContextMenu());
+            loadDependencies.push(moduleStubs.require(self._options.footerTemplateName).addCallback(function(footerTpl) {
+               self._options.footerTpl = footerTpl;
+            }));
+            loadDependencies.done().getResult().addCallback(finalCallBack);
+         } else {
+            loadContextMenu().addCallback(finalCallBack);
+         }
       },
 
       getPicker: function() {
