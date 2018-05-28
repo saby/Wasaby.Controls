@@ -215,7 +215,7 @@ define('SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil',[
                   for (i=0; i < data.d.length; i++) {
                      text = text.replace(/<a[a-zA-z=":\/\-.0-9\s]*>[a-zA-z=":\/\-.0-9\s]*<\/a>/, atob(data.d[i][1]));
                   }
-                  console.log(text);
+                  deferred.callback(text);
                });
             });
          } else {
