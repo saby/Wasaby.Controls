@@ -71,16 +71,19 @@ define('Controls/List/ListViewModel',
             this._nextVersion();
          },
 
-         select: function(keys) {
-            this._multiselection.select(keys);
+         _changeSelection: function(keys, methodName) {
+            this._multiselection[methodName](keys);
             this._nextVersion();
             this._notify('onListChange');
+            this._notify('selectionChanged', this._multiselection.getSelection());
+         },
+
+         select: function(keys) {
+            this._changeSelection(keys, 'select');
          },
 
          unselect: function(keys) {
-            this._multiselection.unselect(keys);
-            this._nextVersion();
-            this._notify('onListChange');
+            this._changeSelection(keys, 'unselect');
          },
 
          updateIndexes: function(startIndex, stopIndex) {

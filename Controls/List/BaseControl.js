@@ -84,7 +84,7 @@ define('Controls/List/BaseControl', [
                   self._virtualScroll.prependItems(addedItems.getCount());
                }
                return addedItems;
-               
+
                //обновить начало/конец видимого диапазона записей и высоты распорок
                //_private.applyVirtualWindow(self, self._virtualScroll.getVirtualWindow());
             }).addErrback(function(error) {
@@ -275,6 +275,10 @@ define('Controls/List/BaseControl', [
          model.subscribe('onListChange', function() {
             self._forceUpdate();
          });
+
+         model.subscribe('selectionChanged', function(event, selection) {
+            self._notify('selectionChanged', [selection]);
+         });
       },
 
       showActionsMenu: function(self, event, itemData, childEvent, showAll) {
@@ -456,6 +460,14 @@ define('Controls/List/BaseControl', [
 
          if (filterChanged || sourceChanged) {
             _private.reload(this, newOptions.dataLoadCallback,  newOptions.dataLoadErrback);
+         }
+
+         if (this._options.selectedKeys !== newOptions.selectedKeys) {
+            this._listViewModel.select(newOptions.selectedKeys);
+         }
+
+         if (this._options.excludedKeys !== newOptions.excludedKeys) {
+            this._listViewModel.unselect(newOptions.excludedKeys);
          }
 
       },

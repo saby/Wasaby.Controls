@@ -3,13 +3,9 @@ define('Controls/OperationsPanel/MassSelector', [
    'tmpl!Controls/OperationsPanel/MassSelector/MassSelector',
    'WS.Data/Source/Memory',
    'css!Controls/OperationsPanel/MassSelector/MassSelector'
-], function(
-   Control,
-   template,
-   Memory
-) {
+], function(Control, template, Memory) {
    'use strict';
-   var  _defaultItems = [
+   var _defaultItems = [
       {
          id: '1',
          title: 'Всё'
@@ -23,25 +19,27 @@ define('Controls/OperationsPanel/MassSelector', [
          title: 'Инвертировать'
       }
    ];
-   var _private = {
-
-   };
+   var _private = {};
 
    var MassSelector = Control.extend({
       _template: template,
       _multiSelectStatus: null,
       _menuCaption: 'Отметить',
+
       _getHierarchyMenuItems: function() {
          return new Memory({
             idProperty: 'id',
             data: _defaultItems
          });
       },
+
       _onCheckBoxClick: function() {
-         console.log('checkboxChange');
+         this._notify('selectedKeysChanged', [null], { bubling: true }); //test
       },
+
       _onMenuItemActivate: function() {
-         console.log('menuActivated');
+         this._notify('selectedKeysChanged', [null]); //test
+         //this._notify('excludedKeysChanged', [selection.excluded]);
       }
    });
 

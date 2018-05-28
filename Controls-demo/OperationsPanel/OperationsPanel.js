@@ -1,11 +1,31 @@
 define('Controls-demo/OperationsPanel/OperationsPanel', [
    'Core/Control',
    'WS.Data/Source/Memory',
-   'tmpl!Controls-demo/OperationsPanel/OperationsPanel'
+   'tmpl!Controls-demo/OperationsPanel/OperationsPanel',
+   'Controls/List',
+   'Controls/List/MassSelector',
+   'Controls/Container/MassSelector'
 ], function(Control, Memory, template) {
    'use strict';
 
+   var srcData = [
+      {
+         id: 1,
+         title: 'Настолько длинное название папки что оно не влезет в максимальный размер 1',
+         description: 'Другое название 1'
+      },
+      {
+         id: 2,
+         title: 'Notebooks 2',
+         description: 'Описание вот такое'
+      },
+      {
+         id: 3,
+         title: 'Smartphones 3 ',
+         description: 'Хватит страдать'
 
+      }
+   ];
    var ModuleClass = Control.extend(
       {
          _currentClick: 'w8 4 click',
@@ -80,6 +100,10 @@ define('Controls-demo/OperationsPanel/OperationsPanel', [
             this._panelSource =  new Memory({
                idProperty: 'id',
                data: this._defaultItems
+            });
+            this._viewSource = new Memory({
+               idProperty: 'id',
+               data: srcData
             });
          },
 
