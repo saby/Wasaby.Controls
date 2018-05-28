@@ -186,13 +186,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   preset.title = editor.getText();
                   this._saveSelectedPreset().addCallback(function (/*isSuccess*/) {
                      /*if (isSuccess) {*/
-                        this._switchEditor(false);
+                        this._endEditingMode();
                         this._updateSelector();
                      /*}*/
                   }.bind(this));
                }.bind(this));
 
-               this.subscribeTo(editor, 'onCancel', this._switchEditor.bind(this, false));
+               this.subscribeTo(editor, 'onCancel', this._endEditingMode.bind(this));
             }
          },
 
@@ -464,45 +464,54 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * @param {object} [listView] Списочный контрол (опционально)
           */
          _startEditingMode: function (listView) {
-            var options = this._options;
-            var preset = this._findPresetById(options.selectedId);
-            if (preset && preset.isStorable) {
-               if (listView) {
-                  listView.sendCommand('close');
+            if (!this._isEditMode) {
+               var options = this._options;
+               var preset = this._findPresetById(options.selectedId);
+               if (preset && preset.isStorable) {
+                  if (listView) {
+                     listView.sendCommand('close');
+                  }
+                  this._isEditMode = true;
+                  this._switchEditor();
+                  var editor = this._editor;
+                  this.getLinkedContext().setValue('editedTitle', preset.title);
+                  editor._clickHandler();
+                  var titles = []; options._items.each(function (v) { if (v.getId() !== preset.id) { titles.push(v.get('title')); } });
+                  editor.setValidators([{
+                     option: 'text',
+                     validator: function (list, value) {
+                        // TODO: Возможно, лучше получать list непосредственно при вызове, а не заранее ???
+                        if (value) {
+                           var v = value.trim();
+                           return !!v && list.indexOf(v) === -1;
+                        }
+                     }.bind(null, titles),
+                     errorMessage: _TITLE_ERROR
+                  }]);
                }
-               this._switchEditor(true);
-               var editor = this._editor;
-               this.getLinkedContext().setValue('editedTitle', preset.title);
-               editor._clickHandler();
-               var titles = []; options._items.each(function (v) { if (v.getId() !== preset.id) { titles.push(v.get('title')); } });
-               editor.setValidators([{
-                  option: 'text',
-                  validator: function (list, value) {
-                     // TODO: Возможно, лучше получать list непосредственно при вызове, а не заранее ???
-                     if (value) {
-                        var v = value.trim();
-                        return !!v && list.indexOf(v) === -1;
-                     }
-                  }.bind(null, titles),
-                  errorMessage: _TITLE_ERROR
-               }]);
             }
+         },
+
+         /**
+          * Выключить моду редактирования
+          *
+          * @protected
+          */
+         _endEditingMode: function () {
+            this._isEditMode = false;
+            this._switchEditor();
+            this._editor.clearMark();
          },
 
          /**
           * Переключить видимость редактора
           *
           * @protected
-          * @param {boolean} isVisible Редактор будет показывться
           */
-         _switchEditor: function (isVisible) {
-            var isEditing = this._isEditMode = !!isVisible;
+         _switchEditor: function () {
+            var isEditing = this._isEditMode;
             this._selector.setVisible(!isEditing);
-            var editor = this._editor;
-            editor.setVisible(isEditing);
-            if (!isEditing) {
-               editor.clearMark();
-            }
+            this._editor.setVisible(isEditing);
          },
 
          /**
@@ -656,6 +665,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             }
             if (values.fieldIds && !cObjectIsEqual(values.fieldIds, this._fieldIds)) {
                this._fieldIds = values.fieldIds;
+               this._startEditingMode();
             }
             if (values.fileUuid && values.fileUuid !== this._fileUuid) {
                this._fileUuid = values.fileUuid;
