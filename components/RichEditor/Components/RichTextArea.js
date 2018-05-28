@@ -601,6 +601,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           * @see text
           */
          setText: function(text) {
+            text = this._sanitizeClasses(text, true);
             if (text !== this._curValue()) {
                this._drawText(text);
             }
@@ -3294,7 +3295,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             return Sanitize(text,
                {
                   validNodes: {
-                     img: images,
+                     img: images ? {
+                        onload: false,
+                        onerror: false
+                     } : false,
                      table: {
                         border: true,
                         cellspacing: true,
@@ -3380,7 +3384,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
                      }.bind(self)
                   },
-                  checkDataAttribute: false,
+                  checkDataAttribute: true,// У изображений есть атрибут data-img-uuid (а также data-mce-src, data-mce-style)
                   escapeInvalidTags: false
                });
          },
