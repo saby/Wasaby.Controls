@@ -326,5 +326,140 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             });
          });
       });
+      describe('class methods', function() {
+         var
+            gridViewModel = new GridViewModel(cfg),
+            imitateTemplate = function() {};
+         it('setColumnTemplate', function() {
+            assert.equal(null, gridViewModel._columnTemplate, 'Incorrect value "_columnTemplate" before "setColumnTemplate(imitateTemplate)".');
+            gridViewModel.setColumnTemplate(imitateTemplate);
+            assert.equal(imitateTemplate, gridViewModel._columnTemplate, 'Incorrect value "_columnTemplate" after "setColumnTemplate(imitateTemplate)".');
+         });
+         it('getHeader && setHeader', function() {
+            assert.deepEqual(gridHeader, gridViewModel.getHeader(), 'Incorrect value "getHeader()" before "setHeader(null)".');
+            gridViewModel.setHeader(null);
+            assert.equal(null, gridViewModel.getHeader(), 'Incorrect value "getHeader()" after "setHeader(null)".');
+            gridViewModel.setHeader(gridHeader);
+            assert.deepEqual(gridHeader, gridViewModel.getHeader(), 'Incorrect value "getHeader()" after "setHeader(gridHeader)".');
+         });
+         it('_prepareHeaderColumns', function() {
+            assert.deepEqual([{}].concat(gridHeader), gridViewModel._headerColumns, 'Incorrect value "_headerColumns" before "_prepareHeaderColumns([])" without multiselect.');
+            gridViewModel._prepareHeaderColumns([], false);
+            assert.deepEqual([], gridViewModel._headerColumns, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns([])" without multiselect.');
+            gridViewModel._prepareHeaderColumns(gridHeader, false);
+            assert.deepEqual(gridHeader, gridViewModel._headerColumns, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns(gridHeader)" without multiselect.');
+
+            gridViewModel._prepareHeaderColumns([], true);
+            assert.deepEqual([{}], gridViewModel._headerColumns, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns([])" with multiselect.');
+            gridViewModel._prepareHeaderColumns(gridHeader, true);
+            assert.deepEqual([{}].concat(gridHeader), gridViewModel._headerColumns, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns(gridHeader)" with multiselect.');
+         });
+         it('getCurrentHeaderColumn && goToNextHeaderColumn && isEndHeaderColumn && resetHeaderColumns', function() {
+            assert.deepEqual({
+               column: {},
+               cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell-checkbox',
+               index: 0
+            }, gridViewModel.getCurrentHeaderColumn(), 'Incorrect value first call "getCurrentHeaderColumn()".');
+
+            assert.equal(true, gridViewModel.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after first call "getCurrentHeaderColumn()".');
+            gridViewModel.goToNextHeaderColumn();
+
+            assert.deepEqual({
+               column: gridHeader[0],
+               cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingRight controls-Grid__row-cell_rowSpacing_L',
+               index: 1
+            }, gridViewModel.getCurrentHeaderColumn(), 'Incorrect value second call "getCurrentHeaderColumn()".');
+
+            assert.equal(true, gridViewModel.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after second call "getCurrentHeaderColumn()".');
+            gridViewModel.goToNextHeaderColumn();
+
+            assert.deepEqual({
+               column: gridHeader[1],
+               cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight ' +
+                  'controls-Grid__row-cell_rowSpacing_L controls-Grid__row-cell_halign_right',
+               index: 2
+            }, gridViewModel.getCurrentHeaderColumn(), 'Incorrect value third call "getCurrentHeaderColumn()".');
+
+            assert.equal(true, gridViewModel.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after third call "getCurrentHeaderColumn()".');
+            gridViewModel.goToNextHeaderColumn();
+
+            assert.deepEqual({
+               column: gridHeader[2],
+               cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_L ' +
+                  'controls-Grid__row-cell_rowSpacing_L controls-Grid__row-cell_halign_right',
+               index: 3
+            }, gridViewModel.getCurrentHeaderColumn(), 'Incorrect value fourth call "getCurrentHeaderColumn()".');
+
+            assert.equal(true, gridViewModel.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after fourth call "getCurrentHeaderColumn()".');
+
+            gridViewModel.goToNextHeaderColumn();
+            assert.equal(false, gridViewModel.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after last call "getCurrentHeaderColumn()".');
+
+            assert.equal(4, gridViewModel._curHeaderColumnIndex, 'Incorrect value "_curHeaderColumnIndex" before "resetHeaderColumns()".');
+            gridViewModel.resetHeaderColumns();
+            assert.equal(0, gridViewModel._curHeaderColumnIndex, 'Incorrect value "_curHeaderColumnIndex" after "resetHeaderColumns()".');
+         });
+         it('getResults', function() {
+            assert.deepEqual(undefined, gridViewModel.getResults(), 'Incorrect value "getResults()".');
+         });
+         it('_prepareResultsColumns', function() {
+            assert.deepEqual([{}].concat(gridColumns), gridViewModel._resultsColumns, 'Incorrect value "_headerColumns" before "_prepareResultsColumns([])" without multiselect.');
+            gridViewModel._prepareResultsColumns([], false);
+            assert.deepEqual([], gridViewModel._resultsColumns, 'Incorrect value "_resultsColumns" after "_prepareResultsColumns([])" without multiselect.');
+            gridViewModel._prepareResultsColumns(gridColumns, false);
+            assert.deepEqual(gridColumns, gridViewModel._resultsColumns, 'Incorrect value "_resultsColumns" after "_prepareResultsColumns(gridColumns)" without multiselect.');
+
+            gridViewModel._prepareResultsColumns([], true);
+            assert.deepEqual([{}], gridViewModel._resultsColumns, 'Incorrect value "_resultsColumns" after "_prepareResultsColumns([])" with multiselect.');
+            gridViewModel._prepareResultsColumns(gridColumns, true);
+            assert.deepEqual([{}].concat(gridColumns), gridViewModel._resultsColumns, 'Incorrect value "_resultsColumns" after "_prepareResultsColumns(gridColumns)" with multiselect.');
+         });
+         it('getCurrentResultsColumn && goToNextResultsColumn && isEndResultsColumn && resetResultsColumns', function() {
+            assert.deepEqual({
+               column: {},
+               cellClasses: 'controls-Grid__results-cell controls-Grid__results-cell-checkbox',
+               index: 0
+            }, gridViewModel.getCurrentResultsColumn(), 'Incorrect value first call "getCurrentResultsColumn()".');
+
+            assert.equal(true, gridViewModel.isEndResultsColumn(), 'Incorrect value "isEndResultsColumn()" after first call "getCurrentResultsColumn()".');
+            gridViewModel.goToNextResultsColumn();
+
+            assert.deepEqual({
+               column: gridColumns[0],
+               cellClasses: 'controls-Grid__results-cell controls-Grid__cell_spacingRight controls-Grid__row-cell_rowSpacing_L ' +
+                  'controls-Grid__header-cell_valign_top',
+               index: 1
+            }, gridViewModel.getCurrentResultsColumn(), 'Incorrect value second call "getCurrentResultsColumn()".');
+
+            assert.equal(true, gridViewModel.isEndResultsColumn(), 'Incorrect value "isEndResultsColumn()" after second call "getCurrentResultsColumn()".');
+            gridViewModel.goToNextResultsColumn();
+
+            assert.deepEqual({
+               column: gridColumns[1],
+               cellClasses: 'controls-Grid__results-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight ' +
+                  'controls-Grid__row-cell_rowSpacing_L controls-Grid__row-cell_halign_right controls-Grid__header-cell_valign_bottom',
+               index: 2
+            }, gridViewModel.getCurrentResultsColumn(), 'Incorrect value third call "getCurrentResultsColumn()".');
+
+            assert.equal(true, gridViewModel.isEndResultsColumn(), 'Incorrect value "isEndResultsColumn()" after third call "getCurrentResultsColumn()".');
+            gridViewModel.goToNextResultsColumn();
+
+            assert.deepEqual({
+               column: gridColumns[2],
+               cellClasses: 'controls-Grid__results-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_L ' +
+                  'controls-Grid__row-cell_rowSpacing_L controls-Grid__row-cell_halign_right controls-Grid__header-cell_valign_middle',
+               index: 3
+            }, gridViewModel.getCurrentResultsColumn(), 'Incorrect value fourth call "getCurrentResultsColumn()".');
+
+            assert.equal(true, gridViewModel.isEndResultsColumn(), 'Incorrect value "isEndResultsColumn()" after fourth call "getCurrentResultsColumn()".');
+
+            gridViewModel.goToNextResultsColumn();
+            assert.equal(false, gridViewModel.isEndResultsColumn(), 'Incorrect value "isEndResultsColumn()" after last call "getCurrentResultsColumn()".');
+
+            assert.equal(4, gridViewModel._curResultsColumnIndex, 'Incorrect value "_curResultsColumnIndex" before "resetResultsColumns()".');
+            gridViewModel.resetResultsColumns();
+            assert.equal(0, gridViewModel._curResultsColumnIndex, 'Incorrect value "_curResultsColumnIndex" after "resetResultsColumns()".');
+         });
+      });
    });
 });
