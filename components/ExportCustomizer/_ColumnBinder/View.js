@@ -203,6 +203,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
                   groupTitles: options.fieldGroupTitles,
                   preserveOrder: true,
                   multiselect: !singleMode,
+                  autoApply: !!singleMode,
                   moveColumns: false,
                   ignoreFixed: true// TODO: Добавить в редактор колонок опцию ignoreFixed
                }
