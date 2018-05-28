@@ -4,8 +4,7 @@ define('Controls/Popup/Opener/InfoBox',
       'Core/core-clone',
       'tmpl!Controls/Popup/Opener/InfoBox/resources/template',
       'Controls/Popup/Opener/BaseOpener',
-      'Controls/Popup/Opener/InfoBox/InfoBoxController',
-      'css!Controls/Popup/Opener/InfoBox/InfoBox'
+      'Controls/Popup/Opener/InfoBox/InfoBoxController'
    ],
    function(cMerge, cClone, template, Base, Strategy) {
       'use strict';

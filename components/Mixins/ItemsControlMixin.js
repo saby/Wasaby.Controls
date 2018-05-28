@@ -82,7 +82,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
 
    getGroupId = function(item, cfg) {
       return cfg.groupBy.method ? cfg.groupBy.method.apply(this, arguments) : item.get(cfg.groupBy.field);
-   };
+   },
 
    applyGroupingToProjection = function(projection, cfg) {
       if (!isEmpty(cfg.groupBy) && cfg.easyGroup) {

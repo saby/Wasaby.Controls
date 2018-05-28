@@ -75,7 +75,7 @@
             />
          </ws:if>
          <SBIS3.CONTROLS:ListView
-            class="controls-Browser-ColumnsEditor-Editing-Area__SelectableList{{moveColumns ? ' controls-Browser-ColumnsEditor-Editing-Area__SelectableList_movable' : ''}}"
+            class="controls-Browser-ColumnsEditor-Editing-Area__SelectableList{{moveColumns ? ' controls-Browser-ColumnsEditor-Editing-Area__SelectableList_movable' : ''}}{{!_optsSelectable.multiselect ? ' controls-ListView__hideCheckBoxes controls-ListView__orangeMarker' : ''}}"
             name="controls-Browser-ColumnsEditor-Editing-Area__SelectableList"
             items="{{ _optsSelectable.items }}"
             easyGroup="{{ true }}"

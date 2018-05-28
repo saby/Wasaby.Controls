@@ -60,6 +60,10 @@ define('Controls/Calendar/MonthSlider', [
 
 
       _beforeMount: function(options) {
+         // TODO: Тема для аккордеона. Временное решение, переделать когда будет понятно, как мы будем делать разные темы в рамках одной страницы.
+         if (options.theme === 'accordion') {
+            this._themeCssClass = 'controls-MonthSlider__accordionTheme';
+         }
          this._days = calendarUtils.getWeekdaysCaptions();
          _private._setMonth(this, options.month, true);
       },
@@ -97,6 +101,8 @@ define('Controls/Calendar/MonthSlider', [
    Component.getOptionTypes = function() {
       return coreMerge({}, IMonth.getOptionTypes());
    };
+
+   Component._private = _private;
 
    return Component;
 });

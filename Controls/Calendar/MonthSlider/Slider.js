@@ -129,8 +129,11 @@ define('Controls/Calendar/MonthSlider/Slider', [
          if (this._animationState === 1) {
             // Хак. Эта функция вызывается синхронно после того как vdom применил классы установленные в _prepareAnimation.
             // Необходимо что бы браузер пересчитал верстку, что бы контейнеры переместились в нужные позиции.
-            this._children.container0.offsetWidth;
-            this._children.container1.offsetWidth;
+            // В тестах нет dom и соответсвенно ссылок на контейнеры
+            if (this._children.container0 && this._children.container1) {
+               this._children.container0.offsetWidth;
+               this._children.container1.offsetWidth;
+            }
 
             _private._animate(this);
 
