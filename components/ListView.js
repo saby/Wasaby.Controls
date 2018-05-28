@@ -4338,7 +4338,7 @@ define('SBIS3.CONTROLS/ListView',
                   this._getScrollWatcher().scrollTo('bottom');
                }
                this._lastPageLoaded = true;
-               /* Грузим последнюю страницу = > страниц точно болье 2ух. */
+               /* Грузим последнюю страницу = > страниц точно больше 2ух. */
                this._scrollBinder.moreThanTwo(true);
             }.bind(this);
             if (noLoad){
