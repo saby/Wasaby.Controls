@@ -1,5 +1,6 @@
 define('SBIS3.CONTROLS/InformationPopup',
    [
+      'require',
       'Lib/Control/CompoundControl/CompoundControl',
       'SBIS3.CONTROLS/Mixins/PopupMixin',
       'Lib/Mixins/LikeWindowMixin',
@@ -21,7 +22,7 @@ define('SBIS3.CONTROLS/InformationPopup',
     * @public
     * @author Степин П.В.
     */
-   function(CompoundControl, PopupMixin, LikeWindowMixin, dotTpl){
+   function(require, CompoundControl, PopupMixin, LikeWindowMixin, dotTpl){
       'use strict';
       var InformationPopup = CompoundControl.extend([PopupMixin, LikeWindowMixin], /** @lends SBIS3.CONTROLS/InformationPopup.prototype */ {
          /**
@@ -48,6 +49,8 @@ define('SBIS3.CONTROLS/InformationPopup',
          },
 
          init : function() {
+            var windowManager = require('Core/WindowManager');
+            this._options.opener = windowManager && windowManager.getActiveWindow();
             InformationPopup.superclass.init.call(this);
          },
 
