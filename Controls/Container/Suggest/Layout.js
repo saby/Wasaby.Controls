@@ -95,7 +95,6 @@ define('Controls/Container/Suggest/Layout',
        * @mixes Controls/Input/interface/ISuggest
        * @mixes Controls/interface/INavigation
        * @control
-       * @category Input
        */
       var SuggestLayout = Control.extend({
          

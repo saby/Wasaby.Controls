@@ -9,7 +9,15 @@ define('Controls/Container/Suggest/Layout/_SuggestListWrapper',
    function(Control, template, _SuggestOptionsField) {
       
       'use strict';
-      
+   
+      /**
+       * Proxy container for suggest options.
+       *
+       * @class Controls/Container/Suggest/Layout/_SuggestListWrapper
+       * @extends Core/Control
+       * @control
+       */
+   
       return Control.extend({
          
          _template: template,
