@@ -46,9 +46,9 @@ define('SBIS3.CONTROLS/InformationPopup',
             }
          },
          $constructor : function(){
-            if (!this._options.opener && require.defined('Core/WindowManager')) {
+            if (!this._opener && require.defined('Core/WindowManager')) {
                var windowManager = require('Core/WindowManager');
-               this._options.opener = windowManager.getActiveWindow();
+               this._opener = windowManager.getActiveWindow();
             }
          },
 
