@@ -182,6 +182,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                this.subscribeTo(editor, 'onApply', function (evtName) {
                   var preset = this._findPresetById(this._options.selectedId);
                   preset.title = editor.getText();
+                  delete preset.isUnreal;
                   this._saveSelectedPreset().addCallback(function (/*isSuccess*/) {
                      /*if (isSuccess) {*/
                         this._endEditingMode();
@@ -209,7 +210,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             }
             var customs = this._customs;
             if (customs && customs.length) {
-               list.push.apply(list, customs);
+               for (var i = 0; i < customs.length; i++) {
+                  var preset = [i];
+                  if (!preset.isUnreal) {
+                     list.push(preset);
+                  }
+               }
             }
             return !list.length ? null : new RecordSet({
                rawData: list,
@@ -451,7 +457,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                title: ItemNamer.make(pattern ? pattern.title : options.newPresetTitle, [{list:options.statics, property:'title'}, {list:this._customs, property:'title'}]),
                fieldIds: pattern ? pattern.fieldIds.slice() : [],
                fileUuid: null,
-               isStorable: true
+               isStorable: true,
+               isUnreal: true
             };
          },
 
