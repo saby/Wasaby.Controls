@@ -160,7 +160,7 @@ define('Controls/Application/HeadDataContext', [
          for (var key in allDeps) {
             if (key.indexOf('css!') === 0) {
                files.css.push(fixLink(key, 'css'));
-            } else if (key.indexOf('tmpl!') !== 0) {
+            } else if (key.indexOf('!') === -1) {
                files.js.push(fixLink(key, 'js'));
             }
          }
