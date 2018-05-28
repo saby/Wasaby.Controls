@@ -69,7 +69,7 @@ define('Controls/Popup/Previewer',
             this._close(event);
          },
 
-         _miniCardMousedownHandler: function(event) {
+         _previewerMousedownHandler: function(event) {
             event.stopPropagation();
          },
 
