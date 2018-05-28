@@ -4,8 +4,9 @@
 define('SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil',[
    'Core/constants',
    'Core/markup/ParserUtilities',
-   'WS.Data/Source/SbisService'
-], function (constants, Parser, SbisService) {
+   'WS.Data/Source/SbisService',
+   'Core/Deferred'
+], function (constants, Parser, SbisService, Deferred) {
    'use strict';
    /**
     * Утилиты для работы с контентом полученным из Богатого текстового редактора
@@ -184,15 +185,18 @@ define('SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil',[
       },
 
 
-      replaceAnchorsToSvg: function(content) {
-         var i = 0,
-            anchors = [];
+      replaceAnchorsToSvg: function(text) {
+         var content = Parser.parse(text),
+            i = 0,
+            anchors = [],
+            deferred = new Deferred();
          if (content.childNodes) {
             while(i < content.childNodes.length) {
-               var className = getAttribute(content.childNodes[i], 'class');
-               if (className === 'LinkDecorator__outerplaceholder') {
-                  anchors.join(getAttribute(content.childNodes[i], 'href'))
+               var closeTag = content.childNodes[i].closeTag;
+               if (closeTag === '<\/a>') {
+                  anchors.push(content.childNodes[i].attributes.href.value)
                }
+               i++;
             }
          }
          if (anchors) {
@@ -203,50 +207,21 @@ define('SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil',[
                      contract: 'LinkDecorator'
                   }
                });
-               source.call('DecorateAsSvgText', {
+               source.call('DecorateAsSvgExt', {
                   LinksArray: anchors
                }).addCallback( function(SVGRecordSet) {
-                  console.log(SVGRecordSet.getRawData());
-
-                  var data = new Record({
-                     rawData: SVGRecordSet.getRawData(),
-                  })
-
+                  var data = SVGRecordSet.getRawData()
                   //Используем atob для декодирования base64
-                  for (i; i < data.d.length; i++) {
-                     replace(/<a[a-zA-Z="_:.\/0-9\s]*>[a-zA-Z="_:.\/0-9\s]*<\/a>/, atob(data.d[i][1]));
+                  for (i=0; i < data.d.length; i++) {
+                     text = text.replace(/<a[a-zA-z=":\/\-.0-9\s]*>[a-zA-z=":\/\-.0-9\s]*<\/a>/, atob(data.d[i][1]));
                   }
-
-                  //replace/метод с внутренностями похожими на unDecorateLinks
-
-                  //smart replace ???
-
-
+                  console.log(text);
                });
             });
          } else {
-            //return new Deferred().callback(content);
+            return new Deferred().callback(text);
          }
-
-         //return deferred;
-
-         /*
-            find anchors in text
-
-            if (anchors) {
-               new sbisService({params}).call().addCallback(function(SVGRecordset)) {
-
-               try  replace with regexp
-
-               see  unDecorateLinks method
-
-               smart replace;
-
-            }
-          else {
-            return new deferred().callback(text);
-
-         return deferred;*/
+         return deferred;
       }
    };
 
