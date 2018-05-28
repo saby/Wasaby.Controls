@@ -9,12 +9,12 @@ define('Controls/Calendar/MonthList/CalendarSource', [
     * Источник данных который возвращает данные для построения календарей в списочных контролах.
     * Каждый элемент это год содержащий массив месяцев.
     *
-    * @class Controls/Calendar/DateRangePicker/CalendarSource
+    * @class Controls/Calendar/MonthList/CalendarSource
     * @extends WS.Data/Source/Base
     * @author Миронов А.Ю.
     */
    var CalendarSource = Base.extend({
-      _moduleName: 'SBIS3.CONTROLS.DateRangeBigChoose.CalendarSource',
+      _moduleName: 'Controls.Calendar.MonthList.CalendarSource',
       $protected: {
          _dataSetItemsProperty: 'items',
          _dataSetTotalProperty: 'total'
@@ -36,7 +36,7 @@ define('Controls/Calendar/MonthList/CalendarSource', [
                   months = [];
 
                   // weeksArray = [];
-                  for (var j = 0; j < 5; j++) {
+                  for (var j = 0; j < 12; j++) {
                      months.push(new Date(offset + i, j, 1));
 
                      // weeksArray.push(CalendarUtils.getWeeksArray(new Date(offset + i, j, 1)));
