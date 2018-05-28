@@ -3,10 +3,9 @@ define('Controls/List/EditInPlace', [
    'tmpl!Controls/List/EditInPlace/EditInPlace',
    'Core/Deferred',
    'WS.Data/Entity/Record',
-   'WS.Data/Display/CollectionItem',
    'Controls/List/resources/utils/ItemsUtil',
    'css!Controls/List/EditInPlace/Text'
-], function(Control, template, Deferred, Record, CollectionItem, ItemsUtil) {
+], function(Control, template, Deferred, Record, ItemsUtil) {
 
    var
       ItemEditResult = { // Возможные результаты события "onItemEdit"
@@ -355,20 +354,17 @@ define('Controls/List/EditInPlace', [
          }
          var index = _private.getEditingItemIndex(this, item, listModel);
          this._isAdd = index === listModel.getCount();
-         this._editingItemProjection = this._isAdd
-            ? new CollectionItem({ contents: this._editingItem })
+         var editingItemProjection = this._isAdd
+            ? listModel._prepareDisplayItemForAdd(item)
             : listModel.getItemById(ItemsUtil.getPropertyValue(this._editingItem, listModel._options.keyProperty), listModel._options.keyProperty);
-         this._editingItemData = {
-            getPropValue: ItemsUtil.getPropertyValue,
-            keyProperty: listModel._options.keyProperty,
-            displayProperty: listModel._options.displayProperty,
-            index: this._isAdd ? listModel.getCount() : index,
-            item: this._editingItem,
-            dispItem: this._editingItemProjection,
-            isEditing: true,
-            isSelected: !listModel._markedItem,
-            key: ItemsUtil.getPropertyValue(this._editingItemProjection.getContents(), listModel._options.keyProperty)
-         };
+
+         listModel.reset(); //reset делается для того, чтобы при добавлении не лезть за пределы проекции
+         this._editingItemData = listModel.getCurrent();
+         this._editingItemData.item = this._editingItem;
+         this._editingItemData.dispItem = editingItemProjection;
+         this._editingItemData.isEditing = true;
+         this._editingItemData.index = this._isAdd ? listModel.getCount() : index;
+
          listModel._setEditingItemData(this._editingItemData);
       },
 

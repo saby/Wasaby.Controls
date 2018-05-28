@@ -175,6 +175,10 @@ define('Controls/List/ItemsViewModel',
             this._items.setEventRaising(true, true);
          },
 
+         _prepareDisplayItemForAdd: function(item) {
+            return ItemsUtil.getDefaultDisplayItem(this._display, item);
+         },
+
          destroy: function() {
             ItemsViewModel.superclass.destroy.apply(this, arguments);
             this._display = null;

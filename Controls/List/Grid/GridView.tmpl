@@ -9,7 +9,11 @@
       <ws:if data="{{_listModel.getResults() && _listModel.getResults().position === 'top'}}">
          <ws:partial template="tmpl!Controls/List/Grid/Results" userTemplate="{{_listModel.getResults().template}}" listModel="{{_listModel}}"/>
       </ws:if>
-      <ws:partial template="tmpl!Controls/List/resources/For" listModel="{{_listModel}}" itemTemplate="{{_itemTemplate}}"/>
+      <ws:partial template="tmpl!Controls/List/resources/For"
+                  listModel="{{_listModel}}"
+                  itemTemplate="{{_itemTemplate}}"
+                  editingItemData="{{_options.editingItemData}}"
+                  isAdd="{{_options.isAdd}}"/>
       <ws:if data="{{_listModel.getResults() && _listModel.getResults().position === 'bottom'}}">
          <ws:partial template="tmpl!Controls/List/Grid/Results" userTemplate="{{_listModel.getResults().template}}" listModel="{{_listModel}}"/>
       </ws:if>

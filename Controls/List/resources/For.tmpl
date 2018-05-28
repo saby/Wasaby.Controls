@@ -11,3 +11,14 @@
               contentTemplate="{{itemContentTemplate}}"
               itemData="{{listModel.getCurrent()}}"/>
 </ws:for>
+<ws:if data="{{editingItemData && isAdd}}">
+      <ws:partial
+              on:click="_onItemClick(editingItemData.dispItem)"
+              itemTemplate="{{itemTemplate}}"
+              template="tmpl!Controls/List/ItemTemplateWrapper"
+              itemActionsTemplate="{{itemActionsTemplate}}"
+              swipeTemplate="{{swipeTemplate}}"
+              multiSelectTpl="{multiSelectTpl}}"
+              contentTemplate="{{itemContentTemplate}}"
+              itemData="{{editingItemData}}"/>
+</ws:if>
