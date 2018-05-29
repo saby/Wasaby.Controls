@@ -31,7 +31,7 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
             },
             {
                id: "3",
-               title: 'Особенный',
+               title: 'Значение3',
                templateTwo: 'tmpl!Controls-demo/RadioGroup/resources/SingleItemTemplate',
                caption: 'caption3'
             },
@@ -42,7 +42,7 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
             },
             {
                id: "5",
-               title: 'Не такой как все',
+               title: 'Значение5',
                caption: 'caption5'
             },
             {
