@@ -1,0 +1,26 @@
+<ws:template name="genreKey">
+   <Controls.Button style="linkMain" caption="genreKey"/>
+</ws:template>
+
+<ws:template name="FIO">
+<Controls.Button style="linkMain" caption="FIO"/>
+</ws:template>
+
+<ws:template name="country">
+<Controls.Filter.Button.Panel.FilterSelect
+        keyProperty="key">
+   <ws:items>
+      <ws:Array>
+         <ws:Object key="{{2}}" value="Россия"/>
+         <ws:Object key="{{3}}" value="США"/>
+         <ws:Object key="{{4}}" value="UK"/>
+      </ws:Array>
+   </ws:items>
+</Controls.Filter.Button.Panel.FilterSelect>
+</ws:template>
+
+<ws:template name="genreTip">
+<Controls.Button style="linkMain" caption="Test1"/>
+</ws:template>
+
+<ws:partial template="{{item.id}}" item="{{item}}"/>

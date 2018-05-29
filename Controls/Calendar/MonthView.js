@@ -60,24 +60,27 @@ define('Controls/Calendar/MonthView', [
       _showWeekdays: null,
       _monthViewModel: null,
 
+      _themeCssClass: '',
+
       _updateView: function(options) {
-         var days = constants.Date.days;
 
          // локализация может поменяться в рантайме, берем актуальный перевод месяцев при каждой инициализации компонента
          // В массиве дни недели находятся в таком же порядке как возвращаемые значения метода Date.prototype.getDay()
          // Перемещаем воскресение из начала массива в конец
-         this._days = days.slice(1);
-         this._days.push(days[0]);
+         this._days = calendarUtils.getWeekdaysCaptions();
          
          this._month = options.month || new Date();
          this._month = DateUtil.normalizeMonth(this._month);
          this._showWeekdays = options.showWeekdays;
-
-
       },
 
       _beforeMount: function(options) {
          this._dayTmpl = options.dayTemplate || dayTmpl;
+
+         // TODO: Тема для аккордеона. Временное решение, переделать когда будет понятно, как мы будем делать разные темы в рамках одной страницы.
+         if (options.theme === 'accordion') {
+            this._themeCssClass = 'controls-MonthView__accordionTheme';
+         }
 
          this._updateView(options);
          this._monthViewModel = options.monthViewModel ? new options.monthViewModel(options) :  new MonthViewModel(options);

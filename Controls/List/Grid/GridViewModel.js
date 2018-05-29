@@ -1,8 +1,7 @@
 define('Controls/List/Grid/GridViewModel', [
-   'Core/Abstract',
-   'Controls/List/ListViewModel',
-   'WS.Data/Entity/VersionableMixin'
-], function(Abstract, ListViewModel, VersionableMixin) {
+   'Controls/List/BaseViewModel',
+   'Controls/List/ListViewModel'
+], function(BaseViewModel, ListViewModel) {
 
    'use strict';
 
@@ -102,7 +101,7 @@ define('Controls/List/Grid/GridViewModel', [
          }
       },
 
-      GridViewModel = Abstract.extend([VersionableMixin], {
+      GridViewModel = BaseViewModel.extend({
          _model: null,
          _columnTemplate: null,
 
@@ -505,10 +504,6 @@ define('Controls/List/Grid/GridViewModel', [
 
          getCount: function() {
             return this._model.getCount();
-         },
-
-         setItemActions: function(item, actions) {
-            this._model.setItemActions(item, actions);
          },
 
          destroy: function() {
