@@ -354,7 +354,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                // Для того, чтобы отловить реальное состояние задизабленности нужно дожидаться события onInit.
                this.once('onInit', function() {
                   //вешать обработчик copy/paste надо в любом случае, тк редактор может менять состояние Enabled
-                  RichUtil.markRichContentOnCopy(this._dataReview);
+                  RichUtil.markRichContentOnCopy(this._dataReview.get(0));
                   if (!this.isEnabled()) {
                      if (!this._readyControlDeffered.isReady()) {
                         this._readyControlDeffered.callback();
@@ -665,8 +665,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             destroy: function() {
                cConstants.$win.unbind('beforeunload', this._saveBeforeWindowClose);
                this.saveToHistory(this.getText());
-               RichUtil.unmarkRichContentOnCopy(this._dataReview);
-               RichUtil.unmarkRichContentOnCopy(this._inputControl);
+               RichUtil.unmarkRichContentOnCopy(this._dataReview.get(0));
+               RichUtil.unmarkRichContentOnCopy(this._inputControl.get(0));
                //Проблема утечки памяти через tinyMCE
                //Проверка на то созадвался ли tinyEditor
                if (this._tinyEditor && this._tinyReady.isReady()) {
@@ -1904,7 +1904,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      editor.shortcuts.remove('access+' + i);
                   }
                   this._inputControl = $(editor.getBody());
-                  RichUtil.markRichContentOnCopy(this._inputControl);
+                  RichUtil.markRichContentOnCopy(this._inputControl.get(0));
                   self._tinyReady.callback();
                   /*НОТИФИКАЦИЯ О ТОМ ЧТО В РЕДАКТОРЕ ПОМЕНЯЛСЯ ФОРМАТ ПОД КУРСОРОМ*/
                   //formatter есть только после инита поэтому подписка осуществляется здесь
