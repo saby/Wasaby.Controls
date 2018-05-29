@@ -36,9 +36,9 @@ define('Controls/Filter/Button/Panel', [
          }
       },
 
-      getFilter: function(self) {
+      getFilter: function(self, items) {
          var filter = {};
-         Chain(self._items).each(function(item) {
+         Chain(items || self._items).each(function(item) {
             if (getPropValue(item, 'value') !== getPropValue(item, 'resetValue') && getPropValue(item, 'visibility')) {
                filter[item.id] = getPropValue(item, 'value');
             }
@@ -91,8 +91,17 @@ define('Controls/Filter/Button/Panel', [
          this._items = _private.cloneItems(this._items);
       },
 
-      _applyFilter: function() {
-         this._notify('sendResult', [_private.getFilter(this)]);
+      _applyHistoryFilter: function(event, items) {
+         var filter = _private.getFilter(this, items);
+         filter['$_history' ] = true;
+         this._applyFilter(event, items);
+      },
+
+      _applyFilter: function(event, items) {
+         this._notify('sendResult', [{
+            filter: _private.getFilter(this),
+            items: items || this._items
+         }]);
       },
 
       _resetFilter: function() {
