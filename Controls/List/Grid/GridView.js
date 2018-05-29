@@ -78,7 +78,7 @@ define('Controls/List/Grid/GridView', [
          _afterMount: function() {
             GridView.superclass._afterMount.apply(this, arguments);
             if (!cDetection.isNotFullGridSupport) {
-               this._private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResults(), this._listModel.getHeader(), this._container);
+               _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResults(), this._listModel.getHeader(), this._container);
             }
          }
       });
