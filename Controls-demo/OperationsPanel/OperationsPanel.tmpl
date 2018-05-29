@@ -1,4 +1,4 @@
-<Controls.Container.MassSelector  selectedKeys="{{[1, 3]}}">
+<Controls.Container.MassSelector selectedKeys="{{[1, 3]}}">
    <div class="controls-OperationsPanel_demo">
       <div>
          <h2>Панель операций</h2>
@@ -19,24 +19,36 @@
             testOnlyForAutoUpdate="{{_width}}"
             testOnlyForAutoUpdate2="{{_px}}"
             source="{{_panelSource}}"
-            on:itemClick="_itemClick()"/>
+            on:itemClick="_itemClick()"
+         />
          <div name="toolbarAnswer">{{ _currentClick }}</div>
       </ws:if>
 
-
       <div class="123">
          <h2>Связанный список</h2>
-         <Controls.List
-            source="{{_viewSource}}"
-            markedKey="{{2}}"
-            allowEmptySelection="{{false}}"
-            multiSelectVisibility="visible"
-            name="listView"
-            keyProperty="id"
-         />
-         <Controls.List.MassSelector
-            ws:content="listView"
-         />
+         <Controls.Container.Scroll attr:class="cDemo-ScrollContainer">
+            <Controls.List.MassSelector>
+               <Controls.List
+                  source="{{_viewSource}}"
+                  markedKey="{{3}}"
+                  displayProperty="title"
+                  allowEmptySelection="{{false}}"
+                  multiSelect="{{true}}"
+                  multiSelectVisibility="visible"
+                  name="listView"
+                  keyProperty="id"
+               >
+                  <ws:navigation source="page" view="infinity">
+                     <ws:sourceConfig
+                        pageSize="{{9}}"
+                        page="{{0}}"
+                        mode="totalCount"
+                     />
+                     <ws:viewConfig pagingMode="direct" />
+                  </ws:navigation>
+               </Controls.List>
+            </Controls.List.MassSelector>
+         </Controls.Container.Scroll>
       </div>
 
       <div>
@@ -44,8 +56,8 @@
          ширина:
          <Controls.Input.Text attr:id="widthInput" bind:value="_width" />
          <Controls.Toggle.DoubleSwitch
-                 bind:value="_px"
-                 captions="{{['px', '%']}}"
+            bind:value="_px"
+            captions="{{['px', '%']}}"
          />
       </div>
    </div>

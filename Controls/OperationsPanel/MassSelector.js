@@ -23,27 +23,40 @@ define('Controls/OperationsPanel/MassSelector', [
 
    var MassSelector = Control.extend({
       _template: template,
-      _multiSelectStatus: null,
+      _multiSelectStatus: false,
       _menuCaption: 'Отметить',
 
       _beforeMount: function(newOptions, context) {
-         var selection = context.selection;
-         this._updateMltiSelectStatus(selection);
+         this._updateSelection(context.selection);
       },
 
       _beforeUpdate: function(newOptions, context) {
-         var selection = context.selection;
-         this._updateMltiSelectStatus(selection);
+         this._updateSelection(context.selection);
       },
-      _updateMltiSelectStatus: function(selection) {
+
+      _updateSelection: function(selection) {
+         this._updateMltiSelectStatus(selection.count);
+         this._updateMltiSelectCaption(selection.count);
+      },
+
+      _updateMltiSelectStatus: function(count) {
          this._multiSelectStatus =
-            selection.selectedKeys && !!selection.selectedKeys.length // есть выделенные ключи
-               ? selection.selectedKeys[0] === null //выделено всё
-                  ? selection.excludedKeys && !!selection.excludedKeys.length //выделено всё и есть невыделенные
-                     ? null
-                     : true
-                  : null
-               : false;
+            count === 'all'
+               ? true
+               : count === 'part' || count !== 0
+                  ? null
+                  : false;
+      },
+
+      _updateMltiSelectCaption: function(count) {
+         this._menuCaption =
+            this._multiSelectStatus === true
+               ? 'Отмечено всё'
+               : count !== 'part'
+                  ? count === 0
+                     ? 'Отметить'
+                     : 'Отмечено (' + count + ')'
+                  : 'Отмечено';
       },
 
       _getHierarchyMenuItems: function() {

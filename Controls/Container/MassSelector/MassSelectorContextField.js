@@ -2,11 +2,13 @@ define('Controls/Container/MassSelector/MassSelectorContextField', [
    'Core/DataContext'
 ], function(DataContext) {
    return DataContext.extend({
-      excludedKeys: null,
       selectedKeys: null,
-      constructor: function(selectedKeys, excludedKeys) {
+      itemsReadyCallback: null,
+      count: 0,
+      constructor: function(selectedKeys, itemsReadyCallback, count) {
          this.selectedKeys = selectedKeys;
-         this.excludedKeys = excludedKeys;
+         this.itemsReadyCallback = itemsReadyCallback;
+         this.count = count;
       }
    });
 });
