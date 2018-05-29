@@ -5,17 +5,19 @@
             <ws:if data="{{title}}">{{title}}</ws:if>
             <ws:else>{[РедакторКолонок@@Отображение колонок]}</ws:else>
          </div>
-         <div class="controls-Browser-ColumnsEditor-Editing-Area__head-title-right">
-            <SBIS3.CONTROLS:Button
-               class="controls-Browser-ColumnsEditor-Editing-Area__ApplyColumnsButton"
-               command="applyColumns" primary="true"
-               >
-               <ws:caption>
-                  <ws:if data="{{applyButtonTitle}}">{{applyButtonTitle}}</ws:if>
-                  <ws:else>{[РедакторКолонок@@Применить]}</ws:else>
-               </ws:caption>
-            </SBIS3.CONTROLS:Button>
-         </div>
+         <ws:if data="{{_optsSelectable.multiselect || !autoApply}}">
+            <div class="controls-Browser-ColumnsEditor-Editing-Area__head-title-right">
+               <SBIS3.CONTROLS:Button
+                  class="controls-Browser-ColumnsEditor-Editing-Area__ApplyColumnsButton"
+                  command="applyColumns" primary="true"
+                  >
+                  <ws:caption>
+                     <ws:if data="{{applyButtonTitle}}">{{applyButtonTitle}}</ws:if>
+                     <ws:else>{[РедакторКолонок@@Применить]}</ws:else>
+                  </ws:caption>
+               </SBIS3.CONTROLS:Button>
+            </div>
+         </ws:if>
       </div>
       <ws:if data="{{usePresets && ((staticPresets && staticPresets.length) || presetNamespace)}}">
          <div class="controls-Browser-ColumnsEditor-Editing-Area__head-preset">
@@ -84,10 +86,12 @@
             idProperty="id"
             displayProperty="title"
             itemsSortMethod="{{_optsSelectable.itemsSortMethod}}"
-            selectedKeys="{{_optsSelectable.markedKeys}}"
+            selectedKeys="{{_optsSelectable.multiselect ? _optsSelectable.markedKeys : undefined}}"
+            selectedKey="{{!_optsSelectable.multiselect && _optsSelectable.markedKeys && _optsSelectable.markedKeys.length ? _optsSelectable.markedKeys[0] : undefined}}"
             itemTpl="tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/templates/selectableItem"
             itemContentTpl="tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/templates/selectableItemContent"
             multiselect="{{_optsSelectable.multiselect}}"
+            showSelectedMarker="{{!_optsSelectable.multiselect}}"
             >
             <ws:handlers
                onItemClick="{{_optsSelectable.onItemClick}}"

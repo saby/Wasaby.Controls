@@ -24,7 +24,6 @@ define('Controls/Toolbar', [
     * @control
     * @public
     * @category Toolbar
-    * @namespace Controls
     * @author Крайнов Д.
     */
 

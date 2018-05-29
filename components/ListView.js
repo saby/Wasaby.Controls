@@ -4388,6 +4388,10 @@ define('SBIS3.CONTROLS/ListView',
                   this._getScrollWatcher().scrollTo('bottom');
                }
                this._lastPageLoaded = true;
+               /* Грузим последнюю страницу = > страниц точно больше 2ух. */
+               if (this._scrollBinder) {
+                  this._scrollBinder.moreThanTwo(true);
+               }
             }.bind(this);
             if (noLoad){
                this._offset = -1;
@@ -4765,7 +4769,10 @@ define('SBIS3.CONTROLS/ListView',
             return this._getDragMove().beginDrag();
          },
          _endDragHandler: function () {
-            return this._getDragMove().endDrag();
+            this._getDragMove().endDrag();
+            if (this._itemsToolbar && this._itemsToolbar.isVisible()) {
+               this._itemsToolbar.recalculatePosition();
+            }
          },
          _onDragHandler: function () {
             return this._getDragMove().drag();
