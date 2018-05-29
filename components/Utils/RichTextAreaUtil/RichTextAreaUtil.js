@@ -186,19 +186,36 @@ define('SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil',[
 
 
       replaceAnchorsToSvg: function(text) {
-         var content = Parser.parse(text),
-            i = 0,
+
+         var parsed = Parser.parse(text),
+            deferred = new Deferred(),
             anchors = [],
-            deferred = new Deferred();
-         if (content.childNodes) {
-            while(i < content.childNodes.length) {
-               var closeTag = content.childNodes[i].closeTag;
-               if (closeTag === '<\/a>') {
-                  anchors.push(content.childNodes[i].attributes.href.value)
+
+         findAnchors = function(content) {
+            var i = 0;
+
+            if (content.childNodes) {
+               while(i < content.childNodes.length) {
+                  var className = getAttribute(content.childNodes[i], 'class');
+                  if (className === 'LinkDecorator__outerplaceholder' || className === 'LinkDecorator__innerplaceholder') {
+                     anchors.push(content.childNodes[i].attributes.href.value)
+                  } else {
+                     findAnchors(content.childNodes[i]);
+                  }
+                  i++;
                }
-               i++;
             }
-         }
+         },
+
+         getAttribute = function(node, atrrName){
+            if (node && node.attributes && node.attributes[atrrName]) {
+               return node.attributes[atrrName].value;
+            }
+            return false;
+         };
+
+         findAnchors(parsed);
+
          if (anchors) {
             require(['WS.Data/Source/SbisService'], function(SbisService) {
                var source = new SbisService({
@@ -212,7 +229,7 @@ define('SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil',[
                }).addCallback( function(SVGRecordSet) {
                   var data = SVGRecordSet.getRawData()
                   //Используем atob для декодирования base64
-                  for (i=0; i < data.d.length; i++) {
+                  for (var i=0; i < data.d.length; i++) {
                      text = text.replace(/<a[a-zA-z=":\/\-.0-9\s]*>[a-zA-z=":\/\-.0-9\s]*<\/a>/, atob(data.d[i][1]));
                   }
                   deferred.callback(text);
