@@ -31,26 +31,27 @@ define('Controls/Popup/Opener/BaseOpener',
             var self = this;
             var cfg = this._getConfig(popupOptions);
 
-            if (this.isOpened()) {
-               this._popupId = ManagerController.update(this._popupId, cfg);
-            } else {
-               if (cfg.isCompoundTemplate) { //TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
-                  requirejs(['Controls/Popup/Compatible/Layer'], function(Layer) {
-                     Layer.load().addCallback(function() {
-                        self._openPopup(cfg, strategy);
-                     });
+            if (this._isExecuting) { //Если мы еще не обработали первый вызов, то дожидаемся его
+               return;
+            }
+            this._isExecuting = true;
+            if (cfg.isCompoundTemplate) { //TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
+               requirejs(['Controls/Popup/Compatible/Layer'], function(Layer) {
+                  Layer.load().addCallback(function() {
+                     self._openPopup(cfg, strategy);
                   });
-               } else {
-                  self._openPopup(cfg, strategy);
-               }
+               });
+            } else {
+               self._openPopup(cfg, strategy);
             }
          },
 
          _openPopup: function(cfg, strategy) {
             var self = this;
             this._getTemplate(cfg).addCallback(function(tpl) {
-               Base.showDialog(tpl, cfg, strategy).addCallback(function(popupId) {
+               Base.showDialog(tpl, cfg, strategy, self._popupId).addCallback(function(popupId) {
                   self._popupId = popupId;
+                  self._isExecuting = false;
                });
             });
          },
@@ -84,6 +85,7 @@ define('Controls/Popup/Opener/BaseOpener',
          close: function() {
             if (this._popupId) {
                ManagerController.remove(this._popupId);
+               this._popupId = null;
             }
          },
 
@@ -96,17 +98,24 @@ define('Controls/Popup/Opener/BaseOpener',
             return !!ManagerController.find(this._popupId);
          }
       });
-      Base.showDialog = function(rootTpl, cfg, strategy) {
-         var def = new Deferred(),
-            popupId = null;
+      Base.showDialog = function(rootTpl, cfg, strategy, popupId) {
+         var def = new Deferred();
 
          if (Base.isVDOMTemplate(rootTpl) && !(cfg.templateOptions && cfg.templateOptions._initCompoundArea)) {
-            popupId = ManagerController.show(cfg, strategy);
+            if (popupId) {
+               popupId = ManagerController.update(popupId, cfg);
+            } else {
+               popupId = ManagerController.show(cfg, strategy);
+            }
             def.callback(popupId);
          } else {
             requirejs(['Controls/Popup/Compatible/BaseOpener'], function(CompatibleOpener) {
                CompatibleOpener._prepareConfigForOldTemplate(cfg, rootTpl);
-               popupId = ManagerController.show(cfg, strategy);
+               if (popupId) {
+                  popupId = ManagerController.update(popupId, cfg);
+               } else {
+                  popupId = ManagerController.show(cfg, strategy);
+               }
                def.callback(popupId);
             });
          }
