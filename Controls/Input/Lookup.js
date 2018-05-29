@@ -55,7 +55,7 @@ define('Controls/Input/Lookup', [
          self._notify('valueChanged', [value]);
       },
       
-      getItems: function (self) {
+      getItems: function(self) {
          if (!self._items) {
             self._items = new List();
          }
@@ -110,6 +110,7 @@ define('Controls/Input/Lookup', [
       _selectedKeys: null,
       _simpleViewModel: null,
       _isEmpty: true,
+
       /* needed, because input will be created only after VDOM synchronisation,
          and we can set focus only in afterUpdate */
       _needSetFocusInInput: false,
@@ -126,9 +127,9 @@ define('Controls/Input/Lookup', [
          }
       },
       
-      _beforeUpdate: function (newOptions) {
+      _beforeUpdate: function(newOptions) {
          var keysChanged = false,
-             self = this;
+            self = this;
          
          _private.updateModel(this, newOptions.value);
          
