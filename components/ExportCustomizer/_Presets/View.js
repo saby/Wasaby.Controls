@@ -184,6 +184,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   var preset = this._findPresetById(options.selectedId);
                   preset.title = editor.getText();
                   delete preset.isUnreal;
+                  preset.isStorable = true;
                   this._saveSelectedPreset().addCallback(function (/*isSuccess*/) {
                      /*if (isSuccess) {*/
                         this._endEditingMode();
@@ -196,7 +197,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   var presetInfo = this._findPresetById(options.selectedId, true);
                   if (presetInfo && presetInfo.preset.isUnreal) {
                      this._customs.splice(presetInfo.index, 1);
-                     // TODO: Предыдущий пресет
+                     // TODO: ^^^ @@@ Предыдущий пресет
                   }
                   this._endEditingMode();
                }.bind(this));
@@ -391,7 +392,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             var presetInfo = this._findPresetById(id, true);
             if (presetInfo) {
                var preset = this._createPreset(presetInfo.preset);
-               this._customs.splice(!presetInfo.isStorable ? 0 : presetInfo.index + 1, 0, preset);
+               this._customs.splice(!presetInfo.notStatic ? 0 : presetInfo.index + 1, 0, preset);
                return this._saveCustoms().addCallback(function (/*isSuccess*/) {
                   //if (isSuccess) {
                      this._selectPreset(preset);
@@ -465,7 +466,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                title: ItemNamer.make(pattern ? pattern.title : options.newPresetTitle, [{list:options.statics, property:'title'}, {list:this._customs, property:'title'}]),
                fieldIds: pattern ? pattern.fieldIds.slice() : [],
                fileUuid: null,
-               isStorable: true,
+               isStorable: false,
                isUnreal: true
             };
          },
@@ -480,7 +481,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             if (!this._isEditMode) {
                var options = this._options;
                var preset = this._findPresetById(options.selectedId);
-               if (preset && preset.isStorable) {
+               if (preset && preset.isStorable/*^^^@@@*/) {
                   if (listView) {
                      listView.sendCommand('close');
                   }
@@ -588,7 +589,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             var customs = this._customs;
             index = _findIndexById(customs, id);
             if (index !== -1) {
-               return extendedResult ? {preset:customs[index], index:index, isStorable:true} : customs[index];
+               return extendedResult ? {preset:customs[index], index:index, notStatic:true} : customs[index];
             }
          },
 
@@ -638,7 +639,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * @return {Core/Deferred}
           */
          _saveCustoms: function () {
-            return this._storage.save(this._options.namespace, this._customs);
+            return this._storage.save(this._options.namespace, this._customs.filter(function (v) { return v.isStorable; }));
          },
 
          /**
@@ -649,7 +650,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           */
          _saveSelectedPreset: function () {
             var preset = this._findPresetById(this._options.selectedId);
-            if (preset && preset.isStorable) {
+            if (preset && preset.isStorable/*^^^@@@*/) {
                var fieldIds = this._fieldIds || [];
                var fileUuid = this._fileUuid || null;
                var need;
@@ -675,6 +676,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * return {Core/Deferred}
           */
          save: function () {
+            // TODO: ^^^ @@@ Переработатать
             return this._storage /*&& this._isEditMode*/ ? this._saveSelectedPreset() : Deferred.success(null);
          },
 
