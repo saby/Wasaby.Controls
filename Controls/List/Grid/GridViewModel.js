@@ -328,7 +328,6 @@ define('Controls/List/Grid/GridViewModel', [
 
          setMarkedKey: function(key) {
             this._model.setMarkedKey(key);
-            this._notify('onListChange');
          },
 
          reset: function() {
@@ -472,7 +471,6 @@ define('Controls/List/Grid/GridViewModel', [
 
          updateIndexes: function(startIndex, stopIndex) {
             this._model.updateIndexes(startIndex, stopIndex);
-            this._notify('onListChange');
          },
 
          setItems: function(items) {

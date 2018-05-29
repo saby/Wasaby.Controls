@@ -9,7 +9,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
          },
          {
             'id': '234',
-            'title': 'Сыр',
+            'title': 'Хлеб',
             'price': 150,
             'balance': 3
          },
@@ -204,8 +204,6 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             assert.equal(cfg.displayProperty, current.displayProperty, 'Incorrect value "current.displayProperty".');
             assert.isTrue(current.multiselect, 'Incorrect value "current.multiselect".');
             assert.deepEqual([{}].concat(gridColumns), current.columns, 'Incorrect value "current.columns".');
-            // TODO: Turn on after support itemActions in the grid
-            // assert.equal(itemActions, current.itemActions, 'Incorrect value "current.".');
             assert.isFalse(current.ladderSupport, 'Incorrect value "current.ladderSupport".');
             assert.equal('XL', current.leftPadding, 'Incorrect value "current.leftPadding".');
             assert.equal('L', current.rightPadding, 'Incorrect value "current.rightPadding".');
@@ -346,8 +344,70 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             gridViewModel.setMultiselect(true);
             assert.isTrue(gridViewModel.getMultiselect(), 'Incorrect value "getMultiselect()" after "setMultiselect(true)".');
          });
-         it('getItemById', function() {
-            assert.deepEqual(gridData[0], gridViewModel.getItemById('123', 'id').getContents(), 'Incorrect value "getItemById(123, id)".');
+         it('methods throwing a call into the model', function() {
+            var
+               gridViewModel = new GridViewModel(cfg),
+               expectedCallStackMethods = ['getItemById', 'setMarkedKey', 'reset', 'isEnd', 'goToNext', 'getNext', 'isLast',
+                  'updateIndexes', 'setItems', 'appendItems', 'prependItems', 'getCount', 'destroy'],
+               callStackMethods = [];
+
+            gridViewModel._model = {
+               getItemById: function() {
+                  callStackMethods.push('getItemById');
+               },
+               setMarkedKey: function() {
+                  callStackMethods.push('setMarkedKey');
+               },
+               reset: function() {
+                  callStackMethods.push('reset');
+               },
+               isEnd: function() {
+                  callStackMethods.push('isEnd');
+               },
+               goToNext: function() {
+                  callStackMethods.push('goToNext');
+               },
+               getNext: function() {
+                  callStackMethods.push('getNext');
+               },
+               isLast: function() {
+                  callStackMethods.push('isLast');
+               },
+               updateIndexes: function() {
+                  callStackMethods.push('updateIndexes');
+               },
+               setItems: function() {
+                  callStackMethods.push('setItems');
+               },
+               appendItems: function() {
+                  callStackMethods.push('appendItems');
+               },
+               prependItems: function() {
+                  callStackMethods.push('prependItems');
+               },
+               getCount: function() {
+                  callStackMethods.push('getCount');
+               },
+               destroy: function() {
+                  callStackMethods.push('destroy');
+               }
+            };
+
+            gridViewModel.getItemById();
+            gridViewModel.setMarkedKey();
+            gridViewModel.reset();
+            gridViewModel.isEnd();
+            gridViewModel.goToNext();
+            gridViewModel.getNext();
+            gridViewModel.isLast();
+            gridViewModel.updateIndexes();
+            gridViewModel.setItems();
+            gridViewModel.appendItems();
+            gridViewModel.prependItems();
+            gridViewModel.getCount();
+            gridViewModel.destroy();
+
+            assert.deepEqual(expectedCallStackMethods, callStackMethods, 'Incorrect call stack methods.');
          });
       });
       describe('other methods of the class', function() {
