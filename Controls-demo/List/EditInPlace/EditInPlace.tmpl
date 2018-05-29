@@ -2,6 +2,7 @@
     <div>
         <h3>Simple list</h3>
         <Controls:List
+                class="test_list_1"
                 name="list"
                 source="{{_viewSource}}"
                 on:beforeItemEdit="_onItemEdit()"
@@ -44,6 +45,7 @@
     <div>
         <h3>Adding doesn't work in this list</h3>
         <Controls:List
+                class="test_list_2"
                 name="list2"
                 source="{{_viewSource2}}"
                 on:beforeItemAdd="_cancelItemAdd()"
@@ -73,6 +75,7 @@
     <div>
         <h3>onBeforeItemAdd handler returns Deferred</h3>
         <Controls:List
+                class="test_list_3"
                 name="list3"
                 source="{{_viewSource3}}"
                 on:beforeItemAdd="_deferredItemAdd()"
@@ -101,6 +104,7 @@
     <div>
         <h3>Editing starts before mounting to DOM</h3>
         <Controls:List
+                class="test_list_4"
                 name="list4"
                 source="{{_viewSource4}}"
                 allowEmptySelection="{{false}}"
@@ -128,6 +132,7 @@
     <div>
         <h3>Adding starts before mounting to DOM</h3>
         <Controls:List
+                class="test_list_5"
                 name="list5"
                 source="{{_viewSource5}}"
                 allowEmptySelection="{{false}}"
