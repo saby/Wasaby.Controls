@@ -93,7 +93,6 @@ define('Controls/Filter/Button/Panel', [
 
       _applyFilter: function() {
          this._notify('sendResult', [_private.getFilter(this)]);
-         this._notify('close');
       },
 
       _resetFilter: function() {
@@ -104,10 +103,6 @@ define('Controls/Filter/Button/Panel', [
             setPropValue(item, 'visibility', getPropValue(self._options.items[index], 'visibility'));
          });
          this._isChanged = false;
-      },
-
-      _close: function() {
-         this._notify('close');
       }
    });
 
