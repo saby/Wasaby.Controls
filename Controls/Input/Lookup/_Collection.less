@@ -32,12 +32,18 @@
 	max-width: 100%;
 }
 
-.controls-Lookup__item__caption-size-m {
-	font-size: 15px;
+.controls-Lookup__item__caption-size-default, .controls-Lookup__item__caption-size-m {
+	font-size: @default-text-size;
 }
 
 .controls-Lookup__item__caption-size-l {
-	font-size: 18px;
+	font-size: @large-text-size;
+}
+
+.controls-Lookup__item__caption-size-h {
+	font-size: @huge-text-size;
+	/* line-height тут нужен, из-за того, что 18 шрифт не влезает в поле ввода и ломает базовую линию */
+	line-height: @default-line-height;
 }
 
 .controls-Lookup__item__caption-style-bold,
