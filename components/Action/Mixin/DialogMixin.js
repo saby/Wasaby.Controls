@@ -4,8 +4,9 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
    'Core/Deferred',
    "WS.Data/Utils",
    'SBIS3.CONTROLS/ControlHierarchyManager',
-   'Core/IoC'
-], function( cMerge, Deferred, Utils, ControlHierarchyManager, IoC){
+   'Core/IoC',
+   'View/Runner/requireHelper'
+], function( cMerge, Deferred, Utils, ControlHierarchyManager, IoC, requireHelper){
    'use strict';
 
    /**
@@ -139,9 +140,9 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             this._isExecuting = true;
             requirejs([componentName], function(Component) {
                try {
-                  if (this._isNewEnvironment()) {
-
-                     var deps = ['Controls/Popup/Opener/BaseOpener', 'Controls/Popup/Compatible/Layer'];
+                  var deps = [];
+                  if (isNewEnvironment()) {
+                     deps = ['Controls/Popup/Opener/BaseOpener', 'Controls/Popup/Compatible/Layer'];
                      if (meta.mode === 'floatArea' && config.isStack === true) {
                         deps.push('Controls/Popup/Opener/Stack/StackController');
                         config._type = 'stack';
@@ -156,7 +157,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
 
                      requirejs(deps, function(BaseOpener, CompatibleLayer, Strategy) {
                         CompatibleLayer.load().addCallback(function() {
-                           var CoreTemplate = requirejs(config.template);
+                           var CoreTemplate = requireHelper.defined(config.template) && requirejs(config.template);
                            config._initCompoundArea = function(compoundArea) {
                               self._dialog = compoundArea;
                            };
@@ -164,7 +165,21 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                         });
                      });
                   } else {
-                     this._dialog = new Component(config);
+                     deps = ['Controls/Popup/Opener/BaseOpener', 'Controls/Popup/Compatible/Layer', 'Controls/Popup/Compatible/BaseOpener'];
+                     requirejs(deps, function(BaseOpener, CompatibleLayer, CompatibleOpener) {
+                        CompatibleLayer.load().addCallback(function() {
+                           var CoreTemplate = requireHelper.defined(config.template) && requirejs(config.template);
+
+                           if (CoreTemplate && BaseOpener.isVDOMTemplate(CoreTemplate)) {
+                              CompatibleOpener._prepareConfigForNewTemplate(config, CoreTemplate);
+                           }
+
+                           // todo какая-то асинхронность, без этого не успевает примениться $.fn.wsControl = ..., хотя присваивается раньше
+                           setTimeout(function () {
+                              self._dialog = new Component(config);
+                           }, 0);
+                        });
+                     });
                   }
                }
                catch (error) {
@@ -174,13 +189,6 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
 
          }
       },
-
-
-      //TODO start compatible block for VDOM
-      _isNewEnvironment: function () {
-         return !!document.getElementsByTagName('html')[0].controlNodes;
-      },
-      //TODO end compatible block for VDOM
       
       _documentClickHandler: function (event) {
          //Клик по связному списку приводит к перерисовке записи в панели, а не открытию новой при autoHide = true
@@ -389,6 +397,13 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
          }
       }
    };
+
+
+   //TODO start compatible block for VDOM
+   function isNewEnvironment() {
+      return !!document.getElementsByTagName('html')[0].controlNodes;
+   }
+   //TODO end compatible block for VDOM
 
    return DialogMixin;
 });

@@ -1,11 +1,12 @@
-define('Controls-demo/Popup/PopupPage',
+define('Controls-demo/Popup/PopupPageOld',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Popup/PopupPage',
+      'tmpl!Controls-demo/Popup/PopupPageOld',
+      'SBIS3.CONTROLS/Action/List/OpenEditDialog',
       'Controls-demo/Popup/TestDialog',
-      'css!Controls-demo/Popup/PopupPage'
+      'css!Controls-demo/Popup/PopupPageOld'
    ],
-   function (Control, template) {
+   function (Control, template, OpenEditDialog) {
       'use strict';
 
       var PopupPage = Control.extend({
@@ -14,6 +15,7 @@ define('Controls-demo/Popup/PopupPage',
          constructor: function (cfg) {
             PopupPage.superclass.constructor.call(this, cfg);
          },
+
 
          openDialog: function () {
             this._children.dialog.open({
@@ -27,8 +29,8 @@ define('Controls-demo/Popup/PopupPage',
 
          openSticky: function () {
             this._children.sticky.open({
-               target: this._children.stickyButton._container,
-               opener: this._children.stickyButton,
+               target: this.getChildControlByName('stickyButton')._container,
+               opener: this.getChildControlByName('stickyButton'),
                templateOptions: {
                   type: this._firstClick ? 'sticky' : 'dialog'
                }
@@ -54,7 +56,17 @@ define('Controls-demo/Popup/PopupPage',
                isCompoundTemplate: true
             });
          },
-
+         openFloatArea: function(event, tplName) {
+            require([tplName], function() {
+               new OpenEditDialog().execute({
+                  template: tplName,
+                  mode: 'floatArea',
+                  dialogOptions: {
+                     isStack: true
+                  }
+               });
+            });
+         },
          _onResult: function (result) {
             if( result ){
                alert(result);
