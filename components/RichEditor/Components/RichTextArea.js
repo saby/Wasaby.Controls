@@ -3297,6 +3297,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   validNodes: {
                      img: images ? {
                         'data-img-uuid': true,
+                        'data-mce-src': true,
                         'data-mce-style': true,
                         onload: false,
                         onerror: false
