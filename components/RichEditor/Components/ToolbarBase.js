@@ -4,9 +4,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
    "Core/EventBus",
    "SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBase",
    'Core/helpers/String/escapeHtml',
-   'SBIS3.CONTROLS/StylesPanelNew',
+   "Core/Deferred",
    'css!SBIS3.CONTROLS/RichEditor/Components/ToolbarBase/RichEditorToolbarBase'
-], function(coreClone, cMerge, EventBus, ButtonGroupBase, escapeHtml, StylesPanel) {
+], function(coreClone, cMerge, EventBus, ButtonGroupBase, escapeHtml, Deferred) {
       'use strict';
 
       /**
@@ -283,9 +283,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
          _openStylesPanel: function(button){
             var editor = this.getLinkedEditor();
             var formats = editor ? editor.getCurrentFormats() : {};
-            var stylesPanel = this.getStylesPanel(button, formats);
-            stylesPanel.setStylesFromObject(formats);
-            stylesPanel.show();
+            this.getStylesPanel(button, formats).addCallback(function(stylesPanel) {
+               stylesPanel.setStylesFromObject(formats);
+               stylesPanel.show();
+            });
          },
 
          _toggleState: function(state, obj) {
@@ -306,7 +307,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
          },
 
          getStylesPanel: function (button, formats) {
-            var stylesPanel = this._stylesPanel;
+            var stylesPanel = this._stylesPanel,
+               returnDef = new Deferred();
             var fontSizes;
             var fontSize = formats ? formats.fontsize : null;
             if (fontSize && (stylesPanel ? stylesPanel.getProperty('fontSizes') : constants.FONT_SIZES).indexOf(fontSize) === -1) {
@@ -338,14 +340,19 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
                   presets:cMerge({}, constants.STYLE_PRESETS),
                   activableByClick: false
                };
-               var componentOptions; try { componentOptions = button.getProperty('componentOptions'); } catch (ex) {};
-               this._stylesPanel = new StylesPanel(componentOptions && typeof componentOptions === 'object' ? cMerge(options, componentOptions) : options);
+               var self = this, componentOptions; try { componentOptions = button.getProperty('componentOptions'); } catch (ex) {};
+               requirejs(["SBIS3.CONTROLS/StylesPanelNew"], function(StylesPanel) {
+                  self._stylesPanel = new StylesPanel(componentOptions && typeof componentOptions === 'object' ? cMerge(options, componentOptions) : options);
 
-               this.subscribeTo(this._stylesPanel, 'changeFormat', function () {
-                  this.getLinkedEditor().applyFormats(this._stylesPanel.getStylesObject());
-               }.bind(this));
+                  self.subscribeTo(self._stylesPanel, 'changeFormat', function() {
+                     this.getLinkedEditor().applyFormats(this._stylesPanel.getStylesObject());
+                  }.bind(self));
+                  returnDef.callback(self._stylesPanel);
+               });
+            } else {
+               returnDef.callback(this._stylesPanel);
             }
-            return this._stylesPanel;
+            return returnDef;
          },
 
          _execCommand: function(name) {

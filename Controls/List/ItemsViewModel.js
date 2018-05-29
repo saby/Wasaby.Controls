@@ -2,8 +2,8 @@
  * Created by kraynovdo on 16.11.2017.
  */
 define('Controls/List/ItemsViewModel',
-   ['Core/Abstract', 'Controls/List/resources/utils/ItemsUtil', 'Core/core-instance', 'WS.Data/Entity/VersionableMixin', 'WS.Data/Source/ISource'],
-   function(Abstract, ItemsUtil, cInstance, VersionableMixin, ISource) {
+   ['Controls/List/BaseViewModel', 'Controls/List/resources/utils/ItemsUtil', 'Core/core-instance', 'WS.Data/Source/ISource'],
+   function(BaseViewModel, ItemsUtil, cInstance, ISource) {
 
       /**
        *
@@ -20,14 +20,14 @@ define('Controls/List/ItemsViewModel',
                (Object.getPrototypeOf(newList.getAdapter()).constructor == Object.getPrototypeOf(oldList.getAdapter()).constructor);
          }
       };
-      var ItemsViewModel = Abstract.extend([VersionableMixin], {
+      var ItemsViewModel = BaseViewModel.extend({
 
          _display: null,
          _items: null,
          _curIndex: 0,
+         _onCollectionChangeFnc: null,
 
          constructor: function(cfg) {
-            this._options = cfg;
             ItemsViewModel.superclass.constructor.apply(this, arguments);
             this._onCollectionChangeFnc = this._onCollectionChange.bind(this);
             if (cfg.items) {
@@ -176,6 +176,14 @@ define('Controls/List/ItemsViewModel',
                item && this._items.remove(item);
             }
             this._items.setEventRaising(true, true);
+         },
+
+         destroy: function() {
+            ItemsViewModel.superclass.destroy.apply(this, arguments);
+            this._display = null;
+            this._items = null;
+            this._curIndex = null;
+            this._onCollectionChangeFnc = null;
          }
       });
 

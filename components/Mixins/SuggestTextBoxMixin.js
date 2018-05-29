@@ -209,7 +209,7 @@ define('SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin', [
                   model: listSource.getModel()
               });
               if (result[1]) {
-                  historyRS.assign(result[1].getAll());
+                  historyRS.append(result[1].getAll());
               }
               return historyRS;
           }).addBoth(function(result) {

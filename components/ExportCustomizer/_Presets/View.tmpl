@@ -9,26 +9,29 @@
       selectedKeys="{{selectedId ? [selectedId] : []}}"
       multiselect="{{false}}"
       dictionaries="{{ [{
-         'template': 'SBIS3.CONTROLS/ListView',
          'dialogOptions': {
             'className': 'controls-ExportCustomizer-Presets-View__picker',
             'border': false,
-            'direction': 'bottom',
+            'animation': 'fade',
             'isStack': false,
             'offset': {'x':-12, 'y':-6}
          },
+         'template': 'SBIS3.CONTROLS/ExportCustomizer/_Presets/ScrolledList',
          'componentOptions': {
-            'className': 'controls-ExportCustomizer-Presets-View__list controls-ListView__orangeMarker',
-            'items': _items,
-            'selectedKey': selectedId,
-            'idProperty': 'id',
-            'displayProperty': 'title',
-            'itemContentTpl': 'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/item',
-            'itemsActions': [],
-            'editMode': 'toolbar|single',
-            'editingTemplate': 'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/edit',
-            'itemsActionsInItemContainer': true,
-            '_footerTitle': addNewTitle
+            'className': 'controls-ExportCustomizer-Presets-View__scrolled',
+            'template': 'SBIS3.CONTROLS/ListView',
+            'scope': {
+               'className': 'controls-ExportCustomizer-Presets-View__list controls-ListView__orangeMarker',
+               'items': _items,
+               'selectedKey': selectedId,
+               'idProperty': 'id',
+               'displayProperty': 'title',
+               'itemContentTpl': 'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/item',
+               'enabledMove': false,
+               'itemsActions': [],
+               'itemsActionsInItemContainer': true,
+               '_footerTitle': addNewTitle
+            }
          }
       }] }}"
       >
@@ -56,5 +59,4 @@
          />
       </ws:editorTpl>
    </SBIS3.CONTROLS.EditAtPlace>
-
 </div>
