@@ -151,6 +151,13 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             assert.equal(expectedResultWithoutRowSeparator[1], GridViewModel._private.prepareRowSeparatorClasses(false, 1, 3));
             assert.equal(expectedResultWithoutRowSeparator[2], GridViewModel._private.prepareRowSeparatorClasses(false, 2, 3));
          });
+         it('onListChangeCallback', function() {
+            var
+               gridViewModel = new GridViewModel(cfg),
+               curVersion = gridViewModel.getVersion();
+            gridViewModel._onListChangeCallback();
+            assert.isTrue(curVersion !== gridViewModel.getVersion(), 'Incorrect value version after call "_onListChangeCallback()".');
+         });
          it('getItemColumnCellClasses', function() {
             var
                gridViewModel = new GridViewModel(cfg),
@@ -326,7 +333,24 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             });
          });
       });
-      describe('class methods', function() {
+      describe('methods for processing with items', function() {
+         var
+            gridViewModel = new GridViewModel(cfg);
+         it('getColumns', function() {
+            assert.deepEqual(gridColumns, gridViewModel.getColumns(), 'Incorrect value "getColumns()".');
+         });
+         it('setMultiselect && getMultiselect', function() {
+            assert.isTrue(gridViewModel.getMultiselect(), 'Incorrect value "getMultiselect()" before "setMultiselect(false)".');
+            gridViewModel.setMultiselect(false);
+            assert.isFalse(gridViewModel.getMultiselect(), 'Incorrect value "getMultiselect()" after "setMultiselect(false)".');
+            gridViewModel.setMultiselect(true);
+            assert.isTrue(gridViewModel.getMultiselect(), 'Incorrect value "getMultiselect()" after "setMultiselect(true)".');
+         });
+         it('getItemById', function() {
+            assert.deepEqual(gridData[0], gridViewModel.getItemById('123', 'id').getContents(), 'Incorrect value "getItemById(123, id)".');
+         });
+      });
+      describe('other methods of the class', function() {
          var
             gridViewModel = new GridViewModel(cfg),
             imitateTemplate = function() {};
@@ -459,6 +483,61 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             assert.equal(4, gridViewModel._curResultsColumnIndex, 'Incorrect value "_curResultsColumnIndex" before "resetResultsColumns()".');
             gridViewModel.resetResultsColumns();
             assert.equal(0, gridViewModel._curResultsColumnIndex, 'Incorrect value "_curResultsColumnIndex" after "resetResultsColumns()".');
+         });
+         it('_prepareColgroupColumns', function() {
+            assert.deepEqual([{}].concat(gridColumns), gridViewModel._colgroupColumns, 'Incorrect value "_colgroupColumns" before "_prepareColgroupColumns([])" without multiselect.');
+            gridViewModel._prepareColgroupColumns([], false);
+            assert.deepEqual([], gridViewModel._colgroupColumns, 'Incorrect value "_colgroupColumns" after "_prepareColgroupColumns([])" without multiselect.');
+            gridViewModel._prepareColgroupColumns(gridColumns, false);
+            assert.deepEqual(gridColumns, gridViewModel._colgroupColumns, 'Incorrect value "_colgroupColumns" after "_prepareColgroupColumns(gridColumns)" without multiselect.');
+
+            gridViewModel._prepareColgroupColumns([], true);
+            assert.deepEqual([{}], gridViewModel._colgroupColumns, 'Incorrect value "_colgroupColumns" after "_prepareColgroupColumns([])" with multiselect.');
+            gridViewModel._prepareColgroupColumns(gridColumns, true);
+            assert.deepEqual([{}].concat(gridColumns), gridViewModel._colgroupColumns, 'Incorrect value "_colgroupColumns" after "_prepareColgroupColumns(gridColumns)" with multiselect.');
+         });
+         it('getCurrentColgroupColumn && goToNextColgroupColumn && isEndColgroupColumn && resetColgroupColumns', function() {
+            assert.deepEqual({
+               column: {},
+               index: 0,
+               style: ''
+            }, gridViewModel.getCurrentColgroupColumn(), 'Incorrect value first call "getCurrentColgroupColumn()".');
+
+            assert.equal(true, gridViewModel.isEndColgroupColumn(), 'Incorrect value "isEndColgroupColumn()" after first call "getCurrentColgroupColumn()".');
+            gridViewModel.goToNextColgroupColumn();
+
+            assert.deepEqual({
+               column: gridColumns[0],
+               index: 1,
+               style: 'width: 1fr'
+            }, gridViewModel.getCurrentColgroupColumn(), 'Incorrect value second call "getCurrentColgroupColumn()".');
+
+            assert.equal(true, gridViewModel.isEndColgroupColumn(), 'Incorrect value "isEndColgroupColumn()" after second call "getCurrentColgroupColumn()".');
+            gridViewModel.goToNextColgroupColumn();
+
+            assert.deepEqual({
+               column: gridColumns[1],
+               index: 2,
+               style: 'width: auto'
+            }, gridViewModel.getCurrentColgroupColumn(), 'Incorrect value third call "getCurrentColgroupColumn()".');
+
+            assert.equal(true, gridViewModel.isEndColgroupColumn(), 'Incorrect value "isEndColgroupColumn()" after third call "getCurrentColgroupColumn()".');
+            gridViewModel.goToNextColgroupColumn();
+
+            assert.deepEqual({
+               column: gridColumns[2],
+               index: 3,
+               style: 'width: auto'
+            }, gridViewModel.getCurrentColgroupColumn(), 'Incorrect value fourth call "getCurrentColgroupColumn()".');
+
+            assert.equal(true, gridViewModel.isEndColgroupColumn(), 'Incorrect value "isEndColgroupColumn()" after fourth call "getCurrentColgroupColumn()".');
+
+            gridViewModel.goToNextColgroupColumn();
+            assert.equal(false, gridViewModel.isEndColgroupColumn(), 'Incorrect value "isEndColgroupColumn()" after last call "getCurrentColgroupColumn()".');
+
+            assert.equal(4, gridViewModel._curColgroupColumnIndex, 'Incorrect value "_curColgroupColumnIndex" before "resetColgroupColumns()".');
+            gridViewModel.resetColgroupColumns();
+            assert.equal(0, gridViewModel._curColgroupColumnIndex, 'Incorrect value "_curColgroupColumnIndex" after "resetColgroupColumns()".');
          });
       });
    });
