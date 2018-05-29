@@ -4338,6 +4338,10 @@ define('SBIS3.CONTROLS/ListView',
                   this._getScrollWatcher().scrollTo('bottom');
                }
                this._lastPageLoaded = true;
+               /* Грузим последнюю страницу = > страниц точно больше 2ух. */
+               if (this._scrollBinder) {
+                  this._scrollBinder.moreThanTwo(true);
+               }
             }.bind(this);
             if (noLoad){
                this._offset = -1;

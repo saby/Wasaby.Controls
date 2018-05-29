@@ -120,7 +120,11 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                /**
                 * @cfg {boolean} Разрешён ли множественный выбор колонок (опционально)
                 */
-               multiselect: true
+               multiselect: true,
+               /**
+                * @cfg {boolean} При выборе колонки применение выбора (и закрытие диалога) происходит автоматически, без нажатия кнопки "Применить". При этом кнопка "Применить" не отображается. Применимо только при выключенном множественном выборе (multiselect == false) (опционально)
+                */
+               autoApply: false
             },
             _childNames: {
                presetView: 'controls-Browser-ColumnsEditor-Editing-Area__Preset',
@@ -206,6 +210,10 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                this._itemsMoveController = new ItemsMoveController({
                   linkedView: this._selectableView
                });
+            }
+
+            if (!options.multiselect && options.autoApply) {
+               this.subscribeTo(this._selectableView, 'onItemActivate', this.sendCommand.bind(this, 'applyColumns'));
             }
          },
 
