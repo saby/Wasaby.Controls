@@ -3296,6 +3296,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                {
                   validNodes: {
                      img: images ? {
+                        'data-img-uuid': true,
+                        'data-mce-style': true,
                         onload: false,
                         onerror: false
                      } : false,
@@ -3384,7 +3386,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
                      }.bind(self)
                   },
-                  checkDataAttribute: true,// У изображений есть атрибут data-img-uuid (а также data-mce-src, data-mce-style)
+                  checkDataAttribute: false,
                   escapeInvalidTags: false
                });
          },
