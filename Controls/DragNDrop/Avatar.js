@@ -16,7 +16,7 @@ define('Controls/DragNDrop/Avatar', [
 
    Avatar.getDefaultOptions = function() {
       return {
-         offset: 10
+         avatarOffset: 10
       };
    };
 

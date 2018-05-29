@@ -184,10 +184,6 @@ define('Controls/List', [
          this._notify('afterItemsMove', [items, target, position, result]);
       },
 
-      _beforeDragStart: function(event, entity) {
-         return this._notify('beforeDragStart', [entity]);
-      },
-
       _dragStart: function(event, dragObject) {
          return this._notify('dragStart', [dragObject]);
       },

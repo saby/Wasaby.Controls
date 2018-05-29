@@ -1,40 +1,38 @@
 <div>
-    <span>First List</span>
     <Controls.List
-            on:beforeDragStart="_beforeDragStart()"
-            class="DND-list"
+            on:dragStart="_dragStart()"
+            class="demo-DragNDrop__firstList"
+            multiSelectVisibility="visible"
             itemsDragNDrop="{{true}}"
             displayProperty="title"
             name="list"
             source="{{_viewSource}}"
-            idProperty="id">
+            keyProperty="id">
+        <ws:itemTemplate>
+            <ws:partial template="tmpl!Controls/List/ItemTemplate" attr:class="demo-DragNDrop__item">
+                <ws:contentTemplate>
+                    <div class="demo-DragNDrop__itemContent">
+                        <img class="demo-DragNDrop__icon" src="{{itemTemplate.itemData.item.get('image')}}" />
+                        <div class="demo-DragNDrop__text">
+                            <div class="demo-DragNDrop__mainText">{{itemTemplate.itemData.item.get('title')}}</div>
+                            <div class="demo-DragNDrop__additionalText">{{itemTemplate.itemData.item.get('additional')}}</div>
+                        </div>
+                    </div>
+                </ws:contentTemplate>
+            </ws:partial>
+        </ws:itemTemplate>
         <ws:dragAvatarTemplate>
-            <div>123</div>
+            <ws:partial template="Controls/DragNDrop/Avatar"/>
         </ws:dragAvatarTemplate>
     </Controls.List>
-    <span>Second List (itemsDragNDrop = false)</span>
     <Controls.List
             on:dragStart="_dragStart()"
-            class="DND-list"
+            class="demo-DragNDrop__list"
             displayProperty="title"
             name="listSecond"
             source = "{{_viewSourceSecond}}"
-            idProperty="id">
-    </Controls.List>
-    <span>Third List</span>
-    <Controls.List
-            on:dragStart="_dragStart()"
-            class="DND-list"
-            itemsDragNDrop="{{true}}"
-            displayProperty="title"
-            name="listThird"
-            source = "{{_viewSourceThird}}"
-            idProperty="id">
+            keyProperty="id">
     </Controls.List>
     <Controls-demo.DragNDrop.Notes name="listNotes"/>
-    <Controls.Button
-            on:click="_onClick()"
-            caption="Reload">
-    </Controls.Button>
     <Controls-demo.DragNDrop.Basket/>
 </div>

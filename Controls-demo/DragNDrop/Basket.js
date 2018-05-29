@@ -9,17 +9,28 @@ define('Controls-demo/DragNDrop/Basket', [
    var Basket = BaseControl.extend({
       _template: template,
       _canDrop: false,
+      _isDragEnter: false,
       _items: [],
 
-      _dragInit: function() {
-         this._canDrop = true;
+      _documentDragStart: function(event, dragObject) {
+         if (dragObject.entity.getItems) {
+            this._canDrop = true;
+         }
       },
 
-      _dragReset: function(event, dragObject) {
-         var
-            id,
-            items;
-         if (this._isDragEnter) {
+      _dragEnter: function() {
+         if (this._canDrop) {
+            this._isDragEnter = true;
+         }
+      },
+
+      _dragLeave: function() {
+         this._isDragEnter = false;
+      },
+
+      _dragEnd: function(event, dragObject) {
+         var id, items;
+         if (this._canDrop) {
             items = dragObject.entity.getItems();
             items.forEach(function(item) {
                id = item.getId();
@@ -28,7 +39,11 @@ define('Controls-demo/DragNDrop/Basket', [
                }
             }, this);
          }
+      },
+
+      _documentDragEnd: function() {
          this._canDrop = false;
+         this._isDragEnter = false;
       }
    });
 

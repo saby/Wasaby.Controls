@@ -1,7 +1,8 @@
 define('Controls/DragNDrop/Container',
    [
       'Core/Control',
-      'tmpl!Controls/DragNDrop/Container/Container'
+      'tmpl!Controls/DragNDrop/Container/Container',
+      'Controls/DragNDrop/Avatar'
    ],
 
    function(Control, template) {

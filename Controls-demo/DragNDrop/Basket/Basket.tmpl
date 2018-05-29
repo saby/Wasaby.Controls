@@ -1,6 +1,9 @@
 <Controls.DragNDrop.Controller
-        on:dragInit="_dragInit()"
-        on:dragReset="_dragReset()">
+        on:dragEnter="_dragEnter()"
+        on:dragLeave="_dragLeave()"
+        on:dragEnd="_dragEnd()"
+        on:documentDragStart="_documentDragStart()"
+        on:documentDragEnd="_documentDragEnd()">
    <div class="{{'basket ' + (_isDragEnter ? 'basket-dragEnter')}}">
       <div class="{{_canDrop ? 'basket-canDrop'}}">
          <ws:if data="{{_items.length > 0}}">

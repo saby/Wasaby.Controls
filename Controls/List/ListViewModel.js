@@ -2,8 +2,8 @@
  * Created by kraynovdo on 16.11.2017.
  */
 define('Controls/List/ListViewModel',
-   ['Core/Abstract', 'Controls/List/ItemsViewModel', 'Controls/Controllers/Multiselect/Selection', 'WS.Data/Entity/VersionableMixin'],
-   function(Abstract, ItemsViewModel, MultiSelection, VersionableMixin) {
+   ['Core/Abstract', 'Controls/List/resources/utils/ItemsUtil', 'Controls/List/ItemsViewModel', 'Controls/Controllers/Multiselect/Selection', 'WS.Data/Entity/VersionableMixin'],
+   function(Abstract, ItemsUtil, ItemsViewModel, MultiSelection, VersionableMixin) {
       /**
        *
        * @author Крайнов Дмитрий
@@ -19,7 +19,8 @@ define('Controls/List/ListViewModel',
       
       var ListViewModel = ItemsViewModel.extend([VersionableMixin], {
          _markedItem: null,
-         _draggingItem: null,
+         _draggingItemData: null,
+         _dragTargetPosition: null,
          _actions: null,
 
          constructor: function(cfg) {
@@ -40,8 +41,8 @@ define('Controls/List/ListViewModel',
             _private.updateIndexes(self);
          },
 
-         getCurrent: function() {
-            var itemsModelCurrent = ListViewModel.superclass.getCurrent.apply(this, arguments);
+         _getItemDataByItem: function() {
+            var itemsModelCurrent = ListViewModel.superclass._getItemDataByItem.apply(this, arguments);
             itemsModelCurrent.isSelected = itemsModelCurrent.dispItem === this._markedItem;
             itemsModelCurrent.itemActions =  this._actions[this.getCurrentIndex()];
             itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
@@ -53,8 +54,11 @@ define('Controls/List/ListViewModel',
                itemsModelCurrent.isEditing = true;
                itemsModelCurrent.item = this._editingItemData.item;
             }
-            if (this._draggingItem && this._draggingItem.get(this._options.keyProperty) === itemsModelCurrent.item.get(this._options.keyProperty)) {
+            if (this._draggingItemData && this._draggingItemData.key === itemsModelCurrent.key) {
                itemsModelCurrent.isDragging = true;
+               if (this._dragTargetItem) {
+                  itemsModelCurrent.isVisible = false;
+               }
             }
             return itemsModelCurrent;
          },
@@ -70,10 +74,56 @@ define('Controls/List/ListViewModel',
             this._nextVersion();
          },
 
-         setDraggingItem: function(item) {
-            this._draggingItem = item;
+         getDraggingItemData: function() {
+            return this._draggingItemData;
+         },
+
+         setDragItems: function(items) {
+            this._dragItems = items;
+            this._draggingItemData = items ? this._getItemDataByItem(this._display.getItemBySourceItem(items[0])) : null;
+            if (this._draggingItemData) {
+               this._draggingItemData.isDragging = true;
+            }
             this._nextVersion();
             this._notify('onListChange');
+         },
+
+         getDragTargetItem: function() {
+            return this._dragTargetItem;
+         },
+
+         setDragTargetItem: function(itemData) {
+            this._dragTargetItem = itemData;
+            this._updateDragTargetPosition(itemData);
+            this._nextVersion();
+            this._notify('onListChange');
+         },
+
+         getDragTargetPosition: function() {
+            return this._dragTargetPosition;
+         },
+
+         _updateDragTargetPosition: function(targetData) {
+            var
+               position,
+               prevIndex;
+
+            if (targetData) {
+               prevIndex = this._dragTargetPosition ? this._dragTargetPosition.index : this._draggingItemData.index;
+               if (targetData.index > prevIndex) {
+                  position = 'after';
+               } else if (targetData.index < prevIndex) {
+                  position = 'before';
+               } else {
+                  position = this._dragTargetPosition.position === 'after' ? 'before' : 'after';
+               }
+               this._dragTargetPosition = {
+                  index: targetData.index,
+                  position: position
+               };
+            } else {
+               this._dragTargetPosition = null;
+            }
          },
 
          setSwipeItem: function(itemData) {

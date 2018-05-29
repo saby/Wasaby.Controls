@@ -69,6 +69,9 @@
                ws:content="listView"
                on:dragStart="_dragStart()"
                on:dragEnd="_dragEnd()"
+               on:dragLeave="_dragLeave()"
+               on:documentDragEnd="_documentDragEnd()"
+               on:documentDragStart="_documentDragStart()"
                dragAvatarTemplate="{{_options.dragAvatarTemplate}}"
                name="dragNDropController"/>
     </ws:if>
