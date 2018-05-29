@@ -157,9 +157,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                this._loadCustoms().addCallback(function () {
                   if (this._needNewPreset) {
                      this._addPreset();
-                     //^^^@@@this._updateSelector();
                      this._startEditingMode();
-                     //^^^@@@this.sendCommand('subviewChanged');
                      this._needNewPreset = null;
                   }
                   this._updateSelector();
@@ -297,7 +295,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
          _onAdd: function (evtName) {
             var listView = evtName.getTarget().getParent();
             this._addPreset();
-            //^^^@@@this._updateListView(listView);
             this._startEditingMode(listView);
             this.sendCommand('subviewChanged');
          },
@@ -317,7 +314,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             switch (action) {
                case 'clone':
                   this._clonePreset(id, listView);
-                  //^^^@@@this._updateListView(listView);
                   this._startEditingMode(listView);
                   break;
                case 'edit':
