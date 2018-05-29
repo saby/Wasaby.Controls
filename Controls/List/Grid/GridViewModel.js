@@ -364,8 +364,8 @@ define('Controls/List/Grid/GridViewModel', [
             current.goToNextColumn = function() {
                current.columnIndex++;
             };
-            current.isEndColumn = function() {
-               return current.columnIndex < current.columns.length;
+            current.getLastColumnIndex = function() {
+               return current.columns.length - 1;
             };
             current.getCurrentColumn = function() {
                var
@@ -475,6 +475,10 @@ define('Controls/List/Grid/GridViewModel', [
 
          setItems: function(items) {
             this._model.setItems(items);
+         },
+
+         setActiveItem: function(itemData) {
+            this._model.setActiveItem(itemData);
          },
 
          appendItems: function(items) {
