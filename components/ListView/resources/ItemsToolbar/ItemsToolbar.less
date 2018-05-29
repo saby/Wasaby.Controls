@@ -215,7 +215,19 @@
 }
 
 .controls-EditActions__cancelButton {
-   .closeButton();
+   .closeButton__popup();
+   .closeButton__popup_standard(29px, 24px, 20px);
+
+   margin-right: 0;
+   .controls-ButtonBase__content {
+      display: none;
+   }
+}
+
+body:not(.ws-is-mobile-platform) {
+   .controls-EditActions__cancelButton {
+      .closeButton__popup_standard_hover();
+   }
 }
 
 .itemsToolbar-leftSwipeAnimation {

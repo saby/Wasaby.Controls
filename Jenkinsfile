@@ -36,7 +36,7 @@ node('controls') {
                 description: '',
                 name: 'ws_data_revision'),
             string(
-                defaultValue: "rc-${version}",
+                defaultValue: props["engine"],
                 description: '',
                 name: 'branch_engine'),
             string(
@@ -47,7 +47,7 @@ node('controls') {
                 choices: "online\npresto\ncarry\ngenie",
                 description: '',
                 name: 'theme'),
-            choice(choices: "chrome\nff", description: '', name: 'browser_type'),
+            choice(choices: "chrome\nff\nie", description: '', name: 'browser_type'),
             booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов", name: 'run_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
@@ -419,7 +419,10 @@ node('controls') {
                 }"""
             sh """
                 cd ./jinnee/distrib/builder
-                cp -rf /home/sbis/Controls/build-ui/ws /home/sbis/Controls/intest-ps/ui/
+                cp -rf ${workspace}/jinnee/ws /home/sbis/Controls/intest-ps/ui/
+                node ./node_modules/grunt-cli/bin/grunt xhtmlmin --root=/home/sbis/Controls/intest-ps/ui --application=/
+                node ./node_modules/grunt-cli/bin/grunt xhtml-build --root=/home/sbis/Controls/intest-ps/ui --application=/
+                node ./node_modules/grunt-cli/bin/grunt tmpl-build --root=/home/sbis/Controls/intest-ps/ui --application=/
                 node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/sbis/Controls/intest-ps/ui --application=/
                 sudo systemctl restart Controls_ps
             """

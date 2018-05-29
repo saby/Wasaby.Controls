@@ -1,8 +1,8 @@
 <div>
     <h3>Кликабельный</h3>
-    <Controls.Toggle.DoubleSwitch bind:value="value" captions="{{['on', 'off']}}" />
+    <Controls.Toggle.DoubleSwitch bind:value="value" captions="{{['on', 'off']}}" attr:test_name="clicked" />
     <h3>Кликабельный, в режиме чтения</h3>
-    <Controls.Toggle.DoubleSwitch readOnly="{{true}}" bind:value="value" captions="{{['on', 'off']}}" />
+    <Controls.Toggle.DoubleSwitch readOnly="{{true}}" bind:value="value" captions="{{['on', 'off']}}" attr:test_name="readonly" />
     <h3>Включен</h3>
     <Controls.Toggle.DoubleSwitch bind:value="value1" captions="{{['on', 'off']}}"/>
     <h3>Выключен</h3>

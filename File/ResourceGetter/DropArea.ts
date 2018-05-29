@@ -6,7 +6,7 @@ import Deferred = require("Core/Deferred");
 import LocalFile = require("File/LocalFile");
 import random = require("Core/helpers/random-helpers");
 import ExtensionsHelper = require("File/utils/ExtensionsHelper");
-import getFilePreparer = require("File/utils/getFilePreparer");
+import getFilePreparer = require("File/utils/filePrepareGetter");
 import replaceDir = require("File/ResourceGetter/DropArea/replaceDir");
 
 type Handler = (files: FileList) => void;
@@ -45,6 +45,7 @@ const OVERLAY_CLASS = 'DropArea_overlay';
 const GLOBAL = (function(){ return this || (0,eval)('this'); }());
 const DOC = GLOBAL.document;
 const IS_SUPPORT = DOC && DOC.body;
+const DRAG_END_TIMEOUT = 200;
 
 let areas: Areas = Object.create(null);
 let areaCount = 0;
@@ -105,6 +106,11 @@ let getArea = (element: HTMLElement) => {
  * @type {Boolean}
  */
 let isDrag: boolean;
+/**
+ * Таймер удаления обёрток
+ * @type {Number}
+ */
+let dragEndTimeout: number;
 
 // Удаление обёрточных элементов
 let dragEnd = () => {
@@ -150,7 +156,7 @@ let overlayHandlers = {
         dragEnd();
     }
 };
-let isNeedOverlay = (dataTransfer): boolean => {
+let isNeedOverlay = (dataTransfer: DataTransfer): boolean => {
     /**
      * В большенстве браузеров при переносе файлов dataTransfer.types == ['Files']
      * И хватает только проверки первого элемента, но некоторые браузеры в зависимости от версии добавляют свои типы
@@ -159,12 +165,13 @@ let isNeedOverlay = (dataTransfer): boolean => {
      * Ещё может расходиться регистр => Array.prototype.include не совсем подходит
      * Поэтому самое простое это склеить типы в строку, привести к единому регистру и найти вхождение
      */
-    let containFileType = dataTransfer.types.join(',').toLowerCase().indexOf('files') >= 0;
+    let containFileType = Array.prototype.join.call(dataTransfer.types, ',').toLowerCase().indexOf('files') >= 0;
     return containFileType && !isDrag && !!areaCount
 };
 // обработчики событий drag&drop на документе
 let globalHandlers = {
     dragenter(event: HTMLDragEvent) {
+        clearTimeout(dragEndTimeout);
         // Если обёртки готовы для всех элементов или событие не содержит файлы, то выходим
         if (!isNeedOverlay(event.dataTransfer)) {
             return
@@ -179,15 +186,24 @@ let globalHandlers = {
             }
         }
     },
-    dragleave(event: HTMLDragEvent) {
-        // Если покинули область окна браузера, то убираем наши обёртки
-        if (!event.relatedTarget) {
-            dragEnd();
-        }
+    dragleave(/*event: HTMLDragEvent*/) {
+        /**
+         * Под win-10 в IE/Edge в event.relatedTarget постоянно лежит null
+         * Хоть и поддержка свойства как бы есть
+         * Что не даёт по его отсуствию понять что D&D вышел за пределы окна браузера,
+         * или же на другой элемент, чтобы скрыть области обёртки
+         *
+         * Поэтому при покидании области создаём таймаут по которому удалим их
+         * Или же скидываем его если сдектектим dragenter, либо dragover
+         */
+        dragEndTimeout = setTimeout(dragEnd, DRAG_END_TIMEOUT);
     },
-    drop(event: HTMLDragEvent) {
+    drop(/*event: HTMLDragEvent*/) {
         // Если бросили файл в произвольную область - просто убераем наши обёртки
         dragEnd();
+    },
+    dragover(/*event: HTMLDragEvent*/) {
+        clearTimeout(dragEndTimeout);
     }
 };
 /// endregion event handlers

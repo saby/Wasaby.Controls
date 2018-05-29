@@ -377,7 +377,8 @@ define('Controls/List/Grid/GridViewModel', [
                      displayProperty: current.displayProperty,
                      index: current.index,
                      key: current.key,
-                     getPropValue: current.getPropValue
+                     getPropValue: current.getPropValue,
+                     isEditing: current.isEditing
                   };
                currentColumn.columnIndex = current.columnIndex;
                currentColumn.cellClasses = _private.getItemColumnCellClasses(current);
@@ -485,8 +486,29 @@ define('Controls/List/Grid/GridViewModel', [
             this._model.prependItems(items);
          },
 
+         setItemActions: function(item, actions) {
+            this._model.setItemActions(item, actions);
+         },
+
+         _setEditingItemData: function(itemData) {
+            this._model._setEditingItemData(itemData);
+            this._nextVersion();
+         },
+
+         getIndexBySourceItem: function(item) {
+            return this._model.getIndexBySourceItem(item);
+         },
+
+         at: function(index) {
+            return this._model.at(index);
+         },
+
          getCount: function() {
             return this._model.getCount();
+         },
+
+         setItemActions: function(item, actions) {
+            this._model.setItemActions(item, actions);
          },
 
          destroy: function() {

@@ -240,12 +240,13 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
                parent: this,
                template: 'SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                className: 'ws-float-area__block-layout controls-Browser-ColumnsEditor-Editor__area',
+               width: hasEditorOptions && 0 < editorOptions.width ? editorOptions.width : undefined,
+               keepSize: !hasEditorOptions || !(0 < editorOptions.width),
                closeByExternalClick: true,
                closeButton: true,
                crossStyle: 'light',
                componentOptions: {
                   title: hasEditorOptions ? editorOptions.title : undefined,
-                  maxHeight: $('body').height(),
                   applyButtonTitle: hasEditorOptions ? editorOptions.applyButtonTitle : undefined,
                   columns: columnsConfig.columns,
                   selectedColumns: columnsConfig.selectedColumns,
@@ -260,6 +261,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
                   useOriginPresetTitle: _selectValue('useOriginPresetTitle', allSources, 'boolean'),
                   moveColumns: _selectValue('moveColumns', edDefSources, 'boolean'),
                   preserveOrder: _selectValue('preserveOrder', edDefSources, 'boolean'),
+                  multiselect: _selectValue('multiselect', edDefSources, 'boolean', true),
                   handlers: {
                      onComplete: this._onAreaComplete.bind(this)
                   }
@@ -312,7 +314,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
 
       // Приватные свойства
 
-      var _selectValue = function (name, sources, type) {
+      var _selectValue = function (name, sources, type, defaultValue) {
          var noType = !type;
          for (var i = 0; i < sources.length; i++) {
             var src = sources[i];
@@ -323,6 +325,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
                }
             }
          }
+         return defaultValue;
       };
 
 

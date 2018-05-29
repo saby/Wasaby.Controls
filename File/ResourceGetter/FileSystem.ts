@@ -4,7 +4,7 @@ import ResourceGetterBase = require("File/ResourceGetter/Base");
 import Deferred = require("Core/Deferred");
 import LocalFile = require("File/LocalFile");
 import ExtensionsHelper = require("File/utils/ExtensionsHelper");
-import getFilePreparer = require("File/utils/getFilePreparer");
+import getFilePreparer = require("File/utils/filePrepareGetter");
 
 const SEC = 1000;
 const MIN = 60 * SEC;
@@ -30,7 +30,8 @@ let setTimeoutAfterFocus = (handler) => {
      * но сделает это синхронно
      *
      * Если же не выносить через setTimeout то можем получить ситуацию, когда окошко выбора файлов открывается,
-     * а фокус в этот момет придёт другому контролу и обработчик сработает, а мы соответственно будем бумать, что окно закрылось
+     * а фокус в этот момет придёт другому контролу и обработчик сработает,
+     * а мы соответственно будем бумать, что окно закрылось
      */
     setTimeout(() => {
         document.addEventListener("focusin", focus);

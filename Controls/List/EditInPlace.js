@@ -4,7 +4,8 @@ define('Controls/List/EditInPlace', [
    'Core/Deferred',
    'WS.Data/Entity/Record',
    'WS.Data/Display/CollectionItem',
-   'Controls/List/resources/utils/ItemsUtil'
+   'Controls/List/resources/utils/ItemsUtil',
+   'css!Controls/List/EditInPlace/Text'
 ], function(Control, template, Deferred, Record, CollectionItem, ItemsUtil) {
 
    var
@@ -250,7 +251,6 @@ define('Controls/List/EditInPlace', [
        * @variant {ItemEditOptions} options Options of editing.
        * @returns {Core/Deferred}
        */
-      //TODO: управлять индикатором загрузки
       editItem: function(options) {
          var self = this,
             editingItemIndex = _private.getEditingItemIndex(this, this._editingItem, this._options.listModel),
@@ -270,7 +270,6 @@ define('Controls/List/EditInPlace', [
        * @param {AddItemOptions} options Options of adding.
        * @returns {Core/Deferred}
        */
-      //TODO: управлять индикатором загрузки
       addItem: function(options) {
          var self = this;
          return this.commitEdit().addCallback(function() {
@@ -318,9 +317,6 @@ define('Controls/List/EditInPlace', [
                case 27: //Esc
                   this.cancelEdit();
                   break;
-               case 9: //Tab //TODO: для грида это не подойдет, так что надо перейти на _onRowDeactivated после решения проблем с ним
-                  _private.editNextRow(this, !e.nativeEvent.shiftKey);
-                  break;
             }
          }
       },
@@ -358,15 +354,12 @@ define('Controls/List/EditInPlace', [
          listModel._setEditingItemData(this._editingItemData);
       },
 
-      // _onRowDeactivated: function(e, isTabPressed) {
-      //TODO: по табу стреляет несколько раз на одной и той же строке, надо Шипину показать
-      //TODO: про таб знаем, а про шифт нет, нужно доработать немножко
-      // if (isTabPressed) {
-      // _private.editNextRow(this, true);
-      // console.log('ушёл фокус со строки по табу');
-      // }
-      // e.stopPropagation();
-      // },
+      _onRowDeactivated: function(e, eventOptions) {
+         if (eventOptions.isTabPressed) {
+            _private.editNextRow(this, !eventOptions.isShiftKey);
+         }
+         e.stopPropagation();
+      },
 
       _beforeUnmount: function() {
          _private.resetVariables(this);

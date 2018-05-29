@@ -253,7 +253,7 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
 
                function checkItems(view) {
                   var viewBlock = view.getContainer().parent();
-                  viewBlock.toggleClass('ws-hidden', !view.getItems().getCount());
+                  viewBlock.toggleClass('ws-hidden', !view.getItems() || !view.getItems().getCount());
                }
    
                listsDef.getResult().addCallback(function(res) {
@@ -262,7 +262,10 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
                      checkItems(self._favoriteView);
                   });
    
-                  self._favoriteView.getItems().prepend(favoriteAllList.getHistory().clone());
+                  /* записей может не быть, пока грузится история */
+                  if (self._favoriteView.getItems()) {
+                     self._favoriteView.getItems().prepend(favoriteAllList.getHistory().clone());
+                  }
    
                   self.processViews(function(view) {
                      self.subscribeTo(view, 'onItemActivate', function(event, itemObj) {

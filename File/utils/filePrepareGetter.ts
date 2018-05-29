@@ -1,4 +1,4 @@
-/// <amd-module name="File/utils/getFilePreparer" />
+/// <amd-module name="File/utils/filePrepareGetter" />
 import LocalFile = require("File/LocalFile");
 import filter = require("File/utils/filter");
 
