@@ -39,6 +39,7 @@ define('Controls/Input/Dropdown',
          _selectedItemChangedHandler: function(event, item) {
             this._text = getPropValue(item, this._options.displayProperty || 'title');
             this._icon = item.get('icon');
+            this._notify('selectedKeysChanged', [getPropValue(item, this._options.keyProperty)]);
          }
       });
 

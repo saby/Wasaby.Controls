@@ -50,8 +50,6 @@ define('Controls/Container/Dropdown',
          },
 
          selectItem: function(item) {
-            var key = item.get(this._options.keyProperty);
-            this._notify('selectedKeysChanged', [key]);
             this._notify('selectedItemChanged', [item]);
          }
       };

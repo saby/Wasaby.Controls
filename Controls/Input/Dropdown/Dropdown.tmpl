@@ -1,7 +1,6 @@
 <Controls.Container.Dropdown
         scope="{{_options}}"
-        bind:selectedKeys="_options.selectedKeys"
-        showHeader="{{_options.showHeader === true ? true : false}}"
+        showHeader="{{_options.showHeader}}"
         popupTarget="{{_popupTarget}}"
         typeShadow="default"
         on:selectedItemChanged="_selectedItemChangedHandler()"

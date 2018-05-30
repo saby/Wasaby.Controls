@@ -45,6 +45,7 @@ define('Controls/Input/ComboBox',
 
          _beforeMount: function(options) {
             this._onClose = _private.close.bind(this);
+            this._selectedKey = options.selectedKey;
             this._value = options.value;
             this._simpleViewModel = new BaseViewModel({
                value: this._value
@@ -70,6 +71,7 @@ define('Controls/Input/ComboBox',
                value: this._value
             });
             this._notify('valueChanged', [this._value]);
+            this._notify('selectedKeyChanged', [getPropValue(selectedItem, this._options.keyProperty)]);
             this._isOpen = false;
          }
 
