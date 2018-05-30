@@ -438,7 +438,7 @@ node('controls') {
             SOFT_RESTART = True
             NO_RESOURCES = True
             DELAY_RUN_TESTS = 2
-            TAGS_NOT_TO_START = iOSOnly
+            TAGS_TO_START = builder
             ELEMENT_OUTPUT_LOG = locator
             WAIT_ELEMENT_LOAD = 20
             HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/"""
