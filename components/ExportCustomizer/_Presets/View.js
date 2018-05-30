@@ -196,10 +196,20 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
 
                this.subscribeTo(editor, 'onCancel', function (evtName) {
                   var presetInfo = this._findPresetById(options.selectedId, true);
-                  if (presetInfo && presetInfo.preset.isUnreal) {
-                     this._customs.splice(presetInfo.index, 1);
-                     var previous = this._findPresetById(this._previousId);
-                     this._selectPreset(previous);
+                  if (presetInfo) {
+                     if (presetInfo.preset.isUnreal) {
+                        this._customs.splice(presetInfo.index, 1);
+                        var previousId = this._previousId;
+                        var previous = previousId ? this._findPresetById(previousId) : null;
+                        this._previousId = null;
+                        this._selectPreset(previous || this._getFirstPreset(options));
+                        if (!previous) {
+                           this._updateSelector();
+                        }
+                     }
+                     else {
+                        this._selectPreset(presetInfo.preset);
+                     }
                   }
                   this._endEditingMode();
                }.bind(this));
@@ -248,10 +258,29 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                var customs = this._customs;
                var hasCustoms = !!(customs && customs.length);
                if (!selectedId || !hasCustoms || _findIndexById(customs, selectedId) === -1) {
-                  options.selectedId = selectedId = statics && statics.length ? statics[0].id : (hasCustoms ? customs[0].id : undefined);
+                  var first = this._getFirstPreset(options);
+                  options.selectedId = selectedId = first ? first.id : undefined;
                }
             }
             return selectedId;
+         },
+
+         /**
+          * ^^^Приготовить идентификатор выбранного элемента для списочного контрола
+          *
+          * @protected
+          * @param {object} options Опции компонента
+          * @return {ExportPreset}
+          */
+         _getFirstPreset: function (options) {
+            var statics = options.statics;
+            if (statics && statics.length) {
+               return statics[0];
+            }
+            var customs = this._customs;
+            if (customs && customs.length) {
+               return customs[0];
+            }
          },
 
          /**
