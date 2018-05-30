@@ -60,7 +60,7 @@ define('Controls/Input/ComboBox',
             this._forceUpdate();
          },
 
-         _open: function() {
+         _mouseDownHandler: function() {
             this._isOpen = !this._isOpen;
          },
 

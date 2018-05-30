@@ -9,7 +9,7 @@
         typeShadow="withoutTop"
         popupTarget="{{_popupTarget}}"
         on:selectedItemChanged="_selectedItemChangedHandler()"
-        on:mousedown="_open()">
+        on:mousedown="_mouseDownHandler()">
 
       <Controls.Input.resources.InputRender.InputRender
               bind:value="_value"
