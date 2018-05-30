@@ -4,7 +4,12 @@ define(['Controls/Container/Filter'], function(Filter){
       
       it('check filter', function () {
          var filterLayout = new Filter();
-         filterLayout._changeFilterHandler(null, {testKey: 'testValue'});
+         var items = [{
+            id: 'testKey',
+            value: 'testValue',
+            resetValue: ''
+         }];
+         filterLayout._itemsChanged(null, items);
          assert.deepEqual(filterLayout._filter, {testKey: 'testValue'});
       });
    
