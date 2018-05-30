@@ -151,13 +151,6 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             assert.equal(expectedResultWithoutRowSeparator[1], GridViewModel._private.prepareRowSeparatorClasses(false, 1, 3));
             assert.equal(expectedResultWithoutRowSeparator[2], GridViewModel._private.prepareRowSeparatorClasses(false, 2, 3));
          });
-         it('onListChangeCallback', function() {
-            var
-               gridViewModel = new GridViewModel(cfg),
-               curVersion = gridViewModel.getVersion();
-            gridViewModel._onListChangeCallback();
-            assert.isTrue(curVersion !== gridViewModel.getVersion(), 'Incorrect value version after call "_onListChangeCallback()".');
-         });
          it('getItemColumnCellClasses', function() {
             var
                gridViewModel = new GridViewModel(cfg),
