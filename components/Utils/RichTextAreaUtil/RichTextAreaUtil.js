@@ -205,7 +205,6 @@ define('SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil', [
          findAnchors(parsed);
 
          if (anchors) {
-            console.log(anchors);
             require(['WS.Data/Source/SbisService'], function(SbisService) {
                var source = new SbisService({
                   endpoint: {
