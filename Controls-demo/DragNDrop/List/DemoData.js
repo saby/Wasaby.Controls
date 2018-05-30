@@ -1,4 +1,4 @@
-define('Controls-demo/DragNDrop/Container/DemoData', [],
+define('Controls-demo/DragNDrop/List/DemoData', [],
    function() {
       'use strict';
 
