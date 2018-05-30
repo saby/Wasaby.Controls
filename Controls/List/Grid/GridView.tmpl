@@ -1,4 +1,4 @@
-<div class="controls-Grid">
+<div class="controls-Grid controls-Grid_{{_options.itemActionsType}}">
    <div class="controls-Grid__wrapper" style="grid-template-columns: {{_prepareGridTemplateColumns(_listModel.getColumns(), _listModel.getMultiselect())}};">
       <ws:if data="{{isNotFullGridSupport}}">
          <ws:partial template="tmpl!Controls/List/Grid/ColGroup" listModel="{{_listModel}}"/>
@@ -13,7 +13,9 @@
                   listModel="{{_listModel}}"
                   itemTemplate="{{_itemTemplate}}"
                   editingItemData="{{_options.editingItemData}}"
-                  isAdd="{{_options.isAdd}}"/>
+                  isAdd="{{_options.isAdd}}"
+                  itemActionsTemplate="{{_options.itemActionsTemplate}}"
+                  itemActionsType="{{_options.itemActionsType}}"/>
       <ws:if data="{{_listModel.getResults() && _listModel.getResults().position === 'bottom'}}">
          <ws:partial template="tmpl!Controls/List/Grid/Results" userTemplate="{{_listModel.getResults().template}}" listModel="{{_listModel}}"/>
       </ws:if>
