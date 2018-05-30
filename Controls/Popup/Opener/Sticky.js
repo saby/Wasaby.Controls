@@ -24,12 +24,17 @@ define('Controls/Popup/Opener/Sticky',
           * @param config конфигурация попапа (popupOptions).
           */
          open: function(config) {
+            this._setCompatibleConfig(config);
             Base.prototype.open.call(this, config, Strategy);
          },
          _scrollHandler: function() {
             if (this._options.targetTracking) {
                ManagerController.popupUpdated(this._popupId);
             }
+         },
+
+         _setCompatibleConfig: function(config) {
+            config._type = 'sticky'; //for compoundArea
          }
       });
 
