@@ -584,6 +584,21 @@ define(['SBIS3.CONTROLS/ListView/resources/Mover',
             assert.equal(treeItems.getRecordById('121').get('parent'), treeItems.at(0).getId());
          });
       });
-
+      describe('._getParentsMap', function () {
+         it('should return map if tree has wrong structure', function () {
+            var mover = new Mover({
+               parentProperty: 'parent',
+               items: new RecordSet({
+                  rawData: [
+                     {'id': 1, title: 'Один', parent: 1, 'parent@': true},
+                     {'id': 2, title: 'Два', parent: 1, 'parent@': true},
+                     {'id': 3, title: 'Три', parent: 2, 'parent@': true}
+                  ],
+                  idProperty: 'id'
+               })
+            });
+            mover._getParentsMap(3);
+         })
+      });
    });
 });
