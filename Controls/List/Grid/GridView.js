@@ -71,14 +71,14 @@ define('Controls/List/Grid/GridView', [
             GridView.superclass._beforeMount.apply(this, arguments);
             this._listModel.setColumnTemplate(ColumnTpl);
             if (cDetection.isNotFullGridSupport) {
-               this._private.prepareColumnsIfPartialGridSupport(cfg.columns);
+               _private.prepareColumnsIfPartialGridSupport(cfg.columns);
             }
          },
 
          _afterMount: function() {
             GridView.superclass._afterMount.apply(this, arguments);
             if (!cDetection.isNotFullGridSupport) {
-               this._private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResults(), this._listModel.getHeader(), this._container);
+               _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResults(), this._listModel.getHeader(), this._container);
             }
          }
       });
