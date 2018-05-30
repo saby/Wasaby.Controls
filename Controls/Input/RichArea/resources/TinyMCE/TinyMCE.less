@@ -3,6 +3,10 @@
    width: 100%;
    position: relative;
 
+   &__fakeArea {
+      display: none;
+   }
+
    &.mce-edit-focus {
       outline: none;
    }
@@ -91,4 +95,35 @@
       -moz-text-size-adjust: none;
       -ms-text-size-adjust: 100%;
    }
+}
+
+.controls-TinyMCE__placeholder {
+   color:  #ccc;
+   /* +1px к каждой стороне отступа тк у controls-RichEditor__editorFrame  есть border 1px*/
+   padding: 3px 17px 1px 5px;
+   background-color: transparent;
+   position: absolute;
+   display: block;
+   cursor: text;
+   z-index: 0;
+   top: 0;
+   .user-select();
+}
+
+.controls-TinyMCE__sourceContainer {
+   display: block;
+   height: 100%;
+   width:100%;
+   -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+   -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+   box-sizing: border-box;         /* Opera/IE 8+ */
+   border: 0 none;
+   resize: none;
+   line-height: 20px;
+   margin: 0;
+   position: relative;
+   z-index: 1;
+   padding: 6px 0 0 4px;
+   overflow-x: hidden;
+   overflow-y: auto;
 }
