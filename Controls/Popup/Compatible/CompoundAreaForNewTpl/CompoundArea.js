@@ -23,6 +23,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             require([this._options.template], function(ctr) {
                var vDomTemplate = control.createControl(ctr, self._options, $('.vDomWrapper', self.getContainer()));
                var container = vDomTemplate.getContainer();
+               container = container.get ? container.get(0) : container; //берем ноду
                var replaceVDOMContainer = function() {
                   var container = vDomTemplate.getContainer();
                   container.eventProperties = { 'on:close': [{
@@ -47,9 +48,6 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
       });
 
       moduleClass.dimensions = {
-         width: '400px',
-         height: '100px',
-         title: 'Редактирование записи',
          resizable: false
       };
 

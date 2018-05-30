@@ -1,8 +1,7 @@
 define('Controls/List/Grid/GridViewModel', [
-   'Core/Abstract',
-   'Controls/List/ListViewModel',
-   'WS.Data/Entity/VersionableMixin'
-], function(Abstract, ListViewModel, VersionableMixin) {
+   'Controls/List/BaseViewModel',
+   'Controls/List/ListViewModel'
+], function(BaseViewModel, ListViewModel) {
 
    'use strict';
 
@@ -45,24 +44,31 @@ define('Controls/List/Grid/GridViewModel', [
             return preparedClasses;
          },
 
+         prepareRowSeparatorClasses: function(showRowSeparator, rowIndex, rowCount) {
+            var
+               result = '';
+            if (showRowSeparator) {
+               if (rowIndex === 0) {
+                  result += ' controls-Grid__row-cell_firstRow';
+                  result += ' controls-Grid__row-cell_withRowSeparator_firstRow';
+               } else {
+                  if (rowIndex === rowCount - 1) {
+                     result += ' controls-Grid__row-cell_lastRow';
+                     result += ' controls-Grid__row-cell_withRowSeparator_lastRow';
+                  }
+               }
+               result += ' controls-Grid__row-cell_withRowSeparator';
+            } else {
+               result += ' controls-Grid__row-cell_withoutRowSeparator';
+            }
+            return result;
+         },
+
          getItemColumnCellClasses: function(current) {
             var
                cellClasses = 'controls-Grid__row-cell';
 
-            if (current.showRowSeparator) {
-               if (current.index === 0) {
-                  cellClasses += ' controls-Grid__row-cell_firstRow';
-                  cellClasses += ' controls-Grid__row-cell_withRowSeparator_firstRow';
-               } else {
-                  if (current.index === current.dispItem.getOwner().getCount() - 1) {
-                     cellClasses += ' controls-Grid__row-cell_lastRow';
-                     cellClasses += ' controls-Grid__row-cell_withRowSeparator_lastRow';
-                  }
-                  cellClasses += ' controls-Grid__row-cell_withRowSeparator';
-               }
-            } else {
-               cellClasses += ' controls-Grid__row-cell_withoutRowSeparator';
-            }
+            cellClasses += _private.prepareRowSeparatorClasses(current.showRowSeparator, current.index, current.dispItem.getOwner().getCount() - 1);
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
             if (current.multiselect && current.columnIndex === 0) {
@@ -90,7 +96,7 @@ define('Controls/List/Grid/GridViewModel', [
          }
       },
 
-      GridViewModel = Abstract.extend([VersionableMixin], {
+      GridViewModel = BaseViewModel.extend({
          _model: null,
          _columnTemplate: null,
 
@@ -105,8 +111,6 @@ define('Controls/List/Grid/GridViewModel', [
 
          _colgroupColumns: [],
          _curColgroupColumnIndex: 0,
-
-         _cellBottomShadowVisibly: false,
 
          _withLadder: false,
          _drawLadder: false,
@@ -125,7 +129,6 @@ define('Controls/List/Grid/GridViewModel', [
             GridViewModel.superclass.constructor.apply(this, arguments);
             this._model = this._createModel(cfg);
             this._model.subscribe('onListChange', function() {
-               self._markedItem = self.getItemById(self._options.markedKey, self._options.idProperty);
                self._nextVersion();
                self._notify('onListChange');
             });
@@ -146,10 +149,6 @@ define('Controls/List/Grid/GridViewModel', [
 
          setColumnTemplate: function(columnTpl) {
             this._columnTemplate = columnTpl;
-         },
-
-         setCellBottomShadowVisibly: function(value) {
-            this._cellBottomShadowVisibly = value;
          },
 
          // -----------------------------------------------------------
@@ -285,7 +284,8 @@ define('Controls/List/Grid/GridViewModel', [
                column = this._colgroupColumns[this._curColgroupColumnIndex];
             return {
                column: column,
-               style: 'width: ' + column.width
+               index: this._curColgroupColumnIndex,
+               style: typeof column.width !== 'undefined' ? 'width: ' + column.width : ''
             };
          },
 
@@ -325,7 +325,6 @@ define('Controls/List/Grid/GridViewModel', [
 
          setMarkedKey: function(key) {
             this._model.setMarkedKey(key);
-            this._notify('onListChange');
          },
 
          reset: function() {
@@ -363,8 +362,8 @@ define('Controls/List/Grid/GridViewModel', [
             current.goToNextColumn = function() {
                current.columnIndex++;
             };
-            current.isEndColumn = function() {
-               return current.columnIndex < current.columns.length;
+            current.getLastColumnIndex = function() {
+               return current.columns.length - 1;
             };
             current.getCurrentColumn = function() {
                var
@@ -470,11 +469,14 @@ define('Controls/List/Grid/GridViewModel', [
 
          updateIndexes: function(startIndex, stopIndex) {
             this._model.updateIndexes(startIndex, stopIndex);
-            this._notify('onListChange');
          },
 
          setItems: function(items) {
             this._model.setItems(items);
+         },
+
+         setActiveItem: function(itemData) {
+            this._model.setActiveItem(itemData);
          },
 
          appendItems: function(items) {
@@ -506,8 +508,8 @@ define('Controls/List/Grid/GridViewModel', [
             return this._model.getCount();
          },
 
-         setItemActions: function(item, actions) {
-            this._model.setItemActions(item, actions);
+         _prepareDisplayItemForAdd: function(item) {
+            return this._model._prepareDisplayItemForAdd(item);
          },
 
          destroy: function() {
@@ -515,6 +517,8 @@ define('Controls/List/Grid/GridViewModel', [
             GridViewModel.superclass.destroy.apply(this, arguments);
          }
       });
+
+   GridViewModel._private = _private;
 
    return GridViewModel;
 });

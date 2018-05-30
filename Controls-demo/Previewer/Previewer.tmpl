@@ -1,0 +1,18 @@
+<div class="ControlsDemo-Previewer">
+   <ws:for data="image in ['Андрей', 'Валера', 'Максим']">
+      <Controls.Popup.Previewer>
+         <ws:content>
+            <img src="Previewer/image/{{image}}.png"/>
+         </ws:content>
+         <ws:template>
+            <Controls.Popup.Templates.Dialog.DialogTemplate>
+               <ws:contentArea>
+                  <div attr:style="padding: 50px; border: 2px solid red;">
+                     <img src="Previewer/image/{{image}}.png" style="height: 150px; width: 150px;"/>
+                  </div>
+               </ws:contentArea>
+            </Controls.Popup.Templates.Dialog.DialogTemplate>
+         </ws:template>
+      </Controls.Popup.Previewer>
+   </ws:for>
+</div>

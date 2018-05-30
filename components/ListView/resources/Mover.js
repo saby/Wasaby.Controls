@@ -394,19 +394,24 @@ define('SBIS3.CONTROLS/ListView/resources/Mover', [
           */
             path = recordSet.getMetaData().path,
             toMap = [];
-         if (recordSet.getMetaData().path) {
-            path.each(function (elem) {
-               toMap.push('' + elem.getId());
-            });
-         }
+
          var record = recordSet.getRecordById(parentKey);
          while (record) {
             parentKey = '' + record.getId();
             if (toMap.indexOf(parentKey) === -1) {
                toMap.push(parentKey);
+            } else {
+               break;
             }
             parentKey = record.get(this._options.parentProperty);
             record = recordSet.getRecordById(parentKey);
+         }
+         if (recordSet.getMetaData().path) {
+            path.each(function (elem) {
+               if (toMap.indexOf(elem.getId()) === -1) {
+                  toMap.push('' + elem.getId());
+               }
+            });
          }
          return toMap;
       },
