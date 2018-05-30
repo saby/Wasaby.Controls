@@ -27,12 +27,8 @@ function(cMerge) {
          this._setSizes(cfg, templateClass);
       },
       _prepareConfigForNewTemplate: function(cfg, templateClass) {
-         cfg.componentOptions = {
-            componentOptions: cfg.templateOptions || cfg.componentOptions || {},
-            template: cfg.template,
-            handlers: cfg.handlers
-         };
-
+         cfg.componentOptions = cfg.templateOptions || cfg.componentOptions || {};
+         cfg.componentOptions.template = cfg.template;
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea';
          this._setSizes(cfg, templateClass);
       },
@@ -42,13 +38,12 @@ function(cMerge) {
             templateOptions: cfg.templateOptions || {},
             componentOptions: cfg.templateOptions || {},
             template: cfg.template,
-            type: cfg._type,
-            handlers: cfg.handlers,
             _initCompoundArea: cfg._initCompoundArea,
             dialogOptions: {
                isStack: cfg._type === 'stack',
                target: cfg.target,
-               modal: cfg.isModal
+               modal: cfg.isModal,
+               handlers: cfg.handlers
             },
             mode: (cfg._type === 'stack' || cfg._type === 'sticky') ? 'floatArea' : 'dialog'
          });

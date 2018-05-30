@@ -115,7 +115,7 @@ define('Controls/Popup/Opener/BaseOpener',
                }
                def.callback(popupId);
             } else {
-               requirejs(['Controls/Popup/Compatible/BaseOpener'], function (CompatibleOpener) {
+               requirejs(['Controls/Popup/Compatible/BaseOpener'], function(CompatibleOpener) {
                   CompatibleOpener._prepareConfigForOldTemplate(cfg, rootTpl);
                   if (popupId) {
                      popupId = ManagerController.update(popupId, cfg);
@@ -129,6 +129,7 @@ define('Controls/Popup/Opener/BaseOpener',
             requirejs(['Controls/Popup/Compatible/BaseOpener', 'SBIS3.CONTROLS/Action/List/OpenEditDialog'], function(CompatibleOpener, OpenEditDialog) {
                var newCfg = CompatibleOpener._prepareConfigFromNewToOld(cfg);
                new OpenEditDialog().execute(newCfg);
+               def.callback();
             });
          }
          return def;
@@ -140,6 +141,7 @@ define('Controls/Popup/Opener/BaseOpener',
          //Если его нет, но есть _stable, значит это функция от tmpl файла
          return !!templateClass.prototype._template || !!templateClass.stable;
       };
+
       //TODO Compatible
       Base.isNewEnvironment = function() {
          return !!document.getElementsByTagName('html')[0].controlNodes;
