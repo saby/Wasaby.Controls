@@ -70,21 +70,15 @@ define('Controls/Filter/Button',
             this._onFilterChanged = this._onFilterChanged.bind(this);
          },
 
-         _beforeUpdate: function(options, context) {
+         _beforeUpdate: function(options) {
             if (this._options.items !== options.items) {
                _private.resolveItems(this, options.items);
             }
-            if (this._historyId !== context.filterLayoutField.historyId) {
-               this._historyId = context.filterLayoutField.historyId;
-            }
          },
 
-         _beforeMount: function(options, context) {
+         _beforeMount: function(options) {
             if (options.items) {
                _private.resolveItems(this, options.items);
-            }
-            if (context.filterLayoutField.historyId) {
-               this._historyId = context.filterLayoutField.historyId;
             }
          },
 
@@ -113,7 +107,7 @@ define('Controls/Filter/Button',
                         itemTemplateProperty: this._options.itemTemplateProperty,
                         additionalTemplate: this._options.additionalTemplate,
                         additionalTemplateProperty: this._options.additionalTemplateProperty,
-                        historyId: this._historyId
+                        historyId: this._options.historyId
                      },
                      template: 'Controls/Filter/Button/Panel',
                      target: this._children.panelTarget
@@ -127,12 +121,6 @@ define('Controls/Filter/Button',
             this._notify('itemsChanged', [data.items]);
          }
       });
-
-      FilterButton.contextTypes = function() {
-         return {
-            filterLayoutField: FilterContextField
-         };
-      };
 
       FilterButton.getDefaultOptions = function() {
          return {
