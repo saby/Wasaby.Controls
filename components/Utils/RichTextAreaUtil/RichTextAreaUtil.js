@@ -105,10 +105,18 @@ define('SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil',[
          }
       },
 
+      getAttribute: function(node, atrrName){
+         if (node && node.attributes && node.attributes[atrrName]) {
+            return node.attributes[atrrName].value;
+         }
+         return false;
+      },
+
       //TODO: временное решение для 230. удалить в 240 когда сделают ошибку https://inside.tensor.ru/opendoc.html?guid=dbaac53f-1608-42fa-9714-d8c3a1959f17
       unDecorateLinks: function(text) {
          var
             parsed = Parser.parse(text),
+            getAttribute = this.getAttribute,
 
             replaceDecoratedLinks = function(content) {
                var
@@ -123,7 +131,8 @@ define('SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil',[
                      //LinkDecorator__linkWrap - если выделили только одну декорированную ссылку и пытаются её вставить данный класс висит на <a>
                      //LinkDecorator__decoratedLink - версия февраля 2017
                      //LinkDecorator__wrap - актуальная версия
-                     if (className === 'LinkDecorator__link' || className == 'LinkDecorator' || className == 'LinkDecorator__simpleLink'|| className == 'LinkDecorator__linkWrap') {
+                     if (className === 'LinkDecorator__link' || className == 'LinkDecorator' || className == 'LinkDecorator__simpleLink'|| className == 'LinkDecorator__linkWrap'
+                        || className == 'LinkDecorator__outerplaceholder' || className == 'LinkDecorator__innerplaceholder') {
                         replaceToHref(content, i);
                      } else if (className == 'LinkDecorator__decoratedLink'){
                         content.childNodes.splice(i, 1);
@@ -135,13 +144,6 @@ define('SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil',[
                      i++;
                   }
                }
-            },
-
-            getAttribute = function(node, atrrName){
-               if (node && node.attributes && node.attributes[atrrName]) {
-                  return node.attributes[atrrName].value;
-               }
-               return false;
             },
 
             replaceToHref = function(content, index){
@@ -190,6 +192,7 @@ define('SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil',[
          var parsed = Parser.parse(text),
             deferred = new Deferred(),
             anchors = [],
+            getAttribute = this.getAttribute,
 
          findAnchors = function(content) {
             var i = 0;
@@ -205,18 +208,12 @@ define('SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil',[
                   i++;
                }
             }
-         },
-
-         getAttribute = function(node, atrrName){
-            if (node && node.attributes && node.attributes[atrrName]) {
-               return node.attributes[atrrName].value;
-            }
-            return false;
          };
 
          findAnchors(parsed);
 
          if (anchors) {
+            console.log(anchors);
             require(['WS.Data/Source/SbisService'], function(SbisService) {
                var source = new SbisService({
                   endpoint: {
@@ -230,13 +227,13 @@ define('SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil',[
                   var data = SVGRecordSet.getRawData()
                   //Используем atob для декодирования base64
                   for (var i=0; i < data.d.length; i++) {
-                     text = text.replace(/<a[a-zA-z=":\/\-.0-9\s]*>[a-zA-z=":\/\-.0-9\s]*<\/a>/, atob(data.d[i][1]));
+                     text = text.replace(/<a class="LinkDecorator__[a-zA-z=":\/\-.0-9\s]*>[a-zA-z=":\/\-.0-9\s]*<\/a>/, atob(data.d[i][1]));
                   }
                   deferred.callback(text);
                });
             });
          } else {
-            return new Deferred().callback(text);
+            deferred.callback(text);
          }
          return deferred;
       }
