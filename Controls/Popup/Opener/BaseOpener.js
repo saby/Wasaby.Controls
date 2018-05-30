@@ -7,6 +7,7 @@ define('Controls/Popup/Opener/BaseOpener',
       'Core/Deferred'
    ],
    function(Control, ManagerController, CoreClone, CoreMerge, Deferred) {
+
       /**
        * Базовый опенер
        * @category Popup
@@ -36,7 +37,7 @@ define('Controls/Popup/Opener/BaseOpener',
             }
             this._isExecuting = true;
 
-            if (!this.isOpened()) { // удаляем неактуальный id
+            if (Base.isNewEnvironment() && !this.isOpened()) { // удаляем неактуальный id
                this._popupId = null;
             }
 
@@ -90,7 +91,6 @@ define('Controls/Popup/Opener/BaseOpener',
          close: function() {
             if (this._popupId) {
                ManagerController.remove(this._popupId);
-               this._popupId = null;
             }
          },
 
@@ -106,22 +106,30 @@ define('Controls/Popup/Opener/BaseOpener',
       Base.showDialog = function(rootTpl, cfg, strategy, popupId) {
          var def = new Deferred();
 
-         if (Base.isVDOMTemplate(rootTpl) && !(cfg.templateOptions && cfg.templateOptions._initCompoundArea)) {
-            if (popupId) {
-               popupId = ManagerController.update(popupId, cfg);
-            } else {
-               popupId = ManagerController.show(cfg, strategy);
-            }
-            def.callback(popupId);
-         } else {
-            requirejs(['Controls/Popup/Compatible/BaseOpener'], function(CompatibleOpener) {
-               CompatibleOpener._prepareConfigForOldTemplate(cfg, rootTpl);
+         if (Base.isNewEnvironment()) {
+            if (Base.isVDOMTemplate(rootTpl) && !(cfg.templateOptions && cfg.templateOptions._initCompoundArea)) {
                if (popupId) {
                   popupId = ManagerController.update(popupId, cfg);
                } else {
                   popupId = ManagerController.show(cfg, strategy);
                }
                def.callback(popupId);
+            } else {
+               requirejs(['Controls/Popup/Compatible/BaseOpener'], function(CompatibleOpener) {
+                  CompatibleOpener._prepareConfigForOldTemplate(cfg, rootTpl);
+                  if (popupId) {
+                     popupId = ManagerController.update(popupId, cfg);
+                  } else {
+                     popupId = ManagerController.show(cfg, strategy);
+                  }
+                  def.callback(popupId);
+               });
+            }
+         } else {
+            requirejs(['Controls/Popup/Compatible/BaseOpener', 'SBIS3.CONTROLS/Action/List/OpenEditDialog'], function(CompatibleOpener, OpenEditDialog) {
+               var newCfg = CompatibleOpener._prepareConfigFromNewToOld(cfg);
+               new OpenEditDialog().execute(newCfg);
+               def.callback();
             });
          }
          return def;
@@ -132,6 +140,11 @@ define('Controls/Popup/Opener/BaseOpener',
          //на VDOM классах есть св-во _template.
          //Если его нет, но есть _stable, значит это функция от tmpl файла
          return !!templateClass.prototype._template || !!templateClass.stable;
+      };
+
+      //TODO Compatible
+      Base.isNewEnvironment = function() {
+         return !!document.getElementsByTagName('html')[0].controlNodes;
       };
 
       return Base;
