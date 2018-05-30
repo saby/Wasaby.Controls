@@ -9,5 +9,18 @@
               itemTemplate="{{itemTemplate}}"
               template="tmpl!Controls/List/ItemTemplateWrapper"
               contentTemplate="{{itemContentTemplate}}"
-              itemData="{{listModel.getCurrent()}}"/>
+              itemData="{{listModel.getCurrent()}}"
+              actionsType="{{itemActionsType}}"/>
 </ws:for>
+<ws:if data="{{editingItemData && isAdd}}">
+      <ws:partial
+              on:click="_onItemClick(editingItemData.dispItem)"
+              itemTemplate="{{itemTemplate}}"
+              template="tmpl!Controls/List/ItemTemplateWrapper"
+              itemActionsTemplate="{{itemActionsTemplate}}"
+              swipeTemplate="{{swipeTemplate}}"
+              multiSelectTpl="{multiSelectTpl}}"
+              contentTemplate="{{itemContentTemplate}}"
+              itemData="{{editingItemData}}"
+              actionsType="{{itemActionsType}}"/>
+</ws:if>
