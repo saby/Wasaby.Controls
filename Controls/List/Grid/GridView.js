@@ -71,7 +71,7 @@ define('Controls/List/Grid/GridView', [
             GridView.superclass._beforeMount.apply(this, arguments);
             this._listModel.setColumnTemplate(ColumnTpl);
             if (cDetection.isNotFullGridSupport) {
-               this._private.prepareColumnsIfPartialGridSupport(cfg.columns);
+               _private.prepareColumnsIfPartialGridSupport(cfg.columns);
             }
          },
 
