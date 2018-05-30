@@ -20,7 +20,8 @@
                     multiSelectTpl="{{multiSelectTpl}}"
                     template="{{itemTemplate}}"
                     contentTemplate="{{itemContentTemplate}}"
-                    itemData="{{listModel.getCurrent()}}"/>
+                    itemData="{{listModel.getCurrent()}}"
+                    actionsType="{{itemActionsType}}"/>
       </ws:if>
       <ws:if data="{{listModel.getDragTargetPosition() &&
                      listModel.getDragTargetPosition().index === listModel.getCurrentIndex() &&

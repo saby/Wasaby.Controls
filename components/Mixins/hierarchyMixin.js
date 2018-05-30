@@ -64,7 +64,7 @@ define('SBIS3.CONTROLS/Mixins/hierarchyMixin', [
              *
              * @example
              * <pre>
-             *    <option name="parentProperty">Раздел@</option>
+             *    <option name="nodeProperty">Раздел@</option>
              * </pre>
              */
             nodeProperty: null,

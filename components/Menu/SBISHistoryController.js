@@ -17,7 +17,9 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
 
    var _private = {
       getOriginId: function(id) {
-         id = (id + '').replace('pinned-', '').replace('recent-', '').replace('frequent-', '');
+         if (id !== null) {
+             id = (id + '').replace('pinned-', '').replace('recent-', '').replace('frequent-', '');
+         }
          return id;
       },
 

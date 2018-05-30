@@ -107,7 +107,6 @@
    // http://css-live.ru/articles/chto-mozhet-polomat-maket-na-gridax-css-grid-layout.html
    min-width: 0;
    font-size: @font-size_Grid-row-cell;
-   overflow: hidden;
 }
 .controls-Grid__row-cell_halign_left {
    text-align: left;
@@ -120,6 +119,9 @@
 }
 .controls-Grid__row:hover .controls-Grid__row-cell {
    background-color: @background-color_Grid-row_hover;
+}
+.controls-Grid__row:hover .controls-itemActionsV {
+   display: inline-block;
 }
 .controls-Grid__row-cell_rowSpacing_default {
    padding-top: (@spacing_Grid-row_default / 2) + @height-Grid-row-separator;
