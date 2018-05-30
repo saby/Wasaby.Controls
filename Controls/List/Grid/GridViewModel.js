@@ -512,6 +512,10 @@ define('Controls/List/Grid/GridViewModel', [
             return this._model._prepareDisplayItemForAdd(item);
          },
 
+         getDragTargetPosition: function() {
+            return this._model.getDragTargetPosition();
+         },
+
          destroy: function() {
             this._model.destroy();
             GridViewModel.superclass.destroy.apply(this, arguments);
