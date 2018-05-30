@@ -35,6 +35,11 @@ define('Controls/Popup/Opener/BaseOpener',
                return;
             }
             this._isExecuting = true;
+
+            if (!this.isOpened()) { // удаляем неактуальный id
+               this._popupId = null;
+            }
+
             if (cfg.isCompoundTemplate) { //TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
                requirejs(['Controls/Popup/Compatible/Layer'], function(Layer) {
                   Layer.load().addCallback(function() {
