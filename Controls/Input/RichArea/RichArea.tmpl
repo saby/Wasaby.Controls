@@ -1,15 +1,38 @@
-<div class="controls-RichTextArea {{_options.readOnly ? 'controls-RichTextArea__readOnly' : 'controls-RichTextArea__editable'}}">
+<div class="controls-RichTextArea {{_options.readOnly ? 'controls-RichTextArea__readOnly' : 'controls-RichTextArea__editable'}}"
+     style="{{_options.autoHeight && _options.maximalHeight && _options.maximalHeight != 0 ? 'max-height:' + _options.maximalHeight + 'px;' }}"
+>
     <Controls.Container.Scroll
             class="controls-RichTextArea__scrollContainer"
+            style="{{_options.autoHeight && _options.maximalHeight && _options.maximalHeight != 0 ? 'max-height:' + _options.maximalHeight + 'px;' }}"
+            name="areaScrollContainer"
     >
         <ws:content>
-            <ws:if data="{{_options.readOnly}}">
-                <div class="controls-RichTextArea__dataReview ws-basic-style" name="previewContainer">
-                </div>
-            </ws:if>
-            <ws:else>
-                <Controls.Input.RichArea.TinyMCE value="{{_options.value}}" on:textChanged="_onTextChanged()" name="tinyMCE"/>
-            </ws:else>
+            <div>
+                <ws:if data="{{_options.readOnly}}">
+                    <div class="controls-RichTextArea__dataReview ws-basic-style"
+                         name="previewContainer"
+                         style="{{!_options.previewAutoHeight && _options.autoHeight && _options.minimalHeight && _options.minimalHeight != 0 ? 'min-height:' + _options.minimalHeight + 'px;'}}"
+                    >
+                        {{_options.value}}
+                    </div>
+                </ws:if>
+                <ws:else>
+                    <Controls.Input.RichArea.resources.TinyMCE value="{{_options.value}}"
+                                                               on:textChanged="_onTextChanged()"
+                                                               on:updateScrollContainerHeight="_updateScrollContainerHeightHandler()"
+                                                               on:updateScrollContainerScrollTop="_updateScrollContainerScrollTopHandler()"
+                                                               on:updateScrollContainerMaxHeight="_updateScrollContainerMaxHeightHandler()"
+                                                               placeholder="{{_options.placeholder}}"
+                                                               name="tinyMCE"
+                                                               codeMode="{{_options.codeMode}}"
+                                                               autoHeight="{{_options.autoHeight}}"
+                                                               minimalHeight="{{_options.minimalHeight}}"
+                                                               maximalHeight="{{_options.maximalHeight}}"
+                                                               saveHistory="{{_options.saveHistory}}"
+                                                               highlightLinks="{{_options.highlightLinks}}"
+                    />
+                </ws:else>
+            </div>
         </ws:content>
     </Controls.Container.Scroll>
 </div>

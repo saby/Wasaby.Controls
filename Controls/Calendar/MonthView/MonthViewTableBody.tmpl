@@ -1,9 +1,9 @@
-<div for="index, week in monthViewModel.getMonthArray()" class="controls-MonthViewVDOM__tableRow">
+<div for="index, week in monthViewModel.getMonthArray()" class="controls-MonthViewVDOM__tableRow {{_themeCssClass}}">
    <div for="indexOfDay, value in week"
         on:click="_dayClickHandler(value.date)"
         on:mouseenter="_mouseEnterHandler(value.date)"
-        attr:class="controls-MonthViewVDOM__item {{ monthViewModel._prepareClass({'value': value}) }}"
+        attr:class="controls-MonthViewVDOM__item {{ monthViewModel._prepareClass({'value': value}) }} {{_themeCssClass}}"
    >
-      <ws:partial template="{{_dayTmpl}}" value="{{value}}"/>
+      <ws:partial template="{{_dayTmpl}}" value="{{value}}" _themeCssClass="{{_themeCssClass}}" mode="{{mode}}"/>
    </div>
 </div>

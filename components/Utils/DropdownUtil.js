@@ -3,8 +3,9 @@ define('SBIS3.CONTROLS/Utils/DropdownUtil', [
    'SBIS3.CONTROLS/Menu/SBISHistoryController',
    'SBIS3.CONTROLS/Utils/HistoryUtil',
    'WS.Data/Query/Query',
-   'Core/helpers/collection-helpers'
-], function(coreClone, HistoryController, historyUtil, Query, colHelpers) {
+   'Core/helpers/collection-helpers',
+   'Core/core-merge'
+], function(coreClone, HistoryController, historyUtil, Query, colHelpers, merge) {
    return {
       showPicker: function(self, prototype, event) {
          var myself = this;
@@ -91,6 +92,7 @@ define('SBIS3.CONTROLS/Utils/DropdownUtil', [
             filter = {};
 
          filter[this._getHistoryController(self).getOriginalIdProperty()] = recordsId;
+         merge(filter, self._options.filter || {});
          query.where(filter).limit(12);
          return query;
       },

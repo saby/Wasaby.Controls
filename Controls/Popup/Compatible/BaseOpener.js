@@ -2,10 +2,10 @@
  * Created by as.krasilnikov on 26.04.2018.
  */
 define('Controls/Popup/Compatible/BaseOpener', [
-   'Core/Deferred',
+   'Core/core-merge',
    'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea'
 ],
-function() {
+function(cMerge) {
    /**
        * Слой совместимости для базового опенера для открытия старых шаблонов
        */
@@ -26,6 +26,33 @@ function() {
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
          this._setSizes(cfg, templateClass);
       },
+      _prepareConfigForNewTemplate: function(cfg, templateClass) {
+         cfg.componentOptions = cfg.templateOptions || cfg.componentOptions || {};
+         cfg.componentOptions.template = cfg.template;
+         cfg.template = 'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea';
+         this._setSizes(cfg, templateClass);
+      },
+
+      _prepareConfigFromNewToOld: function(cfg) {
+         var newCfg = cMerge(cfg, {
+            templateOptions: cfg.templateOptions || {},
+            componentOptions: cfg.templateOptions || {},
+            template: cfg.template,
+            _initCompoundArea: cfg._initCompoundArea,
+            dialogOptions: {
+               isStack: cfg._type === 'stack',
+               target: cfg.target,
+               modal: cfg.isModal,
+               handlers: cfg.handlers
+            },
+            mode: (cfg._type === 'stack' || cfg._type === 'sticky') ? 'floatArea' : 'dialog'
+         });
+         if (cfg.hasOwnProperty('closeByExternalClick')) {
+            cfg.autoHide = cfg.closeByExternalClick;
+         }
+
+         return newCfg;
+      },
 
       //Берем размеры либо с опций, либо с дименшенов
       _setSizes: function(cfg, templateClass) {
@@ -39,6 +66,17 @@ function() {
 
          cfg.minWidth = cfg.minWidth || cfg.maxWidth;
          cfg.maxWidth = cfg.maxWidth || cfg.minWidth;
+
+         if (!cfg.minHeight) {
+            cfg.minHeight = dimensions.minHeight ? parseInt(dimensions.minHeight, 10) : null;
+         }
+         if (!cfg.maxHeight) {
+            cfg.maxHeight = dimensions.maxHeight ? parseInt(dimensions.maxHeight, 10) : null;
+         }
+
+         cfg.minHeight = cfg.minHeight || cfg.maxHeight;
+         cfg.maxHeight = cfg.maxHeight || cfg.minHeight;
+
       }
    };
 }

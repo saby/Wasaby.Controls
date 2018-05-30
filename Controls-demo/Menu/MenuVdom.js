@@ -6,7 +6,7 @@ define('Controls-demo/Menu/MenuVdom', [
    'Controls/History/Source',
    'Controls/History/Service',
    'css!Controls-demo/Dropdown/MenuVdom'
-], function (Control, template, cClone, Memory, historySource, historyService) {
+], function(Control, template, cClone, Memory, historySource, historyService) {
    'use strict';
 
 
@@ -47,18 +47,21 @@ define('Controls-demo/Menu/MenuVdom', [
                title: 'Запись 8'
             }
          ],
-         _createMemory: function (items) {
+         _createMemory: function(items) {
             // возвращаем historySource
             return new historySource({
-                originSource: new Memory({
-                   idProperty: 'id',
-                    data: items
-                }),
-                historySource: new historyService({
-                    historyId: 'TEST_HISTORY_ID'
-                }),
-                parentProperty: 'parent',
-                nodeProperty: '@parent'
+               originSource: new Memory({
+                  idProperty: 'id',
+                  data: items
+               }),
+               // TEST_HISTORY_ID
+               // TEST_HISTORY_ID_V1
+               historySource: new historyService({
+                  historyIds: ['TEST_HISTORY_ID', 'TEST_HISTORY_ID_V1'],
+                  pinned: true
+               }),
+               parentProperty: 'parent',
+               nodeProperty: '@parent'
             });
          },
          _getHierarchyMenuItems: function() {

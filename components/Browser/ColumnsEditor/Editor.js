@@ -262,6 +262,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
                   moveColumns: _selectValue('moveColumns', edDefSources, 'boolean'),
                   preserveOrder: _selectValue('preserveOrder', edDefSources, 'boolean'),
                   multiselect: _selectValue('multiselect', edDefSources, 'boolean', true),
+                  autoApply: _selectValue('autoApply', edDefSources, 'boolean'),
                   handlers: {
                      onComplete: this._onAreaComplete.bind(this)
                   }
