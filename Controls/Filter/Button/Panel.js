@@ -102,6 +102,7 @@ define('Controls/Filter/Button/Panel', [
             filter: _private.getFilter(this),
             items: items || this._items
          }]);
+         this._notify('close');
       },
 
       _resetFilter: function() {
