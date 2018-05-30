@@ -385,8 +385,6 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
                this._startDatePickerResetActive();
                this._datePickerSetActive(this._endDatePicker, DateUtil.getEndOfMonth(date));
             }
-         } else {
-            this._datePickerSetActive(this._startDatePicker);
          }
       },
        _onMonthRangePickerOnItemMouseLeave: function (event, date) {

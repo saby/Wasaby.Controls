@@ -86,7 +86,6 @@ define('Controls/Tabs/Buttons', [
       items: [],
       constructor: function(cfg) {
          TabsButtons.superclass.constructor.apply(this, arguments);
-         this._publish('selectedKeyChanged');
       },
       _beforeMount: function(options, context, receivedState) {
          if (receivedState) {

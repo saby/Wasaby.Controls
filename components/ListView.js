@@ -4769,7 +4769,10 @@ define('SBIS3.CONTROLS/ListView',
             return this._getDragMove().beginDrag();
          },
          _endDragHandler: function () {
-            return this._getDragMove().endDrag();
+            this._getDragMove().endDrag();
+            if (this._itemsToolbar && this._itemsToolbar.isVisible()) {
+               this._itemsToolbar.recalculatePosition();
+            }
          },
          _onDragHandler: function () {
             return this._getDragMove().drag();

@@ -1,0 +1,21 @@
+<div class="controls-HistoryList">
+    <div class="controls-HistoryList__header">Ранее отбирались</div>
+    <Controls.List
+            source = "{{_listMemory}}"
+            idProperty="ObjectId"
+            itemActions="{{_itemActions}}"
+            on:actionClick="_onActionClick()"
+            itemActionVisibilityCallback="{{_showAction}}"
+            class="controls-HistoryList__list">
+
+        <ws:itemTemplate>
+            <ws:partial template="tmpl!Controls/List/ItemTemplate">
+                <ws:contentTemplate>
+                    <div on:click="_contentClick( itemTemplate.itemData)">
+                        <div style="font-size: 11px; color: grey">{{itemTemplate.itemData.item.get('ObjectData')}}</div>
+                    </div>
+                </ws:contentTemplate>
+            </ws:partial>
+        </ws:itemTemplate>
+    </Controls.List>
+</div>
