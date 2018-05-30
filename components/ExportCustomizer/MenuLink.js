@@ -2,14 +2,14 @@
  * Контрол "Ссылка-меню, открывающая настройщик экспорта"
  *
  * @public
- * @class SBIS3.CONTROLS/ExportCustomizer/Link
+ * @class SBIS3.CONTROLS/ExportCustomizer/MenuLink
  * @extends SBIS3.CONTROLS/CompoundControl
  */
-define('SBIS3.CONTROLS/ExportCustomizer/Link',
+define('SBIS3.CONTROLS/ExportCustomizer/MenuLink',
    [
       'SBIS3.CONTROLS/Menu/MenuLink'/*^^^,
-      'tmpl!SBIS3.CONTROLS/ExportCustomizer/Link',
-      'css!SBIS3.CONTROLS/ExportCustomizer/Link'*/
+      'tmpl!SBIS3.CONTROLS/ExportCustomizer/MenuLink',
+      'css!SBIS3.CONTROLS/ExportCustomizer/MenuLink'*/
    ],
 
    function (MenuLink/*^^^, tmpl*/) {
@@ -23,7 +23,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Link',
        * @property {string} fileUuid Uuid шаблона форматирования эксель-файла
        */
 
-      var Link = MenuLink.extend(/**@lends SBIS3.CONTROLS/ExportCustomizer/Link.prototype*/ {
+      var Link = MenuLink.extend(/**@lends SBIS3.CONTROLS/ExportCustomizer/MenuLink.prototype*/ {
 
          /*^^^_dotTplFn: tmpl,*/
          $protected: {
