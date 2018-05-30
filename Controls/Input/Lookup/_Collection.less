@@ -64,3 +64,19 @@
 .controls-Lookup__item__caption-style-primary {
 	color: @color_Lookup_item-primary;
 }
+
+.controls-Lookup__collection {
+	.flex-shrink(1);
+	max-width: 100%;
+	overflow: hidden;
+}
+
+/* Необходим :before с line-height, т.к. в поле связи может не быть поля ввода (input),
+   который образует боазовую линию */
+.controls-Lookup__collection:before {
+	content: '\200b';
+	width: 0;
+	display: inline-block;
+	visibility: hidden;
+	line-height: @default-base-line-height;
+}
