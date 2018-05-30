@@ -93,11 +93,6 @@ define('Controls/List/Grid/GridViewModel', [
             }
 
             return cellClasses;
-         },
-
-         onListChangeCallback: function() {
-            this._nextVersion();
-            this._notify('onListChange');
          }
       },
 
@@ -126,14 +121,17 @@ define('Controls/List/Grid/GridViewModel', [
             columnIndex: null,
             ladderLength: null
          },
-         _onListChangeCallback: null,
 
          constructor: function(cfg) {
+            var
+               self = this;
             this._options = cfg;
             GridViewModel.superclass.constructor.apply(this, arguments);
             this._model = this._createModel(cfg);
-            this._onListChangeCallback = _private.onListChangeCallback.bind(this);
-            this._model.subscribe('onListChange', this._onListChangeCallback);
+            this._model.subscribe('onListChange', function() {
+               self._nextVersion();
+               self._notify('onListChange');
+            });
             this._prepareHeaderColumns(this._options.header, this._options.multiselect);
             this._prepareResultsColumns(this._options.columns, this._options.multiselect);
             this._prepareColgroupColumns(this._options.columns, this._options.multiselect);
