@@ -25,7 +25,7 @@ define('SBIS3.CONTROLS/Utils/ImportExport/PropertyNames',
          if (!obj || typeof obj !== 'object') {
             throw new Error('No arguments');
          }
-         return _changeNames(obj, _camelCaseToLowDash);
+         return _changeNames(_camelCaseToLowDash, obj);
       };
 
       /**
@@ -40,17 +40,23 @@ define('SBIS3.CONTROLS/Utils/ImportExport/PropertyNames',
          if (!obj || typeof obj !== 'object') {
             throw new Error('No arguments');
          }
-         return _changeNames(obj, _lowDashToCamelCase);
+         return _changeNames(_lowDashToCamelCase, obj);
       };
 
       // Private methods:
 
-      var _changeNames = function (values, changer) {
+      var _changeNames = function (changer, values) {
+         if (!values || typeof values !== 'object') {
+            return values;
+         }
+         if (Array.isArray(values)) {
+            return values.length ? values.map(_changeNames.bind(null, changer)) : [];
+         }
          var o = {};
          for (var name in values) {
             var value = values[name];
             var n = changer(name);
-            o[changer(name)] = value && typeof value === 'object' ? _changeNames(value, changer) : value;
+            o[n] = value && typeof value === 'object' ? _changeNames(changer, value) : value;
          }
          return o;
       };

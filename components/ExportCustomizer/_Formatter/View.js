@@ -299,7 +299,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                var method = options.fileUuid ? 'update' : 'create';
                this._callFormatterMethod(method).addCallback(this._onFormatter.bind(this, method));
                var fieldIds = options.fieldIds;
-               this._formatterMenu.setEnabled(!!(fieldIds && fieldIds.length));
+               var isAllow = !!(fieldIds && fieldIds.length);
+               this.setEnabled(isAllow);
+               this.setVisible(isAllow);
             }
          },
 

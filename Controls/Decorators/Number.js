@@ -47,7 +47,7 @@ define('Controls/Decorators/Number',
          }
       };
 
-      var Number = Control.extend({
+      var NumberDecorator = Control.extend({
          _template: template,
 
          _formattedNumber: null,
@@ -63,15 +63,15 @@ define('Controls/Decorators/Number',
          }
       });
 
-      Number.getOptionTypes = function() {
+      NumberDecorator.getOptionTypes = function() {
          return {
             number: descriptor(Number).required(),
             fractionSize: descriptor(Number)
          };
       };
 
-      Number._private = _private;
+      NumberDecorator._private = _private;
 
-      return Number;
+      return NumberDecorator;
    }
 );

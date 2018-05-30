@@ -1,21 +1,21 @@
 <div class="demo-Grid">
+    <Controls.List.AddButton caption="Add record" on:click="list.addItem()"/>
     <div class="demo-Grid__container">
         <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
-            <ws:content>
-                <Controls.Grid
-                        attr:class="demo-Grid__control"
-                        keyProperty="id"
-                        displayProperty="title"
-                        markedKey="{{448390}}"
-                        multiselect="{{true}}"
-                        header="{{gridHeader}}"
-                        source = "{{_viewSource}}"
-                        columns="{{gridColumns}}">
-                    <ws:editingConfig>
-                        <ws:Object editOnClick="{{true}}"/>
-                    </ws:editingConfig>
-                </Controls.Grid>
-            </ws:content>
+            <Controls.Grid
+                    name="list"
+                    attr:class="demo-Grid__control"
+                    keyProperty="id"
+                    displayProperty="title"
+                    markedKey="{{448390}}"
+                    multiselect="{{true}}"
+                    header="{{gridHeader}}"
+                    source = "{{_viewSource}}"
+                    columns="{{gridColumns}}">
+                <ws:editingConfig>
+                    <ws:Object editOnClick="{{true}}" autoAdd="{{true}}"/>
+                </ws:editingConfig>
+            </Controls.Grid>
         </Controls.Container.Scroll>
     </div>
 </div>
