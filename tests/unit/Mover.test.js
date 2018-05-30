@@ -597,7 +597,7 @@ define(['SBIS3.CONTROLS/ListView/resources/Mover',
                   idProperty: 'id'
                })
             });
-            mover._getParentsMap(3);
+            assert.deepEqual(mover._getParentsMap(3), ['3', '2', '1']);
          })
       });
    });
