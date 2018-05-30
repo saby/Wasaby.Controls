@@ -47,6 +47,8 @@ define('Controls/DragNDrop/Controller',
          _template: template,
          _dragEntity: undefined,
          _startEvent: undefined,
+         _documentDragging: false,
+         _insideDragging: false,
 
          startDragNDrop: function(entity, mouseDownEvent) {
             this._dragEntity = entity;
@@ -61,60 +63,58 @@ define('Controls/DragNDrop/Controller',
 
             if (this._startEvent) {
                dragObject = this._getDragObject(nativeEvent, startEvent);
-               if (!this._isDragging && _private.isDragStarted(startEvent, nativeEvent)) {
-                  this._isDragging = true;
+               if (!this._documentDragging && _private.isDragStarted(startEvent, nativeEvent)) {
                   _private.preventClickEvent(startEvent);
-                  this._dragStart(dragObject);
+                  this._insideDragging = true;
+                  this._notify('_documentDragStart', [dragObject], {bubbling: true});
                }
-               if (this._isDragging) {
-                  this._dragMove(dragObject);
+               if (this._documentDragging) {
+                  this._notify('dragMove', [dragObject]);
+                  if (this._options.dragAvatarTemplate) {
+                     this._notify('_updateDragAvatar', [dragObject, this._options.dragAvatarTemplate], {bubbling: true});
+                  }
                }
             }
          },
 
          _onMouseUp: function(event) {
             if (this._startEvent) {
-               if (this._isDragging) {
-                  this._dragEnd(this._getDragObject(event.nativeEvent, this._startEvent));
-                  this._isDragging = false;
+               if (this._documentDragging) {
+                  this._notify('_documentDragEnd', [this._getDragObject(event.nativeEvent, this._startEvent)], {bubbling: true});
                }
-
                this._dragEntity = null;
                this._startEvent = null;
             }
          },
 
-         _dragStart: function(dragObject) {
-            this._notify('dragStart', [dragObject]);
-            this._notify('_documentDragStart', [dragObject], {bubbling: true});
-         },
-
-         _documentDragStart: function(dragObject) {
-            this._notify('documentDragStart', [dragObject]);
-         },
-
-         _dragMove: function(dragObject) {
-            this._notify('dragMove', [dragObject]);
-         },
-
          _mouseEnter: function() {
-            if (this._isDragging) {
+            if (this._documentDragging) {
+               this._insideDragging = true;
                this._notify('dragEnter', [this._getDragObject()]);
             }
          },
 
          _mouseLeave: function() {
-            if (this._isDragging) {
+            if (this._documentDragging) {
+               this._insideDragging = false;
                this._notify('dragLeave', [this._getDragObject()]);
             }
          },
 
-         _dragEnd: function(dragObject) {
-            this._notify('dragEnd', [dragObject]);
-            this._notify('_documentDragEnd', [dragObject], {bubbling: true});
+         _documentDragStart: function(dragObject) {
+            if (this._insideDragging) {
+               this._notify('dragStart', [dragObject]);
+            }
+            this._documentDragging = true;
+            this._notify('documentDragStart', [dragObject]);
          },
 
          _documentDragEnd: function(dragObject) {
+            if (this._insideDragging) {
+               this._notify('dragEnd', [dragObject]);
+            }
+            this._insideDragging = false;
+            this._documentDragging = false;
             this._notify('documentDragEnd', [dragObject]);
          },
 

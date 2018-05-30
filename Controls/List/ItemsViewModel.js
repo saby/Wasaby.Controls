@@ -66,12 +66,15 @@ define('Controls/List/ItemsViewModel',
 
          getCurrent: function() {
             var dispItem = this._display.at(this._curIndex);
+            return this._getItemDataByItem(dispItem);
+         },
 
+         _getItemDataByItem: function(dispItem) {
             return {
                getPropValue: ItemsUtil.getPropertyValue,
                keyProperty: this._options.keyProperty,
                displayProperty: this._options.displayProperty,
-               index: this._curIndex,
+               index: this._display.getIndex(dispItem),
                item: dispItem.getContents(),
                dispItem: dispItem,
                key: ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.keyProperty)

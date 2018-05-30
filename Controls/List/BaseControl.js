@@ -640,6 +640,60 @@ define('Controls/List/BaseControl', [
 
       _onActionClick: function(e, action, item) {
          this._notify('actionClick', [action, item]);
+      },
+
+      _itemMouseDown: function(event, itemData, domEvent) {
+         var
+            items,
+            dragStartResult;
+         if (this._options.itemsDragNDrop) {
+            items = [itemData.item];
+            dragStartResult = this._notify('dragStart', [items]);
+            if (dragStartResult) {
+               this._children.dragNDropController.startDragNDrop(dragStartResult, domEvent);
+            }
+         }
+      },
+
+      _dragStart: function(event, dragObject) {
+         this._listViewModel.setDragItems(dragObject.entity.getItems());
+      },
+
+      _dragEnd: function(event, dragObject) {
+         if (this._options.itemsDragNDrop) {
+            this._dragEndHandler(dragObject);
+         }
+      },
+
+      _dragEndHandler: function(dragObject) {
+         var
+            items = dragObject.entity.getItems(),
+            dragTarget = this._listViewModel.getDragTargetItem(),
+            targetPosition = this._listViewModel.getDragTargetPosition();
+         if (dragTarget) {
+            this._children.moveControl.moveItems(items, dragTarget.item, targetPosition.position);
+         }
+         return this._notify('dragEnd', [dragObject]);
+      },
+
+      _dragLeave: function() {
+         this._listViewModel.setDragTargetItem(null);
+      },
+
+      _documentDragStart: function() {
+         this._isDragging = true;
+      },
+
+      _documentDragEnd: function() {
+         this._isDragging = false;
+         this._listViewModel.setDragTargetItem(null);
+         this._listViewModel.setDragItems(null);
+      },
+
+      _itemMouseEnter: function(event, itemData) {
+         if (this._options.itemsDragNDrop && this._isDragging && !itemData.isDragging) {
+            this._listViewModel.setDragTargetItem(itemData);
+         }
       }
    });
 
