@@ -2,8 +2,8 @@
  * Created by kraynovdo on 16.11.2017.
  */
 define('Controls/List/ListViewModel',
-   ['Controls/List/ItemsViewModel', 'Controls/Controllers/Multiselect/Selection', 'WS.Data/Entity/VersionableMixin'],
-   function(ItemsViewModel, MultiSelection, VersionableMixin) {
+   ['Controls/List/ItemsViewModel', 'Controls/Controllers/Multiselect/Selection', 'WS.Data/Entity/VersionableMixin', 'Controls/List/resources/utils/ItemsUtil'],
+   function(ItemsViewModel, MultiSelection, VersionableMixin, ItemsUtil) {
       /**
        *
        * @author Крайнов Дмитрий
@@ -111,6 +111,9 @@ define('Controls/List/ListViewModel',
          },
          setItemActions: function(item, actions) {
             this._actions[this.getIndexBySourceItem(item)] = actions;
+         },
+         _prepareDisplayItemForAdd: function(item) {
+            return ItemsUtil.getDefaultDisplayItem(this._display, item);
          },
 
          __calcSelectedItem: function(display, selKey, keyProperty) {

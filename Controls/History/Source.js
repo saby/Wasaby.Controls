@@ -2,7 +2,7 @@
  * Created by am.gerasimov on 21.03.2018.
  */
 define('Controls/History/Source', [
-   'WS.Data/Entity/Abstract',
+   'Core/core-extend',
    'WS.Data/Entity/OptionsMixin',
    'WS.Data/Source/ISource',
    'Core/ParallelDeferred',
@@ -12,7 +12,7 @@ define('Controls/History/Source', [
    'WS.Data/Source/DataSet',
    'WS.Data/Chain',
    'WS.Data/Collection/Factory/RecordSet'
-], function(Abstract,
+], function(CoreExtend,
    OptionsMixin,
    ISource,
    ParallelDeferred,
@@ -24,30 +24,37 @@ define('Controls/History/Source', [
    recordSetFactory) {
    /**
     * Source
+    * Proxy source adding history data to the original source
     * @class Controls/History/Source
     * @extends WS.Data/Entity/Abstract
     * @mixes WS.Data/Entity/OptionsMixin
     * @control
     * @public
     * @category Menu
-    @example
+    * @example
     *  <pre>
-    *    var solarSystem = new historySource({
-     *           originSource: new Memory({
-     *               idProperty: 'id',
-     *               data: items
-     *           }),
-     *           historySource: new historyService({
-     *               historyId: 'TEST_HISTORY_ID'
-     *           }),
-     *           parentProperty: 'parent'
-     *       });
+    *    var source = new historySource({
+    *           originSource: new Memory({
+    *               idProperty: 'id',
+    *               data: items
+    *           }),
+    *           historySource: new historyService({
+    *               historyId: 'TEST_HISTORY_ID'
+    *           }),
+    *           parentProperty: 'parent'
+    *       });
     * </pre>
+    * @name Controls/MenuButton#originSource
+    * @cfg {Source} A data source
+    *
+    * @name Controls/MenuButton#historySource
+    * @cfg {Source} A source which work with history
+    * @see {Controls/History/Service} Source working with the service of InputHistory
     */
 
    'use strict';
 
-   var historyMetaFields = ['$_favorite', '$_pinned', '$_history'];
+   var historyMetaFields = ['$_favorite', '$_pinned', '$_history', '$_addFromData'];
 
    var _private = {
       getSourceByMeta: function(self, meta) {
@@ -61,21 +68,25 @@ define('Controls/History/Source', [
          return self.originSource;
       },
 
-      initHistory: function(self, dataSet) {
-         var rows = dataSet.getRow();
-         var pinned = rows.get('pinned');
-         var recent = rows.get('recent');
-         var frequent = rows.get('frequent');
+      initHistory: function(self, data) {
+         if (data.getRow) {
+            var rows = data.getRow();
+            var pinned = rows.get('pinned');
+            var recent = rows.get('recent');
+            var frequent = rows.get('frequent');
 
-         self._history = {
-            pinned: pinned || [],
-            frequent: frequent || [],
-            recent: recent || []
-         };
+            self._history = {
+               pinned: pinned,
+               frequent: frequent,
+               recent: recent
+            };
+         } else {
+            self._history = data;
+         }
       },
 
       getFilterHistory: function(self, rawHistoryData) {
-         var pinned = rawHistoryData.pinned;
+         var pinned = this.getPinnedIds(rawHistoryData);
          var countAll = pinned.length;
          var filteredFrequent = this.filterFrequent(self, rawHistoryData, countAll);
          var filteredRecent = this.filterRecent(self, rawHistoryData, countAll, filteredFrequent);
@@ -87,17 +98,28 @@ define('Controls/History/Source', [
          };
       },
 
+      getPinnedIds: function(rawHistoryData) {
+         var pinnedIds = [];
+
+         rawHistoryData.pinned.forEach(function(element) {
+            pinnedIds.push(element.getId());
+         });
+
+         return pinnedIds;
+      },
+
       filterFrequent: function(self, rawHistoryData, countAll) {
          var filteredFrequent = [];
 
          // рассчитываем количество популярных пунктов
-         var frequentLength = (Constants.MAX_HISTORY - rawHistoryData.pinned.length - (self.countRecent > Constants.MIN_RECENT ? self.countRecent : Constants.MIN_RECENT));
+         var frequentLength = (Constants.MAX_HISTORY - rawHistoryData.pinned.getCount() - (self.countRecent > Constants.MIN_RECENT ? self.countRecent : Constants.MIN_RECENT));
          var countFrequent = 0;
          var item;
 
-         rawHistoryData.frequent.forEach(function(id) {
+         rawHistoryData.frequent.forEach(function(element) {
+            var id = element.getId();
             item = self._oldItems.getRecordById(id);
-            if (countAll < Constants.MAX_HISTORY && countFrequent < frequentLength && rawHistoryData.pinned.indexOf(id) === -1 && !item.get(self._nodeProperty)) {
+            if (countAll < Constants.MAX_HISTORY && countFrequent < frequentLength && !rawHistoryData.pinned.getRecordById(id) && !item.get(self._nodeProperty)) {
                filteredFrequent.push(id);
                countFrequent++;
                countAll++;
@@ -110,11 +132,12 @@ define('Controls/History/Source', [
          var filteredRecent = [];
          var countRecent = 0;
          var maxCountRecent = (self.countRecent > Constants.MIN_RECENT ? self.countRecent : Constants.MIN_RECENT);
-         var item;
+         var item, id;
 
-         rawHistoryData.recent.forEach(function(id) {
+         rawHistoryData.recent.forEach(function(element) {
+            id = element.getId();
             item = self._oldItems.getRecordById(id);
-            if (countAll < Constants.MAX_HISTORY && rawHistoryData.pinned.indexOf(id) === -1 && filteredFrequent.indexOf(id) === -1 && countRecent < maxCountRecent && !item.get(self._nodeProperty)) {
+            if (countAll < Constants.MAX_HISTORY && !rawHistoryData.pinned.getRecordById(id) && filteredFrequent.indexOf(id) === -1 && countRecent < maxCountRecent && !item.get(self._nodeProperty)) {
                filteredRecent.push(id);
                countRecent++;
                countAll++;
@@ -126,7 +149,7 @@ define('Controls/History/Source', [
       getItemsWithHistory: function(self, history, oldItems) {
          var items = new RecordSet({
             adapter: oldItems.getAdapter(),
-            keyProperty: oldItems.keyProperty,
+            idProperty: oldItems.getIdProperty(),
             format: oldItems.getFormat().clone()
          });
          var filteredHistory, historyIds;
@@ -135,6 +158,7 @@ define('Controls/History/Source', [
          historyIds = filteredHistory.pinned.concat(filteredHistory.frequent.concat(filteredHistory.recent));
 
          this.addProperty(this, items, 'pinned', 'boolean', false);
+         this.addProperty(this, items, 'HistoryId', 'string', self.historySource.getHistoryId() || '');
 
          this.fillItems(self, filteredHistory, 'pinned', oldItems, items);
          this.fillFrequentItems(self, filteredHistory, oldItems, items);
@@ -162,10 +186,13 @@ define('Controls/History/Source', [
       },
 
       fillItems: function(self, history, historyType, oldItems, items) {
-         var item, oldItem;
+         var item, oldItem, historyId, historyItem;
 
          history[historyType].forEach(function(id) {
             oldItem = oldItems.getRecordById(id);
+            historyItem = self._history[historyType].getRecordById(id);
+            historyId = historyItem.get('HistoryId');
+
             item = new Model({
                rawData: oldItem.getRawData(),
                adapter: items.getAdapter(),
@@ -177,6 +204,7 @@ define('Controls/History/Source', [
             if (historyType === 'pinned') {
                item.set('pinned', true);
             }
+            item.set('HistoryId', historyId);
             items.add(item);
          });
       },
@@ -184,7 +212,7 @@ define('Controls/History/Source', [
       fillFrequentItems: function(self, history, oldItems, items) {
          var config = {
             adapter: items.getAdapter(),
-            keyProperty: items.keyProperty,
+            idProperty: items.getIdProperty(),
             format: items.getFormat()
          };
          var frequentItems = new RecordSet(config);
@@ -213,37 +241,59 @@ define('Controls/History/Source', [
             });
          }
       },
+
       updatePinned: function(self, item) {
-         var id = item.getId();
          var pinned = self._history.pinned;
          if (item.get('pinned')) {
             item.set('pinned', false);
-            pinned.splice(pinned.indexOf(id), 1);
+            pinned.remove(pinned.getRecordById(item.getId()));
          } else {
             item.set('pinned', true);
-            self._history.pinned.push(id);
+            pinned.add(this.getRawHistoryItem(self, item.getId()));
          }
+         self.historySource.saveHistory(self._history);
       },
+
       updateRecent: function(self, item) {
          var id = item.getId();
-         var index = self._history.recent.indexOf(id);
+         var recent = self._history.recent;
+         var hItem = recent.getRecordById(id);
+         var records;
 
-         if (!item.get(self._nodeProperty)) {
-            if (index !== -1) {
-               self._history.recent.splice(index, 1);
+         if (!(self._nodeProperty && item.get(self._nodeProperty))) {
+            if (hItem) {
+               recent.remove(hItem);
             }
-            self._history.recent.unshift(id);
+            records = new RecordSet({
+               items: [this.getRawHistoryItem(self, item.getId(), item.get('HistoryId') || self.historySource.getHistoryId())]
+            });
+            recent.prepend(records);
+            self.historySource.saveHistory(self._history);
          }
+      },
+
+      getRawHistoryItem: function(self, id, hId) {
+         return new Model({
+            rawData: {
+               d: [id, hId],
+               s: [
+                  {n: 'ObjectId', t: 'Строка'},
+                  {n: 'HistoryId', t: 'Строка'}
+               ]
+            },
+            adapter: self._history.recent.getAdapter()
+         });
       }
    };
 
-   var Source = Abstract.extend([ISource, OptionsMixin], {
+   var Source = CoreExtend.extend([ISource, OptionsMixin], {
       _history: null,
       _oldItems: null,
       _parentProperty: null,
       _nodeProperty: null,
       _displayProperty: null,
       _parents: null,
+      _serialize: false,
 
       constructor: function Memory(cfg) {
          this.originSource = cfg.originSource;
@@ -291,9 +341,10 @@ define('Controls/History/Source', [
                _private.initHistory(self, data[0]);
                self._oldItems = data[1].getAll();
                newItems = _private.getItemsWithHistory(self, self._history, self._oldItems);
+               self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
                return new DataSet({
                   rawData: newItems.getRawData(),
-                  keyProperty: newItems.keyProperty
+                  idProperty: newItems.getIdProperty()
                });
             });
          }
