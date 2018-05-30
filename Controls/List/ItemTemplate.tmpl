@@ -2,7 +2,7 @@
     {{!!itemData.showActions ? ' controls-ListView__item_showActions'}}
     {{!!itemData.isActive ? ' controls-ListView__item_active'}}
     {{!!itemData.isEditing? ' controls-ListView__item_editing'}}"
-     attr:key="{{itemData.dispItem.getHash()}}">
+     attr:key="{{itemData.item.getId()}}">
     <ws:if data="{{itemData.multiSelectVisibility}}">
         <ws:partial template="{{multiSelectTpl}}" multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" attr:class="controls-ListView__checkbox"/>
     </ws:if>
