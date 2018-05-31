@@ -1821,7 +1821,7 @@ define('Controls/Input/RichArea/resources/TinyMCE',
                         offset -= value.length;
                         value = this._getAdjacentTextNodesValue(startNode, false) + value;
                         offset += value.length;
-                        value += this.getAdjacentTextNodesValue(startNode, true);
+                        value += this._getAdjacentTextNodesValue(startNode, true);
                      }
                      if (value.length && offset) {
                         var m = value.match(reUrl);
