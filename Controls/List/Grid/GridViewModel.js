@@ -496,24 +496,8 @@ define('Controls/List/Grid/GridViewModel', [
             this._nextVersion();
          },
 
-         getIndexBySourceItem: function(item) {
-            return this._model.getIndexBySourceItem(item);
-         },
-
-         at: function(index) {
-            return this._model.at(index);
-         },
-
-         getCount: function() {
-            return this._model.getCount();
-         },
-
          _prepareDisplayItemForAdd: function(item) {
             return this._model._prepareDisplayItemForAdd(item);
-         },
-
-         getDragTargetPosition: function() {
-            return this._model.getDragTargetPosition();
          },
 
          getDragTargetPosition: function() {
