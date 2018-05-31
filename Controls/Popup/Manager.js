@@ -50,8 +50,9 @@ define('Controls/Popup/Manager',
             return false;
          },
 
-         popupResult: function(id, result) {
-            return _private.fireEventHandler(id, 'onResult', result);
+         popupResult: function(id) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            return _private.fireEventHandler.apply(_private, [id, 'onResult'].concat(args));
          },
 
          popupClose: function(id) {
@@ -68,10 +69,11 @@ define('Controls/Popup/Manager',
             return false;
          },
 
-         fireEventHandler: function(id, event, eventArg) {
+         fireEventHandler: function(id, event) {
             var element = ManagerController.find(id);
+            var args = Array.prototype.slice.call(arguments, 2);
             if (element && element.popupOptions.eventHandlers && element.popupOptions.eventHandlers.hasOwnProperty(event)) {
-               element.popupOptions.eventHandlers[event](eventArg);
+               element.popupOptions.eventHandlers[event].apply(element.popupOptions, args);
                return true;
             }
             return false;
