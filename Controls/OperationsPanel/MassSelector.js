@@ -35,11 +35,11 @@ define('Controls/OperationsPanel/MassSelector', [
       },
 
       _updateSelection: function(selection) {
-         this._updateMltiSelectStatus(selection.count);
-         this._updateMltiSelectCaption(selection.count);
+         this._updateMultiSelectStatus(selection.count);
+         this._updateMultiSelectCaption(selection.count);
       },
 
-      _updateMltiSelectStatus: function(count) {
+      _updateMultiSelectStatus: function(count) {
          this._multiSelectStatus =
             count === 'all'
                ? true
@@ -48,7 +48,7 @@ define('Controls/OperationsPanel/MassSelector', [
                   : false;
       },
 
-      _updateMltiSelectCaption: function(count) {
+      _updateMultiSelectCaption: function(count) {
          this._menuCaption =
             this._multiSelectStatus === true
                ? 'Отмечено всё'
