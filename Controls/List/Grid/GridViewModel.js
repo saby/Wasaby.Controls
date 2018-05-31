@@ -516,10 +516,6 @@ define('Controls/List/Grid/GridViewModel', [
             return this._model.getDragTargetPosition();
          },
 
-         getDragTargetPosition: function() {
-            return this._model.getDragTargetPosition();
-         },
-
          destroy: function() {
             this._model.destroy();
             GridViewModel.superclass.destroy.apply(this, arguments);

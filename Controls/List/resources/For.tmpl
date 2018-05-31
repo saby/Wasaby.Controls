@@ -14,14 +14,16 @@
               on:contextmenu="_onItemContextMenu(listModel.getCurrent())"
               on:swipe="_onItemSwipe(listModel.getCurrent())"
               on:mousedown="_onItemMouseDown(listModel.getCurrent())"
-                    on:mouseenter="_onItemMouseEnter(listModel.getCurrent())"itemActionsTemplate="{{itemActionsTemplate}}"
+              on:mouseenter="_onItemMouseEnter(listModel.getCurrent())"
+              itemActionsTemplate="{{itemActionsTemplate}}"
               swipeTemplate="{{swipeTemplate}}"
               multiSelectTpl="{{multiSelectTpl}}"
               itemTemplate="{{itemTemplate}}"
               template="tmpl!Controls/List/ItemTemplateWrapper"
               contentTemplate="{{itemContentTemplate}}"
               itemData="{{listModel.getCurrent()}}"
-              actionsType="{{itemActionsType}}"/></ws:if>
+              actionsType="{{itemActionsType}}"/>
+      </ws:if>
       <ws:if data="{{listModel.getDragTargetPosition() &&
                      listModel.getDragTargetPosition().index === listModel.getCurrentIndex() &&
                      listModel.getDragTargetPosition().position === 'after'}}">
