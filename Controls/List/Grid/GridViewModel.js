@@ -328,6 +328,15 @@ define('Controls/List/Grid/GridViewModel', [
             this._notify('onListChange');
          },
 
+         update: function () {
+            this._model.update();
+            this._notify('onListChange');
+         },
+
+         getSwipeItem: function () {
+            return this._model.getSwipeItem();
+         },
+
          reset: function() {
             this._model.reset();
          },
@@ -494,6 +503,10 @@ define('Controls/List/Grid/GridViewModel', [
 
          setItemActions: function(item, actions) {
             this._model.setItemActions(item, actions);
+         },
+
+         setSwipeItem: function(itemData) {
+            this._model.setSwipeItem(itemData);
          },
 
          destroy: function() {

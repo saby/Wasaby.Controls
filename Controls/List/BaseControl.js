@@ -515,9 +515,12 @@ define('Controls/List/BaseControl', [
                this._listViewModel.select([itemData.key]);
             }
          }
-         if (direction === 'right' || direction === 'left') {
+         if (direction === 'right') {
             var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.viewConfig.keyProperty);
             this._listViewModel.setMarkedKey(newKey);
+         }
+         if (direction === 'left') {
+            this._listViewModel.update();
          }
       },
 
@@ -549,7 +552,9 @@ define('Controls/List/BaseControl', [
 
       _onItemClick: function(e, item) {
          var newKey = ItemsUtil.getPropertyValue(item, this._options.viewConfig.keyProperty);
-         this._listViewModel.setMarkedKey(newKey);
+         if (!this._children.swipeControl._isTouch) {
+            this._listViewModel.setMarkedKey(newKey);
+         }
       },
 
       /**

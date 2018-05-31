@@ -117,11 +117,13 @@
 .controls-Grid__row-cell_halign_center {
    text-align: center;
 }
-.controls-Grid__row:hover .controls-Grid__row-cell {
-   background-color: @background-color_Grid-row_hover;
-}
-.controls-Grid__row:hover .controls-itemActionsV {
-   display: inline-block;
+.ws-is-no-touch {
+   .controls-Grid__row:hover .controls-Grid__row-cell {
+      background-color: @background-color_Grid-row_hover;
+   }
+   .controls-Grid__row:hover .controls-itemActionsV {
+      display: inline-block;
+   }
 }
 .controls-Grid__row-cell_rowSpacing_default {
    padding-top: (@spacing_Grid-row_default / 2) + @height-Grid-row-separator;
@@ -218,6 +220,9 @@
 .controls-Grid__cell_spacingLastCol_XXL {
    padding-right: @padding_Grid-left_XXL;
 }
+.controls-GridView__item_active .controls-Grid__row-cell {
+   background: @background-color_Grid-row_hover;
+}
 
 .controls-Grid__row-cell_withSelectionMarker {
    box-shadow: inset @width_Grid-selection-marker 0 0 @color_Grid-selection-marker;
@@ -236,8 +241,7 @@
    cursor: pointer;
 }
 .controls-Grid__checkbox_checked:before,
-.controls-Grid__row:hover .controls-Grid__checkbox_unchecked:before {
-   content: '\200b';
+.controls-Grid__row:hover .controls-Grid__checkbox_unchecked:before{
    position: absolute;
    top: @padding_Grid-checkbox-top;
    left: @padding_Grid-checkbox-left;
@@ -245,6 +249,14 @@
    height: @height_Grid-checkbox;
    border: @width_Grid-checkbox-border solid @color_Grid-checkbox-border;
    box-sizing: border-box;
+}
+.controls-Grid__checkbox_checked:before {
+   content: '\200b';
+}
+.ws-is-no-touch {
+   .controls-Grid__row:hover .controls-Grid__checkbox_unchecked:before {
+      content: '\200b';
+   }
 }
 
 .controls-Grid__checkbox_checked:after {
