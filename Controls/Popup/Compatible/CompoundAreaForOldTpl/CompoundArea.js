@@ -90,16 +90,16 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _producedPendingOperations: [],
 
          _beforeMount: function() {
-            this._rebuildCompountControl = debounce.call(this._rebuildCompountControl, this).bind(this);
+            this._rebuildCompoundControl = debounce.call(this._rebuildCompoundControl, this).bind(this);
             this._commandHandler = this._commandHandler.bind(this);
          },
 
          _shouldUpdate: function(popupOptions) {
-            this._rebuildCompountControl(popupOptions);
+            this._rebuildCompoundControl(popupOptions);
             return false;
          },
 
-         _rebuildCompountControl: function(popupOptions) {
+         _rebuildCompoundControl: function(popupOptions) {
             var oldCompound = this._compoundControl;
             var self = this;
 
