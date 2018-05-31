@@ -80,6 +80,10 @@
         <ws:partial template="{{_options.emptyTemplate}}"/>
     </ws:if>
 
+    <ws:if data="{{_options.footerTemplate}}">
+        <ws:partial template="{{_options.footerTemplate}}"/>
+    </ws:if>
+
     <div class="controls-BaseControl__trigger controls-BaseControl__bottomLoadTrigger" name="bottomLoadTrigger" style="top: -{{_loadOffset}}px;"></div>
     <div class="controls-BaseControl__bottomPlaceholder" style="height: {{_bottomPlaceholderHeight}}px;"></div>
     <div class="controls-BaseControl__trigger controls-BaseControl__bottomListTrigger" name="bottomListTrigger"></div>
