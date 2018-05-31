@@ -6,7 +6,6 @@ define('Controls/Container/MassSelector', [
 ], function(Control, template, MassSelectorContextField, MultiSelection) {
    return Control.extend({
 
-      //todo: весь модуль
       _template: template,
       _multiselection: null,
       _items: null,
