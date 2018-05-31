@@ -707,8 +707,16 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             if (!values || typeof values !== 'object') {
                throw new Error('Object required');
             }
+            var need;
             if (values.fieldIds && !cObjectIsEqual(values.fieldIds, this._fieldIds)) {
                this._fieldIds = values.fieldIds;
+               need = true;
+            }
+            need = need || !!values.fileUuid;
+            if (values.fileUuid && values.fileUuid !== this._fileUuid) {
+               this._fileUuid = values.fileUuid;
+            }
+            if (need) {
                if (!this._isEditMode) {
                   var selectedId = this._options.selectedId;
                   if (selectedId) {
@@ -719,9 +727,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   }
                   this._startEditingMode();
                }
-            }
-            if (values.fileUuid && values.fileUuid !== this._fileUuid) {
-               this._fileUuid = values.fileUuid;
             }
          },
 
@@ -736,6 +741,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             if (selectedId) {
                var current = this._findPresetById(selectedId);
                return {
+                  consumer: {id:selectedId, readonly:!current.isStorable && !current.isUnreal},
                   fieldIds: current.fieldIds,
                   fileUuid: current.fileUuid
                };
