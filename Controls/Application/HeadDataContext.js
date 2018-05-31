@@ -16,7 +16,7 @@ define('Controls/Application/HeadDataContext', [
    } catch (e) {
       modDeps = {links: {}, nodes: {}};
    }
-   //
+
    // var contents;
    // try {
    //    contents = require('json!resources/contents');
@@ -140,7 +140,7 @@ define('Controls/Application/HeadDataContext', [
             for (var i = 0; i < curNodeDeps.length; i++) {
                var node = curNodeDeps[i];
                var splitted = node.split('!');
-               if(splitted[0] === 'optional' && splitted.length > 1) {
+               if (splitted[0] === 'optional' && splitted.length > 1) {
                   splitted.shift();
                   node = splitted.join('!');
                }
