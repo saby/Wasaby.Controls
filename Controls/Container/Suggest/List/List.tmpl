@@ -1,3 +1,14 @@
-<Controls.Container.List scope="{{_options}}" navigation="{{_navigation}}">
-    <ws:partial template="{{_options.content}}"/>
-</Controls.Container.List>
+<div class="controls-Suggest_list">
+    <ws:if data="{{_options.tabsOptions}}">
+        <Controls.Container.Async templateName="Controls/Tabs/Buttons">
+            <ws:partial template="{{'Controls/Tabs/Buttons'}}"
+                        attr:class="controls-Suggest__tabs"
+                        on:selectedKeyChanged="_tabsSelectedKeyChanged()"
+                        displayProperty="{{_options.tabsOptions.displayProperty}}"
+                        keyProperty="{{_options.tabsOptions.keyProperty}}"
+                        source="{{_options.tabsOptions.source}}"
+                        selectedKey="{{_suggestListOptions.tabsSelectedKey || _options.tabsOptions.selectedKey}}"/>
+        </Controls.Container.Async>
+    </ws:if>
+    <Controls.Container.List scope="{{_suggestListOptions}}" navigation="{{_navigation}}" content="{{_options.content}}"/>
+</div>
