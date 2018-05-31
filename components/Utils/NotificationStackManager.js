@@ -116,9 +116,9 @@ define('SBIS3.CONTROLS/Utils/NotificationStackManager',
                //Не учитываем в поиске окна из стека
                return !self._items.some(function(item){
                   return item === win;
-               })
+               });
             });
-            this._zIndex = Math.max(zIndex, maxWindow.getZIndex()) + 1;
+            this._zIndex = Math.max(zIndex, maxWindow ? maxWindow.getZIndex() : 0) + 1;
             this._updatePositions();
          },
 
