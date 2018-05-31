@@ -6,9 +6,10 @@ define('Controls/Input/Lookup', [
    'WS.Data/Collection/List',
    'Core/helpers/Object/isEqual',
    'Core/core-clone',
+   'Core/Deferred',
    'tmpl!Controls/Input/resources/input',
    'css!Controls/Input/Lookup/Lookup'
-], function(Control, template, BaseViewModel, SourceController, List, isEqual, clone) {
+], function(Control, template, BaseViewModel, SourceController, List, isEqual, clone, Deferred) {
    
    'use strict';
    
@@ -34,6 +35,8 @@ define('Controls/Input/Lookup', [
    var _private = {
       loadItems: function(self, source) {
          var filter = clone(self._options.filter || {});
+         var resultDef = new Deferred();
+         
          filter[self._options.keyProperty] = self._options.selectedKeys;
          
          if (!self.sourceController) {
@@ -41,10 +44,17 @@ define('Controls/Input/Lookup', [
                source: source
             });
          }
-         return self.sourceController.load(filter).addCallback(function(result) {
-            self._items = result;
-            return result;
-         });
+         self.sourceController.load(filter)
+            .addCallback(function(result) {
+               resultDef.callback(self._items = result);
+               return result;
+            })
+            .addErrback(function(result) {
+               resultDef.callback(null);
+               return result;
+            });
+         
+         return resultDef;
       },
       
       notifySelectedKeys: function(self, selectedKeys) {
