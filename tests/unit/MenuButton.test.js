@@ -53,11 +53,6 @@ define(
 
          let menu = new MenuButton(config);
 
-         it('after mount', () => {
-             menu._afterMount();
-            assert.equal(menu._popupTarget, menu._container);
-         });
-
          it('check item click', () => {
             menu._notify = (e) => {
                assert.equal(e, 'onMenuItemActivate');
