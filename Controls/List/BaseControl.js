@@ -11,7 +11,6 @@ define('Controls/List/BaseControl', [
    'WS.Data/Collection/RecordSet',
    'Controls/Utils/Toolbar',
    'Controls/List/ItemActions/Utils/Actions',
-   'Core/core-clone',
    'Controls/List/EditInPlace',
    'Controls/List/ItemActions/ItemActionsControl',
    'css!Controls/List/BaseControl/BaseControl'
@@ -26,8 +25,7 @@ define('Controls/List/BaseControl', [
    multiSelectTpl,
    RecordSet,
    tUtil,
-   aUtil,
-   cClone
+   aUtil
 ) {
    'use strict';
 
@@ -510,13 +508,7 @@ define('Controls/List/BaseControl', [
       },
 
       _onCheckBoxClick: function(e, key, status) {
-         var selectedKeys = cClone(this._options.selectedKeys) || [];
-         if (!!status) {
-            selectedKeys.splice(selectedKeys.indexOf(key), 1);
-         } else {
-            selectedKeys.push(key);
-         }
-         this._notify('selectedKeysChanged', [selectedKeys]);
+         this._notify('onCheckBoxClick', [key, status]);
       },
 
       _listSwipe: function(event, itemData, childEvent) {

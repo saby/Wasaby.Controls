@@ -18,8 +18,8 @@ define('Controls/List/MassSelector', [
          this._selectedKeys = context.selection.selectedKeys;
       },
 
-      _selectedKeysChangedHandler: function(event, selectedKeys) {
-         this._notify('selectedKeysChanged', [selectedKeys], {
+      _onCheckBoxClickHandler: function(event, key, status) {
+         this._notify('onCheckBoxClick', [key, status], {
             bubbling: true
          });
       },

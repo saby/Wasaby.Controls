@@ -5,7 +5,6 @@ define('Controls/Container/MassSelector', [
    'Controls/Controllers/Multiselect/Selection'
 ], function(Control, template, MassSelectorContextField, MultiSelection) {
    return Control.extend({
-
       //todo: весь модуль
       _template: template,
       _multiselection: null,
@@ -28,22 +27,26 @@ define('Controls/Container/MassSelector', [
          this._updateContext();
       },
 
-      _selectedKeysChangedHandler: function(event, selectedKeys) {
+      _onCheckBoxClickHandler: function(event, key, status) {
          var currentSelection = this._multiselection.getSelection(),
-            selected = selectedKeys,
+            selected = currentSelection.selected,
             excluded = currentSelection.excluded;
 
-         this._selectedKeys = selectedKeys;
-
          if (this._count === 'all' || this._count === 'part') {
-            excluded = [];
-            this._items.forEach(function(item) {
-               var key = item.getId();
-               if (selectedKeys.indexOf(key) < 0) {
-                  excluded.push(key);
-               }
-            });
+            if (!!status) {
+               //сняли выделение
+               excluded.push(key);
+            } else {
+               excluded.splice(excluded.indexOf(key), 1);
+            }
             selected = [null];
+         } else {
+            if (!!status) {
+               //сняли выделение
+               selected.splice(selected.indexOf(key), 1);
+            } else {
+               selected.push(key);
+            }
          }
 
          this._multiselection.unselectAll();
@@ -51,6 +54,7 @@ define('Controls/Container/MassSelector', [
          this._multiselection.unselect(excluded);
 
          this._updateCount();
+         this._updateSelectedKeys();
          this._updateContext();
       },
 
@@ -92,12 +96,14 @@ define('Controls/Container/MassSelector', [
             excluded = currentSelection.excluded;
 
          if (this._count === 'all' || this._count === 'part') {
-            this._items.forEach(function(item) {
-               var key = item.getId();
-               if (excluded.indexOf(key) < 0) {
-                  this._selectedKeys.push(key);
-               }
-            }.bind(this));
+            this._items.forEach(
+               function(item) {
+                  var key = item.getId();
+                  if (excluded.indexOf(key) < 0) {
+                     this._selectedKeys.push(key);
+                  }
+               }.bind(this)
+            );
          } else {
             this._selectedKeys = selected;
          }
