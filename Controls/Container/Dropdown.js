@@ -93,7 +93,7 @@ define('Controls/Container/Dropdown',
                   items: this._items,
                   width: this._options.width
                },
-               target: this._options.popupTarget,
+               target: this._container,
                corner: this._options.corner
             };
             this._children.DropdownOpener.open(config, this);

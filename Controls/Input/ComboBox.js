@@ -40,12 +40,10 @@ define('Controls/Input/ComboBox',
 
       var ComboBox = Control.extend({
          _template: template,
-         _popupTarget: null,
          _isOpen: false,
 
          _beforeMount: function(options) {
             this._onClose = _private.close.bind(this);
-            this._selectedKey = options.selectedKey;
             this._value = options.value;
             this._simpleViewModel = new BaseViewModel({
                value: this._value
@@ -53,7 +51,6 @@ define('Controls/Input/ComboBox',
          },
 
          _afterMount: function() {
-            this._popupTarget = this._container;
             this._corner = {
                vertical: 'bottom'
             };

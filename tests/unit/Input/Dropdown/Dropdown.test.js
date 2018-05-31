@@ -58,11 +58,6 @@ define(
 
          let dropdownList = new Dropdown(config);
 
-         it('after mount', () => {
-            dropdownList._afterMount();
-            assert.deepEqual(dropdownList._popupTarget, dropdownList._children.popupTarget);
-         });
-
          it('check selectedItemsChanged event', () => {
 
             //subscribe на vdom компонентах не работает, поэтому мы тут переопределяем _notify

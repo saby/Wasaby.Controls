@@ -31,10 +31,6 @@ define('Controls/Input/Dropdown',
          _defaultContentTemplate: defaultContentTemplate,
          _text: '',
 
-         _afterMount: function() {
-            this._popupTarget = this._children.popupTarget;
-         },
-
          _selectedItemChangedHandler: function(event, item) {
             this._text = getPropValue(item, this._options.displayProperty || 'title');
             this._icon = item.get('icon');

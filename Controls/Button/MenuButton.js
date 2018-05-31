@@ -67,10 +67,6 @@ define('Controls/Button/MenuButton',
             MenuButton.superclass.constructor.apply(this, arguments);
          },
 
-         _afterMount: function() {
-            this._popupTarget = this._container;
-         },
-
          _selectedItemChangedHandler: function(event, result) {
             this._notify('onMenuItemActivate', [result]);
          }
