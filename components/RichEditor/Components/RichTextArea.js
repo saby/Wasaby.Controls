@@ -370,7 +370,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                });
                this._fillImages(false);
-               this._decorateAsSVG(this._options.text);
+               if (!this.isEnabled()) {
+                  this._decorateAsSVG(this._options.text);
+               }
             },
 
             /**
