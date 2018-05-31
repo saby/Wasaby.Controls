@@ -84,7 +84,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                /**
                 * @cfg {string} Uuid шаблона форматирования эксель-файла
                 */
-               fileUuid: null
+               fileUuid: null,
+               /**
+                * @cfg {object} Описание потребителя (обычно идентификатор пресета и его редактируемость)
+                */
+               consumer: null
             },
             // Объект, предоставляющий методы форматирования шаблона эксель-файла
             _exportFormatter: null,
@@ -93,7 +97,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             // Контрол предпросмотра
             _preview: null,
             // Размер области предпросмотра
-            _previewSize: null
+            _previewSize: null,
+            // Набор обещаний, ожидающих создания шаблона эксель-файла
+            _creation: {}
          },
 
          _modifyOptions: function () {
@@ -119,7 +125,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                var fieldIds = options.fieldIds;
                if (fieldIds && fieldIds.length) {
                   if (!options.fileUuid) {
-                     this._callFormatterMethod('create').addCallback(this._onFormatter.bind(this, 'create'));
+                     this._callFormatterMethod('create');
                   }
                   else {
                      this._updatePreview();
@@ -151,7 +157,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             var fieldIds = options.fieldIds;
             if (fieldIds && fieldIds.length) {
                var method = useApp ? 'openApp' : 'open';
-               this._callFormatterMethod(method).addCallback(this._onFormatter.bind(this, method));
+               this._callFormatterMethod(method);
             }
          },
 
@@ -163,21 +169,33 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * return {Core/Deferred}
           */
          _callFormatterMethod: function (method) {
-            var args = [];
             var options = this._options;
+            var isCreate = method === 'create';
+            if (isCreate && this._creation[options.consumer ? options.consumer.id : '']) {
+               throw new Error('Already in creation');
+            }
+            var args = [];
             var useBoth = method === 'update' || method === 'open' || method === 'openApp';
             if (method === 'delete' || useBoth) {
                args.push(options.fileUuid);
             }
-            if (method === 'create' || useBoth) {
+            if (isCreate || useBoth) {
                var fieldIds = options.fieldIds;
-               // TODO: Как быть, если массив полей пуст, а файл уже есть? вызывать с пустым массивом или удалять файл?
                args.push(fieldIds || [], this._selectFields(options.allFields, fieldIds, function (v) { return v.title; }) || [], options.serviceParams);
             }
             var formatter = this._exportFormatter;
-            return formatter[method].apply(formatter, args).addErrback(function (err) {
-               return err;
-            });
+            var promise = formatter[method].apply(formatter, args).addCallbacks(
+               this._onFormatter.bind(this, method),
+               function (err) { return err; }
+            );
+            if (isCreate) {
+               var consumer = options.consumer;
+               var consumerId = consumer ? consumer.id : '';
+               this._creation[consumerId] = promise.createDependent().addBoth(function (consumerId) {
+                  delete this._creation[consumerId];
+               }.bind(this, consumerId));
+            }
+            return promise;
          },
 
          /**
@@ -219,9 +237,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * @param {string} fileUuid Uuid шаблона форматирования эксель-файла
           */
          _onFormatter: function (method, fileUuid) {
-            var options = this._options;
-            if (method === 'create' && fileUuid) {
-               options.fileUuid = fileUuid;
+            var has = method === 'create' && !!fileUuid;
+            if (has) {
+               this._options.fileUuid = fileUuid;
+            }
+            if (has || method === 'open' || method === 'openApp') {
                this.sendCommand('subviewChanged');
             }
             this._updatePreview();
@@ -284,12 +304,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                throw new Error('Object required');
             }
             var options = this._options;
-            var waited = {fieldIds:true, fileUuid:false};
+            var waited = {fieldIds:true, fileUuid:false, consumer:true};
             var has = {};
             for (var name in values) {
                if (name in waited) {
                   var value = values[name];
-                  if (waited[name] ? !cObjectIsEqual(value, options[name]) : value !== options[name]) {
+                  if (!(value == null && options[name] == null) && !(waited[name] ? cObjectIsEqual(value, options[name]) : value === options[name])) {
                      has[name] = true;
                      options[name] = value;
                   }
@@ -297,7 +317,18 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             }
             if (has.fieldIds || has.fileUuid) {
                var method = options.fileUuid ? 'update' : 'create';
-               this._callFormatterMethod(method).addCallback(this._onFormatter.bind(this, method));
+               var promise;
+               if (method === 'create') {
+                  var consumer = options.consumer;
+                  promise = this._creation[consumer ? consumer.id : ''];
+               }
+
+               if (promise) {
+                  promise.addCallback(this._callFormatterMethod.bind(this, 'update'));
+               }
+               else {
+                  this._callFormatterMethod(method);
+               }
                var fieldIds = options.fieldIds;
                var isAllow = !!(fieldIds && fieldIds.length);
                this.setEnabled(isAllow);
