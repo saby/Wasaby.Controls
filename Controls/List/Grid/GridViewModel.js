@@ -516,10 +516,6 @@ define('Controls/List/Grid/GridViewModel', [
             return this._model._prepareDisplayItemForAdd(item);
          },
 
-         getDragTargetPosition: function() {
-            return this._model.getDragTargetPosition();
-         },
-
          setSwipeItem: function(itemData) {
             this._model.setSwipeItem(itemData);
          },
