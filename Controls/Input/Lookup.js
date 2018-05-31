@@ -97,8 +97,8 @@ define('Controls/Input/Lookup', [
          self._isEmpty = !self._selectedKeys.length;
    
          /* keys changed - need to hide suggest */
-         if (!this._isEmpty) {
-            this._suggestState = false;
+         if (!self._isEmpty) {
+            self._suggestState = false;
          }
       }
    };
