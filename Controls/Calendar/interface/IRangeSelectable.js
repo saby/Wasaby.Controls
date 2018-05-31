@@ -1,5 +1,5 @@
 define('Controls/Calendar/interface/IRangeSelectable', [
-   'WS.Data/Type/descriptor',
+   'WS.Data/Type/descriptor'
 ], function(types) {
    'use strict';
 
@@ -26,7 +26,7 @@ define('Controls/Calendar/interface/IRangeSelectable', [
              * @variant 'single' режим выделения одного элемента
              * @variant 'disable' режим выбора отключен
              */
-            selectionType: 'range',
+            selectionType: 'range'
          };
       },
 
@@ -35,7 +35,7 @@ define('Controls/Calendar/interface/IRangeSelectable', [
       getOptionTypes: function() {
          return {
             selectionType: types(String).oneOf(Object.keys(selectionTypes)),
-            liveSelection: types(Boolean),
+            liveSelection: types(Boolean)
          };
       }
    };

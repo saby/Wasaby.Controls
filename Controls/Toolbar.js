@@ -3,11 +3,10 @@ define('Controls/Toolbar', [
    'Controls/Controllers/SourceController',
    'tmpl!Controls/Toolbar/Toolbar',
    'tmpl!Controls/Toolbar/ToolbarItemTemplate',
-   'WS.Data/Collection/RecordSet',
    'WS.Data/Collection/Factory/RecordSet',
    'Controls/Utils/Toolbar',
    'css!Controls/Toolbar/Toolbar'
-], function(Control, SourceController, template, toolbarItemTemplate, RecordSet, recordSetFactory, tUtil) {
+], function(Control, SourceController, template, toolbarItemTemplate, recordSetFactory, tUtil) {
    'use strict';
 
    /**

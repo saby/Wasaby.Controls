@@ -2,11 +2,6 @@ define('Controls/Calendar/MonthView', [
    'Core/Control',
    'Core/constants',
    'Core/core-merge',
-   'Core/detection',
-   'Core/Date',
-   'Core/helpers/Object/isEmpty',
-   'WS.Data/Type/descriptor',
-   'Controls/Calendar/Utils',
    'SBIS3.CONTROLS/Utils/DateUtil',
    'SBIS3.CONTROLS/Utils/IfEnabled',
    'Controls/Calendar/MonthView/MonthViewModel',
@@ -20,11 +15,6 @@ define('Controls/Calendar/MonthView', [
    BaseControl,
    constants,
    coreMerge,
-   detection,
-   _Date,
-   isEmpty,
-   types,
-   calendarUtils,
    DateUtil,
    ifEnabled,
    MonthViewModel,
@@ -98,7 +88,7 @@ define('Controls/Calendar/MonthView', [
 
       _mouseEnterHandler: ifEnabled(function(event, item) {
          this._notify('itemMouseEnter', [item]);
-      }),
+      })
 
       // cancelSelection: function () {
       //    var canceled = MonthView.superclass.cancelSelection.call(this);
