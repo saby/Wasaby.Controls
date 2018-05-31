@@ -15,9 +15,10 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
    'tmpl!SBIS3.CONTROLS/DataGridView/resources/GroupTemplate',
    'Core/core-merge',
    'Core/core-instance',
+   'SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/_DimensionsUtil',
    'SBIS3.CONTROLS/Link'
 ], function(constants, Deferred, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate,
-            ItemsTemplate, InvisibleItemsTemplate, ListViewGroupTemplate, DataGridGroupTemplate, cMerge, cInstance) {
+            ItemsTemplate, InvisibleItemsTemplate, ListViewGroupTemplate, DataGridGroupTemplate, cMerge, cInstance, DimensionsUtil) {
    'use strict';
    /**
     * Миксин добавляет функционал, который позволяет контролу устанавливать режимы отображения элементов коллекции по типу "Таблица", "Плитка" и "Список".
@@ -29,7 +30,11 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
        TILE_MODE = { // Возможные результаты режима отображения плитки
           DYNAMIC: 'dynamic', // плитка с изменяемой шириной
           STATIC: 'static' // плитка с постоянной шириной
-       };
+       },
+      HOVER_MODE = {
+         OUTSIDE: 'outside',
+         INSIDE: 'inside'
+      };
    var canServerRenderOther = function(cfg) {
       return !(cfg.itemTemplate || cfg.listTemplate || cfg.tileTemplate);
    },
@@ -147,6 +152,13 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
              */
             tileMode: '',
             /**
+             * @cfg {String} Устанавливает режим расширения по ховеру
+             * Использование опции актуально при режиме изменения ширины по ховеру элемента
+             * @variant inside Ширина плитки увеличивается внутрь контейнера
+             * @variant outside Ширина плитки увеличивается относительно центра элемента
+             */
+            hoverMode: '',
+            /**
              * @cfg {String} Устанавливает файловое поле элемента коллекции, которое предназначено для хранения изображений.
              * @remark
              * Файловое поле используется в шаблоне для построения отображения элементов коллекции.
@@ -156,7 +168,7 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
              * @see tileTemplate
              * @see listTemplate
              */
-            imageField : null,
+            imageField: null,
             /**
              * @cfg {String} Устанавливает файловое поле элемента коллекции, которое предназначено для хранения ширины изображения.
              * @remark
@@ -310,40 +322,15 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
       },
 
       _setDynamicHoveredStyles: function(item) {
-         var
-            additionalWidth = Math.floor(item.outerWidth() / 2),
-            margin = Math.floor(item.outerWidth(true) / 2 - additionalWidth),
-            additionalHeight = Math.floor(item.outerHeight() / 2),
-            container = this._getItemsContainer(),
-            containerRects = container.get(0).getBoundingClientRect(),
-            itemRects = item.get(0).getBoundingClientRect(),
-            horizontalRightDiffer = containerRects.width - (itemRects.width + item.get(0).offsetLeft + additionalWidth / 2),
-            horizontalLeftDiffer = item.get(0).offsetLeft - additionalWidth / 2,
-            verticalBottomDiffer = containerRects.height - (itemRects.height + item.get(0).offsetTop + additionalHeight / 2),
-            verticalTopDiffer = item.get(0).offsetTop - additionalHeight / 2 ,
-            marginLeft,
-            marginRight,
-            marginTop,
-            marginBottom,
-            padding = Math.ceil(additionalHeight / 2) + 'px ' + Math.ceil(additionalWidth / 2) + 'px';
+         var styles = {};
+         if (this._options.hoverMode !== HOVER_MODE.INSIDE) {
+            styles = DimensionsUtil.calcOutsideDimensions(item);
+         } else {
+            styles = DimensionsUtil.calcInsideDimensions(item, this._getItemsContainer());
+         }
 
-         marginTop = marginBottom = (Math.floor(-(additionalHeight / 2 - margin)) + 'px ');
-         marginLeft = marginRight = (Math.floor(-(additionalWidth / 2 - margin)) + 'px ');
-         if (horizontalLeftDiffer < 0) {
-            marginRight = (Math.floor(-(additionalWidth - margin)) + 'px ');
-            marginLeft = 0;
-         } else if (horizontalRightDiffer < 0) {
-            marginLeft = (Math.floor(-(additionalWidth - margin)) + 'px');
-            marginRight = 0 + ' ';
-         }
-         if (verticalTopDiffer < 0) {
-            marginBottom = (Math.floor(-(additionalHeight - margin)) + 'px ');
-            marginTop = 0 + ' ';
-         } else if (verticalBottomDiffer < 0) {
-            marginTop = (Math.floor(-(additionalHeight - margin)) + 'px ');
-            marginBottom = 0 + ' ';
-         }
-         item.css('padding', padding).css('margin', marginTop + marginRight + marginBottom + marginLeft);
+         item.get(0).style.padding = styles.padding;
+         item.get(0).style.margin = styles.margin;
       },
 
       _setStaticHoveredStyles: function(item) {
