@@ -70,7 +70,6 @@ define('Controls/Button/MenuButton',
 
          _afterMount: function() {
             this._popupTarget = this._container;
-            this._forceUpdate();
          },
 
          _selectedItemChangedHandler: function(event, result) {
@@ -80,6 +79,7 @@ define('Controls/Button/MenuButton',
 
       MenuButton.getDefaultOptions = function() {
          return {
+            showHeader: true,
             style: 'buttonDefault',
             size: 'default'
          };

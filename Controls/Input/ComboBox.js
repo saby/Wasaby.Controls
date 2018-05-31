@@ -58,7 +58,6 @@ define('Controls/Input/ComboBox',
                vertical: 'bottom'
             };
             this._width = this._container.offsetWidth;
-            this._forceUpdate();
          },
 
          _mouseDownHandler: function() {

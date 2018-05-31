@@ -80,7 +80,10 @@ define('Controls/Container/Dropdown',
                _private.updateSelectedItem(this, newOptions.selectedKeys);
             }
             if (newOptions.source && newOptions.source !== this._options.source) {
-               return _private.loadItems(this, newOptions.source, newOptions.selectedKeys);
+               var self = this;
+               return _private.loadItems(this, newOptions.source, newOptions.selectedKeys).addCallback(function() {
+                  self._forceUpdate();
+               });
             }
          },
 

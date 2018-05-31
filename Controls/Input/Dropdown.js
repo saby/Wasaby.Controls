@@ -33,7 +33,6 @@ define('Controls/Input/Dropdown',
 
          _afterMount: function() {
             this._popupTarget = this._children.popupTarget;
-            this._forceUpdate();
          },
 
          _selectedItemChangedHandler: function(event, item) {
