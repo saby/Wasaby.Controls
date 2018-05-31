@@ -332,26 +332,6 @@ body {
 }
 
 .controls-EditActions__cancelButton {
-  position: relative;
-  background-image: none;
-  background-color: @background-color_IconButton_bordered;
-  font-size: @font-size_Button_m;
-  .box-shadow(@box-shadow_Button);
-  color: #8991A9;
-  display: inline-block;
-
-  &:before {
-    position: absolute;
-    font-family: 'cbuc-icons';
-    font-size: round(42px * @multiplier);
-    width: round(42px * @multiplier);
-    height: round(42px * @multiplier);
-    content: "\e66c" !important;
-    text-shadow: @text-shadow_Button !important;
-    right: round(8px * @multiplier);
-    top: round(8px * @multiplier);
-  }
-
   &:active {
     box-shadow: none;
   }
