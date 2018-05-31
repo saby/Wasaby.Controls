@@ -74,11 +74,13 @@ define('Controls/List/Tree/TreeViewModel', [
          getCurrent: function() {
             var
                current = TreeViewModel.superclass.getCurrent.apply(this, arguments);
-            current.isExpanded = this._expandedNodes[current.key];
+            current.isExpanded = !!this._expandedNodes[current.key];
             return current;
          }
 
       });
+
+   TreeViewModel._private = _private;
 
    return TreeViewModel;
 });
