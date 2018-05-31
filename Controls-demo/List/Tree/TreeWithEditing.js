@@ -33,10 +33,21 @@ define('Controls-demo/List/Tree/TreeWithEditing', [
             },
             {
                displayProperty: 'Описание',
-               width: 'auto',
+               width: '1fr',
                template: treeEditingTemplate
             }
-         ]
+         ],
+
+         _onBeforeItemAdd: function() {
+            return this._viewSource.create().addCallback(function(model) {
+               model.set('Раздел', null);
+               model.set('Раздел@', true);
+               model.set('Раздел$', null);
+               return {
+                  item: model
+               };
+            });
+         }
       });
 
    return TreeWithEditing;

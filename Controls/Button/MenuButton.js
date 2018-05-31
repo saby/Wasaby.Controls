@@ -64,7 +64,6 @@ define('Controls/Button/MenuButton',
 
          constructor: function(config) {
             _private.cssStyleGeneration(this, config);
-            config.headCaption = config.headCaption || config.caption;
             MenuButton.superclass.constructor.apply(this, arguments);
          },
 

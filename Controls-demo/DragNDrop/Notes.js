@@ -18,24 +18,24 @@ define('Controls-demo/DragNDrop/Notes', [
          title: 'Заметка 1',
          dragging: false,
          position: {
-            top: 200,
-            left: 500
+            top: 700,
+            left: 5
          },
          size: {
-            width: 300,
-            height: 100
+            width: 150,
+            height: 50
          }
       }, {
          id: 1,
          title: 'Заметка 2',
          dragging: false,
          position: {
-            top: 500,
-            left: 600
+            top: 755,
+            left: 5
          },
          size: {
-            width: 200,
-            height: 200
+            width: 150,
+            height: 50
          }
       }],
       _startPosition: undefined,

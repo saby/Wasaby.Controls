@@ -59,8 +59,9 @@ define('Controls/Popup/Manager/Popup',
           * Отправить результат
           * @function Controls/Popup/Manager/Popup#_sendResult
           */
-         _sendResult: function(event, result) {
-            this._notify('popupResult', [this._options.id, result], {bubbling: true});
+         _sendResult: function(event) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            this._notify('popupResult', [this._options.id].concat(args), {bubbling: true});
          },
 
          /**

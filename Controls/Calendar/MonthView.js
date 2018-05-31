@@ -8,7 +8,6 @@ define('Controls/Calendar/MonthView', [
    'WS.Data/Type/descriptor',
    'Controls/Calendar/Utils',
    'SBIS3.CONTROLS/Utils/DateUtil',
-   'SBIS3.CONTROLS/Utils/IfEnabled',
    'Controls/Calendar/MonthView/MonthViewModel',
    'tmpl!Controls/Calendar/MonthView/MonthView',
    'tmpl!Controls/Calendar/MonthView/MonthViewTableBody',
@@ -26,7 +25,6 @@ define('Controls/Calendar/MonthView', [
    types,
    calendarUtils,
    DateUtil,
-   ifEnabled,
    MonthViewModel,
    dotTplFn,
    tableBodyTmpl,
@@ -60,6 +58,8 @@ define('Controls/Calendar/MonthView', [
       _showWeekdays: null,
       _monthViewModel: null,
 
+      _themeCssClass: '',
+
       _updateView: function(options) {
 
          // локализация может поменяться в рантайме, берем актуальный перевод месяцев при каждой инициализации компонента
@@ -70,12 +70,15 @@ define('Controls/Calendar/MonthView', [
          this._month = options.month || new Date();
          this._month = DateUtil.normalizeMonth(this._month);
          this._showWeekdays = options.showWeekdays;
-
-
       },
 
       _beforeMount: function(options) {
          this._dayTmpl = options.dayTemplate || dayTmpl;
+
+         // TODO: Тема для аккордеона. Временное решение, переделать когда будет понятно, как мы будем делать разные темы в рамках одной страницы.
+         if (options.theme === 'accordion') {
+            this._themeCssClass = 'controls-MonthView__accordionTheme';
+         }
 
          this._updateView(options);
          this._monthViewModel = options.monthViewModel ? new options.monthViewModel(options) :  new MonthViewModel(options);
@@ -87,13 +90,13 @@ define('Controls/Calendar/MonthView', [
          this._monthViewModel.updateOptions(newOptions);
       },
 
-      _dayClickHandler: ifEnabled(function(event, item) {
+      _dayClickHandler: function(event, item) {
          this._notify('itemClick', [item]);
-      }),
+      },
 
-      _mouseEnterHandler: ifEnabled(function(event, item) {
+      _mouseEnterHandler: function(event, item) {
          this._notify('itemMouseEnter', [item]);
-      }),
+      },
 
       // cancelSelection: function () {
       //    var canceled = MonthView.superclass.cancelSelection.call(this);

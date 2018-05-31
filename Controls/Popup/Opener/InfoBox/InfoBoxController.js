@@ -3,7 +3,8 @@ define('Controls/Popup/Opener/InfoBox/InfoBoxController',
       'Controls/Popup/Opener/Sticky/StickyController',
       'Controls/Popup/Opener/InfoBox/resources/themeConstantsGetter',
       'Core/core-merge',
-      'Controls/Popup/Manager/ManagerController'
+      'Controls/Popup/Manager/ManagerController',
+      'css!Controls/Popup/Opener/InfoBox/InfoBox'
    ],
    function(StickyController, themeConstantsGetter, cMerge, ManagerController) {
       var constants = themeConstantsGetter('controls-InfoBox__themeConstants', {

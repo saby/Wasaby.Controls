@@ -1,11 +1,12 @@
 /*global define, $ws*/
 define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
-   "Core/core-merge",
+   'Core/core-merge',
    'Core/Deferred',
-   "WS.Data/Utils",
+   'WS.Data/Utils',
    'SBIS3.CONTROLS/ControlHierarchyManager',
-   'Core/IoC'
-], function( cMerge, Deferred, Utils, ControlHierarchyManager, IoC){
+   'Core/IoC',
+   'View/Runner/requireHelper'
+], function(cMerge, Deferred, Utils, ControlHierarchyManager, IoC, requireHelper) {
    'use strict';
 
    /**
@@ -15,20 +16,21 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
     * @author Крайнов Д.О.
     */
    var DialogMixin = /** @lends SBIS3.CONTROLS/Action/Mixin/DialogMixin.prototype */{
-       /**
+      /**
         * @event onAfterShow Происходит после отображения диалога.
         * @param {Core/EventObject} eventObject Дескриптор события.
         * @param {SBIS3.CONTROLS/Action/Mixin/DialogMixin} this Экземпляр класса Действия.
         * @see onBeforeShow
         */
-       /**
+      /**
         * @event onBeforeShow Происходит перед отображением диалога.
         * @param {Core/EventObject} eventObject Дескриптор события.
         * @param {SBIS3.CONTROLS/Action/Mixin/DialogMixin} this Экземпляр класса Действия.
         * @see onAfterShow
         */
-      $protected : {
-         _options : {
+      $protected: {
+         _options: {
+
             /**
              * @deprecated Используйте опцию {@link template}.
              * @cfg {String} Устанавливает компонент, который будет использован в качестве диалога.
@@ -36,6 +38,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
              * @see setDialogComponent
              */
             dialogComponent: '',
+
             /**
              * @cfg {String} Устанавливает шаблон диалога редактирования.
              * @remark
@@ -43,7 +46,8 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
              * Подробнее о создании шаблона читайте в разделе <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/create/">Создание диалога редактирования</a>.
              * @see mode
              */
-            template : '',
+            template: '',
+
             /**
              * @cfg {String} Устанавливает режим отображения диалога.
              * @variant dialog Открытие диалога производится в новом модальном окне, которое создаётся на основе контрола {@link Lib/Control/Dialog/Dialog}.
@@ -55,17 +59,20 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
              * @see getMode
              */
             mode: 'dialog',
+
             /**
              * @cfg {Object} Объект с пользовательскими опциями, которые передаются в диалог в секцию _options.
              */
             componentOptions: null,
+
             /**
              * @cfg {Object} Объект с конфигурацией контрола, на основе которого создаётся диалог (см. {@link mode}). В числе опций также передают и {@link Lib/Control/Control#linkedContext}.
              */
             dialogOptions: null
          },
          _dialog: undefined,
-          _openedPanelConfig: {},
+         _openedPanelConfig: {},
+
          /**
           * Ключ модели из связного списка
           * Отдельно храним ключ для модели из связного списка, т.к. он может не совпадать с ключом редактируемой модели
@@ -91,7 +98,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             this._openComponent(meta);
             return this._executeDeferred;
          }
-         return (new Deferred).callback();
+         return (new Deferred()).callback();
       },
 
       /**
@@ -125,23 +132,23 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
 
       _createComponent: function(config, meta) {
          var componentName = (meta.mode == 'floatArea') ? 'Lib/Control/FloatArea/FloatArea' : 'Lib/Control/Dialog/Dialog',
-             self = this,
-             resetWidth;
+            self = this,
+            resetWidth;
          
-         if (this._isNeedToRedrawDialog()){
+         if (this._isNeedToRedrawDialog()) {
             this._resetComponentOptions();
+
             //Если поменялся шаблон панели, то надо обновить размеры.
             resetWidth = this._dialog._options.template !== config.template;
             cMerge(this._dialog._options, config);
             this._dialog.reload(true, resetWidth);
-         }
-         else {
+         } else {
             this._isExecuting = true;
             requirejs([componentName], function(Component) {
                try {
-                  if (this._isNewEnvironment()) {
-
-                     var deps = ['Controls/Popup/Opener/BaseOpener'];
+                  var deps = [];
+                  if (isNewEnvironment()) {
+                     deps = ['Controls/Popup/Opener/BaseOpener', 'Controls/Popup/Compatible/Layer'];
                      if (meta.mode === 'floatArea' && config.isStack === true) {
                         deps.push('Controls/Popup/Opener/Stack/StackController');
                         config._type = 'stack';
@@ -154,33 +161,36 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                         config._type = 'dialog';
                      }
 
-                     requirejs(deps, function(BaseOpener, Strategy) {
-                        var CoreTemplate = requirejs(config.template);
-                        config._initCompoundArea = function(compoundArea) {
-                           self._dialog = compoundArea;
-                        };
-                        BaseOpener.showDialog(CoreTemplate, config, Strategy);
+                     requirejs(deps, function(BaseOpener, CompatibleLayer, Strategy) {
+                        CompatibleLayer.load().addCallback(function() {
+                           var CoreTemplate = requireHelper.defined(config.template) && requirejs(config.template);
+                           config._initCompoundArea = function(compoundArea) {
+                              self._dialog = compoundArea;
+                           };
+                           BaseOpener.showDialog(CoreTemplate, config, Strategy);
+                        });
                      });
                   } else {
-                     this._dialog = new Component(config);
+                     deps = ['Controls/Popup/Opener/BaseOpener', 'Controls/Popup/Compatible/BaseOpener'];
+                     requirejs(deps, function(BaseOpener, CompatibleOpener) {
+                        var CoreTemplate = requireHelper.defined(config.template) && requirejs(config.template);
+
+                        if (CoreTemplate && BaseOpener.isVDOMTemplate(CoreTemplate)) {
+                           CompatibleOpener._prepareConfigForNewTemplate(config, CoreTemplate);
+                        }
+
+                        self._dialog = new Component(config);
+                     });
                   }
-               }
-               catch (error) {
+               } catch (error) {
                   this._finishExecuteDeferred(error);
                }
             }.bind(this));
 
          }
       },
-
-
-      //TODO start compatible block for VDOM
-      _isNewEnvironment: function () {
-         return !!document.getElementsByTagName('html')[0].controlNodes;
-      },
-      //TODO end compatible block for VDOM
       
-      _documentClickHandler: function (event) {
+      _documentClickHandler: function(event) {
          //Клик по связному списку приводит к перерисовке записи в панели, а не открытию новой при autoHide = true
          if (this._dialog && this._openedPanelConfig.mode === 'floatArea' && this._dialog.isVisible() && this._openedPanelConfig.autoHide) {
             if (this._needCloseDialog(event.target) && !this._isClickToScroll(event)) {
@@ -196,11 +206,12 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
       },
 
       //Если клик был по другой панели, проверяю, связана ли она с текущей
-      _isLinkedPanel: function (target) {
+      _isLinkedPanel: function(target) {
          var floatArea = $(target).closest('.ws-float-area-stack-cut-wrapper').find('.ws-float-area'); //Клик может быть в стики шапку, она лежит выше .ws-float-area
-         if (floatArea.length){
+         if (floatArea.length) {
             return ControlHierarchyManager.checkInclusion(this._dialog, floatArea.wsControl().getContainer());
          }
+
          //Если кликнули по инфобоксу или информационному окну - popup закрывать не нужно
          var infoBox = $(target).closest('.ws-info-box, .controls-InformationPopup, .ws-window-overlay, .js-controls-NotificationStackPopup');
          return !!infoBox.length;
@@ -219,8 +230,9 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
          var dialogOptions = this._dialog._options;
          dialogOptions.componentOptions = {
             isPanelMaximized: dialogOptions.maximized
-         }
+         };
       },
+
       /**
        * Возвращает конфигурацию диалога по умолчанию.
        * @param meta
@@ -239,20 +251,20 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             block_by_task_1173286428: false // временнное решение проблемы описанной в надзадаче
          }, this._options.dialogOptions || {});
       },
-      _getOpener: function(){
+      _getOpener: function() {
          //В 375 все прикладники не успеют указать у себя правильных opener'ов, пока нахожу opener за них.
          //В идеале они должны делать это сами и тогда этот код не нужен
          var popup = this.getContainer() && this.getContainer().closest('.controls-FloatArea'),
-             topParent,
-             floatArea,
-             floatAreaContainer;
+            topParent,
+            floatArea,
+            floatAreaContainer;
+
          //Указываем opener'ом всплывающую панель, в которой лежит action, это может быть либо controls.FloatArea, либо core.FloatArea
          //Нужно в ситуации, когда запись перерисовывается в уже открытой панели, чтобы по opener'aм добраться до панелей, которые открыты из той,
          //которую сейчас перерисовываем, и закрыть их.
          if (popup && popup.length) {
             return popup.wsControl();
-         }
-         else {
+         } else {
             topParent = this.getTopParent();
             if (topParent !== this) {
                floatAreaContainer = topParent.getContainer().closest('.ws-float-area');
@@ -261,6 +273,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
          }
          return floatArea || this;
       },
+
       /**
        * Возвращает конфигурацию диалога - всплывающей панели или окна.
        * @param {Object} meta
@@ -269,23 +282,23 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
        */
       _getDialogConfig: function(meta) {
          var config = this._getDefaultDialogConfig(meta),
-             self = this;
+            self = this;
 
          cMerge(config, meta.dialogOptions);
          this._saveAutoHideState(meta, config);
          config.componentOptions = this._buildComponentConfig(meta);
          config.handlers = config.handlers || {};
          var handlers = {
-            onAfterClose: function (e, result) {
+            onAfterClose: function(e, result) {
                self._isExecuting = false;
                self._finishExecuteDeferred();
                self._notifyOnExecuted(meta, result);
                self._dialog = undefined;
             },
-            onBeforeShow: function () {
+            onBeforeShow: function() {
                self._notify('onBeforeShow', this);
             },
-            onAfterShow: function () {
+            onAfterShow: function() {
                self._isExecuting = false;
                self._notify('onAfterShow', this);
             }
@@ -294,8 +307,8 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             if (handlers.hasOwnProperty(name)) {
                if (config.handlers.hasOwnProperty(name) && config.handlers[name] instanceof Array) {
                   config.handlers[name].push(handlers[name]);
-               } else if(config.handlers.hasOwnProperty(name))  {
-                  config.handlers[name] = [config.handlers[name], handlers[name]]
+               } else if (config.handlers.hasOwnProperty(name))  {
+                  config.handlers[name] = [config.handlers[name], handlers[name]];
                } else {
                   config.handlers[name] = handlers[name];
                }
@@ -320,8 +333,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                //не может обработать валидный результат false
                //Выписал задачу, чтобы мог https://online.sbis.ru/opendoc.html?guid=c7ff3ac1-5884-40ef-bf84-e544d8a41ffa
                this._executeDeferred.callback(false);
-            }
-            else {
+            } else {
                this._executeDeferred.errback(error);
             }
          }
@@ -336,6 +348,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
       setMode: function(mode) {
          this._options.mode = mode;
       },
+
       /**
        * Получить режим открытия диалога редактирования компонента.
        * @param {String} mode режим открытия диалога редактирования компонента {@link mode}.
@@ -345,12 +358,13 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
       getMode: function() {
          return this._options.mode;
       },
+
       /**
        * @deprecated Используйте опцию {@link template}.
        * @description
        * Устанавливает компонент, который будет использован в качестве диалога редактирования записи.
        */
-      setDialogComponent: function (template) {
+      setDialogComponent: function(template) {
          //нужно для того чтобы работал метод setProperty(dialogComponent)
          Utils.logger.stack(this._moduleName + '::$constructor(): option "dialogComponent" is deprecated and will be removed in 3.8.0', 1);
          this._options.template = template;
@@ -370,14 +384,14 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
       /**
        @deprecated
        **/
-      _opendEditComponent: function(meta, dialogComponent, mode){
+      _opendEditComponent: function(meta, dialogComponent, mode) {
          IoC.resolve('ILogger').error('SBIS3.CONTROLS.OpenEditDialog', 'Используйте публичный метод execute для работы с action\'ом открытия диалога редактирования');
          meta.template = dialogComponent;
          this._openComponent.call(this, meta, mode);
       },
 
-      after : {
-         destroy: function () {
+      after: {
+         destroy: function() {
             if (this._dialog) {
                this._dialog.destroy();
                this._dialog = undefined;
@@ -387,6 +401,14 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
          }
       }
    };
+
+
+   //TODO start compatible block for VDOM
+   function isNewEnvironment() {
+      return !!document.getElementsByTagName('html')[0].controlNodes;
+   }
+
+   //TODO end compatible block for VDOM
 
    return DialogMixin;
 });

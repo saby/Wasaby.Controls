@@ -24,6 +24,14 @@ define('Controls/Container/Filter/Button',
       
       'use strict';
       
+      var _private = {
+         updateHistoryId: function(self, context) {
+            if (context.filterLayoutField.historyId) {
+               self._historyId = context.filterLayoutField.historyId;
+            }
+         }
+      };
+      
       var FilterButton = Control.extend({
          
          _template: template,
@@ -34,16 +42,19 @@ define('Controls/Container/Filter/Button',
             if (!isEqual(this.context.get('filterLayoutField').filterButtonItems, filterItems)) {
                this._items = filterItems;
             }
+            _private.updateHistoryId(this, context);
          },
    
          _beforeMount: function(options, context) {
             if (context.filterLayoutField.filterButtonItems) {
                this._items = context.filterLayoutField.filterButtonItems;
             }
+            _private.updateHistoryId(this, context);
          },
-   
-         _filterChanged: function(event, filter) {
-            this._notify('filterChanged', [filter], {bubbling: true});
+
+         _itemsChanged: function(event, items) {
+            this._items = items;
+            this._notify('itemsChanged', [items], {bubbling: true});
          }
       });
    
