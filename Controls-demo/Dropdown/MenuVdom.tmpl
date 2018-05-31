@@ -2,15 +2,15 @@
    <Controls.Input.Text name='fakeText' bind:value="_stateText"/>
    <h2>Dropdown</h2>
    <div style="padding: 5px;">Простой
-      <Controls.Input.Dropdown 
+      <Controls.Input.Dropdown
          on:selectedKeysChanged="_selectedItemsChangedHandler(0)"
          bind:selectedKeys="_selectedKeys0"
          name="myDropdownList0"
          keyProperty="id"
-         source="{{_getDefaultMemory()}}" 
+         source="{{_getDefaultMemory()}}"
       />
    </div>
-   
+
    <div style="padding: 5px;">С кастомными шаблонами записи
       <Controls.Input.Dropdown
          name="myDropdownList1"
@@ -20,9 +20,9 @@
          source="{{_getItemTemplateData()}}"
       />
    </div>
-   
+
    <div style="padding: 5px;">С кастомными шаблонами
-      <Controls.Input.Dropdown 
+      <Controls.Input.Dropdown
          name="myDropdownList2"
          bind:selectedKeys="_selectedKeys2"
          keyProperty="id"
@@ -32,7 +32,7 @@
    </div>
 
    <div style="padding: 5px;">С иконками
-      <Controls.Input.Dropdown 
+      <Controls.Input.Dropdown
          name="myDropdownList3"
          bind:selectedKeys="_selectedKeys3"
          keyProperty="id"
@@ -41,7 +41,7 @@
    </div>
 
    <div style="padding: 5px;">С иерархией
-      <Controls.Input.Dropdown 
+      <Controls.Input.Dropdown
          name="myDropdownList4"
          bind:selectedKeys="_selectedKeys4"
          keyProperty="id"
@@ -52,8 +52,8 @@
    </div>
 
    <div style="padding: 5px;">Со скроллом, шапкой и футером
-      <Controls.Input.Dropdown 
-         name="myDropdownList5" 
+      <Controls.Input.Dropdown
+         name="myDropdownList5"
          attr:test_name="hier_dropdown"
          on:footerClick="footerClickHandler()"
          bind:selectedKeys="_selectedKeys5"
@@ -66,8 +66,8 @@
    </div>
    <h2>MenuButton</h2>
    <div style="padding: 5px;">
-      <Controls.Button.MenuButton 
-         on:onMenuItemActivate="_clickItemsChangedHandler()" 
+      <Controls.Button.MenuButton
+         on:onMenuItemActivate="_clickItemsChangedHandler()"
          attr:test_name="plain_menu"
          name="myMenuButton1"
          keyProperty="id"
@@ -80,7 +80,7 @@
       />
    </div>
    <div style="padding: 5px;">
-      <Controls.Button.MenuButton 
+      <Controls.Button.MenuButton
          name="myMenuButton12"
          keyProperty="id"
          style="buttonDefault"
@@ -93,7 +93,7 @@
       />
    </div>
    <div style="padding: 5px;">
-      <Controls.Button.MenuButton 
+      <Controls.Button.MenuButton
          name="myMenuButton2"
          keyProperty="id"
          style="linkMain"
@@ -105,7 +105,7 @@
       />
    </div>
    <div style="padding: 5px;">
-      <Controls.Button.MenuButton 
+      <Controls.Button.MenuButton
          name="myMenuButton3"
          keyProperty="id"
          style="linkMain"
@@ -117,19 +117,18 @@
       />
    </div>
    <div style="padding: 5px;">Кнопка-иконка small
-      <Controls.Button.MenuButton 
+      <Controls.Button.MenuButton
          name="myMenuButton4"
          keyProperty="id"
          style="linkMain"
          icon="icon-small icon-Author"
          parentProperty="parent"
          nodeProperty="@parent"
-         headCaption="wow so much vdom"
          source="{{_getHierarchyItems()}}"
       />
    </div>
    <div style="padding: 5px;">Кнопка-иконка medium
-      <Controls.Button.MenuButton 
+      <Controls.Button.MenuButton
          name="myMenuButton5"
          keyProperty="id"
          style="linkMain"
@@ -153,8 +152,8 @@
       />
    </div>
    <div style="padding: 5px;">Дублирование малой иконки
-      <Controls.Button.MenuButton 
-         name="myMenuButton8" 
+      <Controls.Button.MenuButton
+         name="myMenuButton8"
          attr:test_name="mirror_small_menu"
          keyProperty="id"
          style="linkMain"
@@ -166,7 +165,7 @@
       </Controls.Button.MenuButton>
    </div>
    <div style="padding: 5px;">Дублирование большой иконки
-      <Controls.Button.MenuButton 
+      <Controls.Button.MenuButton
          name="myMenuButton9"
          keyProperty="id"
          style="linkMain"
@@ -178,7 +177,7 @@
       </Controls.Button.MenuButton>
    </div>
    <div style="padding: 5px;">Меню с крестом
-      <Controls.Button.MenuButton 
+      <Controls.Button.MenuButton
          name="myMenuButton10"
          attr:test_name="cross_menu"
          keyProperty="id"
