@@ -741,7 +741,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             if (selectedId) {
                var current = this._findPresetById(selectedId);
                return {
-                  consumer: {id:selectedId, isEditable:current.isStorable || current.isUnreal},
+                  consumer: {id:selectedId, readonly:!current.isStorable && !current.isUnreal},
                   fieldIds: current.fieldIds,
                   fileUuid: current.fileUuid
                };

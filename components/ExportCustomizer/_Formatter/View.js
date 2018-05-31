@@ -99,7 +99,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             // Размер области предпросмотра
             _previewSize: null,
             // Набор обещаний, ожидающих создания шаблона эксель-файла
-            _creation: {}
+            _creation: {},
+            // Ожидаемое открытие шаблона эксель-файла
+            _opening: null
          },
 
          _modifyOptions: function () {
@@ -157,7 +159,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             var fieldIds = options.fieldIds;
             if (fieldIds && fieldIds.length) {
                var method = useApp ? 'openApp' : 'open';
-               this._callFormatterMethod(method);
+               var consumer = options.consumer;
+               if (consumer && consumer.readonly) {
+                  this._opening = method;
+                  this.sendCommand('subviewChanged');
+               }
+               else {
+                  this._callFormatterMethod(method);
+               }
             }
          },
 
@@ -174,8 +183,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             if (isCreate && this._creation[options.consumer ? options.consumer.id : '']) {
                throw new Error('Already in creation');
             }
+            var isOpen = method === 'open' || method === 'openApp';
+            if (isOpen) {
+               this._opening = null;
+            }
             var args = [];
-            var useBoth = method === 'update' || method === 'open' || method === 'openApp';
+            var useBoth = method === 'update' || isOpen;
             if (method === 'delete' || useBoth) {
                args.push(options.fileUuid);
             }
@@ -196,6 +209,23 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                }.bind(this, consumerId));
             }
             return promise;
+         },
+
+         /**
+          * Вызвать последовательно несколько методов форматера
+          *
+          * @protected
+          * @param {Array<string>} methods Список методов
+          * return {Core/Deferred}
+          */
+         _callFormatterMethods: function (methods) {
+            if (methods && methods.length) {
+               var promise = this._callFormatterMethod(methods[0]);
+               if (1 < methods.length) {
+                  promise.addCallback(this._callFormatterMethods.bind(this, methods.slice(1)));
+               }
+               return promise;
+            }
          },
 
          /**
@@ -237,11 +267,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * @param {string} fileUuid Uuid шаблона форматирования эксель-файла
           */
          _onFormatter: function (method, fileUuid) {
-            var has = method === 'create' && !!fileUuid;
-            if (has) {
+            if (method === 'create' && !!fileUuid) {
                this._options.fileUuid = fileUuid;
-            }
-            if (has || method === 'open' || method === 'openApp') {
                this.sendCommand('subviewChanged');
             }
             this._updatePreview();
@@ -317,17 +344,16 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             }
             if (has.fieldIds || has.fileUuid) {
                var method = options.fileUuid ? 'update' : 'create';
-               var promise;
+               var creating;
                if (method === 'create') {
                   var consumer = options.consumer;
-                  promise = this._creation[consumer ? consumer.id : ''];
+                  creating = this._creation[consumer ? consumer.id : ''];
                }
-
-               if (promise) {
-                  promise.addCallback(this._callFormatterMethod.bind(this, 'update'));
+               if (creating) {
+                  creating.addCallback(this._callFormatterMethods.bind(this, this._opening ? ['update', this._opening] : ['update']));
                }
                else {
-                  this._callFormatterMethod(method);
+                  this._callFormatterMethods(this._opening ? [method, this._opening] : [method]);
                }
                var fieldIds = options.fieldIds;
                var isAllow = !!(fieldIds && fieldIds.length);
