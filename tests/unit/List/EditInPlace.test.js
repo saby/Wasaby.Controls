@@ -461,10 +461,12 @@ define([
             });
             eip._editingItem = listModel.at(0).getContents();
             eip._setEditingItemData(listModel.at(0).getContents(), eip._options.listModel);
-            eip._onKeyDown({
-               nativeEvent: {
-                  keyCode: 9
+            eip._onRowDeactivated({
+               stopPropagation: function() {
+
                }
+            }, {
+               isTabPressed: true
             });
          });
 
@@ -477,10 +479,12 @@ define([
             });
             eip._editingItem = listModel.at(2).getContents();
             eip._setEditingItemData(listModel.at(2).getContents(), eip._options.listModel);
-            eip._onKeyDown({
-               nativeEvent: {
-                  keyCode: 9
+            eip._onRowDeactivated({
+               stopPropagation: function() {
+
                }
+            }, {
+               isTabPressed: true
             });
          });
 
@@ -496,10 +500,12 @@ define([
             });
             eip._editingItem = listModel.at(2).getContents();
             eip._setEditingItemData(listModel.at(2).getContents(), eip._options.listModel);
-            eip._onKeyDown({
-               nativeEvent: {
-                  keyCode: 9
+            eip._onRowDeactivated({
+               stopPropagation: function() {
+
                }
+            }, {
+               isTabPressed: true
             });
          });
 
@@ -513,11 +519,13 @@ define([
             });
             eip._editingItem = listModel.at(1).getContents();
             eip._setEditingItemData(listModel.at(1).getContents(), eip._options.listModel);
-            eip._onKeyDown({
-               nativeEvent: {
-                  keyCode: 9,
-                  shiftKey: true
+            eip._onRowDeactivated({
+               stopPropagation: function() {
+
                }
+            }, {
+               isTabPressed: true,
+               isShiftKey: true
             });
          });
 
@@ -530,16 +538,41 @@ define([
             });
             eip._editingItem = listModel.at(0).getContents();
             eip._setEditingItemData(listModel.at(0).getContents(), eip._options.listModel);
-            eip._onKeyDown({
-               nativeEvent: {
-                  keyCode: 9,
-                  shiftKey: true
+            eip._onRowDeactivated({
+               stopPropagation: function() {
+
                }
+            }, {
+               isTabPressed: true,
+               isShiftKey: true
             });
          });
       });
 
       describe('_onItemClick', function() {
+         it('editOnClick: true, notEditable element', function(done) {
+            eip.commitEdit = function() {
+               done();
+            };
+            eip.saveOptions({
+               editingConfig: {
+                  editOnClick: true
+               }
+            });
+
+            eip._onItemClick({}, newItem, {
+               target: {
+                  closest: function() {
+                     return true;
+                  }
+               },
+               nativeEvent: {
+                  clientX: 0,
+                  clientY: 0
+               }
+            });
+         });
+
          it('editOnClick: true', function(done) {
             eip.editItem = function(options) {
                assert.equal(options.item, newItem);
@@ -551,7 +584,17 @@ define([
                }
             });
 
-            eip._onItemClick({}, newItem);
+            eip._onItemClick({}, newItem, {
+               target: {
+                  closest: function() {
+                     return false;
+                  }
+               },
+               nativeEvent: {
+                  clientX: 0,
+                  clientY: 0
+               }
+            });
          });
 
          it('editOnClick: false', function() {
