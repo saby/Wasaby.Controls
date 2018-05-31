@@ -339,67 +339,51 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
          it('methods throwing a call into the model', function() {
             var
                gridViewModel = new GridViewModel(cfg),
-               expectedCallStackMethods = ['getItemById', 'setMarkedKey', 'reset', 'isEnd', 'goToNext', 'getNext', 'isLast',
-                  'updateIndexes', 'setItems', 'appendItems', 'prependItems', 'getCount', 'destroy'],
+               callMethods = ['getItemById', 'setMarkedKey', 'reset', 'isEnd', 'goToNext', 'getNext', 'isLast',
+                  'updateIndexes', 'setItems', 'setActiveItem', 'appendItems', 'prependItems', 'setItemActions', 'getDragTargetPosition',
+                  'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'select', 'unselect', 'destroy'],
                callStackMethods = [];
 
-            gridViewModel._model = {
-               getItemById: function() {
-                  callStackMethods.push('getItemById');
-               },
-               setMarkedKey: function() {
-                  callStackMethods.push('setMarkedKey');
-               },
-               reset: function() {
-                  callStackMethods.push('reset');
-               },
-               isEnd: function() {
-                  callStackMethods.push('isEnd');
-               },
-               goToNext: function() {
-                  callStackMethods.push('goToNext');
-               },
-               getNext: function() {
-                  callStackMethods.push('getNext');
-               },
-               isLast: function() {
-                  callStackMethods.push('isLast');
-               },
-               updateIndexes: function() {
-                  callStackMethods.push('updateIndexes');
-               },
-               setItems: function() {
-                  callStackMethods.push('setItems');
-               },
-               appendItems: function() {
-                  callStackMethods.push('appendItems');
-               },
-               prependItems: function() {
-                  callStackMethods.push('prependItems');
-               },
-               getCount: function() {
-                  callStackMethods.push('getCount');
-               },
-               destroy: function() {
-                  callStackMethods.push('destroy');
-               }
-            };
-
-            gridViewModel.getItemById();
-            gridViewModel.setMarkedKey();
-            gridViewModel.reset();
-            gridViewModel.isEnd();
-            gridViewModel.goToNext();
-            gridViewModel.getNext();
-            gridViewModel.isLast();
-            gridViewModel.updateIndexes();
-            gridViewModel.setItems();
-            gridViewModel.appendItems();
-            gridViewModel.prependItems();
-            gridViewModel.getCount();
-            gridViewModel.destroy();
-
-            assert.deepEqual(expectedCallStackMethods, callStackMethods, 'Incorrect call stack methods.');
+            gridViewModel._model = {};
+            callMethods.forEach(function(item) {
+               gridViewModel._model[item] = function() {
+                  callStackMethods.push(item);
+               };
+            });
+            callMethods.forEach(function(item) {
+               gridViewModel[item]();
+            });
+            assert.deepEqual(callMethods, callStackMethods, 'Incorrect call stack methods.');
+         });
+      });
+      describe('ladder', function() {
+         var
+            gridViewModel = new GridViewModel(cMerge({
+               stickyFields: ['title']
+            }, cfg));
+         it('current.ladderSupport', function() {
+            assert.isTrue(gridViewModel.getCurrent().ladderSupport, 'Incorrect value "ladderSupport" for "current".');
+         });
+         it('_processLadder', function() {
+            var
+               expectedLadder = [{
+                  ladderValue: 'Хлеб',
+                  rowIndex: 0,
+                  columnIndex: 0,
+                  ladderLength: 4,
+                  currentColumn: null
+               }, {
+                  ladderValue: 'Хлеб',
+                  rowIndex: 0,
+                  columnIndex: 0,
+                  ladderLength: 2,
+                  currentColumn: null
+               }],
+               current = gridViewModel.getCurrent();
+            GridViewModel._private.processLadder(gridViewModel, current);
+            gridViewModel._ladder.currentColumn = null;
+            assert.isTrue(gridViewModel._withLadder, 'Incorrect value "withLadder".');
+            assert.deepEqual(expectedLadder[0], gridViewModel._ladder, 'Incorrect value "ladder".');
          });
       });
       describe('other methods of the class', function() {

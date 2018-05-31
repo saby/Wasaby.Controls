@@ -93,6 +93,56 @@ define('Controls/List/Grid/GridViewModel', [
             }
 
             return cellClasses;
+         },
+         processLadder: function(self, current) {
+            var
+               ladderField = self._options.stickyFields[0],
+               nextItem,
+               nextLadderValue;
+
+            // если рисуем первый элемент
+            if (current.index === 0) {
+               self._ladder.ladderValue = current.getPropValue(current.item, ladderField);
+            }
+
+            if (self._drawLadder) {
+               self._withLadder = false;
+               self._drawLadder = false;
+               self._ladder.currentColumn = null;
+               self._ladder.rowIndex = null;
+               self._ladder.columnIndex = null;
+               self._ladder.ladderLength = null;
+            }
+
+            if (self.isLast()) {
+               if (self._ladder.ladderLength > 1) {
+                  self._drawLadder = true;
+               }
+               return;
+            }
+            nextItem = self.getNext();
+
+            // смотрим на следующий item
+            nextLadderValue = nextItem.getPropValue(nextItem.item, ladderField);
+
+            // если лесенка у следующего item такая же, то увеличиваем длинну лесенки, запоминаем current и rowIndex
+            if (self._ladder.ladderValue === nextLadderValue) {
+               self._withLadder = true;
+
+               // запоминаем только если ранее не запоминали
+               if (!self._ladder.currentColumn) {
+                  self._ladder.currentColumn = current.getCurrentColumn();
+                  self._ladder.rowIndex = current.index;
+                  self._ladder.columnIndex = 0;
+                  self._ladder.ladderLength = 1;
+               }
+               self._ladder.ladderLength++;
+            } else {
+               if (self._ladder.ladderLength > 1) {
+                  self._drawLadder = true;
+               }
+               self._ladder.ladderValue = nextLadderValue;
+            }
          }
       },
 
@@ -395,7 +445,7 @@ define('Controls/List/Grid/GridViewModel', [
             };
 
             if (current.ladderSupport) {
-               this._processLadder(current);
+               _private.processLadder(this, current);
                if (this._drawLadder) {
                   current.ladder = this._ladder;
                   current.ladder.style = 'grid-area: ' +
@@ -406,57 +456,6 @@ define('Controls/List/Grid/GridViewModel', [
                }
             }
             return current;
-         },
-
-         _processLadder: function(current) {
-            var
-               ladderField = this._options.stickyFields[0],
-               nextItem,
-               nextLadderValue;
-
-            // если рисуем первый элемент
-            if (current.index === 0) {
-               this._ladder.ladderValue = current.getPropValue(current.item, ladderField);
-            }
-
-            if (this._drawLadder) {
-               this._withLadder = false;
-               this._drawLadder = false;
-               this._ladder.currentColumn = null;
-               this._ladder.rowIndex = null;
-               this._ladder.columnIndex = null;
-               this._ladder.ladderLength = null;
-            }
-
-            if (this.isLast()) {
-               if (this._ladder.ladderLength > 1) {
-                  this._drawLadder = true;
-               }
-               return;
-            }
-            nextItem = this.getNext();
-
-            // смотрим на следующий item
-            nextLadderValue = nextItem.getPropValue(nextItem.item, ladderField);
-
-            // если лесенка у следующего item такая же, то увеличиваем длинну лесенки, запоминаем current и rowIndex
-            if (this._ladder.ladderValue === nextLadderValue) {
-               this._withLadder = true;
-
-               // запоминаем только если ранее не запоминали
-               if (!this._ladder.currentColumn) {
-                  this._ladder.currentColumn = current.getCurrentColumn();
-                  this._ladder.rowIndex = current.index;
-                  this._ladder.columnIndex = 0;
-                  this._ladder.ladderLength = 1;
-               }
-               this._ladder.ladderLength++;
-            } else {
-               if (this._ladder.ladderLength > 1) {
-                  this._drawLadder = true;
-               }
-               this._ladder.ladderValue = nextLadderValue;
-            }
          },
 
          getNext: function() {
@@ -495,11 +494,6 @@ define('Controls/List/Grid/GridViewModel', [
             return this._model.getDragTargetPosition();
          },
 
-         _setEditingItemData: function(itemData) {
-            this._model._setEditingItemData(itemData);
-            this._nextVersion();
-         },
-
          getIndexBySourceItem: function(item) {
             return this._model.getIndexBySourceItem(item);
          },
@@ -510,10 +504,6 @@ define('Controls/List/Grid/GridViewModel', [
 
          getCount: function() {
             return this._model.getCount();
-         },
-
-         _prepareDisplayItemForAdd: function(item) {
-            return this._model._prepareDisplayItemForAdd(item);
          },
 
          setSwipeItem: function(itemData) {
