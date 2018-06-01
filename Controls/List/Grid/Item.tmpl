@@ -13,7 +13,7 @@
                            attr:class="{{itemData.getCurrentColumn().withLadder ? 'controls-Grid__row-cell__content_withLadder'}}"
                            contentData="{{itemData.getCurrentColumn()}}" />
             </ws:else>
-            <ws:if data="{{itemData.getLastColumnIndex() === itemData.columnIndex && itemData.itemActions  && itemData.itemActions.all && itemData.itemActions.all.length}}">
+            <ws:if data="{{itemData.getLastColumnIndex() === itemData.columnIndex && itemData.itemActions  && itemData.itemActions.all && itemData.itemActions.showed.length}}">
                <ws:partial template="{{itemActionsTemplate}}"  itemData="{{itemData}}"/>
             </ws:if>
          </div>
