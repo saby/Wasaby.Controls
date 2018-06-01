@@ -3,11 +3,11 @@
 }
 
 .controls-SuggestV__suggestionsContainer {
+	margin-top: -@border-width_InputRender;
 	position: absolute;
-	border-width: 0 @default-border-width @default-border-width @default-border-width;
-	border-color: @suggest-picker-border-color;
-	border-style: solid;
+	border: @border-size_suggestionsContainer solid @border-color_suggestionsContainer;
 	box-sizing: border-box;
+	.box-shadow(@shadow_suggestionsContainer);
 }
 
 .controls-SuggestV {
