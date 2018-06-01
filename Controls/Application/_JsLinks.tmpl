@@ -1,12 +1,12 @@
 <div>
+   <ws:if data="{{ cssLinks }}">
+      <ws:for data="i in cssLinks">
+         <script data-vdomignore="true">define('css!{{ getCssNameForDefine(i) }}', '');</script>
+      </ws:for>
+   </ws:if>
    <ws:if data="{{ jsLinks }}">
       <ws:for data="index, value in jsLinks">
          <script type="text/javascript" src="{{ value }}" defer="defer" key="{{ 'scripts_' + index }}" data-vdomignore="true"></script>
-      </ws:for>
-   </ws:if>
-   <ws:if data="{{cssLinks}}">
-      <ws:for data="i in cssLinks">
-         <script data-vdomignore="true">define('css!{{ getCssNameForDefine(i) }}', '');</script>
       </ws:for>
    </ws:if>
 </div>
