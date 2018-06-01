@@ -95,7 +95,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
 
          _shouldUpdate: function(popupOptions) {
-            this._rebuildCompoundControl(popupOptions);
+            if (this._options._shouldUpdate) {
+               this._rebuildCompoundControl(popupOptions);
+            }
             return false;
          },
 
@@ -509,6 +511,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             return res;
          }
       });
+
+      CompoundArea.getDefaultOptions = function() {
+         return {
+            _shouldUpdate: true
+         };
+      };
 
       return CompoundArea;
    });
