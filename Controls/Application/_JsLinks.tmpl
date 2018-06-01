@@ -6,7 +6,7 @@
    </ws:if>
    <ws:if data="{{cssLinks}}">
       <ws:for data="i in cssLinks">
-         <script data-vdomignore="true">define('css!{{i}}', '');</script>
+         <script data-vdomignore="true">define('css!{{ getCssNameForDefine(i) }}', '');</script>
       </ws:for>
    </ws:if>
 </div>
