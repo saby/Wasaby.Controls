@@ -176,12 +176,12 @@ define('Controls/List', [
          this._notify('afterItemsMove', [items, target, position, result]);
       },
 
-      _dragStart: function(event, dragObject) {
-         return this._notify('dragStart', [dragObject]);
+      _dragStart: function(event, items) {
+         return this._notify('dragStart', [items]);
       },
 
-      _dragEnd: function(event, dragObject) {
-         return this._notify('dragEnd', [dragObject]);
+      _dragEnd: function(event, items, target, position) {
+         return this._notify('dragEnd', [items, target, position]);
       }
    });
 

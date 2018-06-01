@@ -149,5 +149,7 @@ define('Controls/DragNDrop/Controller',
          }
       });
 
+      DragNDropController._private = _private;
+
       return DragNDropController;
    });
