@@ -20,6 +20,10 @@ function(cMerge) {
             _isUpdating: !!popupId
          };
 
+         if (cfg.target) {
+            cfg.target = cfg.target[0] ? cfg.target[0] : cfg.target;
+         }
+
          if (cfg.hasOwnProperty('autoHide')) {
             cfg.closeByExternalClick = cfg.autoHide;
          }
@@ -50,6 +54,10 @@ function(cMerge) {
          });
          if (cfg.hasOwnProperty('closeByExternalClick')) {
             cfg.autoHide = cfg.closeByExternalClick;
+         }
+
+         if (newCfg.target) {
+            newCfg.target = $(newCfg.target);
          }
 
          return newCfg;
