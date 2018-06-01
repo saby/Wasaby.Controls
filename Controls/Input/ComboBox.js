@@ -76,7 +76,7 @@ define('Controls/Input/ComboBox',
       ComboBox.getDefaultOptions = function() {
          return {
             editable: false,
-            placeholder: 'Выберите...'
+            placeholder: rk('Выберите...')
          };
       };
 
