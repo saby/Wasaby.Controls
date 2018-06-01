@@ -159,7 +159,9 @@ define('SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin', [
             return;
          }
          this._getHistoryRecordSet().addCallback(function (rs) {
-            if (rs.getCount()) {
+            /* По окончанию запроса поле связи могут скрыть, причём не само поле связи, а его родителя.
+               Проверим, что оно показано */
+            if (rs.getCount() && this.isVisibleWithParents()) {
                this.getList().setItems(rs);
                this.showPicker();
             }
@@ -209,7 +211,7 @@ define('SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin', [
                   model: listSource.getModel()
               });
               if (result[1]) {
-                  historyRS.assign(result[1].getAll());
+                  historyRS.append(result[1].getAll());
               }
               return historyRS;
           }).addBoth(function(result) {
@@ -345,12 +347,20 @@ define('SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin', [
                чтобы при изменнии текста из контекста не вызывался поиск в автодополнении */
             this._changedByKeyboard = true;
          },
-         _observableControlFocusHandler: function(){
-            if (this._options.historyId && !this._historyController){
+         
+         _getHistoryController: function() {
+            if (!this._historyController){
                this._historyController = new HistoryList({
                   historyId: this._options.historyId,
                   maxLength: HISTORY_LENGTH
                });
+            }
+            return this._historyController;
+         },
+         _observableControlFocusHandler: function(){
+            if (this._options.historyId) {
+               /* Проинициализируем контроллер истории, если есть historyId */
+               this._getHistoryController();
             }
             if (this._needShowHistory()){
                //historyId и autoShow взаимоисключающий функционал. В 150 просто отключаю, в 17.10 вывожу ошибку
@@ -365,7 +375,8 @@ define('SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin', [
 
          _addItemToHistory: function(item) {
             if (!this._options.useInputHistoryService) {
-                if (this._historyController) {
+                if (this._options.historyId) {
+                   var historyController = this._getHistoryController();
                     //Определяем наличие записи в истории по ключу: стандартная логика контроллера не подходит,
                     //т.к. проверка наличия добавляемой записи в истории производится по полному сравнению всех полей записи.
                     //В записи поля могут задаваться динамически, либо просто измениться, к примеру значение полей может быть привязано к текущему времени
@@ -374,8 +385,8 @@ define('SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin', [
                         idProp = items ? items.getIdProperty() : this.getList().getProperty('idProperty'),
                         itemId = item.get(idProp),
                         index = -1;
-
-                    this._historyController.each(function (model, i) {
+   
+                   historyController.each(function (model, i) {
                         var historyModelObject = model.get('data').getRawData();
                         var historyModelId;
                         //Проблема в адаптерах historyRecordSet и сохраняемой записи, они могут быть разными
@@ -402,9 +413,9 @@ define('SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin', [
                         }
                     });
                     if (index !== -1) {
-                        this._historyController.removeAt(index);
+                       historyController.removeAt(index);
                     }
-                    this._historyController.prepend(item.getRawData());
+                   historyController.prepend(item.getRawData());
                 }
             } else {
                if (this._inputHistoryController) {

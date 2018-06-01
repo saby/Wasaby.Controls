@@ -113,6 +113,7 @@ define('SBIS3.CONTROLS/FieldLink/resources/ItemsCollection', [
                   }
                },
                function (id) {
+                  self._parentFieldLink.setActive(true);
                   if (id !== undefined) {
                      self._notify('onItemActivate', id);
                   }
@@ -226,6 +227,7 @@ define('SBIS3.CONTROLS/FieldLink/resources/ItemsCollection', [
                targetPart: true,
                cssClassName: pickerClasses.join(' '),
                activableByClick: false,
+               _canScroll: true,
                verticalAlign: {
                   side: 'top'
                },

@@ -113,22 +113,6 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
              * Длина текста, передаваемого в поле ввода, не зависит от настройки опции {@link maxLength}.
              * Установить или изменить текстовое значение в поле ввода можно с помощью метода {@link setText}.
              * Получить текстовое значение поля ввода можно с помощью метода {@link getText}.
-             * @example
-             * Пример 1. Устанавливаем текст в поле ввода для поля связи:
-             * <pre class="brush:xml">
-             *    <option name="text">Филиппов Павел</option>
-             * </pre>
-             * Пример 2. Привязываем значения поля связи к полю myTextField в контексте для настройки фильтрации списка
-             * значений автодополнения. В этом примере проиллюстрирована фильтрация списка по переданному тексту в
-             * поле связи.
-             * ![](/TextBoxBase01.png)
-             * фрагмент верстки:
-             * <pre class="brush:xml">
-             *     <option name="text" bind="myTextField" value="Филиппов Павел"></option>
-             *     <options name="listFilter">
-             *        <option name="ФИО" bind="myTextField" oneWay="true" value=""></option>
-             *     </options>
-             * </pre>
              * @see trim
              * @see maxLength
              * @see setText
@@ -146,10 +130,6 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
              * При включённом режиме пробелы в начале и конце введенного текста будут обрезаны.
              * Будет возвращена новая, усеченная строка. Это следует учитывать при определении {@link maxLength} -
              * максимального количества символов, которое может содержать текст при вводе.
-             * @example
-             * <pre class="brush:xml">
-             *     <option name="trim">true</option>
-             * </pre>
              * @see text
              * @see maxLength
              * @see setMaxLength

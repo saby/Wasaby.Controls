@@ -8,10 +8,12 @@ define('Controls/Filter/Button',
       'Core/moduleStubs',
       'WS.Data/Chain',
       'WS.Data/Utils',
+      'Controls/Container/Filter/FilterContextField',
+      'WS.Data/Type/descriptor',
       'css!Controls/Filter/Button/Button'
    ],
 
-   function(Control, template, moduleStubs, Chain, Utils) {
+   function(Control, template, moduleStubs, Chain, Utils, FilterContextField, types) {
 
       /**
        * @class Controls/Filter/Button
@@ -61,6 +63,7 @@ define('Controls/Filter/Button',
          _template: template,
          _oldPanelOpener: null,
          _text: '',
+         _historyId: null,
 
          constructor: function(config) {
             FilterButton.superclass.constructor.apply(this, arguments);
@@ -100,7 +103,11 @@ define('Controls/Filter/Button',
                   this._children.filterStickyOpener.open({
                      templateOptions: {
                         items: this._options.items,
-                        itemTemplate: this._options.itemTemplate
+                        itemTemplate: this._options.itemTemplate,
+                        itemTemplateProperty: this._options.itemTemplateProperty,
+                        additionalTemplate: this._options.additionalTemplate,
+                        additionalTemplateProperty: this._options.additionalTemplateProperty,
+                        historyId: this._options.historyId
                      },
                      template: 'Controls/Filter/Button/Panel',
                      target: this._children.panelTarget
@@ -109,14 +116,24 @@ define('Controls/Filter/Button',
             }
          },
 
-         _onFilterChanged: function(filter) {
-            this._notify('filterChanged', [filter]);
+         _onFilterChanged: function(data) {
+            this._notify('filterChanged', [data.filter]);
+            this._notify('itemsChanged', [data.items]);
          }
       });
 
       FilterButton.getDefaultOptions = function() {
          return {
             filterAlign: 'right'
+         };
+      };
+
+      FilterButton.getOptionsTypes = function() {
+         return {
+            itemTemplate: types(Object),
+            itemTemplateProperty: types(String),
+            additionalTemplate: types(Object),
+            additionalTemplateProperty: types(String)
          };
       };
 

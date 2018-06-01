@@ -97,13 +97,27 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
          },
 
          _bindEvents: function () {
+            var grid = this._grid;
             //При клике по строке списка колонок
-            this.subscribeTo(this._grid, 'onItemActivate', this._onEdit.bind(this));
-            this.subscribeTo(this._grid, 'onEndMove', function (evtName, dragObject) {
-               var items = this._grid.getItems();
-               var fieldIds = []; items.each(function (v) { fieldIds.push(v.getId()); });
-               this._options.fieldIds = fieldIds;
-               this._redraw();
+            this.subscribeTo(grid, 'onItemActivate', this._onEdit.bind(this));
+
+            //При клике по пустому списку колонок
+            this.subscribeTo(grid, 'onClick', function (evtName) {
+               var items = grid.getItems();
+               if (items && items.getCount() === 1 && !items.at(0).getId()) {
+                  this._onEdit();
+               }
+            }.bind(this));
+
+            //При изменении порядка строк в списке колонок
+            this.subscribeTo(grid, 'onEndMove', function (evtName, dragObject) {
+               var items = grid.getItems();
+               if (items && 1 < items.getCount()) {
+                  var fieldIds = []; items.each(function (v) { fieldIds.push(v.getId()); });
+                  this._options.fieldIds = fieldIds;
+                  //this._redraw();
+                  this.sendCommand('subviewChanged');
+               }
             }.bind(this));
          },
 
@@ -111,14 +125,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
           * Приготовить строки списка колонок
           * @protected
           * @param {object} options Опции компонента
-          * @return {Array<object>}
+          * @return {WS.Data/Collection/RecordSet}
           */
          _makeRows: function (options) {
             var fieldIds = options.fieldIds;
+            var rows;
             if (fieldIds && fieldIds.length) {
                var allFields = options.allFields;
                var isRecordSet = allFields instanceof RecordSet;
-               return fieldIds.map(function (id, i) {
+               rows = fieldIds.map(function (id, i) {
                      var field;
                      if (!isRecordSet) {
                         allFields.some(function (v) { if (v.id === id) { field = v; return true; } });
@@ -136,8 +151,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
                   });
             }
             else {
-               return [{id:'', column:'A', field:options.emptyTitle}];
+               rows = [{id:'', column:'A', field:options.emptyTitle}];
             }
+            // В реализации DataGridView нет полной эквивалентности установки списка его элементов простым массивом объектов и RecordSet-ом с этими
+            // объектами. Например, при задании массивом,  "замерзает" и не обновляется его MemorySource, что приводит к ошибке при перетаскивании
+            // элементов списка. Поэтому возвращаем именно RecordSet:
+            return new RecordSet({
+               rawData: rows,
+               idProperty: 'id'
+            });
          },
 
          /**
@@ -161,9 +183,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
           * Открыть редактор колонок
           * @protected
           * @param {string} fieldId Идентификатор текущего поля
+          * @param {boolean} singleMode Открывать редактор колонок без возможности множественного выделения
           * @return {Core/Deferred<Array<string>>}
           */
-         _openColumnsEditor: function (fieldId) {
+         _openColumnsEditor: function (fieldId, singleMode) {
             if (!this._columnsEditor) {
                this._columnsEditor = new ColumnsEditor();
             }
@@ -187,7 +210,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
                   width: this._container.width(),
                   groupTitles: options.fieldGroupTitles,
                   preserveOrder: true,
-                  multiselect: !fieldId,
+                  multiselect: !singleMode,
+                  autoApply: !!singleMode,
                   moveColumns: false,
                   ignoreFixed: true// TODO: Добавить в редактор колонок опцию ignoreFixed
                }
@@ -213,16 +237,16 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
           * @param {object} data Информация о редактируемой строке (id, item)
           */
          _onEdit: function (evtName, data) {
-            var fieldId = data.id;
-            this._openColumnsEditor(fieldId).addCallback(this._replaceField.bind(this, fieldId));
+            var fieldId = data ? data.id : null;
+            this._openColumnsEditor(fieldId, true).addCallback(this._replaceField.bind(this, fieldId));
          },
 
          /**
           * Обработчик события при удалении строки списка колонок
           * @protected
           * @param {Core/EventObject} evtName Дескриптор события
-          * @param {string|number} id Идентификатор пункта списка колонок
-          * @param {object} model Модель пункта списка колонок
+          * @param {string|number} id Идентификатор элемента списка колонок
+          * @param {object} model Модель элемента списка колонок
           * @param {string} action Название действия
           */
          _onDelete: function (evtName, id/*, model, action*/) {

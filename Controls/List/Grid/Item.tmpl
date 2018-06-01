@@ -1,13 +1,12 @@
-<div attr:class="controls-Grid__row {{!!itemData.isActive ? ' controls-GridView__item_active'}}" attr:key="{{itemData.dispItem.getHash()}}">
+<div attr:class="controls-Grid__row" attr:key="{{itemData.item.getId()}}">
    <ws:if data="{{contentTemplate}}">
       <ws:partial template="{{contentTemplate}}" itemData="{{itemData}}" itemActionsTemplate="{{itemActionsTemplate}}" swipeTemplate="{{swipeTemplate}}" multiSelectTpl="{{multiSelectTpl}}"/>
    </ws:if>
    <ws:else>
       <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex; itemData.goToNextColumn();">
          <div attr:class="{{itemData.getCurrentColumn().cellClasses}}" attr:style="{{itemData.ladderSupport ? itemData.getCurrentColumn().cellStyleForLadder}}">
-            <ws:if data="{{itemData.multiselect && itemData.columnIndex === 0}}">
-               <!-- todo заменить isSelected на isMultiselected -->
-               <div class="controls-Grid__checkboxArea {{itemData.isSelected ? 'controls-Grid__checkbox_checked' : 'controls-Grid__checkbox_unchecked'}}"></div>
+            <ws:if data="{{itemData.multiSelectVisibility && itemData.columnIndex === 0}}">
+               <ws:partial template="{{multiSelectTpl}}" multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" attr:class="controls-ListView__checkbox"/>
             </ws:if>
             <ws:else>
                <ws:partial template="{{itemData.getCurrentColumn().template}}"

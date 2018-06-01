@@ -1,88 +1,84 @@
 <html attr:lang="ru" attr:xml:lang="ru" attr:xmlns="http://www.w3.org/1999/xhtml" attr:key="_" attr:id="root"
       attr:component="Controls/Application">
-<head key="1_1_">
-   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-   
-   <script key="ws-config">
-      window.wsConfig = {
-         wsRoot: '{{wsRoot}}',
-         resourceRoot: '{{resourceRoot}}',
-         compatible: {{compat}}
-      };
-   </script>
-   <style>
-      .ws-hidden {
-         display: none;
-      }
-   </style>
-   <ws:if data="{{ _options.head }}">
-      <ws:partial template="{{ _options.head }}"/>
-   </ws:if>
-   <link rel="stylesheet" href="{{wsRoot}}css/core.css" type="text/css" key="core-css"/>
-   <ws:if data="{{ cssLinks }}">
-      <ws:for data="index, value in cssLinks">
-         <link rel="stylesheet" href="{{ value }}" type="text/css" key="{{ 'css_' + index }}"/>
-      </ws:for>
-   </ws:if>
-   <title key="title">{{ title }}</title>
-</head>
+<Controls.Application._Head
+   wsRoot="{{ wsRoot }}"
+   resourceRoot="{{ resourceRoot }}"
+   compat="{{ compat }}"
+   head="{{ _options.head }}"
+   title="{{ title }}" >
+</Controls.Application._Head>
 <Controls.Event.Listener name="scrollDetect" register="scroll" attr:fixCompatible="1">
    <Controls.Event.Listener name="resizeDetect" register="resize" attr:fixCompatible="1">
       <Controls.Event.Listener name="mousemoveDetect" register="mousemove" attr:fixCompatible="1">
          <Controls.Event.Listener name="mouseupDetect" register="mouseup" attr:fixCompatible="1">
-            <Controls.Event.Listener name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
-               <Controls.Popup.Manager>
-                  <Controls.Application.TouchDetector name="touchDetector">
-                     <Controls.Container.DragNDrop name="dragNDropContainer">
-                        <body
-                           class="{{BodyClasses()}} {{_options.bodyClass}} {{_touchclass()}}"
-                           id="body"
-                           key="1_2_"
-                           on:scroll="_scrollPage()"
-                           on:resize="_resizePage()"
-                           on:mousemove="_mousemovePage()"
-                           on:mousedown="_mousedownPage()"
-                           on:mouseup="_mouseupPage()">
-                        <ws:if data="{{needArea}}">
-                           <div class="ws-focus-in"></div>
-                        </ws:if>
-                        <ws:if data="{{ content.content }}">
-                           <ws:partial template="{{ content.content }}" scope="{{ templateConfig }}"/>
-                        </ws:if>
-                        <Controls.Popup.Manager.Container attr:id="popup" eventHandler="{{content._managerEventHandler}}"/>
-                        
-                        <script key="bundles" type="text/javascript" src="{{wsRoot}}ext/requirejs/bundles.js"></script>
-                        <script key="require" type="text/javascript" src="/cdn/requirejs/2.3.5-p3/require-min.js"></script>
-                        <script key="contents" type="text/javascript" src="{{resourceRoot}}/contents.js"></script>
-                        <script key="config" type="text/javascript" src="{{wsRoot}}ext/requirejs/config.js"></script>
-
-
-                        <ws:if data="{{_options.builder && _options.builderCompatible}}">
-                           <ws:partial template="tmpl!Controls/Application/builderRunnerCompatible"
-                                       _options="{{_options}}"/>
-                        </ws:if>
-                        <ws:if data="{{_options.builder && !_options.builderCompatible}}">
-                           <ws:partial template="tmpl!Controls/Application/builderRunner"
-                                       _options="{{_options}}"/>
-                        </ws:if>
-                        <ws:else data="{{!_options.builderCompatible}}">
-                           <div>
-                              <ws:partial template="tmpl!Controls/Application/startApplicationScript" compat="{{compat}}"
-                                          jsLinks="{{jsLinks}}"
-                                          _options="{{_options}}"/>
-
-                              <ws:if data="{{ _options.scripts }}">
-                                 <ws:for data="i in _options.scripts">
-                                    <ws:partial template="{{ i }}"/>
-                                 </ws:for>
+            <Controls.Event.Listener name="touchmoveDetect" register="touchmove" attr:fixCompatible="1">
+               <Controls.Event.Listener name="touchendDetect" register="touchend" attr:fixCompatible="1">
+                  <Controls.Event.Listener name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
+                     <Controls.Popup.Manager>
+                        <Controls.Application.TouchDetector name="touchDetector">
+                           <Controls.DragNDrop.Container name="dragNDropContainer">
+                              <body
+                                 class="{{BodyClasses()}} {{_options.bodyClass}} {{_touchclass()}}"
+                                 id="body"
+                                 key="1_2_"
+                                 on:scroll="_scrollPage()"
+                                 on:resize="_resizePage()"
+                                 on:mousemove="_mousemovePage()"
+                                 on:touchmove="_touchmovePage()"
+                                 on:touchend="_touchendPage()"
+                                 on:mousedown="_mousedownPage()"
+                                 on:mouseup="_mouseupPage()">
+                              <ws:if data="{{needArea}}">
+                                 <div class="ws-focus-in"></div>
                               </ws:if>
-                           </div>
-                        </ws:else>
-                        </body>
-                     </Controls.Container.DragNDrop>
-                  </Controls.Application.TouchDetector>
-               </Controls.Popup.Manager>
+                              <ws:if data="{{ content.content }}">
+                                 <Controls.Application._Wait>
+                                    <ws:partial template="{{ content.content }}" scope="{{ templateConfig }}"/>
+                                 </Controls.Application._Wait>
+                              </ws:if>
+                              <ws:if data="{{ content.dragAvatarTemplate }}">
+                                 <ws:partial template="{{content.dragAvatarTemplate}}" scope="{{content.dragAvatarOptions}}"></ws:partial>
+                              </ws:if>
+                              <Controls.Popup.Manager.Container attr:id="popup"
+                                                                eventHandler="{{content._managerEventHandler}}"/>
+
+                              <script key="bundles" type="text/javascript"
+                                      src="{{wsRoot}}ext/requirejs/bundles.js"></script>
+                              <script key="require" type="text/javascript"
+                                      src="/cdn/requirejs/2.3.5-p3/require-min.js"></script>
+                              <script key="contents" type="text/javascript" src="{{resourceRoot}}/contents.js"></script>
+                              <script key="config" type="text/javascript"
+                                      src="{{wsRoot}}ext/requirejs/config.js"></script>
+
+                              <ws:if data="{{_options.builder && _options.builderCompatible}}">
+                                 <ws:partial template="tmpl!Controls/Application/builderRunnerCompatible"
+                                             _options="{{_options}}"/>
+                              </ws:if>
+                              <ws:if data="{{_options.builder && !_options.builderCompatible}}">
+                                 <ws:partial template="tmpl!Controls/Application/builderRunner"
+                                             _options="{{_options}}"/>
+                              </ws:if>
+                              <ws:else data="{{!_options.builderCompatible}}">
+                                 <div>
+                                    <ws:partial template="tmpl!Controls/Application/startApplicationScript"
+                                                compat="{{compat}}"
+                                                _options="{{_options}}"/>
+
+                                    <Controls.Application._JsLinks attr:tabindex="-1" />
+
+                                    <ws:if data="{{ _options.scripts }}">
+                                       <ws:for data="i in _options.scripts">
+                                          <ws:partial template="{{ i }}"/>
+                                       </ws:for>
+                                    </ws:if>
+                                 </div>
+                              </ws:else>
+                              </body>
+                           </Controls.DragNDrop.Container>
+                        </Controls.Application.TouchDetector>
+                     </Controls.Popup.Manager>
+                  </Controls.Event.Listener>
+               </Controls.Event.Listener>
             </Controls.Event.Listener>
          </Controls.Event.Listener>
       </Controls.Event.Listener>

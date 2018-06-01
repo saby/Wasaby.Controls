@@ -122,6 +122,10 @@ define('Controls/Controllers/_Search',
                this._searchDeferred.cancel();
             }
             this._sourceController.cancelLoading();
+         },
+         
+         isLoading: function() {
+            return this._searchDeferred && !this._searchDeferred.isReady();
          }
          
       });

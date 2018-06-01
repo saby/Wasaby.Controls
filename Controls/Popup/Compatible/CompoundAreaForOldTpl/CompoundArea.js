@@ -2,11 +2,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
    [
       'Core/Control',
       'tmpl!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
-      'Controls/Popup/Compatible/Layer',
       'Lib/Mixins/LikeWindowMixin',
       'Core/helpers/Array/findIndex',
       'Core/moduleStubs',
       'Core/core-debug',
+      'Core/core-merge',
+      'Core/helpers/Function/debounce',
       'Core/Deferred',
       'Core/IoC',
       'Core/EventObject',
@@ -19,11 +20,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
    ],
    function(Control,
       template,
-      CompatiblePopup,
       LikeWindowMixin,
       arrayFindIndex,
       moduleStubs,
       coreDebug,
+      cMerge,
+      debounce,
       cDeferred,
       IoC,
       EventObject) {
@@ -88,11 +90,39 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _producedPendingOperations: [],
 
          _beforeMount: function() {
+            this._rebuildCompountControl = debounce.call(this._rebuildCompountControl, this).bind(this);
             this._commandHandler = this._commandHandler.bind(this);
          },
 
-         _shouldUpdate: function() {
+         _shouldUpdate: function(popupOptions) {
+            this._rebuildCompountControl(popupOptions);
             return false;
+         },
+
+         _rebuildCompountControl: function(popupOptions) {
+            var oldCompound = this._compoundControl;
+            var self = this;
+
+            //Если compoundControl еще не готов, то в текущей синхронизации ничего выполнять не надо,
+            //она была вызвана после afterMount'a и опции не поменялись
+            if (!oldCompound.isReady()) {
+               return;
+            }
+
+            setTimeout(function() {
+               oldCompound.unsubscribe('onCommandCatch', self._commandHandler);
+               oldCompound.destroy();
+            }, 0);
+            oldCompound._container.remove();
+
+            if (popupOptions._initCompoundArea) {
+               popupOptions._initCompoundArea(this);
+            }
+            var templateOptions = popupOptions.templateOptions || {};
+
+            moduleStubs.require([popupOptions.template]).addCallback(function(result) {
+               self._createCompoundControl(templateOptions, result[0]);
+            });
          },
 
          _afterMount: function(cfg) {
@@ -102,13 +132,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this.handle('onBeforeShow');
             this.handle('onShow');
 
-            var
-               self = this;
-            if (this._options.templateOptions) {
-               this.templateOptions = this._options.templateOptions;
-            } else {
-               this.templateOptions = {};
-            }
+            var self = this;
+            this.templateOptions = this._options.templateOptions || {};
+
             if (this._options._initCompoundArea) {
                this._options._initCompoundArea(this);
             }
@@ -122,15 +148,16 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._options.parent = null;
 
             moduleStubs.require([self._options.template]).addCallback(function(result) {
-               CompatiblePopup.load().addCallback(function() { //Это уже должно быть загружено страницей
-                  self.templateOptions.element = $(self._children.compoundBlock);
-                  self.templateOptions._compoundArea = self;
-                  self.templateOptions.parent = self;
-                  self._compoundControl = new (result[0])(self.templateOptions);
-                  self._subscribeToCommand();
-                  self.handle('onAfterShow'); // todo здесь надо звать хэндлер который пытается подписаться на onAfterShow, попробуй подключить FormController и словить подпись
-               });
+               self._createCompoundControl(self.templateOptions, result[0]);
             });
+         },
+         _createCompoundControl: function(templateOptions, Component) {
+            templateOptions.element = $('<div></div>').appendTo(this._children.compoundBlock);
+            templateOptions._compoundArea = this;
+            templateOptions.parent = this;
+            this._compoundControl = new (Component)(templateOptions);
+            this._subscribeToCommand();
+            this.handle('onAfterShow'); // todo здесь надо звать хэндлер который пытается подписаться на onAfterShow, попробуй подключить FormController и словить подпись
          },
          _subscribeToCommand: function() {
             this._compoundControl.subscribe('onCommandCatch', this._commandHandler);
@@ -244,6 +271,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             if (this._allChildrenPendingOperation) {
                this._allChildrenPendingOperation = null;
                this._unregisterPendingOperation(operation);
+            }
+
+            if (this._parent) {
+               this._parent._childsMapId = this._parent._childsMapId || {};
+               this._parent._childsMapName = this._parent._childsMapName || {};
+               this._parent._childsTabindex = this._parent._childsTabindex || {};
             }
 
             CompoundArea.superclass.destroy.apply(this, arguments);

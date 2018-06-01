@@ -1,0 +1,30 @@
+.basket {
+   width: 350px;
+   height: 200px;
+   border: 1px solid #e6e6e6;
+   font-size: 30px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   color: #CCCCCC;
+}
+.basket-canDrop {
+   border: 2px dashed #ccc;
+   margin: 4px;
+   border-radius: 20px;
+   position: absolute;
+   top: 4px;
+   bottom: 4px;
+   left: 4px;
+   right: 4px;
+   justify-content: center;
+   align-items: center;
+   display: flex;
+}
+.basket-dragEnter {
+   color: #000;
+
+   .basket-canDrop {
+      border-color: #000;
+   }
+}

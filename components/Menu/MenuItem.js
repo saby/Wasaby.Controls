@@ -19,10 +19,15 @@ define('SBIS3.CONTROLS/Menu/MenuItem', [
       _dotTplFn : dotTplFn,
       $protected: {
          _options: {
+            /**
+             * @cfg {Boolean} Включает перенеос текста внутри пункта меню
+             */
+            multiline: false,
             escapeCaptionHtml: false,
             _sanitizeOpts: {
                validNodes: { component: true }
-            }
+            },
+            emulateClickByTap: true
          },
          _iconContainer: undefined
       },

@@ -610,8 +610,8 @@
 // Suggest //
 // ----------- //
 @suggest-loading-bg:                            @list-view-scroll-spritesheet 0 0 no-repeat;
-@suggest-loading-width:                         16px;
-@suggest-loading-right:                         3px;
+@width_suggest_loading:                         16px;
+@right_suggest_loading:                         3px;
 
 @suggest-picker-border-color:                   @default-border-color-second;
 @suggest-picker-box-shadow:                     0 4px 8px rgba(0, 0, 0, 0.15);
@@ -892,6 +892,9 @@
 @width_EditActions-cancelButton:        @width_EditButton;
 @height_EditActions-cancelButton:       @height_EditButton;
 @font-size_EditActions-cancelButton:    22px;
+@width_itemsToolbar_closeButton:       29px;
+@height_itemsToolbar_closeButton:      24px;
+@font-size_itemsToolbar_closeButton:   20px;
 // ItemsToolbar small
 @list-view-small-items-toolbar-line-height:         16px;
 @list-view-small-actions-item-height:               16px;
@@ -918,7 +921,7 @@
 @controls-view-padding-XL:                         24px;
 // Padding with photo
 @controls-view-photo-padding-variants:             S, M, L;
-@controls-view-photo-padding-S:                    0 6px 0 0;
+@controls-view-photo-padding-S:                    0 4px 0 0;
 @controls-view-photo-padding-M:                    0 10px 0 4px;
 @controls-view-photo-padding-L:                    0 14px 0 8px;
 @controls-view-photo-padding-DEFAULT:              0 18px 0 12px;
@@ -939,7 +942,7 @@
 
 @tree-view-padding-left-DEFAULT:                8px;
 @tree-view-level-padding-photo:                 46px;
-@tree-view-level-padding-photo-S:               26px;
+@tree-view-level-padding-photo-S:               24px;
 @tree-view-level-padding-photo-M:               30px;
 @tree-view-level-padding-photo-L:               38px;
 @tree-view-expand-border-width:                 0;
@@ -1829,6 +1832,9 @@
 
 //VDOM Back
 @font-weight_Back:                    bold;
+@font-size_BackButton__caption_size-l: @font-size_Header__caption_size-xl;
+@font-size_BackButton__caption_size-m: @font-size_Header__caption_size-l;
+@font-size_BackButton__caption_size-s: @font-size_Header__caption_size-default;
 
 //headers
 @font-size_Header__caption_size-xl:   20px;

@@ -43,9 +43,9 @@ define('Controls/History/Menu',
             HistoryMenu.superclass.constructor.apply(this, arguments);
          },
 
-         _onResult: function(args) {
-            var actionName = args[0];
-            var data = args[2];
+         _onResult: function(result) {
+            var actionName = result.action;
+            var data = result.data;
             var item = data[0];
             var pin = data[1];
 

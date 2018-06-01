@@ -1,0 +1,60 @@
+.controls-DragNDrop__avatar {
+   position: absolute;
+
+   display: flex;
+   width: 210px;
+   height: 48px;
+   background: #FFFFFF;
+   border: 1px solid #CCCCCC;
+   z-index: 10;
+   .box-shadow(0 0 12px rgba(0, 0, 0, 0.25));
+}
+.controls-DragNDrop__avatar-icon {
+   color: #CCCCCC;
+   width: 40px;
+   height: 40px;
+   border-radius: 8px;
+   margin: 4px 0 4px 4px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   flex-shrink: 0;
+}
+
+.controls-DragNDrop__avatar-icon-size {
+   .icon-size(32px);
+}
+
+.controls-DragNDrop__avatar-text {
+   flex-shrink: 1;
+   width: 100%;
+   margin: 6px;
+   overflow: hidden;
+}
+
+.controls-DragNDrop__avatar-text:after {
+   content: '';
+   display: block;
+   height: 100%;
+   width: 24px;
+   position: absolute;
+   right: 0;
+   top: 0;
+   .horizontal-gradient(rgba(255, 255, 255, 0), #FFF, left);
+}
+
+.controls-DragNDrop__avatar-mainText, .controls-DragNDrop__avatar-additionalText {
+   line-height: 18px;
+   white-space: nowrap;
+}
+
+.controls-DragNDrop__avatar-mainText {
+   font-size: 14px;
+   font-weight: bold;
+   color: #313E78;
+}
+
+.controls-DragNDrop__avatar-additionalText {
+   font-size: 13px;
+   color: #000000;
+}

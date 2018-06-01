@@ -5,7 +5,7 @@
    <ws:else>
       <ws:for data="listModel.resetResultsColumns(); listModel.isEndResultsColumn(); listModel.goToNextResultsColumn();">
          <div class="{{listModel.getCurrentResultsColumn().cellClasses}}">
-            <ws:if data="{{!listModel.getMultiselect() || listModel.getCurrentResultsColumn().index !== 0}}">
+            <ws:if data="{{!listModel.getMultiSelectVisibility() || listModel.getCurrentResultsColumn().index !== 0}}">
                <ws:partial template="{{listModel.getCurrentResultsColumn().column.resultTemplate}}" listModel="{{listModel}}" column="{{column}}" />
             </ws:if>
          </div>

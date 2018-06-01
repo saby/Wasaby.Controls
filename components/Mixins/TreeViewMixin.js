@@ -89,7 +89,7 @@ define('SBIS3.CONTROLS/Mixins/TreeViewMixin', [
              * @example
              * В частном случае шаблон футера узла иерархии используют для размещения кнопок создания нового листа или папки.
              * ![](/folderFooterTpl.png)
-             * Подробный пример использования футера для решения этой прикладной задачи вы можете найти в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/ Добавление по месту в иерархическом списке}.
+             * Подробный пример использования футера для решения этой прикладной задачи вы можете найти в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/edit-in-place/add-in-place/#_3 Добавление по месту в иерархическом списке}.
              * @see SBIS3.CONTROLS.List#footerTpl
              */
             folderFooterTpl: undefined,
@@ -268,12 +268,16 @@ define('SBIS3.CONTROLS/Mixins/TreeViewMixin', [
       //********************************//
       _getLastChildByParent: function(itemsContainer, currentItem) {
          var
+            current,
             level = currentItem.getLevel(),
             enumerator = this._getItemsProjection().getEnumerator();
          enumerator.setCurrent(currentItem);
 
          while (enumerator.moveNext()) {
-            if (enumerator.getCurrent().getLevel() <= level) {
+            current = enumerator.getCurrent();
+
+            //Останавливаем поиск если упёрлись в элемент, отличный от записи(нет метода getLevel), или вышли из папки
+            if (!current.getLevel || current.getLevel() <= level) {
                //Т.к. нам нужно найти последний дочерний элемент, а мы нашли следующий, переместимся на 1 запись назад.
                enumerator.movePrevious();
                break;

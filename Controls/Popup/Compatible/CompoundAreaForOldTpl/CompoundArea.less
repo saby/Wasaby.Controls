@@ -1,3 +1,29 @@
 .controls-CompoundArea {
    background: #FFFFFF;
+
+   //TODO Поддержка стилей старой шапки
+   .ws-window-titlebar-custom {
+      background: #F8F8F8;
+      position: relative;
+      height: 38px;
+      border-bottom: 1px solid #F0F0F0;
+   }
+   .ws-float-area-title {
+      line-height: 38px;
+      font-size: 18px !important;
+      font-weight: bold !important;
+      cursor: default;
+      color: #313F78;
+      text-overflow: ellipsis;
+      display: inline-block;
+      overflow: hidden;
+      box-sizing: border-box;
+      white-space: nowrap;
+      padding-left: 12px;
+      max-width: calc(100% - 40px);
+   }
+}
+
+.controls-CompoundArea__container {
+   height: 100%;
 }

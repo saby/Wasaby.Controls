@@ -33,7 +33,11 @@ define('Controls/List/BaseControl', [
       reload: function(self, userCallback, userErrback) {
          if (self._sourceController) {
             _private.showIndicator(self);
-            return self._sourceController.load(self._filter, self._sorting).addCallback(function(list) {
+
+            //Need to create new Deffered, returned success result
+            //load() method may be fired with errback
+            var resDeferred = new Deferred();
+            self._sourceController.load(self._filter, self._sorting).addCallback(function(list) {
 
                if (userCallback && userCallback instanceof Function) {
                   userCallback(list);
@@ -49,10 +53,13 @@ define('Controls/List/BaseControl', [
 
 
                _private.handleListScroll(self, 0);
-               return list;
+               resDeferred.callback(list);
             }).addErrback(function(error) {
-               return _private.processLoadError(self, error, userErrback);
+               _private.processLoadError(self, error, userErrback);
+               resDeferred.callback(null);
             });
+
+            return resDeferred;
          } else {
             IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
          }
@@ -359,7 +366,6 @@ define('Controls/List/BaseControl', [
 
       constructor: function(cfg) {
          BaseControl.superclass.constructor.apply(this, arguments);
-         this._publish('onDataLoad');
       },
 
       _beforeMount: function(newOptions, context, receivedState) {
@@ -583,17 +589,17 @@ define('Controls/List/BaseControl', [
          return this._notify('beforeItemEdit', [options]);
       },
 
-      _onAfterItemEdit: function(e, item) {
-         this._notify('afterItemEdit', [item]);
+      _onAfterItemEdit: function(e, item, isAdd) {
+         this._notify('afterItemEdit', [item, isAdd]);
          this._children.itemActions.updateItemActions(item, true);
       },
 
-      _onBeforeItemEndEdit: function(e, options) {
-         return this._notify('beforeItemEndEdit', [options]);
+      _onBeforeItemEndEdit: function(e, item, commit, isAdd) {
+         return this._notify('beforeItemEndEdit', [item, commit, isAdd]);
       },
 
-      _onAfterItemEndEdit: function(e, item) {
-         this._notify('beforeItemEndEdit', [item]);
+      _onAfterItemEndEdit: function(e, item, isAdd) {
+         this._notify('beforeItemEndEdit', [item, isAdd]);
          this._children.itemActions.updateItemActions(item);
       },
 
@@ -639,6 +645,60 @@ define('Controls/List/BaseControl', [
 
       _onActionClick: function(e, action, item) {
          this._notify('actionClick', [action, item]);
+      },
+
+      _itemMouseDown: function(event, itemData, domEvent) {
+         var
+            items,
+            dragStartResult;
+         if (this._options.itemsDragNDrop) {
+            items = [itemData.item];
+            dragStartResult = this._notify('dragStart', [items]);
+            if (dragStartResult) {
+               this._children.dragNDropController.startDragNDrop(dragStartResult, domEvent);
+            }
+         }
+      },
+
+      _dragStart: function(event, dragObject) {
+         this._listViewModel.setDragItems(dragObject.entity.getItems());
+      },
+
+      _dragEnd: function(event, dragObject) {
+         if (this._options.itemsDragNDrop) {
+            this._dragEndHandler(dragObject);
+         }
+      },
+
+      _dragEndHandler: function(dragObject) {
+         var
+            items = dragObject.entity.getItems(),
+            dragTarget = this._listViewModel.getDragTargetItem(),
+            targetPosition = this._listViewModel.getDragTargetPosition();
+         if (dragTarget) {
+            this._children.moveControl.moveItems(items, dragTarget.item, targetPosition.position);
+         }
+         return this._notify('dragEnd', [dragObject]);
+      },
+
+      _dragLeave: function() {
+         this._listViewModel.setDragTargetItem(null);
+      },
+
+      _documentDragStart: function() {
+         this._isDragging = true;
+      },
+
+      _documentDragEnd: function() {
+         this._isDragging = false;
+         this._listViewModel.setDragTargetItem(null);
+         this._listViewModel.setDragItems(null);
+      },
+
+      _itemMouseEnter: function(event, itemData) {
+         if (this._options.itemsDragNDrop && this._isDragging && !itemData.isDragging) {
+            this._listViewModel.setDragTargetItem(itemData);
+         }
       }
    });
 

@@ -62,10 +62,11 @@ define([
             assert.isFalse(controller.isLoading(), 'Wrong _isloading value');
             assert.isTrue(cInstance.instanceOfModule(rs, 'WS.Data/Collection/RecordSet'), 'load doesn\'t returns recordset instance');
             assert.equal(3, rs.getCount(), 'load doesn\'t returns recordset instance');
+            controller.destroy();
             done();
          });
 
-         controller.destroy();
+
       });
 
       it('load + navigation', function (done) {
@@ -86,10 +87,11 @@ define([
 
             assert.isTrue(controller.hasMoreData('down'), 'Wrong has more value after load');
             assert.isFalse(controller.hasMoreData('up'), 'Wrong has more value after load');
+            controller.destroy();
             done();
          });
 
-         controller.destroy();
+
       });
 
       it('filters', function (done) {

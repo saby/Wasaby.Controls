@@ -1,6 +1,9 @@
 /**
  * Контрол "Область редактирования настройщика экспорта"
  *
+ * Для того, чтобы возможно было использовать сохранямые и редактируемые пресеты (предустановленные сочетания параметров экспорта), необходимо подключить модуль 'SBIS3.ENGINE/Controls/ExportPresets/Loader'
+ * Для того, чтобы возможно было использовать редактируемые стилевые шаблоны эксель файла, необходимо подключить модуль 'PrintingTemplates/ExportFormatter/Excel'
+ *
  * @public
  * @class SBIS3.CONTROLS/ExportCustomizer/Area
  * @extends SBIS3.CONTROLS/CompoundControl
@@ -143,7 +146,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             if (value) {
                // оно должно быть строкой или числом
                if (typeof value !== 'string' && typeof value !== 'number') {
-                  return new Error('Value must be array');
+                  return new Error('Value must be string or number');
                }
             }
             return value;
@@ -334,7 +337,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                 */
                presetNamespace: null,
                /**
-                * @cfg {string|number} Идентификатор пресета, который будет выбран в списке пресетов (опционально)
+                * @cfg {string|number} Идентификатор пресета, который будет выбран в списке пресетов. Если будет указан пустое значение (null или пустая строка), то это будет воспринято как указание создать новый пустой пресет и выбрать его. Если значение не будет указано вовсе (или будет указано значение undefined), то это будет воспринято как указание выбрать пресет, который был выбран в прошлый раз (опционально)
                 */
                selectedPresetId: null,
                /**
@@ -457,7 +460,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           */
          _reshapeOptions: function (options) {
             var presetsOptions;
-            if (options.usePresets) {
+            var usePresets = options.usePresets;
+            if (usePresets) {
                var staticPresets = options.staticPresets;
                var hasStaticPresets = !!(staticPresets && staticPresets.length);
                var currentPreset;
@@ -482,7 +486,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             var allFields = options.allFields;
             var fieldIds = options.fieldIds;
             var fileUuid = options.fileUuid;
-            if (fieldIds && fieldIds.length) {
+            if (!usePresets && fieldIds && fieldIds.length) {
                // Иногда, fieldIds содержат идентификаторы, отсутствующие в allFields, отбросить их
                var isRecordSet = allFields instanceof RecordSet;
                var len = fieldIds.length;
@@ -501,14 +505,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   columnsTitle: options.columnBinderColumnsTitle || undefined,
                   fieldsTitle: options.columnBinderFieldsTitle || undefined,
                   allFields: allFields,
-                  fieldIds: fieldIds && fieldIds.length ? fieldIds.slice() : undefined
+                  fieldIds: !usePresets && fieldIds && fieldIds.length ? fieldIds.slice() : undefined
                },
                formatter: {
                   title: options.formatterTitle,
                   menuTitle: options.formatterMenuTitle,
                   allFields: allFields,
-                  fieldIds: fieldIds && fieldIds.length ? fieldIds.slice() : undefined,
-                  fileUuid: fileUuid || undefined,
+                  fieldIds: !usePresets && fieldIds && fieldIds.length ? fieldIds.slice() : undefined,
+                  fileUuid: !usePresets && fileUuid ? fileUuid : undefined,
                   serviceParams: serviceParams ? cMerge({}, serviceParams) : undefined
                }
             };
@@ -589,7 +593,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             }
             if (fieldIds || fileUuid) {
                views.columnBinder.setValues({fieldIds:fieldIds.slice()});
-               views.formatter.setValues({fieldIds:fieldIds.slice(), fileUuid:fileUuid});
+               var consumer = values.consumer;
+               views.formatter.setValues({fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumer:consumer ? cMerge({}, consumer) : null});
             }
          },
 
