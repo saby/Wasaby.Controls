@@ -43,12 +43,12 @@ define('Controls/Controllers/_SearchController',
          abort: function(self) {
             _private.getSearch(self).addCallback(function(search) {
                if (search.isLoading()) {
-                  var filter = self._options.filter;
-   
                   search.abort();
-                  delete filter[self._options.searchParam];
-                  self._options.abortCallback(filter);
                }
+   
+               var filter = self._options.filter;
+               delete filter[self._options.searchParam];
+               self._options.abortCallback(filter);
                return search;
             });
          }
