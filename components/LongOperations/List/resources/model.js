@@ -28,7 +28,7 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/model',
                properties: {
                   fullId: {
                      get: function () {
-                        return LongOperationModel.getFullId(this.get('tabKey'), this.get('producer'), this.get('id'));
+                        return LongOperationModel.getFullId(this.getRawData());
                      }
                   },
 
@@ -94,12 +94,12 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/model',
 
       /**
        * Составить полный идентификатор
-       * @param {string} tabKey Ключ вкладки
+       * @param {SBIS3.CONTROLS/LongOperations/Entry} operation Длительная операция
        * @param {string} producer Имя продюсера
        * @param {string|number} id Идентификатор операции
        */
-      LongOperationModel.getFullId = function (tabKey, producer, id) {
-         return (tabKey || '') + ':' + producer + ':' + id;
+      LongOperationModel.getFullId = function (operation) {
+         return operation ? (operation.tabKey || '') + ':' + operation.producer + ':' + operation.id : null;
       };
 
       return LongOperationModel;

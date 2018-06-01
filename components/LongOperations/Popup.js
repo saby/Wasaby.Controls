@@ -146,7 +146,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                   self._activeOperation = null;
                   if (count === 1) {
                      self._setFirstOperationMode(true);
-                     self._activeOperation = items.getRecordById(items.at(0).getId());
+                     self._activeOperation = items.getRecordById(items.at(0).getId()/*Это fullId!*/);
                   }
                   else {
                      self._setFirstOperationMode(false);
@@ -157,7 +157,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                         }
                      });
                      if (!self._activeOperation) {
-                        self._activeOperation = items.getRecordById(items.at(0).getId());
+                        self._activeOperation = items.getRecordById(items.at(0).getId()/*Это fullId!*/);
                      }
                   }
                   actionsContainer.removeClass('ws-hidden');
@@ -330,7 +330,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
           */
          _getResultButtonCaption: function (model) {
             if (model) {
-               var action = this._longOpList.describeMainAction(model);
+               var action = this._longOpList.describeMainAction(model.getRawData());
                if (action) {
                   switch (action.type) {
                      case 'result':
