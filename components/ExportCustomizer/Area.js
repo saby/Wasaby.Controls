@@ -146,7 +146,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             if (value) {
                // оно должно быть строкой или числом
                if (typeof value !== 'string' && typeof value !== 'number') {
-                  return new Error('Value must be array');
+                  return new Error('Value must be string or number');
                }
             }
             return value;
@@ -593,7 +593,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             }
             if (fieldIds || fileUuid) {
                views.columnBinder.setValues({fieldIds:fieldIds.slice()});
-               views.formatter.setValues({fieldIds:fieldIds.slice(), fileUuid:fileUuid});
+               var consumer = values.consumer;
+               views.formatter.setValues({fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumer:consumer ? cMerge({}, consumer) : null});
             }
          },
 

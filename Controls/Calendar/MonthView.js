@@ -3,7 +3,6 @@ define('Controls/Calendar/MonthView', [
    'Core/constants',
    'Core/core-merge',
    'SBIS3.CONTROLS/Utils/DateUtil',
-   'SBIS3.CONTROLS/Utils/IfEnabled',
    'Controls/Calendar/MonthView/MonthViewModel',
    'tmpl!Controls/Calendar/MonthView/MonthView',
    'tmpl!Controls/Calendar/MonthView/MonthViewTableBody',
@@ -16,7 +15,6 @@ define('Controls/Calendar/MonthView', [
    constants,
    coreMerge,
    DateUtil,
-   ifEnabled,
    MonthViewModel,
    dotTplFn,
    tableBodyTmpl,
@@ -82,13 +80,13 @@ define('Controls/Calendar/MonthView', [
          this._monthViewModel.updateOptions(newOptions);
       },
 
-      _dayClickHandler: ifEnabled(function(event, item) {
+      _dayClickHandler: function(event, item) {
          this._notify('itemClick', [item]);
-      }),
+      },
 
-      _mouseEnterHandler: ifEnabled(function(event, item) {
+      _mouseEnterHandler: function(event, item) {
          this._notify('itemMouseEnter', [item]);
-      })
+      }
 
       // cancelSelection: function () {
       //    var canceled = MonthView.superclass.cancelSelection.call(this);
