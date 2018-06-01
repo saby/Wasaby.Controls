@@ -390,13 +390,6 @@ define('SBIS3.CONTROLS/LongOperations/List',
           */
          reload: function () {
             var promise = this._view.reload().addCallback(function () {
-               // TODO: (+) Ограничивать минимально отображаемую величину прогресса
-               // TODO: (+) Проверить, не множится ли интервал для _changeTimeSpent
-               // TODO: (-) Сразу после релоада создавать atemsActions
-               // TODO: (-) Сделать debounce для reload
-               // TODO: (+) Сделать ограничение по времени частоты обновления прогресса
-               // TODO: (-) Перенести ограничения прогресса в продюсер
-               // TODO: (+) Убирать кнопку действия до его реального совершения
                this._checkItems();
             }.bind(this));
             // Индикатор загрузки здесь только приводит к мельканию списка, убрать его
