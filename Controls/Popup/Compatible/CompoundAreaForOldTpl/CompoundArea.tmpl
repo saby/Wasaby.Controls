@@ -2,14 +2,14 @@
    <ws:if data="{{_options.type === 'stack'}}">
       <Controls.Popup.Templates.Stack.StackTemplate>
          <ws:contentArea>
-            <div name="compoundBlock"></div>
+            <div name="compoundBlock" attr:class="controls-CompoundArea__container"></div>
          </ws:contentArea>
       </Controls.Popup.Templates.Stack.StackTemplate>
    </ws:if>
    <ws:else>
       <Controls.Popup.Templates.Dialog.DialogTemplate>
          <ws:contentArea>
-            <div name="compoundBlock"></div>
+            <div name="compoundBlock" attr:class="controls-CompoundArea__container"></div>
          </ws:contentArea>
       </Controls.Popup.Templates.Dialog.DialogTemplate>
    </ws:else>

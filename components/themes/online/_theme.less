@@ -1,4 +1,5 @@
 @themeName: 'online';
+@import "_theme-min";
 
 .addButtonMixin(@svgIcon, @size: 12px) {
    .inline-flexbox();
@@ -13,11 +14,6 @@
       background-image: @svgIcon;
       background-size: contain;
    }
-}
-
-.body {
-  font-family: @default-font-name;
-  font-size: @default-text-size;
 }
 
 .controls-Button__closeButton.controls-IconButton {

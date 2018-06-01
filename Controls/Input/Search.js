@@ -58,12 +58,14 @@ define('Controls/Input/Search',
             this._notifyOnValueChanged(value);
          },
 
-         _onResetClick: function() {
+         _resetClick: function() {
+            //move focus from clear button to input
+            this.activate();
             this._notify('resetClick');
             this._notifyOnValueChanged('');
          },
 
-         _onSearchClick: function() {
+         _searchClick: function() {
             this._notify('searchClick');
          }
          

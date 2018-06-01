@@ -4,6 +4,9 @@
               template="{{_options.content}}"
               scope="{{_options}}"
               attr:class="controls-DragNDrop"
+              dragAvatarOptions="{{_avatarOptions}}"
+              dragAvatarTemplate="{{_avatarTemplate}}"
+              on:_updateDragAvatar="_updateDragAvatar()"
               on:_documentDragStart="_documentDragStart()"
               on:_documentDragEnd="_documentDragEnd()">
       </ws:partial>

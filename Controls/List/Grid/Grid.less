@@ -107,7 +107,6 @@
    // http://css-live.ru/articles/chto-mozhet-polomat-maket-na-gridax-css-grid-layout.html
    min-width: 0;
    font-size: @font-size_Grid-row-cell;
-   overflow: hidden;
 }
 .controls-Grid__row-cell_halign_left {
    text-align: left;
@@ -120,6 +119,9 @@
 }
 .controls-Grid__row:hover .controls-Grid__row-cell {
    background-color: @background-color_Grid-row_hover;
+}
+.controls-Grid__row:hover .controls-itemActionsV {
+   display: inline-block;
 }
 .controls-Grid__row-cell_rowSpacing_default {
    padding-top: (@spacing_Grid-row_default / 2) + @height-Grid-row-separator;
@@ -224,32 +226,4 @@
 .controls-Grid__row-cell-checkbox {
    min-width: @width_Grid-cell-checkbox;
    max-width: @width_Grid-cell-checkbox;
-}
-.controls-Grid__checkboxArea {
-   position: absolute;
-   top: 0;
-   left: 0;
-   width: @width_Grid-checkboxArea;
-   height: @height_Grid-checkboxArea;
-   cursor: pointer;
-}
-.controls-Grid__checkbox_checked:before,
-.controls-Grid__row:hover .controls-Grid__checkbox_unchecked:before {
-   content: '\200b';
-   position: absolute;
-   top: @padding_Grid-checkbox-top;
-   left: @padding_Grid-checkbox-left;
-   width: @width_Grid-checkbox;
-   height: @height_Grid-checkbox;
-   border: @width_Grid-checkbox-border solid @color_Grid-checkbox-border;
-   box-sizing: border-box;
-}
-
-.controls-Grid__checkbox_checked:after {
-   .draw-checkbox();
-   position: absolute;
-   top: @padding_Grid-checkbox-icon-top;
-   left: @padding_Grid-checkbox-icon-left;
-   font-size: @font-size_Grid-checkbox-icon;
-   color: @color_Grid-checkbox-icon;
 }

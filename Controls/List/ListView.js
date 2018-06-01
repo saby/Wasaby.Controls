@@ -83,6 +83,14 @@ define('Controls/List/ListView', [
 
          _onRowDeactivated: function(event, eventOptions) {
             this._notify('rowDeactivated', [eventOptions]);
+         },
+
+         _onItemMouseDown: function(event, itemData) {
+            this._notify('itemMouseDown', [itemData, event]);
+         },
+
+         _onItemMouseEnter: function(event, itemData) {
+            this._notify('itemMouseEnter', [itemData, event]);
          }
 
       });
