@@ -154,7 +154,7 @@ define('Controls/Input/Number', [
                if (this._options.selectOnClick) {
                   runDelayed(function() {
                      self._children.input.select();
-                  })
+                  });
                } else {
                   runDelayed(function() {
                      self._children.input.setSelectionRange(value.length - 2, value.length - 2);
