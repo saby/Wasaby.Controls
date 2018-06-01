@@ -24,16 +24,22 @@ define('SBIS3.CONTROLS/LongOperations/List',
       'use strict';
 
       /**
+       * Минимальное отображаемое изменение прогресса операций (в процентах)
+       * @type {number}
+       */
+      var PROGRESS_MIN_PERCENT = 1.5;
+
+      /**
+       * Минимальный интервал времени между отображением прогресса операций (в мсек)
+       * @type {number}
+       */
+      var PROGRESS_MIN_DELAY = 1500;
+
+      /**
        * Интервал обновления времени выполнения операции
        * @type {number}
        */
       var TIMESPENT_DURATION = 5000;
-
-      /**
-       * Минимальное отображаемое изменение прогресса операций (в процентах)
-       * @type {number}
-       */
-      var MIN_PROGRESS_PERCENT = 1.5;
 
       /**
        * Продолжительность одного мигания анимации завершённых операций
@@ -158,12 +164,18 @@ define('SBIS3.CONTROLS/LongOperations/List',
                                     return;
                                  }
                                  var total = next.total;
-                                 var difference = 100*(value - previousValue)/total;
+                                 var progressDiff = 100*(value - previousValue)/total;
                                  // Если прогресс изменился слишком мало - игнорировать событтие
-                                 if (difference < MIN_PROGRESS_PERCENT) {
+                                 if (progressDiff < PROGRESS_MIN_PERCENT) {
+                                    return;
+                                 }
+                                 var timeDiff = (new Date()).getTime() - operation.startedAt.getTime() - operation.timeSpent - operation.timeIdle;
+                                 // Если прогресс отображался совсем недавно - игнорировать событтие
+                                 if (timeDiff < PROGRESS_MIN_DELAY) {
                                     return;
                                  }
                                  // Только если событтие обрабатывается - установить новые значения
+                                 operation.timeSpent += timeDiff;
                                  operation.progressCurrent = value;
                                  operation.progressTotal = total;
                                  dontReload = true;
@@ -210,7 +222,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
                   var $cont = view.getContainer();
                   items.each(function (item, id) {
                      if (item.get('status') === STATUSES.suspended) {
-                        $cont.find('.js-controls-ListView__item[data-id="' + item.getId()/*Это fullId!*/ + '"]').addClass('LongOperationsList__view_stoppedOperation');
+                        $cont.find('.js-controls-ListView__item[data-id="' + item.getId() + '"]').addClass('LongOperationsList__view_stoppedOperation');
                      }
                   });
                }
@@ -380,9 +392,9 @@ define('SBIS3.CONTROLS/LongOperations/List',
             var promise = this._view.reload().addCallback(function () {
                // TODO: (+) Ограничивать минимально отображаемую величину прогресса
                // TODO: (+) Проверить, не множится ли интервал для _changeTimeSpent
-               // TODO: ^^^@@@DBG Сразу после релоада создавать atemsActions ???
-               // TODO: ^^^@@@DBG Сделать debounce для reload ???
-               // TODO: ^^^@@@DBG Сделать debounce для _notify(evtName.name, evt) ???
+               // TODO: (-) Сразу после релоада создавать atemsActions
+               // TODO: (-) Сделать debounce для reload
+               // TODO: (+) Сделать ограничение по времени частоты обновления прогресса
                // TODO: (-) Перенести ограничения прогресса в продюсер
                // TODO: (+) Убирать кнопку действия до его реального совершения
                this._checkItems();
