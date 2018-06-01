@@ -1,9 +1,6 @@
 define('Controls/Calendar/Month', [
    'Core/Control',
    'Core/core-merge',
-   'Core/detection',
-   'WS.Data/Type/descriptor',
-   'SBIS3.CONTROLS/Utils/DateUtil',
    'tmpl!Controls/Calendar/Month/Month',
    'Controls/Calendar/interface/IMonth',
    'Controls/Calendar/Month/Model',
@@ -12,9 +9,6 @@ define('Controls/Calendar/Month', [
 ], function(
    BaseControl,
    coreMerge,
-   detection,
-   types,
-   DateUtil,
    monthTmpl,
    IMonth,
    MonthViewModel
