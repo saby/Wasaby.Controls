@@ -37,8 +37,13 @@ define('Controls-demo/FilterButton/Panel/Panel',
 
       var Panel = Control.extend({
 
+         _filterChangedHandler: function() {
+            this._text += 'Стреляет filterChanged\n';
+         },
+
          _template: template,
-         sourceDropdown: sourceDropdown
+         sourceDropdown: sourceDropdown,
+         _text: ''
 
       });
 

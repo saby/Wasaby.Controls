@@ -7,10 +7,16 @@ define('Controls/Input/interface/ISuggest', [
     * @mixin Controls/Input/interface/ISuggest
     * @public
     */
+   
+   /**
+    * @typedef {Object} suggestTemplateProp
+    * @property {String} templateName component name, that will be displayed in suggest.
+    * @property {String} templateOptions options for component, that will be displayed in suggest.
+    */
 
    /**
     * @name Controls/Input/interface/ISuggest#suggestTemplate
-    * @cfg {Function} Primary suggest template (showing search results).
+    * @cfg {suggestTemplateProp} Primary suggest template (showing search results).
     */
    
    /**

@@ -57,6 +57,10 @@ define('Controls/List/resources/utils/ItemsUtil', [
             });
             return resItem;
          }
+      },
+
+      getDefaultDisplayItem: function(display, item) {
+         return display.createItem({contents: item});
       }
    };
    return ItemsUtil;

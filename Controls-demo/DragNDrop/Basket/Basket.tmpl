@@ -1,0 +1,17 @@
+<Controls.DragNDrop.Controller
+        on:dragEnter="_dragEnter()"
+        on:dragLeave="_dragLeave()"
+        on:dragEnd="_dragEnd()"
+        on:documentDragStart="_documentDragStart()"
+        on:documentDragEnd="_documentDragEnd()">
+   <div class="{{'basket ' + (_isDragEnter ? 'basket-dragEnter')}}">
+      <div class="{{_canDrop ? 'basket-canDrop'}}">
+         <ws:if data="{{_items.length > 0}}">
+            <span>Товаров в корзине: {{_items.length}}</span>
+         </ws:if>
+         <ws:else>
+            <span>Корзина пуста</span>
+         </ws:else>
+      </div>
+   </div>
+</Controls.DragNDrop.Controller>

@@ -4,9 +4,10 @@ define(
       'WS.Data/Source/Memory',
       'WS.Data/Source/SbisService',
       'WS.Data/Query/Query',
+      'Core/Deferred',
       'SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis',
       'WS.Data/Collection/RecordSet'],
-   function (Save, Memory, SbisService, Query, Strategy, RecordSet) {
+   function (Save, Memory, SbisService, Query, Deferred, Strategy, RecordSet) {
       'use strict';
 
       var data = [
@@ -98,6 +99,51 @@ define(
 
             it('Check queryMethodName', function () {
                assert.equal(lastArgs.cfg.MethodName, 'MyEndpoint.MyQueryMethod');
+            });
+         });
+         describe('showColumnsEditor', function () {
+            it('return Deferred fail', function () {
+               saveAction.sendCommand = function(commandName) {
+                  if (commandName === 'showColumnsEditor') {
+                     return Deferred.fail();
+                  }
+               };
+
+               saveAction.execute({
+                  columns: [{
+                     title: 'Id',
+                     field: 'id'
+                  }],
+                  endpoint: 'FileType',
+                  recordSet: recordSet
+               });
+
+               assert.deepEqual(lastArgs.cfg.Titles, ['Id']);
+               assert.deepEqual(lastArgs.cfg.Fields, ['id']);
+            });
+            it('return columns', function () {
+               saveAction.sendCommand = function(commandName) {
+                  if (commandName === 'showColumnsEditor') {
+                     return Deferred.success({
+                        resultColumns: [{
+                           title: 'Name',
+                           field: 'name'
+                        }]
+                     });
+                  }
+               };
+
+               saveAction.execute({
+                  columns: [{
+                     title: 'Id',
+                     field: 'id'
+                  }],
+                  endpoint: 'FileType',
+                  recordSet: recordSet
+               });
+
+               assert.deepEqual(lastArgs.cfg.Titles, ['Name']);
+               assert.deepEqual(lastArgs.cfg.Fields, ['name']);
             });
          });
       });

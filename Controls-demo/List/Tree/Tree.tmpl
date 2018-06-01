@@ -1,16 +1,45 @@
-<div class="demo-Grid">
-   <div class="demo-Grid__container">
-      <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
-         <ws:content>
-            <Controls.TreeGrid
-                          attr:class="demo-Grid__control"
-                          keyProperty="id"
-                          parentProperty="Раздел"
-                          nodeProperty="Раздел@"
-                          source = "{{_viewSource}}"
-                          columns="{{gridColumns}}">
-            </Controls.TreeGrid>
-         </ws:content>
-      </Controls.Container.Scroll>
+
+<div>
+   <div class="demo-Grid">
+      <div class="demo-Grid__container">
+         <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+            <ws:content>
+               <Controls.TreeGrid
+                             attr:class="demo-Grid__control"
+                             keyProperty="id"
+                             parentProperty="Раздел"
+                             nodeProperty="Раздел@"
+                             source = "{{_viewSource}}"
+                             columns="{{gridColumns}}"
+                             multiSelectVisibility="visible"
+                             itemActions="{{_itemActions}}"
+                             itemActionsType="outside"
+                             on:actionClick="_onActionClick()"
+                             itemActionVisibilityCallback="{{_showAction}}">
+               </Controls.TreeGrid>
+            </ws:content>
+         </Controls.Container.Scroll>
+      </div>
+   </div>
+   <div class="demo-Grid">
+      <div class="demo-Grid__container">
+         <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+            <ws:content>
+               <Controls.TreeGrid
+                       attr:class="demo-Grid__control"
+                       keyProperty="id"
+                       parentProperty="Раздел"
+                       nodeProperty="Раздел@"
+                       source = "{{_viewSource}}"
+                       columns="{{gridColumns}}"
+                       multiSelectVisibility="visible"
+                       itemActions="{{_itemActions}}"
+                       itemActionsType="inside"
+                       on:actionClick="_onActionClick()"
+                       itemActionVisibilityCallback="{{_showAction}}">
+               </Controls.TreeGrid>
+            </ws:content>
+         </Controls.Container.Scroll>
+      </div>
    </div>
 </div>

@@ -1,8 +1,9 @@
 define(
    [
-      'Controls/Dropdown/Opener'
+      'Controls/Dropdown/Opener',
+      'Controls/Popup/Opener/BaseOpener'
    ],
-   (Opener) => {
+   (Opener, BaseOpener) => {
       describe('Opener', () => {
          let config = {
             itemTemplate: 'itemTemplate',
@@ -20,6 +21,10 @@ define(
          let opener = new Opener(config);
          opener._beforeMount(config);
          opener.saveOptions(config);
+
+         BaseOpener.isNewEnvironment = function() {
+            return true;
+         };
 
 
          it('check setter className option', () => {

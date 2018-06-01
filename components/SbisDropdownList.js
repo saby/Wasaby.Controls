@@ -72,7 +72,10 @@ define('SBIS3.CONTROLS/SbisDropdownList',
          },
 
          showPicker: function(event) {
-            DropdownUtil.showPicker(this, SbisDropdownList, event);
+            /* При клике на крестик не грузим записи и историю, пикер тоже открывать не надо */ 
+            if (!event || !$(event.target).hasClass('controls-DropdownList__crossIcon')) {
+               DropdownUtil.showPicker(this, SbisDropdownList, event);
+            }
          },
 
          _clickItemHandler: function(e) {
