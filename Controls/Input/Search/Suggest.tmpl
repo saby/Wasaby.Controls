@@ -1,0 +1,19 @@
+<Controls.Container.Suggest.Layout
+        on:choose="_choose()"
+        on:deactivated="_deactivated()"
+        suggestTemplate="{{_options.suggestTemplate}}"
+        minSearchLength="{{_options.minSearchLength}}"
+        source="{{_options.source}}"
+        navigation="{{_options.navigation}}"
+        searchParam="{{_options.searchParam}}"
+        suggestStyle="overInput"
+        bind:suggestState="_suggestState">
+    <Controls.Input.Search
+            value="{{_options.value}}"
+            tagStyle="{{_options.tagStyle}}"
+            placeholder="{{_options.placeholder}}"
+            style="{{_options.style}}"
+            on:valueChanged="_changeValueHandler()"
+            on:resetClick="_resetClick()">
+    </Controls.Input.Search>
+</Controls.Container.Suggest.Layout>

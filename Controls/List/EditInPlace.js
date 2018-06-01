@@ -251,11 +251,9 @@ define('Controls/List/EditInPlace', [
        * @returns {Core/Deferred}
        */
       editItem: function(options) {
-         var self = this,
-            editingItemIndex = _private.getEditingItemIndex(this, this._editingItem, this._options.listModel),
-            currentItemIndex = this._options.listModel.getIndexBySourceItem(options.item);
+         var self = this;
 
-         if (editingItemIndex !== currentItemIndex) {
+         if (!this._editingItem || !this._editingItem.isEqual(options.item)) {
             return this.commitEdit().addCallback(function() {
                return _private.editItem(self, options).addCallback(function(newOptions) {
                   return _private.afterItemEdit(self, newOptions);

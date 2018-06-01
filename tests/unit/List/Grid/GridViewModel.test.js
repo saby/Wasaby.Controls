@@ -69,7 +69,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
          keyProperty: 'id',
          displayProperty: 'title',
          markedKey: '123',
-         multiselect: true,
+         multiSelectVisibility: 'visible',
          header: gridHeader,
          columns: gridColumns,
          items: gridData,
@@ -87,14 +87,14 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             var
                paramsWithoutMultiselect = {
                   columns: gridColumns,
-                  multiselect: false,
+                  multiSelectVisibility: false,
                   leftPadding: 'XL',
                   rightPadding: 'L',
                   rowSpacing: 'L'
                },
                paramsWithMultiselect = {
                   columns: [{}].concat(gridColumns),
-                  multiselect: true,
+                  multiSelectVisibility: true,
                   leftPadding: 'XL',
                   rightPadding: 'L',
                   rowSpacing: 'L'
@@ -195,7 +195,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
          it('configuration', function() {
             assert.equal(cfg.keyProperty, current.keyProperty, 'Incorrect value "current.keyProperty".');
             assert.equal(cfg.displayProperty, current.displayProperty, 'Incorrect value "current.displayProperty".');
-            assert.isTrue(current.multiselect, 'Incorrect value "current.multiselect".');
+            assert.isTrue(current.multiSelectVisibility, 'Incorrect value "current.multiSelectVisibility".');
             assert.deepEqual([{}].concat(gridColumns), current.columns, 'Incorrect value "current.columns".');
             assert.isFalse(current.ladderSupport, 'Incorrect value "current.ladderSupport".');
             assert.equal('XL', current.leftPadding, 'Incorrect value "current.leftPadding".');
@@ -216,7 +216,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             assert.isTrue(current.isSelected, 'Incorrect value "current.isSelected".');
             assert.equal(undefined, current.isActive, 'Incorrect value "current.isActive".');
             assert.equal(0, current.multiSelectStatus, 'Incorrect value "current.multiSelectStatus".');
-            assert.isFalse(current.multiSelectVisibility, 'Incorrect value "current.multiSelectVisibility".');
+            assert.isTrue(current.multiSelectVisibility, 'Incorrect value "current.multiSelectVisibility".');
             assert.isTrue(current.showActions, 'Incorrect value "current.showActions".');
             assert.equal(undefined, current.isSwiped, 'Incorrect value "current.isSwiped".');
          });
@@ -238,7 +238,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
 
             // check first column (multiselect checkbox column)
             assert.equal(0, current.columnIndex, 'Incorrect value "current.columnIndex".');
-            assert.isTrue(current.isEndColumn(), 'Incorrect value "current.isEndColumn()".');
+            assert.isFalse(current.getLastColumnIndex() === current.columnIndex, 'Incorrect value "current.getLastColumnIndex() === current.columnIndex".');
             checkBaseProperties(current.getCurrentColumn(), {
                columnIndex: 0,
                keyProperty: cfg.keyProperty,
@@ -254,7 +254,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             // check next column
             current.goToNextColumn();
             assert.equal(1, current.columnIndex, 'Incorrect value "current.columnIndex" after "goToNextColumn()".');
-            assert.isTrue(current.isEndColumn(), 'Incorrect value "current.isEndColumn()" after "goToNextColumn()".');
+            assert.isFalse(current.getLastColumnIndex() === current.columnIndex, 'Incorrect value "current.getLastColumnIndex() === current.columnIndex" after "goToNextColumn()".');
             checkBaseProperties(current.getCurrentColumn(), {
                columnIndex: 1,
                keyProperty: cfg.keyProperty,
@@ -270,7 +270,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             // check next column
             current.goToNextColumn();
             assert.equal(2, current.columnIndex, 'Incorrect value "current.columnIndex" after "goToNextColumn()".');
-            assert.isTrue(current.isEndColumn(), 'Incorrect value "current.isEndColumn()" after "goToNextColumn()".');
+            assert.isFalse(current.getLastColumnIndex() === current.columnIndex, 'Incorrect value "current.getLastColumnIndex() === current.columnIndex" after goToNextColumn().');
             checkBaseProperties(current.getCurrentColumn(), {
                columnIndex: 2,
                keyProperty: cfg.keyProperty,
@@ -287,7 +287,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             // check last column
             current.goToNextColumn();
             assert.equal(3, current.columnIndex, 'Incorrect value "current.columnIndex" after "goToNextColumn()".');
-            assert.isTrue(current.isEndColumn(), 'Incorrect value "current.isEndColumn()" after "goToNextColumn()".');
+            assert.isTrue(current.getLastColumnIndex() === current.columnIndex, 'Incorrect value "current.getLastColumnIndex() === current.columnIndex" after "gotToNextColumn()".');
             checkBaseProperties(current.getCurrentColumn(), {
                columnIndex: 3,
                keyProperty: cfg.keyProperty,
@@ -304,13 +304,12 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             // check the absence of other columns
             current.goToNextColumn();
             assert.equal(4, current.columnIndex, 'Incorrect value "current.columnIndex" after "goToNextColumn()".');
-            assert.isFalse(current.isEndColumn(), 'Incorrect value "current.isEndColumn()" after "goToNextColumn()".');
 
             // check reset column index and retest first column
             current.resetColumnIndex();
 
             assert.equal(0, current.columnIndex, 'Incorrect value "current.columnIndex" after "resetColumnIndex()".');
-            assert.isTrue(current.isEndColumn(), 'Incorrect value "current.isEndColumn()" after "resetColumnIndex()".');
+            assert.isFalse(current.getLastColumnIndex() === current.columnIndex, 'Incorrect value "current.getLastColumnIndex() === current.columnIndex" after "resetColumnIndex()".');
             checkBaseProperties(current.getCurrentColumn(), {
                columnIndex: 0,
                keyProperty: cfg.keyProperty,
@@ -330,77 +329,61 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
          it('getColumns', function() {
             assert.deepEqual(gridColumns, gridViewModel.getColumns(), 'Incorrect value "getColumns()".');
          });
-         it('setMultiselect && getMultiselect', function() {
-            assert.isTrue(gridViewModel.getMultiselect(), 'Incorrect value "getMultiselect()" before "setMultiselect(false)".');
-            gridViewModel.setMultiselect(false);
-            assert.isFalse(gridViewModel.getMultiselect(), 'Incorrect value "getMultiselect()" after "setMultiselect(false)".');
-            gridViewModel.setMultiselect(true);
-            assert.isTrue(gridViewModel.getMultiselect(), 'Incorrect value "getMultiselect()" after "setMultiselect(true)".');
+         it('setMultiSelectVisibility && getMultiSelectVisibility', function() {
+            assert.equal('visible', gridViewModel.getMultiSelectVisibility(), 'Incorrect value "getMultiSelectVisibility()" before "setMultiSelectVisibility()".');
+            gridViewModel.setMultiSelectVisibility('');
+            assert.equal('', gridViewModel.getMultiSelectVisibility(), 'Incorrect value "getMultiSelectVisibility()" after "setMultiSelectVisibility()".');
+            gridViewModel.setMultiSelectVisibility('visible');
+            assert.equal('visible', gridViewModel.getMultiSelectVisibility(), 'Incorrect value "getMultiSelectVisibility()" after "setMultiSelectVisibility(visible)".');
          });
          it('methods throwing a call into the model', function() {
             var
                gridViewModel = new GridViewModel(cfg),
-               expectedCallStackMethods = ['getItemById', 'setMarkedKey', 'reset', 'isEnd', 'goToNext', 'getNext', 'isLast',
-                  'updateIndexes', 'setItems', 'appendItems', 'prependItems', 'getCount', 'destroy'],
+               callMethods = ['getItemById', 'setMarkedKey', 'reset', 'isEnd', 'goToNext', 'getNext', 'isLast',
+                  'updateIndexes', 'setItems', 'setActiveItem', 'appendItems', 'prependItems', 'setItemActions', 'getDragTargetPosition',
+                  'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'select', 'unselect', 'destroy'],
                callStackMethods = [];
 
-            gridViewModel._model = {
-               getItemById: function() {
-                  callStackMethods.push('getItemById');
-               },
-               setMarkedKey: function() {
-                  callStackMethods.push('setMarkedKey');
-               },
-               reset: function() {
-                  callStackMethods.push('reset');
-               },
-               isEnd: function() {
-                  callStackMethods.push('isEnd');
-               },
-               goToNext: function() {
-                  callStackMethods.push('goToNext');
-               },
-               getNext: function() {
-                  callStackMethods.push('getNext');
-               },
-               isLast: function() {
-                  callStackMethods.push('isLast');
-               },
-               updateIndexes: function() {
-                  callStackMethods.push('updateIndexes');
-               },
-               setItems: function() {
-                  callStackMethods.push('setItems');
-               },
-               appendItems: function() {
-                  callStackMethods.push('appendItems');
-               },
-               prependItems: function() {
-                  callStackMethods.push('prependItems');
-               },
-               getCount: function() {
-                  callStackMethods.push('getCount');
-               },
-               destroy: function() {
-                  callStackMethods.push('destroy');
-               }
-            };
-
-            gridViewModel.getItemById();
-            gridViewModel.setMarkedKey();
-            gridViewModel.reset();
-            gridViewModel.isEnd();
-            gridViewModel.goToNext();
-            gridViewModel.getNext();
-            gridViewModel.isLast();
-            gridViewModel.updateIndexes();
-            gridViewModel.setItems();
-            gridViewModel.appendItems();
-            gridViewModel.prependItems();
-            gridViewModel.getCount();
-            gridViewModel.destroy();
-
-            assert.deepEqual(expectedCallStackMethods, callStackMethods, 'Incorrect call stack methods.');
+            gridViewModel._model = {};
+            callMethods.forEach(function(item) {
+               gridViewModel._model[item] = function() {
+                  callStackMethods.push(item);
+               };
+            });
+            callMethods.forEach(function(item) {
+               gridViewModel[item]();
+            });
+            assert.deepEqual(callMethods, callStackMethods, 'Incorrect call stack methods.');
+         });
+      });
+      describe('ladder', function() {
+         var
+            gridViewModel = new GridViewModel(cMerge({
+               stickyFields: ['title']
+            }, cfg));
+         it('current.ladderSupport', function() {
+            assert.isTrue(gridViewModel.getCurrent().ladderSupport, 'Incorrect value "ladderSupport" for "current".');
+         });
+         it('_processLadder', function() {
+            var
+               expectedLadder = [{
+                  ladderValue: 'Хлеб',
+                  rowIndex: 0,
+                  columnIndex: 0,
+                  ladderLength: 4,
+                  currentColumn: null
+               }, {
+                  ladderValue: 'Хлеб',
+                  rowIndex: 0,
+                  columnIndex: 0,
+                  ladderLength: 2,
+                  currentColumn: null
+               }],
+               current = gridViewModel.getCurrent();
+            GridViewModel._private.processLadder(gridViewModel, current);
+            gridViewModel._ladder.currentColumn = null;
+            assert.isTrue(gridViewModel._withLadder, 'Incorrect value "withLadder".');
+            assert.deepEqual(expectedLadder[0], gridViewModel._ladder, 'Incorrect value "ladder".');
          });
       });
       describe('other methods of the class', function() {

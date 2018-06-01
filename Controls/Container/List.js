@@ -15,6 +15,10 @@ define('Controls/Container/List',
       
       'use strict';
       
+      var SEARCH_CONTEXT_FIELD = 'searchLayoutField';
+      var SEARCH_VALUE_FIELD = 'searchValue';
+      var FILTER_CONTEXT_FIELD = 'filterLayoutField';
+      var FILTER_VALUE_FIELD = 'filter';
       
       var _private = {
          getSearchController: function(self) {
@@ -53,6 +57,7 @@ define('Controls/Container/List',
             /* Копируем объект, чтобы порвать ссылку и опция у списка изменилась*/
             var filterClone = merge({}, self._options.filter);
             self._filter = merge(filterClone, resultFilter);
+            _private.getSearchController(self).setFilter(self._filter);
          },
          
          abortCallback: function(self, filter) {
@@ -60,7 +65,10 @@ define('Controls/Container/List',
                self._options.searchEndCallback(null, filter);
             }
    
-            _private.updateFilter(self, filter);
+            if (!isEqual(filter, _private.getFilterFromContext(self, self._contextObj))) {
+               _private.updateFilter(self, filter);
+            }
+            self._searchMode = false;
             self._source = self._options.source;
             self._forceUpdate();
          },
@@ -70,44 +78,93 @@ define('Controls/Container/List',
                self._options.searchEndCallback(result, filter);
             }
    
-            _private.updateFilter(self, filter);
+            if (!isEqual(filter, _private.getFilterFromContext(self, self._contextObj)) || !isEqual(filter, self._filter)) {
+               _private.updateFilter(self, filter);
+            }
             _private.updateSource(self, result.data);
             self._searchDeferred.callback();
             self._forceUpdate();
          },
          
-         searchValueChanged: function(self, value) {
-            if (self._searchDeferred && self._searchDeferred.isReady()) {
-               self._searchDeferred.cancel();
-            }
+         searchValueChanged: function(self, value, filter) {
+            var searchController = _private.getSearchController(self);
+            
             if (self._options.searchStartCallback) {
                self._options.searchStartCallback();
             }
+   
+            _private.cancelSearchDeferred(self);
             self._searchDeferred = new Deferred();
-            _private.getSearchController(self).search(value);
-         },
-         
-         filterChanged: function(self, filter) {
-            _private.updateFilter(self, filter);
-            self._forceUpdate();
-         },
-         
-         checkFilterValue: function(self, newContext, oldContext) {
-            var newFilter = newContext.filterLayoutField && newContext.filterLayoutField.filter,
-               oldFilter = self._contextObj &&
-                  self._contextObj.hasOwnProperty('filterLayoutField') &&
-                  oldContext.get('filterLayoutField').filter;
             
-            return newFilter && !isEqual(newFilter, oldFilter) ? _private.filterChanged(self, newFilter) : false;
+            if (filter) {
+               searchController.setFilter(filter);
+            }
+            self._searchMode = true;
+            searchController.search(value);
          },
          
-         checkSearchValue: function(self, newContext, oldContext) {
-            var newValue = newContext.searchLayoutField && newContext.searchLayoutField.searchValue,
-               oldValue = self._contextObj &&
-                  self._contextObj.hasOwnProperty('searchLayoutField') &&
-                  oldContext.get('searchLayoutField').searchValue;
+         cancelSearchDeferred: function(self) {
+            if (self._searchDeferred && self._searchDeferred.isReady()) {
+               self._searchDeferred.cancel();
+               self._searchDeferred = null;
+            }
+         },
+         
+         getValueFromContext: function(context, contextField, valueField) {
+            if (context && context[contextField]) {
+               return context[contextField][valueField];
+            } else {
+               return null;
+            }
+         },
+         
+         isFilterChanged: function(self, context) {
+            var oldValue = this.getFilterFromContext(self, self._contextObj),
+               newValue = this.getFilterFromContext(self, context),
+               changed = false;
             
-            return !isEqual(newValue, oldValue) ? _private.searchValueChanged(self, newValue) : false;
+            if (newValue) {
+               if (self._searchMode) {
+                  /* if search mode on, filter will be changed after search */
+                  changed = !isEqual(_private.getSearchController(self).getFilter(), newValue);
+               } else {
+                  changed = !isEqual(oldValue, newValue);
+               }
+            }
+            return changed;
+         },
+         
+         isSearchValueChanged: function(self, context) {
+            var oldValue = this.getSearchValueFromContext(self, self._contextObj),
+               newValue = this.getSearchValueFromContext(self, context);
+            return !isEqual(oldValue, newValue);
+         },
+         
+         getFilterFromContext: function(self, context) {
+            return this.getValueFromContext(context, FILTER_CONTEXT_FIELD, FILTER_VALUE_FIELD);
+         },
+         
+         getSearchValueFromContext: function(self, context) {
+            return this.getValueFromContext(context, SEARCH_CONTEXT_FIELD, SEARCH_VALUE_FIELD);
+         },
+         
+         checkContextValues: function(self, context) {
+            var filterChanged = this.isFilterChanged(self, context);
+            var searchChanged = this.isSearchValueChanged(self, context);
+            var searchValue = this.getSearchValueFromContext(self, context);
+            var filterValue = this.getFilterFromContext(self, context);
+            
+            if (searchChanged && filterChanged) {
+               this.searchValueChanged(self, searchValue, filterValue);
+            } else if (searchChanged) {
+               this.searchValueChanged(self, searchValue);
+            } else if (filterChanged) {
+               if (self._searchMode) {
+                  this.searchValueChanged(self, searchValue, filterValue);
+               } else {
+                  this.updateFilter(self, filterValue);
+               }
+            }
          }
       };
       
@@ -132,6 +189,7 @@ define('Controls/Container/List',
          
          _template: template,
          _searchDeferred: null,
+         _searchMode: false,
          
          constructor: function(options) {
             List.superclass.constructor.call(this, options);
@@ -139,19 +197,20 @@ define('Controls/Container/List',
          },
          
          _beforeMount: function(options, context) {
-            _private.checkFilterValue(this, context);
-            _private.checkSearchValue(this, context);
-            
+            _private.checkContextValues(this, context);
             return this._searchDeferred;
          },
          
          _beforeUpdate: function(options, context) {
-            _private.checkFilterValue(this, context, this.context);
-            _private.checkSearchValue(this, context, this.context);
+            _private.checkContextValues(this, context);
          },
          
          _beforeUnmount: function() {
-            _private.getSearchController(this).abort();
+            if (this._searchController) {
+               this._searchController.abort();
+               this._searchController = null;
+            }
+            _private.cancelSearchDeferred(this);
          }
          
       });
