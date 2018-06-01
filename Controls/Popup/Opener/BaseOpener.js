@@ -26,9 +26,9 @@ define('Controls/Popup/Opener/BaseOpener',
           * Открыть всплывающую панель
           * @function Controls/Popup/Opener/Base#open
           * @param popupOptions конфигурация попапа
-          * @param strategy стратегия позиционирования попапа
+          * @param controller стратегия позиционирования попапа
           */
-         open: function(popupOptions, strategy) {
+         open: function(popupOptions, controller) {
             var self = this;
             var cfg = this._getConfig(popupOptions);
 
@@ -44,18 +44,18 @@ define('Controls/Popup/Opener/BaseOpener',
             if (cfg.isCompoundTemplate) { //TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
                requirejs(['Controls/Popup/Compatible/Layer'], function(Layer) {
                   Layer.load().addCallback(function() {
-                     self._openPopup(cfg, strategy);
+                     self._openPopup(cfg, controller);
                   });
                });
             } else {
-               self._openPopup(cfg, strategy);
+               self._openPopup(cfg, controller);
             }
          },
 
-         _openPopup: function(cfg, strategy) {
+         _openPopup: function(cfg, controller) {
             var self = this;
-            this._getTemplate(cfg).addCallback(function(tpl) {
-               Base.showDialog(tpl, cfg, strategy, self._popupId).addCallback(function(popupId) {
+            this._requireModules(cfg, controller).addCallback(function(result) {
+               Base.showDialog(result.template, cfg, result.controller, self._popupId).addCallback(function(popupId) {
                   self._popupId = popupId;
                   self._isExecuting = false;
                });
@@ -63,18 +63,34 @@ define('Controls/Popup/Opener/BaseOpener',
          },
 
          //Ленивая загрузка шаблона
-         _getTemplate: function(config) {
-            if (typeof config.template === 'function') {
-               return (new Deferred()).callback(config.template);
-            } else if (requirejs.defined(config.template)) {
-               return (new Deferred()).callback(requirejs(config.template));
-            } else if (!this._openerListDeferred || this._openerListDeferred.isReady()) {
-               this._openerListDeferred = new Deferred();
-               requirejs([config.template], function(template) {
-                  this._openerListDeferred.callback(template);
-               }.bind(this));
+         _requireModules: function(config, controller) {
+            var deps = [];
+            if (this._needRequireModule(config.template)) {
+               deps.push(config.template);
             }
-            return this._openerListDeferred;
+            if (this._needRequireModule(controller)) {
+               deps.push(controller);
+            }
+
+            if (deps.length) {
+               this._openerListDeferred = new Deferred();
+               requirejs(deps, function() {
+                  this._openerListDeferred.callback(this._getRequiredModules(config.template, controller));
+               }.bind(this));
+               return this._openerListDeferred;
+            }
+            return (new Deferred()).callback(this._getRequiredModules(config.template, controller));
+         },
+
+         _needRequireModule: function(module) {
+            return typeof module === 'string' && !requirejs.defined(module);
+         },
+
+         _getRequiredModules: function(template, controller) {
+            return {
+               template: typeof template === 'string' ? requirejs(template) : template,
+               controller: typeof controller === 'string' ? requirejs(controller) : controller
+            };
          },
 
          _getConfig: function(popupOptions) {
@@ -103,7 +119,7 @@ define('Controls/Popup/Opener/BaseOpener',
             return !!ManagerController.find(this._popupId);
          }
       });
-      Base.showDialog = function(rootTpl, cfg, strategy, popupId) {
+      Base.showDialog = function(rootTpl, cfg, controller, popupId) {
          var def = new Deferred();
 
          if (Base.isNewEnvironment()) {
@@ -111,7 +127,7 @@ define('Controls/Popup/Opener/BaseOpener',
                if (popupId) {
                   popupId = ManagerController.update(popupId, cfg);
                } else {
-                  popupId = ManagerController.show(cfg, strategy);
+                  popupId = ManagerController.show(cfg, controller);
                }
                def.callback(popupId);
             } else {
@@ -120,7 +136,7 @@ define('Controls/Popup/Opener/BaseOpener',
                   if (popupId) {
                      popupId = ManagerController.update(popupId, cfg);
                   } else {
-                     popupId = ManagerController.show(cfg, strategy);
+                     popupId = ManagerController.show(cfg, controller);
                   }
                   def.callback(popupId);
                });

@@ -1,10 +1,9 @@
 define('Controls/Popup/Opener/Notification',
    [
-      'Controls/Popup/Opener/BaseOpener',
-      'Controls/Popup/Opener/Notification/NotificationController'
+      'Controls/Popup/Opener/BaseOpener'
 
    ],
-   function(Base, Strategy) {
+   function(Base) {
       /**
        * Действие открытия окна
        * @class Controls/Popup/Opener/Notification
@@ -21,7 +20,7 @@ define('Controls/Popup/Opener/Notification',
           * @param config конфигурация попапа
           */
          open: function(config) {
-            Base.prototype.open.call(this, config, Strategy);
+            Base.prototype.open.call(this, config, 'Controls/Popup/Opener/Notification/NotificationController');
          }
       });
 
