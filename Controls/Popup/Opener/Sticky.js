@@ -2,10 +2,10 @@ define('Controls/Popup/Opener/Sticky',
    [
       'tmpl!Controls/Popup/Opener/Sticky/Sticky',
       'Controls/Popup/Manager/ManagerController',
-      'Controls/Popup/Opener/BaseOpener',
-      'Controls/Popup/Opener/Sticky/StickyController'
+      'Controls/Popup/Opener/BaseOpener'
+
    ],
-   function(template, ManagerController, Base, Strategy) {
+   function(template, ManagerController, Base) {
       /**
        * Действие открытия окна
        * @class Controls/Popup/Opener/Sticky
@@ -25,7 +25,7 @@ define('Controls/Popup/Opener/Sticky',
           */
          open: function(config) {
             this._setCompatibleConfig(config);
-            Base.prototype.open.call(this, config, Strategy);
+            Base.prototype.open.call(this, config, 'Controls/Popup/Opener/Sticky/StickyController');
          },
          _scrollHandler: function() {
             if (this._options.targetTracking) {

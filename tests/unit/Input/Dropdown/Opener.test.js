@@ -32,10 +32,12 @@ define(
          });
 
          it('get template', () => {
+            let controllerName = 'Controls/Popup/Opener/Sticky/StickyController';
+
             //первый раз загрузка
-            opener._getTemplate(config).addCallback(() => {
+            opener._requireModules(config, controllerName).addCallback(() => {
                //второй раз из кэша рекваера
-               opener._getTemplate(config).addCallback(() => {
+               opener._requireModules(config, controllerName).addCallback(() => {
                   assert.isTrue(true);
                });
             });

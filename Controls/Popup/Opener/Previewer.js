@@ -1,10 +1,9 @@
 define('Controls/Popup/Opener/Previewer',
    [
       'Core/core-clone',
-      'Controls/Popup/Opener/BaseOpener',
-      'Controls/Popup/Opener/Previewer/PreviewerController'
+      'Controls/Popup/Opener/BaseOpener'
    ],
-   function(cClone, Base, Controller) {
+   function(cClone, Base) {
 
       'use strict';
 
@@ -34,7 +33,7 @@ define('Controls/Popup/Opener/Previewer',
 
             myCfg.closeByExternalClick = true;
             myCfg.className = 'controls-PreviewerController';
-            Previewer.superclass.open.call(self, myCfg, Controller);
+            Previewer.superclass.open.call(self, myCfg, 'Controls/Popup/Opener/Previewer/PreviewerController');
          }
       };
 
