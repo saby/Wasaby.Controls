@@ -15,7 +15,8 @@
 }
 .controls-Suggest__suggestionsContainer {
 	position: absolute;
-	border-color: @suggest-picker-border-color;
+	border-width: @border-size_suggestionsContainer;
+	border-color: @border-color_suggestionsContainer;
 	border-style: solid;
 	box-sizing: border-box;
 	background-color: @background-color_Suggest-suggestionsContainer;
@@ -23,15 +24,16 @@
 }
 
 .controls-Suggest__suggestionsContainer-style-default {
+	margin-top: -@border-width_InputRender;
 	width: 100%;
-	border-width: 0 @default-border-width @default-border-width @default-border-width;
+	.box-shadow(@shadow_suggestionsContainer);
 }
 
 .controls-Suggest__suggestionsContainer-style-overInput {
 	top: -(@spacing_Suggest_suggestionsContainer_overInput + @default-border-width);
 	left: -(@spacing_Suggest_suggestionsContainer_overInput + @default-border-width);
 	padding-top: @height_InputRender_default + (@spacing_Suggest_suggestionsContainer_overInput * 2);
-	border-width: @default-border-width;
+	.box-shadow(@shadow_suggestionsContainer-overInput);
 }
 
 .controls-Suggest-Text_style_overInput {
