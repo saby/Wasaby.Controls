@@ -139,6 +139,11 @@ define('Controls/Application/HeadDataContext', [
          if (curNodeDeps && curNodeDeps.length) {
             for (var i = 0; i < curNodeDeps.length; i++) {
                var node = curNodeDeps[i];
+               var splitted = node.split('!');
+               if (splitted[0] === 'optional' && splitted.length > 1) {
+                  splitted.shift();
+                  node = splitted.join('!');
+               }
                if (!allDeps[node]) {
                   var nodeDeps = modDeps.links[node];
                   allDeps[node] = true;

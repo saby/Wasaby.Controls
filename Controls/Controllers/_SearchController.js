@@ -42,11 +42,13 @@ define('Controls/Controllers/_SearchController',
          
          abort: function(self) {
             _private.getSearch(self).addCallback(function(search) {
-               var filter = self._options.filter;
-               
-               search.abort();
-               delete filter[self._options.searchParam];
-               self._options.abortCallback(filter);
+               if (search.isLoading()) {
+                  var filter = self._options.filter;
+   
+                  search.abort();
+                  delete filter[self._options.searchParam];
+                  self._options.abortCallback(filter);
+               }
                return search;
             });
          }
@@ -81,6 +83,14 @@ define('Controls/Controllers/_SearchController',
             } else {
                _private.abort(this);
             }
+         },
+         
+         setFilter: function(filter) {
+            this._options.filter = filter;
+         },
+         
+         getFilter: function() {
+            return this._options.filter;
          },
          
          abort: function() {
