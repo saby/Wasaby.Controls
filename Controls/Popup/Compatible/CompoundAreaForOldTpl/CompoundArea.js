@@ -95,8 +95,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
 
          _shouldUpdate: function(popupOptions) {
-            if (this._options._shouldUpdate) {
+            if (popupOptions._isUpdating) {
                this._rebuildCompoundControl(popupOptions);
+               popupOptions._isUpdating = false;
             }
             return false;
          },

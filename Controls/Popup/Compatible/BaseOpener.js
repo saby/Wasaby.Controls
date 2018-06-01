@@ -10,14 +10,14 @@ function(cMerge) {
        * Слой совместимости для базового опенера для открытия старых шаблонов
        */
    return {
-      _prepareConfigForOldTemplate: function(cfg, templateClass) {
+      _prepareConfigForOldTemplate: function(cfg, templateClass, popupId) {
          cfg.templateOptions = {
             templateOptions: cfg.templateOptions || cfg.componentOptions || {},
             template: cfg.template,
             type: cfg._type,
             handlers: cfg.handlers,
-            _shouldUpdate: cfg._shouldUpdate === undefined ? true : cfg._shouldUpdate, // В рамках оптимизации перерисовок compoundArea.
-            _initCompoundArea: cfg._initCompoundArea
+            _initCompoundArea: cfg._initCompoundArea,
+            _isUpdating: !!popupId
          };
 
          if (cfg.hasOwnProperty('autoHide')) {
