@@ -27,4 +27,10 @@ define('Controls/interface/IOpener', [], function() {
     * @name Controls/interface/IOpener#popupOptions.opener
     * @cfg {Object} The component that opened the popup. Used to establish a logical connection
     */
+
+   /**
+    * @name Controls/interface/IOpener#closePopupBeforeUnmount
+    * @cfg {Boolean} Close popup when opener destroyed.
+    * Default value: true
+    */
 });
