@@ -507,7 +507,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             // if res instanceof Error, return it as non-captured
             return res;
-         },
+         }
       });
 
       return CompoundArea;
