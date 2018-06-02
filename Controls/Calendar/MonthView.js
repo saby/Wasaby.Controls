@@ -14,7 +14,7 @@ define('Controls/Calendar/MonthView', [
    'tmpl!Controls/Calendar/MonthView/day',
    'Controls/Calendar/interface/IMonth',
    'i18n!SBIS3.CONTROLS/Calendar',
-   'css!SBIS3.CONTROLS/Date/MonthView/MonthView'
+   'css!Controls/Calendar/MonthView/MonthView'
 ], function(
    BaseControl,
    constants,
