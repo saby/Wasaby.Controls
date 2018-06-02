@@ -146,7 +146,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                   self._activeOperation = null;
                   if (count === 1) {
                      self._setFirstOperationMode(true);
-                     self._activeOperation = items.getRecordById(items.at(0).getId());
+                     self._activeOperation = items.getRecordById(items.at(0).getId()/*Это fullId!*/);
                   }
                   else {
                      self._setFirstOperationMode(false);
@@ -157,7 +157,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                         }
                      });
                      if (!self._activeOperation) {
-                        self._activeOperation = items.getRecordById(items.at(0).getId());
+                        self._activeOperation = items.getRecordById(items.at(0).getId()/*Это fullId!*/);
                      }
                   }
                   actionsContainer.removeClass('ws-hidden');
@@ -330,7 +330,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
           */
          _getResultButtonCaption: function (model) {
             if (model) {
-               var action = this._longOpList.describeMainAction(model);
+               var action = this._longOpList.describeMainAction(model.getRawData());
                if (action) {
                   switch (action.type) {
                      case 'result':
@@ -501,17 +501,18 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                         switch (data.status) {
                            case LongOperationEntry.STATUSES.running:
                               this._setProgress(data.progress ? data.progress.value : 0, data.progress ? data.progress.total : 1, false);
-                           case LongOperationEntry.STATUSES.suspended:
                               break;
+                           /*case LongOperationEntry.STATUSES.suspended:
+                              break;*/
                         }
                         break;
                      case 'progress':
-                        if (active && active === longOpList.lookupItem(data)) {
+                        if (active && active === longOpList.lookupItem(data, true)) {
                            this._setProgress(data.progress.value, data.progress.total, false);
                         }
                         break;
                      case 'notification':
-                        if (data.notification && active && active === longOpList.lookupItem(data)) {
+                        if (data.notification && active && active === longOpList.lookupItem(data, true)) {
                            this._setNotification(data.notification);
                         }
                         break;
@@ -520,7 +521,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
 
                case 'onlongoperationended':
                   this._setProgress(data.progress ? data.progress.value : 1, data.progress ? data.progress.total : 1, true);
-                  var model = this._longOpList.lookupItem(data);
+                  var model = this._longOpList.lookupItem(data, true);
                   if (model) {
                      this._activeOperation = model;
                      this._updateState();

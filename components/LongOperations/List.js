@@ -7,6 +7,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
       'SBIS3.CONTROLS/LongOperations/Entry',
       'SBIS3.CONTROLS/LongOperations/Manager',
       'SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
+      'SBIS3.CONTROLS/LongOperations/List/resources/model',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
       'Lib/Control/FloatArea/FloatArea',
       'tmpl!SBIS3.CONTROLS/LongOperations/List/LongOperationsList',
@@ -16,12 +17,23 @@ define('SBIS3.CONTROLS/LongOperations/List',
       'tmpl!SBIS3.CONTROLS/LongOperations/List/resources/LongOperationsListExecuteTimeTemplate',
       'tmpl!SBIS3.CONTROLS/LongOperations/List/resources/LongOperationsListUserPhotoTemplate',
       'tmpl!SBIS3.CONTROLS/LongOperations/List/resources/LongOperationsListNameTemplate',
-      'SBIS3.CONTROLS/LongOperations/List/resources/model',
       'SBIS3.CONTROLS/DataGridView'
    ],
 
-   function (cMerge, cObjectIsEqual, Deferred, CompoundControl, LongOperationEntry, longOperationsManager, LongOperationsListDataSource, InformationPopupManager, FloatArea, dotTplFn) {
+   function (cMerge, cObjectIsEqual, Deferred, CompoundControl, LongOperationEntry, longOperationsManager, LongOperationsListDataSource, LongOperationModel, InformationPopupManager, FloatArea, dotTplFn) {
       'use strict';
+
+      /**
+       * Минимальное отображаемое изменение прогресса операций (в процентах)
+       * @type {number}
+       */
+      var PROGRESS_MIN_PERCENT = 1.5;
+
+      /**
+       * Минимальный интервал времени между отображением прогресса операций (в мсек)
+       * @type {number}
+       */
+      var PROGRESS_MIN_DELAY = 1500;
 
       /**
        * Интервал обновления времени выполнения операции
@@ -33,7 +45,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
        * Продолжительность одного мигания анимации завершённых операций
        * @type {number}
        */
-      var ANIM_BLINK_DURATION = 400;//700
+      var ANIM_BLINK_DURATION = 400;
 
       /**
        * Количество миганий анимации завершённых операций
@@ -137,40 +149,54 @@ define('SBIS3.CONTROLS/LongOperations/List',
                   }
                   var dontReload;
                   if (['onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted'].indexOf(evtName.name) !== -1) {
-                     var model = self.lookupItem(evt);
-                     dontReload = !model;
-                     if (model) {
+                     var operation = self.lookupItem(evt);
+                     dontReload = !operation;
+                     if (operation) {
                         switch (evtName.name) {
                            case 'onlongoperationchanged':
                               if (evt.changed === 'progress') {
-                                 var previous = model.get('progressCurrent') || 0;
-                                 var value = evt.progress.value || 0;
+                                 var previousValue = operation.progressCurrent || 0;
+                                 var next = evt.progress;
+                                 var value = next.value || 0;
                                  // Для STOMP-событий не гарантирован ни сам факт доставки события, ни сохранение порядка доставляемых событий. Поэтому иногда более старые события прогресса приходят позже более новых, - игнорировать их тогда
                                  // 1175306978 https://online.sbis.ru/opendoc.html?guid=c0f247b7-1b4f-4f9a-8b06-bc33cab61f82
-                                 if (value <= previous) {
+                                 if (value <= previousValue) {
                                     return;
                                  }
-                                 model.set('progressCurrent', value);
-                                 model.set('progressTotal', evt.progress.total);
+                                 var total = next.total;
+                                 var progressDiff = 100*(value - previousValue)/total;
+                                 // Если прогресс изменился слишком мало - игнорировать событтие
+                                 if (progressDiff < PROGRESS_MIN_PERCENT) {
+                                    return;
+                                 }
+                                 var timeDiff = (new Date()).getTime() - operation.startedAt.getTime() - operation.timeSpent - operation.timeIdle;
+                                 // Если прогресс отображался совсем недавно - игнорировать событтие
+                                 if (timeDiff < PROGRESS_MIN_DELAY) {
+                                    return;
+                                 }
+                                 // Только если событтие обрабатывается - установить новые значения
+                                 operation.timeSpent += timeDiff;
+                                 operation.progressCurrent = value;
+                                 operation.progressTotal = total;
                                  dontReload = true;
                               }
                               else {
                                  if (evt.changed === 'status') {
-                                    if (evt.status === STATUSES.running && model.get('status') === STATUSES.suspended) {
-                                       model.set('timeIdle', (new Date()).getTime() - model.get('startedAt').getTime() - model.get('timeSpent'));
+                                    if (evt.status === STATUSES.running && operation.status === STATUSES.suspended) {
+                                       operation.timeIdle = (new Date()).getTime() - operation.startedAt.getTime() - operation.timeSpent;
                                     }
                                  }
                                  else
                                  if (evt.changed === 'notification' && evt.notification) {
-                                    model.set('notification', evt.notification);
+                                    operation.notification = evt.notification;
                                     dontReload = true;
                                  }
-                                 model.set(evt.changed, evt[evt.changed]);
+                                 operation[evt.changed] = evt[evt.changed];
                               }
                               self._checkItems();
                               break;
                            case 'onlongoperationended':
-                              self._animationAdd(model.getId(), !evt.error);
+                              self._animationAdd(LongOperationModel.getFullId(operation), !evt.error);
                               self._animationRun();
                               break;
                            /*case 'onlongoperationdeleted':
@@ -190,46 +216,59 @@ define('SBIS3.CONTROLS/LongOperations/List',
 
             //У приостановленных операций нужно менять цвет текста, поэтому навешиваем класс
             this.subscribeTo(this._view, 'onDrawItems', function () {
-               var items = self._view.getItems();
+               var view = this._view;
+               var items = view.getItems();
                if (items) {
-                  var $cont = self._view.getContainer();
+                  var $cont = view.getContainer();
                   items.each(function (item, id) {
                      if (item.get('status') === STATUSES.suspended) {
                         $cont.find('.js-controls-ListView__item[data-id="' + item.getId() + '"]').addClass('LongOperationsList__view_stoppedOperation');
                      }
                   });
                }
-            });
+            }.bind(this));
 
             //Нужно показывать разные действия в зависимости от состояния операции
             this.subscribeTo(this._view, 'onChangeHoveredItem', function (event, item) {
-               var model = item.record;
-               if (model) {
-                  var actions = self._makeItemsActions(model);
-                  var itemsActionsGroup = self._view.getItemsActions();
-                  if (itemsActionsGroup) {
-                     itemsActionsGroup.setItems(actions);
-                  }
-                  else
-                  if(actions && actions.length) {
-                     self._view.setItemsActions(actions);
-                  }
+               var operation = item.record ? item.record.getRawData() : null;
+               if (operation) {
+                  this._setItemsActions(operation);
                }
-            });
+               this._hoveredOperation = operation;
+            }.bind(this));
          },
 
          /**
-          * Приготовить список доступных действий для указаной модели
+          * Установить доступные действия над операцией
           * @protected
+          * @param {SBIS3.CONTROLS/LongOperations/Entry} operation Длительная операция
+          */
+         _setItemsActions: function (operation) {
+            var view = this._view;
+            var itemsActionsGroup = view.getItemsActions();
+            var actions = this._makeItemsActions(operation);
+            if (itemsActionsGroup) {
+               itemsActionsGroup.setItems(actions);
+            }
+            else
+            if(actions && actions.length) {
+               view.setItemsActions(actions);
+            }
+         },
+
+         /**
+          * Приготовить список доступных действий для указаной операции
+          * @protected
+          * @param {SBIS3.CONTROLS/LongOperations/Entry} operation Длительная операция
           * @return {object[]}
           */
-         _makeItemsActions: function (model) {
+         _makeItemsActions: function (operation) {
             var actions = {};
-            if (model) {
+            if (operation) {
                var STATUSES = LongOperationEntry.STATUSES;
                var DEFAULT_ICO = 'Favourite';
-               var status = model.get('status');
-               var inf = this._getCustomActions(model);
+               var status = operation.status;
+               var inf = this._getCustomActions(operation);
                if (inf) {
                   for (var name in inf) {
                      var action = inf[name];
@@ -239,13 +278,13 @@ define('SBIS3.CONTROLS/LongOperations/List',
                   }
                }
                // Заголовки могут зависесть от модели
-               if (model.get('canSuspend') && status === STATUSES.running) {
-                  actions['suspend'] = {title:rk(model.get('resumeAsRepeat') ? 'Отменить' : 'Приостановить', 'ДлительныеОперации'), icon:'sprite:icon-16 icon-Pause icon-primary action-hover'};
+               if (operation.canSuspend && status === STATUSES.running) {
+                  actions['suspend'] = {title:rk(operation.resumeAsRepeat ? 'Отменить' : 'Приостановить', 'ДлительныеОперации'), icon:'sprite:icon-16 icon-Pause icon-primary action-hover'};
                }
-               if (model.get('canSuspend') && status === STATUSES.suspended) {
-                  actions['resume'] = {title:rk(model.get('resumeAsRepeat') ? 'Повторить' : 'Возобновить', 'ДлительныеОперации'), icon:'sprite:icon-16 icon-DayForward icon-primary action-hover'};
+               if (operation.canSuspend && status === STATUSES.suspended) {
+                  actions['resume'] = {title:rk(operation.resumeAsRepeat ? 'Повторить' : 'Возобновить', 'ДлительныеОперации'), icon:'sprite:icon-16 icon-DayForward icon-primary action-hover'};
                }
-               if (model.get('canDelete')) {
+               if (operation.canDelete) {
                   actions['delete'] = {title:rk('Удалить'), icon:'sprite:icon-16 icon-Erase icon-error'};
                }
             }
@@ -263,7 +302,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
          },
 
          _onUserAction: function (action, $item, id, itemModel) {
-            this.applyUserAction(action, itemModel);
+            this.applyUserAction(action, itemModel.getRawData());
          },
 
          /**
@@ -299,7 +338,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
                   if (!this._notFirst
                         && status === STATUSES.ended
                         && from < model.get('startedAt').getTime() + model.get('timeSpent') + model.get('timeIdle')) {
-                     this._animationAdd(model.getId(), !model.get('isFailed'));
+                     this._animationAdd(model.getId()/*Это fullId!*/, !model.get('isFailed'));
                   }
                   if (!hasRun && status === STATUSES.running) {
                      hasRun = true;
@@ -335,7 +374,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
                items.each(function (model) {
                   if (model.get('status') === STATUSES.running) {
                      model.set('timeSpent', time - model.get('startedAt').getTime() - model.get('timeIdle'));
-                     $cont.find('.js-controls-ListView__item[data-id="' + model.getId() + '"]')
+                     $cont.find('.js-controls-ListView__item[data-id="' + model.getId()/*Это fullId!*/ + '"]')
                         .find('.controls-LongOperationsList__executeTimeContainer').html(model.get('strTimeSpent'));
                   }
                });
@@ -377,33 +416,33 @@ define('SBIS3.CONTROLS/LongOperations/List',
          /**
           * Проверить, может ли длительная операция иметь историю
           * @public
-          * @param {SBIS3.CONTROLS/LongOperations/List/resources/model} model Модель длительной операции
+          * @param {SBIS3.CONTROLS/LongOperations/Entry} operation Длительная операция
           * @returns {boolean}
           */
-         canHasHistory: function (model) {
-            return !!model && longOperationsManager.canHasHistory(model.get('tabKey'), model.get('producer'));
+         canHasHistory: function (operation) {
+            return !!operation && longOperationsManager.canHasHistory(operation.tabKey, operation.producer);
          },
 
          /**
           * Выполнить действие над длительной операцией, инициированное пользователем
           * @public
           * @param {string} action Имя действия (resume, suspend, delete)
-          * @param {SBIS3.CONTROLS/LongOperations/List/resources/model} model Модель длительной операции
+          * @param {SBIS3.CONTROLS/LongOperations/Entry} operation Длительная операция
           * @returns {Core/Deferred}
           */
-         applyUserAction: function (action, model) {
+         applyUserAction: function (action, operation) {
             var isAllow;
             var customAction;
             switch (action) {
                case 'suspend':
                case 'resume':
-                  isAllow = model.get('canSuspend');
+                  isAllow = operation.canSuspend;
                   break;
                case 'delete':
-                  isAllow = model.get('canDelete');
+                  isAllow = operation.canDelete;
                   break;
                default:
-                  var inf = this._getCustomActions(model);
+                  var inf = this._getCustomActions(operation);
                   if (inf && inf[action] && typeof inf[action] === 'object') {
                      customAction = inf[action];
                      isAllow = true;
@@ -418,11 +457,18 @@ define('SBIS3.CONTROLS/LongOperations/List',
                promise = this._execHandler(customAction.call, customAction.args);
             }
             else {
-               promise = longOperationsManager.callAction(action, model.get('tabKey'), model.get('producer'), model.get('id'));
-               // Удаление в LRS может занимать много времени, поэтому перезапросить список нужно сразу - удаляемая операция в него уже не войдёт. Для
-               // остальных действий вызывать reload не нужно, это произойдёт по событию, пришедшему в результате выпонения действия
-               if (action === 'delete') {
-                  promise.addCallback(this.reload.bind(this));
+               promise = longOperationsManager.callAction(action, operation.tabKey, operation.producer, operation.id);
+               switch (action) {
+                  case 'suspend':
+                  case 'resume':
+                     // Запретить приостановку/возобновление операции до следующей перезагрузки данных
+                     operation.canSuspend = false;
+                     break;
+                  case 'delete':
+                     // Удаление в LRS может занимать много времени, поэтому перезапросить список нужно сразу - удаляемая операция в него уже не войдёт. Для
+                     // остальных действий вызывать reload не нужно, это произойдёт по событию, пришедшему в результате выпонения действия
+                     promise.addCallback(this.reload.bind(this));
+                     break;
                }
             }
             return promise;
@@ -431,11 +477,11 @@ define('SBIS3.CONTROLS/LongOperations/List',
          /**
           * Получить описание основного (результирующего или кастомного основное) действия длительной операции
           * @public
-          * @param {SBIS3.CONTROLS/LongOperations/List/resources/model} model Модель длительной операции
+          * @param {SBIS3.CONTROLS/LongOperations/Entry} operation Длительная операция
           * @return {object}
           */
-         describeMainAction: function (model) {
-            var mainAction = this._getMainAction(model);
+         describeMainAction: function (operation) {
+            var mainAction = this._getMainAction(operation);
             if (mainAction) {
                var descr = {type:mainAction.type};
                if (mainAction.type === 'custom') {
@@ -451,7 +497,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
           * @param {SBIS3.CONTROLS/LongOperations/List/resources/model} model Модель длительной операции
           */
          applyMainAction: function (model) {
-            var mainAction = this._getMainAction(model);
+            var mainAction = this._getMainAction(model.getRawData());
             if (mainAction) {
                switch (mainAction.type) {
                   case 'result':
@@ -470,24 +516,24 @@ define('SBIS3.CONTROLS/LongOperations/List',
          /**
           * Определить основное (результирующее или кастомное основное) действие длительной операции
           * @protected
-          * @param {SBIS3.CONTROLS/LongOperations/List/resources/model} model Модель длительной операции
+          * @param {SBIS3.CONTROLS/LongOperations/Entry} operation Длительная операция
           * @return {object}
           */
-         _getMainAction: function (model) {
-            if (model) {
+         _getMainAction: function (operation) {
+            if (operation) {
                var STATUSES = LongOperationEntry.STATUSES;
-               var status = model.get('status');
-               if (status === STATUSES.ended || model.get('isFailed')) {
+               var status = operation.status;
+               if (status === STATUSES.ended || operation.isFailed) {
                   // Только если операция завершена или содержит ошибку
-                  if (!model.get('isFailed') || model.get('useResult')) {
+                  if (!operation.isFailed || operation.useResult) {
                      // Если операция завершена успешно или ей явно предписано использовать результат - выполнить действие, указанное в качестве результата
-                     if (model.get('resultHandler') || model.get('resultUrl')) {
+                     if (operation.resultHandler || operation.resultUrl) {
                         return {type:'result'};
                      }
                      else {
                         // Если нет, то если операция может иметь историю и является составной - открыть журнал операции (либо если было предписано
                         // показать результат, но его не оказалось)
-                        if ((this.canHasHistory(model) && 1 < model.get('progressTotal')) || model.get('useResult')) {
+                        if ((this.canHasHistory(operation) && 1 < operation.progressTotal) || operation.useResult) {
                            return {type:'history'};
                         }
                      }
@@ -499,7 +545,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
                }
                else {
                   // Или если есть кастомное действие, продекларированное как основное
-                  var inf = this._getCustomActions(model);
+                  var inf = this._getCustomActions(operation);
                   if (inf) {
                      for (var name in inf) {
                         var action = inf[name];
@@ -534,11 +580,11 @@ define('SBIS3.CONTROLS/LongOperations/List',
           *    }
           * </pre>
           * @protected
-          * @param {SBIS3.CONTROLS/LongOperations/List/resources/model} model Модель длительной операции
+          * @param {SBIS3.CONTROLS/LongOperations/Entry} operation Длительная операция
           * @return {object}
           */
-         _getCustomActions: function (model) {
-            var custom = model.get('custom');
+         _getCustomActions: function (operation) {
+            var custom = operation.custom;
             if (custom) {
                var actions = custom.actions;
                return actions && typeof actions === 'object' ? actions : null;
@@ -548,7 +594,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
          /**
           * Проверить, разрешено ли кастомное действие для указанного статуса длительной операции
           * @protected
-          * @param {object} model Кастомное действие
+          * @param {object} action Кастомное действие
           * @param {number} status Статус длительной операции
           * @return {boolean}
           */
@@ -715,7 +761,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
             if (model && (model.get('status') === LongOperationEntry.STATUSES.ended || model.get('isFailed'))) {
                var resultHandler = allowResultButton && (model.get('resultHandler') || model.get('resultUrl')) ? this._showResult.bind(this, model) : null;
                var componentModule = 'SBIS3.CONTROLS/LongOperations/History';
-               var componentOptions = this.canHasHistory(model) ? {
+               var componentOptions = this.canHasHistory(model.getRawData()) ? {
                   tabKey: model.get('tabKey'),
                   producer: model.get('producer'),
                   operationId: model.get('id'),
@@ -768,9 +814,10 @@ define('SBIS3.CONTROLS/LongOperations/List',
           * @param {string} options.producer Имя продюсера
           * @param {number|string} [options.operationId] Идентификатор длительной операции (опционально)
           * @param {number|string} [options.workflowId] Идентификатор исполняемого процесса длительной операции (опционально)
-          * @return {WS.Data/Entity/Record}
+          * @param {boolean} asModel Взвращать результат в виде модели
+          * @return {SBIS3.CONTROLS/LongOperations/Entry|WS.Data/Entity/Model<SBIS3.CONTROLS/LongOperations/Entry>}
           */
-         lookupItem: function (options) {
+         lookupItem: function (options, asModel) {
             var items = this._view.getItems();
             if (items && items.getCount()) {
                var producer = options.producer;
@@ -782,10 +829,10 @@ define('SBIS3.CONTROLS/LongOperations/List',
                if (!id) {
                   throw new Error('Property "operationId" or "workflowId" required');
                }
-               for (var i = 0, len = items.getCount(); i < len; i++) {
-                  var item = items.at(i);
-                  if (item.get('producer') === producer && (hasId ? item.get('id') === id : item.get('extra') && item.get('extra').workflow === id)) {
-                     return item;
+               for (var i = 0, list = items.getRawData(), len = list.length; i < len; i++) {
+                  var operation = list[i];
+                  if (operation.producer === producer && (hasId ? operation.id === id : operation.extra && operation.extra.workflow === id)) {
+                     return asModel ? items.at(i) : operation;
                   }
                }
             }
