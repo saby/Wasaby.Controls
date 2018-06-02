@@ -1,9 +1,8 @@
 define('Controls/Dropdown/Opener',
    [
-      'Controls/Popup/Opener/Sticky',
-      'WS.Data/Relation/Hierarchy'
+      'Controls/Popup/Opener/Sticky'
    ],
-   function(Sticky, Hierarchy) {
+   function(Sticky) {
       /**
        * Opener for dropdown menu.
        *
