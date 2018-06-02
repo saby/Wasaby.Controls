@@ -19,7 +19,9 @@ define('Controls/Popup/Opener/BaseOpener',
        */
       var Base = Control.extend({
          _beforeUnmount: function() {
-            this.close();
+            if (this._options.closePopupBeforeUnmount) {
+               this.close();
+            }
          },
 
          /**
@@ -37,7 +39,7 @@ define('Controls/Popup/Opener/BaseOpener',
             }
             this._isExecuting = true;
 
-            if (Base.isNewEnvironment() && !this.isOpened()) { // удаляем неактуальный id
+            if (!this.isOpened()) { // удаляем неактуальный id
                this._popupId = null;
             }
 
@@ -116,7 +118,8 @@ define('Controls/Popup/Opener/BaseOpener',
           * @returns {Boolean} Признак открыта ли связанная всплывающая панель
           */
          isOpened: function() {
-            return !!ManagerController.find(this._popupId);
+            //todo Compatible: Для старого окружения не вызываем методы нового Manager'a
+            return Base.isNewEnvironment() ? !!ManagerController.find(this._popupId) : null;
          }
       });
       Base.showDialog = function(rootTpl, cfg, controller, popupId) {
@@ -149,6 +152,12 @@ define('Controls/Popup/Opener/BaseOpener',
             });
          }
          return def;
+      };
+
+      Base.getDefaultOptions = function() {
+         return {
+            closePopupBeforeUnmount: true
+         };
       };
 
       //TODO Compatible
