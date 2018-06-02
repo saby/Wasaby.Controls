@@ -1,4 +1,4 @@
-define('SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/_DimensionsUtil', [
+define('SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/DimensionsUtil', [
 ], function() {
    return {
       calcOutsideDimensions: function(item) {

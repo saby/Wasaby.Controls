@@ -15,7 +15,7 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
    'tmpl!SBIS3.CONTROLS/DataGridView/resources/GroupTemplate',
    'Core/core-merge',
    'Core/core-instance',
-   'SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/_DimensionsUtil',
+   'SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/DimensionsUtil',
    'SBIS3.CONTROLS/Link'
 ], function(constants, Deferred, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate,
             ItemsTemplate, InvisibleItemsTemplate, ListViewGroupTemplate, DataGridGroupTemplate, cMerge, cInstance, DimensionsUtil) {
@@ -322,15 +322,14 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
       },
 
       _setDynamicHoveredStyles: function(item) {
-         var styles = {};
+         var styles;
          if (this._options.hoverMode !== HOVER_MODE.INSIDE) {
             styles = DimensionsUtil.calcOutsideDimensions(item);
          } else {
             styles = DimensionsUtil.calcInsideDimensions(item, this._getItemsContainer());
          }
 
-         item.get(0).style.padding = styles.padding;
-         item.get(0).style.margin = styles.margin;
+         item.css(styles);
       },
 
       _setStaticHoveredStyles: function(item) {
