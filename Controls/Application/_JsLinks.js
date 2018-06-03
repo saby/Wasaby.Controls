@@ -27,10 +27,24 @@ define('Controls/Application/_JsLinks',
                for (var i = 0; i < res.cssLinks.length; i++) {
                   self.cssLinks.push(res.cssLinks[i].split(/.css$/)[0]);
                }
+               self.receivedStateArr = res.receivedStateArr;
+               if(self.receivedStateArr && self.receivedStateArr.length) {
+                  self.receivedStateScript = self.genReceivedStateScriptGenerator();
+               }
                innerDef.callback(true);
                return res;
             });
             return innerDef;
+         },
+         genReceivedStateScriptGenerator: function() {
+            var resultFn = 'function() { return "<script>" + ';
+            for (var key in this.receivedStateArr) {
+               if (this.receivedStateArr.hasOwnProperty(key)) {
+                  resultFn += 'window["inline' + key + '"] = ' + this.receivedStateArr[key] + ';';
+               }
+            }
+            resultFn += '}';
+            return eval(resultFn);
          },
          getCssNameForDefine: function(cssLink) {
             if (cssLink.indexOf('resources/') === 0) {
