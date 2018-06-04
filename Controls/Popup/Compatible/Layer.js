@@ -1,7 +1,20 @@
 /**
  * Created by as.krasilnikov on 14.05.2018.
  */
-define('Controls/Popup/Compatible/Layer', ['Core/Deferred', 'Core/moduleStubs', 'Core/constants',  'cdn!jquery/3.3.1/jquery-min.js'], function(Deferred, moduleStubs, Constants) {
+
+function getDeps() {
+   var deps = ['Core/Deferred', 'Core/moduleStubs', 'Core/constants'];
+
+   //Если query загрузили в шаблоне страницы, то require о нем ничего не знает -> загрузит второй раз -> затрутся
+   //все jquery-плагины, которые уже навесили свои функции на узлы dom-дерева.
+   //Если $ уже есть, то не грузим его еще раз
+   if (!$) {
+      deps.push('cdn!jquery/3.3.1/jquery-min.js');
+   }
+   return deps;
+}
+
+define('Controls/Popup/Compatible/Layer', getDeps(), function(Deferred, moduleStubs, Constants) {
    'use strict';
 
    var loadDeferred;
