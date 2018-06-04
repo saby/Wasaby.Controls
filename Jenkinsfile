@@ -435,7 +435,7 @@ node('controls') {
             SERVER = test-autotest-db1:5434
             BASE_VERSION = css_${NODE_NAME}${ver}1
             DO_NOT_RESTART = True
-            SOFT_RESTART = True
+            SOFT_RESTART = False
             NO_RESOURCES = True
             DELAY_RUN_TESTS = 2
             TAGS_NOT_TO_START = iOSOnly
