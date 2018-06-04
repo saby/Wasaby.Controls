@@ -268,9 +268,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * @param {string} fileUuid Uuid шаблона форматирования эксель-файла
           */
          _onFormatter: function (method, fileUuid) {
-            if (method === 'create' && !!fileUuid) {
-               this._options.fileUuid = fileUuid;
-               this.sendCommand('subviewChanged');
+            if (!!fileUuid) {
+               var isCreate = method === 'create';
+               if (isCreate) {
+                  this._options.fileUuid = fileUuid;
+               }
+               if (isCreate || method === 'open' || method === 'openApp') {
+                  this.sendCommand('subviewChanged');
+               }
             }
             this._updatePreview();
          },
@@ -308,7 +313,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             this._updatePreviewClearStop();
             var img = this._preview[0];
             var stopper = this._updatePreviewStopper = new Deferred();
-            WaitIndicator.make({target:img.parentNode, delay:1000}, stopper);
+            WaitIndicator.make({target:img.parentNode, delay:0}, stopper);
             var options = this._options;
             this._exportFormatter.getPreviewUrl(options.fileUuid, size.width, size.height).addCallbacks(
                function (url) {
