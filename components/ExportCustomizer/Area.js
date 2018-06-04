@@ -592,9 +592,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                this._options.fileUuid = fileUuid;
             }
             if (fieldIds || fileUuid) {
-               views.columnBinder.setValues({fieldIds:fieldIds.slice()});
+               views.columnBinder.setValues({fieldIds:fieldIds.slice()}, {reason:'presets'});
                var consumer = values.consumer;
-               views.formatter.setValues({fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumer:consumer ? cMerge({}, consumer) : null});
+               views.formatter.setValues({fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumer:consumer ? cMerge({}, consumer) : null}, {reason:'presets'});
             }
          },
 
@@ -612,9 +612,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                this._options.fieldIds = fieldIds.slice();
                var presetsView = views.presets;
                if (presetsView) {
-                  presetsView.setValues({fieldIds:fieldIds.slice()});
+                  presetsView.setValues({fieldIds:fieldIds.slice()}, {reason:'columnBinder'});
                }
-               views.formatter.setValues({fieldIds:fieldIds.slice()});
+               views.formatter.setValues({fieldIds:fieldIds.slice()}, {reason:'columnBinder'});
             }
          },
 
@@ -632,7 +632,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                this._options.fileUuid = fileUuid;
                var presetsView = views.presets;
                if (presetsView) {
-                  presetsView.setValues({fileUuid:fileUuid});
+                  presetsView.setValues({fileUuid:fileUuid}, {reason:'formatter'});
                }
             }
          },
