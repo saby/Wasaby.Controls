@@ -64,9 +64,9 @@ define('Controls/List/Grid/GridViewModel', [
             return result;
          },
 
-         getItemColumnCellClasses: function(current) {
+         getItemColumnCellClasses: function(current, isEditing) {
             var
-               cellClasses = 'controls-Grid__row-cell';
+               cellClasses = isEditing ? 'controls-Grid__row-cell-editing':'controls-Grid__row-cell';
 
             cellClasses += _private.prepareRowSeparatorClasses(current.showRowSeparator, current.index, current.dispItem.getOwner().getCount() - 1);
 
@@ -416,7 +416,7 @@ define('Controls/List/Grid/GridViewModel', [
             current.getLastColumnIndex = function() {
                return current.columns.length - 1;
             };
-            current.getCurrentColumn = function() {
+            current.getCurrentColumn = function(isEditing) {
                var
                   currentColumn = {
                      item: current.item,
@@ -429,7 +429,7 @@ define('Controls/List/Grid/GridViewModel', [
                      isEditing: current.isEditing
                   };
                currentColumn.columnIndex = current.columnIndex;
-               currentColumn.cellClasses = _private.getItemColumnCellClasses(current);
+               currentColumn.cellClasses = _private.getItemColumnCellClasses(current, isEditing);
                currentColumn.column = current.columns[current.columnIndex];
                currentColumn.template = currentColumn.column.template ? currentColumn.column.template : self._columnTemplate;
                if (current.ladderSupport) {

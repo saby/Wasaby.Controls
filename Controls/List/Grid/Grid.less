@@ -100,7 +100,7 @@
 .controls-Grid__row {
    display: contents;
 }
-.controls-Grid__row-cell {
+.controls-Grid__row-cell, .controls-Grid__row-cell-editing {
    min-height: @min-height_Grid-row;
    position: relative;
    // Default "min-width" value "auto" and width limited not working. Fix this bug by reset "min-width" value to "0".
@@ -117,8 +117,14 @@
 .controls-Grid__row-cell_halign_center {
    text-align: center;
 }
-.controls-Grid__row:hover .controls-Grid__row-cell:not(.controls-ListView__item_editing) {
+.controls-Grid__row:hover .controls-Grid__row-cell {
    background-color: @background-color_Grid-row_hover;
+}
+.controls-Grid__row-cell-editing {
+   background-color: @controls-editInPlace-editing-item-bg;
+   >.controls-itemActionsV {
+      display: inline-block;
+   }
 }
 .controls-Grid__row:hover .controls-itemActionsV {
    display: inline-block;
@@ -141,7 +147,7 @@
 .controls-Grid__cell_spacingRight {
    padding-right: @spacing_Grid-column / 2;
 }
-.controls-Grid__row-cell {
+.controls-Grid__row-cell, .controls-Grid__row-cell-editing {
    border-top: @height-Grid-row-separator solid;
 }
 .controls-Grid__row-cell__content_withLadder {
