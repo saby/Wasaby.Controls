@@ -101,8 +101,6 @@ define('Controls/Input/resources/InputRender/InputRender',
          },
 
          _clickHandler: function(e) {
-            //Поле ввода может лежать внутри списка. Если событие клика будет всплывать, то список его обработает, хотя на самом деле клика по строке не было.
-            e.stopPropagation();
             _private.saveSelection(this, e.target);
          },
 
