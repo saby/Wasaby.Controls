@@ -47,11 +47,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
                /**
                 * @cfg {string} Заголовок столбца колонок файла в таблице соответствия
                 */
-               columnsTitle: rk('Столбец', 'НастройщикЭкспорта'),
+               /*columnsTitle: rk('Столбец', 'НастройщикЭкспорта'),*/
                /**
                 * @cfg {string} Заголовок столбца полей данных в таблице соответствия
                 */
-               fieldsTitle: rk('Поле данных', 'НастройщикЭкспорта'),
+               /*fieldsTitle: rk('Поле данных', 'НастройщикЭкспорта'),*/
                /**
                 * @cfg {string} Отображаемый текст при пустом списке соответствий
                 */
@@ -104,15 +104,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
          _bindEvents: function () {
             var grid = this._grid;
             //При клике по строке списка колонок
-            this.subscribeTo(grid, 'onItemActivate', this._onEdit.bind(this));
+            /*this.subscribeTo(grid, 'onItemActivate', this._onEdit.bind(this));*/
 
             //При клике по пустому списку колонок
-            this.subscribeTo(grid, 'onClick', function (evtName) {
+            /*this.subscribeTo(grid, 'onClick', function (evtName) {
                var items = grid.getItems();
                if (items && items.getCount() === 1 && !items.at(0).getId()) {
                   this._onEdit();
                }
-            }.bind(this));
+            }.bind(this));*/
 
             //При изменении порядка строк в списке колонок
             this.subscribeTo(grid, 'onEndMove', function (evtName, dragObject) {
