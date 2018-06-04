@@ -19,7 +19,7 @@ define('Controls/Application/_Wait',
                   return result;
                });
             } else {
-               if (self.waitDef) {
+               if (self.waitDef && !self.waitDef.isReady()) {
                   self.waitDef.callback({});
                }
             }
