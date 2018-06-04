@@ -69,11 +69,11 @@ define('Controls/List/ListViewModel',
             this._notify('onListChange');
          },
 
-         getSwipeItem: function () {
+         getSwipeItem: function() {
             return this._swipeItem.item;
          },
 
-         update: function () {
+         update: function() {
             this._nextVersion();
             this._notify('onListChange');
          },
