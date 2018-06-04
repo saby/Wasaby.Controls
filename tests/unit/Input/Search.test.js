@@ -46,7 +46,7 @@ define(
             it('Click on reset', function () {
                isSearched = false;
                isValueChanged = false;
-               search._onResetClick();
+               search._resetClick();
                assert.isTrue(isValueChanged);
                assert.isTrue(isSearched);
             });
@@ -54,7 +54,7 @@ define(
             it('Click on search', function () {
                isSearched = false;
                isValueChanged = false;
-               search._onSearchClick();
+               search._searchClick();
                assert.isTrue(isSearched);
                assert.isFalse(isValueChanged);
             });

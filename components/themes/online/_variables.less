@@ -601,7 +601,8 @@
 // --------- //
 // Combo box //
 // --------- //
-@box-shadow_ComboBox_picker:                    none;
+@box-shadow_ComboBox_picker:                 0px 8px 12px 0px rgba(0, 0, 0, 0.25);
+@box-shadow_ComboBox_picker_revert:          0px -8px 12px 0px rgba(0, 0, 0, 0.25);
 // --------------- //
 // SuggestTextBox //
 // -------------- //
@@ -610,8 +611,8 @@
 // Suggest //
 // ----------- //
 @suggest-loading-bg:                            @list-view-scroll-spritesheet 0 0 no-repeat;
-@suggest-loading-width:                         16px;
-@suggest-loading-right:                         3px;
+@width_suggest_loading:                         16px;
+@right_suggest_loading:                         3px;
 
 @suggest-picker-border-color:                   @default-border-color-second;
 @suggest-picker-box-shadow:                     0 4px 8px rgba(0, 0, 0, 0.15);
@@ -892,6 +893,9 @@
 @width_EditActions-cancelButton:        @width_EditButton;
 @height_EditActions-cancelButton:       @height_EditButton;
 @font-size_EditActions-cancelButton:    22px;
+@width_itemsToolbar_closeButton:       29px;
+@height_itemsToolbar_closeButton:      24px;
+@font-size_itemsToolbar_closeButton:   20px;
 // ItemsToolbar small
 @list-view-small-items-toolbar-line-height:         16px;
 @list-view-small-actions-item-height:               16px;
@@ -1779,7 +1783,7 @@
 //  Popup   //
 //----------------//
 @controls-Popup-animate-duration:         0.2s;
-@controls-Popup-stack-shadow:             -6px 0px 8px -5px rgba(0, 0, 0, 0.4);
+@controls-Popup-stack-shadow:             -4px -8px 12px -4px rgba(0, 0, 0, 0.4);
 @controls-Popup-stack-shadow-padding:     5px;
 
 //-----------------//

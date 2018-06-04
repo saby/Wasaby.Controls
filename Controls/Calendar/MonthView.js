@@ -2,31 +2,21 @@ define('Controls/Calendar/MonthView', [
    'Core/Control',
    'Core/constants',
    'Core/core-merge',
-   'Core/detection',
-   'Core/Date',
-   'Core/helpers/Object/isEmpty',
-   'WS.Data/Type/descriptor',
-   'Controls/Calendar/Utils',
    'SBIS3.CONTROLS/Utils/DateUtil',
-   'SBIS3.CONTROLS/Utils/IfEnabled',
+   'Controls/Calendar/Utils',
    'Controls/Calendar/MonthView/MonthViewModel',
    'tmpl!Controls/Calendar/MonthView/MonthView',
    'tmpl!Controls/Calendar/MonthView/MonthViewTableBody',
    'tmpl!Controls/Calendar/MonthView/day',
    'Controls/Calendar/interface/IMonth',
    'i18n!SBIS3.CONTROLS/Calendar',
-   'css!SBIS3.CONTROLS/Date/MonthView/MonthView'
+   'css!Controls/Calendar/MonthView/MonthView'
 ], function(
    BaseControl,
    constants,
    coreMerge,
-   detection,
-   _Date,
-   isEmpty,
-   types,
-   calendarUtils,
    DateUtil,
-   ifEnabled,
+   calendarUtils,
    MonthViewModel,
    dotTplFn,
    tableBodyTmpl,
@@ -92,13 +82,13 @@ define('Controls/Calendar/MonthView', [
          this._monthViewModel.updateOptions(newOptions);
       },
 
-      _dayClickHandler: ifEnabled(function(event, item) {
+      _dayClickHandler: function(event, item) {
          this._notify('itemClick', [item]);
-      }),
+      },
 
-      _mouseEnterHandler: ifEnabled(function(event, item) {
+      _mouseEnterHandler: function(event, item) {
          this._notify('itemMouseEnter', [item]);
-      }),
+      }
 
       // cancelSelection: function () {
       //    var canceled = MonthView.superclass.cancelSelection.call(this);

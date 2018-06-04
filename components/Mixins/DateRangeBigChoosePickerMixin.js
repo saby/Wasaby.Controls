@@ -17,6 +17,52 @@ define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
    var DateRangeBigChoosePickerMixin = /**@lends SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin.prototype  */{
       $protected: {
          _options: {
+
+            /**
+             * @cfg {String} Формат отображения данных в полях ввода
+             * Допустимые символы в маске:
+             * <ol>
+             *    <li>D(day) - календарный день.</li>
+             *    <li>M(month) - месяц.</li>
+             *    <li>Y(year) - год.</li>
+             *    <li>H(hour) - час.</li>
+             *    <li>I - минута</li>
+             *    <li>S(second) - секунда.</li>
+             *    <li>U - доля секунды.</li>
+             *    <li>".", "-", ":", "/" - разделители.</li>
+             * </ol>
+             * @example
+             * <pre>
+             *     <option name="mask">HH:II:SS.UUU</option>
+             * </pre>
+             * @variant 'DD.MM.YYYY'
+             * @variant 'DD.MM.YY'
+             * @variant 'DD.MM'
+             * @variant 'YYYY-MM-DD'
+             * @variant 'YY-MM-DD'
+             * @variant 'HH:II:SS.UUU'
+             * @variant 'HH:II:SS'
+             * @variant 'HH:II'
+             * @variant 'DD.MM.YYYY HH:II:SS.UUU'
+             * @variant 'DD.MM.YYYY HH:II:SS'
+             * @variant 'DD.MM.YYYY HH:II'
+             * @variant 'DD.MM.YY HH:II:SS.UUU'
+             * @variant 'DD.MM.YY HH:II:SS'
+             * @variant 'DD.MM.YY HH:II'
+             * @variant 'DD.MM HH:II:SS.UUU'
+             * @variant 'DD.MM HH:II:SS'
+             * @variant 'DD.MM HH:II'
+             * @variant 'YYYY-MM-DD HH:II:SS.UUU'
+             * @variant 'YYYY-MM-DD HH:II:SS'
+             * @variant 'YYYY-MM-DD HH:II'
+             * @variant 'YY-MM-DD HH:II:SS.UUU'
+             * @variant 'YY-MM-DD HH:II:SS'
+             * @variant 'YY-MM-DD HH:II'
+             * @variant 'YYYY'
+             * @variant 'MM/YYYY'
+             */
+            mask: 'DD.MM.YY',
+
             /**
              * @cfg {String} Режим выбора одной даты или диапазона дат
              * @variant range Режим выбора периода
@@ -138,12 +184,13 @@ define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
             element: element,
             startValue: this.getStartValue(),
             endValue: this.getEndValue(),
+            mask: this._options.mask,
             emptyCaption: this._options.emptyCaption,
             selectionType: this._options.selectionType,
             quantum: this._options.quantum,
             serializationMode: this._options.serializationMode,
             minQuantum: this._options.minQuantum
-         }
+         };
       },
 
       _onChooserRangeChange: function (e, start, end) {

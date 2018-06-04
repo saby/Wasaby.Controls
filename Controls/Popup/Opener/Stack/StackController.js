@@ -5,7 +5,8 @@ define('Controls/Popup/Opener/Stack/StackController',
       'WS.Data/Collection/List',
       'Controls/Popup/TargetCoords',
       'Core/Deferred',
-      'Core/constants'
+      'Core/constants',
+      'css!Controls/Popup/Opener/Stack/Stack'
    ],
    function(BaseController, StackStrategy, List, TargetCoords, Deferred, cConstants) {
       'use strict';
@@ -39,6 +40,16 @@ define('Controls/Popup/Opener/Stack/StackController',
                return MINIMAL_PANEL_WIDTH;
             }
             return newWidth;
+         },
+
+         prepareSizes: function(item, container) {
+            var templateStyle = getComputedStyle(container.children[0]);
+            if (!item.popupOptions.minWidth) {
+               item.popupOptions.minWidth = parseInt(templateStyle.minWidth, 10);
+            }
+            if (!item.popupOptions.maxWidth) {
+               item.popupOptions.maxWidth = parseInt(templateStyle.maxWidth, 10);
+            }
          },
 
          /**
@@ -82,18 +93,13 @@ define('Controls/Popup/Opener/Stack/StackController',
          },
 
          elementCreated: function(item, container) {
-            var templateStyle = getComputedStyle(container.children[0]);
-            if (!item.popupOptions.minWidth) {
-               item.popupOptions.minWidth = parseInt(templateStyle.minWidth, 10);
-            }
-            if (!item.popupOptions.maxWidth) {
-               item.popupOptions.maxWidth = parseInt(templateStyle.maxWidth, 10);
-            }
+            _private.prepareSizes(item, container);
             this._stack.add(item, 0);
             this._update();
          },
 
-         elementUpdated: function() {
+         elementUpdated: function(item, container) {
+            _private.prepareSizes(item, container);
             this._update();
          },
 
@@ -141,7 +147,7 @@ define('Controls/Popup/Opener/Stack/StackController',
          },
          _getTemplateContainer: function(container) {
             return container.getElementsByClassName('controls-Popup__template')[0];
-         },
+         }
       });
 
       return new StackController();

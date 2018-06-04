@@ -1,0 +1,62 @@
+.controls-SuggestV {
+	max-width: 100%;
+	position: relative;
+	display: inline-block;
+}
+
+.controls-SuggestV__inputRender {
+	width: 100%;
+}
+
+.controls-Suggest-close {
+	position: absolute;
+	top: 5px;
+	right: 0;
+}
+.controls-Suggest__suggestionsContainer {
+	position: absolute;
+	border-color: @suggest-picker-border-color;
+	border-style: solid;
+	box-sizing: border-box;
+	background-color: @background-color_Suggest-suggestionsContainer;
+	z-index: 1;
+}
+
+.controls-Suggest__suggestionsContainer-style-default {
+	width: 100%;
+	border-width: 0 @default-border-width @default-border-width @default-border-width;
+}
+
+.controls-Suggest__suggestionsContainer-style-overInput {
+	top: -(@spacing_Suggest_suggestionsContainer_overInput + @default-border-width);
+	left: -(@spacing_Suggest_suggestionsContainer_overInput + @default-border-width);
+	padding-top: @height_InputRender_default + (@spacing_Suggest_suggestionsContainer_overInput * 2);
+	border-width: @default-border-width;
+}
+
+.controls-Suggest-Text_style_overInput {
+	z-index: 2;
+}
+
+.controls-Suggest__footer {
+	.flexbox();
+}
+
+.controls-Suggest__showAllLink {
+	color: @color_Link-text;
+	text-decoration: @text-decoration_Link;
+	height: @height_Link;
+	line-height: @link-line-height;
+	cursor: @link-cursor;
+	padding: 0 8px;
+	margin-left: auto;
+}
+
+.controls-Suggest__showAllLink:hover {
+	color: @color_Link-text_hovered;
+	text-decoration: underline;
+}
+
+.controls-Suggest__tabs {
+	margin: @vertical-spacing_Suggest_tabs 0;
+}

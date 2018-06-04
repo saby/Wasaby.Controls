@@ -253,7 +253,7 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
          this._container.addClass('controls-CompositeView-' + this._options.viewMode);
 
          this._calculateTileHandler = this._calculateTile.bind(this);
-         this.subscribe('onDrawItems', this._calculateTileHandler);
+         this.subscribeTo(this, 'onDrawItems', this._calculateTileHandler);
    
          //TODO:Нужен какой то общий канал для ресайза окна
          $(window).bind('resize', this._calculateTileHandler);

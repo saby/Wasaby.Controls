@@ -1,19 +1,21 @@
-<div attr:class="controls-Grid__row controls-ListView__itemV" attr:key="{{itemData.dispItem.getHash()}}">
+<div attr:class="controls-Grid__row controls-ListView__itemV" attr:key="{{itemData.item.getId()}}">
    <ws:if data="{{contentTemplate}}">
       <ws:partial template="{{contentTemplate}}" itemData="{{itemData}}" itemActionsTemplate="{{itemActionsTemplate}}" swipeTemplate="{{swipeTemplate}}" multiSelectTpl="{{multiSelectTpl}}"/>
    </ws:if>
    <ws:else>
-      <ws:for data="itemData.resetColumnIndex(); itemData.isEndColumn(); itemData.goToNextColumn();">
+      <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex; itemData.goToNextColumn();">
          <div attr:class="{{itemData.getCurrentColumn().cellClasses}}" attr:style="{{itemData.ladderSupport ? itemData.getCurrentColumn().cellStyleForLadder}}">
-            <ws:if data="{{itemData.multiselect && itemData.columnIndex === 0}}">
-               <!-- todo заменить isSelected на isMultiselected -->
-               <div class="controls-Grid__checkboxArea js-controls-ListView__notEditable {{itemData.isSelected ? 'controls-Grid__checkbox_checked' : 'controls-Grid__checkbox_unchecked'}}"></div>
+            <ws:if data="{{itemData.multiSelectVisibility && itemData.columnIndex === 0}}">
+               <ws:partial template="{{multiSelectTpl}}" multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" attr:class="controls-ListView__checkbox"/>
             </ws:if>
             <ws:else>
                <ws:partial template="{{itemData.getCurrentColumn().template}}"
                            attr:class="{{itemData.getCurrentColumn().withLadder ? 'controls-Grid__row-cell__content_withLadder'}}"
                            contentData="{{itemData.getCurrentColumn()}}" />
             </ws:else>
+            <ws:if data="{{itemData.getLastColumnIndex() === itemData.columnIndex && itemData.itemActions  && itemData.itemActions.all && itemData.itemActions.all.length}}">
+               <ws:partial template="{{itemActionsTemplate}}"  itemData="{{itemData}}"/>
+            </ws:if>
          </div>
       </ws:for>
    </ws:else>
