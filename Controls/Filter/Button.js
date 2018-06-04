@@ -94,25 +94,20 @@ define('Controls/Filter/Button',
 
          _openFilterPanel: function() {
             if (!this._options.readOnly) {
-               /* if template - show old component */
-               if (this._options.filterTemplate) {
-                  _private.getFilterButtonCompatible(this).addCallback(function(panelOpener) {
-                     panelOpener.showFilterPanel();
-                  });
-               } else {
-                  this._children.filterStickyOpener.open({
-                     templateOptions: {
-                        items: this._options.items,
-                        itemTemplate: this._options.itemTemplate,
-                        itemTemplateProperty: this._options.itemTemplateProperty,
-                        additionalTemplate: this._options.additionalTemplate,
-                        additionalTemplateProperty: this._options.additionalTemplateProperty,
-                        historyId: this._options.historyId
-                     },
-                     template: 'Controls/Filter/Button/Panel',
-                     target: this._children.panelTarget
-                  });
-               }
+               var templatePanel = this._options.filterTemplate || 'Controls/Filter/Button/Panel';
+               this._children.filterStickyOpener.open({
+                  isCompoundTemplate: this._options.filterTemplate,
+                  templateOptions: {
+                     items: this._options.items,
+                     itemTemplate: this._options.itemTemplate,
+                     itemTemplateProperty: this._options.itemTemplateProperty,
+                     additionalTemplate: this._options.additionalTemplate,
+                     additionalTemplateProperty: this._options.additionalTemplateProperty,
+                     historyId: this._options.historyId
+                  },
+                  template: templatePanel,
+                  target: this._children.panelTarget
+               });
             }
          },
 

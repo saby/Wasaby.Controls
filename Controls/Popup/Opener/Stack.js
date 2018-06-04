@@ -1,10 +1,8 @@
 define('Controls/Popup/Opener/Stack',
    [
-      'Controls/Popup/Opener/BaseOpener',
-      'Controls/Popup/Opener/Stack/StackController',
-      'css!Controls/Popup/Opener/Stack/Stack'
+      'Controls/Popup/Opener/BaseOpener'
    ],
-   function(Base, Strategy) {
+   function(Base) {
       var POPUP_CLASS = 'controls-Stack';
 
       /**
@@ -25,7 +23,7 @@ define('Controls/Popup/Opener/Stack',
          open: function(config) {
             config.className = (config.className || '') + ' ' + POPUP_CLASS;
             this._setCompatibleConfig(config);
-            return Base.prototype.open.call(this, config, Strategy);
+            return Base.prototype.open.call(this, config, 'Controls/Popup/Opener/Stack/StackController');
          },
 
          _setCompatibleConfig: function(config) {

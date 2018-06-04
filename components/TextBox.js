@@ -157,6 +157,7 @@ define('SBIS3.CONTROLS/TextBox', [
              * @see setPlaceholder
              * @see textTransform
              * @translatable
+             * @content
              */
             placeholder: '',
             /**
