@@ -11,6 +11,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
       'Core/helpers/Function/debounce',
       'Core/helpers/Object/isEqual',
       'SBIS3.CONTROLS/CompoundControl',
+      'SBIS3.CONTROLS/Utils/ObjectChange',
       'SBIS3.CONTROLS/WaitIndicator',
       'WS.Data/Collection/RecordSet',
       'WS.Data/Di',
@@ -18,7 +19,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
       'css!SBIS3.CONTROLS/ExportCustomizer/_Formatter/View'
    ],
 
-   function (Deferred, coreDebounce, cObjectIsEqual, CompoundControl, WaitIndicator, RecordSet, Di, dotTplFn) {
+   function (Deferred, coreDebounce, cObjectIsEqual, CompoundControl, objectChange, WaitIndicator, RecordSet, Di, dotTplFn) {
       'use strict';
 
       /**
@@ -331,18 +332,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                throw new Error('Object required');
             }
             var options = this._options;
-            var waited = {fieldIds:true, fileUuid:false, consumer:true};
-            var has = {};
-            for (var name in values) {
-               if (name in waited) {
-                  var value = values[name];
-                  if (!(value == null && options[name] == null) && !(waited[name] ? cObjectIsEqual(value, options[name]) : value === options[name])) {
-                     has[name] = true;
-                     options[name] = value;
-                  }
-               }
-            }
-            if (has.fieldIds || has.fileUuid) {
+            var changes = objectChange(options, {fieldIds:true, fileUuid:false, consumer:true}, values);
+            if (changes && ('fieldIds' in changes || 'fileUuid' in changes)) {
                var method = options.fileUuid ? 'update' : 'create';
                var creating;
                if (method === 'create') {
