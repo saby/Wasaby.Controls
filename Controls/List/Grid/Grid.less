@@ -103,6 +103,7 @@
 .controls-Grid__row-cell, .controls-Grid__row-cell-editing {
    min-height: @min-height_Grid-row;
    position: relative;
+   border-top: @height-Grid-row-separator solid;
    // Default "min-width" value "auto" and width limited not working. Fix this bug by reset "min-width" value to "0".
    // http://css-live.ru/articles/chto-mozhet-polomat-maket-na-gridax-css-grid-layout.html
    min-width: 0;
@@ -146,9 +147,6 @@
 }
 .controls-Grid__cell_spacingRight {
    padding-right: @spacing_Grid-column / 2;
-}
-.controls-Grid__row-cell, .controls-Grid__row-cell-editing {
-   border-top: @height-Grid-row-separator solid;
 }
 .controls-Grid__row-cell__content_withLadder {
    visibility: hidden;
