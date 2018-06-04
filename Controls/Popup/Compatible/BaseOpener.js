@@ -16,6 +16,7 @@ function(cMerge) {
             template: cfg.template,
             type: cfg._type,
             handlers: cfg.handlers,
+            _shouldUpdate: cfg._shouldUpdate === undefined ? true : cfg._shouldUpdate, // В рамках оптимизации перерисовок compoundArea.
             _initCompoundArea: cfg._initCompoundArea
          };
 
