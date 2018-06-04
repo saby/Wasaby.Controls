@@ -13,7 +13,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/MenuLink',
       'SBIS3.CONTROLS/CompoundControl',
       'WS.Data/Di',
       'WS.Data/Collection/RecordSet',
-      'tmpl!SBIS3.CONTROLS/ExportCustomizer/MenuLink'
+      'tmpl!SBIS3.CONTROLS/ExportCustomizer/MenuLink',
+      'css!SBIS3.CONTROLS/ExportCustomizer/MenuLink'
    ],
 
    function (Deferred, CompoundControl, Di, RecordSet, tmpl) {
@@ -74,14 +75,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/MenuLink',
             var storage = this._storage;
             return (storage ? storage.load(options.presetNamespace) : Deferred.success(null)).addCallback(function (presets) {
                var items = [];
+               if (presets && presets.length) {
+                  items.push.apply(items, presets);
+               }
                var statics = options.staticPresets;
                if (statics && statics.length) {
                   items.push.apply(items, statics);
                }
-               if (presets && presets.length) {
-                  items.push.apply(items, presets);
-               }
-               items.push({id:'', title:rk('Создать новый шаблон', 'НастройщикЭкспорта')});
+               items.push({id:'', title:rk('Создать новый шаблон', 'НастройщикЭкспорта'), className:'controls-ExportCustomizer-MenuLink__last'});
                return new RecordSet({
                   rawData: items,
                   idProperty: 'id'
