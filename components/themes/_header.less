@@ -153,6 +153,10 @@
       .ws-header-content-mixin(@toggle-header-before-content, @toggle-header-before-font, @toggle-header-before-color);
       width: @toggle-header-before-width;
       float: left;
+      
+      &:hover {
+         .ws-header-content-mixin(@toggle-header-before-content, @toggle-header-before-font, @toggle-header-hover-color);
+      }
    }
 
    &.controls-ToggleButton__normal.controls-Button_size-default.controls-Checked__checked .controls-Button__content:before {
