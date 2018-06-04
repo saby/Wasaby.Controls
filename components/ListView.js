@@ -2665,7 +2665,7 @@ define('SBIS3.CONTROLS/ListView',
             // Поэтому вначале подскролливаем к тулбару и затем скролим к элементу.
             // Такой порядок выбран исходя из того, что запись имеет бо́льший приоритет при отображении, чем тулбар
             // https://online.sbis.ru/opendoc.html?guid=0e0b1cad-2d09-45f8-b705-b1756b52ad99
-            if (itemsToolbarContainer && this._isBottomStyleToolbar()) {
+            if (this._options.editMode.indexOf('toolbar')!== -1 && itemsToolbarContainer && this._isBottomStyleToolbar()) {
                LayoutManager.scrollToElement(itemsToolbarContainer, true);
             }
             this.scrollToItem(model);
