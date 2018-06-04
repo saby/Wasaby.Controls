@@ -3,6 +3,8 @@
  *
  * Для того, чтобы возможно было использовать сохранямые и редактируемые пресеты (предустановленные сочетания параметров экспорта), необходимо подключить модуль 'SBIS3.ENGINE/Controls/ExportPresets/Loader'
  *
+ * Кроме указанных опций доступны все опции компонента {@link SBIS3.CONTROLS/ExportCustomizer/MenuLink}
+ *
  * @public
  * @class SBIS3.CONTROLS/ExportCustomizer/MenuLink
  * @extends SBIS3.CONTROLS/CompoundControl
@@ -59,7 +61,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/MenuLink',
             if (Di.isRegistered(_DI_STORAGE_NAME)) {
                this._storage = Di.resolve(_DI_STORAGE_NAME);
             }
-            this._update();
+            //this._update();
             this.subscribeTo(menuLink, 'onActivated', function () {
                this._update().addCallback(menuLink.showPicker.bind(menuLink));
             }.bind(this));

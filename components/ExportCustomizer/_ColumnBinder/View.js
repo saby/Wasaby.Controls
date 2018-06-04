@@ -78,8 +78,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
             var options = View.superclass._modifyOptions.apply(this, arguments);
             options.fieldIds = options.fieldIds || [];
             options._columns = [
-               {field:'column', title:options.columnsTitle},
-               {field:'field', title:options.fieldsTitle}
+               {field:'column'/*, title:options.columnsTitle*/},
+               {field:'field'/*, title:options.fieldsTitle*/}
             ];
             options._rows = this._makeRows(options);
             return options;
