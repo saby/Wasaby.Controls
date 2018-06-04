@@ -1,7 +1,17 @@
-<div style="margin: 20px">
-   <Controls.Input.ComboBox source="{{_createMemory()}}"
-                            keyProperty="id"
-                            displayProperty="title"
-                            bind:selectedKey="_selectedKey"
-                            attr:style="width: 200px;"/>
+<div>
+   <div style="margin: 20px">
+      <Controls.Input.ComboBox source="{{_createMemory()}}"
+                               keyProperty="id"
+                               displayProperty="title"
+                               bind:selectedKey="_selectedKey"
+                               attr:style="width: 200px;"/>
+   </div>
+   <div style="margin: 20px">
+      Не указан selectedKey
+      <Controls.Input.ComboBox source="{{_createMemory()}}"
+                               keyProperty="id"
+                               displayProperty="title"
+                               bind:selectedKey="_selectedKey2"
+                               attr:style="width: 200px;"/>
+   </div>
 </div>
