@@ -1,14 +1,14 @@
 <div class="controls-FilterPanelChooser__afterChooserWrapper ws-flexbox ws-justify-content-between ws-flex-row-reverse">
-    <SBIS3.CONTROLS:Link name="controls-FilterPanelChooser__dictionaryButton"
+    <SBIS3.CONTROLS.Link name="controls-FilterPanelChooser__dictionaryButton"
                             className="controls-FilterPanelChooser__dictionaryButton additionalLink controls-Link__disabledHover"
                             caption="{{ captionFullList }}"
                             command="showDictionary">
-    </SBIS3.CONTROLS:Link>
-    <SBIS3.CONTROLS:Link name="controls-FilterPanelChooser__allButton"
+    </SBIS3.CONTROLS.Link>
+    <SBIS3.CONTROLS.Link name="controls-FilterPanelChooser__allButton"
                             className="controls-FilterPanelChooser__allButton additionalLink controls-Link__disabledHover"
                             caption="{{ 'Ещё' + ' ' + (properties.items.getCount() - 3) }}"
                             command="showFullList"
                             commandArgs="{{ [true] }}"
                             visible="{{ properties.items.getCount() > 3 }}">
-    </SBIS3.CONTROLS:Link>
+    </SBIS3.CONTROLS.Link>
 </div>

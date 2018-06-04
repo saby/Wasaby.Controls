@@ -1,13 +1,13 @@
 <div class="controls-PrintMassDialog" hasMarkup="true" autoHeight="true">
    <div class="ws-window-titlebar-custom">
-      <SBIS3.CONTROLS:Button
+      <SBIS3.CONTROLS.Button
          primary="{{true}}"
          caption="Выполнить"
          name="controls-buttonPrint"
          className="controls-Button__activatePrintMass"
       />
    </div>
-   <SBIS3.CONTROLS:Radio:Group
+   <SBIS3.CONTROLS.Radio.Group
       idProperty="id"
       displayProperty="title"
       name="controls-RadioButtons"
@@ -18,7 +18,7 @@
    />
    <div class="controls-MassAmountSelector__numberTextBox ws-hidden" id="numberTextBox">
       <div class="ws-label controls-PrintMassDialog__label">Количество записей</div>
-      <SBIS3.CONTROLS:NumberTextBox
+      <SBIS3.CONTROLS.NumberTextBox
          integers="5"
          maxLength="5"
          onlyInteger="{{true}}"

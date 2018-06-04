@@ -13,7 +13,7 @@
       </div>
    </ws:if>
    <ws:else>
-      <SBIS3.CONTROLS:ScrollContainer
+      <SBIS3.CONTROLS.ScrollContainer
          class="controls-ScrollContainer_flex controls-RichEditor__scrollContainer"
          style="{{autoHeight && maximalHeight && maximalHeight != 0 ? 'max-height:' + maximalHeight + 'px;' }}"
          takeScrollbarHidden="{{!(autoHeight && maximalHeight == 0)}}"
@@ -30,7 +30,7 @@
          <div class="controls-RichEditor__sourceContainer ws-hidden">
             <textarea class="controls-RichEditor__sourceArea"></textarea>
          </div>
-      </SBIS3.CONTROLS:ScrollContainer>
+      </SBIS3.CONTROLS.ScrollContainer>
    </ws:else>
    <textarea class="controls-RichEditor__fakeArea" tabindex="0"></textarea>
 </div>

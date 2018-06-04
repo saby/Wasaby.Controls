@@ -19,8 +19,8 @@
       <ws:partial template="{{_options.footerTemplate}}"/>
    </div>
    <!--todo Emitter должен переехать в попап, когда будем делать попапы, показывающиеся при наведении мыши-->
-   <Controls:Event:Emitter if="{{_hasHierarchy}}" event="mousemove" on:mousemove="_mousemoveHandler()"/>
-   <Controls:Dropdown:Opener if="{{_hasHierarchy}}"
+   <Controls.Event.Emitter if="{{_hasHierarchy}}" event="mousemove" on:mousemove="_mousemoveHandler()"/>
+   <Controls.Dropdown.Opener if="{{_hasHierarchy}}"
                              name="subDropdownOpener"
                              on:onSelectedItemChange="resultHandler()"
                              className="controls-DropdownList__subMenu controls-DropdownList__subMenu_margin">
@@ -28,6 +28,6 @@
          <ws:corner horizontal="right"/>
          <ws:eventHandlers onResult="{{resultHandler}}"/>
       </ws:popupOptions>
-   </Controls:Dropdown:Opener>
+   </Controls.Dropdown.Opener>
 </div>
 

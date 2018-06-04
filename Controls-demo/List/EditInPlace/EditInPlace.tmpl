@@ -1,7 +1,7 @@
 <div class="editInPlaceDemo">
     <div>
         <h3>Simple list</h3>
-        <Controls:List
+        <Controls.List
                 name="list"
                 source="{{_viewSource}}"
                 on:beforeItemEdit="_onItemEdit()"
@@ -29,8 +29,8 @@
                     </ws:contentTemplate>
                 </ws:partial>
             </ws:itemTemplate>
-        </Controls:List>
-        <Controls:List:AddButton caption="Add record" on:click="addItem()"/>
+        </Controls.List>
+        <Controls.List.AddButton caption="Add record" on:click="addItem()"/>
         <div attr:style="padding: 15px; background-color: rgba(81,81,81,0.11); width: 150px;">
             <h3>Select options:</h3>
             <div>
@@ -43,7 +43,7 @@
     </div>
     <div>
         <h3>Adding doesn't work in this list</h3>
-        <Controls:List
+        <Controls.List
                 name="list2"
                 source="{{_viewSource2}}"
                 on:beforeItemAdd="_cancelItemAdd()"
@@ -67,12 +67,12 @@
                     </ws:contentTemplate>
                 </ws:partial>
             </ws:itemTemplate>
-        </Controls:List>
-        <Controls:List:AddButton caption="Add record" on:click="list2.addItem()"/>
+        </Controls.List>
+        <Controls.List.AddButton caption="Add record" on:click="list2.addItem()"/>
     </div>
     <div>
         <h3>onBeforeItemAdd handler returns Deferred</h3>
-        <Controls:List
+        <Controls.List
                 name="list3"
                 source="{{_viewSource3}}"
                 on:beforeItemAdd="_deferredItemAdd()"
@@ -96,11 +96,11 @@
                     </ws:contentTemplate>
                 </ws:partial>
             </ws:itemTemplate>
-        </Controls:List>
+        </Controls.List>
     </div>
     <div>
         <h3>Editing starts before mounting to DOM</h3>
-        <Controls:List
+        <Controls.List
                 name="list4"
                 source="{{_viewSource4}}"
                 allowEmptySelection="{{false}}"
@@ -123,11 +123,11 @@
                     </ws:contentTemplate>
                 </ws:partial>
             </ws:itemTemplate>
-        </Controls:List>
+        </Controls.List>
     </div>
     <div>
         <h3>Adding starts before mounting to DOM</h3>
-        <Controls:List
+        <Controls.List
                 name="list5"
                 source="{{_viewSource5}}"
                 allowEmptySelection="{{false}}"
@@ -150,6 +150,6 @@
                     </ws:contentTemplate>
                 </ws:partial>
             </ws:itemTemplate>
-        </Controls:List>
+        </Controls.List>
     </div>
 </div>

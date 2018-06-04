@@ -1,6 +1,6 @@
 <div class="controls-RichEditor {{singleLine ? 'controls-RichEditor_singleLine' : (autoHeight ? 'controls-RichEditor_autoHeight' : 'controls-RichEditor_fixedHeight')}}{{enabled && toolbar && toolbarVisible ? ' controls-RichEditor_toolbarExpanded' : ''}}">
    <ws:if data="{{enabled && toolbar}}">
-      <SBIS3.CONTROLS:RichEditor:Components:Toolbar
+      <SBIS3.CONTROLS.RichEditor.Components.Toolbar
          name="RichEditorToolbar"
          expanded="{{toolbarVisible}}"
          items="{{ items }}"/>

@@ -1,5 +1,5 @@
 <div class="controls-DateRange">
-    <SBIS3.CONTROLS:Date:Box
+    <SBIS3.CONTROLS.Date.Box
        mask="{{mask}}"
        date="{{startValue}}"
        autocompleteMode="start"
@@ -9,7 +9,7 @@
        size="{{size ? size : 'default' }}"
     />
     <div class="controls-DateRange__dash"></div>
-    <SBIS3.CONTROLS:Date:Box
+    <SBIS3.CONTROLS.Date.Box
        mask="{{mask}}"
        date="{{endValue}}"
        autocompleteMode="end"
@@ -19,7 +19,7 @@
        className="controls-DateRange__DatePickerEnd"
        size="{{size ? size : 'default' }}"
     />
-    <SBIS3.CONTROLS:Button:IconButton
+    <SBIS3.CONTROLS.Button.IconButton
        tabindex="0"
        name="DateRange__Button"
        className="controls-DateRange__button controls-DateRange__button_size_{{ size ? size : 'default' }}"
