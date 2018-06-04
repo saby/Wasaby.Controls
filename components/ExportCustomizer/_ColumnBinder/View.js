@@ -11,12 +11,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
       'Core/helpers/Object/isEqual',
       'SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
       'SBIS3.CONTROLS/CompoundControl',
+      'SBIS3.CONTROLS/Utils/ObjectChange',
       'WS.Data/Collection/RecordSet',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
       'css!SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View'
    ],
 
-   function (CommandDispatcher, cObjectIsEqual, ColumnsEditor, CompoundControl, RecordSet, dotTplFn) {
+   function (CommandDispatcher, cObjectIsEqual, ColumnsEditor, CompoundControl, objectChange, RecordSet, dotTplFn) {
       'use strict';
 
       var View = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View.prototype*/ {
@@ -294,14 +295,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
             if (!values || typeof values !== 'object') {
                throw new Error('Object required');
             }
-            var options = this._options;
-            if ('fieldIds' in values) {
-               var fieldIds = values.fieldIds;
-               var has = fieldIds && fieldIds.length ? !cObjectIsEqual(fieldIds, options.fieldIds) : !!(options.fieldIds && options.fieldIds.length);
-               if (has) {
-                  options.fieldIds = fieldIds || [];
-                  this._redraw();
-               }
+            var changes = objectChange(this._options, {fieldIds:true}, values);
+            if (changes && 'fieldIds' in changes) {
+               this._redraw();
             }
          },
 
