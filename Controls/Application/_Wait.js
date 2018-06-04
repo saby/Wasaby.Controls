@@ -19,6 +19,7 @@ define('Controls/Application/_Wait',
                   return result;
                });
             } else {
+               //TODO: убрать когда полечат ошибку
                if (self.waitDef && !self.waitDef.isReady()) {
                   self.waitDef.callback({});
                }

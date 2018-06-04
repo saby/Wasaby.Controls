@@ -521,12 +521,9 @@ define('Controls/List/BaseControl', [
                this._listViewModel.select([itemData.key]);
             }
          }
-         if (direction === 'right') {
+         if (direction === 'right' || direction === 'left') {
             var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.viewConfig.keyProperty);
             this._listViewModel.setMarkedKey(newKey);
-         }
-         if (direction === 'left') {
-            this._listViewModel.update();
          }
       },
 
