@@ -66,4 +66,9 @@ define('Controls/interface/IStickyOpener', [], function() {
     * @name Controls/interface/IStickyOpener#targetTracking
     * @cfg {Boolean} Popup follows the target
     */
+
+   /**
+    * @name Controls/interface/IStickyOpener#closeOnTargetScroll
+    * @cfg {Boolean} Close popup on scroll
+    */
 });

@@ -13,13 +13,12 @@ define('Controls/Application/_Wait',
          _template: function() {
             var res = template.apply(this, arguments);
             var self = this;
-            if (res.addCallback && !res.isReady()) {
+            if (res.addCallback && !res.isReady() && !self.waitDef.isReady()) {
                res.addCallback(function(result) {
                   self.waitDef.callback({});
                   return result;
                });
             } else {
-               //TODO: убрать когда полечат ошибку
                if (self.waitDef && !self.waitDef.isReady()) {
                   self.waitDef.callback({});
                }
