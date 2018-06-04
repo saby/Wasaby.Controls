@@ -1,10 +1,12 @@
-<div class="controls-DropdownList__beforeCaptionWrapper" if="{{!!text}}">
-    <svg class="controls-DropdownList__arrowIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 5 9">
-       <path d="M0,.47A.48.48,0,0,1,.13.14.4.4,0,0,1,.44,0,1,1,0,0,1,.75.16L4.91,4.22,5,4.34a.41.41,0,0,1,0,.31l-.06.13L.75,8.84A1,1,0,0,1,.44,9a.4.4,0,0,1-.31-.14A.48.48,0,0,1,0,8.53Z"></path>
-    </svg>
-</div>
-<div class="controls-DropdownList__textWrapper">
-<span class="controls-DropdownList__text"><span if="{{_selectedItemIcon}}" class="{{_selectedItemIcon}} controls-DropdownList__icon"></span> <span class="controls-DropdownList__value">{{text}}</span></span>
+<div class="controls-DropdownList__captionWrapper">
+    <div class="controls-DropdownList__beforeCaptionWrapper" if="{{!!text}}">
+        <svg class="controls-DropdownList__arrowIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 5 9">
+           <path d="M0,.47A.48.48,0,0,1,.13.14.4.4,0,0,1,.44,0,1,1,0,0,1,.75.16L4.91,4.22,5,4.34a.41.41,0,0,1,0,.31l-.06.13L.75,8.84A1,1,0,0,1,.44,9a.4.4,0,0,1-.31-.14A.48.48,0,0,1,0,8.53Z"></path>
+        </svg>
+    </div>
+    <div class="controls-DropdownList__textWrapper">
+        <span class="controls-DropdownList__text"><span if="{{_selectedItemIcon}}" class="{{_selectedItemIcon}} controls-DropdownList__icon"></span> <span class="controls-DropdownList__value">{{text}}</span></span>
+    </div>
 </div>
 <div class="controls-DropdownList__afterCaptionWrapper" if="{{!!text}}">
 <i class="controls-DropdownList__crossIcon icon-size icon-Close icon-disabled"></i>
