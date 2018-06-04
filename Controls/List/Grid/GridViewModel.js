@@ -379,12 +379,12 @@ define('Controls/List/Grid/GridViewModel', [
             this._model.setMarkedKey(key);
          },
 
-         update: function () {
+         update: function() {
             this._model.update();
             this._notify('onListChange');
          },
 
-         getSwipeItem: function () {
+         getSwipeItem: function() {
             return this._model.getSwipeItem();
          },
 
