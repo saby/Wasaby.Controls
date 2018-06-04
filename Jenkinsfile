@@ -402,30 +402,30 @@ node('controls') {
                 sudo chmod -R 0777 ${workspace}
                 sudo chmod -R 0777 /home/sbis/Controls
             """
-            //Пакуем данные
-            writeFile file: "/home/sbis/Controls/intest-ps/ui/Core.package.json", text: """
-                {
-                "includeCore":true,
-                "platformPackage": true,
-                "include":[
-                "Core/*",
-                "SBIS3.CONTROLS.ItemsControlMixin"
-                ],
-                "modules" : [
-                "Core/core",
-                "SBIS3.CONTROLS.ItemsControlMixin"
-                ],
-                    "output" : "/resources/Core.module.js"
-                }"""
-            sh """
-                cd ./jinnee/distrib/builder
-                cp -rf ${workspace}/jinnee/ws /home/sbis/Controls/intest-ps/ui/
-                node ./node_modules/grunt-cli/bin/grunt xhtmlmin --root=/home/sbis/Controls/intest-ps/ui --application=/
-                node ./node_modules/grunt-cli/bin/grunt xhtml-build --root=/home/sbis/Controls/intest-ps/ui --application=/
-                node ./node_modules/grunt-cli/bin/grunt tmpl-build --root=/home/sbis/Controls/intest-ps/ui --application=/
-                node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/sbis/Controls/intest-ps/ui --application=/
-                sudo systemctl restart Controls_ps
-            """
+            // //Пакуем данные
+            // writeFile file: "/home/sbis/Controls/intest-ps/ui/Core.package.json", text: """
+            //     {
+            //     "includeCore":true,
+            //     "platformPackage": true,
+            //     "include":[
+            //     "Core/*",
+            //     "SBIS3.CONTROLS.ItemsControlMixin"
+            //     ],
+            //     "modules" : [
+            //     "Core/core",
+            //     "SBIS3.CONTROLS.ItemsControlMixin"
+            //     ],
+            //         "output" : "/resources/Core.module.js"
+            //     }"""
+            // sh """
+            //     cd ./jinnee/distrib/builder
+            //     cp -rf ${workspace}/jinnee/ws /home/sbis/Controls/intest-ps/ui/
+            //     node ./node_modules/grunt-cli/bin/grunt xhtmlmin --root=/home/sbis/Controls/intest-ps/ui --application=/
+            //     node ./node_modules/grunt-cli/bin/grunt xhtml-build --root=/home/sbis/Controls/intest-ps/ui --application=/
+            //     node ./node_modules/grunt-cli/bin/grunt tmpl-build --root=/home/sbis/Controls/intest-ps/ui --application=/
+            //     node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/sbis/Controls/intest-ps/ui --application=/
+            //     sudo systemctl restart Controls_ps
+            // """
         }
         writeFile file: "./controls/tests/int/config.ini", text:
             """# UTF-8
