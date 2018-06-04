@@ -59,6 +59,7 @@ define('SBIS3.CONTROLS/WSControls/Buttons/ButtonBase', [
              *     <option name="caption">Сохранить</option>
              * </pre>
              * @translatable
+             * @content
              * @see setCaption
              * @see getCaption
              */
