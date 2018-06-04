@@ -187,11 +187,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
          /**
           * Открыть редактор колонок
           * @protected
-          * @param {string} fieldId Идентификатор текущего поля
+          * @param {Array<string>} fieldIds Список идентификаторов выбранных полей
           * @param {boolean} singleMode Открывать редактор колонок без возможности множественного выделения
           * @return {Core/Deferred<Array<string>>}
           */
-         _openColumnsEditor: function (fieldId, singleMode) {
+         _openColumnsEditor: function (fieldIds, singleMode) {
             if (!this._columnsEditor) {
                this._columnsEditor = new ColumnsEditor();
             }
@@ -207,10 +207,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
             return this._columnsEditor.open(
                {
                   columns: options.allFields,
-                  selectedColumns: fieldId ? [fieldId] : []
+                  selectedColumns: fieldIds || []
                },
                {
-                  title: fieldId ? rk('Выберите поле данных', 'НастройщикЭкспорта') : rk('Выбор полей данных', 'НастройщикЭкспорта'),
+                  title: singleMode ? rk('Выберите поле данных', 'НастройщикЭкспорта') : rk('Выбор полей данных', 'НастройщикЭкспорта'),
                   applyButtonTitle: rk('Выбрать', 'НастройщикЭкспорта'),
                   width: this._container.width(),
                   groupTitles: options.fieldGroupTitles,
@@ -232,7 +232,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
           * @protected
           */
          _onAdd: function () {
-            this._openColumnsEditor().addCallback(this._replaceField.bind(this, null));
+            var fieldIds = this._options.fieldIds;
+            this._openColumnsEditor(fieldIds, false).addCallback(this._replaceField.bind(this, fieldIds));
          },
 
          /**
@@ -241,10 +242,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
           * @param {Core/EventObject} evtName Дескриптор события
           * @param {object} data Информация о редактируемой строке (id, item)
           */
-         _onEdit: function (evtName, data) {
-            var fieldId = data ? data.id : null;
-            this._openColumnsEditor(fieldId, true).addCallback(this._replaceField.bind(this, fieldId));
-         },
+         /*_onEdit: function (evtName, data) {
+            var fieldIds = data ? [data.id] : null;
+            this._openColumnsEditor(fieldIds, true).addCallback(this._replaceField.bind(this, fieldIds));
+         },*/
 
          /**
           * Обработчик события при удалении строки списка колонок
@@ -265,15 +266,23 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
          },
 
          /**
-          * Заместить в списке полей удаляемое поле на новые поля. Если удаляемого поля нет, то новые поля будут добавлены в конец. Если нет новых полей - ничего не произойдёт
+          * Заместить в списке полей удаляемые поля на новые поля. Если удаляемого поля нет, то новые поля будут добавлены в конец. Если нет новых полей - ничего не произойдёт
           * @protected
-          * @param {string} removedId Идентификатор удаляемого поля
+          * @param {Array<string>} removedIds Список идентификаторов удаляемых полей
           * @param {Array<string>} insertedIds список идентификаторов новых полей
           */
-         _replaceField: function (removedId, insertedIds) {
+         _replaceField: function (removedIds, insertedIds) {
             if (insertedIds && insertedIds.length) {
                var fieldIds = this._options.fieldIds;
-               _arrayInsert(fieldIds, removedId ? fieldIds.indexOf(removedId) : null, insertedIds);
+               if (removedIds && removedIds.length) {
+                  for (var i = removedIds.length - 1; 0 <= i; i--) {
+                     var j = fieldIds.indexOf(removedIds[i]);
+                     if (j !== -1) {
+                        fieldIds.splice(j, 1);
+                     }
+                  }
+               }
+               fieldIds.push.apply(fieldIds, insertedIds);
                this._redraw();
                this._grid.setSelectedKey(insertedIds[0]);
                this.sendCommand('subviewChanged');
@@ -338,7 +347,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
        * @param {number} index Позиция для вставки
        * @param {Array<*>} items Новые элементы для вставки
        */
-      var _arrayInsert = function (list, index, items) {
+      /*var _arrayInsert = function (list, index, items) {
          if (items && items.length) {
             var hasIndex = typeof index === 'number' && 0 <= index;
             for (var i = 0; i < items.length; i++) {
@@ -354,7 +363,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
             args.push.apply(args, items);
             list.splice.apply(list, args);
          }
-      };
+      };*/
 
       /**
        * Создать буквенное обозначение для числа
