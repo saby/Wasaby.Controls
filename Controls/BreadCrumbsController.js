@@ -1,13 +1,11 @@
 define('Controls/BreadCrumbsController', [
    'Core/Control',
    'Controls/Utils/BreadCrumbsUtil',
-   'Controls/List/resources/utils/ItemsUtil',
    'Controls/Utils/FontLoadUtil',
    'tmpl!Controls/BreadCrumbsController/BreadCrumbsController'
 ], function(
    Control,
    BreadCrumbsUtil,
-   ItemsUtil,
    FontLoadUtil,
    template
 ) {
