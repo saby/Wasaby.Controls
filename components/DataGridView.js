@@ -1340,24 +1340,24 @@ define('SBIS3.CONTROLS/DataGridView',
       _dragStart: function(e) {
          if (this._isPartScrollVisible) {
             constants.$body.addClass('ws-unSelectable');
-   
-            /* Если скролл происходит перетаскиванием заголовков
-             то выставим соответствующие флаги */
-            this._isHeaderScrolling =
-               e.currentTarget !== this._thumb[0] && //Проверка, что перетаскиваем не ползунок, т.к. он тоже лежит в шапке
-               this._thead && this._thead.find(e.currentTarget).length;
-   
-            if (this._isHeaderScrolling) {
-               this.getContainer().addClass('controls-DataGridView__scrollingNow');
-            }
-            /* На touch устройствах надо перевести фокус(нативный) на ползунок,
-             т.к. сейчас взаимодействие происходит с ним. Иначе могут возникать проблемы,
-             когда курсор остаётся в поле ввода, или ховер останется на иконке другой */
-            if (this._touchSupport) {
-               this._thumb.focus();
-            }
-            this._scrollingNow = true;
          }
+   
+         /* Если скролл происходит перетаскиванием заголовков
+          то выставим соответствующие флаги */
+         this._isHeaderScrolling =
+            e.currentTarget !== this._thumb[0] && //Проверка, что перетаскиваем не ползунок, т.к. он тоже лежит в шапке
+            this._thead && this._thead.find(e.currentTarget).length;
+   
+         if (this._isHeaderScrolling) {
+            this.getContainer().addClass('controls-DataGridView__scrollingNow');
+         }
+         /* На touch устройствах надо перевести фокус(нативный) на ползунок,
+          т.к. сейчас взаимодействие происходит с ним. Иначе могут возникать проблемы,
+          когда курсор остаётся в поле ввода, или ховер останется на иконке другой */
+         if (this._touchSupport) {
+            this._thumb.focus();
+         }
+         this._scrollingNow = true;
       },
 
       updateScrollAndColumns: function(force) {
