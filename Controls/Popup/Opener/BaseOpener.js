@@ -1,12 +1,13 @@
 define('Controls/Popup/Opener/BaseOpener',
    [
       'Core/Control',
+      'tmpl!Controls/Popup/Opener/BaseOpener',
       'Controls/Popup/Manager/ManagerController',
       'Core/core-clone',
       'Core/core-merge',
       'Core/Deferred'
    ],
-   function(Control, ManagerController, CoreClone, CoreMerge, Deferred) {
+   function(Control, Template, ManagerController, CoreClone, CoreMerge, Deferred) {
 
       /**
        * Базовый опенер
@@ -18,6 +19,8 @@ define('Controls/Popup/Opener/BaseOpener',
        * @author Лощинин Дмитрий
        */
       var Base = Control.extend({
+         _template: Template,
+
          _beforeUnmount: function() {
             if (this._options.closePopupBeforeUnmount) {
                this.close();
@@ -109,6 +112,17 @@ define('Controls/Popup/Opener/BaseOpener',
          close: function() {
             if (this._popupId) {
                ManagerController.remove(this._popupId);
+            }
+         },
+
+         _scrollHandler: function(event) {
+            //listScroll стреляет событием много раз, нужно обработать только непосредственно скролл списка
+            if (this.isOpened() && event.type === 'listscroll') {
+               if (this._options.targetTracking) {
+                  ManagerController.popupUpdated(this._popupId);
+               } else if (this._options.closeOnTargetScroll) {
+                  this.close();
+               }
             }
          },
 
