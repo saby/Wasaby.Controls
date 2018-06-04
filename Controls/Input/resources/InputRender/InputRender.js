@@ -101,6 +101,7 @@ define('Controls/Input/resources/InputRender/InputRender',
          },
 
          _clickHandler: function(e) {
+            e.stopPropagation();
             _private.saveSelection(this, e.target);
          },
 
