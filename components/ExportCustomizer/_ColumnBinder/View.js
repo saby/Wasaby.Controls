@@ -11,13 +11,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
       'Core/helpers/Object/isEqual',
       'SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
       'SBIS3.CONTROLS/CompoundControl',
+      'SBIS3.CONTROLS/Controllers/ItemsMoveController',
       'SBIS3.CONTROLS/Utils/ObjectChange',
       'WS.Data/Collection/RecordSet',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
       'css!SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View'
    ],
 
-   function (CommandDispatcher, cObjectIsEqual, ColumnsEditor, CompoundControl, objectChange, RecordSet, dotTplFn) {
+   function (CommandDispatcher, cObjectIsEqual, ColumnsEditor, CompoundControl, ItemsMoveController, objectChange, RecordSet, dotTplFn) {
       'use strict';
 
       var View = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View.prototype*/ {
@@ -94,6 +95,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
             View.superclass.init.apply(this, arguments);
             this._grid = this.getChildControlByName('controls-ExportCustomizer-ColumnBinder-View__grid');
             this._grid.setItemsActions(this._makeRowActions());
+            this._gridMoveController = new ItemsMoveController({
+               linkedView: this._grid
+            });
             this._bindEvents();
          },
 
@@ -312,6 +316,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
             return {
                fieldIds: this._options.fieldIds
             };
+         },
+
+         destroy: function () {
+            if (this._gridMoveController) {
+               this._gridMoveController.destroy();
+            }
+            View.superclass.destroy.apply(this, arguments);
          }
       });
 
