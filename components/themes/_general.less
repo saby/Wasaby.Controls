@@ -2,30 +2,6 @@
 @import "_header";
 @import "_mixins";
 
-body {
-  /* Better Font Rendering =========== */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-button::-moz-focus-inner,
-input[type="button"]::-moz-focus-inner,
-input[type="submit"]::-moz-focus-inner,
-input[type="reset"]::-moz-focus-inner {
-  padding: 0 !important;
-  border: 0 none !important;
-}
-
-/*Кроссбраузерность
-Скрытие иконки автозаполнения в полях ввода в браузере Safari на MacOS
- */
-input::-webkit-contacts-auto-fill-button {
-  visibility: hidden;
-  display: none !important;
-  pointer-events: none;
-  position: absolute;
-  right: 0;
-}
-
 .line-overflow-blur {
   position: relative;
   float: right;
@@ -262,6 +238,10 @@ input::-webkit-contacts-auto-fill-button {
          font-size: @money-decorator-integer-no-accent-registry-font-size;
          color: @money-decorator-integer-no-accent-registry-font-color;
          font-weight: bold;
+      }
+      &__Error {
+         font-weight: bold;
+         color: @error-color;
       }
    }
    &__fraction{

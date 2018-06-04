@@ -1,10 +1,8 @@
 define('Controls/Popup/Opener/Dialog',
    [
-      'Controls/Popup/Opener/BaseOpener',
-      'Controls/Popup/Opener/Dialog/DialogController'
-
+      'Controls/Popup/Opener/BaseOpener'
    ],
-   function(Base, Strategy) {
+   function(Base) {
       /**
        * Действие открытия окна
        * @class Controls/Popup/Opener/Dialog
@@ -21,7 +19,7 @@ define('Controls/Popup/Opener/Dialog',
           * @param config конфигурация попапа
           */
          open: function(config) {
-            Base.prototype.open.call(this, config, Strategy);
+            Base.prototype.open.call(this, config, 'Controls/Popup/Opener/Dialog/DialogController');
          }
       });
 

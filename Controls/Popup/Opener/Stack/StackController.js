@@ -5,7 +5,8 @@ define('Controls/Popup/Opener/Stack/StackController',
       'WS.Data/Collection/List',
       'Controls/Popup/TargetCoords',
       'Core/Deferred',
-      'Core/constants'
+      'Core/constants',
+      'css!Controls/Popup/Opener/Stack/Stack'
    ],
    function(BaseController, StackStrategy, List, TargetCoords, Deferred, cConstants) {
       'use strict';

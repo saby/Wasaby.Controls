@@ -2,7 +2,6 @@ define('Controls/List/Swipe/SwipeControl', [
    'Core/Control',
    'tmpl!Controls/List/Swipe/SwipeControl',
    'Controls/Application/TouchDetector/TouchContextField',
-   'Core/compatibility',
    'Controls/List/ItemActions/Utils/Actions',
    'Controls/Utils/Toolbar',
    'css!Controls/List/Swipe/Swipe'
@@ -10,7 +9,6 @@ define('Controls/List/Swipe/SwipeControl', [
    Control,
    template,
    TouchContextField,
-   compatibility,
    aUtil
 ) {
    'use strict';

@@ -50,7 +50,7 @@
         </div>
         <div class="optionsBlock">
             <h3>Опции заголовка</h3>
-            <ws:Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_showCaption" caption="Показывать заголовок" attr:test_name="ShowCaption"/>
+            <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_showCaption" caption="Показывать заголовок" attr:test_name="ShowCaption"/>
             <Controls:Label name="myLabel1" caption="size:"/>
             <Controls.Toggle.Radio
                     on:selectedKeyChanged="changeSize()"
@@ -72,7 +72,7 @@
                     readOnly="{{false}}"
 					attr:test_name="CaptionStyle"/>
             <h3>Опции счетчика</h3>
-            <ws:Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_showCounter" caption="Показывать счетчик" attr:test_name="ShowCounter"/>
+            <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_showCounter" caption="Показывать счетчик" attr:test_name="ShowCounter"/>
             <Controls:Label name="myLabel1" caption="value"/>
             <Controls:Input:Number bind:value="_counterValue"/>
             <Controls:Label name="myLabel1" caption="style:"/>
@@ -94,7 +94,7 @@
                     readOnly="{{false}}"
 					attr:test_name="CounterSize"/>
             <h3>Опции кнопки-разделителя</h3>
-            <ws:Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_showButtonSeparator" caption="Показывать кнопку-разделитель" attr:test_name="ShowButtonSeparator"/>
+            <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_showButtonSeparator" caption="Показывать кнопку-разделитель" attr:test_name="ShowButtonSeparator"/>
             <Controls:Label name="myLabel1" caption="style:"/>
             <Controls.Toggle.Radio
                     on:selectedKeyChanged="separatorChangeStyle()"
@@ -105,9 +105,9 @@
                     readOnly="{{false}}"
 					attr:test_name="IconStyle"/>
             <br/>
-            <ws:Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_bold" caption="bold" attr:test_name="bold"/>
+            <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_bold" caption="bold" attr:test_name="bold"/>
             <h3>Опции иконки</h3>
-            <ws:Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_showSeparator" caption="Показывать иконку у заголовка" attr:test_name="ShowHeaderSeparator"/>
+            <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_showSeparator" caption="Показывать иконку у заголовка" attr:test_name="ShowHeaderSeparator"/>
             <Controls:Label name="myLabel1" caption="style(только для тем carry и presto):"/>
             <Controls.Toggle.Radio
                     on:selectedKeyChanged="iconChangeStyle()"

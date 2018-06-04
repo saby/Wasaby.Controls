@@ -17,6 +17,13 @@ define('Controls/Application/HeadDataContext', [
       modDeps = {links: {}, nodes: {}};
    }
 
+   var contents;
+   try {
+      contents = require('json!resources/contents');
+   } catch (e) {
+      contents = {};
+   }
+
    /**
     * Checks if bundle has any css
     * @param bundle
@@ -132,6 +139,11 @@ define('Controls/Application/HeadDataContext', [
          if (curNodeDeps && curNodeDeps.length) {
             for (var i = 0; i < curNodeDeps.length; i++) {
                var node = curNodeDeps[i];
+               var splitted = node.split('!');
+               if (splitted[0] === 'optional' && splitted.length > 1) {
+                  splitted.shift();
+                  node = splitted.join('!');
+               }
                if (!allDeps[node]) {
                   var nodeDeps = modDeps.links[node];
                   allDeps[node] = true;
@@ -144,7 +156,7 @@ define('Controls/Application/HeadDataContext', [
       var allDeps = {};
       recursiveWalker(allDeps, deps);
       var files = {js: [], css: []};
-      if (cookie.get('s3debug') !== 'true') {
+      if (cookie.get('s3debug') !== 'true' || contents.buildMode !== 'debug') {
          var jsBundles = checkForBundles(allDeps); // Find all bundles, and removes dependencies that are included in bundles
          var cssBundles = getDependentCss(jsBundles);
          for (var key in jsBundles) {

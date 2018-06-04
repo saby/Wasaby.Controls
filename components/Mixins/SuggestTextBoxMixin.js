@@ -159,7 +159,9 @@ define('SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin', [
             return;
          }
          this._getHistoryRecordSet().addCallback(function (rs) {
-            if (rs.getCount()) {
+            /* По окончанию запроса поле связи могут скрыть, причём не само поле связи, а его родителя.
+               Проверим, что оно показано */
+            if (rs.getCount() && this.isVisibleWithParents()) {
                this.getList().setItems(rs);
                this.showPicker();
             }

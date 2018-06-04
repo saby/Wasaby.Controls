@@ -12,7 +12,7 @@ define('Controls/List/Grid/GridViewModel', [
                preparedClasses = '';
 
             // Колонки
-            if (params.multiselect ? params.columnIndex > 1 :  params.columnIndex > 0) {
+            if (params.multiSelectVisibility ? params.columnIndex > 1 :  params.columnIndex > 0) {
                preparedClasses += ' controls-Grid__cell_spacingLeft';
             }
             if (params.columnIndex < params.columns.length - 1) {
@@ -20,7 +20,7 @@ define('Controls/List/Grid/GridViewModel', [
             }
 
             // Отступ для первой колонки. Если режим мультиселект, то отступ обеспечивается чекбоксом.
-            if (params.columnIndex === 0 && !params.multiselect) {
+            if (params.columnIndex === 0 && !params.multiSelectVisibility) {
                preparedClasses += ' controls-Grid__cell_spacingFirstCol_' + (params.leftPadding || 'default');
             }
 
@@ -71,13 +71,13 @@ define('Controls/List/Grid/GridViewModel', [
             cellClasses += _private.prepareRowSeparatorClasses(current.showRowSeparator, current.index, current.dispItem.getOwner().getCount() - 1);
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
-            if (current.multiselect && current.columnIndex === 0) {
+            if (current.multiSelectVisibility && current.columnIndex === 0) {
                cellClasses += ' controls-Grid__row-cell-checkbox';
             } else {
                cellClasses += _private.getPaddingCellClasses({
                   columns: current.columns,
                   columnIndex: current.columnIndex,
-                  multiselect: current.multiselect,
+                  multiSelectVisibility: current.multiSelectVisibility,
                   leftPadding: current.leftPadding,
                   rightPadding: current.rightPadding,
                   rowSpacing: current.rowSpacing
@@ -93,6 +93,56 @@ define('Controls/List/Grid/GridViewModel', [
             }
 
             return cellClasses;
+         },
+         processLadder: function(self, current) {
+            var
+               ladderField = self._options.stickyFields[0],
+               nextItem,
+               nextLadderValue;
+
+            // если рисуем первый элемент
+            if (current.index === 0) {
+               self._ladder.ladderValue = current.getPropValue(current.item, ladderField);
+            }
+
+            if (self._drawLadder) {
+               self._withLadder = false;
+               self._drawLadder = false;
+               self._ladder.currentColumn = null;
+               self._ladder.rowIndex = null;
+               self._ladder.columnIndex = null;
+               self._ladder.ladderLength = null;
+            }
+
+            if (self.isLast()) {
+               if (self._ladder.ladderLength > 1) {
+                  self._drawLadder = true;
+               }
+               return;
+            }
+            nextItem = self.getNext();
+
+            // смотрим на следующий item
+            nextLadderValue = nextItem.getPropValue(nextItem.item, ladderField);
+
+            // если лесенка у следующего item такая же, то увеличиваем длинну лесенки, запоминаем current и rowIndex
+            if (self._ladder.ladderValue === nextLadderValue) {
+               self._withLadder = true;
+
+               // запоминаем только если ранее не запоминали
+               if (!self._ladder.currentColumn) {
+                  self._ladder.currentColumn = current.getCurrentColumn();
+                  self._ladder.rowIndex = current.index;
+                  self._ladder.columnIndex = 0;
+                  self._ladder.ladderLength = 1;
+               }
+               self._ladder.ladderLength++;
+            } else {
+               if (self._ladder.ladderLength > 1) {
+                  self._drawLadder = true;
+               }
+               self._ladder.ladderValue = nextLadderValue;
+            }
          }
       },
 
@@ -132,9 +182,9 @@ define('Controls/List/Grid/GridViewModel', [
                self._nextVersion();
                self._notify('onListChange');
             });
-            this._prepareHeaderColumns(this._options.header, this._options.multiselect);
-            this._prepareResultsColumns(this._options.columns, this._options.multiselect);
-            this._prepareColgroupColumns(this._options.columns, this._options.multiselect);
+            this._prepareHeaderColumns(this._options.header, this._options.multiSelectVisibility === 'visible');
+            this._prepareResultsColumns(this._options.columns, this._options.multiSelectVisibility === 'visible');
+            this._prepareColgroupColumns(this._options.columns, this._options.multiSelectVisibility === 'visible');
          },
 
          _createModel: function(cfg) {
@@ -143,7 +193,9 @@ define('Controls/List/Grid/GridViewModel', [
                keyProperty: cfg.keyProperty,
                displayProperty: cfg.displayProperty,
                markedKey: cfg.markedKey,
-               multiselect: cfg.multiselect
+               selectedKeys: cfg.selectedKeys,
+               excludedKeys: cfg.excludedKeys,
+               multiSelectVisibility: cfg.multiSelectVisibility
             });
          },
 
@@ -161,11 +213,11 @@ define('Controls/List/Grid/GridViewModel', [
 
          setHeader: function(columns) {
             this._options.header = columns;
-            this._prepareHeaderColumns(this._options.header, this._options.multiselect);
+            this._prepareHeaderColumns(this._options.header, this._options.multiSelectVisibility === 'visible');
          },
 
-         _prepareHeaderColumns: function(columns, multiselect) {
-            if (multiselect) {
+         _prepareHeaderColumns: function(columns, multiSelectVisibility) {
+            if (multiSelectVisibility) {
                this._headerColumns = [{}].concat(columns);
             } else {
                this._headerColumns = columns;
@@ -183,13 +235,13 @@ define('Controls/List/Grid/GridViewModel', [
                cellClasses = 'controls-Grid__header-cell';
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
-            if (this.getMultiselect() && columnIndex === 0) {
+            if (this._options.multiSelectVisibility && columnIndex === 0) {
                cellClasses += ' controls-Grid__header-cell-checkbox';
             } else {
                cellClasses += _private.getPaddingCellClasses({
                   columns: this._headerColumns,
                   columnIndex: columnIndex,
-                  multiselect: this._options.multiselect,
+                  multiSelectVisibility: this._options.multiSelectVisibility === 'visible',
                   leftPadding: this._options.leftPadding,
                   rightPadding: this._options.rightPadding,
                   rowSpacing: this._options.rowSpacing
@@ -219,8 +271,8 @@ define('Controls/List/Grid/GridViewModel', [
             return this._options.results;
          },
 
-         _prepareResultsColumns: function(columns, multiselect) {
-            if (multiselect) {
+         _prepareResultsColumns: function(columns, multiSelectVisibility) {
+            if (multiSelectVisibility) {
                this._resultsColumns = [{}].concat(columns);
             } else {
                this._resultsColumns = columns;
@@ -238,13 +290,13 @@ define('Controls/List/Grid/GridViewModel', [
                cellClasses = 'controls-Grid__results-cell';
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
-            if (this.getMultiselect() && columnIndex === 0) {
+            if (this._options.multiSelectVisibility === 'visible' && columnIndex === 0) {
                cellClasses += ' controls-Grid__results-cell-checkbox';
             } else {
                cellClasses += _private.getPaddingCellClasses({
                   columns: this._resultsColumns,
                   columnIndex: columnIndex,
-                  multiselect: this._options.multiselect,
+                  multiSelectVisibility: this._options.multiSelectVisibility === 'visible',
                   leftPadding: this._options.leftPadding,
                   rightPadding: this._options.rightPadding,
                   rowSpacing: this._options.rowSpacing
@@ -270,8 +322,8 @@ define('Controls/List/Grid/GridViewModel', [
          // ------------------------ colgroup -------------------------
          // -----------------------------------------------------------
 
-         _prepareColgroupColumns: function(columns, multiselect) {
-            if (multiselect) {
+         _prepareColgroupColumns: function(columns, multiSelectVisibility) {
+            if (multiSelectVisibility) {
                this._colgroupColumns = [{}].concat(columns);
             } else {
                this._colgroupColumns = columns;
@@ -309,14 +361,14 @@ define('Controls/List/Grid/GridViewModel', [
             return this._options.columns;
          },
 
-         getMultiselect: function() {
-            return this._options.multiselect;
+         getMultiSelectVisibility: function() {
+            return this._options.multiSelectVisibility;
          },
 
-         setMultiselect: function(multiselect) {
-            this._options.multiselect = multiselect;
-            this._prepareHeaderColumns(this._options.header, this._options.multiselect);
-            this._prepareResultsColumns(this._options.columns, this._options.multiselect);
+         setMultiSelectVisibility: function(multiSelectVisibility) {
+            this._options.multiSelectVisibility = multiSelectVisibility;
+            this._prepareHeaderColumns(this._options.header, this._options.multiSelectVisibility);
+            this._prepareResultsColumns(this._options.columns, this._options.multiSelectVisibility);
          },
 
          getItemById: function(id, keyProperty) {
@@ -346,11 +398,10 @@ define('Controls/List/Grid/GridViewModel', [
             current.leftPadding = this._options.leftPadding;
             current.rightPadding = this._options.rightPadding;
             current.rowSpacing = this._options.rowSpacing;
-            current.multiselect = this._options.multiselect;
             current.showRowSeparator = this._options.showRowSeparator;
             current.ladderSupport = !!this._options.stickyFields;
 
-            if (current.multiselect) {
+            if (current.multiSelectVisibility) {
                current.columns = [{}].concat(this._options.columns);
             } else {
                current.columns = this._options.columns;
@@ -395,7 +446,7 @@ define('Controls/List/Grid/GridViewModel', [
             };
 
             if (current.ladderSupport) {
-               this._processLadder(current);
+               _private.processLadder(this, current);
                if (this._drawLadder) {
                   current.ladder = this._ladder;
                   current.ladder.style = 'grid-area: ' +
@@ -406,57 +457,6 @@ define('Controls/List/Grid/GridViewModel', [
                }
             }
             return current;
-         },
-
-         _processLadder: function(current) {
-            var
-               ladderField = this._options.stickyFields[0],
-               nextItem,
-               nextLadderValue;
-
-            // если рисуем первый элемент
-            if (current.index === 0) {
-               this._ladder.ladderValue = current.getPropValue(current.item, ladderField);
-            }
-
-            if (this._drawLadder) {
-               this._withLadder = false;
-               this._drawLadder = false;
-               this._ladder.currentColumn = null;
-               this._ladder.rowIndex = null;
-               this._ladder.columnIndex = null;
-               this._ladder.ladderLength = null;
-            }
-
-            if (this.isLast()) {
-               if (this._ladder.ladderLength > 1) {
-                  this._drawLadder = true;
-               }
-               return;
-            }
-            nextItem = this.getNext();
-
-            // смотрим на следующий item
-            nextLadderValue = nextItem.getPropValue(nextItem.item, ladderField);
-
-            // если лесенка у следующего item такая же, то увеличиваем длинну лесенки, запоминаем current и rowIndex
-            if (this._ladder.ladderValue === nextLadderValue) {
-               this._withLadder = true;
-
-               // запоминаем только если ранее не запоминали
-               if (!this._ladder.currentColumn) {
-                  this._ladder.currentColumn = current.getCurrentColumn();
-                  this._ladder.rowIndex = current.index;
-                  this._ladder.columnIndex = 0;
-                  this._ladder.ladderLength = 1;
-               }
-               this._ladder.ladderLength++;
-            } else {
-               if (this._ladder.ladderLength > 1) {
-                  this._drawLadder = true;
-               }
-               this._ladder.ladderValue = nextLadderValue;
-            }
          },
 
          getNext: function() {
@@ -496,6 +496,14 @@ define('Controls/List/Grid/GridViewModel', [
             this._nextVersion();
          },
 
+         _prepareDisplayItemForAdd: function(item) {
+            return this._model._prepareDisplayItemForAdd(item);
+         },
+
+         getDragTargetPosition: function() {
+            return this._model.getDragTargetPosition();
+         },
+
          getIndexBySourceItem: function(item) {
             return this._model.getIndexBySourceItem(item);
          },
@@ -508,8 +516,16 @@ define('Controls/List/Grid/GridViewModel', [
             return this._model.getCount();
          },
 
-         _prepareDisplayItemForAdd: function(item) {
-            return this._model._prepareDisplayItemForAdd(item);
+         setSwipeItem: function(itemData) {
+            this._model.setSwipeItem(itemData);
+         },
+
+         select: function(keys) {
+            this._model.select(keys);
+         },
+
+         unselect: function(keys) {
+            this._model.unselect(keys);
          },
 
          destroy: function() {

@@ -271,9 +271,8 @@ define('SBIS3.CONTROLS/Date/Range', [
 
       _getDateRangeBigChooseConfig: function (element) {
          var config = DateRange.superclass._getDateRangeBigChooseConfig.apply(this, arguments);
-         config.mask = this._options.mask;
          config.headerType = DateRangeBigChoose.headerTypes.inputField;
-         return config
+         return config;
       },
 
       _onDateRangeButtonActivated: function() {

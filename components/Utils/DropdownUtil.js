@@ -64,7 +64,7 @@ define('SBIS3.CONTROLS/Utils/DropdownUtil', [
       _getInedxes: function(self, data) {
          var items = self.getItems();
 
-         return colHelpers.filter(this._getHistoryController(self).getIndexesList(self, data), function(id) {
+         return Array.prototype.filter.call(this._getHistoryController(self).getIndexesList(self, data), function(id) {
             return !items.getRecordById(id);
          });
       },
