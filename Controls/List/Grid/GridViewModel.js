@@ -66,7 +66,7 @@ define('Controls/List/Grid/GridViewModel', [
 
          getItemColumnCellClasses: function(current, isEditing) {
             var
-               cellClasses = isEditing ? 'controls-Grid__row-cell-editing' : 'controls-Grid__row-cell';
+               cellClasses = 'controls-Grid__row-cell' + (isEditing ? ' controls-Grid__row-cell-background-hover-editing' : ' controls-Grid__row-cell-background-hover');
 
             cellClasses += _private.prepareRowSeparatorClasses(current.showRowSeparator, current.index, current.dispItem.getOwner().getCount() - 1);
 
