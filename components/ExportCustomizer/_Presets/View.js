@@ -225,10 +225,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           */
          _makeItems: function (options) {
             var list = [];
-            var statics = options.statics;
-            if (statics && statics.length) {
-               list.push.apply(list, statics);
-            }
             var customs = this._customs;
             if (customs && customs.length) {
                for (var i = 0; i < customs.length; i++) {
@@ -237,6 +233,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                      list.push(preset);
                   }
                }
+            }
+            var statics = options.statics;
+            if (statics && statics.length) {
+               list.push.apply(list, statics);
             }
             return !list.length ? null : new RecordSet({
                rawData: list,
