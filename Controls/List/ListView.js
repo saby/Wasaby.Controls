@@ -67,7 +67,7 @@ define('Controls/List/ListView', [
 
          _onItemClick: function(e, dispItem) {
             var item = dispItem.getContents();
-            this._notify('itemClick', [item], {bubbling: true});
+            this._notify('itemClick', [item, e], {bubbling: true});
          },
 
          _onItemContextMenu: function(event, itemData) {
@@ -79,6 +79,10 @@ define('Controls/List/ListView', [
                event.currentTarget.focus();
             }
             this._notify('itemSwipe', [itemData, event]);
+         },
+
+         _onRowDeactivated: function(event, eventOptions) {
+            this._notify('rowDeactivated', [eventOptions]);
          },
 
          _onItemMouseDown: function(event, itemData) {

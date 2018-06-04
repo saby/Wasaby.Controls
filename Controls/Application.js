@@ -100,6 +100,7 @@ define('Controls/Application',
             self.application = (context.AppData ? context.AppData.application : cfg.application);
             self.wsRoot = receivedState.wsRoot || (context.AppData ? context.AppData.wsRoot : cfg.wsRoot);
             self.resourceRoot = receivedState.resourceRoot || (context.AppData ? context.AppData.resourceRoot : cfg.resourceRoot);
+            self.product = receivedState.product || (context.AppData ? context.AppData.product : cfg.product);
             self.BodyClasses = BodyClasses;
 
             self._headData.pushDepComponent(self.application);

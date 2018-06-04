@@ -1,7 +1,7 @@
 <div class="moveDemo">
     <span>Standard moving items</span>
     <Controls.List
-            class="moverDemo__list"
+            class="moverDemo__list test_list_1"
             name="list"
             itemActions="{{_itemActions}}"
             source = "{{_viewSource}}"
@@ -9,7 +9,7 @@
     </Controls.List>
     <span>Move items only to collections</span>
     <Controls.List
-            class="moverDemo__list"
+            class="moverDemo__list test_list_2"
             name="listSecond"
             on:beforeItemsMove="_beforeItemsMoveSecond()"
             itemActions="{{_itemActionsSecond}}"
@@ -18,7 +18,7 @@
     </Controls.List>
     <Controls.Button
             on:click="_onClick()"
-            caption="Reload">
+            caption="{{__reload}}">
     </Controls.Button>
     <Controls.Popup.Opener.Confirmation name="popupOpener"/>
 </div>

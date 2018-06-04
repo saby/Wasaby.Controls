@@ -13,6 +13,8 @@
                   listModel="{{_listModel}}"
                   itemTemplate="{{_itemTemplate}}"
                   multiSelectTpl="{{_options.multiSelectTpl}}"
+                  editingItemData="{{_options.editingItemData}}"
+                  isAdd="{{_options.isAdd}}"
                   itemActionsTemplate="{{_options.itemActionsTemplate}}"
                   itemActionsType="{{_options.itemActionsType}}"/>
       <ws:if data="{{_listModel.getResults() && _listModel.getResults().position === 'bottom'}}">

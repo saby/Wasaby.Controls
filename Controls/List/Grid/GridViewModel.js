@@ -425,7 +425,8 @@ define('Controls/List/Grid/GridViewModel', [
                      displayProperty: current.displayProperty,
                      index: current.index,
                      key: current.key,
-                     getPropValue: current.getPropValue
+                     getPropValue: current.getPropValue,
+                     isEditing: current.isEditing
                   };
                currentColumn.columnIndex = current.columnIndex;
                currentColumn.cellClasses = _private.getItemColumnCellClasses(current);
@@ -488,6 +489,15 @@ define('Controls/List/Grid/GridViewModel', [
 
          setItemActions: function(item, actions) {
             this._model.setItemActions(item, actions);
+         },
+
+         _setEditingItemData: function(itemData) {
+            this._model._setEditingItemData(itemData);
+            this._nextVersion();
+         },
+
+         _prepareDisplayItemForAdd: function(item) {
+            return this._model._prepareDisplayItemForAdd(item);
          },
 
          getDragTargetPosition: function() {

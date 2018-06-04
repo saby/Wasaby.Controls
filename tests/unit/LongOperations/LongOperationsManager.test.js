@@ -56,7 +56,7 @@ define([
       describe('LongOperations: LongOperationsManager', function () {
 
          // Создадим пустой продюсер для проверки добавления
-         define('js!SomeLeftProducer', [], function () {
+         define('SomeLeftProducer', [], function () {
             var SomeLeftProducer = CoreExtend.extend({}, [ILongOperationsProducer, ObservableMixin], {
                getName: function () { return 'SomeLeftProducer'; },
                hasCrossTabEvents: function () {},
@@ -150,7 +150,7 @@ define([
             });
 
             it('Аргумент producer должен быть экземпляром класса, реализующего интерфейс SBIS3.CONTROLS/LongOperations/IProducer (2)', function (done) {
-               require(['js!SomeLeftProducer'], function (someLeftProducer) {
+               require(['SomeLeftProducer'], function (someLeftProducer) {
                   try {
                      assert.doesNotThrow(function () {
                         longOperationsManager.register(someLeftProducer);
@@ -232,7 +232,7 @@ define([
                   assert.isTrue(longOperationsManager.isRegistered(p2));
                   assert.isTrue(longOperationsManager.isRegistered(p3));
                   assert.isNotOk(longOperationsManager.isRegistered(p4));
-                  require(['js!SomeLeftProducer'], function (someLeftProducer) {
+                  require(['SomeLeftProducer'], function (someLeftProducer) {
                      try {
                         assert.isTrue(longOperationsManager.isRegistered(someLeftProducer));
                         done();
@@ -291,7 +291,7 @@ define([
                   assert.strictEqual(longOperationsManager.getByName('SBIS3.CONTROLS/LongOperations/GenericProducer:Второй'), p2);
                   assert.strictEqual(longOperationsManager.getByName('SBIS3.CONTROLS/LongOperations/GenericProducer:Третий'), p3);
                   assert.isUndefined(longOperationsManager.getByName('SBIS3.CONTROLS/LongOperations/GenericProducer:Не зарегистрированный'));
-                  require(['js!SomeLeftProducer'], function (someLeftProducer) {
+                  require(['SomeLeftProducer'], function (someLeftProducer) {
                      try {
                         assert.strictEqual(longOperationsManager.getByName('SomeLeftProducer'), someLeftProducer);
                         done();
@@ -369,7 +369,7 @@ define([
                   assert.isNotOk(longOperationsManager.isRegistered('SBIS3.CONTROLS/LongOperations/GenericProducer:Третий'));
                   assert.isUndefined(longOperationsManager.getByName('SBIS3.CONTROLS/LongOperations/GenericProducer:Второй'));
                   assert.isUndefined(longOperationsManager.getByName('SBIS3.CONTROLS/LongOperations/GenericProducer:Третий'));
-                  require(['js!SomeLeftProducer'], function (someLeftProducer) {
+                  require(['SomeLeftProducer'], function (someLeftProducer) {
                      try {
                         assert.doesNotThrow(function () {
                            assert.isTrue(longOperationsManager.unregister(someLeftProducer));

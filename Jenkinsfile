@@ -1,6 +1,6 @@
 #!groovy
 echo "Задаем параметры сборки"
-def version = "3.18.310"
+def version = "3.18.350"
 
 def gitlabStatusUpdate() {
     if ( currentBuild.currentResult == "ABORTED" ) {
@@ -401,30 +401,6 @@ node('controls') {
                 ${python_ver} "./constructor/updater.py" "${version}" "/home/sbis/Controls" "css_${env.NODE_NAME}${ver}1" "./controls/tests/stand/conf/sbis-rpc-service.ini" "./controls/tests/stand/distrib_branch_ps" --sdk_path "${SDK}" --items "${items}" --host test-autotest-db1 --stand nginx_branch --daemon_name Controls --use_ps --conf x86_64
                 sudo chmod -R 0777 ${workspace}
                 sudo chmod -R 0777 /home/sbis/Controls
-            """
-            //Пакуем данные
-            writeFile file: "/home/sbis/Controls/intest-ps/ui/Core.package.json", text: """
-                {
-                "includeCore":true,
-                "platformPackage": true,
-                "include":[
-                "Core/*",
-                "SBIS3.CONTROLS.ItemsControlMixin"
-                ],
-                "modules" : [
-                "Core/core",
-                "SBIS3.CONTROLS.ItemsControlMixin"
-                ],
-                    "output" : "/resources/Core.module.js"
-                }"""
-            sh """
-                cd ./jinnee/distrib/builder
-                cp -rf ${workspace}/jinnee/ws /home/sbis/Controls/intest-ps/ui/
-                node ./node_modules/grunt-cli/bin/grunt xhtmlmin --root=/home/sbis/Controls/intest-ps/ui --application=/
-                node ./node_modules/grunt-cli/bin/grunt xhtml-build --root=/home/sbis/Controls/intest-ps/ui --application=/
-                node ./node_modules/grunt-cli/bin/grunt tmpl-build --root=/home/sbis/Controls/intest-ps/ui --application=/
-                node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/sbis/Controls/intest-ps/ui --application=/
-                sudo systemctl restart Controls_ps
             """
         }
         writeFile file: "./controls/tests/int/config.ini", text:

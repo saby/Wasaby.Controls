@@ -42,6 +42,11 @@ define(
             }
          ];
 
+         let itemsRecords = new RecordSet({
+            idProperty: 'id',
+            rawData: items
+         });
+
          let config = {
             selectedKeys: '2',
             keyProperty: 'id',
@@ -61,6 +66,14 @@ define(
                dropdownList._beforeMount(config).addCallback(resolve);
             })
          });
+
+         it('before mount', (done) => {
+            dropdownList._beforeMount(config).addCallback(function (items) {
+               assert.deepEqual(items.getRawData(), itemsRecords.getRawData());
+               done();
+            });
+         });
+
          it('check received state', () => {
             let itemsRS = new RecordSet({
                idProperty: 'id',

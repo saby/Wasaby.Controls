@@ -36,7 +36,7 @@ define('WSTest/Focus/Scenario/32', [
             opener: this,
             width: '500px',
             height: '200px',
-            template: 'js!' + testControlName
+            template: testControlName
          })
       }
 

@@ -172,6 +172,9 @@ define('Controls/List/ListViewModel',
          setItemActions: function(item, actions) {
             this._actions[this.getIndexBySourceItem(item)] = actions;
          },
+         _prepareDisplayItemForAdd: function(item) {
+            return ItemsUtil.getDefaultDisplayItem(this._display, item);
+         },
 
          __calcSelectedItem: function(display, selKey, keyProperty) {
 
