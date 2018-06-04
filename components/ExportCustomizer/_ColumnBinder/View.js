@@ -45,14 +45,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
                 */
                title: null,//Определено в шаблоне
                /**
-                * @cfg {string} Заголовок столбца колонок файла в таблице соответствия
-                */
-               /*columnsTitle: rk('Столбец', 'НастройщикЭкспорта'),*/
-               /**
-                * @cfg {string} Заголовок столбца полей данных в таблице соответствия
-                */
-               /*fieldsTitle: rk('Поле данных', 'НастройщикЭкспорта'),*/
-               /**
                 * @cfg {string} Отображаемый текст при пустом списке соответствий
                 */
                emptyTitle: rk('Не задано', 'НастройщикЭкспорта'),
@@ -79,8 +71,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
             var options = View.superclass._modifyOptions.apply(this, arguments);
             options.fieldIds = options.fieldIds || [];
             options._columns = [
-               {field:'column'/*, title:options.columnsTitle*/},
-               {field:'field'/*, title:options.fieldsTitle*/}
+               {field:'column'},
+               {field:'field'}
             ];
             options._rows = this._makeRows(options);
             return options;
@@ -103,16 +95,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
 
          _bindEvents: function () {
             var grid = this._grid;
-            //При клике по строке списка колонок
-            /*this.subscribeTo(grid, 'onItemActivate', this._onEdit.bind(this));*/
-
-            //При клике по пустому списку колонок
-            /*this.subscribeTo(grid, 'onClick', function (evtName) {
-               var items = grid.getItems();
-               if (items && items.getCount() === 1 && !items.at(0).getId()) {
-                  this._onEdit();
-               }
-            }.bind(this));*/
 
             //При изменении порядка строк в списке колонок
             this.subscribeTo(grid, 'onEndMove', function (evtName, dragObject) {
@@ -237,17 +219,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
          },
 
          /**
-          * Обработчик события при клике по строке списка колонок
-          * @protected
-          * @param {Core/EventObject} evtName Дескриптор события
-          * @param {object} data Информация о редактируемой строке (id, item)
-          */
-         /*_onEdit: function (evtName, data) {
-            var fieldIds = data ? [data.id] : null;
-            this._openColumnsEditor(fieldIds, true).addCallback(this._replaceField.bind(this, fieldIds));
-         },*/
-
-         /**
           * Обработчик события при удалении строки списка колонок
           * @protected
           * @param {Core/EventObject} evtName Дескриптор события
@@ -338,32 +309,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
 
 
       // Private methods:
-
-      /**
-       * Вставить в массив новые элементы в указанную позицию, при этом предыдущие вхождения этих элементов будут удалены
-       *
-       * @private
-       * @param {Array<*>} list Исходный массив
-       * @param {number} index Позиция для вставки
-       * @param {Array<*>} items Новые элементы для вставки
-       */
-      /*var _arrayInsert = function (list, index, items) {
-         if (items && items.length) {
-            var hasIndex = typeof index === 'number' && 0 <= index;
-            for (var i = 0; i < items.length; i++) {
-               var j = list.indexOf(items[i]);
-               if (j !== -1) {
-                  list.splice(j, 1);
-                  if (hasIndex && j < index) {
-                     index--;
-                  }
-               }
-            }
-            var args = [hasIndex ? index : list.length, hasIndex ? 1 : 0];
-            args.push.apply(args, items);
-            list.splice.apply(list, args);
-         }
-      };*/
 
       /**
        * Создать буквенное обозначение для числа

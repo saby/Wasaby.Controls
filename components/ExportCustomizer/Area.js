@@ -97,8 +97,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          presetAddNewTitle: _typeIfDefined.bind(null, 'string'),
          presetNewPresetTitle: _typeIfDefined.bind(null, 'string'),
          columnBinderTitle: _typeIfDefined.bind(null, 'string'),
-         /*columnBinderColumnsTitle: _typeIfDefined.bind(null, 'string'),*/
-         /*columnBinderFieldsTitle: _typeIfDefined.bind(null, 'string'),*/
          columnBinderEmptyTitle: _typeIfDefined.bind(null, 'string'),
          formatterTitle: _typeIfDefined.bind(null, 'string'),
          formatterMenuTitle: _typeIfDefined.bind(null, 'string'),
@@ -252,8 +250,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          'columnBinderTitle',
          'presetAddNewTitle',
          'presetNewPresetTitle',
-         /*'columnBinderColumnsTitle',*/
-         /*'columnBinderFieldsTitle',*/
          'columnBinderEmptyTitle',
          'formatterTitle',
          'formatterMenuTitle',
@@ -300,14 +296,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                 * @cfg {string} Заголовок под-компонента "columnBinder" (опционально)
                 */
                columnBinderTitle: null,
-               /**
-                * @cfg {string} Заголовок столбца колонок файла в таблице соответствия под-компонента "columnBinder" (опционально)
-                */
-               /*columnBinderColumnsTitle: null,*/
-               /**
-                * @cfg {string} Заголовок столбца полей данных в таблице соответствия под-компонента "columnBinder" (опционально)
-                */
-               /*columnBinderFieldsTitle: null,*/
                /**
                 * @cfg {string} Отображаемый текст при пустом списке соответствий в под-компоненте "columnBinder" (опционально)
                 */
@@ -502,8 +490,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                presets: presetsOptions,
                columnBinder: {
                   title: options.columnBinderTitle || undefined,
-                  /*columnsTitle: options.columnBinderColumnsTitle || undefined,*/
-                  /*fieldsTitle: options.columnBinderFieldsTitle || undefined,*/
                   allFields: allFields,
                   fieldIds: !usePresets && fieldIds && fieldIds.length ? fieldIds.slice() : undefined
                },
