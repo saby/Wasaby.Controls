@@ -564,8 +564,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * Обработчик "subviewChanged" для под-компонента "preset"
           *
           * @protected
+          * @param {*} [data] Дополнительные данные
           */
-         _onChangePresets: function () {
+         _onChangePresets: function (data) {
             // Выбран новые предустановленные настройки экспорта
             var views = this._views;
             var values = views.presets.getValues();
@@ -578,9 +579,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                this._options.fileUuid = fileUuid;
             }
             if (fieldIds || fileUuid) {
-               views.columnBinder.setValues({fieldIds:fieldIds.slice()}, {reason:'presets'});
+               views.columnBinder.setValues({fieldIds:fieldIds.slice()}, {source:'presets', reason:data});
                var consumer = values.consumer;
-               views.formatter.setValues({fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumer:consumer ? cMerge({}, consumer) : null}, {reason:'presets'});
+               views.formatter.setValues({fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumer:consumer ? cMerge({}, consumer) : null}, {source:'presets', reason:data});
             }
          },
 
@@ -588,8 +589,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * Обработчик "subviewChanged" для под-компонента "columnBinder"
           *
           * @protected
+          * @param {*} [data] Дополнительные данные
           */
-         _onChangeColumnBinder: function () {
+         _onChangeColumnBinder: function (data) {
             // Изменился набор экспортируемых полей
             var views = this._views;
             var values = views.columnBinder.getValues();
@@ -598,9 +600,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                this._options.fieldIds = fieldIds.slice();
                var presetsView = views.presets;
                if (presetsView) {
-                  presetsView.setValues({fieldIds:fieldIds.slice()}, {reason:'columnBinder'});
+                  presetsView.setValues({fieldIds:fieldIds.slice()}, {source:'columnBinder', reason:data});
                }
-               views.formatter.setValues({fieldIds:fieldIds.slice()}, {reason:'columnBinder'});
+               views.formatter.setValues({fieldIds:fieldIds.slice()}, {source:'columnBinder', reason:data});
             }
          },
 
@@ -608,8 +610,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * Обработчик "subviewChanged" для под-компонента "formatter"
           *
           * @protected
+          * @param {*} [data] Дополнительные данные
           */
-         _onChangeFormatter: function () {
+         _onChangeFormatter: function (data) {
             // Изменилось форматирование эксель-файла
             var views = this._views;
             var values = views.formatter.getValues();
@@ -618,7 +621,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                this._options.fileUuid = fileUuid;
                var presetsView = views.presets;
                if (presetsView) {
-                  presetsView.setValues({fileUuid:fileUuid}, {reason:'formatter'});
+                  presetsView.setValues({fileUuid:fileUuid}, {source:'formatter', reason:data});
                }
             }
          },
