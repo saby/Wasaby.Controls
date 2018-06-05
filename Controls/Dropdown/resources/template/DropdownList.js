@@ -122,6 +122,10 @@ define('Controls/Dropdown/resources/template/DropdownList',
                event: event,
                data: [item, flag]
             };
+            //flag means that pin button was clicked
+            if (flag) {
+               event.stopPropagation();
+            }
             this._notify('sendResult', [result]);
          },
          _footerClick: function(event) {
