@@ -351,6 +351,7 @@ define('Controls/List/EditInPlace', [
             dispItem: this._editingItemProjection,
             isEditing: true,
             isSelected: !listModel._markedItem,
+            itemActions: this._isAdd ? listModel.getItemActions(item) : {},
             key: ItemsUtil.getPropertyValue(this._editingItemProjection.getContents(), listModel._options.keyProperty)
          };
          listModel._setEditingItemData(this._editingItemData);
