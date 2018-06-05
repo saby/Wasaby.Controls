@@ -37,6 +37,7 @@ define('Controls/Toggle/Button', [
    /**
     * @name Controls/Toggle/Button#size
     * @cfg {String} Size of the button.
+    * @variant s Button has s size.
     * @variant m Button has m size.
     * @variant l Button has l size.
     */
