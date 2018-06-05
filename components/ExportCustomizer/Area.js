@@ -353,12 +353,16 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                 */
                outputCall: null
             },
+            // Имя кнопки применения
+            _BUTTON_NAME: 'controls-ExportCustomizer-Area__completeButton',
             // Список имён вложенных под-компонентов
             _SUBVIEW_NAMES: {
                presets: 'controls-ExportCustomizer-Area__presets',
                columnBinder: 'controls-ExportCustomizer-Area__body__columnBinder',
                formatter: 'controls-ExportCustomizer-Area__body__formatter'
             },
+            // Кнопка применения
+            _button: null,
             // Ссылки на вложенные под-компоненты
             _views: {}
          },
@@ -518,6 +522,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          },
 
          _init: function () {
+            this._button = _getChildComponent(this, this._BUTTON_NAME);
             // Получить ссылки на имеющиеся под-компоненты
             this._collectViews();
             // Подписаться на необходимые события
@@ -582,6 +587,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                views.columnBinder.setValues({fieldIds:fieldIds.slice()}, {source:'presets', reason:data});
                var consumer = values.consumer;
                views.formatter.setValues({fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumer:consumer ? cMerge({}, consumer) : null}, {source:'presets', reason:data});
+               this._updateCompleteButton(fieldIds);
             }
          },
 
@@ -604,6 +610,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                }
                views.formatter.setValues({fieldIds:fieldIds.slice()}, {source:'columnBinder', reason:data});
             }
+            this._updateCompleteButton(fieldIds);
          },
 
          /*
@@ -623,6 +630,20 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                if (presetsView) {
                   presetsView.setValues({fileUuid:fileUuid}, {source:'formatter', reason:data});
                }
+            }
+         },
+
+         /*
+          * Обновить состояние кнопки применения
+          *
+          * @protected
+          * @param {Array<string>} fieldIds Список привязки колонок в экспортируемом файле к полям данных
+          */
+         _updateCompleteButton: function (fieldIds) {
+            var button = this._button;
+            if (button) {
+               // Показывать кнопку применения толко когда есть поля
+               button.setVisible(!!(fieldIds && fieldIds.length));
             }
          },
 
