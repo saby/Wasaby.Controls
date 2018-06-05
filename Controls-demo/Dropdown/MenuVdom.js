@@ -21,6 +21,7 @@ define('Controls-demo/Dropdown/MenuVdom', [
       {
          _template: template,
          _stateText: 'Выбранный ключ',
+         _selectedKeysEmpty: ['1'],
          _selectedKeys0: ['8'],
          _selectedKeys1: ['2'],
          _selectedKeys2: ['3'],
