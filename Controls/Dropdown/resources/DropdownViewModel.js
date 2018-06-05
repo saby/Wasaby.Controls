@@ -17,7 +17,9 @@ define('Controls/Dropdown/resources/DropdownViewModel',
          constructor: function(cfg) {
             this._options = cfg;
             DropdownViewModel.superclass.constructor.apply(this, arguments);
-
+            if (cfg.emptyText) {
+               this._createEmptyItem();
+            }
             this._itemsModel = new ItemsViewModel({
                items: this._getCurrentRootItems(cfg),
                keyProperty: cfg.keyProperty,
@@ -46,9 +48,6 @@ define('Controls/Dropdown/resources/DropdownViewModel',
          },
 
          reset: function() {
-            if (this._options.emptyText) {
-               this._createEmptyItem();
-            }
             return this._itemsModel.reset();
          },
 
@@ -57,20 +56,11 @@ define('Controls/Dropdown/resources/DropdownViewModel',
          },
 
          goToNext: function() {
-            if (this._emptyItem) {
-               this._emptyItem = null;
-               return;
-            }
             return this._itemsModel.goToNext();
          },
 
          getCurrent: function() {
-            var itemsModelCurrent = {};
-            if (this._emptyItem) {
-               itemsModelCurrent = this._emptyItem;
-            } else {
-               itemsModelCurrent = this._itemsModel.getCurrent();
-            }
+            var itemsModelCurrent = this._itemsModel.getCurrent();
             itemsModelCurrent.hasChildren = this._hasItemChildren(itemsModelCurrent.item);
             itemsModelCurrent.hasParent = this._hasParent(itemsModelCurrent.item);
             itemsModelCurrent.isSelected = this._isItemSelected(itemsModelCurrent.item);
