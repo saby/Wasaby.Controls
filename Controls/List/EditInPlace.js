@@ -4,10 +4,21 @@ define('Controls/List/EditInPlace', [
    'Core/Deferred',
    'WS.Data/Entity/Record',
    'Controls/List/resources/utils/ItemsUtil',
+   'Controls/Utils/BreadCrumbsUtil',
    'css!Controls/List/EditInPlace/Text'
-], function(Control, template, Deferred, Record, ItemsUtil) {
+], function(Control, template, Deferred, Record, ItemsUtil, BreadCrumbsUtil) {
 
    var
+      typographyStyles = [
+         'fontFamily',
+         'fontSize',
+         'fontWeight',
+         'fontStyle',
+         'letterSpacing',
+         'textTransform',
+         'wordSpacing',
+         'textIndent'
+      ],
       ItemEditResult = { // Возможные результаты события "onItemEdit"
          CANCEL: 'Cancel' // Отменить начало редактирования/добавления
       },
@@ -333,11 +344,42 @@ define('Controls/List/EditInPlace', [
       },
 
       _afterUpdate: function() {
-         var target;
+         var target, fakeElement, targetStyle, offset;
          if (this._clientX && this._clientY) {
             target = document.elementFromPoint(this._clientX, this._clientY);
             if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+               fakeElement = document.createElement('div');
+               fakeElement.innerText = '';
+
+               targetStyle = getComputedStyle(target);
+               if (targetStyle.textAlign === 'right') {
+                  offset = target.getBoundingClientRect().right - this._clientX;
+               } else {
+                  offset = this._clientX - target.getBoundingClientRect().left;
+               }
+               typographyStyles.forEach(function(prop) {
+                  fakeElement.style[prop] = targetStyle[prop];
+               });
+
+               for (var i = 0; i < target.value.length; i++) {
+                  if (BreadCrumbsUtil.getWidth(fakeElement) > offset) {
+                     break;
+                  }
+                  if (targetStyle.textAlign === 'right') {
+                     fakeElement.innerText = target.value.slice(target.value.length - 1 - i);
+                  } else {
+                     fakeElement.innerText += target.value[i];
+                  }
+               }
+
+               //EditingRow в afterMount делает this.activate(), чтобы при переходах по табу фокус вставал в поля ввода.
+               //Т.е. если не звать focus(), то фокус может находиться в другом поле ввода.
                target.focus();
+               if (targetStyle.textAlign === 'right') {
+                  target.setSelectionRange(target.value.length - i + 1, target.value.length - i + 1);
+               } else {
+                  target.setSelectionRange(i, i);
+               }
             }
             this._clientX = null;
             this._clientY = null;
