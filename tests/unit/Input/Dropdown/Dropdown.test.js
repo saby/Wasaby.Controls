@@ -65,7 +65,7 @@ define(
             //он будет вызван вместо того что стрельнет событием, тем самым мы проверяем что отправили
             //событие и оно полетит с корректными параметрами.
 
-            dropdownList._selectedItemChangedHandler('itemClick', itemsRecords.at(5));
+            dropdownList._selectedItemsChangedHandler('itemClick', [itemsRecords.at(5)]);
             assert.equal(dropdownList._text, 'Запись 6');
             assert.equal(dropdownList._icon, 'icon-16 icon-Admin icon-primary');
          });

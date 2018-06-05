@@ -57,10 +57,10 @@ define(
             menu._notify = (e) => {
                assert.equal(e, 'onMenuItemActivate');
             };
-            menu._selectedItemChangedHandler('itemClick', {
+            menu._selectedItemsChangedHandler('itemClick', [{
                id: '1',
                title: 'Запись 1'
-            });
+            }]);
          });
 
          function setTrue(assert) {
