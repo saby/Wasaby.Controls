@@ -76,8 +76,7 @@ define('Controls/List/EditInPlace', [
          },
 
          afterItemEndEdit: function(self) {
-         //Это событие всплывает, т.к. прикладники после завершения сохранения могут захотеть показать кнопку "+Запись" (по стандарту при старте добавления она скрывается)
-            self._notify('afterItemEndEdit', [self._originalItem, self._isAdd]);
+            self._notify('afterItemEndEdit', [self._isAdd ? self._editingItem : self._originalItem, self._isAdd]);
             _private.resetVariables(self);
             self._setEditingItemData(null, self._options.listModel);
          },
