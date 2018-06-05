@@ -30,7 +30,9 @@ define('Controls/Container/Dropdown',
             });
             return instance._sourceController.load().addCallback(function(items) {
                instance._items = items;
-               _private.updateSelectedItems(instance, selectedKeys);
+               if (selectedKeys) {
+                  _private.updateSelectedItems(instance, selectedKeys);
+               }
                return items;
             });
          },
