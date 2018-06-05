@@ -16,7 +16,7 @@ define('Controls/List/ListViewModel',
             self._stopIndex = self.getCount();
          }
       };
-      
+
       var ListViewModel = ItemsViewModel.extend([VersionableMixin], {
          _markedItem: null,
          _draggingItemData: null,
@@ -50,6 +50,12 @@ define('Controls/List/ListViewModel',
             itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem.item;
             itemsModelCurrent.multiSelectStatus = this._multiselection.getSelectionStatus(itemsModelCurrent.key);
             itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility === 'visible';
+            itemsModelCurrent.drawActions =
+               itemsModelCurrent.itemActions &&
+               ((itemsModelCurrent.itemActions.showed &&
+               itemsModelCurrent.itemActions.showed.length) ||
+               (itemsModelCurrent.itemActions.showedFirst &&
+               itemsModelCurrent.itemActions.showedFirst.length));
             if (this._editingItemData && itemsModelCurrent.index === this._editingItemData.index) {
                itemsModelCurrent.isEditing = true;
                itemsModelCurrent.item = this._editingItemData.item;

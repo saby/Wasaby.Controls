@@ -62,9 +62,5 @@ define(
                title: 'Запись 1'
             }]);
          });
-
-         function setTrue(assert) {
-            assert.equal(true, true);
-         }
       })
    });

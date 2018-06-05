@@ -471,11 +471,7 @@ define('SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin', [
 
                   if(isPickerVisible) {
                      var list = this.getList();
-                     if (e.which === constants.key.enter) {
-                        list._keyUpHandler(e);
-                     } else {
-                        list._keyboardHover(e);
-                     }
+                     list._keyboardHover(e);
                   }
                   break;
                case constants.key.esc:

@@ -62,9 +62,9 @@ define('Controls/Button/MenuButton',
       var MenuButton = Control.extend({
          _template: template,
 
-         constructor: function(config) {
-            _private.cssStyleGeneration(this, config);
-            MenuButton.superclass.constructor.apply(this, arguments);
+         _beforeMount: function(options) {
+            _private.cssStyleGeneration(this, options);
+            this._onResult = this._onResult.bind(this);
          },
 
          _selectedItemsChangedHandler: function(event, result) {
