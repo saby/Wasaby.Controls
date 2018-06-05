@@ -53,6 +53,7 @@ define('Controls/DragNDrop/Controller',
          startDragNDrop: function(entity, mouseDownEvent) {
             this._dragEntity = entity;
             this._startEvent = mouseDownEvent.nativeEvent;
+            this._registerMouseMove();
          },
 
          _onMouseMove: function(event) {
@@ -64,6 +65,7 @@ define('Controls/DragNDrop/Controller',
             if (this._startEvent) {
                dragObject = this._getDragObject(nativeEvent, startEvent);
                if (!this._documentDragging && _private.isDragStarted(startEvent, nativeEvent)) {
+                  this._registerMouseUp();
                   _private.preventClickEvent(startEvent);
                   this._insideDragging = true;
                   this._notify('_documentDragStart', [dragObject], {bubbling: true});
@@ -82,6 +84,8 @@ define('Controls/DragNDrop/Controller',
                if (this._documentDragging) {
                   this._notify('_documentDragEnd', [this._getDragObject(event.nativeEvent, this._startEvent)], {bubbling: true});
                }
+               this._unregisterMouseMove();
+               this._unregisterMouseUp();
                this._dragEntity = null;
                this._startEvent = null;
             }
@@ -130,20 +134,34 @@ define('Controls/DragNDrop/Controller',
             return result;
          },
 
-         _afterMount: function() {
+         _registerMouseMove: function() {
             this._notify('register', ['mousemove', this, this._onMouseMove], {bubbling: true});
             this._notify('register', ['touchmove', this, this._onMouseMove], {bubbling: true});
+         },
+
+         _unregisterMouseMove: function() {
+            this._notify('unregister', ['mousemove', this], {bubbling: true});
+            this._notify('unregister', ['touchmove', this], {bubbling: true});
+         },
+
+         _registerMouseUp: function() {
             this._notify('register', ['mouseup', this, this._onMouseUp], {bubbling: true});
             this._notify('register', ['touchend', this, this._onMouseUp], {bubbling: true});
+         },
+
+         _unregisterMouseUp: function() {
+            this._notify('unregister', ['mouseup', this], {bubbling: true});
+            this._notify('unregister', ['touchend', this], {bubbling: true});
+         },
+
+         _afterMount: function() {
             this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
             this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
          },
 
          _beforeUnmount: function() {
-            this._notify('unregister', ['mousemove', this], {bubbling: true});
-            this._notify('unregister', ['touchmove', this], {bubbling: true});
-            this._notify('unregister', ['mouseup', this], {bubbling: true});
-            this._notify('unregister', ['touchend', this], {bubbling: true});
+            this._unregisterMouseMove();
+            this._unregisterMouseUp();
             this._notify('unregister', ['documentDragStart', this], {bubbling: true});
             this._notify('unregister', ['documentDragEnd', this], {bubbling: true});
          }

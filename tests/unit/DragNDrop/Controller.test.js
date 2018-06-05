@@ -45,12 +45,16 @@ define([
             controller = new Controller(),
             startEvent = createSyntheticEvent('mousedown', 20, 10);
 
+         controller._afterMount();
+
          controller.saveOptions({
             dragAvatarTemplate: 'template'
          });
 
          controller._notify = function(eventName, args) {
-            events.push(eventName);
+            if (eventName !== 'register' && eventName !== 'unregister') {
+               events.push(eventName);
+            }
             if (eventName === '_documentDragStart') {
                this._documentDragStart();
             }
