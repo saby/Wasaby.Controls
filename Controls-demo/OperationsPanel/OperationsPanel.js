@@ -145,7 +145,7 @@ define('Controls-demo/OperationsPanel/OperationsPanel', [
          }
          this._viewSource = new Memory({
             idProperty: 'id',
-            data: srcData
+            data: newData
          });
       },
 
