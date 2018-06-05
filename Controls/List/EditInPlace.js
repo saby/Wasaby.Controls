@@ -25,7 +25,7 @@ define('Controls/List/EditInPlace', [
 
          afterItemEdit: function(self, options, isAdd) {
             self._editingItem = options.item.clone();
-            self._notify('afterItemEdit', [options.item, isAdd]);
+            self._notify('afterItemEdit', [self._editingItem, isAdd]);
             self._setEditingItemData(self._editingItem, self._options.listModel);
 
             return options;
