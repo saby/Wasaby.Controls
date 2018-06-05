@@ -32,7 +32,6 @@ define('Controls/Popup/Compatible/ShowDialogHelper', ['require', 'Core/Deferred'
                      require(deps, function(BaseOpener, Strategy) {
                         var CoreTemplate = require(config.template);
                         config._initCompoundArea = function(compoundArea) {
-                           self._dialog = compoundArea;
                            dfr && dfr.callback(compoundArea);
                            dfr = null;
                         };
