@@ -39,7 +39,9 @@ define('Controls/Input/Search',
 
          constructor: function(options) {
             Search.superclass.constructor.apply(this, arguments);
-            this._baseViewModel = new BaseViewModel();
+            this._baseViewModel = new BaseViewModel({
+               value: options.value
+            });
          },
    
          _beforeUpdate: function(newOptions) {

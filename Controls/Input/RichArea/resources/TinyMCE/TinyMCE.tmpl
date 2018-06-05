@@ -1,0 +1,24 @@
+<div on:keyup="_containerKeyUpHandler()"
+     on:keydown="_containerKeyDownHandler()"
+     on:focusout="_focusOutHandler()"
+     name="editorContainer">
+    <div class="controls-TinyMCE ws-basic-style clearfix {{_options.codeMode ? 'ws-hidden' : ''}}"
+         name="mceContainer"
+         style="{{_options.autoHeight && _options.minimalHeight && _options.minimalHeight != 0 ? 'min-height:' + _options.minimalHeight + 'px;'}}"
+         on:scroll="_scrollMceHandler()"
+         on:mousewheel="_mouseWheelMceHandler()"
+         on:keydown="_keyDownMceHandler()"
+         on:keyup="_keyUpMceHandler()"
+    ></div>
+    <ws:if data="{{_options.codeMode}}">
+        <textarea class="controls-TinyMCE__sourceContainer"
+                  name="sourceContainer"
+                  on:input="_sourceContainerInputHadler()"
+                  style="{{_options.autoHeight && _options.minimalHeight && _options.minimalHeight != 0 ? 'min-height:' + _options.minimalHeight + 'px;'}}"
+        >{{_value}}</textarea>
+    </ws:if>
+    <ws:if data="{{_placeHolderActive}}">
+        <div class="controls-TinyMCE__placeholder" name="placeholder">{{_options.placeholder}}</div>
+    </ws:if>
+    <textarea name="fakeArea" class="controls-TinyMCE__fakeArea"></textarea>
+</div>

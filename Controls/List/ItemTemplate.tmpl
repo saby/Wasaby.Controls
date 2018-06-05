@@ -5,23 +5,14 @@
     {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}"
      attr:key="{{itemData.item.getId()}}">
     <ws:if data="{{itemData.multiSelectVisibility}}">
-        <ws:partial template="{{multiSelectTpl}}" multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" attr:class="controls-ListView__checkbox"/>
+        <ws:partial template="{{multiSelectTpl}}" multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" attr:class="controls-ListView__checkbox js-controls-ListView__notEditable"/>
     </ws:if>
 
     <ws:if data="{{contentTemplate}}">
-        <ws:if data="{{itemData.isEditing}}">
-            <Controls.List.EditInPlace.EditingRow>
-                <ws:partial
-                        template="{{contentTemplate}}"
-                        itemData="{{itemData}}"/>
-            </Controls.List.EditInPlace.EditingRow>
-        </ws:if>
-        <ws:else>
-            <ws:partial
-                    attr:class="controls-ListView__itemContent"
-                    template="{{contentTemplate}}"
-                    itemData="{{itemData}}"/>
-        </ws:else>
+        <ws:partial
+                attr:class="controls-ListView__itemContent"
+                template="{{contentTemplate}}"
+                itemData="{{itemData}}"/>
     </ws:if>
     <ws:else>
         <div attr:class="controls-ListView__itemContent">{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>

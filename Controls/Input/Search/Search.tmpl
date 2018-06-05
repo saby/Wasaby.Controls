@@ -1,15 +1,17 @@
 <Controls.Input.resources.InputRender.InputRender
-                value="{{_options.value}}"
-                autocomplete="{{_options.autocomplete}}"
-                tagStyle="{{_options.tagStyle}}"
-                viewModel="{{_baseViewModel}}"
-                placeholder="{{_options.placeholder}}"
-                inputType="Search"
-                style="{{_options.style}}"
-                on:valueChanged="_valueChangedHandler()">
+        autocomplete="{{_options.autocomplete}}"
+        tagStyle="{{_options.tagStyle}}"
+        viewModel="{{_baseViewModel}}"
+        placeholder="{{_options.placeholder}}"
+        inputType="Search"
+        style="{{_options.style}}"
+        on:valueChanged="_valueChangedHandler()">
 
    <ws:content>
-      <ws:partial template="tmpl!Controls/Input/resources/input"/>
+      <ws:partial
+              template="tmpl!Controls/Input/resources/input"
+              value="{{_options.value}}"
+              readOnly="{{_options.readOnly}}"/>
    </ws:content>
 
    <ws:afterFieldWrapper>
