@@ -1,7 +1,7 @@
 /**
  * Created by as.krasilnikov on 14.05.2018.
  */
-define('Controls/Popup/Compatible/Layer', ['Core/Deferred', 'Core/moduleStubs', 'Core/constants',  'cdn!jquery/3.3.1/jquery-min.js'], function(Deferred, moduleStubs, Constants) {
+define('Controls/Popup/Compatible/Layer', ['Core/Deferred', 'Core/moduleStubs', 'Core/constants',  '/cdn/jquery/3.3.1/jquery-min.js'], function(Deferred, moduleStubs, Constants) {
    'use strict';
 
    var loadDeferred;
