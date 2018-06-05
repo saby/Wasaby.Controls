@@ -13,7 +13,7 @@ define('Controls/Filter/Button',
       'css!Controls/Filter/Button/Button'
    ],
 
-   function(Control, template, moduleStubs, Chain, Utils, FilterContextField, types) {
+   function(Control, template, moduleStubs, Chain, Utils, types) {
 
       /**
        * @class Controls/Filter/Button
