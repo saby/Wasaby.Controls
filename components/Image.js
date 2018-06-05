@@ -904,6 +904,7 @@ define('SBIS3.CONTROLS/Image',
                var dataSource = this.getDataSource();
                this._attach = Di.create('ImageAttachGetter', {
                   opener: this,
+                  element: this.getContainer()[0],
                   //todo Удалить, временная опция для поддержки смены логотипа компании
                   contract: this._options.linkedObject || dataSource.getEndpoint().contract,
                   binding: dataSource.getBinding()
