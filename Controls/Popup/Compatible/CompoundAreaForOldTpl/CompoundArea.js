@@ -233,7 +233,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             }
             handlers.forEach(function(value) {
                if (eventState.getResult() !== false) {
-                  value.apply(self._compoundControl, [eventState]);
+                  value.apply(self, [eventState]);
                }
             });
 
