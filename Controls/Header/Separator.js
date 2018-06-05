@@ -8,14 +8,14 @@ define('Controls/Header/Separator', [
 
    /**
     * Control showing the right arrow icon.
-    * @class Controls/Header
+    * @class Controls/Header/Separator
     * @extends Core/Control
     * @control
     * @public
     */
 
    /**
-    * @name Controls/Header#style
+    * @name Controls/Header/Separator#style
     * @cfg {String} Icon display style. In the online theme has only one display style.
     * @variant primary Icon-separator will be accented.
     * @variant default Icon-separator will be default.
