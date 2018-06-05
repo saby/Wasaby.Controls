@@ -504,6 +504,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   var editor = this._editor;
                   this.getLinkedContext().setValue('editedTitle', preset.title);
                   editor._clickHandler();
+                  var container = editor._cntrlPanel;
+                  container.find('.controls-EditAtPlace__okButton').attr('title', rk('Сохранить шаблон', 'НастройщикЭкспорта'));
+                  container.find('.controls-EditAtPlace__cancel').attr('title', rk('Отменить изменения', 'НастройщикЭкспорта'));
                   var titles = []; options._items.each(function (v) { if (v.getId() !== preset.id) { titles.push(v.get('title')); } });
                   editor.setValidators([{
                      option: 'text',
