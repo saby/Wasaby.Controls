@@ -6,12 +6,12 @@
 @font-size_ExportCustomizer-Area-head-title: 18px;
 @font-weight_ExportCustomizer-Area-head-title: bold;
 @max-width_ExportCustomizer-Area__presets: 280px;
-@padding_ExportCustomizer-Area-body: 8px 0 12px 0;
 @margin_ExportCustomizer-Area-body-box: 0 0 10px 0;
 @border-bottom_ExportCustomizer-Area-body-box: 1px solid #f7f4f0;
 @padding_ExportCustomizer-Area-body-box: 0 12px 10px 12px;
 @padding_ExportCustomizer-Area-body-box-not-pad: 0 0 10px 0;
-@margin_ExportCustomizer-Area-body-columnBinder: 0 0 32px 0;
+@margin_ExportCustomizer-Area-body-columnBinder: 8px 0 32px 0;
+@margin_ExportCustomizer-Area-body-formatter: 0 0 12px 0;
 
 .controls-ExportCustomizer-Area {
    box-sizing: border-box;
@@ -56,7 +56,6 @@
 .controls-ExportCustomizer-Area__body {
     box-sizing: border-box;
     height: 100%;
-    padding: @padding_ExportCustomizer-Area-body;
 }
 
 .controls-ExportCustomizer-Area__body__columnBinder {
@@ -64,4 +63,5 @@
 }
 
 .controls-ExportCustomizer-Area__body__formatter {
+   margin: @margin_ExportCustomizer-Area-body-formatter;
 }

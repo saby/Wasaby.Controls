@@ -504,6 +504,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   var editor = this._editor;
                   this.getLinkedContext().setValue('editedTitle', preset.title);
                   editor._clickHandler();
+                  var container = editor._cntrlPanel;
+                  container.find('.controls-EditAtPlace__okButton').attr('title', rk('Сохранить шаблон', 'НастройщикЭкспорта'));
+                  container.find('.controls-EditAtPlace__cancel').attr('title', rk('Отменить изменения', 'НастройщикЭкспорта'));
                   var titles = []; options._items.each(function (v) { if (v.getId() !== preset.id) { titles.push(v.get('title')); } });
                   editor.setValidators([{
                      option: 'text',
@@ -661,7 +664,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
          },
 
          /**
-          * Сохранить текущий пресет, если это возможно и необходимо
+          * Сохранить текущий пресет, если это возможно
           *
           * @protected
           * @return {Core/Deferred}
@@ -671,18 +674,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             if (preset && preset.isStorable) {
                var fieldIds = this._fieldIds || [];
                var fileUuid = this._fileUuid || null;
-               var need;
                if (!cObjectIsEqual(preset.fieldIds, fieldIds)) {
                   preset.fieldIds = fieldIds.slice();
-                  need = true;
                }
                if (preset.fileUuid !== fileUuid) {
                   preset.fileUuid = fileUuid;
-                  need = true;
                }
-               if (need) {
-                  return this._saveCustoms();
-               }
+               return this._saveCustoms();
             }
             return Deferred.success(null);
          },
