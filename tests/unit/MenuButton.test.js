@@ -53,65 +53,14 @@ define(
 
          let menu = new MenuButton(config);
 
-         it('check received state', () => {
-             menu._beforeMount(config, null, items);
-            assert.equal(menu._items, items);
-         });
-
-         it('before mount source', () => {
-         items.push({
-            id: '9',
-            title: 'Запись 9'
-         });
-         return new Promise((resolve) => {
-                  menu._beforeMount({
-                  keyProperty: 'id',
-                  source: new Memory({
-                     idProperty: 'id',
-                     data: items
-                  })
-              }).addCallback(() => {
-                  assert.equal(menu._items.getCount(), items.length);
-                  resolve();
-               });
-            });
-         });
-
-         it('before update source', () => {
-            items.push({
-               id: '10',
-               title: 'Запись 10'
-            });
-            return new Promise((resolve) => {
-               menu._beforeUpdate({
-                  keyProperty: 'id',
-                  source: new Memory({
-                     idProperty: 'id',
-                     data: items
-                  })
-               }).addCallback(() => {
-                  assert.equal(menu._items.getCount(), items.length);
-                  resolve();
-               });
-            });
-         });
-
-         it('open menu', () => {
-            menu._children.DropdownOpener = {
-               close: setTrue.bind(this, assert),
-               open: setTrue.bind(this, assert)
-            };
-            menu._children.popupTarget = {
-               _container: 'target'
-            };
-            menu._open();
-         });
-
          it('check item click', () => {
             menu._notify = (e) => {
                assert.equal(e, 'onMenuItemActivate');
             };
-            menu._onResult(['itemClick', 'event', [menu._items.at(4)]]);
+            menu._selectedItemsChangedHandler('itemClick', [{
+               id: '1',
+               title: 'Запись 1'
+            }]);
          });
 
          function setTrue(assert) {
