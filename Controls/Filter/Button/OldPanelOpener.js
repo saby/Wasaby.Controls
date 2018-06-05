@@ -204,7 +204,8 @@ define('Controls/Filter/Button/OldPanelOpener',
                   viewMode: this._options.viewMode,
                   areaCaption: this._options.areaCaption,
                   internalContextFilterName: this._options.internalContextFilterName,
-                  templateOptions: this._options.templateOptions
+                  templateOptions: this._options.templateOptions,
+                  componentOptions: this._options.componentOptions
                },
                self = this,
                templateProperty;

@@ -41,7 +41,8 @@ define('Controls/Filter/Button/_FilterCompatible',
                filterAlign: self._options.filterAlign === 'left' ? 'right' : 'left',
                pickerClassName: self._options.pickerClassName || '',
                internalContextFilterName: self._options.internalContextFilterName || 'sbis3-controls-filter-button',
-               pickerConfig: self._options.pickerConfig || {}
+               pickerConfig: self._options.pickerConfig || {},
+               componentOptions: self._options.componentOptions || {}
             };
          },
          
