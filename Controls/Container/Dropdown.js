@@ -36,13 +36,11 @@ define('Controls/Container/Dropdown',
          },
 
          updateSelectedItems: function(instance, selectedKeys) {
-            if (selectedKeys instanceof Array) {
-               Chain(instance._items).each(function(item) {
-                  if (selectedKeys.indexOf(item.get(instance._options.keyProperty)) > -1) {
-                     instance._selectedItems.push(item);
-                  }
-               });
-            }
+            Chain(instance._items).each(function(item) {
+               if (selectedKeys.indexOf(item.get(instance._options.keyProperty)) > -1) {
+                  instance._selectedItems.push(item);
+               }
+            });
          },
 
          onResult: function(result) {
