@@ -128,9 +128,6 @@ define('Controls/Application/HeadDataContext', [
       } else {
          link += '.js';
       }
-      if (link.indexOf('resources/') !== 0) {
-         link = 'resources/' + link;
-      }
       return link;
    }
 
@@ -167,13 +164,6 @@ define('Controls/Application/HeadDataContext', [
          for (var key in cssBundles) {
             if (cssBundles.hasOwnProperty(key)) {
                files.css.push(fixLink(key, 'css'));
-            }
-         }
-         for (var key in allDeps) {
-            if (key.indexOf('css!') === 0) {
-               files.css.push(fixLink(key, 'css'));
-            } else if (key.indexOf('!') === -1) {
-               files.js.push(fixLink(key, 'js'));
             }
          }
       }
