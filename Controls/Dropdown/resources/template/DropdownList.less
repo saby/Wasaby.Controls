@@ -151,14 +151,18 @@
 
 .controls-DropdownList__row-pin {
   position: absolute;
-  .inline-flexbox();
+  display: none;
   .align-items(center);
-  right: 0;
+  right: @spacing_DropdownList-pin;
   width:  @width-Dropdown-pin;
   height: @height_DropdownList-item;
   font-size: @icon-small-size;
   font-family: @icon-font;
   color: @color-Dropdown-pin;
+}
+
+.controls-DropdownList__row:hover .controls-DropdownList__row-pin {
+   .inline-flexbox();
 }
 
 .controls-DropdownList__unpin {
