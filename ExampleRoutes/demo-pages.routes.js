@@ -27,9 +27,11 @@ module.exports = function(Component) {
 
       // Демо-пример: cвайп при работе со списочным компонентом на тач-устройствах
       '/demo-ws4-swipe': function(req, res) {
-        requirejs(['Examples/Swipe/Module'], function() {
-           render(req, res, 'Examples/Swipe/Module');
-        });
+        requirejs('Examples/Swipe/Module');
+        res.render('tmpl!Controls/Application/Route', {
+           application: 'Examples/Swipe/Module',
+           initDependencies: false
+         }, []);
      }
    }
 };
