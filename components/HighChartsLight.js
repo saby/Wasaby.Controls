@@ -605,13 +605,12 @@ function(coreClone, cMerge, constants,BaseControl, dotTpl, trackElement){
       },
 
       _drawHighChart : function() {
-         var self = this;
          this._options.highChartOptions.chart.events = this._options.highChartOptions.chart.events || {};
+         this._options.highChartOptions.chart.renderTo = this.getContainer().get(0);
          if (this._chartObj) {
             this._chartObj.destroy();
          }
-         this.getContainer().highcharts(this._options.highChartOptions);
-         this._chartObj = this.getContainer().highcharts();
+         this._chartObj = new Highcharts.chart(this._options.highChartOptions);
       },
 
       setConfig : function(config) {
