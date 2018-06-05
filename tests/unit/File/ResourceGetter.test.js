@@ -1,5 +1,5 @@
 define([
-   'Lib/File/Attach/Option/ResourceGetter',
+   'File/Attach/Option/ResourceGetter',
    'Core/Deferred'
 ], function (ResourceGetter, Deferred) {
    'use strict';
@@ -23,7 +23,7 @@ define([
       'oprion2': []
    };
 
-   describe('Controls/File/Attach/Option/ResourceGetter', function () {
+   describe('File/Attach/Option/ResourceGetter', function () {
 
       describe('.getGetter()', function () {
 

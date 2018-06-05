@@ -19,7 +19,7 @@ define([
       'tests/unit/File/Mocks/ResourceGetter',
       'tests/unit/File/SourceMock'
    ], function (BaseAttach, Deferred, LocalFile, LocalFileLink, HttpFileLink, GetResources, IResourceGetter, ISource) {
-      describe('Controls/File/BaseAttach', function () {
+      describe('File/Attach/Base', function () {
          var IFileDataConstructors = [LocalFile, LocalFileLink, HttpFileLink];
 
          describe('.getSelectedResource()', function () {

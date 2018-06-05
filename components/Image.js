@@ -894,7 +894,7 @@ define('SBIS3.CONTROLS/Image',
 
             /**
               * Возвращает загрузчик
-              * @return {Lib/File/Attach/LazyAttach}
+              * @return {File/Attach/Lazy}
               * @private
               */
             _getAttach: function () {
