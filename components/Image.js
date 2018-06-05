@@ -732,7 +732,7 @@ define('SBIS3.CONTROLS/Image',
               */
             _uploadImage: function() {
                var self = this;
-               self._getAttach().choose('FSGetter').addCallback(function() {
+               self._getAttach().choose('FileSystem').addCallback(function() {
                   self._upload();
                });
             },
