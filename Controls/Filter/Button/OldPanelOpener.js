@@ -157,7 +157,7 @@ define('Controls/Filter/Button/OldPanelOpener',
    
          _modifyOptions: function() {
             var opts = OldPanelOpener.superclass._modifyOptions.apply(this, arguments);
-            opts.filterStructure = converterFilterStructure.convertToFilterStructure(opts.filterStructure);
+            opts.filterStructure = opts.items ? converterFilterStructure.convertToFilterStructure(opts.items) : opts.filterStructure;
             return opts;
          },
          
@@ -247,7 +247,7 @@ define('Controls/Filter/Button/OldPanelOpener',
                },
                context: this._pickerContext,
                template: 'SBIS3.CONTROLS/Filter/Button/Area',
-               templateOptions: this._getAreaOptions(),
+               componentOptions: this._getAreaOptions(),
                handlers: {
                   onClose: function() {
                      /* Разрушаем панель при закрытии,
