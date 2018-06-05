@@ -8,8 +8,8 @@ define('Controls/Filter/Button',
       'Core/moduleStubs',
       'WS.Data/Chain',
       'WS.Data/Utils',
-      'Controls/Container/Filter/FilterContextField',
       'WS.Data/Type/descriptor',
+      'Controls/Container/Filter/FilterContextField',
       'css!Controls/Filter/Button/Button'
    ],
 
