@@ -1566,7 +1566,7 @@ define('SBIS3.CONTROLS/ListView',
                 target = this._findItemByElement($target),
                 model, $group;
 
-            if (target.length && this._isViewElement(target)) {
+            if (target.length) {
                model = this._getItemsProjection().getByHash(target.data('hash')).getContents();
                this._elemClickHandler(model.getId(), model, e.target, e);
             }
