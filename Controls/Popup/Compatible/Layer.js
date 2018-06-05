@@ -11,6 +11,7 @@ define('Controls/Popup/Compatible/Layer', ['Core/Deferred', 'Core/moduleStubs', 
       'Lib/Control/BaseCompatible/BaseCompatible',
       'Core/vdom/Synchronizer/resources/DirtyCheckingCompatible',
       'View/Runner/Text/markupGeneratorCompatible',
+      'cdn!jquery-cookie/04-04-2014/jquery-cookie-min.js',
       'Core/nativeExtensions',
 
       // todo возможно надо грузить весь core-extensions

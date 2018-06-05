@@ -17,7 +17,9 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
 
    var _private = {
       getOriginId: function(id) {
-         id = (id + '').replace('pinned-', '').replace('recent-', '').replace('frequent-', '');
+         if (id !== null) {
+             id = (id + '').replace('pinned-', '').replace('recent-', '').replace('frequent-', '');
+         }
          return id;
       },
 
@@ -318,7 +320,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
          * @param {RecordSet} recordSet
          * @param {RecordSet} sourceItems Набор элементов по которым будет заполняться рекорд. Параметр необязательный.
          */
-      fillHistoryRecord: function(self, items, recordSet, sourceItems) {
+      fillHistoryRecord: function(self, items, recordSet, type, sourceItems) {
          var oldItem, newItem;
 
          sourceItems = sourceItems || self._options.oldItems;
@@ -331,6 +333,8 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
                   format: oldItem.getFormat()
                });
                recordSet.add(newItem);
+            }else if(type === 'pinned') {
+               self.setPin(id, false);
             }
          });
       },
@@ -619,19 +623,19 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
          var rows = data && data.getRow();
 
          if (this._options.pinned instanceof Array) {
-            _private.fillHistoryRecord(this, this._options.pinned, this._pinned);
+            _private.fillHistoryRecord(this, this._options.pinned, this._pinned, 'pinned');
          } else if (this._options.pinned && rows && rows.get('pinned')) {
-            _private.fillHistoryRecord(this, rows.get('pinned'), this._pinned);
+            _private.fillHistoryRecord(this, rows.get('pinned'), this._pinned, 'pinned');
          }
 
          if (rows && rows.get('recent')) {
-            _private.fillHistoryRecord(this, rows.get('recent'), this._recent);
+            _private.fillHistoryRecord(this, rows.get('recent'), this._recent,  'recent');
          }
 
          if (this._options.frequent instanceof Array) {
-            _private.fillHistoryRecord(this, this._options.frequent, this._frequent);
+            _private.fillHistoryRecord(this, this._options.frequent, this._frequent, 'frequent');
          } else if (this._options.frequent && rows && rows.get('frequent')) {
-            _private.fillHistoryRecord(this, rows.get('frequent'), this._frequent);
+            _private.fillHistoryRecord(this, rows.get('frequent'), this._frequent, 'frequent');
          }
          historyUtil.setHistory(this._options.historyId, _private.getHistoryDataSet(this));
       },
@@ -646,13 +650,13 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
          this.initRecordSet();
 
          if (this._options.pinned) {
-            _private.fillHistoryRecord(this, this._options.pinned, this._pinned, items);
+            _private.fillHistoryRecord(this, this._options.pinned, this._pinned, 'pinned', items);
          }
          if (rows && rows.get('recent')) {
-            _private.fillHistoryRecord(this, rows.get('recent'), this._recent, items);
+            _private.fillHistoryRecord(this, rows.get('recent'), this._recent, 'recent', items);
          }
          if (this._options.frequent) {
-            _private.fillHistoryRecord(this, this._options.frequent, this._frequent, items);
+            _private.fillHistoryRecord(this, this._options.frequent, this._frequent, 'frequent', items);
          }
          historyUtil.setHistory(this._options.historyId, _private.getHistoryDataSet(this));
       },
@@ -695,7 +699,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
          */
       setFrequnet: function(frequents) {
          this._frequent = _private.getEmptyHistoryRecord(this, coreClone(this._options.oldItems.getFormat()));
-         _private.fillHistoryRecord(this, frequents, this._frequent);
+         _private.fillHistoryRecord(this, frequents, this._frequent, 'frequent');
       },
 
       /**
@@ -715,7 +719,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
          */
       setPinned: function(items) {
          this._pinned = _private.getEmptyHistoryRecord(this, coreClone(this._options.oldItems.getFormat()));
-         _private.fillHistoryRecord(this, items, this._pinned);
+         _private.fillHistoryRecord(this, items, this._pinned, 'pinned');
       },
 
       /**

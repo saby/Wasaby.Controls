@@ -79,6 +79,14 @@ define('Controls/List/ListView', [
                event.currentTarget.focus();
             }
             this._notify('itemSwipe', [itemData, event]);
+         },
+
+         _onItemMouseDown: function(event, itemData) {
+            this._notify('itemMouseDown', [itemData, event]);
+         },
+
+         _onItemMouseEnter: function(event, itemData) {
+            this._notify('itemMouseEnter', [itemData, event]);
          }
 
       });

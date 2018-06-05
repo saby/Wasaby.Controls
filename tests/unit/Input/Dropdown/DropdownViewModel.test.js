@@ -89,7 +89,7 @@ define(
 
          it('destroy', () => {
             viewModel.destroy();
-            assert.equal(viewModel._itemsModel.isDestroyed(), true);
+            assert.equal(null, viewModel._itemsModel._options);
          });
       })
    });

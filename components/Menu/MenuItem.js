@@ -26,7 +26,8 @@ define('SBIS3.CONTROLS/Menu/MenuItem', [
             escapeCaptionHtml: false,
             _sanitizeOpts: {
                validNodes: { component: true }
-            }
+            },
+            emulateClickByTap: true
          },
          _iconContainer: undefined
       },

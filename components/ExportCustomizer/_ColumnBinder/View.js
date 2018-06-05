@@ -11,12 +11,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
       'Core/helpers/Object/isEqual',
       'SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
       'SBIS3.CONTROLS/CompoundControl',
+      'SBIS3.CONTROLS/Controllers/ItemsMoveController',
+      'SBIS3.CONTROLS/Utils/ObjectChange',
       'WS.Data/Collection/RecordSet',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
       'css!SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View'
    ],
 
-   function (CommandDispatcher, cObjectIsEqual, ColumnsEditor, CompoundControl, RecordSet, dotTplFn) {
+   function (CommandDispatcher, cObjectIsEqual, ColumnsEditor, CompoundControl, ItemsMoveController, objectChange, RecordSet, dotTplFn) {
       'use strict';
 
       var View = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View.prototype*/ {
@@ -42,14 +44,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
                 * @cfg {string} Заголовок компонента
                 */
                title: null,//Определено в шаблоне
-               /**
-                * @cfg {string} Заголовок столбца колонок файла в таблице соответствия
-                */
-               columnsTitle: rk('Столбец', 'НастройщикЭкспорта'),
-               /**
-                * @cfg {string} Заголовок столбца полей данных в таблице соответствия
-                */
-               fieldsTitle: rk('Поле данных', 'НастройщикЭкспорта'),
                /**
                 * @cfg {string} Отображаемый текст при пустом списке соответствий
                 */
@@ -77,8 +71,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
             var options = View.superclass._modifyOptions.apply(this, arguments);
             options.fieldIds = options.fieldIds || [];
             options._columns = [
-               {field:'column', title:options.columnsTitle},
-               {field:'field', title:options.fieldsTitle}
+               {field:'column'},
+               {field:'field'}
             ];
             options._rows = this._makeRows(options);
             return options;
@@ -93,29 +87,24 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
             View.superclass.init.apply(this, arguments);
             this._grid = this.getChildControlByName('controls-ExportCustomizer-ColumnBinder-View__grid');
             this._grid.setItemsActions(this._makeRowActions());
+            this._gridMoveController = new ItemsMoveController({
+               linkedView: this._grid
+            });
             this._bindEvents();
          },
 
          _bindEvents: function () {
             var grid = this._grid;
-            //При клике по строке списка колонок
-            this.subscribeTo(grid, 'onItemActivate', this._onEdit.bind(this));
-
-            //При клике по пустому списку колонок
-            this.subscribeTo(grid, 'onClick', function (evtName) {
-               var items = grid.getItems();
-               if (items.getCount() === 1 && !items.at(0).getId()) {
-                  this._onAdd();
-               }
-            }.bind(this));
 
             //При изменении порядка строк в списке колонок
             this.subscribeTo(grid, 'onEndMove', function (evtName, dragObject) {
                var items = grid.getItems();
-               var fieldIds = []; items.each(function (v) { fieldIds.push(v.getId()); });
-               this._options.fieldIds = fieldIds;
-               this._redraw();
-               this.sendCommand('subviewChanged');
+               if (items && 1 < items.getCount()) {
+                  var fieldIds = []; items.each(function (v) { fieldIds.push(v.getId()); });
+                  this._options.fieldIds = fieldIds;
+                  this._redraw();
+                  this.sendCommand('subviewChanged');
+               }
             }.bind(this));
          },
 
@@ -123,14 +112,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
           * Приготовить строки списка колонок
           * @protected
           * @param {object} options Опции компонента
-          * @return {Array<object>}
+          * @return {WS.Data/Collection/RecordSet}
           */
          _makeRows: function (options) {
             var fieldIds = options.fieldIds;
+            var rows;
             if (fieldIds && fieldIds.length) {
                var allFields = options.allFields;
                var isRecordSet = allFields instanceof RecordSet;
-               return fieldIds.map(function (id, i) {
+               rows = fieldIds.map(function (id, i) {
                      var field;
                      if (!isRecordSet) {
                         allFields.some(function (v) { if (v.id === id) { field = v; return true; } });
@@ -148,8 +138,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
                   });
             }
             else {
-               return [{id:'', column:'A', field:options.emptyTitle}];
+               rows = [{id:'', column:'A', field:options.emptyTitle}];
             }
+            // В реализации DataGridView нет полной эквивалентности установки списка его элементов простым массивом объектов и RecordSet-ом с этими
+            // объектами. Например, при задании массивом,  "замерзает" и не обновляется его MemorySource, что приводит к ошибке при перетаскивании
+            // элементов списка. Поэтому возвращаем именно RecordSet:
+            return new RecordSet({
+               rawData: rows,
+               idProperty: 'id'
+            });
          },
 
          /**
@@ -172,10 +169,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
          /**
           * Открыть редактор колонок
           * @protected
-          * @param {string} fieldId Идентификатор текущего поля
+          * @param {Array<string>} fieldIds Список идентификаторов выбранных полей
+          * @param {boolean} singleMode Открывать редактор колонок без возможности множественного выделения
           * @return {Core/Deferred<Array<string>>}
           */
-         _openColumnsEditor: function (fieldId) {
+         _openColumnsEditor: function (fieldIds, singleMode) {
             if (!this._columnsEditor) {
                this._columnsEditor = new ColumnsEditor();
             }
@@ -191,15 +189,16 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
             return this._columnsEditor.open(
                {
                   columns: options.allFields,
-                  selectedColumns: fieldId ? [fieldId] : []
+                  selectedColumns: fieldIds || []
                },
                {
-                  title: fieldId ? rk('Выберите поле данных', 'НастройщикЭкспорта') : rk('Выбор полей данных', 'НастройщикЭкспорта'),
+                  title: singleMode ? rk('Выберите поле данных', 'НастройщикЭкспорта') : rk('Выбор полей данных', 'НастройщикЭкспорта'),
                   applyButtonTitle: rk('Выбрать', 'НастройщикЭкспорта'),
                   width: this._container.width(),
                   groupTitles: options.fieldGroupTitles,
                   preserveOrder: true,
-                  multiselect: !fieldId,
+                  multiselect: !singleMode,
+                  autoApply: !!singleMode,
                   moveColumns: false,
                   ignoreFixed: true// TODO: Добавить в редактор колонок опцию ignoreFixed
                }
@@ -215,26 +214,16 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
           * @protected
           */
          _onAdd: function () {
-            this._openColumnsEditor().addCallback(this._replaceField.bind(this, null));
-         },
-
-         /**
-          * Обработчик события при клике по строке списка колонок
-          * @protected
-          * @param {Core/EventObject} evtName Дескриптор события
-          * @param {object} data Информация о редактируемой строке (id, item)
-          */
-         _onEdit: function (evtName, data) {
-            var fieldId = data.id;
-            this._openColumnsEditor(fieldId).addCallback(this._replaceField.bind(this, fieldId));
+            var fieldIds = this._options.fieldIds;
+            this._openColumnsEditor(fieldIds, false).addCallback(this._replaceField.bind(this, fieldIds));
          },
 
          /**
           * Обработчик события при удалении строки списка колонок
           * @protected
           * @param {Core/EventObject} evtName Дескриптор события
-          * @param {string|number} id Идентификатор пункта списка колонок
-          * @param {object} model Модель пункта списка колонок
+          * @param {string|number} id Идентификатор элемента списка колонок
+          * @param {object} model Модель элемента списка колонок
           * @param {string} action Название действия
           */
          _onDelete: function (evtName, id/*, model, action*/) {
@@ -248,15 +237,23 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
          },
 
          /**
-          * Заместить в списке полей удаляемое поле на новые поля. Если удаляемого поля нет, то новые поля будут добавлены в конец. Если нет новых полей - ничего не произойдёт
+          * Заместить в списке полей удаляемые поля на новые поля. Если удаляемого поля нет, то новые поля будут добавлены в конец. Если нет новых полей - ничего не произойдёт
           * @protected
-          * @param {string} removedId Идентификатор удаляемого поля
+          * @param {Array<string>} removedIds Список идентификаторов удаляемых полей
           * @param {Array<string>} insertedIds список идентификаторов новых полей
           */
-         _replaceField: function (removedId, insertedIds) {
+         _replaceField: function (removedIds, insertedIds) {
             if (insertedIds && insertedIds.length) {
                var fieldIds = this._options.fieldIds;
-               _arrayInsert(fieldIds, removedId ? fieldIds.indexOf(removedId) : null, insertedIds);
+               if (removedIds && removedIds.length) {
+                  for (var i = removedIds.length - 1; 0 <= i; i--) {
+                     var j = fieldIds.indexOf(removedIds[i]);
+                     if (j !== -1) {
+                        fieldIds.splice(j, 1);
+                     }
+                  }
+               }
+               fieldIds.push.apply(fieldIds, insertedIds);
                this._redraw();
                this._grid.setSelectedKey(insertedIds[0]);
                this.sendCommand('subviewChanged');
@@ -277,19 +274,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
           *
           * @public
           * @param {object} values Набор из нескольких значений, которые необходимо изменить
+          * @param {object} meta Дополнительная информация об изменении
           */
-         setValues: function (values) {
+         setValues: function (values, meta) {
             if (!values || typeof values !== 'object') {
                throw new Error('Object required');
             }
-            var options = this._options;
-            if ('fieldIds' in values) {
-               var fieldIds = values.fieldIds;
-               var has = fieldIds && fieldIds.length ? !cObjectIsEqual(fieldIds, options.fieldIds) : !!(options.fieldIds && options.fieldIds.length);
-               if (has) {
-                  options.fieldIds = fieldIds || [];
-                  this._redraw();
-               }
+            var changes = objectChange(this._options, {fieldIds:true}, values);
+            if (changes && 'fieldIds' in changes) {
+               this._redraw();
             }
          },
 
@@ -303,38 +296,19 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
             return {
                fieldIds: this._options.fieldIds
             };
+         },
+
+         destroy: function () {
+            if (this._gridMoveController) {
+               this._gridMoveController.destroy();
+            }
+            View.superclass.destroy.apply(this, arguments);
          }
       });
 
 
 
       // Private methods:
-
-      /**
-       * Вставить в массив новые элементы в указанную позицию, при этом предыдущие вхождения этих элементов будут удалены
-       *
-       * @private
-       * @param {Array<*>} list Исходный массив
-       * @param {number} index Позиция для вставки
-       * @param {Array<*>} items Новые элементы для вставки
-       */
-      var _arrayInsert = function (list, index, items) {
-         if (items && items.length) {
-            var hasIndex = typeof index === 'number' && 0 <= index;
-            for (var i = 0; i < items.length; i++) {
-               var j = list.indexOf(items[i]);
-               if (j !== -1) {
-                  list.splice(j, 1);
-                  if (hasIndex && j < index) {
-                     index--;
-                  }
-               }
-            }
-            var args = [hasIndex ? index : list.length, hasIndex ? 1 : 0];
-            args.push.apply(args, items);
-            list.splice.apply(list, args);
-         }
-      };
 
       /**
        * Создать буквенное обозначение для числа

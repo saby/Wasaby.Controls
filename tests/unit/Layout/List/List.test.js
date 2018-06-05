@@ -9,6 +9,32 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/
    
    describe('Controls.Container.List', function () {
       var listLayout, listOptions, listSource, listSourceData, listSearchParam;
+      
+      var getFilledContext = function() {
+         return {
+            filterLayoutField: {
+               filter: {
+                  title: 'Sasha'
+               }
+            },
+            searchLayoutField: {
+               searchValue: 'Sasha'
+            }
+         };
+      };
+      
+      var getEmptyContext = function() {
+         return {
+            filterLayoutField: {
+               filter: {
+                  title: ''
+               }
+            },
+            searchLayoutField: {
+               searchValue: ''
+            }
+         };
+      };
    
       before(function() {
          listSourceData = [{ id: 1, title: 'Sasha' },
@@ -77,11 +103,6 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/
          List._private.searchCallback(listLayout, {data: recordSet}, {testField: 'testValue'});
          assert.deepEqual(recordSet.getRawData(), listLayout._source._$data);
          assert.deepEqual(listLayout._filter, {testField: 'testValue'});
-      });
-   
-      it('.filterChanged', function() {
-         List._private.filterChanged(listLayout, {testField: 'testValue2'});
-         assert.deepEqual(listLayout._filter, {testField: 'testValue2'});
       });
       
       it('.searchValueChanged', function(done) {
@@ -170,14 +191,15 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/
             ]);
    
             /* To reset source and context*/
+            listLayout._contextObj['searchLayoutField'] = {searchValue: 'Sasha'};
+            listLayout._contextObj['filterLayoutField'] = {filter: {title: 'Sasha'}};
             List._private.abortCallback(listLayout, {});
-            listLayout._contextObj['searchLayoutField'] = {searchValue: ''};
-            context.searchLayoutField.searchValue = '';
             /* check reset */
             assert.deepEqual(listLayout._filter, {});
             assert.deepEqual(listLayout._source._$data, listSourceData);
    
             /* Change context filter */
+            listLayout._contextObj['filterLayoutField'] = {filter: {title: ''}};
             context.filterLayoutField.filter = { title: 'Sasha' };
             listLayout._beforeUpdate({}, context);
             setTimeout(function() {
@@ -186,6 +208,70 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/
             }, 50);
          }, 50);
          
+      });
+   
+      it('._beforeUnmount', function(done) {
+         var listLayout = new List(listOptions);
+         var context = getFilledContext();
+         var aborted = false;
+         listLayout._contextObj = getEmptyContext();
+         
+         listLayout._beforeUpdate({}, context);
+   
+         setTimeout(function() {
+            assert.isTrue(!!listLayout._searchDeferred);
+            assert.isTrue(!!listLayout._searchController);
+   
+            listLayout._searchController.abort = function() {
+              aborted = true;
+            };
+            listLayout._beforeUnmount();
+            assert.isTrue(aborted);
+            assert.equal(listLayout._searchController, undefined);
+            assert.equal(listLayout._searchDeferred, undefined);
+            done();
+         }, 50);
+      });
+   
+      it('Container/List::_private.isFilterChanged', function () {
+         var listLayout = new List(listOptions);
+         var context = getFilledContext();
+   
+         listLayout._contextObj = getEmptyContext();
+         assert.isTrue(List._private.isFilterChanged(listLayout, context));
+   
+         listLayout._contextObj = getFilledContext();
+         assert.isFalse(List._private.isFilterChanged(listLayout, context));
+      });
+   
+      it('Container/List::_private.isSearchValueChanged', function () {
+         var listLayout = new List(listOptions);
+         var context = getFilledContext();
+   
+         listLayout._contextObj = getEmptyContext();
+         assert.isTrue(List._private.isSearchValueChanged(listLayout, context));
+   
+         listLayout._contextObj = getFilledContext();
+         assert.isFalse(List._private.isSearchValueChanged(listLayout, context));
+         
+      });
+   
+      it('Container/List::_private.getSearchValueFromContext', function () {
+         var listLayout = new List(listOptions);
+         var context = getFilledContext();
+         var emptyContext = getEmptyContext();
+         
+         assert.equal('Sasha', List._private.getSearchValueFromContext(listLayout, context));
+         assert.equal('', List._private.getSearchValueFromContext(listLayout, emptyContext));
+      });
+   
+      it('Container/List::_private.getFilterFromContext', function () {
+         var listLayout = new List(listOptions);
+         var context = getFilledContext();
+         var emptyContext = getEmptyContext();
+   
+         assert.deepEqual({title: 'Sasha'}, List._private.getFilterFromContext(listLayout, context));
+         assert.deepEqual({title: ''}, List._private.getFilterFromContext(listLayout, emptyContext));
       });
       
    });

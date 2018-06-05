@@ -264,6 +264,10 @@ define('SBIS3.CONTROLS/Action/List/Save', [
                     //В таком случае нам не надо продолжать сохранение.
                     result.errback();
                  }
+              }).addErrback(function() {
+                 //Диалог выбора колонок, в случае если у него не задан конфиг, возвращает Deferred.fail().
+                 //Мы в таком случае продолжим выгрузку с раннее определённым набором колонок.
+                 result.callback(meta.columns);
               });
            } else {
               //Сюда мы попадаем если команда showColumnsEditor не была обработана.

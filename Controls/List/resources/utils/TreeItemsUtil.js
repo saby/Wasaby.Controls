@@ -12,7 +12,7 @@ define('Controls/List/resources/utils/TreeItemsUtil', [
             var
                displayProperties = {
                   collection: items,
-                  keyProperty: cfg.keyProperty,
+                  idProperty: cfg.keyProperty,
                   parentProperty: cfg.parentProperty,
                   nodeProperty: cfg.nodeProperty,
                   loadedProperty: '!' + cfg.parentProperty + '$',

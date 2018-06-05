@@ -1,6 +1,10 @@
 define('Controls/Calendar/interface/IMonth', [
    'WS.Data/Type/descriptor',
-], function(types) {
+   'SBIS3.CONTROLS/Utils/DateUtil'
+], function(
+   types,
+   dateUtil
+) {
    'use strict';
 
    /**
@@ -23,7 +27,7 @@ define('Controls/Calendar/interface/IMonth', [
              *     <option name="month">2015-03-07T21:00:00.000Z</option>
              * </pre>
              */
-            month: null,
+            month: dateUtil.getStartOfMonth(new Date()),
 
             /**
              * @name Controls/Calendar/interface/IMonth#showCaption
@@ -50,6 +54,16 @@ define('Controls/Calendar/interface/IMonth', [
              * @cfg {Function} Возможность поменять конфигурацию для дня. В функцию приходит объект даты. Опция необходима для производственных каледнадрей.
              */
             dayFormatter: undefined,
+
+            /**
+             * @name Controls/Calendar/interface/IMonth#mode
+             * @cfg {String} Month view mode
+             * @variant current Only the current month is displayed
+             * @variant extended 6 weeks are displayed. The first week of the current month is complete,
+             * the last week is complete and if the current month includes less than 6 weeks, then the weeks
+             * of the next month are displayed.
+             */
+            mode: 'current'
          };
       },
 
@@ -61,7 +75,11 @@ define('Controls/Calendar/interface/IMonth', [
             showCaption: types(Boolean),
             captionFormat: types(String),
             showWeekdays: types(Boolean),
-            dayFormatter: types(Function)
+            dayFormatter: types(Function),
+            mode: types(String).oneOf([
+               'current',
+               'extended'
+            ])
          };
       }
    };

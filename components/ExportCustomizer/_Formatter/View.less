@@ -1,12 +1,13 @@
 
-@margin_ExportCustomizer-Formatter-View-head: 0 0 6px 0;
+@margin_ExportCustomizer-Formatter-View-head: 0 0 10px 0;
 @padding_ExportCustomizer-Formatter-View-title: 0 12px;
 @font-size_ExportCustomizer-Formatter-View-title: 15px;
 @color_ExportCustomizer-Formatter-View-title: #313E78;
 @margin_ExportCustomizer-Formatter-View-formatterMenu: 0 12px 0 0 ;
-@padding_ExportCustomizer-Formatter-View-formatterMenu: 8px 0 6px 0;
 @color_ExportCustomizer-Formatter-View-formatterMenu: #0055BB;
-@height_ExportCustomizer-Formatter-View-preview: 150px;
+@height_ExportCustomizer-Formatter-View-preview: 45px;
+@padding_ExportCustomizer-Formatter-View-text: 0 12px;
+@color_ExportCustomizer-Formatter-View-text: #999999;
 
 .controls-ExportCustomizer-Formatter-View__head {
    .flexbox();
@@ -17,7 +18,7 @@
 
 .controls-ExportCustomizer-Formatter-View__title {
    display: inline-block;
-   .flex-grow(1);
+   .flex-shrink(0);
    padding: @padding_ExportCustomizer-Formatter-View-title;
    font-size: @font-size_ExportCustomizer-Formatter-View-title;
    font-weight: bold;
@@ -27,20 +28,28 @@
 .controls-ExportCustomizer-Formatter-View__formatterMenu {
    .flex-shrink(0);
    margin: @margin_ExportCustomizer-Formatter-View-formatterMenu;
-   padding: @padding_ExportCustomizer-Formatter-View-formatterMenu;
+}
+
+.controls-ExportCustomizer-Formatter-View__formatterMenu.ws-enabled {
    color: @color_ExportCustomizer-Formatter-View-formatterMenu;
 }
 
-.controls-ExportCustomizer-Formatter-View__formatterMenu .controls-Button__text:hover {
+.controls-ExportCustomizer-Formatter-View__formatterMenu.ws-enabled .controls-Button__text:hover {
    text-decoration: underline;
 }
 
 .controls-ExportCustomizer-Formatter-View__preview {
    height: @height_ExportCustomizer-Formatter-View-preview;
    overflow: hidden;
+   text-align: center;
+}
+
+.controls-ExportCustomizer-Formatter-View__preview img.ws-enabled {
+   max-width: 100%;
    cursor: pointer;
 }
 
-.controls-ExportCustomizer-Formatter-View__preview img {
-   width: 100%;
+.controls-ExportCustomizer-Formatter-View__text {
+   padding: @padding_ExportCustomizer-Formatter-View-text;
+   color: @color_ExportCustomizer-Formatter-View-text;
 }
