@@ -67,8 +67,8 @@ define('Controls/Button/MenuButton',
             MenuButton.superclass.constructor.apply(this, arguments);
          },
 
-         _selectedItemChangedHandler: function(event, result) {
-            this._notify('onMenuItemActivate', [result]);
+         _selectedItemsChangedHandler: function(event, result) {
+            this._notify('onMenuItemActivate', [result[0]]);
          }
       });
 

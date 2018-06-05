@@ -15,11 +15,10 @@
         className="{{_offsetClassName}}"
         typeShadow="default"
         showHeader="{{_options.showHeader}}"
-        on:selectedItemChanged="_selectedItemChangedHandler()"
+        on:selectedItemsChanged="_selectedItemsChangedHandler()"
         class="controls-MenuButton">
    <Controls.Button icon="{{_options.icon}}"
                     caption="{{_options.caption}}"
                     style="{{_options.style}}"
-                    size="{{_options.size}}"
-                    on:click="_open()"/>
+                    size="{{_options.size}}"/>
 </Controls.Container.Dropdown>

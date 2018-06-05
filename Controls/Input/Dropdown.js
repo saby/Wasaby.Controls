@@ -4,9 +4,10 @@ define('Controls/Input/Dropdown',
       'tmpl!Controls/Input/Dropdown/Dropdown',
       'tmpl!Controls/Input/Dropdown/resources/defaultContentTemplate',
       'WS.Data/Utils',
+      'WS.Data/Chain',
       'css!Controls/Input/Dropdown/Dropdown'
    ],
-   function(Control, template, defaultContentTemplate, Utils) {
+   function(Control, template, defaultContentTemplate, Utils, Chain) {
 
       /**
        * Input for selection from the list of options.
@@ -26,15 +27,29 @@ define('Controls/Input/Dropdown',
 
       var getPropValue = Utils.getItemPropertyValue.bind(Utils);
 
+      var _private = {
+         getSelectedKeys: function(items, keyProperty) {
+            var keys = [];
+            Chain(items).each(function(item) {
+               keys.push(getPropValue(item, keyProperty));
+            });
+            return keys;
+         }
+      };
+
       var DropdownList = Control.extend({
          _template: template,
          _defaultContentTemplate: defaultContentTemplate,
          _text: '',
 
-         _selectedItemChangedHandler: function(event, item) {
-            this._text = getPropValue(item, this._options.displayProperty || 'title');
-            this._icon = item.get('icon');
-            this._notify('selectedKeysChanged', [getPropValue(item, this._options.keyProperty)]);
+         _selectedItemsChangedHandler: function(event, items) {
+            this._text = getPropValue(items[0], this._options.displayProperty || 'title');
+
+            if (items.length > 1) {
+               this._text += ' и еще' + (items.length - 1);
+            }
+            this._icon = items[0].get('icon');
+            this._notify('selectedKeysChanged', [_private.getSelectedKeys(items, this._options.keyProperty)]);
          }
       });
 

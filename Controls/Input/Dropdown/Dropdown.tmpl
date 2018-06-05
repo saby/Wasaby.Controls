@@ -12,7 +12,7 @@
         selectedKeys="{{_options.selectedKeys}}"
         showHeader="{{_options.showHeader}}"
         typeShadow="default"
-        on:selectedItemChanged="_selectedItemChangedHandler()"
+        on:selectedItemsChanged="_selectedItemsChangedHandler()"
         class="controls-Dropdown">
    <ws:partial template="{{_options.contentTemplate || _defaultContentTemplate}}"
                contentTemplate="{{_options.contentTemplate}}"

@@ -3,10 +3,13 @@ define('Controls/Container/Dropdown',
       'Core/Control',
       'tmpl!Controls/Container/Dropdown/Dropdown',
       'tmpl!Controls/Input/Dropdown/resources/defaultContentTemplate',
-      'Controls/Controllers/SourceController'
+      'Controls/Controllers/SourceController',
+      'Core/helpers/Object/isEqual',
+      'Core/helpers/Object/isEmpty',
+      'WS.Data/Chain'
    ],
 
-   function(Control, template, defaultContentTemplate, SourceController) {
+   function(Control, template, defaultContentTemplate, SourceController, isEqual, isEmpty, Chain) {
 
       /**
           * Container for dropdown lists
@@ -27,13 +30,19 @@ define('Controls/Container/Dropdown',
             });
             return instance._sourceController.load().addCallback(function(items) {
                instance._items = items;
-               _private.updateSelectedItem(instance, selectedKeys);
+               _private.updateSelectedItems(instance, selectedKeys);
                return items;
             });
          },
 
-         updateSelectedItem: function(instance, selectedKeys) {
-            instance._selectedItem = instance._items.getRecordById(selectedKeys);
+         updateSelectedItems: function(instance, selectedKeys) {
+            if (selectedKeys instanceof Array) {
+               Chain(instance._items).each(function(item) {
+                  if (selectedKeys.indexOf(item.get(instance._options.keyProperty)) > -1) {
+                     instance._selectedItems.push(item);
+                  }
+               });
+            }
          },
 
          onResult: function(result) {
@@ -50,7 +59,8 @@ define('Controls/Container/Dropdown',
          },
 
          selectItem: function(item) {
-            this._notify('selectedItemChanged', [item]);
+            this._selectedItems = [item];
+            this._notify('selectedItemsChanged', [this._selectedItems]);
          }
       };
 
@@ -58,10 +68,11 @@ define('Controls/Container/Dropdown',
          _template: template,
 
          _beforeMount: function(options, context, receivedState) {
+            this._selectedItems = [];
             this._onResult = _private.onResult.bind(this);
             if (receivedState) {
                this._items = receivedState;
-               _private.updateSelectedItem(this, options.selectedKeys);
+               _private.updateSelectedItems(this, options.selectedKeys);
             } else {
                if (options.source) {
                   return _private.loadItems(this, options.source, options.selectedKeys);
@@ -70,14 +81,14 @@ define('Controls/Container/Dropdown',
          },
 
          _afterMount: function() {
-            if (this._selectedItem !== undefined) {
-               this._notify('selectedItemChanged', [this._selectedItem]);
+            if (!isEmpty(this._selectedItems)) {
+               this._notify('selectedItemsChanged', [this._selectedItems]);
             }
          },
 
          _beforeUpdate: function(newOptions) {
-            if (newOptions.selectedKeys && newOptions.selectedKeys !== this._options.selectedKeys) {
-               _private.updateSelectedItem(this, newOptions.selectedKeys);
+            if (newOptions.selectedKeys && !isEqual(newOptions.selectedKeys, this._options.selectedKeys)) {
+               _private.updateSelectedItems(this, newOptions.selectedKeys);
             }
             if (newOptions.source && newOptions.source !== this._options.source) {
                var self = this;

@@ -61,13 +61,13 @@ define('Controls/Input/ComboBox',
             this._isOpen = !this._isOpen;
          },
 
-         _selectedItemChangedHandler: function(event, selectedItem) {
-            this._value = getPropValue(selectedItem, this._options.displayProperty);
+         _selectedItemsChangedHandler: function(event, selectedItems) {
+            this._value = getPropValue(selectedItems[0], this._options.displayProperty);
             this._simpleViewModel.updateOptions({
                value: this._value
             });
             this._notify('valueChanged', [this._value]);
-            this._notify('selectedKeyChanged', [getPropValue(selectedItem, this._options.keyProperty)]);
+            this._notify('selectedKeyChanged', [getPropValue(selectedItems[0], this._options.keyProperty)]);
             this._isOpen = false;
          }
 
