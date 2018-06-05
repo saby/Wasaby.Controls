@@ -169,12 +169,18 @@ define('Controls/List/ListViewModel',
                this._nextVersion();
             }
          },
+
          setItemActions: function(item, actions) {
             this._actions[this.getIndexBySourceItem(item)] = actions;
          },
          _prepareDisplayItemForAdd: function(item) {
             return ItemsUtil.getDefaultDisplayItem(this._display, item);
          },
+
+         getItemActions: function(item) {
+            return this._actions[this.getIndexBySourceItem(item)];
+         },
+
 
          __calcSelectedItem: function(display, selKey, keyProperty) {
 
