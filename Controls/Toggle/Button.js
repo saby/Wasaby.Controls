@@ -59,10 +59,8 @@ define('Controls/Toggle/Button', [
       }
    };
    var ToggleButton = Control.extend({
-      _controlName: 'Controls/Toggle/Button',
       _template: template,
-      constructor: function(options) {
-         ToggleButton.superclass.constructor.apply(this, arguments);
+      _beforeMount: function(options) {
          this._type = 'toggle';
          _private.optionsGeneration(this, options);
       },
