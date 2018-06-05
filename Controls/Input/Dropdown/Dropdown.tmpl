@@ -12,10 +12,12 @@
         selectedKeys="{{_options.selectedKeys}}"
         showHeader="{{_options.showHeader}}"
         typeShadow="default"
+        emptyText="{{_options.emptyText}}"
         on:selectedItemsChanged="_selectedItemsChangedHandler()"
         class="controls-Dropdown">
    <ws:partial template="{{_options.contentTemplate || _defaultContentTemplate}}"
                contentTemplate="{{_options.contentTemplate}}"
                icon="{{_icon}}"
-               text="{{_text}}"/>
+               text="{{_text}}"
+               class="controls-Dropdown__{{_isEmptyItem ? 'emptyItem' : 'defaultItem'}}"/>
 </Controls.Container.Dropdown>

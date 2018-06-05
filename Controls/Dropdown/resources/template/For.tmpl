@@ -6,6 +6,7 @@
          resultHandler="{{resultHandler}}"
          hierarchyPadding="{{hierarchyPadding}}"
          parentProperty="{{parentProperty}}"
-         iconPadding="{{iconPadding}}"/>
+         iconPadding="{{iconPadding}}"
+         class="controls-DropdownList__{{listModel.getCurrent().emptyText ? 'emptyItem' : 'defaultItem'}}"/>
    </ws:for>
 </div>

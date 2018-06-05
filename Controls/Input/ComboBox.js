@@ -62,6 +62,7 @@ define('Controls/Input/ComboBox',
          },
 
          _selectedItemsChangedHandler: function(event, selectedItems) {
+            this._isEmptyItem = getPropValue(selectedItems[0], this._options.keyProperty) === null;
             this._value = getPropValue(selectedItems[0], this._options.displayProperty);
             this._simpleViewModel.updateOptions({
                value: this._value

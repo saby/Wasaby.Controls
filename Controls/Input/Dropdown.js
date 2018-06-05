@@ -43,6 +43,7 @@ define('Controls/Input/Dropdown',
          _text: '',
 
          _selectedItemsChangedHandler: function(event, items) {
+            this._isEmptyItem = getPropValue(items[0], this._options.keyProperty) === null;
             this._text = getPropValue(items[0], this._options.displayProperty || 'title');
 
             if (items.length > 1) {
