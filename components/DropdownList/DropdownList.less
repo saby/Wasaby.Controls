@@ -25,12 +25,6 @@
            }
         }
       }
-
-      &:hover {
-        .controls-DropdownList__arrowIcon {
-          fill: @DropdownList-linkStyleHoverColor!important;
-        }
-      }
       * {
          font-size: @font-size_DropDownList;
       }
@@ -548,5 +542,17 @@
    &:hover{
       color: @DropdownList-linkStyleHoverColor;
       text-decoration: underline;
+   }
+}
+
+.controls-DropdownList__captionWrapper {
+   .inline-flexbox();
+   .flex-shrink(1);
+   overflow: hidden;
+}
+
+.controls-DropdownList__captionWrapper:hover {
+   .controls-DropdownList__arrowIcon {
+      fill: @DropdownList-linkStyleHoverColor!important;
    }
 }

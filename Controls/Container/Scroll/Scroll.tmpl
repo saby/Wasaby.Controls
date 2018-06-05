@@ -7,7 +7,7 @@
                   {{_displayState.heightFix ? 'controls-Scroll__content_hidden' : 'controls-Scroll__content_scroll'}}"
            on:resize="_resizeHandler()"
            on:scroll="_scrollHandler()">
-         <ws:partial template="{{_options.content}}"/>
+         <ws:partial template="{{_options.content}}" attr:class="ws-flex-shrink-0"/>
       </div>
    </Controls.Layout.Scroll>
 </ws:template>
