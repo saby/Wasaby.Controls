@@ -555,9 +555,7 @@ define('Controls/List/BaseControl', [
 
       _onItemClick: function(e, item) {
          var newKey = ItemsUtil.getPropertyValue(item, this._options.viewConfig.keyProperty);
-         if (!this._children.swipeControl._isTouch) {
-            this._listViewModel.setMarkedKey(newKey);
-         }
+         this._listViewModel.setMarkedKey(newKey);
       },
 
       /**
