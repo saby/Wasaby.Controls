@@ -9,10 +9,11 @@ define('Controls/Filter/Button',
       'WS.Data/Utils',
       'Controls/Container/Filter/FilterContextField',
       'WS.Data/Type/descriptor',
+      'Core/Deferred',
       'css!Controls/Filter/Button/Button'
    ],
    
-   function(Control, template, Chain, Utils, FilterContextField, types) {
+   function(Control, template, Chain, Utils, FilterContextField, types, Deferred) {
       
       /**
        * @class Controls/Filter/Button
