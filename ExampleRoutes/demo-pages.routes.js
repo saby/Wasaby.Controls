@@ -32,6 +32,6 @@ module.exports = function(Component) {
            application: 'Examples/Swipe/Module',
            initDependencies: false
          }, []);
-     }
+      }
    }
 };
