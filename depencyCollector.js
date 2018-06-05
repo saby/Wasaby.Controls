@@ -42,6 +42,7 @@ var contents = {
    jsModules: jsModules
 };
 contents["requirejsPaths"] = {
+   "SbisFile": "tests/sbis3-app-engine/client/SbisFile",
    "SBIS3.CONTROLS": "components",
    "View": "sbis3-ws/View",
    "WSTest": "tests/WSTest",
