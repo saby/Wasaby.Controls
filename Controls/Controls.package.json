@@ -67,7 +67,19 @@
   "output": "controls-list.package.js"
 }, {
   "include": [
-    "Controls/Popup/*"
+    "Controls/Popup/Manager",
+    "Controls/Popup/Manager/*",
+    "Controls/Popup/Previewer",
+    "Controls/Popup/Previewer/*",
+    "Controls/Popup/Opener/BaseController",
+    "Controls/Popup/Opener/BaseOpener",
+    "Controls/Popup/Opener/Confirmation",
+    "Controls/Popup/Opener/Dialog",
+    "Controls/Popup/Opener/InfoBox",
+    "Controls/Popup/Opener/Notification",
+    "Controls/Popup/Opener/Stack",
+    "Controls/Popup/Opener/Sticky",
+    "Controls/Popup/Opener/Previewer"
   ],
   "output": "controls-popup.package.js"
 }, {
