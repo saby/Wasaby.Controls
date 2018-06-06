@@ -82,7 +82,7 @@ define('Controls/Popup/Opener/Stack/StackController',
             if (cConstants.browser.chrome && !cConstants.browser.isMobilePlatform) {
                this._getTemplateContainer(container).classList.add('controls-Stack_hide');
             } else {
-               this.elementDestroyed(element, container);
+               _private.elementDestroyed(this, element);
             }
             return this._destroyDeferred;
          },
