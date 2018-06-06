@@ -1,7 +1,6 @@
 define('Controls/Calendar/MonthSlider', [
    'Core/Control',
    'Core/core-merge',
-   'WS.Data/Type/descriptor',
    'SBIS3.CONTROLS/Utils/DateUtil',
    'Controls/Calendar/MonthSlider/Slider',
    'Controls/Calendar/Utils',
@@ -11,7 +10,6 @@ define('Controls/Calendar/MonthSlider', [
 ], function(
    BaseControl,
    coreMerge,
-   types,
    DateUtil,
    Slider,
    calendarUtils,

@@ -61,7 +61,8 @@ define('Controls/Decorators/Highlight',
                highlightRegExp = this.getHighlightRegExp(highlight),
                exec, foundText, startingPosition;
 
-            while (exec = highlightRegExp.exec(text)) {
+            while (highlightRegExp.exec(text)) {
+               exec = highlightRegExp.exec(text);
                foundText = exec[0];
 
                if (foundText) {

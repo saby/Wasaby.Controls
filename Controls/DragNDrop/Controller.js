@@ -1,11 +1,10 @@
 define('Controls/DragNDrop/Controller',
    [
       'Core/Control',
-      'Core/core-instance',
       'tmpl!Controls/DragNDrop/Controller/Controller'
    ],
 
-   function(Control, cInstance, template) {
+   function(Control, template) {
       var SHIFT_LIMIT = 4;
 
       var _private = {
