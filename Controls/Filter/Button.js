@@ -15,11 +15,14 @@ define('Controls/Filter/Button',
    function(Control, template, Chain, Utils, types, Deferred) {
 
       /**
+       * Component for data filtering.
+       * Uses property grid for editing filter fields.
        * @class Controls/Filter/Button
        * @extends Core/Control
-       * @mixin Controls/Filter/Button/interface/IFilterPanel
+       * @mixes Controls/interface/IFilterButton
        * @control
        * @public
+       * @author Герасимов Александр
        */
 
       'use strict';
