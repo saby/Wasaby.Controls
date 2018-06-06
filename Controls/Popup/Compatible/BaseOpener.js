@@ -10,14 +10,19 @@ function(cMerge) {
        * Слой совместимости для базового опенера для открытия старых шаблонов
        */
    return {
-      _prepareConfigForOldTemplate: function(cfg, templateClass) {
+      _prepareConfigForOldTemplate: function(cfg, templateClass, popupId) {
          cfg.templateOptions = {
             templateOptions: cfg.templateOptions || cfg.componentOptions || {},
             template: cfg.template,
             type: cfg._type,
             handlers: cfg.handlers,
-            _initCompoundArea: cfg._initCompoundArea
+            _initCompoundArea: cfg._initCompoundArea,
+            _isUpdating: !!popupId
          };
+
+         if (cfg.target) {
+            cfg.target = cfg.target[0] ? cfg.target[0] : cfg.target;
+         }
 
          if (cfg.hasOwnProperty('autoHide')) {
             cfg.closeByExternalClick = cfg.autoHide;
@@ -49,6 +54,10 @@ function(cMerge) {
          });
          if (cfg.hasOwnProperty('closeByExternalClick')) {
             cfg.autoHide = cfg.closeByExternalClick;
+         }
+
+         if (newCfg.target) {
+            newCfg.target = $(newCfg.target);
          }
 
          return newCfg;
