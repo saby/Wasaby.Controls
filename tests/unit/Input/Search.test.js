@@ -30,10 +30,6 @@ define(
                };
                search._searchClick();
             });
-
-            function setTrue(assert) {
-               assert.equal(true, true);
-            }
          });
       });
    });
