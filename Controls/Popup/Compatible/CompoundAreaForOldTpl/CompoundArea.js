@@ -95,8 +95,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
 
          _shouldUpdate: function(popupOptions) {
-            if (this._options._shouldUpdate) {
+            if (popupOptions._isUpdating) {
                this._rebuildCompoundControl(popupOptions);
+               popupOptions._isUpdating = false;
             }
             return false;
          },
@@ -166,7 +167,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
          _commandHandler: function(event, commandName, arg) {
             if (commandName === 'close') {
-               this._close();
+               this._close(arg);
             }
             if (commandName === 'registerPendingOperation') {
                return this._registerChildPendingOperation(arg);
@@ -175,14 +176,14 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                return this._unregisterChildPendingOperation(arg);
             }
          },
-         _close: function() {
-            if (this.handle('onBeforeClose') !== false) {
+         _close: function(arg) {
+            if (this.handle('onBeforeClose', arg) !== false) {
                this.close();
             }
          },
-         closeHandler: function(e) {
+         closeHandler: function(e, arg) {
             e.stopPropagation();
-            this._close();
+            this._close(arg);
          },
 
          /* from api floatArea, window */
@@ -223,17 +224,25 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                return value !== handler;
             });
          },
-         handle: function(eventName) {
-            var handlers = this[eventName + 'Handler'] || [];
-            var eventState = new EventObject(eventName, this);
-            var self = this;
+         handle: function(eventName, arg) {
+            var handlers = this[eventName + 'Handler'] || [],
+               eventState = new EventObject(eventName, this),
+               optionsHandlers = this._options.handlers || [],
+               self = this;
 
             if (handlers[eventName] === 'function') {
-               handlers[eventName] = [this._options.handlers[eventName]];
+               handlers[eventName] = [handlers[eventName]];
             }
+            if (typeof optionsHandlers[eventName] === 'function') {
+               handlers.push(optionsHandlers[eventName]);
+            }
+            if (Array.isArray(optionsHandlers[eventName])) {
+               handlers = handlers.concat(optionsHandlers[eventName]);
+            }
+
             handlers.forEach(function(value) {
                if (eventState.getResult() !== false) {
-                  value.apply(self, [eventState]);
+                  value.apply(self._compoundControl || self, [eventState, arg]);
                }
             });
 

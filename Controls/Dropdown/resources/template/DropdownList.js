@@ -116,12 +116,17 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   this._notify('sendResult', [result]);
             }
          },
-         _itemClickHandler: function(event, item, flag) { //todo нужно обсудить
+         _itemClickHandler: function(event, item, pinClicked) { //todo нужно обсудить
             var result = {
                action: 'itemClick',
                event: event,
-               data: [item, flag]
+               data: [item, pinClicked]
             };
+            
+            // means that pin button was clicked
+            if (pinClicked) {
+               event.stopPropagation();
+            }
             this._notify('sendResult', [result]);
          },
          _footerClick: function(event) {

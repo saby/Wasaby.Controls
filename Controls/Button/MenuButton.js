@@ -72,27 +72,35 @@ define('Controls/Button/MenuButton',
       var MenuButton = Control.extend({
          _template: template,
          _menuHeadTemplate: menuHeadTemplate,
-         constructor: function(config) {
-            _private.cssStyleGeneration(this, config);
-            MenuButton.superclass.constructor.apply(this, arguments);
+
+         _beforeMount: function(options) {
+            _private.cssStyleGeneration(this, options);
             this._onResult = this._onResult.bind(this);
          },
-         _beforeMount: function(options, context, receivedState) {
-            if (receivedState) {
-               this._items = receivedState;
-            } else {
-               if (options.source) {
-                  return _private.loadItems(this, options.source, options.filter);
-               }
-            }
-         },
+         
          _beforeUpdate: function(newOptions) {
-            if (newOptions.source && newOptions.source !== this._options.source) {
-               return _private.loadItems(this, newOptions.source);
+            /* source changed, items is not actual now */
+            if (newOptions.source !== this._options.source || this._options.filter !== newOptions.filter) {
+               this._items = null;
             }
          },
+         
          _open: function() {
-            dropdownUtil.open(this, this._children.popupTarget._container);
+            var self = this;
+            
+            function open() {
+               dropdownUtil.open(self, self._children.popupTarget._container);
+            }
+            
+            if (this._options.source && !this._items) {
+               _private.loadItems(this, this._options.source, this._options.filter).addCallback(function(items) {
+                  self._items = items;
+                  open();
+                  return items;
+               });
+            } else {
+               open();
+            }
          },
          _onResult: function(result) {
             if (result.action === 'itemClick') {

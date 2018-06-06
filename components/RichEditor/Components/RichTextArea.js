@@ -3081,6 +3081,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   // Убрать по мере переделки стороннего кода, используещего эти атрибуты.
                   // Для пролучения uuid правильно использовать метод getImageUuid
                   var style = (width ? 'width:' + width + ';' : '') + (height ? 'height:' + height + ';' : '');
+                  editor.once('selectionchange', function () {
+                     var node = editor.selection.getNode();
+                     // Если узел - элемент, контент которого начинается с символа - убрать его
+                     // 1175285366 https://online.sbis.ru/opendoc.html?guid=20b6f530-64e2-4324-9802-12d14299bf7d
+                     if (node.nodeType === 1) {
+                        var content = node.innerHTML;
+                        if (content.charCodeAt(0) === 65279/*&#xFEFF;*/) {
+                           node.innerHTML = content.substring(1);
+                        }
+                     }
+                  }.bind(this));
                   this.insertHtml(
                      (before || '') +
                      '<img' +

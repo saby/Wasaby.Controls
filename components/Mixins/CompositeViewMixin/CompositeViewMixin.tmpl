@@ -3,7 +3,9 @@
             {{ multiselect !== false ? 'controls-ListView__multiselect' : 'controls-ListView__multiselect__off' }}
             {{ startScrollColumn !== undefined ? 'controls-DataGridView__with-partScroll' }}
             {{ 'controls-CompositeView-' + viewMode }}
-            {{ viewMode === 'tile' ? ('controls-CompositeView-tile__' + tileMode) }}{{ _serverRender ? ' controls-ListView__dataLoaded' : ' controls-ListView__dataNotLoaded'}}">
+            {{ tileMode ? ' controls-CompositeView-tile__new' : ' controls-CompositeView-tile__old' }}
+            {{ viewMode === 'tile' && tileMode ? ('controls-CompositeView-tile__' + tileMode) }}
+            {{ _serverRender ? ' controls-ListView__dataLoaded' : ' controls-ListView__dataNotLoaded'}}">
    <div class="js-controls-DataGridView__minHeight controls-DataGridView__minHeight"></div>
    <SBIS3.CONTROLS:Panel tabindex="{{1}}" class="controls-ListView__fakeFocusElement" allowChangeEnable="{{false}}"/>
    <div class="controls-AjaxLoader ws-hidden">
