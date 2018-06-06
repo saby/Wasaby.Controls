@@ -379,6 +379,10 @@ define('Controls/List/Grid/GridViewModel', [
             this._model.setMarkedKey(key);
          },
 
+         getSwipeItem: function() {
+            return this._model.getSwipeItem();
+         },
+
          reset: function() {
             this._model.reset();
          },
@@ -526,6 +530,10 @@ define('Controls/List/Grid/GridViewModel', [
 
          unselect: function(keys) {
             this._model.unselect(keys);
+         },
+
+         setSwipeItem: function(itemData) {
+            this._model.setSwipeItem(itemData);
          },
 
          destroy: function() {
