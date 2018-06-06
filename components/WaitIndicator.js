@@ -379,8 +379,6 @@ define('SBIS3.CONTROLS/WaitIndicator',
                   waitIndicatorDOMHelper.show(poolItem.spinner);
                }
                poolItem.indicators.push(indicator);
-               // Сбросить отсчёт времени до принудительного удаления из DOM-а
-               waitIndicatorManager._unclear(poolItem);
             }
             else {
                // Индикатора в DOM-е не содержиться
@@ -416,9 +414,6 @@ define('SBIS3.CONTROLS/WaitIndicator',
                      waitIndicatorManager.update(poolItem, indicator.getMessage(), indicator.look);
                   }
                   else {
-                     // Удалить из DOM-а и из пула
-                     // Сбросить отсчёт времени до принудительного удаления из DOM-а
-                     waitIndicatorManager._unclear(poolItem);
                      // Удалить из DOM-а
                      waitIndicatorDOMHelper.remove(poolItem.spinner, isGlobal);
                      // Удалить из пула
@@ -455,18 +450,6 @@ define('SBIS3.CONTROLS/WaitIndicator',
                if (prevMessage !== msg || look !== prevLook) {
                   poolItem.spinner = waitIndicatorDOMHelper.change(poolItem.spinner, poolItem.container, msg, look);
                }
-            }
-         },
-
-         /**
-          * Сбросить отсчёт времени до принудительного удаления из DOM-а
-          * @protected
-          * @param {object} poolItem Элемент пула
-          */
-         _unclear: function (poolItem) {
-            if ('clearing' in poolItem) {
-               clearTimeout(poolItem.clearing);
-               delete poolItem.clearing;
             }
          },
 
