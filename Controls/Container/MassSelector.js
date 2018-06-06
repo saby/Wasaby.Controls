@@ -5,7 +5,6 @@ define('Controls/Container/MassSelector', [
    'Controls/Controllers/Multiselect/Selection'
 ], function(Control, template, MassSelectorContextField, MultiSelection) {
    return Control.extend({
-
       _template: template,
       _multiselection: null,
       _items: null,
@@ -25,6 +24,10 @@ define('Controls/Container/MassSelector', [
 
          this._updateCount();
          this._updateContext();
+      },
+
+      getSelection: function() {
+         return this._multiselection.getSelection();
       },
 
       _onCheckBoxClickHandler: function(event, key, status) {

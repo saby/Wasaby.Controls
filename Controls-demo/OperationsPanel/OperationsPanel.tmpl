@@ -1,4 +1,4 @@
-<Controls.Container.MassSelector selectedKeys="{{[1, 3]}}">
+<Controls.Container.MassSelector selectedKeys="{{[1, 3]}}" name="massSelector">
    <div class="controls-OperationsPanel_demo">
       <div>
          <h2>Панель операций</h2>
@@ -21,7 +21,6 @@
             source="{{_panelSource}}"
             on:itemClick="_itemClick()"
          />
-         <div name="toolbarAnswer">{{ _currentClick }}</div>
       </ws:if>
 
       <div class="123">
@@ -37,6 +36,7 @@
                   multiSelectVisibility="visible"
                   name="listView"
                   keyProperty="id"
+                  on:beforeItemsRemove="_beforeItemsRemove()"
                >
                   <ws:navigation source="page" view="infinity">
                      <ws:sourceConfig
@@ -60,5 +60,8 @@
             captions="{{['px', '%']}}"
          />
       </div>
+      <h2>Действия</h2>
+      <div>{{ _currentClick }}</div>
+      <Controls.Popup.Opener.Confirmation name="popupOpener" />
    </div>
 </Controls.Container.MassSelector>

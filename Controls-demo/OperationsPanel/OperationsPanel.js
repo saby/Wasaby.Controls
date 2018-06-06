@@ -55,59 +55,66 @@ define('Controls-demo/OperationsPanel/OperationsPanel', [
    ];
    var defaultItems = [
       {
-         id: '1',
+         id: 0,
+         icon: 'icon-Erase icon-error',
+         '@parent': false,
+         title: 'Удалить',
+         parent: null
+      },
+      {
+         id: 1,
          icon: 'icon-Time',
          '@parent': false,
          parent: null
       },
       {
-         id: '3',
+         id: 3,
          icon: 'icon-Print',
          title: 'Распечатать',
          '@parent': false,
          parent: null
       },
       {
-         id: '4',
+         id: 4,
          icon: 'icon-Linked',
          title: 'Связанные документы',
          '@parent': true,
          parent: null
       },
       {
-         id: '5',
+         id: 5,
          icon: 'icon-Link',
          title: 'Скопировать в буфер',
          '@parent': false,
          parent: null
       },
       {
-         id: '6',
+         id: 6,
          title: 'Прикрепить к',
          '@parent': true,
          parent: null
       },
       {
-         id: '7',
+         id: 7,
          title: 'Проекту',
          icon: 'icon-Link',
          '@parent': false,
          parent: '4'
       },
       {
-         id: '8',
+         id: 8,
          title: 'Этапу',
          '@parent': false,
          parent: '4'
       },
       {
-         id: '9',
+         id: 9,
          title: 'Согласование',
          '@parent': false,
          parent: '6'
       },
       {
-         id: '10',
+         id: 10,
          title: 'Задача',
          '@parent': false,
          parent: '6'
@@ -150,11 +157,35 @@ define('Controls-demo/OperationsPanel/OperationsPanel', [
       },
 
       _itemClick: function(event, item) {
-         this._currentClick = 'Вы нажали на ' + item.getId();
+         var itemId = item.getId();
+         this._currentClick = 'Вы нажали на ' + itemId;
+         if (itemId === 0) {
+            var selected = this._children.massSelector.getSelection().selected;
+            if (selected && selected.length && selected[0] === null) {
+               this._showError('невозможно удалить всё');
+            } else {
+               this._children.listView.removeItems(selected);
+            }
+         }
       },
 
       _openClick: function(event, item) {
          this._panelVisible = !this._panelVisible;
+      },
+
+      _showError: function(message) {
+         this._children.popupOpener.open({
+            message: message,
+            style: 'error',
+            type: 'ok'
+         });
+      },
+
+      _beforeItemsRemove: function() {
+         return this._children.popupOpener.open({
+            message: 'Remove items?',
+            type: 'yesno'
+         });
       }
    });
    return ModuleClass;
