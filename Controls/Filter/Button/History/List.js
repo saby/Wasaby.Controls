@@ -5,13 +5,12 @@ define('Controls/Filter/Button/History/List', [
    'Core/Control',
    'tmpl!Controls/Filter/Button/History/List',
    'WS.Data/Source/Memory',
-   'WS.Data/Adapter/RecordSet',
    'WS.Data/Adapter/Sbis',
    'Controls/History/FilterSource',
    'Controls/History/Service',
    'Controls/Controllers/SourceController',
    'css!Controls/Filter/Button/History/List'
-], function(BaseControl, template, MemorySource, RecordSetAdapter, SbisAdapter, HistorySource, HistoryService, SourceController) {
+], function(BaseControl, template, MemorySource, SbisAdapter, HistorySource, HistoryService, SourceController) {
    'use strict';
 
    var actionType = {
