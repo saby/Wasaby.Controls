@@ -1,36 +1,5 @@
 <div>
-    <span>First List</span>
-    <Controls.List
-            on:dragStart="_dragStart()"
-            class="DND-list"
-            itemsDragNDrop="{{true}}"
-            displayProperty="title"
-            name="list"
-            source = "{{_viewSource}}"
-            idProperty="id">
-    </Controls.List>
-    <span>Second List (itemsDragNDrop = false)</span>
-    <Controls.List
-            on:dragStart="_dragStart()"
-            class="DND-list"
-            displayProperty="title"
-            name="listSecond"
-            source = "{{_viewSourceSecond}}"
-            idProperty="id">
-    </Controls.List>
-    <span>Third List</span>
-    <Controls.List
-            on:dragStart="_dragStart()"
-            class="DND-list"
-            itemsDragNDrop="{{true}}"
-            displayProperty="title"
-            name="listThird"
-            source = "{{_viewSourceThird}}"
-            idProperty="id">
-    </Controls.List>
-    <Controls-demo.DragNDrop.Notes name="listNotes"/>
-    <Controls.Button
-            on:click="_onClick()"
-            caption="Reload">
-    </Controls.Button>
+    <Controls-demo.DragNDrop.List/>
+    <Controls-demo.DragNDrop.Notes/>
+    <Controls-demo.DragNDrop.Basket/>
 </div>

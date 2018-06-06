@@ -100,14 +100,6 @@ define('Controls/List', [
          return _private.prepareViewConfig(cfg);
       },
 
-      _beforeUpdate: function(newOptions) {
-         if (newOptions.items && (newOptions.items !== this._options.items)) {
-            this._viewModel.setItems(newOptions.items);
-         } else if (newOptions.markedKey !== this._options.markedKey) {
-            this._viewModel.setMarkedKey(newOptions.markedKey);
-         }
-      },
-
       reload: function() {
          this._children.listControl.reload();
       },
@@ -181,6 +173,14 @@ define('Controls/List', [
 
       _afterItemsMove: function(event, items, target, position, result) {
          this._notify('afterItemsMove', [items, target, position, result]);
+      },
+
+      _dragStart: function(event, dragObject) {
+         return this._notify('dragStart', [dragObject]);
+      },
+
+      _dragEnd: function(event, dragObject) {
+         return this._notify('dragEnd', [dragObject]);
       }
    });
 

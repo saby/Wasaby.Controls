@@ -328,14 +328,14 @@ define('SBIS3.CONTROLS/ComponentBinder/SearchController',
             self = this,
             isTree = cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS/Mixins/TreeMixin');
          
-         searchForm.subscribe('onReset', function() {
+         this.subscribeTo(searchForm, 'onReset', function() {
             view.setHighlightText('', false);
             view.setHighlightEnabled(false);
             self._kbLayoutRevertObserver.stopObserve();
          });
    
          if (!this._options.doNotRespondOnReset) {
-            searchForm.subscribe('onReset', function() {
+            this.subscribeTo(searchForm, 'onReset', function() {
                if (isTree) {
                   self._resetGroup();
                } else {
@@ -343,8 +343,8 @@ define('SBIS3.CONTROLS/ComponentBinder/SearchController',
                }
             });
          }
-
-         searchForm.subscribe('onSearch', function(event, text, forced) {
+   
+         this.subscribeTo(searchForm, 'onSearch', function(event, text, forced) {
             /* Если у поля поиска есть автодополнение,
                то поиск надо запускать только по enter'у / выбору из автодополнения. */
             if(searchForm.getProperty('usePicker') && text) {
@@ -368,12 +368,15 @@ define('SBIS3.CONTROLS/ComponentBinder/SearchController',
                self._startSearch(text);
             }
          });
-
-         searchForm.subscribe('onKeyPressed', function(eventObject, event) {
+   
+         this.subscribeTo(searchForm, 'onKeyPressed', function(eventObject, event) {
+            /* Строка поиска связывается searchController'ом со списком в браузере и со списком в автодополнении,
+               когда открыто автодополнение, клик по стрелкам на клавиатуре должен приводить к навигации по списку в автодополнении */
+            var abortKeyPressedProcess = searchForm.isPickerVisible() && !self._options.searchFormWithSuggest;
             /* Нет смысла обрабатывать клавиши и устанавливать фокус, если
                view с которой работает searchForm скрыта.
                (актуально для поля связи / suggestTextBox'a / строки поиска с саггестом ) */
-            if(!isElementVisible(view.getContainer())) {
+            if(!isElementVisible(view.getContainer()) || abortKeyPressedProcess) {
                return;
             }
 

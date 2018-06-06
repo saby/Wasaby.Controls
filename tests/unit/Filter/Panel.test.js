@@ -1,7 +1,7 @@
 define(
    [
       'Controls/Filter/Button/Panel',
-      'WS.Data/Collection/RecordSet',
+      'WS.Data/Collection/RecordSet'
    ],
    function(FilterPanel, RecordSet) {
       describe('FilterPanelVDom', function() {
@@ -39,7 +39,7 @@ define(
             if (e == 'close') {
                isNotifyClose = true;
             } else if (e == 'sendResult') {
-               filter = args[0];
+               filter = args[0]['filter'];
             }
          };
 
@@ -65,6 +65,12 @@ define(
             assert.isTrue(isNotifyClose);
          });
 
+         it('apply history filter', function() {
+            panel._beforeMount(config);
+            panel._applyHistoryFilter();
+            assert.deepEqual({text: '123'}, filter);
+         });
+
          it('reset and filter', function() {
             panel._beforeMount(config);
             panel._resetFilter();
@@ -82,12 +88,6 @@ define(
             panel._beforeMount(config);
             panel._items[2].visibility = true;
             assert.isFalse(FilterPanel._private.hasAdditionalParams(panel._items));
-         });
-
-         it('Close', function() {
-            isNotifyClose = false;
-            panel._close();
-            assert.isTrue(isNotifyClose);
          });
 
          it('recordSet', function() {

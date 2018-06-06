@@ -85,6 +85,9 @@
 @spacing_stackTemplate_head:                    0 52px 0 12px;
 @top-space_stackTemplate_close-button:          5px;
 
+//DialogTemplate
+@padding_dialogTemplate_content:                0 12px;
+
 //FieldLink
 @icon-size_FieldLink-button:                    @default-icon-size;
 @border-width_FieldLink-picker:                 @default-border-width;
@@ -97,6 +100,8 @@
 @spacing_FieldLink-linkContainer:               4px;
 @spacing_FieldLink-item_inField:                @default-padding;
 @spacing_FieldLink-dropAllLinks:                @default-padding;
+@spacing_FieldLink-indicator:                   2px;
+@height_FieldLink-indicator:                    @default-icon-size - @default-border-width;
 @fieldLink-showAll-shadow-width:                20px;
 
 //FieldLink_Link
@@ -263,6 +268,7 @@
 @max-height_DropdownList:       400px;
 @height_DropdownList-item:      32px;
 @border-size_DropdownList:      1px;
+@spacing_DropdownList-pin:      12px;
 @padding_DropdownList-default:  12px;
 @spacing_DropdownList_arrowSubMenu:28px;
 @padding_DropdownList-item:     5px;
@@ -314,7 +320,7 @@
 @padding-left_forwardArrow:       10px;
 //MenuButton
 @menu-button-header-font-size:    @font-size_Popup;
-@width-Dropdown-pin:              20px;
+@width-Dropdown-pin:              16px;
 
 @bread-crumb-home-font-size:      @icon-size_default;
 
@@ -367,8 +373,13 @@
 @vertical-padding_InputArea: 2px;
 
 //Suggest
-@width_Suggest-loader:                          16px;
-@spacing_Suggest-loader:                        3px;
+@width_Suggest-loader:                           16px;
+@spacing_Suggest-loader:                         3px;
+
+//Suggest VDOM
+@spacing_Suggest_suggestionsContainer_overInput: 8px;
+@vertical-spacing_Suggest_tabs:                  8px;
+
 //CloseButton
 @border-width_CloseButton:               1px 0 1px 1px;
 @border-radius_CloseButton:              2px 0 0 2px;
@@ -450,6 +461,8 @@
 @width_itemActions_separator:            1px;
 @width_itemActions_swipeShadow:          6px;
 @max-width_itemActions_title:            120px;
+@margin-bottom_Actions_outside:    29px;
+@margin-bottom_Actions_inside:     3px;
 //SwipeACtions
 @font-size_swipe_icon_small:             24px;
 @font-size_swipe_icon_big:               32px;

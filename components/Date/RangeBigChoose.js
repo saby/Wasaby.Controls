@@ -267,8 +267,6 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          this._monthRangePicker.subscribe('onPeriodMouseLeave', this._onMonthRangePickerOnItemMouseLeave.bind(this));
          this._dateRangePicker.subscribe('onSelectionEnded', this._onDateRangeSelectionEnded.bind(this));
          this._dateRangePicker.subscribe('onMonthChanged', this._onDateRangePickerYearChanged.bind(this));
-         this._dateRangePicker.subscribe('onMonthTitleMouseEnter', this._onDateRangePickerMonthTitleMouseEnter.bind(this));
-         this._dateRangePicker.subscribe('onMonthTitleMouseLeave', this._datePickersResetActive.bind(this));
          this._dateRangePicker.subscribe('onDisplayedRangeChanged', this._dateOnDisplayedRangeChanged.bind(this));
          this._dateRangePicker.subscribe('onPeriodMouseLeave', this._datePickersResetActive.bind(this));
 
@@ -385,24 +383,11 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
                this._startDatePickerResetActive();
                this._datePickerSetActive(this._endDatePicker, DateUtil.getEndOfMonth(date));
             }
-         } else {
-            this._datePickerSetActive(this._startDatePicker);
          }
       },
        _onMonthRangePickerOnItemMouseLeave: function (event, date) {
          if (this._monthRangePicker.isSelectionProcessing()) {
             this._datePickersResetActive();
-         }
-      },
-
-      _onDateRangePickerMonthTitleMouseEnter: function (event, date) {
-         if (!this._dateRangePicker.isSelectionProcessing()) {
-            return;
-         }
-         if (this._dateRangePicker.getStartValue() > date) {
-            this._datePickerSetActive(this._startDatePicker, date);
-         } else {
-            this._datePickerSetActive(this._endDatePicker, new Date(date.getFullYear(), date.getMonth(), date.getDate() - 1));
          }
       },
 

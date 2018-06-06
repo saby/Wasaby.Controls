@@ -268,12 +268,16 @@ define('SBIS3.CONTROLS/Mixins/TreeViewMixin', [
       //********************************//
       _getLastChildByParent: function(itemsContainer, currentItem) {
          var
+            current,
             level = currentItem.getLevel(),
             enumerator = this._getItemsProjection().getEnumerator();
          enumerator.setCurrent(currentItem);
 
          while (enumerator.moveNext()) {
-            if (enumerator.getCurrent().getLevel() <= level) {
+            current = enumerator.getCurrent();
+
+            //Останавливаем поиск если упёрлись в элемент, отличный от записи(нет метода getLevel), или вышли из папки
+            if (!current.getLevel || current.getLevel() <= level) {
                //Т.к. нам нужно найти последний дочерний элемент, а мы нашли следующий, переместимся на 1 запись назад.
                enumerator.movePrevious();
                break;

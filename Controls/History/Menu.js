@@ -32,20 +32,19 @@ define('Controls/History/Menu',
       var HistoryMenu = MenuButton.extend({
          _defaultItemTemplate: itemTemplate,
          _source: null,
-
-         constructor: function(config) {
-            this._source = config.source;
-            config.filter = {
+         
+         _beforeMount: function(options) {
+            this._source = options.source;
+            options.filter = {
                $_history: true
             };
-            config.defaultItemTemplate = itemTemplate;
+            options.defaultItemTemplate = itemTemplate;
             this._onResult = this._onResult.bind(this);
-            HistoryMenu.superclass.constructor.apply(this, arguments);
          },
 
-         _onResult: function(args) {
-            var actionName = args[0];
-            var data = args[2];
+         _onResult: function(result) {
+            var actionName = result.action;
+            var data = result.data;
             var item = data[0];
             var pin = data[1];
 
@@ -60,7 +59,6 @@ define('Controls/History/Menu',
                      $_history: true
                   });
                   this._items = this._source.getItems();
-                  this._open();
                   this._children.DropdownOpener.close();
                   break;
                case 'pinnedClick':
@@ -69,7 +67,6 @@ define('Controls/History/Menu',
                   });
                   this._items = this._source.getItems();
                   this._open();
-                  this._children.DropdownOpener.close();
                   break;
             }
          }

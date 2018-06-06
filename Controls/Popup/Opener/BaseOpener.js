@@ -1,12 +1,14 @@
 define('Controls/Popup/Opener/BaseOpener',
    [
       'Core/Control',
+      'tmpl!Controls/Popup/Opener/BaseOpener',
       'Controls/Popup/Manager/ManagerController',
       'Core/core-clone',
       'Core/core-merge',
       'Core/Deferred'
    ],
-   function(Control, ManagerController, CoreClone, CoreMerge, Deferred) {
+   function(Control, Template, ManagerController, CoreClone, CoreMerge, Deferred) {
+
       /**
        * Базовый опенер
        * @category Popup
@@ -17,57 +19,83 @@ define('Controls/Popup/Opener/BaseOpener',
        * @author Лощинин Дмитрий
        */
       var Base = Control.extend({
+         _template: Template,
+
          _beforeUnmount: function() {
-            this.close();
+            if (this._options.closePopupBeforeUnmount) {
+               this.close();
+            }
          },
 
          /**
           * Открыть всплывающую панель
           * @function Controls/Popup/Opener/Base#open
           * @param popupOptions конфигурация попапа
-          * @param strategy стратегия позиционирования попапа
+          * @param controller стратегия позиционирования попапа
           */
-         open: function(popupOptions, strategy) {
+         open: function(popupOptions, controller) {
             var self = this;
             var cfg = this._getConfig(popupOptions);
 
-            if (this.isOpened()) {
-               this._popupId = ManagerController.update(this._popupId, cfg);
-            } else {
-               if (cfg.isCompoundTemplate) { //TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
-                  requirejs(['Controls/Popup/Compatible/Layer'], function(Layer) {
-                     Layer.load().addCallback(function() {
-                        self._openPopup(cfg, strategy);
-                     });
+            if (this._isExecuting) { //Если мы еще не обработали первый вызов, то дожидаемся его
+               return;
+            }
+            this._isExecuting = true;
+
+            if (!this.isOpened()) { // удаляем неактуальный id
+               this._popupId = null;
+            }
+
+            if (cfg.isCompoundTemplate) { //TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
+               requirejs(['Controls/Popup/Compatible/Layer'], function(Layer) {
+                  Layer.load().addCallback(function() {
+                     self._openPopup(cfg, controller);
                   });
-               } else {
-                  self._openPopup(cfg, strategy);
-               }
+               });
+            } else {
+               self._openPopup(cfg, controller);
             }
          },
 
-         _openPopup: function(cfg, strategy) {
+         _openPopup: function(cfg, controller) {
             var self = this;
-            this._getTemplate(cfg).addCallback(function(tpl) {
-               Base.showDialog(tpl, cfg, strategy).addCallback(function(popupId) {
+            this._requireModules(cfg, controller).addCallback(function(result) {
+               Base.showDialog(result.template, cfg, result.controller, self._popupId).addCallback(function(popupId) {
                   self._popupId = popupId;
+                  self._isExecuting = false;
                });
             });
          },
 
          //Ленивая загрузка шаблона
-         _getTemplate: function(config) {
-            if (typeof config.template === 'function') {
-               return (new Deferred()).callback(config.template);
-            } else if (requirejs.defined(config.template)) {
-               return (new Deferred()).callback(requirejs(config.template));
-            } else if (!this._openerListDeferred || this._openerListDeferred.isReady()) {
-               this._openerListDeferred = new Deferred();
-               requirejs([config.template], function(template) {
-                  this._openerListDeferred.callback(template);
-               }.bind(this));
+         _requireModules: function(config, controller) {
+            var deps = [];
+            if (this._needRequireModule(config.template)) {
+               deps.push(config.template);
             }
-            return this._openerListDeferred;
+            if (this._needRequireModule(controller)) {
+               deps.push(controller);
+            }
+
+            if (deps.length) {
+               this._openerListDeferred = new Deferred();
+               requirejs(deps, function() {
+                  this._openerListDeferred.callback(this._getRequiredModules(config.template, controller));
+               }.bind(this));
+               return this._openerListDeferred;
+            }
+            return (new Deferred()).callback(this._getRequiredModules(config.template, controller));
+         },
+
+         _needRequireModule: function(module) {
+            return typeof module === 'string' && !requirejs.defined(module);
+         },
+
+         _getRequiredModules: function(template, controller) {
+            return {
+               template: typeof template === 'string' ? requirejs(template) : template,
+               controller: typeof controller === 'string' ? requirejs(controller) : controller
+            };
          },
 
          _getConfig: function(popupOptions) {
@@ -87,30 +115,63 @@ define('Controls/Popup/Opener/BaseOpener',
             }
          },
 
+         _scrollHandler: function(event) {
+            //listScroll стреляет событием много раз, нужно обработать только непосредственно скролл списка
+            if (this.isOpened() && event.type === 'listscroll') {
+               if (this._options.targetTracking) {
+                  ManagerController.popupUpdated(this._popupId);
+               } else if (this._options.closeOnTargetScroll) {
+                  this.close();
+               }
+            }
+         },
+
          /**
           * Получить признак, открыта или закрыта связанная всплывающая панель
           * @function Controls/Popup/Opener/Base#isOpened
           * @returns {Boolean} Признак открыта ли связанная всплывающая панель
           */
          isOpened: function() {
-            return !!ManagerController.find(this._popupId);
+            //todo Compatible: Для старого окружения не вызываем методы нового Manager'a
+            return Base.isNewEnvironment() ? !!ManagerController.find(this._popupId) : null;
          }
       });
-      Base.showDialog = function(rootTpl, cfg, strategy) {
-         var def = new Deferred(),
-            popupId = null;
+      Base.showDialog = function(rootTpl, cfg, controller, popupId) {
+         var def = new Deferred();
 
-         if (Base.isVDOMTemplate(rootTpl) && !(cfg.templateOptions && cfg.templateOptions._initCompoundArea)) {
-            popupId = ManagerController.show(cfg, strategy);
-            def.callback(popupId);
-         } else {
-            requirejs(['Controls/Popup/Compatible/BaseOpener'], function(CompatibleOpener) {
-               CompatibleOpener._prepareConfigForOldTemplate(cfg, rootTpl);
-               popupId = ManagerController.show(cfg, strategy);
+         if (Base.isNewEnvironment()) {
+            if (Base.isVDOMTemplate(rootTpl) && !(cfg.templateOptions && cfg.templateOptions._initCompoundArea)) {
+               if (popupId) {
+                  popupId = ManagerController.update(popupId, cfg);
+               } else {
+                  popupId = ManagerController.show(cfg, controller);
+               }
                def.callback(popupId);
+            } else {
+               requirejs(['Controls/Popup/Compatible/BaseOpener'], function(CompatibleOpener) {
+                  CompatibleOpener._prepareConfigForOldTemplate(cfg, rootTpl, popupId);
+                  if (popupId) {
+                     popupId = ManagerController.update(popupId, cfg);
+                  } else {
+                     popupId = ManagerController.show(cfg, controller);
+                  }
+                  def.callback(popupId);
+               });
+            }
+         } else {
+            requirejs(['Controls/Popup/Compatible/BaseOpener', 'SBIS3.CONTROLS/Action/List/OpenEditDialog'], function(CompatibleOpener, OpenEditDialog) {
+               var newCfg = CompatibleOpener._prepareConfigFromNewToOld(cfg);
+               new OpenEditDialog().execute(newCfg);
+               def.callback();
             });
          }
          return def;
+      };
+
+      Base.getDefaultOptions = function() {
+         return {
+            closePopupBeforeUnmount: true
+         };
       };
 
       //TODO Compatible
@@ -118,6 +179,11 @@ define('Controls/Popup/Opener/BaseOpener',
          //на VDOM классах есть св-во _template.
          //Если его нет, но есть _stable, значит это функция от tmpl файла
          return !!templateClass.prototype._template || !!templateClass.stable;
+      };
+
+      //TODO Compatible
+      Base.isNewEnvironment = function() {
+         return !!document.getElementsByTagName('html')[0].controlNodes;
       };
 
       return Base;
