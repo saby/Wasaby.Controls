@@ -32,7 +32,7 @@ define('SBIS3.CONTROLS/WaitIndicator',
     * <br/>
     * Индикатор может иметь стандартный или уменьшеный размер
     * <br/>
-    * Индикатор может отображаться с оверлэем или без. Оверлэй может быть прозрачным (по умолчанию) или с затенением. Маленькие индикаторы всегда
+    * Индикатор может отображаться с оверлэем или без. Оверлэй может быть бесцветным (по умолчанию) или с затенением. Маленькие индикаторы всегда
     * отображаются без оверлэя.
     * <br/>
     * Индикатор может отображаться с сообщением, если оно задано. Маленькие индикаторы всегда отображаются без сообщения.
@@ -61,8 +61,9 @@ define('SBIS3.CONTROLS/WaitIndicator',
     *    <li>{HTMLElement|jQuery|Lib/Control/Control} target - Объект привязки индикатора</li>
     *    <li>{string} message - Текст сообщения индикатора</li>
     *    <li>{number} delay - Задержка перед началом показа индикатора. Если указана неотрицательная закаржка - она будет использована, если нет - будет использована задержка по умолчанию в 2 секунды</li>
+    *    <li>{string} overlay - Настройка оверлэя, допустимые значения - dark, none. Если не задан, используется бесцветный оверлэй</li>
+    *    <li>{boolean} immediate Показывать бесцветный оверлэй сразу после создания, не дожидаясь реального старта индикатора
     *    <li>{string} scroll - Отображать для прокручивания объекта привязки, допустимые значения - left, right, top, bottom</li>
-    *    <li>{string} overlay - Настройка оверлэя, допустимые значения - dark, none. Если не задан, используется прозрачный оверлэй</li>
     *    <li>{boolean} small - Использовать уменьшеный размер</li>
     *    <li>{string} align - Ориентация индикатора при уменьшенном размере, допустимые значения - left, right, top, bottom. Если не задан - индикатор центрируется</li>
     *    <li>{string[]} mods - Массив произвольных модификаторов, для каждого из котороых к DOM элементу индикатора будет добавлен класс вида "ws-wait-indicator_mod-<модификатор>". Все недопустимые для имени класса символы будут удалены</li>
@@ -93,8 +94,9 @@ define('SBIS3.CONTROLS/WaitIndicator',
        * @param {HTMLElement|jQuery|Lib/Control/Control} target Объект привязки индикатора
        * @param {string} message Текст сообщения индикатора
        * @param {object} look Параметры внешнего вида индикатора:
+       * @param {string} look.overlay Настройка оверлэя, допустимые значения - dark, none. Если не задан, используется бесцветный оверлэй
+       * @param {boolean} look.immediate Показывать бесцветный оверлэй сразу после создания, не дожидаясь реального старта индикатора
        * @param {string} look.scroll Отображать для прокручивания объекта привязки, допустимые значения - left, right, top, bottom
-       * @param {string} look.overlay Настройка оверлэя, допустимые значения - dark, none. Если не задан, используется прозрачный оверлэй
        * @param {boolean} look.small Использовать уменьшеный размер
        * @param {string} look.align Ориентация индикатора при уменьшенном размере, допустимые значения - left, right, top, bottom.
        *                            Если не задан - индикатор центрируется
@@ -105,6 +107,7 @@ define('SBIS3.CONTROLS/WaitIndicator',
       var WaitIndicator = function (target, message, look, delay) {
          var oLook = {
             overlay: undefined,
+            immediate: false,
             scroll: undefined,
             small: false,
             align: undefined,
@@ -154,6 +157,9 @@ define('SBIS3.CONTROLS/WaitIndicator',
           * @type {string}
           */
          setMessage: function (msg) {
+            if (msg !=/*Не !==*/ null && typeof msg !== 'string') {
+               throw new Error('String required');
+            }
             var pr0tected = protectedOf(this);
             var prevMsg = pr0tected.message,
                newMsg = msg && typeof msg === 'string' ? msg : null;
@@ -192,7 +198,20 @@ define('SBIS3.CONTROLS/WaitIndicator',
           * @return {Promise|Deferred}
           */
          start: function (delay) {
-            return _callDelayed(this, waitIndicatorManager.start, '_starting', delay);
+            if (delay !=/*Не !==*/ null && !(typeof delay === 'number' && 0 <= delay)) {
+               throw new Error('Positive number required');
+            }
+            var method;
+            var pr0tected = protectedOf(this);
+            if (pr0tected.look.immediate) {
+               pr0tected.overlayOnly = true;
+               waitIndicatorManager.start(this);
+               method = function () {
+                  delete pr0tected.overlayOnly;
+                  waitIndicatorManager.start(this);
+               }.bind(this);
+            }
+            return _callDelayed(this, method || waitIndicatorManager.start.bind(waitIndicatorManager), '_starting', delay);
          },
 
          /**
@@ -203,7 +222,10 @@ define('SBIS3.CONTROLS/WaitIndicator',
           * @return {Promise|Deferred}
           */
          remove: function (delay) {
-            return _callDelayed(this, waitIndicatorManager.remove, '_removing', delay);
+            if (delay !=/*Не !==*/ null && !(typeof delay === 'number' && 0 <= delay)) {
+               throw new Error('Positive number required');
+            }
+            return _callDelayed(this, waitIndicatorManager.remove.bind(waitIndicatorManager), '_removing', delay);
          },
       };
 
@@ -213,6 +235,16 @@ define('SBIS3.CONTROLS/WaitIndicator',
        * @type {function}
        */
       var protectedOf = ProtectedScope.create();
+
+      /**
+       * Геттер свойства, возвращает логическоен значение, показывающее как отображать индикатор
+       * @private
+       * @param {SBIS3.CONTROLS/WaitIndicator} self Этот объект
+       * @return {boolean}
+       */
+      var _isOverlayOnly = function (self) {
+         return protectedOf(self).overlayOnly;
+      };
 
       /**
        * Общая реализация для методов start и remove
@@ -314,8 +346,9 @@ define('SBIS3.CONTROLS/WaitIndicator',
        * @param {HTMLElement|jQuery|Lib/Control/Control} options.target Объект привязки индикатора
        * @param {string} options.message Текст сообщения индикатора
        * @param {number} options.delay Задержка перед началом показа/скрытия индикатора
+       * @param {string} options.overlay Настройка оверлэя, допустимые значения - dark, none. Если не задан, используется бесцветный оверлэй
+       * @param {boolean} options.immediate Показывать бесцветный оверлэй сразу после создания, не дожидаясь реального старта индикатора
        * @param {string} options.scroll Отображать для прокручивания объекта привязки, допустимые значения - left, right, top, bottom
-       * @param {string} options.overlay Настройка оверлэя, допустимые значения - dark, none. Если не задан, используется прозрачный оверлэй
        * @param {boolean} options.small Использовать уменьшеный размер
        * @param {string} options.align Ориентация индикатора при уменьшенном размере, допустимые значения - left, right, top, bottom.
        *                               Если не задан - индикатор центрируется
@@ -374,15 +407,20 @@ define('SBIS3.CONTROLS/WaitIndicator',
             }
             var poolItem = waitIndicatorManager.search(container);
             if (poolItem) {
+               var indicators = poolItem.indicators;
                // Индикатор уже есть в DOM-е
-               if (!poolItem.indicators.length) {
-                  waitIndicatorDOMHelper.show(poolItem.spinner);
+               var i = indicators.indexOf(indicator);
+               if (i === -1) {
+                  indicators.push(indicator);
                }
-               poolItem.indicators.push(indicator);
+               else
+               if (i === 0) {
+                  waitIndicatorManager.update(poolItem);
+               }
             }
             else {
                // Индикатора в DOM-е не содержиться
-               var spinner = waitIndicatorDOMHelper.create(container, indicator.getMessage(), indicator.look);
+               var spinner = waitIndicatorDOMHelper.create(container, indicator.getMessage(), indicator.look, _isOverlayOnly(indicator));
                waitIndicatorManager._pool.push({container:container, spinner:spinner, indicators:[indicator]});
             }
          },
@@ -397,20 +435,20 @@ define('SBIS3.CONTROLS/WaitIndicator',
                isGlobal = !container,
                poolItem = waitIndicatorManager.search(container);
             if (poolItem) {
-               var inds = poolItem.indicators,
+               var indicators = poolItem.indicators,
                   id = indicator.id,
                   i = -1;
-               if (inds.length) {
-                  for (var j = 0; j < inds.length; j++) {
-                     if (inds[j].id === id) {
+               if (indicators.length) {
+                  for (var j = 0; j < indicators.length; j++) {
+                     if (indicators[j].id === id) {
                         i = j;
                         break;
                      }
                   }
                }
                if (i !== -1) {
-                  if (1 < inds.length) {
-                     inds.splice(i, 1);
+                  if (1 < indicators.length) {
+                     indicators.splice(i, 1);
                      waitIndicatorManager.update(poolItem, indicator.getMessage(), indicator.look);
                   }
                   else {
@@ -442,13 +480,13 @@ define('SBIS3.CONTROLS/WaitIndicator',
           * @param {object} prevLook Текущие (отображаемые) параметры внешнего вида
           */
          update: function (poolItem, prevMessage, prevLook) {
-            var inds = poolItem.indicators;
-            if (inds.length) {
-               var msg = inds[0].getMessage();
-               var look = inds[0].look;
-               // Сейчас look неизменяемый, такого сравнения достаточно
-               if (prevMessage !== msg || look !== prevLook) {
-                  poolItem.spinner = waitIndicatorDOMHelper.change(poolItem.spinner, poolItem.container, msg, look);
+            var indicators = poolItem.indicators;
+            if (indicators.length) {
+               var indicator = indicators[0];
+               var msg = indicator.getMessage();
+               var look = indicator.look;
+               if ((prevMessage == null && prevLook == null) || prevMessage !== msg || Object.keys(look).some(function (v) { return look[v] !== prevLook[v]; })) {
+                  poolItem.spinner = waitIndicatorDOMHelper.change(poolItem.spinner, poolItem.container, msg, look, _isOverlayOnly(indicator));
                }
             }
          },
@@ -499,10 +537,11 @@ define('SBIS3.CONTROLS/WaitIndicator',
           * @param {HTMLElement} container Контейнер индикатора
           * @param {string} message Текст сообщения индикатора
           * @param {object} look Параметры внешнего вида индикатора
+          * @param {boolean} overlayOnly Отображать ли только как оверлэй
           * @return {HTMLElement}
           */
-         create: function (container, message, look) {
-            return this.change(null, container, message, look);
+         create: function (container, message, look, overlayOnly) {
+            return this.change(null, container, message, look, overlayOnly);
          },
 
          /**
@@ -512,10 +551,11 @@ define('SBIS3.CONTROLS/WaitIndicator',
           * @param {HTMLElement} container Контейнер индикатора
           * @param {string} message Текст сообщения индикатора
           * @param {object} look Параметры внешнего вида индикатора
+          * @param {boolean} overlayOnly Отображать ли только как оверлэй
           * @return {HTMLElement}
           */
-         change: function (spinner, container, message, look) {
-            var options = this._prepareOptions(container, message, look);
+         change: function (spinner, container, message, look, overlayOnly) {
+            var options = this._prepareOptions(container, message, look, overlayOnly);
             var $prev = spinner ? $(spinner) : null;
             options.z = spinner ? +$prev.css('z-index') : WindowManager.acquireZIndex(false, false, false);
             var $next = $(this._dotTplFn(options));
@@ -577,16 +617,19 @@ define('SBIS3.CONTROLS/WaitIndicator',
           * @param {HTMLElement} container Контейнер индикатора
           * @param {string} message Текст сообщения индикатора
           * @param {object} look Параметры внешнего вида индикатора
+          * @param {boolean} overlayOnly Отображать ли только как оверлэй
           * @return {object}
           */
-         _prepareOptions: function (container, message, look) {
+         _prepareOptions: function (container, message, look, overlayOnly) {
+            var useSpinner = !overlayOnly;
             var options = {
-               isGlob: !container
+               isGlob: !container,
+               useSpinner: useSpinner
             };
-            if (!(look && look.small) && message) {
+            if (useSpinner && !(look && look.small) && message) {
                options.message = message;
             }
-            if (look && typeof look === 'object') {
+            if (useSpinner && look && typeof look === 'object') {
                // Раобрать параметры с учётом приоритетности
                var sides = ['left', 'right', 'top', 'bottom'];
                if (look.scroll && typeof look.scroll === 'string') {
