@@ -51,7 +51,8 @@ define('SBIS3.CONTROLS/Utils/TemplateUtil', ['Core/js-template-doT', 'View/Runne
                template = undefined;
                break;
             case 'object' :
-               if (typeof tpl.func === 'function'){
+               /*typeof null === object*/
+               if (tpl && typeof tpl.func === 'function'){
                   template = tpl.func;
                   return template;
                }
