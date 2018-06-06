@@ -2,8 +2,12 @@
    position: relative;
 }
 
-.ws-is-ie .ws-HighCharts, .ws-is-mobile-safari .ws-HighCharts, .ws-is-mobile-chrome-ios .ws-HighCharts{
-   -webkit-transform: none !important;
+.ws-is-ie,
+.ws-is-mobile-safari,
+.ws-is-mobile-chrome-ios {
+   .ws-HighCharts{
+      -webkit-transform: none !important;
+   }
 }
 
 .ws-HighCharts__plot {
@@ -13,7 +17,7 @@
 .ws-HighCharts__loadingIndicator
 {
    position: absolute;
-   background: url('img/ajax-loader-indicator.gif') center center no-repeat;
+   background: @image_HighChart-loading-indicator center center no-repeat;
    height: 100%;
    top: 0;
    left: 0;
