@@ -43,7 +43,7 @@ define('Controls/Toggle/Button', [
     */
 
    /**
-    * @name Controls/Toggle/Button#captions
+    * @name Controls/Toggle/Button#caption
     * @cfg {String} Button text.
     */
 
