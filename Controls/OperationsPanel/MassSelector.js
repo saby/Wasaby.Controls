@@ -25,12 +25,14 @@ define('Controls/OperationsPanel/MassSelector', [
       _template: template,
       _multiSelectStatus: false,
       _menuCaption: 'Отметить',
+      _menuSource: null,
 
       _beforeMount: function(newOptions, context) {
          this._updateSelection(context.selection);
       },
 
       _beforeUpdate: function(newOptions, context) {
+         this._menuSource = this._getHierarchyMenuItems();
          this._updateSelection(context.selection);
       },
 
