@@ -594,7 +594,7 @@ define('Controls/List/BaseControl', [
       },
 
       _onAfterItemEndEdit: function(e, item, isAdd) {
-         this._notify('beforeItemEndEdit', [item, isAdd]);
+         this._notify('afterItemEndEdit', [item, isAdd]);
          this._children.itemActions.updateItemActions(item);
       },
 
