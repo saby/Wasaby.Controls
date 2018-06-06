@@ -256,11 +256,8 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
                def.addErrback(function (error) {
                   self._finishExecuteDeferred(error);
                   return error;
-               }).addBoth(function (record) {
-                  self._hideLoadingIndicator();
-                  return record;
                });
-            })
+            });
          } else {
             OpenEditDialog.superclass._createComponent.call(this, config, meta)
          }
@@ -686,6 +683,10 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
                onAfterClose: function (e, meta) {
                   self._notifyOnExecuted(meta);
                   self._clearVariables();
+               },
+               onBeforeShow: function() {
+                  self._hideLoadingIndicator();
+                  self._notify('onBeforeShow', this);
                },
                //При множественном клике панель может начать закрываться раньше, чем откроется, в этом случае
                //onAfterClose не будет, смотрим на destroy
