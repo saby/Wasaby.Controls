@@ -169,7 +169,7 @@ define('Controls/List/EditInPlace', [
             return index;
          },
 
-         hasHorizontalScroll: function (target) {
+         hasHorizontalScroll: function(target) {
             var
                targetStyles = getComputedStyle(target),
                result = target.clientWidth !== target.scrollWidth;
