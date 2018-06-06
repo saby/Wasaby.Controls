@@ -49,7 +49,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/MenuLink',
                /**
                 * @cfg {string} Пространство имён для сохранения пользовательских пресетов (опционально)
                 */
-               presetNamespace: null,
+               presetNamespace: null
             },
             _storage: null,
             _menuLink: null
