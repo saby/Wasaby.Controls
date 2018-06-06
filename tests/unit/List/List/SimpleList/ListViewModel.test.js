@@ -84,36 +84,6 @@ define([
          assert.equal(1, iv.getVersion(), 'Incorrect version appendItems');
       });
 
-
-
-      it('multiSelection', function () {
-         var rs1 = new RecordSet({
-            rawData: data,
-            idProperty : 'id'
-         });
-
-
-         var cfg;
-
-         cfg = {
-            items: data,
-            keyProperty: 'id',
-            displayProperty: 'title',
-            selectedKeys: [1, 3]
-         };
-
-         var iv = new ListViewModel(cfg);
-         assert.isTrue(!!iv._multiselection, 'ListViewModel: MultiSelection instance wasn\'t create');
-         assert.deepEqual([1, 3], iv._multiselection._selectedKeys, 'ListViewModel: MultiSelection has wrong selected keys');
-
-         iv.select([2]);
-         assert.deepEqual([1, 3, 2], iv._multiselection._selectedKeys, 'ListViewModel: MultiSelection has wrong selected keys');
-         assert.equal(1, iv.getVersion(), 'Incorrect version appendItems');
-
-         iv.unselect([1]);
-         assert.deepEqual([3, 2], iv._multiselection._selectedKeys, 'ListViewModel: MultiSelection has wrong selected keys');
-         assert.equal(2, iv.getVersion(), 'Incorrect version appendItems');
-      });
    });
 
 });

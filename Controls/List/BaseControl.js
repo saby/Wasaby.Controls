@@ -515,11 +515,7 @@ define('Controls/List/BaseControl', [
          this._children.itemActionsOpener.close();
          if (direction === 'right' && itemData.multiSelectVisibility) {
             var status = itemData.multiSelectStatus;
-            if (status === 1) {
-               this._listViewModel.unselect([itemData.key]);
-            } else {
-               this._listViewModel.select([itemData.key]);
-            }
+            this._notify('onCheckBoxClick', [itemData.key, status]);
          }
          if (direction === 'right' || direction === 'left') {
             var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.viewConfig.keyProperty);

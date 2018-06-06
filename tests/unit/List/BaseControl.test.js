@@ -677,12 +677,18 @@ define([
          var ctrl = new BaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
-
+         ctrl._notify = function(e, args) {
+            assert.equal(e, 'onCheckBoxClick');
+            assert.equal(args[0], 2);
+            assert.equal(args[1], 0);
+         };
          ctrl._onCheckBoxClick({}, 2, 0);
-         assert.deepEqual([1, 3, 2], ctrl._listViewModel._multiselection._selectedKeys, 'BaseControl: MultiSelection has wrong selected keys');
-
+         ctrl._notify = function(e, args) {
+            assert.equal(e, 'onCheckBoxClick');
+            assert.equal(args[0], 1);
+            assert.equal(args[1], 1);
+         };
          ctrl._onCheckBoxClick({}, 1, 1);
-         assert.deepEqual([3, 2], ctrl._listViewModel._multiselection._selectedKeys, 'BaseControl: MultiSelection has wrong selected keys');
       });
 
       describe('EditInPlace', function() {
