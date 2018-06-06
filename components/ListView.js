@@ -446,6 +446,7 @@ define('SBIS3.CONTROLS/ListView',
             _setScrollPagerPositionThrottled: null,
             _updateScrollIndicatorTopThrottled: null,
             _updateScrollIndicatorDownThrottled: null,
+            _onKeyUpEnterThrottled: null,
             _removedItemsCount: false,
             _loadQueue: {},
             _loadId: 0,
@@ -1014,6 +1015,7 @@ define('SBIS3.CONTROLS/ListView',
             this._setScrollPagerPositionThrottled = throttle.call(this._setScrollPagerPosition, 100, true).bind(this);
             this._updateScrollIndicatorTopThrottled = throttle.call(this._updateScrollIndicatorTop, 100, true).bind(this);
             this._updateScrollIndicatorDownThrottled = throttle.call(this._updateScrollIndicatorDown, 100, true).bind(this);
+            this._onKeyUpEnterThrottled = throttle.call(this._onKeyUpEnter, 100, true).bind(this);
             this._eventProxyHdl = this._eventProxyHandler.bind(this);
             this._onScrollHandler = this._onScrollHandler.bind(this);
             /* Инициализацию бесконечного скрола производим один раз */
@@ -1071,7 +1073,6 @@ define('SBIS3.CONTROLS/ListView',
                this._listNavigation.analyzeResponseParams(this.getItems());
             }
             ListView.superclass.init.call(this);
-            this._container.on('keyup', this._keyUpHandler.bind(this));
             this._initLoadMoreButton();
          },
 
@@ -1396,17 +1397,15 @@ define('SBIS3.CONTROLS/ListView',
                this._scrollPager.getContainer().css('right', right);
             }
          },
-         _keyUpHandler: function(e) {
+         _onKeyUpEnter: function(e) {
             var
                selectedKey = this.getSelectedKey();
-            if (e.which === constants.key.enter) {
-               if (selectedKey !== undefined && selectedKey !== null) {
-                  var selectedItem = $("[data-id='" + selectedKey + "']", this._getItemsContainer());
-                  this._elemClickHandler(selectedKey, this.getItems().getRecordById(selectedKey), selectedItem.get(0), e);
-               }
+            if (selectedKey !== undefined && selectedKey !== null) {
+               var selectedItem = $("[data-id='" + selectedKey + "']", this._getItemsContainer());
+               this._elemClickHandler(selectedKey, this.getItems().getRecordById(selectedKey), selectedItem.get(0), e);
             }
          },
-         _keyboardHover: function (e) {
+         _keyboardHover: function(e) {
             var
                selectedKeys,
                selectedKey = this.getSelectedKey(),
@@ -1419,6 +1418,9 @@ define('SBIS3.CONTROLS/ListView',
                   break;
                case constants.key.down:
                   newSelectedItem = this._getNextItemByDOM(selectedKey);
+                  break;
+               case constants.key.enter:
+                  this._onKeyUpEnterThrottled(e);
                   break;
                case constants.key.space:
                   newSelectedItem = this._getNextItemByDOM(selectedKey);
@@ -1566,7 +1568,7 @@ define('SBIS3.CONTROLS/ListView',
                 target = this._findItemByElement($target),
                 model, $group;
 
-            if (target.length && this._isViewElement(target)) {
+            if (target.length) {
                model = this._getItemsProjection().getByHash(target.data('hash')).getContents();
                this._elemClickHandler(model.getId(), model, e.target, e);
             }
@@ -4665,8 +4667,6 @@ define('SBIS3.CONTROLS/ListView',
                clearTimeout(this._loadingIndicatorTimer);
                this._loadingIndicatorTimer = undefined;
             }
-
-            this._container.off('keyup');
 
             ListView.superclass.destroy.call(this);
             if (this._hasDragMove()) {

@@ -108,7 +108,6 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
             container.on('click', '.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_title', this._onMonthTitleClick.bind(this));
             if (!detection.isMobileIOS) {
                container.on('mouseenter.dateRangePicker', '.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_title', this._onMonthTitleMouseEnter.bind(this));
-               container.on('mouseleave.dateRangePicker', '.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_title', this._onMonthTitleMouseLeave.bind(this));
             }
          }
 
@@ -139,7 +138,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
       _onRangeControlMouseLeave: function() {
          if (this.isSelectionProcessing()) {
             this.forEachMonthView(function(control) {
-               control._onRangeControlMouseLeave.call(null, true);
+               control._onRangeControlMouseLeave(null, true);
             });
             this._notify('onPeriodMouseLeave');
          }
@@ -277,13 +276,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
                this._onMonthViewSelectingRangeEndDateChange(null, date);
             }
          }
-         this._notify('onMonthTitleMouseEnter', date);
       },
-      _onMonthTitleMouseLeave: function(event) {
-         if (this.isSelectionProcessing()) {
-            this._notify('onMonthTitleMouseLeave', this._getDateByMonthTitleEvent(event));
-         }
-      },
+
       _getDateByMonthTitleEvent: function(event) {
          return Date.fromSQL($(event.currentTarget).data('date'));
       },

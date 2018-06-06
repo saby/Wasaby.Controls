@@ -957,10 +957,12 @@ define('SBIS3.CONTROLS/Image',
                   Indicator.hide();
                   return;
                }
-               attach.upload(this._uploadParams || {}).addCallback(function(results) {
+               attach.upload(this._uploadParams || {}).addCallbacks(function(results) {
                   results.forEach(function(result) {
                      self._onEndLoad(result);
                   });
+               }, function(result) {
+                  self._onEndLoad(result);
                });
             },
 
