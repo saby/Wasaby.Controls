@@ -51,12 +51,24 @@ define('SBIS3.CONTROLS/Utils/TemplateUtil', ['Core/js-template-doT', 'View/Runne
                template = undefined;
                break;
             case 'object' :
+               if (typeof tpl.func === 'function'){
+                  template = tpl.func;
+                  return template;
+               }
                // Обработка контентной опции массив
                if (Object.prototype.toString.call(tpl) === '[object Array]') {
                   template = function prepareTemplateOnArray() {
                      var fnargs = Array.prototype.slice.call(arguments);
                      return tpl.reduce(function prepareTemplateOnArrayReduce(prevtemplate, nexttemplate) {
-                        return prevtemplate + nexttemplate.apply(this, fnargs);
+                        var nextTpl = nexttemplate;
+                        if (typeof nexttemplate === 'function'){
+                           nextTpl = nexttemplate;
+                        } else if (typeof nexttemplate.func === 'function'){
+                           nextTpl = nexttemplate.func;
+                        } else {
+                           nextTpl = function(){return  '';}
+                        }
+                        return prevtemplate + nextTpl.apply(this, fnargs);
                      }, '');
                   };
                } else {
