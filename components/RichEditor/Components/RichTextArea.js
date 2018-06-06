@@ -609,7 +609,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          },
 
          setActive: function (active) {
-            runDelayed(this._setActive.bind(this, active));
+            // Иногда, когда редактор помещён внуть некоторой FloatArea, случается так, что установка активности происходит во время анимации, когда эта родительская область "вылетает" в рабочсее поле. Чтобы установка активности не мешала анимации - будем делать её асинхронно
+            // 1175247680 https://online.sbis.ru/opendoc.html?guid=d02aee44-14e6-425c-9670-bf35f68714c7
+            setTimeout(this._setActive.bind(this, active), 1);
          },
 
          _setActive: function (active) {
