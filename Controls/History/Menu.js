@@ -1,7 +1,8 @@
 define('Controls/History/Menu',
    [
       'Controls/Button/MenuButton',
-      'tmpl!Controls/History/resources/itemTemplate'
+      'tmpl!Controls/History/resources/itemTemplate',
+      'css!Controls/History/Menu'
    ],
    function(MenuButton, itemTemplate) {
 
