@@ -123,6 +123,9 @@ define('Controls/Container/MassSelector', [
             this._itemsReadyCallback,
             this._count
          );
+         if (this._options.selectionChangeHandler) {
+            this._options.selectionChangeHandler(this._multiselection.getSelection());
+         }
          this._forceUpdate();
       },
 
