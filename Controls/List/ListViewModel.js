@@ -75,6 +75,10 @@ define('Controls/List/ListViewModel',
             this._notify('onListChange');
          },
 
+         getSwipeItem: function() {
+            return this._swipeItem.item;
+         },
+
          setActiveItem: function(itemData) {
             this._activeItem = itemData;
             this._nextVersion();
