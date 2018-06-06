@@ -3,61 +3,37 @@ define(
       'Core/Control',
       'Controls/Input/Search'
    ],
-   function (Control, Search) {
+   function(Control, Search) {
       'use strict';
 
-      var
-         isSearched = false,
-         isValueChanged = false,
-         search;
+      describe('Controls/Input/Search', function() {
 
-      describe('Controls/Input/Search', function () {
+         var search = new Search();
+         var valueSearch;
 
-         before(function () {
-            if (typeof $ === 'undefined') {
-               this.skip();
-            }
-            var container = $('<div></div>');
-            $('#mocha').append(container);
 
-            search = Control.createControl(Search, {element: container}, container);
-            search.subscribe('search', function () {
-               isSearched = true;
-            });
-            search.subscribe('valueChanged', function () {
-               isValueChanged = true;
-            });
-         });
-
-         beforeEach(function () {
-            if(typeof $==='undefined') {
-               this.skip();
-            }
-         });
-
-         after(function () {
-            if (typeof $ !== 'undefined') {
-               search.destroy();
-            }
-         });
-
-         describe('search', function () {
-
-            it('Click on reset', function () {
-               isSearched = false;
-               isValueChanged = false;
-               search._resetClick();
-               assert.isTrue(isValueChanged);
-               assert.isTrue(isSearched);
+         describe('search', function() {
+            it('value changed', function() {
+               search._notify = (e, args) => {
+                  if (e === 'valueChanged') {
+                     valueSearch = args[0];
+                  }
+               };
+               search._valueChangedHandler('valueChanged', 'text');
+               assert.equal(valueSearch, 'text');
             });
 
-            it('Click on search', function () {
-               isSearched = false;
-               isValueChanged = false;
+            it('Click on search', function() {
+               search._notify = (e, args) => {
+                  assert.equal(e, 'searchClick');
+
+               };
                search._searchClick();
-               assert.isTrue(isSearched);
-               assert.isFalse(isValueChanged);
             });
+
+            function setTrue(assert) {
+               assert.equal(true, true);
+            }
          });
       });
    });
