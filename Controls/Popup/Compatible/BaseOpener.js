@@ -3,21 +3,24 @@
  */
 define('Controls/Popup/Compatible/BaseOpener', [
    'Core/core-merge',
+   'Core/helpers/random-helpers',
    'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea'
 ],
-function(cMerge) {
+function(cMerge, Random) {
    /**
        * Слой совместимости для базового опенера для открытия старых шаблонов
        */
    return {
-      _prepareConfigForOldTemplate: function(cfg, templateClass, popupId) {
+      _prepareConfigForOldTemplate: function(cfg, templateClass) {
          cfg.templateOptions = {
             templateOptions: cfg.templateOptions || cfg.componentOptions || {},
             template: cfg.template,
             type: cfg._type,
             handlers: cfg.handlers,
             _initCompoundArea: cfg._initCompoundArea,
-            _isUpdating: !!popupId
+
+            //На каждое обновление конфига генерируем новый id, чтобы понять, что нужно перерисовать шаблон
+            _compoundId: Random.randomId('compound-')
          };
 
          if (cfg.target) {
