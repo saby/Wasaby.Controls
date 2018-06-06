@@ -177,8 +177,8 @@ define('Controls/List/ListViewModel',
          },
 
          setItemActions: function(item, actions) {
-            var itemID = item.getId();
-            var collectionItem = itemID ?  this.getItemById(itemID).getContents() : item;
+            var itemById = this.getItemById(item.getId());
+            var collectionItem = itemById ?  itemById.getContents() : item;
             this._actions[this.getIndexBySourceItem(collectionItem)] = actions;
          },
          _prepareDisplayItemForAdd: function(item) {
@@ -186,8 +186,8 @@ define('Controls/List/ListViewModel',
          },
 
          getItemActions: function(item) {
-            var itemID = item.getId();
-            var collectionItem = itemID ?  this.getItemById(itemID).getContents() : item;
+            var itemById = this.getItemById(item.getId());
+            var collectionItem = itemById ?  itemById.getContents() : item;
             return this._actions[this.getIndexBySourceItem(collectionItem)];
          },
 
