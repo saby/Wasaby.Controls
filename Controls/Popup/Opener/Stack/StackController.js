@@ -11,36 +11,8 @@ define('Controls/Popup/Opener/Stack/StackController',
    function(BaseController, StackStrategy, List, TargetCoords, Deferred, cConstants) {
       'use strict';
 
-      var MINIMAL_PANEL_WIDTH = 50; // минимальная ширина стековой панели, todo уйдет в css после доработки по заданию размеров для панели
-      var MINIMAL_PANEL_DISTANCE = 50; // минимальный отступ стековой панели от правого края
 
       var _private = {
-
-         /**
-          * Расчитываает ширину панели, исходя из ее минимальной и максимальной ширины
-          * @function Controls/Popup/Opener/Stack/StackController#getPanelWidth
-          * @param minWidth минимальная ширина панели
-          * @param maxWidth максимальная ширина панели
-          * @param wWidth ширина окна
-          */
-         getPanelWidth: function(minWidth, maxWidth, wWidth) {
-            if (!minWidth) {
-               minWidth = MINIMAL_PANEL_WIDTH;
-            }
-            if (isNaN(maxWidth)) { //не смогли привести к инту - берем по шаблону
-               return undefined;
-            } else if (!maxWidth) {
-               maxWidth = this.getMaxPanelWidth(wWidth);
-            }
-            var
-               newWidth = Math.min(this.getMaxPanelWidth(wWidth), maxWidth);
-            if (newWidth < minWidth) {
-               return Math.max(minWidth, MINIMAL_PANEL_WIDTH);
-            } else if (newWidth < MINIMAL_PANEL_WIDTH) {
-               return MINIMAL_PANEL_WIDTH;
-            }
-            return newWidth;
-         },
 
          prepareSizes: function(item, container) {
             var templateStyle = getComputedStyle(container.children[0]);
@@ -50,16 +22,18 @@ define('Controls/Popup/Opener/Stack/StackController',
             if (!item.popupOptions.maxWidth) {
                item.popupOptions.maxWidth = parseInt(templateStyle.maxWidth, 10);
             }
+
+            //Если задано одно значение - приравниваем minWidth и maxWidth
+            item.popupOptions.minWidth = item.popupOptions.minWidth || item.popupOptions.maxWidth;
+            item.popupOptions.maxWidth = item.popupOptions.maxWidth || item.popupOptions.minWidth;
+
+            if (item.popupOptions.maxWidth < item.popupOptions.minWidth) {
+               item.popupOptions.maxWidth = item.popupOptions.minWidth;
+            }
+
+            item.containerWidth = container.offsetWidth;
          },
 
-         /**
-          * Расчитываает максимально возможную ширину панели
-          * @function Controls/Popup/Opener/Stack/StackController#getMaxPanelWidth
-          * @param wWidth ширина окна
-          */
-         getMaxPanelWidth: function(wWidth) {
-            return wWidth - MINIMAL_PANEL_DISTANCE;
-         },
          getStackParentCoords: function() {
             var elements = document.getElementsByClassName('controls-Popup__stack-target-container');
             var targetCoords = TargetCoords.get(elements && elements.length ? elements[0] : document.body);
@@ -120,15 +94,6 @@ define('Controls/Popup/Opener/Stack/StackController',
             }
          },
 
-         getDefaultPosition: function() {
-            var position = this._getItemPosition(this._stack.getCount());
-            return {
-               right: position.right,
-               top: position.top,
-               width: 0
-            };
-         },
-
          _update: function() {
             var self = this;
             this._stack.each(function(item, index) {
@@ -139,11 +104,7 @@ define('Controls/Popup/Opener/Stack/StackController',
          _getItemPosition: function(index) {
             var tCoords = _private.getStackParentCoords();
             var item = this._stack.at(index);
-            var previous = this._stack.at(index - 1);
-            var prevData = previous ? previous.position : {};
-            var width = item ? _private.getPanelWidth(item.popupOptions.minWidth, item.popupOptions.maxWidth, window.innerWidth) : 0;
-            var maxPanelWidth = _private.getMaxPanelWidth(window.innerWidth);
-            return StackStrategy.getPosition(index, tCoords, width, maxPanelWidth, prevData.width, prevData.right);
+            return StackStrategy.getPosition(tCoords, item);
          },
          _getTemplateContainer: function(container) {
             return container.getElementsByClassName('controls-Popup__template')[0];
