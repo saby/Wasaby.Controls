@@ -5,8 +5,9 @@ define('Controls/List/EditInPlace', [
    'WS.Data/Entity/Record',
    'Controls/List/resources/utils/ItemsUtil',
    'Controls/Utils/BreadCrumbsUtil',
+   'Core/detection',
    'css!Controls/List/EditInPlace/Text'
-], function(Control, template, Deferred, Record, ItemsUtil, BreadCrumbsUtil) {
+], function(Control, template, Deferred, Record, ItemsUtil, BreadCrumbsUtil, detection) {
 
    var
       typographyStyles = [
@@ -166,6 +167,29 @@ define('Controls/List/EditInPlace', [
             }
 
             return index;
+         },
+
+         hasHorizontalScroll: function (target) {
+            var
+               targetStyles = getComputedStyle(target),
+               result = target.clientWidth !== target.scrollWidth;
+
+            /*
+             Если на элементе висит text-align: right, то хром очень странно округляет scrollWidth. Например при реальной
+             ширине в 277.859 он может округлить scrollWidth до 279. При этом для clientWidth он округляет по какому-то другому
+             алгоритму, и в итоге возникает ситуация, когда текст влезает, но clientWidth и scrollWidth сильно отличаются.
+             Если вешать direction: rtl, то текст всё также остаётся справа, но scrollWidth почти совпадает с реальной шириной
+             (погрешность в пределах 1). Поэтому считаем эту погрешность и если она больше 1, то скролл есть, если меньше - то нет.
+             */
+            if (targetStyles.textAlign === 'right' && detection.chrome) {
+               target.style.direction = 'rtl';
+               target.style.textAlign = 'left';
+               result = Math.abs(parseFloat(targetStyles.width) - target.scrollWidth) >= 1;
+               target.style.direction = '';
+               target.style.textAlign = '';
+            }
+
+            return result;
          }
       };
 
@@ -344,7 +368,7 @@ define('Controls/List/EditInPlace', [
       },
 
       _afterUpdate: function() {
-         var target, fakeElement, targetStyle, offset;
+         var target, fakeElement, targetStyle, offset, currentWidth, previousWidth, lastLetterWidth, hasHorizontalScroll;
          if (this._clientX && this._clientY) {
             target = document.elementFromPoint(this._clientX, this._clientY);
             if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
@@ -352,7 +376,14 @@ define('Controls/List/EditInPlace', [
                fakeElement.innerText = '';
 
                targetStyle = getComputedStyle(target);
-               if (targetStyle.textAlign === 'right') {
+               hasHorizontalScroll = _private.hasHorizontalScroll(target);
+
+               /*
+               Если элемент выравнивается по правому краю, но при этом влезает весь текст, то нужно рассчитывать положение
+               курсора от правого края input'а, т.к. перед текстом может быть свободное место. Во всех остальных случаях
+               нужно рассчитывать от левого края, т.к. текст гарантированно прижат к нему.
+               */
+               if (targetStyle.textAlign === 'right' && !hasHorizontalScroll) {
                   offset = target.getBoundingClientRect().right - this._clientX;
                } else {
                   offset = this._clientX - target.getBoundingClientRect().left;
@@ -362,24 +393,38 @@ define('Controls/List/EditInPlace', [
                });
 
                for (var i = 0; i < target.value.length; i++) {
-                  if (BreadCrumbsUtil.getWidth(fakeElement) > offset) {
+                  currentWidth = BreadCrumbsUtil.getWidth(fakeElement);
+                  if (currentWidth > offset) {
                      break;
                   }
-                  if (targetStyle.textAlign === 'right') {
+                  if (targetStyle.textAlign === 'right' && !hasHorizontalScroll) {
                      fakeElement.innerText = target.value.slice(target.value.length - 1 - i);
                   } else {
                      fakeElement.innerText += target.value[i];
                   }
+                  previousWidth = currentWidth;
                }
 
                //EditingRow в afterMount делает this.activate(), чтобы при переходах по табу фокус вставал в поля ввода.
                //Т.е. если не звать focus(), то фокус может находиться в другом поле ввода.
                target.focus();
-               if (targetStyle.textAlign === 'right') {
-                  target.setSelectionRange(target.value.length - i + 1, target.value.length - i + 1);
+
+               lastLetterWidth = currentWidth - previousWidth;
+               if (targetStyle.textAlign === 'right' && !hasHorizontalScroll) {
+                  if (currentWidth - offset < lastLetterWidth / 2) {
+                     target.setSelectionRange(target.value.length - i, target.value.length - i);
+                  } else {
+                     target.setSelectionRange(target.value.length - i + 1, target.value.length - i + 1);
+                  }
                } else {
-                  target.setSelectionRange(i, i);
+                  if (currentWidth - offset < lastLetterWidth / 2) {
+                     target.setSelectionRange(i, i);
+                  } else {
+                     target.setSelectionRange(i - 1, i - 1);
+                  }
                }
+
+               target.scrollLeft = 0;
             }
             this._clientX = null;
             this._clientY = null;
