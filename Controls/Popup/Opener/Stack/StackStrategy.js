@@ -3,44 +3,54 @@
  */
 define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
    var PANEL_SHADOW_WIDTH = 5; // Отступ контейнера под тень
-   var PANEL_MIN_INDENT = 100; // Минимальное расстояние между панелями
+   var MINIMAL_PANEL_DISTANCE = 50; // минимальный отступ стековой панели от правого края
+
+   var _private = {
+      getPanelWidth: function(item, tCoords, maxPanelWidth) {
+         var maxPanelWidthWithOffset = maxPanelWidth - tCoords.right;
+         var minWidth = item.popupOptions.minWidth;
+         var maxWidth = item.popupOptions.maxWidth;
+
+         if (!minWidth || !maxWidth) { // Если не заданы размеры - строимся по размерам контейнера
+            return item.containerWidth;
+         }
+
+         if (maxWidth <= maxPanelWidthWithOffset) {
+            return maxWidth;
+         }
+         if (minWidth > maxPanelWidthWithOffset) { // Если минимальная ширина не умещается в экран - позиционируемся по правому краю окна
+            tCoords.right = 0;
+            return minWidth;
+         }
+
+         return maxPanelWidth; //Возвращаем допустимую ширину
+      }
+   };
+
    return {
 
       /**
        * Возвращает позицию стек-панели
        * @function Controls/Popup/Opener/Stack/StackController#stack
-       * @param index номер панели
-       * @param tCoords точка, относительно которой будет вылезать панель
-       * @param width ширина панели
-       * @param maxWidth максимально возможная ширина панели
-       * @param prevWidth ширина предыдущей панели
-       * @param prevRight отступ справа предыдущей панели
+       * @param tCoords Координаты контейнера, относительно которого показывается панель
+       * @param item Конфиг позиционируемой панели
        */
-      getPosition: function(index, tCoords, width, maxWidth, prevWidth, prevRight) {
-         var right = tCoords.right,
-            isHidden;
-         if (index !== 0) {
-            if (prevWidth) {
-               var rightCalc = PANEL_MIN_INDENT - ((width + right) - (prevWidth + prevRight));
-               if (rightCalc > 0) {
-                  right += rightCalc;
-               }
-               isHidden = width + right > this.getWindowSizes().width;
-            }
-         }
+      getPosition: function(tCoords, item) {
          return {
-            width: width + PANEL_SHADOW_WIDTH,
-            right: right,
+            width: _private.getPanelWidth(item, tCoords, this.getMaxPanelWidth()) + PANEL_SHADOW_WIDTH,
+            right: tCoords.right,
             top: tCoords.top,
-            bottom: 0,
-            hidden: isHidden
+            bottom: 0
          };
       },
-      getWindowSizes: function() {
-         return {
-            width: window.innerWidth,
-            height: window.innerHeight
-         };
+
+      /**
+       * Расчитываает максимально возможную ширину панели
+       * @function Controls/Popup/Opener/Stack/StackController#getMaxPanelWidth
+       * @param wWidth ширина окна
+       */
+      getMaxPanelWidth: function() {
+         return window.innerWidth - MINIMAL_PANEL_DISTANCE - PANEL_SHADOW_WIDTH;
       }
    };
 });

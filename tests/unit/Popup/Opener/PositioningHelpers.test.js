@@ -6,10 +6,10 @@ define(
       'Controls/Popup/Opener/Dialog/DialogStrategy'
    ],
 
-   function (Stack, Sticky, Notification, Dialog) {
+   function(Stack, Sticky, Notification, Dialog) {
       'use strict';
-      describe('Controls/Popup/Opener/Strategy', function () {
-         describe('Sticky', function () {
+      describe('Controls/Popup/Opener/Strategy', function() {
+         describe('Sticky', function() {
             var targetCoords = {
                top: 200,
                left: 200,
@@ -21,11 +21,11 @@ define(
                topScroll: 0
             };
 
-            Sticky._private.getWindowSizes = function(){
-              return {
-                 width: 1920,
-                 height: 1040
-              }
+            Sticky._private.getWindowSizes = function() {
+               return {
+                  width: 1920,
+                  height: 1040
+               };
             };
 
             it('Simple sticky', function() {
@@ -175,7 +175,7 @@ define(
 
          });
 
-         describe('Dialog', function () {
+         describe('Dialog', function() {
             it('dialog positioning', function() {
                var sizes = {
                   width: 200,
@@ -187,56 +187,74 @@ define(
             });
          });
 
-         describe('Stack', function () {
+         describe('Stack', function() {
             let stackShadowWidth = 5;
-            Stack.getWindowSizes = () => {
-               return {
-                  width: 1920,
-                  height: 1040
-               };
+            Stack.getMaxPanelWidth = () => 1000;
+            let item = {
+               popupOptions: {
+                  minWidth: 600,
+                  maxWidth: 800
+               }
             };
-            it('first stack positioning', function() {
-               var position = Stack.getPosition(0, {top: 0, right: 0}, 1000, 1600);
-               assert.isTrue(position.width === 1000 + stackShadowWidth);
+
+            it('stack with config sizes', function() {
+               var position = Stack.getPosition({top: 0, right: 0}, item);
+               assert.isTrue(position.width === item.popupOptions.maxWidth + stackShadowWidth);
                assert.isTrue(position.top === 0);
                assert.isTrue(position.right === 0);
                assert.isTrue(position.bottom === 0);
             });
-            it('first stack positioning from target', function() {
-               var position = Stack.getPosition(0, {top: 100, right: 100}, 1000, 1600);
-               assert.isTrue(position.width === 1000 + stackShadowWidth);
+
+            it('stack from target container', function() {
+               var position = Stack.getPosition({top: 100, right: 100}, item);
+               assert.isTrue(position.width === item.popupOptions.maxWidth + stackShadowWidth);
                assert.isTrue(position.top === 100);
                assert.isTrue(position.right === 100);
                assert.isTrue(position.bottom === 0);
             });
-            it('current panel is broader then previous', function() {
-               var position = Stack.getPosition(1, {top: 0, right: 0}, 1200, 1600, 1000, 0);
-               assert.isTrue(position.width === 1200 + stackShadowWidth);
+            it('stack without config sizes', function() {
+               let item = {
+                  popupOptions: {},
+                  containerWidth: 800
+               };
+               var position = Stack.getPosition({top: 0, right: 0}, item);
+               assert.isTrue(position.width === item.containerWidth + stackShadowWidth);
                assert.isTrue(position.top === 0);
                assert.isTrue(position.right === 0);
                assert.isTrue(position.bottom === 0);
             });
-            it('previous width is equal current width', function() {
-               var position = Stack.getPosition(1, {top: 0, right: 0}, 1000, 1600, 1000, 0);
-               assert.isTrue(position.width === 1000 + stackShadowWidth);
+            it('stack reduced width', function() {
+               let item = {
+                  popupOptions: {
+                     minWidth: 600,
+                     maxWidth: 1800
+                  }
+               };
+               var position = Stack.getPosition({top: 0, right: 0}, item);
+               assert.isTrue(position.width === Stack.getMaxPanelWidth() + stackShadowWidth);
                assert.isTrue(position.top === 0);
-               assert.isTrue(position.right === 100);
+               assert.isTrue(position.right === 0);
                assert.isTrue(position.bottom === 0);
             });
-            it('previous width is equal current width from target', function() {
-               var position = Stack.getPosition(1, {top: 100, right: 100}, 1000, 1600, 1000, 100);
-               assert.isTrue(position.width === 1000 + stackShadowWidth);
-               assert.isTrue(position.top === 100);
-               assert.isTrue(position.right === 200);
+
+            it('stack reset offset', function() {
+               let item = {
+                  popupOptions: {
+                     minWidth: 800,
+                     maxWidth: 1800
+                  }
+               };
+               var position = Stack.getPosition({top: 0, right: 400}, item);
+               assert.isTrue(position.width === item.popupOptions.minWidth + stackShadowWidth);
+               assert.isTrue(position.top === 0);
+               assert.isTrue(position.right === 0);
                assert.isTrue(position.bottom === 0);
             });
-            it('hidden stack positioning', function() {
-               var position = Stack.getPosition(2, {top: 0, right: 0}, 1000, 1600, 1900, 0);
-               assert.isTrue(position.hidden === true);
-            });
+
+
          });
 
-         describe('Notification', function () {
+         describe('Notification', function() {
             it('first notification positioning', function() {
                var position = Notification.getPosition();
                assert.isTrue(position.right === 16);
