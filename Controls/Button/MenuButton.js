@@ -64,7 +64,6 @@ define('Controls/Button/MenuButton',
 
          _beforeMount: function(options) {
             _private.cssStyleGeneration(this, options);
-            this._onResult = this._onResult.bind(this);
          },
 
          _selectedItemsChangedHandler: function(event, result) {

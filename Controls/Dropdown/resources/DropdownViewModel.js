@@ -18,7 +18,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             this._options = cfg;
             DropdownViewModel.superclass.constructor.apply(this, arguments);
             if (cfg.emptyText) {
-               this._createEmptyItem();
+               this._getEmptyItem();
             }
             this._itemsModel = new ItemsViewModel({
                items: this._getCurrentRootItems(cfg),
@@ -98,7 +98,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
          getCount: function() {
             return this._itemsModel.getCount();
          },
-         _createEmptyItem: function() {
+         _getEmptyItem: function() {
             this._emptyItem = {};
             var itemData = {};
             itemData[this._options.displayProperty || 'title'] = this._options.emptyText === true ? 'Не выбрано' : this._options.emptyText;
