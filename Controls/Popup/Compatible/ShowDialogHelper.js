@@ -24,6 +24,7 @@ define('Controls/Popup/Compatible/ShowDialogHelper', ['require', 'Core/Deferred'
                   deps.push('Controls/Popup/Opener/Dialog/DialogController');
                   config._type = 'dialog';
                }
+               deps.push(config.template);
 
                deps.push(config.template);
 

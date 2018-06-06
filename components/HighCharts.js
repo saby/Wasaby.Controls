@@ -836,12 +836,12 @@ function( SbisService, Query, getType, coreClone, constants, Deferred,BaseContro
       },
 
       _drawHighChart : function() {
-         var plotCont = $('.ws-HighCharts__plot', this.getContainer().get(0));
+         var plotCont = this.getContainer().get(0).querySelector('.ws-HighCharts__plot');
          if (this._chartObj) {
             this._chartObj.destroy();
          }
-         plotCont.highcharts(this._options.highChartOptions);
-         this._chartObj = plotCont.highcharts();
+         this._options.highChartOptions.chart.renderTo = plotCont;
+         this._chartObj = new Highcharts.Chart(this._options.highChartOptions);
       },
 
       _recordSetParse : function() {

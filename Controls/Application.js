@@ -92,7 +92,6 @@ define('Controls/Application',
 
             self._headData = new HeadDataContext(cfg.theme);
             _private.initState(self, receivedState || cfg);
-            self.content = cfg.content;
             self.needArea = cfg.compat || self.compat;
             if (!receivedState) {
                receivedState = {};

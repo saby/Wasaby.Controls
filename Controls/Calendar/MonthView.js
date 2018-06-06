@@ -1,6 +1,5 @@
 define('Controls/Calendar/MonthView', [
    'Core/Control',
-   'Core/constants',
    'Core/core-merge',
    'SBIS3.CONTROLS/Utils/DateUtil',
    'Controls/Calendar/Utils',
@@ -13,7 +12,6 @@ define('Controls/Calendar/MonthView', [
    'css!Controls/Calendar/MonthView/MonthView'
 ], function(
    BaseControl,
-   constants,
    coreMerge,
    DateUtil,
    calendarUtils,
