@@ -1,14 +1,12 @@
 define('Controls/Calendar/MonthSlider/Slider', [
    'Core/Control',
    'Core/core-merge',
-   'Core/detection',
    'WS.Data/Type/descriptor',
    'tmpl!Controls/Calendar/MonthSlider/Slider/Slider',
    'css!Controls/Calendar/MonthSlider/Slider/Slider'
 ], function(
    BaseControl,
    coreMerge,
-   detection,
    types,
    tmpl//,
    // IMonth
@@ -195,7 +193,7 @@ define('Controls/Calendar/MonthSlider/Slider', [
           * @see inAnimation
           * @see outAnimation
           */
-         data: types(Object),
+         data: types(Object)
 
          /**
           * @name Controls/Calendar/MonthSlider/Slider#content
