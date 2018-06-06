@@ -62,7 +62,7 @@ define("File/Attach/Base", ["require", "exports", "Core/Abstract", "Core/core-si
              * </ul>
              * @name File/Attach/Base#multiSelect
              */
-            multiSelect: true,
+            multiSelect: true
         },
         constructor: function (opt) {
             Base.superclass.constructor.apply(this, arguments);
