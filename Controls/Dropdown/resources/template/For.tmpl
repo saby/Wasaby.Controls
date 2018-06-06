@@ -1,8 +1,8 @@
 <div>
-   <ws:if data="{{listModel._emptyItem}}">
+   <ws:if data="{{listModel.getEmptyItem()}}">
       <ws:partial
               template="{{itemTemplate || defaultItemTemplate}}"
-              itemData="{{listModel._emptyItem}}"
+              itemData="{{listModel.getEmptyItem()}}"
               resultHandler="{{resultHandler}}"
               class="controls-DropdownList__emptyItem"/>
    </ws:if>

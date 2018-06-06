@@ -17,9 +17,6 @@ define('Controls/Dropdown/resources/DropdownViewModel',
          constructor: function(cfg) {
             this._options = cfg;
             DropdownViewModel.superclass.constructor.apply(this, arguments);
-            if (cfg.emptyText) {
-               this._getEmptyItem();
-            }
             this._itemsModel = new ItemsViewModel({
                items: this._getCurrentRootItems(cfg),
                keyProperty: cfg.keyProperty,
@@ -98,17 +95,21 @@ define('Controls/Dropdown/resources/DropdownViewModel',
          getCount: function() {
             return this._itemsModel.getCount();
          },
-         _getEmptyItem: function() {
-            this._emptyItem = {};
-            var itemData = {};
-            itemData[this._options.displayProperty || 'title'] = this._options.emptyText === true ? 'Не выбрано' : this._options.emptyText;
-            itemData[this._options.keyProperty] = null;
-            var item = new Model({
-               rawData: itemData
-            });
-            this._emptyItem.item = item;
-            this._emptyItem.getPropValue = ItemsUtil.getPropertyValue;
-            this._emptyItem.emptyText = this._options.emptyText;
+         getEmptyItem: function() {
+            if (this._options.emptyText) {
+               var emptyItem = {};
+               var itemData = {};
+               itemData[this._options.displayProperty || 'title'] = this._options.emptyText === true ? 'Не выбрано' : this._options.emptyText;
+               itemData[this._options.keyProperty] = null;
+               var item = new Model({
+                  rawData: itemData
+               });
+               emptyItem.item = item;
+               emptyItem.isSelected = this._isItemSelected(item);
+               emptyItem.getPropValue = ItemsUtil.getPropertyValue;
+               emptyItem.emptyText = this._options.emptyText;
+               return emptyItem;
+            }
          }
       });
 
