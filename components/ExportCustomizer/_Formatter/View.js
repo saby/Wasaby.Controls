@@ -11,6 +11,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
       'Core/helpers/Function/debounce',
       'Core/helpers/Object/isEqual',
       'SBIS3.CONTROLS/CompoundControl',
+      'SBIS3.CONTROLS/Utils/ObjectChange',
       'SBIS3.CONTROLS/WaitIndicator',
       'WS.Data/Collection/RecordSet',
       'WS.Data/Di',
@@ -18,7 +19,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
       'css!SBIS3.CONTROLS/ExportCustomizer/_Formatter/View'
    ],
 
-   function (Deferred, coreDebounce, cObjectIsEqual, CompoundControl, WaitIndicator, RecordSet, Di, dotTplFn) {
+   function (Deferred, coreDebounce, cObjectIsEqual, CompoundControl, objectChange, WaitIndicator, RecordSet, Di, dotTplFn) {
       'use strict';
 
       /**
@@ -267,9 +268,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * @param {string} fileUuid Uuid шаблона форматирования эксель-файла
           */
          _onFormatter: function (method, fileUuid) {
-            if (method === 'create' && !!fileUuid) {
-               this._options.fileUuid = fileUuid;
-               this.sendCommand('subviewChanged');
+            if (!!fileUuid) {
+               var isCreate = method === 'create';
+               if (isCreate) {
+                  this._options.fileUuid = fileUuid;
+               }
+               if (isCreate || method === 'open' || method === 'openApp') {
+                  this.sendCommand('subviewChanged');
+               }
             }
             this._updatePreview();
          },
@@ -307,7 +313,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             this._updatePreviewClearStop();
             var img = this._preview[0];
             var stopper = this._updatePreviewStopper = new Deferred();
-            WaitIndicator.make({target:img.parentNode, delay:1000}, stopper);
+            WaitIndicator.make({target:img.parentNode, delay:0}, stopper);
             var options = this._options;
             this._exportFormatter.getPreviewUrl(options.fileUuid, size.width, size.height).addCallbacks(
                function (url) {
@@ -325,24 +331,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           *
           * @public
           * @param {object} values Набор из нескольких значений, которые необходимо изменить
+          * @param {object} meta Дополнительная информация об изменении
           */
-         setValues: function (values) {
+         setValues: function (values, meta) {
             if (!values || typeof values !== 'object') {
                throw new Error('Object required');
             }
             var options = this._options;
-            var waited = {fieldIds:true, fileUuid:false, consumer:true};
-            var has = {};
-            for (var name in values) {
-               if (name in waited) {
-                  var value = values[name];
-                  if (!(value == null && options[name] == null) && !(waited[name] ? cObjectIsEqual(value, options[name]) : value === options[name])) {
-                     has[name] = true;
-                     options[name] = value;
-                  }
-               }
-            }
-            if (has.fieldIds || has.fileUuid) {
+            var changes = objectChange(options, {fieldIds:true, fileUuid:false, consumer:true}, values);
+            if (changes && ('fieldIds' in changes || 'fileUuid' in changes)) {
                var method = options.fileUuid ? 'update' : 'create';
                var creating;
                if (method === 'create') {

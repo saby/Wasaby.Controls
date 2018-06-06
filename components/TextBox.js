@@ -141,7 +141,7 @@ define('SBIS3.CONTROLS/TextBox', [
              */
             selectOnClick: false,
             /**
-             * @cfg {String} Устанавливает текст подсказки внутри поля ввода.
+             * @cfg {Content} Устанавливает текст подсказки внутри поля ввода.
              * @remark
              * Данный текст отображается внутри поля ввода до момента получения фокуса.
              * Заменить текст подсказки, заданный опцией, можно при помощи метода {@link setPlaceholder}.
@@ -157,6 +157,7 @@ define('SBIS3.CONTROLS/TextBox', [
              * @see setPlaceholder
              * @see textTransform
              * @translatable
+             * @content
              */
             placeholder: '',
             /**

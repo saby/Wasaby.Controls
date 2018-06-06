@@ -311,11 +311,14 @@ body {
     background-color: #273749 !important;
   }
 }
-.ws-float-area .ws-float-area-title {
-  font-size: round(40px * @multiplier)!important;
-  font-weight: normal !important;
-  padding-left: round(24px * @multiplier) !important;
-  width: calc(~"100% - @{width_CloseButton} - @{padding-right_floatArea-title}") !important; //86 - close button width + 8 - padding
+.ws-float-area,
+.ws-window {
+  .ws-float-area-title {
+    font-size: round(40px * @multiplier) !important;
+    font-weight: normal !important;
+    padding-left: round(24px * @multiplier) !important;
+    width: calc(~"100% - @{width_CloseButton} - @{padding-right_floatArea-title}") !important; //86 - close button width + 8 - padding
+  }
 }
 .ws-float-area-stack-panel-overflow .ws-window-titlebar{
   border-bottom: none!important; //в темах нет бордера у шапок в панелях

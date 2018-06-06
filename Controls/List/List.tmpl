@@ -1,7 +1,9 @@
+<!--прокидываем itemTemplate т.к. иначе мы не понимаем, что нужно перестраивать partail, потому что изменения только в замыкании функции-->
 <Controls.List.ListControl
               viewModelConfig="{{_viewModelConfig}}"
               viewModelConstructor="{{_viewModelConstructor}}"
               viewConfig="{{_viewConfig}}"
+              itemTemplate="{{_options.itemTemplate}}"
               source="{{_options.source}}"
               filter="{{_options.filter}}"
               name="listControl"

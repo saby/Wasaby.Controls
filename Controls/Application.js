@@ -8,7 +8,6 @@ define('Controls/Application',
       'Core/Deferred',
       'Core/BodyClasses',
       'Core/compatibility',
-      'Controls/Application/TouchDetector',
       'Controls/Application/AppData',
       'Controls/Application/HeadDataContext',
       'Core/ConsoleLogger'
@@ -28,7 +27,6 @@ define('Controls/Application',
       Deferred,
       BodyClasses,
       compatibility,
-      TouchDetector,
       AppData,
       HeadDataContext) {
       'use strict';
@@ -94,7 +92,6 @@ define('Controls/Application',
 
             self._headData = new HeadDataContext(cfg.theme);
             _private.initState(self, receivedState || cfg);
-            self.content = cfg.content;
             self.needArea = cfg.compat || self.compat;
             if (!receivedState) {
                receivedState = {};
