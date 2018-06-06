@@ -134,11 +134,26 @@ define('Controls-demo/OperationsPanel/OperationsPanel', [
          this._itemClick = this._itemClick.bind(this);
          this._selectionChange = this._selectionChange.bind(this);
          ModuleClass.superclass.constructor.apply(this, arguments);
-         this.createPanelSource();
-         this.createSource();
+         this._createPanelSource();
+         this._createSource();
+         this._itemActions = this._createItemsActions();
       },
 
-      createPanelSource: function() {
+      _createItemsActions: function() {
+         var self = this;
+         return [
+            {
+               id: 0,
+               icon: 'icon-Erase icon-error',
+               showType: 2,
+               handler: function(item) {
+                  self._children.listView.removeItems([item.getId()]);
+               }
+            }
+         ];
+      },
+
+      _createPanelSource: function() {
          this._panelSource = new Memory({
             idProperty: 'id',
             data: defaultItems
@@ -146,7 +161,7 @@ define('Controls-demo/OperationsPanel/OperationsPanel', [
 
       },
 
-      createSource: function() {
+      _createSource: function() {
          var newData = [];
          for (var i = 0; i < +this._sourceCount; i++) {
             var item = {
@@ -190,10 +205,10 @@ define('Controls-demo/OperationsPanel/OperationsPanel', [
          var selected = selection.selected;
          if (!selected || !selected.length) {
             defaultItems.shift();
-            this.createPanelSource();
+            this._createPanelSource();
          } else if (defaultItems[0] !== deleteItem) {
             defaultItems.unshift(deleteItem);
-            this.createPanelSource();
+            this._createPanelSource();
          }
       },
 

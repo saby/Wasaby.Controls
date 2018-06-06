@@ -19,7 +19,13 @@ define('Controls/List/MassSelector', [
       },
 
       _onCheckBoxClickHandler: function(event, key, status) {
-         this._notify('onCheckBoxClick', [key, status], {
+         this._notify('listCheckBoxClick', [key, status], {
+            bubbling: true
+         });
+      },
+
+      _onAfterItemsRemoveHandler: function(event, keys) {
+         this._notify('listAfterItemsRemove', [keys], {
             bubbling: true
          });
       },

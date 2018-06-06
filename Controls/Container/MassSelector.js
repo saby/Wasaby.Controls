@@ -69,6 +69,14 @@ define('Controls/Container/MassSelector', [
          this._updateContext();
       },
 
+      _afterItemsRemoveHandler: function(evern, keys) {
+         this._multiselection.unselect(keys);
+
+         this._updateCount();
+         this._updateSelectedKeys();
+         this._updateContext();
+      },
+
       _itemsReadyCallback: function(items) {
          if (this._items) {
             this._items.unsubscribe('onCollectionChange', this._updateItems);
@@ -124,7 +132,9 @@ define('Controls/Container/MassSelector', [
             this._count
          );
          if (this._options.selectionChangeHandler) {
-            this._options.selectionChangeHandler(this._multiselection.getSelection());
+            this._options.selectionChangeHandler(
+               this._multiselection.getSelection()
+            );
          }
          this._forceUpdate();
       },
