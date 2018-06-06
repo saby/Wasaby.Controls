@@ -608,9 +608,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             this._setText(text);
          },
 
-         setActive: function(active) {
+         setActive: function (active) {
+            runDelayed(this._setActive.bind(this, active));
+         },
+
+         _setActive: function (active) {
             this._lastActive = active;
-            if (active && this._needFocusOnActivated() && this.isEnabled()) {
+            if (active && this.isEnabled() && this._needFocusOnActivated()) {
                this._performByReady(function() {
                   //Активность могла поменяться пока грузится tinymce.js
                   if (this._lastActive) {
