@@ -103,6 +103,10 @@ define('Controls/Popup/Opener/InfoBox/InfoBoxController',
             return InfoBoxController.superclass.elementCreated.apply(this, arguments);
          },
 
+         elementUpdated: function() {
+            ManagerController.remove(this._openedPopupId); //Инфобокс при скролле или ресайзе скрывается
+         },
+
          elementDestroyed: function(element, container, id) {
             if (id === this._openedPopupId) {
                this._openedPopupId = null;
