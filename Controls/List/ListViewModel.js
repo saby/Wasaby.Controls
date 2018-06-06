@@ -177,11 +177,15 @@ define('Controls/List/ListViewModel',
          },
 
          setItemActions: function(item, actions) {
-            this._actions[this.getIndexBySourceItem(item)] = actions;
+            var itemID = item.getId();
+            var collectionItem = itemID ?  this.getItemById(itemID).getContents() : item;
+            this._actions[this.getIndexBySourceItem(collectionItem)] = actions;
          },
 
          getItemActions: function(item) {
-            return this._actions[this.getIndexBySourceItem(item)];
+            var itemID = item.getId();
+            var collectionItem = itemID ?  this.getItemById(itemID).getContents() : item;
+            return this._actions[this.getIndexBySourceItem(collectionItem)];
          },
 
 
