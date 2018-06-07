@@ -1,0 +1,36 @@
+.controls-Notification {
+  border-top: 3px solid;
+  box-shadow: 0 0 12px rgba(0,0,0, 0.6);
+  position: relative;
+  min-height: 40px;
+  min-width: 40px;
+  &__error {
+    border-color: #ef463a;
+  }
+  &__primary {
+    border-color: #0055BB;
+  }
+  &__done {
+    border-color: #72BE44;
+  }
+  &__content {
+    padding: 8px;
+  }
+
+  &__closeButton {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    cursor: pointer;
+  }
+  &__simpleTemplate {
+    display: flex;
+    align-items: center;
+    &-icon {
+      margin-right: 8px;
+    }
+    &-message {
+      font-size: 15px;
+    }
+  }
+}
