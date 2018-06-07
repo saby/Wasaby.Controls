@@ -633,6 +633,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
 
             _setActive: function (active) {
+               if (this.isDestroyed()) {
+                  return;
+               }
                this._lastActive = active;
                if (active && this.isEnabled() && this._needFocusOnActivated()) {
                   this._performByReady(function() {
