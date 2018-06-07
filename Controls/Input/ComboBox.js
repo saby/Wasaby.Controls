@@ -45,6 +45,7 @@ define('Controls/Input/ComboBox',
 
          _beforeMount: function(options) {
             this._onClose = _private.close.bind(this);
+            this._placeholder = options.placeholder;
             this._value = options.value;
             this._simpleViewModel = new BaseViewModel({
                value: this._value

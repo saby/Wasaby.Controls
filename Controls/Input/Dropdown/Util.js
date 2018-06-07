@@ -1,15 +1,15 @@
-define('Controls/Input/Dropdown/Util', [], function() {
+define('Controls/Input/Dropdown/Util',
+   [],
+   function() {
 
-   'use strict';
-   var DropdownUtil = {
+      'use strict';
 
-      prepareEmpty: function(emptyText) {
+      function prepareEmpty(emptyText) {
          if (emptyText) {
             return emptyText === true ? 'Не выбрано' : emptyText;
          }
       }
-   };
 
-   return DropdownUtil;
-}
+      return {prepareEmpty: prepareEmpty};
+   }
 );
