@@ -79,3 +79,8 @@
 .controls-ButtonBase.controls-EditActions__cancelButton {
   background-color: @background-color-IconButton;
 }
+body:not(.ws-is-mobile-platform) .controls-ButtonBase.controls-EditActions__cancelButton{
+  &:hover, &:active {
+    background-color: @background-color-IconButton_hovered;
+  }
+}

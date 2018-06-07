@@ -1534,7 +1534,7 @@ define('SBIS3.CONTROLS/ListView',
                      itemsProjection.getRoot().getContents().get(recordItems.getIdProperty()) == id);
                },
                siblingItem;
-            if (index === -1 && id && isRootId(id)) {
+            if (index === -1 && typeof id !== 'undefined' && isRootId(id)) {
                index = 0;
             }
             if (isNext) {
