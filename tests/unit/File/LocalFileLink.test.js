@@ -1,5 +1,5 @@
 define([
-   'Lib/File/LocalFileLink'
+   'File/LocalFileLink'
 ], function (LocalFileLink) {
    'use strict';
 
@@ -7,7 +7,7 @@ define([
    var link = 'file:///C:/file1.md';
    var fileLink = new LocalFileLink(link, meta);
 
-   describe('Controls/File/LocalFileLink', function () {
+   describe('File/LocalFileLink', function () {
 
       describe('.getLink()', function () {
          it('Возвращает ссылку на файл, находящийся на локальном устройстве', function () {
