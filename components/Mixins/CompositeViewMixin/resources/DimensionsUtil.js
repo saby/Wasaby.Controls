@@ -3,7 +3,8 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/DimensionsUtil', [
    return {
       calcOutsideDimensions: function(item) {
          var
-            additionalWidth = Math.floor(item.outerWidth() / 2),
+            itemRect = item.get(0).getBoundingClientRect(),
+            additionalWidth = Math.floor(itemRect.width / 2),
             margin = Math.floor(item.outerWidth(true) / 2 - additionalWidth),
             additionalHeight = Math.floor(item.outerHeight(true) / 2);
 
@@ -14,11 +15,11 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/DimensionsUtil', [
       },
       calcInsideDimensions: function(item, container) {
          var
-            additionalWidth = Math.floor(item.outerWidth() / 2),
+            itemRects = item.get(0).getBoundingClientRect(),
+            additionalWidth = Math.floor(itemRects.width / 2),
             margin = Math.floor(item.outerWidth(true) / 2 - additionalWidth),
             additionalHeight = Math.floor(item.outerHeight(true) / 2),
             containerRects = container.get(0).getBoundingClientRect(),
-            itemRects = item.get(0).getBoundingClientRect(),
             horizontalRightDiffer = containerRects.width - (itemRects.width + item.get(0).offsetLeft + additionalWidth / 2),
             horizontalLeftDiffer = item.get(0).offsetLeft - additionalWidth / 2,
             verticalBottomDiffer = containerRects.height - (itemRects.height + item.get(0).offsetTop + additionalHeight / 2),
