@@ -5,10 +5,11 @@ define('Controls/Input/ComboBox',
       'Controls/Input/resources/InputRender/BaseViewModel',
       'Controls/Controllers/SourceController',
       'WS.Data/Utils',
+      'Controls/Input/Dropdown/Util',
       'css!Controls/Input/ComboBox/ComboBox'
    ],
 
-   function(Control, template, BaseViewModel, SourceController, Utils) {
+   function(Control, template, BaseViewModel, SourceController, Utils, dropdownUtils) {
 
       /**
        * Control "ComboBox"
@@ -62,18 +63,20 @@ define('Controls/Input/ComboBox',
          },
 
          _selectedItemsChangedHandler: function(event, selectedItems) {
-            this._isEmptyItem = getPropValue(selectedItems[0], this._options.keyProperty) === null;
+            var key = getPropValue(selectedItems[0], this._options.keyProperty);
+            this._isEmptyItem = key === null;
             if (this._isEmptyItem) {
                this._value = '';
-               this._placeholder = this._options.emptyText === true ? 'Не выбрано' : this._options.emptyText;
+               this._placeholder = dropdownUtils.prepareEmpty(this._options.emptyText);
             } else {
                this._value = getPropValue(selectedItems[0], this._options.displayProperty);
+               this._placeholder = this._options.placeholder;
             }
             this._simpleViewModel.updateOptions({
                value: this._value
             });
             this._notify('valueChanged', [this._value]);
-            this._notify('selectedKeyChanged', [getPropValue(selectedItems[0], this._options.keyProperty)]);
+            this._notify('selectedKeyChanged', [key]);
             this._isOpen = false;
          }
 

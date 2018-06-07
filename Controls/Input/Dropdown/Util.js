@@ -8,15 +8,11 @@ define('Controls/Input/Dropdown/Util', [], function() {
      * @param {Object} self
      * @param {Object} target
      */
-      open: function(self, target) {
-         var config = {
-            templateOptions: {
-               items: self._items,
-               defaultItemTemplate: self._defaultItemTemplate
-            },
-            target: target
-         };
-         self._children.DropdownOpener.open(config, self);
+
+      prepareEmpty: function(emptyText) {
+         if (emptyText) {
+            return emptyText === true ? 'Не выбрано' : emptyText;
+         }
       }
    };
 
