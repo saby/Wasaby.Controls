@@ -504,6 +504,10 @@ define('Controls/List/Grid/GridViewModel', [
             return this._model._prepareDisplayItemForAdd(item);
          },
 
+         getItemActions: function(item) {
+            return this._model.getItemActions(item);
+         },
+
          getDragTargetPosition: function() {
             return this._model.getDragTargetPosition();
          },
