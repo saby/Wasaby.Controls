@@ -39,7 +39,7 @@ define('SBIS3.CONTROLS/Mixins/ChooserMixin', [
            * @param {String|Object} template Строка или объект - конфигурация справочника диалога выбора.
            * Для {@link SBIS3.CONTROLS/FieldLink поля связи} значение второго параметра зависит от значения опции {@link SBIS3.CONTROLS/FieldLink#useSelectorAction useSelectorAction}:
            * <ol>
-           *    <li> useSelectorAction = true - в параметр придёт объект с полями multiselect, selectedItems, selectionType, template</li>
+           *    <li> useSelectorAction = true - в параметр придёт объект с полями multiselect, selectedItems, selectionType, template; конфигурация справочника, которая придёт в {@link https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/FieldLink/options/dictionaries/ dictionaries}.</li>
            *    <li> useSelectorAction = false - в параметр придёт строка</li>
            * </ol>
            * @return {Deferred|Boolean|*} Возможные значения:

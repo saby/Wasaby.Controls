@@ -7,7 +7,6 @@
  */
 define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
    [
-      'Core/core-merge',
       'Core/Deferred',
       'Core/helpers/Object/isEqual',
       'SBIS3.CONTROLS/CompoundControl',
@@ -20,7 +19,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
       'css!SBIS3.CONTROLS/ExportCustomizer/_Presets/View'
    ],
 
-   function (cMerge, Deferred, cObjectIsEqual, CompoundControl, ItemNamer, RecordSet, Di, dotTplFn) {
+   function (Deferred, cObjectIsEqual, CompoundControl, ItemNamer, RecordSet, Di, dotTplFn) {
       'use strict';
 
       /**

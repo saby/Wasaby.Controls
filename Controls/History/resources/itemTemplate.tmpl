@@ -1,4 +1,7 @@
-<div attr:class="controls-DropdownList__row {{itemData.isSelected ? 'controls-DropdownList__selected'}} controls-DropdownList__item-{{itemData.getPropValue(itemData.item, 'pinned') === true && !itemData.hasParent ? 'pinned'}} controls-DropdownList__item-right_{{itemData.hasChildren || hierarchyPadding || itemData.getPropValue(itemData.item, 'pinned') === true || !itemData.hasParent ? 'hierarchy-padding': 'default-padding'}}"
+<div attr:class="controls-DropdownList__row
+                 controls-DropdownList__row_history
+                 {{itemData.isSelected ? 'controls-DropdownList__selected'}}
+                 {{itemData.getPropValue(itemData.item, 'pinned') === true && !itemData.hasParent ?  'controls-DropdownList__row_pinned'}}"
      on:click="_itemClickHandler(itemData.item)" on:mouseenter="_itemMouseEnter(itemData.item, itemData.hasChildren)">
    <div if="{{itemData.icon}}" class="controls-DropdownList__icon {{itemData.icon}}"></div>
    <div class="controls-DropdownList__content">
@@ -13,7 +16,7 @@
    </div>
     <ws:if data="{{!itemData.hasChildren && !(itemData.getPropValue(itemData.item, 'pinned') === true && itemData.hasParent)}}">
         <div    on:click="_itemClickHandler(itemData.item, true)"
-                class="controls-DropdownList__row-pin {{itemData.getPropValue(itemData.item, 'pinned') === true ? 'controls-DropdownList__unpin icon-PinOff' : 'icon-PinNull'}}"></div>
+                class="controls-DropdownList__row_pin {{itemData.getPropValue(itemData.item, 'pinned') === true ? 'controls-DropdownList__row_unpin icon-PinOff' : 'icon-PinNull'}}"></div>
     </ws:if>
    <div if="{{itemData.hasChildren}}" class="controls-DropdownList__arrow icon-MarkCRightLight"></div>
 

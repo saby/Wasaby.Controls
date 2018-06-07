@@ -28,7 +28,6 @@ define('Controls/Input/Search/Suggest',
       var Suggest = Control.extend({
          
          _template: template,
-         _suggestState: false,
          
          _changeValueHandler: function(event, value) {
             this._notify('valueChanged', [value]);
@@ -40,12 +39,12 @@ define('Controls/Input/Search/Suggest',
             this._notify('valueChanged', [item.get(this._options.displayProperty)]);
          },
    
-         _resetClick: function() {
-            this._suggestState = false;
+         _suggestStateChanged: function(event, value) {
+            this._notify('suggestStateChanged', [value]);
          },
    
          _deactivated: function() {
-            this._suggestState = false;
+            this._notify('suggestStateChanged', [false]);
          }
          
       });
@@ -60,7 +59,8 @@ define('Controls/Input/Search/Suggest',
    
       Suggest.getDefaultOptions = function() {
          return {
-            minSearchLength: 3
+            minSearchLength: 3,
+            suggestState: false
          };
       };
       

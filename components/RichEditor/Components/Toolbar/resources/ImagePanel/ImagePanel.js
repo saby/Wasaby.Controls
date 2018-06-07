@@ -5,7 +5,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/ImagePanel/ImageP
       'Lib/Mixins/LikeWindowMixin',
       'tmpl!SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/ImagePanel/ImagePanel',
       "Core/EventBus",
-      'SBIS3.CONTROLS/RichEditor/Components/_ImageUploader',
       'css!SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/ImagePanel/ImagePanel'
    ], function(CompoundControl, PopupMixin, LikeWindowMixin, dotTplFn, EventBus) {
       'use strict';

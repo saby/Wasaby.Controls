@@ -2,8 +2,8 @@
  * Created by kraynovdo on 16.11.2017.
  */
 define('Controls/List/ListViewModel',
-   ['Controls/List/ItemsViewModel', 'Controls/List/resources/utils/ItemsUtil', 'Controls/Controllers/Multiselect/Selection', 'WS.Data/Entity/VersionableMixin'],
-   function(ItemsViewModel, ItemsUtil, MultiSelection, VersionableMixin) {
+   ['Controls/List/ItemsViewModel', 'Controls/Controllers/Multiselect/Selection', 'WS.Data/Entity/VersionableMixin', 'Controls/List/resources/utils/ItemsUtil'],
+   function(ItemsViewModel, MultiSelection, VersionableMixin) {
       /**
        *
        * @author Крайнов Дмитрий
@@ -73,6 +73,10 @@ define('Controls/List/ListViewModel',
             this._markedItem = this.getItemById(key, this._options.keyProperty);
             this._nextVersion();
             this._notify('onListChange');
+         },
+
+         getSwipeItem: function() {
+            return this._swipeItem.item;
          },
 
          setActiveItem: function(itemData) {
@@ -177,14 +181,18 @@ define('Controls/List/ListViewModel',
          },
 
          setItemActions: function(item, actions) {
-            this._actions[this.getIndexBySourceItem(item)] = actions;
+            var itemById = this.getItemById(item.getId());
+            var collectionItem = itemById ?  itemById.getContents() : item;
+            this._actions[this.getIndexBySourceItem(collectionItem)] = actions;
          },
          _prepareDisplayItemForAdd: function(item) {
             return ItemsUtil.getDefaultDisplayItem(this._display, item);
          },
 
          getItemActions: function(item) {
-            return this._actions[this.getIndexBySourceItem(item)];
+            var itemById = this.getItemById(item.getId());
+            var collectionItem = itemById ?  itemById.getContents() : item;
+            return this._actions[this.getIndexBySourceItem(collectionItem)];
          },
 
 
