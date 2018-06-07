@@ -1,0 +1,34 @@
+.ws-HighCharts {
+   position: relative;
+}
+
+.ws-is-ie,
+.ws-is-mobile-safari,
+.ws-is-mobile-chrome-ios {
+   .ws-HighCharts{
+      -webkit-transform: none !important;
+   }
+}
+
+.ws-HighCharts__plot {
+   height: 100%;
+}
+
+.ws-HighCharts__loadingIndicator
+{
+   position: absolute;
+   background: @image_HighChart-loading-indicator center center no-repeat;
+   height: 100%;
+   top: 0;
+   left: 0;
+   width: 100%;
+
+}
+
+/* В хроме на некоторых видеокартах(как минимум на GT1060) svg некорректно рендерится
+ * https://bugs.chromium.org/p/chromium/issues/detail?id=819211
+ * https://github.com/highcharts/highcharts/issues/7662
+ */
+.ws-HighCharts .highcharts-series path {
+     stroke-linecap: initial;
+}

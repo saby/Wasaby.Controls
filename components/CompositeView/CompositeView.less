@@ -69,7 +69,7 @@
       line-height: 27px;
    }
 
-   &:not(.controls-CompositeView-tile__static):not(.controls-CompositeView-tile__dynamic) {
+   &.controls-CompositeView-tile__old {
       /* Стили для режима 'Плитки' */
       .controls-CompositeView__tileItem {
          display: inline-block;
@@ -160,7 +160,7 @@
    }
 }
 
-.controls-CompositeView-tile__static, .controls-CompositeView-tile__dynamic {
+.controls-CompositeView-tile__new {
    .controls-CompositeView__itemsContainer {
       overflow: visible;
       .flexbox();
@@ -380,6 +380,7 @@
          &.controls-CompositeView__item-withTitle {
             .controls-CompositeView__tileTitle {
                display: block;
+               padding: 0 4px;
             }
          }
          &.controls-ListView__hoveredItem, &.controls-ItemActions__activeItem {

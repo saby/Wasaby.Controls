@@ -154,6 +154,30 @@ define([
             assert.isTrue(listModel.at(1).getContents().isEqual(eip._editingItem));
             assert.equal(listModel.at(0).getContents(), eip._originalItem);
          });
+
+         it('afterItemEdit', function(done) {
+            var source = new Memory({
+               idProperty: 'id',
+               data: items
+            });
+
+            eip.saveOptions({
+               listModel: listModel,
+               source: source
+            });
+
+            eip._notify = function(event, args) {
+               if (event === 'afterItemEdit') {
+                  assert.equal(eip._editingItem, args[0]);
+                  assert.isNotOk(args[1]);
+                  done();
+               }
+            };
+
+            eip.editItem({
+               item: listModel.at(0).getContents()
+            });
+         });
       });
 
       describe('addItem', function() {
@@ -197,6 +221,30 @@ define([
                assert.instanceOf(eip._editingItem, Model);
                assert.isTrue(eip._isAdd);
                done();
+            });
+         });
+
+         it('afterItemEdit', function(done) {
+            var source = new Memory({
+               idProperty: 'id',
+               data: items
+            });
+
+            eip.saveOptions({
+               listModel: listModel,
+               source: source
+            });
+
+            eip._notify = function(event, args) {
+               if (event === 'afterItemEdit') {
+                  assert.equal(eip._editingItem, args[0]);
+                  assert.isTrue(args[1]);
+                  done();
+               }
+            };
+
+            eip.addItem({
+               item: newItem
             });
          });
       });
@@ -332,6 +380,60 @@ define([
             };
             var result = eip.commitEdit();
             assert.isFalse(result.isSuccessful());
+         });
+
+         describe('afterItemEndEdit', function() {
+            it('add item', function(done) {
+               var source = new Memory({
+                  idProperty: 'id',
+                  data: data
+               });
+               eip.saveOptions({
+                  listModel: listModel,
+                  source: source
+               });
+
+               eip.addItem({
+                  item: newItem
+               });
+
+               eip._editingItem.set('title', '1234');
+
+               eip._notify = function(event, args) {
+                  if (event === 'afterItemEndEdit') {
+                     assert.equal(eip._editingItem, args[0]);
+                     assert.isTrue(args[1]);
+                     done();
+                  }
+               };
+               eip.commitEdit();
+            });
+
+            it('edit item', function(done) {
+               var source = new Memory({
+                  idProperty: 'id',
+                  data: data
+               });
+               eip.saveOptions({
+                  listModel: listModel,
+                  source: source
+               });
+
+               eip.editItem({
+                  item: listModel.at(0).getContents()
+               });
+
+               eip._editingItem.set('title', '1234');
+
+               eip._notify = function(event, args) {
+                  if (event === 'afterItemEndEdit') {
+                     assert.equal(listModel.at(0).getContents(), args[0]);
+                     assert.isNotOk(args[1]);
+                     done();
+                  }
+               };
+               eip.commitEdit();
+            });
          });
       });
 

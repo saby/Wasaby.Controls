@@ -1,9 +1,8 @@
 define('Controls/Filter/Button/Panel/FilterDropdown', [
    'Core/Control',
-   'WS.Data/Utils',
    'tmpl!Controls/Filter/Button/Panel/FilterDropdown/FilterDropdown',
    'css!Controls/Filter/Button/Panel/FilterDropdown/FilterDropdown'
-], function(Control, Utils, template) {
+], function(Control, template) {
 
    'use strict';
 

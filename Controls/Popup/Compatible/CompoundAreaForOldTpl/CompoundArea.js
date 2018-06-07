@@ -6,7 +6,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/helpers/Array/findIndex',
       'Core/moduleStubs',
       'Core/core-debug',
-      'Core/core-merge',
       'Core/helpers/Function/debounce',
       'Core/Deferred',
       'Core/IoC',
@@ -24,7 +23,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       arrayFindIndex,
       moduleStubs,
       coreDebug,
-      cMerge,
       debounce,
       cDeferred,
       IoC,
@@ -74,6 +72,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          InstantiableMixin,
          LikeWindowMixin], {
          _template: template,
+         _compoundId: undefined,
          templateOptions: null,
          compatible: null,
          fixBaseCompatible: true,
@@ -95,7 +94,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
 
          _shouldUpdate: function(popupOptions) {
-            this._rebuildCompoundControl(popupOptions);
+            if (popupOptions._compoundId !== this._compoundId) {
+               this._rebuildCompoundControl(popupOptions);
+               this._compoundId = popupOptions._compoundId;
+            }
             return false;
          },
 
@@ -134,6 +136,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             var self = this;
             this.templateOptions = this._options.templateOptions || {};
+            this._compoundId = this._options._compoundId;
 
             if (this._options._initCompoundArea) {
                this._options._initCompoundArea(this);
@@ -164,7 +167,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
          _commandHandler: function(event, commandName, arg) {
             if (commandName === 'close') {
-               this._close();
+               this._close(arg);
             }
             if (commandName === 'registerPendingOperation') {
                return this._registerChildPendingOperation(arg);
@@ -173,14 +176,14 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                return this._unregisterChildPendingOperation(arg);
             }
          },
-         _close: function() {
-            if (this.handle('onBeforeClose') !== false) {
+         _close: function(arg) {
+            if (this.handle('onBeforeClose', arg) !== false) {
                this.close();
             }
          },
-         closeHandler: function(e) {
+         closeHandler: function(e, arg) {
             e.stopPropagation();
-            this._close();
+            this._close(arg);
          },
 
          /* from api floatArea, window */
@@ -221,17 +224,25 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                return value !== handler;
             });
          },
-         handle: function(eventName) {
-            var handlers = this[eventName + 'Handler'] || [];
-            var eventState = new EventObject(eventName, this);
-            var self = this;
+         handle: function(eventName, arg) {
+            var handlers = this[eventName + 'Handler'] || [],
+               eventState = new EventObject(eventName, this),
+               optionsHandlers = this._options.handlers || [],
+               self = this;
 
             if (handlers[eventName] === 'function') {
-               handlers[eventName] = [this._options.handlers[eventName]];
+               handlers[eventName] = [handlers[eventName]];
             }
+            if (typeof optionsHandlers[eventName] === 'function') {
+               handlers.push(optionsHandlers[eventName]);
+            }
+            if (Array.isArray(optionsHandlers[eventName])) {
+               handlers = handlers.concat(optionsHandlers[eventName]);
+            }
+
             handlers.forEach(function(value) {
                if (eventState.getResult() !== false) {
-                  value.apply(self._compoundControl, [eventState]);
+                  value.apply(self._compoundControl || self, [eventState, arg]);
                }
             });
 
@@ -509,6 +520,5 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             return res;
          }
       });
-
       return CompoundArea;
    });

@@ -97,8 +97,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          presetAddNewTitle: _typeIfDefined.bind(null, 'string'),
          presetNewPresetTitle: _typeIfDefined.bind(null, 'string'),
          columnBinderTitle: _typeIfDefined.bind(null, 'string'),
-         columnBinderColumnsTitle: _typeIfDefined.bind(null, 'string'),
-         columnBinderFieldsTitle: _typeIfDefined.bind(null, 'string'),
          columnBinderEmptyTitle: _typeIfDefined.bind(null, 'string'),
          formatterTitle: _typeIfDefined.bind(null, 'string'),
          formatterMenuTitle: _typeIfDefined.bind(null, 'string'),
@@ -252,8 +250,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          'columnBinderTitle',
          'presetAddNewTitle',
          'presetNewPresetTitle',
-         'columnBinderColumnsTitle',
-         'columnBinderFieldsTitle',
          'columnBinderEmptyTitle',
          'formatterTitle',
          'formatterMenuTitle',
@@ -300,14 +296,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                 * @cfg {string} Заголовок под-компонента "columnBinder" (опционально)
                 */
                columnBinderTitle: null,
-               /**
-                * @cfg {string} Заголовок столбца колонок файла в таблице соответствия под-компонента "columnBinder" (опционально)
-                */
-               columnBinderColumnsTitle: null,
-               /**
-                * @cfg {string} Заголовок столбца полей данных в таблице соответствия под-компонента "columnBinder" (опционально)
-                */
-               columnBinderFieldsTitle: null,
                /**
                 * @cfg {string} Отображаемый текст при пустом списке соответствий в под-компоненте "columnBinder" (опционально)
                 */
@@ -365,12 +353,16 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                 */
                outputCall: null
             },
+            // Имя кнопки применения
+            _BUTTON_NAME: 'controls-ExportCustomizer-Area__completeButton',
             // Список имён вложенных под-компонентов
             _SUBVIEW_NAMES: {
                presets: 'controls-ExportCustomizer-Area__presets',
                columnBinder: 'controls-ExportCustomizer-Area__body__columnBinder',
                formatter: 'controls-ExportCustomizer-Area__body__formatter'
             },
+            // Кнопка применения
+            _button: null,
             // Ссылки на вложенные под-компоненты
             _views: {}
          },
@@ -502,8 +494,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                presets: presetsOptions,
                columnBinder: {
                   title: options.columnBinderTitle || undefined,
-                  columnsTitle: options.columnBinderColumnsTitle || undefined,
-                  fieldsTitle: options.columnBinderFieldsTitle || undefined,
                   allFields: allFields,
                   fieldIds: !usePresets && fieldIds && fieldIds.length ? fieldIds.slice() : undefined
                },
@@ -532,6 +522,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          },
 
          _init: function () {
+            this._button = _getChildComponent(this, this._BUTTON_NAME);
             // Получить ссылки на имеющиеся под-компоненты
             this._collectViews();
             // Подписаться на необходимые события
@@ -578,8 +569,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * Обработчик "subviewChanged" для под-компонента "preset"
           *
           * @protected
+          * @param {*} [data] Дополнительные данные
           */
-         _onChangePresets: function () {
+         _onChangePresets: function (data) {
             // Выбран новые предустановленные настройки экспорта
             var views = this._views;
             var values = views.presets.getValues();
@@ -592,9 +584,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                this._options.fileUuid = fileUuid;
             }
             if (fieldIds || fileUuid) {
-               views.columnBinder.setValues({fieldIds:fieldIds.slice()});
+               views.columnBinder.setValues({fieldIds:fieldIds.slice()}, {source:'presets', reason:data});
                var consumer = values.consumer;
-               views.formatter.setValues({fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumer:consumer ? cMerge({}, consumer) : null});
+               views.formatter.setValues({fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumer:consumer ? cMerge({}, consumer) : null}, {source:'presets', reason:data});
+               this._updateCompleteButton(fieldIds);
             }
          },
 
@@ -602,8 +595,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * Обработчик "subviewChanged" для под-компонента "columnBinder"
           *
           * @protected
+          * @param {*} [data] Дополнительные данные
           */
-         _onChangeColumnBinder: function () {
+         _onChangeColumnBinder: function (data) {
             // Изменился набор экспортируемых полей
             var views = this._views;
             var values = views.columnBinder.getValues();
@@ -612,18 +606,20 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                this._options.fieldIds = fieldIds.slice();
                var presetsView = views.presets;
                if (presetsView) {
-                  presetsView.setValues({fieldIds:fieldIds.slice()});
+                  presetsView.setValues({fieldIds:fieldIds.slice()}, {source:'columnBinder', reason:data});
                }
-               views.formatter.setValues({fieldIds:fieldIds.slice()});
+               views.formatter.setValues({fieldIds:fieldIds.slice()}, {source:'columnBinder', reason:data});
             }
+            this._updateCompleteButton(fieldIds);
          },
 
          /*
           * Обработчик "subviewChanged" для под-компонента "formatter"
           *
           * @protected
+          * @param {*} [data] Дополнительные данные
           */
-         _onChangeFormatter: function () {
+         _onChangeFormatter: function (data) {
             // Изменилось форматирование эксель-файла
             var views = this._views;
             var values = views.formatter.getValues();
@@ -632,8 +628,22 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                this._options.fileUuid = fileUuid;
                var presetsView = views.presets;
                if (presetsView) {
-                  presetsView.setValues({fileUuid:fileUuid});
+                  presetsView.setValues({fileUuid:fileUuid}, {source:'formatter', reason:data});
                }
+            }
+         },
+
+         /*
+          * Обновить состояние кнопки применения
+          *
+          * @protected
+          * @param {Array<string>} fieldIds Список привязки колонок в экспортируемом файле к полям данных
+          */
+         _updateCompleteButton: function (fieldIds) {
+            var button = this._button;
+            if (button) {
+               // Показывать кнопку применения толко когда есть поля
+               button.setVisible(!!(fieldIds && fieldIds.length));
             }
          },
 

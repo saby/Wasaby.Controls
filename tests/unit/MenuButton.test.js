@@ -52,48 +52,22 @@ define(
          };
 
          let menu = new MenuButton(config);
-
-         it('check received state', () => {
-             menu._beforeMount(config, null, items);
-            assert.equal(menu._items, items);
-         });
-
-         it('before mount source', () => {
-         items.push({
-            id: '9',
-            title: 'Запись 9'
-         });
-         return new Promise((resolve) => {
-                  menu._beforeMount({
-                  keyProperty: 'id',
-                  source: new Memory({
-                     idProperty: 'id',
-                     data: items
-                  })
-              }).addCallback(() => {
-                  assert.equal(menu._items.getCount(), items.length);
-                  resolve();
-               });
-            });
-         });
+         menu.saveOptions(config);
+   
 
          it('before update source', () => {
             items.push({
                id: '10',
                title: 'Запись 10'
             });
-            return new Promise((resolve) => {
-               menu._beforeUpdate({
-                  keyProperty: 'id',
-                  source: new Memory({
-                     idProperty: 'id',
-                     data: items
-                  })
-               }).addCallback(() => {
-                  assert.equal(menu._items.getCount(), items.length);
-                  resolve();
-               });
+            menu._beforeUpdate({
+               keyProperty: 'id',
+               source: new Memory({
+                  idProperty: 'id',
+                  data: items
+               })
             });
+            assert.equal(menu._items, null);
          });
 
          it('open menu', () => {
@@ -107,11 +81,15 @@ define(
             menu._open();
          });
 
-         it('check item click', () => {
+         it('check item click', (done) => {
             menu._notify = (e) => {
                assert.equal(e, 'onMenuItemActivate');
             };
-            menu._onResult(['itemClick', 'event', [menu._items.at(4)]]);
+            menu._open();
+            setTimeout(function () {
+               menu._onResult(['itemClick', 'event', [menu._items.at(4)]]);
+               done();
+            }, 50);
          });
 
          function setTrue(assert) {
