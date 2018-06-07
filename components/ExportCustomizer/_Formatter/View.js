@@ -9,7 +9,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
    [
       'Core/Deferred',
       'Core/helpers/Function/debounce',
-      'Core/helpers/Object/isEqual',
       'SBIS3.CONTROLS/CompoundControl',
       'SBIS3.CONTROLS/Utils/ObjectChange',
       'SBIS3.CONTROLS/WaitIndicator',
@@ -19,7 +18,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
       'css!SBIS3.CONTROLS/ExportCustomizer/_Formatter/View'
    ],
 
-   function (Deferred, coreDebounce, cObjectIsEqual, CompoundControl, objectChange, WaitIndicator, RecordSet, Di, dotTplFn) {
+   function (Deferred, coreDebounce, CompoundControl, objectChange, WaitIndicator, RecordSet, Di, dotTplFn) {
       'use strict';
 
       /**

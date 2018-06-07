@@ -95,7 +95,7 @@ define('Controls/List/Swipe/SwipeControl', [
 
       closeSwipe: function(self) {
          if (self._swipeConfig) {
-            self._notify('closeSwipe', [self._options.listModel._swipeItem.item]);
+            self._notify('closeSwipe', [self._options.listModel.getSwipeItem()]);
             self._options.listModel.setSwipeItem(null);
             self._options.listModel.setActiveItem(null);
             self._swipeConfig = null;
