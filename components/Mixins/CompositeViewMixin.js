@@ -1,6 +1,7 @@
 define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
    'Core/constants',
    'Core/Deferred',
+   'Core/compatibility',
    'tmpl!SBIS3.CONTROLS/Mixins/CompositeViewMixin/CompositeViewMixin',
    'Core/IoC',
    'tmpl!SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/CompositeItemsTemplate',
@@ -17,7 +18,7 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
    'Core/core-instance',
    'SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/DimensionsUtil',
    'SBIS3.CONTROLS/Link'
-], function(constants, Deferred, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate,
+], function(constants, Deferred, coreCompatibility, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate,
             ItemsTemplate, InvisibleItemsTemplate, ListViewGroupTemplate, DataGridGroupTemplate, cMerge, cInstance, DimensionsUtil) {
    'use strict';
    /**
@@ -256,7 +257,9 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
              * @see listTemplate
              * @see SBIS3.CONTROLS/ListView#itemTemplate
              */
-            listTpl: null
+            listTpl: null,
+            itemsActionsInItemContainer: true,
+            tileInScrollContainer: true
          }
       },
 
@@ -270,6 +273,12 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
          //TODO:Нужен какой то общий канал для ресайза окна
          $(window).bind('resize', this._calculateTileHandler);
          this.subscribe('onAfterVisibilityChange', this._calculateTileHandler);
+         if (this._options.tileInScrollContainer) {
+            this._onScrollHandler = this._onScroll.bind(this);
+            this._scrollContainer = this._container.closest('.controls-ScrollContainer__content');
+            this._scrollContainer.on('scroll', this._onScrollHandler);
+            this._scrollContainer.css('z-index', 'auto');
+         }
          
          if (this._options.tileTemplate) {
             IoC.resolve('ILogger').log('CompositeView', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Задан tileTemplate');
@@ -283,10 +292,15 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
          if (this._options.viewMode == 'tile' && !this._options.tileMode){
             this._calculateTileWidth();
          }
+         if (this._options.tileInScrollContainer) {
+            this._resetFixedItem(true);
+         }
       },
 
       _setHoveredStyles: function(item) {
-         if (item && !item.hasClass('controls-CompositeView__hoverStylesInit')) {
+         if (!item && this._options.tileInScrollContainer) {
+            this._resetFixedItem();
+         } else if (item && (!item.hasClass('controls-CompositeView__hoverStylesInit') || this._options.tileInScrollContainer)) {
             this._calculateHoveredStyles(item);
             this._hasItemsActions().addCallback(function(hasItemsActions) {
                item.toggleClass('controls-CompositeView__item-withoutItemsAction', !hasItemsActions);
@@ -313,11 +327,23 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
 
       _calculateHoveredStyles: function(item) {
          if (this._options.tileMode === TILE_MODE.DYNAMIC) {
-            this._resetHoveredStyles(item);
-            this._setDynamicHoveredStyles(item);
+            if (this._options.tileInScrollContainer) {
+               this._setFixedHoveredStyles(item);
+            } else {
+               this._resetHoveredStyles(item);
+               this._setDynamicHoveredStyles(item);
+            }
          } else if (this._options.tileMode === TILE_MODE.STATIC && !this._container.hasClass('controls-CompositeView-tile__static-smallImage')) {
             this._resetHoveredStyles(item);
             this._setStaticHoveredStyles(item);
+         }
+      },
+
+      _setFixedHoveredStyles: function(item) {
+         if (!this._fixedItem || this._fixedItem.item[0] !== item[0]) {
+            item.removeClass('controls-CompositeView__resetHoveredStyle');
+            this._resetHoveredStyles(item);
+            this._setDynamicHoveredStyles(item);
          }
       },
 
@@ -329,7 +355,86 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
             styles = DimensionsUtil.calcInsideDimensions(item, this._getItemsContainer());
          }
 
-         item.css(styles);
+         if (this._options.tileInScrollContainer) {
+            if (!coreCompatibility.touch) {
+               this._createFixedItem(item, styles);
+            }
+         } else {
+            item.css(styles);
+         }
+      },
+
+      _createFixedItem: function(item, styles) {
+         var
+            margin,
+            itemClone,
+            itemRect,
+            maxOuterHeight,
+            parenRect;
+
+         this._resetFixedItem();
+
+         if (!this._fixedItem) {
+            parenRect = item.closest('.controls-ScrollContainer')[0].getBoundingClientRect();
+            margin = DimensionsUtil.getMargin(item);
+            itemRect = item[0].getBoundingClientRect();
+            maxOuterHeight = itemRect.height / 3;
+
+            if ((itemRect.top - parenRect.top) > -maxOuterHeight && (itemRect.bottom -  parenRect.bottom) < maxOuterHeight) {
+               itemClone = item.clone();
+               itemClone.empty();
+               itemClone.insertBefore(item);
+
+               item.css(styles).css({
+                  position: 'fixed',
+                  width: item.width(),
+                  left: itemRect.left - margin,
+                  top: itemRect.top - margin
+               });
+               item.addClass('controls-CompositeView__tileItem-fixed');
+               item.on('wheel', function() {
+                  item.addClass('controls-CompositeView__resetHoveredStyle');
+                  this._resetFixedItem(true);
+               }.bind(this));
+
+               this._fixedItem = {
+                  item: item,
+                  clone: itemClone
+               };
+            }
+         }
+      },
+
+      _resetFixedItem: function(force) {
+         var item;
+         if (this._fixedItem) {
+            item = this._fixedItem.item;
+            if (!item.hasClass('controls-ItemActions__activeItem') || force) {
+               item.css({ position: 'relative', width: 'auto', left: '', top: '' }).removeClass('controls-CompositeView__tileItem-fixed').off('wheel');
+               this._fixedItem.clone.remove();
+               this._fixedItem = null;
+            } else {
+               var menu = this._itemsToolbar && this._itemsToolbar.getItemsActions()._itemActionsMenu;
+               if (menu) {
+                  this.subscribeTo(menu, 'onClose', this._onItemActionsMenuClose.bind(this));
+               }
+            }
+         }
+      },
+
+      _onScroll: function() {
+         this._resetFixedItem(true);
+      },
+
+      _onItemActionsMenuClose: function() {
+         var
+            hoveredItem = this.getHoveredItem(),
+            hoveredItemContainer = hoveredItem && hoveredItem.container,
+            isFixedOnHover = hoveredItemContainer && this._fixedItem && hoveredItemContainer[0] === this._fixedItem.item[0];
+
+         if (!isFixedOnHover) {
+            this._resetFixedItem();
+         }
       },
 
       _setStaticHoveredStyles: function(item) {
@@ -586,6 +691,9 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
 
          destroy: function(parentFnc) {
             $(window).unbind('resize', this._calculateTileHandler);
+            if (this._scrollContainer) {
+               this._scrollContainer.off('scroll', this._onScrollHandler);
+            }
             parentFnc.call(this);
          },
 

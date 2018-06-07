@@ -201,9 +201,13 @@
             box-shadow: 0 0 5px #587AB0;
          }
 
+         &.controls-CompositeView__tileItem-fixed {
+            z-index: 3;
+         }
+
          /*Сбрасываем стили, прописанные inline на дефолтные, чтобы расширение элемента происходило только по ховеру т.к.
            по ховеру данные стили не применятся и будут использоваться inline'овые, расчитанные на js при отрисовке плитки*/
-         &:not(.controls-ListView__hoveredItem):not(.controls-ItemActions__activeItem) {
+         &:not(.controls-ListView__hoveredItem):not(.controls-ItemActions__activeItem), &.controls-CompositeView__resetHoveredStyle {
             padding: 0 !important;
             margin: 2px !important;
 
