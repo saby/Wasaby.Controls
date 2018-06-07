@@ -6,8 +6,6 @@ define([
    describe('Validation-tests', function () {
       var testControl;
       beforeEach(function () {
-         // todo скипаем тесты валидации потому что падает Script error for "ControlsSandbox/Validation/Validation1/Validation1", локально не падает
-         this.skip();
          if (typeof $ === 'undefined') {//Проверка того, что тесты выполняются в браузере
             this.skip();
          }
