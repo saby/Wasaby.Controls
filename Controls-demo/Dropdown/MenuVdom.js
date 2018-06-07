@@ -21,12 +21,13 @@ define('Controls-demo/Dropdown/MenuVdom', [
       {
          _template: template,
          _stateText: 'Выбранный ключ',
+         _selectedKeysEmpty: ['1'],
          _selectedKeys0: ['8'],
-         _selectedKeys1: '2',
-         _selectedKeys2: '3',
-         _selectedKeys3: '4',
-         _selectedKeys4: '5',
-         _selectedKeys5: '6',
+         _selectedKeys1: ['2'],
+         _selectedKeys2: ['3'],
+         _selectedKeys3: ['4'],
+         _selectedKeys4: ['5'],
+         _selectedKeys5: ['6'],
          _selectedItemsChangedHandler: function(event, dropdownIndex, selectedKeys) {
             this._stateText = 'Выбранный ключ: ' + selectedKeys;
          },
