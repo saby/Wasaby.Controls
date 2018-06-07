@@ -20,6 +20,7 @@
             <h3>Search suggest</h3>
             <Controls.Input.Search.Suggest
                     bind:value="_suggest2Value"
+                    bind:suggestState="_suggestState"
                     displayProperty="text"
                     searchParam="title"
                     source="{{_suggestSource}}">
@@ -54,6 +55,7 @@
             <h3>Search suggest with tabs</h3>
             <Controls.Input.Search.Suggest
                     bind:value="_suggest4Value"
+                    bind:suggestState="_suggestState1"
                     displayProperty="text"
                     searchParam="title"
                     source="{{_suggestTabSource}}"

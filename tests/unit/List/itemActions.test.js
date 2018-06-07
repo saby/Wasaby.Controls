@@ -4,12 +4,18 @@
 define([
    'Controls/List/ItemActions/ItemActionsControl',
    'WS.Data/Source/Memory',
+   'WS.Data/Entity/Model',
    'WS.Data/Collection/RecordSet',
    'Controls/List/ListViewModel',
    'Controls/List/ItemActions/Utils/Actions',
    'Controls/Utils/Toolbar',
    'Controls/List/Swipe/SwipeControl'
-], function(ItemActionsControl, MemorySource, RecordSet, ListViewModel, aUtil, tUtil, SwipeControl) {
+], function(ItemActionsControl, MemorySource, Model, RecordSet, ListViewModel, aUtil, tUtil, SwipeControl) {
+
+
+   var createItem = function() {
+      return new Model();
+   };
 
    describe('Controls.List.ItemActions', function() {
       var data, source, listViewModel, rs, actions, cfg;
@@ -227,7 +233,7 @@ define([
                },
                itemData =  {
                   itemActions: {all: actions},
-                  item: true
+                  item: createItem()
                };
             instance._beforeMount(cfg, {isTouch: {isTouch: true}});
             instance.saveOptions(cfg);
@@ -256,7 +262,7 @@ define([
                },
                itemData =  {
                   itemActions: {all: actions},
-                  item: true
+                  item: createItem()
                };
             instance._beforeMount(cfg, {isTouch: {isTouch: true}});
             instance.saveOptions(cfg);
@@ -284,7 +290,7 @@ define([
                },
                itemData =  {
                   itemActions: {all: actions},
-                  item: true
+                  item: createItem()
                };
             instance._beforeMount(cfg, {isTouch: {isTouch: true}});
             instance.saveOptions(cfg);
@@ -311,7 +317,7 @@ define([
                },
                itemData =  {
                   itemActions: {all: actions},
-                  item: true
+                  item: createItem()
                };
             instance._beforeMount(cfg, {isTouch: {isTouch: true}});
             instance.saveOptions(cfg);

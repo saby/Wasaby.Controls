@@ -5,7 +5,7 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/DimensionsUtil', [
          var
             additionalWidth = Math.floor(item.outerWidth() / 2),
             margin = Math.floor(item.outerWidth(true) / 2 - additionalWidth),
-            additionalHeight = Math.floor(item.outerHeight() / 2);
+            additionalHeight = Math.floor(item.outerHeight(true) / 2);
 
          return {
             padding: Math.ceil(additionalHeight / 2) + 'px ' + Math.ceil(additionalWidth / 2) + 'px',
@@ -16,7 +16,7 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/DimensionsUtil', [
          var
             additionalWidth = Math.floor(item.outerWidth() / 2),
             margin = Math.floor(item.outerWidth(true) / 2 - additionalWidth),
-            additionalHeight = Math.floor(item.outerHeight() / 2),
+            additionalHeight = Math.floor(item.outerHeight(true) / 2),
             containerRects = container.get(0).getBoundingClientRect(),
             itemRects = item.get(0).getBoundingClientRect(),
             horizontalRightDiffer = containerRects.width - (itemRects.width + item.get(0).offsetLeft + additionalWidth / 2),

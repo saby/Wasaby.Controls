@@ -802,6 +802,7 @@ define([
             };
             var ctrl = new BaseControl(cfg);
             ctrl._notify = function(e, options) {
+               assert.equal('beforeItemAdd', e);
                assert.equal(options[0], opt);
                return newOpt;
             };
@@ -843,6 +844,7 @@ define([
             };
             var ctrl = new BaseControl(cfg);
             ctrl._notify = function(e, options) {
+               assert.equal('beforeItemEdit', e);
                assert.equal(options[0], opt);
                return newOpt;
             };
@@ -887,9 +889,105 @@ define([
             });
             ctrl._children = {itemActions: {updateItemActions: function() {}}};
             ctrl._notify = function(e, options) {
+               assert.equal('afterItemEdit', e);
                assert.equal(options[0], opt);
+               assert.isNotOk(options[1]);
             };
             ctrl._onAfterItemEdit({}, opt);
+         });
+
+         it('_onAfterItemEdit, isAdd = true', function() {
+            var opt = {
+               test: 'test'
+            };
+            var cfg = {
+               viewName: 'Controls/List/ListView',
+               source: source,
+               viewConfig: {
+                  keyProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: rs,
+                  keyProperty: 'id',
+                  selectedKeys: [1, 3]
+               },
+               viewModelConstructor: ListViewModel,
+               navigation: {
+                  source: 'page',
+                  sourceConfig: {
+                     pageSize: 6,
+                     page: 0,
+                     mode: 'totalCount'
+                  },
+                  view: 'infinity',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  }
+               }
+            };
+            var ctrl = new BaseControl(cfg);
+            ctrl._listViewModel = new ListViewModel({ //аналог beforemount
+               items: rs,
+               keyProperty: 'id',
+               selectedKeys: [1, 3]
+            });
+            ctrl._children = {itemActions: {updateItemActions: function() {}}};
+            ctrl._notify = function(e, options) {
+               assert.equal('afterItemEdit', e);
+               assert.equal(options[0], opt);
+               assert.isTrue(options[1]);
+            };
+            ctrl._onAfterItemEdit({}, opt, true);
+         });
+
+         it('_onBeforeItemEndEdit', function() {
+            var opt = {
+               test: 'test'
+            };
+            var newOpt = {
+               test2: 'test'
+            };
+            var cfg = {
+               viewName: 'Controls/List/ListView',
+               source: source,
+               viewConfig: {
+                  keyProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: rs,
+                  keyProperty: 'id',
+                  selectedKeys: [1, 3]
+               },
+               viewModelConstructor: ListViewModel,
+               navigation: {
+                  source: 'page',
+                  sourceConfig: {
+                     pageSize: 6,
+                     page: 0,
+                     mode: 'totalCount'
+                  },
+                  view: 'infinity',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  }
+               }
+            };
+            var ctrl = new BaseControl(cfg);
+            ctrl._listViewModel = new ListViewModel({ //аналог beforemount
+               items: rs,
+               keyProperty: 'id',
+               selectedKeys: [1, 3]
+            });
+            ctrl._children = {itemActions: {updateItemActions: function() {}}};
+            ctrl._notify = function(e, options) {
+               assert.equal('beforeItemEndEdit', e);
+               assert.equal(options[0], opt);
+               assert.isTrue(options[1]);
+               assert.isTrue(options[2]);
+               return newOpt;
+            };
+            var result = ctrl._onBeforeItemEndEdit({}, opt, true, true);
+            assert.equal(result, newOpt);
          });
 
          it('_onBeforeItemEndEdit', function() {
@@ -975,10 +1073,56 @@ define([
                selectedKeys: [1, 3]
             });
             ctrl._children = {itemActions: {updateItemActions: function() {}}};
-            ctrl._notify = function(e, options) {
-               assert.equal(options[0], opt);
+            ctrl._notify = function(e, args) {
+               assert.equal('afterItemEndEdit', e);
+               assert.equal(args[0], opt);
+               assert.isNotOk(args[1]);
             };
             ctrl._onAfterItemEndEdit({}, opt);
+         });
+
+         it('_onAfterItemEndEdit, isAdd: true', function() {
+            var opt = {
+               test: 'test'
+            };
+            var cfg = {
+               viewName: 'Controls/List/ListView',
+               source: source,
+               viewConfig: {
+                  keyProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: rs,
+                  keyProperty: 'id',
+                  selectedKeys: [1, 3]
+               },
+               viewModelConstructor: ListViewModel,
+               navigation: {
+                  source: 'page',
+                  sourceConfig: {
+                     pageSize: 6,
+                     page: 0,
+                     mode: 'totalCount'
+                  },
+                  view: 'infinity',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  }
+               }
+            };
+            var ctrl = new BaseControl(cfg);
+            ctrl._listViewModel = new ListViewModel({ //аналог beforemount
+               items: rs,
+               keyProperty: 'id',
+               selectedKeys: [1, 3]
+            });
+            ctrl._children = {itemActions: {updateItemActions: function() {}}};
+            ctrl._notify = function(e, args) {
+               assert.equal('afterItemEndEdit', e);
+               assert.equal(args[0], opt);
+               assert.isTrue(args[1]);
+            };
+            ctrl._onAfterItemEndEdit({}, opt, true);
          });
       });
 

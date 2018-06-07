@@ -77,7 +77,7 @@ let Base = CoreExtend.extend(Abstract,{
          * </ul>
          * @name File/Attach/Base#multiSelect
          */
-        multiSelect: true,
+        multiSelect: true
     },
     constructor(opt) {
         Base.superclass.constructor.apply(this, arguments);

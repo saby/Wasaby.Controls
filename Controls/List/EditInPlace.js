@@ -25,7 +25,7 @@ define('Controls/List/EditInPlace', [
 
          afterItemEdit: function(self, options, isAdd) {
             self._editingItem = options.item.clone();
-            self._notify('afterItemEdit', [options.item, isAdd]);
+            self._notify('afterItemEdit', [self._editingItem, isAdd]);
             self._setEditingItemData(self._editingItem, self._options.listModel);
 
             return options;
@@ -76,8 +76,7 @@ define('Controls/List/EditInPlace', [
          },
 
          afterItemEndEdit: function(self) {
-         //Это событие всплывает, т.к. прикладники после завершения сохранения могут захотеть показать кнопку "+Запись" (по стандарту при старте добавления она скрывается)
-            self._notify('afterItemEndEdit', [self._originalItem, self._isAdd]);
+            self._notify('afterItemEndEdit', [self._isAdd ? self._editingItem : self._originalItem, self._isAdd]);
             _private.resetVariables(self);
             self._setEditingItemData(null, self._options.listModel);
          },
@@ -357,11 +356,13 @@ define('Controls/List/EditInPlace', [
             : listModel.getItemById(ItemsUtil.getPropertyValue(this._editingItem, listModel._options.keyProperty), listModel._options.keyProperty);
 
          listModel.reset(); //reset делается для того, чтобы при добавлении не лезть за пределы проекции
+         var actions =  listModel.getItemActions(item);
          this._editingItemData = listModel.getCurrent();
          this._editingItemData.item = this._editingItem;
          this._editingItemData.dispItem = editingItemProjection;
          this._editingItemData.isEditing = true;
-         this._editingItemData.index = this._isAdd ? listModel.getCount() : index;
+         this._editingItemData.index = this._isAdd ? actions : {};
+         this._editingItemData.drawActions = this._isAdd && actions && actions.showed && actions.showed.length,
          this._editingItemData.itemActions = this._isAdd ? listModel.getItemActions(item) : {};
          listModel._setEditingItemData(this._editingItemData);
       },
