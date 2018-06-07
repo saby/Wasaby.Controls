@@ -110,6 +110,6 @@ define('Controls/Container/Dropdown',
             this._children.DropdownOpener.open(config, this);
          }
       });
-
+      Dropdown._private = _private;
       return Dropdown;
    });
