@@ -341,6 +341,7 @@ define('Controls/List/EditInPlace', [
          this._editingItemProjection = this._isAdd
             ? new CollectionItem({ contents: this._editingItem })
             : listModel.getItemById(ItemsUtil.getPropertyValue(this._editingItem, listModel._options.keyProperty), listModel._options.keyProperty);
+         var actions =  listModel.getItemActions(item);
          this._editingItemData = {
             getPropValue: ItemsUtil.getPropertyValue,
             keyProperty: listModel._options.keyProperty,
@@ -350,7 +351,8 @@ define('Controls/List/EditInPlace', [
             dispItem: this._editingItemProjection,
             isEditing: true,
             isSelected: !listModel._markedItem,
-            itemActions: this._isAdd ? listModel.getItemActions(item) : {},
+            itemActions: this._isAdd ? actions : {},
+            drawActions: this._isAdd && actions && actions.showed && actions.showed.length,
             key: ItemsUtil.getPropertyValue(this._editingItemProjection.getContents(), listModel._options.keyProperty)
          };
          listModel._setEditingItemData(this._editingItemData);

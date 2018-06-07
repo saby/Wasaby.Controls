@@ -75,6 +75,10 @@ define('Controls/List/ListViewModel',
             this._notify('onListChange');
          },
 
+         getSwipeItem: function() {
+            return this._swipeItem.item;
+         },
+
          setActiveItem: function(itemData) {
             this._activeItem = itemData;
             this._nextVersion();
@@ -177,11 +181,15 @@ define('Controls/List/ListViewModel',
          },
 
          setItemActions: function(item, actions) {
-            this._actions[this.getIndexBySourceItem(item)] = actions;
+            var itemById = this.getItemById(item.getId());
+            var collectionItem = itemById ?  itemById.getContents() : item;
+            this._actions[this.getIndexBySourceItem(collectionItem)] = actions;
          },
 
          getItemActions: function(item) {
-            return this._actions[this.getIndexBySourceItem(item)];
+            var itemById = this.getItemById(item.getId());
+            var collectionItem = itemById ?  itemById.getContents() : item;
+            return this._actions[this.getIndexBySourceItem(collectionItem)];
          },
 
 
