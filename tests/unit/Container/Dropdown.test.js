@@ -61,15 +61,15 @@ define(
          beforeEach(() => {
             return new Promise((resolve) => {
                dropdownContainer.saveOptions({
-               selectedKeys: '2',
-               keyProperty: 'id'
-            });
+                  selectedKeys: '2',
+                  keyProperty: 'id'
+               });
                dropdownContainer._beforeMount(config).addCallback(resolve);
             });
          });
 
          it('before mount', (done) => {
-            dropdownContainer._beforeMount(config).addCallback(function (items) {
+            dropdownContainer._beforeMount(config).addCallback(function(items) {
                assert.deepEqual(items.getRawData(), itemsRecords.getRawData());
                done();
             });
@@ -77,38 +77,35 @@ define(
 
          it('check received state', () => {
             dropdownContainer._beforeMount(config, null, itemsRecords);
-         assert.deepEqual(dropdownContainer._items.getRawData(), itemsRecords.getRawData());
+            assert.deepEqual(dropdownContainer._items.getRawData(), itemsRecords.getRawData());
          });
 
          it('after mount', () => {
             let selectedItem;
             dropdownContainer._notify = (e, args) => {
-               if ( e == 'selectedItemChanged') {
+               if (e == 'selectedItemsChanged') {
                   selectedItem = args[0];
                }
             };
             dropdownContainer._afterMount();
-            assert.deepEqual(selectedItem, dropdownContainer._items.at(1));
+            assert.deepEqual(selectedItem[0], dropdownContainer._items.at(1));
          });
 
          it('check selectedItemsChanged event', () => {
             let selectedKeys,
                selectedItem;
+
             //subscribe на vdom компонентах не работает, поэтому мы тут переопределяем _notify
             //(дефолтный метод для vdom компонент который стреляет событием).
             //он будет вызван вместо того что стрельнет событием, тем самым мы проверяем что отправили
             //событие и оно полетит с корректными параметрами.
             dropdownContainer._notify = (e, args) => {
-               if (e == 'selectedKeysChanged') {
-                  selectedKeys = args[0];
-               } else if ( e == 'selectedItemChanged') {
+               if (e == 'selectedItemsChanged') {
                   selectedItem = args[0];
                }
             };
             Dropdown._private.selectItem.call(dropdownContainer, dropdownContainer._items.at(5));
-            assert.equal(selectedKeys, '6');
-            assert.deepEqual(selectedItem, dropdownContainer._items.at(5));
-
+            assert.deepEqual(selectedItem[0], dropdownContainer._items.at(5));
          });
 
          it('before update source', () => {
@@ -143,18 +140,27 @@ define(
             dropdownContainer._notify = (e) => {
                assert.equal(e, 'footerClick');
             };
-            dropdownContainer._onResult(['footerClick', 'event'])
-      });
+            dropdownContainer._onResult({action: 'footerClick'});
+         });
 
          it('check item click', () => {
             dropdownContainer._notify = (e) => {
-               assert.equal(e, 'selectedKeysChanged');
+               assert.equal(e, 'selectedItemsChanged');
             };
-            dropdownContainer._onResult(['itemClick', 'event', [dropdownContainer._items.at(4)]])
+            dropdownContainer._onResult({action: 'itemClick', data: [dropdownContainer._items.at(4)]});
+         });
+         it('without items', () => {
+            dropdownContainer._options = config;
+            dropdownContainer._children.DropdownOpener = {
+               close: setTrue.bind(this, assert),
+               open: setTrue.bind(this, assert)
+            };
+            dropdownContainer._items = null;
+            dropdownContainer._open();
          });
 
          function setTrue(assert) {
             assert.equal(true, true);
          }
       });
-});
+   });
