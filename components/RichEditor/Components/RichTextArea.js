@@ -75,6 +75,24 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
        */
       var DI_IMAGE_UPLOADER = 'ImageUploader';
 
+      /**
+       * Вызвать функцию асинхронно. Все агрументы после первого будут использованы как аргументы вызова. Возвращает обещание, разрешаемое результатом выполнения функции
+       * @private
+       * @param {function} func
+       * @return {Core/Deferred}
+       */
+      var _callAsync = function (func/*, args*/) {
+         var promise = new Deferred();
+         var args = Array.prototype.slice.call(arguments, 1);
+         if (BROWSER.isMobileIOS || BROWSER.isMobileSafari) {
+            promise.callback(func.apply(null, args));
+         }
+         else {
+            setTimeout(function () { promise.callback(func.apply(null, args)); }, 1);
+         }
+         return promise;
+      };
+
       var _getTrueIEVersion = function () {
          var version = cConstants.browser.IEVersion;
          // В cConstants.browser.IEVersion неправильно определяется MSIE 11
@@ -601,16 +619,25 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           * @see text
           */
          setText: function(text) {
-            text = this._sanitizeClasses(text, true);
+            text = text ? this._sanitizeClasses(text, true) : '';
             if (text !== this._curValue()) {
                this._drawText(text);
             }
             this._setText(text);
          },
 
-         setActive: function(active) {
+         setActive: function (active) {
+            // Иногда, когда редактор помещён внуть некоторой FloatArea, случается так, что установка активности происходит во время анимации, когда эта родительская область "вылетает" в рабочсее поле. Чтобы установка активности не мешала анимации - будем делать её асинхронно
+            // 1175247680 https://online.sbis.ru/opendoc.html?guid=d02aee44-14e6-425c-9670-bf35f68714c7
+            _callAsync(this._setActive.bind(this), active);
+         },
+
+         _setActive: function (active) {
+            if (this.isDestroyed()) {
+               return;
+            }
             this._lastActive = active;
-            if (active && this._needFocusOnActivated() && this.isEnabled()) {
+            if (active && this.isEnabled() && this._needFocusOnActivated()) {
                this._performByReady(function() {
                   //Активность могла поменяться пока грузится tinymce.js
                   if (this._lastActive) {
@@ -1652,12 +1679,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             }
          },
 
-         _setTrimmedText: function(text) {
-            this._setText(this._trimText(text));
+         _setTrimmedText: function (text) {
+            var trimmedText = this._trimText(text);
+            this._setText(trimmedText, trimmedText !== text);
          },
 
-         _setText: function(text) {
-            if (text !== this.getText()) {
+         _setText: function (text, forced) {
+            var isDifferent = text !== this.getText();
+            if (isDifferent) {
                if (!this._isEmptyValue(text)) {
                   this._textChanged = true;
                }
@@ -1668,8 +1697,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this.clearMark();
             }
             //При нажатии enter передаётся trimmedText поэтому updateHeight text === this.getText() и updateHeight не зовётся
-            this._updateHeight();
-            this._togglePlaceholder(text);
+            if (isDifferent || forced) {
+               this._updateHeight();
+               this._togglePlaceholder(text);
+            }
          },
          _notifyTextChanged: function() {
             this._notifyOnPropertyChanged('text');
