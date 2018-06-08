@@ -78,10 +78,10 @@
          }
       }
       li {
-         padding-bottom: 6px;
+         margin-bottom: 6px;
       }
       & > :last-child li:last-child {
-         padding-bottom: 0;
+         margin-bottom: 0;
       }
    }
    &.controls-RichEditor_fixedHeight .controls-RichEditor__editorFrame {
@@ -305,6 +305,11 @@
        */
       .controls-RichEditor__editorFrame.ws-basic-style > p:last-child {
          padding-bottom: 1px;
+      }
+      .controls-RichEditor__editorFrame {
+         & > :last-child li:last-child {
+            margin-bottom: 6px;
+         }
       }
    }
 }
