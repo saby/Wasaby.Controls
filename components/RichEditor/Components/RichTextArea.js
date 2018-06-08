@@ -2548,6 +2548,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (needUnwrap && template != '2') {
                   $img.unwrap();
                }
+               var imageOptionsPanel =  this._imageOptionsPanel;
+               var canRecalc = true;
                switch (template) {
                   case '1':
                      $img.addClass('image-template-left');
@@ -2563,7 +2565,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         ' data-img-uuid="' + $img.attr('data-img-uuid') + '"' +
                         '></img>' +
                         '</p>';
-                     this._tinyEditor.dom.replace($(html)[0], (needUnwrap ? $parent : $img)[0],false);
+                     var fragment = $(html)[0];
+                     var editor = this._tinyEditor;
+                     editor.dom.split($parent[0], $img[0], fragment);
+                     var newPic = fragment.firstChild;
+                     editor.selection.select(newPic);
+                     imageOptionsPanel.hide();
+                     this._showImageOptionsPanel($(newPic));
+                     canRecalc = false;
                      break;
                   case '3':
                      $img.addClass('image-template-right');
@@ -2573,7 +2582,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                };
                // Вызвать recalcPosition напрямую во избежании ощутимых задержек
                // 49132 https://online.sbis.ru/opendoc.html?guid=f6ceccf6-2001-494d-90c1-d44a6255ad1e
-               this._imageOptionsPanel.recalcPosition();
+               if (canRecalc) {
+                  imageOptionsPanel.recalcPosition();
+               }
                this._updateTextByTiny();
             },
 
