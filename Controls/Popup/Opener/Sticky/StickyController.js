@@ -33,7 +33,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
                sizes: sizes
             };
 
-            cfg.position = StickyStrategy.getPosition(popupCfg, TargetCoords.get(cfg.popupOptions.target ? cfg.popupOptions.target : document.body));
+            cfg.position = StickyStrategy.getPosition(popupCfg, _private._getTargetCoords(cfg, sizes));
 
             // Удаляем предыдущие классы характеризующие направление и добавляем новые
             if (cfg.popupOptions.className) {
@@ -50,6 +50,33 @@ define('Controls/Popup/Opener/Sticky/StickyController',
             className += ' controls-Popup-align-horizontal-' + cfg.align.horizontal.side;
             className += ' controls-Popup-align-vertical-' + cfg.align.vertical.side;
             return className;
+         },
+         _getTargetCoords: function(cfg, sizes) {
+            if (cfg.popupOptions.nativeEvent) {
+               var top = cfg.popupOptions.nativeEvent.clientY;
+               var left = cfg.popupOptions.nativeEvent.clientX;
+               var positionCfg = {
+                  verticalAlign: {
+                     side: 'bottom'
+                  },
+                  horizontalAlign: {
+                     side: 'right'
+                  }
+               };
+               cMerge(cfg.popupOptions, positionCfg);
+               sizes.margins = {top: 0, left: 0};
+               return {
+                  width: 1,
+                  height: 1,
+                  top: top,
+                  left: left,
+                  bottom: document.body.clientHeight - top,
+                  right: document.body.clientWidth - left,
+                  topScroll: 0,
+                  leftScroll: 0
+               };
+            }
+            return TargetCoords.get(cfg.popupOptions.target ? cfg.popupOptions.target : document.body);
          }
       };
 
