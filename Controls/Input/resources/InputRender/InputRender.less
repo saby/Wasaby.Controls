@@ -89,7 +89,6 @@
    font: inherit;
    color: inherit;
    text-align: inherit;
-   caret-color: @color_InputRender;
    //https://inside.tensor.ru/opendoc.html?guid=f0c1b032-e2e4-4e65-b98f-8f9413ac0652&des=
    &::-webkit-contacts-auto-fill-button {
       display: none;
@@ -159,6 +158,7 @@
 //Состояния
 .controls-Text-InputRender_state_default {
    border-color: @border-color_InputRender;
+   caret-color: @color_InputRender;
 }
 
 .controls-Text-InputRender_state_default:hover {
@@ -167,6 +167,7 @@
 
 .controls-Text-InputRender_state_active {
    border-color: @border-color_InputRender_active;
+   caret-color: @color_InputRender;
 }
 
 .controls-Text-InputRender_state_active:focus {
@@ -189,6 +190,7 @@
 .controls-Text-InputRender_state_error {
    background-color: @background-color_InputRender_error;
    border-color: @border-color_InputRender_error;
+   caret-color: @color_InputRender;
 }
 
 //Размеры
