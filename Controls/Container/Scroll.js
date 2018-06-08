@@ -144,6 +144,8 @@ define('Controls/Container/Scroll',
          Scroll = Control.extend({
             _template: template,
 
+            _stickyHeaderHeight: 0,
+
             /**
              * Смещение контента сверху относительно контейнера.
              * @type {number}
@@ -347,6 +349,11 @@ define('Controls/Container/Scroll',
 
             _draggingChangedHandler: function(event, dragging) {
                this._dragging = dragging;
+            },
+
+            _fixedHandler: function(event, shouldFixed, headerHeight) {
+               this._stickyHeaderHeight = shouldFixed ? headerHeight : 0;
+               event.stopPropagation();
             },
 
             getDataId: function() {
