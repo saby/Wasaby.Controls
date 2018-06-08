@@ -12,6 +12,7 @@ define('SBIS3.CONTROLS/Filter/Button',
    "Core/IoC",
    "Core/helpers/Function/once",
    "SBIS3.CONTROLS/Utils/FilterPanelUtils",
+   "Core/detection",
    "SBIS3.CONTROLS/Button/IconButton",
    "SBIS3.CONTROLS/Filter/Button/Line",
    "i18n!SBIS3.CONTROLS/Filter/Button",
@@ -29,7 +30,8 @@ define('SBIS3.CONTROLS/Filter/Button',
         TemplateUtil,
         IoC,
         once,
-        FilterPanelUtils
+        FilterPanelUtils,
+        detection
     ) {
 
        'use strict';
@@ -342,6 +344,7 @@ define('SBIS3.CONTROLS/Filter/Button',
                    side: isRightAlign ? 'left' : 'right'
                 },
                 context: this._pickerContext,
+                locationStrategy: detection.isMobilePlatform ? 'bodyBounds' : null,
                 template: 'SBIS3.CONTROLS/Filter/Button/Area',
                 componentOptions: this._getAreaOptions(),
                 handlers: {
