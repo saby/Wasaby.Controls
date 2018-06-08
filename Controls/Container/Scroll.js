@@ -351,8 +351,8 @@ define('Controls/Container/Scroll',
                this._dragging = dragging;
             },
 
-            _fixedHandler: function(event, shouldFixed, headerHeight) {
-               this._stickyHeaderHeight = shouldFixed ? headerHeight : 0;
+            _fixedHandler: function(event, shouldBeFixed, headerHeight) {
+               this._stickyHeaderHeight = shouldBeFixed ? headerHeight : 0;
                event.stopPropagation();
             },
 

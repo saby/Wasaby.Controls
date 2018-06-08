@@ -1,18 +1,19 @@
 define('Controls/StickyHeader',
    [
       'Core/Control',
+      'Controls/Utils/IntersectionObserver',
       'tmpl!Controls/StickyHeader/StickyHeader',
 
       'css!Controls/StickyHeader/StickyHeader'
    ],
-   function(Control, template) {
+   function(Control, IntersectionObserver, template) {
 
       'use strict';
 
       var StickyHeader = Control.extend({
          _template: template,
 
-         _shouldFixed: false,
+         _shouldBeFixed: false,
 
          _isIntersecting: null,
 
@@ -33,7 +34,7 @@ define('Controls/StickyHeader',
 
          _observeHandler: function(entries) {
             var self = this;
-            var entryTop, entryBottom, isIntersectingTop, isIntersectingBottom, shouldFixed;
+            var entryTop, entryBottom, isIntersectingTop, isIntersectingBottom, shouldBeFixed;
 
             entries.forEach(function(entry) {
                if (entry.target === self._children.observationTargetTop) {
@@ -58,11 +59,11 @@ define('Controls/StickyHeader',
                isIntersectingBottom = this._isIntersecting.bottom;
             }
 
-            shouldFixed = isIntersectingBottom && !isIntersectingTop;
+            shouldBeFixed = isIntersectingBottom && !isIntersectingTop;
 
-            if (shouldFixed !== this._shouldFixed) {
-               this._notify('fixed', [shouldFixed, this._container.offsetHeight], {bubbling: true});
-               this._shouldFixed = shouldFixed;
+            if (shouldBeFixed !== this._shouldBeFixed) {
+               this._notify('fixed', [shouldBeFixed, this._container.offsetHeight], {bubbling: true});
+               this._shouldBeFixed = shouldBeFixed;
             }
          }
       });
