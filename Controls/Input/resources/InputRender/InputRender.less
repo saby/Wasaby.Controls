@@ -16,6 +16,7 @@
 //Суть в том, что поля ввода могут быть внутри контейнера с display: flex и align-items: center и из-за этого съедет базовая линия
 
 .controls-InputRender {
+   caret-color: @color_InputRender;
    box-sizing: border-box;
    cursor: auto;
    line-height: normal;
@@ -89,7 +90,6 @@
    font: inherit;
    color: inherit;
    text-align: inherit;
-   caret-color: @color_InputRender;
    //https://inside.tensor.ru/opendoc.html?guid=f0c1b032-e2e4-4e65-b98f-8f9413ac0652&des=
    &::-webkit-contacts-auto-fill-button {
       display: none;
@@ -175,7 +175,6 @@
 
 .controls-Text-InputRender_state_disabled {
    background-color: @background-color_InputRender_disabled;
-   caret-color: transparent;
 }
 
 .controls-Text-InputRender_state_disabled_singleLine {
