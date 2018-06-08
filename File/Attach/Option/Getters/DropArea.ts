@@ -59,12 +59,12 @@ class DropArea extends ResourceGetter {
         super (new DropAreaGetter(options || {}));
     }
     /**
-    * @static
-    * @method
-    * @returns {String} Тип Getter'a
-    */
-    static getType(){
-    return GETTER_TYPE;
+     * @static
+     * @method
+     * @returns {String} Тип Getter'a
+     */
+    static getType() {
+        return GETTER_TYPE;
     }
 }
 export = DropArea;
