@@ -108,13 +108,14 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List'], functio
          assert.deepEqual(self._filter, resultFilter);
       });
    
-      it('Suggest::_inputActivated', function() {
+      it('Suggest::_inputActivated with autoDropDown', function() {
          var self = getComponentObject();
          var suggestComponent = new Suggest();
          var suggestState = false;
          
          self._options.searchParam = 'searchParam';
-         self._options.minSearchLength = 0;
+         self._options.autoDropDown = true;
+         self._options.minSearchLength = 3;
          suggestComponent.saveOptions(self._options);
          suggestComponent._notify = function(event, val) {
             if (event === 'suggestStateChanged') {
