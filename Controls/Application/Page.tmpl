@@ -32,9 +32,9 @@
                               <ws:if data="{{needArea}}">
                                  <div class="ws-focus-in"></div>
                               </ws:if>
-                              <ws:if data="{{ _options.content }}">
+                              <ws:if data="{{ content.content }}">
                                  <Controls.Application._Wait>
-                                    <ws:partial template="{{ _options.content }}" scope="{{ templateConfig }}"/>
+                                    <ws:partial template="{{ content.content }}" scope="{{ templateConfig }}"/>
                                  </Controls.Application._Wait>
                               </ws:if>
                               <ws:if data="{{ content.dragAvatarTemplate }}">
