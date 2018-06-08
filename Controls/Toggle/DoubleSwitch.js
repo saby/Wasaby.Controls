@@ -46,7 +46,7 @@ define('Controls/Toggle/DoubleSwitch', [
          self._toggleHoverState = 'controls-DoubleSwitcher__toggle_hover';
       },
 
-      unsetToggleHoverClass: function (self) {
+      unsetToggleHoverClass: function(self) {
          self._toggleHoverState = '';
       }
    };
@@ -66,7 +66,7 @@ define('Controls/Toggle/DoubleSwitch', [
       _clickTextHandler: function(e, _nextValue) {
          if (this._options.value !== _nextValue && !this._options.readOnly) {
             _private.notifyChanged(this);
-            this._toggleHoverState='';
+            _private.unsetToggleHoverClass(this);
          }
       },
 
@@ -80,13 +80,13 @@ define('Controls/Toggle/DoubleSwitch', [
          _private.checkCaptions(newOptions.captions);
       },
 
-      activateToggleHover: function (e) {
+      activateToggleHover: function(e) {
          if (~e.target.className.indexOf('controls-DoubleSwitch__text_enabled_unselected')) {
             _private.setToggleHoverClass(this);
          }
       },
 
-      deactivateToggleHover: function (e) {
+      deactivateToggleHover: function(e) {
          _private.unsetToggleHoverClass(this);
       }
    });
