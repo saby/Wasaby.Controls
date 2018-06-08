@@ -22,11 +22,18 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
          eventsChannel = EventBus.channel('WindowChangeChannel'),
          clickCallback = function (e) {
             eventsChannel.notify('onDocumentClick', e);
+         },
+         dragCallback = function(e) {
+            if (e.dataTransfer.types[0] === 'Files') {
+               eventsChannel.notify('onDocumentDrag', e);
+            }
+
          };
       // Отлавливаем mousedown + touchstart в захватывающей фазе, т.к. всплытие до document может быть остановлено
       // через stopPropagation (https://inside.tensor.ru/opendoc.html?guid=b935c090-ccf6-4a9e-a205-5fc9c96a7c04)
       document.addEventListener('mousedown', clickCallback, true);
       document.addEventListener('touchstart', clickCallback, true);
+      document.addEventListener('dragover', dragCallback, true);
 
       $(window).blur(function(e) {
          if(document.activeElement && document.activeElement.tagName == "IFRAME"){
@@ -227,6 +234,9 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
          //Скрываем попап если при скролле таргет скрылся
          EventBus.channel('WindowChangeChannel').subscribe('onWindowScroll', this._onResizeHandler, this);
 
+         //Скрываем попап при драг'н'дропе
+         EventBus.channel('WindowChangeChannel').subscribe('onDocumentDrag', this._dragHandler, this);
+
          if (this._options.closeByExternalOver) {
             EventBus.channel('WindowChangeChannel').subscribe('onDocumentMouseOver', this._clickHandler, this);
          }
@@ -357,10 +367,10 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
          this._defaultVerticalAlignSide = this._options.verticalAlign.side;
          this._defaultHorizontalAlignSide = this._options.horizontalAlign.side;
       },
-      
+
       _getParentContainer: function() {
          var parCont = this._getOption('parentContainer');
-         
+
          if(parCont instanceof jQuery) {
             return parCont;
          } else if (this._getOption('target')) {
@@ -666,6 +676,10 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
          }
       },
 
+      _dragHandler: function() {
+         this.hide();
+      },
+
       //Если клик был по другой всплывашке, определяем, нужно ли закрывать текущий popup
       _isLinkedPanel: function (target) {
          //По ошибке https://inside.tensor.ru/opendoc.html?guid=b935c090-ccf6-4a9e-a205-5fc9c96a7c04 убрали всплытие события при mousedown (для чего описано в ошибке)
@@ -711,7 +725,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             if (this._options.parentContainer) {
                var parContainer = this._getParentContainer(),
                    parOffset = parContainer.offset();
-               
+
                this._targetSizes.offset.top = this._targetSizes.offset.top - parOffset.top + parContainer.scrollTop();
                this._targetSizes.offset.left = this._targetSizes.offset.left - parOffset.left + parContainer.scrollLeft();
             }
@@ -1027,7 +1041,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             if (offset.top <= 0) {
                this._overflowedV = true;
                this._container.css('overflow-y', detection.firefox ? 'scroll' : 'auto');
-               //Высота попапа не может быть больше высоты окна, поэтому ограничим его как минимум этой высотой 
+               //Высота попапа не может быть больше высоты окна, поэтому ограничим его как минимум этой высотой
                if (this._container.get(0).scrollHeight > this._windowSizes.height) {
                   height = this._windowSizes.height;
                }
@@ -1236,11 +1250,11 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             this.moveToTop();//пересчитываем, чтобы z-index был выше других панелей
 
             this._notify('onShow');
-   
+
             if (this._options.target) {
                this._options.target.trigger('wsSubWindowOpen');
             }
-            
+
             if (this._parentFloatArea){
                this._parentFloatArea.setHasPopupInside(true);
             }
@@ -1303,11 +1317,11 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             cWindowManager.setHidden(this._zIndex);
             cWindowManager.releaseZIndex(this._zIndex);
             ControlHierarchyManager.removeNode(this);
-            
+
             if(ControlHierarchyManager.getTopWindow() === this) {
                ControlHierarchyManager.setTopWindow(null);
             }
-            
+
             this._unsubscribeTargetMove();
             EventBus.globalChannel().unsubscribe('MobileInputFocus', this._touchKeyboardMoveHandler);
             EventBus.globalChannel().unsubscribe('MobileInputFocusOut', this._touchKeyboardMoveHandler);
@@ -1392,7 +1406,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
                      self._options.target.trigger('wsSubWindowClose');
                   }
                };
-            
+
             if (result instanceof Deferred) {
                result.addCallback(function (res) {
                   if (res !== false) {
