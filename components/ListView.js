@@ -3006,7 +3006,10 @@ define('SBIS3.CONTROLS/ListView',
                return elem;
             }
 
-            if(this._getItemsProjection() && this._getItemProjectionByItemId(dataId) && this._getItemProjectionByHash(dataHash)) {
+            // _getItemProjectionByItemId полностью убрать слишком страшно, не будем проверять её только при loadItemsStrategy === 'append'
+            // https://online.sbis.ru/opendoc.html?guid=4b3c5ebf-f623-4d2e-9d96-8db8ee32d666
+            if(this._getItemsProjection() && (this._options.loadItemsStrategy !== 'append' || this._getItemProjectionByItemId(dataId)) &&
+               this._getItemProjectionByHash(dataHash)) {
                return elem;
             } else {
                return this._findItemByElement(elem.parent());
