@@ -16,6 +16,7 @@
 //Суть в том, что поля ввода могут быть внутри контейнера с display: flex и align-items: center и из-за этого съедет базовая линия
 
 .controls-InputRender {
+   caret-color: @color_InputRender;
    box-sizing: border-box;
    cursor: auto;
    line-height: normal;
@@ -158,7 +159,6 @@
 //Состояния
 .controls-Text-InputRender_state_default {
    border-color: @border-color_InputRender;
-   caret-color: @color_InputRender;
 }
 
 .controls-Text-InputRender_state_default:hover {
@@ -167,7 +167,6 @@
 
 .controls-Text-InputRender_state_active {
    border-color: @border-color_InputRender_active;
-   caret-color: @color_InputRender;
 }
 
 .controls-Text-InputRender_state_active:focus {
@@ -176,7 +175,6 @@
 
 .controls-Text-InputRender_state_disabled {
    background-color: @background-color_InputRender_disabled;
-   caret-color: transparent;
 }
 
 .controls-Text-InputRender_state_disabled_singleLine {
@@ -190,7 +188,6 @@
 .controls-Text-InputRender_state_error {
    background-color: @background-color_InputRender_error;
    border-color: @border-color_InputRender_error;
-   caret-color: @color_InputRender;
 }
 
 //Размеры
