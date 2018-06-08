@@ -522,10 +522,6 @@ define('Controls/List/Grid/GridViewModel', [
             this._model.unselect(keys);
          },
 
-         setSwipeItem: function(itemData) {
-            this._model.setSwipeItem(itemData);
-         },
-
          destroy: function() {
             this._model.destroy();
             GridViewModel.superclass.destroy.apply(this, arguments);
