@@ -636,8 +636,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             if (this.isDestroyed()) {
                return;
             }
-            this._lastActive = active;
             if (active && this.isEnabled() && this._needFocusOnActivated()) {
+               this._lastActive = active;
                this._performByReady(function() {
                   //Активность могла поменяться пока грузится tinymce.js
                   if (this._lastActive) {
@@ -649,6 +649,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      // 1174883097 https://online.sbis.ru/opendoc.html?guid=56ad4bd1-a74a-4694-98bf-8401938c144a
                      if (noRng && !this.isActive() && this.getText()) {
                         this.setCursorToTheEnd();
+                     }
+                     if (!this._sourceContainer.hasClass('ws-hidden')) {
+                        this.toggleContentSource(true);
                      }
                      if (cConstants.browser.isMobileAndroid) {
                         // на android устройствах не происходит подскролла нативного
@@ -666,6 +669,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         this._notifyMobileInputFocus();
                      }
                   }
+                  this._lastActive = undefined;
                }.bind(this));
             }
             else {
