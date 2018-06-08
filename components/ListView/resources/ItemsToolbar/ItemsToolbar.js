@@ -395,7 +395,7 @@ define('SBIS3.CONTROLS/ListView/resources/ItemsToolbar/ItemsToolbar',
                  isVertical = target.container.hasClass('js-controls-CompositeView__verticalItemActions'),
                  isTile = target.container.hasClass('controls-CompositeView__tileItem'),
                  marginRight = $parentContainer[0].offsetWidth - (position.left + size.width),
-                 marginBottom = $parentContainer[0].getBoundingClientRect().height - (position.top + size.height),
+                 marginBottom = $parentContainer.innerHeight() - (position.top + size.height),
                  $container = this.getContainer(),
                  containerHeight;
 
