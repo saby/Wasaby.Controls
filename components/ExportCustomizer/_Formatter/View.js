@@ -86,9 +86,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                 */
                fileUuid: null,
                /**
-                * @cfg {object} Описание потребителя (обычно идентификатор пресета и его редактируемость)
+                * @cfg {string|number} Идентификатор потребителя (обычно пресета)
                 */
-               consumer: null
+               consumerId: null
             },
             // Объект, предоставляющий методы форматирования шаблона эксель-файла
             _exportFormatter: null,
@@ -180,7 +180,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             var options = this._options;
             var isCreate = method === 'create';
             var isClone = method === 'clone';
-            if ((isCreate || isClone) && this._creation[options.consumer ? options.consumer.id : '']) {
+            var consumerId = options.consumerId || '';
+            if ((isCreate || isClone) && this._creation[consumerId]) {
                throw new Error('Already in creation');
             }
             var isOpen = method === 'open' || method === 'openApp';
@@ -189,8 +190,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             }
             var args = [];
             if (isClone) {
-               var consumer = options.consumer;
-               args.push(this._patterns[consumer ? consumer.id : '']);
+               args.push(this._patterns[consumerId]);
             }
             var useBoth = isOpen || method === 'update';
             if (useBoth || method === 'delete') {
@@ -206,8 +206,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                function (err) { return err; }
             );
             if (isCreate || isClone) {
-               var consumer = options.consumer;
-               var consumerId = consumer ? consumer.id : '';
                this._creation[consumerId] = promise.createDependent().addBoth(function (consumerId) {
                   delete this._creation[consumerId];
                   delete this._patterns[consumerId];
@@ -344,12 +342,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                throw new Error('Object required');
             }
             var options = this._options;
-            var changes = objectChange(options, values, {fieldIds:true, fileUuid:false, consumer:true});
+            var changes = objectChange(options, values, {fieldIds:true, fileUuid:false, consumerId:false});
             if (changes) {
                var fieldIds = options.fieldIds;
                var hasFields = !!(fieldIds && fieldIds.length);
                var method;
-               var consumer = options.consumer;
+               var consumerId = options.consumerId || '';
                if (options.fileUuid) {
                   if ('fieldIds' in changes && !('fileUuid' in changes) && hasFields) {
                      method = 'update';
@@ -360,11 +358,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                      var isClone = meta /*&& meta.source === 'presets'*/ && meta.reason === 'clone';
                      method = isClone ? 'clone' : 'create';
                      if (isClone) {
-                        this._patterns[consumer ? consumer.id : ''] = meta.args[0];
+                        this._patterns[consumerId] = meta.args[0];
                      }
                   }
                }
-               var creating = this._creation[consumer ? consumer.id : ''];
+               var creating = this._creation[consumerId];
                if (creating) {
                   if (method === 'create' || method === 'clone') {
                      method = 'update';

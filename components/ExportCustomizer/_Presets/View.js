@@ -752,7 +752,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             if (selectedId) {
                var current = this._findPresetById(selectedId);
                return {
-                  consumer: {id:selectedId},
+                  consumerId: selectedId,
                   fieldIds: current.fieldIds,
                   fileUuid: current.fileUuid
                };
