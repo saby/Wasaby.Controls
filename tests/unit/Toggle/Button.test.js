@@ -54,14 +54,14 @@ define(['Controls/Toggle/Button'], function (Button) {
          assert.isTrue(Btn._state === '_toggle_on_readOnly', 'changing style failed in state');
       });
 
-      it('constructor', function () {
+      it('_beforeMount', function () {
          var opt = {
             style: 'iconButtonBordered',
             readOnly: true,
             value: true,
             size: 'l'
          };
-         Btn.constructor(opt);
+         Btn._beforeMount(opt);
          assert.isTrue(Btn._style === 'iconButtonBordered', 'changing style failed in style');
          assert.isTrue(Btn._type === 'iconButtonBordered', 'changing style failed in type');
          assert.isTrue(Btn._typeWithSize === 'iconButtonBordered_size-l', 'changing style failed in typeWithSize');
