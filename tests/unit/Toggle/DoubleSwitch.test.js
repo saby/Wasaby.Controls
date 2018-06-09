@@ -222,23 +222,14 @@ define(['Controls/Toggle/DoubleSwitch'], function (Switch) {
                });
             });
 
-            it('_activateOnTextToggleHover with selected caption', function () {
-              var    nextValue= false,
-                     value= false;
-               SW._activateToggleHover(null, nextValue, value);
+            it('_toggleSwitchHoverState with selected caption', function () {
+               SW._toggleSwitchHoverState(null, false);
                assert.isTrue(SW._toggleHoverState === '', 'mouseover to unselect caption leads to toggle with hover state')
             });
 
-            it('_activateOnTextToggleHover with unselected caption', function () {
-               var    nextValue= true,
-                      value= false;
-               SW._activateToggleHover(null, nextValue, value);
+            it('_toggleSwitchHoverState with unselected caption', function () {
+               SW._toggleSwitchHoverState(null, true);
                assert.isTrue(SW._toggleHoverState === 'controls-DoubleSwitcher__toggle_hover', 'mouseover to selected caption leads to toggle without hover state')
-            });
-
-            it('_deactivateToggleHover', function () {
-               SW._deactivateToggleHover();
-               assert.isTrue(SW._toggleHoverState === '', 'mouseout leads to toggle with hover state')
             });
          });
       });

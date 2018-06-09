@@ -40,14 +40,6 @@ define('Controls/Toggle/DoubleSwitch', [
 
       notifyChanged: function(self) {
          self._notify('valueChanged', [!self._options.value]);
-      },
-
-      setToggleHoverClass: function(self) {
-         self._toggleHoverState = 'controls-DoubleSwitcher__toggle_hover';
-      },
-
-      unsetToggleHoverClass: function(self) {
-         self._toggleHoverState = '';
       }
    };
 
@@ -66,7 +58,7 @@ define('Controls/Toggle/DoubleSwitch', [
       _clickTextHandler: function(e, _nextValue) {
          if (this._options.value !== _nextValue && !this._options.readOnly) {
             _private.notifyChanged(this);
-            _private.unsetToggleHoverClass(this);
+            this._toggleSwitchHoverState(false);
          }
       },
 
@@ -80,14 +72,12 @@ define('Controls/Toggle/DoubleSwitch', [
          _private.checkCaptions(newOptions.captions);
       },
 
-      _activateToggleHover: function(e, nextValue, value) {
-         if (nextValue === value) {
-            _private.setToggleHoverClass(this);
+      _toggleSwitchHoverState: function(e, toggledState) {
+         if (toggledState) {
+            this._toggleHoverState = 'controls-DoubleSwitcher__toggle_hover';
+         } else {
+            this._toggleHoverState = '';
          }
-      },
-
-      _deactivateToggleHover: function(e) {
-         _private.unsetToggleHoverClass(this);
       }
    });
 
