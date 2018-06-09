@@ -403,11 +403,10 @@ node('controls') {
                 sudo chmod -R 0777 /home/sbis/Controls
             """
         }
-		def soft_restart = true
+		def soft_restart = "True"
 		if (${params.browser_type} in ['ie', 'edge']){
-			soft_restart = false
+			soft_restart = "False"
 		}
-		echo ${soft_restart}
         writeFile file: "./controls/tests/int/config.ini", text:
             """# UTF-8
             [general]
