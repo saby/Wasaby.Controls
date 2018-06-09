@@ -541,8 +541,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                };
                this.subscribeTo(view, 'onCommandCatch', function (handler, evtName, command/*, args*/) {
                   if (command === 'subviewChanged') {
-                     handler.apply(this, Array.prototype.slice.call(arguments, 3));
-                     evtName.setResult(true);
+                     var result = handler.apply(this, Array.prototype.slice.call(arguments, 3));
+                     evtName.setResult(result || true);
                   }
                }.bind(this, handlers[name].bind(this)));
             }
@@ -570,8 +570,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                var meta = this._makeMeta('presets', [].slice.call(arguments));
                views.columnBinder.setValues({fieldIds:fieldIds.slice()}, meta);
                var consumer = values.consumer;
-               views.formatter.setValues({fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumer:consumer ? cMerge({}, consumer) : null}, meta);
+               var result = views.formatter.setValues({fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumer:consumer ? cMerge({}, consumer) : null}, meta);
                this._updateCompleteButton(fieldIds);
+               return result;
             }
          },
 
@@ -594,8 +595,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   presetsView.setValues({fieldIds:fieldIds.slice()}, meta);
                }
                views.formatter.setValues({fieldIds:fieldIds.slice()}, meta);
+               this._updateCompleteButton(fieldIds);
+               return true;
             }
-            this._updateCompleteButton(fieldIds);
          },
 
          /*
@@ -613,7 +615,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                this._options.fileUuid = fileUuid;
                var presetsView = views.presets;
                if (presetsView) {
-                  presetsView.setValues({fileUuid:fileUuid}, this._makeMeta('formatter', [].slice.call(arguments)));
+                  return presetsView.setValues({fileUuid:fileUuid}, this._makeMeta('formatter', [].slice.call(arguments)));
                }
             }
          },
