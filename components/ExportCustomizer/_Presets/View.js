@@ -721,13 +721,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                }
                else
                if (meta.source === 'formatter') {
-                  if (meta.reason === 'open') {
-                     needStartEdit = true;
-                  }
-                  else
-                  if (values.fileUuid/*^^^*/) {
-                     needStartEdit = true;
-                  }
+                  needStartEdit = meta.reason === 'open';
                }
                if (needStartEdit) {
                   var result;
@@ -758,7 +752,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             if (selectedId) {
                var current = this._findPresetById(selectedId);
                return {
-                  consumer: {id:selectedId/*^^^, readonly:!current.isStorable && !current.isUnreal*/},
+                  consumer: {id:selectedId},
                   fieldIds: current.fieldIds,
                   fileUuid: current.fileUuid
                };

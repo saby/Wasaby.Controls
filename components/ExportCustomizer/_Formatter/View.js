@@ -288,13 +288,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * Обновить изображение предпросмотра
           *
           * @protected
+          * @param {boolean} withClear Указывает очистить сразу от предыдущего изображения
           */
-         _updatePreview: function () {
+         _updatePreview: function (withClear) {
             var fieldIds = this._options.fieldIds;
-            if (fieldIds && fieldIds.length) {
+            var has = !!(fieldIds && fieldIds.length);
+            if (has) {
                this._updatePreviewStart();
             }
-            else {
+            if (!has || withClear) {
                var img = this._preview[0];
                img.src = '';
                img.title = '';
@@ -343,27 +345,48 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             }
             var options = this._options;
             var changes = objectChange(options, values, {fieldIds:true, fileUuid:false, consumer:true});
-            if (changes && ('fieldIds' in changes || 'fileUuid' in changes)) {
-               var method = options.fileUuid ? 'update' : (meta && meta.source === 'presets' && meta.reason === 'clone' ? 'clone' : 'create');
-               var creating;
-               if (method === 'create' || method === 'clone') {
-                  var consumer = options.consumer;
-                  creating = this._creation[consumer ? consumer.id : ''];
-               }
-               if (creating) {
-                  creating.addCallback(this._callFormatterMethods.bind(this, this._opening ? ['update', this._opening] : ['update']));
+            if (changes) {
+               var fieldIds = options.fieldIds;
+               var hasFields = !!(fieldIds && fieldIds.length);
+               var method;
+               var consumer = options.consumer;
+               if (options.fileUuid) {
+                  if ('fieldIds' in changes && !('fileUuid' in changes) && hasFields) {
+                     method = 'update';
+                  }
                }
                else {
-                  if (method === 'clone') {
-                     var consumer = options.consumer;
-                     this._patterns[consumer ? consumer.id : ''] = meta.args[0];
+                  if (hasFields) {
+                     var isClone = meta /*&& meta.source === 'presets'*/ && meta.reason === 'clone';
+                     method = isClone ? 'clone' : 'create';
+                     if (isClone) {
+                        this._patterns[consumer ? consumer.id : ''] = meta.args[0];
+                     }
                   }
-                  this._callFormatterMethods(this._opening ? [method, this._opening] : [method]);
                }
-               var fieldIds = options.fieldIds;
-               var isAllow = !!(fieldIds && fieldIds.length);
-               this.setEnabled(isAllow);
-               this.setVisible(isAllow);
+               var creating = this._creation[consumer ? consumer.id : ''];
+               if (creating) {
+                  if (method === 'create' || method === 'clone') {
+                     method = 'update';
+                  }
+               }
+               var methods = method ? [method] : [];
+               if (this._opening) {
+                  methods.push(this._opening);
+               }
+               if (methods.length) {
+                  if (creating) {
+                     creating.addCallback(this._callFormatterMethods.bind(this, methods));
+                  }
+                  else {
+                     this._callFormatterMethods(methods);
+                  }
+               }
+               else {
+                  this._updatePreview();
+               }
+               this.setEnabled(hasFields);
+               this.setVisible(hasFields);
             }
          },
 
