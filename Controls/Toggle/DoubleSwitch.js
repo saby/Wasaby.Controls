@@ -48,7 +48,7 @@ define('Controls/Toggle/DoubleSwitch', [
       _template: template,
       _toggleTemplate: toggleTemplate,
       _textTemplate: textTemplate,
-      _toggleHoverState: '',
+      _toggleHoverState: false,
 
       constructor: function(options) {
          Switch.superclass.constructor.apply(this, arguments);
@@ -74,9 +74,9 @@ define('Controls/Toggle/DoubleSwitch', [
 
       _toggleSwitchHoverState: function(e, toggledState) {
          if (toggledState) {
-            this._toggleHoverState = 'controls-DoubleSwitcher__toggle_hover';
+            this._toggleHoverState = true;
          } else {
-            this._toggleHoverState = '';
+            this._toggleHoverState = false;
          }
       }
    });
