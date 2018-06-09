@@ -278,19 +278,9 @@
 /* Отступы для классов .controls-ListView__padding-XS|S|M|L|XL */
 .generate-padding-class-DGV(@i: 1) when (@i =< length(@controls-view-padding-variants)) {
    @val: extract(@controls-view-padding-variants, @i);
-   .controls-ListView__padding-@{val} > .controls-DataGridView__table > .controls-DataGridView__thead > .controls-DataGridView__headerRow,
-   .controls-ListView__padding-@{val} > .controls-DataGridView__table > .controls-DataGridView__thead > .controls-DataGridView__results {
-      & > .controls-DataGridView__th {
-         &.controls-DataGridView__firstContentCell {
-            padding-left: ~"@{controls-view-padding-@{val}}";
-         }
-         &:last-child {
-            padding-right: ~"@{controls-view-padding-@{val}}";
-         }
-      }
-   }
+   .controls-ListView__padding-@{val} > .controls-DataGridView__table > .controls-DataGridView__thead > .controls-DataGridView__results,
    .controls-ListView__padding-@{val} > .controls-DataGridView__table > .controls-DataGridView__tbody > .controls-DataGridView__tr {
-      & > .controls-DataGridView__td {
+      & > .controls-DataGridView__td, & > .controls-DataGridView__th {
          &.controls-DataGridView__firstContentCell {
             padding-left: ~"@{controls-view-padding-@{val}}";
          }
@@ -298,12 +288,12 @@
             padding-right: ~"@{controls-view-padding-@{val}}";
          }
       }
-   }
-   .controls-ListView__padding-@{val} > .controls-ListView__footer > .controls-ListView__serviceFooter {
-      padding: 0 ~"@{controls-view-padding-@{val}}";
-   }
-   .controls-ListView__padding-@{val}.controls-ListView__multiselect.controls-ListView__hideCheckBoxes {
-      .check-box-width(~"@{controls-view-padding-@{val}}");
+      & > .controls-ListView__serviceFooter {
+         padding: 0 ~"@{controls-view-padding-@{val}}";
+      }
+      & > .controls-ListView__multiselect.controls-ListView__hideCheckBoxes {
+         .check-box-width(~"@{controls-view-padding-@{val}}");
+      }
    }
    .generate-padding-class-DGV(@i + 1);
 }
