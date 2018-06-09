@@ -18,27 +18,30 @@ define('SBIS3.CONTROLS/Utils/ObjectChange',
        * @public
        * @param {object} target Целевой оъект, который будет изменён
        * @param {object} values Набор новых значений, которые будут использованы для изменения целевого объектв
-       * @param {object} descriptor Описание того, что и как изменить. Представляет из себя набор пар вида имя-логическое значение. Имя указывает на имя свойства целевого объекта, подлежащего изменению, а логическое значение указывает на необходимость сравнения старого и нового значения как объектов
+       * @param {object} descriptors Описание того, что и как изменить. Представляет из себя набор пар вида имя-описание изменения. Имя указывает на элемент в наборе новых значений, а описание изменения содержит логическое значение, указывающее на необходимость сравнения старого и нового значения как объектов
        * @return {object}
        */
-      return function (target, descriptor, values) {
+      return function (target, values, descriptors) {
          if (!target || typeof target !== 'object') {
             throw new Error('Target must be an object');
-         }
-         if (!descriptor || typeof descriptor !== 'object') {
-            throw new Error('Descriptor must be an object');
          }
          if (!values || typeof values !== 'object') {
             throw new Error('Values must be an object');
          }
+         if (!descriptors || typeof descriptors !== 'object') {
+            throw new Error('Descriptors must be an object');
+         }
          var changes;
          for (var name in values) {
-            if (name in descriptor) {
+            if (name in descriptors) {
                var value = values[name];
-               var previous = target[name];
-               if (!(value == null && previous == null) && !(descriptor[name] ? cObjectIsEqual(value, previous) : value === previous)) {
+               var descriptor = descriptors[name];
+               var isComplex = typeof descriptor === 'object';
+               var prop = isComplex && 'target' in descriptor ? descriptor.target : name;
+               var previous = target[prop];
+               if (!(value == null && previous == null) && !((isComplex ? descriptor.asObject : descriptor) ? cObjectIsEqual(value, previous) : value === previous)) {
                   (changes = changes || {})[name] = previous;
-                  target[name] = value;
+                  target[prop] = value;
                }
             }
          }

@@ -11,6 +11,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
       'Core/helpers/Object/isEqual',
       'SBIS3.CONTROLS/CompoundControl',
       'SBIS3.CONTROLS/Utils/ItemNamer',
+      'SBIS3.CONTROLS/Utils/ObjectChange',
       'WS.Data/Collection/RecordSet',
       'WS.Data/Di',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
@@ -19,7 +20,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
       'css!SBIS3.CONTROLS/ExportCustomizer/_Presets/View'
    ],
 
-   function (Deferred, cObjectIsEqual, CompoundControl, ItemNamer, RecordSet, Di, dotTplFn) {
+   function (Deferred, cObjectIsEqual, CompoundControl, ItemNamer, objectChange, RecordSet, Di, dotTplFn) {
       'use strict';
 
       /**
@@ -705,16 +706,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             if (!values || typeof values !== 'object') {
                throw new Error('Object required');
             }
-            var need;
-            if (values.fieldIds && !cObjectIsEqual(values.fieldIds, this._fieldIds)) {
-               this._fieldIds = values.fieldIds;
-               need = true;
-            }
-            need = need || !!values.fileUuid;
-            if (values.fileUuid && values.fileUuid !== this._fileUuid) {
-               this._fileUuid = values.fileUuid;
-            }
-            if (need) {
+            var changes = objectChange(this, values, {fieldIds:{target:'_fieldIds', asObject:true}, fileUuid:{target:'_fileUuid'}});
+            if ('fieldIds' in changes || !!values.fileUuid) {
                if (!this._isEditMode) {
                   var selectedId = this._options.selectedId;
                   if (selectedId) {

@@ -337,7 +337,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                throw new Error('Object required');
             }
             var options = this._options;
-            var changes = objectChange(options, {fieldIds:true, fileUuid:false, consumer:true}, values);
+            var changes = objectChange(options, values, {fieldIds:true, fileUuid:false, consumer:true});
             if (changes && ('fieldIds' in changes || 'fileUuid' in changes)) {
                var method = options.fileUuid ? 'update' : 'create';
                var creating;
