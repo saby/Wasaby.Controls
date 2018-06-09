@@ -404,7 +404,7 @@ node('controls') {
             """
         }
 		def soft_restart = "True"
-		if (${params.browser_type} in ['ie', 'edge']){
+		if ( ${params.browser_type} in ['ie', 'edge'] ){
 			soft_restart = "False"
 		}
         writeFile file: "./controls/tests/int/config.ini", text:
