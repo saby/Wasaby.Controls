@@ -100,6 +100,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             _previewSize: null,
             // Набор обещаний, ожидающих создания шаблона эксель-файла
             _creation: {},
+            // Набор образцов для клонирования
+            _patterns: {},
             // Ожидаемое открытие шаблона эксель-файла
             _opening: null
          },
@@ -159,12 +161,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             var fieldIds = options.fieldIds;
             if (fieldIds && fieldIds.length) {
                var method = useApp ? 'openApp' : 'open';
-               var consumer = options.consumer;
-               if (consumer && consumer.readonly) {
-                  this._opening = method;
-                  this.sendCommand('subviewChanged');
-               }
-               else {
+               this._opening = method;
+               var result = this.sendCommand('subviewChanged', 'open');
+               if (!(result && result.isComplete)) {
                   this._callFormatterMethod(method);
                }
             }
@@ -180,7 +179,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          _callFormatterMethod: function (method) {
             var options = this._options;
             var isCreate = method === 'create';
-            if (isCreate && this._creation[options.consumer ? options.consumer.id : '']) {
+            var isClone = method === 'clone';
+            if ((isCreate || isClone) && this._creation[options.consumer ? options.consumer.id : '']) {
                throw new Error('Already in creation');
             }
             var isOpen = method === 'open' || method === 'openApp';
@@ -188,8 +188,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                this._opening = null;
             }
             var args = [];
-            var useBoth = method === 'update' || isOpen;
-            if (method === 'delete' || useBoth) {
+            if (isClone) {
+               var consumer = options.consumer;
+               args.push(this._patterns[consumer ? consumer.id : '']);
+            }
+            var useBoth = isOpen || method === 'update';
+            if (useBoth || method === 'delete') {
                args.push(options.fileUuid);
             }
             if (isCreate || useBoth) {
@@ -197,15 +201,16 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                args.push(fieldIds || [], this._selectFields(options.allFields, fieldIds, function (v) { return v.title; }) || [], options.serviceParams);
             }
             var formatter = this._exportFormatter;
-            var promise = formatter[method].apply(formatter, args).addCallbacks(
+            var promise = formatter[isClone ? 'copy' : method].apply(formatter, args).addCallbacks(
                this._onFormatter.bind(this, method),
                function (err) { return err; }
             );
-            if (isCreate) {
+            if (isCreate || isClone) {
                var consumer = options.consumer;
                var consumerId = consumer ? consumer.id : '';
                this._creation[consumerId] = promise.createDependent().addBoth(function (consumerId) {
                   delete this._creation[consumerId];
+                  delete this._patterns[consumerId];
                }.bind(this, consumerId));
             }
             return promise;
@@ -268,12 +273,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           */
          _onFormatter: function (method, fileUuid) {
             if (!!fileUuid) {
-               var isCreate = method === 'create';
+               var isCreate = method === 'create' || method === 'clone';
                if (isCreate) {
                   this._options.fileUuid = fileUuid;
                }
                if (isCreate || method === 'open' || method === 'openApp') {
-                  this.sendCommand('subviewChanged');
+                  this.sendCommand('subviewChanged', isCreate ? method : 'openEnd');
                }
             }
             this._updatePreview();
@@ -339,9 +344,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             var options = this._options;
             var changes = objectChange(options, values, {fieldIds:true, fileUuid:false, consumer:true});
             if (changes && ('fieldIds' in changes || 'fileUuid' in changes)) {
-               var method = options.fileUuid ? 'update' : 'create';
+               var method = options.fileUuid ? 'update' : (meta && meta.source === 'presets' && meta.reason === 'clone' ? 'clone' : 'create');
                var creating;
-               if (method === 'create') {
+               if (method === 'create' || method === 'clone') {
                   var consumer = options.consumer;
                   creating = this._creation[consumer ? consumer.id : ''];
                }
@@ -349,6 +354,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                   creating.addCallback(this._callFormatterMethods.bind(this, this._opening ? ['update', this._opening] : ['update']));
                }
                else {
+                  if (method === 'clone') {
+                     var consumer = options.consumer;
+                     this._patterns[consumer ? consumer.id : ''] = meta.args[0];
+                  }
                   this._callFormatterMethods(this._opening ? [method, this._opening] : [method]);
                }
                var fieldIds = options.fieldIds;
