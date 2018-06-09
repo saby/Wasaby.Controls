@@ -279,21 +279,19 @@
 .generate-padding-class-DGV(@i: 1) when (@i =< length(@controls-view-padding-variants)) {
    @val: extract(@controls-view-padding-variants, @i);
    .controls-ListView__padding-@{val} {
-      &:not(.controls-DataGridView) {
-         .controls-DataGridView__td, .controls-DataGridView__th {
-            &.controls-DataGridView__firstContentCell {
-               padding-left: ~"@{controls-view-padding-@{val}}";
-            }
-            &:last-child {
-               padding-right: ~"@{controls-view-padding-@{val}}";
-            }
+      .controls-DataGridView__td, .controls-DataGridView__th {
+         &.controls-DataGridView__firstContentCell {
+            padding-left: ~"@{controls-view-padding-@{val}}";
          }
-         .controls-ListView__serviceFooter {
-            padding: 0 ~"@{controls-view-padding-@{val}}";
+         &:last-child {
+            padding-right: ~"@{controls-view-padding-@{val}}";
          }
-         &.controls-ListView__multiselect.controls-ListView__hideCheckBoxes {
-            .check-box-width(~"@{controls-view-padding-@{val}}");
-         }
+      }
+      .controls-ListView__serviceFooter {
+         padding: 0 ~"@{controls-view-padding-@{val}}";
+      }
+      &.controls-ListView__multiselect.controls-ListView__hideCheckBoxes {
+         .check-box-width(~"@{controls-view-padding-@{val}}");
       }
    }
    .generate-padding-class-DGV(@i + 1);
