@@ -1,0 +1,47 @@
+.controls-Notification {
+  border-top: 3px solid;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
+  position: relative;
+  min-height: 40px;
+  min-width: 40px;
+}
+
+.controls-Notification__error {
+  border-color: @controls-InformationPopup-error-status-border-color;
+}
+
+.controls-Notification__primary {
+  border-color: @controls-InformationPopup-default-status-border-color;
+}
+
+.controls-Notification__done {
+  border-color: @controls-InformationPopup-success-status-border-color;
+}
+
+.controls-Notification__warning {
+  border-color: @controls-InformationPopup-warning-status-border-color;
+}
+
+.controls-Notification__content {
+  padding: 8px;
+}
+
+.controls-Notification__closeButton {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  cursor: pointer;
+}
+
+.controls-Notification__simpleTemplate {
+  display: flex;
+  align-items: center;
+}
+
+.controls-Notification__simpleTemplate-icon {
+  margin-right: 8px;
+}
+
+.controls-Notification__simpleTemplate-message {
+  font-size: 15px;
+}
