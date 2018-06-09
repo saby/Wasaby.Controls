@@ -1,12 +1,10 @@
 define('Controls/Toggle/Button', [
    'Core/Control',
-   'Core/IoC',
    'Controls/Toggle/Button/Classes',
    'tmpl!Controls/Button/Button',
-   'WS.Data/Type/descriptor',
    'css!Controls/Button/Button',
    'css!Controls/Toggle/Button/Button'
-], function(Control, IoC, Classes, template, types) {
+], function(Control, Classes, template) {
    /**
     * Button that switches between different states.
     *
