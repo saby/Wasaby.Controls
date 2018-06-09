@@ -37,7 +37,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
 
             // Удаляем предыдущие классы характеризующие направление и добавляем новые
             if (cfg.popupOptions.className) {
-               cfg.popupOptions.className = cfg.popupOptions.className.replace(/controls-Popup-corner\S*|controls-Popup-align\S*/g, '').trim();
+               cfg.popupOptions.className = cfg.popupOptions.className.replace(/controls-Popup-corner\S*|controls-Popup-align\S*|controls-Sticky__reset-margins/g, '').trim();
                cfg.popupOptions.className += ' ' + _private.getOrientationClasses(popupCfg);
             } else {
                cfg.popupOptions.className = _private.getOrientationClasses(popupCfg);
@@ -49,6 +49,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
             className += ' controls-Popup-corner-horizontal-' + cfg.corner.horizontal;
             className += ' controls-Popup-align-horizontal-' + cfg.align.horizontal.side;
             className += ' controls-Popup-align-vertical-' + cfg.align.vertical.side;
+            className += ' controls-Sticky__reset-margins';
             return className;
          },
          _getTargetCoords: function(cfg, sizes) {
@@ -93,7 +94,9 @@ define('Controls/Popup/Opener/Sticky/StickyController',
          },
 
          elementUpdated: function(cfg, container) {
+            container.classList.remove('controls-Sticky__reset-margins'); //Снимем класс, чтобы взять новое значение отступов
             this.prepareConfig(cfg, container);
+            container.classList.add('controls-Sticky__reset-margins'); //После замеров стилей возвращаем
          },
          prepareConfig: function(cfg, container) {
             var sizes = this._getPopupSizes(cfg, container);
