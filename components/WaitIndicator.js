@@ -234,7 +234,7 @@ define('SBIS3.CONTROLS/WaitIndicator',
                throw new Error('Positive number required');
             }
             return _callDelayed(this, waitIndicatorManager.remove.bind(waitIndicatorManager), '_removing', delay);
-         },
+         }
       };
 
       /**
