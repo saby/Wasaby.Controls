@@ -2,13 +2,13 @@
    <ws:if data="{{_options.orientation === 'vertical'}}">
       <ws:partial template="{{_toggleTemplate}}" attr:class="{{_toggleHoverState}}" _orientation="{{_options.orientation}}" _enabled="{{!_options.readOnly}}" _value="{{_options.value}}"/>
       <span class="controls-DoubleSwitch__textBlock">
-         <ws:partial on:mouseover="_activateToggleHover()" on:mouseout="_deactivateToggleHover()" template="{{_textTemplate}}" _enabled="{{!_options.readOnly}}" _orientation="{{_options.orientation}}" _nextValue="{{true}}" _value="{{_options.value}}" _caption="{{_options.captions[0]}}"/>
-         <ws:partial on:mouseover="_activateToggleHover()" on:mouseout="_deactivateToggleHover()" template="{{_textTemplate}}" _enabled="{{!_options.readOnly}}" _orientation="{{_options.orientation}}" _nextValue="{{false}}" _value="{{!_options.value}}" _caption="{{_options.captions[1]}}"/>
+         <ws:partial on:mouseover="_activateOffTextToggleHover(_options)" on:mouseout="_deactivateToggleHover()" template="{{_textTemplate}}" _enabled="{{!_options.readOnly}}" _orientation="{{_options.orientation}}" _nextValue="{{true}}" _value="{{_options.value}}" _caption="{{_options.captions[0]}}"/>
+         <ws:partial on:mouseover="_activateOnTextToggleHover(_options)" on:mouseout="_deactivateToggleHover()" template="{{_textTemplate}}" _enabled="{{!_options.readOnly}}" _orientation="{{_options.orientation}}" _nextValue="{{false}}" _value="{{!_options.value}}" _caption="{{_options.captions[1]}}"/>
       </span>
    </ws:if>
    <ws:else>
-      <ws:partial on:mouseover="_activateToggleHover()" on:mouseout="_deactivateToggleHover()" template="{{_textTemplate}}" _enabled="{{!_options.readOnly}}" _nextValue="{{true}}" _value="{{_options.value}}" _caption="{{_options.captions[0]}}"/>
+      <ws:partial on:mouseover="_activateOffTextToggleHover(_options)" on:mouseout="_deactivateToggleHover()" template="{{_textTemplate}}" _enabled="{{!_options.readOnly}}" _nextValue="{{true}}" _value="{{_options.value}}" _caption="{{_options.captions[0]}}"/>
       <ws:partial attr:class="{{_toggleHoverState}}" template="{{_toggleTemplate}}" _orientation="{{_options.orientation}}" _enabled="{{!_options.readOnly}}" _value="{{_options.value}}"/>
-      <ws:partial on:mouseover="_activateToggleHover()" on:mouseout="_deactivateToggleHover()" template="{{_textTemplate}}" _enabled="{{!_options.readOnly}}" _nextValue="{{false}}" _value="{{!_options.value}}" _caption="{{_options.captions[1]}}"/>
+      <ws:partial on:mouseover="_activateOnTextToggleHover(_options)" on:mouseout="_deactivateToggleHover()" template="{{_textTemplate}}" _enabled="{{!_options.readOnly}}" _nextValue="{{false}}" _value="{{!_options.value}}" _caption="{{_options.captions[1]}}"/>
    </ws:else>
 </span>
