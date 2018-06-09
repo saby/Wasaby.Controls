@@ -403,6 +403,11 @@ node('controls') {
                 sudo chmod -R 0777 /home/sbis/Controls
             """
         }
+		def soft_restart = true
+		if (${params.browser_type} in ['ie', 'edge']){
+			soft_restart = false
+		}
+		echo ${soft_restart}
         writeFile file: "./controls/tests/int/config.ini", text:
             """# UTF-8
             [general]
@@ -411,7 +416,7 @@ node('controls') {
             SERVER = test-autotest-db1:5434
             BASE_VERSION = css_${NODE_NAME}${ver}1
             DO_NOT_RESTART = True
-            SOFT_RESTART = True
+            SOFT_RESTART = ${soft_restart}
             NO_RESOURCES = True
             DELAY_RUN_TESTS = 2
             TAGS_NOT_TO_START = iOSOnly
