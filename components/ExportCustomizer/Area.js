@@ -567,9 +567,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                this._options.fileUuid = fileUuid;
             }
             if (fieldIds || fileUuid) {
-               views.columnBinder.setValues({fieldIds:fieldIds.slice()}, {source:'presets', reason:data});
+               var meta = this._makeMeta('presets', [].slice.call(arguments));
+               views.columnBinder.setValues({fieldIds:fieldIds.slice()}, meta);
                var consumer = values.consumer;
-               views.formatter.setValues({fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumer:consumer ? cMerge({}, consumer) : null}, {source:'presets', reason:data});
+               views.formatter.setValues({fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumer:consumer ? cMerge({}, consumer) : null}, meta);
                this._updateCompleteButton(fieldIds);
             }
          },
@@ -587,11 +588,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             var fieldIds = values.fieldIds;
             if (fieldIds) {
                this._options.fieldIds = fieldIds.slice();
+               var meta = this._makeMeta('columnBinder', [].slice.call(arguments));
                var presetsView = views.presets;
                if (presetsView) {
-                  presetsView.setValues({fieldIds:fieldIds.slice()}, {source:'columnBinder', reason:data});
+                  presetsView.setValues({fieldIds:fieldIds.slice()}, meta);
                }
-               views.formatter.setValues({fieldIds:fieldIds.slice()}, {source:'columnBinder', reason:data});
+               views.formatter.setValues({fieldIds:fieldIds.slice()}, meta);
             }
             this._updateCompleteButton(fieldIds);
          },
@@ -611,9 +613,28 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                this._options.fileUuid = fileUuid;
                var presetsView = views.presets;
                if (presetsView) {
-                  presetsView.setValues({fileUuid:fileUuid}, {source:'formatter', reason:data});
+                  presetsView.setValues({fileUuid:fileUuid}, this._makeMeta('formatter', [].slice.call(arguments)));
                }
             }
+         },
+
+         /*
+          * Сформировать Мета-данные о событии
+          *
+          * @protected
+          * @param {string} source Имя источника
+          * @param {Array<*>} args Дополнительные данные
+          * @return {object}
+          */
+         _makeMeta: function (source, args) {
+            var meta = {source:source};
+            if (args && args.length) {
+               meta.reason = args[0];
+               if (1 < args.length) {
+                  meta.args = args.slice(1);
+               }
+            }
+            return meta;
          },
 
          /*
