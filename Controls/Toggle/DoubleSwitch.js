@@ -80,14 +80,8 @@ define('Controls/Toggle/DoubleSwitch', [
          _private.checkCaptions(newOptions.captions);
       },
 
-      _activateOnTextToggleHover: function(e, options) {
-         if (options.value) {
-            _private.setToggleHoverClass(this);
-         }
-      },
-
-      _activateOffTextToggleHover: function(e, options) {
-         if (!options.value) {
+      _activateToggleHover: function(e, nextValue, value) {
+         if (nextValue === value) {
             _private.setToggleHoverClass(this);
          }
       },
