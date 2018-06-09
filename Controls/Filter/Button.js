@@ -99,6 +99,7 @@ define('Controls/Filter/Button',
          _clearClick: function() {
             _private.getFilterButtonCompatible(this).addCallback(function(panelOpener) {
                panelOpener.clearFilter();
+               this._text = '';
             });
          },
 
