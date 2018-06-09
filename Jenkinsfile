@@ -464,8 +464,6 @@ node('controls') {
                 [regression]
                 IMAGE_DIR = capture
                 RUN_REGRESSION=True
-				[filestostart]
-				test_vdom_menu_button.py
 				"""
         }
         def run_test_fail = ""
