@@ -239,31 +239,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
       };
 
       /**
-       * Константа (как бы) - Список имён всех собственных опций компонента
+       * Константа (как бы) - Список имён собственных опций компонента, которые не должны входить в общий список (выдаваемый методом getOwnOptionNames)
        *
        * @private
        * @type {Array<string>}
        */
-      var _OWN_OPTIONS_NAMES = [
-         'dialogTitle',
-         'dialogButtonTitle',
-         'columnBinderTitle',
-         'presetAddNewTitle',
-         'presetNewPresetTitle',
-         'columnBinderEmptyTitle',
-         'formatterTitle',
-         'formatterMenuTitle',
-         'serviceParams',
-         'usePresets',
-         'staticPresets',
-         'presetNamespace',
-         'selectedPresetId',
-         'allFields',
-         'fieldIds',
-         'fieldGroupTitles',
-         'fileUuid',
-         'validators',
-         'outputCall'
+      var _SKIP_OWN_OPTIONS_NAMES = [
+         'dialogMode',
+         'waitingMode'
       ];
 
       var Area = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ExportCustomizer/Area.prototype*/ {
@@ -842,7 +825,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
        * @return {Array<string>}
        */
       Area.getOwnOptionNames = function () {
-         return _OWN_OPTIONS_NAMES;
+         var names = Object.keys(_OPTION_TYPES);
+         for (var i = 0; i < _SKIP_OWN_OPTIONS_NAMES.length; i++) {
+            var name = _SKIP_OWN_OPTIONS_NAMES[i];
+            var j = names.indexOf(name);
+            names.splice(j, 1);
+         }
+         return names;
       };
 
       /**
