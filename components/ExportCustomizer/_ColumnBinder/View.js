@@ -279,7 +279,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
             if (!values || typeof values !== 'object') {
                throw new Error('Object required');
             }
-            var changes = objectChange(this._options, {fieldIds:true}, values);
+            var changes = objectChange(this._options, values, {fieldIds:true});
             if (changes && 'fieldIds' in changes) {
                this._redraw();
             }
