@@ -58,9 +58,9 @@ define(
             });
             invalidEmails.forEach(function(item) {
                it('Invalid "' + item + '"', function () {
-                  assert.equal(typeof isEmail({
+                  assert.notEqual(isEmail({
                      value: item
-                  }), 'string');
+                  }), true);
                });
             });
          });
