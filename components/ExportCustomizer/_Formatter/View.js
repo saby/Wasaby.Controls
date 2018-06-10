@@ -86,9 +86,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                 */
                fileUuid: null,
                /**
-                * @cfg {object} Описание потребителя (обычно идентификатор пресета и его редактируемость)
+                * @cfg {string|number} Идентификатор потребителя (обычно пресета)
                 */
-               consumer: null
+               consumerId: null
             },
             // Объект, предоставляющий методы форматирования шаблона эксель-файла
             _exportFormatter: null,
@@ -100,6 +100,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             _previewSize: null,
             // Набор обещаний, ожидающих создания шаблона эксель-файла
             _creation: {},
+            // Набор образцов для клонирования
+            _patterns: {},
             // Ожидаемое открытие шаблона эксель-файла
             _opening: null
          },
@@ -159,12 +161,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             var fieldIds = options.fieldIds;
             if (fieldIds && fieldIds.length) {
                var method = useApp ? 'openApp' : 'open';
-               var consumer = options.consumer;
-               if (consumer && consumer.readonly) {
-                  this._opening = method;
-                  this.sendCommand('subviewChanged');
-               }
-               else {
+               this._opening = method;
+               var result = this.sendCommand('subviewChanged', 'open');
+               if (!(result && result.isComplete)) {
                   this._callFormatterMethod(method);
                }
             }
@@ -180,7 +179,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          _callFormatterMethod: function (method) {
             var options = this._options;
             var isCreate = method === 'create';
-            if (isCreate && this._creation[options.consumer ? options.consumer.id : '']) {
+            var isClone = method === 'clone';
+            var consumerId = options.consumerId || '';
+            if ((isCreate || isClone) && this._creation[consumerId]) {
                throw new Error('Already in creation');
             }
             var isOpen = method === 'open' || method === 'openApp';
@@ -188,8 +189,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                this._opening = null;
             }
             var args = [];
-            var useBoth = method === 'update' || isOpen;
-            if (method === 'delete' || useBoth) {
+            if (isClone) {
+               args.push(this._patterns[consumerId]);
+            }
+            var useBoth = isOpen || method === 'update';
+            if (useBoth || method === 'delete') {
                args.push(options.fileUuid);
             }
             if (isCreate || useBoth) {
@@ -197,15 +201,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                args.push(fieldIds || [], this._selectFields(options.allFields, fieldIds, function (v) { return v.title; }) || [], options.serviceParams);
             }
             var formatter = this._exportFormatter;
-            var promise = formatter[method].apply(formatter, args).addCallbacks(
+            var promise = formatter[isClone ? 'copy' : method].apply(formatter, args).addCallbacks(
                this._onFormatter.bind(this, method),
                function (err) { return err; }
             );
-            if (isCreate) {
-               var consumer = options.consumer;
-               var consumerId = consumer ? consumer.id : '';
+            if (isCreate || isClone) {
                this._creation[consumerId] = promise.createDependent().addBoth(function (consumerId) {
                   delete this._creation[consumerId];
+                  delete this._patterns[consumerId];
                }.bind(this, consumerId));
             }
             return promise;
@@ -268,12 +271,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           */
          _onFormatter: function (method, fileUuid) {
             if (!!fileUuid) {
-               var isCreate = method === 'create';
+               var isCreate = method === 'create' || method === 'clone';
                if (isCreate) {
                   this._options.fileUuid = fileUuid;
                }
                if (isCreate || method === 'open' || method === 'openApp') {
-                  this.sendCommand('subviewChanged');
+                  this.sendCommand('subviewChanged', isCreate ? method : 'openEnd');
                }
             }
             this._updatePreview();
@@ -283,13 +286,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * Обновить изображение предпросмотра
           *
           * @protected
+          * @param {boolean} withClear Указывает очистить сразу от предыдущего изображения
           */
-         _updatePreview: function () {
+         _updatePreview: function (withClear) {
             var fieldIds = this._options.fieldIds;
-            if (fieldIds && fieldIds.length) {
+            var has = !!(fieldIds && fieldIds.length);
+            if (has) {
                this._updatePreviewStart();
             }
-            else {
+            if (!has || withClear) {
                var img = this._preview[0];
                img.src = '';
                img.title = '';
@@ -337,24 +342,49 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                throw new Error('Object required');
             }
             var options = this._options;
-            var changes = objectChange(options, {fieldIds:true, fileUuid:false, consumer:true}, values);
-            if (changes && ('fieldIds' in changes || 'fileUuid' in changes)) {
-               var method = options.fileUuid ? 'update' : 'create';
-               var creating;
-               if (method === 'create') {
-                  var consumer = options.consumer;
-                  creating = this._creation[consumer ? consumer.id : ''];
-               }
-               if (creating) {
-                  creating.addCallback(this._callFormatterMethods.bind(this, this._opening ? ['update', this._opening] : ['update']));
+            var changes = objectChange(options, values, {fieldIds:true, fileUuid:false, consumerId:false});
+            if (changes) {
+               var fieldIds = options.fieldIds;
+               var hasFields = !!(fieldIds && fieldIds.length);
+               var method;
+               var consumerId = options.consumerId || '';
+               if (options.fileUuid) {
+                  if ('fieldIds' in changes && !('fileUuid' in changes) && hasFields) {
+                     method = 'update';
+                  }
                }
                else {
-                  this._callFormatterMethods(this._opening ? [method, this._opening] : [method]);
+                  if (hasFields) {
+                     var isClone = meta /*&& meta.source === 'presets'*/ && meta.reason === 'clone';
+                     method = isClone ? 'clone' : 'create';
+                     if (isClone) {
+                        this._patterns[consumerId] = meta.args[0];
+                     }
+                  }
                }
-               var fieldIds = options.fieldIds;
-               var isAllow = !!(fieldIds && fieldIds.length);
-               this.setEnabled(isAllow);
-               this.setVisible(isAllow);
+               var creating = this._creation[consumerId];
+               if (creating) {
+                  if (method === 'create' || method === 'clone') {
+                     method = 'update';
+                  }
+               }
+               var methods = method ? [method] : [];
+               if (this._opening) {
+                  methods.push(this._opening);
+               }
+               if (methods.length) {
+                  if (creating) {
+                     creating.addCallback(this._callFormatterMethods.bind(this, methods));
+                  }
+                  else {
+                     this._callFormatterMethods(methods);
+                  }
+               }
+               else {
+                  this._updatePreview();
+               }
+               this.setEnabled(hasFields);
+               this.setVisible(hasFields);
             }
          },
 
