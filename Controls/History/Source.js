@@ -358,7 +358,7 @@ define('Controls/History/Source', [
             pd.push(self.originSource.query(query));
 
             return pd.done().getResult().addCallback(function(data) {
-                self._oldItems = data[1].getAll();
+               self._oldItems = data[1].getAll();
                _private.initHistory(self, data[0], self._oldItems);
                newItems = _private.getItemsWithHistory(self, self._history, self._oldItems);
                self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
