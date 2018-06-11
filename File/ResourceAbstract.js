@@ -16,7 +16,7 @@ define("File/ResourceAbstract", ["require", "exports"], function (require, expor
          * @method
          */
         ResourceAbstract.prototype.getMeta = function () {
-            if (this._meta) {
+            if (!this._meta) {
                 this._meta = {};
             }
             return this._meta;
