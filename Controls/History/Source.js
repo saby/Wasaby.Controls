@@ -91,14 +91,14 @@ define('Controls/History/Source', [
          history.each(function(field, historyItems) {
             var toDelete = [];
 
-             historyItems.each(function(rec) {
+            historyItems.each(function(rec) {
                if (!sourceItems.getRecordById(rec.getId())) {
                   toDelete.push(rec);
                }
             });
 
             toDelete.forEach(function(rec) {
-                historyItems.remove(rec);
+               historyItems.remove(rec);
             });
          });
 
