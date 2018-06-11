@@ -6,9 +6,9 @@ define('Controls/Utils/IntersectionObserver',
 
       'use strict';
 
-      var IntersectionObserver = window.IntersectionObserver || simpleExtend.extend({
+      var IntersectionObserver = window && window.IntersectionObserver || simpleExtend.extend({
          observe: function() {
-               
+
          }
       });
       
