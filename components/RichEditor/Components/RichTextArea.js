@@ -388,6 +388,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                });
                this._fillImages(false);
+               if (!this.isEnabled()) {
+                  this._decorateAsSVG(this._options.text);
+               }
             },
 
             /**
@@ -3036,6 +3039,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                return RichUtil.unDecorateLinks(text);
             },
 
+            //Заменяем якори на svg изображения
+            _decorateAsSVG: function(text) {
+               RichUtil.replaceAnchorsToSvg(text).addCallback(function (result) {
+                  this._dataReview.html(result);
+               }.bind(this));
+            },
+
             //метод показа плейсхолдера по значению//
             //TODO: ждать пока решится задача в самом tinyMCE  https://github.com/tinymce/tinymce/issues/2588
             _togglePlaceholder:function(value){
@@ -3261,6 +3271,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   // иначе проверку строкой выше не пройти. (И устанавливаем всегда строкой, даже если пришли null или undefined)
                   this._lastReview = text || '';
                   this._dataReview.html(this._prepareReviewContent(text));
+                  this._decorateAsSVG(text);
                }
             },
 
