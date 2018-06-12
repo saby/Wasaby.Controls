@@ -60,10 +60,12 @@ define('Controls/List/ListViewModel',
                itemsModelCurrent.isEditing = true;
                itemsModelCurrent.item = this._editingItemData.item;
             }
-            if (this._draggingItemData && this._draggingItemData.key === itemsModelCurrent.key) {
-               itemsModelCurrent.isDragging = true;
-               if (this._dragTargetItem) {
-                  itemsModelCurrent.isVisible = false;
+            if (this._dragItems) {
+               if (this._dragItems[0] === itemsModelCurrent.key) {
+                  itemsModelCurrent.isDragging = true;
+               }
+               if (this._dragItems.indexOf(itemsModelCurrent.key) !== -1) {
+                  itemsModelCurrent.isVisible = this._dragItems[0] === itemsModelCurrent.key ? !this._dragTargetItem : false;
                }
             }
             return itemsModelCurrent;
@@ -90,10 +92,7 @@ define('Controls/List/ListViewModel',
 
          setDragItems: function(items) {
             this._dragItems = items;
-            this._draggingItemData = items ? this._getItemDataByItem(this._display.getItemBySourceItem(items[0])) : null;
-            if (this._draggingItemData) {
-               this._draggingItemData.isDragging = true;
-            }
+            this._draggingItemData = items ? this._getItemDataByItem(this.getItemById(items[0], this._options.keyProperty)) : null;
             this._nextVersion();
             this._notify('onListChange');
          },

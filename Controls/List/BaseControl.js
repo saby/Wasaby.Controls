@@ -1,6 +1,7 @@
 define('Controls/List/BaseControl', [
    'Core/Control',
    'Core/IoC',
+   'Core/core-clone',
    'tmpl!Controls/List/BaseControl/BaseControl',
    'Controls/List/resources/utils/ItemsUtil',
    'require',
@@ -16,6 +17,7 @@ define('Controls/List/BaseControl', [
    'css!Controls/List/BaseControl/BaseControl'
 ], function(Control,
    IoC,
+   cClone,
    BaseControlTpl,
    ItemsUtil,
    require,
@@ -645,9 +647,15 @@ define('Controls/List/BaseControl', [
       _itemMouseDown: function(event, itemData, domEvent) {
          var
             items,
+            dragItemIndex,
             dragStartResult;
          if (this._options.itemsDragNDrop) {
-            items = [itemData.item];
+            items = cClone(this._listViewModel._multiselection.getSelection().selected) || [];
+            dragItemIndex = items.indexOf(itemData.key);
+            if (dragItemIndex !== -1) {
+               items.splice(dragItemIndex, 1);
+            }
+            items.unshift(itemData.key);
             dragStartResult = this._notify('dragStart', [items]);
             if (dragStartResult) {
                this._children.dragNDropController.startDragNDrop(dragStartResult, domEvent);
@@ -670,10 +678,10 @@ define('Controls/List/BaseControl', [
             items = dragObject.entity.getItems(),
             dragTarget = this._listViewModel.getDragTargetItem(),
             targetPosition = this._listViewModel.getDragTargetPosition();
-         if (dragTarget) {
+
+         if (dragTarget && this._notify('dragEnd', [items, dragTarget.item, targetPosition.position]) !== false) {
             this._children.moveControl.moveItems(items, dragTarget.item, targetPosition.position);
          }
-         return this._notify('dragEnd', [dragObject]);
       },
 
       _dragLeave: function() {
