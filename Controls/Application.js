@@ -90,7 +90,6 @@ define('Controls/Application',
             var self = this,
                def = new Deferred();
 
-            self.content = cfg.content;
             self._headData = new HeadDataContext(cfg.theme);
             _private.initState(self, receivedState || cfg);
             self.needArea = cfg.compat || self.compat;
@@ -127,10 +126,6 @@ define('Controls/Application',
                compat: self.compat
             });
             return def;
-         },
-
-         _beforeUpdate: function(cfg) {
-            this.content = cfg.content;
          }
       });
 
