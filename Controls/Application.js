@@ -127,6 +127,10 @@ define('Controls/Application',
                compat: self.compat
             });
             return def;
+         },
+
+         _beforeUpdate: function(cfg) {
+            this.content = cfg.content;
          }
       });
 
