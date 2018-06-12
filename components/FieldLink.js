@@ -450,21 +450,6 @@ define('SBIS3.CONTROLS/FieldLink',
                    self.setActive(true);
                 });
           },
-   
-          _getLoadingContainer : function() {
-             return this.getContainer().find('.controls-FieldLink__afterFieldWrapper');
-          },
-   
-          _showLoadingIndicator: function() {
-             var hasIndicator = this._loadingIndicator;
-             
-             FieldLink.superclass._showLoadingIndicator.call(this);
-             
-             /* Если индикатор только создали, то навесим класс для поля связи */
-             if (!hasIndicator) {
-                this._loadingIndicator.addClass('controls-FieldLink__loadingIndicator');
-             }
-          },
 
           _onMouseDownHandler: function(event) {
              var
