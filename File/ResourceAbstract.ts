@@ -16,7 +16,7 @@ abstract class ResourceAbstract implements IResource {
      * @method
      */
     getMeta(): object {
-        if (this._meta) {
+        if (!this._meta) {
             this._meta = {};
         }
         return this._meta;
