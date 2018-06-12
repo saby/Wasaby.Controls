@@ -201,7 +201,12 @@ define('Controls/Container/List',
             return this._searchDeferred;
          },
          
-         _beforeUpdate: function(options, context) {
+         _beforeUpdate: function(newOptions, context) {
+            if (this._options.dataSource !== newOptions.source) {
+               if (this._searchController) {
+                  this._searchController.setSource(newOptions.source);
+               }
+            }
             _private.checkContextValues(this, context);
          },
          
