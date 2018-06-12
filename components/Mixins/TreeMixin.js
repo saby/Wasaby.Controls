@@ -696,7 +696,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
              * Подробнее о типах иерархических записей читайте в разделе <a href="/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
              * @example
              * <pre>
-             *    <option name="allowEnterToFolder">false</option>
+             *    allowEnterToFolder="{{false}}"
              * </pre>
              */
             allowEnterToFolder: true,
@@ -740,7 +740,13 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
              *
              */
             loadItemsStrategy: 'merge',
-            task1174261549: false
+            task1174261549: false,
+            /**
+             * @cfg {Boolean} Сохраняет значение выбранной записи после перезагрузки
+             * @remark
+             * Работает только с <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/navigations/cursor/">навигацией по курсору</a>.
+             */
+            saveReloadPosition: false
          },
          _lastParent : undefined,
          _lastDrawn : undefined,
