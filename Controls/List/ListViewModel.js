@@ -22,6 +22,7 @@ define('Controls/List/ListViewModel',
          _draggingItemData: null,
          _dragTargetPosition: null,
          _actions: null,
+         _selectedKeys: null,
 
          constructor: function(cfg) {
             var self = this;
@@ -32,10 +33,7 @@ define('Controls/List/ListViewModel',
                this._markedItem = this.getItemById(cfg.markedKey, cfg.keyProperty);
             }
 
-            this._multiselection = new MultiSelection({
-               selectedKeys: cfg.selectedKeys,
-               excludedKeys: cfg.excludedKeys
-            });
+            this._selectedKeys =  cfg.selectedKeys || [];
 
             //TODO надо ли?
             _private.updateIndexes(self);
@@ -48,7 +46,7 @@ define('Controls/List/ListViewModel',
             itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
             itemsModelCurrent.showActions = !this._editingItemData && (!this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive));
             itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem.item;
-            itemsModelCurrent.multiSelectStatus = this._multiselection.getSelectionStatus(itemsModelCurrent.key);
+            itemsModelCurrent.multiSelectStatus = this._selectedKeys.indexOf(itemsModelCurrent.key) >= 0;
             itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility === 'visible';
             itemsModelCurrent.drawActions =
                itemsModelCurrent.itemActions &&
@@ -141,15 +139,8 @@ define('Controls/List/ListViewModel',
          },
 
          select: function(keys) {
-            this._multiselection.select(keys);
+            this._selectedKeys = keys;
             this._nextVersion();
-            this._notify('onListChange');
-         },
-
-         unselect: function(keys) {
-            this._multiselection.unselect(keys);
-            this._nextVersion();
-            this._notify('onListChange');
          },
 
          updateIndexes: function(startIndex, stopIndex) {

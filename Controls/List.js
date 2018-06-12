@@ -21,7 +21,6 @@ define('Controls/List', [
             displayProperty: cfg.displayProperty,
             markedKey: cfg.markedKey,
             selectedKeys: cfg.selectedKeys,
-            excludedKeys: cfg.excludedKeys,
             multiSelectVisibility: cfg.multiSelectVisibility,
             itemsReadyCallback: cfg.itemsReadyCallback
          };

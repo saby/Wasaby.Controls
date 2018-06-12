@@ -86,7 +86,7 @@ define('Controls/List/BaseControl', [
                   self._virtualScroll.prependItems(addedItems.getCount());
                }
                return addedItems;
-               
+
                //обновить начало/конец видимого диапазона записей и высоты распорок
                //_private.applyVirtualWindow(self, self._virtualScroll.getVirtualWindow());
             }).addErrback(function(error) {
@@ -459,6 +459,10 @@ define('Controls/List/BaseControl', [
             _private.reload(this, newOptions.dataLoadCallback,  newOptions.dataLoadErrback);
          }
 
+         if (this._options.selectedKeys !== newOptions.selectedKeys) {
+            this._listViewModel.select(newOptions.selectedKeys);
+         }
+
       },
 
       _beforeUnmount: function() {
@@ -505,11 +509,7 @@ define('Controls/List/BaseControl', [
       },
 
       _onCheckBoxClick: function(e, key, status) {
-         if (status === 1) {
-            this._listViewModel.unselect([key]);
-         } else {
-            this._listViewModel.select([key]);
-         }
+         this._notify('onCheckBoxClick', [key, status]);
       },
 
       _listSwipe: function(event, itemData, childEvent) {
@@ -517,11 +517,7 @@ define('Controls/List/BaseControl', [
          this._children.itemActionsOpener.close();
          if (direction === 'right' && itemData.multiSelectVisibility) {
             var status = itemData.multiSelectStatus;
-            if (status === 1) {
-               this._listViewModel.unselect([itemData.key]);
-            } else {
-               this._listViewModel.select([itemData.key]);
-            }
+            this._notify('onCheckBoxClick', [itemData.key, status]);
          }
          if (direction === 'right' || direction === 'left') {
             var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.viewConfig.keyProperty);
