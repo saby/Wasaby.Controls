@@ -77,12 +77,18 @@ function(TemplateUtil) {
          //Если на устройстве есть тач - обрабатываем его. если нет, то mouseup
          //На VDOM компонентах нужно сделать через переопределение метода clickHandler (или его аналоге), который уже имеет в себе костыльную логику, умеющую
          //определять правильный таргет. Сейчас нет необходимости в пробросе колбэков в пикерМиксин и/или добавлении в нем нового события
+         var self = this;
          this._picker.getContainer().on('tap', function(e) {
-            this._clickItemHandler(e);
-            e.preventDefault();
-            e.stopPropagation();
-         }.bind(this));
-         this._picker.getContainer().bind('mouseup', this._clickItemHandler.bind(this));
+            self._tapEvent = true;
+            self._clickItemHandler(e);
+         });
+         this._picker.getContainer().on('mouseup', function(e) {
+            if (self._tapEvent) { //Флаг, что tap отработал
+               self._tapEvent = false;
+            } else {
+               self._clickItemHandler(e);
+            }
+         });
          this._picker.getContainer().bind('dblclick', this._dblClickItem.bind(this));
       },
       _clickItemHandler: function(e) {
