@@ -84,7 +84,9 @@ define('Controls/Toolbar', [
       },
       _beforeUpdate: function(newOptions) {
          if (newOptions.source && newOptions.source !== this._options.source) {
-            return _private.loadItems(this, newOptions.source);
+            _private.loadItems(this, newOptions.source).addCallback(function() {
+               this._forceUpdate();
+            }.bind(this));
          }
          this._nodeProperty = newOptions.nodeProperty;
          this._parentProperty = newOptions.parentProperty;

@@ -12,8 +12,14 @@ define('Controls-demo/Buttons/demoButtons', [
       {
          _template: template,
          count:0,
+         toggleState: false,
+
          clickHandler: function (e) {
             this.count++;
+         },
+
+         clickChangeState: function (e, value) {
+            this.toggleState = value;
          }
       });
    return ModuleClass;

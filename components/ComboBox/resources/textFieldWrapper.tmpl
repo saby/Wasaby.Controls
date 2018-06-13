@@ -9,6 +9,7 @@
     required="true"
     title="{{tooltip ? tooltip : ' '}}"
     readonly="{{ (!enabled || !editable) ? 'readonly' }}"
+    autocorrect="off"
 />
 <ws:if data="{{ enabled && placeholder }}">
     <ws:partial template="{{ compatiblePlaceholderTemplate }}" scope="{{...}}"/>

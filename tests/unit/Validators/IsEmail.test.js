@@ -43,7 +43,8 @@ define(
             'Abc..123@example.com',
             'тест@example.com',
             'example@тест.com',
-            'email@example.toomanysymbols'
+            'email@example.toomanysymbols',
+            'uuuu@uд.ru'
          ];
 
       describe('Controls.Validators', function () {
@@ -57,7 +58,7 @@ define(
             });
             invalidEmails.forEach(function(item) {
                it('Invalid "' + item + '"', function () {
-                  assert.notEqual(typeof isEmail({
+                  assert.notEqual(isEmail({
                      value: item
                   }), true);
                });

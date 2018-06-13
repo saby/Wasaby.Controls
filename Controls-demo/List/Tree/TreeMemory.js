@@ -10,7 +10,7 @@ define('Controls-demo/List/Tree/TreeMemory', [
             var
                filter = query.getWhere();
             query.where(function(item, idx) {
-               if (filter['Раздел']) {
+               if (filter['Раздел'] !== undefined) {
                   return item.get('Раздел') === filter['Раздел'];
                } else {
                   return item.get('Раздел') === null;

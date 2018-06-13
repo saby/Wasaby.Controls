@@ -3,7 +3,7 @@ define('Controls-demo/DragNDrop/List', [
    'Core/core-clone',
    'WS.Data/Source/Memory',
    'Controls-demo/DragNDrop/ListEntity',
-   'Controls-demo/DragNDrop/List/DemoData',
+   'Controls-demo/DragNDrop/DemoData',
    'tmpl!Controls-demo/DragNDrop/List/List',
    'css!Controls-demo/DragNDrop/List/List',
    'Controls/DragNDrop/Avatar'
@@ -17,27 +17,30 @@ define('Controls-demo/DragNDrop/List', [
          showType: 2,
          id: 0
       }],
+      _viewSource: new Memory({
+         idProperty: 'id',
+         data: cClone(DemoData)
+      }),
 
       _beforeMount: function() {
-         this._viewSource = this._createSource(DemoData);
+         this._itemsReadyCallback = this._itemsReady.bind(this);
+      },
+
+      _itemsReady: function(items) {
+         this._items = items;
       },
 
       _dragStart: function(event, items) {
-         var hasBadItems = false;
+         var
+            hasBadItems = false;
          items.forEach(function(item) {
-            if (item.getId() === 0) {
+            if (item === 0) {
                hasBadItems = true;
             }
          });
          return hasBadItems ? false : new ListEntity({
-            items: items
-         });
-      },
-
-      _createSource: function(items) {
-         return new Memory({
-            idProperty: 'id',
-            data: cClone(items)
+            items: items,
+            firstItem: this._items.getRecordById(items[0])
          });
       }
    });
