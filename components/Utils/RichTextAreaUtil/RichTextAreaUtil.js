@@ -106,7 +106,7 @@ define('SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil',[
       //TODO: временное решение для 230. удалить в 240 когда сделают ошибку https://inside.tensor.ru/opendoc.html?guid=dbaac53f-1608-42fa-9714-d8c3a1959f17
       unDecorateLinks: function(text) {
          var
-            parsed = Parser.parse(text),
+            parsed, result,
 
             replaceDecoratedLinks = function(content) {
                var
@@ -177,9 +177,15 @@ define('SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil',[
                content.childNodes[index] = node;
             };
 
-         replaceDecoratedLinks(parsed);
-
-         return parsed.innerHTML();
+         // https://online.sbis.ru/opendoc.html?guid=0b23b9fe-209c-4df4-92bb-80683f8cbec6
+         try {
+            parsed = Parser.parse(text);
+            replaceDecoratedLinks(parsed);
+            result = parsed.innerHTML();
+         } catch (err) {
+            result = text;
+         }
+         return result;
       }
    };
 
