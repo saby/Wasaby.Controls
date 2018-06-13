@@ -202,7 +202,7 @@ define('Controls/Container/List',
          },
          
          _beforeUpdate: function(newOptions, context) {
-            if (this._options.dataSource !== newOptions.source) {
+            if (this._options.source !== newOptions.source) {
                if (this._searchController) {
                   this._searchController.setSource(newOptions.source);
                }
