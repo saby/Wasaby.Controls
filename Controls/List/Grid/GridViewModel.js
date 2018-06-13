@@ -504,6 +504,10 @@ define('Controls/List/Grid/GridViewModel', [
             return this._model._prepareDisplayItemForAdd(item);
          },
 
+         getCurrentIndex: function() {
+            return this._model.getCurrentIndex();
+         },
+
          getItemActions: function(item) {
             return this._model.getItemActions(item);
          },
@@ -534,10 +538,6 @@ define('Controls/List/Grid/GridViewModel', [
 
          unselect: function(keys) {
             this._model.unselect(keys);
-         },
-
-         setSwipeItem: function(itemData) {
-            this._model.setSwipeItem(itemData);
          },
 
          destroy: function() {

@@ -37,8 +37,7 @@ define('Controls/Input/Search',
          _template: template,
          _isFocused: false,
 
-         constructor: function(options) {
-            Search.superclass.constructor.apply(this, arguments);
+         _beforeMount: function(options) {
             this._baseViewModel = new BaseViewModel({
                value: options.value
             });
