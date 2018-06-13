@@ -3,7 +3,7 @@
  */
 define('Controls/List/ListViewModel',
    ['Controls/List/ItemsViewModel', 'Controls/Controllers/Multiselect/Selection', 'WS.Data/Entity/VersionableMixin', 'Controls/List/resources/utils/ItemsUtil'],
-   function(ItemsViewModel, MultiSelection, VersionableMixin) {
+   function(ItemsViewModel, MultiSelection, VersionableMixin, ItemsUtil) {
       /**
        *
        * @author Крайнов Дмитрий
