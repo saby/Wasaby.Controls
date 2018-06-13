@@ -113,6 +113,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             TINYMCE_URL_BASE + '/tinymce'
          ],
          constants = {
+            decreaseHeight1: 2,// Высоты всего, содержащегося внутри .controls-RichEditor__richTextArea уменьшаются на 2px так как она имеет верхнюю и нижнюю границы по 1px
+            decreaseHeight2: 2,// Высоты всего, содержащегося внутри .controls-RichEditor__scrollContainer уменьшаются на 2px так как он имеет нижний отступ 2px
             baseAreaWidth: 768,//726
             defaultImagePercentSize: 25,// Начальный размер картинки (в процентах)
             defaultPreviewerSize: 768,//512
@@ -338,6 +340,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             if (options.autoHeight) {
                options.minimalHeight = this._cleanHeight(options.minimalHeight);
                options.maximalHeight = this._cleanHeight(options.maximalHeight);
+               options._decreaseHeight = constants.decreaseHeight1 + constants.decreaseHeight2;
             }
             return options;
          },
@@ -509,16 +512,18 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
                   }
                   var isInline = options.editorConfig.inline;
+                  var minHeight = 0 < options.minimalHeight ? options.minimalHeight - options._decreaseHeight : 0;
+                  var maxHeight = 0 < options.maximalHeight ? options.maximalHeight - options._decreaseHeight : 0;
                   if (isInline) {
                      this._richTextAreaContainer.css('max-height', options.maximalHeight || '');
                      if (this._hasScrollContainer) {
-                        this._scrollContainer.css('max-height', options.maximalHeight || '');
+                        this._scrollContainer.css('max-height', maxHeight || '');
                      }
-                     this._inputControl.css('min-height', options.minimalHeight || '');
+                     this._inputControl.css('min-height', minHeight || '');
                   }
                   else {
                      var iFrame = $(this._tinyEditor.iframeElement);
-                     iFrame.css({'max-height':options.maximalHeight || '', 'min-height':options.minimalHeight || ''});
+                     iFrame.css({'max-height':maxHeight || '', 'min-height':minHeight || ''});
                   }
                }
             }
@@ -2848,16 +2853,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             var container = this._tinyEditor && this._tinyEditor.getContainer() ? $(this._tinyEditor.getContainer()) : this._inputControl;
             var options = this._options;
             if (options.autoHeight) {
-               var minHeight = this._cleanHeight(options.maximalHeight) || '';
-               this._richTextAreaContainer.css('max-height', minHeight);
+               var maxHeight = this._cleanHeight(options.maximalHeight);
+               this._richTextAreaContainer.css('max-height', maxHeight || '');
                if (this._hasScrollContainer) {
-                  this._scrollContainer.css('max-height', minHeight);
+                  this._scrollContainer.css('max-height', 0 < maxHeight ? maxHeight - options._decreaseHeight : '');
                }
                // Минимальную высоту области просмотра нужно фиксировать только в отсутствии опции previewAutoHeight
                // 1175020199 https://online.sbis.ru/opendoc.html?guid=ff26541b-4dce-4df3-8b04-1764ee9b1e7a
                // 1175043073 https://online.sbis.ru/opendoc.html?guid=69a945c9-b517-4056-855a-6dec71d81823
                if (this._dataReview && !options.previewAutoHeight) {
-                  this._dataReview.css('min-height', enabled ? '' : this._cleanHeight(options.minimalHeight) || '');
+                  var minHeight = enabled ? null :  this._cleanHeight(options.minimalHeight);
+                  this._dataReview.css('min-height', enabled ? '' : (0 < minHeight ? minHeight - options._decreaseHeight : ''));
                }
             }
             else {
