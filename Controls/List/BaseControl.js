@@ -646,7 +646,7 @@ define('Controls/List/BaseControl', [
             dragItemIndex,
             dragStartResult;
          if (this._options.itemsDragNDrop) {
-            items = cClone(this._listViewModel._multiselection.getSelection().selected) || [];
+            items = cClone(this._options.selectedKeys) || [];
             dragItemIndex = items.indexOf(itemData.key);
             if (dragItemIndex !== -1) {
                items.splice(dragItemIndex, 1);
