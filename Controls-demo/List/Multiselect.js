@@ -29,7 +29,6 @@ define('Controls-demo/List/Multiselect', [
 
    var ModuleClass = BaseControl.extend({
       _template: template,
-      _selectedKeys: [1, 3],
       constructor: function() {
          ModuleClass.superclass.constructor.apply(this, arguments);
          this._viewSource = new MemorySource({
