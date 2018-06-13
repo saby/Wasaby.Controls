@@ -1,4 +1,5 @@
 /// <amd-module name="File/LocalFileLink" />
+import ResourceAbstract = require("File/ResourceAbstract");
 type FileInfo = {
     name: string;
     size: number;
@@ -16,11 +17,12 @@ type FileInfo = {
 /**
  * Класс - обёртка над ссылкой на локальный файл
  * @class
+ * @extends File/ResourceAbstract
  * @name File/LocalFileLink
  * @public
  * @author Заляев А.В.
  */
-class LocalFileLink {
+class LocalFileLink extends ResourceAbstract {
     private readonly _fileInfo: Partial<FileInfo>;
     /**
      * @param {String} fileLink Ссылка на файл
@@ -29,7 +31,8 @@ class LocalFileLink {
      * @constructor
      * @name File/LocalFileLink
      */
-    constructor(private fileLink: string, private meta?: any, fileInfo?: Partial<FileInfo>) {
+    constructor(private fileLink: string, meta?: any, fileInfo?: Partial<FileInfo>) {
+        super();
         this._fileInfo = fileInfo || {};
         if (!this._fileInfo.name) {
             /*
@@ -45,16 +48,7 @@ class LocalFileLink {
      * @name File/LocalFileLink#getLink
      */
     getLink(): string {
-    return this.fileLink;
-    }
-    /**
-     * Возвращает дополнительную информацию по файлу
-     * @return {*}
-     * @method
-     * @name File/LocalFileLink#getMeta
-     */
-    getMeta(): any {
-        return this.meta || {};
+        return this.fileLink;
     }
     /**
      * Возвращает информацию о файле, если такая имеется

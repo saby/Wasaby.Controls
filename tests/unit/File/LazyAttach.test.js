@@ -10,14 +10,14 @@ define([
    }
 
    require([
-       'Lib/File/Attach/LazyAttach',
+       'File/Attach/Lazy',
        'Core/Deferred',
-       'Lib/File/LocalFile',
-       'Lib/File/LocalFileLink',
-       'Lib/File/HttpFileLink',
+       'File/LocalFile',
+       'File/LocalFileLink',
+       'File/HttpFileLink',
        'tests/unit/File/Mocks/GetResources'
    ], function(LazyAttach, Deferred, LocalFile, LocalFileLink, HttpFileLink, GetResources) {
-       describe('Controls/File/LazyAttach', function () {
+       describe('File/LazyAttach', function () {
            var getters = ['FileGetter', 'LinkGetter', 'HttpGetter'];
 
            describe('.registerLazyGetter()', function () {

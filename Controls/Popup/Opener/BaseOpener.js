@@ -149,7 +149,7 @@ define('Controls/Popup/Opener/BaseOpener',
                def.callback(popupId);
             } else {
                requirejs(['Controls/Popup/Compatible/BaseOpener'], function(CompatibleOpener) {
-                  CompatibleOpener._prepareConfigForOldTemplate(cfg, rootTpl, popupId);
+                  CompatibleOpener._prepareConfigForOldTemplate(cfg, rootTpl);
                   if (popupId) {
                      popupId = ManagerController.update(popupId, cfg);
                   } else {

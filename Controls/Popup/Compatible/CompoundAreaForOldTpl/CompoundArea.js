@@ -6,7 +6,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/helpers/Array/findIndex',
       'Core/moduleStubs',
       'Core/core-debug',
-      'Core/core-merge',
       'Core/helpers/Function/debounce',
       'Core/Deferred',
       'Core/IoC',
@@ -24,7 +23,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       arrayFindIndex,
       moduleStubs,
       coreDebug,
-      cMerge,
       debounce,
       cDeferred,
       IoC,
@@ -74,6 +72,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          InstantiableMixin,
          LikeWindowMixin], {
          _template: template,
+         _compoundId: undefined,
          templateOptions: null,
          compatible: null,
          fixBaseCompatible: true,
@@ -95,9 +94,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
 
          _shouldUpdate: function(popupOptions) {
-            if (popupOptions._isUpdating) {
+            if (popupOptions._compoundId !== this._compoundId) {
                this._rebuildCompoundControl(popupOptions);
-               popupOptions._isUpdating = false;
+               this._compoundId = popupOptions._compoundId;
             }
             return false;
          },
@@ -137,6 +136,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             var self = this;
             this.templateOptions = this._options.templateOptions || {};
+            this._compoundId = this._options._compoundId;
 
             if (this._options._initCompoundArea) {
                this._options._initCompoundArea(this);
@@ -520,12 +520,5 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             return res;
          }
       });
-
-      CompoundArea.getDefaultOptions = function() {
-         return {
-            _shouldUpdate: true
-         };
-      };
-
       return CompoundArea;
    });

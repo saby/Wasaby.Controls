@@ -8,7 +8,6 @@
 define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
    [
       'Core/CommandDispatcher',
-      'Core/helpers/Object/isEqual',
       'SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
       'SBIS3.CONTROLS/CompoundControl',
       'SBIS3.CONTROLS/Controllers/ItemsMoveController',
@@ -18,7 +17,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
       'css!SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View'
    ],
 
-   function (CommandDispatcher, cObjectIsEqual, ColumnsEditor, CompoundControl, ItemsMoveController, objectChange, RecordSet, dotTplFn) {
+   function (CommandDispatcher, ColumnsEditor, CompoundControl, ItemsMoveController, objectChange, RecordSet, dotTplFn) {
       'use strict';
 
       var View = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View.prototype*/ {
@@ -280,7 +279,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
             if (!values || typeof values !== 'object') {
                throw new Error('Object required');
             }
-            var changes = objectChange(this._options, {fieldIds:true}, values);
+            var changes = objectChange(this._options, values, {fieldIds:true});
             if (changes && 'fieldIds' in changes) {
                this._redraw();
             }
