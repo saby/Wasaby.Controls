@@ -1,0 +1,10 @@
+<div>
+    <Controls.Button caption="Кликни чтобы открыть" on:click="_openNotification()"/>
+    <Controls.Button caption="Кликни чтобы закрыть" on:click="_closeNotification()"/>
+
+    <Controls.Popup.Opener.Notification name="myOpener">
+        <ws:popupOptions template="tmpl!Controls/Popup/Templates/Notification/Simple">
+            <ws:templateOptions style="done" text="HelloWorld!" icon="Admin"></ws:templateOptions>
+        </ws:popupOptions>
+    </Controls.Popup.Opener.Notification>
+</div>

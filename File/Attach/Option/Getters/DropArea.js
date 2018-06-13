@@ -1,6 +1,7 @@
 /// <amd-module name="File/Attach/Option/Getters/DropArea" />
 define("File/Attach/Option/Getters/DropArea", ["require", "exports", "tslib", "File/Attach/Option/ResourceGetter", "File/ResourceGetter/DropArea"], function (require, exports, tslib_1, ResourceGetter, DropAreaGetter) {
     "use strict";
+    var GETTER_TYPE = "DropArea";
     /**
      * Класс конфигурации IResourceGetter для выбора путём Drag&Drop, передаваемый в Attach
      * @class
@@ -55,6 +56,14 @@ define("File/Attach/Option/Getters/DropArea", ["require", "exports", "tslib", "F
         function DropArea(options) {
             return _super.call(this, new DropAreaGetter(options || {})) || this;
         }
+        /**
+        * @static
+        * @method
+        * @returns {String} Тип Getter'a
+        */
+        DropArea.getType = function () {
+            return GETTER_TYPE;
+        };
         return DropArea;
     }(ResourceGetter));
     return DropArea;

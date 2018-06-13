@@ -317,7 +317,19 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
       },
 
       _modifyOptions: function (options) {
+         var mask;
+
          options = DateRangeBigChoose.superclass._modifyOptions.apply(this, arguments);
+
+         // Всегда отображаем поля ввода дат без времени.
+         // Используем только ту часть маски которая отвечает за дату.
+         mask = options.mask.match(/^[YMD/\-.]+/);
+         if (mask) {
+            options.mask = mask[0];
+         } else {
+            throw new Error('The mask option does not satisfy any valid mask for this control');
+         }
+
          options.displayedYear = options.startValue ? options.startValue.getFullYear() : (new Date()).getFullYear();
          // options.displayedPeriod = options.startValue ? options.startValue : DateUtil.normalizeMonth(new Date());
          options.yearPanelLastYear = options.displayedYear;

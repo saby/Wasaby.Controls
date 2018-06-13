@@ -88,6 +88,12 @@ define('Controls/Dropdown/resources/template/DropdownList',
             }
          },
 
+         _beforeUpdate: function(newOptions) {
+            if (newOptions.rootKey !== this._options.rootKey) {
+               this._listModel.setRootKey(newOptions.rootKey);
+            }
+         },
+
          _itemMouseEnter: function(event, item, hasChildren) {
             if (hasChildren) {
                var config = {

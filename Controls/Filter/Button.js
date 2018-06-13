@@ -52,10 +52,12 @@ define('Controls/Filter/Button',
             var textArr = [];
 
             Chain(items).each(function(item) {
-               var textValue = Utils.getItemPropertyValue(item, 'textValue');
+               if (Utils.getItemPropertyValue(item, 'value') !== Utils.getItemPropertyValue(item, 'resetValue')) {
+                  var textValue = Utils.getItemPropertyValue(item, 'textValue');
 
-               if (textValue) {
-                  textArr.push(textValue);
+                  if (textValue) {
+                     textArr.push(textValue);
+                  }
                }
             });
 
@@ -99,6 +101,7 @@ define('Controls/Filter/Button',
          _clearClick: function() {
             _private.getFilterButtonCompatible(this).addCallback(function(panelOpener) {
                panelOpener.clearFilter();
+               this._text = '';
             });
          },
 
