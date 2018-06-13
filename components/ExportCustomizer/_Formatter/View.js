@@ -270,14 +270,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * @param {string} fileUuid Uuid шаблона форматирования эксель-файла
           */
          _onFormatter: function (method, fileUuid) {
-            if (!!fileUuid) {
-               var isCreate = method === 'create' || method === 'clone';
-               if (isCreate) {
-                  this._options.fileUuid = fileUuid;
-               }
-               if (isCreate || method === 'open' || method === 'openApp') {
-                  this.sendCommand('subviewChanged', isCreate ? method : 'openEnd');
-               }
+            var isCreate = method === 'create' || method === 'clone';
+            if (isCreate) {
+               this._options.fileUuid = fileUuid;
+            }
+            if (isCreate || method === 'open' || method === 'openApp') {
+               this.sendCommand('subviewChanged', isCreate ? method : 'openEnd');
             }
             this._updatePreview();
          },
