@@ -376,6 +376,7 @@ define('SBIS3.CONTROLS/DropdownList',
             _pickerBodyContainer: null,
             _resetButton: null,
             _pickerResetButton: null,
+            _checkClickByTap: true,
             _buttonChoose : null,
             _buttonHasMore: null,
             _currentSelection: []

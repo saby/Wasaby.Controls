@@ -239,31 +239,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
       };
 
       /**
-       * Константа (как бы) - Список имён всех собственных опций компонента
+       * Константа (как бы) - Список имён собственных опций компонента, которые не должны входить в общий список (выдаваемый методом getOwnOptionNames)
        *
        * @private
        * @type {Array<string>}
        */
-      var _OWN_OPTIONS_NAMES = [
-         'dialogTitle',
-         'dialogButtonTitle',
-         'columnBinderTitle',
-         'presetAddNewTitle',
-         'presetNewPresetTitle',
-         'columnBinderEmptyTitle',
-         'formatterTitle',
-         'formatterMenuTitle',
-         'serviceParams',
-         'usePresets',
-         'staticPresets',
-         'presetNamespace',
-         'selectedPresetId',
-         'allFields',
-         'fieldIds',
-         'fieldGroupTitles',
-         'fileUuid',
-         'validators',
-         'outputCall'
+      var _SKIP_OWN_OPTIONS_NAMES = [
+         'dialogMode',
+         'waitingMode'
       ];
 
       var Area = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ExportCustomizer/Area.prototype*/ {
@@ -558,8 +541,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                };
                this.subscribeTo(view, 'onCommandCatch', function (handler, evtName, command/*, args*/) {
                   if (command === 'subviewChanged') {
-                     handler.apply(this, Array.prototype.slice.call(arguments, 3));
-                     evtName.setResult(true);
+                     var result = handler.apply(this, Array.prototype.slice.call(arguments, 3));
+                     evtName.setResult(result || true);
                   }
                }.bind(this, handlers[name].bind(this)));
             }
@@ -584,10 +567,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                this._options.fileUuid = fileUuid;
             }
             if (fieldIds || fileUuid) {
-               views.columnBinder.setValues({fieldIds:fieldIds.slice()}, {source:'presets', reason:data});
+               var meta = this._makeMeta('presets', [].slice.call(arguments));
+               views.columnBinder.setValues({fieldIds:fieldIds.slice()}, meta);
                var consumer = values.consumer;
-               views.formatter.setValues({fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumer:consumer ? cMerge({}, consumer) : null}, {source:'presets', reason:data});
+               var result = views.formatter.setValues({fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumer:consumer ? cMerge({}, consumer) : null}, meta);
                this._updateCompleteButton(fieldIds);
+               return result;
             }
          },
 
@@ -604,13 +589,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             var fieldIds = values.fieldIds;
             if (fieldIds) {
                this._options.fieldIds = fieldIds.slice();
+               var meta = this._makeMeta('columnBinder', [].slice.call(arguments));
                var presetsView = views.presets;
                if (presetsView) {
-                  presetsView.setValues({fieldIds:fieldIds.slice()}, {source:'columnBinder', reason:data});
+                  presetsView.setValues({fieldIds:fieldIds.slice()}, meta);
                }
-               views.formatter.setValues({fieldIds:fieldIds.slice()}, {source:'columnBinder', reason:data});
+               views.formatter.setValues({fieldIds:fieldIds.slice()}, meta);
+               this._updateCompleteButton(fieldIds);
+               return true;
             }
-            this._updateCompleteButton(fieldIds);
          },
 
          /*
@@ -628,9 +615,28 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                this._options.fileUuid = fileUuid;
                var presetsView = views.presets;
                if (presetsView) {
-                  presetsView.setValues({fileUuid:fileUuid}, {source:'formatter', reason:data});
+                  return presetsView.setValues({fileUuid:fileUuid}, this._makeMeta('formatter', [].slice.call(arguments)));
                }
             }
+         },
+
+         /*
+          * Сформировать Мета-данные о событии
+          *
+          * @protected
+          * @param {string} source Имя источника
+          * @param {Array<*>} args Дополнительные данные
+          * @return {object}
+          */
+         _makeMeta: function (source, args) {
+            var meta = {source:source};
+            if (args && args.length) {
+               meta.reason = args[0];
+               if (1 < args.length) {
+                  meta.args = args.slice(1);
+               }
+            }
+            return meta;
          },
 
          /*
@@ -842,7 +848,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
        * @return {Array<string>}
        */
       Area.getOwnOptionNames = function () {
-         return _OWN_OPTIONS_NAMES;
+         var names = Object.keys(_OPTION_TYPES);
+         for (var i = 0; i < _SKIP_OWN_OPTIONS_NAMES.length; i++) {
+            var name = _SKIP_OWN_OPTIONS_NAMES[i];
+            var j = names.indexOf(name);
+            names.splice(j, 1);
+         }
+         return names;
       };
 
       /**

@@ -6,7 +6,8 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
    'tmpl!Controls-demo/RadioGroup/resources/RadioItemTemplate',
    'tmpl!Controls-demo/RadioGroup/resources/SingleItemTemplate',
    'tmpl!Controls-demo/RadioGroup/resources/UnionItemTemplate',
-   'css!Controls-demo/RadioGroup/RadioGroupDemo'
+   'css!Controls-demo/RadioGroup/RadioGroupDemo',
+   'WS.Data/Collection/RecordSet'// Удалить после мержа https://online.sbis.ru/opendoc.html?guid=6989b29a-8e1d-4c3b-bb7d-23b09736ef2c
 ], function (Control,
              template,
              MemorySource,

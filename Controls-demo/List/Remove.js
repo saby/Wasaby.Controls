@@ -4,25 +4,30 @@ define('Controls-demo/List/Remove', [
    'Controls-demo/List/Remove/RemoveDemoSource',
    'tmpl!Controls-demo/List/Remove/Remove',
    'css!Controls-demo/List/Remove/Remove'
-], function (BaseControl, cClone, DemoSource, template) {
+], function(BaseControl, cClone, DemoSource, template) {
    'use strict';
 
    var ModuleClass = BaseControl.extend({
       _template: template,
       _itemActions: undefined,
-      _items: [{
-         id: 0,
-         title: 'Стандартное удаление записи'
-      }, {
-         id: 1,
-         title: 'Удаление записи с вопросом'
-      }, {
-         id: 2,
-         title: 'Удаление записи с ошибкой'
-      }, {
-         id: 3,
-         title: 'Долгое удаление записи'
-      }],
+      _items: [
+         {
+            id: 0,
+            title: 'Стандартное удаление записи'
+         },
+         {
+            id: 1,
+            title: 'Удаление записи с вопросом'
+         },
+         {
+            id: 2,
+            title: 'Удаление записи с ошибкой'
+         },
+         {
+            id: 3,
+            title: 'Долгое удаление записи'
+         }
+      ],
 
       _beforeMount: function() {
          this._viewSource = this._createSource(this._items);
@@ -42,14 +47,16 @@ define('Controls-demo/List/Remove', [
 
       _createItemsActions: function(listName) {
          var self = this;
-         return [{
-            id: 0,
-            icon: 'icon-Erase icon-error',
-            showType: 2,
-            handler: function(item) {
-               self._children[listName].removeItems([item.getId()]);
+         return [
+            {
+               id: 0,
+               icon: 'icon-Erase icon-error',
+               showType: 2,
+               handler: function(item) {
+                  self._children[listName].removeItems([item.getId()]);
+               }
             }
-         }];
+         ];
       },
 
       _beforeItemsRemove: function(event, items) {

@@ -696,7 +696,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
              * Подробнее о типах иерархических записей читайте в разделе <a href="/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
              * @example
              * <pre>
-             *    <option name="allowEnterToFolder">false</option>
+             *    allowEnterToFolder="{{false}}"
              * </pre>
              */
             allowEnterToFolder: true,
@@ -740,7 +740,13 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
              *
              */
             loadItemsStrategy: 'merge',
-            task1174261549: false
+            task1174261549: false,
+            /**
+             * @cfg {Boolean} Сохраняет значение выбранной записи после перезагрузки
+             * @remark
+             * Работает только с <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/navigations/cursor/">навигацией по курсору</a>.
+             */
+            saveReloadPosition: false
          },
          _lastParent : undefined,
          _lastDrawn : undefined,
@@ -1696,12 +1702,24 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                if (typeof this.getCurrentRoot() === 'undefined') {
                   curRoot = null;
                }
-               if (this.getSelectedItem().get(this._options.parentProperty) === curRoot) {
+               var
+                  newRootParent = this.getSelectedItem().get(this._options.parentProperty);
+               if (newRootParent === curRoot) {
                   this._hierPages[curRoot] = this.getSelectedItem().get(this._options.navigation.config.field);
                } else {
                   // Мы можем перейти в узел раскрыв дерево, а значит нужно сохранить курсор для родителя узла в который мы провалились
                   // https://online.sbis.ru/opendoc.html?guid=8e6b6c2b-9dc4-44ef-8cad-8662f2ec65d8
-                  this._hierPages[this.getSelectedItem().get(this._options.parentProperty)] = this.getSelectedItem().get(this._options.navigation.config.field);
+                  this._hierPages[newRootParent] = this.getSelectedItem().get(this._options.navigation.config.field);
+                  // Пробегаем также по родителям узла, в который проваливаемся вплоть до currentRoot и таким образом запоминаем исчерпывающий путь
+                  // https://online.sbis.ru/opendoc.html?guid=fdfc17bd-043d-45d8-8c77-29ab5547205a
+                  var
+                     nextParent = this.getItems().getRecordById(newRootParent).get(this._options.parentProperty);
+                  while (nextParent !== curRoot) {
+                     this._hierPages[nextParent] = this.getItems().getRecordById(newRootParent).get(this._options.navigation.config.field);
+                     newRootParent = nextParent;
+                     nextParent = this.getItems().getRecordById(newRootParent).get(this._options.parentProperty);
+                  }
+                  this._hierPages[nextParent] = this.getItems().getRecordById(newRootParent).get(this._options.navigation.config.field);
                }
             }
          }

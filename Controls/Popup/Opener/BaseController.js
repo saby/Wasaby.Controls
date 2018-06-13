@@ -20,13 +20,11 @@ define('Controls/Popup/Opener/BaseController',
             };
          },
          getMargins: function(config, container) {
-            container.style.margin = ''; //todo
             var style = container.currentStyle || window.getComputedStyle(container);
             var margins = {
                top: parseInt(style.marginTop, 10),
                left: parseInt(style.marginLeft, 10)
             };
-            container.style.margin = 0;
             return margins;
          }
       };

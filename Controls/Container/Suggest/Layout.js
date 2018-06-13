@@ -146,8 +146,8 @@ define('Controls/Container/Suggest/Layout',
          },
    
          _inputActivated: function() {
-            if (this._options.minSearchLength === 0) {
-               _private.updateSuggestState(this);
+            if (this._options.autoDropDown) {
+               _private.open(this);
             }
          },
    

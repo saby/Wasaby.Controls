@@ -355,6 +355,23 @@ define('SBIS3.CONTROLS/Mixins/TreeViewMixin', [
                   }
                }
             }
+         },
+         _toggleGroup: function(groupId, flag) {
+            var
+               groupItems,
+               self = this;
+            if (this._getItemsProjection()) {
+               groupItems = this._getGroupItems(groupId);
+               groupItems.forEach(function(item) {
+                  if (cInstance.instanceOfModule(item, 'WS.Data/Display/TreeItem')) {
+                     if (flag) {
+                        self._destroyItemsFolderFooter(item.getContents().get(self._options.idProperty));
+                     } else {
+                        self._createFolderFooter(item);
+                     }
+                  }
+               });
+            }
          }
       },
       _elemClickHandlerInternal: function (data, id, target) {
