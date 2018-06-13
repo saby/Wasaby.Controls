@@ -1,5 +1,5 @@
 define([
-   'Lib/File/LocalFile',
+   'File/LocalFile',
    'Core/constants'
 ], function (LocalFile, constants) {
    'use strict';
@@ -14,7 +14,7 @@ define([
    });
    var localFile = new LocalFile(file, meta, 'filename');
 
-   describe('Controls/File/LocalFile', function () {
+   describe('File/LocalFile', function () {
 
       describe('.getData()', function () {
          it('Возвращает файл', function () {

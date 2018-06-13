@@ -41,7 +41,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          return actions;
       },
 
-      updateItemActions: function(item, options, isEditingItem, self) {
+      updateItemActions: function(self, item, options, isEditingItem) {
          var
             all = _private.fillItemAllActions(item, options.itemActions, options.itemActionVisibilityCallback),
 
@@ -83,20 +83,21 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          });
       },
 
-      updateActions: function(options) {
+      updateActions: function(self, options) {
          if (options.itemActions) {
             for (options.listModel.reset();  options.listModel.isEnd();  options.listModel.goToNext()) {
                var
-                  item = options.listModel.getCurrent().item;
-               _private.updateItemActions(item, options);
+                  itemData = options.listModel.getCurrent(),
+                  item = itemData.item;
+               _private.updateItemActions(self, item, options, itemData.isEditing);
             }
          }
       },
 
-      updateModel: function(newOptions) {
-         _private.updateActions(newOptions);
+      updateModel: function(self, newOptions) {
+         _private.updateActions(self, newOptions);
          newOptions.listModel.subscribe('onListChange', function() {
-            _private.updateActions(newOptions);
+            _private.updateActions(self, self._options);
          });
       },
 
@@ -123,17 +124,17 @@ define('Controls/List/ItemActions/ItemActionsControl', [
 
       _beforeMount: function(newOptions) {
          if (newOptions.listModel) {
-            _private.updateModel(newOptions);
+            _private.updateModel(this, newOptions);
          }
       },
 
       _beforeUpdate: function(newOptions) {
          if (newOptions.listModel && (this._options.listModel !== newOptions.listModel)) {
-            _private.updateModel(newOptions);
+            _private.updateModel(this, newOptions);
          }
 
          if (newOptions.itemActions && (this._options.itemActions !== newOptions.itemActions)) {
-            _private.updateActions(newOptions);
+            _private.updateActions(this, newOptions);
          }
       },
 
@@ -150,7 +151,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
       },
 
       updateItemActions: function(item, isEditingItem) {
-         _private.updateItemActions(item, this._options, isEditingItem, this);
+         _private.updateItemActions(this, item, this._options, isEditingItem);
       }
    });
 

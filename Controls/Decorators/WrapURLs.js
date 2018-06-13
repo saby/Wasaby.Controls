@@ -36,7 +36,8 @@ define('Controls/Decorators/WrapURLs',
                node = {},
                parsedText = [],
                exec;
-
+   
+            // eslint-disable-next-line
             while (exec = this.parseRegExp.exec(text)) {
                if (text.length === this.parseRegExp.lastIndex && !exec[0]) {
                   this.parseRegExp.lastIndex = 0;

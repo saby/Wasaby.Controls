@@ -1,5 +1,26 @@
 <div class="container"  on:click="clickHandler()">
     <div class="wrapper">
+        <div class="header">Кнопка с залипанием</div>
+        <div class="demo_element">
+            <span class="span_label">toggleButton, size="s"</span>
+            <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="s" icon="icon-16 icon-Send" style="iconButtonBordered"/>
+        </div>
+        <div class="demo_element">
+            <span class="span_label">toggleButton, size="default"</span>
+            <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="m" icon="icon-16 icon-Send" style="linkMain"/>
+        </div>
+        <div class="demo_element">
+            <span class="span_label">toggleButton, size="l"</span>
+            <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="l" icon="icon-24 icon-Send" style="iconButtonBordered"/>
+        </div>
+        <div class="demo_element">
+            <span class="span_label">toggleButton, size="l"</span>
+            <Controls.Toggle.Button readOnly="{{true}}" bind:value="toggleState" size="l" icon="icon-24 icon-Send" style="iconButtonBordered"/>
+        </div>
+        <div class="demo_element">
+            <span class="span_label">toggleButton, size="l"</span>
+            <Controls.Toggle.Button readOnly="{{true}}" bind:value="toggleState" size="l" icon="icon-24 icon-Send" style="linkMain"/>
+        </div>
         <div class="header">Кнопки-ссылки</div>
         <div class="type_block" test_name="button_link">
             <div class="demo_element">

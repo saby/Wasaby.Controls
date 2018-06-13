@@ -37,6 +37,7 @@
 
    .controls-RichEditor__scrollContainer {
       width: 100%;
+      padding-bottom: 2px;
    }
 
    .controls-RichEditor__editorFrame {
@@ -143,7 +144,7 @@
    .controls-RichEditor__editorFrame.ws-basic-style {
       box-sizing: border-box;
       word-wrap: break-word;
-      padding: 2px 0 2px 4px;
+      padding: 2px 0 0 4px;
       table {
          margin-bottom: 5px;
       }
@@ -305,14 +306,19 @@
       .controls-RichEditor__editorFrame.ws-basic-style > p:last-child {
          padding-bottom: 1px;
       }
+      .controls-RichEditor__editorFrame {
+         & > :last-child li:last-child {
+            margin-bottom: 6px;
+         }
+      }
    }
 }
 
-.ws-is-chrome {
-   .controls-RichEditor__editorFrame.ws-basic-style p:empty{
-      min-height: 18px;
-   }
+
+.controls-RichEditor__editorFrame.ws-basic-style p:empty{
+   min-height: 18px;
 }
+
 .ws-is-mobile-android {
    .controls-RichEditor__editorFrame {
       -webkit-text-size-adjust: 100%;

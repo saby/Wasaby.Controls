@@ -265,6 +265,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/config',
                tooltip: rk('Вставить изображение'),
                className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
                handlers: {
+                  onInit: handlers.checkImageLoader,
                   onActivated: handlers.image
                },
                order: 140,

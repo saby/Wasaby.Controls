@@ -1,13 +1,15 @@
 <Controls.Container.Suggest.Layout
         on:choose="_choose()"
         on:deactivated="_deactivated()"
+        on:suggestStateChanged="_suggestStateChanged()"
         suggestTemplate="{{_options.suggestTemplate}}"
         minSearchLength="{{_options.minSearchLength}}"
         source="{{_options.source}}"
         navigation="{{_options.navigation}}"
         searchParam="{{_options.searchParam}}"
         suggestStyle="overInput"
-        bind:suggestState="_suggestState">
+        suggestState="{{_options.suggestState}}"
+        autoDropDown="{{_options.autoDropDown}}">
     <Controls.Input.Search
             value="{{_options.value}}"
             tagStyle="{{_options.tagStyle}}"

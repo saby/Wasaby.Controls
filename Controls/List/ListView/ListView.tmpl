@@ -1,16 +1,14 @@
 <div class="controls-ListView">
    <ws:if data="{{_listModel}}">
-      <div class="controls-ListView__items">
-         <ws:partial
-                 template="tmpl!Controls/List/resources/For"
-                 listModel="{{_listModel}}"
-                 itemActionsTemplate="{{_options.itemActionsTemplate}}"
-                 swipeTemplate="{{_options.swipeTemplate}}"
-                 multiSelectTpl="{{_options.multiSelectTpl}}"
-                 editingItemData="{{_options.editingItemData}}"
-                 isAdd="{{_options.isAdd}}"
-                 itemTemplate="{{_itemTemplate}}">
-         </ws:partial>
-      </div>
+      <ws:partial
+              template="tmpl!Controls/List/resources/For"
+              listModel="{{_listModel}}"
+              itemActionsTemplate="{{_options.itemActionsTemplate}}"
+              swipeTemplate="{{_options.swipeTemplate}}"
+              multiSelectTpl="{{_options.multiSelectTpl}}"
+              editingItemData="{{_options.editingItemData}}"
+              isAdd="{{_options.isAdd}}"
+              itemTemplate="{{_itemTemplate}}">
+      </ws:partial>
    </ws:if>
 </div>

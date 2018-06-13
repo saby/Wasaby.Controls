@@ -43,8 +43,8 @@
 //button
 @color_Button_primary:                            @color_Button;
 @color-IconButton__border_iconStyle-primary_hovered:          #cccccc;
-@color-Button_type-IconButton_disabled:           #4B688B;
-@border-color-IconButton_disabled:                rgba(64, 90, 119, 0.3);
+@color-Button_type-IconButton_readOnly:           #4B688B;
+@border-color-IconButton_readOnly:                rgba(64, 90, 119, 0.3);
 @border-color-IconButton:                         rgba(0, 0, 0, 0.05);
 @color-IconButton__shadow:                        rgba(0, 0, 0, 0.35);
 @background-color-IconButton:                     rgba(64, 90, 119, 0.3);
@@ -122,6 +122,7 @@
 @color_Link-additional:                   #FFCC99;
 @color_Link-additional-2:                 #839EBC;
 @color_Link-additional-3:                 #FFFFFF;
+@color_Link-Vdom-text_readOnly:           #4B688B;
 @border-color_Button_primary:             transparent;
 @border-color_Button_primary_hovered:     transparent;
 @background_Button_primary:               #FF7033;
@@ -130,11 +131,12 @@
 @box-shadow_Button_active:                none;
 @background_Button_primary_active:        #FA6019;
 @background_Button_default_active:        #516B8C;
-@background_Button-primary_disabled:      @background_Button_primary;
-@background_Button-default_disabled:      @background_Button_default;
-@color_Button-Vdom-disabled:              rgba(255,255,255, .15);
+@background_Button-primary_readOnly:      @background_Button_primary;
+@background_Button-default_readOnly:      @background_Button_default;
+@color_Button-Vdom-readOnly:              rgba(255,255,255, .15);
 @color_Button-Vdom-text_primary:           #FFFFFF;
 @color_Button-Vdom-text_default:           #FFFFFF;
+@border-color_Button-Vdom_readOnly:        transparent;
 @color_Button-icon:                       #FFFFFF;
 @color_Button-icon_primary:               #FFFFFF;
 @color_Link-main-icon:                    #839EBC;
@@ -446,3 +448,17 @@
 @background-image-BackButton_style-default:                                                                                                     url('img/BackArrowOrangePresto.svg');
 @background-image-BackButton_style-primary_hovered:                                                                                             url('img/BackArrowHoveredPresto.svg');
 @background-image-BackButton_style-default_hovered:                                                                                             url('img/BackArrowHoveredPresto.svg');
+
+//Toggle button
+@border-color_ToggleButton:               @color_Link-main_text;
+@background_ToggleButton_state-on:        @background_Button_default;
+@background_ToggleButton:                 @background_Button;
+@background_ToggleButton_readOnly:        @background_Button;
+@border-color_ToggleButton_readOnly:      @background_Button;
+@color_ToggleButton_readOnly:             @color_Button-Vdom-readOnly;
+@background-ToggleButton_hovered:         @background_Button_default_active;
+@color-ToggleButton__icon_hovered:        inherit;
+@color-ToggleButton_text:                 @color_Button-icon_primary;
+@color-ToggleButton__icon:                @color_Button-icon_primary;
+@color_ToggleButton_style-LinkMain:       @color_Button-icon_primary;
+@color_ToggleButton_Link-main_hovered:    @color_Button-icon_primary;
