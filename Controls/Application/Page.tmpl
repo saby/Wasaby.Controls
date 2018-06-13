@@ -79,15 +79,6 @@
                                                 _options="{{_options}}"/>
                                  </div>
                               </ws:else>
-
-                              <ws:if data="{{ boomCfg }}">
-                                 <script type="text/javascript">
-                                    function startBoomer(){
-                                       BOOMR.init({{boomCfg}});
-                                    };
-                                 </script>
-                                 <script type="text/javascript" src="{{resourceRoot}}View/Runner/Vdom/third-party/boomerang.js" onload="startBoomer()"></script>
-                              </ws:if>
                               </body>
                            </Controls.DragNDrop.Container>
                         </Controls.Application.TouchDetector>
