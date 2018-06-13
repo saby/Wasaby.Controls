@@ -24,25 +24,25 @@ define('Controls/Container/Dropdown',
       'use strict';
 
       var _private = {
-         loadItems: function(instance, source, selectedKeys) {
+         loadItems: function(instance, source, selectedKeys, keyProperty) {
             instance._sourceController = new SourceController({
                source: source
             });
             return instance._sourceController.load().addCallback(function(items) {
                instance._items = items;
-               if (selectedKeys) {
-                  _private.updateSelectedItems(instance, selectedKeys);
-               }
+               _private.updateSelectedItems(instance, selectedKeys, keyProperty);
                return items;
             });
          },
 
-         updateSelectedItems: function(instance, selectedKeys) {
-            Chain(instance._items).each(function(item) {
-               if (selectedKeys.indexOf(item.get(instance._options.keyProperty)) > -1) {
-                  instance._selectedItems.push(item);
-               }
-            });
+         updateSelectedItems: function(instance, selectedKeys, keyProperty) {
+            if (selectedKeys) {
+               Chain(instance._items).each(function(item) {
+                  if (selectedKeys.indexOf(item.get(keyProperty || instance._options.keyProperty)) > -1) {
+                     instance._selectedItems.push(item);
+                  }
+               });
+            }
          },
 
          onResult: function(result) {
@@ -72,10 +72,10 @@ define('Controls/Container/Dropdown',
             this._onResult = _private.onResult.bind(this);
             if (receivedState) {
                this._items = receivedState;
-               _private.updateSelectedItems(this, options.selectedKeys);
+               _private.updateSelectedItems(this, options.selectedKeys, options.keyProperty);
             } else {
                if (options.source) {
-                  return _private.loadItems(this, options.source, options.selectedKeys);
+                  return _private.loadItems(this, options.source, options.selectedKeys, options.keyProperty);
                }
             }
          },
