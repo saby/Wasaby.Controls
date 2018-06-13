@@ -180,6 +180,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             var editor = this._editor;
             if (editor) {
                var options = this._options;
+               this.subscribeTo(editor, 'onPropertyChanged', function (evtName, property) {
+                  if (property === 'text') {
+                     editor.clearMark();
+                  }
+               });
+
                this.subscribeTo(editor, 'onApply', function (evtName) {
                   var preset = this._findPresetById(options.selectedId);
                   preset.title = editor.getText();
@@ -515,16 +521,24 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   var container = editor._cntrlPanel;
                   container.find('.controls-EditAtPlace__okButton').attr('title', rk('Сохранить шаблон', 'НастройщикЭкспорта'));
                   container.find('.controls-EditAtPlace__cancel').attr('title', rk('Отменить изменения', 'НастройщикЭкспорта'));
-                  var titles = []; options._items.each(function (v) { if (v.getId() !== preset.id) { titles.push(v.get('title')); } });
                   editor.setValidators([{
                      option: 'text',
-                     validator: function (list, value) {
-                        // TODO: Возможно, лучше получать list непосредственно при вызове, а не заранее ???
+                     validator: function (presetId, value) {
+                        var reducer = function (r, v) { if (v.id !== presetId) { r.push(v.title); } return r; };
+                        var list = [];
+                        var statics = this._options.statics;
+                        if (statics && statics.length) {
+                           list = statics.reduce(reducer, list);
+                        }
+                        var customs = this._customs;
+                        if (customs && customs.length) {
+                           list = customs.reduce(reducer, list);
+                        }
                         if (value) {
                            var v = value.trim();
                            return !!v && list.indexOf(v) === -1;
                         }
-                     }.bind(null, titles),
+                     }.bind(this, preset.id),
                      errorMessage: _TITLE_ERROR
                   }]);
                }
