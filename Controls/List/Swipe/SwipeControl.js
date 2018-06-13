@@ -288,7 +288,7 @@ define('Controls/List/Swipe/SwipeControl', [
       },
 
       _onActionClick: function(event, action, itemData) {
-         aUtil.actionClick(this, event, action, itemData, this._swipeConfig.type > ROW_TYPE_THRESHOLD);
+         aUtil.actionClick(this, event, action, itemData, true);
       }
 
    });
