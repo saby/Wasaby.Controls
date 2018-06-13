@@ -192,11 +192,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             if (isClone) {
                args.push(this._patterns[consumerId]);
             }
-            var useBoth = isOpen || method === 'update';
-            if (useBoth || method === 'delete') {
+            var isUpdate = method === 'update';
+            if (isOpen || isUpdate || method === 'delete') {
                args.push(options.fileUuid);
             }
-            if (isCreate || useBoth) {
+            if (isCreate || isOpen || isUpdate) {
                var fieldIds = options.fieldIds;
                args.push(fieldIds || [], this._selectFields(options.allFields, fieldIds, function (v) { return v.title; }) || [], options.serviceParams);
             }
@@ -210,6 +210,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                   delete this._creation[consumerId];
                   delete this._patterns[consumerId];
                }.bind(this, consumerId));
+            }
+            if (isCreate || isClone || isUpdate) {
+               this._waitIndicatorStart();
             }
             return promise;
          },
@@ -277,7 +280,34 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             if (isCreate || method === 'open' || method === 'openApp') {
                this.sendCommand('subviewChanged', isCreate ? method : 'openEnd');
             }
+            if (method === 'open' || method === 'openApp') {
+               this._waitIndicatorStart();
+            }
             this._updatePreview();
+         },
+
+         /**
+          * Запустить индикатор ожидания
+          *
+          * @protected
+          */
+         _waitIndicatorStart: function () {
+            this._updatePreviewClearStop();
+            var stopper = this._waitIndicatorStopper = new Deferred();
+            WaitIndicator.make({target:this._preview[0].parentNode, overlay:'dark', delay:0}, stopper);
+         },
+
+         /**
+          * Остановить индикатор ожидания
+          *
+          * @protected
+          */
+         _waitIndicatorEnd: function () {
+            var stopper = this._waitIndicatorStopper;
+            if (stopper) {
+               stopper.callback();
+               this._waitIndicatorStopper = null;
+            }
          },
 
          /**
@@ -289,22 +319,18 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          _updatePreview: function (withClear) {
             var fieldIds = this._options.fieldIds;
             var has = !!(fieldIds && fieldIds.length);
-            if (has) {
-               this._updatePreviewStart();
-            }
             if (!has || withClear) {
                var img = this._preview[0];
                img.src = '';
                img.title = '';
                this._preview.removeClass('ws-enabled').addClass('ws-disabled');
             }
+            if (has) {
+               this._updatePreviewStart();
+            }
          },
          _updatePreviewClearStop: function () {
-            var stopper = this._updatePreviewStopper;
-            if (stopper) {
-               stopper.callback();
-               this._updatePreviewStopper = null;
-            }
+            this._waitIndicatorEnd();
          },
          _updatePreviewStart: coreDebounce(function () {
             var size = this._previewSize;
@@ -312,13 +338,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                var previewContainer = this._preview.parent();
                this._previewSize = size = {width:previewContainer.width(), height:previewContainer.height()};
             }
-            this._updatePreviewClearStop();
-            var img = this._preview[0];
-            var stopper = this._updatePreviewStopper = new Deferred();
-            WaitIndicator.make({target:img.parentNode, delay:0}, stopper);
+            this._waitIndicatorStart();
             var options = this._options;
             this._exportFormatter.getPreviewUrl(options.fileUuid, size.width, size.height).addCallbacks(
                function (url) {
+                  var img = this._preview[0];
                   img.onload = img.onerror = this._updatePreviewClearStop.bind(this);
                   img.src = url;
                   img.title = options.previewTitle;
