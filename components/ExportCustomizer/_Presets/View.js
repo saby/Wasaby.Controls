@@ -406,12 +406,18 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           *
           * @protected
           * @param {string|number} id Идентификатор пресета
+          * @param {object} changes Информация об изменениях
           */
-         _clonePreset: function (id) {
+         _clonePreset: function (id, changes) {
             var presetInfo = this._findPresetById(id, true);
             if (presetInfo) {
                var pattern = presetInfo.preset;
                var preset = this._createPreset(pattern);
+               if (changes) {
+                  for (var property in changes) {
+                     preset[property] = changes[property];
+                  }
+               }
                this._customs.splice(presetInfo.isStatic ? 0 : presetInfo.index + 1, 0, preset);
                this._selectPreset(preset, true, ['clone', pattern.fileUuid]);
             }
@@ -725,11 +731,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                }
                if (needStartEdit) {
                   var result;
-                  var selectedId = this._options.selectedId;
+                  var options = this._options;
+                  var selectedId = options.selectedId;
                   if (selectedId) {
                      var preset = this._findPresetById(selectedId);
                      if (preset && !preset.isStorable) {
-                        this._clonePreset(preset.id);
+                        this._clonePreset(preset.id, {fieldIds:options.fieldIds});
                         result = {isComplete:true};
                      }
                   }
