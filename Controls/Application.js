@@ -5,6 +5,7 @@ define('Controls/Application',
    [
       'Core/Control',
       'tmpl!Controls/Application/Page',
+      'Core/helpers/URLHelpers',
       'Core/Deferred',
       'Core/BodyClasses',
       'Core/compatibility',
@@ -24,6 +25,7 @@ define('Controls/Application',
 
    function(Base,
       template,
+      URLHelpers,
       Deferred,
       BodyClasses,
       compatibility,
@@ -50,6 +52,8 @@ define('Controls/Application',
       };
       var Page = Base.extend({
          _template: template,
+
+         boomCfg: '',
 
          _scrollPage: function(ev) {
             this._children.scrollDetect.start(ev);
@@ -110,6 +114,8 @@ define('Controls/Application',
                context.AppData.resourceRoot = self.resourceRoot;
                context.AppData.application = self.application;
             }
+
+            self.boomCfg = URLHelpers.getQueryParam('boomCfg');
             
             /**
              * Этот перфоманс нужен, для сохранения состояния с сервера, то есть, cfg - это конфиг, который нам прийдет из файла
