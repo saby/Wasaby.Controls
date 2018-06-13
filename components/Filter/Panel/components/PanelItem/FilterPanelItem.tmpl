@@ -1,15 +1,15 @@
 <div class="controls-FilterPanelItem{{item.template === 'SBIS3.CONTROLS/Filter/Panel/components/Boolean' ? ' controls-FilterPanelItem__boolean'}}">
    <ws:if data="{{item.template === 'SBIS3.CONTROLS/Filter/Panel/components/Boolean'}}">
-      <SBIS3.CONTROLS:Filter:Panel:components:Boolean hasMarkup="{{ true }}" caption="{{ item.caption }}" checked="{{ 'value'|mutable }}" value="{{ 'value'|mutable }}" textValue="{{ 'textValue'|mutable }}" name="{{ item.id }}" />
+      <SBIS3.CONTROLS.Filter.Panel.components.Boolean hasMarkup="{{ true }}" caption="{{ item.caption }}" checked="{{ 'value'|mutable }}" value="{{ 'value'|mutable }}" textValue="{{ 'textValue'|mutable }}" name="{{ item.id }}" />
    </ws:if>
    <ws:else>
-      <SBIS3.CONTROLS:Spoiler
+      <SBIS3.CONTROLS.Spoiler
          expanded="{{ item.expanded }}"
          caption="{{ item.caption }}"
          properties="{{ item.properties }}"
          name="{{ item.id }}"
          rightPartTitleTpl="tmpl!SBIS3.CONTROLS/Filter/Panel/components/PanelItem/resources/FilterPanelItemSpoilerRightPartTitleTemplate"
          contentTpl="{{ item.template }}" >
-      </SBIS3.CONTROLS:Spoiler>
+      </SBIS3.CONTROLS.Spoiler>
    </ws:else>
 </div>

@@ -6,10 +6,13 @@ define([
 
 
    function createNativeEvent(type, pageX, pageY) {
-      var result = new Event(type);
-      result.pageX = pageX;
-      result.pageY = pageY;
-      return result;
+      //mock dom event
+      return {
+         preventDefault: function() {},
+         pageX: pageX,
+         pageY: pageY,
+         type: type
+      };
    }
 
    function createSyntheticEvent(type, pageX, pageY) {

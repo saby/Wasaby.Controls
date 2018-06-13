@@ -1,7 +1,7 @@
 <div class="controls-History">
     <div class="controls-History-title">{[Ранее отбирались]}</div>
     <div class="controls-ReportBrowser__history-list">
-        <SBIS3.CONTROLS:Filter:HistoryView name="ReportFavoriteView"
+        <SBIS3.CONTROLS.Filter.HistoryView name="ReportFavoriteView"
                                            itemsActions="{{ [_unFavoriteAction] }}"
                                            historyId="{{ (historyId + '-favorite') }}"
                                            idProperty="{{idProperty}}"
@@ -9,17 +9,17 @@
                                            footerTpl=""
                                            className="controls-History-view controls-History-favoritesView"
                                            itemsSortMethod="{{ _favoriteSortMethod }}">
-        </SBIS3.CONTROLS:Filter:HistoryView>
+        </SBIS3.CONTROLS.Filter.HistoryView>
     </div>
     <div class="controls-ReportBrowser__history-list">
-        <SBIS3.CONTROLS:Filter:HistoryView name="ReportHistoryView"
+        <SBIS3.CONTROLS.Filter.HistoryView name="ReportHistoryView"
                                            itemsActions="{{ [_favoriteAction] }}"
                                            historyId="{{ historyId }}"
                                            idProperty="{{idProperty}}"
                                            displayProperty="{{displayProperty}}"
                                            footerTpl=""
                                            className="controls-History-view">
-        </SBIS3.CONTROLS:Filter:HistoryView>
+        </SBIS3.CONTROLS.Filter.HistoryView>
     </div>
-    <SBIS3.CONTROLS:Action:OpenDialogAction name="editFavorite" initializingWay="local" dialogComponent="SBIS3.CONTROLS/Filter/FavoriteEditDialog"/>
+    <SBIS3.CONTROLS.Action.OpenDialogAction name="editFavorite" initializingWay="local" dialogComponent="SBIS3.CONTROLS/Filter/FavoriteEditDialog"/>
 </div>

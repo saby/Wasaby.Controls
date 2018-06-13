@@ -1,7 +1,7 @@
 <div class="controls-Menu__Popup controls-CodeSampleDialog  controls-FloatArea">
    <div  class="controls-CodeSampleDialog__header">
       <div class="controls-CodeSampleDialog__title" title="{{ windowTitle }}">{{ windowTitle }}</div>
-      <SBIS3.CONTROLS:Button:IconButton
+      <SBIS3.CONTROLS.Button.IconButton
          class="controls-CodeSampleDialog__applyButton controls-IconButton__round-border controls-IconButton__round icon-size"
          name="Apply"
          icon="sprite:icon-16 icon-Yes icon-done"
@@ -9,7 +9,7 @@
       />
    </div>
    <div class="controls-CodeSampleDialog__type_wrap">
-      <SBIS3.CONTROLS:ComboBox
+      <SBIS3.CONTROLS.ComboBox
          class="controls-CodeSampleDialog__type" name="Type"
          items="{{ languages}}"
          idProperty="key"
@@ -20,7 +20,7 @@
       />
    </div>
    <div class="controls-CodeSampleDialog__area_wrap">
-      <SBIS3.CONTROLS:TextArea
+      <SBIS3.CONTROLS.TextArea
          class="controls-CodeSampleDialog__area"
          name="Area"
          minLinesCount="10"
