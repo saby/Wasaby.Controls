@@ -34,7 +34,8 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
        },
       HOVER_MODE = {
          OUTSIDE: 'outside',
-         INSIDE: 'inside'
+         INSIDE: 'inside',
+         FIXED: 'fixed'
       };
    var canServerRenderOther = function(cfg) {
       return !(cfg.itemTemplate || cfg.listTemplate || cfg.tileTemplate);
@@ -157,6 +158,10 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
              * Использование опции актуально при режиме изменения ширины по ховеру элемента
              * @variant inside Ширина плитки увеличивается внутрь контейнера
              * @variant outside Ширина плитки увеличивается относительно центра элемента
+             * @variant fixed Ширина плитки увеличивается относительно центра элемента. Данный режим используется когда
+             * компонент обёрнут в SBIS3.CONTROLS.ScrollContainer и необходимо, чтобы при увеличении элементов,
+             * они были видны за пределами SBIS3.CONTROLS.ScrollContainer. Для корректной работы опций записи, необходимо
+             * так же установить опции itemsActionsInItemContainer {@link https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/ListView/options/itemsActionsInItemContainer/} значение true.
              */
             hoverMode: '',
             /**
@@ -257,9 +262,7 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
              * @see listTemplate
              * @see SBIS3.CONTROLS/ListView#itemTemplate
              */
-            listTpl: null,
-            itemsActionsInItemContainer: true,
-            tileInScrollContainer: true
+            listTpl: null
          }
       },
 
@@ -273,8 +276,8 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
          //TODO:Нужен какой то общий канал для ресайза окна
          $(window).bind('resize', this._calculateTileHandler);
          this.subscribe('onAfterVisibilityChange', this._calculateTileHandler);
-         if (this._options.tileInScrollContainer) {
-            this._onScrollHandler = this._onScroll.bind(this);
+         if (this._options.hoverMode === HOVER_MODE.FIXED) {
+            this._onScrollHandler = this._resetFixedItem.bind(this, true);
             this._scrollContainer = this._container.closest('.controls-ScrollContainer__content');
             this._scrollContainer.on('scroll', this._onScrollHandler);
             this._scrollContainer.css('z-index', 'auto');
@@ -292,15 +295,15 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
          if (this._options.viewMode == 'tile' && !this._options.tileMode){
             this._calculateTileWidth();
          }
-         if (this._options.tileInScrollContainer) {
+         if (this._options.hoverMode === HOVER_MODE.FIXED) {
             this._resetFixedItem(true);
          }
       },
 
       _setHoveredStyles: function(item) {
-         if (!item && this._options.tileInScrollContainer) {
+         if (!item && this._options.hoverMode === HOVER_MODE.FIXED) {
             this._resetFixedItem();
-         } else if (item && (!item.hasClass('controls-CompositeView__hoverStylesInit') || this._options.tileInScrollContainer)) {
+         } else if (item && (!item.hasClass('controls-CompositeView__hoverStylesInit') || this._options.hoverMode === HOVER_MODE.FIXED)) {
             this._calculateHoveredStyles(item);
             this._hasItemsActions().addCallback(function(hasItemsActions) {
                item.toggleClass('controls-CompositeView__item-withoutItemsAction', !hasItemsActions);
@@ -327,7 +330,7 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
 
       _calculateHoveredStyles: function(item) {
          if (this._options.tileMode === TILE_MODE.DYNAMIC) {
-            if (this._options.tileInScrollContainer) {
+            if (this._options.hoverMode === HOVER_MODE.FIXED) {
                this._setFixedHoveredStyles(item);
             } else {
                this._resetHoveredStyles(item);
@@ -349,13 +352,13 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
 
       _setDynamicHoveredStyles: function(item) {
          var styles;
-         if (this._options.hoverMode !== HOVER_MODE.INSIDE) {
-            styles = DimensionsUtil.calcOutsideDimensions(item);
-         } else {
+         if (this._options.hoverMode === HOVER_MODE.INSIDE) {
             styles = DimensionsUtil.calcInsideDimensions(item, this._getItemsContainer());
+         } else {
+            styles = DimensionsUtil.calcOutsideDimensions(item);
          }
 
-         if (this._options.tileInScrollContainer) {
+         if (this._options.hoverMode === HOVER_MODE.FIXED) {
             if (!coreCompatibility.touch) {
                this._createFixedItem(item, styles);
             }
@@ -383,7 +386,7 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
             if ((itemRect.top - parenRect.top) > -maxOuterHeight && (itemRect.bottom -  parenRect.bottom) < maxOuterHeight) {
                itemClone = item.clone();
                itemClone.empty();
-               itemClone.insertBefore(item);
+               itemClone.insertAfter(item);
 
                item.css(styles).css({
                   position: 'fixed',
@@ -420,10 +423,6 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
                }
             }
          }
-      },
-
-      _onScroll: function() {
-         this._resetFixedItem(true);
       },
 
       _onItemActionsMenuClose: function() {
