@@ -51,7 +51,7 @@
 @font-size_Grid-checkbox-icon: 18px;
 @color_Grid-checkbox-icon: #ff7033;
 //--------------- styles ---------------
-.controls-Grid__wrapper {
+.controls-Grid {
    display: grid;
    width: 100%;
 }
@@ -222,9 +222,11 @@
 .controls-Grid__cell_spacingLastCol_XXL {
    padding-right: @padding_Grid-left_XXL;
 }
-
 .controls-Grid__row-cell_withSelectionMarker {
    box-shadow: inset @width_Grid-selection-marker 0 0 @color_Grid-selection-marker;
+}
+.controls-GridView__item_active {
+   background-color: @default-bg-color-hovered-item;
 }
 // Checkbox styles
 .controls-Grid__row-cell-checkbox {

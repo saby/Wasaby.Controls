@@ -3,11 +3,10 @@ define('Controls/Toolbar', [
    'Controls/Controllers/SourceController',
    'tmpl!Controls/Toolbar/Toolbar',
    'tmpl!Controls/Toolbar/ToolbarItemTemplate',
-   'WS.Data/Collection/RecordSet',
    'WS.Data/Collection/Factory/RecordSet',
    'Controls/Utils/Toolbar',
    'css!Controls/Toolbar/Toolbar'
-], function(Control, SourceController, template, toolbarItemTemplate, RecordSet, recordSetFactory, tUtil) {
+], function(Control, SourceController, template, toolbarItemTemplate, recordSetFactory, tUtil) {
    'use strict';
 
    /**
@@ -85,7 +84,9 @@ define('Controls/Toolbar', [
       },
       _beforeUpdate: function(newOptions) {
          if (newOptions.source && newOptions.source !== this._options.source) {
-            return _private.loadItems(this, newOptions.source);
+            _private.loadItems(this, newOptions.source).addCallback(function() {
+               this._forceUpdate();
+            }.bind(this));
          }
          this._nodeProperty = newOptions.nodeProperty;
          this._parentProperty = newOptions.parentProperty;

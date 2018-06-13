@@ -38,6 +38,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/handlers',
             }.bind(this), this._container);
          },
          unlink: onButtonClick,
+         checkImageLoader: function(){
+            this.getParent()._checkImageLoader(this);
+         },
          image: function() {
             this.getParent()._openImagePanel(this);
          },

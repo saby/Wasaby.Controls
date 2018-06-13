@@ -77,12 +77,20 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   items: newOptions.items,
                   rootKey: newOptions.rootKey || null,
                   selectedKeys: newOptions.selectedKeys,
+                  displayProperty: newOptions.displayProperty,
                   keyProperty: newOptions.keyProperty,
                   itemTemplateProperty: newOptions.itemTemplateProperty,
                   nodeProperty: newOptions.nodeProperty,
-                  parentProperty: newOptions.parentProperty
+                  parentProperty: newOptions.parentProperty,
+                  emptyText: newOptions.emptyText
                });
                this._hasHierarchy = this._listModel.hasHierarchy();
+            }
+         },
+
+         _beforeUpdate: function(newOptions) {
+            if (newOptions.rootKey !== this._options.rootKey) {
+               this._listModel.setRootKey(newOptions.rootKey);
             }
          },
 
@@ -116,12 +124,17 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   this._notify('sendResult', [result]);
             }
          },
-         _itemClickHandler: function(event, item, flag) { //todo нужно обсудить
+         _itemClickHandler: function(event, item, pinClicked) { //todo нужно обсудить
             var result = {
                action: 'itemClick',
                event: event,
-               data: [item, flag]
+               data: [item, pinClicked]
             };
+            
+            // means that pin button was clicked
+            if (pinClicked) {
+               event.stopPropagation();
+            }
             this._notify('sendResult', [result]);
          },
          _footerClick: function(event) {

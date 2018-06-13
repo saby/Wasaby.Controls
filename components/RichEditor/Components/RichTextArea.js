@@ -75,6 +75,24 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
        */
       var DI_IMAGE_UPLOADER = 'ImageUploader';
 
+      /**
+       * Вызвать функцию асинхронно. Все агрументы после первого будут использованы как аргументы вызова. Возвращает обещание, разрешаемое результатом выполнения функции
+       * @private
+       * @param {function} func
+       * @return {Core/Deferred}
+       */
+      var _callAsync = function (func/*, args*/) {
+         var promise = new Deferred();
+         var args = Array.prototype.slice.call(arguments, 1);
+         if (BROWSER.isMobileIOS || BROWSER.isMobileSafari) {
+            promise.callback(func.apply(null, args));
+         }
+         else {
+            setTimeout(function () { promise.callback(func.apply(null, args)); }, 1);
+         }
+         return promise;
+      };
+
       var _getTrueIEVersion = function () {
          var version = cConstants.browser.IEVersion;
          // В cConstants.browser.IEVersion неправильно определяется MSIE 11
@@ -370,6 +388,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                });
                this._fillImages(false);
+               if (!this.isEnabled()) {
+                  this._decorateAsSVG(this._options.text);
+               }
             },
 
             /**
@@ -595,22 +616,31 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
              * @example
              * <pre>
              *     if (control.getText() == "Введите ФИО") {
-          *        control.setText("");
-          *     }
+             *        control.setText("");
+             *     }
              * </pre>
              * @see text
              */
             setText: function(text) {
-               text = this._sanitizeClasses(text, true);
+               text = text ? this._sanitizeClasses(text, true) : '';
                if (text !== this._curValue()) {
                   this._drawText(text);
                }
                this._setText(text);
             },
 
-            setActive: function(active) {
-               this._lastActive = active;
-               if (active && this._needFocusOnActivated() && this.isEnabled()) {
+            setActive: function (active) {
+               // Иногда, когда редактор помещён внуть некоторой FloatArea, случается так, что установка активности происходит во время анимации, когда эта родительская область "вылетает" в рабочсее поле. Чтобы установка активности не мешала анимации - будем делать её асинхронно
+               // 1175247680 https://online.sbis.ru/opendoc.html?guid=d02aee44-14e6-425c-9670-bf35f68714c7
+               _callAsync(this._setActive.bind(this), active);
+            },
+
+            _setActive: function (active) {
+               if (this.isDestroyed()) {
+                  return;
+               }
+               if (active && this.isEnabled() && this._needFocusOnActivated()) {
+                  this._lastActive = active;
                   this._performByReady(function() {
                      //Активность могла поменяться пока грузится tinymce.js
                      if (this._lastActive) {
@@ -622,6 +652,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         // 1174883097 https://online.sbis.ru/opendoc.html?guid=56ad4bd1-a74a-4694-98bf-8401938c144a
                         if (noRng && !this.isActive() && this.getText()) {
                            this.setCursorToTheEnd();
+                        }
+                        if (!this._sourceContainer.hasClass('ws-hidden')) {
+                           this.toggleContentSource(true);
                         }
                         if (cConstants.browser.isMobileAndroid) {
                            // на android устройствах не происходит подскролла нативного
@@ -639,6 +672,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                            this._notifyMobileInputFocus();
                         }
                      }
+                     this._lastActive = undefined;
                   }.bind(this));
                }
                else {
@@ -1652,12 +1686,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
             },
 
-            _setTrimmedText: function(text) {
-               this._setText(this._trimText(text));
+            _setTrimmedText: function (text) {
+               var trimmedText = this._trimText(text);
+               this._setText(trimmedText, trimmedText !== text);
             },
 
-            _setText: function(text) {
-               if (text !== this.getText()) {
+            _setText: function (text, forced) {
+               var isDifferent = text !== this.getText();
+               if (isDifferent) {
                   if (!this._isEmptyValue(text)) {
                      this._textChanged = true;
                   }
@@ -1668,8 +1704,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   this.clearMark();
                }
                //При нажатии enter передаётся trimmedText поэтому updateHeight text === this.getText() и updateHeight не зовётся
-               this._updateHeight();
-               this._togglePlaceholder(text);
+               if (isDifferent || forced) {
+                  this._updateHeight();
+                  this._togglePlaceholder(text);
+               }
             },
             _notifyTextChanged: function() {
                this._notifyOnPropertyChanged('text');
@@ -2517,6 +2555,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (needUnwrap && template != '2') {
                   $img.unwrap();
                }
+               var imageOptionsPanel =  this._imageOptionsPanel;
+               var canRecalc = true;
                switch (template) {
                   case '1':
                      $img.addClass('image-template-left');
@@ -2532,7 +2572,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         ' data-img-uuid="' + $img.attr('data-img-uuid') + '"' +
                         '></img>' +
                         '</p>';
-                     this._tinyEditor.dom.replace($(html)[0], (needUnwrap ? $parent : $img)[0],false);
+                     var fragment = $(html)[0];
+                     var editor = this._tinyEditor;
+                     editor.dom.split($parent[0], $img[0], fragment);
+                     var newPic = fragment.firstChild;
+                     editor.selection.select(newPic);
+                     imageOptionsPanel.hide();
+                     this._showImageOptionsPanel($(newPic));
+                     canRecalc = false;
                      break;
                   case '3':
                      $img.addClass('image-template-right');
@@ -2542,7 +2589,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                };
                // Вызвать recalcPosition напрямую во избежании ощутимых задержек
                // 49132 https://online.sbis.ru/opendoc.html?guid=f6ceccf6-2001-494d-90c1-d44a6255ad1e
-               this._imageOptionsPanel.recalcPosition();
+               if (canRecalc) {
+                  imageOptionsPanel.recalcPosition();
+               }
                this._updateTextByTiny();
             },
 
@@ -2990,6 +3039,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                return RichUtil.unDecorateLinks(text);
             },
 
+            //Заменяем якори на svg изображения
+            _decorateAsSVG: function(text) {
+               RichUtil.replaceAnchorsToSvg(text).addCallback(function (result) {
+                  this._dataReview.html(result);
+               }.bind(this));
+            },
+
             //метод показа плейсхолдера по значению//
             //TODO: ждать пока решится задача в самом tinyMCE  https://github.com/tinymce/tinymce/issues/2588
             _togglePlaceholder:function(value){
@@ -3081,6 +3137,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   // Убрать по мере переделки стороннего кода, используещего эти атрибуты.
                   // Для пролучения uuid правильно использовать метод getImageUuid
                   var style = (width ? 'width:' + width + ';' : '') + (height ? 'height:' + height + ';' : '');
+                  editor.once('selectionchange', function () {
+                     var node = editor.selection.getNode();
+                     // Если узел - элемент, контент которого начинается с символа - убрать его
+                     // 1175285366 https://online.sbis.ru/opendoc.html?guid=20b6f530-64e2-4324-9802-12d14299bf7d
+                     if (node.nodeType === 1) {
+                        var content = node.innerHTML;
+                        if (content.charCodeAt(0) === 65279/*&#xFEFF;*/) {
+                           node.innerHTML = content.substring(1);
+                        }
+                     }
+                  }.bind(this));
                   this.insertHtml(
                      (before || '') +
                      '<img' +
@@ -3204,6 +3271,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   // иначе проверку строкой выше не пройти. (И устанавливаем всегда строкой, даже если пришли null или undefined)
                   this._lastReview = text || '';
                   this._dataReview.html(this._prepareReviewContent(text));
+                  this._decorateAsSVG(text);
                }
             },
 

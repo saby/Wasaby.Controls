@@ -5,47 +5,59 @@ define('Controls/Filter/Button',
    [
       'Core/Control',
       'tmpl!Controls/Filter/Button/Button',
-      'Core/moduleStubs',
       'WS.Data/Chain',
       'WS.Data/Utils',
-      'Controls/Container/Filter/FilterContextField',
       'WS.Data/Type/descriptor',
+      'Core/Deferred',
       'css!Controls/Filter/Button/Button'
    ],
 
-   function(Control, template, moduleStubs, Chain, Utils, FilterContextField, types) {
+   function(Control, template, Chain, Utils, types, Deferred) {
 
       /**
+       * Component for data filtering.
+       * Uses property grid for editing filter fields.
        * @class Controls/Filter/Button
        * @extends Core/Control
-       * @mixin Controls/Filter/Button/interface/IFilterPanel
+       * @mixes Controls/interface/IFilterButton
        * @control
        * @public
+       * @author Герасимов Александр
        */
 
       'use strict';
 
       var _private = {
          getFilterButtonCompatible: function(self) {
-            return moduleStubs.require('Controls/Filter/Button/_FilterCompatible').addCallback(function(_FilterCompatible) {
-               if (!self._filterCompatible) {
-                  self._filterCompatible = new _FilterCompatible[0]({
-                     filterButton: self,
-                     filterButtonOptions: self._options
+            var result = new Deferred();
+            requirejs(['Controls/Popup/Compatible/Layer'], (function(Layer) {
+               Layer.load().addCallback(function(res) {
+                  requirejs(['Controls/Filter/Button/_FilterCompatible'], function(_FilterCompatible) {
+                     if (!self._filterCompatible) {
+                        self._filterCompatible = new _FilterCompatible({
+                           filterButton: self,
+                           filterButtonOptions: self._options
+                        });
+                     }
+                     result.callback(self._filterCompatible);
                   });
-               }
-               return self._filterCompatible;
-            });
+                  return res;
+               });
+            })
+            );
+            return result;
          },
 
          getText: function(items) {
             var textArr = [];
 
             Chain(items).each(function(item) {
-               var textValue = Utils.getItemPropertyValue(item, 'textValue');
+               if (Utils.getItemPropertyValue(item, 'value') !== Utils.getItemPropertyValue(item, 'resetValue')) {
+                  var textValue = Utils.getItemPropertyValue(item, 'textValue');
 
-               if (textValue) {
-                  textArr.push(textValue);
+                  if (textValue) {
+                     textArr.push(textValue);
+                  }
                }
             });
 
@@ -65,7 +77,7 @@ define('Controls/Filter/Button',
          _text: '',
          _historyId: null,
 
-         constructor: function(config) {
+         constructor: function() {
             FilterButton.superclass.constructor.apply(this, arguments);
             this._onFilterChanged = this._onFilterChanged.bind(this);
          },
@@ -89,6 +101,7 @@ define('Controls/Filter/Button',
          _clearClick: function() {
             _private.getFilterButtonCompatible(this).addCallback(function(panelOpener) {
                panelOpener.clearFilter();
+               this._text = '';
             });
          },
 

@@ -387,6 +387,8 @@ define('SBIS3.CONTROLS/DataGridView',
     * @cssModifier controls-DataGridView__hasSeparator Устанавливает отображение линий-разделителей между строками.
     * При использовании контролов {@link SBIS3.CONTROLS/CompositeView} или {@link SBIS3.CONTROLS/Tree/CompositeView} модификатор применяется только для режима отображения "Таблица".
     * @cssModifier controls-DataGridView__overflow-ellipsis Устанавливает обрезание троеточием текста во всех колонках таблицы.
+    * @cssModifier controls-DataGridView__tableLayout-auto Расширение колонок по содержимому.
+    * Когда установлен модификатор, списочный компонент работает по <a href="https://www.w3schools.com/cssref/pr_tab_table-layout.asp">спецификации</a>.
     * @cssModifier controls-ListView__padding-XS Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 0px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
     * @cssModifier controls-ListView__padding-S Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 12px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
     * @cssModifier controls-ListView__padding-M Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 16px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
@@ -1338,21 +1340,23 @@ define('SBIS3.CONTROLS/DataGridView',
       },
 
       _dragStart: function(e) {
-         constants.$body.addClass('ws-unSelectable');
-
+         if (this._isPartScrollVisible) {
+            constants.$body.addClass('ws-unSelectable');
+         }
+   
          /* Если скролл происходит перетаскиванием заголовков
-            то выставим соответствующие флаги */
+          то выставим соответствующие флаги */
          this._isHeaderScrolling =
             e.currentTarget !== this._thumb[0] && //Проверка, что перетаскиваем не ползунок, т.к. он тоже лежит в шапке
             this._thead && this._thead.find(e.currentTarget).length;
-
-         if(this._isHeaderScrolling) {
+   
+         if (this._isHeaderScrolling) {
             this.getContainer().addClass('controls-DataGridView__scrollingNow');
          }
          /* На touch устройствах надо перевести фокус(нативный) на ползунок,
-            т.к. сейчас взаимодействие происходит с ним. Иначе могут возникать проблемы,
-            когда курсор остаётся в поле ввода, или ховер останется на иконке другой */
-         if(this._touchSupport) {
+          т.к. сейчас взаимодействие происходит с ним. Иначе могут возникать проблемы,
+          когда курсор остаётся в поле ввода, или ховер останется на иконке другой */
+         if (this._touchSupport) {
             this._thumb.focus();
          }
          this._scrollingNow = true;

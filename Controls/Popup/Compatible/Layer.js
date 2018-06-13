@@ -1,7 +1,7 @@
 /**
  * Created by as.krasilnikov on 14.05.2018.
  */
-define('Controls/Popup/Compatible/Layer', ['Core/Deferred', 'Core/moduleStubs', 'Core/constants',  'cdn!jquery/3.3.1/jquery-min.js'], function(Deferred, moduleStubs, Constants) {
+define('Controls/Popup/Compatible/Layer', ['Core/Deferred'], function(Deferred) {
    'use strict';
 
    var loadDeferred;
@@ -21,43 +21,51 @@ define('Controls/Popup/Compatible/Layer', ['Core/Deferred', 'Core/moduleStubs', 
       'is!browser?WS.Data/ContextField/List'
    ];
 
+   function isNewEnvironment() {
+      return !!document.getElementsByTagName('html')[0].controlNodes;
+   }
+
    return {
       load: function(deps) {
+         if (!isNewEnvironment()) { //Для старого окружения не грузим слои совместимости
+            return (new Deferred()).callback();
+         }
          if (!loadDeferred) {
             loadDeferred = new Deferred();
+            requirejs(['Core/moduleStubs', 'Core/constants',  'cdn!jquery/3.3.1/jquery-min.js'], function(moduleStubs, Constants) {
+               if (window && window.$) {
+                  Constants.$win = $(window);
+                  Constants.$doc = $(document);
+                  Constants.$body = $('body');
+               }
 
-            if (window && window.$) {
-               Constants.$win = $(window);
-               Constants.$doc = $(document);
-               Constants.$body = $('body');
-            }
+               deps = (deps || []).concat(compatibleDeps);
 
-            deps = (deps || []).concat(compatibleDeps);
+               moduleStubs.require(deps).addCallback(function(result) {
+                  // var tempCompatVal = constants.compat;
+                  Constants.compat = true;
+                  loadDeferred.callback(result);
 
-            moduleStubs.require(deps).addCallback(function(result) {
-               // var tempCompatVal = constants.compat;
-               Constants.compat = true;
-               loadDeferred.callback(result);
-
-               // constants.compat = tempCompatVal; //TODO выпилить
-               (function($) {
-                  $.fn.wsControl = function() {
-                     var control = null,
-                        element;
-                     try {
-                        element = this[0];
-                        while (element) {
-                           if (element.wsControl) {
-                              control = element.wsControl;
-                              break;
+                  // constants.compat = tempCompatVal; //TODO выпилить
+                  (function($) {
+                     $.fn.wsControl = function() {
+                        var control = null,
+                           element;
+                        try {
+                           element = this[0];
+                           while (element) {
+                              if (element.wsControl) {
+                                 control = element.wsControl;
+                                 break;
+                              }
+                              element = element.parentNode;
                            }
-                           element = element.parentNode;
+                        } catch (e) {
                         }
-                     } catch (e) {
-                     }
-                     return control;
-                  };
-               })(jQuery);
+                        return control;
+                     };
+                  })(jQuery);
+               });
             });
          }
          return loadDeferred;

@@ -4,7 +4,7 @@
    </ws:if>
    <ws:else>
       <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex; itemData.goToNextColumn();">
-         <div attr:class="{{itemData.getCurrentColumn(itemData.isEditing).cellClasses}}"
+         <div attr:class="{{itemData.getCurrentColumn(itemData.isEditing).cellClasses}}{{!!itemData.isActive ? ' controls-GridView__item_active'}}"
               attr:style="{{itemData.ladderSupport ? itemData.getCurrentColumn().cellStyleForLadder}}">
             <ws:if data="{{itemData.multiSelectVisibility && itemData.columnIndex === 0}}">
                <ws:partial template="{{multiSelectTpl}}" multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" attr:class="controls-ListView__checkbox"/>
@@ -14,8 +14,13 @@
                            attr:class="{{itemData.getCurrentColumn().withLadder ? 'controls-Grid__row-cell__content_withLadder'}}"
                            contentData="{{itemData.getCurrentColumn()}}" />
             </ws:else>
-            <ws:if data="{{itemData.getLastColumnIndex() === itemData.columnIndex && itemData.itemActions  && itemData.itemActions.all && itemData.itemActions.showed.length}}">
-               <ws:partial template="{{itemActionsTemplate}}"  itemData="{{itemData}}"/>
+            <ws:if data="{{itemData.getLastColumnIndex() === itemData.columnIndex && itemData.itemActions  && itemData.itemActions.all && itemData.itemActions.all.length}}">
+               <ws:if data="{{itemData.isSwiped}}">
+                  <ws:partial template="{{swipeTemplate}}"  itemData="{{itemData}}" itemActionsTemplate="{{itemActionsTemplate}}"/>
+               </ws:if>
+               <ws:else >
+                  <ws:partial template="{{itemActionsTemplate}}"  itemData="{{itemData}}"/>
+               </ws:else>
             </ws:if>
          </div>
       </ws:for>

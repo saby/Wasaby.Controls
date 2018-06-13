@@ -1,14 +1,13 @@
 define('Controls/Popup/Manager',
    [
       'Core/Control',
-      'tmpl!Controls/Popup/Manager',
+      'tmpl!Controls/Popup/Manager/Manager',
       'Controls/Popup/Manager/ManagerController',
       'Core/helpers/random-helpers',
-      'Core/patchRequireJS',
       'WS.Data/Collection/List'
    ],
 
-   function(Control, template, ManagerController, Random, patchRequireJS, List) {
+   function(Control, template, ManagerController, Random, List) {
       'use strict';
 
       var _private = {
@@ -72,7 +71,7 @@ define('Controls/Popup/Manager',
          fireEventHandler: function(id, event) {
             var element = ManagerController.find(id);
             var args = Array.prototype.slice.call(arguments, 2);
-            if (element && element.popupOptions.eventHandlers && element.popupOptions.eventHandlers.hasOwnProperty(event)) {
+            if (element && element.popupOptions.eventHandlers && typeof element.popupOptions.eventHandlers[event] === 'function') {
                element.popupOptions.eventHandlers[event].apply(element.popupOptions, args);
                return true;
             }

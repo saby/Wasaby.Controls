@@ -141,7 +141,7 @@ define('SBIS3.CONTROLS/TextBox', [
              */
             selectOnClick: false,
             /**
-             * @cfg {String} Устанавливает текст подсказки внутри поля ввода.
+             * @cfg {Content} Устанавливает текст подсказки внутри поля ввода.
              * @remark
              * Данный текст отображается внутри поля ввода до момента получения фокуса.
              * Заменить текст подсказки, заданный опцией, можно при помощи метода {@link setPlaceholder}.
@@ -157,6 +157,7 @@ define('SBIS3.CONTROLS/TextBox', [
              * @see setPlaceholder
              * @see textTransform
              * @translatable
+             * @content
              */
             placeholder: '',
             /**
@@ -414,7 +415,7 @@ define('SBIS3.CONTROLS/TextBox', [
             // для случая, когда текст не умещается в поле ввода по ширине, показываем всплывающую подсказку с полным текстом
             if (scrollWidth > field[0].clientWidth) {
                this._container.attr('title', this._options.text);
-               field.attr('title', this._options.text === '' ? constants.browser.isIE || constants.browser.retailOffline ? '' : ' ' : this._options.text);
+               field.attr('title', this._options.text === '' ? constants.browser.isIE ? '' : ' ' : this._options.text);
             }
             else if (this._options.tooltip) {
                this.setTooltip(this._options.tooltip);
@@ -422,7 +423,7 @@ define('SBIS3.CONTROLS/TextBox', [
                 this._container.attr('title', '');
                //Ставлю пробел, чтобы скрыть браузерную подсказку "Заполните это поле". Если поставить пробел, то все браузеры,
                //кроме IE, не выводят всплывающую подсказку. Для IE ставлю пустой title, чтобы он не выводил всплывашку.
-               field.attr('title', constants.browser.isIE || constants.browser.retailOffline ? '' : ' ');
+               field.attr('title', constants.browser.isIE ? '' : ' ');
             }
             this._tooltipText = this._options.text;
          }

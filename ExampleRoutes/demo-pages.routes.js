@@ -6,10 +6,9 @@ module.exports = function(Component) {
       }, [innerControl]); 
    };
 
-   // Настройка роутинга для страничек с демо-примерами к WS4.	
    return {
-
-      // Демо-страница "Открытие всплывающего окна с шаблоном-наследником класса Lib/Control/CompoundControl/CompoundControl"
+      // Демо-пример: Демо-пример: открытие шаблона, совместимого с WS3, в программном окружении WS4.
+      // Для построения страницы используется компонент Controls/Application.
       '/demo-ws4-open-component-from-ws3': function(req, res) {
          requirejs('Examples/ws4open/Module');
          res.render('tmpl!Controls/Application/Route', {
@@ -18,11 +17,22 @@ module.exports = function(Component) {
           }, []);
       },
 
-      // Демо-страница "Открытие всплывающего окна с шаблоном-наследником класса Core/Control. Только для WS3"
+      // Демо-пример: cвайп при работе со списочным компонентом на тач-устройствах.
+      // Для построения страницы используется компонент Controls/Application.
+      '/demo-ws4-swipe': function(req, res) {
+        requirejs('Examples/Swipe/Module');
+        res.render('tmpl!Controls/Application/Route', {
+           application: 'Examples/Swipe/Module',
+           initDependencies: false
+         }, []);
+      },
+
+      // Демо-пример: открытие шаблона, совместимого с WS4, в программном окружении WS3.
+      // Для построения страницы используется шаблон VIEW.
       '/demo-ws3-open-component-from-ws4': function(req, res) {
          requirejs(['Examples/ws3open/Module'], function() {
             render(req, res, 'Examples/ws3open/Module');
          });
-     }
+      }
    }
 };

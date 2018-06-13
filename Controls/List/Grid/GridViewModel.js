@@ -379,6 +379,10 @@ define('Controls/List/Grid/GridViewModel', [
             this._model.setMarkedKey(key);
          },
 
+         getSwipeItem: function() {
+            return this._model.getSwipeItem();
+         },
+
          reset: function() {
             this._model.reset();
          },
@@ -498,6 +502,14 @@ define('Controls/List/Grid/GridViewModel', [
 
          _prepareDisplayItemForAdd: function(item) {
             return this._model._prepareDisplayItemForAdd(item);
+         },
+
+         getCurrentIndex: function() {
+            return this._model.getCurrentIndex();
+         },
+
+         getItemActions: function(item) {
+            return this._model.getItemActions(item);
          },
 
          getDragTargetPosition: function() {

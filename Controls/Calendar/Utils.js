@@ -1,9 +1,11 @@
 define('Controls/Calendar/Utils', [
-   'Core/constants'
-], function(constants) {
+   'Core/helpers/i18n/locales'
+], function(locales) {
       
    'use strict';
-      
+
+   var locale = locales.current;
+
    var Utils = {
 
       /**
@@ -11,8 +13,8 @@ define('Controls/Calendar/Utils', [
         * @returns {Array}
         */
       getWeekdaysCaptions: function() {
-         var days = constants.Date.daysSmall.slice(1);
-         days.push(constants.Date.daysSmall[0]);
+         var days = locale.config.daysSmall.slice(1);
+         days.push(locale.config.daysSmall[0]);
 
          return days.map(function(value, index) {
             return {caption: value, weekend: index === 5 || index === 6};

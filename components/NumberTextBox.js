@@ -283,7 +283,9 @@ define('SBIS3.CONTROLS/NumberTextBox', [
 
       setText: function(text){
          var newText = this._isEmptyValue(text) ? text : this._formatText(text);
-         this._setNumericValue(newText);
+         if (newText !== this._options.text) {
+            this._setNumericValue(newText);
+         }
          NumberTextBox.superclass.setText.call(this, newText);
          if(!this.isActive() && this._options.hideEmptyDecimals) {
             this._hideEmptyDecimals();

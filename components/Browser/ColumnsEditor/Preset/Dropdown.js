@@ -84,13 +84,19 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Dropdown',
 
             this.subscribeTo(this._dropdown, 'onSelectedItemsChange', function (evtName, selecteds, changes) {
                var selectedId = selecteds[0];
-               if (selectedId !== this._selectedPresetId) {
+               var isChangedCurrent = selectedId !== this._selectedPresetId;
+               if (isChangedCurrent) {
                   this._selectedPresetId = selectedId;
+               }
+               var isChangedLast = selectedId !== _lastSelecteds[namespace];
+               if (isChangedLast) {
                   _lastSelecteds[namespace] = selectedId;
-                  if (this._isDropdownReady) {
-                     this._notify('onChange', selectedId);
-                     _channel.notifyWithTarget('onChangeSelectedPreset', this, selectedId);
-                  }
+               }
+               if (isChangedCurrent && this._isDropdownReady) {
+                  this._notify('onChange', selectedId);
+               }
+               if (isChangedLast) {
+                  _channel.notifyWithTarget('onChangeSelectedPreset', this, selectedId);
                }
             }.bind(this));
 

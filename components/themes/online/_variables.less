@@ -236,8 +236,8 @@
 @border_Button_disabled:                  1px solid @default-disabled-color;
 @button-disabled-shadow:                  @box-shadow_Button;
 @background_Button_disabled:                      @background_Button;
-@background_Button-primary_disabled:      @background_Button;
-@background_Button-default_disabled:      @background_Button;
+@background_Button-primary_readOnly:      @background_Button;
+@background_Button-default_readOnly:      @background_Button;
 @color_Button-icon_disabled:              @default-disabled-color;
 
 
@@ -1601,7 +1601,7 @@
 @max-width-ColumnsEditor-Editing-Area__head-preset-editor: 316px;
 @padding-ColumnsEditor-Editing-Area__Preset-item: 0 110px 0 6px;
 @width-ColumnsEditor-Editing-Area__Preset-input: 222px;
-@padding-ColumnsEditor-Editing-Area__body: 12px 0;
+@margin-ColumnsEditor-Editing-Area__FixedList: 12px 0;
 @padding-ColumnsEditor-Editing-Area__FixedList: 4px;
 @color-ColumnsEditor-Editing-Area__FixedList-CheckBox__caption: @black-color !important;
 @left-ColumnsEditor-Editing-Area__view-item__itemCheckBox: 4px;
@@ -1611,6 +1611,7 @@
 @line-height-ColumnsEditor-Editing-Area__view-item-text: 24px;
 @color-ColumnsEditor-Editing-Area__view-item-text: #8991a9;
 @color-ColumnsEditor-Editing-Area__view-item-text__multiSelected: @black-color;
+@margin-ColumnsEditor-Editing-Area__SelectableList: 12px 0;
 
 //----------------//
 // ImportCustomizer //
@@ -1783,7 +1784,7 @@
 //  Popup   //
 //----------------//
 @controls-Popup-animate-duration:         0.2s;
-@controls-Popup-stack-shadow:             -6px 0px 8px -5px rgba(0, 0, 0, 0.4);
+@controls-Popup-stack-shadow:             -4px -8px 12px -4px rgba(0, 0, 0, 0.4);
 @controls-Popup-stack-shadow-padding:     5px;
 
 //-----------------//
@@ -1858,3 +1859,6 @@
 //  TinyMCE        //
 //----------------//
 @box-shadow_TinyMCE-images: 0px 0px 5px #587AB0;
+
+// HighChart
+@image_HighChart-loading-indicator: url('img/ajax-loader-indicator.gif');

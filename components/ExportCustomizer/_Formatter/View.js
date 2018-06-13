@@ -9,8 +9,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
    [
       'Core/Deferred',
       'Core/helpers/Function/debounce',
-      'Core/helpers/Object/isEqual',
       'SBIS3.CONTROLS/CompoundControl',
+      'SBIS3.CONTROLS/Utils/ObjectChange',
       'SBIS3.CONTROLS/WaitIndicator',
       'WS.Data/Collection/RecordSet',
       'WS.Data/Di',
@@ -18,7 +18,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
       'css!SBIS3.CONTROLS/ExportCustomizer/_Formatter/View'
    ],
 
-   function (Deferred, coreDebounce, cObjectIsEqual, CompoundControl, WaitIndicator, RecordSet, Di, dotTplFn) {
+   function (Deferred, coreDebounce, CompoundControl, objectChange, WaitIndicator, RecordSet, Di, dotTplFn) {
       'use strict';
 
       /**
@@ -86,9 +86,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                 */
                fileUuid: null,
                /**
-                * @cfg {object} Описание потребителя (обычно идентификатор пресета и его редактируемость)
+                * @cfg {string|number} Идентификатор потребителя (обычно пресета)
                 */
-               consumer: null
+               consumerId: null
             },
             // Объект, предоставляющий методы форматирования шаблона эксель-файла
             _exportFormatter: null,
@@ -100,6 +100,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             _previewSize: null,
             // Набор обещаний, ожидающих создания шаблона эксель-файла
             _creation: {},
+            // Набор образцов для клонирования
+            _patterns: {},
             // Ожидаемое открытие шаблона эксель-файла
             _opening: null
          },
@@ -159,12 +161,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             var fieldIds = options.fieldIds;
             if (fieldIds && fieldIds.length) {
                var method = useApp ? 'openApp' : 'open';
-               var consumer = options.consumer;
-               if (consumer && consumer.readonly) {
-                  this._opening = method;
-                  this.sendCommand('subviewChanged');
-               }
-               else {
+               this._opening = method;
+               var result = this.sendCommand('subviewChanged', 'open');
+               if (!(result && result.isComplete)) {
                   this._callFormatterMethod(method);
                }
             }
@@ -180,7 +179,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          _callFormatterMethod: function (method) {
             var options = this._options;
             var isCreate = method === 'create';
-            if (isCreate && this._creation[options.consumer ? options.consumer.id : '']) {
+            var isClone = method === 'clone';
+            var consumerId = options.consumerId || '';
+            if ((isCreate || isClone) && this._creation[consumerId]) {
                throw new Error('Already in creation');
             }
             var isOpen = method === 'open' || method === 'openApp';
@@ -188,25 +189,30 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                this._opening = null;
             }
             var args = [];
-            var useBoth = method === 'update' || isOpen;
-            if (method === 'delete' || useBoth) {
+            if (isClone) {
+               args.push(this._patterns[consumerId]);
+            }
+            var isUpdate = method === 'update';
+            if (isOpen || isUpdate || method === 'delete') {
                args.push(options.fileUuid);
             }
-            if (isCreate || useBoth) {
+            if (isCreate || isOpen || isUpdate) {
                var fieldIds = options.fieldIds;
                args.push(fieldIds || [], this._selectFields(options.allFields, fieldIds, function (v) { return v.title; }) || [], options.serviceParams);
             }
             var formatter = this._exportFormatter;
-            var promise = formatter[method].apply(formatter, args).addCallbacks(
+            var promise = formatter[isClone ? 'copy' : method].apply(formatter, args).addCallbacks(
                this._onFormatter.bind(this, method),
                function (err) { return err; }
             );
-            if (isCreate) {
-               var consumer = options.consumer;
-               var consumerId = consumer ? consumer.id : '';
+            if (isCreate || isClone) {
                this._creation[consumerId] = promise.createDependent().addBoth(function (consumerId) {
                   delete this._creation[consumerId];
+                  delete this._patterns[consumerId];
                }.bind(this, consumerId));
+            }
+            if (isCreate || isClone || isUpdate) {
+               this._waitIndicatorStart();
             }
             return promise;
          },
@@ -267,36 +273,64 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * @param {string} fileUuid Uuid шаблона форматирования эксель-файла
           */
          _onFormatter: function (method, fileUuid) {
-            if (method === 'create' && !!fileUuid) {
+            var isCreate = method === 'create' || method === 'clone';
+            if (isCreate) {
                this._options.fileUuid = fileUuid;
-               this.sendCommand('subviewChanged');
+            }
+            if (isCreate || method === 'open' || method === 'openApp') {
+               this.sendCommand('subviewChanged', isCreate ? method : 'openEnd');
+            }
+            if (method === 'open' || method === 'openApp') {
+               this._waitIndicatorStart();
             }
             this._updatePreview();
+         },
+
+         /**
+          * Запустить индикатор ожидания
+          *
+          * @protected
+          */
+         _waitIndicatorStart: function () {
+            this._updatePreviewClearStop();
+            var stopper = this._waitIndicatorStopper = new Deferred();
+            WaitIndicator.make({target:this._preview[0].parentNode, overlay:'dark', delay:0}, stopper);
+         },
+
+         /**
+          * Остановить индикатор ожидания
+          *
+          * @protected
+          */
+         _waitIndicatorEnd: function () {
+            var stopper = this._waitIndicatorStopper;
+            if (stopper) {
+               stopper.callback();
+               this._waitIndicatorStopper = null;
+            }
          },
 
          /**
           * Обновить изображение предпросмотра
           *
           * @protected
+          * @param {boolean} withClear Указывает очистить сразу от предыдущего изображения
           */
-         _updatePreview: function () {
+         _updatePreview: function (withClear) {
             var fieldIds = this._options.fieldIds;
-            if (fieldIds && fieldIds.length) {
-               this._updatePreviewStart();
-            }
-            else {
+            var has = !!(fieldIds && fieldIds.length);
+            if (!has || withClear) {
                var img = this._preview[0];
                img.src = '';
                img.title = '';
                this._preview.removeClass('ws-enabled').addClass('ws-disabled');
             }
+            if (has) {
+               this._updatePreviewStart();
+            }
          },
          _updatePreviewClearStop: function () {
-            var stopper = this._updatePreviewStopper;
-            if (stopper) {
-               stopper.callback();
-               this._updatePreviewStopper = null;
-            }
+            this._waitIndicatorEnd();
          },
          _updatePreviewStart: coreDebounce(function () {
             var size = this._previewSize;
@@ -304,13 +338,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                var previewContainer = this._preview.parent();
                this._previewSize = size = {width:previewContainer.width(), height:previewContainer.height()};
             }
-            this._updatePreviewClearStop();
-            var img = this._preview[0];
-            var stopper = this._updatePreviewStopper = new Deferred();
-            WaitIndicator.make({target:img.parentNode, delay:1000}, stopper);
+            this._waitIndicatorStart();
             var options = this._options;
             this._exportFormatter.getPreviewUrl(options.fileUuid, size.width, size.height).addCallbacks(
                function (url) {
+                  var img = this._preview[0];
                   img.onload = img.onerror = this._updatePreviewClearStop.bind(this);
                   img.src = url;
                   img.title = options.previewTitle;
@@ -325,40 +357,56 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           *
           * @public
           * @param {object} values Набор из нескольких значений, которые необходимо изменить
+          * @param {object} meta Дополнительная информация об изменении
           */
-         setValues: function (values) {
+         setValues: function (values, meta) {
             if (!values || typeof values !== 'object') {
                throw new Error('Object required');
             }
             var options = this._options;
-            var waited = {fieldIds:true, fileUuid:false, consumer:true};
-            var has = {};
-            for (var name in values) {
-               if (name in waited) {
-                  var value = values[name];
-                  if (!(value == null && options[name] == null) && !(waited[name] ? cObjectIsEqual(value, options[name]) : value === options[name])) {
-                     has[name] = true;
-                     options[name] = value;
+            var changes = objectChange(options, values, {fieldIds:true, fileUuid:false, consumerId:false});
+            if (changes) {
+               var fieldIds = options.fieldIds;
+               var hasFields = !!(fieldIds && fieldIds.length);
+               var method;
+               var consumerId = options.consumerId || '';
+               if (options.fileUuid) {
+                  if ('fieldIds' in changes && !('fileUuid' in changes) && hasFields) {
+                     method = 'update';
                   }
                }
-            }
-            if (has.fieldIds || has.fileUuid) {
-               var method = options.fileUuid ? 'update' : 'create';
-               var creating;
-               if (method === 'create') {
-                  var consumer = options.consumer;
-                  creating = this._creation[consumer ? consumer.id : ''];
+               else {
+                  if (hasFields) {
+                     var isClone = meta /*&& meta.source === 'presets'*/ && meta.reason === 'clone';
+                     method = isClone ? 'clone' : 'create';
+                     if (isClone) {
+                        this._patterns[consumerId] = meta.args[0];
+                     }
+                  }
                }
+               var creating = this._creation[consumerId];
                if (creating) {
-                  creating.addCallback(this._callFormatterMethods.bind(this, this._opening ? ['update', this._opening] : ['update']));
+                  if (method === 'create' || method === 'clone') {
+                     method = 'update';
+                  }
+               }
+               var methods = method ? [method] : [];
+               if (this._opening) {
+                  methods.push(this._opening);
+               }
+               if (methods.length) {
+                  if (creating) {
+                     creating.addCallback(this._callFormatterMethods.bind(this, methods));
+                  }
+                  else {
+                     this._callFormatterMethods(methods);
+                  }
                }
                else {
-                  this._callFormatterMethods(this._opening ? [method, this._opening] : [method]);
+                  this._updatePreview();
                }
-               var fieldIds = options.fieldIds;
-               var isAllow = !!(fieldIds && fieldIds.length);
-               this.setEnabled(isAllow);
-               this.setVisible(isAllow);
+               this.setEnabled(hasFields);
+               this.setVisible(hasFields);
             }
          },
 

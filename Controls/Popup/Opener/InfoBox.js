@@ -2,11 +2,9 @@ define('Controls/Popup/Opener/InfoBox',
    [
       'Core/core-merge',
       'Core/core-clone',
-      'tmpl!Controls/Popup/Opener/InfoBox/resources/template',
-      'Controls/Popup/Opener/BaseOpener',
-      'Controls/Popup/Opener/InfoBox/InfoBoxController'
+      'Controls/Popup/Opener/BaseOpener'
    ],
-   function(cMerge, cClone, template, Base, Strategy) {
+   function(cMerge, cClone, Base) {
       'use strict';
 
       /**
@@ -86,11 +84,17 @@ define('Controls/Popup/Opener/InfoBox',
                   float: cfg.float
                },
                className: 'controls-InfoBox__popup controls-InfoBox-style-' + cfg.style,
-               template: template
-            }, Strategy);
+               template: 'tmpl!Controls/Popup/Opener/InfoBox/resources/template'
+            }, 'Controls/Popup/Opener/InfoBox/InfoBoxController');
          }
 
       });
+
+      InfoBox.getDefaultOptions = function() {
+         return {
+            closeOnTargetScroll: true
+         };
+      };
 
       return InfoBox;
    }

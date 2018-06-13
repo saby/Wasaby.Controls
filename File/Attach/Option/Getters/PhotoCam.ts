@@ -22,5 +22,13 @@ class PhotoCam extends ResourceGetter {
     constructor (options?: any) {
         super (GETTER_LINK, GETTER_TYPE, options || {});
     }
+    /**
+     * @static
+     * @method
+     * @returns {String} Тип Getter'a
+     */
+    static getType(){
+       return GETTER_TYPE;
+    }
 }
 export = PhotoCam;

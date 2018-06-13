@@ -1,10 +1,9 @@
 define('Controls/Calendar/Controllers/RangeSelectionController', [
    'Core/Control',
    'Core/core-merge',
-   'WS.Data/Type/descriptor',
    'Controls/Calendar/interface/IRangeSelectable',
    'tmpl!Controls/Calendar/Controllers/RangeSelectionController'
-], function(BaseControl, coreMerge, types, IRangeSelectable, RangeSelectrionControllerTmpl) {
+], function(BaseControl, coreMerge, IRangeSelectable, RangeSelectrionControllerTmpl) {
    'use strict';
 
    var _private = {
@@ -175,8 +174,8 @@ define('Controls/Calendar/Controllers/RangeSelectionController', [
 
          this._state = options;
 
-         if (changed && _private.updateDisplayedRange(this)) {
-            this._notify('selectionChanged');
+         if (changed) {
+            _private.updateDisplayedRange(this);
          }
       },
 
@@ -301,7 +300,7 @@ define('Controls/Calendar/Controllers/RangeSelectionController', [
           * @name Controls/Calendar/Controllers/RangeSelectionController#content
           * @cfg {String} представление которым управлят контроллер
           */
-         content: undefined,
+         content: undefined
       }, IRangeSelectable.getDefaultOptions());
    };
 

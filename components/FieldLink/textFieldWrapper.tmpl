@@ -6,6 +6,7 @@
 	maxlength="{{maxLength ? maxLength}}"
 	required="true"
     title="{{tooltip ? tooltip : ' '}}"
+	autocorrect="off"
 />
 <ws:if data="{{ enabled && placeholder }}">
 	<ws:partial template="{{ compatiblePlaceholderTemplate }}" scope="{{...}}"/>

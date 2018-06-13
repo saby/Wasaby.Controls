@@ -1,10 +1,10 @@
 <div class="controls-ToolbarV_item controls-ToolbarV_item__styled"
-     title="{{item.title}}"
-     on:click="_onItemClick(item)">
+     title="{{item.title}}">
     <ws:if data="{{contentTemplate}}">
         <ws:partial
                 template="{{contentTemplate}}"
-                item="{{item}}" />
+                item="{{item}}"
+                size="{{size}}"/>
     </ws:if>
     <ws:else>
         <ws:if data="{{!!item.icon}}">
