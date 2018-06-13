@@ -75,24 +75,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
        */
       var DI_IMAGE_UPLOADER = 'ImageUploader';
 
-      /**
-       * Вызвать функцию асинхронно. Все агрументы после первого будут использованы как аргументы вызова. Возвращает обещание, разрешаемое результатом выполнения функции
-       * @private
-       * @param {function} func
-       * @return {Core/Deferred}
-       */
-      var _callAsync = function (func/*, args*/) {
-         var promise = new Deferred();
-         var args = Array.prototype.slice.call(arguments, 1);
-         if (BROWSER.isMobileIOS || BROWSER.isMobileSafari) {
-            promise.callback(func.apply(null, args));
-         }
-         else {
-            setTimeout(function () { promise.callback(func.apply(null, args)); }, 1);
-         }
-         return promise;
-      };
-
       var _getTrueIEVersion = function () {
          var version = cConstants.browser.IEVersion;
          // В cConstants.browser.IEVersion неправильно определяется MSIE 11
@@ -626,18 +608,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             this._setText(text);
          },
 
-         setActive: function (active) {
-            // Иногда, когда редактор помещён внуть некоторой FloatArea, случается так, что установка активности происходит во время анимации, когда эта родительская область "вылетает" в рабочсее поле. Чтобы установка активности не мешала анимации - будем делать её асинхронно
-            // 1175247680 https://online.sbis.ru/opendoc.html?guid=d02aee44-14e6-425c-9670-bf35f68714c7
-            _callAsync(this._setActive.bind(this), active);
-         },
-
-         _setActive: function (active) {
-            if (this.isDestroyed()) {
-               return;
-            }
-            if (active && this.isEnabled() && this._needFocusOnActivated()) {
-               this._lastActive = active;
+         setActive: function(active) {
+            this._lastActive = active;
+            if (active && this._needFocusOnActivated() && this.isEnabled()) {
                this._performByReady(function() {
                   //Активность могла поменяться пока грузится tinymce.js
                   if (this._lastActive) {
@@ -649,9 +622,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      // 1174883097 https://online.sbis.ru/opendoc.html?guid=56ad4bd1-a74a-4694-98bf-8401938c144a
                      if (noRng && !this.isActive() && this.getText()) {
                         this.setCursorToTheEnd();
-                     }
-                     if (!this._sourceContainer.hasClass('ws-hidden')) {
-                        this.toggleContentSource(true);
                      }
                      if (cConstants.browser.isMobileAndroid) {
                         // на android устройствах не происходит подскролла нативного
@@ -669,7 +639,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         this._notifyMobileInputFocus();
                      }
                   }
-                  this._lastActive = undefined;
                }.bind(this));
             }
             else {
