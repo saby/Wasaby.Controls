@@ -385,7 +385,7 @@ define('SBIS3.CONTROLS/DropdownList',
             this._publish('onClickMore');
             this._keysWeHandle[constants.key.esc] = 100;
             var self = this;
-            this._container.bind(this._isHoverMode() ? 'mouseenter' : 'click', function(event){
+            this._container.bind(this._isHoverMode() ? 'mouseenter' : 'click tap', function(event){
                if (self._getItemsProjection()) {
                   self.showPicker(event);
                }
@@ -816,7 +816,7 @@ define('SBIS3.CONTROLS/DropdownList',
                pickerContainer = this._getPickerContainer();
                this._pickerListContainer = $('.controls-DropdownList__list', pickerContainer);
                this._pickerCloseContainer = $('.controls-DropdownList__close-picker', pickerContainer);
-               this._pickerCloseContainer.on('click touchend', this.hidePicker.bind(this)); //ipad лагает и не ловит click
+               this._pickerCloseContainer.on('click tap', this.hidePicker.bind(this)); //ipad лагает и не ловит click
                this._pickerBodyContainer = $('.controls-DropdownList__body', pickerContainer);
                this._pickerHeadContainer = $('.controls-DropdownList__header', pickerContainer);
                this._pickerFooterContainer = $('.controls-DropdownList__footer', pickerContainer);
