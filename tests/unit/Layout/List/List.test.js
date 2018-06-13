@@ -198,6 +198,15 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/
             assert.deepEqual(listLayout._filter, {});
             assert.deepEqual(listLayout._source._$data, listSourceData);
    
+            /* change source */
+            var newSource = new Memory({
+               data: listSourceData,
+               idProperty: 'id'
+            });
+            listLayout._beforeUpdate({source: newSource}, context);
+            assert.equal(listLayout._searchController._options.source, newSource);
+            
+            
             /* Change context filter */
             listLayout._contextObj['filterLayoutField'] = {filter: {title: ''}};
             context.filterLayoutField.filter = { title: 'Sasha' };
