@@ -214,7 +214,10 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
          var oldItems;
          var length = currentItems.getCount();
 
+         /* После того как сформировали рекордсет с записями из истории,
+            дозаполним его данными из оригинального рекордеста, но не больше maxHistoryLength */
          oldItems = !self._options.maxHistoryLength ? self._options.oldItems : Chain(self._options.oldItems).filter(function(record) {
+            /* Запись уже может быть в истории */
             var addToCurrentItems = !currentItems.getRecordById(record.getId());
             
             if (addToCurrentItems) {
