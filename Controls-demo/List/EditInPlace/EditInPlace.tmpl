@@ -1,7 +1,7 @@
 <div class="editInPlaceDemo">
     <div>
         <h3>Simple list</h3>
-        <Controls:List
+        <Controls.List
                 class="test_list_1"
                 name="list"
                 source="{{_viewSource}}"
@@ -30,8 +30,8 @@
                     </ws:contentTemplate>
                 </ws:partial>
             </ws:itemTemplate>
-        </Controls:List>
-        <Controls:List:AddButton class="test_add_record_1" caption="Add record" on:click="addItem()"/>
+        </Controls.List>
+        <Controls.List.AddButton class="test_add_record_1" caption="Add record" on:click="addItem()"/>
         <div attr:style="padding: 15px; background-color: rgba(81,81,81,0.11); width: 150px;">
             <h3>Select options:</h3>
             <div>
@@ -44,7 +44,7 @@
     </div>
     <div>
         <h3>Adding doesn't work in this list</h3>
-        <Controls:List
+        <Controls.List
                 class="test_list_2"
                 name="list2"
                 source="{{_viewSource2}}"
@@ -69,12 +69,12 @@
                     </ws:contentTemplate>
                 </ws:partial>
             </ws:itemTemplate>
-        </Controls:List>
-        <Controls:List:AddButton class="test_add_record_2" caption="Add record" on:click="list2.addItem()"/>
+        </Controls.List>
+        <Controls.List.AddButton class="test_add_record_2" caption="Add record" on:click="list2.addItem()"/>
     </div>
     <div>
         <h3>Editing starts before mounting to DOM</h3>
-        <Controls:List
+        <Controls.List
                 class="test_list_4"
                 name="list4"
                 source="{{_viewSource4}}"
@@ -98,11 +98,11 @@
                     </ws:contentTemplate>
                 </ws:partial>
             </ws:itemTemplate>
-        </Controls:List>
+        </Controls.List>
     </div>
     <div>
         <h3>Adding starts before mounting to DOM</h3>
-        <Controls:List
+        <Controls.List
                 class="test_list_5"
                 name="list5"
                 source="{{_viewSource5}}"
@@ -126,6 +126,6 @@
                     </ws:contentTemplate>
                 </ws:partial>
             </ws:itemTemplate>
-        </Controls:List>
+        </Controls.List>
     </div>
 </div>

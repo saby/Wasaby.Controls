@@ -2,7 +2,7 @@
 <div class="controls-ImportCustomizer-Provider-View">
    <div class="controls-ImportCustomizer-Provider-View__line-1">
       {[НастройщикИмпорта@@Раздел содержится]}
-      <SBIS3.CONTROLS:DropdownList
+      <SBIS3.CONTROLS.DropdownList
          name="controls-ImportCustomizer-Provider-View__parser"
          className="controls-ImportCustomizer-Provider-View__parser"
          multiselect="{{false}}"
@@ -16,7 +16,7 @@
    </div>
    <div class="controls-ImportCustomizer-Provider-View__line-2">
       {[НастройщикИмпорта@@Разбор начинать с]}
-      <SBIS3.CONTROLS:NumberTextBox
+      <SBIS3.CONTROLS.NumberTextBox
          name="controls-ImportCustomizer-Provider-View__firstLine"
          className="controls-ImportCustomizer-Provider-View__firstLine"
          text="{{'firstLine'|mutable}}"
@@ -26,7 +26,7 @@
          tooltip="{[НастройщикИмпорта@@Номер строки]}"
       />
       {[НастройщикИмпорта@@строки и учитывать символы-разделители]}
-      <SBIS3.CONTROLS:TextBox
+      <SBIS3.CONTROLS.TextBox
          name="controls-ImportCustomizer-Provider-View__separator"
          className="controls-ImportCustomizer-Provider-View__separator"
          text="{{'separator'|mutable }}"
