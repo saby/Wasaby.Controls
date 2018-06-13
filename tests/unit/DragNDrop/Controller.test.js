@@ -52,9 +52,10 @@ define([
          });
 
          controller._notify = function(eventName, args) {
-            if (eventName !== 'register' && eventName !== 'unregister') {
-               events.push(eventName);
+            if (eventName === 'register' || eventName === 'unregister') {
+               eventName = eventName + args[0];
             }
+            events.push(eventName);
             if (eventName === '_documentDragStart') {
                this._documentDragStart();
             }
@@ -74,8 +75,15 @@ define([
          it('dragStart', function() {
             controller.startDragNDrop(entity, startEvent);
             assert.equal(startEvent.nativeEvent, controller._startEvent);
+            assert.equal(events.join(', '), 'registermousemove, registertouchmove, registermouseup, registertouchend');
+         });
+         it('mouseMove without start dragMove', function() {
             controller._onMouseMove(createSyntheticEvent('mousemove', 20, 10));
             assert.equal(events.join(', '), '');
+            assert.isFalse(controller._documentDragging);
+            assert.isFalse(controller._insideDragging);
+         });
+         it('start dragMove', function() {
             controller._onMouseMove(createSyntheticEvent('mousemove', 25, 10));
             assert.equal(events.join(', '), '_documentDragStart, dragStart, documentDragStart, dragMove, _updateDragAvatar');
             assert.isTrue(controller._documentDragging);
@@ -99,7 +107,7 @@ define([
          });
          it('dragEnd', function() {
             controller._onMouseUp(createSyntheticEvent('mouseup', 50, 45));
-            assert.equal(events.join(', '), '_documentDragEnd, dragEnd, documentDragEnd');
+            assert.equal(events.join(', '), '_documentDragEnd, dragEnd, documentDragEnd, unregistermousemove, unregistertouchmove, unregistermouseup, unregistertouchend');
             assert.isFalse(controller._documentDragging);
             assert.isFalse(controller._insideDragging);
             assert.isFalse(!!controller._startEvent);
