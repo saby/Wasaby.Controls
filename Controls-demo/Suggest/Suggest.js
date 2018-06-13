@@ -82,6 +82,8 @@ define('Controls-demo/Suggest/Suggest', [
       _suggest3Value: '',
       _suggest4Value: '',
       _tabsSelectedKey: 0,
+      _suggestState: false,
+      _suggestState1:false,
       
       constructor: function() {
          VDomSuggest.superclass.constructor.apply(this, arguments);

@@ -33,11 +33,11 @@ define('Controls/Popup/Opener/Sticky/StickyController',
                sizes: sizes
             };
 
-            cfg.position = StickyStrategy.getPosition(popupCfg, TargetCoords.get(cfg.popupOptions.target ? cfg.popupOptions.target : document.body));
+            cfg.position = StickyStrategy.getPosition(popupCfg, _private._getTargetCoords(cfg, sizes));
 
             // Удаляем предыдущие классы характеризующие направление и добавляем новые
             if (cfg.popupOptions.className) {
-               cfg.popupOptions.className = cfg.popupOptions.className.replace(/controls-Popup-corner\S*|controls-Popup-align\S*/g, '').trim();
+               cfg.popupOptions.className = cfg.popupOptions.className.replace(/controls-Popup-corner\S*|controls-Popup-align\S*|controls-Sticky__reset-margins/g, '').trim();
                cfg.popupOptions.className += ' ' + _private.getOrientationClasses(popupCfg);
             } else {
                cfg.popupOptions.className = _private.getOrientationClasses(popupCfg);
@@ -49,7 +49,35 @@ define('Controls/Popup/Opener/Sticky/StickyController',
             className += ' controls-Popup-corner-horizontal-' + cfg.corner.horizontal;
             className += ' controls-Popup-align-horizontal-' + cfg.align.horizontal.side;
             className += ' controls-Popup-align-vertical-' + cfg.align.vertical.side;
+            className += ' controls-Sticky__reset-margins';
             return className;
+         },
+         _getTargetCoords: function(cfg, sizes) {
+            if (cfg.popupOptions.nativeEvent) {
+               var top = cfg.popupOptions.nativeEvent.clientY;
+               var left = cfg.popupOptions.nativeEvent.clientX;
+               var positionCfg = {
+                  verticalAlign: {
+                     side: 'bottom'
+                  },
+                  horizontalAlign: {
+                     side: 'right'
+                  }
+               };
+               cMerge(cfg.popupOptions, positionCfg);
+               sizes.margins = {top: 0, left: 0};
+               return {
+                  width: 1,
+                  height: 1,
+                  top: top,
+                  left: left,
+                  bottom: document.body.clientHeight - top,
+                  right: document.body.clientWidth - left,
+                  topScroll: 0,
+                  leftScroll: 0
+               };
+            }
+            return TargetCoords.get(cfg.popupOptions.target ? cfg.popupOptions.target : document.body);
          }
       };
 
@@ -66,7 +94,9 @@ define('Controls/Popup/Opener/Sticky/StickyController',
          },
 
          elementUpdated: function(cfg, container) {
+            container.classList.remove('controls-Sticky__reset-margins'); //Снимем класс, чтобы взять новое значение отступов
             this.prepareConfig(cfg, container);
+            container.classList.add('controls-Sticky__reset-margins'); //После замеров стилей возвращаем
          },
          prepareConfig: function(cfg, container) {
             var sizes = this._getPopupSizes(cfg, container);

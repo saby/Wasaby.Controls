@@ -196,6 +196,17 @@
 	}
 }
 
+/* Приходится делать такой селектор, т.к. для ссылок поля связи (FieldLink_Link) в панели фильтра должен быть другой цвет, и он сделан через селектор панели фильтров,
+   но только если они не лежать внутри поля связи. На VDOM решаем проблему по другому, кто кладёт ссылку, должен сам ей установить цвет. */
+.controls__filterButton__picker .controls-FieldLink .controls-FieldLink__Link.ws-enabled {
+	color:@color_FieldLink-Link_enabled;
+	text-decoration: underline;
+
+	&.ws-enabled:hover {
+		color: @color_FieldLink-Link_enabled_hover;
+	}
+}
+
 .ws-is-desktop-platform {
 	.controls-Link_state-filter:hover {
 		color: @color_filterButton_area_header_link_hover;

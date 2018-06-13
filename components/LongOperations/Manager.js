@@ -18,7 +18,7 @@ define('SBIS3.CONTROLS/LongOperations/Manager',
       'SBIS3.CONTROLS/LongOperations/Const',
       'SBIS3.CONTROLS/LongOperations/TabKey',
       'SBIS3.CONTROLS/LongOperations/Tools/Postloader',
-      'SBIS3.CONTROLS/LongOperations/Tools/ProtectedScope'
+      'SBIS3.CONTROLS/Utils/ProtectedScope'
    ],
 
    function (CoreInstance, EventBus, TabMessage, LongOperationsConst, TabKey, Postloader, ProtectedScope) {

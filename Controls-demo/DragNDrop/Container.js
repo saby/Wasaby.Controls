@@ -6,7 +6,11 @@ define('Controls-demo/DragNDrop/Container', [
    'use strict';
 
    var ModuleClass = BaseControl.extend({
-      _template: template
+      _template: template,
+      _hasList: true,
+      _hasGrid: false,
+      _hasTree: false,
+      _hasNotes: false
    });
    return ModuleClass;
 });

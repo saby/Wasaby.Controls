@@ -74,13 +74,13 @@ type Options = {
  *   });
  *
  *   self.getChildControlByName("fsBtn").subscribe("onActivated", function(){
- *      attach.choose("FileSystem");
+ *      attach.choose(FileSystem.getType());
  *   });
  *   self.getChildControlByName("clipboardBtn").subscribe("onActivated", function(){
- *      attach.choose("ClipboardGetter");
+ *      attach.choose(ClipboardGetter.getType());
  *   });
  *   self.getChildControlByName("scanBtn").subscribe("onActivated", function(){
- *      attach.choose("ScannerGetter");
+ *      attach.choose(ScannerGetter.getType());
  *   });
  *   self.getChildControlByName("uploadBtn").subscribe("onActivated", function(){
  *      attach.upload({
