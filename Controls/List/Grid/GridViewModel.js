@@ -420,7 +420,7 @@ define('Controls/List/Grid/GridViewModel', [
             current.getLastColumnIndex = function() {
                return current.columns.length - 1;
             };
-            current.getCurrentColumn = function(isEditing) {
+            current.getCurrentColumn = function() {
                var
                   currentColumn = {
                      item: current.item,
@@ -433,7 +433,7 @@ define('Controls/List/Grid/GridViewModel', [
                      isEditing: current.isEditing
                   };
                currentColumn.columnIndex = current.columnIndex;
-               currentColumn.cellClasses = _private.getItemColumnCellClasses(current, isEditing);
+               currentColumn.cellClasses = _private.getItemColumnCellClasses(current, current.isEditing);
                currentColumn.column = current.columns[current.columnIndex];
                currentColumn.template = currentColumn.column.template ? currentColumn.column.template : self._columnTemplate;
                if (current.ladderSupport) {
