@@ -36,13 +36,11 @@ define('Controls/Container/Dropdown',
          },
 
          updateSelectedItems: function(instance, selectedKeys, keyProperty) {
-            if (selectedKeys) {
-               Chain(instance._items).each(function(item) {
-                  if (selectedKeys.indexOf(item.get(keyProperty || instance._options.keyProperty)) > -1) {
-                     instance._selectedItems.push(item);
-                  }
-               });
-            }
+            Chain(instance._items).each(function(item) {
+               if (selectedKeys.indexOf(item.get(keyProperty)) > -1) {
+                  instance._selectedItems.push(item);
+               }
+            });
          },
 
          onResult: function(result) {
@@ -110,6 +108,13 @@ define('Controls/Container/Dropdown',
             this._children.DropdownOpener.open(config, this);
          }
       });
+
+      Dropdown.getDefaultOptions = function getDefaultOptions() {
+         return {
+            selectedKeys: []
+         };
+      };
+
 
       return Dropdown;
    });
