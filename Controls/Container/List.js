@@ -44,12 +44,16 @@ define('Controls/Container/List',
             self._options = options;
             self._source = options.source;
             self._filter = options.filter;
+            self._navigation = options.navigation;
          },
          
          updateSource: function(self, data) {
             /* TODO will be a cached source */
+            self._navigation = null;
+            self._filter = {};
             self._source = new Memory({
-               data: data.getRawData()
+               data: data.getRawData(),
+               adapter: self._options.source.getAdapter()
             });
          },
          
@@ -70,6 +74,7 @@ define('Controls/Container/List',
             }
             self._searchMode = false;
             self._source = self._options.source;
+            self._navigation = self._options.navigation;
             self._forceUpdate();
          },
          
