@@ -23,7 +23,7 @@ define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
             return minWidth;
          }
 
-         return maxPanelWidth; //Возвращаем допустимую ширину
+         return maxPanelWidthWithOffset; //Возвращаем допустимую ширину
       }
    };
 
