@@ -368,26 +368,28 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             if (changes) {
                var fieldIds = options.fieldIds;
                var hasFields = !!(fieldIds && fieldIds.length);
-               var method;
                var consumerId = options.consumerId || '';
+               var creating = this._creation[consumerId];
+               var methods = [];
                if (options.fileUuid) {
                   if ('fieldIds' in changes && !('fileUuid' in changes) && hasFields) {
-                     method = 'update';
+                     methods.push('update');
                   }
                }
                else {
                   if (hasFields) {
-                     var isClone = meta /*&& meta.source === 'presets'*/ && meta.reason === 'clone';
-                     method = isClone ? {method:'clone', args:meta.args[0]} : 'create';
+                     if (!creating) {
+                        var isClone = meta /*&& meta.source === 'presets'*/ && meta.reason === 'clone';
+                        methods.push(isClone ? {method:'clone', args:meta.args[0]} : 'create');
+                        if (isClone && 'fieldIds' in changes) {
+                           methods.push('update');
+                        }
+                     }
+                     else {
+                        methods.push('update');
+                     }
                   }
                }
-               var creating = this._creation[consumerId];
-               if (creating) {
-                  if (method === 'create' || method === 'clone') {
-                     method = 'update';
-                  }
-               }
-               var methods = method ? [method] : [];
                if (this._opening) {
                   methods.push(this._opening);
                }
