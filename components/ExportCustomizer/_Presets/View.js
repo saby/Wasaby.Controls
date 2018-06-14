@@ -348,14 +348,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             listView.setSelectedKey(this._options.selectedId);
             switch (action) {
                case 'clone':
-                  this._clonePreset(id, listView);
+                  this._clonePreset(id);
                   this._startEditingMode(listView);
                   break;
                case 'edit':
                   this._editPreset(id, listView);
                   break;
                case 'delete':
-                  this._deletePreset(id, listView)
+                  this._deletePreset(id)
                      .addCallback(_ifSuccess(this._updateListView.bind(this, listView)));
                   break;
             }
@@ -464,12 +464,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                return this._saveCustoms().addCallback(function (/*isSuccess*/) {
                   //if (isSuccess) {
                      var fileUuid = prevPreset.fileUuid;
-                     if (fileUuid) {
-                        this.sendCommand('subviewChanged', 'delete', fileUuid);
-                     }
                      if (this._options.selectedId === id) {
                         var preset = customs.length ? customs[index < customs.length ? index : index - 1] : null;
                         this._selectPreset(preset);
+                     }
+                     if (fileUuid) {
+                        this.sendCommand('subviewChanged', 'delete', fileUuid);
                      }
                   //}
                   return true/*isSuccess*/;
@@ -735,23 +735,26 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             }
             var changes = objectChange(this, values, {fieldIds:{target:'_fieldIds', asObject:true}, fileUuid:{target:'_fileUuid'}});
             if (!this._isEditMode) {
-               var needStartEdit;
+               var isFieldsChanged;
+               var isFormatterOpened;
                if (meta.source === 'columnBinder') {
-                  needStartEdit = changes && 'fieldIds' in changes;
+                  isFieldsChanged = changes && 'fieldIds' in changes;
                }
                else
                if (meta.source === 'formatter') {
-                  needStartEdit = meta.reason === 'open';
+                  isFormatterOpened = meta.reason === 'open';
                }
-               if (needStartEdit) {
+               if (isFieldsChanged || isFormatterOpened) {
                   var result;
                   var options = this._options;
                   var selectedId = options.selectedId;
                   if (selectedId) {
                      var preset = this._findPresetById(selectedId);
                      if (preset && !preset.isStorable) {
-                        this._clonePreset(preset.id, {fieldIds:options.fieldIds});
-                        result = {isComplete:true};
+                        this._clonePreset(preset.id, isFieldsChanged ? {fieldIds:this._fieldIds} : undefined);
+                        if (isFormatterOpened) {
+                           result = {isComplete:true};
+                        }
                      }
                   }
                   this._startEditingMode();
