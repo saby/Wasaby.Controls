@@ -385,11 +385,9 @@ define('SBIS3.CONTROLS/DropdownList',
             this._publish('onClickMore');
             this._keysWeHandle[constants.key.esc] = 100;
             var self = this;
-            this._container.bind(this._isHoverMode() ? 'mouseenter' : 'click tap', function(event){
-               if (self._getItemsProjection()) {
-                  self.showPicker(event);
-               }
-            });
+            if (this._isHoverMode()) {
+               this._container.bind('mouseenter', self.showPicker.bind(self)); //по mouseenter остался только langSelector
+            }
             if (this._container.hasClass('controls-DropdownList__withoutCross')){
                this._options.pickerClassName += ' controls-DropdownList__withoutCross';
             }
@@ -398,6 +396,11 @@ define('SBIS3.CONTROLS/DropdownList',
             }
             this._setHeadVariables();
             this._container.bind('mouseenter' , this._showInfobox.bind(this));
+         },
+         _onClickHandler: function(event) { //Использую механизм checkClickByTap
+            if (this._getItemsProjection()) {
+               this.showPicker(event);
+            }
          },
          _modifyOptions: function() {
             var cfg = DropdownList.superclass._modifyOptions.apply(this, arguments);
