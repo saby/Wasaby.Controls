@@ -433,7 +433,7 @@ define('Controls/List/Grid/GridViewModel', [
                      isEditing: current.isEditing
                   };
                currentColumn.columnIndex = current.columnIndex;
-               currentColumn.cellClasses = _private.getItemColumnCellClasses(current, current.isEditing);
+               currentColumn.cellClasses = _private.getItemColumnCellClasses(current);
                currentColumn.column = current.columns[current.columnIndex];
                currentColumn.template = currentColumn.column.template ? currentColumn.column.template : self._columnTemplate;
                if (current.ladderSupport) {
