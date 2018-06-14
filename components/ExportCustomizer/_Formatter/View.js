@@ -275,6 +275,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          _onFormatter: function (method, result) {
             var isCreate = method === 'create' || method === 'clone';
             var isOpen = method === 'open' || method === 'openApp';
+            var isDelete = method === 'delete';
             if (isCreate) {
                this._options.fileUuid = result;
             }
@@ -288,7 +289,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                // TODO: Пока методы open и openApp в PrintingTemplates/ExportFormatter/Excel не умеют правильно возвращать логическое значение, показывающее, что пользователь изменил шаблон - всегда считаем, что шаблон изменён. Убрать это после исправления
                result = true;
             }
-            if (!isOpen || result) {
+            if (!isDelete && !(isOpen && !result)) {
                this._updatePreview();
             }
          },
@@ -414,10 +415,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                this.setEnabled(hasFields);
                this.setVisible(hasFields);
             }
-            else {
-               if (meta /*&& meta.source === 'presets'*/ && meta.reason === 'delete') {
-                  this._callFormatterMethod('delete', meta.args[0]);
-               }
+            if (meta /*&& meta.source === 'presets'*/ && meta.reason === 'delete') {
+               this._callFormatterMethod('delete', meta.args[0]);
             }
          },
 

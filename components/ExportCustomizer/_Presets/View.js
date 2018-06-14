@@ -203,18 +203,20 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                this.subscribeTo(editor, 'onCancel', function (evtName) {
                   var presetInfo = this._findPresetById(options.selectedId, true);
                   if (presetInfo) {
-                     if (presetInfo.preset.isUnreal) {
+                     var preset = presetInfo.preset;
+                     if (preset.isUnreal) {
                         this._customs.splice(presetInfo.index, 1);
                         var previousId = this._previousId;
                         var previous = previousId ? this._findPresetById(previousId) : null;
                         this._previousId = null;
-                        this._selectPreset(previous || this._getFirstPreset(options));
+                        var fileUuid = /*preset.fileUuid ||*/ this._fileUuid;
+                        this._selectPreset(previous || this._getFirstPreset(options), false, fileUuid ? ['delete', fileUuid] : undefined);
                         if (!previous) {
                            this._updateSelector();
                         }
                      }
                      else {
-                        this._selectPreset(presetInfo.preset);
+                        this._selectPreset(preset);
                      }
                   }
                   this._endEditingMode();
@@ -719,7 +721,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * return {Core/Deferred}
           */
          save: function () {
-            return /*this._storage && this._isEditMode ? this._saveSelectedPreset() :*/ Deferred.success(null);
+            return Deferred.success(null);
          },
 
          /**
