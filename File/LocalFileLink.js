@@ -27,6 +27,7 @@ define("File/LocalFileLink", ["require", "exports", "tslib", "File/ResourceAbstr
         function LocalFileLink(fileLink, meta, fileInfo) {
             var _this = _super.call(this) || this;
             _this.fileLink = fileLink;
+            _this._meta = meta;
             _this._fileInfo = fileInfo || {};
             if (!_this._fileInfo.name) {
                 /*

@@ -33,6 +33,7 @@ class LocalFileLink extends ResourceAbstract {
      */
     constructor(private fileLink: string, meta?: any, fileInfo?: Partial<FileInfo>) {
         super();
+        this._meta = meta;
         this._fileInfo = fileInfo || {};
         if (!this._fileInfo.name) {
             /*
