@@ -118,17 +118,19 @@
 .controls-Grid__row-cell_halign_center {
    text-align: center;
 }
-.ws-is-no-touch .controls-Grid__row:hover .controls-Grid__row-cell-background-hover {
-   background-color: @background-color_Grid-row_hover;
+.ws-is-no-touch {
+   .controls-Grid__row:hover .controls-Grid__row-cell-background-hover {
+      background-color: @background-color_Grid-row_hover;
+   }
+   .controls-Grid__row:hover .controls-itemActionsV {
+      display: inline-block;
+   }
 }
 .controls-Grid__row-cell-background-hover-editing {
    background-color: @controls-editInPlace-editing-item-bg;
    >.controls-itemActionsV {
       display: inline-block;
    }
-}
-.controls-Grid__row:hover .controls-itemActionsV {
-   display: inline-block;
 }
 .controls-Grid__row-cell_rowSpacing_default {
    padding-top: (@spacing_Grid-row_default / 2) + @height-Grid-row-separator;
