@@ -1719,8 +1719,12 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                   // Пробегаем также по родителям узла, в который проваливаемся вплоть до currentRoot и таким образом запоминаем исчерпывающий путь
                   // https://online.sbis.ru/opendoc.html?guid=fdfc17bd-043d-45d8-8c77-29ab5547205a
                   var
-                     nextParent = this.getItems().getRecordById(newRootParent).get(this._options.parentProperty);
-                  while (nextParent !== curRoot) {
+                     nextParent = this.getItems().getRecordById(newRootParent).get(this._options.parentProperty),
+                     root = this.getRoot();
+                  if (typeof root === 'undefined') {
+                     root = null;
+                  }
+                  while (nextParent !== curRoot && nextParent !== root) {
                      this._hierPages[nextParent] = this.getItems().getRecordById(newRootParent).get(this._options.navigation.config.field);
                      newRootParent = nextParent;
                      nextParent = this.getItems().getRecordById(newRootParent).get(this._options.parentProperty);
