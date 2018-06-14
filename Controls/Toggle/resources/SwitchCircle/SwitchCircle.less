@@ -19,15 +19,18 @@
 }
 
 .ws-is-no-touch {
-   .controls-SwitchCircle__svg_size:hover {
+   .controls-SwitchCircle__svg:hover {
       .controls-SwitchCircle__borderCircle_enabled {
          fill: @fill_RadioGroup_borderCircle_enabled_hovered;
       }
    }
 }
 
-.controls-SwitchCircle__svg_size {
+.controls-SwitchCircle__svg {
    width: @width_RadioItem_svg;
    height: @height_RadioItem_svg;
    display: inline-block;
+   //в ie особая обработка кликов по svg: чтобы клик отработал, нужно соблюсти много условий
+   // подробнее тут: https://stackoverflow.com/questions/40984532/svg-click-event-not-working или тут https://www.w3.org/TR/SVG/interact.html#PointerEventsProperty
+   pointer-events: none;
 }

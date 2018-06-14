@@ -180,6 +180,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             var editor = this._editor;
             if (editor) {
                var options = this._options;
+               this.subscribeTo(editor, 'onPropertyChanged', function (evtName, property) {
+                  if (property === 'text') {
+                     editor.clearMark();
+                  }
+               });
+
                this.subscribeTo(editor, 'onApply', function (evtName) {
                   var preset = this._findPresetById(options.selectedId);
                   preset.title = editor.getText();
@@ -406,12 +412,18 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           *
           * @protected
           * @param {string|number} id Идентификатор пресета
+          * @param {object} changes Информация об изменениях
           */
-         _clonePreset: function (id) {
+         _clonePreset: function (id, changes) {
             var presetInfo = this._findPresetById(id, true);
             if (presetInfo) {
                var pattern = presetInfo.preset;
                var preset = this._createPreset(pattern);
+               if (changes) {
+                  for (var property in changes) {
+                     preset[property] = changes[property];
+                  }
+               }
                this._customs.splice(presetInfo.isStatic ? 0 : presetInfo.index + 1, 0, preset);
                this._selectPreset(preset, true, ['clone', pattern.fileUuid]);
             }
@@ -509,16 +521,24 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   var container = editor._cntrlPanel;
                   container.find('.controls-EditAtPlace__okButton').attr('title', rk('Сохранить шаблон', 'НастройщикЭкспорта'));
                   container.find('.controls-EditAtPlace__cancel').attr('title', rk('Отменить изменения', 'НастройщикЭкспорта'));
-                  var titles = []; options._items.each(function (v) { if (v.getId() !== preset.id) { titles.push(v.get('title')); } });
                   editor.setValidators([{
                      option: 'text',
-                     validator: function (list, value) {
-                        // TODO: Возможно, лучше получать list непосредственно при вызове, а не заранее ???
+                     validator: function (presetId, value) {
+                        var reducer = function (r, v) { if (v.id !== presetId) { r.push(v.title); } return r; };
+                        var list = [];
+                        var statics = this._options.statics;
+                        if (statics && statics.length) {
+                           list = statics.reduce(reducer, list);
+                        }
+                        var customs = this._customs;
+                        if (customs && customs.length) {
+                           list = customs.reduce(reducer, list);
+                        }
                         if (value) {
                            var v = value.trim();
                            return !!v && list.indexOf(v) === -1;
                         }
-                     }.bind(null, titles),
+                     }.bind(this, preset.id),
                      errorMessage: _TITLE_ERROR
                   }]);
                }
@@ -725,11 +745,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                }
                if (needStartEdit) {
                   var result;
-                  var selectedId = this._options.selectedId;
+                  var options = this._options;
+                  var selectedId = options.selectedId;
                   if (selectedId) {
                      var preset = this._findPresetById(selectedId);
                      if (preset && !preset.isStorable) {
-                        this._clonePreset(preset.id);
+                        this._clonePreset(preset.id, {fieldIds:options.fieldIds});
                         result = {isComplete:true};
                      }
                   }
