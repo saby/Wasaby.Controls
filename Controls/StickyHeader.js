@@ -64,6 +64,7 @@ define('Controls/StickyHeader',
             if (shouldBeFixed !== this._shouldBeFixed) {
                this._notify('fixed', [shouldBeFixed, this._container.offsetHeight], {bubbling: true});
                this._shouldBeFixed = shouldBeFixed;
+               this._forceUpdate();
             }
          }
       });
