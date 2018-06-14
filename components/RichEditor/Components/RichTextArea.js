@@ -95,6 +95,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             TINYMCE_URL_BASE + '/tinymce'
          ],
          constants = {
+            decreaseHeight1: 2,// Высоты всего, содержащегося внутри .controls-RichEditor__richTextArea уменьшаются на 2px так как она имеет верхнюю и нижнюю границы по 1px
+            decreaseHeight2: 2,// Высоты всего, содержащегося внутри .controls-RichEditor__scrollContainer уменьшаются на 2px так как он имеет нижний отступ 2px
             baseAreaWidth: 768,//726
             defaultImagePercentSize: 25,// Начальный размер картинки (в процентах)
             defaultPreviewerSize: 768,//512
@@ -320,6 +322,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             if (options.autoHeight) {
                options.minimalHeight = this._cleanHeight(options.minimalHeight);
                options.maximalHeight = this._cleanHeight(options.maximalHeight);
+               options._decreaseHeight = constants.decreaseHeight1 + constants.decreaseHeight2;
             }
             return options;
          },
@@ -491,16 +494,18 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
                   }
                   var isInline = options.editorConfig.inline;
+                  var minHeight = 0 < options.minimalHeight ? options.minimalHeight - options._decreaseHeight : 0;
+                  var maxHeight = 0 < options.maximalHeight ? options.maximalHeight - options._decreaseHeight : 0;
                   if (isInline) {
                      this._richTextAreaContainer.css('max-height', options.maximalHeight || '');
                      if (this._hasScrollContainer) {
-                        this._scrollContainer.css('max-height', options.maximalHeight || '');
+                        this._scrollContainer.css('max-height', maxHeight || '');
                      }
-                     this._inputControl.css('min-height', options.minimalHeight || '');
+                     this._inputControl.css('min-height', minHeight || '');
                   }
                   else {
                      var iFrame = $(this._tinyEditor.iframeElement);
-                     iFrame.css({'max-height':options.maximalHeight || '', 'min-height':options.minimalHeight || ''});
+                     iFrame.css({'max-height':maxHeight || '', 'min-height':minHeight || ''});
                   }
                }
             }
@@ -601,7 +606,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           * @see text
           */
          setText: function(text) {
-            text = this._sanitizeClasses(text, true);
+            text = text ? this._sanitizeClasses(text, true) : '';
             if (text !== this._curValue()) {
                this._drawText(text);
             }
@@ -1652,12 +1657,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             }
          },
 
-         _setTrimmedText: function(text) {
-            this._setText(this._trimText(text));
+         _setTrimmedText: function (text) {
+            var trimmedText = this._trimText(text);
+            this._setText(trimmedText, trimmedText !== text);
          },
 
-         _setText: function(text) {
-            if (text !== this.getText()) {
+         _setText: function (text, forced) {
+            var isDifferent = text !== this.getText();
+            if (isDifferent) {
                if (!this._isEmptyValue(text)) {
                   this._textChanged = true;
                }
@@ -1668,8 +1675,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this.clearMark();
             }
             //При нажатии enter передаётся trimmedText поэтому updateHeight text === this.getText() и updateHeight не зовётся
-            this._updateHeight();
-            this._togglePlaceholder(text);
+            if (isDifferent || forced) {
+               this._updateHeight();
+               this._togglePlaceholder(text);
+            }
          },
          _notifyTextChanged: function() {
             this._notifyOnPropertyChanged('text');
@@ -2517,6 +2526,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             if (needUnwrap && template != '2') {
                $img.unwrap();
             }
+            var imageOptionsPanel =  this._imageOptionsPanel;
+            var canRecalc = true;
             switch (template) {
                case '1':
                   $img.addClass('image-template-left');
@@ -2532,7 +2543,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         ' data-img-uuid="' + $img.attr('data-img-uuid') + '"' +
                         '></img>' +
                      '</p>';
-                  this._tinyEditor.dom.replace($(html)[0], (needUnwrap ? $parent : $img)[0],false);
+                  var fragment = $(html)[0];
+                  var editor = this._tinyEditor;
+                  editor.dom.split($parent[0], $img[0], fragment);
+                  var newPic = fragment.firstChild;
+                  editor.selection.select(newPic);
+                  imageOptionsPanel.hide();
+                  this._showImageOptionsPanel($(newPic));
+                  canRecalc = false;
                   break;
                case '3':
                   $img.addClass('image-template-right');
@@ -2542,7 +2560,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             };
             // Вызвать recalcPosition напрямую во избежании ощутимых задержек
             // 49132 https://online.sbis.ru/opendoc.html?guid=f6ceccf6-2001-494d-90c1-d44a6255ad1e
-            this._imageOptionsPanel.recalcPosition();
+            if (canRecalc) {
+               imageOptionsPanel.recalcPosition();
+            }
             this._updateTextByTiny();
          },
 
@@ -2802,16 +2822,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             var container = this._tinyEditor && this._tinyEditor.getContainer() ? $(this._tinyEditor.getContainer()) : this._inputControl;
             var options = this._options;
             if (options.autoHeight) {
-               var minHeight = this._cleanHeight(options.maximalHeight) || '';
-               this._richTextAreaContainer.css('max-height', minHeight);
+               var maxHeight = this._cleanHeight(options.maximalHeight);
+               this._richTextAreaContainer.css('max-height', maxHeight || '');
                if (this._hasScrollContainer) {
-                  this._scrollContainer.css('max-height', minHeight);
+                  this._scrollContainer.css('max-height', 0 < maxHeight ? maxHeight - options._decreaseHeight : '');
                }
                // Минимальную высоту области просмотра нужно фиксировать только в отсутствии опции previewAutoHeight
                // 1175020199 https://online.sbis.ru/opendoc.html?guid=ff26541b-4dce-4df3-8b04-1764ee9b1e7a
                // 1175043073 https://online.sbis.ru/opendoc.html?guid=69a945c9-b517-4056-855a-6dec71d81823
                if (this._dataReview && !options.previewAutoHeight) {
-                  this._dataReview.css('min-height', enabled ? '' : this._cleanHeight(options.minimalHeight) || '');
+                  var minHeight = enabled ? null :  this._cleanHeight(options.minimalHeight);
+                  this._dataReview.css('min-height', enabled ? '' : (0 < minHeight ? minHeight - options._decreaseHeight : ''));
                }
             }
             else {
@@ -3081,6 +3102,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                // Убрать по мере переделки стороннего кода, используещего эти атрибуты.
                // Для пролучения uuid правильно использовать метод getImageUuid
                var style = (width ? 'width:' + width + ';' : '') + (height ? 'height:' + height + ';' : '');
+               editor.once('selectionchange', function () {
+                  var node = editor.selection.getNode();
+                  // Если узел - элемент, контент которого начинается с символа - убрать его
+                  // 1175285366 https://online.sbis.ru/opendoc.html?guid=20b6f530-64e2-4324-9802-12d14299bf7d
+                  if (node.nodeType === 1) {
+                     var content = node.innerHTML;
+                     if (content.charCodeAt(0) === 65279/*&#xFEFF;*/) {
+                        node.innerHTML = content.substring(1);
+                     }
+                  }
+               }.bind(this));
                this.insertHtml(
                   (before || '') +
                   '<img' +

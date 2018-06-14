@@ -71,6 +71,7 @@ define('SBIS3.CONTROLS/Utils/DateUtil',[], function() {
             nums = isoDate.match(dateRE),
             minutesOffset = 0,
             numericKeys = [1, 4, 5, 6, 7, 10, 11];
+
          if (nums) {
             for (var i = 0; i < numericKeys.length; i++) {
                var k = numericKeys[i];
@@ -87,7 +88,13 @@ define('SBIS3.CONTROLS/Utils/DateUtil',[], function() {
                   minutesOffset = 0 - minutesOffset;
                }
             }
-            return new Date(Date.UTC(nums[1], nums[2], nums[3], nums[4], nums[5] + minutesOffset, nums[6], nums[7]));
+
+            // Теперь при создании дат в v8 часовой пояс - это функция от даты/времени даже когда в конструктор передан
+            // таймстемп(раньше такое поведение было только, если в конструктор передавались части даты по отдельности).
+            // Учитываем это поведение.
+            // В браузерах отличных от хрома часовой пояс при создании - это часовой пояс в данный момент
+            // установленный на компьютере;
+            return new Date(nums[1], nums[2], nums[3], nums[4], nums[5] + minutesOffset - (new Date()).getTimezoneOffset(), nums[6], nums[7]);
          }
       },
 

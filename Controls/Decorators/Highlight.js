@@ -60,7 +60,8 @@ define('Controls/Decorators/Highlight',
                parsedText = [],
                highlightRegExp = this.getHighlightRegExp(highlight),
                exec, foundText, startingPosition;
-
+   
+            // eslint-disable-next-line
             while (exec = highlightRegExp.exec(text)) {
                foundText = exec[0];
 

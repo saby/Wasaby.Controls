@@ -250,6 +250,7 @@
 
 //Suggest VDOM
 @background-color_Suggest-suggestionsContainer: @default-bg-color;
+@shadow-color_Suggest-suggestionsContainer: rgba(0, 0, 0, 0.25);
 
 //list add button
 @color_listAddButton_enabled:             #8991A9;
@@ -356,18 +357,19 @@
 @box-shadow_Button_primary_active:             none;
 @background_Button_primary_active:             #FDD2C0;
 @background_Button_default_active:             #587AB0;
-@color_Link-Vdom-text_disabled:                #CCCCCC;
+@color_Link-Vdom-text_readOnly:                #CCCCCC;
 @box-shadow_Button_active:                     none;
-@color_Button-Vdom-disabled:                   #CCCCCC;
-@border-color_Button-Vdom_disabled:            #CCCCCC;
+@color_Button-Vdom-readOnly:                   #CCCCCC;
+@border-color_Button-Vdom_readOnly:            #CCCCCC;
 @color_Button-Vdom-text_primary:                #000000;
 @color_Button-Vdom-text_default:                #000000;
 @color_Button-style-addButton-icon_hovered:    #313E78;
 @color-IconButton__border_iconStyle-primary_hovered:          #cccccc;
-@color-Button_type-IconButton_disabled:           #CCCCCC;
-@border-color-IconButton_disabled:                rgba(0, 0, 0, 0.05);
+@color-Button_type-IconButton_readOnly:           #CCCCCC;
+@border-color-IconButton_readOnly:                rgba(0, 0, 0, 0.05);
 @border-color-IconButton:                         rgba(0, 0, 0, 0.05);
 @color-IconButton__shadow:                        rgba(0, 0, 0, 0.15);
+@border-color-IconButton_toggled:                 @color_primary;
 @background-color-IconButton:                     none;
 @background-color-IconButton_hovered:             none;
 @color_Button-style-addButton-icon:            #000000;
@@ -469,3 +471,16 @@
 @color_FilterPanel-caption:                  #313e78;
 //AdditionalParams
 @color_AdditionalParams-item:                 #313E78;
+//toggleButton
+@background_ToggleButton_state-on:              #F3F3F3;
+@background_ToggleButton:                       transparent;
+@background_ToggleButton_readOnly:               transparent;
+@border-color_ToggleButton_readOnly:            @color_Link-Vdom-text_readOnly;
+@color_ToggleButton_readOnly:                   @color_Link-Vdom-text_readOnly;
+@border-color_ToggleButton:                     @color_Link-main-icon;
+@color-ToggleButton__icon_hovered:              @icon-color-primary-hover;
+@background-ToggleButton_hovered:               @default-bg-color-hovered-item;
+@color-ToggleButton__icon:                      @color_Link-main-icon;
+@color-ToggleButton_text:                       @color_Link-main-icon;
+@color_ToggleButton_style-LinkMain:             @color_Link-main-icon;
+@color_ToggleButton_Link-main_hovered:          @color_Link-main-text_hovered;

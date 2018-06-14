@@ -146,5 +146,20 @@ define(
                done();
             }
          });
+   
+         it('.setSource', function() {
+            var search = new Search(
+               {
+                  source: source,
+                  navigation: navigationSmallPageSize
+               }
+            );
+            var newSource = new Memory({
+               data: data
+            });
+            search.setSource(newSource);
+            
+            assert.equal(search._sourceController._source, newSource);
+         });
       });
    });

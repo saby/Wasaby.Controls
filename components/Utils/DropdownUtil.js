@@ -3,9 +3,8 @@ define('SBIS3.CONTROLS/Utils/DropdownUtil', [
    'SBIS3.CONTROLS/Menu/SBISHistoryController',
    'SBIS3.CONTROLS/Utils/HistoryUtil',
    'WS.Data/Query/Query',
-   'Core/helpers/collection-helpers',
    'Core/core-merge'
-], function(coreClone, HistoryController, historyUtil, Query, colHelpers, merge) {
+], function(coreClone, HistoryController, historyUtil, Query, merge) {
    return {
       showPicker: function(self, prototype, event) {
          var myself = this;

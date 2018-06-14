@@ -92,12 +92,12 @@ define('Controls/Application',
 
             self._headData = new HeadDataContext(cfg.theme);
             _private.initState(self, receivedState || cfg);
-            self.content = cfg.content;
             self.needArea = cfg.compat || self.compat;
             if (!receivedState) {
                receivedState = {};
             }
             self.application = (context.AppData ? context.AppData.application : cfg.application);
+            self.appRoot = cfg.appRoot ? cfg.appRoot : (context.AppData ? context.AppData.appRoot : '/');
             self.wsRoot = receivedState.wsRoot || (context.AppData ? context.AppData.wsRoot : cfg.wsRoot);
             self.resourceRoot = receivedState.resourceRoot || (context.AppData ? context.AppData.resourceRoot : cfg.resourceRoot);
             self.BodyClasses = BodyClasses;
@@ -106,6 +106,7 @@ define('Controls/Application',
 
             if (receivedState && context.AppData) {
                context.AppData.wsRoot = self.wsRoot;
+               context.AppData.appRoot = self.appRoot;
                context.AppData.resourceRoot = self.resourceRoot;
                context.AppData.application = self.application;
             }
@@ -117,6 +118,7 @@ define('Controls/Application',
             def.callback({
                application: self.application,
                title: self.title,
+               appRoot: self.appRoot,
                wsRoot: self.wsRoot,
                resourceRoot: self.resourceRoot,
                templateConfig: self.templateConfig,

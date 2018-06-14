@@ -25,7 +25,7 @@ define('Controls/List/EditInPlace', [
 
          afterItemEdit: function(self, options, isAdd) {
             self._editingItem = options.item.clone();
-            self._notify('afterItemEdit', [options.item, isAdd]);
+            self._notify('afterItemEdit', [self._editingItem, isAdd]);
             self._setEditingItemData(self._editingItem, self._options.listModel);
 
             return options;
@@ -76,8 +76,7 @@ define('Controls/List/EditInPlace', [
          },
 
          afterItemEndEdit: function(self) {
-         //Это событие всплывает, т.к. прикладники после завершения сохранения могут захотеть показать кнопку "+Запись" (по стандарту при старте добавления она скрывается)
-            self._notify('afterItemEndEdit', [self._originalItem, self._isAdd]);
+            self._notify('afterItemEndEdit', [self._isAdd ? self._editingItem : self._originalItem, self._isAdd]);
             _private.resetVariables(self);
             self._setEditingItemData(null, self._options.listModel);
          },
@@ -342,6 +341,7 @@ define('Controls/List/EditInPlace', [
          this._editingItemProjection = this._isAdd
             ? new CollectionItem({ contents: this._editingItem })
             : listModel.getItemById(ItemsUtil.getPropertyValue(this._editingItem, listModel._options.keyProperty), listModel._options.keyProperty);
+         var actions =  listModel.getItemActions(item);
          this._editingItemData = {
             getPropValue: ItemsUtil.getPropertyValue,
             keyProperty: listModel._options.keyProperty,
@@ -351,6 +351,8 @@ define('Controls/List/EditInPlace', [
             dispItem: this._editingItemProjection,
             isEditing: true,
             isSelected: !listModel._markedItem,
+            itemActions: this._isAdd ? actions : {},
+            drawActions: this._isAdd && actions && actions.showed && actions.showed.length,
             key: ItemsUtil.getPropertyValue(this._editingItemProjection.getContents(), listModel._options.keyProperty)
          };
          listModel._setEditingItemData(this._editingItemData);

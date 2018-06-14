@@ -2,8 +2,8 @@
  * Created by kraynovdo on 16.11.2017.
  */
 define('Controls/List/ListViewModel',
-   ['Controls/List/ItemsViewModel', 'Controls/List/resources/utils/ItemsUtil', 'Controls/Controllers/Multiselect/Selection', 'WS.Data/Entity/VersionableMixin'],
-   function(ItemsViewModel, ItemsUtil, MultiSelection, VersionableMixin) {
+   ['Controls/List/ItemsViewModel', 'Controls/Controllers/Multiselect/Selection', 'WS.Data/Entity/VersionableMixin', 'Controls/List/resources/utils/ItemsUtil'],
+   function(ItemsViewModel, MultiSelection, VersionableMixin) {
       /**
        *
        * @author Крайнов Дмитрий
@@ -16,7 +16,7 @@ define('Controls/List/ListViewModel',
             self._stopIndex = self.getCount();
          }
       };
-      
+
       var ListViewModel = ItemsViewModel.extend([VersionableMixin], {
          _markedItem: null,
          _draggingItemData: null,
@@ -50,6 +50,12 @@ define('Controls/List/ListViewModel',
             itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem.item;
             itemsModelCurrent.multiSelectStatus = this._multiselection.getSelectionStatus(itemsModelCurrent.key);
             itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility === 'visible';
+            itemsModelCurrent.drawActions =
+               itemsModelCurrent.itemActions &&
+               ((itemsModelCurrent.itemActions.showed &&
+               itemsModelCurrent.itemActions.showed.length) ||
+               (itemsModelCurrent.itemActions.showedFirst &&
+               itemsModelCurrent.itemActions.showedFirst.length));
             if (this._editingItemData && itemsModelCurrent.index === this._editingItemData.index) {
                itemsModelCurrent.isEditing = true;
                itemsModelCurrent.item = this._editingItemData.item;
@@ -67,6 +73,10 @@ define('Controls/List/ListViewModel',
             this._markedItem = this.getItemById(key, this._options.keyProperty);
             this._nextVersion();
             this._notify('onListChange');
+         },
+
+         getSwipeItem: function() {
+            return this._swipeItem.item;
          },
 
          setActiveItem: function(itemData) {
@@ -169,9 +179,19 @@ define('Controls/List/ListViewModel',
                this._nextVersion();
             }
          },
+
          setItemActions: function(item, actions) {
-            this._actions[this.getIndexBySourceItem(item)] = actions;
+            var itemById = this.getItemById(item.getId());
+            var collectionItem = itemById ?  itemById.getContents() : item;
+            this._actions[this.getIndexBySourceItem(collectionItem)] = actions;
          },
+
+         getItemActions: function(item) {
+            var itemById = this.getItemById(item.getId());
+            var collectionItem = itemById ?  itemById.getContents() : item;
+            return this._actions[this.getIndexBySourceItem(collectionItem)];
+         },
+
 
          __calcSelectedItem: function(display, selKey, keyProperty) {
 

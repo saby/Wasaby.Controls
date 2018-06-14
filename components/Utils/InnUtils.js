@@ -83,7 +83,7 @@ define('SBIS3.CONTROLS/Utils/InnUtils', [], function() {
          }
 
          return innCheckSum( this );
-      },
+      }
    };
    return res;
 });

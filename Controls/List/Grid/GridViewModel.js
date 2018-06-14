@@ -379,6 +379,10 @@ define('Controls/List/Grid/GridViewModel', [
             this._model.setMarkedKey(key);
          },
 
+         getSwipeItem: function() {
+            return this._model.getSwipeItem();
+         },
+
          reset: function() {
             this._model.reset();
          },

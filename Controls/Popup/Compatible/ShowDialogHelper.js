@@ -24,15 +24,21 @@ define('Controls/Popup/Compatible/ShowDialogHelper', ['require', 'Core/Deferred'
                   deps.push('Controls/Popup/Opener/Dialog/DialogController');
                   config._type = 'dialog';
                }
+               deps.push(config.template);
 
-               require(deps, function(BaseOpener, Strategy) {
-                  var CoreTemplate = require(config.template);
-                  config._initCompoundArea = function(compoundArea) {
-                     self._dialog = compoundArea;
-                     dfr && dfr.callback(compoundArea);
-                     dfr = null;
-                  };
-                  BaseOpener.showDialog(CoreTemplate, config, Strategy);
+               deps.push(config.template);
+
+               requirejs(['Controls/Popup/Compatible/Layer'], function(CompatiblePopup) {
+                  CompatiblePopup.load().addCallback(function() {
+                     require(deps, function(BaseOpener, Strategy) {
+                        var CoreTemplate = require(config.template);
+                        config._initCompoundArea = function(compoundArea) {
+                           dfr && dfr.callback(compoundArea);
+                           dfr = null;
+                        };
+                        BaseOpener.showDialog(CoreTemplate, config, Strategy);
+                     });
+                  });
                });
                return dfr;
             } else {

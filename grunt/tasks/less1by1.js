@@ -8,8 +8,7 @@ const helpers = require('./helpers'),
    postcss = require('postcss'),
    autoprefixer = require('autoprefixer'),
    getModuleNameRegExp = new RegExp('\/resources\/([^/]+)'),
-   DEFAULT_THEME = 'online',
-   themes = ['online'];
+   DEFAULT_THEME = 'online';
 let errors = [];
 
 /**
@@ -116,23 +115,21 @@ module.exports = function less1by1Task(grunt) {
                helpers.validateFile(relpath, [grunt.config.get('changed') || `Controls/**/${lessName}.less`])) {
             foundFile = true;
             fs.readFile(filepath, function readFileCb(readFileError, data) {
-               let theme = resolveThemeName(filepath);
+
                if (itIsControl(filepath)) {
                   bar.tick(1, {
 
                      'file': filepath
                   });
 
-                  for (let themeName of themes) {
-                     processLessFile(data, filepath, readFileError, themeName, true);
-                  }
+                  processLessFile(data, filepath, readFileError, DEFAULT_THEME, true);
                } else {
                   //todo: black_list
                   if (!~filepath.indexOf('_theme.less') &&
                            !~filepath.indexOf('_header.less') &&
                            !~filepath.indexOf('_mixins.less') &&
                            !~filepath.indexOf('_typograpy.less') &&
-                           !~filepath.indexOf('_general.less') &&
+                           !~filepath.indexOf('general.less') &&
                            !~filepath.indexOf('_flex.less') &&
                            !~filepath.indexOf('_defaults.less') &&
                            !~filepath.indexOf('_theme-fixme.less') &&
@@ -140,7 +137,7 @@ module.exports = function less1by1Task(grunt) {
                            !~filepath.indexOf('_sizes.less') &&
                            !~filepath.indexOf('_control-list.less') &&
                            !~filepath.indexOf('_colors.less')) {
-                     processLessFile(data, filepath, readFileError, theme, false);
+                     processLessFile(data, filepath, readFileError, DEFAULT_THEME, false);
                   }
                }
             });

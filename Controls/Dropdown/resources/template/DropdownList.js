@@ -86,6 +86,12 @@ define('Controls/Dropdown/resources/template/DropdownList',
             }
          },
 
+         _beforeUpdate: function(newOptions) {
+            if (newOptions.rootKey !== this._options.rootKey) {
+               this._listModel.setRootKey(newOptions.rootKey);
+            }
+         },
+
          _itemMouseEnter: function(event, item, hasChildren) {
             if (hasChildren) {
                var config = {
@@ -116,12 +122,17 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   this._notify('sendResult', [result]);
             }
          },
-         _itemClickHandler: function(event, item, flag) { //todo нужно обсудить
+         _itemClickHandler: function(event, item, pinClicked) { //todo нужно обсудить
             var result = {
                action: 'itemClick',
                event: event,
-               data: [item, flag]
+               data: [item, pinClicked]
             };
+            
+            // means that pin button was clicked
+            if (pinClicked) {
+               event.stopPropagation();
+            }
             this._notify('sendResult', [result]);
          },
          _footerClick: function(event) {

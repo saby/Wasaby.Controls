@@ -3,9 +3,10 @@
  */
 define('Controls/Popup/Compatible/BaseOpener', [
    'Core/core-merge',
+   'Core/helpers/random-helpers',
    'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea'
 ],
-function(cMerge) {
+function(cMerge, Random) {
    /**
        * Слой совместимости для базового опенера для открытия старых шаблонов
        */
@@ -16,9 +17,15 @@ function(cMerge) {
             template: cfg.template,
             type: cfg._type,
             handlers: cfg.handlers,
-            _shouldUpdate: cfg._shouldUpdate === undefined ? true : cfg._shouldUpdate, // В рамках оптимизации перерисовок compoundArea.
-            _initCompoundArea: cfg._initCompoundArea
+            _initCompoundArea: cfg._initCompoundArea,
+
+            //На каждое обновление конфига генерируем новый id, чтобы понять, что нужно перерисовать шаблон
+            _compoundId: Random.randomId('compound-')
          };
+
+         if (cfg.target) {
+            cfg.target = cfg.target[0] ? cfg.target[0] : cfg.target;
+         }
 
          if (cfg.hasOwnProperty('autoHide')) {
             cfg.closeByExternalClick = cfg.autoHide;
@@ -50,6 +57,10 @@ function(cMerge) {
          });
          if (cfg.hasOwnProperty('closeByExternalClick')) {
             cfg.autoHide = cfg.closeByExternalClick;
+         }
+
+         if (newCfg.target) {
+            newCfg.target = $(newCfg.target);
          }
 
          return newCfg;

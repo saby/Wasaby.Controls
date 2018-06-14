@@ -157,7 +157,7 @@ define('Controls/Filter/Button/OldPanelOpener',
    
          _modifyOptions: function() {
             var opts = OldPanelOpener.superclass._modifyOptions.apply(this, arguments);
-            opts.filterStructure = converterFilterStructure.convertToFilterStructure(opts.filterStructure);
+            opts.filterStructure = opts.items ? converterFilterStructure.convertToFilterStructure(opts.items) : opts.filterStructure;
             return opts;
          },
          
@@ -204,14 +204,15 @@ define('Controls/Filter/Button/OldPanelOpener',
                   viewMode: this._options.viewMode,
                   areaCaption: this._options.areaCaption,
                   internalContextFilterName: this._options.internalContextFilterName,
-                  templateOptions: this._options.templateOptions
+                  templateOptions: this._options.templateOptions,
+                  componentOptions: this._options.componentOptions
                },
                self = this,
                templateProperty;
             
             /* Если шаблон указали как имя компонента (SBIS3.* || js!SBIS3.*) */
             function getCompTpl(tpl) {
-               return prepTpl(dotTplForComp({component: (requirejs.defined(tpl) ? tpl : 'js!' + tpl), templateOptions: self.getProperty('templateOptions')}));
+               return prepTpl(dotTplForComp({component: (requirejs.defined(tpl) ? tpl : 'js!' + tpl), componentOptions: self.getProperty('componentOptions')}));
             }
             
             /* Если в качестве шаблона передали вёрстку */
@@ -247,7 +248,7 @@ define('Controls/Filter/Button/OldPanelOpener',
                },
                context: this._pickerContext,
                template: 'SBIS3.CONTROLS/Filter/Button/Area',
-               templateOptions: this._getAreaOptions(),
+               componentOptions: this._getAreaOptions(),
                handlers: {
                   onClose: function() {
                      /* Разрушаем панель при закрытии,
