@@ -130,22 +130,17 @@ define('Controls/Container/Suggest/Layout',
                this._orient = null;
             }
          },
-         
+   
          _afterUpdate: function() {
             /* 1) checking suggestionsContainer in children, because suggest initializing asynchronously
                2) do not change orientation of suggest, if suggest already showed */
             if (this._options.suggestState && this._children.suggestionsContainer && !this._orient) {
-               var orient = this._orient;
-               
                if (this._children.suggestionsContainer.getBoundingClientRect().bottom > window.innerHeight) {
                   this._orient = '-up';
                } else {
                   this._orient = '-down';
                }
-               
-               if (orient !== this._orient) {
-                  this._forceUpdate();
-               }
+               this._forceUpdate();
             }
          },
    
