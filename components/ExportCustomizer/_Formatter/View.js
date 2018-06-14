@@ -270,20 +270,27 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           *
           * @protected
           * @param {string} method Имя метода
-          * @param {string} fileUuid Uuid шаблона форматирования эксель-файла
+          * @param {*} result Результат операции над шаблоном форматирования эксель-файла
           */
-         _onFormatter: function (method, fileUuid) {
+         _onFormatter: function (method, result) {
             var isCreate = method === 'create' || method === 'clone';
+            var isOpen = method === 'open' || method === 'openApp';
             if (isCreate) {
-               this._options.fileUuid = fileUuid;
+               this._options.fileUuid = result;
             }
-            if (isCreate || method === 'open' || method === 'openApp') {
-               this.sendCommand('subviewChanged', isCreate ? method : 'openEnd');
+            if (isCreate || isOpen) {
+               this.sendCommand('subviewChanged', isOpen ? 'openEnd' : method);
             }
-            if (method === 'open' || method === 'openApp') {
+            if (isOpen) {
                this._waitIndicatorStart();
             }
-            this._updatePreview();
+            if (isOpen && typeof result !== 'boolean') {
+               // TODO: Пока методы open и openApp в PrintingTemplates/ExportFormatter/Excel не умеют правильно возвращать логическое значение, показывающее, что пользователь изменил шаблон - всегда считаем, что шаблон изменён. Убрать это после исправления
+               result = true;
+            }
+            if (!isOpen || result) {
+               this._updatePreview();
+            }
          },
 
          /**
