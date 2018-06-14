@@ -49,6 +49,7 @@ define('Controls/Container/List',
          updateSource: function(self, data) {
             /* TODO will be a cached source */
             self._source = new Memory({
+               idProperty: data.getIdProperty(),
                data: data.getRawData()
             });
          },
