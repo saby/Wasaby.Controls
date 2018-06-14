@@ -25,12 +25,11 @@ define('Controls/Container/Suggest/Layout/Dialog',
       var List = Control.extend({
          
          _template: template,
-         _filter: null,
 
          _getChildContext: function() {
             return {
                searchLayoutField: new SearchContextField(this._options.searchValue),
-               filterLayoutField: new FilterContextField({ filter: this._filter })
+               filterLayoutField: new FilterContextField({ filter: null })
             };
          },
    
