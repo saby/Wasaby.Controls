@@ -13,5 +13,8 @@
         <ws:else data="{{!!item.title}}">
             <span class="controls-ToolbarV__item_title">{{item.title}}</span>
         </ws:else>
+        <ws:else data="{{!!item.buttonStyle}}">
+            <Controls.Button readOnly="{{buttonReadOnly}}" caption="{{buttonCaption}}" iconStyle="{{buttonIconStyle}}" icon="{{buttonIcon}}" style="{{buttonStyle}}" size="{{size}}"/>
+        </ws:else>
     </ws:else>
 </div>
