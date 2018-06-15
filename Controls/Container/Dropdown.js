@@ -48,8 +48,8 @@ define('Controls/Container/Dropdown',
          onResult: function(result) {
             switch (result.action) {
                case 'itemClick':
+                  _private.selectItem.apply(this, result.data);
                   if (!result.data[0].get('@parent')) {
-                     _private.selectItem.apply(this, result.data);
                      this._children.DropdownOpener.close();
                   }
                   break;
