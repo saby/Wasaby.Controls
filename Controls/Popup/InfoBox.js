@@ -40,7 +40,7 @@ define('Controls/Popup/InfoBox',
                template: OpenerTemplate,
                position: self._options.position,
                templateOptions: {
-                  content: self._options.content
+                  content: self._options.template
                }
             };
          }
