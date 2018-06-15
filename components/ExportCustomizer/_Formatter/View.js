@@ -141,7 +141,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                var fieldIds = options.fieldIds;
                if (fieldIds && fieldIds.length) {
                   if (!options.fileUuid) {
-                     this._callFormatterMethod('create');
+                     this._callFormatterCreate();
                   }
                   else {
                      this._updatePreview();
@@ -179,63 +179,117 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             var options = this._options;
             var fieldIds = options.fieldIds;
             if (fieldIds && fieldIds.length) {
-               var method = useApp ? 'openApp' : 'open';
-               this._opening = method;
+               this._opening = useApp ? 'openApp' : 'open';
                var result = this.sendCommand('subviewChanged', 'open');
                if (!(result && typeof result === 'object' && result.isComplete)) {
-                  this._callFormatterMethod(method);
+                  this._callFormatterOpen(useApp);
                }
             }
          },
 
          /**
-          * Вызвать метод форматера
+          * Вызвать метод форматера "create" или "clone"
           *
           * @protected
-          * @param {string} method Имя метода
-          * @param {*} [args] Дополнитьные аргументы (опционально)
+          * @param {string} [fileUuid] Uuid шаблона форматирования эксель-файлаю Если указан, то будет произведено клонирование (опционально)
           * return {Core/Deferred}
           */
-         _callFormatterMethod: function (method, args) {
+         _callFormatterCreate: function (args) {
+            var isClone = !!args;
             var options = this._options;
-            var isCreate = method === 'create';
-            var isClone = method === 'clone';
             var consumerId = options.consumerId || '';
-            if ((isCreate || isClone) && this._creation[consumerId]) {
+            if (this._creation[consumerId]) {
                throw new Error('Already in creation');
             }
-            var isOpen = method === 'open' || method === 'openApp';
-            var isUpdate = method === 'update';
-            var isDelete = method === 'delete';
-            if (isOpen) {
-               this._opening = null;
-            }
-            var formatterArgs = [];
-            if (isClone || isDelete) {
-               formatterArgs.push(args);
-            }
-            if (isOpen || isUpdate) {
-               formatterArgs.push(options.fileUuid);
-            }
-            if (isCreate || isOpen || isUpdate) {
-               var fieldIds = options.fieldIds;
-               formatterArgs.push(fieldIds || [], this._selectFields(options.allFields, fieldIds, function (v) { return v.title; }) || [], options.serviceParams);
-            }
+            var fieldIds = options.fieldIds;
             var formatter = this._exportFormatter;
-            var promise = formatter[isClone ? 'copy' : (isDelete ? 'remove' : method)].apply(formatter, formatterArgs).addCallbacks(
-               this._onFormatter.bind(this, method),
+            var promise = (isClone
+                  ? formatter.copy(args)
+                  : formatter.create(fieldIds || [], this._getFieldTitles(fieldIds), options.serviceParams)
+            ).addCallbacks(
+               function (result) {
+                  this._options.fileUuid = result;
+                  this.sendCommand('subviewChanged', isClone ? 'clone' : 'create');
+                  if (result) {
+                     this._updatePreview();
+                  }
+               }.bind(this),
                function (err) { return err; }
             );
-            if (isCreate || isClone) {
-               this._creation[consumerId] = promise.createDependent().addBoth(function (consumerId) {
-                  delete this._creation[consumerId];
-               }.bind(this, consumerId));
-            }
-            if (isCreate || isClone || isUpdate) {
-               // Запустить индикатор сразу, если это не isDelete и не isOpen (для открытия запустить позже)
-               this._waitIndicatorStart();
-            }
+            this._creation[consumerId] = promise.createDependent().addBoth(function (consumerId) {
+               delete this._creation[consumerId];
+            }.bind(this, consumerId));
+            // Запустить индикатор сразу
+            this._waitIndicatorStart();
             return promise;
+         },
+
+         /**
+          * Вызвать метод форматера "update"
+          *
+          * @protected
+          * return {Core/Deferred}
+          */
+         _callFormatterUpdate: function () {
+            var options = this._options;
+            var fieldIds = options.fieldIds;
+            var promise = this._exportFormatter.update(options.fileUuid, fieldIds || [], this._getFieldTitles(fieldIds), options.serviceParams).addCallbacks(
+               function (result) {
+                  this._updatePreview();
+               }.bind(this),
+               function (err) { return err; }
+            );
+            // Запустить индикатор сразу
+            this._waitIndicatorStart();
+            return promise;
+         },
+
+         /**
+          * Вызвать метод форматера "open" или "openApp"
+          *
+          * @protected
+          * @param {boolean} useApp Открыть в отдельном приложении
+          * return {Core/Deferred}
+          */
+         _callFormatterOpen: function (useApp) {
+            this._opening = null;
+            var options = this._options;
+            var fieldIds = options.fieldIds;
+            return this._exportFormatter[useApp ? 'openApp' : 'open'](options.fileUuid, fieldIds || [], this._getFieldTitles(fieldIds), options.serviceParams).addCallbacks(
+               function (result) {
+                  this.sendCommand('subviewChanged', 'openEnd');
+                  if (result) {
+                     this._updatePreview();
+                  }
+               }.bind(this),
+               function (err) { return err; }
+            );
+         },
+
+         /**
+          * Вызвать метод форматера "delete"
+          *
+          * @protected
+          * @param {string} fileUuid Uuid шаблона форматирования эксель-файла
+          * return {Core/Deferred}
+          */
+         _callFormatterDelete: function (fileUuid) {
+            return this._exportFormatter.remove(fileUuid).addCallbacks(
+               function (result) {
+               }.bind(this),
+               function (err) { return err; }
+            );
+         },
+
+         /**
+          * Получить список отображаемых названий полей для указанного списка полей данных
+          *
+          * @protected
+          * @param {Array<string>} fieldIds Список идентификаторв полей данных
+          * return {Array<string>}
+          */
+         _getFieldTitles: function (fieldIds) {
+            return fieldIds && fieldIds.length ? this._selectFields(this._options.allFields, fieldIds, function (v) { return v.title; }) || [] : [];
          },
 
          /**
@@ -247,8 +301,17 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           */
          _callFormatterMethods: function (methods) {
             if (methods && methods.length) {
+               var methodMap = {
+                  'create': '_callFormatterCreate',
+                  'clone': '_callFormatterCreate',
+                  'update': '_callFormatterUpdate',
+                  'open': '_callFormatterOpen',
+                  'openApp': '_callFormatterOpen',
+                  'delete': '_callFormatterDelete'
+               };
                var inf = methods[0];
-               var promise = this._callFormatterMethod.apply(this, typeof inf === 'object' ? [inf.method, inf.args] : [inf]);
+               var method = typeof inf === 'object' ? inf.method : inf;
+               var promise = this[methodMap[method]].apply(this, method === 'clone' || method === 'delete' ? [inf.args] : (method === 'openApp' ? [true] : []));
                if (1 < methods.length) {
                   promise.addCallback(this._callFormatterMethods.bind(this, methods.slice(1)));
                }
@@ -284,28 +347,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                      return field && needMap ? mapper(field) : field;
                   });
                }
-            }
-         },
-
-         /**
-          * Обработчик обратного вызова после выполнения методов форматера
-          *
-          * @protected
-          * @param {string} method Имя метода
-          * @param {*} result Результат операции над шаблоном форматирования эксель-файла
-          */
-         _onFormatter: function (method, result) {
-            var isCreate = method === 'create' || method === 'clone';
-            var isOpen = method === 'open' || method === 'openApp';
-            var isDelete = method === 'delete';
-            if (isCreate) {
-               this._options.fileUuid = result;
-            }
-            if (isCreate || isOpen) {
-               this.sendCommand('subviewChanged', isOpen ? 'openEnd' : method);
-            }
-            if (!isDelete && (!isOpen || result)) {
-               this._updatePreview();
             }
          },
 
@@ -435,7 +476,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                this.setVisible(hasFields);
             }
             if (meta /*&& meta.source === 'presets'*/ && meta.reason === 'delete') {
-               this._callFormatterMethod('delete', meta.args[0]);
+               this._callFormatterDelete(meta.args[0]);
             }
          },
 
