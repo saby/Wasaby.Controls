@@ -691,6 +691,15 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             target = floatArea.wsControl().getOpener();
             return ControlHierarchyManager.checkInclusion(this, target && target.getContainer());
          }
+
+         //TODO: из-за временной поддержки старой кнопки фильтров на vdom странице нужно учитывать и новые компоненты
+         var newPopup = $(target).closest('.controls-Popup');
+         if (newPopup.length) {
+            target = newPopup[0].controlNodes && newPopup[0].controlNodes[0].control; //Получаем попап внутри которого был клик
+            var parent = target && target._options.opener; //Смотрим кто открыл этот попап
+            return ControlHierarchyManager.checkInclusion(this, parent && parent._container); //Если это кнопка фильтров или связанный с ней компонент то не закрываемся
+         }
+
          //Если кликнули по инфобоксу - popup закрывать не нужно
          var infoBox = $(target).closest('.ws-info-box');
          return !!infoBox.length;
