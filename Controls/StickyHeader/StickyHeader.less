@@ -16,3 +16,11 @@
 .controls-StickyHeader__observationTargetBottom {
    bottom: -1px;
 }
+
+.controls-StickyHeader__shadow {
+   bottom: -@height-gradient_Scroll-shadow;
+   background: linear-gradient(
+      to bottom,
+      @start-color-gradient_Scroll-shadow, @end-color-gradient_Scroll-shadow
+   );
+}

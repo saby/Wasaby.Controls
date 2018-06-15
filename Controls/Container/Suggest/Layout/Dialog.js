@@ -28,8 +28,8 @@ define('Controls/Container/Suggest/Layout/Dialog',
 
          _getChildContext: function() {
             return {
-               searchLayoutField: new SearchContextField(this._options.searchValue),
-               filterLayoutField: new FilterContextField({ filter: null })
+               searchLayoutField: new SearchContextField(null),
+               filterLayoutField: new FilterContextField({filter: this._options.filter})
             };
          },
    

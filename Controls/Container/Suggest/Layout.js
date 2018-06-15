@@ -107,6 +107,7 @@ define('Controls/Container/Suggest/Layout',
          _filter: null,
          _tabsSelectedKey: null,
          _searchResult: null,
+         _orient: null,
          
          // <editor-fold desc="LifeCycle">
          
@@ -122,6 +123,25 @@ define('Controls/Container/Suggest/Layout',
             this._searchStart = null;
             this._searchEnd = null;
             this._select = null;
+         },
+         
+         _beforeUpdate: function(newOptions) {
+            if (!newOptions.suggestState) {
+               this._orient = null;
+            }
+         },
+   
+         _afterUpdate: function() {
+            /* 1) checking suggestionsContainer in children, because suggest initializing asynchronously
+               2) do not change orientation of suggest, if suggest already showed */
+            if (this._options.suggestState && this._children.suggestionsContainer && !this._orient) {
+               if (this._children.suggestionsContainer.getBoundingClientRect().bottom > window.innerHeight) {
+                  this._orient = '-up';
+               } else {
+                  this._orient = '-down';
+               }
+               this._forceUpdate();
+            }
          },
    
          _getChildContext: function() {

@@ -205,5 +205,6 @@ define('Controls/Input/Lookup', [
       };
    };
    
+   Lookup._private = _private;
    return Lookup;
 });
