@@ -62,19 +62,19 @@ function(cMerge, Random) {
          }
 
          if (cfg.verticalAlign && cfg.verticalAlign.side === 'top') {
-            cfg.dialogOptions.direction = 'top';
+            newCfg.dialogOptions.direction = 'top';
          }
 
          if (cfg.corner && cfg.corner.vertical === 'bottom') {
-            cfg.dialogOptions.verticalAlign = 'bottom';
+            newCfg.dialogOptions.verticalAlign = 'bottom';
          }
 
          if (cfg.hideCross === true) {
-            cfg.dialogOptions.border = false;
+            newCfg.dialogOptions.border = false;
          }
 
          if (cfg.offset) {
-            cfg.dialogOptions.offset = cfg.offset;
+            newCfg.dialogOptions.offset = cfg.offset;
          }
 
          if (newCfg.target) {
