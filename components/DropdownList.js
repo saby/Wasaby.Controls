@@ -367,7 +367,8 @@ define('SBIS3.CONTROLS/DropdownList',
                 * @remark
                 * Пустое значение имеет ключ null
                 */
-               emptyValue: false
+               emptyValue: false,
+               emulateClickByTap: true
             },
             _pickerListContainer: null,
             _pickerCloseContainer: null,
