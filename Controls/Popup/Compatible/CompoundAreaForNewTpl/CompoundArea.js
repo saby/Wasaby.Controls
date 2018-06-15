@@ -34,6 +34,10 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                      args: []
                   }]};
                };
+               if (self._options._initCompoundArea) {
+                  self._notifyOnSizeChanged(self, self);
+                  self._options._initCompoundArea(self);
+               }
                container.addEventListener('DOMNodeRemoved', replaceVDOMContainer);
             });
          },
