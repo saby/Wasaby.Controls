@@ -1,7 +1,6 @@
 define('Controls/Popup/Opener/Notification',
    [
       'Controls/Popup/Opener/BaseOpener'
-
    ],
    function(Base) {
       /**
