@@ -21,6 +21,23 @@ define('Controls/Filter/Button/Panel', [
     * @event Controls/Filter/Button/Panel#filterChanged Happens when clicking on the button "Select"
     */
 
+   /**
+    * @name Controls/Filter/Button/Panel#items
+    * @cfg {String} Sets a set of initial data to build the mapping.
+    */
+
+   /**
+    * @name Controls/Filter/Button/Panel#itemTemplate
+    * @cfg {String} Field style.
+    */
+      
+   /**
+    * @name Controls/Filter/Button/Panel#additionalTemplate
+    * @cfg {String} Field style.
+    */
+
+
+
    'use strict';
 
    var getPropValue = Utils.getItemPropertyValue.bind(Utils);
