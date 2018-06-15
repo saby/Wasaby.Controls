@@ -1666,7 +1666,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
          var
             newRoot,
             curRoot,
-            filter = coreClone(this.getFilter()) || {},
+            filter = this.getFilter() || {},
             isFakeRoot = isPlainObject(this._options.root) && this._options.root[this._options.idProperty] === key;
          // Internet Explorer при удалении элемента сбрасывает фокус не выше по иерархии, а просто "в никуда" (document.activeElement === null).
          // Для того, чтобы фокус при проваливании в папку не терялся - перед проваливанием устанавливаем его просто
