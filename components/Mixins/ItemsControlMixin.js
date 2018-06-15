@@ -471,7 +471,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
               * </pre>
               * 
               * Чтобы сделать данные иерархическими, компоненту требуется задать иерархические поля в опциях {@link SBIS3.CONTROLS/Mixins/TreeMixin#parentProperty}, {@link SBIS3.CONTROLS/Mixins/TreeMixin#nodeProperty} и {@link SBIS3.CONTROLS/Mixins/TreeMixin#hasChildrenProperty}.
-              * А затем добавьте эти поля в items. Например,
+              * А затем добавить эти поля в items. Например,
               * <pre>
               *     <SBIS3.CONTROLS.Tree.DataGridView 
               *         name="superView"
