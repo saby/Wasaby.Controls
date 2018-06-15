@@ -1,0 +1,24 @@
+<Controls.Container.Filter>
+   <Controls.Container.Search>
+      <ws:content>
+         <div>
+            <ws:if data="{{_options.searchConfig}}">
+               <div>
+               <Controls.Container.Input.Search>
+                  <Controls.Input.Search
+                          bind:value="_options.searchConfig.value">
+                  </Controls.Input.Search>
+               </Controls.Container.Input.Search>
+               </div>
+            </ws:if>
+            <ws:if data="{{_options.content}}">
+               <div>
+                  <Controls.Container.List>
+                     <ws:partial template="{{_options.content}}"/>
+                  </Controls.Container.List>
+               </div>
+            </ws:if>
+         </div>
+      </ws:content>
+   </Controls.Container.Search>
+</Controls.Container.Filter>

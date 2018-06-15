@@ -1,0 +1,13 @@
+<Controls.List source="{{_source}}"
+               keyProperty="id"
+               emptyTemplate="Не найдено">
+   <ws:itemTemplate>
+      <ws:partial template="tmpl!Controls/List/ItemTemplate">
+         <ws:contentTemplate>
+            <div>
+               <div>{{itemTemplate.itemData.item.get('title')}}</div>
+            </div>
+         </ws:contentTemplate>
+      </ws:partial>
+   </ws:itemTemplate>
+</Controls.List>
