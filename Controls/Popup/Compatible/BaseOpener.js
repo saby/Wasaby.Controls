@@ -38,6 +38,8 @@ function(cMerge, Random) {
          cfg.componentOptions = cfg.templateOptions || cfg.componentOptions || {};
          cfg.componentOptions.template = cfg.template;
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea';
+         cfg.animation = 'off';
+
          this._setSizes(cfg, templateClass);
       },
 
@@ -59,8 +61,24 @@ function(cMerge, Random) {
             cfg.autoHide = cfg.closeByExternalClick;
          }
 
+         if (cfg.verticalAlign && cfg.verticalAlign.side === 'top') {
+            cfg.dialogOptions.direction = 'top';
+         }
+
+         if (cfg.corner && cfg.corner.vertical === 'bottom') {
+            cfg.dialogOptions.verticalAlign = 'bottom';
+         }
+
+         if (cfg.hideCross === true) {
+            cfg.dialogOptions.border = false;
+         }
+
+         if (cfg.offset) {
+            cfg.dialogOptions.offset = cfg.offset;
+         }
+
          if (newCfg.target) {
-            newCfg.target = $(newCfg.target);
+            newCfg.dialogOptions.target = $(newCfg.target);
          }
 
          return newCfg;
