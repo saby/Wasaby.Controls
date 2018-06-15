@@ -28,15 +28,6 @@ define('Controls/List/Grid/GridView', [
             });
             return result;
          },
-         prepareColumnsIfPartialGridSupport: function(columns) {
-            for (var i = 0; i < columns.length; i++) {
-               if (columns[i].width === '1fr') {
-                  columns[i].width = 'auto';
-               } else if (columns[i].width === 'auto') {
-                  columns[i].width = '1px';
-               }
-            }
-         },
          prepareHeaderAndResultsIfFullGridSupport: function(results, header, container) {
             var
                resultsPadding,
@@ -64,15 +55,10 @@ define('Controls/List/Grid/GridView', [
          _headerContentTemplate: HeaderContentTpl,
          _prepareGridTemplateColumns: _private.prepareGridTemplateColumns,
          isNotFullGridSupport: cDetection.isNotFullGridSupport,
-         isIE: cDetection.isIE,
-         isSafari11: cDetection.safari11,
 
          _beforeMount: function(cfg) {
             GridView.superclass._beforeMount.apply(this, arguments);
             this._listModel.setColumnTemplate(ColumnTpl);
-            if (cDetection.isNotFullGridSupport) {
-               _private.prepareColumnsIfPartialGridSupport(cfg.columns);
-            }
          },
 
          _afterMount: function() {
