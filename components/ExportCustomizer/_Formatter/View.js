@@ -211,6 +211,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                }.bind(this, consumerId));
             }
             if (isCreate || isClone || isUpdate) {
+               // Запустить индикатор сразу, если это не isDelete и не isOpen (для открытия запустить позже)
                this._waitIndicatorStart();
             }
             return promise;
@@ -282,14 +283,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             if (isCreate || isOpen) {
                this.sendCommand('subviewChanged', isOpen ? 'openEnd' : method);
             }
-            if (isOpen) {
-               this._waitIndicatorStart();
-            }
-            if (isOpen && typeof result !== 'boolean') {
-               // TODO: Пока методы open и openApp в PrintingTemplates/ExportFormatter/Excel не умеют правильно возвращать логическое значение, показывающее, что пользователь изменил шаблон - всегда считаем, что шаблон изменён. Убрать это после исправления
-               result = true;
-            }
-            if (!isDelete && !(isOpen && !result)) {
+            if (!isDelete && (!isOpen || result)) {
                this._updatePreview();
             }
          },
@@ -298,11 +292,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * Запустить индикатор ожидания
           *
           * @protected
+          * @param {boolean} isForced Запустить заново, если индикатор уже запущен
           */
-         _waitIndicatorStart: function () {
-            this._updatePreviewClearStop();
-            var stopper = this._waitIndicatorStopper = new Deferred();
-            WaitIndicator.make({target:this._preview[0].parentNode, overlay:'dark', delay:0}, stopper);
+         _waitIndicatorStart: function (isForced) {
+            if (isForced) {
+               this._updatePreviewClearStop();
+            }
+            if (!this._waitIndicatorStopper) {
+               WaitIndicator.make({target:this._preview[0].parentNode, overlay:'dark', delay:0}, this._waitIndicatorStopper = new Deferred());
+            }
          },
 
          /**
