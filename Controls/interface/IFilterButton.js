@@ -17,40 +17,8 @@ define('Controls/interface/IFilterButton', [
     */
    
    /**
-    * @typedef {String} panelStyle
-    * @variant default one column panel
-    * @variant column two or more column panel
-    */
-   
-   /**
-    * @typedef {Object} panelProps
-    * @property {String} title Filter panel title
-    * @property {Function} topSpaceTemplate Template between title and panel buttons in panel header.
-    * @property {panelStyle} style
-    */
-   
-   /**
-    * @typedef {Object} itemTpl
-    * @property {String} templateName
-    * @property {Object} templateOptions
-    */
-   
-   /**
-    * @typedef {Object} additionalTpl
-    * @property {String} templateName
-    * @property {Object} templateOptions
-    */
-   
-   /**
     * @name Controls/interface/IFilterButton#items
     * @cfg {FilterPanelItems[]} Properties for editing or showing.
-    */
-   
-   /**
-    * @name Controls/interface/IFilterButton#orientation
-    * @cfg {String} orientation of filter button.
-    * @variant right
-    * @variant left
     */
    
    /**
@@ -62,38 +30,19 @@ define('Controls/interface/IFilterButton', [
    
    /**
     * @name Controls/interface/IFilterButton#lineSpaceTemplate
-    * @cfg {Function} template for the space between the filter button and the string.
+    * @cfg {Function} Template for the space between the filter button and the string.
     */
    
    /**
-    * @name Controls/interface/IFilterButton#panelProperties
-    * @cfg {panelProps} options for filter panel
+    * @name Controls/interface/IFilterButton#template
+    * @cfg {String} Template for the pop-up panel. The description of the filter panel options: (@link Controls/interface/IFilterPanel).
     */
    
    /**
-    * @name Controls/interface/IFilterButton#itemTemplate
-    * @cfg {itemTpl} Template for item render
-    */
-   
-   /**
-    * @name Controls/interface/IFilterButton#additionalTemplate
-    * @cfg {additionalTpl} Template for item render in block "Possible to select"
-    */
-   
-   /**
-    * @name Controls/interface/IFilterButton#additionalTemplateProperty
-    * @cfg {additionalTpl} Name of the item property that contains template for item render in block "Possible to select . If not set, additionalTemplate is used instead.
-    */
-   
-   /**
-    * @name Controls/interface/IFilterButton#itemTemplateProperty
-    * @cfg {additionalTpl} Name of the item property that contains template for item render. If not set, itemTemplate is used instead.
-    */
-   
-   /**
-    * @name Controls/interface/IFilterButton#historyId
-    * @cfg {String} Unique id for save history.
-    * @remark For the correct work of the history, you need to configure the structure of the application by the instruction https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ws4/components/filter-search/
+    * @name Controls/interface/IFilterButton#filterAlign
+    * @cfg {String} Sets the direction in which the popup panel will open.
+    * @variant right The panel opens to the left.
+    * @variant left The panel opens to the right.
     */
    
 });
