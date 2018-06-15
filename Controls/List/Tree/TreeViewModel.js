@@ -20,9 +20,13 @@ define('Controls/List/Tree/TreeViewModel', [
       _private = {
          isVisibleItem: function(item) {
             var
+               isExpanded,
                itemParent = item.getParent ? item.getParent() : undefined;
-            if (itemParent && !itemParent.isRoot()) {
-               if (this.expandedNodes[ItemsUtil.getPropertyValue(itemParent.getContents(), this.keyProperty)]) {
+            if (itemParent) {
+               isExpanded = this.expandedNodes[ItemsUtil.getPropertyValue(itemParent.getContents(), this.keyProperty)];
+               if (itemParent.isRoot()) {
+                  return itemParent.getOwner().isRootEnumerable() ? isExpanded : true;
+               } else if (isExpanded) {
                   return _private.isVisibleItem.call(this, itemParent);
                } else {
                   return false;

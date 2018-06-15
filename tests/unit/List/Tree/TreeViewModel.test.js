@@ -99,7 +99,10 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
             var
                item = treeViewModel.getItemById('123', cfg.keyProperty),
                itemChild;
-            assert.isTrue(TreeViewModel._private.displayFilterTree(item.getContents(), 0, item), 'Invalid value "displayFilterTree(123)".');
+            assert.isTrue(TreeViewModel._private.displayFilterTree.call({
+               expandedNodes: treeViewModel._expandedNodes,
+               keyProperty: treeViewModel._options.keyProperty
+            }, item.getContents(), 0, item), 'Invalid value "displayFilterTree(123)".');
             treeViewModel.toggleExpanded(item, true);
             itemChild = treeViewModel.getItemById('234', cfg.keyProperty);
             assert.isTrue(TreeViewModel._private.displayFilterTree.call({
