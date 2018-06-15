@@ -30,7 +30,7 @@ define('Controls/Decorators/PhoneNumber',
       var _private = {
          formatPhone: function(phoneIn) {
             phoneIn = (phoneIn || '').toString();
-            
+
             /*remove non-numeric characters from the string*/
             var
                phoneStr = (phoneIn || '').replace(/\D/g, '');
@@ -70,7 +70,7 @@ define('Controls/Decorators/PhoneNumber',
                var
 
                   /*first symbol. If number is with country code then is 1, else 0: if length is 11 then first symbol is code,
-                  * if less than 11 then number hasn't got a code*/
+                   * if less than 11 then number hasn't got a code*/
                   firstChar = phone.length - 10,
 
                   // the list if the city codes in region (code of the region consist of 3 symbols)
@@ -82,8 +82,8 @@ define('Controls/Decorators/PhoneNumber',
                   m = 0;
 
                /*determine the offset of code number by city code
-               if there is our code from 2 symbols in array, then we indent 2 symbol after region code, else will try to find only first symbol.
-               If have found, then indent only one symbol after region code*/
+                if there is our code from 2 symbols in array, then we indent 2 symbol after region code, else will try to find only first symbol.
+                If have found, then indent only one symbol after region code*/
 
                m = ~Array.indexOf(codeList, tcode) ? 2 : (~Array.indexOf(codeList, tcode.charAt(0)) ? 1 : 0);
 
@@ -111,7 +111,7 @@ define('Controls/Decorators/PhoneNumber',
                   });
 
                /*construct number and append it by extra digits
-               * if the length of the number is bigger or is equal to maximal russian length append '+', else there is no code there and we don't do anything*/
+                * if the length of the number is bigger or is equal to maximal russian length append '+', else there is no code there and we don't do anything*/
                phone = ((phone.length >= phone_max_length) ? '+' + formatted : formatted) +
                   (subphone ? ' доб. ' + subphone : '');
             } else if (phoneCodeModule.foreignCodes[country_code]) {
@@ -119,9 +119,9 @@ define('Controls/Decorators/PhoneNumber',
                var countBeforeSpace = 0;
                if (!phoneCodeModule.foreignCodes[country_code].length) {
                   countBeforeSpace = 1;
-               } else if(phoneCodeModule.foreignCodes[country_code].indexOf(phone.substring(1, 3))>=0) { //check at first the match with three-digit number
+               } else if (phoneCodeModule.foreignCodes[country_code].indexOf(phone.substring(1, 3)) >= 0) { //check at first the match with three-digit number
                   countBeforeSpace = 3;
-               } else if(phoneCodeModule.foreignCodes[country_code].indexOf(phone.substring(1, 2))>=0){ //if three-digit number didn't match, then check two-digit number
+               } else if (phoneCodeModule.foreignCodes[country_code].indexOf(phone.substring(1, 2)) >= 0) { //if three-digit number didn't match, then check two-digit number
                   countBeforeSpace = 2;
                } else {
                   return '+' + phone;
