@@ -98,7 +98,7 @@ define('Controls/Container/Dropdown',
                   this._items = null;
                } else {
                   var self = this;
-                  return _private.loadItems(this, newOptions.source, newOptions.selectedKeys).addCallback(function () {
+                  return _private.loadItems(this, newOptions.source, newOptions.selectedKeys).addCallback(function() {
                      self._forceUpdate();
                   });
                }
@@ -121,7 +121,7 @@ define('Controls/Container/Dropdown',
             }
 
             if (this._options.source && !this._items) {
-               _private.loadItems(this, this._options.source, this._options.filter).addCallback(function (items) {
+               _private.loadItems(this, this._options.source, this._options.filter).addCallback(function(items) {
                   open();
                   return items;
                });
