@@ -90,6 +90,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          _beforeMount: function() {
             this._rebuildCompoundControl = debounce.call(this._rebuildCompoundControl, this).bind(this);
+            this._className = 'controls-CompoundArea';
+            this._className += ' ws-float-area'; //Старые шаблоны завязаны селекторами на этот класс.
             this._commandHandler = this._commandHandler.bind(this);
          },
 

@@ -15,17 +15,17 @@
    <ws:else>
       <SBIS3.CONTROLS.ScrollContainer
          class="controls-ScrollContainer_flex controls-RichEditor__scrollContainer"
-         style="{{autoHeight && maximalHeight && maximalHeight != 0 ? 'max-height:' + maximalHeight + 'px;' }}"
+         style="{{autoHeight && maximalHeight && maximalHeight != 0 ? 'max-height:' + (maximalHeight - _decreaseHeight) + 'px;' }}"
          takeScrollbarHidden="{{!(autoHeight && maximalHeight == 0)}}"
          >
          <div
             class="controls-RichEditor__dataReview ws-basic-style {{editorConfig.className}}{{enabled ? ' ws-hidden'}}"
             tabindex="1"
-            style="{{!previewAutoHeight && autoHeight && minimalHeight && minimalHeight != 0 ? 'min-height:' + minimalHeight + 'px;'}}"
+            style="{{!previewAutoHeight && autoHeight && minimalHeight && minimalHeight != 0 ? 'min-height:' + (minimalHeight - _decreaseHeight) + 'px;'}}"
             >{{!enabled && text ? (_prepareReviewContent(text)|sanitize)}}</div>
          <div
             class="controls-RichEditor__editorFrame ws-basic-style {{editorConfig.className}}{{!enabled ? ' ws-hidden'}}"
-            style="{{autoHeight && minimalHeight && minimalHeight != 0 ? 'min-height:' + minimalHeight + 'px;'}}"
+            style="{{autoHeight && minimalHeight && minimalHeight != 0 ? 'min-height:' + (minimalHeight - _decreaseHeight) + 'px;'}}"
             >{{enabled && text ? (_prepareContent(_prepareReviewContent(text))|sanitize)}}</div>
          <div class="controls-RichEditor__sourceContainer ws-hidden">
             <textarea class="controls-RichEditor__sourceArea"></textarea>

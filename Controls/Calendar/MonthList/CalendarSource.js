@@ -1,8 +1,7 @@
 define('Controls/Calendar/MonthList/CalendarSource', [
    'Core/Deferred',
-   'WS.Data/Source/Base'//,
-   // 'Controls/Calendar/Utils'
-], function(Deferred, Base, /*CalendarUtils*/) {
+   'WS.Data/Source/Base'
+], function(Deferred, Base) {
    'use strict';
 
    /**

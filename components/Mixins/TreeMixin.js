@@ -905,7 +905,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                   this._collapseNodes(this.getOpenedPath(), ignoreKeys);
                }
                this._options.openedPath[id] = true;
-               return this._loadNode(id).addCallback(forAliveOnly(function() {
+               return this._loadNode(id, hash).addCallback(forAliveOnly(function() {
                   var expItem;
                   if (hash) {
                      expItem = this._getItemsProjection().getByHash(hash);
@@ -920,7 +920,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             return Deferred.fail();
          }
       },
-      _loadNode: function(id) {
+      _loadNode: function(id, hash) {
          if (this._dataSource && !this._loadedNodes[id] && this._options.partialyReload) {
             this._toggleIndicator(true);
             this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), 0, this._limit);
@@ -939,7 +939,13 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                else {
                   this._options._items.append(list);
                }
-               this._getItemProjectionByItemId(id).setLoaded(true);
+               // Всегда стараемся работать через hash
+               // https://online.sbis.ru/opendoc.html?guid=4b3c5ebf-f623-4d2e-9d96-8db8ee32d666
+               if (hash) {
+                  this._getItemsProjection().getByHash(hash).setLoaded(true);
+               } else {
+                  this._getItemProjectionByItemId(id).setLoaded(true);
+               }
                this._dataLoadedCallback();
             }).bind(this))
             .addBoth(function(error){
@@ -1666,7 +1672,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
          var
             newRoot,
             curRoot,
-            filter = this.getFilter() || {},
+            filter = coreClone(this.getFilter()) || {},
             isFakeRoot = isPlainObject(this._options.root) && this._options.root[this._options.idProperty] === key;
          // Internet Explorer при удалении элемента сбрасывает фокус не выше по иерархии, а просто "в никуда" (document.activeElement === null).
          // Для того, чтобы фокус при проваливании в папку не терялся - перед проваливанием устанавливаем его просто
