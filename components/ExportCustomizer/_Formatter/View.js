@@ -194,8 +194,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * @param {string} [fileUuid] Uuid шаблона форматирования эксель-файлаю Если указан, то будет произведено клонирование (опционально)
           * return {Core/Deferred}
           */
-         _callFormatterCreate: function (args) {
-            var isClone = !!args;
+         _callFormatterCreate: function (fileUuid) {
+            var isClone = !!fileUuid;
             var options = this._options;
             var consumerId = options.consumerId || '';
             if (this._creation[consumerId]) {
@@ -204,11 +204,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             var fieldIds = options.fieldIds;
             var formatter = this._exportFormatter;
             var promise = (isClone
-                  ? formatter.copy(args)
+                  ? formatter.copy(fileUuid)
                   : formatter.create(fieldIds || [], this._getFieldTitles(fieldIds), options.serviceParams)
             ).addCallbacks(
                function (result) {
-                  this._options.fileUuid = result;
+                  options.fileUuid = result;
                   this.sendCommand('subviewChanged', isClone ? 'clone' : 'create');
                   if (result) {
                      this._updatePreview();
@@ -234,9 +234,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             var options = this._options;
             var fieldIds = options.fieldIds;
             var promise = this._exportFormatter.update(options.fileUuid, fieldIds || [], this._getFieldTitles(fieldIds), options.serviceParams).addCallbacks(
-               function (result) {
-                  this._updatePreview();
-               }.bind(this),
+               this._updatePreview.bind(this, false),
                function (err) { return err; }
             );
             // Запустить индикатор сразу
@@ -275,8 +273,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           */
          _callFormatterDelete: function (fileUuid) {
             return this._exportFormatter.remove(fileUuid).addCallbacks(
-               function (result) {
-               }.bind(this),
+               function (result) {},
                function (err) { return err; }
             );
          },
