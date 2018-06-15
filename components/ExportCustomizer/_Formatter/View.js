@@ -66,6 +66,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                 */
                menuTitle: rk('Редактировать', 'НастройщикЭкспорта'),
                /**
+                * @cfg {string} Название пункта меню выбора способа форматирования для редактирования в браузере
+                */
+               menuItemInlineTitle: rk('в браузере', 'НастройщикЭкспорта'),
+               /**
+                * @cfg {string} Название пункта меню выбора способа форматирования для редактирования в отдельном приложении
+                */
+               menuItemAppTitle: rk('в приложении', 'НастройщикЭкспорта'),
+               /**
                 * @cfg {string} Подпись на изображении предпросмотра
                 */
                previewTitle: rk('Редактировать формат отображения в браузере', 'НастройщикЭкспорта'),
@@ -92,7 +100,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             },
             // Объект, предоставляющий методы форматирования шаблона эксель-файла
             _exportFormatter: null,
-            // Контрол выбора способа форматирования
+            // Контрол меню выбора способа форматирования
             _formatterMenu: null,
             // Контрол предпросмотра
             _preview: null,
@@ -101,14 +109,17 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             // Набор обещаний, ожидающих создания шаблона эксель-файла
             _creation: {},
             // Ожидаемое открытие шаблона эксель-файла
-            _opening: null
+            _opening: null,
+            // Поддерживается ли редактирование шаблона эксель-файла в отдельном приложении
+            // TODO: Это временное решение пока метод canEditInApp форматтера не полностью фунционален. Позже заменить на прямые вызовы этого метода при каждом использовании меню выбора способв форматирования
+            _isAppAllowed: null
          },
 
          _modifyOptions: function () {
             var options = View.superclass._modifyOptions.apply(this, arguments);
             options._menuItems = [
-               {id:'browser', title:'в браузере'},
-               {id:'app', title:'в приложении'}
+               {id:'inline', title:options.menuItemInlineTitle},
+               {id:'app', title:options.menuItemAppTitle}
             ];
             return options;
          },
@@ -119,7 +130,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          init: function () {
             View.superclass.init.apply(this, arguments);
             if (Di.isRegistered(EXPORT_FORMATTER_NAME)) {
-               this._exportFormatter = Di.resolve(EXPORT_FORMATTER_NAME);
+               var formatter = this._exportFormatter = Di.resolve(EXPORT_FORMATTER_NAME);
+               formatter.canEditInApp().addCallback(function (isAllow) {
+                  this._isAppAllowed = isAllow;
+               }.bind(this));
                this._formatterMenu = this.getChildControlByName('controls-ExportCustomizer-Formatter-View__formatterMenu');
                this._preview = this.getContainer().find('.controls-ExportCustomizer-Formatter-View__preview img');
                this._bindEvents();
@@ -141,6 +155,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          },
 
          _bindEvents: function () {
+            this.subscribeTo(this._formatterMenu, 'onActivated', function (evtName) {
+               if (!this._isAppAllowed) {
+                  this._formatterMenu.hidePicker();
+                  this._startFormatEditing(false);
+               }
+            }.bind(this));
+
             this.subscribeTo(this._formatterMenu, 'onMenuItemActivate', function (evtName, selectedId) {
                this._startFormatEditing(selectedId === 'app');
             }.bind(this));
@@ -161,7 +182,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                var method = useApp ? 'openApp' : 'open';
                this._opening = method;
                var result = this.sendCommand('subviewChanged', 'open');
-               if (!(result && result.isComplete)) {
+               if (!(result && typeof result === 'object' && result.isComplete)) {
                   this._callFormatterMethod(method);
                }
             }
