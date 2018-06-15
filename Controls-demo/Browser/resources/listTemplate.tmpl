@@ -1,6 +1,7 @@
-<Controls.List source="{{_source}}"
-               keyProperty="id"
-               emptyTemplate="Не найдено">
+<Controls.List
+        keyProperty="id"
+        emptyTemplate="Не найдено"
+        scope="{{_options}}">
    <ws:itemTemplate>
       <ws:partial template="tmpl!Controls/List/ItemTemplate">
          <ws:contentTemplate>
