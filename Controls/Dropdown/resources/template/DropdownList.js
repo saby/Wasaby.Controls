@@ -156,7 +156,8 @@ define('Controls/Dropdown/resources/template/DropdownList',
 
       Menu.getDefaultOptions = function() {
          return {
-            menuStyle: 'defaultHead'
+            menuStyle: 'defaultHead',
+            typeShadow: 'default'
          };
       };
 
