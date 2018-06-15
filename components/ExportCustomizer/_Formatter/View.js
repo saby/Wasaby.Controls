@@ -66,6 +66,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                 */
                menuTitle: rk('Редактировать', 'НастройщикЭкспорта'),
                /**
+                * @cfg {string} Название пункта меню выбора способа форматирования для редактирования в браузере
+                */
+               menuItemInlineTitle: rk('в браузере', 'НастройщикЭкспорта'),
+               /**
+                * @cfg {string} Название пункта меню выбора способа форматирования для редактирования в отдельном приложении
+                */
+               menuItemAppTitle: rk('в приложении', 'НастройщикЭкспорта'),
+               /**
                 * @cfg {string} Подпись на изображении предпросмотра
                 */
                previewTitle: rk('Редактировать формат отображения в браузере', 'НастройщикЭкспорта'),
@@ -92,7 +100,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             },
             // Объект, предоставляющий методы форматирования шаблона эксель-файла
             _exportFormatter: null,
-            // Контрол выбора способа форматирования
+            // Контрол меню выбора способа форматирования
             _formatterMenu: null,
             // Контрол предпросмотра
             _preview: null,
@@ -100,17 +108,18 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             _previewSize: null,
             // Набор обещаний, ожидающих создания шаблона эксель-файла
             _creation: {},
-            // Набор образцов для клонирования
-            _patterns: {},
             // Ожидаемое открытие шаблона эксель-файла
-            _opening: null
+            _opening: null,
+            // Поддерживается ли редактирование шаблона эксель-файла в отдельном приложении
+            // TODO: Это временное решение пока метод canEditInApp форматтера не полностью фунционален. Позже заменить на прямые вызовы этого метода при каждом использовании меню выбора способв форматирования
+            _isAppAllowed: null
          },
 
          _modifyOptions: function () {
             var options = View.superclass._modifyOptions.apply(this, arguments);
             options._menuItems = [
-               {id:'browser', title:'в браузере'},
-               {id:'app', title:'в приложении'}
+               {id:'inline', title:options.menuItemInlineTitle},
+               {id:'app', title:options.menuItemAppTitle}
             ];
             return options;
          },
@@ -121,7 +130,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          init: function () {
             View.superclass.init.apply(this, arguments);
             if (Di.isRegistered(EXPORT_FORMATTER_NAME)) {
-               this._exportFormatter = Di.resolve(EXPORT_FORMATTER_NAME);
+               var formatter = this._exportFormatter = Di.resolve(EXPORT_FORMATTER_NAME);
+               formatter.canEditInApp().addCallback(function (isAllow) {
+                  this._isAppAllowed = isAllow;
+               }.bind(this));
                this._formatterMenu = this.getChildControlByName('controls-ExportCustomizer-Formatter-View__formatterMenu');
                this._preview = this.getContainer().find('.controls-ExportCustomizer-Formatter-View__preview img');
                this._bindEvents();
@@ -143,6 +155,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          },
 
          _bindEvents: function () {
+            this.subscribeTo(this._formatterMenu, 'onActivated', function (evtName) {
+               if (!this._isAppAllowed) {
+                  this._formatterMenu.hidePicker();
+                  this._startFormatEditing(false);
+               }
+            }.bind(this));
+
             this.subscribeTo(this._formatterMenu, 'onMenuItemActivate', function (evtName, selectedId) {
                this._startFormatEditing(selectedId === 'app');
             }.bind(this));
@@ -163,7 +182,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                var method = useApp ? 'openApp' : 'open';
                this._opening = method;
                var result = this.sendCommand('subviewChanged', 'open');
-               if (!(result && result.isComplete)) {
+               if (!(result && typeof result === 'object' && result.isComplete)) {
                   this._callFormatterMethod(method);
                }
             }
@@ -174,9 +193,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           *
           * @protected
           * @param {string} method Имя метода
+          * @param {*} [args] Дополнитьные аргументы (опционально)
           * return {Core/Deferred}
           */
-         _callFormatterMethod: function (method) {
+         _callFormatterMethod: function (method, args) {
             var options = this._options;
             var isCreate = method === 'create';
             var isClone = method === 'clone';
@@ -185,31 +205,35 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                throw new Error('Already in creation');
             }
             var isOpen = method === 'open' || method === 'openApp';
+            var isUpdate = method === 'update';
+            var isDelete = method === 'delete';
             if (isOpen) {
                this._opening = null;
             }
-            var args = [];
-            if (isClone) {
-               args.push(this._patterns[consumerId]);
+            var formatterArgs = [];
+            if (isClone || isDelete) {
+               formatterArgs.push(args);
             }
-            var useBoth = isOpen || method === 'update';
-            if (useBoth || method === 'delete') {
-               args.push(options.fileUuid);
+            if (isOpen || isUpdate) {
+               formatterArgs.push(options.fileUuid);
             }
-            if (isCreate || useBoth) {
+            if (isCreate || isOpen || isUpdate) {
                var fieldIds = options.fieldIds;
-               args.push(fieldIds || [], this._selectFields(options.allFields, fieldIds, function (v) { return v.title; }) || [], options.serviceParams);
+               formatterArgs.push(fieldIds || [], this._selectFields(options.allFields, fieldIds, function (v) { return v.title; }) || [], options.serviceParams);
             }
             var formatter = this._exportFormatter;
-            var promise = formatter[isClone ? 'copy' : method].apply(formatter, args).addCallbacks(
+            var promise = formatter[isClone ? 'copy' : (isDelete ? 'remove' : method)].apply(formatter, formatterArgs).addCallbacks(
                this._onFormatter.bind(this, method),
                function (err) { return err; }
             );
             if (isCreate || isClone) {
                this._creation[consumerId] = promise.createDependent().addBoth(function (consumerId) {
                   delete this._creation[consumerId];
-                  delete this._patterns[consumerId];
                }.bind(this, consumerId));
+            }
+            if (isCreate || isClone || isUpdate) {
+               // Запустить индикатор сразу, если это не isDelete и не isOpen (для открытия запустить позже)
+               this._waitIndicatorStart();
             }
             return promise;
          },
@@ -218,12 +242,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * Вызвать последовательно несколько методов форматера
           *
           * @protected
-          * @param {Array<string>} methods Список методов
+          * @param {Array<string|object>} methods Список вызываемых методов
           * return {Core/Deferred}
           */
          _callFormatterMethods: function (methods) {
             if (methods && methods.length) {
-               var promise = this._callFormatterMethod(methods[0]);
+               var inf = methods[0];
+               var promise = this._callFormatterMethod.apply(this, typeof inf === 'object' ? [inf.method, inf.args] : [inf]);
                if (1 < methods.length) {
                   promise.addCallback(this._callFormatterMethods.bind(this, methods.slice(1)));
                }
@@ -267,19 +292,49 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           *
           * @protected
           * @param {string} method Имя метода
-          * @param {string} fileUuid Uuid шаблона форматирования эксель-файла
+          * @param {*} result Результат операции над шаблоном форматирования эксель-файла
           */
-         _onFormatter: function (method, fileUuid) {
-            if (!!fileUuid) {
-               var isCreate = method === 'create' || method === 'clone';
-               if (isCreate) {
-                  this._options.fileUuid = fileUuid;
-               }
-               if (isCreate || method === 'open' || method === 'openApp') {
-                  this.sendCommand('subviewChanged', isCreate ? method : 'openEnd');
-               }
+         _onFormatter: function (method, result) {
+            var isCreate = method === 'create' || method === 'clone';
+            var isOpen = method === 'open' || method === 'openApp';
+            var isDelete = method === 'delete';
+            if (isCreate) {
+               this._options.fileUuid = result;
             }
-            this._updatePreview();
+            if (isCreate || isOpen) {
+               this.sendCommand('subviewChanged', isOpen ? 'openEnd' : method);
+            }
+            if (!isDelete && (!isOpen || result)) {
+               this._updatePreview();
+            }
+         },
+
+         /**
+          * Запустить индикатор ожидания
+          *
+          * @protected
+          * @param {boolean} isForced Запустить заново, если индикатор уже запущен
+          */
+         _waitIndicatorStart: function (isForced) {
+            if (isForced) {
+               this._updatePreviewClearStop();
+            }
+            if (!this._waitIndicatorStopper) {
+               WaitIndicator.make({target:this._preview[0].parentNode, overlay:'dark', delay:0}, this._waitIndicatorStopper = new Deferred());
+            }
+         },
+
+         /**
+          * Остановить индикатор ожидания
+          *
+          * @protected
+          */
+         _waitIndicatorEnd: function () {
+            var stopper = this._waitIndicatorStopper;
+            if (stopper) {
+               stopper.callback();
+               this._waitIndicatorStopper = null;
+            }
          },
 
          /**
@@ -291,22 +346,18 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          _updatePreview: function (withClear) {
             var fieldIds = this._options.fieldIds;
             var has = !!(fieldIds && fieldIds.length);
-            if (has) {
-               this._updatePreviewStart();
-            }
             if (!has || withClear) {
                var img = this._preview[0];
                img.src = '';
                img.title = '';
                this._preview.removeClass('ws-enabled').addClass('ws-disabled');
             }
+            if (has) {
+               this._updatePreviewStart();
+            }
          },
          _updatePreviewClearStop: function () {
-            var stopper = this._updatePreviewStopper;
-            if (stopper) {
-               stopper.callback();
-               this._updatePreviewStopper = null;
-            }
+            this._waitIndicatorEnd();
          },
          _updatePreviewStart: coreDebounce(function () {
             var size = this._previewSize;
@@ -314,13 +365,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                var previewContainer = this._preview.parent();
                this._previewSize = size = {width:previewContainer.width(), height:previewContainer.height()};
             }
-            this._updatePreviewClearStop();
-            var img = this._preview[0];
-            var stopper = this._updatePreviewStopper = new Deferred();
-            WaitIndicator.make({target:img.parentNode, delay:0}, stopper);
+            this._waitIndicatorStart();
             var options = this._options;
             this._exportFormatter.getPreviewUrl(options.fileUuid, size.width, size.height).addCallbacks(
                function (url) {
+                  var img = this._preview[0];
                   img.onload = img.onerror = this._updatePreviewClearStop.bind(this);
                   img.src = url;
                   img.title = options.previewTitle;
@@ -337,7 +386,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * @param {object} values Набор из нескольких значений, которые необходимо изменить
           * @param {object} meta Дополнительная информация об изменении
           */
-         setValues: function (values, meta) {
+         restate: function (values, meta) {
             if (!values || typeof values !== 'object') {
                throw new Error('Object required');
             }
@@ -346,29 +395,28 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             if (changes) {
                var fieldIds = options.fieldIds;
                var hasFields = !!(fieldIds && fieldIds.length);
-               var method;
                var consumerId = options.consumerId || '';
+               var creating = this._creation[consumerId];
+               var methods = [];
                if (options.fileUuid) {
                   if ('fieldIds' in changes && !('fileUuid' in changes) && hasFields) {
-                     method = 'update';
+                     methods.push('update');
                   }
                }
                else {
                   if (hasFields) {
-                     var isClone = meta /*&& meta.source === 'presets'*/ && meta.reason === 'clone';
-                     method = isClone ? 'clone' : 'create';
-                     if (isClone) {
-                        this._patterns[consumerId] = meta.args[0];
+                     if (!creating) {
+                        var isClone = meta /*&& meta.source === 'presets'*/ && meta.reason === 'clone';
+                        methods.push(isClone ? {method:'clone', args:meta.args[0]} : 'create');
+                        if (isClone && 'fieldIds' in changes) {
+                           methods.push('update');
+                        }
+                     }
+                     else {
+                        methods.push('update');
                      }
                   }
                }
-               var creating = this._creation[consumerId];
-               if (creating) {
-                  if (method === 'create' || method === 'clone') {
-                     method = 'update';
-                  }
-               }
-               var methods = method ? [method] : [];
                if (this._opening) {
                   methods.push(this._opening);
                }
@@ -385,6 +433,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                }
                this.setEnabled(hasFields);
                this.setVisible(hasFields);
+            }
+            if (meta /*&& meta.source === 'presets'*/ && meta.reason === 'delete') {
+               this._callFormatterMethod('delete', meta.args[0]);
             }
          },
 

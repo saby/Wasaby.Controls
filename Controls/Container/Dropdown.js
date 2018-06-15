@@ -31,9 +31,7 @@ define('Controls/Container/Dropdown',
             });
             return instance._sourceController.load().addCallback(function(items) {
                instance._items = items;
-               if (selectedKeys) {
-                  _private.updateSelectedItems(instance, selectedKeys, keyProperty);
-               }
+               _private.updateSelectedItems(instance, selectedKeys, keyProperty);
                return items;
             });
          },
@@ -49,8 +47,8 @@ define('Controls/Container/Dropdown',
          onResult: function(result) {
             switch (result.action) {
                case 'itemClick':
+                  _private.selectItem.apply(this, result.data);
                   if (!result.data[0].get('@parent')) {
-                     _private.selectItem.apply(this, result.data);
                      this._children.DropdownOpener.close();
                   }
                   break;
@@ -100,7 +98,7 @@ define('Controls/Container/Dropdown',
                   this._items = null;
                } else {
                   var self = this;
-                  return _private.loadItems(this, newOptions.source, newOptions.selectedKeys).addCallback(function() {
+                  return _private.loadItems(this, newOptions.source, newOptions.selectedKeys).addCallback(function () {
                      self._forceUpdate();
                   });
                }
@@ -123,7 +121,7 @@ define('Controls/Container/Dropdown',
             }
 
             if (this._options.source && !this._items) {
-               _private.loadItems(this, this._options.source, this._options.filter).addCallback(function(items) {
+               _private.loadItems(this, this._options.source, this._options.filter).addCallback(function (items) {
                   open();
                   return items;
                });
@@ -131,9 +129,14 @@ define('Controls/Container/Dropdown',
                open();
             }
          }
-
-
       });
+
+      Dropdown.getDefaultOptions = function getDefaultOptions() {
+         return {
+            selectedKeys: []
+         };
+      };
+
       Dropdown._private = _private;
       return Dropdown;
    });
