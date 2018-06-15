@@ -1,28 +1,35 @@
-<div attr:class="controls-ListView__itemV{{marker != false && itemData.isSelected ? ' controls-ListView__item__marked'}}
-    {{!!itemData.showActions ? ' controls-ListView__item_showActions'}}
-    {{!!itemData.isActive ? ' controls-ListView__item_active'}}
-    {{!!itemData.isEditing ? ' controls-ListView__item_editing'}}
-    {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}"
-     attr:key="{{itemData.item.getId()}}">
-    <ws:if data="{{itemData.multiSelectVisibility}}">
-        <ws:partial template="{{multiSelectTpl}}" multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" attr:class="controls-ListView__checkbox js-controls-ListView__notEditable"/>
-    </ws:if>
+<ws:if data="{{!itemData.isGroup}}">
+   <div attr:class="controls-ListView__itemV{{marker != false && itemData.isSelected ? ' controls-ListView__item__marked'}}
+       {{!!itemData.showActions ? ' controls-ListView__item_showActions'}}
+       {{!!itemData.isActive ? ' controls-ListView__item_active'}}
+       {{!!itemData.isEditing ? ' controls-ListView__item_editing'}}
+       {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}"
+        attr:key="{{itemData.item.getId()}}">
+       <ws:if data="{{itemData.multiSelectVisibility}}">
+           <ws:partial template="{{multiSelectTpl}}" multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" attr:class="controls-ListView__checkbox js-controls-ListView__notEditable"/>
+       </ws:if>
 
-    <ws:if data="{{contentTemplate}}">
-        <ws:partial
-                attr:class="controls-ListView__itemContent"
-                template="{{contentTemplate}}"
-                itemData="{{itemData}}"/>
-    </ws:if>
-    <ws:else>
-        <div attr:class="controls-ListView__itemContent">{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>
-    </ws:else>
-    <ws:if data="{{itemData.drawActions}}">
-        <ws:if data="{{itemData.isSwiped}}">
-            <ws:partial template="{{swipeTemplate}}"  itemData="{{itemData}}" itemActionsTemplate="{{itemActionsTemplate}}"/>
-        </ws:if>
-        <ws:else >
-            <ws:partial template="{{itemActionsTemplate}}"  itemData="{{itemData}}"/>
-        </ws:else>
-    </ws:if>
-</div>
+       <ws:if data="{{contentTemplate}}">
+           <ws:partial
+                   attr:class="controls-ListView__itemContent"
+                   template="{{contentTemplate}}"
+                   itemData="{{itemData}}"/>
+       </ws:if>
+       <ws:else>
+           <div attr:class="controls-ListView__itemContent">{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>
+       </ws:else>
+       <ws:if data="{{itemData.drawActions}}">
+           <ws:if data="{{itemData.isSwiped}}">
+               <ws:partial template="{{swipeTemplate}}"  itemData="{{itemData}}" itemActionsTemplate="{{itemActionsTemplate}}"/>
+           </ws:if>
+           <ws:else >
+               <ws:partial template="{{itemActionsTemplate}}"  itemData="{{itemData}}"/>
+           </ws:else>
+       </ws:if>
+   </div>
+</ws:if>
+<ws:else>
+   <div attr:class="{{itemData.isHiddenGroup ? 'controls-ListView__hiddenGroup' : 'controls-Grid__row controls-ListView__group'}} controls-ListView__itemV" attr:key="{{itemData.item}}">
+      <ws:partial template="{{groupTemplate}}" itemData="{{itemData}}"></ws:partial>
+   </div>
+</ws:else>

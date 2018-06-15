@@ -5,6 +5,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 2246,
                'Раздел': null,
+               'Группа': 'group_1',
                'Раздел@': true,
                'Раздел$': null,
                'Наименование': '01. Лицензии СБИС (активируются на reg)',
@@ -13,6 +14,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 454339,
                'Раздел': null,
+               'Группа': 'group_1',
                'Раздел@': true,
                'Раздел$': null,
                'Наименование': '02. Лицензии СБИС (оформление на inside)',
@@ -21,6 +23,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 2253,
                'Раздел': null,
+               'Группа': 'group_1',
                'Раздел@': true,
                'Раздел$': null,
                'Наименование': '03. Носители ЭП',
@@ -29,6 +32,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 457275,
                'Раздел': null,
+               'Группа': 'group_1',
                'Раздел@': true,
                'Раздел$': null,
                'Наименование': '04. Удостоверяющий центр',
@@ -37,6 +41,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 452815,
                'Раздел': null,
+               'Группа': 'group_2',
                'Раздел@': true,
                'Раздел$': null,
                'Наименование': '05. Торговое оборудование',
@@ -45,6 +50,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 457244,
                'Раздел': null,
+               'Группа': 'group_2',
                'Раздел@': true,
                'Раздел$': null,
                'Наименование': '06. Услуги',
@@ -53,6 +59,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 454687,
                'Раздел': null,
+               'Группа': 'group_2',
                'Раздел@': true,
                'Раздел$': null,
                'Наименование': '07. СБиС бухгалтерия и аудит',
@@ -61,6 +68,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 3988,
                'Раздел': null,
+               'Группа': 'group_2',
                'Раздел@': true,
                'Раздел$': null,
                'Наименование': '08. ПО других компаний',
@@ -69,6 +77,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 440833,
                'Раздел': null,
+               'Группа': 'group_3',
                'Раздел@': true,
                'Раздел$': null,
                'Наименование': '09. Материалы и инвентарь',
@@ -77,6 +86,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 439374,
                'Раздел': null,
+               'Группа': 'group_3',
                'Раздел@': true,
                'Раздел$': null,
                'Наименование': '10. Presto',
@@ -85,6 +95,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 455558,
                'Раздел': null,
+               'Группа': 'group_3',
                'Раздел@': true,
                'Раздел$': null,
                'Наименование': '11. Служебное (результат синхронизации)',
@@ -93,6 +104,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 458962,
                'Раздел': null,
+               'Группа': 'group_4',
                'Раздел@': true,
                'Раздел$': null,
                'Наименование': 'НОВЫЕ ТОВАРЫ',
@@ -101,6 +113,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 471641,
                'Раздел': 2246,
+               'Группа': 'group_1',
                'Раздел@': true,
                'Раздел$': null,
                'Наименование': 'Presto',
@@ -109,6 +122,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 453094,
                'Раздел': 2246,
+               'Группа': 'group_1',
                'Раздел@': true,
                'Раздел$': null,
                'Наименование': 'Архив',
@@ -117,6 +131,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 453062,
                'Раздел': 2246,
+               'Группа': 'group_1',
                'Раздел@': true,
                'Раздел$': null,
                'Наименование': 'Все о компаниях и Торги',
@@ -125,6 +140,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 465756,
                'Раздел': 2246,
+               'Группа': 'group_1',
                'Раздел@': true,
                'Раздел$': null,
                'Наименование': 'Дополнительное место хранения',
@@ -133,6 +149,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 466943,
                'Раздел': 2246,
+               'Группа': 'group_1',
                'Раздел@': true,
                'Раздел$': null,
                'Наименование': 'Дополнительные sms',
@@ -141,6 +158,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 453063,
                'Раздел': 2246,
+               'Группа': 'group_1',
                'Раздел@': true,
                'Раздел$': null,
                'Наименование': 'Дополнительные пользователи',
@@ -149,6 +167,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 461394,
                'Раздел': 2246,
+               'Группа': 'group_1',
                'Раздел@': true,
                'Раздел$': null,
                'Наименование': 'ОФД',
@@ -157,6 +176,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 466938,
                'Раздел': 2246,
+               'Группа': 'group_1',
                'Раздел@': true,
                'Раздел$': null,
                'Наименование': 'Пакеты расширений',
@@ -165,6 +185,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 453064,
                'Раздел': 2246,
+               'Группа': 'group_1',
                'Раздел@': true,
                'Раздел$': null,
                'Наименование': 'Точка продаж (ЕГАИС и Розница)',
@@ -173,6 +194,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 452955,
                'Раздел': 2246,
+               'Группа': 'group_1',
                'Раздел@': true,
                'Раздел$': null,
                'Наименование': 'ЭДО',
@@ -181,6 +203,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 452922,
                'Раздел': 2246,
+               'Группа': 'group_1',
                'Раздел@': true,
                'Раздел$': null,
                'Наименование': 'Электронная отчетность',
@@ -189,6 +212,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 452954,
                'Раздел': 2246,
+               'Группа': 'group_1',
                'Раздел@': true,
                'Раздел$': null,
                'Наименование': 'Электронные подписи',
@@ -197,6 +221,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 439491,
                'Раздел': 2246,
+               'Группа': 'group_1',
                'Раздел@': null,
                'Раздел$': null,
                'Наименование': 'Права использования аккаунта sbis.ru в течение 1 года',
@@ -205,6 +230,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 452639,
                'Раздел': 2246,
+               'Группа': 'group_1',
                'Раздел@': null,
                'Раздел$': null,
                'Наименование': 'Права использования \'СБИС SAPPER\' (без настроек)',
@@ -213,6 +239,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 468884,
                'Раздел': 2246,
+               'Группа': 'group_1',
                'Раздел@': null,
                'Раздел$': null,
                'Наименование': 'Права использования \'СБИС Корпоративный УЦ\'',
@@ -221,6 +248,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 445056,
                'Раздел': 2246,
+               'Группа': 'group_1',
                'Раздел@': null,
                'Раздел$': null,
                'Наименование': 'Права использования \'СБИС Нулевка\' по 1 компании',
@@ -229,6 +257,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 445199,
                'Раздел': 2246,
+               'Группа': 'group_1',
                'Раздел@': null,
                'Раздел$': null,
                'Наименование': 'Права использования СБИС Предприятие',
@@ -237,6 +266,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 92,
                'Раздел': 2246,
+               'Группа': 'group_1',
                'Раздел@': null,
                'Раздел$': null,
                'Наименование': 'Права использования \'СБИС Расширенный аналитический блок\'',
@@ -245,6 +275,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 4117,
                'Раздел': 2246,
+               'Группа': 'group_1',
                'Раздел@': null,
                'Раздел$': null,
                'Наименование': 'Права использования \'СБиС++ ЭО: Расширенный аналитический блок\'',
@@ -253,6 +284,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 3139,
                'Раздел': 454339,
+               'Группа': 'group_1',
                'Раздел@': null,
                'Раздел$': null,
                'Наименование': 'Права использования возможности \'СБиС++\' для отправки медицинской отчетности в течение 1 года',
@@ -261,6 +293,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 464182,
                'Раздел': 454339,
+               'Группа': 'group_1',
                'Раздел@': null,
                'Раздел$': null,
                'Наименование': 'Права использования \'СБИС SAPPER\' (с базовыми документами)',
@@ -269,6 +302,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 445507,
                'Раздел': 454339,
+               'Группа': 'group_1',
                'Раздел@': null,
                'Раздел$': null,
                'Наименование': 'Права использования СБИС Витрина для внешнего документооборота',
@@ -277,6 +311,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 461101,
                'Раздел': 454339,
+               'Группа': 'group_1',
                'Раздел@': null,
                'Раздел$': null,
                'Наименование': 'Права использования СБИС по регистрации одного сотрудника в ЕГАИС с правом использования электронной подписи в течение двух лет',
@@ -285,6 +320,7 @@ define('Controls-demo/List/Tree/GridData', function() {
             {
                'id': 461104,
                'Раздел': 454339,
+               'Группа': 'group_1',
                'Раздел@': null,
                'Раздел$': null,
                'Наименование': 'Права использования СБИС по регистрации одного сотрудника в ЕГАИС с правом использования электронной подписи в течение трёх лет',
