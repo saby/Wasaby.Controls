@@ -115,6 +115,6 @@ define('Controls/Container/Dropdown',
          };
       };
 
-
+      Dropdown._private = _private;
       return Dropdown;
    });
