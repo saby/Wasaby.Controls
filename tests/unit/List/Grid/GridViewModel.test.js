@@ -402,6 +402,49 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             gridViewModel.setHeader(gridHeader);
             assert.deepEqual(gridHeader, gridViewModel.getHeader(), 'Incorrect value "getHeader()" after "setHeader(gridHeader)".');
          });
+         it('_prepareCrossBrowserColumn', function() {
+            var
+               initialColumns = [
+                  {
+                     title: 'first',
+                     width: ''
+                  },
+                  {
+                     title: 'second',
+                     width: '1fr'
+                  },
+                  {
+                     title: 'third',
+                     width: '100px'
+                  },
+                  {
+                     title: 'last',
+                     width: 'auto'
+                  }
+               ],
+               resultColumns = [
+                  {
+                     title: 'first',
+                     width: ''
+                  },
+                  {
+                     title: 'second',
+                     width: 'auto'
+                  },
+                  {
+                     title: 'third',
+                     width: '100px'
+                  },
+                  {
+                     title: 'last',
+                     width: '1px'
+                  }
+               ];
+            for (var i = 0; i < initialColumns.length; i++) {
+               assert.deepEqual(resultColumns[i], gridViewModel._prepareCrossBrowserColumn(initialColumns[i], true),
+                  'Incorrect result "_prepareCrossBrowserColumn(initialColumns[' + i + '])".');
+            }
+         });
          it('_prepareHeaderColumns', function() {
             assert.deepEqual([{}].concat(gridHeader), gridViewModel._headerColumns, 'Incorrect value "_headerColumns" before "_prepareHeaderColumns([])" without multiselect.');
             gridViewModel._prepareHeaderColumns([], false);

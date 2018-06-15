@@ -5,7 +5,8 @@ define('Controls-demo/List/Tree/Tree', [
    'Controls-demo/List/Tree/TreeMemory',
    'css!Controls-demo/List/Tree/Tree',
    'Controls/Container/Scroll',
-   'Controls/TreeGrid'
+   'Controls/TreeGrid',
+   'tmpl!Controls-demo/List/Tree/DemoContentTemplate'
 ], function(BaseControl, GridData, template, MemorySource) {
 
    'use strict';
@@ -104,12 +105,8 @@ define('Controls-demo/List/Tree/Tree', [
          gridColumns: [
             {
                displayProperty: 'Наименование',
-               width: '1fr'
-            },
-            {
-               displayProperty: 'p0',
-               width: 'auto',
-               align: 'right'
+               width: '1fr',
+               template: 'tmpl!Controls-demo/List/Tree/DemoContentTemplate'
             }
          ]
       });
