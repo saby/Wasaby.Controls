@@ -91,9 +91,11 @@ define('SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil',
        оригинальная структура кнопки фильтров может меняться прикладными разработчиками,
        и чтобы не нарушать целостность этой структуры, структура из истории аккуртано вмерживается
        в оригинальную, заменяя лишь value и resetValue, и при необходимости сбрасывает value в resetValue */
-      prepareStructureToApply: function(structure, currentStructure, doNotResetIfFound) {
+      prepareStructureToApply: function(structure, currentStructure, doNotResetIfFound, doNotApplyKeys) {
          /* Чтобы не портить текущую историю, сделаем копию (иначе не применится фильтр) */
          var currentStructureCopy = coreClone(currentStructure);
+         doNotResetIfFound = doNotResetIfFound || doNotApplyKeys;
+         doNotApplyKeys = doNotApplyKeys || [];
 
          this.prepareNewStructure(currentStructureCopy, structure);
 
@@ -108,7 +110,7 @@ define('SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil',
                   return currentStructureCopy[key].internalValueField === structureElem.internalValueField;
                }, false);
 
-               if(elemFromHistory) {
+               if(elemFromHistory && doNotApplyKeys.indexOf(elemFromHistory.filterField) === -1) {
                   /* Меняем только value и caption, т.к. нам нужны только значения для фильтрации из историии,
                    остальные значения структуры нам не интересны + их могут менять, и портить их неправильно тем, что пришло из истории неправильно */
                   if(elemFromHistory.value !== undefined) {
