@@ -42,6 +42,7 @@ define('Controls/Input/Phone/ViewModel',
 
             this._options.value = Formatter.getClearData(result.format, result.value).value;
             this._format = result.format;
+            this._nextVersion();
 
             return result;
          },

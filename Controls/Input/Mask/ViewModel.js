@@ -30,6 +30,7 @@ define('Controls/Input/Mask/ViewModel',
             this._options.value = newOptions.value;
             this._replacer = newOptions.replacer;
             this._format = FormatBuilder.getFormat(newOptions.mask, newOptions.formatMaskChars, newOptions.replacer);
+            this._nextVersion();
          },
 
          /**
@@ -42,6 +43,7 @@ define('Controls/Input/Mask/ViewModel',
             var result = InputProcessor.input(splitValue, inputType, this._replacer, this._format, this._format);
 
             this._options.value = result.value;
+            this._nextVersion();
 
             return result;
          }
