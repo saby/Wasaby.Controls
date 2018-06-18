@@ -51,10 +51,7 @@ define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/Res
             }
             _this._options = Object.assign({}, OPTION, cfg);
             _this._extensions = new ExtensionsHelper(_this._options.extensions);
-            var _a = _this._options, element = _a.element, innerClass = _a.innerClass, dragText = _a.dragText, dropText = _a.dropText;
-            _this._overlay = new Overlay_1.Overlay({
-                element: element, innerClass: innerClass, dragText: dragText, dropText: dropText,
-                ondrop: function (data) {
+            _this._overlay = new Overlay_1.Overlay(tslib_1.__assign({}, _this._options, { ondrop: function (data) {
                     replaceDir(data).addCallback(function (results) {
                         return filter(results, {
                             extensions: _this._extensions,
@@ -69,8 +66,7 @@ define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/Res
                             _this._selectDef = null;
                         }
                     });
-                }
-            });
+                } }));
             return _this;
         }
         /**

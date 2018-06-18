@@ -243,8 +243,10 @@ export class Overlay {
             throw new Error('argument "element" must be extended of HTMLElement');
         }
         areas[this.__uid] = config;
+        areaCount++;
     }
     destroy() {
+        areaCount--;
         delete areas[this.__uid];
     }
 }

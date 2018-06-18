@@ -22,7 +22,9 @@ define("File/LocalFile", ["require", "exports", "tslib", "File/ResourceAbstract"
             var _this = _super.call(this) || this;
             _this._data = _data;
             _this._meta = _meta;
-            _this._info = typeof info == 'string' ? {} : info;
+            _this._info = typeof info == 'string' ? {
+                name: info
+            } : info || {};
             _this._info.name = _this._info.name || (_data instanceof File && _data.name);
             if (!_this._info.name) {
                 // Для корректной загрузки Blob через FormData необходимо имя файла

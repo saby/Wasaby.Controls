@@ -190,8 +190,10 @@ define("File/ResourceGetter/DropArea/Overlay", ["require", "exports", "Core/help
                 throw new Error('argument "element" must be extended of HTMLElement');
             }
             areas[this.__uid] = config;
+            areaCount++;
         }
         Overlay.prototype.destroy = function () {
+            areaCount--;
             delete areas[this.__uid];
         };
         return Overlay;

@@ -27,7 +27,9 @@ class LocalFile extends ResourceAbstract {
         info?: string | Info
     ) {
         super();
-        this._info = typeof info == 'string'? {}: info;
+        this._info = typeof info == 'string'? {
+            name: info
+        }: info || {};
         this._info.name = this._info.name || (_data instanceof File && _data.name);
 
         if (!this._info.name) {

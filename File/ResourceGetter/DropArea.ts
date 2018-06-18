@@ -81,9 +81,8 @@ class DropArea extends IResourceGetterBase {
 
         this._options = Object.assign({}, OPTION, cfg);
         this._extensions = new ExtensionsHelper(this._options.extensions);
-        let {element, innerClass, dragText, dropText} = this._options;
         this._overlay = new Overlay({
-            element, innerClass, dragText, dropText,
+            ...this._options,
             ondrop: (data: DataTransfer) => {
                 replaceDir(data).addCallback((results) => {
                     return filter(results, {
