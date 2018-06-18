@@ -32,13 +32,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
 
       /**
        * @typedef {object} ExportFormatterResult Тип, описывающий возвращаемые настраиваемые значения компонента
-       * @property {string} fileUuid Uuid шаблона форматирования эксель-файла
+       * @property {string} fileUuid Uuid стилевого эксель-файла
        *
        * @see fileUuid
        */
 
       /**
-       * Имя регистрации объекта, предоставляющего методы форматирования шаблона эксель-файла, в инжекторе зависимостей
+       * Имя регистрации объекта, предоставляющего методы форматирования стилевого эксель-файла, в инжекторе зависимостей
        * @private
        * @type {string}
        */
@@ -90,7 +90,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                 */
                fieldIds: null,
                /**
-                * @cfg {string} Uuid шаблона форматирования эксель-файла
+                * @cfg {string} Uuid стилевого эксель-файла
                 */
                fileUuid: null,
                /**
@@ -98,7 +98,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                 */
                consumerId: null
             },
-            // Объект, предоставляющий методы форматирования шаблона эксель-файла
+            // Объект, предоставляющий методы форматирования стилевого эксель-файла
             _exportFormatter: null,
             // Контрол меню выбора способа форматирования
             _formatterMenu: null,
@@ -106,11 +106,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             _preview: null,
             // Размер области предпросмотра
             _previewSize: null,
-            // Набор обещаний, ожидающих создания шаблона эксель-файла
+            // Набор обещаний, ожидающих создания стилевого эксель-файла
             _creation: {},
-            // Ожидаемое открытие шаблона эксель-файла
+            // Ожидаемое открытие стилевого эксель-файла
             _opening: null,
-            // Поддерживается ли редактирование шаблона эксель-файла в отдельном приложении
+            // Поддерживается ли редактирование стилевого эксель-файла в отдельном приложении
             // TODO: Это временное решение пока метод canEditInApp форматтера не полностью фунционален. Позже заменить на прямые вызовы этого метода при каждом использовании меню выбора способв форматирования
             _isAppAllowed: null
          },
@@ -170,7 +170,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          },
 
          /**
-          * Открыть для редактирования пользователем (в браузере или в отдельном приложении) шаблон форматирования эксель-файла
+          * Открыть для редактирования пользователем (в браузере или в отдельном приложении) стилевой эксель-файл
           *
           * @protected
           * @param {boolean} useApp Открыть в отдельном приложении
@@ -191,7 +191,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * Вызвать метод форматера "create" или "clone"
           *
           * @protected
-          * @param {string} [fileUuid] Uuid шаблона форматирования эксель-файлаю Если указан, то будет произведено клонирование (опционально)
+          * @param {string} [fileUuid] Uuid стилевого эксель-файлаю Если указан, то будет произведено клонирование (опционально)
           * return {Core/Deferred}
           */
          _callFormatterCreate: function (fileUuid) {
@@ -268,7 +268,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * Вызвать метод форматера "delete"
           *
           * @protected
-          * @param {string} fileUuid Uuid шаблона форматирования эксель-файла
+          * @param {string} fileUuid Uuid стилевого эксель-файла
           * return {Core/Deferred}
           */
          _callFormatterDelete: function (fileUuid) {

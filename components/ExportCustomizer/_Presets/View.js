@@ -28,13 +28,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
        * @property {string|number} id Идентификатор пресета
        * @property {string} title Отображаемое название пресета
        * @property {Array<string>} fieldIds Список привязки колонок в экспортируемом файле к полям данных
-       * @property {string} fileUuid Uuid шаблона форматирования эксель-файла
+       * @property {string} fileUuid Uuid стилевого эксель-файла
        */
 
       /**
        * @typedef {object} ExportPresetsResult Тип, описывающий возвращаемые настраиваемые значения компонента
        * @property {Array<string>} fieldIds Список привязки колонок в экспортируемом файле к полям данных
-       * @property {string} fileUuid Uuid шаблона форматирования эксель-файла
+       * @property {string} fileUuid Uuid стилевого эксель-файла
        */
 
 
@@ -101,7 +101,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             _customs: null,
             // Текущий список привязки колонок в экспортируемом файле к полям данных
             _fieldIds: null,
-            // Текущий uuid шаблона форматирования эксель-файла
+            // Текущий uuid стилевого эксель-файла
             _fileUuid: null,
             // Контрол выбора пресета
             _selector: null,
