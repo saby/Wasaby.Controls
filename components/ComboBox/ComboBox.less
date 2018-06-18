@@ -55,9 +55,7 @@
    overflow: hidden;
    .align-self(center);
 }
-.controls-ComboBox__fieldNotEditable__placeholder {
-   color: @color_ComboBox_placeholder;
-}
+
 .controls-ComboBox__editable-false {
    .controls-InputRender__field{
       display: none;
@@ -69,6 +67,9 @@
       &:focus {
          text-overflow: ellipsis;
       }
+   }
+   .controls-ComboBox__fieldNotEditable__placeholder {
+      color: @color_ComboBox_placeholder;
    }
 }
 
