@@ -22,7 +22,7 @@ define('SBIS3.CONTROLS/ListView/resources/MassSelectionController/MassSelectionH
              });
           },
 
-          _onSetRoot: function(event, root) {
+          _onSetRoot: function(event, currentRoot, hierarchy, root) {
              this._selection.setRoot(root);
           },
 
