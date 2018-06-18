@@ -94,7 +94,7 @@ define('SBIS3.CONTROLS/ComponentBinder/FilterController', [
                   /* Нужна проверка, т.е. механизм биндингов умеет сравнивать только примитивы, и, если мы подменяем объект,
                      он всегда считает, что произошли изменения */
                   var needCompare = self._getOption('compareFilters');
-                  if (!needCompare || !isEqual(parentContext.getValue(BROWSER_FILTER_FIELD, resultFilter))) {
+                  if (!needCompare || !isEqual(parentContext.getValue(BROWSER_FILTER_FIELD), resultFilter)) {
                      parentContext.setValue(BROWSER_FILTER_FIELD, resultFilter);
                   }
                },
