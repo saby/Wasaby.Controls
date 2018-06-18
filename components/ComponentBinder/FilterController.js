@@ -5,9 +5,8 @@ define('SBIS3.CONTROLS/ComponentBinder/FilterController', [
    'Core/Abstract',
    'Core/core-merge',
    'Core/core-clone',
-   'SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil',
-   'Core/helpers/Object/isEqual'
-], function(cAbstract, cMerge, coreClone, FilterHistoryControllerUntil, isEqual) {
+   'SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil'
+], function(cAbstract, cMerge, coreClone, FilterHistoryControllerUntil) {
    
    var BROWSER_FILTER_FIELD = 'browser.filter';
    
@@ -24,7 +23,6 @@ define('SBIS3.CONTROLS/ComponentBinder/FilterController', [
        * @cfg {SBIS3.CONTROLS/ListView} Представление
        */
       _$view: null,
-      _$compareFilters: false,
    
       /**
        * Связывает фильтры и представление данных
@@ -37,7 +35,6 @@ define('SBIS3.CONTROLS/ComponentBinder/FilterController', [
              fastDataFilter = fDataFilter || this._getOption('fastDataFilter'),
              view = viewInst || this._getOption('view'),
              parentContext = view.getParent().getContext(),
-             self = this,
             /* Т.к. отслеживается изменени опции filterStructure в фильтрах,
                то нам необходимо блокировать повторную синхронизацию опции,
                чтобы не было зацикливания, иначе при синхронизации опять сработает подписка на изменение опции тд.. */
@@ -91,12 +88,7 @@ define('SBIS3.CONTROLS/ComponentBinder/FilterController', [
                      //FIXME При рекурсивном мерже некорректно мержатся массивы в полях объекта, при мерже {arr: [123]} <-- {arr: []} получаем {arr: [123]} вместо {arr: []}
                      resultFilter = cMerge(coreClone(parentContext.getValue(BROWSER_FILTER_FIELD)), resultFilter, {rec: false});
                   }
-                  /* Нужна проверка, т.е. механизм биндингов умеет сравнивать только примитивы, и, если мы подменяем объект,
-                     он всегда считает, что произошли изменения */
-                  var needCompare = self._getOption('compareFilters');
-                  if (!needCompare || !isEqual(parentContext.getValue(BROWSER_FILTER_FIELD, resultFilter))) {
-                     parentContext.setValue(BROWSER_FILTER_FIELD, resultFilter);
-                  }
+                  parentContext.setValue(BROWSER_FILTER_FIELD, resultFilter);
                },
                structureChanged = function(event, prop) {
                   if (prop === 'filterStructure' && !blockSync) {
