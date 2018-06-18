@@ -15,7 +15,7 @@
       <Controls.Input.Dropdown
               name="myDropdownList1"
               bind:selectedKeys="_selectedKeysEmpty"
-              emptyText="Nothing"
+              emptyText="{{true}}"
               keyProperty="id"
               itemTemplateProperty="myTemplate"
               source="{{_getItemTemplateData()}}"
