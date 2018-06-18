@@ -91,7 +91,9 @@ class DropArea extends IResourceGetterBase {
                         maxSize: this._options.maxSize
                     });
                 }).addCallback((results) => {
-                    this._options.ondrop.call(this, results);
+                    if (this._options.ondrop) {
+                        this._options.ondrop.call(this, results);
+                    }
                     if (this._selectDef) {
                         this._selectDef.callback(results);
                         this._selectDef = null;

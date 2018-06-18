@@ -61,7 +61,9 @@ define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/Res
                             maxSize: _this._options.maxSize
                         });
                     }).addCallback(function (results) {
-                        _this._options.ondrop.call(_this, results);
+                        if (_this._options.ondrop) {
+                            _this._options.ondrop.call(_this, results);
+                        }
                         if (_this._selectDef) {
                             _this._selectDef.callback(results);
                             _this._selectDef = null;
