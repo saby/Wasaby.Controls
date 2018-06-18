@@ -1,23 +1,19 @@
 <Controls.Container.Filter>
-   <Controls.Container.Search serachParam="title">
+   <Controls.Container.Search>
       <div>
          <ws:if data="{{_options.searchConfig}}">
-            <div>
-               <Controls.Container.Input.Search>
-                  <Controls.Input.Search
-                          bind:value="_options.searchConfig.value">
-                  </Controls.Input.Search>
-               </Controls.Container.Input.Search>
-            </div>
+            <Controls.Container.Input.Search>
+               <Controls.Input.Search
+                       bind:value="_options.searchConfig.value"
+                       class="controls-Browser__search">
+               </Controls.Input.Search>
+            </Controls.Container.Input.Search>
+
          </ws:if>
          <ws:if data="{{_options.content}}">
-            <div>
-               <Controls.Container.List searchParam="title" source="{{_options.source}}">
-                  <ws:content>
-                     <ws:partial template="{{_options.content}}"/>
-                  </ws:content>
-               </Controls.Container.List>
-            </div>
+            <Controls.Container.List scope="{{_options.contentConfig}}">
+               <ws:partial template="{{_options.content}}"/>
+            </Controls.Container.List>
          </ws:if>
       </div>
    </Controls.Container.Search>

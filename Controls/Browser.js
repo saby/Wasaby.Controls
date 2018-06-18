@@ -1,6 +1,7 @@
 define('Controls/Browser', [
    'Core/Control',
-   'tmpl!Controls/Browser/Browser'
+   'tmpl!Controls/Browser/Browser',
+   'css!Controls/Browser/Browser'
 ], function(BaseControl, template) {
 
    'use strict';

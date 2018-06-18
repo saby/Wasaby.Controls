@@ -32,6 +32,14 @@ define('Controls-demo/Browser/Browser', [
       { id: 23, title: 'Petr'}
    ];
 
+   var contentConfig = {
+      searchParam: 'title',
+      source: new Memory({
+         idProperty: 'id',
+         data: sourceData
+      })
+   };
+
    var searchConfig = {
       value: ''
    };
@@ -42,10 +50,7 @@ define('Controls-demo/Browser/Browser', [
 
          _searchConfig: searchConfig,
 
-         _source: new Memory({
-            idProperty: 'id',
-            data: sourceData
-         })
+         _contentConfig: contentConfig
       });
    return ModuleClass;
 });
