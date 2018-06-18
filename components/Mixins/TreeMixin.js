@@ -1543,7 +1543,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                hierarchy = this.getHierarchy(path, this._options.currentRoot);
             }
             if (this._previousRoot !== this._options.currentRoot) {
-               this._notify('onSetRoot', this._options.currentRoot, hierarchy, this._options.root !== undefined ? this._options.root : null);
+               this._notify('onSetRoot', this._options.currentRoot, hierarchy, this._options.root);
                //TODO Совсем быстрое и временное решение. Нужно скроллиться к первому элементу при проваливании в папку.
                // Выпилить, когда это будет делать установка выделенного элемента
                //TODO курсор
