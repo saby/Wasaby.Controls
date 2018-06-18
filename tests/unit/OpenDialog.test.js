@@ -10,6 +10,7 @@ define(['SBIS3.CONTROLS/Action/OpenDialog', 'Core/core-instance', 'Lib/Control/D
          it('should open dialog', function(done) {
             let action = new OpenDialog({
                mode: 'dialog',
+               template: 'Controls/Button',
                dialogOptions: {
                   animationLength: 0
                }
@@ -26,6 +27,7 @@ define(['SBIS3.CONTROLS/Action/OpenDialog', 'Core/core-instance', 'Lib/Control/D
          it('should open floatArea', function(done) {
             let action = new OpenDialog({
                mode: 'floatArea',
+               template: 'Controls/Button',
                dialogOptions: {
                   animationLength: 0
                }
@@ -42,6 +44,7 @@ define(['SBIS3.CONTROLS/Action/OpenDialog', 'Core/core-instance', 'Lib/Control/D
       describe('subscribe', function() {
          it('should notify onAfterClose', function(done) {
             let action = new OpenDialog({
+               template: 'Controls/Button',
                dialogOptions: {
                   handlers: {
                      'onAfterClose': function () {
@@ -57,6 +60,7 @@ define(['SBIS3.CONTROLS/Action/OpenDialog', 'Core/core-instance', 'Lib/Control/D
          });
          it('should notify onBeforeShow', function(done) {
             let action = new OpenDialog({
+               template: 'Controls/Button',
                dialogOptions: {
                   handlers: {
                      'onBeforeShow': function () {
@@ -72,6 +76,7 @@ define(['SBIS3.CONTROLS/Action/OpenDialog', 'Core/core-instance', 'Lib/Control/D
          });
          it('should notify onAfterShow', function(done) {
             let action = new OpenDialog({
+               template: 'Controls/Button',
                dialogOptions: {
                   handlers: {
                      'onAfterShow': function () {

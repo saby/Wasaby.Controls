@@ -25,11 +25,19 @@ define('Controls/Calendar/Month/Model', [
       },
 
       _isStateChanged: function(state) {
-         var isChanged = ModuleClass.superclass._isStateChanged.apply(this, arguments);
+         var isChanged = ModuleClass.superclass._isStateChanged.apply(this, arguments),
+            currentMonthStart = DateUtil.getStartOfMonth(this._state.month),
+            currentMonthEnd = DateUtil.getEndOfMonth(this._state.month);
+
          return isChanged ||
             state.selectionProcessing !== this._state.selectionProcessing ||
-            !DateUtil.isDatesEqual(state.startValue, this._state.startValue) ||
-            !DateUtil.isDatesEqual(state.endValue, this._state.endValue);
+
+            // обновляем только если старый выбранный или новый период пересекаются с отображаемым месяцем
+            (DateUtil.isRangesOverlaps(currentMonthStart, currentMonthEnd, this._state.startValue, this._state.endValue) ||
+               DateUtil.isRangesOverlaps(currentMonthStart, currentMonthEnd, state.startValue, state.endValue)) &&
+
+            // не обновляем если отображаемый месяц полностью входит в старый и новый периоды
+            !(this._state.startValue < currentMonthStart && state.startValue < currentMonthStart && this._state.endValue > currentMonthEnd && state.endValue > currentMonthEnd);
       },
 
       _getDayObject: function(date, state) {

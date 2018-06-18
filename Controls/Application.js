@@ -90,7 +90,6 @@ define('Controls/Application',
             var self = this,
                def = new Deferred();
 
-            self.content = cfg.content;
             self._headData = new HeadDataContext(cfg.theme);
             _private.initState(self, receivedState || cfg);
             self.needArea = cfg.compat || self.compat;
@@ -98,7 +97,7 @@ define('Controls/Application',
                receivedState = {};
             }
             self.application = (context.AppData ? context.AppData.application : cfg.application);
-            self.appRoot = (context.AppData ? context.AppData.appRoot : cfg.appRoot);
+            self.appRoot = cfg.appRoot ? cfg.appRoot : (context.AppData ? context.AppData.appRoot : '/');
             self.wsRoot = receivedState.wsRoot || (context.AppData ? context.AppData.wsRoot : cfg.wsRoot);
             self.resourceRoot = receivedState.resourceRoot || (context.AppData ? context.AppData.resourceRoot : cfg.resourceRoot);
             self.product = receivedState.product || (context.AppData ? context.AppData.product : cfg.product);

@@ -9,6 +9,7 @@ define('Controls/Input/RichArea/resources/TinyMCE',
       'Core/Deferred',
       'Core/helpers/Function/runDelayed',
       'Core/Control',
+      'Core/UserConfig',
       'tmpl!Controls/Input/RichArea/resources/TinyMCE/TinyMCE',
       'SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil',
       'SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/smiles',
@@ -37,6 +38,7 @@ define('Controls/Input/RichArea/resources/TinyMCE',
       Deferred,
       runDelayed,
       Control,
+      UserConfig,
       template,
       RichUtil,
       smiles,
@@ -1821,7 +1823,7 @@ define('Controls/Input/RichArea/resources/TinyMCE',
                         offset -= value.length;
                         value = this._getAdjacentTextNodesValue(startNode, false) + value;
                         offset += value.length;
-                        value += this.getAdjacentTextNodesValue(startNode, true);
+                        value += this._getAdjacentTextNodesValue(startNode, true);
                      }
                      if (value.length && offset) {
                         var m = value.match(reUrl);

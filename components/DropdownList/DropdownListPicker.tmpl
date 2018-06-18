@@ -1,6 +1,6 @@
 <div if="{{hasHead}}" class="controls-DropdownList__header"></div>
 <div class="controls-DropdownList__body">
-<SBIS3.CONTROLS:ScrollContainer
+<SBIS3.CONTROLS.ScrollContainer
         shadowStyle="none"
         name="DropdownScroll"
         activableByClick="false"
@@ -9,24 +9,24 @@
             <div class="controls-DropdownList__list"></div>
             <div if="{{hasCloseButton}}" class="controls-DropdownList__close-picker icon-Close icon-disabled icon-24"></div>
     </ws:content>
-</SBIS3.CONTROLS:ScrollContainer>
+</SBIS3.CONTROLS.ScrollContainer>
 <div class="controls-DropdownList__buttonsBlock {{className}} {{multiselect ? 'controls-DropdownList__multiselect'}}">
     <ws:if data="{{multiselect}}">
-        <SBIS3.CONTROLS:Button:IconButton
+        <SBIS3.CONTROLS.Button.IconButton
                 class="controls-DropdownListFooter_select"
                 name="DropdownList_buttonChoose"
                 icon="sprite:icon-16 icon-Yes icon-done"
                 size="m"
                 style="bordered"
                 primary="true">
-        </SBIS3.CONTROLS:Button:IconButton>
+        </SBIS3.CONTROLS.Button.IconButton>
     </ws:if>
-    <SBIS3.CONTROLS:Link
+    <SBIS3.CONTROLS.Link
             class="controls-DropdownListFooter_hasMore controls-Link__disabledHover"
             name="DropdownList_buttonHasMore"
             emulateClickByTap="{{true}}"
             caption="{[Еще...]}">
-    </SBIS3.CONTROLS:Link>
+    </SBIS3.CONTROLS.Link>
 </div>
 <div if="{{footerTpl}}" class="controls-DropdownListFooter">
     <ws:partial template="{{footerTpl}}" scope="{{...}}" />

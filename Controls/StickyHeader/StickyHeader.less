@@ -1,0 +1,26 @@
+.controls-StickyHeader {
+   top: 0;
+   position: sticky;
+   background: #fff;
+}
+
+.controls-StickyHeader__observationTargetTop,
+.controls-StickyHeader__observationTargetBottom {
+   position: absolute;
+}
+
+.controls-StickyHeader__observationTargetTop {
+   top: -1px;
+}
+
+.controls-StickyHeader__observationTargetBottom {
+   bottom: -1px;
+}
+
+.controls-StickyHeader__shadow {
+   bottom: -@height-gradient_Scroll-shadow;
+   background: linear-gradient(
+      to bottom,
+      @start-color-gradient_Scroll-shadow, @end-color-gradient_Scroll-shadow
+   );
+}

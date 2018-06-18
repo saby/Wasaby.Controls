@@ -212,7 +212,7 @@ define('Controls/Filter/Button/OldPanelOpener',
             
             /* Если шаблон указали как имя компонента (SBIS3.* || js!SBIS3.*) */
             function getCompTpl(tpl) {
-               return prepTpl(dotTplForComp({component: (requirejs.defined(tpl) ? tpl : 'js!' + tpl), templateOptions: self.getProperty('templateOptions')}));
+               return prepTpl(dotTplForComp({component: (requirejs.defined(tpl) ? tpl : 'js!' + tpl), componentOptions: self.getProperty('componentOptions')}));
             }
             
             /* Если в качестве шаблона передали вёрстку */
@@ -240,6 +240,7 @@ define('Controls/Filter/Button/OldPanelOpener',
                self);
             
             return FilterPanelUtils.getPanelConfig({
+               className: 'controls-FilterButton__popup-index',
                corner: isRightAlign ? 'tl' : 'tr',
                opener: this,
                parent: this,

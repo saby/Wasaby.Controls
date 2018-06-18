@@ -75,24 +75,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
        */
       var DI_IMAGE_UPLOADER = 'ImageUploader';
 
-      /**
-       * Вызвать функцию асинхронно. Все агрументы после первого будут использованы как аргументы вызова. Возвращает обещание, разрешаемое результатом выполнения функции
-       * @private
-       * @param {function} func
-       * @return {Core/Deferred}
-       */
-      var _callAsync = function (func/*, args*/) {
-         var promise = new Deferred();
-         var args = Array.prototype.slice.call(arguments, 1);
-         if (BROWSER.isMobileIOS || BROWSER.isMobileSafari) {
-            promise.callback(func.apply(null, args));
-         }
-         else {
-            setTimeout(function () { promise.callback(func.apply(null, args)); }, 1);
-         }
-         return promise;
-      };
-
       var _getTrueIEVersion = function () {
          var version = cConstants.browser.IEVersion;
          // В cConstants.browser.IEVersion неправильно определяется MSIE 11
@@ -113,6 +95,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             TINYMCE_URL_BASE + '/tinymce'
          ],
          constants = {
+            decreaseHeight1: 2,// Высоты всего, содержащегося внутри .controls-RichEditor__richTextArea уменьшаются на 2px так как она имеет верхнюю и нижнюю границы по 1px
+            decreaseHeight2: 2,// Высоты всего, содержащегося внутри .controls-RichEditor__scrollContainer уменьшаются на 2px так как он имеет нижний отступ 2px
             baseAreaWidth: 768,//726
             defaultImagePercentSize: 25,// Начальный размер картинки (в процентах)
             defaultPreviewerSize: 768,//512
@@ -338,6 +322,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (options.autoHeight) {
                   options.minimalHeight = this._cleanHeight(options.minimalHeight);
                   options.maximalHeight = this._cleanHeight(options.maximalHeight);
+                  options._decreaseHeight = constants.decreaseHeight1 + constants.decreaseHeight2;
                }
                return options;
             },
@@ -388,6 +373,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                });
                this._fillImages(false);
+               if (!this.isEnabled()) {
+                  this._decorateAsSVG(this._options.text);
+               }
             },
 
             /**
@@ -509,16 +497,18 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
                      }
                      var isInline = options.editorConfig.inline;
+                     var minHeight = 0 < options.minimalHeight ? options.minimalHeight - options._decreaseHeight : 0;
+                     var maxHeight = 0 < options.maximalHeight ? options.maximalHeight - options._decreaseHeight : 0;
                      if (isInline) {
                         this._richTextAreaContainer.css('max-height', options.maximalHeight || '');
                         if (this._hasScrollContainer) {
-                           this._scrollContainer.css('max-height', options.maximalHeight || '');
+                           this._scrollContainer.css('max-height', maxHeight || '');
                         }
-                        this._inputControl.css('min-height', options.minimalHeight || '');
+                        this._inputControl.css('min-height', minHeight || '');
                      }
                      else {
                         var iFrame = $(this._tinyEditor.iframeElement);
-                        iFrame.css({'max-height':options.maximalHeight || '', 'min-height':options.minimalHeight || ''});
+                        iFrame.css({'max-height':maxHeight || '', 'min-height':minHeight || ''});
                      }
                   }
                }
@@ -626,18 +616,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this._setText(text);
             },
 
-            setActive: function (active) {
-               // Иногда, когда редактор помещён внуть некоторой FloatArea, случается так, что установка активности происходит во время анимации, когда эта родительская область "вылетает" в рабочсее поле. Чтобы установка активности не мешала анимации - будем делать её асинхронно
-               // 1175247680 https://online.sbis.ru/opendoc.html?guid=d02aee44-14e6-425c-9670-bf35f68714c7
-               _callAsync(this._setActive.bind(this), active);
-            },
-
-            _setActive: function (active) {
-               if (this.isDestroyed()) {
-                  return;
-               }
+            setActive: function(active) {
                this._lastActive = active;
-               if (active && this.isEnabled() && this._needFocusOnActivated()) {
+               if (active && this._needFocusOnActivated() && this.isEnabled()) {
                   this._performByReady(function() {
                      //Активность могла поменяться пока грузится tinymce.js
                      if (this._lastActive) {
@@ -2548,6 +2529,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (needUnwrap && template != '2') {
                   $img.unwrap();
                }
+               var imageOptionsPanel =  this._imageOptionsPanel;
+               var canRecalc = true;
                switch (template) {
                   case '1':
                      $img.addClass('image-template-left');
@@ -2563,7 +2546,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         ' data-img-uuid="' + $img.attr('data-img-uuid') + '"' +
                         '></img>' +
                         '</p>';
-                     this._tinyEditor.dom.replace($(html)[0], (needUnwrap ? $parent : $img)[0],false);
+                     var fragment = $(html)[0];
+                     var editor = this._tinyEditor;
+                     editor.dom.split($parent[0], $img[0], fragment);
+                     var newPic = fragment.firstChild;
+                     editor.selection.select(newPic);
+                     imageOptionsPanel.hide();
+                     this._showImageOptionsPanel($(newPic));
+                     canRecalc = false;
                      break;
                   case '3':
                      $img.addClass('image-template-right');
@@ -2573,7 +2563,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                };
                // Вызвать recalcPosition напрямую во избежании ощутимых задержек
                // 49132 https://online.sbis.ru/opendoc.html?guid=f6ceccf6-2001-494d-90c1-d44a6255ad1e
-               this._imageOptionsPanel.recalcPosition();
+               if (canRecalc) {
+                  imageOptionsPanel.recalcPosition();
+               }
                this._updateTextByTiny();
             },
 
@@ -2833,16 +2825,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                var container = this._tinyEditor && this._tinyEditor.getContainer() ? $(this._tinyEditor.getContainer()) : this._inputControl;
                var options = this._options;
                if (options.autoHeight) {
-                  var minHeight = this._cleanHeight(options.maximalHeight) || '';
-                  this._richTextAreaContainer.css('max-height', minHeight);
+                  var maxHeight = this._cleanHeight(options.maximalHeight);
+                  this._richTextAreaContainer.css('max-height', maxHeight || '');
                   if (this._hasScrollContainer) {
-                     this._scrollContainer.css('max-height', minHeight);
+                     this._scrollContainer.css('max-height', 0 < maxHeight ? maxHeight - options._decreaseHeight : '');
                   }
                   // Минимальную высоту области просмотра нужно фиксировать только в отсутствии опции previewAutoHeight
                   // 1175020199 https://online.sbis.ru/opendoc.html?guid=ff26541b-4dce-4df3-8b04-1764ee9b1e7a
                   // 1175043073 https://online.sbis.ru/opendoc.html?guid=69a945c9-b517-4056-855a-6dec71d81823
                   if (this._dataReview && !options.previewAutoHeight) {
-                     this._dataReview.css('min-height', enabled ? '' : this._cleanHeight(options.minimalHeight) || '');
+                     var minHeight = enabled ? null : this._cleanHeight(options.minimalHeight);
+                     this._dataReview.css('min-height', enabled ? '' : (0 < minHeight ? minHeight - options._decreaseHeight : ''));
                   }
                }
                else {
@@ -3019,6 +3012,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                text = typeof text === 'string' ? text : text === null || text === undefined ? '' : text + '';
                //TODO: временное решение для 230. удалить в 240 когда сделают ошибку https://inside.tensor.ru/opendoc.html?guid=dbaac53f-1608-42fa-9714-d8c3a1959f17
                return RichUtil.unDecorateLinks(text);
+            },
+
+            //Заменяем якори на svg изображения
+            _decorateAsSVG: function(text) {
+               RichUtil.replaceAnchorsToSvg(text).addCallback(function (result) {
+                  this._dataReview.html(result);
+               }.bind(this));
             },
 
             //метод показа плейсхолдера по значению//
@@ -3246,6 +3246,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   // иначе проверку строкой выше не пройти. (И устанавливаем всегда строкой, даже если пришли null или undefined)
                   this._lastReview = text || '';
                   this._dataReview.html(this._prepareReviewContent(text));
+                  this._decorateAsSVG(text);
                }
             },
 

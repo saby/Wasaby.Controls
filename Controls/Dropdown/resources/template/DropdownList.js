@@ -77,12 +77,20 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   items: newOptions.items,
                   rootKey: newOptions.rootKey || null,
                   selectedKeys: newOptions.selectedKeys,
+                  displayProperty: newOptions.displayProperty,
                   keyProperty: newOptions.keyProperty,
                   itemTemplateProperty: newOptions.itemTemplateProperty,
                   nodeProperty: newOptions.nodeProperty,
-                  parentProperty: newOptions.parentProperty
+                  parentProperty: newOptions.parentProperty,
+                  emptyText: newOptions.emptyText
                });
                this._hasHierarchy = this._listModel.hasHierarchy();
+            }
+         },
+
+         _beforeUpdate: function(newOptions) {
+            if (newOptions.rootKey !== this._options.rootKey) {
+               this._listModel.setRootKey(newOptions.rootKey);
             }
          },
 
@@ -148,7 +156,8 @@ define('Controls/Dropdown/resources/template/DropdownList',
 
       Menu.getDefaultOptions = function() {
          return {
-            menuStyle: 'defaultHead'
+            menuStyle: 'defaultHead',
+            typeShadow: 'default'
          };
       };
 

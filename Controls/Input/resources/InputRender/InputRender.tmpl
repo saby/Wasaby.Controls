@@ -8,39 +8,44 @@
    {{ _options.readOnly && !_options.multiline ? 'controls-InputRender_whiteSpace_nowrap' : 'controls-InputRender_whiteSpace_normal' }}"
      title="{{tooltip}}">
    <div class="controls-InputRender__wrapper controls-InputRender__wrapper_{{ _options.multiline ? 'multiLine' : 'singleLine' }}">
-      <div class="controls-InputRender__fieldWrapper controls-InputRender__fieldWrapper{{_options.multiline ? '_multiLine' : '_singleLine'}}">
 
-         <ws:if data="{{_options.beforeFieldWrapper}}">
-            <ws:partial template="{{_options.beforeFieldWrapper}}"/>
-         </ws:if>
+      <ws:if data="{{_options.beforeFieldWrapper}}">
+         <ws:partial template="{{_options.beforeFieldWrapper}}"/>
+      </ws:if>
 
-         <ws:partial
-               template="{{_options.content}}"
-               on:input="_inputHandler()"
-               on:click="_clickHandler()"
-               on:select="_selectionHandler()"
-               on:keyup="_keyUpHandler()"
-               on:change="_inputCompletedHandler()"
-               on:focusin="_focusinHandler()"
-               attr:class="{{ _options.textAlign === 'right' ? 'controls-InputRender__field_textAlign_right' }}"
-               value="{{ _options.viewModel.getDisplayValue() }}"
-               autocomplete="{{_options.autocomplete}}"
-         />
+      <ws:if data="{{_options.content}}">
+         <div class="controls-InputRender__fieldWrapper controls-InputRender__fieldWrapper{{_options.multiline ? '_multiLine' : '_singleLine'}}">
 
-         <ws:if data="{{ !_options.viewModel.getDisplayValue() && !_options.readOnly}}">
             <ws:partial
-               attr:class="{{ _options.multiline ? 'controls-InputArea__placeholder_multiline' }}"
-               template="tmpl!Controls/Input/resources/CustomPlaceholder"
-               placeholder="{{ _options.placeholder }}"
-               attr:tabindex="{{-1}}"
+                  template="{{_options.content}}"
+                  on:input="_inputHandler()"
+                  on:click="_clickHandler()"
+                  on:select="_selectionHandler()"
+                  on:keyup="_keyUpHandler()"
+                  on:change="_inputCompletedHandler()"
+                  on:focusin="_focusinHandler()"
+                  attr:class="{{ _options.textAlign === 'right' ? 'controls-InputRender__field_textAlign_right' }}"
+                  value="{{ _options.viewModel.getDisplayValue() }}"
+                  readOnly="{{ _options.readOnly }}"
+                  autocomplete="{{_options.autocomplete}}"
             />
-         </ws:if>
 
-         <ws:if data="{{_options.afterFieldWrapper}}">
-            <ws:partial template="{{_options.afterFieldWrapper}}"/>
-         </ws:if>
+            <ws:if data="{{ !_options.viewModel.getDisplayValue() && !_options.readOnly}}">
+               <ws:partial
+                  attr:class="{{ _options.multiline ? 'controls-InputArea__placeholder_multiline' }}"
+                  template="tmpl!Controls/Input/resources/CustomPlaceholder"
+                  placeholder="{{ _options.placeholder }}"
+                  attr:tabindex="{{-1}}"
+               />
+            </ws:if>
 
-      </div>
+         </div>
+      </ws:if>
+
+      <ws:if data="{{_options.afterFieldWrapper}}">
+         <ws:partial template="{{_options.afterFieldWrapper}}"/>
+      </ws:if>
+
    </div>
 
    <ws:if data="{{_options.tagStyle}}">

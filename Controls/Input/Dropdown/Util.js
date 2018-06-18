@@ -1,25 +1,15 @@
-define('Controls/Input/Dropdown/Util', [], function() {
+define('Controls/Input/Dropdown/Util',
+   [],
+   function() {
 
-   'use strict';
-   var DropdownUtil = {
+      'use strict';
 
-   /**
-     * Открывает всплывашку
-     * @param {Object} self
-     * @param {Object} target
-     */
-      open: function(self, target) {
-         var config = {
-            templateOptions: {
-               items: self._items,
-               defaultItemTemplate: self._defaultItemTemplate
-            },
-            target: target
-         };
-         self._children.DropdownOpener.open(config, self);
+      function prepareEmpty(emptyText) {
+         if (emptyText) {
+            return emptyText === true ? 'Не выбрано' : emptyText;
+         }
       }
-   };
 
-   return DropdownUtil;
-}
+      return {prepareEmpty: prepareEmpty};
+   }
 );

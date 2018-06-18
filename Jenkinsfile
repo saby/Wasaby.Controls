@@ -213,23 +213,6 @@ node('controls') {
                                 url: 'git@git.sbis.ru:root/sbis3-cdn.git']]
                         ])
                     }
-                },
-                checkout4: {
-                    echo "Выкачиваем demo_stand"
-                    dir(workspace) {
-                        checkout([$class: 'GitSCM',
-                        branches: [[name: "rc-${version}"]],
-                        doGenerateSubmoduleConfigurations: false,
-                        extensions: [[
-                            $class: 'RelativeTargetDirectory',
-                            relativeTargetDir: "demo_stand"
-                            ]],
-                            submoduleCfg: [],
-                            userRemoteConfigs: [[
-                                credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
-                                url: 'git@git.sbis.ru:ka.sannikov/demo_stand.git']]
-                        ])
-                    }
                 }
             )
         }
@@ -240,8 +223,6 @@ node('controls') {
                 SDK = SDK.trim()
                 echo SDK
             }
-            echo " Копируем /demo_stand/client в /tests/stand/client"
-            sh "cp -rf ./demo_stand/client ./controls/tests/stand"
             parallel(
                 ws: {
                     echo "Выкачиваем ws для unit тестов и если указан сторонний бранч"

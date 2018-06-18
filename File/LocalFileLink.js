@@ -1,6 +1,5 @@
-define("File/LocalFileLink", ["require", "exports"], function (require, exports) {
+define("File/LocalFileLink", ["require", "exports", "tslib", "File/ResourceAbstract"], function (require, exports, tslib_1, ResourceAbstract) {
     "use strict";
-    /// <amd-module name="File/LocalFileLink" />
     /**
      * @typedef {Object} FileInfo Информация о файле
      * @property {String} [name] Имя
@@ -11,11 +10,13 @@ define("File/LocalFileLink", ["require", "exports"], function (require, exports)
     /**
      * Класс - обёртка над ссылкой на локальный файл
      * @class
+     * @extends File/ResourceAbstract
      * @name File/LocalFileLink
      * @public
      * @author Заляев А.В.
      */
-    var LocalFileLink = /** @class */ (function () {
+    var LocalFileLink = /** @class */ (function (_super) {
+        tslib_1.__extends(LocalFileLink, _super);
         /**
          * @param {String} fileLink Ссылка на файл
          * @param {*} [meta] Дополнительные мета-данные
@@ -24,15 +25,17 @@ define("File/LocalFileLink", ["require", "exports"], function (require, exports)
          * @name File/LocalFileLink
          */
         function LocalFileLink(fileLink, meta, fileInfo) {
-            this.fileLink = fileLink;
-            this.meta = meta;
-            this._fileInfo = fileInfo || {};
-            if (!this._fileInfo.name) {
+            var _this = _super.call(this) || this;
+            _this.fileLink = fileLink;
+            _this._meta = meta;
+            _this._fileInfo = fileInfo || {};
+            if (!_this._fileInfo.name) {
                 /*
                  * Для ссылки на локальный файл, именем является часть пути до него после последнего слеша
                  */
-                this._fileInfo.name = fileLink.replace(/.*(\\|\/)/, "");
+                _this._fileInfo.name = fileLink.replace(/.*(\\|\/)/, "");
             }
+            return _this;
         }
         /**
          * Возвращает ссылку на файл, находящийся на локальном устройстве
@@ -44,19 +47,8 @@ define("File/LocalFileLink", ["require", "exports"], function (require, exports)
             return this.fileLink;
         };
         /**
-         * Возвращает дополнительную информацию по файлу
-         * @return {*}
-         * @method
-         * @name File/LocalFileLink#getMeta
-         */
-        LocalFileLink.prototype.getMeta = function () {
-            return this.meta || {};
-        };
-        /**
          * Возвращает информацию о файле, если такая имеется
          * @return {FileInfo}
-         * @method
-         * @name File/LocalFileLink#getFileInfo
          */
         LocalFileLink.prototype.getFileInfo = function () {
             return this._fileInfo || {};
@@ -64,13 +56,11 @@ define("File/LocalFileLink", ["require", "exports"], function (require, exports)
         /**
          * Возвращает имя файла
          * @return {String}
-         * @method
-         * @name File/LocalFileLink#getName
          */
         LocalFileLink.prototype.getName = function () {
             return this._fileInfo.name || "";
         };
         return LocalFileLink;
-    }());
+    }(ResourceAbstract));
     return LocalFileLink;
 });

@@ -222,6 +222,8 @@ define('Controls/Container/Scroll/Scrollbar',
                if (event.target.getAttribute('name') === 'scrollbar') {
                   delta = _private.calcScrollbarDelta(thumbTop, pageY, this._thumbHeight);
                   this._setPosition(this._position + delta / this._scrollRatio, true);
+               } else {
+                  this._children.dragNDrop.startDragNDrop(null, event);
                }
 
                this._dragging = true;
@@ -234,7 +236,7 @@ define('Controls/Container/Scroll/Scrollbar',
              */
             _scrollbarOnDragHandler: function(e, event) {
                var
-                  pageY = event.nativeEvent.pageY,
+                  pageY = event.domEvent.pageY,
                   delta = pageY - _private.currentPageY;
 
                if (this._setPosition(this._position + delta / this._scrollRatio, true)) {

@@ -1,6 +1,6 @@
 <div class="controls-SelectionDialog">
    <div class="ws-window-titlebar-custom">
-      <SBIS3.CONTROLS:Button
+      <SBIS3.CONTROLS.Button
          class="controls-selectionDialog-SelectionButton"
          name="SelectorControllerButton"
          caption = "{{buttonCaption}}"
@@ -9,11 +9,11 @@
          command = "applySelect"
       />
    </div>
-   <SBIS3.CONTROLS:Action:Selector:SelectorWrapper linkedObjectName = "SelectionDialog-TreeDataGridView">
+   <SBIS3.CONTROLS.Action.Selector.SelectorWrapper linkedObjectName = "SelectionDialog-TreeDataGridView">
       <ws:content>
-         <SBIS3.CONTROLS:ScrollContainer>
+         <SBIS3.CONTROLS.ScrollContainer>
             <ws:content>
-               <SBIS3.CONTROLS:Tree:DataGridView
+               <SBIS3.CONTROLS.Tree.DataGridView
                   class = "controls-SelectionDialog-TreeDataGridView"
                   name = "SelectionDialog-TreeDataGridView"
                   allowEnterToFolder = "{{false}}"
@@ -49,9 +49,9 @@
                      </ws:Array>
                   </ws:columns>
 
-               </SBIS3.CONTROLS:Tree:DataGridView>
+               </SBIS3.CONTROLS.Tree.DataGridView>
             </ws:content>
-         </SBIS3.CONTROLS:ScrollContainer>
+         </SBIS3.CONTROLS.ScrollContainer>
       </ws:content>
-   </SBIS3.CONTROLS:Action:Selector:SelectorWrapper>
+   </SBIS3.CONTROLS.Action.Selector.SelectorWrapper>
 </div>

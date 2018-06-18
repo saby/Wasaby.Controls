@@ -11,6 +11,18 @@
       />
    </div>
 
+   <div style="padding: 5px;">С выбором пустого значения
+      <Controls.Input.Dropdown
+              name="myDropdownList1"
+              bind:selectedKeys="_selectedKeysEmpty"
+              emptyText="{{true}}"
+              keyProperty="id"
+              itemTemplateProperty="myTemplate"
+              source="{{_getItemTemplateData()}}"
+      />
+   </div>
+
+
    <div style="padding: 5px;">С кастомными шаблонами записи
       <Controls.Input.Dropdown
          name="myDropdownList1"

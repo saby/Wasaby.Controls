@@ -1,5 +1,21 @@
 <div>
-    <Controls-demo.DragNDrop.List/>
-    <Controls-demo.DragNDrop.Notes/>
-    <Controls-demo.DragNDrop.Basket/>
+    <Controls.Toggle.Checkbox bind:value="_hasList" caption="List"/>
+    <Controls.Toggle.Checkbox bind:value="_hasGrid" caption="Grid"/>
+    <Controls.Toggle.Checkbox bind:value="_hasTree" caption="Tree"/>
+    <Controls.Toggle.Checkbox bind:value="_hasNotes" caption="Notes"/>
+    <ws:if data="{{_hasList}}">
+        <Controls-demo.DragNDrop.List attr:class="demo-DragNDrop__List"/>
+    </ws:if>
+    <div class="demo-DragNDrop__grids">
+        <ws:if data="{{_hasGrid}}">
+            <Controls-demo.DragNDrop.Grid attr:class="demo-DragNDrop__Grid"/>
+        </ws:if>
+        <ws:if data="{{_hasTree}}">
+            <Controls-demo.DragNDrop.Tree attr:class="demo-DragNDrop__Tree"/>
+        </ws:if>
+    </div>
+    <ws:if data="{{_hasNotes}}">
+        <Controls-demo.DragNDrop.Notes attr:class="demo-DragNDrop__Notes"/>
+    </ws:if>
+    <Controls-demo.DragNDrop.Basket attr:class="demo-DragNDrop__Basket"/>
 </div>

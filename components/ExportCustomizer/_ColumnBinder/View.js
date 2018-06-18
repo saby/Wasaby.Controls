@@ -213,8 +213,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
           * @protected
           */
          _onAdd: function () {
-            var fieldIds = this._options.fieldIds;
-            this._openColumnsEditor(fieldIds, false).addCallback(this._replaceField.bind(this, fieldIds));
+            this._openColumnsEditor(this._options.fieldIds, false).addCallback(this._replaceFields.bind(this));
          },
 
          /**
@@ -236,23 +235,29 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
          },
 
          /**
-          * Заместить в списке полей удаляемые поля на новые поля. Если удаляемого поля нет, то новые поля будут добавлены в конец. Если нет новых полей - ничего не произойдёт
+          * Заменить поля в списке полей на новые. Если поле из списка полей отсутствует среди новых - оно будет удалено. Если новое поле уже присутствует в списке полей - оно останется на своём месте. Если нового поля не было в списке полей - оно будет добавлено в конец списка полей
           * @protected
-          * @param {Array<string>} removedIds Список идентификаторов удаляемых полей
-          * @param {Array<string>} insertedIds список идентификаторов новых полей
+          * @param {Array<string>} insertedIds Список идентификаторов новых полей
           */
-         _replaceField: function (removedIds, insertedIds) {
+         _replaceFields: function (insertedIds) {
             if (insertedIds && insertedIds.length) {
                var fieldIds = this._options.fieldIds;
-               if (removedIds && removedIds.length) {
-                  for (var i = removedIds.length - 1; 0 <= i; i--) {
-                     var j = fieldIds.indexOf(removedIds[i]);
+               if (fieldIds.length) {
+                  var lastIds = insertedIds.slice();
+                  for (var i = fieldIds.length - 1; 0 <= i; i--) {
+                     var j = lastIds.indexOf(fieldIds[i]);
                      if (j !== -1) {
-                        fieldIds.splice(j, 1);
+                        lastIds.splice(j, 1);
+                     }
+                     else {
+                        fieldIds.splice(i, 1);
                      }
                   }
+                  fieldIds.push.apply(fieldIds, lastIds);
                }
-               fieldIds.push.apply(fieldIds, insertedIds);
+               else {
+                  fieldIds.push.apply(fieldIds, insertedIds);
+               }
                this._redraw();
                this._grid.setSelectedKey(insertedIds[0]);
                this.sendCommand('subviewChanged');
@@ -275,11 +280,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
           * @param {object} values Набор из нескольких значений, которые необходимо изменить
           * @param {object} meta Дополнительная информация об изменении
           */
-         setValues: function (values, meta) {
+         restate: function (values, meta) {
             if (!values || typeof values !== 'object') {
                throw new Error('Object required');
             }
-            var changes = objectChange(this._options, {fieldIds:true}, values);
+            var changes = objectChange(this._options, values, {fieldIds:true});
             if (changes && 'fieldIds' in changes) {
                this._redraw();
             }

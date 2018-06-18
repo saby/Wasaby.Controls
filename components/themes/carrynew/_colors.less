@@ -261,14 +261,15 @@
 @box-shadow_Button_active:                none;
 @background_Button_primary_active:        #FA6019;
 @background_Button_default_active:        #516B8C;
-@color_Link-Vdom-text_disabled:           #CCCCCC;
+@color_Link-Vdom-text_readOnly:           #CCCCCC;
 @background_Button_disabled:              #567395;
-@background_Button-primary_disabled:      @background_Button_primary;
-@background_Button-default_disabled:      @background_Button_default;
-@color_Button-Vdom-disabled:              rgba(255,255,255, .15);
+@background_Button-primary_readOnly:      @background_Button_primary;
+@background_Button-default_readOnly:      @background_Button_default;
+@color_Button-Vdom_readOnly:              rgba(255,255,255, .15);
 @color_Button-Vdom-text_primary:           #FFFFFF;
 @color_Button-Vdom-text_default:           #FFFFFF;
 @color_Link-main-icon:                     #587AB0;
+@border-color_Button-Vdom_readOnly:        transparent;
 
 //radioGroup
 @fill_RadioGroup_innerCircle_selected_enabled:     #FF7033;
@@ -317,9 +318,23 @@
 @background-image-BackButton_style-primary_hovered:                                                                                      url('img/BackArrowHoveredCarry.svg');
 @background-image-BackButton_style-default_hovered:                                                                                      url('img/BackArrowHoveredCarry.svg');
 @color-IconButton__border_iconStyle-primary_hovered:          #cccccc;
-@color-Button_type-IconButton_disabled:           #CCCCCC;
-@border-color-IconButton_disabled:                #F2F2F2;
+@color-Button_type-IconButton_readOnly:           #CCCCCC;
+@border-color-IconButton_readOnly:                #F2F2F2;
 @border-color-IconButton:                        rgba(0, 0, 0, 0.05);
 @color-IconButton__shadow:                        rgba(0, 0, 0, 0.15);
 @background-color-IconButton:                     #F2F2F2;
 @background-color-IconButton_hovered:             #EAEAEA;
+
+//Toggle button
+@border-color_ToggleButton:               @default-color;
+@background_ToggleButton_state-on:        @background_Button_default;
+@background_ToggleButton:                 @background_Button;
+@background_ToggleButton_readOnly:        @background_Button;
+@border-color_ToggleButton_readOnly:      @background_Button;
+@color_ToggleButton_readOnly:             @color_Button-Vdom_readOnly;
+@background-ToggleButton_hovered:         @background_Button_default_active;
+@color-ToggleButton__icon_hovered:        inherit;
+@color-ToggleButton_text:                 @color_Button-Vdom-text_primary;
+@color-ToggleButton__icon:                @color_Button-Vdom-text_primary;
+@color_ToggleButton_Link-main_hovered:    @color_Button-Vdom-text_primary;
+@color_ToggleButton_style-LinkMain:       @color_Button-Vdom-text_primary;

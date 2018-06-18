@@ -6,7 +6,20 @@
  * @see File/HttpFileLink
  */
 type IResource = {
-    getMeta(): any;
+    /**
+     * Возвращает дополнительную информацию по ресурсу
+     * @return {Object}
+     * @name File/IResource#getMeta
+     * @method
+     */
+    getMeta(): object;
+    /**
+     * Устанавливает дополнительную информацию по ресурсу
+     * @param {Object} meta
+     * @name File/IResource#setMeta
+     * @method
+     */
+    setMeta(meta: object): void;
 }
 
 export = IResource;

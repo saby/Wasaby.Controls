@@ -349,6 +349,11 @@ define('Controls/Container/Scroll',
                this._dragging = dragging;
             },
 
+            _fixedHandler: function(event, shouldBeFixed) {
+               this._stickyHeader = shouldBeFixed;
+               event.stopPropagation();
+            },
+
             getDataId: function() {
                return 'ControlsContainerScroll';
             },

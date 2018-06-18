@@ -4,7 +4,8 @@
 @font-size_Grid-header-cell: 12px;
 
 @height-Grid-row-separator: 1px;
-@color-Grid-row-separator: #EAEAEA;
+@color-Grid-row-separator-boundary: #EAEAEA;
+@color-Grid-row-separator: #F5F5F5;
 
 @min-height_Grid-row: 24px;
 @background-color_Grid-row_hover: #F0F5FB;
@@ -103,6 +104,7 @@
 .controls-Grid__row-cell {
    min-height: @min-height_Grid-row;
    position: relative;
+   border-top: @height-Grid-row-separator solid;
    // Default "min-width" value "auto" and width limited not working. Fix this bug by reset "min-width" value to "0".
    // http://css-live.ru/articles/chto-mozhet-polomat-maket-na-gridax-css-grid-layout.html
    min-width: 0;
@@ -118,23 +120,29 @@
    text-align: center;
 }
 .ws-is-no-touch {
-   .controls-Grid__row:hover .controls-Grid__row-cell {
+   .controls-Grid__row:hover .controls-Grid__row-cell-background-hover {
       background-color: @background-color_Grid-row_hover;
    }
    .controls-Grid__row:hover .controls-itemActionsV {
       display: inline-block;
    }
 }
+.controls-Grid__row-cell-background-editing {
+   background-color: @controls-editInPlace-editing-item-bg;
+   >.controls-itemActionsV {
+      display: inline-block;
+   }
+}
 .controls-Grid__row-cell_rowSpacing_default {
-   padding-top: (@spacing_Grid-row_default / 2) + @height-Grid-row-separator;
+   padding-top: (@spacing_Grid-row_default / 2);
    padding-bottom: @spacing_Grid-row_default / 2;
 }
 .controls-Grid__row-cell_rowSpacing_M {
-   padding-top: (@spacing_Grid-row_M / 2) + @height-Grid-row-separator;
+   padding-top: (@spacing_Grid-row_M / 2);
    padding-bottom: @spacing_Grid-row_M / 2;
 }
 .controls-Grid__row-cell_rowSpacing_L {
-   padding-top: (@spacing_Grid-row_L / 2) + @height-Grid-row-separator;
+   padding-top: (@spacing_Grid-row_L / 2);
    padding-bottom: @spacing_Grid-row_L / 2;
 }
 .controls-Grid__cell_spacingLeft {
@@ -142,9 +150,6 @@
 }
 .controls-Grid__cell_spacingRight {
    padding-right: @spacing_Grid-column / 2;
-}
-.controls-Grid__row-cell {
-   border-top: @height-Grid-row-separator solid;
 }
 .controls-Grid__row-cell__content_withLadder {
    visibility: hidden;
@@ -165,10 +170,10 @@
    border-bottom: @height-Grid-row-separator solid;
 }
 .controls-Grid__row-cell_withRowSeparator_firstRow {
-   border-top-color: @color-Grid-row-separator;
+   border-top-color: @color-Grid-row-separator-boundary;
 }
 .controls-Grid__row-cell_withRowSeparator_lastRow {
-   border-bottom-color: @color-Grid-row-separator;
+   border-bottom-color: @color-Grid-row-separator-boundary;
 }
 .controls-Grid__row-cell_withRowSeparator {
    border-top-color: @color-Grid-row-separator;
@@ -230,4 +235,15 @@
 .controls-Grid__row-cell-checkbox {
    min-width: @width_Grid-cell-checkbox;
    max-width: @width_Grid-cell-checkbox;
+}
+.controls-GridView__checkbox {
+   position: absolute;
+   top: 3px;
+   left: 0;
+}
+.controls-TreeGrid__row-nodeExpander {
+   padding-top: 5px;
+}
+.controls-Grid__row-cell__contentWrapper {
+   display: inline-flex;
 }
