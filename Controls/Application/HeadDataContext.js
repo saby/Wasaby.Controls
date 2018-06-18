@@ -43,7 +43,7 @@ define('Controls/Application/HeadDataContext', [
       for (var key in allDeps) {
          if (allDeps.hasOwnProperty(key)) {
             var bundleName = bundles[key];
-            if(bundleName) {
+            if (bundleName) {
                delete allDeps[key];
                packages[bundleName] = true;
             }
@@ -52,8 +52,8 @@ define('Controls/Application/HeadDataContext', [
 
       for (var key in allDeps) {
          if (allDeps.hasOwnProperty(key)) {
-            if(modDeps.nodes[key]) {
-               if(isJs(key) || isCss(key)) {
+            if (modDeps.nodes[key]) {
+               if (isJs(key) || isCss(key)) {
                   packages[modDeps.nodes[key].path] = true;
                }
             }
@@ -88,9 +88,9 @@ define('Controls/Application/HeadDataContext', [
          var packages = getPackages(allDeps); // Find all bundles, and removes dependencies that are included in bundles
          for (var key in packages) {
             if (packages.hasOwnProperty(key)) {
-               if(key.slice(key.length - 3, key.length) === 'css') {
+               if (key.slice(key.length - 3, key.length) === 'css') {
                   files.css.push(key);
-               } else if(key.slice(key.length - 2, key.length) === 'js') {
+               } else if (key.slice(key.length - 2, key.length) === 'js') {
                   files.js.push(key);
                }
             }
