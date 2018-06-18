@@ -3,9 +3,11 @@
 define('Controls-demo/BrowserTabs/BrowserTabs', [
    'Core/Control',
    'tmpl!Controls-demo/BrowserTabs/BrowserTabs',
+   'tmpl!Controls-demo/BrowserTabs/resources/tabsContent',
    'WS.Data/Source/Memory'
 ], function(Control,
             template,
+            tabsContent,
             MemorySource
 ) {
    'use strict';
@@ -15,38 +17,28 @@ define('Controls-demo/BrowserTabs/BrowserTabs', [
          data: [
             {
                id: '1',
-               title: 'Done',
-               align: 'left'
+               title: 'very',
+               content: tabsContent
             },
             {
                id: '2',
-               title: 'From Me',
-               align: 'left'
+               title: 'hard',
+               content: tabsContent
             },
             {
                id: '3',
-               title: 'Controlled',
-               align: 'left'
+               title: 'invent',
+               content: tabsContent
             },
             {
                id: '4',
-               title: 'very'
+               title: 'tabs',
+               content: tabsContent
             },
             {
                id: '5',
-               title: 'hard'
-            },
-            {
-               id: '6',
-               title: 'invent'
-            },
-            {
-               id: '7',
-               title: 'tabs'
-            },
-            {
-               id: '8',
-               title: 'titles'
+               title: 'titles',
+               content: tabsContent
             }
          ]
       });
