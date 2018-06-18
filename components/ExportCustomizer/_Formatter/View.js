@@ -32,9 +32,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
 
       /**
        * @typedef {object} ExportFormatterResult Тип, описывающий возвращаемые настраиваемые значения компонента
-       * @property {string} fileUuid Uuid стилевого эксель-файла
+       * @property {string} primaryUuid Исходный uuid стилевого эксель-файла
+       * @property {string} secondaryUuid Транзакционный uuid стилевого эксель-файла
        *
-       * @see fileUuid
+       * @see primaryUuid
+       * @see secondaryUuid
        */
 
       /**
@@ -90,9 +92,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                 */
                fieldIds: null,
                /**
-                * @cfg {string} Uuid стилевого эксель-файла
+                * @cfg {string} Исходный uuid стилевого эксель-файла
                 */
-               fileUuid: null,
+               primaryUuid: null,
+               /**
+                * @cfg {string} Транзакционный uuid стилевого эксель-файла
+                */
+               secondaryUuid: null,
                /**
                 * @cfg {string|number} Идентификатор потребителя (обычно пресета)
                 */
@@ -140,7 +146,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                var options = this._options;
                var fieldIds = options.fieldIds;
                if (fieldIds && fieldIds.length) {
-                  if (!options.fileUuid) {
+                  if (!options.primaryUuid) {
                      this._callFormatterCreate();
                   }
                   else {
@@ -208,7 +214,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                   : formatter.create(fieldIds || [], this._getFieldTitles(fieldIds), options.serviceParams)
             ).addCallbacks(
                function (result) {
-                  options.fileUuid = result;
+                  options.secondaryUuid = result;
                   this.sendCommand('subviewChanged', isClone ? 'clone' : 'create');
                   if (result) {
                      this._updatePreview();
@@ -233,7 +239,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          _callFormatterUpdate: function () {
             var options = this._options;
             var fieldIds = options.fieldIds;
-            var promise = this._exportFormatter.update(options.fileUuid, fieldIds || [], this._getFieldTitles(fieldIds), options.serviceParams).addCallbacks(
+            var promise = this._exportFormatter.update(options.secondaryUuid, fieldIds || [], this._getFieldTitles(fieldIds), options.serviceParams).addCallbacks(
                this._updatePreview.bind(this, false),
                function (err) { return err; }
             );
@@ -253,7 +259,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             this._opening = null;
             var options = this._options;
             var fieldIds = options.fieldIds;
-            return this._exportFormatter[useApp ? 'openApp' : 'open'](options.fileUuid, fieldIds || [], this._getFieldTitles(fieldIds), options.serviceParams).addCallbacks(
+            return this._exportFormatter[useApp ? 'openApp' : 'open'](options.secondaryUuid || options.primaryUuid, fieldIds || [], this._getFieldTitles(fieldIds), options.serviceParams).addCallbacks(
                function (result) {
                   this.sendCommand('subviewChanged', 'openEnd');
                   if (result) {
@@ -405,7 +411,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             }
             this._waitIndicatorStart();
             var options = this._options;
-            this._exportFormatter.getPreviewUrl(options.fileUuid, size.width, size.height).addCallbacks(
+            this._exportFormatter.getPreviewUrl(options.secondaryUuid || options.primaryUuid, size.width, size.height).addCallbacks(
                function (url) {
                   var img = this._preview[0];
                   img.onload = img.onerror = this._updatePreviewClearStop.bind(this);
@@ -429,16 +435,26 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                throw new Error('Object required');
             }
             var options = this._options;
-            var changes = objectChange(options, values, {fieldIds:true, fileUuid:false, consumerId:false});
+            var changes = objectChange(options, values, {fieldIds:true, primaryUuid:false, consumerId:false});
             if (changes) {
+               if ('consumerId' in changes) {
+                  //Если поменялся consumerId и есть seondaryUuid - удалить этот временный файл
+                  var seondaryUuid = options.seondaryUuid;
+                  if (seondaryUuid) {
+                     this._callFormatterDelete(seondaryUuid);
+                     options.seondaryUuid = null;
+                  }
+               }
+               else {
+               }
                var fieldIds = options.fieldIds;
                var hasFields = !!(fieldIds && fieldIds.length);
                var consumerId = options.consumerId || '';
                var creating = this._creation[consumerId];
                var methods = [];
-               if (options.fileUuid) {
-                  if ('fieldIds' in changes && !('fileUuid' in changes) && hasFields) {
-                     methods.push('update');
+               if (options.primaryUuid) {
+                  if (!('primaryUuid' in changes) && 'fieldIds' in changes && hasFields) {
+                     methods.push(options.seondaryUuid ? 'update' : {method:'clone', args:options.primaryUuid});
                   }
                }
                else {
@@ -486,7 +502,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          getValues: function () {
             var options = this._options;
             return {
-               fileUuid: options.fileUuid
+               primaryUuid: options.primaryUuid,
+               secondaryUuid: options.secondaryUuid
             };
          },
 
