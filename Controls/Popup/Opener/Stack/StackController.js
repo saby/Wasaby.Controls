@@ -16,12 +16,9 @@ define('Controls/Popup/Opener/Stack/StackController',
 
          prepareSizes: function(item, container) {
             var templateStyle = getComputedStyle(container.children[0]);
-            if (!item.popupOptions.minWidth) {
-               item.popupOptions.minWidth = parseInt(templateStyle.minWidth, 10);
-            }
-            if (!item.popupOptions.maxWidth) {
-               item.popupOptions.maxWidth = parseInt(templateStyle.maxWidth, 10);
-            }
+
+            item.popupOptions.minWidth = parseInt(item.popupOptions.minWidth || templateStyle.minWidth, 10);
+            item.popupOptions.maxWidth = parseInt(item.popupOptions.maxWidth || templateStyle.maxWidth, 10);
 
             //Если задано одно значение - приравниваем minWidth и maxWidth
             item.popupOptions.minWidth = item.popupOptions.minWidth || item.popupOptions.maxWidth;
