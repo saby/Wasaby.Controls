@@ -20,7 +20,7 @@
     <ws:partial template="{{_options.content}}" on:valueChanged="_changeValueHandler()" on:activated="_inputActivated()" attr:class="controls-Suggest-Text_style_{{_options.suggestStyle}}"/>
 
     <ws:if data="{{_options.suggestState}}">
-        <div class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer-style-{{_options.suggestStyle}}">
+        <div class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer-style-{{_options.suggestStyle}} controls-Suggest__suggestionsContainer-orient{{_orient}}" name="suggestionsContainer">
             <ws:if data="{{_options.suggestStyle === 'overInput'}}">
                 <Controls.Container.Async templateName="Controls/Button/Close">
                     <ws:partial template="{{'Controls/Button/Close'}}" attr:class="controls-Suggest-close" on:click="_close()"/>
@@ -41,7 +41,7 @@
 
     <Controls.Popup.Opener.Stack name="stackOpener">
         <ws:popupOptions template="Controls/Container/Suggest/Layout/Dialog">
-            <ws:templateOptions searchValue="{{_searchValue}}">
+            <ws:templateOptions searchValue="{{_searchValue}}" filter="{{_filter}}">
                 <ws:template>
                     <ws:partial template="suggestTpl"/>
                 </ws:template>

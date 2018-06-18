@@ -95,6 +95,14 @@ define('Controls/Controllers/_SearchController',
          
          abort: function() {
             _private.abort(this);
+         },
+
+         setSource: function(source) {
+            this._options.source = source;
+
+            if (this._search) {
+               this._search.setSource(source);
+            }
          }
          
       });

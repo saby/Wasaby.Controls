@@ -1,5 +1,5 @@
 <div class="controls-ExportCustomizer-Presets-View">
-   <SBIS3.CONTROLS:SelectorButton
+   <SBIS3.CONTROLS.SelectorButton
       className="controls-ExportCustomizer-Presets-View__selector"
       name="controls-ExportCustomizer-Presets-View__selector"
       withoutCross="{{true}}"
@@ -14,7 +14,7 @@
             'border': false,
             'animation': 'fade',
             'isStack': false,
-            'offset': {'x':-12, 'y':-6}
+            'offset': {'x':-13, 'y':-7}
          },
          'template': 'SBIS3.CONTROLS/ExportCustomizer/_Presets/ScrolledList',
          'componentOptions': {
@@ -41,7 +41,7 @@
       <ws:tooltip>
          <ws:if data="{{presetsTooltip}}">{{presetsTooltip}}</ws:if><ws:else>{[НастройщикЭкспорта@@Выбрать другой шаблон]}</ws:else>
       </ws:tooltip>
-   </SBIS3.CONTROLS:SelectorButton>
+   </SBIS3.CONTROLS.SelectorButton>
    <SBIS3.CONTROLS.EditAtPlace
       className="controls-ExportCustomizer-Presets-View__editor"
       name="controls-ExportCustomizer-Presets-View__editor"

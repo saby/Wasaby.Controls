@@ -171,14 +171,16 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                         });
                      });
                   } else {
-                     deps = ['Controls/Popup/Opener/BaseOpener', 'Controls/Popup/Compatible/BaseOpener'];
-                     requirejs(deps, function(BaseOpener, CompatibleOpener) {
-                        var CoreTemplate = requireHelper.defined(config.template) && requirejs(config.template);
-
-                        if (CoreTemplate && BaseOpener.isVDOMTemplate(CoreTemplate)) {
-                           CompatibleOpener._prepareConfigForNewTemplate(config, CoreTemplate);
+                     deps = ['Controls/Popup/Opener/BaseOpener', 'Controls/Popup/Compatible/BaseOpener', config.template];
+                     requirejs(deps, function(BaseOpener, CompatibleOpener, cfgTemplate) {
+                        if (BaseOpener.isVDOMTemplate(cfgTemplate)) {
+                           CompatibleOpener._prepareConfigForNewTemplate(config, cfgTemplate);
+                           config.className = 'ws-invisible'; //Пока не построился дочерний vdom  шаблон - скрываем панель, иначе будет прыжок
+                           config.componentOptions._initCompoundArea = function(compoundArea) {
+                              var dialog = self._dialog;
+                              dialog._container.closest('.ws-float-area, .ws-window').removeClass('ws-invisible');
+                           };
                         }
-
                         self._dialog = new Component(config);
                      });
                   }

@@ -85,6 +85,9 @@ define(
                ],
                [
                   '4',  null, 'TEST_HISTORY_ID_V1'
+               ],
+               [
+                  '9',  null, 'TEST_HISTORY_ID_V1'
                ]
             ],
             s: [
@@ -253,6 +256,30 @@ define(
                hSource.update(myItem, meta);
                historyItems = hSource.getItems();
                assert.equal(hSource._history.recent.at(0).getId(), '7');
+            });
+            it('prepareHistoryBySourceItems', function(done){
+               let newData = new DataSet({
+                  rawData: {
+                     frequent: createRecordSet(frequentData),
+                     pinned: createRecordSet(pinnedData),
+                     recent: createRecordSet(recentData)
+                  },
+                  itemsProperty: '',
+                  idProperty: 'ObjectId'
+               });
+               let memorySource = new Memory({
+                  idProperty: 'id',
+                  data: items
+               });
+               memorySource.query().addCallback(function(res) {
+                  let sourceItems = res.getAll();
+                  let preparedHistory = historySource._private.prepareHistoryBySourceItems(null, newData.getRow(), sourceItems);
+                  assert.equal(preparedHistory.get('frequent').getCount(), 2);
+                  preparedHistory.get('frequent').forEach(function(historyItem){
+                     assert.isFalse(historyItem.getId()=='9');
+                  });
+                  done();
+               })
             });
          });
          describe('check source original methods', function() {

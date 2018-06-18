@@ -1,11 +1,11 @@
 <div class="controls-LongOperations controls-LongOperationHistory">
-   <SBIS3.CONTROLS:Browser
+   <SBIS3.CONTROLS.Browser
       name="brows"
       className="controls-LongOperationHistory__browser"
       >
       <ws:content>
          <ws:if data="{{resultHandler}}">
-         <SBIS3.CONTROLS:Link
+         <SBIS3.CONTROLS.Link
             name="resultButton"
             className="controls-LongOperationsHistory__resultButton"
             >
@@ -17,12 +17,12 @@
                     {[Частичный результат]}
                 </ws:else>
             </ws:caption>
-         </SBIS3.CONTROLS:Link>
+         </SBIS3.CONTROLS.Link>
          </ws:if>
          <div class="controls-Browser__table">
             <div class="controls-Browser__tableRow">
                <div class="controls-Browser__tableCell-fastDataFilter">
-                  <SBIS3.CONTROLS:Filter:FastData
+                  <SBIS3.CONTROLS.Filter.FastData
                      name="browserFastDataFilter"
                      className="controls-Browser__fastDataFilter"
                      >
@@ -35,13 +35,13 @@
                            />
                         </ws:Array>
                      </ws:filterStructure>
-                  </SBIS3.CONTROLS:Filter:FastData>
+                  </SBIS3.CONTROLS.Filter.FastData>
                </div>
             </div>
          </div>
-         <SBIS3.CONTROLS:ScrollContainer class="controls-Browser__scrollContainer controls-Browser__view controls-LongOperationsHistory__view">
+         <SBIS3.CONTROLS.ScrollContainer class="controls-Browser__scrollContainer controls-Browser__view controls-LongOperationsHistory__view">
             <ws:content>
-               <SBIS3.CONTROLS:DataGridView
+               <SBIS3.CONTROLS.DataGridView
                   idProperty="id"
                   name="browserView"
                   pageSize="2000"
@@ -76,9 +76,9 @@
                         />
                      </ws:Array>
                   </ws:columns>
-               </SBIS3.CONTROLS:DataGridView>
+               </SBIS3.CONTROLS.DataGridView>
             </ws:content>
-         </SBIS3.CONTROLS:ScrollContainer>
+         </SBIS3.CONTROLS.ScrollContainer>
       </ws:content>
-   </SBIS3.CONTROLS:Browser>
+   </SBIS3.CONTROLS.Browser>
 </div>

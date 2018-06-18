@@ -1,7 +1,7 @@
 <div class="controls-DataGridView controls-ListView {{multiselect !== false ? 'controls-ListView__multiselect' : 'controls-ListView__multiselect__off' }}
             {{ startScrollColumn !== undefined ? ' controls-DataGridView__with-partScroll' : ''}}{{ _serverRender ? ' controls-ListView__dataLoaded' : ' controls-ListView__dataNotLoaded'}}">
     <div class="js-controls-DataGridView__minHeight controls-DataGridView__minHeight"></div>
-    <SBIS3.CONTROLS:Panel tabindex="{{1}}" class="controls-ListView__fakeFocusElement" allowChangeEnable="{{false}}"/>
+    <SBIS3.CONTROLS.Panel tabindex="{{1}}" class="controls-ListView__fakeFocusElement" allowChangeEnable="{{false}}"/>
     <div class="controls-AjaxLoader ws-hidden">
         <div class="controls-AjaxLoader__outer">
             <div class="controls-AjaxLoader__block">
@@ -35,7 +35,7 @@
     </ws:if>
     <ws:if data="{{ infiniteScroll == 'demand'}}">
         <div class="controls-ListView__serviceFooter">
-            <SBIS3.CONTROLS:Link name="loadMoreButton" class="controls-ListView__loadMoreButton" caption="Еще..." visible="false" allowChangeEnable="{{false}}"/>
+            <SBIS3.CONTROLS.Link name="loadMoreButton" class="controls-ListView__loadMoreButton" caption="Еще..." visible="false" allowChangeEnable="{{false}}"/>
         </div>
     </ws:if>
     <ws:if data="{{ virtualScrolling }}">

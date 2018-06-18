@@ -6,10 +6,11 @@ define('Controls/Container/Dropdown',
       'Controls/Controllers/SourceController',
       'Core/helpers/Object/isEqual',
       'Core/helpers/Object/isEmpty',
-      'WS.Data/Chain'
+      'WS.Data/Chain',
+      'Controls/Input/Dropdown/Util'
    ],
 
-   function(Control, template, defaultContentTemplate, SourceController, isEqual, isEmpty, Chain) {
+   function(Control, template, defaultContentTemplate, SourceController, isEqual, isEmpty, Chain, dropdownUtils) {
 
       /**
           * Container for dropdown lists
@@ -24,22 +25,20 @@ define('Controls/Container/Dropdown',
       'use strict';
 
       var _private = {
-         loadItems: function(instance, source, selectedKeys) {
+         loadItems: function(instance, source, selectedKeys, keyProperty) {
             instance._sourceController = new SourceController({
                source: source
             });
             return instance._sourceController.load().addCallback(function(items) {
                instance._items = items;
-               if (selectedKeys) {
-                  _private.updateSelectedItems(instance, selectedKeys);
-               }
+               _private.updateSelectedItems(instance, selectedKeys, keyProperty);
                return items;
             });
          },
 
-         updateSelectedItems: function(instance, selectedKeys) {
+         updateSelectedItems: function(instance, selectedKeys, keyProperty) {
             Chain(instance._items).each(function(item) {
-               if (selectedKeys.indexOf(item.get(instance._options.keyProperty)) > -1) {
+               if (selectedKeys.indexOf(item.get(keyProperty)) > -1) {
                   instance._selectedItems.push(item);
                }
             });
@@ -48,8 +47,8 @@ define('Controls/Container/Dropdown',
          onResult: function(result) {
             switch (result.action) {
                case 'itemClick':
+                  _private.selectItem.apply(this, result.data);
                   if (!result.data[0].get('@parent')) {
-                     _private.selectItem.apply(this, result.data);
                      this._children.DropdownOpener.close();
                   }
                   break;
@@ -68,14 +67,17 @@ define('Controls/Container/Dropdown',
          _template: template,
 
          _beforeMount: function(options, context, receivedState) {
+            this._emptyText = dropdownUtils.prepareEmpty(options.emptyText);
             this._selectedItems = [];
             this._onResult = _private.onResult.bind(this);
-            if (receivedState) {
-               this._items = receivedState;
-               _private.updateSelectedItems(this, options.selectedKeys);
-            } else {
-               if (options.source) {
-                  return _private.loadItems(this, options.source, options.selectedKeys);
+            if (!options.lazyItemsLoad) {
+               if (receivedState) {
+                  this._items = receivedState;
+                  _private.updateSelectedItems(this, options.selectedKeys, options.keyProperty);
+               } else {
+                  if (options.source) {
+                     return _private.loadItems(this, options.source, options.selectedKeys, options.keyProperty);
+                  }
                }
             }
          },
@@ -91,25 +93,50 @@ define('Controls/Container/Dropdown',
                _private.updateSelectedItems(this, newOptions.selectedKeys);
             }
             if (newOptions.source && newOptions.source !== this._options.source) {
-               var self = this;
-               return _private.loadItems(this, newOptions.source, newOptions.selectedKeys).addCallback(function() {
-                  self._forceUpdate();
-               });
+               if (newOptions.lazyItemsLoad) {
+                  /* source changed, items is not actual now */
+                  this._items = null;
+               } else {
+                  var self = this;
+                  return _private.loadItems(this, newOptions.source, newOptions.selectedKeys).addCallback(function() {
+                     self._forceUpdate();
+                  });
+               }
             }
          },
 
          _open: function() {
-            var config = {
-               templateOptions: {
-                  items: this._items,
-                  width: this._options.width
-               },
-               target: this._container,
-               corner: this._options.corner
-            };
-            this._children.DropdownOpener.open(config, this);
+            var self = this;
+
+            function open() {
+               var config = {
+                  templateOptions: {
+                     items: self._items,
+                     width: self._options.width
+                  },
+                  target: self._container,
+                  corner: self._options.corner
+               };
+               self._children.DropdownOpener.open(config, self);
+            }
+
+            if (this._options.source && !this._items) {
+               _private.loadItems(this, this._options.source, this._options.filter).addCallback(function(items) {
+                  open();
+                  return items;
+               });
+            } else {
+               open();
+            }
          }
       });
 
+      Dropdown.getDefaultOptions = function getDefaultOptions() {
+         return {
+            selectedKeys: []
+         };
+      };
+
+      Dropdown._private = _private;
       return Dropdown;
    });

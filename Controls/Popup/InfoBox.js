@@ -11,13 +11,26 @@ define('Controls/Popup/InfoBox',
       'use strict';
 
       /**
+       * A delayed template display component.
+       * Uses Controls/Popup/Opener/InfoBox.
+       *
        * @class Controls/Popup/InfoBox
        * @extends Core/Control
        * @public
        *
+       * @mixin Controls/interface/IStickyOpener
+       *
+       * @name Controls/Popup/InfoBox#hideDelay
+       * @cfg {Number} Delay before closing after mouse leaves.
+       *
+       * @name Controls/Popup/InfoBox#showDelay
+       * @cfg {Number} Delay before opening after mouse enters.
+       *
        * @name Controls/Popup/InfoBox#content
+       * @cfg {Content} The content to which the logic of opening and closing the template is added.
        *
        * @name Controls/Popup/InfoBox#template
+       * Popup template
        */
 
       var _private = {
@@ -27,7 +40,7 @@ define('Controls/Popup/InfoBox',
                template: OpenerTemplate,
                position: self._options.position,
                templateOptions: {
-                  content: self._options.content
+                  content: self._options.template
                }
             };
          }

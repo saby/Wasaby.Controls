@@ -1281,7 +1281,9 @@ define('SBIS3.CONTROLS/ListView',
                   this._tapHandler(e);
                   break;
                case 'mouseleave':
-                  this._mouseLeaveHandler(e);
+                  if (!isTouchEvent) {
+                     this._mouseLeaveHandler(e);
+                  }
                   break;
                case 'touchend':
                    /* Ipad пакетирует измененния, и не применяет их к дому, пока не закончит работу синхронный код.

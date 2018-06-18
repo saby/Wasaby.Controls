@@ -300,7 +300,8 @@ define('Controls/List/BaseControl', [
             self._children.itemActionsOpener.open({
                opener: self._children.listView,
                target: !context ? childEvent.target : false,
-               templateOptions: {items: rs}
+               templateOptions: {items: rs},
+               nativeEvent: context ? childEvent.nativeEvent : false
             });
             self._menuIsShown = true;
          }
@@ -646,7 +647,7 @@ define('Controls/List/BaseControl', [
             dragItemIndex,
             dragStartResult;
          if (this._options.itemsDragNDrop) {
-            items = cClone(this._listViewModel._multiselection.getSelection().selected) || [];
+            items = cClone(this._options.selectedKeys) || [];
             dragItemIndex = items.indexOf(itemData.key);
             if (dragItemIndex !== -1) {
                items.splice(dragItemIndex, 1);

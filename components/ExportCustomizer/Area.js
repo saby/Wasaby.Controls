@@ -568,9 +568,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             }
             if (fieldIds || fileUuid) {
                var meta = this._makeMeta('presets', [].slice.call(arguments));
-               views.columnBinder.setValues({fieldIds:fieldIds.slice()}, meta);
+               views.columnBinder.restate({fieldIds:fieldIds.slice()}, meta);
                var consumer = values.consumer;
-               var result = views.formatter.setValues({fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumer:consumer ? cMerge({}, consumer) : null}, meta);
+               var result = views.formatter.restate({fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumer:consumer ? cMerge({}, consumer) : null}, meta);
                this._updateCompleteButton(fieldIds);
                return result;
             }
@@ -592,9 +592,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                var meta = this._makeMeta('columnBinder', [].slice.call(arguments));
                var presetsView = views.presets;
                if (presetsView) {
-                  presetsView.setValues({fieldIds:fieldIds.slice()}, meta);
+                  presetsView.restate({fieldIds:fieldIds.slice()}, meta);
                }
-               views.formatter.setValues({fieldIds:fieldIds.slice()}, meta);
+               views.formatter.restate({fieldIds:fieldIds.slice()}, meta);
                this._updateCompleteButton(fieldIds);
                return true;
             }
@@ -615,7 +615,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                this._options.fileUuid = fileUuid;
                var presetsView = views.presets;
                if (presetsView) {
-                  return presetsView.setValues({fileUuid:fileUuid}, this._makeMeta('formatter', [].slice.call(arguments)));
+                  return presetsView.restate({fileUuid:fileUuid}, this._makeMeta('formatter', [].slice.call(arguments)));
                }
             }
          },
@@ -758,7 +758,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             else {
                var scopes = options._scopes;
                for (var name in views) {
-                  views[name].setValues(scopes[name]);
+                  views[name].restate(scopes[name]);
                }
             }
          },

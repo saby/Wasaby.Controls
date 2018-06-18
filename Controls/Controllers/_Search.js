@@ -126,6 +126,10 @@ define('Controls/Controllers/_Search',
          
          isLoading: function() {
             return this._searchDeferred && !this._searchDeferred.isReady();
+         },
+
+         setSource: function(source) {
+            this._sourceController.setSource(source);
          }
          
       });
