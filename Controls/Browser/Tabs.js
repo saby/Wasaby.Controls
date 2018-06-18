@@ -24,6 +24,10 @@ define('Controls/Browser/Tabs', [
          } else {
             return _private.initContent(options.tabsSource._getRecordByKey(options.tabsSelectedKey), this);
          }
+      },
+
+      _beforeUpdate: function(newOptions) {
+         return _private.initContent(newOptions.tabsSource._getRecordByKey(newOptions.tabsSelectedKey), this);
       }
    });
    return browserTabs;
