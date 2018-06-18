@@ -9,7 +9,7 @@ define("File/ResourceGetter/DropArea/replaceDir", ["require", "exports", "Core/P
              * Очередь чтения
              * чтобы не создавать сразу десятки/сотки обращений в файловой системе при чтении папки
              */
-            maxRunningCount: 1
+            maxRunningCount: 5
         }).done().getResult().addCallback(function (results) {
             results.length = length;
             return Array.prototype.slice.call(results);

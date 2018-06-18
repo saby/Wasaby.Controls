@@ -29,7 +29,7 @@ let getParallelDeferred = <T>(steps): Deferred<Array<T>> => {
          * Очередь чтения
          * чтобы не создавать сразу десятки/сотки обращений в файловой системе при чтении папки
          */
-        maxRunningCount: 1
+        maxRunningCount: 5
     }).done().getResult().addCallback<Array<T>>((results) => {
         results.length = length;
         return Array.prototype.slice.call(results)
