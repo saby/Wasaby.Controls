@@ -504,6 +504,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
        * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {String|Number|Null} curRoot Идентификатор узла, который установлен в качестве текущего корня иерархии.
        * @param {Array.<Object>} hierarchy Массив объектов, каждый из которых описывает узлы иерархии установленного пути.
+       * @param {String|Number|Null} root Идентификатор узла, который установлен в качестве корня иерархии для всего реестра.
        * Каждый объект содержит следующие свойства:
        * <ul>
        *    <li>id - идентификатор текущего узла иерархии;</li>
@@ -1548,7 +1549,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                hierarchy = this.getHierarchy(path, this._options.currentRoot);
             }
             if (this._previousRoot !== this._options.currentRoot) {
-               this._notify('onSetRoot', this._options.currentRoot, hierarchy);
+               this._notify('onSetRoot', this._options.currentRoot, hierarchy, this._options.root);
                //TODO Совсем быстрое и временное решение. Нужно скроллиться к первому элементу при проваливании в папку.
                // Выпилить, когда это будет делать установка выделенного элемента
                //TODO курсор
