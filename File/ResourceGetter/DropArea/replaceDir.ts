@@ -42,12 +42,14 @@ let getParallelDeferred = <T>(steps): Deferred<Array<T>> => {
  * @typedef {Object} ReadConfig
  * @property {Array.<File/LocalFile | Error>} results
  * @property {String} [path] Путь до файла
- * @property {String} [folderId] uid папки
+ * @property {Array.<String>} [folderId] набор uid директорий.
+ * Необходимо для последующего построения правильной иерархии на сервисе при загрузке каждым отдельным файлом
+ * На path опираться нельзя т.к. можем перепутать директории с разным локальным рутом, который точно нам не известен
  */
 type ReadConfig = {
     results: Resources;
     path?: string;
-    folderId?: string;
+    folderId?: Array<string>;
 }
 
 /**
@@ -115,7 +117,7 @@ let readEntry = ({results, entry, path = '', folderId}: EntryReadConfig): Deferr
         return readDirectory({
             entry,
             path: path + entry.name + "/",
-            folderId: folder,
+            folderId: folderId? folderId.concat(folder): [folder],
             results
         });
     }
@@ -125,10 +127,10 @@ let readEntry = ({results, entry, path = '', folderId}: EntryReadConfig): Deferr
  * Обходит содержимое набора из Entry
  * @return {Core/Deferred.<Array.<File | Error>>}
  */
-readEntries = ({results, entries, path}: EntriesReadConfig): Deferred => {
+readEntries = ({results, entries, path, folderId}: EntriesReadConfig): Deferred => {
     return getParallelDeferred<Resource | Resources>(
         entries.map((entry: Entry) => {
-            return readEntry({results, entry, path})
+            return readEntry({results, entry, path, folderId})
         })
     );
 };
@@ -193,7 +195,7 @@ let getReader = (deferred: Deferred<void>): FileReader => {
 let getFromFileReader = (files: FileList): Deferred<Array<LocalFile | Error>> => {
     let steps = Array.prototype.map.call(files, (file: File) => {
         let deferred = new Deferred<void>();
-        deferred.addCallbacks<Array<LocalFile>>(() => {
+        deferred.addCallbacks<LocalFile>(() => {
             return new LocalFile(file);
         }, () => {
             return new UploadFolderError({

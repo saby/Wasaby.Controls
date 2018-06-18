@@ -62,7 +62,7 @@ define("File/ResourceGetter/DropArea/replaceDir", ["require", "exports", "Core/P
             return readDirectory({
                 entry: entry,
                 path: path + entry.name + "/",
-                folderId: folder,
+                folderId: folderId ? folderId.concat(folder) : [folder],
                 results: results
             });
         }
@@ -72,9 +72,9 @@ define("File/ResourceGetter/DropArea/replaceDir", ["require", "exports", "Core/P
      * @return {Core/Deferred.<Array.<File | Error>>}
      */
     readEntries = function (_a) {
-        var results = _a.results, entries = _a.entries, path = _a.path;
+        var results = _a.results, entries = _a.entries, path = _a.path, folderId = _a.folderId;
         return getParallelDeferred(entries.map(function (entry) {
-            return readEntry({ results: results, entry: entry, path: path });
+            return readEntry({ results: results, entry: entry, path: path, folderId: folderId });
         }));
     };
     /**
