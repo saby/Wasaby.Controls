@@ -263,14 +263,15 @@ define('SBIS3.CONTROLS/ComponentBinder',
          });
       },
       
-      bindFilters: function(filterButton, fastDataFilter, view) {
+      bindFilters: function(filterButton, fastDataFilter, view, compareFilters) {
          var self = this;
          
          if(!this._filterController) {
             this._filterController = new FilterController({
                view: view,
                filterButton: filterButton,
-               fastDataFilter: fastDataFilter
+               fastDataFilter: fastDataFilter,
+               compareFilters: compareFilters
             });
          }
    
