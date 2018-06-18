@@ -22,8 +22,8 @@ define('SBIS3.CONTROLS/ListView/resources/MassSelectionController/MassSelectionH
              });
           },
 
-          _onSetRoot: function(event, root) {
-             this._selection.setRoot(root);
+          _onSetRoot: function(event, currentRoot, hierarchy, root) {
+             this._selection.setRoot(root !== undefined ? root : null);
           },
 
           //При добавлении элементов в проекцию добавляем их в набор выделенных записей, если:
