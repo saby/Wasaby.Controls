@@ -1,0 +1,8 @@
+<div class="controls-BrowserTabs">
+    <Controls.Tabs.Buttons
+            bind:selectedKey="_options.tabsSelectedKey"
+            keyProperty="id"
+            source="{{_options.tabsSource}}"
+    />
+    <ws:partial template="_options."/>
+</div>
