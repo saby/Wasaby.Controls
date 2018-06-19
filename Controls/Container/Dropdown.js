@@ -121,7 +121,7 @@ define('Controls/Container/Dropdown',
             }
 
             if (this._options.source && !this._items) {
-               _private.loadItems(this, this._options.source, this._options.filter).addCallback(function(items) {
+               _private.loadItems(this, this._options.source, this._options.selectedKeys).addCallback(function(items) {
                   open();
                   return items;
                });
