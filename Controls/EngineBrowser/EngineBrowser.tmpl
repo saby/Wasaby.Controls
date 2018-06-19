@@ -7,7 +7,7 @@
             </Controls.Container.Input.Search>
          </ws:if>
          <ws:if data="{{_options.content}}">
-            <Controls.Container.List scope="{{_options.contentConfig}}">
+            <Controls.Container.List searchParam="{{_options.searchParam}}" source="{{_options.source}}">
                <ws:partial template="{{_options.content}}"/>
             </Controls.Container.List>
          </ws:if>

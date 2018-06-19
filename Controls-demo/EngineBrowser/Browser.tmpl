@@ -1,4 +1,8 @@
 <Controls.EngineBrowser
-        search="Controls-demo/EngineBrowser/resources/searchTemplate"
-        content="Controls-demo/EngineBrowser/resources/listTemplate"
-        contentConfig="{{_contentConfig}}"/>
+        searchParam="title"
+        source="{{_source}}"
+        content="Controls-demo/EngineBrowser/resources/listTemplate">
+   <ws:search>
+      <Controls.Input.Search bind:value="value"/>
+   </ws:search>
+</Controls.EngineBrowser>
