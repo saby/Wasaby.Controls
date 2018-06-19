@@ -1,25 +1,39 @@
+.controls-Button__lightClose, .controls-Button__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1;
+  font-family: @default-icon-font;
+  line-height: @height_CloseButton;
+  font-size: @font-size_CloseButton;
+  &:before {
+    content: @content_CloseButton_icon;
+  }
+}
+
 .controls-Button__close {
 	width: @width_CloseButton - extract(@border-width_CloseButton, 2) - extract(@border-width_CloseButton, 4);
 	height: @height_CloseButton - extract(@border-width_CloseButton, 1) - extract(@border-width_CloseButton, 3);
-	font-family: @default-icon-font;
-	line-height: @height_CloseButton;
-	font-size: @font-size_CloseButton;
 	box-shadow: @box-shadow_CloseButton;
 	border: solid @border-color_CloseButton;
 	border-width: @border-width_CloseButton;
 	border-radius: @border-radius_CloseButton;
 	background-color: @background-color_CloseButton;
-	cursor: pointer;
-	z-index: 1;
-	.flexbox();
-	.align-items(center);
-	.justify-content(center);
 	&:before {
 		color: @color_CloseButton-icon;
 		text-shadow: @text-shadow_Button;
-		content: @content_CloseButton_icon;
 	}
 	&:active {
 		box-shadow: none;
 	}
+}
+
+.controls-Button__lightClose {
+  width: @width_CloseButton_small;
+  height: @height_CloseButton_small;
+  color: @color_CloseButton-light-icon;
+  &:hover {
+    color: @color_CloseButton-light-icon_hover;
+  }
 }
