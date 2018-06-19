@@ -22,8 +22,8 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             var self = this;
             this._onCloseHandler = this._onCloseHandler.bind(this);
             this._onCloseHandler.control = this;
-            require([this._options.template], function(ctr) {
-               var vDomTemplate = control.createControl(ctr, self._options, $('.vDomWrapper', self.getContainer()));
+            require([this._options.innerComponentOptions.template], function(ctr) {
+               var vDomTemplate = control.createControl(ctr, self._options.innerComponentOptions, $('.vDomWrapper', self.getContainer()));
                self._vDomTemplate = vDomTemplate;
                var container = vDomTemplate.getContainer();
                container = container.get ? container.get(0) : container; //берем ноду
