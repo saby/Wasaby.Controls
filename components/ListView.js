@@ -3616,7 +3616,7 @@ define('SBIS3.CONTROLS/ListView',
 
          _updateScrollIndicatorDown: function() {
             var container = this.getContainer();
-            if (this.infiniteScroll === 'down' && this._hasNextPage(this.getItems().getMetaData().more)){
+            if (this._options.infiniteScroll === 'down' && this._hasNextPage(this.getItems().getMetaData().more)){
                container.toggleClass('controls-ListView-scrollIndicator__down', container.hasClass('controls-ListView__indicatorVisible'));
             }
          },
