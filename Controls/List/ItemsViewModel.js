@@ -156,6 +156,12 @@ define('Controls/List/ItemsViewModel',
             this._items.append(items);
          },
 
+         mergeItems: function(items) {
+            this._items.merge(items, {
+               remove: false
+            });
+         },
+
          prependItems: function(items) {
             this._items.prepend(items);
          },

@@ -55,5 +55,11 @@ define('Controls/List/ListControl', [
       }
    });
 
+   ListControl.getDefaultOptions = function() {
+      return {
+         uniqueKeys: true
+      };
+   };
+
    return ListControl;
 });

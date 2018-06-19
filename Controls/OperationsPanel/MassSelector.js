@@ -28,6 +28,7 @@ define('Controls/OperationsPanel/MassSelector', [
       _menuSource: null,
 
       _beforeMount: function(newOptions, context) {
+         this._menuSource = this._getHierarchyMenuItems();
          this._updateSelection(context.selection);
       },
 

@@ -508,6 +508,10 @@ define('Controls/List/Grid/GridViewModel', [
             this._model.setActiveItem(itemData);
          },
 
+         mergeItems: function(items) {
+            this._model.mergeItems(items);
+         },
+
          appendItems: function(items) {
             this._model.appendItems(items);
          },

@@ -14,7 +14,7 @@ define('Controls/List/Tree/TreeViewModel', [
                itemParent = item.getParent();
             if (itemParent && !itemParent.isRoot()) {
                if (this.expandedNodes[ItemsUtil.getPropertyValue(itemParent.getContents(), this.keyProperty)]) {
-                  return _private.isVisibleItem(itemParent);
+                  return _private.isVisibleItem.call(this, itemParent);
                } else {
                   return false;
                }
@@ -75,6 +75,7 @@ define('Controls/List/Tree/TreeViewModel', [
             var
                current = TreeViewModel.superclass.getCurrent.apply(this, arguments);
             current.isExpanded = !!this._expandedNodes[current.key];
+            // current.multiSelectStatus = null;
             return current;
          }
 
