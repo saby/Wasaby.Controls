@@ -330,7 +330,8 @@ node('controls') {
                 junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
             }
         } 
-    }    
+    }   
+        if ( inte || regr ) { 
         stage("Разворот стенда"){
             echo "Запускаем разворот стенда и подготавливаем окружение для тестов"
             // Создаем sbis-rpc-service.ini
@@ -526,19 +527,21 @@ node('controls') {
                         }
                     }
                 }
+              
             )
         }
-        sh """
-            sudo chmod -R 0777 ${workspace}
-            sudo chmod -R 0777 /home/sbis/Controls
-        """
-        if ( ErrUnit ) {
-            throw  ErrUnit
-        } else if (ErrReg) {
-            throw  ErrReg
-        } else if (ErrInt) {
-            throw ErrInt
-        }
-        gitlabStatusUpdate()
+    }    
+    sh """
+        sudo chmod -R 0777 ${workspace}
+        sudo chmod -R 0777 /home/sbis/Controls
+    """
+    if ( ErrUnit ) {
+        throw  ErrUnit
+    } else if (ErrReg) {
+        throw  ErrReg
+    } else if (ErrInt) {
+        throw ErrInt
+    }
+    gitlabStatusUpdate()
     }
 }
