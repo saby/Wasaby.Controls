@@ -457,79 +457,78 @@ node('controls') {
             run_test_fail = "-sf"
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
         }
-        stage("Запуск тестов интеграционных и верстки"){
-            def site = "http://${NODE_NAME}:30010"
-            site.trim()
-			if ("${params.browser_type}" != "ff"){
-				dir("./controls/tests/int"){
-					tmp_smoke = sh returnStatus:true, script: """
-						source /home/sbis/venv_for_test/bin/activate
-						${python_ver} smoke_test.py --SERVER_ADDRESS ${smoke_server_address}
-						deactivate
-					"""
-					if ( "${tmp_smoke}" != "0" ) {
-						currentBuild.result = 'ABORTED'
-                        gitlabStatusUpdate()
-						error('Стенд неработоспособен (не прошел smoke test).')
-					}
-				}
-			}
-            parallel (
-                int_test: {
-                    echo "Запускаем интеграционные тесты"
-                    stage("Инт.тесты"){
-                        if ( inte ){
-                            try {
-                                dir("./controls/tests/int"){
-                                    sh """
-                                    source /home/sbis/venv_for_test/bin/activate
-                                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
-                                    deactivate
-                                    """
-                                }
-                            } catch (err) {
-                                ErrInt = err
-                                currentBuild.result = "FAILURE"
-                                
-                            } finally {
-                                archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
-                                junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
+        
+        def site = "http://${NODE_NAME}:30010"
+        site.trim()
+        dir("./controls/tests/int"){
+            tmp_smoke = sh returnStatus:true, script: """
+                source /home/sbis/venv_for_test/bin/activate
+                ${python_ver} smoke_test.py --SERVER_ADDRESS ${smoke_server_address} --BROWSER chrome
+                deactivate
+            """
+            if ( "${tmp_smoke}" != "0" ) {
+                currentBuild.result = 'ABORTED'
+                gitlabStatusUpdate()
+                error('Стенд неработоспособен (не прошел smoke test).')
+            }
+        }
+        
+        parallel (
+            int_test: {
+                echo "Запускаем интеграционные тесты"
+                stage("Инт.тесты"){
+                    if ( inte ){
+                        try {
+                            dir("./controls/tests/int"){
+                                sh """
+                                source /home/sbis/venv_for_test/bin/activate
+                                python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
+                                deactivate
+                                """
                             }
-							
+                        } catch (err) {
+                            ErrInt = err
+                            currentBuild.result = "FAILURE"
+                            
+                        } finally {
+                            archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
+                            junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
                         }
+                        
                     }
-                },
-                reg_test: {
-                    stage("Рег.тесты"){
-                        echo "Запускаем тесты верстки"
-                        if ( regr ){
-                            try {
-                                sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
-                                dir("./controls/tests/reg"){
-                                    sh """
-                                        source /home/sbis/venv_for_test/bin/activate
-                                        python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS http://test-selenium39-unix.unix.tensor.ru:4444/wd/hub --DISPATCHER_RUN_MODE --STAND platform --STREAMS_NUMBER ${stream_number}
-                                        deactivate
-                                    """
-                                }
-                            } catch (err) {
-                                ErrReg = err
-                                currentBuild.result = "FAILURE"
-                                
-                            } finally {
-                                archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
-                                junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-                                dir(workspace){
-                                    publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './controls/tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
-                                }
-                                archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
+                }
+            },
+            reg_test: {
+                stage("Рег.тесты"){
+                    echo "Запускаем тесты верстки"
+                    if ( regr ){
+                        try {
+                            sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
+                            dir("./controls/tests/reg"){
+                                sh """
+                                    source /home/sbis/venv_for_test/bin/activate
+                                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS http://test-selenium39-unix.unix.tensor.ru:4444/wd/hub --DISPATCHER_RUN_MODE --STAND platform --STREAMS_NUMBER ${stream_number}
+                                    deactivate
+                                """
                             }
+                        } catch (err) {
+                            ErrReg = err
+                            currentBuild.result = "FAILURE"
+                            
+                        } finally {
+                            archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
+                            junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
+                            dir(workspace){
+                                publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './controls/tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
+                            }
+                            archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
                         }
                     }
                 }
-              
-            )
-        }
+            }
+            
+        )
+        
     }    
     sh """
         sudo chmod -R 0777 ${workspace}
