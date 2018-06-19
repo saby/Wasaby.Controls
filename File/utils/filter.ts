@@ -2,7 +2,7 @@
 import ExtensionsHelper = require("File/utils/ExtensionsHelper");
 import ExtensionsError = require("File/Error/Extension");
 import MaxSizeError = require("File/Error/MaxSize");
-import LocalFile = require("../LocalFile");
+import LocalFile = require("File/LocalFile");
 
 const KB = 1024;
 const MB = KB * KB;
