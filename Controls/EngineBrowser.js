@@ -1,7 +1,7 @@
-define('Controls/Browser', [
+define('Controls/EngineBrowser', [
    'Core/Control',
-   'tmpl!Controls/Browser/Browser',
-   'css!Controls/Browser/Browser'
+   'tmpl!Controls/EngineBrowser/EngineBrowser',
+   'css!Controls/EngineBrowser/EngineBrowser'
 ], function(BaseControl, template) {
 
    'use strict';

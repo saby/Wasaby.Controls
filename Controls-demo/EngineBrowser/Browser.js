@@ -1,9 +1,10 @@
-define('Controls-demo/Browser/Browser', [
+define('Controls-demo/EngineBrowser/Browser', [
    'Core/Control',
    'WS.Data/Source/Memory',
-   'tmpl!Controls-demo/Browser/Browser',
-   'Controls/Browser',
-   'Controls-demo/Browser/resources/listTemplate'
+   'tmpl!Controls-demo/EngineBrowser/Browser',
+   'Controls/EngineBrowser',
+   'Controls-demo/EngineBrowser/resources/listTemplate',
+   'Controls-demo/EngineBrowser/resources/searchTemplate'
 ], function(Control, Memory, template) {
    'use strict';
 
@@ -40,15 +41,9 @@ define('Controls-demo/Browser/Browser', [
       })
    };
 
-   var searchConfig = {
-      value: ''
-   };
-
    var ModuleClass = Control.extend(
       {
          _template: template,
-
-         _searchConfig: searchConfig,
 
          _contentConfig: contentConfig
       });

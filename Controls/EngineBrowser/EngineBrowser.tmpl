@@ -1,14 +1,10 @@
 <Controls.Container.Filter>
    <Controls.Container.Search>
       <div>
-         <ws:if data="{{_options.searchConfig}}">
+         <ws:if data="{{_options.search}}">
             <Controls.Container.Input.Search>
-               <Controls.Input.Search
-                       bind:value="_options.searchConfig.value"
-                       class="controls-Browser__search">
-               </Controls.Input.Search>
+               <ws:partial template="{{_options.search}}" class="controls-Browser__search"/>
             </Controls.Container.Input.Search>
-
          </ws:if>
          <ws:if data="{{_options.content}}">
             <Controls.Container.List scope="{{_options.contentConfig}}">
