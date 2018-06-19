@@ -5,20 +5,21 @@ define('Controls/TimeTester/TimeTester',
    [
       'Core/Control',
       'tmpl!Controls/TimeTester/TimeTester',
-      'Core/helpers/URLHelpers'
-
+      'Core/cookie'
    ],
 
    function(Control,
       template,
-      URLHelpers) {
+      cookie) {
       'use strict';
 
       return Control.extend({
          _template: template,
          boomCfg: '',
+         timeTester: '',
          _beforeMount: function() {
-            this.boomCfg = URLHelpers.getQueryParam('boomCfg');
+            this.boomCfg = cookie.get('boomCfg');
+            this.timeTester = cookie.get('timeTester');
          }
       });
    }

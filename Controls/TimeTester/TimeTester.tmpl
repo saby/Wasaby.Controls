@@ -1,23 +1,21 @@
 <div>
    <ws:if data="{{ _options.resourceRoot && boomCfg }}">
       <script type="text/javascript">
+         function startBoomerang(){
+            BOOMR.init({{ boomCfg }});
+         }
+      </script>
+      <script
+         type="text/javascript"
+         src="{{ _options.resourceRoot }}View/Runner/Vdom/third-party/boomerang.js"
+         onload="startBoomerang()">
+      </script>
+   </ws:if>
+   <ws:if data="{{ timeTester }}">
+      <script type="text/javascript">
          var startTime = -1,
             lastLongTickTime = -1,
             ticks = -1;
-
-         function sendTick() {
-            setTimeout(checkTick, 10, Date.now());
-         }
-
-         function checkTick(time) {
-            var currentTime = Date.now();
-            if (currentTime - time > 20) {
-               lastLongTickTime = currentTime;
-            } else if (currentTime - lastLongTickTime > 10000) {
-               clearInterval(ticks);
-               document.dispatchEvent(new CustomEvent('fullLoadTime', { 'detail':  lastLongTickTime - startTime }));
-            }
-         }
 
          function startTimeTester (){
             startTime = lastLongTickTime = Date.now();
@@ -27,15 +25,29 @@
             ticks = setInterval(sendTick, 10);
          }
 
-         function startBoomerang(){
-            BOOMR.init({{ boomCfg }});
-            startTimeTester();
+         function sendTick() {
+            setTimeout(checkTick, 50, Date.now());
          }
-      </script>
-      <script
-         type="text/javascript"
-         src="{{ _options.resourceRoot }}View/Runner/Vdom/third-party/boomerang.js"
-         onload="startBoomerang()">
+
+         function checkTick(time) {
+            var currentTime = Date.now();
+            console.log(currentTime - time);
+            if (currentTime - time > 100) {
+               lastLongTickTime = currentTime;
+            } else if (currentTime - lastLongTickTime > 10000) {
+               clearInterval(ticks);
+               var compatibleLoaded = false;
+               try {
+                  require('Core/Abstract');
+                  compatibleLoaded = true;
+               } catch(e) {}
+               document.dispatchEvent(new CustomEvent('fullLoadTime', {
+                  'detail':  { time: lastLongTickTime - startTime, compatible: compatibleLoaded }
+               }));
+            }
+         }
+
+         startTimeTester();
       </script>
    </ws:if>
 </div>
