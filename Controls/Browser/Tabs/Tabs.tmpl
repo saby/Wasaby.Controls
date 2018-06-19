@@ -4,5 +4,5 @@
             keyProperty="id"
             source="{{_options.tabsSource}}"
     />
-    <ws:partial template="{{_content}}"/>
+    <Controls.Container.Async templateName="{{_options.tabsSource._getRecordByKey(_options.tabsSelectedKey).content}}" templateOptions="{{_options}}"/>
 </div>
