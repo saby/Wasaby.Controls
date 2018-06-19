@@ -180,7 +180,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
          _close: function(arg) {
             if (this.handle('onBeforeClose', arg) !== false) {
-               this.close();
+               this.close(arg);
             }
          },
          closeHandler: function(e, arg) {
@@ -193,11 +193,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          getParent: function() {
             return null;
          },
-         close: function() {
+         close: function(arg) {
             this._notify('close');
 
-            this.handle('onClose');
-            this.handle('onAfterClose');
+            this.handle('onClose', arg);
+            this.handle('onAfterClose', arg);
          },
          _getTemplateComponent: function() {
             return this._compoundControl;
