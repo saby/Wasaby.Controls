@@ -5,8 +5,9 @@ define('SBIS3.CONTROLS/ComponentBinder/FilterController', [
    'Core/Abstract',
    'Core/core-merge',
    'Core/core-clone',
-   'SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil'
-], function(cAbstract, cMerge, coreClone, FilterHistoryControllerUntil) {
+   'SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil',
+   'Core/helpers/Object/isEqual'
+], function(cAbstract, cMerge, coreClone, FilterHistoryControllerUntil, isEqual) {
    
    var BROWSER_FILTER_FIELD = 'browser.filter';
    
@@ -88,7 +89,9 @@ define('SBIS3.CONTROLS/ComponentBinder/FilterController', [
                      //FIXME При рекурсивном мерже некорректно мержатся массивы в полях объекта, при мерже {arr: [123]} <-- {arr: []} получаем {arr: [123]} вместо {arr: []}
                      resultFilter = cMerge(coreClone(parentContext.getValue(BROWSER_FILTER_FIELD)), resultFilter, {rec: false});
                   }
-                  parentContext.setValue(BROWSER_FILTER_FIELD, resultFilter);
+                  if (!isEqual(resultFilter, parentContext.getValue(BROWSER_FILTER_FIELD))) {
+                     parentContext.setValue(BROWSER_FILTER_FIELD, resultFilter);
+                  }
                },
                structureChanged = function(event, prop) {
                   if (prop === 'filterStructure' && !blockSync) {
