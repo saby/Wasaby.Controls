@@ -1,4 +1,4 @@
-define('Controls/Decorators/PhoneNumber/Dictionary', [], function() {
+define('Controls/Decorator/PhoneNumber/Dictionary', [], function() {
    'use strict';
    return {
       region: {

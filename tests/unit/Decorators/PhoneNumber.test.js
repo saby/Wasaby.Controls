@@ -3,13 +3,13 @@
  */
 define(
    [
-      'Controls/Decorators/PhoneNumber'
+      'Controls/Decorator/PhoneNumber'
    ],
    function(Number) {
 
       'use strict';
 
-      describe('Controls.Decorators.PhoneNumber', function() {
+      describe('Controls.Decorator.PhoneNumber', function() {
          var result;
 
          it('Empty number', function() {

@@ -4,7 +4,7 @@
 define('Controls-demo/Decorators/PhoneNumber/PhoneNumber',
    [
       'Core/Control',
-      'Controls/Decorators/PhoneNumber',
+      'Controls/Decorator/PhoneNumber',
       'tmpl!Controls-demo/Decorators/PhoneNumber/PhoneNumber',
       'Controls/Input/Text',
       'css!Controls-demo/Decorators/PhoneNumber/PhoneNumber'

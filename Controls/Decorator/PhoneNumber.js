@@ -1,19 +1,22 @@
 /**
  * Created by ee.volkova1 on 14.06.2018.
  */
-define('Controls/Decorators/PhoneNumber',
+define('Controls/Decorator/PhoneNumber',
    [
       'Core/Control',
       'WS.Data/Type/descriptor',
-      'tmpl!Controls/Decorators/PhoneNumber/PhoneNumber',
-      'Controls/Decorators/PhoneNumber/Dictionary'
+      'tmpl!Controls/Decorator/PhoneNumber/PhoneNumber',
+      'Controls/Decorator/PhoneNumber/Dictionary'
    ],
    function(Control, descriptor, template, phoneCodeModule) {
 
       'use strict';
 
       /**
-       * Beautify Phone number
+       * Beautify Phone number from string which consists of digits and another symbols(spaces, brackets, hyphens) to formatted string
+       * for Russian mobile numbers format is +7(***) ***-**-**
+       * for another Russian numbers +7(****) **-**-** or +7(*****) *-**-** depends on city code
+       * for foreign numbers +foreigncode restdigits
        *
        * @class Controls/Decorators/PhoneNumber
        * @extends Core/Control
