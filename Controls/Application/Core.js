@@ -5,9 +5,10 @@ define('Controls/Application/Core',
    [
       'Core/Control',
       'tmpl!Controls/Application/Core',
-      'Controls/Application/AppData'
+      'Controls/Application/AppData',
+      'Controls/Application/HeadDataContext'
    ],
-   function(Control, template, AppData) {
+   function(Control, template, AppData, HeadDataContext) {
 
       'use strict';
 
@@ -23,10 +24,12 @@ define('Controls/Application/Core',
 
             AppCore.superclass.constructor.apply(this, arguments);
             this.ctxData = new AppData(cfg);
+            this.headDataCtx = new HeadDataContext(cfg.theme || '');
          },
          _getChildContext: function() {
             return {
-               AppData: this.ctxData
+               AppData: this.ctxData,
+               headData: this.headDataCtx
             };
          }
       });

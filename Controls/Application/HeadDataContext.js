@@ -174,6 +174,9 @@ define('Controls/Application/HeadDataContext', [
       pushDepComponent: function(componentName) {
          this.depComponentsMap[componentName] = true;
       },
+      addReceivedState: function(key, receivedState) {
+         this.receivedStateArr[key] = receivedState;
+      },
       pushWaiterDeferred: function(def) {
          var self = this;
          this.waiterDef = def;
@@ -191,7 +194,8 @@ define('Controls/Application/HeadDataContext', [
                self.defRender.callback({
                   jsLinks: self.jsLinks || [],
                   cssLinks: self.cssLinks || [],
-                  errorState: self.err
+                  errorState: self.err,
+                  receivedStateArr: self.receivedStateArr
                });
             });
          });
@@ -200,6 +204,7 @@ define('Controls/Application/HeadDataContext', [
          this.theme = theme;
          this.defRender = new Deferred();
          this.depComponentsMap = {};
+         this.receivedStateArr = {};
       },
       waitAppContent: function() {
          return this.defRender;
