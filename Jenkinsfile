@@ -321,10 +321,10 @@ node('controls') {
                             }
                         )
                     }
-            }
-        } finally {
+            } finally {
             junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
-        }
+            }
+        } 
     }    
         stage("Разворот стенда"){
             echo "Запускаем разворот стенда и подготавливаем окружение для тестов"
