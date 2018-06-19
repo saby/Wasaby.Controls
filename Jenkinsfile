@@ -293,34 +293,34 @@ node('controls') {
             echo items
         }
         stage("Unit тесты"){
-            try {
             if ( unit ){
-                echo "Запускаем юнит тесты"
-                dir(workspace){
-                    sh "cp -rf ./WIS-git-temp ./controls/sbis3-ws"
-                    sh "cp -rf ./ws_data/WS.Data ./controls/components/"
-                    sh "cp -rf ./ws_data/WS.Data ./controls/"
-                }
-                dir("./controls"){
-                    sh "npm config set registry http://npmregistry.sbis.ru:81/"
-                    parallel (
-                        isolated: {
-                            sh "sh ./bin/test-isolated"
-                            sh "mv ./artifacts/xunit-report.xml ./artifacts/test-isolated-report.xml"
-                        },
-                        browser: {
-                            sh """
-                            export test_url_host=${env.NODE_NAME}
-                            export test_server_port=10253
-                            export test_url_port=10253
-                            export WEBDRIVER_remote_enabled=1
-                            export WEBDRIVER_remote_host=10.76.159.209
-                            export WEBDRIVER_remote_port=4444
-                            export test_report=artifacts/test-browser-report.xml
-                            sh ./bin/test-browser"""
-                        }
-                    )
-                }
+                try {
+                    echo "Запускаем юнит тесты"
+                    dir(workspace){
+                        sh "cp -rf ./WIS-git-temp ./controls/sbis3-ws"
+                        sh "cp -rf ./ws_data/WS.Data ./controls/components/"
+                        sh "cp -rf ./ws_data/WS.Data ./controls/"
+                    }
+                    dir("./controls"){
+                        sh "npm config set registry http://npmregistry.sbis.ru:81/"
+                        parallel (
+                            isolated: {
+                                sh "sh ./bin/test-isolated"
+                                sh "mv ./artifacts/xunit-report.xml ./artifacts/test-isolated-report.xml"
+                            },
+                            browser: {
+                                sh """
+                                export test_url_host=${env.NODE_NAME}
+                                export test_server_port=10253
+                                export test_url_port=10253
+                                export WEBDRIVER_remote_enabled=1
+                                export WEBDRIVER_remote_host=10.76.159.209
+                                export WEBDRIVER_remote_port=4444
+                                export test_report=artifacts/test-browser-report.xml
+                                sh ./bin/test-browser"""
+                            }
+                        )
+                    }
             }
         } finally {
             junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
