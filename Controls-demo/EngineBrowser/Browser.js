@@ -2,8 +2,7 @@ define('Controls-demo/EngineBrowser/Browser', [
    'Core/Control',
    'WS.Data/Source/Memory',
    'tmpl!Controls-demo/EngineBrowser/Browser',
-   'Controls/EngineBrowser',
-   'Controls-demo/EngineBrowser/resources/listTemplate'
+   'Controls/EngineBrowser'
 ], function(Control, Memory, template) {
    'use strict';
 
@@ -32,14 +31,6 @@ define('Controls-demo/EngineBrowser/Browser', [
       { id: 23, title: 'Petr'}
    ];
 
-   var contentConfig = {
-      searchParam: 'title',
-      source: new Memory({
-         idProperty: 'id',
-         data: sourceData
-      })
-   };
-
    var ModuleClass = Control.extend(
       {
          _template: template,
@@ -47,9 +38,7 @@ define('Controls-demo/EngineBrowser/Browser', [
          _source: new Memory({
             idProperty: 'id',
             data: sourceData
-         }),
-
-         _contentConfig: contentConfig
+         })
       });
    return ModuleClass;
 });
