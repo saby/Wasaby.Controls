@@ -80,6 +80,7 @@ define('Controls/Popup/Opener/InfoBox',
             }
             this._clearTimeout();
             cfg = cMerge(cClone(DEFAULT_CONFIG), cfg);
+            //TODO код с задержкой дублируется в Popup/Infobox. По задаче нужно обобщить эти 2 компонента: https://online.sbis.ru/opendoc.html?guid=b8584cee-0310-4e71-a8fb-6c38e4306bb5
             if (cfg.showDelay > 0) {
                this._openId = setTimeout(this._open.bind(this, cfg), cfg.showDelay);
             } else {
