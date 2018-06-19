@@ -80,7 +80,7 @@ define('Controls/Button/MenuButton',
          
          _beforeUpdate: function(newOptions) {
             /* source changed, items is not actual now */
-            if (newOptions.source !== this._options.source || this._options.filter !== newOptions.filter) {
+            if (newOptions.source !== this._options.source) {
                this._items = null;
             }
          },
@@ -93,7 +93,7 @@ define('Controls/Button/MenuButton',
             }
             
             if (this._options.source && !this._items) {
-               _private.loadItems(this, this._options.source, this._options.filter).addCallback(function(items) {
+               _private.loadItems(this, this._options.source, this._filter).addCallback(function(items) {
                   self._items = items;
                   open();
                   return items;
