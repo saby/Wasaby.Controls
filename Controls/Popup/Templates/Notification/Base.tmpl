@@ -5,6 +5,6 @@
         </ws:if>
     </div>
     <ws:if data="{{_options.iconClose}}">
-        <Controls.Button.Close class="controls-Notification__closeButton" lightButton="{{true}}"/>
+        <Controls.Button.Close class="controls-Notification__closeButton" lightButton="{{true}}" on:click="_closeClick()"/>
     </ws:if>
 </div>
