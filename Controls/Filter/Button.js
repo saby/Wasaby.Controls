@@ -100,7 +100,7 @@ define('Controls/Filter/Button',
 
          _clearClick: function() {
             if (this._options.filterTemplate) {
-               _private.getFilterButtonCompatible(this).addCallback(function (panelOpener) {
+               _private.getFilterButtonCompatible(this).addCallback(function(panelOpener) {
                   panelOpener.clearFilter();
                });
             }
