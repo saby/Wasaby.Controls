@@ -104,7 +104,7 @@ define('Controls/List/ItemsViewModel',
             return itemData;
          },
 
-         toggleGroup: function (group, state) {
+         toggleGroup: function(group, state) {
             if (typeof state === 'undefined') {
                state = typeof this._collapsedGroups[group] !== 'undefined';
             }
