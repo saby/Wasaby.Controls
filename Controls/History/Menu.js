@@ -33,10 +33,10 @@ define('Controls/History/Menu',
       var HistoryMenu = MenuButton.extend({
          _defaultItemTemplate: itemTemplate,
          _source: null,
-         
+         _filter: null,
+
          _beforeMount: function(options) {
-            this._source = options.source;
-            options.filter = {
+            this._filter = {
                $_history: true
             };
             options.defaultItemTemplate = itemTemplate;
@@ -56,17 +56,17 @@ define('Controls/History/Menu',
             switch (actionName) {
                case 'itemClick':
                   this._notify('onMenuItemActivate', data);
-                  this._source.update(item, {
+                  this._options.source.update(item, {
                      $_history: true
                   });
-                  this._items = this._source.getItems();
+                  this._items = this._options.source.getItems();
                   this._children.DropdownOpener.close();
                   break;
                case 'pinnedClick':
-                  this._source.update(item, {
+                  this._options.source.update(item, {
                      $_pinned: !item.get('pinned')
                   });
-                  this._items = this._source.getItems();
+                  this._items = this._options.source.getItems();
                   this._open();
                   break;
             }
