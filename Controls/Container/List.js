@@ -44,12 +44,21 @@ define('Controls/Container/List',
             self._options = options;
             self._source = options.source;
             self._filter = options.filter;
+            self._navigation = options.navigation;
          },
          
          updateSource: function(self, data) {
+            /* Пока не cached source не используем навигацию и фильтрацию,
+               просто отдаём данные в список, иначе memorySource данные не вернёт,
+               т.к. фильтрация работает в нём только по полному совпадению */
+            self._navigation = null;
+            self._filter = {};
+
             /* TODO will be a cached source */
             self._source = new Memory({
-               data: data.getRawData()
+               idProperty: data.getIdProperty(),
+               data: data.getRawData(),
+               adapter: self._options.source.getAdapter()
             });
          },
          
@@ -70,6 +79,7 @@ define('Controls/Container/List',
             }
             self._searchMode = false;
             self._source = self._options.source;
+            self._navigation = self._options.navigation;
             self._forceUpdate();
          },
          

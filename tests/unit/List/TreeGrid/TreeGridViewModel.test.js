@@ -2,7 +2,7 @@ define(['Controls/List/TreeGrid/TreeGridViewModel', 'Core/core-instance'], funct
 
    describe('Controls.List.TreeGrid.TreeGridViewModel', function() {
       var
-         treeGridViewModel = new TreeGridViewModel({});
+         treeGridViewModel = new TreeGridViewModel({columns:[]});
       it('_createModel', function() {
          var
             createdModel = treeGridViewModel._createModel({});
