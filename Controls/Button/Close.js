@@ -8,7 +8,7 @@ define('Controls/Button/Close', [
       _template: template
    });
 
-   CloseButton._getDefaultOptions = function() {
+   CloseButton.getDefaultOptions = function() {
       return {
          style: 'standart'
       };
