@@ -66,6 +66,23 @@ define('Controls/StickyHeader',
                this._shouldBeFixed = shouldBeFixed;
                this._forceUpdate();
             }
+         },
+
+         _listScrollHandler: function(e, eventType) {
+            switch (eventType) {
+               case 'listTop':
+                  this._listTop = true;
+                  break;
+               case 'scrollMove':
+                  this._listTop = false;
+                  break;
+               case 'canScroll':
+                  this._scrolling = true;
+                  break;
+               case 'cantScroll':
+                  this._scrolling = false;
+                  break;
+            }
          }
       });
 
