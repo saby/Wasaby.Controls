@@ -1,12 +1,13 @@
 define('Controls/StickyHeader',
    [
       'Core/Control',
+      'Core/detection',
       'Controls/Utils/IntersectionObserver',
       'tmpl!Controls/StickyHeader/StickyHeader',
 
       'css!Controls/StickyHeader/StickyHeader'
    ],
-   function(Control, IntersectionObserver, template) {
+   function(Control, detection, IntersectionObserver, template) {
 
       'use strict';
 
@@ -16,6 +17,8 @@ define('Controls/StickyHeader',
          _shouldBeFixed: false,
 
          _isIntersecting: null,
+
+         _isMobileAndroid: detection.isMobileAndroid,
 
          _beforeMount: function() {
             this._isIntersecting = {
