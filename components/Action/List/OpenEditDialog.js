@@ -325,13 +325,17 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
       _showLoadingIndicator: function() {
          this._toggleOverlay(true);
          //TODO VDOM
+         this._isIndicatorShowed = true;
          cIndicator.setMessage(rk('Загрузка'), true);
      },
 
       _hideLoadingIndicator: function() {
          this._toggleOverlay(false);
-         //TODO VDOM
-         cIndicator.hide();
+         if (this._isIndicatorShowed) {
+            //TODO VDOM
+            cIndicator.hide();
+            this._isIndicatorShowed = false;
+         }
        },
 
       _handleError: function(error) {
