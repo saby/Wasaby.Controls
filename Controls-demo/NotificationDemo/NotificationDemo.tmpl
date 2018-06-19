@@ -12,4 +12,10 @@
          </ws:popupOptions>
       </Controls.Popup.Opener.Notification>
    </ws:for>
+   <Controls.Button caption="Кликни чтобы открыть опенер c кастомным шаблоном" on:click="_openNotification('Custom')"/>
+   <Controls.Button caption="Кликни чтобы закрыть {{index}} опенер" on:click="_closeNotification('Custom')"/>
+   <Controls.Popup.Opener.Notification name="myOpenerCustom">
+      <ws:popupOptions template="tmpl!Controls-demo/NotificationDemo/Custom.tmpl">
+      </ws:popupOptions>
+   </Controls.Popup.Opener.Notification>
 </div>

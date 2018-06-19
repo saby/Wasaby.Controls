@@ -5,6 +5,9 @@ define('Controls/Popup/Templates/Notification/Base',
       'css!Controls/Popup/Templates/Notification/Base'
    ],
    function(Control, template) {
+
+      var timeAutoClose = 5000;
+
       var Notification = Control.extend({
          _template: template,
 
@@ -35,7 +38,7 @@ define('Controls/Popup/Templates/Notification/Base',
 
             this._timerId = setTimeout(function() {
                self._notify('close', []);
-            }, 5000);
+            }, timeAutoClose);
          }
       });
 

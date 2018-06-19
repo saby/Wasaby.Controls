@@ -9,7 +9,7 @@ define('Controls/Popup/Opener/Notification',
        * @control
        * @public
        * @category Popup
-       * @extends Controls/Popup/Opener/Base
+       * @extends Controls/Popup/Opener/BaseOpener
        */
       var Notification = Base.extend({
 

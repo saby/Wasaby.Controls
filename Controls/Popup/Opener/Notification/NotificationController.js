@@ -42,6 +42,11 @@ define('Controls/Popup/Opener/Notification/NotificationController',
 
          _updatePositions: function() {
             var height = 0;
+
+            /**
+             * В item.height лежит высота попапа. В ней учитываются отступы между нотификационными окнами,
+             * задаваемые в шаблоне, через css. Это сделано для поддержки тематизации.
+             */
             this._stack.each(function(item) {
                item.position = NotificationStrategy.getPosition(height);
                height += item.height;
