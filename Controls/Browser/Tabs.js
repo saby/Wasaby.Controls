@@ -5,8 +5,6 @@ define('Controls/Browser/Tabs', [
    'WS.Data/Source/Memory'
 ], function(Control, template, MemorySource) {
    'use strict';
-   var _private = {
-   };
    var browserTabs = Control.extend({
       _template: template
    });
