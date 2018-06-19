@@ -194,7 +194,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             return null;
          },
          close: function(arg) {
-            this._notify('close');
+            this._notify('close', null, {bubbling: true});
 
             this.handle('onClose', arg);
             this.handle('onAfterClose', arg);
