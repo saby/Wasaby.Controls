@@ -36,7 +36,6 @@ define('Controls/History/Menu',
          _filter: null,
 
          _beforeMount: function(options) {
-            this._source = options.source;
             this._filter = {
                $_history: true
             };
