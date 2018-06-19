@@ -1335,6 +1335,8 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             EventBus.globalChannel().unsubscribe('MobileInputFocus', this._touchKeyboardMoveHandler);
             EventBus.globalChannel().unsubscribe('MobileInputFocusOut', this._touchKeyboardMoveHandler);
             EventBus.channel('WindowChangeChannel').unsubscribe('onWindowScroll', this._onResizeHandler, this);
+            EventBus.channel('WindowChangeChannel').unsubscribe('onDocumentDrag', this._dragHandler, this);
+
             if (this._options.closeByExternalOver) {
                EventBus.channel('WindowChangeChannel').unsubscribe('onDocumentMouseOver', this._clickHandler, this);
             }

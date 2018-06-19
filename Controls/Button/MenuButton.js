@@ -2,38 +2,48 @@ define('Controls/Button/MenuButton',
    [
       'Core/Control',
       'tmpl!Controls/Button/Menu/MenuButton',
+      'Controls/Controllers/SourceController',
+      'Controls/Input/Dropdown/Util',
       'Controls/Button/Classes',
       'css!Controls/Button/Menu/MenuButton',
       'Controls/Button'
    ],
-   function(Control, template, Classes) {
+   function(Control, template, SourceController, dropdownUtil, Classes, menuHeadTemplate) {
 
       /**
-        * MenuButton
-        * @class Controls/Button
-        * @extends Core/Control
-        * @mixes Controls/Button/interface/ICaption
-        * @mixes Controls/Button/interface/IClick
-        * @mixes Controls/Button/interface/IIcon
-        * @mixes Controls/interface/ITooltip
-        * @mixes Controls/interface/ISource
-        * @control
-        * @public
-        * @category Button
-        */
+       * MenuButton
+       * @class Controls/Button
+       * @extends Core/Control
+       * @mixes Controls/Button/interface/ICaption
+       * @mixes Controls/Button/interface/IClick
+       * @mixes Controls/Button/interface/IIcon
+       * @mixes Controls/interface/ITooltip
+       * @mixes Controls/interface/ISource
+       * @control
+       * @public
+       * @category Button
+       */
 
       'use strict';
 
       /**
-        * @name Controls/MenuButton#headConfig
-        * @cfg {Object} Menu style menuStyle
-        * @variant defaultHead The head with icon and caption
-        * @variant duplicateHead The icon set under first item
-        * @variant cross Menu have cross in left top corner
-        */
+       * @name Controls/MenuButton#headConfig
+       * @cfg {Object} Menu style menuStyle
+       * @variant defaultHead The head with icon and caption
+       * @variant duplicateHead The icon set under first item
+       * @variant cross Menu have cross in left top corner
+       */
 
       var _private = {
-
+         loadItems: function(instance, source, filter) {
+            instance._sourceController = new SourceController({
+               source: source
+            });
+            return instance._sourceController.load(filter || {}).addCallback(function(items) {
+               instance._items = items;
+               return items;
+            });
+         },
          cssStyleGeneration: function(self, options) {
             var sizes = ['small', 'medium', 'large'],
                menuStyle = options.headConfig && options.headConfig.menuStyle,
@@ -61,13 +71,44 @@ define('Controls/Button/MenuButton',
 
       var MenuButton = Control.extend({
          _template: template,
+         _menuHeadTemplate: menuHeadTemplate,
 
          _beforeMount: function(options) {
             _private.cssStyleGeneration(this, options);
+            this._onResult = this._onResult.bind(this);
          },
 
-         _selectedItemsChangedHandler: function(event, result) {
-            this._notify('onMenuItemActivate', [result[0]]);
+         _beforeUpdate: function(newOptions) {
+            /* source changed, items is not actual now */
+            if (newOptions.source !== this._options.source) {
+               this._items = null;
+            }
+         },
+
+         _open: function() {
+            var self = this;
+
+            function open() {
+               dropdownUtil.open(self, self._children.popupTarget._container);
+            }
+
+            if (this._options.source && !this._items) {
+               _private.loadItems(this, this._options.source, this._filter).addCallback(function(items) {
+                  self._items = items;
+                  open();
+                  return items;
+               });
+            } else {
+               open();
+            }
+         },
+         _onResult: function(result) {
+            if (result.action === 'itemClick') {
+               this._notify('onMenuItemActivate', result.data);
+               if (!result.data[0].get('@parent')) {
+                  this._children.DropdownOpener.close();
+               }
+            }
          }
       });
 
