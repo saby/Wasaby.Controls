@@ -101,6 +101,7 @@ node('controls') {
             regr = true
             unit = true
         }
+        def ErrUnit, ErrInt, ErrReg
 
         echo "Выкачиваем хранилища"
         stage("Checkout"){
@@ -321,8 +322,12 @@ node('controls') {
                             }
                         )
                     }
+            } catch (err) {
+                ErrUnit = err
+                currentBuild.result = "FAILURE"
+
             } finally {
-            junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
+                junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
             }
         } 
     }    
@@ -481,6 +486,10 @@ node('controls') {
                                     deactivate
                                     """
                                 }
+                            } catch (err) {
+                                ErrInt = err
+                                currentBuild.result = "FAILURE"
+                                
                             } finally {
                                 archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
                                 junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
@@ -502,6 +511,10 @@ node('controls') {
                                         deactivate
                                     """
                                 }
+                            } catch (err) {
+                                ErrReg = err
+                                currentBuild.result = "FAILURE"
+                                
                             } finally {
                                 archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
                                 junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
@@ -509,7 +522,6 @@ node('controls') {
                                     publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './controls/tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
                                 }
                                 archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
-                            }
                         }
                     }
                 }
@@ -519,6 +531,13 @@ node('controls') {
             sudo chmod -R 0777 ${workspace}
             sudo chmod -R 0777 /home/sbis/Controls
         """
+        if ( ErrUnit ) {
+            throw  ErrUnit
+        } else if (ErrReg) {
+            throw  ErrReg
+        } else if (ErrInt) {
+            throw ErrInt
+        }
         gitlabStatusUpdate()
     }
 }
