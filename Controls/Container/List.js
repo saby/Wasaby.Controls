@@ -53,9 +53,10 @@ define('Controls/Container/List',
                т.к. фильтрация работает в нём только по полному совпадению */
             self._navigation = null;
             self._filter = {};
-            
+
             /* TODO will be a cached source */
             self._source = new Memory({
+               idProperty: data.getIdProperty(),
                data: data.getRawData(),
                adapter: self._options.source.getAdapter()
             });

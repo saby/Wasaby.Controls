@@ -5,6 +5,9 @@ define([
    'use strict';
 
 
+   //mock method, because it works with DOM
+   Controller._private.preventClickEvent = function() {};
+
    function createNativeEvent(type, pageX, pageY) {
       //mock dom event
       return {

@@ -104,6 +104,7 @@
 .controls-Grid__row-cell {
    min-height: @min-height_Grid-row;
    position: relative;
+   border-top: @height-Grid-row-separator solid;
    // Default "min-width" value "auto" and width limited not working. Fix this bug by reset "min-width" value to "0".
    // http://css-live.ru/articles/chto-mozhet-polomat-maket-na-gridax-css-grid-layout.html
    min-width: 0;
@@ -119,10 +120,16 @@
    text-align: center;
 }
 .ws-is-no-touch {
-   .controls-Grid__row:hover .controls-Grid__row-cell {
+   .controls-Grid__row:hover .controls-Grid__row-cell-background-hover {
       background-color: @background-color_Grid-row_hover;
    }
    .controls-Grid__row:hover .controls-itemActionsV {
+      display: inline-block;
+   }
+}
+.controls-Grid__row-cell-background-editing {
+   background-color: @controls-editInPlace-editing-item-bg;
+   >.controls-itemActionsV {
       display: inline-block;
    }
 }
@@ -143,9 +150,6 @@
 }
 .controls-Grid__cell_spacingRight {
    padding-right: @spacing_Grid-column / 2;
-}
-.controls-Grid__row-cell {
-   border-top: @height-Grid-row-separator solid;
 }
 .controls-Grid__row-cell__content_withLadder {
    visibility: hidden;

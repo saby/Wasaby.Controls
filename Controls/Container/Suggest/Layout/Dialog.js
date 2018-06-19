@@ -25,7 +25,7 @@ define('Controls/Container/Suggest/Layout/Dialog',
       var List = Control.extend({
          
          _template: template,
-         
+
          _getChildContext: function() {
             return {
                searchLayoutField: new SearchContextField(null),

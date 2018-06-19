@@ -12,7 +12,7 @@ define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
          var maxWidth = item.popupOptions.maxWidth;
 
          if (!minWidth || !maxWidth) { // Если не заданы размеры - строимся по размерам контейнера
-            return item.containerWidth;
+            return Math.min(item.containerWidth, maxPanelWidthWithOffset); //По ширине контента, но не больше допустимого значения
          }
 
          if (maxWidth <= maxPanelWidthWithOffset) {

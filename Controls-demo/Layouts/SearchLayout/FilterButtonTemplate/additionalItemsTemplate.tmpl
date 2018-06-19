@@ -20,14 +20,14 @@
 </ws:template>
 
 <ws:template name="checked">
-   <Controls.Button style="linkMain" caption="Test1"/>
+   <Controls.Button style="linkMain" caption="checked"/>
 </ws:template>
 
 <ws:template name="Test1">
    <Controls.Input.Dropdown
            source="{{item.source}}"
            keyProperty="key"
-           selectedKeys="{{1}}"/>
+           selectedKeys="{{item.value}}"/>
 </ws:template>
 
 <ws:template name="Test2">

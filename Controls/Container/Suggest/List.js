@@ -30,7 +30,15 @@ define('Controls/Container/Suggest/List',
       
                if (self._suggestListOptions.dialogMode) {
                   var navigation = clone(self._suggestListOptions.navigation);
+                  
+                  /* to turn on infinityScroll */
                   navigation.view = 'infinity';
+                  if (!navigation.viewConfig) {
+                     navigation.viewConfig = {};
+                  }
+                  
+                  /* to show paging */
+                  navigation.viewConfig.pagingMode = true;
                   self._navigation = navigation;
                } else {
                   self._navigation = self._suggestListOptions.navigation;

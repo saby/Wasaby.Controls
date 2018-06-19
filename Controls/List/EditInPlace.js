@@ -448,7 +448,7 @@ define('Controls/List/EditInPlace', [
          this._editingItemData.item = this._editingItem;
          this._editingItemData.dispItem = editingItemProjection;
          this._editingItemData.isEditing = true;
-         this._editingItemData.index = this._isAdd ? actions : {};
+         this._editingItemData.index = this._isAdd ? listModel.getCount() : index;
          this._editingItemData.drawActions = this._isAdd && actions && actions.showed && actions.showed.length,
          this._editingItemData.itemActions = this._isAdd ? listModel.getItemActions(item) : {};
          listModel._setEditingItemData(this._editingItemData);

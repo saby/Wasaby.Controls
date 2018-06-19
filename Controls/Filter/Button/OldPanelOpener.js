@@ -240,6 +240,7 @@ define('Controls/Filter/Button/OldPanelOpener',
                self);
             
             return FilterPanelUtils.getPanelConfig({
+               className: 'controls-FilterButton__popup-index',
                corner: isRightAlign ? 'tl' : 'tr',
                opener: this,
                parent: this,
