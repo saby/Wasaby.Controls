@@ -293,6 +293,7 @@ node('controls') {
             echo items
         }
         stage("Unit тесты"){
+            try {
             if ( unit ){
                 echo "Запускаем юнит тесты"
                 dir(workspace){
@@ -321,7 +322,10 @@ node('controls') {
                     )
                 }
             }
+        } finally {
+            junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
         }
+    }    
         stage("Разворот стенда"){
             echo "Запускаем разворот стенда и подготавливаем окружение для тестов"
             // Создаем sbis-rpc-service.ini
@@ -469,13 +473,19 @@ node('controls') {
                     echo "Запускаем интеграционные тесты"
                     stage("Инт.тесты"){
                         if ( inte ){
-							dir("./controls/tests/int"){
-                                 sh """
-                                 source /home/sbis/venv_for_test/bin/activate
-								 python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
-								 deactivate
-                                 """
+                            try {
+                                dir("./controls/tests/int"){
+                                    sh """
+                                    source /home/sbis/venv_for_test/bin/activate
+                                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
+                                    deactivate
+                                    """
+                                }
+                            } finally {
+                                archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
+                                junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
                             }
+							
                         }
                     }
                 },
@@ -483,13 +493,22 @@ node('controls') {
                     stage("Рег.тесты"){
                         echo "Запускаем тесты верстки"
                         if ( regr ){
-                            sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
-                            dir("./controls/tests/reg"){
-                                sh """
-                                    source /home/sbis/venv_for_test/bin/activate
-                                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS http://test-selenium39-unix.unix.tensor.ru:4444/wd/hub --DISPATCHER_RUN_MODE --STAND platform --STREAMS_NUMBER ${stream_number}
-                                    deactivate
-                                """
+                            try {
+                                sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
+                                dir("./controls/tests/reg"){
+                                    sh """
+                                        source /home/sbis/venv_for_test/bin/activate
+                                        python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS http://test-selenium39-unix.unix.tensor.ru:4444/wd/hub --DISPATCHER_RUN_MODE --STAND platform --STREAMS_NUMBER ${stream_number}
+                                        deactivate
+                                    """
+                                }
+                            } finally {
+                                archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
+                                junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
+                                dir(workspace){
+                                    publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './controls/tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
+                                }
+                                archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
                             }
                         }
                     }
@@ -500,22 +519,6 @@ node('controls') {
             sudo chmod -R 0777 ${workspace}
             sudo chmod -R 0777 /home/sbis/Controls
         """
-        stage("Результаты"){
-            echo "выкладываем результаты в зависимости от включенных тестов 'all only_reg only_int only_unit'"
-            if ( regr ){
-                dir(workspace){
-                    publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './controls/tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
-                }
-                archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
-            }
-            if ( unit ){
-                junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
-            }
-            if ( regr || inte ){
-                archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
-                junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-            }
-        }
         gitlabStatusUpdate()
     }
 }
