@@ -1,5 +1,6 @@
 .controls-Notification {
-  border-top: @border-width_NotificationBase solid;
+  border-style: solid;
+  border-width: @controls-InformationPopup-border-width;
   box-shadow: @box-shadow_NotificationBase;
   position: relative;
   min-height: @min-height_NotificationBase;
@@ -23,16 +24,16 @@
 }
 
 .controls-Notification__content {
-  padding: @padding_NotificationBase_content;
+  padding: @padding_NotificationBase-content;
 }
 
 .controls-Notification__closeButton {
   position: absolute;
-  top: @topIndent_NotificationBase_closeButton;
-  right: @rightIndent_NotificationBase_closeButton;
+  top: @topIndent_NotificationBase-closeButton;
+  right: @rightIndent_NotificationBase-closeButton;
   cursor: pointer;
   &:hover {
-    color: @color_NotificationBase_closeButton;
+    color: @color_NotificationBase-closeButton_hover;
   }
 }
 
@@ -42,9 +43,9 @@
 }
 
 .controls-Notification__simpleTemplate-icon {
-  margin-right: @margin-right_NotificationBase_simpleTemplate_icon_spacing;
+  margin-right: @margin-right_NotificationBase-simpleTemplate-icon;
 }
 
 .controls-Notification__simpleTemplate-message {
-  font-size: @font-size_NotificationBase_simpleTemplate_message;
+  font-size: @font-size_NotificationBase-simpleTemplate-message;
 }
