@@ -2,9 +2,8 @@ define('Controls/HighCharts', [
    'Core/Control',
    'tmpl!Controls/HighCharts/HighCharts',
    'Controls/HighCharts/resources/ParseDataUtil',
-   'Core/ILogger',
    'Core/core-merge'
-], function(Control, template, ParseDataUtil, ILogger, cMerge) {
+], function(Control, template, ParseDataUtil, cMerge) {
 
    /**
     * Component HighCharts

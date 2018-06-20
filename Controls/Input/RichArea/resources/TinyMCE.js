@@ -1,6 +1,5 @@
 define('Controls/Input/RichArea/resources/TinyMCE',
    [
-      'Core/core-clone',
       'Core/Context',
       'Core/Indicator',
       'Core/core-clone',
@@ -21,7 +20,6 @@ define('Controls/Input/RichArea/resources/TinyMCE',
       'Core/helpers/String/linkWrap',
       'SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptionsPanel/ImageOptionsPanel',
       'SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/CodeSampleDialog/CodeSampleDialog',
-      'Core/EventBus',
       'SBIS3.CONTROLS/WaitIndicator',
       'Core/moduleStubs',
 
@@ -29,7 +27,6 @@ define('Controls/Input/RichArea/resources/TinyMCE',
       'i18n!SBIS3.CONTROLS/RichEditor',
       'css!Controls/Input/RichArea/resources/TinyMCE/TinyMCE'
    ], function(
-      cClone,
       cContext,
       cIndicator,
       coreClone,
@@ -50,7 +47,6 @@ define('Controls/Input/RichArea/resources/TinyMCE',
       LinkWrap,
       ImageOptionsPanel,
       CodeSampleDialog,
-      EventBus,
       WaitIndicator,
       moduleStabs
    ) {
