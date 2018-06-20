@@ -84,7 +84,7 @@ define('Controls/Filter/Button/_FilterCompatible',
 
          updateFilterStructure: function(items) {
             if (this._oldPanelOpener) {
-               this._oldPanelOpener._setFilterStructure(converterFilterStructure.convertToFilterStructure(items));
+               this._oldPanelOpener.setFilterStructure(converterFilterStructure.convertToFilterStructure(items));
             }
          }
          
