@@ -486,6 +486,7 @@ node('controls') {
                             }
                         } catch (err) {
                             currentBuild.result = "FAILURE"
+                        }    
                     }
                 }
             },
