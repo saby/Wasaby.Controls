@@ -19,6 +19,8 @@ define('Controls/Container/Dropdown',
        * @class Controls/Container/Dropdown
        * @extends Core/Control
        * @mixes Controls/interface/ISource
+       * @mixes Controls/Button/interface/ICaption
+       * @mixes Controls/Button/interface/IIcon
        * @author Золотова Э.Е.
        * @control
        * @public
@@ -26,6 +28,36 @@ define('Controls/Container/Dropdown',
 
       /**
        * @event Controls/Container/Dropdown#selectedItemsChanged Occurs when the selected items change.
+       */
+
+      /**
+       * @name Controls/Container/Dropdown#nodeProperty
+       * @cfg {String} Name of the field describing the type of the node (list, node, hidden node).
+       */
+
+      /**
+       * @name Controls/Container/Dropdown#parentProperty
+       * @cfg {String} Name of the field that contains information about parent node.
+       */
+
+      /**
+       * @name Controls/Container/Dropdown#headTemplate
+       * @cfg {Function} Template that will be rendered above the list.
+       */
+
+      /**
+       * @name Controls/Container/Dropdown#contentTemplate
+       * @cfg {Function} Template that will be render the list.
+       */
+
+      /**
+       * @name Controls/Container/Dropdown#footerTemplate
+       * @cfg {Function} Template that will be rendered below the list.
+       */
+
+      /**
+       * @name Controls/Container/Dropdown#selectedKeys
+       * @cfg {Array} Array of selected items' keys.
        */
 
       /**
@@ -44,18 +76,16 @@ define('Controls/Container/Dropdown',
        */
 
       /**
-       * @name Controls/Container/Dropdown#nodeProperty
-       * @cfg {String} Name of the field describing the type of the node (list, node, hidden node).
+       * @name Controls/Container/Dropdown#emptyText
+       * @cfg {String} Add an empty item to the list.
+       * @variant true Add empty item with text 'Не выбрано'
        */
 
       /**
-       * @name Controls/Container/Dropdown#parentProperty
-       * @cfg {String} Name of the field that contains information about parent node.
-       */
-
-      /**
-       * @name Controls/Container/Dropdown#footerTemplate
-       * @cfg {Function} Template that will be rendered below the list.
+       * @name Controls/Container/Dropdown#typeShadow
+       * @cfg {String} Specifies the type of shadow around the popup.
+       * @variant default Default shadow
+       * @variant suggestionsContainer Shadow on the right, left, bottom
        */
 
       var _private = {
