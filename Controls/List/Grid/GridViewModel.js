@@ -1,9 +1,8 @@
 define('Controls/List/Grid/GridViewModel', [
    'Controls/List/BaseViewModel',
    'Controls/List/ListViewModel',
-   'Core/detection',
    'Core/core-clone'
-], function(BaseViewModel, ListViewModel, cDetection, cClone) {
+], function(BaseViewModel, ListViewModel, cClone) {
 
    'use strict';
 
