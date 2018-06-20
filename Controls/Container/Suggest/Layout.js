@@ -49,9 +49,9 @@ define('Controls/Container/Suggest/Layout',
                - bottom of suggest on screen -> default orient (-down)
              */
             var suggestHeight = self._children.suggestionsContainer.offsetHeight,
-                containerRect = self._container.getBoundingClientRect(),
-                needToRevert = suggestHeight + containerRect.bottom > (win || window).innerHeight,
-                newOrient;
+               containerRect = self._container.getBoundingClientRect(),
+               needToRevert = suggestHeight + containerRect.bottom > (win || window).innerHeight,
+               newOrient;
             
             if (needToRevert) {
                newOrient = '-up';
@@ -112,7 +112,7 @@ define('Controls/Container/Suggest/Layout',
             }
          },
          
-         loadDependencies: function (self) {
+         loadDependencies: function(self) {
             if (!self._dependenciesDeferred) {
                var deps = DEPS.concat([self._options.suggestTemplate.templateName, self._options.footerTemplate.templateName]);
                
@@ -198,6 +198,7 @@ define('Controls/Container/Suggest/Layout',
          
          _changeValueHandler: function(event, value) {
             this._searchValue = value;
+            
             /* preload suggest dependencies on value changed */
             _private.loadDependencies(this);
             _private.updateSuggestState(this);

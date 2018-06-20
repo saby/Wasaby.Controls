@@ -212,6 +212,7 @@ define('Controls/Container/List',
          
          _beforeMount: function(options, context) {
             _private.checkContextValues(this, context);
+            
             /***************************
                FIXME
                VDOM не умеет обрабатываеть ситуацию,
