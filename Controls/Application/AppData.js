@@ -12,6 +12,7 @@ define('Controls/Application/AppData', [
          this.wsRoot = cfg.wsRoot;
          this.resourceRoot = cfg.resourceRoot;
          this.cssBundles = cfg.cssBundles;
+         this.buildnumber = cfg.buildnumber;
       }
    });
 });
