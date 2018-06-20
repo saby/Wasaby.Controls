@@ -485,14 +485,7 @@ node('controls') {
                                 """
                             }
                         } catch (err) {
-                            ErrInt = err
                             currentBuild.result = "FAILURE"
-                            
-                        } finally {
-                            archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
-                            junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-                        }
-                        
                     }
                 }
             },
@@ -510,16 +503,8 @@ node('controls') {
                                 """
                             }
                         } catch (err) {
-                            ErrReg = err
                             currentBuild.result = "FAILURE"
                             
-                        } finally {
-                            archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
-                            junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-                            dir(workspace){
-                                publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './controls/tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
-                            }
-                            archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
                         }
                     }
                 }
@@ -535,19 +520,18 @@ node('controls') {
     """
     
     dir("./controls") {
-        if ( unit ) {
-        junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
-    } 
-    if ( ErrReg)  {
-        throw  ErrReg
+        if ( regr ){
+            publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './controls/tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
+            archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
+            }
+        if ( unit ){
+            junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
+            }
+        if ( regr || inte ){
+            archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
+            junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
+            }
     }
-    if ( ErrInt ) {
-        throw ErrInt
-    }
-    
-
-    }
-            
         }    
     }
 }
