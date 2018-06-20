@@ -14,8 +14,8 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
       control) {
       /**
        * Слой совместимости для открытия новых шаблонов в старых попапах
-      **/
-      var  moduleClass = CompoundControl.extend({
+       **/
+      var moduleClass = CompoundControl.extend({
          _dotTplFn: template,
          init: function() {
             moduleClass.superclass.init.apply(this, arguments);
@@ -23,27 +23,33 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             this._onCloseHandler = this._onCloseHandler.bind(this);
             this._onCloseHandler.control = this;
             require([this._options.innerComponentOptions.template], function(ctr) {
-               var vDomTemplate = control.createControl(ctr, self._options.innerComponentOptions, $('.vDomWrapper', self.getContainer()));
-               self._vDomTemplate = vDomTemplate;
-               var container = vDomTemplate.getContainer();
-               container = container.get ? container.get(0) : container; //берем ноду
+               self._vDomTemplate = control.createControl(ctr, self._options.innerComponentOptions, $('.vDomWrapper', self.getContainer()));
                var replaceVDOMContainer = function() {
-                  var container = vDomTemplate.getContainer();
-                  container.eventProperties = { 'on:close': [{
-                     fn: self._onCloseHandler,
-                     args: []
-                  }]};
+                  self._getRootContainer().eventProperties = {
+                     'on:close': [{
+                        fn: self._onCloseHandler,
+                        args: []
+                     }]
+                  };
                };
                if (self._options._initCompoundArea) {
                   self._notifyOnSizeChanged(self, self);
                   self._options._initCompoundArea(self);
                }
-               container.addEventListener('DOMNodeRemoved', replaceVDOMContainer);
+               replaceVDOMContainer();
+               self._getRootContainer().addEventListener('DOMNodeRemoved', replaceVDOMContainer);
             });
          },
-         _onCloseHandler: function() {
-            this.sendCommand('close');
+         _onCloseHandler: function(event, result) {
+            this.sendCommand('close', result);
          },
+
+         _getRootContainer: function() {
+            var container = this._vDomTemplate.getContainer();
+            container = container.get ? container.get(0) : container; //берем ноду
+            return container.closest('.control__compoundArea-new');
+         },
+
          destroy: function() {
             moduleClass.superclass.destroy.apply(this, arguments);
             Sync.unMountControlFromDOM(this._vDomTemplate, this._vDomTemplate._container);
