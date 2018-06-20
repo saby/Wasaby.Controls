@@ -6,11 +6,13 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/DimensionsUtil', [
             itemRect = item.get(0).getBoundingClientRect(),
             additionalWidth = Math.floor(itemRect.width / 2),
             margin = Math.floor(item.outerWidth(true) / 2 - additionalWidth),
-            additionalHeight = Math.floor(item.outerHeight(true) / 2);
+            additionalHeight = Math.floor(item.outerHeight(true) / 2),
+            title = $('.controls-CompositeView__tileTitle', item),
+            titleHeight = title.outerHeight(true) - (item.hasClass('controls-CompositeView__item-withTitle') ? 25 : 0);
 
          return {
-            padding: Math.ceil(additionalHeight / 2) + 'px ' + Math.ceil(additionalWidth / 2) + 'px',
-            margin: '' + Math.floor(-(additionalHeight / 2 - margin)) + 'px ' + Math.floor(-(additionalWidth / 2 - margin)) + 'px'
+            padding: Math.ceil(additionalHeight / 2) + 'px ' + Math.ceil(additionalWidth / 2) + 'px ' + Math.ceil(additionalHeight / 2 + titleHeight) + 'px ' + Math.ceil(additionalWidth / 2) + 'px',
+            margin: Math.floor(-(additionalHeight / 2 - margin)) + 'px ' + Math.floor(-(additionalWidth / 2 - margin)) + 'px ' + Math.floor(-(additionalHeight / 2 - margin) - titleHeight) + 'px ' + Math.floor(-(additionalWidth / 2 - margin)) + 'px'
          };
       },
       getMargin: function(item) {
