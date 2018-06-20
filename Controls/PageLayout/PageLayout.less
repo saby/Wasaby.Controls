@@ -2,11 +2,20 @@
    display: inline-block;
 }
 .controls-PageLayout_wrapper {
-   display: inline-flex;
+   .inline-flexbox();
+   width: 100%;
+   height:@height_Tabs;
    align-items: baseline;
    justify-content: space-between;
-   width: 100%;
    position: relative;
+}
+.controls-PageLayout__ControlsArea:before {
+   content: '\200b'; //zero width space
+   width: 0;
+   display: inline-block;
+   visibility: hidden;
+   line-height: @line-height_Tabs-baselineFix;//why so magic
+   font-size: @font-size_Tabs-item;
 }
 .controls-PageLayout_wrapper:after {
    content: '';
