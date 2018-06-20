@@ -7,36 +7,36 @@ define('Controls/History/Menu',
    function(MenuButton, itemTemplate) {
 
       /**
-        * Button
-        *
-        * @class Controls/History/Menu
-        * @extends Controls/Button/MenuButton
-        * @control
-        * @public
-        * @category Menu
-        */
+       * Button
+       *
+       * @class Controls/History/Menu
+       * @extends Controls/Button/MenuButton
+       * @control
+       * @public
+       * @category Menu
+       */
 
       /**
-        * @name Controls/History/Menu#historySource
-        * @cfg {Object} The special source whose has two source inside.
-        * The first source is standard, the second source determines where the data will be stored.
-        * If you use History/Service, then it will work with the History of Input service
-        */
+       * @name Controls/History/Menu#historySource
+       * @cfg {Object} The special source whose has two source inside.
+       * The first source is standard, the second source determines where the data will be stored.
+       * If you use History/Service, then it will work with the History of Input service
+       */
 
       /**
-        * @name Controls/History/Menu#historyId
-        * @cfg {String} history id
-        */
+       * @name Controls/History/Menu#historyId
+       * @cfg {String} history id
+       */
 
       'use strict';
 
       var HistoryMenu = MenuButton.extend({
          _defaultItemTemplate: itemTemplate,
          _source: null,
-         
+         _filter: null,
+
          _beforeMount: function(options) {
-            this._source = options.source;
-            options.filter = {
+            this._filter = {
                $_history: true
             };
             options.defaultItemTemplate = itemTemplate;
@@ -56,17 +56,17 @@ define('Controls/History/Menu',
             switch (actionName) {
                case 'itemClick':
                   this._notify('onMenuItemActivate', data);
-                  this._source.update(item, {
+                  this._options.source.update(item, {
                      $_history: true
                   });
-                  this._items = this._source.getItems();
+                  this._items = this._options.source.getItems();
                   this._children.DropdownOpener.close();
                   break;
                case 'pinnedClick':
-                  this._source.update(item, {
+                  this._options.source.update(item, {
                      $_pinned: !item.get('pinned')
                   });
-                  this._items = this._source.getItems();
+                  this._items = this._options.source.getItems();
                   this._open();
                   break;
             }

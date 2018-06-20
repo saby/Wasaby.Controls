@@ -87,8 +87,10 @@ function(cMerge, Random) {
       //Берем размеры либо с опций, либо с дименшенов
       _setSizes: function(cfg, templateClass) {
          var dimensions = templateClass.dimensions || templateClass.prototype.dimensions || {};
+         var dimensionsMinWidth = dimensions.minWidth || dimensions.width;
+
          if (!cfg.minWidth) {
-            cfg.minWidth = dimensions.minWidth ? parseInt(dimensions.minWidth, 10) : null;
+            cfg.minWidth = dimensionsMinWidth ? parseInt(dimensionsMinWidth, 10) : null;
          }
          if (!cfg.maxWidth) {
             cfg.maxWidth = dimensions.maxWidth ? parseInt(dimensions.maxWidth, 10) : null;

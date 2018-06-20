@@ -3616,7 +3616,7 @@ define('SBIS3.CONTROLS/ListView',
 
          _updateScrollIndicatorDown: function() {
             var container = this.getContainer();
-            if (this.infiniteScroll === 'down' && this._hasNextPage(this.getItems().getMetaData().more)){
+            if (this._infiniteScrollState.mode === 'down' && this._hasNextPage(this.getItems().getMetaData().more)){
                container.toggleClass('controls-ListView-scrollIndicator__down', container.hasClass('controls-ListView__indicatorVisible'));
             }
          },
@@ -5093,6 +5093,7 @@ define('SBIS3.CONTROLS/ListView',
             idArray = Array.isArray(idArray) ? coreClone(idArray) : [idArray];
             message = message || (idArray.length !== 1 ? rk("Удалить записи?", "ОперацииНадЗаписями") : rk("Удалить текущую запись?", "ОперацииНадЗаписями"));
             InformationPopupManager.showConfirmDialog({
+               parent: self,
                message: message,
                hasCancelButton: false,
                opener: self
@@ -5103,6 +5104,7 @@ define('SBIS3.CONTROLS/ListView',
                      self._deleteRecords(idArray, result);
                   }).addErrback(function (result) {
                      InformationPopupManager.showMessageDialog({
+                        parent: self,
                         message: result.message,
                         opener: self,
                         status: 'error'
@@ -5147,6 +5149,7 @@ define('SBIS3.CONTROLS/ListView',
                   return resultDeferred;
                }, this)).addErrback(function (result) {
                   InformationPopupManager.showMessageDialog({
+                     parent: self,
                      message: result.message,
                      opener: self,
                      status: 'error'
