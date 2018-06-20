@@ -34,6 +34,7 @@ define('Controls/List/ListViewModel',
             }
 
             this._selectedKeys =  cfg.selectedKeys || [];
+            this._excludedKeys =  cfg.excludedKeys || [];
 
             //TODO надо ли?
             _private.updateIndexes(self);
@@ -140,6 +141,11 @@ define('Controls/List/ListViewModel',
 
          select: function(keys) {
             this._selectedKeys = keys;
+            this._nextVersion();
+         },
+
+         unselect: function(keys) {
+            this._excludedKeys = keys;
             this._nextVersion();
          },
 

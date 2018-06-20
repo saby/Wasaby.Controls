@@ -75,10 +75,11 @@ define('Controls/List/Tree/TreeViewModel', [
             var
                current = TreeViewModel.superclass.getCurrent.apply(this, arguments);
             current.isExpanded = !!this._expandedNodes[current.key];
-            // current.multiSelectStatus = null;
+
+            //TODO: сюда будут приходить selectedKeys, excludedKeys и стратегия. По этим данным можно понять какой чекбокс рисовать
+            // current.multiSelectStatus = this._treeState[current.key];
             return current;
          }
-
       });
 
    TreeViewModel._private = _private;

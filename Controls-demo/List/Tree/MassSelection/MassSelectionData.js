@@ -6,15 +6,13 @@ define('Controls-demo/List/Tree/MassSelection/MassSelectionData', function() {
                'id': 2246,
                'Раздел': null,
                'Раздел@': true,
-               'Наименование': '01. Лицензии СБИС (активируются на reg)',
-               'multiSelectionProperty': null
+               'Наименование': '01. Лицензии СБИС (активируются на reg)'
             },
             {
                'id': 454339,
                'Раздел': null,
                'Раздел@': true,
-               'Наименование': '02. Лицензии СБИС (оформление на inside)',
-               'multiSelectionProperty': true
+               'Наименование': '02. Лицензии СБИС (оформление на inside)'
             },
             {
                'id': 471641,

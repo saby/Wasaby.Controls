@@ -128,6 +128,7 @@ define('Controls/Container/MassSelector', [
       _updateContext: function() {
          this._context = new MassSelectorContextField(
             this._selectedKeys,
+            this._excludedKeys,
             this._itemsReadyCallback,
             this._count
          );

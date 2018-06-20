@@ -464,6 +464,9 @@ define('Controls/List/BaseControl', [
             this._listViewModel.select(newOptions.selectedKeys);
          }
 
+         if (this._options.excludedKeys !== newOptions.excludedKeys) {
+            this._listViewModel.unselect(newOptions.excludedKeys);
+         }
       },
 
       _beforeUnmount: function() {

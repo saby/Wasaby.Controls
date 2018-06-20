@@ -5,17 +5,9 @@ define('Controls/List/MassSelector', [
 ], function(Control, template, MassSelectorContextField) {
    var MassSelector = Control.extend({
       _template: template,
-      _selectedKeys: null,
-      _contextItemsReadyCallback: null,
 
-      _beforeMount: function(newOptions, context) {
+      _beforeMount: function() {
          this._itemsReadyCallback = this._itemsReady.bind(this);
-         this._selectedKeys = context.selection.selectedKeys;
-         this._contextItemsReadyCallback = context.selection.itemsReadyCallback;
-      },
-
-      _beforeUpdate: function(newOptions, context) {
-         this._selectedKeys = context.selection.selectedKeys;
       },
 
       _onCheckBoxClickHandler: function(event, key, status) {
@@ -31,7 +23,8 @@ define('Controls/List/MassSelector', [
       },
 
       _itemsReady: function(items) {
-         this._contextItemsReadyCallback(items);
+         //TODO: надо уточнить у Зуева почему тут _contextObj, а не _context. В доке написано _context.
+         this._contextObj.selection.itemsReadyCallback(items);
       }
    });
 

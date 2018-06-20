@@ -21,44 +21,87 @@ define('Controls/Container/TreeMassSelector', [
          return treeState;
       },
 
-      updateTreeState: function(treeState, hierarchyRelation, items, item, selectedKeys, status) {
+      //TODO: этот и следующий метод хорошо бы превратить в один
+      hasSelectedChildren: function(item, items, selectedKeys, excludedKeys, hierarchyRelation, treeState) {
+         //TODO: Сейчас я завязываюсь на то, что я зову эту функцию только при снятии отметки, это вроде как-то неправильно
+         /*
+             В папке есть выделенные дети, если:
+             1) Один из детей лежит в selectedKeys
+             2) Одна из дочерних папок находится в состоянии true или null (т.е. внутри той папки что-то выделено)
+             3) Текущая папка была в состоянии true, с одного из детей сняли выделение, но детей больше 1
+             TODO: вообще странный кейс. Если все дети есть в excludedKeys, то вроде как можно их убрать оттуда.
+             4) Текущая папка была в состоянии null, с одного из детей сняли выделение, детей больше 1, но не все дети есть в excludedKeys
+          */
          var
-            parent = hierarchyRelation.getParent(item, items),
-            children,
-            hasSelectedChildren,
-            hasNotSelectedChildren, //TODO: дичь
-            newStatus;
-         while (parent) {
-            hasSelectedChildren = false;
-            hasNotSelectedChildren = false;
-            children = hierarchyRelation.getChildren(parent.getId(), items);
-            if (status) {
-               //сняли выделение
-               if (children.length > 1) {
-                  children.forEach(function(child) {
-                     if (selectedKeys.indexOf(child.getId()) !== -1) {
-                        hasSelectedChildren = true;
-                     }
-                  });
-                  newStatus = hasSelectedChildren ? null : false;
-               } else {
-                  newStatus = false;
-               }
+            children = hierarchyRelation.getChildren(item, items),
+            hasSelectedChildren = false,
+            childId;
+         if (children.length > 1) {
+            if (treeState[item.getId()]) {
+               hasSelectedChildren = true;
             } else {
-               if (children.length > 1) {
-                  children.forEach(function(child) {
-                     if (selectedKeys.indexOf(child.getId()) === -1) {
-                        hasNotSelectedChildren = true;
-                     }
-                  });
-                  newStatus = hasNotSelectedChildren ? null : true;
-               } else {
-                  newStatus = true;
-               }
+               children.forEach(function(child) {
+                  childId = child.getId();
+                  if (selectedKeys.indexOf(childId) !== -1 || excludedKeys.indexOf(childId) === -1 || treeState[childId] || treeState[childId] === null) {
+                     hasSelectedChildren = true;
+                  }
+               });
             }
-            treeState[parent.getId()] = newStatus;
+         }
+         return hasSelectedChildren;
+      },
+
+      hasNotSelectedChildren: function(item, items, selectedKeys, excludedKeys, hierarchyRelation, treeState) {
+         /*
+             В папке есть НЕ выделенные дети, если:
+             1) Одного из детей нет в selectedKeys
+             2) Один из детей есть в excludedKeys
+             3) Дочерняя папка находится в состоянии false или null
+          */
+         var
+            hasNotSelectedChildren = false,
+            childId;
+         hierarchyRelation.getChildren(item, items).forEach(function(child) {
+            childId = child.getId();
+            if (selectedKeys.indexOf(childId) === -1 || excludedKeys.indexOf(childId) !== -1 || !treeState[childId]) {
+               hasNotSelectedChildren = true;
+            }
+         });
+         return hasNotSelectedChildren;
+      },
+
+      updateChildren: function(treeState, hierarchyRelation, items, item, selectedKeys, excludedKeys, status) {
+         hierarchyRelation.getChildren(item, items).forEach(function(child) {
+            if (!_private.isNode(child)) {
+               return;
+            }
+            _private.updateChildren(treeState, hierarchyRelation, items, child, selectedKeys, excludedKeys, status);
+            if (status) {
+               treeState[child.getId()] = _private.hasSelectedChildren(child, items, selectedKeys, excludedKeys, hierarchyRelation, treeState) ? null : false;
+            } else {
+               treeState[child.getId()] = _private.hasNotSelectedChildren(child, items, selectedKeys, excludedKeys, hierarchyRelation, treeState) ? null : true;
+            }
+         });
+      },
+
+      updateParents: function(treeState, hierarchyRelation, items, item, selectedKeys, excludedKeys, status) {
+         var parent = hierarchyRelation.getParent(item, items);
+         while (parent) {
+            if (status) {
+               treeState[parent.getId()] = _private.hasSelectedChildren(parent, items, selectedKeys, excludedKeys, hierarchyRelation, treeState) ? null : false;
+            } else {
+               treeState[parent.getId()] = _private.hasNotSelectedChildren(parent, items, selectedKeys, excludedKeys, hierarchyRelation, treeState) ? null : true;
+            }
             parent = hierarchyRelation.getParent(parent, items);
          }
+      },
+
+      updateTreeState: function(treeState, hierarchyRelation, items, item, selectedKeys, excludedKeys, status) {
+         if (_private.isNode(item)) {
+            treeState[item.getId()] = !status;
+            _private.updateChildren(treeState, hierarchyRelation, items, item, selectedKeys, excludedKeys, status);
+         }
+         _private.updateParents(treeState, hierarchyRelation, items, item, selectedKeys, excludedKeys, status);
       },
 
       removeChildrenFromSelectedKeys: function(hierarchyRelation, items, selectedKeys, folderKey) {
@@ -77,7 +120,7 @@ define('Controls/Container/TreeMassSelector', [
    };
 
    var TreeMassSelector = MassSelector.extend({
-      _treeState: {},
+      _treeState: null,
 
       _beforeMount: function(options) {
          this._hierarchyRelation = new HierarchyRelation({
@@ -95,30 +138,38 @@ define('Controls/Container/TreeMassSelector', [
 
       _onCheckBoxClickHandler: function(event, key, status) {
          //TODO: count всё же надо считать, т.к. он используется в ПМО
-         //TODO: excluded тоже надо учитывать, так вроде и немного проще будет
-         var currentSelection = this._multiselection.getSelection(),
+         //TODO: excluded тоже надо учитывать
+         //TODO: children это вроде только дети первого уровня. Так что если в selectedKeys есть более глубоко лежащие дети, то этот метод их не вычистит. Надо проверить
+         var
+            currentSelection = this._multiselection.getSelection(),
             selected = _private.removeChildrenFromSelectedKeys(this._hierarchyRelation, this._items, currentSelection.selected, key),
-            excluded = currentSelection.excluded;
+            excluded = currentSelection.excluded,
+            item = this._items.getRecordById(key),
+            parentId = this._hierarchyRelation.getParent(item, this._items).getId();
 
-         if (this._treeState[key] || this._treeState[key] === null) {
-            if (status || status === null) {
-               //сняли выделение
+         //TODO: неправильная логика
+         //В excluded нужно класть если было выделение на всей папке, но его сняли с этого узла
+         //Убирать из excluded нужно, если запись до этого там была
+         if (status) {
+            if (this._treeState[parentId]) {
                excluded.push(key);
+            } else if (excluded.indexOf(key) !== -1) {
+               selected.splice(selected.indexOf(key), 1);
+            }
+         }
+         if (this._treeState[parentId] || this._treeState[parentId] === null) {
+            if (status) {
             } else {
                excluded.splice(excluded.indexOf(key), 1);
             }
-            selected = [null];
          } else {
-            if (status || status === null) {
-               //сняли выделение
-               selected.splice(selected.indexOf(key), 1);
+            if (status) {
             } else {
                selected.push(key);
             }
          }
 
-         _private.updateTreeState(this._treeState, this._hierarchyRelation, this._items, key, selected, status);
-
+         _private.updateTreeState(this._treeState, this._hierarchyRelation, this._items, item, selected, excluded, status);
 
          this._multiselection.unselectAll();
          this._multiselection.select(selected);
