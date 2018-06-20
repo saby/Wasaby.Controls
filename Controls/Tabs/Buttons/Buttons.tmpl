@@ -5,7 +5,7 @@
              on:click="_onItemClick(item.get(_options.keyProperty))">
              <ws:partial
                     template="{{ _options.itemTemplateProperty ? item.get(_options.itemTemplateProperty) ?  item.get(_options.itemTemplateProperty) : _options.itemTemplate : _options.itemTemplate}}"
-                    selected="{{item.get(_options.keyProperty) === selectedKey ? true : false}}"
+                    selected="{{item[_options.keyProperty] === _options.selectedKey ? true : false}}"
                     displayProperty="{{_options.displayProperty}}"
                     item="{{item}}"/>
             <div class="controls-Tabs__itemSeparator controls-Tabs__itemSeparator_align_{{item.get('align') || 'right'}}"></div>

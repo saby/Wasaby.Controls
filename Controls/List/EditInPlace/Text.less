@@ -18,22 +18,19 @@
 
 .controls-EditingTemplateText {
    .baseline-fix();
+   flex-shrink: 1;
+   display: inline-flex;
+   align-items: center;
    box-sizing: border-box;
    border-width: @border-width_InputRender;
    border-style: solid;
    border-color: transparent;
+   padding: @padding_InputRender;
    width: 100%;
 }
 
 .controls-EditingTemplateText__editor {
    width: 100%;
-}
-
-.controls-EditingTemplateText {
-   .flex-shrink(1);
-   .inline-flexbox();
-   .align-items(center);
-   padding: @padding_InputRender;
 }
 
 .controls-EditingTemplateText__inner {

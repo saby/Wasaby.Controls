@@ -1,0 +1,20 @@
+<div class="controls-EditAtPlaceV__editorWrapper">
+   <ws:if data="{{isEditing}}">
+      <ws:partial
+         attr:class="controls-EditAtPlaceV__editor"
+         template="{{editorTemplate}}"
+         bind:value="editObject[fieldName]"
+      />
+   </ws:if>
+   <ws:else>
+      <div
+         class="controls-EditAtPlaceV__Text
+                {{enabled ? 'controls-EditAtPlaceV__Text_enabled'}}
+                {{withoutBorder ? 'controls-EditAtPlaceV__Text_withoutBorder'}}
+                controls-EditingTemplateText_size_{{size ? size : 'default'}}
+                controls-EditingTemplateText_style_{{style ? style : 'default'}}"
+      >
+         <div class="controls-EditingTemplateText__inner">{{ editObject[fieldName] }}</div>
+      </div>
+   </ws:else>
+</div>

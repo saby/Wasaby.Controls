@@ -1,4 +1,3 @@
-
 define('Controls-demo/Tabs/Buttons', [
    'Core/Control',
    'tmpl!Controls-demo/Tabs/Buttons/Buttons',
@@ -8,7 +7,8 @@ define('Controls-demo/Tabs/Buttons', [
    'tmpl!Controls-demo/Tabs/Buttons/resources/photoContent',
    'WS.Data/Source/Memory',
    'css!Controls-demo/Tabs/Buttons/Buttons'
-], function(Control,
+], function(
+   Control,
    template,
    spaceTemplate,
    itemTemplate,
@@ -17,218 +17,218 @@ define('Controls-demo/Tabs/Buttons', [
    MemorySource,
    cssButtons
 ) {
-    'use strict';
-    var
-        source1 = new MemorySource({
-            idProperty: 'id',
-            data: [
-                {
-                    id: '1',
-                    title: 'Done',
-                    align: 'left'
-                },
-                {
-                    id: '2',
-                    title: 'From Me',
-                    align: 'left'
-                },
-                {
-                    id: '3',
-                    title: 'Controlled',
-                    align: 'left'
-                },
-                {
-                    id: '4',
-                    title: 'very'
-                },
-                {
-                    id: '5',
-                    title: 'hard'
-                },
-                {
-                    id: '6',
-                    title: 'invent'
-                },
-                {
-                    id: '7',
-                    title: 'tabs'
-                },
-                {
-                    id: '8',
-                    title: 'titles'
-                }
-            ]
-        }),
-        source2 = new MemorySource({
-            idProperty: 'id',
-            data: [
-                {
-                    id: '1',
-                    title: 'Main',
-                    align: 'left',
-                    itemTemplate: mainTemplate
-                },
-                {
-                    id: '2',
-                    title: 'very'
-                },
-                {
-                    id: '3',
-                    title: 'hard'
-                },
-                {
-                    id: '4',
-                    title: 'invent'
-                },
-                {
-                    id: '5',
-                    title: 'tabs'
-                },
-                {
-                    id: '6',
-                    title: 'titles'
-                }
-            ]
-        }),
-        source3 = new MemorySource({
-            idProperty: 'id',
-            data: [
-                {
-                    id: '1',
-                    carambola: 'First',
-                    align: 'left'
-                },
-                {
-                    id: '2',
-                    carambola: 'very'
-                },
-                {
-                    id: '3',
-                    carambola: 'hard'
-                },
-                {
-                    id: '4',
-                    carambola: 'invent'
-                },
-                {
-                    id: '5',
-                    carambola: 'tabs'
-                },
-                {
-                    id: '6',
-                    carambola: 'titles'
-                }
-            ]
-        }),
-        source4 = new MemorySource({
-            idProperty: 'id',
-            data: [
-                {
-                    id: '1',
-                    title: 'First',
-                    align: 'left'
-                },
-                {
-                    id: '2',
-                    title: 'tabs'
-                },
-                {
-                    id: '3',
-                    title: 'titles'
-                }
-            ]
-        }),
-        source5 = new MemorySource({
-            idProperty: 'id',
-            data: [
-                {
-                    id: '1',
-                    title: 'First',
-                    align: 'left',
-                    itemTemplate: itemTemplate
-                },
-                {
-                    id: '2',
-                    title: 'titles'
-                }
-            ]
-        }),
-        source6 = new MemorySource({
-            idProperty: 'id',
-            data: [
-                {
-                    id: '1',
-                    title: 'So long folder name that it will not fit into the maximum size So long folder name that it will not fit into the maximum size'
-                },
-                {
-                    id: '2',
-                    title: 'Second',
-                    align: 'left'
-                },
-                {
-                    id: '3',
-                    title: 'third'
-                }
-            ]
-        }),
-        newSource6 =  new MemorySource({
-            idProperty: 'id',
-            data:  [
-                {
-                    id: '1',
-                    title: 'after'
-                },
-                {
-                    id: '2',
-                    title: 'change'
-                },
-                {
-                    id: '3',
-                    title: 'Source'
-                }
-            ]
-        }),
-        source7 = new MemorySource({
-            idProperty: 'id',
-            data: [
-                {
-                    id: '1',
-                    title: 'First',
-                    align: 'left',
-                    carambola: photoContent,
-                    type: 'photo'
-                },
-                {
-                    id: '2',
-                    title: 'very',
-                    align: 'left'
-                },
-                {
-                    id: '3',
-                    title: 'hard',
-                    align: 'left'
-                },
-                {
-                    id: '4',
-                    title: 'invent',
-                    align: 'left'
-                },
-                {
-                    id: '5',
-                    title: 'tabs'
-                },
-                {
-                    id: '6',
-                    title: 'titles'
-                },
-                {
-                    id: '7',
-                    title: '',
-                    carambola: photoContent,
-                    type: 'photo'
-                }
-            ]
-        });
+   'use strict';
+   var source1 = new MemorySource({
+         idProperty: 'id',
+         data: [
+            {
+               id: '1',
+               title: 'Done',
+               align: 'left'
+            },
+            {
+               id: '2',
+               title: 'From Me',
+               align: 'left'
+            },
+            {
+               id: '3',
+               title: 'Controlled',
+               align: 'left'
+            },
+            {
+               id: '4',
+               title: 'very'
+            },
+            {
+               id: '5',
+               title: 'hard'
+            },
+            {
+               id: '6',
+               title: 'invent'
+            },
+            {
+               id: '7',
+               title: 'tabs'
+            },
+            {
+               id: '8',
+               title: 'titles'
+            }
+         ]
+      }),
+      source2 = new MemorySource({
+         idProperty: 'id',
+         data: [
+            {
+               id: '1',
+               title: 'Main',
+               align: 'left',
+               itemTemplate: mainTemplate
+            },
+            {
+               id: '2',
+               title: 'very'
+            },
+            {
+               id: '3',
+               title: 'hard'
+            },
+            {
+               id: '4',
+               title: 'invent'
+            },
+            {
+               id: '5',
+               title: 'tabs'
+            },
+            {
+               id: '6',
+               title: 'titles'
+            }
+         ]
+      }),
+      source3 = new MemorySource({
+         idProperty: 'id',
+         data: [
+            {
+               id: '1',
+               carambola: 'First',
+               align: 'left'
+            },
+            {
+               id: '2',
+               carambola: 'very'
+            },
+            {
+               id: '3',
+               carambola: 'hard'
+            },
+            {
+               id: '4',
+               carambola: 'invent'
+            },
+            {
+               id: '5',
+               carambola: 'tabs'
+            },
+            {
+               id: '6',
+               carambola: 'titles'
+            }
+         ]
+      }),
+      source4 = new MemorySource({
+         idProperty: 'id',
+         data: [
+            {
+               id: '1',
+               title: 'First',
+               align: 'left'
+            },
+            {
+               id: '2',
+               title: 'tabs'
+            },
+            {
+               id: '3',
+               title: 'titles'
+            }
+         ]
+      }),
+      source5 = new MemorySource({
+         idProperty: 'id',
+         data: [
+            {
+               id: '1',
+               title: 'First',
+               align: 'left',
+               itemTemplate: itemTemplate
+            },
+            {
+               id: '2',
+               title: 'titles'
+            }
+         ]
+      }),
+      source6 = new MemorySource({
+         idProperty: 'id',
+         data: [
+            {
+               id: '1',
+               title:
+                  'So long folder name that it will not fit into the maximum size So long folder name that it will not fit into the maximum size'
+            },
+            {
+               id: '2',
+               title: 'Second',
+               align: 'left'
+            },
+            {
+               id: '3',
+               title: 'third'
+            }
+         ]
+      }),
+      newSource6 = new MemorySource({
+         idProperty: 'id',
+         data: [
+            {
+               id: '1',
+               title: 'after'
+            },
+            {
+               id: '2',
+               title: 'change'
+            },
+            {
+               id: '3',
+               title: 'Source'
+            }
+         ]
+      }),
+      source7 = new MemorySource({
+         idProperty: 'id',
+         data: [
+            {
+               id: '1',
+               title: 'First',
+               align: 'left',
+               carambola: photoContent,
+               type: 'photo'
+            },
+            {
+               id: '2',
+               title: 'very',
+               align: 'left'
+            },
+            {
+               id: '3',
+               title: 'hard',
+               align: 'left'
+            },
+            {
+               id: '4',
+               title: 'invent',
+               align: 'left'
+            },
+            {
+               id: '5',
+               title: 'tabs'
+            },
+            {
+               id: '6',
+               title: 'titles'
+            },
+            {
+               id: '7',
+               title: '',
+               carambola: photoContent,
+               type: 'photo'
+            }
+         ]
+      });
 
    var TabButtonsDemo = Control.extend({
       _template: template,

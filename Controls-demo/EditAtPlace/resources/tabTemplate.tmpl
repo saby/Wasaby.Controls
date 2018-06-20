@@ -1,0 +1,33 @@
+<div>
+    <div class="content_tab_margin inline_editing controls-huge-text-size header_demo_class">{{item[displayProperty]}}</div>
+   <Controls.EditAtPlace
+      name="edit"
+      bind:editObject="item"
+      enabled="{{selected}}"
+      withoutBorder="{{true}}"
+   >
+      <div>
+         <div class="content_tab_margin inline_editing controls-accent-text">
+            <ws:partial
+               template="tmpl!Controls/EditAtPlace/EditingTemplate"
+               fieldName="date"
+            >
+               <ws:editorTemplate>
+                  <Controls.Input.Text selectOnClick="{{ false }}" />
+               </ws:editorTemplate>
+            </ws:partial>
+         </div>
+         <div class="content_tab_margin inline_editing controls-small-text-size controls-addition-color">
+            <span>№:</span>
+            <ws:partial
+               template="tmpl!Controls/EditAtPlace/EditingTemplate"
+               fieldName="number"
+            >
+               <ws:editorTemplate>
+                  <Controls.Input.Text selectOnClick="{{ false }}" />
+               </ws:editorTemplate>
+            </ws:partial>
+         </div>
+      </div>
+   </Controls.EditAtPlace>
+</div>
