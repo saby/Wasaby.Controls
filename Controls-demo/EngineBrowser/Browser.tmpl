@@ -1,9 +1,21 @@
 <Controls.EngineBrowser
         searchParam="title"
-        source="{{_source}}">
+        source="{{_source}}"
+        filterButtonSource="{{_items}}"
+        fastFilterSource="{{_fastFilterSource}}"
+        class="demo-browser">
    <ws:search>
       <Controls.Input.Search bind:value="value"/>
    </ws:search>
+   <ws:fastFilter>
+      <Controls.Filter.Fast />
+   </ws:fastFilter>
+   <ws:filterButton>
+      <Controls.Filter.Button>
+         <ws:itemTemplate templateName="tmpl!Controls-demo/EngineBrowser/resources/filterPanelItemsTemplate"/>
+         <ws:additionalTemplate templateName="tmpl!Controls-demo/EngineBrowser/resources/filterPanelAddItemsTemplate"/>
+      </Controls.Filter.Button>
+   </ws:filterButton>
    <ws:content>
       <Controls.List
               keyProperty="id"
@@ -11,8 +23,9 @@
          <ws:itemTemplate>
             <ws:partial template="tmpl!Controls/List/ItemTemplate">
                <ws:contentTemplate>
-                  <div>
+                  <div attr:style="display: flex; justify-content: space-between">
                      <div>{{itemTemplate.itemData.item.get('title')}}</div>
+                     <div>{{itemTemplate.itemData.item.get('country')}}</div>
                   </div>
                </ws:contentTemplate>
             </ws:partial>
