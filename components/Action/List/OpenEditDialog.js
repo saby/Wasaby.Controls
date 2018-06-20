@@ -254,6 +254,7 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
                   def = wayDelayedRemove(templateComponent);
                }
                def.addErrback(function (error) {
+                  self._hideLoadingIndicator();
                   self._finishExecuteDeferred(error);
                   return error;
                });
