@@ -1,7 +1,7 @@
-define('Controls/Container/Dropdown',
+define('Controls/Dropdown/Container',
    [
       'Core/Control',
-      'tmpl!Controls/Container/Dropdown/Dropdown',
+      'tmpl!Controls//Dropdown/Container/Container',
       'Controls/Controllers/SourceController',
       'Core/helpers/Object/isEqual',
       'Core/helpers/Object/isEmpty',
@@ -16,7 +16,7 @@ define('Controls/Container/Dropdown',
       /**
        * Container for dropdown lists
        *
-       * @class Controls/Container/Dropdown
+       * @class Controls/Dropdown/Container
        * @extends Core/Control
        * @mixes Controls/interface/ISource
        * @mixes Controls/Button/interface/ICaption
@@ -27,41 +27,41 @@ define('Controls/Container/Dropdown',
        */
 
       /**
-       * @event Controls/Container/Dropdown#selectedItemsChanged Occurs when the selected items change.
+       * @event Controls/Dropdown/Container#selectedItemsChanged Occurs when the selected items change.
        */
 
       /**
-       * @name Controls/Container/Dropdown#nodeProperty
+       * @name Controls/Dropdown/Container#nodeProperty
        * @cfg {String} Name of the field describing the type of the node (list, node, hidden node).
        */
 
       /**
-       * @name Controls/Container/Dropdown#parentProperty
+       * @name Controls/Dropdown/Container#parentProperty
        * @cfg {String} Name of the field that contains information about parent node.
        */
 
       /**
-       * @name Controls/Container/Dropdown#headTemplate
+       * @name Controls/Dropdown/Container#headTemplate
        * @cfg {Function} Template that will be rendered above the list.
        */
 
       /**
-       * @name Controls/Container/Dropdown#contentTemplate
+       * @name Controls/Dropdown/Container#contentTemplate
        * @cfg {Function} Template that will be render the list.
        */
 
       /**
-       * @name Controls/Container/Dropdown#footerTemplate
+       * @name Controls/Dropdown/Container#footerTemplate
        * @cfg {Function} Template that will be rendered below the list.
        */
 
       /**
-       * @name Controls/Container/Dropdown#selectedKeys
+       * @name Controls/Dropdown/Container#selectedKeys
        * @cfg {Array} Array of selected items' keys.
        */
 
       /**
-       * @name Controls/Container/Dropdown#headConfig
+       * @name Controls/Dropdown/Container#headConfig
        * @cfg {String} Отображения меню
        * @variant defaultHead Стандартный заголовок
        * @variant duplicateHead Иконка вызывающего элемента дублрируется в первый пункт. Заголовка с фоном нет.
@@ -69,20 +69,20 @@ define('Controls/Container/Dropdown',
        */
 
       /**
-       * @name Controls/Container/Dropdown#showHeader
+       * @name Controls/Dropdown/Container#showHeader
        * @cfg {Boolean} Показывать ли заголовок в меню.
        * @variant true Заголовок есть
        * @variant false Заголовка нет.
        */
 
       /**
-       * @name Controls/Container/Dropdown#emptyText
+       * @name Controls/Dropdown/Container#emptyText
        * @cfg {String} Add an empty item to the list.
        * @variant true Add empty item with text 'Не выбрано'
        */
 
       /**
-       * @name Controls/Container/Dropdown#typeShadow
+       * @name Controls/Dropdown/Container#typeShadow
        * @cfg {String} Specifies the type of shadow around the popup.
        * @variant default Default shadow
        * @variant suggestionsContainer Shadow on the right, left, bottom
