@@ -7,7 +7,13 @@
    source="{{_options.source}}"
    filter="{{_options.filter}}"
    navigation="{{_options.navigation}}"
+   editingConfig="{{_options.editingConfig}}"
    emptyTemplate="{{_options.emptyTemplate}}"
+   itemsDragNDrop="{{_options.itemsDragNDrop}}"
+   dragAvatarTemplate="{{_options.dragAvatarTemplate}}"
+   on:dragStart="_dragStart()"
+   on:dragEnd="_dragEnd()"
+   selectedKeys="{{_options.selectedKeys}}"
    itemActionsType="{{_options.itemActionsType}}"
    itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
    itemActions="{{_options.itemActions}}">

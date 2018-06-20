@@ -504,6 +504,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
        * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {String|Number|Null} curRoot Идентификатор узла, который установлен в качестве текущего корня иерархии.
        * @param {Array.<Object>} hierarchy Массив объектов, каждый из которых описывает узлы иерархии установленного пути.
+       * @param {String|Number|Null} root Идентификатор узла, который установлен в качестве корня иерархии для всего реестра.
        * Каждый объект содержит следующие свойства:
        * <ul>
        *    <li>id - идентификатор текущего узла иерархии;</li>
@@ -696,7 +697,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
              * Подробнее о типах иерархических записей читайте в разделе <a href="/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
              * @example
              * <pre>
-             *    <option name="allowEnterToFolder">false</option>
+             *    allowEnterToFolder="{{false}}"
              * </pre>
              */
             allowEnterToFolder: true,
@@ -740,7 +741,13 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
              *
              */
             loadItemsStrategy: 'merge',
-            task1174261549: false
+            task1174261549: false,
+            /**
+             * @cfg {Boolean} Сохраняет значение выбранной записи после перезагрузки
+             * @remark
+             * Работает только с <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/navigations/cursor/">навигацией по курсору</a>.
+             */
+            saveReloadPosition: false
          },
          _lastParent : undefined,
          _lastDrawn : undefined,
@@ -1542,7 +1549,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                hierarchy = this.getHierarchy(path, this._options.currentRoot);
             }
             if (this._previousRoot !== this._options.currentRoot) {
-               this._notify('onSetRoot', this._options.currentRoot, hierarchy);
+               this._notify('onSetRoot', this._options.currentRoot, hierarchy, this._options.root);
                //TODO Совсем быстрое и временное решение. Нужно скроллиться к первому элементу при проваливании в папку.
                // Выпилить, когда это будет делать установка выделенного элемента
                //TODO курсор
@@ -1713,8 +1720,12 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                   // Пробегаем также по родителям узла, в который проваливаемся вплоть до currentRoot и таким образом запоминаем исчерпывающий путь
                   // https://online.sbis.ru/opendoc.html?guid=fdfc17bd-043d-45d8-8c77-29ab5547205a
                   var
-                     nextParent = this.getItems().getRecordById(newRootParent).get(this._options.parentProperty);
-                  while (nextParent !== curRoot) {
+                     nextParent = this.getItems().getRecordById(newRootParent).get(this._options.parentProperty),
+                     root = this.getRoot();
+                  if (typeof root === 'undefined') {
+                     root = null;
+                  }
+                  while (nextParent !== curRoot && nextParent !== root) {
                      this._hierPages[nextParent] = this.getItems().getRecordById(newRootParent).get(this._options.navigation.config.field);
                      newRootParent = nextParent;
                      nextParent = this.getItems().getRecordById(newRootParent).get(this._options.parentProperty);

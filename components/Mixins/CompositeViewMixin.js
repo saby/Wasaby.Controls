@@ -278,9 +278,15 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
          this.subscribe('onAfterVisibilityChange', this._calculateTileHandler);
          if (this._options.hoverMode === HOVER_MODE.FIXED) {
             this._onScrollHandler = this._resetFixedItem.bind(this, true);
+            //Все нижеперечисленные костыли, должны быть реализованы в композиции scrollContainer и плитки, но т.к.
+            //до выпуска 3.18.310 осталось 2 дня, сами ищем scrollContainer сверху, и делаем с ним всё необходимое.
             this._scrollContainer = this._container.closest('.controls-ScrollContainer__content');
             this._scrollContainer.on('scroll', this._onScrollHandler);
-            this._scrollContainer.css('z-index', 'auto');
+            this._scrollContainer.css({
+               'z-index': 'auto',//иначе блоки скролл контейнера(скроллбар, тени сверху и снизу) перекрывают расширяющуюся плитку
+               'transform': 'none'//в ie навешен стиль transform: scale(1), который создаёт контекст позиционирования, и не даёт
+                                  //показывать элементы за пределами, даже если он position: fixed(https://jsfiddle.net/hp6qbLcs/10/)
+            });
          }
          
          if (this._options.tileTemplate) {
@@ -369,30 +375,22 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
 
       _createFixedItem: function(item, styles) {
          var
-            margin,
-            itemClone,
-            itemRect,
-            maxOuterHeight,
-            parenRect;
+            position,
+            itemClone;
 
          this._resetFixedItem();
 
          if (!this._fixedItem) {
-            parenRect = item.closest('.controls-ScrollContainer')[0].getBoundingClientRect();
-            margin = DimensionsUtil.getMargin(item);
-            itemRect = item[0].getBoundingClientRect();
-            maxOuterHeight = itemRect.height / 3;
+            position = this._getPositionForFixedItem(item);
 
-            if ((itemRect.top - parenRect.top) > -maxOuterHeight && (itemRect.bottom -  parenRect.bottom) < maxOuterHeight) {
+            if (position) {
                itemClone = item.clone();
                itemClone.empty();
                itemClone.insertAfter(item);
 
-               item.css(styles).css({
+               item.css(styles).css(position).css({
                   position: 'fixed',
-                  width: item.width(),
-                  left: itemRect.left - margin,
-                  top: itemRect.top - margin
+                  width: item.width()
                });
                item.addClass('controls-CompositeView__tileItem-fixed');
                item.on('wheel', function() {
@@ -406,6 +404,24 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
                };
             }
          }
+      },
+
+      _getPositionForFixedItem: function(item) {
+         var
+            result,
+            margin = DimensionsUtil.getMargin(item),
+            parenRect = item.closest('.controls-ScrollContainer')[0].getBoundingClientRect(),
+            itemRect = item[0].getBoundingClientRect(),
+            maxOuterHeight = itemRect.height / 3;
+
+         if ((itemRect.top - parenRect.top) > -maxOuterHeight && (itemRect.bottom -  parenRect.bottom) < maxOuterHeight) {
+            result = {
+               left: itemRect.left - margin,
+               top: itemRect.top - margin
+            };
+         }
+
+         return result;
       },
 
       _resetFixedItem: function(force) {
@@ -573,6 +589,19 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
 
       _hasInvisibleItems: function() {
          return this._options.viewMode === 'tile' && this._options.tileMode === TILE_MODE.STATIC;
+      },
+
+      after: {
+         _modifyOptions: function(options) {
+            //_modifyOptions в ListView сбрасывает значение опции itemsActionsInItemContainer в false если это ie.
+            //Сбрасывается значение, для оптимизации и багов с табличной вёрсткой(tr, td). В случае плитки
+            //табличной вёрстки нет, и мы можем выставить itemsActionsInItemContainer в true, для того,
+            //чтбы при увеличении плитки за пределы overflow: hidden; опции записи были видны.
+            if (options.hoverMode === HOVER_MODE.FIXED) {
+               options.itemsActionsInItemContainer = true;
+            }
+            return options;
+         }
       },
 
       around : {

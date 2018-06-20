@@ -1,6 +1,6 @@
 #!groovy
 echo "Задаем параметры сборки"
-def version = "3.18.320"
+def version = "3.18.350"
 
 def gitlabStatusUpdate() {
     if ( currentBuild.currentResult == "ABORTED" ) {
@@ -77,7 +77,7 @@ node('controls') {
         def ver = version.replaceAll('.','')
 		def python_ver = 'python3'
         def SDK = ""
-        def items = "controls:${workspace}/controls, controls_new:${workspace}/controls"
+        def items = "controls:${workspace}/controls, controls_new:${workspace}/controls, controls_file:${workspace}/controls"
 
 		def branch_atf
 		if (params.branch_atf) {
@@ -213,23 +213,6 @@ node('controls') {
                                 url: 'git@git.sbis.ru:root/sbis3-cdn.git']]
                         ])
                     }
-                },
-                checkout4: {
-                    echo "Выкачиваем demo_stand"
-                    dir(workspace) {
-                        checkout([$class: 'GitSCM',
-                        branches: [[name: "rc-${version}"]],
-                        doGenerateSubmoduleConfigurations: false,
-                        extensions: [[
-                            $class: 'RelativeTargetDirectory',
-                            relativeTargetDir: "demo_stand"
-                            ]],
-                            submoduleCfg: [],
-                            userRemoteConfigs: [[
-                                credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
-                                url: 'git@git.sbis.ru:ka.sannikov/demo_stand.git']]
-                        ])
-                    }
                 }
             )
         }
@@ -240,8 +223,6 @@ node('controls') {
                 SDK = SDK.trim()
                 echo SDK
             }
-            echo " Копируем /demo_stand/client в /tests/stand/client"
-            sh "cp -rf ./demo_stand/client ./controls/tests/stand"
             parallel(
                 ws: {
                     echo "Выкачиваем ws для unit тестов и если указан сторонний бранч"
@@ -401,30 +382,6 @@ node('controls') {
                 ${python_ver} "./constructor/updater.py" "${version}" "/home/sbis/Controls" "css_${env.NODE_NAME}${ver}1" "./controls/tests/stand/conf/sbis-rpc-service.ini" "./controls/tests/stand/distrib_branch_ps" --sdk_path "${SDK}" --items "${items}" --host test-autotest-db1 --stand nginx_branch --daemon_name Controls --use_ps --conf x86_64
                 sudo chmod -R 0777 ${workspace}
                 sudo chmod -R 0777 /home/sbis/Controls
-            """
-            //Пакуем данные
-            writeFile file: "/home/sbis/Controls/intest-ps/ui/Core.package.json", text: """
-                {
-                "includeCore":true,
-                "platformPackage": true,
-                "include":[
-                "Core/*",
-                "SBIS3.CONTROLS.ItemsControlMixin"
-                ],
-                "modules" : [
-                "Core/core",
-                "SBIS3.CONTROLS.ItemsControlMixin"
-                ],
-                    "output" : "/resources/Core.module.js"
-                }"""
-            sh """
-                cd ./jinnee/distrib/builder
-                cp -rf ${workspace}/jinnee/ws /home/sbis/Controls/intest-ps/ui/
-                node ./node_modules/grunt-cli/bin/grunt xhtmlmin --root=/home/sbis/Controls/intest-ps/ui --application=/
-                node ./node_modules/grunt-cli/bin/grunt xhtml-build --root=/home/sbis/Controls/intest-ps/ui --application=/
-                node ./node_modules/grunt-cli/bin/grunt tmpl-build --root=/home/sbis/Controls/intest-ps/ui --application=/
-                node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/sbis/Controls/intest-ps/ui --application=/
-                sudo systemctl restart Controls_ps
             """
         }
         writeFile file: "./controls/tests/int/config.ini", text:

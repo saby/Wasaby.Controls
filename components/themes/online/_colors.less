@@ -71,12 +71,12 @@
 //DropdownList
 @background_DropdownList:                #FFFFFF;
 @border-color_DropdownList:              #CCCCCC;
-@shadow_DropdownList:                    0px 0px 12px 0px rgba(0,0,0,0.25);
+@shadow_DropdownList-default:                    0px 0px 12px 0px rgba(0,0,0,0.25);
 @background_DropdownList-item_hover:     #F0F5FB;
 @background_DropdownList-marker:         #D94700;
 @background_DropdownList-header:         #f4f4f4;
 @color_DropdownList-header:              #313E78;
-@color_DropdownList-item:                #000000;
+@color-Dropdown-emptyItem:               #CCCCCC;
 @padding_DropdownList-content:           2px 0;
 
 //FieldLink_Link
@@ -250,8 +250,9 @@
 
 //Suggest VDOM
 @background-color_Suggest-suggestionsContainer: @default-bg-color;
-@shadow-color_Suggest-suggestionsContainer: rgba(0, 0, 0, 0.25);
-
+@shadow_suggestionsContainer:            0 6px 24px rgba(0, 0, 0, 0.25);
+@shadow_suggestionsOverlayContainer:  0 0 12px 0 rgba(0, 0, 0, 0.25);
+@border-color_suggestionsContainer:      #CCCCCC;
 //list add button
 @color_listAddButton_enabled:             #8991A9;
 @color_listAddButton_disabled:           @disabled-color;
@@ -278,6 +279,16 @@
 @background-color_Paging-ellispis:       @default-bg-color;
 @color_Paging_arrow-icon:                @default-color;
 @color_Paging_arrow-icon_disabled:       @disabled-color;
+
+//VDOM DragNDrop.Avatar
+@background-color_Avatar:                 #FFFFFF;
+@border-color_Avatar:                     #CCCCCC;
+@box-shadow-color_Avatar:                 rgba(0, 0, 0, 0.25);
+@color_Avatar-icon:                       #CCCCCC;
+@color_Avatar-mainText:                   #313E78;
+@color_Avatar-additionalText:             #000000;
+@background-color_Avatar-counter:         #0055BB;
+@color_Avatar-counter:                    #FFFFFF;
 
 
 //VDOM Switcher
@@ -414,6 +425,14 @@
 @color_FilterButton-icon-arrow_hover:    @icon-color-primary-hover;
 @color_FilterButton-text:                #0055bb;
 @color_FilterButton-text_hover:          #313E78;
+
+//Lookup
+@color_Lookup_item-cross:                      #CCCCCC;
+@color_Lookup_item-size:                       16px;
+@color_Lookup_item-accent:                     #313E78;
+@color_Lookup_item-primary:                    #D94700;
+@color_Lookup_showSelector:                    @color_primary;
+@color_Lookup-showSelector_hovered:            @color_Link-text_hovered;
 
 //headers
 @color-BackButton__caption_style-default:      #D94700;

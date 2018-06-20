@@ -17,10 +17,10 @@ define('Controls/Popup/Opener/Notification',
          /**
           * Открыть нотификационное окно
           * @function Controls/Popup/Opener/Notification#open
-          * @param config конфигурация попапа
+          * @param popupOptions Controls/interface/IOpener#popupOptions
           */
-         open: function(config) {
-            Base.prototype.open.call(this, config, 'Controls/Popup/Opener/Notification/NotificationController');
+         open: function(popupOptions) {
+            Base.prototype.open.call(this, popupOptions, 'Controls/Popup/Opener/Notification/NotificationController');
          }
       });
 

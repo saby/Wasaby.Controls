@@ -11,28 +11,28 @@ define('Controls/Button/MenuButton',
    function(Control, template, SourceController, dropdownUtil, Classes, menuHeadTemplate) {
 
       /**
-        * MenuButton
-        * @class Controls/Button
-        * @extends Core/Control
-        * @mixes Controls/Button/interface/ICaption
-        * @mixes Controls/Button/interface/IClick
-        * @mixes Controls/Button/interface/IIcon
-        * @mixes Controls/interface/ITooltip
-        * @mixes Controls/interface/ISource
-        * @control
-        * @public
-        * @category Button
-        */
+       * MenuButton
+       * @class Controls/Button
+       * @extends Core/Control
+       * @mixes Controls/Button/interface/ICaption
+       * @mixes Controls/Button/interface/IClick
+       * @mixes Controls/Button/interface/IIcon
+       * @mixes Controls/interface/ITooltip
+       * @mixes Controls/interface/ISource
+       * @control
+       * @public
+       * @category Button
+       */
 
       'use strict';
 
       /**
-        * @name Controls/MenuButton#headConfig
-        * @cfg {Object} Menu style menuStyle
-        * @variant defaultHead The head with icon and caption
-        * @variant duplicateHead The icon set under first item
-        * @variant cross Menu have cross in left top corner
-        */
+       * @name Controls/MenuButton#headConfig
+       * @cfg {Object} Menu style menuStyle
+       * @variant defaultHead The head with icon and caption
+       * @variant duplicateHead The icon set under first item
+       * @variant cross Menu have cross in left top corner
+       */
 
       var _private = {
          loadItems: function(instance, source, filter) {
@@ -77,23 +77,23 @@ define('Controls/Button/MenuButton',
             _private.cssStyleGeneration(this, options);
             this._onResult = this._onResult.bind(this);
          },
-         
+
          _beforeUpdate: function(newOptions) {
             /* source changed, items is not actual now */
-            if (newOptions.source !== this._options.source || this._options.filter !== newOptions.filter) {
+            if (newOptions.source !== this._options.source) {
                this._items = null;
             }
          },
-         
+
          _open: function() {
             var self = this;
-            
+
             function open() {
                dropdownUtil.open(self, self._children.popupTarget._container);
             }
-            
+
             if (this._options.source && !this._items) {
-               _private.loadItems(this, this._options.source, this._options.filter).addCallback(function(items) {
+               _private.loadItems(this, this._options.source, this._filter).addCallback(function(items) {
                   self._items = items;
                   open();
                   return items;
@@ -114,6 +114,7 @@ define('Controls/Button/MenuButton',
 
       MenuButton.getDefaultOptions = function() {
          return {
+            showHeader: true,
             style: 'buttonDefault',
             size: 'default'
          };

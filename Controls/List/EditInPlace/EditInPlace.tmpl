@@ -1,10 +1,10 @@
 <Controls.Validate.FormController name="formController">
     <ws:partial template="{{_options.content}}"
-                editingItemProjection="{{_editingItemProjection}}"
                 editingItemData="{{_editingItemData}}"
                 isAdd="{{_isAdd}}"
                 scope="{{_options}}"
                 on:keyDown="_onKeyDown()"
+                on:rowDeactivated="_onRowDeactivated()"
                 on:itemClick="_onItemClick()">
     </ws:partial>
 </Controls.Validate.FormController>

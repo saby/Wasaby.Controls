@@ -3,11 +3,23 @@ define('Controls/List/EditInPlace', [
    'tmpl!Controls/List/EditInPlace/EditInPlace',
    'Core/Deferred',
    'WS.Data/Entity/Record',
-   'WS.Data/Display/CollectionItem',
-   'Controls/List/resources/utils/ItemsUtil'
-], function(Control, template, Deferred, Record, CollectionItem, ItemsUtil) {
+   'Controls/List/resources/utils/ItemsUtil',
+   'Controls/Utils/BreadCrumbsUtil',
+   'Core/detection',
+   'css!Controls/List/EditInPlace/Text'
+], function(Control, template, Deferred, Record, ItemsUtil, BreadCrumbsUtil, detection) {
 
    var
+      typographyStyles = [
+         'fontFamily',
+         'fontSize',
+         'fontWeight',
+         'fontStyle',
+         'letterSpacing',
+         'textTransform',
+         'wordSpacing',
+         'textIndent'
+      ],
       ItemEditResult = { // Возможные результаты события "onItemEdit"
          CANCEL: 'Cancel' // Отменить начало редактирования/добавления
       },
@@ -154,6 +166,29 @@ define('Controls/List/EditInPlace', [
             }
 
             return index;
+         },
+
+         hasHorizontalScroll: function(target) {
+            var
+               targetStyles = getComputedStyle(target),
+               result = target.clientWidth !== target.scrollWidth;
+
+            /*
+             Если на элементе висит text-align: right, то хром очень странно округляет scrollWidth. Например при реальной
+             ширине в 277.859 он может округлить scrollWidth до 279. При этом для clientWidth он округляет по какому-то другому
+             алгоритму, и в итоге возникает ситуация, когда текст влезает, но clientWidth и scrollWidth сильно отличаются.
+             Если вешать direction: rtl, то текст всё также остаётся справа, но scrollWidth почти совпадает с реальной шириной
+             (погрешность в пределах 1). Поэтому считаем эту погрешность и если она больше 1, то скролл есть, если меньше - то нет.
+             */
+            if (targetStyles.textAlign === 'right' && detection.chrome) {
+               target.style.direction = 'rtl';
+               target.style.textAlign = 'left';
+               result = Math.abs(parseFloat(targetStyles.width) - target.scrollWidth) >= 1;
+               target.style.direction = '';
+               target.style.textAlign = '';
+            }
+
+            return result;
          }
       };
 
@@ -249,7 +284,6 @@ define('Controls/List/EditInPlace', [
        * @variant {ItemEditOptions} options Options of editing.
        * @returns {Core/Deferred}
        */
-      //TODO: управлять индикатором загрузки
       editItem: function(options) {
          var self = this;
 
@@ -267,7 +301,6 @@ define('Controls/List/EditInPlace', [
        * @param {AddItemOptions} options Options of adding.
        * @returns {Core/Deferred}
        */
-      //TODO: управлять индикатором загрузки
       addItem: function(options) {
          var self = this;
          return this.commitEdit().addCallback(function() {
@@ -315,18 +348,85 @@ define('Controls/List/EditInPlace', [
                case 27: //Esc
                   this.cancelEdit();
                   break;
-               case 9: //Tab //TODO: для грида это не подойдет, так что надо перейти на _onRowDeactivated после решения проблем с ним
-                  _private.editNextRow(this, !e.nativeEvent.shiftKey);
-                  break;
             }
          }
       },
 
-      _onItemClick: function(e, record) {
+      _onItemClick: function(e, record, originalEvent) {
          if (this._options.editingConfig && this._options.editingConfig.editOnClick) {
-            this.editItem({
-               item: record
-            });
+            if (originalEvent.target.closest('.js-controls-ListView__notEditable')) {
+               this.commitEdit();
+            } else {
+               this.editItem({
+                  item: record
+               });
+               this._clientX = originalEvent.nativeEvent.clientX;
+               this._clientY = originalEvent.nativeEvent.clientY;
+            }
+         }
+      },
+
+      _afterUpdate: function() {
+         var target, fakeElement, targetStyle, offset, currentWidth, previousWidth, lastLetterWidth, hasHorizontalScroll;
+         if (this._clientX && this._clientY) {
+            target = document.elementFromPoint(this._clientX, this._clientY);
+            if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+               fakeElement = document.createElement('div');
+               fakeElement.innerText = '';
+
+               targetStyle = getComputedStyle(target);
+               hasHorizontalScroll = _private.hasHorizontalScroll(target);
+
+               /*
+               Если элемент выравнивается по правому краю, но при этом влезает весь текст, то нужно рассчитывать положение
+               курсора от правого края input'а, т.к. перед текстом может быть свободное место. Во всех остальных случаях
+               нужно рассчитывать от левого края, т.к. текст гарантированно прижат к нему.
+               */
+               if (targetStyle.textAlign === 'right' && !hasHorizontalScroll) {
+                  offset = target.getBoundingClientRect().right - this._clientX;
+               } else {
+                  offset = this._clientX - target.getBoundingClientRect().left;
+               }
+               typographyStyles.forEach(function(prop) {
+                  fakeElement.style[prop] = targetStyle[prop];
+               });
+
+               for (var i = 0; i < target.value.length; i++) {
+                  currentWidth = BreadCrumbsUtil.getWidth(fakeElement);
+                  if (currentWidth > offset) {
+                     break;
+                  }
+                  if (targetStyle.textAlign === 'right' && !hasHorizontalScroll) {
+                     fakeElement.innerText = target.value.slice(target.value.length - 1 - i);
+                  } else {
+                     fakeElement.innerText += target.value[i];
+                  }
+                  previousWidth = currentWidth;
+               }
+
+               //EditingRow в afterMount делает this.activate(), чтобы при переходах по табу фокус вставал в поля ввода.
+               //Т.е. если не звать focus(), то фокус может находиться в другом поле ввода.
+               target.focus();
+
+               lastLetterWidth = currentWidth - previousWidth;
+               if (targetStyle.textAlign === 'right' && !hasHorizontalScroll) {
+                  if (currentWidth - offset < lastLetterWidth / 2) {
+                     target.setSelectionRange(target.value.length - i, target.value.length - i);
+                  } else {
+                     target.setSelectionRange(target.value.length - i + 1, target.value.length - i + 1);
+                  }
+               } else {
+                  if (currentWidth - offset < lastLetterWidth / 2) {
+                     target.setSelectionRange(i, i);
+                  } else {
+                     target.setSelectionRange(i - 1, i - 1);
+                  }
+               }
+
+               target.scrollLeft = 0;
+            }
+            this._clientX = null;
+            this._clientY = null;
          }
       },
 
@@ -338,35 +438,28 @@ define('Controls/List/EditInPlace', [
          }
          var index = _private.getEditingItemIndex(this, item, listModel);
          this._isAdd = index === listModel.getCount();
-         this._editingItemProjection = this._isAdd
-            ? new CollectionItem({ contents: this._editingItem })
+         var editingItemProjection = this._isAdd
+            ? listModel._prepareDisplayItemForAdd(item)
             : listModel.getItemById(ItemsUtil.getPropertyValue(this._editingItem, listModel._options.keyProperty), listModel._options.keyProperty);
+
+         listModel.reset(); //reset делается для того, чтобы при добавлении не лезть за пределы проекции
          var actions =  listModel.getItemActions(item);
-         this._editingItemData = {
-            getPropValue: ItemsUtil.getPropertyValue,
-            keyProperty: listModel._options.keyProperty,
-            displayProperty: listModel._options.displayProperty,
-            index: this._isAdd ? listModel.getCount() : index,
-            item: this._editingItem,
-            dispItem: this._editingItemProjection,
-            isEditing: true,
-            isSelected: !listModel._markedItem,
-            itemActions: this._isAdd ? actions : {},
-            drawActions: this._isAdd && actions && actions.showed && actions.showed.length,
-            key: ItemsUtil.getPropertyValue(this._editingItemProjection.getContents(), listModel._options.keyProperty)
-         };
+         this._editingItemData = listModel.getCurrent();
+         this._editingItemData.item = this._editingItem;
+         this._editingItemData.dispItem = editingItemProjection;
+         this._editingItemData.isEditing = true;
+         this._editingItemData.index = this._isAdd ? listModel.getCount() : index;
+         this._editingItemData.drawActions = this._isAdd && actions && actions.showed && actions.showed.length,
+         this._editingItemData.itemActions = this._isAdd ? listModel.getItemActions(item) : {};
          listModel._setEditingItemData(this._editingItemData);
       },
 
-      // _onRowDeactivated: function(e, isTabPressed) {
-      //TODO: по табу стреляет несколько раз на одной и той же строке, надо Шипину показать
-      //TODO: про таб знаем, а про шифт нет, нужно доработать немножко
-      // if (isTabPressed) {
-      // _private.editNextRow(this, true);
-      // console.log('ушёл фокус со строки по табу');
-      // }
-      // e.stopPropagation();
-      // },
+      _onRowDeactivated: function(e, eventOptions) {
+         if (eventOptions.isTabPressed) {
+            _private.editNextRow(this, !eventOptions.isShiftKey);
+         }
+         e.stopPropagation();
+      },
 
       _beforeUnmount: function() {
          _private.resetVariables(this);

@@ -24,12 +24,12 @@ define('Controls/Filter/Button/converterFilterStructure',
             structureMap[recordToSructureElemMap[i]] = i;
          }
       }
-      
+
       function convertToFilterStructure(items) {
          return Chain(items).map(function(item) {
             var itemStructureItem = {};
             for (var i in structureMap) {
-               if (Util.getItemPropertyValue(item, structureMap[i]) && structureMap.hasOwnProperty(i)) {
+               if (Util.getItemPropertyValue(item, structureMap[i]) !== undefined && structureMap.hasOwnProperty(i)) {
                   itemStructureItem[i] = Util.getItemPropertyValue(item, structureMap[i]);
                }
             }

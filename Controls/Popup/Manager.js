@@ -71,7 +71,7 @@ define('Controls/Popup/Manager',
          fireEventHandler: function(id, event) {
             var element = ManagerController.find(id);
             var args = Array.prototype.slice.call(arguments, 2);
-            if (element && element.popupOptions.eventHandlers && element.popupOptions.eventHandlers.hasOwnProperty(event)) {
+            if (element && element.popupOptions.eventHandlers && typeof element.popupOptions.eventHandlers[event] === 'function') {
                element.popupOptions.eventHandlers[event].apply(element.popupOptions, args);
                return true;
             }

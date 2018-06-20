@@ -1,5 +1,5 @@
 define([
-   'Lib/File/HttpFileLink'
+   'File/HttpFileLink'
 ], function (HttpFileLink) {
    'use strict';
 
@@ -7,7 +7,7 @@ define([
    var link = 'http://google.com';
    var httpLink = new HttpFileLink(link, meta);
 
-   describe('Controls/File/HttpFileLink', function () {
+   describe('File/HttpFileLink', function () {
 
       describe('.getLink()', function () {
          it('Возвращает ссылку на удалённый ресурс', function () {

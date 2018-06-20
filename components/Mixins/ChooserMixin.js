@@ -36,10 +36,10 @@ define('SBIS3.CONTROLS/Mixins/ChooserMixin', [
           /**
            * @event onChooserClick Происходит при клике на кнопку открытия диалога выбора. Подробнее о создании диалога выбора можно посмотреть {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/selector-action/selector-dialog/ здесь}.
            * @param {Core/EventObject} eventObject Дескриптор события.
-           * @param {String|Object} Строка или объект - конфигурация справочника диалога выбора.
+           * @param {String|Object} template Строка или объект - конфигурация справочника диалога выбора.
            * Для {@link SBIS3.CONTROLS/FieldLink поля связи} значение второго параметра зависит от значения опции {@link SBIS3.CONTROLS/FieldLink#useSelectorAction useSelectorAction}:
            * <ol>
-           *    <li> useSelectorAction = true - в параметр придёт объект - конфигурация справочника, которая придёт в {@link https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/FieldLink/options/dictionaries/ dictionaries}.</li>
+           *    <li> useSelectorAction = true - в параметр придёт объект с полями multiselect, selectedItems, selectionType, template; конфигурация справочника, которая придёт в {@link https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/FieldLink/options/dictionaries/ dictionaries}.</li>
            *    <li> useSelectorAction = false - в параметр придёт строка</li>
            * </ol>
            * @return {Deferred|Boolean|*} Возможные значения:
@@ -177,7 +177,7 @@ define('SBIS3.CONTROLS/Mixins/ChooserMixin', [
             });
          });
       },
-      
+
       showSelector: function(cfg) {
          this._showChooser(cfg.template, cfg.componentOptions, cfg.dialogOptions);
       },

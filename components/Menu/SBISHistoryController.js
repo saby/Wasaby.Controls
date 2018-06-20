@@ -223,7 +223,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
             if (addToCurrentItems) {
                length++;
             }
-            return addToCurrentItems && length < self._options.maxHistoryLength;
+            return addToCurrentItems && length <= self._options.maxHistoryLength;
          }).value(recordSetFactory, this.getConfig(self));
 
          return oldItems;
