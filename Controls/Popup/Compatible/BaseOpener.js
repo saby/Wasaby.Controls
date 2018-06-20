@@ -35,8 +35,8 @@ function(cMerge, Random) {
          this._setSizes(cfg, templateClass);
       },
       _prepareConfigForNewTemplate: function(cfg, templateClass) {
-         cfg.componentOptions = cfg.templateOptions || cfg.componentOptions || {};
-         cfg.componentOptions.template = cfg.template;
+         cfg.componentOptions = {innerComponentOptions: cfg.templateOptions || cfg.componentOptions};
+         cfg.componentOptions.innerComponentOptions.template = cfg.template;
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea';
          cfg.animation = 'off';
 

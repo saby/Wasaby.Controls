@@ -151,6 +151,7 @@ define('SBIS3.CONTROLS/Utils/NotificationStackManager',
             for (var i = 0, l = this._items.length; i < l; i++){
                var
                   container = this._items[i].getContainer(),
+                  oldZindex = this._zIndex,
                   zIndex = this._zIndex;
 
                //Для первого окна запоминаем отступы
@@ -177,6 +178,8 @@ define('SBIS3.CONTROLS/Utils/NotificationStackManager',
                   'z-index': zIndex
                });
 
+               //Удаляем старый zindex из manager'a, иначе он там зависнет навсегда
+               cWindowManager.releaseZIndex(oldZindex);
                this._items[i]._zIndex = zIndex;
 
                bottom += container.outerHeight() + containerOffset.bottom;

@@ -3,13 +3,12 @@ define('Controls/Input/ComboBox',
       'Core/Control',
       'tmpl!Controls/Input/ComboBox/ComboBox',
       'Controls/Input/resources/InputRender/BaseViewModel',
-      'Controls/Controllers/SourceController',
       'WS.Data/Utils',
       'Controls/Input/Dropdown/Util',
       'css!Controls/Input/ComboBox/ComboBox'
    ],
 
-   function(Control, template, BaseViewModel, SourceController, Utils, dropdownUtils) {
+   function(Control, template, BaseViewModel, Utils, dropdownUtils) {
 
       /**
        * Control "ComboBox"

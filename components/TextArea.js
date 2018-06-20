@@ -388,7 +388,7 @@ define('SBIS3.CONTROLS/TextArea', [
          var cnt = parseInt(count, 10);
          this._options.maxLinesCount = cnt;
          this._inputField.trigger('autosize.resize');
-         var hClasses = generateClassesName(this._options.maxLinesCount, cnt, this._options.size);
+         var hClasses = generateClassesName(this._options.minLinesCount, cnt, this._options.size);
          modifyHeightClasses(this._inputField.get(0), hClasses, this._options.size);
       },
 

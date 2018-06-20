@@ -2,7 +2,6 @@ define('Controls/Container/Dropdown',
    [
       'Core/Control',
       'tmpl!Controls/Container/Dropdown/Dropdown',
-      'tmpl!Controls/Input/Dropdown/resources/defaultContentTemplate',
       'Controls/Controllers/SourceController',
       'Core/helpers/Object/isEqual',
       'Core/helpers/Object/isEmpty',
@@ -10,7 +9,7 @@ define('Controls/Container/Dropdown',
       'Controls/Input/Dropdown/Util'
    ],
 
-   function(Control, template, defaultContentTemplate, SourceController, isEqual, isEmpty, Chain, dropdownUtils) {
+   function(Control, template, SourceController, isEqual, isEmpty, Chain, dropdownUtils) {
 
       /**
           * Container for dropdown lists
