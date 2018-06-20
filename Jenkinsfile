@@ -68,6 +68,10 @@ node('controls') {
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
         def ErrUnit, ErrInt, ErrReg
+        def inte = params.run_int
+        def regr = params.run_reg
+        def unit = params.run_unit
+
         try {
         echo "Чистим рабочую директорию"
         deleteDir()
@@ -94,10 +98,7 @@ node('controls') {
 		} else {
 			branch_engine = props["engine"]
 		}
-
-        def inte = params.run_int
-        def regr = params.run_reg
-        def unit = params.run_unit
+        
         if ("${env.BUILD_NUMBER}" == "1"){
             inte = true
             regr = true
@@ -532,11 +533,9 @@ node('controls') {
                 sudo chmod -R 0777 ${workspace}
                 sudo chmod -R 0777 /home/sbis/Controls
             """
-            if ( ErrUnit ) {
-                throw  ErrUnit
-            } else {
+            if ( unit ) {
                 junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
-            }
+            } 
             if ( ErrReg)  {
                 throw  ErrReg
             }
