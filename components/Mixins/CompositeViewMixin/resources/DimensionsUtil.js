@@ -14,7 +14,8 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/DimensionsUtil', [
          };
       },
       getMargin: function(item) {
-         return (item.outerWidth(true) - item.outerWidth()) / 2;
+         var itemRect = item.get(0).getBoundingClientRect();
+         return Math.round(item.outerWidth(true) - itemRect.width) / 2;
       },
       calcInsideDimensions: function(item, container) {
          var
