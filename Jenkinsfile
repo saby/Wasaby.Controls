@@ -532,7 +532,8 @@ node('controls') {
                 sudo chmod -R 0777 ${workspace}
                 sudo chmod -R 0777 /home/sbis/Controls
             """
-            if ( unit ) {
+            dir("./controls") {
+                if ( unit ) {
                 junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
             } 
             if ( ErrReg)  {
@@ -542,6 +543,9 @@ node('controls') {
                 throw ErrInt
             }
             gitlabStatusUpdate()
+
+            }
+            
         }    
     }
 }
