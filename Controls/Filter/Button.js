@@ -9,10 +9,11 @@ define('Controls/Filter/Button',
       'WS.Data/Utils',
       'WS.Data/Type/descriptor',
       'Core/Deferred',
+      'Core/helpers/Object/isEqual',
       'css!Controls/Filter/Button/Button'
    ],
 
-   function(Control, template, Chain, Utils, types, Deferred) {
+   function(Control, template, Chain, Utils, types, Deferred, isEqual) {
 
       /**
        * Component for data filtering.
@@ -67,6 +68,9 @@ define('Controls/Filter/Button',
          resolveItems: function(self, items) {
             self._items = items;
             self._text = _private.getText(items);
+            if (self._options.filterTemplate && self._filterCompatible) {
+               self._filterCompatible.updateFilterStructure(items);
+            }
          }
       };
 
@@ -83,7 +87,7 @@ define('Controls/Filter/Button',
          },
 
          _beforeUpdate: function(options) {
-            if (this._options.items !== options.items) {
+            if (!isEqual(this._options.items, options.items)) {
                _private.resolveItems(this, options.items);
             }
          },
