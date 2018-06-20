@@ -307,7 +307,7 @@ node('controls') {
                         sh "npm config set registry http://npmregistry.sbis.ru:81/"
                         parallel (
                             isolated: {
-                                sh "sh ./bin/test-isolated"
+                                sh "sh ./bin/test-isolated1"
                                 sh "mv ./artifacts/xunit-report.xml ./artifacts/test-isolated-report.xml"
                             },
                             browser: {
