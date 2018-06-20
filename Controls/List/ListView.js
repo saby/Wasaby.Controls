@@ -6,11 +6,13 @@ define('Controls/List/ListView', [
    'tmpl!Controls/List/ListView/ListView',
    'tmpl!Controls/List/ItemTemplate',
    'tmpl!Controls/List/GroupTemplate',
+   'tmpl!Controls/List/GroupContentTemplate',
    'css!Controls/List/ListView/ListView'
 ], function(BaseControl,
    ListViewTpl,
    defaultItemTemplate,
-   GroupTemplate
+   GroupTemplate,
+   GroupContentTemplate
 ) {
    'use strict';
 
@@ -33,6 +35,7 @@ define('Controls/List/ListView', [
          _listModel: null,
          _template: ListViewTpl,
          _groupTemplate: GroupTemplate,
+         _groupContentTemplate: GroupContentTemplate,
          _defaultItemTemplate: defaultItemTemplate,
          _listChanged: false,
 
@@ -46,7 +49,7 @@ define('Controls/List/ListView', [
 
          _beforeMount: function(newOptions) {
             if (newOptions.itemsGroup && newOptions.itemsGroup.template) {
-               this._groupTemplate = newOptions.itemsGroup.template;
+               this._groupContentTemplate = newOptions.itemsGroup.template;
             }
             if (newOptions.listModel) {
                this._listModel = newOptions.listModel;
@@ -74,6 +77,12 @@ define('Controls/List/ListView', [
          _onItemClick: function(e, dispItem) {
             var item = dispItem.getContents();
             this._notify('itemClick', [item, e], {bubbling: true});
+         },
+
+         _onGroupClick: function(e, dispItem) {
+            var
+               item = dispItem.getContents();
+            this._notify('groupClick', [item, e], {bubbling: true});
          },
 
          _onItemContextMenu: function(event, itemData) {
