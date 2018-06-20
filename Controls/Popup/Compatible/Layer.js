@@ -46,9 +46,9 @@ define('Controls/Popup/Compatible/Layer', ['Core/Deferred'], function(Deferred) 
                   Constants.compat = true;
                   Constants.systemExtensions = true;
 
-                  ExtensionsManager.loadExtensions().addCallbacks(function () {
+                  ExtensionsManager.loadExtensions().addCallbacks(function() {
                      loadDeferred.callback(result);
-                  }, function (e) {
+                  }, function(e) {
                      IoC.resolve('ILogger').error('Layer', 'Can\'t load extensions', e);
                      loadDeferred.callback(result);
                   });
