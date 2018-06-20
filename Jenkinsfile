@@ -308,7 +308,7 @@ node('controls') {
                         sh "npm config set registry http://npmregistry.sbis.ru:81/"
                         parallel (
                             isolated: {
-                                sh "sh ./bin/test-isolated1"
+                                sh "sh ./bin/test-isolated"
                                 sh "mv ./artifacts/xunit-report.xml ./artifacts/test-isolated-report.xml"
                             },
                             browser: {
@@ -325,7 +325,6 @@ node('controls') {
                         )
                     }
             } catch (err) {
-                ErrUnit = err
                 currentBuild.result = "FAILURE"
             } 
         }
