@@ -225,6 +225,7 @@ define('Controls/Container/List',
                this._source = new Memory();
             }
             /***********************/
+            
          },
          
          _beforeUpdate: function(newOptions, context) {
