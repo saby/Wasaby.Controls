@@ -239,5 +239,41 @@ define([
          iv.setItems(rs2);
          assert.equal(1, result, 'itemsReadycallback wasn\'t call');
       });
+
+      it('itemsGroup', function() {
+         var
+            data = [
+               { id: 1, title: 'item_1', group: 'group_1' },
+               { id: 2, title: 'item_2', group: 'group_1' },
+               { id: 3, title: 'item_3', group: 'group_1' },
+               { id: 4, title: 'item_4', group: 'group_2' },
+               { id: 5, title: 'item_5', group: 'group_2' }
+            ],
+            items = new RecordSet({
+               rawData: data,
+               keyProperty : 'id'
+            }),
+            cfg = {
+               items: items,
+               keyProperty: 'id',
+               itemsGroup: {
+                  method: function(item) {
+                     return item.get('group');
+                  }
+               },
+               displayProperty: 'title'
+            },
+            itemsViewModel = new ItemsViewModel(cfg);
+         assert.equal(itemsViewModel._display.getGroup(), cfg.itemsGroup.method, 'Grouping for display not applied. Error sending to display grouping method.');
+         assert.equal(itemsViewModel._display.getCount(), 7, 'Grouping for display not applied. Display items count (with groups) not equal 7.');
+         itemsViewModel.toggleGroup('group_1');
+         assert.equal(itemsViewModel._display.getCount(), 4, 'Invalid display items count after collapsing "group_1".');
+         itemsViewModel.toggleGroup('group_2');
+         assert.equal(itemsViewModel._display.getCount(), 2, 'Invalid display items count after collapsing "group_2".');
+         itemsViewModel.toggleGroup('group_1');
+         assert.equal(itemsViewModel._display.getCount(), 5, 'Invalid display items count after expanding "group_1".');
+         itemsViewModel.toggleGroup('group_2');
+         assert.equal(itemsViewModel._display.getCount(), 7, 'Invalid display items count after expanding "group_2".');
+      });
    })
 });
