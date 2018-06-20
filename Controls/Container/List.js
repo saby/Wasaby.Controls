@@ -87,6 +87,11 @@ define('Controls/Container/List',
          
          searchCallback: function(self, result, filter) {
             if (self._options.searchEndCallback) {
+               
+               /* FIXME
+                  Т.к. пока нет cachedSource, мы создаём memory источник, а когда отдаёшь memory источник с данными,
+                  запрос искуственно делаем асинхронным в BaseControl, поэтому если синхронно стрельнуть callback'ом,
+                  список отрисуется пустым, для этого делаю таймаут как и в BaseControl */
                Deferred.fromTimer(10).addCallback(function() {
                   self._options.searchEndCallback(result, filter);
                });
