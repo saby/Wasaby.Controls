@@ -67,6 +67,7 @@ node('controls') {
     echo "Определяем рабочую директорию"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
+        try {
         echo "Чистим рабочую директорию"
         deleteDir()
 
@@ -325,12 +326,9 @@ node('controls') {
             } catch (err) {
                 ErrUnit = err
                 currentBuild.result = "FAILURE"
-
-            } finally {
-                junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
-            }
-        } 
-    }   
+            } 
+        }
+    }       
         if ( inte || regr ) { 
         stage("Разворот стенда"){
             echo "Запускаем разворот стенда и подготавливаем окружение для тестов"
@@ -528,19 +526,25 @@ node('controls') {
             }
             
         )
-        
-    }    
-    sh """
-        sudo chmod -R 0777 ${workspace}
-        sudo chmod -R 0777 /home/sbis/Controls
-    """
-    if ( ErrUnit ) {
-        throw  ErrUnit
-    } else if ( ErrReg)  {
-        throw  ErrReg
-    } else if ( ErrInt ) {
-        throw ErrInt
     }
-    gitlabStatusUpdate()
+} finally {    
+            sh """
+                sudo chmod -R 0777 ${workspace}
+                sudo chmod -R 0777 /home/sbis/Controls
+            """
+            if ( ErrUnit ) {
+                throw  ErrUnit
+            } else {
+                junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
+            }
+            if ( ErrReg)  {
+                throw  ErrReg
+            }
+            if ( ErrInt ) {
+                throw ErrInt
+            }
+            gitlabStatusUpdate()
+        }    
     }
 }
+
