@@ -32,7 +32,7 @@ define('Controls/Popup/Compatible/Layer', ['Core/Deferred'], function(Deferred) 
          }
          if (!loadDeferred) {
             loadDeferred = new Deferred();
-            requirejs(['Core/moduleStubs', 'Core/constants',  'cdn!jquery/3.3.1/jquery-min.js'], function(moduleStubs, Constants) {
+            requirejs(['Core/moduleStubs', 'Core/constants', 'Core/IoC', 'Core/ExtensionsManager', 'cdn!jquery/3.3.1/jquery-min.js'], function(moduleStubs, Constants, IoC, ExtensionsManager) {
                if (window && window.$) {
                   Constants.$win = $(window);
                   Constants.$doc = $(document);
@@ -44,7 +44,14 @@ define('Controls/Popup/Compatible/Layer', ['Core/Deferred'], function(Deferred) 
                moduleStubs.require(deps).addCallback(function(result) {
                   // var tempCompatVal = constants.compat;
                   Constants.compat = true;
-                  loadDeferred.callback(result);
+                  Constants.systemExtensions = true;
+
+                  ExtensionsManager.loadExtensions().addCallbacks(function () {
+                     loadDeferred.callback(result);
+                  }, function (e) {
+                     IoC.resolve('ILogger').error('Layer', 'Can\'t load extensions', e);
+                     loadDeferred.callback(result);
+                  });
 
                   // constants.compat = tempCompatVal; //TODO выпилить
                   (function($) {
