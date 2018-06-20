@@ -12,27 +12,24 @@ define('Controls/PageLayout', [
             if (item.content) {
                self._tabContent = item.content;
             }
-            if (item.controlsAreaTemplate) {
-               self._controlsAreaTemplate = item.controlsAreaTemplate;
+            if (item.controlPanelTemplate) {
+               self._controlPanelTemplate = item.controlPanelTemplate;
             }
-            else {
-               self._controlsAreaTemplate = options.controlsAreaTemplate;
-            }
-         }
-         else {
-            self._controlsAreaTemplate = options.controlsAreaTemplate;
          }
       }
    };
    var browserTabs = Control.extend({
       _template: template,
-      _controlAreaTemplate: null,
 
       _beforeMount: function(options) {
          _private.setTabContent(options, this);
       },
       _beforeUpdate: function(options) {
          _private.setTabContent(options, this);
+      },
+
+      getCurrentControlPanel: function() {
+         return this._controlPanelTemplate || this._options.controlPanelTemplate;
       }
    });
    return browserTabs;
