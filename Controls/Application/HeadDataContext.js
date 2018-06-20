@@ -34,7 +34,7 @@ define('Controls/Application/HeadDataContext', [
    }
 
    function fixLinkSlash(link) {
-      if(link.indexOf('/') !== 0) {
+      if (link.indexOf('/') !== 0) {
          return '/' + link;
       } else {
          return link;
