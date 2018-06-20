@@ -1,0 +1,19 @@
+.controls-PageLayout {
+   display: inline-block;
+}
+.controls-PageLayout_wrapper {
+   display: inline-flex;
+   align-items: baseline;
+   justify-content: space-between;
+   width: 100%;
+   position: relative;
+}
+.controls-PageLayout_wrapper:after {
+   content: '';
+   position: absolute;
+   bottom: 0;
+   left: 0;
+   width: 100%;
+   height: @height_BaseLine;
+   background: @background_BaseLine;
+}

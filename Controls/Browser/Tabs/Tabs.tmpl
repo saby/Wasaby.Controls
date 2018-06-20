@@ -1,8 +1,15 @@
-<div class="controls-BrowserTabs">
-    <Controls.Tabs.Buttons
-            bind:selectedKey="_options.tabsSelectedKey"
-            keyProperty="id"
-            source="{{_options.tabsSource}}"
-    />
+<div class="controls-PageLayout">
+    <div attr:class="controls-PageLayout_wrapper">
+        <ws:if data="{{_controlsAreaTemplate}}">
+            <ws:partial template="{{_controlsAreaTemplate}}"/>
+        </ws:if>
+        <div attr:class="controls-PageLayout__ButtonTabs_wrapper">
+            <Controls.Tabs.Buttons
+                    bind:selectedKey="_options.tabsSelectedKey"
+                    keyProperty="id"
+                    source="{{_options.tabsSource}}"
+            />
+        </div>
+    </div>
     <Controls.Container.Async templateName="{{_tabContent}}" templateOptions="{{_options}}"/>
 </div>

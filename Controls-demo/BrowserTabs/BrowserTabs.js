@@ -5,11 +5,15 @@ define('Controls-demo/BrowserTabs/BrowserTabs', [
    'tmpl!Controls-demo/BrowserTabs/BrowserTabs',
    'tmpl!Controls-demo/BrowserTabs/resources/tabsContent',
    'tmpl!Controls-demo/BrowserTabs/resources/tabsContent2',
+   'tmpl!Controls-demo/BrowserTabs/resources/controlAreaTemplate',
+   'tmpl!Controls-demo/BrowserTabs/resources/controlAreaTemplate2',
    'WS.Data/Source/Memory'
 ], function(Control,
             template,
             tabsContent,
             tabsContent2,
+            controlAreaTemplate,
+            controlAreaTemplate2,
             MemorySource
 ) {
    'use strict';
@@ -20,27 +24,32 @@ define('Controls-demo/BrowserTabs/BrowserTabs', [
             {
                id: '1',
                title: 'very',
-               content: 'tmpl!Controls-demo/BrowserTabs/resources/tabsContent'
+               content: 'tmpl!Controls-demo/BrowserTabs/resources/tabsContent',
+               controlsAreaTemplate: 'tmpl!Controls-demo/BrowserTabs/resources/controlAreaTemplate'
             },
             {
                id: '2',
                title: 'hard',
-               content: 'tmpl!Controls-demo/BrowserTabs/resources/tabsContent2'
+               content: 'tmpl!Controls-demo/BrowserTabs/resources/tabsContent2',
+               controlsAreaTemplate: 'tmpl!Controls-demo/BrowserTabs/resources/controlAreaTemplate2'
             },
             {
                id: '3',
                title: 'invent',
-               content: 'tmpl!Controls-demo/BrowserTabs/resources/tabsContent'
+               content: 'tmpl!Controls-demo/BrowserTabs/resources/tabsContent',
+               controlsAreaTemplate: 'tmpl!Controls-demo/BrowserTabs/resources/controlAreaTemplate'
             },
             {
                id: '4',
                title: 'tabs',
-               content: 'tmpl!Controls-demo/BrowserTabs/resources/tabsContent2'
+               content: 'tmpl!Controls-demo/BrowserTabs/resources/tabsContent2',
+               controlsAreaTemplate: 'tmpl!Controls-demo/BrowserTabs/resources/controlAreaTemplate2'
             },
             {
                id: '5',
                title: 'titles',
-               content: 'tmpl!Controls-demo/BrowserTabs/resources/tabsContent'
+               content: 'tmpl!Controls-demo/BrowserTabs/resources/tabsContent',
+               controlsAreaTemplate: 'tmpl!Controls-demo/BrowserTabs/resources/controlAreaTemplate'
             }
          ]
       });
