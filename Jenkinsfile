@@ -536,9 +536,9 @@ node('controls') {
     """
     if ( ErrUnit ) {
         throw  ErrUnit
-    } else if (ErrReg) {
+    } else if ( ErrReg)  {
         throw  ErrReg
-    } else if (ErrInt) {
+    } else if ( ErrInt ) {
         throw ErrInt
     }
     gitlabStatusUpdate()
