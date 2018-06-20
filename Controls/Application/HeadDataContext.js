@@ -33,6 +33,14 @@ define('Controls/Application/HeadDataContext', [
       return keySplitted[0] === 'css' && keySplitted.length > 1;
    }
 
+   function fixLinkSlash(link) {
+      if(link.indexOf('/') !== 0) {
+         return '/' + link;
+      } else {
+         return link;
+      }
+   }
+
    /**
     * Checks if dependency is a part of any bundle and remove from allDeps
     * @param allDeps
@@ -45,7 +53,7 @@ define('Controls/Application/HeadDataContext', [
             var bundleName = bundles[key];
             if (bundleName) {
                delete allDeps[key];
-               packages[bundleName] = true;
+               packages[fixLinkSlash(bundleName)] = true;
             }
          }
       }
@@ -54,7 +62,7 @@ define('Controls/Application/HeadDataContext', [
          if (allDeps.hasOwnProperty(key)) {
             if (modDeps.nodes[key]) {
                if (isJs(key) || isCss(key)) {
-                  packages[modDeps.nodes[key].path] = true;
+                  packages[fixLinkSlash(modDeps.nodes[key].path)] = true;
                }
             }
          }
