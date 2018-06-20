@@ -80,6 +80,12 @@ define('Controls/Filter/Button/_FilterCompatible',
          
          showFilterPanel: function() {
             _private.getOldPanelOpener(this).showPicker();
+         },
+
+         updateFilterStructure: function(items) {
+            if (this._oldPanelOpener) {
+               this._oldPanelOpener._setFilterStructure(converterFilterStructure.convertToFilterStructure(items));
+            }
          }
          
       });

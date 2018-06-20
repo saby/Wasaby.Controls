@@ -67,6 +67,9 @@ define('Controls/Filter/Button',
          resolveItems: function(self, items) {
             self._items = items;
             self._text = _private.getText(items);
+            if (self._options.filterTemplate && self._filterCompatible) {
+               self._filterCompatible.updateFilterStructure(items);
+            }
          }
       };
 
