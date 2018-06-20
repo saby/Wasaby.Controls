@@ -220,10 +220,12 @@ define('Controls/Container/List',
                вместо того, чтобы дождаться постоения дочернего компонента, он начинает создавать новый компонент.
                Ошибка выписна, в плане у Зуева https://online.sbis.ru/opendoc.html?guid=fb08b40e-f2ac-4dd2-9a84-dfbfc404da02 */
             //return this._searchDeferred;
+            
             if (this._searchMode) {
                _private.cachedSourceFix(this);
                this._source = new Memory();
             }
+            
             /***********************/
             
          },
