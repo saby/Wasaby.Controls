@@ -24,6 +24,7 @@ define('Controls/Filter/Button',
        * @control
        * @public
        * @author Герасимов Александр
+       * @demo Controls-demo/FilterButton/FilterButton
        */
 
       'use strict';
