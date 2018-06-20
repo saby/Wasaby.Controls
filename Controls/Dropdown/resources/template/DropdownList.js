@@ -16,7 +16,6 @@ define('Controls/Dropdown/resources/template/DropdownList',
        * @control
        * @public
        * @category Popup
-       * @demo
        */
 
       /**
