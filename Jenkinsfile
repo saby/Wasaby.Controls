@@ -527,24 +527,26 @@ node('controls') {
             
         )
     }
-} finally {    
-            sh """
-                sudo chmod -R 0777 ${workspace}
-                sudo chmod -R 0777 /home/sbis/Controls
-            """
-            dir("./controls") {
-                if ( unit ) {
-                junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
-            } 
-            if ( ErrReg)  {
-                throw  ErrReg
-            }
-            if ( ErrInt ) {
-                throw ErrInt
-            }
-            gitlabStatusUpdate()
+} finally { 
+    gitlabStatusUpdate()   
+    sh """
+        sudo chmod -R 0777 ${workspace}
+        sudo chmod -R 0777 /home/sbis/Controls
+    """
+    
+    dir("./controls") {
+        if ( unit ) {
+        junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
+    } 
+    if ( ErrReg)  {
+        throw  ErrReg
+    }
+    if ( ErrInt ) {
+        throw ErrInt
+    }
+    
 
-            }
+    }
             
         }    
     }
