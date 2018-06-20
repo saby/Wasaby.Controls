@@ -1,19 +1,41 @@
 /**
  * Created by kraynovdo on 16.11.2017.
  */
-define('Controls/List/ListViewModel',
-   ['Controls/List/ItemsViewModel', 'Controls/Controllers/Multiselect/Selection', 'WS.Data/Entity/VersionableMixin', 'Controls/List/resources/utils/ItemsUtil'],
-   function(ItemsViewModel, MultiSelection, VersionableMixin, ItemsUtil) {
+define('Controls/List/ListViewModel', ['Controls/List/ItemsViewModel', 'Controls/Controllers/Multiselect/Selection', 'WS.Data/Entity/VersionableMixin', 'Controls/List/resources/utils/ItemsUtil', 'Controls/Utils/ArraySimpleValuesUtil'],
+   function(ItemsViewModel, MultiSelection, VersionableMixin, ItemsUtil, ArraySimpleValuesUtil) {
       /**
        *
        * @author Крайнов Дмитрий
        * @public
        */
 
+      var SELECTION_STATUS = {
+         NOT_SELECTED: 0,
+         SELECTED: 1
+      };
+
       var _private = {
          updateIndexes: function(self) {
             self._startIndex = 0;
             self._stopIndex = self.getCount();
+         },
+
+         isAllSelection: function(selectedKeys) {
+            return !!selectedKeys && !!selectedKeys.length && selectedKeys[0] === null;
+         },
+
+         getSelectionStatus: function(id, selectedKeys, excludedKeys) {
+            var status = SELECTION_STATUS.NOT_SELECTED;
+            if (_private.isAllSelection(selectedKeys)) {
+               if (ArraySimpleValuesUtil.invertTypeIndexOf(excludedKeys, id) === -1) {
+                  status = SELECTION_STATUS.SELECTED;
+               }
+            } else {
+               if (ArraySimpleValuesUtil.invertTypeIndexOf(selectedKeys, id) > -1) {
+                  status = SELECTION_STATUS.SELECTED;
+               }
+            }
+            return status;
          }
       };
 
@@ -27,17 +49,26 @@ define('Controls/List/ListViewModel',
          constructor: function(cfg) {
             var self = this;
             this._actions = [];
+
+            //TODO: надо подумать над названием
+            if (cfg.selectionCallback) {
+               cfg.selectionCallback(this._getSelectionController());
+            }
             ListViewModel.superclass.constructor.apply(this, arguments);
 
             if (cfg.markedKey !== undefined) {
                this._markedItem = this.getItemById(cfg.markedKey, cfg.keyProperty);
             }
 
-            this._selectedKeys =  cfg.selectedKeys || [];
-            this._excludedKeys =  cfg.excludedKeys || [];
+            this._selectedKeys = cfg.selectedKeys || [];
+            this._excludedKeys = cfg.excludedKeys || [];
 
             //TODO надо ли?
             _private.updateIndexes(self);
+         },
+
+         _getSelectionController: function() {
+            return MultiSelection;
          },
 
          _getItemDataByItem: function() {
@@ -47,7 +78,7 @@ define('Controls/List/ListViewModel',
             itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
             itemsModelCurrent.showActions = !this._editingItemData && (!this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive));
             itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem.item;
-            itemsModelCurrent.multiSelectStatus = this._selectedKeys.indexOf(itemsModelCurrent.key) >= 0;
+            itemsModelCurrent.multiSelectStatus = _private.getSelectionStatus(itemsModelCurrent.key, this._selectedKeys, this._excludedKeys);
             itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility === 'visible';
             itemsModelCurrent.drawActions =
                itemsModelCurrent.itemActions &&

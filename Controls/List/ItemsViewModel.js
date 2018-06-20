@@ -34,6 +34,11 @@ define('Controls/List/ItemsViewModel',
                if (cfg.itemsReadyCallback) {
                   cfg.itemsReadyCallback(cfg.items);
                }
+
+               //internalItemsReadyCallback сделан, чтобы можно было подписаться на itemsReadyCallback не перебивая прикладных опций
+               if (cfg.internalItemsReadyCallback) {
+                  cfg.internalItemsReadyCallback(cfg.items);
+               }
                this._items = cfg.items;
                this._display = this._prepareDisplay(cfg.items, cfg);
                this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);
@@ -140,6 +145,9 @@ define('Controls/List/ItemsViewModel',
             } else {
                if (this._options.itemsReadyCallback) {
                   this._options.itemsReadyCallback(items);
+               }
+               if (this._options.internalItemsReadyCallback) {
+                  this._options.internalItemsReadyCallback(items);
                }
                this._items = items;
                if (this._display) {

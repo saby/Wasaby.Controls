@@ -10,11 +10,7 @@ define('Controls/Controllers/Multiselect/Selection', [
 ) {
    'use strict';
 
-   var ALLSELECTION_VALUE = [null],
-      SELECTION_STATUS = {
-         NOT_SELECTED: 0,
-         SELECTED: 1
-      };
+   var ALLSELECTION_VALUE = [null];
 
    var _private = {
       isAllSelection: function(selectedKeys) {
@@ -27,13 +23,11 @@ define('Controls/Controllers/Multiselect/Selection', [
       _excludedKeys: null,
 
       constructor: function(options) {
-         this._options = options;
-         this._selectedKeys = options.selectedKeys || [];
-         this._excludedKeys = options.excludedKeys || [];
+         this._selectedKeys = options && options.selectedKeys || [];
 
          //excluded keys имеют смысл только когда выделено все, поэтому ситуацию, когда переданы оба массива считаем ошибочной //TODO возможно надо кинуть здесь исключение
          if (_private.isAllSelection(this._selectedKeys)) {
-            this._excludedKeys = options.excludedKeys || [];
+            this._excludedKeys = options && options.excludedKeys || [];
          } else {
             this._excludedKeys = [];
          }
@@ -87,22 +81,8 @@ define('Controls/Controllers/Multiselect/Selection', [
          };
       },
 
-      getSelectionStatus: function(id) {
-         var status = SELECTION_STATUS.NOT_SELECTED;
-         if (_private.isAllSelection(this._selectedKeys)) {
-            if (ArraySimpleValuesUtil.invertTypeIndexOf(this._excludedKeys, id) === -1) {
-               status = SELECTION_STATUS.SELECTED;
-            }
-         } else {
-            if (ArraySimpleValuesUtil.invertTypeIndexOf(this._selectedKeys, id) > -1) {
-               status = SELECTION_STATUS.SELECTED;
-            }
-         }
-         return status;
-      },
-
-      destroy: function() {
-         this._options = null;
+      getCount: function() {
+         return _private.isAllSelection(this._selectedKeys) ? !!this._excludedKeys.length ? 'part' : 'all' : this._selectedKeys.length;
       }
    });
 

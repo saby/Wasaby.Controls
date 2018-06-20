@@ -2,8 +2,11 @@ define('Controls/List/Tree/TreeViewModel', [
    'Controls/List/ListViewModel',
    'Controls/List/resources/utils/ItemsUtil',
    'Controls/List/resources/utils/TreeItemsUtil',
-   'Core/core-clone'
-], function(ListViewModel, ItemsUtil, TreeItemsUtil, cClone) {
+   'Core/core-clone',
+
+   //TODO: надо написать этот модуль
+   'Controls/Controllers/Multiselect/HierarchySelection'
+], function(ListViewModel, ItemsUtil, TreeItemsUtil, cClone, HierarchySelection) {
 
    'use strict';
 
@@ -52,6 +55,10 @@ define('Controls/List/Tree/TreeViewModel', [
                this._expandedNodes = {};
             }
             TreeViewModel.superclass.constructor.apply(this, arguments);
+         },
+
+         _getSelectionController: function() {
+            return HierarchySelection;
          },
 
          _prepareDisplay: function(items, cfg) {

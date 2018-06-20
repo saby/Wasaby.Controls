@@ -2,9 +2,9 @@ define('Controls/OperationsPanel/MassSelector', [
    'Core/Control',
    'tmpl!Controls/OperationsPanel/MassSelector/MassSelector',
    'WS.Data/Source/Memory',
-   'Controls/Container/MassSelector/MassSelectorContextField',
+   'Controls/Container/MassSelector/SelectionContextField',
    'css!Controls/OperationsPanel/MassSelector/MassSelector'
-], function(Control, template, Memory, MassSelectorContextField) {
+], function(Control, template, Memory, SelectionContextField) {
    'use strict';
    var _defaultItems = [
       {
@@ -103,7 +103,7 @@ define('Controls/OperationsPanel/MassSelector', [
 
    MassSelector.contextTypes = function contextTypes() {
       return {
-         selection: MassSelectorContextField
+         selection: SelectionContextField
       };
    };
 
