@@ -67,6 +67,7 @@ node('controls') {
     echo "Определяем рабочую директорию"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
+        def ErrUnit, ErrInt, ErrReg
         try {
         echo "Чистим рабочую директорию"
         deleteDir()
@@ -102,7 +103,6 @@ node('controls') {
             regr = true
             unit = true
         }
-        def ErrUnit, ErrInt, ErrReg
 
         echo "Выкачиваем хранилища"
         stage("Checkout"){
