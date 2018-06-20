@@ -514,7 +514,6 @@ node('controls') {
         )
     }
 } finally { 
-    gitlabStatusUpdate()   
     sh """
         sudo chmod -R 0777 ${workspace}
         sudo chmod -R 0777 /home/sbis/Controls
@@ -533,6 +532,7 @@ node('controls') {
             junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
             }
     }
+    gitlabStatusUpdate()
         }    
     }
 }
