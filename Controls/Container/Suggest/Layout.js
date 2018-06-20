@@ -42,22 +42,22 @@ define('Controls/Container/Suggest/Layout',
             });
          },
    
-         calcOrient: function(self) {
+         calcOrient: function(self, win) {
             /* calculate algorithm:
-               - bottom of suggest behind the screen -> need to revert
-               - bottom of suggest on screen and suggest reverted -> nothing to do
-               - bottom of suggest on screen -> nothing to do
+               - bottom of suggest behind the screen -> change orient, need to revert (-up)
+               - bottom of suggest on screen and suggest reverted -> nothing to do (-up)
+               - bottom of suggest on screen -> default orient (-down)
              */
             var suggestHeight = self._children.suggestionsContainer.offsetHeight,
                 containerRect = self._container.getBoundingClientRect(),
-                needToRevert = suggestHeight + containerRect.bottom > window.innerHeight,
+                needToRevert = suggestHeight + containerRect.bottom > (win || window).innerHeight,
                 newOrient;
             
             if (needToRevert) {
                newOrient = '-up';
             } else {
                if (self._orient === '-up') {
-                  newOrient = '-up';
+                  newOrient = self._orient;
                } else {
                   newOrient = '-down';
                }
