@@ -47,7 +47,7 @@ node('controls') {
                 choices: "online\npresto\ncarry\ngenie",
                 description: '',
                 name: 'theme'),
-            choice(choices: "chrome\nff\nie", description: '', name: 'browser_type'),
+            choice(choices: "chrome\nff\nie\nedge", description: '', name: 'browser_type'),
             booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов", name: 'run_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
@@ -388,6 +388,11 @@ node('controls') {
                 sudo chmod -R 0777 /home/sbis/Controls
             """
         }
+        def soft_restart = "True"
+        if ( "${params.browser_type}" in ['ie', 'edge'] ){
+			soft_restart = "False"
+		}
+
         writeFile file: "./controls/tests/int/config.ini", text:
             """# UTF-8
             [general]
@@ -396,13 +401,14 @@ node('controls') {
             SERVER = test-autotest-db1:5434
             BASE_VERSION = css_${NODE_NAME}${ver}1
             DO_NOT_RESTART = True
-            SOFT_RESTART = True
+            SOFT_RESTART = ${soft_restart}
             NO_RESOURCES = True
             DELAY_RUN_TESTS = 2
             TAGS_NOT_TO_START = iOSOnly
             ELEMENT_OUTPUT_LOG = locator
             WAIT_ELEMENT_LOAD = 20
             HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/"""
+        
         if ( "${params.theme}" != "online" ) {
             writeFile file: "./controls/tests/reg/config.ini",
             text:
