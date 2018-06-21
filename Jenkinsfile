@@ -67,7 +67,6 @@ node('controls') {
     echo "Определяем рабочую директорию"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
-        def ErrUnit, ErrInt, ErrReg
         def inte = params.run_int
         def regr = params.run_reg
         def unit = params.run_unit
