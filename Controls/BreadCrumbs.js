@@ -26,7 +26,6 @@ define('Controls/BreadCrumbs', [
     * @mixes Controls/interface/IHighlighter
     * @control
     * @public
-    * @demo Controls-demo/BreadCrumbs/BreadCrumbs
     */
 
    var BreadCrumbs = Control.extend({
