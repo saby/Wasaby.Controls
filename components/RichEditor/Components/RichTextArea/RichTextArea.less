@@ -357,3 +357,9 @@
    height: 16px;
    width: 24px;
 }
+//В IE10 если у элемента стоит min-height, то он начинает показывать рамку для изменения размеров
+.ws-is-ie10 {
+   .controls-RichEditor__editorFrame.ws-basic-style p:empty{
+      min-height: auto;
+   }
+}
