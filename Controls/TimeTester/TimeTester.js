@@ -20,6 +20,9 @@ define('Controls/TimeTester/TimeTester',
          _beforeMount: function() {
             this.boomCfg = cookie.get('boomCfg');
             this.timeTester = cookie.get('timeTester');
+         },
+         canAcceptFocus: function() {
+            return false;
          }
       });
    }
