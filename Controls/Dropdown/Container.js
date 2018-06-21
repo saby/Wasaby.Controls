@@ -1,7 +1,7 @@
 define('Controls/Dropdown/Container',
    [
       'Core/Control',
-      'tmpl!Controls//Dropdown/Container/Container',
+      'tmpl!Controls/Dropdown/Container/Container',
       'Controls/Controllers/SourceController',
       'Core/helpers/Object/isEqual',
       'Core/helpers/Object/isEmpty',
