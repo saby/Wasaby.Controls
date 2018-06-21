@@ -696,6 +696,10 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
                self._hideLoadingIndicator();
                self._notify('onBeforeShow', this);
             },
+            onAfterShow: function() {
+               self._isExecuting = false;
+               self._notify('onAfterShow', this);
+            },
             //При множественном клике панель может начать закрываться раньше, чем откроется, в этом случае
             //onAfterClose не будет, смотрим на destroy
             onDestroy: self._clearVariables.bind(self)
