@@ -171,9 +171,11 @@ define('Controls/List/ListViewModel',
          },
 
          setItemActions: function(item, actions) {
-            var itemById = this.getItemById(item.getId());
-            var collectionItem = itemById ?  itemById.getContents() : item;
-            this._actions[this.getIndexBySourceItem(collectionItem)] = actions;
+            if (item.getId) {
+               var itemById = this.getItemById(item.getId());
+               var collectionItem = itemById ?  itemById.getContents() : item;
+               this._actions[this.getIndexBySourceItem(collectionItem)] = actions;
+            }
          },
          _prepareDisplayItemForAdd: function(item) {
             return ItemsUtil.getDefaultDisplayItem(this._display, item);
@@ -184,7 +186,6 @@ define('Controls/List/ListViewModel',
             var collectionItem = itemById ?  itemById.getContents() : item;
             return this._actions[this.getIndexBySourceItem(collectionItem)];
          },
-
 
          __calcSelectedItem: function(display, selKey, keyProperty) {
 

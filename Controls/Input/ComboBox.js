@@ -25,6 +25,7 @@ define('Controls/Input/ComboBox',
        * @public
        * @category Input
        * @author Золотова Э.Е.
+       * @demo ontrols-demo/Input/ComboBox/ComboBox
        */
 
       'use strict';

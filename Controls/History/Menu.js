@@ -14,6 +14,7 @@ define('Controls/History/Menu',
        * @control
        * @public
        * @category Menu
+       * @demo Controls-demo/Menu/MenuVdom
        */
 
       /**

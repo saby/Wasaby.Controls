@@ -21,16 +21,17 @@
       />
    </ws:template>
 
-   <SBIS3.CONTROLS.Button.StateButton
-      if="{{yearStateEnabled && monthStateEnabled}}"
-      tabindex="0"
-      name="StateButton"
-      activableByClick="{{false}}"
-      tooltip="{[Смена режима календаря]}"
-      icon="sprite:icon-size icon-ArrangeList icon-primary controls-DateRangeBigChoose__homeBtn-icon"
-      checkedIcon="sprite:icon-size icon-ArrangeSmallIconsPreview icon-primary controls-DateRangeBigChoose__homeBtn-icon"
-      className="controls-DateRangeBigChoose__stateButton"
-   />
+   <div class="controls-DateRangeBigChoose__stateButton-wrapper" if="{{yearStateEnabled && monthStateEnabled}}">
+      <SBIS3.CONTROLS.Button.StateButton
+         tabindex="0"
+         name="StateButton"
+         activableByClick="{{false}}"
+         tooltip="{[Смена режима календаря]}"
+         icon="sprite:icon-size icon-ArrangeList icon-primary controls-DateRangeBigChoose__homeBtn-icon"
+         checkedIcon="sprite:icon-size icon-ArrangeSmallIconsPreview icon-primary controls-DateRangeBigChoose__homeBtn-icon"
+         className="controls-DateRangeBigChoose__stateButton"
+      />
+   </div>
 
    <SBIS3.CONTROLS.Date.RangeSliderBase
       tabindex="1"
