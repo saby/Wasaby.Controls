@@ -11,10 +11,10 @@ define('Controls/List/Tree/TreeViewModel', [
       _private = {
          isVisibleItem: function(item) {
             var
-               itemParent = item.getParent();
+               itemParent = item.getParent ? item.getParent() : undefined;
             if (itemParent && !itemParent.isRoot()) {
                if (this.expandedNodes[ItemsUtil.getPropertyValue(itemParent.getContents(), this.keyProperty)]) {
-                  return _private.isVisibleItem(itemParent);
+                  return _private.isVisibleItem.call(this, itemParent);
                } else {
                   return false;
                }
@@ -23,17 +23,14 @@ define('Controls/List/Tree/TreeViewModel', [
             }
          },
 
-         displayFilter: function(item, index, itemDisplay) {
+         displayFilterTree: function(item, index, itemDisplay) {
             return _private.isVisibleItem.call(this, itemDisplay);
          },
 
-         getDisplayFilter: function(expandedNodes, cfg) {
+         getDisplayFilter: function(data, cfg) {
             var
                filter = [];
-            filter.push(_private.displayFilter.bind({
-               expandedNodes: expandedNodes,
-               keyProperty: cfg.keyProperty
-            }));
+            filter.push(_private.displayFilterTree.bind(data));
             if (cfg.itemsFilterMethod) {
                filter.push(cfg.itemsFilterMethod);
             }
@@ -55,7 +52,7 @@ define('Controls/List/Tree/TreeViewModel', [
          },
 
          _prepareDisplay: function(items, cfg) {
-            return TreeItemsUtil.getDefaultDisplayTree(items, cfg, _private.getDisplayFilter(this._expandedNodes, cfg));
+            return TreeItemsUtil.getDefaultDisplayTree(items, cfg, this.getDisplayFilter(this.prepareDisplayFilterData(), cfg));
          },
 
          toggleExpanded: function(dispItem) {
@@ -66,9 +63,22 @@ define('Controls/List/Tree/TreeViewModel', [
             } else {
                this._expandedNodes[itemId] = true;
             }
-            this._display.setFilter(_private.getDisplayFilter(this._expandedNodes, this._options));
+            this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
             this._nextVersion();
             this._notify('onListChange');
+         },
+
+         getDisplayFilter: function(data, cfg) {
+            return Array.prototype.concat(TreeViewModel.superclass.getDisplayFilter.apply(this, arguments),
+               _private.getDisplayFilter(data, cfg));
+         },
+
+         prepareDisplayFilterData: function() {
+            var
+               data = TreeViewModel.superclass.prepareDisplayFilterData.apply(this, arguments);
+            data['expandedNodes'] = this._expandedNodes;
+            data['keyProperty'] = this._options.keyProperty;
+            return data;
          },
 
          getCurrent: function() {

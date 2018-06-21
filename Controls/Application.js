@@ -97,6 +97,7 @@ define('Controls/Application',
                receivedState = {};
             }
             self.application = (context.AppData ? context.AppData.application : cfg.application);
+            self.buildnumber = (context.AppData ? context.AppData.buildnumber : '');
             self.appRoot = cfg.appRoot ? cfg.appRoot : (context.AppData ? context.AppData.appRoot : '/');
             self.wsRoot = receivedState.wsRoot || (context.AppData ? context.AppData.wsRoot : cfg.wsRoot);
             self.resourceRoot = receivedState.resourceRoot || (context.AppData ? context.AppData.resourceRoot : cfg.resourceRoot);
@@ -105,7 +106,9 @@ define('Controls/Application',
 
             self._headData.pushDepComponent(self.application);
 
+
             if (receivedState && context.AppData) {
+               context.AppData.buildnumber = self.buildnumber;
                context.AppData.wsRoot = self.wsRoot;
                context.AppData.appRoot = self.appRoot;
                context.AppData.resourceRoot = self.resourceRoot;
@@ -118,6 +121,7 @@ define('Controls/Application',
              */
             def.callback({
                application: self.application,
+               buildnumber: self.buildnumber,
                title: self.title,
                appRoot: self.appRoot,
                wsRoot: self.wsRoot,

@@ -217,7 +217,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      convert_urls: false,
                      formats: constants.styles,
                      paste_webkit_styles: 'color font-size text-align text-decoration width height max-width padding padding-left padding-right padding-top padding-bottom',
-                     paste_retain_style_properties: 'color font-size text-align text-decoration width height max-width padding padding-left padding-right padding-top padding-bottom',
+                     paste_retain_style_properties: 'color font-size font-family text-align text-decoration width height max-width line-height padding padding-left padding-right padding-top padding-bottom background background-color',
                      paste_as_text: true,
                      extended_valid_elements: 'div[class|onclick|style|id],img[unselectable|class|src|alt|title|width|height|align|name|style]',
                      body_class: 'ws-basic-style',
@@ -722,13 +722,30 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   self = this,
                   dialog,
                   eventResult,
-                  prepareAndInsertContent = function(content) {
-                     //Вычищаем все ненужные теги, т.к. они в конечном счёте превращаютя в <p>
-                     content = content.replace(new RegExp('<!--StartFragment-->|<!--EndFragment-->|<html>|<body>|</html>|</body>', 'img'), '').trim();
-                     //получение результата из события  BeforePastePreProcess тини потому что оно возвращает контент чистым от тегов Ворда,
-                     //withStyles: true нужно чтобы в нашем обработчике BeforePastePreProcess мы не обрабатывали а прокинули результат в обработчик тини
-                     eventResult = self.getTinyEditor().fire('PastePreProcess', {content: content, withStyles: true});
-                     self.insertHtml(eventResult.content);
+                  prepareAndInsertContent = function (content) {
+                     //получение результата из события PastePreProcess тини потому что оно возвращает контент чистым от тегов Ворда,
+                     //_isPasteWithStyles = true нужно чтобы в нашем обработчике PastePreProcess мы не обрабатывали а прокинули результат в обработчик тини
+                     var editor = self._tinyEditor;
+                     var pastePlugin = editor.plugins.paste;
+                     self._isPasteWithStyles = true;
+                     if (pastePlugin) {
+                        pastePlugin.clipboard.pasteHtml(content, false);
+                     }
+                     else {
+                        var i = content.indexOf('<!--StartFragment-->');
+                        if (i != -1) {
+                           // Это фрагмент текста из MS Word - оставитьтолько непосредственно значимый фрагмент текста
+                           var j = content.indexOf('<!--EndFragment-->');
+                           content = content.substring(i + 20, j !== -1 ? j : content.length).trim();
+                        }
+                        else {
+                           //Вычищаем все ненужные теги, т.к. они в конечном счёте превращаютя в <p>
+                           content = content.replace(/<html[^>]*>|<body[^>]*>|<\x2Fhtml>|<\x2Fbody>/gi, '').trim();
+                        }
+                        eventResult = self.getTinyEditor().fire('PastePreProcess', {content:content});
+                        self.insertHtml(eventResult.content);
+                     }
+                     delete self._isPasteWithStyles;
                      self._updateTextByTiny();
                   },
                   onPaste = function(event) {
@@ -785,6 +802,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   });
                   service.isReady().addCallback(function() {
                      service.call("getContentType", {}).addCallback(function (ContentType) {
+                        // Сейчас ContentType всегда 'Text'. Почему-то...
                         service.call((ContentType === 'Text/Html' || ContentType === 'Text/Rtf' || ContentType === 'Html' || ContentType === 'Rtf') && save ? 'getHtml' : 'getText', {}).addCallback(function (content) {
                            cIndicator.hide();
                            prepareAndInsertContent(content);
@@ -1940,6 +1958,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                });
 
                editor.on('Paste', function(e) {
+                  // А почему здесь берётся только простой текст?
                   self._clipboardText = e.clipboardData ?
                      e.clipboardData.getData(cConstants.browser.isMobileIOS ? 'text/plain' : 'text') :
                      window.clipboardData.getData('text');
@@ -1951,29 +1970,29 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   // Отключаю форматированную вставку в Win10 -> Edge, т.к. вместе с основным контентом вставляются инородные
                   // элементы, которые портят верстку. Баг пофиксен в свежей версии TinyMCE, нужно обновление.
                   // https://online.sbis.ru/opendoc.html?guid=0d74d2ac-a25c-4d03-b75f-98debcc303a2
-                  var
-                     isRichContent = cConstants.browser.isIE12 && cConstants.browser.isWin10 ? false : e.content.indexOf('data-ws-is-rich-text="true"') !== -1;
-                  e.content = e.content.replace('data-ws-is-rich-text="true"', '');
+                  var isRichContent = cConstants.browser.isIE12 && cConstants.browser.isWin10 ? false : e.content.indexOf('data-ws-is-rich-text="true"') !== -1;
+                  e.content = e.content.replace('data-ws-is-rich-text="true"', '').trim();
                   //Необходимо заменять декорированные ссылки обратно на url
                   //TODO: временное решение для 230. удалить в 240 когда сделают ошибку https://inside.tensor.ru/opendoc.html?guid=dbaac53f-1608-42fa-9714-d8c3a1959f17
                   e.content = self._prepareContent(e.content);
                   //Парсер TinyMCE неправльно распознаёт стили из за - &quot;TensorFont Regular&quot;
                   e.content = e.content.replace(/&quot;TensorFont Regular&quot;/gi,'\'TensorFont Regular\'');
+                  var options = self._options;
                   //_mouseIsPressed - флаг того что мышь была зажата в редакторе и не отпускалась
                   //равносильно тому что d&d совершается внутри редактора => не надо обрезать изображение
                   //upd: в костроме форматная вставка, не нужно вырезать лишние теги
-                  if (!self._mouseIsPressed && self._options.editorConfig.paste_as_text) {
-                     e.content = self._options._sanitizeClasses(e.content, false);
+                  if (!self._mouseIsPressed && options.editorConfig.paste_as_text) {
+                     e.content = options._sanitizeClasses(e.content, false);
                   }
                   self._mouseIsPressed = false;
                   // при форматной вставке по кнопке мы обрабаотываем контент через событие tinyMCE
                   // и послыаем метку форматной вставки, если метка присутствует не надо обрабатывать событие
                   // нашим обработчиком, а просто прокинуть его в дальше
-                  if (e.withStyles) {
+                  if (self._isPasteWithStyles) {
                      return e;
                   }
                   if (!isRichContent) {
-                     if (self._options.editorConfig.paste_as_text) {
+                     if (options.editorConfig.paste_as_text) {
                         //если данные не из БТР и не из word`a, то вставляем как текст
                         //В Костроме юзают БТР с другим конфигом, у них всегда форматная вставка
                         if (self._clipboardText !== false) {
@@ -2319,7 +2338,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      var selection = this._tinyEditor.selection,
                         node = selection.getNode().parentNode;
                      if (node.innerHTML === "<p><br></p>") {
-                        node.innerHTML = '<p><br data-mce-bogus="1"></p>';
+                        node.innerHTML = '<p><br data-mce-bogus="1"></p>';//this._tinyEditor.settings.startContent
                      }
                   }.bind(this));
                }
@@ -3178,6 +3197,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
             _updateHeight: function () {
                if (this.isVisible()) {
+                  var editor = this._tinyEditor;
                   var totalHeight = this._container.height();
                   var content, $content;
                   if (this._options.editorConfig.inline) {
@@ -3185,7 +3205,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      content = $content[0];
                   }
                   else {
-                     content = this._tinyEditor.iframeElement;
+                     content = editor.iframeElement;
                   }
                   if (BROWSER.isIE) {
                      $content = $content || $(content);
@@ -3203,14 +3223,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         var diff = contentHeight - content.clientHeight;
                         if (isChanged) {
                            var parent = content.parentNode;
-                           if (this._tinyEditor) {
+                           if (editor) {
                               if (parent.clientHeight < contentHeight) {
                                  // Также, если прокрутка уже задействована и текущий рэнж находится в самом низу области редактирования. Определяем это по
                                  // расстоянию от нижнего края рэнжа до нижнего края области минус увеличение высоты (diff) и минус нижний отступ области
                                  // редактирования - оно должно быть "небольшим", то есть меньше некоторого порогового значения (2)
                                  var rect0 = content.getBoundingClientRect();
-                                 var rect1 = this._tinyEditor.selection.getBoundingClientRect();
-                                 if (rect0.bottom - rect1.bottom - diff - parseInt($content.css('padding-bottom')) < 2) {
+                                 var rect1 = editor.selection.getBoundingClientRect();
+                                 if (rect0 && rect1 && rect0.bottom - rect1.bottom - diff - parseInt($content.css('padding-bottom')) < 2) {
                                     var scrollTop = parent.scrollHeight - parent.offsetHeight;
                                     if (parent.scrollTop < scrollTop) {
                                        // И если при всём этом область редактирования недопрокручена до самого конца - подскролить её до конца

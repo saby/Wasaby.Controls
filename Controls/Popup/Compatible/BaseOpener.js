@@ -35,9 +35,11 @@ function(cMerge, Random) {
          this._setSizes(cfg, templateClass);
       },
       _prepareConfigForNewTemplate: function(cfg, templateClass) {
-         cfg.componentOptions = cfg.templateOptions || cfg.componentOptions || {};
-         cfg.componentOptions.template = cfg.template;
+         cfg.componentOptions = {innerComponentOptions: cfg.templateOptions || cfg.componentOptions};
+         cfg.componentOptions.innerComponentOptions.template = cfg.template;
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea';
+         cfg.animation = 'off';
+
          this._setSizes(cfg, templateClass);
       },
 
@@ -51,7 +53,8 @@ function(cMerge, Random) {
                isStack: cfg._type === 'stack',
                target: cfg.target,
                modal: cfg.isModal,
-               handlers: cfg.handlers
+               handlers: cfg.handlers,
+               border: false
             },
             mode: (cfg._type === 'stack' || cfg._type === 'sticky') ? 'floatArea' : 'dialog'
          });
@@ -59,8 +62,20 @@ function(cMerge, Random) {
             cfg.autoHide = cfg.closeByExternalClick;
          }
 
+         if (cfg.verticalAlign && cfg.verticalAlign.side === 'top') {
+            newCfg.dialogOptions.direction = 'top';
+         }
+
+         if (cfg.corner && cfg.corner.vertical === 'bottom') {
+            newCfg.dialogOptions.verticalAlign = 'bottom';
+         }
+
+         if (cfg.offset) {
+            newCfg.dialogOptions.offset = cfg.offset;
+         }
+
          if (newCfg.target) {
-            newCfg.target = $(newCfg.target);
+            newCfg.dialogOptions.target = $(newCfg.target);
          }
 
          return newCfg;
@@ -69,8 +84,10 @@ function(cMerge, Random) {
       //Берем размеры либо с опций, либо с дименшенов
       _setSizes: function(cfg, templateClass) {
          var dimensions = templateClass.dimensions || templateClass.prototype.dimensions || {};
+         var dimensionsMinWidth = dimensions.minWidth || dimensions.width;
+
          if (!cfg.minWidth) {
-            cfg.minWidth = dimensions.minWidth ? parseInt(dimensions.minWidth, 10) : null;
+            cfg.minWidth = dimensionsMinWidth ? parseInt(dimensionsMinWidth, 10) : null;
          }
          if (!cfg.maxWidth) {
             cfg.maxWidth = dimensions.maxWidth ? parseInt(dimensions.maxWidth, 10) : null;
