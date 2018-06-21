@@ -44,6 +44,7 @@ define('Controls/Container/Adapter/Enum',
        * @class Controls/Container/Input/Search
        * @extends Core/Control
        * @author Герасимов Александр
+       * @demo Controls-demo/Container/Enum
        * @control
        * @public
        */

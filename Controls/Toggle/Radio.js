@@ -17,6 +17,7 @@ define('Controls/Toggle/Radio', [
     * @control
     * @public
     * @category Toggle
+    * @demo Controls-demo/RadioGroup/RadioGroupDemo
     */
 
    /**
