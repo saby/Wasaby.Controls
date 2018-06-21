@@ -6,12 +6,12 @@
         <ws:if data="{{_options.tabsSource}}">
             <div attr:class="controls-PageLayout__ButtonTabs_wrapper">
                 <Controls.Tabs.Buttons
-                        bind:selectedKey="_options.tabsSelectedKey"
+                        bind:selectedKey="_tabsSelectedKey"
                         keyProperty="id"
                         source="{{_options.tabsSource}}"
                 />
             </div>
         </ws:if>
     </div>
-    <Controls.Container.Async templateName="{{_tabContent || _options.content}}" templateOptions="{{_options}}"/>
+    <Controls.Container.Async templateName="{{getCurrentTabContent()}}" templateOptions="{{_options}}"/>
 </div>
