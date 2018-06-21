@@ -62,13 +62,6 @@ node('controls') {
             gitlabStatusUpdate()
             error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
         }
-
-	def soft_restart = "True"
-	if ( params.browser_type in ['ie', 'edge'] ){
-		soft_restart = "False"
-	}
-	echo "${soft_restart}"
-	echo "${params.browser_type}"
 	
     echo "Определяем рабочую директорию"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
@@ -393,6 +386,11 @@ node('controls') {
                 sudo chmod -R 0777 /home/sbis/Controls
             """
         }
+		def soft_restart = "True"
+        if ( "${params.browser_type}" in ['ie', 'edge'] ){
+			soft_restart = "False"
+		}
+
 		
         writeFile file: "./controls/tests/int/config.ini", text:
             """# UTF-8
