@@ -319,7 +319,7 @@ node('controls') {
                             export WEBDRIVER_remote_host=10.76.159.209
                             export WEBDRIVER_remote_port=4444
                             export test_report=artifacts/test-browser-report.xml
-                            sh ./bin/test-browser1"""
+                            sh ./bin/test-browser"""
                         }
                     )
                 }
