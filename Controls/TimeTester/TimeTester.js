@@ -21,7 +21,7 @@ define('Controls/TimeTester/TimeTester',
             this.boomCfg = cookie.get('boomCfg');
             this.timeTester = cookie.get('timeTester');
          },
-         canAcceptFocus: function () {
+         canAcceptFocus: function() {
             return false;
          }
       });
