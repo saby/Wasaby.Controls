@@ -22,6 +22,7 @@ define('Controls/Button/MenuButton',
        * @control
        * @public
        * @category Button
+       * @demo Controls-demo/Dropdown/MenuVdom
        */
 
       'use strict';

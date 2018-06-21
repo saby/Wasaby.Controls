@@ -16,6 +16,7 @@ define('Controls/Toggle/Switch', [
     * @control
     * @public
     * @category Toggle
+    * @demo Controls-demo/Switch/SwitchDemo
     */
 
    /**

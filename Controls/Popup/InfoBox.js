@@ -17,6 +17,7 @@ define('Controls/Popup/InfoBox',
        * @class Controls/Popup/InfoBox
        * @extends Core/Control
        * @public
+       * @demo Controls-demo/InfoBox/InfoBox
        *
        * @mixin Controls/interface/IStickyOpener
        *
