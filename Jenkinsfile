@@ -297,36 +297,32 @@ node('controls') {
         }
         stage("Unit тесты"){
             if ( unit ){
-                try {
-                    echo "Запускаем юнит тесты"
-                    dir(workspace){
-                        sh "cp -rf ./WIS-git-temp ./controls/sbis3-ws"
-                        sh "cp -rf ./ws_data/WS.Data ./controls/components/"
-                        sh "cp -rf ./ws_data/WS.Data ./controls/"
-                    }
-                    dir("./controls"){
-                        sh "npm config set registry http://npmregistry.sbis.ru:81/"
-                        parallel (
-                            isolated: {
-                                sh "sh ./bin/test-isolated"
-                                sh "mv ./artifacts/xunit-report.xml ./artifacts/test-isolated-report.xml"
-                            },
-                            browser: {
-                                sh """
-                                export test_url_host=${env.NODE_NAME}
-                                export test_server_port=10253
-                                export test_url_port=10253
-                                export WEBDRIVER_remote_enabled=1
-                                export WEBDRIVER_remote_host=10.76.159.209
-                                export WEBDRIVER_remote_port=4444
-                                export test_report=artifacts/test-browser-report.xml
-                                sh ./bin/test-browser"""
-                            }
-                        )
-                    }
-            } catch (err) {
-                currentBuild.result = "FAILURE"
-            } 
+                echo "Запускаем юнит тесты"
+                dir(workspace){
+                    sh "cp -rf ./WIS-git-temp ./controls/sbis3-ws"
+                    sh "cp -rf ./ws_data/WS.Data ./controls/components/"
+                    sh "cp -rf ./ws_data/WS.Data ./controls/"
+                }
+                dir("./controls"){
+                    sh "npm config set registry http://npmregistry.sbis.ru:81/"
+                    parallel (
+                        isolated: {
+                            sh "sh ./bin/test-isolated"
+                            sh "mv ./artifacts/xunit-report.xml ./artifacts/test-isolated-report.xml"
+                        },
+                        browser: {
+                            sh """
+                            export test_url_host=${env.NODE_NAME}
+                            export test_server_port=10253
+                            export test_url_port=10253
+                            export WEBDRIVER_remote_enabled=1
+                            export WEBDRIVER_remote_host=10.76.159.209
+                            export WEBDRIVER_remote_port=4444
+                            export test_report=artifacts/test-browser-report.xml
+                            sh ./bin/test-browser"""
+                        }
+                    )
+                }
         }
     }       
         if ( inte || regr ) { 
@@ -476,17 +472,14 @@ node('controls') {
                 echo "Запускаем интеграционные тесты"
                 stage("Инт.тесты"){
                     if ( inte ){
-                        try {
-                            dir("./controls/tests/int"){
-                                sh """
-                                source /home/sbis/venv_for_test/bin/activate
-                                python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
-                                deactivate
-                                """
-                            }
-                        } catch (err) {
-                            currentBuild.result = "FAILURE"
-                        }    
+                        dir("./controls/tests/int"){
+                            sh """
+                            source /home/sbis/venv_for_test/bin/activate
+                            python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
+                            deactivate
+                            """
+                        }
+                            
                     }
                 }
             },
@@ -494,19 +487,15 @@ node('controls') {
                 stage("Рег.тесты"){
                     echo "Запускаем тесты верстки"
                     if ( regr ){
-                        try {
-                            sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
-                            dir("./controls/tests/reg"){
-                                sh """
-                                    source /home/sbis/venv_for_test/bin/activate
-                                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS http://test-selenium39-unix.unix.tensor.ru:4444/wd/hub --DISPATCHER_RUN_MODE --STAND platform --STREAMS_NUMBER ${stream_number}
-                                    deactivate
-                                """
-                            }
-                        } catch (err) {
-                            currentBuild.result = "FAILURE"
-                            
+                        sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
+                        dir("./controls/tests/reg"){
+                            sh """
+                                source /home/sbis/venv_for_test/bin/activate
+                                python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS http://test-selenium39-unix.unix.tensor.ru:4444/wd/hub --DISPATCHER_RUN_MODE --STAND platform --STREAMS_NUMBER ${stream_number}
+                                deactivate
+                            """
                         }
+                        
                     }
                 }
             }
