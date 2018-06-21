@@ -216,6 +216,7 @@ define('Controls/List/Grid/GridViewModel', [
                items: cfg.items,
                keyProperty: cfg.keyProperty,
                displayProperty: cfg.displayProperty,
+               itemsGroup: cfg.itemsGroup,
                markedKey: cfg.markedKey,
                selectedKeys: cfg.selectedKeys,
                excludedKeys: cfg.excludedKeys,
@@ -434,6 +435,12 @@ define('Controls/List/Grid/GridViewModel', [
             } else {
                current.columns = this._columns;
             }
+
+            if (current.isGroup) {
+               current.groupGridColumnStyle = 'grid-column: 1 / ' + (current.columns.length + 1) + ';';
+               return current;
+            }
+
             current.columnIndex = 0;
             current.resetColumnIndex = function() {
                current.columnIndex = 0;
@@ -487,6 +494,10 @@ define('Controls/List/Grid/GridViewModel', [
             return current;
          },
 
+         toggleGroup: function(group, state) {
+            this._model.toggleGroup(group, state);
+         },
+
          getNext: function() {
             return this._model.getNext();
          },
@@ -505,6 +516,10 @@ define('Controls/List/Grid/GridViewModel', [
 
          setActiveItem: function(itemData) {
             this._model.setActiveItem(itemData);
+         },
+
+         mergeItems: function(items) {
+            this._model.mergeItems(items);
          },
 
          appendItems: function(items) {
