@@ -8,7 +8,7 @@ define(['Controls/List/resources/utils/ItemsUtil', 'WS.Data/Collection/RecordSet
       'use strict';
 
       describe('Controls.List.Utils', function () {
-         var data, cfg1, cfg2, sortFnc, filterFnc, groupFnc;
+         var data, cfg1, sortFnc, filterFnc, groupFnc;
 
          beforeEach(function() {
             data = [
@@ -37,13 +37,8 @@ define(['Controls/List/resources/utils/ItemsUtil', 'WS.Data/Collection/RecordSet
             cfg1 = {
                itemsSortMethod : sortFnc,
                itemsFilterMethod : filterFnc,
-               groupBy : {
+               itemsGroup : {
                   method : groupFnc
-               }
-            },
-            cfg2 = {
-               groupBy : {
-                  field : 'title'
                }
             }
          });
@@ -51,7 +46,7 @@ define(['Controls/List/resources/utils/ItemsUtil', 'WS.Data/Collection/RecordSet
          describe('ItemsUtil', function () {
             var proj;
             it('Flat display Array', function () {
-               proj = ItemsUtil.getDefaultDisplayFlat(data, cfg1);
+               proj = ItemsUtil.getDefaultDisplayFlat(data, cfg1, [cfg1.itemsFilterMethod]);
 
                assert.equal(proj.getSort()[0], sortFnc, 'ItemsSortMethod doesn\'t transfer to display');
                assert.equal(proj.getFilter()[0], filterFnc, 'itemsFilterMethod doesn\'t transfer to display');
@@ -63,12 +58,10 @@ define(['Controls/List/resources/utils/ItemsUtil', 'WS.Data/Collection/RecordSet
                   rawData: data,
                   idProperty : 'id'
                });
-               proj = ItemsUtil.getDefaultDisplayFlat(rs, cfg1);
+               proj = ItemsUtil.getDefaultDisplayFlat(rs, cfg1, [cfg1.itemsFilterMethod]);
                assert.equal(proj.getSort()[0], sortFnc, 'ItemsSortMethod doesn\'t transfer to display');
                assert.equal(proj.getFilter()[0], filterFnc, 'itemsFilterMethod doesn\'t transfer to display');
                assert.equal(proj.getGroup(), groupFnc, 'groupBy doesn\'t transfer to display');
-
-               proj = ItemsUtil.getDefaultDisplayFlat(rs, cfg2);
 
             });
 

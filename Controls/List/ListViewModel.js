@@ -2,8 +2,8 @@
  * Created by kraynovdo on 16.11.2017.
  */
 define('Controls/List/ListViewModel',
-   ['Controls/List/ItemsViewModel', 'Controls/Controllers/Multiselect/Selection', 'WS.Data/Entity/VersionableMixin', 'Controls/List/resources/utils/ItemsUtil'],
-   function(ItemsViewModel, MultiSelection, VersionableMixin, ItemsUtil) {
+   ['Controls/List/ItemsViewModel', 'WS.Data/Entity/VersionableMixin', 'Controls/List/resources/utils/ItemsUtil'],
+   function(ItemsViewModel, VersionableMixin, ItemsUtil) {
       /**
        *
        * @author Крайнов Дмитрий
@@ -171,9 +171,11 @@ define('Controls/List/ListViewModel',
          },
 
          setItemActions: function(item, actions) {
-            var itemById = this.getItemById(item.getId());
-            var collectionItem = itemById ?  itemById.getContents() : item;
-            this._actions[this.getIndexBySourceItem(collectionItem)] = actions;
+            if (item.getId) {
+               var itemById = this.getItemById(item.getId());
+               var collectionItem = itemById ?  itemById.getContents() : item;
+               this._actions[this.getIndexBySourceItem(collectionItem)] = actions;
+            }
          },
          _prepareDisplayItemForAdd: function(item) {
             return ItemsUtil.getDefaultDisplayItem(this._display, item);
@@ -184,7 +186,6 @@ define('Controls/List/ListViewModel',
             var collectionItem = itemById ?  itemById.getContents() : item;
             return this._actions[this.getIndexBySourceItem(collectionItem)];
          },
-
 
          __calcSelectedItem: function(display, selKey, keyProperty) {
 

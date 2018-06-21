@@ -1,8 +1,7 @@
 define('Controls/Calendar/MonthList/CalendarSource', [
    'Core/Deferred',
-   'WS.Data/Source/Base'//,
-   // 'Controls/Calendar/Utils'
-], function(Deferred, Base, /*CalendarUtils*/) {
+   'WS.Data/Source/Base'
+], function(Deferred, Base) {
    'use strict';
 
    /**
@@ -44,7 +43,7 @@ define('Controls/Calendar/MonthList/CalendarSource', [
                   items.push({
                      id: offset + i,
                      year: new Date(offset + i, 0),
-                     months: months,
+                     months: months
 
                      // weeksArray: weeksArray,
                   });

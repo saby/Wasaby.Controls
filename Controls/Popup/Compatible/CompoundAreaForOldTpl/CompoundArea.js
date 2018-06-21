@@ -90,6 +90,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          _beforeMount: function() {
             this._rebuildCompoundControl = debounce.call(this._rebuildCompoundControl, this).bind(this);
+            this._className = 'controls-CompoundArea';
+            this._className += ' ws-float-area'; //Старые шаблоны завязаны селекторами на этот класс.
             this._commandHandler = this._commandHandler.bind(this);
          },
 
@@ -178,7 +180,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
          _close: function(arg) {
             if (this.handle('onBeforeClose', arg) !== false) {
-               this.close();
+               this.close(arg);
             }
          },
          closeHandler: function(e, arg) {
@@ -191,11 +193,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          getParent: function() {
             return null;
          },
-         close: function() {
-            this._notify('close');
+         close: function(arg) {
+            this._notify('close', null, {bubbling: true});
 
-            this.handle('onClose');
-            this.handle('onAfterClose');
+            this.handle('onClose', arg);
+            this.handle('onAfterClose', arg);
          },
          _getTemplateComponent: function() {
             return this._compoundControl;

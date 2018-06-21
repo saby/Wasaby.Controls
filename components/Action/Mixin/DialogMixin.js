@@ -4,9 +4,8 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
    'Core/Deferred',
    'WS.Data/Utils',
    'SBIS3.CONTROLS/ControlHierarchyManager',
-   'Core/IoC',
-   'View/Runner/requireHelper'
-], function(cMerge, Deferred, Utils, ControlHierarchyManager, IoC, requireHelper) {
+   'Core/IoC'
+], function(cMerge, Deferred, Utils, ControlHierarchyManager, IoC) {
    'use strict';
 
    /**
@@ -160,14 +159,13 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                         deps.push('Controls/Popup/Opener/Dialog/DialogController');
                         config._type = 'dialog';
                      }
-
-                     requirejs(deps, function(BaseOpener, CompatibleLayer, Strategy) {
+                     deps.push(config.template);
+                     requirejs(deps, function(BaseOpener, CompatibleLayer, Strategy, cfgTemplate) {
                         CompatibleLayer.load().addCallback(function() {
-                           var CoreTemplate = requireHelper.defined(config.template) && requirejs(config.template);
                            config._initCompoundArea = function(compoundArea) {
                               self._dialog = compoundArea;
                            };
-                           BaseOpener.showDialog(CoreTemplate, config, Strategy);
+                           BaseOpener.showDialog(cfgTemplate, config, Strategy);
                         });
                      });
                   } else {
@@ -175,6 +173,11 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                      requirejs(deps, function(BaseOpener, CompatibleOpener, cfgTemplate) {
                         if (BaseOpener.isVDOMTemplate(cfgTemplate)) {
                            CompatibleOpener._prepareConfigForNewTemplate(config, cfgTemplate);
+                           config.className = 'ws-invisible'; //Пока не построился дочерний vdom  шаблон - скрываем панель, иначе будет прыжок
+                           config.componentOptions._initCompoundArea = function(compoundArea) {
+                              var dialog = self._dialog;
+                              dialog._container.closest('.ws-float-area, .ws-window').removeClass('ws-invisible');
+                           };
                         }
                         self._dialog = new Component(config);
                      });

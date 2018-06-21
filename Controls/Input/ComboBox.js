@@ -3,12 +3,12 @@ define('Controls/Input/ComboBox',
       'Core/Control',
       'tmpl!Controls/Input/ComboBox/ComboBox',
       'Controls/Input/resources/InputRender/BaseViewModel',
-      'Controls/Controllers/SourceController',
       'WS.Data/Utils',
+      'Controls/Input/Dropdown/Util',
       'css!Controls/Input/ComboBox/ComboBox'
    ],
 
-   function(Control, template, BaseViewModel, SourceController, Utils) {
+   function(Control, template, BaseViewModel, Utils, dropdownUtils) {
 
       /**
        * Control "ComboBox"
@@ -25,6 +25,7 @@ define('Controls/Input/ComboBox',
        * @public
        * @category Input
        * @author Золотова Э.Е.
+       * @demo ontrols-demo/Input/ComboBox/ComboBox
        */
 
       'use strict';
@@ -44,6 +45,7 @@ define('Controls/Input/ComboBox',
 
          _beforeMount: function(options) {
             this._onClose = _private.close.bind(this);
+            this._placeholder = options.placeholder;
             this._value = options.value;
             this._simpleViewModel = new BaseViewModel({
                value: this._value
@@ -62,13 +64,20 @@ define('Controls/Input/ComboBox',
          },
 
          _selectedItemsChangedHandler: function(event, selectedItems) {
-            this._isEmptyItem = getPropValue(selectedItems[0], this._options.keyProperty) === null;
-            this._value = getPropValue(selectedItems[0], this._options.displayProperty);
+            var key = getPropValue(selectedItems[0], this._options.keyProperty);
+            this._isEmptyItem = key === null;
+            if (this._isEmptyItem) {
+               this._value = '';
+               this._placeholder = dropdownUtils.prepareEmpty(this._options.emptyText);
+            } else {
+               this._value = getPropValue(selectedItems[0], this._options.displayProperty);
+               this._placeholder = this._options.placeholder;
+            }
             this._simpleViewModel.updateOptions({
                value: this._value
             });
             this._notify('valueChanged', [this._value]);
-            this._notify('selectedKeyChanged', [getPropValue(selectedItems[0], this._options.keyProperty)]);
+            this._notify('selectedKeyChanged', [key]);
             this._isOpen = false;
          }
 

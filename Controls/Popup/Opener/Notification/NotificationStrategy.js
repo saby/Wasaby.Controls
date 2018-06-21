@@ -3,10 +3,10 @@
  */
 define('Controls/Popup/Opener/Notification/NotificationStrategy', [], function() {
    return {
-      getPosition: function() {
+      getPosition: function(offset) {
          return {
-            right: 16,
-            bottom: 16
+            right: 0,
+            bottom: offset
          };
       }
    };
