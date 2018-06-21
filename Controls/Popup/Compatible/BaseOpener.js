@@ -35,8 +35,8 @@ function(cMerge, Random) {
          this._setSizes(cfg, templateClass);
       },
       _prepareConfigForNewTemplate: function(cfg, templateClass) {
-         cfg.componentOptions = cfg.templateOptions || cfg.componentOptions || {};
-         cfg.componentOptions.template = cfg.template;
+         cfg.componentOptions = {innerComponentOptions: cfg.templateOptions || cfg.componentOptions};
+         cfg.componentOptions.innerComponentOptions.template = cfg.template;
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea';
          cfg.animation = 'off';
 
@@ -53,7 +53,8 @@ function(cMerge, Random) {
                isStack: cfg._type === 'stack',
                target: cfg.target,
                modal: cfg.isModal,
-               handlers: cfg.handlers
+               handlers: cfg.handlers,
+               border: false
             },
             mode: (cfg._type === 'stack' || cfg._type === 'sticky') ? 'floatArea' : 'dialog'
          });
@@ -67,10 +68,6 @@ function(cMerge, Random) {
 
          if (cfg.corner && cfg.corner.vertical === 'bottom') {
             newCfg.dialogOptions.verticalAlign = 'bottom';
-         }
-
-         if (cfg.hideCross === true) {
-            newCfg.dialogOptions.border = false;
          }
 
          if (cfg.offset) {

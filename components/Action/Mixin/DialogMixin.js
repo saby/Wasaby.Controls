@@ -4,9 +4,8 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
    'Core/Deferred',
    'WS.Data/Utils',
    'SBIS3.CONTROLS/ControlHierarchyManager',
-   'Core/IoC',
-   'View/Runner/requireHelper'
-], function(cMerge, Deferred, Utils, ControlHierarchyManager, IoC, requireHelper) {
+   'Core/IoC'
+], function(cMerge, Deferred, Utils, ControlHierarchyManager, IoC) {
    'use strict';
 
    /**

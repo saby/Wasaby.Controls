@@ -16,6 +16,7 @@ define('Controls/Toggle/Checkbox', [
     * @control
     * @public
     * @category Toggle
+    * @demo Controls-demo/Checkbox/Checkbox
     */
 
    /**

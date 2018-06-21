@@ -1,8 +1,7 @@
-define('Controls/Container/Dropdown',
+define('Controls/Dropdown/Container',
    [
       'Core/Control',
-      'tmpl!Controls/Container/Dropdown/Dropdown',
-      'tmpl!Controls/Input/Dropdown/resources/defaultContentTemplate',
+      'tmpl!Controls/Dropdown/Container/Container',
       'Controls/Controllers/SourceController',
       'Core/helpers/Object/isEqual',
       'Core/helpers/Object/isEmpty',
@@ -10,19 +9,84 @@ define('Controls/Container/Dropdown',
       'Controls/Input/Dropdown/Util'
    ],
 
-   function(Control, template, defaultContentTemplate, SourceController, isEqual, isEmpty, Chain, dropdownUtils) {
-
-      /**
-          * Container for dropdown lists
-          *
-          * @class Controls/Container/Dropdown
-          * @extends Core/Control
-          * @author Золотова Э.Е.
-          * @control
-          * @public
-          */
+   function(Control, template, SourceController, isEqual, isEmpty, Chain, dropdownUtils) {
 
       'use strict';
+
+      /**
+       * Container for dropdown lists
+       *
+       * @class Controls/Dropdown/Container
+       * @extends Core/Control
+       * @mixes Controls/interface/ISource
+       * @mixes Controls/Button/interface/ICaption
+       * @mixes Controls/Button/interface/IIcon
+       * @author Золотова Э.Е.
+       * @control
+       * @public
+       */
+
+      /**
+       * @event Controls/Dropdown/Container#selectedItemsChanged Occurs when the selected items change.
+       */
+
+      /**
+       * @name Controls/Dropdown/Container#nodeProperty
+       * @cfg {String} Name of the field describing the type of the node (list, node, hidden node).
+       */
+
+      /**
+       * @name Controls/Dropdown/Container#parentProperty
+       * @cfg {String} Name of the field that contains information about parent node.
+       */
+
+      /**
+       * @name Controls/Dropdown/Container#headTemplate
+       * @cfg {Function} Template that will be rendered above the list.
+       */
+
+      /**
+       * @name Controls/Dropdown/Container#contentTemplate
+       * @cfg {Function} Template that will be render the list.
+       */
+
+      /**
+       * @name Controls/Dropdown/Container#footerTemplate
+       * @cfg {Function} Template that will be rendered below the list.
+       */
+
+      /**
+       * @name Controls/Dropdown/Container#selectedKeys
+       * @cfg {Array} Array of selected items' keys.
+       */
+
+      /**
+       * @name Controls/Dropdown/Container#headConfig
+       * @cfg {Object} Menu style menuStyle
+       * @variant defaultHead The head with icon and caption
+       * @variant duplicateHead The icon set under first item
+       * @variant cross Menu have cross in left top corner
+       */
+
+      /**
+       * @name Controls/Dropdown/Container#showHeader
+       * @cfg {Boolean} Display the header
+       * @variant true The header is displayed.
+       * @variant false The header is not displayed.
+       */
+
+      /**
+       * @name Controls/Dropdown/Container#emptyText
+       * @cfg {String} Add an empty item to the list.
+       * @variant true Add empty item with text 'Не выбрано'
+       */
+
+      /**
+       * @name Controls/Dropdown/Container#typeShadow
+       * @cfg {String} Specifies the type of shadow around the popup.
+       * @variant default Default shadow
+       * @variant suggestionsContainer Shadow on the right, left, bottom
+       */
 
       var _private = {
          loadItems: function(instance, source, selectedKeys, keyProperty) {

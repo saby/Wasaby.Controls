@@ -15,6 +15,7 @@ define('Controls/Popup/Opener/InfoBox',
        * @public
        * @category Popup
        * @author Степин Павел Владимирович
+       * @demo Controls-demo/InfoBox/InfoBox
        */
 
       /**
