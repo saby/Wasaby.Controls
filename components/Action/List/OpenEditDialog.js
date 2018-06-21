@@ -681,23 +681,41 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
 
       _getDialogConfig: function () {
          var config = OpenEditDialog.superclass._getDialogConfig.apply(this, arguments),
-             self = this;
-         return cMerge(config, {
-            isFormController: true,
-            handlers: {
-               onAfterClose: function (e, meta) {
-                  self._notifyOnExecuted(meta);
-                  self._clearVariables();
-               },
-               onBeforeShow: function() {
-                  self._hideLoadingIndicator();
-                  self._notify('onBeforeShow', this);
-               },
-               //При множественном клике панель может начать закрываться раньше, чем откроется, в этом случае
-               //onAfterClose не будет, смотрим на destroy
-               onDestroy: self._clearVariables.bind(self)
+             self = this,
+             handlers = {
+                onAfterClose: function (e, meta) {
+                   self._notifyOnExecuted(meta);
+                   self._clearVariables();
+                },
+                onBeforeShow: function() {
+                   self._hideLoadingIndicator();
+                   self._notify('onBeforeShow', this);
+                },
+                //При множественном клике панель может начать закрываться раньше, чем откроется, в этом случае
+                //onAfterClose не будет, смотрим на destroy
+                onDestroy: self._clearVariables.bind(self)
+             },
+             handler;
+         
+         config.isFormController = true;
+         
+         if (config.hasOwnProperty('handlers')) {
+            for (var i in handlers) {
+               if (config.handlers[i]) {
+                  if (Array.isArray(config.handlers[i])) {
+                     config.handlers[i].push(handlers[i]);
+                  } else {
+                     config.handlers[i] = [config.handlers[i], handlers[i]];
+                  }
+               } else {
+                  config.handlers[i] = handlers[i];
+               }
             }
-         });
+         } else {
+            config.handlers = handlers;
+         }
+         
+         return config;
       },
 
       _notifyOnExecuted: function(meta) {
