@@ -95,7 +95,11 @@ define('Controls/Popup/Opener/Sticky/StickyController',
          },
 
          elementUpdated: function(cfg, container) {
-            container.classList.remove('controls-Sticky__reset-margins'); //Снимем класс, чтобы взять новое значение отступов
+            /* Снимаем установленные значения, влияющие на размер и позиционирование, чтобы получить размеры контента */
+            container.classList.remove('controls-Sticky__reset-margins');
+            container.style.width = 'auto';
+            container.style.height = 'auto';
+
             this.prepareConfig(cfg, container);
             container.classList.add('controls-Sticky__reset-margins'); //После замеров стилей возвращаем
          },
