@@ -3963,7 +3963,7 @@ define('SBIS3.CONTROLS/ListView',
             if (this._loadingIndicator && !this._loader) {
                this.getContainer().removeClass('controls-ListView__indicatorVisible');
             }
-            this._container.removeClass('controls-ListView-scrollIndicator__down');
+            this.getContainer().removeClass('controls-ListView-scrollIndicator__down');
          },
          _createLoadingIndicator : function () {
             this._loadingIndicator = $('> .controls-ListView-scrollIndicator', this._container);
