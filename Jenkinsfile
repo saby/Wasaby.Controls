@@ -319,7 +319,7 @@ node('controls') {
                             export WEBDRIVER_remote_host=10.76.159.209
                             export WEBDRIVER_remote_port=4444
                             export test_report=artifacts/test-browser-report.xml
-                            sh ./bin/test-browser"""
+                            sh ./bin/test-browser1"""
                         }
                     )
                 }
@@ -475,7 +475,7 @@ node('controls') {
                         dir("./controls/tests/int"){
                             sh """
                             source /home/sbis/venv_for_test/bin/activate
-                            python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
+                            python smoke_test.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
                             deactivate
                             """
                         }
@@ -491,7 +491,7 @@ node('controls') {
                         dir("./controls/tests/reg"){
                             sh """
                                 source /home/sbis/venv_for_test/bin/activate
-                                python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS http://test-selenium39-unix.unix.tensor.ru:4444/wd/hub --DISPATCHER_RUN_MODE --STAND platform --STREAMS_NUMBER ${stream_number}
+                                python smoke_test.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS http://test-selenium39-unix.unix.tensor.ru:4444/wd/hub --DISPATCHER_RUN_MODE --STAND platform --STREAMS_NUMBER ${stream_number}
                                 deactivate
                             """
                         }
