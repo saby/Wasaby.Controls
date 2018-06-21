@@ -40,7 +40,7 @@ function(cMerge, Random) {
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea';
          cfg.animation = 'off';
 
-         if (cfg.onResultHandler) {
+         if (cfg.onResultHandler) { //передаем onResult - колбэк, объявленный на opener'e, в compoundArea.
             cfg.componentOptions.onResultHandler = cfg.onResultHandler;
          }
 

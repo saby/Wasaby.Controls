@@ -20,7 +20,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
          $protected: {
             _options: {
                isTMPL: function(template) {
-                  return template.indexOf('tmpl!') === 0;
+                  return template.indexOf('tmpl!') === 0; //Если передали просто tmpl в качестве шаблона - нельзя вызывать createControl
                }
             }
          },
@@ -34,6 +34,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                if (!self._options.isTMPL(self._options.innerComponentOptions.template)) {
                   self._vDomTemplate = control.createControl(ctr, self._options.innerComponentOptions, $('.vDomWrapper', self.getContainer()));
                   var replaceVDOMContainer = function() {
+                     //Отлавливаем события с дочернего vdom компонента
                      self._getRootContainer().eventProperties = {
                         'on:close': [{
                            fn: self._onCloseHandler,
