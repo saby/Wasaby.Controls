@@ -429,6 +429,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
                return;
             }
             if (this._options.target) {
+               this._fixPopupCorner();
                var offset = {
                      top: this._targetSizes.offset.top,
                      left: this._targetSizes.offset.left
@@ -462,6 +463,16 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             //Если изменились размеры, то сообщим детям. актуально для ScrollContainer
             if (recalcFlag) {
                this._resizeChilds();
+            }
+         }
+      },
+      _fixPopupCorner: function() {
+         //На ios в горизонтальной ориентации маленькая высота экрана.
+         //В ситуации, когда попап не влезает по ширине и по высоте происходит двойной разворот углов, который в итоге отрабаывает
+         //некорректно. правлю вручную
+         if (this._options._fixPopupRevertCorner && detection.isMobileIOS) {
+            if (this._options.corner === 'tr') {
+               this._options.horizontalAlign.side = 'left';
             }
          }
       },
