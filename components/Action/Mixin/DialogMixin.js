@@ -130,7 +130,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
       },
 
       _createComponent: function(config, meta) {
-         var componentName = (meta.mode == 'floatArea') ? 'Lib/Control/FloatArea/FloatArea' : 'Lib/Control/Dialog/Dialog',
+         var componentName = this._getComponentName(meta),
             self = this,
             resetWidth;
          
@@ -187,6 +187,18 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                }
             }.bind(this));
 
+         }
+      },
+
+      _getComponentName: function(meta) {
+         switch (meta.mode) {
+            case 'floatArea':
+               return 'Lib/Control/FloatArea/FloatArea';
+            case 'recordFloatArea':
+               //Для тех, кто переходит на vdom и на старой странице юзает recordFloatArea. Чтобы пользовались единой оберткой - action'ом.
+               return 'Deprecated/Controls/RecordFloatArea/RecordFloatArea';
+            default:
+               return 'Lib/Control/Dialog/Dialog';
          }
       },
       
