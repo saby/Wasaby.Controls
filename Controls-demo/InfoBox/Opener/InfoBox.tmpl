@@ -1,0 +1,72 @@
+<div class="controls-InfoBoxDemo">
+
+   <style>
+      .controls-InfoBoxDemo {
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+      }
+      .controls-InfoBoxDemo-block {
+         margin-top: 32px;
+         text-align: center;
+      }
+      .controls-InfoBoxDemo-targets {
+         display: flex;
+         flex-wrap: wrap;
+         max-width: 626px;
+      }
+      .controls-InfoBoxDemo-target {
+         background: #69b0ff;
+         color: #fff;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         margin: 20px;
+         cursor: pointer;
+         position: relative;
+      }
+      .controls-InfoBoxDemo-target-standard {
+         width: 64px;
+         height: 64px;
+      }
+      .controls-InfoBoxDemo-target-mini {
+         width: 18px;
+         height: 18px;
+      }
+      .controls-InfoBoxDemo-target:hover {
+         background: #489dfc;
+      }
+      .controls-InfoBoxDemo-min-targets-mode {
+         position: absolute;
+         top: 64px;
+         right: 64px;
+      }
+      .controls-InfoBoxDemo-min-targets-mode-button {
+         padding: 4px;
+         background: #76d676;
+         cursor:pointer;
+      }
+   </style>
+
+   <Controls.Popup.Opener.InfoBox name="IBOpener"></Controls.Popup.Opener.InfoBox>
+
+   <ws:for data="block in _blocks">
+      <div class="controls-InfoBoxDemo-block">
+         <div class="controls-InfoBoxDemo-header">{{block.header}}</div>
+      </div>
+      <div class="controls-InfoBoxDemo-targets">
+         <ws:for data="item in block.items">
+            <div class="controls-InfoBoxDemo-target {{_minTargetMode ? 'controls-InfoBoxDemo-target-mini' : 'controls-InfoBoxDemo-target-standard'}}" on:mouseenter="_open(item.cfg)">
+               {{item.text}}
+            </div>
+         </ws:for>
+      </div>
+   </ws:for>
+
+   <div class="controls-InfoBoxDemo-min-targets-mode">Режим маленьких таргетов:
+      <span class="controls-InfoBoxDemo-min-targets-mode-button" on:click="_toggleMinTargetMode()">
+         {{_minTargetMode ? 'ВЫКЛ' : 'ВКЛ'}}
+      </span>
+   </div>
+
+</div>
