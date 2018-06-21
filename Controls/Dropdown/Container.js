@@ -62,17 +62,17 @@ define('Controls/Dropdown/Container',
 
       /**
        * @name Controls/Dropdown/Container#headConfig
-       * @cfg {String} Отображения меню
-       * @variant defaultHead Стандартный заголовок
-       * @variant duplicateHead Иконка вызывающего элемента дублрируется в первый пункт. Заголовка с фоном нет.
-       * @variant cross Добавляется крест закрытия. Заголовка с фоном нет.
+       * @cfg {Object} Menu style menuStyle
+       * @variant defaultHead The head with icon and caption
+       * @variant duplicateHead The icon set under first item
+       * @variant cross Menu have cross in left top corner
        */
 
       /**
        * @name Controls/Dropdown/Container#showHeader
-       * @cfg {Boolean} Показывать ли заголовок в меню.
-       * @variant true Заголовок есть
-       * @variant false Заголовка нет.
+       * @cfg {Boolean} Display the header
+       * @variant true The header is displayed.
+       * @variant false The header is not displayed.
        */
 
       /**
