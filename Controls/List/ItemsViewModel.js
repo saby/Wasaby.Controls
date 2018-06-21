@@ -2,8 +2,8 @@
  * Created by kraynovdo on 16.11.2017.
  */
 define('Controls/List/ItemsViewModel',
-   ['Controls/List/BaseViewModel', 'Controls/List/resources/utils/ItemsUtil', 'Core/core-instance', 'WS.Data/Source/ISource'],
-   function(BaseViewModel, ItemsUtil, cInstance, ISource) {
+   ['Controls/List/BaseViewModel', 'Controls/List/resources/utils/ItemsUtil', 'Core/core-instance', 'WS.Data/Source/ISource', 'Controls/Constants'],
+   function(BaseViewModel, ItemsUtil, cInstance, ISource, ControlsConstants) {
 
       /**
        *
@@ -18,6 +18,20 @@ define('Controls/List/ItemsViewModel',
                (newList.getModel() === oldList.getModel()) &&
                (Object.getPrototypeOf(newList).constructor == Object.getPrototypeOf(newList).constructor) &&
                (Object.getPrototypeOf(newList.getAdapter()).constructor == Object.getPrototypeOf(oldList.getAdapter()).constructor);
+         },
+         displayFilterGroups: function(item, index, displayItem) {
+            return item === ControlsConstants.view.hiddenGroup || !item.get || !this.collapsedGroups[displayItem.getOwner().getGroup()(item, index, displayItem)];
+         },
+         getDisplayFilter: function(data, cfg) {
+            var
+               filter = [];
+            if (cfg.itemsGroup) {
+               filter.push(_private.displayFilterGroups.bind({ collapsedGroups: data.collapsedGroups }));
+            }
+            if (cfg.itemsFilterMethod) {
+               filter.push(cfg.itemsFilterMethod);
+            }
+            return filter;
          }
       };
       var ItemsViewModel = BaseViewModel.extend({
@@ -26,10 +40,12 @@ define('Controls/List/ItemsViewModel',
          _items: null,
          _curIndex: 0,
          _onCollectionChangeFnc: null,
+         _collapsedGroups: null,
 
          constructor: function(cfg) {
             ItemsViewModel.superclass.constructor.apply(this, arguments);
             this._onCollectionChangeFnc = this._onCollectionChange.bind(this);
+            this._collapsedGroups = {};
             if (cfg.items) {
                if (cfg.itemsReadyCallback) {
                   cfg.itemsReadyCallback(cfg.items);
@@ -41,11 +57,9 @@ define('Controls/List/ItemsViewModel',
          },
 
          _prepareDisplay: function(items, cfg) {
-            if (cfg.display) {
-               return cfg.display;
-            } else {
-               return ItemsUtil.getDefaultDisplayFlat(items, cfg);
-            }
+            var
+               filter = this.getDisplayFilter(this.prepareDisplayFilterData(), cfg);
+            return ItemsUtil.getDefaultDisplayFlat(items, cfg, filter);
          },
 
          reset: function() {
@@ -70,15 +84,48 @@ define('Controls/List/ItemsViewModel',
          },
 
          _getItemDataByItem: function(dispItem) {
+            var
+               itemData = {
+                  getPropValue: ItemsUtil.getPropertyValue,
+                  keyProperty: this._options.keyProperty,
+                  displayProperty: this._options.displayProperty,
+                  index: this._display.getIndex(dispItem),
+                  item: dispItem.getContents(),
+                  dispItem: dispItem,
+                  key: ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.keyProperty)
+               };
+            if (this._options.itemsGroup) {
+               if (itemData.item === ControlsConstants.view.hiddenGroup || !itemData.item.get) {
+                  itemData.isGroup = true;
+                  itemData.isHiddenGroup = itemData.item === ControlsConstants.view.hiddenGroup;
+                  itemData.isGroupExpanded = !this._collapsedGroups[itemData.item];
+               }
+            }
+            return itemData;
+         },
+
+         toggleGroup: function(group, state) {
+            if (typeof state === 'undefined') {
+               state = typeof this._collapsedGroups[group] !== 'undefined';
+            }
+            if (state) {
+               delete this._collapsedGroups[group];
+            } else {
+               this._collapsedGroups[group] = true;
+            }
+            this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
+            this._nextVersion();
+            this._notify('onListChange');
+         },
+
+         prepareDisplayFilterData: function() {
             return {
-               getPropValue: ItemsUtil.getPropertyValue,
-               keyProperty: this._options.keyProperty,
-               displayProperty: this._options.displayProperty,
-               index: this._display.getIndex(dispItem),
-               item: dispItem.getContents(),
-               dispItem: dispItem,
-               key: ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.keyProperty)
+               collapsedGroups: this._collapsedGroups
             };
+         },
+
+         getDisplayFilter: function(data, cfg) {
+            return _private.getDisplayFilter(data, cfg);
          },
 
          getNext: function() {
@@ -154,6 +201,12 @@ define('Controls/List/ItemsViewModel',
          },
          appendItems: function(items) {
             this._items.append(items);
+         },
+
+         mergeItems: function(items) {
+            this._items.merge(items, {
+               remove: false
+            });
          },
 
          prependItems: function(items) {
