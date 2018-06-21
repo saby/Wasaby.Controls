@@ -369,8 +369,14 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
                this._createFixedItem(item, styles);
             }
          } else {
-            item.css(styles);
+            this._setDynamicStyles(item, styles);
          }
+      },
+
+      _setDynamicStyles: function(item, styles) {
+         var titleHeight = $('.controls-CompositeView__tileTitle', item).outerHeight(true) - (item.hasClass('controls-CompositeView__item-withTitle') ? 25 : 0);
+         item.css(styles);
+         $('.controls-CompositeView__tileContainer', item).css('padding-bottom', titleHeight);
       },
 
       _createFixedItem: function(item, styles) {
@@ -388,7 +394,8 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
                itemClone.empty();
                itemClone.insertAfter(item);
 
-               item.css(styles).css(position).css({
+               this._setDynamicStyles(item, styles);
+               item.css(position).css({
                   position: 'fixed',
                   width: item.width()
                });
@@ -465,6 +472,7 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
       _resetHoveredStyles: function(item) {
          //Сбрасываем установленные ранее стили для ховера, т.к. элемент мог измениться и перерисоваться.
          item.css('padding', '').css('margin', '');
+         $('.controls-CompositeView__tileContainer', item).css('padding', '').css('margin', '');
       },
 
       _updateHeadAfterInit: function() {

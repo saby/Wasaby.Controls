@@ -5,7 +5,7 @@ define('Controls/Application/HeadDataContext', [
 ], function(DataContext, Deferred, cookie) {
    var bundles;
    try {
-      bundles = require('json!WS.Core/ext/requirejs/bundles');
+      bundles = require('json!WS.Core/ext/requirejs/bundlesRoute');
    } catch (e) {
       bundles = {};
    }

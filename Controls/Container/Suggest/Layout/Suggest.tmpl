@@ -1,41 +1,36 @@
 <div class="controls-SuggestV">
     <ws:template name="suggestTpl">
-        <Controls.Container.Async templateName="Controls/Container/Suggest/Layout/_SuggestListWrapper">
-            <ws:partial template="{{'Controls/Container/Suggest/Layout/_SuggestListWrapper'}}"
-                        on:itemClick="_select()"
-                        on:tabsSelectedKeyChanged="_tabsSelectedKeyChanged()"
-                        templateName="{{_options.suggestTemplate.templateName}}"
-                        templateOptions="{{_options.suggestTemplate.templateOptions}}"
-                        searchEndCallback="{{_searchEnd}}"
-                        searchStartCallback="{{_searchStart}}"
-                        emptyTemplate="{{_options.emptyTemplate}}"
-                        source="{{_options.source}}"
-                        minSearchLength="{{_options.autoDropDown ? 0 : _options.minSearchLength}}"
-                        navigation="{{_options.navigation}}"
-                        searchParam="{{_options.searchParam}}"
-                        tabsSelectedKey="{{_tabsSelectedKey}}"/>
-        </Controls.Container.Async>
+        <ws:partial template="{{'Controls/Container/Suggest/Layout/_SuggestListWrapper'}}"
+                    on:itemClick="_select()"
+                    on:tabsSelectedKeyChanged="_tabsSelectedKeyChanged()"
+                    templateName="{{_options.suggestTemplate.templateName}}"
+                    templateOptions="{{_options.suggestTemplate.templateOptions}}"
+                    searchEndCallback="{{_searchEnd}}"
+                    searchStartCallback="{{_searchStart}}"
+                    emptyTemplate="{{_options.emptyTemplate}}"
+                    source="{{_options.source}}"
+                    minSearchLength="{{_options.autoDropDown ? 0 : _options.minSearchLength}}"
+                    navigation="{{_options.navigation}}"
+                    searchParam="{{_options.searchParam}}"
+                    tabsSelectedKey="{{_tabsSelectedKey}}"
+        />
     </ws:template>
 
     <ws:partial template="{{_options.content}}" on:valueChanged="_changeValueHandler()" on:activated="_inputActivated()" attr:class="controls-Suggest-Text_style_{{_options.suggestStyle}}"/>
 
     <ws:if data="{{_options.suggestState}}">
         <div class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer-style-{{_options.suggestStyle}} controls-Suggest__suggestionsContainer-orient{{_orient}}" name="suggestionsContainer">
-            <ws:if data="{{_options.suggestStyle === 'overInput'}}">
-                <Controls.Container.Async templateName="Controls/Button/Close">
-                    <ws:partial template="{{'Controls/Button/Close'}}" attr:class="controls-Suggest-close" on:click="_close()"/>
-                </Controls.Container.Async>
-            </ws:if>
+        <ws:if data="{{_options.suggestStyle === 'overInput'}}">
+            <ws:partial template="{{'Controls/Button/Close'}}" attr:class="controls-Suggest-close" on:click="_close()"/>
+        </ws:if>
 
         <ws:partial template="suggestTpl"/>
 
-            <ws:if data="{{_isFooterShown}}">
-                <Controls.Container.Async templateName="{{ _options.footerTemplate.templateName }}">
-                    <ws:partial template="{{ _options.footerTemplate.templateName }}"
-                                on:click="_showAllClick()"
-                                hasMore="{{_searchResult ? _searchResult.hasMore}}"/>
-                </Controls.Container.Async>
-            </ws:if>
+        <ws:if data="{{_isFooterShown}}">
+            <ws:partial template="{{ _options.footerTemplate.templateName }}"
+                        on:click="_showAllClick()"
+                        hasMore="{{_searchResult ? _searchResult.hasMore}}"/>
+        </ws:if>
         </div>
     </ws:if>
 
