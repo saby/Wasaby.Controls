@@ -694,8 +694,7 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
                 //При множественном клике панель может начать закрываться раньше, чем откроется, в этом случае
                 //onAfterClose не будет, смотрим на destroy
                 onDestroy: self._clearVariables.bind(self)
-             },
-             handler;
+             };
          
          config.isFormController = true;
          
