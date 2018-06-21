@@ -100,34 +100,27 @@ module.exports = function less1by1Task(grunt) {
             grunt.log.ok(`Ищем файл: ${lessName}.less`);
          }
 
-
          let taskDone = this.async();
          helpers.recurse(
             rootPath,
             function(filepath, cb) {
                let relpath = path.relative(rootPath, filepath);
+
                if (
                   helpers.validateFile(relpath, [
-                     `components/**/${lessName}.less`
-                  ]) ||
-                  helpers.validateFile(relpath, [`demo/**/${lessName}.less`]) ||
-                  helpers.validateFile(relpath, [
-                     `pages/**/${lessName}.less`
-                  ]) ||
-                  helpers.validateFile(relpath, [
-                     `Controls-demo/**/${lessName}.less`
-                  ]) ||
-                  helpers.validateFile(relpath, [
+                     `components/**/${lessName}.less`,
+                     `demo/**/${lessName}.less`,
+                     `pages/**/${lessName}.less`,
+                     `Controls-demo/**/${lessName}.less`,
                      `Controls/**/${lessName}.less`
                   ])
                ) {
+
                   foundFile = true;
                   fs.readFile(filepath, function readFileCb(
                      readFileError,
                      data
                   ) {
-
-
                      if (!~filepath.indexOf('\\_')) {
                         processLessFile(data, filepath);
                      }
