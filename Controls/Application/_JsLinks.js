@@ -33,7 +33,7 @@ define('Controls/Application/_JsLinks',
             return innerDef;
          },
          getCssNameForDefine: function(cssLink) {
-            if (cssLink.indexOf('resources/') === 0) {
+            if (cssLink.indexOf('resources/') === 0 || cssLink.indexOf('/resources/') === 0) {
                return cssLink.split('resources/')[1].replace(/\.min$/, '');
             } else {
                return cssLink;
