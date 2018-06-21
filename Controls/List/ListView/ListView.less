@@ -57,37 +57,35 @@
    display: flex;
 }
 .controls-ListView__groupContent:before, .controls-ListView__groupContent:after {
-   height: @height_ListView-GroupBy / 2;
-   margin-bottom: @height_ListView-GroupBy / 2;
-   border-bottom: @default-border-width solid @color_ListView-GroupBy_separator;
+   height: @height_ListView-group / 2;
+   margin-bottom: @height_ListView-group / 2;
+   border-bottom: @height_ListView-group-separator solid @color_ListView-group-separator;
    width: 100%;
    content: '';
 }
 .controls-ListView__groupText {
-   line-height: @height_ListView-GroupBy;
    display: inline-block;
-   padding: @padding_ListView-GroupBy_separator;
-   background-color: @background-color_ListView-GroupBy_text;
-   color: @color_ListView-GroupBy_text;
-   font-size: @font-size_ListView-GroupBy_text;
+   padding: @spacing_ListView-group-between-text-separator;
+   color: @color_ListView-group-text;
+   font-size: @font-size_ListView-group-text;
    white-space: nowrap;
    text-align: center;
    flex-shrink: 0;
    user-select: none;
 }
-.controls-ListView__groupExpander:before {
+.controls-ListView__groupExpandable:before {
    cursor: pointer;
-   width: @font-size_ListView-GroupBy_expander;
-   font-size: @font-size_ListView-GroupBy_expander;
-   margin: @margin_ListView-GroupBy_separatorCollapse;
+   width: @width_ListView-group-expander;
+   font-size: @font-size_ListView-group-expander;
+   padding: @spacing_ListView-group-between-text-expander;
    content: '\e000';
 }
-.controls-ListView__groupExpander:hover {
-   color: @color_ListView-GroupBy_text_hovered;
+.controls-ListView__groupExpandable:hover {
+   color: @color_ListView-group-text_hovered;
 }
-.controls-ListView__groupExpander_collapsed:before {
+.controls-ListView__groupExpandable_collapsed:before {
    content: '\e013';
 }
-.controls-ListView__hiddenGroup {
+.controls-ListView__groupHidden {
    display: none;
 }
