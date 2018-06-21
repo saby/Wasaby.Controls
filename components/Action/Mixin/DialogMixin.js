@@ -288,21 +288,8 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
          this._saveAutoHideState(meta, config);
          config.componentOptions = this._buildComponentConfig(meta);
          config.handlers = config.handlers || {};
-         var handlers = {
-            onAfterClose: function(e, result) {
-               self._isExecuting = false;
-               self._finishExecuteDeferred();
-               self._notifyOnExecuted(meta, result);
-               self._dialog = undefined;
-            },
-            onBeforeShow: function() {
-               self._notify('onBeforeShow', this);
-            },
-            onAfterShow: function() {
-               self._isExecuting = false;
-               self._notify('onAfterShow', this);
-            }
-         };
+         var handlers = this._getDialogHandlers(meta);
+         
          for (var name in handlers) {
             if (handlers.hasOwnProperty(name)) {
                if (config.handlers.hasOwnProperty(name) && config.handlers[name] instanceof Array) {
@@ -317,7 +304,26 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
 
          return config;
       },
-
+      
+      _getDialogHandlers: function(meta) {
+         var self = this;
+         return {
+            onAfterClose: function(e, result) {
+               self._isExecuting = false;
+               self._finishExecuteDeferred();
+               self._notifyOnExecuted(meta, result);
+               self._dialog = undefined;
+            },
+            onBeforeShow: function() {
+               self._notify('onBeforeShow', this);
+            },
+            onAfterShow: function() {
+               self._isExecuting = false;
+               self._notify('onAfterShow', this);
+            }
+         };
+      },
+      
       _saveAutoHideState: function(meta, config) {
          this._openedPanelConfig = {
             autoHide: config.autoHide !== undefined ? config.autoHide : true,
