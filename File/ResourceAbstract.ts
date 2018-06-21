@@ -1,14 +1,32 @@
 /// <amd-module name="File/ResourceAbstract" />
-
 import IResource = require("IResource");
+
+export interface FileInfo {
+    name?: string;
+    size?: number;
+    isDirectory?: boolean;
+    type?: string;
+    [propName: string]: any;
+}
+
+/**
+ * @typedef {Object} File/FileInfo Информация о файле
+ * @property {String} [name] Имя
+ * @property {String} [type]  Тип
+ * @property {Boolean} [isDirectory] Является ли директорией
+ * @property {Number} [size] Размер
+ */
 
 /**
  * @class
  * @abstract
  * @implements File/IResource
+ * @name File/ResourceAbstract
  */
-abstract class ResourceAbstract implements IResource {
-    protected _meta: object;
+export abstract class ResourceAbstract implements IResource {
+    protected _meta?: object;
+    protected _info?: FileInfo;
+
     /**
      * Возвращает дополнительную информацию по ресурсу
      * @return {Object}
@@ -21,6 +39,7 @@ abstract class ResourceAbstract implements IResource {
         }
         return this._meta;
     }
+
     /**
      * Устанавливает дополнительную информацию по ресурсу
      * @param {Object} meta
@@ -30,6 +49,24 @@ abstract class ResourceAbstract implements IResource {
     setMeta(meta: object) {
         this._meta = meta;
     }
-}
 
-export = ResourceAbstract;
+    /**
+     * Возвращает информацию о файле, если такая имеется
+     * @name File/ResourceAbstract#getFileInfo
+     * @return {FileInfo}
+     */
+    getFileInfo(): FileInfo {
+        if (!this._info) {
+            this._info = {};
+        }
+        return this._info;
+    }
+    /**
+     * Возвращает имя файла
+     * @name File/ResourceAbstract#getName
+     * @return {String}
+     */
+    getName(): string {
+        return this.getFileInfo().name || "";
+    }
+}

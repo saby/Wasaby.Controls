@@ -1,4 +1,4 @@
-define("File/HttpFileLink", ["require", "exports", "tslib", "File/ResourceAbstract"], function (require, exports, tslib_1, ResourceAbstract) {
+define("File/HttpFileLink", ["require", "exports", "tslib", "File/ResourceAbstract"], function (require, exports, tslib_1, ResourceAbstract_1) {
     "use strict";
     /**
      * Класс - обёртка над http-ссылкой на файл
@@ -12,14 +12,16 @@ define("File/HttpFileLink", ["require", "exports", "tslib", "File/ResourceAbstra
         tslib_1.__extends(HttpFileLink, _super);
         /**
          * @param {String} fileLink Ссылка на ресурс
-         * @param {*} [meta] Дополнительные мета-данные
+         * @param {*} [_meta] Дополнительные мета-данные
+         * @param {FileInfo} [_info] Информация о файле
          * @constructor
          * @name File/HttpFileLink
          */
-        function HttpFileLink(fileLink, meta) {
+        function HttpFileLink(fileLink, _meta, _info) {
             var _this = _super.call(this) || this;
             _this.fileLink = fileLink;
-            _this._meta = meta;
+            _this._meta = _meta;
+            _this._info = _info;
             return _this;
         }
         /**
@@ -32,6 +34,6 @@ define("File/HttpFileLink", ["require", "exports", "tslib", "File/ResourceAbstra
             return this.fileLink;
         };
         return HttpFileLink;
-    }(ResourceAbstract));
+    }(ResourceAbstract_1.ResourceAbstract));
     return HttpFileLink;
 });

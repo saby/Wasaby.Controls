@@ -1,5 +1,5 @@
 /// <amd-module name="File/HttpFileLink" />
-import ResourceAbstract = require("File/ResourceAbstract");
+import {ResourceAbstract, FileInfo} from 'File/ResourceAbstract';
 /**
  * Класс - обёртка над http-ссылкой на файл
  * @class
@@ -11,13 +11,17 @@ import ResourceAbstract = require("File/ResourceAbstract");
 class HttpFileLink extends ResourceAbstract {
     /**
      * @param {String} fileLink Ссылка на ресурс
-     * @param {*} [meta] Дополнительные мета-данные
+     * @param {*} [_meta] Дополнительные мета-данные
+     * @param {FileInfo} [_info] Информация о файле
      * @constructor
      * @name File/HttpFileLink
      */
-    constructor(private fileLink: string, meta?: object) {
+    constructor(
+        private fileLink: string,
+        protected _meta: object,
+        protected _info: FileInfo
+    ) {
         super();
-        this._meta = meta;
     }
     /**
      * Возвращает ссылку на удалённый ресурс
@@ -29,4 +33,5 @@ class HttpFileLink extends ResourceAbstract {
         return this.fileLink;
     }
 }
-export  = HttpFileLink;
+
+export = HttpFileLink;

@@ -1,5 +1,5 @@
 /// <amd-module name="File/ResourceGetter/FileSystem" />
-define("File/ResourceGetter/FileSystem", ["require", "exports", "tslib", "File/ResourceGetter/Base", "Core/Deferred", "File/utils/ExtensionsHelper", "File/utils/filePrepareGetter"], function (require, exports, tslib_1, ResourceGetterBase, Deferred, ExtensionsHelper, getFilePreparer) {
+define("File/ResourceGetter/FileSystem", ["require", "exports", "tslib", "File/ResourceGetter/Base", "Core/Deferred", "File/utils/ExtensionsHelper", "File/utils/filter"], function (require, exports, tslib_1, ResourceGetterBase, Deferred, ExtensionsHelper, filter) {
     "use strict";
     var SEC = 1000;
     var MIN = 60 * SEC;
@@ -130,6 +130,7 @@ define("File/ResourceGetter/FileSystem", ["require", "exports", "tslib", "File/R
          * @see File/LocalFile
          */
         FileSystem.prototype.getFiles = function () {
+            var _this = this;
             if (this.isDestroyed()) {
                 return Deferred.fail("Resource getter is destroyed");
             }
@@ -156,10 +157,12 @@ define("File/ResourceGetter/FileSystem", ["require", "exports", "tslib", "File/R
             });
             var def = new Deferred().
                 // Фильтруем и преобразуем выбранные файлы в массив из ошибок или LocalFile
-                addCallback(getFilePreparer({
-                extensions: this._extensions,
-                maxSize: this._options.maxSize
-            })).
+                addCallback(function (files) {
+                return filter(files, {
+                    extensions: _this._extensions,
+                    maxSize: _this._options.maxSize
+                });
+            }).
                 // убираем отработанные input'ы
                 addBoth(function (result) {
                 input.remove && input.remove();
