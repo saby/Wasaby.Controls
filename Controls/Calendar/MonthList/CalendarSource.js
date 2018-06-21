@@ -43,7 +43,7 @@ define('Controls/Calendar/MonthList/CalendarSource', [
                   items.push({
                      id: offset + i,
                      year: new Date(offset + i, 0),
-                     months: months,
+                     months: months
 
                      // weeksArray: weeksArray,
                   });

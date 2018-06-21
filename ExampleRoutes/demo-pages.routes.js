@@ -33,6 +33,17 @@ module.exports = function(Component) {
          requirejs(['Examples/ws3open/Module'], function() {
             render(req, res, 'Examples/ws3open/Module');
          });
+      },
+
+      // Демо-пример: компоненты для работы с всплывающими окнами.
+      // Для построения страницы используется компонент Controls/Application.
+      '/demo-ws4-popup-opener': function(req, res) {
+         requirejs('Examples/Popup/Opener');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Examples/Popup/Opener',
+            initDependencies: false
+         }, []);
       }
+
    }
 };

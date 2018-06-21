@@ -18,6 +18,7 @@ define('Controls/HighChartsLight',
        * @mixes Controls/interface/IHighCharts
        * @control
        * @authors Volotskoy V.D., Sukhoruchkin A.S.
+       * @demo Controls-demo/HighChartsLight/HighChartsLight
        */
 
       var _private = {

@@ -1,8 +1,9 @@
-<div class="controls-StickyHeader">
+<div class="controls-StickyHeader{{_isMobileAndroid ? ' controls-StickyHeader_android'}}">
    <div name="observationTargetTop" class="controls-StickyHeader__observationTargetTop"></div>
    <ws:partial template="{{_options.content}}" attr:class="controls-StickyHeader__content"/>
    <div name="observationTargetBottom" class="controls-StickyHeader__observationTargetBottom"></div>
-   <ws:if data="{{_shouldBeFixed}}">
+   <ws:if data="{{_shouldBeFixed && _scrolling && !_listTop}}">
       <div class="controls-Scroll__shadow controls-StickyHeader__shadow"></div>
    </ws:if>
+   <Controls.Event.Emitter event="listScroll" on:listScroll="_listScrollHandler()"/>
 </div>

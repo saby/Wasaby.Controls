@@ -18,9 +18,8 @@ define('Controls/List/TreeControl', [
             self._children.baseControl.getSourceController().load(filter, self._sorting).addCallback(function(list) {
                if (self._options.uniqueKeys) {
                   listViewModel.mergeItems(list);
-               }
-               else {
-               listViewModel.appendItems(list);
+               } else {
+                  listViewModel.appendItems(list);
                }
                self._loadedNodes[nodeKey] = true;
                listViewModel.toggleExpanded(dispItem);

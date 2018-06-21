@@ -17,6 +17,7 @@ define('Controls/Popup/InfoBox',
        * @class Controls/Popup/InfoBox
        * @extends Core/Control
        * @public
+       * @demo Controls-demo/InfoBox/InfoBox
        *
        * @mixin Controls/interface/IStickyOpener
        *
@@ -36,7 +37,7 @@ define('Controls/Popup/InfoBox',
       var _private = {
          getCfg: function(self, event) {
             return {
-               target: event.target,
+               target: event.currentTarget || event.target,
                template: OpenerTemplate,
                position: self._options.position,
                templateOptions: {

@@ -555,6 +555,13 @@ define('Controls/List/BaseControl', [
          return _private.reload(this, this._options.dataLoadCallback, this._options.dataLoadErrback);
       },
 
+      _onGroupClick: function(e, item, baseEvent) {
+         // if clicked on group expander element
+         if (baseEvent.target.className.indexOf('controls-ListView__groupExpander') !== -1) {
+            this._listViewModel.toggleGroup(item);
+         }
+      },
+
       _onItemClick: function(e, item) {
          var newKey = ItemsUtil.getPropertyValue(item, this._options.viewConfig.keyProperty);
          this._listViewModel.setMarkedKey(newKey);
