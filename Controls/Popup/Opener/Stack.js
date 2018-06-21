@@ -12,6 +12,7 @@ define('Controls/Popup/Opener/Stack',
        * @public
        * @category Popup
        * @extends Controls/Popup/Opener/Base
+       * @demo Controls-demo/Popup/TestStack
        */
       var Stack = Base.extend({
 

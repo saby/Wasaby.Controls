@@ -22,6 +22,7 @@ define('Controls/Input/Dropdown',
        * @control
        * @public
        * @category Input
+       * @demo Controls-demo/Dropdown/MenuVdom
        */
 
       'use strict';
