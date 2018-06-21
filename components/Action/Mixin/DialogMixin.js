@@ -271,7 +271,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                floatArea = floatAreaContainer.length ? floatAreaContainer[0].wsControl : false;
             }
          }
-         return floatArea || this;
+         return floatArea || null;
       },
 
       /**
