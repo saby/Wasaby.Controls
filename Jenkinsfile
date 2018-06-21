@@ -47,7 +47,7 @@ node('controls') {
                 choices: "online\npresto\ncarry\ngenie",
                 description: '',
                 name: 'theme'),
-            choice(choices: "chrome\nff\nie\nedge", description: '', name: 'browser_type'),
+            choice(choices: "chrome\nff\nie", description: '', name: 'browser_type'),
             booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов", name: 'run_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
@@ -384,10 +384,7 @@ node('controls') {
                 sudo chmod -R 0777 /home/sbis/Controls
             """
         }
-		def soft_restart = "True"
-		if ( "${params.browser_type}" in ['ie', 'edge'] ){
-			soft_restart = "False"
-		}
+
         writeFile file: "./controls/tests/int/config.ini", text:
             """# UTF-8
             [general]
@@ -396,7 +393,7 @@ node('controls') {
             SERVER = test-autotest-db1:5434
             BASE_VERSION = css_${NODE_NAME}${ver}1
             DO_NOT_RESTART = True
-            SOFT_RESTART = ${soft_restart}
+            SOFT_RESTART = True
             NO_RESOURCES = True
             DELAY_RUN_TESTS = 2
             TAGS_NOT_TO_START = iOSOnly
@@ -455,7 +452,7 @@ node('controls') {
         stage("Запуск тестов интеграционных и верстки"){
             def site = "http://${NODE_NAME}:30010"
             site.trim()
-			if ("${params.browser_type}" == "chrome"){
+			if ("${params.browser_type}" != "ff"){
 				dir("./controls/tests/int"){
 					tmp_smoke = sh returnStatus:true, script: """
 						source /home/sbis/venv_for_test/bin/activate
