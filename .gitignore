@@ -3,6 +3,7 @@
 /components/contents.json
 /components/contents.js
 /components/**/*.css
+/Examples/**/*.css
 /pages/**/*.css
 /Controls-demo/**/*.css
 /CONTROLS/**/*.css
