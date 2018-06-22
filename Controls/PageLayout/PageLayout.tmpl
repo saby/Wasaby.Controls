@@ -1,17 +1,19 @@
 <div class="controls-PageLayout">
     <div attr:class="controls-PageLayout_wrapper">
-        <ws:if data="{{getCurrentControlPanel()}}">
-            <ws:partial attr:class="controls-PageLayout__ControlsArea" template="{{getCurrentControlPanel()}}"/>
+        <ws:if data="{{getControlPanelTemplate()}}">
+            <ws:partial attr:class="controls-PageLayout__ControlsArea" template="{{getControlPanelTemplate()}}"/>
         </ws:if>
         <ws:if data="{{_options.tabsSource}}">
             <div attr:class="controls-PageLayout__ButtonTabs_wrapper">
                 <Controls.Tabs.Buttons
-                        bind:selectedKey="_tabsSelectedKey"
+                        bind:selectedKey="_options.tabsSelectedKey"
                         keyProperty="id"
                         source="{{_options.tabsSource}}"
                 />
             </div>
         </ws:if>
     </div>
-    <Controls.Container.Async templateName="{{getCurrentTabContent()}}" templateOptions="{{_options}}"/>
+    <ws:if data="{{getContent()}}">
+        <Controls.Container.Async templateName="{{getContent()}}" templateOptions="{{_options}}"/>
+    </ws:if>
 </div>

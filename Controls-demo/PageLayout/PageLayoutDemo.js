@@ -21,31 +21,31 @@ define('Controls-demo/PageLayout/PageLayoutDemo', [
          idProperty: 'id',
          data: [
             {
-               id: '0',
+               id: '1',
                title: 'very',
                content: 'tmpl!Controls-demo/PageLayout/resources/tabsContent',
                controlPanelTemplate: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate'
             },
             {
-               id: '1',
+               id: '2',
                title: 'hard',
                content: 'tmpl!Controls-demo/PageLayout/resources/tabsContent2',
                controlPanelTemplate: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate2'
             },
             {
-               id: '2',
+               id: '3',
                title: 'invent',
                content: 'tmpl!Controls-demo/PageLayout/resources/tabsContent',
                controlPanelTemplate: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate'
             },
             {
-               id: '3',
+               id: '4',
                title: 'tabs',
                content: 'tmpl!Controls-demo/PageLayout/resources/tabsContent2',
                controlPanelTemplate: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate2'
             },
             {
-               id: '4',
+               id: '5',
                title: 'titles',
                content: 'tmpl!Controls-demo/PageLayout/resources/tabsContent',
                controlPanelTemplate: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate'
@@ -57,27 +57,27 @@ define('Controls-demo/PageLayout/PageLayoutDemo', [
       idProperty: 'id',
       data: [
          {
-            id: '0',
+            id: '1',
             title: 'very',
             content: 'tmpl!Controls-demo/PageLayout/resources/tabsContent'
          },
          {
-            id: '1',
+            id: '2',
             title: 'hard',
             content: 'tmpl!Controls-demo/PageLayout/resources/tabsContent2'
          },
          {
-            id: '2',
+            id: '3',
             title: 'invent',
             content: 'tmpl!Controls-demo/PageLayout/resources/tabsContent'
          },
          {
-            id: '3',
+            id: '4',
             title: 'tabs',
             content: 'tmpl!Controls-demo/PageLayout/resources/tabsContent2'
          },
          {
-            id: '4',
+            id: '5',
             title: 'titles',
             content: 'tmpl!Controls-demo/PageLayout/resources/tabsContent'
          }
