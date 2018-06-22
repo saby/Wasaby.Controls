@@ -14,6 +14,7 @@ define('Controls/Application/AppData', [
          this.product = cfg.product;
          this.cssBundles = cfg.cssBundles;
          this.buildnumber = cfg.buildnumber;
+         this.servicesPath = cfg.servicesPath;
       }
    });
 });
