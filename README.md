@@ -111,6 +111,7 @@
 - `grunt cssC` - скомпилировать все LESS файлы в папке components и темы online,presto,carry в CSS;
 - `grunt cssV` - скомпилировать все LESS файлы в папке Controls и темы online,presto,carry в CSS;
 - `grunt cssD` - скомпилировать все LESS файлы в папке Controls-demo и темы online,presto,carry в CSS;
+- `grunt cssE` - скомпилировать все LESS файлы в папке Examples и темы online,presto,carry в CSS;
 - `grunt copy` - скопировать директории `components` и `themes` в директорию `SBIS3.CONTROLS`;
 - `grunt watch` - следить за изменениями в LESS файлах тем и перекомпилировать их;
 - `grunt run` - собрать проект, поднять тестовый локальный веб-сервер на 666-м порту и запустить `watch`.
