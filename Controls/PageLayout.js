@@ -14,14 +14,6 @@ define('Controls/PageLayout', [
          return self._sourceController.load().addCallback(function(items) {
             return items;
          });
-      },
-      setCurrentItemState: function(options, self) {
-         if (options.tabsSource) {
-            options.tabsSource.read(options.tabsSelectedKey).addCallback(function(item) {
-               self._controlPanelTemplate = item.get('controlPanelTemplate');
-               self._content = item.get('content');
-            });
-         }
       }
    };
    var browserTabs = Control.extend({
@@ -36,7 +28,6 @@ define('Controls/PageLayout', [
                return items;
             }.bind(this));
          }
-         _private.setCurrentItemState(options, this);
       },
       _beforeUpdate: function(newOptions) {
          var self = this;
@@ -46,7 +37,12 @@ define('Controls/PageLayout', [
                self._forceUpdate();
             }.bind(this));
          }
-         _private.setCurrentItemState(newOptions, this);
+      },
+      hideNotSelectedContent: function(item) {
+         if (item ===  this._items.getRecordById(this._options.tabsSelectedKey)) {
+            return 'controls-PageLayout__ShowContent';
+         }
+         return 'controls-PageLayout__HideContent';
       }
    });
    return browserTabs;

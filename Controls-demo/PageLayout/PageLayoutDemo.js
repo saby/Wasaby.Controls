@@ -53,10 +53,23 @@ define('Controls-demo/PageLayout/PageLayoutDemo', [
          ]
       });
 
+   var demoTabsSource2 = new MemorySource({
+      idProperty: 'id',
+      data: [
+         {
+            id: '1',
+            title: 'very',
+            content: 'tmpl!Controls-demo/PageLayout/resources/tabsContent2',
+            controlPanelTemplate: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate2'
+         }
+      ]
+   });
+
    var demoBrowserTabs = Control.extend({
       _template: template,
       _demoTabsSelectedKey: '1',
-      _demoTabsSource: demoTabsSource
+      _demoTabsSource: demoTabsSource,
+      _demoTabsSource2: demoTabsSource2
    });
    return demoBrowserTabs;
 });

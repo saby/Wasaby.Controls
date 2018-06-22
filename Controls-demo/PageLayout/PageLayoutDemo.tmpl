@@ -1,5 +1,17 @@
 <div>
+    <h2>Задано несколько вкладок. Контент кэшируется.</h2>
     <Controls.PageLayout attr:style="width: 100%; margin-bottom: 150px;"
             tabsSelectedKey = "{{_demoTabsSelectedKey}}"
-            tabsSource = "{{_demoTabsSource}}"/>
+            tabsSource = "{{_demoTabsSource}}"
+            cachedContent = "{{true}}"/>
+    <h2>Задано несколько вкладок. Контент не кэшируется.</h2>
+    <Controls.PageLayout attr:style="width: 100%; margin-bottom: 150px;"
+                         tabsSelectedKey = "{{_demoTabsSelectedKey}}"
+                         tabsSource = "{{_demoTabsSource}}"
+                         cachedContent = "{{false}}"/>
+    <h2>Задана одна вкладка. Контент кэшируется/некэшируется(в этом случае нет разницы).</h2>
+    <Controls.PageLayout attr:style="width: 100%; margin-bottom: 150px;"
+                         tabsSelectedKey = "{{_demoTabsSelectedKey}}"
+                         tabsSource = "{{_demoTabsSource2}}"
+                         cachedContent = "{{true}}"/>
 </div>
