@@ -8,7 +8,7 @@ define('Controls/Button/Close', [
       _template: template,
 
       clickHandler: function() {
-         this._notify('close', [], {bubbling: true})
+         this._notify('close', [], { bubbling: true });
       }
    });
 
