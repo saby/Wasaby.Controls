@@ -27,6 +27,16 @@ module.exports = function(Component) {
          }, []);
       },
 
+      // Демо-пример: редактирование по месту в списках.
+      // Для построения страницы используется компонент Controls/Application.
+      '/edit-in-place': function(req, res) {
+         requirejs('Examples/List/EditInPlace/EditInPlace');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Examples/List/EditInPlace/EditInPlace',
+            initDependencies: false
+         }, []);
+      },
+
       // Демо-пример: открытие шаблона, совместимого с WS4, в программном окружении WS3.
       // Для построения страницы используется шаблон VIEW.
       '/demo-ws3-open-component-from-ws4': function(req, res) {
