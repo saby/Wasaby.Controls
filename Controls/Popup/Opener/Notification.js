@@ -16,7 +16,7 @@ define('Controls/Popup/Opener/Notification',
          /**
           * Открыть нотификационное окно
           * @function Controls/Popup/Opener/Notification#open
-          * @param popupOptions Controls/interface/IOpener#popupOptions
+          * @param {Controls/interface/IOpener#popupOptions} popupOptions
           */
          open: function(popupOptions) {
             Base.prototype.open.call(this, popupOptions, 'Controls/Popup/Opener/Notification/NotificationController');
