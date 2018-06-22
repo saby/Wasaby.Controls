@@ -102,6 +102,7 @@ define('Controls/Application',
             self.wsRoot = receivedState.wsRoot || (context.AppData ? context.AppData.wsRoot : cfg.wsRoot);
             self.resourceRoot = receivedState.resourceRoot || (context.AppData ? context.AppData.resourceRoot : cfg.resourceRoot);
             self.product = receivedState.product || (context.AppData ? context.AppData.product : cfg.product);
+            self.servicesPath = receivedState.servicesPath || (context.AppData ? context.AppData.servicesPath : cfg.servicesPath) || '/service/';
             self.BodyClasses = BodyClasses;
 
             self._headData.pushDepComponent(self.application);
@@ -113,6 +114,7 @@ define('Controls/Application',
                context.AppData.appRoot = self.appRoot;
                context.AppData.resourceRoot = self.resourceRoot;
                context.AppData.application = self.application;
+               context.AppData.servicesPath = self.servicesPath;
             }
             
             /**
@@ -127,6 +129,7 @@ define('Controls/Application',
                wsRoot: self.wsRoot,
                resourceRoot: self.resourceRoot,
                templateConfig: self.templateConfig,
+               servicesPath: self.servicesPath,
                compat: self.compat
             });
             return def;
