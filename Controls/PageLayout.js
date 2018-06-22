@@ -6,12 +6,12 @@ define('Controls/PageLayout', [
 ], function(Control, template) {
    'use strict';
    var _private = {
-      setCurrentItemState: function (options, self) {
+      setCurrentItemState: function(options, self) {
          if (options.tabsSource) {
-            options.tabsSource.read(options.tabsSelectedKey).addCallback(function (item) {
+            options.tabsSource.read(options.tabsSelectedKey).addCallback(function(item) {
                this._controlPanelTemplate = item.get('controlPanelTemplate');
                this._content = item.get('content');
-            }.bind(self))
+            }.bind(self));
          }
       }
    };
