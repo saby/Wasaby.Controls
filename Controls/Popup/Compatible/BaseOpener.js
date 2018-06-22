@@ -27,6 +27,13 @@ function(cMerge, Random) {
             cfg.target = cfg.target[0] ? cfg.target[0] : cfg.target;
          }
 
+         if (cfg.record) { //от RecordFloatArea
+            cfg.templateOptions.record = cfg.record;
+         }
+         if (cfg.newRecord) { //от RecordFloatArea
+            cfg.templateOptions.newRecord = cfg.newRecord;
+         }
+
          if (cfg.hasOwnProperty('autoHide')) {
             cfg.closeByExternalClick = cfg.autoHide;
          }
