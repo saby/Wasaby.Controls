@@ -29,6 +29,10 @@ module.exports = function(grunt) {
       'lessDemo'
    ]);
 
+   grunt.registerTask('cssE', [
+      'lessExamples'
+   ]);
+
    grunt.registerTask('js', [
 
       'build-dependencies'

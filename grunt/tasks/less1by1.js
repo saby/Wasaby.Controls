@@ -132,7 +132,8 @@ module.exports = function less1by1Task(grunt) {
                   'demo/**/' + findFileName + '.less',
                   'pages/**/' + findFileName + '.less',
                   'Controls-demo/**/' + findFileName + '.less',
-                  'Controls/**/' + findFileName + '.less'
+                  'Controls/**/' + findFileName + '.less',
+                  'Examples/**/' + findFileName + '.less'
                ])
             ) {
                foundFile = true;
@@ -232,6 +233,18 @@ module.exports = function less1by1Task(grunt) {
             rootPath + '\\Controls-demo',
             38,
             'lessDemo',
+            createAsyncThemeBuilder(this.async())
+         );
+      }
+   );
+   grunt.registerMultiTask(
+      'lessExamples',
+      'Компилит каждую лесску, ложит cssку рядом. Умеет в темы',
+      function() {
+         buildLessInFolder(
+            rootPath + '\\Examples',
+            6,
+            'lessExamples',
             createAsyncThemeBuilder(this.async())
          );
       }
