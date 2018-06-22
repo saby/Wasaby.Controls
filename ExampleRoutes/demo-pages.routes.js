@@ -89,6 +89,6 @@ module.exports = function(Component) {
         requirejs(['Examples/ws3open/Module'], function() {
            render(req, res, 'Examples/ws3open/Module');
         });
-     }
+      }
    }
 };
