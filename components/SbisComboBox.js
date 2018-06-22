@@ -10,7 +10,7 @@ define('SBIS3.CONTROLS/SbisComboBox', [
     * @class SBIS3.CONTROLS/SbisComboBox
     * @extends SBIS3.CONTROLS/ComboBox
     *
-    * @author Романов В.С.
+    * @author Герасимов А.М.
     *
     * @public
     * @control
