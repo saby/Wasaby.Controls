@@ -23,13 +23,7 @@ define('Controls/Popup/Compatible/Layer', [
       'Core/vdom/Synchronizer/resources/DirtyCheckingCompatible',
       'View/Runner/Text/markupGeneratorCompatible',
       'cdn!jquery-cookie/04-04-2014/jquery-cookie-min.js',
-      'Core/nativeExtensions',
-
-      // todo возможно надо грузить весь core-extensions
-      'is!browser?WS.Data/ContextField/Flags',
-      'is!browser?WS.Data/ContextField/Record',
-      'is!browser?WS.Data/ContextField/Enum',
-      'is!browser?WS.Data/ContextField/List'
+      'Core/nativeExtensions'
    ];
    var defaultLicense = {
       defaultLicense: true
@@ -125,9 +119,13 @@ define('Controls/Popup/Compatible/Layer', [
       moduleStubs.require(['OnlineSbisRu/ViewSettings/Util/ViewSettingsData']).addCallback(function(mods) {
          mods[0].getData(null, true).addCallback(function(data) {
             viewSettings = data;
-            dResult.callback(viewSettings);
+            moduleStubs.require(['Core/core-extensions']).addCallback(function() {
+               dResult.callback(viewSettings);
+            });
          }).addErrback(function() {
-            dResult.callback(viewSettings);
+            moduleStubs.require(['Core/core-extensions']).addCallback(function() {
+               dResult.callback(viewSettings);
+            });
          });
       }).addErrback(function() {
          dResult.callback(viewSettings);
@@ -189,6 +187,7 @@ define('Controls/Popup/Compatible/Layer', [
                // var tempCompatVal = constants.compat;
                Constants.compat = true;
                Constants.systemExtensions = true;
+               Constants.userConfigSupport = true;
 
                if (typeof window !== 'undefined') {
                   loadDataProviders().addCallbacks(function() {
