@@ -374,8 +374,8 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
       },
 
       _setDynamicStyles: function(item, styles) {
-         var titleHeight = $('.controls-CompositeView__tileTitle', item).outerHeight(true) - (item.hasClass('controls-CompositeView__item-withTitle') ? 25 : 0);
          item.css(styles);
+         var titleHeight = $('.controls-CompositeView__tileTitle', item).outerHeight(true) - (item.hasClass('controls-CompositeView__item-withTitle') ? 25 : 0);
          $('.controls-CompositeView__tileContainer', item).css('padding-bottom', titleHeight);
       },
 
