@@ -32,7 +32,8 @@ define('Controls-demo/Demo/Page',
             presto: '/../components/themes/presto/presto',
             carry_m: '/../components/themes/carry_medium/carry_medium',
             presto_m: '/../components/themes/presto_medium/presto_medium',
-            online: '/../pages/presto/online'
+            online: '/../pages/presto/online',
+            base: '/../components/themes/online/online'
          },
          setCurrentThemeLinks = function(theme) {
             var createCSSLink = function(id, href) {
@@ -89,7 +90,7 @@ define('Controls-demo/Demo/Page',
             if (UrlParams.cname) {
                this.componentName = 'Controls-demo/' + UrlParams.cname;
             }
-            this._theme = themeLinks[UrlParams['theme']] || themeLinks['online'];
+            this._theme = themeLinks[UrlParams['theme']] || themeLinks['base'];
             requirejs([this.componentName], deferred.callback.bind(deferred));
             return deferred;
          },

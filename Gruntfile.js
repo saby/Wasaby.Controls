@@ -17,6 +17,18 @@ module.exports = function(grunt) {
       'less1by1'
    ]);
 
+   grunt.registerTask('cssV', [
+      'lessVDOM'
+   ]);
+
+   grunt.registerTask('cssC', [
+      'lessControls'
+   ]);
+
+   grunt.registerTask('cssD', [
+      'lessDemo'
+   ]);
+
    grunt.registerTask('js', [
 
       'build-dependencies'
