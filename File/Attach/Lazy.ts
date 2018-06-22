@@ -5,7 +5,8 @@ import GetterContainerLazy = require("File/Attach/Container/GetterLazy");
 import SourceContainerLazy = require("File/Attach/Container/SourceLazy");
 
 /**
- * Класс, наследник Attach/Base, позволяющий регестрировать динамично подгружаемые экземпляры {@link File/IResourceGetter} и {@link WS.Data/Source/ISource}
+ * Класс, наследник Attach/Base, позволяющий регестрировать
+ * динамично подгружаемые экземпляры {@link File/IResourceGetter} и {@link File/Attach/Source}
  * @public
  * @class File/Attach/Lazy
  * @extends File/Attach/Base
