@@ -554,7 +554,7 @@ define('Controls/List/BaseControl', [
 
       _onGroupClick: function(e, item, baseEvent) {
          // if clicked on group expander element
-         if (baseEvent.target.className.indexOf('controls-ListView__groupExpandable') !== -1) {
+         if (~baseEvent.target.className.indexOf('controls-ListView__groupExpander')) {
             this._listViewModel.toggleGroup(item);
          }
       },

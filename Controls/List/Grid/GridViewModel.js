@@ -436,11 +436,6 @@ define('Controls/List/Grid/GridViewModel', [
                current.columns = this._columns;
             }
 
-            if (current.isGroup) {
-               current.groupGridColumnStyle = 'grid-column: 1 / ' + (current.columns.length + 1) + ';';
-               return current;
-            }
-
             current.columnIndex = 0;
             current.resetColumnIndex = function() {
                current.columnIndex = 0;

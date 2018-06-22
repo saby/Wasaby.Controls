@@ -5,7 +5,8 @@ define('Controls-demo/List/Group', [
    'Core/Control',
    'tmpl!Controls-demo/List/Group',
    'Controls/Constants',
-   'WS.Data/Source/Memory'
+   'WS.Data/Source/Memory',
+   'tmpl!Controls-demo/List/DemoGroupTemplate'
 ], function (BaseControl,
              template,
              ControlsConstants,
@@ -52,6 +53,15 @@ define('Controls-demo/List/Group', [
    var ModuleClass = BaseControl.extend(
       {
          _template: template,
+         _dataLoadCallback: function(items) {
+            items.setMetaData({
+               groupResults: {
+                  asus: '1555 руб. 00 коп.',
+                  acer: '7777 руб. 00 коп.',
+                  hp: '2318 руб. 55 коп.'
+               }
+            });
+         },
          _itemsGroupMethod: function(item) {
             if (item.get('brand') === 'apple') {
                return ControlsConstants.view.hiddenGroup;
