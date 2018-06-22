@@ -9,9 +9,9 @@ define('Controls/PageLayout', [
       setCurrentItemState: function(options, self) {
          if (options.tabsSource) {
             options.tabsSource.read(options.tabsSelectedKey).addCallback(function(item) {
-               this._controlPanelTemplate = item.get('controlPanelTemplate');
-               this._content = item.get('content');
-            }.bind(self));
+               self._controlPanelTemplate = item.get('controlPanelTemplate');
+               self._content = item.get('content');
+            });
          }
       }
    };
