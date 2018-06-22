@@ -188,6 +188,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._close(arg);
          },
 
+         reload: function() {
+            this._rebuildCompoundControl(this._options);
+         },
+
          /* from api floatArea, window */
 
          getParent: function() {

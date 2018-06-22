@@ -31,6 +31,38 @@ function(cMerge, Random) {
             cfg.closeByExternalClick = cfg.autoHide;
          }
 
+         var revertPosition = {
+            top: 'bottom',
+            bottom: 'top',
+            left: 'right',
+            right: 'left'
+         };
+
+         if (cfg.hasOwnProperty('verticalAlign')) {
+            cfg.verticalAlign = {side: revertPosition[cfg.verticalAlign]};
+         }
+
+         if (cfg.hasOwnProperty('side')) {
+            cfg.horizontalAlign = {side: revertPosition[cfg.side]};
+         }
+
+         if (cfg.hasOwnProperty('offset')) {
+            if (cfg.offset.x) {
+               cfg.horizontalAlign = cfg.horizontalAlign || {};
+               cfg.horizontalAlign.offset = cfg.offset.x;
+            }
+            if (cfg.offset.y) {
+               cfg.verticalAlign = cfg.verticalAlign || {};
+               cfg.verticalAlign.offset = cfg.offset.y;
+            }
+         }
+
+         if (cfg.hasOwnProperty('direction')) {
+            cfg.corner = cfg.corner || {};
+            var direction = (cfg.direction === 'right' || cfg.direction === 'left') ? 'horizontal' : 'vertical';
+            cfg.corner[direction] = revertPosition[cfg.direction];
+         }
+
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
          this._setSizes(cfg, templateClass);
       },
