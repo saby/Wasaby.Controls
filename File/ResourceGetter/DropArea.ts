@@ -43,7 +43,7 @@ const OPTION: Partial<DropAreaConfig> = {
      * @cfg {Function} Обработчик события onDrop элемента. Позволяет получать ресурсы не ожидая вызова метода getFiles
      * @name File/ResourceGetter/DropArea#ondrop
      */
-    ondrop: (files: Array<LocalFile>) => {},
+    ondrop: (files: Array<LocalFile>) => {}
     /**
      * @cfg {String} Текст на внутреннем элементе во время перемещения файлов
      * @name File/ResourceGetter/DropArea#dragText
