@@ -5,7 +5,7 @@
       <Controls.Filter.Button attr:style="max-width: 200px;"
                               attr:id="filter1"
                               on:filterChanged="_filterChangedHandler()"
-                              template="Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/vdomFilterButtonTemplate">
+                              template="tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/vdomFilterButtonTemplate">
          <ws:items>
             <ws:Array>
                <ws:Object id="FIO" value="Name" resetValue="" visibility="{{false}}"/>
@@ -13,7 +13,7 @@
                <ws:Object id="id" value="{{3}}" resetValue="{{4}}"
                           source="{{sourceDropdown}}" visibility="{{false}}"/>
                <ws:Object id="checked" value="{{true}}" resetValue="{{false}}" visibility="{{false}}"/>
-               <ws:Object id="Test1" value="{{3}}" resetValue="{{2}}" source="{{sourceDropdown}}"
+               <ws:Object id="Test1" value="{{[3]}}" resetValue="{{[2]}}" source="{{sourceDropdown}}"
                           visibility="{{false}}"/>
                <ws:Object id="Test2" value="" resetValue="{{true}}" visibility="{{false}}"/>
                <ws:Object id="Test3" value="" resetValue="{{true}}" visibility="{{false}}"/>
