@@ -2,13 +2,6 @@ define("File/ResourceAbstract", ["require", "exports"], function (require, expor
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
-     * @typedef {Object} File/FileInfo Информация о файле
-     * @property {String} [name] Имя
-     * @property {String} [type]  Тип
-     * @property {Boolean} [isDirectory] Является ли директорией
-     * @property {Number} [size] Размер
-     */
-    /**
      * @class
      * @abstract
      * @implements File/IResource
