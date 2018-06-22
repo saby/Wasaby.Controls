@@ -56,9 +56,7 @@ define('Controls-demo/PageLayout/PageLayoutDemo', [
    var demoBrowserTabs = Control.extend({
       _template: template,
       _demoTabsSelectedKey: '1',
-      _demoTabsSource: demoTabsSource,
-      _controlAreaTemplate: controlAreaTemplate,
-      _tabsContent: tabsContent2
+      _demoTabsSource: demoTabsSource
    });
    return demoBrowserTabs;
 });
