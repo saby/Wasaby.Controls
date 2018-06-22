@@ -35,6 +35,26 @@ module.exports = function(Component) {
          });
       },
 
+      // Демо-пример: концепция использования прикладных шаблонов.
+      // Для построения страницы используется компонент Controls/Application.
+      '/demo-ws4-templates': function(req, res) {
+         requirejs('Examples/List/Base');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Examples/List/Base',
+            initDependencies: false
+         }, []);
+      },
+
+      // Демо-пример: фильтрация и поиск.
+      // Для построения страницы используется компонент Controls/Application.
+      '/demo-ws4-filter-search': function(req, res) {
+         requirejs('Examples/Layouts/SearchLayout');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Examples/Layouts/SearchLayout',
+            initDependencies: false
+         }, []);
+      },
+
       // Демо-пример: компоненты для работы с всплывающими окнами.
       // Для построения страницы используется компонент Controls/Application.
       '/demo-ws4-popup-opener': function(req, res) {
@@ -45,5 +65,14 @@ module.exports = function(Component) {
          }, []);
       }
 
+      // Демо-пример: работа с перемещениями элементов интерфейса.
+      // Для построения страницы используется компонент Controls/Application.
+      '/demo-ws4-drag-n-drop': function(req, res) {
+         requirejs('Examples/DragNDrop/Container');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Examples/DragNDrop/Container',
+            initDependencies: false
+         }, []);
+      }
    }
 };
