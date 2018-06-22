@@ -18,7 +18,7 @@ define('SBIS3.CONTROLS/Link', [
     *
     * @class SBIS3.CONTROLS/Link
     * @extends WSControls/Buttons/ButtonBase
-    * @author Романов В.С.
+    * @author Герасимов А.М.
     *
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
