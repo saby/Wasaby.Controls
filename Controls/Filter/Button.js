@@ -119,9 +119,11 @@ define('Controls/Filter/Button',
                } else {
                   this._children.filterStickyOpener.open({
                      templateOptions: {
-                        items: this._options.items
+                        template: this._options.template,
+                        items: this._options.items,
+                        historyId: this._options.historyId
                      },
-                     template: this._options.template,
+                     template: 'Controls/Filter/Button/Panel/Wrapper/_FilterPanelWrapper',
                      target: this._children.panelTarget
                   });
                }
