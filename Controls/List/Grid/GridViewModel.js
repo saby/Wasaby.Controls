@@ -579,6 +579,14 @@ define('Controls/List/Grid/GridViewModel', [
             this._model.unselect(keys);
          },
 
+         setDragTargetItem: function(itemData) {
+            this._model.setDragTargetItem(itemData);
+         },
+
+         setDragItems: function(items) {
+            this._model.setDragItems(items);
+         },
+
          destroy: function() {
             this._model.destroy();
             GridViewModel.superclass.destroy.apply(this, arguments);
