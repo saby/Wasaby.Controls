@@ -63,7 +63,7 @@ module.exports = function(Component) {
             application: 'Examples/Popup/Opener',
             initDependencies: false
          }, []);
-      }
+      },
 
       // Демо-пример: работа с перемещениями элементов интерфейса.
       // Для построения страницы используется компонент Controls/Application.
