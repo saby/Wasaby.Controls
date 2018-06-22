@@ -61,48 +61,66 @@ module.exports = function less1by1Task(grunt) {
                         function writeFileCb(writeFileError) {
                            if (writeFileError) {
                               errors.push(
-                                 '\n\n Не могу записать файл. Ошибка: ' +
+                                 '\n\n Cannot write the file. Error: ' +
                                     writeFileError.message +
                                     '}.'
                               );
                            }
-                           progBar.tick(1, {
-                              file: newName
-                           });
+                           if (progBar) {
+                              progBar.tick(1, {
+                                 file: newName
+                              });
+                           } else {
+                              grunt.log.ok('   compiling ' + newName);
+                           }
                            asyncCallback();
                         }
                      );
                   });
             } else {
-               progBar.tick(1, {
-                  file: newName
-               });
+               if (progBar) {
+                  progBar.tick(1, {
+                     file: newName
+                  });
+               } else {
+                  grunt.log.error('   Cannot compile the file ' + newName);
+               }
                asyncCallback();
             }
          }
       );
    }
 
-   function buildLessInFolder(folderpath, count, taskName) {
-      //count быстро не посчитать
+   function buildLessInFolder(
+      folderpath,
+      count,
+      taskName,
+      taskDone,
+      findFileName
+   ) {
+      //todo: отказаться от count
 
-      var progBar = new ProgressBar('   compiling [:bar] :file', {
-         complete: '♣',
-         incomplete: '_',
-         width: 30,
-         total: count
-      });
-
-      var lessName = grunt.option('name') || '*',
+      var progBar =
+            !findFileName &&
+            new ProgressBar('   compiling [:bar] :file', {
+               complete: '♣',
+               incomplete: '_',
+               width: 30,
+               total: count
+            }),
          foundFile = false;
-
-      grunt.log.ok(humanize.date('H:i:s') + ': starts task ' + taskName);
-      grunt.log.ok('folder: ' + folderpath);
-      if (lessName !== '*') {
-         grunt.log.ok('looking for: ' + lessName + '.less');
+      findFileName = findFileName || '*';
+      if (findFileName !== '*') {
+         grunt.log.ok('looking for ' + findFileName + '.less');
+      } else {
+         grunt.log.ok(
+            humanize.date('H:i:s') +
+               ': starts task ' +
+               taskName +
+               ' at folder ' +
+               folderpath
+         );
       }
-
-      var taskDone = this.async();
 
       helpers.recurse(
          folderpath,
@@ -110,11 +128,11 @@ module.exports = function less1by1Task(grunt) {
             var relpath = path.relative(rootPath, filepath);
             if (
                helpers.validateFile(relpath, [
-                  'components/**/*.less',
-                  'demo/**/*.less',
-                  'pages/**/*.less',
-                  'Controls-demo/**/*.less',
-                  'Controls/**/*.less'
+                  'components/**/' + findFileName + '.less',
+                  'demo/**/' + findFileName + '.less',
+                  'pages/**/' + findFileName + '.less',
+                  'Controls-demo/**/' + findFileName + '.less',
+                  'Controls/**/' + findFileName + '.less'
                ])
             ) {
                foundFile = true;
@@ -131,25 +149,52 @@ module.exports = function less1by1Task(grunt) {
          },
          function() {
             if (!foundFile) {
-               grunt.log.ok('cannot find the file ' + lessName);
+               grunt.log.ok('Cannot find the file ' + findFileName);
             }
-            grunt.log.ok(
-               humanize.date('H:i:s') + ' : task ' + taskName + ' completed'
-            );
             errors.forEach(function(err) {
                grunt.log.error(err);
             });
+
+            grunt.log.ok(
+               humanize.date('H:i:s') + ': task ' + taskName + ' completed'
+            );
             errors = [];
             taskDone();
          }
       );
    }
 
+   function createAsyncThemeBuilder(taskDone) {
+      return function() {
+         buildLessInFolder(
+            rootPath + '\\components\\themes',
+            19,
+            'ThemesBuild',
+            taskDone
+         );
+      };
+   }
+
    grunt.registerMultiTask(
       'less1by1',
       'Компилит каждую лесску, ложит cssку рядом. Умеет в темы',
       function() {
-         buildLessInFolder.call(this, rootPath, 299, 'less1by1');
+         var findFileName = grunt.option('name'),
+            withThemes =
+               grunt.option('withThemes') === undefined
+                  ? true
+                  : grunt.option('withThemes'),
+            asyncCallback =
+               findFileName && withThemes
+                  ? createAsyncThemeBuilder(this.async())
+                  : this.async();
+         buildLessInFolder(
+            rootPath,
+            299,
+            'less1by1',
+            asyncCallback,
+            findFileName
+         );
       }
    );
 
@@ -157,11 +202,11 @@ module.exports = function less1by1Task(grunt) {
       'lessControls',
       'Компилит каждую лесску, ложит cssку рядом. Умеет в темы',
       function() {
-         buildLessInFolder.call(
-            this,
+         buildLessInFolder(
             rootPath + '\\components',
             179,
-            'lessControls'
+            'lessControls',
+            this.async()
          );
       }
    );
@@ -170,7 +215,12 @@ module.exports = function less1by1Task(grunt) {
       'lessVDOM',
       'Компилит каждую лесску, ложит cssку рядом. Умеет в темы',
       function() {
-         buildLessInFolder.call(this, rootPath + '\\Controls', 81, 'lessVDOM');
+         buildLessInFolder(
+            rootPath + '\\Controls',
+            81,
+            'lessVDOM',
+            createAsyncThemeBuilder(this.async())
+         );
       }
    );
 
@@ -178,11 +228,11 @@ module.exports = function less1by1Task(grunt) {
       'lessDemo',
       'Компилит каждую лесску, ложит cssку рядом. Умеет в темы',
       function() {
-         buildLessInFolder.call(
-            this,
+         buildLessInFolder(
             rootPath + '\\Controls-demo',
             38,
-            'lessDemo'
+            'lessDemo',
+            createAsyncThemeBuilder(this.async())
          );
       }
    );
