@@ -1,5 +1,5 @@
 import Deferred = require("Core/Deferred")
-import IResource = require("File/IResource");
+import {IResource} from "File/IResource";
 
 /**
  * Интерфейс сущности получения ресурсов
@@ -9,7 +9,7 @@ import IResource = require("File/IResource");
  * @see File/HttpFileLink
  * @name File/IResourceGetter
  */
-type IResourceGetter = {
+export type IResourceGetter = {
     /**
      * Возможен ли выбор ресурса
      * @return {Core/Deferred.<Boolean>}
@@ -38,5 +38,15 @@ type IResourceGetter = {
     isDestroyed(): boolean;
 }
 
-export = IResourceGetter;
-
+/**
+ * Конструктор сущности получения ресурсов
+ * @author Заляев А.В.
+ * @see File/LocalFile
+ * @see File/LocalFileLink
+ * @see File/HttpFileLink
+ * @see File/IResourceGetter
+ * @name File/IResourceGetterConstructor
+ */
+export type IResourceGetterConstructor = {
+    new (...args): IResource;
+}
