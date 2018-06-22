@@ -1,19 +1,5 @@
 <div>
-    <h2>Есть вкладки. У каждой вклаки своя панель операций и контент</h2>
     <Controls.PageLayout attr:style="width: 100%; margin-bottom: 150px;"
             tabsSelectedKey = "{{_demoTabsSelectedKey}}"
             tabsSource = "{{_demoTabsSource}}"/>
-    <h2>Нет вкладок.</h2>
-    <Controls.PageLayout attr:style="width: 100%; margin-bottom: 150px;"
-                         controlPanelTemplate="{{_controlAreaTemplate}}">
-        <ws:content>
-            <ws:partial template="{{_tabsContent}}"/>
-        </ws:content>
-    </Controls.PageLayout>
-    <h2>Есть вкладки. У всех вкладок общая панель оперций, но разный контент</h2>
-    <Controls.PageLayout attr:style="width: 100%;"
-                         tabsSelectedKey = "{{_demoTabsSelectedKey}}"
-                         tabsSource = "{{_demoTabsSource2}}"
-                         controlPanelTemplate="{{_controlAreaTemplate}}">
-    </Controls.PageLayout>
 </div>

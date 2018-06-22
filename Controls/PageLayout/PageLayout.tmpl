@@ -1,7 +1,7 @@
 <div class="controls-PageLayout">
     <div attr:class="controls-PageLayout_wrapper">
-        <ws:if data="{{getControlPanelTemplate()}}">
-            <ws:partial attr:class="controls-PageLayout__ControlsArea" template="{{getControlPanelTemplate()}}"/>
+        <ws:if data="{{_controlPanelTemplate}}">
+            <Controls.Container.Async templateName="{{_controlPanelTemplate}}" templateOptions="{{_options}}"/>
         </ws:if>
         <ws:if data="{{_options.tabsSource}}">
             <div attr:class="controls-PageLayout__ButtonTabs_wrapper">
@@ -13,7 +13,7 @@
             </div>
         </ws:if>
     </div>
-    <ws:if data="{{getContent()}}">
-        <Controls.Container.Async templateName="{{getContent()}}" templateOptions="{{_options}}"/>
+    <ws:if data="{{_content}}">
+        <Controls.Container.Async templateName="{{_content}}" templateOptions="{{_options}}"/>
     </ws:if>
 </div>

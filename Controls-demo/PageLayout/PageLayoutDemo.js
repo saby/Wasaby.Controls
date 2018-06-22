@@ -53,42 +53,10 @@ define('Controls-demo/PageLayout/PageLayoutDemo', [
          ]
       });
 
-   var demoTabsSource2 = new MemorySource({
-      idProperty: 'id',
-      data: [
-         {
-            id: '1',
-            title: 'very',
-            content: 'tmpl!Controls-demo/PageLayout/resources/tabsContent'
-         },
-         {
-            id: '2',
-            title: 'hard',
-            content: 'tmpl!Controls-demo/PageLayout/resources/tabsContent2'
-         },
-         {
-            id: '3',
-            title: 'invent',
-            content: 'tmpl!Controls-demo/PageLayout/resources/tabsContent'
-         },
-         {
-            id: '4',
-            title: 'tabs',
-            content: 'tmpl!Controls-demo/PageLayout/resources/tabsContent2'
-         },
-         {
-            id: '5',
-            title: 'titles',
-            content: 'tmpl!Controls-demo/PageLayout/resources/tabsContent'
-         }
-      ]
-   });
-
    var demoBrowserTabs = Control.extend({
       _template: template,
       _demoTabsSelectedKey: '1',
       _demoTabsSource: demoTabsSource,
-      _demoTabsSource2: demoTabsSource2,
       _controlAreaTemplate: controlAreaTemplate,
       _tabsContent: tabsContent2
    });

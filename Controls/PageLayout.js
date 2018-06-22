@@ -23,14 +23,6 @@ define('Controls/PageLayout', [
       },
       _beforeUpdate: function(newOptions) {
          _private.setCurrentItemState(newOptions, this);
-      },
-
-      getContent: function() {
-         return this._content || this._options.content;
-      },
-
-      getControlPanelTemplate: function() {
-         return this._controlPanelTemplate || this._options.controlPanelTemplate;
       }
    });
    return browserTabs;
