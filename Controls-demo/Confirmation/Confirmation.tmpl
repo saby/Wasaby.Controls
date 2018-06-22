@@ -23,6 +23,11 @@
    </ws:for>
 
    <div class="controls-ConfirmationDemo__caption" test_name="result">Result: {{_result}}</div>
+   <div class="controls-ConfirmationDemo__caption" test_name="resultHandler">onResultHandler: {{_resultHandler}}</div>
 
-   <Controls.Popup.Opener.Confirmation name="popupOpener"/>
+   <Controls.Popup.Opener.Confirmation name="popupOpener">
+      <ws:popupOptions>
+         <ws:eventHandlers onResult="{{_onResultHandler}}" />
+      </ws:popupOptions>
+   </Controls.Popup.Opener.Confirmation>
 </div>
