@@ -59,10 +59,10 @@ define("File/Attach", ["require", "exports", "File/Attach/Lazy", "Core/core-simp
      *      attach.choose(FileSystem.getType());
      *   });
      *   self.getChildControlByName("clipboardBtn").subscribe("onActivated", function(){
-     *      attach.choose(ClipboardGetter.getType());
+     *      attach.choose(Clipboard.getType());
      *   });
      *   self.getChildControlByName("scanBtn").subscribe("onActivated", function(){
-     *      attach.choose(ScannerGetter.getType());
+     *      attach.choose(Scanner.getType());
      *   });
      *   self.getChildControlByName("uploadBtn").subscribe("onActivated", function(){
      *      attach.upload({
