@@ -10,8 +10,7 @@ define('Controls/Popup/Compatible/Layer', [
    'WS.Data/Chain',
    'Core/moduleStubs',
    'Core/IoC',
-   'WS.Data/Source/SbisService',
-   'cdn!jquery/3.3.1/jquery-min.js'
+   'WS.Data/Source/SbisService'
 ], function(Deferred, ParallelDeferred, Constants, RightsManager, ExtensionsManager, Chain, moduleStubs, IoC, SbisService) {
    'use strict';
 
@@ -119,11 +118,11 @@ define('Controls/Popup/Compatible/Layer', [
       moduleStubs.require(['OnlineSbisRu/ViewSettings/Util/ViewSettingsData']).addCallback(function(mods) {
          mods[0].getData(null, true).addCallback(function(data) {
             viewSettings = data;
-            moduleStubs.require(['Core/core-extensions']).addCallback(function() {
+            moduleStubs.require(['cdn!jquery/3.3.1/jquery-min.js', 'Core/core-extensions']).addCallback(function() {
                dResult.callback(viewSettings);
             });
          }).addErrback(function() {
-            moduleStubs.require(['Core/core-extensions']).addCallback(function() {
+            moduleStubs.require(['cdn!jquery/3.3.1/jquery-min.js', 'Core/core-extensions']).addCallback(function() {
                dResult.callback(viewSettings);
             });
          });
