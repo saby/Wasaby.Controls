@@ -36,7 +36,7 @@ define('Controls/Button/MenuButton',
 
       /**
        * @name Controls/MenuButton#size
-       * @cfg {String} Size of the button.
+       * @cfg {String} Size of the menu button.
        * @variant s Button has s size. Not supported by these button styles: buttonPrimary, buttonDefault, buttonAdd, iconButtonBordered.
        * @variant m Button has m size.
        * @variant l Button has l size.
@@ -45,7 +45,7 @@ define('Controls/Button/MenuButton',
 
       /**
        * @name Controls/MenuButton#style
-       * @cfg {String} Display style of button.
+       * @cfg {String} Display style of menu button.
        * @variant iconButtonBordered Button display as icon with border.
        * @variant linkMain Button display as main link style.
        * @variant linkMain2 Button display as first nonaccent link style.
