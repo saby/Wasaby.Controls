@@ -2,11 +2,7 @@
 import DataModel = require("WS.Data/Entity/Model");
 import Di = require("WS.Data/Di");
 import {IResource} from "File/IResource";
-
-export type IFileModel = DataModel & {
-    getOrigin(): IResource;
-    getName(): string;
-}
+import {IFileModel} from "File/Attach/IModel";
 
 /**
  * Модуль с результатом загрузки ресурса на сервис
@@ -15,7 +11,7 @@ export type IFileModel = DataModel & {
  * @extends WS.Data/Entity/Model
  * @public
  */
-export let Model: IFileModel = DataModel.extends({
+let Model: IFileModel = DataModel.extend({
 
     /**
      * @cfg {File/IResource} Загружаемый ресурс
@@ -48,3 +44,5 @@ export let Model: IFileModel = DataModel.extends({
 });
 
 Di.register('file.model', Model);
+
+export = Model;

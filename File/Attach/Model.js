@@ -1,6 +1,5 @@
 define("File/Attach/Model", ["require", "exports", "WS.Data/Entity/Model", "WS.Data/Di"], function (require, exports, DataModel, Di) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Модуль с результатом загрузки ресурса на сервис
      * @class
@@ -8,7 +7,7 @@ define("File/Attach/Model", ["require", "exports", "WS.Data/Entity/Model", "WS.D
      * @extends WS.Data/Entity/Model
      * @public
      */
-    exports.Model = DataModel.extends({
+    var Model = DataModel.extend({
         /**
          * @cfg {File/IResource} Загружаемый ресурс
          * @name File/Attach/Model#origin
@@ -36,5 +35,6 @@ define("File/Attach/Model", ["require", "exports", "WS.Data/Entity/Model", "WS.D
             return this._$origin.getName();
         }
     });
-    Di.register('file.model', exports.Model);
+    Di.register('file.model', Model);
+    return Model;
 });
