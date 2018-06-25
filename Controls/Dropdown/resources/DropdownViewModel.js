@@ -10,15 +10,32 @@ define('Controls/Dropdown/resources/DropdownViewModel',
       'WS.Data/Entity/Model',
       'WS.Data/Relation/Hierarchy'
    ],
+
    function(BaseViewModel, Chain, ItemsUtil, ItemsViewModel, Model, Hierarchy) {
+      var _private = {
+         filterHierarchy: function(item) {
+            if (!this._options.parentProperty || !this._options.nodeProperty) {
+               return true;
+            }
+            return item.get(this._options.parentProperty) === this._options.rootKey;
+         },
+         filterAdditional: function(item) {
+            if (!this._options.additionalProperty || this._expanded === true) {
+               return true;
+            }
+            return item.get(this._options.additionalProperty) !== true;
+         }
+      };
+
       var DropdownViewModel = BaseViewModel.extend({
          _itemsModel: null,
+         _expanded: false,
 
          constructor: function(cfg) {
             this._options = cfg;
             DropdownViewModel.superclass.constructor.apply(this, arguments);
             this._itemsModel = new ItemsViewModel({
-               items: this._getCurrentRootItems(cfg),
+               items: cfg.items,
                keyProperty: cfg.keyProperty,
                displayProperty: 'title'
             });
@@ -27,15 +44,18 @@ define('Controls/Dropdown/resources/DropdownViewModel',
                parentProperty: cfg.parentProperty,
                nodeProperty: cfg.nodeProperty
             });
+            this.setFilter(this.getDisplayFilter());
          },
 
-         _getCurrentRootItems: function(cfg) {
-            if (!cfg.parentProperty || !cfg.nodeProperty) {
-               return cfg.items;
-            }
-            return Chain(cfg.items).filter(function(item) {
-               return item.get(cfg.parentProperty) === cfg.rootKey;
-            }).value();
+         setFilter: function(filter) {
+            this._itemsModel.setFilter(filter);
+         },
+
+         getDisplayFilter: function() {
+            var filter = [];
+            filter.push(_private.filterHierarchy.bind(this));
+            filter.push(_private.filterAdditional.bind(this));
+            return filter;
          },
 
          setItems: function(options) {
@@ -44,7 +64,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
 
          setRootKey: function(key) {
             this._options.rootKey = key;
-            this._itemsModel.setItems(this._getCurrentRootItems(this._options));
+            this.setFilter(this.getDisplayFilter());
          },
 
          destroy: function() {
@@ -101,8 +121,19 @@ define('Controls/Dropdown/resources/DropdownViewModel',
          _hasParent: function(item) {
             return this._hierarchy.hasParent(item, this._options.items);
          },
+         getItems: function() {
+            return this._itemsModel._options.items;
+         },
          getCount: function() {
             return this._itemsModel.getCount();
+         },
+         toggleExpanded: function(expanded) {
+            this._expanded = expanded;
+            this.setFilter(this.getDisplayFilter());
+            this._nextVersion();
+         },
+         isExpanded: function() {
+            return this._expanded;
          },
          getEmptyItem: function() {
             if (this._options.emptyText) {
