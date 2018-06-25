@@ -1,7 +1,7 @@
 /// <amd-module name="File/Attach/Base" />
 // dependency for types
 import Uploader = require("File/Attach/Uploader");
-import {IFileModel as Model} from 'File/Attach/Model';
+import {IFileModel as Model} from 'File/Attach/IModel';
 import {Source as ISource} from 'File/Attach/Source';
 import {IResourceGetter} from 'File/IResourceGetter';
 import {IResourceConstructor, IResource} from 'File/IResource';
