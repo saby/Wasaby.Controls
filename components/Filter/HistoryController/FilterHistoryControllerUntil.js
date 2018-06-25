@@ -110,7 +110,7 @@ define('SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil',
                }, false);
 
                if(elemFromHistory) {
-                  if (doNotApplyKeys.indexOf(elemFromHistory.filterField) === -1) {
+                  if (doNotApplyKeys.indexOf(elemFromHistory.filterField || elemFromHistory.internalValueField) === -1) {
                      /* Меняем только value и caption, т.к. нам нужны только значения для фильтрации из историии,
                       остальные значения структуры нам не интересны + их могут менять, и портить их неправильно тем, что пришло из истории неправильно */
                      if (elemFromHistory.value !== undefined) {
