@@ -454,7 +454,7 @@ node('controls') {
         def run_test_fail = ""
         if (params.RUN_ONLY_FAIL_TEST == true){
             run_test_fail = "-sf"
-            step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: lastSuccessful(), stable: false])
+            step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
         }
 
         def site = "http://${NODE_NAME}:30010"
