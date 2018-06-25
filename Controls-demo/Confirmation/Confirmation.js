@@ -2,7 +2,7 @@ define('Controls-demo/Confirmation/Confirmation',
    [
       'Core/Control',
       'tmpl!Controls-demo/Confirmation/Confirmation',
-      'tmpl!Controls-demo/Confirmation/resources/detailsTemplate1'
+      'Controls-demo/Confirmation/resources/detailsComponent'
    ],
    function(Control, template) {
 
@@ -20,7 +20,7 @@ define('Controls-demo/Confirmation/Confirmation',
             background: BG,
             cfg: {
                message: MESSAGE,
-               details: 'tmpl!Controls-demo/Confirmation/resources/detailsTemplate1',
+               details: 'Controls-demo/Confirmation/resources/detailsComponent',
                type: 'ok'
             }
          }, {
@@ -104,12 +104,21 @@ define('Controls-demo/Confirmation/Confirmation',
          _blocks: blocks,
          _result: '',
 
-         _open: function(e, cfg){
+         _beforeMount: function() {
+            this._onResultHandler = this._onResultHandler.bind(this);
+         },
+
+         _open: function(e, cfg) {
             var self = this;
-            this._children.popupOpener.open(cfg).addCallback(function(res){
+            this._children.popupOpener.open(cfg).addCallback(function(res) {
                self._result = res;
                self._forceUpdate();
             });
+         },
+
+         _onResultHandler: function(result) {
+            this._resultHandler = result;
+            this._forceUpdate();
          }
 
       });
