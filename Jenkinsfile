@@ -474,7 +474,7 @@ node('controls') {
             ls -la
             """
         }
-    }    
+
         def site = "http://${NODE_NAME}:30010"
         site.trim()
         dir("./controls/tests/int"){
@@ -522,6 +522,7 @@ node('controls') {
 
                             """
                         }
+                      }
                         
                     }
                 }
