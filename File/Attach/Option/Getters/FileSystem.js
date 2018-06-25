@@ -50,6 +50,11 @@ define("File/Attach/Option/Getters/FileSystem", ["require", "exports", "tslib", 
             return _super.call(this, new Getter(options || {})) || this;
         }
         /**
+         * @description
+         * Тип геттера передается в метод choose File/Attach, чтобы указать каким способом(геттером) выбираются файлы
+         * <pre>
+         *   attach.choose(FileSystem.getType()); // выбрать файлы, используя системное окно
+         * </pre>
          * @static
          * @method
          * @returns {String} Тип Getter'a

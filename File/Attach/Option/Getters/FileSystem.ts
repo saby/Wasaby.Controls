@@ -52,6 +52,11 @@ class FileSystem extends ResourceGetter {
         super (new Getter(options || {}));
     }
     /**
+     * @description 
+     * Тип геттера передается в метод choose File/Attach, чтобы указать каким способом(геттером) выбираются файлы
+     * <pre>
+     *   attach.choose(FileSystem.getType()); // выбрать файлы, используя системное окно
+     * </pre>
      * @static
      * @method
      * @returns {String} Тип Getter'a
