@@ -5,6 +5,7 @@ define('Controls/List/Grid/GridView', [
    'tmpl!Controls/List/Grid/Column',
    'tmpl!Controls/List/Grid/HeaderContent',
    'Core/detection',
+   'tmpl!Controls/List/Grid/GroupTemplate',
    'tmpl!Controls/List/Grid/GroupContentTemplate',
    'tmpl!Controls/List/Grid/Header',
    'tmpl!Controls/List/Grid/Results',
@@ -12,7 +13,7 @@ define('Controls/List/Grid/GridView', [
    'css!Controls/List/Grid/Grid',
    'css!Controls/List/Grid/OldGrid',
    'Controls/List/BaseControl/Scroll/Emitter'
-], function(ListView, GridTpl, DefaultItemTpl, ColumnTpl, HeaderContentTpl, cDetection, GroupContentTemplate) {
+], function(ListView, GridTpl, DefaultItemTpl, ColumnTpl, HeaderContentTpl, cDetection, GroupTemplate, GroupContentTemplate) {
 
    'use strict';
 
@@ -52,6 +53,7 @@ define('Controls/List/Grid/GridView', [
       },
       GridView = ListView.extend({
          _template: GridTpl,
+         _groupTemplate: GroupTemplate,
          _groupContentTemplate: GroupContentTemplate,
          _defaultItemTemplate: DefaultItemTpl,
          _headerContentTemplate: HeaderContentTpl,
