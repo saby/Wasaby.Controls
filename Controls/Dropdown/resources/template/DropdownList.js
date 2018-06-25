@@ -94,6 +94,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
             }
             if (newOptions.items !== this._options.items) {
                this._listModel.setItems(newOptions);
+               this._children.subDropdownOpener.close();
             }
 
          },
@@ -125,6 +126,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
          resultHandler: function(result) {
             switch (result.action) {
                case 'itemClick':
+               case 'pinClicked':
                   this._notify('sendResult', [result]);
             }
          },
