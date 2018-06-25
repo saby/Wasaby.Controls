@@ -1,24 +1,13 @@
 <div class="controls-SubmitPopup__body">
-
    <!--TODO https://online.sbis.ru/opendoc.html?guid=0cf7eb6c-1c4f-4539-aa90-d87cefc47aa3-->
    <div>
       <ws:if data="{{message}}">
-         <ws:partial template="{{messageTemplate}}" hasDetails="{{details}}">
-            <ws:content>
-               <div class="controls-SubmitPopup__message-centered">{{message}}</div>
-            </ws:content>
-         </ws:partial>
+         <ws:partial template="{{messageTemplate}}" hasDetails="{{details}}" content="{{message}}" />
       </ws:if>
    </div>
-
    <div>
       <ws:if data="{{details}}">
-         <ws:partial template="{{detailsTemplate}}">
-            <ws:content>
-               <div class="controls-SubmitPopup__message-centered">{{details}}</div>
-            </ws:content>
-         </ws:partial>
+         <ws:partial template="{{detailsTemplate}}" content="{{details}}" />
       </ws:if>
    </div>
-
 </div>

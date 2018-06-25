@@ -5,7 +5,7 @@ define('SBIS3.CONTROLS/Button/IconButton/IconButtonDocs',
     }
     /**
      * @mixin SBIS3.CONTROLS/Button/IconButton/IconButtonDocs
-     * @author Романов В.С.
+     * @author Герасимов А.М.
      * @public
      * @css @border-width_IconButton_bordered Ширина границ кнопки-иконки с обводкой
      * @css @border-color_IconButton_bordered Цвет границ кнопки-иконки с обводкой по-умолчанию

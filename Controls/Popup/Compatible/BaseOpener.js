@@ -40,6 +40,10 @@ function(cMerge, Random) {
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea';
          cfg.animation = 'off';
 
+         if (cfg.onResultHandler) { //передаем onResult - колбэк, объявленный на opener'e, в compoundArea.
+            cfg.componentOptions.onResultHandler = cfg.onResultHandler;
+         }
+
          this._setSizes(cfg, templateClass);
       },
 
@@ -76,6 +80,10 @@ function(cMerge, Random) {
 
          if (newCfg.target) {
             newCfg.dialogOptions.target = $(newCfg.target);
+         }
+
+         if (newCfg.eventHandlers && newCfg.eventHandlers.onResult) {
+            newCfg.dialogOptions.onResultHandler = newCfg.eventHandlers.onResult;
          }
 
          return newCfg;

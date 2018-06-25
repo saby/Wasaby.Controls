@@ -10,10 +10,24 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
    "Core/core-instance",
    'SBIS3.CONTROLS/Date/RangeBigChoose/resources/CalendarSource',
    'Lib/LayoutManager/LayoutManager',
+   'Controls/Calendar/Utils',
    "SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthView",
    'SBIS3.CONTROLS/ScrollContainer',
    'browser!SBIS3.CONTROLS/ListView/resources/SwipeHandlers'
-], function(constants, detection, throttle, isEmpty, ListView, ItemTmpl, RangeMixin, DateUtils, cInstance, CalendarSource, LayoutManager) {
+], function(
+   constants,
+   detection,
+   throttle,
+   isEmpty,
+   ListView,
+   ItemTmpl,
+   RangeMixin,
+   DateUtils,
+   cInstance,
+   CalendarSource,
+   LayoutManager,
+   calendarUtils
+) {
    'use strict';
    var cConst = constants; //константы нужны для работы дат, не уверен что можно отключать из зависимостей (стан ругается)
 
@@ -249,15 +263,19 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
       _onMonthTitleClick: function(event) {
          var date = this._getDateByMonthTitleEvent(event),
             tmpStart = this.getStartValue(),
-            start, end;
+            range, start, end;
          if (this.isSelectionProcessing()) {
-            if (tmpStart > date) {
-               start = date;
-               end = tmpStart;
+            if (tmpStart >= date) {
+               range = calendarUtils.updateRangeByQuantum(tmpStart, date, this._options.quantum || {});
             } else {
-               start = tmpStart;
-               end = new Date(date.getFullYear(), date.getMonth(), date.getDate() - 1);
+               range = calendarUtils.updateRangeByQuantum(
+                  tmpStart,
+                  new Date(date.getFullYear(), date.getMonth(), date.getDate() - 1),
+                  this._options.quantum || {}
+               );
             }
+            start = range[0];
+            end = range[1];
             this.cancelSelection();
          } else {
             start = date;
@@ -270,7 +288,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          var date = this._getDateByMonthTitleEvent(event),
             startDate = this.getStartValue();
          if (this.isSelectionProcessing()) {
-            if (date >= startDate) {
+            if (date > startDate) {
                this._onMonthViewSelectingRangeEndDateChange(null, new Date(date.getFullYear(), date.getMonth(), date.getDate() - 1));
             } else {
                this._onMonthViewSelectingRangeEndDateChange(null, date);

@@ -1,7 +1,8 @@
 define('Controls-demo/Confirmation/Confirmation',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Confirmation/Confirmation'
+      'tmpl!Controls-demo/Confirmation/Confirmation',
+      'tmpl!Controls-demo/Confirmation/resources/detailsTemplate1'
    ],
    function(Control, template) {
 
@@ -19,7 +20,7 @@ define('Controls-demo/Confirmation/Confirmation',
             background: BG,
             cfg: {
                message: MESSAGE,
-               details: DETAILS,
+               details: 'tmpl!Controls-demo/Confirmation/resources/detailsTemplate1',
                type: 'ok'
             }
          }, {

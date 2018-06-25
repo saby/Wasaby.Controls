@@ -21,7 +21,7 @@ define('SBIS3.CONTROLS/SbisDropdownList',
        * @class SBIS3.CONTROLS/SbisDropdownList
        * @extends SBIS3.CONTROLS/DropdownList
        *
-       * @author Романов В.С.
+       * @author Герасимов А.М.
        *
        * @control
        * @public

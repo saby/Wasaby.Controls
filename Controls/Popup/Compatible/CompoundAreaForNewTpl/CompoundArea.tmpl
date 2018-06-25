@@ -1,3 +1,8 @@
 <div class="control__compoundArea-new">
-   <div class="vDomWrapper"></div>
+   <ws:if data="{{isTMPL(innerComponentOptions.template)}}">
+      <ws:partial template="{{innerComponentOptions.template}}" scope="{{innerComponentOptions}}" />
+   </ws:if>
+   <ws:else>
+      <div class="vDomWrapper"></div>
+   </ws:else>
 </div>
