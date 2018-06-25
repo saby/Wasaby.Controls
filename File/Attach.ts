@@ -2,7 +2,7 @@
 // dependency for types
 import Deferred = require("Core/Deferred");
 import EventObject = require("Core/EventObject");
-import {IFileModel as Model} from 'File/Attach/Model';
+import {IFileModel as Model} from 'File/Attach/IModel';
 import SourceOption = require("File/Attach/Option/Source");
 import ResourceGetterOption = require("File/Attach/Option/ResourceGetter");
 import {IResourceConstructor, IResource} from 'File/IResource';
