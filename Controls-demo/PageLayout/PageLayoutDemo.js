@@ -23,32 +23,32 @@ define('Controls-demo/PageLayout/PageLayoutDemo', [
             {
                id: '1',
                title: 'very',
-               tabsContent: 'tmpl!Controls-demo/PageLayout/resources/tabsContent',
-               controlAreaTemplate: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate'
+               mainArea: 'tmpl!Controls-demo/PageLayout/resources/tabsContent',
+               tabsArea: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate'
             },
             {
                id: '2',
                title: 'hard',
-               tabsContent: 'tmpl!Controls-demo/PageLayout/resources/tabsContent2',
-               controlAreaTemplate: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate2'
+               mainArea: 'tmpl!Controls-demo/PageLayout/resources/tabsContent2',
+               tabsArea: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate2'
             },
             {
                id: '3',
                title: 'invent',
-               tabsContent: 'tmpl!Controls-demo/PageLayout/resources/tabsContent',
-               controlAreaTemplate: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate'
+               mainArea: 'tmpl!Controls-demo/PageLayout/resources/tabsContent',
+               tabsArea: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate'
             },
             {
                id: '4',
                title: 'tabs',
-               tabsContent: 'tmpl!Controls-demo/PageLayout/resources/tabsContent2',
-               controlAreaTemplate: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate2'
+               mainArea: 'tmpl!Controls-demo/PageLayout/resources/tabsContent2',
+               tabsArea: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate2'
             },
             {
                id: '5',
                title: 'titles',
-               tabsContent: 'tmpl!Controls-demo/PageLayout/resources/tabsContent',
-               controlAreaTemplate: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate'
+               mainArea: 'tmpl!Controls-demo/PageLayout/resources/tabsContent',
+               tabsArea: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate'
             }
          ]
       });
@@ -59,8 +59,8 @@ define('Controls-demo/PageLayout/PageLayoutDemo', [
          {
             id: '1',
             title: 'very',
-            tabsContent: 'tmpl!Controls-demo/PageLayout/resources/tabsContent2',
-            controlAreaTemplate: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate2'
+            mainArea: 'tmpl!Controls-demo/PageLayout/resources/tabsContent2',
+            tabsArea: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate2'
          }
       ]
    });

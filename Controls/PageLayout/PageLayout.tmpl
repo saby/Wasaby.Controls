@@ -1,6 +1,6 @@
 <div class="controls-PageLayout">
     <div attr:class="controls-PageLayout__ControlPanel__wrapper">
-        <Controls.Container.Async templateName="{{_controlPanelTemplate}}" templateOptions="{{_options}}"/>
+        <Controls.Container.Async templateName="{{_tabsArea}}" templateOptions="{{_options}}"/>
         <ws:if data="{{_items.getCount() > 1}}">
             <div attr:class="controls-PageLayout__ButtonTabs_wrapper">
                 <Controls.Tabs.Buttons
@@ -11,5 +11,5 @@
             </div>
         </ws:if>
     </div>
-    <Controls.Container.Async templateName="{{_content}}" templateOptions="{{_options}}"/>
+    <Controls.Container.Async templateName="{{_mainArea}}" templateOptions="{{_options}}"/>
 </div>

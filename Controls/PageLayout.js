@@ -16,8 +16,8 @@ define('Controls/PageLayout', [
          });
       },
       updateOptions: function(self) {
-         self._controlPanelTemplate = self._items.getRecordById(self._options.tabsSelectedKey).get('controlAreaTemplate');
-         self._content = self._items.getRecordById(self._options.tabsSelectedKey).get('tabsContent');
+         self._tabsArea = self._items.getRecordById(self._options.tabsSelectedKey).get('tabsArea');
+         self._mainArea = self._items.getRecordById(self._options.tabsSelectedKey).get('mainArea');
       }
    };
    var browserTabs = Control.extend({
