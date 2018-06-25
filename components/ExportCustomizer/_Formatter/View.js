@@ -33,10 +33,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
       /**
        * @typedef {object} ExportFormatterResult Тип, описывающий возвращаемые настраиваемые значения компонента
        * @property {string} primaryUuid Исходный uuid стилевого эксель-файла
-       * @property {string} secondaryUuid Транзакционный uuid стилевого эксель-файла
+       * @property {string} fileUuid Транзакционный uuid стилевого эксель-файла
        *
        * @see primaryUuid
-       * @see secondaryUuid
+       * @see fileUuid
        */
 
       /**
@@ -92,13 +92,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                 */
                fieldIds: null,
                /**
-                * @cfg {string} Исходный uuid стилевого эксель-файла
+                * @cfg {string} Исходный uuid стилевого эксель-файла (неизменного)
                 */
                primaryUuid: null,
                /**
-                * @cfg {string} Транзакционный uuid стилевого эксель-файла
+                * @cfg {string} Транзакционный uuid стилевого эксель-файла (изменяемого)
                 */
-               secondaryUuid: null,
+               fileUuid: null,
                /**
                 * @cfg {string|number} Идентификатор потребителя (обычно пресета)
                 */
@@ -112,10 +112,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             _preview: null,
             // Размер области предпросмотра
             _previewSize: null,
-            // Набор обещаний, ожидающих создания стилевого эксель-файла
-            _creation: {},
-            // Ожидаемое открытие стилевого эксель-файла
-            _opening: null,
             // Поддерживается ли редактирование стилевого эксель-файла в отдельном приложении
             // TODO: Это временное решение пока метод canEditInApp форматтера не полностью фунционален. Позже заменить на прямые вызовы этого метода при каждом использовании меню выбора способв форматирования
             _isAppAllowed: null
@@ -185,9 +181,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             var options = this._options;
             var fieldIds = options.fieldIds;
             if (fieldIds && fieldIds.length) {
-               this._opening = useApp ? 'openApp' : 'open';
-               var result = this.sendCommand('subviewChanged', 'open');
-               if (!(result && typeof result === 'object' && result.isComplete)) {
+               if (!options.fileUuid) {
+                  this._callFormatterMethods([{method:'clone', args:options.primaryUuid}, useApp ? 'openApp' : 'open']);
+               }
+               else {
                   this._callFormatterOpen(useApp);
                }
             }
@@ -204,9 +201,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             var isClone = !!fileUuid;
             var options = this._options;
             var consumerId = options.consumerId || '';
-            if (this._creation[consumerId]) {
-               throw new Error('Already in creation');
-            }
             var fieldIds = options.fieldIds;
             var formatter = this._exportFormatter;
             var promise = (isClone
@@ -214,17 +208,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                   : formatter.create(fieldIds || [], this._getFieldTitles(fieldIds), options.serviceParams)
             ).addCallbacks(
                function (result) {
-                  options.secondaryUuid = result;
+                  options.fileUuid = result;
                   this.sendCommand('subviewChanged', isClone ? 'clone' : 'create');
-                  if (result) {
-                     this._updatePreview();
-                  }
+                  this._updatePreview();
                }.bind(this),
                function (err) { return err; }
             );
-            this._creation[consumerId] = promise.createDependent().addBoth(function (consumerId) {
-               delete this._creation[consumerId];
-            }.bind(this, consumerId));
             // Запустить индикатор сразу
             this._waitIndicatorStart();
             return promise;
@@ -239,7 +228,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          _callFormatterUpdate: function () {
             var options = this._options;
             var fieldIds = options.fieldIds;
-            var promise = this._exportFormatter.update(options.secondaryUuid, fieldIds || [], this._getFieldTitles(fieldIds), options.serviceParams).addCallbacks(
+            var promise = this._exportFormatter.update(options.fileUuid, fieldIds || [], this._getFieldTitles(fieldIds), options.serviceParams).addCallbacks(
                this._updatePreview.bind(this, false),
                function (err) { return err; }
             );
@@ -256,13 +245,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * return {Core/Deferred}
           */
          _callFormatterOpen: function (useApp) {
-            this._opening = null;
             var options = this._options;
             var fieldIds = options.fieldIds;
-            return this._exportFormatter[useApp ? 'openApp' : 'open'](options.secondaryUuid || options.primaryUuid, fieldIds || [], this._getFieldTitles(fieldIds), options.serviceParams).addCallbacks(
+            return this._exportFormatter[useApp ? 'openApp' : 'open'](options.fileUuid || options.primaryUuid, fieldIds || [], this._getFieldTitles(fieldIds), options.serviceParams).addCallbacks(
                function (result) {
-                  this.sendCommand('subviewChanged', 'openEnd');
                   if (result) {
+                     this.sendCommand('subviewChanged', 'afterOpen');
                      this._updatePreview();
                   }
                }.bind(this),
@@ -411,7 +399,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             }
             this._waitIndicatorStart();
             var options = this._options;
-            this._exportFormatter.getPreviewUrl(options.secondaryUuid || options.primaryUuid, size.width, size.height).addCallbacks(
+            this._exportFormatter.getPreviewUrl(options.fileUuid || options.primaryUuid, size.width, size.height).addCallbacks(
                function (url) {
                   var img = this._preview[0];
                   img.onload = img.onerror = this._updatePreviewClearStop.bind(this);
@@ -424,6 +412,30 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          }, PREVIEW_DELAY),
 
          /**
+          * Завершить транзакцию
+          *
+          * @protected
+          * @param {boolean} isCommit Сохранить или откатить изменения
+          * @param {boolean} isForced Сохранить, даже если нет изменений (только при сохранении)
+          */
+         _endTransaction: function (isCommit, isForced) {
+            var options = this._options;
+            var fileUuid = options.fileUuid;
+            if (isCommit && isForced && !fileUuid) {
+               this._callFormatterCreate(options.primaryUuid).addCallback(this._endTransaction.bind(this, true));
+               return;
+            }
+            var deleteUuid = isCommit ? options.primaryUuid : fileUuid;
+            if (deleteUuid) {
+               this._callFormatterDelete(deleteUuid);
+            }
+            if (isCommit) {
+               options.primaryUuid = fileUuid;
+            }
+            options.fileUuid = null;
+         },
+
+         /**
           * Установить указанные настраиваемые значения компонента
           *
           * @public
@@ -434,62 +446,49 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             if (!values || typeof values !== 'object') {
                throw new Error('Object required');
             }
+            if (meta /*&& meta.source === 'presets'*/) {
+               switch (meta.reason) {
+                  case 'delete':
+                     this._callFormatterDelete(meta.args[0]);
+                     return;
+                  case 'transaction':
+                     this._endTransaction(meta.args[0], meta.args[1]);
+                     return;
+               }
+            }
             var options = this._options;
-            var changes = objectChange(options, values, {fieldIds:true, primaryUuid:false, consumerId:false});
+            var changes = objectChange(options, values, {fieldIds:true, primaryUuid:false, fileUuid:false, consumerId:false});
             if (changes) {
-               if ('consumerId' in changes) {
-                  //Если поменялся consumerId и есть seondaryUuid - удалить этот временный файл
-                  var seondaryUuid = options.seondaryUuid;
-                  if (seondaryUuid) {
-                     this._callFormatterDelete(seondaryUuid);
-                     options.seondaryUuid = null;
-                  }
-               }
-               else {
-               }
                var fieldIds = options.fieldIds;
                var hasFields = !!(fieldIds && fieldIds.length);
-               var consumerId = options.consumerId || '';
-               var creating = this._creation[consumerId];
                var methods = [];
-               if (options.primaryUuid) {
-                  if (!('primaryUuid' in changes) && 'fieldIds' in changes && hasFields) {
-                     methods.push(options.seondaryUuid ? 'update' : {method:'clone', args:options.primaryUuid});
+               if ('consumerId' in changes) {
+                  //Если поменялся consumerId
+                  if ('fileUuid' in changes) {
+                     // и поменялся транзакционный uuid - удалить старый транзакционный файл
+                     var fileUuid = changes.fileUuid;
+                     if (fileUuid) {
+                        this._callFormatterDelete(fileUuid);
+                        options.fileUuid = null;
+                     }
                   }
                }
                else {
-                  if (hasFields) {
-                     if (!creating) {
-                        var isClone = meta /*&& meta.source === 'presets'*/ && meta.reason === 'clone';
-                        methods.push(isClone ? {method:'clone', args:meta.args[0]} : 'create');
-                        if (isClone && 'fieldIds' in changes) {
-                           methods.push('update');
-                        }
+                  if ('fieldIds' in changes && hasFields) {
+                     if (!options.fileUuid) {
+                        methods.push({method:'clone', args:options.primaryUuid});
                      }
-                     else {
-                        methods.push('update');
-                     }
+                     methods.push('update');
                   }
-               }
-               if (this._opening) {
-                  methods.push(this._opening);
                }
                if (methods.length) {
-                  if (creating) {
-                     creating.addCallback(this._callFormatterMethods.bind(this, methods));
-                  }
-                  else {
-                     this._callFormatterMethods(methods);
-                  }
+                  this._callFormatterMethods(methods);
                }
                else {
                   this._updatePreview();
                }
                this.setEnabled(hasFields);
                this.setVisible(hasFields);
-            }
-            if (meta /*&& meta.source === 'presets'*/ && meta.reason === 'delete') {
-               this._callFormatterDelete(meta.args[0]);
             }
          },
 
@@ -502,8 +501,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          getValues: function () {
             var options = this._options;
             return {
-               primaryUuid: options.primaryUuid,
-               secondaryUuid: options.secondaryUuid
+               //^^^primaryUuid: options.primaryUuid,
+               fileUuid: options.fileUuid
             };
          },
 
