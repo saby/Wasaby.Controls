@@ -522,13 +522,13 @@ node('controls') {
 
                             """
                         }
-                      }
                         
                     }
                 }
             }
             
         )
+       }
     }
 } finally { 
     sh """
