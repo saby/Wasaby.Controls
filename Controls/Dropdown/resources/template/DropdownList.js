@@ -126,11 +126,11 @@ define('Controls/Dropdown/resources/template/DropdownList',
          },
          _itemClickHandler: function(event, item, pinClicked) { //todo нужно обсудить
             var result = {
-               action: 'itemClick',
+               action: pinClicked ? 'pinClicked' : 'itemClick',
                event: event,
-               data: [item, pinClicked]
+               data: [item]
             };
-            
+
             // means that pin button was clicked
             if (pinClicked) {
                event.stopPropagation();
