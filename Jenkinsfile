@@ -386,7 +386,7 @@ node('controls') {
                 sudo chmod -R 0777 ${workspace}
                 sudo chmod -R 0777 /home/sbis/Controls
             """
-        
+        }
         def soft_restart = "True"
         if ( params.browser_type in ['ie', 'edge'] ){
 			soft_restart = "False"
@@ -406,12 +406,8 @@ node('controls') {
             TAGS_NOT_TO_START = iOSOnly
             ELEMENT_OUTPUT_LOG = locator
             WAIT_ELEMENT_LOAD = 20
-            HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/
-            [filestostart]
-            test_auto_focus.py
-            test_bread_crumbs.py
-            test_browser.py"""
-        
+            HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/"""
+
         if ( "${params.theme}" != "online" ) {
             writeFile file: "./controls/tests/reg/config.ini",
             text:
@@ -432,12 +428,7 @@ node('controls') {
                 #BRANCH=True
                 [regression]
                 IMAGE_DIR = capture_${params.theme}
-                RUN_REGRESSION=True
-                [filestostart]
-                test_bread_crumbs.py
-                test_bread_crumbs_2.py
-                test_button.py
-                """
+                RUN_REGRESSION=True"""
         } else {
             writeFile file: "./controls/tests/reg/config.ini",
             text:
@@ -458,22 +449,12 @@ node('controls') {
                 #BRANCH=True
                 [regression]
                 IMAGE_DIR = capture
-                RUN_REGRESSION=True
-                [filestostart]
-                test_bread_crumbs.py
-                test_bread_crumbs_2.py
-                test_button.py"""
-        }
+                RUN_REGRESSION=True"""
         }
         def run_test_fail = ""
         if (params.RUN_ONLY_FAIL_TEST == true){
             run_test_fail = "-sf"
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
-            sh """
-            echo "define run_test_fail "
-            pwd
-            ls -la
-            """
         }
 
         def site = "http://${NODE_NAME}:30010"
@@ -490,7 +471,7 @@ node('controls') {
                 error('Стенд неработоспособен (не прошел smoke test).')
             }
         }
-        
+
         parallel (
             int_test: {
                 echo "Запускаем интеграционные тесты"
@@ -498,14 +479,12 @@ node('controls') {
                     if ( inte ){
                         dir("./controls/tests/int"){
                             sh """
-                            ls -la
                             source /home/sbis/venv_for_test/bin/activate
-						    python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
-							deactivate
-
+                            python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
+                            deactivate
                             """
                         }
-                            
+
                     }
                 }
             },
@@ -516,27 +495,24 @@ node('controls') {
                         sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
                         dir("./controls/tests/reg"){
                             sh """
-                               ls -la
-                               source /home/sbis/venv_for_test/bin/activate
-                               python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS http://test-selenium39-unix.unix.tensor.ru:4444/wd/hub --DISPATCHER_RUN_MODE --STAND platform --STREAMS_NUMBER ${stream_number}
-                               deactivate
-
+                                source /home/sbis/venv_for_test/bin/activate
+                                python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS http://test-selenium39-unix.unix.tensor.ru:4444/wd/hub --DISPATCHER_RUN_MODE --STAND platform --STREAMS_NUMBER ${stream_number}
+                                deactivate
                             """
                         }
-                        
+
                     }
                 }
             }
-            
-        )
 
+        )
     }
-} finally { 
+} finally {
     sh """
         sudo chmod -R 0777 ${workspace}
         sudo chmod -R 0777 /home/sbis/Controls
     """
-    
+
 
         if ( regr ){
             dir("./controls") {
@@ -551,8 +527,7 @@ node('controls') {
             archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
             junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
             }
-        gitlabStatusUpdate()
-        }    
+    gitlabStatusUpdate()
+        }
     }
 }
-
