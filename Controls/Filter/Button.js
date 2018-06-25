@@ -104,10 +104,12 @@ define('Controls/Filter/Button',
          },
 
          _clearClick: function() {
-            _private.getFilterButtonCompatible(this).addCallback(function(panelOpener) {
-               panelOpener.clearFilter();
-               this._text = '';
-            });
+            if (this._options.filterTemplate) {
+               _private.getFilterButtonCompatible(this).addCallback(function(panelOpener) {
+                  panelOpener.clearFilter();
+               });
+            }
+            this._text = '';
          },
 
          _openFilterPanel: function() {
