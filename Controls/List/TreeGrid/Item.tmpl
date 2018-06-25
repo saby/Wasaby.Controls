@@ -21,7 +21,7 @@
                           class="controls-TreeGrid__row-nodeExpander controls-TreeGrid__row-nodeExpander_{{itemData.isExpanded ? 'expanded' : 'collapsed'}} js-controls-ListView__notEditable"></div>
                   </ws:if>
                </ws:if>
-               <div class="controls-Grid__row-cell__contentWrapper">
+               <div class="controls-Grid__row-cell__contentWrapper{{itemData.getCurrentColumn().column.align ? ' controls-Grid__row-cell__contentWrapper_halign_' + itemData.getCurrentColumn().column.align : ''}}">
                   <ws:partial template="{{itemData.getCurrentColumn().template}}"
                               attr:class="{{itemData.getCurrentColumn().withLadder ? 'controls-Grid__row-cell__content_withLadder'}}"
                               contentData="{{itemData.getCurrentColumn()}}" />

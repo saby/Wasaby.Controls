@@ -34,11 +34,6 @@ define('Controls/List/Grid/GridViewModel', [
             // Межстрочный интервал
             preparedClasses += ' controls-Grid__row-cell_rowSpacing_' + (params.rowSpacing || 'default');
 
-            // Горизонтальное выравнивание колонок
-            if (params.columns[params.columnIndex].align) {
-               preparedClasses += ' controls-Grid__row-cell_halign_' + params.columns[params.columnIndex].align;
-            }
-
             // Вертикальное выравнивание хедера
             if (params.columns[params.columnIndex].valign) {
                preparedClasses += ' controls-Grid__header-cell_valign_' + params.columns[params.columnIndex].valign;
@@ -258,7 +253,11 @@ define('Controls/List/Grid/GridViewModel', [
          getCurrentHeaderColumn: function() {
             var
                columnIndex = this._curHeaderColumnIndex,
-               cellClasses = 'controls-Grid__header-cell';
+               cellClasses = 'controls-Grid__header-cell',
+               headerColumn = {
+                  column: this._headerColumns[this._curHeaderColumnIndex],
+                  index: columnIndex
+               };
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
             if (this._options.multiSelectVisibility && columnIndex === 0) {
@@ -273,12 +272,11 @@ define('Controls/List/Grid/GridViewModel', [
                   rowSpacing: this._options.rowSpacing
                });
             }
-
-            return {
-               column: this._headerColumns[this._curHeaderColumnIndex],
-               cellClasses: cellClasses,
-               index: columnIndex
-            };
+            if (headerColumn.column.align) {
+               cellClasses += ' controls-Grid__header-cell_halign_' + headerColumn.column.align;
+            }
+            headerColumn.cellClasses = cellClasses;
+            return headerColumn;
          },
 
          goToNextHeaderColumn: function() {
