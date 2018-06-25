@@ -1,17 +1,6 @@
-<ws:template name="displayContent">
-    <ws:if data="{{_options.cachedContent}}">
-        <ws:for data="item in _items">
-            <Controls.Container.Async attr:class="{{hideNotSelectedContent(item)}}"  templateName="{{item.get(currentTemplate)}}" templateOptions="{{_options}}"/>
-        </ws:for>
-    </ws:if>
-    <ws:else>
-        <Controls.Container.Async templateName="{{_items.getRecordById(_options.tabsSelectedKey).get(currentTemplate)}}" templateOptions="{{_options}}"/>
-    </ws:else>
-</ws:template>
-
 <div class="controls-PageLayout">
     <div attr:class="controls-PageLayout__ControlPanel__wrapper">
-        <ws:partial template="displayContent" currentTemplate="controlPanelTemplate"/>
+        <Controls.Container.Async templateName="{{_controlPanelTemplate}}" templateOptions="{{_options}}"/>
         <ws:if data="{{_items.getCount() > 1}}">
             <div attr:class="controls-PageLayout__ButtonTabs_wrapper">
                 <Controls.Tabs.Buttons
@@ -22,5 +11,5 @@
             </div>
         </ws:if>
     </div>
-    <ws:partial template="displayContent" currentTemplate="content"/>
+    <Controls.Container.Async templateName="{{_content}}" templateOptions="{{_options}}"/>
 </div>

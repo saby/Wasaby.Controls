@@ -14,6 +14,10 @@ define('Controls/PageLayout', [
          return self._sourceController.load().addCallback(function(items) {
             return items;
          });
+      },
+      updateOptions: function(self) {
+         self._controlPanelTemplate = self._items.getRecordById(self._options.tabsSelectedKey).get('controlPanelTemplate');
+         self._content = self._items.getRecordById(self._options.tabsSelectedKey).get('content');
       }
    };
    var browserTabs = Control.extend({
@@ -22,9 +26,11 @@ define('Controls/PageLayout', [
       _beforeMount: function(options, context, receivedState) {
          if (receivedState) {
             this._items = receivedState;
+            _private.updateOptions(this);
          } else {
             return _private.initItems(options.tabsSource, this).addCallback(function(items) {
                this._items = items;
+               _private.updateOptions(this);
                return items;
             }.bind(this));
          }
@@ -34,15 +40,12 @@ define('Controls/PageLayout', [
          if (newOptions.tabsSource && newOptions.tabsSource !== this._options.tabsSource) {
             return _private.initItems(newOptions.tabsSource, this).addCallback(function(items) {
                this._items = items;
+               _private.updateOptions(this);
                self._forceUpdate();
             }.bind(this));
+         } else {
+            _private.updateOptions(this);
          }
-      },
-      hideNotSelectedContent: function(item) {
-         if (item ===  this._items.getRecordById(this._options.tabsSelectedKey)) {
-            return 'controls-PageLayout__ShowContent';
-         }
-         return 'controls-PageLayout__HideContent';
       }
    });
    return browserTabs;
