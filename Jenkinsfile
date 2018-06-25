@@ -406,7 +406,11 @@ node('controls') {
             TAGS_NOT_TO_START = iOSOnly
             ELEMENT_OUTPUT_LOG = locator
             WAIT_ELEMENT_LOAD = 20
-            HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/"""
+            HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/
+            [filestostart]
+            test_auto_focus.py
+            test_bread_crumbs.py
+            test_browser.py"""
         
         if ( "${params.theme}" != "online" ) {
             writeFile file: "./controls/tests/reg/config.ini",
@@ -428,7 +432,12 @@ node('controls') {
                 #BRANCH=True
                 [regression]
                 IMAGE_DIR = capture_${params.theme}
-                RUN_REGRESSION=True"""
+                RUN_REGRESSION=True
+                [filestostart]
+                test_bread_crumbs.py
+                test_bread_crumbs_2.py
+                test_button.py
+                """
         } else {
             writeFile file: "./controls/tests/reg/config.ini",
             text:
@@ -449,7 +458,11 @@ node('controls') {
                 #BRANCH=True
                 [regression]
                 IMAGE_DIR = capture
-                RUN_REGRESSION=True"""
+                RUN_REGRESSION=True
+                [filestostart]
+                test_bread_crumbs.py
+                test_bread_crumbs_2.py
+                test_button.py"""
         }
         def run_test_fail = ""
         if (params.RUN_ONLY_FAIL_TEST == true){
