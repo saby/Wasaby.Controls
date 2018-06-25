@@ -455,6 +455,11 @@ node('controls') {
         if (params.RUN_ONLY_FAIL_TEST == true){
             run_test_fail = "-sf"
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
+            sh """
+            echo "define run_test_fail "
+            pwd
+            ls -la
+            """
         }
         
         def site = "http://${NODE_NAME}:30010"
@@ -479,9 +484,7 @@ node('controls') {
                     if ( inte ){
                         dir("./controls/tests/int"){
                             sh """
-                            source /home/sbis/venv_for_test/bin/activate
-                            python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
-                            deactivate
+                            ls -la
                             """
                         }
                             
@@ -495,9 +498,7 @@ node('controls') {
                         sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
                         dir("./controls/tests/reg"){
                             sh """
-                                source /home/sbis/venv_for_test/bin/activate
-                                python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS http://test-selenium39-unix.unix.tensor.ru:4444/wd/hub --DISPATCHER_RUN_MODE --STAND platform --STREAMS_NUMBER ${stream_number}
-                                deactivate
+                               ls -la
                             """
                         }
                         
