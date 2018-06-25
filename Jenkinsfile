@@ -464,6 +464,7 @@ node('controls') {
                 test_bread_crumbs_2.py
                 test_button.py"""
         }
+        }
         def run_test_fail = ""
         if (params.RUN_ONLY_FAIL_TEST == true){
             run_test_fail = "-sf"
@@ -528,7 +529,7 @@ node('controls') {
             }
             
         )
-       }
+
     }
 } finally { 
     sh """
