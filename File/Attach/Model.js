@@ -15,10 +15,10 @@ define("File/Attach/Model", ["require", "exports", "WS.Data/Entity/Model", "WS.D
         _$origin: null,
         constructor: function FileModel(options) {
             FileModel.superclass.constructor.call(this, options);
-            if (this._options.origin) {
+            if (!options.origin) {
                 throw new Error('argument "origin" in required');
             }
-            this._$origin = this._options.origin;
+            this._$origin = options.origin;
         },
         /**
          * Возвращает оригинал загружаемого ресурса
