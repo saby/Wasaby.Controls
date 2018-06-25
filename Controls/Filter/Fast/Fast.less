@@ -1,7 +1,8 @@
-.controls-FastFilter {
-   display: flex;
-   overflow: hidden;
+.controls-FastFilter__list {
+   display: grid;
+   grid-template-columns: repeat(auto-fit, minmax(10px, auto));
    width: 100%;
+   //overflow: hidden;
 }
 
 .controls-FastFilter__iconReset {
@@ -17,17 +18,18 @@
 }
 
 .controls-FastFilter__wrapper {
+   width: 100%;
    margin: @spacing_FastFilter-item;
    display: flex;
    align-items: center;
    cursor: pointer;
-   white-space: nowrap;
    overflow: hidden;
 }
 
 .controls-FastFilter__block {
    display: flex;
    align-items: baseline;
+   overflow: hidden;
 }
 
 .controls-FastFilter__block:hover .controls-FastFilter__iconArrow {
@@ -35,6 +37,8 @@
 }
 
 .controls-FastFilter__text {
+   white-space: nowrap;
+   overflow: hidden;
    text-overflow: ellipsis;
    color: @color_Link-text;
    &:hover {

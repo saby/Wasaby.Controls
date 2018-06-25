@@ -8,7 +8,11 @@
 }
 
 .controls-Browser__filter-wrapper {
-   display: flex;
+   display: grid;
+   grid-template-columns: minmax(15px, 1fr) minmax(15px, auto);
+   align-items: baseline;
+   justify-content: flex-end;
+   width: 100%;
 }
 
 .controls-Browser__filterButton {

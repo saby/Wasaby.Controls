@@ -14,7 +14,8 @@ define('Controls-demo/EngineBrowser/Browser', [
       {key: 2, title: 'Russia'},
       {key: 3, title: 'UK'},
       {key: 4, title: 'Japan'},
-      {key: 5, title: 'China'}
+      {key: 5, title: 'China'},
+      {key: 6, title: 'Hong Kong'}
    ];
 
    var sourceData = [

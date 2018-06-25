@@ -115,6 +115,11 @@ define('Controls/Filter/Fast',
             _private.selectItem.apply(this, data);
             this._notify('filterChanged', [_private.getFilter(this._items)]);
             this._children.DropdownOpener.close();
+         },
+
+         resize: function(self, fastFilter) {
+
+            self._notify('sizeChanged', fastFilter.width);
          }
       };
 
@@ -179,6 +184,7 @@ define('Controls/Filter/Fast',
             setPropValue(this._items.at(index), 'value', newValue);
             this._notify('selectedKeysChanged', [newValue]);
             this._notify('filterChanged', [_private.getFilter(this._items)]);
+            _private.resize(this, this._children.fastFilter);
          }
       });
 

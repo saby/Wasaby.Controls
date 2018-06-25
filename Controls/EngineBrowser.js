@@ -7,7 +7,11 @@ define('Controls/EngineBrowser', [
    'use strict';
 
    var Browser = BaseControl.extend({
-      _template: template
+      _template: template,
+
+      _beforeUpdate: function(options) {
+
+      }
    });
 
    return Browser;
