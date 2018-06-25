@@ -1,12 +1,9 @@
 define('Controls/Popup/Opener/Confirmation',
    [
-      'Core/Control',
-      'Core/Deferred',
-      'tmpl!Controls/Popup/Opener/Confirmation/Confirmation',
-      'css!Controls/Popup/Opener/Confirmation/Confirmation',
-      'Controls/Popup/Opener/Confirmation/Dialog'
+      'Controls/Popup/Opener/BaseOpener',
+      'Core/Deferred'
    ],
-   function(Control, Deferred, template) {
+   function(BaseOpener, Deferred) {
       'use strict';
 
       /**
@@ -25,29 +22,36 @@ define('Controls/Popup/Opener/Confirmation',
        * @param {Object} Объект конфигурации открываемого диалога - {@link Controls/Popup/Opener/Confirmation/Dialog}.
        */
 
-      var Confirmation = Control.extend({
-         _template: template,
+      var Confirmation = BaseOpener.extend({
          _resultDef: null,
          _openerResultHandler: null,
 
-         constructor: function(options) {
-            Confirmation.superclass.constructor.apply(this, options);
-            this._openerResultHandler = this._resultHandler.bind(this);
+         _beforeMount: function() {
+            this._closeHandler = this._closeHandler.bind(this);
          },
 
-         _resultHandler: function(res) {
+         _closeHandler: function(res) {
             if (this._resultDef) {
                this._resultDef.callback(res);
                this._resultDef = null;
             }
          },
 
-         open: function(cfg) {
+         open: function(templateOptions) {
             this._resultDef = new Deferred();
-            this._children.opener.open({
-               templateOptions: cfg
-            });
+            var popupOptions = this._getPopupOptions(templateOptions);
+            Confirmation.superclass.open.call(this, popupOptions, 'Controls/Popup/Opener/Dialog/DialogController');
             return this._resultDef;
+         },
+
+         _getPopupOptions: function(templateOptions) {
+            templateOptions.closeHandler = this._closeHandler;
+            return {
+               template: 'Controls/Popup/Opener/Confirmation/Dialog',
+               isModal: true,
+               className: 'controls-Confirmation_popup',
+               templateOptions: templateOptions
+            };
          }
 
       });
