@@ -386,7 +386,7 @@ node('controls') {
                 sudo chmod -R 0777 ${workspace}
                 sudo chmod -R 0777 /home/sbis/Controls
             """
-        }
+        
         def soft_restart = "True"
         if ( params.browser_type in ['ie', 'edge'] ){
 			soft_restart = "False"
@@ -474,7 +474,7 @@ node('controls') {
             ls -la
             """
         }
-        
+    }    
         def site = "http://${NODE_NAME}:30010"
         site.trim()
         dir("./controls/tests/int"){
