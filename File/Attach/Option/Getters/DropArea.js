@@ -57,10 +57,15 @@ define("File/Attach/Option/Getters/DropArea", ["require", "exports", "tslib", "F
             return _super.call(this, new DropAreaGetter(options || {})) || this;
         }
         /**
-        * @static
-        * @method
-        * @returns {String} Тип Getter'a
-        */
+         * @description
+         * Тип геттера передается в метод choose File/Attach, чтобы указать каким способом(геттером) выбираются файлы
+         * <pre>
+         *   attach.choose(DropArea.getType()); // Получение файлов посредством Drag&Drop
+         * </pre>
+         * @static
+         * @method
+         * @returns {String} Тип Getter'a
+         */
         DropArea.getType = function () {
             return GETTER_TYPE;
         };
