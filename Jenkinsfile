@@ -537,9 +537,11 @@ node('controls') {
         sudo chmod -R 0777 /home/sbis/Controls
     """
     
-    dir("./controls") {
+
         if ( regr ){
-            publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
+            dir("./controls") {
+                publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
+            }
             archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
             }
         if ( unit ){
@@ -549,8 +551,7 @@ node('controls') {
             archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
             junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
             }
-    }
-    gitlabStatusUpdate()
+        gitlabStatusUpdate()
         }    
     }
 }
