@@ -15,8 +15,7 @@ define('Controls-demo/List/Grid/Grid', [
    'css!Controls-demo/List/Grid/Grid',
    'Controls/Container/Scroll',
    'Controls/Grid',
-   'Controls/Render/Money/Money',
-   'tmpl!Controls-demo/List/Grid/DemoGroupTemplate'
+   'Controls/Render/Money/Money'
 ], function (BaseControl, GridData, template, MemorySource) {
 
    'use strict';
@@ -106,45 +105,12 @@ define('Controls-demo/List/Grid/Grid', [
          },
          _itemActions: _firstItemActionsArray,
 
-         _dataLoadCallback: function(items) {
-            items.setMetaData({
-               groupResults: {
-                  withoutPrice: '0 руб. 00 коп.',
-                  between0and100: '818 руб. 86 коп.',
-                  between100and200: '2858 руб. 86 коп.',
-                  between200and300: '3148 руб. 86 коп.',
-                  between300and400: '1818 руб. 86 коп.',
-                  more400: '10500 руб. 35 коп.'
-               }
-            });
-         },
-
          _viewSource: new MemorySource({
             idProperty: 'id',
             data: GridData.catalog
          }),
 
          gridData: GridData,
-         _itemsGroupMethod: function(item) {
-            if (item.get('costPrice') === null) {
-               return 'withoutPrice';
-            }
-            if (item.get('costPrice') < 100) {
-               return 'between0and100';
-            }
-            if (item.get('costPrice') > 100 && item.get('costPrice') < 200) {
-               return 'between100and200';
-            }
-            if (item.get('costPrice') > 200 && item.get('costPrice') < 300) {
-               return 'between200and300';
-            }
-            if (item.get('costPrice') > 300 && item.get('costPrice') < 400) {
-               return 'between300and400';
-            }
-            if (item.get('costPrice') > 400) {
-               return 'more400';
-            }
-         },
          gridColumns: [
             {
                displayProperty: 'name',

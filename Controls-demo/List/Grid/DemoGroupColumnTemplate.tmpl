@@ -1,0 +1,8 @@
+<ws:if data="{{contentData.columnIndex >= 2 && contentData.columnIndex !== 5}}">
+   <div class="controls-Grid__row-cell__content controls-Grid__row-cell__content_baseline_XL">
+      <ws:Controls.Decorator.Money number="{{contentData.getPropValue(contentData.item, contentData.column.displayProperty)}}"/>
+   </div>
+</ws:if>
+<ws:else>
+   <ws:partial template="tmpl!Controls/List/Grid/Column" attr:class="controls-Grid__row-cell__content_baseline_XL" contentData="{{contentData}}"/>
+</ws:else>

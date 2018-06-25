@@ -1,8 +1,9 @@
 define('Controls/List/Grid/GridViewModel', [
    'Controls/List/BaseViewModel',
    'Controls/List/ListViewModel',
+   'Controls/Constants',
    'Core/core-clone'
-], function(BaseViewModel, ListViewModel, cClone) {
+], function(BaseViewModel, ListViewModel, ControlsConstants, cClone) {
 
    'use strict';
 
@@ -427,14 +428,22 @@ define('Controls/List/Grid/GridViewModel', [
             current.leftPadding = this._options.leftPadding;
             current.rightPadding = this._options.rightPadding;
             current.rowSpacing = this._options.rowSpacing;
-            current.showRowSeparator = this._options.showRowSeparator;
-            current.ladderSupport = !!this._options.stickyFields;
 
             if (current.multiSelectVisibility) {
                current.columns = [{}].concat(this._columns);
             } else {
                current.columns = this._columns;
             }
+
+            if (this._options.itemsGroup) {
+               if (current.item === ControlsConstants.view.hiddenGroup || !current.item.get) {
+                  current.groupResultsSpacingClass = ' controls-Grid__cell_spacingLastCol_' + (current.rightPadding || 'default');
+                  return current;
+               }
+            }
+
+            current.showRowSeparator = this._options.showRowSeparator;
+            current.ladderSupport = !!this._options.stickyFields;
 
             current.columnIndex = 0;
             current.resetColumnIndex = function() {
