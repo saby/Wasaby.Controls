@@ -173,6 +173,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             this.subscribeTo(this._selector, 'onSelectedItemsChange', function (evtName, ids, changes) {
                var selectedId = ids[0];
                var preset = this._findPresetById(selectedId);
+               this._fileUuid = null;
                this._selectPreset(preset);
                this._updateSelectorListOptions('selectedKey', selectedId);
             }.bind(this));
@@ -412,6 +413,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             var preset = this._createPreset();
             this._customs.push(preset);
             this._previousId = this._options.selectedId;
+            this._fileUuid = null;
             this._selectPreset(preset);
          },
 
@@ -421,20 +423,25 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * @protected
           * @param {string|number} id Идентификатор пресета
           * @param {object} changes Информация об изменениях
+          * @param {boolean} preserveFileUuid Не сбрасывать текщий fileUuid
           */
-         _clonePreset: function (id, changes) {
+         _clonePreset: function (id, changes, preserveFileUuid) {
             var presetInfo = this._findPresetById(id, true);
             if (presetInfo) {
                var pattern = presetInfo.preset;
                var preset = this._createPreset(pattern);
+               this._customs.splice(presetInfo.isStatic ? 0 : presetInfo.index + 1, 0, preset);
+               this._previousId = this._options.selectedId;
+               if (!preserveFileUuid) {
+                  this._fileUuid = null;
+               }
+               this._selectPreset(preset);
                if (changes) {
                   for (var property in changes) {
                      preset[property] = changes[property];
                   }
+                  this.sendCommand('subviewChanged');
                }
-               this._customs.splice(presetInfo.isStatic ? 0 : presetInfo.index + 1, 0, preset);
-               this._previousId = this._options.selectedId;
-               this._selectPreset(preset);
             }
          },
 
@@ -469,15 +476,16 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             var index = _findIndexById(customs, id);
             if (index !== -1) {
                var prevPreset = customs[index];
-               customs.splice(index, 1);
                return this._saveCustoms().addCallback(function (/*isSuccess*/) {
                   //if (isSuccess) {
                      var fileUuid = prevPreset.fileUuid;
                      if (fileUuid) {
                         this.sendCommand('subviewChanged', 'delete', fileUuid);
                      }
+                     customs.splice(index, 1);
                      if (this._options.selectedId === id) {
                         var preset = customs.length ? customs[index < customs.length ? index : index - 1] : null;
+                        this._fileUuid = null;
                         this._selectPreset(preset);
                      }
                   //}
@@ -756,7 +764,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   if (selectedId) {
                      var preset = this._findPresetById(selectedId);
                      if (preset && !preset.isStorable) {
-                        this._clonePreset(preset.id, isFieldsChanged ? {fieldIds:this._fieldIds} : undefined);
+                        this._clonePreset(preset.id, isFieldsChanged ? {fieldIds:this._fieldIds} : undefined, isFormatterOpened ? true : undefined);
                      }
                   }
                   this._startEditingMode();

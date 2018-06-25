@@ -464,14 +464,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                var methods = [];
                if ('consumerId' in changes) {
                   //Если поменялся consumerId
-                  if ('fileUuid' in changes) {
-                     // и поменялся транзакционный uuid - удалить старый транзакционный файл
-                     var fileUuid = changes.fileUuid;
-                     if (fileUuid) {
-                        this._callFormatterDelete(fileUuid);
-                        options.fileUuid = null;
-                     }
-                  }
                }
                else {
                   if ('fieldIds' in changes && hasFields) {
@@ -501,7 +493,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          getValues: function () {
             var options = this._options;
             return {
-               //^^^primaryUuid: options.primaryUuid,
                fileUuid: options.fileUuid
             };
          },
