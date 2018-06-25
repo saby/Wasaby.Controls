@@ -405,6 +405,10 @@ define('Controls/List/BaseControl', [
          }
       },
 
+      getFilter: function() {
+         return this._filter;
+      },
+
       getViewModel: function() {
          return this._listViewModel;
       },
