@@ -112,6 +112,7 @@ define('Controls/Dropdown/Container',
             switch (result.action) {
                case 'pinClicked':
                   this._notify('pinClicked', [result.data]);
+                  this._items = this._options.source.getItems();
                   this._open();
                   break;
                case 'itemClick':

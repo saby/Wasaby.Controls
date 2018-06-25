@@ -39,7 +39,6 @@ define('Controls/History/Menu',
             this._filter = {
                $_history: true
             };
-            this._onResult = this._onResult.bind(this);
          },
 
          _onItemClickHandler: function(result, items) {

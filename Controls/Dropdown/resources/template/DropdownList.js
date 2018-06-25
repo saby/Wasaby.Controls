@@ -92,6 +92,10 @@ define('Controls/Dropdown/resources/template/DropdownList',
             if (newOptions.rootKey !== this._options.rootKey) {
                this._listModel.setRootKey(newOptions.rootKey);
             }
+            if (newOptions.items !== this._options.items) {
+               this._listModel.setItems(newOptions);
+            }
+
          },
 
          _itemMouseEnter: function(event, item, hasChildren) {
