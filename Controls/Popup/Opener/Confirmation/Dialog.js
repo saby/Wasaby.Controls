@@ -98,7 +98,7 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
 
       _sendResult: function(e, res) {
          this._notify('sendResult', [res]);
-         this._notify('close', [res]);
+         this._notify('close');
       },
 
       _keyPressed: function(e) {

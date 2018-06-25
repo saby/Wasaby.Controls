@@ -30,7 +30,19 @@ define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/Res
          * @cfg {Function} Обработчик события onDrop элемента. Позволяет получать ресурсы не ожидая вызова метода getFiles
          * @name File/ResourceGetter/DropArea#ondrop
          */
-        ondrop: function (files) { },
+        ondrop: function (files) { }
+        /**
+         * @cfg {String} Текст на внутреннем элементе во время перемещения файлов
+         * @name File/ResourceGetter/DropArea#dragText
+         */
+        /**
+         * @cfg {String} Текст на внутреннем элементе во время перемещения файлов непосредственно над ним
+         * @name File/ResourceGetter/DropArea#dropText
+         */
+        /**
+         * @cfg {String} Класс внутреннего элемента обёртки, содержащий текст
+         * @name File/ResourceGetter/DropArea#innerClass
+         */
     };
     /**
      * Класс реализующий интерфейс IResourceGetter, позволяющий получать ресурсы через DragAndDrop

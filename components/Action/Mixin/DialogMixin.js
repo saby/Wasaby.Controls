@@ -130,7 +130,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
       },
 
       _createComponent: function(config, meta) {
-         var componentName = (meta.mode == 'floatArea') ? 'Lib/Control/FloatArea/FloatArea' : 'Lib/Control/Dialog/Dialog',
+         var componentName = this._getComponentName(meta),
             self = this,
             resetWidth;
          
@@ -187,6 +187,18 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                }
             }.bind(this));
 
+         }
+      },
+
+      _getComponentName: function(meta) {
+         switch (meta.mode) {
+            case 'floatArea':
+               return 'Lib/Control/FloatArea/FloatArea';
+            case 'recordFloatArea':
+               //Для тех, кто переходит на vdom и на старой странице юзает recordFloatArea. Чтобы пользовались единой оберткой - action'ом.
+               return 'Deprecated/Controls/RecordFloatArea/RecordFloatArea';
+            default:
+               return 'Lib/Control/Dialog/Dialog';
          }
       },
       
@@ -271,7 +283,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                floatArea = floatAreaContainer.length ? floatAreaContainer[0].wsControl : false;
             }
          }
-         return floatArea || this;
+         return floatArea || null;
       },
 
       /**
@@ -288,21 +300,8 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
          this._saveAutoHideState(meta, config);
          config.componentOptions = this._buildComponentConfig(meta);
          config.handlers = config.handlers || {};
-         var handlers = {
-            onAfterClose: function(e, result) {
-               self._isExecuting = false;
-               self._finishExecuteDeferred();
-               self._notifyOnExecuted(meta, result);
-               self._dialog = undefined;
-            },
-            onBeforeShow: function() {
-               self._notify('onBeforeShow', this);
-            },
-            onAfterShow: function() {
-               self._isExecuting = false;
-               self._notify('onAfterShow', this);
-            }
-         };
+         var handlers = this._getDialogHandlers(meta);
+         
          for (var name in handlers) {
             if (handlers.hasOwnProperty(name)) {
                if (config.handlers.hasOwnProperty(name) && config.handlers[name] instanceof Array) {
@@ -317,7 +316,26 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
 
          return config;
       },
-
+      
+      _getDialogHandlers: function(meta) {
+         var self = this;
+         return {
+            onAfterClose: function(e, result) {
+               self._isExecuting = false;
+               self._finishExecuteDeferred();
+               self._notifyOnExecuted(meta, result);
+               self._dialog = undefined;
+            },
+            onBeforeShow: function() {
+               self._notify('onBeforeShow', this);
+            },
+            onAfterShow: function() {
+               self._isExecuting = false;
+               self._notify('onAfterShow', this);
+            }
+         };
+      },
+      
       _saveAutoHideState: function(meta, config) {
          this._openedPanelConfig = {
             autoHide: config.autoHide !== undefined ? config.autoHide : true,

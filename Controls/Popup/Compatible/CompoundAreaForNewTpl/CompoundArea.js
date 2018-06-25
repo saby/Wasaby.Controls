@@ -17,37 +17,59 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
        **/
       var moduleClass = CompoundControl.extend({
          _dotTplFn: template,
+         $protected: {
+            _options: {
+               isTMPL: function(template) {
+                  return template.indexOf('tmpl!') === 0; //Если передали просто tmpl в качестве шаблона - нельзя вызывать createControl
+               }
+            }
+         },
          init: function() {
             moduleClass.superclass.init.apply(this, arguments);
             var self = this;
             this._onCloseHandler = this._onCloseHandler.bind(this);
-            this._onCloseHandler.control = this;
+            this._onResultHandler = this._onResultHandler.bind(this);
+            this._onCloseHandler.control = this._onResultHandler.control = this;
             require([this._options.innerComponentOptions.template], function(ctr) {
-               self._vDomTemplate = control.createControl(ctr, self._options.innerComponentOptions, $('.vDomWrapper', self.getContainer()));
-               var replaceVDOMContainer = function() {
-                  self._getRootContainer().eventProperties = {
-                     'on:close': [{
-                        fn: self._onCloseHandler,
-                        args: []
-                     }]
+               if (!self._options.isTMPL(self._options.innerComponentOptions.template)) {
+                  self._vDomTemplate = control.createControl(ctr, self._options.innerComponentOptions, $('.vDomWrapper', self.getContainer()));
+                  var replaceVDOMContainer = function() {
+                     //Отлавливаем события с дочернего vdom компонента
+                     self._getRootContainer().eventProperties = {
+                        'on:close': [{
+                           fn: self._onCloseHandler,
+                           args: []
+                        }],
+                        'on:sendresult': [{
+                           fn: self._onResultHandler,
+                           args: []
+                        }]
+                     };
                   };
-               };
-               if (self._options._initCompoundArea) {
-                  self._notifyOnSizeChanged(self, self);
-                  self._options._initCompoundArea(self);
+                  if (self._options._initCompoundArea) {
+                     self._notifyOnSizeChanged(self, self);
+                     self._options._initCompoundArea(self);
+                  }
+                  self._getRootContainer().addEventListener('DOMNodeRemoved', function() {
+                     replaceVDOMContainer();
+                  });
                }
-               replaceVDOMContainer();
-               self._getRootContainer().addEventListener('DOMNodeRemoved', replaceVDOMContainer);
             });
          },
-         _onCloseHandler: function(event, result) {
-            this.sendCommand('close', result);
+         _onCloseHandler: function() {
+            this.sendCommand('close', this._result);
+            this._result = null;
+         },
+         _onResultHandler: function(event, result) {
+            this._result = result;
+            if (this._options.onResultHandler) {
+               this._options.onResultHandler(this._result);
+            }
          },
 
          _getRootContainer: function() {
             var container = this._vDomTemplate.getContainer();
-            container = container.get ? container.get(0) : container; //берем ноду
-            return container.closest('.control__compoundArea-new');
+            return container.get ? container.get(0) : container;
          },
 
          destroy: function() {

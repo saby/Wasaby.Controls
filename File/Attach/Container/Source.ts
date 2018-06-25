@@ -1,9 +1,8 @@
 /// <amd-module name="File/Attach/Container/Source" />
 import IContainer = require("File/Attach/Container/IContainer");
-import ISource = require("WS.Data/Source/ISource");
+import {Source as ISource} from 'File/Attach/Source';
 import Deferred = require("Core/Deferred");
-import IResourceConstructor = require("File/IResourceConstructor");
-import IResource = require("File/IResource");
+import {IResource, IResourceConstructor} from 'File/IResource';
 
 type SourceWrapper = {
     fileType: IResourceConstructor;

@@ -55,7 +55,6 @@ define('Controls/Popup/Manager',
          },
 
          popupClose: function(id) {
-            _private.fireEventHandler(id, 'onClose');
             ManagerController.remove(id, this.getItemContainer(id));
             return false;
          },
@@ -148,6 +147,7 @@ define('Controls/Popup/Manager',
             var self = this;
             var element = this.find(id);
             if (element) {
+               _private.fireEventHandler(id, 'onClose');
                _private.removeElement.call(this, element, _private.getItemContainer(id), id).addCallback(function() {
                   self._redrawItems();
                   return element;

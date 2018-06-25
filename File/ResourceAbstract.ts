@@ -1,21 +1,5 @@
 /// <amd-module name="File/ResourceAbstract" />
-import IResource = require("IResource");
-
-export interface FileInfo {
-    name?: string;
-    size?: number;
-    isDirectory?: boolean;
-    type?: string;
-    [propName: string]: any;
-}
-
-/**
- * @typedef {Object} File/FileInfo Информация о файле
- * @property {String} [name] Имя
- * @property {String} [type]  Тип
- * @property {Boolean} [isDirectory] Является ли директорией
- * @property {Number} [size] Размер
- */
+import {IResource, FileInfo} from 'File/IResource';
 
 /**
  * @class
