@@ -1,6 +1,6 @@
 <div attr:class="controls-MonthViewVDOM{{rangeselect ? ' controls-RangeSelectable__rangeselect'}} {{_themeCssClass}}">
    <div attr:class="controls-MonthViewVDOM__caption {{_themeCssClass}}" if="{{_options.showCaption}}">
-      <div attr:class="controls-MonthViewVDOM__caption-text">{{ _month.strftime(_options.captionFormat) }}</div>
+      <div attr:class="controls-MonthViewVDOM__caption-text">{{ _caption }}</div>
    </div>
    <div attr:class="controls-MonthViewVDOM__table">
       <div if="{{_options.showWeekdays}}" attr:class="controls-MonthViewVDOM__tableRow controls-MonthViewVDOM_tableHead {{_themeCssClass}}">

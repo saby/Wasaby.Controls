@@ -1,0 +1,41 @@
+<div class="PageWrap" style="padding-top: 50px;">
+   <div class="PageBlock">
+      <div class="PageBlock__title"></div>
+      <div class="PageBlock__componentWrap ws-flexbox" style="justify-content: space-evenly;">
+         <Controls.Input.Date.RangeLinkLite
+            showPrevArrow="{{true}}"
+            showNextArrow="{{true}}"
+         />
+         <Controls.Input.Date.RangeLinkLite
+            startValue="{{_startValue}}"
+            endValue="{{_endValue}}"
+         />
+         <Controls.Input.Date.RangeLinkLite
+            bind:startValue="_startValue"
+            bind:endValue="_endValue"
+            chooseHalfyears="{{false}}"
+            chooseQuarters="{{false}}"
+            style="linkMain"
+         />
+         <Controls.Input.Date.RangeLinkLite
+            startValue="{{_startValue}}"
+            endValue="{{_endValue}}"
+            chooseHalfyears="{{false}}"
+            chooseMonths="{{false}}"
+            style="linkMain2"
+         />
+         <Controls.Input.Date.RangeLinkLite
+            startValue="{{_startValue}}"
+            endValue="{{_endValue}}"
+            style="linkAdditional"
+         />
+         <Controls.Input.Date.RangeLinkLite
+            startValue="{{_startValue}}"
+            endValue="{{_endValue}}"
+            chooseHalfyears="{{false}}"
+            chooseMonths="{{false}}"
+            chooseQuarters="{{false}}"
+         />
+      </div>
+   </div>
+</div>
