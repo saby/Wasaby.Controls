@@ -28,7 +28,7 @@ define('Controls/Tabs/Buttons', [
             // Необходимо обратить внимание на set/get методы тк возможно item будет enumerable
             // и нужно будет делать через обёртку
             items.each(function(item) {
-               if (item.get('align') === 'left' || instance._options.align === 'left') {
+               if (item.get('align') === 'left') {
                   item.set('_order', leftOrder++);
                } else {
                   item.set('_order', rightOrder++);
@@ -47,7 +47,7 @@ define('Controls/Tabs/Buttons', [
       prepareItemClass: function(item, options, lastRightOrder) {
          var
             classes = ['controls-Tabs__item'];
-         classes.push('controls-Tabs__item_align_' + (item.get('align') ? item.get('align') : options.align || 'right'));
+         classes.push('controls-Tabs__item_align_' + (item.get('align') ? item.get('align') : 'right'));
          if (item.get('_order') === 1 || item.get('_order') === lastRightOrder) {
             classes.push('controls-Tabs__item_extreme');
          }
