@@ -1,8 +1,7 @@
 define('Controls/SwitchableArea', [
    'Core/Control',
    'Controls/SwitchableArea/ViewModel',
-   'tmpl!Controls/SwitchableArea/SwitchableArea'
-   ],
+   'tmpl!Controls/SwitchableArea/SwitchableArea'],
    function(Control, ViewModel, template) {
    'use strict';
 
@@ -15,7 +14,7 @@ define('Controls/SwitchableArea', [
       },
 
       _beforeUpdate: function(newOptions) {
-         this._viewModel.updateViewModel( newOptions.items, newOptions.selectedKey);
+         this._viewModel.updateViewModel(newOptions.items, newOptions.selectedKey);
       },
       isActiveItem: function(item) {
          return this._options.selectedKey !== item.get(this._options.items.getIdProperty());
