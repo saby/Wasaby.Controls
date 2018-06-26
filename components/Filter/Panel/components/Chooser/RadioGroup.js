@@ -24,7 +24,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/RadioGroup', [
     *
     * @class SBIS3.CONTROLS/Filter/Panel/components/Chooser/RadioGroup
     * @extends SBIS3.CONTROLS/Filter/Panel/components/Chooser/Base
-    * @author Борисов П.С.
+    * @author Авраменко А.С.
     * @public
     *
     * @demo Examples/FilterPanel/FilterPanelSimple/FilterPanelSimple
