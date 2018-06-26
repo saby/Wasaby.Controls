@@ -148,6 +148,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._pendingTrace = this._pendingTrace || [];
             this._waiting = this._waiting || [];
 
+            this.__parentFromCfg = this._options.__parentFromCfg;
             this._parent = this._options.parent;
             this._logicParent = this._options.parent;
             this._options.parent = null;
@@ -168,14 +169,19 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._compoundControl.subscribe('onCommandCatch', this._commandHandler);
          },
          _commandHandler: function(event, commandName, arg) {
+            var parent;
             if (commandName === 'close') {
                this._close(arg);
-            }
-            if (commandName === 'registerPendingOperation') {
+            } else if (commandName === 'registerPendingOperation') {
                return this._registerChildPendingOperation(arg);
-            }
-            if (commandName === 'unregisterPendingOperation') {
+            } else if (commandName === 'unregisterPendingOperation') {
                return this._unregisterChildPendingOperation(arg);
+            } else if (this.__parentFromCfg) {
+               parent = this.__parentFromCfg;
+               parent.sendCommand.apply(parent, [commandName].concat(arg));
+            } else if (this._parent && this._parent._options.opener) {
+               parent = this._parent._options.opener;
+               parent.sendCommand.apply(parent, [commandName].concat(arg));
             }
          },
          _close: function(arg) {
