@@ -201,7 +201,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          _callFormatterCreate: function (fileUuid, updateCloned) {
             var isClone = !!fileUuid;
             var options = this._options;
-            var consumerId = options.consumerId || '';
             var fieldIds = options.fieldIds;
             var formatter = this._exportFormatter;
             var promise = (isClone
@@ -437,6 +436,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          _endTransaction: function (isCommit, saving) {
             var options = this._options;
             var fileUuid = options.fileUuid;
+            if (!isCommit) {
+               options.consumerId = null;
+            }
             if (isCommit && saving && saving.force && !fileUuid) {
                return this._callFormatterCreate(options.primaryUuid, false).addCallback(this._endTransaction.bind(this, true, saving));
             }
@@ -477,10 +479,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                var fieldIds = options.fieldIds;
                var hasFields = !!(fieldIds && fieldIds.length);
                var methods = [];
-               if ('consumerId' in changes) {
-                  //Если поменялся consumerId
-               }
-               else {
+               if (!('consumerId' in changes)) {
+                  //Если не поменялся consumerId
                   if ('fieldIds' in changes && hasFields) {
                      if (!options.fileUuid) {
                         var primaryUuid = options.primaryUuid;
