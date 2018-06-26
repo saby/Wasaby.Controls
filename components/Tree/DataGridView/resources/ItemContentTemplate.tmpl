@@ -18,7 +18,7 @@
                        <ws:if data="{{arrowActivatedHandler || (editArrow && editArrow !== 'custom')}}">
                            <div class="controls-TreeView__ellipsis-wrapper">
                                <div class="controls-TreeView__ellipsis-container">
-                                   <div class="controls-TreeView__folderTitle">
+                                   <div class="controls-TreeView__folderTitle controls-DataGridView__columnValue">
                                        <ws:partial template="{{column.contentTpl}}" scope="{{cellData}}" item="{{item}}" projItem="{{projItem}}" field="{{column.field}}" column="{{column}}" included="{{column.included}}" templateBinding="{{column.templateBinding}}" decorators="{{decorators}}" isNode="{{isNode}}" Sanitize="{{Sanitize}}"/>
                                    </div>
                                    <div class="controls-TreeView__editArrow"></div>
@@ -30,7 +30,7 @@
                            </div>
                        </ws:if>
                        <ws:else>
-                           <div class="controls-TreeView__folderTitle">
+                           <div class="controls-TreeView__folderTitle controls-DataGridView__columnValue">
                                <ws:partial template="{{column.contentTpl}}" scope="{{cellData}}" item="{{item}}" projItem="{{projItem}}" field="{{column.field}}" column="{{column}}" included="{{column.included}}" templateBinding="{{column.templateBinding}}" decorators="{{decorators}}" isNode="{{isNode}}" Sanitize="{{Sanitize}}"/>
                            </div>
                        </ws:else>
