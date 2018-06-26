@@ -429,7 +429,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             if (presetInfo) {
                var pattern = presetInfo.preset;
                var preset = this._createPreset(pattern);
-               this._customs.splice(presetInfo.isStatic ? 0 : presetInfo.index + 1, 0, preset);
+               var customs = this._customs;
+               customs.splice(presetInfo.isStatic ? customs.length : presetInfo.index + 1, 0, preset);
                this._previousId = this._options.selectedId;
                this._selectPreset(preset, !preserveFileUuid);
                if (changes) {
