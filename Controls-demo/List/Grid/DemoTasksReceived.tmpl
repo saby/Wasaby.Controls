@@ -1,4 +1,6 @@
-<div class="controls-Grid__row-cell__content js-controls-ListView__notEditable">
-   <div>{{contentData.getPropValue(contentData.item, 'date')}}</div>
-   <div>{{contentData.getPropValue(contentData.item, 'state')}}</div>
-</div>
+<ws:partial template="tmpl!Controls/List/Grid/Column" attr:class="js-controls-ListView__notEditable controls-Grid__row-cell__content_baseline_XL" itemData="{{itemData}}">
+   <ws:contentTemplate>
+      <div>{{itemData.item['date']}}</div>
+      <div>{{itemData.item['state']}}</div>
+   </ws:contentTemplate>
+</ws:partial>
