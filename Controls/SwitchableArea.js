@@ -4,7 +4,7 @@ define('Controls/SwitchableArea',
       'Controls/SwitchableArea/ViewModel',
       'tmpl!Controls/SwitchableArea/SwitchableArea'
    ],
-   function(Control, ViewModel, template) {
+function(Control, ViewModel, template) {
 
       'use strict';
 
@@ -24,6 +24,5 @@ define('Controls/SwitchableArea',
          }
       });
       return SwitchableArea;
-   }
-);
+});
 
