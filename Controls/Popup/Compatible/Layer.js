@@ -73,7 +73,7 @@ define('Controls/Popup/Compatible/Layer', [
       // }));
 
       parallelDef.push(userInfo().addCallback(function(userInfo) {
-         window && (window = userInfo);
+         window && (window.userInfo = userInfo);
       }));
 
       parallelDef.push(getUserLicense().addCallbacks(function(userLicense) {
