@@ -3,7 +3,6 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 1;
   font-family: @font-family_CloseButton;
   line-height: @height_CloseButton;
   font-size: @font-size_CloseButton;
@@ -20,7 +19,8 @@
 	border-width: @border-width_CloseButton;
 	border-radius: @border-radius_CloseButton;
 	background-color: @background-color_CloseButton;
-	&:before {
+   z-index: 1;
+   &:before {
 		color: @color_CloseButton-icon;
 		text-shadow: @text-shadow_Button;
 	}
