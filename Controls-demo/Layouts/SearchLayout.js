@@ -20,7 +20,8 @@ define('Controls-demo/Layouts/SearchLayout', [
    'Controls/Button',
    'Controls/Input/Dropdown',
    'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate',
-   'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/additionalItemsTemplate'
+   'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/additionalItemsTemplate',
+   'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/vdomFilterButtonTemplate'
 
 ], function(BaseControl,
    template,

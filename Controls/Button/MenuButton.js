@@ -92,8 +92,8 @@ define('Controls/Button/MenuButton',
          _beforeMount: function(options) {
             _private.cssStyleGeneration(this, options);
          },
-   
-         _onResult: function(event, result) {
+
+         _onItemClickHandler: function(event, result) {
             this._notify('onMenuItemActivate', [result[0]]);
          }
          
