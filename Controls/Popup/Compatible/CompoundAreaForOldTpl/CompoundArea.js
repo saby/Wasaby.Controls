@@ -188,11 +188,26 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._close(arg);
          },
 
+         reload: function() {
+            this._rebuildCompoundControl(this._options);
+         },
+
          /* from api floatArea, window */
 
          getParent: function() {
             return null;
          },
+
+         /* start RecordFloatArea */
+         getRecord: function() {
+            return this._options.record;
+         },
+         isNewRecord: function() {
+            return this._options.newRecord;
+         },
+
+         /*end RecordFloatArea */
+
          close: function(arg) {
             this._notify('close', null, {bubbling: true});
 
