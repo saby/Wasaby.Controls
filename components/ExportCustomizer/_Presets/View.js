@@ -173,8 +173,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             this.subscribeTo(this._selector, 'onSelectedItemsChange', function (evtName, ids, changes) {
                var selectedId = ids[0];
                var preset = this._findPresetById(selectedId);
-               this._fileUuid = null;
-               this._selectPreset(preset);
+               this._selectPreset(preset, true);
                this._updateSelectorListOptions('selectedKey', selectedId);
             }.bind(this));
 
@@ -189,18 +188,19 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
 
                this.subscribeTo(editor, 'onApply', function (evtName) {
                   var preset = this._findPresetById(options.selectedId);
+                  var preservePrimary = !!preset.patternUuid;
                   preset.title = editor.getText();
                   delete preset.isUnreal;
-                  delete preset.patternUuid
+                  delete preset.patternUuid;
                   preset.isStorable = true;
                   this._previousId = null;
                   this._saveSelectedPreset().addCallback(function (/*isSuccess*/) {
                      /*if (isSuccess) {*/
-                        var forceTransaction = !this._fileUuid;
+                        var force = !this._fileUuid;
                         this._fileUuid = null;
+                        this.sendCommand('subviewChanged', 'transaction', true, {force:force, preservePrimary:preservePrimary});
                         this._endEditingMode();
                         this._updateSelector();
-                        this.sendCommand('subviewChanged', 'transaction', true, forceTransaction);
                      /*}*/
                   }.bind(this));
                }.bind(this));
@@ -413,8 +413,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             var preset = this._createPreset();
             this._customs.push(preset);
             this._previousId = this._options.selectedId;
-            this._fileUuid = null;
-            this._selectPreset(preset);
+            this._selectPreset(preset, true);
          },
 
          /**
@@ -432,10 +431,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                var preset = this._createPreset(pattern);
                this._customs.splice(presetInfo.isStatic ? 0 : presetInfo.index + 1, 0, preset);
                this._previousId = this._options.selectedId;
-               if (!preserveFileUuid) {
-                  this._fileUuid = null;
-               }
-               this._selectPreset(preset);
+               this._selectPreset(preset, !preserveFileUuid);
                if (changes) {
                   for (var property in changes) {
                      preset[property] = changes[property];
@@ -476,17 +472,16 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             var index = _findIndexById(customs, id);
             if (index !== -1) {
                var prevPreset = customs[index];
+               customs.splice(index, 1);
                return this._saveCustoms().addCallback(function (/*isSuccess*/) {
                   //if (isSuccess) {
+                     if (this._options.selectedId === id) {
+                        var preset = customs.length ? customs[index < customs.length ? index : index - 1] : null;
+                        this._selectPreset(preset, true);
+                     }
                      var fileUuid = prevPreset.fileUuid;
                      if (fileUuid) {
                         this.sendCommand('subviewChanged', 'delete', fileUuid);
-                     }
-                     customs.splice(index, 1);
-                     if (this._options.selectedId === id) {
-                        var preset = customs.length ? customs[index < customs.length ? index : index - 1] : null;
-                        this._fileUuid = null;
-                        this._selectPreset(preset);
                      }
                   //}
                   return true/*isSuccess*/;
@@ -596,11 +591,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           *
           * @protected
           * @param {ExportPreset} preset Новый выбранный пресет
+          * @param {boolean} clearFileUuid Сбросить текущее значение свойства _fileUuid
           */
-         _selectPreset: function (preset) {
+         _selectPreset: function (preset, clearFileUuid) {
             var options = this._options;
             options.selectedId = preset ? preset.id : null;
             this._fieldIds = preset ? preset.fieldIds : null;
+            if (clearFileUuid) {
+               this._fileUuid = null;
+            }
             // Даже если fieldIds и fileUuid в предыдущем и текуущем пресетах не отличаются совсем - нужно бросить событие как указание сбросить все несохранённые изменения в других под-компонентах
             this.sendCommand('subviewChanged');
             this._storeSelectedId(options);
@@ -764,7 +763,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   if (selectedId) {
                      var preset = this._findPresetById(selectedId);
                      if (preset && !preset.isStorable) {
-                        this._clonePreset(preset.id, isFieldsChanged ? {fieldIds:this._fieldIds} : undefined, isFormatterOpened ? true : undefined);
+                        this._clonePreset(preset.id, isFieldsChanged ? {fieldIds:this._fieldIds} : undefined, isFormatterOpened);
                      }
                   }
                   this._startEditingMode();

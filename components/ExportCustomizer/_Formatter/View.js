@@ -182,7 +182,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             var fieldIds = options.fieldIds;
             if (fieldIds && fieldIds.length) {
                if (!options.fileUuid) {
-                  this._callFormatterMethods([{method:'clone', args:options.primaryUuid}, useApp ? 'openApp' : 'open']);
+                  this._callFormatterMethods([{method:'clone', args:[options.primaryUuid, false]}, useApp ? 'openApp' : 'open']);
                }
                else {
                   this._callFormatterOpen(useApp);
@@ -194,10 +194,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * Вызвать метод форматера "create" или "clone"
           *
           * @protected
-          * @param {string} [fileUuid] Uuid стилевого эксель-файлаю Если указан, то будет произведено клонирование (опционально)
+          * @param {string} [fileUuid] Uuid стилевого эксель-файла. Если указан, то будет произведено клонирование (опционально)
+          * @param {boolean} [updateCloned] И сразу обновить колонки у только что клонированного стилевого эксель-файла (только при клонировании) (опционально)
           * return {Core/Deferred}
           */
-         _callFormatterCreate: function (fileUuid) {
+         _callFormatterCreate: function (fileUuid, updateCloned) {
             var isClone = !!fileUuid;
             var options = this._options;
             var consumerId = options.consumerId || '';
@@ -209,8 +210,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             ).addCallbacks(
                function (result) {
                   options.fileUuid = result;
-                  this.sendCommand('subviewChanged', isClone ? 'clone' : 'create');
-                  this._updatePreview();
+                  this.sendCommand('subviewChanged');
+                  if (isClone && updateCloned) {
+                     this._callFormatterUpdate();
+                  }
+                  else {
+                     this._updatePreview();
+                  }
                }.bind(this),
                function (err) { return err; }
             );
@@ -301,8 +307,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                   'delete': '_callFormatterDelete'
                };
                var inf = methods[0];
-               var method = typeof inf === 'object' ? inf.method : inf;
-               var promise = this[methodMap[method]].apply(this, method === 'clone' || method === 'delete' ? [inf.args] : (method === 'openApp' ? [true] : []));
+               var isComplex = typeof inf === 'object';
+               var method = isComplex ? inf.method : inf;
+               var promise = this[methodMap[method]].apply(this, isComplex ? (inf.args || []) : (method === 'openApp' ? [true] : []));
                if (1 < methods.length) {
                   promise.addCallback(this._callFormatterMethods.bind(this, methods.slice(1)));
                }
@@ -416,16 +423,18 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           *
           * @protected
           * @param {boolean} isCommit Сохранить или откатить изменения
-          * @param {boolean} isForced Сохранить, даже если нет изменений (только при сохранении)
+          * @param {object} saving Дополнительные опции сохранения
+          * @param {boolean} saving.force Сохранить, даже если нет изменений (только при сохранении)
+          * @param {boolean} saving.preservePrimary Не удалять исходный файл (только при сохранении)
           */
-         _endTransaction: function (isCommit, isForced) {
+         _endTransaction: function (isCommit, saving) {
             var options = this._options;
             var fileUuid = options.fileUuid;
-            if (isCommit && isForced && !fileUuid) {
-               this._callFormatterCreate(options.primaryUuid).addCallback(this._endTransaction.bind(this, true));
+            if (isCommit && saving && saving.force && !fileUuid) {
+               this._callFormatterCreate(options.primaryUuid, false).addCallback(this._endTransaction.bind(this, true));
                return;
             }
-            var deleteUuid = isCommit ? options.primaryUuid : fileUuid;
+            var deleteUuid = isCommit ? (saving && saving.preservePrimary ? null : options.primaryUuid) : fileUuid;
             if (deleteUuid) {
                this._callFormatterDelete(deleteUuid);
             }
@@ -468,9 +477,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                else {
                   if ('fieldIds' in changes && hasFields) {
                      if (!options.fileUuid) {
-                        methods.push({method:'clone', args:options.primaryUuid});
+                        var primaryUuid = options.primaryUuid;
+                        methods.push(primaryUuid ? {method:'clone', args:[primaryUuid, true]} : 'create');
                      }
-                     methods.push('update');
+                     else {
+                        methods.push('update');
+                     }
                   }
                }
                if (methods.length) {
