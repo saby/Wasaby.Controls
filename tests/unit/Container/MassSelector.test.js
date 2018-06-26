@@ -1,22 +1,7 @@
 define(['Controls/Container/MassSelector'], function(MassSelector) {
    'use strict';
    describe('Controls.Container.MassSelector', function() {
-      var cfg = {
-            selectedKeys: [1, 2],
-            excludedKeys: []
-         },
-         cfg1 = {
-            selectedKeys: [],
-            excludedKeys: []
-         },
-         cfg2 = {
-            selectedKeys: [null],
-            excludedKeys: []
-         },
-         cfg3 = {
-            selectedKeys: [null],
-            excludedKeys: [1]
-         },
+      var
          items = [
             {
                getId: function() {
@@ -38,9 +23,29 @@ define(['Controls/Container/MassSelector'], function(MassSelector) {
                   return 3;
                }
             }
-         ];
+         ],
+         cfg = {
+            selectedKeys: [1, 2],
+            excludedKeys: [],
+            items: items
+         },
+         cfg1 = {
+            selectedKeys: [],
+            excludedKeys: [],
+            items: items
+         },
+         cfg2 = {
+            selectedKeys: [null],
+            excludedKeys: [],
+            items: items
+         },
+         cfg3 = {
+            selectedKeys: [null],
+            excludedKeys: [1],
+            items: items
+         };
 
-      //расширяю items чтобы не уеплять наши структуры в демку
+      //расширяю items чтобы не цеплять наши структуры в демку
       items.subscribe = function() {};
       items.unsubscribe = function() {};
 
@@ -95,7 +100,7 @@ define(['Controls/Container/MassSelector'], function(MassSelector) {
          );
       });
 
-      describe('_updateCount', function() {
+      describe('сount', function() {
          var count;
 
          var instance = new MassSelector();
@@ -129,62 +134,11 @@ define(['Controls/Container/MassSelector'], function(MassSelector) {
          });
       });
 
-      it('_itemsReadyCallback', function() {
-         var instance = new MassSelector();
-
-         instance.saveOptions(cfg);
-         instance._beforeMount(cfg);
-         instance._itemsReadyCallback(items);
-         assert.equal(instance._items, items);
-      });
-
-      describe('_updateSelectedKeys', function() {
-         var selectedKeys;
-
-         var instance = new MassSelector();
-         it('selected count', function() {
-            instance.saveOptions(cfg);
-            instance._beforeMount(cfg);
-            instance._updateSelectedKeys();
-            selectedKeys = instance._selectedKeys;
-            assert.equal(selectedKeys.length, 2);
-            assert.equal(selectedKeys[0], 1);
-            assert.equal(selectedKeys[1], 2);
-         });
-
-         it('selected zero', function() {
-            instance.saveOptions(cfg1);
-            instance._beforeMount(cfg1);
-            instance._updateSelectedKeys();
-            selectedKeys = instance._selectedKeys;
-            assert.equal(selectedKeys.length, 0);
-         });
-
-         it('selected all items', function() {
-            instance.saveOptions(cfg2);
-            instance._beforeMount(cfg2);
-            instance._itemsReadyCallback(items);
-            instance._updateSelectedKeys();
-            selectedKeys = instance._selectedKeys;
-            assert.equal(selectedKeys.length, 4);
-         });
-
-         it('selected part items', function() {
-            instance.saveOptions(cfg3);
-            instance._beforeMount(cfg3);
-            instance._itemsReadyCallback(items);
-            instance._updateSelectedKeys();
-            selectedKeys = instance._selectedKeys;
-            assert.equal(selectedKeys.length, 3);
-         });
-      });
-
       describe('_selectedTypeChangedHandler', function() {
          var count;
          var instance = new MassSelector();
          instance.saveOptions(cfg);
          instance._beforeMount(cfg);
-         instance._itemsReadyCallback(items);
 
          count = instance._multiselection.getCount();
          assert.equal(count, 2);
@@ -229,54 +183,38 @@ define(['Controls/Container/MassSelector'], function(MassSelector) {
             instance._afterItemsRemoveHandler([], [1, 2]);
             count = instance._multiselection.getCount();
             assert.equal(count, 0);
-            cfg = {
-               selectedKeys: [1, 2],
-               excludedKeys: []
-            };
          });
       });
 
       describe('_onCheckBoxClickHandler', function() {
-         var selectedKeys, count;
+         var selectedKeys, count, excludedKeys;
 
          var instance = new MassSelector();
          it('first elem click to false', function() {
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
-            instance._onCheckBoxClickHandler({}, 1, 1);
-            selectedKeys = instance._selectedKeys;
+            instance._onCheckBoxClickHandler({}, 1, true);
+            selectedKeys = instance._multiselection.getSelection().selected;
             assert.equal(selectedKeys.length, 1);
             assert.equal(selectedKeys[0], 2);
-            cfg = {
-               selectedKeys: [1, 2],
-               excludedKeys: []
-            };
          });
 
          it('second elem click to false', function() {
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
-            instance._onCheckBoxClickHandler({}, 2, 1);
-            selectedKeys = instance._selectedKeys;
+            instance._onCheckBoxClickHandler({}, 2, true);
+            selectedKeys = instance._multiselection.getSelection().selected;
             assert.equal(selectedKeys.length, 1);
             assert.equal(selectedKeys[0], 1);
-            cfg = {
-               selectedKeys: [1, 2],
-               excludedKeys: []
-            };
          });
 
          it('another elem click to true', function() {
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
-            instance._onCheckBoxClickHandler({}, 50, 0);
-            selectedKeys = instance._selectedKeys;
+            instance._onCheckBoxClickHandler({}, 50, false);
+            selectedKeys = instance._multiselection.getSelection().selected;
             assert.equal(selectedKeys.length, 3);
             assert.equal(selectedKeys[2], 50);
-            cfg = {
-               selectedKeys: [1, 2],
-               excludedKeys: []
-            };
          });
 
 
@@ -284,11 +222,14 @@ define(['Controls/Container/MassSelector'], function(MassSelector) {
          it('selected all click to false', function() {
             instance.saveOptions(cfg2);
             instance._beforeMount(cfg2);
-            instance._itemsReadyCallback(items);
-            instance._onCheckBoxClickHandler({}, 3, 1);
-            selectedKeys = instance._selectedKeys;
+            instance._onCheckBoxClickHandler({}, 3, true);
+            selectedKeys = instance._multiselection.getSelection().selected;
+            excludedKeys = instance._multiselection.getSelection().excluded;
             count = instance._multiselection.getCount();
-            assert.equal(selectedKeys.length, 3);
+            assert.equal(selectedKeys.length, 1);
+            assert.isNull(selectedKeys[0]);
+            assert.equal(excludedKeys.length, 1);
+            assert.equal(excludedKeys[0], 3);
             assert.equal(count, 'part');
          });
 
@@ -296,11 +237,13 @@ define(['Controls/Container/MassSelector'], function(MassSelector) {
          it('selected part click to true', function() {
             instance.saveOptions(cfg3);
             instance._beforeMount(cfg3);
-            instance._itemsReadyCallback(items);
-            instance._onCheckBoxClickHandler({}, 1, 0);
-            selectedKeys = instance._selectedKeys;
+            instance._onCheckBoxClickHandler({}, 1, false);
+            selectedKeys = instance._multiselection.getSelection().selected;
+            excludedKeys = instance._multiselection.getSelection().excluded;
             count = instance._multiselection.getCount();
-            assert.equal(selectedKeys.length, 4);
+            assert.equal(selectedKeys.length, 1);
+            assert.isNull(selectedKeys[0]);
+            assert.equal(excludedKeys.length, 0);
             assert.equal(count, 'all');
          });
       });

@@ -2,9 +2,8 @@ define('Controls/Container/MassSelector', [
    'Core/Control',
    'tmpl!Controls/Container/MassSelector/MassSelector',
    'Controls/Container/MassSelector/SelectionContextField',
-   'Controls/Container/MassSelector/CallbacksContextField',
    'Controls/Controllers/Multiselect/Selection'
-], function(Control, template, SelectionContextField, CallbacksContextField, Selection) {
+], function(Control, template, SelectionContextField, Selection) {
    'use strict';
 
    //TODO: нужно стопить события от List/MassSelector
@@ -14,17 +13,20 @@ define('Controls/Container/MassSelector', [
       _multiselection: null,
 
       _beforeMount: function(newOptions) {
-         this._itemsReadyCallback = this._itemsReadyCallback.bind(this);
          this._updateSelectionContext = this._updateSelectionContext.bind(this);
 
-         this._massSelectorCallbacks = new CallbacksContextField(this._itemsReadyCallback);
+         //TODO: надо таки положить items
+         this._multiselection = new Selection({
+            selectedKeys: newOptions.selectedKeys,
+            excludedKeys: newOptions.excludedKeys,
+            items: newOptions.items,
+            strategy: newOptions.strategy
+         });
 
-         //TODO: после избавления от itemsReadyCallback нужно будет переписать это место.
-         this._selectionContext = new SelectionContextField(
-            newOptions.selected,
-            newOptions.excluded,
-            0
-         );
+         this._multiselection.select(newOptions.selectedKeys || []);
+         this._multiselection.unselect(newOptions.excludedKeys || []);
+
+         this._updateSelectionContext();
       },
 
       //TODO: вроде можно удалить, т.к. используется только в Петиной демке ПМО. А там можно решить всё через selectionChangeHandler
@@ -55,24 +57,6 @@ define('Controls/Container/MassSelector', [
          this._updateSelectionContext();
       },
 
-      _itemsReadyCallback: function(items) {
-         if (this._multiselection) {
-            this._multiselection.setItems(items);
-         } else {
-            this._multiselection = new Selection({
-               selectedKeys: this._options.selectedKeys,
-               excludedKeys: this._options.excludedKeys,
-               items: items,
-               strategy: this._options.strategy
-            });
-         }
-
-         this._multiselection.select(this._options.selectedKeys || []);
-         this._multiselection.unselect(this._options.excludedKeys || []);
-
-         this._updateSelectionContext();
-      },
-
       _updateSelectionContext: function() {
          var currentSelection = this._multiselection.getSelection();
 
@@ -81,6 +65,8 @@ define('Controls/Container/MassSelector', [
             currentSelection.excluded,
             this._multiselection.getCount()
          );
+
+         //TODO: в _beforeMount тут нет this._options
          if (this._options.selectionChangeHandler) {
             this._options.selectionChangeHandler(currentSelection);
          }
@@ -89,8 +75,7 @@ define('Controls/Container/MassSelector', [
 
       _getChildContext: function() {
          return {
-            selection: this._selectionContext,
-            massSelectorCallbacks: this._massSelectorCallbacks
+            selection: this._selectionContext
          };
       }
    });

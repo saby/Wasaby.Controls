@@ -1,17 +1,12 @@
 define('Controls/List/MassSelector', [
    'Core/Control',
    'tmpl!Controls/List/MassSelector/MassSelector',
-   'Controls/Container/MassSelector/SelectionContextField',
-   'Controls/Container/MassSelector/CallbacksContextField'
-], function(Control, template, SelectionContextField, CallbacksContextField) {
+   'Controls/Container/MassSelector/SelectionContextField'
+], function(Control, template, SelectionContextField) {
    'use strict';
 
    var MassSelector = Control.extend({
       _template: template,
-
-      _beforeMount: function() {
-         this._itemsReadyCallback = this._itemsReady.bind(this);
-      },
 
       _onCheckBoxClickHandler: function(event, key, status) {
          this._notify('listCheckBoxClick', [key, status], {
@@ -23,18 +18,12 @@ define('Controls/List/MassSelector', [
          this._notify('listAfterItemsRemove', [keys], {
             bubbling: true
          });
-      },
-
-      _itemsReady: function(items) {
-         //TODO: надо уточнить у Зуева почему тут _contextObj, а не _context. В доке написано _context.
-         this._contextObj.massSelectorCallbacks.itemsReadyCallback(items);
       }
    });
 
    MassSelector.contextTypes = function contextTypes() {
       return {
-         selection: SelectionContextField,
-         massSelectorCallbacks: CallbacksContextField
+         selection: SelectionContextField
       };
    };
 

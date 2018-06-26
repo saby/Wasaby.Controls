@@ -107,15 +107,14 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
          });
 
          //TODO: полная копипаста из Selection (хотя вроде это неправильно, в самом начале нужно почистить ключи, на всякий случай)
-         this._selectedKeys = options.selectedKeys || [];
+         this._selectedKeys = cClone(options.selectedKeys) || [];
 
-         //TODO: можно всегда из опций брать, наверное
-         this._items = options.items;
-         this._strategy = options.strategy;
+         this._items = cClone(options.items);
+         this._strategy = cClone(options.strategy);
 
          //excluded keys имеют смысл только когда выделено все, поэтому ситуацию, когда переданы оба массива считаем ошибочной //TODO возможно надо кинуть здесь исключение
          if (_private.isAllSelection(null, this._selectedKeys, this._excludedKeys, this._items, this._strategy, this._hierarchyRelation)) {
-            this._excludedKeys = options.excludedKeys || [];
+            this._excludedKeys = cClone(options.excludedKeys) || [];
          } else {
             this._excludedKeys = [];
          }
@@ -223,7 +222,7 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
 
       setItems: function(items) {
          //TODO: полная копипаста из Selection
-         this._items = items;
+         this._items = cClone(items);
       },
 
       getSelectionStatus: function(key) {

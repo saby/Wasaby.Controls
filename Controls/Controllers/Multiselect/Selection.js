@@ -10,7 +10,13 @@ define('Controls/Controllers/Multiselect/Selection', [
 ) {
    'use strict';
 
-   var ALLSELECTION_VALUE = [null];
+   var
+      ALLSELECTION_VALUE = [null],
+      SELECTION_STATUS = {
+         NOT_SELECTED: false,
+         SELECTED: true,
+         PARTIALLY_SELECTED: null
+      };
 
    var _private = {
       isAllSelection: function(selectedKeys, excludedKeys, items, strategy) {
@@ -26,9 +32,11 @@ define('Controls/Controllers/Multiselect/Selection', [
             return _private.isAllSelection(selectedKeys, excludedKeys, items, strategy) ? 'all' : selectedKeys.length;
          } else {
             if (_private.isAllSelection(selectedKeys, excludedKeys, items, strategy)) {
-               return 'all';
-            } else if (selectedKeys[0] === null && excludedKeys.length) {
-               return 'part';
+               if (excludedKeys.length) {
+                  return 'part';
+               } else {
+                  return 'all';
+               }
             } else {
                return selectedKeys.length;
             }
@@ -45,14 +53,14 @@ define('Controls/Controllers/Multiselect/Selection', [
       _strategy: '',
 
       constructor: function(options) {
-         this._selectedKeys = options.selectedKeys || [];
+         this._selectedKeys = cClone(options.selectedKeys) || [];
 
-         this._items = options.items;
-         this._strategy = options.strategy;
+         this._items = cClone(options.items);
+         this._strategy = cClone(options.strategy);
 
          //excluded keys имеют смысл только когда выделено все, поэтому ситуацию, когда переданы оба массива считаем ошибочной //TODO возможно надо кинуть здесь исключение
          if (_private.isAllSelection(this._selectedKeys, this._excludedKeys, this._items, this._strategy)) {
-            this._excludedKeys = options.excludedKeys || [];
+            this._excludedKeys = cClone(options.excludedKeys) || [];
          } else {
             this._excludedKeys = [];
          }
@@ -107,18 +115,18 @@ define('Controls/Controllers/Multiselect/Selection', [
       },
 
       setItems: function(items) {
-         this._items = items;
+         this._items = cClone(items);
       },
 
       //TODO: на самом деле не очень понятно где это должно быть. Вроде как в модели, но тогда как она будет чекать isAllSelection?
       //TODO: если прокидывать count и какое-то значение в духе selectedAll: true|false, то всё будет проще. Можно даже будет убрать кучу вызовов isAllSelection, т.к. можно будет считать его один раз: при изменениях выделения
       getSelectionStatus: function(key) {
          if (_private.isAllSelection(this._selectedKeys, this._excludedKeys, this._items, this._strategy)  && this._excludedKeys.indexOf(key) === -1) {
-            return true;
+            return SELECTION_STATUS.SELECTED;
          } else if (this._selectedKeys.indexOf(key) !== -1) {
-            return true;
+            return SELECTION_STATUS.SELECTED;
          } else {
-            return false;
+            return SELECTION_STATUS.NOT_SELECTED;
          }
       },
 
@@ -127,8 +135,7 @@ define('Controls/Controllers/Multiselect/Selection', [
       }
    });
 
-   //для тестов
-   Selection._private = _private;
+   Selection.SELECTION_STATUS = SELECTION_STATUS;
 
    return Selection;
 });
