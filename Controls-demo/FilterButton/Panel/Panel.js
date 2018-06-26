@@ -7,7 +7,8 @@ define('Controls-demo/FilterButton/Panel/Panel',
       'tmpl!Controls-demo/FilterButton/Panel/resources/additionalItemsTemplate2',
       'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate',
       'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/additionalItemsTemplate',
-      'tmpl!Controls-demo/FilterButton/Panel/resources/FIO'
+      'tmpl!Controls-demo/FilterButton/Panel/resources/FIO',
+      'tmpl!Controls-demo/FilterButton/Panel/resources/country'
    ],
 
    function(Control, MemorySource, template) {
