@@ -182,7 +182,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             var fieldIds = options.fieldIds;
             if (fieldIds && fieldIds.length) {
                if (!options.fileUuid) {
-                  this._callFormatterMethods([{method:'clone', args:[options.primaryUuid, false]}, useApp ? 'openApp' : 'open']);
+                  this._callFormatterMethods([{method:'clone', args:[options.primaryUuid, false]}, {method:'open', args:[useApp, true]}]);
                }
                else {
                   this._callFormatterOpen(useApp);
@@ -248,9 +248,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           *
           * @protected
           * @param {boolean} useApp Открыть в отдельном приложении
+          * @param {boolean} deleteNotChanged Удалить файл если он не будет изменён
           * return {Core/Deferred}
           */
-         _callFormatterOpen: function (useApp) {
+         _callFormatterOpen: function (useApp, deleteNotChanged) {
             var options = this._options;
             var fieldIds = options.fieldIds;
             return this._exportFormatter[useApp ? 'openApp' : 'open'](options.fileUuid || options.primaryUuid, fieldIds || [], this._getFieldTitles(fieldIds), options.serviceParams).addCallbacks(
@@ -258,6 +259,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                   if (result) {
                      this.sendCommand('subviewChanged', 'afterOpen');
                      this._updatePreview();
+                  }
+                  else
+                  if (deleteNotChanged) {
+                     this._callFormatterDelete(options.fileUuid);
+                     options.fileUuid = null;
                   }
                }.bind(this),
                function (err) { return err; }

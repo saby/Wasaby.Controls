@@ -424,10 +424,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           *
           * @protected
           * @param {string|number} id Идентификатор пресета
-          * @param {object} changes Информация об изменениях
           * @param {boolean} preserveFileUuid Не сбрасывать текщий fileUuid
+          * @return {ExportPreset}
           */
-         _clonePreset: function (id, changes, preserveFileUuid) {
+         _clonePreset: function (id, preserveFileUuid) {
             var presetInfo = this._findPresetById(id, true);
             if (presetInfo) {
                var pattern = presetInfo.preset;
@@ -436,12 +436,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                customs.splice(presetInfo.isStatic ? customs.length : presetInfo.index + 1, 0, preset);
                this._previousId = this._options.selectedId;
                this._selectPreset(preset, !preserveFileUuid);
-               if (changes) {
-                  for (var property in changes) {
-                     preset[property] = changes[property];
-                  }
-                  this.sendCommand('subviewChanged');
-               }
+               return preset;
             }
          },
 
@@ -600,13 +595,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
          _selectPreset: function (preset, clearFileUuid) {
             var options = this._options;
             options.selectedId = preset ? preset.id : null;
-            this._fieldIds = preset ? preset.fieldIds : null;
+            this._fieldIds = preset ? preset.fieldIds.slice() : null;
             if (clearFileUuid) {
                this._fileUuid = null;
             }
+            this._storeSelectedId(options);
             // Даже если fieldIds и fileUuid в предыдущем и текуущем пресетах не отличаются совсем - нужно бросить событие как указание сбросить все несохранённые изменения в других под-компонентах
             this.sendCommand('subviewChanged');
-            this._storeSelectedId(options);
          },
 
          /**
@@ -767,7 +762,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   if (selectedId) {
                      var preset = this._findPresetById(selectedId);
                      if (preset && !preset.isStorable) {
-                        this._clonePreset(preset.id, isFieldsChanged ? {fieldIds:this._fieldIds} : undefined, isFormatterOpened);
+                        var fieldIds = this._fieldIds;
+                        var newPreset = this._clonePreset(preset.id, isFormatterOpened);
+                        if (isFieldsChanged) {
+                           newPreset.fieldIds = fieldIds ? fieldIds.slice() : [];
+                           this._fieldIds = fieldIds;
+                           this.sendCommand('subviewChanged');
+                        }
                      }
                   }
                   this._startEditingMode();
