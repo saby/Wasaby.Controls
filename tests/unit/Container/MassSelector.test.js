@@ -103,28 +103,28 @@ define(['Controls/Container/MassSelector'], function(MassSelector) {
          it('number count', function() {
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
-            count = instance._count;
+            count = instance._multiselection.getCount();
             assert.equal(count, 2);
          });
 
          it('zero count', function() {
             instance.saveOptions(cfg1);
             instance._beforeMount(cfg1);
-            count = instance._count;
+            count = instance._multiselection.getCount();
             assert.equal(count, 0);
          });
 
          it('all', function() {
             instance.saveOptions(cfg2);
             instance._beforeMount(cfg2);
-            count = instance._count;
+            count = instance._multiselection.getCount();
             assert.equal(count, 'all');
          });
 
          it('part', function() {
             instance.saveOptions(cfg3);
             instance._beforeMount(cfg3);
-            count = instance._count;
+            count = instance._multiselection.getCount();
             assert.equal(count, 'part');
          });
       });
@@ -186,24 +186,24 @@ define(['Controls/Container/MassSelector'], function(MassSelector) {
          instance._beforeMount(cfg);
          instance._itemsReadyCallback(items);
 
-         count = instance._count;
+         count = instance._multiselection.getCount();
          assert.equal(count, 2);
 
          it('toggleAll', function() {
             instance._selectedTypeChangedHandler([], 'toggleAll');
-            count = instance._count;
+            count = instance._multiselection.getCount();
             assert.equal(count, 'part');
          });
 
          it('selectAll', function() {
             instance._selectedTypeChangedHandler([], 'selectAll');
-            count = instance._count;
+            count = instance._multiselection.getCount();
             assert.equal(count, 'all');
          });
 
          it('unselectAll', function() {
             instance._selectedTypeChangedHandler([], 'unselectAll');
-            count = instance._count;
+            count = instance._multiselection.getCount();
             assert.equal(count, 0);
          });
       });
@@ -214,12 +214,12 @@ define(['Controls/Container/MassSelector'], function(MassSelector) {
          instance.saveOptions(cfg);
          instance._beforeMount(cfg);
 
-         count = instance._count;
+         count = instance._multiselection.getCount();
          assert.equal(count, 2);
 
          it('1 key', function() {
             instance._afterItemsRemoveHandler([], [1]);
-            count = instance._count;
+            count = instance._multiselection.getCount();
             assert.equal(count, 1);
          });
 
@@ -227,7 +227,7 @@ define(['Controls/Container/MassSelector'], function(MassSelector) {
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
             instance._afterItemsRemoveHandler([], [1, 2]);
-            count = instance._count;
+            count = instance._multiselection.getCount();
             assert.equal(count, 0);
             cfg = {
                selectedKeys: [1, 2],
@@ -287,7 +287,7 @@ define(['Controls/Container/MassSelector'], function(MassSelector) {
             instance._itemsReadyCallback(items);
             instance._onCheckBoxClickHandler({}, 3, 1);
             selectedKeys = instance._selectedKeys;
-            count = instance._count;
+            count = instance._multiselection.getCount();
             assert.equal(selectedKeys.length, 3);
             assert.equal(count, 'part');
          });
@@ -299,7 +299,7 @@ define(['Controls/Container/MassSelector'], function(MassSelector) {
             instance._itemsReadyCallback(items);
             instance._onCheckBoxClickHandler({}, 1, 0);
             selectedKeys = instance._selectedKeys;
-            count = instance._count;
+            count = instance._multiselection.getCount();
             assert.equal(selectedKeys.length, 4);
             assert.equal(count, 'all');
          });

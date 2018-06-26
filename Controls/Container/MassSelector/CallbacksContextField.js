@@ -5,11 +5,9 @@ define('Controls/Container/MassSelector/CallbacksContextField', [
 
    return DataContext.extend({
       itemsReadyCallback: null,
-      selectionCallback: null,
 
-      constructor: function(itemsReadyCallback, selectionCallback) {
+      constructor: function(itemsReadyCallback) {
          this.itemsReadyCallback = itemsReadyCallback;
-         this.selectionCallback = selectionCallback;
       }
    });
 });

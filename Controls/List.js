@@ -24,8 +24,7 @@ define('Controls/List', [
             selectedKeys: cfg.selectedKeys,
             multiSelectVisibility: cfg.multiSelectVisibility,
             itemsReadyCallback: cfg.itemsReadyCallback,
-            internalItemsReadyCallback: cfg.internalItemsReadyCallback,
-            selectionCallback: cfg.selectionCallback
+            internalItemsReadyCallback: cfg.internalItemsReadyCallback
          };
       },
       prepareViewConfig: function(cfg) {

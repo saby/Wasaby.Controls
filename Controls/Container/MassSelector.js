@@ -2,9 +2,12 @@ define('Controls/Container/MassSelector', [
    'Core/Control',
    'tmpl!Controls/Container/MassSelector/MassSelector',
    'Controls/Container/MassSelector/SelectionContextField',
-   'Controls/Container/MassSelector/CallbacksContextField'
-], function(Control, template, SelectionContextField, CallbacksContextField) {
+   'Controls/Container/MassSelector/CallbacksContextField',
+   'Controls/Controllers/Multiselect/Selection'
+], function(Control, template, SelectionContextField, CallbacksContextField, Selection) {
    'use strict';
+
+   //TODO: нужно стопить события от List/MassSelector
 
    return Control.extend({
       _template: template,
@@ -12,16 +15,11 @@ define('Controls/Container/MassSelector', [
 
       _beforeMount: function(newOptions) {
          this._itemsReadyCallback = this._itemsReadyCallback.bind(this);
-         this._selectionCallback = this._selectionCallback.bind(this);
          this._updateSelectionContext = this._updateSelectionContext.bind(this);
 
-         this._massSelectorCallbacks = new CallbacksContextField(this._itemsReadyCallback, this._selectionCallback);
+         this._massSelectorCallbacks = new CallbacksContextField(this._itemsReadyCallback);
 
-         /*
-         TODO: у меня нет способа получить нужный Selection пока не построятся список и не скажет какой Selection нужно использовать,
-         но список не построится, если не передать ему SelectionContext. В принципе, после получения selection'а изменится только count,
-         так что на первое время сойдет и так
-         */
+         //TODO: после избавления от itemsReadyCallback нужно будет переписать это место.
          this._selectionContext = new SelectionContextField(
             newOptions.selected,
             newOptions.excluded,
@@ -30,12 +28,12 @@ define('Controls/Container/MassSelector', [
       },
 
       //TODO: вроде можно удалить, т.к. используется только в Петиной демке ПМО. А там можно решить всё через selectionChangeHandler
+      //TODO: и надо selectionChangeHandler переделать на событие, если получится сделать так, чтобы оно в _beforeMount не стреляло
       getSelection: function() {
          return this._multiselection.getSelection();
       },
 
       _onCheckBoxClickHandler: function(event, key, status) {
-         //TODO: мне не нравится, что тут нужно оборачивать в массив. Нужно научить Selection самостоятельно оборачивать в массив
          if (!!status) {
             this._multiselection.unselect([key]);
          } else {
@@ -57,16 +55,22 @@ define('Controls/Container/MassSelector', [
          this._updateSelectionContext();
       },
 
-      _itemsReadyCallback: function() {
-         //TODO: нужно будет items в selection прокидывать, наверное
+      _itemsReadyCallback: function(items) {
+         if (this._multiselection) {
+            this._multiselection.setItems(items);
+         } else {
+            this._multiselection = new Selection({
+               selectedKeys: this._options.selectedKeys,
+               excludedKeys: this._options.excludedKeys,
+               items: items,
+               strategy: this._options.strategy
+            });
+         }
+
          this._multiselection.select(this._options.selectedKeys || []);
          this._multiselection.unselect(this._options.excludedKeys || []);
 
          this._updateSelectionContext();
-      },
-
-      _selectionCallback: function(SelectionConstructor) {
-         this._multiselection = new SelectionConstructor();
       },
 
       _updateSelectionContext: function() {

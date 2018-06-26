@@ -13,21 +13,46 @@ define('Controls/Controllers/Multiselect/Selection', [
    var ALLSELECTION_VALUE = [null];
 
    var _private = {
-      isAllSelection: function(selectedKeys) {
-         return !!selectedKeys && !!selectedKeys.length && selectedKeys[0] === null;
+      isAllSelection: function(selectedKeys, excludedKeys, items, strategy) {
+         if (strategy === 'allData') {
+            return selectedKeys[0] === null || selectedKeys.length === items.getCount() && !excludedKeys.length;
+         } else {
+            return selectedKeys[0] === null;
+         }
+      },
+
+      getCount: function(selectedKeys, excludedKeys, items, strategy) {
+         if (strategy === 'allData') {
+            return _private.isAllSelection(selectedKeys, excludedKeys, items, strategy) ? 'all' : selectedKeys.length;
+         } else {
+            if (_private.isAllSelection(selectedKeys, excludedKeys, items, strategy)) {
+               return 'all';
+            } else if (selectedKeys[0] === null && excludedKeys.length) {
+               return 'part';
+            } else {
+               return selectedKeys.length;
+            }
+         }
       }
    };
 
    var Selection = cExtend.extend({
       _selectedKeys: null,
       _excludedKeys: null,
+      _items: null,
+
+      //allData - все данные подгружены, можем не угадывать при расчёте count и отрисовке чекбоксов. partialData - не все данные подгружены.
+      _strategy: '',
 
       constructor: function(options) {
-         this._selectedKeys = options && options.selectedKeys || [];
+         this._selectedKeys = options.selectedKeys || [];
+
+         this._items = options.items;
+         this._strategy = options.strategy;
 
          //excluded keys имеют смысл только когда выделено все, поэтому ситуацию, когда переданы оба массива считаем ошибочной //TODO возможно надо кинуть здесь исключение
-         if (_private.isAllSelection(this._selectedKeys)) {
-            this._excludedKeys = options && options.excludedKeys || [];
+         if (_private.isAllSelection(this._selectedKeys, this._excludedKeys, this._items, this._strategy)) {
+            this._excludedKeys = options.excludedKeys || [];
          } else {
             this._excludedKeys = [];
          }
@@ -36,7 +61,7 @@ define('Controls/Controllers/Multiselect/Selection', [
       },
 
       select: function(keys) {
-         if (_private.isAllSelection(this._selectedKeys)) {
+         if (_private.isAllSelection(this._selectedKeys, this._excludedKeys, this._items, this._strategy)) {
             ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, keys);
          } else {
             ArraySimpleValuesUtil.addSubArray(this._selectedKeys, keys);
@@ -44,7 +69,7 @@ define('Controls/Controllers/Multiselect/Selection', [
       },
 
       unselect: function(keys) {
-         if (_private.isAllSelection(this._selectedKeys)) {
+         if (_private.isAllSelection(this._selectedKeys, this._excludedKeys, this._items, this._strategy)) {
             ArraySimpleValuesUtil.addSubArray(this._excludedKeys, keys);
          } else {
             ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, keys);
@@ -63,7 +88,7 @@ define('Controls/Controllers/Multiselect/Selection', [
 
       toggleAll: function() {
          var swap;
-         if (_private.isAllSelection(this._selectedKeys)) {
+         if (_private.isAllSelection(this._selectedKeys, this._excludedKeys, this._items, this._strategy)) {
             swap = cClone(this._excludedKeys);
             this.unselectAll();
             this.select(swap);
@@ -81,8 +106,24 @@ define('Controls/Controllers/Multiselect/Selection', [
          };
       },
 
+      setItems: function(items) {
+         this._items = items;
+      },
+
+      //TODO: на самом деле не очень понятно где это должно быть. Вроде как в модели, но тогда как она будет чекать isAllSelection?
+      //TODO: если прокидывать count и какое-то значение в духе selectedAll: true|false, то всё будет проще. Можно даже будет убрать кучу вызовов isAllSelection, т.к. можно будет считать его один раз: при изменениях выделения
+      getSelectionStatus: function(key) {
+         if (_private.isAllSelection(this._selectedKeys, this._excludedKeys, this._items, this._strategy)  && this._excludedKeys.indexOf(key) === -1) {
+            return true;
+         } else if (this._selectedKeys.indexOf(key) !== -1) {
+            return true;
+         } else {
+            return false;
+         }
+      },
+
       getCount: function() {
-         return _private.isAllSelection(this._selectedKeys) ? !!this._excludedKeys.length ? 'part' : 'all' : this._selectedKeys.length;
+         return _private.getCount(this._selectedKeys, this._excludedKeys, this._items, this._strategy);
       }
    });
 

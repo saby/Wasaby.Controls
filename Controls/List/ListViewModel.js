@@ -1,8 +1,8 @@
 /**
  * Created by kraynovdo on 16.11.2017.
  */
-define('Controls/List/ListViewModel', ['Controls/List/ItemsViewModel', 'Controls/Controllers/Multiselect/Selection', 'WS.Data/Entity/VersionableMixin', 'Controls/List/resources/utils/ItemsUtil', 'Controls/Utils/ArraySimpleValuesUtil'],
-   function(ItemsViewModel, MultiSelection, VersionableMixin, ItemsUtil, ArraySimpleValuesUtil) {
+define('Controls/List/ListViewModel', ['Controls/List/ItemsViewModel', 'WS.Data/Entity/VersionableMixin', 'Controls/List/resources/utils/ItemsUtil', 'Controls/Utils/ArraySimpleValuesUtil'],
+   function(ItemsViewModel, VersionableMixin, ItemsUtil, ArraySimpleValuesUtil) {
       /**
        *
        * @author Крайнов Дмитрий
@@ -49,11 +49,6 @@ define('Controls/List/ListViewModel', ['Controls/List/ItemsViewModel', 'Controls
          constructor: function(cfg) {
             var self = this;
             this._actions = [];
-
-            //TODO: надо подумать над названием
-            if (cfg.selectionCallback) {
-               cfg.selectionCallback(this._getSelectionController());
-            }
             ListViewModel.superclass.constructor.apply(this, arguments);
 
             if (cfg.markedKey !== undefined) {
@@ -65,10 +60,6 @@ define('Controls/List/ListViewModel', ['Controls/List/ItemsViewModel', 'Controls
 
             //TODO надо ли?
             _private.updateIndexes(self);
-         },
-
-         _getSelectionController: function() {
-            return MultiSelection;
          },
 
          _getItemDataByItem: function() {
