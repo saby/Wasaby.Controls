@@ -1,9 +1,9 @@
 define('Controls/SwitchableArea',
-   [
-      'Core/Control',
-      'Controls/SwitchableArea/ViewModel',
-      'tmpl!Controls/SwitchableArea/SwitchableArea'
-   ],
+[
+   'Core/Control',
+   'Controls/SwitchableArea/ViewModel',
+   'tmpl!Controls/SwitchableArea/SwitchableArea'
+],
 function(Control, ViewModel, template) {
 
       'use strict';
