@@ -7,7 +7,10 @@ define('Controls-demo/FilterButton/Panel/Panel',
       'tmpl!Controls-demo/FilterButton/Panel/resources/additionalItemsTemplate2',
       'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate',
       'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/additionalItemsTemplate',
-      'tmpl!Controls-demo/FilterButton/Panel/resources/FIO'
+      'tmpl!Controls-demo/FilterButton/Panel/resources/FIO',
+      'tmpl!Controls-demo/FilterButton/Panel/resources/country',
+      'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/vdomFilterButtonTemplate',
+      'tmpl!Controls-demo/FilterButton/Panel/resources/vdomFilterTemplate'
    ],
 
    function(Control, MemorySource, template) {
