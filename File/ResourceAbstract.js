@@ -33,14 +33,25 @@ define("File/ResourceAbstract", ["require", "exports"], function (require, expor
         };
         /**
          * Возвращает информацию о файле, если такая имеется
-         * @name File/ResourceAbstract#getFileInfo
+         * @name File/ResourceAbstract#getInfo
          * @return {FileInfo}
          */
-        ResourceAbstract.prototype.getFileInfo = function () {
+        ResourceAbstract.prototype.getInfo = function () {
             if (!this._info) {
-                this._info = {};
+                this.setInfo({});
             }
             return this._info;
+        };
+        ResourceAbstract.prototype.getFileInfo = function () {
+            return this.getInfo();
+        };
+        /**
+         * Возвращает информацию о файле
+         * @name File/ResourceAbstract#setInfo
+         * @param {FileInfo} info
+         */
+        ResourceAbstract.prototype.setInfo = function (info) {
+            this._info = info || {};
         };
         /**
          * Возвращает имя файла

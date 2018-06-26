@@ -36,15 +36,28 @@ export abstract class ResourceAbstract implements IResource {
 
     /**
      * Возвращает информацию о файле, если такая имеется
-     * @name File/ResourceAbstract#getFileInfo
+     * @name File/ResourceAbstract#getInfo
      * @return {FileInfo}
      */
-    getFileInfo(): FileInfo {
+    getInfo(): FileInfo {
         if (!this._info) {
-            this._info = {};
+            this.setInfo({});
         }
         return this._info;
     }
+    getFileInfo(): FileInfo {
+        return this.getInfo();
+    }
+
+    /**
+     * Возвращает информацию о файле
+     * @name File/ResourceAbstract#setInfo
+     * @param {FileInfo} info
+     */
+    setInfo(info: Partial<FileInfo>) {
+        this._info = info || {};
+    }
+
     /**
      * Возвращает имя файла
      * @name File/ResourceAbstract#getName
