@@ -188,20 +188,23 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
 
                this.subscribeTo(editor, 'onApply', function (evtName) {
                   var preset = this._findPresetById(options.selectedId);
-                  var preservePrimary = !!preset.patternUuid;
+                  var transaction = {force:!this._fileUuid, preservePrimary:!!preset.patternUuid};
                   preset.title = editor.getText();
                   delete preset.isUnreal;
                   delete preset.patternUuid;
                   preset.isStorable = true;
                   this._previousId = null;
-                  this._saveSelectedPreset().addCallback(function (/*isSuccess*/) {
-                     /*if (isSuccess) {*/
-                        var force = !this._fileUuid;
-                        this._fileUuid = null;
-                        this.sendCommand('subviewChanged', 'transaction', true, {force:force, preservePrimary:preservePrimary});
-                        this._endEditingMode();
-                        this._updateSelector();
-                     /*}*/
+                  this.sendCommand('subviewChanged', 'transaction', true, transaction).addCallback(function (result) {
+                     if (!this._fileUuid) {
+                        this._fileUuid = result;
+                     }
+                     this._saveSelectedPreset().addCallback(function (/*isSuccess*/) {
+                        /*if (isSuccess) {*/
+                           this._fileUuid = null;
+                           this._endEditingMode();
+                           this._updateSelector();
+                        /*}*/
+                     }.bind(this));
                   }.bind(this));
                }.bind(this));
 

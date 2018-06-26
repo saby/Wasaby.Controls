@@ -569,9 +569,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             if (fieldIds || fileUuid) {
                var meta = this._makeMeta('presets', [].slice.call(arguments));
                views.columnBinder.restate({fieldIds:fieldIds.slice()}, meta);
-               /*var result =*/ views.formatter.restate({fieldIds:fieldIds.slice(), primaryUuid:values.primaryUuid, fileUuid:fileUuid, consumerId:values.consumerId}, meta);
+               var result = views.formatter.restate({fieldIds:fieldIds.slice(), primaryUuid:values.primaryUuid, fileUuid:fileUuid, consumerId:values.consumerId}, meta);
                this._updateCompleteButton(fieldIds);
-               /*return result;*/
+               return result;
             }
          },
 

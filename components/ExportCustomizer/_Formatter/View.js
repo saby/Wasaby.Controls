@@ -426,13 +426,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * @param {object} saving Дополнительные опции сохранения
           * @param {boolean} saving.force Сохранить, даже если нет изменений (только при сохранении)
           * @param {boolean} saving.preservePrimary Не удалять исходный файл (только при сохранении)
+          * @return {Core/Deferred<string>}
           */
          _endTransaction: function (isCommit, saving) {
             var options = this._options;
             var fileUuid = options.fileUuid;
             if (isCommit && saving && saving.force && !fileUuid) {
-               this._callFormatterCreate(options.primaryUuid, false).addCallback(this._endTransaction.bind(this, true));
-               return;
+               return this._callFormatterCreate(options.primaryUuid, false).addCallback(this._endTransaction.bind(this, true, saving));
             }
             var deleteUuid = isCommit ? (saving && saving.preservePrimary ? null : options.primaryUuid) : fileUuid;
             if (deleteUuid) {
@@ -442,6 +442,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                options.primaryUuid = fileUuid;
             }
             options.fileUuid = null;
+            return Deferred.success(fileUuid);
          },
 
          /**
@@ -461,8 +462,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                      this._callFormatterDelete(meta.args[0]);
                      return;
                   case 'transaction':
-                     this._endTransaction(meta.args[0], meta.args[1]);
-                     return;
+                     return this._endTransaction(meta.args[0], meta.args[1]);
                }
             }
             var options = this._options;
