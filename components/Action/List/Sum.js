@@ -137,11 +137,7 @@ define('SBIS3.CONTROLS/Action/List/Sum', [
                     selectedItems,
                     object = this.getLinkedObject(),
                     selection = object.getSelection();
-                if (selection && (selection.marked.length || selection.markedAll)) {
-                   //TODO: костыль для .322. В .350 сделано нормально.
-                   if (!selection.marked.length) {
-                      selection.marked = [null];
-                   }
+                if (selection && selection.marked.length) {
                    result = this._sumBySelection(selection);
                 } else {
                     selectedItems = object.getSelectedItems();
