@@ -2,7 +2,7 @@ define('Controls/SwitchableArea/ViewModel',
    [
       'Core/Control'
    ],
-   function(Control, template) {
+   function(Control) {
 
       'use strict';
 
@@ -25,7 +25,7 @@ define('Controls/SwitchableArea/ViewModel',
             _private.updateLoadStatus(selectedKey, this);
          },
          mustBeLoad: function(item) {
-            return this._items.getRecordById(item.get(this._items.idProperty)).loaded === true;
+            return this._items.getRecordById(item.get(this._items.getIdProperty())).loaded;
          }
       });
 

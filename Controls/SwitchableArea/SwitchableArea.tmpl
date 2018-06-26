@@ -1,5 +1,9 @@
-<ws:for data="item in _options.items">
-    <ws:if data="{{_viewModel.mustBeLoad(item)}}">
-        <Controls.Container.Async attr:class="{{options.selectedKey === item.get(items.getIdProperty())}}" templateName="{{item.get('_content')}}" templateOptions="{{_options}}"/>
-    </ws:if>
-</ws:for>
+<div class="controls-SwitchableArea">
+    <ws:for data="item in _options.items">
+        <ws:if data="{{_viewModel.mustBeLoad(item)}}">
+            <Controls.Container.Async attr:class="{{isActiveItem(item) ? 'controls-SwitchableArea__content_hidden'}}"
+                                      templateName="{{item.get(_options.itemTemplateName)}}"
+                                      templateOptions="{{_options}}"/>
+        </ws:if>
+    </ws:for>
+</div>
