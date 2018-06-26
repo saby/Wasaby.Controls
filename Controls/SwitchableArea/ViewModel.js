@@ -1,25 +1,31 @@
 define('Controls/SwitchableArea/ViewModel',
    [
-      'Core/Control',
-      'tmpl!Controls/SwitchableArea/SwitchableArea'
+      'Core/Control'
    ],
    function(Control, template) {
 
       'use strict';
 
       var _private = {
-         updateLoadStatus: function(options) {
-            options.items.getRecordById(options.selectedKey).beLoad = true;
+         updateLoadStatus: function(selectedKey, self) {
+            self._items.getRecordById(selectedKey).loaded = true;
          }
       };
 
       var ViewModel = Control.extend({
-         _template: template,
-         _beforeMount: function(options) {
-            _private.updateLoadStatus(options);
+         constructor: function(items, selectedKey) {
+            ViewModel.superclass.constructor.apply(this, arguments);
+            this._items = items;
+            _private.updateLoadStatus(selectedKey, this);
          },
-         _beforeUpdate: function(newOptions) {
-            _private.updateLoadStatus(newOptions);
+         updateViewModel: function(items, selectedKey) {
+            if (this._items !== items) {
+               this._items = items;
+            }
+            _private.updateLoadStatus(selectedKey, this);
+         },
+         mustBeLoad: function(item) {
+            return this._items.getRecordById(item.get(this._items.idProperty)).loaded === true;
          }
       });
 

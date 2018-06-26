@@ -1,3 +1,5 @@
 <ws:for data="item in _options.items">
-    <Controls.Container.Async templateName="{{item.get}}" templateOptions="{{_options}}"/>
+    <ws:if data="{{_viewModel.mustBeLoad(item)}}">
+        <Controls.Container.Async attr:class="{{options.selectedKey === item.get(items.getIdProperty())}}" templateName="{{item.get('_content')}}" templateOptions="{{_options}}"/>
+    </ws:if>
 </ws:for>
