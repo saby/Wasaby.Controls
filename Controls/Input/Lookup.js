@@ -33,15 +33,15 @@ define('Controls/Input/Lookup', [
     */
 
    var _private = {
-      loadItems: function(self, source) {
-         var filter = clone(self._options.filter || {});
+      loadItems: function(self, options) {
+         var filter = clone(options.filter || {});
          var resultDef = new Deferred();
-         
-         filter[self._options.keyProperty] = self._options.selectedKeys;
-         
+
+         filter[options.keyProperty] = options.selectedKeys;
+
          if (!self.sourceController) {
             self.sourceController = new SourceController({
-               source: source
+               source: options.source
             });
          }
          self.sourceController.load(filter)
@@ -53,7 +53,7 @@ define('Controls/Input/Lookup', [
                resultDef.callback(null);
                return result;
             });
-         
+
          return resultDef;
       },
       
@@ -133,7 +133,7 @@ define('Controls/Input/Lookup', [
          
          if (this._selectedKeys.length) {
             _private.keysChanged(this);
-            return _private.loadItems(this, options.source);
+            return _private.loadItems(this, options);
          }
       },
       
@@ -150,7 +150,7 @@ define('Controls/Input/Lookup', [
          }
          
          if (newOptions.source !== this._options.source || keysChanged && this._selectedKeys.length) {
-            _private.loadItems(this, newOptions.source).addCallback(function(result) {
+            _private.loadItems(this, newOptions).addCallback(function(result) {
                self._forceUpdate();
                return result;
             });
