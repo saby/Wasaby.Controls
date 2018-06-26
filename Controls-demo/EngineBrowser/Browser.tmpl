@@ -1,0 +1,34 @@
+<Controls.EngineBrowser
+        searchParam="title"
+        source="{{_source}}"
+        filterButtonSource="{{_items}}"
+        class="demo-browser">
+   <ws:search>
+      <Controls.Input.Search bind:value="value"/>
+   </ws:search>
+   <ws:filterButton>
+      <Controls.Filter.Button>
+         <ws:itemTemplate templateName="tmpl!Controls-demo/EngineBrowser/resources/filterPanelItemsTemplate"/>
+         <ws:additionalTemplate templateName="tmpl!Controls-demo/EngineBrowser/resources/filterPanelAddItemsTemplate"/>
+      </Controls.Filter.Button>
+   </ws:filterButton>
+   <ws:content>
+      <Controls.List
+              keyProperty="id"
+              emptyTemplate="Не найдено">
+         <ws:itemTemplate>
+            <ws:partial template="tmpl!Controls/List/ItemTemplate">
+               <ws:contentTemplate>
+                  <div attr:style="display: flex; justify-content: space-between">
+                     <div>{{itemTemplate.itemData.item.get('title')}}</div>
+                     <div>{{itemTemplate.itemData.item.get('country')}}</div>
+                  </div>
+               </ws:contentTemplate>
+            </ws:partial>
+         </ws:itemTemplate>
+      </Controls.List>
+   </ws:content>
+   <ws:navigation source="page" view="page">
+      <ws:sourceConfig pageSize="{{10}}" page="{{0}}" mode="totalCount"/>
+   </ws:navigation>
+</Controls.EngineBrowser>

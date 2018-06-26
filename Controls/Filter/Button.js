@@ -24,6 +24,7 @@ define('Controls/Filter/Button',
        * @control
        * @public
        * @author Герасимов Александр
+       * @demo Controls-demo/FilterButton/FilterButton
        */
 
       'use strict';
@@ -103,10 +104,12 @@ define('Controls/Filter/Button',
          },
 
          _clearClick: function() {
-            _private.getFilterButtonCompatible(this).addCallback(function(panelOpener) {
-               panelOpener.clearFilter();
-               this._text = '';
-            });
+            if (this._options.filterTemplate) {
+               _private.getFilterButtonCompatible(this).addCallback(function(panelOpener) {
+                  panelOpener.clearFilter();
+               });
+            }
+            this._text = '';
          },
 
          _openFilterPanel: function() {
@@ -119,14 +122,11 @@ define('Controls/Filter/Button',
                } else {
                   this._children.filterStickyOpener.open({
                      templateOptions: {
+                        template: this._options.template,
                         items: this._options.items,
-                        itemTemplate: this._options.itemTemplate,
-                        itemTemplateProperty: this._options.itemTemplateProperty,
-                        additionalTemplate: this._options.additionalTemplate,
-                        additionalTemplateProperty: this._options.additionalTemplateProperty,
                         historyId: this._options.historyId
                      },
-                     template: 'Controls/Filter/Button/Panel',
+                     template: 'Controls/Filter/Button/Panel/Wrapper/_FilterPanelWrapper',
                      target: this._children.panelTarget
                   });
                }
