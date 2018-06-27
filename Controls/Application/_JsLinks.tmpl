@@ -1,6 +1,6 @@
 <div>
    <ws:if data="{{ cssLinks }}">
-      <script>{{ getDefines() }}</script>
+      <script>eval("{{ getDefines() }}")</script>
    </ws:if>
    <ws:if data="{{ jsLinks }}">
       <ws:for data="index, value in jsLinks">
