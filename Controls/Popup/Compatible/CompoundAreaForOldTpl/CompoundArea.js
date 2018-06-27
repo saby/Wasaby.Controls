@@ -181,7 +181,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                parent.sendCommand.apply(parent, [commandName].concat(arg));
             } else if (this._parent && this._parent._options.opener) {
                parent = this._parent._options.opener;
+
                /*Если нет sendCommand - значит это не compoundControl - а значит там нет распространения команд*/
+               
                if (parent.sendCommand) {
                   parent.sendCommand.apply(parent, [commandName].concat(arg));
                }
