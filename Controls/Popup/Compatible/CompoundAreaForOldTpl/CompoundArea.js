@@ -159,7 +159,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                //далее floatArea начинает люто дергать recalculateStyle и нужно, чтобы там не было
                //лишних свойств, которые еще не применены к дому
                //панельки с этим начали вылезать плавненько
-               runDelayed(function(){
+               runDelayed(function() {
                   self._createCompoundControl(self.templateOptions, result[0]);
                });
             });
