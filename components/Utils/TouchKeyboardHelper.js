@@ -1,11 +1,12 @@
 /**
  * Утилита рассчета высоты клавиатуры на тач устройствах
+ * @author Зайцев А.С.
  */
 define('SBIS3.CONTROLS/Utils/TouchKeyboardHelper', [
    "Core/constants",
    "Core/EventBus"
 ], function( constants, EventBus) {
-   /*Коэфицент Борисова*/
+
    var ipadCoefficient = {
       portrait: 0.3,
       landscape: 0.56

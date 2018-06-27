@@ -1,0 +1,9 @@
+<div>
+   <ws:for data="key, value in data">
+      <Controls.Container.Async templateName="{{ value }}" templateOptions="{{ templateOptions }}">
+         <div>
+            <ws:partial template="{{ value }}" caption="knopka" value="text"></ws:partial>
+         </div>
+      </Controls.Container.Async>
+   </ws:for>
+</div>
