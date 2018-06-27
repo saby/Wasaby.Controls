@@ -53,16 +53,16 @@ define('Controls/Controllers/Multiselect/Selection', [
       _strategy: '',
 
       constructor: function(options) {
-         this._selectedKeys = cClone(options.selectedKeys) || [];
+         this._selectedKeys = cClone(options.selectedKeys);
+         this._excludedKeys = cClone(options.excludedKeys);
 
+         //TODO: нужно кидать исключение, если нет items
          this._items = cClone(options.items);
-         this._strategy = cClone(options.strategy);
+         this._strategy = options.strategy;
 
-         //excluded keys имеют смысл только когда выделено все, поэтому ситуацию, когда переданы оба массива считаем ошибочной //TODO возможно надо кинуть здесь исключение
-         if (_private.isAllSelection(this._selectedKeys, this._excludedKeys, this._items, this._strategy)) {
-            this._excludedKeys = cClone(options.excludedKeys) || [];
-         } else {
-            this._excludedKeys = [];
+         //excluded keys имеют смысл только когда выделено все, поэтому ситуацию, когда переданы оба массива считаем ошибочной
+         if (options.excludedKeys.length && !_private.isAllSelection(this._selectedKeys, this._excludedKeys, this._items, this._strategy)) {
+            //TODO возможно надо кинуть здесь исключение
          }
 
          Selection.superclass.constructor.apply(this, arguments);
@@ -118,10 +118,8 @@ define('Controls/Controllers/Multiselect/Selection', [
          this._items = cClone(items);
       },
 
-      //TODO: на самом деле не очень понятно где это должно быть. Вроде как в модели, но тогда как она будет чекать isAllSelection?
-      //TODO: если прокидывать count и какое-то значение в духе selectedAll: true|false, то всё будет проще. Можно даже будет убрать кучу вызовов isAllSelection, т.к. можно будет считать его один раз: при изменениях выделения
       getSelectionStatus: function(key) {
-         if (_private.isAllSelection(this._selectedKeys, this._excludedKeys, this._items, this._strategy)  && this._excludedKeys.indexOf(key) === -1) {
+         if (this._excludedKeys.indexOf(key) === -1 && _private.isAllSelection(this._selectedKeys, this._excludedKeys, this._items, this._strategy)) {
             return SELECTION_STATUS.SELECTED;
          } else if (this._selectedKeys.indexOf(key) !== -1) {
             return SELECTION_STATUS.SELECTED;

@@ -217,8 +217,6 @@ define(['Controls/Container/MassSelector'], function(MassSelector) {
             assert.equal(selectedKeys[2], 50);
          });
 
-
-
          it('selected all click to false', function() {
             instance.saveOptions(cfg2);
             instance._beforeMount(cfg2);
@@ -232,7 +230,6 @@ define(['Controls/Container/MassSelector'], function(MassSelector) {
             assert.equal(excludedKeys[0], 3);
             assert.equal(count, 'part');
          });
-
 
          it('selected part click to true', function() {
             instance.saveOptions(cfg3);

@@ -2,17 +2,44 @@
  * Created by kraynovdo on 21.03.2018.
  */
 define([
-   'Controls/Controllers/Multiselect/Selection'
-], function(Selection) {
+   'Controls/Controllers/Multiselect/Selection',
+   'WS.Data/Collection/RecordSet'
+], function(
+   Selection,
+   RecordSet
+) {
    describe('Controls.Controllers.Multiselect.Selection', function() {
-
+      var
+         cfg,
+         selection,
+         selectionInstance,
+         status,
+         data = [{
+            'id': 1
+         }, {
+            'id': 2
+         }, {
+            'id': 3
+         }, {
+            'id': 4
+         }, {
+            'id': 3
+         }, {
+            'id': 6
+         }, {
+            'id': 7
+         }],
+         items = new RecordSet({
+            rawData: data,
+            idProperty: 'id'
+         });
 
       it('ctor', function() {
-         var cfg, selectionInstance;
 
          cfg = {
-            selectedKeys: null,
-            excludedKeys: null
+            selectedKeys: [],
+            excludedKeys: [],
+            items: items
          };
          selectionInstance = new Selection(cfg);
          assert.deepEqual([], selectionInstance._selectedKeys, 'Constructor: wrong field values');
@@ -20,7 +47,8 @@ define([
 
          cfg = {
             selectedKeys: [1, 2, 3],
-            excludedKeys: null
+            excludedKeys: [],
+            items: items
          };
          selectionInstance = new Selection(cfg);
          assert.deepEqual([1, 2, 3], selectionInstance._selectedKeys, 'Constructor: wrong field values');
@@ -28,15 +56,17 @@ define([
 
          cfg = {
             selectedKeys: [1, 2, 3],
-            excludedKeys: [2]
+            excludedKeys: [2],
+            items: items
          };
          selectionInstance = new Selection(cfg);
          assert.deepEqual([1, 2, 3], selectionInstance._selectedKeys, 'Constructor: wrong field values');
-         assert.deepEqual([], selectionInstance._excludedKeys, 'Constructor: wrong field values');
+         assert.deepEqual([2], selectionInstance._excludedKeys, 'Constructor: wrong field values');
 
          cfg = {
             selectedKeys: [null],
-            excludedKeys: [2]
+            excludedKeys: [2],
+            items: items
          };
          selectionInstance = new Selection(cfg);
          assert.deepEqual([null], selectionInstance._selectedKeys, 'Constructor: wrong field values');
@@ -44,11 +74,11 @@ define([
       });
 
       it('select', function() {
-         var cfg, selectionInstance;
 
          cfg = {
             selectedKeys: [],
-            excludedKeys: []
+            excludedKeys: [],
+            items: items
          };
          selectionInstance = new Selection(cfg);
          selectionInstance.select([1, 2, 3]);
@@ -57,7 +87,8 @@ define([
 
          cfg = {
             selectedKeys: [1, 2, 3],
-            excludedKeys: []
+            excludedKeys: [],
+            items: items
          };
          selectionInstance = new Selection(cfg);
          selectionInstance.select([4, 5, 6]);
@@ -66,7 +97,8 @@ define([
 
          cfg = {
             selectedKeys: [1, 2, 3],
-            excludedKeys: []
+            excludedKeys: [],
+            items: items
          };
          selectionInstance = new Selection(cfg);
          selectionInstance.select([2, 4]);
@@ -75,7 +107,8 @@ define([
 
          cfg = {
             selectedKeys: [null],
-            excludedKeys: [2, 3]
+            excludedKeys: [2, 3],
+            items: items
          };
          selectionInstance = new Selection(cfg);
          selectionInstance.select([2, 4]);
@@ -84,7 +117,8 @@ define([
 
          cfg = {
             selectedKeys: [],
-            excludedKeys: []
+            excludedKeys: [],
+            items: items
          };
          selectionInstance = new Selection(cfg);
          selectionInstance.select([null]);
@@ -93,11 +127,11 @@ define([
       });
 
       it('unselect', function() {
-         var cfg, selectionInstance;
 
          cfg = {
             selectedKeys: [1, 2, 3],
-            excludedKeys: []
+            excludedKeys: [],
+            items: items
          };
          selectionInstance = new Selection(cfg);
          selectionInstance.unselect([1, 3]);
@@ -106,7 +140,8 @@ define([
 
          cfg = {
             selectedKeys: [1, 2, 3],
-            excludedKeys: []
+            excludedKeys: [],
+            items: items
          };
          selectionInstance = new Selection(cfg);
          selectionInstance.unselect([1, 2, 3]);
@@ -114,7 +149,8 @@ define([
          assert.deepEqual([], selectionInstance._excludedKeys, 'Constructor: wrong field values');
          cfg = {
             selectedKeys: [null],
-            excludedKeys: []
+            excludedKeys: [],
+            items: items
          };
          selectionInstance = new Selection(cfg);
          selectionInstance.unselect([1, 2, 3]);
@@ -123,7 +159,8 @@ define([
 
          cfg = {
             selectedKeys: [null],
-            excludedKeys: [2, 3, 4]
+            excludedKeys: [2, 3, 4],
+            items: items
          };
          selectionInstance = new Selection(cfg);
          selectionInstance.unselect([1, 2]);
@@ -132,11 +169,11 @@ define([
       });
 
       it('selectAll+unselectAll', function() {
-         var cfg, selectionInstance;
 
          cfg = {
             selectedKeys: [1, 2, 3],
-            excludedKeys: []
+            excludedKeys: [],
+            items: items
          };
          selectionInstance = new Selection(cfg);
          selectionInstance.selectAll();
@@ -145,7 +182,8 @@ define([
 
          cfg = {
             selectedKeys: [1, 2, 3],
-            excludedKeys: []
+            excludedKeys: [],
+            items: items
          };
          selectionInstance = new Selection(cfg);
          selectionInstance.unselectAll();
@@ -154,11 +192,11 @@ define([
       });
 
       it('toggleAll', function() {
-         var cfg, selectionInstance;
 
          cfg = {
             selectedKeys: [1, 2, 3],
-            excludedKeys: []
+            excludedKeys: [],
+            items: items
          };
          selectionInstance = new Selection(cfg);
          selectionInstance.toggleAll();
@@ -167,7 +205,8 @@ define([
 
          cfg = {
             selectedKeys: [null],
-            excludedKeys: [1, 2, 3]
+            excludedKeys: [1, 2, 3],
+            items: items
          };
          selectionInstance = new Selection(cfg);
          selectionInstance.toggleAll();
@@ -176,7 +215,8 @@ define([
 
          cfg = {
             selectedKeys: [null],
-            excludedKeys: []
+            excludedKeys: [],
+            items: items
          };
          selectionInstance = new Selection(cfg);
          selectionInstance.toggleAll();
@@ -185,11 +225,11 @@ define([
       });
 
       it('getSelection', function() {
-         var cfg, selectionInstance, selection;
 
          cfg = {
             selectedKeys: [null],
-            excludedKeys: [1, 2, 3]
+            excludedKeys: [1, 2, 3],
+            items: items
          };
          selectionInstance = new Selection(cfg);
          selection = selectionInstance.getSelection();
@@ -198,11 +238,11 @@ define([
       });
 
       it('getSelectionStatus', function() {
-         var cfg, selectionInstance, status;
 
          cfg = {
             selectedKeys: [1, 2, 3],
-            excludedKeys: []
+            excludedKeys: [],
+            items: items
          };
          selectionInstance = new Selection(cfg);
          status = selectionInstance.getSelectionStatus(1);
@@ -213,7 +253,8 @@ define([
 
          cfg = {
             selectedKeys: [],
-            excludedKeys: []
+            excludedKeys: [],
+            items: items
          };
          selectionInstance = new Selection(cfg);
          status = selectionInstance.getSelectionStatus(1);
@@ -224,7 +265,8 @@ define([
 
          cfg = {
             selectedKeys: [null],
-            excludedKeys: [1, 2, 3]
+            excludedKeys: [1, 2, 3],
+            items: items
          };
          selectionInstance = new Selection(cfg);
          status = selectionInstance.getSelectionStatus(1);

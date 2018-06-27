@@ -38,15 +38,15 @@ define('Controls/OperationsPanel/MassSelector', [
       },
 
       _updateSelection: function(selection) {
-         this._updateMultiSelectStatus(selection.count);
+         this._updateMultiSelectStatus(selection.selectedKeys, selection.excludedKeys);
          this._updateMultiSelectCaption(selection.count);
       },
 
-      _updateMultiSelectStatus: function(count) {
+      _updateMultiSelectStatus: function(selectedKeys, excludedKeys) {
          this._multiSelectStatus =
-            count === 'all'
+            selectedKeys[0] === null && !excludedKeys.length
                ? true
-               : count === 'part' || count !== 0
+               : selectedKeys.length > 0
                   ? null
                   : false;
       },
