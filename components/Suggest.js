@@ -3,9 +3,9 @@ define('SBIS3.CONTROLS/Suggest', [
    'SBIS3.CONTROLS/Mixins/DataBindMixin',
    'SBIS3.CONTROLS/Mixins/PickerMixin',
    'SBIS3.CONTROLS/Mixins/SuggestMixin',
-   'Core/helpers/random-helpers',
+   'Core/helpers/Number/randomId',
    'css!SBIS3.CONTROLS/Suggest/Suggest'
-], function (Control, DataBindMixin, PickerMixin, SuggestMixin, randHelpers) {
+], function (Control, DataBindMixin, PickerMixin, SuggestMixin, randomId) {
    'use strict';
 
    /**
@@ -26,7 +26,7 @@ define('SBIS3.CONTROLS/Suggest', [
          /* Т.к. Suggest может цепляться к контейнеру, в котором уже "живет" другой компонент, то нужно избавиться
           от ситуации, когда у них могут совпадать _id, взятые из html-атрибута id контейнера */
          if (this._id === '') {
-            this._id = randHelpers.randomId();
+            this._id = randomId();
          }
          return this._id;
       }

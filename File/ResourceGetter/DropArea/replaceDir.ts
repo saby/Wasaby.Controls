@@ -4,7 +4,7 @@ import Deferred = require("Core/Deferred");
 import UnknownTypeError = require("File/Error/UnknownType");
 import UploadFolderError = require("File/Error/UploadFolder");
 import LocalFile = require("File/LocalFile");
-import random = require("Core/helpers/random-helpers");
+import createGUID = require("Core/helpers/createGUID");
 
 type DirectoryReader = {
     readEntries(successCallback: (entries: Array<Entry>) => void): void;
@@ -113,7 +113,7 @@ let readEntry = ({results, entry, path = '', folderId}: EntryReadConfig): Deferr
         return getFile({results, entry, path, folderId});
     }
     if (entry.isDirectory) {
-        let folder = random.createGUID();
+        let folder = createGUID();
         return readDirectory({
             entry,
             path: path + entry.name + "/",

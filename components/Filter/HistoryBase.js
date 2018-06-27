@@ -7,7 +7,6 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
    'SBIS3.CONTROLS/CompoundControl',
    'SBIS3.CONTROLS/History/HistoryListUtils',
    'Core/CommandDispatcher',
-   'Core/helpers/collection-helpers',
    'Core/ParallelDeferred',
    'SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil',
    'SBIS3.CONTROLS/History/HistoryList',
@@ -19,7 +18,6 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
    CompoundControl,
    HistoryListUtils,
    CommandDispatcher,
-   colHelpers,
    ParallelDeferred,
    FilterHistoryControllerUntil
 ) {
@@ -164,8 +162,8 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
                            /* Сбрасываем поля, которые не надо сохранять после редактирования */
                            if(!Object.isEmpty(toSaveFields)) {
                               filterItems = record.get(self._options._structureProperty);
-                              colHelpers.forEach(toSaveFields, function(value, key) {
-                                 if(!value) {
+                              Object.keys(toSaveFields).forEach(function(key) {
+                                 if(!toSaveFields[key]) {
                                     reportItem = find(filterItems, function(obj) {
                                        return obj[self._options.idProperty] === key;
                                     });
@@ -178,7 +176,7 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
                                           var endIndex = index + replacementString.length;
                                           //Если подстрока находится в конце или в середине, то надо не забыть вырезать пробел и запятую
                                           if (index !== 0 && index + replacementString.length <= fullString.length) {
-                                              startIndex -= 2;
+                                             startIndex -= 2;
                                           }
                                           //Если подстрока находится вначале, то тоже надо вырезать запятую и пробел
                                           if (index === 0 && replacementString.length !== fullString.length) {

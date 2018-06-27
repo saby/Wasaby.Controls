@@ -1,4 +1,4 @@
-define("File/ResourceGetter/DropArea/replaceDir", ["require", "exports", "Core/ParallelDeferred", "Core/Deferred", "File/Error/UnknownType", "File/Error/UploadFolder", "File/LocalFile", "Core/helpers/random-helpers"], function (require, exports, ParallelDeferred, Deferred, UnknownTypeError, UploadFolderError, LocalFile, random) {
+define("File/ResourceGetter/DropArea/replaceDir", ["require", "exports", "Core/ParallelDeferred", "Core/Deferred", "File/Error/UnknownType", "File/Error/UploadFolder", "File/LocalFile", "Core/helpers/createGUID"], function (require, exports, ParallelDeferred, Deferred, UnknownTypeError, UploadFolderError, LocalFile, createGUID) {
     "use strict";
     var getParallelDeferred = function (steps) {
         var length = steps.length;
@@ -58,7 +58,7 @@ define("File/ResourceGetter/DropArea/replaceDir", ["require", "exports", "Core/P
             return getFile({ results: results, entry: entry, path: path, folderId: folderId });
         }
         if (entry.isDirectory) {
-            var folder = random.createGUID();
+            var folder = createGUID();
             return readDirectory({
                 entry: entry,
                 path: path + entry.name + "/",

@@ -9,12 +9,12 @@ define('SBIS3.CONTROLS/History/HistoryList',
       'WS.Data/Collection/RecordSet',
       'WS.Data/Entity/Record',
       'Core/Serializer',
-      'Core/helpers/random-helpers',
+      'Core/helpers/Number/randomId',
       'Core/helpers/Object/isEqual',
       'Core/IoC'
    ],
 
-   function(HistoryController, IList, IEnumerable, RecordSet, Record, Serializer, randHelpers, isEqualObject, IoC) {
+   function(HistoryController, IList, IEnumerable, RecordSet, Record, Serializer, randomId, isEqualObject, IoC) {
 
       'use strict';
 
@@ -32,7 +32,7 @@ define('SBIS3.CONTROLS/History/HistoryList',
              rawData = {};
 
          rawData[DATA_FIELD] = item;
-         rawData[ID_FIELD] = randHelpers.randomId();
+         rawData[ID_FIELD] = randomId();
 
          model[item instanceof Record ? 'set' : 'setRawData'](rawData);
 
