@@ -1,6 +1,6 @@
 /// <amd-module name="File/Attach/Uploader" />
 // dependency for types
-import {IFileModel as Model} from 'File/Attach/Model';
+import {IFileModel as Model} from 'File/Attach/IModel';
 import {Source} from 'File/Attach/Source';
 import SourceContainer = require("File/Attach/Container/Source");
 import EventObject = require("Core/EventObject");

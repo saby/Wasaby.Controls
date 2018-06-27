@@ -27,8 +27,50 @@ function(cMerge, Random) {
             cfg.target = cfg.target[0] ? cfg.target[0] : cfg.target;
          }
 
+         if (cfg.record) { //от RecordFloatArea
+            cfg.templateOptions.record = cfg.record;
+         }
+         if (cfg.parent) {
+            cfg.templateOptions.__parentFromCfg = cfg.parent;
+         }
+         if (cfg.newRecord) { //от RecordFloatArea
+            cfg.templateOptions.newRecord = cfg.newRecord;
+         }
+
          if (cfg.hasOwnProperty('autoHide')) {
             cfg.closeByExternalClick = cfg.autoHide;
+         }
+
+         var revertPosition = {
+            top: 'bottom',
+            bottom: 'top',
+            left: 'right',
+            right: 'left'
+         };
+
+         if (cfg.hasOwnProperty('verticalAlign')) {
+            cfg.verticalAlign = {side: revertPosition[cfg.verticalAlign]};
+         }
+
+         if (cfg.hasOwnProperty('side')) {
+            cfg.horizontalAlign = {side: revertPosition[cfg.side]};
+         }
+
+         if (cfg.hasOwnProperty('offset')) {
+            if (cfg.offset.x) {
+               cfg.horizontalAlign = cfg.horizontalAlign || {};
+               cfg.horizontalAlign.offset = cfg.offset.x;
+            }
+            if (cfg.offset.y) {
+               cfg.verticalAlign = cfg.verticalAlign || {};
+               cfg.verticalAlign.offset = cfg.offset.y;
+            }
+         }
+
+         if (cfg.hasOwnProperty('direction')) {
+            cfg.corner = cfg.corner || {};
+            var direction = (cfg.direction === 'right' || cfg.direction === 'left') ? 'horizontal' : 'vertical';
+            cfg.corner[direction] = revertPosition[cfg.direction];
          }
 
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';

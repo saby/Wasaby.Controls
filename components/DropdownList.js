@@ -905,7 +905,7 @@ define('SBIS3.CONTROLS/DropdownList',
                value = value === null ? getEmptyText(this._options) : value;
                this._drawSelectedValue(this.getItems().get(), [value]);
             }
-            else if(len && (!this._loadItemsDeferred || this._loadItemsDeferred.isReady())) {
+            else if(len) {
                this.getSelectedItems(true).addCallback(function(list) {
                   if(list) {
                      list.each(function (rec) {

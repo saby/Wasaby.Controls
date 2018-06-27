@@ -58,8 +58,8 @@ node('controls') {
 
 
     if ( "${env.BUILD_NUMBER}" != "1" && !params.run_reg && !params.run_int && !params.run_unit) {
-            currentBuild.result = 'ABORTED'
-            gitlabStatusUpdate()
+            currentBuild.result = 'FAILURE'
+            currentBuild.displayName = "#${env.BUILD_NUMBER} TESTS NOT BUILD"
             error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
         }
 
@@ -407,7 +407,7 @@ node('controls') {
             ELEMENT_OUTPUT_LOG = locator
             WAIT_ELEMENT_LOAD = 20
             HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/"""
-        
+
         if ( "${params.theme}" != "online" ) {
             writeFile file: "./controls/tests/reg/config.ini",
             text:
@@ -456,7 +456,7 @@ node('controls') {
             run_test_fail = "-sf"
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
         }
-        
+
         def site = "http://${NODE_NAME}:30010"
         site.trim()
         dir("./controls/tests/int"){
@@ -471,7 +471,7 @@ node('controls') {
                 error('Стенд неработоспособен (не прошел smoke test).')
             }
         }
-        
+
         parallel (
             int_test: {
                 echo "Запускаем интеграционные тесты"
@@ -484,7 +484,7 @@ node('controls') {
                             deactivate
                             """
                         }
-                            
+
                     }
                 }
             },
@@ -500,22 +500,24 @@ node('controls') {
                                 deactivate
                             """
                         }
-                        
+
                     }
                 }
             }
-            
+
         )
     }
-} finally { 
+} finally {
     sh """
         sudo chmod -R 0777 ${workspace}
         sudo chmod -R 0777 /home/sbis/Controls
     """
-    
-    dir("./controls") {
+
+
         if ( regr ){
-            publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
+            dir("./controls") {
+                publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
+            }
             archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
             }
         if ( unit ){
@@ -525,9 +527,7 @@ node('controls') {
             archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
             junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
             }
-    }
     gitlabStatusUpdate()
-        }    
+        }
     }
 }
-
