@@ -5213,5 +5213,7 @@ define('SBIS3.CONTROLS/ListView',
          }
       });
 
+      ListView.BeginDeleteResult = BeginDeleteResult;
+
       return ListView.mixin([BreakClickBySelectMixin]);
    });
