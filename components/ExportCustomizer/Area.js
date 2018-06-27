@@ -563,7 +563,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             var fieldIds = values.fieldIds;
             var fileUuid = values.fileUuid;
             var formatterValues, formatterMeta;
-            switch (meta.reason) {
+            var reason = meta.reason;
+            var args = meta.args;
+            switch (reason) {
                case 'create':
                case 'clone':
                case 'select':
@@ -571,21 +573,21 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   views.columnBinder.restate({fieldIds:fieldIds.slice()}, meta);
                case 'edit':
                   options.fileUuid = fileUuid;
-                  var consumer = meta.args[0];
+                  var consumer = args[0];
                   formatterValues = {fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumerId:consumer.id, primaryUuid:consumer.patternUuid || consumer.fileUuid};
+                  formatterMeta = {reason:reason, args:reason === 'clone' ? [args[1]] : []};
                   break;
                case 'editEnd':
-                  var args = meta.args;
-                  formatterMeta = {reason:'transaction', args:[args[0], {force:!fileUuid, preservePrimary:args[1].isClone}]};
+                  formatterMeta = {reason:'transaction', args:args};
                   break;
                case 'delete':
-                  var deleteUuid = meta.args[0].fileUuid;
+                  var deleteUuid = args[0].fileUuid;
                   if (deleteUuid) {
-                     formatterMeta = {reason:'delete', args:[deleteUuid]};
+                     formatterMeta = {reason:reason, args:[deleteUuid]};
                   }
                   break;
             }
-            var result = formatterValues || formatterMeta ? views.formatter.restate(formatterValues, formatterMeta) : undefined;
+            var result = formatterValues || formatterMeta ? views.formatter.restate(formatterValues || {}, formatterMeta) : undefined;
             this._updateCompleteButton(fieldIds);
             return result;
          },

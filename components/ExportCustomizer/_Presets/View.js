@@ -779,7 +779,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                            preset.fieldIds = fieldIds ? fieldIds.slice() : [];
                            this._fieldIds = fieldIds;
                         }
-                        this.sendCommand('subviewChanged', 'clone', preset);
+                        this.sendCommand('subviewChanged', 'clone', preset, {isChanged:isFieldsChanged});
                      }
                   }
                   this._startEditingMode();
