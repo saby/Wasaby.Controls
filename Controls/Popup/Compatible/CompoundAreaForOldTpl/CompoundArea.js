@@ -281,7 +281,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             }
             if (Array.isArray(optionsHandlers[eventName])) {
                //Здесь обработчики продублированы в this[eventName + 'Handler']
-               for (var i = 0; i < optionsHandlers[eventName].length; i++ ) {
+               for (var i = 0; i < optionsHandlers[eventName].length; i++) {
                   if (handlers.indexOf(optionsHandlers[eventName][i]) === -1) {
                      handlers.push(optionsHandlers[eventName][i]);
                   }
