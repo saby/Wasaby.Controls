@@ -302,8 +302,11 @@ define('Controls/List/Swipe/SwipeControl', [
 
       _onActionClick: function(event, action, itemData) {
          aUtil.actionClick(this, event, action, itemData, true);
-      }
+      },
 
+      closeSwipe: function() {
+         _private.closeSwipe(this);
+      }
    });
 
 

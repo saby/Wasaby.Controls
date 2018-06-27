@@ -318,6 +318,7 @@ define('Controls/List/BaseControl', [
             self._children.itemActionsOpener.close();
          }
          self._listViewModel.setActiveItem(null);
+         self._children.swipeControl.closeSwipe();
          self._menuIsShown = false;
          self._forceUpdate();
       },
