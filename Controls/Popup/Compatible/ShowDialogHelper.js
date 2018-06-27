@@ -17,7 +17,11 @@ define('Controls/Popup/Compatible/ShowDialogHelper', ['require', 'Core/Deferred'
                   deps.push('Controls/Popup/Opener/Stack/StackController');
                   config._type = 'stack';
                   config.className = (config.className || '') + ' controls-Stack';
-               } else if (meta.mode === 'floatArea' && config.isStack === false) {
+               } else if (meta.mode === 'floatArea' && (config.isStack === false || !config.isStack && config.target)) {
+
+                  /*Нелья проверять на isStack false потому что они не 
+                   * передают этот параметр и ожидают прилипание к таргету*/
+
                   deps.push('Controls/Popup/Opener/Sticky/StickyController');
                   config._type = 'sticky';
                } else {
