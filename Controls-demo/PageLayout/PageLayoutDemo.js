@@ -7,6 +7,7 @@ define('Controls-demo/PageLayout/PageLayoutDemo', [
    'tmpl!Controls-demo/PageLayout/resources/tabsContent2',
    'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate',
    'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate2',
+   'css!Controls-demo/PageLayout/PageLayoutDemo',
    'WS.Data/Source/Memory'
 ], function(Control,
             template,
