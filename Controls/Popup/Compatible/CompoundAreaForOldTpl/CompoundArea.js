@@ -9,8 +9,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/helpers/Function/debounce',
       'Core/Deferred',
       'Core/IoC',
-      'Core/helpers/Function/runDelayed',
       'Core/EventObject',
+      'Core/helpers/Function/runDelayed',
       'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/Abstract.compatible',
       'Lib/Control/Control.compatible',
@@ -160,6 +160,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                //лишних свойств, которые еще не применены к дому
                //панельки с этим начали вылезать плавненько
                runDelayed(function() {
+                  self.handle('onBeforeControlsLoad');
                   self._createCompoundControl(self.templateOptions, result[0]);
                });
             });
@@ -170,6 +171,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             templateOptions.parent = this;
             this._compoundControl = new (Component)(templateOptions);
             this._subscribeToCommand();
+            this.handle('onAfterLoad');
+            this.handle('onInitComplete');
             this.handle('onAfterShow'); // todo здесь надо звать хэндлер который пытается подписаться на onAfterShow, попробуй подключить FormController и словить подпись
          },
          _subscribeToCommand: function() {
@@ -190,7 +193,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                parent = this._parent._options.opener;
 
                /*Если нет sendCommand - значит это не compoundControl - а значит там нет распространения команд*/
-               
+
                if (parent.sendCommand) {
                   parent.sendCommand.apply(parent, [commandName].concat(arg));
                }
@@ -231,6 +234,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             this.handle('onClose', arg);
             this.handle('onAfterClose', arg);
+            this.handle('onDestroy');
          },
          _getTemplateComponent: function() {
             return this._compoundControl;
@@ -268,7 +272,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             if (handlers[eventName] === 'function') {
                handlers[eventName] = [handlers[eventName]];
             }
-            if (typeof optionsHandlers[eventName] === 'function') {
+            if (typeof optionsHandlers[eventName] === 'function' && handlers.indexOf(optionsHandlers[eventName]) === -1) {
                handlers.push(optionsHandlers[eventName]);
             }
             if (Array.isArray(optionsHandlers[eventName])) {
@@ -277,7 +281,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             handlers.forEach(function(value) {
                if (eventState.getResult() !== false) {
-                  value.apply(self._compoundControl || self, [eventState, arg]);
+                  value.apply(self, [eventState, arg]);
                }
             });
 
