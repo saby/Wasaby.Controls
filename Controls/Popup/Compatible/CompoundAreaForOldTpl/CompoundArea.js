@@ -277,13 +277,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                handlers[eventName] = [handlers[eventName]];
             }
             if (typeof optionsHandlers[eventName] === 'function' && handlers.indexOf(optionsHandlers[eventName]) === -1) {
-               if (handlers.indexOf(optionsHandlers[eventName])>-1) {
-                  handlers.push(optionsHandlers[eventName]);
-               }
+               handlers.push(optionsHandlers[eventName]);
             }
             if (Array.isArray(optionsHandlers[eventName])) {
                //Здесь обработчики продублированы в this[eventName + 'Handler']
-               for (var i=0;i<optionsHandlers[eventName].length;i++) {
+               for (var i=0; i<optionsHandlers[eventName].length; i++) {
                   if (handlers.indexOf(optionsHandlers[eventName][i]) === -1) {
                      handlers.push(optionsHandlers[eventName][i]);
                   }
