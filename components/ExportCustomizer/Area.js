@@ -347,7 +347,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             // Кнопка применения
             _button: null,
             // Ссылки на вложенные под-компоненты
-            _views: {}
+            _views: {},
+            // Находимся в режиме редактирования
+            _isEditMode: null
          },
 
          _modifyOptions: function () {
@@ -576,9 +578,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   var consumer = args[0];
                   formatterValues = {fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumerId:consumer.id, primaryUuid:consumer.patternUuid || consumer.fileUuid};
                   formatterMeta = {reason:reason, args:reason === 'clone' ? [args[1]] : []};
+                  if (reason === 'edit') {
+                     this._isEditMode = true;
+                  }
                   break;
                case 'editEnd':
                   formatterMeta = {reason:'transaction', args:args};
+                  this._isEditMode = null;
                   break;
                case 'delete':
                   var deleteUuid = args[0].fileUuid;
@@ -792,7 +798,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                serviceParams: options.serviceParams,
                fieldIds: options.fieldIds,
                columnTitles: this._selectFields(options.allFields, options.fieldIds, function (v) { return v.title; }),
-               fileUuid: options.fileUuid || null//Если значначение пусто, значит стилевого эксель-файла нет. БЛ в таком случае безальтернативно требует значения null
+               fileUuid: options.fileUuid || null,//Если значначение пусто, значит стилевого эксель-файла нет. БЛ в таком случае безальтернативно требует значения null
+               canDeleteFile: this._isEditMode || null
             };
             return withValidation
                ?
