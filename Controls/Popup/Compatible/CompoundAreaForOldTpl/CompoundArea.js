@@ -139,6 +139,25 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             var self = this;
 
+            self.templateOptions = self._options.templateOptions || {};
+            self._compoundId = self._options._compoundId;
+
+            if (self._options._initCompoundArea) {
+               self._options._initCompoundArea(self);
+            }
+
+            self._pending = self._pending || [];
+            self._pendingTrace = self._pendingTrace || [];
+            self._waiting = self._waiting || [];
+
+            self.__parentFromCfg = self._options.__parentFromCfg;
+            self._parent = self._options.parent;
+            self._logicParent = self._options.parent;
+            self._options.parent = null;
+
+
+            self._logicParent.waitForPopupCreated = true;
+
             //Здесь нужно сделать явную асинхронность, потому что к этому моменту накопилась пачка стилей
             //далее floatArea начинает люто дергать recalculateStyle и нужно, чтобы там не было
             //лишних свойств, которые еще не применены к дому
@@ -147,25 +166,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             runDelayed(function() {
                self.handle('onBeforeShow');
                self.handle('onShow');
-               self.templateOptions = self._options.templateOptions || {};
-               self._compoundId = self._options._compoundId;
-
-               if (self._options._initCompoundArea) {
-                  self._options._initCompoundArea(self);
-               }
-
-               self._pending = self._pending || [];
-               self._pendingTrace = self._pendingTrace || [];
-               self._waiting = self._waiting || [];
-
-               self.__parentFromCfg = self._options.__parentFromCfg;
-               self._parent = self._options.parent;
-               self._logicParent = self._options.parent;
-               self._options.parent = null;
 
                moduleStubs.require([self._options.template]).addCallback(function(result) {
                   self.handle('onBeforeControlsLoad');
                   self._createCompoundControl(self.templateOptions, result[0]);
+                  self._logicParent.callbackCreated && self._logicParent.callbackCreated();
                });
             });
          },
