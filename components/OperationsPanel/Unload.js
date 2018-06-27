@@ -232,6 +232,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Unload', [
                   columns: columns,
                   dataSource: view.getDataSource(),
                   filter: view.getFilter(),
+                  sorting: view.getSorting(),
                   offset: view._offset
                };
             if (cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS/Mixins/TreeMixin')) {

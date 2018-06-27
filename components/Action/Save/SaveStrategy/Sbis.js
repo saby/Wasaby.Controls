@@ -7,8 +7,10 @@ define('SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis', [
     'SBIS3.CONTROLS/WaitIndicator',
     'WS.Data/Source/SbisService',
     'WS.Data/Entity/Record',
-    'Core/moduleStubs'
-], function (SaveStrategyBase, EventBus, coreMerge, prepareGetRPCInvocationURL, WaitIndicator, SbisService, Record, moduleStubs) {
+    'WS.Data/Collection/RecordSet',
+    'Core/moduleStubs',
+    'WS.Data/Adapter/Sbis'
+], function(SaveStrategyBase, EventBus, coreMerge, prepareGetRPCInvocationURL, WaitIndicator, SbisService, Record, RecordSet, moduleStubs) {
 
     'use strict';
 
@@ -32,6 +34,26 @@ define('SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis', [
          SaveRecordSet: ['SaveRecordSetLRS', 'SaveRecordSet'],
          SaveMarked: ['SaveMarked', '']
       }
+   };
+
+   var prepareSorting = function(query) {
+      var
+         result = null,
+         orders = query.getOrderBy();
+      if (orders.length > 0) {
+         result = new RecordSet({
+            adapter: 'adapter.sbis'
+         });
+         for (var i = 0; i < orders.length; i++) {
+            result.add(Record.fromObject({
+               n: orders[i].getSelector(),
+               o: orders[i].getOrder(),
+               l: !orders[i].getOrder()
+            }, 'adapter.sbis'));
+         }
+      }
+
+      return result;
    };
 
     var SaveStrategySbis = SaveStrategyBase.extend(/** @lends SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis.prototype */{
@@ -304,11 +326,12 @@ define('SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis', [
                MethodName: meta.dataSource.getEndpoint().contract + '.' + meta.dataSource.getBinding().query,
                PageOrientation: meta.pageOrientation,
                Filter: Record.fromObject(meta.query.getWhere(), meta.dataSource.getAdapter()),
-               //Сортировка при выгрузке никогда не поддерживалась, есть задача https://online.sbis.ru/opendoc.html?guid=8f8e5a7d-1716-40b6-b542-ae81b0a5a440
-               Sorting: null
+               Sorting: prepareSorting(meta.query)
             };
          }
     });
+
+   SaveStrategySbis.prepareSorting = prepareSorting;
 
     return SaveStrategySbis;
 });
