@@ -1243,6 +1243,42 @@ define([
             instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
          });
 
+         it('no showActionsMenu context without actions', function() {
+            var callBackCount = 0;
+            var cfg = {
+                  viewName: 'Controls/List/ListView',
+                  viewConfig: {
+                     idProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: [],
+                     idProperty: 'id'
+                  },
+                  viewModelConstructor: ListViewModel,
+                  source: source
+               },
+               instance = new BaseControl(cfg),
+               fakeEvent = {
+                  type: 'itemcontextmenu'
+               },
+               itemData = {
+                  itemActions: {all: []}
+               };
+            instance._children = {
+               itemActionsOpener: {
+                  open: function() {
+                     callBackCount++;
+                  }
+               }
+            };
+
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg);
+            instance._showActionsMenu(fakeEvent, itemData);
+            assert.equal(callBackCount, 0); //проверяем что не открывали меню
+
+         });
+
          it('showActionsMenu no context', function() {
             var callBackCount = 0;
             var
