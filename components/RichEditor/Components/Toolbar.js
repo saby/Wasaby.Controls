@@ -28,7 +28,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
       /**
        * @class SBIS3.CONTROLS/RichEditor/Components/Toolbar
        * @extends SBIS3.CONTROLS/RichEditor/Components/ToolbarBase
-       * @author Борисов П.С.
+       * @author Волоцкой В.Д.
        * @public
        * @control
        */
