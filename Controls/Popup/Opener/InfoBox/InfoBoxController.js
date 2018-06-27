@@ -1,12 +1,15 @@
 define('Controls/Popup/Opener/InfoBox/InfoBoxController',
    [
+      'Core/Deferred',
       'Controls/Popup/Opener/Sticky/StickyController',
       'Controls/Popup/Opener/InfoBox/resources/themeConstantsGetter',
       'Core/core-merge',
       'Controls/Popup/Manager/ManagerController',
-      'css!Controls/Popup/Opener/InfoBox/InfoBox'
+
+      'css!Controls/Popup/Opener/InfoBox/InfoBox',
+      'css!Controls/Popup/Opener/Previewer/PreviewerController'
    ],
-   function(StickyController, themeConstantsGetter, cMerge, ManagerController) {
+   function(Deferred, StickyController, themeConstantsGetter, cMerge, ManagerController) {
       var constants = themeConstantsGetter('controls-InfoBox__themeConstants', {
          ARROW_WIDTH: 'marginLeft',
          ARROW_H_OFFSET: 'marginRight',
@@ -93,6 +96,8 @@ define('Controls/Popup/Opener/InfoBox/InfoBoxController',
       var InfoBoxController = StickyController.constructor.extend({
          _openedPopupId: null,
 
+         _destroyDeferred: null,
+
          elementCreated: function(cfg, container, id) {
             // Открыто может быть только одно окно
             if (this._openedPopupId) {
@@ -112,7 +117,17 @@ define('Controls/Popup/Opener/InfoBox/InfoBoxController',
                this._openedPopupId = null;
             }
 
-            return InfoBoxController.superclass.elementDestroyed.apply(this, arguments);
+            this._destroyDeferred = new Deferred();
+
+            container.classList.add('controls-PreviewerController_close');
+
+            return this._destroyDeferred;
+         },
+
+         elementAnimated: function(element, container) {
+            if (container.classList.contains('controls-PreviewerController_close')) {
+               this._destroyDeferred.callback();
+            }
          },
 
          prepareConfig: function(cfg, sizes) {

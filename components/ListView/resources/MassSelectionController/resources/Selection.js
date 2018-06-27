@@ -10,6 +10,8 @@ define('SBIS3.CONTROLS/ListView/resources/MassSelectionController/resources/Sele
 ) {
    'use strict';
 
+   var ALLSELECTION_VALUE = [null];
+
    var Selection = Abstract.extend(/** @lends SBIS3.CONTROLS/ListView/resources/MassSelectionController/resources/Selection */{
       _idProperty: undefined,
 
@@ -64,7 +66,7 @@ define('SBIS3.CONTROLS/ListView/resources/MassSelectionController/resources/Sele
 
       getSelection: function() {
          return {
-            marked: this._options.markedAll ? [] : this._options.selectedKeys,
+            marked: this._options.markedAll ? ALLSELECTION_VALUE : this._options.selectedKeys,
             excluded: this._options.markedAll ? this._options.excludedKeys : [],
             markedAll: this._options.markedAll
          }
@@ -90,6 +92,8 @@ define('SBIS3.CONTROLS/ListView/resources/MassSelectionController/resources/Sele
          return keys;
       }
    });
+
+   Selection.ALLSELECTION_VALUE = ALLSELECTION_VALUE;
 
    return Selection;
 });

@@ -92,6 +92,11 @@ define('Controls/Dropdown/resources/template/DropdownList',
             if (newOptions.rootKey !== this._options.rootKey) {
                this._listModel.setRootKey(newOptions.rootKey);
             }
+            if (newOptions.items !== this._options.items) {
+               this._listModel.setItems(newOptions);
+               this._children.subDropdownOpener.close();
+            }
+
          },
 
          _itemMouseEnter: function(event, item, hasChildren) {
@@ -121,16 +126,17 @@ define('Controls/Dropdown/resources/template/DropdownList',
          resultHandler: function(result) {
             switch (result.action) {
                case 'itemClick':
+               case 'pinClicked':
                   this._notify('sendResult', [result]);
             }
          },
          _itemClickHandler: function(event, item, pinClicked) { //todo нужно обсудить
             var result = {
-               action: 'itemClick',
+               action: pinClicked ? 'pinClicked' : 'itemClick',
                event: event,
-               data: [item, pinClicked]
+               data: [item]
             };
-            
+
             // means that pin button was clicked
             if (pinClicked) {
                event.stopPropagation();

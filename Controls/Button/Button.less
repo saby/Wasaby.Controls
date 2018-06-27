@@ -8,6 +8,10 @@
   justify-content: center;
 }
 
+.controls-BaseButton__text {
+  .text-overflow();
+}
+
 .controls-Button_type-iconButtonBordered, .controls-Button_type-iconButtonBordered_readOnly {
   border-radius: @border-radius-IconButton;
   border-style: @border-style-IconButton;
@@ -236,9 +240,6 @@
 .controls-Button__icon-default_iconStyle-default, .controls-Button__icon-default-big_iconStyle-default {
    color: @color_Button-icon;
 }
-.controls-Button__text_style-default {
-  .text-overflow();
-}
 
 .controls-Button__icon-primary_iconStyle-default, .controls-Button__icon-primary-big_iconStyle-default {
    color: @color_Button-icon_primary;
@@ -282,14 +283,6 @@
 
 .controls-Button__icon-iconButtonBordered_iconStyle-default {
    color: @color-IconButtonBordered_default;
-}
-
-.controls-Button__text_style-default {
-  .text-overflow();
-}
-
-.controls-Button__text_style-primary {
-  .text-overflow();
 }
 
 .controls-Button__wrapper_type-button_size-m {
