@@ -64,14 +64,18 @@ define('Controls/Popup/Opener/Stack/StackController',
          },
 
          elementCreated: function(item, container) {
-            _private.prepareSizes(item, container);
-            this._stack.add(item, 0);
-            this._update();
+            if (this._checkContainer(item, container)) {
+               _private.prepareSizes(item, container);
+               this._stack.add(item, 0);
+               this._update();
+            }
          },
 
          elementUpdated: function(item, container) {
-            _private.prepareSizes(item, container);
-            this._update();
+            if (this._checkContainer(item, container)) {
+               _private.prepareSizes(item, container);
+               this._update();
+            }
          },
 
          elementDestroyed: function(element, container) {

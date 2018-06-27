@@ -30,6 +30,9 @@ function(cMerge, Random) {
          if (cfg.record) { //от RecordFloatArea
             cfg.templateOptions.record = cfg.record;
          }
+         if (cfg.parent) {
+            cfg.templateOptions.__parentFromCfg = cfg.parent;
+         }
          if (cfg.newRecord) { //от RecordFloatArea
             cfg.templateOptions.newRecord = cfg.newRecord;
          }
