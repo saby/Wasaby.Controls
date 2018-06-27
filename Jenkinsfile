@@ -449,9 +449,7 @@ node('controls') {
                 #BRANCH=True
                 [regression]
                 IMAGE_DIR = capture
-                RUN_REGRESSION=True
-				[filestostart]
-				test_vdom_list_with_editing.py"""
+                RUN_REGRESSION=True"""
         }
         def run_test_fail = ""
         if (params.RUN_ONLY_FAIL_TEST == true){
