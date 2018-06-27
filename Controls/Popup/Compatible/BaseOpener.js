@@ -26,6 +26,9 @@ function(cMerge, Random) {
          };
 
          if (cfg.target) {
+            //нужно для миникарточки, они хотят работать с CompoundArea - и ей надо дать target
+            //причем работают с jquery объектом
+            cfg.templateOptions.target = cfg.target;
             cfg.target = cfg.target[0] ? cfg.target[0] : cfg.target;
          }
 
