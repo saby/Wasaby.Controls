@@ -79,7 +79,7 @@ define('Controls/Container/Suggest/Layout',
             if (resultData) {
                var data = resultData.data;
                var metaData = data && data.getMetaData();
-               var result = metaData.result;
+               var result = metaData.results;
    
                if (result && result.get(CURRENT_TAB_META_FIELD)) {
                   self._tabsSelectedKey = result.get(CURRENT_TAB_META_FIELD);
