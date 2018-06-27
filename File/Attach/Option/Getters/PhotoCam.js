@@ -22,6 +22,11 @@ define("File/Attach/Option/Getters/PhotoCam", ["require", "exports", "tslib", "F
             return _super.call(this, GETTER_LINK, GETTER_TYPE, options || {}) || this;
         }
         /**
+         * @description
+         * Тип геттера передается в метод choose File/Attach, чтобы указать каким способом(геттером) выбираются файлы
+         * <pre>
+         *   attach.choose(PhotoCam.getType()); // Получение фото с веб-камеры
+         * </pre>
          * @static
          * @method
          * @returns {String} Тип Getter'a

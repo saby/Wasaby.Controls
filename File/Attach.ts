@@ -2,7 +2,7 @@
 // dependency for types
 import Deferred = require("Core/Deferred");
 import EventObject = require("Core/EventObject");
-import {IFileModel as Model} from 'File/Attach/Model';
+import {IFileModel as Model} from 'File/Attach/IModel';
 import SourceOption = require("File/Attach/Option/Source");
 import ResourceGetterOption = require("File/Attach/Option/ResourceGetter");
 import {IResourceConstructor, IResource} from 'File/IResource';
@@ -76,10 +76,10 @@ type Options = {
  *      attach.choose(FileSystem.getType());
  *   });
  *   self.getChildControlByName("clipboardBtn").subscribe("onActivated", function(){
- *      attach.choose(ClipboardGetter.getType());
+ *      attach.choose(Clipboard.getType());
  *   });
  *   self.getChildControlByName("scanBtn").subscribe("onActivated", function(){
- *      attach.choose(ScannerGetter.getType());
+ *      attach.choose(Scanner.getType());
  *   });
  *   self.getChildControlByName("uploadBtn").subscribe("onActivated", function(){
  *      attach.upload({

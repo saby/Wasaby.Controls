@@ -122,8 +122,8 @@ define('Controls/Popup/InfoBox',
       InfoBox.getDefaultOptions = function() {
          return {
             position: 'tl',
-            showDelay: 1500,
-            hideDelay: 1500
+            showDelay: 300,
+            hideDelay: 300
          };
       };
 

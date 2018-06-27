@@ -67,9 +67,6 @@ define('Controls/Application',
          _mouseupPage: function(ev) {
             this._children.mouseupDetect.start(ev);
          },
-         _getChildContext: function() {
-            return {headData: this._headData};
-         },
          _touchmovePage: function(ev) {
             this._children.touchmoveDetect.start(ev);
          },
@@ -90,7 +87,6 @@ define('Controls/Application',
             var self = this,
                def = new Deferred();
 
-            self._headData = new HeadDataContext(cfg.theme);
             _private.initState(self, receivedState || cfg);
             self.needArea = cfg.compat || self.compat;
             if (!receivedState) {
@@ -105,7 +101,7 @@ define('Controls/Application',
             self.servicesPath = receivedState.servicesPath || (context.AppData ? context.AppData.servicesPath : cfg.servicesPath) || '/service/';
             self.BodyClasses = BodyClasses;
 
-            self._headData.pushDepComponent(self.application);
+            context.headData.pushDepComponent(self.application);
 
 
             if (receivedState && context.AppData) {
@@ -138,7 +134,8 @@ define('Controls/Application',
 
       Page.contextTypes = function contextTypes() {
          return {
-            AppData: AppData
+            AppData: AppData,
+            headData: HeadDataContext
          };
       };
 

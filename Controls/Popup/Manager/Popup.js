@@ -78,7 +78,8 @@ define('Controls/Popup/Manager/Popup',
             //Не даем клику всплыть выше попапа. В этому случае событие не долетит до лисенера,
             //который слушает клик по документу. В этом случае, если лисенер отловил событие, значит
             //клик был сделан вне попапа.
-            event.stopPropagation();
+            //Нельзя стопать нативное событие, т.к. иначе ни один mousedown в старых панелях не отработает
+            event.stopped = true;
          },
          _documentClickHandler: function() {
             if (this._options.closeByExternalClick) {

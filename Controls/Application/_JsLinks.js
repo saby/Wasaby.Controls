@@ -27,6 +27,7 @@ define('Controls/Application/_JsLinks',
                for (var i = 0; i < res.cssLinks.length; i++) {
                   self.cssLinks.push(res.cssLinks[i].split(/.css$/)[0]);
                }
+               self.receivedStateArr = res.receivedStateArr;
                innerDef.callback(true);
                return res;
             });
