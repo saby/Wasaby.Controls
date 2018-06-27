@@ -1,19 +1,48 @@
 .controls-HistoryList {
-  margin: 0 12px 12px 12px;
-
-  .controls-ListView__itemV {
-    border: none;
-  }
-
-  .controls-ListView__itemContent {
-    margin: 0;
-  }
-}
-.controls-HistoryList__list {
-  margin-left: 22px;
+  background-color: @background-color_HistoryList;
+  padding: @padding_FilterPanel-history;
 }
 
-.controls-HistoryList__header {
-  font-size: 15px;
-  color: @icon-active-color;
+.controls-HistoryList__itemWrapper {
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+  &:hover {
+    .controls-HistoryList__item {
+      text-decoration: underline;
+    }
+    .controls-HistoryList__iconPin {
+      visibility: visible;
+    }
+  }
+}
+
+.controls-HistoryList__item {
+  font-size: @font-size_HistoryList-item;
+  color: @color_HistoryList-item;
+  height: @height_HistoryList-item;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: @spacing_HistoryList-between-icon-text;
+  width: 100%;
+}
+
+.controls-HistoryList__iconPin {
+  .icon(@icon-size_HistoryList-iconPin, @default-icon-small-font);
+}
+
+.controls-HistoryList__iconPin-default {
+  color: @icon-color-disabled;
+  visibility: hidden;
+}
+
+.controls-HistoryList__iconPin:hover {
+  visibility: visible;
+  color: @icon-color-primary-hover;
+}
+
+.controls-HistoryList__iconPin-active {
+  visibility: visible;
+  color: @icon-color-primary-hover;
 }

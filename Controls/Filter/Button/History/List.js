@@ -9,8 +9,9 @@ define('Controls/Filter/Button/History/List', [
    'Controls/History/FilterSource',
    'Controls/History/Service',
    'Controls/Controllers/SourceController',
+   'WS.Data/Collection/RecordSet',
    'css!Controls/Filter/Button/History/List'
-], function(BaseControl, template, MemorySource, SbisAdapter, HistorySource, HistoryService, SourceController) {
+], function(BaseControl, template, MemorySource, SbisAdapter, HistorySource, HistoryService, SourceController, RecordSet) {
    'use strict';
 
    var actionType = {
@@ -37,7 +38,6 @@ define('Controls/Filter/Button/History/List', [
 
    var _private = {
       loadItems: function(instance, source) {
-         var self = this;
          var filter = {
             '$_history': true
          };
@@ -45,7 +45,10 @@ define('Controls/Filter/Button/History/List', [
             source: source
          });
          return instance._sourceController.load(filter).addCallback(function(items) {
-            instance._listMemory =  self.createHistoryMemory(items);
+            instance._listItems = new RecordSet({
+               rawData: items.getRawData(),
+               adapter: new SbisAdapter()
+            });
             return items;
          });
       },
