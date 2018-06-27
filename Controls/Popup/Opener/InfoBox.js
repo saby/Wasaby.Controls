@@ -99,7 +99,7 @@ define('Controls/Popup/Opener/InfoBox',
                   message: cfg.message,
                   float: cfg.float
                },
-               className: 'controls-InfoBox__popup controls-InfoBox-style-' + cfg.style,
+               className: 'controls-InfoBox__popup controls-PreviewerController controls-InfoBox-style-' + cfg.style,
                template: 'tmpl!Controls/Popup/Opener/InfoBox/resources/template'
             }, 'Controls/Popup/Opener/InfoBox/InfoBoxController');
          },
