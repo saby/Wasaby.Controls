@@ -134,6 +134,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this.deprecatedContr(this._options);
 
             this.handle('onBeforeShow');
+            this.handle('onAfterLoad');
             this.handle('onShow');
 
             var self = this;
@@ -153,6 +154,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._options.parent = null;
 
             moduleStubs.require([self._options.template]).addCallback(function(result) {
+               self.handle('onBeforeControlsLoad');
                self._createCompoundControl(self.templateOptions, result[0]);
             });
          },
@@ -213,6 +215,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             this.handle('onClose', arg);
             this.handle('onAfterClose', arg);
+            this.handle('onDestroy');
          },
          _getTemplateComponent: function() {
             return this._compoundControl;
@@ -250,7 +253,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             if (handlers[eventName] === 'function') {
                handlers[eventName] = [handlers[eventName]];
             }
-            if (typeof optionsHandlers[eventName] === 'function') {
+            if (typeof optionsHandlers[eventName] === 'function' && handlers.indexOf(optionsHandlers[eventName]) === -1) {
                handlers.push(optionsHandlers[eventName]);
             }
             if (Array.isArray(optionsHandlers[eventName])) {
@@ -259,7 +262,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             handlers.forEach(function(value) {
                if (eventState.getResult() !== false) {
-                  value.apply(self._compoundControl || self, [eventState, arg]);
+                  value.apply(self, [eventState, arg]);
                }
             });
 
