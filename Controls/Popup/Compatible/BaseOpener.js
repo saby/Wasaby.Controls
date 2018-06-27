@@ -14,6 +14,7 @@ function(cMerge, Random) {
       _prepareConfigForOldTemplate: function(cfg, templateClass) {
          cfg.templateOptions = {
             templateOptions: cfg.templateOptions || cfg.componentOptions || {},
+            componentOptions: cfg.templateOptions || cfg.componentOptions || {},
             template: cfg.template,
             type: cfg._type,
             handlers: cfg.handlers,

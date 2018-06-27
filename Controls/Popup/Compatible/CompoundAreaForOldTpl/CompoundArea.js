@@ -154,6 +154,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._options.parent = null;
 
             moduleStubs.require([self._options.template]).addCallback(function(result) {
+               self.handle('onBeforeControlsLoad');
                self._createCompoundControl(self.templateOptions, result[0]);
             });
          },
@@ -163,6 +164,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             templateOptions.parent = this;
             this._compoundControl = new (Component)(templateOptions);
             this._subscribeToCommand();
+            this.handle('onAfterLoad');
+            this.handle('onInitComplete');
             this.handle('onAfterShow'); // todo здесь надо звать хэндлер который пытается подписаться на onAfterShow, попробуй подключить FormController и словить подпись
          },
          _subscribeToCommand: function() {
@@ -219,6 +222,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             this.handle('onClose', arg);
             this.handle('onAfterClose', arg);
+            this.handle('onDestroy');
          },
          _getTemplateComponent: function() {
             return this._compoundControl;
@@ -256,7 +260,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             if (handlers[eventName] === 'function') {
                handlers[eventName] = [handlers[eventName]];
             }
-            if (typeof optionsHandlers[eventName] === 'function') {
+            if (typeof optionsHandlers[eventName] === 'function' && handlers.indexOf(optionsHandlers[eventName]) === -1) {
                handlers.push(optionsHandlers[eventName]);
             }
             if (Array.isArray(optionsHandlers[eventName])) {
@@ -265,7 +269,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             handlers.forEach(function(value) {
                if (eventState.getResult() !== false) {
-                  value.apply(self._compoundControl || self, [eventState, arg]);
+                  value.apply(self, [eventState, arg]);
                }
             });
 
