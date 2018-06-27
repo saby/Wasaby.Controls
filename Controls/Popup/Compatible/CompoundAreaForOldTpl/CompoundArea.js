@@ -184,6 +184,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                parent.sendCommand.apply(parent, [commandName].concat(arg));
             }
          },
+         sendCommand: function(commandName, arg) {
+            this._commandHandler(null, commandName, arg);
+         },
          _close: function(arg) {
             if (this.handle('onBeforeClose', arg) !== false) {
                this.close(arg);
