@@ -343,8 +343,12 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
                this._setDynamicHoveredStyles(item);
             }
          } else if (this._options.tileMode === TILE_MODE.STATIC && !this._container.hasClass('controls-CompositeView-tile__static-smallImage')) {
-            this._resetHoveredStyles(item);
-            this._setStaticHoveredStyles(item);
+            if (this._options.hoverMode === HOVER_MODE.FIXED) {
+               this._setFixedHoveredStyles(item);
+            } else {
+               this._resetHoveredStyles(item);
+               this._setStaticHoveredStyles(item);
+            }
          }
       },
 
@@ -352,7 +356,7 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
          if (!this._fixedItem || this._fixedItem.item[0] !== item[0]) {
             item.removeClass('controls-CompositeView__resetHoveredStyle');
             this._resetHoveredStyles(item);
-            this._setDynamicHoveredStyles(item);
+            this[this._options.tileMode === TILE_MODE.DYNAMIC ? '_setDynamicHoveredStyles' : '_setStaticHoveredStyles'](item);
          }
       },
 
@@ -375,7 +379,7 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
 
       _setDynamicStyles: function(item, styles) {
          item.css(styles);
-         var titleHeight = $('.controls-CompositeView__tileTitle', item).outerHeight(true) - (item.hasClass('controls-CompositeView__item-withTitle') ? 25 : 0);
+         var titleHeight = $('.controls-CompositeView__tileTitle', item).outerHeight(true) - (item.hasClass('controls-CompositeView__item-withTitle') ? 26 : 0);
          $('.controls-CompositeView__tileContainer', item).css('padding-bottom', titleHeight);
       },
 
@@ -409,6 +413,8 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
                   item: item,
                   clone: itemClone
                };
+            } else {
+               item.addClass('controls-CompositeView__resetHoveredStyle');
             }
          }
       },
@@ -461,12 +467,21 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
 
       _setStaticHoveredStyles: function(item) {
          var
-            offset, margin,
-            boundingClientRect = item.get(0).getBoundingClientRect();
-         offset = $('.controls-CompositeView__tileTitle', item).outerHeight(true) - (item.hasClass('controls-CompositeView__item-withTitle') ? 25 : 0);
-         margin = (Math.floor(item.outerHeight(true)) - Math.floor(boundingClientRect.height)) / 2;
-         item.css('padding-bottom', offset).css('margin-bottom', -(offset - margin));
-         $('.controls-CompositeView__tileContainer', item).css('margin-bottom', offset);
+            boundingClientRect = item.get(0).getBoundingClientRect(),
+            offset = $('.controls-CompositeView__tileTitle', item).outerHeight(true) - (item.hasClass('controls-CompositeView__item-withTitle') ? 26 : 0),
+            margin = (Math.floor(item.outerHeight(true)) - Math.floor(boundingClientRect.height)) / 2,
+            styles = {
+               'padding-bottom': offset,
+               'margin-bottom': -(offset - margin)
+            };
+
+         if (this._options.hoverMode === HOVER_MODE.FIXED) {
+            if (!coreCompatibility.touch) {
+               this._createFixedItem(item, styles);
+            }
+         } else {
+            this._setDynamicStyles(item, styles);
+         }
       },
 
       _resetHoveredStyles: function(item) {
