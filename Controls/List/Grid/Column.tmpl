@@ -1,1 +1,8 @@
-<div class="controls-Grid__row-cell__content" tabindex="-1">{{contentData.getPropValue(contentData.item, contentData.column.displayProperty)}}</div>
+<div class="controls-Grid__row-cell__content" tabindex="-1">
+   <ws:if data="{{contentTemplate}}">
+      <ws:partial template="{{contentTemplate}}" itemData="{{itemData}}"/>
+   </ws:if>
+   <ws:else>
+      {{itemData.item[itemData.column.displayProperty]}}
+   </ws:else>
+</div>

@@ -1,0 +1,31 @@
+<div attr:class="controls-Grid__row {{itemData.isHiddenGroup ? 'controls-ListView__groupHidden' : 'controls-ListView__group'}}" attr:key="{{itemData.item}}">
+   <div class="controls-ListView__groupContent" style="{{columnAlignGroup ? 'grid-column: 1 / ' + (columnAlignGroup + 1) + ';' : 'grid-column: 1 / ' + (itemData.columns.length + 1) + ';'}}">
+      <ws:if data="{{columnAlignGroup !== undefined || textAlign !== 'left'}}">
+         <div class="controls-ListView__groupSeparator-left">&nbsp;</div>
+      </ws:if>
+      <div class="controls-ListView__groupContent-text {{expander !== false ? 'controls-ListView__groupExpander' + (!itemData.isGroupExpanded ? ' controls-ListView__groupExpander_collapsed': '')}}">
+         <ws:if data="{{contentTemplate}}">
+            <ws:partial template="{{contentTemplate}}" itemData="{{itemData}}"/>
+         </ws:if>
+         <ws:else>
+            {{itemData.item}}
+         </ws:else>
+      </div>
+      <ws:if data="{{columnAlignGroup === undefined}}">
+         <ws:if data="{{textAlign !== 'right'}}">
+            <div class="controls-ListView__groupSeparator-right">&nbsp;</div>
+         </ws:if>
+         <ws:if data="{{!!rightTemplate}}">
+            <ws:partial template="{{rightTemplate}}" attr:class="controls-ListView__groupContent-rightTemplate" itemData="{{itemData}}"/>
+         </ws:if>
+      </ws:if>
+   </div>
+   <ws:if data="{{columnAlignGroup !== undefined}}">
+      <div class="controls-ListView__groupContent" style="{{'grid-column: ' + (columnAlignGroup + 1) + ' / ' + (itemData.columns.length + 1) + ';'}}">
+         <div class="controls-ListView__groupSeparator-right">&nbsp;</div>
+         <ws:if data="{{!!rightTemplate}}">
+            <ws:partial template="{{rightTemplate}}" attr:class="controls-ListView__groupContent-rightTemplate" itemData="{{itemData}}"/>
+         </ws:if>
+      </div>
+   </ws:if>
+</div>

@@ -55,39 +55,44 @@
 }
 .controls-ListView__groupContent {
    display: flex;
+   align-items: baseline;
 }
-.controls-ListView__groupContent:before, .controls-ListView__groupContent:after {
-   height: @height_ListView-GroupBy / 2;
-   margin-bottom: @height_ListView-GroupBy / 2;
-   border-bottom: @default-border-width solid @color_ListView-GroupBy_separator;
+.controls-ListView__groupSeparator-left, .controls-ListView__groupSeparator-right {
+   height: @height_ListView-group / 2;
+   margin-bottom: @height_ListView-group / 2;
+   border-bottom: @height_ListView-group-separator solid @color_ListView-group-separator;
    width: 100%;
-   content: '';
+   font-size: @font-size_ListView-group-expander;
 }
-.controls-ListView__groupText {
-   line-height: @height_ListView-GroupBy;
+.controls-ListView__groupContent-text {
    display: inline-block;
-   padding: @padding_ListView-GroupBy_separator;
-   background-color: @background-color_ListView-GroupBy_text;
-   color: @color_ListView-GroupBy_text;
-   font-size: @font-size_ListView-GroupBy_text;
+   padding: 0 @spacing_ListView-group-between-text-separator;
+   color: @color_ListView-group-text;
+   font-size: @font-size_ListView-group-text;
    white-space: nowrap;
    text-align: center;
    flex-shrink: 0;
    user-select: none;
 }
-.controls-ListView__groupExpander:before {
+.controls-ListView__groupExpander {
    cursor: pointer;
-   width: @font-size_ListView-GroupBy_expander;
-   font-size: @font-size_ListView-GroupBy_expander;
-   margin: @margin_ListView-GroupBy_separatorCollapse;
+}
+.controls-ListView__groupExpander:before {
+   width: @width_ListView-group-expander;
+   font-size: @font-size_ListView-group-expander;
+   padding: 0 @spacing_ListView-group-between-text-expander 0 0;
    content: '\e000';
 }
 .controls-ListView__groupExpander:hover {
-   color: @color_ListView-GroupBy_text_hovered;
+   color: @color_ListView-group-text_hovered;
 }
 .controls-ListView__groupExpander_collapsed:before {
    content: '\e013';
 }
-.controls-ListView__hiddenGroup {
+.controls-ListView__groupHidden {
    display: none;
+}
+.controls-ListView__groupContent-rightTemplate {
+   padding-left: @spacing_ListView-group-between-rightTemplate-separator;
+   flex-shrink: 0;
 }
