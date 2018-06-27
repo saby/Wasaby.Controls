@@ -15,7 +15,7 @@
                 itemData="{{itemData}}"/>
     </ws:if>
     <ws:else>
-        <div attr:class="controls-ListView__itemContent">{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>
+        <div attr:class="controls-ListView__itemContent">{{itemData.getPropValue(itemData.item, itemData.displayProperty || 'title')}}</div>
     </ws:else>
     <ws:if data="{{itemData.drawActions}}">
         <ws:if data="{{itemData.isSwiped}}">

@@ -235,6 +235,7 @@ define('Controls/Container/List',
             if (this._searchMode) {
                _private.cachedSourceFix(this);
                this._source = new Memory({
+                  model: options.source.getModel(),
                   idProperty: options.source.getIdProperty()
                });
             }
