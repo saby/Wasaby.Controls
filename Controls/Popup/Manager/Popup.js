@@ -33,10 +33,12 @@ define('Controls/Popup/Manager/Popup',
          _template: template,
 
          _afterMount: function() {
+
             /*Очень сложный код. Нельзя просто так на afterMount пересчитывать позиции и сигналить о создании
             * внутри может быть compoundArea и мы должны ее дождаться, а там есть асинхронная фаза*/
+            
             if (this.waitForPopupCreated){
-               this.callbackCreated = (function(){
+               this.callbackCreated = (function() {
                   this.callbackCreated = null;
                   this.waitForPopupCreated = false;
                   this._notify('popupCreated', [this._options.id], {bubbling: true});
