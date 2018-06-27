@@ -7,8 +7,8 @@ define('Controls-demo/PageLayout/PageLayoutDemo', [
    'tmpl!Controls-demo/PageLayout/resources/tabsContent2',
    'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate',
    'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate2',
-   'css!Controls-demo/PageLayout/PageLayoutDemo',
-   'WS.Data/Source/Memory'
+   'WS.Data/Source/Memory',
+   'css!Controls-demo/PageLayout/PageLayoutDemo'
 ], function(Control,
             template,
             tabsContent,
