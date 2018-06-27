@@ -41,7 +41,7 @@ define('Controls/Application/_JsLinks',
             }
          },
          getDefines: function() {
-            if(!this.cssLinks) {
+            if (!this.cssLinks) {
                return;
             }
             var result = '';
