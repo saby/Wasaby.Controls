@@ -347,7 +347,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             // Кнопка применения
             _button: null,
             // Ссылки на вложенные под-компоненты
-            _views: {}
+            _views: {},
+            // Находимся в режиме редактирования
+            _isEditMode: null
          },
 
          _modifyOptions: function () {
@@ -555,24 +557,45 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * @param {*} [data] Дополнительные данные
           */
          _onChangePresets: function (data) {
-            // Выбран новые предустановленные настройки экспорта
+            // Выбраны новые предустановленные настройки экспорта
             var views = this._views;
             var values = views.presets.getValues();
+            var meta = this._makeMeta('presets', [].slice.call(arguments));
+            var options = this._options;
             var fieldIds = values.fieldIds;
             var fileUuid = values.fileUuid;
-            if (fieldIds) {
-               this._options.fieldIds = fieldIds.slice();
+            var formatterValues, formatterMeta;
+            var reason = meta.reason;
+            var args = meta.args;
+            switch (reason) {
+               case 'create':
+               case 'clone':
+               case 'select':
+                  options.fieldIds = fieldIds.slice();
+                  views.columnBinder.restate({fieldIds:fieldIds.slice()}, meta);
+               case 'edit':
+                  options.fileUuid = fileUuid;
+                  var consumer = args[0];
+                  formatterValues = {fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumerId:consumer.id, primaryUuid:consumer.patternUuid || consumer.fileUuid};
+                  formatterMeta = {reason:reason, args:reason === 'clone' ? [args[1]] : []};
+                  if (reason === 'edit') {
+                     this._isEditMode = true;
+                  }
+                  break;
+               case 'editEnd':
+                  formatterMeta = {reason:'transaction', args:args};
+                  this._isEditMode = null;
+                  break;
+               case 'delete':
+                  var deleteUuid = args[0].fileUuid;
+                  if (deleteUuid) {
+                     formatterMeta = {reason:reason, args:[deleteUuid]};
+                  }
+                  break;
             }
-            if (fileUuid) {
-               this._options.fileUuid = fileUuid;
-            }
-            if (fieldIds || fileUuid) {
-               var meta = this._makeMeta('presets', [].slice.call(arguments));
-               views.columnBinder.restate({fieldIds:fieldIds.slice()}, meta);
-               var result = views.formatter.restate({fieldIds:fieldIds.slice(), primaryUuid:values.primaryUuid, fileUuid:fileUuid, consumerId:values.consumerId}, meta);
-               this._updateCompleteButton(fieldIds);
-               return result;
-            }
+            var result = formatterValues || formatterMeta ? views.formatter.restate(formatterValues || {}, formatterMeta) : undefined;
+            this._updateCompleteButton(fieldIds);
+            return result;
          },
 
          /*
@@ -775,7 +798,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                serviceParams: options.serviceParams,
                fieldIds: options.fieldIds,
                columnTitles: this._selectFields(options.allFields, options.fieldIds, function (v) { return v.title; }),
-               fileUuid: options.fileUuid || null//Если значначение пусто, значит стилевого эксель-файла нет. БЛ в таком случае безальтернативно требует значения null
+               fileUuid: options.fileUuid || null,//Если значначение пусто, значит стилевого эксель-файла нет. БЛ в таком случае безальтернативно требует значения null
+               canDeleteFile: this._isEditMode || null
             };
             return withValidation
                ?

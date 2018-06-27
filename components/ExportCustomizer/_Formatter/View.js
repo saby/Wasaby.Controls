@@ -429,8 +429,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * @protected
           * @param {boolean} isCommit Сохранить или откатить изменения
           * @param {object} saving Дополнительные опции сохранения
-          * @param {boolean} saving.force Сохранить, даже если нет изменений (только при сохранении)
-          * @param {boolean} saving.preservePrimary Не удалять исходный файл (только при сохранении)
+          * @param {boolean} saving.isClone В транзакции производилось клонирование - нельзя удалять исходный файл (только при сохранении)
           * @return {Core/Deferred<string>}
           */
          _endTransaction: function (isCommit, saving) {
@@ -439,10 +438,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             if (!isCommit) {
                options.consumerId = null;
             }
-            if (isCommit && saving && saving.force && !fileUuid) {
+            if (isCommit && saving && saving.isClone && !fileUuid) {
                return this._callFormatterCreate(options.primaryUuid, false).addCallback(this._endTransaction.bind(this, true, saving));
             }
-            var deleteUuid = isCommit ? (saving && saving.preservePrimary ? null : options.primaryUuid) : fileUuid;
+            var deleteUuid = isCommit ? (saving && saving.isClone ? null : options.primaryUuid) : fileUuid;
             if (deleteUuid) {
                this._callFormatterDelete(deleteUuid);
             }
@@ -464,13 +463,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             if (!values || typeof values !== 'object') {
                throw new Error('Object required');
             }
-            if (meta /*&& meta.source === 'presets'*/) {
+            if (meta) {
+               var args = meta.args;
                switch (meta.reason) {
                   case 'delete':
-                     this._callFormatterDelete(meta.args[0]);
+                     this._callFormatterDelete(args[0]);
                      return;
                   case 'transaction':
-                     return this._endTransaction(meta.args[0], meta.args[1]);
+                     return this._endTransaction(args[0], args[1]);
                }
             }
             var options = this._options;
@@ -479,9 +479,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                var fieldIds = options.fieldIds;
                var hasFields = !!(fieldIds && fieldIds.length);
                var methods = [];
-               if (!('consumerId' in changes)) {
-                  //Если не поменялся consumerId
-                  if ('fieldIds' in changes && hasFields) {
+               if (hasFields) {
+                  //Если не поменялся consumerId, но поменялись поля; или если это клонирование с изменением
+                  if ((!('consumerId' in changes) && 'fieldIds' in changes) || (meta && meta.reason === 'clone' && meta.args[0] && meta.args[0].isChanged)) {
                      if (!options.fileUuid) {
                         var primaryUuid = options.primaryUuid;
                         methods.push(primaryUuid ? {method:'clone', args:[primaryUuid, true]} : 'create');
