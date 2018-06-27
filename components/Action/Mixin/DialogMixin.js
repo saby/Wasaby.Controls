@@ -83,7 +83,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
       },
       $constructor: function() {
          if (this._options.dialogComponent && !this._options.template) {
-            Utils.logger.stack(this._moduleName + '::$constructor(): option "dialogComponent" is deprecated and will be removed in 3.8.0', 1);
+            Utils.logger.log(this._moduleName + '::$constructor()', 'option "dialogComponent" is deprecated and will be removed in 3.8.0');
             this._options.template = this._options.dialogComponent;
          }
          this._documentClickHandler = this._documentClickHandler.bind(this);
@@ -384,7 +384,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
        */
       setDialogComponent: function(template) {
          //нужно для того чтобы работал метод setProperty(dialogComponent)
-         Utils.logger.stack(this._moduleName + '::$constructor(): option "dialogComponent" is deprecated and will be removed in 3.8.0', 1);
+         Utils.logger.log(this._moduleName + '::$constructor()', 'option "dialogComponent" is deprecated and will be removed in 3.8.0');
          this._options.template = template;
 
       },

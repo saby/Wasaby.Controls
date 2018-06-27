@@ -1,14 +1,15 @@
 <div class="ControlsDemo-Previewer">
-   <ws:for data="image in ['Андрей', 'Валера', 'Максим']">
+   <h2 id="info">Previewer</h2>
+   <ws:for data="image in ['Andrey', 'Valera', 'Maksim']">
       <Controls.Popup.Previewer>
          <ws:content>
-            <img src="{{_options.imgRoot}}Controls-demo/Previewer/image/{{image}}.png"/>
+               <img id="target_{{image}}" src="{{_options.imgRoot}}Controls-demo/Previewer/image/{{image}}.png"/>
          </ws:content>
          <ws:template>
             <Controls.Popup.Templates.Dialog.DialogTemplate>
                <ws:contentArea>
-                  <div attr:style="padding: 50px; border: 2px solid red;">
-                     <img src="Previewer/image/{{image}}.png" style="height: 150px; width: 150px;"/>
+                  <div id="popup_{{image}}" attr:style="padding: 50px; border: 2px solid red;">
+                     <img src="{{_options.imgRoot}}Controls-demo/Previewer/image/{{image}}.png" style="height: 150px; width: 150px;"/>
                   </div>
                </ws:contentArea>
             </Controls.Popup.Templates.Dialog.DialogTemplate>

@@ -9,6 +9,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/helpers/Function/debounce',
       'Core/Deferred',
       'Core/IoC',
+      'Core/helpers/Function/runDelayed',
       'Core/EventObject',
       'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/Abstract.compatible',
@@ -154,7 +155,13 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._options.parent = null;
 
             moduleStubs.require([self._options.template]).addCallback(function(result) {
-               self._createCompoundControl(self.templateOptions, result[0]);
+               //Здесь нужно сделать явную асинхронность, потому что к этому моменту накопилась пачка стилей
+               //далее floatArea начинает люто дергать recalculateStyle и нужно, чтобы там не было
+               //лишних свойств, которые еще не применены к дому
+               //панельки с этим начали вылезать плавненько
+               runDelayed(function() {
+                  self._createCompoundControl(self.templateOptions, result[0]);
+               });
             });
          },
          _createCompoundControl: function(templateOptions, Component) {
@@ -181,7 +188,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                parent.sendCommand.apply(parent, [commandName].concat(arg));
             } else if (this._parent && this._parent._options.opener) {
                parent = this._parent._options.opener;
-               parent.sendCommand.apply(parent, [commandName].concat(arg));
+
+               /*Если нет sendCommand - значит это не compoundControl - а значит там нет распространения команд*/
+               
+               if (parent.sendCommand) {
+                  parent.sendCommand.apply(parent, [commandName].concat(arg));
+               }
             }
          },
          _close: function(arg) {
