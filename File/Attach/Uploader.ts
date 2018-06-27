@@ -1,10 +1,10 @@
 /// <amd-module name="File/Attach/Uploader" />
 // dependency for types
-import Model = require('WS.Data/Entity/Model');
-import ISource = require("WS.Data/Source/ISource");
+import {IFileModel as Model} from 'File/Attach/IModel';
+import {Source} from 'File/Attach/Source';
 import SourceContainer = require("File/Attach/Container/Source");
 import EventObject = require("Core/EventObject");
-import IResource = require("File/IResource");
+import {IResource} from 'File/IResource';
 // real dependency
 import Deferred = require("Core/Deferred");
 import ParallelDeferred = require("Core/ParallelDeferred");
@@ -57,7 +57,7 @@ class Uploader {
      * @param {Array.<File/IResource>} files Загружаемые файлы
      * @param {Object} [meta] Дополнительные мета-данные для отправки
      * @param {Object.<Function>} [handlers]
-     * @return {Core/Deferred.<Array.<WS.Data/Entity/Model | Error>>}
+     * @return {Core/Deferred.<Array.<File/Attach/Model | Error>>}
      * @name File/Attach/Uploader#upload
      * @method
      */
@@ -87,13 +87,13 @@ class Uploader {
      * загрузка одного файла через ISource полученный из SourceContainer
      * @param {File/IResource} file Загружаемый файл
      * @param {Object} [meta] Дополнительные мета-данные для отправки
-     * @return {Core/Deferred.<WS.Data/Entity/Model | Error>}
+     * @return {Core/Deferred.<File/Attach/Model | Error>}
      * @private
      * @name File/Attach/Uploader#_uploadFile
      * @method
      */
     private _uploadFile(file: IResource, meta?: {}): Deferred<Model | Error> {
-        return this._container.get(file).addCallback((source: ISource) => {
+        return this._container.get(file).addCallback((source: Source) => {
             this._subscribeToSource(source);
             return source.create(meta || {}, file);
         }).addCallbacks((result: Model) => {
@@ -107,10 +107,10 @@ class Uploader {
 
     /**
      * Подписка на события ISource для их дальнейшего проброса
-     * @param {WS.Data/Source/ISource} source
+     * @param {File/Attach/Source} source
      * @private
      */
-    private _subscribeToSource (source: ISource) {
+    private _subscribeToSource (source: Source) {
         if (source.__attachSubscribed) {
             return;
         }

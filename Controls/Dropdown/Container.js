@@ -1,7 +1,7 @@
 define('Controls/Dropdown/Container',
    [
       'Core/Control',
-      'tmpl!Controls//Dropdown/Container/Container',
+      'tmpl!Controls/Dropdown/Container/Container',
       'Controls/Controllers/SourceController',
       'Core/helpers/Object/isEqual',
       'Core/helpers/Object/isEmpty',
@@ -89,11 +89,11 @@ define('Controls/Dropdown/Container',
        */
 
       var _private = {
-         loadItems: function(instance, source, selectedKeys, keyProperty) {
+         loadItems: function(instance, source, selectedKeys, keyProperty, filter) {
             instance._sourceController = new SourceController({
                source: source
             });
-            return instance._sourceController.load().addCallback(function(items) {
+            return instance._sourceController.load(filter).addCallback(function(items) {
                instance._items = items;
                _private.updateSelectedItems(instance, selectedKeys, keyProperty);
                return items;
@@ -110,8 +110,13 @@ define('Controls/Dropdown/Container',
 
          onResult: function(result) {
             switch (result.action) {
+               case 'pinClicked':
+                  this._notify('pinClicked', [result.data]);
+                  this._items = this._options.source.getItems();
+                  this._open();
+                  break;
                case 'itemClick':
-                  _private.selectItem.apply(this, result.data);
+                  _private.selectItem.call(this, result.data);
                   if (!result.data[0].get('@parent')) {
                      this._children.DropdownOpener.close();
                   }
@@ -122,7 +127,7 @@ define('Controls/Dropdown/Container',
          },
 
          selectItem: function(item) {
-            this._selectedItems = [item];
+            this._selectedItems = item;
             this._notify('selectedItemsChanged', [this._selectedItems]);
          }
       };
@@ -185,7 +190,7 @@ define('Controls/Dropdown/Container',
             }
 
             if (this._options.source && !this._items) {
-               _private.loadItems(this, this._options.source, this._options.selectedKeys).addCallback(function(items) {
+               _private.loadItems(this, this._options.source, this._options.selectedKeys, this._options.keyProperty, this._options.filter).addCallback(function(items) {
                   open();
                   return items;
                });
@@ -197,6 +202,7 @@ define('Controls/Dropdown/Container',
 
       Dropdown.getDefaultOptions = function getDefaultOptions() {
          return {
+            filter: {},
             selectedKeys: []
          };
       };

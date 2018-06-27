@@ -256,9 +256,9 @@ define(
 
          describe('Notification', function() {
             it('first notification positioning', function() {
-               var position = Notification.getPosition();
-               assert.isTrue(position.right === 16);
-               assert.isTrue(position.bottom === 16);
+               var position = Notification.getPosition(0);
+               assert.isTrue(position.right === 0);
+               assert.isTrue(position.bottom === 0);
             });
          });
       });

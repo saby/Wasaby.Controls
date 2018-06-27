@@ -9,6 +9,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/helpers/Function/debounce',
       'Core/Deferred',
       'Core/IoC',
+      'Core/helpers/Function/runDelayed',
       'Core/EventObject',
       'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/Abstract.compatible',
@@ -148,12 +149,19 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._pendingTrace = this._pendingTrace || [];
             this._waiting = this._waiting || [];
 
+            this.__parentFromCfg = this._options.__parentFromCfg;
             this._parent = this._options.parent;
             this._logicParent = this._options.parent;
             this._options.parent = null;
 
             moduleStubs.require([self._options.template]).addCallback(function(result) {
-               self._createCompoundControl(self.templateOptions, result[0]);
+               //Здесь нужно сделать явную асинхронность, потому что к этому моменту накопилась пачка стилей
+               //далее floatArea начинает люто дергать recalculateStyle и нужно, чтобы там не было
+               //лишних свойств, которые еще не применены к дому
+               //панельки с этим начали вылезать плавненько
+               runDelayed(function() {
+                  self._createCompoundControl(self.templateOptions, result[0]);
+               });
             });
          },
          _createCompoundControl: function(templateOptions, Component) {
@@ -168,14 +176,24 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._compoundControl.subscribe('onCommandCatch', this._commandHandler);
          },
          _commandHandler: function(event, commandName, arg) {
+            var parent;
             if (commandName === 'close') {
                this._close(arg);
-            }
-            if (commandName === 'registerPendingOperation') {
+            } else if (commandName === 'registerPendingOperation') {
                return this._registerChildPendingOperation(arg);
-            }
-            if (commandName === 'unregisterPendingOperation') {
+            } else if (commandName === 'unregisterPendingOperation') {
                return this._unregisterChildPendingOperation(arg);
+            } else if (this.__parentFromCfg) {
+               parent = this.__parentFromCfg;
+               parent.sendCommand.apply(parent, [commandName].concat(arg));
+            } else if (this._parent && this._parent._options.opener) {
+               parent = this._parent._options.opener;
+
+               /*Если нет sendCommand - значит это не compoundControl - а значит там нет распространения команд*/
+               
+               if (parent.sendCommand) {
+                  parent.sendCommand.apply(parent, [commandName].concat(arg));
+               }
             }
          },
          _close: function(arg) {
@@ -188,11 +206,26 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._close(arg);
          },
 
+         reload: function() {
+            this._rebuildCompoundControl(this._options);
+         },
+
          /* from api floatArea, window */
 
          getParent: function() {
             return null;
          },
+
+         /* start RecordFloatArea */
+         getRecord: function() {
+            return this._options.record;
+         },
+         isNewRecord: function() {
+            return this._options.newRecord;
+         },
+
+         /*end RecordFloatArea */
+
          close: function(arg) {
             this._notify('close', null, {bubbling: true});
 

@@ -2,22 +2,23 @@ define('Controls-demo/Input/Lookup/Collection',
    [
       'Core/Control',
       'tmpl!Controls-demo/Input/Lookup/Collection',
+      'WS.Data/Collection/RecordSet',
       'WS.Data/Source/Memory',
       'WS.Data/Source/DataSet',
       'WS.Data/Entity/Model',
-      'WS.Data/Collection/RecordSet',
+
       'css!Controls-demo/Input/Lookup/Collection'
    ],
-   function(Control, template, Memory) {
+   function(Control, template, RecordSet) {
       
       'use strict';
       
       var Collection = Control.extend({
          _template: template,
          
-         _sourceMulti: new Memory({
+         _sourceMulti: new RecordSet({
             idProperty: 'id',
-            data: [
+            rawData: [
                {
                   id: 0,
                   title: 'Sasha'
@@ -40,9 +41,9 @@ define('Controls-demo/Input/Lookup/Collection',
                }
             ]
          }),
-         _sourceSingle: new Memory({
+         _sourceSingle: new RecordSet({
             idProperty: 'id',
-            data: [
+            rawData: [
                {
                   id: 0,
                   title: 'Sasha'

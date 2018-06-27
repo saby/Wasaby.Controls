@@ -53,7 +53,7 @@ define('Controls/Container/Suggest/Layout',
                needToRevert = suggestHeight + containerRect.bottom > (win || window).innerHeight,
                newOrient;
             
-            if (needToRevert) {
+            if (needToRevert && self._options.style !== 'overInput') {
                newOrient = '-up';
             } else {
                if (self._orient === '-up') {
@@ -114,8 +114,10 @@ define('Controls/Container/Suggest/Layout',
          
          loadDependencies: function(self) {
             if (!self._dependenciesDeferred) {
-               var deps = DEPS.concat([self._options.suggestTemplate.templateName, self._options.footerTemplate.templateName]);
-               
+               var deps = DEPS.concat([self._options.suggestTemplate.templateName]);
+               if (self._options.footerTemplate !== null) {
+                  deps = deps.concat([self._options.footerTemplate.templateName]);
+               }
                if (self._options.suggestStyle === 'overInput') {
                   deps.push('Controls/Button/Close');
                }

@@ -27,13 +27,14 @@ define('Controls/Application/_JsLinks',
                for (var i = 0; i < res.cssLinks.length; i++) {
                   self.cssLinks.push(res.cssLinks[i].split(/.css$/)[0]);
                }
+               self.receivedStateArr = res.receivedStateArr;
                innerDef.callback(true);
                return res;
             });
             return innerDef;
          },
          getCssNameForDefine: function(cssLink) {
-            if (cssLink.indexOf('resources/') === 0) {
+            if (cssLink.indexOf('resources/') === 0 || cssLink.indexOf('/resources/') === 0) {
                return cssLink.split('resources/')[1].replace(/\.min$/, '');
             } else {
                return cssLink;

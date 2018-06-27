@@ -76,6 +76,8 @@
     "Controls/Popup/Opener/Confirmation",
     "Controls/Popup/Opener/Dialog",
     "Controls/Popup/Opener/InfoBox",
+    "Controls/Popup/InfoBox",
+    "Controls/Popup/InfoBox/*",
     "Controls/Popup/Opener/Notification",
     "Controls/Popup/Opener/Stack",
     "Controls/Popup/Opener/Sticky",

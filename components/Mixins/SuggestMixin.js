@@ -677,11 +677,12 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
          if (!showAllConfig.componentOptions) {
             showAllConfig.componentOptions = {};
          }
-   
+         if (!showAllConfig.dialogOptions) {
+            showAllConfig.dialogOptions = {};
+         }
+
          showAllConfig.componentOptions.listConfig = listConfig;
-         showAllConfig.dialogOptions = {
-            className: 'ws-float-area__block-layout'
-         };
+         showAllConfig.dialogOptions.className = 'ws-float-area__block-layout';
 
          this.hidePicker();
          this.showSelector(showAllConfig);

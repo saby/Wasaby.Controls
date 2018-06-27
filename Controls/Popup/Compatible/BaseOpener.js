@@ -12,6 +12,7 @@ function(cMerge, Random) {
        */
    return {
       _prepareConfigForOldTemplate: function(cfg, templateClass) {
+         var dimensions = this._getDimensions(templateClass);
          cfg.templateOptions = {
             templateOptions: cfg.templateOptions || cfg.componentOptions || {},
             template: cfg.template,
@@ -27,8 +28,54 @@ function(cMerge, Random) {
             cfg.target = cfg.target[0] ? cfg.target[0] : cfg.target;
          }
 
+         if (cfg.record) { //от RecordFloatArea
+            cfg.templateOptions.record = cfg.record;
+         }
+         if (cfg.parent) {
+            cfg.templateOptions.__parentFromCfg = cfg.parent;
+         }
+         if (cfg.newRecord) { //от RecordFloatArea
+            cfg.templateOptions.newRecord = cfg.newRecord;
+         }
+
          if (cfg.hasOwnProperty('autoHide')) {
             cfg.closeByExternalClick = cfg.autoHide;
+         }
+
+         if (dimensions.title) {
+            cfg.templateOptions.caption = dimensions.title;
+         }
+
+         var revertPosition = {
+            top: 'bottom',
+            bottom: 'top',
+            left: 'right',
+            right: 'left'
+         };
+
+         if (cfg.hasOwnProperty('verticalAlign')) {
+            cfg.verticalAlign = {side: revertPosition[cfg.verticalAlign]};
+         }
+
+         if (cfg.hasOwnProperty('side')) {
+            cfg.horizontalAlign = {side: revertPosition[cfg.side]};
+         }
+
+         if (cfg.hasOwnProperty('offset')) {
+            if (cfg.offset.x) {
+               cfg.horizontalAlign = cfg.horizontalAlign || {};
+               cfg.horizontalAlign.offset = cfg.offset.x;
+            }
+            if (cfg.offset.y) {
+               cfg.verticalAlign = cfg.verticalAlign || {};
+               cfg.verticalAlign.offset = cfg.offset.y;
+            }
+         }
+
+         if (cfg.hasOwnProperty('direction')) {
+            cfg.corner = cfg.corner || {};
+            var direction = (cfg.direction === 'right' || cfg.direction === 'left') ? 'horizontal' : 'vertical';
+            cfg.corner[direction] = revertPosition[cfg.direction];
          }
 
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
@@ -39,6 +86,10 @@ function(cMerge, Random) {
          cfg.componentOptions.innerComponentOptions.template = cfg.template;
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea';
          cfg.animation = 'off';
+
+         if (cfg.onResultHandler) { //передаем onResult - колбэк, объявленный на opener'e, в compoundArea.
+            cfg.componentOptions.onResultHandler = cfg.onResultHandler;
+         }
 
          this._setSizes(cfg, templateClass);
       },
@@ -78,12 +129,16 @@ function(cMerge, Random) {
             newCfg.dialogOptions.target = $(newCfg.target);
          }
 
+         if (newCfg.eventHandlers && newCfg.eventHandlers.onResult) {
+            newCfg.dialogOptions.onResultHandler = newCfg.eventHandlers.onResult;
+         }
+
          return newCfg;
       },
 
       //Берем размеры либо с опций, либо с дименшенов
       _setSizes: function(cfg, templateClass) {
-         var dimensions = templateClass.dimensions || templateClass.prototype.dimensions || {};
+         var dimensions = this._getDimensions(templateClass);
          var dimensionsMinWidth = dimensions.minWidth || dimensions.width;
 
          if (!cfg.minWidth) {
@@ -105,8 +160,11 @@ function(cMerge, Random) {
 
          cfg.minHeight = cfg.minHeight || cfg.maxHeight;
          cfg.maxHeight = cfg.maxHeight || cfg.minHeight;
-
+      },
+      _getDimensions: function(templateClass) {
+         return templateClass.dimensions || templateClass.prototype.dimensions || {};
       }
+
    };
 }
 );

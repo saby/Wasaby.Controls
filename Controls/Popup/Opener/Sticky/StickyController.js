@@ -90,22 +90,26 @@ define('Controls/Popup/Opener/Sticky/StickyController',
        * @category Popup
        */
       var StickyController = BaseController.extend({
-         elementCreated: function(cfg, container) {
-            this.prepareConfig(cfg, container);
+         elementCreated: function(item, container) {
+            if (this._checkContainer(item, container)) {
+               this.prepareConfig(item, container);
+            }
          },
 
-         elementUpdated: function(cfg, container) {
-            /* Снимаем установленные значения, влияющие на размер и позиционирование, чтобы получить размеры контента */
-            container.classList.remove('controls-Sticky__reset-margins');
-            container.style.width = 'auto';
-            container.style.height = 'auto';
+         elementUpdated: function(item, container) {
+            if (this._checkContainer(item, container)) {
+               /* Снимаем установленные значения, влияющие на размер и позиционирование, чтобы получить размеры контента */
+               container.classList.remove('controls-Sticky__reset-margins');
+               container.style.width = 'auto';
+               container.style.height = 'auto';
 
-            this.prepareConfig(cfg, container);
-            container.classList.add('controls-Sticky__reset-margins'); //После замеров стилей возвращаем
+               this.prepareConfig(item, container);
+               container.classList.add('controls-Sticky__reset-margins'); //После замеров стилей возвращаем
+            }
          },
-         prepareConfig: function(cfg, container) {
-            var sizes = this._getPopupSizes(cfg, container);
-            _private.prepareConfig(cfg, sizes);
+         prepareConfig: function(item, container) {
+            var sizes = this._getPopupSizes(item, container);
+            _private.prepareConfig(item, sizes);
          }
       });
 

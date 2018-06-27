@@ -38,7 +38,7 @@ define(
          it('addAll', function () {
             selection.selectAll();
             var sel = selection.getSelection();
-            assert.deepEqual(sel.marked, []);
+            assert.deepEqual(sel.marked, Selection.ALLSELECTION_VALUE);
          });
          it('removeAll', function () {
             selection.select([1, 2, 3]);
@@ -50,14 +50,14 @@ define(
          it('toggleAll', function () {
             selection.toggleAll();
             var sel = selection.getSelection();
-            assert.deepEqual(sel.marked, []);
+            assert.deepEqual(sel.marked, Selection.ALLSELECTION_VALUE);
             assert.deepEqual(sel.excluded, []);
          });
          it('add and toggleAll', function () {
             selection.select([1, 2]);
             selection.toggleAll();
             var sel = selection.getSelection();
-            assert.deepEqual(sel.marked, []);
+            assert.deepEqual(sel.marked, Selection.ALLSELECTION_VALUE);
             assert.deepEqual(sel.excluded, [1, 2]);
          });
          it('add, toggleAll and remove', function () {
@@ -65,7 +65,7 @@ define(
             selection.toggleAll();
             selection.unselect([3]);
             var sel = selection.getSelection();
-            assert.deepEqual(sel.marked, []);
+            assert.deepEqual(sel.marked, Selection.ALLSELECTION_VALUE);
             assert.deepEqual(sel.excluded, [1, 2, 3]);
          });
          it('toggleAll and toggleAll', function () {

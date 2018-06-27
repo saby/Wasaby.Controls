@@ -38,6 +38,10 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             }).value();
          },
 
+         setItems: function(options) {
+            this._itemsModel.setItems(options.items);
+         },
+
          setRootKey: function(key) {
             this._options.rootKey = key;
             this._itemsModel.setItems(this._getCurrentRootItems(this._options));

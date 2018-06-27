@@ -11,7 +11,7 @@ define("File/Attach/Option/Source", ["require", "exports"], function (require, e
     var SourceOption = /** @class */ (function () {
         /**
          * @cfg {String} source Ссылка на модуль источника данных ISource
-         * @see WS.Data/Source/ISource
+         * @see File/Attach/Source
          */
         /**
          * @cfg {FunctionConstructor} resourceType Конструктор обёртки над ресурсом
@@ -21,7 +21,7 @@ define("File/Attach/Option/Source", ["require", "exports"], function (require, e
          */
         /**
          * @cfg {Object} options Объект параметров для конструктора ISource
-         * @see WS.Data/Source/ISource
+         * @see File/Attach/Source
          */
         function SourceOption(source, resourceType, options) {
             this.source = source;

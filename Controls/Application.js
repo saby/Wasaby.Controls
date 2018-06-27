@@ -67,9 +67,6 @@ define('Controls/Application',
          _mouseupPage: function(ev) {
             this._children.mouseupDetect.start(ev);
          },
-         _getChildContext: function() {
-            return {headData: this._headData};
-         },
          _touchmovePage: function(ev) {
             this._children.touchmoveDetect.start(ev);
          },
@@ -90,7 +87,6 @@ define('Controls/Application',
             var self = this,
                def = new Deferred();
 
-            self._headData = new HeadDataContext(cfg.theme);
             _private.initState(self, receivedState || cfg);
             self.needArea = cfg.compat || self.compat;
             if (!receivedState) {
@@ -102,9 +98,10 @@ define('Controls/Application',
             self.wsRoot = receivedState.wsRoot || (context.AppData ? context.AppData.wsRoot : cfg.wsRoot);
             self.resourceRoot = receivedState.resourceRoot || (context.AppData ? context.AppData.resourceRoot : cfg.resourceRoot);
             self.product = receivedState.product || (context.AppData ? context.AppData.product : cfg.product);
+            self.servicesPath = receivedState.servicesPath || (context.AppData ? context.AppData.servicesPath : cfg.servicesPath) || '/service/';
             self.BodyClasses = BodyClasses;
 
-            self._headData.pushDepComponent(self.application);
+            context.headData.pushDepComponent(self.application);
 
 
             if (receivedState && context.AppData) {
@@ -113,6 +110,7 @@ define('Controls/Application',
                context.AppData.appRoot = self.appRoot;
                context.AppData.resourceRoot = self.resourceRoot;
                context.AppData.application = self.application;
+               context.AppData.servicesPath = self.servicesPath;
             }
             
             /**
@@ -127,6 +125,7 @@ define('Controls/Application',
                wsRoot: self.wsRoot,
                resourceRoot: self.resourceRoot,
                templateConfig: self.templateConfig,
+               servicesPath: self.servicesPath,
                compat: self.compat
             });
             return def;
@@ -135,7 +134,8 @@ define('Controls/Application',
 
       Page.contextTypes = function contextTypes() {
          return {
-            AppData: AppData
+            AppData: AppData,
+            headData: HeadDataContext
          };
       };
 

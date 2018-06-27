@@ -180,7 +180,11 @@ define("File/ResourceGetter/DropArea/Overlay", ["require", "exports", "Core/help
          * @cfg {String} Текст на внутреннем элементе во время перемещения файлов непосредственно над ним
          * @name File/ResourceGetter/DropArea#dropText
          */
-        dropText: rk("Отпустите файлы"),
+        dropText: rk("Отпустите файлы")
+        /**
+         * @cfg {String} Класс внутреннего элемента обёртки, содержащий текст
+         * @name File/ResourceGetter/DropArea#innerClass
+         */
     };
     var Overlay = /** @class */ (function () {
         function Overlay(cfg) {

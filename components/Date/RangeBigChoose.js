@@ -406,10 +406,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
       _dateOnDisplayedRangeChanged: function (event, start, end) {
          if (this._dateRangePicker.isSelectionProcessing()) {
             if (this.getStartValue() > start) {
-               this._endDatePickerResetActive();
+               this._endDatePickerResetActive(end);
                this._datePickerSetActive(this._startDatePicker, start);
             } else {
-               this._startDatePickerResetActive();
+               this._startDatePickerResetActive(start);
                this._datePickerSetActive(this._endDatePicker, end);
             }
             this.getChildControlByName('DateRangeHeader').setRange(start, end);
@@ -960,12 +960,12 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          }
          picker.setActive(true);
       },
-      _startDatePickerResetActive: function () {
-         this._startDatePicker.setDate(this.getStartValue(), true);
+      _startDatePickerResetActive: function (date) {
+         this._startDatePicker.setDate(date || this.getStartValue(), true);
          this.getChildControlByName('DateRangeHeader').setRange(this.getStartValue(), this.getEndValue());
       },
-      _endDatePickerResetActive: function () {
-         this._endDatePicker.setDate(this.getEndValue(), true);
+      _endDatePickerResetActive: function (date) {
+         this._endDatePicker.setDate(date || this.getEndValue(), true);
          this.getChildControlByName('DateRangeHeader').setRange(this.getStartValue(), this.getEndValue());
       },
       _datePickersResetActive: function () {

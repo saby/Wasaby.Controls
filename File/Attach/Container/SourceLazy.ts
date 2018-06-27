@@ -1,6 +1,6 @@
 /// <amd-module name="File/Attach/Container/SourceLazy" />
 import SourceContainer = require("File/Attach/Container/Source");
-import ISource = require("WS.Data/Source/ISource");
+import {Source as ISource} from 'File/Attach/Source';
 import Deferred = require("Core/Deferred");
 import moduleStubs = require("Core/moduleStubs");
 import IResourceConstructor = require("File/IResourceConstructor");
