@@ -90,6 +90,10 @@ function(cMerge, Random) {
          }
          cfg.corner.horizontal = revertPosition[cfg.direction];
 
+         if (cfg.hasOwnProperty('border')) {
+            cfg.templateOptions.hideCross = !cfg.border;
+         }
+
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
          this._setSizes(cfg, templateClass);
       },
