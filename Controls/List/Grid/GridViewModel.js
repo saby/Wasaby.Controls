@@ -53,8 +53,8 @@ define('Controls/List/Grid/GridViewModel', [
                      result += ' controls-Grid__row-cell_lastRow';
                      result += ' controls-Grid__row-cell_withRowSeparator_lastRow';
                   }
+                  result += ' controls-Grid__row-cell_withRowSeparator';
                }
-               result += ' controls-Grid__row-cell_withRowSeparator';
             } else {
                result += ' controls-Grid__row-cell_withoutRowSeparator';
             }
@@ -65,7 +65,7 @@ define('Controls/List/Grid/GridViewModel', [
             var
                cellClasses = 'controls-Grid__row-cell' + (current.isEditing ? ' controls-Grid__row-cell-background-editing' : ' controls-Grid__row-cell-background-hover');
 
-            cellClasses += _private.prepareRowSeparatorClasses(current.showRowSeparator, current.index, current.dispItem.getOwner().getCount() - 1);
+            cellClasses += _private.prepareRowSeparatorClasses(current.showRowSeparator, current.index, current.dispItem.getOwner().getCount());
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
             if (current.multiSelectVisibility && current.columnIndex === 0) {
