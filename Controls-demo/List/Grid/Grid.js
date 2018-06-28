@@ -7,7 +7,7 @@ define('Controls-demo/List/Grid/Grid', [
    'tmpl!Controls-demo/List/Grid/DemoBalancePrice',
    'tmpl!Controls-demo/List/Grid/DemoCostPrice',
    'tmpl!Controls-demo/List/Grid/DemoHeaderCostPrice',
-
+   'tmpl!Controls-demo/List/Grid/DemoName',
    'tmpl!Controls-demo/List/Grid/DemoTasksPhoto',
    'tmpl!Controls-demo/List/Grid/DemoTasksDescr',
    'tmpl!Controls-demo/List/Grid/DemoTasksReceived',
@@ -114,7 +114,8 @@ define('Controls-demo/List/Grid/Grid', [
          gridColumns: [
             {
                displayProperty: 'name',
-               width: '1fr'
+               width: '1fr',
+               template: 'tmpl!Controls-demo/List/Grid/DemoName'
             },
             {
                displayProperty: 'price',
