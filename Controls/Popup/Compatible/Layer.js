@@ -7,11 +7,10 @@ define('Controls/Popup/Compatible/Layer', [
    'Core/constants',
    'Core/RightsManager',
    'Core/ExtensionsManager',
-   'WS.Data/Chain',
    'Core/moduleStubs',
    'Core/IoC',
    'WS.Data/Source/SbisService'
-], function(Deferred, ParallelDeferred, Constants, RightsManager, ExtensionsManager, Chain, moduleStubs, IoC, SbisService) {
+], function(Deferred, ParallelDeferred, Constants, RightsManager, ExtensionsManager, moduleStubs, IoC, SbisService) {
    'use strict';
 
    var loadDeferred;
@@ -73,11 +72,8 @@ define('Controls/Popup/Compatible/Layer', [
       //    IoC.resolve('ILogger').error('Layer', 'Can\'t load view settings', err);
       // }));
 
-      parallelDef.push(new SbisService({
-         endpoint: 'Пользователь'}).call('GetCurrentUserInfo', {}).addCallbacks(function(userInfo) {
-         window.userInfo = Chain(userInfo.getRow()).toObject() || {};
-      }, function(err) {
-         IoC.resolve('ILogger').error('Layer', 'Can\'t load user info', err);
+      parallelDef.push(userInfo().addCallback(function(userInfo) {
+         window && (window.userInfo = userInfo);
       }));
 
       parallelDef.push(getUserLicense().addCallbacks(function(userLicense) {
@@ -123,6 +119,44 @@ define('Controls/Popup/Compatible/Layer', [
    //    });
    //    return dResult;
    // }
+
+   function userInfo() {
+      var
+         userSource = new SbisService({
+            endpoint: 'Пользователь'
+         }),
+         profileSource = new SbisService({
+            endpoint: 'СервисПрофилей'
+         });
+
+      return userSource.call('GetCurrentUserInfo', {}).addCallback(function(res) {
+         var
+            deferred,
+            result = res.getRow(),
+            data = {};
+         if (result) {
+            result.each(function(k, v) {
+               data[k] = v;
+            });
+         }
+         data.isDemo = data['ВыводимоеИмя'] === 'Демо-версия';
+         data.isPersonalAccount = data['КлассПользователя'] === '__сбис__физики';
+
+         if (data['КлассПользователя'] == '__сбис__физики') {
+            deferred = profileSource.call('ЕстьЛиУМеняАккаунтПомимоФизика').addCallback(function(res) {
+               data.hasMoreAccounts = res.getScalar();
+               return data;
+            });
+         } else {
+            deferred = Deferred.success(data);
+         }
+
+         return deferred;
+      }).addErrback(function(e) {
+         IoC.resolve('ILogger').error('User info', 'Transport error', e);
+         return {};
+      });
+   }
 
    function getUserLicense() {
       var def = new Deferred();

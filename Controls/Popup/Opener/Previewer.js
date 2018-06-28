@@ -8,7 +8,7 @@ define('Controls/Popup/Opener/Previewer',
       'use strict';
 
       var _private = {
-         displayDuration: 1500,
+         displayDuration: 1000,
 
          clearOpeningTimeout: function(self) {
             var id = self._openingTimerId;

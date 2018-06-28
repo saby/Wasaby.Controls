@@ -290,7 +290,7 @@ define('Controls/List/BaseControl', [
          if (context && self._isTouch) {
             return false;
          }
-         if (showActions) {
+         if (showActions && showActions.length) {
             var
                rs = new RecordSet({rawData: showActions});
             childEvent.nativeEvent.preventDefault();

@@ -32,7 +32,7 @@ define('SBIS3.CONTROLS/Slider',
           * @mixes SBIS3.CONTROLS/Mixins/DragNDropMixin
           * @mixes SBIS3.CONTROLS/Mixins/RangeMixin
           *
-          * @author Борисов П.С.
+          * @author Волоцкой В.Д.
           *
           * @ignoreEvents onAfterLoad onChange onStateChange
           * @ignoreEvents onDragStop onDragIn onDragOut onDragStart

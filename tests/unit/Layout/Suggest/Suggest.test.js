@@ -132,6 +132,11 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List'], functio
          self._orient = null;
          assert.equal(Suggest._private.calcOrient(self, {innerHeight: 600}), '-down');
          assert.equal(Suggest._private.calcOrient(self, {innerHeight: 300}), '-up');
+         
+         self._orient = null;
+         self._options.style = 'overInput';
+         assert.equal(Suggest._private.calcOrient(self, {innerHeight: 600}), '-down');
+         assert.equal(Suggest._private.calcOrient(self, {innerHeight: 300}), '-down');
       });
    
       it('Suggest::_inputActivated with autoDropDown', function(done) {

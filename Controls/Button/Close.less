@@ -33,7 +33,16 @@
   width: @width_CloseButton_small;
   height: @height_CloseButton_small;
   color: @color_CloseButton-light-icon;
-  &:hover {
-    color: @color_CloseButton-light-icon_hover;
-  }
+}
+
+.ws-is-no-touch{
+   .controls-Button__close_standart:hover {
+      border-color: @default-border-color-second;
+   }
+   .controls-Button__close_standart:hover:before {
+      color: @icon-color-primary-hover;
+   }
+   .controls-Button__close_light:hover {
+      color: @color_CloseButton-light-icon_hover;
+   }
 }

@@ -29,11 +29,8 @@ define('Controls-demo/DragNDrop/Basket', [
       },
 
       _dragEnd: function(event, dragObject) {
-         var id, items;
          if (this._canDrop) {
-            items = dragObject.entity.getItems();
-            items.forEach(function(item) {
-               id = item.getId();
+            dragObject.entity.getItems().forEach(function(id) {
                if (this._items.indexOf(id) === -1) {
                   this._items.push(id);
                }
