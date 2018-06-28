@@ -188,6 +188,6 @@ define('Controls-demo/List/Grid/Grid', [
             }
          ]
       });
-   return azazaza;
 
+   return ModuleClass;
 });
