@@ -35,15 +35,15 @@ define([
          });
 
       it('ctor', function() {
-
          cfg = {
             selectedKeys: [],
             excludedKeys: [],
             items: items
          };
          selectionInstance = new Selection(cfg);
-         assert.deepEqual([], selectionInstance._selectedKeys, 'Constructor: wrong field values');
-         assert.deepEqual([], selectionInstance._excludedKeys, 'Constructor: wrong field values');
+         selection = selectionInstance.getSelection();
+         assert.deepEqual([], selection.selected, 'Constructor: wrong field values');
+         assert.deepEqual([], selection.excluded, 'Constructor: wrong field values');
 
          cfg = {
             selectedKeys: [1, 2, 3],
@@ -51,8 +51,9 @@ define([
             items: items
          };
          selectionInstance = new Selection(cfg);
-         assert.deepEqual([1, 2, 3], selectionInstance._selectedKeys, 'Constructor: wrong field values');
-         assert.deepEqual([], selectionInstance._excludedKeys, 'Constructor: wrong field values');
+         selection = selectionInstance.getSelection();
+         assert.deepEqual([1, 2, 3], selection.selected, 'Constructor: wrong field values');
+         assert.deepEqual([], selection.excluded, 'Constructor: wrong field values');
 
          cfg = {
             selectedKeys: [1, 2, 3],
@@ -60,8 +61,9 @@ define([
             items: items
          };
          selectionInstance = new Selection(cfg);
-         assert.deepEqual([1, 2, 3], selectionInstance._selectedKeys, 'Constructor: wrong field values');
-         assert.deepEqual([2], selectionInstance._excludedKeys, 'Constructor: wrong field values');
+         selection = selectionInstance.getSelection();
+         assert.deepEqual([1, 2, 3], selection.selected, 'Constructor: wrong field values');
+         assert.deepEqual([2], selection.excluded, 'Constructor: wrong field values');
 
          cfg = {
             selectedKeys: [null],
@@ -69,107 +71,248 @@ define([
             items: items
          };
          selectionInstance = new Selection(cfg);
-         assert.deepEqual([null], selectionInstance._selectedKeys, 'Constructor: wrong field values');
-         assert.deepEqual([2], selectionInstance._excludedKeys, 'Constructor: wrong field values');
+         selection = selectionInstance.getSelection();
+         assert.deepEqual([null], selection.selected, 'Constructor: wrong field values');
+         assert.deepEqual([2], selection.excluded, 'Constructor: wrong field values');
       });
 
-      it('select', function() {
+      describe('partialData', function() {
+         it('select', function() {
+            cfg = {
+               selectedKeys: [],
+               excludedKeys: [],
+               items: items
+            };
+            selectionInstance = new Selection(cfg);
+            selectionInstance.select([1, 2, 3]);
+            selection = selectionInstance.getSelection();
+            assert.deepEqual([1, 2, 3], selection.selected, 'Constructor: wrong field values');
+            assert.deepEqual([], selection.excluded, 'Constructor: wrong field values');
+            assert.equal(3, selectionInstance.getCount());
 
-         cfg = {
-            selectedKeys: [],
-            excludedKeys: [],
-            items: items
-         };
-         selectionInstance = new Selection(cfg);
-         selectionInstance.select([1, 2, 3]);
-         assert.deepEqual([1, 2, 3], selectionInstance._selectedKeys, 'Constructor: wrong field values');
-         assert.deepEqual([], selectionInstance._excludedKeys, 'Constructor: wrong field values');
+            cfg = {
+               selectedKeys: [1, 2, 3],
+               excludedKeys: [],
+               items: items
+            };
+            selectionInstance = new Selection(cfg);
+            selectionInstance.select([4, 5, 6, 7]);
+            selection = selectionInstance.getSelection();
+            assert.deepEqual([1, 2, 3, 4, 5, 6, 7], selection.selected, 'Constructor: wrong field values');
+            assert.deepEqual([], selection.excluded, 'Constructor: wrong field values');
+            assert.equal(7, selectionInstance.getCount());
 
-         cfg = {
-            selectedKeys: [1, 2, 3],
-            excludedKeys: [],
-            items: items
-         };
-         selectionInstance = new Selection(cfg);
-         selectionInstance.select([4, 5, 6]);
-         assert.deepEqual([1, 2, 3, 4, 5, 6], selectionInstance._selectedKeys, 'Constructor: wrong field values');
-         assert.deepEqual([], selectionInstance._excludedKeys, 'Constructor: wrong field values');
+            cfg = {
+               selectedKeys: [1, 2, 3],
+               excludedKeys: [],
+               items: items
+            };
+            selectionInstance = new Selection(cfg);
+            selectionInstance.select([2, 4]);
+            selection = selectionInstance.getSelection();
+            assert.deepEqual([1, 2, 3, 4], selection.selected, 'Constructor: wrong field values');
+            assert.deepEqual([], selection.excluded, 'Constructor: wrong field values');
+            assert.equal(4, selectionInstance.getCount());
 
-         cfg = {
-            selectedKeys: [1, 2, 3],
-            excludedKeys: [],
-            items: items
-         };
-         selectionInstance = new Selection(cfg);
-         selectionInstance.select([2, 4]);
-         assert.deepEqual([1, 2, 3, 4], selectionInstance._selectedKeys, 'Constructor: wrong field values');
-         assert.deepEqual([], selectionInstance._excludedKeys, 'Constructor: wrong field values');
+            cfg = {
+               selectedKeys: [null],
+               excludedKeys: [2, 3],
+               items: items
+            };
+            selectionInstance = new Selection(cfg);
+            selectionInstance.select([2, 4]);
+            selection = selectionInstance.getSelection();
+            assert.deepEqual([null], selection.selected, 'Constructor: wrong field values');
+            assert.deepEqual([3], selection.excluded, 'Constructor: wrong field values');
+            assert.equal(6, selectionInstance.getCount());
 
-         cfg = {
-            selectedKeys: [null],
-            excludedKeys: [2, 3],
-            items: items
-         };
-         selectionInstance = new Selection(cfg);
-         selectionInstance.select([2, 4]);
-         assert.deepEqual([null], selectionInstance._selectedKeys, 'Constructor: wrong field values');
-         assert.deepEqual([3], selectionInstance._excludedKeys, 'Constructor: wrong field values');
+            cfg = {
+               selectedKeys: [],
+               excludedKeys: [],
+               items: items
+            };
+            selectionInstance = new Selection(cfg);
+            selectionInstance.select([null]);
+            selection = selectionInstance.getSelection();
+            assert.deepEqual([null], selection.selected, 'Constructor: wrong field values');
+            assert.deepEqual([], selection.excluded, 'Constructor: wrong field values');
+            assert.equal(7, selectionInstance.getCount());
+         });
 
-         cfg = {
-            selectedKeys: [],
-            excludedKeys: [],
-            items: items
-         };
-         selectionInstance = new Selection(cfg);
-         selectionInstance.select([null]);
-         assert.deepEqual([null], selectionInstance._selectedKeys, 'Constructor: wrong field values');
-         assert.deepEqual([], selectionInstance._excludedKeys, 'Constructor: wrong field values');
+         it('unselect', function() {
+            cfg = {
+               selectedKeys: [1, 2, 3],
+               excludedKeys: [],
+               items: items
+            };
+            selectionInstance = new Selection(cfg);
+            selectionInstance.unselect([1, 3]);
+            selection = selectionInstance.getSelection();
+            assert.deepEqual([2], selection.selected, 'Constructor: wrong field values');
+            assert.deepEqual([], selection.excluded, 'Constructor: wrong field values');
+            assert.equal(1, selectionInstance.getCount());
+
+            cfg = {
+               selectedKeys: [1, 2, 3],
+               excludedKeys: [],
+               items: items
+            };
+            selectionInstance = new Selection(cfg);
+            selectionInstance.unselect([1, 2, 3]);
+            selection = selectionInstance.getSelection();
+            assert.deepEqual([], selection.selected, 'Constructor: wrong field values');
+            assert.deepEqual([], selection.excluded, 'Constructor: wrong field values');
+            assert.equal(0, selectionInstance.getCount());
+
+            cfg = {
+               selectedKeys: [null],
+               excludedKeys: [],
+               items: items
+            };
+            selectionInstance = new Selection(cfg);
+            selectionInstance.unselect([1, 2, 3]);
+            selection = selectionInstance.getSelection();
+            assert.deepEqual([null], selection.selected, 'Constructor: wrong field values');
+            assert.deepEqual([1, 2, 3], selection.excluded, 'Constructor: wrong field values');
+            assert.equal(4, selectionInstance.getCount());
+
+            cfg = {
+               selectedKeys: [null],
+               excludedKeys: [2, 3, 4],
+               items: items
+            };
+            selectionInstance = new Selection(cfg);
+            selectionInstance.unselect([1, 2]);
+            selection = selectionInstance.getSelection();
+            assert.deepEqual([null], selection.selected, 'Constructor: wrong field values');
+            assert.deepEqual([2, 3, 4, 1], selection.excluded, 'Constructor: wrong field values');
+            assert.equal(3, selectionInstance.getCount());
+         });
       });
 
-      it('unselect', function() {
+      describe('allData', function() {
+         it('select', function() {
+            cfg = {
+               selectedKeys: [],
+               excludedKeys: [],
+               items: items,
+               strategy: 'allData'
+            };
+            selectionInstance = new Selection(cfg);
+            selectionInstance.select([1, 2, 3]);
+            selection = selectionInstance.getSelection();
+            assert.deepEqual([1, 2, 3], selection.selected, 'Constructor: wrong field values');
+            assert.deepEqual([], selection.excluded, 'Constructor: wrong field values');
+            assert.equal(3, selectionInstance.getCount());
 
-         cfg = {
-            selectedKeys: [1, 2, 3],
-            excludedKeys: [],
-            items: items
-         };
-         selectionInstance = new Selection(cfg);
-         selectionInstance.unselect([1, 3]);
-         assert.deepEqual([2], selectionInstance._selectedKeys, 'Constructor: wrong field values');
-         assert.deepEqual([], selectionInstance._excludedKeys, 'Constructor: wrong field values');
+            cfg = {
+               selectedKeys: [1, 2, 3],
+               excludedKeys: [],
+               items: items,
+               strategy: 'allData'
+            };
+            selectionInstance = new Selection(cfg);
+            selectionInstance.select([4, 5, 6, 7]);
+            selection = selectionInstance.getSelection();
+            assert.deepEqual([1, 2, 3, 4, 5, 6, 7], selection.selected, 'Constructor: wrong field values');
+            assert.deepEqual([], selection.excluded, 'Constructor: wrong field values');
+            assert.equal(7, selectionInstance.getCount());
 
-         cfg = {
-            selectedKeys: [1, 2, 3],
-            excludedKeys: [],
-            items: items
-         };
-         selectionInstance = new Selection(cfg);
-         selectionInstance.unselect([1, 2, 3]);
-         assert.deepEqual([], selectionInstance._selectedKeys, 'Constructor: wrong field values');
-         assert.deepEqual([], selectionInstance._excludedKeys, 'Constructor: wrong field values');
-         cfg = {
-            selectedKeys: [null],
-            excludedKeys: [],
-            items: items
-         };
-         selectionInstance = new Selection(cfg);
-         selectionInstance.unselect([1, 2, 3]);
-         assert.deepEqual([null], selectionInstance._selectedKeys, 'Constructor: wrong field values');
-         assert.deepEqual([1, 2, 3], selectionInstance._excludedKeys, 'Constructor: wrong field values');
+            cfg = {
+               selectedKeys: [1, 2, 3],
+               excludedKeys: [],
+               items: items,
+               strategy: 'allData'
+            };
+            selectionInstance = new Selection(cfg);
+            selectionInstance.select([2, 4]);
+            selection = selectionInstance.getSelection();
+            assert.deepEqual([1, 2, 3, 4], selection.selected, 'Constructor: wrong field values');
+            assert.deepEqual([], selection.excluded, 'Constructor: wrong field values');
+            assert.equal(4, selectionInstance.getCount());
 
-         cfg = {
-            selectedKeys: [null],
-            excludedKeys: [2, 3, 4],
-            items: items
-         };
-         selectionInstance = new Selection(cfg);
-         selectionInstance.unselect([1, 2]);
-         assert.deepEqual([null], selectionInstance._selectedKeys, 'Constructor: wrong field values');
-         assert.deepEqual([2, 3, 4, 1], selectionInstance._excludedKeys, 'Constructor: wrong field values');
+            cfg = {
+               selectedKeys: [null],
+               excludedKeys: [2, 3],
+               items: items,
+               strategy: 'allData'
+            };
+            selectionInstance = new Selection(cfg);
+            selectionInstance.select([2, 4]);
+            selection = selectionInstance.getSelection();
+            assert.deepEqual([null], selection.selected, 'Constructor: wrong field values');
+            assert.deepEqual([3], selection.excluded, 'Constructor: wrong field values');
+            assert.equal(6, selectionInstance.getCount());
+
+            cfg = {
+               selectedKeys: [],
+               excludedKeys: [],
+               items: items,
+               strategy: 'allData'
+            };
+            selectionInstance = new Selection(cfg);
+            selectionInstance.select([null]);
+            selection = selectionInstance.getSelection();
+            assert.deepEqual([null], selection.selected, 'Constructor: wrong field values');
+            assert.deepEqual([], selection.excluded, 'Constructor: wrong field values');
+            assert.equal(7, selectionInstance.getCount());
+         });
+
+         it('unselect', function() {
+            cfg = {
+               selectedKeys: [1, 2, 3],
+               excludedKeys: [],
+               items: items,
+               strategy: 'allData'
+            };
+            selectionInstance = new Selection(cfg);
+            selectionInstance.unselect([1, 3]);
+            selection = selectionInstance.getSelection();
+            assert.deepEqual([2], selection.selected, 'Constructor: wrong field values');
+            assert.deepEqual([], selection.excluded, 'Constructor: wrong field values');
+            assert.equal(1, selectionInstance.getCount());
+
+            cfg = {
+               selectedKeys: [1, 2, 3],
+               excludedKeys: [],
+               items: items,
+               strategy: 'allData'
+            };
+            selectionInstance = new Selection(cfg);
+            selectionInstance.unselect([1, 2, 3]);
+            selection = selectionInstance.getSelection();
+            assert.deepEqual([], selection.selected, 'Constructor: wrong field values');
+            assert.deepEqual([], selection.excluded, 'Constructor: wrong field values');
+            assert.equal(0, selectionInstance.getCount());
+            cfg = {
+               selectedKeys: [null],
+               excludedKeys: [],
+               items: items,
+               strategy: 'allData'
+            };
+            selectionInstance = new Selection(cfg);
+            selectionInstance.unselect([1, 2, 3]);
+            selection = selectionInstance.getSelection();
+            assert.deepEqual([null], selection.selected, 'Constructor: wrong field values');
+            assert.deepEqual([1, 2, 3], selection.excluded, 'Constructor: wrong field values');
+            assert.equal(4, selectionInstance.getCount());
+
+            cfg = {
+               selectedKeys: [null],
+               excludedKeys: [2, 3, 4],
+               items: items,
+               strategy: 'allData'
+            };
+            selectionInstance = new Selection(cfg);
+            selectionInstance.unselect([1, 2]);
+            selection = selectionInstance.getSelection();
+            assert.deepEqual([null], selection.selected, 'Constructor: wrong field values');
+            assert.deepEqual([2, 3, 4, 1], selection.excluded, 'Constructor: wrong field values');
+            assert.equal(3, selectionInstance.getCount());
+         });
       });
 
       it('selectAll+unselectAll', function() {
-
          cfg = {
             selectedKeys: [1, 2, 3],
             excludedKeys: [],
@@ -177,8 +320,9 @@ define([
          };
          selectionInstance = new Selection(cfg);
          selectionInstance.selectAll();
-         assert.deepEqual([null], selectionInstance._selectedKeys, 'Constructor: wrong field values');
-         assert.deepEqual([], selectionInstance._excludedKeys, 'Constructor: wrong field values');
+         selection = selectionInstance.getSelection();
+         assert.deepEqual([null], selection.selected, 'Constructor: wrong field values');
+         assert.deepEqual([], selection.excluded, 'Constructor: wrong field values');
 
          cfg = {
             selectedKeys: [1, 2, 3],
@@ -187,12 +331,12 @@ define([
          };
          selectionInstance = new Selection(cfg);
          selectionInstance.unselectAll();
-         assert.deepEqual([], selectionInstance._selectedKeys, 'Constructor: wrong field values');
-         assert.deepEqual([], selectionInstance._excludedKeys, 'Constructor: wrong field values');
+         selection = selectionInstance.getSelection();
+         assert.deepEqual([], selection.selected, 'Constructor: wrong field values');
+         assert.deepEqual([], selection.excluded, 'Constructor: wrong field values');
       });
 
       it('toggleAll', function() {
-
          cfg = {
             selectedKeys: [1, 2, 3],
             excludedKeys: [],
@@ -200,8 +344,9 @@ define([
          };
          selectionInstance = new Selection(cfg);
          selectionInstance.toggleAll();
-         assert.deepEqual([null], selectionInstance._selectedKeys, 'Constructor: wrong field values');
-         assert.deepEqual([1, 2, 3], selectionInstance._excludedKeys, 'Constructor: wrong field values');
+         selection = selectionInstance.getSelection();
+         assert.deepEqual([null], selection.selected, 'Constructor: wrong field values');
+         assert.deepEqual([1, 2, 3], selection.excluded, 'Constructor: wrong field values');
 
          cfg = {
             selectedKeys: [null],
@@ -210,8 +355,9 @@ define([
          };
          selectionInstance = new Selection(cfg);
          selectionInstance.toggleAll();
-         assert.deepEqual([1, 2, 3], selectionInstance._selectedKeys, 'Constructor: wrong field values');
-         assert.deepEqual([], selectionInstance._excludedKeys, 'Constructor: wrong field values');
+         selection = selectionInstance.getSelection();
+         assert.deepEqual([1, 2, 3], selection.selected, 'Constructor: wrong field values');
+         assert.deepEqual([], selection.excluded, 'Constructor: wrong field values');
 
          cfg = {
             selectedKeys: [null],
@@ -220,25 +366,12 @@ define([
          };
          selectionInstance = new Selection(cfg);
          selectionInstance.toggleAll();
-         assert.deepEqual([], selectionInstance._selectedKeys, 'Constructor: wrong field values');
-         assert.deepEqual([], selectionInstance._excludedKeys, 'Constructor: wrong field values');
-      });
-
-      it('getSelection', function() {
-
-         cfg = {
-            selectedKeys: [null],
-            excludedKeys: [1, 2, 3],
-            items: items
-         };
-         selectionInstance = new Selection(cfg);
          selection = selectionInstance.getSelection();
-         assert.deepEqual(cfg.selectedKeys, selection.selected, 'Constructor: wrong field values');
-         assert.deepEqual(cfg.excludedKeys, selection.excluded, 'Constructor: wrong field values');
+         assert.deepEqual([], selection.selected, 'Constructor: wrong field values');
+         assert.deepEqual([], selection.excluded, 'Constructor: wrong field values');
       });
 
       it('getSelectionStatus', function() {
-
          cfg = {
             selectedKeys: [1, 2, 3],
             excludedKeys: [],

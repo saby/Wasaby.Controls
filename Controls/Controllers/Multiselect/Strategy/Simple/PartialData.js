@@ -1,24 +1,11 @@
 define('Controls/Controllers/Multiselect/Strategy/Simple/PartialData', [
-   'Core/core-simpleExtend'
-], function(cExtend) {
+   'Controls/Controllers/Multiselect/Strategy/Simple/Base'
+], function(Base) {
    'use strict';
 
-   var PartialData = cExtend.extend({
+   var PartialData = Base.extend({
       isAllSelection: function(options) {
          return options.selectedKeys[0] === null;
-      },
-
-      getCount: function(selectedKeys, excludedKeys) {
-         //TODO: всегда должна возвращаться цифра, но надо править тесты
-         if (this.isAllSelection({ selectedKeys: selectedKeys })) {
-            if (excludedKeys.length) {
-               return 'part';
-            } else {
-               return 'all';
-            }
-         } else {
-            return selectedKeys.length;
-         }
       }
    });
 
