@@ -204,8 +204,8 @@ define('Controls/Popup/Compatible/Layer', [
    }
 
    return {
-      load: function(deps) {
-         if (!isNewEnvironment()) { //Для старого окружения не грузим слои совместимости
+      load: function(deps, force) {
+         if (!isNewEnvironment() && !force) { //Для старого окружения не грузим слои совместимости
             return (new Deferred()).callback();
          }
          if (!loadDeferred) {
