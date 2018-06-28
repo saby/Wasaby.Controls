@@ -12,8 +12,10 @@ function(cMerge, Random) {
        */
    return {
       _prepareConfigForOldTemplate: function(cfg, templateClass) {
+         var dimensions = this._getDimensions(templateClass);
          cfg.templateOptions = {
             templateOptions: cfg.templateOptions || cfg.componentOptions || {},
+            componentOptions: cfg.templateOptions || cfg.componentOptions || {},
             template: cfg.template,
             type: cfg._type,
             handlers: cfg.handlers,
@@ -24,6 +26,9 @@ function(cMerge, Random) {
          };
 
          if (cfg.target) {
+            //нужно для миникарточки, они хотят работать с CompoundArea - и ей надо дать target
+            //причем работают с jquery объектом
+            cfg.templateOptions.target = cfg.target;
             cfg.target = cfg.target[0] ? cfg.target[0] : cfg.target;
          }
 
@@ -39,6 +44,10 @@ function(cMerge, Random) {
 
          if (cfg.hasOwnProperty('autoHide')) {
             cfg.closeByExternalClick = cfg.autoHide;
+         }
+
+         if (dimensions.title) {
+            cfg.templateOptions.caption = dimensions.title;
          }
 
          var revertPosition = {
@@ -133,7 +142,7 @@ function(cMerge, Random) {
 
       //Берем размеры либо с опций, либо с дименшенов
       _setSizes: function(cfg, templateClass) {
-         var dimensions = templateClass.dimensions || templateClass.prototype.dimensions || {};
+         var dimensions = this._getDimensions(templateClass);
          var dimensionsMinWidth = dimensions.minWidth || dimensions.width;
 
          if (!cfg.minWidth) {
@@ -155,8 +164,11 @@ function(cMerge, Random) {
 
          cfg.minHeight = cfg.minHeight || cfg.maxHeight;
          cfg.maxHeight = cfg.maxHeight || cfg.minHeight;
-
+      },
+      _getDimensions: function(templateClass) {
+         return templateClass.dimensions || templateClass.prototype.dimensions || {};
       }
+
    };
 }
 );
