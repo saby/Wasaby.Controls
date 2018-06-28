@@ -1363,6 +1363,11 @@ define([
                   close: function() {
                      callBackCount++;
                   }
+               },
+               swipeControl: {
+                  closeSwipe: function() {
+                     callBackCount++;
+                  }
                }
             };
             instance._listViewModel._activeItem = {
@@ -1382,7 +1387,7 @@ define([
                   }
                }]});
             assert.equal(instance._listViewModel._activeItem, null);
-            assert.equal(callBackCount, 4);
+            assert.equal(callBackCount, 5);
          });
 
          it('_listSwipe  multiSelectStatus = 1', function(done) {
