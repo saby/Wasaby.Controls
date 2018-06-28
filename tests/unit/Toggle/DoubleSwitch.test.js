@@ -115,7 +115,7 @@ define(['Controls/Toggle/DoubleSwitch'], function (Switch) {
                it('click', function () {
                   SW._clickToggleHandler();
                   assert.isTrue(switcherClickedFlag, 'click unsuccess');
-                  assert.isTrue(SW._toggleHoverState === '', 'toggle hover class is incorrect')
+                  assert.isTrue(SW._toggleHoverState === false, 'toggle hover class is incorrect')
                });
             });
 
