@@ -2,11 +2,17 @@
 define('Controls/Controllers/Multiselect/Selection', [
    'Core/core-simpleExtend',
    'Core/core-clone',
-   'Controls/Utils/ArraySimpleValuesUtil'
+   'Controls/Utils/ArraySimpleValuesUtil',
+
+   //TODO: подгружать асинхронно
+   'Controls/Controllers/Multiselect/Strategy/Simple/AllData',
+   'Controls/Controllers/Multiselect/Strategy/Simple/PartialData'
 ], function(
    cExtend,
    cClone,
-   ArraySimpleValuesUtil
+   ArraySimpleValuesUtil,
+   AllData,
+   PartialData
 ) {
    'use strict';
 
@@ -14,35 +20,8 @@ define('Controls/Controllers/Multiselect/Selection', [
       ALLSELECTION_VALUE = [null],
       SELECTION_STATUS = {
          NOT_SELECTED: false,
-         SELECTED: true,
-         PARTIALLY_SELECTED: null
+         SELECTED: true
       };
-
-   var _private = {
-      isAllSelection: function(selectedKeys, excludedKeys, items, strategy) {
-         if (strategy === 'allData') {
-            return selectedKeys[0] === null || selectedKeys.length === items.getCount() && !excludedKeys.length;
-         } else {
-            return selectedKeys[0] === null;
-         }
-      },
-
-      getCount: function(selectedKeys, excludedKeys, items, strategy) {
-         if (strategy === 'allData') {
-            return _private.isAllSelection(selectedKeys, excludedKeys, items, strategy) ? 'all' : selectedKeys.length;
-         } else {
-            if (_private.isAllSelection(selectedKeys, excludedKeys, items, strategy)) {
-               if (excludedKeys.length) {
-                  return 'part';
-               } else {
-                  return 'all';
-               }
-            } else {
-               return selectedKeys.length;
-            }
-         }
-      }
-   };
 
    var Selection = cExtend.extend({
       _selectedKeys: null,
@@ -58,10 +37,10 @@ define('Controls/Controllers/Multiselect/Selection', [
 
          //TODO: нужно кидать исключение, если нет items
          this._items = cClone(options.items);
-         this._strategy = options.strategy;
+         this._strategy = options.strategy === 'allData' ? new AllData(options) : new PartialData(options);
 
          //excluded keys имеют смысл только когда выделено все, поэтому ситуацию, когда переданы оба массива считаем ошибочной
-         if (options.excludedKeys.length && !_private.isAllSelection(this._selectedKeys, this._excludedKeys, this._items, this._strategy)) {
+         if (options.excludedKeys.length && !this._strategy.isAllSelection(this._getParamsForIsAllSelection())) {
             //TODO возможно надо кинуть здесь исключение
          }
 
@@ -69,7 +48,7 @@ define('Controls/Controllers/Multiselect/Selection', [
       },
 
       select: function(keys) {
-         if (_private.isAllSelection(this._selectedKeys, this._excludedKeys, this._items, this._strategy)) {
+         if (this._strategy.isAllSelection(this._getParamsForIsAllSelection())) {
             ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, keys);
          } else {
             ArraySimpleValuesUtil.addSubArray(this._selectedKeys, keys);
@@ -77,7 +56,7 @@ define('Controls/Controllers/Multiselect/Selection', [
       },
 
       unselect: function(keys) {
-         if (_private.isAllSelection(this._selectedKeys, this._excludedKeys, this._items, this._strategy)) {
+         if (this._strategy.isAllSelection(this._getParamsForIsAllSelection())) {
             ArraySimpleValuesUtil.addSubArray(this._excludedKeys, keys);
          } else {
             ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, keys);
@@ -96,7 +75,8 @@ define('Controls/Controllers/Multiselect/Selection', [
 
       toggleAll: function() {
          var swap;
-         if (_private.isAllSelection(this._selectedKeys, this._excludedKeys, this._items, this._strategy)) {
+
+         if (this._strategy.isAllSelection(this._getParamsForIsAllSelection())) {
             swap = cClone(this._excludedKeys);
             this.unselectAll();
             this.select(swap);
@@ -119,7 +99,7 @@ define('Controls/Controllers/Multiselect/Selection', [
       },
 
       getSelectionStatus: function(key) {
-         if (this._excludedKeys.indexOf(key) === -1 && _private.isAllSelection(this._selectedKeys, this._excludedKeys, this._items, this._strategy)) {
+         if (this._excludedKeys.indexOf(key) === -1 && this._strategy.isAllSelection(this._getParamsForIsAllSelection())) {
             return SELECTION_STATUS.SELECTED;
          } else if (this._selectedKeys.indexOf(key) !== -1) {
             return SELECTION_STATUS.SELECTED;
@@ -129,7 +109,15 @@ define('Controls/Controllers/Multiselect/Selection', [
       },
 
       getCount: function() {
-         return _private.getCount(this._selectedKeys, this._excludedKeys, this._items, this._strategy);
+         return this._strategy.getCount(this._selectedKeys, this._excludedKeys, this._items);
+      },
+
+      _getParamsForIsAllSelection: function() {
+         return {
+            selectedKeys: this._selectedKeys,
+            excludedKeys: this._excludedKeys,
+            items: this._items
+         };
       }
    });
 

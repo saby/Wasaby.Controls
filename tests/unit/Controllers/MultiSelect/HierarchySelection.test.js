@@ -276,6 +276,27 @@ define([
                assert.equal(0, selectionInstance.getCount());
             });
 
+            it('unselect nested node', function() {
+               cfg = {
+                  selectedKeys: [2],
+                  excludedKeys: [],
+                  items: new RecordSet({
+                     rawData: items.slice(0, 5),
+                     idProperty: 'id'
+                  })
+               };
+               selectionInstance = new HierarchySelection(cfg);
+               selection = selectionInstance.getSelection();
+               assert.deepEqual([2], selection.selected);
+               assert.deepEqual([], selection.excluded);
+               assert.equal(3, selectionInstance.getCount());
+               selectionInstance.unselect([2]);
+               selection = selectionInstance.getSelection();
+               assert.deepEqual([], selection.selected);
+               assert.deepEqual([], selection.excluded);
+               assert.equal(0, selectionInstance.getCount());
+            });
+
             it('unselect node with excluded nested children', function() {
                cfg = {
                   selectedKeys: [1],
@@ -356,6 +377,24 @@ define([
                assert.equal(0, selectionInstance.getCount());
             });
 
+            it('unselect nested node', function() {
+               cfg = {
+                  selectedKeys: [2],
+                  excludedKeys: [],
+                  items: allData
+               };
+               selectionInstance = new HierarchySelection(cfg);
+               selection = selectionInstance.getSelection();
+               assert.deepEqual([2], selection.selected);
+               assert.deepEqual([], selection.excluded);
+               assert.equal(3, selectionInstance.getCount());
+               selectionInstance.unselect([2]);
+               selection = selectionInstance.getSelection();
+               assert.deepEqual([], selection.selected);
+               assert.deepEqual([], selection.excluded);
+               assert.equal(0, selectionInstance.getCount());
+            });
+
             it('unselect node with excluded nested children', function() {
                cfg = {
                   selectedKeys: [1],
@@ -408,6 +447,147 @@ define([
                assert.deepEqual([1], selection.selected);
                assert.deepEqual([3], selection.excluded);
                assert.equal(4, selectionInstance.getCount());
+            });
+         });
+      });
+
+      describe('getSelectionStatus', function() {
+         describe('partialData', function() {
+            it('leaf in selectedKeys', function() {
+               cfg = {
+                  selectedKeys: [7],
+                  excludedKeys: [],
+                  items: allData
+               };
+               selectionInstance = new HierarchySelection(cfg);
+               assert.equal(HierarchySelection.SELECTION_STATUS.SELECTED, selectionInstance.getSelectionStatus(7));
+            });
+
+            it('node in selectedKeys', function() {
+               cfg = {
+                  selectedKeys: [1],
+                  excludedKeys: [],
+                  items: allData
+               };
+               selectionInstance = new HierarchySelection(cfg);
+               assert.equal(HierarchySelection.SELECTION_STATUS.SELECTED, selectionInstance.getSelectionStatus(1));
+               assert.equal(HierarchySelection.SELECTION_STATUS.SELECTED, selectionInstance.getSelectionStatus(2));
+               assert.equal(HierarchySelection.SELECTION_STATUS.SELECTED, selectionInstance.getSelectionStatus(3));
+               assert.equal(HierarchySelection.SELECTION_STATUS.SELECTED, selectionInstance.getSelectionStatus(4));
+               assert.equal(HierarchySelection.SELECTION_STATUS.SELECTED, selectionInstance.getSelectionStatus(5));
+            });
+
+            it('node in selectedKeys, nested leaf in excludedKeys', function() {
+               cfg = {
+                  selectedKeys: [1],
+                  excludedKeys: [5],
+                  items: allData
+               };
+               selectionInstance = new HierarchySelection(cfg);
+               assert.equal(HierarchySelection.SELECTION_STATUS.PARTIALLY_SELECTED, selectionInstance.getSelectionStatus(1));
+               assert.equal(HierarchySelection.SELECTION_STATUS.SELECTED, selectionInstance.getSelectionStatus(2));
+               assert.equal(HierarchySelection.SELECTION_STATUS.SELECTED, selectionInstance.getSelectionStatus(3));
+               assert.equal(HierarchySelection.SELECTION_STATUS.SELECTED, selectionInstance.getSelectionStatus(4));
+               assert.equal(HierarchySelection.SELECTION_STATUS.NOT_SELECTED, selectionInstance.getSelectionStatus(5));
+            });
+
+            it('selected root, node in excludedKeys', function() {
+               cfg = {
+                  selectedKeys: [null],
+                  excludedKeys: [2],
+                  items: allData
+               };
+               selectionInstance = new HierarchySelection(cfg);
+               assert.equal(HierarchySelection.SELECTION_STATUS.PARTIALLY_SELECTED, selectionInstance.getSelectionStatus(null));
+               assert.equal(HierarchySelection.SELECTION_STATUS.PARTIALLY_SELECTED, selectionInstance.getSelectionStatus(1));
+               assert.equal(HierarchySelection.SELECTION_STATUS.NOT_SELECTED, selectionInstance.getSelectionStatus(2));
+               assert.equal(HierarchySelection.SELECTION_STATUS.NOT_SELECTED, selectionInstance.getSelectionStatus(3));
+               assert.equal(HierarchySelection.SELECTION_STATUS.NOT_SELECTED, selectionInstance.getSelectionStatus(4));
+               assert.equal(HierarchySelection.SELECTION_STATUS.SELECTED, selectionInstance.getSelectionStatus(5));
+               assert.equal(HierarchySelection.SELECTION_STATUS.SELECTED, selectionInstance.getSelectionStatus(6));
+               assert.equal(HierarchySelection.SELECTION_STATUS.SELECTED, selectionInstance.getSelectionStatus(7));
+            });
+
+            it('not selected key', function() {
+               cfg = {
+                  selectedKeys: [],
+                  excludedKeys: [],
+                  items: allData
+               };
+               selectionInstance = new HierarchySelection(cfg);
+               assert.equal(HierarchySelection.SELECTION_STATUS.NOT_SELECTED, selectionInstance.getSelectionStatus(1));
+            });
+         });
+
+         describe('allData', function() {
+            it('leaf in selectedKeys', function() {
+               cfg = {
+                  selectedKeys: [7],
+                  excludedKeys: [],
+                  items: allData,
+                  strategy: 'allData'
+               };
+               selectionInstance = new HierarchySelection(cfg);
+               assert.equal(HierarchySelection.SELECTION_STATUS.SELECTED, selectionInstance.getSelectionStatus(7));
+            });
+
+            it('node in selectedKeys', function() {
+               cfg = {
+                  selectedKeys: [1],
+                  excludedKeys: [],
+                  items: allData,
+                  strategy: 'allData'
+               };
+               selectionInstance = new HierarchySelection(cfg);
+               assert.equal(HierarchySelection.SELECTION_STATUS.SELECTED, selectionInstance.getSelectionStatus(1));
+               assert.equal(HierarchySelection.SELECTION_STATUS.SELECTED, selectionInstance.getSelectionStatus(2));
+               assert.equal(HierarchySelection.SELECTION_STATUS.SELECTED, selectionInstance.getSelectionStatus(3));
+               assert.equal(HierarchySelection.SELECTION_STATUS.SELECTED, selectionInstance.getSelectionStatus(4));
+               assert.equal(HierarchySelection.SELECTION_STATUS.SELECTED, selectionInstance.getSelectionStatus(5));
+            });
+
+            it('node in selectedKeys, nested leaf in excludedKeys', function() {
+               cfg = {
+                  selectedKeys: [1],
+                  excludedKeys: [5],
+                  items: allData,
+                  strategy: 'allData'
+               };
+               selectionInstance = new HierarchySelection(cfg);
+               assert.equal(HierarchySelection.SELECTION_STATUS.PARTIALLY_SELECTED, selectionInstance.getSelectionStatus(1));
+               assert.equal(HierarchySelection.SELECTION_STATUS.SELECTED, selectionInstance.getSelectionStatus(2));
+               assert.equal(HierarchySelection.SELECTION_STATUS.SELECTED, selectionInstance.getSelectionStatus(3));
+               assert.equal(HierarchySelection.SELECTION_STATUS.SELECTED, selectionInstance.getSelectionStatus(4));
+               assert.equal(HierarchySelection.SELECTION_STATUS.NOT_SELECTED, selectionInstance.getSelectionStatus(5));
+            });
+
+            it('selected root, node in excludedKeys', function() {
+               cfg = {
+                  selectedKeys: [null],
+                  excludedKeys: [2],
+                  items: allData,
+                  strategy: 'allData'
+               };
+               selectionInstance = new HierarchySelection(cfg);
+               assert.equal(HierarchySelection.SELECTION_STATUS.PARTIALLY_SELECTED, selectionInstance.getSelectionStatus(null));
+               assert.equal(HierarchySelection.SELECTION_STATUS.PARTIALLY_SELECTED, selectionInstance.getSelectionStatus(1));
+               assert.equal(HierarchySelection.SELECTION_STATUS.NOT_SELECTED, selectionInstance.getSelectionStatus(2));
+               assert.equal(HierarchySelection.SELECTION_STATUS.NOT_SELECTED, selectionInstance.getSelectionStatus(3));
+               assert.equal(HierarchySelection.SELECTION_STATUS.NOT_SELECTED, selectionInstance.getSelectionStatus(4));
+               assert.equal(HierarchySelection.SELECTION_STATUS.SELECTED, selectionInstance.getSelectionStatus(5));
+               assert.equal(HierarchySelection.SELECTION_STATUS.SELECTED, selectionInstance.getSelectionStatus(6));
+               assert.equal(HierarchySelection.SELECTION_STATUS.SELECTED, selectionInstance.getSelectionStatus(7));
+            });
+
+            it('not selected key', function() {
+               cfg = {
+                  selectedKeys: [],
+                  excludedKeys: [],
+                  items: allData,
+                  strategy: 'allData'
+               };
+               selectionInstance = new HierarchySelection(cfg);
+               assert.equal(HierarchySelection.SELECTION_STATUS.NOT_SELECTED, selectionInstance.getSelectionStatus(1));
             });
          });
       });

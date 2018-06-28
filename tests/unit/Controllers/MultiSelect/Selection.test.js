@@ -275,5 +275,19 @@ define([
          status = selectionInstance.getSelectionStatus(4);
          assert.equal(Selection.SELECTION_STATUS.SELECTED, status);
       });
+
+      it('setItems', function() {
+         cfg = {
+            selectedKeys: [],
+            excludedKeys: [],
+            items: new RecordSet({
+               rawData: [],
+               idProperty: 'id'
+            })
+         };
+         selectionInstance = new Selection(cfg);
+         selectionInstance.setItems(items);
+         assert.deepEqual(selectionInstance._items, items);
+      });
    });
 });
