@@ -113,7 +113,7 @@ define('Controls-demo/Suggest/Suggest', [
                      items.setMetaData({
                         tabs: [{id: 1, title: 'Вкладка'}, {id: 2, title: 'Вкладка2'}],
                         more: items.getMetaData().more,
-                        result: new Model({
+                        results: new Model({
                            rawData: {
                               tabsSelectedKey: query.getWhere()['currentTab'] ? query.getWhere()['currentTab'] : 1
                            }

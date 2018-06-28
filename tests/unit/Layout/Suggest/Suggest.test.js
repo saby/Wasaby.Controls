@@ -173,7 +173,7 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
             idProperty: 'id'
          });
          queryRecordSet.setMetaData({
-            result: new Model({
+            results: new Model({
                rawData: {
                   tabsSelectedKey: 'testId'
                }
@@ -187,7 +187,7 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
    
          var queryRecordSetEmpty = new RecordSet();
          queryRecordSetEmpty.setMetaData({
-            result: new Model({
+            results: new Model({
                rawData: {
                   tabsSelectedKey: 'testId2'
                }
