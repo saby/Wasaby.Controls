@@ -9,7 +9,7 @@
                 <div class="controls-Path__backButtonArrow icon-View icon-primary{{_breadCrumbsItems.length > 0 ? '' : ' controls-Path__backButtonArrow_outsideBackButton'}}"
                      on:click="_onArrowClick()"></div>
             </div>
-            <Controls.BreadCrumbs attr:class="controls-Path__breadCrumbs {{_breadCrumbsClass}}"
+            <Controls._BreadCrumbs attr:class="controls-Path__breadCrumbs {{_breadCrumbsClass}}"
                                   items="{{_breadCrumbsItems}}"
                                   visibleItems="{{_visibleItems}}"
                                   keyProperty="{{_options.keyProperty}}"
