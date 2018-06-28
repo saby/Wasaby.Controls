@@ -19,6 +19,8 @@ define('Controls/List/ListViewModel',
 
       var ListViewModel = ItemsViewModel.extend([VersionableMixin], {
          _markedItem: null,
+         _dragItems: null,
+         _dragTargetItem: null,
          _draggingItemData: null,
          _dragTargetPosition: null,
          _actions: null,
