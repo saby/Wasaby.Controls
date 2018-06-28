@@ -22,10 +22,9 @@ define('Controls/BreadCrumbs', [
     *
     * @class Controls/BreadCrumbs
     * @extends Core/Control
-    * @mixes Controls/interface/ISource
-    * @mixes Controls/interface/IHighlighter
+    * @mixes Controls/interface/IBreadCrumbs
     * @control
-    * @public
+    * @private
     */
 
    var BreadCrumbs = Control.extend({
