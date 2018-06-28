@@ -42,6 +42,14 @@ function(cMerge, Random) {
             cfg.templateOptions.newRecord = cfg.newRecord;
          }
 
+         if (cfg.context) {
+            cfg.templateOptions.context = cfg.context;
+         }
+
+         if (cfg.linkedContext) {
+            cfg.templateOptions.linkedContext = cfg.linkedContext;
+         }
+
          if (cfg.hasOwnProperty('autoHide')) {
             cfg.closeByExternalClick = cfg.autoHide;
          }
