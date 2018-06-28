@@ -13,11 +13,9 @@ define('Controls/Popup/Opener/BaseController',
           * Вернуть размеры контента
           * */
          getContentSizes: function(container) {
-            var content = container.querySelector(CONTENT_SELECTOR) || container.firstChild;
-
             return {
-               width: content.scrollWidth,
-               height: content.scrollHeight
+               width: container.offsetWidth,
+               height: container.offsetHeight
             };
          },
          getMargins: function(config, container) {
