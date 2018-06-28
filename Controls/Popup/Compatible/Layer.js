@@ -15,13 +15,13 @@ define('Controls/Popup/Compatible/Layer', [
 
    var loadDeferred;
    var compatibleDeps = [
+      'cdn!jquery/3.3.1/jquery-min.js',
       'Lib/Control/Control.compatible',
       'Lib/Control/AreaAbstract/AreaAbstract.compatible',
       'Lib/Control/BaseCompatible/BaseCompatible',
       'Core/vdom/Synchronizer/resources/DirtyCheckingCompatible',
       'View/Runner/Text/markupGeneratorCompatible',
-      'Core/nativeExtensions',
-      'cdn!jquery/3.3.1/jquery-min.js'
+      'Core/nativeExtensions'
    ];
    var defaultLicense = {
       defaultLicense: true
@@ -31,8 +31,7 @@ define('Controls/Popup/Compatible/Layer', [
       return !!document.getElementsByTagName('html')[0].controlNodes;
    }
 
-   function loadDataProviders() {
-      var parallelDef = new ParallelDeferred();
+   function loadDataProviders(parallelDef) {
 
       parallelDef.push(ExtensionsManager.loadExtensions().addErrback(function(err) {
          IoC.resolve('ILogger').error('Layer', 'Can\'t load system extensions', err);
@@ -98,8 +97,6 @@ define('Controls/Popup/Compatible/Layer', [
       window.product = 'продукт никому не нужен?';
 
       //активность???
-
-      return parallelDef.done().getResult();
    }
 
    // function viewSettingsData() {
@@ -213,7 +210,10 @@ define('Controls/Popup/Compatible/Layer', [
 
             deps = (deps || []).concat(compatibleDeps);
 
-            moduleStubs.require(deps).addCallback(function(result) {
+            var parallelDef = new ParallelDeferred(),
+               result;
+
+            var loadDepsDef = moduleStubs.require(deps).addCallback(function(_result) {
                if (window && window.$) {
                   Constants.$win = $(window);
                   Constants.$doc = $(document);
@@ -240,24 +240,27 @@ define('Controls/Popup/Compatible/Layer', [
                   };
                })(jQuery);
 
-               // var tempCompatVal = constants.compat;
-               Constants.compat = true;
-               Constants.systemExtensions = true;
-               Constants.userConfigSupport = true;
-
-               if (typeof window !== 'undefined') {
-                  loadDataProviders().addCallbacks(function() {
-                     finishLoad(loadDeferred, result);
-                  }, function(e) {
-                     IoC.resolve('ILogger').error('Layer', 'Can\'t load data providers', e);
-                     finishLoad(loadDeferred, result);
-                  });
-               } else {
-                  loadDeferred.callback(result);
-               }
+               result = _result;
             }).addErrback(function(e) {
                IoC.resolve('ILogger').error('Layer', 'Can\'t load dependencies', e);
             });
+            parallelDef.push(loadDepsDef);
+
+            // var tempCompatVal = constants.compat;
+            Constants.compat = true;
+            Constants.systemExtensions = true;
+            Constants.userConfigSupport = true;
+
+            if (typeof window !== 'undefined') {
+               loadDataProviders(parallelDef);
+            }
+            parallelDef.done().getResult().addCallbacks(function() {
+               finishLoad(loadDeferred, result);
+            }, function(e) {
+               IoC.resolve('ILogger').error('Layer', 'Can\'t load data providers', e);
+               finishLoad(loadDeferred, result);
+            });
+
          }
          return loadDeferred;
       }
