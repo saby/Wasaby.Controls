@@ -84,13 +84,11 @@ function(cMerge, Random) {
             }
          }
 
-         if (cfg.hasOwnProperty('direction')) {
-            cfg.corner = cfg.corner || {};
-            if (cfg.direction !== 'right' && cfg.direction !== 'left') {
-               cfg.direction = 'left';
-            }
-            cfg.corner.horizontal = revertPosition[cfg.direction];
+         cfg.corner = cfg.corner || {};
+         if (cfg.direction !== 'right' && cfg.direction !== 'left') {
+            cfg.direction = 'left';
          }
+         cfg.corner.horizontal = revertPosition[cfg.direction];
 
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
          this._setSizes(cfg, templateClass);
