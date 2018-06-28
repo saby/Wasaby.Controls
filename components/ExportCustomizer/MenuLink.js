@@ -77,6 +77,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/MenuLink',
             var storage = this._storage;
             return (storage ? storage.load(options.presetNamespace) : Deferred.success(null)).addCallback(function (presets) {
                var items = [];
+               var firstItems = options.firstItems;
+               if (firstItems && firstItems.length) {
+                  items.push.apply(items, firstItems);
+               }
                if (presets && presets.length) {
                   items.push.apply(items, presets);
                }
