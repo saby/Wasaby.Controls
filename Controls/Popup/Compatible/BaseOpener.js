@@ -86,8 +86,10 @@ function(cMerge, Random) {
 
          if (cfg.hasOwnProperty('direction')) {
             cfg.corner = cfg.corner || {};
-            var direction = (cfg.direction === 'right' || cfg.direction === 'left') ? 'horizontal' : 'vertical';
-            cfg.corner[direction] = revertPosition[cfg.direction];
+            if (cfg.direction !== 'right' && cfg.direction !== 'left') {
+               cfg.direction = 'left';
+            }
+            cfg.corner.horizontal = revertPosition[cfg.direction];
          }
 
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
