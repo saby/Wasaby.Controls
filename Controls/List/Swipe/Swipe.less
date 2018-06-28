@@ -1,6 +1,10 @@
 @keyframes itemActionsSwipe {
   0% {
     max-width:0;
+    padding: 0;
+  }
+  10% {
+    padding: 0 @padding_itemActions_action 0 @padding_itemActions_action + @width_itemActions_swipeShadow;
   }
   100% {
     max-width:100%;
