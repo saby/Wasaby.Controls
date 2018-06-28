@@ -42,12 +42,13 @@
          </div>
       </div>
    </Controls.EditAtPlace>
-   <h2>showToolbar</h2>
+   <h2>showToolbar style="withBackground"</h2>
    <Controls.EditAtPlace
       name="edit"
       bind:editObject="_record2"
       enabled="{{true}}"
       showToolbar="{{true}}"
+      style="withBackground"
       on:cancelEdit="_cancelHandler2()"
    >
       <div class="inline_editing" >
@@ -71,4 +72,13 @@
               itemTemplateProperty="itemTemplate"
               source="{{_tabSource}}"
       />
+   <h2>in tabs 2</h2>
+   <Controls.Tabs.Buttons
+           bind:selectedKey='_selectedTab2'
+           keyProperty="id"
+           on:cancelEdit="_cancelHandler4()"
+           on:beforeEndEdit="_beforeEndEdit2()"
+           itemTemplateProperty="itemTemplate"
+           source="{{_tabSource2}}"
+   />
 </div>

@@ -1,0 +1,54 @@
+<div>
+   <Controls.EditAtPlace
+      name="edit"
+      bind:editObject="item"
+      enabled="{{selected}}"
+      style="withoutBorder"
+   >
+      <div>
+         <div class="content_tab_margin  header_demo_class inline_editing controls-accent-text">
+            <ws:partial
+               size="l"
+               template="tmpl!Controls/EditAtPlace/EditingTemplate"
+               fieldName="surname"
+            >
+               <ws:editorTemplate>
+                  <Controls.Input.Text
+                     selectOnClick="{{ false }}"
+                     attr:class="demo_input_width"
+                     size="l"
+                  />
+               </ws:editorTemplate>
+            </ws:partial>
+
+            <ws:partial
+               size="l"
+               template="tmpl!Controls/EditAtPlace/EditingTemplate"
+               fieldName="name"
+            >
+               <ws:editorTemplate>
+                  <Controls.Input.Text
+                     selectOnClick="{{ false }}"
+                     attr:class="demo_input_width"
+                     size="l"
+                  />
+               </ws:editorTemplate>
+            </ws:partial>
+
+            <ws:partial
+               size="l"
+               template="tmpl!Controls/EditAtPlace/EditingTemplate"
+               fieldName="patronymic"
+            >
+               <ws:editorTemplate>
+                  <Controls.Input.Text
+                     selectOnClick="{{ false }}"
+                     attr:class="demo_input_width"
+                     size="l"
+                  />
+               </ws:editorTemplate>
+            </ws:partial>
+         </div>
+      </div>
+   </Controls.EditAtPlace>
+</div>

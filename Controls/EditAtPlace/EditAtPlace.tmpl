@@ -2,7 +2,11 @@
    name="formController"
    on:deactivated="_onDeactivatedHandler()"
 >
-   <div class="controls-EditAtPlaceV {{_options.showToolbar ? 'controls-EditAtPlaceV__withToolbar'}}">
+   <div
+      class="controls-EditAtPlaceV
+      {{_options.showToolbar ? 'controls-EditAtPlaceV__withToolbar'}}
+      {{_isEditing ? 'controls-EditAtPlaceV_isEditing_style_' + (_options.style ? _options.style : 'default')}}"
+   >
       <ws:partial
          template="{{_options.content}}"
          scope="{{_options}}"
@@ -29,4 +33,4 @@
          </div>
       </ws:if>
    </div>
-</Controls.Validate.FormController>;
+</Controls.Validate.FormController>
