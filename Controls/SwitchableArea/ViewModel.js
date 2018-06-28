@@ -1,8 +1,8 @@
 define('Controls/SwitchableArea/ViewModel',
    [
-      'Core/Control'
+      'Core/core-simpleExtend'
    ],
-   function(Control) {
+   function(SimpleExtend) {
 
       'use strict';
 
@@ -12,7 +12,7 @@ define('Controls/SwitchableArea/ViewModel',
          }
       };
 
-      var ViewModel = Control.extend({
+      var ViewModel = SimpleExtend.extend({
          constructor: function(items, selectedKey) {
             ViewModel.superclass.constructor.apply(this, arguments);
             this._items = items;
