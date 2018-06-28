@@ -81,6 +81,7 @@ define('Controls-demo/List/Grid/Grid', [
 
       ModuleClass = BaseControl.extend({
          _template: template,
+         _actionClicked: '',
 
          _showAction: function(action, item) {
             if (item.get('id') === '471329') {
@@ -101,7 +102,7 @@ define('Controls-demo/List/Grid/Grid', [
             return true;
          },
          _onActionClick: function(event, action, item) {
-            console.log(arguments);
+            this._actionClicked = action.title;
          },
          _itemActions: _firstItemActionsArray,
 
