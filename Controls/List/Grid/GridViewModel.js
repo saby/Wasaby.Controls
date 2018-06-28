@@ -220,7 +220,8 @@ define('Controls/List/Grid/GridViewModel', [
                markedKey: cfg.markedKey,
                selectedKeys: cfg.selectedKeys,
                excludedKeys: cfg.excludedKeys,
-               multiSelectVisibility: cfg.multiSelectVisibility
+               multiSelectVisibility: cfg.multiSelectVisibility,
+               itemsReadyCallback: cfg.itemsReadyCallback
             });
          },
 
