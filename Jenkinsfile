@@ -462,11 +462,12 @@ node('controls') {
         dir("./controls/tests/int"){
             tmp_smoke = sh returnStatus:true, script: """
                 source /home/sbis/venv_for_test/bin/activate
-                ${python_ver} smoke_test.py --SERVER_ADDRESS ${smoke_server_address} --BROWSER chrome
+                ${python_ver} start_tests.py --files_to_start smoke_test.py --SERVER_ADDRESS ${server_address} --RESTART_AFTER_BUILD_MODE --BROWSER chrome
                 deactivate
             """
             if ( "${tmp_smoke}" != "0" ) {
-                currentBuild.result = 'ABORTED'
+                currentBuild.result = 'FAILURE'
+                currentBuild.displayName = "#${env.BUILD_NUMBER} SMOKE TEST FAIL"
                 gitlabStatusUpdate()
                 error('Стенд неработоспособен (не прошел smoke test).')
             }
