@@ -340,6 +340,7 @@ define('Controls/List/BaseControl', [
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/List/interface/IBaseControl
     * @mixes Controls/interface/IRemovable
+    * @mixes Controls/interface/IEditInPlace
     * @control
     * @public
     * @category List
