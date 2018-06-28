@@ -1,4 +1,4 @@
-define("File/ResourceGetter/DropArea/replaceDir", ["require", "exports", "Core/ParallelDeferred", "Core/Deferred", "File/Error/UnknownType", "File/Error/UploadFolder", "File/LocalFile", "Core/helpers/createGUID"], function (require, exports, ParallelDeferred, Deferred, UnknownTypeError, UploadFolderError, LocalFile, createGUID) {
+define("File/ResourceGetter/DropArea/replaceDir", ["require", "exports", "Core/ParallelDeferred", "Core/Deferred", "File/Error/UnknownType", "File/Error/UploadFolder", "File/LocalFile", "File/Directory"], function (require, exports, ParallelDeferred, Deferred, UnknownTypeError, UploadFolderError, LocalFile, Directory) {
     "use strict";
     var getParallelDeferred = function (steps) {
         var length = steps.length;
@@ -21,13 +21,16 @@ define("File/ResourceGetter/DropArea/replaceDir", ["require", "exports", "Core/P
      * @return {Core/Deferred}
      */
     var getFile = function (_a) {
-        var results = _a.results, entry = _a.entry, path = _a.path, folderId = _a.folderId;
+        var results = _a.results, entry = _a.entry, root = _a.root;
         var deferred = new Deferred();
         entry.file(function (file) {
-            results.push(new LocalFile(file, {}, {
-                path: path,
-                folderId: folderId
-            }));
+            var localFile = new LocalFile(file);
+            if (root) {
+                root.push(localFile);
+            }
+            else {
+                results.push(localFile);
+            }
             deferred.callback();
         });
         return deferred;
@@ -36,11 +39,11 @@ define("File/ResourceGetter/DropArea/replaceDir", ["require", "exports", "Core/P
      * Читает содержимое директории Entry и запускает рекурсивный обход по ним
      */
     var readDirectory = function (_a) {
-        var results = _a.results, entry = _a.entry, path = _a.path, folderId = _a.folderId;
+        var results = _a.results, entry = _a.entry, root = _a.root;
         var deferred = new Deferred();
         var dirReader = entry.createReader();
         dirReader.readEntries(function (entries) {
-            deferred.dependOn(readEntries({ results: results, entries: entries, path: path, folderId: folderId }));
+            deferred.dependOn(readEntries({ results: results, entries: entries, root: root }));
         });
         return deferred;
     };
@@ -48,21 +51,28 @@ define("File/ResourceGetter/DropArea/replaceDir", ["require", "exports", "Core/P
      * Читает Entry
      */
     var readEntry = function (_a) {
-        var results = _a.results, entry = _a.entry, _b = _a.path, path = _b === void 0 ? '' : _b, folderId = _a.folderId;
+        var results = _a.results, entry = _a.entry, root = _a.root;
         if (!entry) {
             return Deferred.fail(new UnknownTypeError({
-                fileName: path
+                fileName: root ? root.getName() : ''
             }));
         }
         if (entry.isFile) {
-            return getFile({ results: results, entry: entry, path: path, folderId: folderId });
+            return getFile({ results: results, entry: entry, root: root });
         }
         if (entry.isDirectory) {
-            var folder = createGUID();
+            var folder = new Directory({
+                name: entry.name
+            });
+            if (root) {
+                root.push(folder);
+            }
+            else {
+                results.push(folder);
+            }
             return readDirectory({
                 entry: entry,
-                path: path + entry.name + "/",
-                folderId: folderId ? folderId.concat(folder) : [folder],
+                root: folder,
                 results: results
             });
         }
@@ -72,9 +82,9 @@ define("File/ResourceGetter/DropArea/replaceDir", ["require", "exports", "Core/P
      * @return {Core/Deferred.<Array.<File | Error>>}
      */
     readEntries = function (_a) {
-        var results = _a.results, entries = _a.entries, path = _a.path, folderId = _a.folderId;
+        var results = _a.results, entries = _a.entries, root = _a.root;
         return getParallelDeferred(entries.map(function (entry) {
-            return readEntry({ results: results, entry: entry, path: path, folderId: folderId });
+            return readEntry({ results: results, entry: entry, root: root });
         }));
     };
     /**

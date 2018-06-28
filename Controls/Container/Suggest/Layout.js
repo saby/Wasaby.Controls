@@ -79,11 +79,10 @@ define('Controls/Container/Suggest/Layout',
             if (resultData) {
                var data = resultData.data;
                var metaData = data && data.getMetaData();
+               var result = metaData.results;
    
-               if (metaData) {
-                  if (metaData[CURRENT_TAB_META_FIELD] && self._tabsSelectedKey !== metaData[CURRENT_TAB_META_FIELD]) {
-                     self._tabsSelectedKey = metaData[CURRENT_TAB_META_FIELD];
-                  }
+               if (result && result.get(CURRENT_TAB_META_FIELD)) {
+                  self._tabsSelectedKey = result.get(CURRENT_TAB_META_FIELD);
                }
             }
    
@@ -213,8 +212,7 @@ define('Controls/Container/Suggest/Layout',
          },
    
          _tabsSelectedKeyChanged: function(event, key) {
-            this._tabsSelectedKey = key;
-            _private.updateFilter(this, this._searchValue, this._tabsSelectedKey);
+            _private.updateFilter(this, this._searchValue, key);
          },
          
          _select: function(event, item) {

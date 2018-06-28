@@ -4,7 +4,8 @@ import Deferred = require("Core/Deferred");
 import UnknownTypeError = require("File/Error/UnknownType");
 import UploadFolderError = require("File/Error/UploadFolder");
 import LocalFile = require("File/LocalFile");
-import createGUID = require("Core/helpers/createGUID");
+import Directory = require("File/Directory");
+import {IResource} from "File/IResource";
 
 type DirectoryReader = {
     readEntries(successCallback: (entries: Array<Entry>) => void): void;
@@ -17,7 +18,7 @@ type Entry = null | {
     createReader(): DirectoryReader;
 }
 
-type Resource = LocalFile | Error;
+type Resource = IResource | Error;
 type Resources = Array<Resource>
 
 let getParallelDeferred = <T>(steps): Deferred<Array<T>> => {
@@ -41,15 +42,11 @@ let getParallelDeferred = <T>(steps): Deferred<Array<T>> => {
 /**
  * @typedef {Object} ReadConfig
  * @property {Array.<File/LocalFile | Error>} results
- * @property {String} [path] Путь до файла
- * @property {Array.<String>} [folderId] набор uid директорий.
- * Необходимо для последующего построения правильной иерархии на сервисе при загрузке каждым отдельным файлом
- * На path опираться нельзя т.к. можем перепутать директории с разным локальным рутом, который точно нам не известен
+ * @property {File/Directory} [root]
  */
 type ReadConfig = {
     results: Resources;
-    path?: string;
-    folderId?: Array<string>;
+    root?: Directory;
 }
 
 /**
@@ -76,13 +73,15 @@ let readEntries: (cfg: EntriesReadConfig) => Deferred<Resources>;
  * Читает файл из Entry
  * @return {Core/Deferred}
  */
-let getFile = ({results, entry, path, folderId}: EntryReadConfig): Deferred => {
+let getFile = ({results, entry, root}: EntryReadConfig): Deferred => {
     let deferred = new Deferred();
     entry.file((file: File) => {
-        results.push(new LocalFile(file, {}, {
-            path,
-            folderId
-        }));
+        let localFile = new LocalFile(file);
+        if (root) {
+            root.push(localFile);
+        } else {
+            results.push(localFile);
+        }
         deferred.callback();
     });
     return deferred;
@@ -91,11 +90,11 @@ let getFile = ({results, entry, path, folderId}: EntryReadConfig): Deferred => {
 /**
  * Читает содержимое директории Entry и запускает рекурсивный обход по ним
  */
-let readDirectory = ({results, entry, path, folderId}: EntryReadConfig): Deferred => {
+let readDirectory = ({results, entry, root}: EntryReadConfig): Deferred => {
     let deferred = new Deferred();
     let dirReader = entry.createReader();
     dirReader.readEntries((entries: Array<Entry>) => {
-        deferred.dependOn(readEntries({results, entries, path, folderId}));
+        deferred.dependOn(readEntries({results, entries, root}));
     });
     return deferred;
 };
@@ -103,21 +102,27 @@ let readDirectory = ({results, entry, path, folderId}: EntryReadConfig): Deferre
 /**
  * Читает Entry
  */
-let readEntry = ({results, entry, path = '', folderId}: EntryReadConfig): Deferred => {
+let readEntry = ({results, entry, root}: EntryReadConfig): Deferred => {
     if (!entry) {
         return Deferred.fail(new UnknownTypeError({
-            fileName: path
+            fileName: root ? root.getName(): ''
         }));
     }
     if (entry.isFile) {
-        return getFile({results, entry, path, folderId});
+        return getFile({results, entry, root});
     }
     if (entry.isDirectory) {
-        let folder = createGUID();
+        let folder = new Directory({
+            name: entry.name
+        });
+        if (root) {
+            root.push(folder);
+        } else {
+            results.push(folder);
+        }
         return readDirectory({
             entry,
-            path: path + entry.name + "/",
-            folderId: folderId? folderId.concat(folder): [folder],
+            root: folder,
             results
         });
     }
@@ -127,10 +132,10 @@ let readEntry = ({results, entry, path = '', folderId}: EntryReadConfig): Deferr
  * Обходит содержимое набора из Entry
  * @return {Core/Deferred.<Array.<File | Error>>}
  */
-readEntries = ({results, entries, path, folderId}: EntriesReadConfig): Deferred => {
+readEntries = ({results, entries, root}: EntriesReadConfig): Deferred => {
     return getParallelDeferred<Resource | Resources>(
         entries.map((entry: Entry) => {
-            return readEntry({results, entry, path, folderId})
+            return readEntry({results, entry, root})
         })
     );
 };

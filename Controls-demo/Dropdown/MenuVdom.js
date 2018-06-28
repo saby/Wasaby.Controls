@@ -138,6 +138,14 @@ define('Controls-demo/Dropdown/MenuVdom', [
             }
             return this._createMemory(items);
          },
+         _getAdditionalData: function() {
+            var items = cClone(this._defaultItems);
+            var additionalProperty = 'additional';
+            for (var i = 3; i < items.length; i++) {
+               items[i][additionalProperty] = true;
+            }
+            return this._createMemory(items);
+         },
          footerClickHandler: function() {
             alert('Обработка клика по футеру');
          }

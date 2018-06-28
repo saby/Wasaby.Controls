@@ -61,6 +61,23 @@ define('Controls/Path', [
       }
    };
 
+   /**
+    * Breadcrumbs with back button.
+    *
+    * @class Controls/Path
+    * @extends Core/Control
+    * @mixes Controls/interface/IBreadCrumbs
+    * @control
+    * @public
+    *
+    * @demo Controls-demo/BreadCrumbs/BreadCrumbs
+    */
+
+   /**
+    * @event Controls/Path#arrowActivated Happens after clicking the button "View record".
+    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    */
+
    var Path = Control.extend({
       _template: template,
       _backButtonCaption: '',

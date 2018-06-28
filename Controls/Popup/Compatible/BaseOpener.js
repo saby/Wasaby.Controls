@@ -159,7 +159,7 @@ function(cMerge, randomId) {
             cfg.minWidth = dimensionsMinWidth ? parseInt(dimensionsMinWidth, 10) : null;
          }
          if (!cfg.maxWidth) {
-            cfg.maxWidth = dimensions.maxWidth ? parseInt(dimensions.maxWidth, 10) : null;
+            cfg.maxWidth = parseInt(cfg.width || dimensions.maxWidth, 10) || null;
          }
 
          cfg.minWidth = cfg.minWidth || cfg.maxWidth;

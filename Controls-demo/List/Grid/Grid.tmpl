@@ -7,10 +7,11 @@
             <ws:content>
                <Controls.List.MassSelector>
                   <Controls.Grid
-                                attr:class="demo-Grid__control test_grid_1"
+                                attr:class="demo-Grid__control"
                                 keyProperty="id"
                                 displayProperty="title"
                                 markedKey="{{448390}}"
+                                showRowSeparator="{{true}}"
                                 multiSelectVisibility="visible"
                                 header="{{gridHeader}}"
                                 itemTemplate="tmpl!Controls-demo/List/Grid/DemoItem"
@@ -19,61 +20,81 @@
                                 on:actionClick="_onActionClick()"
                                 itemActionVisibilityCallback="{{_showAction}}"
                                 itemActionsType="outside"
-                                itemsGroup="{{_itemsGroup}}"
                                 columns="{{gridColumns}}">
                   </Controls.Grid>
                </Controls.List.MassSelector>
             </ws:content>
          </Controls.Container.Scroll>
       </Controls.Container.MassSelector>
+      <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+         <ws:content>
+            <Controls.Grid
+                    attr:class="demo-Grid__control"
+                    leftPadding="S"
+                    rightPadding="M"
+                    rowSpacing="M"
+                    keyProperty="id"
+                    displayProperty="title"
+                    markedKey="{{448390}}"
+                    showRowSeparator="{{true}}"
+                    header="{{gridHeader}}"
+                    itemTemplate="tmpl!Controls-demo/List/Grid/DemoItem"
+                    source = "{{_viewSource}}"
+                    itemActions="{{_itemActions}}"
+                    on:actionClick="_onActionClick()"
+                    itemActionVisibilityCallback="{{_showAction}}"
+                    columns="{{gridColumns}}">
+            </Controls.Grid>
+         </ws:content>
+      </Controls.Container.Scroll>
+   </div>
+   <div class="demo-Grid__container">
       <Controls.Container.MassSelector
               selectedKeys="{{['448390']}}"
-              name="massSelector2">
+              name="massSelector">
          <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
             <ws:content>
                <Controls.List.MassSelector>
                   <Controls.Grid
-                          attr:class="demo-Grid__control test_grid_2"
+                          attr:class="demo-Grid__control"
+                          leftPadding="M"
+                          rightPadding="L"
                           keyProperty="id"
                           displayProperty="title"
                           markedKey="{{448390}}"
+                          showRowSeparator="{{true}}"
                           multiSelectVisibility="visible"
-                          header="{{gridHeader}}"
                           itemTemplate="tmpl!Controls-demo/List/Grid/DemoItem"
                           source = "{{_viewSource}}"
                           itemActions="{{_itemActions}}"
                           on:actionClick="_onActionClick()"
                           itemActionVisibilityCallback="{{_showAction}}"
+                          itemActionsType="outside"
                           columns="{{gridColumns}}">
                   </Controls.Grid>
                </Controls.List.MassSelector>
             </ws:content>
          </Controls.Container.Scroll>
       </Controls.Container.MassSelector>
-      <!--<Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+      <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
          <ws:content>
             <Controls.Grid
-                          attr:class="demo-Grid__control test_grid_3"
-                          keyProperty="id"
-                          displayProperty="title"
-                          markedKey="{{448390}}"
-                          items="{{gridData.catalog}}"
-                          header="{{gridHeader}}"
-                          showRowSeparator="{{true}}"
-                          columns="{{gridColumns}}">
+                    attr:class="demo-Grid__control"
+                    leftPadding="L"
+                    rightPadding="XL"
+                    rowSpacing="L"
+                    keyProperty="id"
+                    displayProperty="title"
+                    markedKey="{{448390}}"
+                    showRowSeparator="{{true}}"
+                    itemTemplate="tmpl!Controls-demo/List/Grid/DemoItem"
+                    source = "{{_viewSource}}"
+                    itemActions="{{_itemActions}}"
+                    on:actionClick="_onActionClick()"
+                    itemActionVisibilityCallback="{{_showAction}}"
+                    columns="{{gridColumns}}">
             </Controls.Grid>
          </ws:content>
-      </Controls.Container.Scroll>-->
-      <!--<Controls.Container.Scroll attr:class="demo-Grid__wrapper">
-         <ws:content>
-            <Controls.Grid
-                          attr:class="demo-Grid__control test_grid_4"
-                          keyProperty="id"
-                          items="{{gridData.tasks}}"
-                          stickyFields="{{['photo']}}"
-                          columns="{{tasksColumns}}">
-            </Controls.Grid>
-         </ws:content>
-      </Controls.Container.Scroll>-->
+      </Controls.Container.Scroll>
    </div>
 </div>

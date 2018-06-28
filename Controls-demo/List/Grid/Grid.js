@@ -7,7 +7,7 @@ define('Controls-demo/List/Grid/Grid', [
    'tmpl!Controls-demo/List/Grid/DemoBalancePrice',
    'tmpl!Controls-demo/List/Grid/DemoCostPrice',
    'tmpl!Controls-demo/List/Grid/DemoHeaderCostPrice',
-
+   'tmpl!Controls-demo/List/Grid/DemoName',
    'tmpl!Controls-demo/List/Grid/DemoTasksPhoto',
    'tmpl!Controls-demo/List/Grid/DemoTasksDescr',
    'tmpl!Controls-demo/List/Grid/DemoTasksReceived',
@@ -111,32 +111,11 @@ define('Controls-demo/List/Grid/Grid', [
          }),
 
          gridData: GridData,
-         _itemsGroup: {
-            method: function(item) {
-               if (item.get('costPrice') === null) {
-                  return 'withoutPrice';
-               }
-               if (item.get('costPrice') < 100) {
-                  return 'between0and100';
-               }
-               if (item.get('costPrice') > 100 && item.get('costPrice') < 200) {
-                  return 'between100and200';
-               }
-               if (item.get('costPrice') > 200 && item.get('costPrice') < 300) {
-                  return 'between200and300';
-               }
-               if (item.get('costPrice') > 300 && item.get('costPrice') < 400) {
-                  return 'between300and400';
-               }
-               if (item.get('costPrice') > 400) {
-                  return 'more400';
-               }
-            }
-         },
          gridColumns: [
             {
                displayProperty: 'name',
-               width: '1fr'
+               width: '1fr',
+               template: 'tmpl!Controls-demo/List/Grid/DemoName'
             },
             {
                displayProperty: 'price',
