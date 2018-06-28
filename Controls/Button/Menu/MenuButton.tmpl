@@ -1,32 +1,25 @@
-<div class="controls-MenuButton" >
+<Controls.Dropdown.Container
+        source="{{_options.source}}"
+        keyProperty="{{_options.keyProperty}}"
+        parentProperty="{{_options.parentProperty}}"
+        nodeProperty="{{_options.nodeProperty}}"
+        itemTemplateProperty="{{_options.itemTemplateProperty}}"
+        itemTemplate="{{_options.itemTemplate || _itemTemplate}}"
+        headTemplate="{{_options.headTemplate}}"
+        contentTemplate="{{_options.contentTemplate}}"
+        footerTemplate="{{_options.footerTemplate}}"
+        headConfig="{{_options.headConfig}}"
+        icon="{{_options.icon}}"
+        caption="{{_options.caption}}"
+        className="{{_offsetClassName}}"
+        showHeader="{{_options.showHeader}}"
+        filter="{{_filter}}"
+        lazyItemsLoad="{{true}}"
+        on:selectedItemsChanged="_onItemClickHandler()"
+        on:pinClicked="_onPinClickHandler()"
+        class="controls-MenuButton">
    <Controls.Button icon="{{_options.icon}}"
                     caption="{{_options.caption}}"
                     style="{{_options.style}}"
-                    size="{{_options.size}}"
-                    name="popupTarget"
-                    on:click="_open()"/>
-
-   <Controls.Dropdown.Opener name="DropdownOpener" className="{{_offsetClassName}}">
-      <ws:popupOptions>
-         <ws:eventHandlers onResult="{{_onResult}}"/>
-         <ws:templateOptions
-                 keyProperty="{{_options.keyProperty}}"
-                 parentProperty="{{_options.parentProperty}}"
-                 nodeProperty="{{_options.nodeProperty}}"
-                 itemTemplateProperty="{{_options.itemTemplateProperty}}"
-                 itemTemplate="{{_options.itemTemplate}}"
-                 contentTemplate="{{_options.contentTemplate}}"
-                 footerTemplate="{{_options.footerTemplate}}"
-                 showHeader="{{_options.showHeader === false ? false : true}}"
-                 headConfig="{{_options.headConfig}}"
-                 icon="{{_options.icon}}"
-                 caption="{{_options.caption}}">
-
-                 <!--<ws:headConfig
-                      caption="{{_options.headConfig.caption || _options.caption}}"
-                      menuStyle="{{_options.headConfig.menuStyle}}"
-                      icon="{{_options.headConfig.icon || _options.icon}}"/>-->
-         </ws:templateOptions>
-      </ws:popupOptions>
-   </Controls.Dropdown.Opener>
-</div>
+                    size="{{_options.size}}"/>
+</Controls.Dropdown.Container>

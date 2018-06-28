@@ -55,9 +55,7 @@
    overflow: hidden;
    .align-self(center);
 }
-.controls-ComboBox__fieldNotEditable__placeholder {
-   color: @color_ComboBox_placeholder;
-}
+
 .controls-ComboBox__editable-false {
    .controls-InputRender__field{
       display: none;
@@ -70,11 +68,14 @@
          text-overflow: ellipsis;
       }
    }
+   .controls-ComboBox__fieldNotEditable__placeholder {
+      color: @color_ComboBox_placeholder;
+   }
 }
 
 //Стили пикера
 .controls-ComboBox__picker {
-   .box-shadow(@box-shadow_ComboBox_picker); //todo: тень вокруг пикера, нужно включить её на онлайне
+   .box-shadow(@box-shadow_ComboBox_picker);
    background: @background_ComboBox-picker;
    overflow-y: hidden !important; //Если пикер не вмещается в экран, то он навешивает overflow-y: auto. Тут этот скролл не нужен, так что перебиваем его
    border: @border-width_ComboBox-picker solid @border-color_ComboBox-picker;
@@ -88,6 +89,7 @@
    //а для открытия вверх нужен offset: 1. Переключать offset из комбобокса нереально, т.к. он узнает о том, что пикер открывается вверх
    //уже после расчёта всех отступов. Так что смещаем пикер вниз, если он открывается вверх.
    margin-top: calc(~"1px + "@default-border-width) !important;
+   .box-shadow(@box-shadow_ComboBox_picker_revert);
 }
 
 .controls-ComboBox__scrollContainer {

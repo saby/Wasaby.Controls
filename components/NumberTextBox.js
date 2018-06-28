@@ -247,6 +247,14 @@ define('SBIS3.CONTROLS/NumberTextBox', [
            this._hideEmptyDecimals();
        },
 
+      _focusOutHandler: function() {
+
+         //Сбрасываем CTRL_KEY и SHIFT_KEY так как keyUp не отработает при потере фокуса
+         //Ошибка: https://online.sbis.ru/opendoc.html?guid=2891bd28-e697-4866-be9a-ab7612eaa901
+         this._CTRL_KEY = this._SHIFT_KEY = false;
+         NumberTextBox.superclass._focusOutHandler.apply(this, arguments);
+      },
+
       _inputFocusInHandler: function() {
          var text = this._getInputValue();
          // Показывать нулевую дробную часть при фокусировки не зависимо от опции hideEmptyDecimals
@@ -275,7 +283,9 @@ define('SBIS3.CONTROLS/NumberTextBox', [
 
       setText: function(text){
          var newText = this._isEmptyValue(text) ? text : this._formatText(text);
-         this._setNumericValue(newText);
+         if (newText !== this._options.text) {
+            this._setNumericValue(newText);
+         }
          NumberTextBox.superclass.setText.call(this, newText);
          if(!this.isActive() && this._options.hideEmptyDecimals) {
             this._hideEmptyDecimals();

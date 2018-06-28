@@ -2,7 +2,7 @@
     <div class="ws-window-titlebar-custom controls-FavoriteEditDialog__title">
         <span class="ws-float-area-title">{[Параметры]}</span>
         <div class="controls-FavoriteEditDialog__titleButtons">
-            <SBIS3.CONTROLS:DropdownList
+            <SBIS3.CONTROLS.DropdownList
                     multiselect="{{false}}"
                     idProperty="id"
                     displayProperty="title">
@@ -20,26 +20,26 @@
                         <ws:Object><ws:Number>{{'record/globalParams'|mutable:0}}</ws:Number></ws:Object>
                     </ws:Array>
                 </ws:selectedKeys>
-            </SBIS3.CONTROLS:DropdownList>
-            <SBIS3.CONTROLS:Button:IconButton if="{{ editMode }}" className="controls-FavoriteEditDialog__deleteButton"
+            </SBIS3.CONTROLS.DropdownList>
+            <SBIS3.CONTROLS.Button.IconButton if="{{ editMode }}" className="controls-FavoriteEditDialog__deleteButton"
                     command="notify"
                     commandArgs="{{ ['onDestroyModel'] }}"
                     icon="sprite:icon-24 icon-Erase icon-error"
                     tooltip="{[Удалить]}">
-            </SBIS3.CONTROLS:Button:IconButton>
-            <SBIS3.CONTROLS:Button className="controls-FavoriteEditDialog__addButton" caption="Сохранить" primary="{{ true }}" command="update" name="saveButton">
+            </SBIS3.CONTROLS.Button.IconButton>
+            <SBIS3.CONTROLS.Button className="controls-FavoriteEditDialog__addButton" caption="Сохранить" primary="{{ true }}" command="update" name="saveButton">
                 <ws:commandArgs>
                     <ws:Array>
                         <ws:Object closePanelAfterSubmit="{{ true }}"/>
                     </ws:Array>
                 </ws:commandArgs>
-            </SBIS3.CONTROLS:Button>
+            </SBIS3.CONTROLS.Button>
         </div>
     </div>
-    <SBIS3.CONTROLS:TextBox selectOnClick="{{ true }}" placeholder="{{ textValue }}" text="{{ 'record/editedTextValue'|bind:(editMode ? textValue : ''), 'fromProperty' }}" className="controls-FavoriteEditDialog__textValue-editor"/>
+    <SBIS3.CONTROLS.TextBox selectOnClick="{{ true }}" placeholder="{{ textValue }}" text="{{ 'record/editedTextValue'|bind:(editMode ? textValue : ''), 'fromProperty' }}" className="controls-FavoriteEditDialog__textValue-editor"/>
     <ws:if data="{{_items.length}}">
         <ws:for data="key, value in _items">
-            <SBIS3.CONTROLS:CheckBox
+            <SBIS3.CONTROLS.CheckBox
                     checked="{{ ('record/toSaveFields/' + value.id)|mutable:true }}"
                     caption="<span class='gray-color {{ !value.checkBoxCaption ? ' ws-hidden' }}'>{{ value.checkBoxCaption }}: </span>{{ value.value }}"
                     cssClassName="controls-FavoriteEditDialog__editor"

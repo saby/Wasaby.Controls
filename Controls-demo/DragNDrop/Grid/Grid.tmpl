@@ -1,0 +1,13 @@
+<Controls.Grid
+        on:dragStart="_dragStart()"
+        keyProperty="id"
+        displayProperty="title"
+        itemsDragNDrop="{{true}}"
+        multiSelectVisibility="visible"
+        header="{{_gridHeader}}"
+        source="{{_viewSource}}"
+        columns="{{_gridColumns}}">
+   <ws:dragAvatarTemplate>
+      <ws:partial template="Controls/DragNDrop/Avatar"/>
+   </ws:dragAvatarTemplate>
+</Controls.Grid>

@@ -13,6 +13,7 @@ define('Controls/Header', [
     * @extends Core/Control
     * @control
     * @public
+    * @demo Controls-demo/Headers/headerDemo
     */
 
    /**

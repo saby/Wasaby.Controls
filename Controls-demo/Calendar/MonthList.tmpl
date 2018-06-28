@@ -1,0 +1,21 @@
+<div style="margin: 50px;">
+   <div>month: {{_month}}</div>
+   <div>startValue: {{_startValue}}</div>
+   <div>endValue: {{_endValue}}</div>
+   <div>selectionProcessing: {{_selectionProcessing}}</div>
+   <div>selectionBaseValue: {{_selectionBaseValue}}</div>
+   <div>selectionHoveredValue: {{_selectionHoveredValue}}</div>
+   <Controls.Calendar.MonthList
+      attr:style="margin: 10px; height: 700px; border: red;"
+      bind:startValue="_startValue"
+      bind:endValue="_endValue"
+      bind:month="_month"
+      bind:selectionProcessing="_selectionProcessing"
+      bind:selectionHoveredValue="_selectionHoveredValue"
+      bind:selectionBaseValue="_selectionBaseValue"
+   >
+   </Controls.Calendar.MonthList>
+   <Controls.Button caption="_setEndValue" style="buttonAdd" on:click="_setEndValue()"/>
+   <Controls.Button caption="_setselectionProcessing" style="buttonAdd" on:click="_setSelectionProcessing()"/>
+   <Controls.Button caption="_setSelection" style="buttonAdd" on:click="_setSelection()"/>
+</div>

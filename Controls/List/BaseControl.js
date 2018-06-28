@@ -1,6 +1,7 @@
 define('Controls/List/BaseControl', [
    'Core/Control',
    'Core/IoC',
+   'Core/core-clone',
    'tmpl!Controls/List/BaseControl/BaseControl',
    'Controls/List/resources/utils/ItemsUtil',
    'require',
@@ -16,6 +17,7 @@ define('Controls/List/BaseControl', [
    'css!Controls/List/BaseControl/BaseControl'
 ], function(Control,
    IoC,
+   cClone,
    BaseControlTpl,
    ItemsUtil,
    require,
@@ -84,7 +86,7 @@ define('Controls/List/BaseControl', [
                   self._virtualScroll.prependItems(addedItems.getCount());
                }
                return addedItems;
-               
+
                //обновить начало/конец видимого диапазона записей и высоты распорок
                //_private.applyVirtualWindow(self, self._virtualScroll.getVirtualWindow());
             }).addErrback(function(error) {
@@ -288,7 +290,7 @@ define('Controls/List/BaseControl', [
          if (context && self._isTouch) {
             return false;
          }
-         if (showActions) {
+         if (showActions && showActions.length) {
             var
                rs = new RecordSet({rawData: showActions});
             childEvent.nativeEvent.preventDefault();
@@ -298,7 +300,8 @@ define('Controls/List/BaseControl', [
             self._children.itemActionsOpener.open({
                opener: self._children.listView,
                target: !context ? childEvent.target : false,
-               templateOptions: {items: rs}
+               templateOptions: {items: rs},
+               nativeEvent: context ? childEvent.nativeEvent : false
             });
             self._menuIsShown = true;
          }
@@ -315,6 +318,7 @@ define('Controls/List/BaseControl', [
             self._children.itemActionsOpener.close();
          }
          self._listViewModel.setActiveItem(null);
+         self._children.swipeControl.closeSwipe();
          self._menuIsShown = false;
          self._forceUpdate();
       },
@@ -457,6 +461,10 @@ define('Controls/List/BaseControl', [
             _private.reload(this, newOptions.dataLoadCallback,  newOptions.dataLoadErrback);
          }
 
+         if (this._options.selectedKeys !== newOptions.selectedKeys) {
+            this._listViewModel.select(newOptions.selectedKeys);
+         }
+
       },
 
       _beforeUnmount: function() {
@@ -503,11 +511,7 @@ define('Controls/List/BaseControl', [
       },
 
       _onCheckBoxClick: function(e, key, status) {
-         if (status === 1) {
-            this._listViewModel.unselect([key]);
-         } else {
-            this._listViewModel.select([key]);
-         }
+         this._notify('onCheckBoxClick', [key, status]);
       },
 
       _listSwipe: function(event, itemData, childEvent) {
@@ -515,11 +519,7 @@ define('Controls/List/BaseControl', [
          this._children.itemActionsOpener.close();
          if (direction === 'right' && itemData.multiSelectVisibility) {
             var status = itemData.multiSelectStatus;
-            if (status === 1) {
-               this._listViewModel.unselect([itemData.key]);
-            } else {
-               this._listViewModel.select([itemData.key]);
-            }
+            this._notify('onCheckBoxClick', [itemData.key, status]);
          }
          if (direction === 'right' || direction === 'left') {
             var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.viewConfig.keyProperty);
@@ -551,6 +551,13 @@ define('Controls/List/BaseControl', [
 
       reload: function() {
          return _private.reload(this, this._options.dataLoadCallback, this._options.dataLoadErrback);
+      },
+
+      _onGroupClick: function(e, item, baseEvent) {
+         // if clicked on group expander element
+         if (baseEvent.target.className.indexOf('controls-ListView__groupExpander') !== -1) {
+            this._listViewModel.toggleGroup(item);
+         }
       },
 
       _onItemClick: function(e, item) {
@@ -645,9 +652,15 @@ define('Controls/List/BaseControl', [
       _itemMouseDown: function(event, itemData, domEvent) {
          var
             items,
+            dragItemIndex,
             dragStartResult;
          if (this._options.itemsDragNDrop) {
-            items = [itemData.item];
+            items = cClone(this._options.selectedKeys) || [];
+            dragItemIndex = items.indexOf(itemData.key);
+            if (dragItemIndex !== -1) {
+               items.splice(dragItemIndex, 1);
+            }
+            items.unshift(itemData.key);
             dragStartResult = this._notify('dragStart', [items]);
             if (dragStartResult) {
                this._children.dragNDropController.startDragNDrop(dragStartResult, domEvent);
@@ -670,10 +683,10 @@ define('Controls/List/BaseControl', [
             items = dragObject.entity.getItems(),
             dragTarget = this._listViewModel.getDragTargetItem(),
             targetPosition = this._listViewModel.getDragTargetPosition();
-         if (dragTarget) {
+
+         if (dragTarget && this._notify('dragEnd', [items, dragTarget.item, targetPosition.position]) !== false) {
             this._children.moveControl.moveItems(items, dragTarget.item, targetPosition.position);
          }
-         return this._notify('dragEnd', [dragObject]);
       },
 
       _dragLeave: function() {
@@ -704,5 +717,10 @@ define('Controls/List/BaseControl', [
     }
     };*/
    BaseControl._private = _private;
+   BaseControl.getDefaultOptions = function() {
+      return {
+         uniqueKeys: true
+      };
+   };
    return BaseControl;
 });

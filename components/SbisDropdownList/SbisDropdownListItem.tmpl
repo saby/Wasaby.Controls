@@ -1,5 +1,5 @@
 <ws:partial template="tmpl!SBIS3.CONTROLS/DropdownList/DropdownListItem"
             scope="{{...}}"
-            attr:class="{{item.get && item.get('historyItem') && item.get('pinned') ? ' controls-DropdownList-item-pinned'}}
+            attr:class="{{ item.get && item.get('pinned') ? ' controls-DropdownList-item-pinned'}}
                         {{(item.get && !item.get('visible')) ? ' ws-hidden'}}"
 />

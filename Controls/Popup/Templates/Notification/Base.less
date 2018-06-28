@@ -1,0 +1,49 @@
+.controls-Notification {
+  border-style: solid;
+  border-width: @border-width_NotificationBase;
+  box-shadow: @box-shadow_NotificationBase;
+  position: relative;
+  min-height: @min-height_NotificationBase;
+  min-width: @min-width_NotificationBase;
+  margin: @spacing_NotificationBase-between-notifications;
+}
+
+.controls-Notification__error {
+  border-color: @border-color_NotificationBase_error;
+}
+
+.controls-Notification__primary {
+  border-color: @border-color_NotificationBase_primary;
+}
+
+.controls-Notification__done {
+  border-color: @border-color_NotificationBase_done;
+}
+
+.controls-Notification__warning {
+  border-color: @border-color_NotificationBase_warning;
+}
+
+.controls-Notification__content {
+  padding: @padding_NotificationBase-content;
+}
+
+.controls-Notification__closeButton {
+  position: absolute;
+  top: @top_NotificationBase-closeButton;
+  right: @right_NotificationBase-closeButton;
+  z-index: 1;
+}
+
+.controls-Notification__simpleTemplate {
+  display: flex;
+  align-items: center;
+}
+
+.controls-Notification__simpleTemplate-icon {
+  margin-right: @spacing_NotificationBase-between-icon-and-message;
+}
+
+.controls-Notification__simpleTemplate-message {
+  font-size: @font-size_NotificationBase-message;
+}

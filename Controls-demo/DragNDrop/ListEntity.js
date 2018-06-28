@@ -20,7 +20,7 @@ define('Controls-demo/DragNDrop/ListEntity', ['Controls/DragNDrop/Entity/List/It
          },
 
          _getFirstItem: function() {
-            return this._options.items[0];
+            return this._options.firstItem;
          }
       });
 

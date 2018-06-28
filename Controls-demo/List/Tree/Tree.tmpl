@@ -1,6 +1,6 @@
 
 <div>
-   <div class="demo-Grid">
+   <div class="demo-Grid" style="border-bottom: 12px solid #55AA55;">
       <div class="demo-Grid__container">
          <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
             <ws:content>
@@ -8,6 +8,7 @@
                              attr:class="demo-Grid__control"
                              keyProperty="id"
                              parentProperty="Раздел"
+                             itemsGroup="{{_itemsGroup}}"
                              nodeProperty="Раздел@"
                              source = "{{_viewSource}}"
                              columns="{{gridColumns}}"
@@ -21,7 +22,7 @@
          </Controls.Container.Scroll>
       </div>
    </div>
-   <div class="demo-Grid">
+   <div class="demo-Grid" style="border-top: 12px solid #55AA55;">
       <div class="demo-Grid__container">
          <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
             <ws:content>

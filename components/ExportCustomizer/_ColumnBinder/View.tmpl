@@ -3,7 +3,7 @@
       <div class="controls-ExportCustomizer-ColumnBinder-View__title">
          <ws:if data="{{title}}">{{title}}</ws:if><ws:else>{[НастройщикЭкспорта@@Колонки]}</ws:else>
       </div>
-      <SBIS3.CONTROLS:Button:IconButton
+      <SBIS3.CONTROLS.Button.IconButton
          className="controls-ExportCustomizer-ColumnBinder-View__addRows"
          command="addRows"
          size="s"
@@ -12,7 +12,7 @@
          tooltip="{[НастройщикЭкспорта@@Добавить колонки]}"
       />
    </div>
-   <SBIS3.CONTROLS:DataGridView
+   <SBIS3.CONTROLS.DataGridView
       className="controls-DataGridView__hasSeparator controls-ListView__withoutMarker controls-ExportCustomizer-ColumnBinder-View__grid"
       name="controls-ExportCustomizer-ColumnBinder-View__grid"
       items="{{_rows}}"

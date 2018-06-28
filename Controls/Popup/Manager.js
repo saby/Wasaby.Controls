@@ -55,7 +55,6 @@ define('Controls/Popup/Manager',
          },
 
          popupClose: function(id) {
-            _private.fireEventHandler(id, 'onClose');
             ManagerController.remove(id, this.getItemContainer(id));
             return false;
          },
@@ -71,7 +70,7 @@ define('Controls/Popup/Manager',
          fireEventHandler: function(id, event) {
             var element = ManagerController.find(id);
             var args = Array.prototype.slice.call(arguments, 2);
-            if (element && element.popupOptions.eventHandlers && element.popupOptions.eventHandlers.hasOwnProperty(event)) {
+            if (element && element.popupOptions.eventHandlers && typeof element.popupOptions.eventHandlers[event] === 'function') {
                element.popupOptions.eventHandlers[event].apply(element.popupOptions, args);
                return true;
             }
@@ -148,6 +147,7 @@ define('Controls/Popup/Manager',
             var self = this;
             var element = this.find(id);
             if (element) {
+               _private.fireEventHandler(id, 'onClose');
                _private.removeElement.call(this, element, _private.getItemContainer(id), id).addCallback(function() {
                   self._redrawItems();
                   return element;

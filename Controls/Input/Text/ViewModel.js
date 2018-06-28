@@ -59,6 +59,7 @@ define('Controls/Input/Text/ViewModel',
             }
 
             this._options.value = splitValue.before + insert + splitValue.after;
+            this._nextVersion();
 
             return {
                value: splitValue.before + insert + splitValue.after,
@@ -70,6 +71,7 @@ define('Controls/Input/Text/ViewModel',
             this._options.constraint = options.constraint;
             this._options.maxLength = options.maxLength;
             this._options.value = options.value;
+            this._nextVersion();
          }
       });
 

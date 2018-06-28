@@ -260,36 +260,33 @@
     text-align: right;
 }
 
-.controls-LongOperationsPopup__footer__actionsContainer {
+.controls-LongOperationsPopup__footer_actionPause,
+.controls-LongOperationsPopup__footer_actionHideContent {
     position: absolute;
-    margin-right: @long-operations-popup-actions-container-margin-right;
+    margin-right: @long-operations-popup-foot-action-margin-right;
     right: 0;
-}
-
-.controls-LongOperationsPopup__footer_pauseIcon,
-.controls-LongOperationsPopup__hideContentIcon {
     margin-top: @long-operations-popup-foot-but-gap-top;
     cursor: pointer;
 }
 
-.controls-LongOperationsPopup__hideContentIcon:hover {
+.controls-LongOperationsPopup__footer_actionHideContent:hover {
     color: @long-operations-popup-foot-but-hover-color;
 }
 
-.controls-LongOperationsPopup__hiddenContentMode .controls-LongOperationsPopup__hideContentIcon {
+.controls-LongOperationsPopup__hiddenContentMode .controls-LongOperationsPopup__footer_actionHideContent {
     transform: rotate(180deg);
 }
 
-.controls-LongOperationsPopup__footer_pauseIcon {
+.controls-LongOperationsPopup__footer_firstOperationMode .controls-LongOperationsPopup__footer_actionHideContent {
     display: none;
 }
 
-.controls-LongOperationsPopup__footer_firstOperationMode .controls-LongOperationsPopup__footer_pauseIcon {
+.controls-LongOperationsPopup__footer_actionPause {
+    display: none;
+}
+
+.controls-LongOperationsPopup__footer_firstOperationMode .controls-LongOperationsPopup__footer_actionPause {
     display: inline-block;
-}
-
-.controls-LongOperationsPopup__footer_firstOperationMode .controls-LongOperationsPopup__hideContentIcon {
-    display: none;
 }
 
 .controls-LongOperationsPopup__content_list.controls-ListView.controls-ListView__touchMode:not(.controls-ListView__bottomStyle) > .controls-ItemsToolbar {

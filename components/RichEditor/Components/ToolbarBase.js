@@ -141,6 +141,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
             if (editor) {
                this.unsubscribeFrom(editor, 'onFormatChange', this._handlersInstances.format);
             }
+            this._options.linkedEditor = null;
          },
 
          _bindEditor: function() {

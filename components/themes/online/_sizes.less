@@ -84,9 +84,7 @@
 @font-size_stackTemplate_head:                  18px;
 @spacing_stackTemplate_head:                    0 52px 0 12px;
 @top-space_stackTemplate_close-button:          5px;
-
-//DialogTemplate
-@padding_dialogTemplate_content:                0 12px;
+@shadow_stackTemplate_close-button:             0 1px 2px rgba(0,0,0, .15); //todo - в 350 версии будет компонент closeButton, все стили будут на нем
 
 //FieldLink
 @icon-size_FieldLink-button:                    @default-icon-size;
@@ -100,8 +98,6 @@
 @spacing_FieldLink-linkContainer:               4px;
 @spacing_FieldLink-item_inField:                @default-padding;
 @spacing_FieldLink-dropAllLinks:                @default-padding;
-@spacing_FieldLink-indicator:                   2px;
-@height_FieldLink-indicator:                    @default-icon-size - @default-border-width;
 @fieldLink-showAll-shadow-width:                20px;
 
 //FieldLink_Link
@@ -275,7 +271,7 @@
 @spacing_DropdownList-item-history: @spacing_DropdownList_arrowSubMenu;
 @width_DropdownList-marker:     6px;
 @height_DropdownList-marker:    8px;
-@margin-top_DropdownList:       -6px;
+@margin-top_DropdownList:       -8px;
 @margin-left_DropdownList:      -13px;
 @right_DropdownList-icon:       6px;
 @top_DropdownList-icon:         (@height_DropdownList-item - @menu-expand-height) / 2;
@@ -353,6 +349,24 @@
 @padding_Paging-button:            0;
 @border-width_ScrollPaging:        1px 0 0 0;
 
+//VDOM DragNDrop.Avatar
+@width_Avatar:                         210px;
+@height_Avatar:                        48px;
+@border-width_Avatar:                  1px;
+@box-shadow-size_Avatar:               12px;
+@width_Avatar-icon:                    40px;
+@height_Avatar-icon:                   40px;
+@border-radius_Avatar-icon:            8px;
+@margin_Avatar-icon:                   4px 0 4px 4px;
+@icon-size_Avatar-icon:                32px;
+@margin_Avatar-text:                   6px;
+@width_Avatar-textShadow:              24px;
+@font-size_Avatar-mainText:            14px;
+@font-size_Avatar-additionalText:      13px;
+@height_Avatar-counter:                20px;
+@padding_Avatar-counter:               0 6px;
+@font-size_Avatar-counter:             14px;
+
 //VDOM Switch
 @width_Switch:                     46px;
 @height_Switch:                    24px;
@@ -375,11 +389,13 @@
 
 //Suggest
 @width_Suggest-loader:                           16px;
+@height_Suggest-loader:                          16px;
 @spacing_Suggest-loader:                         3px;
+@spacing_Suggest-empty:                          16px;
 
 //Suggest VDOM
 @spacing_Suggest_suggestionsContainer_overInput: 8px;
-@shadow-size_Suggest_suggestionsContainer:       0px 0px 12px 0px;
+@border-width_suggestionsContainer:              1px;
 @vertical-spacing_Suggest_tabs:                  8px;
 
 //CloseButton
@@ -387,7 +403,12 @@
 @border-radius_CloseButton:              2px 0 0 2px;
 @width_CloseButton:                      36px;
 @height_CloseButton:                     28px;
+//TODO Выпилить этот стиль при полном переходе на VDOM
 @font-size_CloseButton:                  23px;
+@font-size_CloseButton_default:          23px;
+@font-size_CloseButton_light:            24px;
+@width_CloseButton_small:                24px;
+@height_CloseButton_small:               24px;
 //tabButton
 @height_tabbutton_mainItem_menuLink:     23px;
 //editAtPlace
@@ -447,6 +468,10 @@
 //FilterButton
 @font-size_FilterButton-icon:            @icon-size_default_medium;
 @font-size_FilterButton-text:            @default-text-size;
+
+//Lookup
+@spacing_Lookup-item:                    4px;
+
 //itemActions
 @height_itemActions_inside:              24px;
 @height_itemAction_outside:              29px;
@@ -547,3 +572,24 @@
 @height_AdditionalParams-arrow:             26px;
 @margin_AdditionalParams:                   6px;
 @margin_AdditionalParams-caption:           6px 0 6px 12px;
+//toggleButton
+@border-width_ToggleButton:               1px;
+@border-radius-ToggleButton:              2px;
+@height-ToggleButton_style_linkMain_size-m:              24px;
+@min-width-ToggleButton_style_linkMain_size-m:           24px;
+@height-ToggleButton_size-m:        28px;
+@min-width-ToggleButton_size-m:     28px;
+@height-ToggleButton_style_linkMain_size-l:              32px;
+@min-width-ToggleButton_style_linkMain_size-l:           32px;
+@padding_ToggleButton-wrapper_m:    0;
+@padding_ToggleButton-wrapper_l:          0;
+//Notification
+@padding_NotificationBase-content: 8px;
+@font-size_NotificationBase-message: 15px;
+@spacing_NotificationBase-between-icon-and-message: 8px;
+@spacing_NotificationBase-between-notifications: 0 16px 16px 0;
+@right_NotificationBase-closeButton: 8px;
+@top_NotificationBase-closeButton: 8px;
+@min-height_NotificationBase: 40px;
+@min-width_NotificationBase: 40px;
+@border-width_NotificationBase: @controls-InformationPopup-border-width;

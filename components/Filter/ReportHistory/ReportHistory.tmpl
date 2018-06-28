@@ -1,7 +1,7 @@
 <div class="controls-ReportBrowser__history">
     <div class="controls-ReportBrowser__history-favorite">
         <div class="controls-ReportBrowser__history-title">{[Избранное]}</div>
-        <SBIS3.CONTROLS:Filter:HistoryView name="ReportFavoriteView"
+        <SBIS3.CONTROLS.Filter.HistoryView name="ReportFavoriteView"
                                            itemsActions="{{ [_unFavoriteAction] }}"
                                            historyId="{{ (historyId + '-favorite') }}"
                                            displayProperty="{{displayProperty}}"
@@ -10,18 +10,18 @@
                                            itemContentTpl="{{ _favoriteItemTpl }}"
                                            useToggle="{{true}}"
                                            itemsSortMethod="{{ _favoriteSortMethod }}">
-        </SBIS3.CONTROLS:Filter:HistoryView>
+        </SBIS3.CONTROLS.Filter.HistoryView>
     </div>
     <div class="controls-ReportBrowser__history-list">
         <div class="controls-ReportBrowser__history-title">{[Ранее отбирались]}</div>
-        <SBIS3.CONTROLS:Filter:HistoryView name="ReportHistoryView"
+        <SBIS3.CONTROLS.Filter.HistoryView name="ReportHistoryView"
                                            itemsActions="{{ [_favoriteAction] }}"
                                            historyId="{{ historyId }}"
                                            displayProperty="{{displayProperty}}"
                                            idProperty="{{idProperty}}"
                                            useToggle="{{true}}"
                                            className="controls-ReportBrowser__history-view">
-        </SBIS3.CONTROLS:Filter:HistoryView>
+        </SBIS3.CONTROLS.Filter.HistoryView>
     </div>
-    <SBIS3.CONTROLS:Action:OpenDialogAction name="editFavorite" initializingWay="local" dialogComponent="SBIS3.CONTROLS/Filter/FavoriteEditDialog"/>
+    <SBIS3.CONTROLS.Action.OpenDialogAction name="editFavorite" initializingWay="local" dialogComponent="SBIS3.CONTROLS/Filter/FavoriteEditDialog"/>
 </div>

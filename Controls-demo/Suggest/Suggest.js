@@ -81,6 +81,7 @@ define('Controls-demo/Suggest/Suggest', [
       _suggest2Value: '',
       _suggest3Value: '',
       _suggest4Value: '',
+      _suggest5Value: '',
       _tabsSelectedKey: 0,
       _suggestState: false,
       _suggestState1:false,

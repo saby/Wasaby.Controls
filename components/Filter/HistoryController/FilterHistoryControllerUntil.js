@@ -91,9 +91,10 @@ define('SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil',
        оригинальная структура кнопки фильтров может меняться прикладными разработчиками,
        и чтобы не нарушать целостность этой структуры, структура из истории аккуртано вмерживается
        в оригинальную, заменяя лишь value и resetValue, и при необходимости сбрасывает value в resetValue */
-      prepareStructureToApply: function(structure, currentStructure, doNotResetIfFound) {
+      prepareStructureToApply: function(structure, currentStructure, doNotResetIfFound, doNotApplyKeys) {
          /* Чтобы не портить текущую историю, сделаем копию (иначе не применится фильтр) */
          var currentStructureCopy = coreClone(currentStructure);
+         doNotApplyKeys = doNotApplyKeys || [];
 
          this.prepareNewStructure(currentStructureCopy, structure);
 
@@ -109,25 +110,27 @@ define('SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil',
                }, false);
 
                if(elemFromHistory) {
-                  /* Меняем только value и caption, т.к. нам нужны только значения для фильтрации из историии,
-                   остальные значения структуры нам не интересны + их могут менять, и портить их неправильно тем, что пришло из истории неправильно */
-                  if(elemFromHistory.value !== undefined) {
-                     currentStructureCopy[key].value = elemFromHistory.value;
-                  } else {
-                     /* Если при мерже структур возникла ситуация, когда в структуре из истории значения нет,
-                      а в исходной структуре значение есть, то в исходной структуре его надо сбросить в resetValue или удалить.
-                      Иначе применение истории может не заменить некоторые фильтры. */
-                     resetField('value', currentStructureCopy[key]);
-                  }
-
-                  if(elemFromHistory.caption !== undefined) {
-                     currentStructureCopy[key].caption = elemFromHistory.caption;
-                  } else {
-                     resetField('caption', currentStructureCopy[key]);
-                  }
-
-                  if(elemFromHistory.visibilityValue !== undefined) {
-                     currentStructureCopy[key].visibilityValue = elemFromHistory.visibilityValue;
+                  if (doNotApplyKeys.indexOf(elemFromHistory.filterField) === -1) {
+                     /* Меняем только value и caption, т.к. нам нужны только значения для фильтрации из историии,
+                      остальные значения структуры нам не интересны + их могут менять, и портить их неправильно тем, что пришло из истории неправильно */
+                     if (elemFromHistory.value !== undefined) {
+                        currentStructureCopy[key].value = elemFromHistory.value;
+                     } else {
+                        /* Если при мерже структур возникла ситуация, когда в структуре из истории значения нет,
+                         а в исходной структуре значение есть, то в исходной структуре его надо сбросить в resetValue или удалить.
+                         Иначе применение истории может не заменить некоторые фильтры. */
+                        resetField('value', currentStructureCopy[key]);
+                     }
+   
+                     if (elemFromHistory.caption !== undefined) {
+                        currentStructureCopy[key].caption = elemFromHistory.caption;
+                     } else {
+                        resetField('caption', currentStructureCopy[key]);
+                     }
+   
+                     if (elemFromHistory.visibilityValue !== undefined) {
+                        currentStructureCopy[key].visibilityValue = elemFromHistory.visibilityValue;
+                     }
                   }
                } else if(!doNotResetIfFound && currentStructureCopy[key].hasOwnProperty('value') && currentStructureCopy[key].hasOwnProperty('resetValue') && !isEqualObject(currentStructureCopy[key].value, currentStructureCopy[key].resetValue)) {
                   resetField('value', currentStructureCopy[key]);

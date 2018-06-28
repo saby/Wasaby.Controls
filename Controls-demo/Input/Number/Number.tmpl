@@ -13,6 +13,7 @@
          showEmptyDecimals="{{_showEmptyDecimals}}"
          precision="{{_precision}}"
          integersLength="{{_integersLength}}"
+         selectOnClick="{{_selectOnClick}}"
          on:valueChanged="_eventHandler()"
          on:inputCompleted="_eventHandler()"
       />
@@ -33,6 +34,7 @@
          <Controls.Toggle.Checkbox attr:id="enabled" readOnly="{{false}}" bind:value="_readOnly" caption="readOnly"/>
          <Controls.Toggle.Checkbox attr:id="onlyPositive" readOnly="{{false}}" bind:value="_onlyPositive" caption="onlyPositive"/>
          <Controls.Toggle.Checkbox attr:id="showEmptyDecimals" readOnly="{{false}}" bind:value="_showEmptyDecimals" caption="showEmptyDecimals"/>
+         <Controls.Toggle.Checkbox attr:id="selectOnClick" readOnly="{{false}}" bind:value="_selectOnClick" caption="selectOnClick"/>
       </div>
    </div>
    <div hidden="hidden" id="event_test">{{ _eventResult }}</div>

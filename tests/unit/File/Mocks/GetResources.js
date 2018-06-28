@@ -1,8 +1,8 @@
 define('tests/unit/File/Mocks/GetResources', [
    'Core/constants',
-   'Lib/File/LocalFile',
-   'Lib/File/LocalFileLink',
-   'Lib/File/HttpFileLink'
+   'File/LocalFile',
+   'File/LocalFileLink',
+   'File/HttpFileLink'
 ], function (constants, LocalFile, LocalFileLink, HttpFileLink) {
    'use strict';
 

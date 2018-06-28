@@ -52,48 +52,15 @@ define(
          };
 
          let menu = new MenuButton(config);
-         menu.saveOptions(config);
-   
 
-         it('before update source', () => {
-            items.push({
-               id: '10',
-               title: 'Запись 10'
-            });
-            menu._beforeUpdate({
-               keyProperty: 'id',
-               source: new Memory({
-                  idProperty: 'id',
-                  data: items
-               })
-            });
-            assert.equal(menu._items, null);
-         });
-
-         it('open menu', () => {
-            menu._children.DropdownOpener = {
-               close: setTrue.bind(this, assert),
-               open: setTrue.bind(this, assert)
-            };
-            menu._children.popupTarget = {
-               _container: 'target'
-            };
-            menu._open();
-         });
-
-         it('check item click', (done) => {
+         it('check item click', () => {
             menu._notify = (e) => {
                assert.equal(e, 'onMenuItemActivate');
             };
-            menu._open();
-            setTimeout(function () {
-               menu._onResult(['itemClick', 'event', [menu._items.at(4)]]);
-               done();
-            }, 50);
+            menu._onItemClickHandler('itemClick', [{
+               id: '1',
+               title: 'Запись 1'
+            }]);
          });
-
-         function setTrue(assert) {
-            assert.equal(true, true);
-         }
       })
    });

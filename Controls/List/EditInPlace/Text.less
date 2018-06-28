@@ -1,0 +1,58 @@
+.ws-is-no-touch {
+   .controls-ListView__itemV:hover {
+      .controls-EditingTemplateText_enabled {
+         background-color: @background-color_InputRender;
+         border-color: @border-color_InputRender;
+         cursor: text;
+      }
+      .controls-EditingTemplateText_enabled:hover {
+         border-color: @border-color_InputRender_hover;
+      }
+   }
+}
+
+.controls-EditingTemplateText__editorWrapper {
+   flex-grow: 1;
+   min-width: 0;
+}
+
+.controls-EditingTemplateText {
+   .baseline-fix();
+   box-sizing: border-box;
+   border-width: @border-width_InputRender;
+   border-style: solid;
+   border-color: transparent;
+   width: 100%;
+}
+
+.controls-EditingTemplateText__editor {
+   width: 100%;
+}
+
+.controls-EditingTemplateText {
+   .flex-shrink(1);
+   .inline-flexbox();
+   .align-items(center);
+   padding: @padding_InputRender;
+}
+
+.controls-EditingTemplateText__inner {
+   .text-overflow();
+   width: 100%;
+   display: inline-block;
+}
+
+.controls-EditingTemplateText_size_default {
+   height: @height_InputRender_default;
+   font-size: @font-size_InputRender_default;
+}
+
+.controls-EditingTemplateText_size_m {
+   height: @height_InputRender_m;
+   font-size: @font-size_InputRender_m;
+}
+
+.controls-EditingTemplateText_size_l {
+   height: @height_InputRender_l;
+   font-size: @font-size_InputRender_l;
+}

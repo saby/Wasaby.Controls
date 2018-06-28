@@ -504,6 +504,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
        * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {String|Number|Null} curRoot Идентификатор узла, который установлен в качестве текущего корня иерархии.
        * @param {Array.<Object>} hierarchy Массив объектов, каждый из которых описывает узлы иерархии установленного пути.
+       * @param {String|Number|Null} root Идентификатор узла, который установлен в качестве корня иерархии для всего реестра.
        * Каждый объект содержит следующие свойства:
        * <ul>
        *    <li>id - идентификатор текущего узла иерархии;</li>
@@ -696,7 +697,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
              * Подробнее о типах иерархических записей читайте в разделе <a href="/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
              * @example
              * <pre>
-             *    <option name="allowEnterToFolder">false</option>
+             *    allowEnterToFolder="{{false}}"
              * </pre>
              */
             allowEnterToFolder: true,
@@ -740,7 +741,13 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
              *
              */
             loadItemsStrategy: 'merge',
-            task1174261549: false
+            task1174261549: false,
+            /**
+             * @cfg {Boolean} Сохраняет значение выбранной записи после перезагрузки
+             * @remark
+             * Работает только с <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/navigations/cursor/">навигацией по курсору</a>.
+             */
+            saveReloadPosition: false
          },
          _lastParent : undefined,
          _lastDrawn : undefined,
@@ -899,7 +906,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                   this._collapseNodes(this.getOpenedPath(), ignoreKeys);
                }
                this._options.openedPath[id] = true;
-               return this._loadNode(id).addCallback(forAliveOnly(function() {
+               return this._loadNode(id, hash).addCallback(forAliveOnly(function() {
                   var expItem;
                   if (hash) {
                      expItem = this._getItemsProjection().getByHash(hash);
@@ -914,7 +921,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             return Deferred.fail();
          }
       },
-      _loadNode: function(id) {
+      _loadNode: function(id, hash) {
          if (this._dataSource && !this._loadedNodes[id] && this._options.partialyReload) {
             this._toggleIndicator(true);
             this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), 0, this._limit);
@@ -933,7 +940,13 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                else {
                   this._options._items.append(list);
                }
-               this._getItemProjectionByItemId(id).setLoaded(true);
+               // Всегда стараемся работать через hash
+               // https://online.sbis.ru/opendoc.html?guid=4b3c5ebf-f623-4d2e-9d96-8db8ee32d666
+               if (hash) {
+                  this._getItemsProjection().getByHash(hash).setLoaded(true);
+               } else {
+                  this._getItemProjectionByItemId(id).setLoaded(true);
+               }
                this._dataLoadedCallback();
             }).bind(this))
             .addBoth(function(error){
@@ -1536,7 +1549,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                hierarchy = this.getHierarchy(path, this._options.currentRoot);
             }
             if (this._previousRoot !== this._options.currentRoot) {
-               this._notify('onSetRoot', this._options.currentRoot, hierarchy);
+               this._notify('onSetRoot', this._options.currentRoot, hierarchy, this._options.root);
                //TODO Совсем быстрое и временное решение. Нужно скроллиться к первому элементу при проваливании в папку.
                // Выпилить, когда это будет делать установка выделенного элемента
                //TODO курсор
@@ -1696,12 +1709,28 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                if (typeof this.getCurrentRoot() === 'undefined') {
                   curRoot = null;
                }
-               if (this.getSelectedItem().get(this._options.parentProperty) === curRoot) {
+               var
+                  newRootParent = this.getSelectedItem().get(this._options.parentProperty);
+               if (newRootParent === curRoot) {
                   this._hierPages[curRoot] = this.getSelectedItem().get(this._options.navigation.config.field);
                } else {
                   // Мы можем перейти в узел раскрыв дерево, а значит нужно сохранить курсор для родителя узла в который мы провалились
                   // https://online.sbis.ru/opendoc.html?guid=8e6b6c2b-9dc4-44ef-8cad-8662f2ec65d8
-                  this._hierPages[this.getSelectedItem().get(this._options.parentProperty)] = this.getSelectedItem().get(this._options.navigation.config.field);
+                  this._hierPages[newRootParent] = this.getSelectedItem().get(this._options.navigation.config.field);
+                  // Пробегаем также по родителям узла, в который проваливаемся вплоть до currentRoot и таким образом запоминаем исчерпывающий путь
+                  // https://online.sbis.ru/opendoc.html?guid=fdfc17bd-043d-45d8-8c77-29ab5547205a
+                  var
+                     nextParent = this.getItems().getRecordById(newRootParent).get(this._options.parentProperty),
+                     root = this.getRoot();
+                  if (typeof root === 'undefined') {
+                     root = null;
+                  }
+                  while (nextParent !== curRoot && nextParent !== root) {
+                     this._hierPages[nextParent] = this.getItems().getRecordById(newRootParent).get(this._options.navigation.config.field);
+                     newRootParent = nextParent;
+                     nextParent = this.getItems().getRecordById(newRootParent).get(this._options.parentProperty);
+                  }
+                  this._hierPages[nextParent] = this.getItems().getRecordById(newRootParent).get(this._options.navigation.config.field);
                }
             }
          }

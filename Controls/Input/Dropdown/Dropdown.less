@@ -18,13 +18,22 @@
    box-sizing: border-box;
    height: 100%;
    width: 100%;
-   color: @color_Link-text;
    &:hover {
-      color: @color_Link-text_hovered;
       cursor: pointer;
       text-decoration: underline;
       .controls-BaseButton__text {
          text-decoration: underline;
       }
    }
+}
+
+.controls-Dropdown__defaultItem {
+   color: @color_Link-text;
+   &:hover {
+      color: @color_Link-text_hovered;
+   }
+}
+
+.controls-Dropdown__emptyItem {
+   color: @color-Dropdown-emptyItem;
 }

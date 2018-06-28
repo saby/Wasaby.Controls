@@ -5,7 +5,7 @@ define('Controls/Application/HeadDataContext', [
 ], function(DataContext, Deferred, cookie) {
    var bundles;
    try {
-      bundles = require('json!WS.Core/ext/requirejs/bundles');
+      bundles = require('json!WS.Core/ext/requirejs/bundlesRoute');
    } catch (e) {
       bundles = {};
    }
@@ -24,65 +24,21 @@ define('Controls/Application/HeadDataContext', [
       contents = {};
    }
 
-   /**
-    * Checks if bundle has any css
-    * @param bundle
-    * @returns {boolean}
-    */
-   function hasCss(bundle) {
-      if (!Array.isArray(bundle)) {
-         return false;
-      }
-      for (var i = 0; i < bundle.length; i++) {
-         if (~bundle[i].indexOf('css!')) {
-            return true;
-         }
-      }
-      return false;
+   function isJs(key) {
+      return key.split('!')[0] === key;
    }
 
-   /**
-    * Gets css-bundles
-    * @param jsLinks
-    * @returns {{}}
-    */
-   function getDependentCss(jsLinks) {
-      function cropBundleName(s) {
-         if (s.indexOf('.min')) {
-            var cropped = s.split('.min')[0];
-         } else {
-            cropped = s;
-         }
-         if (cropped.indexOf('/') === 0) {
-            cropped = cropped.slice(1);
-         }
-         return cropped;
-      }
+   function isCss(key) {
+      var keySplitted = key.split('!');
+      return keySplitted[0] === 'css' && keySplitted.length > 1;
+   }
 
-      var dependCssLinks = {};
-      var bundleNames = Object.keys(bundles);
-      var croppedBundleNames = [];
-      for (var i = 0; i < bundleNames.length; i++) {
-         croppedBundleNames.push(cropBundleName(bundleNames[i]));
+   function fixLinkSlash(link) {
+      if (link.indexOf('/') !== 0) {
+         return '/' + link;
+      } else {
+         return link;
       }
-      for (var key in jsLinks) {
-         if (jsLinks.hasOwnProperty(key)) {
-            var croppedJsLink = cropBundleName(key);
-            var needLoadCssBundle = false;
-            var bundleIdx = croppedBundleNames.indexOf(croppedJsLink);
-            if (bundleIdx !== -1) {
-               var name = bundleNames[bundleIdx];
-               if (hasCss(bundles[name])) {
-                  needLoadCssBundle = true;
-               }
-            }
-            if (needLoadCssBundle) {
-               var jsLinkNoExtension = key.split('.js')[0];
-               dependCssLinks[jsLinkNoExtension] = true;
-            }
-         }
-      }
-      return dependCssLinks;
    }
 
    /**
@@ -90,45 +46,28 @@ define('Controls/Application/HeadDataContext', [
     * @param allDeps
     * @returns {{}} Object, that contains all necessary bundles
     */
-   function checkForBundles(allDeps) {
-      function removeAllFromObject(obj, els) {
-         for (var i = 0; i < els.length; i++) {
-            delete obj[els[i]];
-         }
-      }
-
-      function findBundle(str) {
-         for (var key in bundles) {
-            if (~bundles[key].indexOf(str)) {
-               return key;
-            }
-         }
-         return null;
-      }
-
-      var jsBundles = {};
+   function getPackages(allDeps) {
+      var packages = {};
       for (var key in allDeps) {
          if (allDeps.hasOwnProperty(key)) {
-            var bundleName = findBundle(key);
+            var bundleName = bundles[key];
             if (bundleName) {
-               removeAllFromObject(allDeps, bundles[bundleName]);
-               jsBundles[bundleName] = true;
+               delete allDeps[key];
+               packages[fixLinkSlash(bundleName)] = true;
             }
          }
       }
-      return jsBundles;
-   }
 
-   function fixLink(link, type) {
-      if (type === 'css') {
-         if (link.indexOf('css!') === 0) {
-            link = link.split('css!')[1];
+      for (var key in allDeps) {
+         if (allDeps.hasOwnProperty(key)) {
+            if (modDeps.nodes[key]) {
+               if (isJs(key) || isCss(key)) {
+                  packages[fixLinkSlash(modDeps.nodes[key].path)] = true;
+               }
+            }
          }
-         link += '.css';
-      } else {
-         link += '.js';
       }
-      return link;
+      return packages;
    }
 
    function collectDependencies(deps, callback) {
@@ -154,16 +93,14 @@ define('Controls/Application/HeadDataContext', [
       recursiveWalker(allDeps, deps);
       var files = {js: [], css: []};
       if (cookie.get('s3debug') !== 'true' && contents.buildMode !== 'debug') {
-         var jsBundles = checkForBundles(allDeps); // Find all bundles, and removes dependencies that are included in bundles
-         var cssBundles = getDependentCss(jsBundles);
-         for (var key in jsBundles) {
-            if (jsBundles.hasOwnProperty(key)) {
-               files.js.push(fixLink(key, 'js'));
-            }
-         }
-         for (var key in cssBundles) {
-            if (cssBundles.hasOwnProperty(key)) {
-               files.css.push(fixLink(key, 'css'));
+         var packages = getPackages(allDeps); // Find all bundles, and removes dependencies that are included in bundles
+         for (var key in packages) {
+            if (packages.hasOwnProperty(key)) {
+               if (key.slice(key.length - 3, key.length) === 'css') {
+                  files.css.push(key);
+               } else if (key.slice(key.length - 2, key.length) === 'js') {
+                  files.js.push(key);
+               }
             }
          }
       }
@@ -173,6 +110,9 @@ define('Controls/Application/HeadDataContext', [
    return DataContext.extend({
       pushDepComponent: function(componentName) {
          this.depComponentsMap[componentName] = true;
+      },
+      addReceivedState: function(key, receivedState) {
+         this.receivedStateArr[key] = receivedState;
       },
       pushWaiterDeferred: function(def) {
          var self = this;
@@ -191,7 +131,8 @@ define('Controls/Application/HeadDataContext', [
                self.defRender.callback({
                   jsLinks: self.jsLinks || [],
                   cssLinks: self.cssLinks || [],
-                  errorState: self.err
+                  errorState: self.err,
+                  receivedStateArr: self.receivedStateArr
                });
             });
          });
@@ -200,6 +141,7 @@ define('Controls/Application/HeadDataContext', [
          this.theme = theme;
          this.defRender = new Deferred();
          this.depComponentsMap = {};
+         this.receivedStateArr = {};
       },
       waitAppContent: function() {
          return this.defRender;

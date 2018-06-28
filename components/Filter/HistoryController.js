@@ -267,7 +267,7 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
                  fb = this._options.filterButton;
 
              /* Применим фильтр из истории*/
-             fb._setFilterStructure(FilterHistoryControllerUntil.prepareStructureToApply(filter.filter, fb.getFilterStructure()));
+             fb._setFilterStructure(FilterHistoryControllerUntil.prepareStructureToApply(filter.filter, fb.getFilterStructure(), undefined, this._options.noSaveFilters));
              fb.getContext().setValue('linkText', filter.linkText);
              fb.hidePicker();
 

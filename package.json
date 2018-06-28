@@ -1,6 +1,6 @@
 {
    "name": "sbis3-controls",
-   "version": "3.18.310",
+   "version": "3.18.350",
    "repository": {
       "type": "git",
       "url": "git@git.sbis.ru:root/sbis3-controls"
@@ -33,18 +33,11 @@
       }
    },
    "devDependencies": {
-      "async": "^2.6.0",
-      "body-parser": "^1.18.2",
+      "async": "^2.6.1",
+      "autoprefixer": "^8.6.2",
+      "body-parser": "^1.18.3",
       "cookie-parser": "^1.4.3",
       "express": "^4.16.3",
-      "gulp": "^3.9.1",
-      "gulp-less": "^3.5.0",
-      "humanize": "0.0.9",
-      "less": "^2.7.3",
-      "merge": "1.2.0",
-      "minimatch": "^3.0.3",
-      "progress": "^2.0.0",
-      "typescript": "2.5.3",
       "grunt": "0.4.5",
       "grunt-contrib-clean": "0.6.0",
       "grunt-contrib-copy": "0.7.0",
@@ -52,12 +45,23 @@
       "grunt-contrib-less": "1.0.0",
       "grunt-contrib-watch": "0.6.1",
       "grunt-express-server": "0.4.19",
+      "gulp": "^3.9.1",
+      "gulp-less": "^3.5.0",
       "gulp-livereload": "^3.8.1",
+      "humanize": "0.0.9",
+      "less": "^2.7.3",
       "load-grunt-config": "0.16.0",
+      "merge": "1.2.0",
+      "minimatch": "^3.0.3",
+      "postcss": "^6.0.22",
+      "progress": "^2.0.0",
       "requirejs": "2.1.18",
       "serve-static": "1.11.x",
-      "ws-unit-testing": "git+https://git.sbis.ru/ws/unit-testing.git#release-2.0",
-      "autoprefixer": "^8.4.1",
-      "postcss": "^6.0.22"
+      "typescript": "2.5.3",
+      "ws-unit-testing": "git+https://git.sbis.ru/ws/unit-testing.git#release-2.0"
+   },
+   "dependencies": {
+      "@tensor-corp/eslint-config": "^1.0.0",
+      "eslint": "^4.19.1"
    }
 }

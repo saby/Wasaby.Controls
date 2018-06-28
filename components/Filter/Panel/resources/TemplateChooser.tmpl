@@ -1,19 +1,19 @@
 <!--viewMode оставлен для поддержки совместимости-->
 <ws:if data="{{ properties.editor === 'dictionary' || properties.viewMode === 'dictionary' }}">
-    <SBIS3.CONTROLS:Filter:Panel:components:Chooser:DictionaryList scope="{{properties}}" value="{{ 'value'|mutable:[] }}" textValue="{{ 'textValue'|mutable }}" />
+    <SBIS3.CONTROLS.Filter.Panel.components.Chooser.DictionaryList scope="{{properties}}" value="{{ 'value'|mutable:[] }}" textValue="{{ 'textValue'|mutable }}" />
 </ws:if>
 <ws:if data="{{ properties.editor === 'favorites' || properties.viewMode === 'favorites' }}">
-    <SBIS3.CONTROLS:Filter:Panel:components:Chooser:FavoritesList scope="{{properties}}" value="{{ 'value'|mutable:[] }}" textValue="{{ 'textValue'|mutable }}" />
+    <SBIS3.CONTROLS.Filter.Panel.components.Chooser.FavoritesList scope="{{properties}}" value="{{ 'value'|mutable:[] }}" textValue="{{ 'textValue'|mutable }}" />
 </ws:if>
 <ws:if data="{{ properties.editor === 'list' || properties.viewMode === 'list' || (!properties.editor && !properties.viewMode) }}">
-    <SBIS3.CONTROLS:Filter:Panel:components:Chooser:List scope="{{properties}}" value="{{ 'value'|mutable:[] }}" textValue="{{ 'textValue'|mutable }}" />
+    <SBIS3.CONTROLS.Filter.Panel.components.Chooser.List scope="{{properties}}" value="{{ 'value'|mutable:[] }}" textValue="{{ 'textValue'|mutable }}" />
 </ws:if>
 <ws:if data="{{ properties.editor === 'radio'}}">
-    <SBIS3.CONTROLS:Filter:Panel:components:Chooser:RadioGroup scope="{{properties}}" value="{{ 'value'|mutable:[] }}" textValue="{{ 'textValue'|mutable }}" />
+    <SBIS3.CONTROLS.Filter.Panel.components.Chooser.RadioGroup scope="{{properties}}" value="{{ 'value'|mutable:[] }}" textValue="{{ 'textValue'|mutable }}" />
 </ws:if>
 <ws:if data="{{ properties.editor === 'fieldLink'}}">
-    <SBIS3.CONTROLS:Filter:Panel:components:Chooser:FieldLink scope="{{properties}}" value="{{ 'value'|mutable:[] }}" textValue="{{ 'textValue'|mutable }}" />
+    <SBIS3.CONTROLS.Filter.Panel.components.Chooser.FieldLink scope="{{properties}}" value="{{ 'value'|mutable:[] }}" textValue="{{ 'textValue'|mutable }}" />
 </ws:if>
 <ws:if data="{{ properties.editor === 'details'}}">
-    <SBIS3.CONTROLS:Filter:Panel:components:Chooser:DetailsList scope="{{properties}}" value="{{ 'value'|mutable:[] }}" textValue="{{ 'textValue'|mutable }}" />
+    <SBIS3.CONTROLS.Filter.Panel.components.Chooser.DetailsList scope="{{properties}}" value="{{ 'value'|mutable:[] }}" textValue="{{ 'textValue'|mutable }}" />
 </ws:if>

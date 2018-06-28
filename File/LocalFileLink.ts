@@ -1,36 +1,29 @@
 /// <amd-module name="File/LocalFileLink" />
-type FileInfo = {
-    name: string;
-    size: number;
-    isDirectory: boolean;
-    type: string;
-}
-
-/**
- * @typedef {Object} FileInfo Информация о файле
- * @property {String} [name] Имя
- * @property {String} [type]  Тип
- * @property {Boolean} [isDirectory] Является ли директорией
- * @property {Number} [size] Размер
- */
+import {ResourceAbstract, FileInfo} from 'File/ResourceAbstract';
 /**
  * Класс - обёртка над ссылкой на локальный файл
  * @class
+ * @extends File/ResourceAbstract
  * @name File/LocalFileLink
  * @public
  * @author Заляев А.В.
  */
-class LocalFileLink {
+class LocalFileLink extends ResourceAbstract {
     private readonly _fileInfo: Partial<FileInfo>;
     /**
      * @param {String} fileLink Ссылка на файл
-     * @param {*} [meta] Дополнительные мета-данные
-     * @param {FileInfo} [fileInfo] Информация о файле
+     * @param {*} [_meta] Дополнительные мета-данные
+     * @param {FileInfo} [_info] Информация о файле
      * @constructor
      * @name File/LocalFileLink
      */
-    constructor(private fileLink: string, private meta?: any, fileInfo?: Partial<FileInfo>) {
-        this._fileInfo = fileInfo || {};
+    constructor(
+        private fileLink: string,
+        protected _meta?: any,
+        protected _info?: FileInfo
+    ) {
+        super();
+        this._fileInfo = this._fileInfo || {};
         if (!this._fileInfo.name) {
             /*
              * Для ссылки на локальный файл, именем является часть пути до него после последнего слеша
@@ -45,30 +38,7 @@ class LocalFileLink {
      * @name File/LocalFileLink#getLink
      */
     getLink(): string {
-    return this.fileLink;
-    }
-    /**
-     * Возвращает дополнительную информацию по файлу
-     * @return {*}
-     * @method
-     * @name File/LocalFileLink#getMeta
-     */
-    getMeta(): any {
-        return this.meta || {};
-    }
-    /**
-     * Возвращает информацию о файле, если такая имеется
-     * @return {FileInfo}
-     */
-    getFileInfo(): Partial<FileInfo> {
-        return this._fileInfo || {};
-    }
-    /**
-     * Возвращает имя файла
-     * @return {String}
-     */
-    getName(): string {
-        return this._fileInfo.name || "";
+        return this.fileLink;
     }
 }
 export  = LocalFileLink;

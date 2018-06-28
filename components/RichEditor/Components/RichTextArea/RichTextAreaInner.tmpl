@@ -1,6 +1,6 @@
 <div class="controls-RichEditor__richTextArea" style="{{autoHeight && maximalHeight && maximalHeight != 0 ? 'max-height:' + maximalHeight + 'px;' }}">
-   <div class="controls-RichEditor__placeholder" >{{ placeholder }}</div>
    <ws:if data="{{singleLine}}">
+      <div class="controls-RichEditor__placeholder">{{ placeholder }}</div>
       <div
          class="controls-RichEditor__dataReview ws-basic-style {{editorConfig.className}}{{enabled ? ' ws-hidden'}}"
          tabindex="1"
@@ -13,24 +13,25 @@
       </div>
    </ws:if>
    <ws:else>
-      <SBIS3.CONTROLS:ScrollContainer
+      <SBIS3.CONTROLS.ScrollContainer
          class="controls-ScrollContainer_flex controls-RichEditor__scrollContainer"
-         style="{{autoHeight && maximalHeight && maximalHeight != 0 ? 'max-height:' + maximalHeight + 'px;' }}"
+         style="{{autoHeight && maximalHeight && maximalHeight != 0 ? 'max-height:' + (maximalHeight - _decreaseHeight) + 'px;' }}"
          takeScrollbarHidden="{{!(autoHeight && maximalHeight == 0)}}"
          >
+         <div class="controls-RichEditor__placeholder">{{ placeholder }}</div>
          <div
             class="controls-RichEditor__dataReview ws-basic-style {{editorConfig.className}}{{enabled ? ' ws-hidden'}}"
             tabindex="1"
-            style="{{!previewAutoHeight && autoHeight && minimalHeight && minimalHeight != 0 ? 'min-height:' + minimalHeight + 'px;'}}"
+            style="{{!previewAutoHeight && autoHeight && minimalHeight && minimalHeight != 0 ? 'min-height:' + (minimalHeight - _decreaseHeight) + 'px;'}}"
             >{{!enabled && text ? (_prepareReviewContent(text)|sanitize)}}</div>
          <div
             class="controls-RichEditor__editorFrame ws-basic-style {{editorConfig.className}}{{!enabled ? ' ws-hidden'}}"
-            style="{{autoHeight && minimalHeight && minimalHeight != 0 ? 'min-height:' + minimalHeight + 'px;'}}"
+            style="{{autoHeight && minimalHeight && minimalHeight != 0 ? 'min-height:' + (minimalHeight - _decreaseHeight) + 'px;'}}"
             >{{enabled && text ? (_prepareContent(_prepareReviewContent(text))|sanitize)}}</div>
          <div class="controls-RichEditor__sourceContainer ws-hidden">
             <textarea class="controls-RichEditor__sourceArea"></textarea>
          </div>
-      </SBIS3.CONTROLS:ScrollContainer>
+      </SBIS3.CONTROLS.ScrollContainer>
    </ws:else>
    <textarea class="controls-RichEditor__fakeArea" tabindex="0"></textarea>
 </div>

@@ -1,4 +1,4 @@
-<div attr:class="controls-Grid__row" attr:key="{{itemData.item.getId()}}">
+<div attr:class="controls-Grid__row controls-ListView__itemV" attr:key="{{itemData.item.getId()}}">
    <ws:if data="{{contentTemplate}}">
       <ws:partial template="{{contentTemplate}}" itemData="{{itemData}}" itemActionsTemplate="{{itemActionsTemplate}}" multiSelectTpl="{{multiSelectTpl}}"/>
    </ws:if>
@@ -7,7 +7,7 @@
          <div attr:class="{{itemData.getCurrentColumn().cellClasses}} controls-TreeGrid__row"
               attr:style="{{itemData.ladderSupport ? itemData.getCurrentColumn().cellStyleForLadder}}">
             <ws:if data="{{itemData.multiSelectVisibility && itemData.columnIndex === 0}}">
-               <ws:partial template="{{multiSelectTpl}}" multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" attr:class="controls-ListView__checkbox"/>
+               <ws:partial template="{{multiSelectTpl}}" multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" attr:class="controls-GridView__checkbox"/>
             </ws:if>
             <ws:else>
                <ws:if data="{{itemData.multiSelectVisibility && itemData.columnIndex === 1 || !itemData.multiSelectVisibility && itemData.columnIndex === 0}}">
@@ -18,14 +18,16 @@
                   </ws:if>
                   <ws:if data="{{itemData.dispItem.isNode()}}">
                      <div on:click="_onNodeExpanderClick(itemData.dispItem)"
-                          class="controls-TreeGrid__row-nodeExpander controls-TreeGrid__row-nodeExpander_{{itemData.isExpanded ? 'expanded' : 'collapsed'}}"></div>
+                          class="controls-TreeGrid__row-nodeExpander controls-TreeGrid__row-nodeExpander_{{itemData.isExpanded ? 'expanded' : 'collapsed'}} js-controls-ListView__notEditable"></div>
                   </ws:if>
                </ws:if>
-               <ws:partial template="{{itemData.getCurrentColumn().template}}"
-                           attr:class="{{itemData.getCurrentColumn().withLadder ? 'controls-Grid__row-cell__content_withLadder'}}"
-                           contentData="{{itemData.getCurrentColumn()}}" />
+               <div class="controls-Grid__row-cell__contentWrapper">
+                  <ws:partial template="{{itemData.getCurrentColumn().template}}"
+                              attr:class="{{itemData.getCurrentColumn().withLadder ? 'controls-Grid__row-cell__content_withLadder'}}"
+                              contentData="{{itemData.getCurrentColumn()}}" />
+               </div>
                <ws:if data="{{itemData.getLastColumnIndex() === itemData.columnIndex && itemData.itemActions  && itemData.itemActions.all && itemData.itemActions.all.length}}">
-                  <ws:partial template="{{itemActionsTemplate}}"  itemData="{{itemData}}"/>
+                  <ws:partial template="{{itemActionsTemplate}}" itemData="{{itemData}}"/>
                </ws:if>
             </ws:else>
          </div>

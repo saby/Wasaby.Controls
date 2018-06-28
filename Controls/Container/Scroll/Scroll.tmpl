@@ -4,10 +4,10 @@
            style="{{_displayState.heightFix ? '' : _styleHideScrollbar}}"
            class="ws-flex-grow-1 controls-Scroll__content
                   {{_hasHover ? 'controls-Scroll__content_possibleScroll'}}
-                  {{_displayState.heightFix ? 'controls-Scroll__content_hidden' : 'controls-Scroll__content_scroll'}}"
+                  {{_displayState.heightFix || _styleHideScrollbar === undefined ? 'controls-Scroll__content_hidden' : 'controls-Scroll__content_scroll'}}"
            on:resize="_resizeHandler()"
            on:scroll="_scrollHandler()">
-         <ws:partial template="{{_options.content}}" attr:class="ws-flex-shrink-0"/>
+         <ws:partial template="{{_options.content}}" attr:class="ws-flex-shrink-0" on:fixed="_fixedHandler()"/>
       </div>
    </Controls.Layout.Scroll>
 </ws:template>
@@ -35,7 +35,7 @@
             on:draggingChanged="_draggingChangedHandler()"/>
       </ws:if>
       <ws:if data="{{_options.shadowVisible && _displayState.hasScroll}}">
-         <ws:if data="{{_displayState.shadowPosition.indexOf('top') > -1}}">
+         <ws:if data="{{_displayState.shadowPosition.indexOf('top') > -1 && !_stickyHeader}}">
             <div class="controls-Scroll__shadow controls-Scroll__shadow_top"></div>
          </ws:if>
          <ws:if data="{{_displayState.shadowPosition.indexOf('bottom') > -1}}">

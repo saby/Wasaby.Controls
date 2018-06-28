@@ -445,7 +445,6 @@ define('SBIS3.CONTROLS/ListView',
             _virtualScrollResetStickyHead: false,
             _setScrollPagerPositionThrottled: null,
             _updateScrollIndicatorTopThrottled: null,
-            _updateScrollIndicatorDownThrottled: null,
             _onKeyUpEnterThrottled: null,
             _removedItemsCount: false,
             _loadQueue: {},
@@ -1014,7 +1013,6 @@ define('SBIS3.CONTROLS/ListView',
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onPageChange', 'onBeginDelete', 'onEndDelete', 'onBeginMove', 'onEndMove');
             this._setScrollPagerPositionThrottled = throttle.call(this._setScrollPagerPosition, 100, true).bind(this);
             this._updateScrollIndicatorTopThrottled = throttle.call(this._updateScrollIndicatorTop, 100, true).bind(this);
-            this._updateScrollIndicatorDownThrottled = throttle.call(this._updateScrollIndicatorDown, 100, true).bind(this);
             this._onKeyUpEnterThrottled = throttle.call(this._onKeyUpEnter, 100, true).bind(this);
             this._eventProxyHdl = this._eventProxyHandler.bind(this);
             this._onScrollHandler = this._onScrollHandler.bind(this);
@@ -1281,7 +1279,9 @@ define('SBIS3.CONTROLS/ListView',
                   this._tapHandler(e);
                   break;
                case 'mouseleave':
-                  this._mouseLeaveHandler(e);
+                  if (!isTouchEvent) {
+                     this._mouseLeaveHandler(e);
+                  }
                   break;
                case 'touchend':
                    /* Ipad пакетирует измененния, и не применяет их к дому, пока не закончит работу синхронный код.
@@ -3006,7 +3006,10 @@ define('SBIS3.CONTROLS/ListView',
                return elem;
             }
 
-            if(this._getItemsProjection() && this._getItemProjectionByItemId(dataId) && this._getItemProjectionByHash(dataHash)) {
+            // _getItemProjectionByItemId полностью убрать слишком страшно, не будем проверять её только при loadItemsStrategy === 'append'
+            // https://online.sbis.ru/opendoc.html?guid=4b3c5ebf-f623-4d2e-9d96-8db8ee32d666
+            if(this._getItemsProjection() && (this._options.loadItemsStrategy === 'append' || this._getItemProjectionByItemId(dataId)) &&
+               this._getItemProjectionByHash(dataHash)) {
                return elem;
             } else {
                return this._findItemByElement(elem.parent());
@@ -3580,7 +3583,6 @@ define('SBIS3.CONTROLS/ListView',
             }
 
             this._updateScrollIndicatorTopThrottled();
-            this._updateScrollIndicatorDownThrottled();
 
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
             if (loadAllowed && isContainerVisible && hasNextPage && !this.isLoading()) {
@@ -3607,13 +3609,6 @@ define('SBIS3.CONTROLS/ListView',
                top = StickyHeaderManager.getStickyHeaderIntersectionHeight(this.getContainer()) - this._scrollWatcher.getScrollContainer().scrollTop();
             }
             this._loadingIndicator.css('top', top);
-         },
-
-         _updateScrollIndicatorDown: function() {
-            var container = this.getContainer();
-            if (this.infiniteScroll === 'down' && this._hasNextPage(this.getItems().getMetaData().more)){
-               container.toggleClass('controls-ListView-scrollIndicator__down', container.hasClass('controls-ListView__indicatorVisible'));
-            }
          },
 
 
@@ -3955,6 +3950,10 @@ define('SBIS3.CONTROLS/ListView',
                this._createLoadingIndicator();
             }
             this.getContainer().addClass('controls-ListView__indicatorVisible');
+            //чтоб индикатор не перекрывал последние записи
+            if (!this._isScrollingUp()) {
+               this.getContainer().addClass('controls-ListView-scrollIndicator__down');
+            }
          },
          /**
           * Удаляет индикатор загрузки
@@ -3964,6 +3963,7 @@ define('SBIS3.CONTROLS/ListView',
             if (this._loadingIndicator && !this._loader) {
                this.getContainer().removeClass('controls-ListView__indicatorVisible');
             }
+            this.getContainer().removeClass('controls-ListView-scrollIndicator__down');
          },
          _createLoadingIndicator : function () {
             this._loadingIndicator = $('> .controls-ListView-scrollIndicator', this._container);
@@ -5088,6 +5088,7 @@ define('SBIS3.CONTROLS/ListView',
             idArray = Array.isArray(idArray) ? coreClone(idArray) : [idArray];
             message = message || (idArray.length !== 1 ? rk("Удалить записи?", "ОперацииНадЗаписями") : rk("Удалить текущую запись?", "ОперацииНадЗаписями"));
             InformationPopupManager.showConfirmDialog({
+               parent: self,
                message: message,
                hasCancelButton: false,
                opener: self
@@ -5098,6 +5099,7 @@ define('SBIS3.CONTROLS/ListView',
                      self._deleteRecords(idArray, result);
                   }).addErrback(function (result) {
                      InformationPopupManager.showMessageDialog({
+                        parent: self,
                         message: result.message,
                         opener: self,
                         status: 'error'
@@ -5142,6 +5144,7 @@ define('SBIS3.CONTROLS/ListView',
                   return resultDeferred;
                }, this)).addErrback(function (result) {
                   InformationPopupManager.showMessageDialog({
+                     parent: self,
                      message: result.message,
                      opener: self,
                      status: 'error'

@@ -1,0 +1,15 @@
+<Controls.TreeGrid
+        on:dragStart="_dragStart()"
+        keyProperty="id"
+        displayProperty="title"
+        parentProperty="Раздел"
+        nodeProperty="Раздел@"
+        itemsDragNDrop="{{true}}"
+        multiSelectVisibility="visible"
+        header="{{_gridHeader}}"
+        source="{{_viewSource}}"
+        columns="{{_gridColumns}}">
+   <ws:dragAvatarTemplate>
+      <ws:partial template="Controls/DragNDrop/Avatar"/>
+   </ws:dragAvatarTemplate>
+</Controls.TreeGrid>

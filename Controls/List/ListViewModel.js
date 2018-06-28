@@ -2,8 +2,8 @@
  * Created by kraynovdo on 16.11.2017.
  */
 define('Controls/List/ListViewModel',
-   ['Controls/List/ItemsViewModel', 'Controls/Controllers/Multiselect/Selection', 'WS.Data/Entity/VersionableMixin', 'Controls/List/resources/utils/ItemsUtil'],
-   function(ItemsViewModel, MultiSelection, VersionableMixin) {
+   ['Controls/List/ItemsViewModel', 'WS.Data/Entity/VersionableMixin', 'Controls/List/resources/utils/ItemsUtil'],
+   function(ItemsViewModel, VersionableMixin, ItemsUtil) {
       /**
        *
        * @author Крайнов Дмитрий
@@ -22,6 +22,7 @@ define('Controls/List/ListViewModel',
          _draggingItemData: null,
          _dragTargetPosition: null,
          _actions: null,
+         _selectedKeys: null,
 
          constructor: function(cfg) {
             var self = this;
@@ -32,10 +33,7 @@ define('Controls/List/ListViewModel',
                this._markedItem = this.getItemById(cfg.markedKey, cfg.keyProperty);
             }
 
-            this._multiselection = new MultiSelection({
-               selectedKeys: cfg.selectedKeys,
-               excludedKeys: cfg.excludedKeys
-            });
+            this._selectedKeys =  cfg.selectedKeys || [];
 
             //TODO надо ли?
             _private.updateIndexes(self);
@@ -48,7 +46,7 @@ define('Controls/List/ListViewModel',
             itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
             itemsModelCurrent.showActions = !this._editingItemData && (!this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive));
             itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem.item;
-            itemsModelCurrent.multiSelectStatus = this._multiselection.getSelectionStatus(itemsModelCurrent.key);
+            itemsModelCurrent.multiSelectStatus = this._selectedKeys.indexOf(itemsModelCurrent.key) >= 0;
             itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility === 'visible';
             itemsModelCurrent.drawActions =
                itemsModelCurrent.itemActions &&
@@ -60,10 +58,12 @@ define('Controls/List/ListViewModel',
                itemsModelCurrent.isEditing = true;
                itemsModelCurrent.item = this._editingItemData.item;
             }
-            if (this._draggingItemData && this._draggingItemData.key === itemsModelCurrent.key) {
-               itemsModelCurrent.isDragging = true;
-               if (this._dragTargetItem) {
-                  itemsModelCurrent.isVisible = false;
+            if (this._dragItems) {
+               if (this._dragItems[0] === itemsModelCurrent.key) {
+                  itemsModelCurrent.isDragging = true;
+               }
+               if (this._dragItems.indexOf(itemsModelCurrent.key) !== -1) {
+                  itemsModelCurrent.isVisible = this._dragItems[0] === itemsModelCurrent.key ? !this._dragTargetItem : false;
                }
             }
             return itemsModelCurrent;
@@ -90,10 +90,7 @@ define('Controls/List/ListViewModel',
 
          setDragItems: function(items) {
             this._dragItems = items;
-            this._draggingItemData = items ? this._getItemDataByItem(this._display.getItemBySourceItem(items[0])) : null;
-            if (this._draggingItemData) {
-               this._draggingItemData.isDragging = true;
-            }
+            this._draggingItemData = items ? this._getItemDataByItem(this.getItemById(items[0], this._options.keyProperty)) : null;
             this._nextVersion();
             this._notify('onListChange');
          },
@@ -142,15 +139,8 @@ define('Controls/List/ListViewModel',
          },
 
          select: function(keys) {
-            this._multiselection.select(keys);
+            this._selectedKeys = keys;
             this._nextVersion();
-            this._notify('onListChange');
-         },
-
-         unselect: function(keys) {
-            this._multiselection.unselect(keys);
-            this._nextVersion();
-            this._notify('onListChange');
          },
 
          updateIndexes: function(startIndex, stopIndex) {
@@ -181,9 +171,14 @@ define('Controls/List/ListViewModel',
          },
 
          setItemActions: function(item, actions) {
-            var itemById = this.getItemById(item.getId());
-            var collectionItem = itemById ?  itemById.getContents() : item;
-            this._actions[this.getIndexBySourceItem(collectionItem)] = actions;
+            if (item.getId) {
+               var itemById = this.getItemById(item.getId());
+               var collectionItem = itemById ?  itemById.getContents() : item;
+               this._actions[this.getIndexBySourceItem(collectionItem)] = actions;
+            }
+         },
+         _prepareDisplayItemForAdd: function(item) {
+            return ItemsUtil.getDefaultDisplayItem(this._display, item);
          },
 
          getItemActions: function(item) {
@@ -191,7 +186,6 @@ define('Controls/List/ListViewModel',
             var collectionItem = itemById ?  itemById.getContents() : item;
             return this._actions[this.getIndexBySourceItem(collectionItem)];
          },
-
 
          __calcSelectedItem: function(display, selKey, keyProperty) {
 

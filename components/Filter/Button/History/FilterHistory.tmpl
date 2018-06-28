@@ -1,20 +1,20 @@
 <div class="controls-filterButton__history-area ws-hidden">
    <span class="controls-filterButton__secondary-title">{[Ранее отбирались]}</span>
    <div class="controls-filterButton__footerAreas-wrapper controls-filterButton__footerAreas-maxHeight">
-      <SBIS3.CONTROLS:ListView
+      <SBIS3.CONTROLS.ListView
          name="historyView"
          className="controls-ListView__withoutMarker controls-filterButton__historyView controls-filterButton__historyView-{{viewMode}}"
          itemsActions="{{[]}}"
          idProperty="id"
          itemsDragNDrop=""
          itemContentTpl="{{ _itemContentTpl }}">
-      </SBIS3.CONTROLS:ListView>
+      </SBIS3.CONTROLS.ListView>
    </div>
-   <SBIS3.CONTROLS:Commands:CommandsSeparator
+   <SBIS3.CONTROLS.Commands.CommandsSeparator
       name="toggleHistory"
       command="toggleHistory"
    />
    <ws:if data="{{ viewMode === 'favoritesMode' }}">
-      <SBIS3.CONTROLS:Action:OpenDialogAction name="editFavorite" initializingWay="local" dialogComponent="SBIS3.CONTROLS/Filter/FavoriteEditDialog"/>
+      <SBIS3.CONTROLS.Action.OpenDialogAction name="editFavorite" initializingWay="local" dialogComponent="SBIS3.CONTROLS/Filter/FavoriteEditDialog"/>
    </ws:if>
 </div>

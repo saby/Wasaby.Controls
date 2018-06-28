@@ -1,5 +1,5 @@
 <div class="controls-Paging">
-    <SBIS3.CONTROLS:Button:IconButton
+    <SBIS3.CONTROLS.Button.IconButton
             tooltip="{[В начало]}"
             cssClassName="control-Paging__btn control-Paging__begin"
             name="PagingBegin"
@@ -7,7 +7,7 @@
             visible="{{visiblePath.begin}}"
     />
 
-    <SBIS3.CONTROLS:Button:IconButton
+    <SBIS3.CONTROLS.Button.IconButton
             tooltip="{[Назад]}"
             cssClassName="control-Paging__btn control-Paging__prev"
             name="PagingPrev"
@@ -17,14 +17,14 @@
     <div class="controls-Paging__itemsContainer{{visiblePath.pages ? '' : ' ws-hidden'}}">
         <ws:partial template="{{ _itemsTemplate }}" if="{{ _records }}" records="{{ _records }}" tplData="{{_itemData}}"/>
     </div>
-    <SBIS3.CONTROLS:Button:IconButton
+    <SBIS3.CONTROLS.Button.IconButton
             tooltip="{[В конец]}"
             cssClassName="control-Paging__btn control-Paging__end"
             name="PagingEnd"
             icon="icon-16 icon-Last icon-primary"
             visible="{{visiblePath.end}}"
     />
-    <SBIS3.CONTROLS:Button:IconButton
+    <SBIS3.CONTROLS.Button.IconButton
             tooltip="{[Вперёд]}"
             cssClassName="control-Paging__btn control-Paging__next"
             name="PagingNext"

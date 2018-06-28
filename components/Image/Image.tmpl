@@ -1,6 +1,6 @@
 <div class="controls-image{{sizeMode === 'normal' ? ' controls-image__normal'}}">
    <ws:template name="MenuLinkTpl">
-      <SBIS3.CONTROLS:Menu:MenuLink
+      <SBIS3.CONTROLS.Menu.MenuLink
          name="ButtonUpload"
          class="controls-image__button-upload"
          tooltip="{[Image@@Загрузить]}"
@@ -21,7 +21,7 @@
             <ws:onPickerOpen type="function">SBIS3.CONTROLS/Image:prototype._pickerOpen</ws:onPickerOpen>
             <ws:onPickerClose type="function">SBIS3.CONTROLS/Image:prototype._pickerClose</ws:onPickerClose>
          </ws:handlers>
-      </SBIS3.CONTROLS:Menu:MenuLink>
+      </SBIS3.CONTROLS.Menu.MenuLink>
    </ws:template>
    <div class="controls-image__wrapper">
       <img
@@ -34,7 +34,7 @@
       <ws:if data="{{imageBar}}">
          <div class="controls-image__image-bar" style="display: none;">
            <ws:partial template="MenuLinkTpl" titleFile="{[Из файла]}" titleWebCam="{[С веб-камеры]}" scope="{{...}}"/>
-           <SBIS3.CONTROLS:Link
+           <SBIS3.CONTROLS.Link
               name="ButtonEdit"
               class="controls-image__button-edit"
               tooltip="{[Редактировать]}"
@@ -42,7 +42,7 @@
               command="editImage"
               visible="{{avoidCache}}"
            />
-            <SBIS3.CONTROLS:Link
+            <SBIS3.CONTROLS.Link
                name="ButtonReset"
                class="controls-image__button-reset"
                tooltip="{[Удалить]}"

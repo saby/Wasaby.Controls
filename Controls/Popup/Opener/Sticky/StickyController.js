@@ -4,7 +4,8 @@ define('Controls/Popup/Opener/Sticky/StickyController',
       'Controls/Popup/Opener/Sticky/StickyStrategy',
       'Core/core-merge',
       'Core/core-clone',
-      'Controls/Popup/TargetCoords'
+      'Controls/Popup/TargetCoords',
+      'css!Controls/Popup/Opener/Sticky/Sticky'
    ],
    function(BaseController, StickyStrategy, cMerge, cClone, TargetCoords) {
       var DEFAULT_OPTIONS = {
@@ -33,11 +34,11 @@ define('Controls/Popup/Opener/Sticky/StickyController',
                sizes: sizes
             };
 
-            cfg.position = StickyStrategy.getPosition(popupCfg, TargetCoords.get(cfg.popupOptions.target ? cfg.popupOptions.target : document.body));
+            cfg.position = StickyStrategy.getPosition(popupCfg, _private._getTargetCoords(cfg, sizes));
 
             // Удаляем предыдущие классы характеризующие направление и добавляем новые
             if (cfg.popupOptions.className) {
-               cfg.popupOptions.className = cfg.popupOptions.className.replace(/controls-Popup-corner\S*|controls-Popup-align\S*/g, '').trim();
+               cfg.popupOptions.className = cfg.popupOptions.className.replace(/controls-Popup-corner\S*|controls-Popup-align\S*|controls-Sticky__reset-margins/g, '').trim();
                cfg.popupOptions.className += ' ' + _private.getOrientationClasses(popupCfg);
             } else {
                cfg.popupOptions.className = _private.getOrientationClasses(popupCfg);
@@ -49,7 +50,35 @@ define('Controls/Popup/Opener/Sticky/StickyController',
             className += ' controls-Popup-corner-horizontal-' + cfg.corner.horizontal;
             className += ' controls-Popup-align-horizontal-' + cfg.align.horizontal.side;
             className += ' controls-Popup-align-vertical-' + cfg.align.vertical.side;
+            className += ' controls-Sticky__reset-margins';
             return className;
+         },
+         _getTargetCoords: function(cfg, sizes) {
+            if (cfg.popupOptions.nativeEvent) {
+               var top = cfg.popupOptions.nativeEvent.clientY;
+               var left = cfg.popupOptions.nativeEvent.clientX;
+               var positionCfg = {
+                  verticalAlign: {
+                     side: 'bottom'
+                  },
+                  horizontalAlign: {
+                     side: 'right'
+                  }
+               };
+               cMerge(cfg.popupOptions, positionCfg);
+               sizes.margins = {top: 0, left: 0};
+               return {
+                  width: 1,
+                  height: 1,
+                  top: top,
+                  left: left,
+                  bottom: document.body.clientHeight - top,
+                  right: document.body.clientWidth - left,
+                  topScroll: 0,
+                  leftScroll: 0
+               };
+            }
+            return TargetCoords.get(cfg.popupOptions.target ? cfg.popupOptions.target : document.body);
          }
       };
 
@@ -61,16 +90,26 @@ define('Controls/Popup/Opener/Sticky/StickyController',
        * @category Popup
        */
       var StickyController = BaseController.extend({
-         elementCreated: function(cfg, container) {
-            this.prepareConfig(cfg, container);
+         elementCreated: function(item, container) {
+            if (this._checkContainer(item, container)) {
+               this.prepareConfig(item, container);
+            }
          },
 
-         elementUpdated: function(cfg, container) {
-            this.prepareConfig(cfg, container);
+         elementUpdated: function(item, container) {
+            if (this._checkContainer(item, container)) {
+               /* Снимаем установленные значения, влияющие на размер и позиционирование, чтобы получить размеры контента */
+               container.classList.remove('controls-Sticky__reset-margins');
+               container.style.width = 'auto';
+               container.style.height = 'auto';
+
+               this.prepareConfig(item, container);
+               container.classList.add('controls-Sticky__reset-margins'); //После замеров стилей возвращаем
+            }
          },
-         prepareConfig: function(cfg, container) {
-            var sizes = this._getPopupSizes(cfg, container);
-            _private.prepareConfig(cfg, sizes);
+         prepareConfig: function(item, container) {
+            var sizes = this._getPopupSizes(item, container);
+            _private.prepareConfig(item, sizes);
          }
       });
 

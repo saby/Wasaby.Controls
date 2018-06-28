@@ -44,12 +44,24 @@ define('Controls/Container/List',
             self._options = options;
             self._source = options.source;
             self._filter = options.filter;
+            self._navigation = options.navigation;
          },
          
+         cachedSourceFix: function(self) {
+            /* Пока не cached source не используем навигацию и фильтрацию,
+             просто отдаём данные в список, иначе memorySource данные не вернёт,
+             т.к. фильтрация работает в нём только по полному совпадению */
+            self._navigation = null;
+            self._filter = {};
+         },
+
          updateSource: function(self, data) {
             /* TODO will be a cached source */
+            _private.cachedSourceFix(self);
             self._source = new Memory({
-               data: data.getRawData()
+               idProperty: data.getIdProperty(),
+               data: data.getRawData(),
+               adapter: self._options.source.getAdapter()
             });
          },
          
@@ -70,12 +82,21 @@ define('Controls/Container/List',
             }
             self._searchMode = false;
             self._source = self._options.source;
+            self._navigation = self._options.navigation;
             self._forceUpdate();
          },
          
          searchCallback: function(self, result, filter) {
             if (self._options.searchEndCallback) {
-               self._options.searchEndCallback(result, filter);
+
+               /* FIXME
+                  Когда отдаёшь memory источник с данными,
+                  запрос искуственно делаем асинхронным в BaseControl, поэтому и список строится асинхронным. Но, т.к. в VDOM'е
+                  асинхронное построение контролов сейчас работает с ошибками, тоже эмулирую асинхронность.
+                  Правится по ошибке в плане Зуева https://online.sbis.ru/opendoc.html?guid=fb08b40e-f2ac-4dd2-9a84-dfbfc404da02 */
+               Deferred.fromTimer(10).addCallback(function() {
+                  self._options.searchEndCallback(result, filter);
+               });
             }
    
             if (!isEqual(filter, _private.getFilterFromContext(self, self._contextObj)) || !isEqual(filter, self._filter)) {
@@ -198,10 +219,32 @@ define('Controls/Container/List',
          
          _beforeMount: function(options, context) {
             _private.checkContextValues(this, context);
-            return this._searchDeferred;
+
+            /***************************
+               FIXME
+               VDOM не умеет обрабатываеть ситуацию,
+               когда в асинхронной фазе построения компонента может измеиться состояние родетельского компонента,
+               вместо того, чтобы дождаться постоения дочернего компонента, он начинает создавать новый компонент.
+               Ошибка выписна, в плане у Зуева https://online.sbis.ru/opendoc.html?guid=fb08b40e-f2ac-4dd2-9a84-dfbfc404da02 */
+            //return this._searchDeferred;
+
+            if (this._searchMode) {
+               _private.cachedSourceFix(this);
+               this._source = new Memory({
+                  idProperty: options.source.getIdProperty()
+               });
+            }
+
+            /***********************/
+
          },
          
-         _beforeUpdate: function(options, context) {
+         _beforeUpdate: function(newOptions, context) {
+            if (this._options.source !== newOptions.source) {
+               if (this._searchController) {
+                  this._searchController.setSource(newOptions.source);
+               }
+            }
             _private.checkContextValues(this, context);
          },
          

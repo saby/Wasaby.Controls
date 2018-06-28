@@ -3,8 +3,9 @@ define('Controls/Calendar/Controllers/DateRangeSelectionController', [
    'Core/helpers/Object/isEmpty',
    'Controls/Calendar/Controllers/RangeSelectionController',
    'Controls/Calendar/interface/IDateRangeSelectable',
-   'SBIS3.CONTROLS/Utils/DateUtil'
-], function(coreMerge, isEmpty, RangeSelectionController, IDateRangeSelectable, DateUtil) {
+   'SBIS3.CONTROLS/Utils/DateUtil',
+   'Controls/Calendar/Utils'
+], function(coreMerge, isEmpty, RangeSelectionController, IDateRangeSelectable, DateUtil, CalendarUtils) {
    'use strict';
 
    var _private = {
@@ -85,78 +86,7 @@ define('Controls/Calendar/Controllers/DateRangeSelectionController', [
             return Component.superclass._getDisplayedRangeEdges.apply(this, arguments);
          }
 
-         var quantum = this._quantum,
-            startDate = this.getSelectionBaseValue() || item,
-            endDate = item,
-            lastQuantumLength, lastQuantumType,
-            days, start, end, i, date;
-
-         if ('days' in quantum) {
-            lastQuantumType = 'days';
-            for (i = 0; i < quantum.days.length; i++) {
-               lastQuantumLength = quantum.days[i];
-               days = DateUtil.getDaysByRange(startDate, endDate) + 1;
-               if (quantum.days[i] >= days) {
-                  return _private.getDayRange(startDate, endDate, lastQuantumLength);
-               }
-            }
-         }
-         if ('weeks' in quantum) {
-            lastQuantumType = 'weeks';
-            for (i = 0; i < quantum.weeks.length; i++) {
-               lastQuantumLength = quantum.weeks[i];
-               if (startDate <= endDate) {
-                  start = DateUtil.getStartOfWeek(startDate);
-                  end = DateUtil.getEndOfWeek(startDate);
-                  end.setDate(end.getDate() + (lastQuantumLength - 1) * 7);
-               } else {
-                  start = DateUtil.getStartOfWeek(startDate);
-                  start.setDate(start.getDate() - (lastQuantumLength - 1) * 7);
-                  end = DateUtil.getEndOfWeek(startDate);
-               }
-               if (endDate >= start && endDate <= end) {
-                  return [start, end];
-               }
-            }
-         }
-         if ('months' in quantum) {
-            lastQuantumType = 'months';
-            for (i = 0; i < quantum.months.length; i++) {
-               lastQuantumLength = quantum.months[i];
-               if (startDate <= endDate) {
-                  start = DateUtil.getStartOfMonth(startDate);
-                  end = DateUtil.getEndOfMonth(startDate);
-                  end.setMonth(end.getMonth() + (lastQuantumLength - 1));
-               } else {
-                  start = DateUtil.getStartOfMonth(startDate);
-                  start.setMonth(start.getMonth() - (lastQuantumLength - 1));
-                  end = DateUtil.getEndOfMonth(startDate);
-               }
-               if (endDate >= start && endDate <= end) {
-                  return [start, end];
-               }
-            }
-         }
-
-         if (lastQuantumType === 'days') {
-            return _private.getDayRange(startDate, endDate, lastQuantumLength);
-         } else if (lastQuantumType === 'weeks') {
-            date = new Date(startDate);
-            date.setDate(date.getDate() + (lastQuantumLength - 1) * 7);
-            if (startDate <= endDate) {
-               return [DateUtil.getStartOfWeek(startDate), DateUtil.getEndOfWeek(date)];
-            } else {
-               return [DateUtil.getStartOfWeek(date), DateUtil.getEndOfWeek(startDate)];
-            }
-         } else if (lastQuantumType === 'months') {
-            date = new Date(startDate);
-            date.setMonth(date.getMonth() + lastQuantumLength - 1);
-            if (startDate <= endDate) {
-               return [DateUtil.getStartOfMonth(startDate), DateUtil.getEndOfMonth(date)];
-            } else {
-               return [DateUtil.getStartOfMonth(date), DateUtil.getEndOfMonth(startDate)];
-            }
-         }
+         return CalendarUtils.updateRangeByQuantum(this.getSelectionBaseValue() || item, item, this._quantum);
       }
    });
 

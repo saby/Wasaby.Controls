@@ -10,7 +10,9 @@
                 <ws:navigation source="page" view="page">
                     <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
                 </ws:navigation>
-                <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTemplate"/>
+                <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTemplate">
+                    <ws:templateOptions demoClass="demo-SuggestInputList"/>
+                </ws:suggestTemplate>
                 <ws:minSearchLength>
                     <ws:Number>3</ws:Number>
                 </ws:minSearchLength>
@@ -27,11 +29,32 @@
                 <ws:navigation source="page" view="page">
                     <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
                 </ws:navigation>
-                <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTemplate"/>
+                <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTemplate">
+                    <ws:templateOptions demoClass="demo-SuggestSearchList"/>
+                </ws:suggestTemplate>
                 <ws:minSearchLength>
                     <ws:Number>3</ws:Number>
                 </ws:minSearchLength>
             </Controls.Input.Search.Suggest>
+        </div>
+        <div class="demo-SuggestWrapper">
+            <h3>Suggest with no footer</h3>
+            <Controls.Input.Suggest
+                    bind:value="_suggest5Value"
+                    displayProperty="text"
+                    searchParam="title"
+                    source="{{_suggestSource}}"
+                    footerTemplate="{{null}}">
+                <ws:navigation source="page" view="page">
+                    <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
+                </ws:navigation>
+                <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTemplate">
+                    <ws:templateOptions demoClass="demo-SuggestInputList"/>
+                </ws:suggestTemplate>
+                <ws:minSearchLength>
+                    <ws:Number>3</ws:Number>
+                </ws:minSearchLength>
+            </Controls.Input.Suggest>
         </div>
     </div>
     <div class="demo-block-suggest">
@@ -45,7 +68,9 @@
                 <ws:navigation source="page" view="page">
                     <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
                 </ws:navigation>
-                <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTabTemplate"/>
+                <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTabTemplate">
+                    <ws:templateOptions demoClass="demo-SuggestInputList"/>
+                </ws:suggestTemplate>
                 <ws:minSearchLength>
                     <ws:Number>3</ws:Number>
                 </ws:minSearchLength>
@@ -63,7 +88,9 @@
                 <ws:navigation source="page" view="page">
                     <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
                 </ws:navigation>
-                <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTabTemplate"/>
+                <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTabTemplate">
+                    <ws:templateOptions demoClass="demo-SuggestSearchList"/>
+                </ws:suggestTemplate>
                 <ws:minSearchLength>
                     <ws:Number>3</ws:Number>
                 </ws:minSearchLength>

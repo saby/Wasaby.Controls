@@ -1,0 +1,9 @@
+<ws:partial template="tmpl!Controls/List/EditInPlace/EditingTemplate"
+            value="{{ contentData.item[contentData.column.displayProperty || 'title'] }}"
+            contentData="{{contentData}}"
+            enabled="{{true}}">
+    <ws:editorTemplate>
+        <Controls.Input.Text bind:value="contentData.item[contentData.column.displayProperty || 'title']"
+                             selectOnClick="{{ false }}" />
+    </ws:editorTemplate>
+</ws:partial>

@@ -514,19 +514,11 @@ body {
   height: @default-height;
 }
 
-.ws-is-webkit:not(.ws-is-mobile-android), .ws-is-mobile-chrome-ios {
-  .controls-BreadCrumbs{
-    // необходимо переверстать хлебные крошки на флекс
-    &.controls-BreadCrumbs__smallItems .controls-BreadCrumbs__arrow {
-      top: @bread-crumb-crumb-home-top;
-    }
-  }
-}
-
 .controls-BreadCrumbs__smallItems {
   top: 1px;
   &.controls-BreadCrumbs .controls-BreadCrumbs__itemsContainer, .controls-BreadCrumbs__crumb {
     .inline-flexbox();
+    .align-items(center);
   }
   &.controls-BreadCrumbs {
     .controls-BreadCrumbs__arrow, .controls-BreadCrumbs__title {

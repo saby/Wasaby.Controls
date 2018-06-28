@@ -31,11 +31,11 @@ function _recurse(input, handler, done) {
 }
 
 function _validateFile(file, patterns) {
-    let passed = true;
+    let passed = false;
 
     for (let i = 0; i < patterns.length; i++) {
-        if (!minimatch(file, patterns[i])) {
-            passed = false;
+        if (minimatch(file, patterns[i])) {
+            passed = true;
             break;
         }
     }

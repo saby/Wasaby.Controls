@@ -3,6 +3,7 @@
         on:deactivated="_deactivated()"
         on:suggestStateChanged="_suggestStateChanged()"
         suggestTemplate="{{_options.suggestTemplate}}"
+        footerTemplate="{{_options.footerTemplate}}"
         minSearchLength="{{_options.minSearchLength}}"
         source="{{_options.source}}"
         navigation="{{_options.navigation}}"
@@ -15,7 +16,6 @@
             tagStyle="{{_options.tagStyle}}"
             placeholder="{{_options.placeholder}}"
             style="{{_options.style}}"
-            on:valueChanged="_changeValueHandler()"
-            on:resetClick="_resetClick()">
+            on:valueChanged="_changeValueHandler()">
     </Controls.Input.Search>
 </Controls.Container.Suggest.Layout>

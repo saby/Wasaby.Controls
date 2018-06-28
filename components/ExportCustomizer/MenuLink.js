@@ -27,7 +27,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/MenuLink',
        * @property {string|number} id Идентификатор пресета
        * @property {string} title Отображаемое название пресета
        * @property {Array<string>} fieldIds Список привязки колонок в экспортируемом файле к полям данных
-       * @property {string} fileUuid Uuid шаблона форматирования эксель-файла
+       * @property {string} fileUuid Uuid стилевого эксель-файла
        */
 
       /**

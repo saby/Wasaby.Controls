@@ -5,7 +5,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptions
       'WS.Data/Di',
       'tmpl!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptionsPanel/ImageOptionsPanel',
       'SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/ImagePanel/ImagePanel',
-      'SBIS3.CONTROLS/RichEditor/Components/_ImageUploader',
       'SBIS3.CONTROLS/Commands/CommandsButton',
       'SBIS3.CONTROLS/Link',
       'css!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptionsPanel/ImageOptionsPanel',

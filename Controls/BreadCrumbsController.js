@@ -11,6 +11,10 @@ define('Controls/BreadCrumbsController', [
 ) {
    'use strict';
 
+   /**
+    * @demo Controls-demo/BreadCrumbs/BreadCrumbs
+    */
+
    var BreadCrumbsController = Control.extend({
       _template: template,
       _visibleItems: [],

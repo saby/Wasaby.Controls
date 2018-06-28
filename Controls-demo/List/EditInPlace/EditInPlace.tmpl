@@ -1,7 +1,8 @@
 <div class="editInPlaceDemo">
     <div>
         <h3>Simple list</h3>
-        <Controls:List
+        <Controls.List
+                class="test_list_1"
                 name="list"
                 source="{{_viewSource}}"
                 on:beforeItemEdit="_onItemEdit()"
@@ -17,25 +18,34 @@
             <ws:itemTemplate>
                 <ws:partial template="tmpl!Controls/List/ItemTemplate">
                     <ws:contentTemplate>
-                        <ws:partial template="tmpl!Controls-demo/List/EditInPlace/editingTemplate"/>
+                        <ws:partial template="tmpl!Controls/List/EditInPlace/EditingTemplate"
+                                    attr:class="controls-EditingTemplateDemo"
+                                    value="{{ itemTemplate.itemData.item.title }}"
+                                    enabled="{{true}}">
+                            <ws:editorTemplate>
+                                <Controls.Input.Text bind:value="itemTemplate.itemData.item.title"
+                                                     selectOnClick="{{ false }}" />
+                            </ws:editorTemplate>
+                        </ws:partial>
                     </ws:contentTemplate>
                 </ws:partial>
             </ws:itemTemplate>
-        </Controls:List>
-        <Controls:List:AddButton caption="Add record" on:click="addItem()"/>
+        </Controls.List>
+        <Controls.List.AddButton class="test_add_record_1" caption="Add record" on:click="addItem()"/>
         <div attr:style="padding: 15px; background-color: rgba(81,81,81,0.11); width: 150px;">
             <h3>Select options:</h3>
             <div>
-                <ws:Controls.Toggle.Checkbox bind:value="_editOnClick" caption="editOnClick"/>
-                <ws:Controls.Toggle.Checkbox bind:value="_singleEdit" caption="singleEdit"/>
-                <ws:Controls.Toggle.Checkbox bind:value="_autoAdd" caption="autoAdd"/>
-                <ws:Controls.Toggle.Checkbox bind:value="_showToolbar" caption="showToolbar"/>
+                <Controls.Toggle.Checkbox bind:value="_editOnClick" caption="editOnClick"/>
+                <Controls.Toggle.Checkbox bind:value="_singleEdit" caption="singleEdit"/>
+                <Controls.Toggle.Checkbox bind:value="_autoAdd" caption="autoAdd"/>
+                <Controls.Toggle.Checkbox bind:value="_showToolbar" caption="showToolbar"/>
             </div>
         </div>
     </div>
     <div>
         <h3>Adding doesn't work in this list</h3>
-        <Controls:List
+        <Controls.List
+                class="test_list_2"
                 name="list2"
                 source="{{_viewSource2}}"
                 on:beforeItemAdd="_cancelItemAdd()"
@@ -47,36 +57,25 @@
             <ws:itemTemplate>
                 <ws:partial template="tmpl!Controls/List/ItemTemplate">
                     <ws:contentTemplate>
-                        <ws:partial template="tmpl!Controls-demo/List/EditInPlace/editingTemplate""/>
+                        <ws:partial template="tmpl!Controls/List/EditInPlace/EditingTemplate"
+                                    attr:class="controls-EditingTemplateDemo"
+                                    value="{{ itemTemplate.itemData.item.title }}"
+                                    enabled="{{true}}">
+                            <ws:editorTemplate>
+                                <Controls.Input.Text bind:value="itemTemplate.itemData.item.title"
+                                                     selectOnClick="{{ false }}" />
+                            </ws:editorTemplate>
+                        </ws:partial>
                     </ws:contentTemplate>
                 </ws:partial>
             </ws:itemTemplate>
-        </Controls:List>
-        <Controls:List:AddButton caption="Add record" on:click="list2.addItem()"/>
-    </div>
-    <div>
-        <h3>onBeforeItemAdd handler returns Deferred</h3>
-        <Controls:List
-                name="list3"
-                source="{{_viewSource3}}"
-                on:beforeItemAdd="_deferredItemAdd()"
-                allowEmptySelection="{{false}}"
-                keyProperty="id">
-            <ws:editingConfig>
-                <ws:Object editOnClick="{{true}}"/>
-            </ws:editingConfig>
-            <ws:itemTemplate>
-                <ws:partial template="tmpl!Controls/List/ItemTemplate">
-                    <ws:contentTemplate>
-                        <ws:partial template="tmpl!Controls-demo/List/EditInPlace/editingTemplate"/>
-                    </ws:contentTemplate>
-                </ws:partial>
-            </ws:itemTemplate>
-        </Controls:List>
+        </Controls.List>
+        <Controls.List.AddButton class="test_add_record_2" caption="Add record" on:click="list2.addItem()"/>
     </div>
     <div>
         <h3>Editing starts before mounting to DOM</h3>
-        <Controls:List
+        <Controls.List
+                class="test_list_4"
                 name="list4"
                 source="{{_viewSource4}}"
                 allowEmptySelection="{{false}}"
@@ -87,15 +86,24 @@
             <ws:itemTemplate>
                 <ws:partial template="tmpl!Controls/List/ItemTemplate">
                     <ws:contentTemplate>
-                        <ws:partial template="tmpl!Controls-demo/List/EditInPlace/editingTemplate"/>
+                        <ws:partial template="tmpl!Controls/List/EditInPlace/EditingTemplate"
+                                    attr:class="controls-EditingTemplateDemo"
+                                    value="{{ itemTemplate.itemData.item.title }}"
+                                    enabled="{{true}}">
+                            <ws:editorTemplate>
+                                <Controls.Input.Text bind:value="itemTemplate.itemData.item.title"
+                                                     selectOnClick="{{ false }}" />
+                            </ws:editorTemplate>
+                        </ws:partial>
                     </ws:contentTemplate>
                 </ws:partial>
             </ws:itemTemplate>
-        </Controls:List>
+        </Controls.List>
     </div>
     <div>
         <h3>Adding starts before mounting to DOM</h3>
-        <Controls:List
+        <Controls.List
+                class="test_list_5"
                 name="list5"
                 source="{{_viewSource5}}"
                 allowEmptySelection="{{false}}"
@@ -106,10 +114,18 @@
             <ws:itemTemplate>
                 <ws:partial template="tmpl!Controls/List/ItemTemplate">
                     <ws:contentTemplate>
-                        <ws:partial template="tmpl!Controls-demo/List/EditInPlace/editingTemplate"/>
+                        <ws:partial template="tmpl!Controls/List/EditInPlace/EditingTemplate"
+                                    attr:class="controls-EditingTemplateDemo"
+                                    value="{{ itemTemplate.itemData.item.title }}"
+                                    enabled="{{true}}">
+                            <ws:editorTemplate>
+                                <Controls.Input.Text bind:value="itemTemplate.itemData.item.title"
+                                                     selectOnClick="{{ false }}" />
+                            </ws:editorTemplate>
+                        </ws:partial>
                     </ws:contentTemplate>
                 </ws:partial>
             </ws:itemTemplate>
-        </Controls:List>
+        </Controls.List>
     </div>
 </div>

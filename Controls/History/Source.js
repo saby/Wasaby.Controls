@@ -68,9 +68,9 @@ define('Controls/History/Source', [
          return self.originSource;
       },
 
-      initHistory: function(self, data) {
+      initHistory: function(self, data, sourceItems) {
          if (data.getRow) {
-            var rows = data.getRow();
+            var rows = this.prepareHistoryBySourceItems(self, data.getRow(), sourceItems);
             var pinned = rows.get('pinned');
             var recent = rows.get('recent');
             var frequent = rows.get('frequent');
@@ -83,6 +83,26 @@ define('Controls/History/Source', [
          } else {
             self._history = data;
          }
+      },
+
+      /* После изменения оригинального рекордсета, в истории могут остаться записи,
+         которых уже нет в рекордсете, поэтому их надо удалить из истории */
+      prepareHistoryBySourceItems: function(self, history, sourceItems) {
+         history.each(function(field, historyItems) {
+            var toDelete = [];
+
+            historyItems.each(function(rec) {
+               if (!sourceItems.getRecordById(rec.getId())) {
+                  toDelete.push(rec);
+               }
+            });
+
+            toDelete.forEach(function(rec) {
+               historyItems.remove(rec);
+            });
+         });
+
+         return history;
       },
 
       getFilterHistory: function(self, rawHistoryData) {
@@ -338,8 +358,8 @@ define('Controls/History/Source', [
             pd.push(self.originSource.query(query));
 
             return pd.done().getResult().addCallback(function(data) {
-               _private.initHistory(self, data[0]);
                self._oldItems = data[1].getAll();
+               _private.initHistory(self, data[0], self._oldItems);
                newItems = _private.getItemsWithHistory(self, self._history, self._oldItems);
                self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
                return new DataSet({

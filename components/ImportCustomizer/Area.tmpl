@@ -3,14 +3,14 @@
       <div class="controls-ImportCustomizer-Area__head  ws-window-titlebar">
          <div class="controls-ImportCustomizer-Area__head-title">
             <ws:if data="{{dialogTitle}}">{{dialogTitle}}</ws:if><ws:else>{[НастройщикИмпорта@@Настройка импорта]}</ws:else>:
-            <SBIS3.CONTROLS:Link
+            <SBIS3.CONTROLS.Link
                className="controls-ImportCustomizer-Area__head-title-link"
                href="{{file.url}}"
                caption="{{file.name}}"
                inNewTab="{{true}}"
             />
          </div>
-         <SBIS3.CONTROLS:Button
+         <SBIS3.CONTROLS.Button
             className="controls-ImportCustomizer-Area__applyButton"
             command="complete" primary="true"
             >
@@ -18,13 +18,13 @@
                <ws:if data="{{dialogButtonTitle}}">{{dialogButtonTitle}}</ws:if>
                <ws:else>{[НастройщикИмпорта@@Импортировать]}</ws:else>
             </ws:caption>
-         </SBIS3.CONTROLS:Button>
+         </SBIS3.CONTROLS.Button>
       </div>
    </ws:if>
-   <SBIS3.CONTROLS:ScrollContainer name="controls-ImportCustomizer-Area__scrollContainer" class="controls-ImportCustomizer-Area__body">
+   <SBIS3.CONTROLS.ScrollContainer name="controls-ImportCustomizer-Area__scrollContainer" class="controls-ImportCustomizer-Area__body">
       <ws:content>
          <ws:if data="{{_isUsedSubview.sheet}}">
-            <SBIS3.CONTROLS:ImportCustomizer:Sheet:View
+            <SBIS3.CONTROLS.ImportCustomizer.Sheet.View
                className="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-sheet"
                name="controls-ImportCustomizer-Area__sheet"
                scope="{{_scopes.sheet}}"
@@ -39,14 +39,14 @@
             />
          </ws:if>
          <ws:if data="{{_isUsedSubview.provider}}">
-            <SBIS3.CONTROLS:ImportCustomizer:Provider:View
+            <SBIS3.CONTROLS.ImportCustomizer.Provider.View
                className="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-provider"
                name="controls-ImportCustomizer-Area__provider"
                scope="{{_scopes.provider}}"
             />
          </ws:if>
          <ws:if data="{{_isUsedSubview.providerArgs}}">
-            <Lib:Control:TemplatedArea:TemplatedArea
+            <Lib.Control.TemplatedArea.TemplatedArea
                className="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-not-pad controls-ImportCustomizer-Area__body__box-providerArgs"
                name="controls-ImportCustomizer-Area__providerArgs"
                template="{{_scopes.providerArgs.component}}"
@@ -55,19 +55,19 @@
             />
          </ws:if>
          <ws:if data="{{_isUsedSubview.columnBinding}}">
-            <SBIS3.CONTROLS:ImportCustomizer:ColumnBinding:View
+            <SBIS3.CONTROLS.ImportCustomizer.ColumnBinding.View
                className="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-not-pad controls-ImportCustomizer-Area__body__box-columnBinding"
                name="controls-ImportCustomizer-Area__columnBinding"
                scope="{{_scopes.columnBinding}}"
             />
          </ws:if>
          <ws:if data="{{_isUsedSubview.mapper}}">
-            <SBIS3.CONTROLS:ImportCustomizer:Mapper:View
+            <SBIS3.CONTROLS.ImportCustomizer.Mapper.View
                className="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-not-pad controls-ImportCustomizer-Area__body__box-mapper"
                name="controls-ImportCustomizer-Area__mapper"
                scope="{{_scopes.mapper}}"
             />
          </ws:if>
       </ws:content>
-   </SBIS3.CONTROLS:ScrollContainer>
+   </SBIS3.CONTROLS.ScrollContainer>
 </div>

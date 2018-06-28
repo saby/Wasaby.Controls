@@ -13,10 +13,10 @@
             <ws:Array>
                <ws:Object id="FIO" value="Name" resetValue="" visibility="{{false}}"/>
                <ws:Object id="firstName" value="123" resetValue="" visibility="{{false}}"/>
-               <ws:Object id="id" value="{{3}}" resetValue="{{4}}"
+               <ws:Object id="id" value="{{[1]}}" resetValue="{{[1]}}"
                           source="{{sourceDropdown}}" visibility="{{false}}"/>
                <ws:Object id="checked" value="{{true}}" resetValue="{{false}}" visibility="{{false}}"/>
-               <ws:Object id="Test1" value="{{3}}" resetValue="{{2}}" source="{{sourceDropdown}}"
+               <ws:Object id="Test1" value="{{[1]}}" resetValue="{{[1]}}" source="{{sourceDropdown}}"
                           visibility="{{false}}"/>
                <ws:Object id="Test2" value="" resetValue="{{true}}" visibility="{{false}}"/>
                <ws:Object id="Test3" value="" resetValue="{{true}}" visibility="{{false}}"/>
@@ -44,8 +44,8 @@
                           template="tmpl!Controls-demo/FilterButton/Panel/resources/FIO"/>
                <ws:Object id="FIO" value="Lala" resetValue="reset" visibility="{{true}}"
                           template="tmpl!Controls-demo/FilterButton/Panel/resources/FIO"/>
-               <ws:Object id="country" value="" resetValue="" visibility="{{false}}"
-                          template="tmpl!Controls-demo/FilterButton/Panel/resources/FIO"/>
+               <ws:Object id="country" value="" resetValue="" visibility="{{false}}" source="{{sourceDropdown}}"
+                          template="tmpl!Controls-demo/FilterButton/Panel/resources/country"/>
                <ws:Object id="genreTip" value="" resetValue="" visibility="{{false}}"
                           template="tmpl!Controls-demo/FilterButton/Panel/resources/FIO"/>
             </ws:Array>

@@ -1,0 +1,115 @@
+.controls-Button_type-link_toggled, .controls-Button_type-link_toggled_readOnly {
+   border: @border-width_ToggleButton solid;
+   border-radius: @border-radius-ToggleButton;
+}
+
+.controls-Button_style-iconButtonBordered_toggle_on {
+   border-color: @border-color-IconButton_toggled;
+}
+
+.controls-Button_type-link_toggled {
+   color: @color-ToggleButton_text;
+   cursor: pointer;
+}
+
+.controls-Button_type-link_toggled_readOnly {
+   color: @color_ToggleButton_readOnly;
+}
+
+.controls-Button_style-link-main_toggled_readOnly {
+   border-color: @background_ToggleButton;
+   background: @background_ToggleButton;
+}
+
+.controls-Button_style-link-main_toggled_toggle_on_readOnly {
+   border-color: @border-color_ToggleButton_readOnly;
+   background: @background_ToggleButton_readOnly;
+}
+
+.controls-Button_style-iconButtonBordered_toggle_on {
+   box-shadow: none;
+}
+
+.controls-Button_style-link-main_toggled {
+   background: @background_ToggleButton;
+   border-color: @background_ToggleButton;
+}
+
+.controls-Button_style-link-main_toggled_toggle_on {
+   border-color: @border-color_ToggleButton;
+   background: @background_ToggleButton_state-on;
+}
+
+.controls-Button_type-link_toggled_size-m {
+   height: @height-ToggleButton_style_linkMain_size-m;
+   min-width: @min-width-ToggleButton_style_linkMain_size-m;
+}
+
+.controls-Button_type-link_toggled_size-l {
+   height: @height-ToggleButton_style_linkMain_size-l;
+   min-width: @min-width-ToggleButton_style_linkMain_size-l;
+}
+
+.controls-Button__wrapper_type-link_toggled_size-m {
+   padding: @padding_ToggleButton-wrapper_m;
+   .justify-content(center);
+}
+
+.controls-Button__wrapper_type-link_toggled_size-l {
+   padding: @padding_ToggleButton-wrapper_l;
+   .justify-content(center);
+}
+
+.controls-Button_style-iconButtonBordered_iconStyle-done_toggle_on {
+   border-color: @color-Icon_style_done;
+}
+
+.controls-Button_style-iconButtonBordered_iconStyle-attention_toggle_on {
+   border-color: @color-Icon_style_attention;
+}
+
+.controls-Button_style-iconButtonBordered_iconStyle-default_toggle_on {
+   border-color: @border-color-IconButton_toggled;
+}
+
+.controls-Button_style-link-main_toggled:active {
+   .controls-Button__icon-link-main_toggled_iconStyle-default_toggle_on {
+      color: @color_ToggleButton_Link-main_hovered;
+   }
+}
+
+.controls-Button__icon-link-main_toggled_iconStyle-default_toggle_on {
+   color: @color_ToggleButton_style-LinkMain;
+}
+
+.controls-Button__icon-link-main_toggled_iconStyle-error_toggle_on {
+   color: @color-Icon_style_error;
+}
+
+.controls-Button__icon-link-main_toggled_iconStyle-done_toggle_on {
+   color: @color-Icon_style_done;
+}
+
+.controls-Button__icon-link-main_toggled_iconStyle-attention_toggle_on {
+   color: @color-Icon_style_attention;
+}
+
+.controls-Button__icon-iconButtonBordered_iconStyle-default_toggle_on {
+   color: @color-IconButtonBordered_default;
+}
+
+.ws-is-no-touch {
+   .controls-Button_style-link-main_toggled:hover {
+      .controls-Button__icon-link-main_toggled_iconStyle-default_toggle_on {
+         color: @color_ToggleButton_Link-main_hovered;
+      }
+   }
+
+   .controls-Button_style-link-main_toggled:hover {
+      background: @background-ToggleButton_hovered;
+      border-color: @background-ToggleButton_hovered;
+      .controls-Button__icon-link-main_toggled_iconStyle-default {
+         color: @color-ToggleButton__icon_hovered;
+      }
+   }
+}

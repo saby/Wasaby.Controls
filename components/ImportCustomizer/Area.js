@@ -1102,9 +1102,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             if (provider.separator) {
                item.separator = provider.separator;
             }
-            if (providerArgs) {
-               item.parserConfig = ['hierarchyField', 'columns'].reduce(function (r, v) { r[v] = providerArgs[v]; return r; }, {});
-            }
+            item.parserConfig = providerArgs ? ['hierarchyField', 'columns'].reduce(function (r, v) { r[v] = providerArgs[v]; return r; }, {}) : {};
             if (sheet) {
                item.name = sheet.name;
                item.columnsCount = sheet.sampleRows[0].length;

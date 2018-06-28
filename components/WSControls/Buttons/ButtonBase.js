@@ -53,12 +53,13 @@ define('SBIS3.CONTROLS/WSControls/Buttons/ButtonBase', [
          _maxTouchCount:2,
          _options: {
             /**
-             * @cfg {String} Устанавливает надпись на кнопке.
+             * @cfg {Content} Устанавливает надпись на кнопке.
              * @example
              * <pre class="brush:xml">
              *     <option name="caption">Сохранить</option>
              * </pre>
              * @translatable
+             * @content
              * @see setCaption
              * @see getCaption
              */

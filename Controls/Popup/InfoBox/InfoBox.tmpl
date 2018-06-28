@@ -1,0 +1,12 @@
+<div>
+   <ws:partial template="{{_options.content}}"
+               on:mousedown="_contentMousedownHandler()"
+               on:mouseenter="_contentMouseenterHandler()"
+               on:mouseleave="_contentMouseleaveHandler()"/>
+   <Controls.Popup.Opener.InfoBox name="openerInfoBox">
+      <ws:popupOptions>
+         <ws:eventHandlers onResult="{{_resultHandler}}"/>
+      </ws:popupOptions>
+   </Controls.Popup.Opener.InfoBox>
+   <Controls.Event.Emitter event="mousedown" on:mousedown="_mousedownHandler()"/>
+</div>

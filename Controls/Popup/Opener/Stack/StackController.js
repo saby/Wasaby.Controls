@@ -16,12 +16,9 @@ define('Controls/Popup/Opener/Stack/StackController',
 
          prepareSizes: function(item, container) {
             var templateStyle = getComputedStyle(container.children[0]);
-            if (!item.popupOptions.minWidth) {
-               item.popupOptions.minWidth = parseInt(templateStyle.minWidth, 10);
-            }
-            if (!item.popupOptions.maxWidth) {
-               item.popupOptions.maxWidth = parseInt(templateStyle.maxWidth, 10);
-            }
+
+            item.popupOptions.minWidth = parseInt(item.popupOptions.minWidth || templateStyle.minWidth, 10);
+            item.popupOptions.maxWidth = parseInt(item.popupOptions.maxWidth || templateStyle.maxWidth, 10);
 
             //Если задано одно значение - приравниваем minWidth и maxWidth
             item.popupOptions.minWidth = item.popupOptions.minWidth || item.popupOptions.maxWidth;
@@ -31,7 +28,7 @@ define('Controls/Popup/Opener/Stack/StackController',
                item.popupOptions.maxWidth = item.popupOptions.minWidth;
             }
 
-            item.containerWidth = container.offsetWidth;
+            item.containerWidth = container.getElementsByClassName('controls-Popup__template')[0].offsetWidth; //Берем размеры пользовательского шаблона
          },
 
          getStackParentCoords: function() {
@@ -67,14 +64,18 @@ define('Controls/Popup/Opener/Stack/StackController',
          },
 
          elementCreated: function(item, container) {
-            _private.prepareSizes(item, container);
-            this._stack.add(item, 0);
-            this._update();
+            if (this._checkContainer(item, container)) {
+               _private.prepareSizes(item, container);
+               this._stack.add(item, 0);
+               this._update();
+            }
          },
 
          elementUpdated: function(item, container) {
-            _private.prepareSizes(item, container);
-            this._update();
+            if (this._checkContainer(item, container)) {
+               _private.prepareSizes(item, container);
+               this._update();
+            }
          },
 
          elementDestroyed: function(element, container) {

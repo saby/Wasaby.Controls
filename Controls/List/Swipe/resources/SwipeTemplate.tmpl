@@ -1,7 +1,7 @@
 <ws:if data="{{itemActionsType === 'outside'}}">
     <ws:partial template="{{itemActionsTemplate}}"  itemData="{{itemData}}"/>
 </ws:if>
-<ws:else >
+<ws:else data="{{swipeConfig}}">
     <div class="controls-itemActionsV_swipe
         {{menuIsShown ? 'controls-itemActionsV_invisible'}}">
         <div class="controls-itemActionsV_{{swipeConfig.direction}}

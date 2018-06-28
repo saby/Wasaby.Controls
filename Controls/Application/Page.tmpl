@@ -6,7 +6,9 @@
    appRoot="{{ appRoot }}"
    compat="{{ compat }}"
    head="{{ _options.head }}"
-   title="{{ title }}" >
+   title="{{ title }}"
+   buildnumber="{{ buildnumber }}"
+   servicesPath="{{ servicesPath }}">
 </Controls.Application._Head>
 <Controls.Event.Listener name="scrollDetect" register="scroll" attr:fixCompatible="1">
    <Controls.Event.Listener name="resizeDetect" register="resize" attr:fixCompatible="1">
@@ -32,11 +34,16 @@
                               <ws:if data="{{needArea}}">
                                  <div class="ws-focus-in"></div>
                               </ws:if>
-                              <ws:if data="{{ content.content }}">
+                              <ws:if data="{{  _options.content }}">
                                  <Controls.Application._Wait>
-                                    <ws:partial template="{{ content.content }}" scope="{{ templateConfig }}"/>
+                                    <ws:partial template="{{  _options.content }}" scope="{{ templateConfig }}"/>
                                  </Controls.Application._Wait>
                               </ws:if>
+                              <ws:else data="{{  content.content }}">
+                                 <Controls.Application._Wait>
+                                    <ws:partial template="{{  content.content }}" scope="{{ templateConfig }}"/>
+                                 </Controls.Application._Wait>
+                              </ws:else>
                               <ws:if data="{{ content.dragAvatarTemplate }}">
                                  <ws:partial template="{{content.dragAvatarTemplate}}" scope="{{content.dragAvatarOptions}}"></ws:partial>
                               </ws:if>
@@ -74,6 +81,7 @@
                                                 _options="{{_options}}"/>
                                  </div>
                               </ws:else>
+                              <Controls.TimeTester.TimeTester resourceRoot="{{ resourceRoot }}" />
                               </body>
                            </Controls.DragNDrop.Container>
                         </Controls.Application.TouchDetector>

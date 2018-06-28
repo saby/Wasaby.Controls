@@ -210,15 +210,20 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
          return recentItems;
       },
 
-      getFilteredOldItems: function(self, curHistoryLength) {
+      getFilteredOldItems: function(self, currentItems) {
          var oldItems;
-         var length = curHistoryLength;
-         var isCondition;
+         var length = currentItems.getCount();
 
-         oldItems = !self._options.maxHistoryLength ? self._options.oldItems : Chain(self._options.oldItems).filter(function() {
-            isCondition = length < self._options.maxHistoryLength;
-            length++;
-            return isCondition;
+         /* После того как сформировали рекордсет с записями из истории,
+            дозаполним его данными из оригинального рекордеста, но не больше maxHistoryLength */
+         oldItems = !self._options.maxHistoryLength ? self._options.oldItems : Chain(self._options.oldItems).filter(function(record) {
+            /* Запись уже может быть в истории */
+            var addToCurrentItems = !currentItems.getRecordById(record.getId());
+            
+            if (addToCurrentItems) {
+               length++;
+            }
+            return addToCurrentItems && length <= self._options.maxHistoryLength;
          }).value(recordSetFactory, this.getConfig(self));
 
          return oldItems;
@@ -264,7 +269,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
          if (processedItems.getCount()) {
             indexLastHistoryItem = processedItems.getCount() - 1;
          }
-         processedItems.append(_private.getFilteredOldItems(self, processedItems.getCount()));
+         processedItems.append(_private.getFilteredOldItems(self, processedItems));
 
          // скрываем лишние
          if (processedItems.getCount() > 11 && self._options.additionalProperty) {
@@ -439,7 +444,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
      * </ul>
      *
      * @class SBIS3.CONTROLS/Menu/SBISHistoryController
-     * @author Романов В.С.
+     * @author Герасимов А.М.
      * @extends Core/Abstract
      * @public
      * @category Buttons

@@ -1,6 +1,6 @@
 <ws:if data="{{ !_isEmptySelection(...) }}"><!-- Функция из multiSelectable и работает именно с options компонента -->
    <div class="controls-FieldLink__beforeFieldWrapper{{enabled ? ' controls-FieldLink__beforeFieldWrapper-enabled' : ' controls-FieldLink__beforeFieldWrapper-disabled'}}">
-      <SBIS3.CONTROLS:FieldLink:resources:ItemsCollection
+      <SBIS3.CONTROLS.FieldLink.resources.ItemsCollection
         cssClassName="controls-FieldLink__linksContainer"
         name="FieldLinkItemsCollection"
         tabindex="0"
@@ -14,6 +14,6 @@
         underlinedItems="{{ underlinedItems }}"
         bigItems="{{ bigItems }}"
         itemsSortMethod="{{ itemsSortMethod }}">
-      </SBIS3.CONTROLS:FieldLink:resources:ItemsCollection>
+      </SBIS3.CONTROLS.FieldLink.resources.ItemsCollection>
    </div>
 </ws:if>

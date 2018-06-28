@@ -122,6 +122,15 @@ define('SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin', [
          this._publish('onBeforeLoadHistory');
          this._options.observableControls.unshift(this);
          CommandDispatcher.declareCommand(this, 'changeSearchParam', function(searchParam) {
+            if (self._list) {
+               var filter = self._list.getFilter();
+               
+               if (filter[self._options.searchParam] && self._options.searchParam !== searchParam) {
+                  filter[searchParam] = filter[self._options.searchParam];
+                  delete filter[self._options.searchParam];
+                  self._list.setFilter(filter, true);
+               }
+            }
             self.setSearchParamName(searchParam);
             
             if (self._needShowHistory()) {

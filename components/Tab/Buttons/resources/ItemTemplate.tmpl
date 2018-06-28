@@ -1,4 +1,4 @@
-<SBIS3.CONTROLS:Tab:Button class="{{'controls-ListView__item ' + item.get('className')|orEmpty}}"
+<SBIS3.CONTROLS.Tab.Button class="{{'controls-ListView__item ' + item.get('className')|orEmpty}}"
                              attributes="{{ {'data-hash': projItem.getHash(), 'data-id': item.getId() } }}"
       caption="{{item[displayProperty]}}"
       align="{{item.get('align') || 'right'}}"
@@ -9,4 +9,4 @@
       visible="{{item.get('visible') !== false}}"
       checked="{{item.getId() === selectedKey ? true : false}}"
       tooltip="{{item.tooltip}}"
-      allowChangeEnable="{{!!allowChangeEnable}}" name="{{item.get('name')}}"></SBIS3.CONTROLS:Tab:Button>
+      allowChangeEnable="{{!!allowChangeEnable}}" name="{{item.get('name')}}"></SBIS3.CONTROLS.Tab.Button>

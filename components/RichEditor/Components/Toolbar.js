@@ -8,6 +8,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
    "tmpl!SBIS3.CONTROLS/RichEditor/Components/Toolbar/RichEditorToolbar",
    "SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/config",
    'SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/ImagePanel/ImagePanel',
+   'WS.Data/Di',
    "SBIS3.CONTROLS/WSControls/Buttons/Button",
    "SBIS3.CONTROLS/WSControls/Buttons/ToggleButton",
    'SBIS3.CONTROLS/Menu/MenuButton',
@@ -15,13 +16,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
    'css!SBIS3.CONTROLS/RichEditor/Components/Toolbar/RichEditorToolbar',
    'css!SBIS3.CONTROLS/Button/ToggleButton/resources/ToggleButton__square',
    'css!SBIS3.CONTROLS/Menu/MenuIcon/MenuIcon'
-], function( cMerge, RichEditorToolbarBase, dotTplFn, defaultConfig, ImagePanel) {
+], function( cMerge, RichEditorToolbarBase, dotTplFn, defaultConfig, ImagePanel, Di) {
 
    'use strict';
 
    var
       constants = {
-         toolbarHeight: 32
+         toolbarHeight: 32,
+         DI_IMAGE_UPLOADER : 'ImageUploader'
       },
       /**
        * @class SBIS3.CONTROLS/RichEditor/Components/Toolbar
@@ -387,6 +389,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
             }
          },
 
+         _checkImageLoader: function(button){
+            if (!Di.isRegistered(constants.DI_IMAGE_UPLOADER)) {
+               button.hide();
+            }
+         },
          _openImagePanel: function(button){
             var
                imagePanel = this.getImagePanel(button);

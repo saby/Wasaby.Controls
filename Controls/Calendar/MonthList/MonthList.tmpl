@@ -1,0 +1,61 @@
+<Controls.Container.Scroll attr:class="DateRangePicker-ScrollContainer" attr:style="height: 100%;" scrollbarVisibility="{{false}}" >
+
+   <Controls.List
+      source = "{{_viewSource}}"
+      name="months"
+      idProperty="id"
+      >
+
+      <ws:navigation source="page" view="infinity">
+         <ws:sourceConfig pageSize="{{1}}" page="{{_page}}"></ws:sourceConfig>
+      </ws:navigation>
+
+      <ws:itemTemplate>
+         <ws:partial template="tmpl!Controls/List/ItemTemplate"
+                     itemData="{{itemTemplate.itemData}}"
+         >
+            <ws:contentTemplate>
+               <ws:for data="monthIndex, month in itemTemplate.itemData.item['months']">
+                  <Controls.Calendar.Month
+
+                     startValue="{{_options.startValue}}"
+                     endValue="{{_options.endValue}}"
+
+                     bind:selectionProcessing="_selectionProcessing"
+                     bind:selectionBaseValue="_selectionBaseValue"
+                     bind:selectionHoveredValue="_selectionHoveredValue"
+
+                     on:startValueChanged="startValueChangedHandler()"
+                     on:endValueChanged="endValueChangedHandler()"
+
+                     className="controls-DateRangeBigChoose-DateRangePicker__item"
+                     showWeekdays="{{false}}"
+                     month="{{month}}"
+                  />
+               </ws:for>
+            </ws:contentTemplate>
+            <!--<ws:partial template="tmpl!Controls/Calendar/DateRangePickerItem"-->
+                        <!--item="{{itemTemplate.itemData.item}}"-->
+                        <!--scope="{{...}}"-->
+               <!--&gt;-->
+               <!--<ws:partial template="tmpl!Controls/Calendar/DateRangePickerItem"-->
+                           <!--item="{{itemTemplate.itemData.item}}"-->
+                           <!--startValue="{{startValue}}"-->
+                           <!--endValue="{{endValue}}"-->
+
+                           <!--_selectionProcessing="{{_selectionProcessing}}"-->
+                           <!--_selectionBaseValue="{{_selectionBaseValue}}"-->
+                           <!--_selectionHoveredValue="{{_selectionHoveredValue}}"-->
+
+                           <!--startValueChangedHandler="{{startValueChangedHandler}}"-->
+                           <!--endValueChangedHandler="{{endValueChangedHandler}}"-->
+
+                           <!--selectionProcessingHandler="{{selectionProcessingHandler}}"-->
+                           <!--selectionBaseValueHandler="{{selectionBaseValueHandler}}"-->
+                           <!--selectionHoveredValueHandler="{{selectionHoveredValueHandler}}"-->
+               <!--&gt;-->
+               <!--</ws:partial>-->
+         </ws:partial>
+      </ws:itemTemplate>
+   </Controls.List>
+</Controls.Container.Scroll>

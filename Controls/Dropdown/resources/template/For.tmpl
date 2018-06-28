@@ -1,4 +1,11 @@
 <div>
+   <ws:if data="{{listModel.getEmptyItem()}}">
+      <ws:partial
+              template="{{itemTemplate || defaultItemTemplate}}"
+              itemData="{{listModel.getEmptyItem()}}"
+              resultHandler="{{resultHandler}}"
+              class="controls-DropdownList__emptyItem"/>
+   </ws:if>
    <ws:for data="listModel.reset(); listModel.isEnd(); listModel.goToNext();">
       <ws:partial
          template="{{listModel.getCurrent().template || itemTemplate || defaultItemTemplate}}"

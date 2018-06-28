@@ -22,5 +22,18 @@ class PhotoCam extends ResourceGetter {
     constructor (options?: any) {
         super (GETTER_LINK, GETTER_TYPE, options || {});
     }
+    /**
+     * @description 
+     * Тип геттера передается в метод choose File/Attach, чтобы указать каким способом(геттером) выбираются файлы
+     * <pre>
+     *   attach.choose(PhotoCam.getType()); // Получение фото с веб-камеры
+     * </pre>
+     * @static
+     * @method
+     * @returns {String} Тип Getter'a
+     */
+    static getType(){
+       return GETTER_TYPE;
+    }
 }
 export = PhotoCam;

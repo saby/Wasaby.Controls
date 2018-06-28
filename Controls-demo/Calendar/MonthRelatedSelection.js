@@ -16,8 +16,8 @@ define('Controls-demo/Calendar/MonthRelatedSelection', [
          _startValue: new Date(2017, 0, 1),
          _endValue: new Date(2017, 0, 30),
          _selectionProcessing: false,
-         selectionBaseValue: null,
-         selectionHoveredValue: null,
+         _selectionBaseValue: null,
+         _selectionHoveredValue: null,
 
          constructor: function() {
             ModuleClass.superclass.constructor.apply(this, arguments);

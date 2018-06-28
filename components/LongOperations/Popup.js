@@ -63,13 +63,13 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
             },
 
             _activeOperation: null,
-            _firstOperationMode: false,
             _floatArea: null,
 
             _longOpList: null,
 
             _notificationContainer: null,
             _progressContainer: null,
+            _footerPause: null,
 
             _tabChannel: null,
 
@@ -100,6 +100,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
             var container = this.getContainer();
             this._notificationContainer = container.find('.controls-LongOperationsPopup__footer_notification');
             this._progressContainer = container.find('.controls-LongOperationsPopup__footer_progress_container');
+            this._footerPause = container.find('.controls-LongOperationsPopup__footer_actionPause');
 
             this._tabChannel = new TabMessage();
 
@@ -138,7 +139,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
             var view = this._longOpList.getView();//this._longOpList.getChildControlByName('operationListDataGrid')
 
             var container = this.getContainer();
-            var actionsContainer = container.find('.controls-LongOperationsPopup__footer__actionsContainer');
+
             this.subscribeTo(view, 'onDrawItems'/*'onItemsReady'*/, function () {
                var items = self._longOpList.getItems();
                var count = items ? items.getCount() : 0;
@@ -160,7 +161,6 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                         self._activeOperation = items.getRecordById(items.at(0).getId()/*Это fullId!*/);
                      }
                   }
-                  actionsContainer.removeClass('ws-hidden');
                   self._updateState();
 
                   // Данные получены - пора показать окно, если оно не было показано ранее
@@ -175,7 +175,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                   //Если операций нет, просто закрываем попап
                   self.close();
                }
-            });
+            }.bind(this));
 
             //При клике по записи, открываем журнал операции или ссылку, если она есть
             this.subscribeTo(view, 'onItemActivate', function (e, meta) {
@@ -193,23 +193,24 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                self._showRegistry();
             });
 
-            container.find('.controls-LongOperationsPopup__hideContentIcon').on('click', function () {
+            container.find('.controls-LongOperationsPopup__footer_actionHideContent').on('click', function () {
                //Показать / Скрыть контент
-               self._toggleContent();
+               this._toggleContent();
                //Возможно после раскрытия нужно известить о выполненых операциях
-               self._longOpList[self._isContentHidden() ? 'animationClear' : 'animationStart']();
-            });
+               this._longOpList[this._isContentHidden() ? 'animationClear' : 'animationStart']();
+            }.bind(this));
 
-            container.find('.controls-LongOperationsPopup__footer_pauseIcon').on('click', function () {
+            this._footerPause.on('click', function () {
                //Остановить / Запустить операцию
-               self._longOpList.applyUserAction($(this).hasClass('icon-Pause') ? 'suspend' : 'resume', self._activeOperation);
-            });
+               var activeOperation = this._activeOperation;
+               this._longOpList.applyUserAction(activeOperation.get('status') === LongOperationEntry.STATUSES.running ? 'suspend' : 'resume', activeOperation.getRawData());
+            }.bind(this));
 
             //Иконку запуска сделаем кликабельной, по ней будет запускать остановленная операция
             container.find('.controls-NotificationPopup__header').on('click', '.controls-LongOperationsPopup__runOperationIcon', function () {
                //Запустить операцию
-               self._longOpList.applyUserAction('resume', self._activeOperation);
-            });
+               this._longOpList.applyUserAction('resume', this._activeOperation.getRawData());
+            }.bind(this));
 
             //Обработчик, который применяет фильтр "Скрыть приостановленные"
             var button = container.find('.controls-LongOperationsPopup__header_stoppedOperationsButton');
@@ -348,52 +349,63 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
           * Обновить состояние панели.
           */
          _updateState: function () {
-            var model = this._activeOperation;
-            if (model) {
+            var activeOperation = this._activeOperation;
+            if (activeOperation) {
                var STATUSES = LongOperationEntry.STATUSES;
-               var title = model.get('title');
-
-               //Кнопка остановки / запуска операции
-               var pauseIcon = this.getContainer().find('.controls-LongOperationsPopup__footer_pauseIcon');
-
-               var status = model.get('status');
+               var title = activeOperation.get('title');
+               var status = activeOperation.get('status');
                switch (status) {
                   case STATUSES.running:
                      this._setHeader(title, 'default', 'icon-size icon-24 controls-LongOperationsPopup__header_icon-customIcon');
-                     if (model.get('canSuspend')) {
-                        pauseIcon.removeClass('ws-hidden').addClass('icon-Pause').removeClass('icon-DayForward');
-                     }
-                     else {
-                        pauseIcon.addClass('ws-hidden');
-                     }
+                     this._setFooterPauseState(activeOperation.get('canSuspend') ? 'running' : null);
                      break;
 
                   case STATUSES.suspended:
                      this._setHeader(title, 'default', 'icon-size icon-24 icon-DayForward icon-primary controls-LongOperationsPopup__runOperationIcon');
-                     if (model.get('canSuspend')) {
-                        pauseIcon.removeClass('ws-hidden').removeClass('icon-Pause').addClass('icon-DayForward');
-                     }
-                     else {
-                        pauseIcon.addClass('ws-hidden');
-                     }
+                     this._setFooterPauseState(activeOperation.get('canSuspend') ? 'suspended' : null);
                      break;
 
                   case STATUSES.ended:
-                     var isSuccess = !model.get('isFailed');
+                     var isSuccess = !activeOperation.get('isFailed');
                      this._setHeader(title, isSuccess ? 'success' : 'error', isSuccess ? 'icon-size icon-24 icon-Yes icon-done' : 'icon-size icon-24 icon-Alert icon-error');
-                     pauseIcon.addClass('ws-hidden');
+                     this._setFooterPauseState(null);
                      break;
                }
 
-               var notification = model.get('notification');
+               var notification = activeOperation.get('notification');
                if (notification) {
                   this._setNotification(notification);
                }
                else {
-                  this._setProgress(model.get('progressCurrent'), model.get('progressTotal'), status === STATUSES.ended);
+                  this._setProgress(activeOperation.get('progressCurrent'), activeOperation.get('progressTotal'), status === STATUSES.ended);
                }
 
-               this._setFooterTimeSpent(model.get('shortTimeSpent'));
+               this._setFooterTimeSpent(activeOperation.get('shortTimeSpent'));
+            }
+         },
+
+         /**
+          * Установить состояние отображения кнопки остановки/запуска операции в нижней панели
+          * @param {string} state Состояние - 'running' или 'suspended'
+          */
+         _setFooterPauseState: function (state) {
+            var footerPause = this._footerPause;
+            var items = this._longOpList.getItems();
+            var count = items ? items.getCount() : 0;
+            if (count === 1) {
+               if (state === 'running') {
+                  footerPause.removeClass('ws-hidden').addClass('icon-Pause').removeClass('icon-DayForward');
+               }
+               else
+               if (state === 'suspended') {
+                  footerPause.removeClass('ws-hidden').removeClass('icon-Pause').addClass('icon-DayForward');
+               }
+               else {
+                  footerPause.addClass('ws-hidden');
+               }
+            }
+            else {
+               footerPause.addClass('ws-hidden');
             }
          },
 
@@ -417,27 +429,15 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
           * @param f Флаг - включить или отключить.
           */
          _setFirstOperationMode: function (f) {
-            if (f !== this._isFirstOperationMode()) {
+            var modeClass = 'controls-LongOperationsPopup__footer_firstOperationMode';
+            var footer = this.getContainer().find('.controls-LongOperationsPopup__footer');
+            if (f !== footer.hasClass(modeClass)) {
                if (f) {
                   //Скрываем контент
                   this._toggleContent(false);
                }
-               this._toggleFirstOperationMode();
+               footer.toggleClass(modeClass);
             }
-         },
-
-         /**
-          * Проверить включен ли режим одной операции.
-          */
-         _isFirstOperationMode: function () {
-            return this.getContainer().find('.controls-LongOperationsPopup__footer').hasClass('controls-LongOperationsPopup__footer_firstOperationMode');
-         },
-
-         /**
-          * Изменить режим одной операции.
-          */
-         _toggleFirstOperationMode: function () {
-            this.getContainer().find('.controls-LongOperationsPopup__footer').toggleClass('controls-LongOperationsPopup__footer_firstOperationMode');
          },
 
          _setProgress: function (current, total, isEnded) {
@@ -618,8 +618,8 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
             var container = this.getContainer();
             [
                '.controls-NotificationPopup__header_caption',
-               '.controls-LongOperationsPopup__hideContentIcon',
-               '.controls-LongOperationsPopup__footer_pauseIcon',
+               '.controls-LongOperationsPopup__footer_actionHideContent',
+               '.controls-LongOperationsPopup__footer_actionPause',
                '.controls-NotificationPopup__header',
                '.controls-LongOperationsPopup__header_stoppedOperationsButton'
             ].forEach(function (selector) {

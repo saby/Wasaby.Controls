@@ -17,6 +17,7 @@ define('Controls-demo/Input/Number/Number', [
       _showEmptyDecimals: false,
       _readOnly: false,
       _eventResult: '',
+      _selectOnClick: false,
 
       _eventHandler: function(e, value) {
          this._eventResult = e.type + ': ' + value;

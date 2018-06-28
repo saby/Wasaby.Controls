@@ -2,10 +2,19 @@
    .flexbox();
    .flex-direction(column);
    max-height: @max-height_DropdownList;
-   border: @border-size_DropdownList solid @border-color_DropdownList;
-   background: @background_DropdownList ;
-   .box-shadow(@shadow_DropdownList)
+   border: @border-width_suggestionsContainer solid @border-color_suggestionsContainer;
+   background: @background_DropdownList;
+   box-sizing: border-box;
 }
+
+.controls-DropdownList__popup-shadow-default {
+   .box-shadow(@shadow_DropdownList-default)
+}
+
+.controls-DropdownList__popup-shadow-suggestionsContainer{
+   .box-shadow(@shadow_suggestionsContainer);
+}
+
 .controls-DropdownList__scroll {
    max-height: 100%;
    padding: @padding_DropdownList-content;
@@ -14,7 +23,6 @@
 .controls-DropdownList__row {
    cursor: pointer;
    position: relative;
-   color: @color_DropdownList-item;
    min-height: @height_DropdownList-item;
    height: @height_DropdownList-item;
    .flexbox();
@@ -26,6 +34,11 @@
       background: @background_DropdownList-item_hover;
    }
 }
+
+.controls-DropdownList__emptyItem {
+   color: @color-Dropdown-emptyItem;
+}
+
 .controls-DropdownList__item-left_default-padding {
    padding-right: @padding_DropdownList-default;
 }
@@ -143,4 +156,10 @@
    .controls-MenuButton-cross:hover {
       color: @color-Dropdown-cross_hovered;
    }
+}
+
+.controls-Toolbar__menu-position {
+   //todo: жду крестик для темизации
+   margin-top: -6px;
+   margin-left: 6px - 2px;//border or ya hz chto eto takoe
 }

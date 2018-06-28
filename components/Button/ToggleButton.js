@@ -20,7 +20,7 @@ define('SBIS3.CONTROLS/Button/ToggleButton', [
     *
     * @class SBIS3.CONTROLS/Button/ToggleButton
     * @extends WSControls/Buttons/ToggleButton
-    * @author Романов В.С.
+    * @author Герасимов А.М.
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip
     *

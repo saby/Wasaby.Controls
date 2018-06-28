@@ -3,10 +3,12 @@ define('Controls-demo/List/Tree/Tree', [
    'Controls-demo/List/Tree/GridData',
    'tmpl!Controls-demo/List/Tree/Tree',
    'Controls-demo/List/Tree/TreeMemory',
+   'Controls/Constants',
    'css!Controls-demo/List/Tree/Tree',
    'Controls/Container/Scroll',
-   'Controls/TreeGrid'
-], function(BaseControl, GridData, template, MemorySource) {
+   'Controls/TreeGrid',
+   'tmpl!Controls-demo/List/Tree/DemoContentTemplate'
+], function(BaseControl, GridData, template, MemorySource, ControlsConstants) {
 
    'use strict';
 
@@ -70,6 +72,12 @@ define('Controls-demo/List/Tree/Tree', [
    var
       ModuleClass = BaseControl.extend({
          _template: template,
+         _itemsGroup: {
+            method: function(item, index, displayItem) {
+               return item.get('Группа');
+            },
+            template: ''
+         },
 
          _showAction: function(action, item) {
             if (item.get('id') === '471329') {
@@ -104,12 +112,8 @@ define('Controls-demo/List/Tree/Tree', [
          gridColumns: [
             {
                displayProperty: 'Наименование',
-               width: '1fr'
-            },
-            {
-               displayProperty: 'p0',
-               width: 'auto',
-               align: 'right'
+               width: '1fr',
+               template: 'tmpl!Controls-demo/List/Tree/DemoContentTemplate'
             }
          ]
       });

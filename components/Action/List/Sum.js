@@ -6,13 +6,14 @@ define('SBIS3.CONTROLS/Action/List/Sum', [
    "SBIS3.CONTROLS/Action/Mixin/DialogMixin",
    "WS.Data/Source/SbisService",
    "WS.Data/Entity/Model",
+   "SBIS3.CONTROLS/WaitIndicator",
    "SBIS3.CONTROLS/Utils/SelectionUtil",
    "Core/core-merge",
    "Core/core-clone",
    "Core/core-instance",
    "WS.Data/Adapter/Sbis"
 ],
-    function ( Deferred,ActionBase, ListMixin, DialogMixin, SbisService, Model, SelectionUtil, cMerge, cClone, cInstance) {
+    function ( Deferred,ActionBase, ListMixin, DialogMixin, SbisService, Model, WaitIndicator, SelectionUtil, cMerge, cClone, cInstance) {
         'use strict';
         /**
          * Класс, описывающий действие суммирования полей в списке.
@@ -170,12 +171,21 @@ define('SBIS3.CONTROLS/Action/List/Sum', [
             },
 
             _sumByFilter: function(filter) {
-               var source = this.getDataSource();
-               return this._getSumSource().call('ПоМетоду', {
-                  'Поля': Object.keys(this._options.fields),
-                  'ИмяМетода': source.getEndpoint().contract + '.' + source.getBinding().query,
-                  'Фильтр': Model.fromObject(filter, 'adapter.sbis')
-               });
+               var
+                  source = this.getDataSource(),
+                  sumDeferred = this._getSumSource().call('ПоМетоду', {
+                     'Поля': Object.keys(this._options.fields),
+                     'ИмяМетода': source.getEndpoint().contract + '.' + source.getBinding().query,
+                     'Фильтр': Model.fromObject(filter, 'adapter.sbis')
+                  });
+
+               WaitIndicator.make({
+                  message: rk('Пожалуйста подождите...'),
+                  overlay: 'dark'
+               }, sumDeferred);
+
+               return sumDeferred;
+
             },
 
             _sumByRecordSet: function(items, format, nodeProperty) {

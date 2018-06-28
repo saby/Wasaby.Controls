@@ -1,6 +1,6 @@
 #!groovy
 echo "Задаем параметры сборки"
-def version = "3.18.310"
+def version = "3.18.350"
 
 def gitlabStatusUpdate() {
     if ( currentBuild.currentResult == "ABORTED" ) {
@@ -47,7 +47,7 @@ node('controls') {
                 choices: "online\npresto\ncarry\ngenie",
                 description: '',
                 name: 'theme'),
-            choice(choices: "chrome\nff\nie", description: '', name: 'browser_type'),
+            choice(choices: "chrome\nff\nie\nedge", description: '', name: 'browser_type'),
             booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов", name: 'run_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
@@ -58,8 +58,8 @@ node('controls') {
 
 
     if ( "${env.BUILD_NUMBER}" != "1" && !params.run_reg && !params.run_int && !params.run_unit) {
-            currentBuild.result = 'ABORTED'
-            gitlabStatusUpdate()
+            currentBuild.result = 'FAILURE'
+            currentBuild.displayName = "#${env.BUILD_NUMBER} TESTS NOT BUILD"
             error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
         }
 
@@ -67,6 +67,11 @@ node('controls') {
     echo "Определяем рабочую директорию"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
+        def inte = params.run_int
+        def regr = params.run_reg
+        def unit = params.run_unit
+
+        try {
         echo "Чистим рабочую директорию"
         deleteDir()
 
@@ -77,7 +82,7 @@ node('controls') {
         def ver = version.replaceAll('.','')
 		def python_ver = 'python3'
         def SDK = ""
-        def items = "controls:${workspace}/controls, controls_new:${workspace}/controls"
+        def items = "controls:${workspace}/controls, controls_new:${workspace}/controls, controls_file:${workspace}/controls"
 
 		def branch_atf
 		if (params.branch_atf) {
@@ -92,10 +97,7 @@ node('controls') {
 		} else {
 			branch_engine = props["engine"]
 		}
-
-        def inte = params.run_int
-        def regr = params.run_reg
-        def unit = params.run_unit
+        
         if ("${env.BUILD_NUMBER}" == "1"){
             inte = true
             regr = true
@@ -213,23 +215,6 @@ node('controls') {
                                 url: 'git@git.sbis.ru:root/sbis3-cdn.git']]
                         ])
                     }
-                },
-                checkout4: {
-                    echo "Выкачиваем demo_stand"
-                    dir(workspace) {
-                        checkout([$class: 'GitSCM',
-                        branches: [[name: "rc-${version}"]],
-                        doGenerateSubmoduleConfigurations: false,
-                        extensions: [[
-                            $class: 'RelativeTargetDirectory',
-                            relativeTargetDir: "demo_stand"
-                            ]],
-                            submoduleCfg: [],
-                            userRemoteConfigs: [[
-                                credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
-                                url: 'git@git.sbis.ru:ka.sannikov/demo_stand.git']]
-                        ])
-                    }
                 }
             )
         }
@@ -240,8 +225,6 @@ node('controls') {
                 SDK = SDK.trim()
                 echo SDK
             }
-            echo " Копируем /demo_stand/client в /tests/stand/client"
-            sh "cp -rf ./demo_stand/client ./controls/tests/stand"
             parallel(
                 ws: {
                     echo "Выкачиваем ws для unit тестов и если указан сторонний бранч"
@@ -339,8 +322,9 @@ node('controls') {
                         }
                     )
                 }
-            }
         }
+    }       
+        if ( inte || regr ) { 
         stage("Разворот стенда"){
             echo "Запускаем разворот стенда и подготавливаем окружение для тестов"
             // Создаем sbis-rpc-service.ini
@@ -402,31 +386,12 @@ node('controls') {
                 sudo chmod -R 0777 ${workspace}
                 sudo chmod -R 0777 /home/sbis/Controls
             """
-            //Пакуем данные
-            writeFile file: "/home/sbis/Controls/intest-ps/ui/Core.package.json", text: """
-                {
-                "includeCore":true,
-                "platformPackage": true,
-                "include":[
-                "Core/*",
-                "SBIS3.CONTROLS.ItemsControlMixin"
-                ],
-                "modules" : [
-                "Core/core",
-                "SBIS3.CONTROLS.ItemsControlMixin"
-                ],
-                    "output" : "/resources/Core.module.js"
-                }"""
-            sh """
-                cd ./jinnee/distrib/builder
-                cp -rf ${workspace}/jinnee/ws /home/sbis/Controls/intest-ps/ui/
-                node ./node_modules/grunt-cli/bin/grunt xhtmlmin --root=/home/sbis/Controls/intest-ps/ui --application=/
-                node ./node_modules/grunt-cli/bin/grunt xhtml-build --root=/home/sbis/Controls/intest-ps/ui --application=/
-                node ./node_modules/grunt-cli/bin/grunt tmpl-build --root=/home/sbis/Controls/intest-ps/ui --application=/
-                node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/sbis/Controls/intest-ps/ui --application=/
-                sudo systemctl restart Controls_ps
-            """
         }
+        def soft_restart = "True"
+        if ( params.browser_type in ['ie', 'edge'] ){
+			soft_restart = "False"
+		}
+
         writeFile file: "./controls/tests/int/config.ini", text:
             """# UTF-8
             [general]
@@ -435,13 +400,14 @@ node('controls') {
             SERVER = test-autotest-db1:5434
             BASE_VERSION = css_${NODE_NAME}${ver}1
             DO_NOT_RESTART = True
-            SOFT_RESTART = True
+            SOFT_RESTART = ${soft_restart}
             NO_RESOURCES = True
             DELAY_RUN_TESTS = 2
             TAGS_NOT_TO_START = iOSOnly
             ELEMENT_OUTPUT_LOG = locator
             WAIT_ELEMENT_LOAD = 20
             HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/"""
+
         if ( "${params.theme}" != "online" ) {
             writeFile file: "./controls/tests/reg/config.ini",
             text:
@@ -490,75 +456,78 @@ node('controls') {
             run_test_fail = "-sf"
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
         }
-        stage("Запуск тестов интеграционных и верстки"){
-            def site = "http://${NODE_NAME}:30010"
-            site.trim()
-			if ("${params.browser_type}" != "ff"){
-				dir("./controls/tests/int"){
-					tmp_smoke = sh returnStatus:true, script: """
-						source /home/sbis/venv_for_test/bin/activate
-						${python_ver} smoke_test.py --SERVER_ADDRESS ${smoke_server_address}
-						deactivate
-					"""
-					if ( "${tmp_smoke}" != "0" ) {
-						currentBuild.result = 'ABORTED'
-                        gitlabStatusUpdate()
-						error('Стенд неработоспособен (не прошел smoke test).')
-					}
-				}
-			}
-            parallel (
-                int_test: {
-                    echo "Запускаем интеграционные тесты"
-                    stage("Инт.тесты"){
-                        if ( inte ){
-							dir("./controls/tests/int"){
-                                 sh """
-                                 source /home/sbis/venv_for_test/bin/activate
-								 python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
-								 deactivate
-                                 """
-                            }
-                        }
-                    }
-                },
-                reg_test: {
-                    stage("Рег.тесты"){
-                        echo "Запускаем тесты верстки"
-                        if ( regr ){
-                            sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
-                            dir("./controls/tests/reg"){
-                                sh """
-                                    source /home/sbis/venv_for_test/bin/activate
-                                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS http://test-selenium39-unix.unix.tensor.ru:4444/wd/hub --DISPATCHER_RUN_MODE --STAND platform --STREAMS_NUMBER ${stream_number}
-                                    deactivate
-                                """
-                            }
-                        }
-                    }
-                }
-            )
-        }
-        sh """
-            sudo chmod -R 0777 ${workspace}
-            sudo chmod -R 0777 /home/sbis/Controls
-        """
-        stage("Результаты"){
-            echo "выкладываем результаты в зависимости от включенных тестов 'all only_reg only_int only_unit'"
-            if ( regr ){
-                dir(workspace){
-                    publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './controls/tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
-                }
-                archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
-            }
-            if ( unit ){
-                junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
-            }
-            if ( regr || inte ){
-                archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
-                junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
+
+        def site = "http://${NODE_NAME}:30010"
+        site.trim()
+        dir("./controls/tests/int"){
+            tmp_smoke = sh returnStatus:true, script: """
+                source /home/sbis/venv_for_test/bin/activate
+                ${python_ver} smoke_test.py --SERVER_ADDRESS ${smoke_server_address} --BROWSER chrome
+                deactivate
+            """
+            if ( "${tmp_smoke}" != "0" ) {
+                currentBuild.result = 'ABORTED'
+                gitlabStatusUpdate()
+                error('Стенд неработоспособен (не прошел smoke test).')
             }
         }
-        gitlabStatusUpdate()
+
+        parallel (
+            int_test: {
+                echo "Запускаем интеграционные тесты"
+                stage("Инт.тесты"){
+                    if ( inte ){
+                        dir("./controls/tests/int"){
+                            sh """
+                            source /home/sbis/venv_for_test/bin/activate
+                            python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
+                            deactivate
+                            """
+                        }
+
+                    }
+                }
+            },
+            reg_test: {
+                stage("Рег.тесты"){
+                    echo "Запускаем тесты верстки"
+                    if ( regr ){
+                        sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
+                        dir("./controls/tests/reg"){
+                            sh """
+                                source /home/sbis/venv_for_test/bin/activate
+                                python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS http://test-selenium39-unix.unix.tensor.ru:4444/wd/hub --DISPATCHER_RUN_MODE --STAND platform --STREAMS_NUMBER ${stream_number}
+                                deactivate
+                            """
+                        }
+
+                    }
+                }
+            }
+
+        )
+    }
+} finally {
+    sh """
+        sudo chmod -R 0777 ${workspace}
+        sudo chmod -R 0777 /home/sbis/Controls
+    """
+
+
+        if ( regr ){
+            dir("./controls") {
+                publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
+            }
+            archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
+            }
+        if ( unit ){
+            junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
+            }
+        if ( regr || inte ){
+            archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
+            junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
+            }
+    gitlabStatusUpdate()
+        }
     }
 }

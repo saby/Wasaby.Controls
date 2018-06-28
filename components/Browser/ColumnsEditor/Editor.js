@@ -80,7 +80,6 @@
  * @see SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase#useColumnsEditor
  *
  * @demo Examples/ColumnsEditor/BrowserAndEditorButton/BrowserAndEditorButton Пример браузера с кнопкой редактора колонок
- * @demo Examples/ColumnsEditor/BrowserAndEditorButtonWithPresets/BrowserAndEditorButtonWithPresets Пример браузера с кнопкой редактора колонок, с пресетами и группами колонок
  * @demo Examples/ColumnsEditor/BrowserAndCustomButton/BrowserAndCustomButton Пример браузера с собственной кнопкой, открывающией редактор колонок
  * @demo Examples/ColumnsEditor/AllCustom/AllCustom Пример с одиночной кнопкой, открывающией редактор колонок (без браузера)
  *

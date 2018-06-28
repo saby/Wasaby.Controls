@@ -10,6 +10,7 @@
                 scope="{{_options.viewConfig}}"
                 listModel="{{_listViewModel}}"
                 on:itemClick="_onItemClick()"
+                on:groupClick="_onGroupClick()"
                 on:itemContextMenu="_showActionsMenu()"
                 on:itemMouseDown="_itemMouseDown()"
                 on:itemMouseEnter="_itemMouseEnter()"
@@ -106,7 +107,7 @@
             name="itemActionsOpener"
             keyProperty="id"
             menuStyle="cross"
-            className="controls-itemActionsV__menu">
+            className="controls-Toolbar__menu-position">
         <ws:popupOptions closeByExternalClick="{{true}}">
             <ws:corner vertical="top" horizontal="right"/>
             <ws:horizontalAlign side="left"/>

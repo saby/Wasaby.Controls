@@ -16,6 +16,7 @@
 .controls-ListView__itemContent {
    margin: 0 0 0 @spacing-List-between-checkbox-content + @width_CheckBox;
    padding: @spacing_List-item_default 0;
+   z-index: 1;
 }
 
 .controls-ListView__item_active {
@@ -51,4 +52,42 @@
       background-color: @controls-editInPlace-editing-item-bg;
     }
   }
+}
+.controls-ListView__groupContent {
+   display: flex;
+}
+.controls-ListView__groupContent:before, .controls-ListView__groupContent:after {
+   height: @height_ListView-GroupBy / 2;
+   margin-bottom: @height_ListView-GroupBy / 2;
+   border-bottom: @default-border-width solid @color_ListView-GroupBy_separator;
+   width: 100%;
+   content: '';
+}
+.controls-ListView__groupText {
+   line-height: @height_ListView-GroupBy;
+   display: inline-block;
+   padding: @padding_ListView-GroupBy_separator;
+   background-color: @background-color_ListView-GroupBy_text;
+   color: @color_ListView-GroupBy_text;
+   font-size: @font-size_ListView-GroupBy_text;
+   white-space: nowrap;
+   text-align: center;
+   flex-shrink: 0;
+   user-select: none;
+}
+.controls-ListView__groupExpander:before {
+   cursor: pointer;
+   width: @font-size_ListView-GroupBy_expander;
+   font-size: @font-size_ListView-GroupBy_expander;
+   margin: @margin_ListView-GroupBy_separatorCollapse;
+   content: '\e000';
+}
+.controls-ListView__groupExpander:hover {
+   color: @color_ListView-GroupBy_text_hovered;
+}
+.controls-ListView__groupExpander_collapsed:before {
+   content: '\e013';
+}
+.controls-ListView__hiddenGroup {
+   display: none;
 }

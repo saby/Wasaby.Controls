@@ -2,7 +2,7 @@
    <ws:for data="image in ['Андрей', 'Валера', 'Максим']">
       <Controls.Popup.Previewer>
          <ws:content>
-            <img src="Previewer/image/{{image}}.png"/>
+            <img src="{{_options.imgRoot}}Controls-demo/Previewer/image/{{image}}.png"/>
          </ws:content>
          <ws:template>
             <Controls.Popup.Templates.Dialog.DialogTemplate>

@@ -43,7 +43,7 @@
 @padding_DropdownList-item:     5px round(16px * @multiplier);
 @width_DropdownList-marker:     round(11px * @multiplier);
 @height_DropdownList-marker:    round(16px * @multiplier);
-@margin-top_DropdownList:       round(-2px * @multiplier);
+@margin-top_DropdownList:       round(-4px * @multiplier);
 @margin-left_DropdownList:      round(-17px * @multiplier);
 @right_DropdownList-icon:       round(16px * @multiplier);
 
@@ -95,14 +95,13 @@
 @width_itemsToolbar_closeButton:            round(58px * @multiplier);
 @height_itemsToolbar_closeButton:           round(58px * @multiplier);
 @font-size_itemsToolbar_closeButton:        @icon-size_default_medium;
+@margin-right_editActions_closeButton:      @list-view-items-toolbar-elements-margin;
 //fieldlink
 @icon-size_FieldLink-button:         @default-icon-size-medium;
 @width_FieldLink-item-cross:         @default-icon-size-medium + @default-padding;
 @spacing_FieldLink-dropAllLinks:     @default-padding;
 @font-size_FieldLink-Link:           @large-text-size;
 @font-size_FieldLink-item-caption_normal: @large-text-size;
-@height_FieldLink-indicator:         @icon-size_default_medium - @default-border-width;
-@spacing_FieldLink-indicator:        4px;
 //searchForm
 @search-form-icon-padding:     0 0 0 round(8px * @multiplier) ;
 //PrintDialog
@@ -155,7 +154,7 @@
 @long-operations-popup-header-icon-margin-right:                round(16px * @multiplier);
 @long-operations-popup-foot-height:                             round(75px * @multiplier);
 @long-operations-popup-collapsed-header-caption-f-size:         round(32px * @multiplier);
-@long-operations-popup-actions-container-margin-right:          round(24px * @multiplier);
+@long-operations-popup-foot-action-margin-right:                round(24px * @multiplier);
 @long-operations-popup-foot-f-size:                             round(32x * @multiplier);
 @long-operations-popup-collapsed-width:                         round(700px * @multiplier);
 @long-operations-popup-collapsed-max-width:                     round(800px * @multiplier);
@@ -192,6 +191,8 @@
 @spacing_Suggest_suggestionsContainer_overInput:     round(11px * @multiplier);
 @width_suggest_loading:                   round(42px * @multiplier);
 @right_suggest_loading:                   0;
+//suggest VDOM
+@border-width_suggestionsContainer:          1px;
 //tabButton
 @margin-right_TabButton_icon:             round(16px * @multiplier);
 @margin-bottom_TabButton_checked_tab:     round(2px * @multiplier);

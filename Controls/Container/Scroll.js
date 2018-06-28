@@ -25,6 +25,7 @@ define('Controls/Container/Scroll',
        * @control
        * @public
        * @category Container
+       * @demo Controls-demo/Container/Scroll
        */
 
       /**
@@ -347,6 +348,11 @@ define('Controls/Container/Scroll',
 
             _draggingChangedHandler: function(event, dragging) {
                this._dragging = dragging;
+            },
+
+            _fixedHandler: function(event, shouldBeFixed) {
+               this._stickyHeader = shouldBeFixed;
+               event.stopPropagation();
             },
 
             getDataId: function() {

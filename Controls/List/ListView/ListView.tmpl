@@ -5,17 +5,12 @@
               listModel="{{_listModel}}"
               itemActionsTemplate="{{_options.itemActionsTemplate}}"
               swipeTemplate="{{_options.swipeTemplate}}"
+              groupTemplate="{{_groupTemplate}}"
+              groupContentTemplate="{{_groupContentTemplate}}"
               multiSelectTpl="{{_options.multiSelectTpl}}"
+              editingItemData="{{_options.editingItemData}}"
+              isAdd="{{_options.isAdd}}"
               itemTemplate="{{_itemTemplate}}">
       </ws:partial>
-       <ws:if data="{{_options.editingItemData && _options.isAdd}}">
-           <ws:partial
-                   on:click="_onItemClick(_options.editingItemProjection)"
-                   template="{{_itemTemplate}}"
-                   itemActionsTemplate="{{_options.itemActionsTemplate}}"
-                   swipeTemplate="{{_options.swipeTemplate}}"
-                   multiSelectTpl="{{_options.multiSelectTpl}}"
-                   itemData="{{_options.editingItemData}}"/>
-       </ws:if>
    </ws:if>
 </div>

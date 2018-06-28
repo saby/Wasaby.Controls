@@ -222,8 +222,12 @@ define('Controls/Container/Scroll/Scrollbar',
                if (event.target.getAttribute('name') === 'scrollbar') {
                   delta = _private.calcScrollbarDelta(thumbTop, pageY, this._thumbHeight);
                   this._setPosition(this._position + delta / this._scrollRatio, true);
+               } else {
+                  this._children.dragNDrop.startDragNDrop(null, event);
                }
+            },
 
+            _scrollbarStartDragHandler: function() {
                this._dragging = true;
                this._notify('draggingChanged', [this._dragging]);
             },
@@ -234,7 +238,7 @@ define('Controls/Container/Scroll/Scrollbar',
              */
             _scrollbarOnDragHandler: function(e, event) {
                var
-                  pageY = event.nativeEvent.pageY,
+                  pageY = event.domEvent.pageY,
                   delta = pageY - _private.currentPageY;
 
                if (this._setPosition(this._position + delta / this._scrollRatio, true)) {
@@ -246,8 +250,10 @@ define('Controls/Container/Scroll/Scrollbar',
              * Обработчик конца перемещения ползунка мышью.
              */
             _scrollbarEndDragHandler: function() {
-               this._dragging = false;
-               this._notify('draggingChanged', [this._dragging]);
+               if (this._dragging) {
+                  this._dragging = false;
+                  this._notify('draggingChanged', [this._dragging]);
+               }
             },
 
             /**

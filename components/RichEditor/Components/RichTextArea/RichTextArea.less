@@ -211,8 +211,8 @@
    }
    .controls-RichEditor__placeholder {
       color:  #ccc;
-      /* +1px к каждой стороне отступа тк у controls-RichEditor__editorFrame  есть border 1px*/
-      padding: 3px 17px 1px 5px;
+      /* +1px к каждой стороне отступа тк у controls-RichEditor__editorFrame есть border 1px (кроме низа, во-избежание проблем в FF https://online.sbis.ru/opendoc.html?guid=d29266fa-6585-4728-9535-eb6923b222af) */
+      padding: 3px 17px 0 5px;
       background-color: transparent;
       position: absolute;
       display: none;
@@ -306,14 +306,19 @@
       .controls-RichEditor__editorFrame.ws-basic-style > p:last-child {
          padding-bottom: 1px;
       }
+      .controls-RichEditor__editorFrame {
+         & > :last-child li:last-child {
+            margin-bottom: 6px;
+         }
+      }
    }
 }
 
-.ws-is-chrome {
-   .controls-RichEditor__editorFrame.ws-basic-style p:empty{
-      min-height: 18px;
-   }
+
+.controls-RichEditor__editorFrame.ws-basic-style p:empty{
+   min-height: 18px;
 }
+
 .ws-is-mobile-android {
    .controls-RichEditor__editorFrame {
       -webkit-text-size-adjust: 100%;
@@ -351,4 +356,10 @@
    margin-left: -32px;
    height: 16px;
    width: 24px;
+}
+//В IE10 если у элемента стоит min-height, то он начинает показывать рамку для изменения размеров
+.ws-is-ie10 {
+   .controls-RichEditor__editorFrame.ws-basic-style p:empty{
+      min-height: auto;
+   }
 }

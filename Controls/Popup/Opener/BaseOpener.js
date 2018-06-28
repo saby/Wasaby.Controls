@@ -121,9 +121,12 @@ define('Controls/Popup/Opener/BaseOpener',
                if (this._options.targetTracking) {
                   ManagerController.popupUpdated(this._popupId);
                } else if (this._options.closeOnTargetScroll) {
-                  this.close();
+                  this._closeOnTargetScroll();
                }
             }
+         },
+         _closeOnTargetScroll: function() {
+            this.close();
          },
 
          /**

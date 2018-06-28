@@ -159,23 +159,68 @@ define('SBIS3.CONTROLS/Mixins/DSMixin', [
              */
             displayProperty: null,
              /**
-              * @cfg {Array.<Object>} Устанавливает набор исходных данных, по которому строится отображение.
+              * @cfg {Array.<Object>} Набор отображаемых данных.
               * @remark
-              * Набор исходных данных - это данные определенного формата, которые будут преобразованы
-              * в элементы коллекции (экземпляры класса {@link WS.Data/Entity/Model Model}).
-              *
-              * Опция items описывает набор данных, который будет преобразован в статический источник данных.
-              * Изменять значение опции items можно с помощью метода {@link setItems}.
-              *
-              * Данные для коллекции элементов задаются либо с помощью этой опции,
-              * либо через источник данных методом {@link setDataSource}.
-              * Опция {@link SBIS3.CONTROLS/Mixins/TreeMixin#hierField} устанавливает поле,
-              * по которому будет построена иерархия.
-              * @see setItems
+              * Чтобы компонент смог показать items, необходимо задать значения опциям {@link idProperty} и {@link displayProperty}.
+              * 
+              * <pre>
+              *     <SBIS3.CONTROLS.DataGridView name="superView" idProperty="id" displayProperty="title">
+              *         <ws:items>
+              *             <ws:Array>
+              *                 <ws:Object id="{{ 1 }}" title="Разработка" />
+              *                 <ws:Object id="{{ 2 }}" title="Задача в разработку" />
+              *                 <ws:Object id="{{ 3 }}" title="Ошибка в разработку" />
+              *             </ws:Array>
+              *         </ws:items>
+              *         ...
+              *     </SBIS3.CONTROLS.DataGridView>
+              * </pre>
+              * 
+              * Те же данные вы можете задать в JS-модуле методом {@link setItems}. Например,
+              * <pre>
+              * var items = [
+              *     {
+              *        id: 1,
+              *        title: 'Все'
+              *     },{
+              *        id: 2,
+              *        title: 'Снять'
+              *     },{
+              *        id: 3,
+              *        title: 'Инвертировать'
+              *     }
+              * ];
+              * component.setItems(items);
+              * </pre>
+              * 
+              * Чтобы сделать данные иерархическими, компоненту требуется задать иерархические поля в опциях {@link SBIS3.CONTROLS/Mixins/TreeMixin#parentProperty}, {@link SBIS3.CONTROLS/Mixins/TreeMixin#nodeProperty} и {@link SBIS3.CONTROLS/Mixins/TreeMixin#hasChildrenProperty}.
+              * А затем добавить эти поля в items. Например,
+              * <pre>
+              *     <SBIS3.CONTROLS.Tree.DataGridView 
+              *         name="superView"
+              *         idProperty="id"
+              *         displayProperty="title"
+              *         parentProperty="section"
+              *         nodeProperty="isFolder"
+              *         hasChildrenProperty="hasChild">
+              *         <ws:items>
+              *             <ws:Array>
+              *                 <ws:Object id="{{ 1 }}" title="Разработка" section="null" isFolder="{{ true }}" hasChild="{{ true }}" />
+              *                 <ws:Object id="{{ 2 }}" title="Задача в разработку" section="{{ 1 }}" isFolder="null" hasChild="{{ false }}" />
+              *                 <ws:Object id="{{ 3 }}" title="Ошибка в разработку" section="{{ 1 }}" isFolder="null" hasChild="{{ false }}" />
+              *             </ws:Array>
+              *         </ws:items>
+              *         ...
+              *     </SBIS3.CONTROLS.Tree.DataGridView>
+              * </pre>
+              * 
               * @see idProperty
               * @see displayProperty
+              * @see SBIS3/CONTROLS/Mixins/TreeMixin#parentProperty
+              * @see SBIS3/CONTROLS/Mixins/TreeMixin#nodeProperty
+              * @see SBIS3/CONTROLS/Mixins/TreeMixin#hasChildrenProperty
               * @see setDataSource
-              * @see SBIS3.CONTROLS/Mixins/TreeMixin#hierField
+              * @see setItems
               */
             items: null,
             /**

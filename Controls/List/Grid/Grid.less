@@ -4,7 +4,8 @@
 @font-size_Grid-header-cell: 12px;
 
 @height-Grid-row-separator: 1px;
-@color-Grid-row-separator: #EAEAEA;
+@color-Grid-row-separator-boundary: #EAEAEA;
+@color-Grid-row-separator: #F5F5F5;
 
 @min-height_Grid-row: 24px;
 @background-color_Grid-row_hover: #F0F5FB;
@@ -38,18 +39,7 @@
 @color_Grid-selection-marker: #FF7033;
 
 @width_Grid-cell-checkbox: 24px;
-@height_Grid-checkboxArea: 32px;
-@width_Grid-checkboxArea: 24px;
-@padding_Grid-checkbox-left: 6px;
-@padding_Grid-checkbox-top: 10px;
-@height_Grid-checkbox: 12px;
-@width_Grid-checkbox: 12px;
-@width_Grid-checkbox-border: 1px;
-@color_Grid-checkbox-border: #999999;
-@padding_Grid-checkbox-icon-top: 4px;
-@padding_Grid-checkbox-icon-left: 6px;
-@font-size_Grid-checkbox-icon: 18px;
-@color_Grid-checkbox-icon: #ff7033;
+@padding_Grid-checkbox: 3px;
 //--------------- styles ---------------
 .controls-Grid {
    display: grid;
@@ -103,6 +93,7 @@
 .controls-Grid__row-cell {
    min-height: @min-height_Grid-row;
    position: relative;
+   border-top: @height-Grid-row-separator solid;
    // Default "min-width" value "auto" and width limited not working. Fix this bug by reset "min-width" value to "0".
    // http://css-live.ru/articles/chto-mozhet-polomat-maket-na-gridax-css-grid-layout.html
    min-width: 0;
@@ -118,23 +109,29 @@
    text-align: center;
 }
 .ws-is-no-touch {
-   .controls-Grid__row:hover .controls-Grid__row-cell {
+   .controls-Grid__row:hover .controls-Grid__row-cell-background-hover {
       background-color: @background-color_Grid-row_hover;
    }
    .controls-Grid__row:hover .controls-itemActionsV {
       display: inline-block;
    }
 }
+.controls-Grid__row-cell-background-editing {
+   background-color: @controls-editInPlace-editing-item-bg;
+   >.controls-itemActionsV {
+      display: inline-block;
+   }
+}
 .controls-Grid__row-cell_rowSpacing_default {
-   padding-top: (@spacing_Grid-row_default / 2) + @height-Grid-row-separator;
+   padding-top: (@spacing_Grid-row_default / 2);
    padding-bottom: @spacing_Grid-row_default / 2;
 }
 .controls-Grid__row-cell_rowSpacing_M {
-   padding-top: (@spacing_Grid-row_M / 2) + @height-Grid-row-separator;
+   padding-top: (@spacing_Grid-row_M / 2);
    padding-bottom: @spacing_Grid-row_M / 2;
 }
 .controls-Grid__row-cell_rowSpacing_L {
-   padding-top: (@spacing_Grid-row_L / 2) + @height-Grid-row-separator;
+   padding-top: (@spacing_Grid-row_L / 2);
    padding-bottom: @spacing_Grid-row_L / 2;
 }
 .controls-Grid__cell_spacingLeft {
@@ -142,9 +139,6 @@
 }
 .controls-Grid__cell_spacingRight {
    padding-right: @spacing_Grid-column / 2;
-}
-.controls-Grid__row-cell {
-   border-top: @height-Grid-row-separator solid;
 }
 .controls-Grid__row-cell__content_withLadder {
    visibility: hidden;
@@ -165,10 +159,10 @@
    border-bottom: @height-Grid-row-separator solid;
 }
 .controls-Grid__row-cell_withRowSeparator_firstRow {
-   border-top-color: @color-Grid-row-separator;
+   border-top-color: @color-Grid-row-separator-boundary;
 }
 .controls-Grid__row-cell_withRowSeparator_lastRow {
-   border-bottom-color: @color-Grid-row-separator;
+   border-bottom-color: @color-Grid-row-separator-boundary;
 }
 .controls-Grid__row-cell_withRowSeparator {
    border-top-color: @color-Grid-row-separator;
@@ -230,4 +224,13 @@
 .controls-Grid__row-cell-checkbox {
    min-width: @width_Grid-cell-checkbox;
    max-width: @width_Grid-cell-checkbox;
+}
+.controls-GridView__checkbox {
+   position: absolute;
+   top: @padding_Grid-checkbox;
+   left: 0;
+}
+.controls-Grid__row-cell__contentWrapper {
+   display: inline-flex;
+   width: 100%;
 }

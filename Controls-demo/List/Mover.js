@@ -9,6 +9,8 @@ define('Controls-demo/List/Mover', [
 
    var ModuleClass = BaseControl.extend({
       _template: template,
+      __lastClicked: 0,
+      __reload: "Reload",
       _itemActions: undefined,
       _items: [{
          id: 0,
@@ -41,6 +43,8 @@ define('Controls-demo/List/Mover', [
       _onClick: function() {
          this._children.list.reload();
          this._children.listSecond.reload();
+         this.__lastClicked += 1;
+         this.__reload = "Reload " + this.__lastClicked;
       },
 
       _beforeItemsMoveSecond: function() {

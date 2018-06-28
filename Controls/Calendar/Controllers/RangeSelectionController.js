@@ -174,8 +174,8 @@ define('Controls/Calendar/Controllers/RangeSelectionController', [
 
          this._state = options;
 
-         if (changed && _private.updateDisplayedRange(this)) {
-            this._notify('selectionChanged');
+         if (changed) {
+            _private.updateDisplayedRange(this);
          }
       },
 

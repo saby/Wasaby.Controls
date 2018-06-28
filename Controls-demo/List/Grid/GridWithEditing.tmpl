@@ -1,0 +1,51 @@
+<div>
+    <div class="demo-Grid">
+        <Controls.List.AddButton caption="Add record" on:click="list.addItem()"/>
+        <div class="demo-Grid__container">
+            <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+                <Controls.Grid
+                        name="list"
+                        attr:class="demo-Grid__control"
+                        keyProperty="id"
+                        displayProperty="title"
+                        markedKey="{{448390}}"
+                        multiselect="{{true}}"
+                        header="{{gridHeader}}"
+                        source = "{{_viewSource}}"
+                        columns="{{gridColumns}}"
+                        itemActions="{{_itemActions}}"
+                        on:actionClick="_onActionClick()"
+                        itemActionVisibilityCallback="{{_showAction}}"
+                        itemActionsType="outside">
+                    <ws:editingConfig>
+                        <ws:Object editOnClick="{{true}}" autoAdd="{{true}}" showToolbar="{{true}}"/>
+                    </ws:editingConfig>
+                </Controls.Grid>
+            </Controls.Container.Scroll>
+        </div>
+    </div>
+    <div class="demo-Grid">
+        <div class="demo-Grid__container">
+            <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+                <Controls.Grid
+                        name="list2"
+                        attr:class="demo-Grid__control"
+                        keyProperty="id"
+                        displayProperty="title"
+                        markedKey="{{448390}}"
+                        multiselect="{{true}}"
+                        header="{{gridHeader}}"
+                        source = "{{_viewSource}}"
+                        columns="{{gridColumns}}"
+                        itemActions="{{_itemActions}}"
+                        on:actionClick="_onActionClick()"
+                        itemActionVisibilityCallback="{{_showAction}}"
+                        itemActionsType="inside">
+                    <ws:editingConfig>
+                        <ws:Object editOnClick="{{true}}" autoAdd="{{true}}"/>
+                    </ws:editingConfig>
+                </Controls.Grid>
+            </Controls.Container.Scroll>
+        </div>
+    </div>
+</div>

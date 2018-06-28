@@ -879,7 +879,7 @@ function( SbisService, Query, getType, coreClone, constants, Deferred,BaseContro
                      ]);
                   }
                   else {
-                     arr[i].data.push([rec.get(seriesOpts[i]).sourceFieldY]);
+                     arr[i].data.push([rec.get(seriesOpts[i].sourceFieldY)]);
                   }
                }
 

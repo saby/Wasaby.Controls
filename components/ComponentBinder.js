@@ -333,7 +333,7 @@ define('SBIS3.CONTROLS/ComponentBinder',
       
                if(filter) {
                   /* Надо вмерживать структуру, полученную из истории, т.к. мы не сохраняем в историю шаблоны строки фильтров */
-                  preparedStructure = FilterHistoryControllerUntil.prepareStructureToApply(filter.filter, filterButton.getFilterStructure());
+                  preparedStructure = FilterHistoryControllerUntil.prepareStructureToApply(filter.filter, filterButton.getFilterStructure(), undefined, ignoreFiltersList);
          
                   if(ignoreFiltersList && ignoreFiltersList.length) {
                      FilterHistoryControllerUntil.resetStructureElementsByFilterKeys(filterButton, preparedStructure, ignoreFiltersList);

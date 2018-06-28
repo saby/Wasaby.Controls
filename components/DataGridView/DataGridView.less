@@ -122,6 +122,9 @@
 .controls-ListView__padding-XL .controls-DataGridView__th.controls-DataGrid__column__type-money:last-child {
    padding-right: @data-grid-money-header-cell-padding-last_XL;
 }
+.controls-ListView__padding-S .controls-DataGridView__th.controls-DataGrid__column__type-money:last-child {
+   padding-right: @data-grid-money-header-cell-padding;
+}
 
 .controls-DataGridView__table {
    width: 100%;
@@ -278,8 +281,8 @@
 /* Отступы для классов .controls-ListView__padding-XS|S|M|L|XL */
 .generate-padding-class-DGV(@i: 1) when (@i =< length(@controls-view-padding-variants)) {
    @val: extract(@controls-view-padding-variants, @i);
-   .controls-ListView__padding-@{val} > .controls-DataGridView__table > .controls-DataGridView__tbody > .controls-DataGridView__tr {
-      & > .controls-DataGridView__td, & > .controls-DataGridView__th {
+   .controls-ListView__padding-@{val} {
+      .controls-DataGridView__td, .controls-DataGridView__th {
          &.controls-DataGridView__firstContentCell {
             padding-left: ~"@{controls-view-padding-@{val}}";
          }
@@ -287,10 +290,10 @@
             padding-right: ~"@{controls-view-padding-@{val}}";
          }
       }
-      & > .controls-ListView__serviceFooter {
+      .controls-ListView__serviceFooter {
          padding: 0 ~"@{controls-view-padding-@{val}}";
       }
-      & > .controls-ListView__multiselect.controls-ListView__hideCheckBoxes {
+      &.controls-ListView__multiselect.controls-ListView__hideCheckBoxes {
          .check-box-width(~"@{controls-view-padding-@{val}}");
       }
    }

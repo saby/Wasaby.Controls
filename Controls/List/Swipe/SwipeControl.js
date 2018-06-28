@@ -240,6 +240,13 @@ define('Controls/List/Swipe/SwipeControl', [
 
       bindHandlers: function(self) {
          self._needShowSeparator = self._needShowSeparator.bind(self);
+      },
+
+      updateModel: function(self, newOptions) {
+         _private.closeSwipe(self);
+         newOptions.listModel.subscribe('onListChange', function() {
+            _private.closeSwipe(self);
+         });
       }
    };
 
@@ -251,6 +258,9 @@ define('Controls/List/Swipe/SwipeControl', [
       _beforeMount: function(newOptions, context) {
          _private.bindHandlers(this);
          this._isTouch = context.isTouch.isTouch;
+         if (newOptions.listModel) {
+            _private.updateModel(this, newOptions);
+         }
       },
 
       _beforeUpdate: function(newOptions, context) {
@@ -260,6 +270,9 @@ define('Controls/List/Swipe/SwipeControl', [
          }
          if (newOptions.itemActions && (this._options.itemActions !== newOptions.itemActions)) {
             _private.closeSwipe(this);
+         }
+         if (newOptions.listModel && (this._options.listModel !== newOptions.listModel)) {
+            _private.updateModel(this, newOptions);
          }
       },
 
@@ -288,9 +301,12 @@ define('Controls/List/Swipe/SwipeControl', [
       },
 
       _onActionClick: function(event, action, itemData) {
-         aUtil.actionClick(this, event, action, itemData, this._swipeConfig.type > ROW_TYPE_THRESHOLD);
-      }
+         aUtil.actionClick(this, event, action, itemData, true);
+      },
 
+      closeSwipe: function() {
+         _private.closeSwipe(this);
+      }
    });
 
 

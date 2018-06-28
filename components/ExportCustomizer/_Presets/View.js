@@ -11,6 +11,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
       'Core/helpers/Object/isEqual',
       'SBIS3.CONTROLS/CompoundControl',
       'SBIS3.CONTROLS/Utils/ItemNamer',
+      'SBIS3.CONTROLS/Utils/ObjectChange',
       'WS.Data/Collection/RecordSet',
       'WS.Data/Di',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
@@ -19,7 +20,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
       'css!SBIS3.CONTROLS/ExportCustomizer/_Presets/View'
    ],
 
-   function (Deferred, cObjectIsEqual, CompoundControl, ItemNamer, RecordSet, Di, dotTplFn) {
+   function (Deferred, cObjectIsEqual, CompoundControl, ItemNamer, objectChange, RecordSet, Di, dotTplFn) {
       'use strict';
 
       /**
@@ -27,13 +28,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
        * @property {string|number} id Идентификатор пресета
        * @property {string} title Отображаемое название пресета
        * @property {Array<string>} fieldIds Список привязки колонок в экспортируемом файле к полям данных
-       * @property {string} fileUuid Uuid шаблона форматирования эксель-файла
+       * @property {string} fileUuid Uuid стилевого эксель-файла
        */
 
       /**
        * @typedef {object} ExportPresetsResult Тип, описывающий возвращаемые настраиваемые значения компонента
        * @property {Array<string>} fieldIds Список привязки колонок в экспортируемом файле к полям данных
-       * @property {string} fileUuid Uuid шаблона форматирования эксель-файла
+       * @property {string} fileUuid Uuid стилевого эксель-файла
        */
 
 
@@ -100,7 +101,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             _customs: null,
             // Текущий список привязки колонок в экспортируемом файле к полям данных
             _fieldIds: null,
-            // Текущий uuid шаблона форматирования эксель-файла
+            // Транзакционный uuid текущего стилевого эксель-файла (изменяемого)
             _fileUuid: null,
             // Контрол выбора пресета
             _selector: null,
@@ -152,19 +153,24 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                this._updateSelectorListOptions('_footerHandler', this._onAdd.bind(this));
             }
             this._bindEvents();
+            var preset = this._findPresetById(this._options.selectedId);
             if (this._storage) {
                this._loadCustoms().addCallback(function () {
-                  if (this._needNewPreset) {
-                     this._addPreset();
+                  var needNewPreset = this._needNewPreset;
+                  if (needNewPreset) {
+                     var newPreset = this._addPreset();
+                     this.sendCommand('subviewChanged', 'create', newPreset);
                      this._startEditingMode();
                      this._needNewPreset = null;
                   }
                   this._updateSelector();
-                  this.sendCommand('subviewChanged');
+                  if (!needNewPreset) {
+                     this.sendCommand('subviewChanged', 'select', preset);
+                  }
                }.bind(this));
             }
             else {
-               this.sendCommand('subviewChanged');
+               this.sendCommand('subviewChanged', 'select', preset);
             }
          },
 
@@ -172,42 +178,64 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             this.subscribeTo(this._selector, 'onSelectedItemsChange', function (evtName, ids, changes) {
                var selectedId = ids[0];
                var preset = this._findPresetById(selectedId);
-               this._selectPreset(preset);
+               this._selectPreset(preset, true);
+               // Даже если fieldIds и fileUuid в предыдущем и текуущем пресетах не отличаются совсем - нужно бросить событие как указание сбросить все несохранённые изменения в других под-компонентах
+               this.sendCommand('subviewChanged', 'select', preset);
                this._updateSelectorListOptions('selectedKey', selectedId);
             }.bind(this));
 
             var editor = this._editor;
             if (editor) {
                var options = this._options;
+               this.subscribeTo(editor, 'onPropertyChanged', function (evtName, property) {
+                  if (property === 'text') {
+                     editor.clearMark();
+                  }
+               });
+
                this.subscribeTo(editor, 'onApply', function (evtName) {
                   var preset = this._findPresetById(options.selectedId);
+                  var isClone = !!preset.patternUuid;
                   preset.title = editor.getText();
                   delete preset.isUnreal;
+                  delete preset.patternUuid;
                   preset.isStorable = true;
                   this._previousId = null;
-                  this._saveSelectedPreset().addCallback(function (/*isSuccess*/) {
-                     /*if (isSuccess) {*/
-                        this._endEditingMode();
-                        this._updateSelector();
-                     /*}*/
+                  this.sendCommand('subviewChanged', 'editEnd', true, {isClone:isClone}).addCallback(function (result) {
+                     if (!this._fileUuid) {
+                        this._fileUuid = result;
+                     }
+                     this._saveSelectedPreset().addCallback(function (/*isSuccess*/) {
+                        /*if (isSuccess) {*/
+                           this._fileUuid = null;
+                           this._endEditingMode();
+                           this._updateSelector();
+                        /*}*/
+                     }.bind(this));
                   }.bind(this));
                }.bind(this));
 
                this.subscribeTo(editor, 'onCancel', function (evtName) {
                   var presetInfo = this._findPresetById(options.selectedId, true);
                   if (presetInfo) {
-                     if (presetInfo.preset.isUnreal) {
+                     var preset = presetInfo.preset;
+                     this._fileUuid = null;
+                     this.sendCommand('subviewChanged', 'editEnd', false);
+                     if (preset.isUnreal) {
                         this._customs.splice(presetInfo.index, 1);
                         var previousId = this._previousId;
                         var previous = previousId ? this._findPresetById(previousId) : null;
                         this._previousId = null;
-                        this._selectPreset(previous || this._getFirstPreset(options));
+                        var nextPreset = previous || this._getFirstPreset(options);
+                        this._selectPreset(nextPreset);
                         if (!previous) {
                            this._updateSelector();
                         }
+                        this.sendCommand('subviewChanged', 'select', nextPreset);
                      }
                      else {
-                        this._selectPreset(presetInfo.preset);
+                        this._selectPreset(preset);
+                        this.sendCommand('subviewChanged', 'select', preset);
                      }
                   }
                   this._endEditingMode();
@@ -265,20 +293,20 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
          },
 
          /**
-          * ^^^Приготовить идентификатор выбранного элемента для списочного контрола
+          * Получить первый по порядку отображения пресет
           *
           * @protected
           * @param {object} options Опции компонента
           * @return {ExportPreset}
           */
          _getFirstPreset: function (options) {
-            var statics = options.statics;
-            if (statics && statics.length) {
-               return statics[0];
-            }
             var customs = this._customs;
             if (customs && customs.length) {
                return customs[0];
+            }
+            var statics = options.statics;
+            if (statics && statics.length) {
+               return statics[0];
             }
          },
 
@@ -322,9 +350,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           */
          _onAdd: function (evtName) {
             var listView = evtName.getTarget().getParent();
-            this._addPreset();
+            var preset = this._addPreset();
+            this.sendCommand('subviewChanged', 'create', preset);
             this._startEditingMode(listView);
-            this.sendCommand('subviewChanged');
          },
 
          /**
@@ -341,14 +369,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             listView.setSelectedKey(this._options.selectedId);
             switch (action) {
                case 'clone':
-                  this._clonePreset(id, listView);
+                  var preset = this._clonePreset(id);
+                  this.sendCommand('subviewChanged', 'clone', preset);
                   this._startEditingMode(listView);
                   break;
                case 'edit':
                   this._editPreset(id, listView);
                   break;
                case 'delete':
-                  this._deletePreset(id, listView)
+                  this._deletePreset(id)
                      .addCallback(_ifSuccess(this._updateListView.bind(this, listView)));
                   break;
             }
@@ -393,11 +422,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * Добавить новый пресет
           *
           * @protected
+          * @return {ExportPreset}
           */
          _addPreset: function () {
             var preset = this._createPreset();
             this._customs.push(preset);
+            this._previousId = this._options.selectedId;
             this._selectPreset(preset, true);
+            return preset;
          },
 
          /**
@@ -405,16 +437,19 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           *
           * @protected
           * @param {string|number} id Идентификатор пресета
+          * @param {boolean} preserveFileUuid Не сбрасывать текщий fileUuid
+          * @return {ExportPreset}
           */
-         _clonePreset: function (id) {
+         _clonePreset: function (id, preserveFileUuid) {
             var presetInfo = this._findPresetById(id, true);
             if (presetInfo) {
-               var preset = this._createPreset(presetInfo.preset);
-               this._customs.splice(presetInfo.isStatic ? 0 : presetInfo.index + 1, 0, preset);
-               this._selectPreset(preset, true);
-            }
-            else {
-               return Deferred.success(false);
+               var pattern = presetInfo.preset;
+               var preset = this._createPreset(pattern);
+               var customs = this._customs;
+               customs.splice(presetInfo.isStatic ? customs.length : presetInfo.index + 1, 0, preset);
+               this._previousId = this._options.selectedId;
+               this._selectPreset(preset, !preserveFileUuid);
+               return preset;
             }
          },
 
@@ -431,6 +466,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                var options = this._options;
                if (options.selectedId !== id) {
                   this._selectPreset(preset);
+                  this.sendCommand('subviewChanged', 'select', preset);
                   this._updateListView(listView);
                }
                this._startEditingMode(listView);
@@ -448,14 +484,16 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             var customs = this._customs;
             var index = _findIndexById(customs, id);
             if (index !== -1) {
-               //var prevPreset = customs[index];
+               var prevPreset = customs[index];
                customs.splice(index, 1);
                return this._saveCustoms().addCallback(function (/*isSuccess*/) {
                   //if (isSuccess) {
                      if (this._options.selectedId === id) {
                         var preset = customs.length ? customs[index < customs.length ? index : index - 1] : null;
-                        this._selectPreset(preset);
+                        this._selectPreset(preset, true);
+                        this.sendCommand('subviewChanged', 'select', preset);
                      }
+                     this.sendCommand('subviewChanged', 'delete', prevPreset);
                   //}
                   return true/*isSuccess*/;
                }.bind(this));
@@ -474,7 +512,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           */
          _createPreset: function (pattern) {
             var options = this._options;
-            return {
+            var preset = {
                id: _makeId(),
                title: ItemNamer.make(pattern ? pattern.title : options.newPresetTitle, [{list:options.statics, property:'title'}, {list:this._customs, property:'title'}]),
                fieldIds: pattern ? pattern.fieldIds.slice() : [],
@@ -482,6 +520,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                isStorable: false,
                isUnreal: true
             };
+            if (pattern) {
+               var fileUuid = pattern.fileUuid;
+               if (fileUuid) {
+                  preset.patternUuid = fileUuid;
+               }
+            }
+            return preset;
          },
 
          /**
@@ -506,18 +551,27 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   var container = editor._cntrlPanel;
                   container.find('.controls-EditAtPlace__okButton').attr('title', rk('Сохранить шаблон', 'НастройщикЭкспорта'));
                   container.find('.controls-EditAtPlace__cancel').attr('title', rk('Отменить изменения', 'НастройщикЭкспорта'));
-                  var titles = []; options._items.each(function (v) { if (v.getId() !== preset.id) { titles.push(v.get('title')); } });
                   editor.setValidators([{
                      option: 'text',
-                     validator: function (list, value) {
-                        // TODO: Возможно, лучше получать list непосредственно при вызове, а не заранее ???
+                     validator: function (presetId, value) {
+                        var reducer = function (r, v) { if (v.id !== presetId) { r.push(v.title); } return r; };
+                        var list = [];
+                        var statics = this._options.statics;
+                        if (statics && statics.length) {
+                           list = statics.reduce(reducer, list);
+                        }
+                        var customs = this._customs;
+                        if (customs && customs.length) {
+                           list = customs.reduce(reducer, list);
+                        }
                         if (value) {
                            var v = value.trim();
                            return !!v && list.indexOf(v) === -1;
                         }
-                     }.bind(null, titles),
+                     }.bind(this, preset.id),
                      errorMessage: _TITLE_ERROR
                   }]);
+                  this.sendCommand('subviewChanged', 'edit', preset);
                }
             }
          },
@@ -549,18 +603,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           *
           * @protected
           * @param {ExportPreset} preset Новый выбранный пресет
-          * @param {boolean} setPrevious Указывает на необходимость запомнить идентификатор предыдущего выбранного пресета
+          * @param {boolean} clearFileUuid Сбросить текущее значение свойства _fileUuid
           */
-         _selectPreset: function (preset, needPrevious) {
+         _selectPreset: function (preset, clearFileUuid) {
             var options = this._options;
-            if (needPrevious) {
-               this._previousId = options.selectedId;
-            }
             options.selectedId = preset ? preset.id : null;
-            this._fieldIds = preset ? preset.fieldIds : null;
-            this._fileUuid = preset ? preset.fileUuid : null;
-            // Даже если fieldIds и fileUuid в предыдущем и текуущем пресетах не отличаются совсем - нужно бросить событие как указание сбросить все несохранённые изменения в других под-компонентах
-            this.sendCommand('subviewChanged');
+            this._fieldIds = preset ? preset.fieldIds.slice() : null;
+            if (clearFileUuid) {
+               this._fileUuid = null;
+            }
             this._storeSelectedId(options);
          },
 
@@ -672,11 +723,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             var preset = this._findPresetById(this._options.selectedId);
             if (preset && preset.isStorable) {
                var fieldIds = this._fieldIds || [];
-               var fileUuid = this._fileUuid || null;
                if (!cObjectIsEqual(preset.fieldIds, fieldIds)) {
                   preset.fieldIds = fieldIds.slice();
                }
-               if (preset.fileUuid !== fileUuid) {
+               var fileUuid = this._fileUuid;
+               if (fileUuid) {
                   preset.fileUuid = fileUuid;
                }
                return this._saveCustoms();
@@ -691,7 +742,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * return {Core/Deferred}
           */
          save: function () {
-            return /*this._storage && this._isEditMode ? this._saveSelectedPreset() :*/ Deferred.success(null);
+            return Deferred.success(null);
          },
 
          /**
@@ -701,26 +752,34 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * @param {object} values Набор из нескольких значений, которые необходимо изменить
           * @param {object} meta Дополнительная информация об изменении
           */
-         setValues: function (values, meta) {
+         restate: function (values, meta) {
             if (!values || typeof values !== 'object') {
                throw new Error('Object required');
             }
-            var need;
-            if (values.fieldIds && !cObjectIsEqual(values.fieldIds, this._fieldIds)) {
-               this._fieldIds = values.fieldIds;
-               need = true;
-            }
-            need = need || !!values.fileUuid;
-            if (values.fileUuid && values.fileUuid !== this._fileUuid) {
-               this._fileUuid = values.fileUuid;
-            }
-            if (need) {
-               if (!this._isEditMode) {
-                  var selectedId = this._options.selectedId;
+            var changes = objectChange(this, values, {fieldIds:{target:'_fieldIds', asObject:true}, fileUuid:{target:'_fileUuid'}});
+            if (!this._isEditMode) {
+               var isFieldsChanged;
+               var isFormatterOpened;
+               if (meta.source === 'columnBinder') {
+                  isFieldsChanged = changes && 'fieldIds' in changes;
+               }
+               else
+               if (meta.source === 'formatter') {
+                  isFormatterOpened = meta.reason === 'afterOpen';
+               }
+               if (isFieldsChanged || isFormatterOpened) {
+                  var options = this._options;
+                  var selectedId = options.selectedId;
                   if (selectedId) {
-                     var preset = this._findPresetById(this._options.selectedId);
-                     if (preset && !preset.isStorable) {
-                        this._clonePreset(preset.id);
+                     var pattern = this._findPresetById(selectedId);
+                     if (pattern && !pattern.isStorable) {
+                        var fieldIds = this._fieldIds;
+                        var preset = this._clonePreset(pattern.id, isFormatterOpened);
+                        if (isFieldsChanged) {
+                           preset.fieldIds = fieldIds ? fieldIds.slice() : [];
+                           this._fieldIds = fieldIds;
+                        }
+                        this.sendCommand('subviewChanged', 'clone', preset, {isChanged:isFieldsChanged});
                      }
                   }
                   this._startEditingMode();
@@ -739,9 +798,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             if (selectedId) {
                var current = this._findPresetById(selectedId);
                return {
-                  consumer: {id:selectedId, readonly:!current.isStorable && !current.isUnreal},
                   fieldIds: current.fieldIds,
-                  fileUuid: current.fileUuid
+                  fileUuid: this._fileUuid || null
                };
             }
             return {};

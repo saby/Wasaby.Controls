@@ -12,6 +12,8 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List'], functio
       var getComponentObject = function() {
          var self = {};
          self._options = {};
+         self._options.suggestTemplate = {};
+         self._options.footerTemplate = {};
          return self;
       };
       
@@ -53,7 +55,7 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List'], functio
          assert.isFalse(state);
       });
    
-      it('Suggest::_private.open', function () {
+      it('Suggest::_private.open', function (done) {
          var self = getComponentObject();
          var state;
          self._options.suggestState = false;
@@ -61,7 +63,10 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List'], functio
             state = args[0];
          };
          Suggest._private.open(self);
-         assert.isTrue(state);
+         self._dependenciesDeferred.addCallback(function() {
+            assert.isTrue(state);
+            done();
+         });
       });
    
       it('Suggest::_private.shouldSearch', function () {
@@ -108,11 +113,37 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List'], functio
          assert.deepEqual(self._filter, resultFilter);
       });
    
-      it('Suggest::_inputActivated with autoDropDown', function() {
+      it('Suggest::_private.calcOrient', function() {
+         var self = getComponentObject();
+   
+         self._children = {
+            suggestionsContainer: {
+               offsetHeight: 500 //suggestHeight
+            }
+         };
+         var mockContainer = {};
+         mockContainer.getBoundingClientRect = function() {
+            return {
+               bottom: 24 //bottom of input
+            };
+         };
+         self._container = mockContainer;
+         
+         self._orient = null;
+         assert.equal(Suggest._private.calcOrient(self, {innerHeight: 600}), '-down');
+         assert.equal(Suggest._private.calcOrient(self, {innerHeight: 300}), '-up');
+         
+         self._orient = null;
+         self._options.style = 'overInput';
+         assert.equal(Suggest._private.calcOrient(self, {innerHeight: 600}), '-down');
+         assert.equal(Suggest._private.calcOrient(self, {innerHeight: 300}), '-down');
+      });
+   
+      it('Suggest::_inputActivated with autoDropDown', function(done) {
          var self = getComponentObject();
          var suggestComponent = new Suggest();
          var suggestState = false;
-         
+      
          self._options.searchParam = 'searchParam';
          self._options.autoDropDown = true;
          self._options.minSearchLength = 3;
@@ -123,8 +154,20 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List'], functio
             }
          };
          suggestComponent._inputActivated();
-         
-         assert.isTrue(suggestState);
+   
+         suggestComponent._dependenciesDeferred.addCallback(function() {
+            assert.isTrue(suggestState);
+            done();
+         });
+      });
+   
+      it('Suggest::_private.loadDependencies', function(done) {
+         var self = getComponentObject();
+
+         Suggest._private.loadDependencies(self).addCallback(function() {
+            assert.isTrue(self._dependenciesDeferred.isReady());
+            done();
+         });
       });
       
    });

@@ -11,7 +11,7 @@ define('Controls/Popup/Previewer/OpenerTemplate',
          _template: template,
 
          _sendResult: function(event) {
-            this._notify('sendResult', [event]);
+            this._notify('sendResult', [event], {bubbling: true});
          }
       });
 

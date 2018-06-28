@@ -17,14 +17,7 @@ define('Controls/Input/Number/ViewModel',
        * @author Баранов М.А.
        */
 
-      var
-         _private,
-         NumberViewModel;
-
-      _private = {
-      };
-
-      NumberViewModel = BaseViewModel.extend({
+      var NumberViewModel = BaseViewModel.extend({
 
          /**
              * Валидирует и подготавливает новое значение по splitValue
@@ -57,6 +50,7 @@ define('Controls/Input/Number/ViewModel',
             }
 
             this._options.value = result.value.replace(/ /g, '');
+            this._nextVersion();
 
             //Запишет значение в input и поставит курсор в указанное место
             return result;
@@ -82,10 +76,12 @@ define('Controls/Input/Number/ViewModel',
             if (String(parseFloat(this._options.value)) !== options.value) {
                this._options.value = options.value;
             }
+            this._nextVersion();
          },
 
          updateValue: function(value) {
             this._options.value = value;
+            this._nextVersion();
             return value;
          }
       });

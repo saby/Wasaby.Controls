@@ -1,7 +1,7 @@
 <div class="controls-EditDialog__content">
    <div class="ws-window-titlebar-custom">
       <div class="ws-window-title controls-EditDialog__title" title="{{imageTitle}}">{{title}}</div>
-      <SBIS3.CONTROLS:Button
+      <SBIS3.CONTROLS.Button
          class="controls-EditDialog__applyButton"
          name="applyButton"
          caption="{[Сохранить]}"
@@ -11,7 +11,7 @@
          <ws:handlers type="object">
             <ws:onActivated type="function">SBIS3.CONTROLS/Image/resources/EditDialog/EditDialog:prototype.onActivateSaveButton</ws:onActivated>
          </ws:handlers>
-      </SBIS3.CONTROLS:Button>
+      </SBIS3.CONTROLS.Button>
    </div>
    <div class="controls-EditDialog__image-wrapper"><img class="controls-EditDialog__image"/></div>
 </div>

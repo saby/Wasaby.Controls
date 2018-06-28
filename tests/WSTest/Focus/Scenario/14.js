@@ -27,7 +27,7 @@ define('WSTest/Focus/Scenario/14', [
    return function scenario14(done) {
       var wnd = new W({
          element: $('#component'),
-         template: 'js!' + caseControlName,
+         template: caseControlName,
          top: 0,
          width: '500px',
          height: '200px',

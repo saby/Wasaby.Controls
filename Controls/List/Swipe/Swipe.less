@@ -1,6 +1,10 @@
 @keyframes itemActionsSwipe {
   0% {
     max-width:0;
+    padding: 0;
+  }
+  10% {
+    padding: 0 @padding_itemActions_action 0 @padding_itemActions_action + @width_itemActions_swipeShadow;
   }
   100% {
     max-width:100%;
@@ -23,6 +27,7 @@
   background-image: -ms-linear-gradient(left, transparent,  @backgroun-color_itemActions_swipe_shadow @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe 100%);
   background-image: -o-linear-gradient(left, transparent,  @backgroun-color_itemActions_swipe_shadow @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe 100%);
   background-image: linear-gradient(to right, transparent,  @backgroun-color_itemActions_swipe_shadow @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe 100%);
+  z-index: 99;
 }
 .controls-itemActionsV__action_padding_swipe {
   padding: @padding_itemActions_action_swipe;
@@ -76,7 +81,9 @@
 .controls-itemActionsV__separator_horizontal_second {
   margin: 0 0 0 @margin_itemActions_separator;
 }
-
+.controls-itemActionsV_row {
+  align-items: center;
+}
 .controls-itemActionsV_row,
 .controls-itemActionsV_column {
   display: inline-flex;

@@ -19,9 +19,9 @@ define('Controls/List', [
             items: cfg.items,
             keyProperty: cfg.keyProperty,
             displayProperty: cfg.displayProperty,
+            itemsGroup: cfg.itemsGroup,
             markedKey: cfg.markedKey,
             selectedKeys: cfg.selectedKeys,
-            excludedKeys: cfg.excludedKeys,
             multiSelectVisibility: cfg.multiSelectVisibility,
             itemsReadyCallback: cfg.itemsReadyCallback
          };
@@ -30,6 +30,7 @@ define('Controls/List', [
          return {
             keyProperty: cfg.keyProperty,
             itemTemplate: cfg.itemTemplate,
+            itemsGroup: cfg.itemsGroup,
             displayProperty: cfg.displayProperty,
             markedKey: cfg.markedKey
          };
@@ -176,12 +177,12 @@ define('Controls/List', [
          this._notify('afterItemsMove', [items, target, position, result]);
       },
 
-      _dragStart: function(event, dragObject) {
-         return this._notify('dragStart', [dragObject]);
+      _dragStart: function(event, items) {
+         return this._notify('dragStart', [items]);
       },
 
-      _dragEnd: function(event, dragObject) {
-         return this._notify('dragEnd', [dragObject]);
+      _dragEnd: function(event, items, target, position) {
+         return this._notify('dragEnd', [items, target, position]);
       }
    });
 

@@ -1,15 +1,19 @@
+{{}}
 <div class="controls-ToolbarV_item controls-ToolbarV_item__styled"
-     title="{{item.title}}"
-     on:click="_onItemClick(item)">
+     title="{{item.title}}">
     <ws:if data="{{contentTemplate}}">
         <ws:partial
                 template="{{contentTemplate}}"
-                item="{{item}}" />
+                item="{{item}}"
+                size="{{size}}"/>
     </ws:if>
     <ws:else>
         <ws:if data="{{!!item.icon}}">
             <i class="controls-ToolbarV__item_icon controls-ToolbarV__item_icon_{{size}} {{item.icon}} icon-default"/>
         </ws:if>
+        <ws:else data="{{!!item.buttonStyle}}">
+            <Controls.Button readOnly="{{item.buttonReadOnly}}" caption="{{item.buttonCaption}}" iconStyle="{{item.buttonIconStyle}}" icon="{{item.buttonIcon}}" style="{{item.buttonStyle}}" size="{{size}}"/>
+        </ws:else>
         <ws:else data="{{!!item.title}}">
             <span class="controls-ToolbarV__item_title">{{item.title}}</span>
         </ws:else>

@@ -1,7 +1,7 @@
 <div class="controls-FilterPanel controls-FilterPanel_align-{{filterAlign}} {{expanded ? expandedClassName : collapsedClassName}}">
    <div class="controls-FilterPanel__headContainer">
-      <SBIS3.CONTROLS:Link className="controls-FilterPanel__resetFilter additionalLink controls-Link__disabledHover" name="ResetFilterButton" caption="Сбросить фильтр" command="resetFilter" enabled="{{!!items}}"/>
-      <SBIS3.CONTROLS:Button:IconButton className="controls-FilterPanel__hideFilterButton controls-IconButton__filter-{{filterAlign}}-close" command="toggleFilter"/>
+      <SBIS3.CONTROLS.Link className="controls-FilterPanel__resetFilter additionalLink controls-Link__disabledHover" name="ResetFilterButton" caption="Сбросить фильтр" command="resetFilter" enabled="{{!!items}}"/>
+      <SBIS3.CONTROLS.Button.IconButton className="controls-FilterPanel__hideFilterButton controls-IconButton__filter-{{filterAlign}}-close" command="toggleFilter"/>
    </div>
    <div class="controls-FilterPanel__contentContainer">
       <ws:if data="{{ expanded }}">

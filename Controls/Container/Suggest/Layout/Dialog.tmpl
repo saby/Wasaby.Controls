@@ -1,14 +1,14 @@
 <div class="controls-SuggestV__dialog">
-    <Controls.Popup.Templates.Dialog.DialogTemplate attr:class="controls-SuggestV__dialog-layout" caption="Все записи">
+    <Controls.Popup.Templates.Stack.StackTemplate attr:class="controls-SuggestV__dialog-layout">
+        <ws:caption>Все записи</ws:caption>
         <ws:contentArea>
             <Controls.Container.Scroll attr:class="controls-ScrollContainer__flex">
                 <ws:content>
                     <ws:partial template="{{_options.template}}"
-                                on:itemClick="_itemClick()">
-                        <ws:templateOptions dialogMode="{{true}}"/>
-                    </ws:partial>
+                                on:itemClick="_itemClick()"
+                                dialogMode="{{true}}"/>
                 </ws:content>
             </Controls.Container.Scroll>
         </ws:contentArea>
-    </Controls.Popup.Templates.Dialog.DialogTemplate>
+    </Controls.Popup.Templates.Stack.StackTemplate>
 </div>

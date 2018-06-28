@@ -3,7 +3,7 @@
    <ws:if data="{{!paletteRenderStyle}}">
       <div class="controls-StylesPanel__header">
          <div class="controls-StylesPanel__title" title="{[Стиль и цвет]}">{[Стиль и цвет]}</div>
-         <SBIS3.CONTROLS:Button:IconButton
+         <SBIS3.CONTROLS.Button.IconButton
             name="Apply"
             command="saveStylesPanel"
             activableByClick="{{false}}"
@@ -11,20 +11,20 @@
             className="controls-StylesPanel__applyButton controls-IconButton__round-border controls-IconButton__round icon-size"
          />
       </div>
-      <SBIS3.CONTROLS:StylesPanelNew:resources:FontStyle:FontStyle
+      <SBIS3.CONTROLS.StylesPanelNew.resources.FontStyle.FontStyle
          style="{{style}}"
          fontSizes="{{fontSizes}}"
          activableByClick="{{false}}"
       />
    </ws:if>
-   <SBIS3.CONTROLS:StylesPanelNew:resources:ColorStyle:ColorStyle
+   <SBIS3.CONTROLS.StylesPanelNew.resources.ColorStyle.ColorStyle
       name="Pallete"
       items="{{colors}}"
       selectedKey="{{style.color}}"
       className="controls-StylesPanel__colors"
       allowEmptySelection="{{allowAutoColor}}"
    />
-   <SBIS3.CONTROLS:CheckBox
+   <SBIS3.CONTROLS.CheckBox
       name="CheckBox"
       visible="{{allowAutoColor}}"
       caption="{[Автоматически (под фон)]}"
@@ -32,7 +32,7 @@
       className="controls-StylesPanel__checkBox"
    />
    <div if="{{!paletteRenderStyle && (historyId || presets)}}" class="controls-StylesPanel-presetFormats_wrapper">
-      <SBIS3.CONTROLS:ListView
+      <SBIS3.CONTROLS.ListView
          name="presetView"
          itemsActions="{{ [] }}"
          itemsDragNDrop="{{false}}"

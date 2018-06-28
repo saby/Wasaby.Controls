@@ -6,32 +6,19 @@ define('Controls/List/resources/utils/ItemsUtil', [
 ], function(Display, cInstance, DataUtils) {
    var ItemsUtil = {
 
-      getDefaultDisplayFlat: function(items, cfg) {
+      getDefaultDisplayFlat: function(items, cfg, filter) {
          var projCfg = {};
          projCfg.keyProperty = cfg.keyProperty;
          if (cfg.itemsSortMethod) {
             projCfg.sort = cfg.itemsSortMethod;
          }
-         if (cfg.itemsFilterMethod) {
-            projCfg.filter = cfg.itemsFilterMethod;
-         }
-         if (cfg.groupBy) {
-            var method;
-            if (!cfg.groupBy.method) {
-               var field = cfg.groupBy.field;
-
-               method = function(item, index, dispItem) {
-                  //делаем id группы строкой всегда, чтоб потом при обращении к id из верстки не ошибаться
-                  return ItemsUtil.getPropertyValue(item, field) + '';
-               };
-            } else {
-               method = cfg.groupBy.method;
-            }
-            projCfg.group = method;
+         if (cfg.itemsGroup && cfg.itemsGroup.method) {
+            projCfg.group = cfg.itemsGroup.method;
          }
          if (cfg.loadItemsStrategy == 'merge') {
             projCfg.unique = true;
          }
+         projCfg.filter = filter;
          return Display.getDefaultDisplay(items, projCfg);
       },
 
@@ -57,6 +44,10 @@ define('Controls/List/resources/utils/ItemsUtil', [
             });
             return resItem;
          }
+      },
+
+      getDefaultDisplayItem: function(display, item) {
+         return display.createItem({contents: item});
       }
    };
    return ItemsUtil;

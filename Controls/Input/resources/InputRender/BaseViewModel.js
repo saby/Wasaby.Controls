@@ -1,9 +1,11 @@
 define('Controls/Input/resources/InputRender/BaseViewModel',
    [
-      'Core/core-simpleExtend'
+      'Core/core-simpleExtend',
+      'WS.Data/Entity/VersionableMixin'
    ],
    function(
-      simpleExtend
+      simpleExtend,
+      VersionableMixin
    ) {
       'use strict';
 
@@ -14,7 +16,7 @@ define('Controls/Input/resources/InputRender/BaseViewModel',
        * @author Баранов М.А.
        */
 
-      return simpleExtend.extend({
+      return simpleExtend.extend([VersionableMixin], {
          constructor: function(options) {
             this._options = options || {};
          },
@@ -28,6 +30,7 @@ define('Controls/Input/resources/InputRender/BaseViewModel',
                value = splitValue.before + splitValue.insert + splitValue.after;
 
             this._options.value = value;
+            this._nextVersion();
 
             return {
                value: value,
@@ -45,6 +48,7 @@ define('Controls/Input/resources/InputRender/BaseViewModel',
 
          updateOptions: function(options) {
             this._options.value = options.value;
+            this._nextVersion();
          }
       });
    }

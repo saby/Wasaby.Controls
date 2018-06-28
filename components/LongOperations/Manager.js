@@ -661,8 +661,11 @@ define('SBIS3.CONTROLS/LongOperations/Manager',
                break;
 
             case 'fulloperational':
-               var inner = protectedOf(manager);
-               inner._tabManagers[tab].isFulloperational = true;
+               var tabManagers = protectedOf(manager)._tabManagers;
+               if (!(tab in tabManagers)) {
+                  tabManagers[tab] = {producers:{}, isFulloperational:false};
+               }
+               tabManagers[tab].isFulloperational = true;
                // И уведомить своих подписчиков
                _channel.notifyWithTarget('fulloperational', manager);
                break;

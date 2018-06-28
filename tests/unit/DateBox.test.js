@@ -129,6 +129,16 @@ define(['Core/constants', 'SBIS3.CONTROLS/Date/Box', 'SBIS3.CONTROLS/Utils/Contr
             assert.equal(this.testControl.getDate().getFullYear(), date.getFullYear() - 100);
          });
       });
+
+      describe('_getDateByText mask = "DD.MM.YYYY"', function() {
+         controlTestCase();
+
+         it('should return null if year is equal 0', function() {
+            this.testControl.setMask('DD.MM.YYYY');
+            assert.isNull(this.testControl._getDateByText('01.01.0000', null, false));
+         });
+      });
+
       describe('.setText', function () {
          controlTestCase();
          it('should generate onTextChange and onDateChange events', function () {

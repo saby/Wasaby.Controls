@@ -58,7 +58,7 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
      * </ul>
      *
      * @class SBIS3.CONTROLS/Menu/SbisMenu
-     * @author Романов В.С.
+     * @author Герасимов А.М.
      * @extends SBIS3.CONTROLS/Menu/ContextMenu
      * @control
      * @public

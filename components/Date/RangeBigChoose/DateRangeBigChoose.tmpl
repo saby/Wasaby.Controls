@@ -3,7 +3,7 @@
 
    <div class="controls-DateRangeBigChoose__months">
       <div class="controls-DateRangeBigChoose__years">
-         <SBIS3.CONTROLS:Button:IconButton
+         <SBIS3.CONTROLS.Button.IconButton
             tabindex="0"
             name="PrevYearButton"
             activableByClick="{{false}}"
@@ -11,7 +11,7 @@
             className="controls-DateRangeBigChoose__years-prevYearBtn"
          />
          <ws:partial template="{{yearsPanelTpl}}" scope="{{...}}" activableByClick="{{ false }}"></ws:partial>
-         <SBIS3.CONTROLS:Button:IconButton
+         <SBIS3.CONTROLS.Button.IconButton
             tabindex="0"
             name="NextYearButton"
             activableByClick="{{false}}"
@@ -19,11 +19,11 @@
             className="controls-DateRangeBigChoose__years-nextYearBtn"
          />
       </div>
-      <SBIS3.CONTROLS:ScrollContainer
+      <SBIS3.CONTROLS.ScrollContainer
          name="ScrollContainer"
          class="controls-DateRangeBigChoose__months-month-wrapper  controls-ScrollContainer__flex controls-ScrollContainer__hiddenScrollbar">
          <ws:content>
-            <SBIS3.CONTROLS:Date:RangeBigChoose:resources:MonthRangePicker
+            <SBIS3.CONTROLS.Date.RangeBigChoose.resources.MonthRangePicker
                tabindex="0"
                name="MonthRangePicker"
                activableByClick="{{false}}"
@@ -35,7 +35,7 @@
                monthClickable="{{monthStateEnabled}}"
             />
          </ws:content>
-      </SBIS3.CONTROLS:ScrollContainer>
+      </SBIS3.CONTROLS.ScrollContainer>
 
    </div>
 
@@ -52,11 +52,11 @@
             </div>
          </div>
       </div>
-      <SBIS3.CONTROLS:ScrollContainer
+      <SBIS3.CONTROLS.ScrollContainer
          name="ScrollContainer"
          class="controls-DateRangeBigChoose__dates-dates-wrapper  controls-ScrollContainer__flex controls-ScrollContainer__hiddenScrollbar">
          <ws:content>
-            <SBIS3.CONTROLS:Date:RangeBigChoose:resources:DateRangePicker
+            <SBIS3.CONTROLS.Date.RangeBigChoose.resources.DateRangePicker
                tabindex="0"
                name="MonthDateRangePicker"
                activableByClick="{{false}}"
@@ -67,6 +67,6 @@
                dayFormatter="{{dayFormatter}}"
             />
          </ws:content>
-      </SBIS3.CONTROLS:ScrollContainer>
+      </SBIS3.CONTROLS.ScrollContainer>
    </div>
 </div>

@@ -1,0 +1,94 @@
+define('Controls/Input/ComboBox',
+   [
+      'Core/Control',
+      'tmpl!Controls/Input/ComboBox/ComboBox',
+      'Controls/Input/resources/InputRender/BaseViewModel',
+      'WS.Data/Utils',
+      'Controls/Input/Dropdown/Util',
+      'css!Controls/Input/ComboBox/ComboBox'
+   ],
+
+   function(Control, template, BaseViewModel, Utils, dropdownUtils) {
+
+      /**
+       * Control "ComboBox"
+       * @class Controls/Input/ComboBox
+       * @extends Core/Control
+       * @mixes Controls/interface/ISource
+       * @mixes Controls/interface/ISingleSelectable
+       * @mixes Controls/Input/interface/IDropdownEmptyValue
+       * @mixes Controls/Input/interface/IInputText
+       * @mixes Controls/Input/interface/IInputPlaceholder
+       * @mixes Controls/Input/interface/IValidation
+       * @mixes Controls/Input/interface/IInputTag
+       * @control
+       * @public
+       * @category Input
+       * @author Золотова Э.Е.
+       * @demo Controls-demo/Input/ComboBox/ComboBox
+       */
+
+      'use strict';
+
+      var getPropValue = Utils.getItemPropertyValue.bind(Utils);
+
+      var _private = {
+         close: function() {
+            this._isOpen = false;
+            this._forceUpdate();
+         }
+      };
+
+      var ComboBox = Control.extend({
+         _template: template,
+         _isOpen: false,
+
+         _beforeMount: function(options) {
+            this._onClose = _private.close.bind(this);
+            this._placeholder = options.placeholder;
+            this._value = options.value;
+            this._simpleViewModel = new BaseViewModel({
+               value: this._value
+            });
+         },
+
+         _afterMount: function() {
+            this._corner = {
+               vertical: 'bottom'
+            };
+            this._width = this._container.offsetWidth;
+         },
+
+         _mouseDownHandler: function() {
+            this._isOpen = !this._isOpen;
+         },
+
+         _selectedItemsChangedHandler: function(event, selectedItems) {
+            var key = getPropValue(selectedItems[0], this._options.keyProperty);
+            this._isEmptyItem = key === null;
+            if (this._isEmptyItem) {
+               this._value = '';
+               this._placeholder = dropdownUtils.prepareEmpty(this._options.emptyText);
+            } else {
+               this._value = getPropValue(selectedItems[0], this._options.displayProperty);
+               this._placeholder = this._options.placeholder;
+            }
+            this._simpleViewModel.updateOptions({
+               value: this._value
+            });
+            this._notify('valueChanged', [this._value]);
+            this._notify('selectedKeyChanged', [key]);
+            this._isOpen = false;
+         }
+
+      });
+
+      ComboBox.getDefaultOptions = function() {
+         return {
+            editable: false,
+            placeholder: rk('Выберите...')
+         };
+      };
+
+      return ComboBox;
+   });

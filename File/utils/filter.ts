@@ -2,6 +2,7 @@
 import ExtensionsHelper = require("File/utils/ExtensionsHelper");
 import ExtensionsError = require("File/Error/Extension");
 import MaxSizeError = require("File/Error/MaxSize");
+import LocalFile = require("File/LocalFile");
 
 const KB = 1024;
 const MB = KB * KB;
@@ -28,12 +29,12 @@ type FilterParams = {
  * @author Заляев А.В.
  */
 export = (
-    fileList: FileList | Array<File | Error>, {
+    fileList: FileList | Array<LocalFile | Error>, {
         extensions,
         maxSize = 0
     }: Partial<FilterParams>
-): Array<Error | File> => {
-    let files = [];
+): Array<Error | LocalFile> => {
+    let results = [];
     maxSize = maxSize * MB;
 
     /*
@@ -42,17 +43,28 @@ export = (
      * Обход надо делать только по числовому индексу и получать через FileList.item({Number}) или FileList[{Number}]
      */
     for (let i = 0; i < fileList.length; i++) {
-        let file = fileList instanceof FileList? fileList.item(i): fileList[i];
+        let item = fileList instanceof FileList?
+            fileList.item(i):
+            fileList[i];
 
         // Если пришла уже ошибка из внутренней фильтрации ResourceGetter
-        if (file instanceof Error) {
-            files.push(file);
+        if (item instanceof Error) {
+            results.push(item);
             continue;
+        }
+
+        let isLocalFile: boolean;
+        let file: File;
+        if (item instanceof LocalFile) {
+            file = <File>item.getData();
+            isLocalFile = true;
+        } else {
+            file = item;
         }
 
         // По типу
         if (extensions && !extensions.verify(file)) {
-            files.push(new ExtensionsError({
+            results.push(new ExtensionsError({
                 fileName: file.name,
                 extensions: extensions.toString()
             }));
@@ -61,14 +73,14 @@ export = (
 
         // По размеру
         if (maxSize && (file.size > maxSize)) {
-            files.push(new MaxSizeError({
+            results.push(new MaxSizeError({
                 fileName: file.name,
                 maxSize
             }));
             continue;
         }
 
-        files.push(file);
+        results.push(isLocalFile? item: new LocalFile(file));
     }
-    return files;
+    return results;
 }

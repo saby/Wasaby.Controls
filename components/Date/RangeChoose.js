@@ -103,9 +103,7 @@ define('SBIS3.CONTROLS/Date/RangeChoose',[
              *
              * @see updateIcons
              */
-            iconsHandler: null,
-
-            _fix165c4103: true
+            iconsHandler: null
          },
          _cssDateRangeChoose: {
             selected: 'controls-DateRangeChoose__selected',
@@ -366,6 +364,10 @@ define('SBIS3.CONTROLS/Date/RangeChoose',[
             end = new Date(year, (rangeId + 1)*6, 0);
          this.setRange(start, end);
          this._notify('onChoose', start, end);
+         // Если панель располагалась надо аккордеоном, то на аккордеоне срабатывал клик.
+         if (detection.isMobileIOS) {
+            e.preventDefault();
+         }
       },
 
       _onQuarterClick: function (e) {
@@ -375,6 +377,10 @@ define('SBIS3.CONTROLS/Date/RangeChoose',[
             end = new Date(year, (rangeId + 1)*3, 0);
          this.setRange(start, end);
          this._notify('onChoose', start, end);
+         // Если панель располагалась надо аккордеоном, то на аккордеоне срабатывал клик.
+         if (detection.isMobileIOS) {
+            e.preventDefault();
+         }
       },
 
       _onMonthClick: function (e) {

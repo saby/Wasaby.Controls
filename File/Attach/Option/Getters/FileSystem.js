@@ -1,6 +1,7 @@
 /// <amd-module name="File/Attach/Option/Getters/FileSystem" />
 define("File/Attach/Option/Getters/FileSystem", ["require", "exports", "tslib", "File/Attach/Option/ResourceGetter", "File/ResourceGetter/FileSystem"], function (require, exports, tslib_1, ResourceGetter, Getter) {
     "use strict";
+    var GETTER_TYPE = "FileSystem";
     /**
      * Класс конфигурации IResourceGetter для выбора из файловой системы, передаваемый в Attach
      * @class
@@ -48,6 +49,19 @@ define("File/Attach/Option/Getters/FileSystem", ["require", "exports", "tslib", 
         function FileSystem(options) {
             return _super.call(this, new Getter(options || {})) || this;
         }
+        /**
+         * @description
+         * Тип геттера передается в метод choose File/Attach, чтобы указать каким способом(геттером) выбираются файлы
+         * <pre>
+         *   attach.choose(FileSystem.getType()); // выбрать файлы, используя системное окно
+         * </pre>
+         * @static
+         * @method
+         * @returns {String} Тип Getter'a
+         */
+        FileSystem.getType = function () {
+            return GETTER_TYPE;
+        };
         return FileSystem;
     }(ResourceGetter));
     return FileSystem;

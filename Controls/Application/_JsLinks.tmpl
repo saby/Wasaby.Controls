@@ -1,12 +1,15 @@
 <div>
    <ws:if data="{{ cssLinks }}">
-      <ws:for data="i in cssLinks">
-         <script data-vdomignore="true">define('css!{{ getCssNameForDefine(i) }}', '');</script>
-      </ws:for>
+      <script>eval("{{ getDefines() }}".replace(/&quot;/g, '"'))</script>
    </ws:if>
    <ws:if data="{{ jsLinks }}">
       <ws:for data="index, value in jsLinks">
-         <script type="text/javascript" src="{{ _options.appRoot?_options.appRoot+value:value }}" defer="defer" key="{{ 'scripts_' + index }}" data-vdomignore="true"></script>
+         <script type="text/javascript" src="{{ _options.appRoot?(_options.appRoot+value).replace('//', '/'):value }}" defer="defer" key="{{ 'scripts_' + index }}" data-vdomignore="true"></script>
+      </ws:for>
+   </ws:if>
+   <ws:if data="{{ receivedStateArr }}">
+      <ws:for data="key, value in receivedStateArr">
+         <script data-vdomignore="true">window['inline{{key}}']='{{value}}';</script>
       </ws:for>
    </ws:if>
 </div>

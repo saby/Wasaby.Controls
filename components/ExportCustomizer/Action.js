@@ -2,7 +2,7 @@
  * Исполняемое действие "Настройщик экспорта"
  *
  * Для того, чтобы возможно было использовать сохранямые и редактируемые пресеты (предустановленные сочетания параметров экспорта), необходимо подключить модуль 'SBIS3.ENGINE/Controls/ExportPresets/Loader'
- * Для того, чтобы возможно было использовать редактируемые стилевые шаблоны эксель файла, необходимо подключить модуль 'PrintingTemplates/ExportFormatter/Excel'
+ * Для того, чтобы возможно было использовать редактируемые стилевые эксель-файлы, необходимо подключить модуль 'PrintingTemplates/ExportFormatter/Excel'
  *
  * @public
  * @class SBIS3.CONTROLS/ExportCustomizer/Action
@@ -52,7 +52,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
        * @property {string|number} id Идентификатор пресета
        * @property {string} title Отображаемое название пресета
        * @property {Array<string>} fieldIds Список привязки колонок в экспортируемом файле к полям данных
-       * @property {string} fileUuid Uuid шаблона форматирования эксель-файла
+       * @property {string} fileUuid Uuid стилевого эксель-файла
        */
 
       /**
@@ -67,7 +67,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
        * @typedef {object} ExportResults Тип, содержащий информацию о результате редактирования
        * @property {Array<string>} fieldIds Список полей для колонок в экспортируемом файле
        * @property {Array<string>} columnTitles Список отображаемых названий колонок в экспортируемом файле
-       * @property {string} fileUuid Uuid шаблона форматирования эксель-файла
+       * @property {string} fileUuid Uuid стилевого эксель-файла
        * @property {ExportServiceParams} serviceParams Прочие параметры, необходимых для работы БЛ
        */
 
@@ -113,7 +113,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * @param {Array<BrowserColumnInfo>|WS.Data/Collection/RecordSet<BrowserColumnInfo>} options.allFields Список объектов с информацией о всех колонках в формате, используемом в браузере
           * @param {Array<string>} options.fieldIds Список привязки колонок в экспортируемом файле к полям данных
           * @param {object} options.fieldGroupTitles Список отображаемых названий групп полей (если используются идентификаторы групп)
-          * @param {string} options.fileUuid Uuid шаблона форматирования эксель-файла
+          * @param {string} options.fileUuid Uuid стилевого эксель-файла
           * @param {Array<ExportValidator>} options.validators Список валидаторов результатов редактирования (опционально)
           * @param {ExportRemoteCall} [options.outputCall] Информация для вызова метода удалённого сервиса для отправки данных вывода (опционально)
           * @return {Deferred<ExportResults>}

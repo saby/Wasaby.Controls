@@ -3,11 +3,12 @@
             {{ multiselect !== false ? 'controls-ListView__multiselect' : 'controls-ListView__multiselect__off' }}
             {{ startScrollColumn !== undefined ? 'controls-DataGridView__with-partScroll' }}
             {{ 'controls-CompositeView-' + viewMode }}
-            {{ viewMode === 'tile' && tileMode ? ' controls-CompositeView-tile__new' : ' controls-CompositeView-tile__old' }}
+            {{ viewMode === 'tile' && tileMode ? ' controls-CompositeView-tile__new' }}
+            {{ viewMode === 'tile' && !tileMode ? ' controls-CompositeView-tile__old' }}
             {{ viewMode === 'tile' && tileMode ? ('controls-CompositeView-tile__' + tileMode) }}
             {{ _serverRender ? ' controls-ListView__dataLoaded' : ' controls-ListView__dataNotLoaded'}}">
    <div class="js-controls-DataGridView__minHeight controls-DataGridView__minHeight"></div>
-   <SBIS3.CONTROLS:Panel tabindex="{{1}}" class="controls-ListView__fakeFocusElement" allowChangeEnable="{{false}}"/>
+   <SBIS3.CONTROLS.Panel tabindex="{{1}}" class="controls-ListView__fakeFocusElement" allowChangeEnable="{{false}}"/>
    <div class="controls-AjaxLoader ws-hidden">
       <div class="controls-AjaxLoader__outer">
          <div class="controls-AjaxLoader__block">
@@ -53,7 +54,7 @@
    </ws:if>
    <ws:if data="{{ infiniteScroll === 'demand'}}">
       <div class="controls-ListView__serviceFooter">
-         <SBIS3.CONTROLS:Link
+         <SBIS3.CONTROLS.Link
                  name="loadMoreButton"
                  cssClassName="controls-ListView__loadMoreButton"
                  caption="Ещё..."

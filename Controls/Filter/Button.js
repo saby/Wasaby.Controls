@@ -9,10 +9,11 @@ define('Controls/Filter/Button',
       'WS.Data/Utils',
       'WS.Data/Type/descriptor',
       'Core/Deferred',
+      'Core/helpers/Object/isEqual',
       'css!Controls/Filter/Button/Button'
    ],
 
-   function(Control, template, Chain, Utils, types, Deferred) {
+   function(Control, template, Chain, Utils, types, Deferred, isEqual) {
 
       /**
        * Component for data filtering.
@@ -52,10 +53,12 @@ define('Controls/Filter/Button',
             var textArr = [];
 
             Chain(items).each(function(item) {
-               var textValue = Utils.getItemPropertyValue(item, 'textValue');
+               if (Utils.getItemPropertyValue(item, 'value') !== Utils.getItemPropertyValue(item, 'resetValue')) {
+                  var textValue = Utils.getItemPropertyValue(item, 'textValue');
 
-               if (textValue) {
-                  textArr.push(textValue);
+                  if (textValue) {
+                     textArr.push(textValue);
+                  }
                }
             });
 
@@ -65,6 +68,9 @@ define('Controls/Filter/Button',
          resolveItems: function(self, items) {
             self._items = items;
             self._text = _private.getText(items);
+            if (self._options.filterTemplate && self._filterCompatible) {
+               self._filterCompatible.updateFilterStructure(items);
+            }
          }
       };
 
@@ -81,7 +87,7 @@ define('Controls/Filter/Button',
          },
 
          _beforeUpdate: function(options) {
-            if (this._options.items !== options.items) {
+            if (!isEqual(this._options.items, options.items)) {
                _private.resolveItems(this, options.items);
             }
          },
@@ -99,6 +105,7 @@ define('Controls/Filter/Button',
          _clearClick: function() {
             _private.getFilterButtonCompatible(this).addCallback(function(panelOpener) {
                panelOpener.clearFilter();
+               this._text = '';
             });
          },
 

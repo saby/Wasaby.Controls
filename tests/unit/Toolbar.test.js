@@ -128,7 +128,8 @@ define(
                         idProperty: 'id',
                         data: defaultItems
                      })
-                  }).addCallback(() => {
+                  });
+                  toolbar._sourceController._loader.addCallback(() => {
                      assert.equal(toolbar._items.getCount(), defaultItems.length);
                      resolve();
                   });

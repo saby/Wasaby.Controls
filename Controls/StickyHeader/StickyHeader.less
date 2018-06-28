@@ -1,0 +1,41 @@
+.controls-StickyHeader {
+   top: 0;
+   position: sticky;
+   background: #fff;
+}
+
+/**
+  * На android есть промежуток между дочерними элементами, внутри родительского.
+  * Когда шапка фиксируется, то между контейнером, относительно которого она фиксируется, и шапкой появляется
+  * пространство, через него можно увидеть прокрученный контент.
+  * https://jsfiddle.net/tz52xr3k/3/
+  *
+  * В качестве решения смещаем шапку вверх и увеличиваем её размер на смещение, через padding.
+  * Таким способом визуально не меняется контент шапки, а свободное пространство исчезает.
+ */
+.controls-StickyHeader_android {
+   @offset: 2px;
+   top: -@offset;
+   padding-top: @offset;
+}
+
+.controls-StickyHeader__observationTargetTop,
+.controls-StickyHeader__observationTargetBottom {
+   position: absolute;
+}
+
+.controls-StickyHeader__observationTargetTop {
+   top: -1px;
+}
+
+.controls-StickyHeader__observationTargetBottom {
+   bottom: -1px;
+}
+
+.controls-StickyHeader__shadow {
+   bottom: -@height-gradient_Scroll-shadow;
+   background: linear-gradient(
+      to bottom,
+      @start-color-gradient_Scroll-shadow, @end-color-gradient_Scroll-shadow
+   );
+}

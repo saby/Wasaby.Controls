@@ -1,0 +1,16 @@
+<div attr:class="controls-operationsPanelV">
+    <ws:if data="{{_options.massSelector}}">
+        <Controls.OperationsPanel.MassSelector/>
+    </ws:if>
+    <Controls.Toolbar
+            attr:class="controls-operationsPanelV__toolbar"
+            name="ItemsToolbar"
+            parentProperty="{{_options.parentProperty}}"
+            nodeProperty="{{_options.nodeProperty}}"
+            keyProperty="{{_options.keyProperty}}"
+            source="{{_toolbarSource}}"
+            on:itemClick="_toolbarItemClick()"
+            itemTemplate="{{_itemTemplate}}" />
+    <Controls.Event.Emitter event="resize"
+                            on:resize="_onResize()"/>
+</div>

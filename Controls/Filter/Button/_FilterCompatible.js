@@ -37,7 +37,7 @@ define('Controls/Filter/Button/_FilterCompatible',
             return {
                element: self._filterButton._container.querySelector('.controls-FilterButton__oldTemplate'),
                template: self._options.filterTemplate,
-               filterStructure: self._options.items || self._options.filterStructure,
+               filterStructure: converterFilterStructure.convertToFilterStructure(self._options.items) || self._options.filterStructure,
                filterAlign: self._options.filterAlign === 'left' ? 'right' : 'left',
                pickerClassName: self._options.pickerClassName || '',
                internalContextFilterName: self._options.internalContextFilterName || 'sbis3-controls-filter-button',
@@ -80,6 +80,12 @@ define('Controls/Filter/Button/_FilterCompatible',
          
          showFilterPanel: function() {
             _private.getOldPanelOpener(this).showPicker();
+         },
+
+         updateFilterStructure: function(items) {
+            if (this._oldPanelOpener) {
+               this._oldPanelOpener.setFilterStructure(converterFilterStructure.convertToFilterStructure(items));
+            }
          }
          
       });

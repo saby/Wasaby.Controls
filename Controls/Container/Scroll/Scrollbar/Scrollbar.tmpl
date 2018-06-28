@@ -1,17 +1,10 @@
 <div name="scrollbar" class="controls-VScrollbar {{_dragging ? 'controls-VScrollbar_dragging'}}"
      on:wheel="_wheelHandler()"
      on:mousedown="_scrollbarBeginDragHandler()">
-   <div name="thumb" class="controls-VScrollbar__thumb controls-VScrollbar__thumb_{{_options.style}}
-   {{_dragging ? 'controls-VScrollbar__thumb_dragging controls-VScrollbar__thumb_dragging_' + _options.style}}"
-        style="height: {{_thumbHeight}}px; transform: translateY({{_position * _scrollRatio}}px);"
-   ></div>
+   <Controls.DragNDrop.Controller name="dragNDrop" on:dragstart="_scrollbarStartDragHandler()" on:dragmove="_scrollbarOnDragHandler()" on:documentdragend="_scrollbarEndDragHandler()">
+      <div name="thumb" class="controls-VScrollbar__thumb controls-VScrollbar__thumb_{{_options.style}}{{_dragging ? ' controls-VScrollbar__thumb_dragging controls-VScrollbar__thumb_dragging_' + _options.style}}"
+           style="height: {{_thumbHeight}}px; transform: translateY({{_position * _scrollRatio}}px);"
+      ></div>
+   </Controls.DragNDrop.Controller>
    <Controls.Event.Emitter event="resize" on:resize="_resizeHandler()"/>
-
-   <ws:if data="{{_dragging}}">
-      <!--Убрать div, когда будет поправлена ошибка https://online.sbis.ru/opendoc.html?guid=c9a2b5f8-405d-46ad-9dcb-e342b5a751ca-->
-      <div>
-         <Controls.Event.Emitter event="mousemove" on:mousemove="_scrollbarOnDragHandler()"/>
-         <Controls.Event.Emitter event="mouseup" on:mouseup="_scrollbarEndDragHandler()"/>
-      </div>
-   </ws:if>
 </div>

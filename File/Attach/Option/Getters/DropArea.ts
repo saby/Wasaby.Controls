@@ -3,6 +3,8 @@
 import ResourceGetter = require("File/Attach/Option/ResourceGetter");
 import DropAreaGetter = require("File/ResourceGetter/DropArea");
 
+const GETTER_TYPE = "DropArea";
+
 /**
  * Класс конфигурации IResourceGetter для выбора путём Drag&Drop, передаваемый в Attach
  * @class
@@ -55,6 +57,19 @@ class DropArea extends ResourceGetter {
      */
     constructor (options?: any) {
         super (new DropAreaGetter(options || {}));
+    }
+    /**
+     * @description 
+     * Тип геттера передается в метод choose File/Attach, чтобы указать каким способом(геттером) выбираются файлы
+     * <pre>
+     *   attach.choose(DropArea.getType()); // Получение файлов посредством Drag&Drop
+     * </pre>
+     * @static
+     * @method
+     * @returns {String} Тип Getter'a
+     */
+    static getType() {
+        return GETTER_TYPE;
     }
 }
 export = DropArea;

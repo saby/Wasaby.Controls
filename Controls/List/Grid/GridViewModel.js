@@ -1,7 +1,8 @@
 define('Controls/List/Grid/GridViewModel', [
    'Controls/List/BaseViewModel',
-   'Controls/List/ListViewModel'
-], function(BaseViewModel, ListViewModel) {
+   'Controls/List/ListViewModel',
+   'Core/core-clone'
+], function(BaseViewModel, ListViewModel, cClone) {
 
    'use strict';
 
@@ -66,7 +67,7 @@ define('Controls/List/Grid/GridViewModel', [
 
          getItemColumnCellClasses: function(current) {
             var
-               cellClasses = 'controls-Grid__row-cell';
+               cellClasses = 'controls-Grid__row-cell' + (current.isEditing ? ' controls-Grid__row-cell-background-editing' : ' controls-Grid__row-cell-background-hover');
 
             cellClasses += _private.prepareRowSeparatorClasses(current.showRowSeparator, current.index, current.dispItem.getOwner().getCount() - 1);
 
@@ -182,9 +183,32 @@ define('Controls/List/Grid/GridViewModel', [
                self._nextVersion();
                self._notify('onListChange');
             });
+            this._columns = this._prepareColumns(this._options.columns);
             this._prepareHeaderColumns(this._options.header, this._options.multiSelectVisibility === 'visible');
-            this._prepareResultsColumns(this._options.columns, this._options.multiSelectVisibility === 'visible');
-            this._prepareColgroupColumns(this._options.columns, this._options.multiSelectVisibility === 'visible');
+            this._prepareResultsColumns(this._columns, this._options.multiSelectVisibility === 'visible');
+            this._prepareColgroupColumns(this._columns, this._options.multiSelectVisibility === 'visible');
+         },
+
+         _prepareCrossBrowserColumn: function(column, isNotFullGridSupport) {
+            var
+               result = cClone(column);
+            if (isNotFullGridSupport) {
+               if (result.width === '1fr') {
+                  result.width = 'auto';
+               } else if (result.width === 'auto') {
+                  result.width = '1px';
+               }
+            }
+            return result;
+         },
+
+         _prepareColumns: function(columns) {
+            var
+               result = [];
+            for (var i = 0; i < columns.length; i++) {
+               result.push(this._prepareCrossBrowserColumn(columns[i]));
+            }
+            return result;
          },
 
          _createModel: function(cfg) {
@@ -192,6 +216,7 @@ define('Controls/List/Grid/GridViewModel', [
                items: cfg.items,
                keyProperty: cfg.keyProperty,
                displayProperty: cfg.displayProperty,
+               itemsGroup: cfg.itemsGroup,
                markedKey: cfg.markedKey,
                selectedKeys: cfg.selectedKeys,
                excludedKeys: cfg.excludedKeys,
@@ -358,7 +383,7 @@ define('Controls/List/Grid/GridViewModel', [
          // -----------------------------------------------------------
 
          getColumns: function() {
-            return this._options.columns;
+            return this._columns;
          },
 
          getMultiSelectVisibility: function() {
@@ -368,7 +393,7 @@ define('Controls/List/Grid/GridViewModel', [
          setMultiSelectVisibility: function(multiSelectVisibility) {
             this._options.multiSelectVisibility = multiSelectVisibility;
             this._prepareHeaderColumns(this._options.header, this._options.multiSelectVisibility);
-            this._prepareResultsColumns(this._options.columns, this._options.multiSelectVisibility);
+            this._prepareResultsColumns(this._columns, this._options.multiSelectVisibility);
          },
 
          getItemById: function(id, keyProperty) {
@@ -406,10 +431,16 @@ define('Controls/List/Grid/GridViewModel', [
             current.ladderSupport = !!this._options.stickyFields;
 
             if (current.multiSelectVisibility) {
-               current.columns = [{}].concat(this._options.columns);
+               current.columns = [{}].concat(this._columns);
             } else {
-               current.columns = this._options.columns;
+               current.columns = this._columns;
             }
+
+            if (current.isGroup) {
+               current.groupGridColumnStyle = 'grid-column: 1 / ' + (current.columns.length + 1) + ';';
+               return current;
+            }
+
             current.columnIndex = 0;
             current.resetColumnIndex = function() {
                current.columnIndex = 0;
@@ -429,7 +460,8 @@ define('Controls/List/Grid/GridViewModel', [
                      displayProperty: current.displayProperty,
                      index: current.index,
                      key: current.key,
-                     getPropValue: current.getPropValue
+                     getPropValue: current.getPropValue,
+                     isEditing: current.isEditing
                   };
                currentColumn.columnIndex = current.columnIndex;
                currentColumn.cellClasses = _private.getItemColumnCellClasses(current);
@@ -462,6 +494,10 @@ define('Controls/List/Grid/GridViewModel', [
             return current;
          },
 
+         toggleGroup: function(group, state) {
+            this._model.toggleGroup(group, state);
+         },
+
          getNext: function() {
             return this._model.getNext();
          },
@@ -482,6 +518,10 @@ define('Controls/List/Grid/GridViewModel', [
             this._model.setActiveItem(itemData);
          },
 
+         mergeItems: function(items) {
+            this._model.mergeItems(items);
+         },
+
          appendItems: function(items) {
             this._model.appendItems(items);
          },
@@ -492,6 +532,23 @@ define('Controls/List/Grid/GridViewModel', [
 
          setItemActions: function(item, actions) {
             this._model.setItemActions(item, actions);
+         },
+
+         _setEditingItemData: function(itemData) {
+            this._model._setEditingItemData(itemData);
+            this._nextVersion();
+         },
+
+         _prepareDisplayItemForAdd: function(item) {
+            return this._model._prepareDisplayItemForAdd(item);
+         },
+
+         getCurrentIndex: function() {
+            return this._model.getCurrentIndex();
+         },
+
+         getItemActions: function(item) {
+            return this._model.getItemActions(item);
          },
 
          getDragTargetPosition: function() {
@@ -520,6 +577,14 @@ define('Controls/List/Grid/GridViewModel', [
 
          unselect: function(keys) {
             this._model.unselect(keys);
+         },
+
+         setDragTargetItem: function(itemData) {
+            this._model.setDragTargetItem(itemData);
+         },
+
+         setDragItems: function(items) {
+            this._model.setDragItems(items);
          },
 
          destroy: function() {

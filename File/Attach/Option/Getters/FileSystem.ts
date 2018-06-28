@@ -3,6 +3,8 @@
 import ResourceGetter = require("File/Attach/Option/ResourceGetter");
 import Getter = require("File/ResourceGetter/FileSystem");
 
+const GETTER_TYPE = "FileSystem";
+
 /**
  * Класс конфигурации IResourceGetter для выбора из файловой системы, передаваемый в Attach
  * @class
@@ -48,6 +50,19 @@ class FileSystem extends ResourceGetter {
      */
     constructor (options?: any) {
         super (new Getter(options || {}));
+    }
+    /**
+     * @description 
+     * Тип геттера передается в метод choose File/Attach, чтобы указать каким способом(геттером) выбираются файлы
+     * <pre>
+     *   attach.choose(FileSystem.getType()); // выбрать файлы, используя системное окно
+     * </pre>
+     * @static
+     * @method
+     * @returns {String} Тип Getter'a
+     */
+    static getType(){
+        return GETTER_TYPE;
     }
 }
 export = FileSystem;

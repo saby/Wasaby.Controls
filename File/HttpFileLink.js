@@ -1,23 +1,28 @@
-define("File/HttpFileLink", ["require", "exports"], function (require, exports) {
+define("File/HttpFileLink", ["require", "exports", "tslib", "File/ResourceAbstract"], function (require, exports, tslib_1, ResourceAbstract_1) {
     "use strict";
-    /// <amd-module name="File/HttpFileLink" />
     /**
      * Класс - обёртка над http-ссылкой на файл
      * @class
+     * @extends File/ResourceAbstract
      * @name File/HttpFileLink
      * @public
      * @author Заляев А.В.
      */
-    var HttpFileLink = /** @class */ (function () {
+    var HttpFileLink = /** @class */ (function (_super) {
+        tslib_1.__extends(HttpFileLink, _super);
         /**
          * @param {String} fileLink Ссылка на ресурс
-         * @param {*} [meta] Дополнительные мета-данные
+         * @param {*} [_meta] Дополнительные мета-данные
+         * @param {FileInfo} [_info] Информация о файле
          * @constructor
          * @name File/HttpFileLink
          */
-        function HttpFileLink(fileLink, meta) {
-            this.fileLink = fileLink;
-            this.meta = meta;
+        function HttpFileLink(fileLink, _meta, _info) {
+            var _this = _super.call(this) || this;
+            _this.fileLink = fileLink;
+            _this._meta = _meta;
+            _this._info = _info;
+            return _this;
         }
         /**
          * Возвращает ссылку на удалённый ресурс
@@ -28,16 +33,7 @@ define("File/HttpFileLink", ["require", "exports"], function (require, exports) 
         HttpFileLink.prototype.getLink = function () {
             return this.fileLink;
         };
-        /**
-         * Возвращает дополнительную информацию по файлу
-         * @return {*}
-         * @method
-         * @name File/HttpFileLink#getMeta
-         */
-        HttpFileLink.prototype.getMeta = function () {
-            return this.meta || {};
-        };
         return HttpFileLink;
-    }());
+    }(ResourceAbstract_1.ResourceAbstract));
     return HttpFileLink;
 });

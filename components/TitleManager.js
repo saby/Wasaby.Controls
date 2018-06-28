@@ -22,6 +22,7 @@ define('SBIS3.CONTROLS/TitleManager', [
        * @param {SBIS3.CONTROLS/Control} control Контрол на время жизни которого нужно установить заголовок
        */
       set: function (title, control) {
+         title = this._prepareTitle(title);
          if (!control.isDestroyed()) {
             var index = this._getIndexById(control.getId());
             if (this._store.length === 0 && document.title != this._defaultTitle) {
@@ -38,6 +39,14 @@ define('SBIS3.CONTROLS/TitleManager', [
             });
             this._setDocumentTitle();
          }
+      },
+
+      //При установке значения в document.title удаляются двойные пробелы
+      //Если мы устанавливаем строку с двойными пробелами в заголовок, то set-значение не будет равно get-значению
+      //и тогда при дестрое компонента не отработает _onDestroyHandler, который восстанавливает предыдущее значение заголовка
+      //проверяя текущее значение document.title и установленное в методе set
+      _prepareTitle: function(title) {
+         return title.replace(/\s+/g, ' ');
       },
 
       removeLastState: function () {

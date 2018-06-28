@@ -1,16 +1,16 @@
 <div class="controls-PrintDialog">
     <div class="ws-window-titlebar-custom controls-PrintDialog__titlebar">
-        <SBIS3.CONTROLS:Button caption="{[Распечатать]}"
+        <SBIS3.CONTROLS.Button caption="{[Распечатать]}"
                                   primary="{{ true }}"
                                   command="print"
                                   class="controls-PrintDialog__button" />
     </div>
-    <SBIS3.CONTROLS:ScrollContainer cssClassName="controls-PrintDialog__scrollContainer">
+    <SBIS3.CONTROLS.ScrollContainer cssClassName="controls-PrintDialog__scrollContainer">
         <ws:content>
-            <Lib:Control:HTMLView:HTMLView class="controls-PrintDialog__content"
+            <Lib.Control.HTMLView.HTMLView class="controls-PrintDialog__content"
                                     minWidth="{{ minWidth }}"
                                     autoWidth="{{ true }}"
                                     name="controls-PrintDialog-print-report"/>
         </ws:content>
-    </SBIS3.CONTROLS:ScrollContainer>
+    </SBIS3.CONTROLS.ScrollContainer>
 </div>

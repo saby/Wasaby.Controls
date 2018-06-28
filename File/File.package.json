@@ -3,7 +3,7 @@
     "output": "file-resource.package.js",
     "include": [
       "File/ResourceGetter/Base",
-      "File/LocalFile",
+      "File/ResourceAbstract",
       "File/LocalFileLink",
       "File/HttpFileLink",
       "File/LocalFile"

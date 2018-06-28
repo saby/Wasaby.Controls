@@ -16,7 +16,11 @@ define('Controls/List/TreeControl', [
          if (!self._loadedNodes[nodeKey]) {
             filter[self._options.viewConfig.parentProperty] = nodeKey;
             self._children.baseControl.getSourceController().load(filter, self._sorting).addCallback(function(list) {
-               listViewModel.appendItems(list);
+               if (self._options.uniqueKeys) {
+                  listViewModel.mergeItems(list);
+               } else {
+                  listViewModel.appendItems(list);
+               }
                self._loadedNodes[nodeKey] = true;
                listViewModel.toggleExpanded(dispItem);
             });
@@ -68,6 +72,12 @@ define('Controls/List/TreeControl', [
          this._children.baseControl.addItem(options);
       }
    });
+
+   TreeControl.getDefaultOptions = function() {
+      return {
+         uniqueKeys: true
+      };
+   };
 
    return TreeControl;
 });

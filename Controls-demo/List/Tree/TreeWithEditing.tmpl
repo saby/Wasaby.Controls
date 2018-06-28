@@ -1,0 +1,20 @@
+<div class="demo-Grid">
+    <Controls.List.AddButton caption="Add record" on:click="list.addItem()"/>
+    <div class="demo-Grid__container">
+        <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+            <Controls.TreeGrid
+                    name="list"
+                    attr:class="demo-Grid__control"
+                    keyProperty="id"
+                    parentProperty="Раздел"
+                    nodeProperty="Раздел@"
+                    on:beforeItemAdd="_onBeforeItemAdd()"
+                    source = "{{_viewSource}}"
+                    columns="{{gridColumns}}">
+                <ws:editingConfig>
+                    <ws:Object editOnClick="{{true}}" autoAdd="{{true}}"/>
+                </ws:editingConfig>
+            </Controls.TreeGrid>
+        </Controls.Container.Scroll>
+    </div>
+</div>

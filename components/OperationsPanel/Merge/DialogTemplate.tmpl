@@ -1,10 +1,10 @@
 <div class="controls-MergeDialogTemplate-wrapper ws-flexbox ws-flex-row">
     <div class="controls-MergeDialogTemplate ws-flexbox ws-flex-column">
         <span class="controls-MergeDialogTemplate__hint ws-flex-shrink-0">{{ hint }}</span>
-        <SBIS3.CONTROLS:ScrollContainer class="controls-MergeDialogTemplate__scroll controls-ScrollContainer__flex ws-flex-shrink-1"
+        <SBIS3.CONTROLS.ScrollContainer class="controls-MergeDialogTemplate__scroll controls-ScrollContainer__flex ws-flex-shrink-1"
                 stickyContainer="{{ true }}">
             <ws:content>
-                <SBIS3.CONTROLS:Tree:DataGridView
+                <SBIS3.CONTROLS.Tree.DataGridView
                         class="controls-MergeDialogTemplate__treeDataGridView controls-ListView__withoutMarker controls-GridView__searchMode controls-TreeView__withoutExpands controls-DataGridView__hasSeparator"
                         name="MergeDialogTemplate__treeDataGridView"
                         itemsDragNDrop="{{ false }}"
@@ -36,18 +36,18 @@
                     </ws:columns>
                     <ws:handlers onSearchPathClick="{{ _onSearchPathClick }}">
                     </ws:handlers>
-                </SBIS3.CONTROLS:Tree:DataGridView>
+                </SBIS3.CONTROLS.Tree.DataGridView>
             </ws:content>
-        </SBIS3.CONTROLS:ScrollContainer>
+        </SBIS3.CONTROLS.ScrollContainer>
         <div class="controls-MergeDialogTemplate__applyBlock ws-hidden ws-flex-shrink-0">
             <span class="controls-MergeDialogTemplate__warning">{{ warning }}</span>
-            <SBIS3.CONTROLS:Button
+            <SBIS3.CONTROLS.Button
                     class="controls-MergeDialogTemplate__mergeButton"
                     name="MergeDialogTemplate-mergeButton"
                     caption="{[Объединить]}"
                     primary="{{ true }}"
                     command="beginMerge">
-            </SBIS3.CONTROLS:Button>
+            </SBIS3.CONTROLS.Button>
         </div>
     </div>
 </div>

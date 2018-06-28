@@ -4,11 +4,13 @@
         searchStartCallback="{{_searchStart}}"
         searchEndCallback="{{_searchEnd}}"
         suggestTemplate="{{_options.suggestTemplate}}"
+        footerTemplate="{{_options.footerTemplate}}"
         minSearchLength="{{_options.minSearchLength}}"
         source="{{_options.source}}"
         searchParam="{{_options.searchParam}}"
         navigation="{{_options.navigation}}"
         autoDropDown="{{_options.autoDropDown}}"
+        emptyTemplate="{{_options.emptyTemplate}}"
         bind:suggestState="_suggestState">
     <Controls.Input.resources.InputRender.InputRender
             size="{{ _options.size }}"

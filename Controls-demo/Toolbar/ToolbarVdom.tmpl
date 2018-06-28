@@ -1,17 +1,25 @@
 <div class="controls-ToolbarVdom" style="padding: 50px;">
-   Пример тулбара: <Controls.Toolbar
-                           name="myToolbar"
-                           parentProperty="parent"
-                           nodeProperty="@parent"
-                           keyProperty="id"
-                           source="{{_getMemorySource(_defaultItems)}}"
-                           on:itemClick="_itemClick()"/>
-   пример плоского тулбара: <Controls.Toolbar
-                                    name="myFlatToolbar"
-                                    keyProperty="id"
-                                    itemTemplateProperty="myTemplate"
-                                    source="{{_getMemorySource(_flatItems)}}"
-                                    on:itemClick="_itemClick()"/>
-   контент идущий за Toolbar'ом
-   <div name="toolbarAnswer">{{_currentClick}}</div>
+   <div style="padding: 5px;">Пример тулбара: 
+      <Controls.Toolbar
+         name="myToolbar"
+         attr:id="Toolbar_1"
+         parentProperty="parent"
+         nodeProperty="@parent"
+         keyProperty="id"
+         source="{{_getMemorySource(_defaultItems)}}"
+         on:itemClick="_itemClick()"
+      />
+   </div>
+   <div style="padding: 5px;">Пример плоского тулбара: 
+      <Controls.Toolbar
+         name="myFlatToolbar"
+         attr:id="Toolbar_2"
+         keyProperty="id"
+         itemTemplateProperty="myTemplate"
+         source="{{_getMemorySource(_flatItems)}}"
+         on:itemClick="_itemClick()"
+      />
+      контент идущий за Toolbar'ом
+   </div>
+   <div style="padding: 5px;" name="toolbarAnswer">{{_currentClick}}</div>
 </div>

@@ -57,7 +57,9 @@ define('Controls/List/ItemsView', [
          },
 
          // Пустой обработчик, т.к. переиспользуется шаблон из ListControl
-         _onItemClick: function() {}
+         _onItemClick: function() {},
+
+         _onGroupClick: function() {}
 
       });
 

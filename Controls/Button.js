@@ -19,6 +19,7 @@ define('Controls/Button', [
     * @control
     * @public
     * @category Button
+    * @demo Controls-demo/Buttons/demoButtons
     */
 
    /**
@@ -73,6 +74,7 @@ define('Controls/Button', [
          self._type = currentButtonClass.type;
          self._typeWithSize = currentButtonClass.type + '_size-' + options.size;
          self._styleWithIconStyle = currentButtonClass.style + '_iconStyle-' + options.iconStyle;
+         self._state = options.readOnly ? '_readOnly' : '';
       }
    };
    var Button = Control.extend({

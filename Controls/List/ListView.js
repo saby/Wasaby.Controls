@@ -5,10 +5,14 @@ define('Controls/List/ListView', [
    'Core/Control',
    'tmpl!Controls/List/ListView/ListView',
    'tmpl!Controls/List/ItemTemplate',
+   'tmpl!Controls/List/GroupTemplate',
+   'tmpl!Controls/List/GroupContentTemplate',
    'css!Controls/List/ListView/ListView'
 ], function(BaseControl,
    ListViewTpl,
-   defaultItemTemplate
+   defaultItemTemplate,
+   GroupTemplate,
+   GroupContentTemplate
 ) {
    'use strict';
 
@@ -30,6 +34,8 @@ define('Controls/List/ListView', [
       {
          _listModel: null,
          _template: ListViewTpl,
+         _groupTemplate: GroupTemplate,
+         _groupContentTemplate: GroupContentTemplate,
          _defaultItemTemplate: defaultItemTemplate,
          _listChanged: false,
 
@@ -42,6 +48,9 @@ define('Controls/List/ListView', [
          },
 
          _beforeMount: function(newOptions) {
+            if (newOptions.itemsGroup && newOptions.itemsGroup.template) {
+               this._groupContentTemplate = newOptions.itemsGroup.template;
+            }
             if (newOptions.listModel) {
                this._listModel = newOptions.listModel;
                this._listModel.subscribe('onListChange', this._onListChangeFnc);
@@ -67,7 +76,13 @@ define('Controls/List/ListView', [
 
          _onItemClick: function(e, dispItem) {
             var item = dispItem.getContents();
-            this._notify('itemClick', [item], {bubbling: true});
+            this._notify('itemClick', [item, e], {bubbling: true});
+         },
+
+         _onGroupClick: function(e, dispItem) {
+            var
+               item = dispItem.getContents();
+            this._notify('groupClick', [item, e], {bubbling: true});
          },
 
          _onItemContextMenu: function(event, itemData) {
@@ -79,6 +94,10 @@ define('Controls/List/ListView', [
                event.currentTarget.focus();
             }
             this._notify('itemSwipe', [itemData, event]);
+         },
+
+         _onRowDeactivated: function(event, eventOptions) {
+            this._notify('rowDeactivated', [eventOptions]);
          },
 
          _onItemMouseDown: function(event, itemData) {

@@ -1,0 +1,38 @@
+<Controls.Dropdown.Container
+        source="{{_options.source}}"
+        keyProperty="{{_options.keyProperty}}"
+        itemTemplateProperty="{{_options.itemTemplateProperty}}"
+        itemTemplate="{{_options.itemTemplate}}"
+        contentTemplate="{{_options.contentTemplate}}"
+        selectedKeys="{{[_options.selectedKey]}}"
+        emptyText="{{_options.emptyText}}"
+        corner="{{_corner}}"
+        width="{{_width}}"
+        className="controls-ComboBox-popup"
+        typeShadow="suggestionsContainer"
+        close="{{_onClose}}"
+        on:selectedItemsChanged="_selectedItemsChangedHandler()"
+        on:mousedown="_mouseDownHandler()"
+        class="controls-ComboBox">
+
+      <Controls.Input.resources.InputRender.InputRender
+              size="{{_options.size}}"
+              tagStyle="{{_options.tagStyle}}"
+              viewModel="{{_simpleViewModel}}"
+              placeholder="{{_placeholder}}"
+              validationErrors="{{_options.validationErrors}}"
+              class="controls-ComboBox-InputRender">
+
+         <ws:content>
+            <ws:partial
+                    template="tmpl!Controls/Input/resources/input"
+                    readOnly="{{!_options.editable}}"
+                    bind:value="_value"/>
+         </ws:content>
+
+         <ws:afterFieldWrapper>
+            <Controls.Button.ButtonSeparator bind:value="_isOpen"/>
+         </ws:afterFieldWrapper>
+
+      </Controls.Input.resources.InputRender.InputRender>
+</Controls.Dropdown.Container>

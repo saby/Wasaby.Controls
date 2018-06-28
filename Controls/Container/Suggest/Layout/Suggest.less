@@ -12,11 +12,12 @@
 	position: absolute;
 	top: 5px;
 	right: 0;
+	z-index: 1;
 }
 .controls-Suggest__suggestionsContainer {
+
 	position: absolute;
-	border-color: @suggest-picker-border-color;
-	border-style: solid;
+	border: @border-width_suggestionsContainer @border-color_suggestionsContainer solid;
 	box-sizing: border-box;
 	background-color: @background-color_Suggest-suggestionsContainer;
 	/* Почему тут z-index:2
@@ -30,15 +31,29 @@
 
 .controls-Suggest__suggestionsContainer-style-default {
 	width: 100%;
-	border-width: 0 @default-border-width @default-border-width @default-border-width;
+	.box-shadow(@shadow_suggestionsContainer);
 }
 
 .controls-Suggest__suggestionsContainer-style-overInput {
 	top: -(@spacing_Suggest_suggestionsContainer_overInput + @default-border-width);
 	left: -(@spacing_Suggest_suggestionsContainer_overInput + @default-border-width);
 	padding-top: @height_InputRender_default + (@spacing_Suggest_suggestionsContainer_overInput * 2);
-	border-width: @default-border-width;
-	.box-shadow(@shadow-size_Suggest_suggestionsContainer @shadow-color_Suggest-suggestionsContainer);
+   border-width: @default-border-width;
+   .box-shadow(@shadow_suggestionsOverlayContainer);
+}
+
+.controls-Suggest__suggestionsContainer-orient {
+	position: fixed;
+	top: -9999px;
+	left: -9999px;
+}
+.controls-Suggest__suggestionsContainer-orient-up {
+	bottom: @height_InputRender_m;
+	margin-bottom: -@default-border-width;
+}
+
+.controls-Suggest__suggestionsContainer-orient-down {
+	margin-top: -@default-border-width;
 }
 
 .controls-Suggest-Text_style_overInput {
@@ -66,4 +81,10 @@
 
 .controls-Suggest__tabs {
 	margin: @vertical-spacing_Suggest_tabs 0;
+}
+
+.controls-Suggest__empty {
+	color: @additional-color;
+	text-align: center;
+	padding: @spacing_Suggest-empty 0;
 }

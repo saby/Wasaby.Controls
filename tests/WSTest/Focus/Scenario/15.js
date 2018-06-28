@@ -37,7 +37,7 @@ define('WSTest/Focus/Scenario/15', [
    var caseChildControlName = 'WSTest/Focus/Case15';
    return function scenario15(done) {//TODO Фокус остается на TextBox1
       var wndParent = new W({
-         template: 'js!' + caseParentControlName,
+         template: caseParentControlName,
          top: 0,
          width: '500px',
          height: '200px'
@@ -48,7 +48,7 @@ define('WSTest/Focus/Scenario/15', [
          fHelpers.childHasFocus(wndParent, 'TextBox0');
 
          var wndChild = new W({
-            template: 'js!' + caseChildControlName,
+            template: caseChildControlName,
             opener: wndParent,
             width: '500px',
             height: '200px'

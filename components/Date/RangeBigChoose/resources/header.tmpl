@@ -1,6 +1,6 @@
 <div class="controls-DateRangeBigChoose__header">
    <ws:template name="DateBoxTpl">
-      <SBIS3.CONTROLS:Date:Box
+      <SBIS3.CONTROLS.Date.Box
          tabindex="2"
          mask="{{mask}}"
          name="DatePickerEnd"
@@ -21,18 +21,19 @@
       />
    </ws:template>
 
-   <SBIS3.CONTROLS:Button:StateButton
-      if="{{yearStateEnabled && monthStateEnabled}}"
-      tabindex="0"
-      name="StateButton"
-      activableByClick="{{false}}"
-      tooltip="{[Смена режима календаря]}"
-      icon="sprite:icon-size icon-ArrangeList icon-primary controls-DateRangeBigChoose__homeBtn-icon"
-      checkedIcon="sprite:icon-size icon-ArrangeSmallIconsPreview icon-primary controls-DateRangeBigChoose__homeBtn-icon"
-      className="controls-DateRangeBigChoose__stateButton"
-   />
+   <div class="controls-DateRangeBigChoose__stateButton-wrapper" if="{{yearStateEnabled && monthStateEnabled}}">
+      <SBIS3.CONTROLS.Button.StateButton
+         tabindex="0"
+         name="StateButton"
+         activableByClick="{{false}}"
+         tooltip="{[Смена режима календаря]}"
+         icon="sprite:icon-size icon-ArrangeList icon-primary controls-DateRangeBigChoose__homeBtn-icon"
+         checkedIcon="sprite:icon-size icon-ArrangeSmallIconsPreview icon-primary controls-DateRangeBigChoose__homeBtn-icon"
+         className="controls-DateRangeBigChoose__stateButton"
+      />
+   </div>
 
-   <SBIS3.CONTROLS:Date:RangeSliderBase
+   <SBIS3.CONTROLS.Date.RangeSliderBase
       tabindex="1"
       name="DateRangeHeader"
       startValue="{{startValue}}"
@@ -46,7 +47,7 @@
       serializationMode="{{serializationMode}}"
    />
    <div class="controls-DateRangeBigChoose__header-period controls-DateRangeBigChoose__header-period-input {{headerType === 'link' ? 'ws-hidden' }}">
-      <SBIS3.CONTROLS:Date:Box
+      <SBIS3.CONTROLS.Date.Box
          tabindex="1"
          mask="{{mask}}"
          name="DatePickerStart"
@@ -66,7 +67,7 @@
       </div>
    </div>
 
-   <SBIS3.CONTROLS:Button:IconButton
+   <SBIS3.CONTROLS.Button.IconButton
       tabindex="0"
       name="HomeButton"
       activableByClick="{{false}}"
@@ -76,12 +77,12 @@
       visible="{{homeButtonVisibility|bind}}"
    />
    <!--<div class="controls-DateRangeBigChoose__header-date-pickers">-->
-   <SBIS3.CONTROLS:Button:IconButton
+   <SBIS3.CONTROLS.Button.IconButton
       tabindex="0"
       name="ApplyButton"
       primary="{{true}}"
       activableByClick="{{false}}"
-      icon="sprite:icon-16 icon-Yes icon-done"
+      icon="sprite:icon-medium icon-Yes icon-done"
       className="controls-DateRangeBigChoose__ApplyButton"
       style="bordered"
    />

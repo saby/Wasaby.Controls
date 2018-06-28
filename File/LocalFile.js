@@ -1,29 +1,36 @@
-define("File/LocalFile", ["require", "exports"], function (require, exports) {
+define("File/LocalFile", ["require", "exports", "tslib", "File/ResourceAbstract"], function (require, exports, tslib_1, ResourceAbstract_1) {
     "use strict";
-    /// <amd-module name="File/LocalFile" />
     /**
      * Класс - обёртка над нативным File/Blob
      * @class
+     * @extends File/ResourceAbstract
      * @name File/LocalFile
      * @public
      * @author Заляев А.В.
      */
-    var LocalFile = /** @class */ (function () {
+    var LocalFile = /** @class */ (function (_super) {
+        tslib_1.__extends(LocalFile, _super);
         /**
          * @param {Blob | File} _data Файл
          * @param {*} [_meta] Дополнительные мета-данные
-         * @param {String} [name] Имя файла. Обязательный аргумент, если в качестве данных передался Blob
+         * @param {String | File/FileInfo} [info] Объект с информацией о файле, либо строка с именем файла.
+         * Имя файла является обязательным аргументом, если в качестве данных передался Blob
          * @constructor
          * @name File/LocalFile
          */
-        function LocalFile(_data, _meta, name) {
-            this._data = _data;
-            this._meta = _meta;
-            this._name = name || (_data instanceof File && _data.name);
-            if (!this._name) {
+        function LocalFile(_data, _meta, info) {
+            var _this = _super.call(this) || this;
+            _this._data = _data;
+            _this._meta = _meta;
+            _this._info = typeof info == 'string' ? {
+                name: info
+            } : info || {};
+            _this._info.name = _this._info.name || (_data instanceof File && _data.name);
+            if (!_this._info.name) {
                 // Для корректной загрузки Blob через FormData необходимо имя файла
                 throw new Error('Argument "name" is required for Blob data');
             }
+            return _this;
         }
         /**
          * Возвращает файл
@@ -34,23 +41,7 @@ define("File/LocalFile", ["require", "exports"], function (require, exports) {
         LocalFile.prototype.getData = function () {
             return this._data;
         };
-        /**
-         * Возвращает имя файла
-         * @return {String}
-         */
-        LocalFile.prototype.getName = function () {
-            return this._name;
-        };
-        /**
-         * Возвращает дополнительную информацию по файлу
-         * @return {*}
-         * @name File/LocalFile#getMeta
-         * @method
-         */
-        LocalFile.prototype.getMeta = function () {
-            return this._meta || {};
-        };
         return LocalFile;
-    }());
+    }(ResourceAbstract_1.ResourceAbstract));
     return LocalFile;
 });

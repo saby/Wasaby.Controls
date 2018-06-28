@@ -71,12 +71,12 @@
 //DropdownList
 @background_DropdownList:                #FFFFFF;
 @border-color_DropdownList:              #CCCCCC;
-@shadow_DropdownList:                    0px 0px 12px 0px rgba(0,0,0,0.25);
+@shadow_DropdownList-default:                    0px 0px 12px 0px rgba(0,0,0,0.25);
 @background_DropdownList-item_hover:     #F0F5FB;
 @background_DropdownList-marker:         #D94700;
 @background_DropdownList-header:         #f4f4f4;
 @color_DropdownList-header:              #313E78;
-@color_DropdownList-item:                #000000;
+@color-Dropdown-emptyItem:               #CCCCCC;
 @padding_DropdownList-content:           2px 0;
 
 //FieldLink_Link
@@ -85,7 +85,7 @@
 @color_FieldLink-Link_disabled:            #8991A9;
 
 //StackTemplate
-@border-left_stackTemplate:                1px solid #F8F8F8;
+@border-left_stackTemplate:                1px solid #BDBDBD;
 @background_stackTemplate_head:            #F8F8F8;
 @background_stackTemplate_content:         #FFFFFF;
 @background_stackTemplate_footer:          #F8F8F8;
@@ -250,16 +250,17 @@
 
 //Suggest VDOM
 @background-color_Suggest-suggestionsContainer: @default-bg-color;
-@shadow-color_Suggest-suggestionsContainer: rgba(0, 0, 0, 0.25);
-
+@shadow_suggestionsContainer:            0 6px 24px rgba(0, 0, 0, 0.25);
+@shadow_suggestionsOverlayContainer:  0 0 12px 0 rgba(0, 0, 0, 0.25);
+@border-color_suggestionsContainer:      #CCCCCC;
 //list add button
 @color_listAddButton_enabled:             #8991A9;
 @color_listAddButton_disabled:           @disabled-color;
 //CloseButton
 @background-color_CloseButton:           transparent;
 @border-color_CloseButton:               @border-color_IconButton_bordered;
-@box-shadow_CloseButton:                 @box-shadow_IconButton;
-@box-shadow_CloseButton_active:          @box-shadow_Button_bordered_hovered;
+@box-shadow_CloseButton:                 @box-shadow-IconButton;
+@box-shadow_CloseButton_active:          @box-shadow-IconButton_activated;
 @border-color_CloseButton_hover:         @border-color_IconButton_bordered_standard_hovered;
 @background-color_CloseButton_hover:     transparent;
 
@@ -278,6 +279,16 @@
 @background-color_Paging-ellispis:       @default-bg-color;
 @color_Paging_arrow-icon:                @default-color;
 @color_Paging_arrow-icon_disabled:       @disabled-color;
+
+//VDOM DragNDrop.Avatar
+@background-color_Avatar:                 #FFFFFF;
+@border-color_Avatar:                     #CCCCCC;
+@box-shadow-color_Avatar:                 rgba(0, 0, 0, 0.25);
+@color_Avatar-icon:                       #CCCCCC;
+@color_Avatar-mainText:                   #313E78;
+@color_Avatar-additionalText:             #000000;
+@background-color_Avatar-counter:         #0055BB;
+@color_Avatar-counter:                    #FFFFFF;
 
 
 //VDOM Switcher
@@ -357,18 +368,19 @@
 @box-shadow_Button_primary_active:             none;
 @background_Button_primary_active:             #FDD2C0;
 @background_Button_default_active:             #587AB0;
-@color_Link-Vdom-text_disabled:                #CCCCCC;
+@color_Link-Vdom-text_readOnly:                #CCCCCC;
 @box-shadow_Button_active:                     none;
-@color_Button-Vdom-disabled:                   #CCCCCC;
-@border-color_Button-Vdom_disabled:            #CCCCCC;
+@color_Button-Vdom-readOnly:                   #CCCCCC;
+@border-color_Button-Vdom_readOnly:            #CCCCCC;
 @color_Button-Vdom-text_primary:                #000000;
 @color_Button-Vdom-text_default:                #000000;
 @color_Button-style-addButton-icon_hovered:    #313E78;
 @color-IconButton__border_iconStyle-primary_hovered:          #cccccc;
-@color-Button_type-IconButton_disabled:           #CCCCCC;
-@border-color-IconButton_disabled:                rgba(0, 0, 0, 0.05);
+@color-Button_type-IconButton_readOnly:           #CCCCCC;
+@border-color-IconButton_readOnly:                rgba(0, 0, 0, 0.05);
 @border-color-IconButton:                         rgba(0, 0, 0, 0.05);
 @color-IconButton__shadow:                        rgba(0, 0, 0, 0.15);
+@border-color-IconButton_toggled:                 @color_primary;
 @background-color-IconButton:                     none;
 @background-color-IconButton_hovered:             none;
 @color_Button-style-addButton-icon:            #000000;
@@ -411,6 +423,14 @@
 @color_FilterButton-icon-arrow_hover:    @icon-color-primary-hover;
 @color_FilterButton-text:                #0055bb;
 @color_FilterButton-text_hover:          #313E78;
+
+//Lookup
+@color_Lookup_item-cross:                      #CCCCCC;
+@color_Lookup_item-size:                       16px;
+@color_Lookup_item-accent:                     #313E78;
+@color_Lookup_item-primary:                    #D94700;
+@color_Lookup_showSelector:                    @color_primary;
+@color_Lookup-showSelector_hovered:            @color_Link-text_hovered;
 
 //headers
 @color-BackButton__caption_style-default:      #D94700;
@@ -470,3 +490,21 @@
 @color_FilterPanel-caption:                  #313e78;
 //AdditionalParams
 @color_AdditionalParams-item:                 #313E78;
+//toggleButton
+@background_ToggleButton_state-on:              #F3F3F3;
+@background_ToggleButton:                       transparent;
+@background_ToggleButton_readOnly:               transparent;
+@border-color_ToggleButton_readOnly:            @color_Link-Vdom-text_readOnly;
+@color_ToggleButton_readOnly:                   @color_Link-Vdom-text_readOnly;
+@border-color_ToggleButton:                     @color_Link-main-icon;
+@color-ToggleButton__icon_hovered:              @icon-color-primary-hover;
+@background-ToggleButton_hovered:               @default-bg-color-hovered-item;
+@color-ToggleButton__icon:                      @color_Link-main-icon;
+@color-ToggleButton_text:                       @color_Link-main-icon;
+@color_ToggleButton_style-LinkMain:             @color_Link-main-icon;
+@color_ToggleButton_Link-main_hovered:          @color_Link-main-text_hovered;
+//NotificationBase
+@border-color_NotificationBase_error: @controls-InformationPopup-error-status-border-color;
+@border-color_NotificationBase_primary: @controls-InformationPopup-default-status-border-color;
+@border-color_NotificationBase_done: @controls-InformationPopup-success-status-border-color;
+@border-color_NotificationBase_warning: @controls-InformationPopup-warning-status-border-color;

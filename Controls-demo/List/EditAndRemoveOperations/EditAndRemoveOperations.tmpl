@@ -13,7 +13,7 @@
     </style>
     <div>
         <h3>Обычный список</h3>
-        <Controls:List
+        <Controls.List
                 name="list"
                 source="{{_viewSource}}"
                 on:beforeItemEdit="_onBeginEdit()"
@@ -35,8 +35,8 @@
                     </ws:contentTemplate>
                 </ws:partial>
             </ws:itemTemplate>
-        </Controls:List>
-        <Controls:List:AddButton caption="Добавить запись" on:click="list.addItem()"/>
+        </Controls.List>
+        <Controls.List.AddButton caption="Добавить запись" on:click="list.addItem()"/>
         <Controls.Popup.Opener.Confirmation name="popupOpener"/>
     </div>
 </div>

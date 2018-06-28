@@ -29,7 +29,7 @@ define([
             mvm = new MonthModel(cfg);
             weeks = mvm.getMonthArray();
 
-            calendarTestUtils.assertMonthView(weeks, function (day) {
+            calendarTestUtils.assertMonthView(weeks, function(day) {
                if (day.date.getMonth() === 0 && (day.date.getDate() !== 1 && day.date.getDate() !== 31)) {
                   assert.isTrue(day.selected);
                } else {
@@ -40,5 +40,63 @@ define([
          });
       });
 
+      describe('.updateOptions', function() {
+         it('should not update the model if the view does not change', function () {
+            let sandbox = sinon.sandbox.create(),
+               mvm = new MonthModel(config),
+               version = mvm.getVersion();
+
+            sandbox.stub(mvm, '_isStateChanged').returns(false);
+            sandbox.stub(mvm, '_validateWeeksArray');
+
+            mvm.updateOptions(config);
+
+            assert(mvm._validateWeeksArray.notCalled, `_validateWeeksArray is called ${mvm._validateWeeksArray.callCount}`);
+            assert.strictEqual(mvm.getVersion(), version, 'model version is changed');
+
+            sandbox.restore();
+         });
+
+         it('should update the model if the view changed', function () {
+            let sandbox = sinon.sandbox.create(),
+               mvm = new MonthModel(config),
+               version = mvm.getVersion();
+
+            sandbox.stub(mvm, '_isStateChanged').returns(true);
+            sandbox.stub(mvm, '_validateWeeksArray');
+
+            mvm.updateOptions(config);
+
+            assert(mvm._validateWeeksArray.called, `_validateWeeksArray is called ${mvm._validateWeeksArray.callCount}`);
+            assert.notEqual(mvm.getVersion(), version, 'model version is changed');
+
+            sandbox.restore();
+         });
+      });
+
+      describe('._isStateChanged', function() {
+         let tests = [
+            {start: new Date(2016, 0, 1), end: new Date(2016, 1, 0), newStart: new Date(2016, 1, 1), newEnd: new Date(2016, 2, 1), resp: false},
+            {start: new Date(2016, 0, 1), end: new Date(2016, 1, 0), newStart: new Date(2018, 1, 1), newEnd: new Date(2018, 2, 1), resp: false},
+            {start: new Date(2016, 0, 1), end: new Date(2017, 0, 15), newStart: new Date(2018, 1, 1), newEnd: new Date(2018, 2, 1), resp: true},
+            {start: new Date(2017, 0, 10), end: new Date(2017, 0, 15), newStart: new Date(2018, 1, 1), newEnd: new Date(2018, 2, 1), resp: true},
+            {start: new Date(2017, 0, 10), end: new Date(2017, 0, 15), newStart: new Date(2017, 0, 15), newEnd: new Date(2017, 0, 20), resp: true},
+            {start: new Date(2016, 0, 10), end: new Date(2016, 0, 15), newStart: new Date(2017, 0, 15), newEnd: new Date(2017, 0, 20), resp: true}
+         ];
+         tests.forEach(function(test, index) {
+            it(`should return ${test.resp}`, function() {
+               let cfg = coreMerge({
+                     startValue: test.start,
+                     endValue: test.end
+                  }, config, {preferSource: true}),
+                  mvm = new MonthModel(cfg);
+
+               cfg.startValue = test.newStart;
+               cfg.endValue = test.newEnd;
+
+               assert.strictEqual(mvm._isStateChanged(cfg), test.resp);
+            });
+         });
+      });
    });
 });

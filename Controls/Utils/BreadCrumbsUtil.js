@@ -78,7 +78,11 @@ define('Controls/Utils/BreadCrumbsUtil', [
             width;
          measurer.classList.add('controls-BreadCrumbsV__measurer');
 
-         measurer.innerHTML = element;
+         if (typeof element === 'string') {
+            measurer.innerHTML = element;
+         } else {
+            measurer.appendChild(element);
+         }
          document.body.appendChild(measurer);
          width = measurer.clientWidth;
          document.body.removeChild(measurer);

@@ -11,6 +11,12 @@ define('Controls-demo/Previewer/Previewer',
          _template: template
       });
 
+      Previewer.getDefaultOptions = function() {
+         return {
+            imgRoot: '/'
+         };
+      };
+
       return Previewer;
    }
 );

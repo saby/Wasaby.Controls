@@ -1,6 +1,0 @@
-<ws:if data="{{itemData.isEditing}}">
-    <Controls:Input:Text bind:value="itemData.item.title" selectOnClick="{{false}}" />
-</ws:if>
-<ws:else>
-    <div>{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>
-</ws:else>

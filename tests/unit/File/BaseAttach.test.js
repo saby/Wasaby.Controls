@@ -10,16 +10,16 @@ define([
       return;
    }
    require([
-      'Lib/File/Attach/BaseAttach',
+      'File/Attach/Base',
       'Core/Deferred',
-      'Lib/File/LocalFile',
-      'Lib/File/LocalFileLink',
-      'Lib/File/HttpFileLink',
+      'File/LocalFile',
+      'File/LocalFileLink',
+      'File/HttpFileLink',
       'tests/unit/File/Mocks/GetResources',
       'tests/unit/File/Mocks/ResourceGetter',
       'tests/unit/File/SourceMock'
    ], function (BaseAttach, Deferred, LocalFile, LocalFileLink, HttpFileLink, GetResources, IResourceGetter, ISource) {
-      describe('Controls/File/BaseAttach', function () {
+      describe('File/Attach/Base', function () {
          var IFileDataConstructors = [LocalFile, LocalFileLink, HttpFileLink];
 
          describe('.getSelectedResource()', function () {
@@ -271,7 +271,7 @@ define([
             var localLink = GetResources(LocalFileLink);
             var getter = new IResourceGetter({
                chosenFiles: [localLink],
-               type: 'FSGetter'
+               type: 'FileSystem'
             });
 
             attach.registerGetter(getter);
@@ -290,7 +290,7 @@ define([
             var localLink = GetResources(LocalFileLink);
             var getter = new IResourceGetter({
                chosenFiles: [localLink],
-               type: 'FSGetter'
+               type: 'FileSystem'
             });
 
             attach.registerGetter(getter);
@@ -312,7 +312,7 @@ define([
             var localFile = GetResources(LocalFile);
             var getter = new IResourceGetter({
                chosenFiles: [localLink],
-               type: 'FSGetter'
+               type: 'FileSystem'
             });
 
             attach.registerGetter(getter);
@@ -334,7 +334,7 @@ define([
             var localFile = GetResources(LocalFile);
             var getter = new IResourceGetter({
                chosenFiles: [localLink],
-               type: 'FSGetter'
+               type: 'FileSystem'
             });
 
             attach.registerGetter(getter);
@@ -354,7 +354,7 @@ define([
             var attach = new BaseAttach();
             var file = GetResources(LocalFile);
             var getter = new IResourceGetter({
-               type: 'FSGetter',
+               type: 'FileSystem',
                chosenFiles: [file, new Error('Chosen broken File')]
             });
 

@@ -8,7 +8,11 @@
   justify-content: center;
 }
 
-.controls-Button_type-iconButtonBordered, .controls-Button_type-iconButtonBordered_disabled {
+.controls-BaseButton__text {
+  .text-overflow();
+}
+
+.controls-Button_type-iconButtonBordered, .controls-Button_type-iconButtonBordered_readOnly {
   border-radius: @border-radius-IconButton;
   border-style: @border-style-IconButton;
   border-width: @border-width-IconButton;
@@ -18,6 +22,9 @@
 
 .controls-Button_type-iconButtonBordered {
   cursor: pointer;
+}
+
+.controls-Button_style-iconButtonBordered {
   border-color: @border-color-IconButton;
 }
 
@@ -31,9 +38,9 @@
   width: @width-IconButton_size-l;
 }
 
-.controls-Button_type-iconButtonBordered_disabled {
-  color: @color-Button_type-IconButton_disabled;
-  border-color: @border-color-IconButton_disabled;
+.controls-Button_type-iconButtonBordered_readOnly {
+  color: @color-Button_type-IconButton_readOnly;
+  border-color: @border-color-IconButton_readOnly;
 }
 
 .ws-is-no-touch {
@@ -159,8 +166,8 @@
   }
 }
 
-.controls-Button_type-link_disabled {
-  color: @color_Link-Vdom-text_disabled;
+.controls-Button_type-link_readOnly {
+  color: @color_Link-Vdom-text_readOnly;
 }
 
 .controls-Button_type-button {
@@ -173,11 +180,11 @@
   box-shadow: @box-shadow_Button_active;
 }
 
-.controls-Button_type-button_disabled{
+.controls-Button_type-button_readOnly{
   min-width: @min-width_Button-Vdom;
   cursor: default;
-  color: @color_Button-Vdom-disabled;
-  border-color: @border-color_Button-Vdom_disabled;
+  color: @color_Button-Vdom-readOnly;
+  border-color: @border-color_Button-Vdom_readOnly;
 }
 
 .controls-Button_style-primary, .controls-Button_style-primary-add {
@@ -202,12 +209,12 @@
   background: @background_Button_default_active;
 }
 
-.controls-Button_style-default_disabled {
-   background: @background_Button-default_disabled;
+.controls-Button_style-default_readOnly {
+  background: @background_Button-default_readOnly;
 }
 
-.controls-Button_style-primary_disabled, .controls-Button_style-primary-add_disabled {
-   background: @background_Button-primary_disabled;
+.controls-Button_style-primary_readOnly, .controls-Button_style-primary-add_readOnly {
+  background: @background_Button-primary_readOnly;
 }
 
 .controls-Button_type-button_size-m {
@@ -233,12 +240,41 @@
 .controls-Button__icon-default_iconStyle-default, .controls-Button__icon-default-big_iconStyle-default {
    color: @color_Button-icon;
 }
-.controls-Button__text_style-default {
-  .text-overflow();
-}
 
 .controls-Button__icon-primary_iconStyle-default, .controls-Button__icon-primary-big_iconStyle-default {
    color: @color_Button-icon_primary;
+}
+
+.controls-Button_style-link-main:active {
+  .controls-Button__icon-link-main_iconStyle-default {
+    color: @color_Link-main-text_hovered;
+  }
+  color: @color_Link-main-text_hovered;
+}
+
+.controls-Button_style-link-main3:active {
+  color: @color_Link-main3-text_hovered;
+}
+
+.controls-Button_type-link:active{
+  .controls-BaseButton__text {
+    text-decoration: underline;
+  }
+}
+
+.controls-Button__icon-default_iconStyle-error, .controls-Button__icon-default-big_iconStyle-error, .controls-Button__icon-iconButtonBordered_iconStyle-error,
+.controls-Button__icon-primary_iconStyle-error, .controls-Button__icon-primary-big_iconStyle-error, .controls-Button__icon-link-main_iconStyle-error {
+  color: @color-Icon_style_error;
+}
+
+.controls-Button__icon-default_iconStyle-done, .controls-Button__icon-default-big_iconStyle-done, .controls-Button__icon-iconButtonBordered_iconStyle-done,
+.controls-Button__icon-primary_iconStyle-done, .controls-Button__icon-primary-big_iconStyle-done, .controls-Button__icon-link-main_iconStyle-done {
+  color: @color-Icon_style_done;
+}
+
+.controls-Button__icon-default_iconStyle-attention, .controls-Button__icon-default-big_iconStyle-attention, .controls-Button__icon-iconButtonBordered_iconStyle-attention,
+.controls-Button__icon-primary_iconStyle-attention, .controls-Button__icon-primary-big_iconStyle-attention, .controls-Button__icon-link-main_iconStyle-attention {
+  color: @color-Icon_style_attention;
 }
 
 .controls-Button__icon-link-main_iconStyle-default {
@@ -247,27 +283,6 @@
 
 .controls-Button__icon-iconButtonBordered_iconStyle-default {
    color: @color-IconButtonBordered_default;
-}
-
-//Icon
-.controls-Button__icon-iconButtonBordered_iconStyle-attention {
-  color: @color-Icon_style_attention;
-}
-
-.controls-Button__icon-iconButtonBordered_iconStyle-done {
-  color: @color-Icon_style_done;
-}
-
-.controls-Button__icon-iconButtonBordered_iconStyle-error {
-  color: @color-Icon_style_error;
-}
-
-.controls-Button__text_style-default {
-  .text-overflow();
-}
-
-.controls-Button__text_style-primary {
-  .text-overflow();
 }
 
 .controls-Button__wrapper_type-button_size-m {

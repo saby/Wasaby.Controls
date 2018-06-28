@@ -4,7 +4,7 @@
         <tr>
             <td class="controls-Pager-block-amount">
                 <ws:if data="{{!noSizePicker}}">
-                   <SBIS3.CONTROLS:DropdownList
+                   <SBIS3.CONTROLS.DropdownList
                            name="controls-Pager_comboBox"
                            className="controls-Pager-block controls-Pager__pageSize-container controls-DropdownList__withoutArrow controls-DropdownList__withoutCross controls-DropdownList__linkStyle"
                            enabled="{{ true }}"
@@ -20,7 +20,7 @@
                 </ws:if>
             </td>
             <td class="controls-Pager-block-paging">
-                <Lib:Control:Paging:Paging
+                <Lib.Control.Paging.Paging
                         name="controls-Pager_paging"
                         className="controls-Pager-block controls-Pager__paging-container"
                         recordsPerPage="{{ pagingOptions.recordsPerPage }}"

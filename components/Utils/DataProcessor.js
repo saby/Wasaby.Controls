@@ -6,16 +6,18 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
    "Core/core-clone",
    "Core/EventBus",
    "Core/Deferred",
+   "WS.Data/Query/Query",
    "WS.Data/Entity/Record",
    "browser!SBIS3.CONTROLS/Utils/DataSetToXmlSerializer",
+   'SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis',
    "SBIS3.CONTROLS/WaitIndicator",
    "WS.Data/Source/SbisService",
    "Transport/prepareGetRPCInvocationURL",
    "SBIS3.CONTROLS/Utils/PrintDialogHTMLView",
    "SBIS3.CONTROLS/Utils/InformationPopupManager",
-   "Lib/File/UrlLoader",
+   "File/Downloader",
    "i18n!SBIS3.CONTROLS/Utils/DataProcessor"
-], function( cExtend, coreClone, EventBus, Deferred, Record, Serializer, WaitIndicator, SbisService, prepareGetRPCInvocationURL, PrintDialogHTMLView, InformationPopupManager, UrlLoader) {
+], function( cExtend, coreClone, EventBus, Deferred, Query, Record, Serializer, SbisSave, WaitIndicator, SbisService, prepareGetRPCInvocationURL, PrintDialogHTMLView, InformationPopupManager, Downloader) {
    /**
     * Обработчик данных для печати и выгрузки(экспорта) в Excel, PDF. Печать осуществляется по готову XSL-шаблону через XSLT-преобразование.
     * Экспорт в Excel и PDF можно выполнить несколькими способами:
@@ -254,7 +256,8 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
          if (isExcel) {
             params['storage'] = 'excel';
          }
-        UrlLoader(prepareGetRPCInvocationURL( isExcel ? 'FileTransfer' : 'File', 'Download', params, undefined, '/file-transfer/service/'));
+         var url = prepareGetRPCInvocationURL( isExcel ? 'FileTransfer' : 'File', 'Download', params, undefined, '/file-transfer/service/');
+         Downloader(url, {}, Downloader.DRIVERS_NAMES.URL);
       },
       /**
        * Метод для формирования параметров фильтрации выгружаемого на сервере файла.
@@ -312,7 +315,7 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
          ) : null;
          cfg[eng ? 'MethodName': 'ИмяМетода'] = dataSource.getEndpoint().contract + '.' + dataSource.getBinding().query;
          cfg[eng ? 'Filter' : 'Фильтр'] = filter ? Record.fromObject(filter, dataSource.getAdapter()) : null;
-         cfg[eng ? 'Sorting' : 'Сортировка'] =  null;
+         cfg[eng ? 'Sorting' : 'Сортировка'] = this._getSorting();
          cfg[eng ? 'Pagination' : 'Навигация'] = navigation ? Record.fromObject(navigation, dataSource.getAdapter()) : null;
          cfg[eng ? 'Fields' : 'Поля'] = parsedColumns.fields;
          cfg[eng ? 'Titles' : 'Заголовки'] = parsedColumns.titles;
@@ -320,6 +323,11 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
             cfg['fileDownloadToken'] = ('' + Math.random()).substr(2)* 1;
          }
          return cfg;
+      },
+
+      _getSorting: function() {
+         var query = new Query();
+         return SbisSave.prepareSorting(query.orderBy(this._options.sorting));
       },
 
       _prepareColumns: function(columns) {

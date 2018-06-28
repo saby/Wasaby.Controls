@@ -42,14 +42,15 @@ define('Controls-demo/BreadCrumbs/BreadCrumbs', [
       items1: [data[0]],
       items2: [data[0], data[5]],
       items3: [{id: 5, title: 'Recor'}, data[5]],
+      info: '',
 
       _onItemClick: function(e, item) {
-         console.log(item);
-         this.items = this.items.slice(0, item.id);
+         this.info = item.id;
       },
 
       _resetCrumbs: function() {
          this.items = data;
+         this.info = '';
       }
    });
 

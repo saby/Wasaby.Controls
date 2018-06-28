@@ -3,11 +3,12 @@ define('Controls/Input/Dropdown',
       'Core/Control',
       'tmpl!Controls/Input/Dropdown/Dropdown',
       'tmpl!Controls/Input/Dropdown/resources/defaultContentTemplate',
-      'Controls/Controllers/SourceController',
+      'WS.Data/Utils',
+      'WS.Data/Chain',
       'Controls/Input/Dropdown/Util',
       'css!Controls/Input/Dropdown/Dropdown'
    ],
-   function(Control, template, defaultContentTemplate, SourceController, dropdownUtil) {
+   function(Control, template, defaultContentTemplate, Utils, Chain, dropdownUtils) {
 
       /**
        * Input for selection from the list of options.
@@ -21,79 +22,41 @@ define('Controls/Input/Dropdown',
        * @control
        * @public
        * @category Input
+       * @demo Controls-demo/Dropdown/MenuVdom
        */
 
       'use strict';
 
-      var _private = {
-         getText: function(selectedItems) {
-            var text = selectedItems[0].get('title');
+      var getPropValue = Utils.getItemPropertyValue.bind(Utils);
 
-            // if (selectedItems.length > 1) {
-            //    text += ' и еще' + (selectedItems.length - 1)
-            // }
-            return text;
-         },
-         loadItems: function(instance, source, selectedKeys) {
-            instance._sourceController = new SourceController({
-               source: source
+      var _private = {
+         getSelectedKeys: function(items, keyProperty) {
+            var keys = [];
+            Chain(items).each(function(item) {
+               keys.push(getPropValue(item, keyProperty));
             });
-            return instance._sourceController.load().addCallback(function(items) {
-               instance._items = items;
-               _private.updateSelectedItem(instance, selectedKeys);
-               return items;
-            });
-         },
-         updateSelectedItem: function(instance, selectedKeys) {
-            instance._selectedItem = instance._items.getRecordById(selectedKeys);
-            instance._icon = instance._selectedItem.get('icon');
+            return keys;
          }
       };
 
       var DropdownList = Control.extend({
          _template: template,
          _defaultContentTemplate: defaultContentTemplate,
-         constructor: function(config) {
-            DropdownList.superclass.constructor.apply(this, arguments);
-            this._onResult = this._onResult.bind(this);
-         },
-         _beforeMount: function(options, context, receivedState) {
-            if (receivedState) {
-               this._items = receivedState;
-               _private.updateSelectedItem(this, options.selectedKeys);
+         _text: '',
+
+         _selectedItemsChangedHandler: function(event, items) {
+            this._isEmptyItem = getPropValue(items[0], this._options.keyProperty) === null;
+            if (this._isEmptyItem) {
+               this._text = dropdownUtils.prepareEmpty(this._options.emptyText);
             } else {
-               if (options.source) {
-                  return _private.loadItems(this, options.source, options.selectedKeys);
-               }
+               this._text = getPropValue(items[0], this._options.displayProperty || 'title');
             }
-         },
-         _beforeUpdate: function(newOptions) {
-            if (newOptions.selectedKeys && newOptions.selectedKeys !== this._options.selectedKeys) {
-               _private.updateSelectedItem(this, newOptions.selectedKeys);
+
+            if (items.length > 1) {
+               this._text += ' и еще' + (items.length - 1);
             }
-            if (newOptions.source && newOptions.source !== this._options.source) {
-               return _private.loadItems(this, newOptions.source, newOptions.selectedKeys);
-            }
-         },
-         _updateText: function(item, displayProperty) {
-            return _private.getText([item], displayProperty); //По стандарту если есть иконка - текст не отображается
-         },
-         _open: function() {
-            dropdownUtil.open(this, this._children.popupTarget);
-         },
-         _onResult: function(result) {
-            switch (result.action) {
-               case 'itemClick':
-                  this._selectItem.apply(this, result.data);
-                  this._children.DropdownOpener.close();
-                  break;
-               case 'footerClick':
-                  this._notify('footerClick', [result.event]);
-            }
-         },
-         _selectItem: function(item) {
-            var key = item.get(this._options.keyProperty);
-            this._notify('selectedKeysChanged', [key]);
+            this._icon = items[0].get('icon');
+            this._notify('selectedKeysChanged', [_private.getSelectedKeys(items, this._options.keyProperty)]);
          }
       });
 
