@@ -1,4 +1,4 @@
-define("File/utils/filter", ["require", "exports", "File/Error/Extension", "File/Error/MaxSize", "File/LocalFile"], function (require, exports, ExtensionsError, MaxSizeError, LocalFile) {
+define("File/utils/filter", ["require", "exports", "File/Error/Extension", "File/Error/MaxSize", "File/LocalFile", "File/Directory"], function (require, exports, ExtensionsError, MaxSizeError, LocalFile, Directory) {
     "use strict";
     var KB = 1024;
     var MB = KB * KB;
@@ -16,7 +16,8 @@ define("File/utils/filter", ["require", "exports", "File/Error/Extension", "File
                 fileList.item(i) :
                 fileList[i];
             // Если пришла уже ошибка из внутренней фильтрации ResourceGetter
-            if (item instanceof Error) {
+            if ((item instanceof Error) ||
+                (item instanceof Directory)) {
                 results.push(item);
                 continue;
             }

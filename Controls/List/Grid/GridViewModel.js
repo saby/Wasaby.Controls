@@ -1,8 +1,9 @@
 define('Controls/List/Grid/GridViewModel', [
    'Controls/List/BaseViewModel',
    'Controls/List/ListViewModel',
+   'Controls/Constants',
    'Core/core-clone'
-], function(BaseViewModel, ListViewModel, cClone) {
+], function(BaseViewModel, ListViewModel, ControlsConstants, cClone) {
 
    'use strict';
 
@@ -32,11 +33,6 @@ define('Controls/List/Grid/GridViewModel', [
 
             // Межстрочный интервал
             preparedClasses += ' controls-Grid__row-cell_rowSpacing_' + (params.rowSpacing || 'default');
-
-            // Горизонтальное выравнивание колонок
-            if (params.columns[params.columnIndex].align) {
-               preparedClasses += ' controls-Grid__row-cell_halign_' + params.columns[params.columnIndex].align;
-            }
 
             // Вертикальное выравнивание хедера
             if (params.columns[params.columnIndex].valign) {
@@ -220,7 +216,8 @@ define('Controls/List/Grid/GridViewModel', [
                markedKey: cfg.markedKey,
                selectedKeys: cfg.selectedKeys,
                excludedKeys: cfg.excludedKeys,
-               multiSelectVisibility: cfg.multiSelectVisibility
+               multiSelectVisibility: cfg.multiSelectVisibility,
+               itemsReadyCallback: cfg.itemsReadyCallback
             });
          },
 
@@ -257,7 +254,11 @@ define('Controls/List/Grid/GridViewModel', [
          getCurrentHeaderColumn: function() {
             var
                columnIndex = this._curHeaderColumnIndex,
-               cellClasses = 'controls-Grid__header-cell';
+               cellClasses = 'controls-Grid__header-cell',
+               headerColumn = {
+                  column: this._headerColumns[this._curHeaderColumnIndex],
+                  index: columnIndex
+               };
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
             if (this._options.multiSelectVisibility && columnIndex === 0) {
@@ -272,12 +273,11 @@ define('Controls/List/Grid/GridViewModel', [
                   rowSpacing: this._options.rowSpacing
                });
             }
-
-            return {
-               column: this._headerColumns[this._curHeaderColumnIndex],
-               cellClasses: cellClasses,
-               index: columnIndex
-            };
+            if (headerColumn.column.align) {
+               cellClasses += ' controls-Grid__header-cell_halign_' + headerColumn.column.align;
+            }
+            headerColumn.cellClasses = cellClasses;
+            return headerColumn;
          },
 
          goToNextHeaderColumn: function() {
@@ -427,8 +427,6 @@ define('Controls/List/Grid/GridViewModel', [
             current.leftPadding = this._options.leftPadding;
             current.rightPadding = this._options.rightPadding;
             current.rowSpacing = this._options.rowSpacing;
-            current.showRowSeparator = this._options.showRowSeparator;
-            current.ladderSupport = !!this._options.stickyFields;
 
             if (current.multiSelectVisibility) {
                current.columns = [{}].concat(this._columns);
@@ -436,10 +434,15 @@ define('Controls/List/Grid/GridViewModel', [
                current.columns = this._columns;
             }
 
-            if (current.isGroup) {
-               current.groupGridColumnStyle = 'grid-column: 1 / ' + (current.columns.length + 1) + ';';
-               return current;
+            if (this._options.itemsGroup) {
+               if (current.item === ControlsConstants.view.hiddenGroup || !current.item.get) {
+                  current.groupResultsSpacingClass = ' controls-Grid__cell_spacingLastCol_' + (current.rightPadding || 'default');
+                  return current;
+               }
             }
+
+            current.showRowSeparator = this._options.showRowSeparator;
+            current.ladderSupport = !!this._options.stickyFields;
 
             current.columnIndex = 0;
             current.resetColumnIndex = function() {

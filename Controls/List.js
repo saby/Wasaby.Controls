@@ -51,6 +51,7 @@ define('Controls/List', [
     * @mixes Controls/interface/IReorderMovable
     * @mixes Controls/List/interface/IListControl
     * @mixes Controls/interface/IRemovable
+    * @mixes Controls/interface/IEditInPlace
     * @control
     * @author Крайнов Д.О.
     * @public

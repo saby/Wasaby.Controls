@@ -99,6 +99,7 @@ define('Controls/List/ItemsViewModel',
                   itemData.isGroup = true;
                   itemData.isHiddenGroup = itemData.item === ControlsConstants.view.hiddenGroup;
                   itemData.isGroupExpanded = !this._collapsedGroups[itemData.item];
+                  itemData.metaData = this._items.getMetaData();
                }
             }
             return itemData;
