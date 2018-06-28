@@ -1,9 +1,10 @@
 define('Controls/Popup/Opener/BaseController',
    [
       'Core/core-extend',
-      'Core/Deferred'
+      'Core/Deferred',
+      'WS.Data/Utils'
    ],
-   function(CoreExtend, cDeferred) {
+   function(CoreExtend, cDeferred, Utils) {
       var CONTENT_SELECTOR = '.controls-Container__popup-scrolling-content';
 
       var _private = {
@@ -12,11 +13,9 @@ define('Controls/Popup/Opener/BaseController',
           * Вернуть размеры контента
           * */
          getContentSizes: function(container) {
-            var content = container.querySelector(CONTENT_SELECTOR) || container.firstChild;
-
             return {
-               width: content.scrollWidth,
-               height: content.scrollHeight
+               width: container.offsetWidth,
+               height: container.offsetHeight
             };
          },
          getMargins: function(config, container) {
@@ -78,6 +77,13 @@ define('Controls/Popup/Opener/BaseController',
                height: sizes.height,
                margins: _private.getMargins(config, container)
             };
+         },
+         _checkContainer: function(item, container) {
+            if (!container) {
+               Utils.logger.error(this._moduleName, 'Ошибка при построении шаблона ' + item.popupOptions.template);
+               return false;
+            }
+            return true;
          }
       });
       return BaseController;

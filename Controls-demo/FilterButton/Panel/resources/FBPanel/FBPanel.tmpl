@@ -1,0 +1,29 @@
+<div class='docs-FBPanel'>
+   <span class="docs-FBPanel__span">Жанр</span>
+   <SBIS3.CONTROLS.ComboBox
+      class="docs-FBPanel__text-box"
+      editable="{{false}}"
+      idProperty="key"
+      displayProperty="title"
+      selectedKey="{{'genreKey'|mutable}}"
+      text="{{'genreTxt'|mutable}}">
+      <ws:items>
+         <ws:Array>
+            <ws:Object key="1" title="фантастика"/>
+            <ws:Object key="2" title="фэнтези"/>
+            <ws:Object key="3" title="мистика"/>
+         </ws:Array>
+      </ws:items>
+   </SBIS3.CONTROLS.ComboBox>
+   <span class="docs-FBPanel__span">Автор</span>
+   <SBIS3.CONTROLS.TextBox class="docs-FBPanel__author" placeholder="Введите фамилию" text="{{'authorText'|mutable}}"/>
+   <SBIS3.CONTROLS.TextBox class="docs-FBPanel__author" placeholder="Введите имя" text="{{'authorNameText'|mutable}}"/>
+   <SBIS3.CONTROLS.Filter.Button.Text
+      name="ContentFilterText"
+      class="docs-FBPanel__text additionalLink"
+      caption="Россия"
+      visible="{{'countryPlusVisible'|mutable:''}}"
+      filterValue="{{'countryPlusName'|bind:'true', 'fromProperty'}}"
+      visibleFilterValue="Россия"
+   />
+</div>

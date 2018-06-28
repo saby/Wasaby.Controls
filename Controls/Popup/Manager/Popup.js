@@ -33,7 +33,19 @@ define('Controls/Popup/Manager/Popup',
          _template: template,
 
          _afterMount: function() {
-            this._notify('popupCreated', [this._options.id], {bubbling: true});
+
+            /*Очень сложный код. Нельзя просто так на afterMount пересчитывать позиции и сигналить о создании
+            * внутри может быть compoundArea и мы должны ее дождаться, а там есть асинхронная фаза*/
+
+            if (this.waitForPopupCreated) {
+               this.callbackCreated = (function() {
+                  this.callbackCreated = null;
+                  this.waitForPopupCreated = false;
+                  this._notify('popupCreated', [this._options.id], {bubbling: true});
+               }).bind(this);
+            } else {
+               this._notify('popupCreated', [this._options.id], {bubbling: true});
+            }
          },
 
          /**
@@ -78,7 +90,8 @@ define('Controls/Popup/Manager/Popup',
             //Не даем клику всплыть выше попапа. В этому случае событие не долетит до лисенера,
             //который слушает клик по документу. В этом случае, если лисенер отловил событие, значит
             //клик был сделан вне попапа.
-            event.stopPropagation();
+            //Нельзя стопать нативное событие, т.к. иначе ни один mousedown в старых панелях не отработает
+            event.stopped = true;
          },
          _documentClickHandler: function() {
             if (this._options.closeByExternalClick) {

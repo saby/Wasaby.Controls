@@ -39,7 +39,18 @@ define('Controls/Application/_JsLinks',
             } else {
                return cssLink;
             }
+         },
+         getDefines: function() {
+            if (!this.cssLinks) {
+               return;
+            }
+            var result = '';
+            for (var i = 0; i < this.cssLinks.length; i++) {
+               result += 'define("css!' + this.getCssNameForDefine(this.cssLinks[i]) + '", "");';
+            }
+            return result;
          }
+
       });
       Page.contextTypes = function() {
          return {

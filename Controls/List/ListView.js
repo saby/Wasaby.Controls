@@ -6,13 +6,11 @@ define('Controls/List/ListView', [
    'tmpl!Controls/List/ListView/ListView',
    'tmpl!Controls/List/ItemTemplate',
    'tmpl!Controls/List/GroupTemplate',
-   'tmpl!Controls/List/GroupContentTemplate',
    'css!Controls/List/ListView/ListView'
 ], function(BaseControl,
    ListViewTpl,
    defaultItemTemplate,
-   GroupTemplate,
-   GroupContentTemplate
+   GroupTemplate
 ) {
    'use strict';
 
@@ -35,7 +33,6 @@ define('Controls/List/ListView', [
          _listModel: null,
          _template: ListViewTpl,
          _groupTemplate: GroupTemplate,
-         _groupContentTemplate: GroupContentTemplate,
          _defaultItemTemplate: defaultItemTemplate,
          _listChanged: false,
 
@@ -49,7 +46,7 @@ define('Controls/List/ListView', [
 
          _beforeMount: function(newOptions) {
             if (newOptions.itemsGroup && newOptions.itemsGroup.template) {
-               this._groupContentTemplate = newOptions.itemsGroup.template;
+               this._groupTemplate = newOptions.itemsGroup.template;
             }
             if (newOptions.listModel) {
                this._listModel = newOptions.listModel;

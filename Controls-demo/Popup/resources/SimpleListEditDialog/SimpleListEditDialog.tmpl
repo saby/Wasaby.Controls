@@ -1,0 +1,91 @@
+<div class="docs-ListEditDialog">
+   <div class="ws-window-titlebar-custom">
+      <SBIS3.CONTROLS.Toolbar
+         name="MyToolbar" 
+         class="docs-ListEditDialog__button-toolbar"
+         idProperty="id"
+         displayProperty="caption"
+         items="{{'record/Тулбар'|mutable}}"/>
+      <SBIS3.CONTROLS.Button
+         name="Сохранить" 
+         class="docs-ListEditDialog__button-submit"
+         caption="Сохранить" primary="{{true}}" />
+   </div>
+   <div data-lmtype="LeftFixed" style="overflow:hidden;" name="div 1">
+      <div data-lmchild="1" class="docs-ListEditDialog__content" style="float:left;width:300px;height:100%;">
+         <div class="docs-ListEditDialog__block-field">
+            <div class="docs-ListEditDialog__content-label">ФИО:</div>
+            <SBIS3.CONTROLS.TextBox class="docs-ListEditDialog__content-field" text="{{'record/Имя'|mutable}}" />
+         </div>
+         <div class="docs-ListEditDialog__block-field">
+            <div class="docs-ListEditDialog__content-label">Должность:</div>
+            <SBIS3.CONTROLS.ComboBox
+               class="docs-ListEditDialog__content-field"
+               selectedKey="{{'record/Должность'|mutable}}"
+               selectOnClick="{{true}}"
+               idProperty="key"
+               displayProperty="title"
+               editable="{{false}}"
+               pickerClassName="controls-ComboBox__markDefaultItem"
+               text="{{'record/Должность'|mutable}}">
+               <ws:items>
+                  <ws:Array>
+                     <ws:Object key="Нет данных" title="Не выбрано..." />
+                     <ws:Object key="Менеджер" title="Менеджер" />
+                     <ws:Object key="Программист" title="Программист" />
+                     <ws:Object key="Оператор" title="Оператор" />
+                  </ws:Array>
+               </ws:items>
+            </SBIS3.CONTROLS.ComboBox>
+         </div>
+         <div class="docs-ListEditDialog__block-field">
+            <div class="docs-ListEditDialog__content-label">Телефон:</div>
+            <SBIS3.CONTROLS.FormattedTextBox
+               class="docs-ListEditDialog__content-field"
+               text="{{'record/Телефон'|mutable}}"
+               mask="+d (dddd) ddd - ddd" />
+         </div>
+         <div class="docs-ListEditDialog__block-field">
+            <div class="docs-ListEditDialog__content-label">Город:</div>
+            <SBIS3.CONTROLS.ComboBox
+               class="docs-ListEditDialog__content-field"
+               selectedKey="{{'record/Город'|mutable}}"
+               selectOnClick="{{true}}"
+               idProperty="key"
+               displayProperty="title"
+               editable="{{false}}"
+               pickerClassName="controls-ComboBox__markDefaultItem"
+               text="Не выбрано...">
+               <ws:items>
+                  <ws:Array>
+                     <ws:Object key="Нет данных" title="Не выбрано..." />
+                     <ws:Object key="Ярославль" title="Ярославль" />
+                     <ws:Object key="Ростов" title="Ростов" />
+                     <ws:Object key="Рыбинск" title="Рыбинск" />
+                  </ws:Array> 
+               </ws:items>
+            </SBIS3.CONTROLS.ComboBox>
+         </div>
+      </div>
+      <div data-lmchild="1" class="leftFixed-content" style="margin-left:300px;height:100%;">
+         <img width="180" style="border-radius: 100px" src="" data-bind="attr : {src : 'record/Изображение'}"/>
+      </div>
+   </div>
+   <SBIS3.CONTROLS.DataGridView
+      class="controls-DataGridView__hasSeparator controls-DataGridView__overflow-ellipsis"
+      items="{{'record/Имущество'|mutable}}"
+      emptyHTML="Данные отсутствуют"
+      idProperty="@Товар"
+      itemsActions=""
+      editingTemplate=""
+      transformHead="{{true}}">
+      <ws:columns>
+         <ws:Array>
+            <ws:Object title="Список имущества.№ на складе" field="@Товар" width="50" className="controls-DataGridView__td__textAlignRight" />
+            <ws:Object title="Список имущества.Наименование" field="Наименование" />
+            <ws:Object title="Список имущества.Кол-во" field="Количество" width="75" className="controls-DataGridView__td__textAlignRight" />
+            <ws:Object title="Список имущества.Стоимость" field="Цена" width="75" className="controls-DataGridView__td__textAlignRight" />
+         </ws:Array> 
+      </ws:columns>
+   </SBIS3.CONTROLS.DataGridView>
+</div>

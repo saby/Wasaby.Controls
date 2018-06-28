@@ -9,32 +9,45 @@
   }
 }
 
-.controls-Button__close_standart {
-	width: @width_CloseButton - extract(@border-width_CloseButton, 2) - extract(@border-width_CloseButton, 4);
-	height: @height_CloseButton - extract(@border-width_CloseButton, 1) - extract(@border-width_CloseButton, 3);
-	box-shadow: @box-shadow_CloseButton;
-	border: solid @border-color_CloseButton;
-	border-width: @border-width_CloseButton;
-	border-radius: @border-radius_CloseButton;
-	background-color: @background-color_CloseButton;
-   font-family: @font-family_CloseButton;
-   font-size: @font-size_CloseButton;
-   &:before {
-		color: @color_CloseButton-icon;
-		text-shadow: @text-shadow_Button;
-	}
-	&:active {
-		box-shadow: none;
-	}
+.controls-Button__close_default {
+  width: @width_CloseButton - extract(@border-width_CloseButton, 2) - extract(@border-width_CloseButton, 4);
+  height: @height_CloseButton - extract(@border-width_CloseButton, 1) - extract(@border-width_CloseButton, 3);
+  border: solid @border-color_CloseButton;
+  border-width: @border-width_CloseButton;
+  border-radius: @border-radius_CloseButton;
+  background-color: @background-color_CloseButton;
+  font-size: @font-size_CloseButton_default;
+  font-family: @font-family_CloseButton_default;
+  color: @color_CloseButton-icon;
+  &:before {
+    text-shadow: @text-shadow_Button;
+  }
+  &:active, &:hover {
+    box-shadow: @box-shadow_CloseButton;
+    color: @color_CloseButton-icon_hover;
+  }
+
 }
 
 .controls-Button__close_light {
+  font-family: @font-family_CloseButton_light;
   width: @width_CloseButton_small;
   height: @height_CloseButton_small;
   color: @color_CloseButton-light-icon;
-  font-family: @font-family_CloseButton_small;
-  font-size: @font-size_CloseButton_small;
+  font-size: @font-size_CloseButton_light;
   &:hover {
     color: @color_CloseButton-light-icon_hover;
   }
+}
+
+.ws-is-no-touch{
+   .controls-Button__close_default:hover {
+      border-color: @default-border-color-second;
+   }
+   .controls-Button__close_default:hover:before {
+      color: @icon-color-primary-hover;
+   }
+   .controls-Button__close_light:hover {
+      color: @color_CloseButton-light-icon_hover;
+   }
 }

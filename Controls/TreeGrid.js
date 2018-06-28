@@ -26,7 +26,7 @@ define('Controls/TreeGrid', [
    /**
     * Hierarchical list with custom item template. Can load data from data source.
     *
-    * @class Controls/Tree
+    * @class Controls/TreeGrid
     * @extends Controls/Grid
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/ISingleSelectable
