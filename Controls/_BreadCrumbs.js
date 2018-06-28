@@ -1,12 +1,12 @@
-define('Controls/BreadCrumbs', [
+define('Controls/_BreadCrumbs', [
    'Core/Control',
    'WS.Data/Collection/RecordSet',
-   'tmpl!Controls/BreadCrumbs/BreadCrumbs',
-   'tmpl!Controls/BreadCrumbs/resources/itemTemplate',
-   'tmpl!Controls/BreadCrumbs/resources/itemsTemplate',
+   'tmpl!Controls/_BreadCrumbs/_BreadCrumbs',
+   'tmpl!Controls/_BreadCrumbs/resources/itemTemplate',
+   'tmpl!Controls/_BreadCrumbs/resources/itemsTemplate',
    'tmpl!Controls/BreadCrumbsController/resources/menuItemTemplate',
    'tmpl!Controls/BreadCrumbsController/resources/menuContentTemplate',
-   'css!Controls/BreadCrumbs/BreadCrumbs'
+   'css!Controls/_BreadCrumbs/_BreadCrumbs'
 ], function(
    Control,
    RecordSet,
@@ -20,7 +20,7 @@ define('Controls/BreadCrumbs', [
    /**
     * Breadcrumbs.
     *
-    * @class Controls/BreadCrumbs
+    * @class Controls/_BreadCrumbs
     * @extends Core/Control
     * @mixes Controls/interface/IBreadCrumbs
     * @control
