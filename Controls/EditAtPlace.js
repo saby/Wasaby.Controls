@@ -6,14 +6,10 @@ define('Controls/EditAtPlace', [
 ], function(Control, template) {
    'use strict';
    var EditResult = {
-
-         // Возможные результаты события "onItemEdit"
-         CANCEL: 'Cancel' // Отменить начало редактирования/добавления
+         CANCEL: 'Cancel' // Undo start editing
       },
       EndEditResult = {
-
-         // Возможные результаты события "onItemEndEdit"
-         CANCEL: 'Cancel' // Отменить завершение редактирования/добавления
+         CANCEL: 'Cancel' // Undo completion of editing
       };
 
    var EditAtPlace = Control.extend({
