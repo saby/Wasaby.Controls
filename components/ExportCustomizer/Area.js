@@ -554,25 +554,24 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * Обработчик "subviewChanged" для под-компонента "preset"
           *
           * @protected
-          * @param {*} [data] Дополнительные данные
+          * @param {string} reason Причина или вид изменения
+          * @param {*} [info] Дополнительные данные
           */
-         _onChangePresets: function (data) {
+         _onChangePresets: function (reason/*, inf*/) {
             // Выбраны новые предустановленные настройки экспорта
             var views = this._views;
             var values = views.presets.getValues();
-            var meta = this._makeMeta('presets', [].slice.call(arguments));
+            var args = [].slice.call(arguments, 1);
             var options = this._options;
             var fieldIds = values.fieldIds;
             var fileUuid = values.fileUuid;
             var formatterValues, formatterMeta;
-            var reason = meta.reason;
-            var args = meta.args;
             switch (reason) {
                case 'create':
                case 'clone':
                case 'select':
                   options.fieldIds = fieldIds.slice();
-                  views.columnBinder.restate({fieldIds:fieldIds.slice()}, meta);
+                  views.columnBinder.restate({fieldIds:fieldIds.slice()}, {source:'presets', reason:reason, args:args});
                case 'edit':
                   options.fileUuid = fileUuid;
                   var consumer = args[0];
