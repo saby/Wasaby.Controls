@@ -1,14 +1,36 @@
+<ws:template name="Text">
+   <ws:partial template="{{_textTemplate}}"
+               _enabled="{{!_options.readOnly}}"
+               _orientation="{{_options.orientation}}"
+               _toggleValue="{{_options.value}}"
+               _value="{{!_options.value}}"/>
+</ws:template>
+<ws:template name="Toggle">
+   <ws:partial template="{{_toggleTemplate}}"
+               attr:class="{{_toggleHoverState ? 'controls-DoubleSwitcher__toggle_hover'}}"
+               _orientation="{{_options.orientation}}"
+               _enabled="{{!_options.readOnly}}"
+               _value="{{_options.value}}"/>
+</ws:template>
+
+<ws:template name="VerticalSwitcher">
+   <ws:partial template="Toggle"/>
+   <span class="controls-DoubleSwitch__textBlock">
+      <ws:partial template="Text" _nextValue="{{true}}" _caption="{{_options.captions[0]}}"/>
+      <ws:partial template="Text" _nextValue="{{false}}" _caption="{{_options.captions[1]}}"/>
+   </span>
+</ws:template>
+<ws:template name="HorizontalSwitcher">
+   <ws:partial template="Text" _nextValue="{{true}}" _caption="{{_options.captions[0]}}"/>
+   <ws:partial template="Toggle"/>
+   <ws:partial template="Text" _nextValue="{{false}}" _caption="{{_options.captions[1]}}"/>
+</ws:template>
+
 <span class="controls-DoubleSwitch" title="{{_options.tooltip}}">
    <ws:if data="{{_options.orientation === 'vertical'}}">
-      <ws:partial template="{{_toggleTemplate}}" _orientation="{{_options.orientation}}" _enabled="{{!_options.readOnly}}" _value="{{_options.value}}"/>
-      <span class="controls-DoubleSwitch__textBlock">
-         <ws:partial template="{{_textTemplate}}" _enabled="{{!_options.readOnly}}" _orientation="{{_options.orientation}}" _nextValue="{{true}}" _value="{{_options.value}}" _caption="{{_options.captions[0]}}"/>
-         <ws:partial template="{{_textTemplate}}" _enabled="{{!_options.readOnly}}" _orientation="{{_options.orientation}}" _nextValue="{{false}}" _value="{{!_options.value}}" _caption="{{_options.captions[1]}}"/>
-      </span>
+      <ws:partial template="VerticalSwitcher"/>
    </ws:if>
    <ws:else>
-      <ws:partial template="{{_textTemplate}}" _enabled="{{!_options.readOnly}}" _nextValue="{{true}}" _value="{{_options.value}}" _caption="{{_options.captions[0]}}"/>
-      <ws:partial template="{{_toggleTemplate}}" _orientation="{{_options.orientation}}" _enabled="{{!_options.readOnly}}" _value="{{_options.value}}"/>
-      <ws:partial template="{{_textTemplate}}" _enabled="{{!_options.readOnly}}" _nextValue="{{false}}" _value="{{!_options.value}}" _caption="{{_options.captions[1]}}"/>
+      <ws:partial template="HorizontalSwitcher"/>
    </ws:else>
 </span>
