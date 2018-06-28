@@ -4,11 +4,8 @@
    <div style="margin: 20px">
       <Controls.Filter.Button attr:style="max-width: 200px;"
                               attr:id="filter1"
-                              on:filterChanged="_filterChangedHandler()">
-         <ws:itemTemplate
-                 templateName="tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate"/>
-         <ws:additionalTemplate
-                 templateName="tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/additionalItemsTemplate"/>
+                              on:filterChanged="_filterChangedHandler()"
+                              template="tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/vdomFilterButtonTemplate">
          <ws:items>
             <ws:Array>
                <ws:Object id="FIO" value="Name" resetValue="" visibility="{{false}}"/>
@@ -34,19 +31,17 @@
    <div style="margin: 20px">
       <Controls.Filter.Button attr:style="max-width: 200px;"
                               attr:id="filter2"
-                              itemTemplateProperty="template"
-                              on:filterChanged="_filterChangedHandler()">
-         <ws:additionalTemplate
-                 templateName="tmpl!Controls-demo/FilterButton/Panel/resources/additionalItemsTemplate2"/>
+                              on:filterChanged="_filterChangedHandler()"
+                              template="tmpl!Controls-demo/FilterButton/Panel/resources/vdomFilterTemplate">
          <ws:items>
             <ws:Array>
-               <ws:Object id="genreKey" value="" resetValue="" visibility="{{false}}"
+               <ws:Object id="genreKey" value="" textValue="key" resetValue="" visibility="{{false}}"
                           template="tmpl!Controls-demo/FilterButton/Panel/resources/FIO"/>
-               <ws:Object id="FIO" value="Lala" resetValue="reset" visibility="{{true}}"
+               <ws:Object id="FIO" value="Lala" textValue="fio" resetValue="reset" visibility="{{true}}"
                           template="tmpl!Controls-demo/FilterButton/Panel/resources/FIO"/>
-               <ws:Object id="country" value="" resetValue="" visibility="{{false}}" source="{{sourceDropdown}}"
+               <ws:Object id="country" value="" textValue="country" resetValue="" visibility="{{false}}" source="{{sourceDropdown}}"
                           template="tmpl!Controls-demo/FilterButton/Panel/resources/country"/>
-               <ws:Object id="genreTip" value="" resetValue="" visibility="{{false}}"
+               <ws:Object id="genreTip" value="" textValue="tip" resetValue="" visibility="{{false}}"
                           template="tmpl!Controls-demo/FilterButton/Panel/resources/FIO"/>
             </ws:Array>
          </ws:items>

@@ -134,7 +134,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
          it('prepareRowSeparatorClasses', function() {
             var
                expectedResultWithRowSeparator = [
-                  ' controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow controls-Grid__row-cell_withRowSeparator',
+                  ' controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow',
                   ' controls-Grid__row-cell_withRowSeparator',
                   ' controls-Grid__row-cell_lastRow controls-Grid__row-cell_withRowSeparator_lastRow controls-Grid__row-cell_withRowSeparator'
                ],
@@ -157,17 +157,17 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                current = gridViewModel.getCurrent(),
                expectedResult = [
                   'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow ' +
-                     'controls-Grid__row-cell_withRowSeparator controls-Grid__row-cell-checkbox controls-Grid__row-cell_rowSpacing_default ' +
+                     'controls-Grid__row-cell-checkbox controls-Grid__row-cell_rowSpacing_default ' +
                      'controls-Grid__row-cell_withSelectionMarker',
                   'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow ' +
-                     'controls-Grid__row-cell_withRowSeparator controls-Grid__cell_spacingRight controls-Grid__row-cell_rowSpacing_L ' +
+                     'controls-Grid__cell_spacingRight controls-Grid__row-cell_rowSpacing_L ' +
                      'controls-Grid__header-cell_valign_top controls-Grid__row-cell_rowSpacing_default',
                   'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow ' +
-                     'controls-Grid__row-cell_withRowSeparator controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight ' +
+                     'controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight ' +
                      'controls-Grid__row-cell_rowSpacing_L ' +
                      'controls-Grid__header-cell_valign_bottom controls-Grid__row-cell_rowSpacing_default',
                   'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow ' +
-                     'controls-Grid__row-cell_withRowSeparator controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_L ' +
+                     'controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_L ' +
                      'controls-Grid__row-cell_rowSpacing_L ' +
                      'controls-Grid__header-cell_valign_middle controls-Grid__row-cell_rowSpacing_default' ];
             assert.equal(expectedResult[0],
@@ -247,7 +247,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                item: gridData[0],
                template: null,
                cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow ' +
-                  'controls-Grid__row-cell_withRowSeparator controls-Grid__row-cell-checkbox controls-Grid__row-cell_rowSpacing_default ' +
+                  'controls-Grid__row-cell-checkbox controls-Grid__row-cell_rowSpacing_default ' +
                   'controls-Grid__row-cell_withSelectionMarker'
             });
 
@@ -263,7 +263,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                item: gridData[0],
                template: null,
                cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow ' +
-                  'controls-Grid__row-cell_withRowSeparator controls-Grid__cell_spacingRight controls-Grid__row-cell_rowSpacing_L ' +
+                  'controls-Grid__cell_spacingRight controls-Grid__row-cell_rowSpacing_L ' +
                   'controls-Grid__header-cell_valign_top controls-Grid__row-cell_rowSpacing_default'
             });
 
@@ -279,7 +279,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                item: gridData[0],
                template: null,
                cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow ' +
-                  'controls-Grid__row-cell_withRowSeparator controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight ' +
+                  'controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight ' +
                   'controls-Grid__row-cell_rowSpacing_L controls-Grid__header-cell_valign_bottom ' +
                   'controls-Grid__row-cell_rowSpacing_default'
             });
@@ -296,7 +296,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                item: gridData[0],
                template: null,
                cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow ' +
-                  'controls-Grid__row-cell_withRowSeparator controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_L ' +
+                  'controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_L ' +
                   'controls-Grid__row-cell_rowSpacing_L controls-Grid__header-cell_valign_middle ' +
                   'controls-Grid__row-cell_rowSpacing_default'
             });
@@ -318,7 +318,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                item: gridData[0],
                template: null,
                cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow ' +
-                  'controls-Grid__row-cell_withRowSeparator controls-Grid__row-cell-checkbox controls-Grid__row-cell_rowSpacing_default ' +
+                  'controls-Grid__row-cell-checkbox controls-Grid__row-cell_rowSpacing_default ' +
                   'controls-Grid__row-cell_withSelectionMarker'
             });
          });

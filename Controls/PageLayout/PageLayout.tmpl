@@ -1,0 +1,12 @@
+<div class="controls-PageLayout">
+    <div attr:class="controls-PageLayout__ControlPanel__wrapper">
+        <Controls.Container.Async templateName="{{_tabsArea}}" templateOptions="{{_options}}"/>
+        <ws:if data="{{_items.getCount() > 1}}">
+            <Controls.Tabs.Buttons
+                    bind:selectedKey="_options.tabsSelectedKey"
+                    keyProperty="{{_options.tabsSource.getIdProperty()}}"
+                    source="{{_options.tabsSource}}"/>
+        </ws:if>
+    </div>
+    <Controls.Container.Async templateName="{{_mainArea}}" templateOptions="{{_options}}"/>
+</div>
