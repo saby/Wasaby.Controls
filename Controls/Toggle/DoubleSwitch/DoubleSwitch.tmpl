@@ -3,7 +3,9 @@
                _enabled="{{!_options.readOnly}}"
                _orientation="{{_options.orientation}}"
                _toggleValue="{{_options.value}}"
-               _value="{{!_options.value}}"/>
+               _value="{{_value}}"
+               _nextValue="{{_nextValue}}"
+               _caption="{{_caption}}"/>
 </ws:template>
 <ws:template name="Toggle">
    <ws:partial template="{{_toggleTemplate}}"
@@ -16,14 +18,14 @@
 <ws:template name="VerticalSwitcher">
    <ws:partial template="Toggle"/>
    <span class="controls-DoubleSwitch__textBlock">
-      <ws:partial template="Text" _nextValue="{{true}}" _caption="{{_options.captions[0]}}"/>
-      <ws:partial template="Text" _nextValue="{{false}}" _caption="{{_options.captions[1]}}"/>
+      <ws:partial template="Text" _nextValue="{{true}}" _caption="{{_options.captions[0]}}" _value="{{_options.value}}"/>
+      <ws:partial template="Text" _nextValue="{{false}}" _caption="{{_options.captions[1]}}" _value="{{!_options.value}}"/>
    </span>
 </ws:template>
 <ws:template name="HorizontalSwitcher">
-   <ws:partial template="Text" _nextValue="{{true}}" _caption="{{_options.captions[0]}}"/>
+   <ws:partial template="Text" _nextValue="{{true}}" _caption="{{_options.captions[0]}}" _value="{{_options.value}}"/>
    <ws:partial template="Toggle"/>
-   <ws:partial template="Text" _nextValue="{{false}}" _caption="{{_options.captions[1]}}"/>
+   <ws:partial template="Text" _nextValue="{{false}}" _caption="{{_options.captions[1]}}" _value="{{!_options.value}}"/>
 </ws:template>
 
 <span class="controls-DoubleSwitch" title="{{_options.tooltip}}">
