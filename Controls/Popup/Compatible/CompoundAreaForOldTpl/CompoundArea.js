@@ -9,8 +9,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/helpers/Function/debounce',
       'Core/Deferred',
       'Core/IoC',
-      'Core/helpers/Function/runDelayed',
       'Core/EventObject',
+      'Core/helpers/Function/runDelayed',
       'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/Abstract.compatible',
       'Lib/Control/Control.compatible',
@@ -27,7 +27,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       debounce,
       cDeferred,
       IoC,
-      EventObject) {
+      EventObject,
+      runDelayed) {
 
       function removeOperation(operation, array) {
          var  idx = arrayFindIndex(array, function(op) {
@@ -134,33 +135,42 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._options = cfg;
             this.deprecatedContr(this._options);
 
-            this.handle('onBeforeShow');
-            this.handle('onShow');
+
 
             var self = this;
-            this.templateOptions = this._options.templateOptions || {};
-            this._compoundId = this._options._compoundId;
 
-            if (this._options._initCompoundArea) {
-               this._options._initCompoundArea(this);
+            self.templateOptions = self._options.templateOptions || {};
+            self._compoundId = self._options._compoundId;
+
+            if (self._options._initCompoundArea) {
+               self._options._initCompoundArea(self);
             }
 
-            this._pending = this._pending || [];
-            this._pendingTrace = this._pendingTrace || [];
-            this._waiting = this._waiting || [];
+            self._pending = self._pending || [];
+            self._pendingTrace = self._pendingTrace || [];
+            self._waiting = self._waiting || [];
 
-            this.__parentFromCfg = this._options.__parentFromCfg;
-            this._parent = this._options.parent;
-            this._logicParent = this._options.parent;
-            this._options.parent = null;
+            self.__parentFromCfg = self._options.__parentFromCfg;
+            self._parent = self._options.parent;
+            self._logicParent = self._options.parent;
+            self._options.parent = null;
 
-            moduleStubs.require([self._options.template]).addCallback(function(result) {
-               //Здесь нужно сделать явную асинхронность, потому что к этому моменту накопилась пачка стилей
-               //далее floatArea начинает люто дергать recalculateStyle и нужно, чтобы там не было
-               //лишних свойств, которые еще не применены к дому
-               //панельки с этим начали вылезать плавненько
-               runDelayed(function() {
+
+            self._logicParent.waitForPopupCreated = true;
+
+            //Здесь нужно сделать явную асинхронность, потому что к этому моменту накопилась пачка стилей
+            //далее floatArea начинает люто дергать recalculateStyle и нужно, чтобы там не было
+            //лишних свойств, которые еще не применены к дому
+            //панельки с этим начали вылезать плавненько
+
+            runDelayed(function() {
+               self.handle('onBeforeShow');
+               self.handle('onShow');
+
+               moduleStubs.require([self._options.template]).addCallback(function(result) {
+                  self.handle('onBeforeControlsLoad');
                   self._createCompoundControl(self.templateOptions, result[0]);
+                  self._logicParent.callbackCreated && self._logicParent.callbackCreated();
                });
             });
          },
@@ -170,6 +180,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             templateOptions.parent = this;
             this._compoundControl = new (Component)(templateOptions);
             this._subscribeToCommand();
+            this.handle('onAfterLoad');
+            this.handle('onInitComplete');
             this.handle('onAfterShow'); // todo здесь надо звать хэндлер который пытается подписаться на onAfterShow, попробуй подключить FormController и словить подпись
          },
          _subscribeToCommand: function() {
@@ -190,7 +202,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                parent = this._parent._options.opener;
 
                /*Если нет sendCommand - значит это не compoundControl - а значит там нет распространения команд*/
-               
+
                if (parent.sendCommand) {
                   parent.sendCommand.apply(parent, [commandName].concat(arg));
                }
@@ -231,6 +243,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             this.handle('onClose', arg);
             this.handle('onAfterClose', arg);
+            this.handle('onDestroy');
          },
          _getTemplateComponent: function() {
             return this._compoundControl;
@@ -268,16 +281,21 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             if (handlers[eventName] === 'function') {
                handlers[eventName] = [handlers[eventName]];
             }
-            if (typeof optionsHandlers[eventName] === 'function') {
+            if (typeof optionsHandlers[eventName] === 'function' && handlers.indexOf(optionsHandlers[eventName]) === -1) {
                handlers.push(optionsHandlers[eventName]);
             }
             if (Array.isArray(optionsHandlers[eventName])) {
-               handlers = handlers.concat(optionsHandlers[eventName]);
+               //Здесь обработчики продублированы в this[eventName + 'Handler']
+               for (var i = 0; i < optionsHandlers[eventName].length; i++) {
+                  if (handlers.indexOf(optionsHandlers[eventName][i]) === -1) {
+                     handlers.push(optionsHandlers[eventName][i]);
+                  }
+               }
             }
 
             handlers.forEach(function(value) {
                if (eventState.getResult() !== false) {
-                  value.apply(self._compoundControl || self, [eventState, arg]);
+                  value.apply(self, [eventState, arg]);
                }
             });
 

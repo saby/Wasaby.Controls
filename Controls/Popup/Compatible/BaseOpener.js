@@ -15,6 +15,7 @@ function(cMerge, randomId) {
          var dimensions = this._getDimensions(templateClass);
          cfg.templateOptions = {
             templateOptions: cfg.templateOptions || cfg.componentOptions || {},
+            componentOptions: cfg.templateOptions || cfg.componentOptions || {},
             template: cfg.template,
             type: cfg._type,
             handlers: cfg.handlers,
@@ -25,6 +26,9 @@ function(cMerge, randomId) {
          };
 
          if (cfg.target) {
+            //нужно для миникарточки, они хотят работать с CompoundArea - и ей надо дать target
+            //причем работают с jquery объектом
+            cfg.templateOptions.target = cfg.target;
             cfg.target = cfg.target[0] ? cfg.target[0] : cfg.target;
          }
 
