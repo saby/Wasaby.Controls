@@ -101,13 +101,13 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                },
                expectedResultWithoutMultiselect = [
                   ' controls-Grid__cell_spacingRight controls-Grid__cell_spacingFirstCol_XL controls-Grid__row-cell_rowSpacing_L controls-Grid__header-cell_valign_top',
-                  ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__row-cell_rowSpacing_L controls-Grid__row-cell_halign_right controls-Grid__header-cell_valign_bottom',
-                  ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_L controls-Grid__row-cell_rowSpacing_L controls-Grid__row-cell_halign_right controls-Grid__header-cell_valign_middle' ],
+                  ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__row-cell_rowSpacing_L controls-Grid__header-cell_valign_bottom',
+                  ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_L controls-Grid__row-cell_rowSpacing_L controls-Grid__header-cell_valign_middle' ],
                expectedResultWithMultiselect = [
                   ' controls-Grid__cell_spacingRight controls-Grid__row-cell_rowSpacing_L',
                   ' controls-Grid__cell_spacingRight controls-Grid__row-cell_rowSpacing_L controls-Grid__header-cell_valign_top',
-                  ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__row-cell_rowSpacing_L controls-Grid__row-cell_halign_right controls-Grid__header-cell_valign_bottom',
-                  ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_L controls-Grid__row-cell_rowSpacing_L controls-Grid__row-cell_halign_right controls-Grid__header-cell_valign_middle' ];
+                  ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__row-cell_rowSpacing_L controls-Grid__header-cell_valign_bottom',
+                  ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_L controls-Grid__row-cell_rowSpacing_L controls-Grid__header-cell_valign_middle' ];
             assert.equal(expectedResultWithoutMultiselect[0],
                GridViewModel._private.getPaddingCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 0})),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithoutMultiselect)".');
@@ -164,11 +164,11 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                      'controls-Grid__header-cell_valign_top controls-Grid__row-cell_rowSpacing_default',
                   'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow ' +
                      'controls-Grid__row-cell_withRowSeparator controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight ' +
-                     'controls-Grid__row-cell_rowSpacing_L controls-Grid__row-cell_halign_right ' +
+                     'controls-Grid__row-cell_rowSpacing_L ' +
                      'controls-Grid__header-cell_valign_bottom controls-Grid__row-cell_rowSpacing_default',
                   'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow ' +
                      'controls-Grid__row-cell_withRowSeparator controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_L ' +
-                     'controls-Grid__row-cell_rowSpacing_L controls-Grid__row-cell_halign_right ' +
+                     'controls-Grid__row-cell_rowSpacing_L ' +
                      'controls-Grid__header-cell_valign_middle controls-Grid__row-cell_rowSpacing_default' ];
             assert.equal(expectedResult[0],
                GridViewModel._private.getItemColumnCellClasses(current),
@@ -280,7 +280,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                template: null,
                cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow ' +
                   'controls-Grid__row-cell_withRowSeparator controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight ' +
-                  'controls-Grid__row-cell_rowSpacing_L controls-Grid__row-cell_halign_right controls-Grid__header-cell_valign_bottom ' +
+                  'controls-Grid__row-cell_rowSpacing_L controls-Grid__header-cell_valign_bottom ' +
                   'controls-Grid__row-cell_rowSpacing_default'
             });
 
@@ -297,7 +297,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                template: null,
                cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow ' +
                   'controls-Grid__row-cell_withRowSeparator controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_L ' +
-                  'controls-Grid__row-cell_rowSpacing_L controls-Grid__row-cell_halign_right controls-Grid__header-cell_valign_middle ' +
+                  'controls-Grid__row-cell_rowSpacing_L controls-Grid__header-cell_valign_middle ' +
                   'controls-Grid__row-cell_rowSpacing_default'
             });
 
@@ -479,7 +479,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             assert.deepEqual({
                column: gridHeader[1],
                cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight ' +
-                  'controls-Grid__row-cell_rowSpacing_L controls-Grid__row-cell_halign_right',
+                  'controls-Grid__row-cell_rowSpacing_L controls-Grid__header-cell_halign_right',
                index: 2
             }, gridViewModel.getCurrentHeaderColumn(), 'Incorrect value third call "getCurrentHeaderColumn()".');
 
@@ -489,7 +489,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             assert.deepEqual({
                column: gridHeader[2],
                cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_L ' +
-                  'controls-Grid__row-cell_rowSpacing_L controls-Grid__row-cell_halign_right',
+                  'controls-Grid__row-cell_rowSpacing_L controls-Grid__header-cell_halign_right',
                index: 3
             }, gridViewModel.getCurrentHeaderColumn(), 'Incorrect value fourth call "getCurrentHeaderColumn()".');
 
@@ -540,7 +540,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             assert.deepEqual({
                column: gridColumns[1],
                cellClasses: 'controls-Grid__results-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight ' +
-                  'controls-Grid__row-cell_rowSpacing_L controls-Grid__row-cell_halign_right controls-Grid__header-cell_valign_bottom',
+                  'controls-Grid__row-cell_rowSpacing_L controls-Grid__header-cell_valign_bottom',
                index: 2
             }, gridViewModel.getCurrentResultsColumn(), 'Incorrect value third call "getCurrentResultsColumn()".');
 
@@ -550,7 +550,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             assert.deepEqual({
                column: gridColumns[2],
                cellClasses: 'controls-Grid__results-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_L ' +
-                  'controls-Grid__row-cell_rowSpacing_L controls-Grid__row-cell_halign_right controls-Grid__header-cell_valign_middle',
+                  'controls-Grid__row-cell_rowSpacing_L controls-Grid__header-cell_valign_middle',
                index: 3
             }, gridViewModel.getCurrentResultsColumn(), 'Incorrect value fourth call "getCurrentResultsColumn()".');
 
