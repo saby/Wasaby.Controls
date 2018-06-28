@@ -50,7 +50,6 @@ define('Controls/List/ItemsViewModel',
                if (cfg.itemsReadyCallback) {
                   cfg.itemsReadyCallback(cfg.items);
                }
-
                this._items = cfg.items;
                this._display = this._prepareDisplay(cfg.items, cfg);
                this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);

@@ -1,41 +1,18 @@
 /**
  * Created by kraynovdo on 16.11.2017.
  */
-define('Controls/List/ListViewModel', ['Controls/List/ItemsViewModel', 'WS.Data/Entity/VersionableMixin', 'Controls/List/resources/utils/ItemsUtil', 'Controls/Utils/ArraySimpleValuesUtil'],
-   function(ItemsViewModel, VersionableMixin, ItemsUtil, ArraySimpleValuesUtil) {
+define('Controls/List/ListViewModel', ['Controls/List/ItemsViewModel', 'WS.Data/Entity/VersionableMixin', 'Controls/List/resources/utils/ItemsUtil'],
+   function(ItemsViewModel, VersionableMixin, ItemsUtil) {
       /**
        *
        * @author Крайнов Дмитрий
        * @public
        */
 
-      var SELECTION_STATUS = {
-         NOT_SELECTED: 0,
-         SELECTED: 1
-      };
-
       var _private = {
          updateIndexes: function(self) {
             self._startIndex = 0;
             self._stopIndex = self.getCount();
-         },
-
-         isAllSelection: function(selectedKeys) {
-            return !!selectedKeys && !!selectedKeys.length && selectedKeys[0] === null;
-         },
-
-         getSelectionStatus: function(id, selectedKeys, excludedKeys) {
-            var status = SELECTION_STATUS.NOT_SELECTED;
-            if (_private.isAllSelection(selectedKeys)) {
-               if (ArraySimpleValuesUtil.invertTypeIndexOf(excludedKeys, id) === -1) {
-                  status = SELECTION_STATUS.SELECTED;
-               }
-            } else {
-               if (ArraySimpleValuesUtil.invertTypeIndexOf(selectedKeys, id) > -1) {
-                  status = SELECTION_STATUS.SELECTED;
-               }
-            }
-            return status;
          }
       };
 
