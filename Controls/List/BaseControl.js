@@ -318,6 +318,7 @@ define('Controls/List/BaseControl', [
             self._children.itemActionsOpener.close();
          }
          self._listViewModel.setActiveItem(null);
+         self._children.swipeControl.closeSwipe();
          self._menuIsShown = false;
          self._forceUpdate();
       },
@@ -339,6 +340,7 @@ define('Controls/List/BaseControl', [
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/List/interface/IBaseControl
     * @mixes Controls/interface/IRemovable
+    * @mixes Controls/interface/IEditInPlace
     * @control
     * @public
     * @category List

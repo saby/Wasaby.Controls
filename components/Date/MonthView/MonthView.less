@@ -46,8 +46,8 @@
 .controls-MonthView__item-selectedStart,
 .controls-MonthView__item-selectedEnd,
 .controls-MonthView__item-selectedInner,
-.controls-MonthView__item-selectedStart-unfinished,
-.controls-MonthView__item-selectedEnd-unfinished {
+.controls-MonthView__item-selectedStart,
+.controls-MonthView__item-selectedEnd {
    outline: 1px solid @border-color__MonthView-item-selected;
 }
 
@@ -77,17 +77,17 @@
    right: -1px;
 }
 
-.controls-MonthView__backgroundColor-currentMonthDay-weekend-unselected-enabled,
-.controls-MonthView__backgroundColor-currentMonthDay-workday-unselected-enabled {
+.controls-MonthView__backgroundColor-currentMonthDay-weekend-unselected,
+.controls-MonthView__backgroundColor-currentMonthDay-workday-unselected {
    background: @background_MonthView-item;
 }
-.controls-MonthView__backgroundColor-currentMonthDay-weekend-selected-enabled,
-.controls-MonthView__backgroundColor-currentMonthDay-workday-selected-enabled {
+.controls-MonthView__backgroundColor-currentMonthDay-weekend-selected,
+.controls-MonthView__backgroundColor-currentMonthDay-workday-selected {
    background: @background_MonthView-item-selected;
 }
 
-.controls-MonthView__backgroundColor-currentMonthDay-weekend-selected-startend-unfinished-enabled,
-.controls-MonthView__backgroundColor-currentMonthDay-workday-selected-startend-unfinished-enabled {
+.controls-MonthView__backgroundColor-currentMonthDay-weekend-selected-startend,
+.controls-MonthView__backgroundColor-currentMonthDay-workday-selected-startend {
    background: @background_MonthView-item-hover;
 }
 
@@ -100,13 +100,13 @@
    background: greyscale(lighten(@background_MonthView-item-selected, 15%));
 }
 
-.controls-MonthView__textColor-currentMonthDay-workday-enabled {
+.controls-MonthView__textColor-currentMonthDay-workday {
    color: @color_MonthView-item;
    //&:hover {
    //   color: @color_MonthView-item-hover;
    //}
 }
-.controls-MonthView__textColor-currentMonthDay-weekend-enabled {
+.controls-MonthView__textColor-currentMonthDay-weekend {
    color: @color_MonthView-item-weekend;
 }
 .controls-MonthView__textColor-currentMonthDay-workday-disabled {
