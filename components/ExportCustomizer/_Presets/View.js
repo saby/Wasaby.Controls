@@ -153,7 +153,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                this._updateSelectorListOptions('_footerHandler', this._onAdd.bind(this));
             }
             this._bindEvents();
-            var preset = this._findPresetById(this._options.selectedId);
+            var options = this._options;
             if (this._storage) {
                this._loadCustoms().addCallback(function () {
                   var needNewPreset = this._needNewPreset;
@@ -165,11 +165,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   }
                   this._updateSelector();
                   if (!needNewPreset) {
+                     var preset = this._findPresetById(options.selectedId);
                      this.sendCommand('subviewChanged', 'select', preset);
                   }
                }.bind(this));
             }
             else {
+               var preset = this._findPresetById(options.selectedId);
                this.sendCommand('subviewChanged', 'select', preset);
             }
          },
