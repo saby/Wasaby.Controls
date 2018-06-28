@@ -77,6 +77,19 @@
       />
    </div>
    <h2>MenuButton</h2>
+   <div style="padding: 5px;">Меню с дополнительными данными
+      <Controls.Button.MenuButton
+         name="myMenuButton11"
+         attr:test_name="cross_menu"
+         keyProperty="id"
+         additionalProperty="additional"
+         style="linkMain"
+         icon="icon-medium icon-Author"
+         menuStyle="cross"
+         source="{{_getAdditionalData()}}">
+         <ws:headConfig menuStyle="cross"/>
+      </Controls.Button.MenuButton>
+   </div>
    <div style="padding: 5px;">
       <Controls.Button.MenuButton
          on:onMenuItemActivate="_clickItemsChangedHandler()"
