@@ -173,7 +173,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Mark', [
             //TODO Подумать что делать если нет _dataSet
             recordsCount = view.getItems() ? view.getItems().getCount() : 0,
             selectedCount = view.getSelectedKeys().length;
-         this._setCheckedInternal(selectedCount === recordsCount && recordsCount ? true : selectedCount ? null : false);
+         this._setCheckedInternal(selectedCount >= recordsCount && recordsCount ? true : selectedCount ? null : false);
       },
       _updateMarkButton: function() {
          var onMenuButtonLoad = function() {
