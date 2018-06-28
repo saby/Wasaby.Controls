@@ -38,7 +38,7 @@ define('SBIS3.CONTROLS/Utils/ItemNamer',
                }
                collections = [{list:list, property:property}];
             }
-            var reEnd = /\s+\(([0-9]+)\)\s*$/;
+            var reEnd = /^\s+\(([0-9]+)\)\s*$/;
             var pattern = value.replace(reEnd, '');
             var previous = [];
             for (var i = 0; i < collections.length; i++) {

@@ -15,6 +15,7 @@ function(cMerge, Random) {
          var dimensions = this._getDimensions(templateClass);
          cfg.templateOptions = {
             templateOptions: cfg.templateOptions || cfg.componentOptions || {},
+            componentOptions: cfg.templateOptions || cfg.componentOptions || {},
             template: cfg.template,
             type: cfg._type,
             handlers: cfg.handlers,
@@ -25,6 +26,9 @@ function(cMerge, Random) {
          };
 
          if (cfg.target) {
+            //нужно для миникарточки, они хотят работать с CompoundArea - и ей надо дать target
+            //причем работают с jquery объектом
+            cfg.templateOptions.target = cfg.target;
             cfg.target = cfg.target[0] ? cfg.target[0] : cfg.target;
          }
 
@@ -36,6 +40,14 @@ function(cMerge, Random) {
          }
          if (cfg.newRecord) { //от RecordFloatArea
             cfg.templateOptions.newRecord = cfg.newRecord;
+         }
+
+         if (cfg.context) {
+            cfg.templateOptions.context = cfg.context;
+         }
+
+         if (cfg.linkedContext) {
+            cfg.templateOptions.linkedContext = cfg.linkedContext;
          }
 
          if (cfg.hasOwnProperty('autoHide')) {
@@ -74,8 +86,10 @@ function(cMerge, Random) {
 
          if (cfg.hasOwnProperty('direction')) {
             cfg.corner = cfg.corner || {};
-            var direction = (cfg.direction === 'right' || cfg.direction === 'left') ? 'horizontal' : 'vertical';
-            cfg.corner[direction] = revertPosition[cfg.direction];
+            if (cfg.direction !== 'right' && cfg.direction !== 'left') {
+               cfg.direction = 'left';
+            }
+            cfg.corner.horizontal = revertPosition[cfg.direction];
          }
 
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
