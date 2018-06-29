@@ -104,7 +104,7 @@ define('Controls/Application/HeadDataContext', [
                if (key.slice(key.length - 3, key.length) === 'css') {
                   files.css.push(key);
                   var corrJs = key.replace(/.css$/, '.js');
-                  if(!packages[corrJs]) {
+                  if (!packages[corrJs]) {
                      files.js.push(corrJs);
                   }
                } else if (key.slice(key.length - 2, key.length) === 'js') {
