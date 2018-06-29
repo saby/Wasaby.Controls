@@ -116,6 +116,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * @param {string} options.fileUuid Uuid стилевого эксель-файла
           * @param {Array<ExportValidator>} options.validators Список валидаторов результатов редактирования (опционально)
           * @param {ExportRemoteCall} [options.outputCall] Информация для вызова метода удалённого сервиса для отправки данных вывода (опционально)
+          * @param {boolean} [options.skipCustomization] Не открывать настройщик экспорта, начать экспорт сразу основываясь на предоставленных в опциях данных (опционально)
           * @return {Deferred<ExportResults>}
           */
          execute: function (options) {
@@ -135,7 +136,16 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
                return Deferred.fail('Allready open');
             }
             this._result = new Deferred();
-            this._open(options);
+            if (options.skipCustomization) {
+               var area = new Area(options);
+               area.complete.addCallbacks(
+                  this._complete.bind(this, true),
+                  this._completeWithError.bind(this, true)
+               );
+            }
+            else {
+               this._open(options);
+            }
             return this._result;
          },
 
