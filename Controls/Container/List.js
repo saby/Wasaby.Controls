@@ -58,6 +58,7 @@ define('Controls/Container/List',
             /* TODO will be a cached source */
             _private.cachedSourceFix(self);
             self._source = new Memory({
+               model: data.getModel(),
                idProperty: data.getIdProperty(),
                data: data.getRawData(),
                adapter: self._options.source.getAdapter()
