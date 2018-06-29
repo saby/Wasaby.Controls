@@ -10,13 +10,14 @@
  */
 define('SBIS3.CONTROLS/ExportCustomizer/Action',
    [
+      'Core/core-merge',
       'Core/Deferred',
       'Lib/Control/FloatArea/FloatArea',
       'SBIS3.CONTROLS/Action',
       'SBIS3.CONTROLS/ExportCustomizer/Area'
    ],
 
-   function (Deferred, FloatArea, Action, Area) {
+   function (cMerge, Deferred, FloatArea, Action, Area) {
       'use strict';
 
       /**
@@ -136,15 +137,20 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
                return Deferred.fail('Allready open');
             }
             this._result = new Deferred();
+            var defaults = this._options;
+            var areaOptions = Area.getOwnOptionNames().reduce(function (acc, name) {
+               var value = options[name];
+               acc[name] = value !== undefined ? value : defaults[name];
+               return acc;
+            }, {});
             if (options.skipCustomization) {
-               var area = new Area(options);
-               area.complete.addCallbacks(
+               (new Area(areaOptions)).complete().addCallbacks(
                   this._complete.bind(this, true),
                   this._completeWithError.bind(this, true)
                );
             }
             else {
-               this._open(options);
+               this._open(areaOptions);
             }
             return this._result;
          },
@@ -156,18 +162,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * @param {object} options Входные аргументы("мета-данные") настройщика экспорта (согласно описанию в методе {@link execute})
           */
          _open: function (options) {
-            var componentOptions = {
+            var componentOptions = cMerge({
                dialogMode: true,
                handlers: {
                   onComplete: this._onAreaComplete.bind(this),
                   onFatalError: this._onAreaError.bind(this)
                }
-            };
-            var defaults = this._options;
-            Area.getOwnOptionNames().forEach(function (name) {
-               var value = options[name];
-               componentOptions[name] = value !== undefined ? value : defaults[name];
-            });
+            }, options);
             this._areaContainer = new FloatArea({
                opener: this,
                direction: 'left',
