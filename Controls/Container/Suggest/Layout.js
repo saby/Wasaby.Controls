@@ -53,7 +53,7 @@ define('Controls/Container/Suggest/Layout',
                needToRevert = suggestHeight + containerRect.bottom > (win || window).innerHeight,
                newOrient;
             
-            if (needToRevert && self._options.style !== 'overInput') {
+            if (needToRevert && self._options.suggestStyle !== 'overInput') {
                newOrient = '-up';
             } else {
                if (self._orient === '-up') {
