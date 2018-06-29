@@ -1,4 +1,4 @@
-.controls-Switch__wrapper {
+.controls-Switch__toggle__wrapper {
    .inline-flexbox();
    .align-items(center);
    .justify-content(center);
@@ -45,6 +45,14 @@
 
 .controls-Switch__text_disabled_unselected {
    color: @color_Switch-text_disabled_unselected;
+}
+
+.controls-Switch__toggle__leftCaption {
+   -webkit-transform: rotate(-180deg);
+   -moz-transform: rotate(-180deg);
+   -ms-transform: rotate(-180deg);
+   -o-transform: rotate(-180deg);
+   transform: rotate(-180deg);
 }
 
 .ws-is-no-touch {
