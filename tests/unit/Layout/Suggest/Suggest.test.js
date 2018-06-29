@@ -44,7 +44,7 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          assert.isTrue(stateNotifyed);
       });
    
-      it('Suggest::_private.close', function () {
+      it('Suggest::_private.close', function() {
          var self = getComponentObject();
          var state;
          self._options.suggestState = true;
@@ -53,6 +53,19 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          };
          Suggest._private.close(self);
          assert.isFalse(state);
+      });
+   
+      it('Suggest::_close', function() {
+         var suggestComponent = new Suggest();
+         suggestComponent._options.style = 'overInput';
+         var value = 'test';
+         suggestComponent._notify = function(event, val) {
+            if (event === 'valueChanged') {
+               value = val[0];
+            }
+         };
+         suggestComponent._close();
+         assert.equal(value, '');
       });
    
       it('Suggest::_private.open', function (done) {
