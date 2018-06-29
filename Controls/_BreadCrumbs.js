@@ -6,7 +6,7 @@ define('Controls/_BreadCrumbs', [
    'tmpl!Controls/_BreadCrumbs/resources/itemsTemplate',
    'tmpl!Controls/BreadCrumbsController/resources/menuItemTemplate',
    'tmpl!Controls/BreadCrumbsController/resources/menuContentTemplate',
-   'css!Controls/_BreadCrumbs/_BreadCrumbs'
+   'css!Controls/_BreadCrumbs/BreadCrumbs'
 ], function(
    Control,
    RecordSet,
