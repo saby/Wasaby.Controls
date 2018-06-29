@@ -181,7 +181,6 @@ define('Controls/Input/Number', [
 
    NumberInput.getOptionTypes = function() {
       return {
-         value: types(String),
          precision: types(Number), //Точность (кол-во знаков после запятой)
          integersLength: types(Number), //Длина целой части
          onlyPositive: types(Boolean), //Только положительные значения
