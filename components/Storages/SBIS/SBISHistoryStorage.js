@@ -7,18 +7,19 @@ define('SBIS3.CONTROLS/Storages/SBIS/SBISHistoryStorage', [
    "SBIS3.CONTROLS/Storages/SBIS/SBISUserConfigStorage",
    "SBIS3.CONTROLS/Storages/SBIS/SBISClientsGlobalConfigStorage",
    "Core/Abstract",
-   'Core/helpers/string-helpers-min',
+   'Transport/serializeURLData',
+   'Transport/deserializeURLData',
    "Core/Deferred",
    "Core/helpers/Function/forAliveOnly",
    "Core/IoC",
    "Core/constants",
    "Lib/Storage/LocalStorage"
-], function(EventBus, cSessionStorage, SBISUserConfigStorage, SBISClientsGlobalConfigStorage, cAbstract, strHelpersMin, Deferred, forAliveOnly, IoC, constants, LocalStorage ) {
+], function(EventBus, cSessionStorage, SBISUserConfigStorage, SBISClientsGlobalConfigStorage, cAbstract, serializeURLData, deserializeURLData, Deferred, forAliveOnly, IoC, constants, LocalStorage ) {
 
    'use strict';
 
    var serializeFnc = function(serialize, value) {
-      return value ? strHelpersMin[serialize ? 'serializeURLData' : 'deserializeURLData'](value) : null;
+      return value ? (serialize ? serializeURLData(value) : deserializeURLData(value)) : null;
    };
    
    var historyLoadCallback = function(rawData, serializer) {

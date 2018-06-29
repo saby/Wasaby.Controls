@@ -3,10 +3,10 @@
  */
 define('Controls/Popup/Compatible/BaseOpener', [
    'Core/core-merge',
-   'Core/helpers/random-helpers',
+   'Core/helpers/Number/randomId',
    'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea'
 ],
-function(cMerge, Random) {
+function(cMerge, randomId) {
    /**
        * Слой совместимости для базового опенера для открытия старых шаблонов
        */
@@ -22,7 +22,7 @@ function(cMerge, Random) {
             _initCompoundArea: cfg._initCompoundArea,
 
             //На каждое обновление конфига генерируем новый id, чтобы понять, что нужно перерисовать шаблон
-            _compoundId: Random.randomId('compound-')
+            _compoundId: randomId('compound-')
          };
 
          if (cfg.target) {

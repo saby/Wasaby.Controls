@@ -1,7 +1,7 @@
 /// <amd-module name="File/ResourceGetter/DropArea/Overlay" />
 /// <amd-dependency path="css!File/ResourceGetter/DropArea/Overlay" />
 
-import random = require("Core/helpers/random-helpers");
+import createGUID = require("Core/helpers/createGUID");
 
 type OnDropHandler = (data: DataTransfer) => void;
 /**
@@ -237,7 +237,7 @@ const OPTION = {
 export class Overlay {
     private readonly __uid: string;
     constructor(cfg: OverlayConfig) {
-        this.__uid = random.createGUID();
+        this.__uid = createGUID();
         let config = Object.assign({}, OPTION, cfg);
         if (!(config.element instanceof HTMLElement)) {
             throw new Error('argument "element" must be extended of HTMLElement');
