@@ -17,13 +17,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
       'SBIS3.CONTROLS/Utils/ImportExport/RemoteCall',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
       'WS.Data/Collection/RecordSet',
+      'WS.Data/Di',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/Area',
       'css!SBIS3.CONTROLS/ExportCustomizer/Area',
       'SBIS3.CONTROLS/Button',
       'SBIS3.CONTROLS/ScrollContainer'
    ],
 
-   function (CommandDispatcher, cMerge, Deferred, CompoundControl, RemoteCall, InformationPopupManager, RecordSet, tmpl) {
+   function (CommandDispatcher, cMerge, Deferred, CompoundControl, RemoteCall, InformationPopupManager, RecordSet, Di, tmpl) {
       'use strict';
 
       /**
@@ -739,35 +740,49 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           */
          complete: function () {
             var promise = new Deferred();
-            // Сформировать результирующие данные из всего имеющегося
-            // И сразу прроверить их
-            this.getValues(true).addCallback(function (data) {
-               // И если всё нормально - завершить диалог
-               if (data) {
-                  var presetsView = this._views.presets;
-                  if (presetsView) {
-                     presetsView.save();
+            var options = this._options;
+            var presetsView = this._views.presets;
+            var isForced = arguments[0];
+            if (!isForced && options.usePresets && !(options.fieldIds && options.fieldIds.length) && !presetsView) {
+               Di.resolve('ExportPresets.Loader').load(options._scopes.presets.namespace).addCallback(function (presets) {
+                  var preset; presets.some(function (v) { if (v.id === options.selectedPresetId) { preset = v; return true; }});
+                  if (preset) {
+                     options.fieldIds = preset.fieldIds;
+                     options.fileUuid = preset.fileUuid;
                   }
-                  var outputCall = this._options.outputCall;
-                  if (outputCall) {
-                     (new RemoteCall(outputCall)).call(data).addCallbacks(
-                        function (result) {
-                           data.result = result;
-                           promise.callback(data);
-                        }.bind(this),
-                        function (err) {
-                           promise.errback(/*err*/rk('При отправке данных поизошла ошибка', 'НастройщикЭкспорта'));
-                        }.bind(this)
-                     );
+                  promise.dependOn(this.complete(true));
+               }.bind(this));
+            }
+            else {
+               // Сформировать результирующие данные из всего имеющегося
+               // И сразу прроверить их
+               this.getValues(true).addCallback(function (data) {
+                  // И если всё нормально - завершить диалог
+                  if (data) {
+                     if (presetsView) {
+                        presetsView.save();
+                     }
+                     var outputCall = options.outputCall;
+                     if (outputCall) {
+                        (new RemoteCall(outputCall)).call(data).addCallbacks(
+                           function (result) {
+                              data.result = result;
+                              promise.callback(data);
+                           }.bind(this),
+                           function (err) {
+                              promise.errback(/*err*/rk('При отправке данных поизошла ошибка', 'НастройщикЭкспорта'));
+                           }.bind(this)
+                        );
+                     }
+                     else {
+                        promise.callback(data);
+                     }
                   }
                   else {
-                     promise.callback(data);
+                     promise.callback(null);
                   }
-               }
-               else {
-                  promise.callback(null);
-               }
-            }.bind(this));
+               }.bind(this));
+            }
             return promise;
          },
 
