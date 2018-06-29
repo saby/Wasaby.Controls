@@ -57,7 +57,7 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
    
       it('Suggest::_close', function() {
          var suggestComponent = new Suggest();
-         suggestComponent._options.style = 'overInput';
+         suggestComponent._options.suggestStyle = 'overInput';
          var value = 'test';
          suggestComponent._notify = function(event, val) {
             if (event === 'valueChanged') {
