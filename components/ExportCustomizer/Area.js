@@ -573,9 +573,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   options.fieldIds = fieldIds.slice();
                   views.columnBinder.restate({fieldIds:fieldIds.slice()}, {source:'presets', reason:reason, args:args});
                case 'edit':
-                  options.fileUuid = fileUuid;
                   var consumer = args[0];
-                  formatterValues = {fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumerId:consumer.id, primaryUuid:consumer.patternUuid || consumer.fileUuid};
+                  var consumerUuid = consumer.patternUuid || consumer.fileUuid;
+                  options.fileUuid = fileUuid || consumerUuid;
+                  formatterValues = {fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumerId:consumer.id, primaryUuid:consumerUuid};
                   formatterMeta = {reason:reason, args:reason === 'clone' ? [args[1]] : []};
                   if (reason === 'edit') {
                      this._isEditMode = true;
@@ -717,6 +718,27 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * @protected
           */
          _cmdComplete: function () {
+            this.complete().addCallbacks(
+               function (data) {
+                  if (data) {
+                     this._notify('onComplete', /*ExportResults:*/data);
+                  }
+                  /*else {
+                     // Иначе пользователь продолжает редактирование
+                  }*/
+               }.bind(this),
+               this._notify.bind(this, 'onFatalError', true)
+            );
+         },
+
+         /*
+          * Завершить работу с текущими данными
+          *
+          * @public
+          * @return {Core/Deferred<ExportResults>}
+          */
+         complete: function () {
+            var promise = new Deferred();
             // Сформировать результирующие данные из всего имеющегося
             // И сразу прроверить их
             this.getValues(true).addCallback(function (data) {
@@ -731,21 +753,22 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                      (new RemoteCall(outputCall)).call(data).addCallbacks(
                         function (result) {
                            data.result = result;
-                           this._notify('onComplete', /*ExportResults:*/data);
+                           promise.callback(data);
                         }.bind(this),
                         function (err) {
-                           this._notify('onFatalError', true, /*err*/rk('При отправке данных поизошла ошибка', 'НастройщикЭкспорта'));
+                           promise.errback(/*err*/rk('При отправке данных поизошла ошибка', 'НастройщикЭкспорта'));
                         }.bind(this)
                      );
                   }
                   else {
-                     this._notify('onComplete', /*ExportResults:*/data);
+                     promise.callback(data);
                   }
                }
-               /*else {
-                  // Иначе пользователь продолжает редактирование
-               }*/
+               else {
+                  promise.callback(null);
+               }
             }.bind(this));
+            return promise;
          },
 
          /**
