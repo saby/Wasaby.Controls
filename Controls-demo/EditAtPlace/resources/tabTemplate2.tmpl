@@ -7,47 +7,49 @@
    >
       <div>
          <div class="content_tab_margin  header_demo_class inline_editing controls-accent-text">
-            <ws:partial
-               size="l"
-               template="tmpl!Controls/EditAtPlace/EditingTemplate"
-               fieldName="surname"
+            <Controls.EditAtPlace.EditAtPlaceTemplate
+                    size="l"
+                    bind:value="content.editObject.surname"
             >
                <ws:editorTemplate>
-                  <Controls.Input.Text
-                     selectOnClick="{{ false }}"
-                     attr:class="demo_input_width"
-                     size="l"
-                  />
+                  <ws:editorTemplate>
+                     <Controls.Input.Text
+                             selectOnClick="{{ false }}"
+                             attr:class="demo_input_width"
+                             size="l"
+                     />
+                  </ws:editorTemplate>
                </ws:editorTemplate>
-            </ws:partial>
+            </Controls.EditAtPlace.EditAtPlaceTemplate>
 
-            <ws:partial
-               size="l"
-               template="tmpl!Controls/EditAtPlace/EditingTemplate"
-               fieldName="name"
+            <Controls.EditAtPlace.EditAtPlaceTemplate
+                    size="l"
+                    bind:value="content.editObject.name"
             >
                <ws:editorTemplate>
-                  <Controls.Input.Text
-                     selectOnClick="{{ false }}"
-                     attr:class="demo_input_width"
-                     size="l"
-                  />
+                  <ws:editorTemplate>
+                     <Controls.Input.Text
+                             selectOnClick="{{ false }}"
+                             attr:class="demo_input_width"
+                             size="l"
+                     />
+                  </ws:editorTemplate>
                </ws:editorTemplate>
-            </ws:partial>
-
-            <ws:partial
-               size="l"
-               template="tmpl!Controls/EditAtPlace/EditingTemplate"
-               fieldName="patronymic"
+            </Controls.EditAtPlace.EditAtPlaceTemplate>
+            <Controls.EditAtPlace.EditAtPlaceTemplate
+                    size="l"
+                    bind:value="content.editObject.patronymic"
             >
                <ws:editorTemplate>
-                  <Controls.Input.Text
-                     selectOnClick="{{ false }}"
-                     attr:class="demo_input_width"
-                     size="l"
-                  />
+                  <ws:editorTemplate>
+                     <Controls.Input.Text
+                             selectOnClick="{{ false }}"
+                             attr:class="demo_input_width"
+                             size="l"
+                     />
+                  </ws:editorTemplate>
                </ws:editorTemplate>
-            </ws:partial>
+            </Controls.EditAtPlace.EditAtPlaceTemplate>
          </div>
       </div>
    </Controls.EditAtPlace>

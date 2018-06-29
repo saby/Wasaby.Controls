@@ -6,6 +6,7 @@ define('Controls-demo/EditAtPlace/EditAtPlace', [
    'WS.Data/Source/Memory',
    'tmpl!Controls-demo/EditAtPlace/resources/tabTemplate',
    'tmpl!Controls-demo/EditAtPlace/resources/tabTemplate2',
+
    'css!Controls-demo/EditAtPlace/EditAtPlace'
 ], function(
    Control,

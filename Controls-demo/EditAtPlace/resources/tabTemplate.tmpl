@@ -8,26 +8,24 @@
    >
       <div>
          <div class="content_tab_margin inline_editing controls-accent-text">
-            <ws:partial
-               template="tmpl!Controls/EditAtPlace/EditingTemplate"
-               fieldName="date"
+            <Controls.EditAtPlace.EditAtPlaceTemplate
+                    bind:value="content.editObject.date"
             >
                <ws:editorTemplate>
                   <Controls.Input.Text selectOnClick="{{ false }}" />
                </ws:editorTemplate>
-            </ws:partial>
+            </Controls.EditAtPlace.EditAtPlaceTemplate>
          </div>
          <div class="content_tab_margin inline_editing controls-small-text-size controls-addition-color">
             <span>№:</span>
-            <ws:partial
-               size="s"
-               template="tmpl!Controls/EditAtPlace/EditingTemplate"
-               fieldName="number"
+            <Controls.EditAtPlace.EditAtPlaceTemplate
+                    size="s"
+                    bind:value="content.editObject.number"
             >
                <ws:editorTemplate>
                   <Controls.Input.Text selectOnClick="{{ false }}" />
                </ws:editorTemplate>
-            </ws:partial>
+            </Controls.EditAtPlace.EditAtPlaceTemplate>
          </div>
       </div>
    </Controls.EditAtPlace>

@@ -9,60 +9,56 @@
       <div class="my_editing_form">
          <div class="my_editing_form_element">
             <span class="my_editing_form_element_title">ОГРН:</span>
-            <ws:partial
-               template="tmpl!Controls/EditAtPlace/EditingTemplate"
-               fieldName="text1"
+            <Controls.EditAtPlace.EditAtPlaceTemplate
+                 bind:value="content.editObject.text1"
             >
                <ws:editorTemplate>
                   <Controls.Input.Text selectOnClick="{{ false }}" />
                </ws:editorTemplate>
-            </ws:partial>
+            </Controls.EditAtPlace.EditAtPlaceTemplate>
          </div>
          <div class="my_editing_form_element">
             <span class="my_editing_form_element_title">КПП:</span>
-            <ws:partial
-               template="tmpl!Controls/EditAtPlace/EditingTemplate"
-               fieldName="text2"
+            <Controls.EditAtPlace.EditAtPlaceTemplate
+                    bind:value="content.editObject.text2"
             >
                <ws:editorTemplate>
                   <Controls.Input.Text selectOnClick="{{ false }}" />
                </ws:editorTemplate>
-            </ws:partial>
+            </Controls.EditAtPlace.EditAtPlaceTemplate>
          </div>
          <div class="my_editing_form_element">
             <span class="my_editing_form_element_title">ИНН:</span>
-            <ws:partial
-               template="tmpl!Controls/EditAtPlace/EditingTemplate"
-               fieldName="text3"
+            <Controls.EditAtPlace.EditAtPlaceTemplate
+                    bind:value="content.editObject.text3"
             >
                <ws:editorTemplate>
                   <Controls.Input.Text selectOnClick="{{ false }}" />
                </ws:editorTemplate>
-            </ws:partial>
+            </Controls.EditAtPlace.EditAtPlaceTemplate>
          </div>
       </div>
    </Controls.EditAtPlace>
-   <h2>showToolbar style="withBackground"</h2>
-   <Controls.EditAtPlace
-      name="edit"
-      bind:editObject="_record2"
-      enabled="{{true}}"
-      showToolbar="{{true}}"
-      style="withBackground"
-      on:cancelEdit="_cancelHandler2()"
-   >
-      <div class="inline_editing" >
-            <span class="my_editing_form_element_title">Surname:</span>
-            <ws:partial
-               template="tmpl!Controls/EditAtPlace/EditingTemplate"
-               fieldName="text1"
-            >
-               <ws:editorTemplate>
-                  <Controls.Input.Text selectOnClick="{{ false }}" />
-               </ws:editorTemplate>
-            </ws:partial>
-      </div>
-   </Controls.EditAtPlace>
+  <h2>showToolbar style="withBackground"</h2>
+ <Controls.EditAtPlace
+    name="edit"
+    bind:editObject="_record2"
+    enabled="{{true}}"
+    showToolbar="{{true}}"
+    style="withBackground"
+    on:cancelEdit="_cancelHandler2()"
+ >
+    <div class="inline_editing" >
+          <span class="my_editing_form_element_title">Surname:</span>
+       <Controls.EditAtPlace.EditAtPlaceTemplate
+               bind:value="content.editObject.text1"
+       >
+             <ws:editorTemplate>
+                <Controls.Input.Text selectOnClick="{{ false }}" />
+             </ws:editorTemplate>
+       </Controls.EditAtPlace.EditAtPlaceTemplate>
+    </div>
+ </Controls.EditAtPlace>
    <h2>in tabs</h2>
       <Controls.Tabs.Buttons
               bind:selectedKey='_selectedTab'
