@@ -24,6 +24,11 @@ define('Controls/Toggle/Switch', [
     * @cfg {String} Title.
     */
 
+   /**
+    * @name Controls/Toggle/Switch#captionLeft
+    * @cfg {Boolean} Switch caption has left position.
+    */
+
    var Switch = Control.extend({
       _template: template,
 
