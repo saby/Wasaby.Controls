@@ -1,12 +1,5 @@
-define("File/LocalFileLink", ["require", "exports", "tslib", "File/ResourceAbstract"], function (require, exports, tslib_1, ResourceAbstract) {
+define("File/LocalFileLink", ["require", "exports", "tslib", "File/ResourceAbstract"], function (require, exports, tslib_1, ResourceAbstract_1) {
     "use strict";
-    /**
-     * @typedef {Object} FileInfo Информация о файле
-     * @property {String} [name] Имя
-     * @property {String} [type]  Тип
-     * @property {Boolean} [isDirectory] Является ли директорией
-     * @property {Number} [size] Размер
-     */
     /**
      * Класс - обёртка над ссылкой на локальный файл
      * @class
@@ -19,16 +12,17 @@ define("File/LocalFileLink", ["require", "exports", "tslib", "File/ResourceAbstr
         tslib_1.__extends(LocalFileLink, _super);
         /**
          * @param {String} fileLink Ссылка на файл
-         * @param {*} [meta] Дополнительные мета-данные
-         * @param {FileInfo} [fileInfo] Информация о файле
+         * @param {*} [_meta] Дополнительные мета-данные
+         * @param {FileInfo} [_info] Информация о файле
          * @constructor
          * @name File/LocalFileLink
          */
-        function LocalFileLink(fileLink, meta, fileInfo) {
+        function LocalFileLink(fileLink, _meta, _info) {
             var _this = _super.call(this) || this;
             _this.fileLink = fileLink;
-            _this._meta = meta;
-            _this._fileInfo = fileInfo || {};
+            _this._meta = _meta;
+            _this._info = _info;
+            _this._fileInfo = _this._fileInfo || {};
             if (!_this._fileInfo.name) {
                 /*
                  * Для ссылки на локальный файл, именем является часть пути до него после последнего слеша
@@ -46,21 +40,7 @@ define("File/LocalFileLink", ["require", "exports", "tslib", "File/ResourceAbstr
         LocalFileLink.prototype.getLink = function () {
             return this.fileLink;
         };
-        /**
-         * Возвращает информацию о файле, если такая имеется
-         * @return {FileInfo}
-         */
-        LocalFileLink.prototype.getFileInfo = function () {
-            return this._fileInfo || {};
-        };
-        /**
-         * Возвращает имя файла
-         * @return {String}
-         */
-        LocalFileLink.prototype.getName = function () {
-            return this._fileInfo.name || "";
-        };
         return LocalFileLink;
-    }(ResourceAbstract));
+    }(ResourceAbstract_1.ResourceAbstract));
     return LocalFileLink;
 });

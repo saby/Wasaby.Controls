@@ -19,6 +19,7 @@ define('Controls/List', [
             items: cfg.items,
             keyProperty: cfg.keyProperty,
             displayProperty: cfg.displayProperty,
+            itemsGroup: cfg.itemsGroup,
             markedKey: cfg.markedKey,
             selectedKeys: cfg.selectedKeys,
             multiSelectVisibility: cfg.multiSelectVisibility,
@@ -29,6 +30,7 @@ define('Controls/List', [
          return {
             keyProperty: cfg.keyProperty,
             itemTemplate: cfg.itemTemplate,
+            itemsGroup: cfg.itemsGroup,
             displayProperty: cfg.displayProperty,
             markedKey: cfg.markedKey
          };
@@ -49,6 +51,7 @@ define('Controls/List', [
     * @mixes Controls/interface/IReorderMovable
     * @mixes Controls/List/interface/IListControl
     * @mixes Controls/interface/IRemovable
+    * @mixes Controls/interface/IEditInPlace
     * @control
     * @author Крайнов Д.О.
     * @public

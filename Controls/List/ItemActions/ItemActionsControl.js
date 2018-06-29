@@ -3,12 +3,14 @@ define('Controls/List/ItemActions/ItemActionsControl', [
    'tmpl!Controls/List/ItemActions/ItemActionsControl',
    'Controls/Utils/Toolbar',
    'Controls/List/ItemActions/Utils/Actions',
+   'Controls/Constants',
    'css!Controls/List/ItemActions/ItemActions'
 ], function(
    Control,
    template,
    tUtil,
-   aUtil
+   aUtil,
+   ControlsConstants
 ) {
    'use strict';
 
@@ -89,7 +91,9 @@ define('Controls/List/ItemActions/ItemActionsControl', [
                var
                   itemData = options.listModel.getCurrent(),
                   item = itemData.item;
-               _private.updateItemActions(self, item, options, itemData.isEditing);
+               if (item !== ControlsConstants.view.hiddenGroup && item.get) {
+                  _private.updateItemActions(self, item, options, itemData.isEditing);
+               }
             }
          }
       },

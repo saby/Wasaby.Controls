@@ -32,13 +32,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
 
       /**
        * @typedef {object} ExportFormatterResult Тип, описывающий возвращаемые настраиваемые значения компонента
-       * @property {string} fileUuid Uuid шаблона форматирования эксель-файла
+       * @property {string} primaryUuid Исходный uuid стилевого эксель-файла
+       * @property {string} fileUuid Транзакционный uuid стилевого эксель-файла
        *
+       * @see primaryUuid
        * @see fileUuid
        */
 
       /**
-       * Имя регистрации объекта, предоставляющего методы форматирования шаблона эксель-файла, в инжекторе зависимостей
+       * Имя регистрации объекта, предоставляющего методы форматирования стилевого эксель-файла, в инжекторе зависимостей
        * @private
        * @type {string}
        */
@@ -90,7 +92,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                 */
                fieldIds: null,
                /**
-                * @cfg {string} Uuid шаблона форматирования эксель-файла
+                * @cfg {string} Исходный uuid стилевого эксель-файла (неизменного)
+                */
+               primaryUuid: null,
+               /**
+                * @cfg {string} Транзакционный uuid стилевого эксель-файла (изменяемого)
                 */
                fileUuid: null,
                /**
@@ -98,7 +104,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                 */
                consumerId: null
             },
-            // Объект, предоставляющий методы форматирования шаблона эксель-файла
+            // Объект, предоставляющий методы форматирования стилевого эксель-файла
             _exportFormatter: null,
             // Контрол меню выбора способа форматирования
             _formatterMenu: null,
@@ -106,11 +112,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             _preview: null,
             // Размер области предпросмотра
             _previewSize: null,
-            // Набор обещаний, ожидающих создания шаблона эксель-файла
-            _creation: {},
-            // Ожидаемое открытие шаблона эксель-файла
-            _opening: null,
-            // Поддерживается ли редактирование шаблона эксель-файла в отдельном приложении
+            // Поддерживается ли редактирование стилевого эксель-файла в отдельном приложении
             // TODO: Это временное решение пока метод canEditInApp форматтера не полностью фунционален. Позже заменить на прямые вызовы этого метода при каждом использовании меню выбора способв форматирования
             _isAppAllowed: null
          },
@@ -140,8 +142,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                var options = this._options;
                var fieldIds = options.fieldIds;
                if (fieldIds && fieldIds.length) {
-                  if (!options.fileUuid) {
-                     this._callFormatterMethod('create');
+                  if (!options.primaryUuid) {
+                     this._callFormatterCreate();
                   }
                   else {
                      this._updatePreview();
@@ -170,7 +172,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          },
 
          /**
-          * Открыть для редактирования пользователем (в браузере или в отдельном приложении) шаблон форматирования эксель-файла
+          * Открыть для редактирования пользователем (в браузере или в отдельном приложении) стилевой эксель-файл
           *
           * @protected
           * @param {boolean} useApp Открыть в отдельном приложении
@@ -179,63 +181,117 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             var options = this._options;
             var fieldIds = options.fieldIds;
             if (fieldIds && fieldIds.length) {
-               var method = useApp ? 'openApp' : 'open';
-               this._opening = method;
-               var result = this.sendCommand('subviewChanged', 'open');
-               if (!(result && typeof result === 'object' && result.isComplete)) {
-                  this._callFormatterMethod(method);
+               if (!options.fileUuid) {
+                  this._callFormatterMethods([{method:'clone', args:[options.primaryUuid, false]}, {method:'open', args:[useApp, true]}]);
+               }
+               else {
+                  this._callFormatterOpen(useApp);
                }
             }
          },
 
          /**
-          * Вызвать метод форматера
+          * Вызвать метод форматера "create" или "clone"
           *
           * @protected
-          * @param {string} method Имя метода
-          * @param {*} [args] Дополнитьные аргументы (опционально)
+          * @param {string} [fileUuid] Uuid стилевого эксель-файла. Если указан, то будет произведено клонирование (опционально)
+          * @param {boolean} [updateCloned] И сразу обновить колонки у только что клонированного стилевого эксель-файла (только при клонировании) (опционально)
           * return {Core/Deferred}
           */
-         _callFormatterMethod: function (method, args) {
+         _callFormatterCreate: function (fileUuid, updateCloned) {
+            var isClone = !!fileUuid;
             var options = this._options;
-            var isCreate = method === 'create';
-            var isClone = method === 'clone';
-            var consumerId = options.consumerId || '';
-            if ((isCreate || isClone) && this._creation[consumerId]) {
-               throw new Error('Already in creation');
-            }
-            var isOpen = method === 'open' || method === 'openApp';
-            var isUpdate = method === 'update';
-            var isDelete = method === 'delete';
-            if (isOpen) {
-               this._opening = null;
-            }
-            var formatterArgs = [];
-            if (isClone || isDelete) {
-               formatterArgs.push(args);
-            }
-            if (isOpen || isUpdate) {
-               formatterArgs.push(options.fileUuid);
-            }
-            if (isCreate || isOpen || isUpdate) {
-               var fieldIds = options.fieldIds;
-               formatterArgs.push(fieldIds || [], this._selectFields(options.allFields, fieldIds, function (v) { return v.title; }) || [], options.serviceParams);
-            }
+            var fieldIds = options.fieldIds;
             var formatter = this._exportFormatter;
-            var promise = formatter[isClone ? 'copy' : (isDelete ? 'remove' : method)].apply(formatter, formatterArgs).addCallbacks(
-               this._onFormatter.bind(this, method),
+            var promise = (isClone
+                  ? formatter.copy(fileUuid)
+                  : formatter.create(fieldIds || [], this._getFieldTitles(fieldIds), options.serviceParams)
+            ).addCallbacks(
+               function (result) {
+                  options.fileUuid = result;
+                  this.sendCommand('subviewChanged');
+                  if (isClone && updateCloned) {
+                     this._callFormatterUpdate();
+                  }
+                  else {
+                     this._updatePreview();
+                  }
+               }.bind(this),
                function (err) { return err; }
             );
-            if (isCreate || isClone) {
-               this._creation[consumerId] = promise.createDependent().addBoth(function (consumerId) {
-                  delete this._creation[consumerId];
-               }.bind(this, consumerId));
-            }
-            if (isCreate || isClone || isUpdate) {
-               // Запустить индикатор сразу, если это не isDelete и не isOpen (для открытия запустить позже)
-               this._waitIndicatorStart();
-            }
+            // Запустить индикатор сразу
+            this._waitIndicatorStart();
             return promise;
+         },
+
+         /**
+          * Вызвать метод форматера "update"
+          *
+          * @protected
+          * return {Core/Deferred}
+          */
+         _callFormatterUpdate: function () {
+            var options = this._options;
+            var fieldIds = options.fieldIds;
+            var promise = this._exportFormatter.update(options.fileUuid, fieldIds || [], this._getFieldTitles(fieldIds), options.serviceParams).addCallbacks(
+               this._updatePreview.bind(this, false),
+               function (err) { return err; }
+            );
+            // Запустить индикатор сразу
+            this._waitIndicatorStart();
+            return promise;
+         },
+
+         /**
+          * Вызвать метод форматера "open" или "openApp"
+          *
+          * @protected
+          * @param {boolean} useApp Открыть в отдельном приложении
+          * @param {boolean} deleteNotChanged Удалить файл если он не будет изменён
+          * return {Core/Deferred}
+          */
+         _callFormatterOpen: function (useApp, deleteNotChanged) {
+            var options = this._options;
+            var fieldIds = options.fieldIds;
+            return this._exportFormatter[useApp ? 'openApp' : 'open'](options.fileUuid || options.primaryUuid, fieldIds || [], this._getFieldTitles(fieldIds), options.serviceParams).addCallbacks(
+               function (result) {
+                  if (result) {
+                     this.sendCommand('subviewChanged', 'afterOpen');
+                     this._updatePreview();
+                  }
+                  else
+                  if (deleteNotChanged) {
+                     this._callFormatterDelete(options.fileUuid);
+                     options.fileUuid = null;
+                  }
+               }.bind(this),
+               function (err) { return err; }
+            );
+         },
+
+         /**
+          * Вызвать метод форматера "delete"
+          *
+          * @protected
+          * @param {string} fileUuid Uuid стилевого эксель-файла
+          * return {Core/Deferred}
+          */
+         _callFormatterDelete: function (fileUuid) {
+            return this._exportFormatter.remove(fileUuid).addCallbacks(
+               function (result) {},
+               function (err) { return err; }
+            );
+         },
+
+         /**
+          * Получить список отображаемых названий полей для указанного списка полей данных
+          *
+          * @protected
+          * @param {Array<string>} fieldIds Список идентификаторв полей данных
+          * return {Array<string>}
+          */
+         _getFieldTitles: function (fieldIds) {
+            return fieldIds && fieldIds.length ? this._selectFields(this._options.allFields, fieldIds, function (v) { return v.title; }) || [] : [];
          },
 
          /**
@@ -247,8 +303,18 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           */
          _callFormatterMethods: function (methods) {
             if (methods && methods.length) {
+               var methodMap = {
+                  'create': '_callFormatterCreate',
+                  'clone': '_callFormatterCreate',
+                  'update': '_callFormatterUpdate',
+                  'open': '_callFormatterOpen',
+                  'openApp': '_callFormatterOpen',
+                  'delete': '_callFormatterDelete'
+               };
                var inf = methods[0];
-               var promise = this._callFormatterMethod.apply(this, typeof inf === 'object' ? [inf.method, inf.args] : [inf]);
+               var isComplex = typeof inf === 'object';
+               var method = isComplex ? inf.method : inf;
+               var promise = this[methodMap[method]].apply(this, isComplex ? (inf.args || []) : (method === 'openApp' ? [true] : []));
                if (1 < methods.length) {
                   promise.addCallback(this._callFormatterMethods.bind(this, methods.slice(1)));
                }
@@ -284,28 +350,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                      return field && needMap ? mapper(field) : field;
                   });
                }
-            }
-         },
-
-         /**
-          * Обработчик обратного вызова после выполнения методов форматера
-          *
-          * @protected
-          * @param {string} method Имя метода
-          * @param {*} result Результат операции над шаблоном форматирования эксель-файла
-          */
-         _onFormatter: function (method, result) {
-            var isCreate = method === 'create' || method === 'clone';
-            var isOpen = method === 'open' || method === 'openApp';
-            var isDelete = method === 'delete';
-            if (isCreate) {
-               this._options.fileUuid = result;
-            }
-            if (isCreate || isOpen) {
-               this.sendCommand('subviewChanged', isOpen ? 'openEnd' : method);
-            }
-            if (!isDelete && (!isOpen || result)) {
-               this._updatePreview();
             }
          },
 
@@ -367,7 +411,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             }
             this._waitIndicatorStart();
             var options = this._options;
-            this._exportFormatter.getPreviewUrl(options.fileUuid, size.width, size.height).addCallbacks(
+            this._exportFormatter.getPreviewUrl(options.fileUuid || options.primaryUuid, size.width, size.height).addCallbacks(
                function (url) {
                   var img = this._preview[0];
                   img.onload = img.onerror = this._updatePreviewClearStop.bind(this);
@@ -380,6 +424,35 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          }, PREVIEW_DELAY),
 
          /**
+          * Завершить транзакцию
+          *
+          * @protected
+          * @param {boolean} isCommit Сохранить или откатить изменения
+          * @param {object} saving Дополнительные опции сохранения
+          * @param {boolean} saving.isClone В транзакции производилось клонирование - нельзя удалять исходный файл (только при сохранении)
+          * @return {Core/Deferred<string>}
+          */
+         _endTransaction: function (isCommit, saving) {
+            var options = this._options;
+            var fileUuid = options.fileUuid;
+            if (!isCommit) {
+               options.consumerId = null;
+            }
+            if (isCommit && saving && saving.isClone && !fileUuid) {
+               return this._callFormatterCreate(options.primaryUuid, false).addCallback(this._endTransaction.bind(this, true, saving));
+            }
+            var deleteUuid = isCommit ? (saving && saving.isClone ? null : options.primaryUuid) : fileUuid;
+            if (deleteUuid) {
+               this._callFormatterDelete(deleteUuid);
+            }
+            if (isCommit) {
+               options.primaryUuid = fileUuid;
+            }
+            options.fileUuid = null;
+            return Deferred.success(fileUuid);
+         },
+
+         /**
           * Установить указанные настраиваемые значения компонента
           *
           * @public
@@ -390,52 +463,42 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             if (!values || typeof values !== 'object') {
                throw new Error('Object required');
             }
+            if (meta) {
+               var args = meta.args;
+               switch (meta.reason) {
+                  case 'delete':
+                     this._callFormatterDelete(args[0]);
+                     return;
+                  case 'transaction':
+                     return this._endTransaction(args[0], args[1]);
+               }
+            }
             var options = this._options;
-            var changes = objectChange(options, values, {fieldIds:true, fileUuid:false, consumerId:false});
+            var changes = objectChange(options, values, {fieldIds:true, primaryUuid:false, fileUuid:false, consumerId:false});
             if (changes) {
                var fieldIds = options.fieldIds;
                var hasFields = !!(fieldIds && fieldIds.length);
-               var consumerId = options.consumerId || '';
-               var creating = this._creation[consumerId];
                var methods = [];
-               if (options.fileUuid) {
-                  if ('fieldIds' in changes && !('fileUuid' in changes) && hasFields) {
-                     methods.push('update');
-                  }
-               }
-               else {
-                  if (hasFields) {
-                     if (!creating) {
-                        var isClone = meta /*&& meta.source === 'presets'*/ && meta.reason === 'clone';
-                        methods.push(isClone ? {method:'clone', args:meta.args[0]} : 'create');
-                        if (isClone && 'fieldIds' in changes) {
-                           methods.push('update');
-                        }
+               if (hasFields) {
+                  //Если не поменялся consumerId, но поменялись поля; или если это клонирование с изменением
+                  if ((!('consumerId' in changes) && 'fieldIds' in changes) || (meta && meta.reason === 'clone' && meta.args[0] && meta.args[0].isChanged)) {
+                     if (!options.fileUuid) {
+                        var primaryUuid = options.primaryUuid;
+                        methods.push(primaryUuid ? {method:'clone', args:[primaryUuid, true]} : 'create');
                      }
                      else {
                         methods.push('update');
                      }
                   }
                }
-               if (this._opening) {
-                  methods.push(this._opening);
-               }
                if (methods.length) {
-                  if (creating) {
-                     creating.addCallback(this._callFormatterMethods.bind(this, methods));
-                  }
-                  else {
-                     this._callFormatterMethods(methods);
-                  }
+                  this._callFormatterMethods(methods);
                }
                else {
                   this._updatePreview();
                }
                this.setEnabled(hasFields);
                this.setVisible(hasFields);
-            }
-            if (meta /*&& meta.source === 'presets'*/ && meta.reason === 'delete') {
-               this._callFormatterMethod('delete', meta.args[0]);
             }
          },
 

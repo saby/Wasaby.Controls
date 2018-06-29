@@ -27,6 +27,7 @@
 }
 
 .controls-FastFilter__block {
+   white-space: nowrap;
    display: flex;
    align-items: baseline;
    overflow: hidden;
@@ -34,16 +35,4 @@
 
 .controls-FastFilter__block:hover .controls-FastFilter__iconArrow {
    fill: @color_FastFilter-iconArrow_hover;
-}
-
-.controls-FastFilter__text {
-   white-space: nowrap;
-   overflow: hidden;
-   text-overflow: ellipsis;
-   color: @color_Link-text;
-   &:hover {
-      cursor: pointer;
-      text-decoration: underline;
-      color: @color_Link-text_hovered;
-   }
 }

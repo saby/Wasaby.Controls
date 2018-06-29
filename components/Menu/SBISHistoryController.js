@@ -444,7 +444,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
      * </ul>
      *
      * @class SBIS3.CONTROLS/Menu/SBISHistoryController
-     * @author Романов В.С.
+     * @author Герасимов А.М.
      * @extends Core/Abstract
      * @public
      * @category Buttons

@@ -39,35 +39,7 @@
    position: absolute;
    top: 8px; //todo themes
    right: 0;
-   cursor: pointer;
    z-index: 1;
-   display: flex;
-   align-items: center;
-   justify-content: center;
-   &:before {
-      content: @content_CloseButton_icon;
-   }
-}
-
-.controls-DialogTemplate__close_button_standart {
-   border-style: solid;
-   width: @width_CloseButton - extract(@border-width_CloseButton, 2) - extract(@border-width_CloseButton, 4);
-   height: @height_CloseButton - extract(@border-width_CloseButton, 1) - extract(@border-width_CloseButton, 3);
-   font-family: @default-icon-font;
-   line-height: @height_CloseButton;
-   font-size: @font-size_CloseButton;
-   box-shadow: @box-shadow_CloseButton;
-   border-width: @border-width_CloseButton;
-   border-color: @border-color_CloseButton;
-   border-radius: @border-radius_CloseButton;
-   background-color: @background-color_CloseButton;
-   &:before {
-      color: @color_CloseButton-icon;
-      text-shadow: @text-shadow_Button;
-   }
-   &:active {
-      box-shadow: none;
-   }
 }
 
 .controls-DialogTemplate__caption {

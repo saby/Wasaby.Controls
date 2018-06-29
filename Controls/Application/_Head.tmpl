@@ -6,8 +6,10 @@
          wsRoot: '{{_options.wsRoot}}',
          resourceRoot: '{{_options.resourceRoot}}',
          appRoot: '{{_options.appRoot}}',
+         defaultServiceUrl: '{{_options.servicesPath}}',
          compatible: {{ _options.compat }}
       };
+      window.buildnumber = '{{ _options.buildnumber }}';
    </script>
    <style>
       .ws-hidden {
@@ -20,7 +22,7 @@
    <link rel="stylesheet" href="{{_options.wsRoot}}css/core.css" type="text/css" key="core-css"/>
    <ws:if data="{{ cssLinks }}">
       <ws:for data="index, value in cssLinks">
-         <link rel="stylesheet" class="css-bundles" href="{{ _options.appRoot?_options.appRoot+value:value }}" type="text/css" key="{{ 'css_' + index }}" data-vdomignore="true"/>
+         <link rel="stylesheet" class="css-bundles" href="{{ _options.appRoot?(_options.appRoot+value).replace('//', '/'):value }}" type="text/css" key="{{ 'css_' + index }}" data-vdomignore="true"/>
       </ws:for>
    </ws:if>
    <title key="title">{{ _options.title }}</title>

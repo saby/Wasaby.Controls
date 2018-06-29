@@ -1,6 +1,6 @@
 define(
    [
-      'Controls/Container/Dropdown',
+      'Controls/Dropdown/Container',
       'WS.Data/Source/Memory',
       'WS.Data/Collection/RecordSet'
    ],
@@ -117,7 +117,7 @@ define(
                }
             };
             Dropdown._private.selectItem.call(dropdownContainer, dropdownContainer._items.at(5));
-            assert.deepEqual(selectedItem[0], dropdownContainer._items.at(5));
+            assert.deepEqual(selectedItem, dropdownContainer._items.at(5));
          });
 
          it('before update source', () => {

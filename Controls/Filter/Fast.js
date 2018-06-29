@@ -164,7 +164,7 @@ define('Controls/Filter/Fast',
                   footerTemplate: getPropValue(item, 'footerTemplate'),
                   selectedKeys: getPropValue(this._items.at(index), 'value')
                },
-               target: event.target.parentElement
+               target: this._container.children[index]
             };
 
             //Сохраняем индекс последнего открытого списка. Чтобы получить список в selectItem

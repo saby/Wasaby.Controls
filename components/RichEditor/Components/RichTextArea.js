@@ -3197,6 +3197,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
             _updateHeight: function () {
                if (this.isVisible()) {
+                  var editor = this._tinyEditor;
                   var totalHeight = this._container.height();
                   var content, $content;
                   if (this._options.editorConfig.inline) {
@@ -3204,7 +3205,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      content = $content[0];
                   }
                   else {
-                     content = this._tinyEditor.iframeElement;
+                     content = editor.iframeElement;
                   }
                   if (BROWSER.isIE) {
                      $content = $content || $(content);
@@ -3222,14 +3223,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         var diff = contentHeight - content.clientHeight;
                         if (isChanged) {
                            var parent = content.parentNode;
-                           if (this._tinyEditor) {
+                           if (editor) {
                               if (parent.clientHeight < contentHeight) {
                                  // Также, если прокрутка уже задействована и текущий рэнж находится в самом низу области редактирования. Определяем это по
                                  // расстоянию от нижнего края рэнжа до нижнего края области минус увеличение высоты (diff) и минус нижний отступ области
                                  // редактирования - оно должно быть "небольшим", то есть меньше некоторого порогового значения (2)
                                  var rect0 = content.getBoundingClientRect();
-                                 var rect1 = this._tinyEditor.selection.getBoundingClientRect();
-                                 if (rect0.bottom - rect1.bottom - diff - parseInt($content.css('padding-bottom')) < 2) {
+                                 var rect1 = editor.selection.getBoundingClientRect();
+                                 if (rect0 && rect1 && rect0.bottom - rect1.bottom - diff - parseInt($content.css('padding-bottom')) < 2) {
                                     var scrollTop = parent.scrollHeight - parent.offsetHeight;
                                     if (parent.scrollTop < scrollTop) {
                                        // И если при всём этом область редактирования недопрокручена до самого конца - подскролить её до конца

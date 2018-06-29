@@ -19,6 +19,7 @@ define('Controls/Button', [
     * @control
     * @public
     * @category Button
+    * @demo Controls-demo/Buttons/demoButtons
     */
 
    /**

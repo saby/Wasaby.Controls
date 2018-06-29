@@ -22,6 +22,10 @@ define('Controls/List/resources/utils/TreeItemsUtil', [
                },
                root, rootAsNode;
 
+            if (cfg.itemsGroup && cfg.itemsGroup.method) {
+               displayProperties.group = cfg.itemsGroup.method;
+            }
+
             if (typeof cfg.root !== 'undefined') {
                root = cfg.root;
             } else {

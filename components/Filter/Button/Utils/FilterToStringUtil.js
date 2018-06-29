@@ -5,14 +5,14 @@ define('SBIS3.CONTROLS/Filter/Button/Utils/FilterToStringUtil',
     [
        'SBIS3.CONTROLS/Utils/TemplateUtil',
        'Core/helpers/Object/isEqual',
-       'Core/helpers/date-helpers',
+       'Core/helpers/Date/compareDates',
        'Core/helpers/String/escapeTagsFromStr'
-    ], function (TemplateUtil, isEqualObject, dateHelpers, escapeTagsFromStr) {
+    ], function (TemplateUtil, isEqualObject, compareDates, escapeTagsFromStr) {
 
        function isEqualValues(val1, val2) {
           /* Даты нельзя сравнивать по обычному равенству (===) */
           if((val1 && val2) && (val1 instanceof Date || val2 instanceof Date)) {
-             return dateHelpers.compareDates(new Date(val1), '=', new Date(val2));
+             return compareDates(new Date(val1), '=', new Date(val2));
           }
           return isEqualObject(val1, val2);
        }

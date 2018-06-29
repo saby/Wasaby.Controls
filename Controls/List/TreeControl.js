@@ -10,13 +10,17 @@ define('Controls/List/TreeControl', [
    var _private = {
       toggleExpanded: function(self, dispItem) {
          var
-            filter = cClone(self._filter || {}),
+            filter = cClone(self._options.filter),
             listViewModel = self._children.baseControl.getViewModel(),
             nodeKey = ItemsUtil.getPropertyValue(dispItem.getContents(), self._options.viewConfig.keyProperty);
          if (!self._loadedNodes[nodeKey]) {
             filter[self._options.viewConfig.parentProperty] = nodeKey;
             self._children.baseControl.getSourceController().load(filter, self._sorting).addCallback(function(list) {
-               listViewModel.appendItems(list);
+               if (self._options.uniqueKeys) {
+                  listViewModel.mergeItems(list);
+               } else {
+                  listViewModel.appendItems(list);
+               }
                self._loadedNodes[nodeKey] = true;
                listViewModel.toggleExpanded(dispItem);
             });
@@ -68,6 +72,13 @@ define('Controls/List/TreeControl', [
          this._children.baseControl.addItem(options);
       }
    });
+
+   TreeControl.getDefaultOptions = function() {
+      return {
+         uniqueKeys: true,
+         filter: {}
+      };
+   };
 
    return TreeControl;
 });

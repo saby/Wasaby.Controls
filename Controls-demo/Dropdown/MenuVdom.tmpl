@@ -1,5 +1,5 @@
 <div class="controls-VDomMenu" style="padding: 50px;">
-   <Controls.Input.Text name='fakeText' bind:value="_stateText"/>
+   <Controls.Input.Text name='fakeText' bind:value="_stateText" attr:test_name="Information"/>
    <h2>Dropdown</h2>
    <div style="padding: 5px;">Простой
       <Controls.Input.Dropdown
@@ -77,127 +77,148 @@
       />
    </div>
    <h2>MenuButton</h2>
-   <div style="padding: 5px;">
-      <Controls.Button.MenuButton
-         on:onMenuItemActivate="_clickItemsChangedHandler()"
-         attr:test_name="plain_menu"
-         name="myMenuButton1"
-         keyProperty="id"
-         style="buttonDefault"
-         icon="icon-24 icon-Author"
-         caption="обычное меню"
-         parentProperty="parent"
-         nodeProperty="@parent"
-         source="{{_getHierarchyMenuItems()}}"
-      />
-   </div>
-   <div style="padding: 5px;">
-      <Controls.Button.MenuButton
-         name="myMenuButton12"
-         keyProperty="id"
-         style="buttonDefault"
-         icon="icon-24 icon-Author"
-         caption="кастомный контент"
-         contentTemplate="tmpl!Controls-demo/Dropdown/resources/contentTemplate"
-         parentProperty="parent"
-         nodeProperty="@parent"
-         source="{{_getHierarchyMenuItems()}}"
-      />
-   </div>
-   <div style="padding: 5px;">
-      <Controls.Button.MenuButton
-         name="myMenuButton2"
-         keyProperty="id"
-         style="linkMain"
-         icon="icon-medium icon-Author"
-         caption="кнопка-ссылка с меню"
-         parentProperty="parent"
-         nodeProperty="@parent"
-         source="{{_getHierarchyMenuItems()}}"
-      />
-   </div>
-   <div style="padding: 5px;">
-      <Controls.Button.MenuButton
-         name="myMenuButton3"
-         keyProperty="id"
-         style="linkMain"
-         icon="icon-small icon-Author"
-         caption="меню с малой иконкой"
-         parentProperty="parent"
-         nodeProperty="@parent"
-         source="{{_getHierarchyItems()}}"
-      />
-   </div>
-   <div style="padding: 5px;">Кнопка-иконка small
-      <Controls.Button.MenuButton
-         name="myMenuButton4"
-         keyProperty="id"
-         style="linkMain"
-         icon="icon-small icon-Author"
-         parentProperty="parent"
-         nodeProperty="@parent"
-         source="{{_getHierarchyItems()}}"
-      />
-   </div>
-   <div style="padding: 5px;">Кнопка-иконка medium
-      <Controls.Button.MenuButton
-         name="myMenuButton5"
-         keyProperty="id"
-         style="linkMain"
-         icon="icon-medium icon-Author"
-         parentProperty="parent"
-         nodeProperty="@parent"
-         source="{{_getHierarchyItems()}}"
-      />
-   </div>
-   <div style="padding: 5px;">
-      <Controls.Button.MenuButton
-         name="myMenuButton6"
-         keyProperty="id"
-         style="buttonDefault"
-         icon="icon-medium icon-Author"
-         caption="с переворотом"
-         parentProperty="parent"
-         nodeProperty="@parent"
-         class="menu-horizontal-revert"
-         source="{{_getHierarchyMenuItems()}}"
-      />
-   </div>
-   <div style="padding: 5px;">Дублирование малой иконки
-      <Controls.Button.MenuButton
-         name="myMenuButton8"
-         attr:test_name="mirror_small_menu"
-         keyProperty="id"
-         style="linkMain"
-         icon="icon-small icon-Author"
-         parentProperty="parent"
-         nodeProperty="@parent"
-         source="{{_getHierarchyItems()}}">
-         <ws:headConfig menuStyle="duplicateHead" blabla="123"/>
-      </Controls.Button.MenuButton>
-   </div>
-   <div style="padding: 5px;">Дублирование большой иконки
-      <Controls.Button.MenuButton
-         name="myMenuButton9"
-         keyProperty="id"
-         style="linkMain"
-         icon="icon-medium icon-Author"
-         parentProperty="parent"
-         nodeProperty="@parent"
-         source="{{_getHierarchyItems()}}">
-         <ws:headConfig menuStyle="duplicateHead" />
-      </Controls.Button.MenuButton>
-   </div>
-   <div style="padding: 5px;">Меню с крестом
-      <Controls.Button.MenuButton
-         name="myMenuButton10"
-         attr:test_name="cross_menu"
-         keyProperty="id"
-         style="linkMain"
-         icon="icon-medium icon-Author"
-         menuStyle="cross"
-         source="{{_getDefaultMemory()}}">
-         <ws:headConfig menuStyle="cross"/>
-      </Controls.Button.MenuButton>
-   </div>
+   <div test_name="capture_menu">
+      <div style="padding: 5px;">Меню с дополнительными данными
+         <Controls.Button.MenuButton
+            name="myMenuButton11"
+            attr:test_name="dop_menu"
+            keyProperty="id"
+            additionalProperty="additional"
+            style="linkMain"
+            icon="icon-medium icon-Author"
+            menuStyle="cross"
+            source="{{_getAdditionalData()}}">
+            <ws:headConfig menuStyle="cross"/>
+         </Controls.Button.MenuButton>
+      </div>
+	   <div style="padding: 5px;">
+		  <Controls.Button.MenuButton
+			 on:onMenuItemActivate="_clickItemsChangedHandler()"
+			 attr:test_name="plain_menu"
+			 name="myMenuButton1"
+			 keyProperty="id"
+			 style="buttonDefault"
+			 icon="icon-24 icon-Author"
+			 caption="обычное меню"
+			 parentProperty="parent"
+			 nodeProperty="@parent"
+			 source="{{_getHierarchyMenuItems()}}"
+		  />
+	   </div>
+	   <div style="padding: 5px;">
+		  <Controls.Button.MenuButton
+			 name="myMenuButton12"
+			 attr:test_name="custom_menu"
+			 keyProperty="id"
+			 style="buttonDefault"
+			 icon="icon-24 icon-Author"
+			 caption="кастомный контент"
+			 contentTemplate="tmpl!Controls-demo/Dropdown/resources/contentTemplate"
+			 parentProperty="parent"
+			 nodeProperty="@parent"
+			 source="{{_getHierarchyMenuItems()}}"
+		  />
+	   </div>
+	   <div style="padding: 5px;">
+		  <Controls.Button.MenuButton
+			 name="myMenuButton2"
+			 attr:test_name="link_menu"
+			 keyProperty="id"
+			 style="linkMain"
+			 icon="icon-medium icon-Author"
+			 caption="кнопка-ссылка с меню"
+			 parentProperty="parent"
+			 nodeProperty="@parent"
+			 source="{{_getHierarchyMenuItems()}}"
+		  />
+	   </div>
+	   <div style="padding: 5px;">
+		  <Controls.Button.MenuButton
+			 name="myMenuButton3"
+			 attr:test_name="link_small_menu"
+			 keyProperty="id"
+			 style="linkMain"
+			 icon="icon-small icon-Author"
+			 caption="меню с малой иконкой"
+			 parentProperty="parent"
+			 nodeProperty="@parent"
+			 source="{{_getHierarchyItems()}}"
+		  />
+	   </div>
+	   <div style="padding: 5px;">Кнопка-иконка small
+		  <Controls.Button.MenuButton
+			 name="myMenuButton4"
+			 attr:test_name="icon_small_menu"
+			 keyProperty="id"
+			 style="linkMain"
+			 icon="icon-small icon-Author"
+			 parentProperty="parent"
+			 nodeProperty="@parent"
+			 source="{{_getHierarchyItems()}}"
+		  />
+	   </div>
+	   <div style="padding: 5px;">Кнопка-иконка medium
+		  <Controls.Button.MenuButton
+			 name="myMenuButton5"
+			 attr:test_name="icon_medium_menu"
+			 keyProperty="id"
+			 style="linkMain"
+			 icon="icon-medium icon-Author"
+			 parentProperty="parent"
+			 nodeProperty="@parent"
+			 source="{{_getHierarchyItems()}}"
+		  />
+	   </div>
+	   <div style="padding: 5px;">
+		  <Controls.Button.MenuButton
+			 name="myMenuButton6"
+			 keyProperty="id"
+			 style="buttonDefault"
+			 icon="icon-medium icon-Author"
+			 caption="с переворотом"
+			 parentProperty="parent"
+			 nodeProperty="@parent"
+			 class="menu-horizontal-revert"
+			 source="{{_getHierarchyMenuItems()}}"
+		  />
+	   </div>
+	   <div style="padding: 5px;">Дублирование малой иконки
+		  <Controls.Button.MenuButton
+			 name="myMenuButton8"
+			 attr:test_name="mirror_small_menu"
+			 keyProperty="id"
+			 style="linkMain"
+			 icon="icon-small icon-Author"
+			 parentProperty="parent"
+			 nodeProperty="@parent"
+			 source="{{_getHierarchyItems()}}">
+			 <ws:headConfig menuStyle="duplicateHead" blabla="123"/>
+		  </Controls.Button.MenuButton>
+	   </div>
+	   <div style="padding: 5px;">Дублирование большой иконки
+		  <Controls.Button.MenuButton
+			 name="myMenuButton9"
+			 attr:test_name="dupl_big_icon_menu"
+			 keyProperty="id"
+			 style="linkMain"
+			 icon="icon-medium icon-Author"
+			 parentProperty="parent"
+			 nodeProperty="@parent"
+			 source="{{_getHierarchyItems()}}">
+			 <ws:headConfig menuStyle="duplicateHead" />
+		  </Controls.Button.MenuButton>
+	   </div>
+	   <div style="padding: 5px;">Меню с крестом
+		  <Controls.Button.MenuButton
+			 name="myMenuButton10"
+			 attr:test_name="cross_menu"
+			 keyProperty="id"
+			 style="linkMain"
+			 icon="icon-medium icon-Author"
+			 menuStyle="cross"
+			 source="{{_getDefaultMemory()}}">
+			 <ws:headConfig menuStyle="cross"/>
+		  </Controls.Button.MenuButton>
+	   </div>
+  </div>
 </div>

@@ -57,7 +57,7 @@ define(
             menu._notify = (e) => {
                assert.equal(e, 'onMenuItemActivate');
             };
-            menu._onResult('itemClick', [{
+            menu._onItemClickHandler('itemClick', [{
                id: '1',
                title: 'Запись 1'
             }]);

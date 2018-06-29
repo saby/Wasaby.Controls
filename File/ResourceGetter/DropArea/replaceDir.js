@@ -1,85 +1,91 @@
-define("File/ResourceGetter/DropArea/replaceDir", ["require", "exports", "Core/ParallelDeferred", "Core/Deferred", "File/Error/UnknownType", "File/Error/UploadFolder"], function (require, exports, ParallelDeferred, Deferred, UnknownTypeError, UploadFolderError) {
+define("File/ResourceGetter/DropArea/replaceDir", ["require", "exports", "Core/ParallelDeferred", "Core/Deferred", "File/Error/UnknownType", "File/Error/UploadFolder", "File/LocalFile", "File/Directory"], function (require, exports, ParallelDeferred, Deferred, UnknownTypeError, UploadFolderError, LocalFile, Directory) {
     "use strict";
-    /**
-     * Развёртка двумерного массива в одномерный
-     * @param {Array<T | Array<T>>} array
-     * @return {Array<T>}
-     */
-    var toPlainArray = function (array) {
-        return Array.prototype.concat.apply([], array);
-    };
     var getParallelDeferred = function (steps) {
         var length = steps.length;
         return new ParallelDeferred({
             steps: steps,
-            stopOnFirstError: false
+            stopOnFirstError: false,
+            /*
+             * Очередь чтения
+             * чтобы не создавать сразу десятки/сотки обращений в файловой системе при чтении папки
+             */
+            maxRunningCount: 5
         }).done().getResult().addCallback(function (results) {
             results.length = length;
             return Array.prototype.slice.call(results);
         });
     };
-    /// region File Entry
     var readEntries;
     /**
-     * Читает и возвращает файл из Entry, добавляя ему относиттельный путь
-     * @param {Entry} entry
-     * @param {String} path Путь до файла
-     * @return {Core/Deferred.<FileWithDir>}
+     * Читает файл из Entry
+     * @return {Core/Deferred}
      */
-    var getFile = function (entry, path) {
+    var getFile = function (_a) {
+        var results = _a.results, entry = _a.entry, root = _a.root;
         var deferred = new Deferred();
         entry.file(function (file) {
-            file.filepath = path + file.name; // save full path
-            deferred.callback(file);
+            var localFile = new LocalFile(file);
+            if (root) {
+                root.push(localFile);
+            }
+            else {
+                results.push(localFile);
+            }
+            deferred.callback();
         });
         return deferred;
     };
     /**
      * Читает содержимое директории Entry и запускает рекурсивный обход по ним
-     * @param {Entry} entry
-     * @param {String} path Путь до файла
-     * @return {Core/Deferred.<Array.<File | Error>>}
      */
-    var readDirectory = function (entry, path) {
+    var readDirectory = function (_a) {
+        var results = _a.results, entry = _a.entry, root = _a.root;
         var deferred = new Deferred();
         var dirReader = entry.createReader();
         dirReader.readEntries(function (entries) {
-            deferred.dependOn(readEntries(entries, path));
+            deferred.dependOn(readEntries({ results: results, entries: entries, root: root }));
         });
         return deferred;
     };
     /**
      * Читает Entry
-     * @param {Entry} entry
-     * @param {string} path Путь до файла
-     * @return {Core/Deferred.<File | Error>}
      */
-    var readEntry = function (entry, path) {
+    var readEntry = function (_a) {
+        var results = _a.results, entry = _a.entry, root = _a.root;
         if (!entry) {
             return Deferred.fail(new UnknownTypeError({
-                fileName: path + ""
+                fileName: root ? root.getName() : ''
             }));
         }
         if (entry.isFile) {
-            return getFile(entry, path);
+            return getFile({ results: results, entry: entry, root: root });
         }
         if (entry.isDirectory) {
-            return readDirectory(entry, path + entry.name + "/");
+            var folder = new Directory({
+                name: entry.name
+            });
+            if (root) {
+                root.push(folder);
+            }
+            else {
+                results.push(folder);
+            }
+            return readDirectory({
+                entry: entry,
+                root: folder,
+                results: results
+            });
         }
     };
     /**
      * Обходит содержимое набора из Entry
-     * @param {Array.<Entry>} entries
-     * @param {string} path Путь до файла
      * @return {Core/Deferred.<Array.<File | Error>>}
      */
-    readEntries = function (entries, path) {
+    readEntries = function (_a) {
+        var results = _a.results, entries = _a.entries, root = _a.root;
         return getParallelDeferred(entries.map(function (entry) {
-            return readEntry(entry, path);
-        })).addCallback(function (results) {
-            // избавляемся от двумерности
-            return toPlainArray(results);
-        });
+            return readEntry({ results: results, entry: entry, root: root });
+        }));
     };
     /**
      * Преобразует данные из объекта DataTransferItemList в массив WebKitEntry и запускает рекурсивный обход по ним
@@ -87,6 +93,7 @@ define("File/ResourceGetter/DropArea/replaceDir", ["require", "exports", "Core/P
      * @return {Deferred.<Array.<File | Error>>}
      */
     var getFromEntries = function (items) {
+        var results = [];
         /*
          * При перемещении файла в DataTransfer.items могут оказаться "лишние" элементы
          * если например переносить .url файл
@@ -98,7 +105,9 @@ define("File/ResourceGetter/DropArea/replaceDir", ["require", "exports", "Core/P
         }).map(function (item) {
             return item.webkitGetAsEntry();
         });
-        return readEntries(entries, "");
+        return readEntries({ results: results, entries: entries }).addCallback(function () {
+            return results;
+        });
     };
     /// endregion File Entry
     /// region FileReader
@@ -130,13 +139,13 @@ define("File/ResourceGetter/DropArea/replaceDir", ["require", "exports", "Core/P
      * остальные непонятные файлы без типов отдадим на загрузку
      *
      * @param {FileList} files
-     * @return {Core/Deferred.<FileList | Array.<File | Error>>}
+     * @return {Core/Deferred.<Array.<File/LocalFile | Error>>}
      */
     var getFromFileReader = function (files) {
         var steps = Array.prototype.map.call(files, function (file) {
             var deferred = new Deferred();
             deferred.addCallbacks(function () {
-                return file;
+                return new LocalFile(file);
             }, function () {
                 return new UploadFolderError({
                     fileName: file.name

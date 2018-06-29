@@ -39,7 +39,7 @@ define('Controls/List/BaseControl', [
             //Need to create new Deffered, returned success result
             //load() method may be fired with errback
             var resDeferred = new Deferred();
-            self._sourceController.load(self._filter, self._sorting).addCallback(function(list) {
+            self._sourceController.load(self._options.filter, self._sorting).addCallback(function(list) {
 
                if (userCallback && userCallback instanceof Function) {
                   userCallback(list);
@@ -70,7 +70,7 @@ define('Controls/List/BaseControl', [
       loadToDirection: function(self, direction, userCallback, userErrback) {
          _private.showIndicator(self, direction);
          if (self._sourceController) {
-            return self._sourceController.load(self._filter, self._sorting, direction).addCallback(function(addedItems) {
+            return self._sourceController.load(self._options.filter, self._sorting, direction).addCallback(function(addedItems) {
 
                if (userCallback && userCallback instanceof Function) {
                   userCallback(addedItems, direction);
@@ -290,7 +290,7 @@ define('Controls/List/BaseControl', [
          if (context && self._isTouch) {
             return false;
          }
-         if (showActions) {
+         if (showActions && showActions.length) {
             var
                rs = new RecordSet({rawData: showActions});
             childEvent.nativeEvent.preventDefault();
@@ -318,6 +318,7 @@ define('Controls/List/BaseControl', [
             self._children.itemActionsOpener.close();
          }
          self._listViewModel.setActiveItem(null);
+         self._children.swipeControl.closeSwipe();
          self._menuIsShown = false;
          self._forceUpdate();
       },
@@ -339,6 +340,7 @@ define('Controls/List/BaseControl', [
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/List/interface/IBaseControl
     * @mixes Controls/interface/IRemovable
+    * @mixes Controls/interface/IEditInPlace
     * @control
     * @public
     * @category List
@@ -356,7 +358,6 @@ define('Controls/List/BaseControl', [
       _loadingIndicatorState: null,
 
       //TODO пока спорные параметры
-      _filter: undefined,
       _sorting: undefined,
 
       _itemTemplate: null,
@@ -382,7 +383,6 @@ define('Controls/List/BaseControl', [
          /* Load more data after reaching end or start of the list.
           TODO могут задать items как рекордсет, надо сразу обработать тогда навигацию и пэйджинг
           */
-         this._filter = newOptions.filter;
 
          if (newOptions.viewModelConfig && newOptions.viewModelConstructor) {
             this._listViewModel = new newOptions.viewModelConstructor(newOptions.viewModelConfig);
@@ -429,7 +429,7 @@ define('Controls/List/BaseControl', [
          //TODO могут задать items как рекордсет, надо сразу обработать тогда навигацию и пэйджинг
 
          if (filterChanged) {
-            this._filter = newOptions.filter;
+            this._options.filter = newOptions.filter;
          }
 
          if (newOptions.viewModelConfig && (newOptions.viewModelConfig !== this._options.viewModelConfig)) {
@@ -550,6 +550,13 @@ define('Controls/List/BaseControl', [
 
       reload: function() {
          return _private.reload(this, this._options.dataLoadCallback, this._options.dataLoadErrback);
+      },
+
+      _onGroupClick: function(e, item, baseEvent) {
+         // if clicked on group expander element
+         if (baseEvent.target.className.indexOf('controls-ListView__groupExpander') !== -1) {
+            this._listViewModel.toggleGroup(item);
+         }
       },
 
       _onItemClick: function(e, item) {
@@ -709,5 +716,10 @@ define('Controls/List/BaseControl', [
     }
     };*/
    BaseControl._private = _private;
+   BaseControl.getDefaultOptions = function() {
+      return {
+         uniqueKeys: true
+      };
+   };
    return BaseControl;
 });

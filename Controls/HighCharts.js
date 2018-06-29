@@ -12,6 +12,7 @@ define('Controls/HighCharts', [
     * @mixes Controls/interface/IHighCharts
     * @control
     * @authors Volotskoy V.D., Sukhoruchkin A.S.
+    * @demo Controls-demo/HighCharts/HighCharts
     */
 
    /**

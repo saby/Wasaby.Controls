@@ -34,7 +34,7 @@ define('Controls/List/Swipe/SwipeControl', [
       SUBTYPE_COUNT = 4,
       TYPES_WITH_TITLE = [3, 4, 7, 8, 11, 12];
    var _private = {
-      
+
       getNumberInterval: function(number,  limits) {
          for (var i = 0; i <  limits.length; i++) {
             if (number < limits[i]) {
@@ -103,7 +103,7 @@ define('Controls/List/Swipe/SwipeControl', [
       },
 
       initSwipe: function(self, itemData, childEvent) {
-         var actionsHeight = childEvent.currentTarget.clientHeight;
+         var actionsHeight = childEvent.currentTarget.clientHeight || (childEvent.currentTarget.children[0] && childEvent.currentTarget.children[0].clientHeight);
          self._swipeConfig = {};
          self._options.listModel.setSwipeItem(itemData);
          self._options.listModel.setActiveItem(itemData);
@@ -302,8 +302,11 @@ define('Controls/List/Swipe/SwipeControl', [
 
       _onActionClick: function(event, action, itemData) {
          aUtil.actionClick(this, event, action, itemData, true);
-      }
+      },
 
+      closeSwipe: function() {
+         _private.closeSwipe(this);
+      }
    });
 
 

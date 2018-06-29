@@ -4,7 +4,7 @@ import ResourceGetterBase = require("File/ResourceGetter/Base");
 import Deferred = require("Core/Deferred");
 import LocalFile = require("File/LocalFile");
 import ExtensionsHelper = require("File/utils/ExtensionsHelper");
-import getFilePreparer = require("File/utils/filePrepareGetter");
+import filter = require("File/utils/filter");
 
 const SEC = 1000;
 const MIN = 60 * SEC;
@@ -179,10 +179,12 @@ class FileSystem extends ResourceGetterBase {
         });
         let def: Deferred<Array<LocalFile | Error>> = new Deferred().
             // Фильтруем и преобразуем выбранные файлы в массив из ошибок или LocalFile
-            addCallback(getFilePreparer({
-                extensions: this._extensions,
-                maxSize: this._options.maxSize
-            })).
+            addCallback((files: FileList) => {
+                return filter(files, {
+                    extensions: this._extensions,
+                    maxSize: this._options.maxSize
+                });
+        }).
             // убираем отработанные input'ы
             addBoth((result) => {
                 input.remove && input.remove();

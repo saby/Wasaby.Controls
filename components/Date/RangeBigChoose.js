@@ -11,7 +11,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
    'SBIS3.CONTROLS/Utils/ControlsValidators',
    "SBIS3.CONTROLS/Utils/DateUtil",
    'SBIS3.CONTROLS/Utils/DateControls',
-   "Core/helpers/event-helpers",
+   'Core/dom/wheel',
    'Core/helpers/Object/isEmpty',
    'SBIS3.CONTROLS/Date/RangeBigChoose/resources/Utils',
    "SBIS3.CONTROLS/Button",
@@ -42,7 +42,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
    ControlsValidators,
    DateUtil,
    DateControlsUtil,
-   eHelpers,
+   wheel,
    isEmpty,
    rangeBigChooseUtils
 ) {
@@ -284,8 +284,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
             this.getContainer().removeClass(css_classes.selectionProcessing);
          }.bind(this));
 
-         eHelpers.wheel(container.find('.controls-DateRangeBigChoose__months-month-picker'), this._onMonthPickerWheel.bind(this));
-         eHelpers.wheel(container.find('.controls-DateRangeBigChoose__dates-dates'), this._onDatesPickerWheel.bind(this));
+         wheel(container.find('.controls-DateRangeBigChoose__months-month-picker'), this._onMonthPickerWheel.bind(this));
+         wheel(container.find('.controls-DateRangeBigChoose__dates-dates'), this._onDatesPickerWheel.bind(this));
          // if (constants.browser.isMobileIOS) {
          //    container.find('.controls-DateRangeBigChoose__months-month-picker').on('swipeVertical', this._onMonthPickerSwipe.bind(this));
          //    container.find('.controls-DateRangeBigChoose__dates-dates').on('swipeVertical', this._onDatesPickerSwipe.bind(this));
@@ -406,10 +406,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
       _dateOnDisplayedRangeChanged: function (event, start, end) {
          if (this._dateRangePicker.isSelectionProcessing()) {
             if (this.getStartValue() > start) {
-               this._endDatePickerResetActive();
+               this._endDatePickerResetActive(end);
                this._datePickerSetActive(this._startDatePicker, start);
             } else {
-               this._startDatePickerResetActive();
+               this._startDatePickerResetActive(start);
                this._datePickerSetActive(this._endDatePicker, end);
             }
             this.getChildControlByName('DateRangeHeader').setRange(start, end);
@@ -960,12 +960,12 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          }
          picker.setActive(true);
       },
-      _startDatePickerResetActive: function () {
-         this._startDatePicker.setDate(this.getStartValue(), true);
+      _startDatePickerResetActive: function (date) {
+         this._startDatePicker.setDate(date || this.getStartValue(), true);
          this.getChildControlByName('DateRangeHeader').setRange(this.getStartValue(), this.getEndValue());
       },
-      _endDatePickerResetActive: function () {
-         this._endDatePicker.setDate(this.getEndValue(), true);
+      _endDatePickerResetActive: function (date) {
+         this._endDatePicker.setDate(date || this.getEndValue(), true);
          this.getChildControlByName('DateRangeHeader').setRange(this.getStartValue(), this.getEndValue());
       },
       _datePickersResetActive: function () {

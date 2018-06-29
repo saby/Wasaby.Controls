@@ -445,7 +445,6 @@ define('SBIS3.CONTROLS/ListView',
             _virtualScrollResetStickyHead: false,
             _setScrollPagerPositionThrottled: null,
             _updateScrollIndicatorTopThrottled: null,
-            _updateScrollIndicatorDownThrottled: null,
             _onKeyUpEnterThrottled: null,
             _removedItemsCount: false,
             _loadQueue: {},
@@ -1014,7 +1013,6 @@ define('SBIS3.CONTROLS/ListView',
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onPageChange', 'onBeginDelete', 'onEndDelete', 'onBeginMove', 'onEndMove');
             this._setScrollPagerPositionThrottled = throttle.call(this._setScrollPagerPosition, 100, true).bind(this);
             this._updateScrollIndicatorTopThrottled = throttle.call(this._updateScrollIndicatorTop, 100, true).bind(this);
-            this._updateScrollIndicatorDownThrottled = throttle.call(this._updateScrollIndicatorDown, 100, true).bind(this);
             this._onKeyUpEnterThrottled = throttle.call(this._onKeyUpEnter, 100, true).bind(this);
             this._eventProxyHdl = this._eventProxyHandler.bind(this);
             this._onScrollHandler = this._onScrollHandler.bind(this);
@@ -2781,7 +2779,8 @@ define('SBIS3.CONTROLS/ListView',
             if (toolbarTarget && targetElement && toolbarTarget.container.get(0) === targetElement.get(0)) {
                toolbarTarget.container = this._getDomElementByItem(item);
                toolbar.setCurrentTarget(toolbarTarget);
-               if (this.isEdit()) { // https://online.sbis.ru/opendoc.html?guid=62f91f28-78ab-4022-9727-7b951536f771
+               // https://online.sbis.ru/opendoc.html?guid=8fc10a14-b254-453d-a2e9-bb514bc3a524
+               if (this._options.editMode.indexOf('toolbar') !== -1 && this.isEdit()) { // https://online.sbis.ru/opendoc.html?guid=62f91f28-78ab-4022-9727-7b951536f771
                   toolbar.show(toolbarTarget);
                   toolbar.lockToolbar();
                }
@@ -3585,7 +3584,6 @@ define('SBIS3.CONTROLS/ListView',
             }
 
             this._updateScrollIndicatorTopThrottled();
-            this._updateScrollIndicatorDownThrottled();
 
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
             if (loadAllowed && isContainerVisible && hasNextPage && !this.isLoading()) {
@@ -3612,13 +3610,6 @@ define('SBIS3.CONTROLS/ListView',
                top = StickyHeaderManager.getStickyHeaderIntersectionHeight(this.getContainer()) - this._scrollWatcher.getScrollContainer().scrollTop();
             }
             this._loadingIndicator.css('top', top);
-         },
-
-         _updateScrollIndicatorDown: function() {
-            var container = this.getContainer();
-            if (this._infiniteScrollState.mode === 'down' && this._hasNextPage(this.getItems().getMetaData().more)){
-               container.toggleClass('controls-ListView-scrollIndicator__down', container.hasClass('controls-ListView__indicatorVisible'));
-            }
          },
 
 
@@ -3960,6 +3951,10 @@ define('SBIS3.CONTROLS/ListView',
                this._createLoadingIndicator();
             }
             this.getContainer().addClass('controls-ListView__indicatorVisible');
+            //чтоб индикатор не перекрывал последние записи
+            if (!this._isScrollingUp()) {
+               this.getContainer().addClass('controls-ListView-scrollIndicator__down');
+            }
          },
          /**
           * Удаляет индикатор загрузки
@@ -3969,6 +3964,7 @@ define('SBIS3.CONTROLS/ListView',
             if (this._loadingIndicator && !this._loader) {
                this.getContainer().removeClass('controls-ListView__indicatorVisible');
             }
+            this.getContainer().removeClass('controls-ListView-scrollIndicator__down');
          },
          _createLoadingIndicator : function () {
             this._loadingIndicator = $('> .controls-ListView-scrollIndicator', this._container);
@@ -5217,6 +5213,8 @@ define('SBIS3.CONTROLS/ListView',
             this._options.itemsHover = hoverMode;
          }
       });
+
+      ListView.BeginDeleteResult = BeginDeleteResult;
 
       return ListView.mixin([BreakClickBySelectMixin]);
    });

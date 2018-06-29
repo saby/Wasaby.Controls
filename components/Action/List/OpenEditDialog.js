@@ -254,6 +254,7 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
                   def = wayDelayedRemove(templateComponent);
                }
                def.addErrback(function (error) {
+                  self._hideLoadingIndicator();
                   self._finishExecuteDeferred(error);
                   return error;
                });
@@ -679,24 +680,30 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
       },
 
       _getDialogConfig: function () {
-         var config = OpenEditDialog.superclass._getDialogConfig.apply(this, arguments),
-             self = this;
-         return cMerge(config, {
-            isFormController: true,
-            handlers: {
-               onAfterClose: function (e, meta) {
-                  self._notifyOnExecuted(meta);
-                  self._clearVariables();
-               },
-               onBeforeShow: function() {
-                  self._hideLoadingIndicator();
-                  self._notify('onBeforeShow', this);
-               },
-               //При множественном клике панель может начать закрываться раньше, чем откроется, в этом случае
-               //onAfterClose не будет, смотрим на destroy
-               onDestroy: self._clearVariables.bind(self)
-            }
-         });
+         var config = OpenEditDialog.superclass._getDialogConfig.apply(this, arguments);
+         config.isFormController = true;
+         return config;
+      },
+   
+      _getDialogHandlers: function() {
+         var self = this;
+         return {
+            onAfterClose: function (e, meta) {
+               self._notifyOnExecuted(meta);
+               self._clearVariables();
+            },
+            onBeforeShow: function () {
+               self._hideLoadingIndicator();
+               self._notify('onBeforeShow', this);
+            },
+            onAfterShow: function() {
+               self._isExecuting = false;
+               self._notify('onAfterShow', this);
+            },
+            //При множественном клике панель может начать закрываться раньше, чем откроется, в этом случае
+            //onAfterClose не будет, смотрим на destroy
+            onDestroy: self._clearVariables.bind(self)
+         };
       },
 
       _notifyOnExecuted: function(meta) {

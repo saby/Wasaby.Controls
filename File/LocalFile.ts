@@ -1,6 +1,9 @@
 /// <amd-module name="File/LocalFile" />
-import ResourceAbstract = require("File/ResourceAbstract");
+import {ResourceAbstract, FileInfo} from 'File/ResourceAbstract';
 
+interface Info extends FileInfo {
+    path?: string;
+}
 /**
  * Класс - обёртка над нативным File/Blob
  * @class
@@ -10,19 +13,26 @@ import ResourceAbstract = require("File/ResourceAbstract");
  * @author Заляев А.В.
  */
 class LocalFile extends ResourceAbstract {
-    private readonly _name: string;
     /**
      * @param {Blob | File} _data Файл
-     * @param {*} [meta] Дополнительные мета-данные
-     * @param {String} [name] Имя файла. Обязательный аргумент, если в качестве данных передался Blob
+     * @param {*} [_meta] Дополнительные мета-данные
+     * @param {String | File/FileInfo} [info] Объект с информацией о файле, либо строка с именем файла.
+     * Имя файла является обязательным аргументом, если в качестве данных передался Blob
      * @constructor
      * @name File/LocalFile
      */
-    constructor(private _data: Blob | File, meta?: any, name?: string) {
+    constructor(
+        private _data: Blob | File,
+        protected _meta?: any,
+        info?: string | Info
+    ) {
         super();
-        this._name = name || (_data instanceof File && _data.name);
-        this._meta = meta;
-        if (!this._name) {
+        this._info = typeof info == 'string'? {
+            name: info
+        }: info || {};
+        this._info.name = this._info.name || (_data instanceof File && _data.name);
+
+        if (!this._info.name) {
             // Для корректной загрузки Blob через FormData необходимо имя файла
             throw new Error('Argument "name" is required for Blob data');
         }
@@ -35,14 +45,6 @@ class LocalFile extends ResourceAbstract {
      */
     getData(): File | Blob {
         return this._data;
-    }
-
-    /**
-     * Возвращает имя файла
-     * @return {String}
-     */
-    getName(): string {
-        return this._name;
     }
 }
 export  = LocalFile;

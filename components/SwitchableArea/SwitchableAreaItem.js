@@ -1,8 +1,8 @@
 /* На основе SBIS3.CORE.SwitchableAreaItem */
 define('SBIS3.CONTROLS/SwitchableArea/SwitchableAreaItem',
    [
-      'Lib/Control/CompoundControl/CompoundControl', 'Core/helpers/random-helpers', 'Core/Deferred', 'Core/ParallelDeferred'
-   ], function(CompoundControl, randHelpers, Deferred, ParallelDeferred) {
+      'Lib/Control/CompoundControl/CompoundControl', 'Core/helpers/Number/randomId', 'Core/Deferred', 'Core/ParallelDeferred'
+   ], function(CompoundControl, randomId, Deferred, ParallelDeferred) {
       'use strict';
 
       /**
@@ -93,7 +93,7 @@ define('SBIS3.CONTROLS/SwitchableArea/SwitchableAreaItem',
          setId: function(id) {
             var oldId = this.getId();
             if (!id){ // не может быть пустым
-               id = randHelpers.randomId('ws-area-');
+               id = randomId('ws-area-');
             }
             this._options.id = id;
             this._notify('onIdChanged', oldId, id);

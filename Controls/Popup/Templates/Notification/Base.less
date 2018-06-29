@@ -1,36 +1,38 @@
 .controls-Notification {
-  border-top: 3px solid;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
+  border-style: solid;
+  border-width: @border-width_NotificationBase;
+  box-shadow: @box-shadow_NotificationBase;
   position: relative;
-  min-height: 40px;
-  min-width: 40px;
+  min-height: @min-height_NotificationBase;
+  min-width: @min-width_NotificationBase;
+  margin: @spacing_NotificationBase-between-notifications;
 }
 
 .controls-Notification__error {
-  border-color: @controls-InformationPopup-error-status-border-color;
+  border-color: @border-color_NotificationBase_error;
 }
 
 .controls-Notification__primary {
-  border-color: @controls-InformationPopup-default-status-border-color;
+  border-color: @border-color_NotificationBase_primary;
 }
 
 .controls-Notification__done {
-  border-color: @controls-InformationPopup-success-status-border-color;
+  border-color: @border-color_NotificationBase_done;
 }
 
 .controls-Notification__warning {
-  border-color: @controls-InformationPopup-warning-status-border-color;
+  border-color: @border-color_NotificationBase_warning;
 }
 
 .controls-Notification__content {
-  padding: 8px;
+  padding: @padding_NotificationBase-content;
 }
 
 .controls-Notification__closeButton {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  cursor: pointer;
+  top: @top_NotificationBase-closeButton;
+  right: @right_NotificationBase-closeButton;
+  z-index: 1;
 }
 
 .controls-Notification__simpleTemplate {
@@ -39,9 +41,9 @@
 }
 
 .controls-Notification__simpleTemplate-icon {
-  margin-right: 8px;
+  margin-right: @spacing_NotificationBase-between-icon-and-message;
 }
 
 .controls-Notification__simpleTemplate-message {
-  font-size: 15px;
+  font-size: @font-size_NotificationBase-message;
 }

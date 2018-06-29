@@ -11,6 +11,18 @@ define('Controls/BreadCrumbsController', [
 ) {
    'use strict';
 
+   /**
+    * Breadcrumbs.
+    *
+    * @class Controls/BreadCrumbsController
+    * @extends Core/Control
+    * @mixes Controls/interface/IBreadCrumbs
+    * @control
+    * @public
+    *
+    * @demo Controls-demo/BreadCrumbs/BreadCrumbs
+    */
+
    var BreadCrumbsController = Control.extend({
       _template: template,
       _visibleItems: [],

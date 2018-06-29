@@ -3,9 +3,16 @@ define('Controls/Button/Close', [
    'tmpl!Controls/Button/Close',
    'css!Controls/Button/Close'
 ], function(Control, template) {
-   
-   return Control.extend({
+
+   var CloseButton = Control.extend({
       _template: template
    });
-   
+
+   CloseButton.getDefaultOptions = function() {
+      return {
+         style: 'default'
+      };
+   };
+
+   return CloseButton;
 });

@@ -19,6 +19,7 @@ define('Controls/Input/Phone',
        * @control
        * @public
        * @category Input
+       * @demo Controls-demo/Input/Phone/Phone
        */
 
       var Phone = Control.extend({

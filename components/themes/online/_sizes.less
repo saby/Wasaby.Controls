@@ -84,9 +84,7 @@
 @font-size_stackTemplate_head:                  18px;
 @spacing_stackTemplate_head:                    0 52px 0 12px;
 @top-space_stackTemplate_close-button:          5px;
-
-//DialogTemplate
-@padding_dialogTemplate_content:                0 12px;
+@shadow_stackTemplate_close-button:             0 1px 2px rgba(0,0,0, .15); //todo - в 350 версии будет компонент closeButton, все стили будут на нем
 
 //FieldLink
 @icon-size_FieldLink-button:                    @default-icon-size;
@@ -231,6 +229,8 @@
 @padding_DropDownList_item_child_text: 16px;
 @font-size_DropDownList:               @default-text-size;
 @top_DropdownList_picker_marker:       13px;
+@right-DropdownList-cross:             6px;
+@top-DropdownList-cross:               7px;
 //Marker
 @background-size_Marker:                                  3px;
 //ListView
@@ -268,12 +268,12 @@
 @border-size_DropdownList:      1px;
 @spacing_DropdownList-pin:      12px;
 @padding_DropdownList-default:  12px;
-@spacing_DropdownList_arrowSubMenu:28px;
+@spacing_DropdownList_arrowSubMenu:32px;
 @padding_DropdownList-item:     5px;
 @spacing_DropdownList-item-history: @spacing_DropdownList_arrowSubMenu;
 @width_DropdownList-marker:     6px;
 @height_DropdownList-marker:    8px;
-@margin-top_DropdownList:       -7px;
+@margin-top_DropdownList:       -8px;
 @margin-left_DropdownList:      -13px;
 @right_DropdownList-icon:       6px;
 @top_DropdownList-icon:         (@height_DropdownList-item - @menu-expand-height) / 2;
@@ -405,7 +405,13 @@
 @border-radius_CloseButton:              2px 0 0 2px;
 @width_CloseButton:                      36px;
 @height_CloseButton:                     28px;
+//TODO Выпилить этот стиль при полном переходе на VDOM
 @font-size_CloseButton:                  23px;
+@font-size_CloseButton_default:          23px;
+@font-size_CloseButton_light:            24px;
+@width_CloseButton_small:                24px;
+@height_CloseButton_small:               24px;
+@font-size_CloseButton_small:            24px;
 //tabButton
 @height_tabbutton_mainItem_menuLink:     23px;
 //editAtPlace
@@ -446,6 +452,8 @@
 @font-size_Tabs-item_selected:           15px;
 @max-width_Tabs_item:                    630px;
 @border-width_Tabs-item_hover_selected:  2px;
+//BrowserTabs Separator
+@thickness_PageLayout_Separator:        @border-width_Tabs;
 //Scrollbar
 @width_Scrollbar:                        4px;
 //Отступ сверху/снизу и от правого края в скролируемой области.
@@ -580,6 +588,25 @@
 @min-width-ToggleButton_style_linkMain_size-l:           32px;
 @padding_ToggleButton-wrapper_m:    0;
 @padding_ToggleButton-wrapper_l:          0;
+//Notification
+@padding_NotificationBase-content: 8px;
+@font-size_NotificationBase-message: 15px;
+@spacing_NotificationBase-between-icon-and-message: 8px;
+@spacing_NotificationBase-between-notifications: 0 16px 16px 0;
+@right_NotificationBase-closeButton: 8px;
+@top_NotificationBase-closeButton: 8px;
+@min-height_NotificationBase: 40px;
+@min-width_NotificationBase: 40px;
+@border-width_NotificationBase: @controls-InformationPopup-border-width;
+//VDOM ListView
+@height_ListView-group: 24px;
+@spacing_ListView-group-between-text-separator: 12px;
+@height_ListView-group-separator: 1px;
+@font-size_ListView-group-text: 12px;
+@font-size_ListView-group-expander: 16px;
+@width_ListView-group-expander: 16px;
+@spacing_ListView-group-between-text-expander: 6px;
+@spacing_ListView-group-between-rightTemplate-separator: 12px;
 
 //Browser
 @margin_Browser-search:             10px 12px;

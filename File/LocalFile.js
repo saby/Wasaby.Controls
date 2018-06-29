@@ -1,4 +1,4 @@
-define("File/LocalFile", ["require", "exports", "tslib", "File/ResourceAbstract"], function (require, exports, tslib_1, ResourceAbstract) {
+define("File/LocalFile", ["require", "exports", "tslib", "File/ResourceAbstract"], function (require, exports, tslib_1, ResourceAbstract_1) {
     "use strict";
     /**
      * Класс - обёртка над нативным File/Blob
@@ -12,17 +12,21 @@ define("File/LocalFile", ["require", "exports", "tslib", "File/ResourceAbstract"
         tslib_1.__extends(LocalFile, _super);
         /**
          * @param {Blob | File} _data Файл
-         * @param {*} [meta] Дополнительные мета-данные
-         * @param {String} [name] Имя файла. Обязательный аргумент, если в качестве данных передался Blob
+         * @param {*} [_meta] Дополнительные мета-данные
+         * @param {String | File/FileInfo} [info] Объект с информацией о файле, либо строка с именем файла.
+         * Имя файла является обязательным аргументом, если в качестве данных передался Blob
          * @constructor
          * @name File/LocalFile
          */
-        function LocalFile(_data, meta, name) {
+        function LocalFile(_data, _meta, info) {
             var _this = _super.call(this) || this;
             _this._data = _data;
-            _this._name = name || (_data instanceof File && _data.name);
-            _this._meta = meta;
-            if (!_this._name) {
+            _this._meta = _meta;
+            _this._info = typeof info == 'string' ? {
+                name: info
+            } : info || {};
+            _this._info.name = _this._info.name || (_data instanceof File && _data.name);
+            if (!_this._info.name) {
                 // Для корректной загрузки Blob через FormData необходимо имя файла
                 throw new Error('Argument "name" is required for Blob data');
             }
@@ -37,14 +41,7 @@ define("File/LocalFile", ["require", "exports", "tslib", "File/ResourceAbstract"
         LocalFile.prototype.getData = function () {
             return this._data;
         };
-        /**
-         * Возвращает имя файла
-         * @return {String}
-         */
-        LocalFile.prototype.getName = function () {
-            return this._name;
-        };
         return LocalFile;
-    }(ResourceAbstract));
+    }(ResourceAbstract_1.ResourceAbstract));
     return LocalFile;
 });

@@ -39,18 +39,7 @@
 @color_Grid-selection-marker: #FF7033;
 
 @width_Grid-cell-checkbox: 24px;
-@height_Grid-checkboxArea: 32px;
-@width_Grid-checkboxArea: 24px;
-@padding_Grid-checkbox-left: 6px;
-@padding_Grid-checkbox-top: 10px;
-@height_Grid-checkbox: 12px;
-@width_Grid-checkbox: 12px;
-@width_Grid-checkbox-border: 1px;
-@color_Grid-checkbox-border: #999999;
-@padding_Grid-checkbox-icon-top: 4px;
-@padding_Grid-checkbox-icon-left: 6px;
-@font-size_Grid-checkbox-icon: 18px;
-@color_Grid-checkbox-icon: #ff7033;
+@padding_Grid-checkbox: 3px;
 //--------------- styles ---------------
 .controls-Grid {
    display: grid;
@@ -110,13 +99,25 @@
    min-width: 0;
    font-size: @font-size_Grid-row-cell;
 }
-.controls-Grid__row-cell_halign_left {
+.controls-Grid__header-cell_halign_left {
    text-align: left;
 }
-.controls-Grid__row-cell_halign_right {
+.controls-Grid__header-cell_halign_right {
    text-align: right;
 }
-.controls-Grid__row-cell_halign_center {
+.controls-Grid__header-cell_halign_center {
+   text-align: center;
+}
+.controls-Grid__row-cell__contentWrapper_halign_left {
+   justify-content: flex-start;
+   text-align: left;
+}
+.controls-Grid__row-cell__contentWrapper_halign_right {
+   justify-content: flex-end;
+   text-align: right;
+}
+.controls-Grid__row-cell__contentWrapper_halign_center {
+   justify-content: center;
    text-align: center;
 }
 .ws-is-no-touch {
@@ -238,12 +239,10 @@
 }
 .controls-GridView__checkbox {
    position: absolute;
-   top: 3px;
+   top: @padding_Grid-checkbox;
    left: 0;
-}
-.controls-TreeGrid__row-nodeExpander {
-   padding-top: 5px;
 }
 .controls-Grid__row-cell__contentWrapper {
    display: inline-flex;
+   width: 100%;
 }

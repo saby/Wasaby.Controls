@@ -1,7 +1,8 @@
 define("File/Attach/Lazy", ["require", "exports", "File/Attach/Base", "Core/core-simpleExtend", "File/Attach/Container/GetterLazy", "File/Attach/Container/SourceLazy"], function (require, exports, Base, CoreExtend, GetterContainerLazy, SourceContainerLazy) {
     "use strict";
     /**
-     * Класс, наследник Attach/Base, позволяющий регестрировать динамично подгружаемые экземпляры {@link File/IResourceGetter} и {@link WS.Data/Source/ISource}
+     * Класс, наследник Attach/Base, позволяющий регестрировать
+     * динамично подгружаемые экземпляры {@link File/IResourceGetter} и {@link File/Attach/Source}
      * @public
      * @class File/Attach/Lazy
      * @extends File/Attach/Base

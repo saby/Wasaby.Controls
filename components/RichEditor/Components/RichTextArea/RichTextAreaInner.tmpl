@@ -1,6 +1,6 @@
 <div class="controls-RichEditor__richTextArea" style="{{autoHeight && maximalHeight && maximalHeight != 0 ? 'max-height:' + maximalHeight + 'px;' }}">
-   <div class="controls-RichEditor__placeholder" >{{ placeholder }}</div>
    <ws:if data="{{singleLine}}">
+      <div class="controls-RichEditor__placeholder">{{ placeholder }}</div>
       <div
          class="controls-RichEditor__dataReview ws-basic-style {{editorConfig.className}}{{enabled ? ' ws-hidden'}}"
          tabindex="1"
@@ -18,6 +18,7 @@
          style="{{autoHeight && maximalHeight && maximalHeight != 0 ? 'max-height:' + (maximalHeight - _decreaseHeight) + 'px;' }}"
          takeScrollbarHidden="{{!(autoHeight && maximalHeight == 0)}}"
          >
+         <div class="controls-RichEditor__placeholder">{{ placeholder }}</div>
          <div
             class="controls-RichEditor__dataReview ws-basic-style {{editorConfig.className}}{{enabled ? ' ws-hidden'}}"
             tabindex="1"

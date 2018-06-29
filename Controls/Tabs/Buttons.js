@@ -74,6 +74,7 @@ define('Controls/Tabs/Buttons', [
      * @control
      * @public
      * @category List
+    * @demo Controls-demo/Tabs/Buttons
      */
 
    /**

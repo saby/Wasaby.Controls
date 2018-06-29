@@ -33,6 +33,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
         */
       var Menu = Control.extend([], {
          _template: MenuItemsTpl,
+         _expanded: false,
          _defaultItemTemplate: itemTemplate,
          _defaultHeadTemplate: defaultHeadTemplate,
          _defaultContentHeadTemplate: defaultContentHeadTemplate,
@@ -79,6 +80,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   selectedKeys: newOptions.selectedKeys,
                   displayProperty: newOptions.displayProperty,
                   keyProperty: newOptions.keyProperty,
+                  additionalProperty: newOptions.additionalProperty,
                   itemTemplateProperty: newOptions.itemTemplateProperty,
                   nodeProperty: newOptions.nodeProperty,
                   parentProperty: newOptions.parentProperty,
@@ -92,6 +94,11 @@ define('Controls/Dropdown/resources/template/DropdownList',
             if (newOptions.rootKey !== this._options.rootKey) {
                this._listModel.setRootKey(newOptions.rootKey);
             }
+            if (newOptions.items !== this._options.items) {
+               this._listModel.setItems(newOptions);
+               this._children.subDropdownOpener.close();
+            }
+
          },
 
          _itemMouseEnter: function(event, item, hasChildren) {
@@ -101,6 +108,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
                      items: this._options.items,
                      itemTemplate: this._options.itemTemplate,
                      keyProperty: this._options.keyProperty,
+                     additionalProperty: this._options.additionalProperty,
                      parentProperty: this._options.parentProperty,
                      nodeProperty: this._options.nodeProperty,
                      selectedKeys: this._options.selectedKeys,
@@ -121,16 +129,17 @@ define('Controls/Dropdown/resources/template/DropdownList',
          resultHandler: function(result) {
             switch (result.action) {
                case 'itemClick':
+               case 'pinClicked':
                   this._notify('sendResult', [result]);
             }
          },
          _itemClickHandler: function(event, item, pinClicked) { //todo нужно обсудить
             var result = {
-               action: 'itemClick',
+               action: pinClicked ? 'pinClicked' : 'itemClick',
                event: event,
-               data: [item, pinClicked]
+               data: [item]
             };
-            
+
             // means that pin button was clicked
             if (pinClicked) {
                event.stopPropagation();
@@ -151,6 +160,11 @@ define('Controls/Dropdown/resources/template/DropdownList',
             if (!event.target.closest('.controls-DropdownList__popup') && this._container.closest('.controls-DropdownList__subMenu')) { //Если увели курсор мимо - закрываемся
                this._notify('close');
             }
+         },
+         _toggleExpanded: function() {
+            this._expanded = !this._expanded;
+            this._listModel.toggleExpanded(this._expanded);
+            this._forceUpdate();
          }
       });
 

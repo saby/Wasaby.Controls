@@ -14,6 +14,7 @@ define('Controls/History/Menu',
        * @control
        * @public
        * @category Menu
+       * @demo Controls-demo/Menu/MenuVdom
        */
 
       /**
@@ -31,45 +32,28 @@ define('Controls/History/Menu',
       'use strict';
 
       var HistoryMenu = MenuButton.extend({
-         _defaultItemTemplate: itemTemplate,
-         _source: null,
+         _itemTemplate: itemTemplate,
          _filter: null,
 
-         _beforeMount: function(options) {
+         _beforeMount: function() {
             this._filter = {
                $_history: true
             };
-            options.defaultItemTemplate = itemTemplate;
-            this._onResult = this._onResult.bind(this);
          },
 
-         _onResult: function(result) {
-            var actionName = result.action;
-            var data = result.data;
-            var item = data[0];
-            var pin = data[1];
+         _onItemClickHandler: function(result, items) {
+            this._notify('onMenuItemActivate', [items[0]]);
+            this._options.source.update(items[0], {
+               $_history: true
+            });
+            this._items = this._options.source.getItems();
+         },
 
-            if (pin === true) {
-               actionName = 'pinnedClick';
-            }
-
-            switch (actionName) {
-               case 'itemClick':
-                  this._notify('onMenuItemActivate', data);
-                  this._options.source.update(item, {
-                     $_history: true
-                  });
-                  this._items = this._options.source.getItems();
-                  this._children.DropdownOpener.close();
-                  break;
-               case 'pinnedClick':
-                  this._options.source.update(item, {
-                     $_pinned: !item.get('pinned')
-                  });
-                  this._items = this._options.source.getItems();
-                  this._open();
-                  break;
-            }
+         _onPinClickHandler: function(event, items) {
+            this._options.source.update(items[0], {
+               $_pinned: !items[0].get('pinned')
+            });
+            this._items = this._options.source.getItems();
          }
       });
 

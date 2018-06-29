@@ -1,0 +1,22 @@
+<div>
+   <div style="background-color: #55AA55; padding: 12px 0;">with default group template</div>
+   <Controls.List
+      source = "{{_viewSource}}"
+      displayProperty="title"
+      keyProperty="id">
+      <ws:itemsGroup method="{{_itemsGroupMethod}}">
+      </ws:itemsGroup>
+   </Controls.List>
+   <div style="background-color: #55AA55; padding: 12px 0;">with custom group template</div>
+   <Controls.List
+      source = "{{_viewSource}}"
+      displayProperty="title"
+      dataLoadCallback="{{_dataLoadCallback}}"
+      keyProperty="id">
+      <ws:itemsGroup method="{{_itemsGroupMethod}}">
+         <ws:template>
+            <ws:partial template="tmpl!Controls-demo/List/DemoGroupTemplate"></ws:partial>
+         </ws:template>
+      </ws:itemsGroup>
+   </Controls.List>
+</div>

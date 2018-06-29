@@ -197,74 +197,10 @@ define('Controls/List/EditInPlace', [
 
       /**
        * @class Controls/List/EditInPlace
+       * @extends Core/Control
+       * @mixes Controls/interface/IEditInPlace
        * @author Зайцев А.С.
        * @public
-       */
-
-      /**
-       * @typedef {Object} ItemEditOptions
-       * @param {WS.Data/Entity/Record} [options.item] Record with initial data.
-       */
-
-      /**
-       * @typedef {String|WS.Data/Entity/Record|Core/Deferred} ItemEditResult
-       * @variant {String} Cancel Cancel start of editing.
-       * @variant {ItemEditOptions} options Options of editing.
-       * @variant {Core/Deferred} Deferred Deferred is used for asynchronous preparation of edited record. It is necessary to fullfill deferred with a record which will be opened for editing.
-       */
-
-      /**
-       * @typedef {String|Core/Deferred} ItemEndEditResult
-       * @variant {String} Cancel Cancel ending of editing\adding.
-       * @variant {Core/Deferred} Deferred Deferred is used for saving with custom logic.
-       */
-
-      /**
-       * @typedef {Object} AddItemOptions
-       * @param {WS.Data/Entity/Record} [options.item] Record with initial data.
-       */
-
-      /**
-       * @typedef {String|Core/Deferred|AddItemOptions} AddItemResult
-       * @variant {String} Cancel Cancel start of adding.
-       * @variant {AddItemOptions} Options of adding.
-       * @variant {Core/Deferred} Deferred Deferred is used for asynchronous preparation of adding record. It is necessary to fullfill deferred with options of adding.
-       */
-
-      /**
-       * @event Controls/List/EditInPlace#beforeItemEdit Happens before start of editing.
-       * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
-       * @param {ItemEditOptions} item Options of editing.
-       * @returns {BeforeItemEditResult}
-       */
-
-      /**
-       * @event Controls/List/EditInPlace#beforeItemAdd Happens before start of adding.
-       * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
-       * @param {AddItemOptions} Options of adding.
-       * @returns {AddItemResult}
-       */
-
-      /**
-       * @event Controls/List/EditInPlace#afterItemEdit Happens after start of editing\adding.
-       * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
-       * @param {WS.Data/Entity/Record} item Editing record.
-       * @param {Boolean} isAdd Flag which allows to differentiate between editing and adding.
-       */
-
-      /**
-       * @event Controls/List/EditInPlace#beforeItemEndEdit Happens before the end of editing\adding.
-       * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
-       * @param {Boolean} commit If it is true editing ends with saving.
-       * @param {Boolean} isAdd Flag which allows to differentiate between editing and adding.
-       * @returns {ItemEndEditResult}
-       */
-
-      /**
-       * @event Controls/List/EditInPlace#afterItemEndEdit Happens after the end of editing\adding.
-       * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
-       * @param {WS.Data/Entity/Record} item Editing record.
-       * @param {Boolean} isAdd Flag which allows to differentiate between editing and adding.
        */
 
       _beforeMount: function(newOptions) {

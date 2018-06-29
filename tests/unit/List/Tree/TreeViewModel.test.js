@@ -78,18 +78,18 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
             var
                item = treeViewModel.getItemById('123', cfg.keyProperty),
                itemChild;
-            assert.isTrue(TreeViewModel._private.displayFilter(item.getContents(), 0, item), 'Invalid value "displayFilter(123)".');
+            assert.isTrue(TreeViewModel._private.displayFilterTree(item.getContents(), 0, item), 'Invalid value "displayFilterTree(123)".');
             treeViewModel.toggleExpanded(item, true);
             itemChild = treeViewModel.getItemById('234', cfg.keyProperty);
-            assert.isTrue(TreeViewModel._private.displayFilter.call({
+            assert.isTrue(TreeViewModel._private.displayFilterTree.call({
                expandedNodes: treeViewModel._expandedNodes,
                keyProperty: treeViewModel._options.keyProperty
-            }, itemChild.getContents(), 1, itemChild), 'Invalid value "displayFilter(234)".');
+            }, itemChild.getContents(), 1, itemChild), 'Invalid value "displayFilterTree(234)".');
             treeViewModel.toggleExpanded(item, false);
-            assert.isFalse(TreeViewModel._private.displayFilter.call({
+            assert.isFalse(TreeViewModel._private.displayFilterTree.call({
                expandedNodes: treeViewModel._expandedNodes,
                keyProperty: treeViewModel._options.keyProperty
-            }, itemChild.getContents(), 1, itemChild), 'Invalid value "displayFilter(234)".');
+            }, itemChild.getContents(), 1, itemChild), 'Invalid value "displayFilterTree(234)".');
          });
          it('getDisplayFilter', function() {
             assert.isTrue(TreeViewModel._private.getDisplayFilter(treeViewModel._expandedNodes, treeViewModel._options).length === 1,

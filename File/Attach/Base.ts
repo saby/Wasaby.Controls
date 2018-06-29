@@ -1,11 +1,10 @@
 /// <amd-module name="File/Attach/Base" />
 // dependency for types
 import Uploader = require("File/Attach/Uploader");
-import Model = require("WS.Data/Entity/Model");
-import ISource = require("WS.Data/Source/ISource");
-import IResourceGetter = require("File/IResourceGetter");
-import IResourceConstructor = require("File/IResourceConstructor");
-import IResource = require("File/IResource");
+import {IFileModel as Model} from 'File/Attach/IModel';
+import {Source as ISource} from 'File/Attach/Source';
+import {IResourceGetter} from 'File/IResourceGetter';
+import {IResourceConstructor, IResource} from 'File/IResource';
 // real dependency
 import Abstract = require("Core/Abstract");
 import CoreExtend = require('Core/core-simpleExtend');
@@ -120,7 +119,7 @@ let Base = CoreExtend.extend(Abstract,{
     /**
      * Регистрация источников данных для загрузки определённого типа файла
      * @param {Function} type конструктор обёртки над файлом
-     * @param {WS.Data/Source/ISource} source источник данных
+     * @param {File/Attach/Source} source источник данных
      * @example
      * Регестрация источника, умеющего загружать LocalFileLink:
      * <pre>
@@ -146,7 +145,7 @@ let Base = CoreExtend.extend(Abstract,{
      * @see File/LocalFile
      * @see File/LocalFileLink
      * @see File/HttpFileLink
-     * @see WS.Data/Source/ISource
+     * @see File/Attach/Source
      */
     registerSource(type: IResourceConstructor, source: ISource): void {
         return this._sourceContainer.push(source, type);
@@ -219,7 +218,7 @@ let Base = CoreExtend.extend(Abstract,{
      * Загрузка выбранных ресурсов.
      * При отсутствии ресурсов во внутреннем состоянии, возвращаеммый Deferred будет завершен ошибкой.
      * @param {Object} [meta] Дополнительные мета-данные для отправки. Сигнатура зависит от конечного сервиса загрузки
-     * @return {Core/Deferred.<Array.<WS.Data/Entity/Model | Error>>} Набор, содержащий модели с результатами,
+     * @return {Core/Deferred.<Array.<File/Attach/Model | Error>>} Набор, содержащий модели с результатами,
      * либо ошибками загрузки
      * @example
      * Загрузка выбранных сканов:
@@ -252,7 +251,7 @@ let Base = CoreExtend.extend(Abstract,{
      * @method
      * @name File/Attach/Base#upload
      * @see File/Attach/Base#getSelectedResource
-     * @see WS.Data/Entity/Model
+     * @see File/Attach/Model
      */
     upload(meta?: object): Deferred<Array<Model | Error>> {
         /*
@@ -444,10 +443,8 @@ export = Base;
  *
  * @name File/Attach/Base#onLoaded
  * @param {Core/EventObject} eventObject Дескриптор события.
- * @param {Array.<Error | WS.Data/Entity/Model>} results Массив, содержащий результаты загрузки выбранных ресурсов.
+ * @param {Array.<Error | File/Attach/Model>} results Массив, содержащий результаты загрузки выбранных ресурсов.
  * Эквивалентно рузультату Deferred'а .upload
- *
- * @see WS.Data/Entity/Model
  */
 /**
  * @event onLoadError
@@ -477,12 +474,12 @@ export = Base;
  * @name File/Attach/Base#onLoadedResource
  * @param {Core/EventObject} eventObject Дескриптор события.
  * @param {File/IResource} resource загружаемый ресурс
- * @param {WS.Data/Entity/Model} model Результат загрузки
+ * @param {File/Attach/Model} model Результат загрузки
  *
  * @see File/LocalFile
  * @see File/LocalFileLink
  * @see File/HttpFileLink
- * @see WS.Data/Entity/Model
+ * @see File/Attach/Model
  */
 /**
  * @event onChosen
