@@ -197,6 +197,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             var parent;
             if (commandName === 'close') {
                this._close(arg);
+            } else if (commandName === 'ok') {
+               return this._close(true);
+            } else if (commandName === 'cancel') {
+               return this._close(false);
             } else if (commandName === 'registerPendingOperation') {
                return this._registerChildPendingOperation(arg);
             } else if (commandName === 'unregisterPendingOperation') {
