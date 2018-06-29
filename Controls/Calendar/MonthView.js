@@ -1,9 +1,9 @@
 define('Controls/Calendar/MonthView', [
    'Core/Control',
    'Core/core-merge',
-   'SBIS3.CONTROLS/Utils/DateUtil',
    'Controls/Calendar/Utils',
    'Controls/Calendar/MonthView/MonthViewModel',
+   'Controls/Utils/Date',
    'tmpl!Controls/Calendar/MonthView/MonthView',
    'tmpl!Controls/Calendar/MonthView/MonthViewTableBody',
    'tmpl!Controls/Calendar/MonthView/day',
@@ -13,9 +13,9 @@ define('Controls/Calendar/MonthView', [
 ], function(
    BaseControl,
    coreMerge,
-   DateUtil,
    calendarUtils,
    MonthViewModel,
+   DateUtil,
    dotTplFn,
    tableBodyTmpl,
    dayTmpl,

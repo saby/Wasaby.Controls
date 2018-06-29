@@ -48,6 +48,7 @@ define('Controls/Toggle/DoubleSwitch', [
       _template: template,
       _toggleTemplate: toggleTemplate,
       _textTemplate: textTemplate,
+      _toggleHoverState: false,
 
       constructor: function(options) {
          Switch.superclass.constructor.apply(this, arguments);
@@ -57,6 +58,7 @@ define('Controls/Toggle/DoubleSwitch', [
       _clickTextHandler: function(e, _nextValue) {
          if (this._options.value !== _nextValue && !this._options.readOnly) {
             _private.notifyChanged(this);
+            this._toggleSwitchHoverState(false);
          }
       },
 
@@ -68,6 +70,14 @@ define('Controls/Toggle/DoubleSwitch', [
 
       _beforeUpdate: function(newOptions) {
          _private.checkCaptions(newOptions.captions);
+      },
+
+      _toggleSwitchHoverState: function(e, toggledState) {
+         if (toggledState) {
+            this._toggleHoverState = true;
+         } else {
+            this._toggleHoverState = false;
+         }
       }
    });
 

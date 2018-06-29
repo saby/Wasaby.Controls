@@ -3,9 +3,16 @@ define('Controls/Calendar/Controllers/DateRangeSelectionController', [
    'Core/helpers/Object/isEmpty',
    'Controls/Calendar/Controllers/RangeSelectionController',
    'Controls/Calendar/interface/IDateRangeSelectable',
-   'SBIS3.CONTROLS/Utils/DateUtil',
-   'Controls/Calendar/Utils'
-], function(coreMerge, isEmpty, RangeSelectionController, IDateRangeSelectable, DateUtil, CalendarUtils) {
+   'Controls/Calendar/Utils',
+   'Controls/Utils/Date'
+], function(
+   coreMerge,
+   isEmpty,
+   RangeSelectionController,
+   IDateRangeSelectable,
+   CalendarUtils,
+   DateUtil
+) {
    'use strict';
 
    var _private = {

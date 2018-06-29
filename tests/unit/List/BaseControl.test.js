@@ -78,14 +78,14 @@ define([
          assert.isTrue(!!mountResult.addCallback, '_beforeMount doesn\'t return deferred');
 
          assert.isTrue(!!ctrl._sourceController, '_dataSourceController wasn\'t created before mounting');
-         assert.deepEqual(filter, ctrl._filter, 'incorrect filter before mounting');
+         assert.deepEqual(filter, ctrl._options.filter, 'incorrect filter before mounting');
 
          //received state 3'rd argument
          mountResult = ctrl._beforeMount(cfg, {}, rs);
          assert.isFalse(!!(mountResult && mountResult.addCallback), '_beforeMount return deferred with received state');
 
          assert.isTrue(!!ctrl._sourceController, '_dataSourceController wasn\'t created before mounting');
-         assert.deepEqual(filter, ctrl._filter, 'incorrect filter before mounting');
+         assert.deepEqual(filter, ctrl._options.filter, 'incorrect filter before mounting');
 
          //создаем новый сорс
          var oldSourceCtrl = ctrl._sourceController;
@@ -112,7 +112,7 @@ define([
 
          ctrl._beforeUpdate(cfg);
          assert.isTrue(ctrl._sourceController !== oldSourceCtrl, '_dataSourceController wasn\'t changed before updating');
-         assert.deepEqual(filter2, ctrl._filter, 'incorrect filter before updating');
+         assert.deepEqual(filter2, ctrl._options.filter, 'incorrect filter before updating');
 
          //сорс грузит асинхронно
          setTimeout(function() {

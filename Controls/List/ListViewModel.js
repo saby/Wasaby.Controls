@@ -19,6 +19,8 @@ define('Controls/List/ListViewModel',
 
       var ListViewModel = ItemsViewModel.extend([VersionableMixin], {
          _markedItem: null,
+         _dragItems: null,
+         _dragTargetItem: null,
          _draggingItemData: null,
          _dragTargetPosition: null,
          _actions: null,
@@ -89,10 +91,12 @@ define('Controls/List/ListViewModel',
          },
 
          setDragItems: function(items) {
-            this._dragItems = items;
-            this._draggingItemData = items ? this._getItemDataByItem(this.getItemById(items[0], this._options.keyProperty)) : null;
-            this._nextVersion();
-            this._notify('onListChange');
+            if (this._dragItems !== items) {
+               this._dragItems = items;
+               this._draggingItemData = items ? this._getItemDataByItem(this.getItemById(items[0], this._options.keyProperty)) : null;
+               this._nextVersion();
+               this._notify('onListChange');
+            }
          },
 
          getDragTargetItem: function() {
@@ -100,10 +104,12 @@ define('Controls/List/ListViewModel',
          },
 
          setDragTargetItem: function(itemData) {
-            this._dragTargetItem = itemData;
-            this._updateDragTargetPosition(itemData);
-            this._nextVersion();
-            this._notify('onListChange');
+            if (this._dragTargetItem !== itemData) {
+               this._dragTargetItem = itemData;
+               this._updateDragTargetPosition(itemData);
+               this._nextVersion();
+               this._notify('onListChange');
+            }
          },
 
          getDragTargetPosition: function() {
