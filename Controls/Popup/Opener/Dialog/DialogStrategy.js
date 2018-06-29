@@ -15,8 +15,8 @@ define('Controls/Popup/Opener/Dialog/DialogStrategy', [], function() {
          var width = this._calculateValue(popupOptions.minWidth, popupOptions.maxWidth, containerSizes.width, wWidth);
          var height = this._calculateValue(popupOptions.minHeight, popupOptions.maxHeight, containerSizes.height, wHeight);
          return {
-            left: Math.round((wWidth - width) / 2),
-            top: Math.round((wHeight - height) / 2),
+            left: this._getCoord(wWidth, width),
+            top: this._getCoord(wHeight, height),
             width: width,
             height: height
          };
@@ -37,7 +37,10 @@ define('Controls/Popup/Opener/Dialog/DialogStrategy', [], function() {
             return windowValue > minRange ? windowValue : minRange;
          }
          return windowValue;
-
+      },
+      _getCoord: function(windowValue, value) {
+         var coord = Math.round((windowValue - value) / 2);
+         return Math.max(coord, 0);
       }
    };
 });

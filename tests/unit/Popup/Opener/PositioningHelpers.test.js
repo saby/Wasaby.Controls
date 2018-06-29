@@ -176,14 +176,42 @@ define(
          });
 
          describe('Dialog', function() {
-            it('dialog positioning', function() {
-               var sizes = {
-                  width: 200,
-                  height: 300
+            let sizes = {
+               width: 200,
+               height: 300
+            };
+            it('dialog positioning base', function() {
+               let position = Dialog.getPosition(1920, 1080, sizes , {});
+               assert.equal(position.top, 390);
+               assert.equal(position.left, 860);
+            });
+
+            it('dialog positioning overflow container', function() {
+               let position = Dialog.getPosition(300, 300, sizes , {});
+               assert.equal(position.top, 0);
+               assert.equal(position.left, 50);
+               assert.equal(position.width, 200);
+               assert.equal(position.height, 300);
+            });
+
+            it('dialog positioning overflow popup config', function() {
+               let popupOptions = {
+                  minWidth: 300,
+                  maxWidth: 600
                };
-               var position = Dialog.getPosition(1920, 1080, sizes);
-               assert.isTrue(position.top === 390);
-               assert.isTrue(position.left === 860);
+               let position = Dialog.getPosition(500, 500, sizes , popupOptions);
+               assert.equal(position.left, 0);
+               assert.equal(position.width, 500);
+            });
+
+            it('dialog positioning overflow minWidth', function() {
+               let popupOptions = {
+                  minWidth: 600,
+                  maxWidth: 700
+               };
+               let position = Dialog.getPosition(500, 500, sizes , popupOptions);
+               assert.equal(position.left, 0);
+               assert.equal(position.width, 600);
             });
          });
 
