@@ -1,7 +1,7 @@
 <div class="controls-DropdownList__popup
             controls-DropdownList__popup-shadow-{{_options.typeShadow}}"
             style="min-width: {{_options.width ? _options.width + 'px'}}">
-   <ws:if data="{{_options.showHeader && !_options.hideCross}}">
+   <ws:if data="{{_options.showHeader}}">
       <ws:partial template="{{_options.headTemplate ? _options.headTemplate : _defaultHeadTemplate}}"
                   defaultContentHeadTemplate="{{_defaultContentHeadTemplate}}"
                   duplicateHeadClassName="{{_duplicateHeadClassName}}"
