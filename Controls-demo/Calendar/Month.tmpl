@@ -29,7 +29,7 @@
    <div class="PageBlock">
       <div class="PageBlock__title">Without days and title</div>
       <div class="PageBlock__componentWrap">
-         <Controls.Calendar.Month month="2017-03-22T21:00:00.000Z" showWeekdays="{{ false }}" selectionType="range"/>
+         <Controls.Calendar.Month month="{{_month}}" showWeekdays="{{ false }}" selectionType="range"/>
       </div>
    </div>
 
@@ -37,9 +37,9 @@
       <div class="PageBlock__title">With selected items</div>
       <div class="PageBlock__componentWrap">
          <Controls.Calendar.MonthView
-               month="2017-04-22T21:00:00.000Z"
-               startValue="2017-04-10T21:00:00.000Z"
-               endValue="2017-04-20T21:00:00.000Z"
+               month="{{_month}}"
+               startValue="{{_startValue2}}"
+               endValue="{{_endValue2}}"
                selectionType="range"
          />
       </div>
@@ -48,21 +48,21 @@
    <div class="PageBlock">
       <div class="PageBlock__title">Selection mode: single day</div>
       <div class="PageBlock__componentWrap">
-         <Controls.Calendar.Month month="2017-05-22T21:00:00.000Z" selectionType="single"/>
+         <Controls.Calendar.Month month="{{_month}}" selectionType="single"/>
       </div>
    </div>
 
    <div class="PageBlock">
       <div class="PageBlock__title">Selection mode: quantum {'days': [1, 3, 7], 'weeks': [2], 'months': [1]}</div>
       <div class="PageBlock__componentWrap">
-         <Controls.Calendar.Month month="2017-05-22T21:00:00.000Z" selectionType="quantum" quantum="{{ {'days': [1, 3, 7], 'weeks': [1, 2], 'months': [1]} }}"/>
+         <Controls.Calendar.Month month="{{_month}}" selectionType="quantum" quantum="{{ {'days': [1, 3, 7], 'weeks': [1, 2], 'months': [1]} }}"/>
       </div>
    </div>
 
    <div class="PageBlock">
       <div class="PageBlock__title">Selection mode: quantum {'days': [3]}</div>
       <div class="PageBlock__componentWrap">
-         <Controls.Calendar.Month month="2017-05-22T21:00:00.000Z" selectionType="quantum" quantum="{{ {'days': [3]} }}"/>
+         <Controls.Calendar.Month month="{{_month}}" selectionType="quantum" quantum="{{ {'days': [3]} }}"/>
       </div>
    </div>
 
@@ -70,9 +70,9 @@
       <div class="PageBlock__title">Disabled</div>
       <div class="PageBlock__componentWrap">
          <Controls.Calendar.Month
-               month="2017-06-22T21:00:00.000Z"
-               startValue="2017-06-10T21:00:00.000Z"
-               endValue="2017-06-20T21:00:00.000Z"
+               month="{{_month}}"
+               startValue="{{_startValue2}}"
+               endValue="{{_endValue2}}"
                enabled="{{ false }}"
          />
       </div>
