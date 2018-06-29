@@ -84,12 +84,14 @@ function(cMerge, Random) {
             }
          }
 
-         if (cfg.hasOwnProperty('direction')) {
-            cfg.corner = cfg.corner || {};
-            if (cfg.direction !== 'right' && cfg.direction !== 'left') {
-               cfg.direction = 'left';
-            }
-            cfg.corner.horizontal = revertPosition[cfg.direction];
+         cfg.corner = cfg.corner || {};
+         if (cfg.direction !== 'right' && cfg.direction !== 'left') {
+            cfg.direction = 'left';
+         }
+         cfg.corner.horizontal = revertPosition[cfg.direction];
+
+         if (cfg.hasOwnProperty('border')) {
+            cfg.templateOptions.hideCross = !cfg.border;
          }
 
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
