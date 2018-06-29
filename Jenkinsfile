@@ -449,7 +449,8 @@ node('controls') {
                 #BRANCH=True
                 [regression]
                 IMAGE_DIR = capture
-                RUN_REGRESSION=True[filestostart]
+                RUN_REGRESSION=True
+				[filestostart]
 				test_vdom_list_grid.py"""
         }
         def run_test_fail = ""
