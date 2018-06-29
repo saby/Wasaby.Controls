@@ -573,9 +573,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   options.fieldIds = fieldIds.slice();
                   views.columnBinder.restate({fieldIds:fieldIds.slice()}, {source:'presets', reason:reason, args:args});
                case 'edit':
-                  options.fileUuid = fileUuid;
                   var consumer = args[0];
-                  formatterValues = {fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumerId:consumer.id, primaryUuid:consumer.patternUuid || consumer.fileUuid};
+                  var consumerUuid = consumer.patternUuid || consumer.fileUuid;
+                  options.fileUuid = fileUuid || consumerUuid;
+                  formatterValues = {fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumerId:consumer.id, primaryUuid:consumerUuid};
                   formatterMeta = {reason:reason, args:reason === 'clone' ? [args[1]] : []};
                   if (reason === 'edit') {
                      this._isEditMode = true;
