@@ -19,8 +19,8 @@ define('Controls/SwitchableArea',
          _beforeUpdate: function(newOptions) {
             this._viewModel.updateViewModel(newOptions.items, newOptions.selectedKey);
          },
-         isActiveItem: function(item) {
-            return this._options.selectedKey !== item.get(this._options.items.getIdProperty());
+         getIdPropertyItem: function(item) {
+            return item.get(this._options.items.getIdProperty());
          }
       });
       return SwitchableArea;
