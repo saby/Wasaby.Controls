@@ -1,4 +1,4 @@
-define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List'], function(Suggest, List){
+define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data/Collection/RecordSet', 'WS.Data/Entity/Model'], function(Suggest, List, RecordSet, Model){
    
    describe('Controls.Container.Suggest.Layout', function () {
    
@@ -168,6 +168,41 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List'], functio
             assert.isTrue(self._dependenciesDeferred.isReady());
             done();
          });
+      });
+   
+      it('Suggest::_private.processResultData', function() {
+         var self = getComponentObject();
+         self._notify = function() {};
+         var queryRecordSet = new RecordSet({
+            rawData: [{id: 1}, {id: 2}, {id: 3}],
+            idProperty: 'id'
+         });
+         queryRecordSet.setMetaData({
+            results: new Model({
+               rawData: {
+                  tabsSelectedKey: 'testId'
+               }
+            })
+         });
+         
+         Suggest._private.precessResultData(self, {data: queryRecordSet});
+   
+         assert.equal(self._searchResult.data, queryRecordSet);
+         assert.equal(self._tabsSelectedKey, 'testId');
+   
+         var queryRecordSetEmpty = new RecordSet();
+         queryRecordSetEmpty.setMetaData({
+            results: new Model({
+               rawData: {
+                  tabsSelectedKey: 'testId2'
+               }
+            })
+         });
+         Suggest._private.precessResultData(self, {data: queryRecordSetEmpty});
+   
+         assert.notEqual(self._searchResult.data, queryRecordSet);
+         assert.equal(self._searchResult.data, queryRecordSetEmpty);
+         assert.equal(self._tabsSelectedKey, 'testId2');
       });
       
    });

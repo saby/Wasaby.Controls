@@ -33,6 +33,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
         */
       var Menu = Control.extend([], {
          _template: MenuItemsTpl,
+         _expanded: false,
          _defaultItemTemplate: itemTemplate,
          _defaultHeadTemplate: defaultHeadTemplate,
          _defaultContentHeadTemplate: defaultContentHeadTemplate,
@@ -79,6 +80,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   selectedKeys: newOptions.selectedKeys,
                   displayProperty: newOptions.displayProperty,
                   keyProperty: newOptions.keyProperty,
+                  additionalProperty: newOptions.additionalProperty,
                   itemTemplateProperty: newOptions.itemTemplateProperty,
                   nodeProperty: newOptions.nodeProperty,
                   parentProperty: newOptions.parentProperty,
@@ -106,6 +108,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
                      items: this._options.items,
                      itemTemplate: this._options.itemTemplate,
                      keyProperty: this._options.keyProperty,
+                     additionalProperty: this._options.additionalProperty,
                      parentProperty: this._options.parentProperty,
                      nodeProperty: this._options.nodeProperty,
                      selectedKeys: this._options.selectedKeys,
@@ -157,6 +160,11 @@ define('Controls/Dropdown/resources/template/DropdownList',
             if (!event.target.closest('.controls-DropdownList__popup') && this._container.closest('.controls-DropdownList__subMenu')) { //Если увели курсор мимо - закрываемся
                this._notify('close');
             }
+         },
+         _toggleExpanded: function() {
+            this._expanded = !this._expanded;
+            this._listModel.toggleExpanded(this._expanded);
+            this._forceUpdate();
          }
       });
 

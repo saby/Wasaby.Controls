@@ -84,6 +84,33 @@ define([
          assert.equal(1, iv.getVersion(), 'Incorrect version appendItems');
       });
 
+      it('setDragTargetItem and setDragItems', function() {
+         var
+            dragItems = [1],
+            target = {index: 1, id: 2},
+            notifyCont = 0,
+            lvm = new ListViewModel({
+               items: data,
+               keyProperty: 'id'
+            });
+
+         lvm._notify = function() {
+            notifyCont++;
+         };
+
+         assert.equal(lvm._dragItems, null);
+         lvm.setDragItems(dragItems);
+         assert.equal(notifyCont, 1);
+         lvm.setDragItems(dragItems);
+         assert.equal(notifyCont, 1);
+
+         assert.equal(lvm._dragTargetItem, null);
+         lvm.setDragTargetItem(target);
+         assert.deepEqual(lvm._dragTargetPosition, {index: 1, position: 'after'});
+         assert.equal(notifyCont, 2);
+         lvm.setDragTargetItem(target);
+         assert.equal(notifyCont, 2);
+      });
    });
 
 });

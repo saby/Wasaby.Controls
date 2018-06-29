@@ -6,10 +6,10 @@ define('SBIS3.CONTROLS/Date/RangeSliderBase',[
    'SBIS3.CONTROLS/Mixins/DateRangeMixin',
    'SBIS3.CONTROLS/Mixins/PickerMixin',
    'SBIS3.CONTROLS/Mixins/FormWidgetMixin',
-   'Core/helpers/date-helpers',
+   'Core/helpers/Date/getFormattedDateRange',
    'SBIS3.CONTROLS/Link',
    'css!SBIS3.CONTROLS/Date/RangeSliderBase/DateRangeSliderBase'
-], function (CompoundControl, dotTplFn, lockIconTemplate, RangeMixin, DateRangeMixin, PickerMixin, FormWidgetMixin, dateHelpers) {
+], function (CompoundControl, dotTplFn, lockIconTemplate, RangeMixin, DateRangeMixin, PickerMixin, FormWidgetMixin, getFormattedDateRange) {
    'use strict';
 
    /**
@@ -129,7 +129,7 @@ define('SBIS3.CONTROLS/Date/RangeSliderBase',[
       _getCaption: function (opts) {
          opts = opts || this._options;
          // В качестве пустого значения используем неразрывный пробел @nbsp;('\xA0') что бы не ехала верстка
-         return dateHelpers.getFormattedDateRange(
+         return getFormattedDateRange(
             opts.startValue,
             opts.endValue,
             {

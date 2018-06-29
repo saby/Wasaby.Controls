@@ -7,7 +7,9 @@
       </Controls.Popup.Templates.Stack.StackTemplate>
    </ws:if>
    <ws:else>
-      <Controls.Popup.Templates.Dialog.DialogTemplate caption="{{_options.caption || _options.title || _options.templateOptions.caption}}">
+      <Controls.Popup.Templates.Dialog.DialogTemplate
+         caption="{{_options.caption || _options.title || _options.templateOptions.caption}}"
+         hideCross="{{_options.hideCross}}">
          <ws:contentArea>
             <div name="compoundBlock" attr:class="controls-CompoundArea__container"></div>
          </ws:contentArea>
