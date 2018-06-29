@@ -11,11 +11,33 @@ define('Controls/Popup/Opener/Dialog/DialogStrategy', [], function() {
        * @param wHeight высота окна браузера
        * @param sizes размеры диалогового окна
        */
-      getPosition: function(wWidth, wHeight, sizes) {
+      getPosition: function(wWidth, wHeight, containerSizes, popupOptions) {
+         var width = this._calculateValue(popupOptions.minWidth, popupOptions.maxWidth, containerSizes.width, wWidth);
+         var height = this._calculateValue(popupOptions.minHeight, popupOptions.maxHeight, containerSizes.height, wHeight);
          return {
-            left: Math.round((wWidth - sizes.width) / 2),
-            top: Math.round((wHeight - sizes.height) / 2)
+            left: Math.round((wWidth - width) / 2),
+            top: Math.round((wHeight - height) / 2),
+            width: width,
+            height: height
          };
+      },
+
+      _calculateValue: function(minRange, maxRange, containerValue, windowValue) {
+         var hasMinValue = true;
+
+         if (!minRange && !maxRange) {
+            minRange = maxRange = containerValue;
+            hasMinValue = false;
+         }
+
+         if (windowValue - maxRange >= 0) {
+            return maxRange;
+         }
+         if (hasMinValue) {
+            return windowValue > minRange ? windowValue : minRange;
+         }
+         return windowValue;
+
       }
    };
 });
