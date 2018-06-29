@@ -131,7 +131,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             });
          },
 
-         getOpener: function(){
+         getOpener: function() {
             return this._logicParent && this._logicParent._options && this._logicParent._options.opener;
          },
 
