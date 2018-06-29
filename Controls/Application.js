@@ -10,8 +10,7 @@ define('Controls/Application',
       'Core/compatibility',
       'Controls/Application/AppData',
       'Controls/Application/HeadDataContext',
-      'Core/ConsoleLogger',
-      'Core/app'
+      'Core/ConsoleLogger'
    ],
 
    /**
