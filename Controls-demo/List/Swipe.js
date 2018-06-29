@@ -38,6 +38,16 @@ define('Controls-demo/List/Swipe', [
          }
       ],
       _actionsArrays = {
+         1: [
+            {
+               id: 1,
+               title: 'one actions without image',
+               showType: showType.TOOLBAR,
+               handler: function(item) {
+                  console.log('one phone Click ', item);
+               }
+            }
+         ],
          2: [
             {
                id: 1,
@@ -357,7 +367,7 @@ define('Controls-demo/List/Swipe', [
 
    var ModuleClass = BaseControl.extend(
       {
-         _actions: [2, 3, 4, 5, 6, 7, 8],
+         _actions: [1, 2, 3, 4, 5, 6, 7, 8],
          _heightS: [37, 38, 44, 52, 72, 73, 75, 85, 92, 107, 108, 109, 110, 120, 133, 134, 157, 158, 169, 170, 181, 182, 184, 223, 224, 263, 264, 303, 304, 350, 400, 500, 600 ],
          _height: 37,
          _itemActions: _actionsArrays[5],
