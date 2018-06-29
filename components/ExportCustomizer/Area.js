@@ -718,6 +718,27 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * @protected
           */
          _cmdComplete: function () {
+            this.complete().addCallbacks(
+               function (data) {
+                  if (data) {
+                     this._notify('onComplete', /*ExportResults:*/data);
+                  }
+                  /*else {
+                     // Иначе пользователь продолжает редактирование
+                  }*/
+               }.bind(this),
+               this._notify.bind(this, 'onFatalError', true)
+            );
+         },
+
+         /*
+          * Завершить работу с текущими данными
+          *
+          * @public
+          * @return {Core/Deferred<ExportResults>}
+          */
+         complete: function () {
+            var promise = new Deferred();
             // Сформировать результирующие данные из всего имеющегося
             // И сразу прроверить их
             this.getValues(true).addCallback(function (data) {
@@ -732,21 +753,22 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                      (new RemoteCall(outputCall)).call(data).addCallbacks(
                         function (result) {
                            data.result = result;
-                           this._notify('onComplete', /*ExportResults:*/data);
+                           promise.callback(data);
                         }.bind(this),
                         function (err) {
-                           this._notify('onFatalError', true, /*err*/rk('При отправке данных поизошла ошибка', 'НастройщикЭкспорта'));
+                           promise.errback(/*err*/rk('При отправке данных поизошла ошибка', 'НастройщикЭкспорта'));
                         }.bind(this)
                      );
                   }
                   else {
-                     this._notify('onComplete', /*ExportResults:*/data);
+                     promise.callback(data);
                   }
                }
-               /*else {
-                  // Иначе пользователь продолжает редактирование
-               }*/
+               else {
+                  promise.callback(null);
+               }
             }.bind(this));
+            return promise;
          },
 
          /**
