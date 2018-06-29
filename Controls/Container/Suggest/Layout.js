@@ -194,7 +194,7 @@ define('Controls/Container/Suggest/Layout',
          // <editor-fold desc="handlers">
          
          _close: function() {
-            if (this._options.style === 'overInput') {
+            if (this._options.suggestStyle === 'overInput') {
                this._notify('valueChanged', ['']);
             }
             _private.close(this);
