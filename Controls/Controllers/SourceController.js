@@ -43,7 +43,7 @@ define('Controls/Controllers/SourceController',
                if (idProperty && idProperty !== dataSet.idProperty) {
                   dataSet.setIdProperty(idProperty);
                }
-               return dataSet.getAll();
+               return dataSet.getAll ? dataSet.getAll() : dataSet;
             }));
 
             if (cInstance.instanceOfModule(dataSource, 'WS.Data/Source/Memory')) {
