@@ -7,25 +7,21 @@ define('Controls/Popup/Compatible/ShowDialogHelper', ['require', 'Core/Deferred'
 
       return function(path, config) {
          var result = moduleStubs.requireModule(path).addCallback(function(Component) {
-            var meta = {mode: 'floatArea'};
-
             if (isNewEnvironment()) {
                var dfr = new Deferred();
 
                var deps = ['Controls/Popup/Opener/BaseOpener'];
-               if (meta.mode === 'floatArea' && config.isStack === true) {
+               if (config.isStack === true) {
                   deps.push('Controls/Popup/Opener/Stack/StackController');
                   config._type = 'stack';
                   config.className = (config.className || '') + ' controls-Stack';
-               } else if (meta.mode === 'floatArea' && config.isStack === false) {
+               } else if (config.target) {
                   deps.push('Controls/Popup/Opener/Sticky/StickyController');
                   config._type = 'sticky';
                } else {
                   deps.push('Controls/Popup/Opener/Dialog/DialogController');
                   config._type = 'dialog';
                }
-               deps.push(config.template);
-
                deps.push(config.template);
 
                requirejs(['Controls/Popup/Compatible/Layer'], function(CompatiblePopup) {

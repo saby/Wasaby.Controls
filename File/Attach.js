@@ -59,10 +59,10 @@ define("File/Attach", ["require", "exports", "File/Attach/Lazy", "Core/core-simp
      *      attach.choose(FileSystem.getType());
      *   });
      *   self.getChildControlByName("clipboardBtn").subscribe("onActivated", function(){
-     *      attach.choose(ClipboardGetter.getType());
+     *      attach.choose(Clipboard.getType());
      *   });
      *   self.getChildControlByName("scanBtn").subscribe("onActivated", function(){
-     *      attach.choose(ScannerGetter.getType());
+     *      attach.choose(Scanner.getType());
      *   });
      *   self.getChildControlByName("uploadBtn").subscribe("onActivated", function(){
      *      attach.upload({
@@ -244,7 +244,7 @@ define("File/Attach", ["require", "exports", "File/Attach/Lazy", "Core/core-simp
          * Загрузка выбраных ресурсов.
          * При отсутствии ресурсов во внутреннем состоянии, возвращаеммый Deferred будет завершен ошибкой.
          * @param {*} [meta] Дополнительные мета-данные для отправки. Сигнатура зависит от конечного сервиса загрузки
-         * @return {Core/Deferred.<Array.<WS.Data/Entity/Model | Error>>} Набор, содержащий модели с результатами,
+         * @return {Core/Deferred.<Array.<File/Attach/Model | Error>>} Набор, содержащий модели с результатами,
          * либо ошибками загрузки
          * @example
          * Выбор и загрузка файла:
@@ -273,7 +273,7 @@ define("File/Attach", ["require", "exports", "File/Attach/Lazy", "Core/core-simp
          * </pre>
          * @method
          * @name File/Attach#upload
-         * @see WS.Data/Entity/Model
+         * @see File/Attach/Model
          * @see File/Attach/Base#getSelectedResource
          */
         upload: function (meta) {
@@ -354,10 +354,8 @@ define("File/Attach", ["require", "exports", "File/Attach/Lazy", "Core/core-simp
  *
  * @name File/Attach#onLoaded
  * @param {Core/EventObject} eventObject Дескриптор события.
- * @param {Array.<Error | WS.Data/Entity/Model>} results Массив, содержащий результаты загрузки выбранных ресурсов.
+ * @param {Array.<Error | File/Attach/Model>} results Массив, содержащий результаты загрузки выбранных ресурсов.
  * Эквивалентно рузультату Deferred'а .upload
- *
- * @see WS.Data/Entity/Model
  */
 /**
  * @event onLoadError
@@ -387,12 +385,12 @@ define("File/Attach", ["require", "exports", "File/Attach/Lazy", "Core/core-simp
  * @name File/Attach#onLoadedResource
  * @param {Core/EventObject} eventObject Дескриптор события.
  * @param {File/IResource} resource загружаемый ресурс
- * @param {Model} model Результат загрузки
+ * @param {File/Attach/Model} model Результат загрузки
  *
  * @see File/LocalFile
  * @see File/LocalFileLink
  * @see File/HttpFileLink
- * @see WS.Data/Entity/Model
+ * @see File/Attach/Model
  */
 /**
  * @event onChosen

@@ -29,6 +29,13 @@
    .align-items(center);
    height: @height_DateRangeBigChoose-header;
 }
+
+// Оборачиваем враппером т.к. иконка на кнопке странно позиционируется под ie 10
+// если на нее навесить маргин или падинг. Повторяется только в этом месте..
+.controls-DateRangeBigChoose__stateButton-wrapper {
+   padding-right: @padding-right_DateRangeBigChoose-state-button;
+}
+
 //todo
 .controls-DateRangeBigChoose__stateButton {
    cursor: pointer;
@@ -36,7 +43,6 @@
       .icon-size(@size_DateRangeBigChoose__stateButton_icon);
       color: @color_DateRangeBigChoose__stateButton_icon;
    }
-   padding-right: @padding-right_DateRangeBigChoose-state-button;
 }
 //todo
 .controls-DateRangeBigChoose__homeBtn {

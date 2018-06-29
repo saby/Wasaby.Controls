@@ -11,7 +11,7 @@ import IResourceConstructor = require("File/IResourceConstructor");
 class SourceOption {
     /**
      * @cfg {String} source Ссылка на модуль источника данных ISource
-     * @see WS.Data/Source/ISource
+     * @see File/Attach/Source
      */
     /**
      * @cfg {FunctionConstructor} resourceType Конструктор обёртки над ресурсом
@@ -21,7 +21,7 @@ class SourceOption {
      */
     /**
      * @cfg {Object} options Объект параметров для конструктора ISource
-     * @see WS.Data/Source/ISource
+     * @see File/Attach/Source
      */
     constructor(
         protected source: string,

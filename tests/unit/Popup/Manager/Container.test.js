@@ -2,10 +2,10 @@ define(
    [
       'Controls/Popup/Manager/Container',
       'WS.Data/Collection/List',
-      'Core/helpers/random-helpers'
+      'Core/helpers/Number/randomId'
    ],
 
-   function (Container, List, Random) {
+   function (Container, List, randomId) {
       'use strict';
       describe('Controls/Popup/Manager/Container', function () {
          var
@@ -14,7 +14,7 @@ define(
             popupContainer = new Container();
 
          it('add popupItem', function(){
-            id = Random.randomId('popup-');
+            id = randomId('popup-');
             items.add({
                id: id,
                popupOptions: {}

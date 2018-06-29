@@ -6,13 +6,15 @@ define('Controls/Container/Suggest/Layout',
       'WS.Data/Type/descriptor',
       'Controls/Container/Search/SearchContextField',
       'Controls/Container/Filter/FilterContextField',
+      'Core/moduleStubs',
       'css!Controls/Container/Suggest/Layout/Suggest'
    ],
-   function(Control, template, emptyTemplate, types, SearchContextField, FilterContextField) {
+   function(Control, template, emptyTemplate, types, SearchContextField, FilterContextField, mStubs) {
       
       'use strict';
       
       var CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
+      var DEPS = ['Controls/Container/Suggest/Layout/_SuggestListWrapper'];
       
       var _private = {
          hasMore: function(searchResult) {
@@ -30,11 +32,38 @@ define('Controls/Container/Suggest/Layout',
          },
          
          close: function(self) {
+            self._orient = null;
             this.suggestStateNotify(self, false);
          },
          
          open: function(self) {
-            this.suggestStateNotify(self, true);
+            _private.loadDependencies(self).addCallback(function() {
+               _private.suggestStateNotify(self, true);
+            });
+         },
+   
+         calcOrient: function(self, win) {
+            /* calculate algorithm:
+               - bottom of suggest behind the screen -> change orient, need to revert (-up)
+               - bottom of suggest on screen and suggest reverted -> nothing to do (-up)
+               - bottom of suggest on screen -> default orient (-down)
+             */
+            var suggestHeight = self._children.suggestionsContainer.offsetHeight,
+               containerRect = self._container.getBoundingClientRect(),
+               needToRevert = suggestHeight + containerRect.bottom > (win || window).innerHeight,
+               newOrient;
+            
+            if (needToRevert && self._options.style !== 'overInput') {
+               newOrient = '-up';
+            } else {
+               if (self._orient === '-up') {
+                  newOrient = self._orient;
+               } else {
+                  newOrient = '-down';
+               }
+            }
+            
+            return newOrient;
          },
    
          shouldSearch: function(self, value) {
@@ -50,11 +79,10 @@ define('Controls/Container/Suggest/Layout',
             if (resultData) {
                var data = resultData.data;
                var metaData = data && data.getMetaData();
+               var result = metaData.results;
    
-               if (metaData) {
-                  if (metaData[CURRENT_TAB_META_FIELD] && self._tabsSelectedKey !== metaData[CURRENT_TAB_META_FIELD]) {
-                     self._tabsSelectedKey = metaData[CURRENT_TAB_META_FIELD];
-                  }
+               if (result && result.get(CURRENT_TAB_META_FIELD)) {
+                  self._tabsSelectedKey = result.get(CURRENT_TAB_META_FIELD);
                }
             }
    
@@ -81,6 +109,21 @@ define('Controls/Container/Suggest/Layout',
             } else {
                _private.close(self);
             }
+         },
+         
+         loadDependencies: function(self) {
+            if (!self._dependenciesDeferred) {
+               var deps = DEPS.concat([self._options.suggestTemplate.templateName]);
+               if (self._options.footerTemplate !== null) {
+                  deps = deps.concat([self._options.footerTemplate.templateName]);
+               }
+               if (self._options.suggestStyle === 'overInput') {
+                  deps.push('Controls/Button/Close');
+               }
+               
+               self._dependenciesDeferred = mStubs.require(deps);
+            }
+            return self._dependenciesDeferred;
          }
       };
    
@@ -107,7 +150,8 @@ define('Controls/Container/Suggest/Layout',
          _filter: null,
          _tabsSelectedKey: null,
          _searchResult: null,
-         _orient: '-down',
+         _dependenciesDeferred: null,
+         _loading: false,
          
          // <editor-fold desc="LifeCycle">
          
@@ -127,17 +171,11 @@ define('Controls/Container/Suggest/Layout',
    
          _afterUpdate: function() {
             /* 1) checking suggestionsContainer in children, because suggest initializing asynchronously
-               2) do not change orientation of suggest, if suggest already showed */
-            if (this._options.suggestState && this._children.suggestionsContainer) {
-               var orient = this._orient;
-               
-               if (this._children.suggestionsContainer.getBoundingClientRect().bottom > window.innerHeight) {
-                  this._orient = '-up';
-               } else {
-                  this._orient = '-down';
-               }
-               
+               2) do not change orientation of suggest, if suggest already showed or data loading now */
+            if (this._options.suggestState && this._children.suggestionsContainer && !this._loading) {
+               var orient = _private.calcOrient(this);
                if (this._orient !== orient) {
+                  this._orient = orient;
                   this._forceUpdate();
                }
             }
@@ -161,6 +199,9 @@ define('Controls/Container/Suggest/Layout',
          
          _changeValueHandler: function(event, value) {
             this._searchValue = value;
+            
+            /* preload suggest dependencies on value changed */
+            _private.loadDependencies(this);
             _private.updateSuggestState(this);
          },
    
@@ -171,8 +212,7 @@ define('Controls/Container/Suggest/Layout',
          },
    
          _tabsSelectedKeyChanged: function(event, key) {
-            this._tabsSelectedKey = key;
-            _private.updateFilter(this, this._searchValue, this._tabsSelectedKey);
+            _private.updateFilter(this, this._searchValue, key);
          },
          
          _select: function(event, item) {
@@ -182,12 +222,14 @@ define('Controls/Container/Suggest/Layout',
          },
          
          _searchStart: function() {
+            this._loading = true;
             if (this._options.searchStartCallback) {
                this._options.searchStartCallback();
             }
          },
          
          _searchEnd: function(result) {
+            this._loading = false;
             _private.precessResultData(this, result);
             if (this._options.searchEndCallback) {
                this._options.searchEndCallback();

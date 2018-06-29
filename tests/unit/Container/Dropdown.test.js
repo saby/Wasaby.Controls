@@ -1,6 +1,6 @@
 define(
    [
-      'Controls/Container/Dropdown',
+      'Controls/Dropdown/Container',
       'WS.Data/Source/Memory',
       'WS.Data/Collection/RecordSet'
    ],
@@ -48,7 +48,17 @@ define(
          });
 
          let config = {
-            selectedKeys: '2',
+            selectedKeys: '[2]',
+            keyProperty: 'id',
+            source: new Memory({
+               idProperty: 'id',
+               data: items
+            })
+         };
+
+         let configLazyLoad = {
+            lazyItemsLoad: true,
+            selectedKeys: '[2]',
             keyProperty: 'id',
             source: new Memory({
                idProperty: 'id',
@@ -57,11 +67,13 @@ define(
          };
 
          let dropdownContainer = new Dropdown(config);
+         let dropdownLazyLoad = new Dropdown(configLazyLoad);
          dropdownContainer._options = config;
+         dropdownLazyLoad._options = config;
          beforeEach(() => {
             return new Promise((resolve) => {
                dropdownContainer.saveOptions({
-                  selectedKeys: '2',
+                  selectedKeys: '[2]',
                   keyProperty: 'id'
                });
                dropdownContainer._beforeMount(config).addCallback(resolve);
@@ -105,7 +117,7 @@ define(
                }
             };
             Dropdown._private.selectItem.call(dropdownContainer, dropdownContainer._items.at(5));
-            assert.deepEqual(selectedItem[0], dropdownContainer._items.at(5));
+            assert.deepEqual(selectedItem, dropdownContainer._items.at(5));
          });
 
          it('before update source', () => {
@@ -115,7 +127,7 @@ define(
             });
             return new Promise((resolve) => {
                dropdownContainer._beforeUpdate({
-                  selectedKeys: '2',
+                  selectedKeys: '[2]',
                   keyProperty: 'id',
                   source: new Memory({
                      idProperty: 'id',
@@ -157,6 +169,36 @@ define(
             };
             dropdownContainer._items = null;
             dropdownContainer._open();
+         });
+
+         it('lazy load', () => {
+            dropdownLazyLoad._beforeMount(configLazyLoad);
+            assert.equal(dropdownLazyLoad._items, undefined);
+         });
+
+         it('before update source', () => {
+            items.push({
+               id: '5',
+               title: 'Запись 11'
+            });
+            dropdownLazyLoad._beforeUpdate({
+               lazyItemsLoad: true,
+               selectedKeys: '[2]',
+               keyProperty: 'id',
+               source: new Memory({
+                  idProperty: 'id',
+                  data: items
+               })
+            });
+            assert.equal(dropdownLazyLoad._items, null);
+         });
+
+         it('open lazyLoad', () => {
+            dropdownLazyLoad._children.DropdownOpener = {
+               close: setTrue.bind(this, assert),
+               open: setTrue.bind(this, assert)
+            };
+            dropdownLazyLoad._open();
          });
 
          function setTrue(assert) {

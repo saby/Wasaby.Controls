@@ -4,9 +4,8 @@
 define('SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil', [
    'Core/constants',
    'Core/markup/ParserUtilities',
-   'WS.Data/Source/SbisService',
    'Core/Deferred'
-], function(constants, Parser, SbisService, Deferred) {
+], function(constants, Parser, Deferred) {
    'use strict';
 
    /**
@@ -210,7 +209,7 @@ define('SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil', [
 
          findAnchors(parsed);
 
-         if (anchors) {
+         if (anchors.length > 0) {
             require(['WS.Data/Source/SbisService'], function(SbisService) {
                var source = new SbisService({
                   endpoint: {

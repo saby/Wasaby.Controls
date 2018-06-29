@@ -78,14 +78,14 @@ define([
          assert.isTrue(!!mountResult.addCallback, '_beforeMount doesn\'t return deferred');
 
          assert.isTrue(!!ctrl._sourceController, '_dataSourceController wasn\'t created before mounting');
-         assert.deepEqual(filter, ctrl._filter, 'incorrect filter before mounting');
+         assert.deepEqual(filter, ctrl._options.filter, 'incorrect filter before mounting');
 
          //received state 3'rd argument
          mountResult = ctrl._beforeMount(cfg, {}, rs);
          assert.isFalse(!!(mountResult && mountResult.addCallback), '_beforeMount return deferred with received state');
 
          assert.isTrue(!!ctrl._sourceController, '_dataSourceController wasn\'t created before mounting');
-         assert.deepEqual(filter, ctrl._filter, 'incorrect filter before mounting');
+         assert.deepEqual(filter, ctrl._options.filter, 'incorrect filter before mounting');
 
          //создаем новый сорс
          var oldSourceCtrl = ctrl._sourceController;
@@ -112,7 +112,7 @@ define([
 
          ctrl._beforeUpdate(cfg);
          assert.isTrue(ctrl._sourceController !== oldSourceCtrl, '_dataSourceController wasn\'t changed before updating');
-         assert.deepEqual(filter2, ctrl._filter, 'incorrect filter before updating');
+         assert.deepEqual(filter2, ctrl._options.filter, 'incorrect filter before updating');
 
          //сорс грузит асинхронно
          setTimeout(function() {
@@ -1243,6 +1243,42 @@ define([
             instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
          });
 
+         it('no showActionsMenu context without actions', function() {
+            var callBackCount = 0;
+            var cfg = {
+                  viewName: 'Controls/List/ListView',
+                  viewConfig: {
+                     idProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: [],
+                     idProperty: 'id'
+                  },
+                  viewModelConstructor: ListViewModel,
+                  source: source
+               },
+               instance = new BaseControl(cfg),
+               fakeEvent = {
+                  type: 'itemcontextmenu'
+               },
+               itemData = {
+                  itemActions: {all: []}
+               };
+            instance._children = {
+               itemActionsOpener: {
+                  open: function() {
+                     callBackCount++;
+                  }
+               }
+            };
+
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg);
+            instance._showActionsMenu(fakeEvent, itemData);
+            assert.equal(callBackCount, 0); //проверяем что не открывали меню
+
+         });
+
          it('showActionsMenu no context', function() {
             var callBackCount = 0;
             var
@@ -1327,6 +1363,11 @@ define([
                   close: function() {
                      callBackCount++;
                   }
+               },
+               swipeControl: {
+                  closeSwipe: function() {
+                     callBackCount++;
+                  }
                }
             };
             instance._listViewModel._activeItem = {
@@ -1346,7 +1387,7 @@ define([
                   }
                }]});
             assert.equal(instance._listViewModel._activeItem, null);
-            assert.equal(callBackCount, 4);
+            assert.equal(callBackCount, 5);
          });
 
          it('_listSwipe  multiSelectStatus = 1', function(done) {

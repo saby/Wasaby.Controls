@@ -32,7 +32,7 @@ define("File/Attach/Uploader", ["require", "exports", "File/Attach/Container/Sou
          * @param {Array.<File/IResource>} files Загружаемые файлы
          * @param {Object} [meta] Дополнительные мета-данные для отправки
          * @param {Object.<Function>} [handlers]
-         * @return {Core/Deferred.<Array.<WS.Data/Entity/Model | Error>>}
+         * @return {Core/Deferred.<Array.<File/Attach/Model | Error>>}
          * @name File/Attach/Uploader#upload
          * @method
          */
@@ -61,7 +61,7 @@ define("File/Attach/Uploader", ["require", "exports", "File/Attach/Container/Sou
          * загрузка одного файла через ISource полученный из SourceContainer
          * @param {File/IResource} file Загружаемый файл
          * @param {Object} [meta] Дополнительные мета-данные для отправки
-         * @return {Core/Deferred.<WS.Data/Entity/Model | Error>}
+         * @return {Core/Deferred.<File/Attach/Model | Error>}
          * @private
          * @name File/Attach/Uploader#_uploadFile
          * @method
@@ -81,7 +81,7 @@ define("File/Attach/Uploader", ["require", "exports", "File/Attach/Container/Sou
         };
         /**
          * Подписка на события ISource для их дальнейшего проброса
-         * @param {WS.Data/Source/ISource} source
+         * @param {File/Attach/Source} source
          * @private
          */
         Uploader.prototype._subscribeToSource = function (source) {

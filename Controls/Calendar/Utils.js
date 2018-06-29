@@ -1,10 +1,24 @@
 define('Controls/Calendar/Utils', [
-   'Core/helpers/i18n/locales'
-], function(locales) {
-      
+   'Core/helpers/i18n/locales',
+   'Controls/Utils/Date'
+], function(
+   locales,
+   DateUtil
+) {
    'use strict';
 
    var locale = locales.current;
+
+   var getDayRange = function(startDate, endDate, quantum) {
+      var date = new Date(startDate);
+      if (startDate <= endDate) {
+         date.setDate(date.getDate() + quantum - 1);
+         return [startDate, date];
+      } else {
+         date.setDate(date.getDate() - quantum + 1);
+         return [date, startDate];
+      }
+   };
 
    var Utils = {
 
@@ -89,6 +103,84 @@ define('Controls/Calendar/Utils', [
          }
 
          return weeksArray;
+      },
+
+      updateRangeByQuantum: function(baseDate, date, quantum) {
+         var lastQuantumLength, lastQuantumType,
+            days, start, end, i, date2;
+
+         if ('days' in quantum) {
+            lastQuantumType = 'days';
+            for (i = 0; i < quantum.days.length; i++) {
+               lastQuantumLength = quantum.days[i];
+               days = DateUtil.getDaysByRange(baseDate, date) + 1;
+               if (quantum.days[i] >= days) {
+                  return getDayRange(baseDate, date, lastQuantumLength);
+               }
+            }
+         }
+         if ('weeks' in quantum) {
+            lastQuantumType = 'weeks';
+            for (i = 0; i < quantum.weeks.length; i++) {
+               lastQuantumLength = quantum.weeks[i];
+               if (baseDate <= date) {
+                  start = DateUtil.getStartOfWeek(baseDate);
+                  end = DateUtil.getEndOfWeek(baseDate);
+                  end.setDate(end.getDate() + (lastQuantumLength - 1) * 7);
+               } else {
+                  start = DateUtil.getStartOfWeek(baseDate);
+                  start.setDate(start.getDate() - (lastQuantumLength - 1) * 7);
+                  end = DateUtil.getEndOfWeek(baseDate);
+               }
+               if (date >= start && date <= end) {
+                  return [start, end];
+               }
+            }
+         }
+         if ('months' in quantum) {
+            lastQuantumType = 'months';
+            for (i = 0; i < quantum.months.length; i++) {
+               lastQuantumLength = quantum.months[i];
+               if (baseDate <= date) {
+                  start = DateUtil.getStartOfMonth(baseDate);
+                  end = DateUtil.getEndOfMonth(baseDate);
+                  end.setMonth(end.getMonth() + (lastQuantumLength - 1));
+               } else {
+                  start = DateUtil.getStartOfMonth(baseDate);
+                  start.setMonth(start.getMonth() - (lastQuantumLength - 1));
+                  end = DateUtil.getEndOfMonth(baseDate);
+               }
+               if (date >= start && date <= end) {
+                  return [start, end];
+               }
+            }
+         }
+
+         if (lastQuantumType === 'days') {
+            return getDayRange(baseDate, date, lastQuantumLength);
+         } else if (lastQuantumType === 'weeks') {
+            date2 = new Date(baseDate);
+            date2.setDate(date2.getDate() + (lastQuantumLength - 1) * 7);
+            if (baseDate <= date) {
+               return [DateUtil.getStartOfWeek(baseDate), DateUtil.getEndOfWeek(date2)];
+            } else {
+               return [DateUtil.getStartOfWeek(date2), DateUtil.getEndOfWeek(baseDate)];
+            }
+         } else if (lastQuantumType === 'months') {
+            date2 = new Date(baseDate);
+            date2.setMonth(date2.getMonth() + lastQuantumLength - 1);
+            if (baseDate <= date) {
+               return [DateUtil.getStartOfMonth(baseDate), DateUtil.getEndOfMonth(date2)];
+            } else {
+               return [DateUtil.getStartOfMonth(date2), DateUtil.getEndOfMonth(baseDate)];
+            }
+         }
+
+         if (baseDate <= date) {
+            return [baseDate, date];
+         } else {
+            return [date, baseDate];
+         }
       }
    };
 

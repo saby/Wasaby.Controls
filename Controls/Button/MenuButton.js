@@ -2,26 +2,26 @@ define('Controls/Button/MenuButton',
    [
       'Core/Control',
       'tmpl!Controls/Button/Menu/MenuButton',
-      'Controls/Controllers/SourceController',
-      'Controls/Input/Dropdown/Util',
       'Controls/Button/Classes',
       'css!Controls/Button/Menu/MenuButton',
       'Controls/Button'
    ],
-   function(Control, template, SourceController, dropdownUtil, Classes, menuHeadTemplate) {
+   function(Control, template, Classes) {
 
       /**
        * MenuButton
-       * @class Controls/Button
+       * @class Controls/MenuButton
        * @extends Core/Control
        * @mixes Controls/Button/interface/ICaption
        * @mixes Controls/Button/interface/IClick
        * @mixes Controls/Button/interface/IIcon
        * @mixes Controls/interface/ITooltip
        * @mixes Controls/interface/ISource
+       * @mixes Controls/interface/IDropdown
        * @control
        * @public
        * @category Button
+       * @demo Controls-demo/Dropdown/MenuVdom
        */
 
       'use strict';
@@ -34,16 +34,33 @@ define('Controls/Button/MenuButton',
        * @variant cross Menu have cross in left top corner
        */
 
+      /**
+       * @name Controls/MenuButton#size
+       * @cfg {String} Size of the menu button.
+       * @variant s Button has s size. Not supported by these button styles: buttonPrimary, buttonDefault, buttonAdd, iconButtonBordered.
+       * @variant m Button has m size.
+       * @variant l Button has l size.
+       * @variant xl Button has xl size. Not supported by these button styles: buttonPrimary, buttonDefault, buttonAdd, iconButtonBordered.
+       */
+
+      /**
+       * @name Controls/MenuButton#style
+       * @cfg {String} Display style of menu button.
+       * @variant iconButtonBordered Button display as icon with border.
+       * @variant linkMain Button display as main link style.
+       * @variant linkMain2 Button display as first nonaccent link style.
+       * @variant linkMain3 Button display as second nonaccent link style.
+       * @variant linkAdditional Button display as third nonaccent link style.
+       * @variant linkAdditional2 Button display as first accent link style.
+       * @variant linkAdditional3 Button display as second accent link style.
+       * @variant linkAdditional4 Button display as third accent link style.
+       * @variant linkAdditional5 Button display as fourth accent link style.
+       * @variant buttonPrimary Button display as primary contour button style.
+       * @variant buttonDefault Button display as default contour button style.
+       * @variant buttonAdd Button display as button with icon add style.
+       */
+
       var _private = {
-         loadItems: function(instance, source, filter) {
-            instance._sourceController = new SourceController({
-               source: source
-            });
-            return instance._sourceController.load(filter || {}).addCallback(function(items) {
-               instance._items = items;
-               return items;
-            });
-         },
          cssStyleGeneration: function(self, options) {
             var sizes = ['small', 'medium', 'large'],
                menuStyle = options.headConfig && options.headConfig.menuStyle,
@@ -71,45 +88,15 @@ define('Controls/Button/MenuButton',
 
       var MenuButton = Control.extend({
          _template: template,
-         _menuHeadTemplate: menuHeadTemplate,
 
          _beforeMount: function(options) {
             _private.cssStyleGeneration(this, options);
-            this._onResult = this._onResult.bind(this);
          },
 
-         _beforeUpdate: function(newOptions) {
-            /* source changed, items is not actual now */
-            if (newOptions.source !== this._options.source) {
-               this._items = null;
-            }
-         },
-
-         _open: function() {
-            var self = this;
-
-            function open() {
-               dropdownUtil.open(self, self._children.popupTarget._container);
-            }
-
-            if (this._options.source && !this._items) {
-               _private.loadItems(this, this._options.source, this._filter).addCallback(function(items) {
-                  self._items = items;
-                  open();
-                  return items;
-               });
-            } else {
-               open();
-            }
-         },
-         _onResult: function(result) {
-            if (result.action === 'itemClick') {
-               this._notify('onMenuItemActivate', result.data);
-               if (!result.data[0].get('@parent')) {
-                  this._children.DropdownOpener.close();
-               }
-            }
+         _onItemClickHandler: function(event, result) {
+            this._notify('onMenuItemActivate', [result[0]]);
          }
+         
       });
 
       MenuButton.getDefaultOptions = function() {

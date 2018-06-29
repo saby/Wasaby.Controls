@@ -1,14 +1,16 @@
 /// <amd-module name="File/ResourceAbstract" />
-
-import IResource = require("IResource");
+import {IResource, FileInfo} from 'File/IResource';
 
 /**
  * @class
  * @abstract
  * @implements File/IResource
+ * @name File/ResourceAbstract
  */
-abstract class ResourceAbstract implements IResource {
-    protected _meta: object;
+export abstract class ResourceAbstract implements IResource {
+    protected _meta?: object;
+    protected _info?: FileInfo;
+
     /**
      * Возвращает дополнительную информацию по ресурсу
      * @return {Object}
@@ -21,6 +23,7 @@ abstract class ResourceAbstract implements IResource {
         }
         return this._meta;
     }
+
     /**
      * Устанавливает дополнительную информацию по ресурсу
      * @param {Object} meta
@@ -30,6 +33,37 @@ abstract class ResourceAbstract implements IResource {
     setMeta(meta: object) {
         this._meta = meta;
     }
-}
 
-export = ResourceAbstract;
+    /**
+     * Возвращает информацию о файле, если такая имеется
+     * @name File/ResourceAbstract#getInfo
+     * @return {FileInfo}
+     */
+    getInfo(): FileInfo {
+        if (!this._info) {
+            this.setInfo({});
+        }
+        return this._info;
+    }
+    getFileInfo(): FileInfo {
+        return this.getInfo();
+    }
+
+    /**
+     * Возвращает информацию о файле
+     * @name File/ResourceAbstract#setInfo
+     * @param {FileInfo} info
+     */
+    setInfo(info: Partial<FileInfo>) {
+        this._info = info || {};
+    }
+
+    /**
+     * Возвращает имя файла
+     * @name File/ResourceAbstract#getName
+     * @return {String}
+     */
+    getName(): string {
+        return this.getFileInfo().name || "";
+    }
+}

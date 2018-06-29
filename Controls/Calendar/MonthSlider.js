@@ -1,20 +1,20 @@
 define('Controls/Calendar/MonthSlider', [
    'Core/Control',
    'Core/core-merge',
-   'SBIS3.CONTROLS/Utils/DateUtil',
+   'Controls/Calendar/interface/IMonth',
    'Controls/Calendar/MonthSlider/Slider',
    'Controls/Calendar/Utils',
+   'Controls/Utils/Date',
    'tmpl!Controls/Calendar/MonthSlider/MonthSlider',
-   'Controls/Calendar/interface/IMonth',
    'css!Controls/Calendar/MonthSlider/MonthSlider'
 ], function(
    BaseControl,
    coreMerge,
-   DateUtil,
+   IMonth,
    Slider,
    calendarUtils,
-   monthTmpl,
-   IMonth
+   DateUtil,
+   monthTmpl
 ) {
 
    'use strict';

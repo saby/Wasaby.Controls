@@ -12,8 +12,10 @@
 	position: absolute;
 	top: 5px;
 	right: 0;
+	z-index: 1;
 }
 .controls-Suggest__suggestionsContainer {
+
 	position: absolute;
 	border: @border-width_suggestionsContainer @border-color_suggestionsContainer solid;
 	box-sizing: border-box;
@@ -41,7 +43,9 @@
 }
 
 .controls-Suggest__suggestionsContainer-orient {
-	visibility: hidden;
+	position: fixed;
+	top: -9999px;
+	left: -9999px;
 }
 .controls-Suggest__suggestionsContainer-orient-up {
 	bottom: @height_InputRender_m;

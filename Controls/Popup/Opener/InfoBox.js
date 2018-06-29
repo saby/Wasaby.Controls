@@ -15,6 +15,7 @@ define('Controls/Popup/Opener/InfoBox',
        * @public
        * @category Popup
        * @author Степин Павел Владимирович
+       * @demo Controls-demo/InfoBox/InfoBox
        */
 
       /**
@@ -51,15 +52,21 @@ define('Controls/Popup/Opener/InfoBox',
        * @variant lc Всплывающее окно отображается слева относительно точки построения, выравнивается по центру
        * @variant lb Всплывающее окно отображается слева относительно точки построения, выравнивается по нижнему краю
        */
+      var INFOBOX_HIDE_DELAY = 300;
+      var INFOBOX_SHOW_DELAY = 300;
 
       //Конфигурация инфобокса по умолчанию
       var DEFAULT_CONFIG = {
          position: 'tl',
          style: 'default',
-         float: false
+         float: false,
+         hideDelay: INFOBOX_HIDE_DELAY,
+         showDelay: INFOBOX_SHOW_DELAY
       };
 
       var InfoBox = Base.extend({
+         _openId: null,
+         _closeId: null,
 
          /**
           * Открыть инфобокс
@@ -70,10 +77,19 @@ define('Controls/Popup/Opener/InfoBox',
             //todo Есть проблема с обновлением в инфобоксе. В update прилетает новый конфиг, но в dom находится
             //еще старая версия подсказки => нельзя получить актуальные размеры, чтобы правильно спозиционироваться.
             if (this.isOpened()) { // Инфобокс всегда один
-               this.close();
+               this.close(0);
             }
-
+            this._clearTimeout();
             cfg = cMerge(cClone(DEFAULT_CONFIG), cfg);
+
+            //TODO код с задержкой дублируется в Popup/Infobox. По задаче нужно обобщить эти 2 компонента: https://online.sbis.ru/opendoc.html?guid=b8584cee-0310-4e71-a8fb-6c38e4306bb5
+            if (cfg.showDelay > 0) {
+               this._openId = setTimeout(this._open.bind(this, cfg), cfg.showDelay);
+            } else {
+               this._open(cfg);
+            }
+         },
+         _open: function(cfg) {
             InfoBox.superclass.open.call(this, {
                target: cfg.target,
                position: cfg.position,
@@ -83,11 +99,28 @@ define('Controls/Popup/Opener/InfoBox',
                   message: cfg.message,
                   float: cfg.float
                },
-               className: 'controls-InfoBox__popup controls-InfoBox-style-' + cfg.style,
+               className: 'controls-InfoBox__popup controls-PreviewerController controls-InfoBox-style-' + cfg.style,
                template: 'tmpl!Controls/Popup/Opener/InfoBox/resources/template'
             }, 'Controls/Popup/Opener/InfoBox/InfoBoxController');
-         }
+         },
+         close: function(delay) {
+            delay = delay === undefined ? INFOBOX_HIDE_DELAY : delay;
+            this._clearTimeout();
+            if (delay > 0) {
+               this._closeId = setTimeout(InfoBox.superclass.close.bind(this), delay);
+            } else {
+               InfoBox.superclass.close.call(this);
+            }
+         },
 
+         _closeOnTargetScroll: function() {
+            this.close(0);
+         },
+
+         _clearTimeout: function() {
+            clearTimeout(this._openId);
+            clearTimeout(this._closeId);
+         }
       });
 
       InfoBox.getDefaultOptions = function() {

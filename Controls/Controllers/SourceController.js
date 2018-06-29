@@ -195,6 +195,7 @@ define('Controls/Controllers/SourceController',
             if (this._queryParamsController) {
                this._queryParamsController.destroy();
             }
+            this.cancelLoading();
             this._options = {};
          }
       });

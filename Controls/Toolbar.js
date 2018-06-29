@@ -25,6 +25,7 @@ define('Controls/Toolbar', [
     * @public
     * @category Toolbar
     * @author Крайнов Д.
+    * @demo Controls-demo/Toolbar/ToolbarVdom
     */
 
    /**

@@ -1,5 +1,4 @@
 define('Controls/Calendar/MonthList', [
-   'Core/core-extend',
    'Core/Control',
    'tmpl!Controls/Calendar/MonthList/MonthList',
    'Controls/Calendar/MonthList/CalendarSource',
@@ -8,7 +7,6 @@ define('Controls/Calendar/MonthList', [
    'View/decorators',
    'Core/Date'
 ], function(
-   extend,
    BaseControl,
    template,
    CalendarSource

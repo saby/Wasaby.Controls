@@ -637,17 +637,14 @@ define(
                backgroundColorClass += '-selected';
                if (scope.selectedStart || scope.selectedEnd) {
                   if (scope.selectionProcessing) {
-                     backgroundColorClass += '-startend-unfinished';
+                     backgroundColorClass += '-startend';
                   }
                }
             } else {
                backgroundColorClass += '-unselected';
             }
 
-            if (scope.enabled) {
-               textColorClass += '-enabled';
-               backgroundColorClass += '-enabled';
-            } else {
+            if (!scope.enabled) {
                textColorClass += '-disabled';
                backgroundColorClass += '-disabled';
             }
@@ -672,10 +669,10 @@ define(
                   }
 
                   if (scope.selectedUnfinishedStart) {
-                     css.push('controls-MonthView__item-selectedStart-unfinished');
+                     css.push('controls-MonthView__item-selectedStart');
                   }
                   if (scope.selectedUnfinishedEnd) {
-                     css.push('controls-MonthView__item-selectedEnd-unfinished');
+                     css.push('controls-MonthView__item-selectedEnd');
                   }
                   if (scope.selected && scope.selectedStart && !scope.selectedUnfinishedStart) {
                      css.push('controls-MonthView__item-selectedStart');

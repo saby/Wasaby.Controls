@@ -18,6 +18,7 @@ define('Controls/HighChartsLight',
        * @mixes Controls/interface/IHighCharts
        * @control
        * @authors Volotskoy V.D., Sukhoruchkin A.S.
+       * @demo Controls-demo/HighChartsLight/HighChartsLight
        */
 
       var _private = {
@@ -41,6 +42,7 @@ define('Controls/HighChartsLight',
             },
 
             _afterMount: function(config) {
+               this._notify('register', ['resize', this, this._reflow], {bubbling: true});
                Highcharts.setOptions({
                   lang: {
                      numericSymbols: ['', '', '', '', '', ''],
@@ -67,8 +69,13 @@ define('Controls/HighChartsLight',
 
 
             _beforeUnmount: function() {
+               this._notify('unregister', ['resize', this], {bubbling: true});
                this._chartInstance.destroy();
                this._chartInstance = undefined;
+            },
+
+            _reflow: function() {
+               this._chartInstance.reflow();
             }
          });
 

@@ -1,19 +1,25 @@
 @keyframes itemActionsSwipe {
   0% {
-    max-width:0;
+    transform: translate(100%, 0);
   }
   100% {
-    max-width:100%;
+    transform: translate(0, 0);
   }
+}
+.controls-itemActionsV_swipe_animationContainer {
+  position:absolute;
+  right: 0;
+  bottom: 0;
+  overflow:hidden;
+  height: 100%;
+  box-sizing: border-box;
+  background-color: transparent;
 }
 .controls-itemActionsV_swipe {
   align-items:center;
   display: inline-flex;
-  position:absolute;
-  .animation(itemActionsSwipe, 1s);
+  animation: itemActionsSwipe 0.35s 0ms ease;
   height: 100%;
-  right: 0;
-  bottom: 0;
   padding: 0 @padding_itemActions_action 0 @padding_itemActions_action + @width_itemActions_swipeShadow;
   overflow:hidden;
   box-sizing: border-box;
@@ -23,7 +29,7 @@
   background-image: -ms-linear-gradient(left, transparent,  @backgroun-color_itemActions_swipe_shadow @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe 100%);
   background-image: -o-linear-gradient(left, transparent,  @backgroun-color_itemActions_swipe_shadow @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe 100%);
   background-image: linear-gradient(to right, transparent,  @backgroun-color_itemActions_swipe_shadow @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe 100%);
-  z-index: 2;
+  z-index: 99;
 }
 .controls-itemActionsV__action_padding_swipe {
   padding: @padding_itemActions_action_swipe;

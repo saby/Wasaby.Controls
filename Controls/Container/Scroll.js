@@ -25,6 +25,7 @@ define('Controls/Container/Scroll',
        * @control
        * @public
        * @category Container
+       * @demo Controls-demo/Container/Scroll
        */
 
       /**

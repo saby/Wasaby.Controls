@@ -3,42 +3,109 @@
  */
 define('Controls/Popup/Compatible/BaseOpener', [
    'Core/core-merge',
-   'Core/helpers/random-helpers',
+   'Core/helpers/Number/randomId',
    'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea'
 ],
-function(cMerge, Random) {
+function(cMerge, randomId) {
    /**
        * Слой совместимости для базового опенера для открытия старых шаблонов
        */
    return {
       _prepareConfigForOldTemplate: function(cfg, templateClass) {
+         var dimensions = this._getDimensions(templateClass);
          cfg.templateOptions = {
             templateOptions: cfg.templateOptions || cfg.componentOptions || {},
+            componentOptions: cfg.templateOptions || cfg.componentOptions || {},
             template: cfg.template,
             type: cfg._type,
             handlers: cfg.handlers,
             _initCompoundArea: cfg._initCompoundArea,
 
             //На каждое обновление конфига генерируем новый id, чтобы понять, что нужно перерисовать шаблон
-            _compoundId: Random.randomId('compound-')
+            _compoundId: randomId('compound-')
          };
 
          if (cfg.target) {
+            //нужно для миникарточки, они хотят работать с CompoundArea - и ей надо дать target
+            //причем работают с jquery объектом
+            cfg.templateOptions.target = cfg.target;
             cfg.target = cfg.target[0] ? cfg.target[0] : cfg.target;
+         }
+
+         if (cfg.record) { //от RecordFloatArea
+            cfg.templateOptions.record = cfg.record;
+         }
+         if (cfg.parent) {
+            cfg.templateOptions.__parentFromCfg = cfg.parent;
+         }
+         if (cfg.newRecord) { //от RecordFloatArea
+            cfg.templateOptions.newRecord = cfg.newRecord;
+         }
+
+         if (cfg.context) {
+            cfg.templateOptions.context = cfg.context;
+         }
+
+         if (cfg.linkedContext) {
+            cfg.templateOptions.linkedContext = cfg.linkedContext;
          }
 
          if (cfg.hasOwnProperty('autoHide')) {
             cfg.closeByExternalClick = cfg.autoHide;
          }
 
+         if (dimensions.title) {
+            cfg.templateOptions.caption = dimensions.title;
+         }
+
+         var revertPosition = {
+            top: 'bottom',
+            bottom: 'top',
+            left: 'right',
+            right: 'left'
+         };
+
+         if (cfg.hasOwnProperty('verticalAlign')) {
+            cfg.verticalAlign = {side: revertPosition[cfg.verticalAlign]};
+         }
+
+         if (cfg.hasOwnProperty('side')) {
+            cfg.horizontalAlign = {side: revertPosition[cfg.side]};
+         }
+
+         if (cfg.hasOwnProperty('offset')) {
+            if (cfg.offset.x) {
+               cfg.horizontalAlign = cfg.horizontalAlign || {};
+               cfg.horizontalAlign.offset = cfg.offset.x;
+            }
+            if (cfg.offset.y) {
+               cfg.verticalAlign = cfg.verticalAlign || {};
+               cfg.verticalAlign.offset = cfg.offset.y;
+            }
+         }
+
+         cfg.corner = cfg.corner || {};
+         if (cfg.direction !== 'right' && cfg.direction !== 'left') {
+            cfg.direction = 'left';
+         }
+         cfg.corner.horizontal = revertPosition[cfg.direction];
+
+         if (cfg.hasOwnProperty('border')) {
+            cfg.templateOptions.hideCross = !cfg.border;
+         }
+
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
          this._setSizes(cfg, templateClass);
       },
       _prepareConfigForNewTemplate: function(cfg, templateClass) {
-         cfg.componentOptions = cfg.templateOptions || cfg.componentOptions || {};
-         cfg.componentOptions.template = cfg.template;
+         cfg.componentOptions = {innerComponentOptions: cfg.templateOptions || cfg.componentOptions};
+         cfg.componentOptions.innerComponentOptions.template = cfg.template;
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea';
          cfg.animation = 'off';
+
+         if (cfg.onResultHandler) { //передаем onResult - колбэк, объявленный на opener'e, в compoundArea.
+            cfg.componentOptions.onResultHandler = cfg.onResultHandler;
+         }
 
          this._setSizes(cfg, templateClass);
       },
@@ -53,7 +120,8 @@ function(cMerge, Random) {
                isStack: cfg._type === 'stack',
                target: cfg.target,
                modal: cfg.isModal,
-               handlers: cfg.handlers
+               handlers: cfg.handlers,
+               border: false
             },
             mode: (cfg._type === 'stack' || cfg._type === 'sticky') ? 'floatArea' : 'dialog'
          });
@@ -69,10 +137,6 @@ function(cMerge, Random) {
             newCfg.dialogOptions.verticalAlign = 'bottom';
          }
 
-         if (cfg.hideCross === true) {
-            newCfg.dialogOptions.border = false;
-         }
-
          if (cfg.offset) {
             newCfg.dialogOptions.offset = cfg.offset;
          }
@@ -81,19 +145,23 @@ function(cMerge, Random) {
             newCfg.dialogOptions.target = $(newCfg.target);
          }
 
+         if (newCfg.eventHandlers && newCfg.eventHandlers.onResult) {
+            newCfg.dialogOptions.onResultHandler = newCfg.eventHandlers.onResult;
+         }
+
          return newCfg;
       },
 
       //Берем размеры либо с опций, либо с дименшенов
       _setSizes: function(cfg, templateClass) {
-         var dimensions = templateClass.dimensions || templateClass.prototype.dimensions || {};
+         var dimensions = this._getDimensions(templateClass);
          var dimensionsMinWidth = dimensions.minWidth || dimensions.width;
 
          if (!cfg.minWidth) {
             cfg.minWidth = dimensionsMinWidth ? parseInt(dimensionsMinWidth, 10) : null;
          }
          if (!cfg.maxWidth) {
-            cfg.maxWidth = dimensions.maxWidth ? parseInt(dimensions.maxWidth, 10) : null;
+            cfg.maxWidth = parseInt(cfg.width || dimensions.maxWidth, 10) || null;
          }
 
          cfg.minWidth = cfg.minWidth || cfg.maxWidth;
@@ -108,8 +176,11 @@ function(cMerge, Random) {
 
          cfg.minHeight = cfg.minHeight || cfg.maxHeight;
          cfg.maxHeight = cfg.maxHeight || cfg.minHeight;
-
+      },
+      _getDimensions: function(templateClass) {
+         return templateClass.dimensions || templateClass.prototype.dimensions || {};
       }
+
    };
 }
 );

@@ -2,7 +2,7 @@
  * Исполняемое действие "Настройщик экспорта"
  *
  * Для того, чтобы возможно было использовать сохранямые и редактируемые пресеты (предустановленные сочетания параметров экспорта), необходимо подключить модуль 'SBIS3.ENGINE/Controls/ExportPresets/Loader'
- * Для того, чтобы возможно было использовать редактируемые стилевые шаблоны эксель файла, необходимо подключить модуль 'PrintingTemplates/ExportFormatter/Excel'
+ * Для того, чтобы возможно было использовать редактируемые стилевые эксель-файлы, необходимо подключить модуль 'PrintingTemplates/ExportFormatter/Excel'
  *
  * @public
  * @class SBIS3.CONTROLS/ExportCustomizer/Action
@@ -10,13 +10,14 @@
  */
 define('SBIS3.CONTROLS/ExportCustomizer/Action',
    [
+      'Core/core-merge',
       'Core/Deferred',
       'Lib/Control/FloatArea/FloatArea',
       'SBIS3.CONTROLS/Action',
       'SBIS3.CONTROLS/ExportCustomizer/Area'
    ],
 
-   function (Deferred, FloatArea, Action, Area) {
+   function (cMerge, Deferred, FloatArea, Action, Area) {
       'use strict';
 
       /**
@@ -52,7 +53,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
        * @property {string|number} id Идентификатор пресета
        * @property {string} title Отображаемое название пресета
        * @property {Array<string>} fieldIds Список привязки колонок в экспортируемом файле к полям данных
-       * @property {string} fileUuid Uuid шаблона форматирования эксель-файла
+       * @property {string} fileUuid Uuid стилевого эксель-файла
        */
 
       /**
@@ -67,7 +68,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
        * @typedef {object} ExportResults Тип, содержащий информацию о результате редактирования
        * @property {Array<string>} fieldIds Список полей для колонок в экспортируемом файле
        * @property {Array<string>} columnTitles Список отображаемых названий колонок в экспортируемом файле
-       * @property {string} fileUuid Uuid шаблона форматирования эксель-файла
+       * @property {string} fileUuid Uuid стилевого эксель-файла
        * @property {ExportServiceParams} serviceParams Прочие параметры, необходимых для работы БЛ
        */
 
@@ -113,9 +114,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * @param {Array<BrowserColumnInfo>|WS.Data/Collection/RecordSet<BrowserColumnInfo>} options.allFields Список объектов с информацией о всех колонках в формате, используемом в браузере
           * @param {Array<string>} options.fieldIds Список привязки колонок в экспортируемом файле к полям данных
           * @param {object} options.fieldGroupTitles Список отображаемых названий групп полей (если используются идентификаторы групп)
-          * @param {string} options.fileUuid Uuid шаблона форматирования эксель-файла
+          * @param {string} options.fileUuid Uuid стилевого эксель-файла
           * @param {Array<ExportValidator>} options.validators Список валидаторов результатов редактирования (опционально)
           * @param {ExportRemoteCall} [options.outputCall] Информация для вызова метода удалённого сервиса для отправки данных вывода (опционально)
+          * @param {boolean} [options.skipCustomization] Не открывать настройщик экспорта, начать экспорт сразу основываясь на предоставленных в опциях данных (опционально)
           * @return {Deferred<ExportResults>}
           */
          execute: function (options) {
@@ -135,7 +137,21 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
                return Deferred.fail('Allready open');
             }
             this._result = new Deferred();
-            this._open(options);
+            var defaults = this._options;
+            var areaOptions = Area.getOwnOptionNames().reduce(function (acc, name) {
+               var value = options[name];
+               acc[name] = value !== undefined ? value : defaults[name];
+               return acc;
+            }, {});
+            if (options.skipCustomization) {
+               (new Area(areaOptions)).complete().addCallbacks(
+                  this._complete.bind(this, true),
+                  this._completeWithError.bind(this, true)
+               );
+            }
+            else {
+               this._open(areaOptions);
+            }
             return this._result;
          },
 
@@ -146,18 +162,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * @param {object} options Входные аргументы("мета-данные") настройщика экспорта (согласно описанию в методе {@link execute})
           */
          _open: function (options) {
-            var componentOptions = {
+            var componentOptions = cMerge({
                dialogMode: true,
                handlers: {
                   onComplete: this._onAreaComplete.bind(this),
                   onFatalError: this._onAreaError.bind(this)
                }
-            };
-            var defaults = this._options;
-            Area.getOwnOptionNames().forEach(function (name) {
-               var value = options[name];
-               componentOptions[name] = value !== undefined ? value : defaults[name];
-            });
+            }, options);
             this._areaContainer = new FloatArea({
                opener: this,
                direction: 'left',

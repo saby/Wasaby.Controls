@@ -429,6 +429,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
                return;
             }
             if (this._options.target) {
+               this._fixPopupCorner();
                var offset = {
                      top: this._targetSizes.offset.top,
                      left: this._targetSizes.offset.left
@@ -462,6 +463,16 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             //Если изменились размеры, то сообщим детям. актуально для ScrollContainer
             if (recalcFlag) {
                this._resizeChilds();
+            }
+         }
+      },
+      _fixPopupCorner: function() {
+         //На ios в горизонтальной ориентации маленькая высота экрана.
+         //В ситуации, когда попап не влезает по ширине и по высоте происходит двойной разворот углов, который в итоге отрабаывает
+         //некорректно. правлю вручную
+         if (this._options._fixPopupRevertCorner && detection.isMobileIOS) {
+            if (this._options.corner === 'tr') {
+               this._options.horizontalAlign.side = 'left';
             }
          }
       },
@@ -1219,23 +1230,40 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
       },
 
       _getZIndex: function(){
-         this._zIndex = cWindowManager.acquireZIndex(this._options.isModal, false, this._options.isHint);
-         cWindowManager.setVisible(this._zIndex);
+         if (!this._isNewEnvironment()) {
+            this._zIndex = cWindowManager.acquireZIndex(this._options.isModal, false, this._options.isHint);
+            cWindowManager.setVisible(this._zIndex);
 
-         var target = $(this.getTarget());
-         var targetWindow = target.closest('.ws-window, .ws-float-area');
-         var targetWindowControl = targetWindow[0] && targetWindow[0].wsControl;
-         var isOverlayVisible = ModalOverlay.getZIndex() > 0 && ModalOverlay._overlay.is(':visible');
+            var target = $(this.getTarget());
+            var targetWindow = target.closest('.ws-window, .ws-float-area');
+            var targetWindowControl = targetWindow[0] && targetWindow[0].wsControl;
+            var isOverlayVisible = ModalOverlay.getZIndex() > 0 && ModalOverlay._overlay.is(':visible');
 
-         //Показываемся под overlay'ем, если он не относится к окну, в котором лежит таргет
-         if (!this.isModal() && targetWindowControl) {
-            //Если панель, где лежит таргет, находится под overlay, то и попап должен быть под ним
-            if (isOverlayVisible && targetWindowControl.getZIndex() < parseInt(ModalOverlay.getZIndex(), 10)) {
-               return ModalOverlay.getZIndex() - 1;
+            //Показываемся под overlay'ем, если он не относится к окну, в котором лежит таргет
+            if (!this.isModal() && targetWindowControl) {
+               //Если панель, где лежит таргет, находится под overlay, то и попап должен быть под ним
+               if (isOverlayVisible && targetWindowControl.getZIndex() < parseInt(ModalOverlay.getZIndex(), 10)) {
+                  return ModalOverlay.getZIndex() - 1;
+               }
+            }
+         } else {
+            var opener = this.getOpener();
+            var openerPopup = opener && opener._container && opener._container.closest('.controls-Popup');
+            var openerPopupZIndex = openerPopup && openerPopup.css('z-index');
+
+            if (openerPopupZIndex) {
+               this._zIndex = parseInt(openerPopupZIndex, 10) + 1; //Выше vdom-окна, над которым открывается попап
+            } else {
+               //zIndex vdom контролов начинается с 10. если опенер лежит не в панели, все открываемые
+               //vdom-окна должны быть выше текущего попапа
+               this._zIndex = 9;
             }
          }
-
          return this._zIndex;
+      },
+
+      _isNewEnvironment: function() {
+         return !!document.getElementsByTagName('html')[0].controlNodes;
       },
 
       /**

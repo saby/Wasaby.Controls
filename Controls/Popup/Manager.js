@@ -3,11 +3,11 @@ define('Controls/Popup/Manager',
       'Core/Control',
       'tmpl!Controls/Popup/Manager/Manager',
       'Controls/Popup/Manager/ManagerController',
-      'Core/helpers/random-helpers',
+      'Core/helpers/Number/randomId',
       'WS.Data/Collection/List'
    ],
 
-   function(Control, template, ManagerController, Random, List) {
+   function(Control, template, ManagerController, randomId, List) {
       'use strict';
 
       var _private = {
@@ -55,7 +55,6 @@ define('Controls/Popup/Manager',
          },
 
          popupClose: function(id) {
-            _private.fireEventHandler(id, 'onClose');
             ManagerController.remove(id, this.getItemContainer(id));
             return false;
          },
@@ -110,7 +109,7 @@ define('Controls/Popup/Manager',
           */
          show: function(options, strategy) {
             var element = {
-               id: Random.randomId('popup-'),
+               id: randomId('popup-'),
                isModal: options.isModal,
                strategy: strategy,
                position: strategy.getDefaultPosition(),
@@ -148,6 +147,7 @@ define('Controls/Popup/Manager',
             var self = this;
             var element = this.find(id);
             if (element) {
+               _private.fireEventHandler(id, 'onClose');
                _private.removeElement.call(this, element, _private.getItemContainer(id), id).addCallback(function() {
                   self._redrawItems();
                   return element;

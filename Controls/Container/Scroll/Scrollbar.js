@@ -225,7 +225,9 @@ define('Controls/Container/Scroll/Scrollbar',
                } else {
                   this._children.dragNDrop.startDragNDrop(null, event);
                }
+            },
 
+            _scrollbarStartDragHandler: function() {
                this._dragging = true;
                this._notify('draggingChanged', [this._dragging]);
             },
@@ -248,8 +250,10 @@ define('Controls/Container/Scroll/Scrollbar',
              * Обработчик конца перемещения ползунка мышью.
              */
             _scrollbarEndDragHandler: function() {
-               this._dragging = false;
-               this._notify('draggingChanged', [this._dragging]);
+               if (this._dragging) {
+                  this._dragging = false;
+                  this._notify('draggingChanged', [this._dragging]);
+               }
             },
 
             /**

@@ -43,9 +43,12 @@
 @padding_DropdownList-item:     5px round(16px * @multiplier);
 @width_DropdownList-marker:     round(11px * @multiplier);
 @height_DropdownList-marker:    round(16px * @multiplier);
-@margin-top_DropdownList:       round(-2px * @multiplier);
+@margin-top_DropdownList:       round(-4px * @multiplier);
 @margin-left_DropdownList:      round(-17px * @multiplier);
 @right_DropdownList-icon:       round(16px * @multiplier);
+@padding_DropdownList-content:  1px 0;
+@top-DropdownList-cross:         ceil(18px * @multiplier);
+@right-DropdownList-cross:       round(16px * @multiplier);
 
 @padding_DropdownList-default:  round(16px * @multiplier);
 @spacing_DropdownList_arrowSubMenu:round(66px * @multiplier);
@@ -95,6 +98,7 @@
 @width_itemsToolbar_closeButton:            round(58px * @multiplier);
 @height_itemsToolbar_closeButton:           round(58px * @multiplier);
 @font-size_itemsToolbar_closeButton:        @icon-size_default_medium;
+@margin-right_editActions_closeButton:      @list-view-items-toolbar-elements-margin;
 //fieldlink
 @icon-size_FieldLink-button:         @default-icon-size-medium;
 @width_FieldLink-item-cross:         @default-icon-size-medium + @default-padding;
@@ -153,7 +157,7 @@
 @long-operations-popup-header-icon-margin-right:                round(16px * @multiplier);
 @long-operations-popup-foot-height:                             round(75px * @multiplier);
 @long-operations-popup-collapsed-header-caption-f-size:         round(32px * @multiplier);
-@long-operations-popup-actions-container-margin-right:          round(24px * @multiplier);
+@long-operations-popup-foot-action-margin-right:                round(24px * @multiplier);
 @long-operations-popup-foot-f-size:                             round(32x * @multiplier);
 @long-operations-popup-collapsed-width:                         round(700px * @multiplier);
 @long-operations-popup-collapsed-max-width:                     round(800px * @multiplier);
@@ -570,6 +574,8 @@
 @border-radius_CloseButton:                     1px;
 @width_CloseButton:                             round(86px * @multiplier);
 @height_CloseButton:                            round(78px * @multiplier);
+@width_CloseButton_small:                       round(42px * @multiplier);
+@height_CloseButton_small:                      round(42px * @multiplier);
 @font-size_CloseButton:                         round(52px * @multiplier);
 
 //StackTemplate
@@ -674,3 +680,11 @@
 @height_FilterPanel-header:                 round(100px * @multiplier);
 //PropertyGrid
 @height_PropertyGrid-item:                  round(89px * @multiplier);
+//VDOM ListView
+@height_ListView-group: round(50px * @multiplier);
+@spacing_ListView-group-between-text-separator: round(24px * @multiplier);
+@font-size_ListView-group-text: round(28px * @multiplier);
+@font-size_ListView-group-expander: round(32px * @multiplier);
+@width_ListView-group-expander: round(32px * @multiplier);
+@spacing_ListView-group-between-text-expander: round(8px * @multiplier);
+@spacing_ListView-group-between-rightTemplate-separator: round(24px * @multiplier);

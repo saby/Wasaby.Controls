@@ -1,7 +1,7 @@
 /// <amd-module name="File/ResourceGetter/PhotoCam/DialogPlugin" />
 
 import Deferred = require("Core/Deferred");
-import dAddHelpers = require("Deprecated/helpers/additional-helpers");
+import axo = require("Core/helpers/axo");
 import toBlob = require("File/utils/b64toBlob");
 import constants = require("Core/constants");
 import DialogAbstract = require("File/ResourceGetter/PhotoCam/DialogAbstract");
@@ -21,7 +21,7 @@ function connectionInnit(connection, localVideo) {
 }
 function jsToSafeArray(array) {
     if (array instanceof Array){
-        let dict = dAddHelpers.axo('Scripting.Dictionary');
+        let dict = axo('Scripting.Dictionary');
 
         for (let i = 0, length = array.length; i < length; i++){
             dict.add(i, jsToSafeArray(array[i]));

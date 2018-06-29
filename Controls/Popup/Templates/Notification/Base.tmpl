@@ -1,12 +1,12 @@
-<div class="controls-Notification controls-Notification__{{_options.style}}">
-    <div class="controls-Notification__content">
-        <ws:if data="{{_options.contentTemplate}}">
-            <ws:partial template="{{_options.contentTemplate}}"></ws:partial>
-        </ws:if>
-    </div>
-    <ws:if data="{{_options.iconClose}}">
-        <div class="controls-Notification__closeButton icon-24 icon-Close icon-disabled"
-             on:click="_closeClick()">
-        </div>
-    </ws:if>
+<div class="controls-Notification controls-Notification__{{_options.style}}"
+     on:mouseenter="_mouseenterHandler()"
+     on:mouseleave="_mouseleaveHandler()">
+   <div class="controls-Notification__content">
+      <ws:if data="{{_options.contentTemplate}}">
+         <ws:partial template="{{_options.contentTemplate}}"></ws:partial>
+      </ws:if>
+   </div>
+   <ws:if data="{{_options.iconClose}}">
+       <Controls.Button.Close class="controls-Notification__closeButton" style="light" on:click="_closeClick()"/>
+   </ws:if>
 </div>

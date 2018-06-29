@@ -14,36 +14,64 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
       control) {
       /**
        * Слой совместимости для открытия новых шаблонов в старых попапах
-      **/
-      var  moduleClass = CompoundControl.extend({
+       **/
+      var moduleClass = CompoundControl.extend({
          _dotTplFn: template,
+         $protected: {
+            _options: {
+               isTMPL: function(template) {
+                  return template.indexOf('tmpl!') === 0; //Если передали просто tmpl в качестве шаблона - нельзя вызывать createControl
+               }
+            }
+         },
          init: function() {
             moduleClass.superclass.init.apply(this, arguments);
             var self = this;
             this._onCloseHandler = this._onCloseHandler.bind(this);
-            this._onCloseHandler.control = this;
-            require([this._options.template], function(ctr) {
-               var vDomTemplate = control.createControl(ctr, self._options, $('.vDomWrapper', self.getContainer()));
-               self._vDomTemplate = vDomTemplate;
-               var container = vDomTemplate.getContainer();
-               container = container.get ? container.get(0) : container; //берем ноду
-               var replaceVDOMContainer = function() {
-                  var container = vDomTemplate.getContainer();
-                  container.eventProperties = { 'on:close': [{
-                     fn: self._onCloseHandler,
-                     args: []
-                  }]};
-               };
-               if (self._options._initCompoundArea) {
-                  self._notifyOnSizeChanged(self, self);
-                  self._options._initCompoundArea(self);
+            this._onResultHandler = this._onResultHandler.bind(this);
+            this._onCloseHandler.control = this._onResultHandler.control = this;
+            require([this._options.innerComponentOptions.template], function(ctr) {
+               if (!self._options.isTMPL(self._options.innerComponentOptions.template)) {
+                  self._vDomTemplate = control.createControl(ctr, self._options.innerComponentOptions, $('.vDomWrapper', self.getContainer()));
+                  var replaceVDOMContainer = function() {
+                     //Отлавливаем события с дочернего vdom компонента
+                     self._getRootContainer().eventProperties = {
+                        'on:close': [{
+                           fn: self._onCloseHandler,
+                           args: []
+                        }],
+                        'on:sendresult': [{
+                           fn: self._onResultHandler,
+                           args: []
+                        }]
+                     };
+                  };
+                  if (self._options._initCompoundArea) {
+                     self._notifyOnSizeChanged(self, self);
+                     self._options._initCompoundArea(self);
+                  }
+                  self._getRootContainer().addEventListener('DOMNodeRemoved', function() {
+                     replaceVDOMContainer();
+                  });
                }
-               container.addEventListener('DOMNodeRemoved', replaceVDOMContainer);
             });
          },
          _onCloseHandler: function() {
-            this.sendCommand('close');
+            this.sendCommand('close', this._result);
+            this._result = null;
          },
+         _onResultHandler: function(event, result) {
+            this._result = result;
+            if (this._options.onResultHandler) {
+               this._options.onResultHandler(this._result);
+            }
+         },
+
+         _getRootContainer: function() {
+            var container = this._vDomTemplate.getContainer();
+            return container.get ? container.get(0) : container;
+         },
+
          destroy: function() {
             moduleClass.superclass.destroy.apply(this, arguments);
             Sync.unMountControlFromDOM(this._vDomTemplate, this._vDomTemplate._container);

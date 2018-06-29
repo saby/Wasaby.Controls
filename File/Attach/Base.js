@@ -102,7 +102,7 @@ define("File/Attach/Base", ["require", "exports", "Core/Abstract", "Core/core-si
         /**
          * Регистрация источников данных для загрузки определённого типа файла
          * @param {Function} type конструктор обёртки над файлом
-         * @param {WS.Data/Source/ISource} source источник данных
+         * @param {File/Attach/Source} source источник данных
          * @example
          * Регестрация источника, умеющего загружать LocalFileLink:
          * <pre>
@@ -128,7 +128,7 @@ define("File/Attach/Base", ["require", "exports", "Core/Abstract", "Core/core-si
          * @see File/LocalFile
          * @see File/LocalFileLink
          * @see File/HttpFileLink
-         * @see WS.Data/Source/ISource
+         * @see File/Attach/Source
          */
         registerSource: function (type, source) {
             return this._sourceContainer.push(source, type);
@@ -199,7 +199,7 @@ define("File/Attach/Base", ["require", "exports", "Core/Abstract", "Core/core-si
          * Загрузка выбранных ресурсов.
          * При отсутствии ресурсов во внутреннем состоянии, возвращаеммый Deferred будет завершен ошибкой.
          * @param {Object} [meta] Дополнительные мета-данные для отправки. Сигнатура зависит от конечного сервиса загрузки
-         * @return {Core/Deferred.<Array.<WS.Data/Entity/Model | Error>>} Набор, содержащий модели с результатами,
+         * @return {Core/Deferred.<Array.<File/Attach/Model | Error>>} Набор, содержащий модели с результатами,
          * либо ошибками загрузки
          * @example
          * Загрузка выбранных сканов:
@@ -232,7 +232,7 @@ define("File/Attach/Base", ["require", "exports", "Core/Abstract", "Core/core-si
          * @method
          * @name File/Attach/Base#upload
          * @see File/Attach/Base#getSelectedResource
-         * @see WS.Data/Entity/Model
+         * @see File/Attach/Model
          */
         upload: function (meta) {
             var _this = this;
@@ -429,10 +429,8 @@ define("File/Attach/Base", ["require", "exports", "Core/Abstract", "Core/core-si
  *
  * @name File/Attach/Base#onLoaded
  * @param {Core/EventObject} eventObject Дескриптор события.
- * @param {Array.<Error | WS.Data/Entity/Model>} results Массив, содержащий результаты загрузки выбранных ресурсов.
+ * @param {Array.<Error | File/Attach/Model>} results Массив, содержащий результаты загрузки выбранных ресурсов.
  * Эквивалентно рузультату Deferred'а .upload
- *
- * @see WS.Data/Entity/Model
  */
 /**
  * @event onLoadError
@@ -462,12 +460,12 @@ define("File/Attach/Base", ["require", "exports", "Core/Abstract", "Core/core-si
  * @name File/Attach/Base#onLoadedResource
  * @param {Core/EventObject} eventObject Дескриптор события.
  * @param {File/IResource} resource загружаемый ресурс
- * @param {WS.Data/Entity/Model} model Результат загрузки
+ * @param {File/Attach/Model} model Результат загрузки
  *
  * @see File/LocalFile
  * @see File/LocalFileLink
  * @see File/HttpFileLink
- * @see WS.Data/Entity/Model
+ * @see File/Attach/Model
  */
 /**
  * @event onChosen

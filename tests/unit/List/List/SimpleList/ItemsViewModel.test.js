@@ -4,8 +4,9 @@
 define([
    'Controls/List/ItemsViewModel',
    'Controls/List/resources/utils/ItemsUtil',
-   'WS.Data/Collection/RecordSet'
-], function(ItemsViewModel, ItemsUtil, RecordSet){
+   'WS.Data/Collection/RecordSet',
+   'Controls/Constants'
+], function(ItemsViewModel, ItemsUtil, RecordSet, ControlsConstants){
    describe('Controls.List.ListControl.ItemsViewModel', function () {
       var data, data2, display;
       beforeEach(function() {
@@ -238,6 +239,62 @@ define([
          result = 0;
          iv.setItems(rs2);
          assert.equal(1, result, 'itemsReadycallback wasn\'t call');
+      });
+
+      it('itemsGroup', function() {
+         var
+            current,
+            data = [
+               { id: 1, title: 'item_1', group: 'hidden' },
+               { id: 1, title: 'item_2', group: 'group_1' },
+               { id: 2, title: 'item_3', group: 'group_1' },
+               { id: 3, title: 'item_4', group: 'group_1' },
+               { id: 4, title: 'item_5', group: 'group_2' },
+               { id: 5, title: 'item_6', group: 'group_2' }
+            ],
+            items = new RecordSet({
+               rawData: data,
+               keyProperty : 'id'
+            }),
+            cfg = {
+               items: items,
+               keyProperty: 'id',
+               itemsGroup: {
+                  method: function(item) {
+                     if (item.get('group') === 'hidden') {
+                        return ControlsConstants.view.hiddenGroup;
+                     }
+                     return item.get('group');
+                  }
+               },
+               displayProperty: 'title'
+            },
+            itemsViewModel = new ItemsViewModel(cfg);
+         assert.equal(itemsViewModel._display.getGroup(), cfg.itemsGroup.method, 'Grouping for display not applied. Error sending to display grouping method.');
+         assert.equal(itemsViewModel._display.getCount(), 9, 'Grouping for display not applied. Display items count (with groups) not equal 7.');
+         itemsViewModel.toggleGroup('group_1');
+         assert.equal(itemsViewModel._display.getCount(), 6, 'Invalid display items count after collapsing "group_1".');
+         itemsViewModel.toggleGroup('group_2');
+         assert.equal(itemsViewModel._display.getCount(), 4, 'Invalid display items count after collapsing "group_2".');
+         itemsViewModel.toggleGroup('group_1');
+         assert.equal(itemsViewModel._display.getCount(), 7, 'Invalid display items count after expanding "group_1".');
+         itemsViewModel.toggleGroup('group_2');
+         assert.equal(itemsViewModel._display.getCount(), 9, 'Invalid display items count after expanding "group_2".');
+         current = itemsViewModel.getCurrent();
+         assert.equal(current.isGroup, true, 'Invalid value isGroup for current item.');
+         assert.equal(current.isHiddenGroup, true, 'Invalid value isHiddenGroup for current item.');
+         assert.equal(current.isGroupExpanded, true, 'Invalid value isGroupExpanded for current item.');
+         itemsViewModel.goToNext();
+         current = itemsViewModel.getCurrent();
+         assert.equal(current.isGroup, undefined, 'Invalid value isGroup for current item.');
+         assert.equal(current.isHiddenGroup, undefined, 'Invalid value isHiddenGroup for current item.');
+         assert.equal(current.isGroupExpanded, undefined, 'Invalid value isGroupExpanded for current item.');
+         itemsViewModel.toggleGroup('group_1');
+         itemsViewModel.goToNext();
+         current = itemsViewModel.getCurrent();
+         assert.equal(current.isGroup, true, 'Invalid value isGroup for current item.');
+         assert.equal(current.isHiddenGroup, false, 'Invalid value isHiddenGroup for current item.');
+         assert.equal(current.isGroupExpanded, false, 'Invalid value isGroupExpanded for current item.');
       });
    })
 });

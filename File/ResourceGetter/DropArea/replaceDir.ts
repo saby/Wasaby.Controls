@@ -3,6 +3,9 @@ import ParallelDeferred = require("Core/ParallelDeferred");
 import Deferred = require("Core/Deferred");
 import UnknownTypeError = require("File/Error/UnknownType");
 import UploadFolderError = require("File/Error/UploadFolder");
+import LocalFile = require("File/LocalFile");
+import Directory = require("File/Directory");
+import {IResource} from "File/IResource";
 
 type DirectoryReader = {
     readEntries(successCallback: (entries: Array<Entry>) => void): void;
@@ -14,29 +17,20 @@ type Entry = null | {
     file(handler: (file: File) => void);
     createReader(): DirectoryReader;
 }
-type FileWithDir = File & {
-    filepath?: string;
-}
 
-type MultipleArray<T> = Array<T | Array<T>>;
-
-type Resource = FileWithDir | Error;
+type Resource = IResource | Error;
 type Resources = Array<Resource>
-
-/**
- * Развёртка двумерного массива в одномерный
- * @param {Array<T | Array<T>>} array
- * @return {Array<T>}
- */
-let toPlainArray = <T>(array: MultipleArray<T>): Array<T> => {
-    return Array.prototype.concat.apply([], array);
-};
 
 let getParallelDeferred = <T>(steps): Deferred<Array<T>> => {
     let length = steps.length;
     return new ParallelDeferred<T>({
         steps,
-        stopOnFirstError: false
+        stopOnFirstError: false,
+        /*
+         * Очередь чтения
+         * чтобы не создавать сразу десятки/сотки обращений в файловой системе при чтении папки
+         */
+        maxRunningCount: 5
     }).done().getResult().addCallback<Array<T>>((results) => {
         results.length = length;
         return Array.prototype.slice.call(results)
@@ -45,71 +39,105 @@ let getParallelDeferred = <T>(steps): Deferred<Array<T>> => {
 
 /// region File Entry
 
-let readEntries: (entries: Array<Entry>, path: string) => Deferred<Resources>;
+/**
+ * @typedef {Object} ReadConfig
+ * @property {Array.<File/LocalFile | Error>} results
+ * @property {File/Directory} [root]
+ */
+type ReadConfig = {
+    results: Resources;
+    root?: Directory;
+}
 
 /**
- * Читает и возвращает файл из Entry, добавляя ему относиттельный путь
- * @param {Entry} entry
- * @param {String} path Путь до файла
- * @return {Core/Deferred.<FileWithDir>}
+ * @typedef {Object} EntriesReadConfig
+ * @extends ReadConfig
+ * @property {Array.<Entry>} entries
  */
-let getFile = (entry: Entry, path: string): Deferred<FileWithDir> => {
-    let deferred = new Deferred<FileWithDir>();
-    entry.file((file: FileWithDir) => {
-        file.filepath = path + file.name; // save full path
-        deferred.callback(file);
+type EntriesReadConfig = ReadConfig & {
+    entries: Array<Entry>;
+}
+
+/**
+ * @typedef {Object} EntryReadConfig
+ * @extends ReadConfig
+ * @property {Entry} entry
+ */
+type EntryReadConfig = ReadConfig & {
+    entry: Entry;
+}
+
+let readEntries: (cfg: EntriesReadConfig) => Deferred<Resources>;
+
+/**
+ * Читает файл из Entry
+ * @return {Core/Deferred}
+ */
+let getFile = ({results, entry, root}: EntryReadConfig): Deferred => {
+    let deferred = new Deferred();
+    entry.file((file: File) => {
+        let localFile = new LocalFile(file);
+        if (root) {
+            root.push(localFile);
+        } else {
+            results.push(localFile);
+        }
+        deferred.callback();
     });
     return deferred;
 };
+
 /**
  * Читает содержимое директории Entry и запускает рекурсивный обход по ним
- * @param {Entry} entry
- * @param {String} path Путь до файла
- * @return {Core/Deferred.<Array.<File | Error>>}
  */
-let readDirectory = (entry: Entry, path: string) => {
-    let deferred = new Deferred<Resources>();
+let readDirectory = ({results, entry, root}: EntryReadConfig): Deferred => {
+    let deferred = new Deferred();
     let dirReader = entry.createReader();
     dirReader.readEntries((entries: Array<Entry>) => {
-        deferred.dependOn(readEntries(entries, path));
+        deferred.dependOn(readEntries({results, entries, root}));
     });
     return deferred;
 };
 
 /**
  * Читает Entry
- * @param {Entry} entry
- * @param {string} path Путь до файла
- * @return {Core/Deferred.<File | Error>}
  */
-let readEntry = (entry: Entry, path: string): Deferred<Resource | Resources> => {
+let readEntry = ({results, entry, root}: EntryReadConfig): Deferred => {
     if (!entry) {
         return Deferred.fail(new UnknownTypeError({
-            fileName: path + ""
+            fileName: root ? root.getName(): ''
         }));
     }
     if (entry.isFile) {
-        return getFile(entry, path);
+        return getFile({results, entry, root});
     }
     if (entry.isDirectory) {
-        return readDirectory(entry, path + entry.name + "/");
+        let folder = new Directory({
+            name: entry.name
+        });
+        if (root) {
+            root.push(folder);
+        } else {
+            results.push(folder);
+        }
+        return readDirectory({
+            entry,
+            root: folder,
+            results
+        });
     }
 };
+
 /**
  * Обходит содержимое набора из Entry
- * @param {Array.<Entry>} entries
- * @param {string} path Путь до файла
  * @return {Core/Deferred.<Array.<File | Error>>}
  */
-readEntries = (entries: Array<Entry>, path: string): Deferred<Resources> => {
+readEntries = ({results, entries, root}: EntriesReadConfig): Deferred => {
     return getParallelDeferred<Resource | Resources>(
         entries.map((entry: Entry) => {
-            return readEntry(entry, path)
+            return readEntry({results, entry, root})
         })
-    ).addCallback<Resources>((results) => {
-        // избавляемся от двумерности
-        return toPlainArray(results)
-    });
+    );
 };
 
 /**
@@ -118,6 +146,7 @@ readEntries = (entries: Array<Entry>, path: string): Deferred<Resources> => {
  * @return {Deferred.<Array.<File | Error>>}
  */
 let getFromEntries = (items: DataTransferItemList): Deferred<Resources> => {
+    let results: Resources = [];
     /*
      * При перемещении файла в DataTransfer.items могут оказаться "лишние" элементы
      * если например переносить .url файл
@@ -129,7 +158,9 @@ let getFromEntries = (items: DataTransferItemList): Deferred<Resources> => {
     }).map(item => {
         return item.webkitGetAsEntry()
     });
-    return readEntries(entries, "");
+    return readEntries({results, entries}).addCallback<Resources>(() => {
+        return results;
+    });
 };
 
 /// endregion File Entry
@@ -164,13 +195,13 @@ let getReader = (deferred: Deferred<void>): FileReader => {
  * остальные непонятные файлы без типов отдадим на загрузку
  *
  * @param {FileList} files
- * @return {Core/Deferred.<FileList | Array.<File | Error>>}
+ * @return {Core/Deferred.<Array.<File/LocalFile | Error>>}
  */
-let getFromFileReader = (files: FileList): Deferred<Resources> => {
+let getFromFileReader = (files: FileList): Deferred<Array<LocalFile | Error>> => {
     let steps = Array.prototype.map.call(files, (file: File) => {
         let deferred = new Deferred<void>();
-        deferred.addCallbacks<Resource>(() => {
-            return file;
+        deferred.addCallbacks<LocalFile>(() => {
+            return new LocalFile(file);
         }, () => {
             return new UploadFolderError({
                 fileName: file.name
@@ -187,7 +218,7 @@ let getFromFileReader = (files: FileList): Deferred<Resources> => {
         return deferred;
     });
 
-    return getParallelDeferred<Resource>(steps);
+    return getParallelDeferred<Array<LocalFile>>(steps);
 };
 /// endregion FileReader
 

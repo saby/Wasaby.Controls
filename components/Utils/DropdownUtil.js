@@ -42,7 +42,7 @@ define('SBIS3.CONTROLS/Utils/DropdownUtil', [
 
          // если есть dataSource то вычитаем данные с сервера,
          // нужно построить список id который хотим получить на выходе рекорд по нему нужно построить записи
-         indexesList = this._getInedxes(self, data);
+         indexesList = this._getIndexes(self, data);
          if (!!indexesList.length) {
             query = this._makeQueryFilterForHistory(self, indexesList);
 
@@ -60,7 +60,7 @@ define('SBIS3.CONTROLS/Utils/DropdownUtil', [
          }
       },
 
-      _getInedxes: function(self, data) {
+      _getIndexes: function(self, data) {
          var items = self.getItems();
 
          return Array.prototype.filter.call(this._getHistoryController(self).getIndexesList(self, data), function(id) {
