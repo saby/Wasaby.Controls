@@ -204,6 +204,19 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          assert.equal(self._searchResult.data, queryRecordSetEmpty);
          assert.equal(self._tabsSelectedKey, 'testId2');
       });
+   
+      it('Suggest::move focus to input after change tab', function() {
+         var suggestComponent = new Suggest();
+         var suggestActivated = false;
+         suggestComponent.activate = function() {
+            suggestActivated = true;
+         };
+   
+         suggestComponent._tabsSelectedKeyChanged(null, 'test');
+         
+         assert.isTrue(suggestActivated);
+         assert.equal(suggestComponent._filter.currentTab, 'test');
+      });
       
    });
    
