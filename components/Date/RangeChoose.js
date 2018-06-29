@@ -7,12 +7,13 @@ define('SBIS3.CONTROLS/Date/RangeChoose',[
    "tmpl!SBIS3.CONTROLS/Date/RangeChoose/DateRangeChoose",
    "SBIS3.CONTROLS/Mixins/RangeMixin",
    "SBIS3.CONTROLS/Mixins/DateRangeMixin",
-   "Core/helpers/event-helpers",
-   "Core/helpers/date-helpers",
+   'Core/dom/wheel',
+   'Core/helpers/Date/getCurrentPeriod',
+   'Core/helpers/Date/getFormattedDateRange',
    "SBIS3.CONTROLS/Button/IconButton",
    "SBIS3.CONTROLS/Link",
    'css!SBIS3.CONTROLS/Date/RangeChoose/DateRangeChoose'
-], function (constants, Deferred, detection, IoC, CompoundControl, dotTplFn, RangeMixin, DateRangeMixin, eHelpers, dateHelpers) {
+], function (constants, Deferred, detection, IoC, CompoundControl, dotTplFn, RangeMixin, DateRangeMixin, wheel, getCurrentPeriod, getFormattedDateRange) {
    'use strict';
     /**
      * @class SBIS3.CONTROLS/Date/RangeChoose
@@ -216,7 +217,7 @@ define('SBIS3.CONTROLS/Date/RangeChoose',[
          container.on('click', '.controls-DateRangeChoose__year-next', this._onNextYearBtnClick.bind(this));
          container.on('click', '.controls-DateRangeChoose__yearsMode-prev', this._onNextYearBtnClick.bind(this));
          container.on('click', '.controls-DateRangeChoose__yearsMode-next', this._onPrevYearBtnClick.bind(this));
-         eHelpers.wheel(container.find(['.', this._cssDateRangeChoose.yearsModeWrapper].join('')), this._onMouseWheel.bind(this));
+         wheel(container.find(['.', this._cssDateRangeChoose.yearsModeWrapper].join('')), this._onMouseWheel.bind(this));
 
          container.find(['.', this._cssDateRangeChoose.month].join('')).click(this._onMonthClick.bind(this));
 
@@ -325,7 +326,7 @@ define('SBIS3.CONTROLS/Date/RangeChoose',[
          } else if (this._options.showHalfyears) {
             periodType = 'halfyear'
          }
-         period = dateHelpers.getCurrentPeriod(periodType)
+         period = getCurrentPeriod(periodType)
          this.setRange(period[0], period[1]);
          this.setYear((new Date()).getFullYear());
          this._notify('onChoose', period[0], period[1]);
@@ -410,7 +411,7 @@ define('SBIS3.CONTROLS/Date/RangeChoose',[
          this.getContainer().find(
             ['.', this._cssDateRangeChoose.currentValue].join('')
          ).text(
-            dateHelpers.getFormattedDateRange(
+            getFormattedDateRange(
                this.getStartValue(),
                this.getEndValue(),
                {

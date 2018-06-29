@@ -7,6 +7,7 @@
       <ws:partial template="tmpl!Controls/Toggle/resources/SwitchCircle/SwitchCircle" readOnly="{{_options.readOnly}}" selected="{{_options.value ? true : false}}"/>
       <span class="controls-Switch__line{{_options.readOnly ? ' controls-Switch__line_disabled' : ' controls-Switch__line_enabled'}}"></span>
    </span>
+   <span class="controls-Switch__text controls-Switch__text_{{_options.readOnly ? 'disabled' : 'enabled'}}_{{_options.value ? 'selected' : 'unselected'}}" >{{_options.caption}}</span>
 </ws:template>
 <ws:template name="caption">
    <span class="controls-Switch__text

@@ -90,6 +90,7 @@ define('SBIS3.CONTROLS/ListView/resources/MassSelectionController/MassSelectionC
           _onItemsReady: function () {
              var projection = this._getProjection();
              this._selection.setProjection(projection);
+             this._onProjectionChangeAdd(projection.getItems());
              this.subscribeTo(projection, 'onCollectionChange', this._onProjectionChange.bind(this));
           },
 

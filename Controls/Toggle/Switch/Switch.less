@@ -43,8 +43,18 @@
    color: @color_Switch-text_enabled_unselected;
 }
 
+.controls-Switch__text_enabled_selected, .controls-Switch__text_enabled_unselected {
+   cursor: pointer;
+}
+
 .controls-Switch__text_disabled_unselected {
    color: @color_Switch-text_disabled_unselected;
+}
+
+.controls-Switch:active {
+   .controls-SwitchCircle__borderCircle_enabled {
+      fill: @fill_RadioGroup_borderCircle_enabled_hovered;
+   }
 }
 
 .controls-Switch__toggle__leftCaption {
@@ -58,5 +68,10 @@
 .ws-is-no-touch {
    .controls-Switch__text_enabled_unselected:hover {
       text-decoration: underline;
+   }
+   .controls-Switch:hover {
+      .controls-SwitchCircle__borderCircle_enabled {
+         fill: @fill_RadioGroup_borderCircle_enabled_hovered;
+      }
    }
 }
