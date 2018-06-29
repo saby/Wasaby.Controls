@@ -216,6 +216,9 @@ define('Controls/Container/Suggest/Layout',
    
          _tabsSelectedKeyChanged: function(event, key) {
             _private.updateFilter(this, this._searchValue, key);
+            
+            // move focus from tabs to input, after change tab
+            this.activate();
          },
          
          _select: function(event, item) {
