@@ -133,6 +133,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          _afterMount: function(cfg) {
             this._options = cfg;
+            
+            //Нам нужно пометить контрол замаунченым для слоя совместимости,
+            //чтобы не создавался еще один enviroment для той же ноды
+
+            this.VDOMReady = true;
             this.deprecatedContr(this._options);
 
 
@@ -183,6 +188,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this.handle('onAfterLoad');
             this.handle('onInitComplete');
             this.handle('onAfterShow'); // todo здесь надо звать хэндлер который пытается подписаться на onAfterShow, попробуй подключить FormController и словить подпись
+            this._compoundControl.setActive(true);
          },
          _subscribeToCommand: function() {
             this._compoundControl.subscribe('onCommandCatch', this._commandHandler);
@@ -301,6 +307,16 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   value.apply(self, [eventState, arg]);
                }
             });
+
+            //subscribeTo берет channel и подписывается к нему на события
+            //поэтому если наше событие не отменено, возьмем канал и нотификанем 
+
+            if (eventState.getResult() !== false) {
+               var result = this._getChannel().notify(eventName, arg);
+               if (result !== undefined) {
+                  eventState.setResult(result);
+               }
+            }
 
             return eventState.getResult();
          },

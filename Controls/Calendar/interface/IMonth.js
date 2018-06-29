@@ -1,6 +1,6 @@
 define('Controls/Calendar/interface/IMonth', [
    'WS.Data/Type/descriptor',
-   'SBIS3.CONTROLS/Utils/DateUtil'
+   'Controls/Utils/Date'
 ], function(
    types,
    dateUtil

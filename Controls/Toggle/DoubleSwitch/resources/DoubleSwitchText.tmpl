@@ -1,3 +1,5 @@
-<span class="{{_orientation === 'vertical' ? ' controls-DoubleSwitch__text_vertical'}}
+<span on:mouseover="_toggleSwitchHoverState(_toggleValue !== _nextValue)"
+      on:mouseout="_toggleSwitchHoverState(false)"
+      class="{{_orientation === 'vertical' ? ' controls-DoubleSwitch__text_vertical'}}
             {{!_value ? _enabled ? ' controls-DoubleSwitch__text_enabled_unselected' : ' controls-DoubleSwitch__text_disabled_unselected'}}"
       on:click="_clickTextHandler(_nextValue)">{{_caption}}</span>
