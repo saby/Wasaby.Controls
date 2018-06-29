@@ -157,6 +157,9 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
    
          suggestComponent._dependenciesDeferred.addCallback(function() {
             assert.isTrue(suggestState);
+            
+            suggestComponent._changeValueHandler(null, '');
+            assert.isTrue(suggestState);
             done();
          });
       });
