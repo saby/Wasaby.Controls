@@ -61,11 +61,15 @@ define('Controls/Dropdown/Container',
        */
 
       /**
+       * @name Controls/Dropdown/Container#hideCross
+       * @cfg {Boolean} Dropdown have cross in left top corner
+       */
+
+      /**
        * @name Controls/Dropdown/Container#headConfig
        * @cfg {Object} Menu style menuStyle
        * @variant defaultHead The head with icon and caption
        * @variant duplicateHead The icon set under first item
-       * @variant cross Menu have cross in left top corner
        */
 
       /**
