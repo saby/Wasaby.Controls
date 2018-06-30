@@ -886,10 +886,11 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             if (err instanceof Error) {
                throw err;
             }
-            this._options.fields = fields;
+            var options = this._options;
+            options.fields = fields;
             var views = this._views;
             //this._setSubviewValues('baseParams', {fields:fields});
-            this._setSubviewValues('columnBinding', {fields:fields});
+            this._setSubviewValues('columnBinding', {fields:fields, mapping:options.columnBindingMapping || {}});
             this._setSubviewValues('mapper', {fields:fields});
          },
 
