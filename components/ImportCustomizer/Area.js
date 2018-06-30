@@ -667,7 +667,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                         results[i + 1] = {
                            provider: {parser:parserName, skippedRows:skippedRows, separator:sheet.separator || ''},
                            providerArgs: this._getProviderArgsOptions(options, parserName, false),
-                           columnBinding: {mapping:{}, skippedRows:skippedRows}
+                           columnBinding: {mapping:options.columnBindingMapping || {}, skippedRows:skippedRows}
                         };
                      }
                      results[''] = cMerge({}, results[1]);
