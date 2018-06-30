@@ -198,6 +198,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             }
             return parsers;
          },
+         providerArgs: _typeIfDefined.bind(null, 'object'),
          fields: function (fields) {
             // Должна быть опция "fields"
             if (!fields) {
@@ -327,6 +328,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          'baseParamsComponent',
          'baseParams',
          'parsers',
+         'providerArgs',
          'fields',
          'sheets',
          'sheetIndex',
@@ -399,6 +401,10 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                 * @cfg {object<ImportParser>} Список всех доступных провайдеров парсинга импортируемых данных
                 */
                parsers: null,
+               /**
+                * @cfg {object} Опции провайдера парсинга (отдельно по каждому парсеру). Состав опций может быть различным для каждого {@link parsers парсера} (опционально)
+                */
+               providerArgs: null,
                /**
                 * @cfg {ImportTargetFields|Core/Deferred<ImportTargetFields>|ImportRemoteCall} Полный набор полей, к которым должны быть привязаны импортируемые данные
                 */
@@ -1102,7 +1108,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             if (provider.separator) {
                item.separator = provider.separator;
             }
-            item.parserConfig = providerArgs ? ['hierarchyField', 'columns'].reduce(function (r, v) { r[v] = providerArgs[v]; return r; }, {}) : {};
+            item.parserConfig = providerArgs ? ['hierarchyName', 'hierarchyField', 'columns'].reduce(function (r, v) { r[v] = providerArgs[v]; return r; }, {}) : {};
             if (sheet) {
                item.name = sheet.name;
                item.columnsCount = sheet.sampleRows[0].length;
@@ -1152,8 +1158,18 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                   dataType: options.dataType,
                   columnCount:sheets && sheets.length ? sheets[0 < sheetIndex ? sheetIndex : 0].sampleRows[0].length : 0
                };
-               var args = parser.args;
-               return args ? cMerge(values, args) : values;
+               var parserArgs = parser.args;
+               if (parserArgs) {
+                  values = cMerge(values, parserArgs);
+               }
+               var providerArgs = options.providerArgs;
+               if (providerArgs) {
+                  var args = providerArgs[parserName];
+                  if (args) {
+                     values = cMerge(values, args);
+                  }
+               }
+               return values;
             }
          },
 
