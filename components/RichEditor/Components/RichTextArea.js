@@ -2553,6 +2553,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                switch (template) {
                   case '1':
                      $img.addClass('image-template-left');
+                     var $list = $img.closest('ol, ul');
+                     if ($list.length) {
+                        $list.addClass('has-img-left');
+                     }
                      break;
                   case '2':
                      //todo: go to tmpl
@@ -2570,6 +2574,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      editor.dom.split($parent[0], $img[0], fragment);
                      var newPic = fragment.firstChild;
                      editor.selection.select(newPic);
+                     $(newPic).closest('ol.has-img-left, ul.has-img-left').removeClass('has-img-left');
                      imageOptionsPanel.hide();
                      this._showImageOptionsPanel($(newPic));
                      canRecalc = false;
@@ -3153,6 +3158,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      '></img>' +
                      (after || '')
                   );
+                  if (className === 'image-template-left') {
+                     var node = editor.selection.getRng().commonAncestorContainer;
+                     var $img = $(node.nodeType == 3 ? node.parentNode : node).find('img');
+                     if ($img.length) {
+                        $img.closest('ol,ul').addClass('has-img-left');
+                     }
+                  }
                   promise.callback();
                }.bind(this);
                img.onerror = function () {
@@ -3397,6 +3409,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                  'additionalText',
                                  'controls-RichEditor__noneditable',
                                  'without-margin',
+                                 'has-img-left',
                                  'image-template-left',
                                  'image-template-center',
                                  'image-template-right',
