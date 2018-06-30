@@ -247,7 +247,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          /* start RecordFloatArea */
          getRecord: function() {
-            return this._options.record;
+            return this._options.record || this._options.templateOptions && this._options.templateOptions.record;
          },
          isNewRecord: function() {
             return this._options.newRecord;
