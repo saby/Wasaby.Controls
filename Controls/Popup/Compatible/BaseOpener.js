@@ -9,9 +9,9 @@ define('Controls/Popup/Compatible/BaseOpener', [
    'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea'
 ],
 function(cMerge,
-         Context,
-         Deferred,
-         Random) {
+   Context,
+   Deferred,
+   Random) {
    /**
        * Слой совместимости для базового опенера для открытия старых шаблонов
        */
@@ -49,7 +49,7 @@ function(cMerge,
 
          if (cfg.context) {
             var destroyDef = new Deferred(),
-               destrFunc = function () {
+               destrFunc = function() {
                   destroyDef.callback();
                   destroyDef = null;
                };
