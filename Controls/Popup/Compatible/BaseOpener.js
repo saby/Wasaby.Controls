@@ -49,23 +49,23 @@ function(cMerge,
 
          if (cfg.context) {
             var destroyDef = new Deferred(),
-               destrFunc = function(){
+               destrFunc = function () {
                   destroyDef.callback();
                   destroyDef = null;
                };
 
             cfg.templateOptions.context = Context.createContext(destroyDef, {}, cfg.context);
-            if (!cfg.templateOptions.handlers){
+            if (!cfg.templateOptions.handlers) {
                cfg.templateOptions.handlers = {};
             }
 
-            if (!cfg.templateOptions.handlers.onDestroy){
+            if (!cfg.templateOptions.handlers.onDestroy) {
                cfg.templateOptions.handlers.onDestroy = destrFunc;
             } else {
-               if (cfg.templateOptions.handlers.onDestroy.push){
+               if (cfg.templateOptions.handlers.onDestroy.push) {
                   cfg.templateOptions.handlers.onDestroy.push(destrFunc);
                } else {
-                  cfg.templateOptions.handlers.onDestroy = [cfg.templateOptions.handlers.onDestroy, destrFunc]
+                  cfg.templateOptions.handlers.onDestroy = [cfg.templateOptions.handlers.onDestroy, destrFunc];
                }
             }
          }
