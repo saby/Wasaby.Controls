@@ -216,7 +216,7 @@ define(
          });
 
          describe('Stack', function() {
-            let stackShadowWidth = 5;
+            let stackShadowWidth = 8;
             Stack.getMaxPanelWidth = () => 1000;
             let item = {
                popupOptions: {
