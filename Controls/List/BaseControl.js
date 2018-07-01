@@ -7,6 +7,7 @@ define('Controls/List/BaseControl', [
    'require',
    'Controls/List/Controllers/VirtualScroll',
    'Controls/Controllers/SourceController',
+   'Core/helpers/Object/isEqual',
    'Core/Deferred',
    'tmpl!Controls/List/BaseControl/multiSelect',
    'WS.Data/Collection/RecordSet',
@@ -23,6 +24,7 @@ define('Controls/List/BaseControl', [
    require,
    VirtualScroll,
    SourceController,
+   isEqualObject,
    Deferred,
    multiSelectTpl,
    RecordSet,
@@ -340,6 +342,7 @@ define('Controls/List/BaseControl', [
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/List/interface/IBaseControl
     * @mixes Controls/interface/IRemovable
+    * @mixes Controls/interface/IEditInPlace
     * @control
     * @public
     * @category List
@@ -422,7 +425,7 @@ define('Controls/List/BaseControl', [
       },
 
       _beforeUpdate: function(newOptions) {
-         var filterChanged = newOptions.filter !== this._options.filter;
+         var filterChanged = !isEqualObject(newOptions.filter, this._options.filter);
          var sourceChanged = newOptions.source !== this._options.source;
 
          //TODO могут задать items как рекордсет, надо сразу обработать тогда навигацию и пэйджинг

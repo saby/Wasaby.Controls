@@ -17,7 +17,7 @@ define('SBIS3.CONTROLS/Slider/Input',
           * @class SBIS3.CONTROLS/Slider/Input
           * @extends SBIS3.CONTROLS/Slider
           *
-          * @author Борисов П.С.
+          * @author Волоцкой В.Д.
           *
           * @demo Examples/SliderInput/SliderInputDemo/SliderInputDemo
           *

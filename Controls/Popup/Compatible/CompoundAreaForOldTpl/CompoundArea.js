@@ -252,6 +252,19 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          isNewRecord: function() {
             return this._options.newRecord;
          },
+         setReadOnly: function(isReadOnly) {
+            var isEnabled = !isReadOnly;
+            var childControls = this._compoundControl.getImmediateChildControls(),
+               control;
+            for (var i = 0, len = childControls.length; i < len; ++i) {
+               control = childControls[i];
+               if (typeof (control.setReadOnly) == 'function') {
+                  control.setReadOnly(!isEnabled);
+               } else {
+                  control.setEnabled(isEnabled);
+               }
+            }
+         },
 
          /*end RecordFloatArea */
 

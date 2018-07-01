@@ -3,10 +3,11 @@ define('Controls/Filter/Button/Panel', [
    'WS.Data/Chain',
    'WS.Data/Utils',
    'Core/core-clone',
+   'Controls/Filter/Button/Panel/Wrapper/_FilterPanelOptions',
    'tmpl!Controls/Filter/Button/Panel/Panel',
    'css!Controls/Filter/Button/Panel/Panel'
 
-], function(Control, Chain, Utils, Clone, template) {
+], function(Control, Chain, Utils, Clone, _FilterPanelOptions, template) {
 
    /**
     * Control "Filter panel"
@@ -21,12 +22,22 @@ define('Controls/Filter/Button/Panel', [
     * @event Controls/Filter/Button/Panel#filterChanged Happens when clicking on the button "Select"
     */
 
+
    'use strict';
 
    var getPropValue = Utils.getItemPropertyValue.bind(Utils);
    var setPropValue = Utils.setItemPropertyValue.bind(Utils);
 
    var _private = {
+
+      resolveItems: function(self, options, context) {
+         if (context && context.filterPanelOptionsField && context.filterPanelOptionsField.options) {
+            self._contextOptions = context.filterPanelOptionsField.options;
+            self._items = this.cloneItems(context.filterPanelOptionsField.options.items);
+         } else {
+            self._items = this.cloneItems(options.items);
+         }
+      },
 
       cloneItems: function(items) {
          if (items['[WS.Data/Entity/CloneableMixin]']) {
@@ -72,9 +83,9 @@ define('Controls/Filter/Button/Panel', [
       _isChanged: false,
       _hasAdditionalParams: false,
 
-      _beforeMount: function(options) {
-         this._items = _private.cloneItems(options.items);
-         this._hasAdditionalParams = _private.hasAdditionalParams(options.items);
+      _beforeMount: function(options, context) {
+         _private.resolveItems(this, options, context);
+         this._hasAdditionalParams = _private.hasAdditionalParams(this._items);
          this._isChanged = _private.isChangedValue(this._items);
       },
 
@@ -106,11 +117,9 @@ define('Controls/Filter/Button/Panel', [
       },
 
       _resetFilter: function() {
-         var self = this;
-         this._items = _private.cloneItems(this._items);
-         Chain(this._items).each(function(item, index) {
+         this._items = _private.cloneItems(this._options.items || this._contextOptions.items);
+         Chain(this._items).each(function(item) {
             setPropValue(item, 'value', getPropValue(item, 'resetValue'));
-            setPropValue(item, 'visibility', getPropValue(self._options.items[index], 'visibility'));
          });
          this._isChanged = false;
       }
@@ -121,6 +130,12 @@ define('Controls/Filter/Button/Panel', [
          title: rk('Отбираются'),
          styleHeader: 'primary',
          size: 'default'
+      };
+   };
+
+   FilterPanel.contextTypes = function() {
+      return {
+         filterPanelOptionsField: _FilterPanelOptions
       };
    };
 

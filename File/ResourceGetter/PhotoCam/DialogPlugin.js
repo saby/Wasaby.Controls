@@ -1,5 +1,5 @@
 /// <amd-module name="File/ResourceGetter/PhotoCam/DialogPlugin" />
-define("File/ResourceGetter/PhotoCam/DialogPlugin", ["require", "exports", "Core/Deferred", "Deprecated/helpers/additional-helpers", "File/utils/b64toBlob", "Core/constants", "File/ResourceGetter/PhotoCam/DialogAbstract"], function (require, exports, Deferred, dAddHelpers, toBlob, constants, DialogAbstract) {
+define("File/ResourceGetter/PhotoCam/DialogPlugin", ["require", "exports", "Core/Deferred", "Core/helpers/axo", "File/utils/b64toBlob", "Core/constants", "File/ResourceGetter/PhotoCam/DialogAbstract"], function (require, exports, Deferred, axo, toBlob, constants, DialogAbstract) {
     "use strict";
     var SEC = 1000;
     var WAIT_USER_MEDIA = 15;
@@ -15,7 +15,7 @@ define("File/ResourceGetter/PhotoCam/DialogPlugin", ["require", "exports", "Core
     }
     function jsToSafeArray(array) {
         if (array instanceof Array) {
-            var dict = dAddHelpers.axo('Scripting.Dictionary');
+            var dict = axo('Scripting.Dictionary');
             for (var i = 0, length_1 = array.length; i < length_1; i++) {
                 dict.add(i, jsToSafeArray(array[i]));
             }
