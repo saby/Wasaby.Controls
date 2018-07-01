@@ -110,4 +110,11 @@
     "Controls/Validate/*"
   ],
   "output": "controls-validate.package.js"
+}, {
+  "include": [
+    "Controls/HighCharts",
+    "Controls/HighChartsLight",
+    "Controls/HighCharts/resources/ParseDataUtil"
+  ],
+  "output": "controls-highcharts.package.js"
 }]
