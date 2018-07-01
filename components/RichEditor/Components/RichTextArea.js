@@ -1231,6 +1231,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         selection.select(listNode, true);
                      };
                   }
+                  else {
+                     var node = rng.commonAncestorContainer;
+                     var body = editor.getBody();
+                     if (node.parentNode !== body) {
+                        // Если элемент не является непосредственным потомком редактора - подняться до такого
+                        // 1175494679 https://online.sbis.ru/opendoc.html?guid=4ce44085-0bd4-4bf9-8f6f-1d43f081cf83
+                        node = editor.dom.getParent(node, function (v) { return v.parentNode === body});
+                        selection.select(node, true);
+                        rng = selection.getRng();
+                     }
+                  }
                }
                if ((isA.list || (isA.blockquote && !isBlockquoteOfList)) && !isAlreadyApplied) {
                   var node = rng.startContainer;
