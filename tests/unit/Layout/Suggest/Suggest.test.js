@@ -147,7 +147,7 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          assert.equal(Suggest._private.calcOrient(self, {innerHeight: 300}), '-up');
          
          self._orient = null;
-         self._options.style = 'overInput';
+         self._options.suggestStyle = 'overInput';
          assert.equal(Suggest._private.calcOrient(self, {innerHeight: 600}), '-down');
          assert.equal(Suggest._private.calcOrient(self, {innerHeight: 300}), '-down');
       });
