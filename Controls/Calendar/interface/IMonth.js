@@ -1,7 +1,9 @@
 define('Controls/Calendar/interface/IMonth', [
+   'Core/helpers/Date/format',
    'WS.Data/Type/descriptor',
    'Controls/Utils/Date'
 ], function(
+   dateFormat,
    types,
    dateUtil
 ) {
@@ -39,9 +41,9 @@ define('Controls/Calendar/interface/IMonth', [
              * @name Controls/Calendar/interface/IMonth#captionFormat
              * @cfg {String} Формат заголовка
              * @remark
-             * Строка должна быть в формате поддерживаемым Date.strftime.
+             * Строка должна быть в формате поддерживаемым Core/helpers/Date/format.
              */
-            captionFormat: '%B, %Y',
+            captionFormat: dateFormat.FULL_MONTH,
 
             /**
              * @name Controls/Calendar/interface/IMonth#showWeekdays

@@ -1,0 +1,38 @@
+<div class="PageWrap" style="padding-top: 50px;">
+   <div class="PageBlock">
+      <div class="PageBlock__title"></div>
+      <div class="PageBlock__componentWrap ws-flexbox" style="justify-content: space-evenly;">
+         <Controls.Input.Date.LinkView
+               showPrevArrow="{{true}}"
+               showNextArrow="{{true}}"
+         />
+         <Controls.Input.Date.LinkView
+               startValue="{{_startValue}}"
+               endValue="{{_endValue}}"
+               showPrevArrow="{{true}}"
+               showNextArrow="{{true}}"
+         />
+         <Controls.Input.Date.LinkView
+               bind:startValue="_startValue"
+               bind:endValue="_endValue"
+               showPrevArrow="{{true}}"
+               showNextArrow="{{true}}"
+         />
+         <Controls.Input.Date.LinkView
+               startValue="{{_startValue}}"
+               endValue="{{_endValue}}"
+               style="linkMain"
+         />
+         <Controls.Input.Date.LinkView
+               startValue="{{_startValue}}"
+               endValue="{{_endValue}}"
+               style="linkMain2"
+         />
+         <Controls.Input.Date.LinkView
+               startValue="{{_startValue}}"
+               endValue="{{_endValue}}"
+               style="linkAdditional"
+         />
+      </div>
+   </div>
+</div>
