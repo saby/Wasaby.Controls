@@ -4,9 +4,11 @@
                on:mouseenter="_contentMouseenterHandler()"
                on:mouseleave="_contentMouseleaveHandler()"/>
    <Controls.Popup.Opener.Previewer name="openerPreviewer">
-      <ws:popupOptions template="Controls/Popup/Previewer/OpenerTemplate" isCompoundTemplate="{{_options.isCompoundTemplate}}">
+      <ws:popupOptions template="Controls/Popup/Previewer/OpenerTemplate"
+                       isCompoundTemplate="{{_options.isCompoundTemplate}}">
          <ws:corner vertical="bottom" horizontal="right"/>
-         <ws:templateOptions content="{{_options.template}}"/>
+         <ws:templateOptions content="{{_options.template || _options.templateName}}"
+                             contentOptions="{{_options.templateOptions}}"/>
          <ws:eventHandlers onResult="{{_resultHandler}}"></ws:eventHandlers>
       </ws:popupOptions>
    </Controls.Popup.Opener.Previewer>
