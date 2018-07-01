@@ -3,6 +3,7 @@ import ExtensionsHelper = require("File/utils/ExtensionsHelper");
 import ExtensionsError = require("File/Error/Extension");
 import MaxSizeError = require("File/Error/MaxSize");
 import LocalFile = require("File/LocalFile");
+import Directory = require("File/Directory");
 
 const KB = 1024;
 const MB = KB * KB;
@@ -29,7 +30,7 @@ type FilterParams = {
  * @author Заляев А.В.
  */
 export = (
-    fileList: FileList | Array<LocalFile | Error>, {
+    fileList: FileList | Array<LocalFile | Directory | Error>, {
         extensions,
         maxSize = 0
     }: Partial<FilterParams>
@@ -48,7 +49,10 @@ export = (
             fileList[i];
 
         // Если пришла уже ошибка из внутренней фильтрации ResourceGetter
-        if (item instanceof Error) {
+        if (
+            (item instanceof Error) ||
+            (item instanceof Directory)
+        ){
             results.push(item);
             continue;
         }

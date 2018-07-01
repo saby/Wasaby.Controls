@@ -131,8 +131,17 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             });
          },
 
+         getOpener: function() {
+            return this._logicParent && this._logicParent._options && this._logicParent._options.opener;
+         },
+
          _afterMount: function(cfg) {
             this._options = cfg;
+            
+            //Нам нужно пометить контрол замаунченым для слоя совместимости,
+            //чтобы не создавался еще один enviroment для той же ноды
+
+            this.VDOMReady = true;
             this.deprecatedContr(this._options);
 
 
@@ -183,6 +192,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this.handle('onAfterLoad');
             this.handle('onInitComplete');
             this.handle('onAfterShow'); // todo здесь надо звать хэндлер который пытается подписаться на onAfterShow, попробуй подключить FormController и словить подпись
+            this._compoundControl.setActive(true);
          },
          _subscribeToCommand: function() {
             this._compoundControl.subscribe('onCommandCatch', this._commandHandler);
@@ -191,6 +201,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             var parent;
             if (commandName === 'close') {
                this._close(arg);
+            } else if (commandName === 'ok') {
+               return this._close(true);
+            } else if (commandName === 'cancel') {
+               return this._close(false);
             } else if (commandName === 'registerPendingOperation') {
                return this._registerChildPendingOperation(arg);
             } else if (commandName === 'unregisterPendingOperation') {
@@ -237,6 +251,19 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
          isNewRecord: function() {
             return this._options.newRecord;
+         },
+         setReadOnly: function(isReadOnly) {
+            var isEnabled = !isReadOnly;
+            var childControls = this._compoundControl.getImmediateChildControls(),
+               control;
+            for (var i = 0, len = childControls.length; i < len; ++i) {
+               control = childControls[i];
+               if (typeof (control.setReadOnly) == 'function') {
+                  control.setReadOnly(!isEnabled);
+               } else {
+                  control.setEnabled(isEnabled);
+               }
+            }
          },
 
          /*end RecordFloatArea */
@@ -301,6 +328,16 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   value.apply(self, [eventState, arg]);
                }
             });
+
+            //subscribeTo берет channel и подписывается к нему на события
+            //поэтому если наше событие не отменено, возьмем канал и нотификанем 
+
+            if (eventState.getResult() !== false) {
+               var result = this._getChannel().notify(eventName, arg);
+               if (result !== undefined) {
+                  eventState.setResult(result);
+               }
+            }
 
             return eventState.getResult();
          },

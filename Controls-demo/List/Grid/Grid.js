@@ -81,6 +81,7 @@ define('Controls-demo/List/Grid/Grid', [
 
       ModuleClass = BaseControl.extend({
          _template: template,
+         _actionClicked: '',
 
          _showAction: function(action, item) {
             if (item.get('id') === '471329') {
@@ -101,7 +102,7 @@ define('Controls-demo/List/Grid/Grid', [
             return true;
          },
          _onActionClick: function(event, action, item) {
-            console.log(arguments);
+            this._actionClicked = action.title;
          },
          _itemActions: _firstItemActionsArray,
 
@@ -111,28 +112,6 @@ define('Controls-demo/List/Grid/Grid', [
          }),
 
          gridData: GridData,
-         _itemsGroup: {
-            method: function(item) {
-               if (item.get('costPrice') === null) {
-                  return 'withoutPrice';
-               }
-               if (item.get('costPrice') < 100) {
-                  return 'between0and100';
-               }
-               if (item.get('costPrice') > 100 && item.get('costPrice') < 200) {
-                  return 'between100and200';
-               }
-               if (item.get('costPrice') > 200 && item.get('costPrice') < 300) {
-                  return 'between200and300';
-               }
-               if (item.get('costPrice') > 300 && item.get('costPrice') < 400) {
-                  return 'between300and400';
-               }
-               if (item.get('costPrice') > 400) {
-                  return 'more400';
-               }
-            }
-         },
          gridColumns: [
             {
                displayProperty: 'name',

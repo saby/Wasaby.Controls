@@ -3,14 +3,14 @@ define('Controls/Calendar/MonthView/MonthViewModel', [
    'Core/core-simpleExtend',
    'Core/core-merge',
    'WS.Data/Entity/VersionableMixin',
-   'SBIS3.CONTROLS/Utils/DateUtil',
-   'Controls/Calendar/Utils'
+   'Controls/Calendar/Utils',
+   'Controls/Utils/Date'
 ], function(
    cExtend,
    coreMerge,
    VersionableMixin,
-   DateUtil,
-   calendarUtils
+   calendarUtils,
+   DateUtil
 ) {
    'use strict';
 

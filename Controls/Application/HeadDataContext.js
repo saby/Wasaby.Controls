@@ -33,6 +33,11 @@ define('Controls/Application/HeadDataContext', [
       return keySplitted[0] === 'css' && keySplitted.length > 1;
    }
 
+   function isTmpl(key) {
+      var keySplitted = key.split('!');
+      return keySplitted[0] === 'tmpl' && keySplitted.length > 1;
+   }
+
    function fixLinkSlash(link) {
       if (link.indexOf('/') !== 0) {
          return '/' + link;
@@ -61,7 +66,7 @@ define('Controls/Application/HeadDataContext', [
       for (var key in allDeps) {
          if (allDeps.hasOwnProperty(key)) {
             if (modDeps.nodes[key]) {
-               if (isJs(key) || isCss(key)) {
+               if (isJs(key) || isCss(key) || isTmpl(key)) {
                   packages[fixLinkSlash(modDeps.nodes[key].path)] = true;
                }
             }
@@ -98,7 +103,13 @@ define('Controls/Application/HeadDataContext', [
             if (packages.hasOwnProperty(key)) {
                if (key.slice(key.length - 3, key.length) === 'css') {
                   files.css.push(key);
+                  var corrJs = key.replace(/.css$/, '.js');
+                  if (!packages[corrJs]) {
+                     files.js.push(corrJs);
+                  }
                } else if (key.slice(key.length - 2, key.length) === 'js') {
+                  files.js.push(key);
+               } else if (key.slice(key.length - 4, key.length) === 'tmpl') {
                   files.js.push(key);
                }
             }

@@ -99,6 +99,7 @@ define('Controls/List/ItemsViewModel',
                   itemData.isGroup = true;
                   itemData.isHiddenGroup = itemData.item === ControlsConstants.view.hiddenGroup;
                   itemData.isGroupExpanded = !this._collapsedGroups[itemData.item];
+                  itemData.metaData = this._items.getMetaData();
                }
             }
             return itemData;
@@ -113,9 +114,13 @@ define('Controls/List/ItemsViewModel',
             } else {
                this._collapsedGroups[group] = true;
             }
-            this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
+            this.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
             this._nextVersion();
             this._notify('onListChange');
+         },
+
+         setFilter: function(filter) {
+            this._display.setFilter(filter);
          },
 
          prepareDisplayFilterData: function() {
