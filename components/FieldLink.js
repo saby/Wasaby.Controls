@@ -617,7 +617,7 @@ define('SBIS3.CONTROLS/FieldLink',
              if(this._options.useSelectorAction) {
                 this._getSelectorAction().execute(wsCoreMerge(actionCfg, cfg));
              } else {
-                this._showChooser(cfg.template, cfg.componentOptions, cfg.dialogOptions);
+                this._showChooser(cfg.template, cfg.componentOptions, cfg.dialogOptions, cfg);
              }
           },
 
