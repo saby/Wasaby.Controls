@@ -7,7 +7,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
       "Core/core-clone",
       "Core/Context",
       "Core/Indicator",
-      "Core/core-clone",
       "Core/CommandDispatcher",
       "Core/constants",
       "Core/Deferred",
@@ -36,7 +35,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
       cClone,
       cContext,
       cIndicator,
-      coreClone,
       CommandDispatcher,
       cConstants,
       Deferred,
@@ -1011,11 +1009,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   for (var i = 0; i < properties.length; i++) {
                      var prop = properties[i];
                      if (prop === 'fontsize') {
-                        formats[prop] = +editor.dom.getStyle(node, 'font-size', true).replace('px', '');//^^^+$node.css('font-size').replace('px', '')
+                        formats[prop] = +editor.dom.getStyle(node, 'font-size', true).replace('px', '');
                      }
                      else
                      if (prop === 'color') {
-                        var color = editor.dom.getStyle(node, 'color', true);//^^^$node.css('color')
+                        var color = editor.dom.getStyle(node, 'color', true);
                         formats[prop] = constants.colorsMap[color] || color;
                      }
                      else {
@@ -1074,6 +1072,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   if (!sameFont) {
                      this._setFontSize(formats.fontsize);
                   }
+                  var node = this._getCurrentFormatNode();
+                  if (this._applyTextDecorationUnderlineAndLinethrough(node, false) && !node.attributes.length) {
+                     var nodes = [].slice.call(node.childNodes);
+                     editor.$(nodes).unwrap();
+                     var last = nodes[nodes.length - 1];
+                     this._selectNewRng(nodes[0], 0, last, last[last.nodeType === 3 ? 'nodeValue' : 'innerHTML'].length);
+                  }
                   var hasOther;
                   for (var i = 0, names = ['bold', 'italic', 'underline', 'strikethrough']; i < names.length; i++) {
                      var name = names[i];
@@ -1086,6 +1091,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                   if (formats.color !== this.getCurrentFormats(['color']).color) {
                      formatter.apply('forecolor', {value:formats.color});
+                     if (formats.underline && formats.strikethrough) {
+                        this._applyTextDecorationUnderlineAndLinethrough(this._getCurrentFormatNode(), true);
+                     }
                      hasOther = true;
                   }
                   if (sameFont && !hasOther) {
@@ -1096,6 +1104,23 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      this._setFontSize(formats.fontsize);
                   }
                   this._updateTextByTiny();
+               }
+            },
+
+            _applyTextDecorationUnderlineAndLinethrough: function (node, isOn) {
+               var dom = this._tinyEditor.dom;
+               if (isOn) {
+                  dom.setStyle(node, 'text-decoration-line', 'underline line-through');
+                  return true;
+               }
+               else {
+                  if (dom.getStyle(node, 'text-decoration-line', false) === 'underline line-through') {
+                     dom.setStyle(node, {'text-decoration-line':'', 'text-decoration-style':'', 'text-decoration-color':''});
+                     if (!dom.getAttrib(node, 'style')) {
+                        node.removeAttribute('style');
+                     }
+                     return true;
+                  }
                }
             },
 
@@ -1319,7 +1344,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                var
                   editor = this._tinyEditor,
                   selection = editor.selection,
-                  range = coreClone(selection.getRng()),
+                  range = cClone(selection.getRng()),
                   element = selection.getNode(),
                   anchor = editor.dom.getParent(element, 'a[href]'),
                   origHref = anchor ? editor.dom.getAttrib(anchor, 'href') : '',
