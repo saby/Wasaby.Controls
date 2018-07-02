@@ -234,6 +234,16 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             e.stopPropagation();
             this._close(arg);
          },
+         _keyUp: function(event) {
+            var
+               self = this;
+            require(['Core/constants'], function(CoreConstants) {
+               if (event.nativeEvent.keyCode === CoreConstants.key.esc) {
+                  self._close();
+               }
+            });
+            event.stopPropagation();
+         },
 
          reload: function() {
             this._rebuildCompoundControl(this._options);
