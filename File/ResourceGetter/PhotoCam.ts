@@ -7,6 +7,7 @@ import LocalFileLink = require("File/LocalFileLink");
 import detection = require("Core/detection");
 import merge = require("Core/core-merge");
 import OpenDialog = require("SBIS3.CONTROLS/Action/OpenDialog");
+import {isDestroyedAsync} from 'File/Decorator/isDestroyed';
 
 const DIALOG = "File/ResourceGetter/PhotoCam/Dialog";
 const DIALOG_PLUGIN = "File/ResourceGetter/PhotoCam/DialogPlugin";
@@ -76,6 +77,7 @@ class PhotoCam extends IResourceGetterBase {
      * @see File/LocalFile
      * @see File/LocalFileLink
      */
+    @isDestroyedAsync
     getFiles(): Deferred<Array<LocalFileLink | LocalFile>> {
         if (this.isDestroyed()) {
             return Deferred.fail("Resource getter is destroyed");

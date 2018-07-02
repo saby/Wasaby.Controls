@@ -48,5 +48,5 @@ export type IResourceGetter = {
  * @name File/IResourceGetterConstructor
  */
 export type IResourceGetterConstructor = {
-    new (...args): IResource;
+    new (...args): IResourceGetter;
 }
