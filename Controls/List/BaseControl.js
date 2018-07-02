@@ -7,6 +7,7 @@ define('Controls/List/BaseControl', [
    'require',
    'Controls/List/Controllers/VirtualScroll',
    'Controls/Controllers/SourceController',
+   'Core/helpers/Object/isEqual',
    'Core/Deferred',
    'tmpl!Controls/List/BaseControl/multiSelect',
    'WS.Data/Collection/RecordSet',
@@ -23,6 +24,7 @@ define('Controls/List/BaseControl', [
    require,
    VirtualScroll,
    SourceController,
+   isEqualObject,
    Deferred,
    multiSelectTpl,
    RecordSet,
@@ -39,7 +41,7 @@ define('Controls/List/BaseControl', [
             //Need to create new Deffered, returned success result
             //load() method may be fired with errback
             var resDeferred = new Deferred();
-            self._sourceController.load(self._filter, self._sorting).addCallback(function(list) {
+            self._sourceController.load(self._options.filter, self._sorting).addCallback(function(list) {
 
                if (userCallback && userCallback instanceof Function) {
                   userCallback(list);
@@ -70,7 +72,7 @@ define('Controls/List/BaseControl', [
       loadToDirection: function(self, direction, userCallback, userErrback) {
          _private.showIndicator(self, direction);
          if (self._sourceController) {
-            return self._sourceController.load(self._filter, self._sorting, direction).addCallback(function(addedItems) {
+            return self._sourceController.load(self._options.filter, self._sorting, direction).addCallback(function(addedItems) {
 
                if (userCallback && userCallback instanceof Function) {
                   userCallback(addedItems, direction);
@@ -358,7 +360,6 @@ define('Controls/List/BaseControl', [
       _loadingIndicatorState: null,
 
       //TODO пока спорные параметры
-      _filter: undefined,
       _sorting: undefined,
 
       _itemTemplate: null,
@@ -384,7 +385,6 @@ define('Controls/List/BaseControl', [
          /* Load more data after reaching end or start of the list.
           TODO могут задать items как рекордсет, надо сразу обработать тогда навигацию и пэйджинг
           */
-         this._filter = newOptions.filter;
 
          if (newOptions.viewModelConfig && newOptions.viewModelConstructor) {
             this._listViewModel = new newOptions.viewModelConstructor(newOptions.viewModelConfig);
@@ -425,13 +425,13 @@ define('Controls/List/BaseControl', [
       },
 
       _beforeUpdate: function(newOptions) {
-         var filterChanged = newOptions.filter !== this._options.filter;
+         var filterChanged = !isEqualObject(newOptions.filter, this._options.filter);
          var sourceChanged = newOptions.source !== this._options.source;
 
          //TODO могут задать items как рекордсет, надо сразу обработать тогда навигацию и пэйджинг
 
          if (filterChanged) {
-            this._filter = newOptions.filter;
+            this._options.filter = newOptions.filter;
          }
 
          if (newOptions.viewModelConfig && (newOptions.viewModelConfig !== this._options.viewModelConfig)) {

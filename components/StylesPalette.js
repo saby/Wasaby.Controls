@@ -4,7 +4,7 @@ define('SBIS3.CONTROLS/StylesPalette', [
    'Lib/Control/CompoundControl/CompoundControl',
    'SBIS3.CONTROLS/History/HistoryController',
    'Core/helpers/Object/find',
-   'Core/helpers/random-helpers',
+   'Core/helpers/Number/randomId',
    'tmpl!SBIS3.CONTROLS/StylesPalette/StylesPalette',
    'Core/EventBus',
    'tmpl!SBIS3.CONTROLS/StylesPanelNew/resources/presetItemTemplate',
@@ -16,7 +16,7 @@ define('SBIS3.CONTROLS/StylesPalette', [
    'SBIS3.CONTROLS/CheckBox',
    'css!SBIS3.CONTROLS/StylesPalette/StylesPalette',
    'css!SBIS3.CONTROLS/Menu/MenuItem/MenuItem'
-], function(CommandDispatcher, cMerge, CompoundControl, HistoryController, objectFind, randHelpers, dotTplFn, EventBus) {
+], function(CommandDispatcher, cMerge, CompoundControl, HistoryController, objectFind, randomId, dotTplFn, EventBus) {
 
 
    'use strict';
@@ -299,7 +299,7 @@ define('SBIS3.CONTROLS/StylesPalette', [
          for (var style in presets) {
             if (presets.hasOwnProperty(style)) {
                preparedItem = {
-                  id: randHelpers.randomId(),
+                  id: randomId(),
                   // Обязательно скопировать, иначе при удалении preparedItem.json.name ниже будет изменена и опция presets
                   // 1175097680 https://online.sbis.ru/opendoc.html?guid=3c38343d-1dc4-4bfb-b7c8-593606a6b846
                   json: cMerge({}, presets[style])
@@ -476,7 +476,7 @@ define('SBIS3.CONTROLS/StylesPalette', [
          this._history.length > 4 && this._history.pop();
 
          historyFormat = {
-            id: randHelpers.randomId(),
+            id: randomId(),
             json: this._currentStyle
          };
 

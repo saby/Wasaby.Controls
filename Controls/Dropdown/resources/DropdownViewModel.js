@@ -4,14 +4,13 @@
 define('Controls/Dropdown/resources/DropdownViewModel',
    [
       'Controls/List/BaseViewModel',
-      'WS.Data/Chain',
       'Controls/List/resources/utils/ItemsUtil',
       'Controls/List/ItemsViewModel',
       'WS.Data/Entity/Model',
       'WS.Data/Relation/Hierarchy'
    ],
 
-   function(BaseViewModel, Chain, ItemsUtil, ItemsViewModel, Model, Hierarchy) {
+   function(BaseViewModel, ItemsUtil, ItemsViewModel, Model, Hierarchy) {
       var _private = {
          filterHierarchy: function(item) {
             if (!this._options.parentProperty || !this._options.nodeProperty) {

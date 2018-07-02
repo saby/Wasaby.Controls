@@ -131,6 +131,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             });
          },
 
+         getOpener: function() {
+            return this._logicParent && this._logicParent._options && this._logicParent._options.opener;
+         },
+
          _afterMount: function(cfg) {
             this._options = cfg;
             
@@ -197,6 +201,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             var parent;
             if (commandName === 'close') {
                this._close(arg);
+            } else if (commandName === 'ok') {
+               return this._close(true);
+            } else if (commandName === 'cancel') {
+               return this._close(false);
             } else if (commandName === 'registerPendingOperation') {
                return this._registerChildPendingOperation(arg);
             } else if (commandName === 'unregisterPendingOperation') {
@@ -239,10 +247,23 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          /* start RecordFloatArea */
          getRecord: function() {
-            return this._options.record;
+            return this._options.record || this._options.templateOptions && this._options.templateOptions.record;
          },
          isNewRecord: function() {
             return this._options.newRecord;
+         },
+         setReadOnly: function(isReadOnly) {
+            var isEnabled = !isReadOnly;
+            var childControls = this._compoundControl.getImmediateChildControls(),
+               control;
+            for (var i = 0, len = childControls.length; i < len; ++i) {
+               control = childControls[i];
+               if (typeof (control.setReadOnly) == 'function') {
+                  control.setReadOnly(!isEnabled);
+               } else {
+                  control.setEnabled(isEnabled);
+               }
+            }
          },
 
          /*end RecordFloatArea */
