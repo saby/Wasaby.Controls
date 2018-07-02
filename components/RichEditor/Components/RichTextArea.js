@@ -2656,6 +2656,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   this._imageOptionsPanel = new ImageOptionsPanel({
                      templates: self._options.templates,
                      parent: self,
+                     opener: self,
                      target: target,
                      imageUuid: uuid,
                      targetPart: true,
