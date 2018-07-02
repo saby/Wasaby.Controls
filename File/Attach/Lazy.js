@@ -1,4 +1,4 @@
-define("File/Attach/Lazy", ["require", "exports", "File/Attach/Base", "Core/core-simpleExtend", "File/Attach/Container/GetterLazy", "File/Attach/Container/SourceLazy"], function (require, exports, Base, CoreExtend, GetterContainerLazy, SourceContainerLazy) {
+define("File/Attach/Lazy", ["require", "exports", "tslib", "File/Attach/Base", "File/Attach/Container/GetterLazy", "File/Attach/Container/SourceLazy"], function (require, exports, tslib_1, Base, GetterContainerLazy, SourceContainerLazy) {
     "use strict";
     /**
      * Класс, наследник Attach/Base, позволяющий регестрировать
@@ -8,12 +8,14 @@ define("File/Attach/Lazy", ["require", "exports", "File/Attach/Base", "Core/core
      * @extends File/Attach/Base
      * @author Заляев А.В.
      */
-    var Lazy = CoreExtend.extend(Base, {
-        constructor: function () {
-            Lazy.superclass.constructor.apply(this, arguments);
-            this._getterContainer = new GetterContainerLazy();
-            this._sourceContainer = new SourceContainerLazy();
-        },
+    var Lazy = /** @class */ (function (_super) {
+        tslib_1.__extends(Lazy, _super);
+        function Lazy(opt) {
+            var _this = _super.call(this, opt) || this;
+            _this._getterContainer = new GetterContainerLazy();
+            _this._sourceContainer = new SourceContainerLazy();
+            return _this;
+        }
         /**
          * Ленивая регестрация экземпляров IResourceGetter, для получения файлов
          * @param {String} name Имя модуля
@@ -21,19 +23,20 @@ define("File/Attach/Lazy", ["require", "exports", "File/Attach/Base", "Core/core
          * @param {*} [options] Параметры вызова конструктора
          * @void
          */
-        registerLazyGetter: function (name, link, options) {
+        Lazy.prototype.registerLazyGetter = function (name, link, options) {
             return this._getterContainer.register(name, link, options);
-        },
+        };
         /**
          * Ленивая регестрация ISource
-         * @param {Function} fileType Конструктор обёртки над ресурсом
+         * @param {File/IResourceConstructor} fileType Конструктор обёртки над ресурсом
          * @param {String} link Ссылка на источник данных
          * @param {*} [options] Параметры вызова конструктора обёртки
          * @void
          */
-        registerLazySource: function (fileType, link, options) {
+        Lazy.prototype.registerLazySource = function (fileType, link, options) {
             return this._sourceContainer.register(fileType, link, options);
-        }
-    });
+        };
+        return Lazy;
+    }(Base));
     return Lazy;
 });

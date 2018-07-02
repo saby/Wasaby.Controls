@@ -12,12 +12,13 @@ import ParallelDeferred = require("Core/ParallelDeferred");
 import moduleStubs = require("Core/moduleStubs");
 import ObservableMixin = require("WS.Data/Entity/ObservableMixin");
 import {isDestroyed, isDestroyedAsync} from "File/Decorator/isDestroyed";
-import {ISourceContainer} from "./IContainer";
+import {IGetterContainer, ISourceContainer} from "./IContainer";
 
 const UPLOADER_LINK = "File/Attach/Uploader";
 
 type Options = {
-    multiSelect: boolean
+    multiSelect: boolean;
+    [propName: string]: any;
 }
 
 const DEFAULT = {
@@ -92,7 +93,7 @@ Observable.prototype = ObservableMixin;
  */
 abstract class Abstract extends Observable {
     private _selectedResources: Array<IResource>;
-    protected _getterContainer: IContainer<IResourceGetter>;
+    protected _getterContainer: IGetterContainer;
     protected _sourceContainer: ISourceContainer;
     private _loader: Uploader;
     private _$options: Options;
