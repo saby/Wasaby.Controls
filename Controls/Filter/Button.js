@@ -82,9 +82,15 @@ define('Controls/Filter/Button',
          _text: '',
          _historyId: null,
 
-         constructor: function() {
-            FilterButton.superclass.constructor.apply(this, arguments);
+         _beforeMount: function(options) {
+            if (options.items) {
+               _private.resolveItems(this, options.items);
+            }
             this._onFilterChanged = this._onFilterChanged.bind(this);
+         },
+
+         _afterMount: function() {
+            this._notify('resize', [{filterButton: this._children.panelTarget.offsetWidth}]);
          },
 
          _beforeUpdate: function(options) {
@@ -93,9 +99,11 @@ define('Controls/Filter/Button',
             }
          },
 
-         _beforeMount: function(options) {
-            if (options.items) {
-               _private.resolveItems(this, options.items);
+         _afterUpdate: function() {
+            if (this._isChanged) {
+               this._isChanged = false;
+               this._notify('resize', [{filterButton: this._children.FilterWrapper.offsetWidth}]);
+               this._forceUpdate();
             }
          },
 
@@ -136,21 +144,13 @@ define('Controls/Filter/Button',
          _onFilterChanged: function(data) {
             this._notify('filterChanged', [data.filter]);
             this._notify('itemsChanged', [data.items]);
+            this._isChanged = true;
          }
       });
 
       FilterButton.getDefaultOptions = function() {
          return {
             filterAlign: 'right'
-         };
-      };
-
-      FilterButton.getOptionsTypes = function() {
-         return {
-            itemTemplate: types(Object),
-            itemTemplateProperty: types(String),
-            additionalTemplate: types(Object),
-            additionalTemplateProperty: types(String)
          };
       };
 

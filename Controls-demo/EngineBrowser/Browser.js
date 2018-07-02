@@ -48,7 +48,7 @@ define('Controls-demo/EngineBrowser/Browser', [
       {
          id: 'title',
          resetValue: 'По имени',
-         value: 'По имени',
+         value: 'Ferdinand',
          properties: {
             keyProperty: 'title',
             displayProperty: 'title',
@@ -58,9 +58,10 @@ define('Controls-demo/EngineBrowser/Browser', [
                   data: [
                      {id: 0, title: 'По имени'},
                      {id: 1, title: 'Sasha'},
-                     {id: 2, title: 'Petrova'},
-                     {id: 3, title: 'Ivan'},
-                     {id: 3, title: 'Andrey'}
+                     {id: 2, title: 'Petr'},
+                     {id: 4, title: 'Ivan'},
+                     {id: 5, title: 'Andrey'},
+                     {id: 7, title: 'Ferdinand'}
                   ]
                }
             }
@@ -69,7 +70,7 @@ define('Controls-demo/EngineBrowser/Browser', [
       {
          id: 'id',
          resetValue: 0,
-         value: 0,
+         value: 5,
          properties: {
             keyProperty: 'id',
             displayProperty: 'title',
@@ -81,7 +82,8 @@ define('Controls-demo/EngineBrowser/Browser', [
                      {id: 1, title: '1'},
                      {id: 2, title: '2'},
                      {id: 3, title: '3'},
-                     {id: 4, title: '4'}
+                     {id: 4, title: '4'},
+                     {id: 5, title: '123456'}
                   ]
                }
             }
@@ -120,7 +122,7 @@ define('Controls-demo/EngineBrowser/Browser', [
          id: 'FIO',
          value: '',
          resetValue: '',
-         textValue: 'FIO',
+         textValue: 'Ser name',
          visibility: true
       },
       {

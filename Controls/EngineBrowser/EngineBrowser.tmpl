@@ -12,14 +12,14 @@
                <ws:partial template="{{_options.topTemplate}}" class="controls-Browser__topTemplate"/>
             </ws:if>
             <div name="filterWrapper"
-                 class="controls-Browser__filter-wrapper controls-Browser__filter-wrapper-default">
+                 class="controls-Browser__filter-wrapper controls-Browser__filter-wrapper-{{_compress}}">
                <ws:if data="{{_options.fastFilter}}">
-                  <Controls.Container.Filter.Fast name="fastFilter">
+                  <Controls.Container.Filter.Fast name="fastFilter" on:resize="onResize()">
                      <ws:partial template="{{_options.fastFilter}}" class="controls-Browser__fastFilter"/>
                   </Controls.Container.Filter.Fast>
                </ws:if>
                <ws:if data="{{_options.filterButton}}">
-                  <Controls.Container.Filter.Button name="filterButton">
+                  <Controls.Container.Filter.Button name="filterButton" on:resize="onResize()">
                      <ws:partial template="{{_options.filterButton}}" class="controls-Browser__filterButton"/>
                   </Controls.Container.Filter.Button>
                </ws:if>

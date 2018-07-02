@@ -115,11 +115,15 @@ define('Controls/Filter/Fast',
             _private.selectItem.apply(this, data);
             this._notify('filterChanged', [_private.getFilter(this._items)]);
             this._children.DropdownOpener.close();
+            this._isChanged = true;
          },
 
-         resize: function(self, fastFilter) {
-
-            self._notify('sizeChanged', fastFilter.width);
+         resize: function(self, filters) {
+            var width = 0;
+            Chain(filters).each(function(filter) {
+               width += filter.offsetWidth;
+            });
+            self._notify('resize', [{fastFilter : width}]);
          }
       };
 
@@ -127,6 +131,7 @@ define('Controls/Filter/Fast',
          _template: template,
          _configs: null,
          _items: null,
+         _isChanged: true,
 
          constructor: function() {
             FastData.superclass.constructor.apply(this, arguments);
@@ -149,6 +154,19 @@ define('Controls/Filter/Fast',
                });
             }
             return resultDef;
+         },
+
+         _afterMount: function() {
+            this._isChanged = false;
+            _private.resize(this, this._container.children);
+         },
+
+         _afterUpdate: function() {
+            if (this._isChanged) {
+               this._isChanged = false;
+               _private.resize(this, this._container.children);
+               this._forceUpdate();
+            }
          },
 
          _open: function(event, item, index) {
@@ -184,6 +202,7 @@ define('Controls/Filter/Fast',
             setPropValue(this._items.at(index), 'value', newValue);
             this._notify('selectedKeysChanged', [newValue]);
             this._notify('filterChanged', [_private.getFilter(this._items)]);
+            this._isChanged = true;
             _private.resize(this, this._children.fastFilter);
          }
       });
