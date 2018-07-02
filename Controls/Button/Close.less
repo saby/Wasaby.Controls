@@ -19,12 +19,13 @@
   font-size: @font-size_CloseButton_default;
   font-family: @font-family_CloseButton_default;
   color: @color_CloseButton-icon;
+  box-shadow: @box-shadow_CloseButton;
   &:before {
     text-shadow: @text-shadow_Button;
   }
-  &:active, &:hover {
-    box-shadow: @box-shadow_CloseButton;
+  &:active {
     color: @color_CloseButton-icon_hover;
+     box-shadow: none;
   }
 
 }
@@ -44,8 +45,8 @@
    .controls-Button__close_default:hover {
       border-color: @default-border-color-second;
    }
-   .controls-Button__close_default:hover:before {
-      color: @icon-color-primary-hover;
+   .controls-Button__close_default:hover {
+      color: @color_CloseButton-icon_hover;
    }
    .controls-Button__close_light:hover {
       color: @color_CloseButton-light-icon_hover;
