@@ -193,6 +193,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this.handle('onInitComplete');
             this.handle('onAfterShow'); // todo здесь надо звать хэндлер который пытается подписаться на onAfterShow, попробуй подключить FormController и словить подпись
             this._compoundControl.setActive(true);
+            var self = this;
+            runDelayed(function() {
+               self._compoundControl._notifyOnSizeChanged();
+            });
          },
          _subscribeToCommand: function() {
             this._compoundControl.subscribe('onCommandCatch', this._commandHandler);
