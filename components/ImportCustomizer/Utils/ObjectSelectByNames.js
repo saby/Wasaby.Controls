@@ -2,9 +2,9 @@
  * Вспомогательная функция. Выбрать из объекта только указанные в списке свойства
  *
  * @public
- * @class SBIS3.CONTROLS/Utils/ObjectSelectByNames
+ * @class SBIS3.CONTROLS/ImportCustomizer/Utils/ObjectSelectByNames
  */
-define('SBIS3.CONTROLS/Utils/ObjectSelectByNames',
+define('SBIS3.CONTROLS/ImportCustomizer/Utils/ObjectSelectByNames',
    [
    ],
 
