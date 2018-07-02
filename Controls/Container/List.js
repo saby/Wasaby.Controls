@@ -186,6 +186,13 @@ define('Controls/Container/List',
                   this.updateFilter(self, filterValue);
                }
             }
+         },
+         
+         destroySearchController: function(self) {
+            if (self._searchController) {
+               self._searchController.abort();
+               self._searchController = null;
+            }
          }
       };
       
@@ -240,20 +247,16 @@ define('Controls/Container/List',
          },
          
          _beforeUpdate: function(newOptions, context) {
-            if (this._options.source !== newOptions.source) {
-               if (this._searchController) {
-                  this._searchController.setSource(newOptions.source);
-               }
+            if (this._options.source !== newOptions.source || this._options.navigation !== newOptions.navigation || this._options.searchDelay !== newOptions.searchDelay) {
+               _private.destroySearchController(this);
+               _private.resolveOptions(this, newOptions);
             }
             _private.checkContextValues(this, context);
          },
          
          _beforeUnmount: function() {
-            if (this._searchController) {
-               this._searchController.abort();
-               this._searchController = null;
-            }
             _private.cancelSearchDeferred(this);
+            _private.destroySearchController(this);
          }
          
       });
