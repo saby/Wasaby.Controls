@@ -44,7 +44,7 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          assert.isTrue(stateNotifyed);
       });
    
-      it('Suggest::_private.close', function () {
+      it('Suggest::_private.close', function() {
          var self = getComponentObject();
          var state;
          self._options.suggestState = true;
@@ -53,6 +53,19 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          };
          Suggest._private.close(self);
          assert.isFalse(state);
+      });
+   
+      it('Suggest::_close', function() {
+         var suggestComponent = new Suggest();
+         suggestComponent._options.suggestStyle = 'overInput';
+         var value = 'test';
+         suggestComponent._notify = function(event, val) {
+            if (event === 'valueChanged') {
+               value = val[0];
+            }
+         };
+         suggestComponent._close();
+         assert.equal(value, '');
       });
    
       it('Suggest::_private.open', function (done) {
@@ -134,7 +147,7 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          assert.equal(Suggest._private.calcOrient(self, {innerHeight: 300}), '-up');
          
          self._orient = null;
-         self._options.style = 'overInput';
+         self._options.suggestStyle = 'overInput';
          assert.equal(Suggest._private.calcOrient(self, {innerHeight: 600}), '-down');
          assert.equal(Suggest._private.calcOrient(self, {innerHeight: 300}), '-down');
       });
@@ -156,6 +169,9 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          suggestComponent._inputActivated();
    
          suggestComponent._dependenciesDeferred.addCallback(function() {
+            assert.isTrue(suggestState);
+            
+            suggestComponent._changeValueHandler(null, '');
             assert.isTrue(suggestState);
             done();
          });
@@ -203,6 +219,19 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          assert.notEqual(self._searchResult.data, queryRecordSet);
          assert.equal(self._searchResult.data, queryRecordSetEmpty);
          assert.equal(self._tabsSelectedKey, 'testId2');
+      });
+   
+      it('Suggest::move focus to input after change tab', function() {
+         var suggestComponent = new Suggest();
+         var suggestActivated = false;
+         suggestComponent.activate = function() {
+            suggestActivated = true;
+         };
+   
+         suggestComponent._tabsSelectedKeyChanged(null, 'test');
+         
+         assert.isTrue(suggestActivated);
+         assert.equal(suggestComponent._filter.currentTab, 'test');
       });
       
    });

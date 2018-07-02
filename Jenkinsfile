@@ -451,11 +451,6 @@ node('controls') {
                 IMAGE_DIR = capture
                 RUN_REGRESSION=True"""
         }
-        def run_test_fail = ""
-        if (params.RUN_ONLY_FAIL_TEST == true){
-            run_test_fail = "-sf"
-            step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
-        }
 
         def site = "http://${NODE_NAME}:30010"
         site.trim()
@@ -473,6 +468,11 @@ node('controls') {
             }
         }
 
+        def run_test_fail = ""
+        if (params.RUN_ONLY_FAIL_TEST == true){
+            run_test_fail = "-sf"
+            step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
+        }
         parallel (
             int_test: {
                 echo "Запускаем интеграционные тесты"

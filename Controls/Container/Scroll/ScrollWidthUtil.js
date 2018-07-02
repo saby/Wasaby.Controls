@@ -9,6 +9,8 @@ define('Controls/Container/Scroll/ScrollWidthUtil',
 
       var _private = {
 
+         styleHideScrollbar: null,
+
          /**
           * Расчет ширины нативного скролла с помощью вспомогательного контейнера.
           * @return {number}
@@ -40,10 +42,10 @@ define('Controls/Container/Scroll/ScrollWidthUtil',
             if (detection.webkit || detection.chrome) {
                scrollbarWidth = 0;
             } else if (detection.isIE12) {
-               scrollbarWidth = 16;
+               scrollbarWidth = 12;
             } else if (detection.isIE10 || detection.isIE11) {
                scrollbarWidth = 17;
-            } else if (window) {
+            } else if (typeof window !== 'undefined') {
                scrollbarWidth = _private.calcScrollbarWidthByMeasuredBlock();
             }
 
@@ -67,50 +69,36 @@ define('Controls/Container/Scroll/ScrollWidthUtil',
                if (compatibility.touch && detection.isIE) {
                   style += 'padding-right: ' + scrollbarWidth + 'px;';
                }
-            } else {
+            } else if (scrollbarWidth === 0) {
                style = '';
             }
 
             return style;
-         },
-
-         calcStyleHideScrollbarFn: function(detection, compatibility) {
-            var styleHideScrollbarFn;
-
-            if (detection.firefox) {
-               styleHideScrollbarFn = function() {
-                  var scrollbarWidth;
-
-                  if (window) {
-                     scrollbarWidth = _private.calcScrollbarWidthByMeasuredBlock();
-
-                     return _private.calcStyleHideScrollbar(scrollbarWidth, detection, compatibility);
-                  }
-               };
-            } else {
-               styleHideScrollbarFn = function() {
-                  var scrollbarWidth;
-
-                  if (typeof _private.styleHideScrollbar === 'undefined') {
-                     scrollbarWidth = _private.calcScrollbarWidth(detection);
-
-                     if (typeof scrollbarWidth === 'number') {
-                        _private.styleHideScrollbar = _private.calcStyleHideScrollbar(scrollbarWidth, detection, compatibility);
-                     }
-                  }
-
-                  return _private.styleHideScrollbar;
-               };
-            }
-
-            return styleHideScrollbarFn;
          }
       };
 
       return {
          _private: _private,
 
-         calcStyleHideScrollbar: _private.calcStyleHideScrollbarFn(detection, compatibility)
+         calcStyleHideScrollbar: function() {
+            var scrollbarWidth, styleHideScrollbar;
+
+            if (typeof _private.styleHideScrollbar === 'string') {
+               styleHideScrollbar = _private.styleHideScrollbar;
+            } else {
+               scrollbarWidth = _private.calcScrollbarWidth(detection);
+               styleHideScrollbar = _private.calcStyleHideScrollbar(scrollbarWidth, detection, compatibility);
+            }
+
+            /**
+             * Do not cache on the server and firefox.
+             */
+            if (!(typeof window === 'undefined' || detection.firefox)) {
+               _private.styleHideScrollbar = styleHideScrollbar;
+            }
+
+            return styleHideScrollbar;
+         }
       };
    }
 );

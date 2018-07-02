@@ -132,7 +132,8 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                selectableView: 'controls-Browser-ColumnsEditor-Editing-Area__SelectableList',
                presetDropdown: 'controls-Browser-ColumnsEditor-Editing-Area__Preset-item-title',
                presetInput: 'controls-Browser-ColumnsEditor-Editing-Area__Preset-input',
-               operationsMark: 'controls-Browser-ColumnsEditor-Editing-Area__OperationsMark'
+               operationsMark: 'controls-Browser-ColumnsEditor-Editing-Area__OperationsMark',
+               applyColumnsButton: 'controls-Browser-ColumnsEditor-Editing-Area__ApplyColumnsButton'
             },
             _presetView: null,
             _presetDropdown: null,
@@ -140,6 +141,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
             _selectableView: null,
             _currentPreset: null,
             _operationsMark: null,
+            _applyColumnsButton: null,
             _presetValidator: null
          },
 
@@ -169,6 +171,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
             this._fixedView = _getChildComponent(this, this._childNames.fixedView);
             this._selectableView = this.getChildControlByName(this._childNames.selectableView);
             this._operationsMark = _getChildComponent(this, this._childNames.operationsMark);
+            this._applyColumnsButton = this.getChildControlByName(this._childNames.applyColumnsButton);
 
             if (this._operationsMark) {
                this._operationsMark.setLinkedView(this._selectableView);
@@ -210,6 +213,12 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                this._itemsMoveController = new ItemsMoveController({
                   linkedView: this._selectableView
                });
+            }
+
+            if (!this._fixedView) {
+               this.subscribeTo(this._selectableView, 'onSelectedItemsChange', function (e, selectedIds, changes) {
+                  this._applyColumnsButton.setVisible(!!(selectedIds && selectedIds.length));
+               }.bind(this));
             }
 
             if (!options.multiselect && options.autoApply) {

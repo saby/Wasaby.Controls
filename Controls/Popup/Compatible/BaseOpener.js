@@ -3,10 +3,15 @@
  */
 define('Controls/Popup/Compatible/BaseOpener', [
    'Core/core-merge',
+   'Core/Context',
+   'Core/Deferred',
    'Core/helpers/Number/randomId',
    'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea'
 ],
-function(cMerge, randomId) {
+function(cMerge,
+   Context,
+   Deferred,
+   randomId) {
    /**
        * Слой совместимости для базового опенера для открытия старых шаблонов
        */
@@ -43,7 +48,26 @@ function(cMerge, randomId) {
          }
 
          if (cfg.context) {
-            cfg.templateOptions.context = cfg.context;
+            var destroyDef = new Deferred(),
+               destrFunc = function() {
+                  destroyDef.callback();
+                  destroyDef = null;
+               };
+
+            cfg.templateOptions.context = Context.createContext(destroyDef, {}, cfg.context);
+            if (!cfg.templateOptions.handlers) {
+               cfg.templateOptions.handlers = {};
+            }
+
+            if (!cfg.templateOptions.handlers.onDestroy) {
+               cfg.templateOptions.handlers.onDestroy = destrFunc;
+            } else {
+               if (cfg.templateOptions.handlers.onDestroy.push) {
+                  cfg.templateOptions.handlers.onDestroy.push(destrFunc);
+               } else {
+                  cfg.templateOptions.handlers.onDestroy = [cfg.templateOptions.handlers.onDestroy, destrFunc];
+               }
+            }
          }
 
          if (cfg.linkedContext) {
