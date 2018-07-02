@@ -206,7 +206,7 @@ function(cMerge,
          cfg.maxHeight = cfg.maxHeight || cfg.minHeight;
       },
 
-      _getCaption: function (cfg, templateClass) {
+      _getCaption: function(cfg, templateClass) {
          var dimensions = this._getDimensions(templateClass);
          var templateOptions = this._getTemplateOptions(templateClass);
          return cfg.title || cfg.caption ||
@@ -220,7 +220,7 @@ function(cMerge,
          return templateClass.dimensions || templateClass.prototype.dimensions || {};
       },
 
-      _getTemplateOptions: function (templateClass) {
+      _getTemplateOptions: function(templateClass) {
          return OpenDialogUtil.getOptionsFromProto(templateClass);
       }
 
