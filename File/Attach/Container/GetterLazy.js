@@ -28,19 +28,19 @@ define("File/Attach/Container/GetterLazy", ["require", "exports", "tslib", "Core
                 if (!_this._links[name]) {
                     return error;
                 }
-                return moduleStubs.require("optional!" + _this._links[name]);
-            }).addCallback(function (_a) {
-                var ResourceGetter = _a[0];
-                delete _this._links[name];
-                if (!ResourceGetter) {
-                    return Deferred.fail("ResourceGetter \"" + name + "\" is not supported in this project");
-                }
-                var getter = new ResourceGetter(_this._options[name]);
-                if (getter.getType() !== name) {
-                    return Deferred.fail("The name \"" + name + "\" is incorrectly specified when registering a dynamic dependency \"" + getter.getType() + "\"");
-                }
-                _this.push(getter);
-                return getter;
+                return moduleStubs.require("optional!" + _this._links[name]).addCallback(function (_a) {
+                    var ResourceGetter = _a[0];
+                    delete _this._links[name];
+                    if (!ResourceGetter) {
+                        return Deferred.fail("ResourceGetter \"" + name + "\" is not supported in this project");
+                    }
+                    var getter = new ResourceGetter(_this._options[name]);
+                    if (getter.getType() !== name) {
+                        return Deferred.fail("The name \"" + name + "\" is incorrectly specified when registering a dynamic dependency \"" + getter.getType() + "\"");
+                    }
+                    _this.push(getter);
+                    return getter;
+                });
             });
         };
         /**
