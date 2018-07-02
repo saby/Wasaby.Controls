@@ -159,6 +159,7 @@ define('Controls/Filter/Fast',
          _afterMount: function() {
             this._isChanged = false;
             _private.resize(this, this._container.children);
+            this._forceUpdate();
          },
 
          _afterUpdate: function() {

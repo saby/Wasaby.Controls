@@ -83,7 +83,7 @@ define('Controls-demo/EngineBrowser/Browser', [
                      {id: 2, title: '2'},
                      {id: 3, title: '3'},
                      {id: 4, title: '4'},
-                     {id: 5, title: '123456'}
+                     {id: 5, title: 'Очень-очень длинное значение'}
                   ]
                }
             }
