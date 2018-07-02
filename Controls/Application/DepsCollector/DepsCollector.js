@@ -7,7 +7,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
    var DEPTYPES = {
       BUNDLE: 1,
       SINGLE: 2
-   }
+   };
 
    function isJs(key) {
       return key.split('!')[0] === key;
@@ -30,6 +30,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
          return link;
       }
    }
+
 
    /**
     * Checks if dependency is a part of any bundle and removes from allDeps
@@ -89,7 +90,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
          this.modInfo = modInfo;
          this.bundlesRoute = bundlesRoute;
       },
-      collectDependencies: function (deps) {
+      collectDependencies: function(deps) {
          var files = {js: [], css: []};
          var allDeps = {};
          recursiveWalker(allDeps, deps, this.modDeps);
