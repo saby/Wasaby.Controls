@@ -2531,11 +2531,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   .addErrback(function (err) {
                      // Если это не cancel - показать сообщение об ошибке
                      if (!(err && err.canceled)) {
-                     	if (err.name === 'WrongFileType') {
-                     		this._showImgError(rk('Не удалось загрузить файл'), err.message);
-                     	} else {
-                     		this._showImgError();
-                     	};                        
+                        if (err.name === 'WrongFileType') {
+                           this._showImgError(rk('Не удалось загрузить файл'), err.message);
+                        } else {
+                           this._showImgError();
+                        }
                      }
                      return err;
                   }.bind(this));
@@ -3168,12 +3168,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
 
             /**
-			  * Показать пользователю сообщение об ошибке загрузки изображения
-			  * @param {string} title заголовок сообщения
-			  * @param {string} text текст сообщения
-			  * @returns {Core/Deferred}
-			  * @protected
-			  */
+              * Показать пользователю сообщение об ошибке загрузки изображения
+              * @param {string} title заголовок сообщения
+              * @param {string} text текст сообщения
+              * @returns {Core/Deferred}
+              * @protected
+              */
             _showImgError: function (title, text) {
                var promise = new Deferred();
                require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function (InformationPopupManager) {
