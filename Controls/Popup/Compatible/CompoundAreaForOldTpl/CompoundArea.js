@@ -185,12 +185,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             this._compoundControlCreated = new cDeferred();
             runDelayed(function() {
-               self.handle('onBeforeShow');
-               self.handle('onShow');
-
                moduleStubs.require([self._options.template]).addCallback(function(result) {
                   self.handle('onBeforeControlsLoad');
                   self._createCompoundControl(self.templateOptions, result[0]);
+                  self.handle('onBeforeShow');
+                  self.handle('onShow');
                   self._logicParent.callbackCreated && self._logicParent.callbackCreated();
                }).addErrback(function(e) {
                   IoC.resolve('ILogger').error('CompoundArea', 'Шаблон "' + self._options.template + '" не смог быть загружен!');
