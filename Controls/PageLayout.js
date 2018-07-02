@@ -6,6 +6,27 @@ define('Controls/PageLayout', [
    'css!Controls/PageLayout/PageLayout'
 ], function(Control, template, SourceController) {
    'use strict';
+
+   /**
+    * PageLayout
+    *
+    * @class Controls/PageLayout
+    * @extends Core/Control
+    * @control
+    * @public
+    * @category PageLayout
+    * @demo Controls-demo/PageLayout/PageLayoutDemo
+    */
+
+   /**
+    * @typedef {WS.Data/Source/Memory} tabsSource
+    * @property {object} items recordset of item
+    * @property {string|FilterValue} value начальное значение
+    */
+   /**
+    * @typedef {Object} FilterValue
+    * @property {string} fieldName поле контекста, из которого брать значение
+    */
    var _private = {
       initItems: function(source, self) {
          self._sourceController = new SourceController({
