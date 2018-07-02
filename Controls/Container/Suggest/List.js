@@ -56,6 +56,14 @@ define('Controls/Container/Suggest/List',
          },
          
          _beforeUpdate: function(newOptions, context) {
+            var currentTabSelectedKey = this._suggestListOptions.tabsSelectedKey;
+            var newTabSelectedKey = context && context.suggestOptionsField && context.suggestOptionsField.options.tabsSelectedKey;
+            
+            /* Need notify after getting tab from query */
+            if (currentTabSelectedKey === null && newTabSelectedKey !== null) {
+               this._tabsSelectedKeyChanged(null, newTabSelectedKey);
+            }
+            
             _private.checkContext(this, context);
          },
    
