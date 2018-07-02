@@ -461,11 +461,6 @@ define('Controls/List/BaseControl', [
          if (filterChanged || sourceChanged) {
             _private.reload(this, newOptions.dataLoadCallback,  newOptions.dataLoadErrback);
          }
-
-         if (this._options.selectedKeys !== newOptions.selectedKeys) {
-            this._listViewModel.select(newOptions.selectedKeys);
-         }
-
       },
 
       _beforeUnmount: function() {
@@ -512,7 +507,7 @@ define('Controls/List/BaseControl', [
       },
 
       _onCheckBoxClick: function(e, key, status) {
-         this._notify('onCheckBoxClick', [key, status]);
+         this._notify('checkboxClick', [key, status]);
       },
 
       _listSwipe: function(event, itemData, childEvent) {
@@ -520,7 +515,7 @@ define('Controls/List/BaseControl', [
          this._children.itemActionsOpener.close();
          if (direction === 'right' && itemData.multiSelectVisibility) {
             var status = itemData.multiSelectStatus;
-            this._notify('onCheckBoxClick', [itemData.key, status]);
+            this._notify('checkboxClick', [itemData.key, status]);
          }
          if (direction === 'right' || direction === 'left') {
             var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.viewConfig.keyProperty);

@@ -1,8 +1,9 @@
 <ws:partial
    template="{{_options.content}}"
    scope="{{_options}}"
-   on:onCheckBoxClick="_onCheckBoxClickHandler()"
+   on:checkBoxClick="_onCheckBoxClickHandler()"
    on:afterItemsRemove="_onAfterItemsRemoveHandler()"
-   selectedKeys="{{_selectedKeys}}"
-   itemsReadyCallback="{{_itemsReadyCallback}}"
+   selectedKeys="{{context.selection.selectedKeys}}"
+   excludedKeys="{{context.selection.excludedKeys}}"
+   selectionInstance="{{context.selection.selectionInstance}}"
 />

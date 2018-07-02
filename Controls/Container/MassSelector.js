@@ -1,147 +1,97 @@
 define('Controls/Container/MassSelector', [
    'Core/Control',
    'tmpl!Controls/Container/MassSelector/MassSelector',
-   'Controls/Container/MassSelector/MassSelectorContextField',
-   'Controls/Controllers/Multiselect/Selection'
-], function(Control, template, MassSelectorContextField, MultiSelection) {
+   'Controls/Container/MassSelector/SelectionContextField',
+   'Controls/Controllers/Multiselect/Selection',
+   'Controls/Controllers/SourceController'
+], function(
+   Control,
+   template,
+   SelectionContextField,
+   Selection,
+   SourceController
+) {
+   'use strict';
+
+   //TODO: нужно стопить события от List/MassSelector
+
    return Control.extend({
       _template: template,
       _multiselection: null,
-      _items: null,
-      _count: 0,
-      _selectedKeys: null,
 
       _beforeMount: function(newOptions) {
-         this._itemsReadyCallback = this._itemsReadyCallback.bind(this);
-         this._updateItems = this._updateItems.bind(this);
+         var self = this;
+         this._updateSelectionContext = this._updateSelectionContext.bind(this);
 
-         this._selectedKeys = newOptions.selectedKeys;
-
-         this._multiselection = new MultiSelection({
-            selectedKeys: newOptions.selectedKeys,
-            excludedKeys: newOptions.excludedKeys
+         this._sourceController = new SourceController({
+            source: newOptions.source,
+            navigation: newOptions.navigation
          });
 
-         this._updateCount();
-         this._updateContext();
+         return this._sourceController.load().addCallback(function(items) {
+            self._createMultiselection(newOptions, items);
+            self._updateSelectionContext();
+         });
       },
 
+      //TODO: вроде можно удалить, т.к. используется только в Петиной демке ПМО. А там можно решить всё через selectionChangeHandler
+      //TODO: и надо selectionChangeHandler переделать на событие, если получится сделать так, чтобы оно в _beforeMount не стреляло
       getSelection: function() {
          return this._multiselection.getSelection();
       },
 
       _onCheckBoxClickHandler: function(event, key, status) {
-         var currentSelection = this._multiselection.getSelection(),
-            selected = currentSelection.selected,
-            excluded = currentSelection.excluded;
-
-         if (this._count === 'all' || this._count === 'part') {
-            if (!!status) {
-               //сняли выделение
-               excluded.push(key);
-            } else {
-               excluded.splice(excluded.indexOf(key), 1);
-            }
-            selected = [null];
+         if (status === true || status === null) {
+            this._multiselection.unselect([key]);
          } else {
-            if (!!status) {
-               //сняли выделение
-               selected.splice(selected.indexOf(key), 1);
-            } else {
-               selected.push(key);
-            }
+            this._multiselection.select([key]);
          }
 
-         this._multiselection.unselectAll();
-         this._multiselection.select(selected);
-         this._multiselection.unselect(excluded);
-
-         this._updateCount();
-         this._updateSelectedKeys();
-         this._updateContext();
+         this._updateSelectionContext();
       },
 
       _selectedTypeChangedHandler: function(event, typeName) {
          this._multiselection[typeName]();
 
-         this._updateCount();
-         this._updateSelectedKeys();
-         this._updateContext();
+         this._updateSelectionContext();
       },
 
-      _afterItemsRemoveHandler: function(evern, keys) {
+      _afterItemsRemoveHandler: function(event, keys) {
          this._multiselection.unselect(keys);
 
-         this._updateCount();
-         this._updateSelectedKeys();
-         this._updateContext();
+         this._updateSelectionContext();
       },
 
-      _itemsReadyCallback: function(items) {
-         if (this._items) {
-            this._items.unsubscribe('onCollectionChange', this._updateItems);
-         }
-         this._items = items;
-         this._items.subscribe('onCollectionChange', this._updateItems);
-         this._updateItems();
-      },
+      _updateSelectionContext: function() {
+         var currentSelection = this._multiselection.getSelection();
 
-      _updateCount: function() {
-         var currentSelection = this._multiselection.getSelection(),
-            selectedKeys = currentSelection.selected,
-            excludedKeys = currentSelection.excluded;
-         this._count =
-            selectedKeys && !!selectedKeys.length
-               ? selectedKeys[0] === null
-                  ? excludedKeys && !!excludedKeys.length
-                     ? 'part'
-                     : 'all'
-                  : selectedKeys.length
-               : 0;
-      },
-
-      _updateSelectedKeys: function() {
-         this._selectedKeys = [];
-         var currentSelection = this._multiselection.getSelection(),
-            selected = currentSelection.selected,
-            excluded = currentSelection.excluded;
-
-         if (this._count === 'all' || this._count === 'part') {
-            this._items.forEach(
-               function(item) {
-                  var key = item.getId();
-                  if (excluded.indexOf(key) < 0) {
-                     this._selectedKeys.push(key);
-                  }
-               }.bind(this)
-            );
-         } else {
-            this._selectedKeys = selected;
-         }
-      },
-
-      _updateItems: function() {
-         this._updateSelectedKeys();
-         this._updateContext();
-      },
-
-      _updateContext: function() {
-         this._context = new MassSelectorContextField(
-            this._selectedKeys,
-            this._itemsReadyCallback,
-            this._count
+         //TODO: по сути можно отдавать только multiSelection и сделать его версионируемым
+         this._selectionContext = new SelectionContextField(
+            currentSelection.selected,
+            currentSelection.excluded,
+            this._multiselection.getCount(),
+            this._multiselection
          );
+
+         //TODO: в _beforeMount тут нет this._options
          if (this._options.selectionChangeHandler) {
-            this._options.selectionChangeHandler(
-               this._multiselection.getSelection()
-            );
+            this._options.selectionChangeHandler(currentSelection);
          }
          this._forceUpdate();
       },
 
+      _createMultiselection: function(options, items) {
+         this._multiselection = new Selection({
+            selectedKeys: options.selectedKeys || [],
+            excludedKeys: options.excludedKeys || [],
+            items: items,
+            strategy: options.strategy
+         });
+      },
+
       _getChildContext: function() {
          return {
-            selection: this._context
+            selection: this._selectionContext
          };
       }
    });

@@ -35,7 +35,7 @@ define('Controls/List/ListViewModel',
                this._markedItem = this.getItemById(cfg.markedKey, cfg.keyProperty);
             }
 
-            this._selectedKeys =  cfg.selectedKeys || [];
+            this._selectionInstance = cfg.selectionInstance;
 
             //TODO надо ли?
             _private.updateIndexes(self);
@@ -48,7 +48,9 @@ define('Controls/List/ListViewModel',
             itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
             itemsModelCurrent.showActions = !this._editingItemData && (!this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive));
             itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem.item;
-            itemsModelCurrent.multiSelectStatus = this._selectedKeys.indexOf(itemsModelCurrent.key) >= 0;
+            if (this._selectionInstance) { //Будем считать, что если не пришёл selectionInstance, То multiSelectStatus вообще не нужен
+               itemsModelCurrent.multiSelectStatus = this._selectionInstance.getSelectionStatus(itemsModelCurrent.key);
+            }
             itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility === 'visible';
             itemsModelCurrent.drawActions =
                itemsModelCurrent.itemActions &&
@@ -141,11 +143,6 @@ define('Controls/List/ListViewModel',
 
          setSwipeItem: function(itemData) {
             this._swipeItem = itemData;
-            this._nextVersion();
-         },
-
-         select: function(keys) {
-            this._selectedKeys = keys;
             this._nextVersion();
          },
 

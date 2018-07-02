@@ -2,9 +2,9 @@ define('Controls/OperationsPanel/MassSelector', [
    'Core/Control',
    'tmpl!Controls/OperationsPanel/MassSelector/MassSelector',
    'WS.Data/Source/Memory',
-   'Controls/Container/MassSelector/MassSelectorContextField',
+   'Controls/Container/MassSelector/SelectionContextField',
    'css!Controls/OperationsPanel/MassSelector/MassSelector'
-], function(Control, template, Memory, MassSelectorContextField) {
+], function(Control, template, Memory, SelectionContextField) {
    'use strict';
    var _defaultItems = [
       {
@@ -28,6 +28,7 @@ define('Controls/OperationsPanel/MassSelector', [
       _menuSource: null,
 
       _beforeMount: function(newOptions, context) {
+         this._menuSource = this._getHierarchyMenuItems();
          this._updateSelection(context.selection);
       },
 
@@ -37,28 +38,29 @@ define('Controls/OperationsPanel/MassSelector', [
       },
 
       _updateSelection: function(selection) {
-         this._updateMultiSelectStatus(selection.count);
+         this._updateMultiSelectStatus(selection.selectedKeys, selection.excludedKeys);
          this._updateMultiSelectCaption(selection.count);
       },
 
-      _updateMultiSelectStatus: function(count) {
+      _updateMultiSelectStatus: function(selectedKeys, excludedKeys) {
          this._multiSelectStatus =
-            count === 'all'
+            selectedKeys[0] === null && !excludedKeys.length
                ? true
-               : count === 'part' || count !== 0
+               : selectedKeys.length > 0
                   ? null
                   : false;
       },
 
       _updateMultiSelectCaption: function(count) {
-         this._menuCaption =
-            this._multiSelectStatus === true
-               ? 'Отмечено всё'
-               : count !== 'part'
-                  ? count === 0
-                     ? 'Отметить'
-                     : 'Отмечено (' + count + ')'
-                  : 'Отмечено';
+         if (this._multiSelectStatus === true) {
+            this._menuCaption = 'Отмечено всё';
+         }
+         if (this._multiSelectStatus === null) {
+            this._menuCaption = 'Отмечено (' + count + ')';
+         }
+         if (this._multiSelectStatus === false) {
+            this._menuCaption = 'Отметить';
+         }
       },
 
       _getHierarchyMenuItems: function() {
@@ -102,7 +104,7 @@ define('Controls/OperationsPanel/MassSelector', [
 
    MassSelector.contextTypes = function contextTypes() {
       return {
-         selection: MassSelectorContextField
+         selection: SelectionContextField
       };
    };
 

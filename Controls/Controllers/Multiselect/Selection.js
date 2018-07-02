@@ -2,47 +2,53 @@
 define('Controls/Controllers/Multiselect/Selection', [
    'Core/core-simpleExtend',
    'Core/core-clone',
-   'Controls/Utils/ArraySimpleValuesUtil'
+   'Controls/Utils/ArraySimpleValuesUtil',
+
+   //TODO: подгружать асинхронно
+   'Controls/Controllers/Multiselect/Strategy/Simple/Base'
 ], function(
    cExtend,
    cClone,
-   ArraySimpleValuesUtil
+   ArraySimpleValuesUtil,
+   BaseStrategy
 ) {
    'use strict';
 
-   var ALLSELECTION_VALUE = [null],
+   var
+      ALLSELECTION_VALUE = [null],
       SELECTION_STATUS = {
-         NOT_SELECTED: 0,
-         SELECTED: 1
+         NOT_SELECTED: false,
+         SELECTED: true
       };
-
-   var _private = {
-      isAllSelection: function(selectedKeys) {
-         return !!selectedKeys && !!selectedKeys.length && selectedKeys[0] === null;
-      }
-   };
 
    var Selection = cExtend.extend({
       _selectedKeys: null,
       _excludedKeys: null,
+      _items: null,
+
+      //allData - все данные подгружены, можем не угадывать при расчёте count и отрисовке чекбоксов. partialData - не все данные подгружены.
+      _strategy: '',
 
       constructor: function(options) {
-         this._options = options;
-         this._selectedKeys = options.selectedKeys || [];
-         this._excludedKeys = options.excludedKeys || [];
+         this._selectedKeys = cClone(options.selectedKeys);
+         this._excludedKeys = cClone(options.excludedKeys);
 
-         //excluded keys имеют смысл только когда выделено все, поэтому ситуацию, когда переданы оба массива считаем ошибочной //TODO возможно надо кинуть здесь исключение
-         if (_private.isAllSelection(this._selectedKeys)) {
-            this._excludedKeys = options.excludedKeys || [];
-         } else {
-            this._excludedKeys = [];
+         //TODO: нужно кидать исключение, если нет items
+         this._items = cClone(options.items);
+
+         //Для плоского списка стратегии allData и partialData не различаются ничем
+         this._strategy = new BaseStrategy(options);
+
+         //excluded keys имеют смысл только когда выделено все, поэтому ситуацию, когда переданы оба массива считаем ошибочной
+         if (options.excludedKeys.length && !this._strategy.isAllSelection(this._getParams())) {
+            //TODO возможно надо кинуть здесь исключение
          }
 
          Selection.superclass.constructor.apply(this, arguments);
       },
 
       select: function(keys) {
-         if (_private.isAllSelection(this._selectedKeys)) {
+         if (this._strategy.isAllSelection(this._getParams())) {
             ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, keys);
          } else {
             ArraySimpleValuesUtil.addSubArray(this._selectedKeys, keys);
@@ -50,7 +56,7 @@ define('Controls/Controllers/Multiselect/Selection', [
       },
 
       unselect: function(keys) {
-         if (_private.isAllSelection(this._selectedKeys)) {
+         if (this._strategy.isAllSelection(this._getParams())) {
             ArraySimpleValuesUtil.addSubArray(this._excludedKeys, keys);
          } else {
             ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, keys);
@@ -69,7 +75,8 @@ define('Controls/Controllers/Multiselect/Selection', [
 
       toggleAll: function() {
          var swap;
-         if (_private.isAllSelection(this._selectedKeys)) {
+
+         if (this._strategy.isAllSelection(this._getParams())) {
             swap = cClone(this._excludedKeys);
             this.unselectAll();
             this.select(swap);
@@ -87,27 +94,34 @@ define('Controls/Controllers/Multiselect/Selection', [
          };
       },
 
-      getSelectionStatus: function(id) {
-         var status = SELECTION_STATUS.NOT_SELECTED;
-         if (_private.isAllSelection(this._selectedKeys)) {
-            if (ArraySimpleValuesUtil.invertTypeIndexOf(this._excludedKeys, id) === -1) {
-               status = SELECTION_STATUS.SELECTED;
-            }
-         } else {
-            if (ArraySimpleValuesUtil.invertTypeIndexOf(this._selectedKeys, id) > -1) {
-               status = SELECTION_STATUS.SELECTED;
-            }
-         }
-         return status;
+      setItems: function(items) {
+         this._items = cClone(items);
       },
 
-      destroy: function() {
-         this._options = null;
+      getSelectionStatus: function(key) {
+         if (this._excludedKeys.indexOf(key) === -1 && this._strategy.isAllSelection(this._getParams())) {
+            return SELECTION_STATUS.SELECTED;
+         } else if (this._selectedKeys.indexOf(key) !== -1) {
+            return SELECTION_STATUS.SELECTED;
+         } else {
+            return SELECTION_STATUS.NOT_SELECTED;
+         }
+      },
+
+      getCount: function() {
+         return this._strategy.getCount(this._selectedKeys, this._excludedKeys, this._items);
+      },
+
+      _getParams: function() {
+         return {
+            selectedKeys: this._selectedKeys,
+            excludedKeys: this._excludedKeys,
+            items: this._items
+         };
       }
    });
 
-   //для тестов
-   Selection._private = _private;
+   Selection.SELECTION_STATUS = SELECTION_STATUS;
 
    return Selection;
 });
