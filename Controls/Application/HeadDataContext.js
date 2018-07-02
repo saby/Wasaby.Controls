@@ -26,7 +26,7 @@ define('Controls/Application/HeadDataContext', [
          this.receivedStateArr[key] = receivedState;
       },
       pushWaiterDeferred: function(def) {
-         var depsCollector = DepsCollector(modDeps.links, modDeps.nodes, bundles);
+         var depsCollector = new DepsCollector(modDeps.links, modDeps.nodes, bundles);
          var self = this;
          this.waiterDef = def;
          this.waiterDef.addCallback(function() {
