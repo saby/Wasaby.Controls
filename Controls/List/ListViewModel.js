@@ -1,7 +1,8 @@
 /**
  * Created by kraynovdo on 16.11.2017.
  */
-define('Controls/List/ListViewModel', ['Controls/List/ItemsViewModel', 'WS.Data/Entity/VersionableMixin', 'Controls/List/resources/utils/ItemsUtil'],
+define('Controls/List/ListViewModel',
+   ['Controls/List/ItemsViewModel', 'WS.Data/Entity/VersionableMixin', 'Controls/List/resources/utils/ItemsUtil'],
    function(ItemsViewModel, VersionableMixin, ItemsUtil) {
       /**
        *
@@ -32,8 +33,7 @@ define('Controls/List/ListViewModel', ['Controls/List/ItemsViewModel', 'WS.Data/
                this._markedItem = this.getItemById(cfg.markedKey, cfg.keyProperty);
             }
 
-            this._selectedKeys = cfg.selectedKeys || [];
-            this._excludedKeys = cfg.excludedKeys || [];
+            this._selectionInstance = cfg.selectionInstance;
 
             //TODO надо ли?
             _private.updateIndexes(self);
@@ -46,7 +46,9 @@ define('Controls/List/ListViewModel', ['Controls/List/ItemsViewModel', 'WS.Data/
             itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
             itemsModelCurrent.showActions = !this._editingItemData && (!this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive));
             itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem.item;
-            itemsModelCurrent.multiSelectStatus = _private.getSelectionStatus(itemsModelCurrent.key, this._selectedKeys, this._excludedKeys);
+            if (this._selectionInstance) { //Будем считать, что если не пришёл selectionInstance, То multiSelectStatus вообще не нужен
+               itemsModelCurrent.multiSelectStatus = this._selectionInstance.getSelectionStatus(itemsModelCurrent.key);
+            }
             itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility === 'visible';
             itemsModelCurrent.drawActions =
                itemsModelCurrent.itemActions &&
@@ -135,16 +137,6 @@ define('Controls/List/ListViewModel', ['Controls/List/ItemsViewModel', 'WS.Data/
 
          setSwipeItem: function(itemData) {
             this._swipeItem = itemData;
-            this._nextVersion();
-         },
-
-         select: function(keys) {
-            this._selectedKeys = keys;
-            this._nextVersion();
-         },
-
-         unselect: function(keys) {
-            this._excludedKeys = keys;
             this._nextVersion();
          },
 

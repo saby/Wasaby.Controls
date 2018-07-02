@@ -6,6 +6,9 @@ define('Controls/Controllers/Multiselect/Strategy/Hierarchy/AllData', [
    'use strict';
 
    var AllData = Base.extend({
+
+      //TODO: нужно решить что же возвращает эта функция. Выделены ли все дети, либо просто проверяет наличие выделения на папке.
+      //Логичнее возвращать выделены ли все, но тогда код в unselect неправильный
       isAllSelection: function(options) {
          var
             rootId = options.rootId,

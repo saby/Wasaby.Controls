@@ -2,8 +2,15 @@ define('Controls/Container/MassSelector', [
    'Core/Control',
    'tmpl!Controls/Container/MassSelector/MassSelector',
    'Controls/Container/MassSelector/SelectionContextField',
-   'Controls/Controllers/Multiselect/Selection'
-], function(Control, template, SelectionContextField, Selection) {
+   'Controls/Controllers/Multiselect/Selection',
+   'Controls/Controllers/SourceController'
+], function(
+   Control,
+   template,
+   SelectionContextField,
+   Selection,
+   SourceController
+) {
    'use strict';
 
    //TODO: нужно стопить события от List/MassSelector
@@ -13,20 +20,18 @@ define('Controls/Container/MassSelector', [
       _multiselection: null,
 
       _beforeMount: function(newOptions) {
+         var self = this;
          this._updateSelectionContext = this._updateSelectionContext.bind(this);
 
-         //TODO: надо таки положить items
-         this._multiselection = new Selection({
-            selectedKeys: newOptions.selectedKeys,
-            excludedKeys: newOptions.excludedKeys,
-            items: newOptions.items,
-            strategy: newOptions.strategy
+         this._sourceController = new SourceController({
+            source: newOptions.source,
+            navigation: newOptions.navigation
          });
 
-         this._multiselection.select(newOptions.selectedKeys || []);
-         this._multiselection.unselect(newOptions.excludedKeys || []);
-
-         this._updateSelectionContext();
+         return this._sourceController.load().addCallback(function(items) {
+            self._createMultiselection(newOptions, items);
+            self._updateSelectionContext();
+         });
       },
 
       //TODO: вроде можно удалить, т.к. используется только в Петиной демке ПМО. А там можно решить всё через selectionChangeHandler
@@ -36,7 +41,7 @@ define('Controls/Container/MassSelector', [
       },
 
       _onCheckBoxClickHandler: function(event, key, status) {
-         if (!!status) {
+         if (status === true || status === null) {
             this._multiselection.unselect([key]);
          } else {
             this._multiselection.select([key]);
@@ -60,10 +65,12 @@ define('Controls/Container/MassSelector', [
       _updateSelectionContext: function() {
          var currentSelection = this._multiselection.getSelection();
 
+         //TODO: по сути можно отдавать только multiSelection и сделать его версионируемым
          this._selectionContext = new SelectionContextField(
             currentSelection.selected,
             currentSelection.excluded,
-            this._multiselection.getCount()
+            this._multiselection.getCount(),
+            this._multiselection
          );
 
          //TODO: в _beforeMount тут нет this._options
@@ -71,6 +78,15 @@ define('Controls/Container/MassSelector', [
             this._options.selectionChangeHandler(currentSelection);
          }
          this._forceUpdate();
+      },
+
+      _createMultiselection: function(options, items) {
+         this._multiselection = new Selection({
+            selectedKeys: options.selectedKeys || [],
+            excludedKeys: options.excludedKeys || [],
+            items: items,
+            strategy: options.strategy
+         });
       },
 
       _getChildContext: function() {

@@ -1,31 +1,30 @@
 define(['Controls/OperationsPanel/MassSelector'], function(MassSelector) {
    'use strict';
    describe('Controls.OperationsPanel.MassSelector', function() {
-      it('_updateMultiSelectStatus', function() {
+      it('_updateSelection', function() {
          var instance = new MassSelector();
-         instance._updateMultiSelectStatus('all');
+         var selection = {
+            selectedKeys: [null],
+            excludedKeys: []
+         };
+         instance._updateSelection(selection);
          assert.equal(instance._multiSelectStatus, true);
-         instance._updateMultiSelectStatus('part');
-         assert.equal(instance._multiSelectStatus, null);
-         instance._updateMultiSelectStatus(0);
-         assert.equal(instance._multiSelectStatus, false);
-         instance._updateMultiSelectStatus(10);
-         assert.equal(instance._multiSelectStatus, null);
-      });
-      it('_updateMultiSelectCaption', function() {
-         var instance = new MassSelector();
-         instance._updateMultiSelectStatus('all');
-         instance._updateMultiSelectCaption('all');
          assert.equal(instance._menuCaption, 'Отмечено всё');
-         instance._updateMultiSelectStatus('part');
-         instance._updateMultiSelectCaption('part');
-         assert.equal(instance._menuCaption, 'Отмечено');
-         instance._updateMultiSelectStatus(0);
-         instance._updateMultiSelectCaption(0);
+         selection = {
+            selectedKeys: [],
+            excludedKeys: []
+         };
+         instance._updateSelection(selection);
+         assert.equal(instance._multiSelectStatus, false);
          assert.equal(instance._menuCaption, 'Отметить');
-         instance._updateMultiSelectStatus(10);
-         instance._updateMultiSelectCaption(10);
-         assert.equal(instance._menuCaption, 'Отмечено (10)');
+         selection = {
+            selectedKeys: [1, 2],
+            excludedKeys: [],
+            count: 2
+         };
+         instance._updateSelection(selection);
+         assert.equal(instance._multiSelectStatus, null);
+         assert.equal(instance._menuCaption, 'Отмечено (2)');
       });
       it('_getHierarchyMenuItems', function() {
          var instance = new MassSelector();

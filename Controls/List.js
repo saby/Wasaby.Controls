@@ -23,7 +23,8 @@ define('Controls/List', [
             markedKey: cfg.markedKey,
             selectedKeys: cfg.selectedKeys,
             multiSelectVisibility: cfg.multiSelectVisibility,
-            itemsReadyCallback: cfg.itemsReadyCallback
+            itemsReadyCallback: cfg.itemsReadyCallback,
+            selectionInstance: cfg.selectionInstance
          };
       },
       prepareViewConfig: function(cfg) {

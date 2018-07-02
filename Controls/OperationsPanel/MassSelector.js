@@ -52,14 +52,15 @@ define('Controls/OperationsPanel/MassSelector', [
       },
 
       _updateMultiSelectCaption: function(count) {
-         this._menuCaption =
-            this._multiSelectStatus === true
-               ? 'Отмечено всё'
-               : count !== 'part'
-                  ? count === 0
-                     ? 'Отметить'
-                     : 'Отмечено (' + count + ')'
-                  : 'Отмечено';
+         if (this._multiSelectStatus === true) {
+            this._menuCaption = 'Отмечено всё';
+         }
+         if (this._multiSelectStatus === null) {
+            this._menuCaption = 'Отмечено (' + count + ')';
+         }
+         if (this._multiSelectStatus === false) {
+            this._menuCaption = 'Отметить';
+         }
       },
 
       _getHierarchyMenuItems: function() {

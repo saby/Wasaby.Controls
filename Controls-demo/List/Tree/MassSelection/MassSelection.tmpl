@@ -1,7 +1,10 @@
 <div class="demo-Grid">
+    <h1>Partial data</h1>
     <div class="demo-Grid__container">
-        <Controls.Container.MassSelector parentProperty="Раздел"
-                                             keyProperty="id">
+        <Controls.Container.TreeMassSelector source="{{_viewSource}}"
+                                             keyProperty="id"
+                                             parentProperty="Раздел"
+                                             nodeProperty="Раздел@">
             <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
                     <Controls.List.MassSelector>
                         <Controls.TreeGrid
@@ -10,12 +13,35 @@
                                 keyProperty="id"
                                 parentProperty="Раздел"
                                 nodeProperty="Раздел@"
-                                source = "{{_viewSource}}"
+                                source="{{_viewSource}}"
                                 multiSelectVisibility="visible"
                                 columns="{{gridColumns}}">
                         </Controls.TreeGrid>
                     </Controls.List.MassSelector>
             </Controls.Container.Scroll>
-        </Controls.Container.MassSelector>
+        </Controls.Container.TreeMassSelector>
+    </div>
+    <h1>All data</h1>
+    <div class="demo-Grid__container">
+        <Controls.Container.TreeMassSelector source="{{_viewSource}}"
+                                             strategy="allData"
+                                             keyProperty="id"
+                                             parentProperty="Раздел"
+                                             nodeProperty="Раздел@">
+            <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+                <Controls.List.MassSelector>
+                    <Controls.TreeGrid
+                            name="list"
+                            attr:class="demo-Grid__control"
+                            keyProperty="id"
+                            parentProperty="Раздел"
+                            nodeProperty="Раздел@"
+                            source="{{_viewSource}}"
+                            multiSelectVisibility="visible"
+                            columns="{{gridColumns}}">
+                    </Controls.TreeGrid>
+                </Controls.List.MassSelector>
+            </Controls.Container.Scroll>
+        </Controls.Container.TreeMassSelector>
     </div>
 </div>

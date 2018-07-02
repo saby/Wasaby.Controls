@@ -215,7 +215,6 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
          it('state', function() {
             assert.isTrue(current.isSelected, 'Incorrect value "current.isSelected".');
             assert.equal(undefined, current.isActive, 'Incorrect value "current.isActive".');
-            assert.equal(0, current.multiSelectStatus, 'Incorrect value "current.multiSelectStatus".');
             assert.isTrue(current.multiSelectVisibility, 'Incorrect value "current.multiSelectVisibility".');
             assert.isTrue(current.showActions, 'Incorrect value "current.showActions".');
             assert.equal(undefined, current.isSwiped, 'Incorrect value "current.isSwiped".');
@@ -341,7 +340,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                gridViewModel = new GridViewModel(cfg),
                callMethods = ['getItemById', 'setMarkedKey', 'reset', 'isEnd', 'goToNext', 'getNext', 'isLast',
                   'updateIndexes', 'setItems', 'setActiveItem', 'appendItems', 'prependItems', 'setItemActions', 'getDragTargetPosition',
-                  'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'select', 'unselect', 'getSwipeItem', 'destroy'],
+                  'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'getSwipeItem', 'destroy'],
                callStackMethods = [];
 
             gridViewModel._model = {};

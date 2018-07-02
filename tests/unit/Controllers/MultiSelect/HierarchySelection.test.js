@@ -238,7 +238,8 @@ define([
                cfg = {
                   selectedKeys: [],
                   excludedKeys: [],
-                  items: allData
+                  items: allData,
+                  strategy: 'allData'
                };
                selectionInstance = new HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
@@ -363,7 +364,8 @@ define([
                cfg = {
                   selectedKeys: [1],
                   excludedKeys: [],
-                  items: allData
+                  items: allData,
+                  strategy: 'allData'
                };
                selectionInstance = new HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
@@ -381,7 +383,8 @@ define([
                cfg = {
                   selectedKeys: [2],
                   excludedKeys: [],
-                  items: allData
+                  items: allData,
+                  strategy: 'allData'
                };
                selectionInstance = new HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
@@ -399,7 +402,8 @@ define([
                cfg = {
                   selectedKeys: [1],
                   excludedKeys: [3],
-                  items: allData
+                  items: allData,
+                  strategy: 'allData'
                };
                selectionInstance = new HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
@@ -417,7 +421,8 @@ define([
                cfg = {
                   selectedKeys: [null],
                   excludedKeys: [3],
-                  items: allData
+                  items: allData,
+                  strategy: 'allData'
                };
                selectionInstance = new HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
@@ -435,18 +440,24 @@ define([
                cfg = {
                   selectedKeys: [1],
                   excludedKeys: [],
-                  items: allData
+                  items: allData,
+                  strategy: 'allData'
                };
                selectionInstance = new HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
                assert.deepEqual([1], selection.selected);
                assert.deepEqual([], selection.excluded);
                assert.equal(5, selectionInstance.getCount());
-               selectionInstance.unselect([3]);
+               selectionInstance.unselect([5]);
                selection = selectionInstance.getSelection();
                assert.deepEqual([1], selection.selected);
-               assert.deepEqual([3], selection.excluded);
+               assert.deepEqual([5], selection.excluded);
                assert.equal(4, selectionInstance.getCount());
+               selectionInstance.unselect([2]);
+               selection = selectionInstance.getSelection();
+               assert.deepEqual([], selection.selected);
+               assert.deepEqual([], selection.excluded);
+               assert.equal(0, selectionInstance.getCount());
             });
          });
       });
