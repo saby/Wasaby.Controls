@@ -110,4 +110,18 @@
     "Controls/Validate/*"
   ],
   "output": "controls-validate.package.js"
+}, {
+  "include": [
+    "Controls/HighCharts",
+    "Controls/HighChartsLight",
+    "Controls/HighCharts/resources/ParseDataUtil"
+  ],
+  "output": "controls-highcharts.package.js"
+}, {
+  "include": [
+    "Controls/DragNDrop/Avatar",
+    "Controls/DragNDrop/Controller",
+    "Controls/DragNDrop/Container"
+  ],
+  "output": "controls-dragndrop.package.js"
 }]

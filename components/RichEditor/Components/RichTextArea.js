@@ -2178,6 +2178,37 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   });
                }
 
+               if (BROWSER.isIE) {
+                  editor.on('dragstart', function (evt) {
+                     var target = evt.target;;
+                     if (target.nodeName === 'IMG') {
+                        this._msieDragndropTarget = target;
+                     }
+                  }.bind(this));
+
+                  editor.on('drop', function (mceEvent) {
+                     if (this._msieDragndropTarget) {
+                        var target = mceEvent.targetClone;
+                        if (target.nodeName === 'IMG' && target.src === this._msieDragndropTarget.src) {
+                           var node = editor.getDoc().elementFromPoint(mceEvent.clientX, mceEvent.clientY);
+                           var body = editor.getBody();
+                           var need = node === body || !body.contains(node);
+                           if (!need) {
+                              if (node.parentNode === body && node.contains(this._msieDragndropTarget)) {
+                                 var rng = editor.editorManager.dom.RangeUtils.getCaretRangeFromPoint(mceEvent.clientX, mceEvent.clientY, editor.getDoc());
+                                 need = !rng || !!rng.htmlText;
+                              }
+                           }
+                           if (need) {
+                              mceEvent.stopPropagation();
+                              mceEvent.preventDefault();
+                           }
+                        }
+                        this._msieDragndropTarget = null;
+                     }
+                  }.bind(this));
+               }
+
                //БИНДЫ НА СОБЫТИЯ КЛАВИАТУРЫ (ВВОД)
                if (cConstants.browser.isMobileIOS || cConstants.browser.isMobileAndroid) {
                   //TODO: https://github.com/tinymce/tinymce/issues/2533
