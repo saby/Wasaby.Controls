@@ -74,6 +74,8 @@
     "Controls/Popup/Opener/BaseController",
     "Controls/Popup/Opener/BaseOpener",
     "Controls/Popup/Opener/Confirmation",
+    "Controls/Popup/Opener/Confirmation/*",
+    "Controls/Popup/Templates/*",
     "Controls/Popup/Opener/Dialog",
     "Controls/Popup/Opener/InfoBox",
     "Controls/Popup/InfoBox",
