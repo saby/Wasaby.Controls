@@ -40,6 +40,19 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       function finishResultOk(result) {
          return !(result instanceof Error || result === false);
       }
+      function setReadOnly(compoundControl, isReadOnly) {
+         var isEnabled = !isReadOnly;
+         var childControls = compoundControl.getImmediateChildControls(),
+            control;
+         for (var i = 0, len = childControls.length; i < len; ++i) {
+            control = childControls[i];
+            if (typeof (control.setReadOnly) === 'function') {
+               control.setReadOnly(!isEnabled);
+            } else {
+               control.setEnabled(isEnabled);
+            }
+         }
+      }
 
       var logger = IoC.resolve('ILogger');
       var allProducedPendingOperations = [];
@@ -144,8 +157,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this.VDOMReady = true;
             this.deprecatedContr(this._options);
 
-
-
             var self = this;
 
             self.templateOptions = self._options.templateOptions || {};
@@ -172,6 +183,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             //лишних свойств, которые еще не применены к дому
             //панельки с этим начали вылезать плавненько
 
+            this._compoundControlCreated = new cDeferred();
             runDelayed(function() {
                self.handle('onBeforeShow');
                self.handle('onShow');
@@ -180,7 +192,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   self.handle('onBeforeControlsLoad');
                   self._createCompoundControl(self.templateOptions, result[0]);
                   self._logicParent.callbackCreated && self._logicParent.callbackCreated();
-               });
+               }).addErrback(function(e) {
+                  IoC.resolve('ILogger').error('CompoundArea', 'Шаблон "' + self._options.template + '" не смог быть загружен!');
+                  this._compoundControlCreated.errback(e);
+               }.bind(this));
             });
          },
          _createCompoundControl: function(templateOptions, Component) {
@@ -188,6 +203,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             templateOptions._compoundArea = this;
             templateOptions.parent = this;
             this._compoundControl = new (Component)(templateOptions);
+            this._compoundControlCreated.callback(this._compoundControl);
             this._subscribeToCommand();
             this.handle('onAfterLoad');
             this.handle('onInitComplete');
@@ -260,16 +276,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             return this._options.newRecord;
          },
          setReadOnly: function(isReadOnly) {
-            var isEnabled = !isReadOnly;
-            var childControls = this._compoundControl.getImmediateChildControls(),
-               control;
-            for (var i = 0, len = childControls.length; i < len; ++i) {
-               control = childControls[i];
-               if (typeof (control.setReadOnly) == 'function') {
-                  control.setReadOnly(!isEnabled);
-               } else {
-                  control.setEnabled(isEnabled);
-               }
+            if (this._compoundControl) {
+               setReadOnly(this._compoundControl, isReadOnly);
+            } else {
+               this._compoundControlCreated.addCallback(function() {
+                  setReadOnly(this._compoundControl, isReadOnly);
+               }.bind(this));
             }
          },
 
