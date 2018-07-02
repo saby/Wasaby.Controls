@@ -112,7 +112,9 @@ define([
 
          ctrl._beforeUpdate(cfg);
          assert.isTrue(ctrl._sourceController !== oldSourceCtrl, '_dataSourceController wasn\'t changed before updating');
-         assert.deepEqual(filter2, ctrl._options.filter, 'incorrect filter before updating');
+         assert.deepEqual(filter, ctrl._options.filter, 'incorrect filter before updating');
+         ctrl.saveOptions(cfg);
+         assert.deepEqual(filter, ctrl._options.filter, 'incorrect filter after updating');
 
          //сорс грузит асинхронно
          setTimeout(function() {
