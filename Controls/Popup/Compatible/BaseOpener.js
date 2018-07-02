@@ -55,7 +55,12 @@ function(cMerge,
                   destroyDef = null;
                };
 
-            cfg.templateOptions.context = Context.createContext(destroyDef, {}, cfg.context);
+            if (cfg.context instanceof Context) {
+               cfg.templateOptions.context = Context.createContext(destroyDef, {}, cfg.context);
+            } else {
+               cfg.templateOptions.context = Context.createContext(destroyDef, cfg.context ? cfg.context : {}, null);
+            }
+
             if (!cfg.templateOptions.handlers) {
                cfg.templateOptions.handlers = {};
             }
