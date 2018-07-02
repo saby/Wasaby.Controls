@@ -1,5 +1,7 @@
-<ws:partial template="{{_content}}"
-            scope="{{_options.contentOptions}}"
-            on:mousedown="_sendResult()"
-            on:mouseenter="_sendResult()"
-            on:mouseleave="_sendResult()"/>
+<Controls.Container.Async templateName="{{_options.contentTemplateName}}">
+   <ws:partial template="{{_options.contentTemplateName}}"
+               scope="{{_options.contentTemplateOptions}}"
+               on:mousedown="_sendResult()"
+               on:mouseenter="_sendResult()"
+               on:mouseleave="_sendResult()"/>
+</Controls.Container.Async>

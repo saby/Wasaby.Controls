@@ -7,8 +7,8 @@
       <ws:popupOptions template="Controls/Popup/Previewer/OpenerTemplate"
                        isCompoundTemplate="{{_options.isCompoundTemplate}}">
          <ws:corner vertical="bottom" horizontal="right"/>
-         <ws:templateOptions content="{{_options.template || _options.templateName}}"
-                             contentOptions="{{_options.templateOptions}}"/>
+         <ws:templateOptions contentTemplateName="{{_options.template || _options.templateName}}"
+                             contentTemplateOptions="{{_options.templateOptions}}"/>
          <ws:eventHandlers onResult="{{_resultHandler}}"></ws:eventHandlers>
       </ws:popupOptions>
    </Controls.Popup.Opener.Previewer>
