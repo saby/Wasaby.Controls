@@ -1,19 +1,23 @@
 <div>
    <ws:if data="{{listModel.getEmptyItem()}}">
       <ws:partial
-              template="{{itemTemplate || defaultItemTemplate}}"
-              itemData="{{listModel.getEmptyItem()}}"
-              resultHandler="{{resultHandler}}"
-              hideCross="{{hideCross}}"
-              class="controls-DropdownList__emptyItem"/>
+            on:click="_itemClickHandler(listModel.getEmptyItem().item)"
+            on:mouseenter="_itemMouseEnter(listModel.getEmptyItem().item, listModel.getEmptyItem().hasChildren)"
+            template="{{itemTemplate || defaultItemTemplate}}"
+            itemData="{{listModel.getEmptyItem()}}"
+            resultHandler="{{resultHandler}}"
+            hideCross="{{hideCross}}"
+            class="controls-DropdownList__emptyItem"/>
    </ws:if>
    <ws:for data="listModel.reset(); listModel.isEnd(); listModel.goToNext();">
       <ws:partial
-         template="{{listModel.getCurrent().template || itemTemplate || defaultItemTemplate}}"
-         itemData="{{listModel.getCurrent()}}"
-         resultHandler="{{resultHandler}}"
-         hideCross="{{hideCross}}"
-         parentProperty="{{parentProperty}}"
-         iconPadding="{{iconPadding}}"/>
+            on:click="_itemClickHandler(listModel.getCurrent().item)"
+            on:mouseenter="_itemMouseEnter(listModel.getCurrent().item, listModel.getCurrent().hasChildren)"
+            template="{{listModel.getCurrent().template || itemTemplate || defaultItemTemplate}}"
+            itemData="{{listModel.getCurrent()}}"
+            resultHandler="{{resultHandler}}"
+            hideCross="{{hideCross}}"
+            parentProperty="{{parentProperty}}"
+            iconPadding="{{iconPadding}}"/>
    </ws:for>
 </div>

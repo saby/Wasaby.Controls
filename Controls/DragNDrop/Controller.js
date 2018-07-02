@@ -52,6 +52,7 @@ define('Controls/DragNDrop/Controller',
          startDragNDrop: function(entity, mouseDownEvent) {
             this._dragEntity = entity;
             this._startEvent = mouseDownEvent.nativeEvent;
+            _private.preventClickEvent(this._startEvent);
             this._registerMouseMove();
             this._registerMouseUp();
          },
@@ -65,7 +66,6 @@ define('Controls/DragNDrop/Controller',
             if (this._startEvent) {
                dragObject = this._getDragObject(nativeEvent, startEvent);
                if (!this._documentDragging && _private.isDragStarted(startEvent, nativeEvent)) {
-                  _private.preventClickEvent(startEvent);
                   this._insideDragging = true;
                   this._notify('_documentDragStart', [dragObject], {bubbling: true});
                }

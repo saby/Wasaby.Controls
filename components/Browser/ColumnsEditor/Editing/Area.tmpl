@@ -9,6 +9,8 @@
             <div class="controls-Browser-ColumnsEditor-Editing-Area__head-title-right">
                <SBIS3.CONTROLS.Button
                   class="controls-Browser-ColumnsEditor-Editing-Area__ApplyColumnsButton"
+                  name="controls-Browser-ColumnsEditor-Editing-Area__ApplyColumnsButton"
+                  visible="{{ (_optsFixed.items && _optsFixed.items.length) || (_optsSelectable.items && _optsSelectable.items.length) }}"
                   command="applyColumns" primary="true"
                   >
                   <ws:caption>

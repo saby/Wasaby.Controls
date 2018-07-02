@@ -188,7 +188,9 @@ define('Controls/Dropdown/Container',
                      width: self._options.width
                   },
                   target: self._container,
-                  corner: self._options.corner
+                  corner: self._options.corner,
+                  horizontalAlign: self._options.horizontalAlign,
+                  verticalAlign: self._options.verticalAlign
                };
                self._children.DropdownOpener.open(config, self);
             }
