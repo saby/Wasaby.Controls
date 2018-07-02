@@ -1248,7 +1248,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             }
          } else {
             var opener = this.getOpener();
-            var openerPopup = opener && opener._container && opener._container.closest('.controls-Popup');
+            var openerPopup = opener && opener._container && opener._container.closest('.controls-Popup, .controls-FloatArea');
             var openerPopupZIndex = openerPopup && openerPopup.css('z-index');
 
             if (openerPopupZIndex) {
