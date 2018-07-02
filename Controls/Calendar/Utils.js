@@ -1,8 +1,10 @@
 define('Controls/Calendar/Utils', [
    'Core/helpers/i18n/locales',
-   'SBIS3.CONTROLS/Utils/DateUtil'
-], function(locales, DateUtil) {
-      
+   'Controls/Utils/Date'
+], function(
+   locales,
+   DateUtil
+) {
    'use strict';
 
    var locale = locales.current;

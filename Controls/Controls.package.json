@@ -74,6 +74,8 @@
     "Controls/Popup/Opener/BaseController",
     "Controls/Popup/Opener/BaseOpener",
     "Controls/Popup/Opener/Confirmation",
+    "Controls/Popup/Opener/Confirmation/*",
+    "Controls/Popup/Templates/*",
     "Controls/Popup/Opener/Dialog",
     "Controls/Popup/Opener/InfoBox",
     "Controls/Popup/InfoBox",
@@ -110,4 +112,18 @@
     "Controls/Validate/*"
   ],
   "output": "controls-validate.package.js"
+}, {
+  "include": [
+    "Controls/HighCharts",
+    "Controls/HighChartsLight",
+    "Controls/HighCharts/resources/ParseDataUtil"
+  ],
+  "output": "controls-highcharts.package.js"
+}, {
+  "include": [
+    "Controls/DragNDrop/Avatar",
+    "Controls/DragNDrop/Controller",
+    "Controls/DragNDrop/Container"
+  ],
+  "output": "controls-dragndrop.package.js"
 }]

@@ -522,6 +522,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           */
          destroy: function () {
             this._updatePreviewClearStop();
+            var formatter = this._exportFormatter;
+            if (typeof formatter.clear === 'function') {
+               formatter.clear();
+            }
             View.superclass.destroy.apply(this, arguments);
          }
       });
