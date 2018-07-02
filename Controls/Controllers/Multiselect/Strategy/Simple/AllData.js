@@ -6,7 +6,7 @@ define('Controls/Controllers/Multiselect/Strategy/Simple/AllData', [
    'use strict';
 
    var AllData = Base.extend({
-      isAllSelection: function(options) {
+      isAllChildrenSelected: function(options) {
          var
             selectedKeys = options.selectedKeys,
             excludedKeys = options.excludedKeys,

@@ -6,7 +6,7 @@ define('Controls/Controllers/Multiselect/Strategy/Hierarchy/PartialData', [
    'use strict';
 
    var PartialData = Base.extend({
-      isAllSelection: function(options) {
+      isAllChildrenSelected: function(options) {
          var
             rootId = options.rootId,
             selectedKeys = options.selectedKeys,

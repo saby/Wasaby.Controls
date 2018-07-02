@@ -59,7 +59,7 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
             parent = key === null ? null : this._hierarchyRelation.getParent(key, this._items);
             while (parent) {
                parentId = parent.getId();
-               if (this._strategy.isAllSelection(this._getParamsForIsAllSelection(parentId))) {
+               if (this._strategy.isAllChildrenSelected(this._getParamsForIsAllChildrenSelected(parentId))) {
                   childrenIds = this._strategy.getChildrenIds(parentId, this._items);
                   ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, childrenIds.concat(key));
                   ArraySimpleValuesUtil.addSubArray(this._selectedKeys, [parentId]);
@@ -70,7 +70,7 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
                }
             }
             if (parent === null) {
-               if (this._strategy.isAllSelection(this._getParamsForIsAllSelection(null))) {
+               if (this._strategy.isAllChildrenSelected(this._getParamsForIsAllChildrenSelected(null))) {
                   childrenIds = this._strategy.getChildrenIds(null, this._items);
                   ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, childrenIds.concat(key));
                   ArraySimpleValuesUtil.addSubArray(this._selectedKeys, [null]);
@@ -97,18 +97,27 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
             parent = key === null ? null : this._hierarchyRelation.getParent(key, this._items);
             while (parent) {
                parentId = parent.getId();
-               if (this._strategy.isAllSelection(this._getParamsForIsAllSelection(parentId))) {
+               if (this._strategy.isAllSelection(this._getParamsForIsAllChildrenSelected(parentId))) {
                   ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [key]);
                   if (this._strategy instanceof AllData) {
                      if (!this._strategy.getSelectedChildrenCount(parentId, this._selectedKeys, this._excludedKeys, this._items)) {
                         childrenIds = this._strategy.getChildrenIds(parentId, this._items);
                         ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, childrenIds);
                         ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, [parentId]);
+                        ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [parentId]);
                      }
                   }
-                  break;
-               } else {
-                  parent = this._hierarchyRelation.getParent(parentId, this._items);
+               }
+               parent = this._hierarchyRelation.getParent(parentId, this._items);
+            }
+            if (parent === null && this._strategy.isAllSelection(this._getParamsForIsAllChildrenSelected(null))) {
+               ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [key]);
+               if (this._strategy instanceof AllData) {
+                  if (!this._strategy.getSelectedChildrenCount(null, this._selectedKeys, this._excludedKeys, this._items)) {
+                     childrenIds = this._strategy.getChildrenIds(null, this._items);
+                     ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, childrenIds);
+                     ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, [null]);
+                  }
                }
             }
          }.bind(this));
@@ -134,6 +143,7 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
          if (key === null || this._hierarchyRelation.isNode(this._items.getRecordById(key), this._items)) {
             this._strategy.getChildrenIds(key, this._items).forEach(function(childId) {
                if (this._excludedKeys.indexOf(childId) !== -1) {
+                  //TODO: как-то я здесь упоролся
                   hasExcludedChildren = false;
                }
                if (this._selectedKeys.indexOf(childId) !== -1) {
@@ -155,8 +165,8 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
          return HierarchySelection.SELECTION_STATUS.NOT_SELECTED;
       },
 
-      _getParamsForIsAllSelection: function(rootId) {
-         var params = HierarchySelection.superclass._getParamsForIsAllSelection.apply(this, arguments);
+      _getParamsForIsAllChildrenSelected: function(rootId) {
+         var params = HierarchySelection.superclass._getParamsForIsAllChildrenSelected.apply(this, arguments);
          params.rootId = rootId ? rootId : null;
          return params;
       }

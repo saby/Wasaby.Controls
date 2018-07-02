@@ -4,6 +4,13 @@ define('Controls/Controllers/Multiselect/Strategy/Simple/Base', [
    'use strict';
 
    var Base = cExtend.extend({
+      isAllSelection: function(options) {
+         var
+            selectedKeys = options.selectedKeys;
+
+         return selectedKeys[0] === null;
+      },
+
       getCount: function(selectedKeys, excludedKeys, items) {
          if (this.isAllSelection({
             selectedKeys: selectedKeys,

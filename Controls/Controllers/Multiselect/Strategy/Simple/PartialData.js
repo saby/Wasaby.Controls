@@ -4,8 +4,8 @@ define('Controls/Controllers/Multiselect/Strategy/Simple/PartialData', [
    'use strict';
 
    var PartialData = Base.extend({
-      isAllSelection: function(options) {
-         return options.selectedKeys[0] === null;
+      isAllChildrenSelected: function(options) {
+         return options.selectedKeys[0] === null && !options.excludedKeys.length;
       }
    });
 

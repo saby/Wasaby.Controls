@@ -40,7 +40,7 @@ define('Controls/Controllers/Multiselect/Selection', [
          this._strategy = options.strategy === 'allData' ? new AllData(options) : new PartialData(options);
 
          //excluded keys имеют смысл только когда выделено все, поэтому ситуацию, когда переданы оба массива считаем ошибочной
-         if (options.excludedKeys.length && !this._strategy.isAllSelection(this._getParamsForIsAllSelection())) {
+         if (options.excludedKeys.length && !this._strategy.isAllChildrenSelected(this._getParamsForIsAllChildrenSelected())) {
             //TODO возможно надо кинуть здесь исключение
          }
 
@@ -48,7 +48,7 @@ define('Controls/Controllers/Multiselect/Selection', [
       },
 
       select: function(keys) {
-         if (this._strategy.isAllSelection(this._getParamsForIsAllSelection())) {
+         if (this._strategy.isAllChildrenSelected(this._getParamsForIsAllChildrenSelected())) {
             ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, keys);
          } else {
             ArraySimpleValuesUtil.addSubArray(this._selectedKeys, keys);
@@ -56,7 +56,7 @@ define('Controls/Controllers/Multiselect/Selection', [
       },
 
       unselect: function(keys) {
-         if (this._strategy.isAllSelection(this._getParamsForIsAllSelection())) {
+         if (this._strategy.isAllChildrenSelected(this._getParamsForIsAllChildrenSelected())) {
             ArraySimpleValuesUtil.addSubArray(this._excludedKeys, keys);
          } else {
             ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, keys);
@@ -76,7 +76,7 @@ define('Controls/Controllers/Multiselect/Selection', [
       toggleAll: function() {
          var swap;
 
-         if (this._strategy.isAllSelection(this._getParamsForIsAllSelection())) {
+         if (this._strategy.isAllChildrenSelected(this._getParamsForIsAllChildrenSelected())) {
             swap = cClone(this._excludedKeys);
             this.unselectAll();
             this.select(swap);
@@ -99,7 +99,7 @@ define('Controls/Controllers/Multiselect/Selection', [
       },
 
       getSelectionStatus: function(key) {
-         if (this._excludedKeys.indexOf(key) === -1 && this._strategy.isAllSelection(this._getParamsForIsAllSelection())) {
+         if (this._excludedKeys.indexOf(key) === -1 && this._strategy.isAllSelection(this._getParamsForIsAllChildrenSelected())) {
             return SELECTION_STATUS.SELECTED;
          } else if (this._selectedKeys.indexOf(key) !== -1) {
             return SELECTION_STATUS.SELECTED;
@@ -112,7 +112,7 @@ define('Controls/Controllers/Multiselect/Selection', [
          return this._strategy.getCount(this._selectedKeys, this._excludedKeys, this._items);
       },
 
-      _getParamsForIsAllSelection: function() {
+      _getParamsForIsAllChildrenSelected: function() {
          return {
             selectedKeys: this._selectedKeys,
             excludedKeys: this._excludedKeys,

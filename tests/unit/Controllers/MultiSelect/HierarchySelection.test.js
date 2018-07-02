@@ -356,6 +356,52 @@ define([
                assert.deepEqual([1], selection.selected);
                assert.deepEqual([3], selection.excluded);
                assert.equal(3, selectionInstance.getCount());
+               selectionInstance.unselect([4]);
+               selection = selectionInstance.getSelection();
+               assert.deepEqual([1], selection.selected);
+               assert.deepEqual([3, 4], selection.excluded);
+               assert.equal(2, selectionInstance.getCount());
+            });
+
+            it('sequentially unselect all children inside selected root', function() {
+               cfg = {
+                  selectedKeys: [null],
+                  excludedKeys: [],
+                  items: allData
+               };
+               selectionInstance = new HierarchySelection(cfg);
+               selection = selectionInstance.getSelection();
+               assert.deepEqual([null], selection.selected);
+               assert.deepEqual([], selection.excluded);
+               assert.equal(7, selectionInstance.getCount());
+               selectionInstance.unselect([7]);
+               assert.deepEqual([null], selection.selected);
+               assert.deepEqual([7], selection.excluded);
+               assert.equal(6, selectionInstance.getCount());
+               selectionInstance.unselect([6]);
+               assert.deepEqual([null], selection.selected);
+               assert.deepEqual([7, 6], selection.excluded);
+               assert.equal(5, selectionInstance.getCount());
+               selectionInstance.unselect([5]);
+               assert.deepEqual([null], selection.selected);
+               assert.deepEqual([7, 6, 5], selection.excluded);
+               assert.equal(4, selectionInstance.getCount());
+               selectionInstance.unselect([4]);
+               assert.deepEqual([null], selection.selected);
+               assert.deepEqual([7, 6, 5, 4], selection.excluded);
+               assert.equal(3, selectionInstance.getCount());
+               selectionInstance.unselect([3]);
+               assert.deepEqual([null], selection.selected);
+               assert.deepEqual([7, 6, 5, 4, 3], selection.excluded);
+               assert.equal(2, selectionInstance.getCount());
+               selectionInstance.unselect([2]);
+               assert.deepEqual([null], selection.selected);
+               assert.deepEqual([7, 6, 5, 2], selection.excluded);
+               assert.equal(1, selectionInstance.getCount());
+               selectionInstance.unselect([1]);
+               assert.deepEqual([null], selection.selected);
+               assert.deepEqual([7, 6, 1], selection.excluded);
+               assert.equal(0, selectionInstance.getCount());
             });
          });
 
@@ -455,6 +501,40 @@ define([
                assert.equal(4, selectionInstance.getCount());
                selectionInstance.unselect([2]);
                selection = selectionInstance.getSelection();
+               assert.deepEqual([], selection.selected);
+               assert.deepEqual([1], selection.excluded);
+               assert.equal(0, selectionInstance.getCount());
+            });
+
+            it('sequentially unselect all children inside selected root', function() {
+               cfg = {
+                  selectedKeys: [null],
+                  excludedKeys: [],
+                  items: allData,
+                  strategy: 'allData'
+               };
+               selectionInstance = new HierarchySelection(cfg);
+               selection = selectionInstance.getSelection();
+               assert.deepEqual([null], selection.selected);
+               assert.deepEqual([], selection.excluded);
+               assert.equal(7, selectionInstance.getCount());
+               selectionInstance.unselect([7]);
+               assert.deepEqual([null], selection.selected);
+               assert.deepEqual([7], selection.excluded);
+               assert.equal(6, selectionInstance.getCount());
+               selectionInstance.unselect([6]);
+               assert.deepEqual([null], selection.selected);
+               assert.deepEqual([7, 6], selection.excluded);
+               assert.equal(5, selectionInstance.getCount());
+               selectionInstance.unselect([5]);
+               assert.deepEqual([null], selection.selected);
+               assert.deepEqual([7, 6, 5], selection.excluded);
+               assert.equal(4, selectionInstance.getCount());
+               selectionInstance.unselect([4]);
+               assert.deepEqual([null], selection.selected);
+               assert.deepEqual([7, 6, 5, 4], selection.excluded);
+               assert.equal(3, selectionInstance.getCount());
+               selectionInstance.unselect([3]);
                assert.deepEqual([], selection.selected);
                assert.deepEqual([], selection.excluded);
                assert.equal(0, selectionInstance.getCount());

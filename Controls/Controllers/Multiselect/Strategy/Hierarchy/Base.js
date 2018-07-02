@@ -70,7 +70,7 @@ define('Controls/Controllers/Multiselect/Strategy/Hierarchy/Base', [
 
       getSelectedChildrenCount: function(rootId, selectedKeys, excludedKeys, items) {
          var
-            parentSelected = this.isParentSelected(rootId, selectedKeys, excludedKeys, items) || selectedKeys.indexOf(rootId) !== -1,
+            parentSelected = selectedKeys.indexOf(rootId) !== -1 || this.isParentSelected(rootId, selectedKeys, excludedKeys, items),
             childId;
 
          return this._hierarchyRelation.getChildren(rootId, items).reduce(function(acc, child) {
@@ -83,7 +83,7 @@ define('Controls/Controllers/Multiselect/Strategy/Hierarchy/Base', [
                   return acc + 1;
                }
             } else {
-               if (this._hierarchyRelation.isNode(child)) {
+               if (this._hierarchyRelation.isNode(child) && excludedKeys.indexOf(childId) === -1) {
                   return acc + this.getSelectedChildrenCount(childId, selectedKeys, excludedKeys, items);
                } else {
                   return acc;
@@ -94,6 +94,17 @@ define('Controls/Controllers/Multiselect/Strategy/Hierarchy/Base', [
 
       getCount: function(selectedKeys, excludedKeys, items) {
          return this.getSelectedChildrenCount(null, selectedKeys, excludedKeys, items);
+      },
+
+      isAllSelection: function(options) {
+         var
+            rootId = options.rootId,
+            selectedKeys = options.selectedKeys,
+            excludedKeys = options.excludedKeys,
+            items = options.items,
+            isParentSelected = this.isParentSelected(rootId, selectedKeys, excludedKeys, items);
+
+         return isParentSelected || selectedKeys.indexOf(rootId) !== -1;
       }
    });
 
