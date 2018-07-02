@@ -1,4 +1,4 @@
-/// <amd-module name="File/Attach/Option/ResourceGetter" />
+/// <amd-module name="File/Attach/Option/Getter" />
 import {IResourceGetter} from 'File/IResourceGetter';
 /**
  * Класс конфигурации {@link File/IResourceGetter}, передаваемый в {@link File/Attach}
@@ -8,39 +8,25 @@ import {IResourceGetter} from 'File/IResourceGetter';
  * @see File/IResourceGetter
  * @author Заляев А.В.
  */
-class ResourceGetterOption {
+class GetterOption {
     /**
-     * @cfg {String | File/IResourceGetter} Экземпляр IResourceGetter
+     * @cfg {File/IResourceGetter} Экземпляр IResourceGetter
      * @name File/Attach/Option/ResourceGetter#getter
      */
     /**
-     * @cfg {Object} Параметры вызова конструктора
-     * @name File/Attach/Option/ResourceGetter#options
-     */
-    /**
      *
-     * @param {String | File/IResourceGetter} getter Экземпляр IResourceGetter, либо ссылка на модуль
-     * @param {String} name
-     * @param {*} [options] Параметры вызова конструктора
+     * @param {File/IResourceGetter} getter Экземпляр IResourceGetter
      * @constructor
      * @see File/IResourceGetter
      */
-    constructor (private getter: IResourceGetter, private options?: any) {}
+    constructor (private getter: IResourceGetter) {}
     /**
-     * Возвращает параметры вызова конструктора
-     * @return {*}
-     * @name File/Attach/Option/ResourceGetter#getOptions
-     */
-    getOptions(): any {
-        return this.options;
-    }
-    /**
-     * Возвращает экземпляр IResourceGetter, либо ссылку на модуль
-     * @return {String | File/IResourceGetter}
+     * Возвращает экземпляр IResourceGetter
+     * @return {File/IResourceGetter}
      * @name File/Attach/Option/ResourceGetter#getGetter
      */
     getGetter(): IResourceGetter {
         return this.getter;
     }
 }
-export = ResourceGetterOption;
+export = GetterOption;

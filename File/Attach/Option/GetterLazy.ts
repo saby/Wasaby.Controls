@@ -1,52 +1,67 @@
 /// <amd-module name="File/Attach/Option/GetterLazy" />
 import {Option} from 'File/Attach/Option';
+
 /**
- * Класс конфигурации {@link File/IResourceGetter}, передаваемый в {@link File/Attach}
- * @class File/Attach/Option/ResourceGetter
+ * Класс конфигурации {@link File/IResourceGetter}, передаваемый в {@link File/Attach},
+ * позволяющий регистрировать динамично-загружаемые модули
+ * @class File/Attach/Option/GetterLazy
  * @public
  * @see File/Attach
  * @see File/IResourceGetter
  * @author Заляев А.В.
  */
-export class GetterLazy extends Option {
+class GetterLazyOption {
     /**
-     * @cfg {String | File/IResourceGetter} Экземпляр IResourceGetter, либо ссылка на модуль
-     * @name File/Attach/Option/ResourceGetter#getter
+     * @cfg {String} Cсылка на модуль IResourceGetter
+     * @name File/Attach/Option/GetterLazy#link
      */
+
     /**
-     * @cfg {String} Экземпляр IResourceGetter, либо ссылка на модуль
-     * @name File/Attach/Option/ResourceGetter#name
+     * @cfg {String} Тип
+     * @name File/Attach/Option/GetterLazy#type
      */
+
     /**
      * @cfg {Object} Параметры вызова конструктора
-     * @name File/Attach/Option/ResourceGetter#options
+     * @name File/Attach/Option/GetterLazy#options
      */
+
     /**
      *
-     * @param {File/IResourceGetter} link Экземпляр IResourceGetter, либо ссылка на модуль
+     * @param {File/IResourceGetter} link Cсылка на модуль IResourceGetter
      * @param {String} type
      * @param {*} [options] Параметры вызова конструктора
      * @constructor
      * @see File/IResourceGetter
      */
-    constructor (private link: string, private type: string, protected options?: object) {
-        super();
-    }
+    constructor (private link: string, private type: string, protected options?: object) {}
 
     /**
-     *
+     * Возвращает тип источника русусрса
      * @return {String}
-     * @name File/Attach/Option/ResourceGetter#getName
+     * @name File/Attach/Option/GetterLazy#getType
      */
     getType(): string {
         return this.type;
     }
+
     /**
-     * Возвращает экземпляр IResourceGetter, либо ссылку на модуль
-     * @return {String | File/IResourceGetter}
-     * @name File/Attach/Option/ResourceGetter#getGetter
+     * Возвращает ссылку на модуль IResourceGetter
+     * @return {String}
+     * @name File/Attach/Option/GetterLazy#getGetter
      */
     getLink(): string {
         return this.link;
     }
+
+    /**
+     * Возвращает параметры вызова конструктора
+     * @return {*}
+     * @name File/Attach/GetterLazy#getOptions
+     */
+    getOptions(): any {
+        return this.options || {};
+    }
 }
+
+export = GetterLazyOption;

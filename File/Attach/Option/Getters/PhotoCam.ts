@@ -1,15 +1,15 @@
 /// <amd-module name="File/Attach/Option/Getters/PhotoCam" />
 
-import ResourceGetter = require("File/Attach/Option/ResourceGetter");
+import ResourceGetter = require("File/Attach/Option/GetterLazy");
 
 const GETTER_LINK = "File/ResourceGetter/PhotoCam";
 const GETTER_TYPE = "PhotoCam";
 
 /**
- * Класс конфигурации IResourceGetter для получения снимков с камеры, передаваемый в Attach
+ * Класс конфигурации {@link File/IResourceGetter} для получения снимков с камеры, передаваемый в {@link File/Attach}
  * @class
  * @name File/Attach/Option/Getters/PhotoCam
- * @extends File/Attach/Option/ResourceGetter
+ * @extends File/Attach/Option/GetterLazy
  * @public
  * @author Заляев А.В.
  */
@@ -23,7 +23,7 @@ class PhotoCam extends ResourceGetter {
         super (GETTER_LINK, GETTER_TYPE, options || {});
     }
     /**
-     * @description 
+     * @description
      * Тип геттера передается в метод choose File/Attach, чтобы указать каким способом(геттером) выбираются файлы
      * <pre>
      *   attach.choose(PhotoCam.getType()); // Получение фото с веб-камеры

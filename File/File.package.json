@@ -34,7 +34,6 @@
       "File/Attach",
       "File/Attach/Abstract",
       "File/Attach/Uploader",
-      "File/Attach/Option",
       "File/Attach/Option/*",
       "File/Attach/Container/*"
     ]

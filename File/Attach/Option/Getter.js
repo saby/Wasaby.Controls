@@ -1,4 +1,4 @@
-define("File/Attach/Option/ResourceGetter", ["require", "exports"], function (require, exports) {
+define("File/Attach/Option/Getter", ["require", "exports"], function (require, exports) {
     "use strict";
     /**
      * Класс конфигурации {@link File/IResourceGetter}, передаваемый в {@link File/Attach}
@@ -8,44 +8,29 @@ define("File/Attach/Option/ResourceGetter", ["require", "exports"], function (re
      * @see File/IResourceGetter
      * @author Заляев А.В.
      */
-    var ResourceGetterOption = /** @class */ (function () {
+    var GetterOption = /** @class */ (function () {
         /**
-         * @cfg {String | File/IResourceGetter} Экземпляр IResourceGetter
+         * @cfg {File/IResourceGetter} Экземпляр IResourceGetter
          * @name File/Attach/Option/ResourceGetter#getter
          */
         /**
-         * @cfg {Object} Параметры вызова конструктора
-         * @name File/Attach/Option/ResourceGetter#options
-         */
-        /**
          *
-         * @param {String | File/IResourceGetter} getter Экземпляр IResourceGetter, либо ссылка на модуль
-         * @param {String} name
-         * @param {*} [options] Параметры вызова конструктора
+         * @param {File/IResourceGetter} getter Экземпляр IResourceGetter
          * @constructor
          * @see File/IResourceGetter
          */
-        function ResourceGetterOption(getter, options) {
+        function GetterOption(getter) {
             this.getter = getter;
-            this.options = options;
         }
         /**
-         * Возвращает параметры вызова конструктора
-         * @return {*}
-         * @name File/Attach/Option/ResourceGetter#getOptions
-         */
-        ResourceGetterOption.prototype.getOptions = function () {
-            return this.options;
-        };
-        /**
-         * Возвращает экземпляр IResourceGetter, либо ссылку на модуль
-         * @return {String | File/IResourceGetter}
+         * Возвращает экземпляр IResourceGetter
+         * @return {File/IResourceGetter}
          * @name File/Attach/Option/ResourceGetter#getGetter
          */
-        ResourceGetterOption.prototype.getGetter = function () {
+        GetterOption.prototype.getGetter = function () {
             return this.getter;
         };
-        return ResourceGetterOption;
+        return GetterOption;
     }());
-    return ResourceGetterOption;
+    return GetterOption;
 });

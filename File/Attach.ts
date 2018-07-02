@@ -1,8 +1,8 @@
 /// <amd-module name="File/Attach" />
 // dependency for types
 import SourceOption = require("File/Attach/Option/Source");
-import GetterOption = require("File/Attach/Option/ResourceGetter");
-import ResourceGetterOption = require("File/Attach/Option/ResourceGetter");
+import GetterOption = require("File/Attach/Option/Getter");
+import GetterLazyOption = require("File/Attach/Option/GetterLazy");
 import {IResourceGetter} from "File/IResourceGetter";
 import {IContainerLazy, ISourceContainerLazy} from "File/Attach/IContainer";
 import Abstract = require("File/Attach/Abstract");
@@ -11,7 +11,7 @@ import SourceContainerLazy = require("File/Attach/Container/SourceLazy");
 
 type Options = {
     sourceOptions: Array<SourceOption>;
-    getterOptions: Array<ResourceGetterOption>;
+    getterOptions: Array<GetterOption | GetterLazyOption>;
     multiSelect: boolean;
     [propName: string]: any;
 }
@@ -49,7 +49,8 @@ const DEFAULT: Partial<Options> = {
      */
     sourceOptions: [],
     /**
-     * @cfg {Array.<File/Attach/Option/ResourceGetter>} Набор параметров для регестрации
+     * @cfg {Array.<File/Attach/Option/GetterOption | File/Attach/Option/GetterOptionGetterLazyOption>}
+     * Набор параметров для регестрации
      * {@link File/IResourceGetter}, указывающий доступные способы получения ресурслв
      * @example
      * <pre>
@@ -179,23 +180,22 @@ class Attach extends Abstract {
         this._getterContainer = new GetterContainerLazy();
         this._sourceContainer = new SourceContainerLazy();
 
-        opt.getterOptions.forEach((option: GetterOption) => {
+        opt.getterOptions.forEach((option: GetterOption | GetterLazyOption) => {
             this.addGetterOption(option);
         });
         opt.sourceOptions.forEach((option: SourceOption) => {
             this.addSourceOption(option)
         });
     }
-    addGetterOption(option: GetterOption) {
-        let getter = option.getGetter();
-        if (typeof getter === "string") {
-            return this._getterContainer.register(
-                option.getName(),
-                getter,
-                option.getOptions()
-            );
+    addGetterOption(option: GetterOption | GetterLazyOption) {
+        if (option instanceof GetterOption) {
+            return this._getterContainer.push(option.getGetter());
         }
-        this._getterContainer.push(getter);
+        return this._getterContainer.register(
+            option.getType(),
+            option.getLink(),
+            option.getOptions()
+        );
     }
     addSourceOption(option: SourceOption) {
         this._sourceContainer.register(

@@ -1,60 +1,65 @@
-define("File/Attach/Option/GetterLazy", ["require", "exports", "tslib", "File/Attach/Option"], function (require, exports, tslib_1, Option_1) {
+define("File/Attach/Option/GetterLazy", ["require", "exports"], function (require, exports) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
     /**
-     * Класс конфигурации {@link File/IResourceGetter}, передаваемый в {@link File/Attach}
-     * @class File/Attach/Option/ResourceGetter
+     * Класс конфигурации {@link File/IResourceGetter}, передаваемый в {@link File/Attach},
+     * позволяющий регистрировать динамично-загружаемые модули
+     * @class File/Attach/Option/GetterLazy
      * @public
      * @see File/Attach
      * @see File/IResourceGetter
      * @author Заляев А.В.
      */
-    var GetterLazy = /** @class */ (function (_super) {
-        tslib_1.__extends(GetterLazy, _super);
+    var GetterLazyOption = /** @class */ (function () {
         /**
-         * @cfg {String | File/IResourceGetter} Экземпляр IResourceGetter, либо ссылка на модуль
-         * @name File/Attach/Option/ResourceGetter#getter
+         * @cfg {String} Cсылка на модуль IResourceGetter
+         * @name File/Attach/Option/GetterLazy#link
          */
         /**
-         * @cfg {String} Экземпляр IResourceGetter, либо ссылка на модуль
-         * @name File/Attach/Option/ResourceGetter#name
+         * @cfg {String} Тип
+         * @name File/Attach/Option/GetterLazy#type
          */
         /**
          * @cfg {Object} Параметры вызова конструктора
-         * @name File/Attach/Option/ResourceGetter#options
+         * @name File/Attach/Option/GetterLazy#options
          */
         /**
          *
-         * @param {File/IResourceGetter} link Экземпляр IResourceGetter, либо ссылка на модуль
+         * @param {File/IResourceGetter} link Cсылка на модуль IResourceGetter
          * @param {String} type
          * @param {*} [options] Параметры вызова конструктора
          * @constructor
          * @see File/IResourceGetter
          */
-        function GetterLazy(link, type, options) {
-            var _this = _super.call(this) || this;
-            _this.link = link;
-            _this.type = type;
-            _this.options = options;
-            return _this;
+        function GetterLazyOption(link, type, options) {
+            this.link = link;
+            this.type = type;
+            this.options = options;
         }
         /**
-         *
+         * Возвращает тип источника русусрса
          * @return {String}
-         * @name File/Attach/Option/ResourceGetter#getName
+         * @name File/Attach/Option/GetterLazy#getType
          */
-        GetterLazy.prototype.getType = function () {
+        GetterLazyOption.prototype.getType = function () {
             return this.type;
         };
         /**
-         * Возвращает экземпляр IResourceGetter, либо ссылку на модуль
-         * @return {String | File/IResourceGetter}
-         * @name File/Attach/Option/ResourceGetter#getGetter
+         * Возвращает ссылку на модуль IResourceGetter
+         * @return {String}
+         * @name File/Attach/Option/GetterLazy#getGetter
          */
-        GetterLazy.prototype.getLink = function () {
+        GetterLazyOption.prototype.getLink = function () {
             return this.link;
         };
-        return GetterLazy;
-    }(Option_1.Option));
-    exports.GetterLazy = GetterLazy;
+        /**
+         * Возвращает параметры вызова конструктора
+         * @return {*}
+         * @name File/Attach/GetterLazy#getOptions
+         */
+        GetterLazyOption.prototype.getOptions = function () {
+            return this.options || {};
+        };
+        return GetterLazyOption;
+    }());
+    return GetterLazyOption;
 });

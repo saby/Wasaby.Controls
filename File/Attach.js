@@ -1,4 +1,4 @@
-define("File/Attach", ["require", "exports", "tslib", "File/Attach/Abstract", "File/Attach/Container/GetterLazy", "File/Attach/Container/SourceLazy"], function (require, exports, tslib_1, Abstract, GetterContainerLazy, SourceContainerLazy) {
+define("File/Attach", ["require", "exports", "tslib", "File/Attach/Option/Getter", "File/Attach/Abstract", "File/Attach/Container/GetterLazy", "File/Attach/Container/SourceLazy"], function (require, exports, tslib_1, GetterOption, Abstract, GetterContainerLazy, SourceContainerLazy) {
     "use strict";
     var DEFAULT = {
         /**
@@ -34,7 +34,8 @@ define("File/Attach", ["require", "exports", "tslib", "File/Attach/Abstract", "F
          */
         sourceOptions: [],
         /**
-         * @cfg {Array.<File/Attach/Option/ResourceGetter>} Набор параметров для регестрации
+         * @cfg {Array.<File/Attach/Option/GetterOption | File/Attach/Option/GetterOptionGetterLazyOption>}
+         * Набор параметров для регестрации
          * {@link File/IResourceGetter}, указывающий доступные способы получения ресурслв
          * @example
          * <pre>
@@ -167,11 +168,10 @@ define("File/Attach", ["require", "exports", "tslib", "File/Attach/Abstract", "F
             return _this;
         }
         Attach.prototype.addGetterOption = function (option) {
-            var getter = option.getGetter();
-            if (typeof getter === "string") {
-                return this._getterContainer.register(option.getName(), getter, option.getOptions());
+            if (option instanceof GetterOption) {
+                return this._getterContainer.push(option.getGetter());
             }
-            this._getterContainer.push(getter);
+            return this._getterContainer.register(option.getType(), option.getLink(), option.getOptions());
         };
         Attach.prototype.addSourceOption = function (option) {
             this._sourceContainer.register(option.getResourceType(), option.getSourceName(), option.getOptions());
