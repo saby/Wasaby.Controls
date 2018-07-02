@@ -204,7 +204,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             templateOptions.parent = this;
             this._compoundControl = new (Component)(templateOptions);
             this._compoundControlCreated.callback(this._compoundControl);
-            this._subscribeToCommand();
             this.handle('onAfterLoad');
             this.handle('onInitComplete');
             this.handle('onAfterShow'); // todo здесь надо звать хэндлер который пытается подписаться на onAfterShow, попробуй подключить FormController и словить подпись
@@ -216,9 +215,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
          isOpened: function() {
             return true;
-         },
-         _subscribeToCommand: function() {
-            this._compoundControl.subscribe('onCommandCatch', this._commandHandler);
          },
          _commandHandler: function(event, commandName, arg) {
             var parent;
