@@ -1,6 +1,4 @@
 <div class="controls-FastFilter">
-
-   <div class="controls-FastFilter__list" name="fastFilter">
    <ws:for data="index, item in _items">
       <div class="controls-FastFilter__wrapper">
          <div class="controls-FastFilter__block"
@@ -20,7 +18,6 @@
          </ws:if>
       </div>
    </ws:for>
-   </div>
    <Controls.Dropdown.Opener name="DropdownOpener">
       <ws:popupOptions>
          <ws:eventHandlers onResult="{{_onResult}}"/>

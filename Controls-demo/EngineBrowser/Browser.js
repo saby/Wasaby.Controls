@@ -5,7 +5,8 @@ define('Controls-demo/EngineBrowser/Browser', [
    'css!Controls-demo/EngineBrowser/Browser',
    'Controls/EngineBrowser',
    'tmpl!Controls-demo/EngineBrowser/resources/filterPanelAddItemsTemplate',
-   'tmpl!Controls-demo/EngineBrowser/resources/filterPanelItemsTemplate'
+   'tmpl!Controls-demo/EngineBrowser/resources/filterPanelItemsTemplate',
+   'tmpl!Controls-demo/EngineBrowser/resources/filterButtonEngineTemplate'
 ], function(Control, Memory, template) {
    'use strict';
 
@@ -15,7 +16,7 @@ define('Controls-demo/EngineBrowser/Browser', [
       {key: 3, title: 'UK'},
       {key: 4, title: 'Japan'},
       {key: 5, title: 'China'},
-      {key: 6, title: 'Hong Kong'}
+      {key: 6, title: 'Australia'}
    ];
 
    var sourceData = [
@@ -57,7 +58,7 @@ define('Controls-demo/EngineBrowser/Browser', [
                   data: [
                      {id: 0, title: 'По имени'},
                      {id: 1, title: 'Sasha'},
-                     {id: 2, title: 'Petr'},
+                     {id: 2, title: 'Petrova'},
                      {id: 3, title: 'Ivan'},
                      {id: 3, title: 'Andrey'}
                   ]
@@ -96,13 +97,7 @@ define('Controls-demo/EngineBrowser/Browser', [
             source: {
                module: 'WS.Data/Source/Memory',
                options: {
-                  data: [
-                     {id: 1, title: 'USA'},
-                     {id: 2, title: 'Russia'},
-                     {id: 3, title: 'UK'},
-                     {id: 4, title: 'Japan'},
-                     {id: 0, title: 'China'}
-                  ]
+                  data: countries
                }
             }
          }

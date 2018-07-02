@@ -8,7 +8,11 @@
                   <ws:partial template="{{_options.search}}" class="controls-Browser__search"/>
                </Controls.Container.Input.Search>
             </ws:if>
-            <div name="filterWrapper" class="controls-Browser__filter-wrapper">
+            <ws:if data="{{_options.topTemplate}}">
+               <ws:partial template="{{_options.topTemplate}}" class="controls-Browser__topTemplate"/>
+            </ws:if>
+            <div name="filterWrapper"
+                 class="controls-Browser__filter-wrapper controls-Browser__filter-wrapper-default">
                <ws:if data="{{_options.fastFilter}}">
                   <Controls.Container.Filter.Fast name="fastFilter">
                      <ws:partial template="{{_options.fastFilter}}" class="controls-Browser__fastFilter"/>

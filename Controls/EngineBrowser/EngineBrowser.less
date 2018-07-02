@@ -9,10 +9,17 @@
 
 .controls-Browser__filter-wrapper {
    display: grid;
-   grid-template-columns: minmax(15px, 1fr) minmax(15px, auto);
    align-items: baseline;
-   justify-content: flex-end;
    width: 100%;
+}
+
+.controls-Browser__filter-wrapper-default {
+   grid-template-columns: minmax(15px, auto) minmax(15px, auto);
+   justify-content: flex-end;
+}
+
+.controls-Browser__fastFilter {
+   justify-content: flex-end;
 }
 
 .controls-Browser__filterButton {

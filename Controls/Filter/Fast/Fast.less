@@ -1,8 +1,6 @@
-.controls-FastFilter__list {
-   display: grid;
-   grid-template-columns: repeat(auto-fit, minmax(10px, auto));
+.controls-FastFilter {
    width: 100%;
-   //overflow: hidden;
+   display: flex;
 }
 
 .controls-FastFilter__iconReset {
@@ -18,9 +16,8 @@
 }
 
 .controls-FastFilter__wrapper {
-   width: 100%;
    margin: @spacing_FastFilter-item;
-   display: flex;
+   display: inline-flex;
    align-items: center;
    cursor: pointer;
    overflow: hidden;
@@ -28,7 +25,7 @@
 
 .controls-FastFilter__block {
    white-space: nowrap;
-   display: flex;
+   display: inline-flex;
    align-items: baseline;
    overflow: hidden;
 }

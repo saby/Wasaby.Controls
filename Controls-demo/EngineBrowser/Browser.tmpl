@@ -8,14 +8,15 @@
       <Controls.Input.Search bind:value="value"
                            attr:style="min-width: 300px;"/>
    </ws:search>
+
+   <!--<ws:topTemplate>-->
+      <!--<Controls.Button style="default" caption="Найти" attr:style="margin-top: 10px; margin-bottom: 10px; min-width: 70px;"/>-->
+   <!--</ws:topTemplate>-->
    <ws:fastFilter>
       <Controls.Filter.Fast />
    </ws:fastFilter>
    <ws:filterButton>
-      <Controls.Filter.Button>
-         <ws:itemTemplate templateName="tmpl!Controls-demo/EngineBrowser/resources/filterPanelItemsTemplate"/>
-         <ws:additionalTemplate templateName="tmpl!Controls-demo/EngineBrowser/resources/filterPanelAddItemsTemplate"/>
-      </Controls.Filter.Button>
+      <Controls.Filter.Button template="tmpl!Controls-demo/EngineBrowser/resources/filterButtonEngineTemplate"/>
    </ws:filterButton>
    <ws:content>
       <Controls.List
