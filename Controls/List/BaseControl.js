@@ -461,6 +461,10 @@ define('Controls/List/BaseControl', [
          if (filterChanged || sourceChanged) {
             _private.reload(this, newOptions.dataLoadCallback,  newOptions.dataLoadErrback);
          }
+
+         if (newOptions.selectedKeys !== this._options.selectedKeys || newOptions.excludedKeys !== this._options.excludedKeys) {
+            this._listViewModel._nextVersion();
+         }
       },
 
       _beforeUnmount: function() {
