@@ -574,6 +574,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                      }.bind(this, preset.id),
                      errorMessage: _TITLE_ERROR
                   }]);
+                  editor._origKeyPressHandler = editor._keyPressHandler;
+                  editor._setKeyPressHandler(function (evt) {
+                     if ((evt.key === 'Enter' || evt.keyCode == 13) && !this._canSave()) {
+                        evt.preventDefault();
+                        evt.stopImmediatePropagation();
+                        return;
+                     }
+                     editor._origKeyPressHandler(evt);
+                  }.bind(this));
                   this.sendCommand('subviewChanged', 'edit', preset);
                }
             }
@@ -588,7 +597,20 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             this._editorOkButton = null;
             this._isEditMode = false;
             this._switchEditor();
+            editor._setKeyPressHandler(editor._origKeyPressHandler);
+            editor._origKeyPressHandler = null;
             this._editor.clearMark();
+         },
+
+         /**
+          * Проверить можно ли сохранять текущий пресет
+          *
+          * @protected
+          * @return {boolean}
+          */
+         _canSave: function () {
+            var fieldIds = this._fieldIds;
+            return !!(fieldIds && fieldIds.length);
          },
 
          /**
@@ -600,8 +622,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             if (this._isEditMode) {
                var okButton = this._editorOkButton;
                if (okButton) {
-                  var fieldIds = this._fieldIds;
-                  okButton.toggleClass('ws-hidden', !(fieldIds && fieldIds.length));
+                  okButton.toggleClass('ws-hidden', !this._canSave());
                }
             }
          },
