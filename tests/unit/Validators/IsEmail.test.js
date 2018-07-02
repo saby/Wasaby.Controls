@@ -23,7 +23,8 @@ define(
             'тест@тест.рф',
             'тест@тест.йцу.рф',
             '',
-            'NotCaseSensitive@test.com'
+            'NotCaseSensitive@test.com',
+            'info@почта.рф'
          ],
          invalidEmails = [
             'plainaddress',

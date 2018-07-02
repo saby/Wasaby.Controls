@@ -17,13 +17,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
       'SBIS3.CONTROLS/Utils/ImportExport/RemoteCall',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
       'WS.Data/Collection/RecordSet',
+      'WS.Data/Di',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/Area',
       'css!SBIS3.CONTROLS/ExportCustomizer/Area',
       'SBIS3.CONTROLS/Button',
       'SBIS3.CONTROLS/ScrollContainer'
    ],
 
-   function (CommandDispatcher, cMerge, Deferred, CompoundControl, RemoteCall, InformationPopupManager, RecordSet, tmpl) {
+   function (CommandDispatcher, cMerge, Deferred, CompoundControl, RemoteCall, InformationPopupManager, RecordSet, Di, tmpl) {
       'use strict';
 
       /**
@@ -554,29 +555,29 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * Обработчик "subviewChanged" для под-компонента "preset"
           *
           * @protected
-          * @param {*} [data] Дополнительные данные
+          * @param {string} reason Причина или вид изменения
+          * @param {*} [info] Дополнительные данные
           */
-         _onChangePresets: function (data) {
+         _onChangePresets: function (reason/*, inf*/) {
             // Выбраны новые предустановленные настройки экспорта
             var views = this._views;
             var values = views.presets.getValues();
-            var meta = this._makeMeta('presets', [].slice.call(arguments));
+            var args = [].slice.call(arguments, 1);
             var options = this._options;
             var fieldIds = values.fieldIds;
             var fileUuid = values.fileUuid;
             var formatterValues, formatterMeta;
-            var reason = meta.reason;
-            var args = meta.args;
             switch (reason) {
                case 'create':
                case 'clone':
                case 'select':
                   options.fieldIds = fieldIds.slice();
-                  views.columnBinder.restate({fieldIds:fieldIds.slice()}, meta);
+                  views.columnBinder.restate({fieldIds:fieldIds.slice()}, {source:'presets', reason:reason, args:args});
                case 'edit':
-                  options.fileUuid = fileUuid;
                   var consumer = args[0];
-                  formatterValues = {fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumerId:consumer.id, primaryUuid:consumer.patternUuid || consumer.fileUuid};
+                  var consumerUuid = consumer.patternUuid || consumer.fileUuid;
+                  options.fileUuid = fileUuid || consumerUuid;
+                  formatterValues = {fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumerId:consumer.id, primaryUuid:consumerUuid};
                   formatterMeta = {reason:reason, args:reason === 'clone' ? [args[1]] : []};
                   if (reason === 'edit') {
                      this._isEditMode = true;
@@ -718,35 +719,71 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * @protected
           */
          _cmdComplete: function () {
-            // Сформировать результирующие данные из всего имеющегося
-            // И сразу прроверить их
-            this.getValues(true).addCallback(function (data) {
-               // И если всё нормально - завершить диалог
-               if (data) {
-                  var presetsView = this._views.presets;
-                  if (presetsView) {
-                     presetsView.save();
-                  }
-                  var outputCall = this._options.outputCall;
-                  if (outputCall) {
-                     (new RemoteCall(outputCall)).call(data).addCallbacks(
-                        function (result) {
-                           data.result = result;
-                           this._notify('onComplete', /*ExportResults:*/data);
-                        }.bind(this),
-                        function (err) {
-                           this._notify('onFatalError', true, /*err*/rk('При отправке данных поизошла ошибка', 'НастройщикЭкспорта'));
-                        }.bind(this)
-                     );
-                  }
-                  else {
+            this.complete().addCallbacks(
+               function (data) {
+                  if (data) {
                      this._notify('onComplete', /*ExportResults:*/data);
                   }
-               }
-               /*else {
-                  // Иначе пользователь продолжает редактирование
-               }*/
-            }.bind(this));
+                  /*else {
+                     // Иначе пользователь продолжает редактирование
+                  }*/
+               }.bind(this),
+               this._notify.bind(this, 'onFatalError', true)
+            );
+         },
+
+         /*
+          * Завершить работу с текущими данными
+          *
+          * @public
+          * @return {Core/Deferred<ExportResults>}
+          */
+         complete: function () {
+            var promise = new Deferred();
+            var options = this._options;
+            var presetsView = this._views.presets;
+            var isForced = arguments[0];
+            if (!isForced && options.usePresets && !(options.fieldIds && options.fieldIds.length) && !presetsView) {
+               Di.resolve('ExportPresets.Loader').load(options._scopes.presets.namespace).addCallback(function (presets) {
+                  var preset; presets.some(function (v) { if (v.id === options.selectedPresetId) { preset = v; return true; }});
+                  if (preset) {
+                     options.fieldIds = preset.fieldIds;
+                     options.fileUuid = preset.fileUuid;
+                  }
+                  promise.dependOn(this.complete(true));
+               }.bind(this));
+            }
+            else {
+               // Сформировать результирующие данные из всего имеющегося
+               // И сразу прроверить их
+               this.getValues(true).addCallback(function (data) {
+                  // И если всё нормально - завершить диалог
+                  if (data) {
+                     if (presetsView) {
+                        presetsView.save();
+                     }
+                     var outputCall = options.outputCall;
+                     if (outputCall) {
+                        (new RemoteCall(outputCall)).call(data).addCallbacks(
+                           function (result) {
+                              data.result = result;
+                              promise.callback(data);
+                           }.bind(this),
+                           function (err) {
+                              promise.errback(/*err*/rk('При отправке данных поизошла ошибка', 'НастройщикЭкспорта'));
+                           }.bind(this)
+                        );
+                     }
+                     else {
+                        promise.callback(data);
+                     }
+                  }
+                  else {
+                     promise.callback(null);
+                  }
+               }.bind(this));
+            }
+            return promise;
          },
 
          /**

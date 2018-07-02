@@ -871,6 +871,8 @@
 @list-view-scroll-height:                       32px;
 @list-view-loading-indicator-gradient-bg:       @list-view-scroll-spritesheet no-repeat center, linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.69) 51%, rgba(255, 255, 255, 0) 100%);
 @list-view-loading-indicator-gradient-bg-up:    @list-view-scroll-spritesheet no-repeat center, linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.69) 51%, rgba(255, 255, 255, 0) 100%);
+@list-view-loading-indicator-gradient-block-bg: @list-view-scroll-spritesheet no-repeat center, linear-gradient(to top, rgba(234,234,234,1) 0%, rgba(234, 234, 234, 0.7) 50%, rgba(234, 234, 234, 0.69) 51%, rgba(234, 234, 234, 0) 100%);
+@list-view-loading-indicator-gradient-block-bg-up:@list-view-scroll-spritesheet no-repeat center, linear-gradient(to bottom, rgba(234,234,234,1) 0%, rgba(234, 234, 234, 0.7) 50%, rgba(234, 234, 234, 0.69) 51%, rgba(234, 234, 234, 0) 100%);
 @listView-empty-data-color:                     #999999;
 @listView-empty-data-font-size:                 15px;
 @listView-empty-data-padding-top:               16px;
@@ -1712,6 +1714,7 @@
 @background-color_ExportCustomizer-Presets-View-item-selected: #d94700;
 @margin_ExportCustomizer-Presets-View-add: 4px 12px 4px 12px;
 @margin_ExportCustomizer-Presets-View-editor-panel: 0 0 0 12px;
+@margin_ExportCustomizer-Presets-View-editor-panel-ok: 0 12px 0 0;
 
 @margin_ExportCustomizer-ColumnBinder-View-head: 0 0 8px 0;
 @padding_ExportCustomizer-ColumnBinder-View-title: 0 12px;
@@ -1847,7 +1850,7 @@
 //----------------//
 @controls-Popup-animate-duration:         0.2s;
 @controls-Popup-stack-shadow:             -4px -8px 12px -4px rgba(0, 0, 0, 0.4);
-@controls-Popup-stack-shadow-padding:     5px;
+@controls-Popup-stack-shadow-padding:     8px;
 
 //-----------------//
 //  InfoBox   //

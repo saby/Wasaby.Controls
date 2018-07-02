@@ -59,7 +59,7 @@ class DropArea extends ResourceGetter {
         super (new DropAreaGetter(options || {}));
     }
     /**
-     * @description 
+     * @description
      * Тип геттера передается в метод choose File/Attach, чтобы указать каким способом(геттером) выбираются файлы
      * <pre>
      *   attach.choose(DropArea.getType()); // Получение файлов посредством Drag&Drop
