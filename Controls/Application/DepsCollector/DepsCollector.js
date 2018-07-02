@@ -80,6 +80,8 @@ define('Controls/Application/DepsCollector/DepsCollector', [
    }
 
    var DepsCollector = coreExtend.extend([], {
+
+
       /**
        * @param modDeps - object, contains all nodes of dependency tree
        * @param modInfo - contains info about path to module files

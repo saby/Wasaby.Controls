@@ -31,7 +31,7 @@ define('Controls/Application/HeadDataContext', [
          this.waiterDef = def;
          this.waiterDef.addCallback(function() {
             var components = Object.keys(self.depComponentsMap);
-            if(cookie.get('s3debug') !== 'true' && contents.buildMode !== 'debug') {
+            if (cookie.get('s3debug') !== 'true' && contents.buildMode !== 'debug') {
                var files = depsCollector.collectDependencies(components);
                self.jsLinks = files.js;
                self.cssLinks = files.css;
