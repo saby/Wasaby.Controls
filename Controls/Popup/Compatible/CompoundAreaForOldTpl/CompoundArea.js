@@ -10,6 +10,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/Deferred',
       'Core/IoC',
       'Core/EventObject',
+      'Core/helpers/Hcontrol/doAutofocus',
       'Core/helpers/Function/runDelayed',
       'Lib/Control/AreaAbstract/AreaAbstract.compatible',
       'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
@@ -28,6 +29,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       cDeferred,
       IoC,
       EventObject,
+      doAutofocus,
       runDelayed,
       AreaAbstract) {
 
@@ -194,6 +196,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   self._createCompoundControl(self.templateOptions, result[0]);
                   self.handle('onBeforeShow');
                   self.handle('onShow');
+                  doAutofocus(self._compoundControl._container);
                   self._logicParent.callbackCreated && self._logicParent.callbackCreated();
                }).addErrback(function(e) {
                   IoC.resolve('ILogger').error('CompoundArea', 'Шаблон "' + self._options.template + '" не смог быть загружен!');
