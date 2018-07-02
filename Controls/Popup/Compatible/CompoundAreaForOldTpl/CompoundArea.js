@@ -189,11 +189,30 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             templateOptions.parent = this;
             this._compoundControl = new (Component)(templateOptions);
             this._subscribeToCommand();
+            this._setCustomHeader();
             this.handle('onAfterLoad');
             this.handle('onInitComplete');
             this.handle('onAfterShow'); // todo здесь надо звать хэндлер который пытается подписаться на onAfterShow, попробуй подключить FormController и словить подпись
             this._compoundControl.setActive(true);
          },
+
+         _setCustomHeader: function() {
+            var hasHeader = !!this._options.caption;
+            var customHeaderContainer = this._compoundControl.getContainer().find('.ws-window-titlebar-custom');
+            if (hasHeader) {
+               if (customHeaderContainer.length) {
+                  customHeaderContainer.prepend('<div class="ws-float-area-title">' + this._options.caption + '</div>');
+               }
+               else {
+                  this.getContainer().prepend($('<div class="ws-window-titlebar"><div class="ws-float-area-title ws-float-area-title-generated">' + this._options.caption + '</div></div>'));
+                  this.getContainer().addClass('controls-CompoundArea-headerPadding');
+               }
+            }
+            else {
+               this.getContainer().removeClass('controls-CompoundArea-headerPadding');
+            }
+         },
+
          _subscribeToCommand: function() {
             this._compoundControl.subscribe('onCommandCatch', this._commandHandler);
          },
