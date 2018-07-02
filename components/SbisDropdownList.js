@@ -139,6 +139,9 @@ define('SBIS3.CONTROLS/SbisDropdownList',
             var id = SbisDropdownList.superclass.getDefaultId.call(this, (this._historyController && this._historyController.getOldItems()));
             return (this._historyController && this._historyController.getOriginId(id)) || id;
          },
+         //Метод надо перебить, т.к. в историческом выпдающем списке могут содержаться записи,
+         //которых нет в текущем наборе данных
+         _removeOldKeysCallback: function() {},
 
          destroy: function() {
             SbisDropdownList.superclass.destroy.apply(this, arguments);
