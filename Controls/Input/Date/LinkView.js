@@ -31,7 +31,7 @@ define('Controls/Input/Date/LinkView', [
     */
 
    var _private = {
-      _updateEnabled(self, readOnly) {
+      _updateEnabled: function(self, readOnly) {
          if (self._options === readOnly) {
             return;
          }
@@ -42,7 +42,7 @@ define('Controls/Input/Date/LinkView', [
          self._valueEnabledClass += readOnly ? 'disabled' : 'enabled';
       },
 
-      _updateCaption(self, options) {
+      _updateCaption: function(self, options) {
          var opt = options || self._options;
 
          self._caption = _private._getCaption(
@@ -62,7 +62,7 @@ define('Controls/Input/Date/LinkView', [
                fullNameOfMonth: true,
                contractToQuarter: true,
                contractToHalfYear: true,
-               emptyPeriodTitle: emptyCaption ? emptyCaption : '\xA0'
+               emptyPeriodTitle: emptyCaption || '\xA0'
             }
          );
       }
@@ -86,7 +86,6 @@ define('Controls/Input/Date/LinkView', [
          this._rangeModel.update(options);
          _private._updateCaption(this, options);
          _private._updateEnabled(this, options.readOnly);
-
       },
 
       _beforeUpdate: function(options) {

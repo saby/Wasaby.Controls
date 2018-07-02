@@ -1,6 +1,7 @@
 define('Controls/Calendar/MonthView', [
    'Core/Control',
    'Core/core-merge',
+   'Core/helpers/Date/format',
    'Controls/Calendar/Utils',
    'Controls/Calendar/MonthView/MonthViewModel',
    'Controls/Utils/Date',
@@ -13,6 +14,7 @@ define('Controls/Calendar/MonthView', [
 ], function(
    BaseControl,
    coreMerge,
+   formatDate,
    calendarUtils,
    MonthViewModel,
    DateUtil,
@@ -40,12 +42,12 @@ define('Controls/Calendar/MonthView', [
 
    var _private = {
       _updateView: function(self, options) {
-         var newMonth = DateUtil.valueToDate(options.month) || new Date();
+         var newMonth = options.month || new Date();
 
          // localization can change in runtime, take the actual translation of the months each time the component
          // is initialized. In the array, the days of the week are in the same order as the return values
          // of the Date.prototype.getDay () method.  Moving the resurrection from the beginning of the array to the end.
-         this._days = calendarUtils.getWeekdaysCaptions();
+         self._days = calendarUtils.getWeekdaysCaptions();
 
          if (!DateUtil.isDatesEqual(newMonth, self._month)) {
             self._month = newMonth;
@@ -53,8 +55,8 @@ define('Controls/Calendar/MonthView', [
                self._caption = formatDate(self._month, options.captionFormat);
             }
          }
-         this._month = DateUtil.normalizeMonth(this._month);
-         this._showWeekdays = options.showWeekdays;
+         self._month = DateUtil.normalizeMonth(self._month);
+         self._showWeekdays = options.showWeekdays;
       },
    };
 
@@ -80,7 +82,7 @@ define('Controls/Calendar/MonthView', [
          }
 
          _private._updateView(this, options);
-         this._monthViewModel = options.monthViewModel ? new options.monthViewModel(options) :  new MonthViewModel(options);
+         this._monthViewModel = options.monthViewModel ? new options.monthViewModel(options) : new MonthViewModel(options);
       },
 
       _beforeUpdate: function(newOptions) {
