@@ -1918,6 +1918,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         if (imgOptsPanel && imgOptsPanel.isVisible()) {
                            var $img = imgOptsPanel.getTarget();
                            if ($img && $img.length) {
+                              this._markListWithImage($img, false);
                               var selection = editor.selection;
                               selection.select($img[0]);
                               selection.getRng().deleteContents();
@@ -2185,6 +2186,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      if (target === this._firefoxDragndropTarget) {
                         var parent = target.parentNode;
                         if (parent) {
+                           self._markListWithImage($(target), false);
                            parent.removeChild(target);
                         }
                         this._firefoxDragndropTarget = null;
@@ -2609,6 +2611,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                switch (template) {
                   case '1':
                      $img.addClass('image-template-left');
+                     this._markListWithImage($img, true);
                      break;
                   case '2':
                      //todo: go to tmpl
@@ -2626,6 +2629,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      editor.dom.split($parent[0], $img[0], fragment);
                      var newPic = fragment.firstChild;
                      editor.selection.select(newPic);
+                     this._markListWithImage($(newPic), false);
                      imageOptionsPanel.hide();
                      this._showImageOptionsPanel($(newPic));
                      canRecalc = false;
@@ -2703,6 +2707,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         nodeForDelete = nodeForSelect;
                         nodeForSelect = nodeForDelete.parentNode;
                      }
+                     self._markListWithImage($(nodeForDelete), false);
                      $(nodeForDelete).remove();
                      //Проблема:
                      //          После удаления изображения необходимо вернуть фокус в редактор,
@@ -3209,6 +3214,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      '></img>' +
                      (after || '')
                   );
+                  if (className === 'image-template-left') {
+                     var node = editor.selection.getRng().commonAncestorContainer;
+                     this._markListWithImage($(node.nodeType == 3 ? node.parentNode : node).find('img'), true);
+                  }
                   promise.callback();
                }.bind(this);
                img.onerror = function () {
@@ -3217,6 +3226,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }.bind(this);
                img.src = src;
                return promise;
+            },
+
+            _markListWithImage: function ($img, isOn) {
+               if ($img.length) {
+                  if (isOn) {
+                     $img.closest('ol,ul').addClass('has-img-left');
+                  }
+                  else {
+                     $img.closest('ol.has-img-left,ul.has-img-left').removeClass('has-img-left');
+                  }
+               }
             },
 
             _showImgError: function () {
@@ -3453,6 +3473,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                  'additionalText',
                                  'controls-RichEditor__noneditable',
                                  'without-margin',
+                                 'has-img-left',
                                  'image-template-left',
                                  'image-template-center',
                                  'image-template-right',
