@@ -14,16 +14,16 @@ define('Controls/Controllers/Multiselect/Strategy/Hierarchy/PartialData', [
             items = options.items,
             isParentSelected = this.isParentSelected(rootId, selectedKeys, excludedKeys, items),
             childrenIds = this.getChildrenIds(rootId, items),
-            allChildrenSelected = true;
+            hasExcludedChildren = false;
 
          for (var i = 0; i < childrenIds.length; i++) {
             if (excludedKeys.indexOf(childrenIds[i]) !== -1) {
-               allChildrenSelected = false;
+               hasExcludedChildren = true;
                break;
             }
          }
 
-         return (isParentSelected || selectedKeys.indexOf(rootId) !== -1) && allChildrenSelected;
+         return (isParentSelected || selectedKeys.indexOf(rootId) !== -1) && !hasExcludedChildren;
       }
    });
 

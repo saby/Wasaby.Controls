@@ -12,17 +12,18 @@ define('Controls/Controllers/Multiselect/Strategy/Hierarchy/AllData', [
             selectedKeys = options.selectedKeys,
             excludedKeys = options.excludedKeys,
             items = options.items,
-            allChildrenSelected = true,
+            hasExcludedChildren = false,
             selectedChildrenCount = this.getSelectedChildrenCount(rootId, selectedKeys, excludedKeys, items),
             childrenIds = this.getChildrenIds(rootId, items);
 
          for (var i = 0; i < childrenIds.length; i++) {
             if (excludedKeys.indexOf(childrenIds[i]) !== -1) {
-               allChildrenSelected = false;
+               hasExcludedChildren = true;
                break;
             }
          }
-         return (selectedKeys.indexOf(rootId) !== -1 || selectedChildrenCount === childrenIds.length) && allChildrenSelected;
+
+         return (selectedKeys.indexOf(rootId) !== -1 || selectedChildrenCount === childrenIds.length) && !hasExcludedChildren;
       }
    });
 

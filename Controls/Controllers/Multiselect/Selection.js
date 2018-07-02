@@ -5,14 +5,12 @@ define('Controls/Controllers/Multiselect/Selection', [
    'Controls/Utils/ArraySimpleValuesUtil',
 
    //TODO: подгружать асинхронно
-   'Controls/Controllers/Multiselect/Strategy/Simple/AllData',
-   'Controls/Controllers/Multiselect/Strategy/Simple/PartialData'
+   'Controls/Controllers/Multiselect/Strategy/Simple/Base'
 ], function(
    cExtend,
    cClone,
    ArraySimpleValuesUtil,
-   AllData,
-   PartialData
+   BaseStrategy
 ) {
    'use strict';
 
@@ -37,10 +35,12 @@ define('Controls/Controllers/Multiselect/Selection', [
 
          //TODO: нужно кидать исключение, если нет items
          this._items = cClone(options.items);
-         this._strategy = options.strategy === 'allData' ? new AllData(options) : new PartialData(options);
+
+         //Для плоского списка стратегии allData и partialData не различаются ничем
+         this._strategy = new BaseStrategy(options);
 
          //excluded keys имеют смысл только когда выделено все, поэтому ситуацию, когда переданы оба массива считаем ошибочной
-         if (options.excludedKeys.length && !this._strategy.isAllChildrenSelected(this._getParamsForIsAllChildrenSelected())) {
+         if (options.excludedKeys.length && !this._strategy.isAllSelection(this._getParams())) {
             //TODO возможно надо кинуть здесь исключение
          }
 
@@ -48,7 +48,7 @@ define('Controls/Controllers/Multiselect/Selection', [
       },
 
       select: function(keys) {
-         if (this._strategy.isAllChildrenSelected(this._getParamsForIsAllChildrenSelected())) {
+         if (this._strategy.isAllSelection(this._getParams())) {
             ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, keys);
          } else {
             ArraySimpleValuesUtil.addSubArray(this._selectedKeys, keys);
@@ -56,7 +56,7 @@ define('Controls/Controllers/Multiselect/Selection', [
       },
 
       unselect: function(keys) {
-         if (this._strategy.isAllChildrenSelected(this._getParamsForIsAllChildrenSelected())) {
+         if (this._strategy.isAllSelection(this._getParams())) {
             ArraySimpleValuesUtil.addSubArray(this._excludedKeys, keys);
          } else {
             ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, keys);
@@ -76,7 +76,7 @@ define('Controls/Controllers/Multiselect/Selection', [
       toggleAll: function() {
          var swap;
 
-         if (this._strategy.isAllChildrenSelected(this._getParamsForIsAllChildrenSelected())) {
+         if (this._strategy.isAllSelection(this._getParams())) {
             swap = cClone(this._excludedKeys);
             this.unselectAll();
             this.select(swap);
@@ -99,7 +99,7 @@ define('Controls/Controllers/Multiselect/Selection', [
       },
 
       getSelectionStatus: function(key) {
-         if (this._excludedKeys.indexOf(key) === -1 && this._strategy.isAllSelection(this._getParamsForIsAllChildrenSelected())) {
+         if (this._excludedKeys.indexOf(key) === -1 && this._strategy.isAllSelection(this._getParams())) {
             return SELECTION_STATUS.SELECTED;
          } else if (this._selectedKeys.indexOf(key) !== -1) {
             return SELECTION_STATUS.SELECTED;
@@ -112,7 +112,7 @@ define('Controls/Controllers/Multiselect/Selection', [
          return this._strategy.getCount(this._selectedKeys, this._excludedKeys, this._items);
       },
 
-      _getParamsForIsAllChildrenSelected: function() {
+      _getParams: function() {
          return {
             selectedKeys: this._selectedKeys,
             excludedKeys: this._excludedKeys,

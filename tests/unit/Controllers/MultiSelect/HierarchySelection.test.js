@@ -165,6 +165,27 @@ define([
                assert.deepEqual([], selection.excluded);
                assert.equal(3, selectionInstance.getCount());
             });
+
+            it('select previously excluded child', function() {
+               cfg = {
+                  selectedKeys: [null],
+                  excludedKeys: [2, 5],
+                  items: allData
+               };
+               selectionInstance = new HierarchySelection(cfg);
+               selection = selectionInstance.getSelection();
+               assert.deepEqual([null], selection.selected);
+               assert.deepEqual([2, 5], selection.excluded);
+               assert.equal(3, selectionInstance.getCount());
+               selectionInstance.select([2]);
+               assert.deepEqual([null], selection.selected);
+               assert.deepEqual([5], selection.excluded);
+               assert.equal(6, selectionInstance.getCount());
+               selectionInstance.select([5]);
+               assert.deepEqual([null], selection.selected);
+               assert.deepEqual([], selection.excluded);
+               assert.equal(7, selectionInstance.getCount());
+            });
          });
 
          describe('allData', function() {
@@ -247,6 +268,28 @@ define([
                assert.deepEqual([], selection.excluded);
                selectionInstance.select([null]);
                selection = selectionInstance.getSelection();
+               assert.deepEqual([null], selection.selected);
+               assert.deepEqual([], selection.excluded);
+               assert.equal(7, selectionInstance.getCount());
+            });
+
+            it('select previously excluded child', function() {
+               cfg = {
+                  selectedKeys: [null],
+                  excludedKeys: [2, 5],
+                  items: allData,
+                  strategy: 'allData'
+               };
+               selectionInstance = new HierarchySelection(cfg);
+               selection = selectionInstance.getSelection();
+               assert.deepEqual([null], selection.selected);
+               assert.deepEqual([2, 5], selection.excluded);
+               assert.equal(3, selectionInstance.getCount());
+               selectionInstance.select([2]);
+               assert.deepEqual([null], selection.selected);
+               assert.deepEqual([5], selection.excluded);
+               assert.equal(6, selectionInstance.getCount());
+               selectionInstance.select([5]);
                assert.deepEqual([null], selection.selected);
                assert.deepEqual([], selection.excluded);
                assert.equal(7, selectionInstance.getCount());

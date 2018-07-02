@@ -28,7 +28,6 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
       _hierarchyRelation: null,
 
       constructor: function(options) {
-         //TODO: вроде неплохо бы почистить ключи, на всякий случай
          HierarchySelection.superclass.constructor.apply(this, arguments);
 
          this._strategy = options.strategy === 'allData' ? new AllData(options) : new PartialData(options);
@@ -42,16 +41,17 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
       },
 
       select: function(keys) {
-         // 1) Безусловно удаляем все ключи из excludedKeys
-         // 2) Безусловно добавляем все ключи в selectedKeys
-         // 3) Для каждого ключа получаем всех детей и удаляем их из обоих массивов
-         // 4) Для каждого ключа бежим по всем родителям, если в них выделены все записи, то сносим всех детей из selectedKeys, добавляем туда родителя
+         // 1) Удаляем все ключи из excludedKeys, если они там есть. Если их там нет, то добавляем в selectedKeys
+         // 2) Для каждого ключа получаем всех детей и удаляем их из обоих массивов
+         // 3) Для каждого ключа бежим по всем родителям, если в них выделены все записи, то сносим всех детей из selectedKeys, добавляем туда родителя
          var childrenIds, parent, parentId;
 
-         ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, keys);
-         ArraySimpleValuesUtil.addSubArray(this._selectedKeys, keys);
-
          keys.forEach(function(key) {
+            if (this._excludedKeys.indexOf(key) !== -1) {
+               ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, keys);
+            } else {
+               ArraySimpleValuesUtil.addSubArray(this._selectedKeys, keys);
+            }
             childrenIds = this._strategy.getChildrenIds(key, this._items);
             ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, childrenIds);
             ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, childrenIds);
@@ -59,7 +59,7 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
             parent = key === null ? null : this._hierarchyRelation.getParent(key, this._items);
             while (parent) {
                parentId = parent.getId();
-               if (this._strategy.isAllChildrenSelected(this._getParamsForIsAllChildrenSelected(parentId))) {
+               if (this._strategy.isAllChildrenSelected(this._getParams(parentId))) {
                   childrenIds = this._strategy.getChildrenIds(parentId, this._items);
                   ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, childrenIds.concat(key));
                   ArraySimpleValuesUtil.addSubArray(this._selectedKeys, [parentId]);
@@ -70,7 +70,7 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
                }
             }
             if (parent === null) {
-               if (this._strategy.isAllChildrenSelected(this._getParamsForIsAllChildrenSelected(null))) {
+               if (this._strategy.isAllChildrenSelected(this._getParams(null))) {
                   childrenIds = this._strategy.getChildrenIds(null, this._items);
                   ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, childrenIds.concat(key));
                   ArraySimpleValuesUtil.addSubArray(this._selectedKeys, [null]);
@@ -97,7 +97,7 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
             parent = key === null ? null : this._hierarchyRelation.getParent(key, this._items);
             while (parent) {
                parentId = parent.getId();
-               if (this._strategy.isAllSelection(this._getParamsForIsAllChildrenSelected(parentId))) {
+               if (this._strategy.isAllSelection(this._getParams(parentId))) {
                   ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [key]);
                   if (this._strategy instanceof AllData) {
                      if (!this._strategy.getSelectedChildrenCount(parentId, this._selectedKeys, this._excludedKeys, this._items)) {
@@ -110,7 +110,7 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
                }
                parent = this._hierarchyRelation.getParent(parentId, this._items);
             }
-            if (parent === null && this._strategy.isAllSelection(this._getParamsForIsAllChildrenSelected(null))) {
+            if (parent === null && this._strategy.isAllSelection(this._getParams(null))) {
                ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [key]);
                if (this._strategy instanceof AllData) {
                   if (!this._strategy.getSelectedChildrenCount(null, this._selectedKeys, this._excludedKeys, this._items)) {
@@ -136,25 +136,15 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
             1) Он есть в selectedKeys
             2) Выделен его родитель и листа нет в excludedKeys
           */
-         //TODO: опять сложно получилось
-         var
-            hasExcludedChildren = true,
-            hasSelectedChildren = false;
+         var hasExcludedChildren = false;
          if (key === null || this._hierarchyRelation.isNode(this._items.getRecordById(key), this._items)) {
             this._strategy.getChildrenIds(key, this._items).forEach(function(childId) {
                if (this._excludedKeys.indexOf(childId) !== -1) {
-                  //TODO: как-то я здесь упоролся
-                  hasExcludedChildren = false;
-               }
-               if (this._selectedKeys.indexOf(childId) !== -1) {
-                  hasSelectedChildren = true;
+                  hasExcludedChildren = true;
                }
             }.bind(this));
             if (this._selectedKeys.indexOf(key) !== -1 || (this._excludedKeys.indexOf(key) === -1 && this._strategy.isParentSelected(key, this._selectedKeys, this._excludedKeys, this._items))) {
-               return hasExcludedChildren ? HierarchySelection.SELECTION_STATUS.SELECTED : HierarchySelection.SELECTION_STATUS.PARTIALLY_SELECTED;
-            }
-            if (hasSelectedChildren) {
-               return HierarchySelection.SELECTION_STATUS.PARTIALLY_SELECTED;
+               return hasExcludedChildren ? HierarchySelection.SELECTION_STATUS.PARTIALLY_SELECTED : HierarchySelection.SELECTION_STATUS.SELECTED;
             }
          } else {
             if (this._selectedKeys.indexOf(key) !== -1 || this._excludedKeys.indexOf(key) === -1 && this._strategy.isParentSelected(key, this._selectedKeys, this._excludedKeys, this._items)) {
@@ -165,8 +155,8 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
          return HierarchySelection.SELECTION_STATUS.NOT_SELECTED;
       },
 
-      _getParamsForIsAllChildrenSelected: function(rootId) {
-         var params = HierarchySelection.superclass._getParamsForIsAllChildrenSelected.apply(this, arguments);
+      _getParams: function(rootId) {
+         var params = HierarchySelection.superclass._getParams.apply(this, arguments);
          params.rootId = rootId ? rootId : null;
          return params;
       }
