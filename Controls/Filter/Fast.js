@@ -123,7 +123,7 @@ define('Controls/Filter/Fast',
             Chain(filters).each(function(filter) {
                width += filter.offsetWidth;
             });
-            self._notify('resize', [{fastFilter : width}]);
+            self._notify('resize', [{fastFilter: width}]);
          }
       };
 
