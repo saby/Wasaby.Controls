@@ -1,12 +1,11 @@
 define('Controls/Popup/Previewer/OpenerTemplate',
    [
       'Core/Control',
-      'Core/Deferred',
       'tmpl!Controls/Popup/Previewer/OpenerTemplate',
 
       'Controls/Container/Async'
    ],
-   function(Control, Deferred, template) {
+   function(Control, template) {
 
       'use strict';
 
