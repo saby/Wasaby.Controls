@@ -192,11 +192,11 @@ define('Controls/Popup/Compatible/Layer', [
    function finishLoad(loadDeferred, result) {
       moduleStubs.require(['Core/core-extensions', 'cdn!jquery-cookie/04-04-2014/jquery-cookie-min.js']).addCallbacks(function() {
          loadDeferred.callback(result);
-         require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer']);
+         require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!SBIS3.ENGINE/Controls/MiniCard']);
       }, function(e) {
          IoC.resolve('ILogger').error('Layer', 'Can\'t load core extensions', e);
          loadDeferred.callback(result);
-         require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer']);
+         require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!SBIS3.ENGINE/Controls/MiniCard']);
       });
    }
 

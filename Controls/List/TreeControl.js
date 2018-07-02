@@ -10,7 +10,7 @@ define('Controls/List/TreeControl', [
    var _private = {
       toggleExpanded: function(self, dispItem) {
          var
-            filter = cClone(self._filter || {}),
+            filter = cClone(self._options.filter),
             listViewModel = self._children.baseControl.getViewModel(),
             nodeKey = ItemsUtil.getPropertyValue(dispItem.getContents(), self._options.viewConfig.keyProperty);
          if (!self._loadedNodes[nodeKey]) {
@@ -75,7 +75,8 @@ define('Controls/List/TreeControl', [
 
    TreeControl.getDefaultOptions = function() {
       return {
-         uniqueKeys: true
+         uniqueKeys: true,
+         filter: {}
       };
    };
 

@@ -153,6 +153,7 @@ define('Controls/Filter/Button/OldPanelOpener',
             declareCmd('reset-filter', this._resetFilter.bind(this, false));
             declareCmd('show-filter', showPicker);
             declareCmd('change-field-internal', this._changeFieldInternal.bind(this));
+            declareCmd('close', this.hidePicker.bind(this));
          },
    
          _modifyOptions: function() {

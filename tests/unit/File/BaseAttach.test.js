@@ -266,7 +266,7 @@ define([
             });
          });
 
-         describe('onChoose event', function () {
+         describe('onChosen event', function () {
             var attach = new BaseAttach();
             var localLink = GetResources(LocalFileLink);
             var getter = new IResourceGetter({
@@ -277,7 +277,7 @@ define([
             attach.registerGetter(getter);
 
             it('Выбор ресурса', function (done) {
-               attach.subscribe('onChoose', function (event, chosenFile) {
+               attach.subscribe('onChosen', function (event, chosenFile) {
                   assert.deepEqual(localLink, chosenFile);
                   done();
                });
@@ -285,7 +285,7 @@ define([
             });
          });
 
-         describe('onChoose event (setResult Error)', function () {
+         describe('onChosen event (setResult Error)', function () {
             var attach = new BaseAttach();
             var localLink = GetResources(LocalFileLink);
             var getter = new IResourceGetter({
@@ -294,7 +294,7 @@ define([
             });
 
             attach.registerGetter(getter);
-            attach.subscribe('onChoose', function (event, chosenFile) {
+            attach.subscribe('onChosen', function (event, chosenFile) {
                event.setResult(new Error('Ошибка'));
             });
 
@@ -306,7 +306,7 @@ define([
             });
          });
 
-         describe('onChoose event (setResult LocalFile)', function () {
+         describe('onChosen event (setResult LocalFile)', function () {
             var attach = new BaseAttach();
             var localLink = GetResources(LocalFileLink);
             var localFile = GetResources(LocalFile);
@@ -316,7 +316,7 @@ define([
             });
 
             attach.registerGetter(getter);
-            attach.subscribe('onChoose', function (event, chosenFile) {
+            attach.subscribe('onChosen', function (event, chosenFile) {
                event.setResult(localFile);
             });
 
@@ -328,7 +328,7 @@ define([
             });
          });
 
-         describe('onChoose event (setResult Deferred<LocalFile>)', function () {
+         describe('onChosen event (setResult Deferred<LocalFile>)', function () {
             var attach = new BaseAttach();
             var localLink = GetResources(LocalFileLink);
             var localFile = GetResources(LocalFile);
@@ -338,7 +338,7 @@ define([
             });
 
             attach.registerGetter(getter);
-            attach.subscribe('onChoose', function (event, chosenFile) {
+            attach.subscribe('onChosen', function (event, chosenFile) {
                event.setResult(new Deferred().callback(localFile));
             });
 

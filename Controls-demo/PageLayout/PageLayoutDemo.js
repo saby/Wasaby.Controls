@@ -1,5 +1,3 @@
-
-
 define('Controls-demo/PageLayout/PageLayoutDemo', [
    'Core/Control',
    'tmpl!Controls-demo/PageLayout/PageLayoutDemo',

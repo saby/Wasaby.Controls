@@ -461,7 +461,6 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
             this._editArrow = new IconButton({
                element: this._container.find('> .controls-TreeView__editArrow-container'),
                icon: 'icon-View icon-size',
-               cssClassName: 'ws-hidden',
                parent: this,
                allowChangeEnable: false,
                handlers: {
@@ -472,7 +471,11 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
                   }
                }
             });
+            //Т.к. базовый контрол снимает класс ws-hidden, а нам надо, чтобы изначально стрелка была скрыта.
+            //А если её создавать скрытой, а потом показывать, вызывается лишний resize
+            this._hideEditArrow();
          }
+
          return this._editArrow;
       },
 

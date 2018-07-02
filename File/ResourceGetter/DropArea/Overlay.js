@@ -1,6 +1,6 @@
 /// <amd-module name="File/ResourceGetter/DropArea/Overlay" />
 /// <amd-dependency path="css!File/ResourceGetter/DropArea/Overlay" />
-define("File/ResourceGetter/DropArea/Overlay", ["require", "exports", "Core/helpers/random-helpers", "css!File/ResourceGetter/DropArea/Overlay"], function (require, exports, random) {
+define("File/ResourceGetter/DropArea/Overlay", ["require", "exports", "Core/helpers/createGUID", "css!File/ResourceGetter/DropArea/Overlay"], function (require, exports, createGUID) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var OVERLAY_ID_PREFIX = "DropArea-";
@@ -188,7 +188,7 @@ define("File/ResourceGetter/DropArea/Overlay", ["require", "exports", "Core/help
     };
     var Overlay = /** @class */ (function () {
         function Overlay(cfg) {
-            this.__uid = random.createGUID();
+            this.__uid = createGUID();
             var config = Object.assign({}, OPTION, cfg);
             if (!(config.element instanceof HTMLElement)) {
                 throw new Error('argument "element" must be extended of HTMLElement');

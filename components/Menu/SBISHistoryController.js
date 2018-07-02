@@ -603,6 +603,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
       },
 
       prepareRecordSet: function(record, idPrefix, history) {
+         record.setEventRaising(false, true);
          _private.addProperty(this, record, 'visible', 'boolean', true);
          _private.addProperty(this, record, 'pinned', 'boolean', false);
          _private.addProperty(this, record, 'historyItem', 'boolean', history);
@@ -617,6 +618,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
          });
 
          record.setIdProperty(_private.getHistoryId(this));
+         record.setEventRaising(true, true);
       },
 
       /**

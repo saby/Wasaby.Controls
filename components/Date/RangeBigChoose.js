@@ -11,7 +11,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
    'SBIS3.CONTROLS/Utils/ControlsValidators',
    "SBIS3.CONTROLS/Utils/DateUtil",
    'SBIS3.CONTROLS/Utils/DateControls',
-   "Core/helpers/event-helpers",
+   'Core/dom/wheel',
    'Core/helpers/Object/isEmpty',
    'SBIS3.CONTROLS/Date/RangeBigChoose/resources/Utils',
    "SBIS3.CONTROLS/Button",
@@ -42,7 +42,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
    ControlsValidators,
    DateUtil,
    DateControlsUtil,
-   eHelpers,
+   wheel,
    isEmpty,
    rangeBigChooseUtils
 ) {
@@ -284,8 +284,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
             this.getContainer().removeClass(css_classes.selectionProcessing);
          }.bind(this));
 
-         eHelpers.wheel(container.find('.controls-DateRangeBigChoose__months-month-picker'), this._onMonthPickerWheel.bind(this));
-         eHelpers.wheel(container.find('.controls-DateRangeBigChoose__dates-dates'), this._onDatesPickerWheel.bind(this));
+         wheel(container.find('.controls-DateRangeBigChoose__months-month-picker'), this._onMonthPickerWheel.bind(this));
+         wheel(container.find('.controls-DateRangeBigChoose__dates-dates'), this._onDatesPickerWheel.bind(this));
          // if (constants.browser.isMobileIOS) {
          //    container.find('.controls-DateRangeBigChoose__months-month-picker').on('swipeVertical', this._onMonthPickerSwipe.bind(this));
          //    container.find('.controls-DateRangeBigChoose__dates-dates').on('swipeVertical', this._onDatesPickerSwipe.bind(this));

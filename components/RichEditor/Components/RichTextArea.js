@@ -7,7 +7,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
       "Core/core-clone",
       "Core/Context",
       "Core/Indicator",
-      "Core/core-clone",
       "Core/CommandDispatcher",
       "Core/constants",
       "Core/Deferred",
@@ -36,7 +35,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
       cClone,
       cContext,
       cIndicator,
-      coreClone,
       CommandDispatcher,
       cConstants,
       Deferred,
@@ -1011,11 +1009,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   for (var i = 0; i < properties.length; i++) {
                      var prop = properties[i];
                      if (prop === 'fontsize') {
-                        formats[prop] = +editor.dom.getStyle(node, 'font-size', true).replace('px', '');//^^^+$node.css('font-size').replace('px', '')
+                        formats[prop] = +editor.dom.getStyle(node, 'font-size', true).replace('px', '');
                      }
                      else
                      if (prop === 'color') {
-                        var color = editor.dom.getStyle(node, 'color', true);//^^^$node.css('color')
+                        var color = editor.dom.getStyle(node, 'color', true);
                         formats[prop] = constants.colorsMap[color] || color;
                      }
                      else {
@@ -1074,6 +1072,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   if (!sameFont) {
                      this._setFontSize(formats.fontsize);
                   }
+                  var node = this._getCurrentFormatNode();
+                  if (this._applyTextDecorationUnderlineAndLinethrough(node, false) && !node.attributes.length) {
+                     var nodes = [].slice.call(node.childNodes);
+                     editor.$(nodes).unwrap();
+                     var last = nodes[nodes.length - 1];
+                     this._selectNewRng(nodes[0], 0, last, last[last.nodeType === 3 ? 'nodeValue' : 'innerHTML'].length);
+                  }
                   var hasOther;
                   for (var i = 0, names = ['bold', 'italic', 'underline', 'strikethrough']; i < names.length; i++) {
                      var name = names[i];
@@ -1086,6 +1091,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                   if (formats.color !== this.getCurrentFormats(['color']).color) {
                      formatter.apply('forecolor', {value:formats.color});
+                     if (formats.underline && formats.strikethrough) {
+                        this._applyTextDecorationUnderlineAndLinethrough(this._getCurrentFormatNode(), true);
+                     }
                      hasOther = true;
                   }
                   if (sameFont && !hasOther) {
@@ -1096,6 +1104,23 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      this._setFontSize(formats.fontsize);
                   }
                   this._updateTextByTiny();
+               }
+            },
+
+            _applyTextDecorationUnderlineAndLinethrough: function (node, isOn) {
+               var dom = this._tinyEditor.dom;
+               if (isOn) {
+                  dom.setStyle(node, 'text-decoration-line', 'underline line-through');
+                  return true;
+               }
+               else {
+                  if (dom.getStyle(node, 'text-decoration-line', false) === 'underline line-through') {
+                     dom.setStyle(node, {'text-decoration-line':'', 'text-decoration-style':'', 'text-decoration-color':''});
+                     if (!dom.getAttrib(node, 'style')) {
+                        node.removeAttribute('style');
+                     }
+                     return true;
+                  }
                }
             },
 
@@ -1319,7 +1344,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                var
                   editor = this._tinyEditor,
                   selection = editor.selection,
-                  range = coreClone(selection.getRng()),
+                  range = cClone(selection.getRng()),
                   element = selection.getNode(),
                   anchor = editor.dom.getParent(element, 'a[href]'),
                   origHref = anchor ? editor.dom.getAttrib(anchor, 'href') : '',
@@ -1893,6 +1918,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         if (imgOptsPanel && imgOptsPanel.isVisible()) {
                            var $img = imgOptsPanel.getTarget();
                            if ($img && $img.length) {
+                              this._markListWithImage($img, false);
                               var selection = editor.selection;
                               selection.select($img[0]);
                               selection.getRng().deleteContents();
@@ -2160,11 +2186,43 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      if (target === this._firefoxDragndropTarget) {
                         var parent = target.parentNode;
                         if (parent) {
+                           self._markListWithImage($(target), false);
                            parent.removeChild(target);
                         }
                         this._firefoxDragndropTarget = null;
                      }
                   });
+               }
+
+               if (BROWSER.isIE) {
+                  editor.on('dragstart', function (evt) {
+                     var target = evt.target;;
+                     if (target.nodeName === 'IMG') {
+                        this._msieDragndropTarget = target;
+                     }
+                  }.bind(this));
+
+                  editor.on('drop', function (mceEvent) {
+                     if (this._msieDragndropTarget) {
+                        var target = mceEvent.targetClone;
+                        if (target.nodeName === 'IMG' && target.src === this._msieDragndropTarget.src) {
+                           var node = editor.getDoc().elementFromPoint(mceEvent.clientX, mceEvent.clientY);
+                           var body = editor.getBody();
+                           var need = node === body || !body.contains(node);
+                           if (!need) {
+                              if (node.parentNode === body && node.contains(this._msieDragndropTarget)) {
+                                 var rng = editor.editorManager.dom.RangeUtils.getCaretRangeFromPoint(mceEvent.clientX, mceEvent.clientY, editor.getDoc());
+                                 need = !rng || !!rng.htmlText;
+                              }
+                           }
+                           if (need) {
+                              mceEvent.stopPropagation();
+                              mceEvent.preventDefault();
+                           }
+                        }
+                        this._msieDragndropTarget = null;
+                     }
+                  }.bind(this));
                }
 
                //БИНДЫ НА СОБЫТИЯ КЛАВИАТУРЫ (ВВОД)
@@ -2531,7 +2589,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   .addErrback(function (err) {
                      // Если это не cancel - показать сообщение об ошибке
                      if (!(err && err.canceled)) {
-                        this._showImgError();
+                        if (err.name === 'WrongFileType') {
+                           this._showImgError(rk('Не удалось загрузить файл'), err.message);
+                        } else {
+                           this._showImgError();
+                        }
                      }
                      return err;
                   }.bind(this));
@@ -2553,6 +2615,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                switch (template) {
                   case '1':
                      $img.addClass('image-template-left');
+                     this._markListWithImage($img, true);
                      break;
                   case '2':
                      //todo: go to tmpl
@@ -2570,6 +2633,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      editor.dom.split($parent[0], $img[0], fragment);
                      var newPic = fragment.firstChild;
                      editor.selection.select(newPic);
+                     this._markListWithImage($(newPic), false);
                      imageOptionsPanel.hide();
                      this._showImageOptionsPanel($(newPic));
                      canRecalc = false;
@@ -2647,6 +2711,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         nodeForDelete = nodeForSelect;
                         nodeForSelect = nodeForDelete.parentNode;
                      }
+                     self._markListWithImage($(nodeForDelete), false);
                      $(nodeForDelete).remove();
                      //Проблема:
                      //          После удаления изображения необходимо вернуть фокус в редактор,
@@ -3153,6 +3218,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      '></img>' +
                      (after || '')
                   );
+                  if (className === 'image-template-left') {
+                     var node = editor.selection.getRng().commonAncestorContainer;
+                     this._markListWithImage($(node.nodeType == 3 ? node.parentNode : node).find('img'), true);
+                  }
                   promise.callback();
                }.bind(this);
                img.onerror = function () {
@@ -3163,14 +3232,32 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                return promise;
             },
 
-            _showImgError: function () {
+            _markListWithImage: function ($img, isOn) {
+               if ($img.length) {
+                  if (isOn) {
+                     $img.closest('ol,ul').addClass('has-img-left');
+                  }
+                  else {
+                     $img.closest('ol.has-img-left,ul.has-img-left').removeClass('has-img-left');
+                  }
+               }
+            },
+
+            /**
+              * Показать пользователю сообщение об ошибке загрузки изображения
+              * @param {string} title заголовок сообщения
+              * @param {string} text текст сообщения
+              * @returns {Core/Deferred}
+              * @protected
+              */
+            _showImgError: function (title, text) {
                var promise = new Deferred();
                require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function (InformationPopupManager) {
                   InformationPopupManager.showMessageDialog({
                         status: 'error',
                         className: 'controls-RichEditor__insertImg-alert',
-                        message: rk('Ошибка'),
-                        details: rk('Невозможно открыть изображение'),
+                        message: title || rk('Ошибка'),
+                        details: text || rk('Невозможно открыть изображение'),
                         isModal: true,
                         closeByExternalClick: true,
                         opener: this
@@ -3397,6 +3484,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                  'additionalText',
                                  'controls-RichEditor__noneditable',
                                  'without-margin',
+                                 'has-img-left',
                                  'image-template-left',
                                  'image-template-center',
                                  'image-template-right',

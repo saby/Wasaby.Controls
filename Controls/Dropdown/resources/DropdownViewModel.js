@@ -4,14 +4,13 @@
 define('Controls/Dropdown/resources/DropdownViewModel',
    [
       'Controls/List/BaseViewModel',
-      'WS.Data/Chain',
       'Controls/List/resources/utils/ItemsUtil',
       'Controls/List/ItemsViewModel',
       'WS.Data/Entity/Model',
       'WS.Data/Relation/Hierarchy'
    ],
 
-   function(BaseViewModel, Chain, ItemsUtil, ItemsViewModel, Model, Hierarchy) {
+   function(BaseViewModel, ItemsUtil, ItemsViewModel, Model, Hierarchy) {
       var _private = {
          filterHierarchy: function(item) {
             if (!this._options.parentProperty || !this._options.nodeProperty) {
@@ -91,6 +90,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             itemsModelCurrent.hasParent = this._hasParent(itemsModelCurrent.item);
             itemsModelCurrent.isSelected = this._isItemSelected(itemsModelCurrent.item);
             itemsModelCurrent.icon = itemsModelCurrent.item.get('icon');
+            itemsModelCurrent.iconStyle = itemsModelCurrent.item.get('iconStyle');
             itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
             itemsModelCurrent.template = itemsModelCurrent.item.get(itemsModelCurrent.itemTemplateProperty);
             return itemsModelCurrent;

@@ -14,13 +14,13 @@ var removeInvalidXMLChars = function(valueStr) {
 };
 define('SBIS3.CONTROLS/Utils/DataSetToXmlSerializer', [
    "Transport/ReportPrinter",
-   'Core/helpers/unrelated-helpers',
+   'Core/helpers/axo',
    "Core/core-extend",
    "Core/constants",
    "Core/IoC",
    "Core/core-instance",
    "i18n!SBIS3.CONTROLS/Utils/DataSetToXmlSerializer"
-], function(cReportPrinter, uHelpers, cExtend, constants, IoC, cInstance) {
+], function(cReportPrinter, axo, cExtend, constants, IoC, cInstance) {
    return cExtend({}, {
 
       _complexFields: {
@@ -291,8 +291,8 @@ define('SBIS3.CONTROLS/Utils/DataSetToXmlSerializer', [
          if (document.implementation && document.implementation.createDocument)
             doc = document.implementation.createDocument("", "", null);
          // IE
-         if(uHelpers.axo) {
-            doc = uHelpers.axo(constants.IE_ACTIVEOBJECT_XML_PRINT_TYPE);
+         if(axo) {
+            doc = axo(constants.IE_ACTIVEOBJECT_XML_PRINT_TYPE);
          }
          return doc;
       }

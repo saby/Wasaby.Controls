@@ -180,6 +180,46 @@
 @width_DateRangeBigChoose-item-selectedStart-before:     1px;
 @margin_DateRangeBigChoose-picker:                       -11px 0 0 -39px;
 @margin_DateRangeBigChoose-picker-month-only:            -11px 0 0 -11px;
+
+// DateRangeLinkView
+@font-size_DateLinkView:                   15px;
+@font-weight_DateLinkView-value:           bold;
+@min-width_DateLinkView-value:             102px;
+@padding_DateLinkView-value:               1px;
+@width_DateLinkView-year-state:            81px;
+@height_DateLinkView:                      24px;
+@width_DateLinkView-prev-next-buttons:     24px;
+@font-size_DateLinkView-prev-next-buttons: 16px;
+
+// PeriodLiteDialog
+@indents_PeriodLiteDialog:                       4px;
+@border-width_PeriodLiteDialog_hovered:          1px;
+@font-size_PeriodLiteDialog:                     15px;
+@min-width_PeriodLiteDialog:                     176px;
+@standart-line-height_PeriodLiteDialog:          32px;
+@min-width_PeriodLiteDialog-item-years:          82px;
+@font-size_PeriodLiteDialog-currentValue:        15px;
+@font-weight_PeriodLiteDialog-currentValue:      bold;
+@height_PeriodLiteDialog-currentValue:           32px;
+@padding-left-right_PeriodLiteDialog-currentValue:  10px;
+@font-size_PeriodLiteDialog-year:                15px;
+@height_PeriodLiteDialog-year:                   @standart-line-height_PeriodLiteDialog;
+@padding-left_PeriodLiteDialog-year:             2px;
+@width_PeriodLiteDialog-year-prev-next-btns:     32px;
+@font-size_PeriodLiteDialog-year-prev-next-btns: 16px;
+@width_PeriodLiteDialog-home-icon:               24px;
+@width_PeriodLiteDialog-halfyear-caption:        30px;
+@margin_PeriodLiteDialog-quarter: 0 0 @indents_PeriodLiteDialog (@width_PeriodLiteDialog-halfyear-caption + @indents_PeriodLiteDialog);
+@width_PeriodLiteDialog-quarter-caption:         28px;
+@margin_PeriodLiteDialog-month:                  0 0 0 (@width_PeriodLiteDialog-quarter-caption + @indents_PeriodLiteDialog);
+@padding_PeriodLiteDialog-month:                 0 8px 0 8px;
+@right_PeriodLiteDialog-checkbox:                12px;
+@margin_PeriodLiteDialog-home-button:            0 auto 12px;
+
+// DateRangeLinkLite
+@margin-top_DateRangeLinkLite-normal:      -5px;
+@margin-top_DateRangeLinkLite-years:       @margin-top_DateRangeLinkLite-normal - @height_PeriodLiteDialog-year;
+
 //time-header:
 @time-header-icon-size:           @default-icon-size;
 //treeview
@@ -277,6 +317,7 @@
 @width_DropdownList-marker:     6px;
 @height_DropdownList-marker:    8px;
 @margin-top_DropdownList:       -8px;
+@margin-top_DropdownList-ff:    -7px;
 @margin-left_DropdownList:      -13px;
 @right_DropdownList-icon:       6px;
 @top_DropdownList-icon:         (@height_DropdownList-item - @menu-expand-height) / 2;

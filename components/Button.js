@@ -87,7 +87,8 @@ define('SBIS3.CONTROLS/Button',
                 * </pre>
                 */
                style: 'standard',
-               _svgIcon: null
+               _svgIcon: null,
+               emulateClickByTap: true
             }
          },
          _modifyOptions: function(options, parsedOptions, attrToMerge) {
