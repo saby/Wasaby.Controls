@@ -54,9 +54,6 @@ define("File/ResourceGetter/PhotoCam", ["require", "exports", "tslib", "File/Res
          */
         PhotoCam.prototype.getFiles = function () {
             var _this = this;
-            if (this.isDestroyed()) {
-                return Deferred.fail("Resource getter is destroyed");
-            }
             this._chooseDef = new Deferred().addBoth(function (result) {
                 _this._chooseDef = null;
                 return result;
