@@ -72,6 +72,7 @@ define('Controls-demo/List/Tree/Tree', [
    var
       ModuleClass = BaseControl.extend({
          _template: template,
+         _actionClicked: '',
          _itemsGroup: {
             method: function(item, index, displayItem) {
                return item.get('Группа');
@@ -97,8 +98,8 @@ define('Controls-demo/List/Tree/Tree', [
 
             return true;
          },
-         _onActionClick: function(event, action, item) {
-            console.log(arguments);
+         _onActionClick: function(event, action) {
+            this._actionClicked = action.title;
          },
 
          _itemActions: _firstItemActionsArray,

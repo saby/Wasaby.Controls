@@ -86,6 +86,13 @@
    margin-left: @margin-left_DropdownList;
 }
 
+//15 шрифт имеет нечетную высоту, из-за этого текст располагается не по центру
+// ff располагает текст выше, а Chrome ниже
+.ws-is-firefox .controls-DropdownList__margin {
+   margin-top: @margin-top_DropdownList-ff;
+   margin-left: @margin-left_DropdownList;
+}
+
 .controls-DropdownList__subMenu_margin {
    margin-top: @offset_DropdownList-submenu;
 }
@@ -165,4 +172,20 @@
 
 .controls-DropdownList__additional-button {
    cursor: pointer;
+}
+
+.controls-DropdownList__icon_style_default {
+   color: @color_Link-main-icon;
+}
+
+.controls-DropdownList__icon_style_attention {
+   color: @color-Icon_style_attention;
+}
+
+.controls-DropdownList__icon_style_error {
+   color: @color-Icon_style_error;
+}
+
+.controls-DropdownList__icon_style_done {
+   color: @color-Icon_style_done;
 }

@@ -992,6 +992,7 @@ define('SBIS3.CONTROLS/ListView',
                //включает плейсхолдер при перемещении записи мышкой, в 100 он работает только с плоскими списками,
                //опция будет удалена при реализации перемещения по новому стандарту
                useDragPlaceHolder: false,
+               scrollIndicatorStyle: 'default',
                //TODO коммент ниже
                task1173941879: false
             },

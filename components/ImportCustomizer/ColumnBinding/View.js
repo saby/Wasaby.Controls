@@ -203,15 +203,18 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                }
             }
             var grid = this._grid;
-            if (!has.mapping) {
-               options.mapping = {};
-            }
             if (has.rows || has.fields) {
+               if (!has.mapping && !('mapping' in values)) {
+                  options.mapping = {};
+               }
                var inf = this._makeUpdateInfo(options);
                grid.setColumns(inf.columns);
                grid.setItems(inf.rows);
             }
             else {
+               if (!has.mapping) {
+                  options.mapping = {};
+               }
                if (has.skippedRows) {
                   this._updateSkippedRows();
                }
