@@ -1,35 +1,35 @@
 <div class="controls-FilterButton" name="panelTarget">
-    <div class="controls-FilterButton__wrapper {{!_isChanged ? 'controls-FilterButton__wrapper-width'}}"
-    name="FilterWrapper">
-        <ws:if data="{{_text}}">
-            <div class="controls-FilterButton__text-wrapper controls-FilterButton__text-wrapper_state_{{_getFilterState()}}"
-                 on:click="_openFilterPanel()"
-            name="">
-                <ws:if data="{{_options.filterAlign === 'right'}}">
-                    <div class="controls-FilterButton__arrow controls-FilterButton__arrow_state_{{_getFilterState()}} icon-DayForward"></div>
-                </ws:if>
-                <div class="controls-FilterButton__text controls-FilterButton__text_state_{{_getFilterState()}}" title="{{_text}}">
-                    {{_text}}
-                </div>
-            </div>
-            <ws:if data="{{!_options.readOnly}}">
-                <div class="controls-FilterButton__clear icon-Close" on:click="_clearClick()"></div>
+   <div class="controls-FilterButton__wrapper {{!_isChanged ? 'controls-FilterButton__wrapper-width'}}">
+      <ws:if data="{{_text}}">
+         <div class="controls-FilterButton__text-wrapper controls-FilterButton__text-wrapper_state_{{_getFilterState()}}"
+              on:click="_openFilterPanel()"
+              name="filterText">
+            <ws:if data="{{_options.filterAlign === 'right'}}">
+               <div class="controls-FilterButton__arrow controls-FilterButton__arrow_state_{{_getFilterState()}} icon-DayForward"></div>
             </ws:if>
-        </ws:if>
-        <ws:if data="{{_options.spaceTemplate}}">
-            <div class="controls-FilterButton__space"></div>
-        </ws:if>
-        <div class="controls-FilterButton__icon controls-FilterButton__icon_{{_options.filterAlign}} controls-FilterButton__icon_state_{{_getFilterState()}} icon-FilterBig"
-             on:click="_openFilterPanel()">
-        </div>
-    </div>
-    <ws:if data="{{_options.filterTemplate}}">
-        <div class="controls-FilterButton__oldTemplate controls-FilterButton__oldTemplate_{{_options.filterAlign}}"></div>
-    </ws:if>
+            <div class="controls-FilterButton__text controls-FilterButton__text_state_{{_getFilterState()}}"
+                 title="{{_text}}">
+               {{_text}}
+            </div>
+         </div>
+         <ws:if data="{{!_options.readOnly}}">
+            <div class="controls-FilterButton__clear icon-Close" on:click="_clearClick()"></div>
+         </ws:if>
+      </ws:if>
+      <ws:if data="{{_options.spaceTemplate}}">
+         <div class="controls-FilterButton__space"></div>
+      </ws:if>
+      <div class="controls-FilterButton__icon controls-FilterButton__icon_{{_options.filterAlign}} controls-FilterButton__icon_state_{{_getFilterState()}} icon-FilterBig"
+           on:click="_openFilterPanel()">
+      </div>
+   </div>
+   <ws:if data="{{_options.filterTemplate}}">
+      <div class="controls-FilterButton__oldTemplate controls-FilterButton__oldTemplate_{{_options.filterAlign}}"></div>
+   </ws:if>
 
    <Controls.Popup.Opener.Sticky name="filterStickyOpener">
-       <ws:popupOptions  closeByExternalClick="{{true}}">
-           <ws:eventHandlers onResult="{{_onFilterChanged}}"/>
-       </ws:popupOptions>
+      <ws:popupOptions closeByExternalClick="{{true}}">
+         <ws:eventHandlers onResult="{{_onFilterChanged}}"/>
+      </ws:popupOptions>
    </Controls.Popup.Opener.Sticky>
 </div>

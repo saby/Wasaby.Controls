@@ -11,10 +11,10 @@ define('Controls/EngineBrowser', [
       _compress: 'default',
 
       onResize: function(event, width) {
-         if (width.fastFilter) {
+         if (width.fastFilter !== undefined) {
             this._widthFastFilter = width.fastFilter;
          }
-         if (width.filterButton) {
+         if (width.filterButton !== undefined) {
             this._widthFilterButton = width.filterButton;
          }
          if (this._widthFilterButton >=  this._children.filterWrapper.offsetWidth / 2) {
