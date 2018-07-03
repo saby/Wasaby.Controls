@@ -7,6 +7,7 @@ define('Controls/List/BaseControl', [
    'require',
    'Controls/List/Controllers/VirtualScroll',
    'Controls/Controllers/SourceController',
+   'Core/helpers/Object/isEqual',
    'Core/Deferred',
    'tmpl!Controls/List/BaseControl/multiSelect',
    'WS.Data/Collection/RecordSet',
@@ -23,6 +24,7 @@ define('Controls/List/BaseControl', [
    require,
    VirtualScroll,
    SourceController,
+   isEqualObject,
    Deferred,
    multiSelectTpl,
    RecordSet,
@@ -423,7 +425,7 @@ define('Controls/List/BaseControl', [
       },
 
       _beforeUpdate: function(newOptions) {
-         var filterChanged = newOptions.filter !== this._options.filter;
+         var filterChanged = !isEqualObject(newOptions.filter, this._options.filter);
          var sourceChanged = newOptions.source !== this._options.source;
 
          if (newOptions.viewModelConfig && (newOptions.viewModelConfig !== this._options.viewModelConfig)) {

@@ -3,11 +3,11 @@ define('Controls/Popup/Manager',
       'Core/Control',
       'tmpl!Controls/Popup/Manager/Manager',
       'Controls/Popup/Manager/ManagerController',
-      'Core/helpers/random-helpers',
+      'Core/helpers/Number/randomId',
       'WS.Data/Collection/List'
    ],
 
-   function(Control, template, ManagerController, Random, List) {
+   function(Control, template, ManagerController, randomId, List) {
       'use strict';
 
       var _private = {
@@ -107,7 +107,7 @@ define('Controls/Popup/Manager',
           */
          show: function(options, strategy) {
             var element = {
-               id: Random.randomId('popup-'),
+               id: randomId('popup-'),
                isModal: options.isModal,
                strategy: strategy,
                position: strategy.getDefaultPosition(),
