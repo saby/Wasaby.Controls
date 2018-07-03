@@ -19,7 +19,6 @@ define('Controls/Date/model/DateRange', [
     * @noShow
     */
    var ModuleClass = cExtend.extend([ObservableMixin, VersionableMixin], {
-      _options: null,
       _startValue: null,
       _endValue: null,
 

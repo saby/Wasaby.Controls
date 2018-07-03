@@ -57,7 +57,7 @@ define('Controls/Calendar/MonthView', [
          }
          self._month = DateUtil.normalizeMonth(self._month);
          self._showWeekdays = options.showWeekdays;
-      },
+      }
    };
 
    var MonthView = BaseControl.extend({
