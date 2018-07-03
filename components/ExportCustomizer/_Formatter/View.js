@@ -10,6 +10,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
       'Core/Deferred',
       'Core/helpers/Function/debounce',
       'SBIS3.CONTROLS/CompoundControl',
+      'SBIS3.CONTROLS/ExportCustomizer/Utils/CollectionSelectByIds',
       'SBIS3.CONTROLS/Utils/ObjectChange',
       'SBIS3.CONTROLS/WaitIndicator',
       'WS.Data/Collection/RecordSet',
@@ -18,7 +19,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
       'css!SBIS3.CONTROLS/ExportCustomizer/_Formatter/View'
    ],
 
-   function (Deferred, coreDebounce, CompoundControl, objectChange, WaitIndicator, RecordSet, Di, dotTplFn) {
+   function (Deferred, coreDebounce, CompoundControl, collectionSelectByIds, objectChange, WaitIndicator, RecordSet, Di, dotTplFn) {
       'use strict';
 
       /**
@@ -291,7 +292,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * return {Array<string>}
           */
          _getFieldTitles: function (fieldIds) {
-            return fieldIds && fieldIds.length ? this._selectFields(this._options.allFields, fieldIds, function (v) { return v.title; }) || [] : [];
+            return fieldIds && fieldIds.length ? collectionSelectByIds(this._options.allFields, fieldIds, function (v) { return v.title; }) || [] : [];
          },
 
          /**
@@ -319,37 +320,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                   promise.addCallback(this._callFormatterMethods.bind(this, methods.slice(1)));
                }
                return promise;
-            }
-         },
-
-         /**
-          * Выбрать из списка всех колонок только объекты согласно указанным идентификаторам. Если указана функция-преобразователь, то преобразовать с её помощью каждый полученный элемент списка
-          *
-          * @protected
-          * @param {Array<BrowserColumnInfo>|WS.Data/Collection/RecordSet<BrowserColumnInfo>} allFields Список объектов с информацией о всех колонках в формате, используемом в браузере
-          * @param {Array<string>} fieldIds Список привязки колонок в экспортируемом файле к полям данных
-          * @param {function} [mapper] Функция-преобразователь отобранных объектов (опционально)
-          * @return {Array<*>}
-          */
-         _selectFields: function (allFields, fieldIds, mapper) {
-            if (allFields && fieldIds && fieldIds.length) {
-               var isRecordSet = allFields instanceof RecordSet;
-               if (isRecordSet ? allFields.getCount() : allFields.length) {
-                  var needMap = typeof mapper === 'function';
-                  return fieldIds.map(function (id, i) {
-                     var field;
-                     if (!isRecordSet) {
-                        allFields.some(function (v) { if (v.id === id) { field = v; return true; } });
-                     }
-                     else {
-                        var model = allFields.getRecordById(id);
-                        if (model) {
-                           field = model.getRawData();
-                        }
-                     }
-                     return field && needMap ? mapper(field) : field;
-                  });
-               }
             }
          },
 

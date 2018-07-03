@@ -10,6 +10,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
       'Core/Deferred',
       'Core/helpers/Object/isEqual',
       'SBIS3.CONTROLS/CompoundControl',
+      'SBIS3.CONTROLS/ExportCustomizer/Utils/CollectionSelectByIds',
       'SBIS3.CONTROLS/Utils/ItemNamer',
       'SBIS3.CONTROLS/Utils/ObjectChange',
       'WS.Data/Collection/RecordSet',
@@ -20,7 +21,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
       'css!SBIS3.CONTROLS/ExportCustomizer/_Presets/View'
    ],
 
-   function (Deferred, cObjectIsEqual, CompoundControl, ItemNamer, objectChange, RecordSet, Di, dotTplFn) {
+   function (Deferred, cObjectIsEqual, CompoundControl, collectionSelectByIds, ItemNamer, objectChange, RecordSet, Di, dotTplFn) {
       'use strict';
 
       /**

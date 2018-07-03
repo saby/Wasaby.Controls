@@ -14,6 +14,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
       'Core/core-merge',
       'Core/Deferred',
       'SBIS3.CONTROLS/CompoundControl',
+      'SBIS3.CONTROLS/ExportCustomizer/Utils/CollectionSelectByIds',
       'SBIS3.CONTROLS/Utils/ImportExport/RemoteCall',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
       'WS.Data/Collection/RecordSet',
@@ -24,7 +25,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
       'SBIS3.CONTROLS/ScrollContainer'
    ],
 
-   function (CommandDispatcher, cMerge, Deferred, CompoundControl, RemoteCall, InformationPopupManager, RecordSet, Di, tmpl) {
+   function (CommandDispatcher, cMerge, Deferred, CompoundControl, collectionSelectByIds, RemoteCall, InformationPopupManager, RecordSet, Di, tmpl) {
       'use strict';
 
       /**
@@ -834,7 +835,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             var data = {
                serviceParams: options.serviceParams,
                fieldIds: options.fieldIds,
-               columnTitles: this._selectFields(options.allFields, options.fieldIds, function (v) { return v.title; }),
+               columnTitles: collectionSelectByIds(options.allFields, options.fieldIds, function (v) { return v.title; }) || [],
                fileUuid: options.fileUuid || null,//Если значначение пусто, значит стилевого эксель-файла нет. БЛ в таком случае безальтернативно требует значения null
                canDeleteFile: this._isEditMode || null
             };
@@ -848,37 +849,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   // Вернуть сразу
                   Deferred.success(data);
          },
-
-         /**
-          * Выбрать из списка всех колонок только объекты согласно указанным идентификаторам. Если указана функция-преобразователь, то преобразовать с её помощью каждый полученный элемент списка
-          *
-          * @protected
-          * @param {Array<BrowserColumnInfo>|WS.Data/Collection/RecordSet<BrowserColumnInfo>} allFields Список объектов с информацией о всех колонках в формате, используемом в браузере
-          * @param {Array<string>} fieldIds Список привязки колонок в экспортируемом файле к полям данных
-          * @param {function} [mapper] Функция-преобразователь отобранных объектов (опционально)
-          * @return {Array<*>}
-          */
-         _selectFields: function (allFields, fieldIds, mapper) {
-            if (allFields && fieldIds && fieldIds.length) {
-               var isRecordSet = allFields instanceof RecordSet;
-               if (isRecordSet ? allFields.getCount() : allFields.length) {
-                  var needMap = typeof mapper === 'function';
-                  return fieldIds.map(function (id, i) {
-                     var field;
-                     if (!isRecordSet) {
-                        allFields.some(function (v) { if (v.id === id) { field = v; return true; } });
-                     }
-                     else {
-                        var model = allFields.getRecordById(id);
-                        if (model) {
-                           field = model.getRawData();
-                        }
-                     }
-                     return field && needMap ? mapper(field) : field;
-                  });
-               }
-            }
-         }//,
 
          /*destroy: function () {
             Area.superclass.destroy.apply(this, arguments);
