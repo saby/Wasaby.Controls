@@ -99,6 +99,13 @@ define('Controls/Dropdown/Opener',
       });
 
       DropdownOpener._private = _private;
+
+      DropdownOpener.getDefaultOptions = function() {
+         return {
+            closeOnTargetScroll: true
+         };
+      };
+
       return DropdownOpener;
    }
 );

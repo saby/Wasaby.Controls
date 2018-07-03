@@ -114,7 +114,8 @@ define(['Controls/Toggle/DoubleSwitch'], function (Switch) {
             describe('click to toggle(function _clickToggleHandler)', function(){
                it('click', function () {
                   SW._clickToggleHandler();
-                  assert(switcherClickedFlag);
+                  assert.isTrue(switcherClickedFlag, 'click unsuccess');
+                  assert.isTrue(SW._toggleHoverState === false, 'toggle hover class is incorrect')
                });
             });
 
@@ -212,6 +213,23 @@ define(['Controls/Toggle/DoubleSwitch'], function (Switch) {
                   Switch._private.checkCaptions(SW._options.captions);
                   assert(true);
                });
+            });
+         });
+         describe('state hover of toggle',function () {
+            beforeEach(function(){
+               SW = new Switch({
+                  captions: ['capt1', 'capt2']
+               });
+            });
+
+            it('_toggleSwitchHoverState with selected caption', function () {
+               SW._toggleSwitchHoverState(null, false);
+               assert.isTrue(SW._toggleHoverState === false, 'mouseover to unselect caption leads to toggle with hover state')
+            });
+
+            it('_toggleSwitchHoverState with unselected caption', function () {
+               SW._toggleSwitchHoverState(null, true);
+               assert.isTrue(SW._toggleHoverState === true, 'mouseover to selected caption leads to toggle without hover state')
             });
          });
       });

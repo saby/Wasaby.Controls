@@ -11,12 +11,18 @@ define('Controls/Popup/Opener/Notification',
        * @category Popup
        * @extends Controls/Popup/Opener/BaseOpener
        */
+
+      /**
+       * @typedef {Object} popupOptions
+       * @property {Function} template Шаблон отображения внутреннего содержимого
+       * @property {Object} templateOptions Шаблон отображения внутреннего содержимого
+       */
       var Notification = Base.extend({
 
          /**
           * Открыть нотификационное окно
           * @function Controls/Popup/Opener/Notification#open
-          * @param {Controls/interface/IOpener#popupOptions} popupOptions
+          * @param {popupOptions} popupOptions конфиг попапа.
           */
          open: function(popupOptions) {
             Base.prototype.open.call(this, popupOptions, 'Controls/Popup/Opener/Notification/NotificationController');

@@ -10,11 +10,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/Deferred',
       'Core/IoC',
       'Core/EventObject',
+      'Core/helpers/Hcontrol/doAutofocus',
       'Core/helpers/Function/runDelayed',
+      'Lib/Control/AreaAbstract/AreaAbstract.compatible',
       'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/Abstract.compatible',
       'Lib/Control/Control.compatible',
-      'Lib/Control/AreaAbstract/AreaAbstract.compatible',
       'Lib/Control/BaseCompatible/BaseCompatible',
       'WS.Data/Entity/InstantiableMixin'
    ],
@@ -28,7 +29,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       cDeferred,
       IoC,
       EventObject,
-      runDelayed) {
+      doAutofocus,
+      runDelayed,
+      AreaAbstract) {
 
       function removeOperation(operation, array) {
          var  idx = arrayFindIndex(array, function(op) {
@@ -39,6 +42,19 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
       function finishResultOk(result) {
          return !(result instanceof Error || result === false);
+      }
+      function setReadOnly(compoundControl, isReadOnly) {
+         var isEnabled = !isReadOnly;
+         var childControls = compoundControl.getImmediateChildControls(),
+            control;
+         for (var i = 0, len = childControls.length; i < len; ++i) {
+            control = childControls[i];
+            if (typeof (control.setReadOnly) === 'function') {
+               control.setReadOnly(!isEnabled);
+            } else {
+               control.setEnabled(isEnabled);
+            }
+         }
       }
 
       var logger = IoC.resolve('ILogger');
@@ -131,6 +147,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             });
          },
 
+         getOpener: function() {
+            return this._logicParent && this._logicParent._options && this._logicParent._options.opener;
+         },
+
          _afterMount: function(cfg) {
             this._options = cfg;
             
@@ -140,9 +160,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this.VDOMReady = true;
             this.deprecatedContr(this._options);
 
-
-
             var self = this;
+
+            var container = self._container.length ? self._container[0] : self._container;
+            container.wsControl = self;
 
             self.templateOptions = self._options.templateOptions || {};
             self._compoundId = self._options._compoundId;
@@ -168,15 +189,19 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             //лишних свойств, которые еще не применены к дому
             //панельки с этим начали вылезать плавненько
 
+            this._compoundControlCreated = new cDeferred();
             runDelayed(function() {
-               self.handle('onBeforeShow');
-               self.handle('onShow');
-
                moduleStubs.require([self._options.template]).addCallback(function(result) {
                   self.handle('onBeforeControlsLoad');
                   self._createCompoundControl(self.templateOptions, result[0]);
+                  self.handle('onBeforeShow');
+                  self.handle('onShow');
+                  doAutofocus(self._compoundControl._container);
                   self._logicParent.callbackCreated && self._logicParent.callbackCreated();
-               });
+               }).addErrback(function(e) {
+                  IoC.resolve('ILogger').error('CompoundArea', 'Шаблон "' + self._options.template + '" не смог быть загружен!');
+                  this._compoundControlCreated.errback(e);
+               }.bind(this));
             });
          },
          _createCompoundControl: function(templateOptions, Component) {
@@ -184,12 +209,37 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             templateOptions._compoundArea = this;
             templateOptions.parent = this;
             this._compoundControl = new (Component)(templateOptions);
+            this._compoundControlCreated.callback(this._compoundControl);
             this._subscribeToCommand();
+            this._setCustomHeader();
             this.handle('onAfterLoad');
             this.handle('onInitComplete');
             this.handle('onAfterShow'); // todo здесь надо звать хэндлер который пытается подписаться на onAfterShow, попробуй подключить FormController и словить подпись
             this._compoundControl.setActive(true);
+            var self = this;
+            runDelayed(function() {
+               self._compoundControl._notifyOnSizeChanged();
+            });
          },
+         isOpened: function() {
+            return true;
+         },
+
+         _setCustomHeader: function() {
+            var hasHeader = !!this._options.caption;
+            var customHeaderContainer = this._compoundControl.getContainer().find('.ws-window-titlebar-custom');
+            if (hasHeader) {
+               if (customHeaderContainer.length) {
+                  customHeaderContainer.prepend('<div class="ws-float-area-title">' + this._options.caption + '</div>');
+               } else {
+                  this.getContainer().prepend($('<div class="ws-window-titlebar"><div class="ws-float-area-title ws-float-area-title-generated">' + this._options.caption + '</div></div>'));
+                  this.getContainer().addClass('controls-CompoundArea-headerPadding');
+               }
+            } else {
+               this.getContainer().removeClass('controls-CompoundArea-headerPadding');
+            }
+         },
+
          _subscribeToCommand: function() {
             this._compoundControl.subscribe('onCommandCatch', this._commandHandler);
          },
@@ -197,6 +247,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             var parent;
             if (commandName === 'close') {
                this._close(arg);
+            } else if (commandName === 'ok') {
+               return this._close(true);
+            } else if (commandName === 'cancel') {
+               return this._close(false);
             } else if (commandName === 'registerPendingOperation') {
                return this._registerChildPendingOperation(arg);
             } else if (commandName === 'unregisterPendingOperation') {
@@ -239,10 +293,19 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          /* start RecordFloatArea */
          getRecord: function() {
-            return this._options.record;
+            return this._options.record || this._options.templateOptions && this._options.templateOptions.record;
          },
          isNewRecord: function() {
             return this._options.newRecord;
+         },
+         setReadOnly: function(isReadOnly) {
+            if (this._compoundControl) {
+               setReadOnly(this._compoundControl, isReadOnly);
+            } else {
+               this._compoundControlCreated.addCallback(function() {
+                  setReadOnly(this._compoundControl, isReadOnly);
+               }.bind(this));
+            }
          },
 
          /*end RecordFloatArea */
@@ -504,6 +567,17 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             return this._childPendingOperations;
          },
 
+         getChildControlByName: function(name) {
+            var finded = null;
+            try {
+               finded = AreaAbstract.getChildControlByName.call(this, name);
+            } catch (e) {
+               return this.getOpener().getTopParent().getChildControlByName(name);
+            }
+
+            return finded;
+         },
+
          /**
           *
           * Добавить отложенную асинхронную операцию в очередь ожидания окна.
@@ -524,6 +598,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._pending.forEach(function(pending) {
                pending.callback(true);
             });
+         },
+
+         getImmediateChildControls: function() {
+            return [this._compoundControl];
          },
 
          /**

@@ -992,6 +992,7 @@ define('SBIS3.CONTROLS/ListView',
                //включает плейсхолдер при перемещении записи мышкой, в 100 он работает только с плоскими списками,
                //опция будет удалена при реализации перемещения по новому стандарту
                useDragPlaceHolder: false,
+               scrollIndicatorStyle: 'default',
                //TODO коммент ниже
                task1173941879: false
             },
@@ -2779,7 +2780,8 @@ define('SBIS3.CONTROLS/ListView',
             if (toolbarTarget && targetElement && toolbarTarget.container.get(0) === targetElement.get(0)) {
                toolbarTarget.container = this._getDomElementByItem(item);
                toolbar.setCurrentTarget(toolbarTarget);
-               if (this.isEdit()) { // https://online.sbis.ru/opendoc.html?guid=62f91f28-78ab-4022-9727-7b951536f771
+               // https://online.sbis.ru/opendoc.html?guid=8fc10a14-b254-453d-a2e9-bb514bc3a524
+               if (this._options.editMode.indexOf('toolbar') !== -1 && this.isEdit()) { // https://online.sbis.ru/opendoc.html?guid=62f91f28-78ab-4022-9727-7b951536f771
                   toolbar.show(toolbarTarget);
                   toolbar.lockToolbar();
                }

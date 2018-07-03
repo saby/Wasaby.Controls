@@ -175,7 +175,7 @@ define('Controls/Layout/Scroll',
 
          _unRegisterIt: function(event, registerType, component) {
             if (registerType === 'listScroll') {
-               this._registrar.unregister(event, component, callback);
+               this._registrar.unregister(event, component);
             }
          },
 

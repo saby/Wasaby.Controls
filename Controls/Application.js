@@ -46,6 +46,11 @@ define('Controls/Application',
             self.title = cfg.title;
             self.templateConfig = cfg.templateConfig;
             self.compat = cfg.compat || false;
+         },
+         calculateBodyClasses: function() {
+            //Эти классы вешаются в двух местах. Разница в том, что BodyClasses всегда возвращает один и тот же класс,
+            //а TouchDetector реагирует на изменение состояния. Поэтому в Application оставим только класс от TouchDetector
+            return BodyClasses().replace('ws-is-touch', '').replace('ws-is-no-touch', '');
          }
       };
       var Page = Base.extend({
@@ -99,7 +104,7 @@ define('Controls/Application',
             self.resourceRoot = receivedState.resourceRoot || (context.AppData ? context.AppData.resourceRoot : cfg.resourceRoot);
             self.product = receivedState.product || (context.AppData ? context.AppData.product : cfg.product);
             self.servicesPath = receivedState.servicesPath || (context.AppData ? context.AppData.servicesPath : cfg.servicesPath) || '/service/';
-            self.BodyClasses = BodyClasses;
+            self.BodyClasses = _private.calculateBodyClasses;
 
             context.headData.pushDepComponent(self.application);
 

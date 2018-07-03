@@ -83,12 +83,14 @@
       padding: 0 !important;
 
       .controls-MenuItem__content {
-         width: auto;
+         height: 100%;
+         display: flex;
+         align-items: center;
+         justify-content: center;
       }
       .controls-RichEditorToolbar__color {
          height: 16px;
          width: 16px;
-         margin: 0 8px 0 8px;
          border-radius: 2px;
          &Black {
             background-color: black;
@@ -181,4 +183,14 @@
          padding-top: 0;
       }
    }
+}
+
+.ws-is-ie {
+  .fre-color {
+    .controls-ListView__item {
+      .controls-MenuItem__content {
+        display: flex;
+      }
+    }
+  }
 }
