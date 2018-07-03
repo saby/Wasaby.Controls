@@ -106,6 +106,8 @@ define('Controls/Toolbar', [
                target: event.target
             };
             this._children.menuOpener.open(config, this);
+            //TODO нотифай событий menuOpened и menuClosed нужен для работы механизма корректного закрытия превьювера переделать
+            // по задаче https://online.sbis.ru/opendoc.html?guid=76ed6751-9f8c-43d7-b305-bde84c1e8cd7
             this._notify('menuOpened', [], {bubbling: true});
          }
          event.stopPropagation();
