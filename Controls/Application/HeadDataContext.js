@@ -4,6 +4,13 @@ define('Controls/Application/HeadDataContext', [
    'Core/cookie',
    'Core/IoC'
 ], function(DataContext, Deferred, cookie, IoC) {
+
+   var DEPTYPES = {
+      BUNDLE: 1,
+      SINGLE: 2
+   };
+
+
    var bundles;
    try {
       bundles = require('json!WS.Core/ext/requirejs/bundlesRoute');
@@ -59,7 +66,7 @@ define('Controls/Application/HeadDataContext', [
             var bundleName = bundles[key];
             if (bundleName) {
                delete allDeps[key];
-               packages[fixLinkSlash(bundleName)] = true;
+               packages[fixLinkSlash(bundleName)] = DEPTYPES.BUNDLE;
             }
          }
       }
@@ -68,7 +75,7 @@ define('Controls/Application/HeadDataContext', [
          if (allDeps.hasOwnProperty(key)) {
             if (modDeps.nodes[key]) {
                if (isJs(key) || isCss(key) || isTmpl(key)) {
-                  packages[fixLinkSlash(modDeps.nodes[key].path)] = true;
+                  packages[fixLinkSlash(modDeps.nodes[key].path)] = DEPTYPES.SINGLE;
                }
             }
          }
@@ -105,7 +112,7 @@ define('Controls/Application/HeadDataContext', [
                if (key.slice(key.length - 3, key.length) === 'css') {
                   files.css.push(addBuildNumber(key, buildNumber));
                   var corrJs = key.replace(/.css$/, '.js');
-                  if (!packages[corrJs]) {
+                  if (!packages[corrJs] && packages[key] === DEPTYPES.BUNDLE) {
                      files.js.push(addBuildNumber(corrJs, buildNumber));
                   }
                } else if (key.slice(key.length - 2, key.length) === 'js') {
