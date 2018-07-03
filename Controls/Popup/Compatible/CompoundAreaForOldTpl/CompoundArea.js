@@ -11,10 +11,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/IoC',
       'Core/EventObject',
       'Core/helpers/Function/runDelayed',
+      'Lib/Control/AreaAbstract/AreaAbstract.compatible',
       'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/Abstract.compatible',
       'Lib/Control/Control.compatible',
-      'Lib/Control/AreaAbstract/AreaAbstract.compatible',
       'Lib/Control/BaseCompatible/BaseCompatible',
       'WS.Data/Entity/InstantiableMixin'
    ],
@@ -28,7 +28,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       cDeferred,
       IoC,
       EventObject,
-      runDelayed) {
+      runDelayed,
+      AreaAbstract) {
 
       function removeOperation(operation, array) {
          var  idx = arrayFindIndex(array, function(op) {
@@ -159,6 +160,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             var self = this;
 
+            var container = self._container.length ? self._container[0] : self._container;
+            container.wsControl = self;
+
             self.templateOptions = self._options.templateOptions || {};
             self._compoundId = self._options._compoundId;
 
@@ -185,12 +189,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             this._compoundControlCreated = new cDeferred();
             runDelayed(function() {
-               self.handle('onBeforeShow');
-               self.handle('onShow');
-
                moduleStubs.require([self._options.template]).addCallback(function(result) {
                   self.handle('onBeforeControlsLoad');
                   self._createCompoundControl(self.templateOptions, result[0]);
+                  self.handle('onBeforeShow');
+                  self.handle('onShow');
                   self._logicParent.callbackCreated && self._logicParent.callbackCreated();
                }).addErrback(function(e) {
                   IoC.resolve('ILogger').error('CompoundArea', 'Шаблон "' + self._options.template + '" не смог быть загружен!');
@@ -204,6 +207,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             templateOptions.parent = this;
             this._compoundControl = new (Component)(templateOptions);
             this._compoundControlCreated.callback(this._compoundControl);
+            this._setCustomHeader();
             this.handle('onAfterLoad');
             this.handle('onInitComplete');
             this.handle('onAfterShow'); // todo здесь надо звать хэндлер который пытается подписаться на onAfterShow, попробуй подключить FormController и словить подпись
@@ -216,6 +220,22 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          isOpened: function() {
             return true;
          },
+
+         _setCustomHeader: function() {
+            var hasHeader = !!this._options.caption;
+            var customHeaderContainer = this._compoundControl.getContainer().find('.ws-window-titlebar-custom');
+            if (hasHeader) {
+               if (customHeaderContainer.length) {
+                  customHeaderContainer.prepend('<div class="ws-float-area-title">' + this._options.caption + '</div>');
+               } else {
+                  this.getContainer().prepend($('<div class="ws-window-titlebar"><div class="ws-float-area-title ws-float-area-title-generated">' + this._options.caption + '</div></div>'));
+                  this.getContainer().addClass('controls-CompoundArea-headerPadding');
+               }
+            } else {
+               this.getContainer().removeClass('controls-CompoundArea-headerPadding');
+            }
+         },
+
          _commandHandler: function(event, commandName, arg) {
             var parent;
             if (commandName === 'close') {
@@ -540,6 +560,17 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             return this._childPendingOperations;
          },
 
+         getChildControlByName: function(name) {
+            var finded = null;
+            try {
+               finded = AreaAbstract.getChildControlByName.call(this, name);
+            } catch (e) {
+               return this.getOpener().getTopParent().getChildControlByName(name);
+            }
+
+            return finded;
+         },
+
          /**
           *
           * Добавить отложенную асинхронную операцию в очередь ожидания окна.
@@ -560,6 +591,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._pending.forEach(function(pending) {
                pending.callback(true);
             });
+         },
+
+         getImmediateChildControls: function() {
+            return [this._compoundControl];
          },
 
          /**
