@@ -58,7 +58,7 @@ define('Controls/Application/HeadDataContext', [
          if (allDeps.hasOwnProperty(key)) {
             var bundleName = bundles[key];
             if (bundleName) {
-               IoC.resolve('ILogger').info('Module ' + key + 'in bundle ' + bundleName);
+               IoC.resolve('ILogger').info('Module ' + key + ' in bundle ' + bundleName);
                delete allDeps[key];
                packages[fixLinkSlash(bundleName)] = true;
             }
@@ -123,6 +123,8 @@ define('Controls/Application/HeadDataContext', [
    function addBuildNumber(link, buildNumber) {
       if (buildNumber) {
          return link.replace(/\.(css|js|tmpl)$/, 'v' + buildNumber + '$&');
+      } else {
+         return link;
       }
    }
 
@@ -156,12 +158,12 @@ define('Controls/Application/HeadDataContext', [
             });
          });
       },
-      constructor: function(theme) {
+      constructor: function(theme, buildNumber) {
          this.theme = theme;
          this.defRender = new Deferred();
          this.depComponentsMap = {};
          this.receivedStateArr = {};
-         this.buildNumber = cfg.buildNumber;
+         this.buildNumber = buildNumber;
       },
       waitAppContent: function() {
          return this.defRender;
