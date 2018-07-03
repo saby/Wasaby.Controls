@@ -60,7 +60,9 @@ define('Controls/Toolbar', [
          self._popupOptions = {
             corner: {vertical: 'top', horizontal: 'right'},
             horizontalAlign: {side: 'left'},
-            onResult: self._onResult,
+            eventHandlers: {
+               onResult: self._onResult
+            },
             templateOptions: {
                keyProperty: newOptions.keyProperty,
                parentProperty: newOptions.parentProperty,

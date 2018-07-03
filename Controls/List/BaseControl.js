@@ -332,8 +332,10 @@ define('Controls/List/BaseControl', [
             closeByExternalClick: true,
             corner: {vertical: 'top', horizontal: 'right'},
             horizontalAlign: {side: 'left'},
-            onResult: self._closeActionsMenu,
-            onClose: self._closeActionsMenu,
+            eventHandlers: {
+               onResult: self._closeActionsMenu,
+               onClose: self._closeActionsMenu
+            },
             templateOptions: {
                showHeader: true,
                headConfig: {
