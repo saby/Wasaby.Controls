@@ -116,13 +116,14 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          _shouldUpdate: function(popupOptions) {
             if (popupOptions._compoundId !== this._compoundId) {
-               this._rebuildCompoundControl(popupOptions);
+               this._templateOptions = this._options.templateOptions || {};
+               this._rebuildCompoundControl();
                this._compoundId = popupOptions._compoundId;
             }
             return false;
          },
 
-         _rebuildCompoundControl: function(popupOptions) {
+         _rebuildCompoundControl: function() {
             var oldCompound = this._compoundControl;
             var self = this;
 
@@ -138,13 +139,14 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             }, 0);
             oldCompound._container.remove();
 
-            if (popupOptions._initCompoundArea) {
-               popupOptions._initCompoundArea(this);
+            if (this._options._initCompoundArea) {
+               this._options._initCompoundArea(this);
             }
-            var templateOptions = popupOptions.templateOptions || {};
 
-            moduleStubs.require([popupOptions.template]).addCallback(function(result) {
-               self._createCompoundControl(templateOptions, result[0]);
+            this._compoundControlCreated = new cDeferred();
+
+            moduleStubs.require([this._options.template]).addCallback(function(result) {
+               self._createCompoundControl(result[0]);
             });
          },
 
@@ -166,7 +168,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             var container = self._container.length ? self._container[0] : self._container;
             container.wsControl = self;
 
-            self.templateOptions = self._options.templateOptions || {};
+            self._templateOptions = self._options.templateOptions || {};
             self._compoundId = self._options._compoundId;
 
             if (self._options._initCompoundArea) {
@@ -193,10 +195,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._compoundControlCreated = new cDeferred();
             runDelayed(function() {
                moduleStubs.require([self._options.template]).addCallback(function(result) {
-                  self.handle('onBeforeControlsLoad');
                   self._createCompoundControl(self.templateOptions, result[0]);
-                  self.handle('onBeforeShow');
-                  self.handle('onShow');
                   doAutofocus(self._compoundControl._container);
                   self._logicParent.callbackCreated && self._logicParent.callbackCreated();
                }).addErrback(function(e) {
@@ -205,12 +204,17 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                }.bind(this));
             });
          },
-         _createCompoundControl: function(templateOptions, Component) {
-            templateOptions.element = $('<div></div>').appendTo(this._children.compoundBlock);
-            templateOptions._compoundArea = this;
-            templateOptions.parent = this;
-            this._compoundControl = new (Component)(templateOptions);
+         _createCompoundControl: function(Component) {
+            this._templateOptions.element = $('<div></div>').appendTo(this._children.compoundBlock);
+            this._templateOptions._compoundArea = this;
+            this._templateOptions.parent = this;
+
+            this.handle('onBeforeControlsLoad');
+            this._compoundControl = new (Component)(this._templateOptions);
+            this.handle('onBeforeShow');
+            this.handle('onShow');
             this._compoundControlCreated.callback(this._compoundControl);
+            this._subscribeToCommand();
             this._setCustomHeader();
             cEventBus.globalChannel().notify('onWindowCreated', this); // StickyHeaderMediator listens for onWindowCreated
             this.handle('onAfterLoad');
@@ -241,6 +245,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             }
          },
 
+         _subscribeToCommand: function() {
+            this._compoundControl.subscribe('onCommandCatch', this._commandHandler);
+         },
          _commandHandler: function(event, commandName, arg) {
             var parent;
             if (commandName === 'close') {
@@ -281,8 +288,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._close(arg);
          },
 
+         _setCompoundAreaOptions: function(newOptions) {
+            this._templateOptions = newOptions.templateOptions || {};
+         },
+
          reload: function() {
-            this._rebuildCompoundControl(this._options);
+            this._rebuildCompoundControl();
          },
 
          /* from api floatArea, window */
