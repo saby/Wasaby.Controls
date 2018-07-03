@@ -92,7 +92,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          LikeWindowMixin], {
          _template: template,
          _compoundId: undefined,
-         templateOptions: null,
+         _templateOptions: null,
          compatible: null,
          fixBaseCompatible: true,
          _templateComponent: undefined,
@@ -195,7 +195,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._compoundControlCreated = new cDeferred();
             runDelayed(function() {
                moduleStubs.require([self._options.template]).addCallback(function(result) {
-                  self._createCompoundControl(self.templateOptions, result[0]);
+                  self._createCompoundControl(result[0]);
                   doAutofocus(self._compoundControl._container);
                   self._logicParent.callbackCreated && self._logicParent.callbackCreated();
                }).addErrback(function(e) {
