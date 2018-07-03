@@ -1257,14 +1257,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      };
                   }
                   else {
+                     var dom = editor.dom;
                      var node = rng.commonAncestorContainer;
-                     var body = editor.getBody();
-                     if (node.parentNode !== body) {
+                     if (!dom.isBlock(node)) {
                         // Если элемент не является блочным элементом - поднять рэнж выше по дереву
                         // 1175494679 https://online.sbis.ru/opendoc.html?guid=4ce44085-0bd4-4bf9-8f6f-1d43f081cf83
-                        var dom = editor.dom;
+                        var body = editor.getBody();
                         var isChanged;
-                        for ( ; node.parentNode !== body && !dom.isBlock() && !Array.prototype.some.call(node.parentNode.childNodes, function (v) { return v.nodeName === 'IMG' || dom.isBlock(v); }); node = node.parentNode, isChanged = true) {}
+                        for ( ; node.parentNode !== body && !dom.isBlock(node) && !Array.prototype.some.call(node.parentNode.childNodes, function (v) { return v.nodeName === 'IMG' || dom.isBlock(v); }); node = node.parentNode, isChanged = true) {}
                         if (isChanged) {
                            selection.select(node, true);
                            rng = selection.getRng();
