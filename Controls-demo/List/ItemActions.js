@@ -54,7 +54,7 @@ define('Controls-demo/List/ItemActions', [
          },
          {
             id: 1,
-            icon: 'icon-PhoneNull',
+            icon: 'icon-primary icon-PhoneNull',
             title: 'phone',
             handler: function(item) {
                console.log('action phone Click ', item);
@@ -62,7 +62,7 @@ define('Controls-demo/List/ItemActions', [
          },
          {
             id: 2,
-            icon: 'icon-EmptyMessage',
+            icon: 'icon-primary icon-EmptyMessage',
             title: 'message',
             handler: function() {
                alert('Message Click');
@@ -70,7 +70,7 @@ define('Controls-demo/List/ItemActions', [
          },
          {
             id: 3,
-            icon: 'icon-Profile',
+            icon: 'icon-primary icon-Profile',
             title: 'profile',
             showType: showType.MENU_TOOLBAR,
             handler: function() {
@@ -79,7 +79,7 @@ define('Controls-demo/List/ItemActions', [
          },
          {
             id: 4,
-            icon: 'icon-Erase',
+            icon: 'icon-Erase icon-error',
             title: 'delete pls',
             showType: showType.TOOLBAR,
             handler: function() {
