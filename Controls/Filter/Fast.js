@@ -119,9 +119,17 @@ define('Controls/Filter/Fast',
          },
 
          resize: function(self, filters) {
-            var width = 0;
-            Chain(filters).each(function(filter) {
+            var width = 0,
+               arrWidth = [];
+            Chain(filters).each(function(filter, index) {
                width += filter.offsetWidth;
+               arrWidth.push({index: index, width: filter.offsetWidth});
+            });
+            arrWidth.sort(function(a, b) {
+               return a.width - b.width;
+            }).splice(0, 1);
+            Chain(arrWidth).each(function(elem, index) {
+               self._configs[elem.index].shrink = index + 1;
             });
             self._notify('resize', [{fastFilter: width}]);
          }
@@ -204,7 +212,7 @@ define('Controls/Filter/Fast',
             this._notify('selectedKeysChanged', [newValue]);
             this._notify('filterChanged', [_private.getFilter(this._items)]);
             this._isChanged = true;
-            _private.resize(this, this._children.fastFilter);
+            _private.resize(this, this._container.children);
          }
       });
 

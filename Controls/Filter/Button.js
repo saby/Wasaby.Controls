@@ -90,7 +90,9 @@ define('Controls/Filter/Button',
          },
 
          _afterMount: function() {
-            this._notify('resize', [{filterButton: this._children.filterText.offsetWidth}]);
+            if (this._text) {
+               this._notify('resize', [{filterButton: this._children.filterText.offsetWidth}]);
+            }
          },
 
          _beforeUpdate: function(options) {
@@ -102,7 +104,11 @@ define('Controls/Filter/Button',
          _afterUpdate: function() {
             if (this._isChanged) {
                this._isChanged = false;
-               this._notify('resize', [{filterButton: this._children.filterText.offsetWidth}]);
+               if (this._text) {
+                  this._notify('resize', [{filterButton: this._children.filterText.offsetWidth}]);
+               } else {
+                  this._notify('resize', [{filterButton: 0}]);
+               }
                this._forceUpdate();
             }
          },
