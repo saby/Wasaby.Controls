@@ -582,6 +582,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             });
          },
 
+         getImmediateChildControls: function() {
+            return [this._compoundControl];
+         },
+
          /**
           * Получение информации о добавленных пендингах, включая информацию, откуда был добавлен пендинг
           * @returns {Array} Массив объектов, хранящих пендинг и информацию, откуда был добавлен пендинг
