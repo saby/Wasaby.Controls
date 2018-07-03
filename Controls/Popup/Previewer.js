@@ -78,9 +78,11 @@ define('Controls/Popup/Previewer',
             switch (event.type) {
                case 'menuclosed':
                   this._enableClose = true;
+                  event.stopPropagation();
                   break;
                case 'menuopened':
                   this._enableClose = false;
+                  event.stopPropagation();
                   break;
                case 'mouseenter':
                   this._cancel(event, 'closing');
