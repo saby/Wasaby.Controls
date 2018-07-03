@@ -112,8 +112,7 @@
 
 .controls-InputRender__placeholder {
    .compatPlaceholder(@color_InputRender-placeholder);
-   .inline-flexbox();
-   .align-items(center);
+   display: inline-flex;
    padding-left: 1px; //Отступ в 1px нужен, чтобы плейсхолдер не наезжал на курсор
 }
 
@@ -126,6 +125,16 @@
    .text-overflow();
    display: inline-block;
    width: 100%;
+}
+
+.controls-InputRender__placeholder_singleLine {
+   align-items: center;
+   box-sizing: border-box;
+}
+
+.controls-InputRender__placeholder_multiLine {
+   align-items: baseline;
+   box-sizing: border-box;
 }
 
 // риусем информационный треугольник через border, чтобы он занимал свои физические размеры
