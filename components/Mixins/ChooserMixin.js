@@ -85,8 +85,7 @@ define('SBIS3.CONTROLS/Mixins/ChooserMixin', [
             config: {
                isStack: true,
                autoHide: true,
-               autoCloseOnHide: true,
-               overlay: true
+               autoCloseOnHide: true
             },
             type: {
                old: {
