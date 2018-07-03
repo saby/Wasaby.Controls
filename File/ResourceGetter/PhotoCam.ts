@@ -79,9 +79,6 @@ class PhotoCam extends IResourceGetterBase {
      */
     @isDestroyedAsync
     getFiles(): Deferred<Array<LocalFileLink | LocalFile>> {
-        if (this.isDestroyed()) {
-            return Deferred.fail("Resource getter is destroyed");
-        }
         this._chooseDef = new Deferred().addBoth((result) => {
             this._chooseDef = null;
             return result;
