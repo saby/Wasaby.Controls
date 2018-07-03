@@ -61,7 +61,8 @@ define('Controls/Toolbar', [
             corner: {vertical: 'top', horizontal: 'right'},
             horizontalAlign: {side: 'left'},
             eventHandlers: {
-               onResult: self._onResult
+               onResult: self._onResult,
+               onClose: self._closeHandler
             },
             templateOptions: {
                keyProperty: newOptions.keyProperty,
