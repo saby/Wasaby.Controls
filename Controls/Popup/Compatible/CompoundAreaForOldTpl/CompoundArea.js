@@ -11,10 +11,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/IoC',
       'Core/EventObject',
       'Core/helpers/Function/runDelayed',
+      'Lib/Control/AreaAbstract/AreaAbstract.compatible',
       'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/Abstract.compatible',
       'Lib/Control/Control.compatible',
-      'Lib/Control/AreaAbstract/AreaAbstract.compatible',
       'Lib/Control/BaseCompatible/BaseCompatible',
       'WS.Data/Entity/InstantiableMixin'
    ],
@@ -28,7 +28,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       cDeferred,
       IoC,
       EventObject,
-      runDelayed) {
+      runDelayed,
+      AreaAbstract) {
 
       function removeOperation(operation, array) {
          var  idx = arrayFindIndex(array, function(op) {
@@ -158,6 +159,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this.deprecatedContr(this._options);
 
             var self = this;
+
+            var container = self._container.length ? self._container[0] : self._container;
+            container.wsControl = self;
 
             self.templateOptions = self._options.templateOptions || {};
             self._compoundId = self._options._compoundId;
@@ -560,6 +564,17 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             return this._childPendingOperations;
          },
 
+         getChildControlByName: function(name) {
+            var finded = null;
+            try {
+               finded = AreaAbstract.getChildControlByName.call(this, name);
+            } catch (e) {
+               return this.getOpener().getTopParent().getChildControlByName(name);
+            }
+
+            return finded;
+         },
+
          /**
           *
           * Добавить отложенную асинхронную операцию в очередь ожидания окна.
@@ -580,6 +595,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._pending.forEach(function(pending) {
                pending.callback(true);
             });
+         },
+
+         getImmediateChildControls: function() {
+            return [this._compoundControl];
          },
 
          /**
