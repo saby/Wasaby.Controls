@@ -47,7 +47,7 @@ define('Controls/Popup/Manager',
             return false;
          },
 
-         popupDeactivated: function (id) {
+         popupDeactivated: function(id) {
             var element = ManagerController.find(id);
             if (element) {
                element.strategy.popupDeactivated(element, this.getItemContainer(id)); // при создании попапа, зарегистрируем его
@@ -194,5 +194,4 @@ define('Controls/Popup/Manager',
 
       Manager.prototype._private = _private;
       return Manager;
-   }
-);
+   });
