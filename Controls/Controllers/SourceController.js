@@ -18,7 +18,7 @@ define('Controls/Controllers/SourceController',
                var sourceConstructor = requirejs(sourceOpt.module);
                result = new sourceConstructor(sourceOpt.options || {});
             }
-            if (!cInstance.instanceOfMixin(result, 'WS.Data/Source/ISource')) {
+            if (!cInstance.instanceOfMixin(result, 'WS.Data/Source/ICrud')) {
                IoC.resolve('ILogger').error('SourceController', 'Source option has incorrect type');
             }
             return result;
