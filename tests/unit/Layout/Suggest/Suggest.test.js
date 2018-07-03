@@ -233,6 +233,14 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          assert.isTrue(suggestActivated);
          assert.equal(suggestComponent._filter.currentTab, 'test');
       });
+   
+      it('Suggest::_beforeUpdate', function() {
+         var suggestComponent = new Suggest();
+         suggestComponent._orient = 'down';
+   
+         suggestComponent._beforeUpdate({suggestState: false});
+         assert.equal(suggestComponent._orient, null);
+      });
       
    });
    
