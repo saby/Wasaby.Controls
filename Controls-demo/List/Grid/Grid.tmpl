@@ -4,7 +4,7 @@
               source="{{_viewSource}}"
               selectedKeys="{{['448390']}}"
               name="massSelector">
-         <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+         <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="default">
             <ws:content>
                <Controls.List.MassSelector>
                   <Controls.Grid
@@ -27,7 +27,7 @@
             </ws:content>
          </Controls.Container.Scroll>
       </Controls.Container.MassSelector>
-      <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+      <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="selected_record">
          <ws:content>
             <Controls.Grid
                     attr:class="demo-Grid__control test_grid_2"
@@ -54,7 +54,7 @@
               source="{{_viewSource}}"
               selectedKeys="{{['448390']}}"
               name="massSelector">
-         <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+         <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="mark_record">
             <ws:content>
                <Controls.List.MassSelector>
                   <Controls.Grid
@@ -78,7 +78,7 @@
             </ws:content>
          </Controls.Container.Scroll>
       </Controls.Container.MassSelector>
-      <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+      <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="no_title">
          <ws:content>
             <Controls.Grid
                     attr:class="demo-Grid__control test_grid_4"
@@ -101,6 +101,6 @@
    </div>
    <div>
       <h3>Кликнули на </h3>
-      <span>{{_actionClicked}}</span>
+      <span class="action__last_clicked">{{_actionClicked}}</span>
    </div>
 </div>

@@ -1,1 +1,8 @@
-<div class="controls-Suggest__empty">Нет данных</div>
+<div class="controls-Suggest__empty">
+    <ws:if data="{{contentTemplate}}">
+        <ws:partial template="{{contentTemplate}}"/>
+    </ws:if>
+    <ws:else>
+        Нет данных
+    </ws:else>
+</div>

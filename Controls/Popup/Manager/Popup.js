@@ -44,6 +44,7 @@ define('Controls/Popup/Manager/Popup',
                   this._notify('popupCreated', [this._options.id], {bubbling: true});
                }).bind(this);
             } else {
+               //todo doautofocus
                this._notify('popupCreated', [this._options.id], {bubbling: true});
             }
          },

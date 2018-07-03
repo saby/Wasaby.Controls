@@ -30,6 +30,18 @@ define(
                };
                search._searchClick();
             });
+   
+            it('Enter click', function() {
+               search._notify = (e, args) => {
+                  assert.equal(e, 'searchClick');
+         
+               };
+               search._keyUpHandler({
+                  nativeEvent: {
+                     which: 13 //enter key
+                  }
+               });
+            });
          });
       });
    });
