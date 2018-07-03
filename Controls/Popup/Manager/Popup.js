@@ -46,6 +46,7 @@ define('Controls/Popup/Manager/Popup',
             } else {
                //todo doautofocus
                this._notify('popupCreated', [this._options.id], {bubbling: true});
+               this.activate();
             }
          },
 
@@ -84,18 +85,6 @@ define('Controls/Popup/Manager/Popup',
           */
          _keyUp: function(event) {
             if (event.nativeEvent.keyCode === CoreConstants.key.esc) {
-               this._close();
-            }
-         },
-         _popupClickHandler: function(event) {
-            //Не даем клику всплыть выше попапа. В этому случае событие не долетит до лисенера,
-            //который слушает клик по документу. В этом случае, если лисенер отловил событие, значит
-            //клик был сделан вне попапа.
-            //Нельзя стопать нативное событие, т.к. иначе ни один mousedown в старых панелях не отработает
-            event.stopped = true;
-         },
-         _documentClickHandler: function() {
-            if (this._options.closeByExternalClick) {
                this._close();
             }
          }

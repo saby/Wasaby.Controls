@@ -51,6 +51,10 @@ define('Controls/Popup/Manager/Container',
          setPopupItems: function(popupItems) {
             this._popupItems = popupItems;
             this._forceUpdate();
+         },
+
+         _popupDeactivated: function(event, popupId) {
+            this._notify('popupDeactivated', [popupId], {bubbling: true});
          }
       });
 

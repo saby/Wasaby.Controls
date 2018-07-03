@@ -107,6 +107,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _isFinishingChildOperations: false,
          _producedPendingOperations: [],
 
+         _isReadOnly: true,
+
          _beforeMount: function() {
             this._rebuildCompoundControl = debounce.call(this._rebuildCompoundControl, this).bind(this);
             this._className = 'controls-CompoundArea';
@@ -299,6 +301,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             return this._options.newRecord;
          },
          setReadOnly: function(isReadOnly) {
+            this._isReadOnly = isReadOnly;
             if (this._compoundControl) {
                setReadOnly(this._compoundControl, isReadOnly);
             } else {
@@ -306,6 +309,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   setReadOnly(this._compoundControl, isReadOnly);
                }.bind(this));
             }
+         },
+         isReadOnly: function() {
+            return this._isReadOnly;
          },
 
          /*end RecordFloatArea */
