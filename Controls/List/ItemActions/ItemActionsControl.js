@@ -30,10 +30,10 @@ define('Controls/List/ItemActions/ItemActionsControl', [
             if (!itemActionVisibilityCallback || itemActionVisibilityCallback(action, item)) {
                if (action.icon && !~action.icon.indexOf(ACTION_ICON_CLASS)) {
                   action.icon += ' ' + ACTION_ICON_CLASS;
-                  if (~action.icon.indexOf('icon-done')) {
+                  if (action.iconStyle && ~action.iconStyle.indexOf('done')) {
                      action.iconDone = true;
                   }
-                  if (~action.icon.indexOf('icon-error')) {
+                  if (action.iconStyle && ~action.iconStyle.indexOf('error')) {
                      action.iconError = true;
                   }
                }
