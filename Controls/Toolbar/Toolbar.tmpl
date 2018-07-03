@@ -11,20 +11,6 @@
     <div if="{{_needShowMenu}}" class="controls-ToolBarV__menuOpen controls-ToolbarV_item__styled"  name="popupTarget" on:click="_showMenu()">
         <i class="icon-medium icon-ExpandDown"/>
     </div>
-    <Controls.Dropdown.Opener name="menuOpener" className="controls-Toolbar__menu-position">
-        <ws:popupOptions>
-            <ws:corner vertical="top" horizontal="right"/>
-            <ws:horizontalAlign side="left"/>
-            <ws:eventHandlers onResult="{{_onResult}}" onClose="{{_closeHandler}}"/>
-            <ws:templateOptions
-                    keyProperty="{{_options.keyProperty}}"
-                    parentProperty="{{_options.parentProperty}}"
-                    nodeProperty="{{_options.nodeProperty}}"
-                    iconSize="{{_options.size}}"
-                    showHeader="{{true}}">
-                <ws:headConfig menuStyle="cross" />
-            </ws:templateOptions>
-        </ws:popupOptions>
-    </Controls.Dropdown.Opener>
+    <Controls.Dropdown.Opener name="menuOpener" className="controls-Toolbar__menu-position" popupOptions="{{_popupOptions}}" />
     </div>
 </div>

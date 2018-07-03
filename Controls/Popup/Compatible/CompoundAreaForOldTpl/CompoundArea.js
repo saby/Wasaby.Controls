@@ -10,7 +10,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/Deferred',
       'Core/IoC',
       'Core/EventObject',
+      'Core/helpers/Hcontrol/doAutofocus',
       'Core/helpers/Function/runDelayed',
+      'Core/EventBus',
       'Lib/Control/AreaAbstract/AreaAbstract.compatible',
       'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/Abstract.compatible',
@@ -28,8 +30,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       cDeferred,
       IoC,
       EventObject,
+      doAutofocus,
       runDelayed,
-      AreaAbstract) {
+      cEventBus) {
 
       function removeOperation(operation, array) {
          var  idx = arrayFindIndex(array, function(op) {
@@ -194,6 +197,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   self._createCompoundControl(self.templateOptions, result[0]);
                   self.handle('onBeforeShow');
                   self.handle('onShow');
+                  doAutofocus(self._compoundControl._container);
                   self._logicParent.callbackCreated && self._logicParent.callbackCreated();
                }).addErrback(function(e) {
                   IoC.resolve('ILogger').error('CompoundArea', 'Шаблон "' + self._options.template + '" не смог быть загружен!');
@@ -207,8 +211,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             templateOptions.parent = this;
             this._compoundControl = new (Component)(templateOptions);
             this._compoundControlCreated.callback(this._compoundControl);
-            this._subscribeToCommand();
             this._setCustomHeader();
+            cEventBus.globalChannel().notify('onWindowCreated', this); // StickyHeaderMediator listens for onWindowCreated
             this.handle('onAfterLoad');
             this.handle('onInitComplete');
             this.handle('onAfterShow'); // todo здесь надо звать хэндлер который пытается подписаться на onAfterShow, попробуй подключить FormController и словить подпись
@@ -237,9 +241,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             }
          },
 
-         _subscribeToCommand: function() {
-            this._compoundControl.subscribe('onCommandCatch', this._commandHandler);
-         },
          _commandHandler: function(event, commandName, arg) {
             var parent;
             if (commandName === 'close') {
@@ -248,6 +249,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                return this._close(true);
             } else if (commandName === 'cancel') {
                return this._close(false);
+            } else if (commandName === 'resize') {
+               this._notify('resize', null, {bubbling: true});
             } else if (commandName === 'registerPendingOperation') {
                return this._registerChildPendingOperation(arg);
             } else if (commandName === 'unregisterPendingOperation') {
@@ -285,7 +288,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          /* from api floatArea, window */
 
          getParent: function() {
-            return null;
+            return this.__parentFromCfg || null;
          },
 
          /* start RecordFloatArea */
@@ -326,8 +329,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this[eventName + 'Handler'] = handlers;
             handlers.push(handler);
          },
-         subscribeTo: function(eventName, handler) {
-            this.subscribe(eventName, handler);
+         subscribeTo: function(control, eventName, handler) {
+            control.subscribe(eventName, handler);
          },
          once: function(eventName, handler) {
             this.subscribe(eventName, function() {
@@ -397,9 +400,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             while (ops.length > 0) {
                this._unregisterPendingOperation(ops[0]);
             }
-
-
-
             var
                operation = this._allChildrenPendingOperation,
                message;
@@ -469,11 +469,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          getPendingOperations: function() {
             return this._producedPendingOperations;
          },
-
-
-
-
-
 
          _registerChildPendingOperation: function(operation) {
             var name, finishFunc;
@@ -562,17 +557,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          getChildPendingOperations: function() {
             return this._childPendingOperations;
-         },
-
-         getChildControlByName: function(name) {
-            var finded = null;
-            try {
-               finded = AreaAbstract.getChildControlByName.call(this, name);
-            } catch (e) {
-               return this.getOpener().getTopParent().getChildControlByName(name);
-            }
-
-            return finded;
          },
 
          /**
