@@ -1,12 +1,12 @@
 .controls-Dropdown {
-   display: inline-flex;
+   display: inline-block;
    cursor: pointer;
 }
 
 .controls-Dropdown__wrapper {
    .inline-flexbox();
-   min-width: 0;
    .align-items(center);
+   width: 100%;
    height: @default-height;
    &:before {
       content: "\200b";
@@ -16,7 +16,6 @@
 .controls-Dropdown__text {
    box-sizing: border-box;
    .text-overflow();
-   height: 100%;
    width: 100%;
    &:hover {
       cursor: pointer;
