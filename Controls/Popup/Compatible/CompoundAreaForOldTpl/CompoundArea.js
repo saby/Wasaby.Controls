@@ -11,6 +11,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/IoC',
       'Core/EventObject',
       'Core/helpers/Function/runDelayed',
+      'Core/constants',
+
       'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/Abstract.compatible',
       'Lib/Control/Control.compatible',
@@ -28,7 +30,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       cDeferred,
       IoC,
       EventObject,
-      runDelayed) {
+      runDelayed,
+      CoreConstants
+   ) {
 
       function removeOperation(operation, array) {
          var  idx = arrayFindIndex(array, function(op) {
@@ -237,11 +241,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _keyUp: function(event) {
             var
                self = this;
-            require(['Core/constants'], function(CoreConstants) {
-               if (event.nativeEvent.keyCode === CoreConstants.key.esc) {
-                  self._close();
-               }
-            });
+            if (!event.nativeEven.shiftKey && event.nativeEvent.keyCode === CoreConstants.key.esc) {
+               self._close();
+            }
             event.stopPropagation();
          },
 
