@@ -1260,11 +1260,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      var node = rng.commonAncestorContainer;
                      var body = editor.getBody();
                      if (node.parentNode !== body) {
-                        // Если элемент не является непосредственным потомком редактора - подняться до такого
+                        // Если элемент не является блочным элементом - поднять рэнж выше по дереву
                         // 1175494679 https://online.sbis.ru/opendoc.html?guid=4ce44085-0bd4-4bf9-8f6f-1d43f081cf83
-                        node = editor.dom.getParent(node, function (v) { return v.parentNode === body});
-                        selection.select(node, true);
-                        rng = selection.getRng();
+                        var dom = editor.dom;
+                        var isChanged;
+                        for ( ; node.parentNode !== body && !dom.isBlock() && !Array.prototype.some.call(node.parentNode.childNodes, function (v) { return v.nodeName === 'IMG' || dom.isBlock(v); }); node = node.parentNode, isChanged = true) {}
+                        if (isChanged) {
+                           selection.select(node, true);
+                           rng = selection.getRng();
+                        }
                      }
                   }
                }
