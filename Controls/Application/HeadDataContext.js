@@ -26,7 +26,7 @@ define('Controls/Application/HeadDataContext', [
          this.receivedStateArr[key] = receivedState;
       },
       pushWaiterDeferred: function(def) {
-         var depsCollector = new DepsCollector(modDeps.links, modDeps.nodes, bundles);
+         var depsCollector = new DepsCollector(modDeps.links, modDeps.nodes, bundles, this.buildNumber);
          var self = this;
          this.waiterDef = def;
          this.waiterDef.addCallback(function() {
@@ -39,7 +39,6 @@ define('Controls/Application/HeadDataContext', [
                self.jsLinks = [];
                self.cssLinks = [];
             }
-
             self.defRender.callback({
                jsLinks: self.jsLinks || [],
                cssLinks: self.cssLinks || [],
@@ -48,11 +47,12 @@ define('Controls/Application/HeadDataContext', [
             });
          });
       },
-      constructor: function(theme) {
+      constructor: function(theme, buildNumber) {
          this.theme = theme;
          this.defRender = new Deferred();
          this.depComponentsMap = {};
          this.receivedStateArr = {};
+         this.buildNumber = buildNumber;
       },
       waitAppContent: function() {
          return this.defRender;
