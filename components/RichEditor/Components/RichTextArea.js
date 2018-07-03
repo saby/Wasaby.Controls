@@ -1264,7 +1264,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         // 1175494679 https://online.sbis.ru/opendoc.html?guid=4ce44085-0bd4-4bf9-8f6f-1d43f081cf83
                         var body = editor.getBody();
                         var isChanged;
-                        for ( ; node.parentNode !== body && !dom.isBlock(node) && !Array.prototype.some.call(node.parentNode.childNodes, function (v) { return v.nodeName === 'IMG' || dom.isBlock(v); }); node = node.parentNode, isChanged = true) {}
+                        var _hasBlockSibling = function (bode) {
+                           return Array.prototype.some.call(node.parentNode.childNodes, function (v) {
+                              return v.nodeName === 'IMG' || dom.isBlock(v);
+                           });
+                        };
+                        for ( ; node.parentNode !== body && !dom.isBlock(node) && !_hasBlockSibling(node); node = node.parentNode, isChanged = true) {}
                         if (isChanged) {
                            selection.select(node, true);
                            rng = selection.getRng();
