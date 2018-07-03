@@ -64,7 +64,7 @@ define(
          fastDataItems._beforeMount(configWithItems);
 
          fastData._notify = (e, args) => {
-            if(e == 'selectedKeysChanged') {
+            if (e == 'selectedKeysChanged') {
                isSelected = true;
                selectedKey = args[0];
             } else {
@@ -135,7 +135,7 @@ define(
             FastData._private.reload(fastData).addCallback(function () {
                FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function () {
                   fastData.lastOpenIndex = 0;
-                  fastData._children = {fastFilter: []};
+                  fastData._container = {children: []};
                   isSelected = false;
                   selectedKey = null;
                   fastData._reset(null, fastData._items.at(0), 0);
