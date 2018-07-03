@@ -1,5 +1,5 @@
 /// <amd-module name="File/ResourceGetter/FileSystem" />
-define("File/ResourceGetter/FileSystem", ["require", "exports", "tslib", "File/ResourceGetter/Base", "Core/Deferred", "File/utils/ExtensionsHelper", "File/utils/filter"], function (require, exports, tslib_1, ResourceGetterBase, Deferred, ExtensionsHelper, filter) {
+define("File/ResourceGetter/FileSystem", ["require", "exports", "tslib", "File/ResourceGetter/Base", "Core/Deferred", "File/utils/ExtensionsHelper", "File/utils/filter", "File/Decorator/isDestroyed"], function (require, exports, tslib_1, ResourceGetterBase, Deferred, ExtensionsHelper, filter, isDestroyed_1) {
     "use strict";
     var SEC = 1000;
     var MIN = 60 * SEC;
@@ -131,9 +131,6 @@ define("File/ResourceGetter/FileSystem", ["require", "exports", "tslib", "File/R
          */
         FileSystem.prototype.getFiles = function () {
             var _this = this;
-            if (this.isDestroyed()) {
-                return Deferred.fail("Resource getter is destroyed");
-            }
             /**
              * Между выбором пользователем файлов и срабатыванием события о выборе (фактическом попадании сущности FileList
              * внутрь input) есть некий промежуток времени, который
@@ -193,6 +190,9 @@ define("File/ResourceGetter/FileSystem", ["require", "exports", "tslib", "File/R
         FileSystem.prototype.canExec = function () {
             return Deferred.success(!this.isDestroyed());
         };
+        tslib_1.__decorate([
+            isDestroyed_1.isDestroyedAsync
+        ], FileSystem.prototype, "getFiles", null);
         return FileSystem;
     }(ResourceGetterBase));
     return FileSystem;

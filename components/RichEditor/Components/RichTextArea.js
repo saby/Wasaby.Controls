@@ -1256,6 +1256,26 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         selection.select(listNode, true);
                      };
                   }
+                  else {
+                     var dom = editor.dom;
+                     var node = rng.commonAncestorContainer;
+                     if (!dom.isBlock(node)) {
+                        // Если элемент не является блочным элементом - поднять рэнж выше по дереву
+                        // 1175494679 https://online.sbis.ru/opendoc.html?guid=4ce44085-0bd4-4bf9-8f6f-1d43f081cf83
+                        var body = editor.getBody();
+                        var isChanged;
+                        var _hasBlockSibling = function (bode) {
+                           return Array.prototype.some.call(node.parentNode.childNodes, function (v) {
+                              return v.nodeName === 'IMG' || dom.isBlock(v);
+                           });
+                        };
+                        for ( ; node.parentNode !== body && !dom.isBlock(node) && !_hasBlockSibling(node); node = node.parentNode, isChanged = true) {}
+                        if (isChanged) {
+                           selection.select(node, true);
+                           rng = selection.getRng();
+                        }
+                     }
+                  }
                }
                if ((isA.list || (isA.blockquote && !isBlockquoteOfList)) && !isAlreadyApplied) {
                   var node = rng.startContainer;
@@ -2660,6 +2680,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   this._imageOptionsPanel = new ImageOptionsPanel({
                      templates: self._options.templates,
                      parent: self,
+                     opener: self,
                      target: target,
                      imageUuid: uuid,
                      targetPart: true,

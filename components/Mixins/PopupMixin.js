@@ -1230,7 +1230,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
       },
 
       _getZIndex: function(){
-         if (!this._isNewEnvironment()) {
+         if (!this._isNewEnvironment() || this._options.isHint) {
             this._zIndex = cWindowManager.acquireZIndex(this._options.isModal, false, this._options.isHint);
             cWindowManager.setVisible(this._zIndex);
 
