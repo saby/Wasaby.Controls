@@ -71,13 +71,19 @@ define('Controls/StickyHeader',
             }
          },
 
-         _listScrollHandler: function(e, eventType) {
+         _listScrollHandler: function(e, eventType, args) {
             switch (eventType) {
                case 'listTop':
                   this._listTop = true;
                   break;
                case 'scrollMove':
-                  this._listTop = false;
+                  /**
+                   * Убрать условие после выполнения задачи.
+                   * https://online.sbis.ru/opendoc.html?guid=e7b57af4-478d-432a-b5c2-b5d2e33d55b2
+                   */
+                  if (args.scrollTop) {
+                     this._listTop = false;
+                  }
                   break;
                case 'canScroll':
                   this._scrolling = true;
