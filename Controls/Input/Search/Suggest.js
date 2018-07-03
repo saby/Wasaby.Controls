@@ -53,6 +53,7 @@ define('Controls/Input/Search/Suggest',
          
          _resetClick: function() {
             this._notify('resetClick');
+            
             //standart
             this._notify('suggestStateChanged', [false]);
          }
