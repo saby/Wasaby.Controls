@@ -135,6 +135,7 @@ define(
             FastData._private.reload(fastData).addCallback(function () {
                FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function () {
                   fastData.lastOpenIndex = 0;
+                  fastData._children = {fastFilter: []};
                   isSelected = false;
                   selectedKey = null;
                   fastData._reset(null, fastData._items.at(0), 0);
