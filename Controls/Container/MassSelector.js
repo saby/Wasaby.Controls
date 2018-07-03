@@ -13,8 +13,7 @@ define('Controls/Container/MassSelector', [
 ) {
    'use strict';
 
-   //TODO: нужно стопить события от List/MassSelector
-   //TODO: реагировать на изменения items
+   //TODO: после Саниной доброски нужно реагировать на изменение items
 
    return Control.extend({
       _template: template,
