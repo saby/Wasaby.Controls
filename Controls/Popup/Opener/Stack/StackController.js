@@ -20,7 +20,7 @@ define('Controls/Popup/Opener/Stack/StackController',
             item.popupOptions.minWidth = parseInt(item.popupOptions.minWidth || templateStyle.minWidth, 10);
             item.popupOptions.maxWidth = parseInt(item.popupOptions.maxWidth || templateStyle.maxWidth, 10);
 
-            //Если задано одно значение - приравниваем minWidth и maxWidth
+            // Если задано одно значение - приравниваем minWidth и maxWidth
             item.popupOptions.minWidth = item.popupOptions.minWidth || item.popupOptions.maxWidth;
             item.popupOptions.maxWidth = item.popupOptions.maxWidth || item.popupOptions.minWidth;
 
@@ -28,7 +28,7 @@ define('Controls/Popup/Opener/Stack/StackController',
                item.popupOptions.maxWidth = item.popupOptions.minWidth;
             }
 
-            item.containerWidth = container.getElementsByClassName('controls-Popup__template')[0].offsetWidth; //Берем размеры пользовательского шаблона
+            item.containerWidth = container.getElementsByClassName('controls-Popup__template')[0].offsetWidth; // Берем размеры пользовательского шаблона
          },
 
          getStackParentCoords: function() {
@@ -113,5 +113,4 @@ define('Controls/Popup/Opener/Stack/StackController',
       });
 
       return new StackController();
-   }
-);
+   });

@@ -33,10 +33,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       doAutofocus,
       runDelayed,
       cEventBus) {
-
       function removeOperation(operation, array) {
-         var  idx = arrayFindIndex(array, function(op) {
-            return op === operation; 
+         var idx = arrayFindIndex(array, function(op) {
+            return op === operation;
          });
          array.splice(idx, 1);
       }
@@ -68,8 +67,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          BaseCompatible,
          InstantiableMixin;
 
-      //На сервере всегда надо подтянуть слой, потому что контролы могут строиться для разных клиентов
-      //и для разных страниц
+      // На сервере всегда надо подтянуть слой, потому что контролы могут строиться для разных клиентов
+      // и для разных страниц
       if (typeof process === 'undefined' || !process.domain ||
          !process.domain.req || process.domain.req.compatible !== false) {
          AbstractCompatible = require.defined('Core/Abstract.compatible') && require('Core/Abstract.compatible');
@@ -83,7 +82,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
       /**
        * Слой совместимости для открытия старых шаблонов в новых попапах
-      **/
+      * */
       var CompoundArea = Control.extend([AbstractCompatible || {},
          ControlCompatible || {},
          AreaAbstractCompatible || {},
@@ -112,7 +111,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _beforeMount: function() {
             this._rebuildCompoundControl = debounce.call(this._rebuildCompoundControl, this).bind(this);
             this._className = 'controls-CompoundArea';
-            this._className += ' ws-float-area'; //Старые шаблоны завязаны селекторами на этот класс.
+            this._className += ' ws-float-area'; // Старые шаблоны завязаны селекторами на этот класс.
             this._commandHandler = this._commandHandler.bind(this);
          },
 
@@ -128,8 +127,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             var oldCompound = this._compoundControl;
             var self = this;
 
-            //Если compoundControl еще не готов, то в текущей синхронизации ничего выполнять не надо,
-            //она была вызвана после afterMount'a и опции не поменялись
+            // Если compoundControl еще не готов, то в текущей синхронизации ничего выполнять не надо,
+            // она была вызвана после afterMount'a и опции не поменялись
             if (!oldCompound.isReady()) {
                return;
             }
@@ -156,9 +155,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          _afterMount: function(cfg) {
             this._options = cfg;
-            
-            //Нам нужно пометить контрол замаунченым для слоя совместимости,
-            //чтобы не создавался еще один enviroment для той же ноды
+
+            // Нам нужно пометить контрол замаунченым для слоя совместимости,
+            // чтобы не создавался еще один enviroment для той же ноды
 
             this.VDOMReady = true;
             this.deprecatedContr(this._options);
@@ -187,10 +186,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             self._logicParent.waitForPopupCreated = true;
 
-            //Здесь нужно сделать явную асинхронность, потому что к этому моменту накопилась пачка стилей
-            //далее floatArea начинает люто дергать recalculateStyle и нужно, чтобы там не было
-            //лишних свойств, которые еще не применены к дому
-            //панельки с этим начали вылезать плавненько
+            // Здесь нужно сделать явную асинхронность, потому что к этому моменту накопилась пачка стилей
+            // далее floatArea начинает люто дергать recalculateStyle и нужно, чтобы там не было
+            // лишних свойств, которые еще не применены к дому
+            // панельки с этим начали вылезать плавненько
 
             this._compoundControlCreated = new cDeferred();
             runDelayed(function() {
@@ -252,7 +251,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             } else if (commandName === 'cancel') {
                return this._close(false);
             } else if (commandName === 'resize') {
-               this._notify('resize', null, {bubbling: true});
+               this._notify('resize', null, { bubbling: true });
             } else if (commandName === 'registerPendingOperation') {
                return this._registerChildPendingOperation(arg);
             } else if (commandName === 'unregisterPendingOperation') {
@@ -263,7 +262,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             } else if (this._parent && this._parent._options.opener) {
                parent = this._parent._options.opener;
 
-               /*Если нет sendCommand - значит это не compoundControl - а значит там нет распространения команд*/
+               /* Если нет sendCommand - значит это не compoundControl - а значит там нет распространения команд */
 
                if (parent.sendCommand) {
                   parent.sendCommand.apply(parent, [commandName].concat(arg));
@@ -314,10 +313,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             return this._isReadOnly;
          },
 
-         /*end RecordFloatArea */
+         /* end RecordFloatArea */
 
          close: function(arg) {
-            this._notify('close', null, {bubbling: true});
+            this._notify('close', null, { bubbling: true });
 
             this.handle('onClose', arg);
             this.handle('onAfterClose', arg);
@@ -363,7 +362,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                handlers.push(optionsHandlers[eventName]);
             }
             if (Array.isArray(optionsHandlers[eventName])) {
-               //Здесь обработчики продублированы в this[eventName + 'Handler']
+               // Здесь обработчики продублированы в this[eventName + 'Handler']
                for (var i = 0; i < optionsHandlers[eventName].length; i++) {
                   if (handlers.indexOf(optionsHandlers[eventName][i]) === -1) {
                      handlers.push(optionsHandlers[eventName][i]);
@@ -377,8 +376,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                }
             });
 
-            //subscribeTo берет channel и подписывается к нему на события
-            //поэтому если наше событие не отменено, возьмем канал и нотификанем 
+            // subscribeTo берет channel и подписывается к нему на события
+            // поэтому если наше событие не отменено, возьмем канал и нотификанем
 
             if (eventState.getResult() !== false) {
                var result = this._getChannel().notify(eventName, arg);
@@ -416,7 +415,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                logger.error('Lib/Mixins/PendingOperationParentMixin', message);
             }
 
-            this._childPendingOperations = [];//cleanup им вызывать не надо - всё равно там destroy будет работать, у дочернего контрола
+            this._childPendingOperations = [];// cleanup им вызывать не надо - всё равно там destroy будет работать, у дочернего контрола
             if (this._allChildrenPendingOperation) {
                this._allChildrenPendingOperation = null;
                this._unregisterPendingOperation(operation);
@@ -430,8 +429,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             CompoundArea.superclass.destroy.apply(this, arguments);
          },
-
-
 
 
          _removeOpFromCollections: function(operation) {
@@ -627,9 +624,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   this._waiting.push(dNotify);
                }
                return true;
-            } else {
-               return false;
             }
+            return false;
          },
          _checkPendingOperations: function(res) {
             var totalOps = this._pending.length, result;
