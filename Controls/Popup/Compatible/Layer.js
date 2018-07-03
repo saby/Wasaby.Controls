@@ -20,6 +20,7 @@ define('Controls/Popup/Compatible/Layer', [
       'Lib/Control/AreaAbstract/AreaAbstract.compatible',
       'Lib/Control/BaseCompatible/BaseCompatible',
       'Core/vdom/Synchronizer/resources/DirtyCheckingCompatible',
+      'Lib/StickyHeader/StickyHeaderMediator/StickyHeaderMediator',
       'View/Runner/Text/markupGeneratorCompatible',
       'Core/nativeExtensions'
    ];
