@@ -40,6 +40,19 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       function finishResultOk(result) {
          return !(result instanceof Error || result === false);
       }
+      function setReadOnly(compoundControl, isReadOnly) {
+         var isEnabled = !isReadOnly;
+         var childControls = compoundControl.getImmediateChildControls(),
+            control;
+         for (var i = 0, len = childControls.length; i < len; ++i) {
+            control = childControls[i];
+            if (typeof (control.setReadOnly) === 'function') {
+               control.setReadOnly(!isEnabled);
+            } else {
+               control.setEnabled(isEnabled);
+            }
+         }
+      }
 
       var logger = IoC.resolve('ILogger');
       var allProducedPendingOperations = [];
@@ -144,8 +157,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this.VDOMReady = true;
             this.deprecatedContr(this._options);
 
-
-
             var self = this;
 
             self.templateOptions = self._options.templateOptions || {};
@@ -172,15 +183,18 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             //лишних свойств, которые еще не применены к дому
             //панельки с этим начали вылезать плавненько
 
+            this._compoundControlCreated = new cDeferred();
             runDelayed(function() {
-               self.handle('onBeforeShow');
-               self.handle('onShow');
-
                moduleStubs.require([self._options.template]).addCallback(function(result) {
                   self.handle('onBeforeControlsLoad');
                   self._createCompoundControl(self.templateOptions, result[0]);
+                  self.handle('onBeforeShow');
+                  self.handle('onShow');
                   self._logicParent.callbackCreated && self._logicParent.callbackCreated();
-               });
+               }).addErrback(function(e) {
+                  IoC.resolve('ILogger').error('CompoundArea', 'Шаблон "' + self._options.template + '" не смог быть загружен!');
+                  this._compoundControlCreated.errback(e);
+               }.bind(this));
             });
          },
          _createCompoundControl: function(templateOptions, Component) {
@@ -188,12 +202,37 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             templateOptions._compoundArea = this;
             templateOptions.parent = this;
             this._compoundControl = new (Component)(templateOptions);
+            this._compoundControlCreated.callback(this._compoundControl);
             this._subscribeToCommand();
+            this._setCustomHeader();
             this.handle('onAfterLoad');
             this.handle('onInitComplete');
             this.handle('onAfterShow'); // todo здесь надо звать хэндлер который пытается подписаться на onAfterShow, попробуй подключить FormController и словить подпись
             this._compoundControl.setActive(true);
+            var self = this;
+            runDelayed(function() {
+               self._compoundControl._notifyOnSizeChanged();
+            });
          },
+         isOpened: function() {
+            return true;
+         },
+
+         _setCustomHeader: function() {
+            var hasHeader = !!this._options.caption;
+            var customHeaderContainer = this._compoundControl.getContainer().find('.ws-window-titlebar-custom');
+            if (hasHeader) {
+               if (customHeaderContainer.length) {
+                  customHeaderContainer.prepend('<div class="ws-float-area-title">' + this._options.caption + '</div>');
+               } else {
+                  this.getContainer().prepend($('<div class="ws-window-titlebar"><div class="ws-float-area-title ws-float-area-title-generated">' + this._options.caption + '</div></div>'));
+                  this.getContainer().addClass('controls-CompoundArea-headerPadding');
+               }
+            } else {
+               this.getContainer().removeClass('controls-CompoundArea-headerPadding');
+            }
+         },
+
          _subscribeToCommand: function() {
             this._compoundControl.subscribe('onCommandCatch', this._commandHandler);
          },
@@ -247,22 +286,18 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          /* start RecordFloatArea */
          getRecord: function() {
-            return this._options.record;
+            return this._options.record || this._options.templateOptions && this._options.templateOptions.record;
          },
          isNewRecord: function() {
             return this._options.newRecord;
          },
          setReadOnly: function(isReadOnly) {
-            var isEnabled = !isReadOnly;
-            var childControls = this._compoundControl.getImmediateChildControls(),
-               control;
-            for (var i = 0, len = childControls.length; i < len; ++i) {
-               control = childControls[i];
-               if (typeof (control.setReadOnly) == 'function') {
-                  control.setReadOnly(!isEnabled);
-               } else {
-                  control.setEnabled(isEnabled);
-               }
+            if (this._compoundControl) {
+               setReadOnly(this._compoundControl, isReadOnly);
+            } else {
+               this._compoundControlCreated.addCallback(function() {
+                  setReadOnly(this._compoundControl, isReadOnly);
+               }.bind(this));
             }
          },
 

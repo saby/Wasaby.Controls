@@ -34,14 +34,14 @@ define('Controls/List/BaseControl', [
    'use strict';
 
    var _private = {
-      reload: function(self, userCallback, userErrback) {
+      reload: function(self, filter, userCallback, userErrback) {
          if (self._sourceController) {
             _private.showIndicator(self);
 
             //Need to create new Deffered, returned success result
             //load() method may be fired with errback
             var resDeferred = new Deferred();
-            self._sourceController.load(self._options.filter, self._sorting).addCallback(function(list) {
+            self._sourceController.load(filter, self._sorting).addCallback(function(list) {
 
                if (userCallback && userCallback instanceof Function) {
                   userCallback(list);
@@ -140,7 +140,7 @@ define('Controls/List/BaseControl', [
       scrollToEdge: function(self, direction) {
          if (self._sourceController && self._sourceController.hasMoreData(direction)) {
             self._sourceController.setEdgeState(direction);
-            _private.reload(self, self._options.dataLoadCallback, self._options.dataLoadErrback).addCallback(function() {
+            _private.reload(self, self._options.filter, self._options.dataLoadCallback, self._options.dataLoadErrback).addCallback(function() {
                if (direction === 'up') {
                   self._notify('doScroll', ['top'], {bubbling: true});
                } else {
@@ -402,7 +402,7 @@ define('Controls/List/BaseControl', [
                this._sourceController.calculateState(receivedState);
                this._listViewModel.setItems(receivedState);
             } else {
-               return _private.reload(this, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
+               return _private.reload(this, newOptions.filter, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
             }
          }
       },
@@ -427,12 +427,6 @@ define('Controls/List/BaseControl', [
       _beforeUpdate: function(newOptions) {
          var filterChanged = !isEqualObject(newOptions.filter, this._options.filter);
          var sourceChanged = newOptions.source !== this._options.source;
-
-         //TODO могут задать items как рекордсет, надо сразу обработать тогда навигацию и пэйджинг
-
-         if (filterChanged) {
-            this._options.filter = newOptions.filter;
-         }
 
          if (newOptions.viewModelConfig && (newOptions.viewModelConfig !== this._options.viewModelConfig)) {
             this._listViewModel = new newOptions.viewModelConstructor(newOptions.viewModelConfig);
@@ -459,7 +453,7 @@ define('Controls/List/BaseControl', [
          }
 
          if (filterChanged || sourceChanged) {
-            _private.reload(this, newOptions.dataLoadCallback,  newOptions.dataLoadErrback);
+            _private.reload(this, newOptions.filter, newOptions.dataLoadCallback,  newOptions.dataLoadErrback);
          }
 
          if (this._options.selectedKeys !== newOptions.selectedKeys) {
@@ -551,7 +545,7 @@ define('Controls/List/BaseControl', [
       },
 
       reload: function() {
-         return _private.reload(this, this._options.dataLoadCallback, this._options.dataLoadErrback);
+         return _private.reload(this, this._options.filter, this._options.dataLoadCallback, this._options.dataLoadErrback);
       },
 
       _onGroupClick: function(e, item, baseEvent) {
