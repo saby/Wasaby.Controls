@@ -142,7 +142,7 @@ define('Controls/Layout/Scroll',
                if (!self._observer) {
                   _private.onChangeScroll(self, e.target);
                }
-            }, 100)();
+            }, 100, true)();
          },
 
          _resizeHandler: function() {

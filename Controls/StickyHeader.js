@@ -74,14 +74,18 @@ define('Controls/StickyHeader',
          _listScrollHandler: function(e, eventType, args) {
             switch (eventType) {
                case 'listTop':
+                  //TODO: https://online.sbis.ru/opendoc.html?guid=e7b57af4-478d-432a-b5c2-b5d2e33d55b2
+                  this._time = Date.now();
+
                   this._listTop = true;
                   break;
                case 'scrollMove':
                   /**
-                   * Убрать условие после выполнения задачи.
+                   * TODO: Убрать условие после выполнения задачи.
                    * https://online.sbis.ru/opendoc.html?guid=e7b57af4-478d-432a-b5c2-b5d2e33d55b2
                    */
-                  if (args.scrollTop) {
+                  if (args.scrollTop !== 0 && Date.now() - this._time > 100) {
+                     console.log(Date.now() - this._time);
                      this._listTop = false;
                   }
                   break;
