@@ -30,8 +30,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       IoC,
       EventObject,
       doAutofocus,
-      runDelayed,
-      AreaAbstract) {
+      runDelayed) {
 
       function removeOperation(operation, array) {
          var  idx = arrayFindIndex(array, function(op) {
@@ -288,7 +287,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          /* from api floatArea, window */
 
          getParent: function() {
-            return null;
+            return this.__parentFromCfg || null;
          },
 
          /* start RecordFloatArea */
@@ -329,8 +328,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this[eventName + 'Handler'] = handlers;
             handlers.push(handler);
          },
-         subscribeTo: function(eventName, handler) {
-            this.subscribe(eventName, handler);
+         subscribeTo: function(control, eventName, handler) {
+            control.subscribe(eventName, handler);
          },
          once: function(eventName, handler) {
             this.subscribe(eventName, function() {
@@ -400,9 +399,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             while (ops.length > 0) {
                this._unregisterPendingOperation(ops[0]);
             }
-
-
-
             var
                operation = this._allChildrenPendingOperation,
                message;
@@ -472,11 +468,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          getPendingOperations: function() {
             return this._producedPendingOperations;
          },
-
-
-
-
-
 
          _registerChildPendingOperation: function(operation) {
             var name, finishFunc;
@@ -565,17 +556,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          getChildPendingOperations: function() {
             return this._childPendingOperations;
-         },
-
-         getChildControlByName: function(name) {
-            var finded = null;
-            try {
-               finded = AreaAbstract.getChildControlByName.call(this, name);
-            } catch (e) {
-               return this.getOpener().getTopParent().getChildControlByName(name);
-            }
-
-            return finded;
          },
 
          /**
