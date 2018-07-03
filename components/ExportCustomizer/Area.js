@@ -438,6 +438,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * @param {object} options Опции компонента
           */
          _reshapeOptions: function (options) {
+            var allFields = options.allFields;
             var presetsOptions;
             var usePresets = options.usePresets;
             if (usePresets) {
@@ -457,12 +458,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                presetsOptions = {
                   addNewTitle: options.presetAddNewTitle,
                   newPresetTitle: options.presetNewPresetTitle,
+                  allFields: allFields,
                   statics: hasStaticPresets ? staticPresets.slice() : null,
                   namespace: options.presetNamespace,
                   selectedId: options.selectedPresetId
                };
             }
-            var allFields = options.allFields;
             var fieldIds = options.fieldIds;
             var fileUuid = options.fileUuid;
             if (!usePresets && fieldIds && fieldIds.length) {
@@ -579,7 +580,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   var consumerUuid = consumer.patternUuid || consumer.fileUuid;
                   options.fileUuid = fileUuid || consumerUuid;
                   formatterValues = {fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumerId:consumer.id, primaryUuid:consumerUuid};
-                  formatterMeta = {reason:reason, args:reason === 'clone' ? [args[1]] : []};
+                  formatterMeta = {reason:reason, args:args.slice(1)};
                   if (reason === 'edit') {
                      this._isEditMode = true;
                   }

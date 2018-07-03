@@ -451,7 +451,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                var methods = [];
                if (hasFields) {
                   //Если не поменялся consumerId, но поменялись поля; или если это клонирование с изменением
-                  if ((!('consumerId' in changes) && 'fieldIds' in changes) || (meta && meta.reason === 'clone' && meta.args[0] && meta.args[0].isChanged)) {
+                  if ((!('consumerId' in changes) && 'fieldIds' in changes) || (meta && meta.args[0] && meta.args[0].isChanged)) {
                      if (!options.fileUuid) {
                         var primaryUuid = options.primaryUuid;
                         methods.push(primaryUuid ? {method:'clone', args:[primaryUuid, true]} : 'create');

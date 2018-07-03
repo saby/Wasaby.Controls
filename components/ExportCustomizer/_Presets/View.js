@@ -29,6 +29,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
        * @property {string|number} id Идентификатор пресета
        * @property {string} title Отображаемое название пресета
        * @property {Array<string>} fieldIds Список привязки колонок в экспортируемом файле к полям данных
+       * @property {Array<string>} [lastTitles] Список последних известных отображаемых названий полей данных, служит для контроля изменений. Используется только с пользовательскими пресетами (опционально)
        * @property {string} fileUuid Uuid стилевого эксель-файла
        */
 
@@ -83,6 +84,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                 * @cfg {string} Название нового пресета
                 */
                newPresetTitle: rk('Новый шаблон', 'НастройщикЭкспорта'),
+               /**
+                * @cfg {Array<BrowserColumnInfo>|WS.Data/Collection/RecordSet<BrowserColumnInfo>} Список объектов с информацией о всех колонках в формате, используемом в браузере
+                */
+               allFields: null,
                /**
                 * @cfg {Array<ExportPreset>} Список неизменяемых пресетов
                 */
@@ -183,7 +188,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                var preset = this._findPresetById(selectedId);
                this._selectPreset(preset, true);
                // Даже если fieldIds и fileUuid в предыдущем и текуущем пресетах не отличаются совсем - нужно бросить событие как указание сбросить все несохранённые изменения в других под-компонентах
-               this.sendCommand('subviewChanged', 'select', preset);
+               this.sendCommand('subviewChanged', 'select', preset, {isChanged:this._isOutdated(preset, true)});
                this._updateSelectorListOptions('selectedKey', selectedId);
             }.bind(this));
 
@@ -234,11 +239,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                         if (!previous) {
                            this._updateSelector();
                         }
-                        this.sendCommand('subviewChanged', 'select', nextPreset);
+                        this.sendCommand('subviewChanged', 'select', nextPreset, {isChanged:this._isOutdated(nextPreset, true)});
                      }
                      else {
                         this._selectPreset(preset);
-                        this.sendCommand('subviewChanged', 'select', preset);
+                        this.sendCommand('subviewChanged', 'select', preset, false);
                      }
                   }
                   this._endEditingMode();
@@ -373,7 +378,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             switch (action) {
                case 'clone':
                   var preset = this._clonePreset(id);
-                  this.sendCommand('subviewChanged', 'clone', preset);
+                  this.sendCommand('subviewChanged', 'clone', preset, {isChanged:this._isOutdated(preset, true)});
                   this._startEditingMode(listView);
                   break;
                case 'edit':
@@ -469,7 +474,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                var options = this._options;
                if (options.selectedId !== id) {
                   this._selectPreset(preset);
-                  this.sendCommand('subviewChanged', 'select', preset);
+                  this.sendCommand('subviewChanged', 'select', preset, {isChanged:this._isOutdated(preset, true)});
                   this._updateListView(listView);
                }
                this._startEditingMode(listView);
@@ -494,7 +499,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                      if (this._options.selectedId === id) {
                         var preset = customs.length ? customs[index < customs.length ? index : index - 1] : null;
                         this._selectPreset(preset, true);
-                        this.sendCommand('subviewChanged', 'select', preset);
+                        this.sendCommand('subviewChanged', 'select', preset, {isChanged:this._isOutdated(preset, true)});
                      }
                      this.sendCommand('subviewChanged', 'delete', prevPreset);
                   //}
@@ -734,6 +739,29 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
          },
 
          /**
+          * Определить, не устарели ли отображаемые названия полей в пресете. Актуально только для пользовательских пресетов
+          *
+          * @protected
+          * @param {ExportPreset} preset Пресет
+          * @param {boolean} updateAndSave Обновить и сохранить, если устарел
+          * @return {boolean}
+          */
+         _isOutdated: function (preset, updateAndSave) {
+            if (preset && preset.isStorable) {
+               var actualTitles = collectionSelectByIds(this._options.allFields, preset.fieldIds, function (v) { return v.title; }) || [];
+               var presetTitles = preset.lastTitles;
+               var isOutdated = !presetTitles || (actualTitles.length !== presetTitles.length) || actualTitles.some(function (v) { return v !== presetTitles[i]; });
+               if (isOutdated) {
+                  if (updateAndSave) {
+                     preset.lastTitles = actualTitles;
+                     this._saveCustoms();
+                  }
+                  return true;
+               }
+            }
+         },
+
+         /**
           * Загрузить пользовательские пресеты
           *
           * @protected
@@ -820,7 +848,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                            preset.fieldIds = fieldIds ? fieldIds.slice() : [];
                            this._fieldIds = fieldIds;
                         }
-                        this.sendCommand('subviewChanged', 'clone', preset, {isChanged:isFieldsChanged});
+                        this.sendCommand('subviewChanged', 'clone', preset, {isChanged:isFieldsChanged || this._isOutdated(preset, true)});
                      }
                   }
                   this._startEditingMode();
