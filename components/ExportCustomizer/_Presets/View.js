@@ -597,6 +597,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             this._editorOkButton = null;
             this._isEditMode = false;
             this._switchEditor();
+            var editor = this._editor;
             editor._setKeyPressHandler(editor._origKeyPressHandler);
             editor._origKeyPressHandler = null;
             this._editor.clearMark();
