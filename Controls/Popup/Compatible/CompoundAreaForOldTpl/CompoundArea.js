@@ -11,10 +11,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/IoC',
       'Core/EventObject',
       'Core/helpers/Function/runDelayed',
+      'Lib/Control/AreaAbstract/AreaAbstract.compatible',
       'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/Abstract.compatible',
       'Lib/Control/Control.compatible',
-      'Lib/Control/AreaAbstract/AreaAbstract.compatible',
       'Lib/Control/BaseCompatible/BaseCompatible',
       'WS.Data/Entity/InstantiableMixin'
    ],
@@ -28,7 +28,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       cDeferred,
       IoC,
       EventObject,
-      runDelayed) {
+      runDelayed,
+      AreaAbstract) {
 
       function removeOperation(operation, array) {
          var  idx = arrayFindIndex(array, function(op) {
@@ -558,6 +559,17 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          getChildPendingOperations: function() {
             return this._childPendingOperations;
+         },
+
+         getChildControlByName: function(name) {
+            var finded = null;
+            try {
+               finded = AreaAbstract.getChildControlByName.call(this, name);
+            } catch (e) {
+               return this.getOpener().getTopParent().getChildControlByName(name);
+            }
+
+            return finded;
          },
 
          /**
