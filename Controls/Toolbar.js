@@ -69,6 +69,7 @@ define('Controls/Toolbar', [
 
       constructor: function(options) {
          this._onResult = this._onResult.bind(this);
+         this._closeHandler = this._closeHandler.bind(this);
          this._parentProperty = options.parentProperty;
          this._nodeProperty = options.nodeProperty;
          Toolbar.superclass.constructor.apply(this, arguments);
@@ -105,6 +106,7 @@ define('Controls/Toolbar', [
                target: event.target
             };
             this._children.menuOpener.open(config, this);
+            this._notify('menuOpened', [], {bubbling: true});
          }
          event.stopPropagation();
          this._notify('itemClick', [item]);
@@ -119,6 +121,7 @@ define('Controls/Toolbar', [
             },
             target: this._children.popupTarget
          };
+         this._notify('menuOpened', [], {bubbling: true});
          this._children.menuOpener.open(config, this);
       },
 
@@ -127,6 +130,10 @@ define('Controls/Toolbar', [
             this._onItemClick(result.event, result.data[0]);
             this._children.menuOpener.close();
          }
+      },
+
+      _closeHandler: function() {
+         this._notify('menuClosed', [], {bubbling: true});
       }
    });
 

@@ -15,7 +15,7 @@
         <ws:popupOptions>
             <ws:corner vertical="top" horizontal="right"/>
             <ws:horizontalAlign side="left"/>
-            <ws:eventHandlers onResult="{{_onResult}}"/>
+            <ws:eventHandlers onResult="{{_onResult}}" onClose="{{_closeHandler}}"/>
             <ws:templateOptions
                     keyProperty="{{_options.keyProperty}}"
                     parentProperty="{{_options.parentProperty}}"
