@@ -211,7 +211,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             templateOptions.parent = this;
             this._compoundControl = new (Component)(templateOptions);
             this._compoundControlCreated.callback(this._compoundControl);
-            this._subscribeToCommand();
             this._setCustomHeader();
             cEventBus.globalChannel().notify('onWindowCreated', this); // StickyHeaderMediator listens for onWindowCreated
             this.handle('onAfterLoad');
@@ -242,9 +241,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             }
          },
 
-         _subscribeToCommand: function() {
-            this._compoundControl.subscribe('onCommandCatch', this._commandHandler);
-         },
          _commandHandler: function(event, commandName, arg) {
             var parent;
             if (commandName === 'close') {
