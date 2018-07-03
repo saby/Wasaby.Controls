@@ -85,8 +85,7 @@ define('SBIS3.CONTROLS/Mixins/ChooserMixin', [
             config: {
                isStack: true,
                autoHide: true,
-               autoCloseOnHide: true,
-               overlay: true
+               autoCloseOnHide: true
             },
             type: {
                old: {
@@ -110,7 +109,7 @@ define('SBIS3.CONTROLS/Mixins/ChooserMixin', [
        * @param {String} template имя шаблона в виде 'js!SBIS3.CONTROLS.MyTemplate'
        * @param {Object} componentOptions опции которые прокинутся в компонент выбора
        */
-      _showChooser: function(template, componentOptions, dialogOptions) {
+      _showChooser: function(template, componentOptions, dialogOptions, cfg) {
          var self = this,
              config = this._getAdditionalChooserConfig(),
              version, selectorConfig, commonConfig, clickResult;
@@ -129,7 +128,7 @@ define('SBIS3.CONTROLS/Mixins/ChooserMixin', [
             }, []));
          }
 
-         clickResult = this._notify('onChooserClick', template);
+         clickResult = this._notify('onChooserClick', template, cfg);
          /* Т.к. не все успели перевести свои панели выбора на новые контролы,
             то при использовании нескольких "Справочников" в поле связи, в событии onChooserClick
             будут менять режим работы. Удалится как поле связи перейдёт на использование action'a */

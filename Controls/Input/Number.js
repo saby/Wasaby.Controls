@@ -173,6 +173,12 @@ define('Controls/Input/Number', [
       }
    });
 
+   NumberInput.getDefaultOptions = function() {
+      return {
+         value: ''
+      };
+   };
+
    NumberInput.getOptionTypes = function() {
       return {
          precision: types(Number), //Точность (кол-во знаков после запятой)

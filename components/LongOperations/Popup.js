@@ -35,9 +35,9 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
        * @type {object}
        */
       var RESULT_BUTTON_TITLES = {
-         download: 'Скачать',
-         open:     'Открыть',
-         viewLog:  'Журнал'
+         download: rk('Скачать'),
+         open:     rk('Открыть'),
+         viewLog:  rk('Журнал')
       };
 
       /**
@@ -66,6 +66,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
             _floatArea: null,
 
             _longOpList: null,
+            _resultButton: null,
 
             _notificationContainer: null,
             _progressContainer: null,
@@ -86,6 +87,8 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
             LongOperationsPopup.superclass.init.call(this);
 
             this._longOpList = this.getChildControlByName('operationList');
+            this._resultButton = this.getChildControlByName('downloadButton');
+
             var customConditions = this._options.customConditions;
             // В текущей реализации наличие непустой опции customConditions обязательно
             if (!customConditions || !Array.isArray(customConditions)) {
@@ -182,7 +185,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                self._longOpList.applyMainAction(meta.item);
             });
 
-            this.subscribeTo(this.getChildControlByName('downloadButton'), 'onActivated', function () {
+            this.subscribeTo(this._resultButton, 'onActivated', function () {
                if (self._activeOperation) {
                   self._longOpList.applyMainAction(self._activeOperation);
                }
@@ -316,10 +319,28 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
 
             var butCaption = this._getResultButtonCaption(this._activeOperation);
             var hasButton = !!butCaption;
-            var button = this.getChildControlByName('downloadButton');
+            var button = this._resultButton;
             button.setVisible(hasButton);
             if (hasButton) {
-               button.setCaption(rk(butCaption));
+               var isMarkup = butCaption.indexOf('<') !== -1;
+               var prevTmpl = button.getProperty('contentTemplate');
+               var wasMarkup = !!prevTmpl && typeof prevTmpl === 'string';
+               if (isMarkup) {
+                  if (!wasMarkup || butCaption !== prevTmpl) {
+                     button.setProperties({contentTemplate:butCaption, caption:null});
+                     button._origContentTemplate = prevTmpl;
+                     button.rebuildMarkup();
+                  }
+               }
+               else {
+                  if (wasMarkup) {
+                     button.setProperties({contentTemplate:button._origContentTemplate, caption:butCaption});
+                     button.rebuildMarkup();
+                  }
+                  else {
+                     button.setCaption(butCaption);
+                  }
+               }
             }
          },
 

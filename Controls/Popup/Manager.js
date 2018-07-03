@@ -22,11 +22,9 @@ define('Controls/Popup/Manager',
             var self = this;
             return element.strategy.elementDestroyed(element, container, id).addCallback(function() {
                self._popupItems.remove(element);
-               if (element.isModal) {
-                  var indices = self._popupItems.getIndicesByValue('isModal', true);
-                  ManagerController.getContainer().setOverlay(indices.length ? indices[indices.length - 1] : -1);
-                  return element;
-               }
+               var indices = self._popupItems.getIndicesByValue('isModal', true);
+               ManagerController.getContainer().setOverlay(indices.length ? indices[indices.length - 1] : -1);
+               return element;
             });
          },
 

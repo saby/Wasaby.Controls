@@ -4,6 +4,7 @@ define('Controls-demo/List/Grid/Group', [
    'WS.Data/Source/Memory',
    'tmpl!Controls-demo/List/Grid/DemoGroupTemplate',
    'tmpl!Controls-demo/List/Grid/DemoGroupColumnTemplate',
+   'Controls/Decorator/Money',
    'tmpl!Controls/List/GroupContentResultsTemplate',
    'tmpl!Controls-demo/List/Grid/DemoGroupHeaderTemplate'
 ], function (BaseControl, template, MemorySource) {

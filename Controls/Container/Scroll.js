@@ -191,7 +191,7 @@ define('Controls/Container/Scroll',
 
                if (receivedState) {
                   _private.updateDisplayState(this, receivedState.displayState);
-                  this._styleHideScrollbar = receivedState.styleHideScrollbar;
+                  this._styleHideScrollbar = receivedState.styleHideScrollbar || ScrollWidthUtil.calcStyleHideScrollbar();
                   this._useNativeScrollbar = receivedState.useNativeScrollbar;
                } else {
                   def = new Deferred();
@@ -234,11 +234,6 @@ define('Controls/Container/Scroll',
                 */
                if (typeof this._displayState.heightFix === 'undefined') {
                   this._displayState.heightFix = ScrollHeightFixUtil.calcHeightFix(this._children.content);
-
-                  this._forceUpdate();
-               }
-               if (typeof this._styleHideScrollbar === 'undefined') {
-                  this._styleHideScrollbar = ScrollWidthUtil.calcStyleHideScrollbar();
 
                   this._forceUpdate();
                }
