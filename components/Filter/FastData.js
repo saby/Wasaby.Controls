@@ -181,7 +181,7 @@ define('SBIS3.CONTROLS/Filter/FastData',
 
          _modifyOptions: function(){
             var opts = FastDataFilter.superclass._modifyOptions.apply(this, arguments);
-            if (this._options.serverRender) {
+            if (opts.serverRender) {
                opts.filterStructure.forEach(function (structure) {
                   if (structure.caption && structure.value && !isEqual(structure.value, structure.resetValue)) {
                      opts.items.forEach(function (item) {
