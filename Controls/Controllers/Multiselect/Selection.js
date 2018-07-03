@@ -48,6 +48,9 @@ define('Controls/Controllers/Multiselect/Selection', [
       },
 
       select: function(keys) {
+         this._selectedKeys = this._selectedKeys.slice();
+         this._excludedKeys = this._excludedKeys.slice();
+
          if (this._strategy.isAllSelection(this._getParams())) {
             ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, keys);
          } else {
@@ -56,6 +59,9 @@ define('Controls/Controllers/Multiselect/Selection', [
       },
 
       unselect: function(keys) {
+         this._selectedKeys = this._selectedKeys.slice();
+         this._excludedKeys = this._excludedKeys.slice();
+
          if (this._strategy.isAllSelection(this._getParams())) {
             ArraySimpleValuesUtil.addSubArray(this._excludedKeys, keys);
          } else {

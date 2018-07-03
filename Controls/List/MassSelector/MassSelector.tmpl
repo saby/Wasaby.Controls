@@ -3,7 +3,7 @@
    scope="{{_options}}"
    on:checkBoxClick="_onCheckBoxClickHandler()"
    on:afterItemsRemove="_onAfterItemsRemoveHandler()"
-   selectedKeys="{{context.selection.selectedKeys}}"
-   excludedKeys="{{context.selection.excludedKeys}}"
-   selectionInstance="{{context.selection.selectionInstance}}"
+   selectedKeys="{{_calculatedSelectedKeys}}"
+   partiallySelectedKeys="{{_calculatedPartiallySelectedKeys}}"
+   excludedKeys="{{_calculatedExcludedKeys}}"
 />

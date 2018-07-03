@@ -14,10 +14,12 @@ define('Controls/Container/MassSelector', [
    'use strict';
 
    //TODO: нужно стопить события от List/MassSelector
+   //TODO: реагировать на изменения items
 
    return Control.extend({
       _template: template,
       _multiselection: null,
+      _items: null,
 
       _beforeMount: function(newOptions) {
          var self = this;
@@ -29,13 +31,12 @@ define('Controls/Container/MassSelector', [
          });
 
          return this._sourceController.load().addCallback(function(items) {
+            self._items = items;
             self._createMultiselection(newOptions, items);
             self._updateSelectionContext();
          });
       },
 
-      //TODO: вроде можно удалить, т.к. используется только в Петиной демке ПМО. А там можно решить всё через selectionChangeHandler
-      //TODO: и надо selectionChangeHandler переделать на событие, если получится сделать так, чтобы оно в _beforeMount не стреляло
       getSelection: function() {
          return this._multiselection.getSelection();
       },
@@ -65,15 +66,14 @@ define('Controls/Container/MassSelector', [
       _updateSelectionContext: function() {
          var currentSelection = this._multiselection.getSelection();
 
-         //TODO: по сути можно отдавать только multiSelection и сделать его версионируемым
          this._selectionContext = new SelectionContextField(
             currentSelection.selected,
             currentSelection.excluded,
             this._multiselection.getCount(),
-            this._multiselection
+            this._multiselection,
+            this._items
          );
 
-         //TODO: в _beforeMount тут нет this._options
          if (this._options.selectionChangeHandler) {
             this._options.selectionChangeHandler(currentSelection);
          }

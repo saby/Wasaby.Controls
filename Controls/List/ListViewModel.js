@@ -14,6 +14,16 @@ define('Controls/List/ListViewModel',
          updateIndexes: function(self) {
             self._startIndex = 0;
             self._stopIndex = self.getCount();
+         },
+
+         getSelectionStatus: function(self, key) {
+            if (self._selectedKeys.indexOf(key) !== -1) {
+               return true;
+            } else if (self._partiallySelectedKeys.indexOf(key) !== -1) {
+               return null;
+            } else {
+               return false;
+            }
          }
       };
 
@@ -35,7 +45,9 @@ define('Controls/List/ListViewModel',
                this._markedItem = this.getItemById(cfg.markedKey, cfg.keyProperty);
             }
 
-            this._selectionInstance = cfg.selectionInstance;
+            this._selectedKeys = cfg.selectedKeys || [];
+            this._excludedKeys = cfg.excludedKeys || [];
+            this._partiallySelectedKeys = cfg.partiallySelectedKeys || [];
 
             //TODO надо ли?
             _private.updateIndexes(self);
@@ -48,9 +60,7 @@ define('Controls/List/ListViewModel',
             itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
             itemsModelCurrent.showActions = !this._editingItemData && (!this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive));
             itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem.item;
-            if (this._selectionInstance) { //Будем считать, что если не пришёл selectionInstance, То multiSelectStatus вообще не нужен
-               itemsModelCurrent.multiSelectStatus = this._selectionInstance.getSelectionStatus(itemsModelCurrent.key);
-            }
+            itemsModelCurrent.multiSelectStatus = _private.getSelectionStatus(this, itemsModelCurrent.key);
             itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility === 'visible';
             itemsModelCurrent.drawActions =
                itemsModelCurrent.itemActions &&
@@ -188,6 +198,13 @@ define('Controls/List/ListViewModel',
             var itemById = this.getItemById(item.getId());
             var collectionItem = itemById ?  itemById.getContents() : item;
             return this._actions[this.getIndexBySourceItem(collectionItem)];
+         },
+
+         _updateSelection: function(selectedKeys, excludedKeys, partiallySelectedKeys) {
+            this._selectedKeys = selectedKeys || [];
+            this._excludedKeys = excludedKeys || [];
+            this._partiallySelectedKeys = partiallySelectedKeys || [];
+            this._nextVersion();
          },
 
          __calcSelectedItem: function(display, selKey, keyProperty) {

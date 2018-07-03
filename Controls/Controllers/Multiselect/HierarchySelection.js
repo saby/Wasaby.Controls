@@ -45,6 +45,8 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
          // 2) Для каждого ключа получаем всех детей и удаляем их из обоих массивов
          // 3) Для каждого ключа бежим по всем родителям, если в них выделены все записи, то сносим всех детей из selectedKeys, добавляем туда родителя
          var childrenIds, parent, parentId;
+         this._selectedKeys = this._selectedKeys.slice();
+         this._excludedKeys = this._excludedKeys.slice();
 
          keys.forEach(function(key) {
             if (this._excludedKeys.indexOf(key) !== -1) {
@@ -88,6 +90,8 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
             childrenIds,
             parent,
             parentId;
+         this._selectedKeys = this._selectedKeys.slice();
+         this._excludedKeys = this._excludedKeys.slice();
 
          ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, keys);
 

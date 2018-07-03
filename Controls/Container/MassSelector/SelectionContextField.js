@@ -8,12 +8,14 @@ define('Controls/Container/MassSelector/SelectionContextField', [
       excludedKeys: null,
       count: 0,
       selectionInstance: null,
+      items: null,
 
-      constructor: function(selectedKeys, excludedKeys, count, selectionInstance) {
+      constructor: function(selectedKeys, excludedKeys, count, selectionInstance, items) {
          this.selectedKeys = selectedKeys;
          this.excludedKeys = excludedKeys;
          this.count = count;
          this.selectionInstance = selectionInstance;
+         this.items = items;
       }
    });
 });

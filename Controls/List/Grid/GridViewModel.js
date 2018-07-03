@@ -574,6 +574,10 @@ define('Controls/List/Grid/GridViewModel', [
             this._model.setSwipeItem(itemData);
          },
 
+         _updateSelection: function(selectedKeys, excludedKeys, partiallySelectedKeys) {
+            this._model._updateSelection(selectedKeys, excludedKeys, partiallySelectedKeys);
+         },
+
          setDragTargetItem: function(itemData) {
             this._model.setDragTargetItem(itemData);
          },

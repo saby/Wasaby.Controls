@@ -462,8 +462,8 @@ define('Controls/List/BaseControl', [
             _private.reload(this, newOptions.dataLoadCallback,  newOptions.dataLoadErrback);
          }
 
-         if (newOptions.selectedKeys !== this._options.selectedKeys || newOptions.excludedKeys !== this._options.excludedKeys) {
-            this._listViewModel._nextVersion();
+         if (newOptions.selectedKeys !== this._options.selectedKeys || newOptions.excludedKeys !== this._options.excludedKeys || newOptions.partiallySelectedKeys !== this._options.partiallySelectedKeys) {
+            this._listViewModel._updateSelection(newOptions.selectedKeys, newOptions.excludedKeys, newOptions.partiallySelectedKeys);
          }
       },
 
