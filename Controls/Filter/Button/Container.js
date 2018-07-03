@@ -1,12 +1,10 @@
 define('Controls/Filter/Button/Container',
    [
       'Core/Control',
-      'tmpl!Controls/Filter/Button/Container',
-      'Controls/Container/Filter/FilterContextField',
-      'Core/helpers/Object/isEqual'
+      'tmpl!Controls/Filter/Button/Container'
    ],
    
-   function(Control, template, FilterContextField, isEqual) {
+   function(Control, template) {
       
       /**
        * Container component for FilterButton
@@ -21,45 +19,11 @@ define('Controls/Filter/Button/Container',
       
       'use strict';
       
-      var _private = {
-         updateHistoryId: function(self, context) {
-            if (context.filterLayoutField.historyId) {
-               self._historyId = context.filterLayoutField.historyId;
-            }
-         }
-      };
-      
-      var FilterButton = Control.extend({
+      var Container = Control.extend({
          
-         _template: template,
-         
-         _beforeUpdate: function(options, context) {
-            //context from Filter layout
-            var filterItems = context.filterLayoutField.filterButtonItems;
-            if (!isEqual(this.context.get('filterLayoutField').filterButtonItems, filterItems)) {
-               this._items = filterItems;
-            }
-            _private.updateHistoryId(this, context);
-         },
-         
-         _beforeMount: function(options, context) {
-            if (context.filterLayoutField.filterButtonItems) {
-               this._items = context.filterLayoutField.filterButtonItems;
-            }
-            _private.updateHistoryId(this, context);
-         },
-         
-         _itemsChanged: function(event, items) {
-            this._items = items;
-            this._notify('itemsChanged', [items], {bubbling: true});
-         }
+         _template: template
       });
       
-      FilterButton.contextTypes = function() {
-         return {
-            filterLayoutField: FilterContextField
-         };
-      };
       
-      return FilterButton;
+      return Container;
    });
