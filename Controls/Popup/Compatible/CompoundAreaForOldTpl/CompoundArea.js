@@ -160,6 +160,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             var self = this;
 
+            var container = self._container.length ? self._container[0] : self._container;
+            container.wsControl = self;
+
             self.templateOptions = self._options.templateOptions || {};
             self._compoundId = self._options._compoundId;
 
