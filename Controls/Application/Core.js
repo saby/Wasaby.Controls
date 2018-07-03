@@ -24,7 +24,7 @@ define('Controls/Application/Core',
 
             AppCore.superclass.constructor.apply(this, arguments);
             this.ctxData = new AppData(cfg);
-            this.headDataCtx = new HeadDataContext(cfg.theme || '');
+            this.headDataCtx = new HeadDataContext(cfg.theme || '', cfg.buildNumber);
          },
          _getChildContext: function() {
             return {
