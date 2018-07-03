@@ -57,6 +57,7 @@ define('Controls/Application/HeadDataContext', [
          if (allDeps.hasOwnProperty(key)) {
             var bundleName = bundles[key];
             if (bundleName) {
+               IoC.resolve('ILogger').info('Module ' + key + ' in bundle ' + bundleName);
                delete allDeps[key];
                packages[fixLinkSlash(bundleName)] = true;
             }
