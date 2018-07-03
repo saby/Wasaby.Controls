@@ -58,7 +58,6 @@ define('Controls/Application/HeadDataContext', [
          if (allDeps.hasOwnProperty(key)) {
             var bundleName = bundles[key];
             if (bundleName) {
-               IoC.resolve('ILogger').info('Module ' + key + ' in bundle ' + bundleName);
                delete allDeps[key];
                packages[fixLinkSlash(bundleName)] = true;
             }
@@ -77,7 +76,7 @@ define('Controls/Application/HeadDataContext', [
       return packages;
    }
 
-   function collectDependencies(deps, callback) {
+   function collectDependencies(deps, callback, buildNumber) {
       function recursiveWalker(allDeps, curNodeDeps) {
          if (curNodeDeps && curNodeDeps.length) {
             for (var i = 0; i < curNodeDeps.length; i++) {
@@ -104,15 +103,15 @@ define('Controls/Application/HeadDataContext', [
          for (var key in packages) {
             if (packages.hasOwnProperty(key)) {
                if (key.slice(key.length - 3, key.length) === 'css') {
-                  files.css.push(addBuildNumber(key, this.buildNumber));
+                  files.css.push(addBuildNumber(key, buildNumber));
                   var corrJs = key.replace(/.css$/, '.js');
                   if (!packages[corrJs]) {
-                     files.js.push(addBuildNumber(corrJs, this.buildNumber));
+                     files.js.push(addBuildNumber(corrJs, buildNumber));
                   }
                } else if (key.slice(key.length - 2, key.length) === 'js') {
-                  files.js.push(addBuildNumber(key, this.buildNumber));
+                  files.js.push(addBuildNumber(key, buildNumber));
                } else if (key.slice(key.length - 4, key.length) === 'tmpl') {
-                  files.js.push(addBuildNumber(key, this.buildNumber));
+                  files.js.push(addBuildNumber(key, buildNumber));
                }
             }
          }
@@ -122,7 +121,7 @@ define('Controls/Application/HeadDataContext', [
 
    function addBuildNumber(link, buildNumber) {
       if (buildNumber) {
-         return link.replace(/\.(css|js|tmpl)$/, 'v' + buildNumber + '$&');
+         return link.replace(/\.(css|js|tmpl)$/, '.v' + buildNumber + '$&');
       } else {
          return link;
       }
@@ -155,7 +154,7 @@ define('Controls/Application/HeadDataContext', [
                   errorState: self.err,
                   receivedStateArr: self.receivedStateArr
                });
-            });
+            }, self.buildNumber);
          });
       },
       constructor: function(theme, buildNumber) {
