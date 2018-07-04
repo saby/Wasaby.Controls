@@ -10,9 +10,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/Deferred',
       'Core/IoC',
       'Core/EventObject',
-      'Core/helpers/Hcontrol/doAutofocus',
       'Core/helpers/Function/runDelayed',
+      'Core/constants',
+      'Core/helpers/Hcontrol/doAutofocus',
       'Core/EventBus',
+
       'Lib/Control/AreaAbstract/AreaAbstract.compatible',
       'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/Abstract.compatible',
@@ -20,7 +22,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Lib/Control/BaseCompatible/BaseCompatible',
       'WS.Data/Entity/InstantiableMixin'
    ],
-   function(Control,
+   function(
+      Control,
       template,
       LikeWindowMixin,
       arrayFindIndex,
@@ -30,9 +33,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       cDeferred,
       IoC,
       EventObject,
-      doAutofocus,
       runDelayed,
-      cEventBus) {
+      CoreConstants,
+      doAutofocus,
+      cEventBus
+   ) {
       function removeOperation(operation, array) {
          var idx = arrayFindIndex(array, function(op) {
             return op === operation;
@@ -284,6 +289,14 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          closeHandler: function(e, arg) {
             e.stopPropagation();
             this._close(arg);
+         },
+         _keyUp: function(event) {
+            var
+               self = this;
+            if (!event.nativeEven.shiftKey && event.nativeEvent.keyCode === CoreConstants.key.esc) {
+               self._close();
+            }
+            event.stopPropagation();
          },
 
          _setCompoundAreaOptions: function(newOptions) {
