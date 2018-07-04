@@ -50,10 +50,11 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
 
          keys.forEach(function(key) {
             if (this._excludedKeys.indexOf(key) !== -1) {
-               ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, keys);
+               ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, [key]);
             } else {
-               ArraySimpleValuesUtil.addSubArray(this._selectedKeys, keys);
+               ArraySimpleValuesUtil.addSubArray(this._selectedKeys, [key]);
             }
+
             childrenIds = this._strategy.getChildrenIds(key, this._items);
             ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, childrenIds);
             ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, childrenIds);
@@ -83,7 +84,7 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
 
       unselect: function(keys) {
          // 1) Удаляем всех из selectedKeys
-         // 2) Удаляем всех детей из excludedKeys
+         // 2) Удаляем всех детей из selectedKeys и excludedKeys
          // 3) Для каждого ключа бежим по всем родителям, как только нашли полностью выделенного родителя, то добавляем в excludedKeys и заканчиваем бежать
          // 3.1) Если стратегия allData и если после этого у полностью выделенного родителя все дети оказались в excludedKeys, то снимаем выделение с него.
          var
@@ -96,7 +97,10 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
          ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, keys);
 
          keys.forEach(function(key) {
-            ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, this._strategy.getChildrenIds(key, this._items));
+            childrenIds = this._strategy.getChildrenIds(key, this._items);
+
+            ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, childrenIds);
+            ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, childrenIds);
 
             parent = key === null ? null : this._hierarchyRelation.getParent(key, this._items);
             while (parent) {
@@ -108,7 +112,11 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
                         childrenIds = this._strategy.getChildrenIds(parentId, this._items);
                         ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, childrenIds);
                         ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, [parentId]);
-                        ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [parentId]);
+
+                        parent = this._hierarchyRelation.getParent(parentId, this._items);
+                        if (parent && this._strategy.isAllSelection(this._getParams(parent.getId()))) {
+                           ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [parent.getId()]);
+                        }
                      }
                   }
                }

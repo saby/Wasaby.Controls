@@ -457,10 +457,57 @@ define([
                assert.deepEqual([7, 6, 1], selection.excluded);
                assert.equal(0, selectionInstance.getCount());
             });
+
+            it('unselect all nested children then select parent', function() {
+               cfg = {
+                  selectedKeys: [],
+                  excludedKeys: [],
+                  items: allData
+               };
+               selectionInstance = new HierarchySelection(cfg);
+               selectionInstance.select([2, 5]);
+               selection = selectionInstance.getSelection();
+               assert.deepEqual([2, 5], selection.selected);
+               assert.deepEqual([], selection.excluded);
+               assert.equal(4, selectionInstance.getCount());
+               selectionInstance.unselect([5]);
+               selection = selectionInstance.getSelection();
+               assert.deepEqual([2], selection.selected);
+               assert.deepEqual([], selection.excluded);
+               assert.equal(3, selectionInstance.getCount());
+               selectionInstance.unselect([2]);
+               selection = selectionInstance.getSelection();
+               assert.deepEqual([], selection.selected);
+               assert.deepEqual([], selection.excluded);
+               assert.equal(0, selectionInstance.getCount());
+               selectionInstance.select([1]);
+               selection = selectionInstance.getSelection();
+               assert.deepEqual([1], selection.selected);
+               assert.deepEqual([], selection.excluded);
+               assert.equal(5, selectionInstance.getCount());
+            });
+
+            it('unselect parent of selected child', function () {
+               cfg = {
+                  selectedKeys: [2],
+                  excludedKeys: [],
+                  items: allData
+               };
+               selectionInstance = new HierarchySelection(cfg);
+               selection = selectionInstance.getSelection();
+               assert.deepEqual([2], selection.selected);
+               assert.deepEqual([], selection.excluded);
+               assert.equal(3, selectionInstance.getCount());
+               selectionInstance.unselect([1]);
+               selection = selectionInstance.getSelection();
+               assert.deepEqual([], selection.selected);
+               assert.deepEqual([], selection.excluded);
+               assert.equal(0, selectionInstance.getCount());
+            });
          });
 
          describe('allData', function() {
-            it('unselect node', function() {
+            it('unselect node', function () {
                cfg = {
                   selectedKeys: [1],
                   excludedKeys: [],
@@ -479,7 +526,7 @@ define([
                assert.equal(0, selectionInstance.getCount());
             });
 
-            it('unselect nested node', function() {
+            it('unselect nested node', function () {
                cfg = {
                   selectedKeys: [2],
                   excludedKeys: [],
@@ -498,7 +545,7 @@ define([
                assert.equal(0, selectionInstance.getCount());
             });
 
-            it('unselect node with excluded nested children', function() {
+            it('unselect node with excluded nested children', function () {
                cfg = {
                   selectedKeys: [1],
                   excludedKeys: [3],
@@ -517,7 +564,7 @@ define([
                assert.equal(0, selectionInstance.getCount());
             });
 
-            it('unselect root with excluded nested children', function() {
+            it('unselect root with excluded nested children', function () {
                cfg = {
                   selectedKeys: [null],
                   excludedKeys: [3],
@@ -536,7 +583,7 @@ define([
                assert.equal(0, selectionInstance.getCount());
             });
 
-            it('unselect child inside selected node', function() {
+            it('unselect child inside selected node', function () {
                cfg = {
                   selectedKeys: [1],
                   excludedKeys: [],
@@ -556,11 +603,11 @@ define([
                selectionInstance.unselect([2]);
                selection = selectionInstance.getSelection();
                assert.deepEqual([], selection.selected);
-               assert.deepEqual([1], selection.excluded);
+               assert.deepEqual([], selection.excluded);
                assert.equal(0, selectionInstance.getCount());
             });
 
-            it('sequentially unselect all children inside selected root', function() {
+            it('sequentially unselect all children inside selected root', function () {
                cfg = {
                   selectedKeys: [null],
                   excludedKeys: [],
@@ -593,6 +640,55 @@ define([
                assert.deepEqual([7, 6, 5, 4], selection.excluded);
                assert.equal(3, selectionInstance.getCount());
                selectionInstance.unselect([3]);
+               selection = selectionInstance.getSelection();
+               assert.deepEqual([], selection.selected);
+               assert.deepEqual([], selection.excluded);
+               assert.equal(0, selectionInstance.getCount());
+            });
+
+            it('unselect all nested children then select parent', function () {
+               cfg = {
+                  selectedKeys: [],
+                  excludedKeys: [],
+                  items: allData,
+                  strategy: 'allData'
+               };
+               selectionInstance = new HierarchySelection(cfg);
+               selectionInstance.select([2, 5]);
+               selection = selectionInstance.getSelection();
+               assert.deepEqual([1], selection.selected);
+               assert.deepEqual([], selection.excluded);
+               assert.equal(5, selectionInstance.getCount());
+               selectionInstance.unselect([5]);
+               selection = selectionInstance.getSelection();
+               assert.deepEqual([1], selection.selected);
+               assert.deepEqual([5], selection.excluded);
+               assert.equal(4, selectionInstance.getCount());
+               selectionInstance.unselect([2]);
+               selection = selectionInstance.getSelection();
+               assert.deepEqual([], selection.selected);
+               assert.deepEqual([], selection.excluded);
+               assert.equal(0, selectionInstance.getCount());
+               selectionInstance.select([1]);
+               selection = selectionInstance.getSelection();
+               assert.deepEqual([1], selection.selected);
+               assert.deepEqual([], selection.excluded);
+               assert.equal(5, selectionInstance.getCount());
+            });
+
+            it('unselect parent of selected child', function () {
+               cfg = {
+                  selectedKeys: [2],
+                  excludedKeys: [],
+                  items: allData,
+                  strategy: 'allData'
+               };
+               selectionInstance = new HierarchySelection(cfg);
+               selection = selectionInstance.getSelection();
+               assert.deepEqual([2], selection.selected);
+               assert.deepEqual([], selection.excluded);
+               assert.equal(3, selectionInstance.getCount());
+               selectionInstance.unselect([1]);
                selection = selectionInstance.getSelection();
                assert.deepEqual([], selection.selected);
                assert.deepEqual([], selection.excluded);
