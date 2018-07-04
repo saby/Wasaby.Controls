@@ -1,8 +1,9 @@
 define('Controls/Application/DepsCollector/DepsCollector', [
    'Core/Deferred',
+   'Core/IoC',
    'Core/cookie',
    'Core/core-extend'
-], function(Deferred, cookie, coreExtend) {
+], function(Deferred, IoC, cookie, coreExtend) {
 
    var DEPTYPES = {
       BUNDLE: 1,
@@ -43,6 +44,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
          if (allDeps.hasOwnProperty(key)) {
             var bundleName = bundlesRoute[key];
             if (bundleName) {
+               IoC.resolve('ILogger').info('Module ' + key + ' in bundle ' + bundleName);
                delete allDeps[key];
                packages[fixLinkSlash(bundleName)] = DEPTYPES.BUNDLE;
             }
