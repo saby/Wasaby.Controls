@@ -184,22 +184,6 @@ define(
             });
          });
 
-         it('set shrink', function(done) {
-            var width = [{index: '2', width: 100},
-               {index: '0', width: 300},
-               {index: '1', width: 50},
-               {index: '3', width: 600}];
-            FastData._private.reload(fastData, fastData.sourceController).addCallback(function () {
-               FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function () {
-                  FastData._private.setShrink(fastData, width);
-                  assert.equal(fastData._configs[0].shrink, 3);
-                  assert.equal(fastData._configs[1].shrink, 1);
-                  assert.equal(fastData._configs[2].shrink, 2);
-                  assert.equal(fastData._configs[3].shrink, 4);
-                  done();
-               });
-            });
-         });
          function setTrue(assert) {
             assert.equal(true, true);
          }
