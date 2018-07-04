@@ -44,6 +44,9 @@ function(cMerge,
          if (cfg.parent) {
             cfg.templateOptions.__parentFromCfg = cfg.parent;
          }
+         if (cfg.opener) {
+            cfg.templateOptions.__openerFromCfg = cfg.opener;
+         }
          if (cfg.newRecord) { //от RecordFloatArea
             cfg.templateOptions.newRecord = cfg.newRecord;
          }
