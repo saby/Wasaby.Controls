@@ -1,72 +1,73 @@
-<Controls.Container.MultiSelector
-        source="{{_viewSource}}"
-        selectedKeys="{{[1, 3]}}"
-        name="multiSelector"
-        selectionChangeHandler="{{_selectionChange}}">
-   <div class="controls-OperationsPanel_demo">
-      <div>
-         <h2>Панель операций</h2>
-         <span>open/close-panel -></span>
-         <i
-            on:click="_openClick()"
-            class="icon-medium {{_panelVisible ? 'icon-MarkCollapseBold' : 'icon-MarkExpandBold'}}"
-         />
-      </div>
-      <ws:if data="{{_panelVisible}}">
-         <Controls.OperationsPanel
-            attr:style="width:{{_width}}{{ _px ? 'px' : '%'}}; max-width:100%;"
-            name="myPanel"
-            multiSelector="{{true}}"
-            parentProperty="parent"
-            nodeProperty="@parent"
-            keyProperty="id"
-            testOnlyForAutoUpdate="{{_width}}"
-            testOnlyForAutoUpdate2="{{_px}}"
-            source="{{_panelSource}}"
-            on:itemClick="_itemClick()"
-         />
-      </ws:if>
+<Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
+   <Controls.Container.MultiSelector
+           selectedKeys="{{[1, 3]}}"
+           name="multiSelector"
+           selectionChangeHandler="{{_selectionChange}}">
+      <div class="controls-OperationsPanel_demo">
+         <div>
+            <h2>Панель операций</h2>
+            <span>open/close-panel -></span>
+            <i
+                    on:click="_openClick()"
+                    class="icon-medium {{_panelVisible ? 'icon-MarkCollapseBold' : 'icon-MarkExpandBold'}}"
+            />
+         </div>
+         <ws:if data="{{_panelVisible}}">
+            <Controls.OperationsPanel
+                    attr:style="width:{{_width}}{{ _px ? 'px' : '%'}}; max-width:100%;"
+                    name="myPanel"
+                    multiSelector="{{true}}"
+                    parentProperty="parent"
+                    nodeProperty="@parent"
+                    keyProperty="id"
+                    testOnlyForAutoUpdate="{{_width}}"
+                    testOnlyForAutoUpdate2="{{_px}}"
+                    source="{{_panelSource}}"
+                    on:itemClick="_itemClick()"
+            />
+         </ws:if>
 
-      <div class="123">
-         <h2>Связанный список</h2>
-         <Controls.Container.Scroll attr:class="cDemo-ScrollContainer">
-            <Controls.List.MultiSelector>
-               <Controls.List
-                  source="{{_viewSource}}"
-                  markedKey="{{3}}"
-                  displayProperty="title"
-                  allowEmptySelection="{{false}}"
-                  multiSelect="{{true}}"
-                  multiSelectVisibility="visible"
-                  name="listView"
-                  keyProperty="id"
-                  itemActions="{{_itemActions}}"
-                  on:beforeItemsRemove="_beforeItemsRemove()"
-               >
-                  <ws:navigation source="page" view="infinity">
-                     <ws:sourceConfig
-                        pageSize="{{9}}"
-                        page="{{0}}"
-                        mode="totalCount"
-                     />
-                     <ws:viewConfig pagingMode="direct" />
-                  </ws:navigation>
-               </Controls.List>
-            </Controls.List.MultiSelector>
-         </Controls.Container.Scroll>
-      </div>
+         <div class="123">
+            <h2>Связанный список</h2>
+            <Controls.Container.Scroll attr:class="cDemo-ScrollContainer">
+               <Controls.List.MultiSelector>
+                  <Controls.List
+                          source="{{_viewSource}}"
+                          markedKey="{{3}}"
+                          displayProperty="title"
+                          allowEmptySelection="{{false}}"
+                          multiSelect="{{true}}"
+                          multiSelectVisibility="visible"
+                          name="listView"
+                          keyProperty="id"
+                          itemActions="{{_itemActions}}"
+                          on:beforeItemsRemove="_beforeItemsRemove()"
+                  >
+                     <ws:navigation source="page" view="infinity">
+                        <ws:sourceConfig
+                                pageSize="{{9}}"
+                                page="{{0}}"
+                                mode="totalCount"
+                        />
+                        <ws:viewConfig pagingMode="direct" />
+                     </ws:navigation>
+                  </Controls.List>
+               </Controls.List.MultiSelector>
+            </Controls.Container.Scroll>
+         </div>
 
-      <div>
-         <h2>Настройки</h2>
-         ширина:
-         <Controls.Input.Text attr:id="widthInput" bind:value="_width" />
-         <Controls.Toggle.DoubleSwitch
-            bind:value="_px"
-            captions="{{['px', '%']}}"
-         />
+         <div>
+            <h2>Настройки</h2>
+            ширина:
+            <Controls.Input.Text attr:id="widthInput" bind:value="_width" />
+            <Controls.Toggle.DoubleSwitch
+                    bind:value="_px"
+                    captions="{{['px', '%']}}"
+            />
+         </div>
+         <h2>Действия</h2>
+         <div>{{ _currentClick }}</div>
+         <Controls.Popup.Opener.Confirmation name="popupOpener" />
       </div>
-      <h2>Действия</h2>
-      <div>{{ _currentClick }}</div>
-      <Controls.Popup.Opener.Confirmation name="popupOpener" />
-   </div>
-</Controls.Container.MultiSelector>
+   </Controls.Container.MultiSelector>
+</Controls.Container.Data>

@@ -3,37 +3,32 @@ define('Controls/Container/MultiSelector', [
    'tmpl!Controls/Container/MultiSelector/MultiSelector',
    'Controls/Container/MultiSelector/SelectionContextField',
    'Controls/Controllers/Multiselect/Selection',
-   'Controls/Controllers/SourceController'
+   'Controls/Container/Data/ContextOptions'
 ], function(
    Control,
    template,
    SelectionContextField,
    Selection,
-   SourceController
+   DataContext
 ) {
    'use strict';
 
-   //TODO: после Саниной доброски нужно реагировать на изменение items
-
-   return Control.extend({
+   var MultiSelector = Control.extend({
       _template: template,
       _multiselection: null,
       _items: null,
 
-      _beforeMount: function(newOptions) {
-         var self = this;
-         this._updateSelectionContext = this._updateSelectionContext.bind(this);
+      _beforeMount: function(newOptions, context) {
+         this._items = context.dataOptions.items;
+         this._createMultiselection(newOptions, context.dataOptions.items);
+         this._updateSelectionContext();
+      },
 
-         this._sourceController = new SourceController({
-            source: newOptions.source,
-            navigation: newOptions.navigation
-         });
-
-         return this._sourceController.load().addCallback(function(items) {
-            self._items = items;
-            self._createMultiselection(newOptions, items);
-            self._updateSelectionContext();
-         });
+      _beforeUpdate: function(newOptions, context) {
+         if (this._items !== context.dataOptions.items) {
+            this._items = context.dataOptions.items;
+            this._multiselection.setItems(context.dataOptions.items);
+         }
       },
 
       getSelection: function() {
@@ -69,8 +64,7 @@ define('Controls/Container/MultiSelector', [
             currentSelection.selected,
             currentSelection.excluded,
             this._multiselection.getCount(),
-            this._multiselection,
-            this._items
+            this._multiselection
          );
 
          if (this._options.selectionChangeHandler) {
@@ -94,4 +88,12 @@ define('Controls/Container/MultiSelector', [
          };
       }
    });
+
+   MultiSelector.contextTypes = function() {
+      return {
+         dataOptions: DataContext
+      };
+   };
+
+   return MultiSelector;
 });

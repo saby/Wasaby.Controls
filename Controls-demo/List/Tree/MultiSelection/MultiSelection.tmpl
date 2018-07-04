@@ -1,11 +1,11 @@
 <div class="demo-Grid">
     <h1>Partial data</h1>
     <div class="demo-Grid__container">
-        <Controls.Container.TreeMultiSelector source="{{_viewSource}}"
-                                             keyProperty="id"
-                                             parentProperty="Раздел"
-                                             nodeProperty="Раздел@">
-            <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+        <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
+            <Controls.Container.TreeMultiSelector keyProperty="id"
+                                                  parentProperty="Раздел"
+                                                  nodeProperty="Раздел@">
+                <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
                     <Controls.List.MultiSelector>
                         <Controls.TreeGrid
                                 name="list"
@@ -18,30 +18,33 @@
                                 columns="{{gridColumns}}">
                         </Controls.TreeGrid>
                     </Controls.List.MultiSelector>
-            </Controls.Container.Scroll>
-        </Controls.Container.TreeMultiSelector>
+                </Controls.Container.Scroll>
+            </Controls.Container.TreeMultiSelector>
+        </Controls.Container.Data>
     </div>
     <h1>All data</h1>
     <div class="demo-Grid__container">
-        <Controls.Container.TreeMultiSelector source="{{_viewSource}}"
-                                             strategy="allData"
-                                             keyProperty="id"
-                                             parentProperty="Раздел"
-                                             nodeProperty="Раздел@">
-            <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
-                <Controls.List.MultiSelector>
-                    <Controls.TreeGrid
-                            name="list"
-                            attr:class="demo-Grid__control"
-                            keyProperty="id"
-                            parentProperty="Раздел"
-                            nodeProperty="Раздел@"
-                            source="{{_viewSource}}"
-                            multiSelectVisibility="visible"
-                            columns="{{gridColumns}}">
-                    </Controls.TreeGrid>
-                </Controls.List.MultiSelector>
-            </Controls.Container.Scroll>
-        </Controls.Container.TreeMultiSelector>
+        <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
+            <Controls.Container.TreeMultiSelector source="{{_viewSource}}"
+                                                  strategy="allData"
+                                                  keyProperty="id"
+                                                  parentProperty="Раздел"
+                                                  nodeProperty="Раздел@">
+                <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+                    <Controls.List.MultiSelector>
+                        <Controls.TreeGrid
+                                name="list"
+                                attr:class="demo-Grid__control"
+                                keyProperty="id"
+                                parentProperty="Раздел"
+                                nodeProperty="Раздел@"
+                                source="{{_viewSource}}"
+                                multiSelectVisibility="visible"
+                                columns="{{gridColumns}}">
+                        </Controls.TreeGrid>
+                    </Controls.List.MultiSelector>
+                </Controls.Container.Scroll>
+            </Controls.Container.TreeMultiSelector>
+        </Controls.Container.Data>
     </div>
 </div>

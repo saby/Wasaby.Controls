@@ -2,12 +2,14 @@ define('Controls/List/MultiSelector', [
    'Core/Control',
    'tmpl!Controls/List/MultiSelector/MultiSelector',
    'Controls/Container/MultiSelector/SelectionContextField',
-   'Core/helpers/Object/isEqual'
+   'Core/helpers/Object/isEqual',
+   'Controls/Container/Data/ContextOptions'
 ], function(
    Control,
    template,
    SelectionContextField,
-   isEqual
+   isEqual,
+   DataContext
 ) {
    'use strict';
 
@@ -43,16 +45,16 @@ define('Controls/List/MultiSelector', [
       _beforeMount: function(newOptions, context) {
          this._selectedKeys = context.selection.selectedKeys;
          this._excludedKeys = context.selection.excludedKeys;
-         this._items = context.selection.items;
+         this._items = context.dataOptions.items;
          this._selectionInstance = context.selection.selectionInstance;
          _private.calculateCheckboxes(this);
       },
 
       _beforeUpdate: function(newOptions, context) {
-         if (this._selectedKeys !== context.selection.selectedKeys || this._excludedKeys !== context.selection.excludedKeys || !isEqual(this._items, context.selection.items)) {
+         if (this._selectedKeys !== context.selection.selectedKeys || this._excludedKeys !== context.selection.excludedKeys || !isEqual(this._items, context.dataOptions.items)) {
             this._selectedKeys = context.selection.selectedKeys;
             this._excludedKeys = context.selection.excludedKeys;
-            this._items = context.selection.items;
+            this._items = context.dataOptions.items;
             _private.calculateCheckboxes(this);
          }
       },
@@ -72,7 +74,8 @@ define('Controls/List/MultiSelector', [
 
    MultiSelector.contextTypes = function contextTypes() {
       return {
-         selection: SelectionContextField
+         selection: SelectionContextField,
+         dataOptions: DataContext
       };
    };
 
