@@ -2,22 +2,21 @@
     <h1>Partial data</h1>
     <div class="demo-Grid__container">
         <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
-            <Controls.Container.TreeMultiSelector keyProperty="id"
-                                                  parentProperty="Раздел"
+            <Controls.Container.TreeMultiSelector parentProperty="Раздел"
                                                   nodeProperty="Раздел@">
                 <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
-                    <Controls.List.MultiSelector>
-                        <Controls.TreeGrid
-                                name="list"
-                                attr:class="demo-Grid__control"
-                                keyProperty="id"
-                                parentProperty="Раздел"
-                                nodeProperty="Раздел@"
-                                source="{{_viewSource}}"
-                                multiSelectVisibility="visible"
-                                columns="{{gridColumns}}">
-                        </Controls.TreeGrid>
-                    </Controls.List.MultiSelector>
+                    <Controls.List.Container>
+                        <Controls.List.MultiSelector>
+                                <Controls.TreeGrid
+                                        name="list"
+                                        attr:class="demo-Grid__control"
+                                        parentProperty="Раздел"
+                                        nodeProperty="Раздел@"
+                                        multiSelectVisibility="visible"
+                                        columns="{{gridColumns}}">
+                                </Controls.TreeGrid>
+                        </Controls.List.MultiSelector>
+                    </Controls.List.Container>
                 </Controls.Container.Scroll>
             </Controls.Container.TreeMultiSelector>
         </Controls.Container.Data>
@@ -25,24 +24,22 @@
     <h1>All data</h1>
     <div class="demo-Grid__container">
         <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
-            <Controls.Container.TreeMultiSelector source="{{_viewSource}}"
-                                                  strategy="allData"
-                                                  keyProperty="id"
+            <Controls.Container.TreeMultiSelector strategy="allData"
                                                   parentProperty="Раздел"
                                                   nodeProperty="Раздел@">
                 <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
-                    <Controls.List.MultiSelector>
-                        <Controls.TreeGrid
-                                name="list"
-                                attr:class="demo-Grid__control"
-                                keyProperty="id"
-                                parentProperty="Раздел"
-                                nodeProperty="Раздел@"
-                                source="{{_viewSource}}"
-                                multiSelectVisibility="visible"
-                                columns="{{gridColumns}}">
-                        </Controls.TreeGrid>
-                    </Controls.List.MultiSelector>
+                    <Controls.List.Container>
+                        <Controls.List.MultiSelector>
+                            <Controls.TreeGrid
+                                    name="list"
+                                    attr:class="demo-Grid__control"
+                                    parentProperty="Раздел"
+                                    nodeProperty="Раздел@"
+                                    multiSelectVisibility="visible"
+                                    columns="{{gridColumns}}">
+                            </Controls.TreeGrid>
+                        </Controls.List.MultiSelector>
+                    </Controls.List.Container>
                 </Controls.Container.Scroll>
             </Controls.Container.TreeMultiSelector>
         </Controls.Container.Data>

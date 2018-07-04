@@ -20,7 +20,7 @@ define('Controls/Container/MultiSelector', [
 
       _beforeMount: function(newOptions, context) {
          this._items = context.dataOptions.items;
-         this._createMultiselection(newOptions, context.dataOptions.items);
+         this._createMultiselection(newOptions, context);
          this._updateSelectionContext();
       },
 
@@ -73,11 +73,11 @@ define('Controls/Container/MultiSelector', [
          this._forceUpdate();
       },
 
-      _createMultiselection: function(options, items) {
+      _createMultiselection: function(options, context) {
          this._multiselection = new Selection({
             selectedKeys: options.selectedKeys || [],
             excludedKeys: options.excludedKeys || [],
-            items: items,
+            items: context.dataOptions.items,
             strategy: options.strategy
          });
       },

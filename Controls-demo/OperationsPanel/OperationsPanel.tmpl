@@ -30,29 +30,30 @@
          <div class="123">
             <h2>Связанный список</h2>
             <Controls.Container.Scroll attr:class="cDemo-ScrollContainer">
-               <Controls.List.MultiSelector>
-                  <Controls.List
-                          source="{{_viewSource}}"
-                          markedKey="{{3}}"
-                          displayProperty="title"
-                          allowEmptySelection="{{false}}"
-                          multiSelect="{{true}}"
-                          multiSelectVisibility="visible"
-                          name="listView"
-                          keyProperty="id"
-                          itemActions="{{_itemActions}}"
-                          on:beforeItemsRemove="_beforeItemsRemove()"
-                  >
-                     <ws:navigation source="page" view="infinity">
-                        <ws:sourceConfig
-                                pageSize="{{9}}"
-                                page="{{0}}"
-                                mode="totalCount"
-                        />
-                        <ws:viewConfig pagingMode="direct" />
-                     </ws:navigation>
-                  </Controls.List>
-               </Controls.List.MultiSelector>
+               <Controls.List.Container>
+                  <Controls.List.MultiSelector>
+                     <Controls.List
+                             source="{{_viewSource}}"
+                             markedKey="{{3}}"
+                             displayProperty="title"
+                             allowEmptySelection="{{false}}"
+                             multiSelect="{{true}}"
+                             multiSelectVisibility="visible"
+                             name="listView"
+                             itemActions="{{_itemActions}}"
+                             on:beforeItemsRemove="_beforeItemsRemove()"
+                     >
+                        <ws:navigation source="page" view="infinity">
+                           <ws:sourceConfig
+                                   pageSize="{{9}}"
+                                   page="{{0}}"
+                                   mode="totalCount"
+                           />
+                           <ws:viewConfig pagingMode="direct" />
+                        </ws:navigation>
+                     </Controls.List>
+                  </Controls.List.MultiSelector>
+               </Controls.List.Container>
             </Controls.Container.Scroll>
          </div>
 

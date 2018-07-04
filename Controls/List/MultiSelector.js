@@ -2,13 +2,11 @@ define('Controls/List/MultiSelector', [
    'Core/Control',
    'tmpl!Controls/List/MultiSelector/MultiSelector',
    'Controls/Container/MultiSelector/SelectionContextField',
-   'Core/helpers/Object/isEqual',
    'Controls/Container/Data/ContextOptions'
 ], function(
    Control,
    template,
    SelectionContextField,
-   isEqual,
    DataContext
 ) {
    'use strict';
@@ -46,15 +44,25 @@ define('Controls/List/MultiSelector', [
          this._selectedKeys = context.selection.selectedKeys;
          this._excludedKeys = context.selection.excludedKeys;
          this._items = context.dataOptions.items;
+         this._items.subscribe('onCollectionChange', function() {
+            _private.calculateCheckboxes(this);
+            this._forceUpdate();
+         }.bind(this));
          this._selectionInstance = context.selection.selectionInstance;
          _private.calculateCheckboxes(this);
       },
 
       _beforeUpdate: function(newOptions, context) {
-         if (this._selectedKeys !== context.selection.selectedKeys || this._excludedKeys !== context.selection.excludedKeys || !isEqual(this._items, context.dataOptions.items)) {
+         if (this._items !== context.dataOptions.items) {
+            this._items = context.dataOptions.items;
+            this._items.subscribe('onCollectionChange', function() {
+               _private.calculateCheckboxes(this);
+               this._forceUpdate();
+            }.bind(this));
+            _private.calculateCheckboxes(this);
+         } else if (this._selectedKeys !== context.selection.selectedKeys || this._excludedKeys !== context.selection.excludedKeys) {
             this._selectedKeys = context.selection.selectedKeys;
             this._excludedKeys = context.selection.excludedKeys;
-            this._items = context.dataOptions.items;
             _private.calculateCheckboxes(this);
          }
       },
