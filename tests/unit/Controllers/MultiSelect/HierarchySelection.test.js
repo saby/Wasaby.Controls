@@ -667,6 +667,16 @@ define([
                selectionInstance = new HierarchySelection(cfg);
                assert.equal(HierarchySelection.SELECTION_STATUS.NOT_SELECTED, selectionInstance.getSelectionStatus(1));
             });
+
+            it('hasSelectedChildren', function() {
+               cfg = {
+                  selectedKeys: [3],
+                  excludedKeys: [],
+                  items: allData
+               };
+               selectionInstance = new HierarchySelection(cfg);
+               assert.equal(HierarchySelection.SELECTION_STATUS.PARTIALLY_SELECTED, selectionInstance.getSelectionStatus(1));
+            });
          });
 
          describe('allData', function() {
@@ -738,6 +748,17 @@ define([
                };
                selectionInstance = new HierarchySelection(cfg);
                assert.equal(HierarchySelection.SELECTION_STATUS.NOT_SELECTED, selectionInstance.getSelectionStatus(1));
+            });
+
+            it('hasSelectedChildren', function() {
+               cfg = {
+                  selectedKeys: [3],
+                  excludedKeys: [],
+                  items: allData,
+                  strategy: 'allData'
+               };
+               selectionInstance = new HierarchySelection(cfg);
+               assert.equal(HierarchySelection.SELECTION_STATUS.PARTIALLY_SELECTED, selectionInstance.getSelectionStatus(1));
             });
          });
       });

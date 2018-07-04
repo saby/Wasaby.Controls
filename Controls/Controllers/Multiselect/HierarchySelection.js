@@ -140,15 +140,23 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
             1) Он есть в selectedKeys
             2) Выделен его родитель и листа нет в excludedKeys
           */
-         var hasExcludedChildren = false;
+         var
+            hasExcludedChildren = false,
+            hasSelectedChildren = false;
          if (key === null || this._hierarchyRelation.isNode(this._items.getRecordById(key), this._items)) {
             this._strategy.getChildrenIds(key, this._items).forEach(function(childId) {
                if (this._excludedKeys.indexOf(childId) !== -1) {
                   hasExcludedChildren = true;
                }
+               if (this._selectedKeys.indexOf(childId) !== -1) {
+                  hasSelectedChildren = true;
+               }
             }.bind(this));
             if (this._selectedKeys.indexOf(key) !== -1 || (this._excludedKeys.indexOf(key) === -1 && this._strategy.isParentSelected(key, this._selectedKeys, this._excludedKeys, this._items))) {
                return hasExcludedChildren ? HierarchySelection.SELECTION_STATUS.PARTIALLY_SELECTED : HierarchySelection.SELECTION_STATUS.SELECTED;
+            }
+            if (hasSelectedChildren) {
+               return HierarchySelection.SELECTION_STATUS.PARTIALLY_SELECTED;
             }
          } else {
             if (this._selectedKeys.indexOf(key) !== -1 || this._excludedKeys.indexOf(key) === -1 && this._strategy.isParentSelected(key, this._selectedKeys, this._excludedKeys, this._items)) {
