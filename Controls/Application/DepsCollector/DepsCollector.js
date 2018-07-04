@@ -10,6 +10,14 @@ define('Controls/Application/DepsCollector/DepsCollector', [
       SINGLE: 2
    };
 
+   function addBuildNumber(link, buildNumber) {
+      if (buildNumber) {
+         return link.replace(/\.(css|js|tmpl)$/, '.v' + buildNumber + '$&');
+      } else {
+         return link;
+      }
+   }
+
    function isJs(key) {
       return key.split('!')[0] === key;
    }
@@ -89,10 +97,11 @@ define('Controls/Application/DepsCollector/DepsCollector', [
        * @param modInfo - contains info about path to module files
        * @param bundlesRoute - contains info about custom packets with modules
        */
-      constructor: function(modDeps, modInfo, bundlesRoute) {
+      constructor: function(modDeps, modInfo, bundlesRoute, buildNumber) {
          this.modDeps = modDeps;
          this.modInfo = modInfo;
          this.bundlesRoute = bundlesRoute;
+         this.buildNumber = buildNumber;
       },
       collectDependencies: function(deps) {
          var files = {js: [], css: []};
@@ -102,15 +111,15 @@ define('Controls/Application/DepsCollector/DepsCollector', [
          for (var key in packages) {
             if (packages.hasOwnProperty(key)) {
                if (key.slice(key.length - 3, key.length) === 'css') {
-                  files.css.push(key);
+                  files.css.push(addBuildNumber(key, this.buildNumber));
                   var corrJs = key.replace(/.css$/, '.js');
                   if (!packages[corrJs] && packages[key] === DEPTYPES.BUNDLE) {
-                     files.js.push(corrJs);
+                     files.js.push(addBuildNumber(corrJs, this.buildNumber));
                   }
                } else if (key.slice(key.length - 2, key.length) === 'js') {
-                  files.js.push(key);
+                  files.js.push(addBuildNumber(key, this.buildNumber));
                } else if (key.slice(key.length - 4, key.length) === 'tmpl') {
-                  files.js.push(key);
+                  files.js.push(addBuildNumber(key, this.buildNumber));
                }
             }
          }
