@@ -1,7 +1,7 @@
 <ws:if data="{{_listItems && _listItems.getCount() !== 0}}">
    <div class="controls-HistoryList">
       <div class="controls-FilterPanel__caption">Ранее отбирались</div>
-      <div class="controls-HistoryList__list {{_isMaxHeight ? 'controls-FilterPanel_maxHeight'}}">
+      <div class="controls-HistoryList__content {{_isMaxHeight ? 'controls-FilterPanel_maxHeight'}}">
          <ws:for data="item in _listItems">
             <div class="controls-HistoryList__itemWrapper">
                <div class="controls-HistoryList__item" on:click="_contentClick(item)">{{_getText(item)}}</div>

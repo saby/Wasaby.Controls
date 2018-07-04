@@ -10,9 +10,13 @@ define('Controls/Filter/Button/History/List', [
    'Controls/History/Service',
    'Controls/Controllers/SourceController',
    'WS.Data/Collection/RecordSet',
+   'WS.Data/Chain',
+   'WS.Data/Utils',
    'css!Controls/Filter/Button/History/List'
-], function(BaseControl, template, MemorySource, SbisAdapter, HistorySource, HistoryService, SourceController, RecordSet) {
+], function(BaseControl, template, MemorySource, SbisAdapter, HistorySource, HistoryService, SourceController, RecordSet, Chain, Utils) {
    'use strict';
+
+   var getPropValue = Utils.getItemPropertyValue.bind(Utils);
 
    var actionType = {
 
@@ -78,6 +82,21 @@ define('Controls/Filter/Button/History/List', [
          });
       },
 
+      getStringHistoryFromItems: function(items) {
+         var text = [];
+         Chain(items).each(function(elem) {
+            var value = getPropValue(elem, 'value');
+
+            if ((value !== getPropValue(elem, 'resetValue')) && (!elem.hasOwnProperty('visibility') || getPropValue(elem, 'visibility'))) {
+               var textValue = getPropValue(elem, 'textValue');
+               if (textValue) {
+                  text.push(textValue);
+               }
+            }
+         });
+         return text.join(', ');
+      },
+
       updateItems: function(self) {
          var historySource = this.getHistorySource(self);
          self._listMemory = this.createHistoryMemory(historySource.getItems());
@@ -124,6 +143,15 @@ define('Controls/Filter/Button/History/List', [
          if (newOptions.historyId && newOptions.historyId !== this._options.historyId) {
             return _private.loadItems(this, _private.getHistorySource(this, newOptions.historyId));
          }
+      },
+
+      _getText: function(item) {
+         var text = '';
+         var items = JSON.parse(item.get('ObjectData'));
+         if (items) {
+            text = _private.getStringHistoryFromItems(items);
+         }
+         return text;
       },
 
       destroy: function() {
