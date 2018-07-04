@@ -13,6 +13,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/helpers/Function/runDelayed',
       'Core/constants',
       'Core/helpers/Hcontrol/doAutofocus',
+      'Deprecated/Controls/DialogRecord/DialogRecord',
       'Core/EventBus',
 
       'Lib/Control/AreaAbstract/AreaAbstract.compatible',
@@ -36,6 +37,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       runDelayed,
       CoreConstants,
       doAutofocus,
+      DialogRecord,
       cEventBus
    ) {
       function removeOperation(operation, array) {
@@ -335,6 +337,80 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
          isReadOnly: function() {
             return this._isReadOnly;
+         },
+
+
+         setSaveDiffOnly: function(){
+            DialogRecord.prototype.setSaveDiffOnly.apply(this, arguments);
+         },
+         ok: function() {
+            DialogRecord.prototype.ok.apply(this, arguments);
+         },
+         _setEnabledForChildControls: function() {
+            DialogRecord.prototype._setEnabledForChildControls.apply(this, arguments);
+         },
+         _showLoadingIndicator: function() {
+            DialogRecord.prototype._showLoadingIndicator.apply(this, arguments);
+         },
+         _hideLoadingIndicator: function() {
+            DialogRecord.prototype._hideLoadingIndicator.apply(this, arguments);
+         },
+         isAllReady: function() {
+            return DialogRecord.prototype.isAllReady.apply(this, arguments);
+         },
+         getChildControls: function() {
+            return DialogRecord.prototype.getChildControls.apply(this, arguments);
+         },
+         getReports: function() {
+            return DialogRecord.prototype.getReports.apply(this, arguments);
+         },
+         _printMenuItemsIsChanged: function() {
+            return DialogRecord.prototype._printMenuItemsIsChanged.apply(this, arguments);
+         },
+         _createPrintMenu: function() {
+            return DialogRecord.prototype._createPrintMenu.apply(this, arguments);
+         },
+         showReportList: function() {
+            return DialogRecord.prototype.showReportList.apply(this, arguments);
+         },
+         printReport: function() {
+            return DialogRecord.prototype.printReport.apply(this, arguments);
+         },
+         _showReport: function() {
+            return DialogRecord.prototype._showReport.apply(this, arguments);
+         },
+         print: function() {
+            return DialogRecord.prototype.print.apply(this, arguments);
+         },
+         _hideWindow: function() {
+         },
+         _getTitle: function() {
+            return document.title;
+         },
+
+         _openConfirmDialog: function() {
+            return DialogRecord.prototype._openConfirmDialog.apply(this, arguments);
+         },
+         isSaved: function() {
+            return DialogRecord.prototype.isSaved.apply(this, []);
+         },
+         _unbindBeforeUnload: function() {
+            DialogRecord.prototype._unbindBeforeUnload.apply(this);
+         },
+         _beforeUnloadHandler: function() {
+            return DialogRecord.prototype._beforeUnloadHandler.apply(this);
+         },
+         unsubscribeOnBeforeUnload: function() {
+            DialogRecord.prototype.unsubscribeOnBeforeUnload.apply(this);
+         },
+         updateRecord: function() {
+            return DialogRecord.prototype.updateRecord.apply(this, arguments);
+         },
+         save: function() {
+            return DialogRecord.prototype.save.apply(this, arguments);
+         },
+         _processError: function(error) {
+            DialogRecord.prototype._processError.apply(this, [error]);
          },
 
          /* end RecordFloatArea */
