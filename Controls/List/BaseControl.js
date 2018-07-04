@@ -316,7 +316,7 @@ define('Controls/List/BaseControl', [
 
          if (actionName === 'itemClick') {
             var action = args.data && args.data[0] && args.data[0].getRawData();
-            aUtil.actionClick(self, event, action, self._listViewModel._activeItem);
+            aUtil.actionClick(self, event, action, self._listViewModel.getActiveItem());
             self._children.itemActionsOpener.close();
          }
          self._listViewModel.setActiveItem(null);
