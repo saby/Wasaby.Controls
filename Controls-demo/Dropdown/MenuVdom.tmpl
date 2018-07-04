@@ -87,8 +87,7 @@
             style="linkMain"
             icon="icon-medium icon-Author"
             menuStyle="cross"
-            source="{{_getAdditionalData()}}"
-				showClose="{{true}}">
+            source="{{_getAdditionalData()}}">
          </Controls.Button.MenuButton>
       </div>
 	   <div style="padding: 5px;">
@@ -206,19 +205,6 @@
 			 nodeProperty="@parent"
 			 source="{{_getHierarchyItems()}}">
 			 <ws:headConfig menuStyle="duplicateHead" />
-		  </Controls.Button.MenuButton>
-	   </div>
-	   <div style="padding: 5px;">Меню с крестом
-		  <Controls.Button.MenuButton
-			 name="myMenuButton10"
-			 attr:test_name="cross_menu"
-			 keyProperty="id"
-			 style="linkMain"
-			 icon="icon-medium icon-Author"
-			 menuStyle="cross"
-			 showHeader="{{false}}"
-			 source="{{_getDefaultMemory()}}"
-			 showClose="{{true}}">
 		  </Controls.Button.MenuButton>
 	   </div>
   </div>

@@ -61,11 +61,6 @@ define('Controls/Dropdown/Container',
        */
 
       /**
-       * @name Controls/Dropdown/Container#showClose
-       * @cfg {Boolean} Dropdown have cross in left top corner
-       */
-
-      /**
        * @name Controls/Dropdown/Container#headConfig
        * @cfg {Object} Menu style menuStyle
        * @variant defaultHead The head with icon and caption
