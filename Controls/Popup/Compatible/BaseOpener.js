@@ -80,6 +80,14 @@ function(cMerge,
             cfg.templateOptions.linkedContext = cfg.linkedContext;
          }
 
+         if (cfg.maximize) {
+            if (cfg.className) {
+               cfg.className += ' ws-window';
+            } else {
+               cfg.className = 'ws-window';
+            }
+         }
+
          if (cfg.hasOwnProperty('autoHide')) {
             cfg.closeByExternalClick = cfg.autoHide;
          }
