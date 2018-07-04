@@ -151,10 +151,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             });
          },
 
-         getOpener: function() {
-            return this._logicParent && this._logicParent._options && this._logicParent._options.opener;
-         },
-
          _afterMount: function(cfg) {
             this._options = cfg;
 
@@ -181,6 +177,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             self._waiting = self._waiting || [];
 
             self.__parentFromCfg = self._options.__parentFromCfg;
+            self.__openerFromCfg = self._options.__openerFromCfg;
             self._parent = self._options.parent;
             self._logicParent = self._options.parent;
             self._options.parent = null;
@@ -301,6 +298,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          getParent: function() {
             return this.__parentFromCfg || null;
+         },
+         getOpener: function() {
+            return this.__openerFromCfg || null;
          },
 
          /* start RecordFloatArea */
