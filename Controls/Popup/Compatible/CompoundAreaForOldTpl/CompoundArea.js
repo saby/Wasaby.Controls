@@ -326,6 +326,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          /* end RecordFloatArea */
 
+         hide: function(arg) {
+            this.close(arg);
+         },
          close: function(arg) {
             this._notify('close', null, { bubbling: true });
 
