@@ -2,9 +2,10 @@ define('Controls/Popup/Opener/BaseController',
    [
       'Core/core-extend',
       'Core/Deferred',
+      'Controls/Popup/Manager/ManagerController',
       'WS.Data/Utils'
    ],
-   function(CoreExtend, cDeferred, Utils) {
+   function(CoreExtend, cDeferred, ManagerController, Utils) {
       var CONTENT_SELECTOR = '.controls-Container__popup-scrolling-content';
 
       var _private = {
@@ -63,6 +64,11 @@ define('Controls/Popup/Opener/BaseController',
           */
          elementDestroyed: function(element) {
             return new cDeferred().callback();
+         },
+         popupDeactivated: function(item) {
+            if (item.popupOptions.closeByExternalClick) {
+               ManagerController.remove(item.id);
+            }
          },
          getDefaultPosition: function() {
             return {

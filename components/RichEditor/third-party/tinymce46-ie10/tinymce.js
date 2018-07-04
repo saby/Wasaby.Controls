@@ -11138,13 +11138,10 @@
 
                // Get parents and add them to object
                parents = [];
+               // HTML ELEMENT closure creates memory leaks.
                editor.dom.getParent(node, function(node) {
-                  if (node === root) {
-                     return true;
-                  }
-
                   parents.push(node);
-               });
+               }, root);
 
                args = args || {};
                args.element = node;
