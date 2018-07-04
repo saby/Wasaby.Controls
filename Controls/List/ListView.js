@@ -23,6 +23,7 @@ define('Controls/List/ListView', [
       resizeNotifyOnListChanged: function(self) {
          if (self._listChanged) {
             self._listChanged = false;
+            
             //command to scroll layout
             self._notify('resize', [], {bubbling: true});
             self._notify('checkScroll', [], {bubbling: true});
