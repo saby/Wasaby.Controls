@@ -102,6 +102,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          compatible: null,
          fixBaseCompatible: true,
          _templateComponent: undefined,
+         _isClosing: false,
 
          _pending: null,
          _pendingTrace: null,
@@ -295,9 +296,14 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._commandHandler(null, commandName, arg);
          },
          _close: function(arg) {
+            if (this._isClosing) {
+               return false;
+            }
+            this._isClosing = true;
             if (this.handle('onBeforeClose', arg) !== false) {
                this.close(arg);
             }
+            this._isClosing = false;
          },
          closeHandler: function(e, arg) {
             e.stopPropagation();
