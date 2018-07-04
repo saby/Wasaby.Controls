@@ -748,13 +748,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * @return {boolean}
           */
          _isOutdated: function (preset, updateAndSave) {
-            if (preset && preset.isStorable) {
+            if (preset && preset.isStorable && !preset.isActual) {
                var actualTitles = collectionSelectByIds(this._options.allFields, preset.fieldIds, function (v) { return v.title; }) || [];
                var presetTitles = preset.lastTitles;
-               var isOutdated = !presetTitles || (actualTitles.length !== presetTitles.length) || actualTitles.some(function (v) { return v !== presetTitles[i]; });
+               var isOutdated = !presetTitles || (actualTitles.length !== presetTitles.length) || actualTitles.some(function (v, i) { return v !== presetTitles[i]; });
                if (isOutdated) {
                   if (updateAndSave) {
                      preset.lastTitles = actualTitles;
+                     preset.isActual = true;
                      this._saveCustoms();
                   }
                   return true;
