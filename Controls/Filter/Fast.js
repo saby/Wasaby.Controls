@@ -115,34 +115,6 @@ define('Controls/Filter/Fast',
             _private.selectItem.apply(this, data);
             this._notify('filterChanged', [_private.getFilter(this._items)]);
             this._children.DropdownOpener.close();
-            this._isChanged = true;
-         },
-
-         getWidth: function(self, filters) {
-            self._width = 0;
-            var arrWidth = [];
-            Chain(filters).each(function(filter, index) {
-               self._width += filter.offsetWidth;
-               if (filter.offsetWidth) {
-                  arrWidth.push({index: index, width: filter.offsetWidth});
-               }
-            });
-            return arrWidth;
-         },
-
-         setShrink: function(self, arrWidth) {
-            arrWidth.sort(function(a, b) {
-               return a.width - b.width;
-            });
-            Chain(arrWidth).each(function(elem, index) {
-               self._configs[elem.index].shrink = index + 1;
-            });
-         },
-
-         resize: function(self) {
-            self._isChanged = false;
-            _private.setShrink(self, _private.getWidth(self, self._container.children));
-            self._notify('resize', [{fastFilter: self._width}]);
          }
       };
 
@@ -150,7 +122,6 @@ define('Controls/Filter/Fast',
          _template: template,
          _configs: null,
          _items: null,
-         _isChanged: true,
 
          constructor: function() {
             FastData.superclass.constructor.apply(this, arguments);
@@ -173,18 +144,6 @@ define('Controls/Filter/Fast',
                });
             }
             return resultDef;
-         },
-
-         _afterMount: function() {
-            _private.resize(this);
-            this._forceUpdate();
-         },
-
-         _afterUpdate: function() {
-            if (this._isChanged) {
-               _private.resize(this);
-               this._forceUpdate();
-            }
          },
 
          _open: function(event, item, index) {
@@ -220,8 +179,6 @@ define('Controls/Filter/Fast',
             setPropValue(this._items.at(index), 'value', newValue);
             this._notify('selectedKeysChanged', [newValue]);
             this._notify('filterChanged', [_private.getFilter(this._items)]);
-            this._isChanged = true;
-            _private.resize(this, this._container.children);
          }
       });
 

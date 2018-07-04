@@ -1,6 +1,6 @@
 <div class="controls-FastFilter" name="fastFilter">
    <ws:for data="index, item in _items">
-      <div class="controls-FastFilter__wrapper  {{!_isChanged ? 'controls-FastFilter__wrapper-invisible' : ''}} ws-flex-shrink-{{_configs[index].shrink}}" name="wrapper">
+      <div class="controls-FastFilter__wrapper">
          <div class="controls-FastFilter__block"
               on:click="_open(item, index)">
 

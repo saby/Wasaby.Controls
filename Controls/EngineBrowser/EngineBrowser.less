@@ -8,28 +8,19 @@
 }
 
 .controls-Browser__filter-wrapper {
-   display: grid;
+   display: flex;
    align-items: baseline;
    justify-content: flex-end;
    width: 100%;
-}
-
-.controls-Browser__filter-wrapper-default {
-   grid-template-columns: minmax(15px, 1fr) minmax(15px, auto);
-}
-
-.controls-Browser__filter-wrapper-autoFast {
-   grid-template-columns: minmax(15px, auto) minmax(15px, 1fr);
-}
-
-.controls-Browser__filter-wrapper-maxFast {
-   grid-template-columns: minmax(15px, 2fr) minmax(15px, 1fr);
+   min-width: 0;
 }
 
 .controls-Browser__fastFilter {
    justify-content: flex-end;
+   min-width: 0;
 }
 
 .controls-Browser__filterButton {
    margin: @margin_Browser-filterButton;
+   min-width: 0;
 }

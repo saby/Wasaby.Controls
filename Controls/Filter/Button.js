@@ -82,34 +82,13 @@ define('Controls/Filter/Button',
          _text: '',
          _historyId: null,
 
-         _beforeMount: function(options) {
-            if (options.items) {
-               _private.resolveItems(this, options.items);
-            }
+         _beforeMount: function() {
             this._onFilterChanged = this._onFilterChanged.bind(this);
-         },
-
-         _afterMount: function() {
-            if (this._text) {
-               this._notify('resize', [{filterButton: this._children.filterText.offsetWidth}]);
-            }
          },
 
          _beforeUpdate: function(options) {
             if (!isEqual(this._options.items, options.items)) {
                _private.resolveItems(this, options.items);
-            }
-         },
-
-         _afterUpdate: function() {
-            if (this._isChanged) {
-               this._isChanged = false;
-               if (this._text) {
-                  this._notify('resize', [{filterButton: this._children.filterText.offsetWidth}]);
-               } else {
-                  this._notify('resize', [{filterButton: 0}]);
-               }
-               this._forceUpdate();
             }
          },
 
@@ -123,7 +102,6 @@ define('Controls/Filter/Button',
                   panelOpener.clearFilter();
                });
             }
-            this._isChanged = true;
             this._text = '';
          },
 
@@ -151,7 +129,6 @@ define('Controls/Filter/Button',
          _onFilterChanged: function(data) {
             this._notify('filterChanged', [data.filter]);
             this._notify('itemsChanged', [data.items]);
-            this._isChanged = true;
          }
       });
 
