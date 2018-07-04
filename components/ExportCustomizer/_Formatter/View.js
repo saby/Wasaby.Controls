@@ -13,13 +13,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
       'SBIS3.CONTROLS/ExportCustomizer/Utils/CollectionSelectByIds',
       'SBIS3.CONTROLS/Utils/ObjectChange',
       'SBIS3.CONTROLS/WaitIndicator',
-      'WS.Data/Collection/RecordSet',
       'WS.Data/Di',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
       'css!SBIS3.CONTROLS/ExportCustomizer/_Formatter/View'
    ],
 
-   function (Deferred, coreDebounce, CompoundControl, collectionSelectByIds, objectChange, WaitIndicator, RecordSet, Di, dotTplFn) {
+   function (Deferred, coreDebounce, CompoundControl, collectionSelectByIds, objectChange, WaitIndicator, Di, dotTplFn) {
       'use strict';
 
       /**
@@ -229,12 +228,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * Вызвать метод форматера "update"
           *
           * @protected
+          * @param {string} [fileUuid] Uuid стилевого эксель-файла. Если не указан, то будет использован текущий uuid из опций (опционально)
           * return {Core/Deferred}
           */
-         _callFormatterUpdate: function () {
+         _callFormatterUpdate: function (fileUuid) {
             var options = this._options;
             var fieldIds = options.fieldIds;
-            var promise = this._exportFormatter.update(options.fileUuid, fieldIds || [], this._getFieldTitles(fieldIds), options.serviceParams).addCallbacks(
+            var promise = this._exportFormatter.update(fileUuid || options.fileUuid, fieldIds || [], this._getFieldTitles(fieldIds), options.serviceParams).addCallbacks(
                this._updatePreview.bind(this, false),
                function (err) { return err; }
             );
@@ -450,8 +450,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                var hasFields = !!(fieldIds && fieldIds.length);
                var methods = [];
                if (hasFields) {
+                  var isConsumerChanged = 'consumerId' in changes;
+                  var reason = meta ? meta.reason : null;
+                  var arg = meta && meta.args ? meta.args[0] : null;
                   //Если не поменялся consumerId, но поменялись поля; или если это клонирование с изменением
-                  if ((!('consumerId' in changes) && 'fieldIds' in changes) || (meta && meta.args[0] && meta.args[0].isChanged)) {
+                  if ((!isConsumerChanged && 'fieldIds' in changes) || (reason === 'clone' && arg && arg.isChanged)) {
                      if (!options.fileUuid) {
                         var primaryUuid = options.primaryUuid;
                         methods.push(primaryUuid ? {method:'clone', args:[primaryUuid, true]} : 'create');
@@ -459,6 +462,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                      else {
                         methods.push('update');
                      }
+                  }
+                  else
+                  if (isConsumerChanged && (reason === 'select' && arg && arg.isChanged)) {
+                     methods.push({method:'update', args:[options.primaryUuid]});
                   }
                }
                if (methods.length) {

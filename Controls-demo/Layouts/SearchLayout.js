@@ -150,6 +150,15 @@ define('Controls-demo/Layouts/SearchLayout', [
             idProperty: 'id',
             data: filterData
          }),
+         _navigation:{
+            source: 'page',
+            view: 'page',
+            sourceConfig: {
+               pageSize: 20,
+               page: 0,
+               mode: 'totalCount'
+            }
+         },
          _fastFilterData: filterData,
          sourceDropdown: sourceDropdown,
          _value: 3
