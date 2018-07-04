@@ -1,9 +1,9 @@
-define('Controls-demo/List/Tree/MassSelection/MassSelection', [
+define('Controls-demo/List/Tree/MultiSelection/MultiSelection', [
    'Core/Control',
-   'Controls-demo/List/Tree/MassSelection/MassSelectionData',
-   'tmpl!Controls-demo/List/Tree/MassSelection/MassSelection',
+   'Controls-demo/List/Tree/MultiSelection/MultiSelectionData',
+   'tmpl!Controls-demo/List/Tree/MultiSelection/MultiSelection',
    'WS.Data/Source/Memory',
-   'css!Controls-demo/List/Tree/MassSelection/MassSelection'
+   'css!Controls-demo/List/Tree/MultiSelection/MultiSelection'
 ], function(Control, Data, template, Memory) {
    'use strict';
 

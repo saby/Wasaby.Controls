@@ -1,4 +1,4 @@
-define('Controls-demo/List/Tree/MassSelection/MassSelectionData', function() {
+define('Controls-demo/List/Tree/MultiSelection/MultiSelectionData', function() {
    var
       data = {
          catalog: [
