@@ -239,6 +239,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             if (hasHeader) {
                if (customHeaderContainer.length) {
                   customHeaderContainer.prepend('<div class="ws-float-area-title">' + this._options.caption + '</div>');
+                  if (this._options.type === 'dialog') {
+                     var height = customHeaderContainer.height();
+                     $('.controls-DialogTemplate', this.getContainer()).css('margin-bottom', height);
+                  }
                } else {
                   this.getContainer().prepend($('<div class="ws-window-titlebar"><div class="ws-float-area-title ws-float-area-title-generated">' + this._options.caption + '</div></div>'));
                   this.getContainer().addClass('controls-CompoundArea-headerPadding');
