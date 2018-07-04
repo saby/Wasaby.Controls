@@ -46,7 +46,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
                /**
                 * @cfg {string} Отображаемый текст при пустом списке соответствий
                 */
-               emptyTitle: rk('Не задано', 'НастройщикЭкспорта'),
+               emptyHTML: rk('Список колонок пуст.', 'НастройщикЭкспорта') + '<br/>' + rk('Вы должны добавить хотя бы одну колонку для выгрузки.', 'НастройщикЭкспорта'),
                /**
                 * @cfg {Array<BrowserColumnInfo>|WS.Data/Collection/RecordSet<BrowserColumnInfo>} Список объектов с информацией о всех колонках в формате, используемом в браузере
                 */
@@ -137,7 +137,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
                   });
             }
             else {
-               rows = [{id:'', column:'A', field:options.emptyTitle}];
+               rows = [];
             }
             // В реализации DataGridView нет полной эквивалентности установки списка его элементов простым массивом объектов и RecordSet-ом с этими
             // объектами. Например, при задании массивом,  "замерзает" и не обновляется его MemorySource, что приводит к ошибке при перетаскивании

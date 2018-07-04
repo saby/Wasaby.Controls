@@ -45,6 +45,17 @@ define('Controls/Input/Search/Suggest',
    
          _deactivated: function() {
             this._notify('suggestStateChanged', [false]);
+         },
+   
+         _searchClick: function() {
+            this._notify('searchClick');
+         },
+         
+         _resetClick: function() {
+            this._notify('resetClick');
+            
+            //standart
+            this._notify('suggestStateChanged', [false]);
          }
          
       });

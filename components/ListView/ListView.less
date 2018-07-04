@@ -161,11 +161,25 @@ controls-ListView__item__withHover:hover {
    z-index: 11;
    right: 0;
    width: 100%;
-   background: @list-view-loading-indicator-gradient-bg;
    background-size: @background-size_ListView_ScrollIndicator;
    &.controls-ListView-scrollIndicator__up{
       top: 0;
+   }
+}
+
+.controls-ListView-scrollIndicator_style_default {
+   background: @list-view-loading-indicator-gradient-bg;
+
+   &.controls-ListView-scrollIndicator__up {
       background: @list-view-loading-indicator-gradient-bg-up;
+   }
+}
+
+.controls-ListView-scrollIndicator_style_blockLayout{
+   background: @list-view-loading-indicator-gradient-block-bg;
+
+   &.controls-ListView-scrollIndicator__up {
+      background: @list-view-loading-indicator-gradient-block-bg-up;
    }
 }
 

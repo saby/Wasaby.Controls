@@ -43,7 +43,7 @@ define('SBIS3.CONTROLS/Mixins/ActiveMultiSelectable', ['WS.Data/Entity/Model', '
       setSelectedItems: function(list) {
          var newList;
 
-         if(list) {
+         if (list) {
             list = this._prepareItems(list);
 
             if (list.getCount() && !this._options.multiselect) {
@@ -53,6 +53,10 @@ define('SBIS3.CONTROLS/Mixins/ActiveMultiSelectable', ['WS.Data/Entity/Model', '
             }
          } else {
             newList = null;
+         }
+   
+         if (this._loadItemsDeferred && !this._loadItemsDeferred.isReady()) {
+            this._loadItemsDeferred.cancel();
          }
 
          this._options.selectedItems = newList;

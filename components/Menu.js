@@ -202,6 +202,13 @@ define('SBIS3.CONTROLS/Menu', [
       },
 
       _itemActivatedHandler: function(id, event) {
+         var createdSubMenuId = this._createdSubMenuId;
+         this._createdSubMenuId = null;
+         //clickbytap генерериет click по элементу, его надо пропустить, если открылось подменю с таким же id
+         if (createdSubMenuId === id && event.originalEvent.isTrusted === false) {
+            return;
+         }
+
          var menuItem = this.getItemInstance(id);
          if (!(menuItem.getContainer().hasClass('controls-Menu__hasChild'))) {
             for (var j in this._subMenus) {
@@ -323,6 +330,9 @@ define('SBIS3.CONTROLS/Menu', [
          for (i in instances) {
             if (instances.hasOwnProperty(i)) {
                instances[i].getContainer().hover(function(e) {
+                  if (!self._isVisible)
+                     return;//на ipad ховер может сработать над скрытым элементом
+
                   var
                      isFirstLevel = false,
                      id = $(this).attr('data-id'),
@@ -344,12 +354,12 @@ define('SBIS3.CONTROLS/Menu', [
                   if (self._subContainers[id]) {
                      if (!self._subMenus[id]) {
                         self._subMenus[id] = self._createSubMenu(this, parent, isFirstLevel, item);
-
                         // Предотвращаем всплытие focus и mousedown с контейнера меню, т.к. это приводит к потере фокуса
                         self._subMenus[id]._container.on('mousedown focus', self._blockFocusEvents);
                         self._subContainers[id].show();
                         self._subMenus[id].getContainer().append(self._subContainers[id]);
                      }
+                     self._createdSubMenuId = id;
                      mySubmenu = self._subMenus[id];
                      mySubmenu.show();
                      /* Само меню не должно вызывать перерасчёта у соседних элементов,
