@@ -43,14 +43,22 @@ define('Controls-demo/BreadCrumbs/BreadCrumbs', [
       items2: [data[0], data[5]],
       items3: [{id: 5, title: 'Recor'}, data[5]],
       info: '',
+      _arrowActivated: false,
 
       _onItemClick: function(e, item) {
          this.info = item.id;
+         this._arrowActivated = false;
       },
 
       _resetCrumbs: function() {
          this.items = data;
          this.info = '';
+         this._arrowActivated = false;
+      },
+
+      _onArrowActivated: function() {
+         this.info = '';
+         this._arrowActivated = true;
       }
    });
 

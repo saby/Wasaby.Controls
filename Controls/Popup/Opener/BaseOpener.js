@@ -8,7 +8,6 @@ define('Controls/Popup/Opener/BaseOpener',
       'Core/Deferred'
    ],
    function(Control, Template, ManagerController, CoreClone, CoreMerge, Deferred) {
-
       /**
        * Базовый опенер
        * @category Popup
@@ -37,7 +36,7 @@ define('Controls/Popup/Opener/BaseOpener',
             var self = this;
             var cfg = this._getConfig(popupOptions);
 
-            if (this._isExecuting) { //Если мы еще не обработали первый вызов, то дожидаемся его
+            if (this._isExecuting) { // Если мы еще не обработали первый вызов, то дожидаемся его
                return;
             }
             this._isExecuting = true;
@@ -46,7 +45,7 @@ define('Controls/Popup/Opener/BaseOpener',
                this._popupId = null;
             }
 
-            if (cfg.isCompoundTemplate) { //TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
+            if (cfg.isCompoundTemplate) { // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
                requirejs(['Controls/Popup/Compatible/Layer'], function(Layer) {
                   Layer.load().addCallback(function() {
                      self._openPopup(cfg, controller);
@@ -67,7 +66,7 @@ define('Controls/Popup/Opener/BaseOpener',
             });
          },
 
-         //Ленивая загрузка шаблона
+         // Ленивая загрузка шаблона
          _requireModules: function(config, controller) {
             var deps = [];
             if (this._needRequireModule(config.template)) {
@@ -116,7 +115,7 @@ define('Controls/Popup/Opener/BaseOpener',
          },
 
          _scrollHandler: function(event) {
-            //listScroll стреляет событием много раз, нужно обработать только непосредственно скролл списка
+            // listScroll стреляет событием много раз, нужно обработать только непосредственно скролл списка
             if (this.isOpened() && event.type === 'listscroll') {
                if (this._options.targetTracking) {
                   ManagerController.popupUpdated(this._popupId);
@@ -135,7 +134,7 @@ define('Controls/Popup/Opener/BaseOpener',
           * @returns {Boolean} Признак открыта ли связанная всплывающая панель
           */
          isOpened: function() {
-            //todo Compatible: Для старого окружения не вызываем методы нового Manager'a
+            // todo Compatible: Для старого окружения не вызываем методы нового Manager'a
             return Base.isNewEnvironment() ? !!ManagerController.find(this._popupId) : null;
          }
       });
@@ -177,18 +176,17 @@ define('Controls/Popup/Opener/BaseOpener',
          };
       };
 
-      //TODO Compatible
+      // TODO Compatible
       Base.isVDOMTemplate = function(templateClass) {
-         //на VDOM классах есть св-во _template.
-         //Если его нет, но есть _stable, значит это функция от tmpl файла
+         // на VDOM классах есть св-во _template.
+         // Если его нет, но есть _stable, значит это функция от tmpl файла
          return !!templateClass.prototype._template || !!templateClass.stable;
       };
 
-      //TODO Compatible
+      // TODO Compatible
       Base.isNewEnvironment = function() {
          return !!document.getElementsByTagName('html')[0].controlNodes;
       };
 
       return Base;
-   }
-);
+   });

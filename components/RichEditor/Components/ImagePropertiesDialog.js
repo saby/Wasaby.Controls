@@ -33,7 +33,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog', [
 
          var validators = [{
             validator: function () {
-               return this.getValue() !== 0;
+               var value = this.getValue();
+               return value && value !== 0;
             },
             errorMessage: 'Значение не может быть равно нулю!'
          }];
