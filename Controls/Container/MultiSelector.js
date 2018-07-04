@@ -1,7 +1,7 @@
-define('Controls/Container/MassSelector', [
+define('Controls/Container/MultiSelector', [
    'Core/Control',
-   'tmpl!Controls/Container/MassSelector/MassSelector',
-   'Controls/Container/MassSelector/SelectionContextField',
+   'tmpl!Controls/Container/MultiSelector/MultiSelector',
+   'Controls/Container/MultiSelector/SelectionContextField',
    'Controls/Controllers/Multiselect/Selection',
    'Controls/Controllers/SourceController'
 ], function(

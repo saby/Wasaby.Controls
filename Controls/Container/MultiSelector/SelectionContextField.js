@@ -1,4 +1,4 @@
-define('Controls/Container/MassSelector/SelectionContextField', [
+define('Controls/Container/MultiSelector/SelectionContextField', [
    'Core/DataContext'
 ], function(DataContext) {
    'use strict';

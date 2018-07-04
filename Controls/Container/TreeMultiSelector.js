@@ -1,13 +1,13 @@
-define('Controls/Container/TreeMassSelector', [
-   'Controls/Container/MassSelector',
+define('Controls/Container/TreeMultiSelector', [
+   'Controls/Container/MultiSelector',
    'Controls/Controllers/Multiselect/HierarchySelection'
 ], function(
-   MassSelector,
+   MultiSelector,
    HierarchySelection
 ) {
    'use strict';
 
-   return MassSelector.extend({
+   return MultiSelector.extend({
       _createMultiselection: function(options, items) {
          this._multiselection = new HierarchySelection({
             selectedKeys: options.selectedKeys || [],

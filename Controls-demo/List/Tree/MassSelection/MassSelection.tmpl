@@ -1,12 +1,12 @@
 <div class="demo-Grid">
     <h1>Partial data</h1>
     <div class="demo-Grid__container">
-        <Controls.Container.TreeMassSelector source="{{_viewSource}}"
+        <Controls.Container.TreeMultiSelector source="{{_viewSource}}"
                                              keyProperty="id"
                                              parentProperty="Раздел"
                                              nodeProperty="Раздел@">
             <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
-                    <Controls.List.MassSelector>
+                    <Controls.List.MultiSelector>
                         <Controls.TreeGrid
                                 name="list"
                                 attr:class="demo-Grid__control"
@@ -17,19 +17,19 @@
                                 multiSelectVisibility="visible"
                                 columns="{{gridColumns}}">
                         </Controls.TreeGrid>
-                    </Controls.List.MassSelector>
+                    </Controls.List.MultiSelector>
             </Controls.Container.Scroll>
-        </Controls.Container.TreeMassSelector>
+        </Controls.Container.TreeMultiSelector>
     </div>
     <h1>All data</h1>
     <div class="demo-Grid__container">
-        <Controls.Container.TreeMassSelector source="{{_viewSource}}"
+        <Controls.Container.TreeMultiSelector source="{{_viewSource}}"
                                              strategy="allData"
                                              keyProperty="id"
                                              parentProperty="Раздел"
                                              nodeProperty="Раздел@">
             <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
-                <Controls.List.MassSelector>
+                <Controls.List.MultiSelector>
                     <Controls.TreeGrid
                             name="list"
                             attr:class="demo-Grid__control"
@@ -40,8 +40,8 @@
                             multiSelectVisibility="visible"
                             columns="{{gridColumns}}">
                     </Controls.TreeGrid>
-                </Controls.List.MassSelector>
+                </Controls.List.MultiSelector>
             </Controls.Container.Scroll>
-        </Controls.Container.TreeMassSelector>
+        </Controls.Container.TreeMultiSelector>
     </div>
 </div>

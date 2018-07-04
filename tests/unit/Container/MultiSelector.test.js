@@ -1,12 +1,12 @@
 define([
-   'Controls/Container/MassSelector',
+   'Controls/Container/MultiSelector',
    'WS.Data/Source/Memory'
 ], function(
-   MassSelector,
+   MultiSelector,
    Memory
 ) {
    'use strict';
-   describe('Controls.Container.MassSelector', function() {
+   describe('Controls.Container.MultiSelector', function() {
       var
          items = [
             {
@@ -43,7 +43,7 @@ define([
          };
 
       it('getSelection', function(done) {
-         var instance = new MassSelector();
+         var instance = new MultiSelector();
          instance._beforeMount(cfg).addCallback(function() {
             var selection = instance.getSelection();
             assert.equal(selection.selected.length, 2);
@@ -64,7 +64,7 @@ define([
                   count++;
                }
             };
-         var instance = new MassSelector(cfg);
+         var instance = new MultiSelector(cfg);
          instance.saveOptions(cfg);
          instance._beforeMount(cfg).addCallback(function() {
             assert.equal(count, 1);
@@ -73,7 +73,7 @@ define([
       });
 
       it('_getChildContext', function(done) {
-         var instance = new MassSelector(cfg);
+         var instance = new MultiSelector(cfg);
          var expected = {
             selection: {
                count: 2,
@@ -104,7 +104,7 @@ define([
          var count;
 
          it('toggleAll', function(done) {
-            var instance = new MassSelector();
+            var instance = new MultiSelector();
             instance.saveOptions(cfg);
             instance._beforeMount(cfg).addCallback(function() {
                instance._selectedTypeChangedHandler([], 'toggleAll');
@@ -115,7 +115,7 @@ define([
          });
 
          it('selectAll', function(done) {
-            var instance = new MassSelector();
+            var instance = new MultiSelector();
             instance.saveOptions(cfg);
             instance._beforeMount(cfg).addCallback(function() {
                instance._selectedTypeChangedHandler([], 'selectAll');
@@ -126,7 +126,7 @@ define([
          });
 
          it('unselectAll', function(done) {
-            var instance = new MassSelector();
+            var instance = new MultiSelector();
             instance.saveOptions(cfg);
             instance._beforeMount(cfg).addCallback(function() {
                instance._selectedTypeChangedHandler([], 'unselectAll');
@@ -141,7 +141,7 @@ define([
          var count;
 
          it('1 key', function(done) {
-            var instance = new MassSelector();
+            var instance = new MultiSelector();
             instance.saveOptions(cfg);
             instance._beforeMount(cfg).addCallback(function() {
                instance._afterItemsRemoveHandler([], [1]);
@@ -152,7 +152,7 @@ define([
          });
 
          it('2 key', function(done) {
-            var instance = new MassSelector();
+            var instance = new MultiSelector();
             instance.saveOptions(cfg);
             instance._beforeMount(cfg).addCallback(function() {
                instance._afterItemsRemoveHandler([], [1, 2]);
@@ -167,7 +167,7 @@ define([
          var selectedKeys, excludedKeys;
 
          it('first elem click to false', function(done) {
-            var instance = new MassSelector();
+            var instance = new MultiSelector();
             instance.saveOptions(cfg);
             instance._beforeMount(cfg).addCallback(function() {
                instance._onCheckBoxClickHandler({}, 1, true);
@@ -179,7 +179,7 @@ define([
          });
 
          it('second elem click to false', function(done) {
-            var instance = new MassSelector();
+            var instance = new MultiSelector();
             instance.saveOptions(cfg);
             instance._beforeMount(cfg).addCallback(function() {
                instance._onCheckBoxClickHandler({}, 2, true);
@@ -191,7 +191,7 @@ define([
          });
 
          it('another elem click to true', function(done) {
-            var instance = new MassSelector();
+            var instance = new MultiSelector();
             instance.saveOptions(cfg);
             instance._beforeMount(cfg).addCallback(function() {
                instance._onCheckBoxClickHandler({}, 50, false);
@@ -203,7 +203,7 @@ define([
          });
 
          it('selected all click to false', function(done) {
-            var instance = new MassSelector();
+            var instance = new MultiSelector();
             instance.saveOptions(cfg1);
             instance._beforeMount(cfg1).addCallback(function() {
                instance._onCheckBoxClickHandler({}, 3, true);
@@ -218,7 +218,7 @@ define([
          });
 
          it('selected part click to true', function(done) {
-            var instance = new MassSelector();
+            var instance = new MultiSelector();
             instance.saveOptions(cfg2);
             instance._beforeMount(cfg2).addCallback(function() {
                instance._onCheckBoxClickHandler({}, 1, false);

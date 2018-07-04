@@ -1,7 +1,7 @@
-define('Controls/List/MassSelector', [
+define('Controls/List/MultiSelector', [
    'Core/Control',
-   'tmpl!Controls/List/MassSelector/MassSelector',
-   'Controls/Container/MassSelector/SelectionContextField',
+   'tmpl!Controls/List/MultiSelector/MultiSelector',
+   'Controls/Container/MultiSelector/SelectionContextField',
    'Core/helpers/Object/isEqual'
 ], function(
    Control,
@@ -29,7 +29,7 @@ define('Controls/List/MassSelector', [
       }
    };
 
-   var MassSelector = Control.extend({
+   var MultiSelector = Control.extend({
       _template: template,
       _selectedKeys: null,
       _partiallySelectedKeys: null,
@@ -70,11 +70,11 @@ define('Controls/List/MassSelector', [
       }
    });
 
-   MassSelector.contextTypes = function contextTypes() {
+   MultiSelector.contextTypes = function contextTypes() {
       return {
          selection: SelectionContextField
       };
    };
 
-   return MassSelector;
+   return MultiSelector;
 });

@@ -1,7 +1,7 @@
-<Controls.Container.MassSelector
+<Controls.Container.MultiSelector
         source="{{_viewSource}}"
         selectedKeys="{{[1, 3]}}"
-        name="massSelector"
+        name="multiSelector"
         selectionChangeHandler="{{_selectionChange}}">
    <div class="controls-OperationsPanel_demo">
       <div>
@@ -16,7 +16,7 @@
          <Controls.OperationsPanel
             attr:style="width:{{_width}}{{ _px ? 'px' : '%'}}; max-width:100%;"
             name="myPanel"
-            massSelector="{{true}}"
+            multiSelector="{{true}}"
             parentProperty="parent"
             nodeProperty="@parent"
             keyProperty="id"
@@ -30,7 +30,7 @@
       <div class="123">
          <h2>Связанный список</h2>
          <Controls.Container.Scroll attr:class="cDemo-ScrollContainer">
-            <Controls.List.MassSelector>
+            <Controls.List.MultiSelector>
                <Controls.List
                   source="{{_viewSource}}"
                   markedKey="{{3}}"
@@ -52,7 +52,7 @@
                      <ws:viewConfig pagingMode="direct" />
                   </ws:navigation>
                </Controls.List>
-            </Controls.List.MassSelector>
+            </Controls.List.MultiSelector>
          </Controls.Container.Scroll>
       </div>
 
@@ -69,4 +69,4 @@
       <div>{{ _currentClick }}</div>
       <Controls.Popup.Opener.Confirmation name="popupOpener" />
    </div>
-</Controls.Container.MassSelector>
+</Controls.Container.MultiSelector>

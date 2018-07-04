@@ -1,9 +1,9 @@
-define('Controls/OperationsPanel/MassSelector', [
+define('Controls/OperationsPanel/MultiSelector', [
    'Core/Control',
-   'tmpl!Controls/OperationsPanel/MassSelector/MassSelector',
+   'tmpl!Controls/OperationsPanel/MultiSelector/MultiSelector',
    'WS.Data/Source/Memory',
-   'Controls/Container/MassSelector/SelectionContextField',
-   'css!Controls/OperationsPanel/MassSelector/MassSelector'
+   'Controls/Container/MultiSelector/SelectionContextField',
+   'css!Controls/OperationsPanel/MultiSelector/MultiSelector'
 ], function(Control, template, Memory, SelectionContextField) {
    'use strict';
    var _defaultItems = [
@@ -21,7 +21,7 @@ define('Controls/OperationsPanel/MassSelector', [
       }
    ];
 
-   var MassSelector = Control.extend({
+   var MultiSelector = Control.extend({
       _template: template,
       _multiSelectStatus: false,
       _menuCaption: 'Отметить',
@@ -102,11 +102,11 @@ define('Controls/OperationsPanel/MassSelector', [
       }
    });
 
-   MassSelector.contextTypes = function contextTypes() {
+   MultiSelector.contextTypes = function contextTypes() {
       return {
          selection: SelectionContextField
       };
    };
 
-   return MassSelector;
+   return MultiSelector;
 });

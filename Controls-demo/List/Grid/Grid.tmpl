@@ -1,12 +1,12 @@
 <div class="demo-Grid">
    <div class="demo-Grid__container">
-      <Controls.Container.MassSelector
+      <Controls.Container.MultiSelector
               source="{{_viewSource}}"
               selectedKeys="{{['448390']}}"
-              name="massSelector">
+              name="multiSelector">
          <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="default">
             <ws:content>
-               <Controls.List.MassSelector>
+               <Controls.List.MultiSelector>
                   <Controls.Grid
                                 attr:class="demo-Grid__control test_grid_1"
                                 keyProperty="id"
@@ -23,10 +23,10 @@
                                 itemActionsType="outside"
                                 columns="{{gridColumns}}">
                   </Controls.Grid>
-               </Controls.List.MassSelector>
+               </Controls.List.MultiSelector>
             </ws:content>
          </Controls.Container.Scroll>
-      </Controls.Container.MassSelector>
+      </Controls.Container.MultiSelector>
       <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="selected_record">
          <ws:content>
             <Controls.Grid
@@ -50,13 +50,13 @@
       </Controls.Container.Scroll>
    </div>
    <div class="demo-Grid__container">
-      <Controls.Container.MassSelector
+      <Controls.Container.MultiSelector
               source="{{_viewSource}}"
               selectedKeys="{{['448390']}}"
-              name="massSelector">
+              name="multiSelector">
          <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="mark_record">
             <ws:content>
-               <Controls.List.MassSelector>
+               <Controls.List.MultiSelector>
                   <Controls.Grid
                           attr:class="demo-Grid__control test_grid_3"
                           leftPadding="M"
@@ -74,10 +74,10 @@
                           itemActionsType="outside"
                           columns="{{gridColumns}}">
                   </Controls.Grid>
-               </Controls.List.MassSelector>
+               </Controls.List.MultiSelector>
             </ws:content>
          </Controls.Container.Scroll>
-      </Controls.Container.MassSelector>
+      </Controls.Container.MultiSelector>
       <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="no_title">
          <ws:content>
             <Controls.Grid

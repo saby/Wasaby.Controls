@@ -1,8 +1,8 @@
-define(['Controls/OperationsPanel/MassSelector'], function(MassSelector) {
+define(['Controls/OperationsPanel/MultiSelector'], function(MultiSelector) {
    'use strict';
-   describe('Controls.OperationsPanel.MassSelector', function() {
+   describe('Controls.OperationsPanel.MultiSelector', function() {
       it('_updateSelection', function() {
-         var instance = new MassSelector();
+         var instance = new MultiSelector();
          var selection = {
             selectedKeys: [null],
             excludedKeys: []
@@ -27,12 +27,12 @@ define(['Controls/OperationsPanel/MassSelector'], function(MassSelector) {
          assert.equal(instance._menuCaption, 'Отмечено (2)');
       });
       it('_getHierarchyMenuItems', function() {
-         var instance = new MassSelector();
+         var instance = new MultiSelector();
          var menuSource = instance._getHierarchyMenuItems();
          assert.equal(menuSource._$data.length, 3);
       });
       it('_onCheckBoxClick', function() {
-         var instance = new MassSelector();
+         var instance = new MultiSelector();
          instance._multiSelectStatus = true;
          instance.notify = function(eventName, argumentsArray) {
             assert.equal(argumentsArray[0], 'unselectAll');
@@ -46,7 +46,7 @@ define(['Controls/OperationsPanel/MassSelector'], function(MassSelector) {
          instance._onCheckBoxClick();
       });
       it('_onMenuItemActivate', function() {
-         var instance = new MassSelector();
+         var instance = new MultiSelector();
          instance._multiSelectStatus = true;
          instance.notify = function(eventName, argumentsArray) {
             assert.equal(argumentsArray[0], 'selectAll');
