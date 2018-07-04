@@ -340,7 +340,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
 
 
-         setSaveDiffOnly: function(){
+         setSaveDiffOnly: function() {
             DialogRecord.prototype.setSaveDiffOnly.apply(this, arguments);
          },
          ok: function() {
