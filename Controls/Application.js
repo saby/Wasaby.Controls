@@ -10,7 +10,8 @@ define('Controls/Application',
       'Core/compatibility',
       'Controls/Application/AppData',
       'Controls/Application/HeadDataContext',
-      'Core/ConsoleLogger'
+      'Core/ConsoleLogger',
+      'css!Controls/Application'
    ],
 
    /**
@@ -91,6 +92,8 @@ define('Controls/Application',
          _beforeMount: function(cfg, context, receivedState) {
             var self = this,
                def = new Deferred();
+
+            self.stopEvents = typeof window === 'undefined' && !(cfg.compat || self.compat);
 
             _private.initState(self, receivedState || cfg);
             self.needArea = cfg.compat || self.compat;
