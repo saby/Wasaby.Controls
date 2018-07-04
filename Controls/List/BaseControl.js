@@ -587,7 +587,9 @@ define('Controls/List/BaseControl', [
       * @returns {Core/Deferred}
       */
       editItem: function(options) {
-         this._children.editInPlace.editItem(options);
+         if (!this._options.readOnly) {
+            this._children.editInPlace.editItem(options);
+         }
       },
 
       /**
@@ -596,7 +598,9 @@ define('Controls/List/BaseControl', [
       * @returns {Core/Deferred}
       */
       addItem: function(options) {
-         this._children.editInPlace.addItem(options);
+         if (!this._options.readOnly) {
+            this._children.editInPlace.addItem(options);
+         }
       },
 
       _onBeforeItemAdd: function(e, options) {
