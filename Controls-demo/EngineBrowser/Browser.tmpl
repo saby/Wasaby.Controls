@@ -6,17 +6,17 @@
         class="demo-browser">
    <ws:search>
       <Controls.Input.Search bind:value="value"
-                           attr:style="min-width: 300px;"/>
+                             class="demo-browser-search"/>
    </ws:search>
 
    <ws:topTemplate>
-      <div style="display: flex; flex-wrap: nowrap; margin: 10px 0;">
-         <Controls.Button icon="icon-24 icon-AddButtonNew" style="iconButtonBordered" attr:style="margin-right: 12px;"/>
-         <Controls.Button icon="icon-24 icon-Unfavourite" size="s" style="linkMain" attr:style="margin-right: 12px;"/>
+      <div class="demo-browser-topTemplate">
+         <Controls.Button icon="icon-24 icon-AddButtonNew" style="iconButtonBordered" class="demo-browser-button"/>
+         <Controls.Button icon="icon-24 icon-Unfavourite" size="s" style="linkMain" class="demo-browser=button"/>
       </div>
    </ws:topTemplate>
    <ws:fastFilter>
-      <Controls.Filter.Fast />
+      <Controls.Filter.Fast/>
    </ws:fastFilter>
    <ws:filterButton>
       <Controls.Filter.Button template="tmpl!Controls-demo/EngineBrowser/resources/filterButtonEngineTemplate"/>
@@ -28,7 +28,7 @@
          <ws:itemTemplate>
             <ws:partial template="tmpl!Controls/List/ItemTemplate">
                <ws:contentTemplate>
-                  <div attr:style="display: flex; justify-content: space-between">
+                  <div class="demo-browser-list">
                      <div>{{itemTemplate.itemData.item.get('title')}}</div>
                      <div>{{itemTemplate.itemData.item.get('country')}}</div>
                   </div>
