@@ -82,7 +82,10 @@ define('Controls/Filter/Button',
          _text: '',
          _historyId: null,
 
-         _beforeMount: function() {
+         _beforeMount: function(options) {
+            if (options.items) {
+               _private.resolveItems(this, options.items);
+            }
             this._onFilterChanged = this._onFilterChanged.bind(this);
          },
 
