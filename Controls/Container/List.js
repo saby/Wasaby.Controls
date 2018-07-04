@@ -248,7 +248,7 @@ define('Controls/Container/List',
          
          _beforeUpdate: function(newOptions, context) {
             if (this._options.source !== newOptions.source || this._options.navigation !== newOptions.navigation || this._options.searchDelay !== newOptions.searchDelay) {
-               _private.destroySearchController(this);
+               this._searchController = null;
                _private.resolveOptions(this, newOptions);
             }
             _private.checkContextValues(this, context);
