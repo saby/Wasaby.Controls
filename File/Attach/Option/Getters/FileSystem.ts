@@ -1,6 +1,6 @@
 /// <amd-module name="File/Attach/Option/Getters/FileSystem" />
 
-import ResourceGetter = require("File/Attach/Option/ResourceGetter");
+import ResourceGetter = require("File/Attach/Option/Getter");
 import Getter = require("File/ResourceGetter/FileSystem");
 
 const GETTER_TYPE = "FileSystem";
@@ -9,7 +9,7 @@ const GETTER_TYPE = "FileSystem";
  * Класс конфигурации IResourceGetter для выбора из файловой системы, передаваемый в Attach
  * @class
  * @name File/Attach/Option/Getters/FileSystem
- * @extends File/Attach/Option/ResourceGetter
+ * @extends File/Attach/Option/Getter
  * @public
  * @author Заляев А.В.
  */
@@ -52,7 +52,7 @@ class FileSystem extends ResourceGetter {
         super (new Getter(options || {}));
     }
     /**
-     * @description 
+     * @description
      * Тип геттера передается в метод choose File/Attach, чтобы указать каким способом(геттером) выбираются файлы
      * <pre>
      *   attach.choose(FileSystem.getType()); // выбрать файлы, используя системное окно

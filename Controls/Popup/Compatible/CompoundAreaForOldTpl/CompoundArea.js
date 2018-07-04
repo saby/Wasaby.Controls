@@ -12,6 +12,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/EventObject',
       'Core/helpers/Hcontrol/doAutofocus',
       'Core/helpers/Function/runDelayed',
+      'Core/EventBus',
       'Lib/Control/AreaAbstract/AreaAbstract.compatible',
       'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/Abstract.compatible',
@@ -30,7 +31,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       IoC,
       EventObject,
       doAutofocus,
-      runDelayed) {
+      runDelayed,
+      cEventBus) {
 
       function removeOperation(operation, array) {
          var  idx = arrayFindIndex(array, function(op) {
@@ -209,8 +211,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             templateOptions.parent = this;
             this._compoundControl = new (Component)(templateOptions);
             this._compoundControlCreated.callback(this._compoundControl);
-            this._subscribeToCommand();
             this._setCustomHeader();
+            cEventBus.globalChannel().notify('onWindowCreated', this); // StickyHeaderMediator listens for onWindowCreated
             this.handle('onAfterLoad');
             this.handle('onInitComplete');
             this.handle('onAfterShow'); // todo здесь надо звать хэндлер который пытается подписаться на onAfterShow, попробуй подключить FormController и словить подпись
@@ -239,9 +241,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             }
          },
 
-         _subscribeToCommand: function() {
-            this._compoundControl.subscribe('onCommandCatch', this._commandHandler);
-         },
          _commandHandler: function(event, commandName, arg) {
             var parent;
             if (commandName === 'close') {
@@ -250,6 +249,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                return this._close(true);
             } else if (commandName === 'cancel') {
                return this._close(false);
+            } else if (commandName === 'resize') {
+               this._notify('resize', null, {bubbling: true});
             } else if (commandName === 'registerPendingOperation') {
                return this._registerChildPendingOperation(arg);
             } else if (commandName === 'unregisterPendingOperation') {
