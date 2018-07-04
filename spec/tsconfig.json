@@ -13,7 +13,8 @@
     "baseUrl": "./",
     "diagnostics": true,
     "locale": "ru",
-    "importHelpers": true
+    "importHelpers": true,
+    "experimentalDecorators": true
   },
   "include": [
     "../File/**/*",

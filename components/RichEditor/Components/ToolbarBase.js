@@ -326,6 +326,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
                var editor = this.getLinkedEditor();
                var options = {
                   parent: editor, // при закрытии панели необходимо чтобы фокус оставался в редакторе
+                  opener: editor,
                   target: button.getContainer(),
                   corner: 'tl',
                   verticalAlign: {

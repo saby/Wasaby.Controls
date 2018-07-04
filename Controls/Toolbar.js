@@ -54,6 +54,26 @@ define('Controls/Toolbar', [
             adapter: items.getAdapter(),
             idProperty: items.getIdProperty()
          });
+      },
+
+      setPopupOptions: function(self, newOptions) {
+         self._popupOptions = {
+            corner: {vertical: 'top', horizontal: 'right'},
+            horizontalAlign: {side: 'left'},
+            eventHandlers: {
+               onResult: self._onResult
+            },
+            templateOptions: {
+               keyProperty: newOptions.keyProperty,
+               parentProperty: newOptions.parentProperty,
+               nodeProperty: newOptions.nodeProperty,
+               iconSize: newOptions.size,
+               showHeader: true,
+               headConfig: {
+                  menuStyle: 'cross'
+               }
+            }
+         };
       }
    };
 
@@ -66,6 +86,7 @@ define('Controls/Toolbar', [
       _parentProperty: null,
       _nodeProperty: null,
       _items: null,
+      _popupOptions: null,
 
       constructor: function(options) {
          this._onResult = this._onResult.bind(this);
@@ -74,6 +95,7 @@ define('Controls/Toolbar', [
          Toolbar.superclass.constructor.apply(this, arguments);
       },
       _beforeMount: function(options, context, receivedState) {
+         _private.setPopupOptions(this, options);
          if (receivedState) {
             this._items = receivedState;
             this._menuItems = _private.getMenuItems(this._items);
@@ -85,6 +107,12 @@ define('Controls/Toolbar', [
          }
       },
       _beforeUpdate: function(newOptions) {
+         if (newOptions.keyProperty !== this._options.keyProperty ||
+            this._options.parentProperty !== newOptions.parentProperty ||
+            this._options.nodeProperty !== newOptions.nodeProperty ||
+            this._options.iconSize !== newOptions.size) {
+            _private.setPopupOptions(this, newOptions);
+         }
          if (newOptions.source && newOptions.source !== this._options.source) {
             _private.loadItems(this, newOptions.source).addCallback(function() {
                this._forceUpdate();

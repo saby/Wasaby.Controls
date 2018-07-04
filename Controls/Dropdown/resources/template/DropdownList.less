@@ -69,6 +69,7 @@
 }
 
 .controls-DropdownList__icon {
+   color: @color_primary;
    margin-right: @right_DropdownList-icon;
 }
 
@@ -87,6 +88,13 @@
 
 .controls-DropdownList__margin {
    margin-top: @margin-top_DropdownList;
+   margin-left: @margin-left_DropdownList;
+}
+
+//15 шрифт имеет нечетную высоту, из-за этого текст располагается не по центру
+// ff располагает текст выше, а Chrome ниже
+.ws-is-firefox .controls-DropdownList__margin {
+   margin-top: @margin-top_DropdownList-ff;
    margin-left: @margin-left_DropdownList;
 }
 

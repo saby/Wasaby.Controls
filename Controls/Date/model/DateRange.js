@@ -3,7 +3,7 @@ define('Controls/Date/model/DateRange', [
    'WS.Data/Entity/ObservableMixin',
    'WS.Data/Entity/VersionableMixin',
    'Controls/Utils/DateRangeUtil',
-   'SBIS3.CONTROLS/Utils/DateUtil',
+   'SBIS3.CONTROLS/Utils/DateUtil'
 ], function(
    cExtend,
    ObservableMixin,
@@ -19,7 +19,6 @@ define('Controls/Date/model/DateRange', [
     * @noShow
     */
    var ModuleClass = cExtend.extend([ObservableMixin, VersionableMixin], {
-      _options: null,
       _startValue: null,
       _endValue: null,
 
@@ -28,7 +27,7 @@ define('Controls/Date/model/DateRange', [
          this._options = {};
       },
 
-      update(options) {
+      update: function(options) {
          var changed = false;
          if (!DateUtil.isDatesEqual(options.startValue, this._options.startValue)) {
             this._startValue = options.startValue;

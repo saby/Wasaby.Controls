@@ -107,13 +107,6 @@
             name="itemActionsOpener"
             keyProperty="id"
             menuStyle="cross"
-            className="controls-Toolbar__menu-position">
-        <ws:popupOptions closeByExternalClick="{{true}}">
-            <ws:corner vertical="top" horizontal="right"/>
-            <ws:horizontalAlign side="left"/>
-            <ws:eventHandlers onResult="{{_closeActionsMenu}}" onClose="{{_closeActionsMenu}}"/>
-            <ws:templateOptions hideCross="{{true}}">
-            </ws:templateOptions>
-        </ws:popupOptions>
-    </Controls.Dropdown.Opener>
+            className="controls-Toolbar__menu-position"
+            popupOptions="{{_popupOptions}}" />
 </div>

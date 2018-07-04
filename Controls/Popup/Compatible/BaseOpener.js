@@ -6,18 +6,19 @@ define('Controls/Popup/Compatible/BaseOpener', [
    'Core/Context',
    'Core/Deferred',
    'Core/helpers/Number/randomId',
+   'SBIS3.CONTROLS/Action/Utils/OpenDialogUtil',
    'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea'
 ],
 function(cMerge,
    Context,
    Deferred,
-   randomId) {
+   randomId,
+   OpenDialogUtil) {
    /**
        * Слой совместимости для базового опенера для открытия старых шаблонов
        */
    return {
       _prepareConfigForOldTemplate: function(cfg, templateClass) {
-         var dimensions = this._getDimensions(templateClass);
          cfg.templateOptions = {
             templateOptions: cfg.templateOptions || cfg.componentOptions || {},
             componentOptions: cfg.templateOptions || cfg.componentOptions || {},
@@ -54,7 +55,12 @@ function(cMerge,
                   destroyDef = null;
                };
 
-            cfg.templateOptions.context = Context.createContext(destroyDef, {}, cfg.context);
+            if (cfg.context instanceof Context) {
+               cfg.templateOptions.context = Context.createContext(destroyDef, {}, cfg.context);
+            } else {
+               cfg.templateOptions.context = Context.createContext(destroyDef, cfg.context ? cfg.context : {}, null);
+            }
+
             if (!cfg.templateOptions.handlers) {
                cfg.templateOptions.handlers = {};
             }
@@ -78,9 +84,7 @@ function(cMerge,
             cfg.closeByExternalClick = cfg.autoHide;
          }
 
-         if (dimensions.title) {
-            cfg.templateOptions.caption = dimensions.title;
-         }
+         cfg.templateOptions.caption = this._getCaption(cfg, templateClass);
 
          var revertPosition = {
             top: 'bottom',
@@ -91,6 +95,10 @@ function(cMerge,
 
          if (cfg.hasOwnProperty('verticalAlign')) {
             cfg.verticalAlign = {side: revertPosition[cfg.verticalAlign]};
+         }
+
+         if (cfg._type === 'dialog' && !cfg.hasOwnProperty('modal')) {
+            cfg.isModal = true;
          }
 
          if (cfg.hasOwnProperty('side')) {
@@ -179,13 +187,14 @@ function(cMerge,
       //Берем размеры либо с опций, либо с дименшенов
       _setSizes: function(cfg, templateClass) {
          var dimensions = this._getDimensions(templateClass);
-         var dimensionsMinWidth = dimensions.minWidth || dimensions.width;
+         var templateOptions = this._getTemplateOptions(templateClass);
+         var minWidth = dimensions.minWidth || templateOptions.minWidth || dimensions.width || templateOptions.width;
 
          if (!cfg.minWidth) {
-            cfg.minWidth = dimensionsMinWidth ? parseInt(dimensionsMinWidth, 10) : null;
+            cfg.minWidth = minWidth ? parseInt(minWidth, 10) : null;
          }
          if (!cfg.maxWidth) {
-            cfg.maxWidth = parseInt(cfg.width || dimensions.maxWidth, 10) || null;
+            cfg.maxWidth = parseInt(cfg.width || dimensions.maxWidth || templateOptions.maxWidth, 10) || null;
          }
 
          cfg.minWidth = cfg.minWidth || cfg.maxWidth;
@@ -201,8 +210,24 @@ function(cMerge,
          cfg.minHeight = cfg.minHeight || cfg.maxHeight;
          cfg.maxHeight = cfg.maxHeight || cfg.minHeight;
       },
+
+      _getCaption: function(cfg, templateClass) {
+         var dimensions = this._getDimensions(templateClass);
+         var templateOptions = this._getTemplateOptions(templateClass);
+         return cfg.title || cfg.caption ||
+            dimensions.title || dimensions.caption ||
+            templateClass.caption || templateClass.title ||
+            cfg.templateOptions.title || cfg.templateOptions.caption ||
+            templateOptions.title || templateOptions.caption;
+      },
+
       _getDimensions: function(templateClass) {
          return templateClass.dimensions || templateClass.prototype.dimensions || {};
+      },
+
+      _getTemplateOptions: function(templateClass) {
+         var initializer = (templateClass.prototype || templateClass)._initializer; //опции можно достать не везде
+         return initializer ? OpenDialogUtil.getOptionsFromProto(templateClass) : {};
       }
 
    };

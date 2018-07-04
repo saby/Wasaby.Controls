@@ -1,6 +1,6 @@
 /// <amd-module name="File/Attach/Option/Getters/DropArea" />
 
-import ResourceGetter = require("File/Attach/Option/ResourceGetter");
+import ResourceGetter = require("File/Attach/Option/Getter");
 import DropAreaGetter = require("File/ResourceGetter/DropArea");
 
 const GETTER_TYPE = "DropArea";
@@ -9,7 +9,7 @@ const GETTER_TYPE = "DropArea";
  * Класс конфигурации IResourceGetter для выбора путём Drag&Drop, передаваемый в Attach
  * @class
  * @name File/Attach/Option/Getters/DropArea
- * @extends File/Attach/Option/ResourceGetter
+ * @extends File/Attach/Option/Getter
  * @public
  * @author Заляев А.В.
  */
