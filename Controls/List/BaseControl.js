@@ -339,10 +339,7 @@ define('Controls/List/BaseControl', [
                onClose: self._closeActionsMenu
             },
             templateOptions: {
-               showHeader: true,
-               headConfig: {
-                  menuStyle: 'cross'
-               }
+               showClose: true
             }
          };
       }

@@ -61,7 +61,7 @@ define('Controls/Dropdown/Container',
        */
 
       /**
-       * @name Controls/Dropdown/Container#hideCross
+       * @name Controls/Dropdown/Container#showClose
        * @cfg {Boolean} Dropdown have cross in left top corner
        */
 

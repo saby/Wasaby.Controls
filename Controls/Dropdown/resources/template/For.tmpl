@@ -6,7 +6,7 @@
             template="{{itemTemplate || defaultItemTemplate}}"
             itemData="{{listModel.getEmptyItem()}}"
             resultHandler="{{resultHandler}}"
-            hideCross="{{hideCross}}"
+            showClose="{{showClose}}"
             class="controls-DropdownList__emptyItem"/>
    </ws:if>
    <ws:for data="listModel.reset(); listModel.isEnd(); listModel.goToNext();">
@@ -16,7 +16,7 @@
             template="{{listModel.getCurrent().template || itemTemplate || defaultItemTemplate}}"
             itemData="{{listModel.getCurrent()}}"
             resultHandler="{{resultHandler}}"
-            hideCross="{{hideCross}}"
+            showClose="{{showClose}}"
             parentProperty="{{parentProperty}}"
             iconPadding="{{iconPadding}}"/>
    </ws:for>
