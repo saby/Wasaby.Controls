@@ -327,6 +327,24 @@ define('Controls/List/BaseControl', [
 
       bindHandlers: function(self) {
          self._closeActionsMenu = self._closeActionsMenu.bind(self);
+      },
+
+      setPopupOptions: function(self) {
+         self._popupOptions = {
+            closeByExternalClick: true,
+            corner: {vertical: 'top', horizontal: 'right'},
+            horizontalAlign: {side: 'left'},
+            eventHandlers: {
+               onResult: self._closeActionsMenu,
+               onClose: self._closeActionsMenu
+            },
+            templateOptions: {
+               showHeader: true,
+               headConfig: {
+                  menuStyle: 'cross'
+               }
+            }
+         };
       }
    };
 
@@ -370,12 +388,15 @@ define('Controls/List/BaseControl', [
       _bottomPlaceholderHeight: 0,
       _menuIsShown: null,
 
+      _popupOptions: null,
+
       constructor: function(cfg) {
          BaseControl.superclass.constructor.apply(this, arguments);
       },
 
       _beforeMount: function(newOptions, context, receivedState) {
          _private.bindHandlers(this);
+         _private.setPopupOptions(this);
 
          this._virtualScroll = new VirtualScroll({
             maxVisibleItems: newOptions.virtualScrollConfig && newOptions.virtualScrollConfig.maxVisibleItems,
