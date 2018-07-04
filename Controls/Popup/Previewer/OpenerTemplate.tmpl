@@ -4,7 +4,9 @@
                   scope="{{_options.contentTemplateOptions}}"
                   on:mousedown="_sendResult()"
                   on:mouseenter="_sendResult()"
-                  on:mouseleave="_sendResult()"/>
+                  on:mouseleave="_sendResult()"
+                  on:menuOpened="_sendResult()"
+                  on:menuClosed="_sendResult()"/>
    </Controls.Container.Async>
 </ws:if>
 <ws:else>
@@ -13,5 +15,6 @@
       on:mousedown="_sendResult()"
       on:mouseenter="_sendResult()"
       on:mouseleave="_sendResult()"
-   />
+      on:menuOpened="_sendResult()"
+      on:menuClosed="_sendResult()"/>
 </ws:else>
