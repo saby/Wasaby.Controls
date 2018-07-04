@@ -1,8 +1,16 @@
 define('Controls/Application/HeadDataContext', [
    'Core/DataContext',
    'Core/Deferred',
-   'Core/cookie'
-], function(DataContext, Deferred, cookie) {
+   'Core/cookie',
+   'Core/IoC'
+], function(DataContext, Deferred, cookie, IoC) {
+
+   var DEPTYPES = {
+      BUNDLE: 1,
+      SINGLE: 2
+   };
+
+
    var bundles;
    try {
       bundles = require('json!WS.Core/ext/requirejs/bundlesRoute');
@@ -59,7 +67,7 @@ define('Controls/Application/HeadDataContext', [
             if (bundleName) {
                IoC.resolve('ILogger').info('Module ' + key + ' in bundle ' + bundleName);
                delete allDeps[key];
-               packages[fixLinkSlash(bundleName)] = true;
+               packages[fixLinkSlash(bundleName)] = DEPTYPES.BUNDLE;
             }
          }
       }
@@ -68,7 +76,7 @@ define('Controls/Application/HeadDataContext', [
          if (allDeps.hasOwnProperty(key)) {
             if (modDeps.nodes[key]) {
                if (isJs(key) || isCss(key) || isTmpl(key)) {
-                  packages[fixLinkSlash(modDeps.nodes[key].path)] = true;
+                  packages[fixLinkSlash(modDeps.nodes[key].path)] = DEPTYPES.SINGLE;
                }
             }
          }
@@ -76,7 +84,7 @@ define('Controls/Application/HeadDataContext', [
       return packages;
    }
 
-   function collectDependencies(deps, callback) {
+   function collectDependencies(deps, callback, buildNumber) {
       function recursiveWalker(allDeps, curNodeDeps) {
          if (curNodeDeps && curNodeDeps.length) {
             for (var i = 0; i < curNodeDeps.length; i++) {
@@ -103,20 +111,28 @@ define('Controls/Application/HeadDataContext', [
          for (var key in packages) {
             if (packages.hasOwnProperty(key)) {
                if (key.slice(key.length - 3, key.length) === 'css') {
-                  files.css.push(key);
+                  files.css.push(addBuildNumber(key, buildNumber));
                   var corrJs = key.replace(/.css$/, '.js');
-                  if (!packages[corrJs]) {
-                     files.js.push(corrJs);
+                  if (!packages[corrJs] && packages[key] === DEPTYPES.BUNDLE) {
+                     files.js.push(addBuildNumber(corrJs, buildNumber));
                   }
                } else if (key.slice(key.length - 2, key.length) === 'js') {
-                  files.js.push(key);
+                  files.js.push(addBuildNumber(key, buildNumber));
                } else if (key.slice(key.length - 4, key.length) === 'tmpl') {
-                  files.js.push(key);
+                  files.js.push(addBuildNumber(key, buildNumber));
                }
             }
          }
       }
       return callback(undefined, files);
+   }
+
+   function addBuildNumber(link, buildNumber) {
+      if (buildNumber) {
+         return link.replace(/\.(css|js|tmpl)$/, '.v' + buildNumber + '$&');
+      } else {
+         return link;
+      }
    }
 
    return DataContext.extend({
@@ -146,14 +162,15 @@ define('Controls/Application/HeadDataContext', [
                   errorState: self.err,
                   receivedStateArr: self.receivedStateArr
                });
-            });
+            }, self.buildNumber);
          });
       },
-      constructor: function(theme) {
+      constructor: function(theme, buildNumber) {
          this.theme = theme;
          this.defRender = new Deferred();
          this.depComponentsMap = {};
          this.receivedStateArr = {};
+         this.buildNumber = buildNumber;
       },
       waitAppContent: function() {
          return this.defRender;
