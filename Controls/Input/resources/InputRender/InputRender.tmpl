@@ -32,7 +32,7 @@
 
             <ws:if data="{{ !_options.viewModel.getDisplayValue() && !_options.readOnly}}">
                <ws:partial
-                  attr:class="{{ _options.multiline ? 'controls-InputRender__placeholder_multiLine' : 'controls-InputRender__placeholder_singleLine' }}"
+                  attr:class="{{ _options.multiline ? 'controls-InputArea__placeholder_multiline' }}"
                   template="tmpl!Controls/Input/resources/CustomPlaceholder"
                   placeholder="{{ _options.placeholder }}"
                   attr:tabindex="{{-1}}"
