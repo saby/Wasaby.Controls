@@ -116,6 +116,15 @@ function(cMerge,
             cfg.horizontalAlign = {side: revertPosition[cfg.side]};
          }
 
+         if (cfg.horizontalAlign) {
+            if (cfg.horizontalAlign.side === undefined) {
+               delete cfg.horizontalAlign.side;
+            }
+            if (cfg.horizontalAlign.offset === undefined) {
+               delete cfg.horizontalAlign.offset;
+            }
+         }
+
          if (cfg.hasOwnProperty('offset')) {
             if (cfg.offset.x) {
                cfg.horizontalAlign = cfg.horizontalAlign || {};

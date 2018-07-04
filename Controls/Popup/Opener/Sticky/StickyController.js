@@ -26,10 +26,14 @@ define('Controls/Popup/Opener/Sticky/StickyController',
       var _private = {
          prepareConfig: function(cfg, sizes) {
             var popupCfg = {
-               corner: cMerge(cClone(DEFAULT_OPTIONS['corner']), cfg.popupOptions.corner || {}),
+               corner: cMerge(cClone(DEFAULT_OPTIONS.corner), cfg.popupOptions.corner || {}),
                align: {
-                  horizontal: cMerge(cClone(DEFAULT_OPTIONS['horizontalAlign']), cfg.popupOptions.horizontalAlign || {}),
-                  vertical: cMerge(cClone(DEFAULT_OPTIONS['verticalAlign']), cfg.popupOptions.verticalAlign || {})
+                  horizontal: cMerge(cClone(DEFAULT_OPTIONS.horizontalAlign), cfg.popupOptions.horizontalAlign || {}),
+                  vertical: cMerge(cClone(DEFAULT_OPTIONS.verticalAlign), cfg.popupOptions.verticalAlign || {})
+               },
+               config: {
+                  maxWidth: cfg.popupOptions.maxWidth,
+                  maxHeight: cfg.popupOptions.maxHeight
                },
                sizes: sizes
             };
@@ -66,7 +70,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
                   }
                };
                cMerge(cfg.popupOptions, positionCfg);
-               sizes.margins = {top: 0, left: 0};
+               sizes.margins = { top: 0, left: 0 };
                return {
                   width: 1,
                   height: 1,
@@ -104,7 +108,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
                container.style.height = 'auto';
 
                this.prepareConfig(item, container);
-               container.classList.add('controls-Sticky__reset-margins'); //После замеров стилей возвращаем
+               container.classList.add('controls-Sticky__reset-margins'); // После замеров стилей возвращаем
             }
          },
          prepareConfig: function(item, container) {
@@ -114,5 +118,4 @@ define('Controls/Popup/Opener/Sticky/StickyController',
       });
 
       return new StickyController();
-   }
-);
+   });
