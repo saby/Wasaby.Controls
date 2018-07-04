@@ -1,5 +1,5 @@
 <div style="margin: 32px; display: flex; flex-direction: column; width: 18em;">
-   <div style="padding: 3em; background-color: rgba(38,59,74,0.22)">
+   <div style="padding: 3em; background-color: rgba(38,59,74,0.22); {{_hide ? 'display: none;' : ''}}">
       <h2>Area</h2>
       <Controls.Label name="myLabel1" caption="Пример"/>
       <Controls.Input.Area
@@ -39,6 +39,7 @@
                                       bind:value="_validationErrorsValue" caption="validationErrors"/>
          <br/>
          <Controls.Toggle.Checkbox attr:id="enabled" readOnly="{{false}}" bind:value="_readOnly" caption="readOnly"/>
+         <Controls.Toggle.Checkbox attr:id="enabled" readOnly="{{false}}" bind:value="_hide" caption="hide"/>
       </div>
    </div>
    <div hidden="hidden" id="event_test">{{ _eventResult }}</div>
