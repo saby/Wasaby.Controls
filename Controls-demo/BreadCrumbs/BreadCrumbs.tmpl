@@ -15,7 +15,11 @@
     <Controls.BreadCrumbsController attr:id="twoCrumbsButDifferent" items="{{items3}}" on:itemClick="_onItemClick()" />
     <h2>Path</h2>
     <Controls.Path attr:id="path" items="{{items}}"
+                   on:arrowActivated="_onArrowActivated()"
                    on:itemClick="_onItemClick()" />
     <div id="reset" class="asLink" on:click="_resetCrumbs()">Сбросить крошки</div>
     <div id="info">Нажали на элемент с id: {{info}}</div>
+    <ws:if data="{{_arrowActivated}}">
+        <div id="arrowInfo">Нажали на стрелку</div>
+    </ws:if>
 </div>
