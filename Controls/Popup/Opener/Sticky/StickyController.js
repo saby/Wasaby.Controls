@@ -108,6 +108,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
                var height = container.style.height;
                container.style.width = 'auto';
                container.style.height = 'auto';
+
                /* end: Снимаем установленные значения, влияющие на размер и позиционирование, чтобы получить размеры контента */
 
                this.prepareConfig(item, container);
