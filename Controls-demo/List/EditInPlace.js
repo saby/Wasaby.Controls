@@ -89,6 +89,8 @@ define('Controls-demo/List/EditInPlace', [
       _editOnClick: true,
       _singleEdit: false,
       _autoAdd: false,
+      _handleItemClick: false,
+      _handleClickError: false,
       _editingItem: new Model({
          rawData: {
             id: 2,
@@ -197,6 +199,12 @@ define('Controls-demo/List/EditInPlace', [
 
       itemEdit: function(options) {
          this._children.list.itemEdit(options);
+      },
+
+      _itemClickHandler: function(e, item, nativeEvent) {
+         if (nativeEvent.target.tagName === 'INPUT') {
+            this._handleClickError = true;
+         }
       }
    });
    return EditInPlace;
