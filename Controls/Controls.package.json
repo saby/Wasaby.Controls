@@ -67,23 +67,7 @@
   "output": "controls-list.package.js"
 }, {
   "include": [
-    "Controls/Popup/Manager",
-    "Controls/Popup/Manager/*",
-    "Controls/Popup/Previewer",
-    "Controls/Popup/Previewer/*",
-    "Controls/Popup/Opener/BaseController",
-    "Controls/Popup/Opener/BaseOpener",
-    "Controls/Popup/Opener/Confirmation",
-    "Controls/Popup/Opener/Confirmation/*",
-    "Controls/Popup/Templates/*",
-    "Controls/Popup/Opener/Dialog",
-    "Controls/Popup/Opener/InfoBox",
-    "Controls/Popup/InfoBox",
-    "Controls/Popup/InfoBox/*",
-    "Controls/Popup/Opener/Notification",
-    "Controls/Popup/Opener/Stack",
-    "Controls/Popup/Opener/Sticky",
-    "Controls/Popup/Opener/Previewer"
+    "Controls/Popup/*"
   ],
   "output": "controls-popup.package.js"
 }, {
@@ -121,9 +105,12 @@
   "output": "controls-highcharts.package.js"
 }, {
   "include": [
-    "Controls/DragNDrop/Avatar",
-    "Controls/DragNDrop/Controller",
-    "Controls/DragNDrop/Container"
+    "Controls/DragNDrop/*"
   ],
   "output": "controls-dragndrop.package.js"
+}, {
+  "include": [
+    "Controls/Calendar/*"
+  ],
+  "output": "controls-calendar.package.js"
 }]
