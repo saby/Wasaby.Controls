@@ -229,6 +229,13 @@ function(cMerge,
 
          cfg.minHeight = cfg.minHeight || cfg.maxHeight;
          cfg.maxHeight = cfg.maxHeight || cfg.minHeight;
+
+         if (!cfg.minHeight) { //нет размеров - строимся по контенту
+            cfg.autoHeight = true;
+         }
+         if (!cfg.minWidth) { //нет размеров - строимся по контенту
+            cfg.autoWidth = true;
+         }
       },
 
       _getCaption: function(cfg, templateClass) {
