@@ -35,9 +35,9 @@ module.exports = function(Component) {
 
       // Демо-пример: работа всплывающих окон и панелей
       '/demo-ws4-opener-stack': function(req, res) {
-        requirejs('Controls-demo/Popup/PopupPage');
+        requirejs('Examples/Popup/Opener');
         res.render('tmpl!Controls/Application/Route', {
-           application: 'Controls-demo/Popup/PopupPage',
+           application: 'Examples/Popup/Opener',
            initDependencies: false
          }, []);
       },
