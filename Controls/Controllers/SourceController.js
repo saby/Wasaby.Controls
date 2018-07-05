@@ -155,10 +155,6 @@ define('Controls/Controllers/SourceController',
             }
          },
 
-         setSource: function(source) {
-            this._source = _private.prepareSource(source);
-         },
-
          calculateState: function(list) {
             if (this._queryParamsController) {
                this._queryParamsController.calculateState(list);

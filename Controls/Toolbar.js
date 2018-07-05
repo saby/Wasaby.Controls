@@ -61,17 +61,15 @@ define('Controls/Toolbar', [
             corner: {vertical: 'top', horizontal: 'right'},
             horizontalAlign: {side: 'left'},
             eventHandlers: {
-               onResult: self._onResult
+               onResult: self._onResult,
+               onClose: self._closeHandler
             },
             templateOptions: {
                keyProperty: newOptions.keyProperty,
                parentProperty: newOptions.parentProperty,
                nodeProperty: newOptions.nodeProperty,
                iconSize: newOptions.size,
-               showHeader: true,
-               headConfig: {
-                  menuStyle: 'cross'
-               }
+               showClose: true
             }
          };
       }
@@ -90,6 +88,7 @@ define('Controls/Toolbar', [
 
       constructor: function(options) {
          this._onResult = this._onResult.bind(this);
+         this._closeHandler = this._closeHandler.bind(this);
          this._parentProperty = options.parentProperty;
          this._nodeProperty = options.nodeProperty;
          Toolbar.superclass.constructor.apply(this, arguments);
@@ -133,6 +132,11 @@ define('Controls/Toolbar', [
                target: event.target
             };
             this._children.menuOpener.open(config, this);
+
+            //TODO нотифай событий menuOpened и menuClosed нужен для работы механизма корректного закрытия превьювера переделать
+            //TODO по задаче https://online.sbis.ru/opendoc.html?guid=76ed6751-9f8c-43d7-b305-bde84c1e8cd7
+
+            this._notify('menuOpened', [], {bubbling: true});
          }
          event.stopPropagation();
          this._notify('itemClick', [item]);
@@ -147,6 +151,7 @@ define('Controls/Toolbar', [
             },
             target: this._children.popupTarget
          };
+         this._notify('menuOpened', [], {bubbling: true});
          this._children.menuOpener.open(config, this);
       },
 
@@ -155,6 +160,10 @@ define('Controls/Toolbar', [
             this._onItemClick(result.event, result.data[0]);
             this._children.menuOpener.close();
          }
+      },
+
+      _closeHandler: function() {
+         this._notify('menuClosed', [], {bubbling: true});
       }
    });
 
