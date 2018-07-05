@@ -53,19 +53,15 @@ define([
          assert.equal(selection.excluded.length, 0);
       });
 
-      it('_updateContext', function() {
-         var count = 0,
-            cfg = {
-               selectedKeys: [1, 2],
-               excludedKeys: [],
-               selectionChangeHandler: function() {
-                  count++;
-               }
-            };
-         var instance = new MultiSelector(cfg);
-         instance.saveOptions(cfg);
-         instance._beforeMount(cfg, context);
-         assert.equal(count, 1);
+      it('_beforeUpdate', function() {
+         var instance = new MultiSelector();
+         instance._multiselection = {
+            setItems: function(items) {
+               assert.deepEqual(context.dataOptions.items, items);
+            }
+         };
+         instance._beforeUpdate(cfg, context);
+         assert.deepEqual(context.dataOptions.items, instance._items);
       });
 
       it('_getChildContext', function() {
