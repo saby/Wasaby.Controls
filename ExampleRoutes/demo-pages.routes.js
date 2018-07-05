@@ -80,9 +80,9 @@ module.exports = function(Component) {
 
       // Демо-пример: компоненты для работы с всплывающими окнами.
       '/demo-ws4-popup-opener': function(req, res) {
-         requirejs('Controls-demo/Popup/PopupPage');
+         requirejs('Examples/Popup/Opener');
          res.render('tmpl!Controls/Application/Route', {
-            application: 'Controls-demo/Popup/PopupPage',
+            application: 'Examples/Popup/Opener',
             initDependencies: false
          }, []);
       },
