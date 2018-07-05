@@ -131,6 +131,10 @@ define('Controls/Layout/Scroll',
             this._registrar = new Registrar({register: 'listScroll'});
          },
 
+         _afterMount: function() {
+            this._notify('register', ['resize', this, this._resizeHandler], {bubbling: true});
+         },
+
 
          _scrollHandler: function(e) {
             var self = this;
@@ -185,6 +189,7 @@ define('Controls/Layout/Scroll',
                this._observer.disconnect();
                this._observer = null;
             }
+            this._notify('unregister', ['resize', this], {bubbling: true});
             this._registrar.destroy();
          }
 
