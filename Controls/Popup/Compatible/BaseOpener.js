@@ -175,7 +175,7 @@ function(cMerge,
                handlers: cfg.handlers,
                border: false
             },
-            mode: (cfg._type === 'stack' || cfg._type === 'sticky') ? 'floatArea' : 'dialog'
+            mode: (cfg._type === 'stack' || cfg._type === 'sticky' || cfg.target) ? 'floatArea' : 'dialog'
          });
          if (cfg.hasOwnProperty('closeByExternalClick')) {
             cfg.autoHide = cfg.closeByExternalClick;
