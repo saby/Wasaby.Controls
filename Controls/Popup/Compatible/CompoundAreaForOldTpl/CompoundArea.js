@@ -13,7 +13,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/helpers/Function/runDelayed',
       'Core/constants',
       'Core/helpers/Hcontrol/doAutofocus',
-      'Deprecated/Controls/DialogRecord/DialogRecord',
+      'optional!Deprecated/Controls/DialogRecord/DialogRecord',
       'Core/EventBus',
 
       'Lib/Control/AreaAbstract/AreaAbstract.compatible',
