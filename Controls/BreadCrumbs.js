@@ -1,8 +1,8 @@
-define('Controls/BreadCrumbsController', [
+define('Controls/BreadCrumbs', [
    'Core/Control',
    'Controls/Utils/BreadCrumbsUtil',
    'Controls/Utils/FontLoadUtil',
-   'tmpl!Controls/BreadCrumbsController/BreadCrumbsController'
+   'tmpl!Controls/BreadCrumbs/BreadCrumbs'
 ], function(
    Control,
    BreadCrumbsUtil,
@@ -14,7 +14,7 @@ define('Controls/BreadCrumbsController', [
    /**
     * Breadcrumbs.
     *
-    * @class Controls/BreadCrumbsController
+    * @class Controls/BreadCrumbs
     * @extends Core/Control
     * @mixes Controls/interface/IBreadCrumbs
     * @control
@@ -23,7 +23,7 @@ define('Controls/BreadCrumbsController', [
     * @demo Controls-demo/BreadCrumbs/BreadCrumbs
     */
 
-   var BreadCrumbsController = Control.extend({
+   var BreadCrumbs = Control.extend({
       _template: template,
       _visibleItems: [],
       _oldWidth: 0,
@@ -54,5 +54,5 @@ define('Controls/BreadCrumbsController', [
       }
    });
 
-   return BreadCrumbsController;
+   return BreadCrumbs;
 });
