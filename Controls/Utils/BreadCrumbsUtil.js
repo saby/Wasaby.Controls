@@ -1,7 +1,7 @@
 define('Controls/Utils/BreadCrumbsUtil', [
    'Controls/List/resources/utils/ItemsUtil',
-   'tmpl!Controls/BreadCrumbsView/resources/itemsTemplate',
-   'tmpl!Controls/BreadCrumbsView/resources/itemTemplate',
+   'tmpl!Controls/BreadCrumbs/View/resources/itemsTemplate',
+   'tmpl!Controls/BreadCrumbs/View/resources/itemTemplate',
    'css!Controls/Utils/BreadCrumbsUtil'
 ], function(
    ItemsUtil,

@@ -1,11 +1,11 @@
 define([
-   'Controls/BreadCrumbsView',
+   'Controls/BreadCrumbs/View',
    'WS.Data/Entity/Model'
 ], function(
    BreadCrumbsView,
    Model
 ) {
-   describe('Controls._BreadCrumbsView', function() {
+   describe('Controls.BreadCrumbs.View', function() {
       var bc, data;
       beforeEach(function() {
          data = [
