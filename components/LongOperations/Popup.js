@@ -1,6 +1,5 @@
 define('SBIS3.CONTROLS/LongOperations/Popup',
    [
-      'Core/core-merge',
       "Core/UserInfo",
       'Core/Deferred',
       'Core/EventBus',
@@ -10,10 +9,10 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
       "tmpl!SBIS3.CONTROLS/LongOperations/Popup/resources/headerTemplate",
       "tmpl!SBIS3.CONTROLS/LongOperations/Popup/resources/contentTemplate",
       "tmpl!SBIS3.CONTROLS/LongOperations/Popup/resources/footerTemplate",
-      "css!SBIS3.CONTROLS/LongOperations/Popup/LongOperationsPopup",
-      'SBIS3.CONTROLS/LongOperations/Registry'
+      "Lib/Control/FloatArea/FloatArea",
+      "css!SBIS3.CONTROLS/LongOperations/Popup/LongOperationsPopup"
    ],
-   function (cMerge, UserInfo, Deferred, EventBus, TabMessage, NotificationPopup, LongOperationEntry, headerTemplate, contentTpl, footerTpl) {
+   function (UserInfo, Deferred, EventBus, TabMessage, NotificationPopup, LongOperationEntry, headerTemplate, contentTpl, footerTpl, FloatArea) {
       'use strict';
 
       /**
@@ -60,25 +59,11 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                className: 'controls-LongOperations controls-LongOperationsPopup controls-LongOperationsPopup__hidden controls-LongOperationsPopup__hiddenContentMode',
                customConditions: null,
                withAnimation: null,
-               waitIndicatorText: null,
-
-               _actionOpenRegistry: {
-                  template: 'SBIS3.CONTROLS/LongOperations/Registry',
-                  mode: 'floatArea',
-                  dialogOptions: {
-                     title: rk('Все операции', 'ДлительныеОперации'),
-                     direction: 'left',
-                     animation: 'slide',
-                     isStack: true,
-                     autoCloseOnHide: true,
-                     maxWidth: 1000
-                  }
-               }
+               waitIndicatorText: null
             },
 
             _activeOperation: null,
-            _actionOpenRegistry: null,
-            _isRegistryOpened: null,
+            _floatArea: null,
 
             _longOpList: null,
             _resultButton: null,
@@ -103,7 +88,6 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
 
             this._longOpList = this.getChildControlByName('operationList');
             this._resultButton = this.getChildControlByName('downloadButton');
-            this._actionOpenRegistry = this.getChildControlByName('controls-LongOperationsPopup__actionOpenRegistry');
 
             var customConditions = this._options.customConditions;
             // В текущей реализации наличие непустой опции customConditions обязательно
@@ -269,21 +253,27 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
          },
 
          /**
-          * Метод показывает реестр всех операций
+          * Метод показывает floatArea.
           */
          _showRegistry: function () {
-            var componentOptions = {
-               columns: {userPic:false},
-               userId: this._options.userId
-            };
-            var actionOptions = this._options._actionOpenRegistry;
-            this._actionOpenRegistry.execute({
-               dialogOptions: cMerge({
-                  opener: this
-               }, actionOptions.dialogOptions),
-               componentOptions: componentOptions
-            }).addBoth(this._onRegistryClose.bind(this));
-            this._isRegistryOpened = true;
+            this._onFloatAreaClose_b = this._onFloatAreaClose_b || this._onFloatAreaClose.bind(this)
+            this._floatArea = new FloatArea({
+               title: rk('Все операции'),
+               template: 'SBIS3.CONTROLS/LongOperations/Registry',
+               componentOptions: {
+                  columns: {
+                     userPic: false
+                  },
+                  userId: this._options.userId
+               },
+               opener: this,
+               direction: 'left',
+               animation: 'slide',
+               isStack: true,
+               autoCloseOnHide: true,
+               maxWidth: 1000
+            });
+            this._floatArea.once('onAfterClose', this._onFloatAreaClose_b);
 
             //Скрываем нашу панель, во время работы с floatArea, она не нужна (Т.к. setVisible(false) вызовет событие onClose с последующим вызовом destroy менеджером информационных окон, то просто меняем стиль)
             this.getContainer().css('visibility', 'hidden');
@@ -291,8 +281,8 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
             this._notify('onSizeChange');
          },
 
-         _onRegistryClose: function () {
-            this._isRegistryOpened = null;
+         _onFloatAreaClose: function () {
+            this._floatArea = null;
             this.getContainer().css('visibility', 'visible');
             this._notify('onSizeChange');
          },
@@ -600,7 +590,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                setTimeout(function () {
                   if (!self.isDestroyed() && self.isVisible()
                         //Если активен режим с floatArea (открыт журнал), то просто скрываем ромашку. Анимация не нужна.
-                        && !self._isRegistryOpened) {
+                        && !self._floatArea) {
                      var _moveTo = function ($target, zIndex, $element) {
                         var offset = $target.offset();
                         $element
@@ -642,6 +632,9 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
          destroy: function () {
             this._tabChannel.destroy();
             this._tabChannel = null;
+            if (this._floatArea) {
+               this._floatArea.unsubscribe('onAfterClose', this._onFloatAreaClose_b);
+            }
 
             var container = this.getContainer();
             [
