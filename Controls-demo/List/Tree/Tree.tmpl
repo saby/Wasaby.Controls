@@ -18,7 +18,7 @@
                              multiSelectVisibility="visible"
                              itemActions="{{_itemActions}}"
                              itemActionsType="outside"
-                             on:actionClick="_onActionClick()"
+                             on:itemActionsClick="_onActionClick()"
                              itemActionVisibilityCallback="{{_showAction}}">
                </Controls.TreeGrid>
             </ws:content>
@@ -39,7 +39,7 @@
                        multiSelectVisibility="visible"
                        itemActions="{{_itemActions}}"
                        itemActionsType="inside"
-                       on:actionClick="_onActionClick()"
+                       on:itemActionsClick="_onActionClick()"
                        itemActionVisibilityCallback="{{_showAction}}">
                </Controls.TreeGrid>
             </ws:content>

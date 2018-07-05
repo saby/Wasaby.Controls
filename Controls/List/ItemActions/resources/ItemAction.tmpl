@@ -3,7 +3,7 @@
             {{!!action.iconDone ? ' controls-itemActionsV__action_done'}}
             {{!!action.iconError ? ' controls-itemActionsV__action_error'}}"
       attr:title="{{!!action.title ? action.title}}"
-      on:click="_onActionClick(action, itemData)">
+      on:click="_onItemActionsClick(action, itemData)">
     <ws:if data="{{!!action.icon}}">
         <i attr:class="{{action.icon}}"/>
     </ws:if>

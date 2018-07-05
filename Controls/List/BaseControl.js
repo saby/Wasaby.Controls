@@ -329,7 +329,7 @@ define('Controls/List/BaseControl', [
 
          if (actionName === 'itemClick') {
             var action = args.data && args.data[0] && args.data[0].getRawData();
-            aUtil.actionClick(self, event, action, self._listViewModel.getActiveItem());
+            aUtil.itemActionsClick(self, event, action, self._listViewModel.getActiveItem());
             self._children.itemActionsOpener.close();
          }
          self._listViewModel.setActiveItem(null);
@@ -671,8 +671,8 @@ define('Controls/List/BaseControl', [
          this._notify('afterItemsMove', [items, target, position, result]);
       },
 
-      _onActionClick: function(e, action, item) {
-         this._notify('actionClick', [action, item]);
+      _onItemActionsClick: function(e, action, item) {
+         this._notify('itemActionsClick', [action, item]);
       },
 
       _itemMouseDown: function(event, itemData, domEvent) {
