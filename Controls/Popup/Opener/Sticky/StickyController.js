@@ -102,13 +102,21 @@ define('Controls/Popup/Opener/Sticky/StickyController',
 
          elementUpdated: function(item, container) {
             if (this._checkContainer(item, container)) {
-               /* Снимаем установленные значения, влияющие на размер и позиционирование, чтобы получить размеры контента */
+               /* start: Снимаем установленные значения, влияющие на размер и позиционирование, чтобы получить размеры контента */
                container.classList.remove('controls-Sticky__reset-margins');
+               var width = container.style.width;
+               var height = container.style.height;
                container.style.width = 'auto';
                container.style.height = 'auto';
+               /* end: Снимаем установленные значения, влияющие на размер и позиционирование, чтобы получить размеры контента */
 
                this.prepareConfig(item, container);
+
+               /* start: Возвращаем все значения но узел, чтобы vdom не рассинхронизировался */
+               container.style.width = width;
+               container.style.height = height;
                container.classList.add('controls-Sticky__reset-margins'); // После замеров стилей возвращаем
+               /* end: Возвращаем все значения но узел, чтобы vdom не рассинхронизировался */
             }
          },
          prepareConfig: function(item, container) {
