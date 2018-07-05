@@ -173,6 +173,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                               dialog._container.closest('.ws-float-area, .ws-float-area-stack-cut-wrapper, .ws-window').removeClass('ws-invisible');
                            };
                         }
+                        config._openFromAction = true;
                         self._dialog = new Component(config);
                      });
                   }
