@@ -9,7 +9,6 @@ define('SBIS3.CONTROLS/LongOperations/List',
       'SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
       'SBIS3.CONTROLS/LongOperations/List/resources/model',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
-      'Lib/Control/FloatArea/FloatArea',
       'tmpl!SBIS3.CONTROLS/LongOperations/List/LongOperationsList',
       'css!SBIS3.CONTROLS/LongOperations/List/LongOperationsList',
       'tmpl!SBIS3.CONTROLS/LongOperations/List/resources/LongOperationsListStateTemplate',
@@ -17,10 +16,11 @@ define('SBIS3.CONTROLS/LongOperations/List',
       'tmpl!SBIS3.CONTROLS/LongOperations/List/resources/LongOperationsListExecuteTimeTemplate',
       'tmpl!SBIS3.CONTROLS/LongOperations/List/resources/LongOperationsListUserPhotoTemplate',
       'tmpl!SBIS3.CONTROLS/LongOperations/List/resources/LongOperationsListNameTemplate',
-      'SBIS3.CONTROLS/DataGridView'
+      'SBIS3.CONTROLS/DataGridView',
+      'SBIS3.CONTROLS/LongOperations/History'
    ],
 
-   function (cMerge, cObjectIsEqual, Deferred, CompoundControl, LongOperationEntry, longOperationsManager, LongOperationsListDataSource, LongOperationModel, InformationPopupManager, FloatArea, dotTplFn) {
+   function (cMerge, cObjectIsEqual, Deferred, CompoundControl, LongOperationEntry, longOperationsManager, LongOperationsListDataSource, LongOperationModel, InformationPopupManager, dotTplFn) {
       'use strict';
 
       /**
@@ -89,10 +89,24 @@ define('SBIS3.CONTROLS/LongOperations/List',
                listName: 'browserView',
                userId: null,
 
-               noLoad: false
+               noLoad: false,
+
+               _actionOpenHistory: {
+                  template: 'SBIS3.CONTROLS/LongOperations/History',
+                  mode: 'floatArea',
+                  dialogOptions: {
+                     title: rk('Журнал выполнения операции', 'ДлительныеОперации'),
+                     direction: 'left',
+                     animation: 'slide',
+                     isStack: true,
+                     autoCloseOnHide: true,
+                     maxWidth: 680
+                  }
+               }
             },
 
             _view: null,
+            _actionOpenHistory: null,
             _spentTiming: null,
             _animQueue: [],
             _animating: null,
@@ -117,6 +131,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
             LongOperationsList.superclass.init.call(this);
 
             this._view = this.getChildControlByName(this._options.listName);
+            this._actionOpenHistory = this.getChildControlByName('controls-LongOperationsList__actionOpenHistory');
 
             //this._view.setItemsActions(this._makeItemsActions(null));
 
@@ -760,7 +775,6 @@ define('SBIS3.CONTROLS/LongOperations/List',
             //Только если операция завершена или содержит ошибку
             if (model && (model.get('status') === LongOperationEntry.STATUSES.ended || model.get('isFailed'))) {
                var resultHandler = allowResultButton && (model.get('resultHandler') || model.get('resultUrl')) ? this._showResult.bind(this, model) : null;
-               var componentModule = 'SBIS3.CONTROLS/LongOperations/History';
                var componentOptions = this.canHasHistory(model.getRawData()) ? {
                   tabKey: model.get('tabKey'),
                   producer: model.get('producer'),
@@ -772,38 +786,14 @@ define('SBIS3.CONTROLS/LongOperations/List',
                   failedOperation: model,
                   resultHandler: resultHandler
                };
-               if (this._floatArea) {
-                  var noUpdate;
-                  var prevOptions = this._floatArea.getProperty('componentOptions');
-                  if (prevOptions) {
-                     prevOptions = cMerge({}, prevOptions);
-                     delete prevOptions.resultHandler;
-                     var nextOptions = cMerge({}, componentOptions);
-                     delete nextOptions.resultHandler;
-                     noUpdate = cObjectIsEqual(prevOptions, nextOptions);
-                  }
-                  if (!noUpdate) {
-                     this._floatArea.setProperty('componentOptions', componentOptions);
-                     this._floatArea.setTemplate(componentModule, componentOptions);
-                  }
-               }
-               else {
-                  this._floatArea = new FloatArea({
-                     title: rk('Журнал выполнения операции', 'ДлительныеОперации'),
-                     template: componentModule,
-                     componentOptions: componentOptions,
+               var actionOptions = this._options._actionOpenHistory;
+               this._actionOpenHistory.execute({
+                  dialogOptions: cMerge({
                      opener: this,
-                     direction: 'left',
-                     animation: 'slide',
-                     isStack: true,
-                     autoCloseOnHide: true,
-                     maxWidth: 680
-                  });
-                  this._floatArea.setProperty('componentOptions', componentOptions);
-                  this.subscribeOnceTo(this._floatArea, 'onClose', function () {
-                     this._floatArea = null;
-                  }.bind(this));
-               }
+                     autoHide: false
+                  }, actionOptions.dialogOptions),
+                  componentOptions: componentOptions
+               });
             }
          },
 
