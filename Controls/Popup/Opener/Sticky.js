@@ -31,7 +31,7 @@ define('Controls/Popup/Opener/Sticky',
       });
 
       Sticky.getDefaultOptions = function() {
-         return coreMerge({}, Base.getDefaultOptions());
+         return coreMerge(Base.getDefaultOptions(), {});
       };
       return Sticky;
    }

@@ -103,8 +103,8 @@ define('Controls/Dropdown/Opener',
 
       DropdownOpener.getDefaultOptions = function() {
          return coreMerge(
-            {closeOnTargetScroll: true},
-            Sticky.getDefaultOptions());
+            Sticky.getDefaultOptions(),
+            {closeOnTargetScroll: true});
       };
 
       return DropdownOpener;
