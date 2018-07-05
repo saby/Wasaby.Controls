@@ -1,8 +1,9 @@
 define('Controls/Dropdown/Opener',
    [
-      'Controls/Popup/Opener/Sticky'
+      'Controls/Popup/Opener/Sticky',
+      'Core/core-merge'
    ],
-   function(Sticky) {
+   function(Sticky, coreMerge) {
       /**
        * Opener for dropdown menu.
        *
@@ -101,9 +102,9 @@ define('Controls/Dropdown/Opener',
       DropdownOpener._private = _private;
 
       DropdownOpener.getDefaultOptions = function() {
-         return {
-            closeOnTargetScroll: true
-         };
+         return coreMerge(
+            {closeOnTargetScroll: true},
+            Sticky.getDefaultOptions());
       };
 
       return DropdownOpener;
