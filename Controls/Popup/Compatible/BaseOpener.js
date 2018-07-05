@@ -214,17 +214,17 @@ function(cMerge,
             cfg.minWidth = minWidth ? parseInt(minWidth, 10) : null;
          }
          if (!cfg.maxWidth) {
-            cfg.maxWidth = parseInt(cfg.width || dimensions.maxWidth || templateOptions.maxWidth, 10) || null;
+            cfg.maxWidth = parseInt(cfg.width || dimensions.maxWidth || templateOptions.maxWidth, 10) || undefined;
          }
 
          cfg.minWidth = cfg.minWidth || cfg.maxWidth;
          cfg.maxWidth = cfg.maxWidth || cfg.minWidth;
 
          if (!cfg.minHeight) {
-            cfg.minHeight = dimensions.minHeight ? parseInt(dimensions.minHeight, 10) : null;
+            cfg.minHeight = dimensions.minHeight ? parseInt(dimensions.minHeight, 10) : undefined;
          }
          if (!cfg.maxHeight) {
-            cfg.maxHeight = dimensions.maxHeight ? parseInt(dimensions.maxHeight, 10) : null;
+            cfg.maxHeight = dimensions.maxHeight ? parseInt(dimensions.maxHeight, 10) : undefined;
          }
 
          cfg.minHeight = cfg.minHeight || cfg.maxHeight;
