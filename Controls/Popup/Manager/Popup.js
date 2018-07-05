@@ -45,7 +45,9 @@ define('Controls/Popup/Manager/Popup',
             } else {
                // todo doautofocus
                this._notify('popupCreated', [this._options.id], { bubbling: true });
-               this.activate();
+               if (this._options.autofocus) {
+                  this.activate();
+               }
             }
          },
 
@@ -88,5 +90,12 @@ define('Controls/Popup/Manager/Popup',
             }
          }
       });
+
+      Popup.getDefaultOptions = function() {
+         return {
+            autofocus: true
+         };
+      };
+
       return Popup;
    });
