@@ -1,8 +1,10 @@
 /// <amd-module name="File/Attach/Lazy" />
 import Base = require("File/Attach/Base");
-import CoreExtend = require('Core/core-simpleExtend');
 import GetterContainerLazy = require("File/Attach/Container/GetterLazy");
 import SourceContainerLazy = require("File/Attach/Container/SourceLazy");
+import {IResourceGetter} from "File/IResourceGetter";
+import {IResourceConstructor} from "File/IResource";
+import {IGetterContainerLazy, ISourceContainerLazy} from 'File/Attach/IContainer';
 
 /**
  * Класс, наследник Attach/Base, позволяющий регестрировать
@@ -12,12 +14,14 @@ import SourceContainerLazy = require("File/Attach/Container/SourceLazy");
  * @extends File/Attach/Base
  * @author Заляев А.В.
  */
-let Lazy  = CoreExtend.extend(Base, {
-    constructor(){
-        Lazy.superclass.constructor.apply(this, arguments);
+class Lazy extends Base {
+    protected _getterContainer: IGetterContainerLazy;
+    protected _sourceContainer: ISourceContainerLazy;
+    constructor(opt){
+        super(opt);
         this._getterContainer = new GetterContainerLazy();
         this._sourceContainer = new SourceContainerLazy();
-    },
+    }
     /**
      * Ленивая регестрация экземпляров IResourceGetter, для получения файлов
      * @param {String} name Имя модуля
@@ -27,16 +31,17 @@ let Lazy  = CoreExtend.extend(Base, {
      */
     registerLazyGetter(name: string, link: string, options?) {
         return this._getterContainer.register(name, link, options);
-    },
+    }
     /**
      * Ленивая регестрация ISource
-     * @param {Function} fileType Конструктор обёртки над ресурсом
+     * @param {File/IResourceConstructor} fileType Конструктор обёртки над ресурсом
      * @param {String} link Ссылка на источник данных
      * @param {*} [options] Параметры вызова конструктора обёртки
      * @void
      */
-    registerLazySource(fileType: Function, link: string, options?: any) {
+    registerLazySource(fileType: IResourceConstructor, link: string, options?: any) {
         return this._sourceContainer.register(fileType, link, options);
     }
-});
+}
+
 export = Lazy;

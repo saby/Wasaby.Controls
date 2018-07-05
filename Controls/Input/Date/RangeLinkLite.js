@@ -1,8 +1,6 @@
 define('Controls/Input/Date/RangeLinkLite', [
    'Core/Control',
    'Core/core-merge',
-   'Core/detection',
-   'WS.Data/Type/descriptor',
    'Controls/Input/Date/interface/ILinkView',
    'Controls/Date/model/DateRange',
    'Controls/Calendar/Utils',
@@ -11,8 +9,6 @@ define('Controls/Input/Date/RangeLinkLite', [
 ], function(
    BaseControl,
    coreMerge,
-   detection,
-   types,
    ILinkView,
    DateRangeModel,
    CalendarControlsUtils,

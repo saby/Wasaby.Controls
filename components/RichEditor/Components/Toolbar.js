@@ -320,6 +320,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
                var editor = this.getLinkedEditor();
                this._imagePanel = new ImagePanel({
                   parent: button,
+                  opener: editor,
                   target: button.getContainer(),
                   verticalAlign: {
                      side: 'top',

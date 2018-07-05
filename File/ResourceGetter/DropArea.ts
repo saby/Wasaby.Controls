@@ -7,6 +7,7 @@ import ExtensionsHelper = require("File/utils/ExtensionsHelper");
 import filter = require("File/utils/filter");
 import replaceDir = require("File/ResourceGetter/DropArea/replaceDir");
 import {Overlay, OverlayViewConfig} from 'File/ResourceGetter/DropArea/Overlay';
+import {isDestroyedAsync} from 'File/Decorator/isDestroyed'
 
 type DropAreaConfig = OverlayViewConfig & {
     element: HTMLElement;
@@ -108,10 +109,8 @@ class DropArea extends IResourceGetterBase {
      * @name File/ResourceGetter/DropArea#getFiles
      * @see File/LocalFile
      */
+    @isDestroyedAsync
     getFiles(): Deferred<Array<LocalFile | Error>> {
-        if (this.isDestroyed()) {
-            return Deferred.fail("Resource getter is destroyed");
-        }
         if (this._selectDef) {
             this._selectDef.cancel();
         }

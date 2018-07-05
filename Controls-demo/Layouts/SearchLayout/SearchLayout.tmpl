@@ -53,7 +53,7 @@
                                 </Controls.Container.Filter.Button>
                             </div>
                             <div class="controls-demo__LayoutInner">
-                                <Controls.Container.List searchParam="firstName" source="{{_dataSource}}">
+                                <Controls.Container.List searchParam="firstName" source="{{_dataSource}}" navigation="{{_navigation}}">
                                     <ws:content>
                                         <div>
                                             <Controls.List keyProperty="id" name="list" >
@@ -74,9 +74,6 @@
                                             </Controls.List>
                                         </div>
                                     </ws:content>
-                                    <ws:navigation source="page" view="page">
-                                        <ws:sourceConfig pageSize="{{20}}" page="{{0}}" mode="totalCount"/>
-                                    </ws:navigation>
                                 </Controls.Container.List>
                             </div>
                         </div>

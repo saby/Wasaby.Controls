@@ -590,6 +590,10 @@ define('Controls/List/Grid/GridViewModel', [
             this._model.setDragItems(items);
          },
 
+         getActiveItem: function() {
+            return this._model.getActiveItem();
+         },
+
          destroy: function() {
             this._model.destroy();
             GridViewModel.superclass.destroy.apply(this, arguments);

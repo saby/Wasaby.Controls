@@ -20,6 +20,7 @@ define('Controls/Popup/Compatible/Layer', [
       'Lib/Control/AreaAbstract/AreaAbstract.compatible',
       'Lib/Control/BaseCompatible/BaseCompatible',
       'Core/vdom/Synchronizer/resources/DirtyCheckingCompatible',
+      'Lib/StickyHeader/StickyHeaderMediator/StickyHeaderMediator',
       'View/Runner/Text/markupGeneratorCompatible',
       'Core/nativeExtensions'
    ];
@@ -190,11 +191,23 @@ define('Controls/Popup/Compatible/Layer', [
    // }
 
    function finishLoad(loadDeferred, result) {
+      var coreControl = require('Core/Control'),
+         controlCompatible = require('Lib/Control/Control.compatible');
       moduleStubs.require(['Core/core-extensions', 'cdn!jquery-cookie/04-04-2014/jquery-cookie-min.js']).addCallbacks(function() {
+
+         // частично поддерживаем старое API. поддержка gedId
+         coreControl.prototype._isCorrectContainer = controlCompatible._isCorrectContainer;
+         coreControl.prototype.getId = controlCompatible.getId;
+         
          loadDeferred.callback(result);
          require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!SBIS3.ENGINE/Controls/MiniCard']);
       }, function(e) {
          IoC.resolve('ILogger').error('Layer', 'Can\'t load core extensions', e);
+
+         // частично поддерживаем старое API. поддержка gedId
+         coreControl.prototype._isCorrectContainer = controlCompatible._isCorrectContainer;
+         coreControl.prototype.getId = controlCompatible.getId;
+
          loadDeferred.callback(result);
          require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!SBIS3.ENGINE/Controls/MiniCard']);
       });

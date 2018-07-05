@@ -1,7 +1,6 @@
 define('Controls/Date/interface/IPeriodSimpleDialog', [
-   'Core/core-merge',
    'WS.Data/Type/descriptor'
-], function(coreMerge, types) {
+], function(types) {
    'use strict';
 
    /**

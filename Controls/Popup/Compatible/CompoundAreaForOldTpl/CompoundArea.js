@@ -11,14 +11,20 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/IoC',
       'Core/EventObject',
       'Core/helpers/Function/runDelayed',
+      'Core/constants',
+      'Core/helpers/Hcontrol/doAutofocus',
+      'Deprecated/Controls/DialogRecord/DialogRecord',
+      'Core/EventBus',
+
+      'Lib/Control/AreaAbstract/AreaAbstract.compatible',
       'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/Abstract.compatible',
       'Lib/Control/Control.compatible',
-      'Lib/Control/AreaAbstract/AreaAbstract.compatible',
       'Lib/Control/BaseCompatible/BaseCompatible',
       'WS.Data/Entity/InstantiableMixin'
    ],
-   function(Control,
+   function(
+      Control,
       template,
       LikeWindowMixin,
       arrayFindIndex,
@@ -28,11 +34,15 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       cDeferred,
       IoC,
       EventObject,
-      runDelayed) {
-
+      runDelayed,
+      CoreConstants,
+      doAutofocus,
+      DialogRecord,
+      cEventBus
+   ) {
       function removeOperation(operation, array) {
-         var  idx = arrayFindIndex(array, function(op) {
-            return op === operation; 
+         var idx = arrayFindIndex(array, function(op) {
+            return op === operation;
          });
          array.splice(idx, 1);
       }
@@ -64,8 +74,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          BaseCompatible,
          InstantiableMixin;
 
-      //На сервере всегда надо подтянуть слой, потому что контролы могут строиться для разных клиентов
-      //и для разных страниц
+      // На сервере всегда надо подтянуть слой, потому что контролы могут строиться для разных клиентов
+      // и для разных страниц
       if (typeof process === 'undefined' || !process.domain ||
          !process.domain.req || process.domain.req.compatible !== false) {
          AbstractCompatible = require.defined('Core/Abstract.compatible') && require('Core/Abstract.compatible');
@@ -79,7 +89,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
       /**
        * Слой совместимости для открытия старых шаблонов в новых попапах
-      **/
+      * */
       var CompoundArea = Control.extend([AbstractCompatible || {},
          ControlCompatible || {},
          AreaAbstractCompatible || {},
@@ -88,10 +98,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          LikeWindowMixin], {
          _template: template,
          _compoundId: undefined,
-         templateOptions: null,
+         _templateOptions: null,
          compatible: null,
          fixBaseCompatible: true,
          _templateComponent: undefined,
+         _isClosing: false,
 
          _pending: null,
          _pendingTrace: null,
@@ -103,27 +114,31 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _isFinishingChildOperations: false,
          _producedPendingOperations: [],
 
+         _isReadOnly: true,
+
          _beforeMount: function() {
             this._rebuildCompoundControl = debounce.call(this._rebuildCompoundControl, this).bind(this);
             this._className = 'controls-CompoundArea';
-            this._className += ' ws-float-area'; //Старые шаблоны завязаны селекторами на этот класс.
+            this._className += ' ws-float-area'; // Старые шаблоны завязаны селекторами на этот класс.
             this._commandHandler = this._commandHandler.bind(this);
+            this._commandCatchHandler = this._commandCatchHandler.bind(this);
          },
 
          _shouldUpdate: function(popupOptions) {
             if (popupOptions._compoundId !== this._compoundId) {
-               this._rebuildCompoundControl(popupOptions);
+               this._templateOptions = this._options.templateOptions || {};
+               this._rebuildCompoundControl();
                this._compoundId = popupOptions._compoundId;
             }
             return false;
          },
 
-         _rebuildCompoundControl: function(popupOptions) {
+         _rebuildCompoundControl: function() {
             var oldCompound = this._compoundControl;
             var self = this;
 
-            //Если compoundControl еще не готов, то в текущей синхронизации ничего выполнять не надо,
-            //она была вызвана после afterMount'a и опции не поменялись
+            // Если compoundControl еще не готов, то в текущей синхронизации ничего выполнять не надо,
+            // она была вызвана после afterMount'a и опции не поменялись
             if (!oldCompound.isReady()) {
                return;
             }
@@ -134,32 +149,32 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             }, 0);
             oldCompound._container.remove();
 
-            if (popupOptions._initCompoundArea) {
-               popupOptions._initCompoundArea(this);
+            if (this._options._initCompoundArea) {
+               this._options._initCompoundArea(this);
             }
-            var templateOptions = popupOptions.templateOptions || {};
 
-            moduleStubs.require([popupOptions.template]).addCallback(function(result) {
-               self._createCompoundControl(templateOptions, result[0]);
+            this._compoundControlCreated = new cDeferred();
+
+            moduleStubs.require([this._options.template]).addCallback(function(result) {
+               self._createCompoundControl(result[0]);
             });
-         },
-
-         getOpener: function() {
-            return this._logicParent && this._logicParent._options && this._logicParent._options.opener;
          },
 
          _afterMount: function(cfg) {
             this._options = cfg;
-            
-            //Нам нужно пометить контрол замаунченым для слоя совместимости,
-            //чтобы не создавался еще один enviroment для той же ноды
+
+            // Нам нужно пометить контрол замаунченым для слоя совместимости,
+            // чтобы не создавался еще один enviroment для той же ноды
 
             this.VDOMReady = true;
             this.deprecatedContr(this._options);
 
             var self = this;
 
-            self.templateOptions = self._options.templateOptions || {};
+            var container = self._container.length ? self._container[0] : self._container;
+            container.wsControl = self;
+
+            self._templateOptions = self._options.templateOptions || {};
             self._compoundId = self._options._compoundId;
 
             if (self._options._initCompoundArea) {
@@ -171,6 +186,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             self._waiting = self._waiting || [];
 
             self.__parentFromCfg = self._options.__parentFromCfg;
+            self.__openerFromCfg = self._options.__openerFromCfg;
             self._parent = self._options.parent;
             self._logicParent = self._options.parent;
             self._options.parent = null;
@@ -178,19 +194,16 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             self._logicParent.waitForPopupCreated = true;
 
-            //Здесь нужно сделать явную асинхронность, потому что к этому моменту накопилась пачка стилей
-            //далее floatArea начинает люто дергать recalculateStyle и нужно, чтобы там не было
-            //лишних свойств, которые еще не применены к дому
-            //панельки с этим начали вылезать плавненько
+            // Здесь нужно сделать явную асинхронность, потому что к этому моменту накопилась пачка стилей
+            // далее floatArea начинает люто дергать recalculateStyle и нужно, чтобы там не было
+            // лишних свойств, которые еще не применены к дому
+            // панельки с этим начали вылезать плавненько
 
             this._compoundControlCreated = new cDeferred();
             runDelayed(function() {
-               self.handle('onBeforeShow');
-               self.handle('onShow');
-
                moduleStubs.require([self._options.template]).addCallback(function(result) {
-                  self.handle('onBeforeControlsLoad');
-                  self._createCompoundControl(self.templateOptions, result[0]);
+                  self._createCompoundControl(result[0]);
+                  doAutofocus(self._compoundControl._container);
                   self._logicParent.callbackCreated && self._logicParent.callbackCreated();
                }).addErrback(function(e) {
                   IoC.resolve('ILogger').error('CompoundArea', 'Шаблон "' + self._options.template + '" не смог быть загружен!');
@@ -198,13 +211,19 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                }.bind(this));
             });
          },
-         _createCompoundControl: function(templateOptions, Component) {
-            templateOptions.element = $('<div></div>').appendTo(this._children.compoundBlock);
-            templateOptions._compoundArea = this;
-            templateOptions.parent = this;
-            this._compoundControl = new (Component)(templateOptions);
+         _createCompoundControl: function(Component) {
+            this._templateOptions.element = $('<div></div>').appendTo(this._children.compoundBlock);
+            this._templateOptions._compoundArea = this;
+            this._templateOptions.parent = this;
+
+            this.handle('onBeforeControlsLoad');
+            this._compoundControl = new (Component)(this._templateOptions);
+            this.handle('onBeforeShow');
+            this.handle('onShow');
             this._compoundControlCreated.callback(this._compoundControl);
             this._subscribeToCommand();
+            this._setCustomHeader();
+            cEventBus.globalChannel().notify('onWindowCreated', this); // StickyHeaderMediator listens for onWindowCreated
             this.handle('onAfterLoad');
             this.handle('onInitComplete');
             this.handle('onAfterShow'); // todo здесь надо звать хэндлер который пытается подписаться на onAfterShow, попробуй подключить FormController и словить подпись
@@ -217,55 +236,109 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          isOpened: function() {
             return true;
          },
-         _subscribeToCommand: function() {
-            this._compoundControl.subscribe('onCommandCatch', this._commandHandler);
+
+         _setCustomHeader: function() {
+            var hasHeader = !!this._options.caption;
+            var customHeaderContainer = this._compoundControl.getContainer().find('.ws-window-titlebar-custom');
+            if (hasHeader) {
+               if (customHeaderContainer.length) {
+                  customHeaderContainer.prepend('<div class="ws-float-area-title">' + this._options.caption + '</div>');
+                  if (this._options.type === 'dialog') {
+                     var height = customHeaderContainer.height();
+                     $('.controls-DialogTemplate', this.getContainer()).css('margin-bottom', height);
+                  }
+               } else {
+                  this.getContainer().prepend($('<div class="ws-window-titlebar"><div class="ws-float-area-title ws-float-area-title-generated">' + this._options.caption + '</div></div>'));
+                  this.getContainer().addClass('controls-CompoundArea-headerPadding');
+               }
+            } else {
+               this.getContainer().removeClass('controls-CompoundArea-headerPadding');
+            }
          },
-         _commandHandler: function(event, commandName, arg) {
-            var parent;
+
+         _subscribeToCommand: function() {
+            this._compoundControl.subscribe('onCommandCatch', this._commandCatchHandler);
+         },
+
+         _commandCatchHandler: function(event, commandName, arg) {
+            event.setResult(this._commandHandler(commandName, arg));
+         },
+         _commandHandler: function(commandName, arg) {
+            var parent, argWithName;
+
+            if (Array.isArray(arg) && arg.length === 1) {
+               argWithName = [commandName, arg];
+            } else {
+               argWithName = [commandName].concat(arg);
+            }
+
             if (commandName === 'close') {
-               this._close(arg);
+               return this._close(arg);
             } else if (commandName === 'ok') {
                return this._close(true);
             } else if (commandName === 'cancel') {
                return this._close(false);
+            } else if (commandName === 'resize' || commandName === 'resizeYourself') {
+               this._notify('resize', null, { bubbling: true });
             } else if (commandName === 'registerPendingOperation') {
                return this._registerChildPendingOperation(arg);
             } else if (commandName === 'unregisterPendingOperation') {
                return this._unregisterChildPendingOperation(arg);
             } else if (this.__parentFromCfg) {
                parent = this.__parentFromCfg;
-               parent.sendCommand.apply(parent, [commandName].concat(arg));
+               parent.sendCommand.apply(parent, argWithName);
             } else if (this._parent && this._parent._options.opener) {
                parent = this._parent._options.opener;
 
-               /*Если нет sendCommand - значит это не compoundControl - а значит там нет распространения команд*/
+               /* Если нет sendCommand - значит это не compoundControl - а значит там нет распространения команд */
 
                if (parent.sendCommand) {
-                  parent.sendCommand.apply(parent, [commandName].concat(arg));
+                  parent.sendCommand.apply(parent, argWithName);
                }
             }
          },
          sendCommand: function(commandName, arg) {
-            this._commandHandler(null, commandName, arg);
+            return this._commandHandler(commandName, arg);
          },
          _close: function(arg) {
+            if (this._isClosing) {
+               return false;
+            }
+            this._isClosing = true;
             if (this.handle('onBeforeClose', arg) !== false) {
                this.close(arg);
+               return true;
             }
+            this._isClosing = false;
          },
          closeHandler: function(e, arg) {
             e.stopPropagation();
             this._close(arg);
          },
+         _keyUp: function(event) {
+            var
+               self = this;
+            if (!event.nativeEven.shiftKey && event.nativeEvent.keyCode === CoreConstants.key.esc) {
+               self._close();
+            }
+            event.stopPropagation();
+         },
+
+         _setCompoundAreaOptions: function(newOptions) {
+            this._templateOptions = newOptions.templateOptions || {};
+         },
 
          reload: function() {
-            this._rebuildCompoundControl(this._options);
+            this._rebuildCompoundControl();
          },
 
          /* from api floatArea, window */
 
          getParent: function() {
-            return null;
+            return this.__parentFromCfg || null;
+         },
+         getOpener: function() {
+            return this.__openerFromCfg || null;
          },
 
          /* start RecordFloatArea */
@@ -276,6 +349,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             return this._options.newRecord;
          },
          setReadOnly: function(isReadOnly) {
+            this._isReadOnly = isReadOnly;
             if (this._compoundControl) {
                setReadOnly(this._compoundControl, isReadOnly);
             } else {
@@ -284,11 +358,91 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                }.bind(this));
             }
          },
+         isReadOnly: function() {
+            return this._isReadOnly;
+         },
 
-         /*end RecordFloatArea */
 
+         setSaveDiffOnly: function() {
+            DialogRecord.prototype.setSaveDiffOnly.apply(this, arguments);
+         },
+         ok: function() {
+            DialogRecord.prototype.ok.apply(this, arguments);
+         },
+         _setEnabledForChildControls: function() {
+            DialogRecord.prototype._setEnabledForChildControls.apply(this, arguments);
+         },
+         _showLoadingIndicator: function() {
+            DialogRecord.prototype._showLoadingIndicator.apply(this, arguments);
+         },
+         _hideLoadingIndicator: function() {
+            DialogRecord.prototype._hideLoadingIndicator.apply(this, arguments);
+         },
+         isAllReady: function() {
+            return DialogRecord.prototype.isAllReady.apply(this, arguments);
+         },
+         getChildControls: function() {
+            return DialogRecord.prototype.getChildControls.apply(this, arguments);
+         },
+         getReports: function() {
+            return DialogRecord.prototype.getReports.apply(this, arguments);
+         },
+         _printMenuItemsIsChanged: function() {
+            return DialogRecord.prototype._printMenuItemsIsChanged.apply(this, arguments);
+         },
+         _createPrintMenu: function() {
+            return DialogRecord.prototype._createPrintMenu.apply(this, arguments);
+         },
+         showReportList: function() {
+            return DialogRecord.prototype.showReportList.apply(this, arguments);
+         },
+         printReport: function() {
+            return DialogRecord.prototype.printReport.apply(this, arguments);
+         },
+         _showReport: function() {
+            return DialogRecord.prototype._showReport.apply(this, arguments);
+         },
+         print: function() {
+            return DialogRecord.prototype.print.apply(this, arguments);
+         },
+         _hideWindow: function() {
+         },
+         _getTitle: function() {
+            return document.title;
+         },
+
+         _openConfirmDialog: function() {
+            return DialogRecord.prototype._openConfirmDialog.apply(this, arguments);
+         },
+         isSaved: function() {
+            return DialogRecord.prototype.isSaved.apply(this, []);
+         },
+         _unbindBeforeUnload: function() {
+            DialogRecord.prototype._unbindBeforeUnload.apply(this);
+         },
+         _beforeUnloadHandler: function() {
+            return DialogRecord.prototype._beforeUnloadHandler.apply(this);
+         },
+         unsubscribeOnBeforeUnload: function() {
+            DialogRecord.prototype.unsubscribeOnBeforeUnload.apply(this);
+         },
+         updateRecord: function() {
+            return DialogRecord.prototype.updateRecord.apply(this, arguments);
+         },
+         save: function() {
+            return DialogRecord.prototype.save.apply(this, arguments);
+         },
+         _processError: function(error) {
+            DialogRecord.prototype._processError.apply(this, [error]);
+         },
+
+         /* end RecordFloatArea */
+
+         hide: function() {
+            this.close();
+         },
          close: function(arg) {
-            this._notify('close', null, {bubbling: true});
+            this._notify('close', null, { bubbling: true });
 
             this.handle('onClose', arg);
             this.handle('onAfterClose', arg);
@@ -306,8 +460,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this[eventName + 'Handler'] = handlers;
             handlers.push(handler);
          },
-         subscribeTo: function(eventName, handler) {
-            this.subscribe(eventName, handler);
+         subscribeTo: function(control, eventName, handler) {
+            control.subscribe(eventName, handler);
          },
          once: function(eventName, handler) {
             this.subscribe(eventName, function() {
@@ -334,7 +488,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                handlers.push(optionsHandlers[eventName]);
             }
             if (Array.isArray(optionsHandlers[eventName])) {
-               //Здесь обработчики продублированы в this[eventName + 'Handler']
+               // Здесь обработчики продублированы в this[eventName + 'Handler']
                for (var i = 0; i < optionsHandlers[eventName].length; i++) {
                   if (handlers.indexOf(optionsHandlers[eventName][i]) === -1) {
                      handlers.push(optionsHandlers[eventName][i]);
@@ -348,8 +502,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                }
             });
 
-            //subscribeTo берет channel и подписывается к нему на события
-            //поэтому если наше событие не отменено, возьмем канал и нотификанем 
+            // subscribeTo берет channel и подписывается к нему на события
+            // поэтому если наше событие не отменено, возьмем канал и нотификанем
 
             if (eventState.getResult() !== false) {
                var result = this._getChannel().notify(eventName, arg);
@@ -377,9 +531,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             while (ops.length > 0) {
                this._unregisterPendingOperation(ops[0]);
             }
-
-
-
             var
                operation = this._allChildrenPendingOperation,
                message;
@@ -390,7 +541,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                logger.error('Lib/Mixins/PendingOperationParentMixin', message);
             }
 
-            this._childPendingOperations = [];//cleanup им вызывать не надо - всё равно там destroy будет работать, у дочернего контрола
+            this._childPendingOperations = [];// cleanup им вызывать не надо - всё равно там destroy будет работать, у дочернего контрола
             if (this._allChildrenPendingOperation) {
                this._allChildrenPendingOperation = null;
                this._unregisterPendingOperation(operation);
@@ -404,8 +555,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             CompoundArea.superclass.destroy.apply(this, arguments);
          },
-
-
 
 
          _removeOpFromCollections: function(operation) {
@@ -449,11 +598,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          getPendingOperations: function() {
             return this._producedPendingOperations;
          },
-
-
-
-
-
 
          _registerChildPendingOperation: function(operation) {
             var name, finishFunc;
@@ -566,6 +710,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             });
          },
 
+         getImmediateChildControls: function() {
+            return [this._compoundControl];
+         },
+
          /**
           * Получение информации о добавленных пендингах, включая информацию, откуда был добавлен пендинг
           * @returns {Array} Массив объектов, хранящих пендинг и информацию, откуда был добавлен пендинг
@@ -602,9 +750,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   this._waiting.push(dNotify);
                }
                return true;
-            } else {
-               return false;
             }
+            return false;
          },
          _checkPendingOperations: function(res) {
             var totalOps = this._pending.length, result;

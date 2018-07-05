@@ -5,7 +5,8 @@
         placeholder="{{_options.placeholder}}"
         inputType="Search"
         style="{{_options.style}}"
-        on:valueChanged="_valueChangedHandler()">
+        on:valueChanged="_valueChangedHandler()"
+        on:keyUp="_keyUpHandler()">
 
    <ws:content>
       <ws:partial
