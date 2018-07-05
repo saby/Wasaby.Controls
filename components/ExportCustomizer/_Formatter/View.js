@@ -182,7 +182,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             var fieldIds = options.fieldIds;
             if (fieldIds && fieldIds.length) {
                if (!options.fileUuid) {
-                  this._callFormatterMethods([{method:'clone', args:[options.primaryUuid, false]}, {method:'open', args:[useApp, true]}]);
+                  this._callFormatterMethods([{method:'clone', args:[options.primaryUuid, false, true]}, {method:'open', args:[useApp, true]}]);
                }
                else {
                   this._callFormatterOpen(useApp);
@@ -196,9 +196,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * @protected
           * @param {string} [fileUuid] Uuid стилевого эксель-файла. Если указан, то будет произведено клонирование (опционально)
           * @param {boolean} [updateCloned] И сразу обновить колонки у только что клонированного стилевого эксель-файла (только при клонировании) (опционально)
+          * @param {boolean} [isSilent] Не формирорвать событие (опционально)
           * return {Core/Deferred}
           */
-         _callFormatterCreate: function (fileUuid, updateCloned) {
+         _callFormatterCreate: function (fileUuid, updateCloned, isSilent) {
             var isClone = !!fileUuid;
             var options = this._options;
             var fieldIds = options.fieldIds;
@@ -209,7 +210,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             ).addCallbacks(
                function (result) {
                   options.fileUuid = result;
-                  this.sendCommand('subviewChanged');
+                  if (!isSilent) {
+                     this.sendCommand('subviewChanged');
+                  }
                   if (isClone && updateCloned) {
                      this._callFormatterUpdate();
                   }
