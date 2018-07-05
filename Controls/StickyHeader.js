@@ -85,7 +85,6 @@ define('Controls/StickyHeader',
                    * https://online.sbis.ru/opendoc.html?guid=e7b57af4-478d-432a-b5c2-b5d2e33d55b2
                    */
                   if (args.scrollTop !== 0 && Date.now() - this._time > 100) {
-                     console.log(Date.now() - this._time);
                      this._listTop = false;
                   }
                   break;
