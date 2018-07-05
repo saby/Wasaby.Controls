@@ -93,7 +93,7 @@ define('Controls/Popup/Opener/InfoBox',
             InfoBox.superclass.open.call(this, {
                target: cfg.target,
                position: cfg.position,
-               activateAfterMount: false,
+               autofocus: false,
                templateOptions: { // Опции, которые будут переданы в наш шаблон Opener/InfoBox/resources/template
                   template: cfg.template,
                   templateOptions: cfg.templateOptions, // Опции, которые будут переданы в прикладной cfg.template (выполняется построение внутри нашего шаблона)
