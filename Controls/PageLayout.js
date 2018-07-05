@@ -19,13 +19,20 @@ define('Controls/PageLayout', [
     */
 
    /**
-    * @typedef {WS.Data/Source/Memory} tabsSource
-    * @property {object} items recordset of item
-    * @property {string|FilterValue} value начальное значение
+    * @typedef {Source/Memory} tabsSource
+    * @property {Array} data Items with settings for the item.
+    * @property {String} idProperty String with name of identifier in item.
     */
    /**
-    * @typedef {Object} FilterValue
-    * @property {string} fieldName поле контекста, из которого брать значение
+    * @typedef Controls/PageLayout tabsSelectedKey
+    * @cfg {String} tabsSelectedKey Number of selected key.
+    */
+   /**
+    * @typedef {Array} data
+    * @property {String} idProperty Model of item.
+    * @property {String} tittle Tittle of tabs.
+    * @property {String} mainArea Model of item.
+    * @property {String} tabsArea Model of item.
     */
    var _private = {
       initItems: function(source, self) {
