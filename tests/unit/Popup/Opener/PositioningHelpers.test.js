@@ -44,6 +44,7 @@ define(
                         offset: 0
                      }
                   },
+                  config: {},
                   sizes: {
                      width: 100,
                      height: 100,
@@ -73,6 +74,7 @@ define(
                         offset: 0
                      }
                   },
+                  config: {},
                   sizes: {
                      width: 200,
                      height: 200,
@@ -102,6 +104,7 @@ define(
                         offset: -10
                      }
                   },
+                  config: {},
                   sizes: {
                      width: 100,
                      height: 100,
@@ -131,6 +134,7 @@ define(
                         offset: 0
                      }
                   },
+                  config: {},
                   sizes: {
                      width: 100,
                      height: 100,
@@ -160,6 +164,7 @@ define(
                         offset: 0
                      }
                   },
+                  config: {},
                   sizes: {
                      width: 400,
                      height: 200,

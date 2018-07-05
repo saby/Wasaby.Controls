@@ -207,6 +207,10 @@ define('Controls/List/ListViewModel',
             this._nextVersion();
          },
 
+         getActiveItem: function() {
+            return this._activeItem;
+         },
+
          __calcSelectedItem: function(display, selKey, keyProperty) {
 
             //TODO надо вычислить индекс
