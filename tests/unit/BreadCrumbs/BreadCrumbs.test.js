@@ -1,5 +1,5 @@
 define([
-   'Controls/_BreadCrumbsView',
+   'Controls/BreadCrumbsView',
    'WS.Data/Entity/Model'
 ], function(
    BreadCrumbsView,

@@ -1,7 +1,7 @@
-define('Controls/_BreadCrumbsView', [
+define('Controls/BreadCrumbsView', [
    'Core/Control',
    'WS.Data/Collection/RecordSet',
-   'tmpl!Controls/BreadCrumbsView/_BreadCrumbsView',
+   'tmpl!Controls/BreadCrumbsView/BreadCrumbsView',
    'tmpl!Controls/BreadCrumbsView/resources/itemTemplate',
    'tmpl!Controls/BreadCrumbsView/resources/itemsTemplate',
    'tmpl!Controls/BreadCrumbs/resources/menuItemTemplate',
@@ -20,7 +20,7 @@ define('Controls/_BreadCrumbsView', [
    /**
     * BreadCrumbsView.
     *
-    * @class Controls/_BreadCrumbsView
+    * @class Controls/BreadCrumbsView
     * @extends Core/Control
     * @mixes Controls/interface/IBreadCrumbs
     * @control
