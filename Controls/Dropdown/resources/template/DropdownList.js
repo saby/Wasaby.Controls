@@ -23,7 +23,6 @@ define('Controls/Dropdown/resources/template/DropdownList',
         * @cfg {String} Отображения меню
         * @variant defaultHead Стандартный заголовок
         * @variant duplicateHead Иконка вызывающего элемента дублрируется в первый пункт. Заголовка с фоном нет.
-        * @variant cross Добавляется крест закрытия. Заголовка с фоном нет.
         */
       /**
         * @name Controls/Menu#showHeader
@@ -63,9 +62,6 @@ define('Controls/Dropdown/resources/template/DropdownList',
                }
                if (this._headConfig.menuStyle === 'duplicateHead') {
                   this._duplicateHeadClassName = 'control-MenuButton-duplicate-head_' + iconSize;
-               }
-               if (this._headConfig.menuStyle === 'cross') {
-                  this._headConfig.icon = null;
                }
             }
             Menu.superclass.constructor.apply(this, arguments);
@@ -154,6 +150,9 @@ define('Controls/Dropdown/resources/template/DropdownList',
             this._notify('sendResult', [result]);
          },
          _headerClick: function() {
+            this._notify('close');
+         },
+         _closeClick: function() {
             this._notify('close');
          },
          _mousemoveHandler: function(emitterEvent, event) {

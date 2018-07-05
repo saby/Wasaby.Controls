@@ -19,8 +19,8 @@ class GetterContainerLazy extends GetterContainer {
      * ссылки на экземпляры IResourceGetter для ленивой загрузки
      * @private
      */
-    private _links: HashMap<string>;
-    private _options: HashMap<any>;
+    private readonly _links: HashMap<string>;
+    private readonly _options: HashMap<any>;
 
     constructor() {
         super();
@@ -38,9 +38,6 @@ class GetterContainerLazy extends GetterContainer {
             if (!this._links[name]) {
                 return error;
             }
-            /*
-             * Загружаем Модуль через optional! т.к. не все проекты включают в себя модули из репозитория СБИС Плагина
-             */
             return moduleStubs.require(
                 "optional!" + this._links[name]
             ).addCallback(([ResourceGetter]: [IResourceGetterConstructor]) => {
@@ -57,6 +54,7 @@ class GetterContainerLazy extends GetterContainer {
             });
         });
     }
+
     /**
      * Зарегестрирован ли источник ресурсов в контейнере
      * @param {String} name Имя источника
@@ -66,6 +64,7 @@ class GetterContainerLazy extends GetterContainer {
     has(name: string): boolean {
         return super.has(name) || !!this._links[name];
     }
+
     /**
      * Регистрация ссылки для последующей ленивой загрузки
      * @param {String} name Имя модуля

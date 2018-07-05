@@ -15752,12 +15752,10 @@
           node = root;
         }
         parents = [];
-        editor.dom.getParent(node, function (node) {
-          if (node === root) {
-            return true;
-          }
-          parents.push(node);
-        });
+         // HTML ELEMENT closure creates memory leaks.
+        editor.dom.getParent(node, function(node) {
+           parents.push(node);
+        }, root);
         args = args || {};
         args.element = node;
         args.parents = parents;
