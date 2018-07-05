@@ -121,6 +121,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._className = 'controls-CompoundArea';
             this._className += ' ws-float-area'; // Старые шаблоны завязаны селекторами на этот класс.
             this._commandHandler = this._commandHandler.bind(this);
+            this._commandCatchHandler = this._commandCatchHandler.bind(this);
          },
 
          _shouldUpdate: function(popupOptions) {
@@ -256,9 +257,13 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
 
          _subscribeToCommand: function() {
-            this._compoundControl.subscribe('onCommandCatch', this._commandHandler);
+            this._compoundControl.subscribe('onCommandCatch', this._commandCatchHandler);
          },
-         _commandHandler: function(event, commandName, arg) {
+
+         _commandCatchHandler: function(event, commandName, arg) {
+            event.setResult(this._commandHandler(commandName, arg));
+         },
+         _commandHandler: function(commandName, arg) {
             var parent, argWithName;
 
             if (Array.isArray(arg) && arg.length === 1) {
@@ -268,7 +273,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             }
 
             if (commandName === 'close') {
-               this._close(arg);
+               return this._close(arg);
             } else if (commandName === 'ok') {
                return this._close(true);
             } else if (commandName === 'cancel') {
@@ -293,7 +298,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             }
          },
          sendCommand: function(commandName, arg) {
-            this._commandHandler(null, commandName, arg);
+            return this._commandHandler(commandName, arg);
          },
          _close: function(arg) {
             if (this._isClosing) {
@@ -302,6 +307,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._isClosing = true;
             if (this.handle('onBeforeClose', arg) !== false) {
                this.close(arg);
+               return true;
             }
             this._isClosing = false;
          },
