@@ -318,7 +318,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _keyUp: function(event) {
             var
                self = this;
-            if (!event.nativeEven.shiftKey && event.nativeEvent.keyCode === CoreConstants.key.esc) {
+            if (!event.nativeEvent.shiftKey && event.nativeEvent.keyCode === CoreConstants.key.esc) {
                self._close();
             }
             event.stopPropagation();
