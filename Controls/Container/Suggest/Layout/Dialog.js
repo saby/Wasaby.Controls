@@ -25,26 +25,12 @@ define('Controls/Container/Suggest/Layout/Dialog',
       var List = Control.extend({
          
          _template: template,
-         _resizeTimeout: null,
 
          _getChildContext: function() {
             return {
                searchLayoutField: new SearchContextField(null),
                filterLayoutField: new FilterContextField({filter: this._options.filter})
             };
-         },
-         
-         _afterMount: function() {
-            /* Костыль до 400. В 400 сделано распростронение resize */
-            var self = this;
-            self._resizeTimeout = setTimeout(function() {
-               self._children.scroll._children.scrollLayout._resizeHandler();
-            });
-         },
-         
-         _beforeUnmount: function() {
-            clearTimeout(this._resizeTimeout);
-            this._resizeTimeout = null;
          },
    
          _itemClick: function(event, item) {
