@@ -1,15 +1,15 @@
-<div class="controls-Path">
-    <div class="controls-Path__wrapper">
+<div class="controls-BreadCrumbsPath">
+    <div class="controls-BreadCrumbsPath__wrapper">
         <ws:if data="{{_options.items}}">
-            <div class="controls-Path__backButton__wrapper {{_backButtonClass}}">
-                <Controls.Button.Back attr:class="controls-Path__backButton"
+            <div class="controls-BreadCrumbsPath__backButton__wrapper {{_backButtonClass}}">
+                <Controls.Button.Back attr:class="controls-BreadCrumbsPath__backButton"
                                       caption="{{_backButtonCaption}}"
                                       style="primary"
                                       on:click="_onBackButtonClick()"/>
-                <div class="controls-Path__backButtonArrow icon-View icon-primary{{_breadCrumbsItems.length > 0 ? '' : ' controls-Path__backButtonArrow_outsideBackButton'}}"
+                <div class="controls-BreadCrumbsPath__backButtonArrow icon-View icon-primary{{_breadCrumbsItems.length > 0 ? '' : ' controls-BreadCrumbsPath__backButtonArrow_outsideBackButton'}}"
                      on:click="_onArrowClick()"></div>
             </div>
-            <Controls.BreadCrumbsView attr:class="controls-Path__breadCrumbs {{_breadCrumbsClass}}"
+            <Controls.BreadCrumbsView attr:class="controls-BreadCrumbsPath__breadCrumbs {{_breadCrumbsClass}}"
                                   items="{{_breadCrumbsItems}}"
                                   visibleItems="{{_visibleItems}}"
                                   keyProperty="{{_options.keyProperty}}"

@@ -1,11 +1,11 @@
-define('Controls/Path', [
+define('Controls/BreadCrumbsPath', [
    'Core/Control',
    'Controls/Utils/BreadCrumbsUtil',
    'Controls/List/resources/utils/ItemsUtil',
    'Controls/Utils/FontLoadUtil',
-   'tmpl!Controls/Path/Path',
+   'tmpl!Controls/BreadCrumbsPath/BreadCrumbsPath',
    'tmpl!Controls/Button/BackButton/Back',
-   'css!Controls/Path/Path'
+   'css!Controls/BreadCrumbsPath/BreadCrumbsPath'
 ], function(
    Control,
    BreadCrumbsUtil,
@@ -64,7 +64,7 @@ define('Controls/Path', [
    /**
     * Breadcrumbs with back button.
     *
-    * @class Controls/Path
+    * @class Controls/BreadCrumbsPath
     * @extends Core/Control
     * @mixes Controls/interface/IBreadCrumbs
     * @control
@@ -74,11 +74,11 @@ define('Controls/Path', [
     */
 
    /**
-    * @event Controls/Path#arrowActivated Happens after clicking the button "View record".
+    * @event Controls/BreadCrumbsPath#arrowActivated Happens after clicking the button "View record".
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     */
 
-   var Path = Control.extend({
+   var BreadCrumbsPath = Control.extend({
       _template: template,
       _backButtonCaption: '',
       _visibleItems: [],
@@ -122,5 +122,5 @@ define('Controls/Path', [
          this._notify('arrowActivated');
       }
    });
-   return Path;
+   return BreadCrumbsPath;
 });

@@ -14,7 +14,7 @@
     <h2>Две крошки, но одна из них не может сжиматься</h2>
     <Controls.BreadCrumbs attr:id="twoCrumbsButDifferent" items="{{items3}}" on:itemClick="_onItemClick()" />
     <h2>Path</h2>
-    <Controls.Path attr:id="path" items="{{items}}"
+    <Controls.BreadCrumbsPath attr:id="path" items="{{items}}"
                    on:arrowActivated="_onArrowActivated()"
                    on:itemClick="_onItemClick()" />
     <div id="reset" class="asLink" on:click="_resetCrumbs()">Сбросить крошки</div>
