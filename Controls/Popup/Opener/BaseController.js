@@ -79,8 +79,8 @@ define('Controls/Popup/Opener/BaseController',
          _getPopupSizes: function(config, container) {
             var sizes = _private.getContentSizes(container);
             return {
-               width: sizes.width,
-               height: sizes.height,
+               width: config.popupOptions.maxWidth || sizes.width,
+               height: config.popupOptions.maxHeight || sizes.height,
                margins: _private.getMargins(config, container)
             };
          },
@@ -93,5 +93,4 @@ define('Controls/Popup/Opener/BaseController',
          }
       });
       return BaseController;
-   }
-);
+   });

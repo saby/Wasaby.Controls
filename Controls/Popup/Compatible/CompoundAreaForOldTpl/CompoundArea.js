@@ -10,9 +10,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/Deferred',
       'Core/IoC',
       'Core/EventObject',
-      'Core/helpers/Hcontrol/doAutofocus',
       'Core/helpers/Function/runDelayed',
+      'Core/constants',
+      'Core/helpers/Hcontrol/doAutofocus',
+      'Deprecated/Controls/DialogRecord/DialogRecord',
       'Core/EventBus',
+
       'Lib/Control/AreaAbstract/AreaAbstract.compatible',
       'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/Abstract.compatible',
@@ -20,7 +23,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Lib/Control/BaseCompatible/BaseCompatible',
       'WS.Data/Entity/InstantiableMixin'
    ],
-   function(Control,
+   function(
+      Control,
       template,
       LikeWindowMixin,
       arrayFindIndex,
@@ -30,9 +34,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       cDeferred,
       IoC,
       EventObject,
-      doAutofocus,
       runDelayed,
-      cEventBus) {
+      CoreConstants,
+      doAutofocus,
+      DialogRecord,
+      cEventBus
+   ) {
       function removeOperation(operation, array) {
          var idx = arrayFindIndex(array, function(op) {
             return op === operation;
@@ -95,6 +102,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          compatible: null,
          fixBaseCompatible: true,
          _templateComponent: undefined,
+         _isClosing: false,
 
          _pending: null,
          _pendingTrace: null,
@@ -151,10 +159,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             });
          },
 
-         getOpener: function() {
-            return this._logicParent && this._logicParent._options && this._logicParent._options.opener;
-         },
-
          _afterMount: function(cfg) {
             this._options = cfg;
 
@@ -181,6 +185,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             self._waiting = self._waiting || [];
 
             self.__parentFromCfg = self._options.__parentFromCfg;
+            self.__openerFromCfg = self._options.__openerFromCfg;
             self._parent = self._options.parent;
             self._logicParent = self._options.parent;
             self._options.parent = null;
@@ -237,6 +242,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             if (hasHeader) {
                if (customHeaderContainer.length) {
                   customHeaderContainer.prepend('<div class="ws-float-area-title">' + this._options.caption + '</div>');
+                  if (this._options.type === 'dialog') {
+                     var height = customHeaderContainer.height();
+                     $('.controls-DialogTemplate', this.getContainer()).css('margin-bottom', height);
+                  }
                } else {
                   this.getContainer().prepend($('<div class="ws-window-titlebar"><div class="ws-float-area-title ws-float-area-title-generated">' + this._options.caption + '</div></div>'));
                   this.getContainer().addClass('controls-CompoundArea-headerPadding');
@@ -250,14 +259,21 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._compoundControl.subscribe('onCommandCatch', this._commandHandler);
          },
          _commandHandler: function(event, commandName, arg) {
-            var parent;
+            var parent, argWithName;
+
+            if (Array.isArray(arg) && arg.length === 1) {
+               argWithName = [commandName, arg];
+            } else {
+               argWithName = [commandName].concat(arg);
+            }
+
             if (commandName === 'close') {
                this._close(arg);
             } else if (commandName === 'ok') {
                return this._close(true);
             } else if (commandName === 'cancel') {
                return this._close(false);
-            } else if (commandName === 'resize') {
+            } else if (commandName === 'resize' || commandName === 'resizeYourself') {
                this._notify('resize', null, { bubbling: true });
             } else if (commandName === 'registerPendingOperation') {
                return this._registerChildPendingOperation(arg);
@@ -265,14 +281,14 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                return this._unregisterChildPendingOperation(arg);
             } else if (this.__parentFromCfg) {
                parent = this.__parentFromCfg;
-               parent.sendCommand.apply(parent, [commandName].concat(arg));
+               parent.sendCommand.apply(parent, argWithName);
             } else if (this._parent && this._parent._options.opener) {
                parent = this._parent._options.opener;
 
                /* Если нет sendCommand - значит это не compoundControl - а значит там нет распространения команд */
 
                if (parent.sendCommand) {
-                  parent.sendCommand.apply(parent, [commandName].concat(arg));
+                  parent.sendCommand.apply(parent, argWithName);
                }
             }
          },
@@ -280,13 +296,26 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._commandHandler(null, commandName, arg);
          },
          _close: function(arg) {
+            if (this._isClosing) {
+               return false;
+            }
+            this._isClosing = true;
             if (this.handle('onBeforeClose', arg) !== false) {
                this.close(arg);
             }
+            this._isClosing = false;
          },
          closeHandler: function(e, arg) {
             e.stopPropagation();
             this._close(arg);
+         },
+         _keyUp: function(event) {
+            var
+               self = this;
+            if (!event.nativeEven.shiftKey && event.nativeEvent.keyCode === CoreConstants.key.esc) {
+               self._close();
+            }
+            event.stopPropagation();
          },
 
          _setCompoundAreaOptions: function(newOptions) {
@@ -301,6 +330,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          getParent: function() {
             return this.__parentFromCfg || null;
+         },
+         getOpener: function() {
+            return this.__openerFromCfg || null;
          },
 
          /* start RecordFloatArea */
@@ -324,8 +356,85 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             return this._isReadOnly;
          },
 
+
+         setSaveDiffOnly: function() {
+            DialogRecord.prototype.setSaveDiffOnly.apply(this, arguments);
+         },
+         ok: function() {
+            DialogRecord.prototype.ok.apply(this, arguments);
+         },
+         _setEnabledForChildControls: function() {
+            DialogRecord.prototype._setEnabledForChildControls.apply(this, arguments);
+         },
+         _showLoadingIndicator: function() {
+            DialogRecord.prototype._showLoadingIndicator.apply(this, arguments);
+         },
+         _hideLoadingIndicator: function() {
+            DialogRecord.prototype._hideLoadingIndicator.apply(this, arguments);
+         },
+         isAllReady: function() {
+            return DialogRecord.prototype.isAllReady.apply(this, arguments);
+         },
+         getChildControls: function() {
+            return DialogRecord.prototype.getChildControls.apply(this, arguments);
+         },
+         getReports: function() {
+            return DialogRecord.prototype.getReports.apply(this, arguments);
+         },
+         _printMenuItemsIsChanged: function() {
+            return DialogRecord.prototype._printMenuItemsIsChanged.apply(this, arguments);
+         },
+         _createPrintMenu: function() {
+            return DialogRecord.prototype._createPrintMenu.apply(this, arguments);
+         },
+         showReportList: function() {
+            return DialogRecord.prototype.showReportList.apply(this, arguments);
+         },
+         printReport: function() {
+            return DialogRecord.prototype.printReport.apply(this, arguments);
+         },
+         _showReport: function() {
+            return DialogRecord.prototype._showReport.apply(this, arguments);
+         },
+         print: function() {
+            return DialogRecord.prototype.print.apply(this, arguments);
+         },
+         _hideWindow: function() {
+         },
+         _getTitle: function() {
+            return document.title;
+         },
+
+         _openConfirmDialog: function() {
+            return DialogRecord.prototype._openConfirmDialog.apply(this, arguments);
+         },
+         isSaved: function() {
+            return DialogRecord.prototype.isSaved.apply(this, []);
+         },
+         _unbindBeforeUnload: function() {
+            DialogRecord.prototype._unbindBeforeUnload.apply(this);
+         },
+         _beforeUnloadHandler: function() {
+            return DialogRecord.prototype._beforeUnloadHandler.apply(this);
+         },
+         unsubscribeOnBeforeUnload: function() {
+            DialogRecord.prototype.unsubscribeOnBeforeUnload.apply(this);
+         },
+         updateRecord: function() {
+            return DialogRecord.prototype.updateRecord.apply(this, arguments);
+         },
+         save: function() {
+            return DialogRecord.prototype.save.apply(this, arguments);
+         },
+         _processError: function(error) {
+            DialogRecord.prototype._processError.apply(this, [error]);
+         },
+
          /* end RecordFloatArea */
 
+         hide: function() {
+            this.close();
+         },
          close: function(arg) {
             this._notify('close', null, { bubbling: true });
 

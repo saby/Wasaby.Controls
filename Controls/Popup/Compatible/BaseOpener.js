@@ -44,6 +44,9 @@ function(cMerge,
          if (cfg.parent) {
             cfg.templateOptions.__parentFromCfg = cfg.parent;
          }
+         if (cfg.opener) {
+            cfg.templateOptions.__openerFromCfg = cfg.opener;
+         }
          if (cfg.newRecord) { //от RecordFloatArea
             cfg.templateOptions.newRecord = cfg.newRecord;
          }
@@ -111,6 +114,15 @@ function(cMerge,
 
          if (cfg.hasOwnProperty('side')) {
             cfg.horizontalAlign = {side: revertPosition[cfg.side]};
+         }
+
+         if (cfg.horizontalAlign) {
+            if (cfg.horizontalAlign.side === undefined) {
+               delete cfg.horizontalAlign.side;
+            }
+            if (cfg.horizontalAlign.offset === undefined) {
+               delete cfg.horizontalAlign.offset;
+            }
          }
 
          if (cfg.hasOwnProperty('offset')) {
