@@ -316,12 +316,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._close(arg);
          },
          _keyUp: function(event) {
-            var
-               self = this;
             if (!event.nativeEvent.shiftKey && event.nativeEvent.keyCode === CoreConstants.key.esc) {
-               self._close();
+               this._close();
+               event.stopPropagation();
             }
-            event.stopPropagation();
          },
 
          _setCompoundAreaOptions: function(newOptions) {
