@@ -62,7 +62,9 @@
   "include": [
     "Controls/List/*",
     "Controls/List",
-    "Controls/Grid"
+    "Controls/Grid",
+    "Controls/StickyHeader",
+    "Controls/StickyHeader/*"
   ],
   "output": "controls-list.package.js"
 }, {
