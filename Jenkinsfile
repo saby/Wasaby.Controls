@@ -454,7 +454,7 @@ node('controls') {
 
         def site = "http://${NODE_NAME}:30010"
         site.trim()
-        dir("./controls/tests/int"){
+        dir("./controls/tests/reg"){
             tmp_smoke = sh returnStatus:true, script: """
                 source /home/sbis/venv_for_test/bin/activate
                 ${python_ver} start_tests.py --files_to_start smoke_test.py --SERVER_ADDRESS ${server_address} --RESTART_AFTER_BUILD_MODE --BROWSER chrome
