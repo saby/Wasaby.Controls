@@ -24,13 +24,10 @@ define('Controls/PageLayout', [
     */
 
    /**
-    * @name Controls/PageLayout#mainAreaProperty
-    * @cfg {String} Name of field with template, which display in main area. Default value 'mainArea'.
+    * @name Controls/PageLayout#itemTemplateProperty
+    * @cfg {String} Name of field with template, which display in main area. Default value 'itemTemplate'. It is possible to divide by type on topArea and middleArea.
     */
-   /**
-    * @name Controls/PageLayout#tabsAreaProperty
-    * @cfg {String} Name of field with template, which display in tabs area. Default value 'tabsArea'.
-    */
+
    /**
     * @name Controls/PageLayout#tabsSelectedKey
     * @cfg {String} Key of selected item.
