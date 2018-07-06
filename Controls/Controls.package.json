@@ -13,7 +13,9 @@
 }, {
   "include": [
     "Controls/Container/*",
-    "Controls/Layout/*"
+    "Controls/Layout/*",
+    "Controls/StickyHeader",
+    "Controls/StickyHeader/*"
   ],
   "output": "controls-container.package.js"
 }, {
@@ -62,9 +64,7 @@
   "include": [
     "Controls/List/*",
     "Controls/List",
-    "Controls/Grid",
-    "Controls/StickyHeader",
-    "Controls/StickyHeader/*"
+    "Controls/Grid"
   ],
   "output": "controls-list.package.js"
 }, {
