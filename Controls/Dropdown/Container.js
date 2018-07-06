@@ -95,6 +95,9 @@ define('Controls/Dropdown/Container',
             return instance._sourceController.load(filter).addCallback(function(items) {
                instance._items = items;
                _private.updateSelectedItems(instance, selectedKeys, keyProperty);
+               if (instance._options.dataLoadCallback) {
+                  instance._options.dataLoadCallback(instance._selectedItems);
+               }
                return items;
             });
          },
@@ -150,10 +153,8 @@ define('Controls/Dropdown/Container',
             }
          },
 
-         _afterMount: function() {
-            if (!isEmpty(this._selectedItems)) {
-               this._notify('selectedItemsChanged', [this._selectedItems]);
-            }
+         _afterMount: function(options) {
+            console.log(this._options.width);
          },
 
          _beforeUpdate: function(newOptions) {
