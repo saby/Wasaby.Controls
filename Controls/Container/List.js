@@ -42,7 +42,6 @@ define('Controls/Container/List',
          
          resolveOptions: function(self, options) {
             self._options = options;
-            self._source = options.source;
             self._filter = options.filter;
             self._navigation = options.navigation;
          },
@@ -219,12 +218,10 @@ define('Controls/Container/List',
          _searchDeferred: null,
          _searchMode: false,
          
-         constructor: function(options) {
-            List.superclass.constructor.call(this, options);
-            _private.resolveOptions(this, options);
-         },
-         
          _beforeMount: function(options, context) {
+            this._source = options.source;
+            
+            _private.resolveOptions(this, options);
             _private.checkContextValues(this, context);
 
             /***************************
@@ -247,9 +244,13 @@ define('Controls/Container/List',
          },
          
          _beforeUpdate: function(newOptions, context) {
-            if (this._options.source !== newOptions.source || this._options.navigation !== newOptions.navigation || this._options.searchDelay !== newOptions.searchDelay) {
-               this._searchController = null;
+            if (this._options.source !== newOptions.source || !isEqual(this._options.navigation, newOptions.navigation) || this._options.searchDelay !== newOptions.searchDelay) {
+               var currentFilter = _private.getFilterFromContext(this, this._contextObj);
                _private.resolveOptions(this, newOptions);
+               
+               /* create searchController with new options */
+               this._searchController = null;
+               _private.getSearchController(this).setFilter(currentFilter);
             }
             _private.checkContextValues(this, context);
          },

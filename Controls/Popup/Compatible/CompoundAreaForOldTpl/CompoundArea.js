@@ -13,7 +13,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/helpers/Function/runDelayed',
       'Core/constants',
       'Core/helpers/Hcontrol/doAutofocus',
-      'Deprecated/Controls/DialogRecord/DialogRecord',
+      'optional!Deprecated/Controls/DialogRecord/DialogRecord',
       'Core/EventBus',
 
       'Lib/Control/AreaAbstract/AreaAbstract.compatible',
@@ -99,6 +99,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _template: template,
          _compoundId: undefined,
          _templateOptions: null,
+         _templateName: null,
          compatible: null,
          fixBaseCompatible: true,
          _templateComponent: undefined,
@@ -117,11 +118,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _isReadOnly: true,
 
          _beforeMount: function() {
-            this._rebuildCompoundControl = debounce.call(this._rebuildCompoundControl, this).bind(this);
             this._className = 'controls-CompoundArea';
             this._className += ' ws-float-area'; // Старые шаблоны завязаны селекторами на этот класс.
             this._commandHandler = this._commandHandler.bind(this);
             this._commandCatchHandler = this._commandCatchHandler.bind(this);
+            this._templateName = this._options.template;
          },
 
          _shouldUpdate: function(popupOptions) {
@@ -155,9 +156,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             this._compoundControlCreated = new cDeferred();
 
-            moduleStubs.require([this._options.template]).addCallback(function(result) {
+            moduleStubs.require([this._templateName]).addCallback(function(result) {
                self._createCompoundControl(result[0]);
             });
+            return this._compoundControlCreated;
          },
 
          _afterMount: function(cfg) {
@@ -201,7 +203,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             this._compoundControlCreated = new cDeferred();
             runDelayed(function() {
-               moduleStubs.require([self._options.template]).addCallback(function(result) {
+               moduleStubs.require([self._templateName]).addCallback(function(result) {
                   self._createCompoundControl(result[0]);
                   doAutofocus(self._compoundControl._container);
                   self._logicParent.callbackCreated && self._logicParent.callbackCreated();
@@ -318,7 +320,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _keyUp: function(event) {
             var
                self = this;
-            if (!event.nativeEven.shiftKey && event.nativeEvent.keyCode === CoreConstants.key.esc) {
+            if (!event.nativeEvent.shiftKey && event.nativeEvent.keyCode === CoreConstants.key.esc) {
                self._close();
             }
             event.stopPropagation();
@@ -330,6 +332,13 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          reload: function() {
             this._rebuildCompoundControl();
+         },
+         setTemplate: function(template, templateOptions) {
+            if (templateOptions) {
+               this._templateOptions = templateOptions.templateOptions;
+            }
+            this._templateName = template;
+            return this._rebuildCompoundControl();
          },
 
          /* from api floatArea, window */
@@ -442,11 +451,14 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this.close();
          },
          close: function(arg) {
-            this._notify('close', null, { bubbling: true });
+            //Могут несколько раз позвать закрытие подряд
+            if (!this._compoundControl.isDestroyed()) {
+               this._notify('close', null, { bubbling: true });
 
-            this.handle('onClose', arg);
-            this.handle('onAfterClose', arg);
-            this.handle('onDestroy');
+               this.handle('onClose', arg);
+               this.handle('onAfterClose', arg);
+               this.handle('onDestroy');
+            }
          },
          _getTemplateComponent: function() {
             return this._compoundControl;
