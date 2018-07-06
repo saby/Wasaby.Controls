@@ -95,9 +95,6 @@ define('Controls/Dropdown/Container',
             return instance._sourceController.load(filter).addCallback(function(items) {
                instance._items = items;
                _private.updateSelectedItems(instance, selectedKeys, keyProperty);
-               if (instance._options.dataLoadCallback) {
-                  instance._options.dataLoadCallback(instance._selectedItems);
-               }
                return items;
             });
          },
@@ -108,6 +105,9 @@ define('Controls/Dropdown/Container',
                   instance._selectedItems.push(item);
                }
             });
+            if (instance._options.dataLoadCallback) {
+               instance._options.dataLoadCallback(instance._selectedItems);
+            }
          },
 
          onResult: function(result) {
