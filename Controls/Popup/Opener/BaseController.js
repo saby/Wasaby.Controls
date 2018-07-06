@@ -2,9 +2,10 @@ define('Controls/Popup/Opener/BaseController',
    [
       'Core/core-extend',
       'Core/Deferred',
+      'Controls/Popup/Manager/ManagerController',
       'WS.Data/Utils'
    ],
-   function(CoreExtend, cDeferred, Utils) {
+   function(CoreExtend, cDeferred, ManagerController, Utils) {
       var CONTENT_SELECTOR = '.controls-Container__popup-scrolling-content';
 
       var _private = {
@@ -64,6 +65,11 @@ define('Controls/Popup/Opener/BaseController',
          elementDestroyed: function(element) {
             return new cDeferred().callback();
          },
+         popupDeactivated: function(item) {
+            if (item.popupOptions.closeByExternalClick) {
+               ManagerController.remove(item.id);
+            }
+         },
          getDefaultPosition: function() {
             return {
                top: -10000,
@@ -73,8 +79,8 @@ define('Controls/Popup/Opener/BaseController',
          _getPopupSizes: function(config, container) {
             var sizes = _private.getContentSizes(container);
             return {
-               width: sizes.width,
-               height: sizes.height,
+               width: config.popupOptions.maxWidth || sizes.width,
+               height: config.popupOptions.maxHeight || sizes.height,
                margins: _private.getMargins(config, container)
             };
          },
@@ -87,5 +93,4 @@ define('Controls/Popup/Opener/BaseController',
          }
       });
       return BaseController;
-   }
-);
+   });

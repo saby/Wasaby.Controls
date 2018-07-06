@@ -81,9 +81,17 @@ define('SBIS3.CONTROLS/OperationsPanel/Merge/DialogTemplate', [
             MergeDialogTemplate.superclass.init.apply(this, arguments);
             this._applyContainer = this.getContainer().find('.controls-MergeDialogTemplate__applyBlock');
             this._treeView = this.getChildControlByName('MergeDialogTemplate__treeDataGridView');
-            this._treeView.subscribe('onSelectedItemChange', this.onSelectedItemChange.bind(this));
+            this.subscribeTo(this._treeView, 'onSelectedItemChange', this.onSelectedItemChange.bind(this));
+            this.subscribeTo(this._treeView, 'onItemClick', this._onItemClickHandler.bind(this));
             //this._treeView.setGroupBy(this._treeView.getSearchGroupBy(), false);
             this._initItems();
+        },
+        _onItemClickHandler: function(e, id, model) {
+           var result;
+            if (model.get(this._options.nodeProperty)) {
+               result =  false;
+            }
+           e.setResult(result);
         },
         _initItems: function() {
             var

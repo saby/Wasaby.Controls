@@ -1,7 +1,7 @@
 /// <amd-module name="File/ResourceGetter/Base" />
 import Deferred = require("Core/Deferred");
-import IResourceGetter = require("File/IResourceGetter");
-import IResource = require("File/IResource");
+import {IResourceGetter} from 'File/IResourceGetter';
+import {IResource} from "File/IResource";
 
 /**
  * Абстрактный класс, реализующий интерфейс получения файлов IResourceGetter
