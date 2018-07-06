@@ -26,10 +26,14 @@ define('Controls/Popup/Opener/Sticky/StickyController',
       var _private = {
          prepareConfig: function(cfg, sizes) {
             var popupCfg = {
-               corner: cMerge(cClone(DEFAULT_OPTIONS['corner']), cfg.popupOptions.corner || {}),
+               corner: cMerge(cClone(DEFAULT_OPTIONS.corner), cfg.popupOptions.corner || {}),
                align: {
-                  horizontal: cMerge(cClone(DEFAULT_OPTIONS['horizontalAlign']), cfg.popupOptions.horizontalAlign || {}),
-                  vertical: cMerge(cClone(DEFAULT_OPTIONS['verticalAlign']), cfg.popupOptions.verticalAlign || {})
+                  horizontal: cMerge(cClone(DEFAULT_OPTIONS.horizontalAlign), cfg.popupOptions.horizontalAlign || {}),
+                  vertical: cMerge(cClone(DEFAULT_OPTIONS.verticalAlign), cfg.popupOptions.verticalAlign || {})
+               },
+               config: {
+                  maxWidth: cfg.popupOptions.maxWidth,
+                  maxHeight: cfg.popupOptions.maxHeight
                },
                sizes: sizes
             };
@@ -66,7 +70,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
                   }
                };
                cMerge(cfg.popupOptions, positionCfg);
-               sizes.margins = {top: 0, left: 0};
+               sizes.margins = { top: 0, left: 0 };
                return {
                   width: 1,
                   height: 1,
@@ -98,13 +102,22 @@ define('Controls/Popup/Opener/Sticky/StickyController',
 
          elementUpdated: function(item, container) {
             if (this._checkContainer(item, container)) {
-               /* Снимаем установленные значения, влияющие на размер и позиционирование, чтобы получить размеры контента */
+               /* start: Снимаем установленные значения, влияющие на размер и позиционирование, чтобы получить размеры контента */
                container.classList.remove('controls-Sticky__reset-margins');
+               var width = container.style.width;
+               var height = container.style.height;
                container.style.width = 'auto';
                container.style.height = 'auto';
 
+               /* end: Снимаем установленные значения, влияющие на размер и позиционирование, чтобы получить размеры контента */
+
                this.prepareConfig(item, container);
-               container.classList.add('controls-Sticky__reset-margins'); //После замеров стилей возвращаем
+
+               /* start: Возвращаем все значения но узел, чтобы vdom не рассинхронизировался */
+               container.style.width = width;
+               container.style.height = height;
+               container.classList.add('controls-Sticky__reset-margins'); // После замеров стилей возвращаем
+               /* end: Возвращаем все значения но узел, чтобы vdom не рассинхронизировался */
             }
          },
          prepareConfig: function(item, container) {
@@ -114,5 +127,4 @@ define('Controls/Popup/Opener/Sticky/StickyController',
       });
 
       return new StickyController();
-   }
-);
+   });

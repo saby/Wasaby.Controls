@@ -24,6 +24,7 @@
                   on:keyup="_keyUpHandler()"
                   on:change="_inputCompletedHandler()"
                   on:focusin="_focusinHandler()"
+                  on:focusout="_focusoutHandler()"
                   attr:class="{{ _options.textAlign === 'right' ? 'controls-InputRender__field_textAlign_right' }}"
                   value="{{ _options.viewModel.getDisplayValue() }}"
                   readOnly="{{ _options.readOnly }}"

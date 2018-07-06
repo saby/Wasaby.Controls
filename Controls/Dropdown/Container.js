@@ -65,7 +65,6 @@ define('Controls/Dropdown/Container',
        * @cfg {Object} Menu style menuStyle
        * @variant defaultHead The head with icon and caption
        * @variant duplicateHead The icon set under first item
-       * @variant cross Menu have cross in left top corner
        */
 
       /**
