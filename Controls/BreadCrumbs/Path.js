@@ -5,7 +5,7 @@ define('Controls/BreadCrumbs/Path', [
    'Controls/Utils/FontLoadUtil',
    'tmpl!Controls/BreadCrumbs/Path/Path',
    'tmpl!Controls/Button/BackButton/Back',
-   'css!Controls/Path/Path'
+   'css!Controls/BreadCrumbs/Path/Path'
 ], function(
    Control,
    BreadCrumbsUtil,
