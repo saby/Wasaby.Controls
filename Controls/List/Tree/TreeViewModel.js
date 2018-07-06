@@ -2,8 +2,17 @@ define('Controls/List/Tree/TreeViewModel', [
    'Controls/List/ListViewModel',
    'Controls/List/resources/utils/ItemsUtil',
    'Controls/List/resources/utils/TreeItemsUtil',
-   'Core/core-clone'
-], function(ListViewModel, ItemsUtil, TreeItemsUtil, cClone) {
+   'Core/core-clone',
+   'WS.Data/Relation/Hierarchy',
+   'Controls/Utils/ArraySimpleValuesUtil'
+], function(
+   ListViewModel,
+   ItemsUtil,
+   TreeItemsUtil,
+   cClone,
+   HierarchyRelation,
+   ArraySimpleValuesUtil
+) {
 
    'use strict';
 
@@ -35,6 +44,45 @@ define('Controls/List/Tree/TreeViewModel', [
                filter.push(cfg.itemsFilterMethod);
             }
             return filter;
+         },
+
+         getAllChildren: function(hierarchyRelation, rootId, items) {
+            var children = [];
+
+            hierarchyRelation.getChildren(rootId, items).forEach(function(child) {
+               if (hierarchyRelation.isNode(child)) {
+                  ArraySimpleValuesUtil.addSubArray(children, _private.getAllChildren(hierarchyRelation, child.getId(), items));
+               }
+               ArraySimpleValuesUtil.addSubArray(children, [child]);
+            });
+
+            return children;
+         },
+
+         getSelectedChildrenCount: function(hierarchyRelation, rootId, items, selectedKeys) {
+            var
+               res = 0;
+
+            _private.getAllChildren(hierarchyRelation, rootId, items).forEach(function(child) {
+               if (selectedKeys.indexOf(child.getId()) !== -1) {
+                  res++;
+               }
+            });
+
+            return res;
+         },
+
+         allChildrenSelected: function(hierarchyRelation, key, items, selectedKeys) {
+            var
+               res = true;
+
+            _private.getAllChildren(hierarchyRelation, key, items).forEach(function(child) {
+               if (selectedKeys.indexOf(child.getId()) === -1) {
+                  res = false;
+               }
+            });
+
+            return res;
          }
       },
 
@@ -48,6 +96,11 @@ define('Controls/List/Tree/TreeViewModel', [
             } else {
                this._expandedNodes = {};
             }
+            this._hierarchyRelation = new HierarchyRelation({
+               idProperty: cfg.keyProperty || 'id',
+               parentProperty: cfg.parentProperty || 'Раздел',
+               nodeProperty: cfg.nodeProperty || 'Раздел@'
+            });
             TreeViewModel.superclass.constructor.apply(this, arguments);
          },
 
@@ -83,8 +136,21 @@ define('Controls/List/Tree/TreeViewModel', [
 
          getCurrent: function() {
             var
-               current = TreeViewModel.superclass.getCurrent.apply(this, arguments);
+               current = TreeViewModel.superclass.getCurrent.apply(this, arguments),
+               allChildrenSelected;
             current.isExpanded = !!this._expandedNodes[current.key];
+
+            //TODO: смотреть на hasMore. Если подгружены не все дети, значит false
+            if (current.dispItem.isNode()) {
+               allChildrenSelected = _private.allChildrenSelected(this._hierarchyRelation, current.key, this._items, this._selectedKeys);
+               current.multiSelectStatus =
+                  this._selectedKeys.indexOf(current.key) !== -1
+                     ? allChildrenSelected
+                        ? true
+                        : null
+                     : false;
+            }
+
             return current;
          }
 

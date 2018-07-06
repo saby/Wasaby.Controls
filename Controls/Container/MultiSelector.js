@@ -66,10 +66,8 @@ define('Controls/Container/MultiSelector', [
          var currentSelection = this._multiselection.getSelection();
 
          this._selectionContext = new SelectionContextField(
-            currentSelection.selected,
-            currentSelection.excluded,
+            this._multiselection.getSelectedKeysForRender(),
             this._multiselection.getCount(),
-            this._multiselection,
             this._items
          );
 
@@ -83,8 +81,7 @@ define('Controls/Container/MultiSelector', [
          this._multiselection = new Selection({
             selectedKeys: options.selectedKeys || [],
             excludedKeys: options.excludedKeys || [],
-            items: items,
-            strategy: options.strategy
+            items: items
          });
       },
 

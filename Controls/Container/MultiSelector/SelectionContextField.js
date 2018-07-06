@@ -5,16 +5,12 @@ define('Controls/Container/MultiSelector/SelectionContextField', [
 
    return DataContext.extend({
       selectedKeys: null,
-      excludedKeys: null,
       count: 0,
-      selectionInstance: null,
       items: null,
 
-      constructor: function(selectedKeys, excludedKeys, count, selectionInstance, items) {
+      constructor: function(selectedKeys, count, items) {
          this.selectedKeys = selectedKeys;
-         this.excludedKeys = excludedKeys;
          this.count = count;
-         this.selectionInstance = selectionInstance;
          this.items = items;
       }
    });

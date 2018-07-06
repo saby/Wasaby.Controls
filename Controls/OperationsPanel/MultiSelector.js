@@ -38,6 +38,7 @@ define('Controls/OperationsPanel/MultiSelector', [
       },
 
       _updateSelection: function(selection) {
+         //TODO: нет excludedKeys, есть items и selectedKeys
          this._updateMultiSelectStatus(selection.selectedKeys, selection.excludedKeys);
          this._updateMultiSelectCaption(selection.count);
       },
