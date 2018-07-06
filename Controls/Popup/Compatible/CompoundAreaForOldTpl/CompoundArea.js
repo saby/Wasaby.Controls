@@ -205,6 +205,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   self._createCompoundControl(result[0]);
                   doAutofocus(self._compoundControl._container);
                   self._logicParent.callbackCreated && self._logicParent.callbackCreated();
+                  runDelayed(function() {
+                     self.handle('onResize');
+                  });
                }).addErrback(function(e) {
                   IoC.resolve('ILogger').error('CompoundArea', 'Шаблон "' + self._options.template + '" не смог быть загружен!');
                   this._compoundControlCreated.errback(e);
