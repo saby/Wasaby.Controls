@@ -1,0 +1,447 @@
+[
+  {
+    "include": [
+      "SBIS3.CONTROLS/Mixins/*",
+      "SBIS3.CONTROLS/ListView",
+      "SBIS3.CONTROLS/ListView/*",
+      "SBIS3.CONTROLS/DataGridView",
+      "SBIS3.CONTROLS/DataGridView/*",
+      "SBIS3.CONTROLS/CompositeView",
+      "SBIS3.CONTROLS/CompositeView/*",
+      "SBIS3.CONTROLS/Button",
+      "SBIS3.CONTROLS/Button/*",
+      "SBIS3.CONTROLS/SearchForm/*",
+      "SBIS3.CONTROLS/Tree/*"
+    ],
+    "output": "sbis3controls-browser.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Accordion",
+      "SBIS3.CONTROLS/Accordion/*"
+    ],
+    "output": "sbis3controls-accordion.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Action",
+      "SBIS3.CONTROLS/Action/*"
+    ],
+    "output": "sbis3controls-action.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/BreadCrumbs",
+      "SBIS3.CONTROLS/BreadCrumbs/*"
+    ],
+    "output": "sbis3controls-bread-crumbs.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Browser",
+      "SBIS3.CONTROLS/Browser/*"
+    ],
+    "output": "sbis3controls-controls-browser.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Calendar",
+      "SBIS3.CONTROLS/Calendar/*"
+    ],
+    "output": "sbis3controls-calendar.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/CheckBox",
+      "SBIS3.CONTROLS/CheckBox/*"
+    ],
+    "output": "sbis3controls-checkbox.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/ColorPicker",
+      "SBIS3.CONTROLS/ColorPicker/*"
+    ],
+    "output": "sbis3controls-colorpicker.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/ComboBox",
+      "SBIS3.CONTROLS/ComboBox/*"
+    ],
+    "output": "sbis3controls-combobox.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Commands/*"
+    ],
+    "output": "sbis3controls-commands.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/ComponentBinder",
+      "SBIS3.CONTROLS/ComponentBinder/*"
+    ],
+    "output": "sbis3controls-componentbinder.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Controllers/*"
+    ],
+    "output": "sbis3controls-controllers.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Date/*"
+    ],
+    "output": "sbis3controls-date.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Dialog",
+      "SBIS3.CONTROLS/Dialog/*"
+    ],
+    "output": "sbis3controls-dialog.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/DropdownList",
+      "SBIS3.CONTROLS/DropdownList/*"
+    ],
+    "output": "sbis3controls-dropdownlist.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/EditAtPlace",
+      "SBIS3.CONTROLS/EditAtPlace/*"
+    ],
+    "output": "sbis3controls-editatplace.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/ExportCustomizer/*"
+    ],
+    "output": "sbis3controls-exportcustomizer.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/FieldLink",
+      "SBIS3.CONTROLS/FieldLink/*"
+    ],
+    "output": "sbis3controls-fieldlink.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Filter/*"
+    ],
+    "output": "sbis3controls-filter.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/FloatArea",
+      "SBIS3.CONTROLS/FloatArea/*"
+    ],
+    "output": "sbis3controls-floatarea.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/FormattedTextBox",
+      "SBIS3.CONTROLS/FormattedTextBox/*"
+    ],
+    "output": "sbis3controls-formattedtextbox.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/FormController",
+      "SBIS3.CONTROLS/FormController/*"
+    ],
+    "output": "sbis3controls-formcontroller.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/HighCharts",
+      "SBIS3.CONTROLS/HighCharts/*"
+    ],
+    "output": "sbis3controls-highcharts.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/HighChartsLight",
+      "SBIS3.CONTROLS/HighChartsLight/*"
+    ],
+    "output": "sbis3controls-highchartslight.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/History/*"
+    ],
+    "output": "sbis3controls-history.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Image",
+      "SBIS3.CONTROLS/Image/*"
+    ],
+    "output": "sbis3controls-image.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/ImportCustomizer/*"
+    ],
+    "output": "sbis3controls-importcustomizer.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/InformationPopup",
+      "SBIS3.CONTROLS/InformationPopup/*"
+    ],
+    "output": "sbis3controls-informationpopup.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Interfaces/*"
+    ],
+    "output": "sbis3controls-interfaces.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Label",
+      "SBIS3.CONTROLS/Label/*"
+    ],
+    "output": "sbis3controls-label.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Layouts/*"
+    ],
+    "output": "sbis3controls-layouts.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Link",
+      "SBIS3.CONTROLS/Link/*"
+    ],
+    "output": "sbis3controls-link.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Menu",
+      "SBIS3.CONTROLS/Menu/*"
+    ],
+    "output": "sbis3controls-menu.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/MoneyTextBox",
+      "SBIS3.CONTROLS/MoneyTextBox/*"
+    ],
+    "output": "sbis3controls-moneytextbox.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/OperationsPanel",
+      "SBIS3.CONTROLS/OperationsPanel/*"
+    ],
+    "output": "sbis3controls-operationspanel.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Pager",
+      "SBIS3.CONTROLS/Pager/*"
+    ],
+    "output": "sbis3controls-pager.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Paging",
+      "SBIS3.CONTROLS/Paging/*"
+    ],
+    "output": "sbis3controls-paging.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Panel",
+      "SBIS3.CONTROLS/Panel/*"
+    ],
+    "output": "sbis3controls-panel.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/PasswordTextBox",
+      "SBIS3.CONTROLS/PasswordTextBox/*"
+    ],
+    "output": "sbis3controls-passwordtextbox.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/PhoneTextBox",
+      "SBIS3.CONTROLS/PhoneTextBox/*"
+    ],
+    "output": "sbis3controls-phonetextbox.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/PrintDialogTemplate",
+      "SBIS3.CONTROLS/PrintDialogTemplate/*"
+    ],
+    "output": "sbis3controls-printdialogtemplate.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/ProcessStateIndicator",
+      "SBIS3.CONTROLS/ProcessStateIndicator/*"
+    ],
+    "output": "sbis3controls-processstateindicator.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/ProgressBar",
+      "SBIS3.CONTROLS/ProgressBar/*"
+    ],
+    "output": "sbis3controls-progressbar.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Radio/*"
+    ],
+    "output": "sbis3controls-radio.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/RichEditor",
+      "SBIS3.CONTROLS/RichEditor/*"
+    ],
+    "output": "sbis3controls-richeditor.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/SbisDropdownList",
+      "SBIS3.CONTROLS/SbisDropdownList/*"
+    ],
+    "output": "sbis3controls-sbisdropdownlist.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/ScrollContainer",
+      "SBIS3.CONTROLS/ScrollContainer/*"
+    ],
+    "output": "sbis3controls-scrollcontainer.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/SelectorButton",
+      "SBIS3.CONTROLS/SelectorButton/*"
+    ],
+    "output": "sbis3controls-selectorbutton.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Slider",
+      "SBIS3.CONTROLS/Slider/*"
+    ],
+    "output": "sbis3controls-slider.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Spoiler",
+      "SBIS3.CONTROLS/Spoiler/*"
+    ],
+    "output": "sbis3controls-spoiler.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Storages/*"
+    ],
+    "output": "sbis3controls-storages.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/StylesPalette",
+      "SBIS3.CONTROLS/StylesPalette/*"
+    ],
+    "output": "sbis3controls-stylespalette.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/StylesPanelNew",
+      "SBIS3.CONTROLS/StylesPanelNew/*"
+    ],
+    "output": "sbis3controls-stylespanelnew.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/SubmitPopup",
+      "SBIS3.CONTROLS/SubmitPopup/*"
+    ],
+    "output": "sbis3controls-submitpopup.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Suggest",
+      "SBIS3.CONTROLS/Suggest/*"
+    ],
+    "output": "sbis3controls-suggest.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/SwitchableArea",
+      "SBIS3.CONTROLS/SwitchableArea/*"
+    ],
+    "output": "sbis3controls-switchablearea.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Switcher",
+      "SBIS3.CONTROLS/Switcher/*"
+    ],
+    "output": "sbis3controls-switcher.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Tab/*"
+    ],
+    "output": "sbis3controls-tab.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/TextArea",
+      "SBIS3.CONTROLS/TextArea/*"
+    ],
+    "output": "sbis3controls-textarea.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/TextBox",
+      "SBIS3.CONTROLS/TextBox/*"
+    ],
+    "output": "sbis3controls-textbox.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Toolbar",
+      "SBIS3.CONTROLS/Toolbar/*"
+    ],
+    "output": "sbis3controls-toolbar.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/UnitEditor",
+      "SBIS3.CONTROLS/UnitEditor/*"
+    ],
+    "output": "sbis3controls-uniteditor.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/VdomPhoneTextBox",
+      "SBIS3.CONTROLS/VdomPhoneTextBox/*"
+    ],
+    "output": "sbis3controls-vdomphonetextbox.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/WaitIndicator",
+      "SBIS3.CONTROLS/WaitIndicator/*"
+    ],
+    "output": "sbis3controls-waitindicator.package.js"
+  }
+]
