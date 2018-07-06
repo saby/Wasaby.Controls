@@ -105,7 +105,10 @@ function(cMerge,
          };
 
          if (cfg.hasOwnProperty('verticalAlign')) {
-            cfg.verticalAlign = {side: revertPosition[cfg.verticalAlign]};
+            //Если object - значит api popupMixin'a, которое совпадает с новым api => ничего не меняем
+            if (typeof cfg.verticalAlign !== 'object') {
+               cfg.verticalAlign = {side: revertPosition[cfg.verticalAlign]};
+            }
          }
 
          if (cfg._type === 'dialog' && !cfg.hasOwnProperty('modal')) {
