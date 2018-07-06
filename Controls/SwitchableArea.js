@@ -25,8 +25,13 @@ define('Controls/SwitchableArea',
        */
 
       /**
-       * @name Controls/SwitchableArea#itemTemplate
-       * @cfg {Function} Template for item render.
+       * @name Controls/SwitchableArea#selectedKey
+       * @cfg {Function} Key of selected item.
+       */
+
+      /**
+       * @name Controls/SwitchableArea#itemTemplateProperty
+       * @cfg {RecordSet} Name of field with template, which display.
        */
 
       var SwitchableArea = Control.extend({

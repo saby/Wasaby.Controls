@@ -3,7 +3,7 @@
         <ws:if data="{{_viewModel.mustBeLoad(item)}}">
             <Controls.Container.Async attr:class="{{_options.selectedKey !== getIdPropertyItem(item) ? 'ws-hidden'}}"
                                       attr:key="{{getIdPropertyItem(item)}}"
-                                      templateName="{{item.get(_options.itemTemplateName)}}"
+                                      templateName="{{item.get(_options.itemTemplateProperty)}}"
                                       templateOptions="{{_options}}"/>
         </ws:if>
     </ws:for>

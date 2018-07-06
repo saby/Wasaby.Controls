@@ -20,20 +20,20 @@ define('Controls/PageLayout', [
 
    /**
     * @name Controls/PageLayout#source
-    * @cfg  Object of Source/Memory
+    * @cfg  Object that implements ISource interface for data access.
     */
 
    /**
-    * @name Controls/PageLayout#mainArea
-    * @cfg {String} Template for item in main content area.
+    * @name Controls/PageLayout#mainAreaProperty
+    * @cfg {String} Name of field with template, which display in main area. Default value 'mainArea'.
     */
    /**
-    * @name Controls/PageLayout#tabsArea
-    * @cfg {String} Template for item in tabs content area.
+    * @name Controls/PageLayout#tabsAreaProperty
+    * @cfg {String} Name of field with template, which display in tabs area. Default value 'tabsArea'.
     */
    /**
     * @name Controls/PageLayout#tabsSelectedKey
-    * @cfg {String} tabsSelectedKey Number of selected key.
+    * @cfg {String} Key of selected item.
     */
    var _private = {
       initItems: function(source, self) {
@@ -45,8 +45,8 @@ define('Controls/PageLayout', [
          });
       },
       updateOptions: function(self) {
-         self._tabsArea = self._items.getRecordById(self._options.tabsSelectedKey).get('tabsArea');
-         self._mainArea = self._items.getRecordById(self._options.tabsSelectedKey).get('mainArea');
+         self._tabsArea = self._items.getRecordById(self._options.tabsSelectedKey).get(self._options.tabsAreaProperty || 'tabsArea');
+         self._mainArea = self._items.getRecordById(self._options.tabsSelectedKey).get(self._options.mainAreaProperty || 'mainArea');
       }
    };
    var browserTabs = Control.extend({
