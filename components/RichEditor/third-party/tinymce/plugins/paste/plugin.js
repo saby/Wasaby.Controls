@@ -1258,7 +1258,7 @@ var paste = (function () {
     text = (Env.webkit || Env.ie) && navigator.userAgent.search(/\bwindows\b/i) !== -1 ? text.replace(/\n/gi, '\r\n') : text;
     text = text.replace(/\u00A0/gi, ' ');
     return {
-      html: rng.startOffset === 0 && rng.commonAncestorContainer.nodeType === 3 && rng.endOffset === rng.commonAncestorContainer.nodeValue.length && !sel.dom.isBlock(sel.getNode()) ? sel.dom.getOuterHTML(sel.getNode()) : sel.getContent({ contextual: true }),
+      html: /*rng.startOffset === 0 && rng.commonAncestorContainer.nodeType === 3 && rng.endOffset === rng.commonAncestorContainer.nodeValue.length && !sel.dom.isBlock(sel.getNode()) ? sel.dom.getOuterHTML(sel.getNode()) :*/ sel.getContent({ contextual: true }),
       text: text
     };
   };
