@@ -87,6 +87,7 @@ define('Controls/Popup/Opener/Stack/StackController',
                this._fixTemplateAnimation(element);
             } else {
                _private.elementDestroyed(this, element);
+               return (new Deferred()).callback();
             }
             return this._destroyDeferred[element.id];
          },
