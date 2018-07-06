@@ -441,6 +441,10 @@ define('SBIS3.CONTROLS/ListView',
                top: null,
                bottom: null
             },
+            /* Флаг, обозначающий, нужно ли нам показывать индикатор загрузки сверху при подгрузке списка вверх,
+               его не надо показывать, когда реестр загружен и сверху подгружаются записи, тогда они просто добавятся сверху,
+               а индикатор лишь будет вызывать моргание. */
+            _scrollUpIndicator: false,
             _virtualScrollShouldReset: false,
             _virtualScrollResetStickyHead: false,
             _setScrollPagerPositionThrottled: null,
@@ -1385,6 +1389,7 @@ define('SBIS3.CONTROLS/ListView',
 
               this._virtualScrollController._scrollHandler(event, scrollTop, scrollbarDragging);
             }
+            this._scrollUpIndicator = true;
          },
          _setScrollPagerPosition: function(){
             var right;
@@ -2231,6 +2236,7 @@ define('SBIS3.CONTROLS/ListView',
 
             this._reloadInfiniteScrollParams(offset);
             this._previousGroupBy = undefined;
+            this._scrollUpIndicator = false;
             // При перезагрузке нужно также почистить hoveredItem, иначе следующее отображение тулбара будет для элемента, которого уже нет (ведь именно из-за этого ниже скрывается тулбар).
             this._clearHoveredItem();
             this._unlockItemsToolbar();
@@ -3657,8 +3663,17 @@ define('SBIS3.CONTROLS/ListView',
                var offset = this._getNextOffset(),
                   self = this;
                //показываем индикатор вверху, если подгрузка вверх или вниз но перевернутая
-               this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', this._isScrollingUp());
-               this._showLoadingIndicator();
+               var isScrollingUp = this._isScrollingUp();
+               this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', isScrollingUp);
+               
+               if (isScrollingUp) {
+                  if (this._scrollUpIndicator) {
+                     this._showLoadingIndicator();
+                  }
+                  this._scrollUpIndicator = true;
+               } else {
+                  this._showLoadingIndicator();
+               }
                this._toggleEmptyData(false);
 
                /*TODO перенос события для курсоров глубже, делаю под ифом, чтоб не сломать текущий функционал*/
