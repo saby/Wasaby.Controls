@@ -19,20 +19,21 @@ define('Controls/PageLayout', [
     */
 
    /**
-    * @typedef {Source/Memory} tabsSource
-    * @property {Array} data Items with settings for the item.
-    * @property {String} idProperty String with name of identifier in item.
+    * @name Controls/PageLayout#source
+    * @cfg  Object of Source/Memory
+    */
+
+   /**
+    * @name Controls/PageLayout#mainArea
+    * @cfg {String} Template for item in main content area.
     */
    /**
-    * @typedef Controls/PageLayout tabsSelectedKey
+    * @name Controls/PageLayout#tabsArea
+    * @cfg {String} Template for item in tabs content area.
+    */
+   /**
+    * @name Controls/PageLayout#tabsSelectedKey
     * @cfg {String} tabsSelectedKey Number of selected key.
-    */
-   /**
-    * @typedef {Array} data
-    * @property {String} idProperty Model of item.
-    * @property {String} tittle Tittle of tabs.
-    * @property {String} mainArea Model of item.
-    * @property {String} tabsArea Model of item.
     */
    var _private = {
       initItems: function(source, self) {

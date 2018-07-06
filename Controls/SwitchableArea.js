@@ -8,6 +8,27 @@ define('Controls/SwitchableArea',
 
       'use strict';
 
+      /**
+       * SwitchableArea
+       *
+       * @class Controls/SwitchableArea
+       * @extends Core/Control
+       * @control
+       * @public
+       * @category SwitchableArea
+       * @demo Controls-demo/SwitchableArea/DemoSwitchableArea
+       */
+
+      /**
+       * @name Controls/SwitchableArea#items
+       * @cfg {RecordSet} RecordSet of item, which itemTemplate are displayed.
+       */
+
+      /**
+       * @name Controls/SwitchableArea#itemTemplate
+       * @cfg {Function} Template for item render.
+       */
+
       var SwitchableArea = Control.extend({
          _template: template,
 
