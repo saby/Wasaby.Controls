@@ -1,6 +1,11 @@
-<div class="controlAreaTemplate">
-    <Controls.Header attr:style="margin-right: 5px" caption="Caption" style="default" size="xl"/>
-    <Controls.Button attr:style="margin-right: 3px" readOnly="{{false}}" attr:test_name="icon_border_1" iconStyle="error" icon="icon-16 icon-Author" style="linkMain" size="m"/>
-    <Controls.Button attr:style="margin-right: 3px" readOnly="{{false}}" attr:test_name="option_button_3" iconStyle="default" caption="Кнопка со значком и текстом" icon="icon-24 icon-Send" style="buttonPrimary" size="m"/>
-    <Controls.Button readOnly="{{true}}" attr:test_name="icon_button_4" iconStyle="default" icon="icon-24 icon-Send" caption="Кнопка-ссылка со значком и текстом" style="linkMain" size="m"/>
-</div>
+<ws:if data="{{type === 'topArea'}}">
+    <div class="controlAreaTemplate">
+        <Controls.Header attr:style="margin-right: 5px" caption="Caption" style="default" size="xl"/>
+        <Controls.Button attr:style="margin-right: 3px" readOnly="{{false}}" attr:test_name="icon_border_1" iconStyle="error" icon="icon-16 icon-Author" style="linkMain" size="m"/>
+        <Controls.Button attr:style="margin-right: 3px" readOnly="{{false}}" attr:test_name="option_button_3" iconStyle="default" caption="Кнопка со значком и текстом" icon="icon-24 icon-Send" style="buttonPrimary" size="m"/>
+        <Controls.Button readOnly="{{true}}" attr:test_name="icon_button_4" iconStyle="default" icon="icon-24 icon-Send" caption="Кнопка-ссылка со значком и текстом" style="linkMain" size="m"/>
+    </div>
+</ws:if>
+<ws:else>
+    <div>Super Abstract Content</div>
+</ws:else>

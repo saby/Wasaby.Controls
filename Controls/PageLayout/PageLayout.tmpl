@@ -1,6 +1,6 @@
 <div class="controls-PageLayout">
     <div attr:class="controls-PageLayout__ControlPanel__wrapper">
-        <Controls.SwitchableArea itemTemplateProperty="tabsArea" items="{{_items}}" selectedKey="{{_options.tabsSelectedKey}}"/>
+        <Controls.SwitchableArea type="topArea" itemTemplateProperty="{{_options.itemTemplateProperty || 'itemTemplate'}}" items="{{_items}}" selectedKey="{{_options.tabsSelectedKey}}"/>
         <ws:if data="{{_items.getCount() > 1}}">
             <Controls.Tabs.Buttons
                     bind:selectedKey="_options.tabsSelectedKey"
@@ -8,5 +8,5 @@
                     source="{{_options.tabsSource}}"/>
         </ws:if>
     </div>
-    <Controls.SwitchableArea itemTemplateProperty="mainArea" items="{{_items}}" selectedKey="{{_options.tabsSelectedKey}}"/>
+    <Controls.SwitchableArea type="middleArea" itemTemplateProperty="{{_options.itemTemplateProperty || 'itemTemplate'}}" items="{{_items}}" selectedKey="{{_options.tabsSelectedKey}}"/>
 </div>
