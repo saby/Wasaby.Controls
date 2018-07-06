@@ -48,7 +48,7 @@ define('Controls-demo/EngineBrowser/Browser', [
       {
          id: 'title',
          resetValue: 'По имени',
-         value: 'Ferdinand',
+         value: 'Petr',
          properties: {
             keyProperty: 'title',
             displayProperty: 'title',
@@ -60,8 +60,7 @@ define('Controls-demo/EngineBrowser/Browser', [
                      {id: 1, title: 'Sasha'},
                      {id: 2, title: 'Petr'},
                      {id: 4, title: 'Ivan'},
-                     {id: 5, title: 'Andrey'},
-                     {id: 7, title: 'Ferdinand'}
+                     {id: 5, title: 'Andrey'}
                   ]
                }
             }
@@ -70,7 +69,7 @@ define('Controls-demo/EngineBrowser/Browser', [
       {
          id: 'id',
          resetValue: 0,
-         value: 5,
+         value: 4,
          properties: {
             keyProperty: 'id',
             displayProperty: 'title',
@@ -82,8 +81,7 @@ define('Controls-demo/EngineBrowser/Browser', [
                      {id: 1, title: '1'},
                      {id: 2, title: '2'},
                      {id: 3, title: '3'},
-                     {id: 4, title: '4'},
-                     {id: 5, title: 'Очень-очень длинное значение'}
+                     {id: 4, title: '4'}
                   ]
                }
             }
