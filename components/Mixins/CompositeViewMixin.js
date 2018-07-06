@@ -92,10 +92,10 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
 
          switch (cfg.viewMode) {
             case 'tile':
-               parentOptions.itemTpl = tileTpl;
+               parentOptions.itemTpl = TemplateUtil.prepareTemplate(tileTpl);
                break;
             case 'list':
-               parentOptions.itemTpl = listTpl;
+               parentOptions.itemTpl = TemplateUtil.prepareTemplate(listTpl);
                break;
          }
       }
