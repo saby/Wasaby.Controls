@@ -200,7 +200,7 @@ define('Controls/Popup/Compatible/Layer', [
          coreControl.prototype.getId = controlCompatible.getId;
          
          loadDeferred.callback(result);
-         moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!SBIS3.ENGINE/Controls/MiniCard']).addErrback(function (err) {
+         moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!SBIS3.ENGINE/Controls/MiniCard']).addErrback(function(err) {
             IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', err);
          });
       }, function(e) {
@@ -211,7 +211,7 @@ define('Controls/Popup/Compatible/Layer', [
          coreControl.prototype.getId = controlCompatible.getId;
 
          loadDeferred.callback(result);
-         moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!SBIS3.ENGINE/Controls/MiniCard']).addErrback(function (err) {
+         moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!SBIS3.ENGINE/Controls/MiniCard']).addErrback(function(err) {
             IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', err);
          });
       });
@@ -275,7 +275,7 @@ define('Controls/Popup/Compatible/Layer', [
                finishLoad(loadDeferred, result);
             }, function(e) {
                IoC.resolve('ILogger').error('Layer', 'Can\'t load data providers', e);
-               loadDepsDef.addCallback(function () {
+               loadDepsDef.addCallback(function() {
                   finishLoad(loadDeferred, result);
                });
             });
