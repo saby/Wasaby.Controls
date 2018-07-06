@@ -175,7 +175,7 @@ function(cMerge,
                handlers: cfg.handlers,
                border: false
             },
-            mode: (cfg._type === 'stack' || cfg._type === 'sticky') ? 'floatArea' : 'dialog'
+            mode: (cfg._type === 'stack' || cfg._type === 'sticky' || cfg.target) ? 'floatArea' : 'dialog'
          });
          if (cfg.hasOwnProperty('closeByExternalClick')) {
             cfg.autoHide = cfg.closeByExternalClick;
@@ -214,21 +214,28 @@ function(cMerge,
             cfg.minWidth = minWidth ? parseInt(minWidth, 10) : null;
          }
          if (!cfg.maxWidth) {
-            cfg.maxWidth = parseInt(cfg.width || dimensions.maxWidth || templateOptions.maxWidth, 10) || null;
+            cfg.maxWidth = parseInt(cfg.width || dimensions.maxWidth || templateOptions.maxWidth, 10) || undefined;
          }
 
          cfg.minWidth = cfg.minWidth || cfg.maxWidth;
          cfg.maxWidth = cfg.maxWidth || cfg.minWidth;
 
          if (!cfg.minHeight) {
-            cfg.minHeight = dimensions.minHeight ? parseInt(dimensions.minHeight, 10) : null;
+            cfg.minHeight = dimensions.minHeight ? parseInt(dimensions.minHeight, 10) : undefined;
          }
          if (!cfg.maxHeight) {
-            cfg.maxHeight = dimensions.maxHeight ? parseInt(dimensions.maxHeight, 10) : null;
+            cfg.maxHeight = dimensions.maxHeight ? parseInt(dimensions.maxHeight, 10) : undefined;
          }
 
          cfg.minHeight = cfg.minHeight || cfg.maxHeight;
          cfg.maxHeight = cfg.maxHeight || cfg.minHeight;
+
+         if (!cfg.minHeight) { //нет размеров - строимся по контенту
+            cfg.autoHeight = true;
+         }
+         if (!cfg.minWidth) { //нет размеров - строимся по контенту
+            cfg.autoWidth = true;
+         }
       },
 
       _getCaption: function(cfg, templateClass) {
