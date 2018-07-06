@@ -5,7 +5,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
    [
       "Core/UserConfig",
       "Core/core-clone",
-      "Core/core-merge",
       "Core/Context",
       "Core/Indicator",
       "Core/CommandDispatcher",
@@ -34,7 +33,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
    ], function (
       UserConfig,
       cClone,
-      cMerge,
       cContext,
       cIndicator,
       CommandDispatcher,
@@ -215,18 +213,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      inline: true,
                      relative_urls: false,
                      convert_urls: false,
-                     formats: cMerge({
-                        bold: [
-                           {inline:'span', styles:{fontWeight:'bold'}},
-                           {inline: 'strong', remove:'all'},
-                           {inline:'b', remove:'all'}
-                        ],
-                        italic: [
-                           {inline:'span', styles:{fontStyle:'italic'}},
-                           {inline:'em', remove:'all'},
-                           {inline:'i', remove:'all'}
-                        ]
-                     }, constants.styles),
+                     formats: constants.styles,
                      paste_webkit_styles: 'color font-size font-weight font-style font-family text-align text-decoration width height max-width line-height padding padding-left padding-right padding-top padding-bottom background background-color',
                      paste_retain_style_properties: 'color font-size font-weight font-style font-family text-align text-decoration width height max-width line-height padding padding-left padding-right padding-top padding-bottom background background-color',
                      paste_as_text: true,
@@ -2572,6 +2559,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   if (needStop) {
                      evt.preventDefault();
                      evt.stopPropagation();
+                     //TODO: Обдумать this._container[0].scrollIntoView(evt.alignToTop);//^^^
                   }
                }.bind(this));
             },
