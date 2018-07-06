@@ -1,5 +1,6 @@
 <html attr:lang="ru" attr:xml:lang="ru" attr:xmlns="http://www.w3.org/1999/xhtml" attr:key="_" attr:id="root"
-      attr:component="Controls/Application">
+      attr:component="Controls/Application"
+      attr:class="{{ stopEvents ? 'pre-load' : '' }}">
 <Controls.Application._Head
    wsRoot="{{ wsRoot }}"
    resourceRoot="{{ resourceRoot }}"
@@ -39,6 +40,11 @@
                                     <ws:partial template="{{  _options.content }}" scope="{{ templateConfig }}"/>
                                  </Controls.Application._Wait>
                               </ws:if>
+							  <ws:else>
+                                 <Controls.Application._Wait content="">
+                                 </Controls.Application._Wait>
+                              </ws:else>
+
                               <ws:if data="{{ content.dragAvatarTemplate }}">
                                  <ws:partial template="{{content.dragAvatarTemplate}}" scope="{{content.dragAvatarOptions}}"></ws:partial>
                               </ws:if>
@@ -76,7 +82,7 @@
                                                 _options="{{_options}}"/>
                                  </div>
                               </ws:else>
-                              <Controls.TimeTester.TimeTester resourceRoot="{{ resourceRoot }}" />
+                              <Core.TimeTester resourceRoot="{{ resourceRoot }}" />
                               </body>
                            </Controls.DragNDrop.Container>
                         </Controls.Application.TouchDetector>

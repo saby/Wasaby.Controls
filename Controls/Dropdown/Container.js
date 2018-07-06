@@ -65,7 +65,6 @@ define('Controls/Dropdown/Container',
        * @cfg {Object} Menu style menuStyle
        * @variant defaultHead The head with icon and caption
        * @variant duplicateHead The icon set under first item
-       * @variant cross Menu have cross in left top corner
        */
 
       /**
@@ -184,7 +183,9 @@ define('Controls/Dropdown/Container',
                      width: self._options.width
                   },
                   target: self._container,
-                  corner: self._options.corner
+                  corner: self._options.corner,
+                  horizontalAlign: self._options.horizontalAlign,
+                  verticalAlign: self._options.verticalAlign
                };
                self._children.DropdownOpener.open(config, self);
             }

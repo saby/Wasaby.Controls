@@ -14,6 +14,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
       'SBIS3.CONTROLS/CompoundControl',
       'SBIS3.CONTROLS/Utils/ImportExport/RemoteCall',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
+      'SBIS3.CONTROLS/ImportCustomizer/Utils/ObjectSelectByNames',
       'WS.Data/Collection/RecordSet',
       'WS.Data/Type/descriptor',
       'tmpl!SBIS3.CONTROLS/ImportCustomizer/Area',
@@ -24,7 +25,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
       'SBIS3.CONTROLS/ScrollContainer'
    ],
 
-   function (CommandDispatcher, cMerge, Deferred, /*IoC,*/ CompoundControl, RemoteCall, InformationPopupManager, RecordSet, DataType, tmpl) {
+   function (CommandDispatcher, cMerge, Deferred, /*IoC,*/ CompoundControl, RemoteCall, InformationPopupManager, objectSelectByNames, RecordSet, DataType, tmpl) {
       'use strict';
 
       /**
@@ -198,6 +199,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             }
             return parsers;
          },
+         providerArgs: _typeIfDefined.bind(null, 'object'),
          fields: function (fields) {
             // Должна быть опция "fields"
             if (!fields) {
@@ -296,9 +298,9 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          parsers: {
             // TODO: Обдумать добавление поля applicable:Array<string> для указания типов данных (Excel или DBF)
             // TODO: Обдумать удаление поля order
-            'InColumsHierarchyParser': {title:rk('в отдельной колонке', 'НастройщикИмпорта'), order:10},
-            'InSeparateLineHierarchyParser': {title:rk('в отдельной строке', 'НастройщикИмпорта'), component:'SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View', order:20},
-            'InLineGroupsHierarchyParser': {title:rk('в группировке строк', 'НастройщикИмпорта'), order:30}
+            'InColumnsHierarchyParser': {title:rk('в отдельной колонке', 'НастройщикИмпорта'), order:10},
+            'InRowsHierarchyParser': {title:rk('в отдельной строке', 'НастройщикИмпорта'), component:'SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View', order:20},
+            'OutlineHierarchyParser': {title:rk('в группировке строк', 'НастройщикИмпорта'), order:30}
          },
          validators: [
             {
@@ -327,6 +329,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          'baseParamsComponent',
          'baseParams',
          'parsers',
+         'providerArgs',
          'fields',
          'sheets',
          'sheetIndex',
@@ -399,6 +402,10 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                 * @cfg {object<ImportParser>} Список всех доступных провайдеров парсинга импортируемых данных
                 */
                parsers: null,
+               /**
+                * @cfg {object} Опции провайдера парсинга (отдельно по каждому парсеру). Состав опций может быть различным для каждого {@link parsers парсера} (опционально)
+                */
+               providerArgs: null,
                /**
                 * @cfg {ImportTargetFields|Core/Deferred<ImportTargetFields>|ImportRemoteCall} Полный набор полей, к которым должны быть привязаны импортируемые данные
                 */
@@ -520,11 +527,11 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             // Опции под-компонента "sheet"
             if (isUsedSubview.sheet) {
                var sheetTitles = hasSheets ? sheets.map(function (v) {return v.name; }) : [];
-               scopes.sheet = cMerge({sheetTitles:sheetTitles}, _lodashPick(options, ['dataType', 'allSheetsTitle', 'sheetIndex']));
+               scopes.sheet = cMerge({sheetTitles:sheetTitles}, objectSelectByNames(options, ['dataType', 'allSheetsTitle', 'sheetIndex']));
             }
             // Опции под-компонента "baseParams"
             if (isUsedSubview.baseParams) {
-               scopes.baseParams = cMerge(options.baseParams ? cMerge({}, options.baseParams) : {}, _lodashPick(options, ['dataType', 'fields']));
+               scopes.baseParams = cMerge(options.baseParams ? cMerge({}, options.baseParams) : {}, objectSelectByNames(options, ['dataType', 'fields']));
             }
             // Опции под-компонента "provider"
             if (isUsedSubview.provider) {
@@ -538,11 +545,11 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             // Опции под-компонента "columnBinding"
             if (isUsedSubview.columnBinding) {
                var sampleRows = hasSheets ? sheet.sampleRows : [];
-               scopes.columnBinding = cMerge({rows:sampleRows, skippedRows:skippedRows}, _lodashPick(options, ['dataType', 'fields', {menuTitle:'columnBindingMenuTitle', headTitle:'columnBindingHeadTitle', mapping:'columnBindingMapping'}]));
+               scopes.columnBinding = cMerge({rows:sampleRows, skippedRows:skippedRows}, objectSelectByNames(options, ['dataType', 'fields', {menuTitle:'columnBindingMenuTitle', headTitle:'columnBindingHeadTitle', mapping:'columnBindingMapping'}]));
             }
             // Опции под-компонента "mapping"
             if (isUsedSubview.mapper) {
-               scopes.mapper = cMerge(options.mapping || {}, _lodashPick(options, ['dataType', 'fields', {fieldColumnTitle:'mapperFieldColumnTitle', variantColumnTitle:'mapperVariantColumnTitle'}]));
+               scopes.mapper = cMerge(options.mapping || {}, objectSelectByNames(options, ['dataType', 'fields', {fieldColumnTitle:'mapperFieldColumnTitle', variantColumnTitle:'mapperVariantColumnTitle'}]));
             }
             options._scopes = scopes;
          },
@@ -661,7 +668,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                         results[i + 1] = {
                            provider: {parser:parserName, skippedRows:skippedRows, separator:sheet.separator || ''},
                            providerArgs: this._getProviderArgsOptions(options, parserName, false),
-                           columnBinding: {mapping:{}, skippedRows:skippedRows}
+                           columnBinding: {mapping:options.columnBindingMapping || {}, skippedRows:skippedRows}
                         };
                      }
                      results[''] = cMerge({}, results[1]);
@@ -880,10 +887,11 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             if (err instanceof Error) {
                throw err;
             }
-            this._options.fields = fields;
+            var options = this._options;
+            options.fields = fields;
             var views = this._views;
             //this._setSubviewValues('baseParams', {fields:fields});
-            this._setSubviewValues('columnBinding', {fields:fields});
+            this._setSubviewValues('columnBinding', {fields:fields, mapping:options.columnBindingMapping || {}});
             this._setSubviewValues('mapper', {fields:fields});
          },
 
@@ -1102,7 +1110,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             if (provider.separator) {
                item.separator = provider.separator;
             }
-            item.parserConfig = providerArgs ? ['hierarchyField', 'columns'].reduce(function (r, v) { r[v] = providerArgs[v]; return r; }, {}) : {};
+            item.parserConfig = providerArgs ? ['hierarchyName', 'hierarchyField', 'columns'].reduce(function (r, v) { r[v] = providerArgs[v]; return r; }, {}) : {};
             if (sheet) {
                item.name = sheet.name;
                item.columnsCount = sheet.sampleRows[0].length;
@@ -1152,8 +1160,18 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                   dataType: options.dataType,
                   columnCount:sheets && sheets.length ? sheets[0 < sheetIndex ? sheetIndex : 0].sampleRows[0].length : 0
                };
-               var args = parser.args;
-               return args ? cMerge(values, args) : values;
+               var parserArgs = parser.args;
+               if (parserArgs) {
+                  values = cMerge(values, parserArgs);
+               }
+               var providerArgs = options.providerArgs;
+               if (providerArgs) {
+                  var args = providerArgs[parserName];
+                  if (args) {
+                     values = cMerge(values, args);
+                  }
+               }
+               return values;
             }
          },
 
@@ -1270,37 +1288,6 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
       var _getChildComponent = function (self, name) {
          if (self.hasChildControlByName(name)) {
             return self.getChildControlByName(name);
-         }
-      };
-
-      /**
-       * Выбрать из объекта только указанные в списке свойства. Является аналогом Lodash pick, но в отличие от него принимает в качестве элемтов массива properties не только строки, но также и объекты вида имя-значение, где имя будет использовано в качестве имени свойства в результате, а значение - в качестве имени свойства в исходном объекте-источнике
-       *
-       * @private
-       * @param {object} source Объект-источник
-       * @param {Array<string|object>} properties Список выбираемых свойства
-       * @return {object}
-       */
-      var _lodashPick = function (source, properties) {
-         if (source && typeof source === 'object' && Array.isArray(properties) && properties.length) {
-            return properties.reduce(function (result, what) {
-               if (what) {
-                  var type = typeof what;
-                  if (type === 'object') {
-                     for (var to in what) {
-                        var from = what[to];
-                        if (from && typeof from === 'string') {
-                           result[to] = source[from];
-                        }
-                     }
-                  }
-                  else
-                  if (type === 'string') {
-                     result[what] = source[what];
-                  }
-               }
-               return result;
-            }, {});
          }
       };
 

@@ -1,6 +1,6 @@
 /// <amd-module name="File/Attach/Container/Getter" />
 // dependency for types
-import IContainer = require("File/Attach/Container/IContainer");
+import {IContainer} from 'File/Attach/IContainer';
 import {IResourceGetter} from 'File/IResourceGetter';
 // real dependency
 import Deferred = require("Core/Deferred");
@@ -17,7 +17,7 @@ class GetterContainer implements IContainer<IResourceGetter> {
      * Экземпляры IResourceGetter
      * @private
      */
-    private _getters: HashMap<IResourceGetter>;
+    private readonly _getters: HashMap<IResourceGetter>;
 
     constructor() {
         this._getters = Object.create(null);

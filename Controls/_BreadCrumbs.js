@@ -1,12 +1,12 @@
 define('Controls/_BreadCrumbs', [
    'Core/Control',
    'WS.Data/Collection/RecordSet',
-   'tmpl!Controls/_BreadCrumbs/_BreadCrumbs',
-   'tmpl!Controls/_BreadCrumbs/resources/itemTemplate',
-   'tmpl!Controls/_BreadCrumbs/resources/itemsTemplate',
+   'tmpl!Controls/BreadCrumbs/_BreadCrumbs',
+   'tmpl!Controls/BreadCrumbs/resources/itemTemplate',
+   'tmpl!Controls/BreadCrumbs/resources/itemsTemplate',
    'tmpl!Controls/BreadCrumbsController/resources/menuItemTemplate',
    'tmpl!Controls/BreadCrumbsController/resources/menuContentTemplate',
-   'css!Controls/_BreadCrumbs/BreadCrumbs'
+   'css!Controls/BreadCrumbs/BreadCrumbs'
 ], function(
    Control,
    RecordSet,

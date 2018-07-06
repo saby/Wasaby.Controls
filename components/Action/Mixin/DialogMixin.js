@@ -131,16 +131,10 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
 
       _createComponent: function(config, meta) {
          var componentName = this._getComponentName(meta),
-            self = this,
-            resetWidth;
+            self = this;
          
          if (this._isNeedToRedrawDialog()) {
-            this._resetComponentOptions();
-
-            //Если поменялся шаблон панели, то надо обновить размеры.
-            resetWidth = this._dialog._options.template !== config.template;
-            cMerge(this._dialog._options, config);
-            this._dialog.reload(true, resetWidth);
+            this._reloadTemplate(config);
          } else {
             this._isExecuting = true;
             requirejs([componentName], function(Component) {
@@ -148,11 +142,11 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                   var deps = [];
                   if (isNewEnvironment()) {
                      deps = ['Controls/Popup/Opener/BaseOpener', 'Controls/Popup/Compatible/Layer'];
-                     if (meta.mode === 'floatArea' && config.isStack === true) {
+                     if (meta.mode !== 'dialog' && config.isStack === true) {
                         deps.push('Controls/Popup/Opener/Stack/StackController');
                         config._type = 'stack';
                         config.className = (config.className || '') + ' controls-Stack';
-                     } else if (meta.mode === 'floatArea' && config.isStack === false) {
+                     } else if (meta.mode !== 'dialog' && config.isStack === false) {
                         deps.push('Controls/Popup/Opener/Sticky/StickyController');
                         config._type = 'sticky';
                      } else {
@@ -187,6 +181,24 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                }
             }.bind(this));
 
+         }
+      },
+
+      _reloadTemplate: function(config) {
+         var self = this;
+         this._resetComponentOptions();
+
+         if (this._dialog._setCompoundAreaOptions) {
+            requirejs(['Controls/Popup/Compatible/BaseOpener', config.template], function(compatibleOpener, Template) {
+               compatibleOpener._prepareConfigForOldTemplate(config, Template);
+               self._dialog._setCompoundAreaOptions(config.templateOptions);
+               self._dialog.reload();
+            });
+         }
+         else {
+            var resetWidth = this._dialog._options.template !== config.template;
+            cMerge(this._dialog._options, config);
+            this._dialog.reload(true, resetWidth);
          }
       },
 

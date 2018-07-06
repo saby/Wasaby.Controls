@@ -73,7 +73,7 @@ define('SBIS3.CONTROLS/ControlHierarchyManager', [], function () {
          var control = $(target).wsControl();
          if (control){
             var parent = control.getOpener instanceof Function ? control.getOpener() || control.getParent() : control.getParent(),
-               parentContainer = parent ? parent.getContainer() : null;
+               parentContainer = parent && parent.getContainer ? parent.getContainer() : null;
             if (parentContainer && this._findContainer(component, parentContainer)){
                return true;
             } else {

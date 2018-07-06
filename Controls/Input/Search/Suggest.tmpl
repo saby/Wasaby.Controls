@@ -16,6 +16,8 @@
             tagStyle="{{_options.tagStyle}}"
             placeholder="{{_options.placeholder}}"
             style="{{_options.style}}"
+            on:searchClick="_searchClick()"
+            on:resetClick="_resetClick()"
             on:valueChanged="_changeValueHandler()">
     </Controls.Input.Search>
 </Controls.Container.Suggest.Layout>

@@ -14,6 +14,7 @@
   height: 100%;
   box-sizing: border-box;
   background-color: transparent;
+  z-index: 99;
 }
 .controls-itemActionsV_swipe {
   align-items:center;
@@ -29,7 +30,6 @@
   background-image: -ms-linear-gradient(left, transparent,  @backgroun-color_itemActions_swipe_shadow @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe 100%);
   background-image: -o-linear-gradient(left, transparent,  @backgroun-color_itemActions_swipe_shadow @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe 100%);
   background-image: linear-gradient(to right, transparent,  @backgroun-color_itemActions_swipe_shadow @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe 100%);
-  z-index: 99;
 }
 .controls-itemActionsV__action_padding_swipe {
   padding: @padding_itemActions_action_swipe;
@@ -97,7 +97,7 @@
 }
 
 .controls-itemActionsV_column_full {
-  justify-content: space-around;
+  justify-content: space-evenly;
 }
 
 .controls-itemActionsV__action_title_lonely {

@@ -309,12 +309,11 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
       _setHoveredStyles: function(item) {
          if (!item && this._options.hoverMode === HOVER_MODE.FIXED) {
             this._resetFixedItem();
-         } else if (item && (!item.hasClass('controls-CompositeView__hoverStylesInit') || this._options.hoverMode === HOVER_MODE.FIXED)) {
+         } else if (item) {
             this._calculateHoveredStyles(item);
             this._hasItemsActions().addCallback(function(hasItemsActions) {
                item.toggleClass('controls-CompositeView__item-withoutItemsAction', !hasItemsActions);
             });
-            item.addClass('controls-CompositeView__hoverStylesInit');
          }
       },
 

@@ -1,5 +1,6 @@
 <div class="controls-DropdownList__popup
-            controls-DropdownList__popup-shadow-{{_options.typeShadow}}"
+            controls-DropdownList__popup-shadow-{{_options.typeShadow}}
+            {{_options.dropdownClassName}}"
             style="min-width: {{_options.width ? _options.width + 'px'}}">
    <ws:if data="{{_options.showHeader}}">
       <ws:partial template="{{_options.headTemplate ? _options.headTemplate : _defaultHeadTemplate}}"
@@ -14,7 +15,7 @@
                      listModel="{{_listModel}}"
                      itemTemplate="{{_options.itemTemplate}}"
                      defaultItemTemplate="{{_defaultItemTemplate}}"
-                     hierarchyPadding="{{(_options.headConfig.menuStyle === 'cross') ? true : false}}"
+                     showClose="{{_options.showClose}}"
                      parentProperty="{{_options.parentProperty}}"
                      iconPadding="{{_options.iconPadding}}"
                      resultHandler="{{resultHandler}}"></ws:partial>
@@ -25,6 +26,9 @@
          </ws:if>
       </div>
    </Controls.Container.Scroll>
+   <ws:if data="{{_options.showClose}}">
+      <Controls.Button.Close class="controls-DropdownList-cross" style="light" on:click="_closeClick()"/>
+   </ws:if>
    <div if="{{_options.footerTemplate}}" class="controls-DropdownList__footer" on:click="_footerClick()">
       <ws:partial template="{{_options.footerTemplate}}"/>
    </div>

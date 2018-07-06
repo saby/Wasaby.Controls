@@ -147,7 +147,7 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          assert.equal(Suggest._private.calcOrient(self, {innerHeight: 300}), '-up');
          
          self._orient = null;
-         self._options.style = 'overInput';
+         self._options.suggestStyle = 'overInput';
          assert.equal(Suggest._private.calcOrient(self, {innerHeight: 600}), '-down');
          assert.equal(Suggest._private.calcOrient(self, {innerHeight: 300}), '-down');
       });
@@ -169,6 +169,9 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          suggestComponent._inputActivated();
    
          suggestComponent._dependenciesDeferred.addCallback(function() {
+            assert.isTrue(suggestState);
+            
+            suggestComponent._changeValueHandler(null, '');
             assert.isTrue(suggestState);
             done();
          });
@@ -229,6 +232,14 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          
          assert.isTrue(suggestActivated);
          assert.equal(suggestComponent._filter.currentTab, 'test');
+      });
+   
+      it('Suggest::_beforeUpdate', function() {
+         var suggestComponent = new Suggest();
+         suggestComponent._orient = 'down';
+   
+         suggestComponent._beforeUpdate({suggestState: false});
+         assert.equal(suggestComponent._orient, null);
       });
       
    });

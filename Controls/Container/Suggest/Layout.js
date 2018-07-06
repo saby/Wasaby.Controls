@@ -53,7 +53,7 @@ define('Controls/Container/Suggest/Layout',
                needToRevert = suggestHeight + containerRect.bottom > (win || window).innerHeight,
                newOrient;
             
-            if (needToRevert && self._options.style !== 'overInput') {
+            if (needToRevert && self._options.suggestStyle !== 'overInput') {
                newOrient = '-up';
             } else {
                if (self._orient === '-up') {
@@ -106,7 +106,8 @@ define('Controls/Container/Suggest/Layout',
             if (_private.shouldSearch(self, self._searchValue)) {
                _private.updateFilter(self, self._searchValue, self._tabsSelectedKey);
                _private.open(self);
-            } else {
+            } else if (!self._options.autoDropDown) {
+               //autoDropDown - close only on Esc key or deactivate
                _private.close(self);
             }
          },
@@ -167,6 +168,12 @@ define('Controls/Container/Suggest/Layout',
             this._searchStart = null;
             this._searchEnd = null;
             this._select = null;
+         },
+         
+         _beforeUpdate: function(newOptions) {
+            if (!newOptions.suggestState) {
+               this._orient = null;
+            }
          },
    
          _afterUpdate: function() {

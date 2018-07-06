@@ -50,6 +50,10 @@
   padding-right: @spacing_DropdownList_arrowSubMenu;
 }
 
+.controls-DropdownList__item-right_close-padding {
+  padding-right: @spacing_DropdownList_cross;
+}
+
 .controls-DropdownList__content {
    font-size: @large-text-size;
 }
@@ -84,6 +88,13 @@
 
 .controls-DropdownList__margin {
    margin-top: @margin-top_DropdownList;
+   margin-left: @margin-left_DropdownList;
+}
+
+//15 шрифт имеет нечетную высоту, из-за этого текст располагается не по центру
+// ff располагает текст выше, а Chrome ниже
+.ws-is-firefox .controls-DropdownList__margin {
+   margin-top: @margin-top_DropdownList-ff;
    margin-left: @margin-left_DropdownList;
 }
 
