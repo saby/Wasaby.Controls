@@ -153,10 +153,6 @@ define('Controls/Dropdown/Container',
             }
          },
 
-         _afterMount: function(options) {
-            console.log(this._options.width);
-         },
-
          _beforeUpdate: function(newOptions) {
             if (newOptions.selectedKeys && !isEqual(newOptions.selectedKeys, this._options.selectedKeys)) {
                _private.updateSelectedItems(this, newOptions.selectedKeys);

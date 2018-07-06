@@ -54,7 +54,6 @@ define('Controls/Input/Dropdown',
             this._notify('selectedKeysChanged', [_private.getSelectedKeys(items, this._options.keyProperty)]);
          },
 
-
          _setText: function(items) {
             this._isEmptyItem = getPropValue(items[0], this._options.keyProperty) === null;
             if (this._isEmptyItem) {
