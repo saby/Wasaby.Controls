@@ -6,12 +6,9 @@ define('Controls/Dropdown/resources/template/DropdownList',
       'tmpl!Controls/Dropdown/resources/template/itemTemplate',
       'tmpl!Controls/Dropdown/resources/template/defaultHeadTemplate',
       'tmpl!Controls/Dropdown/resources/template/defaultContentHeadTemplate',
-      'Controls/Container/Scroll/Context',
-
       'css!Controls/Dropdown/resources/template/DropdownList'
    ],
-   function(Control, MenuItemsTpl, DropdownViewModel, itemTemplate, defaultHeadTemplate, defaultContentHeadTemplate, ScrollData) {
-      //TODO: Убрать определение контекста для Scroll, когда будет готова поддержка контекста для старого окружения.
+   function(Control, MenuItemsTpl, DropdownViewModel, itemTemplate, defaultHeadTemplate, defaultContentHeadTemplate) {
 
       /**
        * Действие открытия прилипающего окна
@@ -74,8 +71,6 @@ define('Controls/Dropdown/resources/template/DropdownList',
             Menu.superclass.constructor.apply(this, arguments);
             this.resultHandler = this.resultHandler.bind(this);
             this._mousemoveHandler = this._mousemoveHandler.bind(this);
-
-            this._scrollData = new ScrollData({pagingVisible: false});
          },
          _beforeMount: function(newOptions) {
             if (newOptions.items) {
@@ -170,11 +165,6 @@ define('Controls/Dropdown/resources/template/DropdownList',
             this._expanded = !this._expanded;
             this._listModel.toggleExpanded(this._expanded);
             this._forceUpdate();
-         },
-         _getChildContext: function() {
-            return {
-               ScrollData: this._scrollData
-            };
          }
       });
 
