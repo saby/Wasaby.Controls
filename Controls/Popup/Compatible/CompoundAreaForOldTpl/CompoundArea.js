@@ -475,7 +475,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
          once: function(eventName, handler) {
             this.subscribe(eventName, function() {
-               handler();
+               handler.apply(this, arguments);
                this.unsubscribe(eventName, handler);
             }.bind(this));
          },
