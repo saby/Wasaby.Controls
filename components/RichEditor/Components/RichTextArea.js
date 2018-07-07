@@ -1709,6 +1709,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                codeDialog.setText(editor.plugins.codesample.getCurrentCode(editor) || '');
                codeDialog.show();
             },
+            /**
+             * Метод возвращает объект вида { id: inEditor }
+             * id - id файла на сбис-диске;
+             * inEditor - на момент вызова метода текст редактора содержит данное изображение.
+             * Если inEditor == false, значит изображение было загружено в редактор (или редактор открыли уже с данным изображением),
+             * но на момент вызова метода изображение в редакторе отсутствует.
+             */
             getImages: function() {
                return this._fillImages(true);
             },
