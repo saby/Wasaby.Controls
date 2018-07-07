@@ -142,8 +142,8 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          }
       },
 
-      _onActionClick: function(event, action, itemData) {
-         aUtil.actionClick(this, event, action, itemData);
+      _onItemActionsClick: function(event, action, itemData) {
+         aUtil.itemActionsClick(this, event, action, itemData);
       },
 
       _applyEdit: function(item) {
