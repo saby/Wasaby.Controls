@@ -19,6 +19,7 @@ define('Controls/Dropdown/Container',
        * @class Controls/Dropdown/Container
        * @extends Core/Control
        * @mixes Controls/interface/ISource
+       * @mixes Controls/Input/interface/IDropdownEmptyText
        * @mixes Controls/Button/interface/ICaption
        * @mixes Controls/Button/interface/IIcon
        * @author Золотова Э.Е.
@@ -72,12 +73,6 @@ define('Controls/Dropdown/Container',
        * @cfg {Boolean} Display the header
        * @variant true The header is displayed.
        * @variant false The header is not displayed.
-       */
-
-      /**
-       * @name Controls/Dropdown/Container#emptyText
-       * @cfg {String} Add an empty item to the list.
-       * @variant true Add empty item with text 'Не выбрано'
        */
 
       /**
