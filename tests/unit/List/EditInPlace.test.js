@@ -705,6 +705,54 @@ define([
             };
             eip._onItemClick({}, newItem);
          });
+
+         it('readOnly, commitEdit', function() {
+            eip.commitEdit = function() {
+               throw new Error('commitEdit shouldn\'t be called if EditInPlace is readOnly');
+            };
+            eip.saveOptions({
+               editingConfig: {
+                  editOnClick: true
+               },
+               readOnly: true
+            });
+
+            eip._onItemClick({}, newItem, {
+               target: {
+                  closest: function() {
+                     return true;
+                  }
+               },
+               nativeEvent: {
+                  clientX: 0,
+                  clientY: 0
+               }
+            });
+         });
+
+         it('readOnly, editItem', function() {
+            eip.editItem = function() {
+               throw new Error('editItem shouldn\'t be called if EditInPlace is readOnly');
+            };
+            eip.saveOptions({
+               editingConfig: {
+                  editOnClick: true
+               },
+               readOnly: true
+            });
+
+            eip._onItemClick({}, newItem, {
+               target: {
+                  closest: function() {
+                     return false;
+                  }
+               },
+               nativeEvent: {
+                  clientX: 0,
+                  clientY: 0
+               }
+            });
+         });
       });
    });
 });
