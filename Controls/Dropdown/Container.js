@@ -19,6 +19,7 @@ define('Controls/Dropdown/Container',
        * @class Controls/Dropdown/Container
        * @extends Core/Control
        * @mixes Controls/interface/ISource
+       * @mixes Controls/Input/interface/IDropdownEmptyText
        * @mixes Controls/Button/interface/ICaption
        * @mixes Controls/Button/interface/IIcon
        * @author Золотова Э.Е.
@@ -75,12 +76,6 @@ define('Controls/Dropdown/Container',
        */
 
       /**
-       * @name Controls/Dropdown/Container#emptyText
-       * @cfg {String} Add an empty item to the list.
-       * @variant true Add empty item with text 'Не выбрано'
-       */
-
-      /**
        * @name Controls/Dropdown/Container#typeShadow
        * @cfg {String} Specifies the type of shadow around the popup.
        * @variant default Default shadow
@@ -105,6 +100,9 @@ define('Controls/Dropdown/Container',
                   instance._selectedItems.push(item);
                }
             });
+            if (instance._options.dataLoadCallback) {
+               instance._options.dataLoadCallback(instance._selectedItems);
+            }
          },
 
          onResult: function(result) {
@@ -147,12 +145,6 @@ define('Controls/Dropdown/Container',
                      return _private.loadItems(this, options.source, options.selectedKeys, options.keyProperty);
                   }
                }
-            }
-         },
-
-         _afterMount: function() {
-            if (!isEmpty(this._selectedItems)) {
-               this._notify('selectedItemsChanged', [this._selectedItems]);
             }
          },
 

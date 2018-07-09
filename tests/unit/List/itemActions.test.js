@@ -181,7 +181,7 @@ define([
          assert.equal(listViewModel._actions[1].all.length, actions.length - 2);// для item`a  с id = 2 фильтруется два экшена
       });
 
-      it('_onActionClick', function() {
+      it('_onItemActionClick', function() {
          var callBackCount = 0;
          var instance = new ItemActionsControl();
          var action = {
@@ -195,7 +195,7 @@ define([
             assert.isTrue(args[1]);
             assert.equal(args[0], action);
          };
-         instance._onActionClick({stopPropagation: function() {}}, action, {item: true});
+         instance._onItemActionsClick({stopPropagation: function() {}}, action, {item: true});
          assert.equal(callBackCount, 2);
       });
 
@@ -428,7 +428,7 @@ define([
 
    describe('Controls.List.Utils.Actions', function() {
 
-      it('actionClick menu', function() {
+      it('itemActionClick menu', function() {
          var
             callBackCount = 0,
             fakeEvent = {
@@ -451,7 +451,7 @@ define([
                   assert.equal(eventName, 'menuActionsClick');
                }
             };
-         aUtil.actionClick(instance, fakeEvent, action, itemData, false);
+         aUtil.itemActionsClick(instance, fakeEvent, action, itemData, false);
          assert.equal(callBackCount, 2);
       });
 

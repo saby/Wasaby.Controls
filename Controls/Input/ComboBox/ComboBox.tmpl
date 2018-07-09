@@ -11,6 +11,7 @@
         className="controls-ComboBox-popup"
         typeShadow="suggestionsContainer"
         close="{{_onClose}}"
+        dataLoadCallback="{{_setText}}"
         on:selectedItemsChanged="_selectedItemsChangedHandler()"
         on:mousedown="_mouseDownHandler()"
         class="controls-ComboBox">
