@@ -53,7 +53,7 @@ node('controls') {
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
             booleanParam(defaultValue: false, description: "Запуск только упавших тестов из предыдущего билда", name: 'RUN_ONLY_FAIL_TEST')
             ]),
-        pipelineTriggers([cron("H */1 * * 5-7")])
+        pipelineTriggers([cron(H */1 * * 5-7)])
     ])
 
 
