@@ -1,27 +1,11 @@
 define('Controls/TreeGrid', [
    'Controls/Grid',
    'Controls/List/TreeGrid/TreeGridViewModel',
-   'Core/core-merge',
    'Controls/List/TreeGrid/TreeGridView',
    'css!Controls/List/TreeGrid/TreeGrid',
    'Controls/List/TreeControl'
-], function(Grid, TreeGridViewModel, cMerge) {
+], function(Grid, TreeGridViewModel) {
    'use strict';
-
-   var _private = {
-      prepareModelConfig: function(cfg) {
-         return {
-            parentProperty: cfg.parentProperty,
-            nodeProperty: cfg.nodeProperty
-         };
-      },
-      prepareViewConfig: function(cfg) {
-         return {
-            parentProperty: cfg.parentProperty,
-            nodeProperty: cfg.nodeProperty
-         };
-      }
-   };
 
    /**
     * Hierarchical list with custom item template. Can load data from data source.
@@ -48,12 +32,6 @@ define('Controls/TreeGrid', [
       _viewTemplate: 'Controls/List/TreeControl',
       _getModelConstructor: function() {
          return TreeGridViewModel;
-      },
-      _prepareModelConfig: function(cfg) {
-         return cMerge(Tree.superclass._prepareModelConfig(cfg), _private.prepareModelConfig(cfg));
-      },
-      _prepareViewConfig: function(cfg) {
-         return cMerge(Tree.superclass._prepareViewConfig(cfg), _private.prepareViewConfig(cfg));
       }
    });
    return Tree;

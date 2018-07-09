@@ -315,7 +315,7 @@ define('Controls/List/Grid/GridViewModel', [
                cellClasses = 'controls-Grid__results-cell';
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
-            if (this._options.multiSelectVisibility === 'visible' || this._options.multiSelectVisibility === 'onhover' && columnIndex === 0) {
+            if ((this._options.multiSelectVisibility === 'visible' || this._options.multiSelectVisibility === 'onhover') && columnIndex === 0) {
                cellClasses += ' controls-Grid__results-cell-checkbox';
             } else {
                cellClasses += _private.getPaddingCellClasses({
@@ -391,9 +391,12 @@ define('Controls/List/Grid/GridViewModel', [
          },
 
          setMultiSelectVisibility: function(multiSelectVisibility) {
+            var
+               hasMultiSelect = multiSelectVisibility === 'visible' || multiSelectVisibility === 'onhover';
             this._model.setMultiSelectVisibility(multiSelectVisibility);
-            this._prepareHeaderColumns(this._options.header, this._options.multiSelectVisibility);
-            this._prepareResultsColumns(this._columns, this._options.multiSelectVisibility);
+            this._prepareColgroupColumns(this._columns, hasMultiSelect);
+            this._prepareHeaderColumns(this._options.header, hasMultiSelect);
+            this._prepareResultsColumns(this._columns, hasMultiSelect);
          },
 
          getItemById: function(id, keyProperty) {

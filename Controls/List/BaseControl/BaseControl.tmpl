@@ -7,7 +7,7 @@
         <ws:partial
                 template="{{ _options.content }}"
                 name="listView"
-                scope="{{_options.viewConfig}}"
+                scope="{{_options}}"
                 listModel="{{_listViewModel}}"
                 on:itemClick="_onItemClick()"
                 on:groupClick="_onGroupClick()"
@@ -24,7 +24,7 @@
         </ws:partial>
         <Controls.List.Mover ws:content="listView"
                              name="moveControl"
-                             keyProperty="{{_options.viewConfig.keyProperty}}"
+                             keyProperty="{{_options.keyProperty}}"
                              on:beforeItemsMove="_beforeItemsMove()"
                              on:afterItemsMove="_afterItemsMove()"
                              sourceController="{{_sourceController}}"

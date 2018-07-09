@@ -418,8 +418,8 @@ define('Controls/List/BaseControl', [
           TODO могут задать items как рекордсет, надо сразу обработать тогда навигацию и пэйджинг
           */
 
-         if (newOptions.viewModelConfig && newOptions.viewModelConstructor) {
-            this._listViewModel = new newOptions.viewModelConstructor(newOptions.viewModelConfig);
+         if (newOptions.viewModelConstructor) {
+            this._listViewModel = new newOptions.viewModelConstructor(newOptions);
             this._virtualScroll.setItemsCount(this._listViewModel.getCount());
             _private.initListViewModelHandler(this, this._listViewModel);
          }
@@ -460,12 +460,6 @@ define('Controls/List/BaseControl', [
          var filterChanged = !isEqualObject(newOptions.filter, this._options.filter);
          var sourceChanged = newOptions.source !== this._options.source;
 
-         if (newOptions.viewModelConfig && (newOptions.viewModelConfig !== this._options.viewModelConfig)) {
-            this._listViewModel = new newOptions.viewModelConstructor(newOptions.viewModelConfig);
-            _private.initListViewModelHandler(this, this._listViewModel);
-
-            //this._virtualScroll.setItemsCount(this._listViewModel.getCount());
-         } else
          if (newOptions.markedKey !== this._options.markedKey) {
             this._listViewModel.setMarkedKey(newOptions.markedKey);
          }
@@ -552,7 +546,7 @@ define('Controls/List/BaseControl', [
             this._notify('checkboxClick', [itemData.key, status]);
          }
          if (direction === 'right' || direction === 'left') {
-            var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.viewConfig.keyProperty);
+            var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.keyProperty);
             this._listViewModel.setMarkedKey(newKey);
          }
       },
@@ -591,7 +585,7 @@ define('Controls/List/BaseControl', [
       },
 
       _onItemClick: function(e, item) {
-         var newKey = ItemsUtil.getPropertyValue(item, this._options.viewConfig.keyProperty);
+         var newKey = ItemsUtil.getPropertyValue(item, this._options.keyProperty);
          this._listViewModel.setMarkedKey(newKey);
       },
 

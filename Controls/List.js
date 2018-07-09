@@ -13,30 +13,6 @@ define('Controls/List', [
 ) {
    'use strict';
 
-   var _private = {
-      prepareModelConfig: function(cfg) {
-         return {
-            items: cfg.items,
-            keyProperty: cfg.keyProperty,
-            displayProperty: cfg.displayProperty,
-            itemsGroup: cfg.itemsGroup,
-            markedKey: cfg.markedKey,
-            selectedKeys: cfg.selectedKeys,
-            multiSelectVisibility: cfg.multiSelectVisibility,
-            itemsReadyCallback: cfg.itemsReadyCallback
-         };
-      },
-      prepareViewConfig: function(cfg) {
-         return {
-            keyProperty: cfg.keyProperty,
-            itemTemplate: cfg.itemTemplate,
-            itemsGroup: cfg.itemsGroup,
-            displayProperty: cfg.displayProperty,
-            markedKey: cfg.markedKey
-         };
-      }
-   };
-
    /**
     * Plain list with custom item template. Can load data from data source.
     *
@@ -80,29 +56,13 @@ define('Controls/List', [
       _bottomPlaceholderHeight: 0,
 
       _viewModelConstructor: null,
-      _viewModelConfig: null,
-      _viewConfig: null,
 
-      _beforeMount: function(newOptions) {
+      _beforeMount: function() {
          this._viewModelConstructor = this._getModelConstructor();
-         this._viewModelConfig = this._prepareModelConfig(newOptions);
-         this._viewConfig = this._prepareViewConfig(newOptions);
-      },
-
-      _beforeUpdate: function(opts) {
-         console.log('123');
       },
 
       _getModelConstructor: function() {
          return ListViewModel;
-      },
-
-      _prepareModelConfig: function(cfg) {
-         return _private.prepareModelConfig(cfg);
-      },
-
-      _prepareViewConfig: function(cfg) {
-         return _private.prepareViewConfig(cfg);
       },
 
       reload: function() {
@@ -195,6 +155,5 @@ define('Controls/List', [
     dataSource: Types(ISource)
     }
     };*/
-   ListControl._private = _private;
    return ListControl;
 });

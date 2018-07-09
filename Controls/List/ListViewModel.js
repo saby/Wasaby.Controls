@@ -201,6 +201,7 @@ define('Controls/List/ListViewModel',
          setMultiSelectVisibility: function(multiSelectVisibility) {
             this._options.multiSelectVisibility = multiSelectVisibility;
             this._nextVersion();
+            this._notify('onListChange');
          },
 
          getMultiSelectVisibility: function() {
