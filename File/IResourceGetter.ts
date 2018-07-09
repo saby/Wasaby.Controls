@@ -1,3 +1,4 @@
+/// <amd-module name="File/IResourceGetter.ts" />
 import Deferred = require("Core/Deferred")
 import {IResource} from "File/IResource";
 
