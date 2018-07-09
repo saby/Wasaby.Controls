@@ -1,0 +1,67 @@
+<div>
+    <h2>Заголовки</h2>
+    <h3>Крупный загловок</h3>
+    <div>
+        <Controls.Header caption="Заголовок" readOnly="{{true}}" style="default" size="xl"/>
+        <Controls.Header caption="Заголовок" readOnly="{{true}}" style="primary" size="xl"/>
+    </div>
+    <h2>Загловок с кликом и без</h2>
+    <div>
+        <Controls.Header caption="Заголовок" readOnly="{{false}}" style="default" size="l"/>
+        <Controls.Header caption="Заголовок" readOnly="{{false}}" style="primary" size="l"/>
+        <br/>
+        <Controls.Header caption="Заголовок" readOnly="{{false}}" style="default" size="m"/>
+        <Controls.Header caption="Заголовок" readOnly="{{false}}" style="primary" size="m"/>
+        <br/>
+        <Controls.Header caption="Заголовок" readOnly="{{false}}" style="default" size="s"/>
+        <Controls.Header caption="Заголовок" readOnly="{{false}}" style="primary" size="s"/>
+    </div>
+    <h2>Заголовки со счетчиками</h2>
+    <div>
+        <div attr:class="Header_Counter__wrapper">
+            <Controls.Header caption="test header" style="default" size="l"/>
+            <Controls.Header.Counter attr:class="counter" value="{{12}}" style="primary" size="l"/>
+        </div>
+        <div attr:class="Header_Counter__wrapper">
+            <Controls.Header caption="test header" style="default" size="m"/>
+            <Controls.Header.Counter attr:class="counter" value="{{12}}" style="disabled" size="m"/>
+        </div>
+        <div attr:class="Header_Counter__wrapper">
+            <Controls.Header caption="test header" style="primary" size="s"/>
+            <Controls.Header.Counter attr:class="counter" value="{{12}}" style="default" size="s"/>
+        </div>
+    </div>
+    <h2>Разделители</h2>
+    <h3>Разделители-заголовки со счетчиком и без. Счетчик опционально</h3>
+    <div>
+        <div attr:class="Header_Counter__wrapper">
+            <Controls.Header caption="test header" style="default" size="l"/>
+            <Controls.Header.Separator/>
+        </div>
+        <div attr:class="Header_Counter__wrapper">
+            <Controls.Header caption="test header" style="primary" size="m"/>
+            <Controls.Header.Separator/>
+        </div>
+        <div attr:class="Header_Counter__wrapper">
+            <Controls.Header caption="test header" style="default" size="l"/>
+            <Controls.Header.Counter attr:class="counter" value="{{12}}" style="disabled" size="l"/>
+            <Controls.Header.Separator/>
+        </div>
+        <div attr:class="Header_Counter__wrapper">
+            <Controls.Header caption="test header" style="primary" size="m"/>
+            <Controls.Header.Counter attr:class="counter" value="{{12}}" style="disabled" size="m"/>
+            <Controls.Header.Separator/>
+        </div>
+    </div>
+    <h3>Разделитель-кнопка для показа/скрытия контента</h3>
+    <div>
+        <Controls.Button.ButtonSeparator on:click="clickIcon()" bold="{{true}}" style="Accent" iconValue="{{_iconValue}}"/>
+        <Controls.Button.ButtonSeparator on:click="clickIcon()" bold="{{false}}" style="Accent" iconValue="{{_iconValue}}"/>
+        <br/>
+        <Controls.Button.ButtonSeparator on:click="clickIcon()" bold="{{true}}" style="Main" iconValue="{{_iconValue}}"/>
+        <Controls.Button.ButtonSeparator on:click="clickIcon()" bold="{{false}}" style="Main" iconValue="{{_iconValue}}"/>
+        <br/>
+        <Controls.Button.ButtonSeparator on:click="clickIcon()" bold="{{true}}" style="Additional" iconValue="{{_iconValue}}"/>
+        <Controls.Button.ButtonSeparator on:click="clickIcon()" bold="{{false}}" style="Additional" iconValue="{{_iconValue}}"/>
+    </div>
+</div>
