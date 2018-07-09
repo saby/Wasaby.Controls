@@ -1,17 +1,17 @@
 @min-width_BreadCrumbs_withOverflow: @font-size_BreadCrumbs-arrow + @min-width_BreadCrumbs-text;
 
-.controls-BreadCrumbsV {
+.controls-BreadCrumbsView {
    white-space: nowrap;
 }
 
-.controls-BreadCrumbsV__wrapper {
+.controls-BreadCrumbsView__wrapper {
    display: flex;
    align-items: baseline;
    overflow: hidden;
    width: 100%;
 }
 
-.controls-BreadCrumbsV__items {
+.controls-BreadCrumbsView__items {
    display: inline-flex;
    align-items: center;
    overflow: hidden;
@@ -19,14 +19,14 @@
    width: 100%;
 }
 
-.controls-BreadCrumbsV__crumb {
+.controls-BreadCrumbsView__crumb {
    display: inline-flex;
    align-items: center;
    flex-shrink: 0;
    min-width: 0;
 }
 
-.controls-BreadCrumbsV__titleWrapper {
+.controls-BreadCrumbsView__titleWrapper {
    flex-shrink: 0;
    cursor: pointer;
    position: relative;
@@ -34,33 +34,33 @@
    min-width: 0;
 }
 
-.controls-BreadCrumbsV__title {
+.controls-BreadCrumbsView__title {
    .text-overflow();
    color: @color_BreadCrumbs-title;
 }
 
-.controls-BreadCrumbsV__crumb_withOverflow {
+.controls-BreadCrumbsView__crumb_withOverflow {
    flex-shrink: 1;
    min-width: @min-width_BreadCrumbs_withOverflow;
 }
 
-.controls-BreadCrumbsV__titleWrapper_withOverflow {
+.controls-BreadCrumbsView__titleWrapper_withOverflow {
    flex-shrink: 1;
    min-width: @min-width_BreadCrumbs-text;
 }
 
-.controls-BreadCrumbsV__arrow {
+.controls-BreadCrumbsView__arrow {
    .icon(@font-size_BreadCrumbs-arrow);
    cursor: pointer;
 }
 
-.controls-BreadCrumbsV__home {
+.controls-BreadCrumbsView__home {
    .icon(@font-size_BreadCrumbs-home);
    cursor: pointer;
    padding-right: @spacing_BreadCrumbs-between-home-and-crumbs;
 }
 
-.controls-BreadCrumbsV__title_min {
+.controls-BreadCrumbsView__title_min {
    //класс существует только для удобства замеров
    min-width: @min-width_BreadCrumbs-text;
 }
@@ -69,21 +69,21 @@
    max-width: @max-width_BreadCrumbs-menu;
 }
 
-.controls-BreadCrumbsV__menuItem {
+.controls-BreadCrumbsView__menuItem {
    .baseline-fix();
    display: inline-flex;
    align-items: center;
    height: @height_BreadCrumbs-menuItem;
 }
 
-.controls-BreadCrumbsV__menuTitle {
+.controls-BreadCrumbsView__menuTitle {
    .text-overflow();
    flex-shrink: 1;
    display: inline-block;
    width: 100%;
 }
 
-.controls-BreadCrumbsV__indentation {
+.controls-BreadCrumbsView__indentation {
    display: inline-flex;
    flex-shrink: 0;
    height: @height_BreadCrumbs-corner;
@@ -95,17 +95,17 @@
 }
 
 .ws-is-no-touch {
-   .controls-BreadCrumbsV__title:hover {
+   .controls-BreadCrumbsView__title:hover {
       color: @color_BreadCrumbs-title_hovered;
       text-decoration: underline;
    }
 
-   .controls-BreadCrumbsV__home:hover {
+   .controls-BreadCrumbsView__home:hover {
       color: @bread-crumb-title-hover-color;
    }
 }
 
 //Класс сделан только для удобства замеров
-.controls-BreadCrumbsV__crumbMeasurer {
+.controls-BreadCrumbsView__crumbMeasurer {
    font-family: @font-family_BreadCrumbs, "Courier New";
 }

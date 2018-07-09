@@ -1,12 +1,12 @@
-define('Controls/_BreadCrumbs', [
+define('Controls/BreadCrumbs/View', [
    'Core/Control',
    'WS.Data/Collection/RecordSet',
-   'tmpl!Controls/BreadCrumbs/_BreadCrumbs',
-   'tmpl!Controls/BreadCrumbs/resources/itemTemplate',
-   'tmpl!Controls/BreadCrumbs/resources/itemsTemplate',
-   'tmpl!Controls/BreadCrumbsController/resources/menuItemTemplate',
-   'tmpl!Controls/BreadCrumbsController/resources/menuContentTemplate',
-   'css!Controls/BreadCrumbs/BreadCrumbs'
+   'tmpl!Controls/BreadCrumbs/View/View',
+   'tmpl!Controls/BreadCrumbs/View/resources/itemTemplate',
+   'tmpl!Controls/BreadCrumbs/View/resources/itemsTemplate',
+   'tmpl!Controls/BreadCrumbs/resources/menuItemTemplate',
+   'tmpl!Controls/BreadCrumbs/resources/menuContentTemplate',
+   'css!Controls/BreadCrumbs/View/View'
 ], function(
    Control,
    RecordSet,
@@ -18,16 +18,16 @@ define('Controls/_BreadCrumbs', [
    'use strict';
 
    /**
-    * Breadcrumbs.
+    * BreadCrumbs/View.
     *
-    * @class Controls/_BreadCrumbs
+    * @class Controls/BreadCrumbs/View
     * @extends Core/Control
     * @mixes Controls/interface/IBreadCrumbs
     * @control
     * @private
     */
 
-   var BreadCrumbs = Control.extend({
+   var BreadCrumbsView = Control.extend({
       _template: template,
       _itemTemplate: itemTemplate,
       _itemsTemplate: itemsTemplate,
@@ -81,5 +81,5 @@ define('Controls/_BreadCrumbs', [
       }
    });
 
-   return BreadCrumbs;
+   return BreadCrumbsView;
 });

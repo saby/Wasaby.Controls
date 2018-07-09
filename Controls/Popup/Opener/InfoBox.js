@@ -8,14 +8,18 @@ define('Controls/Popup/Opener/InfoBox',
       'use strict';
 
       /**
-       * Класс открытия всплывающей подсказки с расширенными возможностями
+       * Класс открытия всплывающей подсказки с расширенными возможностями.
+       * 
+       * <a href="https://test-wi.sbis.ru/materials/demo-ws4-infobox">Демо-пример</a>.
+       * <u>Внимание</u>: временно демо-пример размещён на test-wi.sbis.ru.
+       * Для авторизации воспользуйтесь связкой логин/пароль как "Демо_тензор"/"Демо123".
+       * 
        * @class Controls/Popup/Opener/InfoBox
        * @extends Core/Control
        * @control
        * @public
        * @category Popup
        * @author Степин Павел Владимирович
-       * @demo Controls-demo/InfoBox/InfoBox
        */
 
       /**

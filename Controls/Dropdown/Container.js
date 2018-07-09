@@ -100,6 +100,9 @@ define('Controls/Dropdown/Container',
                   instance._selectedItems.push(item);
                }
             });
+            if (instance._options.dataLoadCallback) {
+               instance._options.dataLoadCallback(instance._selectedItems);
+            }
          },
 
          onResult: function(result) {
@@ -142,12 +145,6 @@ define('Controls/Dropdown/Container',
                      return _private.loadItems(this, options.source, options.selectedKeys, options.keyProperty);
                   }
                }
-            }
-         },
-
-         _afterMount: function() {
-            if (!isEmpty(this._selectedItems)) {
-               this._notify('selectedItemsChanged', [this._selectedItems]);
             }
          },
 

@@ -1,7 +1,7 @@
 define('Controls/Utils/BreadCrumbsUtil', [
    'Controls/List/resources/utils/ItemsUtil',
-   'tmpl!Controls/BreadCrumbs/resources/itemsTemplate',
-   'tmpl!Controls/BreadCrumbs/resources/itemTemplate',
+   'tmpl!Controls/BreadCrumbs/View/resources/itemsTemplate',
+   'tmpl!Controls/BreadCrumbs/View/resources/itemTemplate',
    'css!Controls/Utils/BreadCrumbsUtil'
 ], function(
    ItemsUtil,
@@ -63,9 +63,9 @@ define('Controls/Utils/BreadCrumbsUtil', [
                return _private.getItemData(index, items);
             })
          });
-         measurer.classList.add('controls-BreadCrumbsV__measurer');
+         measurer.classList.add('controls-BreadCrumbsView__measurer');
          document.body.appendChild(measurer);
-         [].forEach.call(measurer.getElementsByClassName('controls-BreadCrumbsV__crumb'), function(item) {
+         [].forEach.call(measurer.getElementsByClassName('controls-BreadCrumbsView__crumb'), function(item) {
             itemsSizes.push(item.clientWidth);
          });
          document.body.removeChild(measurer);
@@ -77,7 +77,7 @@ define('Controls/Utils/BreadCrumbsUtil', [
          var
             measurer = document.createElement('div'),
             width;
-         measurer.classList.add('controls-BreadCrumbsV__measurer');
+         measurer.classList.add('controls-BreadCrumbsView__measurer');
 
          if (typeof element === 'string') {
             measurer.innerHTML = element;
