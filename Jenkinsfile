@@ -22,10 +22,10 @@ node('controls') {
     gitLabConnection('git'),
     buildDiscarder(
         logRotator(
-            artifactDaysToKeepStr: '100',
-            artifactNumToKeepStr: '100',
-            daysToKeepStr: '100',
-            numToKeepStr: '100')),
+            artifactDaysToKeepStr: '3',
+            artifactNumToKeepStr: '3',
+            daysToKeepStr: '3',
+            numToKeepStr: '3')),
         parameters([
             string(
                 defaultValue: 'sdk',
@@ -53,7 +53,7 @@ node('controls') {
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
             booleanParam(defaultValue: false, description: "Запуск только упавших тестов из предыдущего билда", name: 'RUN_ONLY_FAIL_TEST')
             ]),
-        pipelineTriggers([cron(H */1 * * 5-7)])
+        pipelineTriggers([])
     ])
 
 
