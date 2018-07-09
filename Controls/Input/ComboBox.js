@@ -30,7 +30,7 @@ define('Controls/Input/ComboBox',
 
       /**
        * @name Controls/Dropdown/Container#displayProperty
-       * @cfg {String} Name of the item property that content will be displayed.
+       * @cfg {String} Name of the item property that content will be displayed. Only affects the value when selecting.
        */
 
       'use strict';
