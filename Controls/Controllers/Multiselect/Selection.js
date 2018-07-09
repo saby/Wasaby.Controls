@@ -2,15 +2,11 @@
 define('Controls/Controllers/Multiselect/Selection', [
    'Core/core-simpleExtend',
    'Core/core-clone',
-   'Controls/Utils/ArraySimpleValuesUtil',
-
-   //TODO: подгружать асинхронно
-   'Controls/Controllers/Multiselect/Strategy/Simple/Base'
+   'Controls/Utils/ArraySimpleValuesUtil'
 ], function(
    cExtend,
    cClone,
-   ArraySimpleValuesUtil,
-   BaseStrategy
+   ArraySimpleValuesUtil
 ) {
    'use strict';
 
@@ -26,9 +22,6 @@ define('Controls/Controllers/Multiselect/Selection', [
       _excludedKeys: null,
       _items: null,
 
-      //allData - все данные подгружены, можем не угадывать при расчёте count и отрисовке чекбоксов. partialData - не все данные подгружены.
-      _strategy: '',
-
       constructor: function(options) {
          this._selectedKeys = cClone(options.selectedKeys);
          this._excludedKeys = cClone(options.excludedKeys);
@@ -36,11 +29,8 @@ define('Controls/Controllers/Multiselect/Selection', [
          //TODO: нужно кидать исключение, если нет items
          this._items = cClone(options.items);
 
-         //Для плоского списка стратегии allData и partialData не различаются ничем
-         this._strategy = new BaseStrategy(options);
-
          //excluded keys имеют смысл только когда выделено все, поэтому ситуацию, когда переданы оба массива считаем ошибочной
-         if (options.excludedKeys.length && !this._strategy.isAllSelection(this._getParams())) {
+         if (options.excludedKeys.length && !this._isAllSelection(this._getParams())) {
             //TODO возможно надо кинуть здесь исключение
          }
 
@@ -51,7 +41,7 @@ define('Controls/Controllers/Multiselect/Selection', [
          this._selectedKeys = this._selectedKeys.slice();
          this._excludedKeys = this._excludedKeys.slice();
 
-         if (this._strategy.isAllSelection(this._getParams())) {
+         if (this._isAllSelection(this._getParams())) {
             ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, keys);
          } else {
             ArraySimpleValuesUtil.addSubArray(this._selectedKeys, keys);
@@ -62,7 +52,7 @@ define('Controls/Controllers/Multiselect/Selection', [
          this._selectedKeys = this._selectedKeys.slice();
          this._excludedKeys = this._excludedKeys.slice();
 
-         if (this._strategy.isAllSelection(this._getParams())) {
+         if (this._isAllSelection(this._getParams())) {
             ArraySimpleValuesUtil.addSubArray(this._excludedKeys, keys);
          } else {
             ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, keys);
@@ -82,7 +72,7 @@ define('Controls/Controllers/Multiselect/Selection', [
       toggleAll: function() {
          var swap;
 
-         if (this._strategy.isAllSelection(this._getParams())) {
+         if (this._isAllSelection(this._getParams())) {
             swap = cClone(this._excludedKeys);
             this.unselectAll();
             this.select(swap);
@@ -104,18 +94,32 @@ define('Controls/Controllers/Multiselect/Selection', [
          this._items = cClone(items);
       },
 
-      getSelectionStatus: function(key) {
-         if (this._excludedKeys.indexOf(key) === -1 && this._strategy.isAllSelection(this._getParams())) {
-            return SELECTION_STATUS.SELECTED;
-         } else if (this._selectedKeys.indexOf(key) !== -1) {
-            return SELECTION_STATUS.SELECTED;
+      getCount: function() {
+         if (this._isAllSelection({
+            selectedKeys: this._selectedKeys,
+            excludedKeys: this._excludedKeys,
+            items: this._items
+         })) {
+            return this._items.getCount() - this._excludedKeys.length;
          } else {
-            return SELECTION_STATUS.NOT_SELECTED;
+            return this._selectedKeys.length;
          }
       },
 
-      getCount: function() {
-         return this._strategy.getCount(this._selectedKeys, this._excludedKeys, this._items);
+      getSelectedKeysForRender: function() {
+         var
+            res = [],
+            self = this,
+            itemId;
+
+         this._items.forEach(function(item) {
+            itemId = item.getId();
+            if (self._selectedKeys[0] === null && self._excludedKeys.indexOf(itemId) === -1 || self._selectedKeys.indexOf(itemId) !== -1) {
+               res.push(itemId);
+            }
+         });
+
+         return res;
       },
 
       _getParams: function() {
@@ -124,6 +128,13 @@ define('Controls/Controllers/Multiselect/Selection', [
             excludedKeys: this._excludedKeys,
             items: this._items
          };
+      },
+
+      _isAllSelection: function(options) {
+         var
+            selectedKeys = options.selectedKeys;
+
+         return selectedKeys[0] === null;
       }
    });
 

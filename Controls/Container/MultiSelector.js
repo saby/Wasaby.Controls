@@ -35,27 +35,15 @@ define('Controls/Container/MultiSelector', [
          return this._multiselection.getSelection();
       },
 
-      _onCheckBoxClickHandler: function(event, key, status) {
-         if (status === true || status === null) {
-            this._multiselection.unselect([key]);
-         } else {
-            this._multiselection.select([key]);
-         }
-         this._notify('selectionChange', [this._multiselection.getSelection()]);
+      _onListSelectionChange: function(event, diff) {
+         this._multiselection.unselect(diff.removed);
+         this._multiselection.select(diff.added);
 
          this._updateSelectionContext();
       },
 
       _selectedTypeChangedHandler: function(event, typeName) {
          this._multiselection[typeName]();
-         this._notify('selectionChange', [this._multiselection.getSelection()]);
-
-         this._updateSelectionContext();
-      },
-
-      _afterItemsRemoveHandler: function(event, keys) {
-         this._multiselection.unselect(keys);
-         this._notify('selectionChange', [this._multiselection.getSelection()]);
 
          this._updateSelectionContext();
       },
@@ -66,10 +54,14 @@ define('Controls/Container/MultiSelector', [
          this._selectionContext = new SelectionContextField(
             currentSelection.selected,
             currentSelection.excluded,
+            this._multiselection.getSelectedKeysForRender(),
             this._multiselection.getCount(),
             this._multiselection
          );
 
+         if (this._options.selectionChangeHandler) {
+            this._options.selectionChangeHandler(currentSelection);
+         }
          this._forceUpdate();
       },
 
@@ -77,8 +69,7 @@ define('Controls/Container/MultiSelector', [
          this._multiselection = new Selection({
             selectedKeys: options.selectedKeys || [],
             excludedKeys: options.excludedKeys || [],
-            items: context.dataOptions.items,
-            strategy: options.strategy
+            items: context.dataOptions.items
          });
       },
 

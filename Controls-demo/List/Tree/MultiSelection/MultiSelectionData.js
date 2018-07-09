@@ -28,6 +28,11 @@ define('Controls-demo/List/Tree/MultiSelection/MultiSelectionData', function() {
                'Раздел@': false,
                'Наименование': 5
             }, {
+               'id': 8,
+               'Раздел': 1,
+               'Раздел@': true,
+               'Наименование': 'пустая папка'
+            }, {
                'id': 6,
                'Раздел': null,
                'Раздел@': true,

@@ -247,44 +247,6 @@ define([
          assert.deepEqual([], selection.excluded, 'Constructor: wrong field values');
       });
 
-      it('getSelectionStatus', function() {
-         cfg = {
-            selectedKeys: [1, 2, 3],
-            excludedKeys: [],
-            items: items
-         };
-         selectionInstance = new Selection(cfg);
-         status = selectionInstance.getSelectionStatus(1);
-         assert.equal(Selection.SELECTION_STATUS.SELECTED, status);
-
-         status = selectionInstance.getSelectionStatus(4);
-         assert.equal(Selection.SELECTION_STATUS.NOT_SELECTED, status);
-
-         cfg = {
-            selectedKeys: [],
-            excludedKeys: [],
-            items: items
-         };
-         selectionInstance = new Selection(cfg);
-         status = selectionInstance.getSelectionStatus(1);
-         assert.equal(Selection.SELECTION_STATUS.NOT_SELECTED, status);
-
-         status = selectionInstance.getSelectionStatus(4);
-         assert.equal(Selection.SELECTION_STATUS.NOT_SELECTED, status);
-
-         cfg = {
-            selectedKeys: [null],
-            excludedKeys: [1, 2, 3],
-            items: items
-         };
-         selectionInstance = new Selection(cfg);
-         status = selectionInstance.getSelectionStatus(1);
-         assert.equal(Selection.SELECTION_STATUS.NOT_SELECTED, status);
-
-         status = selectionInstance.getSelectionStatus(4);
-         assert.equal(Selection.SELECTION_STATUS.SELECTED, status);
-      });
-
       it('setItems', function() {
          cfg = {
             selectedKeys: [],

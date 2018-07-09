@@ -52,6 +52,17 @@ define('Controls/List/ListControl', [
       },
       addItem: function(options) {
          this._children.baseControl.addItem(options);
+      },
+      _onCheckBoxClick: function(e, key, status) {
+         if (status) {
+            this._notify('selectionChange', [{added: [], removed: [key]}]);
+         } else {
+            this._notify('selectionChange', [{added: [key], removed: []}]);
+         }
+      },
+
+      _onAfterItemsRemoveHandler: function(e, keys) {
+         this._notify('selectionChange', [{added: [], removed: keys}]);
       }
    });
 

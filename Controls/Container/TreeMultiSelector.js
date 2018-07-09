@@ -13,7 +13,6 @@ define('Controls/Container/TreeMultiSelector', [
             selectedKeys: options.selectedKeys || [],
             excludedKeys: options.excludedKeys || [],
             items: context.dataOptions.items,
-            strategy: options.strategy,
             idProperty: context.dataOptions.keyProperty,
             parentProperty: options.parentProperty,
             nodeProperty: options.nodeProperty

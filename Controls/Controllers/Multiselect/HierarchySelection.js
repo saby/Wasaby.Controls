@@ -2,18 +2,12 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
    'Controls/Controllers/Multiselect/Selection',
    'Core/core-clone',
    'Controls/Utils/ArraySimpleValuesUtil',
-   'WS.Data/Relation/Hierarchy',
-
-   //TODO: подгружать асинхронно
-   'Controls/Controllers/Multiselect/Strategy/Hierarchy/AllData',
-   'Controls/Controllers/Multiselect/Strategy/Hierarchy/PartialData'
+   'WS.Data/Relation/Hierarchy'
 ], function(
    Selection,
    cClone,
    ArraySimpleValuesUtil,
-   HierarchyRelation,
-   AllData,
-   PartialData
+   HierarchyRelation
 ) {
    'use strict';
 
@@ -22,6 +16,105 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
          NOT_SELECTED: false,
          SELECTED: true,
          PARTIALLY_SELECTED: null
+      },
+      _private = {
+         getAllChildren: function(hierarchyRelation, rootId, items) {
+            var children = [];
+
+            hierarchyRelation.getChildren(rootId, items).forEach(function(child) {
+               if (hierarchyRelation.isNode(child)) {
+                  ArraySimpleValuesUtil.addSubArray(children, _private.getAllChildren(hierarchyRelation, child.getId(), items));
+               }
+               ArraySimpleValuesUtil.addSubArray(children, [child]);
+            });
+
+            return children;
+         },
+
+         getChildrenIds: function(hierarchyRelation, rootId, items) {
+            return _private.getAllChildren(hierarchyRelation, rootId, items).map(function(child) {
+               return child.getId();
+            });
+         },
+
+         isParentSelected: function(hierarchyRelation, key, selectedKeys, excludedKeys, items) {
+            if (key === null) {
+               return selectedKeys[0] === null;
+            }
+
+            var
+               parent = hierarchyRelation.getParent(key, items),
+               parentSelected = false,
+               parentId;
+
+            while (parent) {
+               parentId = parent.getId();
+               if (selectedKeys.indexOf(parentId) !== -1) {
+                  parentSelected = true;
+                  break;
+               }
+               if (excludedKeys.indexOf(parentId) !== -1) {
+                  break;
+               }
+               parent = hierarchyRelation.getParent(parentId, items);
+            }
+
+            if (parent === null && selectedKeys[0] === null) {
+               parentSelected = true;
+            }
+
+            return parentSelected;
+         },
+
+         isParentExcluded: function(hierarchyRelation, key, selectedKeys, excludedKeys, items) {
+            var
+               parent = hierarchyRelation.getParent(key, items),
+               parentExcluded,
+               parentId;
+
+            while (parent) {
+               parentId = parent.getId();
+               if (selectedKeys.indexOf(parentId) !== -1) {
+                  parentExcluded = false;
+                  break;
+               }
+               if (excludedKeys.indexOf(parentId) !== -1) {
+                  parentExcluded = true;
+                  break;
+               }
+               parent = hierarchyRelation.getParent(parentId, items);
+            }
+
+            if (parent === null && selectedKeys[0] === null) {
+               parentExcluded = false;
+            }
+
+            return parentExcluded;
+         },
+
+         getSelectedChildrenCount: function(hierarchyRelation, rootId, selectedKeys, excludedKeys, items) {
+            var
+               parentSelected = selectedKeys.indexOf(rootId) !== -1 || _private.isParentSelected(hierarchyRelation, rootId, selectedKeys, excludedKeys, items),
+               childId;
+
+            return hierarchyRelation.getChildren(rootId, items).reduce(function(acc, child) {
+               childId = child.getId();
+
+               if (selectedKeys.indexOf(childId) !== -1 || parentSelected && excludedKeys.indexOf(childId) === -1) {
+                  if (hierarchyRelation.isNode(child)) {
+                     return acc + 1 + _private.getSelectedChildrenCount(hierarchyRelation, childId, selectedKeys, excludedKeys, items);
+                  } else {
+                     return acc + 1;
+                  }
+               } else {
+                  if (hierarchyRelation.isNode(child) && excludedKeys.indexOf(childId) === -1) {
+                     return acc + _private.getSelectedChildrenCount(hierarchyRelation, childId, selectedKeys, excludedKeys, items);
+                  } else {
+                     return acc;
+                  }
+               }
+            }, 0);
+         }
       };
 
    var HierarchySelection = Selection.extend({
@@ -30,9 +123,6 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
       constructor: function(options) {
          HierarchySelection.superclass.constructor.apply(this, arguments);
 
-         this._strategy = options.strategy === 'allData' ? new AllData(options) : new PartialData(options);
-
-         //TODO: надо подумать как не создавать hierarchyRelation в двух местах, потому что он нужен и здесь и в стратегиях
          this._hierarchyRelation = new HierarchyRelation({
             idProperty: options.keyProperty || 'id',
             parentProperty: options.parentProperty || 'Раздел',
@@ -43,50 +133,26 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
       select: function(keys) {
          // 1) Удаляем все ключи из excludedKeys, если они там есть. Если их там нет, то добавляем в selectedKeys
          // 2) Для каждого ключа получаем всех детей и удаляем их из обоих массивов
-         // 3) Для каждого ключа бежим по всем родителям, если в них выделены все записи, то сносим всех детей из selectedKeys, добавляем туда родителя
-         var childrenIds, parent, parentId;
+         var childrenIds;
          this._selectedKeys = this._selectedKeys.slice();
          this._excludedKeys = this._excludedKeys.slice();
 
          keys.forEach(function(key) {
             if (this._excludedKeys.indexOf(key) !== -1) {
-               ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, [key]);
+               ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, keys);
             } else {
-               ArraySimpleValuesUtil.addSubArray(this._selectedKeys, [key]);
+               ArraySimpleValuesUtil.addSubArray(this._selectedKeys, keys);
             }
-
-            childrenIds = this._strategy.getChildrenIds(key, this._items);
+            childrenIds = _private.getChildrenIds(this._hierarchyRelation, key, this._items);
             ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, childrenIds);
             ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, childrenIds);
-
-            parent = key === null ? null : this._hierarchyRelation.getParent(key, this._items);
-            while (parent) {
-               parentId = parent.getId();
-               if (this._strategy.isAllChildrenSelected(this._getParams(parentId))) {
-                  childrenIds = this._strategy.getChildrenIds(parentId, this._items);
-                  ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, childrenIds.concat(key));
-                  ArraySimpleValuesUtil.addSubArray(this._selectedKeys, [parentId]);
-
-                  parent = this._hierarchyRelation.getParent(parentId, this._items);
-               } else {
-                  break;
-               }
-            }
-            if (parent === null) {
-               if (this._strategy.isAllChildrenSelected(this._getParams(null))) {
-                  childrenIds = this._strategy.getChildrenIds(null, this._items);
-                  ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, childrenIds.concat(key));
-                  ArraySimpleValuesUtil.addSubArray(this._selectedKeys, [null]);
-               }
-            }
          }.bind(this));
       },
 
       unselect: function(keys) {
          // 1) Удаляем всех из selectedKeys
-         // 2) Удаляем всех детей из selectedKeys и excludedKeys
+         // 2) Удаляем всех детей из excludedKeys
          // 3) Для каждого ключа бежим по всем родителям, как только нашли полностью выделенного родителя, то добавляем в excludedKeys и заканчиваем бежать
-         // 3.1) Если стратегия allData и если после этого у полностью выделенного родителя все дети оказались в excludedKeys, то снимаем выделение с него.
          var
             childrenIds,
             parent,
@@ -97,88 +163,68 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
          ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, keys);
 
          keys.forEach(function(key) {
-            childrenIds = this._strategy.getChildrenIds(key, this._items);
-
-            ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, childrenIds);
+            childrenIds = _private.getChildrenIds(this._hierarchyRelation, key, this._items);
             ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, childrenIds);
+            ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, childrenIds);
 
             parent = key === null ? null : this._hierarchyRelation.getParent(key, this._items);
             while (parent) {
                parentId = parent.getId();
-               if (this._strategy.isAllSelection(this._getParams(parentId))) {
+               if (this._isAllSelection(this._getParams(parentId))) {
                   ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [key]);
-                  if (this._strategy instanceof AllData) {
-                     if (!this._strategy.getSelectedChildrenCount(parentId, this._selectedKeys, this._excludedKeys, this._items)) {
-                        childrenIds = this._strategy.getChildrenIds(parentId, this._items);
-                        ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, childrenIds);
-                        ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, [parentId]);
-
-                        parent = this._hierarchyRelation.getParent(parentId, this._items);
-                        if (parent && this._strategy.isAllSelection(this._getParams(parent.getId()))) {
-                           ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [parent.getId()]);
-                        }
-                     }
-                  }
                }
                parent = this._hierarchyRelation.getParent(parentId, this._items);
             }
-            if (parent === null && this._strategy.isAllSelection(this._getParams(null))) {
+            if (parent === null && this._isAllSelection(this._getParams(null))) {
                ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [key]);
-               if (this._strategy instanceof AllData) {
-                  if (!this._strategy.getSelectedChildrenCount(null, this._selectedKeys, this._excludedKeys, this._items)) {
-                     childrenIds = this._strategy.getChildrenIds(null, this._items);
-                     ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, childrenIds);
-                     ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, [null]);
-                  }
-               }
             }
          }.bind(this));
       },
 
-      getSelectionStatus: function(key) {
-         /*
-            Папка выделена полностью, если:
-            1) Она есть в selectedKeys и её детей нет в excludedKeys.
-            2) Выделен её родитель и её детей нет в excludedKeys.
-            Папка выделена частично, если:
-            1) Она есть в selectedKeys и её дети есть в excludedKeys.
-            2) Выделен её родитель и её дети есть в excludedKeys.
-            3) Её дети есть в selectedKeys
-            Лист выделен, если:
-            1) Он есть в selectedKeys
-            2) Выделен его родитель и листа нет в excludedKeys
-          */
-         var
-            hasExcludedChildren = false,
-            hasSelectedChildren = false;
-         if (key === null || this._hierarchyRelation.isNode(this._items.getRecordById(key), this._items)) {
-            this._strategy.getChildrenIds(key, this._items).forEach(function(childId) {
-               if (this._excludedKeys.indexOf(childId) !== -1) {
-                  hasExcludedChildren = true;
-               }
-               if (this._selectedKeys.indexOf(childId) !== -1) {
-                  hasSelectedChildren = true;
-               }
-            }.bind(this));
-            if (this._selectedKeys.indexOf(key) !== -1 || (this._excludedKeys.indexOf(key) === -1 && this._strategy.isParentSelected(key, this._selectedKeys, this._excludedKeys, this._items))) {
-               return hasExcludedChildren ? HierarchySelection.SELECTION_STATUS.PARTIALLY_SELECTED : HierarchySelection.SELECTION_STATUS.SELECTED;
-            }
-            if (hasSelectedChildren) {
-               return HierarchySelection.SELECTION_STATUS.PARTIALLY_SELECTED;
-            }
-         } else {
-            if (this._selectedKeys.indexOf(key) !== -1 || this._excludedKeys.indexOf(key) === -1 && this._strategy.isParentSelected(key, this._selectedKeys, this._excludedKeys, this._items)) {
-               return HierarchySelection.SELECTION_STATUS.SELECTED;
-            }
-         }
+      getCount: function() {
+         return _private.getSelectedChildrenCount(this._hierarchyRelation, null, this._selectedKeys, this._excludedKeys, this._items);
+      },
 
-         return HierarchySelection.SELECTION_STATUS.NOT_SELECTED;
+      getSelectedKeysForRender: function() {
+         var
+            res = [],
+            self = this,
+            itemId,
+            isParentSelected,
+            isParentExcluded,
+            hasSelectedChildren,
+            excluded;
+
+         this._items.forEach(function(item) {
+            itemId = item.getId();
+            isParentSelected = _private.isParentSelected(self._hierarchyRelation, itemId, self._selectedKeys, self._excludedKeys, self._items);
+            isParentExcluded = _private.isParentExcluded(self._hierarchyRelation, itemId, self._selectedKeys, self._excludedKeys, self._items);
+            hasSelectedChildren = _private.getSelectedChildrenCount(self._hierarchyRelation, itemId, self._selectedKeys, self._excludedKeys, self._items) > 0;
+            excluded = self._excludedKeys.indexOf(itemId) !== -1 || isParentExcluded;
+            if ((self._selectedKeys[0] === null || isParentSelected || hasSelectedChildren) && !excluded || self._selectedKeys.indexOf(itemId) !== -1) {
+               res.push(itemId);
+            }
+         });
+
+         return res;
       },
 
       _getParams: function(rootId) {
          var params = HierarchySelection.superclass._getParams.apply(this, arguments);
          params.rootId = rootId ? rootId : null;
+         params.hierarchyRelation = this._hierarchyRelation;
          return params;
+      },
+
+      _isAllSelection: function(options) {
+         var
+            rootId = options.rootId,
+            selectedKeys = options.selectedKeys,
+            excludedKeys = options.excludedKeys,
+            items = options.items,
+            isParentSelected = _private.isParentSelected(this._hierarchyRelation, rootId, selectedKeys, excludedKeys, items);
+
+         return isParentSelected || selectedKeys.indexOf(rootId) !== -1;
       }
    });
 

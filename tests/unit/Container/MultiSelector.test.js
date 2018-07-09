@@ -121,84 +121,21 @@ define([
          });
       });
 
-      describe('_afterItemsRemoveHandler', function() {
-         var count;
-
-         it('1 key', function() {
+      describe('_onListSelectionChange', function() {
+         it('first elem click to false', function(done) {
+            //TODO: щас поправлю
             var instance = new MultiSelector();
             instance.saveOptions(cfg);
-            instance._beforeMount(cfg, context);
-            instance._afterItemsRemoveHandler([], [1]);
-            count = instance._multiselection.getCount();
-            assert.equal(count, 1);
-         });
-
-         it('2 key', function() {
-            var instance = new MultiSelector();
-            instance.saveOptions(cfg);
-            instance._beforeMount(cfg, context);
-            instance._afterItemsRemoveHandler([], [1, 2]);
-            count = instance._multiselection.getCount();
-            assert.equal(count, 0);
-         });
-      });
-
-      describe('_onCheckBoxClickHandler', function() {
-         var selectedKeys, excludedKeys;
-
-         it('first elem click to false', function() {
-            var instance = new MultiSelector();
-            instance.saveOptions(cfg);
-            instance._beforeMount(cfg, context);
-            instance._onCheckBoxClickHandler({}, 1, true);
-            selectedKeys = instance._multiselection.getSelection().selected;
-            assert.equal(selectedKeys.length, 1);
-            assert.equal(selectedKeys[0], 2);
-         });
-
-         it('second elem click to false', function() {
-            var instance = new MultiSelector();
-            instance.saveOptions(cfg);
-            instance._beforeMount(cfg, context);
-            instance._onCheckBoxClickHandler({}, 2, true);
-            selectedKeys = instance._multiselection.getSelection().selected;
-            assert.equal(selectedKeys.length, 1);
-            assert.equal(selectedKeys[0], 1);
-         });
-
-         it('another elem click to true', function() {
-            var instance = new MultiSelector();
-            instance.saveOptions(cfg);
-            instance._beforeMount(cfg, context);
-            instance._onCheckBoxClickHandler({}, 50, false);
-            selectedKeys = instance._multiselection.getSelection().selected;
-            assert.equal(selectedKeys.length, 3);
-            assert.equal(selectedKeys[2], 50);
-         });
-
-         it('selected all click to false', function() {
-            var instance = new MultiSelector();
-            instance.saveOptions(cfg1);
-            instance._beforeMount(cfg1, context);
-            instance._onCheckBoxClickHandler({}, 3, true);
-            selectedKeys = instance._multiselection.getSelection().selected;
-            excludedKeys = instance._multiselection.getSelection().excluded;
-            assert.equal(selectedKeys.length, 1);
-            assert.isNull(selectedKeys[0]);
-            assert.equal(excludedKeys.length, 1);
-            assert.equal(excludedKeys[0], 3);
-         });
-
-         it('selected part click to true', function() {
-            var instance = new MultiSelector();
-            instance.saveOptions(cfg2);
-            instance._beforeMount(cfg2, context);
-            instance._onCheckBoxClickHandler({}, 1, false);
-            selectedKeys = instance._multiselection.getSelection().selected;
-            excludedKeys = instance._multiselection.getSelection().excluded;
-            assert.equal(selectedKeys.length, 1);
-            assert.isNull(selectedKeys[0]);
-            assert.equal(excludedKeys.length, 0);
+            instance._beforeMount(cfg).addCallback(function() {
+               instance._multiselection.unselect = function(removed) {
+                  assert.deepEqual([3, 4], removed);
+               };
+               instance._multiselection.select = function(added) {
+                  assert.deepEqual([1, 2], added);
+               };
+               instance._onListSelectionChange({}, {added: [1, 2], removed: [3, 4]});
+               done();
+            });
          });
       });
    });
