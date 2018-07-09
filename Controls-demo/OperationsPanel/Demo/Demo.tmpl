@@ -3,24 +3,24 @@
                                           keyProperty="id"
                                           parentProperty="Раздел"
                                           nodeProperty="Раздел@">
-        <div attr:class="demo-Grid__wrapper">
+        <div attr:style="width: 45%;">
             <i on:click="_openClick()"
                class="icon-medium {{_panelVisible ? 'icon-MarkCollapseBold' : 'icon-MarkExpandBold'}}"/>
-            <!--<ws:if data="{{_panelVisible}}">-->
-            <!--<Controls.OperationsPanel-->
-            <!--attr:style="width:{{_width}}{{ _px ? 'px' : '%'}}; max-width:100%;"-->
-            <!--name="myPanel"-->
-            <!--multiSelector="{{true}}"-->
-            <!--parentProperty="parent"-->
-            <!--nodeProperty="@parent"-->
-            <!--keyProperty="id"-->
-            <!--testOnlyForAutoUpdate="{{_width}}"-->
-            <!--testOnlyForAutoUpdate2="{{_px}}"-->
-            <!--source="{{_panelSource}}"-->
-            <!--on:itemClick="_itemClick()"-->
-            <!--/>-->
-            <!--</ws:if>-->
-            <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+            <ws:if data="{{_panelVisible}}">
+                <Controls.OperationsPanel
+                    attr:style="width:{{_width}}{{ _px ? 'px' : '%'}}; max-width:100%;"
+                    name="myPanel"
+                    multiSelector="{{true}}"
+                    parentProperty="parent"
+                    nodeProperty="@parent"
+                    keyProperty="id"
+                    testOnlyForAutoUpdate="{{_width}}"
+                    testOnlyForAutoUpdate2="{{_px}}"
+                    source="{{_panelSource}}"
+                    on:itemClick="_itemClick()"
+                    />
+            </ws:if>
+            <Controls.Container.Scroll>
                 <Controls.List.MultiSelector>
                     <Controls.TreeGrid
                             name="list"
