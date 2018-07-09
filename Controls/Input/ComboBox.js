@@ -16,7 +16,7 @@ define('Controls/Input/ComboBox',
        * @extends Core/Control
        * @mixes Controls/interface/ISource
        * @mixes Controls/interface/ISingleSelectable
-       * @mixes Controls/Input/interface/IDropdownEmptyValue
+       * @mixes Controls/Input/interface/IDropdownEmptyText
        * @mixes Controls/Input/interface/IInputText
        * @mixes Controls/Input/interface/IInputPlaceholder
        * @mixes Controls/Input/interface/IValidation

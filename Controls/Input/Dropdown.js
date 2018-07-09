@@ -18,7 +18,7 @@ define('Controls/Input/Dropdown',
        * @mixes Controls/interface/ISource
        * @mixes Controls/Input/interface/IValidation
        * @mixes Controls/interface/ISingleSelectable
-       * @mixes Controls/Input/interface/IDropdownEmptyValue
+       * @mixes Controls/Input/interface/IDropdownEmptyText
        * @control
        * @public
        * @category Input

@@ -1,19 +1,19 @@
-<div class="controls-PeriodLiteDialog">
+<div class="controls-PeriodLiteDialog {{_getWidthCssClass()}}">
    <ws:if data="{{_options.chooseMonths || _options.chooseQuarters || _options.chooseHalfyears}}">
       <div class="controls-PeriodLiteDialog__currentValue" on:click="_onHeaderClick()">{{_caption}}</div>
       <div class="controls-PeriodLiteDialog__bodyWrapper">
          <div class="controls-PeriodLiteDialog__item-background-hovered{{ !_yearHovered ? ' ws-hidden'}}"></div>
          <div class="controls-PeriodLiteDialog__yearWrapper{{ _yearHovered ? ' controls-PeriodLiteDialog__background-transparent'}}">
             <span class="controls-PeriodLiteDialog__year-prev" on:click="_onPrevYearBtnClick()"></span>
-
-            <Controls.Button
-               class="controls-PeriodLiteDialog__home"
-               style="linkMain"
-               icon="icon-small icon-Home3"
-               on:click="_onHomeClick()"
-            />
+            <div class="controls-PeriodLiteDialog__home-wrapper{{ (!_options.chooseQuarters && !_options.chooseHalfyears) ? '-lite' }}">
+               <Controls.Button
+                  style="linkMain"
+                  icon="icon-small icon-Home3"
+                  on:click="_onHomeClick()"
+               />
+            </div>
             <span
-               class="controls-PeriodLiteDialog__year {{ _options.chooseYears === true ? 'controls-DateRangeChoose__year-clickable' }}"
+               class="controls-PeriodLiteDialog__year {{ _getYearCssClasses() }}"
                on:mouseenter="_onYearMouseEnter()"
                on:mouseleave="_onYearMouseLeave()"
                on:click="_onYearClick(_year)"
@@ -41,10 +41,10 @@
       <div class="controls-PeriodLiteDialog__text-align-center"
          on:wheel="_onWheel()"
       >
-         <ws:for data="value as key in [0, 1, 2, 3, 4]">
-            <div  class="controls-PeriodLiteDialog-item-years controls-PeriodLiteDialog__v-layout-item"
-               on:click="_onYearClick(_year + value)">
-               {{ _year + value}}
+         <ws:for data="value in [0, 1, 2, 3, 4]">
+            <div  class="controls-PeriodLiteDialog-item-years controls-PeriodLiteDialog__v-layout-item {{_year - value === _options.startValue.getFullYear() ? ' controls-PeriodLiteDialog__selectedYear'}}"
+               on:click="_onYearClick(_year - value)">
+               {{ _year - value }}
             </div>
          </ws:for>
       </div>

@@ -66,6 +66,7 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          };
          suggestComponent._close();
          assert.equal(value, '');
+         assert.equal(suggestComponent._searchValue, '');
       });
    
       it('Suggest::_private.open', function (done) {

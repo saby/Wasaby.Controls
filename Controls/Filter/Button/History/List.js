@@ -123,7 +123,7 @@ define('Controls/Filter/Button/History/List', [
       _itemActions: _itemsAction,
       _template: template,
 
-      _onActionClick: function(event, action, item) {
+      _onItemActionsClick: function(event, action, item) {
          _private.getHistorySource(this).update(item, {
             $_pinned: !item.get('pinned')
          });

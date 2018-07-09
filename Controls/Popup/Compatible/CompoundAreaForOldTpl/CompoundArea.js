@@ -6,14 +6,13 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/helpers/Array/findIndex',
       'Core/moduleStubs',
       'Core/core-debug',
-      'Core/helpers/Function/debounce',
       'Core/Deferred',
       'Core/IoC',
       'Core/EventObject',
       'Core/helpers/Function/runDelayed',
       'Core/constants',
       'Core/helpers/Hcontrol/doAutofocus',
-      'Deprecated/Controls/DialogRecord/DialogRecord',
+      'optional!Deprecated/Controls/DialogRecord/DialogRecord',
       'Core/EventBus',
 
       'Lib/Control/AreaAbstract/AreaAbstract.compatible',
@@ -30,7 +29,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       arrayFindIndex,
       moduleStubs,
       coreDebug,
-      debounce,
       cDeferred,
       IoC,
       EventObject,
@@ -99,6 +97,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _template: template,
          _compoundId: undefined,
          _templateOptions: null,
+         _templateName: null,
          compatible: null,
          fixBaseCompatible: true,
          _templateComponent: undefined,
@@ -117,11 +116,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _isReadOnly: true,
 
          _beforeMount: function() {
-            this._rebuildCompoundControl = debounce.call(this._rebuildCompoundControl, this).bind(this);
             this._className = 'controls-CompoundArea';
             this._className += ' ws-float-area'; // Старые шаблоны завязаны селекторами на этот класс.
             this._commandHandler = this._commandHandler.bind(this);
             this._commandCatchHandler = this._commandCatchHandler.bind(this);
+            this._templateName = this._options.template;
          },
 
          _shouldUpdate: function(popupOptions) {
@@ -155,9 +154,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             this._compoundControlCreated = new cDeferred();
 
-            moduleStubs.require([this._options.template]).addCallback(function(result) {
+            moduleStubs.require([this._templateName]).addCallback(function(result) {
                self._createCompoundControl(result[0]);
             });
+            return this._compoundControlCreated;
          },
 
          _afterMount: function(cfg) {
@@ -201,10 +201,13 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             this._compoundControlCreated = new cDeferred();
             runDelayed(function() {
-               moduleStubs.require([self._options.template]).addCallback(function(result) {
+               moduleStubs.require([self._templateName]).addCallback(function(result) {
                   self._createCompoundControl(result[0]);
                   doAutofocus(self._compoundControl._container);
                   self._logicParent.callbackCreated && self._logicParent.callbackCreated();
+                  runDelayed(function() {
+                     self.handle('onResize');
+                  });
                }).addErrback(function(e) {
                   IoC.resolve('ILogger').error('CompoundArea', 'Шаблон "' + self._options.template + '" не смог быть загружен!');
                   this._compoundControlCreated.errback(e);
@@ -274,11 +277,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             if (commandName === 'close') {
                return this._close(arg);
-            } else if (commandName === 'ok') {
+            } if (commandName === 'ok') {
                return this._close(true);
-            } else if (commandName === 'cancel') {
+            } if (commandName === 'cancel') {
                return this._close(false);
-            } else if (commandName === 'resize' || commandName === 'resizeYourself') {
+            } if (commandName === 'resize' || commandName === 'resizeYourself') {
                this._notify('resize', null, { bubbling: true });
             } else if (commandName === 'registerPendingOperation') {
                return this._registerChildPendingOperation(arg);
@@ -307,6 +310,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._isClosing = true;
             if (this.handle('onBeforeClose', arg) !== false) {
                this.close(arg);
+               this._isClosing = false;
                return true;
             }
             this._isClosing = false;
@@ -316,12 +320,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._close(arg);
          },
          _keyUp: function(event) {
-            var
-               self = this;
-            if (!event.nativeEven.shiftKey && event.nativeEvent.keyCode === CoreConstants.key.esc) {
-               self._close();
+            if (!event.nativeEvent.shiftKey && event.nativeEvent.keyCode === CoreConstants.key.esc) {
+               this._close();
+               event.stopPropagation();
             }
-            event.stopPropagation();
          },
 
          _setCompoundAreaOptions: function(newOptions) {
@@ -330,6 +332,13 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          reload: function() {
             this._rebuildCompoundControl();
+         },
+         setTemplate: function(template, templateOptions) {
+            if (templateOptions) {
+               this._templateOptions = templateOptions.templateOptions;
+            }
+            this._templateName = template;
+            return this._rebuildCompoundControl();
          },
 
          /* from api floatArea, window */
@@ -438,15 +447,36 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          /* end RecordFloatArea */
 
+         isVisible: function() {
+            if (this._options.autoShow !== undefined) {
+               return this._isVisible;
+            }
+            return true;
+         },
+
+         show: function() {
+            this._toggleVisible(true);
+         },
+
          hide: function() {
             this.close();
          },
          close: function(arg) {
-            this._notify('close', null, { bubbling: true });
+            if (this._options.autoCloseOnHide === false) {
+               this._toggleVisible(false);
+            } else if (!this._compoundControl.isDestroyed()) {
+               this._notify('close', null, { bubbling: true });
 
-            this.handle('onClose', arg);
-            this.handle('onAfterClose', arg);
-            this.handle('onDestroy');
+               this.handle('onClose', arg);
+               this.handle('onAfterClose', arg);
+               this.handle('onDestroy');
+            }
+
+            // Могут несколько раз позвать закрытие подряд
+         },
+         _toggleVisible: function(visible) {
+            this.getContainer().closest('.controls-Popup').toggleClass('ws-hidden', !visible);
+            this._isVisible = visible;
          },
          _getTemplateComponent: function() {
             return this._compoundControl;

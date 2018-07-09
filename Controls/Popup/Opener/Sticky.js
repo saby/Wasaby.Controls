@@ -1,8 +1,9 @@
 define('Controls/Popup/Opener/Sticky',
    [
-      'Controls/Popup/Opener/BaseOpener'
+      'Controls/Popup/Opener/BaseOpener',
+      'Core/core-merge'
    ],
-   function(Base) {
+   function(Base, coreMerge) {
       /**
        * Действие открытия окна
        * @class Controls/Popup/Opener/Sticky
@@ -29,6 +30,9 @@ define('Controls/Popup/Opener/Sticky',
          }
       });
 
+      Sticky.getDefaultOptions = function() {
+         return coreMerge(Base.getDefaultOptions(), {});
+      };
       return Sticky;
    }
 );
