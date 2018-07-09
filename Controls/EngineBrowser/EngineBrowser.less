@@ -1,16 +1,19 @@
 .controls-Browser__header {
    .flexbox();
    .justify-content(space-between);
+   .align-items(center);
+   height: @height_Browser-header;
 }
 
 .controls-Browser__search {
+   width: @width_Browser-search;
    margin: @margin_Browser-search;
 }
 
 .controls-Browser__filter-wrapper {
    display: flex;
-   align-items: baseline;
    justify-content: flex-end;
+   margin: @margin_Browser-filterWrapper;
    width: 100%;
    min-width: 0;
 }
@@ -21,6 +24,5 @@
 }
 
 .controls-Browser__filterButton {
-   margin: @margin_Browser-filterButton;
    min-width: 0;
 }
