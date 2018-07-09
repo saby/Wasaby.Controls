@@ -7,6 +7,7 @@
  */
 define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
    [
+      'Core/CommandDispatcher',
       'Core/Deferred',
       'Core/helpers/Object/isEqual',
       'SBIS3.CONTROLS/CompoundControl',
@@ -21,7 +22,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
       'css!SBIS3.CONTROLS/ExportCustomizer/_Presets/View'
    ],
 
-   function (Deferred, cObjectIsEqual, CompoundControl, collectionSelectByIds, ItemNamer, objectChange, RecordSet, Di, dotTplFn) {
+   function (CommandDispatcher, Deferred, cObjectIsEqual, CompoundControl, collectionSelectByIds, ItemNamer, objectChange, RecordSet, Di, dotTplFn) {
       'use strict';
 
       /**
@@ -113,6 +114,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             _selector: null,
             // Контрол редактирования пресета
             _editor: null,
+            // Кнопка удаления пресета
+            _delete: null,
             // Идетификатор предыдущего выбранного пресета
             _previousId: null,
             // Компонент находится в моде редактирования
@@ -141,6 +144,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
 
          $constructor: function () {
             this.getLinkedContext().setValue('editedTitle', '');
+            CommandDispatcher.declareCommand(this, 'delete', function () {
+               this._deletePreset(this._options.selectedId)
+                  .addCallback(_ifSuccess(this._updateSelector.bind(this)));
+            }.bind(this));
          },
 
          init: function () {
@@ -157,6 +164,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                });
                this._updateSelectorListOptions('footerTpl', 'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/footer');
                this._updateSelectorListOptions('_footerHandler', this._onAdd.bind(this));
+               this._delete = this.getChildControlByName('controls-ExportCustomizer-Presets-View__delete');
             }
             this._bindEvents();
             var options = this._options;
@@ -166,8 +174,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   if (needNewPreset) {
                      var newPreset = this._addPreset();
                      this.sendCommand('subviewChanged', 'create', newPreset);
-                     this._startEditingMode();
-                     this._needNewPreset = null;
+                     // Анимация для FloatArea моргает при изменении контента во время самой анимации. Сейчас можно поправить только так.
+                     // https://online.sbis.ru/opendoc.html?guid=62b89eca-84e1-4185-9a1b-0b8940e51a0a
+                     setTimeout(function() {
+                        this._startEditingMode();
+                        this._needNewPreset = null;
+                     }.bind(this), 200);
                   }
                   this._updateSelector();
                   if (!needNewPreset) {
@@ -552,6 +564,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                      listView.sendCommand('close');
                   }
                   this._isEditMode = true;
+                  this._switchDeleteButton(false);
                   this._switchEditor();
                   var editor = this._editor;
                   this.getLinkedContext().setValue('editedTitle', preset.title);
@@ -602,6 +615,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
          _endEditingMode: function () {
             this._editorOkButton = null;
             this._isEditMode = false;
+            var preset = this._findPresetById(this._options.selectedId);
+            this._switchDeleteButton(preset && preset.isStorable);
             this._switchEditor();
             var editor = this._editor;
             editor._setKeyPressHandler(editor._origKeyPressHandler);
@@ -621,7 +636,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
          },
 
          /**
-          * Проверить доступность кнопки сохранения
+          * Проверить доступность кнопки сохранения редактора
           *
           * @protected
           */
@@ -631,6 +646,19 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                if (okButton) {
                   okButton.toggleClass('ws-hidden', !this._canSave());
                }
+            }
+         },
+
+         /**
+          * Переключить видимость кнопки удаления текущего пресета
+          *
+          * @protected
+          * @param {boolean} isOn Показать или скрыть
+          */
+         _switchDeleteButton: function (isOn) {
+            var button = this._delete;
+            if (button) {
+               button.setVisible(isOn && !this._isEditMode);
             }
          },
 
@@ -660,6 +688,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                this._fileUuid = null;
             }
             this._storeSelectedId(options);
+            this._switchDeleteButton(!!preset && preset.isStorable);
             this._checkEditorOkButton();
          },
 
@@ -748,13 +777,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * @return {boolean}
           */
          _isOutdated: function (preset, updateAndSave) {
-            if (preset && preset.isStorable) {
+            if (preset && preset.isStorable && !preset.isActual) {
                var actualTitles = collectionSelectByIds(this._options.allFields, preset.fieldIds, function (v) { return v.title; }) || [];
                var presetTitles = preset.lastTitles;
-               var isOutdated = !presetTitles || (actualTitles.length !== presetTitles.length) || actualTitles.some(function (v) { return v !== presetTitles[i]; });
+               var isOutdated = !presetTitles || (actualTitles.length !== presetTitles.length) || actualTitles.some(function (v, i) { return v !== presetTitles[i]; });
                if (isOutdated) {
                   if (updateAndSave) {
                      preset.lastTitles = actualTitles;
+                     preset.isActual = true;
                      this._saveCustoms();
                   }
                   return true;

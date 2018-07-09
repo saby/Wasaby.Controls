@@ -18,7 +18,7 @@
 }
 
 .controls-PeriodLiteDialog {
-   box-sizing: border-box;
+   box-sizing: padding-box;
    .user-select();
    background-color: @background-color_PeriodLiteDialog;
    border: @float-area-border;
@@ -27,6 +27,13 @@
    font-size: @font-size_PeriodLiteDialog;
    padding: 0;
    height: auto;
+}
+
+.controls-PeriodLiteDialog__width-big {
+   min-width: @min-width_PeriodLiteDialog;
+}
+.controls-PeriodLiteDialog__width-medium {
+   min-width: @min-width_PeriodLiteDialog-medium;
 }
 
 .controls-PeriodLiteDialog__v-layout {
@@ -115,9 +122,16 @@
    content: "\e007";
 }
 
-.controls-PeriodLiteDialog__home {
+.controls-PeriodLiteDialog__home-wrapper {
+   display: flex;
+   justify-content: center;
    width: @width_PeriodLiteDialog-home-icon;
 }
+.controls-PeriodLiteDialog__home-wrapper-lite {
+   display: flex;
+   width: @width_PeriodLiteDialog-home-icon-lite;
+}
+
 .controls-PeriodLiteDialog__year {
    color: @color_PeriodLiteDialog-year;
    display: block;
@@ -126,8 +140,11 @@
    height: @height_PeriodLiteDialog-year;
    line-height: @height_PeriodLiteDialog-year;
    vertical-align: middle;
-   padding-left: @padding-left_PeriodLiteDialog-year;
    flex-grow: 1;
+}
+
+.controls-PeriodLiteDialog__year-medium {
+   padding-left: @padding-left_PeriodLiteDialog-year;
 }
 
 .controls-PeriodLiteDialog__year-clickable{
@@ -138,7 +155,6 @@
 }
 
 .controls-PeriodLiteDialog-item {
-   min-width: @min-width_PeriodLiteDialog;
    margin-top: 0;
 }
 
@@ -238,4 +254,9 @@
 .controls-PeriodLiteDialog__years-home {
    text-align: center;
    margin: @margin_PeriodLiteDialog-home-button;
+}
+
+.controls-PeriodLiteDialog__selectedYear {
+   font-weight: bold;
+   color: @color_PeriodLiteDialog-selected-year;
 }

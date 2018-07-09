@@ -849,7 +849,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                :
                   // Вернуть сразу
                   Deferred.success(data);
-         },
+         }//,
 
          /*destroy: function () {
             Area.superclass.destroy.apply(this, arguments);

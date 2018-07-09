@@ -19,6 +19,7 @@ define('Controls/Dropdown/Container',
        * @class Controls/Dropdown/Container
        * @extends Core/Control
        * @mixes Controls/interface/ISource
+       * @mixes Controls/Input/interface/IDropdownEmptyText
        * @mixes Controls/Button/interface/ICaption
        * @mixes Controls/Button/interface/IIcon
        * @author Золотова Э.Е.
@@ -65,7 +66,6 @@ define('Controls/Dropdown/Container',
        * @cfg {Object} Menu style menuStyle
        * @variant defaultHead The head with icon and caption
        * @variant duplicateHead The icon set under first item
-       * @variant cross Menu have cross in left top corner
        */
 
       /**
@@ -73,12 +73,6 @@ define('Controls/Dropdown/Container',
        * @cfg {Boolean} Display the header
        * @variant true The header is displayed.
        * @variant false The header is not displayed.
-       */
-
-      /**
-       * @name Controls/Dropdown/Container#emptyText
-       * @cfg {String} Add an empty item to the list.
-       * @variant true Add empty item with text 'Не выбрано'
        */
 
       /**
@@ -106,6 +100,9 @@ define('Controls/Dropdown/Container',
                   instance._selectedItems.push(item);
                }
             });
+            if (instance._options.dataLoadCallback) {
+               instance._options.dataLoadCallback(instance._selectedItems);
+            }
          },
 
          onResult: function(result) {
@@ -148,12 +145,6 @@ define('Controls/Dropdown/Container',
                      return _private.loadItems(this, options.source, options.selectedKeys, options.keyProperty);
                   }
                }
-            }
-         },
-
-         _afterMount: function() {
-            if (!isEmpty(this._selectedItems)) {
-               this._notify('selectedItemsChanged', [this._selectedItems]);
             }
          },
 

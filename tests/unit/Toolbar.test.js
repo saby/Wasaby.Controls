@@ -86,6 +86,9 @@ define(
                });
             });
             it('open menu', function() {
+               toolbar._notify = (e) => {
+                  assert.equal(e, 'menuOpened');
+               };
                toolbar._children.menuOpener = {
                   close: setTrue.bind(this, assert),
                   open: setTrue.bind(this, assert)
@@ -109,11 +112,13 @@ define(
             });
             it('click item with menu', function() {
                let isNotify = false;
+               let eventString = '';
                toolbar._notify = (e) => {
-                  assert.equal(e, 'itemClick');
+                  eventString += e;
                   isNotify = true;
                };
                toolbar._onItemClick({stopPropagation: () => {}}, itemWithMenu);
+               assert.equal(eventString, 'menuOpeneditemClick');
                assert.equal(isNotify, true);
             });
             it('before update source', () => {

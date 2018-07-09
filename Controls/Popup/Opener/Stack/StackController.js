@@ -20,7 +20,7 @@ define('Controls/Popup/Opener/Stack/StackController',
             item.popupOptions.minWidth = parseInt(item.popupOptions.minWidth || templateStyle.minWidth, 10);
             item.popupOptions.maxWidth = parseInt(item.popupOptions.maxWidth || templateStyle.maxWidth, 10);
 
-            //Если задано одно значение - приравниваем minWidth и maxWidth
+            // Если задано одно значение - приравниваем minWidth и maxWidth
             item.popupOptions.minWidth = item.popupOptions.minWidth || item.popupOptions.maxWidth;
             item.popupOptions.maxWidth = item.popupOptions.maxWidth || item.popupOptions.minWidth;
 
@@ -28,7 +28,7 @@ define('Controls/Popup/Opener/Stack/StackController',
                item.popupOptions.maxWidth = item.popupOptions.minWidth;
             }
 
-            item.containerWidth = container.getElementsByClassName('controls-Popup__template')[0].offsetWidth; //Берем размеры пользовательского шаблона
+            item.containerWidth = container.getElementsByClassName('controls-Popup__template')[0].offsetWidth; // Берем размеры пользовательского шаблона
          },
 
          getStackParentCoords: function() {
@@ -43,7 +43,8 @@ define('Controls/Popup/Opener/Stack/StackController',
          elementDestroyed: function(instance, element) {
             instance._stack.remove(element);
             instance._update();
-            instance._destroyDeferred.callback();
+            instance._destroyDeferred[element.id].callback();
+            delete instance._destroyDeferred[element.id];
          }
       };
 
@@ -56,11 +57,12 @@ define('Controls/Popup/Opener/Stack/StackController',
        */
 
       var StackController = BaseController.extend({
-         _destroyDeferred: undefined,
+         _destroyDeferred: {},
          constructor: function(cfg) {
             StackController.superclass.constructor.call(this, cfg);
             this._stack = new List();
             _private.elementDestroyed.bind(this);
+            this._fixTemplateAnimation.bind(this);
          },
 
          elementCreated: function(item, container) {
@@ -79,13 +81,15 @@ define('Controls/Popup/Opener/Stack/StackController',
          },
 
          elementDestroyed: function(element, container) {
-            this._destroyDeferred = new Deferred();
+            this._destroyDeferred[element.id] = new Deferred();
             if (cConstants.browser.chrome && !cConstants.browser.isMobilePlatform) {
                this._getTemplateContainer(container).classList.add('controls-Stack_hide');
+               this._fixTemplateAnimation(element);
             } else {
                _private.elementDestroyed(this, element);
+               return (new Deferred()).callback();
             }
-            return this._destroyDeferred;
+            return this._destroyDeferred[element.id];
          },
 
          elementAnimated: function(element, container) {
@@ -109,9 +113,23 @@ define('Controls/Popup/Opener/Stack/StackController',
          },
          _getTemplateContainer: function(container) {
             return container.getElementsByClassName('controls-Popup__template')[0];
+         },
+
+
+         // Метод, который проверяет работу анимации. Если анимация через пол секунды не сообщила о своем завершении -
+         // завершает ее вручную. Необходимость вызвана изощренной логикой прикладных разработчиков, которые сами
+         // по непонятным никому причинам из js кода удаляют шаблон или отписываются от всех его событий, что мешает
+         // работе анимации
+         _fixTemplateAnimation: function(element) {
+            var self = this;
+            setTimeout(function() {
+               var destroyDef = self._destroyDeferred[element.id];
+               if (destroyDef && !destroyDef.isReady()) {
+                  _private.elementDestroyed(self, element);
+               }
+            }, 500);
          }
       });
 
       return new StackController();
-   }
-);
+   });

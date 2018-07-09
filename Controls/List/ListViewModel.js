@@ -72,6 +72,7 @@ define('Controls/List/ListViewModel',
          },
 
          setMarkedKey: function(key) {
+            this._options.markedKey = key;
             this._markedItem = this.getItemById(key, this._options.keyProperty);
             this._nextVersion();
             this._notify('onListChange');
@@ -191,6 +192,10 @@ define('Controls/List/ListViewModel',
             var itemById = this.getItemById(item.getId());
             var collectionItem = itemById ?  itemById.getContents() : item;
             return this._actions[this.getIndexBySourceItem(collectionItem)];
+         },
+
+         getActiveItem: function() {
+            return this._activeItem;
          },
 
          __calcSelectedItem: function(display, selKey, keyProperty) {

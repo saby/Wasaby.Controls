@@ -8,10 +8,10 @@ define('Controls/Layout/Scroll',
       'Core/Control',
       'tmpl!Controls/Layout/Scroll/Scroll',
       'Controls/Event/Registrar',
-      'Core/helpers/Function/throttle',
+      'Core/helpers/Function/debounce',
       'Core/detection'
    ],
-   function(Control, template, Registrar, throttle, detection) {
+   function(Control, template, Registrar, debounce, detection) {
 
       'use strict';
 
@@ -131,13 +131,17 @@ define('Controls/Layout/Scroll',
             this._registrar = new Registrar({register: 'listScroll'});
          },
 
+         _afterMount: function() {
+            this._notify('register', ['resize', this, this._resizeHandler], {bubbling: true});
+         },
+
 
          _scrollHandler: function(e) {
             var self = this;
 
-            // подписка на скролл через throttle. Нужно подобрать оптимальное значение,
+            // подписка на скролл через debounce. Нужно подобрать оптимальное значение,
             // как часто кидать внутреннее событие скролла. На простом списке - раз в 100мс достаточно.
-            throttle(function() {
+            debounce(function() {
                _private.start(self, 'scrollMove', {scrollTop: e.target.scrollTop});
                if (!self._observer) {
                   _private.onChangeScroll(self, e.target);
@@ -185,6 +189,7 @@ define('Controls/Layout/Scroll',
                this._observer.disconnect();
                this._observer = null;
             }
+            this._notify('unregister', ['resize', this], {bubbling: true});
             this._registrar.destroy();
          }
 

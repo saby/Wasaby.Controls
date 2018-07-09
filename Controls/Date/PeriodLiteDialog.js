@@ -4,7 +4,7 @@ define('Controls/Date/PeriodLiteDialog', [
    'Core/helpers/Date/getFormattedDateRange',
    'Core/helpers/date-helpers',
    'Core/helpers/i18n/locales',
-   'Controls/Date/interface/IPeriodSimpleDialog',
+   'Controls/Date/interface/IPeriodLiteDialog',
    'tmpl!Controls/Date/PeriodLiteDialog/PeriodLiteDialog',
    'tmpl!Controls/Date/PeriodLiteDialog/Item',
    'tmpl!Controls/Date/PeriodLiteDialog/ItemMonths',
@@ -28,13 +28,13 @@ define('Controls/Date/PeriodLiteDialog', [
    /**
     * A link button that displays the period. Supports the change of periods to adjacent.
     *
-    * @class Controls/Calendar/DateRangeLinkView
+    * @class Controls/Date/PeriodLiteDialog
     * @extends Core/Control
-    * @mixes Controls/Date/interface/IPeriodSimpleDialog
+    * @mixes Controls/Date/interface/IPeriodLiteDialog
     * @control
     * @public
     * @author Миронов А.Ю.
-    * @demo Controls-demo/Date/PeriodSimpleDialog
+    * @demo Controls-demo/Date/PeriodLiteDialog
     *
     */
 
@@ -43,19 +43,18 @@ define('Controls/Date/PeriodLiteDialog', [
       _getDefaultYear: function(options) {
 
          var start = options.startValue,
-            currentYear, startValueYear;
+            currentYear = (new Date()).getFullYear(),
+            startValueYear;
 
-         if (!options.showYears || options.showHalfyears || options.showQuarters || options.showMonths) {
+         if (!options.chooseYears || options.chooseHalfyears || options.chooseQuarters || options.chooseMonths) {
             return start ? start.getFullYear() : undefined;
          }
 
          startValueYear = start ? start.getFullYear() : null;
 
          if (!startValueYear) {
-            return (new Date()).getFullYear();
+            return currentYear;
          }
-
-         currentYear = (new Date()).getFullYear();
 
          if (startValueYear >= currentYear) {
             return startValueYear;
@@ -253,6 +252,27 @@ define('Controls/Date/PeriodLiteDialog', [
          var start = new Date(this._year, month, 1),
             end = new Date(this._year, month + 1, 0);
          this._notify('sendResult', [start, end], { bubbling: true });
+      },
+
+      _getWidthCssClass: function() {
+         if (this._options.chooseHalfyears) {
+            return 'controls-PeriodLiteDialog__width-big';
+         }
+         if (this._options.chooseQuarters || this._options.chooseMonths) {
+            return 'controls-PeriodLiteDialog__width-medium';
+         }
+         return '';
+      },
+
+      _getYearCssClasses: function() {
+         var css = [];
+         if (this._options.chooseYears) {
+            css.push('controls-PeriodLiteDialog__year-clickable');
+         }
+         if (this._options.chooseMonths && this._options.chooseQuarters && this._options.chooseHalfyears) {
+            css.push('controls-PeriodLiteDialog__year-medium');
+         }
+         return css.join(' ');
       }
 
    });

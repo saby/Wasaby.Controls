@@ -6,9 +6,12 @@ define('Controls/Dropdown/resources/template/DropdownList',
       'tmpl!Controls/Dropdown/resources/template/itemTemplate',
       'tmpl!Controls/Dropdown/resources/template/defaultHeadTemplate',
       'tmpl!Controls/Dropdown/resources/template/defaultContentHeadTemplate',
+      'Controls/Container/Scroll/Context',
+
       'css!Controls/Dropdown/resources/template/DropdownList'
    ],
-   function(Control, MenuItemsTpl, DropdownViewModel, itemTemplate, defaultHeadTemplate, defaultContentHeadTemplate) {
+   function(Control, MenuItemsTpl, DropdownViewModel, itemTemplate, defaultHeadTemplate, defaultContentHeadTemplate, ScrollData) {
+      //TODO: Убрать определение контекста для Scroll, когда будет готова поддержка контекста для старого окружения.
 
       /**
        * Действие открытия прилипающего окна
@@ -23,7 +26,6 @@ define('Controls/Dropdown/resources/template/DropdownList',
         * @cfg {String} Отображения меню
         * @variant defaultHead Стандартный заголовок
         * @variant duplicateHead Иконка вызывающего элемента дублрируется в первый пункт. Заголовка с фоном нет.
-        * @variant cross Добавляется крест закрытия. Заголовка с фоном нет.
         */
       /**
         * @name Controls/Menu#showHeader
@@ -64,13 +66,12 @@ define('Controls/Dropdown/resources/template/DropdownList',
                if (this._headConfig.menuStyle === 'duplicateHead') {
                   this._duplicateHeadClassName = 'control-MenuButton-duplicate-head_' + iconSize;
                }
-               if (this._headConfig.menuStyle === 'cross') {
-                  this._headConfig.icon = null;
-               }
             }
             Menu.superclass.constructor.apply(this, arguments);
             this.resultHandler = this.resultHandler.bind(this);
             this._mousemoveHandler = this._mousemoveHandler.bind(this);
+
+            this._scrollData = new ScrollData({pagingVisible: false});
          },
          _beforeMount: function(newOptions) {
             if (newOptions.items) {
@@ -156,6 +157,9 @@ define('Controls/Dropdown/resources/template/DropdownList',
          _headerClick: function() {
             this._notify('close');
          },
+         _closeClick: function() {
+            this._notify('close');
+         },
          _mousemoveHandler: function(emitterEvent, event) {
             if (!event.target.closest('.controls-DropdownList__popup') && this._container.closest('.controls-DropdownList__subMenu')) { //Если увели курсор мимо - закрываемся
                this._notify('close');
@@ -165,6 +169,11 @@ define('Controls/Dropdown/resources/template/DropdownList',
             this._expanded = !this._expanded;
             this._listModel.toggleExpanded(this._expanded);
             this._forceUpdate();
+         },
+         _getChildContext: function() {
+            return {
+               ScrollData: this._scrollData
+            };
          }
       });
 

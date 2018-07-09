@@ -99,8 +99,11 @@ define(
                   isIE12: true
                };
 
-               result = ScrollWidthUtil._private.calcScrollbarWidth(detection);
+               result = ScrollWidthUtil._private.calcScrollbarWidth(detection, {touch: false});
                assert.equal(result, 12);
+
+               result = ScrollWidthUtil._private.calcScrollbarWidth(detection, {touch: true});
+               assert.equal(result, 16);
             });
             it('ie11', function() {
                detection = {

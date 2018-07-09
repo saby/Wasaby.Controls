@@ -1,4 +1,4 @@
-define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/RecordSet', 'Core/Deferred'], function(List, Memory, RecordSet, Deferred) {
+define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/RecordSet', 'Core/Deferred', 'Core/core-clone'], function(List, Memory, RecordSet, Deferred, clone) {
    
    if (typeof mocha !== 'undefined') {
       //Из-за того, что загрузка через Core/moduleStubs добавляет в global Lib/Control/LoadingIndicator/LoadingIndicator,
@@ -109,6 +109,7 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/
       
       it('.searchValueChanged', function(done) {
          var listLayout = new List(listOptions);
+         listLayout._beforeMount(listOptions);
          List._private.searchValueChanged(listLayout, 'Sasha');
          
          setTimeout(function() {
@@ -145,8 +146,14 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/
       it('._beforeUnmount', function(done) {
          /* To reset source */
          var listLayout = new List(listOptions);
+         var context = getFilledContext();
+         var aborted = false;
+         listLayout._beforeMount(listOptions);
+         listLayout._contextObj = getEmptyContext();
+         
          List._private.abortCallback(listLayout, {});
-         List._private.searchValueChanged(listLayout, 'Sasha');
+         
+         listLayout._beforeUpdate(listOptions, context);
 
          setTimeout(function() {
             //FIXME вернуть как будет cached source
@@ -156,10 +163,16 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/
                { id: 1, title: 'Sasha' },
                { id: 5, title: 'Sasha' }
             ]);
+            assert.isTrue(!!listLayout._searchDeferred);
+            assert.isTrue(!!listLayout._searchController);
+            listLayout._searchController.abort = function() {
+               aborted = true;
+            };
             listLayout._beforeUnmount();
             setTimeout(function() {
-               assert.deepEqual(listLayout._filter, {});
-               assert.deepEqual(listLayout._source._$data, listSourceData);
+               assert.isTrue(aborted);
+               assert.equal(listLayout._searchController, undefined);
+               assert.equal(listLayout._searchDeferred, undefined);
                done();
             }, 50);
          }, 50);
@@ -179,8 +192,13 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/
          listLayout._contextObj = {};
          listLayout._contextObj['filterLayoutField'] = { filter: {} };
          listLayout._contextObj['searchLayoutField'] = {searchValue: ''};
+   
+         /* emulate _beforeMount */
+         listLayout.saveOptions(listOptions);
+         List._private.resolveOptions(listLayout, listOptions);
+         listLayout._source = listOptions.source;
          
-         listLayout._beforeUpdate({}, context);
+         listLayout._beforeUpdate(listOptions, context);
          
          /* Nothing changes */
          assert.deepEqual(listLayout._filter, {});
@@ -188,7 +206,7 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/
    
          /* SearchValue changed */
          context.searchLayoutField.searchValue = 'Sasha';
-         listLayout._beforeUpdate({}, context);
+         listLayout._beforeUpdate(listOptions, context);
          setTimeout(function() {
             //FIXME вернуть как будет cached source
             //assert.deepEqual(listLayout._filter, {title: 'Sasha'});
@@ -211,43 +229,39 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/
                data: listSourceData,
                idProperty: 'id'
             });
-            listLayout._beforeUpdate({source: newSource}, context);
+            var newOpts = clone(listOptions);
+            newOpts.source = newSource;
+            listLayout._beforeUpdate(newOpts, context);
             assert.equal(listLayout._searchController._options.source, newSource);
             
             
             /* Change context filter */
             listLayout._contextObj['filterLayoutField'] = {filter: {title: ''}};
             context.filterLayoutField.filter = { title: 'Sasha' };
-            listLayout._beforeUpdate({}, context);
+            listLayout._beforeUpdate(newOpts, context);
             setTimeout(function() {
                assert.deepEqual(listLayout._filter, {title: 'Sasha'});
+   
+               var newNavigation = {
+                  source: 'page',
+                  view: 'page',
+                  sourceConfig: {
+                     pageSize: 2,
+                     page: 0,
+                     mode: 'totalCount'
+                  }
+               };
+               newOpts = clone(newOpts);
+               newOpts.navigation = newNavigation;
+               newOpts.source = newSource;
+               listLayout._beforeUpdate(newOpts, context);
+   
+               assert.deepEqual(listLayout._searchController._options.navigation, newNavigation);
+   
                done();
             }, 50);
          }, 50);
          
-      });
-   
-      it('._beforeUnmount', function(done) {
-         var listLayout = new List(listOptions);
-         var context = getFilledContext();
-         var aborted = false;
-         listLayout._contextObj = getEmptyContext();
-         
-         listLayout._beforeUpdate({}, context);
-   
-         setTimeout(function() {
-            assert.isTrue(!!listLayout._searchDeferred);
-            assert.isTrue(!!listLayout._searchController);
-   
-            listLayout._searchController.abort = function() {
-              aborted = true;
-            };
-            listLayout._beforeUnmount();
-            assert.isTrue(aborted);
-            assert.equal(listLayout._searchController, undefined);
-            assert.equal(listLayout._searchDeferred, undefined);
-            done();
-         }, 50);
       });
    
       it('Container/List::_private.isFilterChanged', function () {
@@ -263,6 +277,7 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/
    
       it('Container/List::_private.isSearchValueChanged', function () {
          var listLayout = new List(listOptions);
+         listLayout._beforeMount(listOptions);
          var context = getFilledContext();
    
          listLayout._contextObj = getEmptyContext();
