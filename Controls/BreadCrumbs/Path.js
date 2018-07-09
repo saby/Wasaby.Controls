@@ -1,11 +1,11 @@
-define('Controls/Path', [
+define('Controls/BreadCrumbs/Path', [
    'Core/Control',
    'Controls/Utils/BreadCrumbsUtil',
    'Controls/List/resources/utils/ItemsUtil',
    'Controls/Utils/FontLoadUtil',
-   'tmpl!Controls/Path/Path',
+   'tmpl!Controls/BreadCrumbs/Path/Path',
    'tmpl!Controls/Button/BackButton/Back',
-   'css!Controls/Path/Path'
+   'css!Controls/BreadCrumbs/Path/Path'
 ], function(
    Control,
    BreadCrumbsUtil,
@@ -22,14 +22,14 @@ define('Controls/Path', [
             self._backButtonClass = '';
             self._breadCrumbsClass = '';
          } else if (maxCrumbsWidth < availableWidth / 2 && backButtonWidth > availableWidth / 2) {
-            self._backButtonClass = 'controls-Path__backButton_long';
-            self._breadCrumbsClass = 'controls-Path__breadCrumbs_short';
+            self._backButtonClass = 'controls-BreadCrumbsPath__backButton_long';
+            self._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_short';
          } else if (maxCrumbsWidth > availableWidth / 2 && backButtonWidth > availableWidth / 2) {
-            self._backButtonClass = 'controls-Path__backButton_half';
-            self._breadCrumbsClass = 'controls-Path__breadCrumbs_half';
+            self._backButtonClass = 'controls-BreadCrumbsPath__backButton_half';
+            self._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_half';
          } else if (maxCrumbsWidth > availableWidth / 2 && backButtonWidth < availableWidth / 2) {
-            self._backButtonClass = 'controls-Path__backButton_short';
-            self._breadCrumbsClass = 'controls-Path__breadCrumbs_long';
+            self._backButtonClass = 'controls-BreadCrumbsPath__backButton_short';
+            self._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_long';
          }
       },
       
@@ -50,7 +50,7 @@ define('Controls/Path', [
             }));
             _private.calculateClasses(self, BreadCrumbsUtil.getMaxCrumbsWidth(self._breadCrumbsItems), backButtonWidth, self._container.clientWidth);
 
-            availableWidth = self._breadCrumbsClass === 'controls-Path__breadCrumbs_half' ? self._container.clientWidth / 2 : self._container.clientWidth;
+            availableWidth = self._breadCrumbsClass === 'controls-BreadCrumbsPath__breadCrumbs_half' ? self._container.clientWidth / 2 : self._container.clientWidth;
             BreadCrumbsUtil.calculateBreadCrumbsToDraw(self,  self._breadCrumbsItems, availableWidth);
          } else {
             self._visibleItems = [];
@@ -64,7 +64,7 @@ define('Controls/Path', [
    /**
     * Breadcrumbs with back button.
     *
-    * @class Controls/Path
+    * @class Controls/BreadCrumbs/Path
     * @extends Core/Control
     * @mixes Controls/interface/IBreadCrumbs
     * @control
@@ -74,11 +74,11 @@ define('Controls/Path', [
     */
 
    /**
-    * @event Controls/Path#arrowActivated Happens after clicking the button "View record".
+    * @event Controls/BreadCrumbs/Path#arrowActivated Happens after clicking the button "View record".
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     */
 
-   var Path = Control.extend({
+   var BreadCrumbsPath = Control.extend({
       _template: template,
       _backButtonCaption: '',
       _visibleItems: [],
@@ -90,8 +90,8 @@ define('Controls/Path', [
       _afterMount: function() {
          this._oldWidth = this._container.clientWidth;
          if (this._options.items && this._options.items.length > 0) {
-            FontLoadUtil.waitForFontLoad('controls-BreadCrumbsV__crumbMeasurer').addCallback(function() {
-               FontLoadUtil.waitForFontLoad('controls-Path__backButtonMeasurer').addCallback(function() {
+            FontLoadUtil.waitForFontLoad('controls-BreadCrumbsView__crumbMeasurer').addCallback(function() {
+               FontLoadUtil.waitForFontLoad('controls-BreadCrumbsPath__backButtonMeasurer').addCallback(function() {
                   _private.calculateItems(this, this._options.items);
                   this._forceUpdate();
                }.bind(this));
@@ -122,5 +122,5 @@ define('Controls/Path', [
          this._notify('arrowActivated');
       }
    });
-   return Path;
+   return BreadCrumbsPath;
 });

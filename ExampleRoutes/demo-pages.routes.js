@@ -15,7 +15,7 @@ module.exports = function(Component) {
         ### Пространство имён - Controls/ . ###
       */
 
-      // Демо-пример: Демо-пример: открытие шаблона, совместимого с WS3, в программном окружении WS4.
+      // Демо-пример: открытие шаблона, совместимого с WS3, в программном окружении WS4.
       '/demo-ws4-open-component-from-ws3': function(req, res) {
          requirejs('Examples/ws4open/Module');
          res.render('tmpl!Controls/Application/Route', {
@@ -29,6 +29,24 @@ module.exports = function(Component) {
         requirejs('Examples/Swipe/Module');
         res.render('tmpl!Controls/Application/Route', {
            application: 'Examples/Swipe/Module',
+           initDependencies: false
+         }, []);
+      },
+
+      // Демо-пример: работа всплывающих окон и панелей
+      '/demo-ws4-opener-stack': function(req, res) {
+        requirejs('Controls-demo/Popup/PopupPage');
+        res.render('tmpl!Controls/Application/Route', {
+           application: 'Controls-demo/Popup/PopupPage',
+           initDependencies: false
+         }, []);
+      },
+
+      // Демо-пример: работа инфобокса
+      '/demo-ws4-infobox': function(req, res) {
+        requirejs('Controls-demo/InfoBox/InfoBox');
+        res.render('tmpl!Controls/Application/Route', {
+           application: 'Controls-demo/InfoBox/InfoBox',
            initDependencies: false
          }, []);
       },

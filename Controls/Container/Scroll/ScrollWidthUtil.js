@@ -32,17 +32,13 @@ define('Controls/Container/Scroll/ScrollWidthUtil',
           * @param detection
           * @return {number}
           */
-         calcScrollbarWidth: function(detection) {
+         calcScrollbarWidth: function(detection, compatibility) {
             var scrollbarWidth;
 
-            /**
-             * В браузерах с поддержкой ::-webkit-scrollbar установлена ширина 0.
-             * Определяем не с помощью Core/detection, потому что в нем считается, что chrome не на WebKit.
-             */
             if (detection.webkit || detection.chrome) {
                scrollbarWidth = 0;
             } else if (detection.isIE12) {
-               scrollbarWidth = 12;
+               scrollbarWidth = compatibility.touch ? 16 : 12;
             } else if (detection.isIE10 || detection.isIE11) {
                scrollbarWidth = 17;
             } else if (typeof window !== 'undefined') {
@@ -86,7 +82,7 @@ define('Controls/Container/Scroll/ScrollWidthUtil',
             if (typeof _private.styleHideScrollbar === 'string') {
                styleHideScrollbar = _private.styleHideScrollbar;
             } else {
-               scrollbarWidth = _private.calcScrollbarWidth(detection);
+               scrollbarWidth = _private.calcScrollbarWidth(detection, compatibility);
                styleHideScrollbar = _private.calcStyleHideScrollbar(scrollbarWidth, detection, compatibility);
             }
 

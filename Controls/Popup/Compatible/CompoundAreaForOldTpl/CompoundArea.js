@@ -6,7 +6,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/helpers/Array/findIndex',
       'Core/moduleStubs',
       'Core/core-debug',
-      'Core/helpers/Function/debounce',
       'Core/Deferred',
       'Core/IoC',
       'Core/EventObject',
@@ -30,7 +29,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       arrayFindIndex,
       moduleStubs,
       coreDebug,
-      debounce,
       cDeferred,
       IoC,
       EventObject,
@@ -207,6 +205,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   self._createCompoundControl(result[0]);
                   doAutofocus(self._compoundControl._container);
                   self._logicParent.callbackCreated && self._logicParent.callbackCreated();
+                  runDelayed(function() {
+                     self.handle('onResize');
+                  });
                }).addErrback(function(e) {
                   IoC.resolve('ILogger').error('CompoundArea', 'Шаблон "' + self._options.template + '" не смог быть загружен!');
                   this._compoundControlCreated.errback(e);
@@ -276,11 +277,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             if (commandName === 'close') {
                return this._close(arg);
-            } else if (commandName === 'ok') {
+            } if (commandName === 'ok') {
                return this._close(true);
-            } else if (commandName === 'cancel') {
+            } if (commandName === 'cancel') {
                return this._close(false);
-            } else if (commandName === 'resize' || commandName === 'resizeYourself') {
+            } if (commandName === 'resize' || commandName === 'resizeYourself') {
                this._notify('resize', null, { bubbling: true });
             } else if (commandName === 'registerPendingOperation') {
                return this._registerChildPendingOperation(arg);
@@ -309,6 +310,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._isClosing = true;
             if (this.handle('onBeforeClose', arg) !== false) {
                this.close(arg);
+               this._isClosing = false;
                return true;
             }
             this._isClosing = false;
@@ -318,12 +320,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._close(arg);
          },
          _keyUp: function(event) {
-            var
-               self = this;
             if (!event.nativeEvent.shiftKey && event.nativeEvent.keyCode === CoreConstants.key.esc) {
-               self._close();
+               this._close();
+               event.stopPropagation();
             }
-            event.stopPropagation();
          },
 
          _setCompoundAreaOptions: function(newOptions) {
@@ -447,18 +447,36 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          /* end RecordFloatArea */
 
+         isVisible: function() {
+            if (this._options.autoShow !== undefined) {
+               return this._isVisible;
+            }
+            return true;
+         },
+
+         show: function() {
+            this._toggleVisible(true);
+         },
+
          hide: function() {
             this.close();
          },
          close: function(arg) {
-            //Могут несколько раз позвать закрытие подряд
-            if (!this._compoundControl.isDestroyed()) {
+            if (this._options.autoCloseOnHide === false) {
+               this._toggleVisible(false);
+            } else if (!this._compoundControl.isDestroyed()) {
                this._notify('close', null, { bubbling: true });
 
                this.handle('onClose', arg);
                this.handle('onAfterClose', arg);
                this.handle('onDestroy');
             }
+
+            // Могут несколько раз позвать закрытие подряд
+         },
+         _toggleVisible: function(visible) {
+            this.getContainer().closest('.controls-Popup').toggleClass('ws-hidden', !visible);
+            this._isVisible = visible;
          },
          _getTemplateComponent: function() {
             return this._compoundControl;
@@ -477,7 +495,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
          once: function(eventName, handler) {
             this.subscribe(eventName, function() {
-               handler();
+               handler.apply(this, arguments);
                this.unsubscribe(eventName, handler);
             }.bind(this));
          },

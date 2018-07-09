@@ -30,10 +30,10 @@ define('Controls/List/ItemActions/ItemActionsControl', [
             if (!itemActionVisibilityCallback || itemActionVisibilityCallback(action, item)) {
                if (action.icon && !~action.icon.indexOf(ACTION_ICON_CLASS)) {
                   action.icon += ' ' + ACTION_ICON_CLASS;
-                  if (~action.icon.indexOf('icon-done')) {
+                  if (action.iconStyle && ~action.iconStyle.indexOf('done')) {
                      action.iconDone = true;
                   }
-                  if (~action.icon.indexOf('icon-error')) {
+                  if (action.iconStyle && ~action.iconStyle.indexOf('error')) {
                      action.iconError = true;
                   }
                }
@@ -142,8 +142,8 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          }
       },
 
-      _onActionClick: function(event, action, itemData) {
-         aUtil.actionClick(this, event, action, itemData);
+      _onItemActionsClick: function(event, action, itemData) {
+         aUtil.itemActionsClick(this, event, action, itemData);
       },
 
       _applyEdit: function(item) {
