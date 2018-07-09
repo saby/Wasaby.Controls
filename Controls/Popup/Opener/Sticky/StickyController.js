@@ -95,9 +95,9 @@ define('Controls/Popup/Opener/Sticky/StickyController',
        */
       var StickyController = BaseController.extend({
          elementCreated: function(item, container) {
+            item.position.position = undefined;
             if (this._checkContainer(item, container)) {
                this.prepareConfig(item, container);
-               item.position.position = undefined;
             }
          },
 
