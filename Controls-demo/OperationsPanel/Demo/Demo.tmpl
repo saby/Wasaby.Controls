@@ -1,0 +1,39 @@
+<div class="demo-Grid__container">
+    <Controls.Container.TreeMultiSelector source="{{_viewSource}}"
+                                          keyProperty="id"
+                                          parentProperty="Раздел"
+                                          nodeProperty="Раздел@">
+        <div attr:class="demo-Grid__wrapper">
+            <i on:click="_openClick()"
+               class="icon-medium {{_panelVisible ? 'icon-MarkCollapseBold' : 'icon-MarkExpandBold'}}"/>
+            <!--<ws:if data="{{_panelVisible}}">-->
+            <!--<Controls.OperationsPanel-->
+            <!--attr:style="width:{{_width}}{{ _px ? 'px' : '%'}}; max-width:100%;"-->
+            <!--name="myPanel"-->
+            <!--multiSelector="{{true}}"-->
+            <!--parentProperty="parent"-->
+            <!--nodeProperty="@parent"-->
+            <!--keyProperty="id"-->
+            <!--testOnlyForAutoUpdate="{{_width}}"-->
+            <!--testOnlyForAutoUpdate2="{{_px}}"-->
+            <!--source="{{_panelSource}}"-->
+            <!--on:itemClick="_itemClick()"-->
+            <!--/>-->
+            <!--</ws:if>-->
+            <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+                <Controls.List.MultiSelector>
+                    <Controls.TreeGrid
+                            name="list"
+                            attr:class="demo-Grid__control"
+                            keyProperty="id"
+                            parentProperty="Раздел"
+                            nodeProperty="Раздел@"
+                            source="{{_viewSource}}"
+                            multiSelectVisibility="{{_multiSelectVisibility}}"
+                            columns="{{gridColumns}}"
+                    />
+                </Controls.List.MultiSelector>
+            </Controls.Container.Scroll>
+        </div>
+    </Controls.Container.TreeMultiSelector>
+</div>
