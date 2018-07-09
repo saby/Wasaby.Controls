@@ -57,6 +57,8 @@ define('Controls/Container/MultiSelector', [
          var currentSelection = this._multiselection.getSelection();
 
          this._selectionContext = new SelectionContextField(
+            currentSelection.selected,
+            currentSelection.excluded,
             this._multiselection.getSelectedKeysForRender(),
             this._multiselection.getCount(),
             this._items
