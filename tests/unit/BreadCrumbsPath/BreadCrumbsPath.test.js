@@ -1,5 +1,5 @@
 define([
-   'Controls/Path',
+   'Controls/BreadCrumbs/Path',
    'Controls/Utils/BreadCrumbsUtil',
    'Controls/Utils/FontLoadUtil',
    'Core/Deferred'
@@ -9,7 +9,7 @@ define([
    FontLoadUtil,
    Deferred
 ) {
-   describe('Controls.Path', function() {
+   describe('Controls.BreadCrumbs.Path', function() {
       var path, data, getWidth, getMaxCrumbsWidth, calculateBreadCrumbsToDraw;
 
       function mockBreadCrumbsUtil(backButtonWidth, maxCrumbsWidth) {
