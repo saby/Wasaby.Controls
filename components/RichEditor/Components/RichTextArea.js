@@ -3573,7 +3573,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
                         }.bind(self)
                      },
-                     checkDataAttribute: false,
+                     checkDataAttribute: true,
                      escapeInvalidTags: false
                   });
             },
