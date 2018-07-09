@@ -202,6 +202,7 @@ define('Controls/Container/Suggest/Layout',
          
          _close: function() {
             if (this._options.suggestStyle === 'overInput') {
+               this._searchValue = '';
                this._notify('valueChanged', ['']);
             }
             _private.close(this);
