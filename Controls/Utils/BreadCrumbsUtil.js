@@ -23,9 +23,9 @@ define('Controls/Utils/BreadCrumbsUtil', [
             return;
          }
          if (window) {
-            ARROW_WIDTH = _private.getWidth('<span class="controls-BreadCrumbsV__arrow icon-size icon-DayForward icon-primary action-hover"></span>');
-            HOME_WIDTH = _private.getWidth('<div class="controls-BreadCrumbsV__home icon-size icon-Home3 icon-primary"></div>');
-            BREAD_CRUMB_MIN_WIDTH = _private.getWidth('<div class="controls-BreadCrumbsV__title_min"></div>');
+            ARROW_WIDTH = _private.getWidth('<span class="controls-BreadCrumbsView__arrow icon-size icon-DayForward icon-primary action-hover"></span>');
+            HOME_WIDTH = _private.getWidth('<div class="controls-BreadCrumbsView__home icon-size icon-Home3 icon-primary"></div>');
+            BREAD_CRUMB_MIN_WIDTH = _private.getWidth('<div class="controls-BreadCrumbsView__title_min"></div>');
             DOTS_WIDTH = _private.getWidth(itemTemplate({
                itemData: {
                   getPropValue: ItemsUtil.getPropertyValue,
