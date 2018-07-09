@@ -34,7 +34,8 @@
    opacity: 0.6;
 }
 
-.ws-is-no-touch {
+//Пока страница не ожила, мы не знаем тач устройство или нет, так что на мобильных устройствах нужно скрыть операции над записью
+.ws-is-no-touch:not(.ws-is-mobile-platform) {
   .controls-ListView__item_showActions {
     &:hover {
       >.controls-itemActionsV {
