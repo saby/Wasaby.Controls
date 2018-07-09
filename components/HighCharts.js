@@ -16,7 +16,7 @@ define('SBIS3.CONTROLS/HighCharts', [
 function( SbisService, Query, getType, coreClone, constants, Deferred,BaseControl, dotTpl, forAliveOnly, trackElement){
    'use strict';
 
-   var LOADING_INDICATOR_DELAY = 750;
+   var LOADING_INDICATOR_DELAY = 2000;
 
    function ctxOnFieldChange(e, field, value, init) {
       var changedFilter = this._ctxBind[field];
