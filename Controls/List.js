@@ -6,7 +6,7 @@ define('Controls/List', [
    'tmpl!Controls/List/List',
    'Controls/List/ListViewModel',
    'Controls/List/ListView',
-   'Controls/List/EditInPlace'
+   'Controls/List/ListControl'
 ], function(Control,
    ListControlTpl,
    ListViewModel
@@ -66,6 +66,8 @@ define('Controls/List', [
       _loader: null,
       _loadingState: null,
       _loadingIndicatorState: null,
+      _viewName: 'Controls/List/ListView',
+      _viewTemplate: 'Controls/List/ListControl',
 
       //TODO пока спорные параметры
       _filter: undefined,
@@ -87,8 +89,8 @@ define('Controls/List', [
          this._viewConfig = this._prepareViewConfig(newOptions);
       },
 
-      _afterMount: function() {
-
+      _beforeUpdate: function(opts) {
+         console.log('123');
       },
 
       _getModelConstructor: function() {

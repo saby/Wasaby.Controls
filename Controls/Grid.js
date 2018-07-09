@@ -2,10 +2,9 @@ define('Controls/Grid', [
    'Controls/List',
    'Controls/List/Grid/GridViewModel',
    'Core/core-merge',
-   'tmpl!Controls/List/Grid/Grid',
    'Controls/List/Grid/GridView',
    'Controls/List/BaseControl'
-], function(List, GridViewModel, cMerge, GridTpl) {
+], function(List, GridViewModel, cMerge) {
 
    'use strict';
 
@@ -57,8 +56,9 @@ define('Controls/Grid', [
          }
       },
       Grid = List.extend({
-         _template: GridTpl,
          _viewConfig: null,
+         _viewName: 'Controls/List/Grid/GridView',
+         _viewTemplate: 'Controls/List/ListControl',
          _getModelConstructor: function() {
             return GridViewModel;
          },

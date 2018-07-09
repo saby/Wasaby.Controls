@@ -484,6 +484,10 @@ define('Controls/List/BaseControl', [
             });
          }
 
+         if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
+            this._listViewModel.setMultiSelectVisibility(newOptions.multiSelectVisibility);
+         }
+
          if (filterChanged || sourceChanged) {
             _private.reload(this, newOptions.filter, newOptions.dataLoadCallback,  newOptions.dataLoadErrback);
          }

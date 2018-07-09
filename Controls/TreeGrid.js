@@ -1,11 +1,11 @@
 define('Controls/TreeGrid', [
    'Controls/Grid',
    'Controls/List/TreeGrid/TreeGridViewModel',
-   'tmpl!Controls/List/TreeGrid/TreeGrid',
    'Core/core-merge',
    'Controls/List/TreeGrid/TreeGridView',
-   'css!Controls/List/TreeGrid/TreeGrid'
-], function(Grid, TreeGridViewModel, TreeTpl, cMerge) {
+   'css!Controls/List/TreeGrid/TreeGrid',
+   'Controls/List/TreeControl'
+], function(Grid, TreeGridViewModel, cMerge) {
    'use strict';
 
    var _private = {
@@ -44,7 +44,8 @@ define('Controls/TreeGrid', [
     */
 
    var Tree = Grid.extend({
-      _template: TreeTpl,
+      _viewName: 'Controls/List/TreeGrid/TreeGridView',
+      _viewTemplate: 'Controls/List/TreeControl',
       _getModelConstructor: function() {
          return TreeGridViewModel;
       },
