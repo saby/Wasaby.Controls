@@ -201,7 +201,7 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
                  needUpdateHistory = false;
 
              this._listHistory.each(function(historyElem) {
-                FilterHistoryControllerUntil.prepareNewStructure(currentStructure, historyElem.filter);
+                FilterHistoryControllerUntil.prepareNewStructure(currentStructure, historyElem.filter, self._options.noSaveFilters);
                 var linkText = FilterToStringUtil.string(historyElem.filter, 'historyItemTemplate');
 
                 if(linkText) {
