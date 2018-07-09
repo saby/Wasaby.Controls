@@ -27,18 +27,18 @@ function(cMerge,
             handlers: cfg.handlers,
             _initCompoundArea: cfg._initCompoundArea,
 
-            //На каждое обновление конфига генерируем новый id, чтобы понять, что нужно перерисовать шаблон
+            // На каждое обновление конфига генерируем новый id, чтобы понять, что нужно перерисовать шаблон
             _compoundId: randomId('compound-')
          };
 
          if (cfg.target) {
-            //нужно для миникарточки, они хотят работать с CompoundArea - и ей надо дать target
-            //причем работают с jquery объектом
+            // нужно для миникарточки, они хотят работать с CompoundArea - и ей надо дать target
+            // причем работают с jquery объектом
             cfg.templateOptions.target = cfg.target;
             cfg.target = cfg.target[0] ? cfg.target[0] : cfg.target;
          }
 
-         if (cfg.record) { //от RecordFloatArea
+         if (cfg.record) { // от RecordFloatArea
             cfg.templateOptions.record = cfg.record;
          }
          if (cfg.parent) {
@@ -47,7 +47,7 @@ function(cMerge,
          if (cfg.opener) {
             cfg.templateOptions.__openerFromCfg = cfg.opener;
          }
-         if (cfg.newRecord) { //от RecordFloatArea
+         if (cfg.newRecord) { // от RecordFloatArea
             cfg.templateOptions.newRecord = cfg.newRecord;
          }
 
@@ -70,12 +70,10 @@ function(cMerge,
 
             if (!cfg.templateOptions.handlers.onDestroy) {
                cfg.templateOptions.handlers.onDestroy = destrFunc;
+            } else if (cfg.templateOptions.handlers.onDestroy.push) {
+               cfg.templateOptions.handlers.onDestroy.push(destrFunc);
             } else {
-               if (cfg.templateOptions.handlers.onDestroy.push) {
-                  cfg.templateOptions.handlers.onDestroy.push(destrFunc);
-               } else {
-                  cfg.templateOptions.handlers.onDestroy = [cfg.templateOptions.handlers.onDestroy, destrFunc];
-               }
+               cfg.templateOptions.handlers.onDestroy = [cfg.templateOptions.handlers.onDestroy, destrFunc];
             }
          }
 
@@ -83,12 +81,10 @@ function(cMerge,
             cfg.templateOptions.linkedContext = cfg.linkedContext;
          }
 
+         cfg.className = cfg.className || '';
+
          if (cfg.maximize) {
-            if (cfg.className) {
-               cfg.className += ' ws-window';
-            } else {
-               cfg.className = 'ws-window';
-            }
+            cfg.className += ' ws-window';
          }
 
          if (cfg.hasOwnProperty('autoHide')) {
@@ -116,7 +112,7 @@ function(cMerge,
          }
 
          if (cfg.hasOwnProperty('side')) {
-            cfg.horizontalAlign = {side: revertPosition[cfg.side]};
+            cfg.horizontalAlign = { side: revertPosition[cfg.side] };
          }
 
          if (cfg.horizontalAlign) {
@@ -141,7 +137,7 @@ function(cMerge,
 
          cfg.corner = cfg.corner || {};
          if (cfg.direction !== 'right' && cfg.direction !== 'left') {
-            cfg.direction = 'left';
+            cfg.direction = cfg.direction ? 'left' : 'right';
          }
          cfg.corner.horizontal = revertPosition[cfg.direction];
 
@@ -149,16 +145,27 @@ function(cMerge,
             cfg.templateOptions.hideCross = !cfg.border;
          }
 
+         if (cfg.hasOwnProperty('autoShow')) {
+            cfg.templateOptions.autoShow = cfg.autoShow;
+            cfg.templateOptions._isVisible = cfg.autoShow;
+            cfg.closeByExternalClick = false;
+            cfg.className += ' ws-hidden';
+         }
+
+         if (cfg.hasOwnProperty('autoCloseOnHide')) {
+            cfg.templateOptions.autoCloseOnHide = cfg.autoCloseOnHide;
+         }
+
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
          this._setSizes(cfg, templateClass);
       },
       _prepareConfigForNewTemplate: function(cfg, templateClass) {
-         cfg.componentOptions = {innerComponentOptions: cfg.templateOptions || cfg.componentOptions};
+         cfg.componentOptions = { innerComponentOptions: cfg.templateOptions || cfg.componentOptions };
          cfg.componentOptions.innerComponentOptions.template = cfg.template;
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea';
          cfg.animation = 'off';
 
-         if (cfg.onResultHandler) { //передаем onResult - колбэк, объявленный на opener'e, в compoundArea.
+         if (cfg.onResultHandler) { // передаем onResult - колбэк, объявленный на opener'e, в compoundArea.
             cfg.componentOptions.onResultHandler = cfg.onResultHandler;
          }
 
@@ -207,7 +214,7 @@ function(cMerge,
          return newCfg;
       },
 
-      //Берем размеры либо с опций, либо с дименшенов
+      // Берем размеры либо с опций, либо с дименшенов
       _setSizes: function(cfg, templateClass) {
          var dimensions = this._getDimensions(templateClass);
          var templateOptions = this._getTemplateOptions(templateClass);
@@ -233,10 +240,10 @@ function(cMerge,
          cfg.minHeight = cfg.minHeight || cfg.maxHeight;
          cfg.maxHeight = cfg.maxHeight || cfg.minHeight;
 
-         if (!cfg.minHeight) { //нет размеров - строимся по контенту
+         if (!cfg.minHeight) { // нет размеров - строимся по контенту
             cfg.autoHeight = true;
          }
-         if (!cfg.minWidth) { //нет размеров - строимся по контенту
+         if (!cfg.minWidth) { // нет размеров - строимся по контенту
             cfg.autoWidth = true;
          }
       },
@@ -256,10 +263,9 @@ function(cMerge,
       },
 
       _getTemplateOptions: function(templateClass) {
-         var initializer = (templateClass.prototype || templateClass)._initializer; //опции можно достать не везде
+         var initializer = (templateClass.prototype || templateClass)._initializer; // опции можно достать не везде
          return initializer ? OpenDialogUtil.getOptionsFromProto(templateClass) : {};
       }
 
    };
-}
-);
+});
