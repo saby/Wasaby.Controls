@@ -1,5 +1,5 @@
-<Controls.Container.Async attr:class="{{selectedKey !== idPropertyItem ? 'ws-hidden'}}"
+<Controls.Container.Async attr:class="{{_options.selectedKey !== idPropertyItem ? 'ws-hidden'}}"
                           attr:key="{{idPropertyItem}}"
-                          templateName="{{item.get(itemTemplateProperty)}}">
-    <ws:templateOptions item="{{item}}" readOnly="{{readOnly}}" theme="{{theme}}" type="{{type}}"/>
+                          templateName="{{item.get(_options.itemTemplateProperty)}}"
+                          templateOptions="{{_options}}">
 </Controls.Container.Async>

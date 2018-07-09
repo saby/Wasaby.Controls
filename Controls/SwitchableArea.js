@@ -3,9 +3,10 @@ define('Controls/SwitchableArea',
       'Core/Control',
       'Controls/SwitchableArea/ViewModel',
       'tmpl!Controls/SwitchableArea/SwitchableArea',
-      'tmpl!Controls/SwitchableArea/resource/itemTemplate'
+      'tmpl!Controls/SwitchableArea/resource/itemTemplate',
+      'Controls/Application/HeadDataContext'
    ],
-   function(Control, ViewModel, template) {
+   function(Control, ViewModel, template, defaultItemTemplate, HeadDataContext) {
 
       'use strict';
 
@@ -37,6 +38,7 @@ define('Controls/SwitchableArea',
 
       var SwitchableArea = Control.extend({
          _template: template,
+         _defaultItemTemplate: defaultItemTemplate,
 
          _beforeMount: function(options) {
             this._viewModel = new ViewModel(options.items, options.selectedKey);

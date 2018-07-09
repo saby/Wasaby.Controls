@@ -1,7 +1,7 @@
 <div class="controls-SwitchableArea">
     <ws:for data="item in _options.items">
         <ws:if data="{{_viewModel.mustBeLoad(item)}}">
-            <ws:partial template="{{_options.itemTemplate}}" idPropertyItem="{{getIdPropertyItem(item)}}" item="{{item}}" selectedKey="{{_options.selectedKey}}" itemTemplateProperty="{{_options.itemTemplateProperty}}"/>
+            <ws:partial template="{{_options.itemTemplate || _defaultItemTemplate}}" idPropertyItem="{{getIdPropertyItem(item)}}" item="{{item}}" _options="{{_options}}"/>
         </ws:if>
     </ws:for>
 </div>
