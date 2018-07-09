@@ -332,6 +332,7 @@ define('SBIS3.CONTROLS/TextBox', [
        */
       setInformationIconColor: function (color) {
          if (!color) {
+            this._options.informationIconColor = color;
             this._destroyInformationIcon();
             return;
          }

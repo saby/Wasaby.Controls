@@ -59,9 +59,13 @@ define('Controls/Popup/Opener/BaseOpener',
          _openPopup: function(cfg, controller) {
             var self = this;
             this._requireModules(cfg, controller).addCallback(function(result) {
-               Base.showDialog(result.template, cfg, result.controller, self._popupId).addCallback(function(popupId) {
-                  self._popupId = popupId;
+               Base.showDialog(result.template, cfg, result.controller, self._popupId).addCallback(function(result) {
                   self._isExecuting = false;
+                  if (Base.isNewEnvironment()) {
+                     self._popupId = result;
+                  } else {
+                     self._action = result;
+                  }
                });
             });
          },
@@ -111,6 +115,9 @@ define('Controls/Popup/Opener/BaseOpener',
          close: function() {
             if (this._popupId) {
                ManagerController.remove(this._popupId);
+            } else if (!Base.isNewEnvironment() && this._action) {
+               this._action.destroy();
+               this._action = null;
             }
          },
 
@@ -163,8 +170,9 @@ define('Controls/Popup/Opener/BaseOpener',
          } else {
             requirejs(['Controls/Popup/Compatible/BaseOpener', 'SBIS3.CONTROLS/Action/List/OpenEditDialog'], function(CompatibleOpener, OpenEditDialog) {
                var newCfg = CompatibleOpener._prepareConfigFromNewToOld(cfg);
-               new OpenEditDialog().execute(newCfg);
-               def.callback();
+               var action = new OpenEditDialog();
+               action.execute(newCfg);
+               def.callback(action);
             });
          }
          return def;

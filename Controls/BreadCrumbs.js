@@ -1,8 +1,8 @@
-define('Controls/BreadCrumbsController', [
+define('Controls/BreadCrumbs', [
    'Core/Control',
    'Controls/Utils/BreadCrumbsUtil',
    'Controls/Utils/FontLoadUtil',
-   'tmpl!Controls/BreadCrumbsController/BreadCrumbsController'
+   'tmpl!Controls/BreadCrumbs/BreadCrumbs'
 ], function(
    Control,
    BreadCrumbsUtil,
@@ -14,7 +14,7 @@ define('Controls/BreadCrumbsController', [
    /**
     * Breadcrumbs.
     *
-    * @class Controls/BreadCrumbsController
+    * @class Controls/BreadCrumbs
     * @extends Core/Control
     * @mixes Controls/interface/IBreadCrumbs
     * @control
@@ -23,7 +23,7 @@ define('Controls/BreadCrumbsController', [
     * @demo Controls-demo/BreadCrumbs/BreadCrumbs
     */
 
-   var BreadCrumbsController = Control.extend({
+   var BreadCrumbs = Control.extend({
       _template: template,
       _visibleItems: [],
       _oldWidth: 0,
@@ -31,7 +31,7 @@ define('Controls/BreadCrumbsController', [
       _afterMount: function() {
          if (this._options.items && this._options.items.length > 0) {
             this._oldWidth = this._container.clientWidth;
-            FontLoadUtil.waitForFontLoad('controls-BreadCrumbsV__crumbMeasurer').addCallback(function() {
+            FontLoadUtil.waitForFontLoad('controls-BreadCrumbsView__crumbMeasurer').addCallback(function() {
                BreadCrumbsUtil.calculateBreadCrumbsToDraw(this,  this._options.items, this._oldWidth);
                this._forceUpdate();
             }.bind(this));
@@ -54,5 +54,5 @@ define('Controls/BreadCrumbsController', [
       }
    });
 
-   return BreadCrumbsController;
+   return BreadCrumbs;
 });

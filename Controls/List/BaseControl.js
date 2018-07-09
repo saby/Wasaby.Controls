@@ -15,6 +15,7 @@ define('Controls/List/BaseControl', [
    'Controls/List/ItemActions/Utils/Actions',
    'Controls/List/EditInPlace',
    'Controls/List/ItemActions/ItemActionsControl',
+
    'css!Controls/List/BaseControl/BaseControl'
 ], function(Control,
    IoC,
@@ -55,7 +56,7 @@ define('Controls/List/BaseControl', [
 
                //pre scroll loading
                //не использовать удалить по задаче https://online.sbis.ru/opendoc.html?guid=f968dcef-6d9f-431c-9653-5aea20aeaff2
-               if (!list.getCount()) {
+               if (self._mounted && !list.getCount()) {
                   self._notify('checkScroll', [], {bubbling: true});
                }
 
@@ -96,7 +97,7 @@ define('Controls/List/BaseControl', [
 
                //pre scroll loading
                //не использовать удалить по задаче https://online.sbis.ru/opendoc.html?guid=f968dcef-6d9f-431c-9653-5aea20aeaff2
-               if (!addedItems.getCount()) {
+               if (self._mounted && !addedItems.getCount()) {
                   self._notify('checkScroll', [], {bubbling: true});
                }
 
@@ -329,7 +330,7 @@ define('Controls/List/BaseControl', [
 
          if (actionName === 'itemClick') {
             var action = args.data && args.data[0] && args.data[0].getRawData();
-            aUtil.actionClick(self, event, action, self._listViewModel.getActiveItem());
+            aUtil.itemActionsClick(self, event, action, self._listViewModel.getActiveItem());
             self._children.itemActionsOpener.close();
          }
          self._listViewModel.setActiveItem(null);
@@ -465,8 +466,8 @@ define('Controls/List/BaseControl', [
 
             //this._virtualScroll.setItemsCount(this._listViewModel.getCount());
          } else
-         if (newOptions.selectedKey !== this._options.selectedKey) {
-            this._listViewModel.setMarkedKey(newOptions.selectedKey);
+         if (newOptions.markedKey !== this._options.markedKey) {
+            this._listViewModel.setMarkedKey(newOptions.markedKey);
          }
 
 
@@ -596,7 +597,9 @@ define('Controls/List/BaseControl', [
       * @returns {Core/Deferred}
       */
       editItem: function(options) {
-         this._children.editInPlace.editItem(options);
+         if (!this._options.readOnly) {
+            this._children.editInPlace.editItem(options);
+         }
       },
 
       /**
@@ -605,7 +608,9 @@ define('Controls/List/BaseControl', [
       * @returns {Core/Deferred}
       */
       addItem: function(options) {
-         this._children.editInPlace.addItem(options);
+         if (!this._options.readOnly) {
+            this._children.editInPlace.addItem(options);
+         }
       },
 
       _onBeforeItemAdd: function(e, options) {
@@ -670,8 +675,8 @@ define('Controls/List/BaseControl', [
          this._notify('afterItemsMove', [items, target, position, result]);
       },
 
-      _onActionClick: function(e, action, item) {
-         this._notify('actionClick', [action, item]);
+      _onItemActionsClick: function(e, action, item) {
+         this._notify('itemActionsClick', [action, item]);
       },
 
       _itemMouseDown: function(event, itemData, domEvent) {
