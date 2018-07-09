@@ -350,6 +350,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             return this.__openerFromCfg || null;
          },
 
+         getTemplateName: function() {
+            return this._template;
+         },
+
          /* start RecordFloatArea */
          getRecord: function() {
             return this._options.record || this._options.templateOptions && this._options.templateOptions.record;
