@@ -1,7 +1,6 @@
 <ws:partial
    template="{{_options.content}}"
    scope="{{_options}}"
-   on:checkBoxClick="_onCheckBoxClickHandler()"
-   on:afterItemsRemove="_onAfterItemsRemoveHandler()"
+   on:selectionChange="_onSelectionChange()"
    selectedKeys="{{context.selection.selectedKeys}}"
 />

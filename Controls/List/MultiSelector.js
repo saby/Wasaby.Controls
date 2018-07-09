@@ -12,14 +12,8 @@ define('Controls/List/MultiSelector', [
    var MultiSelector = Control.extend({
       _template: template,
 
-      _onCheckBoxClickHandler: function(event, key, status) {
-         this._notify('listCheckBoxClick', [key, status], {
-            bubbling: true
-         });
-      },
-
-      _onAfterItemsRemoveHandler: function(event, keys) {
-         this._notify('listAfterItemsRemove', [keys], {
+      _onSelectionChange: function(event, keys, status) {
+         this._notify('listSelectionChange', [keys, status], {
             bubbling: true
          });
       }

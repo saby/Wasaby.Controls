@@ -63,9 +63,13 @@ define('Controls/List/Tree/TreeViewModel', [
             var
                res = 0;
 
-            _private.getAllChildren(hierarchyRelation, rootId, items).forEach(function(child) {
+            hierarchyRelation.getChildren(rootId, items).forEach(function(child) {
                if (selectedKeys.indexOf(child.getId()) !== -1) {
-                  res++;
+                  if (hierarchyRelation.isNode(child)) {
+                     res += 1 + _private.getSelectedChildrenCount(hierarchyRelation, child.getId(), items, selectedKeys);
+                  } else {
+                     res++;
+                  }
                }
             });
 
@@ -136,19 +140,18 @@ define('Controls/List/Tree/TreeViewModel', [
 
          getCurrent: function() {
             var
-               current = TreeViewModel.superclass.getCurrent.apply(this, arguments),
-               allChildrenSelected;
+               current = TreeViewModel.superclass.getCurrent.apply(this, arguments);
             current.isExpanded = !!this._expandedNodes[current.key];
 
-            //TODO: смотреть на hasMore. Если подгружены не все дети, значит false
-            if (current.dispItem.isNode()) {
-               allChildrenSelected = _private.allChildrenSelected(this._hierarchyRelation, current.key, this._items, this._selectedKeys);
-               current.multiSelectStatus =
-                  this._selectedKeys.indexOf(current.key) !== -1
-                     ? allChildrenSelected
-                        ? true
-                        : null
-                     : false;
+            if (current.dispItem.isNode() && this._selectedKeys.indexOf(current.key) !== -1) {
+               //TODO: проверка на hasMore должна быть тут
+               if (_private.allChildrenSelected(this._hierarchyRelation, current.key, this._items, this._selectedKeys)) {
+                  current.multiSelectStatus = true;
+               } else if (_private.getSelectedChildrenCount(this._hierarchyRelation, current.key, this._items, this._selectedKeys)) {
+                  current.multiSelectStatus = null;
+               } else {
+                  current.multiSelectStatus = false;
+               }
             }
 
             return current;

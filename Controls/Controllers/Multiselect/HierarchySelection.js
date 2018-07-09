@@ -67,10 +67,6 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
          },
 
          isParentExcluded: function(hierarchyRelation, key, selectedKeys, excludedKeys, items) {
-            if (key === null) {
-               return false;
-            }
-
             var
                parent = hierarchyRelation.getParent(key, items),
                parentExcluded,
@@ -176,26 +172,11 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
                parentId = parent.getId();
                if (this._isAllSelection(this._getParams(parentId))) {
                   ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [key]);
-                  // if (!_private.getSelectedChildrenCount(this._hierarchyRelation, parentId, this._selectedKeys, this._excludedKeys, this._items)) {
-                  //    childrenIds = _private.getChildrenIds(this._hierarchyRelation, parentId, this._items);
-                  //    ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, childrenIds);
-                  //    ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, [parentId]);
-                  //    ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [parentId]);
-                  //    parent = this._hierarchyRelation.getParent(parentId, this._items);
-                  //    if (parent && this._isAllSelection(this._getParams(parent.getId()))) {
-                  //       ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [parent.getId()]);
-                  //    }
-                  // }
                }
                parent = this._hierarchyRelation.getParent(parentId, this._items);
             }
             if (parent === null && this._isAllSelection(this._getParams(null))) {
                ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [key]);
-               // if (!_private.getSelectedChildrenCount(this._hierarchyRelation, null, this._selectedKeys, this._excludedKeys, this._items)) {
-               //    childrenIds = _private.getChildrenIds(this._hierarchyRelation, null, this._items);
-               //    ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, childrenIds);
-               //    ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, [null]);
-               // }
             }
          }.bind(this));
       },

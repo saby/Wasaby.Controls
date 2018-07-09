@@ -40,24 +40,15 @@ define('Controls/Container/MultiSelector', [
          return this._multiselection.getSelection();
       },
 
-      _onCheckBoxClickHandler: function(event, key, status) {
-         if (status === true || status === null) {
-            this._multiselection.unselect([key]);
-         } else {
-            this._multiselection.select([key]);
-         }
+      _onListSelectionChange: function(event, diff) {
+         this._multiselection.unselect(diff.removed);
+         this._multiselection.select(diff.added);
 
          this._updateSelectionContext();
       },
 
       _selectedTypeChangedHandler: function(event, typeName) {
          this._multiselection[typeName]();
-
-         this._updateSelectionContext();
-      },
-
-      _afterItemsRemoveHandler: function(event, keys) {
-         this._multiselection.unselect(keys);
 
          this._updateSelectionContext();
       },
