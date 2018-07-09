@@ -31,17 +31,21 @@ define('Controls/Popup/Opener/BaseOpener',
           * @function Controls/Popup/Opener/Base#open
           * @param popupOptions конфигурация попапа
           * @param controller стратегия позиционирования попапа
+          * @param displayMode режим отображения попапа
+          * @variant 'single' одновременно на экране может присутствовать только один попап
+          * @variant 'multiple' одновременно на экране может присутствовать несколько попапов
           */
-         open: function(popupOptions, controller) {
+         open: function(popupOptions, controller, displayMode) {
             var self = this;
             var cfg = this._getConfig(popupOptions);
+            var shouldCreateNewPopup = !this.isOpened() || displayMode === 'multiple';
 
             if (this._isExecuting) { // Если мы еще не обработали первый вызов, то дожидаемся его
                return;
             }
             this._isExecuting = true;
 
-            if (!this.isOpened()) { // удаляем неактуальный id
+            if (shouldCreateNewPopup) { // удаляем неактуальный id
                this._popupId = null;
             }
 
