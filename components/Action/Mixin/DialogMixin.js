@@ -2,10 +2,11 @@
 define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
    'Core/core-merge',
    'Core/Deferred',
+   'Core/core-instance',
    'WS.Data/Utils',
    'SBIS3.CONTROLS/ControlHierarchyManager',
    'Core/IoC'
-], function(cMerge, Deferred, Utils, ControlHierarchyManager, IoC) {
+], function(cMerge, Deferred, cInstance, Utils, ControlHierarchyManager, IoC) {
    'use strict';
 
    /**
@@ -423,7 +424,11 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
       after: {
          destroy: function() {
             if (this._dialog) {
-               this._dialog.destroy();
+               if (cInstance.instanceOfModule(this._dialog, 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea')) {
+                  this._dialog.close();
+               } else {
+                  this._dialog.destroy();
+               }
                this._dialog = undefined;
             }
             document.removeEventListener('mousedown', this._documentClickHandler);
