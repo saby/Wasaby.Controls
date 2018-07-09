@@ -4,6 +4,7 @@
         <Controls.List
                 class="test_list_1"
                 name="list"
+                readOnly="{{_readOnly}}"
                 source="{{_viewSource}}"
                 on:beforeItemEdit="_onItemEdit()"
                 on:beforeItemAdd="_onItemAdd()"
@@ -39,6 +40,7 @@
                 <Controls.Toggle.Checkbox bind:value="_singleEdit" caption="singleEdit" class="demo__singleEdit"/>
                 <Controls.Toggle.Checkbox bind:value="_autoAdd" caption="autoAdd" class="demo__autoAdd"/>
                 <Controls.Toggle.Checkbox bind:value="_showToolbar" caption="showToolbar" class="demo__showToolbar"/>
+                <Controls.Toggle.Checkbox bind:value="_readOnly" caption="readOnly" class="demo__readOnly"/>
             </div>
         </div>
     </div>

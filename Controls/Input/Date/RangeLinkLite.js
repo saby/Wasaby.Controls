@@ -2,6 +2,7 @@ define('Controls/Input/Date/RangeLinkLite', [
    'Core/Control',
    'Core/core-merge',
    'Controls/Input/Date/interface/ILinkView',
+   'Controls/Date/interface/IPeriodLiteDialog',
    'Controls/Date/model/DateRange',
    'Controls/Calendar/Utils',
    'tmpl!Controls/Input/Date/RangeLinkLite/RangeLinkLite',
@@ -10,6 +11,7 @@ define('Controls/Input/Date/RangeLinkLite', [
    BaseControl,
    coreMerge,
    ILinkView,
+   IPeriodLiteDialog,
    DateRangeModel,
    CalendarControlsUtils,
    componentTmpl
@@ -23,6 +25,7 @@ define('Controls/Input/Date/RangeLinkLite', [
     * @class Controls/Input/Date/RangeLinkLite
     * @extends Core/Control
     * @mixes Controls/Input/Date/interface/ILinkView
+    * @mixes Controls/Date/interface/IPeriodLiteDialog
     * @control
     * @public
     * @category Input
@@ -49,8 +52,7 @@ define('Controls/Input/Date/RangeLinkLite', [
       openDialog: function(event) {
          var className;
 
-         if (this._options.showYears && !this._options.showMonths &&
-            !this._options.showQuarters && !this._options.showHalfyears) {
+         if (!this._options.chooseMonths && !this._options.chooseQuarters && !this._options.chooseHalfyears) {
             className = 'controls-DateRangeLinkLite__picker-years-only';
          } else {
             className = 'controls-DateRangeLinkLite__picker-normal';
@@ -92,11 +94,11 @@ define('Controls/Input/Date/RangeLinkLite', [
    Component.EMPTY_CAPTIONS = ILinkView.EMPTY_CAPTIONS;
 
    Component.getDefaultOptions = function() {
-      return coreMerge({}, ILinkView.getDefaultOptions());
+      return coreMerge(coreMerge({}, IPeriodLiteDialog.getDefaultOptions()), ILinkView.getDefaultOptions());
    };
 
    Component.getOptionTypes = function() {
-      return coreMerge({}, ILinkView.getOptionTypes());
+      return coreMerge(coreMerge({}, IPeriodLiteDialog.getOptionTypes()), ILinkView.getOptionTypes());
    };
 
    return Component;

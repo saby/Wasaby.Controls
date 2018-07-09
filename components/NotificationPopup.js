@@ -33,6 +33,7 @@ define('SBIS3.CONTROLS/NotificationPopup', [
                 * @remark
                 * По умолчанию используется шаблон с иконкой и заголовком.
                 * Внутри шаблона объект it возвращает опции класса.
+                * Чтобы при создании headerTemplate иконка, отображающая статус процесса, менялась, нужно элементу с иконкой добавить класс controls-NotificationPopup__header_icon.
                 * @see bodyTemplate
                 * @see footerTemplate
                 * @see icon
