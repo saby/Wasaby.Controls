@@ -90,6 +90,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             itemsModelCurrent.hasParent = this._hasParent(itemsModelCurrent.item);
             itemsModelCurrent.isSelected = this._isItemSelected(itemsModelCurrent.item);
             itemsModelCurrent.icon = itemsModelCurrent.item.get('icon');
+            itemsModelCurrent.iconStyle = itemsModelCurrent.item.get('iconStyle');
             itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
             itemsModelCurrent.template = itemsModelCurrent.item.get(itemsModelCurrent.itemTemplateProperty);
             return itemsModelCurrent;
