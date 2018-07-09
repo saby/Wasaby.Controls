@@ -48,9 +48,9 @@ node('controls') {
                 description: '',
                 name: 'theme'),
             choice(choices: "chrome\nff\nie\nedge", description: '', name: 'browser_type'),
-            booleanParam(defaultValue: true, description: "Запуск тестов верстки", name: 'run_reg'),
-            booleanParam(defaultValue: true, description: "Запуск интеграционных тестов", name: 'run_int'),
-            booleanParam(defaultValue: true, description: "Запуск unit тестов", name: 'run_unit'),
+            booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
+            booleanParam(defaultValue: false, description: "Запуск интеграционных тестов", name: 'run_int'),
+            booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
             booleanParam(defaultValue: false, description: "Запуск только упавших тестов из предыдущего билда", name: 'RUN_ONLY_FAIL_TEST')
             ]),
         pipelineTriggers([cron("H */1 * * 5-7")])
