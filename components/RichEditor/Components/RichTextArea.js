@@ -214,8 +214,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      relative_urls: false,
                      convert_urls: false,
                      formats: constants.styles,
-                     paste_webkit_styles: 'color font-size text-align text-decoration width height max-width padding padding-left padding-right padding-top padding-bottom',
-                     paste_retain_style_properties: 'color font-size font-family text-align text-decoration width height max-width line-height padding padding-left padding-right padding-top padding-bottom background background-color',
+                     paste_webkit_styles: 'color font-size font-weight font-style font-family text-align text-decoration width height max-width line-height padding padding-left padding-right padding-top padding-bottom background background-color',
+                     paste_retain_style_properties: 'color font-size font-weight font-style font-family text-align text-decoration width height max-width line-height padding padding-left padding-right padding-top padding-bottom background background-color',
                      paste_as_text: true,
                      extended_valid_elements: 'div[class|onclick|style|id],img[unselectable|class|src|alt|title|width|height|align|name|style]',
                      body_class: 'ws-basic-style',
@@ -719,8 +719,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   save = typeof saveStyles === 'undefined' ? true : saveStyles,
                   self = this,
                   dialog,
-                  eventResult,
                   prepareAndInsertContent = function (content) {
+                     var i = content.indexOf('<!--StartFragment-->');
+                     var isCleared = i != -1;
+                     if (isCleared) {
+                        // Это фрагмент текста из MS Word - оставитьтолько непосредственно значимый фрагмент текста
+                        var j = content.indexOf('<!--EndFragment-->');
+                        content = content.substring(i + 20, j !== -1 ? j : content.length).trim();
+                     }
                      //получение результата из события PastePreProcess тини потому что оно возвращает контент чистым от тегов Ворда,
                      //_isPasteWithStyles = true нужно чтобы в нашем обработчике PastePreProcess мы не обрабатывали а прокинули результат в обработчик тини
                      var editor = self._tinyEditor;
@@ -730,17 +736,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         pastePlugin.clipboard.pasteHtml(content, false);
                      }
                      else {
-                        var i = content.indexOf('<!--StartFragment-->');
-                        if (i != -1) {
-                           // Это фрагмент текста из MS Word - оставитьтолько непосредственно значимый фрагмент текста
-                           var j = content.indexOf('<!--EndFragment-->');
-                           content = content.substring(i + 20, j !== -1 ? j : content.length).trim();
-                        }
-                        else {
+                        if (!isCleared) {
                            //Вычищаем все ненужные теги, т.к. они в конечном счёте превращаютя в <p>
                            content = content.replace(/<html[^>]*>|<body[^>]*>|<\x2Fhtml>|<\x2Fbody>/gi, '').trim();
                         }
-                        eventResult = self.getTinyEditor().fire('PastePreProcess', {content:content});
+                        var eventResult = editor.fire('PastePreProcess', {content:content});
                         self.insertHtml(eventResult.content);
                      }
                      delete self._isPasteWithStyles;
@@ -1709,6 +1709,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                codeDialog.setText(editor.plugins.codesample.getCurrentCode(editor) || '');
                codeDialog.show();
             },
+            /**
+             * Метод возвращает объект вида { id: inEditor }
+             * id - id файла на сбис-диске;
+             * inEditor - на момент вызова метода текст редактора содержит данное изображение.
+             * Если inEditor == false, значит изображение было загружено в редактор (или редактор открыли уже с данным изображением),
+             * но на момент вызова метода изображение в редакторе отсутствует.
+             */
             getImages: function() {
                return this._fillImages(true);
             },
@@ -2559,6 +2566,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   if (needStop) {
                      evt.preventDefault();
                      evt.stopPropagation();
+                     //TODO: Обдумать this._container[0].scrollIntoView(evt.alignToTop);//^^^
                   }
                }.bind(this));
             },

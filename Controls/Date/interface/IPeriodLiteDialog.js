@@ -1,10 +1,11 @@
-define('Controls/Date/interface/IPeriodSimpleDialog', [
+define('Controls/Date/interface/IPeriodLiteDialog', [
    'WS.Data/Type/descriptor'
 ], function(types) {
    'use strict';
 
    /**
-    * mixin Controls/Calendar/interface/ISimpleRangeDialog
+    * mixin Controls/Date/interface/IPeriodLiteDialog
+    * @public
     */
    var EMPTY_CAPTIONS = {
       NOT_SPECIFIED: rk('Не указан'),
@@ -18,67 +19,86 @@ define('Controls/Date/interface/IPeriodSimpleDialog', [
          return {
 
             /**
-             * @name Controls/Calendar/interface/ISimpleRangeDialog#year
+             * @name Controls/Date/interface/IPeriodLiteDialog#year
              * @cfg {Date} Displayed period
              */
             year: undefined,
 
+            /**
+             * @name Controls/Date/interface/IPeriodLiteDialog#chooseMonths
+             * @cfg {Boolean} Sets the option to choose a month
+             */
             chooseMonths: true,
+
+            /**
+             * @name Controls/Date/interface/IPeriodLiteDialog#chooseQuarters
+             * @cfg {Boolean} Sets the option to choose a quarter
+             */
             chooseQuarters: true,
+
+            /**
+             * @name Controls/Date/interface/IPeriodLiteDialog#chooseHalfyears
+             * @cfg {Boolean} Sets the option to choose a half-year
+             */
             chooseHalfyears: true,
+
+            /**
+             * @name Controls/Date/interface/IPeriodLiteDialog#chooseYears
+             * @cfg {Boolean} Sets the option to choose a year
+             */
             chooseYears: true,
 
             /**
-             * @name Controls/Calendar/interface/ISimpleRangeDialog#emptyCaption
+             * @name Controls/Date/interface/IPeriodLiteDialog#emptyCaption
              * @cfg {String} Text that is used if the period is not selected
              */
             emptyCaption: undefined,
 
             // TODO: Доделать полноценную поддержку следующих опций. Пока не показываем их в документации.
             /**
-             * @name Controls/Calendar/interface/ISimpleRangeDialog#checkedStart
+             * @name Controls/Date/interface/IPeriodLiteDialog#checkedStart
              * @cfg {Date} The date (month) of the beginning of the checked period
              * @noshow
              */
             checkedStart: undefined,
 
             /**
-             * @name Controls/Calendar/interface/ISimpleRangeDialog#checkedEnd
+             * @name Controls/Date/interface/IPeriodLiteDialog#checkedEnd
              * @cfg {Date} The date(month) of the end of the checked period
              * @noshow
              */
             checkedEnd: undefined,
 
             /**
-             * @name Controls/Calendar/interface/ISimpleRangeDialog#checkedIconCssClass
+             * @name Controls/Date/interface/IPeriodLiteDialog#checkedIconCssClass
              * @cfg {String} The CSS class that will be set on the selected icons. The default is a green tick.
              * @noshow
              */
             checkedIconCssClass: 'icon-Yes icon-done',
 
             /**
-             * @name Controls/Calendar/interface/ISimpleRangeDialog#uncheckedIconCssClass
+             * @name Controls/Date/interface/IPeriodLiteDialog#uncheckedIconCssClass
              * @cfg {String} A CSS class that will be set on unselected icons. The default is a gray tick.
              * @noshow
              */
             uncheckedIconCssClass: 'icon-Yes icon-disabled',
 
             /**
-             * @name Controls/Calendar/interface/ISimpleRangeDialog#checkedIconTitle
+             * @name Controls/Date/interface/IPeriodLiteDialog#checkedIconTitle
              * @cfg {String} A hint that will be displayed on the selected icons. By default, there is no tooltip.
              * @noshow
              */
             checkedIconTitle: undefined,
 
             /**
-             * @name Controls/Calendar/interface/ISimpleRangeDialog#uncheckedIconTitle
+             * @name Controls/Date/interface/IPeriodLiteDialog#uncheckedIconTitle
              * @cfg {String} A hint that will be displayed on the unselected icons. By default, there is no tooltip.
              * @noshow
              */
             uncheckedIconTitle: undefined,
 
             /**
-             * @name Controls/Calendar/interface/ISimpleRangeDialog#iconsHandler
+             * @name Controls/Date/interface/IPeriodLiteDialog#iconsHandler
              * @cfg {Function} Sets the function to be called when the component is repainted.
              * @remark
              * Function Arguments:

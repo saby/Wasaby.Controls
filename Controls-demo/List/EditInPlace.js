@@ -91,6 +91,7 @@ define('Controls-demo/List/EditInPlace', [
       _autoAdd: false,
       _handleItemClick: false,
       _handleClickError: false,
+      _readOnly: false,
       _editingItem: new Model({
          rawData: {
             id: 2,
