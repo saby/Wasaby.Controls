@@ -11,7 +11,11 @@
       "SBIS3.CONTROLS/Button",
       "SBIS3.CONTROLS/Button/*",
       "SBIS3.CONTROLS/SearchForm/*",
-      "SBIS3.CONTROLS/Tree/*"
+      "SBIS3.CONTROLS/Tree/*",
+      "SBIS3.CONTROLS/BreadCrumbs",
+      "SBIS3.CONTROLS/BreadCrumbs/*",
+      "SBIS3.CONTROLS/ComponentBinder",
+      "SBIS3.CONTROLS/ComponentBinder/*"
     ],
     "output": "sbis3controls-browser.package.js"
   },
@@ -28,13 +32,6 @@
       "SBIS3.CONTROLS/Action/*"
     ],
     "output": "sbis3controls-action.package.js"
-  },
-  {
-    "include": [
-      "SBIS3.CONTROLS/BreadCrumbs",
-      "SBIS3.CONTROLS/BreadCrumbs/*"
-    ],
-    "output": "sbis3controls-bread-crumbs.package.js"
   },
   {
     "include": [
@@ -76,13 +73,6 @@
       "SBIS3.CONTROLS/Commands/*"
     ],
     "output": "sbis3controls-commands.package.js"
-  },
-  {
-    "include": [
-      "SBIS3.CONTROLS/ComponentBinder",
-      "SBIS3.CONTROLS/ComponentBinder/*"
-    ],
-    "output": "sbis3controls-componentbinder.package.js"
   },
   {
     "include": [
@@ -146,9 +136,17 @@
   {
     "include": [
       "SBIS3.CONTROLS/FormattedTextBox",
-      "SBIS3.CONTROLS/FormattedTextBox/*"
+      "SBIS3.CONTROLS/FormattedTextBox/*",
+      "SBIS3.CONTROLS/VdomPhoneTextBox",
+      "SBIS3.CONTROLS/VdomPhoneTextBox/*",
+      "SBIS3.CONTROLS/MoneyTextBox",
+      "SBIS3.CONTROLS/MoneyTextBox/*",
+      "SBIS3.CONTROLS/PhoneTextBox",
+      "SBIS3.CONTROLS/PhoneTextBox/*",
+      "SBIS3.CONTROLS/PasswordTextBox",
+      "SBIS3.CONTROLS/PasswordTextBox/*"
     ],
-    "output": "sbis3controls-formattedtextbox.package.js"
+    "output": "sbis3controls-specialtextbox.package.js"
   },
   {
     "include": [
@@ -232,13 +230,6 @@
   },
   {
     "include": [
-      "SBIS3.CONTROLS/MoneyTextBox",
-      "SBIS3.CONTROLS/MoneyTextBox/*"
-    ],
-    "output": "sbis3controls-moneytextbox.package.js"
-  },
-  {
-    "include": [
       "SBIS3.CONTROLS/OperationsPanel",
       "SBIS3.CONTROLS/OperationsPanel/*"
     ],
@@ -267,20 +258,6 @@
   },
   {
     "include": [
-      "SBIS3.CONTROLS/PasswordTextBox",
-      "SBIS3.CONTROLS/PasswordTextBox/*"
-    ],
-    "output": "sbis3controls-passwordtextbox.package.js"
-  },
-  {
-    "include": [
-      "SBIS3.CONTROLS/PhoneTextBox",
-      "SBIS3.CONTROLS/PhoneTextBox/*"
-    ],
-    "output": "sbis3controls-phonetextbox.package.js"
-  },
-  {
-    "include": [
       "SBIS3.CONTROLS/PrintDialogTemplate",
       "SBIS3.CONTROLS/PrintDialogTemplate/*"
     ],
@@ -289,16 +266,15 @@
   {
     "include": [
       "SBIS3.CONTROLS/ProcessStateIndicator",
-      "SBIS3.CONTROLS/ProcessStateIndicator/*"
-    ],
-    "output": "sbis3controls-processstateindicator.package.js"
-  },
-  {
-    "include": [
+      "SBIS3.CONTROLS/ProcessStateIndicator/*",
       "SBIS3.CONTROLS/ProgressBar",
-      "SBIS3.CONTROLS/ProgressBar/*"
+      "SBIS3.CONTROLS/ProgressBar/*",
+      "SBIS3.CONTROLS/Slider",
+      "SBIS3.CONTROLS/Slider/*",
+      "SBIS3.CONTROLS/Spoiler",
+      "SBIS3.CONTROLS/Spoiler/*"
     ],
-    "output": "sbis3controls-progressbar.package.js"
+    "output": "sbis3controls-processing.package.js"
   },
   {
     "include": [
@@ -336,20 +312,6 @@
   },
   {
     "include": [
-      "SBIS3.CONTROLS/Slider",
-      "SBIS3.CONTROLS/Slider/*"
-    ],
-    "output": "sbis3controls-slider.package.js"
-  },
-  {
-    "include": [
-      "SBIS3.CONTROLS/Spoiler",
-      "SBIS3.CONTROLS/Spoiler/*"
-    ],
-    "output": "sbis3controls-spoiler.package.js"
-  },
-  {
-    "include": [
       "SBIS3.CONTROLS/Storages/*"
     ],
     "output": "sbis3controls-storages.package.js"
@@ -384,13 +346,6 @@
   },
   {
     "include": [
-      "SBIS3.CONTROLS/SwitchableArea",
-      "SBIS3.CONTROLS/SwitchableArea/*"
-    ],
-    "output": "sbis3controls-switchablearea.package.js"
-  },
-  {
-    "include": [
       "SBIS3.CONTROLS/Switcher",
       "SBIS3.CONTROLS/Switcher/*"
     ],
@@ -398,19 +353,16 @@
   },
   {
     "include": [
-      "SBIS3.CONTROLS/Tab/*"
+      "SBIS3.CONTROLS/Tab/*",
+      "SBIS3.CONTROLS/SwitchableArea",
+      "SBIS3.CONTROLS/SwitchableArea/*"
     ],
     "output": "sbis3controls-tab.package.js"
   },
   {
     "include": [
       "SBIS3.CONTROLS/TextArea",
-      "SBIS3.CONTROLS/TextArea/*"
-    ],
-    "output": "sbis3controls-textarea.package.js"
-  },
-  {
-    "include": [
+      "SBIS3.CONTROLS/TextArea/*",
       "SBIS3.CONTROLS/TextBox",
       "SBIS3.CONTROLS/TextBox/*"
     ],
@@ -429,13 +381,6 @@
       "SBIS3.CONTROLS/UnitEditor/*"
     ],
     "output": "sbis3controls-uniteditor.package.js"
-  },
-  {
-    "include": [
-      "SBIS3.CONTROLS/VdomPhoneTextBox",
-      "SBIS3.CONTROLS/VdomPhoneTextBox/*"
-    ],
-    "output": "sbis3controls-vdomphonetextbox.package.js"
   },
   {
     "include": [
