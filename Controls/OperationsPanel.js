@@ -41,9 +41,9 @@ define('Controls/OperationsPanel', [
       },
       getAvailableWidth: function(instance) {
          var
-            massSelectorBlock = instance._container.getElementsByClassName('controls-operationsPanelV__massSelector')[0],
-            massSelectorWidth = massSelectorBlock ? massSelectorBlock.clientWidth : 0;
-         return  instance._container.clientWidth - massSelectorWidth;
+            multiSelectorBlock = instance._container.getElementsByClassName('controls-operationsPanelV__multiSelector')[0],
+            multiSelectorWidth = multiSelectorBlock ? multiSelectorBlock.clientWidth : 0;
+         return  instance._container.clientWidth - multiSelectorWidth;
       }
    };
    var OperationsPanel = Control.extend({
