@@ -2,7 +2,8 @@ define('Controls/SwitchableArea',
    [
       'Core/Control',
       'Controls/SwitchableArea/ViewModel',
-      'tmpl!Controls/SwitchableArea/SwitchableArea'
+      'tmpl!Controls/SwitchableArea/SwitchableArea',
+      'tmpl!Controls/SwitchableArea/resource/itemTemplate'
    ],
    function(Control, ViewModel, template) {
 
