@@ -289,14 +289,14 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                return this._unregisterChildPendingOperation(arg);
             } else if (this.__parentFromCfg) {
                parent = this.__parentFromCfg;
-               parent.sendCommand.apply(parent, argWithName);
+               return parent.sendCommand.apply(parent, argWithName);
             } else if (this._parent && this._parent._options.opener) {
                parent = this._parent._options.opener;
 
                /* Если нет sendCommand - значит это не compoundControl - а значит там нет распространения команд */
 
                if (parent.sendCommand) {
-                  parent.sendCommand.apply(parent, argWithName);
+                  return parent.sendCommand.apply(parent, argWithName);
                }
             }
          },
@@ -348,6 +348,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
          getOpener: function() {
             return this.__openerFromCfg || null;
+         },
+
+         getTemplateName: function() {
+            return this._template;
          },
 
          /* start RecordFloatArea */
