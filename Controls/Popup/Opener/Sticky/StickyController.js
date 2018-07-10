@@ -95,6 +95,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
        */
       var StickyController = BaseController.extend({
          elementCreated: function(item, container) {
+            item.position.position = undefined;
             if (this._checkContainer(item, container)) {
                this.prepareConfig(item, container);
             }
@@ -102,15 +103,37 @@ define('Controls/Popup/Opener/Sticky/StickyController',
 
          elementUpdated: function(item, container) {
             if (this._checkContainer(item, container)) {
-               /* Снимаем установленные значения, влияющие на размер и позиционирование, чтобы получить размеры контента */
+               /* start: Снимаем установленные значения, влияющие на размер и позиционирование, чтобы получить размеры контента */
                container.classList.remove('controls-Sticky__reset-margins');
+               var width = container.style.width;
+               var height = container.style.height;
                container.style.width = 'auto';
                container.style.height = 'auto';
 
+               /* end: Снимаем установленные значения, влияющие на размер и позиционирование, чтобы получить размеры контента */
+
                this.prepareConfig(item, container);
+
+               /* start: Возвращаем все значения но узел, чтобы vdom не рассинхронизировался */
+               container.style.width = width;
+               container.style.height = height;
                container.classList.add('controls-Sticky__reset-margins'); // После замеров стилей возвращаем
+               /* end: Возвращаем все значения но узел, чтобы vdom не рассинхронизировался */
             }
          },
+
+         getDefaultPosition: function() {
+            return {
+               top: -10000,
+               left: -10000,
+
+               // Плавающая ошибка на ios, когда position:absolute контейнер создается за пределами экрана и растягивает страницу
+               // что влечет за собой неправильное позиционирование ввиду неверных координат. + на странице стреляют события скролла
+               // Лечится position:fixed при позиционировании попапа за пределами экрана
+               position: 'fixed'
+            };
+         },
+
          prepareConfig: function(item, container) {
             var sizes = this._getPopupSizes(item, container);
             _private.prepareConfig(item, sizes);

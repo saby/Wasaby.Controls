@@ -14,6 +14,7 @@ define('Controls/List/BaseControl', [
    'Controls/List/ItemActions/Utils/Actions',
    'Controls/List/EditInPlace',
    'Controls/List/ItemActions/ItemActionsControl',
+
    'css!Controls/List/BaseControl/BaseControl'
 ], function(Control,
    IoC,
@@ -53,7 +54,7 @@ define('Controls/List/BaseControl', [
 
                //pre scroll loading
                //не использовать удалить по задаче https://online.sbis.ru/opendoc.html?guid=f968dcef-6d9f-431c-9653-5aea20aeaff2
-               if (!list.getCount()) {
+               if (self._mounted && !list.getCount()) {
                   self._notify('checkScroll', [], {bubbling: true});
                }
 
@@ -94,7 +95,7 @@ define('Controls/List/BaseControl', [
 
                //pre scroll loading
                //не использовать удалить по задаче https://online.sbis.ru/opendoc.html?guid=f968dcef-6d9f-431c-9653-5aea20aeaff2
-               if (!addedItems.getCount()) {
+               if (self._mounted && !addedItems.getCount()) {
                   self._notify('checkScroll', [], {bubbling: true});
                }
 
@@ -465,8 +466,8 @@ define('Controls/List/BaseControl', [
 
             //this._virtualScroll.setItemsCount(this._listViewModel.getCount());
          } else
-         if (newOptions.selectedKey !== this._options.selectedKey) {
-            this._listViewModel.setMarkedKey(newOptions.selectedKey);
+         if (newOptions.markedKey !== this._options.markedKey) {
+            this._listViewModel.setMarkedKey(newOptions.markedKey);
          }
 
 

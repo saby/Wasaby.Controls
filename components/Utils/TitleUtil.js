@@ -6,16 +6,17 @@ define('SBIS3.CONTROLS/Utils/TitleUtil', ['SBIS3.CONTROLS/Utils/GetTextWidth', '
     */
    return /** @lends SBIS3.CONTROLS/Utils/TitleUtil.prototype */ {
       /**
-       *
-       * @param container
+       * @param container - контейнер с текстом.
+       * @param ellipsisContainer - контейнер, ограничивающий ширину.
        */
-      setTitle: function(container) {
+      setTitle: function(container, ellipsisContainer) {
          var innerText;
          var style;
          var width;
          container = container && container.get ? container.get(0) : container;
+         ellipsisContainer = ellipsisContainer && ellipsisContainer.get ? ellipsisContainer.get(0) : ellipsisContainer;
          if (container) {
-            style = window.getComputedStyle(container);
+            style = window.getComputedStyle(ellipsisContainer || container);
             width = parseInt(style.width, 10);
             innerText = container.innerText;
 
