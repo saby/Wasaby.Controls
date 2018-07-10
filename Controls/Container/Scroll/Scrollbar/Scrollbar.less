@@ -5,12 +5,9 @@
    border-color: transparent;
    padding: 0 @margin_Scrollbar;
    border-width: @margin_Scrollbar 0;
+   width: @width_Scrollbar + 2 * @margin_Scrollbar;
    transition: width @animation-duration_Scrollbar ease-in-out;
    .box-sizing();
-}
-
-.controls-VScrollbar_visible {
-   width: @width_Scrollbar + 2 * @margin_Scrollbar;
 }
 
 .controls-VScrollbar__thumb {
