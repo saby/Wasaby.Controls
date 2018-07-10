@@ -52,7 +52,7 @@ define('Controls/SwitchableArea',
          _beforeUpdate: function(newOptions) {
             this._viewModel.updateViewModel(newOptions.items, newOptions.selectedKey);
          },
-         getIdPropertyItem: function(item) {
+         getItemId: function(item) {
             return item.get(this._options.items.getIdProperty());
          }
       });
