@@ -1,9 +1,9 @@
 <div>
    <Controls.EditAtPlace
-      name="edit"
-      bind:editObject="item"
-      enabled="{{selected}}"
-      style="withoutBorder"
+           name="edit"
+           bind:editObject="item"
+           enabled="{{selected}}"
+           style="withoutBorder"
    >
       <div>
          <div class="content_tab_margin  header_demo_class inline_editing controls-accent-text">
@@ -12,13 +12,11 @@
                     bind:value="content.editObject.surname"
             >
                <ws:editorTemplate>
-                  <ws:editorTemplate>
-                     <Controls.Input.Text
-                             selectOnClick="{{ false }}"
-                             attr:class="demo_input_width"
-                             size="l"
-                     />
-                  </ws:editorTemplate>
+                  <Controls.Input.Text
+                          selectOnClick="{{ false }}"
+                          attr:class="demo_input_width"
+                          size="l"
+                  />
                </ws:editorTemplate>
             </Controls.EditAtPlace.EditAtPlaceTemplate>
 
@@ -27,13 +25,11 @@
                     bind:value="content.editObject.name"
             >
                <ws:editorTemplate>
-                  <ws:editorTemplate>
-                     <Controls.Input.Text
-                             selectOnClick="{{ false }}"
-                             attr:class="demo_input_width"
-                             size="l"
-                     />
-                  </ws:editorTemplate>
+                  <Controls.Input.Text
+                          selectOnClick="{{ false }}"
+                          attr:class="demo_input_width"
+                          size="l"
+                  />
                </ws:editorTemplate>
             </Controls.EditAtPlace.EditAtPlaceTemplate>
             <Controls.EditAtPlace.EditAtPlaceTemplate
@@ -41,13 +37,11 @@
                     bind:value="content.editObject.patronymic"
             >
                <ws:editorTemplate>
-                  <ws:editorTemplate>
-                     <Controls.Input.Text
-                             selectOnClick="{{ false }}"
-                             attr:class="demo_input_width"
-                             size="l"
-                     />
-                  </ws:editorTemplate>
+                  <Controls.Input.Text
+                          selectOnClick="{{ false }}"
+                          attr:class="demo_input_width"
+                          size="l"
+                  />
                </ws:editorTemplate>
             </Controls.EditAtPlace.EditAtPlaceTemplate>
          </div>
