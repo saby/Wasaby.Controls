@@ -258,8 +258,6 @@ define('SBIS3.CONTROLS/SelectorButton',
          if(selectedItems) {
             selectedItems.each(function(rec) {
                displayText.push(
-                  // Чтобы не тянуть в зависимости htmlToText из Deprecated/helpers/string-helpers,
-                  // выполним replace из него прямо тут
                   escapeTagsFromStr((rec.get(self._options.displayProperty) || '').replace(/<br>/g, '\n'), '\\w+')
                );
             });

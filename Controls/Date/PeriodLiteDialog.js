@@ -2,7 +2,7 @@ define('Controls/Date/PeriodLiteDialog', [
    'Core/Control',
    'Core/core-merge',
    'Core/helpers/Date/getFormattedDateRange',
-   'Core/helpers/date-helpers',
+   'Core/helpers/Date/getCurrentPeriod',
    'Core/helpers/i18n/locales',
    'Controls/Date/interface/IPeriodLiteDialog',
    'tmpl!Controls/Date/PeriodLiteDialog/PeriodLiteDialog',
@@ -14,7 +14,7 @@ define('Controls/Date/PeriodLiteDialog', [
    BaseControl,
    coreMerge,
    getFormattedDateRange,
-   dateHelpers,
+   getCurrentPeriod,
    locales,
    IPeriodSimpleDialog,
    componentTmpl,
@@ -198,7 +198,7 @@ define('Controls/Date/PeriodLiteDialog', [
          } else if (this._options.chooseHalfyears) {
             periodType = 'halfyear';
          }
-         period = dateHelpers.getCurrentPeriod(periodType);
+         period = getCurrentPeriod(periodType);
          this.setYear((new Date()).getFullYear());
          this._notify('sendResult', period, { bubbling: true });
       },

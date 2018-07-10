@@ -60,7 +60,7 @@ define('SBIS3.CONTROLS/Storages/SBIS/SBISHistoryStorage', [
             /**
              * @cfg {Function} Функция для сериализации и десериализации.
              * @remark
-             * По-умолчанию используется {@link Core/helpers/string-helpers#serializeURLData} и {@link Core/helpers/string-helpers#deserializeURLData}.
+             * По-умолчанию используется {@link Transport/serializeURLData} и {@link Transport/deserializeURLData}.
              * @example
              * Сделаем сериализатор для даты:
              * <pre>
