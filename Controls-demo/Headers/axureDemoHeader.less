@@ -1,6 +1,13 @@
 .Header_Counter__wrapper {
    display: inline-block;
 }
+.demo__header {
+   margin: 0 10%;
+}
+.demo__block {
+   display: flex;
+   justify-content: space-between;
+}
 .ws-is-no-touch {
    .Header_Counter__wrapper:hover {
       .controls-Header__caption_style-default_hovered {
@@ -19,6 +26,34 @@
 
       .controls-HeaderCounter_style-primary_hovered {
          color: @color_HeaderCounter_style-primary_hovered;
+      }
+   }
+
+   .header_all__clickable:hover {
+      .controls-Header__caption_style-default_hovered {
+         color: @color_Header__caption_style-default_hovered;
+         cursor: pointer;
+      }
+
+      .controls-Header__caption_style-primary_hovered {
+         color: @color_Header__caption_style-primary_hovered;
+         cursor: pointer;
+      }
+
+      .controls-HeaderCounter_style-default_hovered {
+         color: @color_HeaderCounter_style-default_hovered;
+      }
+
+      .controls-HeaderCounter_style-primary_hovered {
+         color: @color_HeaderCounter_style-primary_hovered;
+      }
+
+      .controls-HeaderSeparator__icon_style-default {
+         fill: @fill_HeaderSeparator_default_hovered;
+      }
+
+      .controls-HeaderSeparator__icon_style-primary {
+         fill: @fill_HeaderSeparator_primary_hovered;
       }
    }
 }

@@ -1,4 +1,4 @@
-<div>
+<div class="demo__header">
     <h2>Заголовки</h2>
     <h3>Крупный загловок</h3>
     <div>
@@ -6,15 +6,17 @@
         <Controls.Header caption="Заголовок" readOnly="{{true}}" style="primary" size="xl"/>
     </div>
     <h2>Загловок с кликом и без</h2>
-    <div>
-        <Controls.Header caption="Заголовок" readOnly="{{false}}" style="default" size="l"/>
-        <Controls.Header caption="Заголовок" readOnly="{{false}}" style="primary" size="l"/>
-        <br/>
-        <Controls.Header caption="Заголовок" readOnly="{{false}}" style="default" size="m"/>
-        <Controls.Header caption="Заголовок" readOnly="{{false}}" style="primary" size="m"/>
-        <br/>
-        <Controls.Header caption="Заголовок" readOnly="{{false}}" style="default" size="s"/>
-        <Controls.Header caption="Заголовок" readOnly="{{false}}" style="primary" size="s"/>
+    <div class="demo__block">
+        <div>
+            <Controls.Header caption="Заголовок" readOnly="{{false}}" style="default" size="l"/>
+            <Controls.Header caption="Заголовок" readOnly="{{false}}" style="default" size="m"/>
+            <Controls.Header caption="Заголовок" readOnly="{{false}}" style="default" size="s"/>
+        </div>
+        <div>
+            <Controls.Header caption="Заголовок" readOnly="{{false}}" style="primary" size="l"/>
+            <Controls.Header caption="Заголовок" readOnly="{{false}}" style="primary" size="m"/>
+            <Controls.Header caption="Заголовок" readOnly="{{false}}" style="primary" size="s"/>
+        </div>
     </div>
     <h2>Заголовки со счетчиками</h2>
     <div>
@@ -33,35 +35,91 @@
     </div>
     <h2>Разделители</h2>
     <h3>Разделители-заголовки со счетчиком и без. Счетчик опционально</h3>
-    <div>
-        <div attr:class="Header_Counter__wrapper">
-            <Controls.Header caption="test header" style="default" size="l"/>
-            <Controls.Header.Separator/>
+    <div class="demo__block">
+        <div>
+            <div attr:class="Header_Counter__wrapper">
+                <Controls.Header caption="test header" style="default" size="l"/>
+                <Controls.Header.Separator/>
+            </div>
+            <div attr:class="Header_Counter__wrapper">
+                <Controls.Header caption="test header" style="primary" size="m"/>
+                <Controls.Header.Separator/>
+            </div>
         </div>
-        <div attr:class="Header_Counter__wrapper">
-            <Controls.Header caption="test header" style="primary" size="m"/>
-            <Controls.Header.Separator/>
-        </div>
-        <div attr:class="Header_Counter__wrapper">
-            <Controls.Header caption="test header" style="default" size="l"/>
-            <Controls.Header.Counter attr:class="counter" value="{{12}}" style="disabled" size="l"/>
-            <Controls.Header.Separator/>
-        </div>
-        <div attr:class="Header_Counter__wrapper">
-            <Controls.Header caption="test header" style="primary" size="m"/>
-            <Controls.Header.Counter attr:class="counter" value="{{12}}" style="disabled" size="m"/>
-            <Controls.Header.Separator/>
+        <div>
+            <div attr:class="Header_Counter__wrapper">
+                <Controls.Header caption="test header" style="default" size="l"/>
+                <Controls.Header.Counter attr:class="counter" value="{{12}}" style="disabled" size="l"/>
+                <Controls.Header.Separator/>
+            </div>
+            <div attr:class="Header_Counter__wrapper">
+                <Controls.Header caption="test header" style="primary" size="m"/>
+                <Controls.Header.Counter attr:class="counter" value="{{12}}" style="disabled" size="m"/>
+                <Controls.Header.Separator/>
+            </div>
         </div>
     </div>
     <h3>Разделитель-кнопка для показа/скрытия контента</h3>
-    <div>
-        <Controls.Button.ButtonSeparator on:click="clickIcon()" bold="{{true}}" style="Accent" value="{{_iconValue}}"/>
-        <Controls.Button.ButtonSeparator on:click="clickIcon()" bold="{{false}}" style="Accent" value="{{_iconValue}}"/>
-        <br/>
-        <Controls.Button.ButtonSeparator on:click="clickIcon()" bold="{{true}}" style="Main" value="{{_iconValue}}"/>
-        <Controls.Button.ButtonSeparator on:click="clickIcon()" bold="{{false}}" style="Main" value="{{_iconValue}}"/>
-        <br/>
-        <Controls.Button.ButtonSeparator on:click="clickIcon()" bold="{{true}}" style="Additional" value="{{_iconValue}}"/>
-        <Controls.Button.ButtonSeparator on:click="clickIcon()" bold="{{false}}" style="Additional" value="{{_iconValue}}"/>
+    <div class="demo__block">
+        <div>
+            <Controls.Button.ButtonSeparator on:click="clickIcon()" bold="{{true}}" style="Accent" value="{{_iconValue}}"/>
+            <Controls.Button.ButtonSeparator on:click="clickIcon()" bold="{{true}}" style="Main" value="{{_iconValue}}"/>
+            <Controls.Button.ButtonSeparator on:click="clickIcon()" bold="{{true}}" style="Additional" value="{{_iconValue}}"/>
+        </div>
+        <div>
+            <Controls.Button.ButtonSeparator on:click="clickIcon()" bold="{{false}}" style="Accent" value="{{_iconValue}}"/>
+            <Controls.Button.ButtonSeparator on:click="clickIcon()" bold="{{false}}" style="Main" value="{{_iconValue}}"/>
+            <Controls.Button.ButtonSeparator on:click="clickIcon()" bold="{{false}}" style="Additional" value="{{_iconValue}}"/>
+        </div>
+        <Controls.Button.BigSeparator on:click="clickIcon()" value="{{_iconValue}}"/>
+    </div>
+    <h3>Разделитель кнопка для показа скрытия контента с отдельно кликабельным заголовком и без</h3>
+    <div class="demo__block">
+        <div>
+            <div>
+                <Controls.Header on:click="clickIcon()" caption="test header" style="default" size="l"/>
+                <Controls.Button.ButtonSeparator on:click="clickIcon()" bold="{{true}}" style="Accent" value="{{_iconValue}}"/>
+            </div>
+            <div class="header_all__clickable">
+                <Controls.Header on:click="clickIcon()" caption="test header" style="default" size="l"/>
+                <Controls.Header.Counter on:click="clickIcon()" attr:class="counter" value="{{12}}" style="disabled" size="m"/>
+                <Controls.Button.ButtonSeparator on:click="clickIcon()" bold="{{true}}" style="Accent" value="{{_iconValue}}"/>
+            </div>
+        </div>
+        <div>
+            <div>
+                <Controls.Button.ButtonSeparator on:click="clickIcon()" bold="{{true}}" style="Accent" value="{{_iconValue}}"/>
+                <Controls.Header on:click="clickIcon()" caption="test header" style="default" size="l"/>
+            </div>
+            <div>
+                <Controls.Button.ButtonSeparator on:click="clickIcon()" bold="{{true}}" style="Accent" value="{{_iconValue}}"/>
+                <Controls.Header.Counter on:click="clickIcon()" attr:class="counter" value="{{12}}" style="disabled" size="m"/>
+                <Controls.Header on:click="clickIcon()" caption="test header" style="default" size="l"/>
+            </div>
+        </div>
+    </div>
+    <div class="demo__block">
+        <div>
+            <div>
+                <Controls.Header caption="test header" style="default" size="l"/>
+                <Controls.Button.ButtonSeparator on:click="clickIcon()" bold="{{true}}" style="Accent" value="{{_iconValue}}"/>
+            </div>
+            <div class="header_all__clickable">
+                <Controls.Header caption="test header" style="default" size="l"/>
+                <Controls.Header.Counter attr:class="counter" value="{{12}}" style="disabled" size="m"/>
+                <Controls.Button.ButtonSeparator on:click="clickIcon()" bold="{{true}}" style="Accent" value="{{_iconValue}}"/>
+            </div>
+        </div>
+        <div>
+            <div>
+                <Controls.Button.ButtonSeparator on:click="clickIcon()" bold="{{true}}" style="Accent" value="{{_iconValue}}"/>
+                <Controls.Header caption="test header" style="default" size="l"/>
+            </div>
+            <div>
+                <Controls.Button.ButtonSeparator on:click="clickIcon()" bold="{{true}}" style="Accent" value="{{_iconValue}}"/>
+                <Controls.Header.Counter attr:class="counter" value="{{12}}" style="disabled" size="m"/>
+                <Controls.Header caption="test header" style="default" size="l"/>
+            </div>
+        </div>
     </div>
 </div>
