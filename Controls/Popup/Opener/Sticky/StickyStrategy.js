@@ -89,30 +89,34 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', [], function() {
             }
          };
 
-         // Проверим, возможно окну достаточно места
-         checkOverflow(function(firstOverflowValue) {
-            // Попробуем инвертировать окно и проверим снова
-            self.invert(popupCfg, direction);
-            targetPoint = self.getTargetPoint(popupCfg, targetCoords);
+         if (popupCfg.locationStrategy === 'dontMove') {
+            checkOverflow(function() {});
+         } else {
+            // Проверим, возможно окну достаточно места
+            checkOverflow(function(firstOverflowValue) {
+               // Попробуем инвертировать окно и проверим снова
+               self.invert(popupCfg, direction);
+               targetPoint = self.getTargetPoint(popupCfg, targetCoords);
 
-            checkOverflow(function(secondOverflowValue) {
-               // Если и на этот раз окно не поместилось, отобразим окно в ту сторону, где места было больше
-               if (firstOverflowValue < secondOverflowValue) {
-                  self.invert(popupCfg, direction);
-                  targetPoint = self.getTargetPoint(popupCfg, targetCoords);
-                  coordinate = self.getCoordinate(targetPoint, popupCfg, direction);
-               }
+               checkOverflow(function(secondOverflowValue) {
+                  // Если и на этот раз окно не поместилось, отобразим окно в ту сторону, где места было больше
+                  if (firstOverflowValue < secondOverflowValue) {
+                     self.invert(popupCfg, direction);
+                     targetPoint = self.getTargetPoint(popupCfg, targetCoords);
+                     coordinate = self.getCoordinate(targetPoint, popupCfg, direction);
+                  }
 
-               minOverflow = Math.min(firstOverflowValue, secondOverflowValue);
+                  minOverflow = Math.min(firstOverflowValue, secondOverflowValue);
 
-               scroll = targetCoords[direction === 'horizontal' ? 'leftScroll' : 'topScroll'];
-               if (coordinate < scroll) {
-                  coordinate = scroll;
-               }
+                  scroll = targetCoords[direction === 'horizontal' ? 'leftScroll' : 'topScroll'];
+                  if (coordinate < scroll) {
+                     coordinate = scroll;
+                  }
 
-               size = popupCfg.sizes[direction === 'horizontal' ? 'width' : 'height'] - minOverflow;
+                  size = popupCfg.sizes[direction === 'horizontal' ? 'width' : 'height'] - minOverflow;
+               });
             });
-         });
+         }
 
          return {
             coordinate: coordinate,
