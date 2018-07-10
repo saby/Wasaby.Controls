@@ -95,7 +95,7 @@ define('Controls/Date/interface/IPeriodLiteDialog', [
              * @cfg {String} A hint that will be displayed on the unselected icons. By default, there is no tooltip.
              * @noshow
              */
-            uncheckedIconTitle: undefined,
+            uncheckedIconTitle: undefined
 
             /**
              * @name Controls/Date/interface/IPeriodLiteDialog#iconsHandler
