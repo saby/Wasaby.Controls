@@ -156,6 +156,10 @@ function(cMerge,
             cfg.templateOptions.autoCloseOnHide = cfg.autoCloseOnHide;
          }
 
+         if (cfg.hasOwnProperty('modal')) {
+            cfg.isModal = cfg.modal;
+         }
+
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
          this._setSizes(cfg, templateClass);
       },
