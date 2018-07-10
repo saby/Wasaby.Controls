@@ -19,10 +19,14 @@ define('Controls/Popup/Opener/BaseOpener',
        */
       var Base = Control.extend({
          _template: Template,
+         _popupIds: [],
+         _currentPopupId: undefined,
 
          _beforeUnmount: function() {
             if (this._options.closePopupBeforeUnmount) {
-               this.close();
+               this._popupIds.forEach(function(popupId) {
+                  ManagerController.remove(popupId);
+               });
             }
          },
 
@@ -46,7 +50,7 @@ define('Controls/Popup/Opener/BaseOpener',
             this._isExecuting = true;
 
             if (shouldCreateNewPopup) { // удаляем неактуальный id
-               this._popupId = null;
+               this._currentPopupId = null;
             }
 
             if (cfg.isCompoundTemplate) { // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
@@ -56,17 +60,17 @@ define('Controls/Popup/Opener/BaseOpener',
                   });
                });
             } else {
-               self._openPopup(cfg, controller);
+               self._openPopup(cfg, controller, displayMode);
             }
          },
 
-         _openPopup: function(cfg, controller) {
+         _openPopup: function(cfg, controller, displayMode) {
             var self = this;
             this._requireModules(cfg, controller).addCallback(function(result) {
                Base.showDialog(result.template, cfg, result.controller, self._popupId).addCallback(function(result) {
                   self._isExecuting = false;
                   if (Base.isNewEnvironment()) {
-                     self._popupId = result;
+                     self._popupIds.push(result);
                   } else {
                      self._action = result;
                   }
@@ -117,8 +121,11 @@ define('Controls/Popup/Opener/BaseOpener',
           * @function Controls/Popup/Opener/Base#show
           */
          close: function() {
-            if (this._popupId) {
-               ManagerController.remove(this._popupId);
+            if (this._currentPopupId) {
+               ManagerController.remove(this._currentPopupId);
+
+               //Ещё нужно удалить текущий id из массива всех id
+               this._popupIds.splice(this._popupIds.indexOf(this._currentPopupId), 1);
             } else if (!Base.isNewEnvironment() && this._action) {
                this._action.destroy();
                this._action = null;
@@ -129,7 +136,7 @@ define('Controls/Popup/Opener/BaseOpener',
             // listScroll стреляет событием много раз, нужно обработать только непосредственно скролл списка
             if (this.isOpened() && event.type === 'listscroll') {
                if (this._options.targetTracking) {
-                  ManagerController.popupUpdated(this._popupId);
+                  ManagerController.popupUpdated(this._currentPopupId);
                } else if (this._options.closeOnTargetScroll) {
                   this._closeOnTargetScroll();
                }
@@ -146,7 +153,7 @@ define('Controls/Popup/Opener/BaseOpener',
           */
          isOpened: function() {
             // todo Compatible: Для старого окружения не вызываем методы нового Manager'a
-            return Base.isNewEnvironment() ? !!ManagerController.find(this._popupId) : null;
+            return Base.isNewEnvironment() ? !!ManagerController.find(this._currentPopupId) : null;
          }
       });
       Base.showDialog = function(rootTpl, cfg, controller, popupId) {
