@@ -5,6 +5,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
    [
       "Core/UserConfig",
       "Core/core-clone",
+      "Core/core-merge",
       "Core/Context",
       "Core/Indicator",
       "Core/CommandDispatcher",
@@ -33,6 +34,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
    ], function (
       UserConfig,
       cClone,
+      cMerge,
       cContext,
       cIndicator,
       CommandDispatcher,
@@ -254,6 +256,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                    */
                   saveHistory: true,
                   /**
+                   * @cfg {object} Набор допустимых аттрибутов. Формат: "имя атрибута" - "значение", представляющее из себя либо true (разрещено всегда), либо false (запрещено всегда), либо функцию проверки, врзвращающую логическое значение
+                   */
+                  validAttributes: undefined,
+                  /**
                    * @cfg {function} функция проверки валидности класса
                    */
                   validateClass: undefined,
@@ -310,7 +316,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                options = RichTextArea.superclass._modifyOptions.apply(this, arguments);
                options._prepareReviewContent = this._prepareReviewContent.bind({_options: options});
                options._prepareContent = this._prepareContent.bind(this);
-               options._sanitizeClasses = this._sanitizeClasses.bind(this);
+               options._sanitizeClasses = this._sanitizeText.bind(this);
                if (options.singleLine) {
                   options.editorConfig.nowrap = true;
                   if (options.autoHeight) {
@@ -607,7 +613,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
              * @see text
              */
             setText: function(text) {
-               text = text ? this._sanitizeClasses(text, true) : '';
+               text = text ? this._sanitizeText(text, true) : '';
                if (text !== this._curValue()) {
                   this._drawText(text);
                }
@@ -2028,7 +2034,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   //равносильно тому что d&d совершается внутри редактора => не надо обрезать изображение
                   //upd: в костроме форматная вставка, не нужно вырезать лишние теги
                   if (!self._mouseIsPressed && options.editorConfig.paste_as_text) {
-                     e.content = options._sanitizeClasses(e.content, false);
+                     e.content = self._sanitizeText(e.content, false);
                   }
                   self._mouseIsPressed = false;
                   // при форматной вставке по кнопке мы обрабаотываем контент через событие tinyMCE
@@ -3383,7 +3389,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (text && text[0] !== '<') {
                   text = '<p>' + text.replace(/\n/gi, '<br/>') + '</p>';
                }
-               text = this._options._sanitizeClasses(text, true);
+               text = this._sanitizeText(text, true);
                return this._options.highlightLinks ? LinkWrap.wrapURLs(LinkWrap.wrapFiles(text), true) : text;
             },
 
@@ -3410,7 +3416,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      if (this._tinyReady.isReady()) {
                         this._tinyEditor.setContent(text);
                      } else {
-                        this._inputControl.html(this._options._sanitizeClasses(text, true));
+                        this._inputControl.html(this._sanitizeText(text, true));
                      }
                   }
                }
@@ -3474,109 +3480,116 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             }
             return true;*/
             },
-            _sanitizeClasses: function(text, images) {
-               var
-                  self = this;
-               return Sanitize(text,
-                  {
-                     validNodes: {
-                        img: images ? {
-                           'data-img-uuid': true,
-                           'data-mce-src': true,
-                           'data-mce-style': true,
-                           onload: false,
-                           onerror: false
-                        } : false,
-                        table: {
-                           border: true,
-                           cellspacing: true,
-                           cellpadding: true
+
+            _sanitizeText: function (text, images) {
+               var options = this._options;
+               var sanitizeOptions = {
+                  validNodes: {
+                     img: images ? {
+                        'data-img-uuid': true,
+                        'data-mce-src': true,
+                        'data-mce-style': true,
+                        onload: false,
+                        onerror: false
+                     } : false,
+                     table: {
+                        border: true,
+                        cellspacing: true,
+                        cellpadding: true
+                     }
+                  },
+                  validAttributes: {
+                     'class': function (content, attributeName) {
+                        var
+                           //проверка options для юнит тестов, тк там метод зовётся на прототипе
+                           classValidator = options ? options.validateClass : null,
+                           validateIsFunction = typeof classValidator === 'function',
+                           currentValue = content.attributes[attributeName].value,
+                           classes = currentValue.split(' '),
+                           whiteList =  [
+                              'titleText',
+                              'subTitleText',
+                              'additionalText',
+                              'controls-RichEditor__noneditable',
+                              'without-margin',
+                              'has-img-left',
+                              'image-template-left',
+                              'image-template-center',
+                              'image-template-right',
+                              'mce-object-iframe',
+                              'ws-hidden',
+                              'language-javascript',
+                              'language-css',
+                              'language-markup',
+                              'language-php',
+                              'token',
+                              'comment',
+                              'prolog',
+                              'doctype',
+                              'cdata',
+                              'punctuation',
+                              'namespace',
+                              'property',
+                              'tag',
+                              'boolean',
+                              'number',
+                              'constant',
+                              'symbol',
+                              'deleted',
+                              'selector',
+                              'attr-name',
+                              'string',
+                              'char',
+                              'builtin',
+                              'inserted',
+                              'operator',
+                              'entity',
+                              'url',
+                              'style',
+                              'attr-value',
+                              'keyword',
+                              'function',
+                              'regex',
+                              'important',
+                              'variable',
+                              'bold',
+                              'italic',
+                              'LinkDecorator__link',
+                              'LinkDecorator',
+                              'LinkDecorator__simpleLink',
+                              'LinkDecorator__linkWrap',
+                              'LinkDecorator__decoratedLink',
+                              'LinkDecorator__wrap',
+                              'LinkDecorator__image'
+                           ],
+                           index = classes.length - 1;
+
+                        while (index >= 0) {
+                           if (!~whiteList.indexOf(classes[index]) && (!validateIsFunction || !classValidator(classes[index]))) {
+                              classes.splice(index, 1);
+                           }
+                           index -= 1;
                         }
-                     },
-                     validAttributes: {
-                        'class' : function(content, attributeName) {
-                           var
-                              //проверка this._options для юнит тестов, тк там метод зовётся на прототипе
-                              validateIsFunction = this._options && typeof this._options.validateClass === 'function',
-                              currentValue = content.attributes[attributeName].value,
-                              classes = currentValue.split(' '),
-                              whiteList =  [
-                                 'titleText',
-                                 'subTitleText',
-                                 'additionalText',
-                                 'controls-RichEditor__noneditable',
-                                 'without-margin',
-                                 'has-img-left',
-                                 'image-template-left',
-                                 'image-template-center',
-                                 'image-template-right',
-                                 'mce-object-iframe',
-                                 'ws-hidden',
-                                 'language-javascript',
-                                 'language-css',
-                                 'language-markup',
-                                 'language-php',
-                                 'token',
-                                 'comment',
-                                 'prolog',
-                                 'doctype',
-                                 'cdata',
-                                 'punctuation',
-                                 'namespace',
-                                 'property',
-                                 'tag',
-                                 'boolean',
-                                 'number',
-                                 'constant',
-                                 'symbol',
-                                 'deleted',
-                                 'selector',
-                                 'attr-name',
-                                 'string',
-                                 'char',
-                                 'builtin',
-                                 'inserted',
-                                 'operator',
-                                 'entity',
-                                 'url',
-                                 'style',
-                                 'attr-value',
-                                 'keyword',
-                                 'function',
-                                 'regex',
-                                 'important',
-                                 'variable',
-                                 'bold',
-                                 'italic',
-                                 'LinkDecorator__link',
-                                 'LinkDecorator',
-                                 'LinkDecorator__simpleLink',
-                                 'LinkDecorator__linkWrap',
-                                 'LinkDecorator__decoratedLink',
-                                 'LinkDecorator__wrap',
-                                 'LinkDecorator__image'
-                              ],
-                              index = classes.length - 1;
+                        currentValue = classes.join(' ');
+                        if (currentValue) {
+                           content.attributes[attributeName].value = currentValue;
+                        } else {
+                           delete content.attributes[attributeName];
+                        }
 
-                           while (index >= 0) {
-                              if (!~whiteList.indexOf(classes[index]) && (!validateIsFunction || !this._options.validateClass(classes[index]))) {
-                                 classes.splice(index, 1);
-                              }
-                              index -= 1;
-                           }
-                           currentValue = classes.join(' ');
-                           if (currentValue) {
-                              content.attributes[attributeName].value = currentValue;
-                           } else {
-                              delete content.attributes[attributeName];
-                           }
-
-                        }.bind(self)
-                     },
-                     checkDataAttribute: false,
-                     escapeInvalidTags: false
-                  });
+                     }.bind(this)
+                  },
+                  checkDataAttribute: false,
+                  escapeInvalidTags: false
+               };
+               var validAttributes = options ? options.validAttributes : null;
+               if (validAttributes && typeof validAttributes === 'object') {
+                  sanitizeOptions.validAttributes = cMerge(validAttributes, sanitizeOptions.validAttributes);
+                  //^^^sanitizeOptions.checkDataAttribute = true;
+               }
+               return Sanitize(text, sanitizeOptions);
             },
+
             _getTextBeforePaste: function(editor){
                //Проблема:
                //          после вставки текста могут возникать пробелы после <br> в начале строки
