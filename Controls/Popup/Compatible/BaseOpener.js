@@ -250,11 +250,13 @@ function(cMerge,
 
       _getCaption: function(cfg, templateClass) {
          var dimensions = this._getDimensions(templateClass);
+         var compoundAreaOptions = cfg.templateOptions;
          var templateOptions = this._getTemplateOptions(templateClass);
          return cfg.title || cfg.caption ||
             dimensions.title || dimensions.caption ||
             templateClass.caption || templateClass.title ||
-            cfg.templateOptions.title || cfg.templateOptions.caption ||
+            compoundAreaOptions.title || compoundAreaOptions.caption ||
+            compoundAreaOptions.templateOptions.title || compoundAreaOptions.templateOptions.caption ||
             templateOptions.title || templateOptions.caption;
       },
 
