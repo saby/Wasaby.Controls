@@ -248,6 +248,10 @@ define('Controls/Container/List',
                var currentFilter = _private.getFilterFromContext(this, this._contextObj);
                _private.resolveOptions(this, newOptions);
                
+               if (this._searchMode) {
+                  _private.cachedSourceFix(this);
+               }
+               
                /* create searchController with new options */
                this._searchController = null;
                _private.getSearchController(this).setFilter(currentFilter);
