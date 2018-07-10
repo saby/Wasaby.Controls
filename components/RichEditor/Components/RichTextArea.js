@@ -316,7 +316,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                options = RichTextArea.superclass._modifyOptions.apply(this, arguments);
                options._prepareReviewContent = this._prepareReviewContent.bind({_options: options});
                options._prepareContent = this._prepareContent.bind(this);
-               options._sanitizeClasses = this._sanitizeText.bind(this);
+               options._sanitizeClasses = this._sanitizeClasses.bind(this);
                if (options.singleLine) {
                   options.editorConfig.nowrap = true;
                   if (options.autoHeight) {
@@ -613,7 +613,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
              * @see text
              */
             setText: function(text) {
-               text = text ? this._sanitizeText(text, true) : '';
+               text = text ? this._sanitizeClasses(text, true) : '';
                if (text !== this._curValue()) {
                   this._drawText(text);
                }
@@ -2034,7 +2034,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   //равносильно тому что d&d совершается внутри редактора => не надо обрезать изображение
                   //upd: в костроме форматная вставка, не нужно вырезать лишние теги
                   if (!self._mouseIsPressed && options.editorConfig.paste_as_text) {
-                     e.content = self._sanitizeText(e.content, false);
+                     e.content = options._sanitizeClasses(e.content, false);
                   }
                   self._mouseIsPressed = false;
                   // при форматной вставке по кнопке мы обрабаотываем контент через событие tinyMCE
@@ -3389,7 +3389,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (text && text[0] !== '<') {
                   text = '<p>' + text.replace(/\n/gi, '<br/>') + '</p>';
                }
-               text = this._sanitizeText(text, true);
+               text = this._options._sanitizeClasses(text, true);
                return this._options.highlightLinks ? LinkWrap.wrapURLs(LinkWrap.wrapFiles(text), true) : text;
             },
 
@@ -3416,7 +3416,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      if (this._tinyReady.isReady()) {
                         this._tinyEditor.setContent(text);
                      } else {
-                        this._inputControl.html(this._sanitizeText(text, true));
+                        this._inputControl.html(this._options._sanitizeClasses(text, true));
                      }
                   }
                }
@@ -3481,7 +3481,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             return true;*/
             },
 
-            _sanitizeText: function (text, images) {
+            _sanitizeClasses: function (text, images) {
                var options = this._options;
                var sanitizeOptions = {
                   validNodes: {
@@ -3585,7 +3585,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                var validAttributes = options ? options.validAttributes : null;
                if (validAttributes && typeof validAttributes === 'object') {
                   sanitizeOptions.validAttributes = cMerge(validAttributes, sanitizeOptions.validAttributes);
-                  //^^^sanitizeOptions.checkDataAttribute = true;
                }
                return Sanitize(text, sanitizeOptions);
             },
