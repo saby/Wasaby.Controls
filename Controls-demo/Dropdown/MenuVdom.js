@@ -20,7 +20,7 @@ define('Controls-demo/Dropdown/MenuVdom', [
    var ModuleClass = Control.extend(
       {
          _template: template,
-         _stateText: 'Выбранный ключ',
+         _stateText: 'Выбранный ключ: 8',
          _selectedKeysEmpty: ['1'],
          _selectedKeys0: ['8'],
          _selectedKeys1: ['2'],
