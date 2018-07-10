@@ -1,35 +1,40 @@
-define(['Controls/Button/ButtonSeparator'], function (Separator) {
+define(['Controls/Button/ButtonSeparator'], function(Separator) {
    'use strict';
    var separator;
-   describe('Controls/Button/ButtonSeparator', function () {
-      beforeEach(function(){
+   describe('Controls/Button/ButtonSeparator', function() {
+      function getSeparator() {
          separator = new Separator();
-      });
+      }
 
-      afterEach(function () {
+      function destroySeparator() {
          separator.destroy();
          separator = undefined;
-      });
+      }
 
-      it('counter open state', function () {
+      it('counter open state', function() {
+         getSeparator();
          var opt = {
             value: true
          };
          separator.saveOptions(opt);
          separator._beforeMount(opt);
          assert.isTrue(separator._icon === 'icon-CollapseLight ', 'icon style generate incorrect');
+         destroySeparator();
       });
 
-      it('counter close state', function () {
+      it('counter close state', function() {
+         getSeparator();
          var opt = {
             value: false
          };
          separator.saveOptions(opt);
          separator._beforeMount(opt);
          assert.isTrue(separator._icon === 'icon-ExpandLight ', 'icon style generate incorrect');
+         destroySeparator();
       });
 
-      it('update counter open state to close state', function () {
+      it('update counter open state to close state', function() {
+         getSeparator();
          var opt = {
             value: true
          };
@@ -39,9 +44,11 @@ define(['Controls/Button/ButtonSeparator'], function (Separator) {
          separator.saveOptions(opt);
          separator._beforeUpdate(newOpt);
          assert.isTrue(separator._icon === 'icon-ExpandLight ', 'icon style generate incorrect');
+         destroySeparator();
       });
 
-      it('update counter close state to open state', function () {
+      it('update counter close state to open state', function() {
+         getSeparator();
          var opt = {
             value: false
          };
@@ -51,6 +58,7 @@ define(['Controls/Button/ButtonSeparator'], function (Separator) {
          separator.saveOptions(opt);
          separator._beforeUpdate(newOpt);
          assert.isTrue(separator._icon === 'icon-CollapseLight ', 'icon style generate incorrect');
+         destroySeparator();
       });
    });
 });
