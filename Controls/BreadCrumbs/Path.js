@@ -22,14 +22,14 @@ define('Controls/BreadCrumbs/Path', [
             self._backButtonClass = '';
             self._breadCrumbsClass = '';
          } else if (maxCrumbsWidth < availableWidth / 2 && backButtonWidth > availableWidth / 2) {
-            self._backButtonClass = 'controls-Path__backButton_long';
-            self._breadCrumbsClass = 'controls-Path__breadCrumbs_short';
+            self._backButtonClass = 'controls-BreadCrumbsPath__backButton_long';
+            self._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_short';
          } else if (maxCrumbsWidth > availableWidth / 2 && backButtonWidth > availableWidth / 2) {
-            self._backButtonClass = 'controls-Path__backButton_half';
-            self._breadCrumbsClass = 'controls-Path__breadCrumbs_half';
+            self._backButtonClass = 'controls-BreadCrumbsPath__backButton_half';
+            self._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_half';
          } else if (maxCrumbsWidth > availableWidth / 2 && backButtonWidth < availableWidth / 2) {
-            self._backButtonClass = 'controls-Path__backButton_short';
-            self._breadCrumbsClass = 'controls-Path__breadCrumbs_long';
+            self._backButtonClass = 'controls-BreadCrumbsPath__backButton_short';
+            self._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_long';
          }
       },
       
@@ -50,7 +50,7 @@ define('Controls/BreadCrumbs/Path', [
             }));
             _private.calculateClasses(self, BreadCrumbsUtil.getMaxCrumbsWidth(self._breadCrumbsItems), backButtonWidth, self._container.clientWidth);
 
-            availableWidth = self._breadCrumbsClass === 'controls-Path__breadCrumbs_half' ? self._container.clientWidth / 2 : self._container.clientWidth;
+            availableWidth = self._breadCrumbsClass === 'controls-BreadCrumbsPath__breadCrumbs_half' ? self._container.clientWidth / 2 : self._container.clientWidth;
             BreadCrumbsUtil.calculateBreadCrumbsToDraw(self,  self._breadCrumbsItems, availableWidth);
          } else {
             self._visibleItems = [];
