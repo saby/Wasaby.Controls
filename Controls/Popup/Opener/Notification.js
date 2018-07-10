@@ -29,6 +29,12 @@ define('Controls/Popup/Opener/Notification',
          }
       });
 
+      Notification.getDefaultOptions = function() {
+         return {
+            displayMode: 'multiple'
+         };
+      };
+
       return Notification;
    }
 );

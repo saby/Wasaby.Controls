@@ -20,7 +20,6 @@ define('Controls/Popup/Opener/BaseOpener',
       var Base = Control.extend({
          _template: Template,
          _popupIds: [],
-         _currentPopupId: undefined,
 
          _beforeUnmount: function() {
             if (this._options.closePopupBeforeUnmount) {
@@ -35,14 +34,11 @@ define('Controls/Popup/Opener/BaseOpener',
           * @function Controls/Popup/Opener/Base#open
           * @param popupOptions конфигурация попапа
           * @param controller стратегия позиционирования попапа
-          * @param displayMode режим отображения попапа
-          * @variant 'single' одновременно на экране может присутствовать только один попап
-          * @variant 'multiple' одновременно на экране может присутствовать несколько попапов
           */
-         open: function(popupOptions, controller, displayMode) {
+         open: function(popupOptions, controller) {
             var self = this;
             var cfg = this._getConfig(popupOptions);
-            var shouldCreateNewPopup = !this.isOpened() || displayMode === 'multiple';
+            var shouldCreateNewPopup = !this.isOpened() || this._options.displayMode === 'multiple';
 
             if (this._isExecuting) { // Если мы еще не обработали первый вызов, то дожидаемся его
                return;
@@ -50,7 +46,7 @@ define('Controls/Popup/Opener/BaseOpener',
             this._isExecuting = true;
 
             if (shouldCreateNewPopup) { // удаляем неактуальный id
-               this._currentPopupId = null;
+               this._popupIds.pop();
             }
 
             if (cfg.isCompoundTemplate) { // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
@@ -60,14 +56,16 @@ define('Controls/Popup/Opener/BaseOpener',
                   });
                });
             } else {
-               self._openPopup(cfg, controller, displayMode);
+               self._openPopup(cfg, controller);
             }
          },
 
-         _openPopup: function(cfg, controller, displayMode) {
+         _openPopup: function(cfg, controller) {
             var self = this;
             this._requireModules(cfg, controller).addCallback(function(result) {
-               Base.showDialog(result.template, cfg, result.controller, self._popupId).addCallback(function(result) {
+               var
+                  popupId = self._options.displayMode === 'single' ? self._getCurrentPopupId() : null;
+               Base.showDialog(result.template, cfg, result.controller, popupId).addCallback(function(result) {
                   self._isExecuting = false;
                   if (Base.isNewEnvironment()) {
                      self._popupIds.push(result);
@@ -121,11 +119,12 @@ define('Controls/Popup/Opener/BaseOpener',
           * @function Controls/Popup/Opener/Base#show
           */
          close: function() {
-            if (this._currentPopupId) {
-               ManagerController.remove(this._currentPopupId);
+            //TODO переработать метод close по задаче: https://online.sbis.ru/opendoc.html?guid=aec286ce-4116-472e-8267-f85a6a82a188
+            if (this._getCurrentPopupId()) {
+               ManagerController.remove(this._getCurrentPopupId());
 
                //Ещё нужно удалить текущий id из массива всех id
-               this._popupIds.splice(this._popupIds.indexOf(this._currentPopupId), 1);
+               this._popupIds.pop();
             } else if (!Base.isNewEnvironment() && this._action) {
                this._action.destroy();
                this._action = null;
@@ -136,7 +135,7 @@ define('Controls/Popup/Opener/BaseOpener',
             // listScroll стреляет событием много раз, нужно обработать только непосредственно скролл списка
             if (this.isOpened() && event.type === 'listscroll') {
                if (this._options.targetTracking) {
-                  ManagerController.popupUpdated(this._currentPopupId);
+                  ManagerController.popupUpdated(this._getCurrentPopupId());
                } else if (this._options.closeOnTargetScroll) {
                   this._closeOnTargetScroll();
                }
@@ -146,6 +145,10 @@ define('Controls/Popup/Opener/BaseOpener',
             this.close();
          },
 
+         _getCurrentPopupId: function() {
+            return this._popupIds[this._popupIds.length - 1]
+         },
+
          /**
           * Получить признак, открыта или закрыта связанная всплывающая панель
           * @function Controls/Popup/Opener/Base#isOpened
@@ -153,7 +156,7 @@ define('Controls/Popup/Opener/BaseOpener',
           */
          isOpened: function() {
             // todo Compatible: Для старого окружения не вызываем методы нового Manager'a
-            return Base.isNewEnvironment() ? !!ManagerController.find(this._currentPopupId) : null;
+            return Base.isNewEnvironment() ? !!ManagerController.find(this._getCurrentPopupId()) : null;
          }
       });
       Base.showDialog = function(rootTpl, cfg, controller, popupId) {
@@ -191,7 +194,8 @@ define('Controls/Popup/Opener/BaseOpener',
 
       Base.getDefaultOptions = function() {
          return {
-            closePopupBeforeUnmount: true
+            closePopupBeforeUnmount: true,
+            displayMode: 'single'
          };
       };
 
