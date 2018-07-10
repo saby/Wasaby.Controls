@@ -87,9 +87,7 @@ function(cMerge,
             cfg.className += ' ws-window';
          }
 
-         if (cfg.hasOwnProperty('autoHide')) {
-            cfg.closeByExternalClick = cfg.autoHide;
-         }
+         cfg.closeByExternalClick = cfg.hasOwnProperty('autoHide') ? cfg.autoHide : true;
 
          cfg.templateOptions.caption = this._getCaption(cfg, templateClass);
 
@@ -148,8 +146,9 @@ function(cMerge,
          if (cfg.hasOwnProperty('autoShow')) {
             cfg.templateOptions.autoShow = cfg.autoShow;
             cfg.templateOptions._isVisible = cfg.autoShow;
-            cfg.closeByExternalClick = false;
-            cfg.className += ' ws-hidden';
+            if (!cfg.autoShow) {
+               cfg.className += ' ws-hidden';
+            }
          }
 
          if (cfg.hasOwnProperty('autoCloseOnHide')) {
