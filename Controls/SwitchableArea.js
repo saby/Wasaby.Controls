@@ -3,10 +3,9 @@ define('Controls/SwitchableArea',
       'Core/Control',
       'Controls/SwitchableArea/ViewModel',
       'tmpl!Controls/SwitchableArea/SwitchableArea',
-      'tmpl!Controls/SwitchableArea/resource/itemTemplate',
-      'Controls/Application/HeadDataContext'
+      'tmpl!Controls/SwitchableArea/resource/itemTemplate'
    ],
-   function(Control, ViewModel, template, defaultItemTemplate, HeadDataContext) {
+   function(Control, ViewModel, template, defaultItemTemplate) {
 
       'use strict';
 
@@ -28,12 +27,17 @@ define('Controls/SwitchableArea',
 
       /**
        * @name Controls/SwitchableArea#selectedKey
-       * @cfg {Function} Key of selected item.
+       * @cfg {String} Key of selected item.
        */
 
       /**
        * @name Controls/SwitchableArea#itemTemplateProperty
-       * @cfg {RecordSet} Name of field with template, which display.
+       * @cfg {String} Name of field with template, which display.
+       */
+
+      /**
+       * @name Controls/SwitchableArea#itemTemplate
+       * @cfg {Function} Template for item render.
        */
 
       var SwitchableArea = Control.extend({

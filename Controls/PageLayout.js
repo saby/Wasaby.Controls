@@ -40,10 +40,6 @@ define('Controls/PageLayout', [
          return self._sourceController.load().addCallback(function(items) {
             return items;
          });
-      },
-      updateOptions: function(self) {
-         self._tabsArea = self._items.getRecordById(self._options.tabsSelectedKey).get(self._options.tabsAreaProperty || 'tabsArea');
-         self._mainArea = self._items.getRecordById(self._options.tabsSelectedKey).get(self._options.mainAreaProperty || 'mainArea');
       }
    };
    var browserTabs = Control.extend({
@@ -56,7 +52,6 @@ define('Controls/PageLayout', [
          } else {
             return _private.initItems(options.tabsSource, this).addCallback(function(items) {
                this._items = items;
-               _private.updateOptions(this);
                return items;
             }.bind(this));
          }
@@ -66,11 +61,8 @@ define('Controls/PageLayout', [
          if (newOptions.tabsSource && newOptions.tabsSource !== this._options.tabsSource) {
             return _private.initItems(newOptions.tabsSource, this).addCallback(function(items) {
                this._items = items;
-               _private.updateOptions(this);
                self._forceUpdate();
             }.bind(this));
-         } else {
-            _private.updateOptions(this);
          }
       }
    });
