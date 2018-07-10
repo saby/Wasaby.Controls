@@ -287,18 +287,16 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                return this._registerChildPendingOperation(arg);
             } else if (commandName === 'unregisterPendingOperation') {
                return this._unregisterChildPendingOperation(arg);
-            } else if (this.__parentFromCfg) {
-               parent = this.__parentFromCfg;
+            } else if (this.getParent()) {
+               parent = this.getParent();
                return parent.sendCommand.apply(parent, argWithName);
-            } else if (this._parent && this._parent._options.opener) {
-               parent = this._parent._options.opener;
-
-               /* Если нет sendCommand - значит это не compoundControl - а значит там нет распространения команд */
-
-               if (parent.sendCommand) {
-                  return parent.sendCommand.apply(parent, argWithName);
-               }
             }
+
+            // Мы не распространяем команды по опенеру! и никогда не распространяли!
+            // else if (this.getOpener()) {
+            //    parent = this.getOpener();
+            //    return parent.sendCommand.apply(parent, argWithName);
+            // }
          },
          sendCommand: function(commandName, arg) {
             return this._commandHandler(commandName, arg);
