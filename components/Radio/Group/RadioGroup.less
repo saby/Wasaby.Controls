@@ -1,21 +1,21 @@
 .controls-RadioGroup {
-  font-size: 0; //До перевода на tmpl, dot добавляет лишний шаблон при шаблонизации
-  
-  > * {
-    display: inline-block;
-    margin: @radio-group-horizontal-item-margin;
-    font-size: @default-text-size; //До перевода на tmpl, dot добавляет лишний пробел при шаблонизации
-  }
+   font-size: 0; //До перевода на tmpl, dot добавляет лишний шаблон при шаблонизации
 
-  &.controls-ButtonGroup__vertical {
-    .controls-ListView__item {
-      display: block;
-      height: auto;
-      margin: @button-group-vertical-item-margin;
-      padding-left: calc(~"@{size_Switcher-btn} + 12px");
-       .controls-RadioButton__icon{
-         margin-left: -18px;
-       }
-    }
-  }
+   > * {
+      display: inline-block;
+      margin: @radio-group-horizontal-item-margin;
+      font-size: @default-text-size; //До перевода на tmpl, dot добавляет лишний пробел при шаблонизации
+   }
+
+   &.controls-ButtonGroup__vertical {
+      > .controls-ListView__item {
+         display: block;
+         height: auto;
+         margin: @button-group-vertical-item-margin;
+         padding-left: calc(~"@{size_Switcher-btn} + 12px");
+         .controls-RadioButton__icon {
+            margin-left: -18px;
+         }
+      }
+   }
 }

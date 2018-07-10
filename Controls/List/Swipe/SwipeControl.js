@@ -357,8 +357,8 @@ define('Controls/List/Swipe/SwipeControl', [
          return _private.needShowTitle(action, type, hasIcon);
       },
 
-      _onActionClick: function(event, action, itemData) {
-         aUtil.actionClick(this, event, action, itemData, true);
+      _onItemActionsClick: function(event, action, itemData) {
+         aUtil.itemActionsClick(this, event, action, itemData, true);
       },
 
       closeSwipe: function() {

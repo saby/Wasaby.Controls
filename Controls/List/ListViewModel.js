@@ -72,6 +72,7 @@ define('Controls/List/ListViewModel',
          },
 
          setMarkedKey: function(key) {
+            this._options.markedKey = key;
             this._markedItem = this.getItemById(key, this._options.keyProperty);
             this._nextVersion();
             this._notify('onListChange');

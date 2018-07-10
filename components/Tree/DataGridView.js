@@ -542,6 +542,11 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
             this._updateEditArrow();
          }
       },
+      
+      _getCellEllipsisContainer: function(td) {
+         var folderTitleEllipsis = td.find('.controls-TreeView__ellipsis-wrapper');
+         return folderTitleEllipsis.length ? folderTitleEllipsis : TreeDataGridView.superclass._getCellEllipsisContainer.apply(this, arguments);
+      },
 
       _onAfterBeginEdit: function() {
          TreeDataGridView.superclass._onAfterBeginEdit.apply(this, arguments);
