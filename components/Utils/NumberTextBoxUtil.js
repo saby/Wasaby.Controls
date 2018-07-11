@@ -164,6 +164,9 @@ define('SBIS3.CONTROLS/Utils/NumberTextBoxUtil', [],
              * @returns {{value: (*|XML|string|void|tinymce.html.Node), caretPosition: *, step: *}}
              */
             backspacePressed: function (b, e, currentVal, delimiters, decimals, dotOverstep) {
+               if (b === 0 && e === 0) {
+                  return {value: currentVal, caretPosition: b, step: 1};
+               }
                 var dotPosition = currentVal.indexOf('.'),
                     newCaretPosition = b, step;
 
