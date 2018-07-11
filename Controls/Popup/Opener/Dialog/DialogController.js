@@ -37,7 +37,7 @@ define('Controls/Popup/Opener/Dialog/DialogController',
             /* start: Возвращаем все значения но узел, чтобы vdom не рассинхронизировался */
             container.style.width = width;
             container.style.height = height;
-            
+
             /* end: Возвращаем все значения но узел, чтобы vdom не рассинхронизировался */
          },
          prepareConfig: function(cfg, container) {

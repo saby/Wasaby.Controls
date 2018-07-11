@@ -3,37 +3,41 @@ define('Controls/Container/MultiSelector', [
    'tmpl!Controls/Container/MultiSelector/MultiSelector',
    'Controls/Container/MultiSelector/SelectionContextField',
    'Controls/Controllers/Multiselect/Selection',
-   'Controls/Controllers/SourceController'
+   'Controls/Container/Data/ContextOptions'
 ], function(
    Control,
    template,
    SelectionContextField,
    Selection,
-   SourceController
+   DataContext
 ) {
    'use strict';
 
-   //TODO: после Саниной доброски нужно реагировать на изменение items
-
-   return Control.extend({
+   var MultiSelector = Control.extend({
       _template: template,
       _multiselection: null,
       _items: null,
 
-      _beforeMount: function(newOptions) {
+      _beforeMount: function(newOptions, context) {
          var self = this;
-         this._updateSelectionContext = this._updateSelectionContext.bind(this);
-
-         this._sourceController = new SourceController({
-            source: newOptions.source,
-            navigation: newOptions.navigation
-         });
-
-         return this._sourceController.load().addCallback(function(items) {
-            self._items = items;
-            self._createMultiselection(newOptions, items);
+         this._items = context.dataOptions.items;
+         this._createMultiselection(newOptions, context);
+         this._updateSelectionContext();
+         this._items.subscribe('onCollectionChange', function() {
             self._updateSelectionContext();
          });
+      },
+
+      _beforeUpdate: function(newOptions, context) {
+         var self = this;
+         if (this._items !== context.dataOptions.items) {
+            this._items = context.dataOptions.items;
+            this._multiselection.setItems(context.dataOptions.items);
+            this._updateSelectionContext();
+            this._items.subscribe('onCollectionChange', function() {
+               self._updateSelectionContext();
+            });
+         }
       },
 
       getSelection: function() {
@@ -60,8 +64,7 @@ define('Controls/Container/MultiSelector', [
             currentSelection.selected,
             currentSelection.excluded,
             this._multiselection.getSelectedKeysForRender(),
-            this._multiselection.getCount(),
-            this._items
+            this._multiselection.getCount()
          );
 
          if (this._options.selectionChangeHandler) {
@@ -70,11 +73,11 @@ define('Controls/Container/MultiSelector', [
          this._forceUpdate();
       },
 
-      _createMultiselection: function(options, items) {
+      _createMultiselection: function(options, context) {
          this._multiselection = new Selection({
             selectedKeys: options.selectedKeys || [],
             excludedKeys: options.excludedKeys || [],
-            items: items
+            items: context.dataOptions.items
          });
       },
 
@@ -84,4 +87,12 @@ define('Controls/Container/MultiSelector', [
          };
       }
    });
+
+   MultiSelector.contextTypes = function() {
+      return {
+         dataOptions: DataContext
+      };
+   };
+
+   return MultiSelector;
 });
