@@ -1,7 +1,6 @@
 define('SBIS3.CONTROLS/LongOperations/List',
    [
       'Core/core-merge',
-      'Core/helpers/Object/isEqual',
       'Core/Deferred',
       'Lib/Control/CompoundControl/CompoundControl',
       'SBIS3.CONTROLS/LongOperations/Entry',
@@ -20,7 +19,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
       'SBIS3.CONTROLS/LongOperations/History'
    ],
 
-   function (cMerge, cObjectIsEqual, Deferred, CompoundControl, LongOperationEntry, longOperationsManager, LongOperationsListDataSource, LongOperationModel, InformationPopupManager, dotTplFn) {
+   function (cMerge, Deferred, CompoundControl, LongOperationEntry, longOperationsManager, LongOperationsListDataSource, LongOperationModel, InformationPopupManager, dotTplFn) {
       'use strict';
 
       /**
@@ -100,6 +99,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
                      animation: 'slide',
                      isStack: true,
                      autoCloseOnHide: true,
+                     minWidth: 680,
                      maxWidth: 680
                   }
                }

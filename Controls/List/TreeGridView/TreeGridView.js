@@ -1,6 +1,7 @@
-define('Controls/List/TreeGrid/TreeGridView', [
+define('Controls/List/TreeGridView/TreeGridView', [
    'Controls/List/Grid/GridView',
-   'tmpl!Controls/List/TreeGrid/Item'
+   'tmpl!Controls/List/TreeGridView/Item',
+   'css!Controls/List/TreeGridView/TreeGridView'
 ], function(GridView, DefaultItemTpl) {
 
    'use strict';

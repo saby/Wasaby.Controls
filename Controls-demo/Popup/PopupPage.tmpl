@@ -1,61 +1,58 @@
-<Controls.Application title="Демо-пример: действие открытия окна стековой панели"
-appRoot="/materials/" head='<link rel="stylesheet" href="/materials/resources/SBIS3.CONTROLS/themes/online/online.css" type="text/css" />'>
-    <div class="popup-page">
-        <Controls.Popup.Opener.Dialog name="dialog">
-            <ws:popupOptions template="Controls-demo/Popup/TestDialog">
-                <ws:templateOptions type="dialog"/>
-            </ws:popupOptions>
-        </Controls.Popup.Opener.Dialog>
-        <Controls.Popup.Opener.Dialog name="modalDialog">
-            <ws:popupOptions isModal="{{true}}" template="Controls-demo/Popup/TestDialog">
-                <ws:templateOptions type="dialog"/>
-            </ws:popupOptions>
-        </Controls.Popup.Opener.Dialog>
-        <Controls.Popup.Opener.Sticky name="sticky"
-                                        onResult="{{_onResult}}"
-        >
-            <ws:popupOptions template="Controls-demo/Popup/TestDialog"
-                            autoHide="{{true}}"
-            >
-                <ws:verticalAlign side="bottom"/>
-                <ws:horizontalAlign side="left"/>
-                <ws:corner vertical="bottom" horizontal="left"/>
-            </ws:popupOptions>
-        </Controls.Popup.Opener.Sticky>
-        <Controls.Popup.Opener.Notification name="notification">
-            <ws:popupOptions template="Controls-demo/Popup/TestDialog">
-                <ws:templateOptions type="notification"/>
-            </ws:popupOptions>
-        </Controls.Popup.Opener.Notification>
-        <Controls.Popup.Opener.Stack name="stack">
-            <ws:popupOptions template="Controls-demo/Popup/TestStack" closeByExternalClick="{{true}}">
-                <ws:templateOptions type="stack"/>
-            </ws:popupOptions>
-        </Controls.Popup.Opener.Stack>
+<div class="popup-page">
+   <Controls.Popup.Opener.Dialog name="dialog">
+      <ws:popupOptions template="Controls-demo/Popup/TestDialog">
+         <ws:templateOptions type="dialog"/>
+      </ws:popupOptions>
+   </Controls.Popup.Opener.Dialog>
+   <Controls.Popup.Opener.Dialog name="modalDialog">
+      <ws:popupOptions isModal="{{true}}" template="Controls-demo/Popup/TestDialog">
+         <ws:templateOptions type="dialog"/>
+      </ws:popupOptions>
+   </Controls.Popup.Opener.Dialog>
+   <Controls.Popup.Opener.Sticky name="sticky"
+                                 onResult="{{_onResult}}"
+   >
+      <ws:popupOptions template="Controls-demo/Popup/TestDialog"
+                       autoHide="{{true}}"
+      >
+         <ws:verticalAlign side="bottom"/>
+         <ws:horizontalAlign side="left"/>
+         <ws:corner vertical="bottom" horizontal="left"/>
+      </ws:popupOptions>
+   </Controls.Popup.Opener.Sticky>
+   <Controls.Popup.Opener.Notification name="notification">
+      <ws:popupOptions template="Controls-demo/Popup/TestDialog">
+         <ws:templateOptions type="notification"/>
+      </ws:popupOptions>
+   </Controls.Popup.Opener.Notification>
+   <Controls.Popup.Opener.Stack name="stack">
+      <ws:popupOptions template="Controls-demo/Popup/TestStack" closeByExternalClick="{{true}}">
+         <ws:templateOptions type="stack"/>
+      </ws:popupOptions>
+   </Controls.Popup.Opener.Stack>
 
-        <Controls.Popup.Opener.Stack name="openOldTemplate">
-            <ws:popupOptions template="Controls-demo/Popup/TestFormController/TestFormController">
-                <ws:templateOptions type="stack"/>
-            </ws:popupOptions>
-        </Controls.Popup.Opener.Stack>
-        <div>
-            <Controls.Button name="dialogButton" caption="dialog" on:click="openDialog()"/>
-        </div>
-        <div>
-            <Controls.Button name="modalDialogButton" caption="modal dialog" on:click="openModalDialog()"/>
-        </div>
-        <div>
-            <Controls.Button name="stickyButton" caption="sticky" on:click="openSticky()"/>
-        </div>
-        <div>
-            <Controls.Button name="notificationButton" caption="notification" on:click="openNotification()"/>
-        </div>
-        <div>
-            <Controls.Button name="stackButton" caption="stack" on:click="openStack()"/>
-        </div>
+   <Controls.Popup.Opener.Stack name="openOldTemplate">
+      <ws:popupOptions template="Controls-demo/Popup/TestFormController/TestFormController">
+         <ws:templateOptions type="stack"/>
+      </ws:popupOptions>
+   </Controls.Popup.Opener.Stack>
+   <div>
+      <Controls.Button name="dialogButton" caption="dialog" on:click="openDialog()"/>
+   </div>
+   <div>
+      <Controls.Button name="modalDialogButton" caption="modal dialog" on:click="openModalDialog()"/>
+   </div>
+   <div>
+      <Controls.Button name="stickyButton" caption="sticky" on:click="openSticky()"/>
+   </div>
+   <div>
+      <Controls.Button name="notificationButton" caption="notification" on:click="openNotification()"/>
+   </div>
+   <div>
+      <Controls.Button name="stackButton" caption="stack" on:click="openStack()"/>
+   </div>
 
-        <div>
-            <Controls.Button name="stackButton2" caption="open old template" on:click="openOldTemplate()"/>
-        </div>
-    </div>
-</Controls.Application>    
+   <div>
+      <Controls.Button name="stackButton2" caption="open old template" on:click="openOldTemplate()"/>
+   </div>
+</div>

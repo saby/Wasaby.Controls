@@ -117,7 +117,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          _beforeMount: function() {
             this._className = 'controls-CompoundArea';
-            this._className += ' ws-float-area'; // Старые шаблоны завязаны селекторами на этот класс.
+            this._className += (this._options.type === 'stack') ? ' ws-float-area' : ' ws-window'; // Старые шаблоны завязаны селекторами на этот класс.
             this._commandHandler = this._commandHandler.bind(this);
             this._commandCatchHandler = this._commandCatchHandler.bind(this);
             this._templateName = this._options.template;
@@ -219,6 +219,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._templateOptions._compoundArea = this;
             this._templateOptions.parent = this;
 
+            this.handle('onInit');
             this.handle('onBeforeControlsLoad');
             this._compoundControl = new (Component)(this._templateOptions);
             this.handle('onBeforeShow');
@@ -254,6 +255,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   this.getContainer().prepend($('<div class="ws-window-titlebar"><div class="ws-float-area-title ws-float-area-title-generated">' + this._options.caption + '</div></div>'));
                   this.getContainer().addClass('controls-CompoundArea-headerPadding');
                }
+            } else if (customHeaderContainer.length) {
+               var container = $('.controls-DialogTemplate', this.getContainer());
+               container.prepend(customHeaderContainer.addClass('controls-CompoundArea-custom-header'));
+               this.getContainer().addClass('controls-CompoundArea-headerPadding');
             } else {
                this.getContainer().removeClass('controls-CompoundArea-headerPadding');
             }
@@ -281,24 +286,24 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                return this._close(true);
             } if (commandName === 'cancel') {
                return this._close(false);
+            } if (commandName === 'update') {
+               return true;
             } if (commandName === 'resize' || commandName === 'resizeYourself') {
                this._notify('resize', null, { bubbling: true });
             } else if (commandName === 'registerPendingOperation') {
                return this._registerChildPendingOperation(arg);
             } else if (commandName === 'unregisterPendingOperation') {
                return this._unregisterChildPendingOperation(arg);
-            } else if (this.__parentFromCfg) {
-               parent = this.__parentFromCfg;
+            } else if (this.getParent()) {
+               parent = this.getParent();
                return parent.sendCommand.apply(parent, argWithName);
-            } else if (this._parent && this._parent._options.opener) {
-               parent = this._parent._options.opener;
-
-               /* Если нет sendCommand - значит это не compoundControl - а значит там нет распространения команд */
-
-               if (parent.sendCommand) {
-                  return parent.sendCommand.apply(parent, argWithName);
-               }
             }
+
+            // Мы не распространяем команды по опенеру! и никогда не распространяли!
+            // else if (this.getOpener()) {
+            //    parent = this.getOpener();
+            //    return parent.sendCommand.apply(parent, argWithName);
+            // }
          },
          sendCommand: function(commandName, arg) {
             return this._commandHandler(commandName, arg);
@@ -319,7 +324,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             e.stopPropagation();
             this._close(arg);
          },
-         _keyUp: function(event) {
+         _keyDown: function(event) {
             if (!event.nativeEvent.shiftKey && event.nativeEvent.keyCode === CoreConstants.key.esc) {
                this._close();
                event.stopPropagation();
