@@ -1,9 +1,7 @@
 define('Controls/Application/DepsCollector/DepsCollector', [
-   'Core/Deferred',
    'Core/IoC',
-   'Core/cookie',
    'Core/core-extend'
-], function(Deferred, IoC, cookie, coreExtend) {
+], function(IoC, coreExtend) {
 
    var DEPTYPES = {
       BUNDLE: 1,
