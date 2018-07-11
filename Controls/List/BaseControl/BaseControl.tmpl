@@ -1,4 +1,4 @@
-<div class="controls-BaseControl controls-BaseControl__lastRowActions_{{_options.itemActionsType}}" on:showIndicator="_showIndicator()" on:hideIndicator="_hideIndicator()">
+<div class="controls-BaseControl controls-BaseControl__lastRowActions_{{_options.itemActionsPosition}}" on:showIndicator="_showIndicator()" on:hideIndicator="_hideIndicator()">
     <div class="controls-BaseControl__trigger controls-BaseControl__topListTrigger" name="topListTrigger"></div>
     <div class="controls-BaseControl__topPlaceholder" style="height: {{_topPlaceholderHeight}}px;"></div>
     <div class="controls-BaseControl__trigger controls-BaseControl__topLoadTrigger" name="topLoadTrigger" style="bottom: -{{_loadOffset}}px;"></div>
@@ -57,7 +57,7 @@
                 menuIsShown="{{_menuIsShown}}"
                 itemActions="{{_options.itemActions}}"
                 itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
-                itemActionsType="{{_options.itemActionsType}}"/>
+                itemActionsPosition="{{_options.itemActionsPosition}}"/>
         <Controls.List.Swipe.SwipeControl
                 ws:content="listView"
                 on:menuActionsClick="_showActionsMenu()"

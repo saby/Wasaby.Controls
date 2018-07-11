@@ -87,9 +87,7 @@ function(cMerge,
             cfg.className += ' ws-window';
          }
 
-         if (cfg.hasOwnProperty('autoHide')) {
-            cfg.closeByExternalClick = cfg.autoHide;
-         }
+         cfg.closeByExternalClick = cfg.hasOwnProperty('autoHide') ? cfg.autoHide : true;
 
          cfg.templateOptions.caption = this._getCaption(cfg, templateClass);
 
@@ -148,12 +146,17 @@ function(cMerge,
          if (cfg.hasOwnProperty('autoShow')) {
             cfg.templateOptions.autoShow = cfg.autoShow;
             cfg.templateOptions._isVisible = cfg.autoShow;
-            cfg.closeByExternalClick = false;
-            cfg.className += ' ws-hidden';
+            if (!cfg.autoShow) {
+               cfg.className += ' ws-hidden';
+            }
          }
 
          if (cfg.hasOwnProperty('autoCloseOnHide')) {
             cfg.templateOptions.autoCloseOnHide = cfg.autoCloseOnHide;
+         }
+
+         if (cfg.hasOwnProperty('modal')) {
+            cfg.isModal = cfg.modal;
          }
 
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
@@ -250,11 +253,13 @@ function(cMerge,
 
       _getCaption: function(cfg, templateClass) {
          var dimensions = this._getDimensions(templateClass);
+         var compoundAreaOptions = cfg.templateOptions;
          var templateOptions = this._getTemplateOptions(templateClass);
          return cfg.title || cfg.caption ||
             dimensions.title || dimensions.caption ||
             templateClass.caption || templateClass.title ||
-            cfg.templateOptions.title || cfg.templateOptions.caption ||
+            compoundAreaOptions.title || compoundAreaOptions.caption ||
+            compoundAreaOptions.templateOptions.title || compoundAreaOptions.templateOptions.caption ||
             templateOptions.title || templateOptions.caption;
       },
 

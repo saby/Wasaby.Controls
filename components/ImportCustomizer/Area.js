@@ -177,24 +177,22 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          baseParamsComponent: DataType(String).required(),
          baseParams: _typeIfDefined.bind(null, 'object'),
          parsers: function (parsers) {
-            // Должна быть опция "parsers"
-            if (!parsers) {
-               throw new Error('Option "parsers" required');
-            }
-            // и она должна быть объектом
-            if (typeof parsers !== 'object') {
+            // Если есть опция "parsers", то она должна быть объектом
+            if (parsers && typeof parsers !== 'object') {
                throw new Error('Option "parsers" must be an object');
             }
-            for (var name in parsers) {
-               // Каждый элемент набора parsers должно быть {@link ImportParser}
-               var v = parsers[name];
-               if (!(name &&
-                     (typeof v === 'object') &&
-                     (v.title && typeof v.title === 'string') &&
-                     (!v.component || typeof v.component === 'string') &&
-                     (!v.args || typeof v.args === 'object')
-                  )) {
-                  return new Error('Parsers items must be an ImportParser');
+            if (parsers) {
+               for (var name in parsers) {
+                  // Каждый элемент набора parsers должно быть {@link ImportParser}
+                  var v = parsers[name];
+                  if (!(name &&
+                        (typeof v === 'object') &&
+                        (v.title && typeof v.title === 'string') &&
+                        (!v.component || typeof v.component === 'string') &&
+                        (!v.args || typeof v.args === 'object')
+                     )) {
+                     return new Error('Parsers items must be an ImportParser');
+                  }
                }
             }
             return parsers;
@@ -295,13 +293,6 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             //Место назначения для импортирования (таблица в базе данных и т.п.)
             destination: null
          },
-         parsers: {
-            // TODO: Обдумать добавление поля applicable:Array<string> для указания типов данных (Excel или DBF)
-            // TODO: Обдумать удаление поля order
-            'InColumnsHierarchyParser': {title:rk('в отдельной колонке', 'НастройщикИмпорта'), order:10},
-            'InRowsHierarchyParser': {title:rk('в отдельной строке', 'НастройщикИмпорта'), component:'SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View', order:20},
-            'OutlineHierarchyParser': {title:rk('в группировке строк', 'НастройщикИмпорта'), order:30}
-         },
          validators: [
             {
                validator: function (data, optionGetter) { return data.dataType === 'cml' || data.sheets.every(function (sheet) { return !!sheet.columns.length; }); },
@@ -401,7 +392,13 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                /**
                 * @cfg {object<ImportParser>} Список всех доступных провайдеров парсинга импортируемых данных
                 */
-               parsers: null,
+               parsers: {
+                  // TODO: Обдумать добавление поля applicable:Array<string> для указания типов данных (Excel или DBF)
+                  // TODO: Обдумать удаление поля order
+                  'InColumnsHierarchyParser': {title:rk('в отдельной колонке', 'НастройщикИмпорта'), order:10},
+                  'InRowsHierarchyParser': {title:rk('в отдельной строке', 'НастройщикИмпорта'), component:'SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View', order:20},
+                  'OutlineHierarchyParser': {title:rk('в группировке строк', 'НастройщикИмпорта'), order:30}
+               },
                /**
                 * @cfg {object} Опции провайдера парсинга (отдельно по каждому парсеру). Состав опций может быть различным для каждого {@link parsers парсера} (опционально)
                 */
@@ -507,17 +504,21 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             var sheets = options.sheets;
             var hasSheets = sheets && sheets.length;
             var parsers = options.parsers;
-            var parserNames = Object.keys(parsers);
-            var parserItems = parserNames.map(function (v) { var o = parsers[v]; return {id:v, title:o.title, order:o.order}; });
-            parserItems.sort(function (v1, v2) { return v1.order - v2.order; });
-            options._defaultParserName = parserItems[0].id;
+            var parserNames = parsers ? Object.keys(parsers) : [];
+            var hasParsers = !!parserNames.length;
+            var parserItems;
+            if (hasParsers) {
+               var parserItems = parserNames.map(function (v) { var o = parsers[v]; return {id:v, title:o.title, order:o.order}; });
+               parserItems.sort(function (v1, v2) { return v1.order - v2.order; });
+               options._defaultParserName = parserItems[0].id;
+            }
             var sheetIndex = options.sheetIndex;
             if (hasSheets && (options.sameSheetConfigs || sheetIndex ==/*Не ===*/ null)) {
                options.sheetIndex = sheetIndex = -1;
             }
             var sheet = hasSheets ? sheets[0 < sheetIndex ? sheetIndex : 0] : null;
             var parserName = hasSheets ? sheet.parser : null;
-            if (!parserName) {
+            if (!parserName && hasParsers) {
                parserName = options._defaultParserName;
                if (hasSheets) {
                   sheet.parser = parserName;
@@ -536,7 +537,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             // Опции под-компонента "provider"
             if (isUsedSubview.provider) {
                var separator = hasSheets && sheet.separator ? sheet.separator : '';
-               scopes.provider = {dataType:options.dataType, parsers:parserItems, parser:parserName, skippedRows:skippedRows, separator:separator};
+               scopes.provider = {dataType:options.dataType, parsers:parserItems || [], parser:parserName, skippedRows:skippedRows, separator:separator};
             }
             // Опции под-компонента "providerArgs"
             if (isUsedSubview.providerArgs) {
@@ -661,7 +662,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                      for (var i = 0; i < sheets.length; i++) {
                         var sheet = sheets[i];
                         var parserName = sheet.parser;
-                        if (!parserName) {
+                        if (!parserName && options._defaultParserName) {
                            sheet.parser = parserName = options._defaultParserName;
                         }
                         var skippedRows = 0 < sheet.skippedRows ? sheet.skippedRows : 0;
@@ -869,7 +870,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                 sheet: notWaiting && isExcel,
                 baseParams: notWaiting,
                 provider: notWaiting && isExcel,
-                providerArgs: notWaiting && isExcel,
+                providerArgs: notWaiting && isExcel && !!(options.parsers && Object.keys(options.parsers).length),
                 columnBinding: notWaiting && (isExcel || dataType === Area.DATA_TYPE_DBF),
                 mapper: notWaiting && dataType === Area.DATA_TYPE_CML
             };
@@ -1152,26 +1153,29 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
           * @return {object}
           */
          _getProviderArgsOptions: function (options, parserName, withHandler) {
-            var parser = options.parsers[parserName];
-            if (parser && parser.component) {
-               var sheets = options.sheets;
-               var sheetIndex = options.sheetIndex;
-               var values = {
-                  dataType: options.dataType,
-                  columnCount:sheets && sheets.length ? sheets[0 < sheetIndex ? sheetIndex : 0].sampleRows[0].length : 0
-               };
-               var parserArgs = parser.args;
-               if (parserArgs) {
-                  values = cMerge(values, parserArgs);
-               }
-               var providerArgs = options.providerArgs;
-               if (providerArgs) {
-                  var args = providerArgs[parserName];
-                  if (args) {
-                     values = cMerge(values, args);
+            var parsers = options.parsers;
+            if (parsers) {
+               var parser = options.parsers[parserName];
+               if (parser && parser.component) {
+                  var sheets = options.sheets;
+                  var sheetIndex = options.sheetIndex;
+                  var values = {
+                     dataType: options.dataType,
+                     columnCount:sheets && sheets.length ? sheets[0 < sheetIndex ? sheetIndex : 0].sampleRows[0].length : 0
+                  };
+                  var parserArgs = parser.args;
+                  if (parserArgs) {
+                     values = cMerge(values, parserArgs);
                   }
+                  var providerArgs = options.providerArgs;
+                  if (providerArgs) {
+                     var args = providerArgs[parserName];
+                     if (args) {
+                        values = cMerge(values, args);
+                     }
+                  }
+                  return values;
                }
-               return values;
             }
          },
 

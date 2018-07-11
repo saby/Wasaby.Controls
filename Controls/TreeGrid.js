@@ -1,10 +1,10 @@
 define('Controls/TreeGrid', [
    'Controls/Grid',
-   'Controls/List/TreeGrid/TreeGridViewModel',
-   'Controls/List/TreeGrid/TreeGridView',
-   'css!Controls/List/TreeGrid/TreeGrid',
-   'Controls/List/TreeControl'
-], function(Grid, TreeGridViewModel) {
+   'Controls/List/TreeGridView/TreeGridViewModel',
+   'tmpl!Controls/List/TreeGrid/TreeGrid',
+   'Core/core-merge',
+   'Controls/List/TreeGridView/TreeGridView'
+], function(Grid, TreeGridViewModel, TreeTpl, cMerge) {
    'use strict';
 
    /**
@@ -28,7 +28,7 @@ define('Controls/TreeGrid', [
     */
 
    var Tree = Grid.extend({
-      _viewName: 'Controls/List/TreeGrid/TreeGridView',
+      _viewName: 'Controls/List/TreeGridView/TreeGridView',
       _viewTemplate: 'Controls/List/TreeControl',
       _getModelConstructor: function() {
          return TreeGridViewModel;

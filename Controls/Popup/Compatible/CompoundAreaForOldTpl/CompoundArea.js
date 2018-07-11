@@ -13,6 +13,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/constants',
       'Core/helpers/Hcontrol/doAutofocus',
       'optional!Deprecated/Controls/DialogRecord/DialogRecord',
+      'Core/helpers/additional-helpers',
       'Core/EventBus',
 
       'Lib/Control/AreaAbstract/AreaAbstract.compatible',
@@ -36,6 +37,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       CoreConstants,
       doAutofocus,
       DialogRecord,
+      addHelpers,
       cEventBus
    ) {
       function removeOperation(operation, array) {
@@ -117,7 +119,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          _beforeMount: function() {
             this._className = 'controls-CompoundArea';
-            this._className += ' ws-float-area'; // Старые шаблоны завязаны селекторами на этот класс.
+            this._className += (this._options.type === 'stack') ? ' ws-float-area' : ' ws-window'; // Старые шаблоны завязаны селекторами на этот класс.
             this._commandHandler = this._commandHandler.bind(this);
             this._commandCatchHandler = this._commandCatchHandler.bind(this);
             this._templateName = this._options.template;
@@ -219,6 +221,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._templateOptions._compoundArea = this;
             this._templateOptions.parent = this;
 
+            this.handle('onInit');
             this.handle('onBeforeControlsLoad');
             this._compoundControl = new (Component)(this._templateOptions);
             this.handle('onBeforeShow');
@@ -254,6 +257,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   this.getContainer().prepend($('<div class="ws-window-titlebar"><div class="ws-float-area-title ws-float-area-title-generated">' + this._options.caption + '</div></div>'));
                   this.getContainer().addClass('controls-CompoundArea-headerPadding');
                }
+            } else if (customHeaderContainer.length) {
+               var container = $('.controls-DialogTemplate', this.getContainer());
+               container.prepend(customHeaderContainer.addClass('controls-CompoundArea-custom-header'));
+               this.getContainer().addClass('controls-CompoundArea-headerPadding');
             } else {
                this.getContainer().removeClass('controls-CompoundArea-headerPadding');
             }
@@ -281,24 +288,32 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                return this._close(true);
             } if (commandName === 'cancel') {
                return this._close(false);
-            } if (commandName === 'resize' || commandName === 'resizeYourself') {
+            } if (commandName === 'update') {
+               return true;
+            } else if (commandName === 'save') {
+               return this.save(arg);
+            } else if (commandName === 'delete') {
+               return this.delRecord(arg);
+            } else if (commandName === 'print') {
+               return this.print(arg);
+            } else if (commandName === 'printReport') {
+               return this.printReport(arg);
+            } else if (commandName === 'resize' || commandName === 'resizeYourself') {
                this._notify('resize', null, { bubbling: true });
             } else if (commandName === 'registerPendingOperation') {
                return this._registerChildPendingOperation(arg);
             } else if (commandName === 'unregisterPendingOperation') {
                return this._unregisterChildPendingOperation(arg);
-            } else if (this.__parentFromCfg) {
-               parent = this.__parentFromCfg;
-               parent.sendCommand.apply(parent, argWithName);
-            } else if (this._parent && this._parent._options.opener) {
-               parent = this._parent._options.opener;
-
-               /* Если нет sendCommand - значит это не compoundControl - а значит там нет распространения команд */
-
-               if (parent.sendCommand) {
-                  parent.sendCommand.apply(parent, argWithName);
-               }
+            } else if (this.getParent()) {
+               parent = this.getParent();
+               return parent.sendCommand.apply(parent, argWithName);
             }
+
+            // Мы не распространяем команды по опенеру! и никогда не распространяли!
+            // else if (this.getOpener()) {
+            //    parent = this.getOpener();
+            //    return parent.sendCommand.apply(parent, argWithName);
+            // }
          },
          sendCommand: function(commandName, arg) {
             return this._commandHandler(commandName, arg);
@@ -319,7 +334,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             e.stopPropagation();
             this._close(arg);
          },
-         _keyUp: function(event) {
+         _keyDown: function(event) {
             if (!event.nativeEvent.shiftKey && event.nativeEvent.keyCode === CoreConstants.key.esc) {
                this._close();
                event.stopPropagation();
@@ -350,6 +365,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             return this.__openerFromCfg || null;
          },
 
+         getTemplateName: function() {
+            return this._template;
+         },
+
          /* start RecordFloatArea */
          getRecord: function() {
             return this._options.record || this._options.templateOptions && this._options.templateOptions.record;
@@ -357,6 +376,93 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          isNewRecord: function() {
             return this._options.newRecord;
          },
+
+         setRecord: function(record, noConfirm) {
+            var self = this;
+            if (!noConfirm) {
+               this.openConfirmDialog(true).addCallback(function(result) {
+                  if (result) {
+                     self._setRecord(record);
+                  }
+               });
+            } else {
+               this._setRecord(record);
+            }
+         },
+         _setRecord: function(record) {
+            var oldRecord = this.getRecord(),
+               context = this.getLinkedContext(),
+               self = this,
+               setRecordFunc = function() {
+                  if (self._options.clearContext) {
+                     context.setContextData(record);
+                  } else {
+                     context.replaceRecord(record);
+                  }
+                  if (self.isNewRecord()) {
+                     self._options.newRecord = record.getKey() === null;
+                  }
+                  self._notify('onChangeRecord', record, oldRecord);//Отдаем запись, хотя здесь ее можно получить простым getRecord + старая запись
+               },
+               result;
+            result = this._notify('onBeforeChangeRecord', record, oldRecord);
+            addHelpers.callbackWrapper(result, setRecordFunc.bind(this));
+         },
+         openConfirmDialog: function(noHide) {
+            var self = this,
+               deferred = new cDeferred();
+            this._displaysConfirmDialog = true;
+            deferred.addCallback(function(result) {
+               self._notify('onConfirmDialogSelect', result);
+               self._displaysConfirmDialog = false;
+               return result;
+            });
+            if ((self.getRecord().isChanged() && !self.isSaved()) || self._recordIsChanged) {
+               this._openConfirmDialog(false, true).addCallback(function(result) {
+                  switch (result) {
+                     case 'yesButton' : {
+                        if (self._result === undefined) {
+                           self._result = true;
+                        }
+                        self.updateRecord().addCallback(function() {
+                           self._confirmDialogToCloseActions(deferred, noHide);
+                        }).addErrback(function() {
+                           deferred.callback(false);
+                        });
+                        break;
+                     }
+                     case 'noButton' : {
+                        if (self._result === undefined) {
+                           self._result = false;
+                        }
+
+                        /**
+                         * Если откатить изменения в записи, поля связи, которые с ней связанны, начнут обратно вычитываться, если были изменены, а это уже не нужно
+                         * Положили rollback обратно, поля связи уже так себя вести не должны, а rollback реально нужен
+                         * Оставляем возможность проводить сохранение записи в прикладном коде. По задаче Алены(см коммент вверху) ошибка не повторяется, т.к. там уже юзают formController
+                         */
+                        self._confirmDialogToCloseActions(deferred, noHide);
+                        break;
+                     }
+                     default : {
+                        deferred.callback(false);
+                     }
+                  }
+               });
+            } else {
+               self._confirmDialogToCloseActions(deferred, noHide);
+            }
+            return deferred;
+         },
+         _confirmDialogToCloseActions: function(deferred, noHide) {
+            // EventBus.channel('navigation').unsubscribe('onBeforeNavigate', this._onBeforeNavigate, this);
+            deferred.callback(true);
+            if (!noHide) {
+               this.close.apply(this, arguments);
+            }
+         },
+
+
          setReadOnly: function(isReadOnly) {
             this._isReadOnly = isReadOnly;
             if (this._compoundControl) {
@@ -440,6 +546,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
          save: function() {
             return DialogRecord.prototype.save.apply(this, arguments);
+         },
+         delRecord: function() {
+            return DialogRecord.prototype.delRecord.apply(this, arguments);
          },
          _processError: function(error) {
             DialogRecord.prototype._processError.apply(this, [error]);

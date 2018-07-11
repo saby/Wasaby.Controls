@@ -5,7 +5,7 @@
       <Controls.Filter.Button attr:style="max-width: 200px;"
                               attr:id="filter1"
                               on:filterChanged="_filterChangedHandler()"
-                              template="tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/vdomFilterButtonTemplate">
+                              templateName="tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/vdomFilterButtonTemplate">
          <ws:items>
             <ws:Array>
                <ws:Object id="FIO" value="Name" resetValue="" visibility="{{false}}"/>
@@ -32,7 +32,7 @@
       <Controls.Filter.Button attr:style="max-width: 200px;"
                               attr:id="filter2"
                               on:filterChanged="_filterChangedHandler()"
-                              template="tmpl!Controls-demo/FilterButton/Panel/resources/vdomFilterTemplate">
+                              templateName="tmpl!Controls-demo/FilterButton/Panel/resources/vdomFilterTemplate">
          <ws:items>
             <ws:Array>
                <ws:Object id="genreKey" value="" textValue="key" resetValue="" visibility="{{false}}"

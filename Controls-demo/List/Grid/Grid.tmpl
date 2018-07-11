@@ -1,32 +1,31 @@
 <div class="demo-Grid">
    <div class="demo-Grid__container">
-      <Controls.Container.MultiSelector
-              source="{{_viewSource}}"
-              selectedKeys="{{['448390']}}"
-              name="multiSelector">
-         <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="default">
-            <ws:content>
-               <Controls.List.MultiSelector>
-                  <Controls.Grid
-                                attr:class="demo-Grid__control test_grid_1"
-                                keyProperty="id"
-                                displayProperty="title"
-                                markedKey="{{448390}}"
-                                showRowSeparator="{{true}}"
-                                multiSelectVisibility="visible"
-                                header="{{gridHeader}}"
-                                itemTemplate="tmpl!Controls-demo/List/Grid/DemoItem"
-                                source = "{{_viewSource}}"
-                                itemActions="{{_itemActions}}"
-                                on:itemActionsClick="_onActionClick()"
-                                itemActionVisibilityCallback="{{_showAction}}"
-                                itemActionsType="outside"
-                                columns="{{gridColumns}}">
-                  </Controls.Grid>
-               </Controls.List.MultiSelector>
-            </ws:content>
-         </Controls.Container.Scroll>
-      </Controls.Container.MultiSelector>
+      <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
+         <Controls.Container.MultiSelector
+                 selectedKeys="{{['448390']}}"
+                 name="multiSelector">
+            <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="default">
+               <Controls.List.Container>
+                  <Controls.List.MultiSelector>
+                     <Controls.Grid
+                             attr:class="demo-Grid__control test_grid_1"
+                             displayProperty="title"
+                             markedKey="{{448390}}"
+                             showRowSeparator="{{true}}"
+                             multiSelectVisibility="visible"
+                             header="{{gridHeader}}"
+                             itemTemplate="tmpl!Controls-demo/List/Grid/DemoItem"
+                             itemActions="{{_itemActions}}"
+                             on:itemActionsClick="_onActionClick()"
+                             itemActionVisibilityCallback="{{_showAction}}"
+                             itemActionsPosition="outside"
+                             columns="{{gridColumns}}">
+                     </Controls.Grid>
+                  </Controls.List.MultiSelector>
+               </Controls.List.Container>
+            </Controls.Container.Scroll>
+         </Controls.Container.MultiSelector>
+      </Controls.Container.Data>
       <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="selected_record">
          <ws:content>
             <Controls.Grid
@@ -50,34 +49,33 @@
       </Controls.Container.Scroll>
    </div>
    <div class="demo-Grid__container">
-      <Controls.Container.MultiSelector
-              source="{{_viewSource}}"
-              selectedKeys="{{['448390']}}"
-              name="multiSelector">
-         <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="mark_record">
-            <ws:content>
-               <Controls.List.MultiSelector>
-                  <Controls.Grid
-                          attr:class="demo-Grid__control test_grid_3"
-                          leftPadding="M"
-                          rightPadding="L"
-                          keyProperty="id"
-                          displayProperty="title"
-                          markedKey="{{448390}}"
-                          showRowSeparator="{{true}}"
-                          multiSelectVisibility="visible"
-                          itemTemplate="tmpl!Controls-demo/List/Grid/DemoItem"
-                          source = "{{_viewSource}}"
-                          itemActions="{{_itemActions}}"
-                          on:itemActionsClick="_onActionClick()"
-                          itemActionVisibilityCallback="{{_showAction}}"
-                          itemActionsType="outside"
-                          columns="{{gridColumns}}">
-                  </Controls.Grid>
-               </Controls.List.MultiSelector>
-            </ws:content>
-         </Controls.Container.Scroll>
-      </Controls.Container.MultiSelector>
+      <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
+         <Controls.Container.MultiSelector
+                 selectedKeys="{{['448390']}}"
+                 name="multiSelector">
+            <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="mark_record">
+               <Controls.List.Container>
+                  <Controls.List.MultiSelector>
+                     <Controls.Grid
+                             attr:class="demo-Grid__control test_grid_3"
+                             leftPadding="M"
+                             rightPadding="L"
+                             displayProperty="title"
+                             markedKey="{{448390}}"
+                             showRowSeparator="{{true}}"
+                             multiSelectVisibility="visible"
+                             itemTemplate="tmpl!Controls-demo/List/Grid/DemoItem"
+                             itemActions="{{_itemActions}}"
+                             on:itemActionsClick="_onActionClick()"
+                             itemActionVisibilityCallback="{{_showAction}}"
+                             itemActionsPosition="outside"
+                             columns="{{gridColumns}}">
+                     </Controls.Grid>
+                  </Controls.List.MultiSelector>
+               </Controls.List.Container>
+            </Controls.Container.Scroll>
+         </Controls.Container.MultiSelector>
+      </Controls.Container.Data>
       <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="no_title">
          <ws:content>
             <Controls.Grid
