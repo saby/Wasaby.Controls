@@ -7,6 +7,7 @@
             on:deactivated="_popupDeactivated(item.id)"
             attr:class="controls-Container__popup {{item.popupOptions.className}} {{item.position.hidden ? 'ws-invisible'}}"
             attr:style="z-index: {{( index + 1 ) * 10}};
+                position: {{item.position.position !== undefined ? item.position.position}};
                 left: {{item.position.left === undefined ? 'auto' : item.position.left + 'px'}};
                 right: {{item.position.right === undefined ? 'auto' : item.position.right + 'px'}};
                 top: {{item.position.top === undefined ? 'auto': item.position.top + 'px'}};

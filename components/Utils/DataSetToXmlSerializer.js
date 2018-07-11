@@ -3,7 +3,6 @@
  */
 /**
  * Преобразует строку к валидному формату для XSLT трансформации.
- * Функция из Deprecated/helpers/string-helpers, чтобы не тянуть в зависимостях
  */
 var removeInvalidXMLChars = function(valueStr) {
    if (typeof valueStr == "string") {
