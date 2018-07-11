@@ -1,11 +1,11 @@
 define('Controls/List/MultiSelector', [
    'Core/Control',
    'tmpl!Controls/List/MultiSelector/MultiSelector',
-   'Controls/Container/Data/ContextOptions'
+   'Controls/Container/MultiSelector/SelectionContextField'
 ], function(
    Control,
    template,
-   DataContext
+   SelectionContextField
 ) {
    'use strict';
 
@@ -21,7 +21,7 @@ define('Controls/List/MultiSelector', [
 
    MultiSelector.contextTypes = function contextTypes() {
       return {
-         dataOptions: DataContext
+         selection: SelectionContextField
       };
    };
 

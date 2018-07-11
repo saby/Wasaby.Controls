@@ -55,11 +55,7 @@ define([
 
       it('_beforeUpdate', function() {
          var instance = new MultiSelector();
-         instance._multiselection = {
-            setItems: function(items) {
-               assert.deepEqual(context.dataOptions.items, items);
-            }
-         };
+         instance._createMultiselection(cfg, context);
          instance._beforeUpdate(cfg, context);
          assert.deepEqual(context.dataOptions.items, instance._items);
       });
@@ -122,20 +118,17 @@ define([
       });
 
       describe('_onListSelectionChange', function() {
-         it('first elem click to false', function(done) {
-            //TODO: щас поправлю
+         it('first elem click to false', function() {
             var instance = new MultiSelector();
             instance.saveOptions(cfg);
-            instance._beforeMount(cfg).addCallback(function() {
-               instance._multiselection.unselect = function(removed) {
-                  assert.deepEqual([3, 4], removed);
-               };
-               instance._multiselection.select = function(added) {
-                  assert.deepEqual([1, 2], added);
-               };
-               instance._onListSelectionChange({}, {added: [1, 2], removed: [3, 4]});
-               done();
-            });
+            instance._beforeMount(cfg, context);
+            instance._multiselection.unselect = function(removed) {
+               assert.deepEqual([3, 4], removed);
+            };
+            instance._multiselection.select = function(added) {
+               assert.deepEqual([1, 2], added);
+            };
+            instance._onListSelectionChange({}, {added: [1, 2], removed: [3, 4]});
          });
       });
    });

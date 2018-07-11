@@ -5,8 +5,18 @@ define('Controls/List/TreeControl', [
    'Core/core-clone',
    'WS.Data/Relation/Hierarchy',
    'Controls/Container/MultiSelector/SelectionContextField',
+   'Controls/Container/Data/ContextOptions',
    'Controls/Utils/ArraySimpleValuesUtil'
-], function(Control, TreeControlTpl, ItemsUtil, cClone, HierarchyRelation, SelectionContextField, ArraySimpleValuesUtil) {
+], function(
+   Control,
+   TreeControlTpl,
+   ItemsUtil,
+   cClone,
+   HierarchyRelation,
+   SelectionContextField,
+   DataContext,
+   ArraySimpleValuesUtil
+) {
    'use strict';
 
    var _private = {
@@ -118,22 +128,22 @@ define('Controls/List/TreeControl', [
             newSelectedKeys,
             childrenIds;
          if (status === true || status === null) {
-            parents = _private.getAllParentsIds(this._hierarchyRelation, key, this._contextObj.selection.items);
-            newSelectedKeys = this._contextObj.selection.calculatedSelectedKeys.slice();
+            parents = _private.getAllParentsIds(this._hierarchyRelation, key, this.context.get('dataOptions').items);
+            newSelectedKeys = this.context.get('selection').calculatedSelectedKeys.slice();
             newSelectedKeys.splice(newSelectedKeys.indexOf(key), 1);
-            childrenIds = _private.getAllChildren(this._hierarchyRelation, key, this._contextObj.selection.items).map(function(child) {
+            childrenIds = _private.getAllChildren(this._hierarchyRelation, key, this.context.get('dataOptions').items).map(function(child) {
                return child.getId();
             });
             ArraySimpleValuesUtil.removeSubArray(newSelectedKeys, childrenIds);
             for (var i = 0; i < parents.length; i++) {
                //TODO: проверка на hasMore должна быть тут
-               if (_private.getSelectedChildrenCount(this._hierarchyRelation, parents[i], newSelectedKeys, this._contextObj.selection.items) === 0) {
+               if (_private.getSelectedChildrenCount(this._hierarchyRelation, parents[i], newSelectedKeys, this.context.get('dataOptions').items) === 0) {
                   newSelectedKeys.splice(newSelectedKeys.indexOf(parents[i]), 1);
                } else {
                   break;
                }
             }
-            this._notify('selectionChange', [ArraySimpleValuesUtil.getArrayDifference(this._contextObj.selection.calculatedSelectedKeys, newSelectedKeys)]);
+            this._notify('selectionChange', [ArraySimpleValuesUtil.getArrayDifference(this.context.get('selection').calculatedSelectedKeys, newSelectedKeys)]);
          } else {
             this._notify('selectionChange', [{added: [key], removed: []}]);
          }
@@ -142,16 +152,16 @@ define('Controls/List/TreeControl', [
       _onAfterItemsRemoveHandler: function(e, keys) {
          var
             self = this,
-            newSelectedKeys = this._contextObj.selection.calculatedSelectedKeys.slice(),
+            newSelectedKeys = this.context.get('selection').calculatedSelectedKeys.slice(),
             parents;
 
          ArraySimpleValuesUtil.removeSubArray(newSelectedKeys, keys);
 
          keys.forEach(function(key) {
-            parents = _private.getAllParentsIds(self._hierarchyRelation, key, self._contextObj.selection.items);
+            parents = _private.getAllParentsIds(self._hierarchyRelation, key, self.context.get('dataOptions').items);
             for (var i = 0; i < parents.length; i++) {
                //TODO: проверка на hasMore должна быть тут
-               if (_private.getSelectedChildrenCount(self._hierarchyRelation, parents[i], newSelectedKeys, self._contextObj.selection.items) === 0) {
+               if (_private.getSelectedChildrenCount(self._hierarchyRelation, parents[i], newSelectedKeys, self.context.get('dataOptions').items) === 0) {
                   newSelectedKeys.splice(newSelectedKeys.indexOf(parents[i]), 1);
                } else {
                   break;
@@ -159,7 +169,7 @@ define('Controls/List/TreeControl', [
             }
          });
 
-         this._notify('selectionChange', [ArraySimpleValuesUtil.getArrayDifference(this._contextObj.selection.calculatedSelectedKeys, newSelectedKeys)]);
+         this._notify('selectionChange', [ArraySimpleValuesUtil.getArrayDifference(this.context.get('selection').calculatedSelectedKeys, newSelectedKeys)]);
       }
    });
 
@@ -169,11 +179,11 @@ define('Controls/List/TreeControl', [
          filter: {}
       };
    };
-
-   //TODO: перейти на другой контекст, после того, как прикручу Санин контейнер
+   
    TreeControl.contextTypes = function contextTypes() {
       return {
-         selection: SelectionContextField
+         selection: SelectionContextField,
+         dataOptions: DataContext
       };
    };
 

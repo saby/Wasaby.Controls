@@ -19,15 +19,24 @@ define('Controls/Container/MultiSelector', [
       _items: null,
 
       _beforeMount: function(newOptions, context) {
+         var self = this;
          this._items = context.dataOptions.items;
          this._createMultiselection(newOptions, context);
          this._updateSelectionContext();
+         this._items.subscribe('onCollectionChange', function() {
+            self._updateSelectionContext();
+         });
       },
 
       _beforeUpdate: function(newOptions, context) {
+         var self = this;
          if (this._items !== context.dataOptions.items) {
             this._items = context.dataOptions.items;
             this._multiselection.setItems(context.dataOptions.items);
+            this._updateSelectionContext();
+            this._items.subscribe('onCollectionChange', function() {
+               self._updateSelectionContext();
+            });
          }
       },
 
@@ -55,8 +64,7 @@ define('Controls/Container/MultiSelector', [
             currentSelection.selected,
             currentSelection.excluded,
             this._multiselection.getSelectedKeysForRender(),
-            this._multiselection.getCount(),
-            this._multiselection
+            this._multiselection.getCount()
          );
 
          if (this._options.selectionChangeHandler) {
