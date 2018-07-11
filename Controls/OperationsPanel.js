@@ -17,6 +17,32 @@ define('Controls/OperationsPanel', [
 ) {
    'use strict';
 
+   /**
+    * Control for grouping operations.
+    *
+    * @class Controls/Operations/Panel
+    * @extends Core/Control
+    * @mixes Controls/interface/ISource
+    * @mixes Controls/List/interface/IHierarchy
+    * @control
+    * @public
+    */
+
+   /**
+    * @name Controls/Operations/Panel#multiSelector
+    * @cfg {Boolean} multiSelector Show multiSelector block.
+    */
+
+   /**
+    * @name Controls/Operations/Panel#visible
+    * @cfg {Boolean} visible Operations panel visibility.
+    */
+
+   /**
+    * @event Controls/Operations/Panel#itemClick Occurs when item was clicked.
+    * @param {WS.Data/Entity/Record} item Clicked item.
+    */
+
    var _private = {
 
       loadItems: function(instance, source) {
