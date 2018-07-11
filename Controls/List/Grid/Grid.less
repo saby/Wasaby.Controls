@@ -1,5 +1,7 @@
 //--------------- constants ---------------
-@font-size_Grid-cell_XL: 17px;
+@font-size_Grid-cell_L: 17px;
+@font-size_Grid-cell_M: 14px;
+@font-size_Grid-cell_S: 12px;
 @font-size_Grid-row-cell: 14px;
 @font-size_Grid-header-cell: 12px;
 
@@ -176,10 +178,17 @@
 .controls-Grid__row-cell_withRowSeparator {
    border-top-color: @color-Grid-row-separator;
 }
-.controls-Grid__row-cell__content_baseline_XL:before {
-   // Для выравнивания текста внутри ячейки по базовой линии, создаваемой самым большим шрифтом
+.controls-Grid__row-cell__content_baseline_L:before {
    content: '\200b';
-   font-size: @font-size_Grid-cell_XL;
+   font-size: @font-size_Grid-cell_L;
+}
+.controls-Grid__row-cell__content_baseline_M:before {
+   content: '\200b';
+   font-size: @font-size_Grid-cell_M;
+}
+.controls-Grid__row-cell__content_baseline_S:before {
+   content: '\200b';
+   font-size: @font-size_Grid-cell_S;
 }
 .controls-Grid__cell_spacingFirstCol_default {
    padding-left: @padding_Grid-left_default;
