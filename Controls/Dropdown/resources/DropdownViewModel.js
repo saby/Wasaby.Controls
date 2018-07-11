@@ -7,19 +7,21 @@ define('Controls/Dropdown/resources/DropdownViewModel',
       'Controls/List/resources/utils/ItemsUtil',
       'Controls/List/ItemsViewModel',
       'WS.Data/Entity/Model',
-      'WS.Data/Relation/Hierarchy'
+      'WS.Data/Relation/Hierarchy',
+      'Controls/Constants',
    ],
 
-   function(BaseViewModel, ItemsUtil, ItemsViewModel, Model, Hierarchy) {
+   function(BaseViewModel, ItemsUtil, ItemsViewModel, Model, Hierarchy, ControlsConstants) {
       var _private = {
          filterHierarchy: function(item) {
-            if (!this._options.parentProperty || !this._options.nodeProperty) {
+
+            if (!this._options.parentProperty || !this._options.nodeProperty || !item.get) {
                return true;
             }
             return item.get(this._options.parentProperty) === this._options.rootKey;
          },
          filterAdditional: function(item) {
-            if (!this._options.additionalProperty || this._expanded === true) {
+            if (!this._options.additionalProperty || this._expanded === true || !item.get) {
                return true;
             }
             return item.get(this._options.additionalProperty) !== true;
@@ -34,6 +36,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             this._options = cfg;
             DropdownViewModel.superclass.constructor.apply(this, arguments);
             this._itemsModel = new ItemsViewModel({
+               itemsGroup: cfg.itemsGroup,
                items: cfg.items,
                keyProperty: cfg.keyProperty,
                displayProperty: 'title'
@@ -86,10 +89,18 @@ define('Controls/Dropdown/resources/DropdownViewModel',
 
          getCurrent: function() {
             var itemsModelCurrent = this._itemsModel.getCurrent();
+            if (!itemsModelCurrent.item.get) {
+               itemsModelCurrent.isGroup = true;
+               itemsModelCurrent.isHiddenGroup = itemsModelCurrent.item === ControlsConstants.view.hiddenGroup;
+               return itemsModelCurrent
+            }
             itemsModelCurrent.hasChildren = this._hasItemChildren(itemsModelCurrent.item);
             itemsModelCurrent.hasParent = this._hasParent(itemsModelCurrent.item);
             itemsModelCurrent.isSelected = this._isItemSelected(itemsModelCurrent.item);
             itemsModelCurrent.icon = itemsModelCurrent.item.get('icon');
+            if (!this._itemsModel.isLast()) {
+               itemsModelCurrent.hasSeparator = this._needToDrawSeparator(itemsModelCurrent.item, this._itemsModel.getNext().item);
+            }
             itemsModelCurrent.iconStyle = itemsModelCurrent.item.get('iconStyle');
             itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
             itemsModelCurrent.template = itemsModelCurrent.item.get(itemsModelCurrent.itemTemplateProperty);
@@ -112,7 +123,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             var display = this._itemsModel._display;
             for (var i = 0; i < display.getCount(); i++) {
                var item = display.at(i).getContents();
-               if (item.get(this._options.nodeProperty)) {
+               if (item.get && item.get(this._options.nodeProperty)) {
                   return true;
                }
             }
@@ -150,6 +161,14 @@ define('Controls/Dropdown/resources/DropdownViewModel',
                emptyItem.emptyText = this._options.emptyText;
                return emptyItem;
             }
+         },
+         _needToDrawSeparator: function (item, nextItem) {
+            if (!nextItem.get) {
+               return false;
+            }
+            var itemInHistory = item.get('pinned') || item.get('recent') || item.get('frequent');
+            var nextItemInHistory = nextItem.get('pinned') || nextItem.get('recent') || nextItem.get('frequent');
+            return itemInHistory && !nextItemInHistory
          }
       });
 

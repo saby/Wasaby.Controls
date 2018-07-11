@@ -9,7 +9,14 @@
             class="controls-DropdownList__emptyItem"/>
    </ws:if>
    <ws:for data="listModel.reset(); listModel.isEnd(); listModel.goToNext();">
-      <ws:partial
+      <ws:if data="{{listModel.getCurrent().isGroup}}">
+         <ws:if data="{{!listModel.getCurrent().isHiddenGroup}}">
+            <ws:partial
+               template="{{listModel.getCurrent().groupTemplate || defaultGroupTemplate}}"/>
+         </ws:if>
+      </ws:if>
+      <ws:else>
+         <ws:partial
             on:click="_itemClickHandler(listModel.getCurrent().item)"
             on:mouseenter="_itemMouseEnter(listModel.getCurrent().item, listModel.getCurrent().hasChildren)"
             template="{{listModel.getCurrent().template || itemTemplate || defaultItemTemplate}}"
@@ -18,5 +25,6 @@
             hierarchyPadding="{{hierarchyPadding}}"
             parentProperty="{{parentProperty}}"
             iconPadding="{{iconPadding}}"/>
+      </ws:else>
    </ws:for>
 </div>
