@@ -121,6 +121,7 @@ define('Controls/Dropdown/Container',
                   //FIXME тут необходимо перевести на кэширующий источник,
                   //Чтобы при клике историческое меню обновляло источник => а контейнер обновил item'ы
                   //Но т.к. кэширующий сорс есть только в 400, выписываю задачу на переход.
+                  //https://online.sbis.ru/opendoc.html?guid=eedde59b-d906-47c4-b2cf-4f6d3d3cc2c7
                   if (this._options.source.getItems) {
                      this._items = this._options.source.getItems();
                   }
