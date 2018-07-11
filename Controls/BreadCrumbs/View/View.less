@@ -1,0 +1,111 @@
+@min-width_BreadCrumbs_withOverflow: @font-size_BreadCrumbs-arrow + @min-width_BreadCrumbs-text;
+
+.controls-BreadCrumbsView {
+   white-space: nowrap;
+}
+
+.controls-BreadCrumbsView__wrapper {
+   display: flex;
+   align-items: baseline;
+   overflow: hidden;
+   width: 100%;
+}
+
+.controls-BreadCrumbsView__items {
+   display: inline-flex;
+   align-items: center;
+   overflow: hidden;
+   height: @height_BreadCrumbs-items;
+   width: 100%;
+}
+
+.controls-BreadCrumbsView__crumb {
+   display: inline-flex;
+   align-items: center;
+   flex-shrink: 0;
+   min-width: 0;
+}
+
+.controls-BreadCrumbsView__titleWrapper {
+   flex-shrink: 0;
+   cursor: pointer;
+   position: relative;
+   overflow: hidden;
+   min-width: 0;
+}
+
+.controls-BreadCrumbsView__title {
+   .text-overflow();
+   color: @color_BreadCrumbs-title;
+}
+
+.controls-BreadCrumbsView__crumb_withOverflow {
+   flex-shrink: 1;
+   min-width: @min-width_BreadCrumbs_withOverflow;
+}
+
+.controls-BreadCrumbsView__titleWrapper_withOverflow {
+   flex-shrink: 1;
+   min-width: @min-width_BreadCrumbs-text;
+}
+
+.controls-BreadCrumbsView__arrow {
+   .icon(@font-size_BreadCrumbs-arrow);
+   cursor: pointer;
+}
+
+.controls-BreadCrumbsView__home {
+   .icon(@font-size_BreadCrumbs-home);
+   cursor: pointer;
+   padding-right: @spacing_BreadCrumbs-between-home-and-crumbs;
+}
+
+.controls-BreadCrumbsView__title_min {
+   //класс существует только для удобства замеров
+   min-width: @min-width_BreadCrumbs-text;
+}
+
+.controls-BreadCrumbsController__menu {
+   max-width: @max-width_BreadCrumbs-menu;
+}
+
+.controls-BreadCrumbsView__menuItem {
+   .baseline-fix();
+   display: inline-flex;
+   align-items: center;
+   height: @height_BreadCrumbs-menuItem;
+}
+
+.controls-BreadCrumbsView__menuTitle {
+   .text-overflow();
+   flex-shrink: 1;
+   display: inline-block;
+   width: 100%;
+}
+
+.controls-BreadCrumbsView__indentation {
+   display: inline-flex;
+   flex-shrink: 0;
+   height: @height_BreadCrumbs-corner;
+   width: @width_BreadCrumbs-corner;
+   &:last-of-type {
+      background: @background_BreadCrumbs-corner no-repeat;
+      align-self: flex-start;
+   }
+}
+
+.ws-is-no-touch {
+   .controls-BreadCrumbsView__title:hover {
+      color: @color_BreadCrumbs-title_hovered;
+      text-decoration: underline;
+   }
+
+   .controls-BreadCrumbsView__home:hover {
+      color: @bread-crumb-title-hover-color;
+   }
+}
+
+//Класс сделан только для удобства замеров
+.controls-BreadCrumbsView__crumbMeasurer {
+   font-family: @font-family_BreadCrumbs, "Courier New";
+}

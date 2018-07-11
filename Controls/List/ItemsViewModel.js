@@ -114,9 +114,13 @@ define('Controls/List/ItemsViewModel',
             } else {
                this._collapsedGroups[group] = true;
             }
-            this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
+            this.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
             this._nextVersion();
             this._notify('onListChange');
+         },
+
+         setFilter: function(filter) {
+            this._display.setFilter(filter);
          },
 
          prepareDisplayFilterData: function() {

@@ -20,7 +20,7 @@ define('Controls-demo/Dropdown/MenuVdom', [
    var ModuleClass = Control.extend(
       {
          _template: template,
-         _stateText: 'Выбранный ключ',
+         _stateText: 'Выбранный ключ: 8',
          _selectedKeysEmpty: ['1'],
          _selectedKeys0: ['8'],
          _selectedKeys1: ['2'],
@@ -135,6 +135,14 @@ define('Controls-demo/Dropdown/MenuVdom', [
                   id: '' + i,
                   title: 'Запись ' + i
                });
+            }
+            return this._createMemory(items);
+         },
+         _getAdditionalData: function() {
+            var items = cClone(this._defaultItems);
+            var additionalProperty = 'additional';
+            for (var i = 3; i < items.length; i++) {
+               items[i][additionalProperty] = true;
             }
             return this._createMemory(items);
          },

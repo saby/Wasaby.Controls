@@ -17,7 +17,7 @@
                                    <Controls.Filter.Fast bind:value="_value"/>
                                 </Controls.Container.Filter.Fast>
                                 <Controls.Container.Filter.Button>
-                                        <Controls.Filter.Button template="tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/vdomFilterButtonTemplate">
+                                        <Controls.Filter.Button templateName="tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/vdomFilterButtonTemplate">
                                            <ws:items>
                                               <ws:Array>
                                                  <ws:Object id="FIO" value="Name" resetValue="" visibility="{{false}}">
@@ -53,7 +53,7 @@
                                 </Controls.Container.Filter.Button>
                             </div>
                             <div class="controls-demo__LayoutInner">
-                                <Controls.Container.List searchParam="firstName" source="{{_dataSource}}">
+                                <Controls.Container.List searchParam="firstName" source="{{_dataSource}}" navigation="{{_navigation}}">
                                     <ws:content>
                                         <div>
                                             <Controls.List keyProperty="id" name="list" >
@@ -74,9 +74,6 @@
                                             </Controls.List>
                                         </div>
                                     </ws:content>
-                                    <ws:navigation source="page" view="page">
-                                        <ws:sourceConfig pageSize="{{20}}" page="{{0}}" mode="totalCount"/>
-                                    </ws:navigation>
                                 </Controls.Container.List>
                             </div>
                         </div>

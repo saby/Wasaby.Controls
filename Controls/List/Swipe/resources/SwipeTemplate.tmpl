@@ -1,33 +1,35 @@
-<ws:if data="{{itemActionsType === 'outside'}}">
+<ws:if data="{{itemActionsPosition === 'outside'}}">
     <ws:partial template="{{itemActionsTemplate}}"  itemData="{{itemData}}"/>
 </ws:if>
 <ws:else data="{{swipeConfig}}">
-    <div class="controls-itemActionsV_swipe
-        {{menuIsShown ? 'controls-itemActionsV_invisible'}}">
-        <div class="controls-itemActionsV_{{swipeConfig.direction}}
-            {{swipeConfig.isFull? 'controls-itemActionsV_column_full'}}">
-            <ws:partial
-                    template="tmpl!Controls/List/Swipe/resources/SwipeFor"
-                    itemData="{{itemData}}"
-                    columnNumber="{{1}}"
-                    showedActions="{{swipeConfig.direction === 'row' ? itemData.itemActions.showed : itemData.itemActions.showedFirst}}"
-                    swipeConfig="{{swipeConfig}}"
-                    needShowSeparator="{{needShowSeparator}}"
-                    needShowTitle="{{needShowTitle}}"/>
-        </div>
-        <ws:if data="{{itemData.itemActions.showedSecond}}">
-            <div class="controls-itemActionsV__separator controls-itemActionsV__separator_vertical"></div>
-            <div class="controls-itemActionsV_column
+    <div class="controls-itemActionsV_swipe_animationContainer">
+        <div class="controls-itemActionsV_swipe
+            {{menuIsShown ? 'controls-itemActionsV_invisible'}}">
+            <div class="controls-itemActionsV_{{swipeConfig.direction}}
                 {{swipeConfig.isFull? 'controls-itemActionsV_column_full'}}">
                 <ws:partial
                         template="tmpl!Controls/List/Swipe/resources/SwipeFor"
                         itemData="{{itemData}}"
-                        showedActions="{{itemData.itemActions.showedSecond}}"
-                        columnNumber="{{2}}"
+                        columnNumber="{{1}}"
+                        showedActions="{{swipeConfig.direction === 'row' ? itemData.itemActions.showed : itemData.itemActions.showedFirst}}"
                         swipeConfig="{{swipeConfig}}"
                         needShowSeparator="{{needShowSeparator}}"
                         needShowTitle="{{needShowTitle}}"/>
             </div>
-        </ws:if>
+            <ws:if data="{{itemData.itemActions.showedSecond}}">
+                <div class="controls-itemActionsV__separator controls-itemActionsV__separator_vertical"></div>
+                <div class="controls-itemActionsV_column
+                    {{swipeConfig.isFull? 'controls-itemActionsV_column_full'}}">
+                    <ws:partial
+                            template="tmpl!Controls/List/Swipe/resources/SwipeFor"
+                            itemData="{{itemData}}"
+                            showedActions="{{itemData.itemActions.showedSecond}}"
+                            columnNumber="{{2}}"
+                            swipeConfig="{{swipeConfig}}"
+                            needShowSeparator="{{needShowSeparator}}"
+                            needShowTitle="{{needShowTitle}}"/>
+                </div>
+            </ws:if>
+        </div>
     </div>
 </ws:else>

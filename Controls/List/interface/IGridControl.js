@@ -19,6 +19,33 @@ define('Controls/List/interface/IGridControl', [
     */
 
    /**
+    * @name Controls/List/interface/IGridControl#rowSpacing
+    * @cfg {String} Spacing between grid rows.
+    * @variant S Small spacing.
+    * @variant M Medium spacing.
+    * @variant L Large spacing.
+    * @variant XL Extra large spacing.
+    */
+
+   /**
+    * @name Controls/List/interface/IGridControl#leftPadding
+    * @cfg {String} Padding to the left border of the grid.
+    * @variant S Small padding.
+    * @variant M Medium padding.
+    * @variant L Large padding.
+    * @variant XL Extra large padding.
+    */
+
+   /**
+    * @name Controls/List/interface/IGridControl#rightPadding
+    * @cfg {String} Padding to the right border of the grid.
+    * @variant S Small padding.
+    * @variant M Medium padding.
+    * @variant L Large padding.
+    * @variant XL Extra large padding.
+    */
+
+   /**
     * @typedef {Object} HeaderCell Describer the header cell.
     * @property {String} [title] Text.
     * @property {String} [align] Horizontal text align (left|center|right).

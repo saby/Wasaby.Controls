@@ -1,11 +1,11 @@
 define([
-   'Controls/BreadCrumbs',
+   'Controls/BreadCrumbs/View',
    'WS.Data/Entity/Model'
 ], function(
-   BreadCrumbs,
+   BreadCrumbsView,
    Model
 ) {
-   describe('Controls.BreadCrumbs', function() {
+   describe('Controls.BreadCrumbs.View', function() {
       var bc, data;
       beforeEach(function() {
          data = [
@@ -34,7 +34,7 @@ define([
                title: 'Record3eqweqweqeqweqweedsadeqweqewqeqweqweqw'
             }
          ];
-         bc = new BreadCrumbs();
+         bc = new BreadCrumbsView();
          bc.saveOptions({
             items: data
          });

@@ -1,5 +1,4 @@
-<div class="controls-FastFilter">
-
+<div class="controls-FastFilter" name="fastFilter">
    <ws:for data="index, item in _items">
       <div class="controls-FastFilter__wrapper">
          <div class="controls-FastFilter__block"
@@ -10,8 +9,7 @@
                         d="M0,.47A.48.48,0,0,1,.13.14.4.4,0,0,1,.44,0,1,1,0,0,1,.75.16L4.91,4.22,5,4.34a.41.41,0,0,1,0,.31l-.06.13L.75,8.84A1,1,0,0,1,.44,9a.4.4,0,0,1-.31-.14A.48.48,0,0,1,0,8.53Z"></path>
                </svg>
 
-            <div class="controls-Dropdown__text">{{_getText(item, index)}}
-            </div>
+            <div class="controls-Dropdown__text controls-Dropdown__defaultItem">{{_getText(item, index)}}</div>
          </div>
          <ws:if data="{{item.value !== item.resetValue}}">
          <span class="controls-FastFilter__iconReset icon-Close"
@@ -19,10 +17,12 @@
          </ws:if>
       </div>
    </ws:for>
-
    <Controls.Dropdown.Opener name="DropdownOpener">
       <ws:popupOptions>
          <ws:eventHandlers onResult="{{_onResult}}"/>
+         <ws:templateOptions
+                 showClose="{{true}}">
+         </ws:templateOptions>
       </ws:popupOptions>
    </Controls.Dropdown.Opener>
 </div>

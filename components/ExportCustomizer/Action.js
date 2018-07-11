@@ -10,13 +10,14 @@
  */
 define('SBIS3.CONTROLS/ExportCustomizer/Action',
    [
+      'Core/core-merge',
       'Core/Deferred',
       'Lib/Control/FloatArea/FloatArea',
       'SBIS3.CONTROLS/Action',
       'SBIS3.CONTROLS/ExportCustomizer/Area'
    ],
 
-   function (Deferred, FloatArea, Action, Area) {
+   function (cMerge, Deferred, FloatArea, Action, Area) {
       'use strict';
 
       /**
@@ -116,6 +117,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * @param {string} options.fileUuid Uuid стилевого эксель-файла
           * @param {Array<ExportValidator>} options.validators Список валидаторов результатов редактирования (опционально)
           * @param {ExportRemoteCall} [options.outputCall] Информация для вызова метода удалённого сервиса для отправки данных вывода (опционально)
+          * @param {boolean} [options.skipCustomization] Не открывать настройщик экспорта, начать экспорт сразу основываясь на предоставленных в опциях данных (опционально)
           * @return {Deferred<ExportResults>}
           */
          execute: function (options) {
@@ -135,7 +137,21 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
                return Deferred.fail('Allready open');
             }
             this._result = new Deferred();
-            this._open(options);
+            var defaults = this._options;
+            var areaOptions = Area.getOwnOptionNames().reduce(function (acc, name) {
+               var value = options[name];
+               acc[name] = value !== undefined ? value : defaults[name];
+               return acc;
+            }, {});
+            if (options.skipCustomization) {
+               (new Area(areaOptions)).complete().addCallbacks(
+                  this._complete.bind(this, true),
+                  this._completeWithError.bind(this, true)
+               );
+            }
+            else {
+               this._open(areaOptions, { opener: options.opener });
+            }
             return this._result;
          },
 
@@ -145,21 +161,16 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * @protected
           * @param {object} options Входные аргументы("мета-данные") настройщика экспорта (согласно описанию в методе {@link execute})
           */
-         _open: function (options) {
-            var componentOptions = {
+         _open: function (options, dialogOptions) {
+            var componentOptions = cMerge({
                dialogMode: true,
                handlers: {
                   onComplete: this._onAreaComplete.bind(this),
                   onFatalError: this._onAreaError.bind(this)
                }
-            };
-            var defaults = this._options;
-            Area.getOwnOptionNames().forEach(function (name) {
-               var value = options[name];
-               componentOptions[name] = value !== undefined ? value : defaults[name];
-            });
+            }, options);
             this._areaContainer = new FloatArea({
-               opener: this,
+               opener: dialogOptions.opener || this,
                direction: 'left',
                animation: 'slide',
                isStack: true,

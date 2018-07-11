@@ -2,7 +2,7 @@
  * Created by as.krasilnikov on 21.03.2018.
  */
 define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
-   var PANEL_SHADOW_WIDTH = 5; // Отступ контейнера под тень
+   var PANEL_SHADOW_WIDTH = 8; // Отступ контейнера под тень
    var MINIMAL_PANEL_DISTANCE = 50; // минимальный отступ стековой панели от правого края
 
    var _private = {

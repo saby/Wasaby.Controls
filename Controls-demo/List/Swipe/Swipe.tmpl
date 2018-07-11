@@ -1,12 +1,12 @@
 <div class="itemActionsDemo">
-     <h2>itemActionsType="inline"</h2>
+     <h2>itemActionsPosition="inline"</h2>
     <Controls.List
             source = "{{_viewSource}}"
             markedKey="{{1}}"
             allowEmptySelection="{{false}}"
             idProperty="id"
             itemActions="{{_itemActions}}"
-            on:actionClick="_onActionClick()"
+            on:itemActionsClick="_onActionClick()"
             multiSelectVisibility="visible"
             class="itemActionsDemo__list">
 

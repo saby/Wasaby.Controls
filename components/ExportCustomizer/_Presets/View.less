@@ -4,7 +4,8 @@
 }
 
 .controls-ExportCustomizer-Presets-View__selector {
-   max-width: 100%;
+   .flex-grow(1);
+   max-width: ~"calc(100% - "@max-width_ExportCustomizer-Presets-View-offset~")";
    text-overflow: ellipsis;
 
    .controls-Button__text {
@@ -64,6 +65,15 @@
    margin: @margin_ExportCustomizer-Presets-View-editor-panel;
 }
 
+.controls-ExportCustomizer-Presets-View .controls-EditAtPlace__okButton {
+   margin: @margin_ExportCustomizer-Presets-View-editor-panel-ok;
+}
+
 .controls-ExportCustomizer-Presets-View .controls-EditAtPlace__cancel {
-   margin-right: 0;
+   margin: 0;
+}
+
+.controls-ExportCustomizer-Presets-View__delete {
+   .flex-shrink(0);
+   margin: @margin_ExportCustomizer-Presets-View-delete;
 }

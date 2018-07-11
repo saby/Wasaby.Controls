@@ -14,16 +14,18 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
       'Core/core-merge',
       'Core/Deferred',
       'SBIS3.CONTROLS/CompoundControl',
+      'SBIS3.CONTROLS/ExportCustomizer/Utils/CollectionSelectByIds',
       'SBIS3.CONTROLS/Utils/ImportExport/RemoteCall',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
       'WS.Data/Collection/RecordSet',
+      'WS.Data/Di',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/Area',
       'css!SBIS3.CONTROLS/ExportCustomizer/Area',
       'SBIS3.CONTROLS/Button',
       'SBIS3.CONTROLS/ScrollContainer'
    ],
 
-   function (CommandDispatcher, cMerge, Deferred, CompoundControl, RemoteCall, InformationPopupManager, RecordSet, tmpl) {
+   function (CommandDispatcher, cMerge, Deferred, CompoundControl, collectionSelectByIds, RemoteCall, InformationPopupManager, RecordSet, Di, tmpl) {
       'use strict';
 
       /**
@@ -436,6 +438,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * @param {object} options Опции компонента
           */
          _reshapeOptions: function (options) {
+            var allFields = options.allFields;
             var presetsOptions;
             var usePresets = options.usePresets;
             if (usePresets) {
@@ -455,12 +458,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                presetsOptions = {
                   addNewTitle: options.presetAddNewTitle,
                   newPresetTitle: options.presetNewPresetTitle,
+                  allFields: allFields,
                   statics: hasStaticPresets ? staticPresets.slice() : null,
                   namespace: options.presetNamespace,
                   selectedId: options.selectedPresetId
                };
             }
-            var allFields = options.allFields;
             var fieldIds = options.fieldIds;
             var fileUuid = options.fileUuid;
             if (!usePresets && fieldIds && fieldIds.length) {
@@ -554,30 +557,30 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * Обработчик "subviewChanged" для под-компонента "preset"
           *
           * @protected
-          * @param {*} [data] Дополнительные данные
+          * @param {string} reason Причина или вид изменения
+          * @param {*} [info] Дополнительные данные
           */
-         _onChangePresets: function (data) {
+         _onChangePresets: function (reason/*, inf*/) {
             // Выбраны новые предустановленные настройки экспорта
             var views = this._views;
             var values = views.presets.getValues();
-            var meta = this._makeMeta('presets', [].slice.call(arguments));
+            var args = [].slice.call(arguments, 1);
             var options = this._options;
             var fieldIds = values.fieldIds;
             var fileUuid = values.fileUuid;
             var formatterValues, formatterMeta;
-            var reason = meta.reason;
-            var args = meta.args;
             switch (reason) {
                case 'create':
                case 'clone':
                case 'select':
                   options.fieldIds = fieldIds.slice();
-                  views.columnBinder.restate({fieldIds:fieldIds.slice()}, meta);
+                  views.columnBinder.restate({fieldIds:fieldIds.slice()}, {source:'presets', reason:reason, args:args});
                case 'edit':
-                  options.fileUuid = fileUuid;
                   var consumer = args[0];
-                  formatterValues = {fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumerId:consumer.id, primaryUuid:consumer.patternUuid || consumer.fileUuid};
-                  formatterMeta = {reason:reason, args:reason === 'clone' ? [args[1]] : []};
+                  var consumerUuid = consumer.patternUuid || consumer.fileUuid;
+                  options.fileUuid = fileUuid || consumerUuid;
+                  formatterValues = {fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumerId:consumer.id, primaryUuid:consumerUuid};
+                  formatterMeta = {reason:reason, args:args.slice(1)};
                   if (reason === 'edit') {
                      this._isEditMode = true;
                   }
@@ -718,35 +721,71 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * @protected
           */
          _cmdComplete: function () {
-            // Сформировать результирующие данные из всего имеющегося
-            // И сразу прроверить их
-            this.getValues(true).addCallback(function (data) {
-               // И если всё нормально - завершить диалог
-               if (data) {
-                  var presetsView = this._views.presets;
-                  if (presetsView) {
-                     presetsView.save();
-                  }
-                  var outputCall = this._options.outputCall;
-                  if (outputCall) {
-                     (new RemoteCall(outputCall)).call(data).addCallbacks(
-                        function (result) {
-                           data.result = result;
-                           this._notify('onComplete', /*ExportResults:*/data);
-                        }.bind(this),
-                        function (err) {
-                           this._notify('onFatalError', true, /*err*/rk('При отправке данных поизошла ошибка', 'НастройщикЭкспорта'));
-                        }.bind(this)
-                     );
-                  }
-                  else {
+            this.complete().addCallbacks(
+               function (data) {
+                  if (data) {
                      this._notify('onComplete', /*ExportResults:*/data);
                   }
-               }
-               /*else {
-                  // Иначе пользователь продолжает редактирование
-               }*/
-            }.bind(this));
+                  /*else {
+                     // Иначе пользователь продолжает редактирование
+                  }*/
+               }.bind(this),
+               this._notify.bind(this, 'onFatalError', true)
+            );
+         },
+
+         /*
+          * Завершить работу с текущими данными
+          *
+          * @public
+          * @return {Core/Deferred<ExportResults>}
+          */
+         complete: function () {
+            var promise = new Deferred();
+            var options = this._options;
+            var presetsView = this._views.presets;
+            var isForced = arguments[0];
+            if (!isForced && options.usePresets && !(options.fieldIds && options.fieldIds.length) && !presetsView) {
+               Di.resolve('ExportPresets.Loader').load(options._scopes.presets.namespace).addCallback(function (presets) {
+                  var preset; presets.some(function (v) { if (v.id === options.selectedPresetId) { preset = v; return true; }});
+                  if (preset) {
+                     options.fieldIds = preset.fieldIds;
+                     options.fileUuid = preset.fileUuid;
+                  }
+                  promise.dependOn(this.complete(true));
+               }.bind(this));
+            }
+            else {
+               // Сформировать результирующие данные из всего имеющегося
+               // И сразу прроверить их
+               this.getValues(true).addCallback(function (data) {
+                  // И если всё нормально - завершить диалог
+                  if (data) {
+                     if (presetsView) {
+                        presetsView.save();
+                     }
+                     var outputCall = options.outputCall;
+                     if (outputCall) {
+                        (new RemoteCall(outputCall)).call(data).addCallbacks(
+                           function (result) {
+                              data.result = result;
+                              promise.callback(data);
+                           }.bind(this),
+                           function (err) {
+                              promise.errback(/*err*/rk('При отправке данных поизошла ошибка', 'НастройщикЭкспорта'));
+                           }.bind(this)
+                        );
+                     }
+                     else {
+                        promise.callback(data);
+                     }
+                  }
+                  else {
+                     promise.callback(null);
+                  }
+               }.bind(this));
+            }
+            return promise;
          },
 
          /**
@@ -797,7 +836,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             var data = {
                serviceParams: options.serviceParams,
                fieldIds: options.fieldIds,
-               columnTitles: this._selectFields(options.allFields, options.fieldIds, function (v) { return v.title; }),
+               columnTitles: collectionSelectByIds(options.allFields, options.fieldIds, function (v) { return v.title; }) || [],
                fileUuid: options.fileUuid || null,//Если значначение пусто, значит стилевого эксель-файла нет. БЛ в таком случае безальтернативно требует значения null
                canDeleteFile: this._isEditMode || null
             };
@@ -810,37 +849,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                :
                   // Вернуть сразу
                   Deferred.success(data);
-         },
-
-         /**
-          * Выбрать из списка всех колонок только объекты согласно указанным идентификаторам. Если указана функция-преобразователь, то преобразовать с её помощью каждый полученный элемент списка
-          *
-          * @protected
-          * @param {Array<BrowserColumnInfo>|WS.Data/Collection/RecordSet<BrowserColumnInfo>} allFields Список объектов с информацией о всех колонках в формате, используемом в браузере
-          * @param {Array<string>} fieldIds Список привязки колонок в экспортируемом файле к полям данных
-          * @param {function} [mapper] Функция-преобразователь отобранных объектов (опционально)
-          * @return {Array<*>}
-          */
-         _selectFields: function (allFields, fieldIds, mapper) {
-            if (allFields && fieldIds && fieldIds.length) {
-               var isRecordSet = allFields instanceof RecordSet;
-               if (isRecordSet ? allFields.getCount() : allFields.length) {
-                  var needMap = typeof mapper === 'function';
-                  return fieldIds.map(function (id, i) {
-                     var field;
-                     if (!isRecordSet) {
-                        allFields.some(function (v) { if (v.id === id) { field = v; return true; } });
-                     }
-                     else {
-                        var model = allFields.getRecordById(id);
-                        if (model) {
-                           field = model.getRawData();
-                        }
-                     }
-                     return field && needMap ? mapper(field) : field;
-                  });
-               }
-            }
          }//,
 
          /*destroy: function () {

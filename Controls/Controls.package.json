@@ -13,7 +13,9 @@
 }, {
   "include": [
     "Controls/Container/*",
-    "Controls/Layout/*"
+    "Controls/Layout/*",
+    "Controls/StickyHeader",
+    "Controls/StickyHeader/*"
   ],
   "output": "controls-container.package.js"
 }, {
@@ -67,21 +69,7 @@
   "output": "controls-list.package.js"
 }, {
   "include": [
-    "Controls/Popup/Manager",
-    "Controls/Popup/Manager/*",
-    "Controls/Popup/Previewer",
-    "Controls/Popup/Previewer/*",
-    "Controls/Popup/Opener/BaseController",
-    "Controls/Popup/Opener/BaseOpener",
-    "Controls/Popup/Opener/Confirmation",
-    "Controls/Popup/Opener/Dialog",
-    "Controls/Popup/Opener/InfoBox",
-    "Controls/Popup/InfoBox",
-    "Controls/Popup/InfoBox/*",
-    "Controls/Popup/Opener/Notification",
-    "Controls/Popup/Opener/Stack",
-    "Controls/Popup/Opener/Sticky",
-    "Controls/Popup/Opener/Previewer"
+    "Controls/Popup/*"
   ],
   "output": "controls-popup.package.js"
 }, {
@@ -110,4 +98,21 @@
     "Controls/Validate/*"
   ],
   "output": "controls-validate.package.js"
+}, {
+  "include": [
+    "Controls/HighCharts",
+    "Controls/HighChartsLight",
+    "Controls/HighCharts/resources/ParseDataUtil"
+  ],
+  "output": "controls-highcharts.package.js"
+}, {
+  "include": [
+    "Controls/DragNDrop/*"
+  ],
+  "output": "controls-dragndrop.package.js"
+}, {
+  "include": [
+    "Controls/Calendar/*"
+  ],
+  "output": "controls-calendar.package.js"
 }]

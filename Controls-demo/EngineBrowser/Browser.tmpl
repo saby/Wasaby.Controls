@@ -2,15 +2,24 @@
         searchParam="title"
         source="{{_source}}"
         filterButtonSource="{{_items}}"
+        fastFilterSource="{{_fastFilterSource}}"
         class="demo-browser">
    <ws:search>
-      <Controls.Input.Search bind:value="value"/>
+      <Controls.Input.Search bind:value="value"
+                             class="demo-browser-search"/>
    </ws:search>
+
+   <ws:topTemplate>
+      <div class="demo-browser-topTemplate">
+         <Controls.Button icon="icon-medium icon-AddButtonNew" style="iconButtonBordered" class="demo-browser-button"/>
+         <Controls.Button icon="icon-medium icon-Unfavourite" style="linkMain" class="demo-browser=button"/>
+      </div>
+   </ws:topTemplate>
+   <ws:fastFilter>
+      <Controls.Filter.Fast/>
+   </ws:fastFilter>
    <ws:filterButton>
-      <Controls.Filter.Button>
-         <ws:itemTemplate templateName="tmpl!Controls-demo/EngineBrowser/resources/filterPanelItemsTemplate"/>
-         <ws:additionalTemplate templateName="tmpl!Controls-demo/EngineBrowser/resources/filterPanelAddItemsTemplate"/>
-      </Controls.Filter.Button>
+      <Controls.Filter.Button templateName="tmpl!Controls-demo/EngineBrowser/resources/filterButtonEngineTemplate"/>
    </ws:filterButton>
    <ws:content>
       <Controls.List
@@ -19,7 +28,7 @@
          <ws:itemTemplate>
             <ws:partial template="tmpl!Controls/List/ItemTemplate">
                <ws:contentTemplate>
-                  <div attr:style="display: flex; justify-content: space-between">
+                  <div class="demo-browser-list">
                      <div>{{itemTemplate.itemData.item.get('title')}}</div>
                      <div>{{itemTemplate.itemData.item.get('country')}}</div>
                   </div>
@@ -28,7 +37,4 @@
          </ws:itemTemplate>
       </Controls.List>
    </ws:content>
-   <ws:navigation source="page" view="page">
-      <ws:sourceConfig pageSize="{{10}}" page="{{0}}" mode="totalCount"/>
-   </ws:navigation>
 </Controls.EngineBrowser>

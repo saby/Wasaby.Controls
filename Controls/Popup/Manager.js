@@ -3,11 +3,11 @@ define('Controls/Popup/Manager',
       'Core/Control',
       'tmpl!Controls/Popup/Manager/Manager',
       'Controls/Popup/Manager/ManagerController',
-      'Core/helpers/random-helpers',
+      'Core/helpers/Number/randomId',
       'WS.Data/Collection/List'
    ],
 
-   function(Control, template, ManagerController, Random, List) {
+   function(Control, template, ManagerController, randomId, List) {
       'use strict';
 
       var _private = {
@@ -22,11 +22,9 @@ define('Controls/Popup/Manager',
             var self = this;
             return element.strategy.elementDestroyed(element, container, id).addCallback(function() {
                self._popupItems.remove(element);
-               if (element.isModal) {
-                  var indices = self._popupItems.getIndicesByValue('isModal', true);
-                  ManagerController.getContainer().setOverlay(indices.length ? indices[indices.length - 1] : -1);
-                  return element;
-               }
+               var indices = self._popupItems.getIndicesByValue('isModal', true);
+               ManagerController.getContainer().setOverlay(indices.length ? indices[indices.length - 1] : -1);
+               return element;
             });
          },
 
@@ -45,6 +43,14 @@ define('Controls/Popup/Manager',
             if (element) {
                element.strategy.elementUpdated(element, this.getItemContainer(id)); // при создании попапа, зарегистрируем его
                return true;
+            }
+            return false;
+         },
+
+         popupDeactivated: function(id) {
+            var element = ManagerController.find(id);
+            if (element) {
+               element.strategy.popupDeactivated(element, this.getItemContainer(id)); // при создании попапа, зарегистрируем его
             }
             return false;
          },
@@ -109,7 +115,7 @@ define('Controls/Popup/Manager',
           */
          show: function(options, strategy) {
             var element = {
-               id: Random.randomId('popup-'),
+               id: randomId('popup-'),
                isModal: options.isModal,
                strategy: strategy,
                position: strategy.getDefaultPosition(),
@@ -188,5 +194,4 @@ define('Controls/Popup/Manager',
 
       Manager.prototype._private = _private;
       return Manager;
-   }
-);
+   });

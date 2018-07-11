@@ -1,7 +1,8 @@
 define('Controls/Utils/BreadCrumbsUtil', [
    'Controls/List/resources/utils/ItemsUtil',
-   'tmpl!Controls/BreadCrumbs/resources/itemsTemplate',
-   'tmpl!Controls/BreadCrumbs/resources/itemTemplate'
+   'tmpl!Controls/BreadCrumbs/View/resources/itemsTemplate',
+   'tmpl!Controls/BreadCrumbs/View/resources/itemTemplate',
+   'css!Controls/Utils/BreadCrumbsUtil'
 ], function(
    ItemsUtil,
    itemsTemplate,
@@ -22,9 +23,9 @@ define('Controls/Utils/BreadCrumbsUtil', [
             return;
          }
          if (window) {
-            ARROW_WIDTH = _private.getWidth('<span class="controls-BreadCrumbsV__arrow icon-size icon-DayForward icon-primary action-hover"></span>');
-            HOME_WIDTH = _private.getWidth('<div class="controls-BreadCrumbsV__home icon-size icon-Home3 icon-primary"></div>');
-            BREAD_CRUMB_MIN_WIDTH = _private.getWidth('<div class="controls-BreadCrumbsV__title_min"></div>');
+            ARROW_WIDTH = _private.getWidth('<span class="controls-BreadCrumbsView__arrow icon-size icon-DayForward icon-primary action-hover"></span>');
+            HOME_WIDTH = _private.getWidth('<div class="controls-BreadCrumbsView__home icon-size icon-Home3 icon-primary"></div>');
+            BREAD_CRUMB_MIN_WIDTH = _private.getWidth('<div class="controls-BreadCrumbsView__title_min"></div>');
             DOTS_WIDTH = _private.getWidth(itemTemplate({
                itemData: {
                   getPropValue: ItemsUtil.getPropertyValue,
@@ -62,9 +63,9 @@ define('Controls/Utils/BreadCrumbsUtil', [
                return _private.getItemData(index, items);
             })
          });
-         measurer.classList.add('controls-BreadCrumbsV__measurer');
+         measurer.classList.add('controls-BreadCrumbsView__measurer');
          document.body.appendChild(measurer);
-         [].forEach.call(measurer.getElementsByClassName('controls-BreadCrumbsV__crumb'), function(item) {
+         [].forEach.call(measurer.getElementsByClassName('controls-BreadCrumbsView__crumb'), function(item) {
             itemsSizes.push(item.clientWidth);
          });
          document.body.removeChild(measurer);
@@ -76,7 +77,7 @@ define('Controls/Utils/BreadCrumbsUtil', [
          var
             measurer = document.createElement('div'),
             width;
-         measurer.classList.add('controls-BreadCrumbsV__measurer');
+         measurer.classList.add('controls-BreadCrumbsView__measurer');
 
          if (typeof element === 'string') {
             measurer.innerHTML = element;

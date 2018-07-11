@@ -53,8 +53,8 @@ define('Controls/List/Grid/GridViewModel', [
                      result += ' controls-Grid__row-cell_lastRow';
                      result += ' controls-Grid__row-cell_withRowSeparator_lastRow';
                   }
+                  result += ' controls-Grid__row-cell_withRowSeparator';
                }
-               result += ' controls-Grid__row-cell_withRowSeparator';
             } else {
                result += ' controls-Grid__row-cell_withoutRowSeparator';
             }
@@ -65,7 +65,7 @@ define('Controls/List/Grid/GridViewModel', [
             var
                cellClasses = 'controls-Grid__row-cell' + (current.isEditing ? ' controls-Grid__row-cell-background-editing' : ' controls-Grid__row-cell-background-hover');
 
-            cellClasses += _private.prepareRowSeparatorClasses(current.showRowSeparator, current.index, current.dispItem.getOwner().getCount() - 1);
+            cellClasses += _private.prepareRowSeparatorClasses(current.showRowSeparator, current.index, current.dispItem.getOwner().getCount());
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
             if (current.multiSelectVisibility && current.columnIndex === 0) {
@@ -574,12 +574,8 @@ define('Controls/List/Grid/GridViewModel', [
             this._model.setSwipeItem(itemData);
          },
 
-         select: function(keys) {
-            this._model.select(keys);
-         },
-
-         unselect: function(keys) {
-            this._model.unselect(keys);
+         _updateSelection: function(selectedKeys) {
+            this._model._updateSelection(selectedKeys);
          },
 
          setDragTargetItem: function(itemData) {
@@ -588,6 +584,10 @@ define('Controls/List/Grid/GridViewModel', [
 
          setDragItems: function(items) {
             this._model.setDragItems(items);
+         },
+
+         getActiveItem: function() {
+            return this._model.getActiveItem();
          },
 
          destroy: function() {

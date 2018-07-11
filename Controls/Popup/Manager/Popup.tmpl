@@ -5,12 +5,10 @@
             scope="{{_options.templateOptions}}"
             on:sendResult="_sendResult()"
             on:close="_close()"
-            on:mousedown="_popupClickHandler()"
             on:keyup="_keyUp()"
-            on:animationend="_animated()"
+            on:transitionend="_animated()"
             on:resize="_update()">
     </ws:partial>
     <Controls.Event.Emitter event="resize" on:resize="_update()"/>
     <Controls.Event.Emitter event="scroll" on:scroll="_update()"/>
-    <Controls.Event.Emitter event="mousedown" on:mousedown="_documentClickHandler()"/>
 </div>

@@ -96,17 +96,20 @@ define(
             });
             it('ie12', function() {
                detection = {
-                  isIE12: true,
-                  userAgent: ''
+                  isIE12: true
                };
 
+               detection.IEVersion = 16;
+               result = ScrollWidthUtil._private.calcScrollbarWidth(detection);
+               assert.equal(result, 12);
+
+               detection.IEVersion = 17;
                result = ScrollWidthUtil._private.calcScrollbarWidth(detection);
                assert.equal(result, 16);
             });
             it('ie11', function() {
                detection = {
-                  isIE11: true,
-                  userAgent: ''
+                  isIE11: true
                };
 
                result = ScrollWidthUtil._private.calcScrollbarWidth(detection);
@@ -114,8 +117,7 @@ define(
             });
             it('ie10', function() {
                detection = {
-                  isIE10: true,
-                  userAgent: ''
+                  isIE10: true
                };
 
                result = ScrollWidthUtil._private.calcScrollbarWidth(detection);
@@ -123,15 +125,14 @@ define(
             });
             it('firefox', function() {
                detection = {
-                  firefox: true,
-                  userAgent: ''
+                  firefox: true
                };
 
                result = ScrollWidthUtil._private.calcScrollbarWidth(detection);
-               if (window) {
-                  assert.equal(result, 20);
-               } else {
+               if (typeof window === 'undefined') {
                   assert.equal(result, undefined);
+               } else {
+                  assert.equal(result, 20);
                }
             });
          });

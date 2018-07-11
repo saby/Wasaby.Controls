@@ -49,6 +49,11 @@
 .controls-DropdownList__item-right_hierarchy-padding {
   padding-right: @spacing_DropdownList_arrowSubMenu;
 }
+
+.controls-DropdownList__item-right_close-padding {
+  padding-right: @spacing_DropdownList_cross;
+}
+
 .controls-DropdownList__content {
    font-size: @large-text-size;
 }
@@ -64,7 +69,6 @@
 }
 
 .controls-DropdownList__icon {
-   color: @color_primary;
    margin-right: @right_DropdownList-icon;
 }
 
@@ -86,6 +90,13 @@
    margin-left: @margin-left_DropdownList;
 }
 
+//15 шрифт имеет нечетную высоту, из-за этого текст располагается не по центру
+// ff располагает текст выше, а Chrome ниже
+.ws-is-firefox .controls-DropdownList__margin {
+   margin-top: @margin-top_DropdownList-ff;
+   margin-left: @margin-left_DropdownList;
+}
+
 .controls-DropdownList__subMenu_margin {
    margin-top: @offset_DropdownList-submenu;
 }
@@ -104,18 +115,10 @@
    .box-sizing(border-box);
 }
 
-.controls-MenuButton-cross {
+.controls-DropdownList-cross {
    position: absolute;
-   .inline-flexbox();
-   .justify-content(center);
-   .align-items(center);
-   color: @color-Dropdown-cross;
-   width: @width-Dropdown-cross;
-   height: @height-Dropdown-cross;
-   font-size: @font-size-Dropdown-cross;
-   font-family: @default-icon-medium-font;
-   right: 0;
-   top: 0;
+   right: @right-DropdownList-cross;
+   top: @top-DropdownList-cross;
    z-index: 2;
 }
 
@@ -162,4 +165,31 @@
    //todo: жду крестик для темизации
    margin-top: -6px;
    margin-left: 6px - 2px;//border or ya hz chto eto takoe
+}
+
+.controls-DropdownList__additional {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   height: 30px;
+}
+
+.controls-DropdownList__additional-button {
+   cursor: pointer;
+}
+
+.controls-DropdownList__icon_style_default {
+   color: @color_Link-main-icon;
+}
+
+.controls-DropdownList__icon_style_attention {
+   color: @color-Icon_style_attention;
+}
+
+.controls-DropdownList__icon_style_error {
+   color: @color-Icon_style_error;
+}
+
+.controls-DropdownList__icon_style_done {
+   color: @color-Icon_style_done;
 }

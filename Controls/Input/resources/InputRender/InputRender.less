@@ -112,13 +112,20 @@
 
 .controls-InputRender__placeholder {
    .compatPlaceholder(@color_InputRender-placeholder);
-   .inline-flexbox();
-   .align-items(center);
+   display: inline-flex;
    padding-left: 1px; //Отступ в 1px нужен, чтобы плейсхолдер не наезжал на курсор
 }
 
 .controls-InputRender__placeholder_simple {
    pointer-events: none;
+}
+
+.controls-InputRender__placeholder_singleLine {
+   align-items: center;
+}
+
+.controls-InputRender__placeholder_multiLine {
+   align-items: baseline;
 }
 
 //На controls-InputRender__placeholder нельзя вешать text-overflow, потому что флексы не обрезаются
@@ -152,8 +159,8 @@
 .controls-InputRender__tagStyle-primary {
    border-right-color: @color_InputRender-tagStyle_primary;
 }
-.controls-InputRender__tagStyle-disabled {
-   border-right-color: @color_InputRender-tagStyle_disabled;
+.controls-InputRender__tagStyle-info {
+   border-right-color: @color_InputRender-tagStyle_info;
 }
 
 //Состояния

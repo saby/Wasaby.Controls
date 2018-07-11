@@ -65,6 +65,29 @@ define(
             Manager.remove(id);
             assert.equal(Manager._popupItems.getCount(), 0);
          });
+
+         it('add modal popup', function() {
+            let Manager = new ManagerConstructor();
+            let id1 = Manager.show({
+               isModal: false,
+               testOption: 'created'
+            }, new BaseController());
+
+            Manager.show({
+               isModal: true,
+               testOption: 'created'
+            }, new BaseController());
+
+            let indices = Manager._popupItems.getIndicesByValue('isModal', true);
+            assert.equal(indices.length, 1);
+            assert.equal(indices[0], 1);
+
+            Manager.remove(id1);
+
+            indices = Manager._popupItems.getIndicesByValue('isModal', true);
+            assert.equal(indices.length, 1);
+            assert.equal(indices[0], 0);
+         });
       });
    }
 );

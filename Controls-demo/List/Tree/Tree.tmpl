@@ -1,5 +1,8 @@
-
 <div>
+   <div>
+      <h3>Кликнули на </h3>
+      <span>{{_actionClicked}}</span>
+   </div>
    <div class="demo-Grid" style="border-bottom: 12px solid #55AA55;">
       <div class="demo-Grid__container">
          <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
@@ -14,8 +17,8 @@
                              columns="{{gridColumns}}"
                              multiSelectVisibility="visible"
                              itemActions="{{_itemActions}}"
-                             itemActionsType="outside"
-                             on:actionClick="_onActionClick()"
+                             itemActionsPosition="outside"
+                             on:itemActionsClick="_onActionClick()"
                              itemActionVisibilityCallback="{{_showAction}}">
                </Controls.TreeGrid>
             </ws:content>
@@ -35,8 +38,8 @@
                        columns="{{gridColumns}}"
                        multiSelectVisibility="visible"
                        itemActions="{{_itemActions}}"
-                       itemActionsType="inside"
-                       on:actionClick="_onActionClick()"
+                       itemActionsPosition="inside"
+                       on:itemActionsClick="_onActionClick()"
                        itemActionVisibilityCallback="{{_showAction}}">
                </Controls.TreeGrid>
             </ws:content>

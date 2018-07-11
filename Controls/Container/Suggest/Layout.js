@@ -53,7 +53,7 @@ define('Controls/Container/Suggest/Layout',
                needToRevert = suggestHeight + containerRect.bottom > (win || window).innerHeight,
                newOrient;
             
-            if (needToRevert && self._options.style !== 'overInput') {
+            if (needToRevert && self._options.suggestStyle !== 'overInput') {
                newOrient = '-up';
             } else {
                if (self._orient === '-up') {
@@ -79,11 +79,10 @@ define('Controls/Container/Suggest/Layout',
             if (resultData) {
                var data = resultData.data;
                var metaData = data && data.getMetaData();
+               var result = metaData.results;
    
-               if (metaData) {
-                  if (metaData[CURRENT_TAB_META_FIELD] && self._tabsSelectedKey !== metaData[CURRENT_TAB_META_FIELD]) {
-                     self._tabsSelectedKey = metaData[CURRENT_TAB_META_FIELD];
-                  }
+               if (result && result.get(CURRENT_TAB_META_FIELD)) {
+                  self._tabsSelectedKey = result.get(CURRENT_TAB_META_FIELD);
                }
             }
    
@@ -107,7 +106,8 @@ define('Controls/Container/Suggest/Layout',
             if (_private.shouldSearch(self, self._searchValue)) {
                _private.updateFilter(self, self._searchValue, self._tabsSelectedKey);
                _private.open(self);
-            } else {
+            } else if (!self._options.autoDropDown) {
+               //autoDropDown - close only on Esc key or deactivate
                _private.close(self);
             }
          },
@@ -151,15 +151,17 @@ define('Controls/Container/Suggest/Layout',
          _filter: null,
          _tabsSelectedKey: null,
          _searchResult: null,
+         _searchDelay: null,
          _dependenciesDeferred: null,
          _loading: false,
          
          // <editor-fold desc="LifeCycle">
          
-         _beforeMount: function() {
+         _beforeMount: function(options) {
             this._searchStart = this._searchStart.bind(this);
             this._searchEnd = this._searchEnd.bind(this);
             this._select = this._select.bind(this);
+            this._searchDelay = options.searchDelay;
          },
    
          _beforeUnmount: function() {
@@ -168,6 +170,12 @@ define('Controls/Container/Suggest/Layout',
             this._searchStart = null;
             this._searchEnd = null;
             this._select = null;
+         },
+         
+         _beforeUpdate: function(newOptions) {
+            if (!newOptions.suggestState) {
+               this._orient = null;
+            }
          },
    
          _afterUpdate: function() {
@@ -195,11 +203,15 @@ define('Controls/Container/Suggest/Layout',
          // <editor-fold desc="handlers">
          
          _close: function() {
+            if (this._options.suggestStyle === 'overInput') {
+               this._searchValue = '';
+               this._notify('valueChanged', ['']);
+            }
             _private.close(this);
          },
          
          _changeValueHandler: function(event, value) {
-            this._searchValue = value;
+            this._searchValue = _private.shouldSearch(this, value) ? value : '';
             
             /* preload suggest dependencies on value changed */
             _private.loadDependencies(this);
@@ -213,8 +225,11 @@ define('Controls/Container/Suggest/Layout',
          },
    
          _tabsSelectedKeyChanged: function(event, key) {
-            this._tabsSelectedKey = key;
-            _private.updateFilter(this, this._searchValue, this._tabsSelectedKey);
+            this._searchDelay = 0;
+            _private.updateFilter(this, this._searchValue, key);
+            
+            // move focus from tabs to input, after change tab
+            this.activate();
          },
          
          _select: function(event, item) {
@@ -232,6 +247,7 @@ define('Controls/Container/Suggest/Layout',
          
          _searchEnd: function(result) {
             this._loading = false;
+            this._searchDelay = this._options.searchDelay;
             _private.precessResultData(this, result);
             if (this._options.searchEndCallback) {
                this._options.searchEndCallback();
