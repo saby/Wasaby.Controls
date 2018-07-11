@@ -1,7 +1,7 @@
-define('Controls-demo/Headers/axureDemoHeader', [
+define('Controls-demo/Headers/standartDemoHeader', [
    'Core/Control',
-   'tmpl!Controls-demo/Headers/axureDemoHeader',
-   'css!Controls-demo/Headers/axureDemoHeader'
+   'tmpl!Controls-demo/Headers/standartDemoHeader',
+   'css!Controls-demo/Headers/standartDemoHeader'
 ], function(Control, template) {
    'use strict';
 
