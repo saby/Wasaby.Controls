@@ -235,6 +235,14 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          assert.equal(suggestComponent._filter.currentTab, 'test');
       });
    
+      it('Suggest::searchDelay on tabChange', function() {
+         var suggestComponent = new Suggest();
+         suggestComponent.activate = function() {};
+         
+         suggestComponent._tabsSelectedKeyChanged(null, 'test');
+         assert.equal(suggestComponent._searchDelay, 0);
+      });
+   
       it('Suggest::_beforeUpdate', function() {
          var suggestComponent = new Suggest();
          suggestComponent._orient = 'down';
