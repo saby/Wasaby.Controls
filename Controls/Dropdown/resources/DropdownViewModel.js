@@ -92,7 +92,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             if (!itemsModelCurrent.item.get) {
                itemsModelCurrent.isGroup = true;
                itemsModelCurrent.isHiddenGroup = itemsModelCurrent.item === ControlsConstants.view.hiddenGroup;
-               return itemsModelCurrent
+               return itemsModelCurrent;
             }
             itemsModelCurrent.hasChildren = this._hasItemChildren(itemsModelCurrent.item);
             itemsModelCurrent.hasParent = this._hasParent(itemsModelCurrent.item);
@@ -162,13 +162,13 @@ define('Controls/Dropdown/resources/DropdownViewModel',
                return emptyItem;
             }
          },
-         _needToDrawSeparator: function (item, nextItem) {
+         _needToDrawSeparator: function(item, nextItem) {
             if (!nextItem.get) {
                return false;
             }
             var itemInHistory = item.get('pinned') || item.get('recent') || item.get('frequent');
             var nextItemInHistory = nextItem.get('pinned') || nextItem.get('recent') || nextItem.get('frequent');
-            return itemInHistory && !nextItemInHistory
+            return itemInHistory && !nextItemInHistory;
          }
       });
 

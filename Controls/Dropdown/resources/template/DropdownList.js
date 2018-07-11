@@ -11,7 +11,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
 
       'css!Controls/Dropdown/resources/template/DropdownList'
    ],
-   function(Control, MenuItemsTpl, DropdownViewModel, groupTemplate,itemTemplate, defaultHeadTemplate, defaultContentHeadTemplate, ScrollData) {
+   function(Control, MenuItemsTpl, DropdownViewModel, groupTemplate, itemTemplate, defaultHeadTemplate, defaultContentHeadTemplate, ScrollData) {
       //TODO: Убрать определение контекста для Scroll, когда будет готова поддержка контекста для старого окружения.
 
       /**
