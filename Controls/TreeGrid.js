@@ -1,10 +1,9 @@
 define('Controls/TreeGrid', [
    'Controls/Grid',
    'Controls/List/TreeGridView/TreeGridViewModel',
-   'tmpl!Controls/List/TreeGrid/TreeGrid',
-   'Core/core-merge',
-   'Controls/List/TreeGridView/TreeGridView'
-], function(Grid, TreeGridViewModel, TreeTpl, cMerge) {
+   'Controls/List/TreeGridView/TreeGridView',
+   'Controls/List/TreeControl'
+], function(Grid, TreeGridViewModel) {
    'use strict';
 
    /**
