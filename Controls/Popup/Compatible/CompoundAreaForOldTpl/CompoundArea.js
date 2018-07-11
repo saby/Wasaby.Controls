@@ -286,12 +286,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             if (commandName === 'close') {
                return this._close(arg);
-            } if (commandName === 'ok') {
+            } else if (commandName === 'ok') {
                return this._close(true);
-            } if (commandName === 'cancel') {
+            } else if (commandName === 'cancel') {
                return this._close(false);
-            } if (commandName === 'update') {
-               return true;
             } else if (commandName === 'save') {
                return this.save(arg);
             } else if (commandName === 'delete') {
