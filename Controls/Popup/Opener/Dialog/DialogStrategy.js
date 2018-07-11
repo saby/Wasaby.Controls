@@ -12,16 +12,30 @@ define('Controls/Popup/Opener/Dialog/DialogStrategy', [], function() {
        * @param sizes размеры диалогового окна
        */
       getPosition: function(wWidth, wHeight, containerSizes, popupOptions) {
-         var width = this._calculateValue(popupOptions.minWidth, popupOptions.maxWidth, containerSizes.width, wWidth);
-         var height = this._calculateValue(popupOptions.minHeight, popupOptions.maxHeight, containerSizes.height, wHeight);
+         var sizes = this._calculateSizes(wWidth, wHeight, containerSizes, popupOptions);
          return {
-            left: this._getCoord(wWidth, width),
-            top: this._getCoord(wHeight, height),
+            left: this._getCoord(wWidth, sizes.width),
+            top: this._getCoord(wHeight, sizes.height),
+            width: sizes.width,
+            height: sizes.height
+         };
+      },
+      _calculateSizes: function(wWidth, wHeight, containerSizes, popupOptions) {
+         var width, height;
+
+         if (popupOptions.maximize) {
+            width = wWidth;
+            height = wHeight;
+         } else {
+            width = !popupOptions.maximize ? this._calculateValue(popupOptions.minWidth, popupOptions.maxWidth, containerSizes.width, wWidth) : wWidth;
+            height = !popupOptions.maximize ? this._calculateValue(popupOptions.minHeight, popupOptions.maxHeight, containerSizes.height, wHeight) : wHeight;
+         }
+
+         return {
             width: width,
             height: height
          };
       },
-
       _calculateValue: function(minRange, maxRange, containerValue, windowValue) {
          var hasMinValue = true;
 

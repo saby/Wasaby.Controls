@@ -11,6 +11,7 @@
         selectedKeys="{{_options.selectedKeys}}"
         showHeader="{{_options.showHeader}}"
         emptyText="{{_options.emptyText}}"
+        dataLoadCallback="{{_setText}}"
         on:selectedItemsChanged="_selectedItemsChangedHandler()"
         class="controls-Dropdown">
    <ws:partial template="{{_options.contentTemplate || _defaultContentTemplate}}"

@@ -4,10 +4,10 @@ define('SBIS3.CONTROLS/PrintDialogTemplate',
       'tmpl!SBIS3.CONTROLS/PrintDialogTemplate/PrintDialogTemplate',
       'Core/SessionStorage',
       'Core/detection',
-      'Core/helpers/fast-control-helpers',
+      'Lib/Control/LoadingIndicator/LoadingIndicator',
       'Core/CommandDispatcher',
       'css!SBIS3.CONTROLS/PrintDialogTemplate/PrintDialogTemplate'
-   ], function(CompoundControl, template, SessionStorage, detection, fcHelpers, CommandDispatcher) {
+   ], function(CompoundControl, template, SessionStorage, detection, LoadingIndicator, CommandDispatcher) {
       "use strict";
 
       var autoTestsConfig = SessionStorage.get('autoTestConfig');
@@ -38,7 +38,7 @@ define('SBIS3.CONTROLS/PrintDialogTemplate',
             });
 
             htmlView.once('onContentReady', function(){
-               fcHelpers.toggleIndicator(false);
+               LoadingIndicator.toggleIndicator(false);
                if (needShowReportDialog) {
                   //Блокируем навигацию по клику на ссылки
                   $(htmlView.getIframeDocument()).delegate('a', 'click', function(event) {
@@ -61,7 +61,7 @@ define('SBIS3.CONTROLS/PrintDialogTemplate',
 
             if (!htmlView.setHTML(this._options.htmlText, this._options.maxHTMLLength)) {
                // Длина документа превысила установленное значение, диалог показан не будет, отменяем печать.
-               fcHelpers.toggleIndicator(false);
+               LoadingIndicator.toggleIndicator(false);
                // Закрываем диалог печати.
                this.sendCommand('close');
             }

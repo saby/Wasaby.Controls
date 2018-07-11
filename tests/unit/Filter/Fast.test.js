@@ -44,6 +44,35 @@ define(
                   keyProperty: 'title',
                   displayProperty: 'title'
                }
+            },
+            {
+               id: 'third',
+               value: 'все страны',
+               resetValue: 'все страны',
+               properties: {
+                  keyProperty: 'title',
+                  displayProperty: 'title',
+                  source: {
+                     module: 'WS.Data/Source/Memory',
+                     options: {
+                        data: items[0]
+                     }
+                  }
+               }
+            },            {
+               id: 'fourth',
+               value: 'все страны',
+               resetValue: 'все страны',
+               properties: {
+                  keyProperty: 'title',
+                  displayProperty: 'title',
+                  source: {
+                     module: 'WS.Data/Source/Memory',
+                     options: {
+                        data: items[0]
+                     }
+                  }
+               }
             }
          ];
 
@@ -64,7 +93,7 @@ define(
          fastDataItems._beforeMount(configWithItems);
 
          fastData._notify = (e, args) => {
-            if(e == 'selectedKeysChanged') {
+            if (e == 'selectedKeysChanged') {
                isSelected = true;
                selectedKey = args[0];
             } else {
@@ -135,6 +164,7 @@ define(
             FastData._private.reload(fastData).addCallback(function () {
                FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function () {
                   fastData.lastOpenIndex = 0;
+                  fastData._container = {children: []};
                   isSelected = false;
                   selectedKey = null;
                   fastData._reset(null, fastData._items.at(0), 0);
@@ -146,7 +176,6 @@ define(
          });
 
          it('open dropdown', function () {
-
             var event = {target: {}};
             FastData._private.reload(fastData, fastData.sourceController).addCallback(function () {
                FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function () {
@@ -154,6 +183,7 @@ define(
                });
             });
          });
+
          function setTrue(assert) {
             assert.equal(true, true);
          }

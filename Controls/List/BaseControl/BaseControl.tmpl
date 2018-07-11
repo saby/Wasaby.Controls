@@ -50,7 +50,7 @@
                 on:commitActionClick="_commitEditActionHandler()"
                 on:cancelActionClick="_cancelEditActionHandler()"
                 on:menuActionsClick="_showActionsMenu()"
-                on:actionClick="_onActionClick()"
+                on:itemActionsClick="_onItemActionsClick()"
                 showToolbar="{{_options.editingConfig.showToolbar}}"
                 name="itemActions"
                 listModel="{{_listViewModel}}"
@@ -107,14 +107,6 @@
             name="itemActionsOpener"
             keyProperty="id"
             menuStyle="cross"
-            className="controls-Toolbar__menu-position">
-        <ws:popupOptions closeByExternalClick="{{true}}">
-            <ws:corner vertical="top" horizontal="right"/>
-            <ws:horizontalAlign side="left"/>
-            <ws:eventHandlers onResult="{{_closeActionsMenu}}" onClose="{{_closeActionsMenu}}"/>
-            <ws:templateOptions showHeader="{{true}}">
-                <ws:headConfig menuStyle="cross" />
-            </ws:templateOptions>
-        </ws:popupOptions>
-    </Controls.Dropdown.Opener>
+            className="controls-Toolbar__menu-position"
+            popupOptions="{{_popupOptions}}" />
 </div>

@@ -6,6 +6,7 @@ define('Controls/Input/Date/interface/ILinkView', [
 
    /**
     * mixin Controls/Input/Date/interface/ILinkView
+    * @public
     */
    var EMPTY_CAPTIONS = {
       NOT_SPECIFIED: rk('Не указан'),

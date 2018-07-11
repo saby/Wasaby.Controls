@@ -18,7 +18,7 @@ define('Controls/Controllers/SourceController',
                var sourceConstructor = requirejs(sourceOpt.module);
                result = new sourceConstructor(sourceOpt.options || {});
             }
-            if (!cInstance.instanceOfMixin(result, 'WS.Data/Source/ISource')) {
+            if (!cInstance.instanceOfMixin(result, 'WS.Data/Source/ICrud')) {
                IoC.resolve('ILogger').error('SourceController', 'Source option has incorrect type');
             }
             return result;
@@ -43,7 +43,7 @@ define('Controls/Controllers/SourceController',
                if (idProperty && idProperty !== dataSet.idProperty) {
                   dataSet.setIdProperty(idProperty);
                }
-               return dataSet.getAll();
+               return dataSet.getAll ? dataSet.getAll() : dataSet;
             }));
 
             if (cInstance.instanceOfModule(dataSource, 'WS.Data/Source/Memory')) {
@@ -153,10 +153,6 @@ define('Controls/Controllers/SourceController',
             if (this._queryParamsController) {
                return this._queryParamsController.hasMoreData(direction);
             }
-         },
-
-         setSource: function(source) {
-            this._source = _private.prepareSource(source);
          },
 
          calculateState: function(list) {

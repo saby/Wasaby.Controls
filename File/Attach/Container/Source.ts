@@ -1,5 +1,5 @@
 /// <amd-module name="File/Attach/Container/Source" />
-import IContainer = require("File/Attach/Container/IContainer");
+import IContainer = require("File/Attach/IContainer");
 import {Source as ISource} from 'File/Attach/Source';
 import Deferred = require("Core/Deferred");
 import {IResource, IResourceConstructor} from 'File/IResource';

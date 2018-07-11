@@ -1,0 +1,23 @@
+<div class="demo-Grid">
+    <div class="demo-Grid__container">
+        <Controls.Container.TreeMultiSelector source="{{_viewSource}}"
+                                             keyProperty="id"
+                                             parentProperty="Раздел"
+                                             nodeProperty="Раздел@">
+            <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+                <Controls.List.MultiSelector>
+                    <Controls.TreeGrid
+                            name="list"
+                            attr:class="demo-Grid__control"
+                            keyProperty="id"
+                            parentProperty="Раздел"
+                            nodeProperty="Раздел@"
+                            source="{{_viewSource}}"
+                            multiSelectVisibility="visible"
+                            columns="{{gridColumns}}">
+                    </Controls.TreeGrid>
+                </Controls.List.MultiSelector>
+            </Controls.Container.Scroll>
+        </Controls.Container.TreeMultiSelector>
+    </div>
+</div>

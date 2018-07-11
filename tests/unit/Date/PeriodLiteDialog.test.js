@@ -167,5 +167,27 @@ define([
          });
       });
 
+      describe('_getDefaultYear', function() {
+         const currentYear = (new Date).getFullYear();
+         [
+            [currentYear - 6, currentYear - 2],
+            [currentYear - 5, currentYear - 1],
+            [currentYear - 4, currentYear],
+            [currentYear - 3, currentYear],
+            [currentYear - 2, currentYear],
+            [currentYear - 1, currentYear],
+            [currentYear, currentYear],
+            [currentYear + 1, currentYear + 1],
+            [currentYear + 2, currentYear + 2],
+            [currentYear + 3, currentYear + 3]
+         ].forEach(function(test) {
+            it(`should return ${test[1]} for ${test[0]}} year`, function() {
+               assert.equal(
+                  PeriodLiteDialog._private._getDefaultYear({ startValue: new Date(test[0], 0, 1), chooseYears: true }),
+                  test[1]
+               );
+            });
+         });
+      });
    });
 });

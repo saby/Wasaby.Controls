@@ -1,13 +1,13 @@
 /// <amd-module name="File/Attach/Option/Getters/PhotoCam" />
-define("File/Attach/Option/Getters/PhotoCam", ["require", "exports", "tslib", "File/Attach/Option/ResourceGetter"], function (require, exports, tslib_1, ResourceGetter) {
+define("File/Attach/Option/Getters/PhotoCam", ["require", "exports", "tslib", "File/Attach/Option/GetterLazy"], function (require, exports, tslib_1, ResourceGetter) {
     "use strict";
     var GETTER_LINK = "File/ResourceGetter/PhotoCam";
     var GETTER_TYPE = "PhotoCam";
     /**
-     * Класс конфигурации IResourceGetter для получения снимков с камеры, передаваемый в Attach
+     * Класс конфигурации {@link File/IResourceGetter} для получения снимков с камеры, передаваемый в {@link File/Attach}
      * @class
      * @name File/Attach/Option/Getters/PhotoCam
-     * @extends File/Attach/Option/ResourceGetter
+     * @extends File/Attach/Option/GetterLazy
      * @public
      * @author Заляев А.В.
      */

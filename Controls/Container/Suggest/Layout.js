@@ -169,6 +169,12 @@ define('Controls/Container/Suggest/Layout',
             this._searchEnd = null;
             this._select = null;
          },
+         
+         _beforeUpdate: function(newOptions) {
+            if (!newOptions.suggestState) {
+               this._orient = null;
+            }
+         },
    
          _afterUpdate: function() {
             /* 1) checking suggestionsContainer in children, because suggest initializing asynchronously
@@ -196,6 +202,7 @@ define('Controls/Container/Suggest/Layout',
          
          _close: function() {
             if (this._options.suggestStyle === 'overInput') {
+               this._searchValue = '';
                this._notify('valueChanged', ['']);
             }
             _private.close(this);

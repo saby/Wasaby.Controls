@@ -5,6 +5,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
    [
       "Core/UserConfig",
       "Core/core-clone",
+      "Core/core-merge",
       "Core/Context",
       "Core/Indicator",
       "Core/CommandDispatcher",
@@ -33,6 +34,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
    ], function (
       UserConfig,
       cClone,
+      cMerge,
       cContext,
       cIndicator,
       CommandDispatcher,
@@ -214,8 +216,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      relative_urls: false,
                      convert_urls: false,
                      formats: constants.styles,
-                     paste_webkit_styles: 'color font-size text-align text-decoration width height max-width padding padding-left padding-right padding-top padding-bottom',
-                     paste_retain_style_properties: 'color font-size font-family text-align text-decoration width height max-width line-height padding padding-left padding-right padding-top padding-bottom background background-color',
+                     paste_webkit_styles: 'color font-size font-weight font-style font-family text-align text-decoration width height max-width line-height padding padding-left padding-right padding-top padding-bottom background',
+                     paste_retain_style_properties: 'color font-size font-weight font-style font-family text-align text-decoration width height max-width line-height padding padding-left padding-right padding-top padding-bottom background',
                      paste_as_text: true,
                      extended_valid_elements: 'div[class|onclick|style|id],img[unselectable|class|src|alt|title|width|height|align|name|style]',
                      body_class: 'ws-basic-style',
@@ -253,6 +255,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                    * @cfg {boolean} Сохранять ли историю ввода
                    */
                   saveHistory: true,
+                  /**
+                   * @cfg {object} Набор допустимых аттрибутов. Формат: "имя атрибута" - "значение", представляющее из себя либо true (разрещено всегда), либо false (запрещено всегда), либо функцию проверки, врзвращающую логическое значение
+                   */
+                  validAttributes: undefined,
                   /**
                    * @cfg {function} функция проверки валидности класса
                    */
@@ -719,8 +725,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   save = typeof saveStyles === 'undefined' ? true : saveStyles,
                   self = this,
                   dialog,
-                  eventResult,
                   prepareAndInsertContent = function (content) {
+                     var i = content.indexOf('<!--StartFragment-->');
+                     var isCleared = i != -1;
+                     if (isCleared) {
+                        // Это фрагмент текста из MS Word - оставитьтолько непосредственно значимый фрагмент текста
+                        var j = content.indexOf('<!--EndFragment-->');
+                        content = content.substring(i + 20, j !== -1 ? j : content.length).trim();
+                     }
                      //получение результата из события PastePreProcess тини потому что оно возвращает контент чистым от тегов Ворда,
                      //_isPasteWithStyles = true нужно чтобы в нашем обработчике PastePreProcess мы не обрабатывали а прокинули результат в обработчик тини
                      var editor = self._tinyEditor;
@@ -730,17 +742,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         pastePlugin.clipboard.pasteHtml(content, false);
                      }
                      else {
-                        var i = content.indexOf('<!--StartFragment-->');
-                        if (i != -1) {
-                           // Это фрагмент текста из MS Word - оставитьтолько непосредственно значимый фрагмент текста
-                           var j = content.indexOf('<!--EndFragment-->');
-                           content = content.substring(i + 20, j !== -1 ? j : content.length).trim();
-                        }
-                        else {
+                        if (!isCleared) {
                            //Вычищаем все ненужные теги, т.к. они в конечном счёте превращаютя в <p>
                            content = content.replace(/<html[^>]*>|<body[^>]*>|<\x2Fhtml>|<\x2Fbody>/gi, '').trim();
                         }
-                        eventResult = self.getTinyEditor().fire('PastePreProcess', {content:content});
+                        var eventResult = editor.fire('PastePreProcess', {content:content});
                         self.insertHtml(eventResult.content);
                      }
                      delete self._isPasteWithStyles;
@@ -1709,6 +1715,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                codeDialog.setText(editor.plugins.codesample.getCurrentCode(editor) || '');
                codeDialog.show();
             },
+            /**
+             * Метод возвращает объект вида { id: inEditor }
+             * id - id файла на сбис-диске;
+             * inEditor - на момент вызова метода текст редактора содержит данное изображение.
+             * Если inEditor == false, значит изображение было загружено в редактор (или редактор открыли уже с данным изображением),
+             * но на момент вызова метода изображение в редакторе отсутствует.
+             */
             getImages: function() {
                return this._fillImages(true);
             },
@@ -2559,6 +2572,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   if (needStop) {
                      evt.preventDefault();
                      evt.stopPropagation();
+                     //TODO: Обдумать this._container[0].scrollIntoView(evt.alignToTop);//^^^
                   }
                }.bind(this));
             },
@@ -3473,109 +3487,115 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             }
             return true;*/
             },
-            _sanitizeClasses: function(text, images) {
-               var
-                  self = this;
-               return Sanitize(text,
-                  {
-                     validNodes: {
-                        img: images ? {
-                           'data-img-uuid': true,
-                           'data-mce-src': true,
-                           'data-mce-style': true,
-                           onload: false,
-                           onerror: false
-                        } : false,
-                        table: {
-                           border: true,
-                           cellspacing: true,
-                           cellpadding: true
+
+            _sanitizeClasses: function (text, images) {
+               var options = this._options;
+               var sanitizeOptions = {
+                  validNodes: {
+                     img: images ? {
+                        'data-img-uuid': true,
+                        'data-mce-src': true,
+                        'data-mce-style': true,
+                        onload: false,
+                        onerror: false
+                     } : false,
+                     table: {
+                        border: true,
+                        cellspacing: true,
+                        cellpadding: true
+                     }
+                  },
+                  validAttributes: {
+                     'class': function (content, attributeName) {
+                        var
+                           //проверка options для юнит тестов, тк там метод зовётся на прототипе
+                           classValidator = options ? options.validateClass : null,
+                           validateIsFunction = typeof classValidator === 'function',
+                           currentValue = content.attributes[attributeName].value,
+                           classes = currentValue.split(' '),
+                           whiteList =  [
+                              'titleText',
+                              'subTitleText',
+                              'additionalText',
+                              'controls-RichEditor__noneditable',
+                              'without-margin',
+                              'has-img-left',
+                              'image-template-left',
+                              'image-template-center',
+                              'image-template-right',
+                              'mce-object-iframe',
+                              'ws-hidden',
+                              'language-javascript',
+                              'language-css',
+                              'language-markup',
+                              'language-php',
+                              'token',
+                              'comment',
+                              'prolog',
+                              'doctype',
+                              'cdata',
+                              'punctuation',
+                              'namespace',
+                              'property',
+                              'tag',
+                              'boolean',
+                              'number',
+                              'constant',
+                              'symbol',
+                              'deleted',
+                              'selector',
+                              'attr-name',
+                              'string',
+                              'char',
+                              'builtin',
+                              'inserted',
+                              'operator',
+                              'entity',
+                              'url',
+                              'style',
+                              'attr-value',
+                              'keyword',
+                              'function',
+                              'regex',
+                              'important',
+                              'variable',
+                              'bold',
+                              'italic',
+                              'LinkDecorator__link',
+                              'LinkDecorator',
+                              'LinkDecorator__simpleLink',
+                              'LinkDecorator__linkWrap',
+                              'LinkDecorator__decoratedLink',
+                              'LinkDecorator__wrap',
+                              'LinkDecorator__image'
+                           ],
+                           index = classes.length - 1;
+
+                        while (index >= 0) {
+                           if (!~whiteList.indexOf(classes[index]) && (!validateIsFunction || !classValidator(classes[index]))) {
+                              classes.splice(index, 1);
+                           }
+                           index -= 1;
                         }
-                     },
-                     validAttributes: {
-                        'class' : function(content, attributeName) {
-                           var
-                              //проверка this._options для юнит тестов, тк там метод зовётся на прототипе
-                              validateIsFunction = this._options && typeof this._options.validateClass === 'function',
-                              currentValue = content.attributes[attributeName].value,
-                              classes = currentValue.split(' '),
-                              whiteList =  [
-                                 'titleText',
-                                 'subTitleText',
-                                 'additionalText',
-                                 'controls-RichEditor__noneditable',
-                                 'without-margin',
-                                 'has-img-left',
-                                 'image-template-left',
-                                 'image-template-center',
-                                 'image-template-right',
-                                 'mce-object-iframe',
-                                 'ws-hidden',
-                                 'language-javascript',
-                                 'language-css',
-                                 'language-markup',
-                                 'language-php',
-                                 'token',
-                                 'comment',
-                                 'prolog',
-                                 'doctype',
-                                 'cdata',
-                                 'punctuation',
-                                 'namespace',
-                                 'property',
-                                 'tag',
-                                 'boolean',
-                                 'number',
-                                 'constant',
-                                 'symbol',
-                                 'deleted',
-                                 'selector',
-                                 'attr-name',
-                                 'string',
-                                 'char',
-                                 'builtin',
-                                 'inserted',
-                                 'operator',
-                                 'entity',
-                                 'url',
-                                 'style',
-                                 'attr-value',
-                                 'keyword',
-                                 'function',
-                                 'regex',
-                                 'important',
-                                 'variable',
-                                 'bold',
-                                 'italic',
-                                 'LinkDecorator__link',
-                                 'LinkDecorator',
-                                 'LinkDecorator__simpleLink',
-                                 'LinkDecorator__linkWrap',
-                                 'LinkDecorator__decoratedLink',
-                                 'LinkDecorator__wrap',
-                                 'LinkDecorator__image'
-                              ],
-                              index = classes.length - 1;
+                        currentValue = classes.join(' ');
+                        if (currentValue) {
+                           content.attributes[attributeName].value = currentValue;
+                        } else {
+                           delete content.attributes[attributeName];
+                        }
 
-                           while (index >= 0) {
-                              if (!~whiteList.indexOf(classes[index]) && (!validateIsFunction || !this._options.validateClass(classes[index]))) {
-                                 classes.splice(index, 1);
-                              }
-                              index -= 1;
-                           }
-                           currentValue = classes.join(' ');
-                           if (currentValue) {
-                              content.attributes[attributeName].value = currentValue;
-                           } else {
-                              delete content.attributes[attributeName];
-                           }
-
-                        }.bind(self)
-                     },
-                     checkDataAttribute: false,
-                     escapeInvalidTags: false
-                  });
+                     }.bind(this)
+                  },
+                  checkDataAttribute: false,
+                  escapeInvalidTags: false
+               };
+               var validAttributes = options ? options.validAttributes : null;
+               if (validAttributes && typeof validAttributes === 'object') {
+                  sanitizeOptions.validAttributes = cMerge(validAttributes, sanitizeOptions.validAttributes);
+               }
+               return Sanitize(text, sanitizeOptions);
             },
+
             _getTextBeforePaste: function(editor){
                //Проблема:
                //          после вставки текста могут возникать пробелы после <br> в начале строки

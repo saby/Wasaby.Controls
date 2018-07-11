@@ -15752,12 +15752,10 @@
           node = root;
         }
         parents = [];
-        editor.dom.getParent(node, function (node) {
-          if (node === root) {
-            return true;
-          }
-          parents.push(node);
-        });
+         // HTML ELEMENT closure creates memory leaks.
+        editor.dom.getParent(node, function(node) {
+           parents.push(node);
+        }, root);
         args = args || {};
         args.element = node;
         args.parents = parents;
@@ -38921,7 +38919,7 @@ var paste = (function () {
     text = (Env.webkit || Env.ie) && navigator.userAgent.search(/\bwindows\b/i) !== -1 ? text.replace(/\n/gi, '\r\n') : text;
     text = text.replace(/\u00A0/gi, ' ');
     return {
-      html: rng.startOffset === 0 && rng.commonAncestorContainer.nodeType === 3 && rng.endOffset === rng.commonAncestorContainer.nodeValue.length && !sel.dom.isBlock(sel.getNode()) ? sel.dom.getOuterHTML(sel.getNode()) : sel.getContent({ contextual: true }),
+      html: /*rng.startOffset === 0 && rng.commonAncestorContainer.nodeType === 3 && rng.endOffset === rng.commonAncestorContainer.nodeValue.length && !sel.dom.isBlock(sel.getNode()) ? sel.dom.getOuterHTML(sel.getNode()) :*/ sel.getContent({ contextual: true }),
       text: text
     };
   };

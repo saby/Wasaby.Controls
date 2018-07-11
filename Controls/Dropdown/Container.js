@@ -19,6 +19,7 @@ define('Controls/Dropdown/Container',
        * @class Controls/Dropdown/Container
        * @extends Core/Control
        * @mixes Controls/interface/ISource
+       * @mixes Controls/Input/interface/IDropdownEmptyText
        * @mixes Controls/Button/interface/ICaption
        * @mixes Controls/Button/interface/IIcon
        * @author Золотова Э.Е.
@@ -65,7 +66,6 @@ define('Controls/Dropdown/Container',
        * @cfg {Object} Menu style menuStyle
        * @variant defaultHead The head with icon and caption
        * @variant duplicateHead The icon set under first item
-       * @variant cross Menu have cross in left top corner
        */
 
       /**
@@ -76,12 +76,6 @@ define('Controls/Dropdown/Container',
        */
 
       /**
-       * @name Controls/Dropdown/Container#emptyText
-       * @cfg {String} Add an empty item to the list.
-       * @variant true Add empty item with text 'Не выбрано'
-       */
-
-      /**
        * @name Controls/Dropdown/Container#typeShadow
        * @cfg {String} Specifies the type of shadow around the popup.
        * @variant default Default shadow
@@ -89,23 +83,26 @@ define('Controls/Dropdown/Container',
        */
 
       var _private = {
-         loadItems: function(instance, source, selectedKeys, keyProperty, filter) {
+         loadItems: function(instance, source, selectedKeys, keyProperty, dataLoadCallback, filter) {
             instance._sourceController = new SourceController({
                source: source
             });
             return instance._sourceController.load(filter).addCallback(function(items) {
                instance._items = items;
-               _private.updateSelectedItems(instance, selectedKeys, keyProperty);
+               _private.updateSelectedItems(instance, selectedKeys, keyProperty, dataLoadCallback);
                return items;
             });
          },
 
-         updateSelectedItems: function(instance, selectedKeys, keyProperty) {
+         updateSelectedItems: function(instance, selectedKeys, keyProperty, dataLoadCallback) {
             Chain(instance._items).each(function(item) {
                if (selectedKeys.indexOf(item.get(keyProperty)) > -1) {
                   instance._selectedItems.push(item);
                }
             });
+            if (dataLoadCallback) {
+               dataLoadCallback(instance._selectedItems);
+            }
          },
 
          onResult: function(result) {
@@ -142,18 +139,12 @@ define('Controls/Dropdown/Container',
             if (!options.lazyItemsLoad) {
                if (receivedState) {
                   this._items = receivedState;
-                  _private.updateSelectedItems(this, options.selectedKeys, options.keyProperty);
+                  _private.updateSelectedItems(this, options.selectedKeys, options.keyProperty, options.dataLoadCallback);
                } else {
                   if (options.source) {
-                     return _private.loadItems(this, options.source, options.selectedKeys, options.keyProperty);
+                     return _private.loadItems(this, options.source, options.selectedKeys, options.keyProperty, options.dataLoadCallback);
                   }
                }
-            }
-         },
-
-         _afterMount: function() {
-            if (!isEmpty(this._selectedItems)) {
-               this._notify('selectedItemsChanged', [this._selectedItems]);
             }
          },
 
@@ -192,7 +183,7 @@ define('Controls/Dropdown/Container',
             }
 
             if (this._options.source && !this._items) {
-               _private.loadItems(this, this._options.source, this._options.selectedKeys, this._options.keyProperty, this._options.filter).addCallback(function(items) {
+               _private.loadItems(this, this._options.source, this._options.selectedKeys, this._options.keyProperty, this._options.dataLoadCallBack, this._options.filter).addCallback(function(items) {
                   open();
                   return items;
                });

@@ -35,6 +35,18 @@ define(['SBIS3.CONTROLS/TextBox'], function (TextBox) {
             });
 
         });
+        describe('setInformationIconColor', function() {
+           it('empty', function() {
+               TB._options.informationIconColor = 'done';
+               TB.setInformationIconColor('');
+               assert.equal('',  TB._options.informationIconColor);
+           });
+           it('value', function() {
+              TB._options.informationIconColor = '';
+              TB.setInformationIconColor('done');
+              assert.equal('done',  TB._options.informationIconColor);
+           });
+        });
         afterEach(function () {
             TB.destroy();
             TB = undefined;

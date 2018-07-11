@@ -15,6 +15,7 @@ define('Controls/List/BaseControl', [
    'Controls/List/ItemActions/Utils/Actions',
    'Controls/List/EditInPlace',
    'Controls/List/ItemActions/ItemActionsControl',
+
    'css!Controls/List/BaseControl/BaseControl'
 ], function(Control,
    IoC,
@@ -53,6 +54,12 @@ define('Controls/List/BaseControl', [
                   self._listViewModel.setItems(list);
                }
 
+               //pre scroll loading
+               //не использовать удалить по задаче https://online.sbis.ru/opendoc.html?guid=f968dcef-6d9f-431c-9653-5aea20aeaff2
+               if (self._mounted && !list.getCount()) {
+                  self._notify('checkScroll', [], {bubbling: true});
+               }
+
                //self._virtualScroll.setItemsCount(self._listViewModel.getCount());
 
 
@@ -87,6 +94,13 @@ define('Controls/List/BaseControl', [
                   self._listViewModel.prependItems(addedItems);
                   self._virtualScroll.prependItems(addedItems.getCount());
                }
+
+               //pre scroll loading
+               //не использовать удалить по задаче https://online.sbis.ru/opendoc.html?guid=f968dcef-6d9f-431c-9653-5aea20aeaff2
+               if (self._mounted && !addedItems.getCount()) {
+                  self._notify('checkScroll', [], {bubbling: true});
+               }
+
                return addedItems;
 
                //обновить начало/конец видимого диапазона записей и высоты распорок
@@ -316,7 +330,7 @@ define('Controls/List/BaseControl', [
 
          if (actionName === 'itemClick') {
             var action = args.data && args.data[0] && args.data[0].getRawData();
-            aUtil.actionClick(self, event, action, self._listViewModel._activeItem);
+            aUtil.itemActionsClick(self, event, action, self._listViewModel.getActiveItem());
             self._children.itemActionsOpener.close();
          }
          self._listViewModel.setActiveItem(null);
@@ -327,6 +341,21 @@ define('Controls/List/BaseControl', [
 
       bindHandlers: function(self) {
          self._closeActionsMenu = self._closeActionsMenu.bind(self);
+      },
+
+      setPopupOptions: function(self) {
+         self._popupOptions = {
+            closeByExternalClick: true,
+            corner: {vertical: 'top', horizontal: 'right'},
+            horizontalAlign: {side: 'left'},
+            eventHandlers: {
+               onResult: self._closeActionsMenu,
+               onClose: self._closeActionsMenu
+            },
+            templateOptions: {
+               showClose: true
+            }
+         };
       }
    };
 
@@ -370,12 +399,15 @@ define('Controls/List/BaseControl', [
       _bottomPlaceholderHeight: 0,
       _menuIsShown: null,
 
+      _popupOptions: null,
+
       constructor: function(cfg) {
          BaseControl.superclass.constructor.apply(this, arguments);
       },
 
       _beforeMount: function(newOptions, context, receivedState) {
          _private.bindHandlers(this);
+         _private.setPopupOptions(this);
 
          this._virtualScroll = new VirtualScroll({
             maxVisibleItems: newOptions.virtualScrollConfig && newOptions.virtualScrollConfig.maxVisibleItems,
@@ -434,8 +466,8 @@ define('Controls/List/BaseControl', [
 
             //this._virtualScroll.setItemsCount(this._listViewModel.getCount());
          } else
-         if (newOptions.selectedKey !== this._options.selectedKey) {
-            this._listViewModel.setMarkedKey(newOptions.selectedKey);
+         if (newOptions.markedKey !== this._options.markedKey) {
+            this._listViewModel.setMarkedKey(newOptions.markedKey);
          }
 
 
@@ -456,10 +488,9 @@ define('Controls/List/BaseControl', [
             _private.reload(this, newOptions.filter, newOptions.dataLoadCallback,  newOptions.dataLoadErrback);
          }
 
-         if (this._options.selectedKeys !== newOptions.selectedKeys) {
-            this._listViewModel.select(newOptions.selectedKeys);
+         if (newOptions.selectedKeys !== this._options.selectedKeys) {
+            this._listViewModel._updateSelection(newOptions.selectedKeys);
          }
-
       },
 
       _beforeUnmount: function() {
@@ -506,7 +537,7 @@ define('Controls/List/BaseControl', [
       },
 
       _onCheckBoxClick: function(e, key, status) {
-         this._notify('onCheckBoxClick', [key, status]);
+         this._notify('checkboxClick', [key, status]);
       },
 
       _listSwipe: function(event, itemData, childEvent) {
@@ -514,7 +545,7 @@ define('Controls/List/BaseControl', [
          this._children.itemActionsOpener.close();
          if (direction === 'right' && itemData.multiSelectVisibility) {
             var status = itemData.multiSelectStatus;
-            this._notify('onCheckBoxClick', [itemData.key, status]);
+            this._notify('checkboxClick', [itemData.key, status]);
          }
          if (direction === 'right' || direction === 'left') {
             var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.viewConfig.keyProperty);
@@ -566,7 +597,9 @@ define('Controls/List/BaseControl', [
       * @returns {Core/Deferred}
       */
       editItem: function(options) {
-         this._children.editInPlace.editItem(options);
+         if (!this._options.readOnly) {
+            this._children.editInPlace.editItem(options);
+         }
       },
 
       /**
@@ -575,7 +608,9 @@ define('Controls/List/BaseControl', [
       * @returns {Core/Deferred}
       */
       addItem: function(options) {
-         this._children.editInPlace.addItem(options);
+         if (!this._options.readOnly) {
+            this._children.editInPlace.addItem(options);
+         }
       },
 
       _onBeforeItemAdd: function(e, options) {
@@ -640,8 +675,8 @@ define('Controls/List/BaseControl', [
          this._notify('afterItemsMove', [items, target, position, result]);
       },
 
-      _onActionClick: function(e, action, item) {
-         this._notify('actionClick', [action, item]);
+      _onItemActionsClick: function(e, action, item) {
+         this._notify('itemActionsClick', [action, item]);
       },
 
       _itemMouseDown: function(event, itemData, domEvent) {

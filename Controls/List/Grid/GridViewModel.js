@@ -574,12 +574,8 @@ define('Controls/List/Grid/GridViewModel', [
             this._model.setSwipeItem(itemData);
          },
 
-         select: function(keys) {
-            this._model.select(keys);
-         },
-
-         unselect: function(keys) {
-            this._model.unselect(keys);
+         _updateSelection: function(selectedKeys) {
+            this._model._updateSelection(selectedKeys);
          },
 
          setDragTargetItem: function(itemData) {
@@ -588,6 +584,10 @@ define('Controls/List/Grid/GridViewModel', [
 
          setDragItems: function(items) {
             this._model.setDragItems(items);
+         },
+
+         getActiveItem: function() {
+            return this._model.getActiveItem();
          },
 
          destroy: function() {

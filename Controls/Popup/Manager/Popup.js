@@ -33,19 +33,21 @@ define('Controls/Popup/Manager/Popup',
          _template: template,
 
          _afterMount: function() {
-
-            /*Очень сложный код. Нельзя просто так на afterMount пересчитывать позиции и сигналить о создании
-            * внутри может быть compoundArea и мы должны ее дождаться, а там есть асинхронная фаза*/
+            /* Очень сложный код. Нельзя просто так на afterMount пересчитывать позиции и сигналить о создании
+            * внутри может быть compoundArea и мы должны ее дождаться, а там есть асинхронная фаза */
 
             if (this.waitForPopupCreated) {
                this.callbackCreated = (function() {
                   this.callbackCreated = null;
                   this.waitForPopupCreated = false;
-                  this._notify('popupCreated', [this._options.id], {bubbling: true});
+                  this._notify('popupCreated', [this._options.id], { bubbling: true });
                }).bind(this);
             } else {
-               //todo doautofocus
-               this._notify('popupCreated', [this._options.id], {bubbling: true});
+               // todo doautofocus
+               this._notify('popupCreated', [this._options.id], { bubbling: true });
+               if (this._options.autofocus) {
+                  this.activate();
+               }
             }
          },
 
@@ -54,10 +56,10 @@ define('Controls/Popup/Manager/Popup',
           * @function Controls/Popup/Manager/Popup#_close
           */
          _close: function() {
-            this._notify('popupClose', [this._options.id], {bubbling: true});
+            this._notify('popupClose', [this._options.id], { bubbling: true });
          },
          _animated: function() {
-            this._notify('popupAnimated', [this._options.id], {bubbling: true});
+            this._notify('popupAnimated', [this._options.id], { bubbling: true });
          },
 
          /**
@@ -65,7 +67,7 @@ define('Controls/Popup/Manager/Popup',
           * @function Controls/Popup/Manager/Popup#_close
           */
          _update: function() {
-            this._notify('popupUpdated', [this._options.id], {bubbling: true});
+            this._notify('popupUpdated', [this._options.id], { bubbling: true });
          },
 
          /**
@@ -74,7 +76,7 @@ define('Controls/Popup/Manager/Popup',
           */
          _sendResult: function(event) {
             var args = Array.prototype.slice.call(arguments, 1);
-            this._notify('popupResult', [this._options.id].concat(args), {bubbling: true});
+            this._notify('popupResult', [this._options.id].concat(args), { bubbling: true });
          },
 
          /**
@@ -86,20 +88,14 @@ define('Controls/Popup/Manager/Popup',
             if (event.nativeEvent.keyCode === CoreConstants.key.esc) {
                this._close();
             }
-         },
-         _popupClickHandler: function(event) {
-            //Не даем клику всплыть выше попапа. В этому случае событие не долетит до лисенера,
-            //который слушает клик по документу. В этом случае, если лисенер отловил событие, значит
-            //клик был сделан вне попапа.
-            //Нельзя стопать нативное событие, т.к. иначе ни один mousedown в старых панелях не отработает
-            event.stopped = true;
-         },
-         _documentClickHandler: function() {
-            if (this._options.closeByExternalClick) {
-               this._close();
-            }
          }
       });
+
+      Popup.getDefaultOptions = function() {
+         return {
+            autofocus: true
+         };
+      };
+
       return Popup;
-   }
-);
+   });

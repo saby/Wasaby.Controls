@@ -330,6 +330,9 @@ define('SBIS3.CONTROLS/Menu', [
          for (i in instances) {
             if (instances.hasOwnProperty(i)) {
                instances[i].getContainer().hover(function(e) {
+                  if (!self._isVisible)
+                     return;//на ipad ховер может сработать над скрытым элементом
+
                   var
                      isFirstLevel = false,
                      id = $(this).attr('data-id'),
