@@ -71,6 +71,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                      animation: 'slide',
                      isStack: true,
                      autoCloseOnHide: true,
+                     minWidth: 1000,
                      maxWidth: 1000
                   }
                }

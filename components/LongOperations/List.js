@@ -99,6 +99,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
                      animation: 'slide',
                      isStack: true,
                      autoCloseOnHide: true,
+                     minWidth: 680,
                      maxWidth: 680
                   }
                }
