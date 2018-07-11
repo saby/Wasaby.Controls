@@ -23,15 +23,15 @@
         </div>
         <h2>Header with counter</h2>
         <div>
-            <div attr:class="Header_Counter__wrapper test_element">
+            <div attr:class="Header_Counter__wrapper test_element controls-Header_all__clickable">
                 <Controls.Header caption="Header" style="default" size="l"/>
                 <Controls.Header.Counter attr:class="counter" value="{{12}}" style="primary" size="l"/>
             </div>
-            <div attr:class="Header_Counter__wrapper test_element">
+            <div attr:class="Header_Counter__wrapper test_element controls-Header_all__clickable">
                 <Controls.Header caption="Header" style="default" size="m"/>
                 <Controls.Header.Counter attr:class="counter" value="{{12}}" style="disabled" size="m"/>
             </div>
-            <div attr:class="Header_Counter__wrapper test_element">
+            <div attr:class="Header_Counter__wrapper test_element controls-Header_all__clickable">
                 <Controls.Header caption="Header" style="primary" size="s"/>
                 <Controls.Header.Counter attr:class="counter" value="{{12}}" style="default" size="s"/>
             </div>
@@ -40,22 +40,22 @@
         <h3>Header-separator with and without counter.</h3>
         <div>
             <div>
-                <div attr:class="test_element Header_Counter__wrapper header_separator__clickable">
+                <div attr:class="test_element Header_Counter__wrapper controls-Header_Separator__clickable">
                     <Controls.Header caption="Header" style="default" size="l"/>
                     <Controls.Header.Separator style="default"/>
                 </div>
-                <div attr:class="test_element Header_Counter__wrapper header_separator__clickable">
+                <div attr:class="test_element Header_Counter__wrapper controls-Header_Separator__clickable">
                     <Controls.Header caption="Header" style="primary" size="m"/>
                     <Controls.Header.Separator style="primary"/>
                 </div>
             </div>
             <div>
-                <div attr:class="test_element Header_Counter__wrapper header_separator__clickable">
+                <div attr:class="test_element Header_Counter__wrapper controls-Header_Separator__clickable">
                     <Controls.Header caption="Header" style="default" size="l"/>
                     <Controls.Header.Counter attr:class="counter" value="{{12}}" style="disabled" size="l"/>
                     <Controls.Header.Separator style="default"/>
                 </div>
-                <div attr:class="test_element Header_Counter__wrapper header_separator__clickable">
+                <div attr:class="test_element Header_Counter__wrapper controls-Header_Separator__clickable">
                     <Controls.Header caption="Header" style="primary" size="m"/>
                     <Controls.Header.Counter attr:class="counter" value="{{12}}" style="disabled" size="m"/>
                     <Controls.Header.Separator style="primary"/>
@@ -79,22 +79,22 @@
         <h3>Button-separator and headers with union click</h3>
         <div>
             <div class="demo__block">
-                <div attr:class="test_element header_all__clickable">
+                <div attr:class="test_element controls-Header_all__clickable">
                     <Controls.Header on:click="clickIcon()" caption="Header" style="default" size="l"/>
                     <Controls.Button.ButtonSeparator on:click="clickIcon()" bold="{{true}}" style="Accent" value="{{_iconValue}}"/>
                 </div>
-                <div attr:class="test_element header_all__clickable">
+                <div attr:class="test_element controls-Header_all__clickable">
                     <Controls.Header on:click="clickIcon()" caption="Header" style="default" size="l"/>
                     <Controls.Header.Counter on:click="clickIcon()" attr:class="counter" value="{{12}}" style="disabled" size="m"/>
                     <Controls.Button.ButtonSeparator on:click="clickIcon()" bold="{{true}}" style="Accent" value="{{_iconValue}}"/>
                 </div>
             </div>
             <div class="demo__block">
-                <div attr:class="test_element header_all__clickable">
+                <div attr:class="test_element controls-Header_all__clickable">
                     <Controls.Button.ButtonSeparator on:click="clickIcon()" bold="{{true}}" style="Accent" value="{{_iconValue}}"/>
                     <Controls.Header on:click="clickIcon()" caption="Header" style="default" size="l"/>
                 </div>
-                <div attr:class="test_element header_all__clickable">
+                <div attr:class="test_element controls-Header_all__clickable">
                     <Controls.Button.ButtonSeparator on:click="clickIcon()" bold="{{true}}" style="Accent" value="{{_iconValue}}"/>
                     <Controls.Header.Counter on:click="clickIcon()" attr:class="counter-left-direction" value="{{12}}" style="disabled" size="m"/>
                     <Controls.Header on:click="clickIcon()" caption="Header" style="default" size="l"/>
