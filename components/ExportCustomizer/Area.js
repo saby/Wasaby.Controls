@@ -15,6 +15,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
       'Core/Deferred',
       'SBIS3.CONTROLS/CompoundControl',
       'SBIS3.CONTROLS/ExportCustomizer/Constants',
+      'SBIS3.CONTROLS/Utils/ImportExport/OptionsTool',
       'SBIS3.CONTROLS/ExportCustomizer/Utils/CollectionSelectByIds',
       'SBIS3.CONTROLS/Utils/ImportExport/RemoteCall',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
@@ -26,7 +27,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
       'SBIS3.CONTROLS/ScrollContainer'
    ],
 
-   function (CommandDispatcher, cMerge, Deferred, CompoundControl, Constants, collectionSelectByIds, RemoteCall, InformationPopupManager, RecordSet, Di, tmpl) {
+   function (CommandDispatcher, cMerge, Deferred, CompoundControl, Constants, OptionsTool, collectionSelectByIds, RemoteCall, InformationPopupManager, RecordSet, Di, tmpl) {
       'use strict';
 
       /**
@@ -80,6 +81,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
        * @property {string} fileUuid Uuid стилевого эксель-файла
        * @property {ExportServiceParams} serviceParams Прочие параметры, необходимых для работы БЛ
        */
+
+      /**
+       * Инструмент обработки опций
+       * @private
+       * @type {SBIS3.CONTROLS/Utils/ImportExport/OptionsTool}
+       */
+      var optionsTool = new OptionsTool(Constants.OPTION_TYPES, Constants.DEFAULT_OPTIONS, Constants.SKIP_OWN_OPTIONS_NAMES);
+
+
 
       var Area = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ExportCustomizer/Area.prototype*/ {
 
@@ -198,68 +208,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * @param {object} options Опции компонента
           */
          _processOptions: function (options) {
-            this._resolveOptions(options);
-            this._validateOptions(options, this._filterValidatedOptionNames.bind(this));
+            optionsTool.resolveOptions(options);
+            optionsTool.validateOptions(options, !options.dialogMode ? function (names, options) { return _arrayRemove(names, 'dialogTitle', 'dialogButtonTitle'); } : null);
             this._reshapeOptions(options);
-         },
-
-         /**
-          * Разрешить неустановленные собственные опции компонента их значениями по умолчанию из статического метода getDefaultOptions
-          * @protected
-          * @param {object} options Опции компонента
-          */
-         _resolveOptions: function (options) {
-            var defaultOptions = Area.getDefaultOptions();
-            for (var name in defaultOptions) {
-               if (options[name] ==/*Не ===*/ null) {
-                  options[name] = defaultOptions[name];
-               }
-            }
-         },
-
-         /**
-          * Отобрать из указанных имён собственных опций только те, проверки для которых актуальны, учитывая значения других опций
-          * @protected
-          * @param {Array<string>} names Имена собственных опций компонента, для которых имеются валидаторы из статического метода getOptionTypes
-          * @param {object} options Опции компонента
-          * @param {Array<string>}
-          */
-         _filterValidatedOptionNames: function (names, options) {
-            if (!options.waitingMode) {
-               if (!options.dialogMode) {
-                  var _remove = function (list) { Array.prototype.slice.call(arguments, 1).forEach(function (item) { var i = list.indexOf(item); if (i !== -1) { list.splice(i, 1); }; }); };
-                  _remove(names, 'dialogTitle', 'dialogButtonTitle');
-               }
-               return names;
-            }
-         },
-
-         /**
-          * Проверить собственные опции компонента на допустимость их значений, используя валидаторы из статического метода getOptionTypes
-          * @protected
-          * @param {object} options Опции компонента
-          * @param {function(Array<string>, object):Array<string>} [namesFilter] Фильт имён опций, которые подлежат проверке. Применяется при необходимости варьировать проверку в зависимости от значений других опций (опционально)
-          */
-         _validateOptions: function (options, namesFilter) {
-            var typeValidators = Area.getOptionTypes();
-            if (typeValidators) {
-               var names = Object.keys(typeValidators);
-               if (namesFilter) {
-                  names = namesFilter.call(null, names, options);
-               }
-               if (names && names.length) {
-                  for (var i = 0; i < names.length; i++) {
-                     var name = names[i];
-                     var validator = typeValidators[name];
-                     if (validator) {
-                        var err = validator(options[name]);
-                        if (err instanceof Error) {
-                           throw new Error('Wrong option "' + name + '": ' + err.message);
-                        }
-                     }
-                  }
-               }
-            }
          },
 
          /**
@@ -697,9 +648,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
        * @static
        * @return {object}
        */
-      Area.getDefaultOptions = function () {
-         return Constants.DEFAULT_OPTIONS;
-      };
+      Area.getDefaultOptions = optionsTool.getDefaultOptions.bind(optionsTool);
 
       /**
        * Получить список имён всех собственных опций компонента
@@ -708,15 +657,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
        * @static
        * @return {Array<string>}
        */
-      Area.getOwnOptionNames = function () {
-         var names = Object.keys(Constants.OPTION_TYPES);
-         for (var i = 0, list = Constants.SKIP_OWN_OPTIONS_NAMES; i < list.length; i++) {
-            var name = list[i];
-            var j = names.indexOf(name);
-            names.splice(j, 1);
-         }
-         return names;
-      };
+      Area.getOwnOptionNames = optionsTool.getOwnOptionNames.bind(optionsTool);
 
       /**
        * Получить проверочную информацию о типах данных опций
@@ -725,9 +666,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
        * @static
        * @return {object}
        */
-      Area.getOptionTypes = function () {
-         return Constants.OPTION_TYPES;
-      };
+      Area.getOptionTypes = optionsTool.getOptionTypes.bind(optionsTool);
 
       /**
        * Показать сообщение пользователю
@@ -760,6 +699,24 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
 
 
       // Private methods:
+
+      /**
+       * Удалить из массива указанные элементы
+       *
+       * @private
+       * @param {Array<*>} list Массив элементов
+       * @param {*} ...items Список удаляемых элементов (остальные аргументы)
+       */
+      var _arrayRemove = function (list/*, ...items*/) {
+         var items = Array.prototype.slice.call(arguments, 1);
+         for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            var j = list.indexOf(item);
+            if (j !== -1) {
+               list.splice(о, 1);
+            }
+         }
+      };
 
       /**
        * Получить вложенный под-компонент, если он есть
