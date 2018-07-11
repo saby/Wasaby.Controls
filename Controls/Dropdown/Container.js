@@ -117,6 +117,7 @@ define('Controls/Dropdown/Container',
                   break;
                case 'itemClick':
                   _private.selectItem.call(this, result.data);
+                  
                   //FIXME тут необходимо перевести на кэширующий источник,
                   //Чтобы при клике историческое меню обновляло источник => а контейнер обновил item'ы
                   //Но т.к. кэширующий сорс есть только в 400, выписываю задачу на переход.
