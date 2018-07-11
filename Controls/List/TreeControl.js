@@ -137,6 +137,31 @@ define('Controls/List/TreeControl', [
          } else {
             this._notify('selectionChange', [{added: [key], removed: []}]);
          }
+      },
+
+      _onAfterItemsRemoveHandler: function(e, keys, result) {
+         var
+            self = this,
+            newSelectedKeys = this._contextObj.selection.calculatedSelectedKeys.slice(),
+            parents;
+
+         this._notify('afterItemsRemove', [keys, result]);
+
+         ArraySimpleValuesUtil.removeSubArray(newSelectedKeys, keys);
+
+         keys.forEach(function(key) {
+            parents = _private.getAllParentsIds(self._hierarchyRelation, key, self._contextObj.selection.items);
+            for (var i = 0; i < parents.length; i++) {
+               //TODO: проверка на hasMore должна быть тут
+               if (_private.getSelectedChildrenCount(self._hierarchyRelation, parents[i], newSelectedKeys, self._contextObj.selection.items) === 0) {
+                  newSelectedKeys.splice(newSelectedKeys.indexOf(parents[i]), 1);
+               } else {
+                  break;
+               }
+            }
+         });
+
+         this._notify('selectionChange', [ArraySimpleValuesUtil.getArrayDifference(this._contextObj.selection.calculatedSelectedKeys, newSelectedKeys)]);
       }
    });
 
