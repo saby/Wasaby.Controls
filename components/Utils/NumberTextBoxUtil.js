@@ -165,6 +165,9 @@ define('SBIS3.CONTROLS/Utils/NumberTextBoxUtil', [],
              */
             backspacePressed: function (b, e, currentVal, delimiters, decimals, dotOverstep) {
                if (b === 0 && e === 0) {
+                  //При нажатии Backspace в начале поля ввода, caretPosition высчитывался неправильно, и становился отрицательным
+                  //Дальше, чтобы поставить курсор в нужное место вызывался такой код selection.collapse(element, caretPosition)
+                  //iPad зависает, если позвать selection.collapse с отрицательным caretPosition
                   return {value: currentVal, caretPosition: b, step: 1};
                }
                 var dotPosition = currentVal.indexOf('.'),
