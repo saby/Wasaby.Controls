@@ -126,6 +126,14 @@ define('SBIS3.CONTROLS/Action',
           *       title: 'Редактирования товара'
           *    }
           * });
+          *
+          * // Когда вы переопределяете метод execute, важно передать в качестве опции opener
+          * action.execute({
+          *   'componentOptions': cfg.componentOptions,
+          *
+          *   // opener применяется для того чтобы установить логическую связь между двумя окнами
+          *   'opener': self
+          * });
           * </pre>
           */
          execute: function (meta) {

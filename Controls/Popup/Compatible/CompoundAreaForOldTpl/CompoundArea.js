@@ -281,6 +281,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                return this._close(true);
             } if (commandName === 'cancel') {
                return this._close(false);
+            } if (commandName === 'update') {
+               return true;
             } if (commandName === 'resize' || commandName === 'resizeYourself') {
                this._notify('resize', null, { bubbling: true });
             } else if (commandName === 'registerPendingOperation') {

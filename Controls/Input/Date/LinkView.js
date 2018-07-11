@@ -1,6 +1,6 @@
 define('Controls/Input/Date/LinkView', [
    'Core/Control',
-   'Core/helpers/date-helpers',
+   'Core/helpers/Date/getFormattedDateRange',
    'Controls/Calendar/Utils',
    'Controls/Date/model/DateRange',
    'Controls/Input/Date/interface/ILinkView',
@@ -8,7 +8,7 @@ define('Controls/Input/Date/LinkView', [
    'css!Controls/Input/Date/LinkView/LinkView'
 ], function(
    BaseControl,
-   dateHelpers,
+   getFormattedDateRange,
    CalendarControlsUtils,
    DateRangeModel,
    IDateLinkView,
@@ -54,7 +54,7 @@ define('Controls/Input/Date/LinkView', [
 
       _getCaption: function(startValue, endValue, emptyCaption) {
          // As an empty value, use the non-breaking space @nbsp; ('\ xA0') that would not make layout
-         return dateHelpers.getFormattedDateRange(
+         return getFormattedDateRange(
             startValue,
             endValue,
             {

@@ -680,13 +680,13 @@ define([
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
          ctrl._notify = function(e, args) {
-            assert.equal(e, 'onCheckBoxClick');
+            assert.equal(e, 'checkboxClick');
             assert.equal(args[0], 2);
             assert.equal(args[1], 0);
          };
          ctrl._onCheckBoxClick({}, 2, 0);
          ctrl._notify = function(e, args) {
-            assert.equal(e, 'onCheckBoxClick');
+            assert.equal(e, 'checkboxClick');
             assert.equal(args[0], 1);
             assert.equal(args[1], 1);
          };
