@@ -14,6 +14,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/helpers/Hcontrol/doAutofocus',
       'optional!Deprecated/Controls/DialogRecord/DialogRecord',
       'Core/EventBus',
+      'Controls/Popup/Manager/ManagerController',
 
       'Lib/Control/AreaAbstract/AreaAbstract.compatible',
       'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
@@ -36,7 +37,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       CoreConstants,
       doAutofocus,
       DialogRecord,
-      cEventBus
+      cEventBus,
+      ManagerController
    ) {
       function removeOperation(operation, array) {
          var idx = arrayFindIndex(array, function(op) {
@@ -486,8 +488,30 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             // Могут несколько раз позвать закрытие подряд
          },
          _toggleVisible: function(visible) {
-            this.getContainer().closest('.controls-Popup').toggleClass('ws-hidden', !visible);
-            this._isVisible = visible;
+            var popupContainer = this.getContainer().closest('.controls-Popup')[0];
+            if (popupContainer) {
+               // Нужно обновить опции Popup'a, чтобы ws-hidden не затерся/восстановился при синхронизации
+               var controlNode = popupContainer.controlNodes && popupContainer.controlNodes[0];
+               if (controlNode) {
+                  var
+                     id = controlNode.control._options.id,
+                     popupConfig = ManagerController.find(id);
+                  if (popupConfig) {
+                     // Удалим или поставим ws-hidden в зависимости от переданного аргумента
+                     var newClassName = popupConfig.popupOptions.className || '';
+                     if (visible) {
+                        newClassName = newClassName.replace(/ws-hidden/ig, '');
+                     } else if (newClassName.indexOf('ws-hidden') === -1) {
+                        newClassName += ' ws-hidden';
+                     }
+                     popupConfig.popupOptions.className = newClassName;
+
+                     // Сразу обновим список классов на контейнере, чтобы при пересинхронизации он не "прыгал"
+                     popupContainer.className = newClassName;
+                     this._isVisible = visible;
+                  }
+               }
+            }
          },
          _getTemplateComponent: function() {
             return this._compoundControl;
