@@ -60,18 +60,28 @@ define('Controls/Popup/InfoBox',
 
          _open: function(event) {
             this._children.openerInfoBox.open(_private.getCfg(this, event));
+
             clearTimeout(this._openId);
             clearTimeout(this._closeId);
+
             this._openId = null;
             this._closeId = null;
+            this._opened = true;
+
+            this._forceUpdate();
          },
 
          _close: function() {
             this._children.openerInfoBox.close();
+
             clearTimeout(this._openId);
             clearTimeout(this._closeId);
+
             this._openId = null;
             this._closeId = null;
+            this._opened = false;
+
+            this._forceUpdate();
          },
 
          _contentMousedownHandler: function(event) {
