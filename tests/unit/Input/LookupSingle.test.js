@@ -47,7 +47,7 @@ define(['Controls/Input/Lookup', 'WS.Data/Entity/Model', 'WS.Data/Collection/Lis
                keyProperty: 'id'
             }
          };
-         Lookup._private.loadItems(self,self._options).addCallback(function(result) {
+         Lookup._private.loadItems(self, null, self._options.keyProperty, self._options.selectedKeys, self._options.source).addCallback(function(result) {
             assert.equal(result.at(0).getId(), 1);
             assert.equal(result.at(1).getId(), 2);
             assert.equal(result.getCount(), 2);
