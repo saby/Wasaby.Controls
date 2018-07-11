@@ -2087,7 +2087,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      }
                   }
                   var html = content.innerHTML;
-                  var rng = editor.selection.getRng();
+                  var selection = editor.selection;
+                  var rng = selection.getRng();
+                  var isAfterUrl;
                   if (isPlainUrl) {
                      if (rng.collapsed) {
                         var endNode = rng.endContainer;
@@ -2114,7 +2116,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      }
                      if (value.length && offset) {
                         var m = value.match(reUrl);
-                        if (m && m.index + m[0].length === offset) {
+                        isAfterUrl = m && m.index + m[0].length === offset;
+                        if (isAfterUrl) {
                            // Имеем вставку текста сразу после урла, с которым он сольётся - отделить его пробелом в началее
                            // Было бы лучше (намного) если бы этот урл был сразу ссылкой, но тогда сервис декораторов не подхватит его
                            // 93358 https://online.sbis.ru/opendoc.html?guid=6e7ccbf1-001c-43fb-afc1-7887baa96d7c
@@ -2122,6 +2125,34 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         }
                      }
                   }
+                  if (!isPlainUrl && !isAfterUrl && rng.collapsed) {
+                     // Если вставляется не блочный элемент, то нужно убедиться, что он вставляется в блочный элемент, для этого поднять рэнж выше по дереву, если необходимо
+                     // 1175500981 https://online.sbis.ru/opendoc.html?guid=0757be2b-56c9-4714-bb9f-c6f99e90bbf6
+                     var node = rng.commonAncestorContainer;
+                     if (node.nodeType === 3) {
+                        var dom = editor.dom;
+                        if (!Array.prototype.some.call(content.childNodes, dom.isBlock)) {
+                           var parent = dom.getParent(startNode, function (v) { var p = v.parentNode; return dom.isBlock(p) || 1 < p.childNodes.length; }, editor.getBody());
+                           if (parent !== node) {
+                              var atStart = rng.endOffset === 0;
+                              if (atStart || node.nodeValue.length === rng.endOffset) {
+                                 node = parent;
+                              }
+                              else {
+                                 editor.undoManager.ignore(function () {
+                                    selection.setContent('<span data-mce-type="bookmark"></span>');
+                                    var bookmark = dom.split(parent, dom.$('[data-mce-type=bookmark]', selection.getNode())[0]);
+                                    node = bookmark.previousSibling;
+                                    bookmark.remove();
+                                 });
+                              }
+                              selection.select(node, false);
+                              selection.collapse(atStart);
+                           }
+                        }
+                     }
+                  }
+
                   //Замена переносов строк на <br>
                   html = html.replace(/([^>])\n(?!<)/gi, '$1<br />');
 
