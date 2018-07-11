@@ -14,6 +14,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
       'Core/core-merge',
       'Core/Deferred',
       'SBIS3.CONTROLS/CompoundControl',
+      'SBIS3.CONTROLS/ExportCustomizer/Constants',
       'SBIS3.CONTROLS/ExportCustomizer/Utils/CollectionSelectByIds',
       'SBIS3.CONTROLS/Utils/ImportExport/RemoteCall',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
@@ -25,7 +26,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
       'SBIS3.CONTROLS/ScrollContainer'
    ],
 
-   function (CommandDispatcher, cMerge, Deferred, CompoundControl, collectionSelectByIds, RemoteCall, InformationPopupManager, RecordSet, Di, tmpl) {
+   function (CommandDispatcher, cMerge, Deferred, CompoundControl, Constants, collectionSelectByIds, RemoteCall, InformationPopupManager, RecordSet, Di, tmpl) {
       'use strict';
 
       /**
@@ -79,177 +80,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
        * @property {string} fileUuid Uuid стилевого эксель-файла
        * @property {ExportServiceParams} serviceParams Прочие параметры, необходимых для работы БЛ
        */
-
-      var _typeIfDefined = function (type, value) {
-         // Если значение есть - оно должно иметь указанный тип
-         return value !=/*Не !==*/ null && typeof value !== type ? new Error('Value must be a ' + type) : value;
-      };
-
-      /**
-       * Константа (как бы) - Проверочная информация о типах данных опций
-       *
-       * @private
-       * @type {object}
-       */
-      var _OPTION_TYPES = {
-         dialogMode: _typeIfDefined.bind(null, 'boolean'),
-         waitingMode: _typeIfDefined.bind(null, 'boolean'),
-         dialogTitle: _typeIfDefined.bind(null, 'string'),
-         dialogButtonTitle: _typeIfDefined.bind(null, 'string'),
-         presetAddNewTitle: _typeIfDefined.bind(null, 'string'),
-         presetNewPresetTitle: _typeIfDefined.bind(null, 'string'),
-         columnBinderTitle: _typeIfDefined.bind(null, 'string'),
-         columnBinderEmptyTitle: _typeIfDefined.bind(null, 'string'),
-         formatterTitle: _typeIfDefined.bind(null, 'string'),
-         formatterMenuTitle: _typeIfDefined.bind(null, 'string'),
-         serviceParams: function (value) {
-            // Должно быть значение
-            if (!value) {
-               return new Error('Value required');
-            }
-            // и должна быть {@link ExportServiceParams}
-            if (typeof value !== 'object' ||
-               !(value.MethodName && typeof value.MethodName === 'string') ||
-               !(value.Filter ==/*Не ===*/ null || typeof value.Filter === 'object') ||
-               !(value.Pagination ==/*Не ===*/ null || typeof value.Pagination === 'object') ||
-               !(value.HierarchyField ==/*Не ===*/ null || typeof value.HierarchyField === 'string') ||
-               !(value.FileName && typeof value.FileName === 'string')
-            ) {
-               return new Error('Value must be an ExportServiceParams');
-            }
-            return value;
-         },
-         usePresets: _typeIfDefined.bind(null, 'boolean'),
-         staticPresets: function (value) {
-            // Если значение есть
-            if (value) {
-               // оно должно быть массивом
-               if (!Array.isArray(value)) {
-                  return new Error('Value must be array');
-               }
-               // И каждый элемент массива должен быть {@link ExportPreset}
-               if (!value.every(function (v) { return (
-                     typeof v === 'object' &&
-                     (v.id && (typeof v.id === 'string' || typeof v.id === 'number') &&
-                     (v.title && typeof v.title === 'string') &&
-                     (v.fieldIds && Array.isArray(v.fieldIds) && v.fieldIds.every(function (v2) { return !!v2 && typeof v2 === 'string'; }))) &&
-                     (v.fileUuid && typeof v.fileUuid === 'string')
-                  ); })) {
-                  return new Error('Array items must be an ExportPreset');
-               }
-            }
-            return value;
-         },
-         presetNamespace: _typeIfDefined.bind(null, 'string'),
-         selectedPresetId: function (value) {
-            // Если значение есть
-            if (value) {
-               // оно должно быть строкой или числом
-               if (typeof value !== 'string' && typeof value !== 'number') {
-                  return new Error('Value must be string or number');
-               }
-            }
-            return value;
-         },
-         allFields: function (value) {
-            // Должно быть значение
-            if (!value) {
-               return new Error('Value required');
-            }
-            // и быть не пустым массивом или рекодсетом
-            if (!(Array.isArray(value) && value.length) && !(value instanceof RecordSet && value.getCount())) {
-               return new Error('Value must be none empty array or recordset');
-            }
-            var isRecordSet = value instanceof RecordSet;
-            var list = isRecordSet ? value.getRawData() : value;
-            // И каждый элемент массива (или рекодсета) должен быть {@link BrowserColumnInfo}. Но проверить достаточно только на актуальные здесь свойства
-            if (!list.every(function (v) { return (
-                  typeof v === 'object' &&
-                  (v.id && typeof v.id === 'string') &&
-                  (v.title && typeof v.title === 'string')
-               ); })) {
-               return new Error((isRecordSet ? 'RecordSet' : 'Array') + ' items must be a BrowserColumnInfo');
-            }
-            return value;
-         },
-         fieldIds: function (value) {
-            // Если значение есть
-            if (value) {
-               // оно должно быть массивом
-               if (!Array.isArray(value)) {
-                  return new Error('Value must be array');
-               }
-               // И каждый элемент массива должен быть не пустой строкой
-               if (!value.every(function (v) { return !!v && typeof v === 'string'; })) {
-                  return new Error('Array items must be none empty strings');
-               }
-            }
-            return value;
-         },
-         fieldGroupTitles: _typeIfDefined.bind(null, 'object'),
-         fileUuid: _typeIfDefined.bind(null, 'string'),
-         validators: function (value) {
-            // Если значение есть, то оно должна быть массивом
-            if (value && !Array.isArray(value)) {
-               return new Error('Value must be an Array');
-            }
-            if (value) {
-               // И каждый элемент массива должен быть {@link ExportValidator}
-               if (!value.every(function (v) { return (
-                     typeof v === 'object' &&
-                     (v.validator && typeof v.validator === 'function') &&
-                     (!v.params || Array.isArray(params)) &&
-                     (!v.errorMessage || typeof v.errorMessage === 'string') &&
-                     (!v.noFailOnError || typeof v.noFailOnError === 'boolean')
-                  ); })) {
-                  return new Error('Value items must be an ExportValidator');
-               }
-            }
-            return value;
-         },
-         outputCall: function (value) {
-            // Если значение есть
-            if (value) {
-               // оно должно быть объектом
-               if (typeof value !== 'object') {
-                  return new Error('Value must be an object');
-               }
-               // и должно быть {@link ExportRemoteCall} - если получится создать экземпляр RemoteCall - значит это {@link ExportRemoteCall}
-               var instance;
-               try {
-                  instance = new RemoteCall(value);
-               }
-               catch (ex) {
-                  return new Error('Value must be an ExportRemoteCall');
-               }
-            }
-            return value;
-         }
-      };
-
-      /**
-       * онстанта (как бы) - Значения опций по умолчанию
-       *
-       * @private
-       * @type {object}
-       */
-      var _DEFAULT_OPTIONS = {
-         validators: [{
-            validator: function (data, optionGetter) { return !!(data.fieldIds && data.fieldIds.length); },
-            errorMessage: rk('Не выбрано ни одной колонки для экспорта', 'НастройщикЭкспорта')
-         }]
-      };
-
-      /**
-       * Константа (как бы) - Список имён собственных опций компонента, которые не должны входить в общий список (выдаваемый методом getOwnOptionNames)
-       *
-       * @private
-       * @type {Array<string>}
-       */
-      var _SKIP_OWN_OPTIONS_NAMES = [
-         'dialogMode',
-         'waitingMode'
-      ];
 
       var Area = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ExportCustomizer/Area.prototype*/ {
 
@@ -868,7 +698,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
        * @return {object}
        */
       Area.getDefaultOptions = function () {
-         return _DEFAULT_OPTIONS;
+         return Constants.DEFAULT_OPTIONS;
       };
 
       /**
@@ -879,9 +709,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
        * @return {Array<string>}
        */
       Area.getOwnOptionNames = function () {
-         var names = Object.keys(_OPTION_TYPES);
-         for (var i = 0; i < _SKIP_OWN_OPTIONS_NAMES.length; i++) {
-            var name = _SKIP_OWN_OPTIONS_NAMES[i];
+         var names = Object.keys(Constants.OPTION_TYPES);
+         for (var i = 0, list = Constants.SKIP_OWN_OPTIONS_NAMES; i < list.length; i++) {
+            var name = list[i];
             var j = names.indexOf(name);
             names.splice(j, 1);
          }
@@ -896,7 +726,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
        * @return {object}
        */
       Area.getOptionTypes = function () {
-         return _OPTION_TYPES;
+         return Constants.OPTION_TYPES;
       };
 
       /**
