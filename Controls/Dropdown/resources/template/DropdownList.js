@@ -88,17 +88,26 @@ define('Controls/Dropdown/resources/template/DropdownList',
                });
                this._hasHierarchy = this._listModel.hasHierarchy();
             }
+            this._popupOptions = {
+               corner: {
+                  horizontal: 'right'
+               },
+               eventHandlers: {
+                  onResult: this.resultHandler
+               }
+            };
          },
 
          _beforeUpdate: function(newOptions) {
             if (newOptions.rootKey !== this._options.rootKey) {
                this._listModel.setRootKey(newOptions.rootKey);
+               this._hasHierarchy = this._listModel.hasHierarchy();
             }
             if (newOptions.items !== this._options.items) {
                this._listModel.setItems(newOptions);
+               this._hasHierarchy = this._listModel.hasHierarchy();
                this._children.subDropdownOpener.close();
             }
-
          },
 
          _itemMouseEnter: function(event, item, hasChildren) {

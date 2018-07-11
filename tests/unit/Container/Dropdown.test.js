@@ -72,10 +72,7 @@ define(
          dropdownLazyLoad._options = config;
          beforeEach(() => {
             return new Promise((resolve) => {
-               dropdownContainer.saveOptions({
-                  selectedKeys: '[2]',
-                  keyProperty: 'id'
-               });
+               dropdownContainer.saveOptions(config);
                dropdownContainer._beforeMount(config).addCallback(resolve);
             });
          });
