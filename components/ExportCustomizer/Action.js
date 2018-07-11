@@ -12,12 +12,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
    [
       'Core/core-merge',
       'Core/Deferred',
-      'Lib/Control/FloatArea/FloatArea',
       'SBIS3.CONTROLS/Action',
-      'SBIS3.CONTROLS/ExportCustomizer/Area'
+      'SBIS3.CONTROLS/ExportCustomizer/Constants',
+      'SBIS3.CONTROLS/Utils/ImportExport/OptionsTool',
+      'SBIS3.CONTROLS/Utils/InformationPopupManager',
+      'SBIS3.CONTROLS/WaitIndicator'
    ],
 
-   function (cMerge, Deferred, FloatArea, Action, Area) {
+   function (cMerge, Deferred, Action, Constants, OptionsTool, InformationPopupManager, WaitIndicator) {
       'use strict';
 
       /**
@@ -118,6 +120,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * @param {Array<ExportValidator>} options.validators Список валидаторов результатов редактирования (опционально)
           * @param {ExportRemoteCall} [options.outputCall] Информация для вызова метода удалённого сервиса для отправки данных вывода (опционально)
           * @param {boolean} [options.skipCustomization] Не открывать настройщик экспорта, начать экспорт сразу основываясь на предоставленных в опциях данных (опционально)
+          * @param {Lib/Control/Control} [options.opener] Компонент, инициировавщий открытие настройщика экспорта. Используется в отсутствие опции skipCustomization (опционально)
           * @return {Deferred<ExportResults>}
           */
          execute: function (options) {
@@ -136,21 +139,20 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
             if (this._result) {
                return Deferred.fail('Allready open');
             }
-            this._result = new Deferred();
+            var names = (new OptionsTool(Constants.OPTION_TYPES, Constants.DEFAULT_OPTIONS, Constants.SKIP_OWN_OPTIONS_NAMES)).getOwnOptionNames();
             var defaults = this._options;
-            var areaOptions = Area.getOwnOptionNames().reduce(function (acc, name) {
-               var value = options[name];
-               acc[name] = value !== undefined ? value : defaults[name];
-               return acc;
-            }, {});
+            var areaOptions = names.reduce(function (r, v) { var o = options[v]; r[v] = o !== undefined ? o : defaults[v]; return r; }, {});
+            this._result = new Deferred();
             if (options.skipCustomization) {
-               (new Area(areaOptions)).complete().addCallbacks(
-                  this._complete.bind(this, true),
-                  this._completeWithError.bind(this, true)
-               );
+               require(['SBIS3.CONTROLS/ExportCustomizer/Area'], function (Area) {
+                  (new Area(areaOptions)).complete().addCallbacks(
+                     this._complete.bind(this, true),
+                     this._completeWithError.bind(this, true)
+                  );
+               }.bind(this));
             }
             else {
-               this._open(areaOptions, { opener: options.opener });
+               this._open(areaOptions, options.opener);
             }
             return this._result;
          },
@@ -160,35 +162,56 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           *
           * @protected
           * @param {object} options Входные аргументы("мета-данные") настройщика экспорта (согласно описанию в методе {@link execute})
+          * @param {Lib/Control/Control} [opener] Компонент, инициировавщий открытие настройщика экспорта, если есть (опционально)
           */
-         _open: function (options, dialogOptions) {
-            var componentOptions = cMerge({
-               dialogMode: true,
-               handlers: {
-                  onComplete: this._onAreaComplete.bind(this),
-                  onFatalError: this._onAreaError.bind(this)
+         _open: function (options, opener) {
+            var wiatIndicator = new WaitIndicator(this._getWaitIndicatorTarget(opener), rk('Загружается', 'НастройщикЭкспорта'), {overlay:'dark'}, 1000);
+            require(['SBIS3.CONTROLS/ExportCustomizer/Area', 'Lib/Control/FloatArea/FloatArea'], function (Area, FloatArea) {
+               wiatIndicator.remove();
+               var componentOptions = cMerge({
+                  dialogMode: true,
+                  handlers: {
+                     onComplete: this._onAreaComplete.bind(this),
+                     onFatalError: this._onAreaError.bind(this)
+                  }
+               }, options);
+               this._areaContainer = new FloatArea({
+                  opener: opener || this,
+                  direction: 'left',
+                  animation: 'slide',
+                  isStack: true,
+                  autoCloseOnHide: true,
+                  template: 'SBIS3.CONTROLS/ExportCustomizer/Area',
+                  className: 'ws-float-area__block-layout controls-ExportCustomizer__area',
+                  closeByExternalClick: true,
+                  closeButton: true,
+                  componentOptions: componentOptions,
+                  handlers: {
+                     onClose: this._onAreaClose.bind(this)
+                  }
+               });
+               this._notify('onSizeChange');
+               this.subscribeOnceTo(this._areaContainer, 'onAfterClose', this._notify.bind(this, 'onSizeChange'));
+            }.bind(this));
+         },
+
+         /*
+          * Найти подходящий контейнер для индикатора ожидания
+          *
+          * @protected
+          * @param {Lib/Control/Control} opener Компонент, с которго следует начать поиск
+          * @return {jQuery}
+          */
+         _getWaitIndicatorTarget: function (opener) {
+            if (opener) {
+               var $container = opener.getContainer();
+               if ($container) {
+                  $container = $container.parents('[data-component]:not(html)').last();
+                  if ($container.length) {
+                     return $container;
+                  }
                }
-            }, options);
-            this._areaContainer = new FloatArea({
-               opener: dialogOptions.opener || this,
-               direction: 'left',
-               animation: 'slide',
-               isStack: true,
-               autoCloseOnHide: true,
-               //parent: this,
-               template: 'SBIS3.CONTROLS/ExportCustomizer/Area',
-               className: 'ws-float-area__block-layout controls-ExportCustomizer__area',
-               closeByExternalClick: true,
-               //caption: '',
-               closeButton: true,
-               componentOptions: componentOptions,
-               handlers: {
-                  onClose: this._onAreaClose.bind(this)
-               }
-            });
-            this._notify('onSizeChange');
-            this.subscribeOnceTo(this._areaContainer, 'onAfterClose', this._notify.bind(this, 'onSizeChange'));
-            //this._notify('onOpen');
+            }
          },
 
          /**
@@ -271,13 +294,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           */
          _completeWithError: function (withAlert, err) {
             if (withAlert) {
-               Area.showMessage(
-                  'error',
-                  rk('Ошибка', 'НастройщикЭкспорта'),
-                  ((err && err.message ? err.message : err) || rk('При получении данных поизошла неизвестная ошибка', 'НастройщикЭкспорта')) + '\n' +
-                     rk('Настройка экспорта будет прервана', 'НастройщикЭкспорта')
-               )
-                  .addCallback(this._complete.bind(this, false, err));
+               var promise = new Deferred();
+               InformationPopupManager.showMessageDialog({
+                  status: 'error',
+                  message: rk('Ошибка', 'НастройщикЭкспорта'),
+                  details: ((err && err.message ? err.message : err) || rk('При получении данных поизошла неизвестная ошибка', 'НастройщикЭкспорта')) +
+                           '\n' + rk('Настройка экспорта будет прервана', 'НастройщикЭкспорта')
+               }, promise.callback.bind(promise, null));
+               promise.addCallback(this._complete.bind(this, false, err));
             }
             else {
                this._complete(false, err);

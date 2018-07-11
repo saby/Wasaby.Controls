@@ -15,8 +15,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
       'Core/Deferred',
       'SBIS3.CONTROLS/CompoundControl',
       'SBIS3.CONTROLS/ExportCustomizer/Constants',
-      'SBIS3.CONTROLS/Utils/ImportExport/OptionsTool',
       'SBIS3.CONTROLS/ExportCustomizer/Utils/CollectionSelectByIds',
+      'SBIS3.CONTROLS/Utils/ImportExport/OptionsTool',
       'SBIS3.CONTROLS/Utils/ImportExport/RemoteCall',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
       'WS.Data/Collection/RecordSet',
@@ -27,7 +27,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
       'SBIS3.CONTROLS/ScrollContainer'
    ],
 
-   function (CommandDispatcher, cMerge, Deferred, CompoundControl, Constants, OptionsTool, collectionSelectByIds, RemoteCall, InformationPopupManager, RecordSet, Di, tmpl) {
+   function (CommandDispatcher, cMerge, Deferred, CompoundControl, Constants, collectionSelectByIds, OptionsTool, RemoteCall, InformationPopupManager, RecordSet, Di, tmpl) {
       'use strict';
 
       /**
@@ -713,7 +713,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             var item = items[i];
             var j = list.indexOf(item);
             if (j !== -1) {
-               list.splice(о, 1);
+               list.splice(j, 1);
             }
          }
       };
