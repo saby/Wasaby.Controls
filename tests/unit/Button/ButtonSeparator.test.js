@@ -2,17 +2,13 @@ define(['Controls/Button/ButtonSeparator'], function(Separator) {
    'use strict';
    var separator;
    describe('Controls/Button/ButtonSeparator', function() {
-      function getSeparator() {
-         separator = new Separator();
-      }
-
       function destroySeparator() {
          separator.destroy();
          separator = undefined;
       }
 
       it('counter open state', function() {
-         getSeparator();
+         separator = new Separator();
          var opt = {
             value: true
          };
@@ -23,7 +19,7 @@ define(['Controls/Button/ButtonSeparator'], function(Separator) {
       });
 
       it('counter close state', function() {
-         getSeparator();
+         separator = new Separator();
          var opt = {
             value: false
          };
@@ -34,7 +30,7 @@ define(['Controls/Button/ButtonSeparator'], function(Separator) {
       });
 
       it('update counter open state to close state', function() {
-         getSeparator();
+         separator = new Separator();
          var opt = {
             value: true
          };
@@ -48,7 +44,7 @@ define(['Controls/Button/ButtonSeparator'], function(Separator) {
       });
 
       it('update counter close state to open state', function() {
-         getSeparator();
+         separator = new Separator();
          var opt = {
             value: false
          };
