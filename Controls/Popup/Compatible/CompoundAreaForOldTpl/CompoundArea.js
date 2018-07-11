@@ -219,6 +219,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._templateOptions._compoundArea = this;
             this._templateOptions.parent = this;
 
+            this.handle('onInit');
             this.handle('onBeforeControlsLoad');
             this._compoundControl = new (Component)(this._templateOptions);
             this.handle('onBeforeShow');
