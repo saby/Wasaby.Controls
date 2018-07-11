@@ -5,7 +5,8 @@ define('Controls-demo/EngineBrowser/Browser', [
    'css!Controls-demo/EngineBrowser/Browser',
    'Controls/EngineBrowser',
    'tmpl!Controls-demo/EngineBrowser/resources/filterPanelAddItemsTemplate',
-   'tmpl!Controls-demo/EngineBrowser/resources/filterPanelItemsTemplate'
+   'tmpl!Controls-demo/EngineBrowser/resources/filterPanelItemsTemplate',
+   'tmpl!Controls-demo/EngineBrowser/resources/filterButtonEngineTemplate'
 ], function(Control, Memory, template) {
    'use strict';
 
@@ -14,7 +15,8 @@ define('Controls-demo/EngineBrowser/Browser', [
       {key: 2, title: 'Russia'},
       {key: 3, title: 'UK'},
       {key: 4, title: 'Japan'},
-      {key: 5, title: 'China'}
+      {key: 5, title: 'China'},
+      {key: 6, title: 'Australia'}
    ];
 
    var sourceData = [
@@ -42,6 +44,66 @@ define('Controls-demo/EngineBrowser/Browser', [
       {id: 23, title: 'Petr', country: 'USA'}
    ];
 
+   var fastFilterData = [
+      {
+         id: 'title',
+         resetValue: 'По имени',
+         value: 'Petr',
+         properties: {
+            keyProperty: 'title',
+            displayProperty: 'title',
+            source: {
+               module: 'WS.Data/Source/Memory',
+               options: {
+                  data: [
+                     {id: 0, title: 'По имени'},
+                     {id: 1, title: 'Sasha'},
+                     {id: 2, title: 'Petr'},
+                     {id: 4, title: 'Ivan'},
+                     {id: 5, title: 'Andrey'}
+                  ]
+               }
+            }
+         }
+      },
+      {
+         id: 'id',
+         resetValue: 0,
+         value: 4,
+         properties: {
+            keyProperty: 'id',
+            displayProperty: 'title',
+            source: {
+               module: 'WS.Data/Source/Memory',
+               options: {
+                  data: [
+                     {id: 0, title: 'По id'},
+                     {id: 1, title: '1'},
+                     {id: 2, title: '2'},
+                     {id: 3, title: '3'},
+                     {id: 4, title: '4'}
+                  ]
+               }
+            }
+         }
+      },
+      {
+         id: 'country',
+         resetValue: 'USA',
+         value: 'USA',
+         properties: {
+            keyProperty: 'title',
+            displayProperty: 'title',
+            source: {
+               module: 'WS.Data/Source/Memory',
+               options: {
+                  data: countries
+               }
+            }
+         }
+      }
+   ];
+
    var items = [
       {
          id: 'title',
@@ -58,13 +120,13 @@ define('Controls-demo/EngineBrowser/Browser', [
          id: 'FIO',
          value: '',
          resetValue: '',
-         textValue: 'FIO',
+         textValue: 'Ser name',
          visibility: true
       },
       {
          id: 'country',
-         value: ['USA'],
-         resetValue: ['USA'],
+         value: 'USA',
+         resetValue: 'USA',
          textValue: 'country',
          visibility: false,
          source: new Memory({
@@ -82,7 +144,7 @@ define('Controls-demo/EngineBrowser/Browser', [
             idProperty: 'id',
             data: sourceData
          }),
-
+         _fastFilterSource: fastFilterData,
          _items: items
       });
    return ModuleClass;

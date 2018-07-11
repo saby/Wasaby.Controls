@@ -174,8 +174,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   if (needNewPreset) {
                      var newPreset = this._addPreset();
                      this.sendCommand('subviewChanged', 'create', newPreset);
-                     this._startEditingMode();
-                     this._needNewPreset = null;
+                     // Анимация для FloatArea моргает при изменении контента во время самой анимации. Сейчас можно поправить только так.
+                     // https://online.sbis.ru/opendoc.html?guid=62b89eca-84e1-4185-9a1b-0b8940e51a0a
+                     setTimeout(function() {
+                        this._startEditingMode();
+                        this._needNewPreset = null;
+                     }.bind(this), 200);
                   }
                   this._updateSelector();
                   if (!needNewPreset) {
