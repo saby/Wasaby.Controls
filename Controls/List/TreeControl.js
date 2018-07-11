@@ -149,11 +149,13 @@ define('Controls/List/TreeControl', [
          }
       },
 
-      _onAfterItemsRemoveHandler: function(e, keys) {
+      _onAfterItemsRemoveHandler: function(e, keys, result) {
          var
             self = this,
             newSelectedKeys = this.context.get('selection').calculatedSelectedKeys.slice(),
             parents;
+
+         this._notify('afterItemsRemove', [keys, result]);
 
          ArraySimpleValuesUtil.removeSubArray(newSelectedKeys, keys);
 

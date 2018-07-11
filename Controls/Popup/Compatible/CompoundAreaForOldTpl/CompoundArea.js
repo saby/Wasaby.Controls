@@ -117,7 +117,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          _beforeMount: function() {
             this._className = 'controls-CompoundArea';
-            this._className += ' ws-float-area'; // Старые шаблоны завязаны селекторами на этот класс.
+            this._className += (this._options.type === 'stack') ? ' ws-float-area' : ' ws-window'; // Старые шаблоны завязаны селекторами на этот класс.
             this._commandHandler = this._commandHandler.bind(this);
             this._commandCatchHandler = this._commandCatchHandler.bind(this);
             this._templateName = this._options.template;
@@ -219,6 +219,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._templateOptions._compoundArea = this;
             this._templateOptions.parent = this;
 
+            this.handle('onInit');
             this.handle('onBeforeControlsLoad');
             this._compoundControl = new (Component)(this._templateOptions);
             this.handle('onBeforeShow');
@@ -254,6 +255,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   this.getContainer().prepend($('<div class="ws-window-titlebar"><div class="ws-float-area-title ws-float-area-title-generated">' + this._options.caption + '</div></div>'));
                   this.getContainer().addClass('controls-CompoundArea-headerPadding');
                }
+            } else if (customHeaderContainer.length) {
+               var container = $('.controls-DialogTemplate', this.getContainer());
+               container.prepend(customHeaderContainer.addClass('controls-CompoundArea-custom-header'));
+               this.getContainer().addClass('controls-CompoundArea-headerPadding');
             } else {
                this.getContainer().removeClass('controls-CompoundArea-headerPadding');
             }
@@ -281,6 +286,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                return this._close(true);
             } if (commandName === 'cancel') {
                return this._close(false);
+            } if (commandName === 'update') {
+               return true;
             } if (commandName === 'resize' || commandName === 'resizeYourself') {
                this._notify('resize', null, { bubbling: true });
             } else if (commandName === 'registerPendingOperation') {

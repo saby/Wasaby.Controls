@@ -1,5 +1,6 @@
 {{/* Выбор провайдера парсинга */}}
 <div class="controls-ImportCustomizer-Provider-View">
+   <ws:if data="{{parsers && parsers.length}}">
    <div class="controls-ImportCustomizer-Provider-View__line-1">
       {[НастройщикИмпорта@@Раздел содержится]}
       <SBIS3.CONTROLS.DropdownList
@@ -14,6 +15,7 @@
          selectedKeys="{{parser ? [parser] : undefined}}"
       />
    </div>
+   </ws:if>
    <div class="controls-ImportCustomizer-Provider-View__line-2">
       {[НастройщикИмпорта@@Разбор начинать с]}
       <SBIS3.CONTROLS.NumberTextBox

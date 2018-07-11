@@ -178,6 +178,25 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          });
       });
    
+      it('Suggest::_changeValueHandler', function() {
+         var self = getComponentObject();
+         var suggestComponent = new Suggest();
+      
+         self._options.searchParam = 'searchParam';
+         self._options.minSearchLength = 3;
+         suggestComponent.saveOptions(self._options);
+         suggestComponent._active = true;
+   
+         suggestComponent._changeValueHandler(null, 't');
+         assert.equal(suggestComponent._searchValue, '');
+   
+         suggestComponent._changeValueHandler(null, 'te');
+         assert.equal(suggestComponent._searchValue, '');
+   
+         suggestComponent._changeValueHandler(null, 'test');
+         assert.equal(suggestComponent._searchValue, 'test');
+      });
+   
       it('Suggest::_private.loadDependencies', function(done) {
          var self = getComponentObject();
 
@@ -233,6 +252,14 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          
          assert.isTrue(suggestActivated);
          assert.equal(suggestComponent._filter.currentTab, 'test');
+      });
+   
+      it('Suggest::searchDelay on tabChange', function() {
+         var suggestComponent = new Suggest();
+         suggestComponent.activate = function() {};
+         
+         suggestComponent._tabsSelectedKeyChanged(null, 'test');
+         assert.equal(suggestComponent._searchDelay, 0);
       });
    
       it('Suggest::_beforeUpdate', function() {
