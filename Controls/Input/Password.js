@@ -39,9 +39,9 @@ define('Controls/Input/Password',
             });
          },
 
-         _beforeUpdate: function() {
+         _beforeUpdate: function(newOptions) {
             this._simpleViewModel.updateOptions({
-               value: this._options.value
+               value: newOptions.value
             });
          },
 
