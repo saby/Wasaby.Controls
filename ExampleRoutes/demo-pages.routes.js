@@ -96,6 +96,15 @@ module.exports = function(Component) {
          }, []);
       },
 
+      // Демо-пример: заголовки(разделители) и кнопка назад
+      '/demo-ws4-header-separator': function(req, res) {
+         requirejs('Controls-demo/Headers/axureDemoHeader');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Controls-demo/Headers/axureDemoHeader',
+            initDependencies: false
+         }, []);
+      },
+
       /*
         ### СТРАНИЧКИ ДЛЯ СТАРЫХ КОНТРОЛОВ - WS3. ### 
         ### Для построения страницы используется шаблон VIEW. ###
