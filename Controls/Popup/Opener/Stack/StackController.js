@@ -69,6 +69,7 @@ define('Controls/Popup/Opener/Stack/StackController',
             if (this._checkContainer(item, container)) {
                _private.prepareSizes(item, container);
                this._stack.add(item, 0);
+               item.popupOptions.className += ' controls-Stack__opened';
                this._update();
             }
          },
@@ -83,7 +84,7 @@ define('Controls/Popup/Opener/Stack/StackController',
          elementDestroyed: function(element, container) {
             this._destroyDeferred[element.id] = new Deferred();
             if (cConstants.browser.chrome && !cConstants.browser.isMobilePlatform) {
-               this._getTemplateContainer(container).classList.add('controls-Stack_hide');
+               container.classList.remove('controls-Stack__opened');
                this._fixTemplateAnimation(element);
             } else {
                _private.elementDestroyed(this, element);
@@ -93,8 +94,7 @@ define('Controls/Popup/Opener/Stack/StackController',
          },
 
          elementAnimated: function(element, container) {
-            var templateContainer = this._getTemplateContainer(container);
-            if (templateContainer.classList.contains('controls-Stack_hide')) {
+            if (!container.classList.contains('controls-Stack__opened')) {
                _private.elementDestroyed(this, element);
             }
          },
