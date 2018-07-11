@@ -143,7 +143,7 @@ define([
             listModel: listViewModel,
             itemActions: actions,
             showToolbar: true,
-            itemActionsType: 'outside'
+            itemActionsPosition: 'outside'
          };
          var ctrl = new ItemActionsControl(cfg);
          ctrl._beforeMount(cfg);
@@ -201,7 +201,7 @@ define([
 
       it('getDefaultOptions ', function() {
          var defOpts = ItemActionsControl.getDefaultOptions();
-         assert.equal(defOpts.itemActionsType, 'inside');
+         assert.equal(defOpts.itemActionsPosition, 'inside');
          assert.isTrue(defOpts.itemActionVisibilityCallback());
       });
 
