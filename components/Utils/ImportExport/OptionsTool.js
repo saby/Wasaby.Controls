@@ -112,19 +112,19 @@ define('SBIS3.CONTROLS/Utils/ImportExport/OptionsTool',
           * Проверить собственные опции компонента на допустимость их значений
           * @protected
           * @param {object} options Опции компонента
-          * @param {function(Array<string>, object):Array<string>} [namesFilter] Фильт имён опций, которые подлежат проверке. Применяется при необходимости варьировать проверку в зависимости от значений других опций (опционально)
+          * @param {function(string, object):boolean} [nameFilter] Фильтр имён опций, которые подлежат проверке. Применяется при необходимости варьировать проверку в зависимости от значений других опций (опционально)
           */
-         validateOptions: function (options, namesFilter) {
+         validateOptions: function (options, nameFilter) {
             if (!options || typeof options !== 'object') {
                throw new Error('Options must be an object');
             }
-            if (namesFilter && typeof namesFilter !== 'function') {
-               throw new Error('NamesFilter must be a function');
+            if (nameFilter && typeof nameFilter !== 'function') {
+               throw new Error('NameFilter must be a function');
             }
             var types = this._types;
             var names = Object.keys(types);
-            if (namesFilter) {
-               names = namesFilter.call(null, names, options);
+            if (nameFilter) {
+               names = names.filter(function (v) { return nameFilter.call(null, v, options); });
             }
             if (names && names.length) {
                for (var i = 0; i < names.length; i++) {
