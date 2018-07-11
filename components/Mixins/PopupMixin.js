@@ -207,6 +207,11 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
              * @type {Boolean}
              */
             bodyBounds: false,
+            
+            /**
+             * @cfg {Boolean} Пересчитывать положение попапа при отображении клавиатуры на мобильных устройствах
+             */
+            recalculateOnKeyboardShow: true,
             isHint: true,
             parentContainer: '',
             /*
@@ -293,9 +298,11 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
           }
           return this._options.parentContainer;
       },
-
-      _touchKeyboardMoveHandler: function(){
-         this.recalcPosition();
+   
+      _touchKeyboardMoveHandler: function() {
+         if (this._options.recalculateOnKeyboardShow) {
+            this.recalcPosition();
+         }
       },
 
       //Подписка на изменение состояния таргета
