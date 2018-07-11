@@ -104,6 +104,7 @@ define('Controls/List/TreeControl', [
          this._children.baseControl.moveItems(items, target, position);
       },
       reload: function() {
+         this._loadedNodes = {};
          this._children.baseControl.reload();
       },
       editItem: function(options) {
