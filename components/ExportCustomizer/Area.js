@@ -208,8 +208,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * @param {object} options Опции компонента
           */
          _processOptions: function (options) {
-            optionsTool.resolveOptions(options);
-            optionsTool.validateOptions(options, !options.dialogMode ? function (names, options) { return _arrayRemove(names, 'dialogTitle', 'dialogButtonTitle'); } : null);
+            optionsTool.resolveOptions(options, true);
+            optionsTool.validateOptions(options, !options.dialogMode ? function (name, options) { return ['dialogTitle', 'dialogButtonTitle'].indexOf(name) === -1; } : null);
             this._reshapeOptions(options);
          },
 
@@ -263,6 +263,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                presets: presetsOptions,
                columnBinder: {
                   title: options.columnBinderTitle || undefined,
+                  fieldGroupTitles: options.fieldGroupTitles || undefined,
                   allFields: allFields,
                   fieldIds: !usePresets && fieldIds && fieldIds.length ? fieldIds.slice() : undefined
                },
