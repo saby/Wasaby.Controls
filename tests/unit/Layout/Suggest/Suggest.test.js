@@ -178,6 +178,25 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          });
       });
    
+      it('Suggest::_changeValueHandler', function() {
+         var self = getComponentObject();
+         var suggestComponent = new Suggest();
+      
+         self._options.searchParam = 'searchParam';
+         self._options.minSearchLength = 3;
+         suggestComponent.saveOptions(self._options);
+         suggestComponent._active = true;
+   
+         suggestComponent._changeValueHandler(null, 't');
+         assert.equal(suggestComponent._searchValue, '');
+   
+         suggestComponent._changeValueHandler(null, 'te');
+         assert.equal(suggestComponent._searchValue, '');
+   
+         suggestComponent._changeValueHandler(null, 'test');
+         assert.equal(suggestComponent._searchValue, 'test');
+      });
+   
       it('Suggest::_private.loadDependencies', function(done) {
          var self = getComponentObject();
 

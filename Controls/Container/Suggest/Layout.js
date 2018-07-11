@@ -211,7 +211,7 @@ define('Controls/Container/Suggest/Layout',
          },
          
          _changeValueHandler: function(event, value) {
-            this._searchValue = value;
+            this._searchValue = _private.shouldSearch(this, value) ? value : '';
             
             /* preload suggest dependencies on value changed */
             _private.loadDependencies(this);
