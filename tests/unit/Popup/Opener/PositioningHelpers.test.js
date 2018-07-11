@@ -5,9 +5,10 @@ define(
       'Controls/Popup/Opener/Notification/NotificationStrategy',
       'Controls/Popup/Opener/Dialog/DialogStrategy',
       'Controls/Popup/Opener/Sticky/StickyController',
+      'Controls/Popup/Opener/Dialog/DialogController',
    ],
 
-   function(Stack, Sticky, Notification, Dialog, StickyController) {
+   function(Stack, Sticky, Notification, Dialog, StickyController, DialogController) {
       'use strict';
       describe('Controls/Popup/Opener/Strategy', function() {
          describe('Sticky', function() {
@@ -231,6 +232,23 @@ define(
                assert.equal(position.left, 0);
                assert.equal(position.width, 600);
             });
+
+            it('dialog container sizes after update', function() {
+               DialogController.prepareConfig = () => {
+                  assert.equal(container.style.width, 'auto');
+                  assert.equal(container.style.height, 'auto');
+               };
+               let container = {
+                  style: {
+                     width: 10,
+                     height: 10
+                  }
+               };
+               DialogController.elementUpdated(null, container);
+               assert.equal(container.style.width, 10);
+               assert.equal(container.style.height, 10);
+            });
+
          });
 
          describe('Stack', function() {

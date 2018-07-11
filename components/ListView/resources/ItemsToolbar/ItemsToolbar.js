@@ -521,6 +521,7 @@ define('SBIS3.CONTROLS/ListView/resources/ItemsToolbar/ItemsToolbar',
                 if (this._options.touchMode || animate) {
                    this._untrackingTarget();
                 }
+                this._currentTarget = null;
 
                 if (this._options.touchMode && animate) {
                    this._itemsActions && this._itemsActions.applyItemActions();
@@ -530,7 +531,6 @@ define('SBIS3.CONTROLS/ListView/resources/ItemsToolbar/ItemsToolbar',
                    this.hideItemsActions();
                    this._notify('onItemsToolbarHide');
                 }
-                this._currentTarget = null;
              }
           },
           /**

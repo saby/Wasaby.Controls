@@ -70,10 +70,10 @@ define('Controls/List/interface/IListControl', [
     */
 
    /**
-    * @name Controls/List/interface/IListControl#itemActionsType
+    * @name Controls/List/interface/IListControl#itemActionsPosition
     * @cfg {String} item operations display type
-    * @variant inline
-    * @variant underline
+    * @variant inside
+    * @variant outside
     */
 
    /**
