@@ -44,19 +44,26 @@ define('Controls/Input/Dropdown',
          _defaultContentTemplate: defaultContentTemplate,
          _text: '',
 
+         _beforeMount: function() {
+            this._setText = this._setText.bind(this);
+         },
+
          _selectedItemsChangedHandler: function(event, items) {
+            this._setText(items);
+            this._icon = items[0].get('icon');
+            this._notify('selectedKeysChanged', [_private.getSelectedKeys(items, this._options.keyProperty)]);
+         },
+
+         _setText: function(items) {
             this._isEmptyItem = getPropValue(items[0], this._options.keyProperty) === null;
             if (this._isEmptyItem) {
                this._text = dropdownUtils.prepareEmpty(this._options.emptyText);
             } else {
                this._text = getPropValue(items[0], this._options.displayProperty || 'title');
             }
-
             if (items.length > 1) {
                this._text += ' и еще' + (items.length - 1);
             }
-            this._icon = items[0].get('icon');
-            this._notify('selectedKeysChanged', [_private.getSelectedKeys(items, this._options.keyProperty)]);
          }
       });
 

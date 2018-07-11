@@ -976,8 +976,7 @@ define('SBIS3.CONTROLS/FieldLink',
                     displayFields.push(rec.get(self._options.displayProperty) || '');
                  });
               }
-              // Чтобы не тянуть в зависимости htmlToText из Deprecated/helpers/string-helpers,
-              // выполним replace из него прямо тут
+
               return escapeTagsFromStr(displayFields.join(', ').replace(/<br>/g, '\n'), '\\w+');
           },
 

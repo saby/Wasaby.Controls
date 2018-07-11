@@ -9,8 +9,9 @@ define('Controls/Popup/Compatible/Layer', [
    'Core/ExtensionsManager',
    'Core/moduleStubs',
    'Core/IoC',
-   'WS.Data/Source/SbisService'
-], function(Deferred, ParallelDeferred, Constants, RightsManager, ExtensionsManager, moduleStubs, IoC, SbisService) {
+   'WS.Data/Source/SbisService',
+   'WS.Data/Chain'
+], function(Deferred, ParallelDeferred, Constants, RightsManager, ExtensionsManager, moduleStubs, IoC, SbisService, Chain) {
    'use strict';
 
    var loadDeferred;
@@ -161,7 +162,7 @@ define('Controls/Popup/Compatible/Layer', [
 
       new SbisService({endpoint: 'Биллинг'}).call('ДанныеЛицензии', {}).addCallbacks(function(record) {
          if (record && record.getRow().get('ПараметрыЛицензии')) {
-            var data = record.getRow().get('ПараметрыЛицензии').toObject();
+            var data = Chain(record.getRow().get('ПараметрыЛицензии')).toObject();
             def.callback(data);
          } else {
             def.callback(defaultLicense);
@@ -200,7 +201,9 @@ define('Controls/Popup/Compatible/Layer', [
          coreControl.prototype.getId = controlCompatible.getId;
          
          loadDeferred.callback(result);
-         require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!SBIS3.ENGINE/Controls/MiniCard']);
+         moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!SBIS3.ENGINE/Controls/MiniCard']).addErrback(function(err) {
+            IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', err);
+         });
       }, function(e) {
          IoC.resolve('ILogger').error('Layer', 'Can\'t load core extensions', e);
 
@@ -209,7 +212,9 @@ define('Controls/Popup/Compatible/Layer', [
          coreControl.prototype.getId = controlCompatible.getId;
 
          loadDeferred.callback(result);
-         require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!SBIS3.ENGINE/Controls/MiniCard']);
+         moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!SBIS3.ENGINE/Controls/MiniCard']).addErrback(function(err) {
+            IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', err);
+         });
       });
    }
 
@@ -271,7 +276,9 @@ define('Controls/Popup/Compatible/Layer', [
                finishLoad(loadDeferred, result);
             }, function(e) {
                IoC.resolve('ILogger').error('Layer', 'Can\'t load data providers', e);
-               finishLoad(loadDeferred, result);
+               loadDepsDef.addCallback(function() {
+                  finishLoad(loadDeferred, result);
+               });
             });
 
          }
