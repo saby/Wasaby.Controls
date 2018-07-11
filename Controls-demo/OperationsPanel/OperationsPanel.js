@@ -201,7 +201,7 @@ define('Controls-demo/OperationsPanel/OperationsPanel', [
          });
       },
 
-      _selectionChange: function(selection) {
+      _selectionChange: function(e, selection) {
          var selected = selection.selected;
          if (!selected || !selected.length) {
             defaultItems.shift();
