@@ -6,7 +6,7 @@
             on:sendResult="_sendResult()"
             on:close="_close()"
             on:keyup="_keyUp()"
-            on:animationend="_animated()"
+            on:transitionend="_animated()"
             on:resize="_update()">
     </ws:partial>
     <Controls.Event.Emitter event="resize" on:resize="_update()"/>
