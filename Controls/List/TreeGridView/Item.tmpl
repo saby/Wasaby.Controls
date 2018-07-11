@@ -3,7 +3,11 @@
       <div attr:class="{{itemData.getCurrentColumn().cellClasses}} controls-TreeGrid__row"
            attr:style="{{itemData.ladderSupport ? itemData.getCurrentColumn().cellStyleForLadder}}">
          <ws:if data="{{itemData.multiSelectVisibility && itemData.columnIndex === 0}}">
-            <ws:partial template="{{multiSelectTpl}}" multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" attr:class="controls-GridView__checkbox"/>
+            <ws:partial template="{{multiSelectTpl}}"
+                        triState="{{itemData.dispItem.isNode()}}"
+                        multiSelectStatus="{{itemData.multiSelectStatus}}"
+                        key="{{itemData.key}}"
+                        attr:class="controls-GridView__checkbox"/>
          </ws:if>
          <ws:else>
             <ws:if data="{{itemData.multiSelectVisibility && itemData.columnIndex === 1 || !itemData.multiSelectVisibility && itemData.columnIndex === 0}}">
