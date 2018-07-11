@@ -287,6 +287,9 @@
       "SBIS3.CONTROLS/RichEditor",
       "SBIS3.CONTROLS/RichEditor/*"
     ],
+    "exclude": [
+      "css!SBIS3.CONTROLS/RichEditor/third-party/tinymce/skins/lightgray/*"
+    ],
     "output": "sbis3controls-richeditor.package.js"
   },
   {
