@@ -61,8 +61,9 @@ define('Controls/List/ListControl', [
          }
       },
 
-      _onAfterItemsRemoveHandler: function(e, keys) {
-         this._notify('selectionChange', [{added: [], removed: keys}]);
+      _onAfterItemsRemoveHandler: function(e, items, result) {
+         this._notify('selectionChange', [{added: [], removed: items}]);
+         this._notify('afterItemsRemove', [items, result]);
       }
    });
 
