@@ -216,6 +216,20 @@ define('Controls/Input/Number/InputProcessor',
                var
                   shift = 0;
 
+               //If all integers were removed, then we need to set first character in integers part to 0
+               if (splitValue.before === '' || splitValue.before === '-') {
+                  if (splitValue.after === '') {
+                     splitValue.before = '';
+                  }
+                  if (splitValue.after[0] === '.') {
+                     if (splitValue.after[1]) {
+                        splitValue.before = '0';
+                     } else {
+                        splitValue.after = '';
+                     }
+                  }
+               }
+
                return {
                   value: _private.getValueWithDelimiters(splitValue),
                   position: _private.getCursorPosition(splitValue, shift)
@@ -243,6 +257,20 @@ define('Controls/Input/Number/InputProcessor',
                   } else {
                      splitValue.before += '.';
                      splitValue.after = splitValue.after.slice(1);
+                  }
+               }
+
+               //If all integers were removed, then we need to set first character in integers part to 0
+               if (splitValue.before === '' || splitValue.before === '-') {
+                  if (splitValue.after === '') {
+                     splitValue.before = '';
+                  }
+                  if (splitValue.after[0] === '.') {
+                     if (splitValue.after[1]) {
+                        splitValue.before = '0';
+                     } else {
+                        splitValue.after = '';
+                     }
                   }
                }
 
