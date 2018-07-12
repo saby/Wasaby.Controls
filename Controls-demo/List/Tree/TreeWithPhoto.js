@@ -23,23 +23,23 @@ define('Controls-demo/List/Tree/TreeWithPhoto', [
             data: [
                {  id: 1,   title: 'Node',         'Раздел': null, 'Раздел@': true,  'Раздел$': null, photo: '' },
                {  id: 11,  title: 'Node',         'Раздел': 1,    'Раздел@': true,  'Раздел$': null, photo: '' },
-               {  id: 111, title: 'Leaf',         'Раздел': 11,   'Раздел@': null,  'Раздел$': null, photo: '/Controls-demo/List/Grid/data/krainov.png' },
-               {  id: 12,  title: 'Leaf',         'Раздел': 1,    'Раздел@': null,  'Раздел$': null, photo: '/Controls-demo/List/Grid/data/korbyt.png' },
-               {  id: 13,  title: 'Hidden node',  'Раздел': 1,    'Раздел@': false, 'Раздел$': true, photo: '/Controls-demo/List/Grid/data/dogadkin.png' },
+               {  id: 111, title: 'Leaf',         'Раздел': 11,   'Раздел@': null,  'Раздел$': null, photo: '/resources/Controls-demo/List/Grid/data/krainov.png' },
+               {  id: 12,  title: 'Leaf',         'Раздел': 1,    'Раздел@': null,  'Раздел$': null, photo: '/resources/Controls-demo/List/Grid/data/korbyt.png' },
+               {  id: 13,  title: 'Hidden node',  'Раздел': 1,    'Раздел@': false, 'Раздел$': true, photo: '/resources/Controls-demo/List/Grid/data/dogadkin.png' },
                {  id: 2,   title: 'Empty node',   'Раздел': null, 'Раздел@': true,  'Раздел$': null, photo: '' },
-               {  id: 3,   title: 'Hidden node',  'Раздел': null, 'Раздел@': false, 'Раздел$': true, photo: '/Controls-demo/List/Grid/data/krainov.png' },
-               {  id: 31,  title: 'Leaf',         'Раздел': 3,    'Раздел@': null,  'Раздел$': null, photo: '/Controls-demo/List/Grid/data/korbyt.png' },
-               {  id: 4,   title: 'Empty hidden', 'Раздел': null, 'Раздел@': false, 'Раздел$': false, photo: '/Controls-demo/List/Grid/data/dogadkin.png' },
-               {  id: 5,   title: 'Leaf',         'Раздел': null, 'Раздел@': null,  'Раздел$': null, photo: '/Controls-demo/List/Grid/data/korbyt.png' }
+               {  id: 3,   title: 'Hidden node',  'Раздел': null, 'Раздел@': false, 'Раздел$': true, photo: '/resources/Controls-demo/List/Grid/data/krainov.png' },
+               {  id: 31,  title: 'Leaf',         'Раздел': 3,    'Раздел@': null,  'Раздел$': null, photo: '/resources/Controls-demo/List/Grid/data/korbyt.png' },
+               {  id: 4,   title: 'Empty hidden', 'Раздел': null, 'Раздел@': false, 'Раздел$': false, photo: '/resources/Controls-demo/List/Grid/data/dogadkin.png' },
+               {  id: 5,   title: 'Leaf',         'Раздел': null, 'Раздел@': null,  'Раздел$': null, photo: '/resources/Controls-demo/List/Grid/data/korbyt.png' }
             ]
          }),
 
          _viewSourceTwoLevels: new MemorySource({
             idProperty: 'id',
             data: [
-               {  id: 1, title: 'Крайнов Дмитрий', 'Раздел': null, 'Раздел@': true, photo: '/Controls-demo/List/Grid/data/krainov.png' },
-               {  id: 2, title: 'Корбут Антон', 'Раздел': null, 'Раздел@': true, photo: '/Controls-demo/List/Grid/data/korbyt.png' },
-               {  id: 3, title: 'Догадкин Владимир', 'Раздел': null, 'Раздел@': true, photo: '/Controls-demo/List/Grid/data/dogadkin.png' },
+               {  id: 1, title: 'Крайнов Дмитрий', 'Раздел': null, 'Раздел@': true, photo: '/resources/Controls-demo/List/Grid/data/krainov.png' },
+               {  id: 2, title: 'Корбут Антон', 'Раздел': null, 'Раздел@': true, photo: '/resources/Controls-demo/List/Grid/data/korbyt.png' },
+               {  id: 3, title: 'Догадкин Владимир', 'Раздел': null, 'Раздел@': true, photo: '/resources/Controls-demo/List/Grid/data/dogadkin.png' },
                {  id: 11, title: 'Шеврон платформенно появляется с отступом от самого длинного поля', 'Раздел': 1, 'Раздел@': null,  photo: null },
                {  id: 12, title: 'Разработать макет блока для реестров (наподобии информационого)', 'Раздел': 1, 'Раздел@': null,  photo: null },
                {  id: 13, title: 'Стандартизовать выезжающую панель бв такмо виде как на скринах', 'Раздел': 1, 'Раздел@': null,  photo: null },
