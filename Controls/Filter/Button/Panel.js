@@ -13,7 +13,7 @@ define('Controls/Filter/Button/Panel', [
     * Control "Filter panel"
     * @class Controls/Filter/Button/Panel
     * @extends Core/Control
-    * @mixes Controls/Filter/Button/interface/IFilterPanel
+    * @mixes Controls/interface/IFilterPanel
     * @control
     * @public
     */
@@ -21,7 +21,6 @@ define('Controls/Filter/Button/Panel', [
    /**
     * @event Controls/Filter/Button/Panel#filterChanged Happens when clicking on the button "Select"
     */
-
 
    'use strict';
 

@@ -24,13 +24,14 @@
                                 itemTemplateProperty="{{_options.itemTemplateProperty}}"
                                 on:valueChanged="_valueChangedHandler()"
                                 on:visibilityChanged="_visibilityChangedHandler()"
-                                class="controls-FilterPanel__PropertyGrid"/>
+                                attr:class="controls-FilterPanel__PropertyGrid"/>
          <ws:if data="{{_hasAdditionalParams}}">
             <Controls.Filter.Button.Panel.AdditionalParams
                     items="{{_items}}"
                     itemTemplate="{{_options.additionalTemplate}}"
                     itemTemplateProperty="{{_options.additionalTemplateProperty}}"
-                    on:valueChanged="_valueChangedHandler()"/>
+                    on:valueChanged="_valueChangedHandler()"
+                    attr:class="controls-FilterPanel__AdditionalParams{{_options.historyId ? '-history' : ''}}"/>
          </ws:if>
          <ws:if data="{{_options.historyId}}">
             <Controls.Filter.Button.History.List
