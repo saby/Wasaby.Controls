@@ -17,6 +17,7 @@ define('Controls/Popup/Compatible/Layer', [
    var loadDeferred;
    var compatibleDeps = [
       'cdn!jquery/3.3.1/jquery-min.js',
+      'Core/Control',
       'Lib/Control/Control.compatible',
       'Lib/Control/AreaAbstract/AreaAbstract.compatible',
       'Lib/Control/BaseCompatible/BaseCompatible',
