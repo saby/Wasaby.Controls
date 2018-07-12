@@ -181,6 +181,11 @@
 .controls-Grid__row-cell_withRowSeparator {
    border-top-color: @color-Grid-row-separator;
 }
+/* По умолчанию используется большая базова линия (первая строка всегда должна быть с большой базовой линией).
+   Далее, в зависимости от задачи, по месту устанавливаются нужные классы:
+   controls-Grid__row-cell__content_baseline_S
+   controls-Grid__row-cell__content_baseline_M
+   controls-Grid__row-cell__content_baseline_L */
 .controls-Grid__row-cell__content_baseline_L:before {
    content: '\200b';
    font-size: @font-size_Grid-cell_L;
