@@ -102,6 +102,10 @@ define(
             var selection = window.getSelection();
             //Оборачиваем вызов selection.collapse в try из за нативной баги FireFox(https://bugzilla.mozilla.org/show_bug.cgi?id=773137)
             try {
+               if (position < 0) {
+                  //Safari (и iOS, и macOS) зависает, если позвать selection.collapse с отрицательным caretPosition
+                  position = 0;
+               }
                selection.collapse(container, position);
             } catch (e) {
             }
