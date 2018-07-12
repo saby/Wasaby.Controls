@@ -431,7 +431,9 @@ node('controls') {
                 #BRANCH=True
                 [regression]
                 IMAGE_DIR = capture_${params.theme}
-                RUN_REGRESSION=True"""
+                RUN_REGRESSION=True
+				[filestostart]
+				test_vdom_date_range_link_lite.py"""
         } else {
             writeFile file: "./controls/tests/reg/config.ini",
             text:
