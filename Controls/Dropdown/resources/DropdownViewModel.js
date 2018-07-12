@@ -166,7 +166,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             if (!nextItem.get) {
                return false;
             }
-            var itemInHistory = item.get('pinned') || item.get('recent') || item.get('frequent');
+            var itemInHistory = (item.get('pinned') || item.get('recent') || item.get('frequent')) && !item.get('parent');
             var nextItemInHistory = nextItem.get('pinned') || nextItem.get('recent') || nextItem.get('frequent');
             return itemInHistory && !nextItemInHistory;
          }
