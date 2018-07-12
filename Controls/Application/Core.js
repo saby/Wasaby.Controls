@@ -20,7 +20,7 @@ define('Controls/Application/Core',
             var self = this;
             nativeCss.load = function(path, require, load, conf) {
                load(null);
-               self.headDataCtx.pushCssLink(self.ctxData.resourceRoot + '/' + path + ".css");
+               self.headDataCtx.pushCssLink(self.ctxData.resourceRoot + '/' + path + '.css');
                self.headDataCtx.updateConsumers();
             };
 
