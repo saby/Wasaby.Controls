@@ -1,0 +1,26 @@
+<div class="panel-demo">
+   Without the block "Yet possible to select"
+   <div>
+      <Controls.Filter.Button attr:class="panel-demo-filterButton"
+                              templateName="tmpl!Controls-demo/Filter/Button/resources/withoutAdditional/filterPanelTemplateSimple"
+                              bind:items="_itemsSimple">
+      </Controls.Filter.Button>
+   </div>
+
+   The template for the block "Selected" is specified using the option "template" for each filter.
+   <div>
+      <Controls.Filter.Button attr:class="panel-demo-filterButton"
+                              bind:items="_itemsTemplate"
+                              templateName="tmpl!Controls-demo/Filter/Button/resources/itemTemplate/filterPanelTemplateItemProperty">
+      </Controls.Filter.Button>
+   </div>
+
+   The template for the block "Selected" is specified using the option "itemTemplate".
+   <div>
+      <Controls.Filter.Button attr:class="panel-demo-filterButton"
+                              on:filterChanged="_filterChangedHandler()"
+                              templateName="tmpl!Controls-demo/Filter/Button/resources/withAdditional/filterPanelTemplateAdditional"
+                              bind:items="_items">
+      </Controls.Filter.Button>
+   </div>
+</div>
