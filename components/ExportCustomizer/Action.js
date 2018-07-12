@@ -154,19 +154,30 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
             var options = names.reduce(function (r, v) { var o = data[v]; r[v] = o !== undefined ? o : defaults[v]; return r; }, {});
             this._result = new Deferred();
             if (data.skipCustomization) {
-               optionsTool.resolveOptions(options, true);
-               optionsTool.validateOptions(options);
-               this._prepareForImmediate(options).addCallback(function () {
-                  Executor.execute(options).addCallbacks(
-                     this._complete.bind(this, true),
-                     this._completeWithError.bind(this, true)
-                  );
-               }.bind(this));
+               this._immediate(options, optionsTool);
             }
             else {
                this._open(options, data.opener);
             }
             return this._result;
+         },
+
+         /*
+          * Выполнить экспорт немедленно (без отккрытия диалога настройщика экспорта)
+          *
+          * @protected
+          * @param {object} options Опции
+          * @param {SBIS3.CONTROLS/Utils/ImportExport/OptionsTool} optionsTool Инструмент для работы с опциями
+          */
+         _immediate: function (options, optionsTool) {
+            optionsTool.resolveOptions(options, true);
+            optionsTool.validateOptions(options);
+            this._prepareForImmediate(options).addCallback(function () {
+               Executor.execute(options).addCallbacks(
+                  this._complete.bind(this, true),
+                  this._completeWithError.bind(this, true)
+               );
+            }.bind(this));
          },
 
          /*
