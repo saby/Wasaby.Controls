@@ -207,6 +207,11 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
              * @type {Boolean}
              */
             bodyBounds: false,
+            
+            /**
+             * @cfg {Boolean} Пересчитывать положение попапа при отображении клавиатуры на мобильных устройствах
+             */
+            recalculateOnKeyboardShow: true,
             isHint: true,
             parentContainer: '',
             /*
@@ -293,9 +298,11 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
           }
           return this._options.parentContainer;
       },
-
-      _touchKeyboardMoveHandler: function(){
-         this.recalcPosition();
+   
+      _touchKeyboardMoveHandler: function() {
+         if (this._options.recalculateOnKeyboardShow) {
+            this.recalcPosition();
+         }
       },
 
       //Подписка на изменение состояния таргета
@@ -1230,7 +1237,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
       },
 
       _getZIndex: function(){
-         if (!this._isNewEnvironment() || this._options.isHint) {
+         if (!this._isNewEnvironment() || this._options._isSubmitPopup) {
             this._zIndex = cWindowManager.acquireZIndex(this._options.isModal, false, this._options.isHint);
             cWindowManager.setVisible(this._zIndex);
 
@@ -1247,7 +1254,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
                }
             }
          } else {
-            var opener = this.getOpener();
+            var opener = this.getOpener() || this.getParent();
             var openerPopup = opener && opener._container && opener._container.closest('.controls-Popup, .controls-FloatArea, .ws-window');
             var openerPopupZIndex = openerPopup && openerPopup.css('z-index');
 

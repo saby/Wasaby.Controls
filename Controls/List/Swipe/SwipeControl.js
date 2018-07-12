@@ -128,7 +128,7 @@ define('Controls/List/Swipe/SwipeControl', [
          self._swipeConfig = {};
          self._options.listModel.setSwipeItem(itemData);
          self._options.listModel.setActiveItem(itemData);
-         if (self._options.itemActionsType !== 'outside') {
+         if (self._options.itemActionsPosition !== 'outside') {
             self._swipeConfig.type = _private.initSwipeType(
                actionsHeight,
                itemData.itemActions.all.length

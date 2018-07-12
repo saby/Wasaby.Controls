@@ -1,9 +1,10 @@
-<div>
+<div class="controls-DateRangeLinkLite">
    <Controls.Input.Date.LinkView
       scope="{{_options}}"
       startValue="{{_rangeModel.startValue}}"
       endValue="{{_rangeModel.endValue}}"
       on:linkClick="openDialog()"
+      attr:class="controls-DateRangeLinkLite__view"
    />
 
    <Controls.Popup.Opener.Sticky name="opener">

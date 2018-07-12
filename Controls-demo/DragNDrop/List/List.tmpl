@@ -1,31 +1,33 @@
-<Controls.Container.MassSelector>
-   <Controls.List.MassSelector>
-      <Controls.List
-              on:dragStart="_dragStart()"
-              class="demo-DragNDrop__list"
-              multiSelectVisibility="visible"
-              itemsDragNDrop="{{true}}"
-              itemsReadyCallback="{{_itemsReadyCallback}}"
-              displayProperty="title"
-              source="{{_viewSource}}"
-              itemActions="{{_itemActions}}"
-              keyProperty="id">
-         <ws:itemTemplate>
-            <ws:partial template="tmpl!Controls/List/ItemTemplate" attr:class="demo-DragNDrop__item">
-               <ws:contentTemplate>
-                  <div class="demo-DragNDrop__itemContent">
-                     <img class="demo-DragNDrop__icon" src="{{itemTemplate.itemData.item.get('image')}}" />
-                     <div class="demo-DragNDrop__text">
-                        <div class="demo-DragNDrop__mainText">{{itemTemplate.itemData.item.get('title')}}</div>
-                        <div class="demo-DragNDrop__additionalText">{{itemTemplate.itemData.item.get('additional')}}</div>
-                     </div>
-                  </div>
-               </ws:contentTemplate>
-            </ws:partial>
-         </ws:itemTemplate>
-         <ws:dragAvatarTemplate>
-            <ws:partial template="Controls/DragNDrop/Avatar"/>
-         </ws:dragAvatarTemplate>
-      </Controls.List>
-   </Controls.List.MassSelector>
-</Controls.Container.MassSelector>
+<Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
+   <Controls.Container.MultiSelector>
+      <Controls.List.Container>
+         <Controls.List.MultiSelector>
+            <Controls.List
+                    on:dragStart="_dragStart()"
+                    class="demo-DragNDrop__list"
+                    multiSelectVisibility="visible"
+                    itemsDragNDrop="{{true}}"
+                    itemsReadyCallback="{{_itemsReadyCallback}}"
+                    displayProperty="title"
+                    itemActions="{{_itemActions}}">
+               <ws:itemTemplate>
+                  <ws:partial template="tmpl!Controls/List/ItemTemplate" attr:class="demo-DragNDrop__item">
+                     <ws:contentTemplate>
+                        <div class="demo-DragNDrop__itemContent">
+                           <img class="demo-DragNDrop__icon" src="{{itemTemplate.itemData.item.get('image')}}" />
+                           <div class="demo-DragNDrop__text">
+                              <div class="demo-DragNDrop__mainText">{{itemTemplate.itemData.item.get('title')}}</div>
+                              <div class="demo-DragNDrop__additionalText">{{itemTemplate.itemData.item.get('additional')}}</div>
+                           </div>
+                        </div>
+                     </ws:contentTemplate>
+                  </ws:partial>
+               </ws:itemTemplate>
+               <ws:dragAvatarTemplate>
+                  <ws:partial template="Controls/DragNDrop/Avatar"/>
+               </ws:dragAvatarTemplate>
+            </Controls.List>
+         </Controls.List.MultiSelector>
+      </Controls.List.Container>
+   </Controls.Container.MultiSelector>
+</Controls.Container.Data>

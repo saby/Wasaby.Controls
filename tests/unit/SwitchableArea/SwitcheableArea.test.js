@@ -10,12 +10,12 @@ define(['Controls/SwitchableArea', 'WS.Data/Collection/RecordSet'], function (Sw
          SwitchArea = new SwitchableArea();
       });
 
-      it('getIdPropertyItem', function () {
+      it('getItemId', function () {
          var opt = {
             items: testItems
          };
          SwitchArea.saveOptions(opt);
-         assert.equal(SwitchArea.getIdPropertyItem(testItems.at(2)), 3, 'getIdProperty is uncorrect');
+         assert.equal(SwitchArea.getItemId(testItems.at(2)), 3, 'getIdProperty is uncorrect');
       });
 
       it('life circle', function () {

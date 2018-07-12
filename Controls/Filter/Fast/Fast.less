@@ -1,6 +1,6 @@
 .controls-FastFilter {
-   display: flex;
    width: 100%;
+   display: flex;
 }
 
 .controls-FastFilter__iconReset {
@@ -17,15 +17,17 @@
 
 .controls-FastFilter__wrapper {
    margin: @spacing_FastFilter-item;
-   display: flex;
+   display: inline-flex;
    align-items: center;
    cursor: pointer;
+   overflow: hidden;
 }
 
 .controls-FastFilter__block {
    white-space: nowrap;
-   display: flex;
+   display: inline-flex;
    align-items: baseline;
+   min-width: 0;
 }
 
 .controls-FastFilter__block:hover .controls-FastFilter__iconArrow {
