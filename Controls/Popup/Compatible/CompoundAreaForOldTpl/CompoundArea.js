@@ -15,6 +15,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'optional!Deprecated/Controls/DialogRecord/DialogRecord',
       'Core/helpers/additional-helpers',
       'Core/EventBus',
+      'Controls/Popup/Manager/ManagerController',
 
       'Lib/Control/AreaAbstract/AreaAbstract.compatible',
       'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
@@ -38,7 +39,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       doAutofocus,
       DialogRecord,
       addHelpers,
-      cEventBus
+      cEventBus,
+      ManagerController
    ) {
       function removeOperation(operation, array) {
          var idx = arrayFindIndex(array, function(op) {
@@ -271,10 +273,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
 
          _commandCatchHandler: function(event, commandName, arg) {
-            event.setResult(this._commandHandler(commandName, arg));
+            var args = Array.prototype.slice.call(arguments, 2);
+            event.setResult(this._commandHandler(commandName, args));
          },
-         _commandHandler: function(commandName, arg) {
+         _commandHandler: function(commandName, args) {
             var parent, argWithName;
+            var arg = args[0];
 
             if (Array.isArray(arg) && arg.length === 1) {
                argWithName = [commandName, arg];
@@ -302,9 +306,15 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                return this._registerChildPendingOperation(arg);
             } else if (commandName === 'unregisterPendingOperation') {
                return this._unregisterChildPendingOperation(arg);
-            } else if (this.getParent()) {
-               parent = this.getParent();
-               return parent.sendCommand.apply(parent, argWithName);
+            } else {
+               var compoundControlCommandResult = this._sendCompoundControlCommand(commandName, args);
+               if (compoundControlCommandResult) {
+                  return compoundControlCommandResult;
+               }
+               if (this.getParent()) {
+                  parent = this.getParent();
+                  return parent.sendCommand.apply(parent, argWithName);
+               }
             }
 
             // Мы не распространяем команды по опенеру! и никогда не распространяли!
@@ -312,6 +322,16 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             //    parent = this.getOpener();
             //    return parent.sendCommand.apply(parent, argWithName);
             // }
+         },
+         _sendCompoundControlCommand: function(commandName, args) {
+            var commandHandler = this._getCommandHandler(commandName);
+            if (commandHandler) {
+               return commandHandler.apply(this._compoundControl, args);
+            }
+            return false;
+         },
+         _getCommandHandler: function(commandName) {
+            return this._compoundControl.getUserData('commandStorage')[commandName];
          },
          sendCommand: function(commandName, arg) {
             return this._commandHandler(commandName, arg);
@@ -582,8 +602,30 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             // Могут несколько раз позвать закрытие подряд
          },
          _toggleVisible: function(visible) {
-            this.getContainer().closest('.controls-Popup').toggleClass('ws-hidden', !visible);
-            this._isVisible = visible;
+            var popupContainer = this.getContainer().closest('.controls-Popup')[0];
+            if (popupContainer) {
+               // Нужно обновить опции Popup'a, чтобы ws-hidden не затерся/восстановился при синхронизации
+               var controlNode = popupContainer.controlNodes && popupContainer.controlNodes[0];
+               if (controlNode) {
+                  var
+                     id = controlNode.control._options.id,
+                     popupConfig = ManagerController.find(id);
+                  if (popupConfig) {
+                     // Удалим или поставим ws-hidden в зависимости от переданного аргумента
+                     var newClassName = popupConfig.popupOptions.className || '';
+                     if (visible) {
+                        newClassName = newClassName.replace(/ws-hidden/ig, '');
+                     } else if (newClassName.indexOf('ws-hidden') === -1) {
+                        newClassName += ' ws-hidden';
+                     }
+                     popupConfig.popupOptions.className = newClassName;
+
+                     // Сразу обновим список классов на контейнере, чтобы при пересинхронизации он не "прыгал"
+                     popupContainer.className = newClassName;
+                     this._isVisible = visible;
+                  }
+               }
+            }
          },
          _getTemplateComponent: function() {
             return this._compoundControl;

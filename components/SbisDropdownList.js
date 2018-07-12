@@ -126,7 +126,9 @@ define('SBIS3.CONTROLS/SbisDropdownList',
             var self = this;
             var args = arguments;
       
-            if (!this._options.multiselect && id) {
+            /* Прикладные разработкичи могут менять ключ ещё до загрузки списка,
+               надо на это проверять */
+            if (!this._options.multiselect && id && self.getItems()) {
                _private.addToHistory(this, id).addCallback(function() {
                   SbisDropdownList.superclass.setSelectedKeys.apply(self, args);
                });
