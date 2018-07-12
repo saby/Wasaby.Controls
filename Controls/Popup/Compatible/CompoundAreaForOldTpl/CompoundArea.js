@@ -307,14 +307,18 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             } else if (commandName === 'unregisterPendingOperation') {
                return this._unregisterChildPendingOperation(arg);
             } else {
-               var compoundControlCommandResult = this._sendCompoundControlCommand(commandName, args);
-               if (compoundControlCommandResult) {
-                  return compoundControlCommandResult;
-               }
-               if (this.getParent()) {
+               var result;
+
+               result = this._sendCompoundControlCommand(commandName, args);
+               if (!result && this.getParent()) {
                   parent = this.getParent();
-                  return parent.sendCommand.apply(parent, argWithName);
+                  result = parent.sendCommand.apply(parent, argWithName);
                }
+
+               // Даже если обработчик команды нашего CompoundControl'a и его родителя не вернули истинностный результат,
+               // мы должны вернуть true чтобы прервать всплытие команды к родителям, потому что мы протолкнули
+               // ее выше вручную (parent.sendCommand), и нам не нужно, чтобы она продолжила всплывать по второму разу
+               return result || true;
             }
 
             // Мы не распространяем команды по опенеру! и никогда не распространяли!
