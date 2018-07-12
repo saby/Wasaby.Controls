@@ -271,10 +271,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
 
          _commandCatchHandler: function(event, commandName, arg) {
-            event.setResult(this._commandHandler(commandName, arg));
+            var args = Array.prototype.slice.call(arguments, 2);
+            event.setResult(this._commandHandler(commandName, args));
          },
-         _commandHandler: function(commandName, arg) {
+         _commandHandler: function(commandName, args) {
             var parent, argWithName;
+            var arg = args[0];
 
             if (Array.isArray(arg) && arg.length === 1) {
                argWithName = [commandName, arg];
@@ -284,12 +286,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             if (commandName === 'close') {
                return this._close(arg);
-            } if (commandName === 'ok') {
+            } else if (commandName === 'ok') {
                return this._close(true);
-            } if (commandName === 'cancel') {
+            } else if (commandName === 'cancel') {
                return this._close(false);
-            } if (commandName === 'update') {
-               return true;
             } else if (commandName === 'save') {
                return this.save(arg);
             } else if (commandName === 'delete') {
@@ -304,9 +304,15 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                return this._registerChildPendingOperation(arg);
             } else if (commandName === 'unregisterPendingOperation') {
                return this._unregisterChildPendingOperation(arg);
-            } else if (this.getParent()) {
-               parent = this.getParent();
-               return parent.sendCommand.apply(parent, argWithName);
+            } else {
+               var compoundControlCommandResult = this._sendCompoundControlCommand(commandName, args);
+               if (compoundControlCommandResult) {
+                  return compoundControlCommandResult;
+               }
+               if (this.getParent()) {
+                  parent = this.getParent();
+                  return parent.sendCommand.apply(parent, argWithName);
+               }
             }
 
             // Мы не распространяем команды по опенеру! и никогда не распространяли!
@@ -314,6 +320,16 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             //    parent = this.getOpener();
             //    return parent.sendCommand.apply(parent, argWithName);
             // }
+         },
+         _sendCompoundControlCommand: function(commandName, args) {
+            var commandHandler = this._getCommandHandler(commandName);
+            if (commandHandler) {
+               return commandHandler.apply(this._compoundControl, args);
+            }
+            return false;
+         },
+         _getCommandHandler: function(commandName) {
+            return this._compoundControl.getUserData('commandStorage')[commandName];
          },
          sendCommand: function(commandName, arg) {
             return this._commandHandler(commandName, arg);
