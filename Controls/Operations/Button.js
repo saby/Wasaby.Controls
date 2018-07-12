@@ -4,7 +4,7 @@ define('Controls/Operations/Button', [
    'use strict';
 
    /**
-    * Control for changing the visibility of the "Controls/Operations/Panel".
+    * Control for changing the extensibility of the "Controls/Operations/Panel".
     *
     * @class Controls/Operations/Button
     * @extends Core/Control
