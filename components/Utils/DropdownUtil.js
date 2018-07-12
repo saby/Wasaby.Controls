@@ -3,8 +3,9 @@ define('SBIS3.CONTROLS/Utils/DropdownUtil', [
    'SBIS3.CONTROLS/Menu/SBISHistoryController',
    'SBIS3.CONTROLS/Utils/HistoryUtil',
    'WS.Data/Query/Query',
-   'Core/core-merge'
-], function(coreClone, HistoryController, historyUtil, Query, merge) {
+   'Core/core-merge',
+   'Core/core-instance'
+], function(coreClone, HistoryController, historyUtil, Query, merge, cInstance) {
    return {
       initHistory: function(self, callback, event) {
          var myself = this;
@@ -14,12 +15,14 @@ define('SBIS3.CONTROLS/Utils/DropdownUtil', [
 
             // нужна вычитка данных с БЛ по id позвать списочный метод с нужным фильтром
             self._historyDeferred = this._getHistoryController(self).getUnionIndexesList(self).addCallback(function(data) {
-               if (self.getDataSource()) {
-                  myself._loadItems(self, callback, data, event);
-               } else {
-                  myself._getHistoryController(self).parseHistoryData(data);
-                  myself.callShow(self, callback, event);
-                  historyUtil.setHistory(self._options.historyId, self._getHistoryController(self).getHistoryDataSet());
+               if (!self.isDestroyed()) {
+                  if (self.getDataSource()) {
+                     myself._loadItems(self, callback, data, event);
+                  } else {
+                     myself._getHistoryController(self).parseHistoryData(data);
+                     myself.callShow(self, callback, event);
+                     historyUtil.setHistory(self._options.historyId, self._getHistoryController(self).getHistoryDataSet());
+                  }
                }
             }).addErrback(function() {
                myself._getHistoryController(self).parseHistoryData();
@@ -48,10 +51,12 @@ define('SBIS3.CONTROLS/Utils/DropdownUtil', [
 
             // подгрузят данные метод БЛ опции и в utils ещё необходимо проставить через item
             self.getDataSource().query(query).addCallback(function(result) {
-               // заполняем по пунктам, учесть индексы из опций
-               myself._getHistoryController(self).setHistoryDataFromRecord(result.getAll(), data);
-               myself.callShow(self, callback, event);
-               historyUtil.setHistory(self._options.historyId, myself._getHistoryController(self).getHistoryDataSet());
+               if (!self.isDestroyed()) {
+                  // заполняем по пунктам, учесть индексы из опций
+                  myself._getHistoryController(self).setHistoryDataFromRecord(result.getAll(), data);
+                  myself.callShow(self, callback, event);
+                  historyUtil.setHistory(self._options.historyId, myself._getHistoryController(self).getHistoryDataSet());
+               }
             });
          } else {
             myself._getHistoryController(self).setHistoryDataFromRecord(self.getItems(), data);
@@ -70,8 +75,16 @@ define('SBIS3.CONTROLS/Utils/DropdownUtil', [
 
       _getHistoryController: function(self) {
          if (!self._historyController) {
+            var items = self.getItems();
+            
+            if (cInstance.instanceOfMixin(items, 'WS.Data/Entity/ICloneable')) {
+               items = items.clone(true);
+            } else {
+               items = coreClone(items);
+            }
+            
             self._historyController = new HistoryController({
-               oldItems: coreClone(self.getItems()),
+               oldItems: items,
                historyId: self._options.historyId,
                pinned: self._options.pinned,
                frequent: self._options.frequent,
