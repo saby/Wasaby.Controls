@@ -211,7 +211,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * @param {Lib/Control/Control} [opener] Компонент, инициировавщий открытие настройщика экспорта, если есть (опционально)
           */
          _open: function (options, opener) {
-            var wiatIndicator = new WaitIndicator(this._getWaitIndicatorTarget(opener), rk('Загружается', 'НастройщикЭкспорта'), {overlay:'dark'}, 1000);
+            var wiatIndicator = new WaitIndicator(null, rk('Загружается', 'НастройщикЭкспорта'), {overlay:'dark'}, 1000);
             require(['SBIS3.CONTROLS/ExportCustomizer/Area', 'Lib/Control/FloatArea/FloatArea'], function (Area, FloatArea) {
                wiatIndicator.remove();
                var componentOptions = cMerge({
@@ -239,25 +239,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
                this._notify('onSizeChange');
                this.subscribeOnceTo(this._areaContainer, 'onAfterClose', this._notify.bind(this, 'onSizeChange'));
             }.bind(this));
-         },
-
-         /*
-          * Найти подходящий контейнер для индикатора ожидания
-          *
-          * @protected
-          * @param {Lib/Control/Control} opener Компонент, с которго следует начать поиск
-          * @return {jQuery}
-          */
-         _getWaitIndicatorTarget: function (opener) {
-            if (opener) {
-               var $container = opener.getContainer();
-               if ($container) {
-                  $container = $container.parents('[data-component]:not(html)').last();
-                  if ($container.length) {
-                     return $container;
-                  }
-               }
-            }
          },
 
          /**
