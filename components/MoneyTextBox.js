@@ -240,6 +240,10 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
        * @param {Number} [pos2]  позиция правого края выделения
        */
       _setCaretPosition : function(pos, pos2) {
+         if (pos < 0) {
+            //Safari (и iOS, и macOS) зависает, если позвать selection.collapse с отрицательным caretPosition
+            pos = 0;
+         }
          var input = this._inputField[0].firstChild,
              selection = window.getSelection();
          if(!input){
