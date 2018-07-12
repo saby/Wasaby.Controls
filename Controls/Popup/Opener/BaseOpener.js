@@ -38,15 +38,14 @@ define('Controls/Popup/Opener/BaseOpener',
          open: function(popupOptions, controller) {
             var self = this;
             var cfg = this._getConfig(popupOptions);
-            var shouldCreateNewPopup = !this.isOpened() || this._options.displayMode === 'multiple';
 
             if (this._isExecuting) { // Если мы еще не обработали первый вызов, то дожидаемся его
                return;
             }
             this._isExecuting = true;
 
-            if (shouldCreateNewPopup) { // удаляем неактуальный id
-               this._popupIds.pop();
+            if (!this.isOpened() && this._options.displayMode === 'single') { // удаляем неактуальные id
+               this._popupIds = [];
             }
 
             if (cfg.isCompoundTemplate) { // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
@@ -146,7 +145,7 @@ define('Controls/Popup/Opener/BaseOpener',
          },
 
          _getCurrentPopupId: function() {
-            return this._popupIds[this._popupIds.length - 1]
+            return this._popupIds[this._popupIds.length - 1];
          },
 
          /**
