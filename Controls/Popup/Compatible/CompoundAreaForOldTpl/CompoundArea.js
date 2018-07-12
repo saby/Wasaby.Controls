@@ -259,7 +259,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   this.getContainer().prepend($('<div class="ws-window-titlebar"><div class="ws-float-area-title ws-float-area-title-generated">' + this._options.caption + '</div></div>'));
                   this.getContainer().addClass('controls-CompoundArea-headerPadding');
                }
-            } else if (customHeaderContainer.length) {
+            } else if (customHeaderContainer.length && this._options.type === 'dialog') {
                var container = $('.controls-DialogTemplate', this.getContainer());
                container.prepend(customHeaderContainer.addClass('controls-CompoundArea-custom-header'));
                this.getContainer().addClass('controls-CompoundArea-headerPadding');
