@@ -65,12 +65,14 @@ define('Controls/List/ListControl', [
       },
 
       _onAfterItemsRemoveHandler: function(e, keys, result) {
-         var newSelectedKeys = this._options.selectedKeys.slice();
-         keys.forEach(function(key) {
-            newSelectedKeys.splice(newSelectedKeys.indexOf(key), 1);
-         });
+         if (this._options.selectedKeys) {
+            var newSelectedKeys = this._options.selectedKeys.slice();
+            keys.forEach(function(key) {
+               newSelectedKeys.splice(newSelectedKeys.indexOf(key), 1);
+            });
+            this._notify('selectedKeysChanged', [newSelectedKeys, [], keys]);
+         }
          this._notify('afterItemsRemove', [keys, result]);
-         this._notify('selectedKeysChanged', [newSelectedKeys, [], keys]);
       }
    });
 
