@@ -24,18 +24,14 @@ define('Controls/OperationsPanel', [
     * @extends Core/Control
     * @mixes Controls/interface/ISource
     * @mixes Controls/List/interface/IHierarchy
+    * @mixes Controls/List/interface/IExpandable
     * @control
     * @public
     */
 
    /**
-    * @name Controls/Operations/Panel#multiSelector
+    * @name Controls/Operations/Panel#multiSelectorVisibility
     * @cfg {Boolean} multiSelector Show multiSelector block.
-    */
-
-   /**
-    * @name Controls/Operations/Panel#visible
-    * @cfg {Boolean} visible Operations panel visibility.
     */
 
    /**

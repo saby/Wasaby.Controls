@@ -8,6 +8,7 @@ define('Controls/Operations/Button', [
     *
     * @class Controls/Operations/Button
     * @extends Core/Control
+    * @mixes Controls/List/interface/IExpandable
     * @control
     * @public
     */
