@@ -143,7 +143,7 @@ define('SBIS3.CONTROLS/Action/Selector/SelectorController', [
              });
              this._linkedObject = chooserWrapper._getLinkedObject();
              
-             if (this._options.allowSelectionEventBubbling) {
+             if (this._options.allowSelectionCommandBubbling) {
                 return true;
              }
           },
@@ -201,7 +201,7 @@ define('SBIS3.CONTROLS/Action/Selector/SelectorController', [
                 onChangeSelection();
              }
              
-             if (this._options.allowSelectionEventBubbling) {
+             if (this._options.allowSelectionCommandBubbling) {
                 return true;
              }
           },
