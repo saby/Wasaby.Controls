@@ -64,6 +64,22 @@ define('Controls/Input/Number/InputProcessor',
                return this.concatSplitValue(splitValue).replace(/ /g, '');
             },
 
+            processDeletionOfAllIntegers: function(splitValue) {
+               //If all integers were removed, then we need to set first character in integers part to 0
+               if (splitValue.before === '' || splitValue.before === '-') {
+                  if (splitValue.after === '') {
+                     splitValue.before = '';
+                  }
+                  if (splitValue.after[0] === '.') {
+                     if (splitValue.after[1]) {
+                        splitValue.before = '0';
+                     } else {
+                        splitValue.after = '';
+                     }
+                  }
+               }
+            },
+
             //Набор валидаторов для числа
             validators: {
 
@@ -216,19 +232,7 @@ define('Controls/Input/Number/InputProcessor',
                var
                   shift = 0;
 
-               //If all integers were removed, then we need to set first character in integers part to 0
-               if (splitValue.before === '' || splitValue.before === '-') {
-                  if (splitValue.after === '') {
-                     splitValue.before = '';
-                  }
-                  if (splitValue.after[0] === '.') {
-                     if (splitValue.after[1]) {
-                        splitValue.before = '0';
-                     } else {
-                        splitValue.after = '';
-                     }
-                  }
-               }
+               _private.processDeletionOfAllIntegers(splitValue);
 
                return {
                   value: _private.getValueWithDelimiters(splitValue),
@@ -260,19 +264,7 @@ define('Controls/Input/Number/InputProcessor',
                   }
                }
 
-               //If all integers were removed, then we need to set first character in integers part to 0
-               if (splitValue.before === '' || splitValue.before === '-') {
-                  if (splitValue.after === '') {
-                     splitValue.before = '';
-                  }
-                  if (splitValue.after[0] === '.') {
-                     if (splitValue.after[1]) {
-                        splitValue.before = '0';
-                     } else {
-                        splitValue.after = '';
-                     }
-                  }
-               }
+               _private.processDeletionOfAllIntegers(splitValue);
 
                return {
                   value: _private.getValueWithDelimiters(splitValue),
@@ -301,19 +293,7 @@ define('Controls/Input/Number/InputProcessor',
                   splitValue.after = '.' + splitValue.after;
                }
 
-               //If we delete the last character on the left and there is no integers after it, then we need to set it to '0'
-               if (splitValue.before === '' || splitValue.before === '-') {
-                  if (splitValue.after === '') {
-                     splitValue.before = '';
-                  }
-                  if (splitValue.after[0] === '.') {
-                     if (splitValue.after[1]) {
-                        splitValue.before = '0';
-                     } else {
-                        splitValue.after = '';
-                     }
-                  }
-               }
+               _private.processDeletionOfAllIntegers(splitValue);
 
                //If a space was removed, we should delete the number to the left of it and move the cursor one unit to the left
                if (splitValue.delete === ' ') {
