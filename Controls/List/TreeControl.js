@@ -127,6 +127,7 @@ define('Controls/List/TreeControl', [
          var
             parents,
             newSelectedKeys,
+            diff,
             childrenIds;
          if (status === true || status === null) {
             parents = _private.getAllParentsIds(this._hierarchyRelation, key, this.context.get('dataOptions').items);
@@ -144,9 +145,12 @@ define('Controls/List/TreeControl', [
                   break;
                }
             }
-            this._notify('selectionChange', [ArraySimpleValuesUtil.getArrayDifference(this.context.get('selection').calculatedSelectedKeys, newSelectedKeys)]);
+            diff = ArraySimpleValuesUtil.getArrayDifference(this.context.get('selection').calculatedSelectedKeys, newSelectedKeys);
+            this._notify('selectedKeysChanged', [newSelectedKeys, diff.added, diff.removed]);
          } else {
-            this._notify('selectionChange', [{added: [key], removed: []}]);
+            newSelectedKeys = this.context.get('selection').calculatedSelectedKeys.slice();
+            newSelectedKeys.push(key);
+            this._notify('selectedKeysChanged', [newSelectedKeys, [key], []]);
          }
       },
 
@@ -154,6 +158,7 @@ define('Controls/List/TreeControl', [
          var
             self = this,
             newSelectedKeys = this.context.get('selection').calculatedSelectedKeys.slice(),
+            diff,
             parents;
 
          this._notify('afterItemsRemove', [keys, result]);
@@ -172,7 +177,9 @@ define('Controls/List/TreeControl', [
             }
          });
 
-         this._notify('selectionChange', [ArraySimpleValuesUtil.getArrayDifference(this.context.get('selection').calculatedSelectedKeys, newSelectedKeys)]);
+         diff = ArraySimpleValuesUtil.getArrayDifference(this.context.get('selection').calculatedSelectedKeys, newSelectedKeys);
+
+         this._notify('selectedKeysChanged', [newSelectedKeys, diff.added, diff.removed]);
       }
    });
 
