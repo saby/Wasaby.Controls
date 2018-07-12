@@ -226,6 +226,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
             require(['SBIS3.CONTROLS/ExportCustomizer/Area', 'Lib/Control/FloatArea/FloatArea'], function (Area, FloatArea) {
                wiatIndicator.remove();
                var componentOptions = cMerge({
+                  name: 'controls-ExportCustomizer__area',
+                  waitingMode: true,
                   dialogMode: true,
                   handlers: {
                      onComplete: this._onAreaComplete.bind(this),
@@ -244,6 +246,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
                   closeButton: true,
                   componentOptions: componentOptions,
                   handlers: {
+                     onAfterShow: function () {
+                        this._areaContainer.getChildControlByName('controls-ExportCustomizer__area').setValues({waitingMode:false});
+                     }.bind(this),
                      onClose: this._onAreaClose.bind(this)
                   }
                });
