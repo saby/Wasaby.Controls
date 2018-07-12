@@ -15,8 +15,7 @@ define('Controls/Grid', [
     * @class Controls/Grid
     * @extends Controls/List
     * @mixes Controls/interface/ISource
-    * @mixes Controls/interface/ISingleSelectable
-    * @mixes Controls/interface/IPromisedSelectable
+    * @mixes Controls/interface/IMultiSelectable
     * @mixes Controls/interface/IGroupedView
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
