@@ -368,7 +368,7 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
          }
 
          if (this._options.hoverMode === HOVER_MODE.FIXED) {
-            //Костыль. На старых страницах больше неоткуда не взять динамическое значение isTouch при работе с компьютером
+            //На старых страницах больше ниоткуда не взять динамическое значение isTouch при работе с компьютером
             //и телевизором одновременно.
             if (!document.body.className.indexOf('ws-is-touch')) {
                this._createFixedItem(item, styles);
