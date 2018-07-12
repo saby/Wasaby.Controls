@@ -29,14 +29,12 @@ define('Controls-demo/List/Multiselect', [
 
    var ModuleClass = BaseControl.extend({
       _template: template,
-      _selectedKeys: null,
       constructor: function() {
          ModuleClass.superclass.constructor.apply(this, arguments);
          this._viewSource = new MemorySource({
             idProperty: 'id',
             data: srcData
          });
-         this._selectedKeys = [1, 2];
       }
    });
    return ModuleClass;
