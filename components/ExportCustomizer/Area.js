@@ -15,19 +15,17 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
       'Core/Deferred',
       'SBIS3.CONTROLS/CompoundControl',
       'SBIS3.CONTROLS/ExportCustomizer/Constants',
-      'SBIS3.CONTROLS/ExportCustomizer/Utils/CollectionSelectByIds',
+      'SBIS3.CONTROLS/ExportCustomizer/_Executor',
       'SBIS3.CONTROLS/Utils/ImportExport/OptionsTool',
-      'SBIS3.CONTROLS/Utils/ImportExport/RemoteCall',
-      'SBIS3.CONTROLS/Utils/InformationPopupManager',
+      /*'SBIS3.CONTROLS/Utils/InformationPopupManager',*/
       'WS.Data/Collection/RecordSet',
-      'WS.Data/Di',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/Area',
       'css!SBIS3.CONTROLS/ExportCustomizer/Area',
       'SBIS3.CONTROLS/Button',
       'SBIS3.CONTROLS/ScrollContainer'
    ],
 
-   function (CommandDispatcher, cMerge, Deferred, CompoundControl, Constants, collectionSelectByIds, OptionsTool, RemoteCall, InformationPopupManager, RecordSet, Di, tmpl) {
+   function (CommandDispatcher, cMerge, Deferred, CompoundControl, Constants, Executor, OptionsTool, /*InformationPopupManager,*/ RecordSet, tmpl) {
       'use strict';
 
       /**
@@ -97,6 +95,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          $protected: {
             _options: {
                dialogMode: null,// {boolean} Отображать как часть диалога (опционально)
+
                /**
                 * @cfg {string} Отображать в режиме ожидания (опционально)
                 */
@@ -176,7 +175,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                /**
                 * @cfg {ExportRemoteCall} Информация для вызова метода удалённого сервиса для отправки данных вывода (опционально)
                 */
-               outputCall: null
+               outputCall: null,
+
+               isTemporaryFile: null// {boolean} Текущее значение fileUuid в опциях указывает на временный файл
             },
             // Имя кнопки применения
             _BUTTON_NAME: 'controls-ExportCustomizer-Area__completeButton',
@@ -378,6 +379,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   }
                   break;
             }
+            options.isTemporaryFile = null;
             var result = formatterValues || formatterMeta ? views.formatter.restate(formatterValues || {}, formatterMeta) : undefined;
             this._updateCompleteButton(fieldIds);
             return result;
@@ -419,7 +421,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             var values = views.formatter.getValues();
             var fileUuid = values.fileUuid;
             if (fileUuid) {
-               this._options.fileUuid = fileUuid;
+               var options = this._options;
+               options.fileUuid = fileUuid;
+               options.isTemporaryFile = true;
                var presetsView = views.presets;
                if (presetsView) {
                   /*return*/ presetsView.restate({fileUuid:fileUuid}, this._makeMeta('formatter', [].slice.call(arguments)));
@@ -461,43 +465,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          },
 
          /*
-          * Проверить результаты
-          *
-          * @protected
-          * @param {object} data Результирующие данные
-          * @return {Core/Deferred}
-          */
-         _checkResults: function (data) {
-            var validators = this._options.validators;
-            var promise;
-            if (validators && validators.length) {
-               var errors = [];
-               var warnings = [];
-               var optionGetter = this._getOption.bind(this);
-               for (var i = 0; i < validators.length; i++) {
-                  var check = validators[i];
-                  var args = check.params;
-                  args = args && args.length ? args.slice() : [];
-                  args.unshift(data, optionGetter);
-                  var result = check.validator.apply(null, args);
-                  if (result !== true) {
-                     (check.noFailOnError ? warnings : errors).push(
-                        result || check.errorMessage || rk('Неизвестная ошибка', 'НастройщикЭкспорта')
-                     );
-                  }
-               }
-               if (errors.length) {
-                  promise = Area.showMessage('error', rk('Исправьте пожалуйста', 'НастройщикЭкспорта'), errors.join('\n'));
-               }
-               else
-               if (warnings.length) {
-                  promise = Area.showMessage('confirm', rk('Проверьте пожалуйста', 'НастройщикЭкспорта'), warnings.join('\n') + '\n\n' + rk('Действительно экспортировать так?', 'НастройщикЭкспорта'));
-               }
-            }
-            return promise || Deferred.success(true);
-         },
-
-         /*
           * Реализация команды "complete"
           *
           * @protected
@@ -523,51 +490,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * @return {Core/Deferred<ExportResults>}
           */
          complete: function () {
-            var promise = new Deferred();
-            var options = this._options;
-            var presetsView = this._views.presets;
-            var isForced = arguments[0];
-            if (!isForced && options.usePresets && !(options.fieldIds && options.fieldIds.length) && !presetsView) {
-               Di.resolve('ExportPresets.Loader').load(options._scopes.presets.namespace).addCallback(function (presets) {
-                  var preset; presets.some(function (v) { if (v.id === options.selectedPresetId) { preset = v; return true; }});
-                  if (preset) {
-                     options.fieldIds = preset.fieldIds;
-                     options.fileUuid = preset.fileUuid;
-                  }
-                  promise.dependOn(this.complete(true));
-               }.bind(this));
-            }
-            else {
-               // Сформировать результирующие данные из всего имеющегося
-               // И сразу прроверить их
-               this.getValues(true).addCallback(function (data) {
-                  // И если всё нормально - завершить диалог
-                  if (data) {
-                     if (presetsView) {
-                        presetsView.save();
-                     }
-                     var outputCall = options.outputCall;
-                     if (outputCall) {
-                        (new RemoteCall(outputCall)).call(data).addCallbacks(
-                           function (result) {
-                              data.result = result;
-                              promise.callback(data);
-                           }.bind(this),
-                           function (err) {
-                              promise.errback(/*err*/rk('При отправке данных поизошла ошибка', 'НастройщикЭкспорта'));
-                           }.bind(this)
-                        );
-                     }
-                     else {
-                        promise.callback(data);
-                     }
-                  }
-                  else {
-                     promise.callback(null);
-                  }
-               }.bind(this));
-            }
-            return promise;
+            return Executor.execute(this._options);
          },
 
          /**
@@ -614,23 +537,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * @return {Core/Deferred<ExportResults>}
           */
          getValues: function (withValidation) {
-            var options = this._options;
-            var data = {
-               serviceParams: options.serviceParams,
-               fieldIds: options.fieldIds,
-               columnTitles: collectionSelectByIds(options.allFields, options.fieldIds, function (v) { return v.title; }) || [],
-               fileUuid: options.fileUuid || null,//Если значначение пусто, значит стилевого эксель-файла нет. БЛ в таком случае безальтернативно требует значения null
-               canDeleteFile: this._isEditMode || null
-            };
-            return withValidation
-               ?
-                  // Прроверить собранные данные
-                  this._checkResults(data).addCallback(function (isSuccess) {
-                     return isSuccess ? data : null;
-                  })
-               :
-                  // Вернуть сразу
-                  Deferred.success(data);
+            return Executor.gatherValues(this._options, withValidation);
          }//,
 
          /*destroy: function () {
@@ -679,7 +586,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
        * @param {string} text Текст сообщения
        * @return {Core/Deferred}
        */
-      Area.showMessage = function (type, title, text) {
+      /*Area.showMessage = function (type, title, text) {
          var isConfirm = type === 'confirm';
          var promise = new Deferred();
          var args = [{
@@ -695,7 +602,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          }
          InformationPopupManager[isConfirm ? 'showConfirmDialog' : 'showMessageDialog'].apply(InformationPopupManager, args);
          return promise;
-      };
+      };*/
 
 
 
