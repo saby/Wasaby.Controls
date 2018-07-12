@@ -172,7 +172,7 @@ define('Controls-demo/Menu/MenuVdom', [
                $_history: true
             });
             hs.historySource.query = function() {
-               let def = new Deferred();
+               var def = new Deferred();
                def.addCallback(function(set) {
                   return set;
                });

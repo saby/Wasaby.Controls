@@ -92,6 +92,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             if (!itemsModelCurrent.item.get) {
                itemsModelCurrent.isGroup = true;
                itemsModelCurrent.isHiddenGroup = itemsModelCurrent.item === ControlsConstants.view.hiddenGroup;
+               itemsModelCurrent.groupTemplate = this._itemsModel._options.itemsGroup.template;
                return itemsModelCurrent;
             }
             itemsModelCurrent.hasChildren = this._hasItemChildren(itemsModelCurrent.item);
