@@ -14,12 +14,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
       'Core/Deferred',
       'SBIS3.CONTROLS/Action',
       'SBIS3.CONTROLS/ExportCustomizer/Constants',
+      'SBIS3.CONTROLS/ExportCustomizer/_Executor',
       'SBIS3.CONTROLS/Utils/ImportExport/OptionsTool',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
-      'SBIS3.CONTROLS/WaitIndicator'
+      'SBIS3.CONTROLS/WaitIndicator',
+      'WS.Data/Di'
    ],
 
-   function (cMerge, Deferred, Action, Constants, OptionsTool, InformationPopupManager, WaitIndicator) {
+   function (cMerge, Deferred, Action, Constants, Executor, OptionsTool, InformationPopupManager, WaitIndicator, Di) {
       'use strict';
 
       /**
@@ -73,6 +75,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
        * @property {string} fileUuid Uuid стилевого эксель-файла
        * @property {ExportServiceParams} serviceParams Прочие параметры, необходимых для работы БЛ
        */
+
+      /**
+       * Имя регистрации объекта, предоставляющего методы загрузки и сохранения пользовательских пресетов, в инжекторе зависимостей
+       * @private
+       * @type {string}
+       */
+      var _DI_STORAGE_NAME = 'ExportPresets.Loader';
 
       var ExportCustomizerAction = Action.extend([], /**@lends SBIS3.CONTROLS/ExportCustomizer/Action.prototype*/ {
 
@@ -130,31 +139,68 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
          /**
           * Метод, выполняющий основное действие
           * @protected
-          * @param {object} options Входные аргументы("мета-данные") настройщика экспорта (согласно описанию в методе {@link execute})
+          * @param {object} data Входные аргументы("мета-данные") настройщика экспорта (согласно описанию в методе {@link execute})
           */
-         _doExecute: function (options) {
-            if (!options || typeof options !== 'object') {
+         _doExecute: function (data) {
+            if (!data || typeof data !== 'object') {
                throw new Error('No arguments');
             }
             if (this._result) {
                return Deferred.fail('Allready open');
             }
-            var names = (new OptionsTool(Constants.OPTION_TYPES, Constants.DEFAULT_OPTIONS, Constants.SKIP_OWN_OPTIONS_NAMES)).getOwnOptionNames();
+            var optionsTool = new OptionsTool(Constants.OPTION_TYPES, Constants.DEFAULT_OPTIONS, Constants.SKIP_OWN_OPTIONS_NAMES);
+            var names = optionsTool.getOwnOptionNames();
             var defaults = this._options;
-            var areaOptions = names.reduce(function (r, v) { var o = options[v]; r[v] = o !== undefined ? o : defaults[v]; return r; }, {});
+            var options = names.reduce(function (r, v) { var o = data[v]; r[v] = o !== undefined ? o : defaults[v]; return r; }, {});
             this._result = new Deferred();
-            if (options.skipCustomization) {
-               require(['SBIS3.CONTROLS/ExportCustomizer/Area'], function (Area) {
-                  (new Area(areaOptions)).complete().addCallbacks(
+            if (data.skipCustomization) {
+               optionsTool.resolveOptions(options, true);
+               optionsTool.validateOptions(options);
+               this._prepareForImmediate(options).addCallback(function () {
+                  Executor.execute(options).addCallbacks(
                      this._complete.bind(this, true),
                      this._completeWithError.bind(this, true)
                   );
                }.bind(this));
             }
             else {
-               this._open(areaOptions, options.opener);
+               this._open(options, data.opener);
             }
             return this._result;
+         },
+
+         /*
+          * Подготовиться к немедленному выполнению экспорта (без отккрытия диалога настройщика экспорта)
+          *
+          * @protected
+          * @param {object} options Опции
+          * @return {Core/Deferred}
+          */
+         _prepareForImmediate: function (options) {
+            if (options.usePresets && !(options.fieldIds && options.fieldIds.length)) {
+               var selectedPresetId = options.selectedPresetId;
+               if (selectedPresetId) {
+                  var _usePreset = function (presets) {
+                     if (presets && presets.length) {
+                        var preset; presets.some(function (v) { if (v.id === selectedPresetId) { preset = v; return true; }});
+                        if (preset) {
+                           options.fieldIds = preset.fieldIds;
+                           options.fileUuid = preset.fileUuid;
+                           return true;
+                        }
+                     }
+                  };
+                  if (!_usePreset(options.staticPresets) && Di.isRegistered(_DI_STORAGE_NAME)) {
+                     var promise = new Deferred();
+                     Di.resolve(_DI_STORAGE_NAME).load(options.presetNamespace).addCallback(function (customs) {
+                        _usePreset(customs);
+                        promise.callback();
+                     });
+                     return promise;
+                  }
+               }
+            }
+            return Deferred.success();
          },
 
          /**
