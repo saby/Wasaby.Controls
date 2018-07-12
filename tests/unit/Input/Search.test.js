@@ -34,7 +34,8 @@ define(
                search.activate = () => {
                   activated = true;
                };
-               
+   
+               search._searchClick();
                assert.isTrue(searched);
                assert.isTrue(activated);
             });
