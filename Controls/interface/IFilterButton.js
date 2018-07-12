@@ -34,8 +34,8 @@ define('Controls/interface/IFilterButton', [
     */
    
    /**
-    * @name Controls/interface/IFilterButton#template
-    * @cfg {String} Template for the pop-up panel. The description of the filter panel options: (@link Controls/interface/IFilterPanel).
+    * @name Controls/interface/IFilterButton#templateName
+    * @cfg {String} Template for the pop-up panel. The description of the filter panel options: {@link Controls/interface/IFilterPanel}.
     */
    
    /**
