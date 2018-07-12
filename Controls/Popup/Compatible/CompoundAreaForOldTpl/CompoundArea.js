@@ -251,20 +251,25 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             if (hasHeader) {
                if (customHeaderContainer.length) {
                   customHeaderContainer.prepend('<div class="ws-float-area-title">' + this._options.caption + '</div>');
-                  if (this._options.type === 'dialog') {
-                     var height = customHeaderContainer.height();
-                     $('.controls-DialogTemplate', this.getContainer()).css('margin-bottom', height);
-                  }
+                  this._prependCustomHeader(customHeaderContainer);
                } else {
                   this.getContainer().prepend($('<div class="ws-window-titlebar"><div class="ws-float-area-title ws-float-area-title-generated">' + this._options.caption + '</div></div>'));
                   this.getContainer().addClass('controls-CompoundArea-headerPadding');
                }
             } else if (customHeaderContainer.length && this._options.type === 'dialog') {
-               var container = $('.controls-DialogTemplate', this.getContainer());
-               container.prepend(customHeaderContainer.addClass('controls-CompoundArea-custom-header'));
-               this.getContainer().addClass('controls-CompoundArea-headerPadding');
+               this._prependCustomHeader(customHeaderContainer);
             } else {
                this.getContainer().removeClass('controls-CompoundArea-headerPadding');
+            }
+         },
+
+         _prependCustomHeader: function(customHead) {
+            var container = $('.controls-DialogTemplate', this.getContainer());
+            container.prepend(customHead.addClass('controls-CompoundArea-custom-header'));
+            this.getContainer().addClass('controls-CompoundArea-headerPadding');
+            if (this._options.type === 'dialog') {
+               var height = customHead.height();
+               $('.controls-DialogTemplate', this.getContainer()).css('padding-top', height);
             }
          },
 
