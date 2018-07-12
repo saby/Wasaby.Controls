@@ -18,7 +18,7 @@ define('Controls/Application/Core',
          ctxData: null,
          constructor: function(cfg) {
             var self = this;
-            nativeCss.load = function(path, require, load, conf){
+            nativeCss.load = function(path, require, load, conf) {
                load(null);
                self.headDataCtx.pushCssLink(self.ctxData.resourceRoot + '/' + path + ".css");
                self.headDataCtx.updateConsumers();
@@ -41,7 +41,7 @@ define('Controls/Application/Core',
             };
          },
          coreTheme: '',
-         setTheme: function(ev, theme){
+         setTheme: function(ev, theme) {
             this.coreTheme = theme;
          }
       });
