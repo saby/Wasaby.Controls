@@ -44,7 +44,6 @@ define('SBIS3.CONTROLS/Utils/ImportExport/OptionsTool',
           * Получить проверочную информацию о типах данных опций
           *
           * @public
-          * @static
           * @return {object}
           */
          getOptionTypes: function () {
@@ -55,7 +54,6 @@ define('SBIS3.CONTROLS/Utils/ImportExport/OptionsTool',
           * Получить опции по умолчанию
           *
           * @public
-          * @static
           * @return {object}
           */
          getDefaultOptions: function () {
@@ -66,7 +64,6 @@ define('SBIS3.CONTROLS/Utils/ImportExport/OptionsTool',
           * Получить список имён всех собственных опций компонента
           *
           * @public
-          * @static
           * @return {Array<string>}
           */
          getOwnOptionNames: function () {
@@ -86,7 +83,7 @@ define('SBIS3.CONTROLS/Utils/ImportExport/OptionsTool',
 
          /**
           * Разрешить неустановленные собственные опции компонента их значениями по умолчанию
-          * @protected
+          * @public
           * @param {object} options Опции компонента
           * @param {boolean} replaceNulls Заменять значениями по умолчанию не только отсутствующие (undefined) опции, но и опции со значением null
           */
@@ -110,7 +107,7 @@ define('SBIS3.CONTROLS/Utils/ImportExport/OptionsTool',
 
          /**
           * Проверить собственные опции компонента на допустимость их значений
-          * @protected
+          * @public
           * @param {object} options Опции компонента
           * @param {function(string, object):boolean} [nameFilter] Фильтр имён опций, которые подлежат проверке. Применяется при необходимости варьировать проверку в зависимости от значений других опций (опционально)
           */
