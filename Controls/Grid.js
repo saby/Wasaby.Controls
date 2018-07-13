@@ -1,11 +1,9 @@
 define('Controls/Grid', [
    'Controls/List',
    'Controls/List/Grid/GridViewModel',
-   'Core/core-merge',
-   'tmpl!Controls/List/Grid/Grid',
    'Controls/List/Grid/GridView',
    'Controls/List/BaseControl'
-], function(List, GridViewModel, cMerge, GridTpl) {
+], function(List, GridViewModel) {
 
    'use strict';
 
@@ -28,44 +26,11 @@ define('Controls/Grid', [
     */
 
    var
-      _private = {
-         prepareModelConfig: function(cfg) {
-            return {
-               columns: cfg.columns,
-               header: cfg.header,
-               results: cfg.results,
-               showRowSeparator: cfg.showRowSeparator,
-               multiselect: cfg.multiselect,
-               rowSpacing: cfg.rowSpacing,
-               leftPadding: cfg.leftPadding,
-               rightPadding: cfg.rightPadding,
-               stickyFields: cfg.stickyFields
-            };
-         },
-         prepareViewConfig: function(cfg) {
-            return {
-               columns: cfg.columns,
-               header: cfg.header,
-               results: cfg.results,
-               showRowSeparator: cfg.showRowSeparator,
-               rowSpacing: cfg.rowSpacing,
-               leftPadding: cfg.leftPadding,
-               rightPadding: cfg.rightPadding,
-               stickyFields: cfg.stickyFields
-            };
-         }
-      },
       Grid = List.extend({
-         _template: GridTpl,
-         _viewConfig: null,
+         _viewName: 'Controls/List/Grid/GridView',
+         _viewTemplate: 'Controls/List/ListControl',
          _getModelConstructor: function() {
             return GridViewModel;
-         },
-         _prepareModelConfig: function(cfg) {
-            return cMerge(Grid.superclass._prepareModelConfig(cfg), _private.prepareModelConfig(cfg));
-         },
-         _prepareViewConfig: function(cfg) {
-            return cMerge(Grid.superclass._prepareViewConfig(cfg), _private.prepareViewConfig(cfg));
          }
       });
 

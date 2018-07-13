@@ -49,7 +49,7 @@ define('Controls/List/ListViewModel',
             itemsModelCurrent.showActions = !this._editingItemData && (!this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive));
             itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem.item;
             itemsModelCurrent.multiSelectStatus = this._selectedKeys.indexOf(itemsModelCurrent.key) !== -1;
-            itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility === 'visible';
+            itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility === 'visible' || this._options.multiSelectVisibility === 'onhover';
             itemsModelCurrent.drawActions =
                itemsModelCurrent.itemActions &&
                ((itemsModelCurrent.itemActions.showed &&
@@ -199,6 +199,16 @@ define('Controls/List/ListViewModel',
 
          getActiveItem: function() {
             return this._activeItem;
+         },
+
+         setMultiSelectVisibility: function(multiSelectVisibility) {
+            this._options.multiSelectVisibility = multiSelectVisibility;
+            this._nextVersion();
+            this._notify('onListChange');
+         },
+
+         getMultiSelectVisibility: function() {
+            return this._options.multiSelectVisibility;
          },
 
          __calcSelectedItem: function(display, selKey, keyProperty) {
