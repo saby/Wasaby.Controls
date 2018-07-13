@@ -1,4 +1,18 @@
 <div class="controlsDemo-PasswordBasic">
    <div class="controlsDemo-PasswordBasic__title">Password input field</div>
-   <Controls.Input.Password placeholder="Password" bind:value="_value"/>
+   <Controls.Validate.Controller name="validateController">
+      <ws:content>
+         <Controls.Input.Password name="password"
+                                  placeholder="Password" tagStyle="{{_tagStyle}}"
+                                  on:tagClick="_tagClickHandler()"
+                                  on:inputCompleted="_inputCompletedHandler()"
+                                  bind:value="_value"/>
+      </ws:content>
+      <ws:validators>
+         <ws:Function value="{{_value}}">Controls-demo/Input/Password/Basic/validator</ws:Function>
+      </ws:validators>
+   </Controls.Validate.Controller>
+
+   <Controls.Popup.Opener.InfoBox name="infoBox"/>
+   <Controls.Popup.Opener.Confirmation name="confirmation"/>
 </div>

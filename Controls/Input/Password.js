@@ -1,14 +1,15 @@
 define('Controls/Input/Password',
    [
       'Core/Control',
-      'tmpl!Controls/Input/Password/Password',
       'WS.Data/Type/descriptor',
+      'Controls/Utils/tmplNotify',
+      'tmpl!Controls/Input/Password/Password',
       'Controls/Input/resources/InputRender/BaseViewModel',
 
       'css!Controls/Input/Password/Password'
    ],
 
-   function(Control, template, types, BaseViewModel) {
+   function(Control, types, tmplNotify, template, BaseViewModel) {
 
    /**
     * Password input.
@@ -24,12 +25,16 @@ define('Controls/Input/Password',
     * @public
     * @category Input
     * @author Золотова Э.Е.
+    * @demo Controls-demo/Input/Password/Basic
     */
 
       'use strict';
 
       var PasswordInput = Control.extend({
          _template: template,
+
+         _notifyHandler: tmplNotify,
+
          _passwordVisible: false,
 
          constructor: function(options) {
@@ -47,13 +52,14 @@ define('Controls/Input/Password',
 
          _toggleVisibilityHandler: function() {
             this._passwordVisible = !this._passwordVisible;
-         },
-
-         _valueChangedHandler: function(e, value) {
-            this._notify('valueChanged', [value]);
          }
-
       });
+
+      PasswordInput.getDefaultOptions = function() {
+         return {
+            value: ''
+         };
+      };
 
       PasswordInput.getOptionTypes = function getOptionsTypes() {
          return {
