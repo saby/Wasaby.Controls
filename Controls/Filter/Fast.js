@@ -73,7 +73,7 @@ define('Controls/Filter/Fast',
             self._configs[index].displayProperty = properties.displayProperty;
 
             if (properties.items) {
-               _private.prepareItems(self._configs[index], properties.items, properties.keyProperty);
+               _private.prepareItems(self._configs[index], properties.items);
                return Deferred.success(self._configs[index]._items);
             } else if (properties.source) {
                return _private.loadItemsFromSource(self._configs[index], properties.source, properties.keyProperty);
@@ -170,10 +170,14 @@ define('Controls/Filter/Fast',
          },
 
          _getText: function() {
+            var self = this;
             Chain(this._configs).each(function(config, index) {
-               if (config._items) {
-                  config.text = getPropValue(config._items.at(index), config.displayProperty);
-               }
+               var sKey = getPropValue(self._items.at(index), 'value');
+               Chain(config._items).each(function(item) {
+                  if (getPropValue(item, config.keyProperty) === sKey) {
+                     config.text = getPropValue(item, config.displayProperty);
+                  }
+               });
             });
          },
 
