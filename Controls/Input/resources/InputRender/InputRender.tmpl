@@ -50,8 +50,8 @@
    </div>
 
    <ws:if data="{{_options.tagStyle}}">
-      <div on:mouseenter="_notifyHandler('onTagHover')"
-           on:click="_notifyHandler('onTagClick')"
+      <div on:mouseenter="_notifyHandler('tagHover')"
+           on:click="_notifyHandler('tagClick')"
            class="controls-InputRender__tagStyle controls-InputRender__tagStyle-{{_options.tagStyle}}">
       </div>
    </ws:if>
