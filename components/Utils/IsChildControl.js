@@ -9,7 +9,7 @@ define('SBIS3.CONTROLS/Utils/IsChildControl', function() {
     //MOVE_TO ШИПИН
     return function(parent, child) {
         while (child && child !== parent) {
-            child = child.getParent() || child.getOpener && child.getOpener();
+            child = child.getParent && child.getParent() || child.getOpener && child.getOpener();
         }
         return child === parent;
     };

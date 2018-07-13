@@ -30,7 +30,7 @@
                template="tmpl!Controls/List/ItemTemplateWrapper"
                contentTemplate="{{itemContentTemplate}}"
                itemData="{{listModel.getCurrent()}}"
-               actionsType="{{itemActionsType}}"/>
+               actionsType="{{itemActionsPosition}}"/>
          </ws:if>
       </ws:else>
       <ws:if data="{{listModel.getDragTargetPosition() &&
@@ -53,5 +53,5 @@
               multiSelectTpl="{multiSelectTpl}}"
               contentTemplate="{{itemContentTemplate}}"
               itemData="{{editingItemData}}"
-              actionsType="{{itemActionsType}}"/>
+              actionsType="{{itemActionsPosition}}"/>
 </ws:if>

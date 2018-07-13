@@ -50,7 +50,8 @@ define([
             items: data,
             keyProperty: 'id',
             displayProperty: 'title',
-            markedKey: 1
+            markedKey: 1,
+            selectedKeys: [data[0].id]
          };
 
          var iv = new ListViewModel(cfg);
@@ -61,6 +62,7 @@ define([
          assert.equal(0, cur.index, 'Incorrect field set on getCurrent()');
          assert.deepEqual(data[0], cur.item, 'Incorrect field set on getCurrent()');
          assert.isTrue(cur.isSelected, 'Incorrect field set on getCurrent()');
+         assert.isTrue(cur.multiSelectStatus, 'Incorrect field set on getCurrent()');
 
       });
 
@@ -80,6 +82,7 @@ define([
 
          iv.setMarkedKey(3);
          marItem = iv._markedItem;
+         assert.equal(3, iv._options.markedKey, 'Incorrect selectedKey option value');
          assert.equal(iv._display.at(2), marItem, 'Incorrect selectedItem');
          assert.equal(1, iv.getVersion(), 'Incorrect version appendItems');
       });
@@ -110,6 +113,20 @@ define([
          assert.equal(notifyCont, 2);
          lvm.setDragTargetItem(target);
          assert.equal(notifyCont, 2);
+      });
+
+      it('_updateSelection', function() {
+         var cfg = {
+            items: data,
+            keyProperty: 'id',
+            displayProperty: 'title',
+            selectedKeys: [1]
+         };
+
+         var iv = new ListViewModel(cfg);
+         assert.deepEqual(iv._selectedKeys, [1]);
+         iv._updateSelection([2, 3]);
+         assert.deepEqual(iv._selectedKeys, [2, 3]);
       });
    });
 

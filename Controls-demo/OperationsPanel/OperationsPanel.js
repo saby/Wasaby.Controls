@@ -3,8 +3,8 @@ define('Controls-demo/OperationsPanel/OperationsPanel', [
    'WS.Data/Source/Memory',
    'tmpl!Controls-demo/OperationsPanel/OperationsPanel',
    'Controls/List',
-   'Controls/List/MassSelector',
-   'Controls/Container/MassSelector',
+   'Controls/List/MultiSelector',
+   'Controls/Container/MultiSelector',
    'css!Controls-demo/OperationsPanel/OperationsPanel'
 ], function(Control, Memory, template) {
    'use strict';
@@ -180,7 +180,7 @@ define('Controls-demo/OperationsPanel/OperationsPanel', [
          var itemId = item.getId();
          this._currentClick = 'Вы нажали на ' + itemId;
          if (itemId === 0) {
-            var selected = this._children.massSelector.getSelection().selected;
+            var selected = this._children.multiSelector.getSelection().selected;
             if (selected && selected.length && selected[0] === null) {
                this._showError('невозможно удалить всё');
             } else {
@@ -201,7 +201,7 @@ define('Controls-demo/OperationsPanel/OperationsPanel', [
          });
       },
 
-      _selectionChange: function(selection) {
+      _selectionChange: function(e, selection) {
          var selected = selection.selected;
          if (!selected || !selected.length) {
             defaultItems.shift();

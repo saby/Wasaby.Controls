@@ -65,7 +65,7 @@ define('Controls/Toggle/Radio', [
 
       _selectKeyChanged: function(e, item, keyProperty) {
          if (!this._options.readOnly) {
-            this._notify('selectedKeyChanged', item.get(keyProperty));
+            this._notify('selectedKeyChanged', [item.get(keyProperty)]);
          }
       }
    });

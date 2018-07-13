@@ -284,6 +284,13 @@ define('SBIS3.CONTROLS/ComponentBinder',
       
       /**
        * Метод для связывания истории фильтров с представлением данных
+       * @param {SBIS3.CONTROLS/Filter/Button} filterButton кнопка фильтра
+       * @param {SBIS3.CONTROLS/Filter/FastData} fastDataFilter быстрый фильтр
+       * @param {string} searchParam параметр поиска
+       * @param {uuid} historyId идентификатор истории
+       * @param {array} ignoreFiltersList массив ключей фильтров, которые не нужно запоминать (записывать в историю)
+       * @param {boolean} applyOnLoad параметр, определяющий, нужно ли применять историю перед представления данных при загрузке
+       * @param {SBIS3.CONTROLS/Browser} browser браузер
        */
       bindFilterHistory: function(filterButton, fastDataFilter, searchParam, historyId, ignoreFiltersList, applyOnLoad, browser, loadHistory, saveRootInHistory) {
             /* Этот параметр необходим для возможности делать запрос в конструкторе,
@@ -371,6 +378,12 @@ define('SBIS3.CONTROLS/ComponentBinder',
             return res;
          });
       },
+
+       /**
+        * Метод для инициализации сохранения в историю текущего количества записей в списке
+        * @param {SBIS3.CONTROLS/ListView} view представление данных
+        * @param {uuid} id идентификатор истории
+        */
 
       bindPagingHistory: function(view, id) {
          this._pagingHistoryController = new HistoryController({historyId: id});

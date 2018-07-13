@@ -113,7 +113,11 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlaceHoverController/EditInPlace
                         return editingRecord;
                      }
                   } else {
-                     return EditInPlaceHoverController.superclass.edit.apply(this, [model])
+                     if (this._hoveredEip) {
+                        this._hoveredEip.hide();
+                        this._hoveredEip = null;
+                     }
+                     return EditInPlaceHoverController.superclass.edit.apply(this, [model]);
                   }
                }.bind(this));
             },

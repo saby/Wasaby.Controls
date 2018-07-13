@@ -30,10 +30,10 @@ define('Controls/List/ItemActions/ItemActionsControl', [
             if (!itemActionVisibilityCallback || itemActionVisibilityCallback(action, item)) {
                if (action.icon && !~action.icon.indexOf(ACTION_ICON_CLASS)) {
                   action.icon += ' ' + ACTION_ICON_CLASS;
-                  if (~action.icon.indexOf('icon-done')) {
+                  if (action.iconStyle && ~action.iconStyle.indexOf('done')) {
                      action.iconDone = true;
                   }
-                  if (~action.icon.indexOf('icon-error')) {
+                  if (action.iconStyle && ~action.iconStyle.indexOf('error')) {
                      action.iconError = true;
                   }
                }
@@ -47,7 +47,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          var
             all = _private.fillItemAllActions(item, options.itemActions, options.itemActionVisibilityCallback),
 
-            showed = options.itemActionsType === 'outside'
+            showed = options.itemActionsPosition === 'outside'
                ? all
                : all.filter(function(action) {
                   return action.showType === tUtil.showType.TOOLBAR || action.showType === tUtil.showType.MENU_TOOLBAR;
@@ -71,7 +71,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
             });
          }
 
-         if (_private.needActionsMenu(all, options.itemActionsType)) {
+         if (_private.needActionsMenu(all, options.itemActionsPosition)) {
             showed.push({
                title: 'Еще',
                icon: 'icon-ExpandDown icon-primary ' + ACTION_ICON_CLASS,
@@ -105,7 +105,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          });
       },
 
-      needActionsMenu: function(actions, itemActionsType) {
+      needActionsMenu: function(actions, itemActionsPosition) {
          var
             main = 0,
             additional = 0;
@@ -118,7 +118,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
             }
          });
 
-         return actions && (additional + main !==  actions.length) && itemActionsType !== 'outside';
+         return actions && (additional + main !==  actions.length) && itemActionsPosition !== 'outside';
       }
    };
 
@@ -161,7 +161,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
 
    ItemActionsControl.getDefaultOptions = function() {
       return {
-         itemActionsType: 'inside',
+         itemActionsPosition: 'inside',
          itemActionVisibilityCallback: function() {
             return true;
          },

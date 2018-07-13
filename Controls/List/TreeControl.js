@@ -3,8 +3,20 @@ define('Controls/List/TreeControl', [
    'tmpl!Controls/List/TreeControl/TreeControl',
    'Controls/List/resources/utils/ItemsUtil',
    'Core/core-clone',
-   'Controls/List/BaseControl'
-], function(Control, TreeControlTpl, ItemsUtil, cClone) {
+   'WS.Data/Relation/Hierarchy',
+   'Controls/Container/MultiSelector/SelectionContextField',
+   'Controls/Container/Data/ContextOptions',
+   'Controls/Utils/ArraySimpleValuesUtil'
+], function(
+   Control,
+   TreeControlTpl,
+   ItemsUtil,
+   cClone,
+   HierarchyRelation,
+   SelectionContextField,
+   DataContext,
+   ArraySimpleValuesUtil
+) {
    'use strict';
 
    var _private = {
@@ -27,6 +39,40 @@ define('Controls/List/TreeControl', [
          } else {
             listViewModel.toggleExpanded(dispItem);
          }
+      },
+      getAllParentsIds: function(hierarchyRelation, key, items) {
+         var
+            parentsIds = [],
+            parent = hierarchyRelation.getParent(key, items);
+
+         while (parent) {
+            parentsIds.push(parent.getId());
+            parent = hierarchyRelation.getParent(parent, items);
+         }
+
+         return parentsIds;
+      },
+      getAllChildren: function(hierarchyRelation, rootId, items) {
+         var
+            children = [];
+
+         hierarchyRelation.getChildren(rootId, items).forEach(function(child) {
+            if (hierarchyRelation.isNode(child)) {
+               ArraySimpleValuesUtil.addSubArray(children, _private.getAllChildren(hierarchyRelation, child.getId(), items));
+            }
+            ArraySimpleValuesUtil.addSubArray(children, [child]);
+         });
+
+         return children;
+      },
+      getSelectedChildrenCount: function(hierarchyRelation, rootId, selectedKeys, items) {
+         return _private.getAllChildren(hierarchyRelation, rootId, items).reduce(function(acc, child) {
+            if (selectedKeys.indexOf(child.getId()) !== -1) {
+               return acc + 1;
+            } else {
+               return acc;
+            }
+         }, 0);
       }
    };
 
@@ -43,8 +89,13 @@ define('Controls/List/TreeControl', [
    var TreeControl = Control.extend({
       _template: TreeControlTpl,
       _loadedNodes: null,
-      constructor: function() {
+      constructor: function(cfg) {
          this._loadedNodes = {};
+         this._hierarchyRelation =  new HierarchyRelation({
+            idProperty: cfg.keyProperty || 'id',
+            parentProperty: cfg.parentProperty || 'Раздел',
+            nodeProperty: cfg.nodeProperty || 'Раздел@'
+         });
          return TreeControl.superclass.constructor.apply(this, arguments);
       },
       _onNodeExpanderClick: function(e, dispItem) {
@@ -63,6 +114,7 @@ define('Controls/List/TreeControl', [
          this._children.baseControl.moveItems(items, target, position);
       },
       reload: function() {
+         this._loadedNodes = {};
          this._children.baseControl.reload();
       },
       editItem: function(options) {
@@ -70,6 +122,57 @@ define('Controls/List/TreeControl', [
       },
       addItem: function(options) {
          this._children.baseControl.addItem(options);
+      },
+      _onCheckBoxClick: function(e, key, status) {
+         var
+            parents,
+            newSelectedKeys,
+            childrenIds;
+         if (status === true || status === null) {
+            parents = _private.getAllParentsIds(this._hierarchyRelation, key, this.context.get('dataOptions').items);
+            newSelectedKeys = this.context.get('selection').calculatedSelectedKeys.slice();
+            newSelectedKeys.splice(newSelectedKeys.indexOf(key), 1);
+            childrenIds = _private.getAllChildren(this._hierarchyRelation, key, this.context.get('dataOptions').items).map(function(child) {
+               return child.getId();
+            });
+            ArraySimpleValuesUtil.removeSubArray(newSelectedKeys, childrenIds);
+            for (var i = 0; i < parents.length; i++) {
+               //TODO: проверка на hasMore должна быть тут
+               if (_private.getSelectedChildrenCount(this._hierarchyRelation, parents[i], newSelectedKeys, this.context.get('dataOptions').items) === 0) {
+                  newSelectedKeys.splice(newSelectedKeys.indexOf(parents[i]), 1);
+               } else {
+                  break;
+               }
+            }
+            this._notify('selectionChange', [ArraySimpleValuesUtil.getArrayDifference(this.context.get('selection').calculatedSelectedKeys, newSelectedKeys)]);
+         } else {
+            this._notify('selectionChange', [{added: [key], removed: []}]);
+         }
+      },
+
+      _onAfterItemsRemoveHandler: function(e, keys, result) {
+         var
+            self = this,
+            newSelectedKeys = this.context.get('selection').calculatedSelectedKeys.slice(),
+            parents;
+
+         this._notify('afterItemsRemove', [keys, result]);
+
+         ArraySimpleValuesUtil.removeSubArray(newSelectedKeys, keys);
+
+         keys.forEach(function(key) {
+            parents = _private.getAllParentsIds(self._hierarchyRelation, key, self.context.get('dataOptions').items);
+            for (var i = 0; i < parents.length; i++) {
+               //TODO: проверка на hasMore должна быть тут
+               if (_private.getSelectedChildrenCount(self._hierarchyRelation, parents[i], newSelectedKeys, self.context.get('dataOptions').items) === 0) {
+                  newSelectedKeys.splice(newSelectedKeys.indexOf(parents[i]), 1);
+               } else {
+                  break;
+               }
+            }
+         });
+
+         this._notify('selectionChange', [ArraySimpleValuesUtil.getArrayDifference(this.context.get('selection').calculatedSelectedKeys, newSelectedKeys)]);
       }
    });
 
@@ -79,6 +182,14 @@ define('Controls/List/TreeControl', [
          filter: {}
       };
    };
+   
+   TreeControl.contextTypes = function contextTypes() {
+      return {
+         selection: SelectionContextField,
+         dataOptions: DataContext
+      };
+   };
+
 
    return TreeControl;
 });

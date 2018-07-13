@@ -4,12 +4,11 @@ define('Controls/Dropdown/Container',
       'tmpl!Controls/Dropdown/Container/Container',
       'Controls/Controllers/SourceController',
       'Core/helpers/Object/isEqual',
-      'Core/helpers/Object/isEmpty',
       'WS.Data/Chain',
       'Controls/Input/Dropdown/Util'
    ],
 
-   function(Control, template, SourceController, isEqual, isEmpty, Chain, dropdownUtils) {
+   function(Control, template, SourceController, isEqual, Chain, dropdownUtils) {
 
       'use strict';
 
@@ -83,23 +82,26 @@ define('Controls/Dropdown/Container',
        */
 
       var _private = {
-         loadItems: function(instance, source, selectedKeys, keyProperty, filter) {
+         loadItems: function(instance, source, selectedKeys, keyProperty, dataLoadCallback, filter) {
             instance._sourceController = new SourceController({
                source: source
             });
             return instance._sourceController.load(filter).addCallback(function(items) {
                instance._items = items;
-               _private.updateSelectedItems(instance, selectedKeys, keyProperty);
+               _private.updateSelectedItems(instance, selectedKeys, keyProperty, dataLoadCallback);
                return items;
             });
          },
 
-         updateSelectedItems: function(instance, selectedKeys, keyProperty) {
+         updateSelectedItems: function(instance, selectedKeys, keyProperty, dataLoadCallback) {
             Chain(instance._items).each(function(item) {
                if (selectedKeys.indexOf(item.get(keyProperty)) > -1) {
                   instance._selectedItems.push(item);
                }
             });
+            if (dataLoadCallback) {
+               dataLoadCallback(instance._selectedItems);
+            }
          },
 
          onResult: function(result) {
@@ -111,6 +113,14 @@ define('Controls/Dropdown/Container',
                   break;
                case 'itemClick':
                   _private.selectItem.call(this, result.data);
+                  
+                  //FIXME тут необходимо перевести на кэширующий источник,
+                  //Чтобы при клике историческое меню обновляло источник => а контейнер обновил item'ы
+                  //Но т.к. кэширующий сорс есть только в 400, выписываю задачу на переход.
+                  //https://online.sbis.ru/opendoc.html?guid=eedde59b-d906-47c4-b2cf-4f6d3d3cc2c7
+                  if (this._options.source.getItems) {
+                     this._items = this._options.source.getItems();
+                  }
                   if (!result.data[0].get('@parent')) {
                      this._children.DropdownOpener.close();
                   }
@@ -136,18 +146,12 @@ define('Controls/Dropdown/Container',
             if (!options.lazyItemsLoad) {
                if (receivedState) {
                   this._items = receivedState;
-                  _private.updateSelectedItems(this, options.selectedKeys, options.keyProperty);
+                  _private.updateSelectedItems(this, options.selectedKeys, options.keyProperty, options.dataLoadCallback);
                } else {
                   if (options.source) {
-                     return _private.loadItems(this, options.source, options.selectedKeys, options.keyProperty);
+                     return _private.loadItems(this, options.source, options.selectedKeys, options.keyProperty, options.dataLoadCallback);
                   }
                }
-            }
-         },
-
-         _afterMount: function() {
-            if (!isEmpty(this._selectedItems)) {
-               this._notify('selectedItemsChanged', [this._selectedItems]);
             }
          },
 
@@ -186,7 +190,7 @@ define('Controls/Dropdown/Container',
             }
 
             if (this._options.source && !this._items) {
-               _private.loadItems(this, this._options.source, this._options.selectedKeys, this._options.keyProperty, this._options.filter).addCallback(function(items) {
+               _private.loadItems(this, this._options.source, this._options.selectedKeys, this._options.keyProperty, this._options.dataLoadCallBack, this._options.filter).addCallback(function(items) {
                   open();
                   return items;
                });
