@@ -12,7 +12,7 @@
       <ws:if data="{{listModel.getCurrent().isGroup}}">
          <ws:if data="{{!listModel.getCurrent().isHiddenGroup}}">
             <ws:partial
-               template="{{listModel.getCurrent().groupTemplate || defaultGroupTemplate}}"/>
+               template="{{groupTemplate}}" itemData="{{listModel.getCurrent()}}"/>
          </ws:if>
       </ws:if>
       <ws:else>

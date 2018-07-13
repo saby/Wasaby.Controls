@@ -7,11 +7,10 @@ define('Controls/Dropdown/resources/DropdownViewModel',
       'Controls/List/resources/utils/ItemsUtil',
       'Controls/List/ItemsViewModel',
       'WS.Data/Entity/Model',
-      'WS.Data/Relation/Hierarchy',
-      'Controls/Constants',
+      'WS.Data/Relation/Hierarchy'
    ],
 
-   function(BaseViewModel, ItemsUtil, ItemsViewModel, Model, Hierarchy, ControlsConstants) {
+   function(BaseViewModel, ItemsUtil, ItemsViewModel, Model, Hierarchy) {
       var _private = {
          filterHierarchy: function(item) {
 
@@ -34,7 +33,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             var itemInHistory = (item.get('pinned') || item.get('recent') || item.get('frequent')) && !item.get('parent');
             var nextItemInHistory = nextItem.get('pinned') || nextItem.get('recent') || nextItem.get('frequent');
             return itemInHistory && !nextItemInHistory;
-         },
+         }
       };
 
       var DropdownViewModel = BaseViewModel.extend({
@@ -98,10 +97,9 @@ define('Controls/Dropdown/resources/DropdownViewModel',
 
          getCurrent: function() {
             var itemsModelCurrent = this._itemsModel.getCurrent();
-            if (!itemsModelCurrent.item.get) {
-               itemsModelCurrent.isGroup = true;
-               itemsModelCurrent.isHiddenGroup = itemsModelCurrent.item === ControlsConstants.view.hiddenGroup;
-               itemsModelCurrent.groupTemplate = this._options.itemsGroup.template;
+
+            //if we had group element we should return it without changes
+            if (itemsModelCurrent.isGroup) {
                return itemsModelCurrent;
             }
             itemsModelCurrent.hasChildren = this._hasItemChildren(itemsModelCurrent.item);

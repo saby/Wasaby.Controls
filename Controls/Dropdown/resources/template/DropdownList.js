@@ -38,7 +38,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
       var Menu = Control.extend([], {
          _template: MenuItemsTpl,
          _expanded: false,
-         _defaultGroupTemplate: groupTemplate,
+         _groupTemplate: groupTemplate,
          _defaultItemTemplate: itemTemplate,
          _defaultHeadTemplate: defaultHeadTemplate,
          _defaultContentHeadTemplate: defaultContentHeadTemplate,
@@ -51,6 +51,9 @@ define('Controls/Dropdown/resources/template/DropdownList',
 
             if (config.defaultItemTemplate) {
                this._defaultItemTemplate = config.defaultItemTemplate;
+            }
+            if (config.itemsGroup && config.itemsGroup.template) {
+               this._groupTemplate = config.itemsGroup.template;
             }
 
             if (config.showHeader) {
@@ -92,7 +95,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   nodeProperty: newOptions.nodeProperty,
                   parentProperty: newOptions.parentProperty,
                   emptyText: newOptions.emptyText,
-                  itemsGroup: newOptions.itemsGroup,
+                  itemsGroup: newOptions.itemsGroup
                });
                this._hasHierarchy = this._listModel.hasHierarchy();
             }
@@ -130,7 +133,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
                      selectedKeys: this._options.selectedKeys,
                      rootKey: item.get(this._options.keyProperty),
                      showHeader: false,
-                     defaultItemTemplate: this._options.defaultItemTemplate,
+                     defaultItemTemplate: this._options.defaultItemTemplate
                   },
                   corner: {
                      horizontal: 'right'
