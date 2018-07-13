@@ -516,7 +516,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                this._processOptions(options);
             }
             var views = this._views;
-            var needRebuild = !options.waitingMode ? !views.columnBinder || !views.formatter : !!views.columnBinder || !!views.formatter;
+            var needRebuild = !options.waitingMode ? (options.usePresets && !views.presets) || !views.columnBinder || !views.formatter : (options.usePresets && !!views.presets) || !!views.columnBinder || !!views.formatter;
             if (needRebuild) {
                this.rebuildMarkup();
                this._init();
