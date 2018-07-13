@@ -20,9 +20,9 @@ define('Controls/List/TreeControl', [
          var
             filter = cClone(self._options.filter),
             listViewModel = self._children.baseControl.getViewModel(),
-            nodeKey = ItemsUtil.getPropertyValue(dispItem.getContents(), self._options.viewConfig.keyProperty);
+            nodeKey = ItemsUtil.getPropertyValue(dispItem.getContents(), self._options.keyProperty);
          if (!self._loadedNodes[nodeKey]) {
-            filter[self._options.viewConfig.parentProperty] = nodeKey;
+            filter[self._options.parentProperty] = nodeKey;
             self._children.baseControl.getSourceController().load(filter, self._sorting).addCallback(function(list) {
                if (self._options.uniqueKeys) {
                   listViewModel.mergeItems(list);
