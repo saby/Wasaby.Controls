@@ -170,11 +170,9 @@ define('Controls/Filter/Fast',
          },
 
          _getText: function() {
-            var self = this;
             Chain(this._configs).each(function(config, index) {
                if (config._items) {
-                  var sKey = getPropValue(self._items.at(index), 'value');
-                  config.text = getPropValue(config._items.getRecordById(sKey), config.displayProperty);
+                  config.text = getPropValue(config._items.at(index), config.displayProperty);
                }
             });
          },
