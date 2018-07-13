@@ -611,6 +611,16 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             // Могут несколько раз позвать закрытие подряд
          },
+
+         _toggleVisibleClass: function(className, visible) {
+            className = className || '';
+            if (visible) {
+               className = className.replace(/ws-hidden/ig, '');
+            } else if (className.indexOf('ws-hidden') === -1) {
+               className += ' ws-hidden';
+            }
+            return className;
+         },
          _toggleVisible: function(visible) {
             var popupContainer = this.getContainer().closest('.controls-Popup')[0];
             if (popupContainer) {
@@ -622,16 +632,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                      popupConfig = ManagerController.find(id);
                   if (popupConfig) {
                      // Удалим или поставим ws-hidden в зависимости от переданного аргумента
-                     var newClassName = popupConfig.popupOptions.className || '';
-                     if (visible) {
-                        newClassName = newClassName.replace(/ws-hidden/ig, '');
-                     } else if (newClassName.indexOf('ws-hidden') === -1) {
-                        newClassName += ' ws-hidden';
-                     }
-                     popupConfig.popupOptions.className = newClassName;
+                     popupConfig.popupOptions.className = this._toggleVisibleClass(popupConfig.popupOptions.className, visible);
 
                      // Сразу обновим список классов на контейнере, чтобы при пересинхронизации он не "прыгал"
-                     popupContainer.className = newClassName;
+                     popupContainer.className = this._toggleVisibleClass(popupContainer.className, visible);
                      this._isVisible = visible;
                   }
                }
