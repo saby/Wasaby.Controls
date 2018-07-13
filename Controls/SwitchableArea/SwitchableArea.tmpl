@@ -1,10 +1,7 @@
 <div class="controls-SwitchableArea">
     <ws:for data="item in _options.items">
         <ws:if data="{{_viewModel.mustBeLoad(item)}}">
-            <Controls.Container.Async attr:class="{{_options.selectedKey !== getIdPropertyItem(item) ? 'ws-hidden'}}"
-                                      attr:key="{{getIdPropertyItem(item)}}"
-                                      templateName="{{item.get(_options.itemTemplateName)}}"
-                                      templateOptions="{{_options}}"/>
+            <ws:partial template="{{_options.itemTemplate || _defaultItemTemplate}}" currentItemId="{{getItemId(item)}}" item="{{item}}" _options="{{_options}}"/>
         </ws:if>
     </ws:for>
 </div>

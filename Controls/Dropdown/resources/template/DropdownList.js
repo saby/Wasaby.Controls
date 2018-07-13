@@ -79,7 +79,6 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   items: newOptions.items,
                   rootKey: newOptions.rootKey || null,
                   selectedKeys: newOptions.selectedKeys,
-                  displayProperty: newOptions.displayProperty,
                   keyProperty: newOptions.keyProperty,
                   additionalProperty: newOptions.additionalProperty,
                   itemTemplateProperty: newOptions.itemTemplateProperty,
@@ -89,17 +88,26 @@ define('Controls/Dropdown/resources/template/DropdownList',
                });
                this._hasHierarchy = this._listModel.hasHierarchy();
             }
+            this._popupOptions = {
+               corner: {
+                  horizontal: 'right'
+               },
+               eventHandlers: {
+                  onResult: this.resultHandler
+               }
+            };
          },
 
          _beforeUpdate: function(newOptions) {
             if (newOptions.rootKey !== this._options.rootKey) {
                this._listModel.setRootKey(newOptions.rootKey);
+               this._hasHierarchy = this._listModel.hasHierarchy();
             }
             if (newOptions.items !== this._options.items) {
                this._listModel.setItems(newOptions);
+               this._hasHierarchy = this._listModel.hasHierarchy();
                this._children.subDropdownOpener.close();
             }
-
          },
 
          _itemMouseEnter: function(event, item, hasChildren) {
@@ -109,7 +117,6 @@ define('Controls/Dropdown/resources/template/DropdownList',
                      items: this._options.items,
                      itemTemplate: this._options.itemTemplate,
                      keyProperty: this._options.keyProperty,
-                     additionalProperty: this._options.additionalProperty,
                      parentProperty: this._options.parentProperty,
                      nodeProperty: this._options.nodeProperty,
                      selectedKeys: this._options.selectedKeys,

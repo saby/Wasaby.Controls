@@ -32,13 +32,13 @@ define('Controls/Container/Scroll/ScrollWidthUtil',
           * @param detection
           * @return {number}
           */
-         calcScrollbarWidth: function(detection, compatibility) {
+         calcScrollbarWidth: function(detection) {
             var scrollbarWidth;
 
             if (detection.webkit || detection.chrome) {
                scrollbarWidth = 0;
             } else if (detection.isIE12) {
-               scrollbarWidth = compatibility.touch ? 16 : 12;
+               scrollbarWidth = detection.IEVersion < 17 ? 12 : 16;
             } else if (detection.isIE10 || detection.isIE11) {
                scrollbarWidth = 17;
             } else if (typeof window !== 'undefined') {
@@ -82,7 +82,7 @@ define('Controls/Container/Scroll/ScrollWidthUtil',
             if (typeof _private.styleHideScrollbar === 'string') {
                styleHideScrollbar = _private.styleHideScrollbar;
             } else {
-               scrollbarWidth = _private.calcScrollbarWidth(detection, compatibility);
+               scrollbarWidth = _private.calcScrollbarWidth(detection);
                styleHideScrollbar = _private.calcStyleHideScrollbar(scrollbarWidth, detection, compatibility);
             }
 

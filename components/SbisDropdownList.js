@@ -8,11 +8,11 @@ define('SBIS3.CONTROLS/SbisDropdownList',
       'SBIS3.CONTROLS/Utils/DropdownUtil',
       'tmpl!SBIS3.CONTROLS/SbisDropdownList/SbisDropdownListItem',
       'tmpl!SBIS3.CONTROLS/DropdownList/DropdownListItem',
-      'css!SBIS3.CONTROLS/SbisDropdownList/SbisDropdownList',
-      'Core/core-clone'
+      'Core/Deferred',
+      'css!SBIS3.CONTROLS/SbisDropdownList/SbisDropdownList'
    ],
 
-   function(DropdownList, Model, DropdownUtil, SbisDropdownListItem) {
+   function(DropdownList, Model, DropdownUtil, SbisDropdownListItem, DropdownListItem, Deferred) {
 
       'use strict';
 
@@ -27,6 +27,28 @@ define('SBIS3.CONTROLS/SbisDropdownList',
        * @public
        * @category Input
        */
+      
+      var _private = {
+         addToHistory: function(self, id) {
+            var def = new Deferred();
+            DropdownUtil.initHistory(self, function() {
+               var items = self.getItems();
+   
+               if (!items.getRecordById(id)) {
+                  self._historyDeferred = null;
+                  self._historyController.addToRecent(id, new Model({
+                     rawData: {},
+                     adapter: items.getAdapter(),
+                     format: items.getFormat().clone()
+                  }));
+               }
+               self._historyController.addToHistory(self._historyController.getCastId(id));
+               def.callback();
+            });
+            
+            return def;
+         }
+      };
 
 
       var SbisDropdownList = DropdownList.extend(/** @lends SBIS3.CONTROLS/SbisDropdownList.prototype */{
@@ -74,7 +96,7 @@ define('SBIS3.CONTROLS/SbisDropdownList',
          showPicker: function(event) {
             /* При клике на крестик не грузим записи и историю, пикер тоже открывать не надо */ 
             if (!event || !$(event.target).hasClass('controls-DropdownList__crossIcon')) {
-               DropdownUtil.showPicker(this, SbisDropdownList, event);
+               DropdownUtil.initHistory(this, SbisDropdownList.superclass.showPicker, event);
             }
          },
 
@@ -101,20 +123,18 @@ define('SBIS3.CONTROLS/SbisDropdownList',
 
          setSelectedKeys: function(idArray) {
             var id = idArray && idArray[0];
-            var items = this.getItems();
-
-            if (this._historyController && !this._options.multiselect && id) {
-               if (!items.getRecordById(id)) {
-                  this._historyDeferred = null;
-                  this._historyController.addToRecent(id, new Model({
-                     rawData: {},
-                     adapter: items.getAdapter(),
-                     format: items.getFormat().clone()
-                  }));
-               }
-               this._historyController.addToHistory(this._historyController.getCastId(id));
+            var self = this;
+            var args = arguments;
+      
+            /* Прикладные разработкичи могут менять ключ ещё до загрузки списка,
+               надо на это проверять */
+            if (!this._options.multiselect && id && self.getItems()) {
+               _private.addToHistory(this, id).addCallback(function() {
+                  SbisDropdownList.superclass.setSelectedKeys.apply(self, args);
+               });
+            } else {
+               SbisDropdownList.superclass.setSelectedKeys.apply(self, args);
             }
-            SbisDropdownList.superclass.setSelectedKeys.apply(this, arguments);
          },
 
          setPinned: function(items) {

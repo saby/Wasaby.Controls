@@ -1,5 +1,5 @@
-define(['Controls/List/TreeGrid/TreeGridView'], function(TreeGridView) {
-   describe('Controls.List.TreeGrid.TreeGridView', function() {
+define(['Controls/List/TreeGridView/TreeGridView'], function(TreeGridView) {
+   describe('Controls.List.TreeGridView.TreeGridView', function() {
       it('TreeGridView._onNodeExpanderClick', function() {
          var
             treeGridView = new TreeGridView(),

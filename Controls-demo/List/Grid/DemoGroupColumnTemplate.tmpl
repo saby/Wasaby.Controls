@@ -1,10 +1,10 @@
 <ws:if data="{{itemData.columnIndex >= 2 && itemData.columnIndex !== 5}}">
-   <ws:partial template="tmpl!Controls/List/Grid/Column" attr:class="controls-Grid__row-cell__content_baseline_XL" itemData="{{itemData}}">
+   <ws:partial template="tmpl!Controls/List/Grid/Column" attr:class="controls-Grid__row-cell__content_baseline_L" itemData="{{itemData}}">
       <ws:contentTemplate>
          <Controls.Decorator.Money number="{{itemData.item[itemData.column.displayProperty]}}"/>
       </ws:contentTemplate>
    </ws:partial>
 </ws:if>
 <ws:else>
-   <ws:partial template="tmpl!Controls/List/Grid/Column" attr:class="controls-Grid__row-cell__content_baseline_XL" itemData="{{itemData}}"/>
+   <ws:partial template="tmpl!Controls/List/Grid/Column" attr:class="controls-Grid__row-cell__content_baseline_L" itemData="{{itemData}}"/>
 </ws:else>
