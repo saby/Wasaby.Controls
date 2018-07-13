@@ -50,7 +50,7 @@ define(
                value: 'все страны',
                resetValue: 'все страны',
                properties: {
-                  keyProperty: 'title',
+                  keyProperty: 'key',
                   displayProperty: 'title',
                   source: {
                      module: 'WS.Data/Source/Memory',
@@ -119,16 +119,6 @@ define(
             FastData._private.reload(fastDataItems).addCallback(function () {
                FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function () {
                   assert.deepEqual(fastData._configs[0]._items.getRawData(), items[0]);
-                  done();
-               });
-            });
-         });
-
-         it('update text', function (done) {
-            FastData._private.reload(fastData).addCallback(function () {
-               FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function () {
-                  var text = fastData._getText(fastData._items.at(0), 0);
-                  assert.equal(text, items[0][1].title);
                   done();
                });
             });
