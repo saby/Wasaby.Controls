@@ -373,6 +373,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._templateName = template;
             return this._rebuildCompoundControl();
          },
+         getCurrentTemplateName: function() {
+            return this._templateName;
+         },
 
          /* from api floatArea, window */
 
