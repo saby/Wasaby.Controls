@@ -195,6 +195,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             self._logicParent = self._options.parent;
             self._options.parent = null;
 
+            self._notifyVDOM = self._notify;
+            self._notify = self.handle;
 
             self._logicParent.waitForPopupCreated = true;
 
@@ -235,6 +237,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this.handle('onAfterLoad');
             this.handle('onInitComplete');
             this.handle('onAfterShow'); // todo здесь надо звать хэндлер который пытается подписаться на onAfterShow, попробуй подключить FormController и словить подпись
+            this.handle('onReady');
             this._compoundControl.setActive(true);
             var self = this;
             runDelayed(function() {
@@ -302,7 +305,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             } else if (commandName === 'printReport') {
                return this.printReport(arg);
             } else if (commandName === 'resize' || commandName === 'resizeYourself') {
-               this._notify('resize', null, { bubbling: true });
+               this._notifyVDOM('resize', null, { bubbling: true });
             } else if (commandName === 'registerPendingOperation') {
                return this._registerChildPendingOperation(arg);
             } else if (commandName === 'unregisterPendingOperation') {
@@ -602,11 +605,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             if (this._options.autoCloseOnHide === false) {
                this._toggleVisible(false);
             } else if (!this._compoundControl.isDestroyed()) {
-               this._notify('close', null, { bubbling: true });
+               this._notifyVDOM('close', null, { bubbling: true });
 
                this.handle('onClose', arg);
                this.handle('onAfterClose', arg);
-               this.handle('onDestroy');
             }
 
             // Могут несколько раз позвать закрытие подряд
