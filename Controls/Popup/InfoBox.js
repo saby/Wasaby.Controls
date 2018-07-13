@@ -67,8 +67,6 @@ define('Controls/Popup/InfoBox',
             this._openId = null;
             this._closeId = null;
             this._opened = true;
-
-            this._forceUpdate();
          },
 
          _close: function() {
@@ -80,8 +78,6 @@ define('Controls/Popup/InfoBox',
             this._openId = null;
             this._closeId = null;
             this._opened = false;
-
-            this._forceUpdate();
          },
 
          _contentMousedownHandler: function(event) {
