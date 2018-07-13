@@ -66,6 +66,8 @@ define('Controls/Input/Search',
          },
 
          _searchClick: function() {
+            //move focus from search button to input
+            this.activate();
             this._notify('searchClick');
          },
    

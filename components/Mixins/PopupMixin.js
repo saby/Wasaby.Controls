@@ -218,6 +218,9 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             эта опция нужна для того, чтобы понять, надо ли отключать плавный скролл на мобильных устройствах на остальных панелях
             */
             _canScroll: false,
+            /* Опция необходима, чтобы на мобильных устройствах была возможность отключить resize попапа при скроле страницы.
+               Не все попапы должны менять свое положение при скроле, т.к. скролить можно быстро и они будут скакать. */
+            _resizeOnScroll: true,
             _fixJqueryPositionBug: false, //https://online.sbis.ru/opendoc.html?guid=e99ac72c-93d7-493f-a23e-ad09d45e908b
             _fixPopupRevertCorner: false //Логика поиска противоположного угла для меню. Скорее всего такая логика должна быть по умолчанию
          }
@@ -236,8 +239,10 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
 
          this._initOppositeCorners();
 
-         //Скрываем попап если при скролле таргет скрылся
-         EventBus.channel('WindowChangeChannel').subscribe('onWindowScroll', this._onResizeHandler, this);
+         if (this._options._resizeOnScroll) {
+            //Скрываем попап если при скролле таргет скрылся
+            EventBus.channel('WindowChangeChannel').subscribe('onWindowScroll', this._onResizeHandler, this);
+         }
 
          //Скрываем попап при драг'н'дропе
          EventBus.channel('WindowChangeChannel').subscribe('onDocumentDrag', this._dragHandler, this);
@@ -1255,7 +1260,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             }
          } else {
             var opener = this.getOpener() || this.getParent();
-            var openerPopup = opener && opener._container && opener._container.closest('.controls-Popup, .controls-FloatArea, .ws-window');
+            var openerPopup = opener && opener._container && opener._container.closest('.controls-Popup, .controls-FloatArea, .ws-window:not(".controls-CompoundArea")');
             var openerPopupZIndex = openerPopup && openerPopup.css('z-index');
 
             if (openerPopupZIndex) {
@@ -1369,7 +1374,9 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             this._unsubscribeTargetMove();
             EventBus.globalChannel().unsubscribe('MobileInputFocus', this._touchKeyboardMoveHandler);
             EventBus.globalChannel().unsubscribe('MobileInputFocusOut', this._touchKeyboardMoveHandler);
-            EventBus.channel('WindowChangeChannel').unsubscribe('onWindowScroll', this._onResizeHandler, this);
+            if (this._options._resizeOnScroll) {
+               EventBus.channel('WindowChangeChannel').unsubscribe('onWindowScroll', this._onResizeHandler, this);
+            }
             EventBus.channel('WindowChangeChannel').unsubscribe('onDocumentDrag', this._dragHandler, this);
 
             if (this._options.closeByExternalOver) {

@@ -6,13 +6,13 @@ define('SBIS3.CONTROLS/SbisDropdownList',
       'SBIS3.CONTROLS/DropdownList',
       'WS.Data/Entity/Model',
       'SBIS3.CONTROLS/Utils/DropdownUtil',
+      'Core/Deferred',
       'tmpl!SBIS3.CONTROLS/SbisDropdownList/SbisDropdownListItem',
       'tmpl!SBIS3.CONTROLS/DropdownList/DropdownListItem',
-      'Core/Deferred',
       'css!SBIS3.CONTROLS/SbisDropdownList/SbisDropdownList'
    ],
 
-   function(DropdownList, Model, DropdownUtil, SbisDropdownListItem, DropdownListItem, Deferred) {
+   function(DropdownList, Model, DropdownUtil, Deferred, SbisDropdownListItem) {
 
       'use strict';
 

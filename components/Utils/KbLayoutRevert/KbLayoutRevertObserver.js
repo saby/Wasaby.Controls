@@ -223,12 +223,12 @@ define('SBIS3.CONTROLS/Utils/KbLayoutRevert/KbLayoutRevertObserver',
                      queryUtil(view.getDataSource(), [viewFilter, view.getSorting(), view.getOffset(), view.getPageSize()]).addCallback(function (res) {
                         self._onViewDataLoad(null, res.getAll());
                         return res;
-                     })
+                     });
                   } else {
                      self._toggleItemsEventRaising(false);
                      /* Для того, чтобы индикатор не моргал между запросами, если запрос работает > INDICATOR_DELAY */
                      if (self._getTimer().getTime() > INDICATOR_DELAY) {
-                        view.getContainer().find('.controls-AjaxLoader').eq(0).toggleClass('ws-hidden controls-AjaxLoader__showIndication');
+                        view._showIndicator();
                      }
                      self._getTimer().stop();
                      view.setFilter(viewFilter);
