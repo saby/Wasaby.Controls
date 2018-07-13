@@ -756,7 +756,7 @@ define('SBIS3.CONTROLS/DataGridView',
 
          var td = this._getCellContainerByElement(e.target),
              columns = this.getColumns(),
-             index, hoveredColumn, colIndex, colValue, colValueText;
+             index, hoveredColumn, colIndex, colValue;
 
          if(td.length) {
             index = td.index();
@@ -765,7 +765,7 @@ define('SBIS3.CONTROLS/DataGridView',
 
             if(columns[colIndex] && !columns[colIndex].cellTemplate && !td[0].getAttribute('title')) {
                colValue = td.find('.controls-DataGridView__columnValue')[0];
-               TitleUtil.setTitle(colValue);
+               TitleUtil.setTitle(colValue, this._getCellEllipsisContainer(td));
             }
 
             if (hoveredColumn.columnIndex !== index) {
@@ -774,6 +774,10 @@ define('SBIS3.CONTROLS/DataGridView',
                this._updateHoveredColumnCells();
             }
          }
+      },
+   
+      _getCellEllipsisContainer: function(td) {
+         return td.find('.controls-DataGridView__columnValue');
       },
 
       _mouseLeaveHandler: function() {

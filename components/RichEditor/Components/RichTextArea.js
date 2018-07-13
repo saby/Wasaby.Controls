@@ -5,6 +5,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
    [
       "Core/UserConfig",
       "Core/core-clone",
+      "Core/core-merge",
       "Core/Context",
       "Core/Indicator",
       "Core/CommandDispatcher",
@@ -33,6 +34,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
    ], function (
       UserConfig,
       cClone,
+      cMerge,
       cContext,
       cIndicator,
       CommandDispatcher,
@@ -214,8 +216,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      relative_urls: false,
                      convert_urls: false,
                      formats: constants.styles,
-                     paste_webkit_styles: 'color font-size text-align text-decoration width height max-width padding padding-left padding-right padding-top padding-bottom',
-                     paste_retain_style_properties: 'color font-size font-family text-align text-decoration width height max-width line-height padding padding-left padding-right padding-top padding-bottom background background-color',
+                     paste_webkit_styles: 'color font-size font-weight font-style font-family text-align text-decoration width height max-width line-height padding padding-left padding-right padding-top padding-bottom background',
+                     paste_retain_style_properties: 'color font-size font-weight font-style font-family text-align text-decoration width height max-width line-height padding padding-left padding-right padding-top padding-bottom background',
                      paste_as_text: true,
                      extended_valid_elements: 'div[class|onclick|style|id],img[unselectable|class|src|alt|title|width|height|align|name|style]',
                      body_class: 'ws-basic-style',
@@ -253,6 +255,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                    * @cfg {boolean} Сохранять ли историю ввода
                    */
                   saveHistory: true,
+                  /**
+                   * @cfg {object} Набор допустимых аттрибутов. Формат: "имя атрибута" - "значение", представляющее из себя либо true (разрещено всегда), либо false (запрещено всегда), либо функцию проверки, врзвращающую логическое значение
+                   */
+                  validAttributes: undefined,
                   /**
                    * @cfg {function} функция проверки валидности класса
                    */
@@ -719,8 +725,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   save = typeof saveStyles === 'undefined' ? true : saveStyles,
                   self = this,
                   dialog,
-                  eventResult,
                   prepareAndInsertContent = function (content) {
+                     var i = content.indexOf('<!--StartFragment-->');
+                     var isCleared = i != -1;
+                     if (isCleared) {
+                        // Это фрагмент текста из MS Word - оставитьтолько непосредственно значимый фрагмент текста
+                        var j = content.indexOf('<!--EndFragment-->');
+                        content = content.substring(i + 20, j !== -1 ? j : content.length).trim();
+                     }
                      //получение результата из события PastePreProcess тини потому что оно возвращает контент чистым от тегов Ворда,
                      //_isPasteWithStyles = true нужно чтобы в нашем обработчике PastePreProcess мы не обрабатывали а прокинули результат в обработчик тини
                      var editor = self._tinyEditor;
@@ -730,17 +742,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         pastePlugin.clipboard.pasteHtml(content, false);
                      }
                      else {
-                        var i = content.indexOf('<!--StartFragment-->');
-                        if (i != -1) {
-                           // Это фрагмент текста из MS Word - оставитьтолько непосредственно значимый фрагмент текста
-                           var j = content.indexOf('<!--EndFragment-->');
-                           content = content.substring(i + 20, j !== -1 ? j : content.length).trim();
-                        }
-                        else {
+                        if (!isCleared) {
                            //Вычищаем все ненужные теги, т.к. они в конечном счёте превращаютя в <p>
                            content = content.replace(/<html[^>]*>|<body[^>]*>|<\x2Fhtml>|<\x2Fbody>/gi, '').trim();
                         }
-                        eventResult = self.getTinyEditor().fire('PastePreProcess', {content:content});
+                        var eventResult = editor.fire('PastePreProcess', {content:content});
                         self.insertHtml(eventResult.content);
                      }
                      delete self._isPasteWithStyles;
@@ -1255,6 +1261,26 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         $listNode.removeAttr('contenteditable');
                         selection.select(listNode, true);
                      };
+                  }
+                  else {
+                     var dom = editor.dom;
+                     var node = rng.commonAncestorContainer;
+                     if (!dom.isBlock(node)) {
+                        // Если элемент не является блочным элементом - поднять рэнж выше по дереву
+                        // 1175494679 https://online.sbis.ru/opendoc.html?guid=4ce44085-0bd4-4bf9-8f6f-1d43f081cf83
+                        var body = editor.getBody();
+                        var isChanged;
+                        var _hasBlockSibling = function (bode) {
+                           return Array.prototype.some.call(node.parentNode.childNodes, function (v) {
+                              return v.nodeName === 'IMG' || dom.isBlock(v);
+                           });
+                        };
+                        for ( ; node.parentNode !== body && !dom.isBlock(node) && !_hasBlockSibling(node); node = node.parentNode, isChanged = true) {}
+                        if (isChanged) {
+                           selection.select(node, true);
+                           rng = selection.getRng();
+                        }
+                     }
                   }
                }
                if ((isA.list || (isA.blockquote && !isBlockquoteOfList)) && !isAlreadyApplied) {
@@ -2061,7 +2087,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      }
                   }
                   var html = content.innerHTML;
-                  var rng = editor.selection.getRng();
+                  var selection = editor.selection;
+                  var rng = selection.getRng();
+                  var isAfterUrl;
                   if (isPlainUrl) {
                      if (rng.collapsed) {
                         var endNode = rng.endContainer;
@@ -2088,7 +2116,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      }
                      if (value.length && offset) {
                         var m = value.match(reUrl);
-                        if (m && m.index + m[0].length === offset) {
+                        isAfterUrl = m && m.index + m[0].length === offset;
+                        if (isAfterUrl) {
                            // Имеем вставку текста сразу после урла, с которым он сольётся - отделить его пробелом в началее
                            // Было бы лучше (намного) если бы этот урл был сразу ссылкой, но тогда сервис декораторов не подхватит его
                            // 93358 https://online.sbis.ru/opendoc.html?guid=6e7ccbf1-001c-43fb-afc1-7887baa96d7c
@@ -2096,6 +2125,34 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         }
                      }
                   }
+                  if (!isPlainUrl && !isAfterUrl && rng.collapsed) {
+                     // Если вставляется не блочный элемент, то нужно убедиться, что он вставляется в блочный элемент, для этого поднять рэнж выше по дереву, если необходимо
+                     // 1175500981 https://online.sbis.ru/opendoc.html?guid=0757be2b-56c9-4714-bb9f-c6f99e90bbf6
+                     var node = rng.commonAncestorContainer;
+                     if (node.nodeType === 3) {
+                        var dom = editor.dom;
+                        if (!Array.prototype.some.call(content.childNodes, dom.isBlock)) {
+                           var parent = dom.getParent(startNode, function (v) { var p = v.parentNode; return dom.isBlock(p) || 1 < p.childNodes.length; }, editor.getBody());
+                           if (parent !== node) {
+                              var atStart = rng.endOffset === 0;
+                              if (atStart || node.nodeValue.length === rng.endOffset) {
+                                 node = parent;
+                              }
+                              else {
+                                 editor.undoManager.ignore(function () {
+                                    selection.setContent('<span data-mce-type="bookmark"></span>');
+                                    var bookmark = dom.split(parent, dom.$('[data-mce-type=bookmark]', selection.getNode())[0]);
+                                    node = bookmark.previousSibling;
+                                    bookmark.remove();
+                                 });
+                              }
+                              selection.select(node, false);
+                              selection.collapse(atStart);
+                           }
+                        }
+                     }
+                  }
+
                   //Замена переносов строк на <br>
                   html = html.replace(/([^>])\n(?!<)/gi, '$1<br />');
 
@@ -2539,6 +2596,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   if (needStop) {
                      evt.preventDefault();
                      evt.stopPropagation();
+                     //TODO: Обдумать this._container[0].scrollIntoView(evt.alignToTop);//^^^
                   }
                }.bind(this));
             },
@@ -2660,6 +2718,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   this._imageOptionsPanel = new ImageOptionsPanel({
                      templates: self._options.templates,
                      parent: self,
+                     opener: self,
                      target: target,
                      imageUuid: uuid,
                      targetPart: true,
@@ -3452,109 +3511,115 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             }
             return true;*/
             },
-            _sanitizeClasses: function(text, images) {
-               var
-                  self = this;
-               return Sanitize(text,
-                  {
-                     validNodes: {
-                        img: images ? {
-                           'data-img-uuid': true,
-                           'data-mce-src': true,
-                           'data-mce-style': true,
-                           onload: false,
-                           onerror: false
-                        } : false,
-                        table: {
-                           border: true,
-                           cellspacing: true,
-                           cellpadding: true
+
+            _sanitizeClasses: function (text, images) {
+               var options = this._options;
+               var sanitizeOptions = {
+                  validNodes: {
+                     img: images ? {
+                        'data-img-uuid': true,
+                        'data-mce-src': true,
+                        'data-mce-style': true,
+                        onload: false,
+                        onerror: false
+                     } : false,
+                     table: {
+                        border: true,
+                        cellspacing: true,
+                        cellpadding: true
+                     }
+                  },
+                  validAttributes: {
+                     'class': function (content, attributeName) {
+                        var
+                           //проверка options для юнит тестов, тк там метод зовётся на прототипе
+                           classValidator = options ? options.validateClass : null,
+                           validateIsFunction = typeof classValidator === 'function',
+                           currentValue = content.attributes[attributeName].value,
+                           classes = currentValue.split(' '),
+                           whiteList =  [
+                              'titleText',
+                              'subTitleText',
+                              'additionalText',
+                              'controls-RichEditor__noneditable',
+                              'without-margin',
+                              'has-img-left',
+                              'image-template-left',
+                              'image-template-center',
+                              'image-template-right',
+                              'mce-object-iframe',
+                              'ws-hidden',
+                              'language-javascript',
+                              'language-css',
+                              'language-markup',
+                              'language-php',
+                              'token',
+                              'comment',
+                              'prolog',
+                              'doctype',
+                              'cdata',
+                              'punctuation',
+                              'namespace',
+                              'property',
+                              'tag',
+                              'boolean',
+                              'number',
+                              'constant',
+                              'symbol',
+                              'deleted',
+                              'selector',
+                              'attr-name',
+                              'string',
+                              'char',
+                              'builtin',
+                              'inserted',
+                              'operator',
+                              'entity',
+                              'url',
+                              'style',
+                              'attr-value',
+                              'keyword',
+                              'function',
+                              'regex',
+                              'important',
+                              'variable',
+                              'bold',
+                              'italic',
+                              'LinkDecorator__link',
+                              'LinkDecorator',
+                              'LinkDecorator__simpleLink',
+                              'LinkDecorator__linkWrap',
+                              'LinkDecorator__decoratedLink',
+                              'LinkDecorator__wrap',
+                              'LinkDecorator__image'
+                           ],
+                           index = classes.length - 1;
+
+                        while (index >= 0) {
+                           if (!~whiteList.indexOf(classes[index]) && (!validateIsFunction || !classValidator(classes[index]))) {
+                              classes.splice(index, 1);
+                           }
+                           index -= 1;
                         }
-                     },
-                     validAttributes: {
-                        'class' : function(content, attributeName) {
-                           var
-                              //проверка this._options для юнит тестов, тк там метод зовётся на прототипе
-                              validateIsFunction = this._options && typeof this._options.validateClass === 'function',
-                              currentValue = content.attributes[attributeName].value,
-                              classes = currentValue.split(' '),
-                              whiteList =  [
-                                 'titleText',
-                                 'subTitleText',
-                                 'additionalText',
-                                 'controls-RichEditor__noneditable',
-                                 'without-margin',
-                                 'has-img-left',
-                                 'image-template-left',
-                                 'image-template-center',
-                                 'image-template-right',
-                                 'mce-object-iframe',
-                                 'ws-hidden',
-                                 'language-javascript',
-                                 'language-css',
-                                 'language-markup',
-                                 'language-php',
-                                 'token',
-                                 'comment',
-                                 'prolog',
-                                 'doctype',
-                                 'cdata',
-                                 'punctuation',
-                                 'namespace',
-                                 'property',
-                                 'tag',
-                                 'boolean',
-                                 'number',
-                                 'constant',
-                                 'symbol',
-                                 'deleted',
-                                 'selector',
-                                 'attr-name',
-                                 'string',
-                                 'char',
-                                 'builtin',
-                                 'inserted',
-                                 'operator',
-                                 'entity',
-                                 'url',
-                                 'style',
-                                 'attr-value',
-                                 'keyword',
-                                 'function',
-                                 'regex',
-                                 'important',
-                                 'variable',
-                                 'bold',
-                                 'italic',
-                                 'LinkDecorator__link',
-                                 'LinkDecorator',
-                                 'LinkDecorator__simpleLink',
-                                 'LinkDecorator__linkWrap',
-                                 'LinkDecorator__decoratedLink',
-                                 'LinkDecorator__wrap',
-                                 'LinkDecorator__image'
-                              ],
-                              index = classes.length - 1;
+                        currentValue = classes.join(' ');
+                        if (currentValue) {
+                           content.attributes[attributeName].value = currentValue;
+                        } else {
+                           delete content.attributes[attributeName];
+                        }
 
-                           while (index >= 0) {
-                              if (!~whiteList.indexOf(classes[index]) && (!validateIsFunction || !this._options.validateClass(classes[index]))) {
-                                 classes.splice(index, 1);
-                              }
-                              index -= 1;
-                           }
-                           currentValue = classes.join(' ');
-                           if (currentValue) {
-                              content.attributes[attributeName].value = currentValue;
-                           } else {
-                              delete content.attributes[attributeName];
-                           }
-
-                        }.bind(self)
-                     },
-                     checkDataAttribute: false,
-                     escapeInvalidTags: false
-                  });
+                     }.bind(this)
+                  },
+                  checkDataAttribute: false,
+                  escapeInvalidTags: false
+               };
+               var validAttributes = options ? options.validAttributes : null;
+               if (validAttributes && typeof validAttributes === 'object') {
+                  sanitizeOptions.validAttributes = cMerge(validAttributes, sanitizeOptions.validAttributes);
+               }
+               return Sanitize(text, sanitizeOptions);
             },
+
             _getTextBeforePaste: function(editor){
                //Проблема:
                //          после вставки текста могут возникать пробелы после <br> в начале строки

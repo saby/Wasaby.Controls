@@ -11,13 +11,14 @@
    .controls-DialogTemplate .controls-DialogTemplate__content-area .ws-window-titlebar-custom, &.ws-window .ws-window-titlebar {
       z-index: 10;
       height: 40px;
+      background: #ffffff;
    }
 
-   .controls-StackTemplate .ws-float-area-title{
+   .controls-StackTemplate .ws-float-area-title {
       line-height: 38px;
    }
 
-   .controls-DialogTemplate .ws-float-area-title{
+   .controls-DialogTemplate .ws-float-area-title {
       line-height: 40px;
    }
 
@@ -60,3 +61,18 @@
 .controls-CompoundArea__container {
    height: 100%;
 }
+
+.controls-CompoundArea-custom-header {
+   position: absolute!important;
+   top: 0;
+   left: 0;
+   right: 0;
+   height: 40px;
+}
+
+.ws-window {
+   .controls-CompoundArea {
+      background: none;
+   }
+}
+

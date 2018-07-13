@@ -14,6 +14,7 @@ define('Controls/List/BaseControl', [
    'Controls/List/ItemActions/Utils/Actions',
    'Controls/List/EditInPlace',
    'Controls/List/ItemActions/ItemActionsControl',
+
    'css!Controls/List/BaseControl/BaseControl'
 ], function(Control,
    IoC,
@@ -51,6 +52,12 @@ define('Controls/List/BaseControl', [
                   self._listViewModel.setItems(list);
                }
 
+               //pre scroll loading
+               //не использовать удалить по задаче https://online.sbis.ru/opendoc.html?guid=f968dcef-6d9f-431c-9653-5aea20aeaff2
+               if (self._mounted && !list.getCount()) {
+                  self._notify('checkScroll', [], {bubbling: true});
+               }
+
                //self._virtualScroll.setItemsCount(self._listViewModel.getCount());
 
 
@@ -85,6 +92,13 @@ define('Controls/List/BaseControl', [
                   self._listViewModel.prependItems(addedItems);
                   self._virtualScroll.prependItems(addedItems.getCount());
                }
+
+               //pre scroll loading
+               //не использовать удалить по задаче https://online.sbis.ru/opendoc.html?guid=f968dcef-6d9f-431c-9653-5aea20aeaff2
+               if (self._mounted && !addedItems.getCount()) {
+                  self._notify('checkScroll', [], {bubbling: true});
+               }
+
                return addedItems;
 
                //обновить начало/конец видимого диапазона записей и высоты распорок
@@ -325,6 +339,24 @@ define('Controls/List/BaseControl', [
 
       bindHandlers: function(self) {
          self._closeActionsMenu = self._closeActionsMenu.bind(self);
+      },
+
+      setPopupOptions: function(self) {
+         self._popupOptions = {
+            closeByExternalClick: true,
+            corner: {vertical: 'top', horizontal: 'right'},
+            horizontalAlign: {side: 'left'},
+            eventHandlers: {
+               onResult: self._closeActionsMenu,
+               onClose: self._closeActionsMenu
+            },
+            templateOptions: {
+               showHeader: true,
+               headConfig: {
+                  menuStyle: 'cross'
+               }
+            }
+         };
       }
    };
 
@@ -367,12 +399,15 @@ define('Controls/List/BaseControl', [
       _bottomPlaceholderHeight: 0,
       _menuIsShown: null,
 
+      _popupOptions: null,
+
       constructor: function(cfg) {
          BaseControl.superclass.constructor.apply(this, arguments);
       },
 
       _beforeMount: function(newOptions, context, receivedState) {
          _private.bindHandlers(this);
+         _private.setPopupOptions(this);
 
          this._virtualScroll = new VirtualScroll({
             maxVisibleItems: newOptions.virtualScrollConfig && newOptions.virtualScrollConfig.maxVisibleItems,
@@ -431,8 +466,8 @@ define('Controls/List/BaseControl', [
 
             //this._virtualScroll.setItemsCount(this._listViewModel.getCount());
          } else
-         if (newOptions.selectedKey !== this._options.selectedKey) {
-            this._listViewModel.setMarkedKey(newOptions.selectedKey);
+         if (newOptions.markedKey !== this._options.markedKey) {
+            this._listViewModel.setMarkedKey(newOptions.markedKey);
          }
 
 

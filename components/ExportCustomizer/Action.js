@@ -150,7 +150,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
                );
             }
             else {
-               this._open(areaOptions);
+               this._open(areaOptions, { opener: options.opener });
             }
             return this._result;
          },
@@ -161,7 +161,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * @protected
           * @param {object} options Входные аргументы("мета-данные") настройщика экспорта (согласно описанию в методе {@link execute})
           */
-         _open: function (options) {
+         _open: function (options, dialogOptions) {
             var componentOptions = cMerge({
                dialogMode: true,
                handlers: {
@@ -170,7 +170,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
                }
             }, options);
             this._areaContainer = new FloatArea({
-               opener: this,
+               opener: dialogOptions.opener || this,
                direction: 'left',
                animation: 'slide',
                isStack: true,

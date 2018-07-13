@@ -54,7 +54,7 @@ define('Controls-demo/List/ItemActions', [
          },
          {
             id: 1,
-            icon: 'icon-primary icon-PhoneNull',
+            icon: 'icon-PhoneNull',
             title: 'phone',
             handler: function(item) {
                console.log('action phone Click ', item);
@@ -62,7 +62,7 @@ define('Controls-demo/List/ItemActions', [
          },
          {
             id: 2,
-            icon: 'icon-primary icon-EmptyMessage',
+            icon: 'icon-EmptyMessage',
             title: 'message',
             handler: function() {
                alert('Message Click');
@@ -70,7 +70,7 @@ define('Controls-demo/List/ItemActions', [
          },
          {
             id: 3,
-            icon: 'icon-primary icon-Profile',
+            icon: 'icon-Profile',
             title: 'profile',
             showType: showType.MENU_TOOLBAR,
             handler: function() {
@@ -79,7 +79,8 @@ define('Controls-demo/List/ItemActions', [
          },
          {
             id: 4,
-            icon: 'icon-Erase icon-error',
+            icon: 'icon-Erase',
+            iconStyle: 'error',
             title: 'delete pls',
             showType: showType.TOOLBAR,
             handler: function() {
@@ -87,6 +88,8 @@ define('Controls-demo/List/ItemActions', [
             }
          }
       ];
+
+
 
    var ModuleClass = BaseControl.extend(
       {

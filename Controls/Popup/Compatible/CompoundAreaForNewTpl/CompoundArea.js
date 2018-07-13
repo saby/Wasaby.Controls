@@ -6,7 +6,8 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
       'Lib/Control/CompoundControl/CompoundControl',
       'tmpl!Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
       'Core/vdom/Synchronizer/Synchronizer',
-      'Core/Control'
+      'Core/Control',
+      'css!Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea'
    ],
    function(CompoundControl,
       template,

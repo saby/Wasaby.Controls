@@ -1,4 +1,4 @@
-<div config="{{_options.__$config}}" data-component="{{_moduleName}}" class="{{_className}}" on:close="closeHandler()">
+<div config="{{_options.__$config}}" data-component="{{_moduleName}}" class="{{_className}}" on:close="closeHandler()" on:keydown="_keyDown()">
    <ws:if data="{{_options.type === 'stack'}}">
       <Controls.Popup.Templates.Stack.StackTemplate>
          <ws:contentArea>

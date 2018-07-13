@@ -151,15 +151,17 @@ define('Controls/Container/Suggest/Layout',
          _filter: null,
          _tabsSelectedKey: null,
          _searchResult: null,
+         _searchDelay: null,
          _dependenciesDeferred: null,
          _loading: false,
          
          // <editor-fold desc="LifeCycle">
          
-         _beforeMount: function() {
+         _beforeMount: function(options) {
             this._searchStart = this._searchStart.bind(this);
             this._searchEnd = this._searchEnd.bind(this);
             this._select = this._select.bind(this);
+            this._searchDelay = options.searchDelay;
          },
    
          _beforeUnmount: function() {
@@ -168,6 +170,12 @@ define('Controls/Container/Suggest/Layout',
             this._searchStart = null;
             this._searchEnd = null;
             this._select = null;
+         },
+         
+         _beforeUpdate: function(newOptions) {
+            if (!newOptions.suggestState) {
+               this._orient = null;
+            }
          },
    
          _afterUpdate: function() {
@@ -196,13 +204,14 @@ define('Controls/Container/Suggest/Layout',
          
          _close: function() {
             if (this._options.suggestStyle === 'overInput') {
+               this._searchValue = '';
                this._notify('valueChanged', ['']);
             }
             _private.close(this);
          },
          
          _changeValueHandler: function(event, value) {
-            this._searchValue = value;
+            this._searchValue = _private.shouldSearch(this, value) ? value : '';
             
             /* preload suggest dependencies on value changed */
             _private.loadDependencies(this);
@@ -216,6 +225,7 @@ define('Controls/Container/Suggest/Layout',
          },
    
          _tabsSelectedKeyChanged: function(event, key) {
+            this._searchDelay = 0;
             _private.updateFilter(this, this._searchValue, key);
             
             // move focus from tabs to input, after change tab
@@ -237,6 +247,7 @@ define('Controls/Container/Suggest/Layout',
          
          _searchEnd: function(result) {
             this._loading = false;
+            this._searchDelay = this._options.searchDelay;
             _private.precessResultData(this, result);
             if (this._options.searchEndCallback) {
                this._options.searchEndCallback();

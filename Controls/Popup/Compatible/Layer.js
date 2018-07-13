@@ -9,8 +9,9 @@ define('Controls/Popup/Compatible/Layer', [
    'Core/ExtensionsManager',
    'Core/moduleStubs',
    'Core/IoC',
-   'WS.Data/Source/SbisService'
-], function(Deferred, ParallelDeferred, Constants, RightsManager, ExtensionsManager, moduleStubs, IoC, SbisService) {
+   'WS.Data/Source/SbisService',
+   'WS.Data/Chain'
+], function(Deferred, ParallelDeferred, Constants, RightsManager, ExtensionsManager, moduleStubs, IoC, SbisService, Chain) {
    'use strict';
 
    var loadDeferred;
@@ -20,6 +21,7 @@ define('Controls/Popup/Compatible/Layer', [
       'Lib/Control/AreaAbstract/AreaAbstract.compatible',
       'Lib/Control/BaseCompatible/BaseCompatible',
       'Core/vdom/Synchronizer/resources/DirtyCheckingCompatible',
+      'Lib/StickyHeader/StickyHeaderMediator/StickyHeaderMediator',
       'View/Runner/Text/markupGeneratorCompatible',
       'Core/nativeExtensions'
    ];
@@ -160,7 +162,7 @@ define('Controls/Popup/Compatible/Layer', [
 
       new SbisService({endpoint: 'Биллинг'}).call('ДанныеЛицензии', {}).addCallbacks(function(record) {
          if (record && record.getRow().get('ПараметрыЛицензии')) {
-            var data = record.getRow().get('ПараметрыЛицензии').toObject();
+            var data = Chain(record.getRow().get('ПараметрыЛицензии')).toObject();
             def.callback(data);
          } else {
             def.callback(defaultLicense);
