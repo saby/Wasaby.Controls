@@ -4,12 +4,11 @@ define('Controls/Dropdown/Container',
       'tmpl!Controls/Dropdown/Container/Container',
       'Controls/Controllers/SourceController',
       'Core/helpers/Object/isEqual',
-      'Core/helpers/Object/isEmpty',
       'WS.Data/Chain',
       'Controls/Input/Dropdown/Util'
    ],
 
-   function(Control, template, SourceController, isEqual, isEmpty, Chain, dropdownUtils) {
+   function(Control, template, SourceController, isEqual, Chain, dropdownUtils) {
 
       'use strict';
 

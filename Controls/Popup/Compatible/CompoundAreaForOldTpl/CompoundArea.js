@@ -13,7 +13,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/constants',
       'Core/helpers/Hcontrol/doAutofocus',
       'optional!Deprecated/Controls/DialogRecord/DialogRecord',
+      'Core/helpers/additional-helpers',
       'Core/EventBus',
+      'Controls/Popup/Manager/ManagerController',
 
       'Lib/Control/AreaAbstract/AreaAbstract.compatible',
       'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
@@ -36,7 +38,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       CoreConstants,
       doAutofocus,
       DialogRecord,
-      cEventBus
+      addHelpers,
+      cEventBus,
+      ManagerController
    ) {
       function removeOperation(operation, array) {
          var idx = arrayFindIndex(array, function(op) {
@@ -255,7 +259,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   this.getContainer().prepend($('<div class="ws-window-titlebar"><div class="ws-float-area-title ws-float-area-title-generated">' + this._options.caption + '</div></div>'));
                   this.getContainer().addClass('controls-CompoundArea-headerPadding');
                }
-            } else if (customHeaderContainer.length) {
+            } else if (customHeaderContainer.length && this._options.type === 'dialog') {
                var container = $('.controls-DialogTemplate', this.getContainer());
                container.prepend(customHeaderContainer.addClass('controls-CompoundArea-custom-header'));
                this.getContainer().addClass('controls-CompoundArea-headerPadding');
@@ -269,10 +273,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
 
          _commandCatchHandler: function(event, commandName, arg) {
-            event.setResult(this._commandHandler(commandName, arg));
+            var args = Array.prototype.slice.call(arguments, 2);
+            event.setResult(this._commandHandler(commandName, args));
          },
-         _commandHandler: function(commandName, arg) {
+         _commandHandler: function(commandName, args) {
             var parent, argWithName;
+            var arg = args[0];
 
             if (Array.isArray(arg) && arg.length === 1) {
                argWithName = [commandName, arg];
@@ -282,21 +288,33 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             if (commandName === 'close') {
                return this._close(arg);
-            } if (commandName === 'ok') {
+            } else if (commandName === 'ok') {
                return this._close(true);
-            } if (commandName === 'cancel') {
+            } else if (commandName === 'cancel') {
                return this._close(false);
-            } if (commandName === 'update') {
-               return true;
-            } if (commandName === 'resize' || commandName === 'resizeYourself') {
+            } else if (commandName === 'save') {
+               return this.save(arg);
+            } else if (commandName === 'delete') {
+               return this.delRecord(arg);
+            } else if (commandName === 'print') {
+               return this.print(arg);
+            } else if (commandName === 'printReport') {
+               return this.printReport(arg);
+            } else if (commandName === 'resize' || commandName === 'resizeYourself') {
                this._notify('resize', null, { bubbling: true });
             } else if (commandName === 'registerPendingOperation') {
                return this._registerChildPendingOperation(arg);
             } else if (commandName === 'unregisterPendingOperation') {
                return this._unregisterChildPendingOperation(arg);
-            } else if (this.getParent()) {
-               parent = this.getParent();
-               return parent.sendCommand.apply(parent, argWithName);
+            } else {
+               var compoundControlCommandResult = this._sendCompoundControlCommand(commandName, args);
+               if (compoundControlCommandResult) {
+                  return compoundControlCommandResult;
+               }
+               if (this.getParent()) {
+                  parent = this.getParent();
+                  return parent.sendCommand.apply(parent, argWithName);
+               }
             }
 
             // Мы не распространяем команды по опенеру! и никогда не распространяли!
@@ -304,6 +322,16 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             //    parent = this.getOpener();
             //    return parent.sendCommand.apply(parent, argWithName);
             // }
+         },
+         _sendCompoundControlCommand: function(commandName, args) {
+            var commandHandler = this._getCommandHandler(commandName);
+            if (commandHandler) {
+               return commandHandler.apply(this._compoundControl, args);
+            }
+            return false;
+         },
+         _getCommandHandler: function(commandName) {
+            return this._compoundControl.getUserData('commandStorage')[commandName];
          },
          sendCommand: function(commandName, arg) {
             return this._commandHandler(commandName, arg);
@@ -366,6 +394,93 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          isNewRecord: function() {
             return this._options.newRecord;
          },
+
+         setRecord: function(record, noConfirm) {
+            var self = this;
+            if (!noConfirm) {
+               this.openConfirmDialog(true).addCallback(function(result) {
+                  if (result) {
+                     self._setRecord(record);
+                  }
+               });
+            } else {
+               this._setRecord(record);
+            }
+         },
+         _setRecord: function(record) {
+            var oldRecord = this.getRecord(),
+               context = this.getLinkedContext(),
+               self = this,
+               setRecordFunc = function() {
+                  if (self._options.clearContext) {
+                     context.setContextData(record);
+                  } else {
+                     context.replaceRecord(record);
+                  }
+                  if (self.isNewRecord()) {
+                     self._options.newRecord = record.getKey() === null;
+                  }
+                  self._notify('onChangeRecord', record, oldRecord);//Отдаем запись, хотя здесь ее можно получить простым getRecord + старая запись
+               },
+               result;
+            result = this._notify('onBeforeChangeRecord', record, oldRecord);
+            addHelpers.callbackWrapper(result, setRecordFunc.bind(this));
+         },
+         openConfirmDialog: function(noHide) {
+            var self = this,
+               deferred = new cDeferred();
+            this._displaysConfirmDialog = true;
+            deferred.addCallback(function(result) {
+               self._notify('onConfirmDialogSelect', result);
+               self._displaysConfirmDialog = false;
+               return result;
+            });
+            if ((self.getRecord().isChanged() && !self.isSaved()) || self._recordIsChanged) {
+               this._openConfirmDialog(false, true).addCallback(function(result) {
+                  switch (result) {
+                     case 'yesButton' : {
+                        if (self._result === undefined) {
+                           self._result = true;
+                        }
+                        self.updateRecord().addCallback(function() {
+                           self._confirmDialogToCloseActions(deferred, noHide);
+                        }).addErrback(function() {
+                           deferred.callback(false);
+                        });
+                        break;
+                     }
+                     case 'noButton' : {
+                        if (self._result === undefined) {
+                           self._result = false;
+                        }
+
+                        /**
+                         * Если откатить изменения в записи, поля связи, которые с ней связанны, начнут обратно вычитываться, если были изменены, а это уже не нужно
+                         * Положили rollback обратно, поля связи уже так себя вести не должны, а rollback реально нужен
+                         * Оставляем возможность проводить сохранение записи в прикладном коде. По задаче Алены(см коммент вверху) ошибка не повторяется, т.к. там уже юзают formController
+                         */
+                        self._confirmDialogToCloseActions(deferred, noHide);
+                        break;
+                     }
+                     default : {
+                        deferred.callback(false);
+                     }
+                  }
+               });
+            } else {
+               self._confirmDialogToCloseActions(deferred, noHide);
+            }
+            return deferred;
+         },
+         _confirmDialogToCloseActions: function(deferred, noHide) {
+            // EventBus.channel('navigation').unsubscribe('onBeforeNavigate', this._onBeforeNavigate, this);
+            deferred.callback(true);
+            if (!noHide) {
+               this.close.apply(this, arguments);
+            }
+         },
+
+
          setReadOnly: function(isReadOnly) {
             this._isReadOnly = isReadOnly;
             if (this._compoundControl) {
@@ -450,6 +565,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          save: function() {
             return DialogRecord.prototype.save.apply(this, arguments);
          },
+         delRecord: function() {
+            return DialogRecord.prototype.delRecord.apply(this, arguments);
+         },
          _processError: function(error) {
             DialogRecord.prototype._processError.apply(this, [error]);
          },
@@ -484,8 +602,30 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             // Могут несколько раз позвать закрытие подряд
          },
          _toggleVisible: function(visible) {
-            this.getContainer().closest('.controls-Popup').toggleClass('ws-hidden', !visible);
-            this._isVisible = visible;
+            var popupContainer = this.getContainer().closest('.controls-Popup')[0];
+            if (popupContainer) {
+               // Нужно обновить опции Popup'a, чтобы ws-hidden не затерся/восстановился при синхронизации
+               var controlNode = popupContainer.controlNodes && popupContainer.controlNodes[0];
+               if (controlNode) {
+                  var
+                     id = controlNode.control._options.id,
+                     popupConfig = ManagerController.find(id);
+                  if (popupConfig) {
+                     // Удалим или поставим ws-hidden в зависимости от переданного аргумента
+                     var newClassName = popupConfig.popupOptions.className || '';
+                     if (visible) {
+                        newClassName = newClassName.replace(/ws-hidden/ig, '');
+                     } else if (newClassName.indexOf('ws-hidden') === -1) {
+                        newClassName += ' ws-hidden';
+                     }
+                     popupConfig.popupOptions.className = newClassName;
+
+                     // Сразу обновим список классов на контейнере, чтобы при пересинхронизации он не "прыгал"
+                     popupContainer.className = newClassName;
+                     this._isVisible = visible;
+                  }
+               }
+            }
          },
          _getTemplateComponent: function() {
             return this._compoundControl;

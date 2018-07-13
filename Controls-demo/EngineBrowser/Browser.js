@@ -48,7 +48,7 @@ define('Controls-demo/EngineBrowser/Browser', [
       {
          id: 'title',
          resetValue: 'По имени',
-         value: 'Petr',
+         value: 'По имени',
          properties: {
             keyProperty: 'title',
             displayProperty: 'title',
@@ -69,7 +69,7 @@ define('Controls-demo/EngineBrowser/Browser', [
       {
          id: 'id',
          resetValue: 0,
-         value: 4,
+         value: 0,
          properties: {
             keyProperty: 'id',
             displayProperty: 'title',
