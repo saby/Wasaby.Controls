@@ -1,11 +1,9 @@
 define('Controls/Controllers/Multiselect/HierarchySelection', [
    'Controls/Controllers/Multiselect/Selection',
-   'Core/core-clone',
    'Controls/Utils/ArraySimpleValuesUtil',
    'WS.Data/Relation/Hierarchy'
 ], function(
    Selection,
-   cClone,
    ArraySimpleValuesUtil,
    HierarchyRelation
 ) {

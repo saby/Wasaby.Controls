@@ -10,10 +10,9 @@ define('Controls/Button/MenuButton',
 
       /**
        * MenuButton
-       * @class Controls/MenuButton
+       * @class Controls/Button/MenuButton
        * @extends Core/Control
        * @mixes Controls/Button/interface/ICaption
-       * @mixes Controls/Button/interface/IClick
        * @mixes Controls/Button/interface/IIcon
        * @mixes Controls/interface/ITooltip
        * @mixes Controls/interface/ISource
@@ -27,7 +26,11 @@ define('Controls/Button/MenuButton',
       'use strict';
 
       /**
-       * @name Controls/MenuButton#headConfig
+       * @event Controls/Button/MenuButton#onMenuItemActivate Occurs when an item is selected from the list.
+       */
+
+      /**
+       * @name Controls/Button/MenuButton#headConfig
        * @cfg {Object} Menu style menuStyle
        * @variant defaultHead The head with icon and caption
        * @variant duplicateHead The icon set under first item
@@ -35,7 +38,7 @@ define('Controls/Button/MenuButton',
        */
 
       /**
-       * @name Controls/MenuButton#size
+       * @name Controls/Button/MenuButton#size
        * @cfg {String} Size of the menu button.
        * @variant s Button has s size. Not supported by these button styles: buttonPrimary, buttonDefault, buttonAdd, iconButtonBordered.
        * @variant m Button has m size.
@@ -44,7 +47,7 @@ define('Controls/Button/MenuButton',
        */
 
       /**
-       * @name Controls/MenuButton#style
+       * @name Controls/Button/MenuButton#style
        * @cfg {String} Display style of menu button.
        * @variant iconButtonBordered Button display as icon with border.
        * @variant linkMain Button display as main link style.
