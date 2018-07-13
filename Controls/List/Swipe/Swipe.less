@@ -11,7 +11,7 @@
     transform: translate(0, 0);
   }
   100% {
-    //В конце анимации вешаю display: none, т.к. иначе на айпаде не успевают скрыться операции над записью и происходит моргание
+    //iPad is not fast enough to re-paint immediately after the animation, so we'll just set display to none to avoid blinking.
     display: none;
     transform: translate(100%, 0);
   }
