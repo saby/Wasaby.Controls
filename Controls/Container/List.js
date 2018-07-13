@@ -58,6 +58,7 @@ define('Controls/Container/List',
             /* TODO will be a cached source */
             _private.cachedSourceFix(self);
             self._source = new Memory({
+               model: data.getModel(),
                idProperty: data.getIdProperty(),
                data: data.getRawData(),
                adapter: self._options.source.getAdapter()
@@ -235,6 +236,7 @@ define('Controls/Container/List',
             if (this._searchMode) {
                _private.cachedSourceFix(this);
                this._source = new Memory({
+                  model: options.source.getModel(),
                   idProperty: options.source.getIdProperty()
                });
             }
