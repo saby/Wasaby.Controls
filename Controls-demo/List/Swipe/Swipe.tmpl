@@ -4,11 +4,11 @@
             source = "{{_viewSource}}"
             markedKey="{{1}}"
             allowEmptySelection="{{false}}"
-            idProperty="id"
+            keyProperty="id"
             itemActions="{{_itemActions}}"
             on:itemActionsClick="_onActionClick()"
             multiSelectVisibility="visible"
-            class="itemActionsDemo__list">
+            attr:class="itemActionsDemo__list">
 
         <ws:itemTemplate>
             <ws:partial template="tmpl!Controls/List/ItemTemplate">
