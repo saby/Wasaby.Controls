@@ -1,0 +1,15 @@
+<div class="controls-ConfirmationTemplate controls-ConfirmationTemplate__status-{{_options.style}}{{_options.size == 'big' ? ' controls-SubmitPopup__size-big' : ' controls-SubmitPopup__size-standard'}}"
+    on:keyup="_keyPressed()"
+    ws-tab-cycling="true"
+    ws-delegates-tabfocus="true">
+    <ws:if data="{{!_options.hideCross}}">
+        <Controls.Button.Close attr:class="controls-DialogTemplate__close_button" on:click="close()"/>
+    </ws:if>
+    <!--Если размер текста сообщения и описания превышает заданные рамки, то увеличиваем размер окна-->
+    <div class="controls-ConfirmationTemplate__body">
+        <ws:partial template="{{_options.contentArea}}"/>
+    </div>
+    <div class="controls-ConfirmationTemplate__footer">
+        <ws:partial template="{{_options.footerArea}}"/>
+    </div>
+</div>
