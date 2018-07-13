@@ -4,7 +4,6 @@ define('Controls-demo/Input/Password/Basic',
       'tmpl!Controls-demo/Input/Password/Basic/Basic',
 
       'Controls/Input/Password',
-      'Controls-demo/Input/Password/Basic/validator',
       'css!Controls-demo/Input/Password/Basic/Basic'
    ],
    function(Control, template) {
