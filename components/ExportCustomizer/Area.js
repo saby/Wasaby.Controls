@@ -367,10 +367,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   if (reason === 'edit') {
                      this._isEditMode = true;
                   }
+                  else {
+                     options.isTemporaryFile = null;
+                  }
                   break;
                case 'editEnd':
                   formatterMeta = {reason:'transaction', args:args};
                   this._isEditMode = null;
+                  options.isTemporaryFile = null;
                   break;
                case 'delete':
                   var deleteUuid = args[0].fileUuid;
@@ -379,7 +383,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   }
                   break;
             }
-            options.isTemporaryFile = null;
             var result = formatterValues || formatterMeta ? views.formatter.restate(formatterValues || {}, formatterMeta) : undefined;
             this._updateCompleteButton(fieldIds);
             return result;
