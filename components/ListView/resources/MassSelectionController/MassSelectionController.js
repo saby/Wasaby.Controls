@@ -17,7 +17,7 @@ define('SBIS3.CONTROLS/ListView/resources/MassSelectionController/MassSelectionC
              _silent: false,
              _selection: undefined
           },
-          $constructor: function () {
+          $constructor: function() {
              this._selection = this._createSelection();
 
              this.subscribeTo(this._options.linkedObject, 'onItemsReady', this._onItemsReady.bind(this));
@@ -94,11 +94,17 @@ define('SBIS3.CONTROLS/ListView/resources/MassSelectionController/MassSelectionC
              this.subscribeTo(projection, 'onCollectionChange', this._onProjectionChange.bind(this));
           },
 
-          _onProjectionChangeAdd: function (newItems) {
-             var addSelection = [];
-             if (this._selection._options.markedAll) {
-                newItems.forEach(function (item) {
-                   addSelection.push(item.getContents().get(this._options.idProperty));
+          _onProjectionChangeAdd: function(newItems) {
+             var
+                itemId,
+                addSelection = [],
+                selection = this._selection.getSelection();
+             if (selection.markedAll) {
+                newItems.forEach(function(item) {
+                   itemId = item.getContents().get(this._options.idProperty);
+                   if (!ArraySimpleValuesUtil.hasInArray(selection.excluded, itemId)) {
+                      addSelection.push(itemId);
+                   }
                 }, this);
                 if (addSelection.length) {
                    this._options.linkedObject.addItemsSelection(addSelection);
