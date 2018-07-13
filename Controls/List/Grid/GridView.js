@@ -21,7 +21,7 @@ define('Controls/List/Grid/GridView', [
          prepareGridTemplateColumns: function(columns, multiselect) {
             var
                result = '';
-            if (multiselect) {
+            if (multiselect === 'visible' || multiselect === 'onhover') {
                result += 'auto ';
             }
             columns.forEach(function(column) {
