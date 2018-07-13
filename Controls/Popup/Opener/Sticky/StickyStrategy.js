@@ -84,7 +84,7 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', [], function() {
             maxOverflowValue = self.getMaxOverflowValue(coordinate, popupCfg, direction, targetCoords);
 
             // Если окно не влезает, то передаем управление дальше
-            if (maxOverflowValue > 0 && popupCfg.locationStrategy !== 'dontMove') {
+            if (maxOverflowValue > 0 && popupCfg.locationStrategy !== 'fixed') {
                callback(maxOverflowValue);
             }
          };
