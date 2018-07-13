@@ -1,5 +1,5 @@
-define('Controls/OperationsPanel/Utils', [
-   'tmpl!Controls/OperationsPanel/ItemTemplate',
+define('Controls/Operations/Panel/Utils', [
+   'tmpl!Controls/Operations/Panel/ItemTemplate',
    'Controls/Utils/Toolbar'
 ], function(
    itemTemplate,
@@ -7,31 +7,26 @@ define('Controls/OperationsPanel/Utils', [
 ) {
    'use strict';
 
-   var
-      MENU_WIDTH = 0,
-      initialized;
+   var MENU_WIDTH = 0;
 
    var _private = {
       initializeConstants: function() {
-         if (initialized) {
-            return;
+         if (!MENU_WIDTH) {
+            MENU_WIDTH = window && _private.getWidth('<span class="controls-ToolBarV__menuOpen controls-ToolbarV_item__styled"><i class="icon-medium icon-ExpandDown"/></span>');
          }
-         MENU_WIDTH = window && _private.getWidth('<span class="controls-ToolBarV__menuOpen controls-ToolbarV_item__styled"><i class="icon-medium icon-ExpandDown"/></span>');
-
-         initialized = true;
       },
 
-
-      getItemsSizes: function(items) {
+      getItemsSizes: function(items, visibleKeys) {
          var
             measurer = document.createElement('div'),
             itemsSizes = [],
             itemsMark = '';
 
-         items.forEach(function(item) {
+         visibleKeys.forEach(function(key) {
             itemsMark += itemTemplate({
-               item: item,
-               size: 'm'});
+               item: items.getRecordById(key),
+               size: 'm'
+            });
          });
 
          measurer.innerHTML = itemsMark;
@@ -68,37 +63,38 @@ define('Controls/OperationsPanel/Utils', [
 
       fillItemsType: function(self, items, availableWidth) {
          var
-            visibleItems = items.filter(function(item) {
-               return !item[self._options.parentProperty] && item[self._options.parentProperty] !== 0;
-            }),
-            length = visibleItems.length,
-            itemsSizes = _private.getItemsSizes(visibleItems),
-            currentWidth = itemsSizes.reduce(function(acc, width) {
-               return acc + width;
-            }, 0);
+            itemsSizes,
+            currentWidth,
+            visibleItemsKeys = [];
+
+         items.each(function(item) {
+            if (!item.get(self._options.parentProperty)) {
+               visibleItemsKeys.push(item.get(self._options.keyProperty));
+            }
+         });
+         itemsSizes = _private.getItemsSizes(items, visibleItemsKeys);
+         currentWidth = itemsSizes.reduce(function(acc, width) {
+            return acc + width;
+         }, 0);
 
          _private.initializeConstants();
 
          items.forEach(function(item) {
-            item.showType = 0;
-            item.title = item.title || ''; //страховка от дураков
+            item.set('showType', 0);
          });
 
          if (currentWidth > availableWidth) {
             currentWidth += MENU_WIDTH;
-            for (var i = length - 1; i >= 0; i--) {
-               if (currentWidth > availableWidth) {
-                  currentWidth -= itemsSizes[i];
-                  visibleItems[i].showType = tUtil.showType.MENU;
-               } else {
-                  visibleItems[i].showType = tUtil.showType.MENU_TOOLBAR;
-               }
+            for (var i = visibleItemsKeys.length - 1; i >= 0; i--) {
+               items.getRecordById(visibleItemsKeys[i]).set('showType', currentWidth > availableWidth ? tUtil.showType.MENU : tUtil.showType.MENU_TOOLBAR);
+               currentWidth -= itemsSizes[i];
             }
          } else {
-            items.forEach(function(item) {
-               item.showType = tUtil.showType.TOOLBAR;
+            items.each(function(item) {
+               item.set('showType', tUtil.showType.TOOLBAR);
             });
          }
+         return items;
       }
    };
 });

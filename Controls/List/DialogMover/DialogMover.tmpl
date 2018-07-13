@@ -1,5 +1,9 @@
 <div>
-   <Controls.List.Mover name="mover" parentProperty="{{_options.parentProperty}}"/>
+   <Controls.List.Mover
+           name="mover"
+           on:beforeItemsMove="_beforeItemsMove()"
+           on:afterItemsMove="_afterItemsMove()"
+           parentProperty="{{_options.parentProperty}}"/>
    <Controls.Popup.Opener.Dialog name="moveDialogOpener">
       <ws:popupOptions isModal="{{true}}" template="Controls/List/DialogMover/MoveDialog">
          <ws:eventHandlers onResult="{{_onDialogResult}}"/>

@@ -1,0 +1,37 @@
+<div class="demoWrapper">
+   <div class="testBlock" test_name="BackButtonCapture">
+      <div class="exampleBlock">
+         <h2>Панель операций</h2>
+         <Controls.Container.Data keyProperty="id" source="{{_viewSource}}">
+            <Controls.Container.MultiSelector>
+               <Controls.Operations.Panel
+                       test_name="panel"
+                       expanded="{{_expanded}}"
+                       multiSelectorVisibility="{{_multiSelectorVisibility}}"
+                       source="{{_source}}"
+                       parentProperty="parent"
+                       nodeProperty="@parent"
+                       rightTemplate="{{_rightTemplate ? _rightTemplateTpl : null}}"
+                       keyProperty="id"
+               />
+            </Controls.Container.MultiSelector>
+         </Controls.Container.Data>
+      </div>
+      <div class="optionsBlock">
+         <h3>Опции</h3>
+         <Controls.Label caption="expanded:"/>
+         <Controls.Toggle.Checkbox test_name="expanded" bind:value="_expanded" caption="Show/hide operationsPanel"/>
+         <Controls.Label caption="source:"/>
+         <Controls.Toggle.Radio
+            test_name="source"
+            on:selectedKeyChanged="sourceChange()"
+            keyProperty="id"
+            selectedKey="{{_sourceNumber}}"
+            source="{{_sourceConfig}}"/>
+         <Controls.Label caption="multiSelectorVisibility:"/>
+         <Controls.Toggle.Checkbox test_name="multiSelectorVisibility" bind:value="_multiSelectorVisibility" caption="Show/hide multiSelector"/>
+         <Controls.Label caption="rightTemplate:"/>
+         <Controls.Toggle.Checkbox test_name="rightTemplate" bind:value="_rightTemplate" caption="Show/hide rightTemplate"/>
+      </div>
+   </div>
+</div>
