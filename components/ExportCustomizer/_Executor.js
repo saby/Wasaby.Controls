@@ -40,17 +40,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Executor',
             // И сразу прроверить их
             this.gatherValues(options, true).addCallback(function (data) {
                // И если всё нормально - завершить диалог
-               //////////////////////////////////////////////////
-               console.log('DBG: ExC_Exec.ececute: data=', data, ';');
-               //////////////////////////////////////////////////
                if (data) {
                   var outputCall = options.outputCall;
                   if (outputCall) {
                      (new RemoteCall(outputCall)).call(data).addCallbacks(
                         function (result) {
-                           //////////////////////////////////////////////////
-                           console.log('DBG: ExC_Exec.ececute: result=', result, ';');
-                           //////////////////////////////////////////////////
                            data.result = result;
                            promise.callback(data);
                         },
