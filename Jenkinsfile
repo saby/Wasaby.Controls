@@ -452,9 +452,7 @@ node('controls') {
                 #BRANCH=True
                 [regression]
                 IMAGE_DIR = capture
-                RUN_REGRESSION=True
-				[filestostart]
-				test_vdom_date_range_link_lite.py"""
+                RUN_REGRESSION=True"""
         }
 
         def site = "http://${NODE_NAME}:30010"
