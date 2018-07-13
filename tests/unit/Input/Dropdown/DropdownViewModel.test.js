@@ -142,9 +142,9 @@ define(
             });
             it('historySeparator', function () {
                viewModel3.goToNext();
-               assert.isFalse(viewModel3._needToDrawSeparator(viewModel3._itemsModel.getCurrent().item, viewModel3._itemsModel.getNext().item));
+               assert.isFalse(DropdownViewModel._private.needToDrawSeparator(viewModel3._itemsModel.getCurrent().item, viewModel3._itemsModel.getNext().item));
                viewModel3.goToNext();
-               assert.isTrue(viewModel3._needToDrawSeparator(viewModel3._itemsModel.getCurrent().item, viewModel3._itemsModel.getNext().item));
+               assert.isTrue(DropdownViewModel._private.needToDrawSeparator(viewModel3._itemsModel.getCurrent().item, viewModel3._itemsModel.getNext().item));
             });
          });
 

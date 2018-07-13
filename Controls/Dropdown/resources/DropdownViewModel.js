@@ -25,7 +25,16 @@ define('Controls/Dropdown/resources/DropdownViewModel',
                return true;
             }
             return item.get(this._options.additionalProperty) !== true;
-         }
+         },
+
+         needToDrawSeparator: function(item, nextItem) {
+            if (!nextItem.get) {
+               return false;
+            }
+            var itemInHistory = (item.get('pinned') || item.get('recent') || item.get('frequent')) && !item.get('parent');
+            var nextItemInHistory = nextItem.get('pinned') || nextItem.get('recent') || nextItem.get('frequent');
+            return itemInHistory && !nextItemInHistory;
+         },
       };
 
       var DropdownViewModel = BaseViewModel.extend({
@@ -92,15 +101,18 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             if (!itemsModelCurrent.item.get) {
                itemsModelCurrent.isGroup = true;
                itemsModelCurrent.isHiddenGroup = itemsModelCurrent.item === ControlsConstants.view.hiddenGroup;
-               itemsModelCurrent.groupTemplate = this._itemsModel._options.itemsGroup.template;
+               itemsModelCurrent.groupTemplate = this._options.itemsGroup.template;
                return itemsModelCurrent;
             }
             itemsModelCurrent.hasChildren = this._hasItemChildren(itemsModelCurrent.item);
             itemsModelCurrent.hasParent = this._hasParent(itemsModelCurrent.item);
             itemsModelCurrent.isSelected = this._isItemSelected(itemsModelCurrent.item);
             itemsModelCurrent.icon = itemsModelCurrent.item.get('icon');
+
+            //Проверяем, является ли элемент последним, иначе не возьмётся getNext,
+            //needToDrawSeparator разделяет items из истории и не из истории
             if (!this._itemsModel.isLast()) {
-               itemsModelCurrent.hasSeparator = this._needToDrawSeparator(itemsModelCurrent.item, this._itemsModel.getNext().item);
+               itemsModelCurrent.hasSeparator = _private.needToDrawSeparator(itemsModelCurrent.item, this._itemsModel.getNext().item);
             }
             itemsModelCurrent.iconStyle = itemsModelCurrent.item.get('iconStyle');
             itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
@@ -163,15 +175,8 @@ define('Controls/Dropdown/resources/DropdownViewModel',
                return emptyItem;
             }
          },
-         _needToDrawSeparator: function(item, nextItem) {
-            if (!nextItem.get) {
-               return false;
-            }
-            var itemInHistory = (item.get('pinned') || item.get('recent') || item.get('frequent')) && !item.get('parent');
-            var nextItemInHistory = nextItem.get('pinned') || nextItem.get('recent') || nextItem.get('frequent');
-            return itemInHistory && !nextItemInHistory;
-         }
       });
 
+      DropdownViewModel._private = _private;
       return DropdownViewModel;
    });
