@@ -209,7 +209,7 @@ define(
                let position = Dialog.getPosition(300, 300, sizes , {});
                assert.equal(position.top, 0);
                assert.equal(position.left, 50);
-               assert.equal(position.width, 200);
+               assert.equal(position.width, undefined);
                assert.equal(position.height, 300);
             });
 

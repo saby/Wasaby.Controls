@@ -251,20 +251,25 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             if (hasHeader) {
                if (customHeaderContainer.length) {
                   customHeaderContainer.prepend('<div class="ws-float-area-title">' + this._options.caption + '</div>');
-                  if (this._options.type === 'dialog') {
-                     var height = customHeaderContainer.height();
-                     $('.controls-DialogTemplate', this.getContainer()).css('margin-bottom', height);
-                  }
+                  this._prependCustomHeader(customHeaderContainer);
                } else {
                   this.getContainer().prepend($('<div class="ws-window-titlebar"><div class="ws-float-area-title ws-float-area-title-generated">' + this._options.caption + '</div></div>'));
                   this.getContainer().addClass('controls-CompoundArea-headerPadding');
                }
             } else if (customHeaderContainer.length && this._options.type === 'dialog') {
-               var container = $('.controls-DialogTemplate', this.getContainer());
-               container.prepend(customHeaderContainer.addClass('controls-CompoundArea-custom-header'));
-               this.getContainer().addClass('controls-CompoundArea-headerPadding');
+               this._prependCustomHeader(customHeaderContainer);
             } else {
                this.getContainer().removeClass('controls-CompoundArea-headerPadding');
+            }
+         },
+
+         _prependCustomHeader: function(customHead) {
+            var container = $('.controls-DialogTemplate', this.getContainer());
+            container.prepend(customHead.addClass('controls-CompoundArea-custom-header'));
+            this.getContainer().addClass('controls-CompoundArea-headerPadding');
+            if (this._options.type === 'dialog') {
+               var height = customHead.height();
+               $('.controls-DialogTemplate', this.getContainer()).css('padding-top', height);
             }
          },
 
@@ -272,19 +277,15 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._compoundControl.subscribe('onCommandCatch', this._commandCatchHandler);
          },
 
-         _commandCatchHandler: function(event, commandName, arg) {
+         _commandCatchHandler: function(event, commandName) {
             var args = Array.prototype.slice.call(arguments, 2);
             event.setResult(this._commandHandler(commandName, args));
          },
          _commandHandler: function(commandName, args) {
-            var parent, argWithName;
-            var arg = args[0];
-
-            if (Array.isArray(arg) && arg.length === 1) {
-               argWithName = [commandName, arg];
-            } else {
-               argWithName = [commandName].concat(arg);
-            }
+            var
+               parent,
+               argsWithName = [commandName].concat(args),
+               arg = args[0];
 
             if (commandName === 'close') {
                return this._close(arg);
@@ -313,7 +314,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                }
                if (this.getParent()) {
                   parent = this.getParent();
-                  return parent.sendCommand.apply(parent, argWithName);
+                  return parent.sendCommand.apply(parent, argsWithName);
                }
             }
 
@@ -333,8 +334,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _getCommandHandler: function(commandName) {
             return this._compoundControl.getUserData('commandStorage')[commandName];
          },
-         sendCommand: function(commandName, arg) {
-            return this._commandHandler(commandName, arg);
+         sendCommand: function(commandName) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            return this._commandHandler(commandName, args);
          },
          _close: function(arg) {
             if (this._isClosing) {
@@ -355,6 +357,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _keyDown: function(event) {
             if (!event.nativeEvent.shiftKey && event.nativeEvent.keyCode === CoreConstants.key.esc) {
                this._close();
+               event.stopPropagation();
+            }
+         },
+         _keyUp: function(event) {
+            if (!event.nativeEvent.shiftKey && event.nativeEvent.keyCode === CoreConstants.key.esc) {
                event.stopPropagation();
             }
          },
@@ -604,6 +611,16 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             // Могут несколько раз позвать закрытие подряд
          },
+
+         _toggleVisibleClass: function(className, visible) {
+            className = className || '';
+            if (visible) {
+               className = className.replace(/ws-hidden/ig, '');
+            } else if (className.indexOf('ws-hidden') === -1) {
+               className += ' ws-hidden';
+            }
+            return className;
+         },
          _toggleVisible: function(visible) {
             var popupContainer = this.getContainer().closest('.controls-Popup')[0];
             if (popupContainer) {
@@ -615,16 +632,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                      popupConfig = ManagerController.find(id);
                   if (popupConfig) {
                      // Удалим или поставим ws-hidden в зависимости от переданного аргумента
-                     var newClassName = popupConfig.popupOptions.className || '';
-                     if (visible) {
-                        newClassName = newClassName.replace(/ws-hidden/ig, '');
-                     } else if (newClassName.indexOf('ws-hidden') === -1) {
-                        newClassName += ' ws-hidden';
-                     }
-                     popupConfig.popupOptions.className = newClassName;
+                     popupConfig.popupOptions.className = this._toggleVisibleClass(popupConfig.popupOptions.className, visible);
 
                      // Сразу обновим список классов на контейнере, чтобы при пересинхронизации он не "прыгал"
-                     popupContainer.className = newClassName;
+                     popupContainer.className = this._toggleVisibleClass(popupContainer.className, visible);
                      this._isVisible = visible;
                   }
                }

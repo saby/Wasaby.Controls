@@ -59,7 +59,21 @@ define('SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil',
 
          return viewFilter;
       },
-      prepareStructureToSave: function(structure) {
+      
+      resetNoSaveStructureKeys: function(structure, doNotSaveKeys) {
+         var structureCopy = coreClone(structure);
+         
+         structureCopy.forEach(function(elem) {
+            if (doNotSaveKeys.indexOf(elem.filterField) !== -1) {
+               resetField('value', elem);
+               resetField('caption', elem);
+            }
+         });
+         
+         return structureCopy;
+      },
+      
+      prepareStructureToSave: function(structure, doNotSaveKeys) {
          /* Все правки надо делать с копией, чтобы не портить оригинальную структуру */
          var structureCopy = coreClone(structure);
 
