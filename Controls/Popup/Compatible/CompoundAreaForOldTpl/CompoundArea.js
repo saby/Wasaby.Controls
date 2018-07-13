@@ -277,19 +277,15 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._compoundControl.subscribe('onCommandCatch', this._commandCatchHandler);
          },
 
-         _commandCatchHandler: function(event, commandName, arg) {
+         _commandCatchHandler: function(event, commandName) {
             var args = Array.prototype.slice.call(arguments, 2);
             event.setResult(this._commandHandler(commandName, args));
          },
          _commandHandler: function(commandName, args) {
-            var parent, argWithName;
-            var arg = args[0];
-
-            if (Array.isArray(arg) && arg.length === 1) {
-               argWithName = [commandName, arg];
-            } else {
-               argWithName = [commandName].concat(arg);
-            }
+            var
+               parent,
+               argsWithName = [commandName].concat(args),
+               arg = args[0];
 
             if (commandName === 'close') {
                return this._close(arg);
@@ -318,7 +314,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                }
                if (this.getParent()) {
                   parent = this.getParent();
-                  return parent.sendCommand.apply(parent, argWithName);
+                  return parent.sendCommand.apply(parent, argsWithName);
                }
             }
 
@@ -338,8 +334,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _getCommandHandler: function(commandName) {
             return this._compoundControl.getUserData('commandStorage')[commandName];
          },
-         sendCommand: function(commandName, arg) {
-            return this._commandHandler(commandName, arg);
+         sendCommand: function(commandName) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            return this._commandHandler(commandName, args);
          },
          _close: function(arg) {
             if (this._isClosing) {
