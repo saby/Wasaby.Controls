@@ -225,9 +225,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
             var wiatIndicator = new WaitIndicator(null, rk('Загружается', 'НастройщикЭкспорта'), {overlay:'dark'}, 1000);
             require(['SBIS3.CONTROLS/ExportCustomizer/Area', 'Lib/Control/FloatArea/FloatArea'], function (Area, FloatArea) {
                wiatIndicator.remove();
+               var needDelay = options.usePresets && !options.selectedPresetId;
                var componentOptions = cMerge({
                   name: 'controls-ExportCustomizer__area',
-                  waitingMode: true,
+                  enabled: !needDelay,
+                  //waitingMode: needDelay,
                   dialogMode: true,
                   handlers: {
                      onComplete: this._onAreaComplete.bind(this),
@@ -246,9 +248,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
                   closeButton: true,
                   componentOptions: componentOptions,
                   handlers: {
-                     onAfterShow: function () {
-                        this._areaContainer.getChildControlByName('controls-ExportCustomizer__area').setValues({waitingMode:false});
-                     }.bind(this),
+                     onAfterShow: needDelay ? function () {
+                        this._areaContainer.getChildControlByName('controls-ExportCustomizer__area').setEnabled(true);
+                     }.bind(this) : null,
                      onClose: this._onAreaClose.bind(this)
                   }
                });
