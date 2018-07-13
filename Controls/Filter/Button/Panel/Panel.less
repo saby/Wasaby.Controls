@@ -2,8 +2,8 @@
    width: @width_FilterPanel_default;
 }
 
-.controls-FilterPanel__wrapper {
-   margin-bottom: @spacing-bottom_FilterPanel;
+.controls-FilterPanel__blockParams {
+   margin: @margin_FilterPanel-blockParams;
 }
 
 .controls-FilterPanel__header {
@@ -11,6 +11,7 @@
    display: flex;
    justify-content: flex-end;
    align-items: baseline;
+   margin-left: auto;
 }
 
 .controls-FilterPanel__header:before {
@@ -21,8 +22,25 @@
    visibility: hidden;
 }
 
+.controls-FilterPanel__caption {
+   font-size: @font-size_FilterPanel-caption;
+   color: @color_FilterPanel-caption;
+   margin: @margin_FilterPanel-caption;
+}
+
 .controls-FilterPanel__PropertyGrid {
    margin: @margin_FilterPanel__PropertyGrid;
+}
+
+.controls-FilterPanel__separator {
+   display: flex;
+   justify-content: center;
+   height: @height_AdditionalParams-arrow;
+}
+
+.controls-FilterPanel_maxHeight {
+   max-height: @max-height_FilterPanel-items;
+   overflow: hidden;
 }
 
 .controls-FilterPanel__header-topTemplate {
@@ -31,9 +49,5 @@
 
 .controls-FilterPanel__resetButton {
    margin: @margin_FilterPanel-resetButton-title;
-}
-
-.controls-FilterPanel__filterButton {
-   margin-right: @spacing_FilterPanel-between-filterButton-closeButton;
 }
 

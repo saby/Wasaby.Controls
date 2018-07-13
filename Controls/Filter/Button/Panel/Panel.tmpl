@@ -18,23 +18,25 @@
       </div>
    </ws:topArea>
    <ws:contentArea>
-      <div class="controls-FilterPanel__wrapper">
-         <Controls.PropertyGrid items="{{_items}}"
-                                itemTemplate="{{_options.itemTemplate}}"
-                                itemTemplateProperty="{{_options.itemTemplateProperty}}"
-                                on:valueChanged="_valueChangedHandler()"
-                                on:visibilityChanged="_visibilityChangedHandler()"
-                                class="controls-FilterPanel__PropertyGrid"/>
-         <ws:if data="{{_hasAdditionalParams}}">
-            <Controls.Filter.Button.Panel.AdditionalParams
-                    items="{{_items}}"
-                    itemTemplate="{{_options.additionalTemplate}}"
-                    itemTemplateProperty="{{_options.additionalTemplateProperty}}"
-                    on:valueChanged="_valueChangedHandler()"/>
-         </ws:if>
-         <ws:if data="{{_options.historyId}}">
+      <div>
+         <div class="controls-FilterPanel__blockParams">
+            <Controls.PropertyGrid items="{{_items}}"
+                                   itemTemplate="{{_options.itemTemplate}}"
+                                   itemTemplateProperty="{{_options.itemTemplateProperty}}"
+                                   on:valueChanged="_valueChangedHandler()"
+                                   on:visibilityChanged="_visibilityChangedHandler()"
+                                   class="controls-FilterPanel__PropertyGrid"/>
+            <ws:if data="{{_hasAdditionalParams}}">
+               <Controls.Filter.Button.Panel.AdditionalParams
+                       items="{{_items}}"
+                       itemTemplate="{{_options.additionalTemplate}}"
+                       itemTemplateProperty="{{_options.additionalTemplateProperty}}"
+                       on:valueChanged="_valueChangedHandler()"/>
+            </ws:if>
+         </div>
+         <ws:if data="{{_historyId}}">
             <Controls.Filter.Button.History.List
-                    historyId="{{_options.historyId}}"
+                    historyId="{{_historyId}}"
                     on:applyHistoryFilter="_applyHistoryFilter()"/>
          </ws:if>
       </div>
