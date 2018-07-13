@@ -4,14 +4,14 @@
                  {{itemData.getPropValue(itemData.item, 'pinned') === true && !itemData.hasParent ?  'controls-DropdownList__row_pinned'}}"
      on:click="_itemClickHandler(itemData.item)">
    <div if="{{itemData.icon}}" class="controls-DropdownList__icon {{itemData.icon}}"></div>
-   <div class="controls-DropdownList__content">
+   <div class="controls-DropdownList__content controls-DropdownList__content_{{multiLine ? 'multiLine' : 'singleLine'}}">
       <ws:if data="{{contentTemplate}}">
          <ws:partial
             template="{{contentTemplate}}"
             itemData="{{itemData}}" />
       </ws:if>
       <ws:else>
-         <div>{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>
+         {{itemData.getPropValue(itemData.item, displayProperty || 'title')}}
       </ws:else>
    </div>
     <ws:if data="{{!itemData.hasChildren && !(itemData.getPropValue(itemData.item, 'pinned') === true && itemData.hasParent)}}">
