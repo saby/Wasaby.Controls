@@ -174,12 +174,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   if (needNewPreset) {
                      var newPreset = this._addPreset();
                      this.sendCommand('subviewChanged', 'create', newPreset);
-                     // Анимация для FloatArea моргает при изменении контента во время самой анимации. Сейчас можно поправить только так.
-                     // https://online.sbis.ru/opendoc.html?guid=62b89eca-84e1-4185-9a1b-0b8940e51a0a
-                     setTimeout(function() {
-                        this._startEditingMode();
-                        this._needNewPreset = null;
-                     }.bind(this), 200);
+                     this._startEditingMode();
+                     this._needNewPreset = null;
                   }
                   this._updateSelector();
                   if (!needNewPreset) {
@@ -260,6 +256,20 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   }
                   this._endEditingMode();
                }.bind(this));
+            }
+         },
+
+         /**
+          * Переключить доступность компонента
+          *
+          * @protected
+          * @param {boolean} isEnabled Указывает, будет ли компонент доступен
+          */
+         setEnabled: function (isEnabled) {
+            var wasEnabled = this.isEnabled();
+            View.superclass.setEnabled.call(this, isEnabled);
+            if (isEnabled && !wasEnabled && this._isEditMode) {
+               this._initEditor(this._findPresetById(this._options.selectedId));
             }
          },
 
@@ -557,8 +567,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           */
          _startEditingMode: function (listView) {
             if (!this._isEditMode) {
-               var options = this._options;
-               var preset = this._findPresetById(options.selectedId);
+               var preset = this._findPresetById(this._options.selectedId);
                if (preset && (preset.isStorable || preset.isUnreal)) {
                   if (listView) {
                      listView.sendCommand('close');
@@ -566,45 +575,57 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   this._isEditMode = true;
                   this._switchDeleteButton(false);
                   this._switchEditor();
-                  var editor = this._editor;
-                  this.getLinkedContext().setValue('editedTitle', preset.title);
-                  editor._clickHandler();
-                  var container = editor._cntrlPanel;
-                  (this._editorOkButton = container.find('.controls-EditAtPlace__okButton')).attr('title', rk('Сохранить шаблон', 'НастройщикЭкспорта'));
-                  container.find('.controls-EditAtPlace__cancel').attr('title', rk('Отменить изменения', 'НастройщикЭкспорта'));
-                  this._checkEditorOkButton();
-                  editor.setValidators([{
-                     option: 'text',
-                     validator: function (presetId, value) {
-                        var reducer = function (r, v) { if (v.id !== presetId) { r.push(v.title); } return r; };
-                        var list = [];
-                        var statics = this._options.statics;
-                        if (statics && statics.length) {
-                           list = statics.reduce(reducer, list);
-                        }
-                        var customs = this._customs;
-                        if (customs && customs.length) {
-                           list = customs.reduce(reducer, list);
-                        }
-                        if (value) {
-                           var v = value.trim();
-                           return !!v && list.indexOf(v) === -1;
-                        }
-                     }.bind(this, preset.id),
-                     errorMessage: _TITLE_ERROR
-                  }]);
-                  editor._origKeyPressHandler = editor._keyPressHandler;
-                  editor._setKeyPressHandler(function (evt) {
-                     if ((evt.key === 'Enter' || evt.keyCode == 13) && !this._canSave()) {
-                        evt.preventDefault();
-                        evt.stopImmediatePropagation();
-                        return;
-                     }
-                     editor._origKeyPressHandler(evt);
-                  }.bind(this));
+                  if (this.isEnabled()) {
+                     this._initEditor(preset);
+                  }
                   this.sendCommand('subviewChanged', 'edit', preset);
                }
             }
+         },
+
+         /**
+          * Инициализировать редактор
+          *
+          * @param {ExportPreset} preset Пресет
+          * @protected
+          */
+         _initEditor: function (preset) {
+            var editor = this._editor;
+            this.getLinkedContext().setValue('editedTitle', preset.title);
+            editor._clickHandler();
+            var container = editor._cntrlPanel;
+            (this._editorOkButton = container.find('.controls-EditAtPlace__okButton')).attr('title', rk('Сохранить шаблон', 'НастройщикЭкспорта'));
+            container.find('.controls-EditAtPlace__cancel').attr('title', rk('Отменить изменения', 'НастройщикЭкспорта'));
+            this._checkEditorOkButton();
+            editor.setValidators([{
+               option: 'text',
+               validator: function (presetId, value) {
+                  var reducer = function (r, v) { if (v.id !== presetId) { r.push(v.title); } return r; };
+                  var list = [];
+                  var statics = this._options.statics;
+                  if (statics && statics.length) {
+                     list = statics.reduce(reducer, list);
+                  }
+                  var customs = this._customs;
+                  if (customs && customs.length) {
+                     list = customs.reduce(reducer, list);
+                  }
+                  if (value) {
+                     var v = value.trim();
+                     return !!v && list.indexOf(v) === -1;
+                  }
+               }.bind(this, preset.id),
+               errorMessage: _TITLE_ERROR
+            }]);
+            editor._origKeyPressHandler = editor._keyPressHandler;
+            editor._setKeyPressHandler(function (evt) {
+               if ((evt.key === 'Enter' || evt.keyCode == 13) && !this._canSave()) {
+                  evt.preventDefault();
+                  evt.stopImmediatePropagation();
+                  return;
+               }
+               editor._origKeyPressHandler(evt);
+            }.bind(this));
          },
 
          /**
