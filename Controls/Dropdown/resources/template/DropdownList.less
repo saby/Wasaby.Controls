@@ -2,6 +2,7 @@
    .flexbox();
    .flex-direction(column);
    max-height: @max-height_DropdownList;
+   max-width: @max-width_DropdownList;
    border: @border-width_suggestionsContainer solid @border-color_suggestionsContainer;
    background: @background_DropdownList;
    box-sizing: border-box;
@@ -24,7 +25,6 @@
    cursor: pointer;
    position: relative;
    min-height: @height_DropdownList-item;
-   height: @height_DropdownList-item;
    .flexbox();
    .align-items(center);
    padding-left: @padding_DropdownList-default;
@@ -56,6 +56,10 @@
 
 .controls-DropdownList__content {
    font-size: @large-text-size;
+}
+
+.controls-DropdownList__content_singleLine {
+   .text-overflow();
 }
 
 .controls-DropdownList__selected:after {
