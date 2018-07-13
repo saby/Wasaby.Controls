@@ -109,8 +109,9 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             itemsModelCurrent.isSelected = this._isItemSelected(itemsModelCurrent.item);
             itemsModelCurrent.icon = itemsModelCurrent.item.get('icon');
 
-            //Проверяем, является ли элемент последним, иначе не возьмётся getNext,
-            //needToDrawSeparator разделяет items из истории и не из истории
+            //Draw the separator to split history and nohistory items.
+            //Separator is needed only when list has both history and nohistory items
+            //if the last item is in history then separator is unnecessary
             if (!this._itemsModel.isLast()) {
                itemsModelCurrent.hasSeparator = _private.needToDrawSeparator(itemsModelCurrent.item, this._itemsModel.getNext().item);
             }
