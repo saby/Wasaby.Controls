@@ -96,6 +96,16 @@ module.exports = function(Component) {
          }, []);
       },
 
+      // Демо-пример: операции над записью.
+      '/demo-ws4-item-actions': function(req, res) {
+         requirejs('Examples/List/ItemActions');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Examples/List/ItemActions',
+            initDependencies: false
+         }, []);
+      },
+
+
       /*
         ### СТРАНИЧКИ ДЛЯ СТАРЫХ КОНТРОЛОВ - WS3. ### 
         ### Для построения страницы используется шаблон VIEW. ###
