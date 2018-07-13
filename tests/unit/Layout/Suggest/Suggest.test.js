@@ -153,7 +153,7 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          assert.equal(Suggest._private.calcOrient(self, {innerHeight: 300}), '-down');
       });
    
-      it('Suggest::_inputActivated with autoDropDown', function(done) {
+      it('Suggest::_inputActivated/inputClicked with autoDropDown', function(done) {
          var self = getComponentObject();
          var suggestComponent = new Suggest();
          var suggestState = false;
@@ -174,7 +174,14 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
             
             suggestComponent._changeValueHandler(null, '');
             assert.isTrue(suggestState);
-            done();
+   
+            suggestComponent._close();
+            suggestComponent._inputClicked();
+            
+            suggestComponent._dependenciesDeferred.addCallback(function() {
+               assert.isTrue(suggestState);
+               done();
+            });
          });
       });
    

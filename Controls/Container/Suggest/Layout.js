@@ -224,6 +224,12 @@ define('Controls/Container/Suggest/Layout',
             }
          },
    
+         _inputClicked: function() {
+            if (this._options.autoDropDown && !this._options.suggestState) {
+               _private.open(this);
+            }
+         },
+   
          _tabsSelectedKeyChanged: function(event, key) {
             this._searchDelay = 0;
             _private.updateFilter(this, this._searchValue, key);
