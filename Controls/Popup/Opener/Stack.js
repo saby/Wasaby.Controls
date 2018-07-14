@@ -3,7 +3,7 @@ define('Controls/Popup/Opener/Stack',
       'Controls/Popup/Opener/BaseOpener'
    ],
    function(Base) {
-      var POPUP_CLASS = 'controls-Stack';
+      var POPUP_CLASS = 'controls-Stack controls-Stack__waiting';
 
       /**
        * Действие открытия стековой панели.
