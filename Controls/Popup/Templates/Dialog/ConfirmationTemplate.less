@@ -1,8 +1,6 @@
 .controls-ConfirmationTemplate {
-   border-top: @controls-InformationPopup-border-top-width solid;
-   border-left: @controls-SubmitPopup-border-left;
-   border-right: @controls-SubmitPopup-border-right;
-   border-bottom: @controls-SubmitPopup-border-bottom;
+   border-style: solid;
+   border-width: @controls-InformationPopup-border-width;
    background: @controls-InformationPopup-bg;
    .box-shadow(@controls-panel-shadow);
 
@@ -24,8 +22,13 @@
 
    box-sizing: border-box;
 }
-
 .controls-ConfirmationTemplate__body {
+   box-sizing: border-box;
+   border-left: @controls-SubmitPopup-border-left;
+   border-right: @controls-SubmitPopup-border-right;
+   border-bottom: @controls-SubmitPopup-border-bottom;
+}
+.controls-ConfirmationTemplate__main {
    padding: @controls-SubmitPopup-body-padding;
 }
 
