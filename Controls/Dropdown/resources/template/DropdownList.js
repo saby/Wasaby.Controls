@@ -3,6 +3,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
       'Core/Control',
       'tmpl!Controls/Dropdown/resources/template/DropdownList',
       'Controls/Dropdown/resources/DropdownViewModel',
+      'tmpl!Controls/Dropdown/resources/template/defaultGroupTemplate',
       'tmpl!Controls/Dropdown/resources/template/itemTemplate',
       'tmpl!Controls/Dropdown/resources/template/defaultHeadTemplate',
       'tmpl!Controls/Dropdown/resources/template/defaultContentHeadTemplate',
@@ -10,7 +11,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
 
       'css!Controls/Dropdown/resources/template/DropdownList'
    ],
-   function(Control, MenuItemsTpl, DropdownViewModel, itemTemplate, defaultHeadTemplate, defaultContentHeadTemplate, ScrollData) {
+   function(Control, MenuItemsTpl, DropdownViewModel, groupTemplate, itemTemplate, defaultHeadTemplate, defaultContentHeadTemplate, ScrollData) {
       //TODO: Убрать определение контекста для Scroll, когда будет готова поддержка контекста для старого окружения.
 
       /**
@@ -37,6 +38,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
       var Menu = Control.extend([], {
          _template: MenuItemsTpl,
          _expanded: false,
+         _groupTemplate: groupTemplate,
          _defaultItemTemplate: itemTemplate,
          _defaultHeadTemplate: defaultHeadTemplate,
          _defaultContentHeadTemplate: defaultContentHeadTemplate,
@@ -49,6 +51,9 @@ define('Controls/Dropdown/resources/template/DropdownList',
 
             if (config.defaultItemTemplate) {
                this._defaultItemTemplate = config.defaultItemTemplate;
+            }
+            if (config.itemsGroup && config.itemsGroup.template) {
+               this._groupTemplate = config.itemsGroup.template;
             }
 
             if (config.showHeader) {
@@ -89,7 +94,8 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   itemTemplateProperty: newOptions.itemTemplateProperty,
                   nodeProperty: newOptions.nodeProperty,
                   parentProperty: newOptions.parentProperty,
-                  emptyText: newOptions.emptyText
+                  emptyText: newOptions.emptyText,
+                  itemsGroup: newOptions.itemsGroup
                });
                this._hasHierarchy = this._listModel.hasHierarchy();
             }
