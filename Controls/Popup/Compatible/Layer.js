@@ -131,6 +131,9 @@ define('Controls/Popup/Compatible/Layer', [
 
       if (window && window.userInfo) {
          data = window.userInfo;
+         data.isDemo = data['ВыводимоеИмя'] === 'Демо-версия';
+         data.isPersonalAccount = data['КлассПользователя'] === '__сбис__физики';
+
          if (data['КлассПользователя'] == '__сбис__физики') {
             return profileSource.call('ЕстьЛиУМеняАккаунтПомимФизика').addCallback(function(res) {
                data.hasMoreAccounts = res.getScalar();
