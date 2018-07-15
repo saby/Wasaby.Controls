@@ -226,7 +226,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Constants',
          SKIP_OWN_OPTIONS_NAMES: [
             'dialogMode',
             'waitingMode'
-         ],
+         ]
       };
    }
 );

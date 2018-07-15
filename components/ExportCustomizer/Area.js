@@ -12,7 +12,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
    [
       'Core/CommandDispatcher',
       'Core/core-merge',
-      'Core/Deferred',
       'SBIS3.CONTROLS/CompoundControl',
       'SBIS3.CONTROLS/ExportCustomizer/Constants',
       'SBIS3.CONTROLS/ExportCustomizer/_Executor',
@@ -25,7 +24,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
       'SBIS3.CONTROLS/ScrollContainer'
    ],
 
-   function (CommandDispatcher, cMerge, Deferred, CompoundControl, Constants, Executor, OptionsTool, /*InformationPopupManager,*/ RecordSet, tmpl) {
+   function (CommandDispatcher, cMerge, CompoundControl, Constants, Executor, OptionsTool, /*InformationPopupManager,*/ RecordSet, tmpl) {
       'use strict';
 
       /**
