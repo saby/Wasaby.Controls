@@ -18,12 +18,12 @@ define('Controls/Application/Core',
       * когда WS соберется и попадет в SDK - этот кусок будет удален
       * */
 
-      var global = (function () {
+      var global = (function() {
          return this || (0, eval)('this');
       }());
 
       var buildMode = global.contents ? global.contents.buildMode : 'debug',
-         isDebugMode = function () {
+         isDebugMode = function() {
             return global.document && global.document.cookie && global.document.cookie.indexOf('s3debug=true') > -1;
          };
 
@@ -34,9 +34,10 @@ define('Controls/Application/Core',
       if (global.buildnumber && !isDebugMode()) {
          suffix += '.v' + global.buildnumber;
       }
+      
       function getCssP(path) {
          return (window.wsConfig.resourceRoot + '/' + path + suffix + '.css').replace('//', '/');
-      };
+      }
 
       var AppCore = Control.extend({
          _template: template,
