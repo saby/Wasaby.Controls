@@ -44,7 +44,6 @@ define('Controls/Input/Area', [
     * @cfg {String} New line key.
     * @variant enter When user presses Enter.
     * @variant ctrlEnter When user presses Ctrl + Enter.
-    * @variant shiftEnter When user presses Shift + Enter.
     */
 
    var _private = {
