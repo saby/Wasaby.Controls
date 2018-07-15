@@ -11,7 +11,7 @@ define('SBIS3.CONTROLS/OperationsPanel', [
    'css!SBIS3.CONTROLS/OperationsPanel/OperationsPanel'
 ], function(Control, dotTplFn, ItemsControlMixin, cInstance, ItemTemplate, moduleStubs) {
 
-   var ITEMS_MENU_WIDTH = 28;
+   var ITEMS_MENU_WIDTH = 36;
 
    var
       buildTplArgs = function(cfg) {
