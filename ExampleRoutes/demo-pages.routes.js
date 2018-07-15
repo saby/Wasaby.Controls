@@ -116,6 +116,13 @@ module.exports = function(Component) {
         requirejs(['Examples/ws3open/Module'], function() {
            render(req, res, 'Examples/ws3open/Module');
         });
+      },
+
+      '/demo-ws3-import': function(req, res) {
+        requirejs(['Examples/Import/ImportModule'], function() {
+           render(req, res, 'Examples/Import/ImportModule');
+        });
       }
+
    }
 };
