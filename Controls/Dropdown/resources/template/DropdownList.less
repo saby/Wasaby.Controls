@@ -35,6 +35,11 @@
    }
 }
 
+//не удалять, высота необходима, чтобы корректно работал align-items:center в IE
+.controls-DropdownList__row_singleLine {
+   height: @height_DropdownList-item;
+}
+
 .controls-DropdownList__emptyItem {
    color: @color-Dropdown-emptyItem;
 }
