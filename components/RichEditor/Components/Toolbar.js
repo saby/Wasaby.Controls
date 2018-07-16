@@ -100,23 +100,22 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
                alignjustify: false
             },
             _styleBox: undefined,
-            _pickerOpenHandler: undefined,
             _fromFormatChange: false
          },
 
          init: function() {
-            var
-               self = this;
             RichEditorToolbar.superclass.init.call(this);
             //Необходимо делать блокировку фокуса на пикере comboBox`a чтобы редактор не терял выделение
             //Делаем это при первом показе пикера
             if (this.getItems().getRecordById('style')){
                this._styleBox = this.getItemInstance('style');
-               self._pickerOpenHandler = function() {
-                  self._styleBox._picker._container.on('mousedown focus', self._blockFocusEvents);
-               }.bind(self);
-               self._styleBox.once('onPickerOpen', self._pickerOpenHandler);
+               this._pickerOpenHandler = this._pickerOpenHandler.bind(this);
+               this._styleBox.once('onPickerOpen', this._pickerOpenHandler);
             }
+         },
+
+         _pickerOpenHandler: function() {
+            this._styleBox._picker._container.on('mousedown focus', this._blockFocusEvents);
          },
 
          $constructor: function() {
@@ -132,24 +131,22 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
          },
 
          setExpanded: function(expanded) {
-            var
-               self = this;
-
-            if (!this._doAnimate)
-            {
+            if (!this._doAnimate) {
                this._doAnimate = true;
+               this._settedExpanded = expanded;
                this._itemsContainer.animate(
                {
                   height: expanded ? constants.toolbarHeight : 0
                },
                'fast',
-               function () {
-                  self._doAnimate = false;
-                  self._container.toggleClass('controls-RichEditorToolbar__hide', !expanded);
-               }
+               this._setExpandedAnimateCallback
                );
                RichEditorToolbar.superclass.setExpanded.apply(this, arguments);
             }
+         },
+         _setExpandedAnimateCallback: function () {
+            this._doAnimate = false;
+            this._container.toggleClass('controls-RichEditorToolbar__hide', !this._settedExpanded);
          },
 
          _undoRedoChangeHandler : function(event, hasUndoRedo) {
@@ -244,8 +241,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
          },
 
          _toggleContentSourceHandler: function(event, state) {
-            var
-               buttons = this.getItemsInstances();
+            var buttons = this.getItemsInstances();
+
             if (state && !this._buttonsState) {
                this._buttonsState = {};
                for (var i in buttons) {
@@ -333,7 +330,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
                   linkedEditor: editor,
                   imageFolder: editor._options.imageFolder
                });
-               this._imagePanel.subscribe('onImageChange', function(event, key, fileobj){
+               this.subscribeTo(this._imagePanel, 'onImageChange', function(event, key, fileobj){
                   self._insertImageTemplate(key, fileobj);
                });
             }
@@ -411,6 +408,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
             }
             RichEditorToolbar.superclass.destroy.apply(this, arguments);
             this._itemsContainer = null;
+            this._imagePanel = null;
          }
 
       });
