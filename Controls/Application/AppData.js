@@ -2,8 +2,15 @@
  * Created by dv.zuev on 01.02.2018.
  */
 define('Controls/Application/AppData', [
-   'Core/DataContext'
-], function(DataContext) {
+   'Core/DataContext',
+   'Core/cookie'
+], function(DataContext, cookie) {
+
+   //TODO: Убрать со слоем совместимости
+   if (cookie.get('DisableCompatible')) {
+      define('Lib/NavigationController/JqueryModule', [], function() {});
+   }
+
    return DataContext.extend({
       jsLinks: [],
       constructor: function(cfg) {
