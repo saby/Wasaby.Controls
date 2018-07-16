@@ -105,6 +105,14 @@ define('SBIS3.CONTROLS/Utils/ScrollWatcher', [
       _onContainerScroll: function (event) {
          var scrollTop, elem;
 
+         /**
+          * При унижтожении мы отписываемся от события scroll, но обработчик все равно будет вызван.
+          * https://developer.mozilla.org/ru/docs/Web/API/EventTarget/removeEventListener
+          */
+         if (this.isDestroyed()) {
+            return;
+         }
+
          elem = event.target;
          //если скролл в боди, то просто так скролл топ не посчитать
          if (elem == document) {
@@ -239,7 +247,7 @@ define('SBIS3.CONTROLS/Utils/ScrollWatcher', [
       },
 
       destroy: function() {
-         this._getScrollElement().unbind('.wsScrollWatcher', this._onContainerScroll);
+         this._getScrollElement().unbind('scroll.wsScrollWatcher', this._onContainerScroll);
          
          /* Т.к. опции при разрушении не затираются, необходимо затереть самим */
          this._setOption('element', null);
