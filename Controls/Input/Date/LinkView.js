@@ -1,6 +1,6 @@
 define('Controls/Input/Date/LinkView', [
    'Core/Control',
-   'Core/helpers/date-helpers',
+   'Core/helpers/Date/getFormattedDateRange',
    'Controls/Calendar/Utils',
    'Controls/Date/model/DateRange',
    'Controls/Input/Date/interface/ILinkView',
@@ -8,7 +8,7 @@ define('Controls/Input/Date/LinkView', [
    'css!Controls/Input/Date/LinkView/LinkView'
 ], function(
    BaseControl,
-   dateHelpers,
+   getFormattedDateRange,
    CalendarControlsUtils,
    DateRangeModel,
    IDateLinkView,
@@ -31,7 +31,7 @@ define('Controls/Input/Date/LinkView', [
     */
 
    var _private = {
-      _updateEnabled(self, readOnly) {
+      _updateEnabled: function(self, readOnly) {
          if (self._options === readOnly) {
             return;
          }
@@ -42,7 +42,7 @@ define('Controls/Input/Date/LinkView', [
          self._valueEnabledClass += readOnly ? 'disabled' : 'enabled';
       },
 
-      _updateCaption(self, options) {
+      _updateCaption: function(self, options) {
          var opt = options || self._options;
 
          self._caption = _private._getCaption(
@@ -54,7 +54,7 @@ define('Controls/Input/Date/LinkView', [
 
       _getCaption: function(startValue, endValue, emptyCaption) {
          // As an empty value, use the non-breaking space @nbsp; ('\ xA0') that would not make layout
-         return dateHelpers.getFormattedDateRange(
+         return getFormattedDateRange(
             startValue,
             endValue,
             {
@@ -62,7 +62,7 @@ define('Controls/Input/Date/LinkView', [
                fullNameOfMonth: true,
                contractToQuarter: true,
                contractToHalfYear: true,
-               emptyPeriodTitle: emptyCaption ? emptyCaption : '\xA0'
+               emptyPeriodTitle: emptyCaption || '\xA0'
             }
          );
       }
@@ -86,7 +86,6 @@ define('Controls/Input/Date/LinkView', [
          this._rangeModel.update(options);
          _private._updateCaption(this, options);
          _private._updateEnabled(this, options.readOnly);
-
       },
 
       _beforeUpdate: function(options) {

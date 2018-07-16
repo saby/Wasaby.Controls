@@ -22,10 +22,8 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
 
 
    var
-      DEFAULT_SELECT_CHECKBOX_WIDTH = 24, // Стандартная ширина чекбокса отметки записи.
-      DEFAULT_ROW_SELECT_WIDTH = 12,      // Стандартная ширина полоски выбранной строки.
       DEFAULT_FIELD_PADDING_SIZE = 5,     // Стандартный отступ в полях ввода 4px + border 1px. Используется для расчёта отступа при редактировании по месту.
-      DEFAULT_EXPAND_ELEMENT_WIDTH = 26,  // Стандартная ширина стрелки разворота в дереве
+      DEFAULT_EXPAND_ELEMENT_WIDTH = 24,  // Стандартная ширина стрелки разворота в дереве
       DEFAULT_CELL_PADDING_DIFFERENCE = 1,// Стандартная разница между оступом в ячейке табличного представления и отступом в текстовых полях (6px - 5px = 1px)
       buildTplArgsTDG = function(cfg) {
          var tplOptions, tvOptions;
@@ -387,7 +385,7 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
             }
          }
          if (this._options.editingTemplate && hasCheckbox) {
-            checkboxOffset = container.hasClass('controls-ListView__hideCheckBoxes') ? DEFAULT_ROW_SELECT_WIDTH : DEFAULT_SELECT_CHECKBOX_WIDTH;
+            checkboxOffset = $('.controls-DataGridView__td__checkBox', target).width() || 0;
          }
          // Считаем необходимый отступ слева-направо:
          // отступ чекбокса + отступ строки + отступ иерархии (в режиме поиска 0) + ширина стрелки разворота.
@@ -461,7 +459,6 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
             this._editArrow = new IconButton({
                element: this._container.find('> .controls-TreeView__editArrow-container'),
                icon: 'icon-View icon-size',
-               cssClassName: 'ws-hidden',
                parent: this,
                allowChangeEnable: false,
                handlers: {
@@ -472,7 +469,11 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
                   }
                }
             });
+            //Т.к. базовый контрол снимает класс ws-hidden, а нам надо, чтобы изначально стрелка была скрыта.
+            //А если её создавать скрытой, а потом показывать, вызывается лишний resize
+            this._hideEditArrow();
          }
+
          return this._editArrow;
       },
 
@@ -540,6 +541,11 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
          if(!this._touchSupport || !this._hasHoveredItem()) {
             this._updateEditArrow();
          }
+      },
+      
+      _getCellEllipsisContainer: function(td) {
+         var folderTitleEllipsis = td.find('.controls-TreeView__ellipsis-wrapper');
+         return folderTitleEllipsis.length ? folderTitleEllipsis : TreeDataGridView.superclass._getCellEllipsisContainer.apply(this, arguments);
       },
 
       _onAfterBeginEdit: function() {

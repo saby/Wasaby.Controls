@@ -1,5 +1,5 @@
 /// <amd-module name="File/ResourceGetter/DropArea" />
-define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/ResourceGetter/Base", "Core/Deferred", "File/utils/ExtensionsHelper", "File/utils/filter", "File/ResourceGetter/DropArea/replaceDir", "File/ResourceGetter/DropArea/Overlay"], function (require, exports, tslib_1, IResourceGetterBase, Deferred, ExtensionsHelper, filter, replaceDir, Overlay_1) {
+define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/ResourceGetter/Base", "Core/Deferred", "File/utils/ExtensionsHelper", "File/utils/filter", "File/ResourceGetter/DropArea/replaceDir", "File/ResourceGetter/DropArea/Overlay", "File/Decorator/isDestroyed"], function (require, exports, tslib_1, IResourceGetterBase, Deferred, ExtensionsHelper, filter, replaceDir, Overlay_1, isDestroyed_1) {
     "use strict";
     var OPTION = {
         /**
@@ -32,15 +32,23 @@ define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/Res
          */
         ondrop: function (files) { }
         /**
-         * @cfg {String} Текст на внутреннем элементе во время перемещения файлов
+         * @cfg {String} Текст подсказки во время перемещения файлов
          * @name File/ResourceGetter/DropArea#dragText
          */
         /**
-         * @cfg {String} Текст на внутреннем элементе во время перемещения файлов непосредственно над ним
+         * @cfg {String} Текст подсказки во время перемещения файлов непосредственно над областью
          * @name File/ResourceGetter/DropArea#dropText
          */
         /**
-         * @cfg {String} Класс внутреннего элемента обёртки, содержащий текст
+         * @cfg {String} Текст дополнительной подсказки во время перемещения файлов
+         * @name File/ResourceGetter/DropArea#dragSubtitle
+         */
+        /**
+         * @cfg {String} Текст дополнительной подсказки во время перемещения файлов непосредственно над областью
+         * @name File/ResourceGetter/DropArea#dropSubtitle
+         */
+        /**
+         * @cfg {String} Дополнительный класс элемента обёртки
          * @name File/ResourceGetter/DropArea#innerClass
          */
     };
@@ -89,9 +97,6 @@ define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/Res
          * @see File/LocalFile
          */
         DropArea.prototype.getFiles = function () {
-            if (this.isDestroyed()) {
-                return Deferred.fail("Resource getter is destroyed");
-            }
             if (this._selectDef) {
                 this._selectDef.cancel();
             }
@@ -113,6 +118,9 @@ define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/Res
             this._overlay.destroy();
             _super.prototype.destroy.call(this);
         };
+        tslib_1.__decorate([
+            isDestroyed_1.isDestroyedAsync
+        ], DropArea.prototype, "getFiles", null);
         return DropArea;
     }(IResourceGetterBase));
     return DropArea;

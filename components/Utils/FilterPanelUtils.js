@@ -122,8 +122,10 @@ define('SBIS3.CONTROLS/Utils/FilterPanelUtils',
             locationStrategy: detection.isMobilePlatform ? 'dontMove' : null,
             closeByExternalClick: true,
             closeOnTargetMove: !detection.isMobilePlatform,
+            recalculateOnKeyboardShow: false,
             cssClassName: 'controls__filterButton__picker',
             _canScroll: true,
+            _resizeOnScroll: false,
             activateAfterShow: true
          };
          Object.assign(config, addConfig);

@@ -52,6 +52,7 @@
 
 @padding_DropdownList-default:  round(16px * @multiplier);
 @spacing_DropdownList_arrowSubMenu:round(66px * @multiplier);
+@spacing_DropdownList_cross:     round(66px * @multiplier);
 //MoneyTextBox
 @font-size_MoneyTextBox-decimals: @small-text-size;
 //NumberTextBox
@@ -225,7 +226,7 @@
 @DropdownList-picker-close-btn-right:                 round(16px * @multiplier);
 @DropdownList-picker-menu-item-height:                round(52px * @multiplier);
 @dropdown-list-item-padding:                          round(12px * @multiplier) round(78px * @multiplier)  round(13px * @multiplier) round(16px * @multiplier);
-@DropdownList-picker-fastdatafilter-offset:           0 0 0 round(25px * @multiplier);
+@DropdownList-picker-fastdatafilter-offset:           0 0 0 floor(25px * @multiplier);
 @DropdownList-picker-fastdatafilter-multi-offset:     @DropdownList-picker-fastdatafilter-offset;
 @DropdownList-picker-fdf-left:                        round(-17px * @multiplier);
 @size_DropDownList_filter_cross:                      round(42px * @multiplier);
@@ -448,6 +449,7 @@
 @indents_PeriodLiteDialog:                          round(8px * @multiplier);
 @font-size_PeriodLiteDialog:                        round(28px * @multiplier);
 @min-width_PeriodLiteDialog:                        round(334px * @multiplier);
+@min-width_PeriodLiteDialog-medium:                 round(334px * @multiplier);
 @standart-line-height_PeriodLiteDialog:             round(50px * @multiplier);
 @min-width_PeriodLiteDialog-item-years:             round(136px * @multiplier);
 @font-size_PeriodLiteDialog-currentValue:           round(32px * @multiplier);
@@ -459,6 +461,7 @@
 @width_PeriodLiteDialog-year-prev-next-btns:        @height_PeriodLiteDialog-year;
 @font-size_PeriodLiteDialog-year-prev-next-btns:    round(42px * @multiplier);
 @width_PeriodLiteDialog-home-icon:                  round(32px * @multiplier);
+@width_PeriodLiteDialog-home-icon-lite:             round(32px * @multiplier);
 
 //ItemsToolbar
 @list-view-items-toolbar-right:                        0;
@@ -603,6 +606,7 @@
 @width_CloseButton_small:                       round(42px * @multiplier);
 @height_CloseButton_small:                      round(42px * @multiplier);
 @font-size_CloseButton:                         round(52px * @multiplier);
+@font-size_CloseButton_light:                   round(42px *@multiplier);
 
 //StackTemplate
 @min-height_stackTemplate_head:                 round(100px * @multiplier);
@@ -714,3 +718,13 @@
 @width_ListView-group-expander: round(32px * @multiplier);
 @spacing_ListView-group-between-text-expander: round(8px * @multiplier);
 @spacing_ListView-group-between-rightTemplate-separator: round(24px * @multiplier);
+//VDOM TreeGridView
+@width-TreeViewGrid-levelPadding_default: round(50px * @multiplier);
+@height_TreeGridView-nodeExpander: round(42px * @multiplier);
+@width_TreeGridView-nodeExpander: round(42px * @multiplier);
+@padding_TreeGridView-nodeExpander_size_default: round(4px * @multiplier);
+@font-size_TreeGridView-nodeExpander: round(30px * @multiplier);
+
+//EngineBrowser
+@height_Browser-header:        round(100px * @multiplier);
+@width_Browser-search:         round(600px * @multiplier);

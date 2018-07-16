@@ -11,7 +11,7 @@ define('SBIS3.CONTROLS/OperationsPanel', [
    'css!SBIS3.CONTROLS/OperationsPanel/OperationsPanel'
 ], function(Control, dotTplFn, ItemsControlMixin, cInstance, ItemTemplate, moduleStubs) {
 
-   var ITEMS_MENU_WIDTH = 28;
+   var ITEMS_MENU_WIDTH = 36;
 
    var
       buildTplArgs = function(cfg) {
@@ -98,6 +98,7 @@ define('SBIS3.CONTROLS/OperationsPanel', [
              * По умолчанию: false
              * @property {Boolean} mark Операции отметки.
              * Элемент, служащий для выделения записей. Такие элементы рисуются в самом начале пмо.
+             * По умолчанию: false
              * @property {Boolean} selection Операции над выбранными записями.
              * Элемент пмо, который показывается, когда в связном представлении данных есть выделенные записи.
              * По умолчанию: true

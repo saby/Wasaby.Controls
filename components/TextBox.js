@@ -11,7 +11,8 @@ define('SBIS3.CONTROLS/TextBox', [
    'Core/helpers/Function/forAliveOnly',
    'Core/i18n',
    'SBIS3.CONTROLS/ControlHierarchyManager',
-   "Core/Sanitize",
+   'Core/Sanitize',
+   'Core/detection',
    'SBIS3.CONTROLS/Button/IconButton',
    'css!Controls/Input/resources/InputRender/InputRender',
    'css!SBIS3.CONTROLS/TextBox/TextBox'
@@ -29,7 +30,9 @@ define('SBIS3.CONTROLS/TextBox', [
     forAliveOnly,
     i18n,
     ControlHierarchyManager,
-    Sanitize) {
+    Sanitize,
+    detection
+) {
 
    'use strict';
 
@@ -332,6 +335,7 @@ define('SBIS3.CONTROLS/TextBox', [
        */
       setInformationIconColor: function (color) {
          if (!color) {
+            this._options.informationIconColor = color;
             this._destroyInformationIcon();
             return;
          }
@@ -613,11 +617,20 @@ define('SBIS3.CONTROLS/TextBox', [
       },
 
       _inputFocusInHandler: function(e) {
+         var self = this;
          if (this._fromTouch){
             EventBus.globalChannel().notify('MobileInputFocus');
          }
          if (this._options.selectOnClick){
-            this._inputField.select();
+            //IE теряет выделение, если select вызывается из обработчика focusin, так что обернём в setTimeout.
+            //https://codepen.io/anon/pen/LBYLpJ
+            if (detection.isIE) {
+               setTimeout(function() {
+                  self._inputField.select();
+               }, 0);
+            } else {
+               this._inputField.select();
+            }
          }
          /* При получении фокуса полем ввода, сделаем контрол активным.
           *  Делать контрол надо активным по фокусу, т.к. при клике и уведении мыши,

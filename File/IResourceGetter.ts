@@ -1,3 +1,4 @@
+/// <amd-module name="File/IResourceGetter" />
 import Deferred = require("Core/Deferred")
 import {IResource} from "File/IResource";
 
@@ -48,5 +49,5 @@ export type IResourceGetter = {
  * @name File/IResourceGetterConstructor
  */
 export type IResourceGetterConstructor = {
-    new (...args): IResource;
+    new (...args): IResourceGetter;
 }

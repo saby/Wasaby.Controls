@@ -144,6 +144,10 @@ define('Controls/Input/resources/InputRender/InputRender',
             }
          },
 
+         _focusoutHandler: function(e) {
+            e.target.scrollLeft = 0;
+         },
+
          /**
           * Метод вставляет строку text вместо текущего выделенного текста в инпуте
           * Если текст не выделен, то просто вставит text на позицию каретки

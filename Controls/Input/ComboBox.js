@@ -16,7 +16,7 @@ define('Controls/Input/ComboBox',
        * @extends Core/Control
        * @mixes Controls/interface/ISource
        * @mixes Controls/interface/ISingleSelectable
-       * @mixes Controls/Input/interface/IDropdownEmptyValue
+       * @mixes Controls/Input/interface/IDropdownEmptyText
        * @mixes Controls/Input/interface/IInputText
        * @mixes Controls/Input/interface/IInputPlaceholder
        * @mixes Controls/Input/interface/IValidation
@@ -26,6 +26,11 @@ define('Controls/Input/ComboBox',
        * @category Input
        * @author Золотова Э.Е.
        * @demo Controls-demo/Input/ComboBox/ComboBox
+       */
+
+      /**
+       * @name Controls/Dropdown/Container#displayProperty
+       * @cfg {String} Name of the item property that content will be displayed. Only affects the value when selecting.
        */
 
       'use strict';
@@ -50,6 +55,7 @@ define('Controls/Input/ComboBox',
             this._simpleViewModel = new BaseViewModel({
                value: this._value
             });
+            this._setText = this._setText.bind(this);
          },
 
          _afterMount: function() {
@@ -57,6 +63,7 @@ define('Controls/Input/ComboBox',
                vertical: 'bottom'
             };
             this._width = this._container.offsetWidth;
+            this._forceUpdate();
          },
 
          _mouseDownHandler: function() {
@@ -65,7 +72,14 @@ define('Controls/Input/ComboBox',
 
          _selectedItemsChangedHandler: function(event, selectedItems) {
             var key = getPropValue(selectedItems[0], this._options.keyProperty);
-            this._isEmptyItem = key === null;
+            this._setText(selectedItems);
+            this._notify('valueChanged', [this._value]);
+            this._notify('selectedKeyChanged', [key]);
+            this._isOpen = false;
+         },
+
+         _setText: function(selectedItems) {
+            this._isEmptyItem = getPropValue(selectedItems[0], this._options.keyProperty) === null;
             if (this._isEmptyItem) {
                this._value = '';
                this._placeholder = dropdownUtils.prepareEmpty(this._options.emptyText);
@@ -76,9 +90,6 @@ define('Controls/Input/ComboBox',
             this._simpleViewModel.updateOptions({
                value: this._value
             });
-            this._notify('valueChanged', [this._value]);
-            this._notify('selectedKeyChanged', [key]);
-            this._isOpen = false;
          }
 
       });

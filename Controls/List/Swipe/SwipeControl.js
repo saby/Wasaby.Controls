@@ -112,14 +112,23 @@ define('Controls/List/Swipe/SwipeControl', [
          return heights[type % SUBTYPE_COUNT]; //каждые SUBTYPE_COUNT типа высота сбрасывается до 1
       },
 
-      closeSwipe: function(self) {
-         if (self._swipeConfig) {
-            self._notify('closeSwipe', [
-               self._options.listModel.getSwipeItem()
-            ]);
-            self._options.listModel.setSwipeItem(null);
-            self._options.listModel.setActiveItem(null);
-            self._swipeConfig = null;
+      notifyAndResetSwipe: function(self) {
+         self._swipeConfig = null;
+         self._notify('closeSwipe', [
+            self._options.listModel.getSwipeItem()
+         ]);
+         self._options.listModel.setSwipeItem(null);
+         self._options.listModel.setActiveItem(null);
+      },
+
+      closeSwipe: function(self, withAnimation) {
+         if (self._animationState === 'open') {
+            self._animationState = 'close';
+            if (withAnimation) {
+               self._options.listModel._nextVersion();
+            } else {
+               _private.notifyAndResetSwipe(self);
+            }
          }
       },
 
@@ -128,7 +137,7 @@ define('Controls/List/Swipe/SwipeControl', [
          self._swipeConfig = {};
          self._options.listModel.setSwipeItem(itemData);
          self._options.listModel.setActiveItem(itemData);
-         if (self._options.itemActionsType !== 'outside') {
+         if (self._options.itemActionsPosition !== 'outside') {
             self._swipeConfig.type = _private.initSwipeType(
                actionsHeight,
                itemData.itemActions.all.length
@@ -149,6 +158,7 @@ define('Controls/List/Swipe/SwipeControl', [
                self._swipeConfig.type === TWO_COLUMN_MENU_TYPE;
             _private.initItemsForSwipe(self, itemData, actionsHeight);
          }
+         self._animationState = 'open';
       },
 
       initSeparatorType: function(direction) {
@@ -337,7 +347,7 @@ define('Controls/List/Swipe/SwipeControl', [
          ) {
             _private.initSwipe(this, itemData, childEvent);
          } else {
-            _private.closeSwipe(this);
+            _private.closeSwipe(this, true);
          }
       },
 
@@ -357,12 +367,18 @@ define('Controls/List/Swipe/SwipeControl', [
          return _private.needShowTitle(action, type, hasIcon);
       },
 
-      _onActionClick: function(event, action, itemData) {
-         aUtil.actionClick(this, event, action, itemData, true);
+      _onItemActionsClick: function(event, action, itemData) {
+         aUtil.itemActionsClick(this, event, action, itemData, true);
       },
 
       closeSwipe: function() {
          _private.closeSwipe(this);
+      },
+
+      _onAnimationEnd: function() {
+         if (this._animationState === 'close') {
+            _private.notifyAndResetSwipe(this);
+         }
       }
    });
 

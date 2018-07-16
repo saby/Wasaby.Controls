@@ -29,18 +29,25 @@ define('SBIS3.CONTROLS/Menu/ContextMenu', [
             return cfg;
         },
 
-        _itemActivatedHandler: function (id, event) {
-            if (!(this._isItemHasChild(id))) {
-                this.hide();
+       _itemActivatedHandler: function (id, event) {
+          var createdSubMenuId = this._createdSubMenuId;
+          this._createdSubMenuId = null;
+          //clickbytap генерериет click по элементу, его надо пропустить, если открылось подменю с таким же id
+          if (createdSubMenuId === id && event.originalEvent.isTrusted === false) {
+             return;
+          }
 
-                for (var j in this._subMenus) {
-                    if (this._subMenus.hasOwnProperty(j)) {
-                        this._subMenus[j].hide();
-                    }
+          if (!(this._isItemHasChild(id))) {
+             this.hide();
+
+             for (var j in this._subMenus) {
+                if (this._subMenus.hasOwnProperty(j)) {
+                   this._subMenus[j].hide();
                 }
-            }
-            this._notify('onMenuItemActivate', id, event);
-        },
+             }
+          }
+          this._notify('onMenuItemActivate', id, event);
+       },
         _onMenuConfig: function (config) {
             return config;
         },

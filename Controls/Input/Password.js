@@ -61,11 +61,5 @@ define('Controls/Input/Password',
          };
       };
 
-      PasswordInput.getDefaultOptions = function getDefaultOptions() {
-         return {
-            placeholder: rk('Пароль')
-         };
-      };
-
       return PasswordInput;
    });

@@ -44,7 +44,6 @@ define('Controls/Input/Area', [
     * @cfg {String} New line key.
     * @variant enter When user presses Enter.
     * @variant ctrlEnter When user presses Ctrl + Enter.
-    * @variant shiftEnter When user presses Shift + Enter.
     */
 
    var _private = {
@@ -73,12 +72,13 @@ define('Controls/Input/Area', [
       /*
        * Updates area multiline
        */
-      updateMultiline: function(self) {
+      updateMultiline: function(self, minLines) {
          var fakeArea = self._children.fakeArea;
          var fakeAreaWrapper = self._children.fakeAreaWrapper;
 
          //Will define the number of rows in Area by comparing fakeArea and her wrap heights
-         self._multiline = fakeArea.clientHeight > fakeAreaWrapper.clientHeight;
+         //Смотрим ещё и на minLines, т.к. прикладники могут создавать Area внутри контейнера с display: none.
+         self._multiline = fakeArea.clientHeight > fakeAreaWrapper.clientHeight || minLines > 1;
       }
    };
 
@@ -105,7 +105,7 @@ define('Controls/Input/Area', [
 
          //Should calculate area height after mount
          _private.updateHasScroll(this);
-         _private.updateMultiline(this);
+         _private.updateMultiline(this, this._options.minLines);
          this._forceUpdate();
       },
 
@@ -113,7 +113,7 @@ define('Controls/Input/Area', [
          Area.superclass._beforeUpdate.apply(this, arguments);
          _private.setFakeAreaValue(this, newOptions.value);
          _private.updateHasScroll(this);
-         _private.updateMultiline(this);
+         _private.updateMultiline(this, newOptions.minLines);
       },
 
       _afterUpdate: function(oldOptions) {
@@ -126,7 +126,7 @@ define('Controls/Input/Area', [
       _valueChangedHandler: function(e, value) {
          _private.setFakeAreaValue(this, value);
          _private.updateHasScroll(this);
-         _private.updateMultiline(this);
+         _private.updateMultiline(this, this._options.minLines);
          this._notify('valueChanged', [value]);
       },
 

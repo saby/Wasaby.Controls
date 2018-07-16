@@ -2,6 +2,7 @@
    .flexbox();
    .flex-direction(column);
    max-height: @max-height_DropdownList;
+   max-width: @max-width_DropdownList;
    border: @border-width_suggestionsContainer solid @border-color_suggestionsContainer;
    background: @background_DropdownList;
    box-sizing: border-box;
@@ -24,7 +25,6 @@
    cursor: pointer;
    position: relative;
    min-height: @height_DropdownList-item;
-   height: @height_DropdownList-item;
    .flexbox();
    .align-items(center);
    padding-left: @padding_DropdownList-default;
@@ -50,8 +50,16 @@
   padding-right: @spacing_DropdownList_arrowSubMenu;
 }
 
+.controls-DropdownList__item-right_close-padding {
+  padding-right: @spacing_DropdownList_cross;
+}
+
 .controls-DropdownList__content {
    font-size: @large-text-size;
+}
+
+.controls-DropdownList__content_singleLine {
+   .text-overflow();
 }
 
 .controls-DropdownList__selected:after {
@@ -83,6 +91,13 @@
 
 .controls-DropdownList__margin {
    margin-top: @margin-top_DropdownList;
+   margin-left: @margin-left_DropdownList;
+}
+
+//15 шрифт имеет нечетную высоту, из-за этого текст располагается не по центру
+// ff располагает текст выше, а Chrome ниже
+.ws-is-firefox .controls-DropdownList__margin {
+   margin-top: @margin-top_DropdownList-ff;
    margin-left: @margin-left_DropdownList;
 }
 
@@ -165,4 +180,29 @@
 
 .controls-DropdownList__additional-button {
    cursor: pointer;
+}
+
+.controls-DropdownList__icon_style_default {
+   color: @color_Link-main-icon;
+}
+
+.controls-DropdownList__icon_style_attention {
+   color: @color-Icon_style_attention;
+}
+
+.controls-DropdownList__icon_style_error {
+   color: @color-Icon_style_error;
+}
+
+.controls-DropdownList__icon_style_done {
+   color: @color-Icon_style_done;
+}
+
+.controls-DropdownList__group_separator {
+   content: '';
+   position: relative;
+   padding: 0 4px;
+   height: 1px;
+   background-color: @data-grid-edge-cell-separator-color;
+   margin: 4px;
 }

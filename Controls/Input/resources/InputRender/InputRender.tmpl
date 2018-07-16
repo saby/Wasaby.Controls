@@ -24,6 +24,7 @@
                   on:keyup="_keyUpHandler()"
                   on:change="_inputCompletedHandler()"
                   on:focusin="_focusinHandler()"
+                  on:focusout="_focusoutHandler()"
                   attr:class="{{ _options.textAlign === 'right' ? 'controls-InputRender__field_textAlign_right' }}"
                   value="{{ _options.viewModel.getDisplayValue() }}"
                   readOnly="{{ _options.readOnly }}"
@@ -32,7 +33,7 @@
 
             <ws:if data="{{ !_options.viewModel.getDisplayValue() && !_options.readOnly}}">
                <ws:partial
-                  attr:class="{{ _options.multiline ? 'controls-InputArea__placeholder_multiline' }}"
+                  attr:class="{{ _options.multiline ? 'controls-InputRender__placeholder_multiLine' : 'controls-InputRender__placeholder_singleLine' }}"
                   template="tmpl!Controls/Input/resources/CustomPlaceholder"
                   placeholder="{{ _options.placeholder }}"
                   attr:tabindex="{{-1}}"
@@ -49,8 +50,8 @@
    </div>
 
    <ws:if data="{{_options.tagStyle}}">
-      <div on:mouseenter="_notifyHandler('onTagHover')"
-           on:click="_notifyHandler('onTagClick')"
+      <div on:mouseenter="_notifyHandler('tagHover')"
+           on:click="_notifyHandler('tagClick')"
            class="controls-InputRender__tagStyle controls-InputRender__tagStyle-{{_options.tagStyle}}">
       </div>
    </ws:if>

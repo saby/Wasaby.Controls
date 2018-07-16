@@ -9,7 +9,7 @@
    </ws:if>
    <ws:if data="{{ receivedStateArr }}">
       <ws:for data="key, value in receivedStateArr">
-         <script data-vdomignore="true">window['inline{{key}}']='{{value}}';</script>
+         <script data-vdomignore="true">window['inline{{key}}']='{{__setHTMLUnsafe(value)}}';</script>
       </ws:for>
    </ws:if>
 </div>

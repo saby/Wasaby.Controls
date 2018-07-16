@@ -1,4 +1,20 @@
-<ws:partial template="{{_options.content}}"
-            on:mousedown="_sendResult()"
-            on:mouseenter="_sendResult()"
-            on:mouseleave="_sendResult()"/>
+<div>
+   <ws:if data="{{_options.contentTemplateName}}">
+      <ws:partial template="{{_options.contentTemplateName}}"
+                  scope="{{_options.contentTemplateOptions}}"
+                  on:mousedown="_sendResult()"
+                  on:mouseenter="_sendResult()"
+                  on:mouseleave="_sendResult()"
+                  on:menuOpened="_sendResult()"
+                  on:menuClosed="_sendResult()"/>
+   </ws:if>
+   <ws:else>
+      <ws:partial
+         template="{{_options.content}}"
+         on:mousedown="_sendResult()"
+         on:mouseenter="_sendResult()"
+         on:mouseleave="_sendResult()"
+         on:menuOpened="_sendResult()"
+         on:menuClosed="_sendResult()"/>
+   </ws:else>
+</div>

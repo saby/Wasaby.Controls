@@ -2,7 +2,6 @@
  * Created by as.krasilnikov on 21.03.2018.
  */
 define('Controls/Popup/Opener/Sticky/StickyStrategy', [], function() {
-
    var INVERTING_CONST = {
       top: 'bottom',
       bottom: 'top',
@@ -68,7 +67,8 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', [], function() {
             popupCfg.sizes[direction === 'horizontal' ? 'width' : 'height'] -
             (this.getWindowSizes()[direction === 'horizontal' ? 'width' : 'height'] -
             (coordinate - targetCoords[direction === 'horizontal' ? 'leftScroll' : 'topScroll'])),
-            targetCoords[direction === 'horizontal' ? 'leftScroll' : 'topScroll'] - coordinate);
+            targetCoords[direction === 'horizontal' ? 'leftScroll' : 'topScroll'] - coordinate
+         );
       },
 
       getPositionCoordinates: function(popupCfg, targetCoords, targetPoint, direction) {
@@ -83,20 +83,20 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', [], function() {
             coordinate = self.getCoordinate(targetPoint, popupCfg, direction);
             maxOverflowValue = self.getMaxOverflowValue(coordinate, popupCfg, direction, targetCoords);
 
-            //Если окно не влезает, то передаем управление дальше
-            if (maxOverflowValue > 0) {
+            // Если окно не влезает, то передаем управление дальше
+            if (maxOverflowValue > 0 && popupCfg.locationStrategy !== 'fixed') {
                callback(maxOverflowValue);
             }
          };
 
-         //Проверим, возможно окну достаточно места
+         // Проверим, возможно окну достаточно места
          checkOverflow(function(firstOverflowValue) {
-            //Попробуем инвертировать окно и проверим снова
+            // Попробуем инвертировать окно и проверим снова
             self.invert(popupCfg, direction);
             targetPoint = self.getTargetPoint(popupCfg, targetCoords);
 
             checkOverflow(function(secondOverflowValue) {
-               //Если и на этот раз окно не поместилось, отобразим окно в ту сторону, где места было больше
+               // Если и на этот раз окно не поместилось, отобразим окно в ту сторону, где места было больше
                if (firstOverflowValue < secondOverflowValue) {
                   self.invert(popupCfg, direction);
                   targetPoint = self.getTargetPoint(popupCfg, targetCoords);
@@ -137,10 +137,10 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', [], function() {
          return {
             left: horizontalPosition.coordinate,
             top: verticalPosition.coordinate,
-            width: horizontalPosition.size,
-            height: verticalPosition.size
+            width: horizontalPosition.size || popupCfg.config.maxWidth,
+            height: verticalPosition.size || popupCfg.config.maxHeight
          };
       },
-      _private: _private //для тестов
+      _private: _private // для тестов
    };
 });

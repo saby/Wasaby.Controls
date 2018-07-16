@@ -1,41 +1,52 @@
-<div class="PageWrap" style="padding-top: 50px;">
+<div class="PageWrap">
    <div class="PageBlock">
       <div class="PageBlock__title"></div>
-      <div class="PageBlock__componentWrap ws-flexbox" style="justify-content: space-evenly;">
-         <Controls.Input.Date.RangeLinkLite
-            showPrevArrow="{{true}}"
-            showNextArrow="{{true}}"
-         />
-         <Controls.Input.Date.RangeLinkLite
-            startValue="{{_startValue}}"
-            endValue="{{_endValue}}"
-         />
-         <Controls.Input.Date.RangeLinkLite
-            bind:startValue="_startValue"
-            bind:endValue="_endValue"
-            chooseHalfyears="{{false}}"
-            chooseQuarters="{{false}}"
-            style="linkMain"
-         />
-         <Controls.Input.Date.RangeLinkLite
-            startValue="{{_startValue}}"
-            endValue="{{_endValue}}"
-            chooseHalfyears="{{false}}"
-            chooseMonths="{{false}}"
-            style="linkMain2"
-         />
-         <Controls.Input.Date.RangeLinkLite
-            startValue="{{_startValue}}"
-            endValue="{{_endValue}}"
-            style="linkAdditional"
-         />
-         <Controls.Input.Date.RangeLinkLite
-            startValue="{{_startValue}}"
-            endValue="{{_endValue}}"
-            chooseHalfyears="{{false}}"
-            chooseMonths="{{false}}"
-            chooseQuarters="{{false}}"
-         />
+      <div class="PageBlock__content">
+         <div class="PageBlock__componentWrap">
+            <Controls.Input.Date.RangeLinkLite/>
+         </div>
+         <div class="PageBlock__componentWrap">
+            <Controls.Input.Date.RangeLinkLite
+               showPrevArrow="{{true}}"
+               showNextArrow="{{true}}"
+               startValue="{{_startValue}}"
+               endValue="{{_endValueHalfYear}}"
+            />
+         </div>
+         <div class="PageBlock__componentWrap">
+            <Controls.Input.Date.RangeLinkLite
+               bind:startValue="_startValueBind"
+               bind:endValue="_endValueBind"
+               chooseHalfyears="{{false}}"
+               chooseQuarters="{{false}}"
+               style="linkMain"
+            />
+         </div>
+         <div class="PageBlock__componentWrap">
+            <Controls.Input.Date.RangeLinkLite
+               startValue="{{_startValue}}"
+               endValue="{{_endValueQuarter}}"
+               chooseHalfyears="{{false}}"
+               chooseMonths="{{false}}"
+               style="linkMain2"
+            />
+
+         </div>
+         <div class="PageBlock__componentWrap">
+            <Controls.Input.Date.RangeLinkLite
+               style="linkAdditional"
+               emptyCaption="не задан"
+            />
+         </div>
+         <div class="PageBlock__componentWrap">
+            <Controls.Input.Date.RangeLinkLite
+               startValue="{{_startValue}}"
+               endValue="{{_endValueYear}}"
+               chooseHalfyears="{{false}}"
+               chooseMonths="{{false}}"
+               chooseQuarters="{{false}}"
+            />
+         </div>
       </div>
    </div>
 </div>

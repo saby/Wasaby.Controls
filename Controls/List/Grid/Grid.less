@@ -1,5 +1,7 @@
 //--------------- constants ---------------
-@font-size_Grid-cell_XL: 17px;
+@font-size_Grid-cell_L: 17px;
+@font-size_Grid-cell_M: 14px;
+@font-size_Grid-cell_S: 12px;
 @font-size_Grid-row-cell: 14px;
 @font-size_Grid-header-cell: 12px;
 
@@ -108,15 +110,15 @@
 .controls-Grid__header-cell_halign_center {
    text-align: center;
 }
-.controls-Grid__row-cell__contentWrapper_halign_left {
+.controls-Grid__row-cell__content_halign_left {
    justify-content: flex-start;
    text-align: left;
 }
-.controls-Grid__row-cell__contentWrapper_halign_right {
+.controls-Grid__row-cell__content_halign_right {
    justify-content: flex-end;
    text-align: right;
 }
-.controls-Grid__row-cell__contentWrapper_halign_center {
+.controls-Grid__row-cell__content_halign_center {
    justify-content: center;
    text-align: center;
 }
@@ -179,10 +181,22 @@
 .controls-Grid__row-cell_withRowSeparator {
    border-top-color: @color-Grid-row-separator;
 }
-.controls-Grid__row-cell__content_baseline_XL:before {
-   // Для выравнивания текста внутри ячейки по базовой линии, создаваемой самым большим шрифтом
+/* По умолчанию используется большая базова линия (первая строка всегда должна быть с большой базовой линией).
+   Далее, в зависимости от задачи, по месту устанавливаются нужные классы:
+   controls-Grid__row-cell__content_baseline_S
+   controls-Grid__row-cell__content_baseline_M
+   controls-Grid__row-cell__content_baseline_L */
+.controls-Grid__row-cell__content_baseline_L:before {
    content: '\200b';
-   font-size: @font-size_Grid-cell_XL;
+   font-size: @font-size_Grid-cell_L;
+}
+.controls-Grid__row-cell__content_baseline_M:before {
+   content: '\200b';
+   font-size: @font-size_Grid-cell_M;
+}
+.controls-Grid__row-cell__content_baseline_S:before {
+   content: '\200b';
+   font-size: @font-size_Grid-cell_S;
 }
 .controls-Grid__cell_spacingFirstCol_default {
    padding-left: @padding_Grid-left_default;
@@ -245,4 +259,9 @@
 .controls-Grid__row-cell__contentWrapper {
    display: inline-flex;
    width: 100%;
+}
+.controls-Grid__row-cell__content {
+   width: 100%;
+   display: inline-flex;
+   align-items: baseline;
 }

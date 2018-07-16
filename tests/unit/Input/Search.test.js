@@ -24,11 +24,32 @@ define(
             });
 
             it('Click on search', function() {
+               let searched = false;
+               let activated = false;
+               
                search._notify = (e, args) => {
-                  assert.equal(e, 'searchClick');
+                  searched = true;
 
                };
+               search.activate = () => {
+                  activated = true;
+               };
+   
                search._searchClick();
+               assert.isTrue(searched);
+               assert.isTrue(activated);
+            });
+   
+            it('Enter click', function() {
+               search._notify = (e, args) => {
+                  assert.equal(e, 'searchClick');
+         
+               };
+               search._keyUpHandler({
+                  nativeEvent: {
+                     which: 13 //enter key
+                  }
+               });
             });
          });
       });

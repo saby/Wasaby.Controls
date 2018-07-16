@@ -72,10 +72,7 @@ define(
          dropdownLazyLoad._options = config;
          beforeEach(() => {
             return new Promise((resolve) => {
-               dropdownContainer.saveOptions({
-                  selectedKeys: '[2]',
-                  keyProperty: 'id'
-               });
+               dropdownContainer.saveOptions(config);
                dropdownContainer._beforeMount(config).addCallback(resolve);
             });
          });
@@ -90,17 +87,6 @@ define(
          it('check received state', () => {
             dropdownContainer._beforeMount(config, null, itemsRecords);
             assert.deepEqual(dropdownContainer._items.getRawData(), itemsRecords.getRawData());
-         });
-
-         it('after mount', () => {
-            let selectedItem;
-            dropdownContainer._notify = (e, args) => {
-               if (e == 'selectedItemsChanged') {
-                  selectedItem = args[0];
-               }
-            };
-            dropdownContainer._afterMount();
-            assert.deepEqual(selectedItem[0], dropdownContainer._items.at(1));
          });
 
          it('check selectedItemsChanged event', () => {

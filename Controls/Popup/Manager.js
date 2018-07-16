@@ -47,6 +47,14 @@ define('Controls/Popup/Manager',
             return false;
          },
 
+         popupDeactivated: function(id) {
+            var element = ManagerController.find(id);
+            if (element) {
+               element.strategy.popupDeactivated(element, this.getItemContainer(id)); // при создании попапа, зарегистрируем его
+            }
+            return false;
+         },
+
          popupResult: function(id) {
             var args = Array.prototype.slice.call(arguments, 1);
             return _private.fireEventHandler.apply(_private, [id, 'onResult'].concat(args));
@@ -84,8 +92,7 @@ define('Controls/Popup/Manager',
 
       var Manager = Control.extend({
          _template: template,
-         constructor: function() {
-            Manager.superclass.constructor.apply(this, arguments);
+         _afterMount: function() {
             ManagerController.setManager(this);
             this._popupItems = new List();
          },
@@ -186,5 +193,4 @@ define('Controls/Popup/Manager',
 
       Manager.prototype._private = _private;
       return Manager;
-   }
-);
+   });

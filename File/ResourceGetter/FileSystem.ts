@@ -5,6 +5,7 @@ import Deferred = require("Core/Deferred");
 import LocalFile = require("File/LocalFile");
 import ExtensionsHelper = require("File/utils/ExtensionsHelper");
 import filter = require("File/utils/filter");
+import {isDestroyedAsync} from 'File/Decorator/isDestroyed';
 
 const SEC = 1000;
 const MIN = 60 * SEC;
@@ -152,10 +153,8 @@ class FileSystem extends ResourceGetterBase {
      * @name File/ResourceGetter/FileSystem#getFiles
      * @see File/LocalFile
      */
+    @isDestroyedAsync
     getFiles(): Deferred<Array<LocalFile | Error>> {
-        if (this.isDestroyed()) {
-            return Deferred.fail("Resource getter is destroyed");
-        }
         /**
          * Между выбором пользователем файлов и срабатыванием события о выборе (фактическом попадании сущности FileList
          * внутрь input) есть некий промежуток времени, который

@@ -22,8 +22,7 @@ define('Controls/Popup/Manager/Container',
 
          _template: template,
          _overlayId: null,
-         constructor: function() {
-            Container.superclass.constructor.apply(this, arguments);
+         _afterMount: function() {
             ManagerController.setContainer(this);
          },
 
@@ -37,7 +36,7 @@ define('Controls/Popup/Manager/Container',
          },
 
          _overlayClickHandler: function(event) {
-            //По клику на overlay закрываем окно, к которому относится этот overlay
+            // По клику на overlay закрываем окно, к которому относится этот overlay
             event.stopPropagation();
             var popupId = this._popupItems.at(this._overlayId).id;
             ManagerController.remove(popupId);
@@ -51,9 +50,12 @@ define('Controls/Popup/Manager/Container',
          setPopupItems: function(popupItems) {
             this._popupItems = popupItems;
             this._forceUpdate();
+         },
+
+         _popupDeactivated: function(event, popupId) {
+            this._notify('popupDeactivated', [popupId], { bubbling: true });
          }
       });
 
       return Container;
-   }
-);
+   });

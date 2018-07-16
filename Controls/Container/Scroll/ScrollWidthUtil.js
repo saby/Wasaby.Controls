@@ -35,14 +35,10 @@ define('Controls/Container/Scroll/ScrollWidthUtil',
          calcScrollbarWidth: function(detection) {
             var scrollbarWidth;
 
-            /**
-             * В браузерах с поддержкой ::-webkit-scrollbar установлена ширина 0.
-             * Определяем не с помощью Core/detection, потому что в нем считается, что chrome не на WebKit.
-             */
             if (detection.webkit || detection.chrome) {
                scrollbarWidth = 0;
             } else if (detection.isIE12) {
-               scrollbarWidth = 12;
+               scrollbarWidth = detection.IEVersion < 17 ? 12 : 16;
             } else if (detection.isIE10 || detection.isIE11) {
                scrollbarWidth = 17;
             } else if (typeof window !== 'undefined') {

@@ -1,12 +1,12 @@
 define('Controls/Input/Date/interface/ILinkView', [
-   'Core/core-merge',
    'WS.Data/Type/descriptor',
-   'SBIS3.CONTROLS/Utils/DateUtil',
-], function(coreMerge, types, DateUtil) {
+   'SBIS3.CONTROLS/Utils/DateUtil'
+], function(types, DateUtil) {
    'use strict';
 
    /**
     * mixin Controls/Input/Date/interface/ILinkView
+    * @public
     */
    var EMPTY_CAPTIONS = {
       NOT_SPECIFIED: rk('Не указан'),

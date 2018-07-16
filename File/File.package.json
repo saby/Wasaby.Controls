@@ -23,27 +23,19 @@
     ]
   },
   {
-    "output": "file-attach-base.package.js",
+    "output": "file-decorator.package.js",
     "include": [
-      "File/Attach/Base",
-      "File/Attach/Uploader",
-      "File/Attach/Container/Getter",
-      "File/Attach/Container/Source"
-    ]
-  },
-  {
-    "output": "file-attach-lazy.package.js",
-    "include": [
-      "File/Attach/Lazy",
-      "File/Attach/Container/GetterLazy",
-      "File/Attach/Container/SourceLazy"
+      "File/Decorator/*"
     ]
   },
   {
     "output": "file-attach.package.js",
     "include": [
       "File/Attach",
-      "File/Attach/Option/*"
+      "File/Attach/Abstract",
+      "File/Attach/Uploader",
+      "File/Attach/Option/*",
+      "File/Attach/Container/*"
     ]
   },
   {
@@ -54,6 +46,21 @@
     ],
     "exclude": [
       "File/ResourceGetter/PhotoCam/DialogPlugin"
+    ]
+  },
+  {
+    "output": "file-drop-area.package.js",
+    "include": [
+      "File/ResourceGetter/DropArea",
+      "File/ResourceGetter/DropArea/*",
+      "File/Directory"
+    ]
+  },
+  {
+    "output": "file-downloader.package.js",
+    "include": [
+      "File/Downloader",
+      "File/Driver/*"
     ]
   }
 ]

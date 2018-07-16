@@ -22,9 +22,9 @@ define(['Controls/List/Grid/GridView'], function(GridView) {
 
    describe('Controls.List.Grid.GridView', function() {
       it('GridView.prepareGridTemplateColumns', function() {
-         assert.equal(preparedColumnsWithMultiselect, GridView._private.prepareGridTemplateColumns(gridColumns, true),
+         assert.equal(preparedColumnsWithMultiselect, GridView._private.prepareGridTemplateColumns(gridColumns, 'visible'),
             'Incorrect result "prepareGridTemplateColumns(gridColumns, true)".');
-         assert.equal(preparedColumnsWithoutMiltiselect, GridView._private.prepareGridTemplateColumns(gridColumns, false),
+         assert.equal(preparedColumnsWithoutMiltiselect, GridView._private.prepareGridTemplateColumns(gridColumns, 'hidden'),
             'Incorrect result "prepareGridTemplateColumns(gridColumns, false)".');
       });
       

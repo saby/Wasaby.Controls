@@ -9,9 +9,7 @@
      tagStyle="{{_options.tagStyle}}"
      validationErrors="{{_options.validationErrors}}"
      on:valueChanged="_valueChangedHandler()"
-     on:inputCompleted="_inputCompletedHandler()"
-     on:tagHover="_notifyHandler('onTagHover')"
-     on:tagClick="_notifyHandler('onTagClick')">
+     on:inputCompleted="_inputCompletedHandler()">
    <ws:content>
       <ws:partial
          template="tmpl!Controls/Input/resources/input"

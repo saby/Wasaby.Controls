@@ -54,6 +54,24 @@ define('Controls/Toolbar', [
             adapter: items.getAdapter(),
             idProperty: items.getIdProperty()
          });
+      },
+
+      setPopupOptions: function(self, newOptions) {
+         self._popupOptions = {
+            corner: {vertical: 'top', horizontal: 'right'},
+            horizontalAlign: {side: 'left'},
+            eventHandlers: {
+               onResult: self._onResult,
+               onClose: self._closeHandler
+            },
+            templateOptions: {
+               keyProperty: newOptions.keyProperty,
+               parentProperty: newOptions.parentProperty,
+               nodeProperty: newOptions.nodeProperty,
+               iconSize: newOptions.size,
+               showClose: true
+            }
+         };
       }
    };
 
@@ -66,14 +84,17 @@ define('Controls/Toolbar', [
       _parentProperty: null,
       _nodeProperty: null,
       _items: null,
+      _popupOptions: null,
 
       constructor: function(options) {
          this._onResult = this._onResult.bind(this);
+         this._closeHandler = this._closeHandler.bind(this);
          this._parentProperty = options.parentProperty;
          this._nodeProperty = options.nodeProperty;
          Toolbar.superclass.constructor.apply(this, arguments);
       },
       _beforeMount: function(options, context, receivedState) {
+         _private.setPopupOptions(this, options);
          if (receivedState) {
             this._items = receivedState;
             this._menuItems = _private.getMenuItems(this._items);
@@ -85,6 +106,12 @@ define('Controls/Toolbar', [
          }
       },
       _beforeUpdate: function(newOptions) {
+         if (newOptions.keyProperty !== this._options.keyProperty ||
+            this._options.parentProperty !== newOptions.parentProperty ||
+            this._options.nodeProperty !== newOptions.nodeProperty ||
+            this._options.iconSize !== newOptions.size) {
+            _private.setPopupOptions(this, newOptions);
+         }
          if (newOptions.source && newOptions.source !== this._options.source) {
             _private.loadItems(this, newOptions.source).addCallback(function() {
                this._forceUpdate();
@@ -105,6 +132,11 @@ define('Controls/Toolbar', [
                target: event.target
             };
             this._children.menuOpener.open(config, this);
+
+            //TODO нотифай событий menuOpened и menuClosed нужен для работы механизма корректного закрытия превьювера переделать
+            //TODO по задаче https://online.sbis.ru/opendoc.html?guid=76ed6751-9f8c-43d7-b305-bde84c1e8cd7
+
+            this._notify('menuOpened', [], {bubbling: true});
          }
          event.stopPropagation();
          this._notify('itemClick', [item]);
@@ -119,6 +151,7 @@ define('Controls/Toolbar', [
             },
             target: this._children.popupTarget
          };
+         this._notify('menuOpened', [], {bubbling: true});
          this._children.menuOpener.open(config, this);
       },
 
@@ -127,6 +160,10 @@ define('Controls/Toolbar', [
             this._onItemClick(result.event, result.data[0]);
             this._children.menuOpener.close();
          }
+      },
+
+      _closeHandler: function() {
+         this._notify('menuClosed', [], {bubbling: true});
       }
    });
 

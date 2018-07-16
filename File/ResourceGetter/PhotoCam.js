@@ -1,5 +1,5 @@
 /// <amd-module name="File/ResourceGetter/PhotoCam" />
-define("File/ResourceGetter/PhotoCam", ["require", "exports", "tslib", "File/ResourceGetter/Base", "Core/Deferred", "Core/detection", "Core/core-merge", "SBIS3.CONTROLS/Action/OpenDialog"], function (require, exports, tslib_1, IResourceGetterBase, Deferred, detection, merge, OpenDialog) {
+define("File/ResourceGetter/PhotoCam", ["require", "exports", "tslib", "File/ResourceGetter/Base", "Core/Deferred", "Core/detection", "Core/core-merge", "SBIS3.CONTROLS/Action/OpenDialog", "File/Decorator/isDestroyed"], function (require, exports, tslib_1, IResourceGetterBase, Deferred, detection, merge, OpenDialog, isDestroyed_1) {
     "use strict";
     var DIALOG = "File/ResourceGetter/PhotoCam/Dialog";
     var DIALOG_PLUGIN = "File/ResourceGetter/PhotoCam/DialogPlugin";
@@ -54,9 +54,6 @@ define("File/ResourceGetter/PhotoCam", ["require", "exports", "tslib", "File/Res
          */
         PhotoCam.prototype.getFiles = function () {
             var _this = this;
-            if (this.isDestroyed()) {
-                return Deferred.fail("Resource getter is destroyed");
-            }
             this._chooseDef = new Deferred().addBoth(function (result) {
                 _this._chooseDef = null;
                 return result;
@@ -80,6 +77,9 @@ define("File/ResourceGetter/PhotoCam", ["require", "exports", "tslib", "File/Res
         PhotoCam.prototype.canExec = function () {
             return Deferred.success(!this._chooseDef);
         };
+        tslib_1.__decorate([
+            isDestroyed_1.isDestroyedAsync
+        ], PhotoCam.prototype, "getFiles", null);
         return PhotoCam;
     }(IResourceGetterBase));
     return PhotoCam;

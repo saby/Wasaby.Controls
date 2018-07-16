@@ -64,7 +64,10 @@ define('SBIS3.CONTROLS/ImportCustomizer/Provider/View',
          _modifyOptions: function () {
             var options = View.superclass._modifyOptions.apply(this, arguments);
             if (!options.parser) {
-               options.parser = options.parsers[0].id;
+               var parsers = options.parsers;
+               if (parsers && parsers.length) {
+                  options.parser = options.parsers[0].id;
+               }
             }
             return options;
          },
@@ -79,15 +82,21 @@ define('SBIS3.CONTROLS/ImportCustomizer/Provider/View',
 
          init: function () {
             View.superclass.init.apply(this, arguments);
-            this._parserView = this.getChildControlByName('controls-ImportCustomizer-Provider-View__parser');
+            var parsers = this._options.parsers;
+            if (parsers && parsers.length) {
+               this._parserView = this.getChildControlByName('controls-ImportCustomizer-Provider-View__parser');
+            }
             this._bindEvents();
          },
 
          _bindEvents: function () {
-            this.subscribeTo(this._parserView, 'onSelectedItemsChange', function (evtName, selecteds, changes) {
-               this._options.parser = selecteds[0];
-               this.sendCommand('subviewChanged');
-            }.bind(this));
+            var parserView = this._parserView;
+            if (parserView) {
+               this.subscribeTo(parserView, 'onSelectedItemsChange', function (evtName, selecteds, changes) {
+                  this._options.parser = selecteds[0];
+                  this.sendCommand('subviewChanged');
+               }.bind(this));
+            }
             this.subscribeTo(this.getLinkedContext(), 'onFieldChange', function (evtName, name, value) {
                var isFirstLine = name === 'firstLine';
                var key = isFirstLine ? 'skippedRows' : name;
@@ -125,7 +134,10 @@ define('SBIS3.CONTROLS/ImportCustomizer/Provider/View',
                }
             }
             if (has.parser) {
-               this._parserView.setSelectedKeys([options.parser]);
+               var parserView = this._parserView;
+               if (parserView) {
+                  this._parserView.setSelectedKeys([options.parser]);
+               }
             }
             if (has.skippedRows || has.separator) {
                var args = {};

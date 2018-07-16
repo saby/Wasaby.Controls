@@ -3,16 +3,20 @@ define('Controls/Popup/Opener/Stack',
       'Controls/Popup/Opener/BaseOpener'
    ],
    function(Base) {
-      var POPUP_CLASS = 'controls-Stack';
+      var POPUP_CLASS = 'controls-Stack controls-Stack__waiting';
 
       /**
-       * Действие открытия стековой панели
+       * Действие открытия стековой панели.
+       * 
+       * <a href="https://test-wi.sbis.ru/materials/demo-ws4-opener-stack">Демо-пример</a>.
+       * <u>Внимание</u>: временно демо-пример размещён на test-wi.sbis.ru.
+       * Для авторизации воспользуйтесь связкой логин/пароль как "Демо_тензор"/"Демо123".
+       * 
        * @class Controls/Popup/Opener/Stack
        * @control
        * @public
        * @category Popup
        * @extends Controls/Popup/Opener/Base
-       * @demo Controls-demo/Popup/PopupPage
        */
       var Stack = Base.extend({
 

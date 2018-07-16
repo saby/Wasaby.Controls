@@ -1,12 +1,12 @@
 <div class="itemActionsDemo">
-     <h2>itemActionsType="inline"</h2>
+     <h2>itemActionsPosition="inline"</h2>
     <Controls.List
             source = "{{_viewSource}}"
             markedKey="{{2}}"
             allowEmptySelection="{{false}}"
             keyProperty="id"
             itemActions="{{_itemActions}}"
-            on:actionClick="_onActionClick()"
+            on:itemActionsClick="_onActionClick()"
             itemActionVisibilityCallback="{{_showAction}}"
             class="test_list_1 itemActionsDemo__list itemActionsDemo__marginleft10">
 
@@ -22,14 +22,14 @@
         </ws:itemTemplate>
     </Controls.List>
     <div on:click="changeSource()" style="margin:10px"> Сменить источник для первого списка</div>
-    <h2>itemActionsType="outside"</h2>
+    <h2>itemActionsPosition="outside"</h2>
     <Controls.List
             source = "{{_viewSource2}}"
             markedKey="{{2}}"
             allowEmptySelection="{{false}}"
-            itemActionsType="outside"
+            itemActionsPosition="outside"
             keyProperty="id"
-            on:actionClick="_onActionClick()"
+            on:itemActionsClick="_onActionClick()"
             itemActions="{{_itemActions}}"
             itemActionVisibilityCallback="{{_showAction}}"
             class="test_list_2 itemActionsDemo__list itemActionsDemo__marginleft10">
