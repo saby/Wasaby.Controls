@@ -2,13 +2,12 @@ define('Controls/Utils/tmplNotify', [], function() {
 
    'use strict';
 
+   /**
+    * A handler to use in the template to carry out event forwarding up.
+    */
    return function(event, eventName) {
       var args = Array.prototype.slice.call(arguments, 2);
 
-      if (args) {
-         this._notify(eventName, Array.prototype.slice.call(arguments, 2));
-      } else {
-         this._notify(eventName);
-      }
+      this._notify(eventName, args);
    };
 });
