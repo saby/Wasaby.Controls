@@ -52,6 +52,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       function finishResultOk(result) {
          return !(result instanceof Error || result === false);
       }
+
       //test
       function setReadOnly(compoundControl, isReadOnly) {
          var isEnabled = !isReadOnly;
