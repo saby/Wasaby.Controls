@@ -296,7 +296,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                return this._close(true);
             } else if (commandName === 'cancel') {
                return this._close(false);
-            } else if (commandName === 'save') {
+            } else if (this._options._mode === 'recordFloatArea' && commandName === 'save') {
                return this.save(arg);
             } else if (commandName === 'delete') {
                return this.delRecord(arg);
