@@ -3,6 +3,7 @@ define('Controls-demo/List/Tree/TreeWithPhoto', [
    'tmpl!Controls-demo/List/Tree/TreeWithPhoto',
    'Controls-demo/List/Tree/TreeMemory',
    'css!Controls-demo/List/Tree/TreeWithPhoto',
+   'css!Controls-demo/List/data/images',
    'tmpl!Controls-demo/List/Tree/TreeWithPhoto-content',
    'tmpl!Controls-demo/List/Tree/TreeWithPhoto-item16',
    'tmpl!Controls-demo/List/Tree/TreeWithPhoto-item24',
@@ -23,23 +24,23 @@ define('Controls-demo/List/Tree/TreeWithPhoto', [
             data: [
                {  id: 1,   title: 'Node',         'Раздел': null, 'Раздел@': true,  'Раздел$': null, photo: '' },
                {  id: 11,  title: 'Node',         'Раздел': 1,    'Раздел@': true,  'Раздел$': null, photo: '' },
-               {  id: 111, title: 'Leaf',         'Раздел': 11,   'Раздел@': null,  'Раздел$': null, photo: 'List/Grid/data/krainov.png' },
-               {  id: 12,  title: 'Leaf',         'Раздел': 1,    'Раздел@': null,  'Раздел$': null, photo: 'List/Grid/data/korbyt.png' },
-               {  id: 13,  title: 'Hidden node',  'Раздел': 1,    'Раздел@': false, 'Раздел$': true, photo: 'List/Grid/data/dogadkin.png' },
+               {  id: 111, title: 'Leaf',         'Раздел': 11,   'Раздел@': null,  'Раздел$': null, photo: 'Krainov' },
+               {  id: 12,  title: 'Leaf',         'Раздел': 1,    'Раздел@': null,  'Раздел$': null, photo: 'Korbyt' },
+               {  id: 13,  title: 'Hidden node',  'Раздел': 1,    'Раздел@': false, 'Раздел$': true, photo: 'Dogadkin' },
                {  id: 2,   title: 'Empty node',   'Раздел': null, 'Раздел@': true,  'Раздел$': null, photo: '' },
-               {  id: 3,   title: 'Hidden node',  'Раздел': null, 'Раздел@': false, 'Раздел$': true, photo: 'List/Grid/data/krainov.png' },
-               {  id: 31,  title: 'Leaf',         'Раздел': 3,    'Раздел@': null,  'Раздел$': null, photo: 'List/Grid/data/korbyt.png' },
-               {  id: 4,   title: 'Empty hidden', 'Раздел': null, 'Раздел@': false, 'Раздел$': false, photo: 'List/Grid/data/dogadkin.png' },
-               {  id: 5,   title: 'Leaf',         'Раздел': null, 'Раздел@': null,  'Раздел$': null, photo: 'List/Grid/data/korbyt.png' }
+               {  id: 3,   title: 'Hidden node',  'Раздел': null, 'Раздел@': false, 'Раздел$': true, photo: 'Krainov' },
+               {  id: 31,  title: 'Leaf',         'Раздел': 3,    'Раздел@': null,  'Раздел$': null, photo: 'Korbyt' },
+               {  id: 4,   title: 'Empty hidden', 'Раздел': null, 'Раздел@': false, 'Раздел$': false, photo: 'Dogadkin' },
+               {  id: 5,   title: 'Leaf',         'Раздел': null, 'Раздел@': null,  'Раздел$': null, photo: 'Korbyt' }
             ]
          }),
 
          _viewSourceTwoLevels: new MemorySource({
             idProperty: 'id',
             data: [
-               {  id: 1, title: 'Крайнов Дмитрий', 'Раздел': null, 'Раздел@': true, photo: 'List/Grid/data/krainov.png' },
-               {  id: 2, title: 'Корбут Антон', 'Раздел': null, 'Раздел@': true, photo: 'List/Grid/data/korbyt.png' },
-               {  id: 3, title: 'Догадкин Владимир', 'Раздел': null, 'Раздел@': true, photo: 'List/Grid/data/dogadkin.png' },
+               {  id: 1, title: 'Крайнов Дмитрий', 'Раздел': null, 'Раздел@': true, photo: 'Krainov' },
+               {  id: 2, title: 'Корбут Антон', 'Раздел': null, 'Раздел@': true, photo: 'Korbyt' },
+               {  id: 3, title: 'Догадкин Владимир', 'Раздел': null, 'Раздел@': true, photo: 'Dogadkin' },
                {  id: 11, title: 'Шеврон платформенно появляется с отступом от самого длинного поля', 'Раздел': 1, 'Раздел@': null,  photo: null },
                {  id: 12, title: 'Разработать макет блока для реестров (наподобии информационого)', 'Раздел': 1, 'Раздел@': null,  photo: null },
                {  id: 13, title: 'Стандартизовать выезжающую панель бв такмо виде как на скринах', 'Раздел': 1, 'Раздел@': null,  photo: null },

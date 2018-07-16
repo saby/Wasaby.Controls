@@ -7,9 +7,6 @@ define('Controls/List/TreeGridView/TreeGridView', [
    'use strict';
 
    var
-      _private = {
-
-      },
       TreeGridView = GridView.extend({
          _defaultItemTemplate: DefaultItemTpl,
          _onNodeExpanderClick: function(e, dispItem) {

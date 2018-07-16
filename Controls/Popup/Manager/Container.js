@@ -22,8 +22,7 @@ define('Controls/Popup/Manager/Container',
 
          _template: template,
          _overlayId: null,
-         constructor: function() {
-            Container.superclass.constructor.apply(this, arguments);
+         _afterMount: function() {
             ManagerController.setContainer(this);
          },
 

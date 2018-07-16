@@ -1066,7 +1066,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                }
                else {
                   sheets = [this._combineResultSheet(results[''])];
-                  sheets[0].columnsCount = options.sheets[0].sampleRows[0].length;;
+                  sheets[0].columnsCount = options.sheets[0].sampleRows[0].length;
+                  //sheets[0].index = -1;// Все листы обрабатываются одинаково, не может быть определённого индекса
                }
                //data.sheetIndex = sheetIndex;
                data.sameSheetConfigs = !useAllSheets;
@@ -1104,7 +1105,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             var providerArgs = result.providerArgs;
             var columnBindingMapping = result.columnBinding.mapping;
             var item = {
-               parser: provider.parser,
+               parser: provider.parser || null,
                skippedRows: provider.skippedRows,
                columns: Object.keys(columnBindingMapping).map(function (v) { return {index:columnBindingMapping[v], field:v}; })
             };
@@ -1131,16 +1132,18 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
           * @param {string} parser Имя выбранного парсера
           */
          _updateProviderArgsView: function (parserName) {
-            var options = this._options;
-            var component = options.parsers[parserName].component;
             var view = this._views.providerArgs;
-            if (component) {
-               view.setTemplate(component, this._getProviderArgsOptions(options, parserName, true));
+            if (view) {
+               var options = this._options;
+               var component = parserName ? options.parsers[parserName].component : null;
+               if (component) {
+                  view.setTemplate(component, this._getProviderArgsOptions(options, parserName, true));
+               }
+               else {
+                  view.clearTemplate();
+               }
+               view.setVisible(!!component);
             }
-            else {
-               view.clearTemplate();
-            }
-            view.setVisible(!!component);
          },
 
          /*

@@ -1,4 +1,4 @@
-<div name="scrollbar" class="controls-VScrollbar {{_dragging ? 'controls-VScrollbar_dragging'}}"
+<div name="scrollbar" class="controls-VScrollbar{{_dragging ? ' controls-VScrollbar_dragging'}}{{_thumbHeight ? '' : ' ws-invisible'}}"
      on:wheel="_wheelHandler()"
      on:mousedown="_scrollbarBeginDragHandler()">
    <Controls.DragNDrop.Controller name="dragNDrop" on:dragstart="_scrollbarStartDragHandler()" on:dragmove="_scrollbarOnDragHandler()" on:documentdragend="_scrollbarEndDragHandler()">

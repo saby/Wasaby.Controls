@@ -142,12 +142,13 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                try {
                   var deps = [];
                   if (isNewEnvironment()) {
+                     config._mode = meta.mode;
                      deps = ['Controls/Popup/Opener/BaseOpener', 'Controls/Popup/Compatible/Layer'];
                      if (meta.mode !== 'dialog' && config.isStack === true) {
                         deps.push('Controls/Popup/Opener/Stack/StackController');
                         config._type = 'stack';
                         config.className = (config.className || '') + ' controls-Stack';
-                     } else if (meta.mode !== 'dialog' && config.isStack === false) {
+                     } else if (meta.mode !== 'dialog' && config.isStack === false && config.target) {
                         deps.push('Controls/Popup/Opener/Sticky/StickyController');
                         config._type = 'sticky';
                      } else {

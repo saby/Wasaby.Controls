@@ -22,7 +22,25 @@
    <link rel="stylesheet" href="{{_options.wsRoot}}css/core.css" type="text/css" key="core-css"/>
    <ws:if data="{{ cssLinks }}">
       <ws:for data="index, value in cssLinks">
-         <link rel="stylesheet" class="css-bundles" href="{{ _options.appRoot?(_options.appRoot+value).replace('//', '/'):value }}" type="text/css" key="{{ 'css_' + index }}" data-vdomignore="true"/>
+         <ws:if data="{{_options.theme}}">
+            <ws:if data="{{isMultiThemes()}}">
+               <ws:for data="thInd, oneTheme in _options.theme">
+                  <link rel="stylesheet" class="css-bundles"
+                     href="{{ getCssWithTheme(value, oneTheme) }}"
+                     type="text/css"
+                     key="{{ 'css_' + index + '_' + thInd}}" />
+               </ws:for>
+            </ws:if>
+            <ws:else>
+               <link rel="stylesheet" class="css-bundles"
+                     href="{{ getCssWithTheme(value, _options.theme) }}"
+                     type="text/css"
+                     key="{{ 'css_' + index }}" />
+            </ws:else>
+         </ws:if>
+         <ws:else>
+            <link rel="stylesheet" class="css-bundles" href="{{ _options.appRoot?(_options.appRoot+value).replace('//', '/'):value }}" type="text/css" key="{{ 'css_' + index }}" />
+         </ws:else>
       </ws:for>
    </ws:if>
    <title key="title">{{ _options.title }}</title>

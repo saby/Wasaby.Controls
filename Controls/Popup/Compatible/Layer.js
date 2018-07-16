@@ -8,15 +8,17 @@ define('Controls/Popup/Compatible/Layer', [
    'Core/RightsManager',
    'Core/ExtensionsManager',
    'Core/moduleStubs',
+   'View/Runner/requireHelper',
    'Core/IoC',
    'WS.Data/Source/SbisService',
    'WS.Data/Chain'
-], function(Deferred, ParallelDeferred, Constants, RightsManager, ExtensionsManager, moduleStubs, IoC, SbisService, Chain) {
+], function(Deferred, ParallelDeferred, Constants, RightsManager, ExtensionsManager, moduleStubs, requireHelper, IoC, SbisService, Chain) {
    'use strict';
 
    var loadDeferred;
    var compatibleDeps = [
       'cdn!jquery/3.3.1/jquery-min.js',
+      'Core/Control',
       'Lib/Control/Control.compatible',
       'Lib/Control/AreaAbstract/AreaAbstract.compatible',
       'Lib/Control/BaseCompatible/BaseCompatible',
@@ -126,35 +128,50 @@ define('Controls/Popup/Compatible/Layer', [
          }),
          profileSource = new SbisService({
             endpoint: 'СервисПрофилей'
-         });
+         }),
+         data = {};
 
-      return userSource.call('GetCurrentUserInfo', {}).addCallback(function(res) {
-         var
-            deferred,
-            result = res.getRow(),
-            data = {};
-         if (result) {
-            result.each(function(k, v) {
-               data[k] = v;
-            });
-         }
+      if (window && window.userInfo) {
+         data = window.userInfo;
          data.isDemo = data['ВыводимоеИмя'] === 'Демо-версия';
          data.isPersonalAccount = data['КлассПользователя'] === '__сбис__физики';
 
          if (data['КлассПользователя'] == '__сбис__физики') {
-            deferred = profileSource.call('ЕстьЛиУМеняАккаунтПомимоФизика').addCallback(function(res) {
+            return profileSource.call('ЕстьЛиУМеняАккаунтПомимФизика').addCallback(function(res) {
                data.hasMoreAccounts = res.getScalar();
                return data;
             });
          } else {
-            deferred = Deferred.success(data);
+            return Deferred.success(data);
          }
+      } else {
+         return userSource.call('GetCurrentUserInfo', {}).addCallback(function(res) {
+            var
+               deferred,
+               result = res.getRow();
+            if (result) {
+               result.each(function(k, v) {
+                  data[k] = v;
+               });
+            }
+            data.isDemo = data['ВыводимоеИмя'] === 'Демо-версия';
+            data.isPersonalAccount = data['КлассПользователя'] === '__сбис__физики';
 
-         return deferred;
-      }).addErrback(function(e) {
-         IoC.resolve('ILogger').error('User info', 'Transport error', e);
-         return {};
-      });
+            if (data['КлассПользователя'] == '__сбис__физики') {
+               deferred = profileSource.call('ЕстьЛиУМеняАккаунтПомимоФизика').addCallback(function(res) {
+                  data.hasMoreAccounts = res.getScalar();
+                  return data;
+               });
+            } else {
+               deferred = Deferred.success(data);
+            }
+
+            return deferred;
+         }).addErrback(function(e) {
+            IoC.resolve('ILogger').error('User info', 'Transport error', e);
+            return {};
+         });
+      }
    }
 
    function getUserLicense() {
@@ -201,9 +218,6 @@ define('Controls/Popup/Compatible/Layer', [
          coreControl.prototype.getId = controlCompatible.getId;
          
          loadDeferred.callback(result);
-         moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!SBIS3.ENGINE/Controls/MiniCard']).addErrback(function(err) {
-            IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', err);
-         });
       }, function(e) {
          IoC.resolve('ILogger').error('Layer', 'Can\'t load core extensions', e);
 
@@ -212,9 +226,6 @@ define('Controls/Popup/Compatible/Layer', [
          coreControl.prototype.getId = controlCompatible.getId;
 
          loadDeferred.callback(result);
-         moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!SBIS3.ENGINE/Controls/MiniCard']).addErrback(function(err) {
-            IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', err);
-         });
       });
    }
 
@@ -263,16 +274,29 @@ define('Controls/Popup/Compatible/Layer', [
                IoC.resolve('ILogger').error('Layer', 'Can\'t load dependencies', e);
             });
             parallelDef.push(loadDepsDef);
+            var parallelDefRes = parallelDef.done().getResult();
 
             // var tempCompatVal = constants.compat;
             Constants.compat = true;
-            Constants.systemExtensions = true;
-            Constants.userConfigSupport = true;
 
             if (typeof window !== 'undefined') {
-               loadDataProviders(parallelDef);
+               // для тестов и демок не нужно грузить ни дата провайдеры, ни активность
+               if (requireHelper.defined('OnlineSbisRu/VDOM/MainPage/MainPage')) {
+                  Constants.systemExtensions = true;
+                  Constants.userConfigSupport = true;
+                  loadDataProviders(parallelDef);
+                  parallelDefRes.addCallbacks(function() {
+                     moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!SBIS3.ENGINE/Controls/MiniCard']).addErrback(function(err) {
+                        IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', err);
+                     });
+                  }, function() {
+                     moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!SBIS3.ENGINE/Controls/MiniCard']).addErrback(function(err) {
+                        IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', err);
+                     });
+                  });
+               }
             }
-            parallelDef.done().getResult().addCallbacks(function() {
+            parallelDefRes.addCallbacks(function() {
                finishLoad(loadDeferred, result);
             }, function(e) {
                IoC.resolve('ILogger').error('Layer', 'Can\'t load data providers', e);
