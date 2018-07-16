@@ -81,22 +81,6 @@ define('SBIS3.CONTROLS/LongOperations/Registry',
          _modifyOptions: function () {
             var options = LongOperationsRegistry.superclass._modifyOptions.apply(this, arguments);
             options.useUsersFilter = !options.userId && !!(RightsManager.getRights(['Long_requests_config'])['Long_requests_config'] & RightsManager.ADMIN_MASK);
-            //////////////////////////////////////////////////^^^@@@DBG
-            // TODO: Это временный фрагмент, до того момента, как эта информация будет помещена в шаблон в "Конфигурация/Система/Длительные операции". Удалить после этого !
-            if (options.useUsersFilter && !options.usersFilterComponent) {
-               options.usersFilterComponent = 'Staff/Choice';
-               options.usersFilterParams = {
-                  selectionType: 'leaf',
-                  withAccess: true,
-                  multiselect: false,
-                  entityType: 'Пользователь',
-                  placeholder: rk('укажите ФИО')
-               };
-               require(['Core/IoC'], function (IoC) {
-                  IoC.resolve('ILogger').log('Реестр длительных операций', 'Отсутствуют опции "usersFilterComponent" и "usersFilterParams", необходимые для фильтра пользователей');
-               });
-            }
-            //////////////////////////////////////////////////
             return options;
          },
 
