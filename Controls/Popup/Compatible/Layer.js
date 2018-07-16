@@ -133,44 +133,35 @@ define('Controls/Popup/Compatible/Layer', [
 
       if (window && window.userInfo) {
          data = window.userInfo;
-         data.isDemo = data['ВыводимоеИмя'] === 'Демо-версия';
-         data.isPersonalAccount = data['КлассПользователя'] === '__сбис__физики';
 
-         if (data['КлассПользователя'] == '__сбис__физики') {
-            return profileSource.call('ЕстьЛиУМеняАккаунтПомимФизика').addCallback(function(res) {
-               data.hasMoreAccounts = res.getScalar();
-               return data;
-            });
-         } else {
-            return Deferred.success(data);
-         }
+         return expandUserInfo(data);
       } else {
          return userSource.call('GetCurrentUserInfo', {}).addCallback(function(res) {
-            var
-               deferred,
-               result = res.getRow();
-            if (result) {
-               result.each(function(k, v) {
-                  data[k] = v;
-               });
-            }
-            data.isDemo = data['ВыводимоеИмя'] === 'Демо-версия';
-            data.isPersonalAccount = data['КлассПользователя'] === '__сбис__физики';
+            data = Chain(res.getRow()).toObject();
 
-            if (data['КлассПользователя'] == '__сбис__физики') {
-               deferred = profileSource.call('ЕстьЛиУМеняАккаунтПомимоФизика').addCallback(function(res) {
-                  data.hasMoreAccounts = res.getScalar();
-                  return data;
-               });
-            } else {
-               deferred = Deferred.success(data);
-            }
-
-            return deferred;
+            return expandUserInfo(data);
          }).addErrback(function(e) {
             IoC.resolve('ILogger').error('User info', 'Transport error', e);
             return {};
          });
+      }
+
+      function expandUserInfo(data) {
+         var deferred;
+
+         data.isDemo = data['ВыводимоеИмя'] === 'Демо-версия';
+         data.isPersonalAccount = data['КлассПользователя'] === '__сбис__физики';
+
+         if (data['КлассПользователя'] == '__сбис__физики') {
+            deferred = profileSource.call('ЕстьЛиУМеняАккаунтПомимоФизика').addCallback(function(res) {
+               data.hasMoreAccounts = res.getScalar();
+               return data;
+            });
+         } else {
+            deferred = Deferred.success(data);
+         }
+
+         return deferred;
       }
    }
 
