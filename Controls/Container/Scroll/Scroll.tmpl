@@ -3,7 +3,7 @@
       <div name="content"
            style="{{_displayState.heightFix ? '' : _styleHideScrollbar}}"
            class="ws-flex-grow-1 controls-Scroll__content
-                  {{_useNativeScrollbar ? '' : 'controls-Scroll__content_scrollbarWidthZero'}}
+                  {{_useNativeScrollbar ? '' : 'controls-Scroll__content_hideNativeScrollbar'}}
                   {{_hasHover ? 'controls-Scroll__content_possibleScroll'}}
                   {{_displayState.heightFix || _styleHideScrollbar === undefined ? 'controls-Scroll__content_hidden' : 'controls-Scroll__content_scroll'}}"
            on:resize="_resizeHandler()"
