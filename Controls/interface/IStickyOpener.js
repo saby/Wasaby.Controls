@@ -53,6 +53,14 @@ define('Controls/interface/IStickyOpener', [], function() {
     */
 
    /**
+    * @name Controls/interface/IStickyOpener#popupOptions.locationStrategy
+    * @cfg {String} A method of adjusting the popup panel to the free space next to the target.
+    * @variant fixed the popup bar does not move relative to the target.
+    * @variant fixedCorner the popup panel container is limited to the edge of the screen if it does not fit into the screen.
+    * @variant auto
+    */
+
+   /**
     * @name Controls/interface/IStickyOpener#popupOptions.horizontalAlign
     * @cfg {HorizontalAlign} Sets the horizontal alignment of the popup.
     */
