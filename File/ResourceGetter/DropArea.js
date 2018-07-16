@@ -32,15 +32,23 @@ define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/Res
          */
         ondrop: function (files) { }
         /**
-         * @cfg {String} Текст на внутреннем элементе во время перемещения файлов
+         * @cfg {String} Текст подсказки во время перемещения файлов
          * @name File/ResourceGetter/DropArea#dragText
          */
         /**
-         * @cfg {String} Текст на внутреннем элементе во время перемещения файлов непосредственно над ним
+         * @cfg {String} Текст подсказки во время перемещения файлов непосредственно над областью
          * @name File/ResourceGetter/DropArea#dropText
          */
         /**
-         * @cfg {String} Класс внутреннего элемента обёртки, содержащий текст
+         * @cfg {String} Текст дополнительной подсказки во время перемещения файлов
+         * @name File/ResourceGetter/DropArea#dragSubtitle
+         */
+        /**
+         * @cfg {String} Текст дополнительной подсказки во время перемещения файлов непосредственно над областью
+         * @name File/ResourceGetter/DropArea#dropSubtitle
+         */
+        /**
+         * @cfg {String} Дополнительный класс элемента обёртки
          * @name File/ResourceGetter/DropArea#innerClass
          */
     };

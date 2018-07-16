@@ -7,13 +7,12 @@ define('Controls/Filter/Button',
       'tmpl!Controls/Filter/Button/Button',
       'WS.Data/Chain',
       'WS.Data/Utils',
-      'WS.Data/Type/descriptor',
       'Core/Deferred',
       'Core/helpers/Object/isEqual',
       'css!Controls/Filter/Button/Button'
    ],
 
-   function(Control, template, Chain, Utils, types, Deferred, isEqual) {
+   function(Control, template, Chain, Utils, Deferred, isEqual) {
 
       /**
        * Component for data filtering.

@@ -4,7 +4,9 @@
 <ws:else data="{{swipeConfig}}">
     <div class="controls-itemActionsV_swipe_animationContainer">
         <div class="controls-itemActionsV_swipe
-            {{menuIsShown ? 'controls-itemActionsV_invisible'}}">
+            {{menuIsShown ? 'controls-itemActionsV_invisible'}}
+            controls-itemActionsV_swipe_{{animationState}}"
+            on:animationend="_onAnimationEnd()">
             <div class="controls-itemActionsV_{{swipeConfig.direction}}
                 {{swipeConfig.isFull? 'controls-itemActionsV_column_full'}}">
                 <ws:partial

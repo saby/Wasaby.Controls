@@ -17,7 +17,7 @@
         />
     </ws:template>
 
-    <ws:partial template="{{_options.content}}" on:valueChanged="_changeValueHandler()" on:activated="_inputActivated()" attr:class="controls-Suggest-Text_style_{{_options.suggestStyle}}"/>
+    <ws:partial template="{{_options.content}}" on:valueChanged="_changeValueHandler()" on:activated="_inputActivated()" on:click="_inputClicked()" attr:class="controls-Suggest-Text_style_{{_options.suggestStyle}}"/>
 
     <ws:if data="{{_options.suggestState}}">
         <div class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer-style-{{_options.suggestStyle}} controls-Suggest__suggestionsContainer-orient{{_orient}}" name="suggestionsContainer">

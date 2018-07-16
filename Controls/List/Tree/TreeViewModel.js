@@ -143,7 +143,7 @@ define('Controls/List/Tree/TreeViewModel', [
                current = TreeViewModel.superclass.getCurrent.apply(this, arguments);
             current.isExpanded = !!this._expandedNodes[current.key];
 
-            if (current.dispItem.isNode() && this._selectedKeys.indexOf(current.key) !== -1) {
+            if (!current.isGroup && current.dispItem.isNode() && this._selectedKeys.indexOf(current.key) !== -1) {
                //TODO: проверка на hasMore должна быть тут
                if (_private.allChildrenSelected(this._hierarchyRelation, current.key, this._items, this._selectedKeys)) {
                   current.multiSelectStatus = true;

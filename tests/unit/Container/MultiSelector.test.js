@@ -128,7 +128,7 @@ define([
             instance._multiselection.select = function(added) {
                assert.deepEqual([1, 2], added);
             };
-            instance._onListSelectionChange({}, {added: [1, 2], removed: [3, 4]});
+            instance._onListSelectionChange({}, [], [1, 2], [3, 4]);
          });
       });
    });

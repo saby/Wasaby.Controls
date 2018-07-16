@@ -19,6 +19,7 @@ define('Controls/Application/HeadDataContext', [
    }
 
    return DataContext.extend({
+      _version: 0,
       pushDepComponent: function(componentName) {
          this.depComponentsMap[componentName] = true;
       },
@@ -34,11 +35,12 @@ define('Controls/Application/HeadDataContext', [
             if (cookie.get('s3debug') !== 'true' && contents.buildMode !== 'debug') {
                var files = depsCollector.collectDependencies(components);
                self.jsLinks = files.js;
-               self.cssLinks = files.css;
+               self.cssLinks = self.cssLinks ? self.cssLinks.concat(files.css) : files.css;
             } else {
                self.jsLinks = [];
-               self.cssLinks = [];
+               self.cssLinks = self.cssLinks || [];
             }
+            self._version++;
             self.defRender.callback({
                jsLinks: self.jsLinks || [],
                cssLinks: self.cssLinks || [],
@@ -47,12 +49,20 @@ define('Controls/Application/HeadDataContext', [
             });
          });
       },
-      constructor: function(theme, buildNumber) {
+      constructor: function(theme, buildNumber, cssLinks) {
          this.theme = theme;
          this.defRender = new Deferred();
          this.depComponentsMap = {};
          this.receivedStateArr = {};
          this.buildNumber = buildNumber;
+         this.cssLinks = cssLinks;
+      },
+      pushCssLink: function(url) {
+         this.cssLinks.push(url);
+         this._version++;
+      },
+      getVersion: function() {
+         return this._version;
       },
       waitAppContent: function() {
          return this.defRender;

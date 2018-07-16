@@ -6,13 +6,13 @@ define('SBIS3.CONTROLS/SbisDropdownList',
       'SBIS3.CONTROLS/DropdownList',
       'WS.Data/Entity/Model',
       'SBIS3.CONTROLS/Utils/DropdownUtil',
+      'Core/Deferred',
       'tmpl!SBIS3.CONTROLS/SbisDropdownList/SbisDropdownListItem',
       'tmpl!SBIS3.CONTROLS/DropdownList/DropdownListItem',
-      'Core/Deferred',
       'css!SBIS3.CONTROLS/SbisDropdownList/SbisDropdownList'
    ],
 
-   function(DropdownList, Model, DropdownUtil, SbisDropdownListItem, DropdownListItem, Deferred) {
+   function(DropdownList, Model, DropdownUtil, Deferred, SbisDropdownListItem) {
 
       'use strict';
 
@@ -159,6 +159,9 @@ define('SBIS3.CONTROLS/SbisDropdownList',
             var id = SbisDropdownList.superclass.getDefaultId.call(this, (this._historyController && this._historyController.getOldItems()));
             return (this._historyController && this._historyController.getOriginId(id)) || id;
          },
+         //Метод надо перебить, т.к. в историческом выпдающем списке могут содержаться записи,
+         //которых нет в текущем наборе данных
+         _removeOldKeysCallback: function() {},
 
          destroy: function() {
             SbisDropdownList.superclass.destroy.apply(this, arguments);
