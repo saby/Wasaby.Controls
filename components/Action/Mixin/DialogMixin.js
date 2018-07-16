@@ -94,7 +94,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
       },
       _doExecute: function(meta) {
          if (!this._isExecuting) { //Если завершился предыдущий execute
-            this._closeDialogAfterDestroy = meta.hasOwnProperty('closeDialogAfterDestroy') ? meta.closeDialogAfterDestroy : true;
+            this._closeDialogAfterDestroy = meta && meta.hasOwnProperty('closeDialogAfterDestroy') ? meta.closeDialogAfterDestroy : true;
             this._executeDeferred = new Deferred();
             this._openComponent(meta);
             return this._executeDeferred;
