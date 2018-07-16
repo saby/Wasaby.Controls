@@ -9,13 +9,14 @@ define('Controls/Popup/Opener/Stack',
       if (HAS_ANIMATION) {
          POPUP_CLASS += ' controls-Stack__waiting';
       }
+
       /**
        * Действие открытия стековой панели.
-       * 
+       *
        * <a href="https://test-wi.sbis.ru/materials/demo-ws4-opener-stack">Демо-пример</a>.
        * <u>Внимание</u>: временно демо-пример размещён на test-wi.sbis.ru.
        * Для авторизации воспользуйтесь связкой логин/пароль как "Демо_тензор"/"Демо123".
-       * 
+       *
        * @class Controls/Popup/Opener/Stack
        * @control
        * @public
@@ -36,10 +37,9 @@ define('Controls/Popup/Opener/Stack',
          },
 
          _setCompatibleConfig: function(config) {
-            config._type = 'stack'; //for compoundArea
+            config._type = 'stack'; // for compoundArea
          }
       });
 
       return Stack;
-   }
-);
+   });
