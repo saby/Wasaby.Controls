@@ -88,6 +88,7 @@ define('Controls/Dropdown/Container',
             });
             return instance._sourceController.load(filter).addCallback(function(items) {
                instance._items = items;
+               instance._selectedItems = [];
                _private.updateSelectedItems(instance, selectedKeys, keyProperty, dataLoadCallback);
                return items;
             });
@@ -140,7 +141,6 @@ define('Controls/Dropdown/Container',
          _template: template,
 
          _beforeMount: function(options, context, receivedState) {
-            this._emptyText = dropdownUtils.prepareEmpty(options.emptyText);
             this._selectedItems = [];
             this._onResult = _private.onResult.bind(this);
             if (!options.lazyItemsLoad) {
@@ -157,7 +157,9 @@ define('Controls/Dropdown/Container',
 
          _beforeUpdate: function(newOptions) {
             if (newOptions.selectedKeys && !isEqual(newOptions.selectedKeys, this._options.selectedKeys)) {
-               _private.updateSelectedItems(this, newOptions.selectedKeys);
+               this._selectedItems = [];
+               _private.updateSelectedItems(this, newOptions.selectedKeys, newOptions.keyProperty);
+               this._notify('selectedItemsChanged', [this._selectedItems]);
             }
             if (newOptions.source && newOptions.source !== this._options.source) {
                if (newOptions.lazyItemsLoad) {
@@ -165,7 +167,7 @@ define('Controls/Dropdown/Container',
                   this._items = null;
                } else {
                   var self = this;
-                  return _private.loadItems(this, newOptions.source, newOptions.selectedKeys).addCallback(function() {
+                  return _private.loadItems(this, newOptions.source, newOptions.selectedKeys, newOptions.keyProperty).addCallback(function() {
                      self._forceUpdate();
                   });
                }
@@ -179,7 +181,8 @@ define('Controls/Dropdown/Container',
                var config = {
                   templateOptions: {
                      items: self._items,
-                     width: self._options.width
+                     width: self._options.width,
+                     emptyText: self._emptyText = dropdownUtils.prepareEmpty(self._options.emptyText)
                   },
                   target: self._container,
                   corner: self._options.corner,
