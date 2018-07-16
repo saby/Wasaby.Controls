@@ -13,7 +13,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/constants',
       'Core/helpers/Hcontrol/doAutofocus',
       'optional!Deprecated/Controls/DialogRecord/DialogRecord',
-      'Core/helpers/additional-helpers',
       'Core/EventBus',
       'Controls/Popup/Manager/ManagerController',
 
@@ -38,7 +37,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       CoreConstants,
       doAutofocus,
       DialogRecord,
-      addHelpers,
       cEventBus,
       ManagerController
    ) {
@@ -441,7 +439,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                },
                result;
             result = this._notify('onBeforeChangeRecord', record, oldRecord);
-            addHelpers.callbackWrapper(result, setRecordFunc.bind(this));
+            cDeferred.callbackWrapper(result, setRecordFunc.bind(this));
          },
          openConfirmDialog: function(noHide) {
             var self = this,
