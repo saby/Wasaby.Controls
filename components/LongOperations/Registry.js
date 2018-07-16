@@ -93,7 +93,7 @@ define('SBIS3.CONTROLS/LongOperations/Registry',
                   placeholder: rk('укажите ФИО')
                };
                require(['Core/IoC'], function (IoC) {
-                  IoC.resolve('ILogger').log('Реестр длительных операций', 'Отсутствуют опции "usersFilterComponent" и "usersFilterParams", необходимые дя фильтра пользователей');
+                  IoC.resolve('ILogger').log('Реестр длительных операций', 'Отсутствуют опции "usersFilterComponent" и "usersFilterParams", необходимые для фильтра пользователей');
                });
             }
             //////////////////////////////////////////////////
