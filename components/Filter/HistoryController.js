@@ -242,7 +242,9 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
                 });
                 return;
              }
-
+             
+             structure = FilterHistoryControllerUntil.resetNoSaveStructureKeys(structure, this._options.noSaveFilters);
+             
              self.saveToHistory({
                 linkText: FilterToStringUtil.string(structure, 'historyItemTemplate'),
                 filter: FilterHistoryControllerUntil.prepareStructureToSave(structure)
