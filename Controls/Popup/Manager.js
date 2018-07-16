@@ -92,8 +92,7 @@ define('Controls/Popup/Manager',
 
       var Manager = Control.extend({
          _template: template,
-         constructor: function() {
-            Manager.superclass.constructor.apply(this, arguments);
+         _afterMount: function() {
             ManagerController.setManager(this);
             this._popupItems = new List();
          },

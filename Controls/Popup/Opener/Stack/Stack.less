@@ -2,10 +2,6 @@
    overflow: hidden;
    padding-left: @controls-Popup-stack-shadow-padding;
    .controls-Popup__template {
-      will-change: transform;
-      transition: transform @controls-Popup-animate-duration linear;
-      transform: translateX(100%);
-
       width: 100%;
       height: 100%;
       position: relative;
@@ -14,6 +10,18 @@
    }
 }
 
-.controls-Stack__opened .controls-Popup__template {
+.controls-Stack__waiting .controls-Popup__template {
+   transform: translateX(100%);
+}
+
+.controls-Stack__open .controls-Popup__template {
+   will-change: transform;
+   transition: transform @controls-Popup-animate-duration linear;
    transform: translateX(0%);
+}
+
+.controls-Stack__close .controls-Popup__template {
+   will-change: transform;
+   transition: transform @controls-Popup-animate-duration linear;
+   transform: translateX(100%);
 }

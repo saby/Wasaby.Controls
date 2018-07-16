@@ -26,6 +26,7 @@ function(cMerge,
             type: cfg._type,
             handlers: cfg.handlers,
             _initCompoundArea: cfg._initCompoundArea,
+            _mode: cfg._mode,
 
             // На каждое обновление конфига генерируем новый id, чтобы понять, что нужно перерисовать шаблон
             _compoundId: Random.randomId('compound-')

@@ -123,7 +123,7 @@ define('Controls/Popup/Opener/BaseOpener',
 
          _scrollHandler: function(event) {
             // listScroll стреляет событием много раз, нужно обработать только непосредственно скролл списка
-            if (this.isOpened() && event.type === 'listscroll') {
+            if (this.isOpened() && event.type === 'scroll') {
                if (this._options.targetTracking) {
                   ManagerController.popupUpdated(this._popupId);
                } else if (this._options.closeOnTargetScroll) {

@@ -1,5 +1,8 @@
 define('SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/DimensionsUtil', [
 ], function() {
+   'use strict';
+   //Высота title без наведения. 18px height + 4px*2 padding + 1px border top
+   var TITLE_HEIGHT = 27;
    return {
       calcOutsideDimensions: function(item) {
          var
@@ -8,7 +11,7 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/DimensionsUtil', [
             margin = Math.floor(item.outerWidth(true) / 2 - additionalWidth),
             additionalHeight = Math.floor(item.outerHeight(true) / 2),
             title = $('.controls-CompositeView__tileTitle', item),
-            titleHeight = title.outerHeight(true) - (item.hasClass('controls-CompositeView__item-withTitle') ? 25 : 0);
+            titleHeight = title.outerHeight(true) - (item.hasClass('controls-CompositeView__item-withTitle') ? TITLE_HEIGHT : 0);
 
          return {
             padding: Math.ceil(additionalHeight / 2) + 'px ' + Math.ceil(additionalWidth / 2) + 'px ' + Math.ceil(additionalHeight / 2 + titleHeight) + 'px ' + Math.ceil(additionalWidth / 2) + 'px',

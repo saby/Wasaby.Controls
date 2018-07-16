@@ -125,6 +125,7 @@ define('SBIS3.CONTROLS/Utils/FilterPanelUtils',
             recalculateOnKeyboardShow: false,
             cssClassName: 'controls__filterButton__picker',
             _canScroll: true,
+            _resizeOnScroll: false,
             activateAfterShow: true
          };
          Object.assign(config, addConfig);

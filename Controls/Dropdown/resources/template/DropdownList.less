@@ -2,6 +2,7 @@
    .flexbox();
    .flex-direction(column);
    max-height: @max-height_DropdownList;
+   max-width: @max-width_DropdownList;
    border: @border-width_suggestionsContainer solid @border-color_suggestionsContainer;
    background: @background_DropdownList;
    box-sizing: border-box;
@@ -24,7 +25,6 @@
    cursor: pointer;
    position: relative;
    min-height: @height_DropdownList-item;
-   height: @height_DropdownList-item;
    .flexbox();
    .align-items(center);
    padding-left: @padding_DropdownList-default;
@@ -52,6 +52,10 @@
 
 .controls-DropdownList__content {
    font-size: @large-text-size;
+}
+
+.controls-DropdownList__content_singleLine {
+   .text-overflow();
 }
 
 .controls-DropdownList__selected:after {
@@ -188,4 +192,13 @@
 
 .controls-DropdownList__icon_style_done {
    color: @color-Icon_style_done;
+}
+
+.controls-DropdownList__group_separator {
+   content: '';
+   position: relative;
+   padding: 0 4px;
+   height: 1px;
+   background-color: @data-grid-edge-cell-separator-color;
+   margin: 4px;
 }
