@@ -1,10 +1,14 @@
 define('Controls/Popup/Opener/Stack',
    [
-      'Controls/Popup/Opener/BaseOpener'
+      'Controls/Popup/Opener/BaseOpener',
+      'Core/constants'
    ],
-   function(Base) {
-      var POPUP_CLASS = 'controls-Stack controls-Stack__waiting';
-
+   function(Base, cConstants) {
+      var HAS_ANIMATION = cConstants.browser.chrome && !cConstants.browser.isMobilePlatform;
+      var POPUP_CLASS = 'controls-Stack';
+      if (HAS_ANIMATION) {
+         POPUP_CLASS += ' controls-Stack__waiting';
+      }
       /**
        * Действие открытия стековой панели.
        * 
