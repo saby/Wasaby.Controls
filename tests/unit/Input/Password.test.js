@@ -1,68 +1,19 @@
 define(
    [
       'Controls/Input/Password',
-      'Core/vdom/Synchronizer/resources/SyntheticEvent',
-      'Controls/Input/resources/InputRender/BaseViewModel'
+      'Core/vdom/Synchronizer/resources/SyntheticEvent'
    ],
-   function(Password, SyntheticEvent, BaseViewModel) {
+   function(Password, SyntheticEvent) {
 
       'use strict';
 
       var instance;
-      var superConstructor = Password.superclass.constructor;
 
       beforeEach(function() {
          instance = {};
-         Password.superclass.constructor = function() {};
-      });
-
-      afterEach(function() {
-         Password.superclass.constructor = superConstructor;
       });
 
       describe('Controls.Input.Password', function() {
-         describe('Life', function() {
-            it('constructor', function() {
-               var value = 'password';
-               var options = {
-                  value: value
-               };
-               var viewModel = new BaseViewModel({
-                  value: value
-               });
-
-               Password.prototype.constructor.call(instance, options);
-               assert.deepEqual(instance, {
-                  _simpleViewModel: viewModel
-               });
-            });
-
-            it('_beforeUpdate', function() {
-               var value = 'drowssap';
-               var options = {
-                  value: value
-               };
-               var viewModel = new BaseViewModel({
-                  value: value
-               });
-
-               viewModel.updateOptions(options);
-               instance._simpleViewModel = new BaseViewModel({
-                  value: 'password'
-               });
-
-               Password.prototype._beforeUpdate.call(instance, options);
-               assert.deepEqual(instance, {
-                  _simpleViewModel: viewModel
-               });
-            });
-
-            it('options', function() {
-               Password.getOptionTypes();
-               Password.getDefaultOptions();
-            });
-         });
-
          describe('_toggleVisibilityHandler', function() {
             it('The password is visible', function() {
                instance._passwordVisible = false;
