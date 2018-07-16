@@ -1,10 +1,10 @@
-define('Controls-demo/Input/Password/Basic',
+define('Controls-demo/Example/Input/Password',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Input/Password/Basic/Basic',
+      'tmpl!Controls-demo/Example/Input/Password/Password',
 
       'Controls/Input/Password',
-      'css!Controls-demo/Input/Password/Basic/Basic'
+      'css!Controls-demo/Example/Input/Password/Password'
    ],
    function(Control, template) {
 
