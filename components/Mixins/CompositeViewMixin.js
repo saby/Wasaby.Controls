@@ -368,7 +368,9 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
          }
 
          if (this._options.hoverMode === HOVER_MODE.FIXED) {
-            if (!coreCompatibility.touch) {
+            //На старых страницах больше ниоткуда не взять динамическое значение isTouch при работе с компьютером
+            //и телевизором одновременно.
+            if (document.body.className.indexOf('ws-is-touch') === -1) {
                this._createFixedItem(item, styles);
             }
          } else {

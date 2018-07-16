@@ -5,45 +5,57 @@
    </div>
    <div class="demo-Grid" style="border-bottom: 12px solid #55AA55;">
       <div class="demo-Grid__container">
-         <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
-            <ws:content>
-               <Controls.TreeGrid
-                             attr:class="demo-Grid__control"
-                             keyProperty="id"
-                             parentProperty="Раздел"
-                             itemsGroup="{{_itemsGroup}}"
-                             nodeProperty="Раздел@"
-                             source = "{{_viewSource}}"
-                             columns="{{gridColumns}}"
-                             multiSelectVisibility="visible"
-                             itemActions="{{_itemActions}}"
-                             itemActionsPosition="outside"
-                             on:itemActionsClick="_onActionClick()"
-                             itemActionVisibilityCallback="{{_showAction}}">
-               </Controls.TreeGrid>
-            </ws:content>
-         </Controls.Container.Scroll>
+         <Controls.Container.Data source="{{_viewSource}}"
+                                  keyProperty="id">
+            <Controls.Container.TreeMultiSelector parentProperty="Раздел"
+                                                  nodeProperty="Раздел@">
+               <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+                  <Controls.List.Container>
+                     <Controls.List.MultiSelector>
+                        <Controls.TreeGrid
+                                attr:class="demo-Grid__control"
+                                parentProperty="Раздел"
+                                itemsGroup="{{_itemsGroup}}"
+                                nodeProperty="Раздел@"
+                                columns="{{gridColumns}}"
+                                multiSelectVisibility="visible"
+                                itemActions="{{_itemActions}}"
+                                itemActionsPosition="outside"
+                                on:itemActionsClick="_onActionClick()"
+                                itemActionVisibilityCallback="{{_showAction}}">
+                        </Controls.TreeGrid>
+                     </Controls.List.MultiSelector>
+                  </Controls.List.Container>
+               </Controls.Container.Scroll>
+            </Controls.Container.TreeMultiSelector>
+         </Controls.Container.Data>
       </div>
    </div>
    <div class="demo-Grid" style="border-top: 12px solid #55AA55;">
       <div class="demo-Grid__container">
-         <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
-            <ws:content>
-               <Controls.TreeGrid
-                       attr:class="demo-Grid__control"
-                       keyProperty="id"
-                       parentProperty="Раздел"
-                       nodeProperty="Раздел@"
-                       source = "{{_viewSource}}"
-                       columns="{{gridColumns}}"
-                       multiSelectVisibility="visible"
-                       itemActions="{{_itemActions}}"
-                       itemActionsPosition="inside"
-                       on:itemActionsClick="_onActionClick()"
-                       itemActionVisibilityCallback="{{_showAction}}">
-               </Controls.TreeGrid>
-            </ws:content>
-         </Controls.Container.Scroll>
+         <Controls.Container.Data source="{{_viewSource}}"
+                                  keyProperty="id">
+            <Controls.Container.TreeMultiSelector parentProperty="Раздел"
+                                                  nodeProperty="Раздел@">
+               <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+                  <Controls.List.Container>
+                     <Controls.List.MultiSelector>
+                        <Controls.TreeGrid
+                                attr:class="demo-Grid__control"
+                                parentProperty="Раздел"
+                                nodeProperty="Раздел@"
+                                columns="{{gridColumns}}"
+                                multiSelectVisibility="visible"
+                                itemActions="{{_itemActions}}"
+                                itemActionsPosition="inside"
+                                on:itemActionsClick="_onActionClick()"
+                                itemActionVisibilityCallback="{{_showAction}}">
+                        </Controls.TreeGrid>
+                     </Controls.List.MultiSelector>
+                  </Controls.List.Container>
+               </Controls.Container.Scroll>
+            </Controls.Container.TreeMultiSelector>
+         </Controls.Container.Data>
       </div>
    </div>
 </div>
