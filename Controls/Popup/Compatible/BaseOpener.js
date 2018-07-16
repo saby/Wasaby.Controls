@@ -195,6 +195,10 @@ function(cMerge,
             cfg.autoHide = cfg.closeByExternalClick;
          }
 
+         if (cfg.hasOwnProperty('closeChildWindows')) {
+            newCfg.dialogOptions.closeChildWindows = cfg.closeChildWindows;
+         }
+
          if (cfg.verticalAlign && cfg.verticalAlign.side === 'top') {
             newCfg.dialogOptions.direction = 'top';
          }
