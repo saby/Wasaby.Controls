@@ -96,7 +96,9 @@ function(cMerge,
             top: 'bottom',
             bottom: 'top',
             left: 'right',
-            right: 'left'
+            right: 'left',
+            middle: 'center',
+            center: 'center'
          };
 
          if (cfg.hasOwnProperty('verticalAlign')) {
