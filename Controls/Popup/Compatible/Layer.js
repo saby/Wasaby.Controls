@@ -152,7 +152,7 @@ define('Controls/Popup/Compatible/Layer', [
          data.isDemo = data['ВыводимоеИмя'] === 'Демо-версия';
          data.isPersonalAccount = data['КлассПользователя'] === '__сбис__физики';
 
-         if (data['КлассПользователя'] == '__сбис__физики') {
+         if (data['КлассПользователя'] === '__сбис__физики') {
             deferred = profileSource.call('ЕстьЛиУМеняАккаунтПомимоФизика').addCallback(function(res) {
                data.hasMoreAccounts = res.getScalar();
                return data;
