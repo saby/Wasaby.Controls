@@ -1,5 +1,7 @@
 <ws:template name="period">
-   <Controls.Button style="linkMain" size="l" caption="January'15" bind:value="item.value"/>
+   <Controls.Input.Dropdown bind:selectedKeys="item.value"
+                            keyProperty="key"
+                            source="{{item.source}}" />
 </ws:template>
 
 <ws:template name="state">
@@ -9,24 +11,18 @@
 </ws:template>
 
 <ws:template name="sender">
-   <div class="panel-demo-textFilter">
       <Controls.Button style="linkMain"  caption="Sender" attr:class="panel-demo-text"/>
-      <Controls.Input.Text bind:value="item.value" attr:class="panel-demo-input" />
-   </div>
+      <Controls.Input.Text bind:value="item.value" attr:class="panel-without-additional-demo-input" />
 </ws:template>
 
 <ws:template name="author">
-   <div class="panel-demo-textFilter">
       <Controls.Button style="linkMain"  caption="Author" attr:class="panel-demo-text"/>
-      <Controls.Input.Text bind:value="item.value" attr:class="panel-demo-input" />
-   </div>
+      <Controls.Input.Text bind:value="item.value" attr:class="panel-without-additional-demo-input" />
 </ws:template>
 
 <ws:template name="responsible">
-   <div class="panel-demo-textFilter">
       <Controls.Button style="linkMain"  caption="Responsible" attr:class="panel-demo-text"/>
-      <Controls.Input.Text bind:value="item.value" attr:class="panel-demo-input"/>
-   </div>
+      <Controls.Input.Text bind:value="item.value" attr:class="panel-without-additional-demo-input" />
 </ws:template>
 
 <ws:template name="tagging">

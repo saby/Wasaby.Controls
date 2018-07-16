@@ -34,7 +34,7 @@
    },
    "devDependencies": {
       "async": "^2.6.1",
-      "autoprefixer": "^8.6.2",
+      "autoprefixer": "^8.6.5",
       "body-parser": "^1.18.3",
       "cookie-parser": "^1.4.3",
       "express": "^4.16.3",

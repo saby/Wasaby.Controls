@@ -3,11 +3,12 @@ define('Controls/Filter/Button/Panel', [
    'WS.Data/Chain',
    'WS.Data/Utils',
    'Core/core-clone',
+   'Core/helpers/Object/isEqual',
    'Controls/Filter/Button/Panel/Wrapper/_FilterPanelOptions',
    'tmpl!Controls/Filter/Button/Panel/Panel',
    'css!Controls/Filter/Button/Panel/Panel'
 
-], function(Control, Chain, Utils, Clone, _FilterPanelOptions, template) {
+], function(Control, Chain, Utils, Clone, isEqual, _FilterPanelOptions, template) {
 
    /**
     * Control "Filter panel"
@@ -59,7 +60,7 @@ define('Controls/Filter/Button/Panel', [
       isChangedValue: function(items) {
          var isChanged = false;
          Chain(items).each(function(item) {
-            if (getPropValue(item, 'value') !== getPropValue(item, 'resetValue') && getPropValue(item, 'visibility')) {
+            if (!isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue')) && getPropValue(item, 'visibility')) {
                isChanged = true;
             }
          });

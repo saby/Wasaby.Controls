@@ -91,7 +91,7 @@ define('Controls-demo/Filter/Button/PanelVDom',
       };
 
       var itemsSimple = [
-         {id: 'period', value: '', resetValue: '', textValue: 'Period', visibility: true},
+         {id: 'period', value: [1], resetValue: [1], textValue: 'Period', source: sourcePeriod, visibility: true},
          {id: 'state', value: [1], resetValue: [1], textValue: 'Stage', source: sourceState, visibility: true},
          {id: 'sender', value: '', resetValue: '', textValue: 'Sender', visibility: true},
          {id: 'author', value: 'Ivanov K.K.', resetValue: '', textValue: 'Author', visibility: true},
@@ -101,13 +101,13 @@ define('Controls-demo/Filter/Button/PanelVDom',
       var itemsTemplate = [
          {id: 'author', value: '', textValue: 'Author', resetValue: '', visibility: true,
             templateItem: 'tmpl!Controls-demo/Filter/Button/resources/itemTemplate/author'},
-         { id: 'period', value: [1], textValue: 'Period', resetValue: '', visibility: true,
+         { id: 'period', value: [1], textValue: 'Period', resetValue: [1], visibility: true,
             source: sourcePeriod,
             templateItem: 'tmpl!Controls-demo/Filter/Button/resources/itemTemplate/period'}
       ];
 
       var items = [
-         {id: 'period', value: '', resetValue: '', textValue: 'Period', visibility: true},
+         {id: 'period', value: [1], resetValue: [1], textValue: 'Period', source: sourcePeriod, visibility: true},
          {id: 'state', value: [1], resetValue: [1], textValue: 'State', source: sourceState, visibility: true},
          {id: 'limit', value: [1], resetValue: [1], textValue: 'Limit', source: sourceLimit, visibility: true},
          {id: 'sender', value: '', resetValue: '', textValue: 'Sender', visibility: false},
@@ -134,8 +134,7 @@ define('Controls-demo/Filter/Button/PanelVDom',
 
          _itemsSimple: itemsSimple,
          _itemsTemplate: itemsTemplate,
-         _items: items,
-         sourcePeriod: sourcePeriod
+         _items: items
 
       });
 
