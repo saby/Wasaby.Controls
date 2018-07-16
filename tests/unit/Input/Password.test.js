@@ -1,9 +1,8 @@
 define(
    [
-      'Controls/Input/Password',
-      'Core/vdom/Synchronizer/resources/SyntheticEvent'
+      'Controls/Input/Password'
    ],
-   function(Password, SyntheticEvent) {
+   function(Password) {
 
       'use strict';
 
@@ -30,26 +29,6 @@ define(
                Password.prototype._toggleVisibilityHandler.call(instance);
                assert.deepEqual(instance, {
                   _passwordVisible: false
-               });
-            });
-         });
-
-         describe('_valueChangedHandler', function() {
-            it('The value has changed', function() {
-               var value = 'password';
-               var inputEvent = new SyntheticEvent('input');
-               var notify = function(eventName, args) {
-                  this._eventName = eventName;
-                  this._args = args;
-               };
-
-               instance._notify = notify;
-
-               Password.prototype._valueChangedHandler.call(instance, inputEvent, value);
-               assert.deepEqual(instance, {
-                  _eventName: 'valueChanged',
-                  _args: [value],
-                  _notify: notify
                });
             });
          });

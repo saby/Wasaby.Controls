@@ -104,7 +104,7 @@ define('Controls-demo/Demo/Page',
          },
 
          backClickHdl: function() {
-            window.location.href = window.location.origin + '/Controls-demo/demo.html';
+            window.history.back();
          },
 
          constructor: function(cfg) {
