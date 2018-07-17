@@ -12,12 +12,16 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
    [
       'Core/core-merge',
       'Core/Deferred',
-      'Lib/Control/FloatArea/FloatArea',
       'SBIS3.CONTROLS/Action',
-      'SBIS3.CONTROLS/ExportCustomizer/Area'
+      'SBIS3.CONTROLS/ExportCustomizer/Constants',
+      'SBIS3.CONTROLS/ExportCustomizer/_Executor',
+      'SBIS3.CONTROLS/Utils/ImportExport/OptionsTool',
+      'SBIS3.CONTROLS/Utils/InformationPopupManager',
+      'SBIS3.CONTROLS/WaitIndicator',
+      'WS.Data/Di'
    ],
 
-   function (cMerge, Deferred, FloatArea, Action, Area) {
+   function (cMerge, Deferred, Action, Constants, Executor, OptionsTool, InformationPopupManager, WaitIndicator, Di) {
       'use strict';
 
       /**
@@ -72,6 +76,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
        * @property {ExportServiceParams} serviceParams Прочие параметры, необходимых для работы БЛ
        */
 
+      /**
+       * Имя регистрации объекта, предоставляющего методы загрузки и сохранения пользовательских пресетов, в инжекторе зависимостей
+       * @private
+       * @type {string}
+       */
+      var _DI_STORAGE_NAME = 'ExportPresets.Loader';
+
       var ExportCustomizerAction = Action.extend([], /**@lends SBIS3.CONTROLS/ExportCustomizer/Action.prototype*/ {
 
          /**
@@ -118,6 +129,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * @param {Array<ExportValidator>} options.validators Список валидаторов результатов редактирования (опционально)
           * @param {ExportRemoteCall} [options.outputCall] Информация для вызова метода удалённого сервиса для отправки данных вывода (опционально)
           * @param {boolean} [options.skipCustomization] Не открывать настройщик экспорта, начать экспорт сразу основываясь на предоставленных в опциях данных (опционально)
+          * @param {Lib/Control/Control} [options.opener] Компонент, инициировавщий открытие настройщика экспорта. Используется в отсутствие опции skipCustomization (опционально)
           * @return {Deferred<ExportResults>}
           */
          execute: function (options) {
@@ -127,32 +139,79 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
          /**
           * Метод, выполняющий основное действие
           * @protected
-          * @param {object} options Входные аргументы("мета-данные") настройщика экспорта (согласно описанию в методе {@link execute})
+          * @param {object} data Входные аргументы("мета-данные") настройщика экспорта (согласно описанию в методе {@link execute})
           */
-         _doExecute: function (options) {
-            if (!options || typeof options !== 'object') {
+         _doExecute: function (data) {
+            if (!data || typeof data !== 'object') {
                throw new Error('No arguments');
             }
             if (this._result) {
                return Deferred.fail('Allready open');
             }
-            this._result = new Deferred();
+            var optionsTool = new OptionsTool(Constants.OPTION_TYPES, Constants.DEFAULT_OPTIONS, Constants.SKIP_OWN_OPTIONS_NAMES);
+            var names = optionsTool.getOwnOptionNames();
             var defaults = this._options;
-            var areaOptions = Area.getOwnOptionNames().reduce(function (acc, name) {
-               var value = options[name];
-               acc[name] = value !== undefined ? value : defaults[name];
-               return acc;
-            }, {});
-            if (options.skipCustomization) {
-               (new Area(areaOptions)).complete().addCallbacks(
+            var options = names.reduce(function (r, v) { var o = data[v]; r[v] = o !== undefined ? o : defaults[v]; return r; }, {});
+            this._result = new Deferred();
+            if (data.skipCustomization) {
+               this._immediate(options, optionsTool);
+            }
+            else {
+               this._open(options, data.opener);
+            }
+            return this._result;
+         },
+
+         /*
+          * Выполнить экспорт немедленно (без отккрытия диалога настройщика экспорта)
+          *
+          * @protected
+          * @param {object} options Опции
+          * @param {SBIS3.CONTROLS/Utils/ImportExport/OptionsTool} optionsTool Инструмент для работы с опциями
+          */
+         _immediate: function (options, optionsTool) {
+            optionsTool.resolveOptions(options, true);
+            optionsTool.validateOptions(options);
+            this._prepareForImmediate(options).addCallback(function () {
+               Executor.execute(options).addCallbacks(
                   this._complete.bind(this, true),
                   this._completeWithError.bind(this, true)
                );
+            }.bind(this));
+         },
+
+         /*
+          * Подготовиться к немедленному выполнению экспорта (без отккрытия диалога настройщика экспорта)
+          *
+          * @protected
+          * @param {object} options Опции
+          * @return {Core/Deferred}
+          */
+         _prepareForImmediate: function (options) {
+            if (options.usePresets && !(options.fieldIds && options.fieldIds.length)) {
+               var selectedPresetId = options.selectedPresetId;
+               if (selectedPresetId) {
+                  var _usePreset = function (presets) {
+                     if (presets && presets.length) {
+                        var preset; presets.some(function (v) { if (v.id === selectedPresetId) { preset = v; return true; }});
+                        if (preset) {
+                           options.fieldIds = preset.fieldIds;
+                           options.fileUuid = preset.fileUuid;
+                           return true;
+                        }
+                     }
+                  };
+                  if (!_usePreset(options.staticPresets) && Di.isRegistered(_DI_STORAGE_NAME)) {
+                     var promise = new Deferred();
+                     Di.resolve(_DI_STORAGE_NAME).load(options.presetNamespace).addCallback(function (customs) {
+                        _usePreset(customs);
+                        promise.callback();
+                     });
+                     return promise;
+                  }
+               }
             }
-            else {
-               this._open(areaOptions);
-            }
-            return this._result;
+            return Deferred.success();
          },
 
          /**
@@ -160,35 +219,44 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           *
           * @protected
           * @param {object} options Входные аргументы("мета-данные") настройщика экспорта (согласно описанию в методе {@link execute})
+          * @param {Lib/Control/Control} [opener] Компонент, инициировавщий открытие настройщика экспорта, если есть (опционально)
           */
-         _open: function (options) {
-            var componentOptions = cMerge({
-               dialogMode: true,
-               handlers: {
-                  onComplete: this._onAreaComplete.bind(this),
-                  onFatalError: this._onAreaError.bind(this)
-               }
-            }, options);
-            this._areaContainer = new FloatArea({
-               opener: this,
-               direction: 'left',
-               animation: 'slide',
-               isStack: true,
-               autoCloseOnHide: true,
-               //parent: this,
-               template: 'SBIS3.CONTROLS/ExportCustomizer/Area',
-               className: 'ws-float-area__block-layout controls-ExportCustomizer__area',
-               closeByExternalClick: true,
-               //caption: '',
-               closeButton: true,
-               componentOptions: componentOptions,
-               handlers: {
-                  onClose: this._onAreaClose.bind(this)
-               }
-            });
-            this._notify('onSizeChange');
-            this.subscribeOnceTo(this._areaContainer, 'onAfterClose', this._notify.bind(this, 'onSizeChange'));
-            //this._notify('onOpen');
+         _open: function (options, opener) {
+            var wiatIndicator = new WaitIndicator(null, rk('Загружается', 'НастройщикЭкспорта'), {overlay:'dark'}, 1000);
+            require(['SBIS3.CONTROLS/ExportCustomizer/Area', 'Lib/Control/FloatArea/FloatArea'], function (Area, FloatArea) {
+               wiatIndicator.remove();
+               var needDelay = options.usePresets && !options.selectedPresetId;
+               var componentOptions = cMerge({
+                  name: 'controls-ExportCustomizer__area',
+                  enabled: !needDelay,
+                  //waitingMode: needDelay,
+                  dialogMode: true,
+                  handlers: {
+                     onComplete: this._onAreaComplete.bind(this),
+                     onFatalError: this._onAreaError.bind(this)
+                  }
+               }, options);
+               this._areaContainer = new FloatArea({
+                  opener: opener || this,
+                  direction: 'left',
+                  animation: 'slide',
+                  isStack: true,
+                  autoCloseOnHide: true,
+                  template: 'SBIS3.CONTROLS/ExportCustomizer/Area',
+                  className: 'ws-float-area__block-layout controls-ExportCustomizer__area',
+                  closeByExternalClick: true,
+                  closeButton: true,
+                  componentOptions: componentOptions,
+                  handlers: {
+                     onAfterShow: needDelay ? function () {
+                        this._areaContainer.getChildControlByName('controls-ExportCustomizer__area').setEnabled(true);
+                     }.bind(this) : null,
+                     onClose: this._onAreaClose.bind(this)
+                  }
+               });
+               this._notify('onSizeChange');
+               this.subscribeOnceTo(this._areaContainer, 'onAfterClose', this._notify.bind(this, 'onSizeChange'));
+            }.bind(this));
          },
 
          /**
@@ -271,13 +339,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           */
          _completeWithError: function (withAlert, err) {
             if (withAlert) {
-               Area.showMessage(
-                  'error',
-                  rk('Ошибка', 'НастройщикЭкспорта'),
-                  ((err && err.message ? err.message : err) || rk('При получении данных поизошла неизвестная ошибка', 'НастройщикЭкспорта')) + '\n' +
-                     rk('Настройка экспорта будет прервана', 'НастройщикЭкспорта')
-               )
-                  .addCallback(this._complete.bind(this, false, err));
+               var promise = new Deferred();
+               InformationPopupManager.showMessageDialog({
+                  status: 'error',
+                  message: rk('Ошибка', 'НастройщикЭкспорта'),
+                  details: ((err && err.message ? err.message : err) || rk('При получении данных поизошла неизвестная ошибка', 'НастройщикЭкспорта')) +
+                           '\n' + rk('Настройка экспорта будет прервана', 'НастройщикЭкспорта')
+               }, promise.callback.bind(promise, null));
+               promise.addCallback(this._complete.bind(this, false, err));
             }
             else {
                this._complete(false, err);

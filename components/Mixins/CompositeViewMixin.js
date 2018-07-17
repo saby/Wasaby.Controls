@@ -92,10 +92,10 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
 
          switch (cfg.viewMode) {
             case 'tile':
-               parentOptions.itemTpl = tileTpl;
+               parentOptions.itemTpl = TemplateUtil.prepareTemplate(tileTpl);
                break;
             case 'list':
-               parentOptions.itemTpl = listTpl;
+               parentOptions.itemTpl = TemplateUtil.prepareTemplate(listTpl);
                break;
          }
       }
@@ -368,7 +368,9 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
          }
 
          if (this._options.hoverMode === HOVER_MODE.FIXED) {
-            if (!coreCompatibility.touch) {
+            //На старых страницах больше ниоткуда не взять динамическое значение isTouch при работе с компьютером
+            //и телевизором одновременно.
+            if (document.body.className.indexOf('ws-is-touch') === -1) {
                this._createFixedItem(item, styles);
             }
          } else {

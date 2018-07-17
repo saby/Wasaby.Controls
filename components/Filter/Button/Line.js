@@ -27,6 +27,8 @@ define('SBIS3.CONTROLS/Filter/Button/Line',
                self = this,
                updateContext = function() {
                   var linkText;
+                  var isVisible = self.isVisible();
+                  var newVisible;
 
                   /* Проверяем, изменился ли фильтр */
                   if (context.getValue('filterChanged')) {
@@ -40,7 +42,14 @@ define('SBIS3.CONTROLS/Filter/Button/Line',
                      linkText: linkText,
                      titleText: escapeTagsFromStr(linkText, '')
                   });
-                  self.toggle(!!linkText);
+   
+                  newVisible = !!linkText;
+                  
+                  /* Внезапно, в AreaAbstract нет проверки в методе toggle, на то, меняется ли visible,
+                     и даже если ничего не менялось, код вызывает лишнюю перефокусировку, поэтому проверяю руками. */
+                  if (newVisible !== isVisible) {
+                     self.toggle(newVisible);
+                  }
                   self._notifyOnSizeChanged();
                };
 

@@ -123,17 +123,18 @@ define(['Controls/Button'], function (Button) {
             assert(btn._style === 'default' && btn._type === 'button' && btn._typeWithSize === 'button_size-big');
          });
       });
-      describe('constructor() and _beforeUpdate()', function () {
+      describe('constructor() and _beforeUpdate()', function() {
          var optionsCorrect = false;
-         beforeEach(function () {
-            Button._private.cssStyleGeneration = function (self, options) {
-               if (options.style === 'test' && options.size === 'size'){
+         function redefinitionCssStyleGeneration() {
+            Button._private.cssStyleGeneration = function(self, options) {
+               if (options.style === 'test' && options.size === 'size') {
                   optionsCorrect = true;
                }
             };
-         });
+         }
 
-         it('constructor', function () {
+         it('constructor', function() {
+            redefinitionCssStyleGeneration();
             var opt = {
                style: 'test',
                size: 'size'
@@ -142,7 +143,8 @@ define(['Controls/Button'], function (Button) {
             assert(optionsCorrect);
          });
 
-         it('_beforeUpdate', function () {
+         it('_beforeUpdate', function() {
+            redefinitionCssStyleGeneration();
             var opt = {
                style: 'test',
                size: 'size'

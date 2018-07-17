@@ -48,6 +48,7 @@ define('SBIS3.CONTROLS/SubmitPopup', [
           */
          $protected: {
             _options: {
+               _isSubmitPopup: true,
                /**
                 * @name SBIS3.CONTROLS/SubmitPopup#opener
                 * @cfg {undefined|Lib/Control/Control} Устанавливает контрол, который будет считаться инициатором открытия диалога.

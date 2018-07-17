@@ -3,6 +3,7 @@ define('Controls-demo/Dropdown/MenuVdom', [
    'tmpl!Controls-demo/Dropdown/MenuVdom',
    'Core/core-clone',
    'WS.Data/Source/Memory',
+   'Controls/Constants',
    'tmpl!Controls-demo/Dropdown/resources/itemTemplate1',
    'tmpl!Controls-demo/Dropdown/resources/itemTemplateContent1',
    'tmpl!Controls-demo/Dropdown/resources/ItemsTemplate2',
@@ -13,14 +14,14 @@ define('Controls-demo/Dropdown/MenuVdom', [
    'css!Controls-demo/Dropdown/MenuVdom',
    'WS.Data/Collection/RecordSet' //TODO: удалить это когда появится асинк и технология патчинга jsLinks
    //сейчас зависимость тянется асинхронно и десериализовать данные пытаемся раньше, чем это произойдет
-], function(Control, template, cClone, Memory) {
+], function(Control, template, cClone, Memory, ControlsConstants) {
    'use strict';
 
 
    var ModuleClass = Control.extend(
       {
          _template: template,
-         _stateText: 'Выбранный ключ',
+         _stateText: 'Выбранный ключ: 8',
          _selectedKeysEmpty: ['1'],
          _selectedKeys0: ['8'],
          _selectedKeys1: ['2'],
@@ -34,6 +35,15 @@ define('Controls-demo/Dropdown/MenuVdom', [
          _clickItemsChangedHandler: function(event, data) {
             this._stateText = data.get('title');
          },
+         _itemsGroup: {
+            method: function(item) {
+               if (item.get('group') === 'hidden' || !item.get('group')) {
+                  return ControlsConstants.view.hiddenGroup;
+               }
+               return item.get('group');
+            },
+            template: '',
+         },
          _defaultItems: [
             {
                id: '1',
@@ -45,26 +55,32 @@ define('Controls-demo/Dropdown/MenuVdom', [
             },
             {
                id: '3',
+               group: 'group 2',
                title: 'Запись 3'
             },
             {
                id: '4',
+               group: 'group 2',
                title: 'Запись 4'
             },
             {
                id: '5',
+               group: 'group 3',
                title: 'Запись 5'
             },
             {
                id: '6',
+               group: 'group 3',
                title: 'Запись 6'
             },
             {
                id: '7',
+               group: 'group 4',
                title: 'Запись 7'
             },
             {
                id: '8',
+               group: 'group 3',
                title: 'Запись 8'
             }
          ],

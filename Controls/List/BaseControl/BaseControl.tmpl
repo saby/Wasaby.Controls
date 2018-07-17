@@ -1,4 +1,4 @@
-<div class="controls-BaseControl controls-BaseControl__lastRowActions_{{_options.itemActionsType}}" on:showIndicator="_showIndicator()" on:hideIndicator="_hideIndicator()">
+<div class="controls-BaseControl controls-BaseControl__lastRowActions_{{_options.itemActionsPosition}}" on:showIndicator="_showIndicator()" on:hideIndicator="_hideIndicator()">
     <div class="controls-BaseControl__trigger controls-BaseControl__topListTrigger" name="topListTrigger"></div>
     <div class="controls-BaseControl__topPlaceholder" style="height: {{_topPlaceholderHeight}}px;"></div>
     <div class="controls-BaseControl__trigger controls-BaseControl__topLoadTrigger" name="topLoadTrigger" style="bottom: -{{_loadOffset}}px;"></div>
@@ -7,7 +7,7 @@
         <ws:partial
                 template="{{ _options.content }}"
                 name="listView"
-                scope="{{_options.viewConfig}}"
+                scope="{{_options}}"
                 listModel="{{_listViewModel}}"
                 on:itemClick="_onItemClick()"
                 on:groupClick="_onGroupClick()"
@@ -24,7 +24,7 @@
         </ws:partial>
         <Controls.List.Mover ws:content="listView"
                              name="moveControl"
-                             keyProperty="{{_options.viewConfig.keyProperty}}"
+                             keyProperty="{{_options.keyProperty}}"
                              on:beforeItemsMove="_beforeItemsMove()"
                              on:afterItemsMove="_afterItemsMove()"
                              sourceController="{{_sourceController}}"
@@ -50,14 +50,14 @@
                 on:commitActionClick="_commitEditActionHandler()"
                 on:cancelActionClick="_cancelEditActionHandler()"
                 on:menuActionsClick="_showActionsMenu()"
-                on:actionClick="_onActionClick()"
+                on:itemActionsClick="_onItemActionsClick()"
                 showToolbar="{{_options.editingConfig.showToolbar}}"
                 name="itemActions"
                 listModel="{{_listViewModel}}"
                 menuIsShown="{{_menuIsShown}}"
                 itemActions="{{_options.itemActions}}"
                 itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
-                itemActionsType="{{_options.itemActionsType}}"/>
+                itemActionsPosition="{{_options.itemActionsPosition}}"/>
         <Controls.List.Swipe.SwipeControl
                 ws:content="listView"
                 on:menuActionsClick="_showActionsMenu()"

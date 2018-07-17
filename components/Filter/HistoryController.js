@@ -201,7 +201,7 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
                  needUpdateHistory = false;
 
              this._listHistory.each(function(historyElem) {
-                FilterHistoryControllerUntil.prepareNewStructure(currentStructure, historyElem.filter);
+                FilterHistoryControllerUntil.prepareNewStructure(currentStructure, historyElem.filter, self._options.noSaveFilters);
                 var linkText = FilterToStringUtil.string(historyElem.filter, 'historyItemTemplate');
 
                 if(linkText) {
@@ -242,7 +242,9 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
                 });
                 return;
              }
-
+             
+             structure = FilterHistoryControllerUntil.resetNoSaveStructureKeys(structure, this._options.noSaveFilters);
+             
              self.saveToHistory({
                 linkText: FilterToStringUtil.string(structure, 'historyItemTemplate'),
                 filter: FilterHistoryControllerUntil.prepareStructureToSave(structure)

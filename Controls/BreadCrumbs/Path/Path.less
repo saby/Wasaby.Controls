@@ -1,0 +1,60 @@
+@min-width_BackButton_short: @min-width_BreadCrumbs-text + @width-BackButton_size-default + @spacing-BackButton-between-icon-text;
+
+.controls-BreadCrumbsPath__wrapper {
+   display: flex;
+   align-items: baseline;
+   white-space: nowrap;
+}
+
+.controls-BreadCrumbsPath__backButton {
+   white-space: nowrap;
+   position: relative;
+}
+
+.controls-BreadCrumbsPath__backButton__wrapper {
+   position: relative;
+   display: inline-flex;
+   align-items: baseline;
+}
+
+.controls-BreadCrumbsPath__backButtonArrow {
+   .icon(@font-size_Path-backButtonArrow);
+   position: absolute;
+   align-self: center;
+   background-color: @background-color_Path-backButtonArrow;
+   right: 0;
+}
+
+.controls-BreadCrumbsPath__backButtonArrow_outsideBackButton {
+   margin-right: -@font-size_Path-backButtonArrow;
+}
+
+.controls-BreadCrumbsPath__breadCrumbs {
+   flex-grow: 1;
+   overflow: hidden;
+}
+
+.controls-BreadCrumbsPath__backButton_short {
+   flex-shrink: 1;
+   min-width: @min-width_BackButton_short;
+   overflow: hidden;
+}
+
+.controls-BreadCrumbsPath__backButton_half,
+.controls-BreadCrumbsPath__breadCrumbs_half {
+   width: 50%;
+   flex-shrink: 1;
+   overflow: hidden;
+}
+
+.ws-is-no-touch {
+   .controls-BreadCrumbsPath__backButtonArrow:hover {
+      color: @color_Path-backButtonArrow_hovered;
+   }
+}
+
+//Класс сделан только для удобства замеров
+.controls-BreadCrumbsPath__backButtonMeasurer {
+   font-family: @font-family_BreadCrumbs, "Courier New";
+   font-weight: @font-weight_Back;
+}

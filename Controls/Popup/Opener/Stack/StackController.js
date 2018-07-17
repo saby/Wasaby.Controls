@@ -43,7 +43,11 @@ define('Controls/Popup/Opener/Stack/StackController',
          elementDestroyed: function(instance, element) {
             instance._stack.remove(element);
             instance._update();
-            instance._destroyDeferred.callback();
+            instance._destroyDeferred[element.id].callback();
+            delete instance._destroyDeferred[element.id];
+         },
+         removeAnimationClasses: function(className) {
+            return className.replace(/controls-Stack__close|controls-Stack__open|controls-Stack__waiting/ig, '');
          }
       };
 
@@ -56,7 +60,7 @@ define('Controls/Popup/Opener/Stack/StackController',
        */
 
       var StackController = BaseController.extend({
-         _destroyDeferred: undefined,
+         _destroyDeferred: {},
          constructor: function(cfg) {
             StackController.superclass.constructor.call(this, cfg);
             this._stack = new List();
@@ -68,32 +72,40 @@ define('Controls/Popup/Opener/Stack/StackController',
             if (this._checkContainer(item, container)) {
                _private.prepareSizes(item, container);
                this._stack.add(item, 0);
+               item.popupOptions.className += ' controls-Stack__open';
                this._update();
             }
          },
 
          elementUpdated: function(item, container) {
-            if (this._checkContainer(item, container)) {
-               _private.prepareSizes(item, container);
-               this._update();
+            //if container contains waiting class then animation wasn't over
+            if (!container.classList.contains('controls-Stack__waiting')) {
+               if (this._checkContainer(item, container)) {
+                  _private.prepareSizes(item, container);
+                  this._update();
+               }
             }
          },
 
          elementDestroyed: function(element, container) {
-            this._destroyDeferred = new Deferred();
+            this._destroyDeferred[element.id] = new Deferred();
             if (cConstants.browser.chrome && !cConstants.browser.isMobilePlatform) {
-               this._getTemplateContainer(container).classList.add('controls-Stack_hide');
+               element.popupOptions.className += ' controls-Stack__close';
+               container.classList.add('controls-Stack__close');
                this._fixTemplateAnimation(element);
             } else {
                _private.elementDestroyed(this, element);
+               return (new Deferred()).callback();
             }
-            return this._destroyDeferred;
+            return this._destroyDeferred[element.id];
          },
 
          elementAnimated: function(element, container) {
-            var templateContainer = this._getTemplateContainer(container);
-            if (templateContainer.classList.contains('controls-Stack_hide')) {
+            element.popupOptions.className = _private.removeAnimationClasses(element.popupOptions.className);
+            if (this._destroyDeferred[element.id]) {
                _private.elementDestroyed(this, element);
+            } else {
+               container.classList.remove('controls-Stack__waiting', 'controls-Stack__open');
             }
          },
 
@@ -121,7 +133,8 @@ define('Controls/Popup/Opener/Stack/StackController',
          _fixTemplateAnimation: function(element) {
             var self = this;
             setTimeout(function() {
-               if (self._destroyDeferred && !self._destroyDeferred.isReady()) {
+               var destroyDef = self._destroyDeferred[element.id];
+               if (destroyDef && !destroyDef.isReady()) {
                   _private.elementDestroyed(self, element);
                }
             }, 500);

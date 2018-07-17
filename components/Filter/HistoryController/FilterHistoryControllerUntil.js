@@ -59,7 +59,21 @@ define('SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil',
 
          return viewFilter;
       },
-      prepareStructureToSave: function(structure) {
+      
+      resetNoSaveStructureKeys: function(structure, doNotSaveKeys) {
+         var structureCopy = coreClone(structure);
+         
+         structureCopy.forEach(function(elem) {
+            if (doNotSaveKeys.indexOf(elem.filterField) !== -1) {
+               resetField('value', elem);
+               resetField('caption', elem);
+            }
+         });
+         
+         return structureCopy;
+      },
+      
+      prepareStructureToSave: function(structure, doNotSaveKeys) {
          /* Все правки надо делать с копией, чтобы не портить оригинальную структуру */
          var structureCopy = coreClone(structure);
 
@@ -96,7 +110,7 @@ define('SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil',
          var currentStructureCopy = coreClone(currentStructure);
          doNotApplyKeys = doNotApplyKeys || [];
 
-         this.prepareNewStructure(currentStructureCopy, structure);
+         this.prepareNewStructure(currentStructureCopy, structure, doNotApplyKeys);
 
          /* Алгоритм следующий:
           1) Пробегаемся по структуре (она первична, в ней можно менять только фильтры, саму струкруту менять нельзя!!) и ищем
@@ -140,7 +154,7 @@ define('SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil',
          return currentStructureCopy;
       },
 
-      prepareNewStructure: function(currentStructure, newStructure) {
+      prepareNewStructure: function(currentStructure, newStructure, noSaveFilters) {
          var toDelete = [],
              hasStructureElem = false,
              checkTpl = function (tplName, curStructure, newStructure) {
@@ -150,13 +164,15 @@ define('SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil',
                    delete newStructure[tplName]
                 }
              };
-
+   
+         noSaveFilters = noSaveFilters || [];
+         
          for (var key in newStructure) {
             if (newStructure.hasOwnProperty(key)) {
                var elemFromCurrentStructure = objectFind(currentStructure, function(elem) {
                   /* По неустановленной причине, в структуре из истории могут появляться null'ы,
                    скорее всего, это прикладная ошибка, но надо от этого защититься (повторяется только на некоторых фильтрах ЭДО) */
-                  if(!newStructure[key]) {
+                  if(!newStructure[key] || noSaveFilters.indexOf(newStructure[key].filterField) !== -1) {
                      return false;
                   } else {
                      hasStructureElem = newStructure[key].internalValueField === elem.internalValueField;

@@ -157,8 +157,6 @@ define('SBIS3.CONTROLS/Button/BackButton',
       setCaption: function(caption){
          var isEmptyCaption = (caption === null || caption === '' || typeof caption === 'undefined');
          this._link.setCaption(caption);
-         // Чтобы не тянуть в зависимости htmlToText из Deprecated/helpers/string-helpers,
-         // выполним replace из него прямо тут
 
          var tooltip = caption || '';
          if (this._options.escapeCaptionHtml === false) {

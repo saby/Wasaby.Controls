@@ -53,6 +53,47 @@ define('SBIS3.CONTROLS/Image',
          /**
           * Класс контрол "Изображение". Позволяет отображать и редактировать изображения, полученные из источника данных.
           * В качестве источника данных допускается использовать только {@link WS.Data/Source/SbisService}.
+          * @example Добавление источника данных в JS-коде:
+          * <pre>
+          *     // Объявляем экземпляр источника данных.
+          *     define('MyModule/Folder/MyComponent', [
+          *
+          *         // Зависимости компонента.
+          *         ...,
+          *         'WS.Data/Source/SbisService'
+          *     ],
+          *
+          *     function(... , SbisService) {
+          *         var source = new SbisService({
+          *            endpoint: 'PatentView',
+          *            binding: {
+          *               read: 'ReadImage'
+          *            },
+          *            idProperty: '@Patent'
+          *         }),
+          *
+          *         // Экземпляр компонента SBIS3.CONTROLS/Image
+          *         imageComponent = this.getChildControlByName('imageComponent');
+          *
+          *    // Задаём источник данных.
+          *    imageComponent.setDataSource(source);
+          *    ...
+          * </pre>
+          * Добавление источника данных в вёрстке:
+          * <pre>
+          *     <SBIS3.CONTROLS.Image name="imageComponent">
+          *          <ws:dataSource module="WS.Data/Source/SbisService">
+          *              <ws:options>
+          *                  <ws:endpoint contract="PatentView" idProperty="@Patent">
+          *                  </ws:endpoint>
+          *                  <ws:binding read="ReadImage">
+          *                  </ws:binding>
+          *              </ws:options>
+          *          </ws:dataSource>
+          *          ...
+          *     </SBIS3.CONTROLS.Image>
+          * </pre>
+          * @remark Контрол image создастся с уже заданным адресом файла с картинкой (c атрибутом src в теге <img>).
           * @class SBIS3.CONTROLS/Image
           * @extends Lib/Control/CompoundControl/CompoundControl
           * @author Волоцкой В.Д.

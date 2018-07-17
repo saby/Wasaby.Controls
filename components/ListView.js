@@ -441,6 +441,10 @@ define('SBIS3.CONTROLS/ListView',
                top: null,
                bottom: null
             },
+            /* Флаг, обозначающий, нужно ли нам показывать индикатор загрузки сверху при подгрузке списка вверх,
+               его не надо показывать, когда реестр загружен и сверху подгружаются записи, тогда они просто добавятся сверху,
+               а индикатор лишь будет вызывать моргание. */
+            _scrollUpIndicator: false,
             _virtualScrollShouldReset: false,
             _virtualScrollResetStickyHead: false,
             _setScrollPagerPositionThrottled: null,
@@ -1385,6 +1389,7 @@ define('SBIS3.CONTROLS/ListView',
 
               this._virtualScrollController._scrollHandler(event, scrollTop, scrollbarDragging);
             }
+            this._scrollUpIndicator = true;
          },
          _setScrollPagerPosition: function(){
             var right;
@@ -2231,6 +2236,7 @@ define('SBIS3.CONTROLS/ListView',
 
             this._reloadInfiniteScrollParams(offset);
             this._previousGroupBy = undefined;
+            this._scrollUpIndicator = false;
             // При перезагрузке нужно также почистить hoveredItem, иначе следующее отображение тулбара будет для элемента, которого уже нет (ведь именно из-за этого ниже скрывается тулбар).
             this._clearHoveredItem();
             this._unlockItemsToolbar();
@@ -3584,7 +3590,7 @@ define('SBIS3.CONTROLS/ListView',
                this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator_outside', !hasScroll);
             }
 
-            this._updateScrollIndicatorTopThrottled();
+            this._updateScrollIndicatorTopThrottled(type);
 
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
             if (loadAllowed && isContainerVisible && hasNextPage && !this.isLoading()) {
@@ -3604,10 +3610,11 @@ define('SBIS3.CONTROLS/ListView',
           * Обновляет положение ромашки, чтобы её не перекрывал фиксированный заголовок
           * @private
           */
-         _updateScrollIndicatorTop: function () {
+         _updateScrollIndicatorTop: function(type) {
             var top = '';
+            var isScrollingUp = type ? type === 'ud' : this._isScrollingUp();
             // Если скролим вверх и есть что загружать сверху
-            if (this._isScrollingUp() && this.getItems() && this._hasNextPage(this.getItems().getMetaData().more, this._scrollOffset.top) || this._loadingIndicator.hasClass('controls-ListView-scrollIndicator__up')) {
+            if (isScrollingUp && this.getItems() && this._hasNextPage(this.getItems().getMetaData().more, this._scrollOffset.top) || !type && this._loadingIndicator.hasClass('controls-ListView-scrollIndicator__up')) {
                top = StickyHeaderManager.getStickyHeaderIntersectionHeight(this.getContainer()) - this._scrollWatcher.getScrollContainer().scrollTop();
             }
             this._loadingIndicator.css('top', top);
@@ -3657,8 +3664,17 @@ define('SBIS3.CONTROLS/ListView',
                var offset = this._getNextOffset(),
                   self = this;
                //показываем индикатор вверху, если подгрузка вверх или вниз но перевернутая
-               this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', this._isScrollingUp());
-               this._showLoadingIndicator();
+               var isScrollingUp = type ? type === 'up' : this._isScrollingUp();
+               this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', isScrollingUp);
+               
+               if (isScrollingUp) {
+                  if (this._scrollUpIndicator) {
+                     this._showLoadingIndicator(type);
+                  }
+                  this._scrollUpIndicator = true;
+               } else {
+                  this._showLoadingIndicator(type);
+               }
                this._toggleEmptyData(false);
 
                /*TODO перенос события для курсоров глубже, делаю под ифом, чтоб не сломать текущий функционал*/
@@ -3943,17 +3959,19 @@ define('SBIS3.CONTROLS/ListView',
           * Проверяет, нахдится ли скролл вверху
           * @returns {*|*|boolean|Boolean}
           */
-         isScrollOnTop: function(){
+         isScrollOnTop: function() {
             return this._getScrollWatcher().isScrollOnTop();
          },
 
-         _showLoadingIndicator: function () {
+         _showLoadingIndicator: function(type) {
+            var isScrollingUp = type ? type === 'up' : this._isScrollingUp();
             if (!this._loadingIndicator) {
                this._createLoadingIndicator();
             }
             this.getContainer().addClass('controls-ListView__indicatorVisible');
+            
             //чтоб индикатор не перекрывал последние записи
-            if (!this._isScrollingUp()) {
+            if (!isScrollingUp) {
                this.getContainer().addClass('controls-ListView-scrollIndicator__down');
             }
          },

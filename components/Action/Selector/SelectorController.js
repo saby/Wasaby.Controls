@@ -79,7 +79,11 @@ define('SBIS3.CONTROLS/Action/Selector/SelectorController', [
                  *     </options>
                  * </pre>
                  */
-                filter: null
+                filter: null,
+                /**
+                 * @cfg {Boolean} Разрешить всплытие комманд selectorWrapperSelectionChanged, selectComplete
+                 */
+                allowSelectionCommandBubbling: false
              },
              _linkedObject: undefined,
              _selectButton: null
@@ -138,6 +142,10 @@ define('SBIS3.CONTROLS/Action/Selector/SelectorController', [
                 selectionType: this._options.selectionType
              });
              this._linkedObject = chooserWrapper._getLinkedObject();
+             
+             if (!this._options.allowSelectionCommandBubbling) {
+                return true;
+             }
           },
 
           /**
@@ -191,6 +199,10 @@ define('SBIS3.CONTROLS/Action/Selector/SelectorController', [
                    }
                 });
                 onChangeSelection();
+             }
+             
+             if (!this._options.allowSelectionCommandBubbling) {
+                return true;
              }
           },
            /**

@@ -4,6 +4,7 @@
 define('Controls/Application/AppData', [
    'Core/DataContext'
 ], function(DataContext) {
+
    return DataContext.extend({
       jsLinks: [],
       constructor: function(cfg) {

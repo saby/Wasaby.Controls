@@ -2,10 +2,11 @@
 define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
    'Core/core-merge',
    'Core/Deferred',
+   'Core/core-instance',
    'WS.Data/Utils',
    'SBIS3.CONTROLS/ControlHierarchyManager',
    'Core/IoC'
-], function(cMerge, Deferred, Utils, ControlHierarchyManager, IoC) {
+], function(cMerge, Deferred, cInstance, Utils, ControlHierarchyManager, IoC) {
    'use strict';
 
    /**
@@ -141,12 +142,13 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                try {
                   var deps = [];
                   if (isNewEnvironment()) {
+                     config._mode = meta.mode;
                      deps = ['Controls/Popup/Opener/BaseOpener', 'Controls/Popup/Compatible/Layer'];
                      if (meta.mode !== 'dialog' && config.isStack === true) {
                         deps.push('Controls/Popup/Opener/Stack/StackController');
                         config._type = 'stack';
                         config.className = (config.className || '') + ' controls-Stack';
-                     } else if (meta.mode !== 'dialog' && config.isStack === false) {
+                     } else if (meta.mode !== 'dialog' && config.isStack === false && config.target) {
                         deps.push('Controls/Popup/Opener/Sticky/StickyController');
                         config._type = 'sticky';
                      } else {
@@ -173,6 +175,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                               dialog._container.closest('.ws-float-area, .ws-float-area-stack-cut-wrapper, .ws-window').removeClass('ws-invisible');
                            };
                         }
+                        config._openFromAction = true;
                         self._dialog = new Component(config);
                      });
                   }
@@ -423,7 +426,11 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
       after: {
          destroy: function() {
             if (this._dialog) {
-               this._dialog.destroy();
+               if (cInstance.instanceOfModule(this._dialog, 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea')) {
+                  this._dialog.close();
+               } else {
+                  this._dialog.destroy();
+               }
                this._dialog = undefined;
             }
             document.removeEventListener('mousedown', this._documentClickHandler);

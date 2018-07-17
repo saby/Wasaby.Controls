@@ -35,7 +35,7 @@ define('Controls/List/ListViewModel',
                this._markedItem = this.getItemById(cfg.markedKey, cfg.keyProperty);
             }
 
-            this._selectedKeys =  cfg.selectedKeys || [];
+            this._selectedKeys = cfg.selectedKeys || [];
 
             //TODO надо ли?
             _private.updateIndexes(self);
@@ -48,8 +48,8 @@ define('Controls/List/ListViewModel',
             itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
             itemsModelCurrent.showActions = !this._editingItemData && (!this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive));
             itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem.item;
-            itemsModelCurrent.multiSelectStatus = this._selectedKeys.indexOf(itemsModelCurrent.key) >= 0;
-            itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility === 'visible';
+            itemsModelCurrent.multiSelectStatus = this._selectedKeys.indexOf(itemsModelCurrent.key) !== -1;
+            itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility === 'visible' || this._options.multiSelectVisibility === 'onhover';
             itemsModelCurrent.drawActions =
                itemsModelCurrent.itemActions &&
                ((itemsModelCurrent.itemActions.showed &&
@@ -72,6 +72,10 @@ define('Controls/List/ListViewModel',
          },
 
          setMarkedKey: function(key) {
+            if (key === this._options.markedKey) {
+               return;
+            }
+            this._options.markedKey = key;
             this._markedItem = this.getItemById(key, this._options.keyProperty);
             this._nextVersion();
             this._notify('onListChange');
@@ -144,11 +148,6 @@ define('Controls/List/ListViewModel',
             this._nextVersion();
          },
 
-         select: function(keys) {
-            this._selectedKeys = keys;
-            this._nextVersion();
-         },
-
          updateIndexes: function(startIndex, stopIndex) {
             if ((this._startIndex !== startIndex) || (this._stopIndex !== stopIndex)) {
                this._startIndex = startIndex;
@@ -193,8 +192,23 @@ define('Controls/List/ListViewModel',
             return this._actions[this.getIndexBySourceItem(collectionItem)];
          },
 
+         _updateSelection: function(selectedKeys) {
+            this._selectedKeys = selectedKeys || [];
+            this._nextVersion();
+         },
+
          getActiveItem: function() {
             return this._activeItem;
+         },
+
+         setMultiSelectVisibility: function(multiSelectVisibility) {
+            this._options.multiSelectVisibility = multiSelectVisibility;
+            this._nextVersion();
+            this._notify('onListChange');
+         },
+
+         getMultiSelectVisibility: function() {
+            return this._options.multiSelectVisibility;
          },
 
          __calcSelectedItem: function(display, selKey, keyProperty) {

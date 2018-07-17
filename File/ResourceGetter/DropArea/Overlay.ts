@@ -1,6 +1,5 @@
 /// <amd-module name="File/ResourceGetter/DropArea/Overlay" />
 /// <amd-dependency path="css!File/ResourceGetter/DropArea/Overlay" />
-
 import createGUID = require("Core/helpers/createGUID");
 
 type OnDropHandler = (data: DataTransfer) => void;
@@ -13,6 +12,8 @@ type OnDropHandler = (data: DataTransfer) => void;
 export type OverlayViewConfig = {
     dragText: string;
     dropText: string;
+    dragSubtitle: string;
+    dropSubtitle: string;
     innerClass: string;
 }
 export type OverlayConfig = Partial<OverlayViewConfig> & {
@@ -38,6 +39,9 @@ type HTMLDragEvent = DragEvent & {
 
 const OVERLAY_ID_PREFIX = "DropArea-";
 const OVERLAY_CLASS = 'DropArea_overlay';
+const TITLE_CLASS = "title";
+const SUBTITLE_CLASS = "subtitle";
+const SIZE_CLASS_POSTFIX = "_size_";
 const GLOBAL = (function(){ return this || (0,eval)('this'); }());
 const DOC = GLOBAL.document;
 const IS_SUPPORT = DOC && DOC.body;
@@ -74,26 +78,53 @@ let setOverlayPosition = (overlay, element) => {
         height: ${element.offsetHeight}px;
         z-index: ${getZIndex(element) + 1};
     `);
+    let sizes = [190, 280, 340, 400, 510];
+    for (let i = 0; i < sizes.length; i++) {
+        let width = sizes[i];
+        if (element.offsetWidth < width) {
+            element.classList.add(`${OVERLAY_CLASS}${SIZE_CLASS_POSTFIX}${i+1}`);
+            break;
+        }
+    }
 };
 // Создаёт обёртку над указанным элементом
 let createOverlay = (area: OverlayConfig, uid: string) => {
     let overlay = DOC.createElement("div");
     let element = area.element;
-    overlay.classList.add(OVERLAY_CLASS);
+    overlay.classList.add(OVERLAY_CLASS, area.innerClass);
     overlay.setAttribute('id', `${OVERLAY_ID_PREFIX}${uid}`);
     setOverlayPosition(overlay, element);
-    let inner = DOC.createElement("div");
-    if (area.innerClass) {
-        inner.classList.add(area.innerClass || "");
-    }
-    inner.innerText = area.dragText;
-    overlay.appendChild(inner);
+
+    // title
+    let title = DOC.createElement("div");
+    title.classList.add(TITLE_CLASS);
+    title.innerText = area.dragText;
+    overlay.appendChild(title);
+
+    // subtitle
+    let dragSubtitle = DOC.createElement("div");
+    dragSubtitle.classList.add(SUBTITLE_CLASS);
+    dragSubtitle.innerText = area.dragSubtitle;
+    overlay.appendChild(dragSubtitle);
+
     element.parentNode.insertBefore(overlay, element);
     return overlay;
 };
 let getArea = (element: HTMLElement) => {
     let uid = element.getAttribute("id").replace(OVERLAY_ID_PREFIX, "");
     return areas[uid];
+};
+let updateOverlayText = (target: HTMLElement, isDragOver: boolean) => {
+    let area = getArea(target);
+    let title = <HTMLElement> target.querySelector('.' + TITLE_CLASS);
+    let subtitle = <HTMLElement> target.querySelector('.' + SUBTITLE_CLASS);
+    if (isDragOver) {
+        title.innerText = area.dropText;
+        subtitle.innerText = area.dropSubtitle;
+        return
+    }
+    title.innerText = area.dragText;
+    subtitle.innerText = area.dragSubtitle;
 };
 
 /**
@@ -124,7 +155,7 @@ let overlayHandlers = {
         if (dropAreas.indexOf(event.target) === -1) {
             return
         }
-        event.target.querySelector('div').innerText = getArea(event.target).dropText;
+        updateOverlayText(event.target, true);
     },
     dragover(event: HTMLDragEvent) {
         // без этого нормально не убьётся стандартный обработчик drop
@@ -138,13 +169,17 @@ let overlayHandlers = {
         ) {
             return
         }
-        let target = dropAreas.indexOf(event.target) === -1? <HTMLElement> event.target.parentNode: event.target;
-        target.querySelector('div').innerText = getArea(target).dragText;
+        let target = dropAreas.indexOf(event.target) === -1?
+            <HTMLElement> event.target.parentNode:
+            event.target;
+        updateOverlayText(target, false);
     },
     drop(event: HTMLDragEvent) {
         event.preventDefault();
         event.stopPropagation();
-        let target = dropAreas.indexOf(event.target) === -1? <HTMLElement> event.target.parentNode: event.target;
+        let target = dropAreas.indexOf(event.target) === -1?
+            <HTMLElement> event.target.parentNode:
+            event.target;
         dragEnd();
         let area = getArea(target);
         area.ondrop(event.dataTransfer);
@@ -211,26 +246,36 @@ if (IS_SUPPORT) {
 const OPTION = {
     /**
      * @cfg {HTMLElement} DOM элемент для перетаскивания файлов
-     * @name File/ResourceGetter/DropArea#element
+     * @name File/ResourceGetter/DropArea/Overlay#element
      */
     /**
      * @cfg {Function} Обработчик события onDrop элемента. Позволяет получать ресурсы не ожидая вызова метода getFiles
-     * @name File/ResourceGetter/DropArea#ondrop
+     * @name File/ResourceGetter/DropArea/Overlay#ondrop
      */
     ondrop: (data: DataTransfer) => {},
     /**
-     * @cfg {String} Текст на внутреннем элементе во время перемещения файлов
-     * @name File/ResourceGetter/DropArea#dragText
+     * @cfg {String} Текст подсказки во время перемещения файлов
+     * @name File/ResourceGetter/DropArea/Overlay#dragText
      */
-    dragText: rk("Переместите файлы сюда"),
+    dragText: rk('Переместите файлы сюда'),
     /**
-     * @cfg {String} Текст на внутреннем элементе во время перемещения файлов непосредственно над ним
-     * @name File/ResourceGetter/DropArea#dropText
+     * @cfg {String} Текст подсказки во время перемещения файлов непосредственно над областью
+     * @name File/ResourceGetter/DropArea/Overlay#dropText
      */
-    dropText: rk("Отпустите файлы")
+    dropText: rk('Отпустите файлы'),
     /**
-     * @cfg {String} Класс внутреннего элемента обёртки, содержащий текст
-     * @name File/ResourceGetter/DropArea#innerClass
+     * @cfg {String} Текст дополнительной подсказки во время перемещения файлов
+     * @name File/ResourceGetter/DropArea/Overlay#dragSubtitle
+     */
+    dragSubtitle: '',
+    /**
+     * @cfg {String} Текст дополнительной подсказки во время перемещения файлов непосредственно над областью
+     * @name File/ResourceGetter/DropArea/Overlay#dropSubtitle
+     */
+    dropSubtitle: ''
+    /**
+     * @cfg {String} Дополнительный класс элемента обёртки
+     * @name File/ResourceGetter/DropArea/Overlay#innerClass
      */
 };
 

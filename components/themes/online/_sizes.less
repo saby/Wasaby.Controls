@@ -193,6 +193,7 @@
 @border-width_PeriodLiteDialog_hovered:          1px;
 @font-size_PeriodLiteDialog:                     15px;
 @min-width_PeriodLiteDialog:                     176px;
+@min-width_PeriodLiteDialog-medium:              146px;
 @standart-line-height_PeriodLiteDialog:          32px;
 @min-width_PeriodLiteDialog-item-years:          82px;
 @font-size_PeriodLiteDialog-currentValue:        15px;
@@ -201,10 +202,11 @@
 @padding-left-right_PeriodLiteDialog-currentValue:  10px;
 @font-size_PeriodLiteDialog-year:                15px;
 @height_PeriodLiteDialog-year:                   @standart-line-height_PeriodLiteDialog;
-@padding-left_PeriodLiteDialog-year:             2px;
+@padding-left_PeriodLiteDialog-year:             12px;
 @width_PeriodLiteDialog-year-prev-next-btns:     32px;
 @font-size_PeriodLiteDialog-year-prev-next-btns: 16px;
-@width_PeriodLiteDialog-home-icon:               24px;
+@width_PeriodLiteDialog-home-icon:               32px;
+@width_PeriodLiteDialog-home-icon-lite:          24px;
 @width_PeriodLiteDialog-halfyear-caption:        30px;
 @margin_PeriodLiteDialog-quarter: 0 0 @indents_PeriodLiteDialog (@width_PeriodLiteDialog-halfyear-caption + @indents_PeriodLiteDialog);
 @width_PeriodLiteDialog-quarter-caption:         28px;
@@ -304,6 +306,7 @@
 
 //DropdownList
 @max-height_DropdownList:       400px;
+@max-width_DropdownList:        700px;
 @height_DropdownList-item:      32px;
 @border-size_DropdownList:      1px;
 @spacing_DropdownList-pin:      12px;
@@ -440,7 +443,8 @@
 //Suggest VDOM
 @spacing_Suggest_suggestionsContainer_overInput: 8px;
 @border-width_suggestionsContainer:              1px;
-@vertical-spacing_Suggest_tabs:                  8px;
+@spacing-bottom_Suggest-between-search-tabs:     8px;
+@top_Suggest_close:                              8px;
 
 //CloseButton
 @border-width_CloseButton:               1px 0 1px 1px;
@@ -590,7 +594,7 @@
 @width_FastFilter-iconArrow:                16px;
 @spacing_FastFilter-between-icon-text:      0 2px 0 2px;
 //icon-button
-@box-shadow-IconButton:                  0px 1px 4px @color-IconButton__shadow;
+@box-shadow-IconButton:                  0px 1px 2px @color-IconButton__shadow;
 @height-IconButton_size-m:               24px;
 @width-IconButton_size-m:                24px;
 @height-IconButton_size-l:               28px;
@@ -650,6 +654,24 @@
 @spacing_ListView-group-between-text-expander: 6px;
 @spacing_ListView-group-between-rightTemplate-separator: 12px;
 
+//EngineBrowser
+//VDOM TreeGridView
+@width-TreeViewGrid-levelPadding_size_s: 24px;
+@width-TreeViewGrid-levelPadding_size_m: 30px;
+@width-TreeViewGrid-levelPadding_size_l: 38px;
+@width-TreeViewGrid-levelPadding_size_xl: 46px;
+@width-TreeViewGrid-levelPadding_size_default: @width-TreeViewGrid-levelPadding_size_s;
+@height_TreeGridView-nodeExpander: 16px;
+@width_TreeGridView-nodeExpander: 16px;
+@padding_TreeGridView-nodeExpander_size_s: 4px;
+@padding_TreeGridView-nodeExpander_size_m: 4px 10px 4px 4px;;
+@padding_TreeGridView-nodeExpander_size_l: 4px 14px 4px 8px;
+@padding_TreeGridView-nodeExpander_size_xl: 4px 18px 4px 12px;
+@padding_TreeGridView-nodeExpander_size_default: @padding_TreeGridView-nodeExpander_size_s;
+@font-size_TreeGridView-nodeExpander: 16px;
 //Browser
-@margin_Browser-search:             10px 12px;
-@margin_Browser-filterButton:       10px 8px 10px 0;
+@height_Browser-header:                   44px;
+@width_Browser-search:                    300px;
+@spacing_Browser-inner-element:           12px;
+@margin-left_Browser-search:              12px;
+@margin-right_Browser-filter:             8px;

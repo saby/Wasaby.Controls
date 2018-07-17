@@ -17,7 +17,7 @@ define('Controls/List/ListControl', [
     * @class Controls/List
     * @extends Controls/List/BaseControl
     * @mixes Controls/interface/ISource
-    * @mixes Controls/interface/IPromisedSelectable
+    * @mixes Controls/interface/IMultiSelectable
     * @mixes Controls/interface/IGroupedView
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
@@ -52,6 +52,27 @@ define('Controls/List/ListControl', [
       },
       addItem: function(options) {
          this._children.baseControl.addItem(options);
+      },
+      _onCheckBoxClick: function(e, key, status) {
+         var newSelectedKeys = this._options.selectedKeys.slice();
+         if (status) {
+            newSelectedKeys.splice(newSelectedKeys.indexOf(key), 1);
+            this._notify('selectedKeysChanged', [newSelectedKeys, [], [key]]);
+         } else {
+            newSelectedKeys.push(key);
+            this._notify('selectedKeysChanged', [newSelectedKeys, [key], []]);
+         }
+      },
+
+      _onAfterItemsRemoveHandler: function(e, keys, result) {
+         if (this._options.selectedKeys) {
+            var newSelectedKeys = this._options.selectedKeys.slice();
+            keys.forEach(function(key) {
+               newSelectedKeys.splice(newSelectedKeys.indexOf(key), 1);
+            });
+            this._notify('selectedKeysChanged', [newSelectedKeys, [], keys]);
+         }
+         this._notify('afterItemsRemove', [keys, result]);
       }
    });
 

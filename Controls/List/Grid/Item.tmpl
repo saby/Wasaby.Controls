@@ -10,11 +10,9 @@
                <ws:partial template="{{multiSelectTpl}}" multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" attr:class="controls-GridView__checkbox"/>
             </ws:if>
             <ws:else>
-               <div class="controls-Grid__row-cell__contentWrapper{{itemData.getCurrentColumn().column.align ? ' controls-Grid__row-cell__contentWrapper_halign_' + itemData.getCurrentColumn().column.align : ''}}">
-                  <ws:partial template="{{itemData.getCurrentColumn().template}}"
-                              attr:class="{{itemData.getCurrentColumn().withLadder ? 'controls-Grid__row-cell__content_withLadder'}}"
-                              itemData="{{itemData.getCurrentColumn()}}" />
-               </div>
+               <ws:partial template="{{itemData.getCurrentColumn().template}}"
+                           attr:class="{{itemData.getCurrentColumn().withLadder ? 'controls-Grid__row-cell__content_withLadder'}}{{itemData.getCurrentColumn().column.align ? ' controls-Grid__row-cell__content_halign_' + itemData.getCurrentColumn().column.align : ''}}"
+                           itemData="{{itemData.getCurrentColumn()}}" />
             </ws:else>
             <ws:if data="{{itemData.getLastColumnIndex() === itemData.columnIndex && itemData.itemActions  && itemData.itemActions.all && itemData.itemActions.all.length}}">
                <ws:if data="{{itemData.isSwiped}}">
