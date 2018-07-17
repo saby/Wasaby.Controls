@@ -2048,6 +2048,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      }
                   }
                }
+               this._tinyLastRng = this._tinyEditor.selection.getRng();
             },
             _onMouseUpCallback: function(e) { //в ie криво отрабатывает клик
                if (e.ctrlKey) {
@@ -2526,19 +2527,22 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   e.stopPropagation();
                   e.preventDefault();
                }
+               this._tinyLastRng = this.getTinyEditor().selection.getRng();
             },
             _onKeyUpCallback2: function(e) {
                this._typeInProcess = false;
                if (!(e.keyCode === cConstants.key.enter && e.ctrlKey)) { // Не нужно обрабатывать ctrl+enter, т.к. это сочетание для дефолтной кнопки
                   this._updateTextByTiny();
                }
+               this._tinyLastRng = this.getTinyEditor().selection.getRng();
             },
             _onKeyUpCallback3: function(e) {
-               var selection = this._tinyEditor.selection,
+               var selection = this.getTinyEditor().selection,
                   node = selection.getNode().parentNode;
                if (node.innerHTML === "<p><br></p>") {
                   node.innerHTML = '<p><br data-mce-bogus="1"></p>';//this._tinyEditor.settings.startContent
                }
+               this._tinyLastRng = selection.getRng();
             },
 
             _linkEditStart: function() {
@@ -2671,6 +2675,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
             saveCallbacks: function() {
                this._sanitizeClasses = this._sanitizeClasses.bind(this);
+               this._onFocusChangedCallbackTimeout = this._onFocusChangedCallbackTimeout.bind(this);
                this._prepareReviewContent = this._prepareReviewContent.bind(this);
                this._prepareContent = this._prepareContent.bind(this);
                this._performByReadyCallback = this._performByReadyCallback.bind(this);
