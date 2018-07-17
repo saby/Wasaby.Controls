@@ -1,7 +1,7 @@
 define([
-   'Controls/DragNDrop/Avatar',
+   'Controls/DragNDrop/DraggingTemplate',
    'Controls/DragNDrop/Entity/List/Items'
-], function(Avatar, Entity) {
+], function(DraggingTemplate, Entity) {
    'use strict';
 
    function crateEntity(itemsCount) {
@@ -12,17 +12,9 @@ define([
       });
    }
 
-   var avatar = new Avatar({entity: crateEntity(1)});
+   var avatar = new DraggingTemplate({entity: crateEntity(1)});
 
-   describe('Controls.DragNDrop.Avatar', function() {
-      it('default mainText', function() {
-         avatar._beforeMount({entity: crateEntity()});
-         assert.equal(avatar._mainText, 'Запись реестра');
-      });
-      it('default logo', function() {
-         avatar._beforeMount({entity: crateEntity()});
-         assert.equal(avatar._logo, 'icon-DocumentUnknownType');
-      });
+   describe('Controls.DragNDrop.DraggingTemplate', function() {
       it('itemsCount = 1', function() {
          avatar._beforeMount({entity: crateEntity(1)});
          assert.equal(avatar._itemsCount, undefined);
