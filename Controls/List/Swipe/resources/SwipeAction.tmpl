@@ -2,7 +2,7 @@
       title="{{!!action.title ? action.title}}"
       style="{{'height:' + action.height}}"
       on:click="_onActionClick(action, itemData)">
-    <ws:if data="{{!!action.icon}}">
+    <ws:if data="{{needShowIcon(action, swipeConfig.direction, itemData.hasShowedItemActionWithIcon)}}">
         <i class="{{action.icon}} {{swipeConfig.swipeIconSize}} controls-itemActionsV__action_icon_swipe"/>
     </ws:if>
     <ws:if data="{{needShowTitle(action, swipeConfig.type)}}">
