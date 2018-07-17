@@ -2663,6 +2663,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
             saveCallbacks: function() {
                this._performByReadyCallback = this._performByReadyCallback.bind(this);
+               this._onCutTimeout = this._onCutTimeout.bind(this);
                this._sanitizeClassCallback = this._sanitizeClassCallback.bind(this);
                this._onSetupCallback = this._onSetupCallback.bind(this);
                this._onInitCallback = this._onInitCallback.bind(this);
@@ -3832,6 +3833,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
             _sanitizeClassCallback: function(content, attributeName) {
                var
+                  options = this._options,
                   //проверка options для юнит тестов, тк там метод зовётся на прототипе
                   classValidator = options ? options.validateClass : null,
                   validateIsFunction = typeof classValidator === 'function',
