@@ -1395,7 +1395,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                            align = v;
                            return true;
                         }
-                        ;
                      });
                      if (align) {
                         afterProcess = function() {
@@ -2171,7 +2170,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      //если данные не из БТР и не из word`a, то вставляем как текст
                      //В Костроме юзают БТР с другим конфигом, у них всегда форматная вставка
                      if (this._clipboardText !== false) {
-                        e.content = this._getTextBeforePaste(editor);
+                        e.content = this._getTextBeforePaste(this.getTinyEditor());
                      }
                   }
                }
@@ -2184,11 +2183,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                // editor.plugins.paste.clipboard.pasteFormat = 'html';
             },
             _onPastePostProcessCallback: function(event) {
+               var editor = this.getTinyEditor();
                var content = event.node;
                var reUrlOnly = /^https?:\/\/[a-z0-9:=&%#_\-\.\/\?]+$/gi;
                var reUrl = /https?:\/\/[a-z0-9:=&%#_\-\.\/\?]+/i;
                var isPlainUrl = content.innerHTML.search(reUrlOnly) !== -1;
                var $content = $(content);
+               var offset;
                $content.find('[unselectable ="on"]').attr('data-mce-resize', 'false');
                if (!isPlainUrl) {
                   var $images = $content.find('img:not(.ws-fre__smile)');
@@ -2222,11 +2223,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                var selection = editor.selection;
                var rng = selection.getRng();
                var isAfterUrl;
+               var startNode;
                if (isPlainUrl) {
                   if (rng.collapsed) {
                      var endNode = rng.endContainer;
                      var text = endNode.nodeType === 1 ? endNode.innerHTML : endNode.nodeValue;
-                     var offset = rng.endOffset;
+                     offset = rng.endOffset;
                      if (text && offset < text.length && text.substring(offset, offset + 1).search(/[<\s]/gi) === -1) {
                         // Имеем вставку урла внутрь текста, с которым он сольётся - отделить его пробелом в конце
                         // Было бы лучше (намного) сделать этот урл сразу ссылкой, но тогда сервис декораторов не подхватит его
@@ -2236,10 +2238,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                }
                else {
-                  var startNode = rng.startContainer;
+                  startNode = rng.startContainer;
                   var value = startNode.nodeType === 1 ? startNode.innerHTML : startNode.nodeValue;
-                  var offset = rng.startOffset;
-                  if (startNode.nodeType == 3) {
+                  offset = rng.startOffset;
+                  if (startNode.nodeType === 3) {
                      // Нужно слить текст со всеми соседними текстовыми узлами (нормализовать родитьский узел здесь нельзя, так как слетит рэнж)
                      offset -= value.length;
                      value = this._getAdjacentTextNodesValue(startNode, false) + value;
@@ -2264,10 +2266,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   if (node.nodeType === 3) {
                      var dom = editor.dom;
                      if (!Array.prototype.some.call(content.childNodes, dom.isBlock)) {
+
                         var parent = dom.getParent(startNode, function(v) {
                            var p = v.parentNode;
                            return dom.isBlock(p) || 1 < p.childNodes.length;
                         }, editor.getBody());
+
                         if (parent !== node) {
                            var atStart = rng.endOffset === 0;
                            if (atStart || node.nodeValue.length === rng.endOffset) {
@@ -2865,7 +2869,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             _getAdjacentTextNodesValue: function(node, toEnd) {
                var prop = toEnd ? 'nextSibling' : 'previousSibling';
                var value = '';
-               for (var n = node[prop]; n && n.nodeType == 3; n = n[prop]) {
+               for (var n = node[prop]; n && n.nodeType === 3; n = n[prop]) {
                   value = toEnd ? value + n.nodeValue : n.nodeValue + value;
                }
                return value;
