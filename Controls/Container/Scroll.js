@@ -236,6 +236,10 @@ define('Controls/Container/Scroll',
                   this._displayState.heightFix = ScrollHeightFixUtil.calcHeightFix(this._children.content);
 
                   this._forceUpdate();
+               } else {
+                  this._displayState.hasScroll = _private.calcHasScroll(this);
+                  this._displayState.contentHeight = _private.getContentHeight(this);
+                  this._displayState.shadowPosition = _private.getShadowPosition(this);
                }
             },
 
