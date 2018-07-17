@@ -42,7 +42,8 @@ define('Controls/Popup/Previewer',
             var type = _private.getType(event.type);
 
             this._children.openerPreviewer.open({
-               target: event.target
+               target: event.target,
+               closeChildWindows: this._options.closeChildWindows
             }, type);
          },
 

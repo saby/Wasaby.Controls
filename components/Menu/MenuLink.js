@@ -59,12 +59,20 @@ define('SBIS3.CONTROLS/Menu/MenuLink', [
     * @cssModifier controls-Menu__hide-menu-header Скрывает из выпадающего меню заголовок, который устанавливают с помощью опции {@link caption}.
     */
 
-   var MenuLink = WSMenuButton.extend( [], /** @lends SBIS3.CONTROLS/Menu/MenuLink.prototype */ {
+   var MenuLink = WSMenuButton.extend([], /** @lends SBIS3.CONTROLS/Menu/MenuLink.prototype */ {
       $protected: {
          _zIndex: ''
       },
 
-      _modifyOptions : function() {
+      $constructor: function() {
+         if (this._container.hasClass('controls-Menu__hide-menu-header')) {
+            this._options.pickerClassName += ' controls-MenuLink__Menu-hide-header';
+         } else {
+            this._options.pickerClassName += ' controls-MenuLink__Menu-show-header';
+         }
+      },
+
+      _modifyOptions: function() {
          var opts = MenuLink.superclass._modifyOptions.apply(this, arguments);
          opts.pickerClassName += ' controls-MenuLink__Menu';
          opts.cssClassName += ' controls-MenuLink controls-Link';
@@ -78,11 +86,11 @@ define('SBIS3.CONTROLS/Menu/MenuLink', [
       },
 
       _toggleState: function() {
-          var  container = this._container;
-          container[0].className = container[0].className.replace(/(^|\s)controls-Link_state-\S+/g, '');
+         var  container = this._container;
+         container[0].className = container[0].className.replace(/(^|\s)controls-Link_state-\S+/g, '');
 
-          container.addClass('controls-Link_state-' + (this._options.enabled ? this._options.style : 'disabled'));
-          MenuLink.superclass._toggleState.apply(this, arguments);
+         container.addClass('controls-Link_state-' + (this._options.enabled ? this._options.style : 'disabled'));
+         MenuLink.superclass._toggleState.apply(this, arguments);
       }
    });
 
