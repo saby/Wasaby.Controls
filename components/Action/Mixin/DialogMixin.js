@@ -170,10 +170,10 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                      requirejs(deps, function(BaseOpener, CompatibleOpener, cfgTemplate) {
                         if (BaseOpener.isVDOMTemplate(cfgTemplate)) {
                            CompatibleOpener._prepareConfigForNewTemplate(config, cfgTemplate);
-                           config.className = 'ws-invisible'; //Пока не построился дочерний vdom  шаблон - скрываем панель, иначе будет прыжок
+                           config.className = (config.className || '') + ' ws-invisible'; //Пока не построился дочерний vdom  шаблон - скрываем панель, иначе будет прыжок
                            config.componentOptions._initCompoundArea = function(compoundArea) {
                               var dialog = self._dialog;
-                              dialog._container.closest('.ws-float-area, .ws-float-area-stack-cut-wrapper, .ws-window').removeClass('ws-invisible');
+                              dialog._container.closest('.ws-invisible').removeClass('ws-invisible');
                            };
                         }
                         config._openFromAction = true;
