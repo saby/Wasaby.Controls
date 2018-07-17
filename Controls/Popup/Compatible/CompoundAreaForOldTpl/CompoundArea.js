@@ -648,7 +648,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                      if (popupConfig.popupOptions.isModal) {
                         // Текущее состояние модальности задается в popupConfig
                         popupConfig.isModal = visible;
-                        ManagerController._manager._popupItems._reindex();
+
+                        // Изменили конфигурацию попапа, нужно, чтобы менеджер увидел эти изменения
+                        ManagerController.reindex();
                         ManagerController.update(id, popupConfig.popupOptions);
                      }
 

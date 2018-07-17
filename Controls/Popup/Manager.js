@@ -181,6 +181,15 @@ define('Controls/Popup/Manager',
          },
 
          /**
+          * Переиндексировать набор попапов, например после изменения конфигурации
+          * одного из них
+          * @function Controls/Popup/Manager#reindex
+          */
+         reindex: function() {
+            this._popupItems._reindex();
+         },
+
+         /**
           * Установить набор попапов
           * @function Controls/Popup/Manager#_redrawItems
           */
