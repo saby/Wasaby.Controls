@@ -642,6 +642,18 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
                      // Сразу обновим список классов на контейнере, чтобы при пересинхронизации он не "прыгал"
                      popupContainer.className = this._toggleVisibleClass(popupContainer.className, visible);
+
+                     // Если попап модальный, нужно чтобы Manager показал/скрыл/переместил оверлей
+                     // Из popupConfig.popupOptions.isModal узнаем, является ли попап модальным
+                     if (popupConfig.popupOptions.isModal) {
+                        // Текущее состояние модальности задается в popupConfig
+                        popupConfig.isModal = visible;
+
+                        // Изменили конфигурацию попапа, нужно, чтобы менеджер увидел эти изменения
+                        ManagerController.reindex();
+                        ManagerController.update(id, popupConfig.popupOptions);
+                     }
+
                      this._isVisible = visible;
                   }
                }
