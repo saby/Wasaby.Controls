@@ -131,20 +131,18 @@ define('Controls/Popup/Compatible/Layer', [
          }),
          data = {};
 
-      if (window && window.userInfo) {
-         data = window.userInfo;
+      //Получение данных из контекста
 
-         return expandUserInfo(data);
-      } else {
-         return userSource.call('GetCurrentUserInfo', {}).addCallback(function(res) {
-            data = Chain(res.getRow()).toObject();
+      var opt = document.querySelector('html').controlNodes;
 
-            return expandUserInfo(data);
-         }).addErrback(function(e) {
-            IoC.resolve('ILogger').error('User info', 'Transport error', e);
-            return {};
-         });
+      for (var i = 0, len = opt.length; i < len; i++) {
+         if (opt[i].control._getChildContext && opt[i].control._getChildContext().userInfoField) {
+            data = opt[i].control._getChildContext().userInfoField.userInfo;
+            break;
+         }
       }
+
+      return expandUserInfo(data);
 
       function expandUserInfo(data) {
          var deferred;
