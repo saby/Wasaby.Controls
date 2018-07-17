@@ -1,0 +1,32 @@
+<div>
+   <h1>MasterDetailContainer</h1>
+   <br/>
+
+   <Controls.Container.MasterDetail>
+      <ws:master>
+            <Controls.Container.Scroll>
+               <Controls.Container.MasterList>
+                  <Controls.List
+                          keyProperty="id"
+                          source="{{_viewSource}}">
+                     <ws:itemTemplate>
+                        <ws:partial template="tmpl!Controls/List/ItemTemplate"
+                                    class="{{itemTemplate.itemData.isSelected ? 'controls-MasterDetail__masterContainer__selected-item' : 'controls-MasterDetail__masterContainer__item'}}">
+                           <ws:contentTemplate>
+                              <div>
+                                 {{itemTemplate.itemData.item.title}}
+                              </div>
+                           </ws:contentTemplate>
+                        </ws:partial>
+                     </ws:itemTemplate>
+                  </Controls.List>
+               </Controls.Container.MasterList>
+            </Controls.Container.Scroll>
+      </ws:master>
+      <ws:detail>
+         <div>
+            {{detail.selectedMasterField}}
+         </div>
+      </ws:detail>
+   </Controls.Container.MasterDetail>
+</div>
