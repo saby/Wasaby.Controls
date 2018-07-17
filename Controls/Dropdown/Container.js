@@ -95,11 +95,15 @@ define('Controls/Dropdown/Container',
          },
 
          updateSelectedItems: function(instance, selectedKeys, keyProperty, dataLoadCallback) {
-            Chain(instance._items).each(function(item) {
-               if (selectedKeys.indexOf(item.get(keyProperty)) > -1) {
-                  instance._selectedItems.push(item);
-               }
-            });
+            if (selectedKeys[0] === null && instance._options.emptyText) {
+               instance._selectedItems.push(null);
+            } else {
+               Chain(instance._items).each(function(item) {
+                  if (selectedKeys.indexOf(item.get(keyProperty)) > -1) {
+                     instance._selectedItems.push(item);
+                  }
+               });
+            }
             if (dataLoadCallback) {
                dataLoadCallback(instance._selectedItems);
             }
@@ -158,8 +162,7 @@ define('Controls/Dropdown/Container',
          _beforeUpdate: function(newOptions) {
             if (newOptions.selectedKeys && !isEqual(newOptions.selectedKeys, this._options.selectedKeys)) {
                this._selectedItems = [];
-               _private.updateSelectedItems(this, newOptions.selectedKeys, newOptions.keyProperty);
-               this._notify('selectedItemsChanged', [this._selectedItems]);
+               _private.updateSelectedItems(this, newOptions.selectedKeys, newOptions.keyProperty, newOptions.dataLoadCallback);
             }
             if (newOptions.source && newOptions.source !== this._options.source) {
                if (newOptions.lazyItemsLoad) {
