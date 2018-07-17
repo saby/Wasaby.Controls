@@ -321,7 +321,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
             _modifyOptions: function(options) {
                options = RichTextArea.superclass._modifyOptions.apply(this, arguments);
-               options._prepareReviewContent = this._prepareReviewContent.bind({_options: options});
 
                if (options.singleLine) {
                   options.editorConfig.nowrap = true;
@@ -2661,6 +2660,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
             saveCallbacks: function() {
                this._sanitizeClasses = this._sanitizeClasses.bind(this);
+               this._prepareReviewContent = this._prepareReviewContent.bind(this);
                this._prepareContent = this._prepareContent.bind(this);
                this._performByReadyCallback = this._performByReadyCallback.bind(this);
                this._onCutTimeout = this._onCutTimeout.bind(this);
