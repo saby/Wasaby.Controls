@@ -321,7 +321,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
             _modifyOptions: function(options) {
                options = RichTextArea.superclass._modifyOptions.apply(this, arguments);
-               options._prepareReviewContent = this._prepareReviewContent.bind(this);
+               options._prepareReviewContent = function(text) {
+                  return this._prepareReviewContent(text, options);
+               }.bind(this);
                options._prepareContent = this._prepareContent.bind(this);
 
                if (options.singleLine) {
@@ -563,11 +565,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             insertHtml: function(html) {
                if (typeof html === 'string' && this._tinyEditor) {
                   this._performByReady(function() {
-                    this._performByReadyOnInsertHTML(html);
+                     this._performByReadyOnInsertHTML(html);
                   }.bind(this));
                }
             },
-            _performByReadyOnInsertHTML: function(html){
+            _performByReadyOnInsertHTML: function(html) {
                html = this._prepareContent(html);
                // Если по любым причинам редактор пуст абсолютно - восстановить минимальный контент
                // 1175088566 https://online.sbis.ru/opendoc.html?guid=5f7765c4-55e5-4e73-b7bd-3cd05c61d4e2
@@ -750,6 +752,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this._inputControl.unbind('mouseup dblclick click mousedown touchstart scroll');
                if (this._imageOptionsPanel) {
                   this._imageOptionsPanel.destroy();
+               }
+               if (this._options) {
+                  this._options._prepareReviewContent = null;
+                  this._options._prepareContent = null;
                }
                RichTextArea.superclass.destroy.apply(this, arguments);
 
@@ -3710,12 +3716,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
             },
 
-            _prepareReviewContent: function(text) {
+            _prepareReviewContent: function(text, options) {
+               var _options = options || this._options;
                if (text && text[0] !== '<') {
                   text = '<p>' + text.replace(/\n/gi, '<br/>') + '</p>';
                }
-               text = this._sanitizeClasses(text, true);
-               return this._options.highlightLinks ? LinkWrap.wrapURLs(LinkWrap.wrapFiles(text), true) : text;
+               text = this._sanitizeClasses(text, true, options);
+               return _options.highlightLinks ? LinkWrap.wrapURLs(LinkWrap.wrapFiles(text), true) : text;
             },
 
             //установка значения в редактор
@@ -3806,8 +3813,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             return true;*/
             },
 
-            _sanitizeClasses: function(text, images) {
-               var options = this._options;
+            _sanitizeClasses: function(text, images, options) {
+               var _options = options || this._options;
                var sanitizeOptions = {
                   validNodes: {
                      img: images ? {
@@ -3824,23 +3831,25 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      }
                   },
                   validAttributes: {
-                     'class': this._sanitizeClassCallback
+                     'class': function(content, attributeName) {
+                        this._sanitizeClassCallback(content, attributeName, _options);
+                     }.bind(this)
                   },
                   checkDataAttribute: false,
                   escapeInvalidTags: false
                };
-               var validAttributes = options ? options.validAttributes : null;
+               var validAttributes = _options ? _options.validAttributes : null;
                if (validAttributes && typeof validAttributes === 'object') {
                   sanitizeOptions.validAttributes = cMerge(validAttributes, sanitizeOptions.validAttributes);
                }
                return Sanitize(text, sanitizeOptions);
             },
 
-            _sanitizeClassCallback: function(content, attributeName) {
+            _sanitizeClassCallback: function(content, attributeName, options) {
                var
-                  options = this._options,
+                  _options = options || this._options,
                   //проверка options для юнит тестов, тк там метод зовётся на прототипе
-                  classValidator = options ? options.validateClass : null,
+                  classValidator = _options ? _options.validateClass : null,
                   validateIsFunction = typeof classValidator === 'function',
                   currentValue = content.attributes[attributeName].value,
                   classes = currentValue.split(' '),
