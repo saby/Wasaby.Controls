@@ -464,6 +464,8 @@ node('controls') {
                 deactivate
 
             """
+
+            junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
             echo "Ждем 10 сек"
             sleep(10)
             echo currentBuild.result
