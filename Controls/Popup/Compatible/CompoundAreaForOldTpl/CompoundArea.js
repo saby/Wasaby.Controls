@@ -594,7 +594,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          /* end RecordFloatArea */
 
          isVisible: function() {
-            if (this._options.autoShow !== undefined) {
+            if (this._options.autoShow === false) {
                return this._isVisible;
             }
             return true;
