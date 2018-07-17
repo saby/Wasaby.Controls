@@ -3709,7 +3709,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (text && text[0] !== '<') {
                   text = '<p>' + text.replace(/\n/gi, '<br/>') + '</p>';
                }
-               text = this._options._sanitizeClasses(text, true);
+               text = this._sanitizeClasses(text, true);
                return this._options.highlightLinks ? LinkWrap.wrapURLs(LinkWrap.wrapFiles(text), true) : text;
             },
 
@@ -3736,7 +3736,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      if (this._tinyReady.isReady()) {
                         this._tinyEditor.setContent(text);
                      } else {
-                        this._inputControl.html(this._options._sanitizeClasses(text, true));
+                        this._inputControl.html(this._sanitizeClasses(text, true));
                      }
                   }
                }
