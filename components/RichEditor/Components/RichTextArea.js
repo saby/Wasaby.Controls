@@ -321,6 +321,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
             _modifyOptions: function(options) {
                options = RichTextArea.superclass._modifyOptions.apply(this, arguments);
+               options._prepareReviewContent = this._prepareReviewContent.bind(this);
+               options._prepareContent = this._prepareContent.bind(this);
 
                if (options.singleLine) {
                   options.editorConfig.nowrap = true;
@@ -561,41 +563,44 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             insertHtml: function(html) {
                if (typeof html === 'string' && this._tinyEditor) {
                   this._performByReady(function() {
-                     html = this._prepareContent(html);
-                     // Если по любым причинам редактор пуст абсолютно - восстановить минимальный контент
-                     // 1175088566 https://online.sbis.ru/opendoc.html?guid=5f7765c4-55e5-4e73-b7bd-3cd05c61d4e2
-                     this._ensureHasMinContent();
-                     var editor = this._tinyEditor;
-                     var lastRng = this._tinyLastRng;
-                     if (lastRng) {
-                        // Если определён последний рэнж, значит вставка происходит в неактивный редактор или в отсутствии фокуса. Если текщий рэнж
-                        // не соответствунет ему - используем последний.
-                        // https://online.sbis.ru/opendoc.html?guid=e1e07406-30c3-493a-9cc0-b85ebdf055bd
-                        // https://online.sbis.ru/opendoc.html?guid=49da7b60-c4d2-46c8-b1b7-db1eb86e4443
-                        var rng = editor.selection.getRng();
-                        if (rng.startContainer !== lastRng.startContainer || rng.startOffset !== lastRng.startOffset ||
-                           rng.endContainer !== lastRng.endContainer || rng.endOffset !== lastRng.endOffset) {
-                           editor.selection.setRng(lastRng);
-                        }
-                     }
-                     editor.insertContent(html);
-                     // Иногда в FF после вставки рэнж охватывает весь элемент редактора, а не находится внутри него - поставить курсор в конец
-                     // в таком случае
-                     // 1174769960 https://online.sbis.ru/opendoc.html?guid=268d5fe6-e038-40d3-b185-eff696796f12
-                     // 1174769988 https://online.sbis.ru/opendoc.html?guid=5c37d724-1e7b-4627-afe6-257db37d4798
-                     if (cConstants.browser.firefox) {
-                        var rng = editor.selection.getRng();
-                        var editorBody = editor.getBody();
-                        if (rng.startContainer === editorBody && rng.endContainer === editorBody) {
-                           this.setCursorToTheEnd();
-                        }
-                     }
-                     //вставка контента может быть инициирована любым контролом,
-                     //необходимо нотифицировать о появлении клавиатуры в любом случае
-                     if (cConstants.browser.isMobilePlatform) {
-                        this._notifyMobileInputFocus();
-                     }
+                    this._performByReadyOnInsertHTML(html);
                   }.bind(this));
+               }
+            },
+            _performByReadyOnInsertHTML: function(html){
+               html = this._prepareContent(html);
+               // Если по любым причинам редактор пуст абсолютно - восстановить минимальный контент
+               // 1175088566 https://online.sbis.ru/opendoc.html?guid=5f7765c4-55e5-4e73-b7bd-3cd05c61d4e2
+               this._ensureHasMinContent();
+               var editor = this._tinyEditor;
+               var lastRng = this._tinyLastRng;
+               if (lastRng) {
+                  // Если определён последний рэнж, значит вставка происходит в неактивный редактор или в отсутствии фокуса. Если текщий рэнж
+                  // не соответствунет ему - используем последний.
+                  // https://online.sbis.ru/opendoc.html?guid=e1e07406-30c3-493a-9cc0-b85ebdf055bd
+                  // https://online.sbis.ru/opendoc.html?guid=49da7b60-c4d2-46c8-b1b7-db1eb86e4443
+                  var rng = editor.selection.getRng();
+                  if (rng.startContainer !== lastRng.startContainer || rng.startOffset !== lastRng.startOffset ||
+                     rng.endContainer !== lastRng.endContainer || rng.endOffset !== lastRng.endOffset) {
+                     editor.selection.setRng(lastRng);
+                  }
+               }
+               editor.insertContent(html);
+               // Иногда в FF после вставки рэнж охватывает весь элемент редактора, а не находится внутри него - поставить курсор в конец
+               // в таком случае
+               // 1174769960 https://online.sbis.ru/opendoc.html?guid=268d5fe6-e038-40d3-b185-eff696796f12
+               // 1174769988 https://online.sbis.ru/opendoc.html?guid=5c37d724-1e7b-4627-afe6-257db37d4798
+               if (cConstants.browser.firefox) {
+                  var rng = editor.selection.getRng();
+                  var editorBody = editor.getBody();
+                  if (rng.startContainer === editorBody && rng.endContainer === editorBody) {
+                     this.setCursorToTheEnd();
+                  }
+               }
+               //вставка контента может быть инициирована любым контролом,
+               //необходимо нотифицировать о появлении клавиатуры в любом случае
+               if (cConstants.browser.isMobilePlatform) {
+                  this._notifyMobileInputFocus();
                }
             },
 
