@@ -394,7 +394,20 @@ define([
             assert.equal(SwipeControl._private.needShowTitle({title: true, icon: true}, 9), false);
             assert.equal(SwipeControl._private.needShowTitle({title: true, icon: true}, 10), false);
          });
-
+         it('_private needShowIcon', function() {
+            assert.isTrue(SwipeControl._private.needShowIcon({icon: 'icon-16 icon-Alert icon-primary'}, 'row', true),
+               'Incorrect result needShowIcon({icon: "icon"}, "row", true).');
+            assert.isTrue(SwipeControl._private.needShowIcon({icon: 'icon-16 icon-Alert icon-primary'}, 'column', true),
+               'Incorrect result needShowIcon({icon: "icon"}, "column", true).');
+            assert.isTrue(SwipeControl._private.needShowIcon({}, 'row', true),
+               'Incorrect result needShowIcon({}, "row", true).');
+            assert.isFalse(SwipeControl._private.needShowIcon({}, 'row', false),
+               'Incorrect result needShowIcon({}, "row", false).');
+            assert.isFalse(SwipeControl._private.needShowIcon({}, 'column', true),
+               'Incorrect result needShowIcon({}, "column", true).');
+            assert.isFalse(SwipeControl._private.needShowIcon({}, 'column', false),
+               'Incorrect result needShowIcon({}, "column", false).');
+         });
          it('_private needShowSeparator', function() {
             var
                itemData = {
