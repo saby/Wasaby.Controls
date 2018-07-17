@@ -26,6 +26,7 @@ function(cMerge,
             type: cfg._type,
             handlers: cfg.handlers,
             _initCompoundArea: cfg._initCompoundArea,
+            _mode: cfg._mode,
 
             // На каждое обновление конфига генерируем новый id, чтобы понять, что нужно перерисовать шаблон
             _compoundId: randomId('compound-')
@@ -192,6 +193,10 @@ function(cMerge,
          });
          if (cfg.hasOwnProperty('closeByExternalClick')) {
             cfg.autoHide = cfg.closeByExternalClick;
+         }
+
+         if (cfg.hasOwnProperty('closeChildWindows')) {
+            newCfg.dialogOptions.closeChildWindows = cfg.closeChildWindows;
          }
 
          if (cfg.verticalAlign && cfg.verticalAlign.side === 'top') {
