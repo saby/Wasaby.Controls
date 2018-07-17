@@ -136,7 +136,7 @@ function(cMerge,
 
          cfg.corner = cfg.corner || {};
          if (cfg.direction !== 'right' && cfg.direction !== 'left') {
-            cfg.direction = cfg.direction ? 'left' : 'right';
+            cfg.direction = 'right';
          }
          cfg.corner.horizontal = revertPosition[cfg.direction];
 
