@@ -7,37 +7,17 @@ define('Controls/Application/Core',
       'tmpl!Controls/Application/Core',
       'Controls/Application/AppData',
       'Controls/Application/HeadDataContext',
+      'Core/css-resolve',
       'native-css'
    ],
-   function(Control, template, AppData, HeadDataContext, nativeCss) {
+   function(Control,
+      template,
+      AppData,
+      HeadDataContext,
+      cssResolve,
+      nativeCss) {
 
       'use strict';
-
-      /*COPYPASTE FROM Core/css-resolver
-      * заливаю так
-      * когда WS соберется и попадет в SDK - этот кусок будет удален
-      * */
-
-      var global = (function() {
-         return this || (0, eval)('this');
-      }());
-
-      var buildMode = global.contents ? global.contents.buildMode : 'debug',
-         isDebugMode = function() {
-            return global.document && global.document.cookie && global.document.cookie.indexOf('s3debug=true') > -1;
-         };
-
-      var suffix = '';
-      if (buildMode === 'release' && !isDebugMode()) {
-         suffix = '.min';
-      }
-      if (global.buildnumber && !isDebugMode()) {
-         suffix += '.v' + global.buildnumber;
-      }
-      
-      function getCssP(path) {
-         return (window.wsConfig.resourceRoot + '/' + path + suffix + '.css').replace('//', '/');
-      }
 
       var AppCore = Control.extend({
          _template: template,
@@ -46,7 +26,7 @@ define('Controls/Application/Core',
             var self = this;
             nativeCss.load = function(path, require, load, conf) {
                load(null);
-               self.headDataCtx.pushCssLink(getCssP(path));
+               self.headDataCtx.pushCssLink(cssResolve(path));
                self.headDataCtx.updateConsumers();
             };
 
