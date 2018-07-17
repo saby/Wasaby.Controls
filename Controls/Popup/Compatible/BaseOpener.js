@@ -148,6 +148,7 @@ function(cMerge,
             cfg.templateOptions.autoShow = cfg.autoShow;
             cfg.templateOptions._isVisible = cfg.autoShow;
             if (!cfg.autoShow) {
+               cfg.closeByExternalClick = false;
                cfg.className += ' ws-hidden';
             }
          }
