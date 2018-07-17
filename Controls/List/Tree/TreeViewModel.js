@@ -155,6 +155,12 @@ define('Controls/List/Tree/TreeViewModel', [
             }
 
             return current;
+         },
+
+         setRoot: function(root) {
+            this._display.setRoot(root);
+            this._nextVersion();
+            this._notify('onListChange');
          }
 
       });

@@ -11,6 +11,7 @@ define('Controls/List/TreeGridView/TreeGridView', [
          _defaultItemTemplate: DefaultItemTpl,
          _onNodeExpanderClick: function(e, dispItem) {
             this._notify('nodeExpanderClick', [dispItem], {bubbling: true});
+            e.stopImmediatePropagation();
          }
       });
 

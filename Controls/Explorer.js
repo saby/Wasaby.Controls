@@ -1,11 +1,26 @@
 define('Controls/Explorer', [
-   'Core/Control'
-
-], function(Control
-) {
+   'Core/Control',
+   'tmpl!Controls/Explorer/Explorer',
+   'WS.Data/Entity/VersionableMixin',
+   'Controls/TreeGrid',
+   'Controls/BreadCrumbs/Path'
+], function(Control, template) {
    'use strict';
 
-   var _private = {};
+   var _private = {
+      setRoot: function(self, item) {
+         self._root = item.getId();
+      },
+      dataLoadCallback: function(self, data) {
+         var
+            path = data.getMetaData().path;
+         if (path) {
+            self._breadCrumbsItems = data.getMetaData().path;
+         } else {
+            self._breadCrumbsItems = [];
+         }
+      }
+   };
 
    /**
     * Hierarchical list that can expand and go inside the folders. Can load data from data source.
@@ -28,7 +43,23 @@ define('Controls/Explorer', [
     */
 
    var Explorer = Control.extend({
+      _template: template,
+      _breadCrumbsItems: null,
+      _root: null,
+      constructor: function() {
+         this._crumbs = [];
+         this._dataLoadCallback = _private.dataLoadCallback.bind(null, this);
+         return Explorer.superclass.constructor.apply(this, arguments);
+      },
+      _onItemClick: function(event, item) {
+         _private.setRoot(this, item);
+      },
+      _onBreadCrumbsArrowActivated: function() {
 
+      },
+      _onBreadCrumbsClick: function() {
+
+      }
    });
    return Explorer;
 });

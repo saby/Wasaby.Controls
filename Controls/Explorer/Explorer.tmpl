@@ -1,0 +1,10 @@
+<div class="controls-Explorer">
+   <Controls.BreadCrumbs.Path name="explorerPath"
+                              keyProperty="{{_options.keyProperty}}"
+                              displayProperty="{{_options.displayProperty}}"
+                              items="{{_breadCrumbsItems}}"
+                              on:arrowActivated="_onBreadCrumbsArrowActivated()"
+                              on:itemClick="_onBreadCrumbsClick()" />
+   <Controls.TreeGrid root="{{_root}}" scope="{{_options}}" on:itemClick="_onItemClick()" dataLoadCallback="{{_dataLoadCallback}}">
+   </Controls.TreeGrid>
+</div>
