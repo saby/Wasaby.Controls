@@ -458,7 +458,7 @@ node('controls') {
         def site = "http://${NODE_NAME}:30010"
         site.trim()
         dir("./controls/tests/int"){
-            tmp_smoke = sh returnStatus:true, script: """
+            sh"""
                 source /home/sbis/venv_for_test/bin/activate
                 ${python_ver} start_tests.py --files_to_start smoke_test.py --SERVER_ADDRESS ${server_address} --RESTART_AFTER_BUILD_MODE --BROWSER chrome
                 deactivate
@@ -466,10 +466,8 @@ node('controls') {
             """
 
             junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-            echo "Ждем 10 сек"
-            sleep(10)
-            echo currentBuild.result
-            if ( "${tmp_smoke}" != "0" ) {
+            sleep(5)
+            if ( "${currentBuild.result}" != "SUCCESS" ) {
                 currentBuild.result = 'FAILURE'
                 currentBuild.displayName = "#${env.BUILD_NUMBER} SMOKE TEST FAIL"
                 gitlabStatusUpdate()
