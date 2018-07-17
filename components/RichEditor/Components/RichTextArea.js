@@ -322,8 +322,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             _modifyOptions: function(options) {
                options = RichTextArea.superclass._modifyOptions.apply(this, arguments);
                options._prepareReviewContent = this._prepareReviewContent.bind({_options: options});
-               options._prepareContent = this._prepareContent.bind(this);
-               options._sanitizeClasses = this._sanitizeClasses.bind(this);
+
                if (options.singleLine) {
                   options.editorConfig.nowrap = true;
                   if (options.autoHeight) {
@@ -339,7 +338,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
 
             $constructor: function() {
-               var self = this;
 
                this._publish('onInitEditor', 'onUndoRedoChange', 'onNodeChange', 'onFormatChange', 'onToggleContentSource');
 
@@ -2156,7 +2154,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                //равносильно тому что d&d совершается внутри редактора => не надо обрезать изображение
                //upd: в костроме форматная вставка, не нужно вырезать лишние теги
                if (!this._mouseIsPressed && options.editorConfig.paste_as_text) {
-                  e.content = options._sanitizeClasses(e.content, false);
+                  e.content = this._sanitizeClasses(e.content, false);
                }
                this._mouseIsPressed = false;
                // при форматной вставке по кнопке мы обрабаотываем контент через событие tinyMCE
@@ -2662,6 +2660,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
             },
             saveCallbacks: function() {
+               this._sanitizeClasses = this._sanitizeClasses.bind(this);
+               this._prepareContent = this._prepareContent.bind(this);
                this._performByReadyCallback = this._performByReadyCallback.bind(this);
                this._onCutTimeout = this._onCutTimeout.bind(this);
                this._sanitizeClassCallback = this._sanitizeClassCallback.bind(this);
