@@ -51,6 +51,7 @@ define('Controls/Input/Dropdown',
          _selectedItemsChangedHandler: function(event, items) {
             this._setText(items);
             this._icon = items[0].get('icon');
+            this._notify('textChanged', [this._text]);
             this._notify('selectedKeysChanged', [_private.getSelectedKeys(items, this._options.keyProperty)]);
          },
 

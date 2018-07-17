@@ -159,8 +159,7 @@ define('Controls/Dropdown/Container',
          _beforeUpdate: function(newOptions) {
             if (newOptions.selectedKeys && !isEqual(newOptions.selectedKeys, this._options.selectedKeys)) {
                this._selectedItems = [];
-               _private.updateSelectedItems(this, newOptions.selectedKeys, newOptions.keyProperty);
-               this._notify('selectedItemsChanged', [this._selectedItems]);
+               _private.updateSelectedItems(this, newOptions.selectedKeys, newOptions.keyProperty, newOptions.dataLoadCallback);
             }
             if (newOptions.source && newOptions.source !== this._options.source) {
                if (newOptions.lazyItemsLoad) {
