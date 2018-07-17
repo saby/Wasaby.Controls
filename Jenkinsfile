@@ -457,15 +457,15 @@ node('controls') {
 
         def site = "http://${NODE_NAME}:30010"
         site.trim()
-        dir("./controls/tests/reg"){
+        dir("./controls/tests/int"){
             tmp_smoke = sh returnStatus:true, script: """
                 source /home/sbis/venv_for_test/bin/activate
                 ${python_ver} start_tests.py --files_to_start smoke_test.py --SERVER_ADDRESS ${server_address} --RESTART_AFTER_BUILD_MODE --BROWSER chrome
                 deactivate
 
             """
-            echo "Ждем 5 сек"
-            sleep(5000)
+            echo "Ждем 10 сек"
+            sleep(10)
             echo currentBuild.result
             if ( "${tmp_smoke}" != "0" ) {
                 currentBuild.result = 'FAILURE'
