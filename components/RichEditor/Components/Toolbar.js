@@ -107,6 +107,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
             RichEditorToolbar.superclass.init.call(this);
             //Необходимо делать блокировку фокуса на пикере comboBox`a чтобы редактор не терял выделение
             //Делаем это при первом показе пикера
+            this._setExpandedAnimateCallback = this._setExpandedAnimateCallback.bind(this);
+
             if (this.getItems().getRecordById('style')){
                this._styleBox = this.getItemInstance('style');
                this._pickerOpenHandler = this._pickerOpenHandler.bind(this);
@@ -297,6 +299,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
             this._handlersInstances.undoRedo = this._undoRedoChangeHandler.bind(this);
             this._handlersInstances.node = this._nodeChangeHandler.bind(this);
             this._handlersInstances.source = this._toggleContentSourceHandler.bind(this);
+
             if (this.getItems().getRecordById('undo') && this.getItems().getRecordById('redo')) {
                editor.subscribe('onUndoRedoChange', this._handlersInstances.undoRedo);
             }
