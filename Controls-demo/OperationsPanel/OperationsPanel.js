@@ -2,11 +2,13 @@ define('Controls-demo/OperationsPanel/OperationsPanel', [
    'Core/Control',
    'WS.Data/Source/Memory',
    'tmpl!Controls-demo/OperationsPanel/OperationsPanel',
+   'Controls-demo/List/Tree/GridData',
+   'Controls-demo/List/Tree/TreeMemory',
    'Controls/List',
    'Controls/List/MultiSelector',
    'Controls/Container/MultiSelector',
    'css!Controls-demo/OperationsPanel/OperationsPanel'
-], function(Control, Memory, template) {
+], function(Control, Memory, template, GridData, TreeMemory) {
    'use strict';
    var deleteItem = {
          id: 0,
@@ -15,55 +17,18 @@ define('Controls-demo/OperationsPanel/OperationsPanel', [
          title: 'Удалить',
          parent: null
       },
-      srcData = [
-         {
-            id: 1,
-            title:
-               'Настолько длинное название папки что оно не влезет в максимальный размер'
-         },
-         {
-            id: 2,
-            title: 'Notebooks'
-         },
-         {
-            id: 3,
-            title: 'Smartphones'
-         },
-         {
-            id: 4,
-            title: 'Notebook Lenovo G505 59426068'
-         },
-         {
-            id: 5,
-            title: 'Notebook Packard Bell EasyNote TE69HW-29572G32'
-         },
-         {
-            id: 6,
-            title: 'Notebook ASUS X550LC-XO228H'
-         },
-         {
-            id: 7,
-            title: 'Notebook Lenovo IdeaPad G5030 (80G0001FRK)'
-         },
-         {
-            id: 8,
-            title: 'Notebook Lenovo G505 59426068'
-         },
-         {
-            id: 9,
-            title: 'Lenovo'
-         },
-         {
-            id: 10,
-            title:
-               'Настолько длинное название папки что оно не влезет в максимальный размер'
-         }
-      ],
       defaultItems = [
          deleteItem,
          {
             id: 1,
             icon: 'icon-Time',
+            '@parent': false,
+            parent: null
+         },
+         {
+            id: 2,
+            icon: 'icon-Move',
+            title: 'Перенести',
             '@parent': false,
             parent: null
          },
@@ -129,6 +94,12 @@ define('Controls-demo/OperationsPanel/OperationsPanel', [
       _width: '540',
       _px: true,
       _sourceCount: 15,
+      _columns: [{
+         displayProperty: 'Наименование'
+      }],
+      _moverFiler: {
+         onlyFolders: true
+      },
 
       constructor: function() {
          this._itemClick = this._itemClick.bind(this);
@@ -162,29 +133,28 @@ define('Controls-demo/OperationsPanel/OperationsPanel', [
       },
 
       _createSource: function() {
-         var newData = [];
-         for (var i = 0; i < +this._sourceCount; i++) {
-            var item = {
-               id: i,
-               title: srcData[i % 10].title + ' ' + i
-            };
-            newData.push(item);
-         }
-         this._viewSource = new Memory({
+         this._viewSource = new TreeMemory({
             idProperty: 'id',
-            data: newData
+            data: GridData.catalog
          });
       },
 
       _itemClick: function(event, item) {
          var itemId = item.getId();
          this._currentClick = 'Вы нажали на ' + itemId;
+         var selected = this._children.multiSelector.getSelection().selected;
          if (itemId === 0) {
-            var selected = this._children.multiSelector.getSelection().selected;
             if (selected && selected.length && selected[0] === null) {
                this._showError('невозможно удалить всё');
             } else {
-               this._children.listView.removeItems(selected);
+               this._children.remover.removeItems(selected);
+            }
+         }
+         if (itemId === 2) {
+            if (selected && selected.length) {
+               this._children.dialogMover.moveItemsWithDialog(selected);
+            } else {
+               this._showError('Необходимо выбрать записи');
             }
          }
       },

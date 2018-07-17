@@ -22,13 +22,6 @@
               <ws:partial template ="{{_multiSelectTpl}}"/>
            </ws:multiSelectTpl>
         </ws:partial>
-        <Controls.List.Mover ws:content="listView"
-                             name="moveControl"
-                             keyProperty="{{_options.keyProperty}}"
-                             on:beforeItemsMove="_beforeItemsMove()"
-                             on:afterItemsMove="_afterItemsMove()"
-                             sourceController="{{_sourceController}}"
-                             listModel="{{_listViewModel}}"/>
        <Controls.List.EditInPlace ws:content="listView"
                                   name="editInPlace"
                                   editingConfig="{{_options.editingConfig}}"
@@ -39,12 +32,6 @@
                                   on:afterItemEndEdit="_onAfterItemEndEdit()"
                                   listModel="{{_listViewModel}}"
                                   source="{{_sourceController}}" />
-       <Controls.List.Remove ws:content="listView"
-                             name="removeControl"
-                             sourceController="{{_sourceController}}"
-                             listModel="{{_listViewModel}}"
-                             on:beforeItemsRemove="_beforeItemsRemove()"
-                             on:afterItemsRemove="_afterItemsRemove()"/>
         <Controls.List.ItemActions.ItemActionsControl
                 ws:content="listView"
                 on:commitActionClick="_commitEditActionHandler()"
