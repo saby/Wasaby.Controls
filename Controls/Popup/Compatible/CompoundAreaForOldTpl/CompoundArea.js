@@ -1,5 +1,6 @@
 define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
    [
+      'require',
       'Core/Control',
       'tmpl!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Lib/Mixins/LikeWindowMixin',
@@ -24,6 +25,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'WS.Data/Entity/InstantiableMixin'
    ],
    function(
+      require,
       Control,
       template,
       LikeWindowMixin,
