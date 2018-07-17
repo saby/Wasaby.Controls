@@ -466,7 +466,6 @@ node('controls') {
             """
 
             junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-            sleep(5)
             if ( "${currentBuild.result}" != "SUCCESS" ) {
                 currentBuild.result = 'FAILURE'
                 currentBuild.displayName = "#${env.BUILD_NUMBER} SMOKE TEST FAIL"
