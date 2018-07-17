@@ -1259,10 +1259,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
                }
             }
          } else {
-            var opener = this.getOpener() || this.getParent();
-            var openerPopup = opener && opener._container && opener._container.closest('.controls-Popup, .controls-FloatArea, .ws-window:not(".controls-CompoundArea"), .controls-Menu__Popup');
-            var openerPopupZIndex = openerPopup && openerPopup.css('z-index');
-
+            var openerPopupZIndex = this._getOpenerZIndex();
             if (openerPopupZIndex) {
                this._zIndex = parseInt(openerPopupZIndex, 10) + 1; //Выше vdom-окна, над которым открывается попап
             } else {
@@ -1272,6 +1269,19 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             }
          }
          return this._zIndex;
+      },
+
+      _getOpenerZIndex: function() {
+         var opener = this.getOpener() || this.getParent();
+         var selector = '.controls-Popup, .controls-FloatArea, .ws-window:not(".controls-CompoundArea"), .controls-StylesPalette, .controls-Menu__Popup';
+         var openerPopup = opener && opener._container && opener._container.closest(selector);
+         //Из-за того, что все вешают классы как хотят, по селектору мы можем добраться до контейнера, который лежит внутри попапа.
+         //Пытаемся достучаться до корневой ноды попапа, чтобы взять  z-index
+         while (openerPopup && openerPopup.length > 0 && (!openerPopup.css('z-index') || openerPopup.css('z-index') === 'auto')) {
+            openerPopup = openerPopup.parent();
+         }
+
+         return openerPopup && openerPopup.css('z-index');
       },
 
       _isNewEnvironment: function() {
