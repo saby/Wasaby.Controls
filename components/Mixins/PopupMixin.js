@@ -1260,7 +1260,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             }
          } else {
             var opener = this.getOpener() || this.getParent();
-            var openerPopup = opener && opener._container && opener._container.closest('.controls-Popup, .controls-FloatArea, .ws-window:not(".controls-CompoundArea")');
+            var openerPopup = opener && opener._container && opener._container.closest('.controls-Popup, .controls-FloatArea, .ws-window:not(".controls-CompoundArea"), .controls-Menu__Popup');
             var openerPopupZIndex = openerPopup && openerPopup.css('z-index');
 
             if (openerPopupZIndex) {
