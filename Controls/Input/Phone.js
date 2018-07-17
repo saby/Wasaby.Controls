@@ -20,6 +20,7 @@ define('Controls/Input/Phone',
        * @public
        * @category Input
        * @demo Controls-demo/Input/Phone/Phone
+       * @demo Controls-demo/Example/Input/Phone
        */
 
       var Phone = Control.extend({
@@ -46,6 +47,12 @@ define('Controls/Input/Phone',
          _focusinHandler: function() {}
       });
 
+      Phone.getDefaultOptions = function() {
+         return {
+            value: ''
+         };
+      };
+      
       return Phone;
    }
 );

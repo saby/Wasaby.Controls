@@ -25,6 +25,7 @@ define('Controls/Input/Mask',
        * @public
        * @category Input
        * @demo Controls-demo/Input/Mask/Mask
+       * @demo Controls-demo/Example/Input/Mask
        */
 
       /**

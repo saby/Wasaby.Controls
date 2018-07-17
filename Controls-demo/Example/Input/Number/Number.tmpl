@@ -1,0 +1,16 @@
+<div class="example-Number">
+   <div class="example-Base__title">Number input field</div>
+   <div class="example-Base__specify">With tip in</div>
+   <Controls.Input.Number placeholder="Count"
+                          precision="{{0}}"
+                          bind:value="_value1"/>
+   <div class="example-Base__specify example-Base__specify_detached">Input of integers with a set range (0-999)</div>
+   <Controls.Input.Number placeholder="Count"
+                          precision="{{0}}"
+                          integersLength="{{3}}"
+                          bind:value="_value2"/>
+   <div class="example-Base__specify example-Base__specify_detached">Input of integer and fractional part</div>
+   <Controls.Input.Number placeholder="Count"
+                          precision="{{2}}"
+                          bind:value="_value3"/>
+</div>

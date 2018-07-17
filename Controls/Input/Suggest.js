@@ -22,6 +22,7 @@ define('Controls/Input/Suggest',
        * @public
        * @category Input
        * @demo Controls-demo/Suggest/Suggest
+       * @demo Controls-demo/Example/Input/Suggest
        */
       
       'use strict';

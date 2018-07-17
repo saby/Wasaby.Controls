@@ -1,9 +1,9 @@
-define('Controls-demo/Example/Input/Password',
+define('Controls-demo/Example/Input/Area',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Example/Input/Password/Password',
+      'tmpl!Controls-demo/Example/Input/Area/Area',
 
-      'Controls/Input/Password',
+      'Controls/Input/Area',
       'css!Controls-demo/Example/resource/Base'
    ],
    function(Control, template) {

@@ -1,9 +1,9 @@
-define('Controls-demo/Example/Input/Password',
+define('Controls-demo/Example/Input/Mask',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Example/Input/Password/Password',
+      'tmpl!Controls-demo/Example/Input/Mask/Mask',
 
-      'Controls/Input/Password',
+      'Controls/Input/Mask',
       'css!Controls-demo/Example/resource/Base'
    ],
    function(Control, template) {
@@ -11,7 +11,9 @@ define('Controls-demo/Example/Input/Password',
       'use strict';
 
       return Control.extend({
-         _template: template
+         _template: template,
+
+         _mobilePhone: '+7 '
       });
    }
 );

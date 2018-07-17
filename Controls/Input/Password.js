@@ -25,7 +25,7 @@ define('Controls/Input/Password',
     * @public
     * @category Input
     * @author Золотова Э.Е.
-    * @demo Controls-demo/Input/Password/Basic
+    * @demo Controls-demo/Example/Input/Password
     */
 
       'use strict';

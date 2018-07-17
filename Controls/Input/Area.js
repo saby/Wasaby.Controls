@@ -27,6 +27,7 @@ define('Controls/Input/Area', [
     * @category Input
     * @author Степин Павел Владимирович
     * @demo Controls-demo/Input/Area/Area
+    * @demo Controls-demo/Example/Input/Area
     */
 
    /**

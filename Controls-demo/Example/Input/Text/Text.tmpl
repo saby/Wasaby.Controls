@@ -1,0 +1,81 @@
+<div class="example-Text">
+   <div class="example-Base__title">Simple text field</div>
+   <div class="ws-inline-flexbox ws-flex-column">
+      <div class="example-Base__specify">Enabled</div>
+      <Controls.Input.Text placeholder="Tip"
+                           bind:value="_valueEnabled1"/>
+      <div class="example-Base__specify example-Base__specify_detached">Empty and inactive</div>
+      <Controls.Input.Text readOnly="{{true}}"
+                           attr:class="example-Text_fullWidth"
+                           bind:value="_valueDisabled1"/>
+      <div class="example-Base__specify example-Base__specify_detached">Filled and inactived</div>
+      <Controls.Input.Text readOnly="{{true}}"
+                           bind:value="_valueDisabled2"/>
+   </div>
+   <div class="example-Base__title">Labels for input fields</div>
+   <Controls.Label caption="Метка" on:click="_labelClickHandler('text2')" attr:class="ws-inline-flexbox"/>
+   <Controls.Input.Text name="text2"
+                        placeholder="Tip"
+                        bind:value="_value2"/>
+   <Controls.Label caption="Метка" on:click="_labelClickHandler('text3')"/>
+   <Controls.Input.Text name="text3"
+                        placeholder="Tip"
+                        bind:value="_value3"/>
+   <div class="example-Base__title">Field labels are required</div>
+   <div>
+      <Controls.Label caption="Метка"
+                      required="{{true}}"
+                      on:click="_labelClickHandler('text4')" attr:class="ws-inline-flexbox"/>
+      <Controls.Input.Text name="text4"
+                           placeholder="Tip"
+                           bind:value="_value4"/>
+   </div>
+   <div class="example-Base__specify_detached">
+      <Controls.Label caption="Метка"
+                      required="{{true}}"
+                      on:click="_labelClickHandler('text5')" attr:class="ws-inline-flexbox"/>
+      <Controls.Input.Text name="text5"
+                           placeholder="Tip"
+                           bind:value="_value5"/>
+   </div>
+   <div class="example-Base__specify_detached">
+      <Controls.Label caption="Метка"
+                      required="{{true}}"
+                      on:click="_labelClickHandler('text6')" attr:class="ws-inline-flexbox"/>
+      <Controls.Input.Text name="text6"
+                           placeholder="Tip"
+                           bind:value="_value6"/>
+   </div>
+   <Controls.Label caption="Метка"
+                   required="{{true}}"
+                   on:click="_labelClickHandler('text7')"/>
+   <Controls.Input.Text name="text7"
+                        placeholder="Tip"
+                        bind:value="_value7"/>
+   <div class="example-Base__title">Input field with tag</div>
+   <div class="ws-flexbox ws-justify-content-between ws-flex-wrap example-Text__tagContainer">
+      <ws:for data="tagStyle in _tagStyles">
+         <Controls.Input.Text tagStyle="{{tagStyle}}" on:tagClick="_showInfoBox()"/>
+      </ws:for>
+   </div>
+   <div class="example-Base__title">Alignment</div>
+   <div class="example-Base__specify">Left</div>
+   <Controls.Input.Text placeholder="Tip"
+                        textAlign="left"
+                        bind:value="_value8"/>
+   <div class="example-Base__specify example-Base__specify_detached">Right</div>
+   <Controls.Input.Text placeholder="Tip"
+                        textAlign="right"
+                        bind:value="_value9"/>
+   <div class="example-Base__title">Header fonts</div>
+   <div class="example-Base__specify">header</div>
+   <Controls.Input.Text placeholder="Tip"
+                        style="header"
+                        bind:value="_value10"/>
+   <div class="example-Base__specify example-Base__specify_detached">accentHeader</div>
+   <Controls.Input.Text placeholder="Tip"
+                        style="accentHeader"
+                        bind:value="_value11"/>
+
+   <Controls.Popup.Opener.InfoBox name="infoBox"/>
+</div>
