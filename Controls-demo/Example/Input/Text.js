@@ -24,7 +24,7 @@ define('Controls-demo/Example/Input/Text',
          },
 
          _labelClickHandler: function(event, nameText) {
-            this._children[nameText].focus();
+            this._children[nameText].activate();
          },
          
          _showInfoBox: function(event) {

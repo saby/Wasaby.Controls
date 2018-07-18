@@ -113,10 +113,6 @@ define('Controls/Input/Text',
 
          paste: function(text) {
             this._caretPosition = inputHelper.pasteHelper(this._children['inputRender'], this._children['input'], text);
-         },
-
-         focus: function() {
-            this._children.input.focus();
          }
       });
 
