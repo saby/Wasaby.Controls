@@ -266,7 +266,6 @@ function(cMerge,
             dimensions.title || dimensions.caption ||
             templateClass.caption || templateClass.title ||
             compoundAreaOptions.title || compoundAreaOptions.caption ||
-            compoundAreaOptions.templateOptions.title || compoundAreaOptions.templateOptions.caption ||
             templateOptions.title || templateOptions.caption;
       },
 
