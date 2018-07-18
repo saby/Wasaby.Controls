@@ -23,6 +23,9 @@ define('Controls/Explorer', [
             }
             self._breadCrumbsVisibility = !!self._breadCrumbsItems.length;
             self._forceUpdate();
+            if (self._options.dataLoadCallback) {
+               self._options.dataLoadCallback.apply(null, arguments);
+            }
          }
       };
 
