@@ -1,24 +1,26 @@
-<div class="moveDemo">
-    <span>Standard moving items</span>
-    <Controls.List
-            class="moverDemo__list test_list_1"
-            name="list"
-            itemActions="{{_itemActions}}"
-            source = "{{_viewSource}}"
-            keyProperty="id">
-    </Controls.List>
-    <span>Move items only to collections</span>
-    <Controls.List
-            class="moverDemo__list test_list_2"
-            name="listSecond"
-            on:beforeItemsMove="_beforeItemsMoveSecond()"
-            itemActions="{{_itemActionsSecond}}"
-            source = "{{_viewSourceSecond}}"
-            keyProperty="id">
-    </Controls.List>
-    <Controls.Button
-            on:click="_onClick()"
-            caption="{{__reload}}">
-    </Controls.Button>
-    <Controls.Popup.Opener.Confirmation name="popupOpener"/>
-</div>
+<div class="demo-Mover">
+   <span>Standard moving items</span>
+   <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
+      <div>
+         <Controls.List.Mover name="listMover"/>
+         <Controls.List.Container>
+            <Controls.List class="demo-Mover__list test_list_1"
+                           name="list"
+                           itemActions="{{_itemActions}}"/>
+         </Controls.List.Container>
+      </div>
+   </Controls.Container.Data>
+   <span>Move items only to collections</span>
+   <Controls.Container.Data source="{{_viewSourceSecond}}" keyProperty="id">
+      <div>
+         <Controls.List.Mover name="listSecondMover" on:beforeItemsMove="_beforeItemsMoveSecond()"/>
+         <Controls.List.Container>
+            <Controls.List class="demo-Mover__list test_list_2"
+                           name="listSecond"
+                           itemActions="{{_itemActionsSecond}}"/>
+         </Controls.List.Container>
+      </div>
+   </Controls.Container.Data>
+   <Controls.Button on:click="_onClick()" caption="{{_reloadCaption}}" />
+   <Controls.Popup.Opener.Confirmation name="popupOpener" />
+</div>;
