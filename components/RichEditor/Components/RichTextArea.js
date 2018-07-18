@@ -321,9 +321,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
             _modifyOptions: function(options) {
                options = RichTextArea.superclass._modifyOptions.apply(this, arguments);
-               options._prepareReviewContent = this._prepareReviewContent.bind({_options: options});
+               options._prepareReviewContent = function(text) {
+                  return this._prepareReviewContent(text, options);
+               }.bind(this);
                options._prepareContent = this._prepareContent.bind(this);
-               options._sanitizeClasses = this._sanitizeClasses.bind(this);
+
                if (options.singleLine) {
                   options.editorConfig.nowrap = true;
                   if (options.autoHeight) {
@@ -339,7 +341,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
 
             $constructor: function() {
-               var self = this;
 
                this._publish('onInitEditor', 'onUndoRedoChange', 'onNodeChange', 'onFormatChange', 'onToggleContentSource');
 
@@ -564,41 +565,44 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             insertHtml: function(html) {
                if (typeof html === 'string' && this._tinyEditor) {
                   this._performByReady(function() {
-                     html = this._prepareContent(html);
-                     // Если по любым причинам редактор пуст абсолютно - восстановить минимальный контент
-                     // 1175088566 https://online.sbis.ru/opendoc.html?guid=5f7765c4-55e5-4e73-b7bd-3cd05c61d4e2
-                     this._ensureHasMinContent();
-                     var editor = this._tinyEditor;
-                     var lastRng = this._tinyLastRng;
-                     if (lastRng) {
-                        // Если определён последний рэнж, значит вставка происходит в неактивный редактор или в отсутствии фокуса. Если текщий рэнж
-                        // не соответствунет ему - используем последний.
-                        // https://online.sbis.ru/opendoc.html?guid=e1e07406-30c3-493a-9cc0-b85ebdf055bd
-                        // https://online.sbis.ru/opendoc.html?guid=49da7b60-c4d2-46c8-b1b7-db1eb86e4443
-                        var rng = editor.selection.getRng();
-                        if (rng.startContainer !== lastRng.startContainer || rng.startOffset !== lastRng.startOffset ||
-                           rng.endContainer !== lastRng.endContainer || rng.endOffset !== lastRng.endOffset) {
-                           editor.selection.setRng(lastRng);
-                        }
-                     }
-                     editor.insertContent(html);
-                     // Иногда в FF после вставки рэнж охватывает весь элемент редактора, а не находится внутри него - поставить курсор в конец
-                     // в таком случае
-                     // 1174769960 https://online.sbis.ru/opendoc.html?guid=268d5fe6-e038-40d3-b185-eff696796f12
-                     // 1174769988 https://online.sbis.ru/opendoc.html?guid=5c37d724-1e7b-4627-afe6-257db37d4798
-                     if (cConstants.browser.firefox) {
-                        var rng = editor.selection.getRng();
-                        var editorBody = editor.getBody();
-                        if (rng.startContainer === editorBody && rng.endContainer === editorBody) {
-                           this.setCursorToTheEnd();
-                        }
-                     }
-                     //вставка контента может быть инициирована любым контролом,
-                     //необходимо нотифицировать о появлении клавиатуры в любом случае
-                     if (cConstants.browser.isMobilePlatform) {
-                        this._notifyMobileInputFocus();
-                     }
+                     this._performByReadyOnInsertHTML(html);
                   }.bind(this));
+               }
+            },
+            _performByReadyOnInsertHTML: function(html) {
+               html = this._prepareContent(html);
+               // Если по любым причинам редактор пуст абсолютно - восстановить минимальный контент
+               // 1175088566 https://online.sbis.ru/opendoc.html?guid=5f7765c4-55e5-4e73-b7bd-3cd05c61d4e2
+               this._ensureHasMinContent();
+               var editor = this._tinyEditor;
+               var lastRng = this._tinyLastRng;
+               if (lastRng) {
+                  // Если определён последний рэнж, значит вставка происходит в неактивный редактор или в отсутствии фокуса. Если текщий рэнж
+                  // не соответствунет ему - используем последний.
+                  // https://online.sbis.ru/opendoc.html?guid=e1e07406-30c3-493a-9cc0-b85ebdf055bd
+                  // https://online.sbis.ru/opendoc.html?guid=49da7b60-c4d2-46c8-b1b7-db1eb86e4443
+                  var rng = editor.selection.getRng();
+                  if (rng.startContainer !== lastRng.startContainer || rng.startOffset !== lastRng.startOffset ||
+                     rng.endContainer !== lastRng.endContainer || rng.endOffset !== lastRng.endOffset) {
+                     editor.selection.setRng(lastRng);
+                  }
+               }
+               editor.insertContent(html);
+               // Иногда в FF после вставки рэнж охватывает весь элемент редактора, а не находится внутри него - поставить курсор в конец
+               // в таком случае
+               // 1174769960 https://online.sbis.ru/opendoc.html?guid=268d5fe6-e038-40d3-b185-eff696796f12
+               // 1174769988 https://online.sbis.ru/opendoc.html?guid=5c37d724-1e7b-4627-afe6-257db37d4798
+               if (cConstants.browser.firefox) {
+                  var rng = editor.selection.getRng();
+                  var editorBody = editor.getBody();
+                  if (rng.startContainer === editorBody && rng.endContainer === editorBody) {
+                     this.setCursorToTheEnd();
+                  }
+               }
+               //вставка контента может быть инициирована любым контролом,
+               //необходимо нотифицировать о появлении клавиатуры в любом случае
+               if (cConstants.browser.isMobilePlatform) {
+                  this._notifyMobileInputFocus();
                }
             },
 
@@ -748,6 +752,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this._inputControl.unbind('mouseup dblclick click mousedown touchstart scroll');
                if (this._imageOptionsPanel) {
                   this._imageOptionsPanel.destroy();
+               }
+               if (this._options) {
+                  this._options._prepareReviewContent = null;
+                  this._options._prepareContent = null;
                }
                RichTextArea.superclass.destroy.apply(this, arguments);
 
@@ -1395,7 +1403,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                            align = v;
                            return true;
                         }
-                        ;
                      });
                      if (align) {
                         afterProcess = function() {
@@ -2041,6 +2048,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      }
                   }
                }
+               this._tinyLastRng = this._tinyEditor.selection.getRng();
             },
             _onMouseUpCallback: function(e) { //в ie криво отрабатывает клик
                if (e.ctrlKey) {
@@ -2157,7 +2165,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                //равносильно тому что d&d совершается внутри редактора => не надо обрезать изображение
                //upd: в костроме форматная вставка, не нужно вырезать лишние теги
                if (!this._mouseIsPressed && options.editorConfig.paste_as_text) {
-                  e.content = options._sanitizeClasses(e.content, false);
+                  e.content = this._sanitizeClasses(e.content, false);
                }
                this._mouseIsPressed = false;
                // при форматной вставке по кнопке мы обрабаотываем контент через событие tinyMCE
@@ -2171,7 +2179,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      //если данные не из БТР и не из word`a, то вставляем как текст
                      //В Костроме юзают БТР с другим конфигом, у них всегда форматная вставка
                      if (this._clipboardText !== false) {
-                        e.content = this._getTextBeforePaste(editor);
+                        e.content = this._getTextBeforePaste(this.getTinyEditor());
                      }
                   }
                }
@@ -2184,11 +2192,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                // editor.plugins.paste.clipboard.pasteFormat = 'html';
             },
             _onPastePostProcessCallback: function(event) {
+               var editor = this.getTinyEditor();
                var content = event.node;
                var reUrlOnly = /^https?:\/\/[a-z0-9:=&%#_\-\.\/\?]+$/gi;
                var reUrl = /https?:\/\/[a-z0-9:=&%#_\-\.\/\?]+/i;
                var isPlainUrl = content.innerHTML.search(reUrlOnly) !== -1;
                var $content = $(content);
+               var offset;
                $content.find('[unselectable ="on"]').attr('data-mce-resize', 'false');
                if (!isPlainUrl) {
                   var $images = $content.find('img:not(.ws-fre__smile)');
@@ -2222,11 +2232,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                var selection = editor.selection;
                var rng = selection.getRng();
                var isAfterUrl;
+               var startNode;
                if (isPlainUrl) {
                   if (rng.collapsed) {
                      var endNode = rng.endContainer;
                      var text = endNode.nodeType === 1 ? endNode.innerHTML : endNode.nodeValue;
-                     var offset = rng.endOffset;
+                     offset = rng.endOffset;
                      if (text && offset < text.length && text.substring(offset, offset + 1).search(/[<\s]/gi) === -1) {
                         // Имеем вставку урла внутрь текста, с которым он сольётся - отделить его пробелом в конце
                         // Было бы лучше (намного) сделать этот урл сразу ссылкой, но тогда сервис декораторов не подхватит его
@@ -2236,10 +2247,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                }
                else {
-                  var startNode = rng.startContainer;
+                  startNode = rng.startContainer;
                   var value = startNode.nodeType === 1 ? startNode.innerHTML : startNode.nodeValue;
-                  var offset = rng.startOffset;
-                  if (startNode.nodeType == 3) {
+                  offset = rng.startOffset;
+                  if (startNode.nodeType === 3) {
                      // Нужно слить текст со всеми соседними текстовыми узлами (нормализовать родитьский узел здесь нельзя, так как слетит рэнж)
                      offset -= value.length;
                      value = this._getAdjacentTextNodesValue(startNode, false) + value;
@@ -2264,10 +2275,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   if (node.nodeType === 3) {
                      var dom = editor.dom;
                      if (!Array.prototype.some.call(content.childNodes, dom.isBlock)) {
+
                         var parent = dom.getParent(startNode, function(v) {
                            var p = v.parentNode;
                            return dom.isBlock(p) || 1 < p.childNodes.length;
                         }, editor.getBody());
+
                         if (parent !== node) {
                            var atStart = rng.endOffset === 0;
                            if (atStart || node.nodeValue.length === rng.endOffset) {
@@ -2514,19 +2527,22 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   e.stopPropagation();
                   e.preventDefault();
                }
+               this._tinyLastRng = this.getTinyEditor().selection.getRng();
             },
             _onKeyUpCallback2: function(e) {
                this._typeInProcess = false;
                if (!(e.keyCode === cConstants.key.enter && e.ctrlKey)) { // Не нужно обрабатывать ctrl+enter, т.к. это сочетание для дефолтной кнопки
                   this._updateTextByTiny();
                }
+               this._tinyLastRng = this.getTinyEditor().selection.getRng();
             },
             _onKeyUpCallback3: function(e) {
-               var selection = this._tinyEditor.selection,
+               var selection = this.getTinyEditor().selection,
                   node = selection.getNode().parentNode;
                if (node.innerHTML === "<p><br></p>") {
                   node.innerHTML = '<p><br data-mce-bogus="1"></p>';//this._tinyEditor.settings.startContent
                }
+               this._tinyLastRng = selection.getRng();
             },
 
             _linkEditStart: function() {
@@ -2658,7 +2674,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
             },
             saveCallbacks: function() {
+               this._sanitizeClasses = this._sanitizeClasses.bind(this);
+               this._onFocusChangedCallbackTimeout = this._onFocusChangedCallbackTimeout.bind(this);
+               this._prepareReviewContent = this._prepareReviewContent.bind(this);
+               this._prepareContent = this._prepareContent.bind(this);
                this._performByReadyCallback = this._performByReadyCallback.bind(this);
+               this._onCutTimeout = this._onCutTimeout.bind(this);
                this._sanitizeClassCallback = this._sanitizeClassCallback.bind(this);
                this._onSetupCallback = this._onSetupCallback.bind(this);
                this._onInitCallback = this._onInitCallback.bind(this);
@@ -2865,7 +2886,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             _getAdjacentTextNodesValue: function(node, toEnd) {
                var prop = toEnd ? 'nextSibling' : 'previousSibling';
                var value = '';
-               for (var n = node[prop]; n && n.nodeType == 3; n = n[prop]) {
+               for (var n = node[prop]; n && n.nodeType === 3; n = n[prop]) {
                   value = toEnd ? value + n.nodeValue : n.nodeValue + value;
                }
                return value;
@@ -3700,12 +3721,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
             },
 
-            _prepareReviewContent: function(text) {
+            _prepareReviewContent: function(text, options) {
+               var _options = options || this._options;
                if (text && text[0] !== '<') {
                   text = '<p>' + text.replace(/\n/gi, '<br/>') + '</p>';
                }
-               text = this._options._sanitizeClasses(text, true);
-               return this._options.highlightLinks ? LinkWrap.wrapURLs(LinkWrap.wrapFiles(text), true) : text;
+               text = this._sanitizeClasses(text, true, options);
+               return _options.highlightLinks ? LinkWrap.wrapURLs(LinkWrap.wrapFiles(text), true) : text;
             },
 
             //установка значения в редактор
@@ -3731,7 +3753,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      if (this._tinyReady.isReady()) {
                         this._tinyEditor.setContent(text);
                      } else {
-                        this._inputControl.html(this._options._sanitizeClasses(text, true));
+                        this._inputControl.html(this._sanitizeClasses(text, true));
                      }
                   }
                }
@@ -3796,8 +3818,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             return true;*/
             },
 
-            _sanitizeClasses: function(text, images) {
-               var options = this._options;
+            _sanitizeClasses: function(text, images, options) {
+               var _options = options || this._options;
                var sanitizeOptions = {
                   validNodes: {
                      img: images ? {
@@ -3814,22 +3836,25 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      }
                   },
                   validAttributes: {
-                     'class': this._sanitizeClassCallback
+                     'class': function(content, attributeName) {
+                        this._sanitizeClassCallback(content, attributeName, _options);
+                     }.bind(this)
                   },
                   checkDataAttribute: false,
                   escapeInvalidTags: false
                };
-               var validAttributes = options ? options.validAttributes : null;
+               var validAttributes = _options ? _options.validAttributes : null;
                if (validAttributes && typeof validAttributes === 'object') {
                   sanitizeOptions.validAttributes = cMerge(validAttributes, sanitizeOptions.validAttributes);
                }
                return Sanitize(text, sanitizeOptions);
             },
 
-            _sanitizeClassCallback: function(content, attributeName) {
+            _sanitizeClassCallback: function(content, attributeName, options) {
                var
+                  _options = options || this._options,
                   //проверка options для юнит тестов, тк там метод зовётся на прототипе
-                  classValidator = options ? options.validateClass : null,
+                  classValidator = _options ? _options.validateClass : null,
                   validateIsFunction = typeof classValidator === 'function',
                   currentValue = content.attributes[attributeName].value,
                   classes = currentValue.split(' '),
