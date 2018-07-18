@@ -55,6 +55,10 @@ define('Controls/Input/Mask',
       /**
        * @name Controls/Input/Mask#replacer
        * @cfg {String} Symbol that will be shown when character is not entered.
+       *
+       * @remark If quantifiers are used in the mask, the replacer cannot be set.
+       * Correct operation is not supported.
+       *
        * @example
        * <pre>
        *    For example, mask='dd.dd', replacer=' ', value='12.34'.
