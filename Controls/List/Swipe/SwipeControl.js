@@ -261,6 +261,14 @@ define('Controls/List/Swipe/SwipeControl', [
          });
       },
 
+      needShowIcon: function(action, direction, hasShowedItemActionWithIcon) {
+         // https://online.sbis.ru/opendoc.html?guid=e4d479a6-a2d1-470c-899a-1baf6028ff21
+         // согласно стандарту, операции должны отображаться с иконкой, если:
+         // 1. операция с иконкой.
+         // 2. операции выводятся в строку и среди отображаемых операций имеется хотя бы одна операция с иконкой
+         return !!action.icon || direction === 'row' && hasShowedItemActionWithIcon;
+      },
+
       needShowTitle: function(action, type, hasIcon) {
          var tempAction = action ? action : { title: true, icon: true }; //menu emulateAction
          return (
@@ -351,6 +359,10 @@ define('Controls/List/Swipe/SwipeControl', [
 
       _needShowSeparator: function(action, itemData, type) {
          return _private.needShowSeparator(this, action, itemData, type);
+      },
+
+      _needShowIcon: function(action, direction, hasShowedItemActionWithIcon) {
+         return _private.needShowIcon(action, direction, hasShowedItemActionWithIcon);
       },
 
       _needShowTitle: function(action, type, hasIcon) {
