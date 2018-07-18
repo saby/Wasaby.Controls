@@ -1,5 +1,6 @@
 define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
    [
+      'require',
       'Core/Control',
       'tmpl!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Lib/Mixins/LikeWindowMixin',
@@ -25,6 +26,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'WS.Data/Entity/InstantiableMixin'
    ],
    function(
+      require,
       Control,
       template,
       LikeWindowMixin,
@@ -296,7 +298,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                return this._close(true);
             } else if (commandName === 'cancel') {
                return this._close(false);
-            } else if (commandName === 'save') {
+            } else if (this._options._mode === 'recordFloatArea' && commandName === 'save') {
                return this.save(arg);
             } else if (commandName === 'delete') {
                return this.delRecord(arg);
@@ -311,14 +313,18 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             } else if (commandName === 'unregisterPendingOperation') {
                return this._unregisterChildPendingOperation(arg);
             } else {
-               var compoundControlCommandResult = this._sendCompoundControlCommand(commandName, args);
-               if (compoundControlCommandResult) {
-                  return compoundControlCommandResult;
-               }
-               if (this.getParent()) {
+               var result;
+
+               result = this._sendCompoundControlCommand(commandName, args);
+               if (!result && this.getParent()) {
                   parent = this.getParent();
-                  return parent.sendCommand.apply(parent, argsWithName);
+                  result = parent.sendCommand.apply(parent, argsWithName);
                }
+
+               // Даже если обработчик команды нашего CompoundControl'a и его родителя не вернули истинностный результат,
+               // мы должны вернуть true чтобы прервать всплытие команды к родителям, потому что мы протолкнули
+               // ее выше вручную (parent.sendCommand), и нам не нужно, чтобы она продолжила всплывать по второму разу
+               return result || true;
             }
 
             // Мы не распространяем команды по опенеру! и никогда не распространяли!

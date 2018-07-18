@@ -94,6 +94,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
       },
       _doExecute: function(meta) {
          if (!this._isExecuting) { //Если завершился предыдущий execute
+            this._closeDialogAfterDestroy = meta && meta.hasOwnProperty('closeDialogAfterDestroy') ? meta.closeDialogAfterDestroy : true;
             this._executeDeferred = new Deferred();
             this._openComponent(meta);
             return this._executeDeferred;
@@ -142,6 +143,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                try {
                   var deps = [];
                   if (isNewEnvironment()) {
+                     config._mode = meta.mode;
                      deps = ['Controls/Popup/Opener/BaseOpener', 'Controls/Popup/Compatible/Layer'];
                      if (meta.mode !== 'dialog' && config.isStack === true) {
                         deps.push('Controls/Popup/Opener/Stack/StackController');
@@ -168,10 +170,10 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                      requirejs(deps, function(BaseOpener, CompatibleOpener, cfgTemplate) {
                         if (BaseOpener.isVDOMTemplate(cfgTemplate)) {
                            CompatibleOpener._prepareConfigForNewTemplate(config, cfgTemplate);
-                           config.className = 'ws-invisible'; //Пока не построился дочерний vdom  шаблон - скрываем панель, иначе будет прыжок
+                           config.className = (config.className || '') + ' ws-invisible'; //Пока не построился дочерний vdom  шаблон - скрываем панель, иначе будет прыжок
                            config.componentOptions._initCompoundArea = function(compoundArea) {
                               var dialog = self._dialog;
-                              dialog._container.closest('.ws-float-area, .ws-float-area-stack-cut-wrapper, .ws-window').removeClass('ws-invisible');
+                              dialog._container.closest('.ws-invisible').removeClass('ws-invisible');
                            };
                         }
                         config._openFromAction = true;
@@ -424,14 +426,14 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
 
       after: {
          destroy: function() {
-            if (this._dialog) {
+            if (this._dialog && this._closeDialogAfterDestroy) {
                if (cInstance.instanceOfModule(this._dialog, 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea')) {
                   this._dialog.close();
                } else {
                   this._dialog.destroy();
                }
-               this._dialog = undefined;
             }
+            this._dialog = undefined;
             document.removeEventListener('mousedown', this._documentClickHandler);
             document.removeEventListener('touchstart', this._documentClickHandler);
          }

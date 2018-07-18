@@ -35,7 +35,8 @@ define('Controls/Popup/Opener/Sticky/StickyController',
                   maxWidth: cfg.popupOptions.maxWidth,
                   maxHeight: cfg.popupOptions.maxHeight
                },
-               sizes: sizes
+               sizes: sizes,
+               locationStrategy: cfg.popupOptions.locationStrategy
             };
 
             cfg.position = StickyStrategy.getPosition(popupCfg, _private._getTargetCoords(cfg, sizes));
