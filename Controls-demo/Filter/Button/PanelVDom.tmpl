@@ -1,26 +1,38 @@
-<div class="panel-demo">
-   Without the block "Yet possible to select"
+<div class="panel-demo" xmlns:ws="http://www.w3.org/1999/xhtml">
    <div>
       <Controls.Filter.Button attr:class="panel-demo-filterButton"
-                              templateName="tmpl!Controls-demo/Filter/Button/resources/withoutAdditional/filterPanelTemplateSimple"
+                              filterAlign="{{_selectedKeyAlign}}"
                               bind:items="_itemsSimple">
+         <ws:templateName>
+            <ws:partial template="tmpl!Controls-demo/Filter/Button/resources/filterPanelTemplateSimple"
+                        title="{{_title}}"
+                        styleHeader="{{_selectedKeyStyle}}"
+                        itemTemplateProperty="{{_itemTemplateProperty}}"
+                        itemTemplate="{{_itemTemplate}}"
+                        additionalTemplate="{{_addTemplate}}"/>
+         </ws:templateName>
       </Controls.Filter.Button>
    </div>
 
-   The template for the block "Selected" is specified using the option "template" for each filter.
-   <div>
-      <Controls.Filter.Button attr:class="panel-demo-filterButton"
-                              bind:items="_itemsTemplate"
-                              templateName="tmpl!Controls-demo/Filter/Button/resources/itemTemplate/filterPanelTemplateItemProperty">
-      </Controls.Filter.Button>
+   <div class="panel-demo-option-block">
+      <h3>Задайте опции:</h3>
+      <Controls.Label name="myLabel1" caption="Filter align"/>
+      <Controls.Input.ComboBox attr:id="align" source="{{_alignFilterSource}}" bind:selectedKey="_selectedKeyAlign" keyProperty="title"
+                               displayProperty="title"/>
+
+      <Controls.Label name="myLabel1" caption="Style header panel"/>
+      <Controls.Input.ComboBox attr:id="styleHeader" source="{{_styleHeaderSource}}" bind:selectedKey="_selectedKeyStyle" keyProperty="title"
+                               displayProperty="title"/>
+
+      <Controls.Label name="myLabel1" caption="Title"/>
+      <Controls.Input.Text attr:id="title" bind:value="_title"/>
+
+      <Controls.Toggle.Checkbox attr:id="add" on:valueChanged="valueChangedHandler()"
+                                bind:value="_additionalBlock" caption="Without block additional"/>
+
+      <Controls.Toggle.Checkbox attr:id="property" on:valueChanged="valueChangedHandler2()"
+                                bind:value="_hasItemTemplateProperty" caption="Filter 'author' from block 'Selected' is specified using the option 'templateItem'"/>
+
    </div>
 
-   The template for the block "Selected" is specified using the option "itemTemplate".
-   <div>
-      <Controls.Filter.Button attr:class="panel-demo-filterButton"
-                              on:filterChanged="_filterChangedHandler()"
-                              templateName="tmpl!Controls-demo/Filter/Button/resources/withAdditional/filterPanelTemplateAdditional"
-                              bind:items="_items">
-      </Controls.Filter.Button>
-   </div>
 </div>
