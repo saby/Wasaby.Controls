@@ -75,6 +75,8 @@ define('Controls/Button', [
          self._typeWithSize = currentButtonClass.type + '_size-' + options.size;
          self._styleWithIconStyle = currentButtonClass.style + '_iconStyle-' + options.iconStyle;
          self._state = options.readOnly ? '_readOnly' : '';
+         self._caption = options.caption;
+         self._icon = options.icon;
       }
    };
    var Button = Control.extend({

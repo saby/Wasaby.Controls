@@ -41,8 +41,13 @@ define('Controls/Toggle/Button', [
     */
 
    /**
-    * @name Controls/Toggle/Button#caption
-    * @cfg {String} Button text.
+    * @name Controls/Toggle/Button#icons
+    * @cfg {Array} Set of icons.
+    */
+
+   /**
+    * @name Controls/Toggle/Button#captions
+    * @cfg {Array} Set of captions.
     */
 
    var _private = {
@@ -54,6 +59,8 @@ define('Controls/Toggle/Button', [
          self._typeWithSize = self._type + '_size-' + options.size;
          self._styleWithIconStyle = self._style + '_iconStyle-' + options.iconStyle;
          self._state = (options.value ? '_toggle_on' : '') + (options.readOnly ? '_readOnly' : '');
+         self._caption = (options.value ? options.captions[0] : options.captions[1]);
+         self._icon = (options.value ? options.icons[0] : options.icons[1]);
       }
    };
    var ToggleButton = Control.extend({
