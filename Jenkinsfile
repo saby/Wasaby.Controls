@@ -70,6 +70,7 @@ node('controls') {
         def inte = params.run_int
         def regr = params.run_reg
         def unit = params.run_unit
+        def smoke_result = true
 
         try {
         echo "Чистим рабочую директорию"
@@ -456,6 +457,7 @@ node('controls') {
 
         def site = "http://${NODE_NAME}:30010"
         site.trim()
+
         dir("./controls/tests/int"){
             sh"""
                 source /home/sbis/venv_for_test/bin/activate
@@ -468,9 +470,9 @@ node('controls') {
             if ( currentBuild.result != null ) {
                 currentBuild.result = 'FAILURE'
                 currentBuild.displayName = "#${env.BUILD_NUMBER} SMOKE TEST FAIL"
+                smoke_result = false
                 gitlabStatusUpdate()
                 error('Стенд неработоспособен (не прошел smoke test).')
-                return
             }
         }
 
@@ -530,7 +532,7 @@ node('controls') {
         if ( unit ){
             junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
             }
-        if ( regr || inte ){
+        if ( (regr || inte) && smoke_result ){
             archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
             junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
             }
