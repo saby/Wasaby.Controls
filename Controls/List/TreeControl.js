@@ -88,18 +88,29 @@ define('Controls/List/TreeControl', [
       constructor: function(cfg) {
          this._loadedNodes = {};
          this._hierarchyRelation =  new HierarchyRelation({
-            idProperty: cfg.keyProperty || 'id',
-            parentProperty: cfg.parentProperty || 'Раздел',
-            nodeProperty: cfg.nodeProperty || 'Раздел@'
+            idProperty: cfg.keyProperty,
+            parentProperty: cfg.parentProperty,
+            nodeProperty: cfg.nodeProperty
          });
          return TreeControl.superclass.constructor.apply(this, arguments);
+      },
+      _beforeUpdate: function(newOptions) {
+         var
+            filter;
+         if (this._options.root !== newOptions.root) {
+            filter = cClone(this._options.filter);
+            filter[this._options.parentProperty] = newOptions.root;
+            this.reload(filter);
+            this._children.baseControl.getViewModel().setRoot(newOptions.root);
+         }
+         TreeControl.superclass._beforeUpdate.apply(this, arguments);
       },
       _onNodeExpanderClick: function(e, dispItem) {
          _private.toggleExpanded(this, dispItem);
       },
-      reload: function() {
+      reload: function(filter) {
          this._loadedNodes = {};
-         this._children.baseControl.reload();
+         this._children.baseControl.reload(filter);
       },
       editItem: function(options) {
          this._children.baseControl.editItem(options);
