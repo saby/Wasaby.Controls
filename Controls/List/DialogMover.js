@@ -1,11 +1,9 @@
 define('Controls/List/DialogMover', [
    'Core/Control',
-   'Core/Deferred',
-   'Core/core-instance',
    'WS.Data/Source/ISource',
    'tmpl!Controls/List/DialogMover/DialogMover',
    'Controls/Container/Data/ContextOptions'
-], function(Control, Deferred, cInstance, ISource, template, dataOptions) {
+], function(Control, ISource, template, dataOptions) {
 
    /**
     * A class that describes the action of moving list items with dialog.
