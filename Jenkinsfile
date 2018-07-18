@@ -523,19 +523,19 @@ node('controls') {
     """
 
 
-        if ( regr ){
-            dir("./controls") {
-                publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
-            }
-            archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
-            }
-        if ( unit ){
-            junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
-            }
-        if ( (regr || inte) && smoke_result ){
-            archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
-            junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-            }
+    if ( unit ){
+        junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
+        }
+    if ( (regr || inte) && smoke_result ){
+        archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
+        junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
+        }
+    if ( regr ){
+        dir("./controls") {
+            publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
+        }
+        archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
+        }
     gitlabStatusUpdate()
         }
     }
