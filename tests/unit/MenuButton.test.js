@@ -1,6 +1,6 @@
 define(
    [
-       'Controls/Button/MenuButton',
+       'Controls/Button/Menu',
       'WS.Data/Source/Memory'
    ],
    (MenuButton, Memory) => {

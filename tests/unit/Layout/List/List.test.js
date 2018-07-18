@@ -149,7 +149,7 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/
          var context = getFilledContext();
          var aborted = false;
          listLayout._beforeMount(listOptions);
-         listLayout._contextObj = getEmptyContext();
+         listLayout._saveContextObject(getEmptyContext());
          
          List._private.abortCallback(listLayout, {});
          
@@ -189,9 +189,10 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/
             }
          };
          var listLayout = new List(listOptions);
-         listLayout._contextObj = {};
-         listLayout._contextObj['filterLayoutField'] = { filter: {} };
-         listLayout._contextObj['searchLayoutField'] = {searchValue: ''};
+         listLayout._saveContextObject({
+            filterLayoutField: {filter: {}},
+            searchLayoutField: {searchValue: ''}
+         });
    
          /* emulate _beforeMount */
          listLayout.saveOptions(listOptions);
@@ -217,8 +218,10 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/
             ]);
    
             /* To reset source and context*/
-            listLayout._contextObj['searchLayoutField'] = {searchValue: 'Sasha'};
-            listLayout._contextObj['filterLayoutField'] = {filter: {title: 'Sasha'}};
+            listLayout._saveContextObject({
+               filterLayoutField: {filter: {title: 'Sasha'}},
+               searchLayoutField: {searchValue: 'Sasha'}
+            });
             List._private.abortCallback(listLayout, {});
             /* check reset */
             assert.deepEqual(listLayout._filter, {});
@@ -236,7 +239,10 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/
             
             
             /* Change context filter */
-            listLayout._contextObj['filterLayoutField'] = {filter: {title: ''}};
+            listLayout._saveContextObject({
+               filterLayoutField: {filter: {title: ''}},
+               searchLayoutField: {searchValue: 'Sasha'}
+            });
             context.filterLayoutField.filter = { title: 'Sasha' };
             listLayout._beforeUpdate(newOpts, context);
             setTimeout(function() {
@@ -268,10 +274,10 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/
          var listLayout = new List(listOptions);
          var context = getFilledContext();
    
-         listLayout._contextObj = getEmptyContext();
+         listLayout._saveContextObject(getEmptyContext());
          assert.isTrue(List._private.isFilterChanged(listLayout, context));
    
-         listLayout._contextObj = getFilledContext();
+         listLayout._saveContextObject(getFilledContext());
          assert.isFalse(List._private.isFilterChanged(listLayout, context));
       });
    
@@ -280,10 +286,10 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/
          listLayout._beforeMount(listOptions);
          var context = getFilledContext();
    
-         listLayout._contextObj = getEmptyContext();
+         listLayout._saveContextObject(getEmptyContext());
          assert.isTrue(List._private.isSearchValueChanged(listLayout, context));
    
-         listLayout._contextObj = getFilledContext();
+         listLayout._saveContextObject(getFilledContext());
          assert.isFalse(List._private.isSearchValueChanged(listLayout, context));
          
       });
