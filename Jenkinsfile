@@ -465,12 +465,12 @@ node('controls') {
             """
 
             junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-            junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
             if ( currentBuild.result != null ) {
                 currentBuild.result = 'FAILURE'
                 currentBuild.displayName = "#${env.BUILD_NUMBER} SMOKE TEST FAIL"
                 gitlabStatusUpdate()
                 error('Стенд неработоспособен (не прошел smoke test).')
+                return
             }
         }
 
