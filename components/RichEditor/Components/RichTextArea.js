@@ -759,7 +759,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                RichTextArea.superclass.destroy.apply(this, arguments);
 
-
+               this._tinyLastRng = null;
                this._tinyEditor = null;
                this._sourceContainer = null;
                this._fakeArea = null;
