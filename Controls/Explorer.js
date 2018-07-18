@@ -65,5 +65,8 @@ define('Controls/Explorer', [
          _private.setRoot(this, item[setPreviousNode ? this._options.parentProperty : this._options.keyProperty]);
       }
    });
+
+   Explorer._private = _private;
+
    return Explorer;
 });
