@@ -22,9 +22,7 @@ define('Controls/List/ListControl', [
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
-    * @mixes Controls/interface/IReorderMovable
     * @mixes Controls/List/interface/IListControl
-    * @mixes Controls/interface/IRemovable
     * @control
     * @public
     * @category List
@@ -32,18 +30,6 @@ define('Controls/List/ListControl', [
 
    var ListControl = Control.extend({
       _template: ListControlTpl,
-      removeItems: function(items) {
-         this._children.baseControl.removeItems(items);
-      },
-      moveItemUp: function(item) {
-         this._children.baseControl.moveItemUp(item);
-      },
-      moveItemDown: function(item) {
-         this._children.baseControl.moveItemDown(item);
-      },
-      moveItems: function(items, target, position) {
-         this._children.baseControl.moveItems(items, target, position);
-      },
       reload: function() {
          this._children.baseControl.reload();
       },

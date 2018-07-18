@@ -370,7 +370,6 @@ define('Controls/List/BaseControl', [
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/List/interface/IBaseControl
-    * @mixes Controls/interface/IRemovable
     * @mixes Controls/interface/IEditInPlace
     * @control
     * @public
@@ -551,18 +550,6 @@ define('Controls/List/BaseControl', [
          }
       },
 
-      removeItems: function(items) {
-         this._children.removeControl.removeItems(items);
-      },
-
-      _beforeItemsRemove: function(event, items) {
-         return this._notify('beforeItemsRemove', [items]);
-      },
-
-      _afterItemsRemove: function(event, items, result) {
-         this._notify('afterItemsRemove', [items, result]);
-      },
-
       _showIndicator: function(event, direction) {
          _private.showIndicator(this, direction);
          event.stopPropagation();
@@ -653,26 +640,6 @@ define('Controls/List/BaseControl', [
          _private.closeActionsMenu(this, args);
       },
 
-      moveItemUp: function(item) {
-         this._children.moveControl.moveItemUp(item);
-      },
-
-      moveItemDown: function(item) {
-         this._children.moveControl.moveItemDown(item);
-      },
-
-      moveItems: function(items, target, position) {
-         this._children.moveControl.moveItems(items, target, position);
-      },
-
-      _beforeItemsMove: function(event, items, target, position) {
-         return this._notify('beforeItemsMove', [items, target, position]);
-      },
-
-      _afterItemsMove: function(event, items, target, position, result) {
-         this._notify('afterItemsMove', [items, target, position, result]);
-      },
-
       _onItemActionsClick: function(e, action, item) {
          this._notify('itemActionsClick', [action, item]);
       },
@@ -712,8 +679,8 @@ define('Controls/List/BaseControl', [
             dragTarget = this._listViewModel.getDragTargetItem(),
             targetPosition = this._listViewModel.getDragTargetPosition();
 
-         if (dragTarget && this._notify('dragEnd', [items, dragTarget.item, targetPosition.position]) !== false) {
-            this._children.moveControl.moveItems(items, dragTarget.item, targetPosition.position);
+         if (dragTarget) {
+            this._notify('dragEnd', [items, dragTarget.item, targetPosition.position]);
          }
       },
 
