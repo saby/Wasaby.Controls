@@ -136,7 +136,7 @@ function(cMerge,
 
          cfg.corner = cfg.corner || {};
          if (cfg.direction !== 'right' && cfg.direction !== 'left') {
-            cfg.direction = cfg.direction ? 'left' : 'right';
+            cfg.direction = 'right';
          }
          cfg.corner.horizontal = revertPosition[cfg.direction];
 
@@ -193,6 +193,10 @@ function(cMerge,
          });
          if (cfg.hasOwnProperty('closeByExternalClick')) {
             cfg.autoHide = cfg.closeByExternalClick;
+         }
+
+         if (cfg.hasOwnProperty('closeChildWindows')) {
+            newCfg.dialogOptions.closeChildWindows = cfg.closeChildWindows;
          }
 
          if (cfg.verticalAlign && cfg.verticalAlign.side === 'top') {

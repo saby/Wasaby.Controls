@@ -30,6 +30,10 @@ define('Controls-demo/DragNDrop/List', [
          this._items = items;
       },
 
+      _dragEnd: function(event, items, target, position) {
+         this._children.listMover.moveItems(items, target, position);
+      },
+
       _dragStart: function(event, items) {
          var
             hasBadItems = false;
