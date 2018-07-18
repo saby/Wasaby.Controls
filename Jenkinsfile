@@ -70,7 +70,6 @@ node('controls') {
         def inte = params.run_int
         def regr = params.run_reg
         def unit = params.run_unit
-        def smoke_result = true
 
         try {
         echo "Чистим рабочую директорию"
@@ -465,12 +464,11 @@ node('controls') {
                 deactivate
 
             """
-
             junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
+            sh "sudo rm -rf ./test-reports"
             if ( currentBuild.result != null ) {
                 currentBuild.result = 'FAILURE'
                 currentBuild.displayName = "#${env.BUILD_NUMBER} SMOKE TEST FAIL"
-                smoke_result = false
                 gitlabStatusUpdate()
                 error('Стенд неработоспособен (не прошел smoke test).')
             }
@@ -526,7 +524,7 @@ node('controls') {
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
         }
-    if ( (regr || inte) && smoke_result ){
+    if ( regr || inte ){
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
         }
