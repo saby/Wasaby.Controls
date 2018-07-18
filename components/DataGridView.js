@@ -706,12 +706,18 @@ define('SBIS3.CONTROLS/DataGridView',
       },
 
       $constructor: function() {
+         var self = this;
          // Событие onChangeHeadVisibility используется в стики хедере.
          // Внешнюю документацию не обновлял, т.к. без метода получения состояния видимости хедера это событие
          // практически не представляет ценности.
          this._publish('onDrawHead', 'onChangeHeadVisibility');
          this._tfoot = $('.controls-DataGridView__tfoot', this._container[0]);
          this._tbody = $('.controls-DataGridView__tbody', this._container[0]);
+         this.getContainer().on('mousedown', function(e) {
+            if (self._isPartScrollVisible() && e.which === 2) {
+               e.preventDefault();
+            }
+         });
       },
 
       init: function() {
