@@ -96,6 +96,14 @@ module.exports = function(Component) {
          }, []);
       },
 
+      // Демо-пример: заголовки(разделители) и кнопка назад
+      '/demo-ws4-header-separator': function(req, res) {
+         requirejs('Controls-demo/Headers/standartDemoHeader');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Controls-demo/Headers/standartDemoHeader',
+            initDependencies: false
+         }, []);
+      },
       // Демо-пример: операции над записью.
       '/demo-ws4-item-actions': function(req, res) {
          requirejs('Examples/List/ItemActions');
@@ -104,7 +112,6 @@ module.exports = function(Component) {
             initDependencies: false
          }, []);
       },
-
 
       /*
         ### СТРАНИЧКИ ДЛЯ СТАРЫХ КОНТРОЛОВ - WS3. ### 

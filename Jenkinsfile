@@ -1,6 +1,6 @@
 #!groovy
 echo "Задаем параметры сборки"
-def version = "3.18.400"
+def version = "3.18.500"
 
 def gitlabStatusUpdate() {
     if ( currentBuild.currentResult == "ABORTED" ) {
