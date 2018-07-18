@@ -465,9 +465,7 @@ node('controls') {
             """
 
             junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-            sleep(5)
-            echo "${currentBuild.result}"
-            if ( "${currentBuild.result}" != "SUCCESS" ) {
+            if ( currentBuild.result != null ) {
                 currentBuild.result = 'FAILURE'
                 currentBuild.displayName = "#${env.BUILD_NUMBER} SMOKE TEST FAIL"
                 gitlabStatusUpdate()
