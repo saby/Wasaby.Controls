@@ -77,7 +77,6 @@ node('controls') {
 
 		echo "Назначаем переменные"
         def server_address=props["SERVER_ADDRESS"]
-		def smoke_server_address=props["SMOKE_SERVER_ADDRESS"]
 		def stream_number=props["snit"]
         def ver = version.replaceAll('.','')
 		def python_ver = 'python3'
@@ -466,6 +465,7 @@ node('controls') {
             """
 
             junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
+            sleep(5)
             echo "${currentBuild.result}"
             if ( "${currentBuild.result}" != "SUCCESS" ) {
                 currentBuild.result = 'FAILURE'
