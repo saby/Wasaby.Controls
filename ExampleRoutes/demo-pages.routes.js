@@ -104,6 +104,14 @@ module.exports = function(Component) {
             initDependencies: false
          }, []);
       },
+      // Демо-пример: операции над записью.
+      '/demo-ws4-item-actions': function(req, res) {
+         requirejs('Examples/List/ItemActions');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Examples/List/ItemActions',
+            initDependencies: false
+         }, []);
+      },
 
       /*
         ### СТРАНИЧКИ ДЛЯ СТАРЫХ КОНТРОЛОВ - WS3. ### 

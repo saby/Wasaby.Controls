@@ -3,7 +3,8 @@
       <div class="PageBlock__title"></div>
       <div class="PageBlock__content">
          <div class="PageBlock__componentWrap">
-            <Controls.Input.Date.RangeLinkLite/>
+            <Controls.Input.Date.RangeLinkLite 
+			   attr:test_name="default_range"/>
          </div>
          <div class="PageBlock__componentWrap">
             <Controls.Input.Date.RangeLinkLite
@@ -11,6 +12,7 @@
                showNextArrow="{{true}}"
                startValue="{{_startValue}}"
                endValue="{{_endValueHalfYear}}"
+			   attr:test_name="show_arrow_range"
             />
          </div>
          <div class="PageBlock__componentWrap">
@@ -20,6 +22,7 @@
                chooseHalfyears="{{false}}"
                chooseQuarters="{{false}}"
                style="linkMain"
+			   attr:test_name="months_range"
             />
          </div>
          <div class="PageBlock__componentWrap">
@@ -29,6 +32,7 @@
                chooseHalfyears="{{false}}"
                chooseMonths="{{false}}"
                style="linkMain2"
+			   attr:test_name="quarters_range"
             />
 
          </div>
@@ -36,6 +40,7 @@
             <Controls.Input.Date.RangeLinkLite
                style="linkAdditional"
                emptyCaption="не задан"
+			   attr:test_name="range_not_value"
             />
          </div>
          <div class="PageBlock__componentWrap">
@@ -45,6 +50,7 @@
                chooseHalfyears="{{false}}"
                chooseMonths="{{false}}"
                chooseQuarters="{{false}}"
+			   attr:test_name="range_years_only"
             />
          </div>
       </div>

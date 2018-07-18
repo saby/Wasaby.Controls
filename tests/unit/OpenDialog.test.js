@@ -19,9 +19,11 @@ define(['SBIS3.CONTROLS/Action/OpenDialog', 'Core/core-instance', 'Lib/Control/D
             action.subscribe('onBeforeShow', function (e, dialog) {
                assert.isTrue(cInstance.instanceOfModule(dialog, 'Lib/Control/Dialog/Dialog'));
                done();
-               dialog.close();
             });
 
+            action.subscribe('onAfterShow', function (e, dialog) {
+               dialog.close();
+            });
          });
 
          it('should open floatArea', function(done) {
@@ -36,7 +38,10 @@ define(['SBIS3.CONTROLS/Action/OpenDialog', 'Core/core-instance', 'Lib/Control/D
             action.subscribe('onBeforeShow', function (e, dialog) {
                assert.isTrue(cInstance.instanceOfModule(dialog, 'Lib/Control/FloatArea/FloatArea'));
                done();
-               action.getDialog().close();
+            });
+
+            action.subscribe('onAfterShow', function (e, dialog) {
+               dialog.close();
             });
          });
       });
