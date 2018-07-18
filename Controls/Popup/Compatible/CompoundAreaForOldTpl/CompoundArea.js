@@ -1,5 +1,6 @@
 define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
    [
+      'require',
       'Core/Control',
       'tmpl!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Lib/Mixins/LikeWindowMixin',
@@ -25,6 +26,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'WS.Data/Entity/InstantiableMixin'
    ],
    function(
+      require,
       Control,
       template,
       LikeWindowMixin,
@@ -292,19 +294,19 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             if (commandName === 'close') {
                return this._close(arg);
-            } else if (commandName === 'ok') {
+            } if (commandName === 'ok') {
                return this._close(true);
-            } else if (commandName === 'cancel') {
+            } if (commandName === 'cancel') {
                return this._close(false);
-            } else if (this._options._mode === 'recordFloatArea' && commandName === 'save') {
+            } if (this._options._mode === 'recordFloatArea' && commandName === 'save') {
                return this.save(arg);
-            } else if (commandName === 'delete') {
+            } if (commandName === 'delete') {
                return this.delRecord(arg);
-            } else if (commandName === 'print') {
+            } if (commandName === 'print') {
                return this.print(arg);
-            } else if (commandName === 'printReport') {
+            } if (commandName === 'printReport') {
                return this.printReport(arg);
-            } else if (commandName === 'resize' || commandName === 'resizeYourself') {
+            } if (commandName === 'resize' || commandName === 'resizeYourself') {
                this._notifyVDOM('resize', null, { bubbling: true });
             } else if (commandName === 'registerPendingOperation') {
                return this._registerChildPendingOperation(arg);
@@ -437,7 +439,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   if (self.isNewRecord()) {
                      self._options.newRecord = record.getKey() === null;
                   }
-                  self._notify('onChangeRecord', record, oldRecord);//Отдаем запись, хотя здесь ее можно получить простым getRecord + старая запись
+                  self._notify('onChangeRecord', record, oldRecord);// Отдаем запись, хотя здесь ее можно получить простым getRecord + старая запись
                },
                result;
             result = this._notify('onBeforeChangeRecord', record, oldRecord);
@@ -455,7 +457,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             if ((self.getRecord().isChanged() && !self.isSaved()) || self._recordIsChanged) {
                this._openConfirmDialog(false, true).addCallback(function(result) {
                   switch (result) {
-                     case 'yesButton' : {
+                     case 'yesButton': {
                         if (self._result === undefined) {
                            self._result = true;
                         }
@@ -466,7 +468,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                         });
                         break;
                      }
-                     case 'noButton' : {
+                     case 'noButton': {
                         if (self._result === undefined) {
                            self._result = false;
                         }
@@ -479,7 +481,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                         self._confirmDialogToCloseActions(deferred, noHide);
                         break;
                      }
-                     default : {
+                     default: {
                         deferred.callback(false);
                      }
                   }
@@ -592,7 +594,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          /* end RecordFloatArea */
 
          isVisible: function() {
-            if (this._options.autoShow !== undefined) {
+            if (this._options.autoShow === false) {
                return this._isVisible;
             }
             return true;
@@ -628,36 +630,52 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             return className;
          },
          _toggleVisible: function(visible) {
-            var popupContainer = this.getContainer().closest('.controls-Popup')[0];
-            if (popupContainer) {
-               // Нужно обновить опции Popup'a, чтобы ws-hidden не затерся/восстановился при синхронизации
-               var controlNode = popupContainer.controlNodes && popupContainer.controlNodes[0];
-               if (controlNode) {
-                  var
-                     id = controlNode.control._options.id,
-                     popupConfig = ManagerController.find(id);
-                  if (popupConfig) {
-                     // Удалим или поставим ws-hidden в зависимости от переданного аргумента
-                     popupConfig.popupOptions.className = this._toggleVisibleClass(popupConfig.popupOptions.className, visible);
+            var
+               popupContainer = this.getContainer().closest('.controls-Popup')[0],
+               id = this._getPopupId(),
+               popupConfig = this._getManagerConfig();
 
-                     // Сразу обновим список классов на контейнере, чтобы при пересинхронизации он не "прыгал"
-                     popupContainer.className = this._toggleVisibleClass(popupContainer.className, visible);
+            if (popupConfig) {
+               // Удалим или поставим ws-hidden в зависимости от переданного аргумента
+               popupConfig.popupOptions.className = this._toggleVisibleClass(popupConfig.popupOptions.className, visible);
 
-                     // Если попап модальный, нужно чтобы Manager показал/скрыл/переместил оверлей
-                     // Из popupConfig.popupOptions.isModal узнаем, является ли попап модальным
-                     if (popupConfig.popupOptions.isModal) {
-                        // Текущее состояние модальности задается в popupConfig
-                        popupConfig.isModal = visible;
+               // Сразу обновим список классов на контейнере, чтобы при пересинхронизации он не "прыгал"
+               popupContainer.className = this._toggleVisibleClass(popupContainer.className, visible);
 
-                        // Изменили конфигурацию попапа, нужно, чтобы менеджер увидел эти изменения
-                        ManagerController.reindex();
-                        ManagerController.update(id, popupConfig.popupOptions);
-                     }
+               // Если попап модальный, нужно чтобы Manager показал/скрыл/переместил оверлей
+               // Из popupConfig.popupOptions.isModal узнаем, является ли попап модальным
+               if (popupConfig.popupOptions.isModal) {
+                  // Текущее состояние модальности задается в popupConfig
+                  popupConfig.isModal = visible;
 
-                     this._isVisible = visible;
-                  }
+                  // Изменили конфигурацию попапа, нужно, чтобы менеджер увидел эти изменения
+                  ManagerController.reindex();
+                  ManagerController.update(id, popupConfig.popupOptions);
                }
+
+               this._isVisible = visible;
             }
+         },
+         setOffset: function(newOffset) {
+            var popupConfig = this._getManagerConfig();
+            if (popupConfig) {
+               popupConfig.popupOptions.horizontalAlign = popupConfig.popupOptions.horizontalAlign || {};
+               popupConfig.popupOptions.horizontalAlign.offset = newOffset.x || 0;
+
+               popupConfig.popupOptions.verticalAlign = popupConfig.popupOptions.verticalAlign || {};
+               popupConfig.popupOptions.verticalAlign.offset = newOffset.y || 0;
+
+               ManagerController.update(this._getPopupId(), popupConfig);
+            }
+         },
+         _getManagerConfig: function() {
+            var id = this._getPopupId();
+            return id ? ManagerController.find(id) : undefined;
+         },
+         _getPopupId: function() {
+            var popupContainer = this.getContainer().closest('.controls-Popup')[0];
+            var controlNode = popupContainer && popupContainer.controlNodes && popupContainer.controlNodes[0];
+            return controlNode && controlNode.control._options.id;
          },
          _getTemplateComponent: function() {
             return this._compoundControl;
