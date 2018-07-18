@@ -1,0 +1,43 @@
+<div class="panel-demo">
+   <div>
+      <Controls.Filter.Button attr:class="panel-demo-filterButton"
+                              filterAlign="{{_selectedKeyAlign}}"
+                              bind:items="_itemsSimple">
+         <ws:templateName>
+            <ws:partial template="tmpl!Controls-demo/Filter/Button/panelOptions/filterPanelTemplateOptions"
+                        title="{{_title}}"
+                        styleHeader="{{_selectedKeyStyle}}"
+                        itemTemplateProperty="{{_itemTemplateProperty}}"
+                        itemTemplate="{{_itemTemplate}}"
+                        additionalTemplate="{{_addTemplate}}"/>
+         </ws:templateName>
+      </Controls.Filter.Button>
+   </div>
+
+   <div class="panel-demo-option-block">
+      <h3>Задайте опции:</h3>
+      <Controls.Label name="myLabel1" caption="Filter align"/>
+      <Controls.Toggle.Radio
+              keyProperty="title"
+              bind:selectedKey="_selectedKeyAlign"
+              source="{{_alignFilterSource}}"
+              direction="horizontal"/>
+
+      <Controls.Label name="myLabel1" caption="Style header panel"/>
+      <Controls.Toggle.Radio
+              keyProperty="title"
+              bind:selectedKey="_selectedKeyStyle"
+              source="{{_styleHeaderSource}}"
+              direction="horizontal"/>
+
+      <Controls.Label name="myLabel1" caption="Title"/>
+      <Controls.Input.Text attr:id="title" bind:value="_title"/>
+
+      <Controls.Toggle.Checkbox attr:id="add" on:valueChanged="valueChangedHandler()"
+                                bind:value="_additionalBlock" caption="Without block additional"/>
+
+      <Controls.Toggle.Checkbox attr:id="property" on:valueChanged="valueChangedHandler2()"
+                                bind:value="_hasItemTemplateProperty" caption="Filter 'author' from block 'Selected' is specified using the option 'templateItem'"/>
+   </div>
+
+</div>
