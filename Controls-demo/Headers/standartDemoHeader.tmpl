@@ -9,32 +9,53 @@
         <h2>Header</h2>
         <h3>Big header</h3>
         <div>
+            xl size (TF Bold 20 px)
             <Controls.Header attr:class="test_element" caption="Header" readOnly="{{true}}" style="default" size="xl"/>
             <Controls.Header attr:class="test_element" caption="Header" readOnly="{{true}}" style="primary" size="xl"/>
         </div>
         <h2>Header with and without click event</h2>
         <div>
-            <div>
+            <div attr:class="demo__block">
+                <div>l size (TF Bold 18 px)</div>
+                <br/>
+                <div>m size (TF Bold 15 px)</div>
+                <br/>
+                <div>s size (TF Bold 14 px)</div>
+            </div>
+            <div attr:class="demo__block">
                 <Controls.Header attr:class="test_element" caption="Header" readOnly="{{false}}" style="default" size="l"/>
+                <br/>
                 <Controls.Header attr:class="test_element" caption="Header" readOnly="{{false}}" style="default" size="m"/>
+                <br/>
                 <Controls.Header attr:class="test_element" caption="Header" readOnly="{{false}}" style="default" size="s"/>
             </div>
-            <div>
+            <div attr:class="demo__block">
                 <Controls.Header attr:class="test_element" caption="Header" readOnly="{{false}}" style="primary" size="l"/>
+                <br/>
                 <Controls.Header attr:class="test_element" caption="Header" readOnly="{{false}}" style="primary" size="m"/>
+                <br/>
                 <Controls.Header attr:class="test_element" caption="Header" readOnly="{{false}}" style="primary" size="s"/>
             </div>
         </div>
         <h2>Header with counter</h2>
         <div>
+            <div>l size (TF 18 px)</div>
+            <br/>
+            <div>m size (TF 15 px)</div>
+            <br/>
+            <div>s size (TF 14 px)</div>
+        </div>
+        <div>
             <div attr:class="Header_Counter__wrapper test_element controls-Header_all__clickable">
                 <Controls.Header caption="Header" style="default" size="l"/>
                 <Controls.Header.Counter attr:class="counter" value="{{12}}" style="primary" size="l"/>
             </div>
+            <br/>
             <div attr:class="Header_Counter__wrapper test_element controls-Header_all__clickable">
                 <Controls.Header caption="Header" style="default" size="m"/>
                 <Controls.Header.Counter attr:class="counter" value="{{12}}" style="disabled" size="m"/>
             </div>
+            <br/>
             <div attr:class="Header_Counter__wrapper test_element controls-Header_all__clickable">
                 <Controls.Header caption="Header" style="primary" size="s"/>
                 <Controls.Header.Counter attr:class="counter" value="{{12}}" style="default" size="s"/>
