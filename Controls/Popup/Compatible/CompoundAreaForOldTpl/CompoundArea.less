@@ -15,8 +15,14 @@
       background: #ffffff;
    }
 
-   .controls-StackTemplate .ws-float-area-title {
-      line-height: 38px;
+   .controls-StackTemplate {
+      .ws-float-area-title {
+         line-height: 38px;
+      }
+      .ws-window-titlebar-custom {
+         background: #F8F8F8;
+         border-bottom: 1px solid #F0F0F0;
+      }
    }
 
    .controls-DialogTemplate .ws-float-area-title {
@@ -24,9 +30,7 @@
    }
 
    .ws-window-titlebar-custom {
-      background: #F8F8F8;
       position: relative;
-      border-bottom: 1px solid #F0F0F0;
    }
    .ws-float-area-title {
       font-size: 18px !important;
@@ -73,9 +77,14 @@
    height: 40px;
 }
 
-.ws-window {
-   .controls-CompoundArea {
+.ws-window.controls-CompoundArea {
+   .ws-window-titlebar {
+      left: 1px;
+      right: 1px;
+   }
+   .controls-DialogTemplate {
       background: none;
+      border: none;
    }
 }
 
