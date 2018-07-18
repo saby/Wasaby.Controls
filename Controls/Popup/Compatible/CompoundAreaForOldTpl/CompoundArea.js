@@ -630,18 +630,30 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             return className;
          },
          _toggleVisible: function(visible) {
-            var popupContainer = this.getContainer().closest('.controls-Popup')[0];
-            if (popupContainer) {
-               // Нужно обновить опции Popup'a, чтобы ws-hidden не затерся/восстановился при синхронизации
-               var popupConfig = this._getManagerConfig();
-               if (popupConfig) {
-                  // Удалим или поставим ws-hidden в зависимости от переданного аргумента
-                  popupConfig.popupOptions.className = this._toggleVisibleClass(popupConfig.popupOptions.className, visible);
+            var
+               popupContainer = this.getContainer().closest('.controls-Popup')[0],
+               id = this._getPopupId(),
+               popupConfig = this._getManagerConfig();
 
-                  // Сразу обновим список классов на контейнере, чтобы при пересинхронизации он не "прыгал"
-                  popupContainer.className = this._toggleVisibleClass(popupContainer.className, visible);
-                  this._isVisible = visible;
+            if (popupConfig) {
+               // Удалим или поставим ws-hidden в зависимости от переданного аргумента
+               popupConfig.popupOptions.className = this._toggleVisibleClass(popupConfig.popupOptions.className, visible);
+
+               // Сразу обновим список классов на контейнере, чтобы при пересинхронизации он не "прыгал"
+               popupContainer.className = this._toggleVisibleClass(popupContainer.className, visible);
+
+               // Если попап модальный, нужно чтобы Manager показал/скрыл/переместил оверлей
+               // Из popupConfig.popupOptions.isModal узнаем, является ли попап модальным
+               if (popupConfig.popupOptions.isModal) {
+                  // Текущее состояние модальности задается в popupConfig
+                  popupConfig.isModal = visible;
+
+                  // Изменили конфигурацию попапа, нужно, чтобы менеджер увидел эти изменения
+                  ManagerController.reindex();
+                  ManagerController.update(id, popupConfig.popupOptions);
                }
+
+               this._isVisible = visible;
             }
          },
          setOffset: function(newOffset) {
