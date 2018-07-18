@@ -6,16 +6,12 @@ define('Controls-demo/Filter/Button/PanelVDom',
       'tmpl!Controls-demo/Filter/Button/PanelVDom',
       'Controls/Filter/Button/Panel',
 
-      'tmpl!Controls-demo/Filter/Button/resources/withoutAdditional/filterPanelTemplateSimple',
-      'tmpl!Controls-demo/Filter/Button/resources/withoutAdditional/mainBlockPanelSimple',
+      'tmpl!Controls-demo/Filter/Button/resources/filterPanelTemplateSimple',
+      'tmpl!Controls-demo/Filter/Button/resources/mainBlockPanelSimple',
 
-      'tmpl!Controls-demo/Filter/Button/resources/itemTemplate/filterPanelTemplateItemProperty',
-      'tmpl!Controls-demo/Filter/Button/resources/itemTemplate/period',
-      'tmpl!Controls-demo/Filter/Button/resources/itemTemplate/author',
+      'tmpl!Controls-demo/Filter/Button/resources/author',
 
-      'tmpl!Controls-demo/Filter/Button/resources/withAdditional/filterPanelTemplateAdditional',
-      'tmpl!Controls-demo/Filter/Button/resources/withAdditional/mainBlockPanel',
-      'tmpl!Controls-demo/Filter/Button/resources/withAdditional/additionalBlockPanel',
+      'tmpl!Controls-demo/Filter/Button/resources/additionalBlockPanel',
 
       'css!Controls-demo/Filter/Button/PanelVDom'
    ],
@@ -30,6 +26,28 @@ define('Controls-demo/Filter/Button/PanelVDom',
        */
 
       'use strict';
+
+      var alignFilterSource = {
+         module: 'WS.Data/Source/Memory',
+         options: {
+            data: [
+               {key: 1, title: 'right'},
+               {key: 2, title: 'left'}
+            ],
+            idProperty: 'key'
+         }
+      };
+
+      var styleHeaderSource = {
+         module: 'WS.Data/Source/Memory',
+         options: {
+            data: [
+               {key: 1, title: 'primary'},
+               {key: 2, title: 'default'}
+            ],
+            idProperty: 'key'
+         }
+      };
 
       var sourcePeriod = {
          module: 'WS.Data/Source/Memory',
@@ -94,25 +112,17 @@ define('Controls-demo/Filter/Button/PanelVDom',
          {id: 'period', value: [2], resetValue: [1], textValue: 'Today', source: sourcePeriod, visibility: true},
          {id: 'state', value: [1], resetValue: [1], source: sourceState, visibility: true},
          {id: 'sender', value: '', resetValue: '', visibility: true},
-         {id: 'author', value: 'Ivanov K.K.', resetValue: '', visibility: true},
+         {id: 'author', value: 'Ivanov K.K.', resetValue: '', visibility: true, templateItem: 'tmpl!Controls-demo/Filter/Button/resources/author'},
          {id: 'responsible', value: '', resetValue: '', visibility: true}
-      ];
-
-      var itemsTemplate = [
-         {id: 'author', value: '', resetValue: '', visibility: true,
-            templateItem: 'tmpl!Controls-demo/Filter/Button/resources/itemTemplate/author'},
-         { id: 'period', value: [1], textValue: 'Period', resetValue: [1], visibility: true,
-            source: sourcePeriod,
-            templateItem: 'tmpl!Controls-demo/Filter/Button/resources/itemTemplate/period'}
       ];
 
       var items = [
          {id: 'period', value: [1], resetValue: [1], source: sourcePeriod, visibility: true},
          {id: 'state', value: [1], resetValue: [1], source: sourceState, visibility: true},
          {id: 'limit', value: [1], resetValue: '', textValue: 'Due date', source: sourceLimit, visibility: false},
-         {id: 'sender', value: '', resetValue: '', visibility: false},
-         {id: 'author', value: 'Ivanov K.K.', resetValue: '', visibility: true},
-         {id: 'responsible', value: '', resetValue: '', visibility: false},
+         {id: 'sender', value: '', resetValue: '', visibility: true},
+         {id: 'author', value: 'Ivanov K.K.', resetValue: '', visibility: true, templateItem: 'tmpl!Controls-demo/Filter/Button/resources/author'},
+         {id: 'responsible', value: '', resetValue: '', visibility: true},
          {id: 'tagging', value: '', resetValue: '', textValue: 'Marks', visibility: false},
          {id: 'operation', value: '', resetValue: '', visibility: false},
          {id: 'group', value: [1], resetValue: [1], source: sourceGroup, visibility: false},
@@ -125,15 +135,38 @@ define('Controls-demo/Filter/Button/PanelVDom',
 
       var PanelVDom = Control.extend({
          _template: template,
+         _itemTemplate: { templateName: 'tmpl!Controls-demo/Filter/Button/resources/mainBlockPanelSimple'},
+         _addTemplate: {templateName: 'tmpl!Controls-demo/Filter/Button/resources/additionalBlockPanel'},
+         _itemsSimple: items,
+         _hasItemTemplateProperty: false,
+         _styleHeaderSource: styleHeaderSource,
 
-         _filterChangedHandler: function(event, filter) {
-            Chain(this._items).each(function(item) {
-               item.textValue = filter[item.id];
-            });
+         valueChangedHandler: function(event, value) {
+            if (value) {
+               this._itemsSimple = itemsSimple;
+               this._addTemplate = null;
+            } else {
+               this._itemsSimple = items;
+               this._addTemplate = {templateName: 'tmpl!Controls-demo/Filter/Button/resources/additionalBlockPanel'};
+            }
          },
 
-         _itemsSimple: itemsSimple,
-         _itemsTemplate: itemsTemplate,
+         valueChangedHandler2: function(event, value) {
+            if (value) {
+               this._itemTemplateProperty = 'templateItem';
+            } else {
+               this._itemTemplateProperty = null;
+            }
+         },
+
+         _title: 'Отбираются',
+
+         _alignFilterSource: alignFilterSource,
+         _selectedKeyAlign: 'right',
+         _selectedKeyStyle: 'primary',
+
+         _additionalBlock: false,
+
          _items: items
 
       });
