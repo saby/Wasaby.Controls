@@ -1,15 +1,39 @@
 define('Controls-demo/Explorer/ExplorerMemory', [
    'WS.Data/Source/Memory',
-   'Core/Deferred'
-], function(MemorySource, Deferred) {
+   'Core/Deferred',
+   'Core/core-clone'
+], function(MemorySource, Deferred, cClone) {
 
    'use strict';
 
+   function getById(items, id) {
+      for (var i = 0; i < items.length; i++) {
+         if (items[i].id === id) {
+            return cClone(items[i]);
+         }
+      }
+   }
+
+   function getFullPath(items, currentRoot) {
+      var
+         path = [],
+         currentNode = getById(items, currentRoot);
+      while (currentNode.parent !== null) {
+         currentNode = getById(items, currentNode.parent);
+         path.unshift(currentNode);
+      }
+      path.unshift(getById(items, currentRoot));
+      return path;
+   }
+
    var
       TreeMemory = MemorySource.extend({
-         _path: [],
+         constructor: function() {
+            TreeMemory.superclass.constructor.apply(this, arguments);
+         },
          query: function(query) {
             var
+               self = this,
                result = new Deferred(),
                filter = query.getWhere(),
                parent = filter['parent'];
@@ -26,15 +50,10 @@ define('Controls-demo/Explorer/ExplorerMemory', [
                data.getAll = function() {
                   var
                      result = originalGetAll.apply(this, arguments),
-                     meta = result.getMetaData(),
-                     path = [];
-                  if (parent !== undefined) {
-                     path.push({
-                        id: 1,
-                        title: 'Node'
-                     });
+                     meta = result.getMetaData();
+                  if (parent !== undefined && parent !== null) {
+                     meta.path = getFullPath(self._$data, parent);
                   }
-                  meta.path = path;
                   result.setMetaData(meta);
                   return result;
                };

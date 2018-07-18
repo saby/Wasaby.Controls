@@ -158,6 +158,7 @@ define('Controls/List/Tree/TreeViewModel', [
          },
 
          setRoot: function(root) {
+            this._expandedNodes = {};
             this._display.setRoot(root);
             this._nextVersion();
             this._notify('onListChange');

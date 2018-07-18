@@ -1,5 +1,6 @@
 <div class="controls-Explorer">
    <Controls.BreadCrumbs.Path name="explorerPath"
+                              attr:class="controls-Explorer__breadCrumbsPath{{!_breadCrumbsVisibility ? ' controls-Explorer__breadCrumbsPath_hidden'}}"
                               keyProperty="{{_options.keyProperty}}"
                               displayProperty="{{_options.displayProperty}}"
                               items="{{_breadCrumbsItems}}"

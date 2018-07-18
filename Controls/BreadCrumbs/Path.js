@@ -5,6 +5,7 @@ define('Controls/BreadCrumbs/Path', [
    'Controls/Utils/FontLoadUtil',
    'tmpl!Controls/BreadCrumbs/Path/Path',
    'tmpl!Controls/Button/BackButton/Back',
+   'Controls/Button/Back',
    'css!Controls/BreadCrumbs/Path/Path'
 ], function(
    Control,
@@ -106,12 +107,12 @@ define('Controls/BreadCrumbs/Path', [
          }
       },
 
-      _onItemClick: function(e, item) {
-         this._notify('itemClick', [item]);
+      _onItemClick: function(e, item, homeClick) {
+         this._notify('itemClick', [item, homeClick]);
       },
 
       _onBackButtonClick: function() {
-         this._notify('itemClick', [this._options.items[0]]);
+         this._notify('itemClick', [this._options.items[0], true]);
       },
 
       _onResize: function() {

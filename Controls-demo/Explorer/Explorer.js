@@ -14,16 +14,18 @@ define('Controls-demo/Explorer/Explorer', [
          _viewSource: new MemorySource({
             idProperty: 'id',
             data: [
-               {  id: 1,   title: 'Node',         'parent': null, 'parent@': true,  'parent$': null   },
-               {  id: 11,  title: 'Node',         'parent': 1,    'parent@': true,  'parent$': null   },
-               {  id: 111, title: 'Leaf',         'parent': 11,   'parent@': null,  'parent$': null   },
-               {  id: 12,  title: 'Leaf',         'parent': 1,    'parent@': null,  'parent$': null   },
-               {  id: 13,  title: 'Hidden node',  'parent': 1,    'parent@': false, 'parent$': true   },
-               {  id: 2,   title: 'Empty node',   'parent': null, 'parent@': true,  'parent$': null   },
-               {  id: 3,   title: 'Hidden node',  'parent': null, 'parent@': false, 'parent$': true   },
-               {  id: 31,  title: 'Leaf',         'parent': 3,    'parent@': null,  'parent$': null   },
-               {  id: 4,   title: 'Empty hidden', 'parent': null, 'parent@': false, 'parent$': false  },
-               {  id: 5,   title: 'Leaf',         'parent': null, 'parent@': null,  'parent$': null   }
+               {  id: 1,   'parent': null, 'parent@': true, title: 'В фокусе (3)' },
+               {  id: 11,  'parent': 1,    'parent@': true, title: 'Поручения отделу кадров (1)' },
+               {  id: 12,  'parent': 1,    'parent@': true, title: 'Ошибки' },
+               {  id: 13,  'parent': 1,    'parent@': null, title: 'Нужно подумать о внесении в стандарт редактирования по месту данного поведения' },
+               {  id: 111, 'parent': 11,   'parent@': true, title: 'Задачи' },
+               {  id: 112, 'parent': 11,   'parent@': null, title: 'Отпуск Ежегодный с 26.07.18 по 27.07.18 "Компания "Тензор" ООО' },
+               {  id: 2,   'parent': null, 'parent@': true, title: 'Аккордеон (2)' },
+               {  id: 21,  'parent': 2,    'parent@': null, title: 'Утечка памяти при построении складского отчета продаж' },
+               {  id: 22,  'parent': 2,    'parent@': null, title: 'Нет тултипов у значений мин и макс у суммарных значений' },
+               {  id: 3,   'parent': null, 'parent@': true, title: 'Задачи 3.7.3.100' },
+               {  id: 4,   'parent': null, 'parent@': null, title: 'Разработать проект стандарта Хлебные крошки' },
+               {  id: 5,   'parent': null, 'parent@': null, title: 'Разобраться с цветом правого аккордеона, лент и тд.' }
             ]
          }),
 
