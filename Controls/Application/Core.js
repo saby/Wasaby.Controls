@@ -9,7 +9,7 @@ define('Controls/Application/Core',
       'Controls/Application/HeadDataContext',
       'native-css'
    ],
-   function(Control, template, AppData, HeadDataContext, nativeCss) {
+   function(Control, template, AppData, HeadDataContext) {
 
       'use strict';
 
@@ -43,12 +43,13 @@ define('Controls/Application/Core',
          _template: template,
          ctxData: null,
          constructor: function(cfg) {
-            var self = this;
+
+            /*var self = this;
             nativeCss.load = function(path, require, load, conf) {
                load(null);
                self.headDataCtx.pushCssLink(getCssP(path));
                self.headDataCtx.updateConsumers();
-            };
+            };*/
 
             try {
                /*TODO: set to presentation service*/
