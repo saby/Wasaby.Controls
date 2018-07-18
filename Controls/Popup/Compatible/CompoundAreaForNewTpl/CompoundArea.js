@@ -8,15 +8,13 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
       'Core/vdom/Synchronizer/Synchronizer',
       'Core/Control',
       'Core/Deferred',
-      'Core/moduleStubs',
       'css!Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea'
    ],
    function(CompoundControl,
       template,
       Sync,
       control,
-      Deferred,
-      moduleStubs) {
+      Deferred) {
       /**
        * Слой совместимости для открытия новых шаблонов в старых попапах
        * */
