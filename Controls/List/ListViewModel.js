@@ -42,7 +42,9 @@ define('Controls/List/ListViewModel',
          },
 
          _getItemDataByItem: function() {
-            var itemsModelCurrent = ListViewModel.superclass._getItemDataByItem.apply(this, arguments);
+            var
+               itemsModelCurrent = ListViewModel.superclass._getItemDataByItem.apply(this, arguments),
+               drawedActions;
             itemsModelCurrent.isSelected = itemsModelCurrent.dispItem === this._markedItem;
             itemsModelCurrent.itemActions =  this._actions[this.getCurrentIndex()];
             itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
@@ -50,12 +52,23 @@ define('Controls/List/ListViewModel',
             itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem.item;
             itemsModelCurrent.multiSelectStatus = this._selectedKeys.indexOf(itemsModelCurrent.key) >= 0;
             itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility === 'visible';
-            itemsModelCurrent.drawActions =
-               itemsModelCurrent.itemActions &&
-               ((itemsModelCurrent.itemActions.showed &&
-               itemsModelCurrent.itemActions.showed.length) ||
-               (itemsModelCurrent.itemActions.showedFirst &&
-               itemsModelCurrent.itemActions.showedFirst.length));
+            if (itemsModelCurrent.itemActions) {
+               if (itemsModelCurrent.itemActions.showed && itemsModelCurrent.itemActions.showed.length) {
+                  drawedActions = itemsModelCurrent.itemActions.showed;
+               } else {
+                  drawedActions = itemsModelCurrent.itemActions.showedFirst;
+               }
+            }
+            itemsModelCurrent.drawActions = drawedActions && drawedActions.length;
+            if (itemsModelCurrent.drawActions) {
+               itemsModelCurrent.hasShowedItemActionWithIcon = false;
+               for (var i = 0; i < drawedActions.length; i++) {
+                  if (!!drawedActions[i].icon) {
+                     itemsModelCurrent.hasShowedItemActionWithIcon = true;
+                     break;
+                  }
+               }
+            }
             if (this._editingItemData && itemsModelCurrent.index === this._editingItemData.index) {
                itemsModelCurrent.isEditing = true;
                itemsModelCurrent.item = this._editingItemData.item;
