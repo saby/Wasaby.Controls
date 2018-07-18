@@ -19,13 +19,13 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
       moduleStubs) {
       /**
        * Слой совместимости для открытия новых шаблонов в старых попапах
-       **/
+       * */
       var moduleClass = CompoundControl.extend({
          _dotTplFn: template,
          $protected: {
             _options: {
                isTMPL: function(template) {
-                  return template.indexOf('tmpl!') === 0; //Если передали просто tmpl в качестве шаблона - нельзя вызывать createControl
+                  return template.indexOf('tmpl!') === 0; // Если передали просто tmpl в качестве шаблона - нельзя вызывать createControl
                }
             }
          },
@@ -42,6 +42,8 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                require([this._options.innerComponentOptions.template], function(ctr) {
                   if (!self._options.isTMPL(self._options.innerComponentOptions.template)) {
                      self._vDomTemplate = control.createControl(ctr, self._options.innerComponentOptions, $('.vDomWrapper', self.getContainer()));
+                     self._afterMountHandler();
+
                      var replaceVDOMContainer = function() {
                         //Отлавливаем события с дочернего vdom компонента
                         self._getRootContainer().eventProperties = {
@@ -55,10 +57,6 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                            }]
                         };
                      };
-                     if (self._options._initCompoundArea) {
-                        self._notifyOnSizeChanged(self, self);
-                        self._options._initCompoundArea(self);
-                     }
                      self._getRootContainer().addEventListener('DOMNodeRemoved', function() {
                         replaceVDOMContainer();
                      });
@@ -69,6 +67,19 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
 
                return def;
             });
+         },
+
+         // Обсудили с Д.Зуевым, другого способа узнать что vdom компонент добавился в dom нет.
+         _afterMountHandler: function() {
+            var self = this;
+            self._baseAfterMount = self._vDomTemplate._afterMount;
+            self._vDomTemplate._afterMount = function() {
+               self._baseAfterMount.apply(this, arguments);
+               if (self._options._initCompoundArea) {
+                  self._notifyOnSizeChanged(self, self);
+                  self._options._initCompoundArea(self);
+               }
+            };
          },
          _onCloseHandler: function() {
             this.sendCommand('close', this._result);
@@ -97,7 +108,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
          },
 
          _forceUpdate: function() {
-            //Заглушка для ForceUpdate которого на compoundControl нет
+            // Заглушка для ForceUpdate которого на compoundControl нет
          }
       });
 
@@ -106,5 +117,4 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
       };
 
       return moduleClass;
-   }
-);
+   });
