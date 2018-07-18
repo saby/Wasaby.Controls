@@ -408,7 +408,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          /* start RecordFloatArea */
          getRecord: function() {
-            return this._options.record || this._options.templateOptions && this._options.templateOptions.record;
+            return this._record || this._options.record || this._options.templateOptions && this._options.templateOptions.record;
          },
          isNewRecord: function() {
             return this._options.newRecord;
@@ -439,6 +439,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   if (self.isNewRecord()) {
                      self._options.newRecord = record.getKey() === null;
                   }
+                  self._record = record;
                   self._notify('onChangeRecord', record, oldRecord);// Отдаем запись, хотя здесь ее можно получить простым getRecord + старая запись
                },
                result;
