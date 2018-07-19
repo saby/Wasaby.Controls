@@ -1,0 +1,11 @@
+<div class="example-BaseDemoInput ws-inline-flexbox ws-flex-column">
+   <div class="example-Base__title">{{_options.title}}</div>
+   <div if="{{_options.blocker}}"
+        class="icon-16 icon-primary {{_lock ? 'icon-Lock' : 'icon-Unlock'}}"
+        on:click="_switchBlocker()"></div>
+   <ws:for data="item in _options.contents">
+      <ws:partial template="{{item}}"
+                  readOnly="{{_lock}}"
+                  attr:class="example-BaseDemoInput__content ws-align-self-end"/>
+   </ws:for>
+</div>

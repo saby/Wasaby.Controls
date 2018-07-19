@@ -1,5 +1,34 @@
-<div class="example-Text">
-   <div class="example-Base__title">Simple text field</div>
+<div class="example-Text ws-inline-flexbox ws-flex-column">
+   <Controls-demo.Example.resource.BaseDemoInput title="Simple text field">
+      <ws:contents>
+         <ws:Array>
+            <Controls.Input.Text placeholder="Tooltip"
+                                 bind:value="_value1"/>
+         </ws:Array>
+      </ws:contents>
+   </Controls-demo.Example.resource.BaseDemoInput>
+
+   <Controls-demo.Example.resource.BaseDemoInput title="Labels for input fields">
+      <ws:contents>
+         <ws:Array>
+            <div>
+               <Controls.Label caption="Label1" on:click="_labelClickHandler('text2')"/>
+               <div>
+                  <Controls.Input.Text name="text2"
+                                       placeholder="Tooltip"
+                                       bind:value="_value2"/>
+                  <div>
+                     <Controls.Label caption="Label1" on:click="_labelClickHandler('text3')"/>
+                     <Controls.Input.Text name="text3"
+                                          placeholder="Tooltip"
+                                          bind:value="_value3"/>
+                  </div>
+               </div>
+            </div>
+         </ws:Array>
+      </ws:contents>
+   </Controls-demo.Example.resource.BaseDemoInput>
+   <!--<div class="example-Base__title">Simple text field</div>
    <div class="ws-inline-flexbox ws-flex-column">
       <div class="example-Base__specify">Enabled</div>
       <Controls.Input.Text placeholder="Tip"
@@ -77,5 +106,5 @@
                         style="accentHeader"
                         bind:value="_value11"/>
 
-   <Controls.Popup.Opener.InfoBox name="infoBox"/>
+   <Controls.Popup.Opener.InfoBox name="infoBox"/>-->
 </div>

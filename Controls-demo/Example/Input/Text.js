@@ -5,8 +5,7 @@ define('Controls-demo/Example/Input/Text',
 
       'Controls/Label',
       'Controls/Input/Text',
-      'css!Controls-demo/Example/resource/Base',
-      'css!Controls-demo/Example/Input/Text/Text'
+      'Controls-demo/Example/resource/BaseDemoInput'
    ],
    function(Control, template) {
 
