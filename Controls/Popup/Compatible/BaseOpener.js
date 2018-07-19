@@ -216,6 +216,9 @@ function(cMerge,
 
          if (newCfg.target) {
             newCfg.dialogOptions.target = $(newCfg.target);
+            if (cfg.mode === 'floatArea') {
+               newCfg.dialogOptions.fitWindow = true;
+            }
          }
 
          if (newCfg.eventHandlers && newCfg.eventHandlers.onResult) {
