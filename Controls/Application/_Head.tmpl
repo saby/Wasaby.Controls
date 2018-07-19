@@ -19,6 +19,7 @@
    <ws:if data="{{ _options.head }}">
       <ws:partial template="{{ _options.head }}"/>
    </ws:if>
+   <link rel="stylesheet" href="{{_options.wsRoot}}css/core.css" type="text/css" key="core-css"/>
    <ws:if data="{{ cssLinks }}">
       <ws:for data="index, value in cssLinks">
          <ws:if data="{{_options.theme}}">
