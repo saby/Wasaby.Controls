@@ -14,8 +14,7 @@ define('Controls/Application/Core',
       template,
       AppData,
       HeadDataContext,
-      cssResolve,
-      nativeCss) {
+      cssResolve) {
 
       'use strict';
 
@@ -23,12 +22,13 @@ define('Controls/Application/Core',
          _template: template,
          ctxData: null,
          constructor: function(cfg) {
-            var self = this;
+
+            /*var self = this;
             nativeCss.load = function(path, require, load, conf) {
                load(null);
                self.headDataCtx.pushCssLink(cssResolve(path));
                self.headDataCtx.updateConsumers();
-            };
+            };*/
 
             try {
                /*TODO: set to presentation service*/
