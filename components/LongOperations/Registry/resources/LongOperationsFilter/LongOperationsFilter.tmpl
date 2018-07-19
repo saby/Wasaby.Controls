@@ -72,17 +72,13 @@
          </ws:selectedKeys>
       </SBIS3.CONTROLS.DropdownList>
    </div>
-   <div if="{{!hideStaffFilter}}" class="controls-LongOperationsFilter__block">
+   <div if="{{useUsersFilter && usersFilterComponent}}" class="controls-LongOperationsFilter__block">
       <div class="controls-LongOperationsFilter__responsibleTitle">{[Ответственный]}</div>
-      <ws:partial template="optional!Staff/Choice"
-         selectionType="leaf"
-         withAccess="{{true}}"
-         multiselect="{{false}}"
-         entityType="Пользователь"
+      <ws:partial template="{{usersFilterComponent}}"
+         scope="{{usersFilterParams}}"
+         className="controls-LongOperationsFilter__usersFilter"
          name="FilterResponsibleFace"
          caption="{{'UserName'|mutable}}"
-         placeholder="{[укажите ФИО]}"
-         className="controls-LongOperationsFilter__responsibleChooser"
          >
          <ws:selectedKeys>
             <ws:Array>
