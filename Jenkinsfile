@@ -275,8 +275,10 @@ node('controls') {
             echo "Собираем controls"
             dir("./controls"){
                 echo "подкидываем istanbul в проект"
-                sh 'istanbul instrument --complete-copy ./components'
-                sh 'istanbul instrument --complete-copy ./Controls'
+                sh 'istanbul instrument --complete-copy --output ./components-cover ./components'
+                sh 'istanbul instrument --complete-copy --output ./controls-cover ./Controls'
+                sh 'sudo mv ./components ./components-orig && sudo mv ./components-cover ./components'
+                sh 'sudo mv ./Controls ./Controls-orig && sudo mv ./controls-cover ./Controls'
                 sh "${python_ver} ${workspace}/constructor/build_controls.py ${workspace}/controls ${env.BUILD_NUMBER} --not_web_sdk NOT_WEB_SDK"
             }
             dir(workspace){
@@ -463,7 +465,7 @@ node('controls') {
         dir("./controls/tests/int"){
             sh"""
                 source /home/sbis/venv_for_test/bin/activate
-                ${python_ver} start_tests.py --files_to_start smoke_test.py --SERVER_ADDRESS ${server_address} --RESTART_AFTER_BUILD_MODE --BROWSER chrome --FAIL_TEST_REPEAT_TIMES 0
+                ${python_ver} start_tests.py --files_to_start smoke_test.py --SERVER_ADDRESS ${server_address} --RESTART_AFTER_BUILD_MODE --BROWSER chrome --FAIL_TEST_REPEAT_TIMES 0 --COVERAGE True
                 deactivate
 
             """
@@ -490,7 +492,7 @@ node('controls') {
                         dir("./controls/tests/int"){
                             sh """
                             source /home/sbis/venv_for_test/bin/activate
-                            echo python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
+                            echo python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --COVERAGE True
                             deactivate
                             """
                         }
@@ -506,7 +508,7 @@ node('controls') {
                         dir("./controls/tests/reg"){
                             sh """
                                 source /home/sbis/venv_for_test/bin/activate
-                                echo python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
+                                echo python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --COVERAGE True
                                 deactivate
                             """
                         }
