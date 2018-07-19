@@ -191,8 +191,8 @@ define('Controls/List/ListViewModel',
          },
 
          setItemActions: function(item, actions) {
-            if (item.getId) {
-               var itemById = this.getItemById(item.getId());
+            if (item.get) {
+               var itemById = this.getItemById(item.get(this._options.keyProperty));
                var collectionItem = itemById ?  itemById.getContents() : item;
                this._actions[this.getIndexBySourceItem(collectionItem)] = actions;
             }
