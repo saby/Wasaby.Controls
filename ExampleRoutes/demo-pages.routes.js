@@ -24,58 +24,10 @@ module.exports = function(Component) {
           }, []);
       },
 
-      '/demo-ws4-input-area': function(req, res) {
-         requirejs('Controls-demo/Example/Input/Area');
+      '/demo-ws4-input': function(req, res) {
+         requirejs('Controls-demo/Example/Input');
          res.render('tmpl!Controls/Application/Route', {
-            application: 'Controls-demo/Example/Input/Area',
-            initDependencies: false
-         }, []);
-      },
-
-      '/demo-ws4-input-mask': function(req, res) {
-         requirejs('Controls-demo/Example/Input/Mask');
-         res.render('tmpl!Controls/Application/Route', {
-            application: 'Controls-demo/Example/Input/Mask',
-            initDependencies: false
-         }, []);
-      },
-
-      '/demo-ws4-input-number': function(req, res) {
-         requirejs('Controls-demo/Example/Input/Number');
-         res.render('tmpl!Controls/Application/Route', {
-            application: 'Controls-demo/Example/Input/Number',
-            initDependencies: false
-         }, []);
-      },
-
-      '/demo-ws4-input-password': function(req, res) {
-         requirejs('Controls-demo/Example/Input/Password');
-         res.render('tmpl!Controls/Application/Route', {
-            application: 'Controls-demo/Example/Input/Password',
-            initDependencies: false
-         }, []);
-      },
-
-      '/demo-ws4-input-phone': function(req, res) {
-         requirejs('Controls-demo/Example/Input/Phone');
-         res.render('tmpl!Controls/Application/Route', {
-            application: 'Controls-demo/Example/Input/Phone',
-            initDependencies: false
-         }, []);
-      },
-
-      '/demo-ws4-input-suggest': function(req, res) {
-         requirejs('Controls-demo/Example/Input/Suggest');
-         res.render('tmpl!Controls/Application/Route', {
-            application: 'Controls-demo/Example/Input/Suggest',
-            initDependencies: false
-         }, []);
-      },
-
-      '/demo-ws4-input-text': function(req, res) {
-         requirejs('Controls-demo/Example/Input/Text');
-         res.render('tmpl!Controls/Application/Route', {
-            application: 'Controls-demo/Example/Input/Text',
+            application: 'Controls-demo/Example/Input',
             initDependencies: false
          }, []);
       },

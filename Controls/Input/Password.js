@@ -13,7 +13,7 @@ define('Controls/Input/Password',
 
    /**
     * Password input.
-    * <a href="https://wi.sbis.ru/materials/demo-ws4-input-password">Демо-пример</a>.
+    * <a href="https://wi.sbis.ru/materials/demo-ws4-input">Демо-пример</a>.
     *
     * @class Controls/Input/Password
     * @extends Core/Control
