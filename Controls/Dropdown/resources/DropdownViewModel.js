@@ -104,7 +104,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             }
             itemsModelCurrent.hasChildren = this._hasItemChildren(itemsModelCurrent.item);
             itemsModelCurrent.hasParent = this._hasParent(itemsModelCurrent.item);
-            itemsModelCurrent.isSelected = this._isItemSelected(itemsModelCurrent.item);
+            itemsModelCurrent.isSelected = this._options.hideSelectMark ? false : this._isItemSelected(itemsModelCurrent.item);
             itemsModelCurrent.icon = itemsModelCurrent.item.get('icon');
 
             //Draw the separator to split history and nohistory items.
@@ -123,7 +123,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             if (keys instanceof Array) {
                return keys.indexOf(item.get(this._options.keyProperty)) > -1;
             }
-            return keys !== undefined  && keys === item.get(this._options.keyProperty);
+            return keys !== undefined && keys === item.get(this._options.keyProperty);
          },
          _hasItemChildren: function(item) {
             return this._hierarchy.isNode(item) && !!this._hierarchy.getChildren(item, this._options.items).length;
@@ -168,7 +168,6 @@ define('Controls/Dropdown/resources/DropdownViewModel',
                   rawData: itemData
                });
                emptyItem.item = item;
-               emptyItem.isSelected = this._isItemSelected(item);
                emptyItem.getPropValue = ItemsUtil.getPropertyValue;
                emptyItem.emptyText = this._options.emptyText;
                return emptyItem;
