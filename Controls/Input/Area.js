@@ -19,6 +19,7 @@ define('Controls/Input/Area', [
 
    /**
     * Multiline text input with autoheight.
+    * <a href="https://wi.sbis.ru/materials/demo-ws4-input-area">Демо-пример</a>.
     *
     * @class Controls/Input/Area
     * @extends Controls/Input/Text
@@ -27,7 +28,6 @@ define('Controls/Input/Area', [
     * @category Input
     * @author Степин Павел Владимирович
     * @demo Controls-demo/Input/Area/Area
-    * @demo Controls-demo/Example/Input/Area
     */
 
    /**

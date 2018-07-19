@@ -4,7 +4,8 @@ define('Controls-demo/Example/Input/Mask',
       'tmpl!Controls-demo/Example/Input/Mask/Mask',
 
       'Controls/Input/Mask',
-      'css!Controls-demo/Example/resource/Base'
+      'css!Controls-demo/Example/resource/Base',
+      'Controls-demo/Example/resource/BaseDemoInput'
    ],
    function(Control, template) {
 

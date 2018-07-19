@@ -16,6 +16,7 @@ define('Controls/Input/Text',
 
       /**
        * Single-line text input.
+       * <a href="https://wi.sbis.ru/materials/demo-ws4-input-text">Демо-пример</a>.
        *
        * @class Controls/Input/Text
        * @extends Core/Control
@@ -28,7 +29,6 @@ define('Controls/Input/Text',
        * @category Input
        * @author Журавлев Максим Сергеевич
        * @demo Controls-demo/Input/Text/Text
-       * @demo Controls-demo/Example/Input/Text
        */
 
 

@@ -5,8 +5,7 @@ define('Controls-demo/Example/Input/Suggest',
       'tmpl!Controls-demo/Example/Input/Suggest/Suggest',
 
       'Controls/Input/Suggest',
-      'css!Controls-demo/Example/resource/Base',
-      'css!Controls-demo/Example/Input/Suggest/Suggest'
+      'Controls-demo/Example/resource/BaseDemoInput'
    ],
    function(Control, MemorySource, template) {
 

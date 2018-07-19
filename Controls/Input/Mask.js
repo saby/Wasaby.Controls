@@ -14,6 +14,7 @@ define('Controls/Input/Mask',
 
       /**
        * Input for entering text with a specified format.
+       * <a href="https://wi.sbis.ru/materials/demo-ws4-input-mask">Демо-пример</a>.
        *
        * @class Controls/Input/Mask
        * @extends Core/Control
@@ -25,7 +26,6 @@ define('Controls/Input/Mask',
        * @public
        * @category Input
        * @demo Controls-demo/Input/Mask/Mask
-       * @demo Controls-demo/Example/Input/Mask
        */
 
       /**

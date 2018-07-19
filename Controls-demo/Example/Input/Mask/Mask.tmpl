@@ -1,14 +1,37 @@
 <div class="example-Mask">
-   <div class="example-Base__title">The format of the input field</div>
-   <div class="example-Base__specify">SNILS</div>
-   <Controls.Input.Mask placeholder="SNILS"
-                        mask="ddd-ddd-ddd dd"
-                        bind:value="_snils"/>
-   <div class="example-Base__specify example-Base__specify_detached">Bank card number</div>
-   <Controls.Input.Mask placeholder="Card number"
-                        mask="dddd dddd dddd dddd"
-                        bind:value="_cardNumber"/>
-   <div class="example-Base__specify example-Base__specify_detached">Mobile phone</div>
-   <Controls.Input.Mask mask="+7 (ddd) ddd-dd-dd"
-                        bind:value="_mobilePhone"/>
+   <Controls-demo.Example.resource.BaseDemoInput title="The format of the input field">
+      <ws:contents>
+         <ws:Array>
+            <ws:Object>
+               <ws:template>
+                  <div>
+                     <div class="example-Base__specify">SNILS</div>
+                     <Controls.Input.Mask placeholder="SNILS"
+                                          mask="ddd-ddd-ddd dd"
+                                          bind:value="_snils"/>
+                  </div>
+               </ws:template>
+            </ws:Object>
+            <ws:Object spacing="normal">
+               <ws:template>
+                  <div>
+                     <div class="example-Base__specify">Bank card number</div>
+                     <Controls.Input.Mask placeholder="Card number"
+                                          mask="dddd dddd dddd dddd"
+                                          bind:value="_cardNumber"/>
+                  </div>
+               </ws:template>
+            </ws:Object>
+            <ws:Object spacing="normal">
+               <ws:template>
+                  <div>
+                     <div class="example-Base__specify example-Base__specify_detached">Mobile phone</div>
+                     <Controls.Input.Mask mask="+7 (ddd) ddd-dd-dd"
+                                          bind:value="_mobilePhone"/>
+                  </div>
+               </ws:template>
+            </ws:Object>
+         </ws:Array>
+      </ws:contents>
+   </Controls-demo.Example.resource.BaseDemoInput>
 </div>

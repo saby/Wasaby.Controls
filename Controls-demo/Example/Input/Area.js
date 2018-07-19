@@ -4,7 +4,8 @@ define('Controls-demo/Example/Input/Area',
       'tmpl!Controls-demo/Example/Input/Area/Area',
 
       'Controls/Input/Area',
-      'css!Controls-demo/Example/resource/Base'
+      'css!Controls-demo/Example/resource/Base',
+      'Controls-demo/Example/resource/BaseDemoInput'
    ],
    function(Control, template) {
 

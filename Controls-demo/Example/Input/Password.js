@@ -4,7 +4,7 @@ define('Controls-demo/Example/Input/Password',
       'tmpl!Controls-demo/Example/Input/Password/Password',
 
       'Controls/Input/Password',
-      'css!Controls-demo/Example/resource/Base'
+      'Controls-demo/Example/resource/BaseDemoInput'
    ],
    function(Control, template) {
 

@@ -4,7 +4,8 @@ define('Controls-demo/Example/Input/Number',
       'tmpl!Controls-demo/Example/Input/Number/Number',
 
       'Controls/Input/Number',
-      'css!Controls-demo/Example/resource/Base'
+      'css!Controls-demo/Example/resource/Base',
+      'Controls-demo/Example/resource/BaseDemoInput'
    ],
    function(Control, template) {
 

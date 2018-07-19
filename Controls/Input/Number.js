@@ -35,6 +35,7 @@ define('Controls/Input/Number', [
 
       /**
        * Number input.
+       * <a href="https://wi.sbis.ru/materials/demo-ws4-input-number">Демо-пример</a>.
        *
        * @class Controls/Input/Number
        * @extends Core/Control
@@ -47,7 +48,6 @@ define('Controls/Input/Number', [
        * @category Input
        * @author Баранов М.А.
        * @demo Controls-demo/Input/Number/Number
-       * @demo Controls-demo/Example/Input/Number
        */
 
       /**

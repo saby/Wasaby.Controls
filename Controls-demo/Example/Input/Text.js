@@ -3,7 +3,6 @@ define('Controls-demo/Example/Input/Text',
       'Core/Control',
       'tmpl!Controls-demo/Example/Input/Text/Text',
 
-      'Controls/Label',
       'Controls/Input/Text',
       'Controls-demo/Example/resource/BaseDemoInput'
    ],
@@ -14,23 +13,33 @@ define('Controls-demo/Example/Input/Text',
       return Control.extend({
          _template: template,
 
-         _tagStyles: null,
+         _currentActiveTag: null,
 
-         _valueDisabled2: 'Simple text input field',
+         _value9: '10 500.00',
 
-         _beforeMount: function() {
-            this._tagStyles = ['primary', 'done', 'attention', 'error', 'info'];
-         },
+         _value10: '10 500.00',
+
+         _value11: '10 500.00',
+
+         _value12: '10 500.00',
+
+         _value13: '10 500.00',
 
          _labelClickHandler: function(event, nameText) {
             this._children[nameText].activate();
          },
          
-         _showInfoBox: function(event) {
-            this._children.infoBox.open({
-               target: event.target,
-               message: 'Tooltip'
-            });
+         _showInfoBox: function(event, target) {
+            var infoBox = this._children.infoBox;
+
+            if (this._currentActiveTag !== target) {
+               infoBox.open({
+                  target: target,
+                  message: 'Tooltip text',
+                  position: 'tl'
+               });
+               this._currentActiveTag = target;
+            }
          }
       });
    }

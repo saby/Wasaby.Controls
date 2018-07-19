@@ -10,6 +10,7 @@ define('Controls/Input/Phone',
 
       /**
        * Phone input.
+       * <a href="https://wi.sbis.ru/materials/demo-ws4-input-phone">Демо-пример</a>.
        *
        * @class Controls/Input/Phone
        * @extends Core/Control
@@ -20,7 +21,6 @@ define('Controls/Input/Phone',
        * @public
        * @category Input
        * @demo Controls-demo/Input/Phone/Phone
-       * @demo Controls-demo/Example/Input/Phone
        */
 
       var Phone = Control.extend({
