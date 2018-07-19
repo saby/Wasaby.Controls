@@ -721,6 +721,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (this._tinyEditor && this._tinyReady.isReady()) {
 
                   this._tinyEditor.off();
+                  this._unSubscribeOnScroll();
 
                   this._tinyEditor.execCommand('mceRemoveControl', true, this.getContainer().find('[id*=mce_]').attr('id'));
                   this._tinyEditor.destroy && this._tinyEditor.destroy();
@@ -2068,46 +2069,67 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   this._readyControlDeffered.callback();
                }
             },
-            _onInitContentBody: function() {
-               var bindImageEvent = function(event, callback) {
-                  this._inputControl.bind(event, function(e) {
-                     if (this._inputControl.attr('contenteditable') !== 'false') {
-                        var
-                           target = e.target;
-                        if (target.nodeName === 'IMG' && target.className.indexOf('mce-object-iframe') === -1) {
-                           callback(e, target);
-                        }
-                     }
-                  }.bind(this));
-               }.bind(this);
+            _bindImageEvent: function(eventNames, callback) {
+               this.getTinyEditor().on(eventNames, function(e) {
 
+                  var _tinyEditor = this.getTinyEditor();
+                  var body = $(_tinyEditor.getBody());
+
+                  if (body.attr('contenteditable') !== 'false') {
+                     var target = e.target;
+                     if (target.nodeName === 'IMG' && target.className.indexOf('mce-object-iframe') === -1) {
+                        callback(e, target);
+                     }
+                  }
+
+               }.bind(this));
+            },
+            _subscribeOnScroll: function() {
+               var _editorWin = $(this.getTinyEditor().getWin());
+               _editorWin.on('scroll', this._hideImageOptionsPanel); // не всегда стреляет (iframe)
+               _editorWin.on('mousewheel', this._hideImageOptionsPanel); // не всегда стреляет (iframe)
+               this._container.on('scroll', this._hideImageOptionsPanel); // не всегда стреляет (iframe)
+               this._container.on('mousewheel', this._hideImageOptionsPanel); // не всегда стреляет (iframe)
+               _editorWin = null;
+            },
+            _unSubscribeOnScroll: function() {
+               var _editorWin = $(this.getTinyEditor().getWin());
+               _editorWin.off('scroll', this._hideImageOptionsPanel); // не всегда стреляет (iframe)
+               _editorWin.off('mousewheel', this._hideImageOptionsPanel); // не всегда стреляет (iframe)
+               this._container.off('scroll', this._hideImageOptionsPanel); // не всегда стреляет (iframe)
+               this._container.off('mousewheel', this._hideImageOptionsPanel); // не всегда стреляет (iframe)
+               _editorWin = null;
+            },
+            _onInitContentBody: function() {
                var editor = this.getTinyEditor();
+
                //По двойному клику на изображение показывать диалог редактирования размеров
-               bindImageEvent('dblclick', this._ondblClickCallback);
+               this._bindImageEvent('dblclick', this._ondblClickCallback);
                //По нажатию на изображения показывать панель редактирования самого изображения
-               bindImageEvent('mouseup touchstart', this._onMouseupTouchstartCallback);
+               this._bindImageEvent('mouseup touchstart', this._onMouseupTouchstartCallback);
 
                //Проблема:
                //    При клике на изображение в ie появляются квадраты ресайза
                //Решение:
                //    отменять дефолтное действие
                if (cConstants.browser.isIE) {
-                  bindImageEvent('mousedown', this._onMouseDownCallback);
+                  this._bindImageEvent('mousedown', this._onMouseDownCallback);
                }
 
                //При клике на изображение снять с него выделение
-               bindImageEvent('click', this._onClickCallback);
-               this._inputControl.on('scroll mousewheel', this._hideImageOptionsPanel);
-               this._inputControl.on('keydown', this._onKeyDownCallback);
+               this._bindImageEvent('click', this._onClickCallback);
+               this._subscribeOnScroll();
+
+               editor.on('keydown', this._onKeyDownCallback);
 
                // При нажатии клавиши Del - удалить изображение, если оно выделено
                // 1174801418 https://online.sbis.ru/opendoc.html?guid=1473813c-1617-4a21-9890-cedd1c692bfd
-               this._inputControl.on('keyup', this._onKeyUpCallback);
+               editor.on('keyup', this._onKeyUpCallback);
 
                this._inputControl.attr('tabindex', 1);
 
                if (!cConstants.browser.firefox) { //в firefox работает нативно
-                  this._inputControl.bind('mouseup', this._onMouseUpCallback);
+                  editor.on('mouseup', this._onMouseUpCallback);
                }
                this._notifyOnSizeChanged();
                if (!this._readyControlDeffered.isReady()) {
@@ -2119,6 +2141,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                for (var i = 1; i <= 9; i++) {
                   editor.shortcuts.remove('access+' + i);
                }
+
                this._inputControl = $(editor.getBody());
 
                RichUtil.markRichContentOnCopy(this._inputControl.get(0));
@@ -3460,15 +3483,18 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             //метод показа плейсхолдера по значению//
             //TODO: ждать пока решится задача в самом tinyMCE  https://github.com/tinymce/tinymce/issues/2588
             _togglePlaceholder: function(value) {
-               var
-                  curValue = value || this.getText();
-               this.getContainer().toggleClass('controls-RichEditor__empty', (curValue === '' || curValue ===
-                  undefined || curValue === null) &&
-                  this._inputControl.html().indexOf('</li>') < 0 &&
-                  this._inputControl.html().indexOf('<p>&nbsp;') < 0 &&
-                  this._inputControl.html().indexOf('<p><br>&nbsp;') < 0 &&
-                  this._inputControl.html().indexOf('<blockquote>') < 0
-               );
+               var curValue = value || this.getText();
+               var _tiny = this.getTinyEditor();
+               var _currentContent = _tiny ? $(_tiny.getBody()).html() : this._inputControl.html();
+               var isEmptyCurValue = curValue === '' || curValue === undefined || curValue === null;
+               var bodyNotHasTags = _currentContent.indexOf('</li>') < 0 &&
+                  _currentContent.indexOf('<p>&nbsp;') < 0 &&
+                  _currentContent.indexOf('<p><br>&nbsp;') < 0 &&
+                  _currentContent.indexOf('<blockquote>') < 0;
+
+               var _toggle = isEmptyCurValue && bodyNotHasTags;
+
+               this.getContainer().toggleClass('controls-RichEditor__empty', _toggle);
             },
 
             _replaceSmilesToCode: function(text) {
