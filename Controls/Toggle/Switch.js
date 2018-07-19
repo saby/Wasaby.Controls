@@ -25,8 +25,10 @@ define('Controls/Toggle/Switch', [
     */
 
    /**
-    * @name Controls/Toggle/Switch#captionLeft
+    * @name Controls/Toggle/Switch#captionPosition
     * @cfg {Boolean} Switch caption has left position.
+    * @variant left Switch has caption before toggle composition.
+    * @variant right Switch has toggle before caption composition.
     */
 
    var Switch = Control.extend({
@@ -41,14 +43,19 @@ define('Controls/Toggle/Switch', [
 
    Switch.getDefaultOptions = function getDefaultOptions() {
       return {
-         value: false
+         value: false,
+         captionPosition: 'right'
       };
    };
 
    Switch.getOptionTypes = function getOptionTypes() {
       return {
          value: types(Boolean),
-         caption: types(String)
+         caption: types(String),
+         captionPosition: types(String).oneOf([
+            'left',
+            'right'
+         ])
       };
    };
 
