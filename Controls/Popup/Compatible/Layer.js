@@ -8,15 +8,17 @@ define('Controls/Popup/Compatible/Layer', [
    'Core/RightsManager',
    'Core/ExtensionsManager',
    'Core/moduleStubs',
+   'View/Runner/requireHelper',
    'Core/IoC',
    'WS.Data/Source/SbisService',
    'WS.Data/Chain'
-], function(Deferred, ParallelDeferred, Constants, RightsManager, ExtensionsManager, moduleStubs, IoC, SbisService, Chain) {
+], function(Deferred, ParallelDeferred, Constants, RightsManager, ExtensionsManager, moduleStubs, requireHelper, IoC, SbisService, Chain) {
    'use strict';
 
    var loadDeferred;
    var compatibleDeps = [
       'cdn!jquery/3.3.1/jquery-min.js',
+      'Core/Control',
       'Lib/Control/Control.compatible',
       'Lib/Control/AreaAbstract/AreaAbstract.compatible',
       'Lib/Control/BaseCompatible/BaseCompatible',
@@ -216,7 +218,6 @@ define('Controls/Popup/Compatible/Layer', [
          coreControl.prototype.getId = controlCompatible.getId;
          
          loadDeferred.callback(result);
-         require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!SBIS3.ENGINE/Controls/MiniCard']);
       }, function(e) {
          IoC.resolve('ILogger').error('Layer', 'Can\'t load core extensions', e);
 
@@ -225,7 +226,6 @@ define('Controls/Popup/Compatible/Layer', [
          coreControl.prototype.getId = controlCompatible.getId;
 
          loadDeferred.callback(result);
-         require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!SBIS3.ENGINE/Controls/MiniCard']);
       });
    }
 
@@ -274,20 +274,35 @@ define('Controls/Popup/Compatible/Layer', [
                IoC.resolve('ILogger').error('Layer', 'Can\'t load dependencies', e);
             });
             parallelDef.push(loadDepsDef);
+            var parallelDefRes = parallelDef.done().getResult();
 
             // var tempCompatVal = constants.compat;
             Constants.compat = true;
-            Constants.systemExtensions = true;
-            Constants.userConfigSupport = true;
 
             if (typeof window !== 'undefined') {
-               loadDataProviders(parallelDef);
+               // для тестов и демок не нужно грузить ни дата провайдеры, ни активность
+               if (requireHelper.defined('OnlineSbisRu/VDOM/MainPage/MainPage')) {
+                  Constants.systemExtensions = true;
+                  Constants.userConfigSupport = true;
+                  loadDataProviders(parallelDef);
+                  parallelDefRes.addCallbacks(function() {
+                     moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!SBIS3.ENGINE/Controls/MiniCard']).addErrback(function(err) {
+                        IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', err);
+                     });
+                  }, function() {
+                     moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!SBIS3.ENGINE/Controls/MiniCard']).addErrback(function(err) {
+                        IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', err);
+                     });
+                  });
+               }
             }
-            parallelDef.done().getResult().addCallbacks(function() {
+            parallelDefRes.addCallbacks(function() {
                finishLoad(loadDeferred, result);
             }, function(e) {
                IoC.resolve('ILogger').error('Layer', 'Can\'t load data providers', e);
-               finishLoad(loadDeferred, result);
+               loadDepsDef.addCallback(function() {
+                  finishLoad(loadDeferred, result);
+               });
             });
 
          }
