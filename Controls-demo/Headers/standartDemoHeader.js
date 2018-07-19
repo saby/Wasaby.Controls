@@ -1,8 +1,7 @@
 define('Controls-demo/Headers/standartDemoHeader', [
    'Core/Control',
    'tmpl!Controls-demo/Headers/standartDemoHeader',
-   'css!Controls-demo/Headers/standartDemoHeader',
-   'css!components/themes/fonts/glyphs'
+   'css!Controls-demo/Headers/standartDemoHeader'
 ], function(Control, template) {
    'use strict';
 
