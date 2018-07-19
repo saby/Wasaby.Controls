@@ -1,36 +1,31 @@
 <div class="removeDemo">
-    <Controls.List
-            class="removeDemo__list test_list_1"
-            name="list"
-            markedKey="{{1}}"
-            itemActions="{{_itemActions}}"
-            source = "{{_viewSource}}"
-            on:beforeItemsRemove="_beforeItemsRemove()"
-            on:afterItemsRemove="_afterItemsRemove()"
-            keyProperty="id">
-    </Controls.List>
-    <Controls.List
-            class="removeDemo__list test_list_2"
-            on:beforeItemsRemove="_secondListRemoveHandler()"
-            on:afterItemsRemove="_secondListRemoveHandler()"
-            source = "{{_viewSourceSecond}}"
-            keyProperty="id">
-        <ws:itemTemplate>
-            <ws:partial template="tmpl!Controls/List/ItemTemplate">
-                <ws:contentTemplate>
-                    <div>
-                        <span>List in list</span>
-                        <Controls.List
-                                class="test_list_3"
-                                name="listSecond"
-                                itemActions="{{_itemActionsSecond}}"
-                                source = "{{_viewSourceClone}}"
-                                keyProperty="id">
-                        </Controls.List>
-                    </div>
-                </ws:contentTemplate>
-            </ws:partial>
-        </ws:itemTemplate>
-    </Controls.List>
+    <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
+        <ws:content>
+            <div>
+                <Controls.List.Remover name="listRemoveFirst" on:beforeItemsRemove="_beforeItemsRemove()" on:afterItemsRemove="_afterItemsRemove()"/>
+                <Controls.List.Container>
+                    <Controls.List
+                            class="removeDemo__list test_list_1"
+                            name="list"
+                            markedKey="{{1}}"
+                            itemActions="{{_itemActions}}"/>
+                </Controls.List.Container>
+            </div>
+        </ws:content>
+    </Controls.Container.Data>
+    <Controls.Container.Data source="{{_viewSourceSecond}}" keyProperty="id">
+        <ws:content>
+            <div>
+                <Controls.List.Remover name="listRemoveSecond"/>
+                <Controls.List.Container>
+                    <Controls.List
+                            class="removeDemo__list test_list_3"
+                            name="listSecond"
+                            itemActions="{{_itemActionsSecond}}">
+                    </Controls.List>
+                </Controls.List.Container>
+            </div>
+        </ws:content>
+    </Controls.Container.Data>
     <Controls.Popup.Opener.Confirmation name="popupOpener"/>
 </div>

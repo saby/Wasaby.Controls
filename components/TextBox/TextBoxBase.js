@@ -222,7 +222,9 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
          var newTextIsEmpty = this._isEmptyValue(text),
              newText = newTextIsEmpty ? text : this._formatText(text.toString());
 
-         if (newText !== this._options.text) {
+         //На андроиде не стреляет событие keyPress, а в нем делался preventDefault для значений, которые не подходят под inputRegExp
+         //Чтобы убирать эти значения из поля ввода нужно всегда перерисовывать текст
+         if (newText !== this._options.text || constants.browser.isMobileAndroid) {
             if(!this._textChanged && !(newTextIsEmpty && this._isEmptyValue(this._options.text))) {
                this._textChanged = true;
             }

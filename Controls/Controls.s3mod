@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<ui_module id="f6fdf353-3ab3-4dbb-8671-01c2b418bf0a" name="Controls" responsible="Бегунов А. В." version="1.00">
+<ui_module id="f6fdf353-3ab3-4dbb-8671-01c2b418bf0a" name="Controls" responsible="Крайнов Д. О." version="1.00">
 
   <description>Новая библиотека контролов реализованных на технологии VDOM</description>
 

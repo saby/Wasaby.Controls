@@ -1,33 +1,31 @@
-<div class="controls-SubmitPopup__footer">
-   <div class="controls-SubmitPopup__buttonContainer">
-      <ws:if data="{{type === 'ok'}}">
+<div class="controls-SubmitPopup__buttonContainer">
+   <ws:if data="{{type === 'ok'}}">
+      <Controls.Button
+         ws-autofocus="{{true}}"
+         style="buttonPrimary"
+         caption="{{okCaption}}"
+         attr:class="controls-SubmitPopup__button controls-Button__ellipsis controls-SubmitPopup__button-standard"
+         on:click="_sendResult()"/>
+   </ws:if>
+   <ws:else>
+      <Controls.Button
+         ws-autofocus="{{true}}"
+         style="buttonPrimary"
+         caption="{{yesCaption}}"
+         attr:class="controls-SubmitPopup__button{{type === 'yesnocancel' ? ' controls-SubmitPopup__button-mini' : ' controls-SubmitPopup__button-standard'}} controls-Button__ellipsis"
+         on:click="_sendResult(true)"
+      />
+      <Controls.Button
+         caption="{{noCaption}}"
+         attr:class="controls-SubmitPopup__button{{type === 'yesnocancel' ? ' controls-SubmitPopup__button-mini' : ' controls-SubmitPopup__button-standard'}} controls-Button__ellipsis"
+         on:click="_sendResult(false)"
+      />
+      <ws:if data="{{type === 'yesnocancel'}}">
          <Controls.Button
-            ws-autofocus="{{true}}"
-            style="buttonPrimary"
-            caption="{{okCaption}}"
-            attr:class="controls-SubmitPopup__button controls-Button__ellipsis controls-SubmitPopup__button-standard"
-            on:click="_sendResult()"/>
+            caption="{{cancelCaption}}"
+            attr:class="controls-SubmitPopup__button controls-SubmitPopup__button-mini controls-Button__ellipsis"
+            on:click="_sendResult()"
+         />
       </ws:if>
-      <ws:else>
-         <Controls.Button
-            ws-autofocus="{{true}}"
-            style="buttonPrimary"
-            caption="{{yesCaption}}"
-            attr:class="controls-SubmitPopup__button{{type === 'yesnocancel' ? ' controls-SubmitPopup__button-mini' : ' controls-SubmitPopup__button-standard'}} controls-Button__ellipsis"
-            on:click="_sendResult(true)"
-         />
-         <Controls.Button
-            caption="{{noCaption}}"
-            attr:class="controls-SubmitPopup__button{{type === 'yesnocancel' ? ' controls-SubmitPopup__button-mini' : ' controls-SubmitPopup__button-standard'}} controls-Button__ellipsis"
-            on:click="_sendResult(false)"
-         />
-         <ws:if data="{{type === 'yesnocancel'}}">
-            <Controls.Button
-               caption="{{cancelCaption}}"
-               attr:class="controls-SubmitPopup__button controls-SubmitPopup__button-mini controls-Button__ellipsis"
-               on:click="_sendResult()"
-            />
-         </ws:if>
-      </ws:else>
-   </div>
+   </ws:else>
 </div>

@@ -1,5 +1,5 @@
 <div>
-   <ws:if data="{{_options.targetTracking || _options.closeOnTargetScroll}}">
-      <Controls.Event.Emitter event="listScroll" on:listScroll="_scrollHandler()"/>
+   <ws:if data="{{isOpened() && (_options.targetTracking || _options.closeOnTargetScroll)}}">
+      <Controls.Event.Emitter event="scroll" on:scroll="_scrollHandler()"/>
    </ws:if>
 </div>

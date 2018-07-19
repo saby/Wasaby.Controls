@@ -257,11 +257,12 @@ define('Controls/Container/Scroll',
                this._displayState = _private.calcDisplayState(this);
             },
 
-            _scrollHandler: function() {
+            _scrollHandler: function(ev) {
                if (!this._dragging) {
                   this._scrollTop = _private.getScrollTop(this._children.content);
                   this._notify('scroll', [this._scrollTop]);
                }
+               this._children.scrollDetect.start(ev);
             },
 
             _scrollbarTaken: function(notify) {

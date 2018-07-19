@@ -59,7 +59,7 @@ define('Controls/Popup/Opener/BaseOpener',
          _openPopup: function(cfg, controller) {
             var self = this;
             this._requireModules(cfg, controller).addCallback(function(result) {
-               Base.showDialog(result.template, cfg, result.controller, self._popupId).addCallback(function(result) {
+               Base.showDialog(result.template, cfg, result.controller, self._popupId, self).addCallback(function(result) {
                   self._isExecuting = false;
                   if (Base.isNewEnvironment()) {
                      self._popupId = result;
@@ -123,7 +123,7 @@ define('Controls/Popup/Opener/BaseOpener',
 
          _scrollHandler: function(event) {
             // listScroll стреляет событием много раз, нужно обработать только непосредственно скролл списка
-            if (this.isOpened() && event.type === 'listscroll') {
+            if (this.isOpened() && event.type === 'scroll') {
                if (this._options.targetTracking) {
                   ManagerController.popupUpdated(this._popupId);
                } else if (this._options.closeOnTargetScroll) {
@@ -142,10 +142,16 @@ define('Controls/Popup/Opener/BaseOpener',
           */
          isOpened: function() {
             // todo Compatible: Для старого окружения не вызываем методы нового Manager'a
-            return Base.isNewEnvironment() ? !!ManagerController.find(this._popupId) : null;
+            if (Base.isNewEnvironment()) {
+               return !!ManagerController.find(this._popupId);
+            }
+            if (this._action) {
+               return !!this._action.getDialog();
+            }
+            return null;
          }
       });
-      Base.showDialog = function(rootTpl, cfg, controller, popupId) {
+      Base.showDialog = function(rootTpl, cfg, controller, popupId, opener) {
          var def = new Deferred();
 
          if (Base.isNewEnvironment()) {
@@ -168,9 +174,32 @@ define('Controls/Popup/Opener/BaseOpener',
                });
             }
          } else {
-            requirejs(['Controls/Popup/Compatible/BaseOpener', 'SBIS3.CONTROLS/Action/List/OpenEditDialog'], function(CompatibleOpener, OpenEditDialog) {
+            var isFormController = false;
+            var proto = rootTpl.prototype && rootTpl.prototype.__proto__;
+            while (proto && !isFormController) {
+               if (proto._moduleName === 'SBIS3.CONTROLS/FormController') {
+                  isFormController = true;
+               }
+               proto = proto.__proto__;
+            }
+
+            var deps = ['Controls/Popup/Compatible/BaseOpener'];
+
+            if (isFormController) {
+               deps.push('SBIS3.CONTROLS/Action/List/OpenEditDialog');
+            } else {
+               deps.push('SBIS3.CONTROLS/Action/OpenDialog');
+            }
+
+            requirejs(deps, function(CompatibleOpener, Action) {
                var newCfg = CompatibleOpener._prepareConfigFromNewToOld(cfg);
-               var action = new OpenEditDialog();
+               var action;
+               if (!opener || !opener._action) {
+                  action = new Action();
+               } else {
+                  action = opener._action;
+                  action.closeDialog();
+               }
                action.execute(newCfg);
                def.callback(action);
             });

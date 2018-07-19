@@ -4,8 +4,6 @@ define('Controls/List/TreeControl', [
    'Controls/List/resources/utils/ItemsUtil',
    'Core/core-clone',
    'WS.Data/Relation/Hierarchy',
-   'Controls/Container/MultiSelector/SelectionContextField',
-   'Controls/Container/Data/ContextOptions',
    'Controls/Utils/ArraySimpleValuesUtil'
 ], function(
    Control,
@@ -13,8 +11,6 @@ define('Controls/List/TreeControl', [
    ItemsUtil,
    cClone,
    HierarchyRelation,
-   SelectionContextField,
-   DataContext,
    ArraySimpleValuesUtil
 ) {
    'use strict';
@@ -24,9 +20,9 @@ define('Controls/List/TreeControl', [
          var
             filter = cClone(self._options.filter),
             listViewModel = self._children.baseControl.getViewModel(),
-            nodeKey = ItemsUtil.getPropertyValue(dispItem.getContents(), self._options.viewConfig.keyProperty);
-         if (!self._loadedNodes[nodeKey]) {
-            filter[self._options.viewConfig.parentProperty] = nodeKey;
+            nodeKey = ItemsUtil.getPropertyValue(dispItem.getContents(), self._options.keyProperty);
+         if (!self._loadedNodes[nodeKey] && !dispItem.isRoot()) {
+            filter[self._options.parentProperty] = nodeKey;
             self._children.baseControl.getSourceController().load(filter, self._sorting).addCallback(function(list) {
                if (self._options.uniqueKeys) {
                   listViewModel.mergeItems(list);
@@ -101,18 +97,6 @@ define('Controls/List/TreeControl', [
       _onNodeExpanderClick: function(e, dispItem) {
          _private.toggleExpanded(this, dispItem);
       },
-      removeItems: function(items) {
-         this._children.baseControl.removeItems(items);
-      },
-      moveItemUp: function(item) {
-         this._children.baseControl.moveItemUp(item);
-      },
-      moveItemDown: function(item) {
-         this._children.baseControl.moveItemDown(item);
-      },
-      moveItems: function(items, target, position) {
-         this._children.baseControl.moveItems(items, target, position);
-      },
       reload: function() {
          this._loadedNodes = {};
          this._children.baseControl.reload();
@@ -127,52 +111,61 @@ define('Controls/List/TreeControl', [
          var
             parents,
             newSelectedKeys,
+            diff,
             childrenIds;
          if (status === true || status === null) {
-            parents = _private.getAllParentsIds(this._hierarchyRelation, key, this.context.get('dataOptions').items);
-            newSelectedKeys = this.context.get('selection').calculatedSelectedKeys.slice();
+            parents = _private.getAllParentsIds(this._hierarchyRelation, key, this._options.items);
+            newSelectedKeys = this._options.selectedKeys.slice();
             newSelectedKeys.splice(newSelectedKeys.indexOf(key), 1);
-            childrenIds = _private.getAllChildren(this._hierarchyRelation, key, this.context.get('dataOptions').items).map(function(child) {
+            childrenIds = _private.getAllChildren(this._hierarchyRelation, key, this._options.items).map(function(child) {
                return child.getId();
             });
             ArraySimpleValuesUtil.removeSubArray(newSelectedKeys, childrenIds);
             for (var i = 0; i < parents.length; i++) {
                //TODO: проверка на hasMore должна быть тут
-               if (_private.getSelectedChildrenCount(this._hierarchyRelation, parents[i], newSelectedKeys, this.context.get('dataOptions').items) === 0) {
+               if (_private.getSelectedChildrenCount(this._hierarchyRelation, parents[i], newSelectedKeys, this._options.items) === 0) {
                   newSelectedKeys.splice(newSelectedKeys.indexOf(parents[i]), 1);
                } else {
                   break;
                }
             }
-            this._notify('selectionChange', [ArraySimpleValuesUtil.getArrayDifference(this.context.get('selection').calculatedSelectedKeys, newSelectedKeys)]);
+            diff = ArraySimpleValuesUtil.getArrayDifference(this._options.selectedKeys, newSelectedKeys);
+            this._notify('selectedKeysChanged', [newSelectedKeys, diff.added, diff.removed]);
          } else {
-            this._notify('selectionChange', [{added: [key], removed: []}]);
+            newSelectedKeys = this._options.selectedKeys.slice();
+            newSelectedKeys.push(key);
+            this._notify('selectedKeysChanged', [newSelectedKeys, [key], []]);
          }
       },
 
       _onAfterItemsRemoveHandler: function(e, keys, result) {
-         var
-            self = this,
-            newSelectedKeys = this.context.get('selection').calculatedSelectedKeys.slice(),
-            parents;
-
          this._notify('afterItemsRemove', [keys, result]);
 
-         ArraySimpleValuesUtil.removeSubArray(newSelectedKeys, keys);
+         if (this._options.selectedKeys) {
+            var
+               self = this,
+               newSelectedKeys = this._options.selectedKeys.slice(),
+               diff,
+               parents;
 
-         keys.forEach(function(key) {
-            parents = _private.getAllParentsIds(self._hierarchyRelation, key, self.context.get('dataOptions').items);
-            for (var i = 0; i < parents.length; i++) {
-               //TODO: проверка на hasMore должна быть тут
-               if (_private.getSelectedChildrenCount(self._hierarchyRelation, parents[i], newSelectedKeys, self.context.get('dataOptions').items) === 0) {
-                  newSelectedKeys.splice(newSelectedKeys.indexOf(parents[i]), 1);
-               } else {
-                  break;
+            ArraySimpleValuesUtil.removeSubArray(newSelectedKeys, keys);
+
+            keys.forEach(function(key) {
+               parents = _private.getAllParentsIds(self._hierarchyRelation, key, self._options.items);
+               for (var i = 0; i < parents.length; i++) {
+                  //TODO: проверка на hasMore должна быть тут
+                  if (_private.getSelectedChildrenCount(self._hierarchyRelation, parents[i], newSelectedKeys, self._options.items) === 0) {
+                     newSelectedKeys.splice(newSelectedKeys.indexOf(parents[i]), 1);
+                  } else {
+                     break;
+                  }
                }
-            }
-         });
+            });
 
-         this._notify('selectionChange', [ArraySimpleValuesUtil.getArrayDifference(this.context.get('selection').calculatedSelectedKeys, newSelectedKeys)]);
+            diff = ArraySimpleValuesUtil.getArrayDifference(this._options.selectedKeys, newSelectedKeys);
+
+            this._notify('selectedKeysChanged', [newSelectedKeys, diff.added, diff.removed]);
+         }
       }
    });
 
@@ -180,13 +173,6 @@ define('Controls/List/TreeControl', [
       return {
          uniqueKeys: true,
          filter: {}
-      };
-   };
-   
-   TreeControl.contextTypes = function contextTypes() {
-      return {
-         selection: SelectionContextField,
-         dataOptions: DataContext
       };
    };
 
