@@ -9,7 +9,7 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/DimensionsUtil', [
             itemRect = item.get(0).getBoundingClientRect(),
             additionalWidth = Math.floor(itemRect.width / 2),
             margin = Math.floor(item.outerWidth(true) / 2 - additionalWidth),
-            additionalHeight = Math.floor(item.outerHeight(true) / 2),
+            additionalHeight = Math.floor(itemRect.height / 2),
             title = $('.controls-CompositeView__tileTitle', item),
             titleHeight = title.outerHeight(true) - (item.hasClass('controls-CompositeView__item-withTitle') ? TITLE_HEIGHT : 0);
 
@@ -27,7 +27,7 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/DimensionsUtil', [
             itemRects = item.get(0).getBoundingClientRect(),
             additionalWidth = Math.floor(itemRects.width / 2),
             margin = Math.floor(item.outerWidth(true) / 2 - additionalWidth),
-            additionalHeight = Math.floor(item.outerHeight(true) / 2),
+            additionalHeight = Math.floor(itemRects.height / 2),
             containerRects = container.get(0).getBoundingClientRect(),
             horizontalRightDiffer = containerRects.width - (itemRects.width + item.get(0).offsetLeft + additionalWidth / 2),
             horizontalLeftDiffer = item.get(0).offsetLeft - additionalWidth / 2,
@@ -37,29 +37,31 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/DimensionsUtil', [
             marginRight,
             marginTop,
             marginBottom,
-            paddingTop = Math.ceil(additionalHeight / 2),
-            paddingBottom = Math.ceil(additionalWidth / 2);
+            paddingVertical = Math.ceil(additionalHeight / 2),
+            paddingHorizontal = Math.ceil(additionalWidth / 2),
+            title = $('.controls-CompositeView__tileTitle', item),
+            titleHeight = title.outerHeight(true) - (item.hasClass('controls-CompositeView__item-withTitle') ? TITLE_HEIGHT : 0);
 
          marginTop = marginBottom = Math.floor(-(additionalHeight / 2 - margin));
          marginLeft = marginRight = Math.floor(-(additionalWidth / 2 - margin));
          if (horizontalLeftDiffer < 0) {
-            marginRight += marginLeft;
-            marginLeft = 0;
+            marginRight = marginRight + marginLeft - margin;
+            marginLeft = margin;
          } else if (horizontalRightDiffer < 0) {
-            marginLeft += marginRight;
-            marginRight = 0;
+            marginLeft = marginLeft + marginRight - margin;
+            marginRight = margin;
          }
          if (verticalTopDiffer < 0) {
-            marginBottom += marginTop;
-            marginTop = 0;
+            marginBottom = marginBottom + marginTop - margin;
+            marginTop = margin;
          } else if (verticalBottomDiffer < 0) {
-            marginTop += marginBottom;
-            marginBottom = 0;
+            marginTop = marginTop + marginBottom - margin;
+            marginBottom = margin;
          }
 
          return {
-            padding: paddingTop + 'px ' + paddingBottom + 'px',
-            margin: marginTop + 'px ' + marginRight + 'px ' + marginBottom + 'px ' + marginLeft + 'px'
+            padding: paddingVertical + 'px ' + paddingHorizontal + 'px ' + (paddingVertical + titleHeight) + 'px ' + paddingHorizontal + 'px',
+            margin: marginTop + 'px ' + marginRight + 'px ' + (marginBottom - titleHeight) + 'px ' + marginLeft + 'px'
          };
       }
    };
