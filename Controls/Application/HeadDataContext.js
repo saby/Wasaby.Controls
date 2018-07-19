@@ -2,8 +2,8 @@ define('Controls/Application/HeadDataContext', [
    'Core/DataContext',
    'Core/Deferred',
    'Core/cookie',
-   'Core/IoC'
-], function(DataContext, Deferred, cookie, IoC) {
+   'View/Logger'
+], function(DataContext, Deferred, cookie, Logger) {
 
    var DEPTYPES = {
       BUNDLE: 1,
@@ -65,7 +65,7 @@ define('Controls/Application/HeadDataContext', [
          if (allDeps.hasOwnProperty(key)) {
             var bundleName = bundles[key];
             if (bundleName) {
-               IoC.resolve('ILogger').info('Module ' + key + ' in bundle ' + bundleName);
+               Logger.log('Custom packets logs', ['Module ' + key + ' in bundle ' + bundleName]);
                delete allDeps[key];
                packages[fixLinkSlash(bundleName)] = DEPTYPES.BUNDLE;
             }
