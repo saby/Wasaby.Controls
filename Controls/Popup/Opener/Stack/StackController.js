@@ -80,13 +80,18 @@ define('Controls/Popup/Opener/Stack/StackController',
          },
 
          elementUpdated: function(item, container) {
-            // if container contains waiting class then animation wasn't over
-            if (!container.classList.contains('controls-Stack__waiting')) {
+            if (this._canUpdate(container)) {
                if (this._checkContainer(item, container)) {
                   _private.prepareSizes(item, container);
                   this._update();
                }
             }
+         },
+
+         _canUpdate: function(container) {
+            // if container contains waiting class then animation wasn't over
+            // if container contains closing class then popup destroying
+            return !container.classList.contains('controls-Stack__waiting') || container.classList.contains('controls-Stack__close');
          },
 
          elementDestroyed: function(element, container) {
