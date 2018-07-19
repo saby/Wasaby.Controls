@@ -614,6 +614,16 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
          }
 
          record.forEach(function(item) {
+            var itemOwner = item.getOwner(),
+               ownerFormat;
+   
+            if (itemOwner) {
+               ownerFormat = itemOwner.getFormat();
+      
+               if (ownerFormat.getFieldIndex('historyId') === -1) {
+                  _private.addProperty(this, itemOwner, 'historyId', 'string', 'id');
+               }
+            }
             item.set('historyId', idPrefix + item.getId());
          });
 
