@@ -211,6 +211,9 @@ define('Controls/Container/Suggest/Layout',
          },
          
          _changeValueHandler: function(event, value) {
+            if (this._options.trim) {
+               value = value.trim();
+            }
             this._searchValue = _private.shouldSearch(this, value) ? value : '';
             
             /* preload suggest dependencies on value changed */

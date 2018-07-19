@@ -202,6 +202,10 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
    
          suggestComponent._changeValueHandler(null, 'test');
          assert.equal(suggestComponent._searchValue, 'test');
+   
+         self._options.trim = true;
+         suggestComponent._changeValueHandler(null, '  ');
+         assert.equal(suggestComponent._searchValue, '');
       });
    
       it('Suggest::_private.loadDependencies', function(done) {
