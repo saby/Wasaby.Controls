@@ -173,7 +173,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
                emptyItem.emptyText = this._options.emptyText;
                return emptyItem;
             }
-         },
+         }
       });
 
       DropdownViewModel._private = _private;
