@@ -38,10 +38,9 @@ define('Controls/Container/Adapter/Enum',
       };
 
       /**
-       * Container component for Search
-       * Notify bubbling event "search".
-       * Should be located inside Controls/Container/Search.
-       * @class Controls/Container/Input/Search
+       * Container component for working with controls.
+       * This container accepts an Enum object.
+       * @class Controls/Container/Adapter/Enum
        * @extends Core/Control
        * @author Герасимов Александр
        * @demo Controls-demo/Container/Enum
