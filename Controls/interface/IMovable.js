@@ -4,7 +4,7 @@ define('Controls/interface/IMovable', [
    /**
     * Interface for changing the order of items in the collection.
     *
-    * @mixin Controls/interface/IMovable
+    * @interface Controls/interface/IMovable
     * @public
     */
 

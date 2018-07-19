@@ -19,7 +19,7 @@ define('Controls/Popup/InfoBox',
        * @public
        * @demo Controls-demo/InfoBox/InfoBox
        *
-       * @mixin Controls/interface/IStickyOpener
+       * @interface Controls/interface/IStickyOpener
        *
        * @name Controls/Popup/InfoBox#hideDelay
        * @cfg {Number} Delay before closing after mouse leaves.

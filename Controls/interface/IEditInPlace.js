@@ -4,7 +4,7 @@ define('Controls/interface/IEditInPlace', [
    /**
     * Interface for components that have edit in place.
     *
-    * @mixin Controls/interface/IEditInPlace
+    * @interface Controls/interface/IEditInPlace
     * @public
     */
 

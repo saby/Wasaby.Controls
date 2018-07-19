@@ -4,7 +4,7 @@ define('Controls/interface/ISource', [
    /**
     * Interface for components that use data source.
     *
-    * @mixin Controls/interface/ISource
+    * @interface Controls/interface/ISource
     * @public
     */
 

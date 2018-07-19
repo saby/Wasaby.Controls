@@ -4,7 +4,7 @@ define('Controls/Button/interface/ICaption', [
    /**
     * Button caption interface.
     *
-    * @mixin Controls/Button/interface/ICaption
+    * @interface Controls/Button/interface/ICaption
     * @public
     */
 

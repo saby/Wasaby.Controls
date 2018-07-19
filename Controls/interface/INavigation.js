@@ -4,7 +4,7 @@ define('Controls/interface/INavigation', [
    /**
     * Interface for list navigation.
     *
-    * @mixin Controls/interface/INavigation
+    * @interface Controls/interface/INavigation
     * @public
     */
 

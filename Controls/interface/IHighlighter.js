@@ -5,7 +5,7 @@ define('Controls/interface/IHighlighter', [
     * Highlighting interface. Different types of highlighter can be used in a component:
     * search highlighter, validation highlighter, etc. Highlighter is used when rendering list items.
     *
-    * @mixin Controls/interface/IHighlighter
+    * @interface Controls/interface/IHighlighter
     * @public
     */
 
