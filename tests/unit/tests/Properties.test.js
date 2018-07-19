@@ -90,7 +90,7 @@ define([
       function assertInitProperties() {
          assert.isTrue(typeof this._thisIsInstance === 'boolean');
          assert.isTrue(this.hasOwnProperty('_parent'));
-         assert.isTrue(this.hasOwnProperty('_context'));
+         assert.isTrue(this.hasOwnProperty('_compatContext'));
          assert.isTrue(typeof this._$independentContext === 'boolean');
          assert.isTrue(this.hasOwnProperty('_$contextRestriction'));
          assert.isTrue(typeof this._$record === 'boolean');
