@@ -98,7 +98,7 @@ define('Controls/List/TreeControl', [
          var
             filter;
          if (this._options.root !== newOptions.root) {
-            filter = cClone(this._options.filter);
+            filter = cClone(this._options.filter || {});
             filter[this._options.parentProperty] = newOptions.root;
             this.reload(filter);
             this._children.baseControl.getViewModel().setRoot(newOptions.root);
