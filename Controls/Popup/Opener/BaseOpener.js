@@ -174,20 +174,18 @@ define('Controls/Popup/Opener/BaseOpener',
                });
             }
          } else {
-            function isFormController() {
-               var proto = rootTpl.prototype && rootTpl.prototype.__proto__;
-               while (proto) {
-                  if (proto._moduleName === 'SBIS3.CONTROLS/FormController') {
-                     return true;
-                  }
-                  proto = proto.__proto__;
+            var isFormController = false;
+            var proto = rootTpl.prototype && rootTpl.prototype.__proto__;
+            while (proto && !isFormController) {
+               if (proto._moduleName === 'SBIS3.CONTROLS/FormController') {
+                  isFormController = true;
                }
-               return false;
+               proto = proto.__proto__;
             }
 
             var deps = ['Controls/Popup/Compatible/BaseOpener'];
 
-            if (isFormController()) {
+            if (isFormController) {
                deps.push('SBIS3.CONTROLS/Action/List/OpenEditDialog');
             } else {
                deps.push('SBIS3.CONTROLS/Action/OpenDialog');

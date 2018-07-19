@@ -2,8 +2,8 @@
  * Created by kraynovdo on 16.11.2017.
  */
 define('Controls/List/ItemsViewModel',
-   ['Controls/List/BaseViewModel', 'Controls/List/resources/utils/ItemsUtil', 'Core/core-instance', 'WS.Data/Source/ISource', 'Controls/Constants'],
-   function(BaseViewModel, ItemsUtil, cInstance, ISource, ControlsConstants) {
+   ['Controls/List/BaseViewModel', 'Controls/List/resources/utils/ItemsUtil', 'Core/core-instance', 'Controls/Constants'],
+   function(BaseViewModel, ItemsUtil, cInstance, ControlsConstants) {
 
       /**
        *
