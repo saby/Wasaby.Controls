@@ -31,11 +31,7 @@ for item in path_result:
             d = json.loads(f.read(), encoding='utf-8')
             print(tf, 'Filename: ', fname)
             tf+=1
-            for k in d:
-                # изменения только в controls
-                if '\controls\\' not in k:
-                    continue
-                coverage_result.append(k)
+            coverage_result.append(d.keys())
     uresult = sorted(set(coverage_result))
     result[item] = uresult
 
