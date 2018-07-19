@@ -7,12 +7,13 @@ define('Controls/Filter/Button',
       'tmpl!Controls/Filter/Button/Button',
       'WS.Data/Chain',
       'WS.Data/Utils',
+      'Core/core-clone',
       'Core/Deferred',
       'Core/helpers/Object/isEqual',
       'css!Controls/Filter/Button/Button'
    ],
 
-   function(Control, template, Chain, Utils, Deferred, isEqual) {
+   function(Control, template, Chain, Utils, Clone, Deferred, isEqual) {
 
       /**
        * Component for data filtering.
@@ -53,7 +54,9 @@ define('Controls/Filter/Button',
             var textArr = [];
 
             Chain(items).each(function(item) {
-               if (Utils.getItemPropertyValue(item, 'value') !== Utils.getItemPropertyValue(item, 'resetValue')) {
+               if (Utils.getItemPropertyValue(item, 'value') !== Utils.getItemPropertyValue(item, 'resetValue') &&
+                  Utils.getItemPropertyValue(item, 'visibility')
+               ) {
                   var textValue = Utils.getItemPropertyValue(item, 'textValue');
 
                   if (textValue) {
@@ -71,6 +74,13 @@ define('Controls/Filter/Button',
             if (self._options.filterTemplate && self._filterCompatible) {
                self._filterCompatible.updateFilterStructure(items);
             }
+         },
+
+         resetItems: function(self, items) {
+            Chain(items).each(function(item, index) {
+               Utils.setItemPropertyValue(item, 'value', Utils.getItemPropertyValue(item, 'resetValue'));
+               Utils.setItemPropertyValue(item, 'visibility', Utils.getItemPropertyValue(self._sourceItems[index], 'visibility'));
+            });
          }
       };
 
@@ -83,6 +93,7 @@ define('Controls/Filter/Button',
 
          _beforeMount: function(options) {
             if (options.items) {
+               this._sourceItems = Clone(options.items);
                _private.resolveItems(this, options.items);
             }
             this._onFilterChanged = this._onFilterChanged.bind(this);
@@ -103,6 +114,9 @@ define('Controls/Filter/Button',
                _private.getFilterButtonCompatible(this).addCallback(function(panelOpener) {
                   panelOpener.clearFilter();
                });
+            } else {
+               _private.resetItems(this, this._items);
+               this._notify('itemsChanged', [this._items]);
             }
             this._text = '';
          },
