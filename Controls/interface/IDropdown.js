@@ -3,7 +3,7 @@ define('Controls/interface/IDropdown', [], function() {
    /**
     * Interface for dropdown lists.
     *
-    * @mixin Controls/interface/IDropdown
+    * @interface Controls/interface/IDropdown
     * @public
     */
 

@@ -4,7 +4,7 @@ define('Controls/interface/IHierarchicalItems', [
    /**
     * Interface for hierarchical list.
     *
-    * @mixin Controls/interface/IHierarchicalItems
+    * @interface Controls/interface/IHierarchicalItems
     * @public
     */
 

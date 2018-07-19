@@ -4,7 +4,7 @@ define('Controls/interface/IMultiSelectable', [
    /**
     * Interface for item selection in list.
     *
-    * @mixin Controls/interface/IMultiSelectable
+    * @interface Controls/interface/IMultiSelectable
     * @public
     */
 

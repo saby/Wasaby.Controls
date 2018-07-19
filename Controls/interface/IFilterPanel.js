@@ -4,7 +4,7 @@ define('Controls/interface/IFilterPanel', [
    /**
     * Interface for filter panel
     *
-    * @mixin Controls/interface/IFilterPanel
+    * @interface Controls/interface/IFilterPanel
     * @public
     */
 

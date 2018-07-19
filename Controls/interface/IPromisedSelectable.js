@@ -4,7 +4,7 @@ define('Controls/interface/IPromisedSelectable', [
    /**
     * Selection interface for collections with unknown number of items.
     *
-    * @mixin Controls/interface/IPromisedSelectable
+    * @interface Controls/interface/IPromisedSelectable
     * @public
     */
 

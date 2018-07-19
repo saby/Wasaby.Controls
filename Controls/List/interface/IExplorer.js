@@ -3,7 +3,7 @@ define('Controls/List/interface/IExplorer', [
    /**
     * Interface for hierarchical lists that can open folders.
     *
-    * @mixin Controls/List/interface/IExplorer
+    * @interface Controls/List/interface/IExplorer
     * @public
     */
 
