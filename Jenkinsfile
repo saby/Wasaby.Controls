@@ -495,7 +495,12 @@ node('controls') {
                             python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --COVERAGE True
                             deactivate
                             """
-                            sh "cp ../coverage_handler.py ./coverage_handler.py && python3 coverage_handler.py"
+                            sh """
+                            cp ../coverage_handler.py ./coverage/coverage_handler.py
+                            cd ./coverage
+                            python3 coverage_handler.py
+                            """
+
                         }
 
                     }
