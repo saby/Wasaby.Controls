@@ -347,6 +347,7 @@ define('SBIS3.CONTROLS/Filter/Button',
                 locationStrategy: detection.isMobilePlatform ? 'bodyBounds' : null,
                 template: 'SBIS3.CONTROLS/Filter/Button/Area',
                 componentOptions: this._getAreaOptions(),
+                task1175546430: this._options.task1175546430,
                 handlers: {
                    onClose: function() {
                       /* Разрушаем панель при закрытии,
