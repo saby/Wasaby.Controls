@@ -1,4 +1,4 @@
-<div attr:class="{{itemData.isHiddenGroup ? 'controls-ListView__groupHidden' : 'controls-ListView__group'}}" attr:key="{{itemData.item}}">
+<div attr:class="{{itemData.isHiddenGroup ? 'controls-ListView__groupHidden' : 'controls-ListView__group'}}" attr:key="group-{{itemData.item}}">
    <div class="controls-ListView__groupContent">
       <ws:if data="{{separator !== false && textAlign !== 'left'}}">
          <div class="controls-ListView__groupSeparator-left">&nbsp;</div>

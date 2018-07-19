@@ -1,6 +1,7 @@
 define('Controls/List/TreeControl', [
    'Core/Control',
    'wml!Controls/List/TreeControl/TreeControl',
+   'Controls/Controllers/SourceController',
    'Controls/List/resources/utils/ItemsUtil',
    'Core/core-clone',
    'WS.Data/Relation/Hierarchy',
@@ -8,6 +9,7 @@ define('Controls/List/TreeControl', [
 ], function(
    Control,
    TreeControlTpl,
+   SourceController,
    ItemsUtil,
    cClone,
    HierarchyRelation,
@@ -16,25 +18,66 @@ define('Controls/List/TreeControl', [
    'use strict';
 
    var _private = {
+      clearSourceControllers: function(self) {
+         var
+            listViewModel = self._children.baseControl.getViewModel();
+         for (var prop in self._nodesSourceControllers) {
+            if (self._nodesSourceControllers.hasOwnProperty(prop)) {
+               self._nodesSourceControllers[prop].destroy();
+            }
+         }
+         self._nodesSourceControllers = {};
+         listViewModel.setHasMoreStorage({});
+      },
       toggleExpanded: function(self, dispItem) {
          var
             filter = cClone(self._options.filter),
             listViewModel = self._children.baseControl.getViewModel(),
-            nodeKey = ItemsUtil.getPropertyValue(dispItem.getContents(), self._options.keyProperty);
-         if (!self._loadedNodes[nodeKey] && !dispItem.isRoot()) {
+            nodeKey = dispItem.getContents().getId();
+         if (!self._nodesSourceControllers[nodeKey] && !dispItem.isRoot()) {
+            self._nodesSourceControllers[nodeKey] = new SourceController({
+               source: self._options.source,
+               navigation: self._options.navigation
+            });
+
             filter[self._options.parentProperty] = nodeKey;
-            self._children.baseControl.getSourceController().load(filter, self._sorting).addCallback(function(list) {
+            self._nodesSourceControllers[nodeKey].load(filter, self._sorting).addCallback(function(list) {
+               listViewModel.setHasMoreStorage(_private.prepareHasMoreStorage(self._nodesSourceControllers));
                if (self._options.uniqueKeys) {
                   listViewModel.mergeItems(list);
                } else {
                   listViewModel.appendItems(list);
                }
-               self._loadedNodes[nodeKey] = true;
                listViewModel.toggleExpanded(dispItem);
             });
          } else {
             listViewModel.toggleExpanded(dispItem);
          }
+      },
+      prepareHasMoreStorage: function(sourceControllers) {
+         var
+            hasMore = {};
+         for (var i in sourceControllers) {
+            if (sourceControllers.hasOwnProperty(i)) {
+               hasMore[i] = sourceControllers[i].hasMoreData('down');
+            }
+         }
+         return hasMore;
+      },
+      loadMore: function(self, dispItem) {
+         var
+            filter = cClone(self._options.filter),
+            listViewModel = self._children.baseControl.getViewModel(),
+            nodeKey = dispItem.getContents().getId();
+         filter[self._options.parentProperty] = nodeKey;
+         self._nodesSourceControllers[nodeKey].load(filter, self._sorting, 'down').addCallback(function(list) {
+            listViewModel.setHasMoreStorage(_private.prepareHasMoreStorage(self._nodesSourceControllers));
+            if (self._options.uniqueKeys) {
+               listViewModel.mergeItems(list);
+            } else {
+               listViewModel.appendItems(list);
+            }
+         });
       },
       getAllParentsIds: function(hierarchyRelation, key, items) {
          var
@@ -71,7 +114,10 @@ define('Controls/List/TreeControl', [
          }, 0);
       },
       onNodeRemoved: function(self, nodeId) {
-         delete self._loadedNodes[nodeId];
+         if (self._nodesSourceControllers[nodeId]) {
+            self._nodesSourceControllers[nodeId].destroy();
+         }
+         delete self._nodesSourceControllers[nodeId];
       }
    };
 
@@ -88,9 +134,9 @@ define('Controls/List/TreeControl', [
    var TreeControl = Control.extend(/** @lends Controls/List/TreeControl */{
       _onNodeRemovedFn: null,
       _template: TreeControlTpl,
-      _loadedNodes: null,
+      _nodesSourceControllers: null,
       constructor: function() {
-         this._loadedNodes = {};
+         this._nodesSourceControllers = {};
          return TreeControl.superclass.constructor.apply(this, arguments);
       },
       _beforeMount: function(cfg) {
@@ -124,8 +170,11 @@ define('Controls/List/TreeControl', [
       _onNodeExpanderClick: function(e, dispItem) {
          _private.toggleExpanded(this, dispItem);
       },
+      _onLoadMoreClick: function(e, dispItem) {
+         _private.loadMore(this, dispItem);
+      },
       reload: function(filter) {
-         this._loadedNodes = {};
+         _private.clearSourceControllers(this);
          this._children.baseControl.reload(filter);
       },
       editItem: function(options) {
@@ -218,6 +267,11 @@ define('Controls/List/TreeControl', [
 
       _markedKeyChangedHandler: function(event, key) {
          this._notify('markedKeyChanged', [key]);
+      },
+
+      destroy: function() {
+         _private.clearSourceControllers(this);
+         TreeControl.superclass.destroy.apply(this, arguments);
       }
    });
 
@@ -229,6 +283,7 @@ define('Controls/List/TreeControl', [
       };
    };
 
+   TreeControl._private = _private;
 
    return TreeControl;
 });

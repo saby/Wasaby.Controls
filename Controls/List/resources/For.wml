@@ -1,57 +1,44 @@
-<ws:for data="listModel.reset(); listModel.isEnd(); listModel.goToNext();">
-      <ws:if data="{{listModel.getDragTargetPosition() &&
-                     listModel.getDragTargetPosition().index === listModel.getCurrentIndex() &&
-                     listModel.getDragTargetPosition().position === 'before'}}">
-            <ws:partial
-                    multiSelectTpl="{{multiSelectTpl}}"
-                    template="{{itemTemplate}}"
-                    contentTemplate="{{itemContentTemplate}}"
-                    itemData="{{listModel.getDraggingItemData()}}"/>
-      </ws:if>
-      <ws:if data="{{listModel.getCurrent().isGroup}}">
-         <ws:partial
-                 template="{{groupTemplate}}"
-                 on:click="_onGroupClick(listModel.getCurrent().dispItem)"
-                 itemData="{{listModel.getCurrent()}}"/>
-      </ws:if>
-      <ws:else>
-         <ws:if data="{{listModel.getCurrent().isVisible !== false}}">
-            <ws:partial
-               on:click="_onItemClick(listModel.getCurrent().dispItem)"
-               on:contextmenu="_onItemContextMenu(listModel.getCurrent())"
-               on:swipe="_onItemSwipe(listModel.getCurrent())"
-               on:mousedown="_onItemMouseDown(listModel.getCurrent())"
-               on:mouseenter="_onItemMouseEnter(listModel.getCurrent())"
-               itemActionsTemplate="{{itemActionsTemplate}}"
-               groupTemplate="{{groupTemplate}}"
-               swipeTemplate="{{swipeTemplate}}"
-               multiSelectTpl="{{multiSelectTpl}}"
-               itemTemplate="{{itemTemplate}}"
-               template="wml!Controls/List/ItemTemplateWrapper"
-               contentTemplate="{{itemContentTemplate}}"
-               itemData="{{listModel.getCurrent()}}"
-               actionsType="{{itemActionsPosition}}"/>
-         </ws:if>
-      </ws:else>
-      <ws:if data="{{listModel.getDragTargetPosition() &&
-                     listModel.getDragTargetPosition().index === listModel.getCurrentIndex() &&
-                     listModel.getDragTargetPosition().position === 'after'}}">
-            <ws:partial
-                    multiSelectTpl="{{multiSelectTpl}}"
-                    template="{{itemTemplate}}"
-                    contentTemplate="{{itemContentTemplate}}"
-                    itemData="{{listModel.getDraggingItemData()}}"/>
-      </ws:if>
+<ws:template name="itemOutputLocalTemplate">
+   <ws:partial
+      __noDirtyChecking="{{true}}"
+      template="{{itemOutputWrapper}}"
+      itemOutputWrapper="{{itemOutputWrapper}}"
+      listModel="{{listModel}}"
+      itemActionsTemplate="{{itemActionsTemplate}}"
+      swipeTemplate="{{swipeTemplate}}"
+      multiSelectTpl="{{multiSelectTpl}}"
+      itemTemplate="{{itemTemplate}}"
+      itemActionsPosition="{{itemActionsPosition}}" />
+</ws:template>
+<ws:template name="groupOutputLocalTemplate">
+   <ws:partial
+      template="{{groupTemplate}}"
+      __noDirtyChecking="{{true}}"
+      on:click="_onGroupClick(listModel.getCurrent().dispItem)"
+      itemData="{{listModel.getCurrent()}}"/>
+   {{listModel.goToNext();}}
+   <ws:if data="{{currentGroup.isGroupExpanded}}">
+      <ws:for data="; listModel.isEnd() && !listModel.getCurrent().isGroup;">
+         <ws:partial template="itemOutputLocalTemplate"/>
+      </ws:for>
+   </ws:if>
+</ws:template>
+<ws:for data="listModel.reset(); listModel.isEnd();">
+   <ws:if data="{{listModel.getCurrent().isGroup}}">
+      <ws:partial template="groupOutputLocalTemplate" currentGroup="{{listModel.getCurrent()}}"/>
+   </ws:if>
+   <ws:else>
+      <ws:partial template="itemOutputLocalTemplate"/>
+   </ws:else>
 </ws:for>
 <ws:if data="{{editingItemData && isAdd}}">
-      <ws:partial
-              on:click="_onItemClick(editingItemData.dispItem)"
-              itemTemplate="{{itemTemplate}}"
-              template="wml!Controls/List/ItemTemplateWrapper"
-              itemActionsTemplate="{{itemActionsTemplate}}"
-              swipeTemplate="{{swipeTemplate}}"
-              multiSelectTpl="{multiSelectTpl}}"
-              contentTemplate="{{itemContentTemplate}}"
-              itemData="{{editingItemData}}"
-              actionsType="{{itemActionsPosition}}"/>
+   <ws:partial
+      on:click="_onItemClick(editingItemData.dispItem)"
+      itemTemplate="{{itemTemplate}}"
+      template="wml!Controls/List/ItemTemplateWrapper"
+      itemActionsTemplate="{{itemActionsTemplate}}"
+      swipeTemplate="{{swipeTemplate}}"
+      multiSelectTpl="{multiSelectTpl}}"
+      itemData="{{editingItemData}}"
+      actionsType="{{itemActionsPosition}}"/>
 </ws:if>

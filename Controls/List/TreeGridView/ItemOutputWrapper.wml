@@ -1,0 +1,32 @@
+<ws:template name="itemOutputLocalTemplate">
+   <ws:partial
+      __noDirtyChecking="{{true}}"
+      template="{{currentItemTemplate}}"
+      itemOutputWrapper="{{itemOutputWrapper}}"
+      listModel="{{listModel}}"
+      itemActionsTemplate="{{itemActionsTemplate}}"
+      currentNode="{{currentNode}}"
+      swipeTemplate="{{swipeTemplate}}"
+      multiSelectTpl="{{multiSelectTpl}}"
+      itemTemplate="{{itemTemplate}}"
+      itemActionsPosition="{{itemActionsPosition}}"/>
+</ws:template>
+<ws:template name="nodeOutputLocalTemplate">
+   <ws:partial template="itemOutputLocalTemplate" currentItemTemplate="{{'wml!Controls/List/resources/ItemOutputWrapper'}}"/>
+   <ws:if data="{{currentNode.hasChildren}}">
+      <ws:partial template="itemOutputLocalTemplate"
+         currentItemTemplate="{{itemOutputWrapper}}"
+         currentNode="{{currentNode}}"/>
+      <ws:if data="{{!!currentNode.footerStorage}}">
+         <ws:partial template="{{'wml!Controls/List/TreeGridView/NodeFooter'}}" itemData="{{currentNode}}"/>
+      </ws:if>
+   </ws:if>
+</ws:template>
+<ws:for data="; listModel.isEnd() && !listModel.getCurrent().isGroup && (currentNode === undefined || listModel.getCurrent().item[listModel.getCurrent().parentProperty] === currentNode.item.getId()) ;">
+   <ws:if data="{{listModel.getCurrent().dispItem.isNode()}}">
+      <ws:partial template="nodeOutputLocalTemplate" currentNode="{{listModel.getCurrent()}}"/>
+   </ws:if>
+   <ws:else>
+      <ws:partial template="itemOutputLocalTemplate" currentItemTemplate="{{'wml!Controls/List/resources/ItemOutputWrapper'}}"/>
+   </ws:else>
+</ws:for>
