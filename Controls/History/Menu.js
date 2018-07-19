@@ -1,16 +1,16 @@
 define('Controls/History/Menu',
    [
-      'Controls/Button/MenuButton',
+      'Controls/Button/Menu',
       'tmpl!Controls/History/resources/itemTemplate',
       'css!Controls/History/Menu'
    ],
-   function(MenuButton, itemTemplate) {
+   function(Menu, itemTemplate) {
 
       /**
        * Button
        *
        * @class Controls/History/Menu
-       * @extends Controls/Button/MenuButton
+       * @extends Controls/Button/Menu
        * @control
        * @public
        * @category Menu
@@ -31,7 +31,7 @@ define('Controls/History/Menu',
 
       'use strict';
 
-      var HistoryMenu = MenuButton.extend({
+      var HistoryMenu = Menu.extend({
          _itemTemplate: itemTemplate,
          _filter: null,
 

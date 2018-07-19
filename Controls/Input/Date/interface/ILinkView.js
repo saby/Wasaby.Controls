@@ -11,7 +11,7 @@ define('Controls/Input/Date/interface/ILinkView', [
    var EMPTY_CAPTIONS = {
       NOT_SPECIFIED: rk('Не указан'),
       NOT_SELECTED: rk('Не выбран'),
-      WITHOUT_DUE_DATE: rk('Бессрочно'),
+      WITHOUT_DUE_DATE: rk('Бессрочно', 'ShortForm'),
       ALL_TIME: rk('Весь период')
    };
 
