@@ -40,7 +40,7 @@ node('controls') {
                 description: '',
                 name: 'branch_engine'),
             string(
-                defaultValue: "",
+                defaultValue: "4.10/pea/coverage",
                 description: '',
                 name: 'branch_atf'),
             choice(
@@ -465,7 +465,7 @@ node('controls') {
         dir("./controls/tests/int"){
             sh"""
                 source /home/sbis/venv_for_test/bin/activate
-                ${python_ver} start_tests.py --files_to_start smoke_test.py --SERVER_ADDRESS ${server_address} --RESTART_AFTER_BUILD_MODE --BROWSER chrome --FAIL_TEST_REPEAT_TIMES 0 --COVERAGE True
+                ${python_ver} start_tests.py --files_to_start smoke_test.py --SERVER_ADDRESS ${server_address} --RESTART_AFTER_BUILD_MODE --BROWSER chrome --FAIL_TEST_REPEAT_TIMES 0
                 deactivate
 
             """
@@ -492,7 +492,7 @@ node('controls') {
                         dir("./controls/tests/int"){
                             sh """
                             source /home/sbis/venv_for_test/bin/activate
-                            echo python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --COVERAGE True
+                            python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --COVERAGE True
                             deactivate
                             """
                         }
