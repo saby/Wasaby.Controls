@@ -31,7 +31,8 @@ for item in path_result:
             d = json.loads(f.read(), encoding='utf-8')
             print(tf, 'Filename: ', fname)
             tf+=1
-            coverage_result.append(d.keys())
+            for k in d:
+                coverage_result.append(k)
     uresult = sorted(set(coverage_result))
     result[item] = uresult
 
