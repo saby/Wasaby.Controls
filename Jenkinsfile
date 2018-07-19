@@ -514,7 +514,7 @@ node('controls') {
                         dir("./controls/tests/reg"){
                             sh """
                                 source /home/sbis/venv_for_test/bin/activate
-                                echo python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --COVERAGE True
+                                python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
                                 deactivate
                             """
                         }
