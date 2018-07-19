@@ -13,7 +13,7 @@
          dragAvatarTemplate="{{_options.dragAvatarTemplate}}"
          name="dragNDropController">
          <ws:content>
-            <ws:partial template="{{content}}" />
+            <ws:partial template="{{viewContent}}" />
          </ws:content>
       </Controls.DragNDrop.Controller>
    </ws:template>
@@ -42,9 +42,9 @@
    <ws:template name="fullView">
       <ws:if data="{{_options.itemsDragNDrop}}">
          <ws:partial template="withDragNDrop">
-            <ws:content>
+            <ws:viewContent>
                <ws:partial template="viewTpl"  name="{{name}}"/>
-            </ws:content>
+            </ws:viewContent>
          </ws:partial>
       </ws:if>
       <ws:else>
