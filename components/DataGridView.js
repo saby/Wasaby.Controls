@@ -714,7 +714,7 @@ define('SBIS3.CONTROLS/DataGridView',
          this._tfoot = $('.controls-DataGridView__tfoot', this._container[0]);
          this._tbody = $('.controls-DataGridView__tbody', this._container[0]);
          this.getContainer().on('mousedown', function(e) {
-            if (self._isPartScrollVisible() && e.which === 2) {
+            if (self._isPartScrollVisible && e.which === 2) {
                e.preventDefault();
             }
          });
