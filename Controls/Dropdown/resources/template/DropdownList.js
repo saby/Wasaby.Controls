@@ -117,6 +117,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
                });
                _private.updateHierarchy(this);
             }
+            _private.setPopupOptions(this, newOptions);
          },
 
          _beforeUpdate: function(newOptions) {
