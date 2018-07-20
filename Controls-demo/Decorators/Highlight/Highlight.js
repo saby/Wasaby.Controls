@@ -4,7 +4,7 @@ define('Controls-demo/Decorators/Highlight/Highlight',
       'tmpl!Controls-demo/Decorators/Highlight/Highlight',
 
       'Controls/Input/Area',
-      'Controls/Decorators/Highlight',
+      'Controls/Decorator/Highlight',
       'css!Controls-demo/Decorators/Highlight/Highlight'
    ],
    function(Control, template) {
