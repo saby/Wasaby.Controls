@@ -73,13 +73,13 @@ define('Controls-demo/Headers/headerDemo', [
       idProperty: 'title',
       data: [
          {
-            title: 'Accent'
+            title: 'accent'
          },
          {
-            title: 'Additional'
+            title: 'additional'
          },
          {
-            title: 'Main'
+            title: 'main'
          }
       ]
    });
