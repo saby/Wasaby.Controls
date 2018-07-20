@@ -1,12 +1,12 @@
 define(
    [
-      'Controls/Decorators/Number'
+      'Controls/Decorator/Number'
    ],
    function(Number) {
 
       'use strict';
 
-      describe('Controls.Decorators.Number', function() {
+      describe('Controls.Decorator.Number', function() {
          var result;
 
          it('Zero number', function() {

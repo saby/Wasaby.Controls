@@ -24,9 +24,7 @@ define('Controls/List', [
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
-    * @mixes Controls/interface/IReorderMovable
     * @mixes Controls/List/interface/IListControl
-    * @mixes Controls/interface/IRemovable
     * @mixes Controls/interface/IEditInPlace
     * @control
     * @author Крайнов Д.О.
@@ -106,38 +104,6 @@ define('Controls/List', [
 
       _onAfterItemEndEdit: function(e, item, isAdd) {
          this._notify('afterItemEndEdit', [item, isAdd]);
-      },
-
-      _beforeItemsRemove: function(event, items) {
-         return this._notify('beforeItemsRemove', [items]);
-      },
-
-      _afterItemsRemove: function(event, items, result) {
-         this._notify('afterItemsRemove', [items, result]);
-      },
-
-      removeItems: function(items) {
-         this._children.listControl.removeItems(items);
-      },
-
-      moveItemUp: function(item) {
-         this._children.listControl.moveItemUp(item);
-      },
-
-      moveItemDown: function(item) {
-         this._children.listControl.moveItemDown(item);
-      },
-
-      moveItems: function(items, target, position) {
-         this._children.listControl.moveItems(items, target, position);
-      },
-
-      _beforeItemsMove: function(event, items, target, position) {
-         return this._notify('beforeItemsMove', [items, target, position]);
-      },
-
-      _afterItemsMove: function(event, items, target, position, result) {
-         this._notify('afterItemsMove', [items, target, position, result]);
       },
 
       _dragStart: function(event, items) {

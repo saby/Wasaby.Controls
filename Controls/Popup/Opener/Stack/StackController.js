@@ -10,7 +10,7 @@ define('Controls/Popup/Opener/Stack/StackController',
    ],
    function(BaseController, StackStrategy, List, TargetCoords, Deferred, cConstants) {
       'use strict';
-
+      var HAS_ANIMATION = cConstants.browser.chrome && !cConstants.browser.isMobilePlatform;
 
       var _private = {
 
@@ -72,14 +72,15 @@ define('Controls/Popup/Opener/Stack/StackController',
             if (this._checkContainer(item, container)) {
                _private.prepareSizes(item, container);
                this._stack.add(item, 0);
-               item.popupOptions.className += ' controls-Stack__open';
+               if (HAS_ANIMATION) {
+                  item.popupOptions.className += ' controls-Stack__open';
+               }
                this._update();
             }
          },
 
          elementUpdated: function(item, container) {
-            //if container contains waiting class then animation wasn't over
-            if (!container.classList.contains('controls-Stack__waiting')) {
+            if (this._canUpdate(container)) {
                if (this._checkContainer(item, container)) {
                   _private.prepareSizes(item, container);
                   this._update();
@@ -87,9 +88,15 @@ define('Controls/Popup/Opener/Stack/StackController',
             }
          },
 
+         _canUpdate: function(container) {
+            // if container contains waiting class then animation wasn't over
+            // if container contains closing class then popup destroying
+            return !container.classList.contains('controls-Stack__waiting') || container.classList.contains('controls-Stack__close');
+         },
+
          elementDestroyed: function(element, container) {
             this._destroyDeferred[element.id] = new Deferred();
-            if (cConstants.browser.chrome && !cConstants.browser.isMobilePlatform) {
+            if (HAS_ANIMATION) {
                element.popupOptions.className += ' controls-Stack__close';
                container.classList.add('controls-Stack__close');
                this._fixTemplateAnimation(element);
