@@ -58,9 +58,9 @@ define('Controls/Button/ButtonSeparator', [
       return {
          bold: types(Boolean),
          style: types(String).oneOf([
-            'Accent',
-            'Additional',
-            'Main'
+            'accent',
+            'additional',
+            'main'
          ]),
          value: types(Boolean)
       };
