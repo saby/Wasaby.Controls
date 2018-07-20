@@ -5,10 +5,10 @@
       attr:title="{{_options.tooltip}}"
       on:click="_clickHandler()">
     <span attr:class="controls-BaseButton__content controls-Button__wrapper_type-{{_typeWithSize}}">
-        <ws:if data="{{!!_options.icon}}">
+        <ws:if data="{{!!_icon}}">
             <i attr:class="controls-Button__icon {{_icon}} {{_options.readOnly ? '':'controls-Button__icon-' + _styleWithIconStyle + _state}}"></i>
         </ws:if>
-        <ws:if data="{{!!_options.caption}}">
+        <ws:if data="{{!!_caption}}">
            <span attr:class="controls-BaseButton__text controls-Button__text_style-{{_style}} {{_options.icon ? ' controls-Button__text_gap'}}">
                <ws:partial template="{{_caption}}"/>
            </span>
