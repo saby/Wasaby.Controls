@@ -11,8 +11,7 @@ define('Controls-demo/Demo/Page',
       'css',
       'css!Controls-demo/Demo/Page',
       'Controls/Application',
-      'Core/vdom/Synchronizer/resources/DirtyCheckingCompatible',
-      'css!SBIS3.CONTROLS/themes/online/online'
+      'Core/vdom/Synchronizer/resources/DirtyCheckingCompatible'
    ],
    function(Control, Deferred, template, AppData, ScrollData, cssPlugin) {
       'use strict';
