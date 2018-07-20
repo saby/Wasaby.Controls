@@ -184,8 +184,7 @@ define('Controls/Dropdown/Container',
                var config = {
                   templateOptions: {
                      items: self._items,
-                     width: self._options.width,
-                     emptyText: self._emptyText = dropdownUtils.prepareEmpty(self._options.emptyText)
+                     width: self._options.width
                   },
                   target: self._container,
                   corner: self._options.corner,
