@@ -88,7 +88,6 @@ define('Controls/Dropdown/Container',
             });
             return instance._sourceController.load(filter).addCallback(function(items) {
                instance._items = items;
-               instance._selectedItems = [];
                _private.updateSelectedItems(instance, selectedKeys, keyProperty, dataLoadCallback);
                return items;
             });
@@ -99,6 +98,7 @@ define('Controls/Dropdown/Container',
                instance._selectedItems.push(null);
             } else {
                Chain(instance._items).each(function(item) {
+                  //We check whether the key of the item is contained in the array of selected keys
                   if (selectedKeys.indexOf(item.get(keyProperty)) > -1) {
                      instance._selectedItems.push(item);
                   }
@@ -160,7 +160,7 @@ define('Controls/Dropdown/Container',
          },
 
          _beforeUpdate: function(newOptions) {
-            if (newOptions.selectedKeys && !isEqual(newOptions.selectedKeys, this._options.selectedKeys)) {
+            if (!isEqual(newOptions.selectedKeys, this._options.selectedKeys)) {
                this._selectedItems = [];
                _private.updateSelectedItems(this, newOptions.selectedKeys, newOptions.keyProperty, newOptions.dataLoadCallback);
             }
@@ -184,8 +184,7 @@ define('Controls/Dropdown/Container',
                var config = {
                   templateOptions: {
                      items: self._items,
-                     width: self._options.width,
-                     emptyText: self._emptyText = dropdownUtils.prepareEmpty(self._options.emptyText)
+                     width: self._options.width
                   },
                   target: self._container,
                   corner: self._options.corner,
@@ -203,6 +202,10 @@ define('Controls/Dropdown/Container',
             } else {
                open();
             }
+         },
+
+         _getEmptyText: function() {
+            return dropdownUtils.prepareEmpty(this._options.emptyText);
          }
       });
 
