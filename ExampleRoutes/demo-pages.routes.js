@@ -24,6 +24,14 @@ module.exports = function(Component) {
           }, []);
       },
 
+      '/demo-ws4-input': function(req, res) {
+         requirejs('Controls-demo/Example/Input');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Controls-demo/Example/Input',
+            initDependencies: false
+         }, []);
+      },
+
       // Демо-пример: cвайп при работе со списочным компонентом на тач-устройствах.
       '/demo-ws4-swipe': function(req, res) {
         requirejs('Examples/Swipe/Module');

@@ -10,6 +10,7 @@ define('Controls/Input/Phone',
 
       /**
        * Phone input.
+       * <a href="https://wi.sbis.ru/materials/demo-ws4-input">Демо-пример</a>.
        *
        * @class Controls/Input/Phone
        * @extends Core/Control
@@ -46,6 +47,12 @@ define('Controls/Input/Phone',
          _focusinHandler: function() {}
       });
 
+      Phone.getDefaultOptions = function() {
+         return {
+            value: ''
+         };
+      };
+      
       return Phone;
    }
 );
