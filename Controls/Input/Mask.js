@@ -1,5 +1,6 @@
 define('Controls/Input/Mask',
    [
+      'Core/IoC',
       'Core/Control',
       'Core/helpers/Object/isEqual',
       'Controls/Input/Mask/ViewModel',
@@ -8,7 +9,7 @@ define('Controls/Input/Mask',
       'Controls/Input/resources/InputRender/InputRender',
       'tmpl!Controls/Input/resources/input'
    ],
-   function(Control, isEqual, ViewModel, runDelayed, MaskTpl) {
+   function(IoC, Control, isEqual, ViewModel, runDelayed, MaskTpl) {
 
       'use strict';
 
@@ -74,6 +75,8 @@ define('Controls/Input/Mask',
 
       var
          _private = {
+            regExpQuantifiers: '\\\\({.*?}|.)',
+
             findLastUserEnteredCharPosition: function(value, replacer) {
                var position;
 
@@ -100,6 +103,21 @@ define('Controls/Input/Mask',
                if (position < selectedPosition) {
                   input.setSelectionRange(position, position);
                }
+            },
+            validateReplacer: function(replacer, mask) {
+               var validation;
+
+               if (replacer && this.regExpQuantifiers.test(mask)) {
+                  validation = false;
+                  IoC.resolve('ILogger').error('Mask', 'Used not empty replacer and mask with quantifiers. More on https://wi.sbis.ru/docs/js/Controls/Input/Mask/options/replacer/');
+               } else {
+                  validation = true;
+               }
+
+               return validation;
+            },
+            calcReplacer: function(replacer, mask) {
+               return this.validateReplacer(replacer, mask) ? replacer : '';
             }
          },
          Mask = Control.extend({
@@ -107,13 +125,11 @@ define('Controls/Input/Mask',
 
             _viewModel: null,
 
-            constructor: function(options) {
-               Mask.superclass.constructor.call(this, options);
-
+            _beforeMount: function(options) {
                this._viewModel = new ViewModel({
                   value: options.value,
                   mask: options.mask,
-                  replacer: options.replacer,
+                  replacer: _private.calcReplacer(options.replacer, options.mask),
                   formatMaskChars: options.formatMaskChars
                });
             },
@@ -128,7 +144,7 @@ define('Controls/Input/Mask',
                   this._viewModel.updateOptions({
                      value: newOptions.value,
                      mask: newOptions.mask,
-                     replacer: newOptions.replacer,
+                     replacer: _private.calcReplacer(newOptions.replacer, newOptions.mask),
                      formatMaskChars: newOptions.formatMaskChars
                   });
                }
