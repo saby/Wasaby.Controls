@@ -1,12 +1,12 @@
 define(
    [
-      'Controls/Decorators/Highlight'
+      'Controls/Decorator/Highlight'
    ],
    function(Highlight) {
 
       'use strict';
 
-      describe('Controls.Decorators.Highlight', function() {
+      describe('Controls.Decorator.Highlight', function() {
          var result;
 
          describe('parseText', function() {
